@@ -3,7 +3,7 @@ name: Daily Pokefuta Scraping
 on:
   schedule:
     # Run daily at 2:00 AM JST (17:00 UTC)
-    - cron: '0 17 * * *'
+    - cron: '0 18 * * *'
   workflow_dispatch: # Allow manual trigger
 
 permissions:
