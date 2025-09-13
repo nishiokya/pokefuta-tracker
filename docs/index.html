@@ -209,6 +209,7 @@
               <th>コード</th>
               <th>都道府県</th>
               <th>ポケふた数</th>
+              <th>サイト</th>
             </tr>
           </thead>
           <tbody id="prefecture-table-body">
@@ -251,6 +252,7 @@
     let allMarkers = [];
     let allData = [];
     let prefectureCounts = {};
+    let prefectureSiteCounts = {};
     let selectedPrefecture = '';
 
     async function loadPokefutaData() {
@@ -268,11 +270,20 @@
             const prefecture = data.prefecture || '不明';
             prefectureCounts[prefecture] = (prefectureCounts[prefecture] || 0) + 1;
 
+            // Count prefecture sites
+            if (data.prefecture_site_url) {
+              prefectureSiteCounts[prefecture] = (prefectureSiteCounts[prefecture] || 0) + 1;
+            }
+
             const pokemons = data.pokemons && data.pokemons.length > 0
               ? data.pokemons.join(', ')
               : '—';
 
             const prefectureCode = prefectureCodeMap[prefecture] || '--';
+
+            const prefectureSiteLink = data.prefecture_site_url
+              ? `<br/><a href='${data.prefecture_site_url}' target='_blank' style='color: #28a745; text-decoration: none;'>🌐 ${prefecture}サイト</a>`
+              : '';
 
             const popupContent = `
               <div style='min-width:200px'>
@@ -280,7 +291,7 @@
                 <b>タイトル:</b> ${data.title}<br/>
                 <b>都道府県:</b> ${prefecture} <span class="prefecture-code">${prefectureCode}</span><br/>
                 <b>ポケモン:</b> ${pokemons}<br/>
-                <a href='${data.detail_url}' target='_blank' style='color: #007cba; text-decoration: none;'>📝 公式詳細</a>
+                <a href='${data.detail_url}' target='_blank' style='color: #007cba; text-decoration: none;'>📝 公式詳細</a>${prefectureSiteLink}
               </div>
             `;
 
@@ -346,11 +357,14 @@
       sortedPrefectures.forEach(([prefecture, count]) => {
         const row = document.createElement('tr');
         const code = prefectureCodeMap[prefecture] || '--';
+        const siteCount = prefectureSiteCounts[prefecture] || 0;
+        const siteIcon = siteCount > 0 ? '🌐' : '—';
 
         row.innerHTML = `
           <td><span class="prefecture-code">${code}</span></td>
           <td>${prefecture}</td>
           <td><span class="count-badge">${count}</span></td>
+          <td style="text-align: center;">${siteIcon}</td>
         `;
 
         row.addEventListener('click', () => {

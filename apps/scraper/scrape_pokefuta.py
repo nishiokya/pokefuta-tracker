@@ -40,6 +40,7 @@ class Pokefuta:
     lng: float
     pokemons: List[str]
     detail_url: str
+    prefecture_site_url: str
     source_last_checked: str
 
 # --- logging
@@ -108,11 +109,22 @@ def parse_detail_html(detail_url: str, html: str, now_iso: str, logger: logging.
         if title_elem:
             title = title_elem.get_text(strip=True)
 
-    # pokemons (Japanese site patterns with normalization)
+    # pokemons and prefecture site detection
     pokemons: List[str] = []
-    # Look for Pokemon names in various patterns
+    prefecture_site_url = ""
+
+    # Look for Pokemon names and prefecture site links
     for a in soup.select("a[href]"):
         t = a.get_text(strip=True)
+        href = a.get("href", "")
+
+        # Check for prefecture site links
+        if re.search(r'(ローカルActs.*ページ|.*県ページ|都道府県.*ページ)', t):
+            if href:
+                prefecture_site_url = urljoin(detail_url, href)
+            continue  # Don't add to pokemon list
+
+        # Extract Pokemon names
         if t and ("図鑑" in t or "ポケモン" in t or "Pokédex" in t or "ずかん" in t):
             # Extract and normalize Pokemon name
             name = re.sub(r'(図鑑|ポケモン|Pokédex|ずかん|へ|の)', '', t).strip()
@@ -200,7 +212,7 @@ def parse_detail_html(detail_url: str, html: str, now_iso: str, logger: logging.
     # id
     m = re.search(r"/desc/(\d+)/?", detail_url)
     pid = m.group(1) if m else ""
-    return Pokefuta(pid, title, prefecture or "", lat, lng, pokemons, detail_url, now_iso)
+    return Pokefuta(pid, title, prefecture or "", lat, lng, pokemons, detail_url, prefecture_site_url, now_iso)
 
 def extract_from_detail(detail_url: str, now_iso: str, logger: logging.Logger) -> Optional[Pokefuta]:
     r = fetch(detail_url, logger)
