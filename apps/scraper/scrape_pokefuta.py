@@ -108,14 +108,14 @@ def parse_detail_html(detail_url: str, html: str, now_iso: str, logger: logging.
         if title_elem:
             title = title_elem.get_text(strip=True)
 
-    # pokemons (Japanese site patterns)
+    # pokemons (Japanese site patterns with normalization)
     pokemons: List[str] = []
     # Look for Pokemon names in various patterns
     for a in soup.select("a[href]"):
         t = a.get_text(strip=True)
-        if t and ("図鑑" in t or "ポケモン" in t or "Pokédex" in t):
-            # Extract Pokemon name
-            name = re.sub(r'(図鑑|ポケモン|Pokédex|の)', '', t).strip()
+        if t and ("図鑑" in t or "ポケモン" in t or "Pokédex" in t or "ずかん" in t):
+            # Extract and normalize Pokemon name
+            name = re.sub(r'(図鑑|ポケモン|Pokédex|ずかん|へ|の)', '', t).strip()
             if name and len(name) > 1:
                 pokemons.append(name)
 
@@ -129,18 +129,32 @@ def parse_detail_html(detail_url: str, html: str, now_iso: str, logger: logging.
         matches = re.findall(pattern, soup.get_text())
         for match in matches:
             clean_name = re.sub(r'[^\w\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]', '', match).strip()
+            # Remove common suffixes
+            clean_name = re.sub(r'(ずかん|図鑑|へ)$', '', clean_name).strip()
             if clean_name and clean_name not in pokemons:
                 pokemons.append(clean_name)
 
-    # prefecture (Japanese site extraction)
+    # prefecture (extract from title)
     prefecture = ""
-    # Try breadcrumb or navigation patterns
-    for a in reversed(soup.select("a[href]")):
-        href = a.get("href",""); txt = a.get_text(strip=True)
-        if PREF_PAGE_PAT.search(href) and txt:
-            prefecture = txt; break
+    # First, try to extract from title (e.g., "鹿児島県/指宿市" -> "鹿児島県")
+    if title and '/' in title:
+        prefecture_part = title.split('/')[0].strip()
+        # Check if it looks like a prefecture name
+        if re.match(r'.*[都道府県]$', prefecture_part):
+            prefecture = prefecture_part
 
-    # If no prefecture found, try to extract from URL or page content
+    # If no prefecture found from title, try breadcrumb or navigation patterns
+    if not prefecture:
+        for a in reversed(soup.select("a[href]")):
+            href = a.get("href",""); txt = a.get_text(strip=True)
+            if PREF_PAGE_PAT.search(href) and txt:
+                # Clean up prefecture name from navigation
+                cleaned_pref = re.sub(r'(トップへ|へ戻る|に戻る)$', '', txt).strip()
+                if re.match(r'.*[都道府県]$', cleaned_pref):
+                    prefecture = cleaned_pref
+                    break
+
+    # If still no prefecture found, try to extract from URL or page content
     if not prefecture:
         # Extract from URL path
         url_parts = detail_url.split('/')
