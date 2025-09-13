@@ -15,50 +15,156 @@
       right: 10px;
       z-index: 1000;
       background: white;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      max-width: 250px;
-      max-height: 80vh;
-      overflow-y: auto;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      max-width: 320px;
+      max-height: 85vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
 
-    #controls h3 {
-      margin: 0 0 10px 0;
-      font-size: 14px;
+    .controls-header {
+      padding: 16px 20px 12px 20px;
+      border-bottom: 1px solid #eee;
+      background: #f8f9fa;
+      border-radius: 12px 12px 0 0;
+    }
+
+    .controls-header h3 {
+      margin: 0;
+      font-size: 16px;
       color: #333;
+      font-weight: 600;
+    }
+
+    .controls-content {
+      padding: 16px 20px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .filter-section {
+      margin-bottom: 20px;
+    }
+
+    .filter-section h4 {
+      margin: 0 0 8px 0;
+      font-size: 14px;
+      color: #555;
+      font-weight: 600;
     }
 
     #prefecture-filter {
       width: 100%;
-      padding: 8px;
+      padding: 10px;
       border: 1px solid #ddd;
-      border-radius: 4px;
+      border-radius: 6px;
       font-size: 14px;
-      margin-bottom: 10px;
+      background: white;
+    }
+
+    #prefecture-filter:focus {
+      outline: none;
+      border-color: #007cba;
+      box-shadow: 0 0 0 3px rgba(0,124,186,0.1);
+    }
+
+    .prefecture-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+
+    .prefecture-table th,
+    .prefecture-table td {
+      padding: 8px 6px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+
+    .prefecture-table th {
+      background: #f8f9fa;
+      font-weight: 600;
+      color: #555;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .prefecture-table tr:hover {
+      background: #f0f8ff;
+      cursor: pointer;
+    }
+
+    .prefecture-table tr.selected {
+      background: #e3f2fd;
+      color: #1976d2;
+    }
+
+    .prefecture-code {
+      font-family: 'Monaco', 'Menlo', monospace;
+      background: #f1f3f4;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .count-badge {
+      background: #007cba;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: bold;
+      min-width: 20px;
+      text-align: center;
+      display: inline-block;
     }
 
     .stats {
       font-size: 12px;
       color: #666;
       border-top: 1px solid #eee;
-      padding-top: 10px;
-      margin-top: 10px;
+      padding-top: 12px;
+      margin-top: 16px;
+      display: flex;
+      justify-content: space-between;
     }
 
     .reset-btn {
       background: #007cba;
       color: white;
       border: none;
-      padding: 6px 12px;
-      border-radius: 4px;
+      padding: 8px 16px;
+      border-radius: 6px;
       cursor: pointer;
-      font-size: 12px;
-      margin-left: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      width: 100%;
+      margin-top: 12px;
+      transition: background 0.2s;
     }
 
     .reset-btn:hover {
       background: #005a8b;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: #007cba;
+      box-shadow: 0 0 0 3px rgba(0,124,186,0.1);
     }
 
     #map { height: 100%; }
@@ -66,29 +172,56 @@
 
     @media (max-width: 768px) {
       #controls {
-        position: relative;
-        top: 0;
+        position: fixed;
+        top: auto;
+        bottom: 0;
         right: 0;
-        margin: 10px;
+        left: 0;
         max-width: none;
-        max-height: none;
+        max-height: 50vh;
+        border-radius: 12px 12px 0 0;
       }
       #map {
-        height: calc(100% - 140px);
+        height: 100%;
       }
     }
   </style>
 </head>
 <body>
   <div id="controls">
-    <h3>🗾 都道府県フィルタ</h3>
-    <select id="prefecture-filter">
-      <option value="">すべての都道府県</option>
-    </select>
-    <button class="reset-btn" onclick="resetMap()">リセット</button>
-    <div class="stats">
-      <div id="total-count">総数: <span>0</span>件</div>
-      <div id="visible-count">表示中: <span>0</span>件</div>
+    <div class="controls-header">
+      <h3>🗾 ポケふたマップ</h3>
+    </div>
+    <div class="controls-content">
+      <div class="filter-section">
+        <h4>都道府県で絞り込み</h4>
+        <select id="prefecture-filter">
+          <option value="">すべての都道府県</option>
+        </select>
+      </div>
+
+      <div class="filter-section">
+        <h4>都道府県別ポケふた数</h4>
+        <input type="text" class="search-input" id="search-input" placeholder="都道府県を検索...">
+        <table class="prefecture-table" id="prefecture-table">
+          <thead>
+            <tr>
+              <th>コード</th>
+              <th>都道府県</th>
+              <th>ポケふた数</th>
+            </tr>
+          </thead>
+          <tbody id="prefecture-table-body">
+          </tbody>
+        </table>
+      </div>
+
+      <button class="reset-btn" onclick="resetMap()">🔄 すべて表示</button>
+
+      <div class="stats">
+        <div id="total-count">総数: <span>0</span></div>
+        <div id="visible-count">表示: <span>0</span></div>
+      </div>
     </div>
   </div>
   <div id="map"></div>
@@ -101,9 +234,24 @@
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
+    // 都道府県コードマッピング
+    const prefectureCodeMap = {
+      '北海道': '01', '青森県': '02', '岩手県': '03', '宮城県': '04', '秋田県': '05',
+      '山形県': '06', '福島県': '07', '茨城県': '08', '栃木県': '09', '群馬県': '10',
+      '埼玉県': '11', '千葉県': '12', '東京都': '13', '神奈川県': '14', '新潟県': '15',
+      '富山県': '16', '石川県': '17', '福井県': '18', '山梨県': '19', '長野県': '20',
+      '岐阜県': '21', '静岡県': '22', '愛知県': '23', '三重県': '24', '滋賀県': '25',
+      '京都府': '26', '大阪府': '27', '兵庫県': '28', '奈良県': '29', '和歌山県': '30',
+      '鳥取県': '31', '島根県': '32', '岡山県': '33', '広島県': '34', '山口県': '35',
+      '徳島県': '36', '香川県': '37', '愛媛県': '38', '高知県': '39', '福岡県': '40',
+      '佐賀県': '41', '長崎県': '42', '熊本県': '43', '大分県': '44', '宮崎県': '45',
+      '鹿児島県': '46', '沖縄県': '47'
+    };
+
     let allMarkers = [];
     let allData = [];
-    let prefectures = new Set();
+    let prefectureCounts = {};
+    let selectedPrefecture = '';
 
     async function loadPokefutaData() {
       try {
@@ -116,21 +264,23 @@
             const data = JSON.parse(line);
             allData.push(data);
 
-            if (data.prefecture) {
-              prefectures.add(data.prefecture);
-            }
+            // Count by prefecture
+            const prefecture = data.prefecture || '不明';
+            prefectureCounts[prefecture] = (prefectureCounts[prefecture] || 0) + 1;
 
             const pokemons = data.pokemons && data.pokemons.length > 0
               ? data.pokemons.join(', ')
               : '—';
 
+            const prefectureCode = prefectureCodeMap[prefecture] || '--';
+
             const popupContent = `
-              <div style='min-width:180px'>
+              <div style='min-width:200px'>
                 <b>ID:</b> ${data.id}<br/>
-                <b>Title:</b> ${data.title}<br/>
-                <b>Prefecture:</b> ${data.prefecture || '—'}<br/>
-                <b>Pokémon:</b> ${pokemons}<br/>
-                <a href='${data.detail_url}' target='_blank'>Official detail</a>
+                <b>タイトル:</b> ${data.title}<br/>
+                <b>都道府県:</b> ${prefecture} <span class="prefecture-code">${prefectureCode}</span><br/>
+                <b>ポケモン:</b> ${pokemons}<br/>
+                <a href='${data.detail_url}' target='_blank' style='color: #007cba; text-decoration: none;'>📝 公式詳細</a>
               </div>
             `;
 
@@ -138,13 +288,14 @@
               .bindPopup(popupContent);
 
             marker.pokefutaData = data;
+            marker.pokefutaData.prefectureCode = prefectureCode;
             allMarkers.push(marker);
             marker.addTo(map);
           }
         });
 
-        // Populate prefecture filter
         populatePrefectureFilter();
+        populatePrefectureTable();
         updateStats();
       } catch (error) {
         console.error('Error loading pokefuta data:', error);
@@ -153,25 +304,86 @@
 
     function populatePrefectureFilter() {
       const select = document.getElementById('prefecture-filter');
-      const sortedPrefectures = Array.from(prefectures).filter(p => p).sort();
+      const sortedPrefectures = Object.keys(prefectureCounts)
+        .filter(p => p !== '不明')
+        .sort((a, b) => {
+          const codeA = prefectureCodeMap[a] || '99';
+          const codeB = prefectureCodeMap[b] || '99';
+          return codeA.localeCompare(codeB);
+        });
+
+      // Add 不明 at the end if exists
+      if (prefectureCounts['不明']) {
+        sortedPrefectures.push('不明');
+      }
 
       sortedPrefectures.forEach(prefecture => {
         const option = document.createElement('option');
         option.value = prefecture;
-        option.textContent = prefecture;
+        const code = prefectureCodeMap[prefecture] || '--';
+        option.textContent = `${code} ${prefecture} (${prefectureCounts[prefecture]})`;
         select.appendChild(option);
       });
 
-      // Add event listener
       select.addEventListener('change', filterByPrefecture);
     }
 
+    function populatePrefectureTable() {
+      const tbody = document.getElementById('prefecture-table-body');
+      const sortedPrefectures = Object.entries(prefectureCounts)
+        .filter(([prefecture]) => prefecture !== '不明')
+        .sort(([a], [b]) => {
+          const codeA = prefectureCodeMap[a] || '99';
+          const codeB = prefectureCodeMap[b] || '99';
+          return codeA.localeCompare(codeB);
+        });
+
+      // Add 不明 at the end if exists
+      if (prefectureCounts['不明']) {
+        sortedPrefectures.push(['不明', prefectureCounts['不明']]);
+      }
+
+      sortedPrefectures.forEach(([prefecture, count]) => {
+        const row = document.createElement('tr');
+        const code = prefectureCodeMap[prefecture] || '--';
+
+        row.innerHTML = `
+          <td><span class="prefecture-code">${code}</span></td>
+          <td>${prefecture}</td>
+          <td><span class="count-badge">${count}</span></td>
+        `;
+
+        row.addEventListener('click', () => {
+          selectPrefectureFromTable(prefecture, row);
+        });
+
+        tbody.appendChild(row);
+      });
+
+      // Add search functionality
+      const searchInput = document.getElementById('search-input');
+      searchInput.addEventListener('input', searchPrefectures);
+    }
+
+    function selectPrefectureFromTable(prefecture, row) {
+      // Update dropdown
+      document.getElementById('prefecture-filter').value = prefecture;
+
+      // Update table selection
+      document.querySelectorAll('.prefecture-table tr').forEach(r => r.classList.remove('selected'));
+      row.classList.add('selected');
+
+      // Filter map
+      selectedPrefecture = prefecture;
+      filterByPrefecture();
+    }
+
     function filterByPrefecture() {
-      const selectedPrefecture = document.getElementById('prefecture-filter').value;
+      const selectedPref = document.getElementById('prefecture-filter').value || selectedPrefecture;
       let visibleCount = 0;
 
       allMarkers.forEach(marker => {
-        const shouldShow = !selectedPrefecture || marker.pokefutaData.prefecture === selectedPrefecture;
+        const shouldShow = !selectedPref || marker.pokefutaData.prefecture === selectedPref;
 
         if (shouldShow) {
           if (!map.hasLayer(marker)) {
@@ -187,10 +399,35 @@
 
       updateStats(visibleCount);
 
-      // Adjust map view if prefecture is selected
-      if (selectedPrefecture) {
-        fitMapToPrefecture(selectedPrefecture);
+      // Highlight table row
+      updateTableSelection(selectedPref);
+
+      // Adjust map view
+      if (selectedPref) {
+        fitMapToPrefecture(selectedPref);
       }
+    }
+
+    function updateTableSelection(prefecture) {
+      document.querySelectorAll('.prefecture-table tr').forEach(row => {
+        row.classList.remove('selected');
+        const prefCell = row.cells[1];
+        if (prefCell && prefCell.textContent === prefecture) {
+          row.classList.add('selected');
+        }
+      });
+    }
+
+    function searchPrefectures() {
+      const query = document.getElementById('search-input').value.toLowerCase();
+      const rows = document.querySelectorAll('#prefecture-table-body tr');
+
+      rows.forEach(row => {
+        const prefecture = row.cells[1].textContent.toLowerCase();
+        const code = row.cells[0].textContent.toLowerCase();
+        const shouldShow = prefecture.includes(query) || code.includes(query);
+        row.style.display = shouldShow ? '' : 'none';
+      });
     }
 
     function fitMapToPrefecture(prefecture) {
@@ -215,12 +452,20 @@
     function resetMap() {
       // Reset filter
       document.getElementById('prefecture-filter').value = '';
+      document.getElementById('search-input').value = '';
+      selectedPrefecture = '';
 
       // Show all markers
       allMarkers.forEach(marker => {
         if (!map.hasLayer(marker)) {
           marker.addTo(map);
         }
+      });
+
+      // Show all table rows
+      document.querySelectorAll('#prefecture-table-body tr').forEach(row => {
+        row.style.display = '';
+        row.classList.remove('selected');
       });
 
       // Reset map view
