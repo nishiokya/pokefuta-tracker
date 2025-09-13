@@ -7,11 +7,90 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
   <style>
-    html, body, #map { height: 100%; margin: 0; }
+    html, body { height: 100%; margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+
+    #controls {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 1000;
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      max-width: 250px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    #controls h3 {
+      margin: 0 0 10px 0;
+      font-size: 14px;
+      color: #333;
+    }
+
+    #prefecture-filter {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .stats {
+      font-size: 12px;
+      color: #666;
+      border-top: 1px solid #eee;
+      padding-top: 10px;
+      margin-top: 10px;
+    }
+
+    .reset-btn {
+      background: #007cba;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      margin-left: 8px;
+    }
+
+    .reset-btn:hover {
+      background: #005a8b;
+    }
+
+    #map { height: 100%; }
     .leaflet-popup-content-wrapper { border-radius: 12px; }
+
+    @media (max-width: 768px) {
+      #controls {
+        position: relative;
+        top: 0;
+        right: 0;
+        margin: 10px;
+        max-width: none;
+        max-height: none;
+      }
+      #map {
+        height: calc(100% - 140px);
+      }
+    }
   </style>
 </head>
 <body>
+  <div id="controls">
+    <h3>🗾 都道府県フィルタ</h3>
+    <select id="prefecture-filter">
+      <option value="">すべての都道府県</option>
+    </select>
+    <button class="reset-btn" onclick="resetMap()">リセット</button>
+    <div class="stats">
+      <div id="total-count">総数: <span>0</span>件</div>
+      <div id="visible-count">表示中: <span>0</span>件</div>
+    </div>
+  </div>
   <div id="map"></div>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
@@ -22,6 +101,10 @@
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
+    let allMarkers = [];
+    let allData = [];
+    let prefectures = new Set();
+
     async function loadPokefutaData() {
       try {
         const response = await fetch('./pokefuta.ndjson');
@@ -31,6 +114,12 @@
         lines.forEach(line => {
           if (line.trim()) {
             const data = JSON.parse(line);
+            allData.push(data);
+
+            if (data.prefecture) {
+              prefectures.add(data.prefecture);
+            }
+
             const pokemons = data.pokemons && data.pokemons.length > 0
               ? data.pokemons.join(', ')
               : '—';
@@ -45,16 +134,101 @@
               </div>
             `;
 
-            L.marker([data.lat, data.lng])
-              .addTo(map)
+            const marker = L.marker([data.lat, data.lng])
               .bindPopup(popupContent);
+
+            marker.pokefutaData = data;
+            allMarkers.push(marker);
+            marker.addTo(map);
           }
         });
+
+        // Populate prefecture filter
+        populatePrefectureFilter();
+        updateStats();
       } catch (error) {
         console.error('Error loading pokefuta data:', error);
       }
     }
 
+    function populatePrefectureFilter() {
+      const select = document.getElementById('prefecture-filter');
+      const sortedPrefectures = Array.from(prefectures).filter(p => p).sort();
+
+      sortedPrefectures.forEach(prefecture => {
+        const option = document.createElement('option');
+        option.value = prefecture;
+        option.textContent = prefecture;
+        select.appendChild(option);
+      });
+
+      // Add event listener
+      select.addEventListener('change', filterByPrefecture);
+    }
+
+    function filterByPrefecture() {
+      const selectedPrefecture = document.getElementById('prefecture-filter').value;
+      let visibleCount = 0;
+
+      allMarkers.forEach(marker => {
+        const shouldShow = !selectedPrefecture || marker.pokefutaData.prefecture === selectedPrefecture;
+
+        if (shouldShow) {
+          if (!map.hasLayer(marker)) {
+            marker.addTo(map);
+          }
+          visibleCount++;
+        } else {
+          if (map.hasLayer(marker)) {
+            map.removeLayer(marker);
+          }
+        }
+      });
+
+      updateStats(visibleCount);
+
+      // Adjust map view if prefecture is selected
+      if (selectedPrefecture) {
+        fitMapToPrefecture(selectedPrefecture);
+      }
+    }
+
+    function fitMapToPrefecture(prefecture) {
+      const prefectureMarkers = allMarkers.filter(marker =>
+        marker.pokefutaData.prefecture === prefecture
+      );
+
+      if (prefectureMarkers.length > 0) {
+        const group = new L.featureGroup(prefectureMarkers);
+        map.fitBounds(group.getBounds(), { padding: [20, 20] });
+      }
+    }
+
+    function updateStats(visibleCount = null) {
+      const totalElement = document.querySelector('#total-count span');
+      const visibleElement = document.querySelector('#visible-count span');
+
+      totalElement.textContent = allMarkers.length;
+      visibleElement.textContent = visibleCount !== null ? visibleCount : allMarkers.length;
+    }
+
+    function resetMap() {
+      // Reset filter
+      document.getElementById('prefecture-filter').value = '';
+
+      // Show all markers
+      allMarkers.forEach(marker => {
+        if (!map.hasLayer(marker)) {
+          marker.addTo(map);
+        }
+      });
+
+      // Reset map view
+      map.setView([36.0, 138.0], 6);
+      updateStats();
+    }
+
+    // Initialize
     loadPokefutaData();
   </script>
 </body>
