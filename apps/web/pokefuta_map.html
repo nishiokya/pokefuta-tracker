@@ -44,6 +44,48 @@
       flex: 1;
     }
 
+    .tab-container {
+      margin-bottom: 16px;
+    }
+
+    .tab-buttons {
+      display: flex;
+      border-bottom: 2px solid #eee;
+      margin-bottom: 16px;
+    }
+
+    .tab-button {
+      flex: 1;
+      padding: 12px 16px;
+      background: none;
+      border: none;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      color: #666;
+      transition: all 0.2s;
+      border-bottom: 2px solid transparent;
+    }
+
+    .tab-button:hover {
+      background: #f8f9fa;
+      color: #333;
+    }
+
+    .tab-button.active {
+      color: #007cba;
+      border-bottom-color: #007cba;
+      background: #f0f8ff;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
     .filter-section {
       margin-bottom: 20px;
     }
@@ -53,6 +95,50 @@
       font-size: 14px;
       color: #555;
       font-weight: 600;
+    }
+
+    .pokemon-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 8px;
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid #eee;
+      border-radius: 6px;
+      padding: 10px;
+    }
+
+    .pokemon-item {
+      padding: 8px 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      background: white;
+      cursor: pointer;
+      text-align: center;
+      font-size: 12px;
+      transition: all 0.2s;
+      user-select: none;
+    }
+
+    .pokemon-item:hover {
+      background: #f0f8ff;
+      border-color: #007cba;
+    }
+
+    .pokemon-item.selected {
+      background: #007cba;
+      color: white;
+      border-color: #005a8b;
+    }
+
+    .pokemon-count {
+      color: #666;
+      font-size: 10px;
+      margin-top: 2px;
+    }
+
+    .pokemon-item.selected .pokemon-count {
+      color: #e6f3ff;
     }
 
     #prefecture-filter {
@@ -193,28 +279,48 @@
       <h3>🗾 ポケふたマップ</h3>
     </div>
     <div class="controls-content">
-      <div class="filter-section">
-        <h4>都道府県で絞り込み</h4>
-        <select id="prefecture-filter">
-          <option value="">すべての都道府県</option>
-        </select>
+      <!-- Tab Interface -->
+      <div class="tab-buttons">
+        <button class="tab-button active" onclick="switchTab('prefecture')">🗾 都道府県</button>
+        <button class="tab-button" onclick="switchTab('pokemon')">🎯 ポケモン</button>
       </div>
 
-      <div class="filter-section">
-        <h4>都道府県別ポケふた数</h4>
-        <input type="text" class="search-input" id="search-input" placeholder="都道府県を検索...">
-        <table class="prefecture-table" id="prefecture-table">
-          <thead>
-            <tr>
-              <th>コード</th>
-              <th>都道府県</th>
-              <th>ポケふた数</th>
-              <th>サイト</th>
-            </tr>
-          </thead>
-          <tbody id="prefecture-table-body">
-          </tbody>
-        </table>
+      <!-- Prefecture Filter Tab -->
+      <div id="prefecture-tab" class="tab-content active">
+        <div class="filter-section">
+          <h4>都道府県で絞り込み</h4>
+          <select id="prefecture-filter">
+            <option value="">すべての都道府県</option>
+          </select>
+        </div>
+
+        <div class="filter-section">
+          <h4>都道府県別ポケふた数</h4>
+          <input type="text" class="search-input" id="search-input" placeholder="都道府県を検索...">
+          <table class="prefecture-table" id="prefecture-table">
+            <thead>
+              <tr>
+                <th>コード</th>
+                <th>都道府県</th>
+                <th>ポケふた数</th>
+                <th>サイト</th>
+              </tr>
+            </thead>
+            <tbody id="prefecture-table-body">
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Pokemon Filter Tab -->
+      <div id="pokemon-tab" class="tab-content">
+        <div class="filter-section">
+          <h4>ポケモンで絞り込み</h4>
+          <input type="text" class="search-input" id="pokemon-search" placeholder="ポケモンを検索...">
+          <div id="pokemon-grid" class="pokemon-grid">
+            <!-- Pokemon items will be populated here -->
+          </div>
+        </div>
       </div>
 
       <button class="reset-btn" onclick="resetMap()">🔄 すべて表示</button>
@@ -256,6 +362,9 @@
     let prefectureSiteCounts = {};
     let cityCounts = {};
     let selectedPrefecture = '';
+    let pokemonCounts = {};
+    let selectedPokemons = [];
+    let currentTab = 'prefecture';
 
     async function loadPokefutaData() {
       try {
@@ -281,6 +390,15 @@
             if (data.city) {
               const cityKey = `${prefecture}/${data.city}`;
               cityCounts[cityKey] = (cityCounts[cityKey] || 0) + 1;
+            }
+
+            // Count Pokemon
+            if (data.pokemons && Array.isArray(data.pokemons)) {
+              data.pokemons.forEach(pokemon => {
+                if (pokemon && pokemon.trim()) {
+                  pokemonCounts[pokemon] = (pokemonCounts[pokemon] || 0) + 1;
+                }
+              });
             }
 
             const pokemons = data.pokemons && data.pokemons.length > 0
@@ -317,6 +435,7 @@
 
         populatePrefectureFilter();
         populatePrefectureTable();
+        populatePokemonGrid();
         updateStats();
       } catch (error) {
         console.error('Error loading pokefuta data:', error);
@@ -475,11 +594,142 @@
       cityElement.textContent = Object.keys(cityCounts).length;
     }
 
+    function populatePokemonGrid() {
+      const grid = document.getElementById('pokemon-grid');
+      const sortedPokemons = Object.entries(pokemonCounts)
+        .sort(([a], [b]) => a.localeCompare(b, 'ja'))
+        .sort(([, countA], [, countB]) => countB - countA);
+
+      grid.innerHTML = '';
+
+      sortedPokemons.forEach(([pokemon, count]) => {
+        const item = document.createElement('div');
+        item.className = 'pokemon-item';
+        item.innerHTML = `
+          <div class="pokemon-name">${pokemon}</div>
+          <div class="pokemon-count">${count}</div>
+        `;
+
+        item.addEventListener('click', () => {
+          togglePokemonSelection(pokemon, item);
+        });
+
+        grid.appendChild(item);
+      });
+
+      // Add search functionality for Pokemon
+      const searchInput = document.getElementById('pokemon-search');
+      searchInput.addEventListener('input', searchPokemons);
+    }
+
+    function togglePokemonSelection(pokemon, item) {
+      const index = selectedPokemons.indexOf(pokemon);
+
+      if (index > -1) {
+        selectedPokemons.splice(index, 1);
+        item.classList.remove('selected');
+      } else {
+        selectedPokemons.push(pokemon);
+        item.classList.add('selected');
+      }
+
+      filterByPokemon();
+    }
+
+    function searchPokemons() {
+      const query = document.getElementById('pokemon-search').value.toLowerCase();
+      const items = document.querySelectorAll('#pokemon-grid .pokemon-item');
+
+      items.forEach(item => {
+        const pokemonName = item.querySelector('.pokemon-name').textContent.toLowerCase();
+        const shouldShow = pokemonName.includes(query);
+        item.style.display = shouldShow ? 'block' : 'none';
+      });
+    }
+
+    function filterByPokemon() {
+      if (selectedPokemons.length === 0) {
+        // Show all markers if no Pokemon selected
+        allMarkers.forEach(marker => {
+          if (!map.hasLayer(marker)) {
+            marker.addTo(map);
+          }
+        });
+        updateStats();
+        return;
+      }
+
+      let visibleCount = 0;
+
+      allMarkers.forEach(marker => {
+        const markerPokemons = marker.pokefutaData.pokemons || [];
+        const shouldShow = selectedPokemons.some(selectedPokemon =>
+          markerPokemons.includes(selectedPokemon)
+        );
+
+        if (shouldShow) {
+          if (!map.hasLayer(marker)) {
+            marker.addTo(map);
+          }
+          visibleCount++;
+        } else {
+          if (map.hasLayer(marker)) {
+            map.removeLayer(marker);
+          }
+        }
+      });
+
+      updateStats(visibleCount);
+    }
+
+    function switchTab(tabName) {
+      currentTab = tabName;
+
+      // Update tab buttons
+      document.querySelectorAll('.tab-button').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      document.querySelector(`.tab-button[onclick="switchTab('${tabName}')"]`).classList.add('active');
+
+      // Update tab content
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+      });
+      document.getElementById(`${tabName}-tab`).classList.add('active');
+
+      // Reset current filters when switching tabs
+      if (tabName === 'prefecture') {
+        // Reset Pokemon selections
+        selectedPokemons = [];
+        document.querySelectorAll('#pokemon-grid .pokemon-item').forEach(item => {
+          item.classList.remove('selected');
+        });
+        document.getElementById('pokemon-search').value = '';
+
+        // Apply prefecture filter if any
+        filterByPrefecture();
+      } else if (tabName === 'pokemon') {
+        // Reset prefecture selections
+        selectedPrefecture = '';
+        document.getElementById('prefecture-filter').value = '';
+        document.getElementById('search-input').value = '';
+        document.querySelectorAll('.prefecture-table tr').forEach(row => {
+          row.classList.remove('selected');
+          row.style.display = '';
+        });
+
+        // Apply Pokemon filter if any
+        filterByPokemon();
+      }
+    }
+
     function resetMap() {
-      // Reset filter
+      // Reset filters for both tabs
       document.getElementById('prefecture-filter').value = '';
       document.getElementById('search-input').value = '';
+      document.getElementById('pokemon-search').value = '';
       selectedPrefecture = '';
+      selectedPokemons = [];
 
       // Show all markers
       allMarkers.forEach(marker => {
@@ -492,6 +742,12 @@
       document.querySelectorAll('#prefecture-table-body tr').forEach(row => {
         row.style.display = '';
         row.classList.remove('selected');
+      });
+
+      // Reset Pokemon selections
+      document.querySelectorAll('#pokemon-grid .pokemon-item').forEach(item => {
+        item.classList.remove('selected');
+        item.style.display = 'block';
       });
 
       // Reset map view
