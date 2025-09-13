@@ -36,6 +36,7 @@ class Pokefuta:
     id: str
     title: str
     prefecture: str
+    city: str
     lat: float
     lng: float
     pokemons: List[str]
@@ -146,14 +147,23 @@ def parse_detail_html(detail_url: str, html: str, now_iso: str, logger: logging.
             if clean_name and clean_name not in pokemons:
                 pokemons.append(clean_name)
 
-    # prefecture (extract from title)
+    # prefecture and city extraction from title
     prefecture = ""
-    # First, try to extract from title (e.g., "鹿児島県/指宿市" -> "鹿児島県")
+    city = ""
+    # Extract from title (e.g., "鹿児島県/指宿市" -> "鹿児島県", "指宿市")
     if title and '/' in title:
-        prefecture_part = title.split('/')[0].strip()
-        # Check if it looks like a prefecture name
-        if re.match(r'.*[都道府県]$', prefecture_part):
-            prefecture = prefecture_part
+        parts = title.split('/')
+        if len(parts) >= 2:
+            prefecture_part = parts[0].strip()
+            city_part = parts[1].strip()
+
+            # Check if it looks like a prefecture name
+            if re.match(r'.*[都道府県]$', prefecture_part):
+                prefecture = prefecture_part
+
+            # Extract city name (市町村)
+            if city_part:
+                city = city_part
 
     # If no prefecture found from title, try breadcrumb or navigation patterns
     if not prefecture:
@@ -212,7 +222,7 @@ def parse_detail_html(detail_url: str, html: str, now_iso: str, logger: logging.
     # id
     m = re.search(r"/desc/(\d+)/?", detail_url)
     pid = m.group(1) if m else ""
-    return Pokefuta(pid, title, prefecture or "", lat, lng, pokemons, detail_url, prefecture_site_url, now_iso)
+    return Pokefuta(pid, title, prefecture or "", city, lat, lng, pokemons, detail_url, prefecture_site_url, now_iso)
 
 def extract_from_detail(detail_url: str, now_iso: str, logger: logging.Logger) -> Optional[Pokefuta]:
     r = fetch(detail_url, logger)

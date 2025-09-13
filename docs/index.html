@@ -222,6 +222,7 @@
       <div class="stats">
         <div id="total-count">総数: <span>0</span></div>
         <div id="visible-count">表示: <span>0</span></div>
+        <div id="city-count">市町村: <span>0</span></div>
       </div>
     </div>
   </div>
@@ -253,6 +254,7 @@
     let allData = [];
     let prefectureCounts = {};
     let prefectureSiteCounts = {};
+    let cityCounts = {};
     let selectedPrefecture = '';
 
     async function loadPokefutaData() {
@@ -275,6 +277,12 @@
               prefectureSiteCounts[prefecture] = (prefectureSiteCounts[prefecture] || 0) + 1;
             }
 
+            // Count cities
+            if (data.city) {
+              const cityKey = `${prefecture}/${data.city}`;
+              cityCounts[cityKey] = (cityCounts[cityKey] || 0) + 1;
+            }
+
             const pokemons = data.pokemons && data.pokemons.length > 0
               ? data.pokemons.join(', ')
               : '—';
@@ -285,11 +293,13 @@
               ? `<br/><a href='${data.prefecture_site_url}' target='_blank' style='color: #28a745; text-decoration: none;'>🌐 ${prefecture}サイト</a>`
               : '';
 
+            const cityInfo = data.city ? `<br/><b>市町村:</b> ${data.city}` : '';
+
             const popupContent = `
               <div style='min-width:200px'>
                 <b>ID:</b> ${data.id}<br/>
                 <b>タイトル:</b> ${data.title}<br/>
-                <b>都道府県:</b> ${prefecture} <span class="prefecture-code">${prefectureCode}</span><br/>
+                <b>都道府県:</b> ${prefecture} <span class="prefecture-code">${prefectureCode}</span>${cityInfo}<br/>
                 <b>ポケモン:</b> ${pokemons}<br/>
                 <a href='${data.detail_url}' target='_blank' style='color: #007cba; text-decoration: none;'>📝 公式詳細</a>${prefectureSiteLink}
               </div>
@@ -458,9 +468,11 @@
     function updateStats(visibleCount = null) {
       const totalElement = document.querySelector('#total-count span');
       const visibleElement = document.querySelector('#visible-count span');
+      const cityElement = document.querySelector('#city-count span');
 
       totalElement.textContent = allMarkers.length;
       visibleElement.textContent = visibleCount !== null ? visibleCount : allMarkers.length;
+      cityElement.textContent = Object.keys(cityCounts).length;
     }
 
     function resetMap() {
