@@ -1,1 +1,8 @@
 manhole_images/*
+*.raw.ndjson
+*.log
+__pycache__/
+*.pyc
+*.pyo
+change_summary.json
+create_pr.flag

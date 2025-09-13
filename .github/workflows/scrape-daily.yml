@@ -31,13 +31,111 @@ jobs:
       - name: Run scraper
         run: |
           cd apps/scraper
-          python scrape_pokefuta.py --scan-min 1 --scan-max 450 --out pokefuta.ndjson --write-mode ndjson --sleep 1.0
+          python scrape_pokefuta.py --scan-min 1 --scan-max 450 --out pokefuta.raw.ndjson --write-mode ndjson --sleep 1.0
+
+      - name: Clean data and check for changes
+        run: |
+          cd apps/scraper
+          python clean_and_notify.py --input pokefuta.raw.ndjson --output pokefuta.ndjson
 
       - name: Update docs for GitHub Pages
         run: |
           cp apps/scraper/pokefuta.ndjson docs/pokefuta.ndjson
 
-      - name: Commit and push if changed
+      - name: Check if PR should be created
+        id: check_changes
+        run: |
+          cd apps/scraper
+          if [ -f "create_pr.flag" ]; then
+            echo "create_pr=true" >> $GITHUB_OUTPUT
+            echo "Changes detected - PR will be created"
+          else
+            echo "create_pr=false" >> $GITHUB_OUTPUT
+            echo "No changes detected"
+          fi
+
+      - name: Create PR branch if changes detected
+        if: steps.check_changes.outputs.create_pr == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+          # Create new branch for PR
+          branch_name="auto-update-$(date +'%Y%m%d-%H%M%S')"
+          git checkout -b "$branch_name"
+
+          # Add all changes
+          git add apps/scraper/pokefuta.ndjson docs/pokefuta.ndjson CHANGELOG.md
+
+          # Commit changes
+          git commit -m "📊 Automatic pokefuta data update - $(date +'%Y-%m-%d')
+
+          🤖 Generated with [Claude Code](https://claude.ai/code)
+
+          Co-Authored-By: Claude <noreply@anthropic.com>"
+
+          # Push branch
+          git push origin "$branch_name"
+
+          # Store branch name for PR creation
+          echo "BRANCH_NAME=$branch_name" >> $GITHUB_ENV
+
+      - name: Create Pull Request
+        if: steps.check_changes.outputs.create_pr == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd apps/scraper
+
+          # Read summary for PR body
+          if [ -f "change_summary.json" ]; then
+            # Extract data from summary
+            added_count=$(cat change_summary.json | jq -r '.added_count')
+            removed_count=$(cat change_summary.json | jq -r '.removed_count')
+            total_changes=$(cat change_summary.json | jq -r '.total_changes')
+            net_change=$(cat change_summary.json | jq -r '.net_change')
+            date=$(cat change_summary.json | jq -r '.date')
+
+            # Create PR body
+            pr_body="## 📊 Automatic Pokefuta Data Update - $date
+
+          ### 📈 Summary
+          - **Total Changes:** $total_changes
+          - **Added IDs:** $added_count
+          - **Removed IDs:** $removed_count
+          - **Net Change:** $net_change
+
+          ### 🔄 What Changed
+          This PR contains automatically detected changes to the pokefuta data:
+          - 🧹 **Data Cleaning:** Pokemon names normalized, duplicates removed
+          - 🗾 **Location Data:** Prefecture and city information updated
+          - 🌐 **Site Links:** Prefecture site URLs properly categorized
+          - 📊 **Changelog:** Updated with detailed change history
+
+          ### 🤖 Automation
+          This PR was automatically created by the daily scraping workflow.
+          - **Data Source:** Official Pokemon Local Acts website
+          - **Schedule:** Daily at 10:00 UTC
+          - **Quality:** Automatic data validation and cleaning applied
+
+          **View live map:** https://nishiokya.github.io/pokefuta-tracker/
+
+          ---
+          🤖 Generated with [Claude Code](https://claude.ai/code)"
+          else
+            pr_body="Automatic pokefuta data update"
+          fi
+
+          # Create PR
+          gh pr create \
+            --title "📊 Automatic pokefuta data update - $date" \
+            --body "$pr_body" \
+            --head "$BRANCH_NAME" \
+            --base main \
+            --label "automated,data-update"
+
+      - name: Regular update without PR
+        if: steps.check_changes.outputs.create_pr == 'false'
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
@@ -45,7 +143,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Update pokefuta data - $(date +'%Y-%m-%d %H:%M:%S JST')
+            git commit -m "🔄 Routine pokefuta data update - $(date +'%Y-%m-%d')
 
             🤖 Generated with [Claude Code](https://claude.ai/code)
 
