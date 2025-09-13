@@ -210,6 +210,27 @@
       display: inline-block;
     }
 
+    .count-badge-zero {
+      background: #e0e0e0;
+      color: #666;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: bold;
+      min-width: 20px;
+      text-align: center;
+      display: inline-block;
+    }
+
+    .prefecture-table tr.no-pokefuta {
+      opacity: 0.6;
+      cursor: default !important;
+    }
+
+    .prefecture-table tr.no-pokefuta:hover {
+      background: transparent !important;
+    }
+
     .stats {
       font-size: 12px;
       color: #666;
@@ -444,24 +465,33 @@
 
     function populatePrefectureFilter() {
       const select = document.getElementById('prefecture-filter');
-      const sortedPrefectures = Object.keys(prefectureCounts)
-        .filter(p => p !== '不明')
+
+      // Get all 47 prefectures and sort by code
+      const allPrefectures = Object.keys(prefectureCodeMap)
         .sort((a, b) => {
-          const codeA = prefectureCodeMap[a] || '99';
-          const codeB = prefectureCodeMap[b] || '99';
+          const codeA = prefectureCodeMap[a];
+          const codeB = prefectureCodeMap[b];
           return codeA.localeCompare(codeB);
         });
 
       // Add 不明 at the end if exists
       if (prefectureCounts['不明']) {
-        sortedPrefectures.push('不明');
+        allPrefectures.push('不明');
       }
 
-      sortedPrefectures.forEach(prefecture => {
+      allPrefectures.forEach(prefecture => {
         const option = document.createElement('option');
         option.value = prefecture;
         const code = prefectureCodeMap[prefecture] || '--';
-        option.textContent = `${code} ${prefecture} (${prefectureCounts[prefecture]})`;
+        const count = prefectureCounts[prefecture] || 0;
+        option.textContent = `${code} ${prefecture} (${count})`;
+
+        // Disable option if no pokefuta (but still show it)
+        if (count === 0 && prefecture !== '不明') {
+          option.disabled = true;
+          option.style.color = '#999';
+        }
+
         select.appendChild(option);
       });
 
@@ -470,35 +500,50 @@
 
     function populatePrefectureTable() {
       const tbody = document.getElementById('prefecture-table-body');
-      const sortedPrefectures = Object.entries(prefectureCounts)
-        .filter(([prefecture]) => prefecture !== '不明')
-        .sort(([a], [b]) => {
-          const codeA = prefectureCodeMap[a] || '99';
-          const codeB = prefectureCodeMap[b] || '99';
-          return codeA.localeCompare(codeB);
-        });
+
+      // Create array of all 47 prefectures with their counts
+      const allPrefectures = Object.keys(prefectureCodeMap).map(prefecture => [
+        prefecture,
+        prefectureCounts[prefecture] || 0
+      ]);
+
+      // Sort by prefecture code
+      allPrefectures.sort(([a], [b]) => {
+        const codeA = prefectureCodeMap[a];
+        const codeB = prefectureCodeMap[b];
+        return codeA.localeCompare(codeB);
+      });
 
       // Add 不明 at the end if exists
       if (prefectureCounts['不明']) {
-        sortedPrefectures.push(['不明', prefectureCounts['不明']]);
+        allPrefectures.push(['不明', prefectureCounts['不明']]);
       }
 
-      sortedPrefectures.forEach(([prefecture, count]) => {
+      allPrefectures.forEach(([prefecture, count]) => {
         const row = document.createElement('tr');
         const code = prefectureCodeMap[prefecture] || '--';
         const siteCount = prefectureSiteCounts[prefecture] || 0;
         const siteIcon = siteCount > 0 ? '🌐' : '—';
 
+        // Style row differently if no pokefuta
+        const countBadgeClass = count > 0 ? 'count-badge' : 'count-badge-zero';
+        const rowClass = count === 0 ? 'no-pokefuta' : '';
+
+        row.className = rowClass;
         row.innerHTML = `
           <td><span class="prefecture-code">${code}</span></td>
           <td>${prefecture}</td>
-          <td><span class="count-badge">${count}</span></td>
+          <td><span class="${countBadgeClass}">${count}</span></td>
           <td style="text-align: center;">${siteIcon}</td>
         `;
 
-        row.addEventListener('click', () => {
-          selectPrefectureFromTable(prefecture, row);
-        });
+        // Only add click handler if there are pokefuta
+        if (count > 0) {
+          row.addEventListener('click', () => {
+            selectPrefectureFromTable(prefecture, row);
+          });
+          row.style.cursor = 'pointer';
+        }
 
         tbody.appendChild(row);
       });
@@ -760,3 +805,13 @@
   </script>
 </body>
 </html>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LX58JGRPNV"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-LX58JGRPNV');
+</script>
