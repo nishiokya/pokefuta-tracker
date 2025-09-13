@@ -21,7 +21,7 @@ from urllib.parse import urljoin, urlparse, parse_qs
 import requests
 from bs4 import BeautifulSoup
 
-DEFAULT_BASE = "https://local.pokemon.jp/en/manhole/"
+DEFAULT_BASE = "https://local.pokemon.jp/manhole/"
 HEADERS = {"User-Agent": "pokefuta-tracker-scraper (+https://github.com/yourname/pokefuta-tracker)"}
 REQ_TIMEOUT = 20
 SLEEP_SEC = 0.6
@@ -95,23 +95,94 @@ def parse_detail_html(detail_url: str, html: str, now_iso: str, logger: logging.
             lat, lng = float(m.group(1)), float(m.group(3)); break
     if lat is None or lng is None:
         return None
-    # title
+
+    # title (Japanese site extraction)
     title = ""
+    # Try h1, h2 first
     h = soup.find(["h1","h2"])
-    if h and h.get_text(strip=True): title = h.get_text(strip=True)
-    # pokemons
+    if h and h.get_text(strip=True):
+        title = h.get_text(strip=True)
+    # If no title found, try specific class patterns
+    if not title:
+        title_elem = soup.find(class_=re.compile(r'title|heading', re.I))
+        if title_elem:
+            title = title_elem.get_text(strip=True)
+
+    # pokemons (Japanese site patterns)
     pokemons: List[str] = []
+    # Look for Pokemon names in various patterns
     for a in soup.select("a[href]"):
         t = a.get_text(strip=True)
-        if t and ("Pokédex" in t or "図鑑" in t):
-            name = t.replace("Pokédex","").strip()
-            if name: pokemons.append(name)
-    # prefecture (heuristic)
+        if t and ("図鑑" in t or "ポケモン" in t or "Pokédex" in t):
+            # Extract Pokemon name
+            name = re.sub(r'(図鑑|ポケモン|Pokédex|の)', '', t).strip()
+            if name and len(name) > 1:
+                pokemons.append(name)
+
+    # Also look for Pokemon names in text content
+    pokemon_patterns = [
+        r'ポケモン[：:]\s*([^\s、。]+)',
+        r'デザイン[：:]\s*([^\s、。]+)',
+        r'モチーフ[：:]\s*([^\s、。]+)'
+    ]
+    for pattern in pokemon_patterns:
+        matches = re.findall(pattern, soup.get_text())
+        for match in matches:
+            clean_name = re.sub(r'[^\w\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]', '', match).strip()
+            if clean_name and clean_name not in pokemons:
+                pokemons.append(clean_name)
+
+    # prefecture (Japanese site extraction)
     prefecture = ""
+    # Try breadcrumb or navigation patterns
     for a in reversed(soup.select("a[href]")):
         href = a.get("href",""); txt = a.get_text(strip=True)
         if PREF_PAGE_PAT.search(href) and txt:
             prefecture = txt; break
+
+    # If no prefecture found, try to extract from URL or page content
+    if not prefecture:
+        # Extract from URL path
+        url_parts = detail_url.split('/')
+        for part in url_parts:
+            if re.match(r'^[a-z]+$', part) and len(part) > 2:
+                # Try to map URL part to prefecture name
+                prefecture_map = {
+                    'kagoshima': '鹿児島県',
+                    'aomori': '青森県',
+                    'iwate': '岩手県',
+                    'miyagi': '宮城県',
+                    'fukushima': '福島県',
+                    'tokyo': '東京都',
+                    'osaka': '大阪府',
+                    'kyoto': '京都府',
+                    'hyogo': '兵庫県',
+                    'nara': '奈良県',
+                    'wakayama': '和歌山県',
+                    'shiga': '滋賀県',
+                    'mie': '三重県',
+                    'aichi': '愛知県',
+                    'shizuoka': '静岡県',
+                    'yamanashi': '山梨県',
+                    'nagano': '長野県',
+                    'gifu': '岐阜県',
+                    'fukui': '福井県',
+                    'ishikawa': '石川県',
+                    'toyama': '富山県',
+                    'niigata': '新潟県',
+                    'gunma': '群馬県',
+                    'tochigi': '栃木県',
+                    'ibaraki': '茨城県',
+                    'chiba': '千葉県',
+                    'saitama': '埼玉県',
+                    'kanagawa': '神奈川県',
+                    'hokkaido': '北海道',
+                    'okinawa': '沖縄県',
+                }
+                if part in prefecture_map:
+                    prefecture = prefecture_map[part]
+                    break
+
     # id
     m = re.search(r"/desc/(\d+)/?", detail_url)
     pid = m.group(1) if m else ""
@@ -145,7 +216,7 @@ def stream_prefecture_pages(base_url: str, logger: logging.Logger) -> Generator[
             href = a.get("href"); 
             if not href: continue
             absu = urljoin(url, href); p = urlparse(absu).path
-            if (p.startswith("/en/manhole/") or p.startswith("/manhole/")) and p.endswith(".html"):
+            if p.startswith("/manhole/") and p.endswith(".html"):
                 if absu not in seen:
                     seen.add(absu); queue.append(absu)
         time.sleep(SLEEP_SEC)

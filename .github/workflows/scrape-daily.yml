@@ -1,0 +1,68 @@
+name: Daily Pokefuta Scraping
+
+on:
+  schedule:
+    # Run daily at 2:00 AM JST (17:00 UTC)
+    - cron: '0 17 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  scrape-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run scraper
+        run: |
+          cd apps/scraper
+          python scrape_pokefuta.py --scan-min 1 --scan-max 2000 --out pokefuta.ndjson --write-mode ndjson --sleep 1.0
+
+      - name: Update docs for GitHub Pages
+        run: |
+          cp apps/scraper/pokefuta.ndjson docs/pokefuta.ndjson
+
+      - name: Commit and push if changed
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add apps/scraper/pokefuta.ndjson docs/pokefuta.ndjson
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update pokefuta data - $(date +'%Y-%m-%d %H:%M:%S JST')
+
+            🤖 Generated with [Claude Code](https://claude.ai/code)
+
+            Co-Authored-By: Claude <noreply@anthropic.com>"
+            git push
+          fi
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+        with:
+          enablement: true
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './docs'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
