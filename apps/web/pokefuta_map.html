@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pokéfuta Mini Map</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <style>
+    html, body, #map { height: 100%; margin: 0; }
+    .leaflet-popup-content-wrapper { border-radius: 12px; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script>
+    const map = L.map('map').setView([36.0, 138.0], 6);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    async function loadPokefutaData() {
+      try {
+        const response = await fetch('./pokefuta.ndjson');
+        const text = await response.text();
+        const lines = text.trim().split('\n');
+
+        lines.forEach(line => {
+          if (line.trim()) {
+            const data = JSON.parse(line);
+            const pokemons = data.pokemons && data.pokemons.length > 0
+              ? data.pokemons.join(', ')
+              : '—';
+
+            const popupContent = `
+              <div style='min-width:180px'>
+                <b>ID:</b> ${data.id}<br/>
+                <b>Title:</b> ${data.title}<br/>
+                <b>Prefecture:</b> ${data.prefecture || '—'}<br/>
+                <b>Pokémon:</b> ${pokemons}<br/>
+                <a href='${data.detail_url}' target='_blank'>Official detail</a>
+              </div>
+            `;
+
+            L.marker([data.lat, data.lng])
+              .addTo(map)
+              .bindPopup(popupContent);
+          }
+        });
+      } catch (error) {
+        console.error('Error loading pokefuta data:', error);
+      }
+    }
+
+    loadPokefutaData();
+  </script>
+</body>
+</html>
