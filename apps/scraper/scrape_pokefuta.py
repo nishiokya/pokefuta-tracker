@@ -42,7 +42,6 @@ class Pokefuta:
     pokemons: List[str]
     detail_url: str
     prefecture_site_url: str
-    source_last_checked: str
 
 # --- logging
 def setup_logger(level: str = "INFO") -> logging.Logger:
@@ -85,7 +84,7 @@ def fetch(url: str, logger: logging.Logger) -> requests.Response:
     raise RuntimeError(f"Failed to fetch {url}: {last}")
 
 # --- parse
-def parse_detail_html(detail_url: str, html: str, now_iso: str, logger: logging.Logger) -> Optional[Pokefuta]:
+def parse_detail_html(detail_url: str, html: str, logger: logging.Logger) -> Optional[Pokefuta]:
     soup = BeautifulSoup(html, "html.parser")
     # coords
     lat = lng = None
@@ -222,12 +221,12 @@ def parse_detail_html(detail_url: str, html: str, now_iso: str, logger: logging.
     # id
     m = re.search(r"/desc/(\d+)/?", detail_url)
     pid = m.group(1) if m else ""
-    return Pokefuta(pid, title, prefecture or "", city, lat, lng, pokemons, detail_url, prefecture_site_url, now_iso)
+    return Pokefuta(pid, title, prefecture or "", city, lat, lng, pokemons, detail_url, prefecture_site_url)
 
-def extract_from_detail(detail_url: str, now_iso: str, logger: logging.Logger) -> Optional[Pokefuta]:
+def extract_from_detail(detail_url: str, logger: logging.Logger) -> Optional[Pokefuta]:
     r = fetch(detail_url, logger)
     if r.status_code == 404: return None
-    return parse_detail_html(detail_url, r.text, now_iso, logger)
+    return parse_detail_html(detail_url, r.text, logger)
 
 # --- url streams (yield で逐次処理)
 def stream_prefecture_pages(base_url: str, logger: logging.Logger) -> Generator[str, None, None]:
@@ -340,8 +339,7 @@ def main():
             if not _running:
                 logger.warning("SIGINT received. Flushing and exiting...")
                 break
-            now_iso = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
-            rec = extract_from_detail(durl, now_iso, logger)
+            rec = extract_from_detail(durl, logger)
             processed += 1
             if rec:
                 successes += 1

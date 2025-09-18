@@ -92,8 +92,7 @@ def clean_pokefuta_data(input_file: str, output_file: str, logger: logging.Logge
                     'lng': data['lng'],
                     'pokemons': clean_pokemon_names(data.get('pokemons', [])),
                     'detail_url': data['detail_url'],
-                    'prefecture_site_url': data.get('prefecture_site_url', ''),
-                    'source_last_checked': data['source_last_checked']
+                    'prefecture_site_url': data.get('prefecture_site_url', '')
                 }
 
                 cleaned_data.append(cleaned_item)
