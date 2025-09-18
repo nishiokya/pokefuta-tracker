@@ -7,35 +7,42 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
   <style>
-    html, body { height: 100%; margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 50%, #ffe66d 100%);
+    }
 
     #controls {
       position: absolute;
       top: 10px;
       right: 10px;
       z-index: 1000;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fcff 100%);
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(255, 107, 107, 0.3);
       max-width: 320px;
       max-height: 85vh;
       overflow: hidden;
       display: flex;
       flex-direction: column;
+      border: 3px solid #ff6b6b;
     }
 
     .controls-header {
-      padding: 16px 20px 12px 20px;
-      border-bottom: 1px solid #eee;
-      background: #f8f9fa;
-      border-radius: 12px 12px 0 0;
+      padding: 18px 20px 14px 20px;
+      border-bottom: 3px solid #ffe66d;
+      background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+      border-radius: 13px 13px 0 0;
     }
 
     .controls-header h3 {
       margin: 0;
-      font-size: 16px;
-      color: #333;
-      font-weight: 600;
+      font-size: 18px;
+      color: white;
+      font-weight: 700;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     }
 
     .controls-content {
@@ -50,32 +57,38 @@
 
     .tab-buttons {
       display: flex;
-      border-bottom: 2px solid #eee;
+      border-bottom: 3px solid #ffe66d;
       margin-bottom: 16px;
+      background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(255, 107, 107, 0.2);
     }
 
     .tab-button {
       flex: 1;
-      padding: 12px 16px;
-      background: none;
+      padding: 14px 16px;
+      background: rgba(255, 255, 255, 0.9);
       border: none;
       font-size: 14px;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
-      color: #666;
-      transition: all 0.2s;
-      border-bottom: 2px solid transparent;
+      color: #2c5282;
+      transition: all 0.3s ease;
+      border-bottom: 4px solid transparent;
     }
 
     .tab-button:hover {
-      background: #f8f9fa;
-      color: #333;
+      background: rgba(255, 230, 109, 0.4);
+      color: #1a365d;
+      transform: translateY(-2px);
     }
 
     .tab-button.active {
-      color: #007cba;
-      border-bottom-color: #007cba;
-      background: #f0f8ff;
+      background: linear-gradient(135deg, #ff6b6b, #ff8a8a);
+      color: white;
+      border-bottom-color: #ffe66d;
+      box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
     }
 
     .tab-content {
@@ -88,72 +101,92 @@
 
     .filter-section {
       margin-bottom: 20px;
+      background: linear-gradient(135deg, #ffffff 0%, #f0f8ff 100%);
+      padding: 16px;
+      border-radius: 12px;
+      border: 2px solid #4ecdc4;
+      box-shadow: 0 4px 12px rgba(78, 205, 196, 0.1);
     }
 
     .filter-section h4 {
-      margin: 0 0 8px 0;
+      margin: 0 0 12px 0;
       font-size: 14px;
-      color: #555;
+      color: #2c5282;
       font-weight: 600;
     }
 
     .pokemon-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-      gap: 8px;
+      gap: 10px;
       max-height: 300px;
       overflow-y: auto;
-      border: 1px solid #eee;
-      border-radius: 6px;
-      padding: 10px;
+      border: 2px solid #4ecdc4;
+      border-radius: 12px;
+      padding: 12px;
+      background: linear-gradient(135deg, #ffffff 0%, #f0f8ff 100%);
     }
 
     .pokemon-item {
-      padding: 8px 10px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      background: white;
+      padding: 10px 12px;
+      border: 2px solid #4ecdc4;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #ffffff 0%, #f8fcff 100%);
       cursor: pointer;
       text-align: center;
       font-size: 12px;
-      transition: all 0.2s;
+      font-weight: 600;
+      transition: all 0.3s ease;
       user-select: none;
+      color: #2c5282;
     }
 
     .pokemon-item:hover {
-      background: #f0f8ff;
-      border-color: #007cba;
+      background: linear-gradient(135deg, #ffe66d, #fff2a6);
+      border-color: #ff6b6b;
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 6px 16px rgba(255, 107, 107, 0.2);
     }
 
     .pokemon-item.selected {
-      background: #007cba;
+      background: linear-gradient(135deg, #ff6b6b, #ff8a8a);
       color: white;
-      border-color: #005a8b;
+      border-color: #ffe66d;
+      box-shadow: 0 8px 20px rgba(255, 107, 107, 0.3);
     }
 
     .pokemon-count {
-      color: #666;
+      color: #4ecdc4;
       font-size: 10px;
-      margin-top: 2px;
+      margin-top: 4px;
+      background: linear-gradient(135deg, #ffe66d, #fff2a6);
+      padding: 2px 6px;
+      border-radius: 8px;
+      display: inline-block;
+      border: 1px solid #4ecdc4;
     }
 
     .pokemon-item.selected .pokemon-count {
-      color: #e6f3ff;
+      color: #2c5282;
+      background: linear-gradient(135deg, #ffe66d, #fff2a6);
+      border-color: #ffe66d;
     }
 
     #prefecture-filter {
       width: 100%;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
+      padding: 12px 14px;
+      border: 2px solid #4ecdc4;
+      border-radius: 8px;
       font-size: 14px;
-      background: white;
+      background: linear-gradient(180deg, #ffffff 0%, #f0f8ff 100%);
+      color: #2c5282;
+      font-weight: 500;
     }
 
     #prefecture-filter:focus {
       outline: none;
-      border-color: #007cba;
-      box-shadow: 0 0 0 3px rgba(0,124,186,0.1);
+      border-color: #ff6b6b;
+      box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.2);
     }
 
     .prefecture-table {
@@ -161,60 +194,66 @@
       border-collapse: collapse;
       font-size: 13px;
       margin-top: 10px;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(78, 205, 196, 0.1);
     }
 
     .prefecture-table th,
     .prefecture-table td {
       padding: 8px 6px;
       text-align: left;
-      border-bottom: 1px solid #eee;
+      border-bottom: 1px solid #e0f2f1;
     }
 
     .prefecture-table th {
-      background: #f8f9fa;
+      background: linear-gradient(135deg, #4ecdc4, #26a69a);
       font-weight: 600;
-      color: #555;
+      color: white;
       font-size: 12px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
 
     .prefecture-table tr:hover {
-      background: #f0f8ff;
+      background: linear-gradient(135deg, #ffe66d, #fff2a6);
       cursor: pointer;
     }
 
     .prefecture-table tr.selected {
-      background: #e3f2fd;
-      color: #1976d2;
+      background: linear-gradient(135deg, #ff6b6b, #ff8a8a);
+      color: white;
     }
 
     .prefecture-code {
       font-family: 'Monaco', 'Menlo', monospace;
-      background: #f1f3f4;
-      padding: 2px 6px;
-      border-radius: 3px;
+      background: linear-gradient(135deg, #4ecdc4, #26a69a);
+      color: white;
+      padding: 3px 7px;
+      border-radius: 6px;
       font-size: 11px;
       font-weight: bold;
     }
 
     .count-badge {
-      background: #007cba;
+      background: linear-gradient(135deg, #ff6b6b, #ff8a8a);
       color: white;
-      padding: 2px 8px;
-      border-radius: 12px;
+      padding: 3px 10px;
+      border-radius: 15px;
       font-size: 11px;
       font-weight: bold;
       min-width: 20px;
       text-align: center;
       display: inline-block;
+      box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
     }
 
     .count-badge-zero {
-      background: #e0e0e0;
+      background: linear-gradient(135deg, #e0e0e0, #cccccc);
       color: #666;
-      padding: 2px 8px;
-      border-radius: 12px;
+      padding: 3px 10px;
+      border-radius: 15px;
       font-size: 11px;
       font-weight: bold;
       min-width: 20px;
@@ -242,36 +281,43 @@
     }
 
     .reset-btn {
-      background: #007cba;
+      background: linear-gradient(135deg, #ff6b6b, #ff8a8a);
       color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 6px;
+      border: 2px solid #ffe66d;
+      padding: 12px 20px;
+      border-radius: 25px;
       cursor: pointer;
-      font-size: 13px;
-      font-weight: 500;
+      font-size: 14px;
+      font-weight: 700;
       width: 100%;
-      margin-top: 12px;
-      transition: background 0.2s;
+      margin-top: 16px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
     }
 
     .reset-btn:hover {
-      background: #005a8b;
+      background: linear-gradient(135deg, #4ecdc4, #26a69a);
+      border-color: #ffe66d;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(78, 205, 196, 0.4);
     }
 
     .search-input {
       width: 100%;
-      padding: 8px 12px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
+      padding: 10px 14px;
+      border: 2px solid #4ecdc4;
+      border-radius: 8px;
       font-size: 13px;
       margin-bottom: 10px;
+      background: linear-gradient(180deg, #ffffff 0%, #f0f8ff 100%);
+      color: #2c5282;
+      font-weight: 500;
     }
 
     .search-input:focus {
       outline: none;
-      border-color: #007cba;
-      box-shadow: 0 0 0 3px rgba(0,124,186,0.1);
+      border-color: #ff6b6b;
+      box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.2);
     }
 
     #map { height: 100%; }
