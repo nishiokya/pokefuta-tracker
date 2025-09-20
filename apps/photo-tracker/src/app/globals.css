@@ -1,0 +1,275 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-gradient-to-br from-pokemon-red via-pokemon-blue to-pokemon-yellow;
+    @apply text-pokemon-darkBlue;
+    @apply overflow-x-hidden;
+  }
+
+  /* Custom scrollbar for webkit browsers */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-100 rounded-lg;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-pokemon-blue rounded-lg;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-pokemon-red;
+  }
+}
+
+@layer components {
+  /* Pokemon-themed components */
+  .card-pokemon {
+    @apply bg-gradient-to-br from-white to-pokemon-lightBlue;
+    @apply border-2 border-pokemon-blue;
+    @apply rounded-2xl shadow-pokemon;
+    @apply backdrop-blur-sm;
+  }
+
+  .btn-pokemon {
+    @apply bg-gradient-to-r from-pokemon-red to-pink-500;
+    @apply text-white font-bold;
+    @apply px-6 py-3 rounded-full;
+    @apply shadow-pokemon;
+    @apply transition-all duration-300;
+    @apply border-2 border-pokemon-yellow;
+  }
+
+  .btn-pokemon:hover {
+    @apply shadow-pokemon-hover;
+    @apply transform scale-105;
+    @apply bg-gradient-to-r from-pokemon-blue to-cyan-500;
+  }
+
+  .btn-pokemon:disabled {
+    @apply opacity-50 cursor-not-allowed;
+    @apply transform scale-100;
+  }
+
+  .btn-pokemon-secondary {
+    @apply bg-gradient-to-r from-pokemon-blue to-cyan-500;
+    @apply text-white font-semibold;
+    @apply px-4 py-2 rounded-lg;
+    @apply border border-pokemon-yellow;
+    @apply transition-all duration-300;
+  }
+
+  .btn-pokemon-secondary:hover {
+    @apply bg-gradient-to-r from-pokemon-yellow to-yellow-400;
+    @apply text-pokemon-darkBlue;
+    @apply transform -translate-y-1;
+  }
+
+  .input-pokemon {
+    @apply bg-white/90 backdrop-blur-sm;
+    @apply border-2 border-pokemon-blue;
+    @apply rounded-lg px-4 py-3;
+    @apply focus:border-pokemon-red focus:ring-2 focus:ring-pokemon-red/20;
+    @apply transition-all duration-300;
+  }
+
+  .badge-pokemon {
+    @apply bg-gradient-to-r from-pokemon-yellow to-yellow-400;
+    @apply text-pokemon-darkBlue font-bold;
+    @apply px-3 py-1 rounded-full text-sm;
+    @apply shadow-sm;
+  }
+
+  /* Loading animations */
+  .loading-pokemon {
+    @apply animate-pulse;
+  }
+
+  .loading-spin {
+    animation: pokemon-spin 1s linear infinite;
+  }
+
+  @keyframes pokemon-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  /* Map styles */
+  .map-container {
+    @apply w-full h-full rounded-2xl overflow-hidden;
+    @apply border-4 border-pokemon-blue;
+    @apply shadow-pokemon;
+  }
+
+  /* Photo grid */
+  .photo-grid {
+    @apply grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4;
+  }
+
+  .photo-item {
+    @apply relative aspect-square rounded-lg overflow-hidden;
+    @apply border-2 border-pokemon-blue;
+    @apply shadow-sm hover:shadow-pokemon;
+    @apply transition-all duration-300;
+    @apply cursor-pointer;
+  }
+
+  .photo-item:hover {
+    @apply transform scale-105;
+    @apply border-pokemon-red;
+  }
+
+  /* Visit card */
+  .visit-card {
+    @apply card-pokemon p-4 mb-4;
+    @apply hover:shadow-pokemon-hover;
+    @apply transition-all duration-300;
+    @apply cursor-pointer;
+  }
+
+  .visit-card:hover {
+    @apply transform -translate-y-2;
+  }
+
+  /* Navigation */
+  .nav-pokemon {
+    @apply fixed bottom-0 left-0 right-0;
+    @apply bg-gradient-to-r from-pokemon-red via-pokemon-blue to-pokemon-yellow;
+    @apply border-t-4 border-white;
+    @apply p-4;
+    @apply backdrop-blur-lg;
+  }
+
+  .nav-item {
+    @apply flex flex-col items-center justify-center;
+    @apply text-white font-semibold;
+    @apply py-2 px-3 rounded-lg;
+    @apply transition-all duration-300;
+  }
+
+  .nav-item.active {
+    @apply bg-white/20 backdrop-blur-sm;
+    @apply shadow-sm;
+  }
+
+  .nav-item:hover {
+    @apply bg-white/10;
+    @apply transform -translate-y-1;
+  }
+}
+
+@layer utilities {
+  /* Custom utilities for Pokemon theme */
+  .text-shadow-pokemon {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .backdrop-pokemon {
+    backdrop-filter: blur(10px) saturate(180%);
+    background: rgba(255, 255, 255, 0.85);
+  }
+
+  /* Responsive utilities */
+  .container-pokemon {
+    @apply max-w-md mx-auto px-4;
+  }
+
+  .safe-area-inset {
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-top: env(safe-area-inset-top);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+}
+
+/* Leaflet map overrides for Pokemon theme */
+.leaflet-container {
+  font-family: inherit;
+}
+
+.leaflet-popup-content-wrapper {
+  @apply card-pokemon !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3) !important;
+}
+
+.leaflet-popup-tip {
+  @apply bg-pokemon-blue !important;
+}
+
+.leaflet-control {
+  @apply card-pokemon !important;
+  border: 2px solid theme('colors.pokemon.blue') !important;
+}
+
+.leaflet-control a {
+  @apply text-pokemon-darkBlue !important;
+}
+
+.leaflet-control a:hover {
+  @apply bg-pokemon-yellow text-pokemon-darkBlue !important;
+}
+
+/* Custom marker styles */
+.marker-visited {
+  filter: hue-rotate(90deg) saturate(1.2);
+}
+
+.marker-unvisited {
+  opacity: 0.6;
+  filter: grayscale(0.5);
+}
+
+/* Photo upload styles */
+.dropzone {
+  @apply border-2 border-dashed border-pokemon-blue;
+  @apply rounded-2xl p-8;
+  @apply bg-white/50 backdrop-blur-sm;
+  @apply transition-all duration-300;
+  @apply cursor-pointer;
+}
+
+.dropzone:hover {
+  @apply border-pokemon-red bg-pokemon-lightBlue/30;
+}
+
+.dropzone.active {
+  @apply border-pokemon-yellow bg-pokemon-yellow/20;
+  @apply shadow-pokemon;
+}
+
+/* Progress bar */
+.progress-pokemon {
+  @apply w-full bg-gray-200 rounded-full h-3;
+  @apply overflow-hidden;
+}
+
+.progress-pokemon-bar {
+  @apply h-full bg-gradient-to-r from-pokemon-red to-pokemon-blue;
+  @apply rounded-full transition-all duration-300;
+  @apply relative overflow-hidden;
+}
+
+.progress-pokemon-bar::after {
+  content: '';
+  @apply absolute inset-0;
+  @apply bg-gradient-to-r from-transparent via-white/30 to-transparent;
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
