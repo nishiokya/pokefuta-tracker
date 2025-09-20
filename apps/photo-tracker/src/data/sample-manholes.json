@@ -1,0 +1,72 @@
+[
+  {
+    "id": "sample-1",
+    "name": "ピカチュウマンホール",
+    "description": "ピカチュウが描かれた可愛いマンホール",
+    "prefecture": "神奈川県",
+    "city": "横浜市",
+    "address": "横浜市みなとみらい21",
+    "latitude": 35.4595,
+    "longitude": 139.6317,
+    "source_url": "https://example.com/pikachu-manhole",
+    "is_visited": true,
+    "last_visit": "2024-01-15T10:30:00Z",
+    "photo_count": 3
+  },
+  {
+    "id": "sample-2",
+    "name": "イーブイマンホール",
+    "description": "イーブイとその進化系が描かれたマンホール",
+    "prefecture": "東京都",
+    "city": "渋谷区",
+    "address": "渋谷区渋谷1-1-1",
+    "latitude": 35.6598,
+    "longitude": 139.7006,
+    "source_url": "https://example.com/eevee-manhole",
+    "is_visited": false,
+    "last_visit": null,
+    "photo_count": 0
+  },
+  {
+    "id": "sample-3",
+    "name": "ポッチャママンホール",
+    "description": "ポッチャマが泳いでいる様子のマンホール",
+    "prefecture": "北海道",
+    "city": "札幌市",
+    "address": "札幌市中央区大通西1",
+    "latitude": 43.0642,
+    "longitude": 141.3469,
+    "source_url": "https://example.com/piplup-manhole",
+    "is_visited": true,
+    "last_visit": "2024-02-20T14:15:00Z",
+    "photo_count": 2
+  },
+  {
+    "id": "sample-4",
+    "name": "カビゴンマンホール",
+    "description": "大きなカビゴンが寝ているマンホール",
+    "prefecture": "大阪府",
+    "city": "大阪市",
+    "address": "大阪市中央区道頓堀1",
+    "latitude": 34.6686,
+    "longitude": 135.5023,
+    "source_url": "https://example.com/snorlax-manhole",
+    "is_visited": false,
+    "last_visit": null,
+    "photo_count": 0
+  },
+  {
+    "id": "sample-5",
+    "name": "ゲンガーマンホール",
+    "description": "夜の街にぴったりなゲンガーのマンホール",
+    "prefecture": "京都府",
+    "city": "京都市",
+    "address": "京都市下京区烏丸通四条下ル",
+    "latitude": 35.0056,
+    "longitude": 135.7681,
+    "source_url": "https://example.com/gengar-manhole",
+    "is_visited": true,
+    "last_visit": "2024-01-08T16:45:00Z",
+    "photo_count": 1
+  }
+]

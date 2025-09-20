@@ -74,7 +74,7 @@
   .btn-pokemon-secondary:hover {
     @apply bg-gradient-to-r from-pokemon-yellow to-yellow-400;
     @apply text-pokemon-darkBlue;
-    @apply transform translateY(-1px);
+    @apply transform -translate-y-1;
   }
 
   .input-pokemon {
@@ -140,7 +140,7 @@
   }
 
   .visit-card:hover {
-    @apply transform translateY(-2px);
+    @apply transform -translate-y-2;
   }
 
   /* Navigation */
@@ -166,7 +166,7 @@
 
   .nav-item:hover {
     @apply bg-white/10;
-    @apply transform translateY(-1px);
+    @apply transform -translate-y-1;
   }
 }
 
