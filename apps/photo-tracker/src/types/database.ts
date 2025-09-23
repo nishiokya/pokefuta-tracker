@@ -101,7 +101,8 @@ export interface Database {
       photo: {
         Row: {
           id: string;
-          visit_id: string;
+          visit_id: string | null;
+          manhole_id: number | null;
           storage_provider: string;
           storage_key: string;
           original_name: string | null;
@@ -115,24 +116,15 @@ export interface Database {
           thumbnail_320: string | null;
           thumbnail_800: string | null;
           thumbnail_1600: string | null;
+          binary_data: ArrayBuffer | null;
+          thumbnail_small: ArrayBuffer | null;
+          thumbnail_medium: ArrayBuffer | null;
+          metadata: Record<string, any> | null;
         };
         Insert: {
           id?: string;
-          visit_id: string;
-          storage_provider?: string;
-          storage_key: string;
-          original_name?: string | null;
-          width?: number | null;
-          height?: number | null;
-          file_size?: number | null;
-          content_type?: string;
-          exif?: ExifData | null;
-          sha256?: string | null;
-          thumbnail_320?: string | null;
-          thumbnail_800?: string | null;
-          thumbnail_1600?: string | null;
-        };
-        Update: {
+          visit_id?: string | null;
+          manhole_id?: number | null;
           storage_provider?: string;
           storage_key?: string;
           original_name?: string | null;
@@ -145,6 +137,30 @@ export interface Database {
           thumbnail_320?: string | null;
           thumbnail_800?: string | null;
           thumbnail_1600?: string | null;
+          binary_data?: ArrayBuffer | null;
+          thumbnail_small?: ArrayBuffer | null;
+          thumbnail_medium?: ArrayBuffer | null;
+          metadata?: Record<string, any> | null;
+        };
+        Update: {
+          visit_id?: string | null;
+          manhole_id?: number | null;
+          storage_provider?: string;
+          storage_key?: string;
+          original_name?: string | null;
+          width?: number | null;
+          height?: number | null;
+          file_size?: number | null;
+          content_type?: string;
+          exif?: ExifData | null;
+          sha256?: string | null;
+          thumbnail_320?: string | null;
+          thumbnail_800?: string | null;
+          thumbnail_1600?: string | null;
+          binary_data?: ArrayBuffer | null;
+          thumbnail_small?: ArrayBuffer | null;
+          thumbnail_medium?: ArrayBuffer | null;
+          metadata?: Record<string, any> | null;
         };
       };
       shared_link: {
@@ -176,6 +192,54 @@ export interface Database {
           description?: string | null;
           expires_at?: string | null;
           is_active?: boolean;
+        };
+      };
+      image: {
+        Row: {
+          id: string;
+          photo_id: string | null;
+          manhole_id: number | null;
+          filename: string;
+          content_type: string;
+          file_size: number;
+          width: number | null;
+          height: number | null;
+          binary_data: ArrayBuffer;
+          thumbnail_small: ArrayBuffer | null;
+          thumbnail_medium: ArrayBuffer | null;
+          created_at: string;
+          updated_at: string;
+          exif_data: ExifData | null;
+          metadata: Record<string, any> | null;
+        };
+        Insert: {
+          id?: string;
+          photo_id?: string | null;
+          manhole_id?: number | null;
+          filename: string;
+          content_type: string;
+          file_size: number;
+          width?: number | null;
+          height?: number | null;
+          binary_data: ArrayBuffer;
+          thumbnail_small?: ArrayBuffer | null;
+          thumbnail_medium?: ArrayBuffer | null;
+          exif_data?: ExifData | null;
+          metadata?: Record<string, any> | null;
+        };
+        Update: {
+          photo_id?: string | null;
+          manhole_id?: number | null;
+          filename?: string;
+          content_type?: string;
+          file_size?: number;
+          width?: number | null;
+          height?: number | null;
+          binary_data?: ArrayBuffer;
+          thumbnail_small?: ArrayBuffer | null;
+          thumbnail_medium?: ArrayBuffer | null;
+          exif_data?: ExifData | null;
+          metadata?: Record<string, any> | null;
         };
       };
     };
@@ -300,4 +364,18 @@ export type ManholeCandidate = {
   manhole: Database['public']['Tables']['manhole']['Row'];
   distance: number;
   confidence: number;
+};
+
+// Convenience type exports
+export type Manhole = Database['public']['Tables']['manhole']['Row'] & {
+  name?: string;
+  description?: string;
+  city?: string;
+  address?: string;
+  latitude?: number;
+  longitude?: number;
+  source_url?: string;
+  is_visited?: boolean;
+  last_visit?: string | null;
+  photo_count?: number;
 };
