@@ -134,6 +134,31 @@
       text-align: center;
     }
 
+    .manhole-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: flex-end;
+    }
+
+    .maps-link {
+      background: #4285f4;
+      color: white;
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 15px;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: inline-block;
+    }
+
+    .maps-link:hover {
+      background: #3367d6;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
     .loading {
       text-align: center;
       padding: 40px;
@@ -170,8 +195,8 @@
         gap: 10px;
       }
 
-      .manhole-distance {
-        align-self: flex-start;
+      .manhole-actions {
+        align-items: flex-start;
       }
     }
   </style>
@@ -336,7 +361,9 @@
       }
 
       // Generate HTML
-      const html = filteredManholes.map(manhole => `
+      const html = filteredManholes.map(manhole => {
+        const mapsUrl = `https://www.google.com/maps?q=${manhole.lat},${manhole.lng}`;
+        return `
         <div class="manhole-item">
           <div class="manhole-info">
             <div class="manhole-title">${manhole.title || `マンホール #${manhole.id}`}</div>
@@ -345,9 +372,13 @@
               ${manhole.pokemons.map(pokemon => `<span class="manhole-pokemon">${pokemon}</span>`).join('')}
             </div>
           </div>
-          <div class="manhole-distance">${formatDistance(manhole.distance)}</div>
+          <div class="manhole-actions">
+            <div class="manhole-distance">${formatDistance(manhole.distance)}</div>
+            <a href="${mapsUrl}" target="_blank" class="maps-link">🗺️ 地図で見る</a>
+          </div>
         </div>
-      `).join('');
+        `;
+      }).join('');
 
       listDiv.innerHTML = html;
     }
