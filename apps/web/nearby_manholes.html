@@ -134,6 +134,31 @@
       text-align: center;
     }
 
+    .manhole-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: flex-end;
+    }
+
+    .maps-link {
+      background: #4285f4;
+      color: white;
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 15px;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: inline-block;
+    }
+
+    .maps-link:hover {
+      background: #3367d6;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
     .loading {
       text-align: center;
       padding: 40px;
@@ -170,8 +195,8 @@
         gap: 10px;
       }
 
-      .manhole-distance {
-        align-self: flex-start;
+      .manhole-actions {
+        align-items: flex-start;
       }
     }
   </style>
@@ -181,7 +206,7 @@
     <div class="header">
       <h1>🕳️ 近くのポケモンマンホール</h1>
       <p>あなたの現在地から近いポケふたを見つけましょう！</p>
-      <a href="pokefuta_map.html" style="display: inline-block; background: rgba(255, 255, 255, 0.2); color: white; text-decoration: none; padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 600; margin-top: 10px; border: 1px solid rgba(255, 255, 255, 0.3); transition: all 0.3s ease;" onmouseover="this.style.background='rgba(255, 255, 255, 0.3)'; this.style.transform='translateY(-1px)'" onmouseout="this.style.background='rgba(255, 255, 255, 0.2)'; this.style.transform='translateY(0)'">🗾 マップに戻る</a>
+      <a href="/" style="display: inline-block; background: rgba(255, 255, 255, 0.2); color: white; text-decoration: none; padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 600; margin-top: 10px; border: 1px solid rgba(255, 255, 255, 0.3); transition: all 0.3s ease;" onmouseover="this.style.background='rgba(255, 255, 255, 0.3)'; this.style.transform='translateY(-1px)'" onmouseout="this.style.background='rgba(255, 255, 255, 0.2)'; this.style.transform='translateY(0)'">🗾 マップに戻る</a>
     </div>
 
     <div class="location-status" id="locationStatus">
@@ -192,12 +217,12 @@
       <label for="distanceSelect">表示範囲:</label>
       <select id="distanceSelect" onchange="filterManholes()">
         <option value="1">1km以内</option>
-        <option value="3" selected>3km以内</option>
+        <option value="3">3km以内</option>
         <option value="5">5km以内</option>
         <option value="10">10km以内</option>
         <option value="20">20km以内</option>
         <option value="50">50km以内</option>
-        <option value="999999">すべて</option>
+        <option value="999999" selected>すべて</option>
       </select>
     </div>
 
@@ -336,7 +361,9 @@
       }
 
       // Generate HTML
-      const html = filteredManholes.map(manhole => `
+      const html = filteredManholes.map(manhole => {
+        const mapsUrl = `https://www.google.com/maps?q=${manhole.lat},${manhole.lng}`;
+        return `
         <div class="manhole-item">
           <div class="manhole-info">
             <div class="manhole-title">${manhole.title || `マンホール #${manhole.id}`}</div>
@@ -345,9 +372,13 @@
               ${manhole.pokemons.map(pokemon => `<span class="manhole-pokemon">${pokemon}</span>`).join('')}
             </div>
           </div>
-          <div class="manhole-distance">${formatDistance(manhole.distance)}</div>
+          <div class="manhole-actions">
+            <div class="manhole-distance">${formatDistance(manhole.distance)}</div>
+            <a href="${mapsUrl}" target="_blank" class="maps-link">🗺️ 地図で見る</a>
+          </div>
         </div>
-      `).join('');
+        `;
+      }).join('');
 
       listDiv.innerHTML = html;
     }
@@ -366,5 +397,15 @@
       }
     });
   </script>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LX58JGRPNV"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-LX58JGRPNV');
+</script>
 </body>
 </html>
