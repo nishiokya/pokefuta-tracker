@@ -32,6 +32,7 @@ jobs:
         run: |
           mkdir -p docs
           cp apps/web/pokefuta_map.html docs/index.html
+          cp apps/web/nearby_manholes.html docs/nearby_manholes.html
           cp apps/scraper/pokefuta.ndjson docs/pokefuta.ndjson
 
       - name: Upload artifact
