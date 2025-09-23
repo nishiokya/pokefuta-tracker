@@ -424,6 +424,12 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script>
+    const pokefutaIcon = L.icon({
+  iconUrl: './pokefuta_icon_32.png',  // 32px版を使う場合
+  iconSize: [32, 32],                 // アイコンのサイズ
+  iconAnchor: [16, 16],               // 中心に合わせる（[横/2, 縦/2]）
+  popupAnchor: [0, -16]               // ポップアップの位置補正
+});
     const map = L.map('map').setView([36.0, 138.0], 6);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
@@ -511,7 +517,7 @@
               </div>
             `;
 
-            const marker = L.marker([data.lat, data.lng])
+            const marker = L.marker([data.lat, data.lng], { icon: pokefutaIcon })
               .bindPopup(popupContent);
 
             marker.pokefutaData = data;
