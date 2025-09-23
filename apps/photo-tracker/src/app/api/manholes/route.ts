@@ -4,6 +4,19 @@ import { cookies } from 'next/headers';
 import { Database } from '@/types/database';
 import sampleManholes from '@/data/sample-manholes.json';
 
+// Helper functions to extract coordinates from PostGIS format
+function extractLatFromLocation(location: string): number | undefined {
+  if (!location) return undefined;
+  const match = location.match(/POINT\(([^\s]+)\s+([^\s]+)\)/);
+  return match ? parseFloat(match[2]) : undefined;
+}
+
+function extractLngFromLocation(location: string): number | undefined {
+  if (!location) return undefined;
+  const match = location.match(/POINT\(([^\s]+)\s+([^\s]+)\)/);
+  return match ? parseFloat(match[1]) : undefined;
+}
+
 export async function GET(request: NextRequest) {
   try {
     // Check if Supabase is configured
@@ -35,64 +48,70 @@ export async function GET(request: NextRequest) {
     const lat = searchParams.get('lat');
     const lng = searchParams.get('lng');
     const radius = searchParams.get('radius') || '50'; // km
-    const limit = parseInt(searchParams.get('limit') || '100');
+    const limit = parseInt(searchParams.get('limit') || '1000');
     const visited = searchParams.get('visited'); // 'true', 'false', or null for all
 
-    let query = supabase
-      .from('manhole')
-      .select(`
-        *,
-        visit!left (
-          id,
-          visited_at,
-          photo_count
-        )
-      `)
-      .limit(limit);
+    try {
+      // Try to fetch from manhole table
+      const { data: manholes, error } = await supabase
+        .from('manhole')
+        .select('*')
+        .limit(limit);
 
-    // Add geographic filtering if coordinates provided
-    if (lat && lng) {
-      // For now, we'll use a simple bounding box filter
-      // In production, you would use PostGIS functions
-      const latFloat = parseFloat(lat);
-      const lngFloat = parseFloat(lng);
-      const radiusKm = parseFloat(radius);
-      const latDelta = radiusKm / 111; // Approximate km per degree of latitude
-      const lngDelta = radiusKm / (111 * Math.cos(latFloat * Math.PI / 180));
+      if (error) {
+        console.error('Database error:', error);
+        // If there's a database error, fall back to sample data
+        throw new Error(`Database query failed: ${error.message}`);
+      }
 
-      query = query
-        .gte('latitude', latFloat - latDelta)
-        .lte('latitude', latFloat + latDelta)
-        .gte('longitude', lngFloat - lngDelta)
-        .lte('longitude', lngFloat + lngDelta);
+      // If we have data, transform it to our expected format
+      if (manholes && manholes.length > 0) {
+        const manholesWithVisitStatus = manholes.map(manhole => ({
+          ...manhole,
+          name: manhole.title || manhole.name || 'ポケふた',
+          description: manhole.description || '',
+          city: manhole.municipality || manhole.city || '',
+          address: manhole.address || '',
+          // Extract coordinates from PostGIS location if needed
+          latitude: manhole.latitude || extractLatFromLocation(manhole.location),
+          longitude: manhole.longitude || extractLngFromLocation(manhole.location),
+          is_visited: false, // Default to false since we don't have visit data yet
+          last_visit: null,
+          photo_count: 0
+        }));
+
+        // Apply visited filter to database results
+        let filteredManholes = manholesWithVisitStatus;
+        if (visited === 'true') {
+          filteredManholes = manholesWithVisitStatus.filter(m => m.is_visited);
+        } else if (visited === 'false') {
+          filteredManholes = manholesWithVisitStatus.filter(m => !m.is_visited);
+        }
+
+        return NextResponse.json(filteredManholes);
+      }
+
+      // If table is empty, fall back to sample data
+      console.log('Manhole table is empty, using sample data');
+      throw new Error('Table is empty');
+
+    } catch (dbError) {
+      console.log('Database error, falling back to sample data:', (dbError as Error).message);
+      // Fall back to sample data as before
+      const { searchParams } = new URL(request.url);
+      const visited = searchParams.get('visited');
+
+      let filteredManholes = sampleManholes;
+
+      // Apply visited filter
+      if (visited === 'true') {
+        filteredManholes = sampleManholes.filter(m => m.is_visited);
+      } else if (visited === 'false') {
+        filteredManholes = sampleManholes.filter(m => !m.is_visited);
+      }
+
+      return NextResponse.json(filteredManholes);
     }
-
-    // Add visited filter
-    if (visited === 'true') {
-      query = query.not('visit', 'is', null);
-    } else if (visited === 'false') {
-      query = query.is('visit', null);
-    }
-
-    const { data: manholes, error } = await query;
-
-    if (error) {
-      console.error('Error fetching manholes:', error);
-      return NextResponse.json(
-        { error: 'Failed to fetch manholes' },
-        { status: 500 }
-      );
-    }
-
-    // Transform data to include visit status
-    const manholesWithVisitStatus = manholes?.map(manhole => ({
-      ...manhole,
-      is_visited: manhole.visit && manhole.visit.length > 0,
-      last_visit: manhole.visit?.[0]?.visited_at || null,
-      photo_count: manhole.visit?.[0]?.photo_count || 0
-    })) || [];
-
-    return NextResponse.json(manholesWithVisitStatus);
 
   } catch (error) {
     console.error('API Error:', error);

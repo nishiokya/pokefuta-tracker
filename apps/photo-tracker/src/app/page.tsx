@@ -1,7 +1,54 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Camera, Map, History, Settings } from 'lucide-react';
 
+interface Stats {
+  totalManholes: number;
+  visitedManholes: number;
+  totalPhotos: number;
+}
+
 export default function HomePage() {
+  const [stats, setStats] = useState<Stats>({
+    totalManholes: 0,
+    visitedManholes: 0,
+    totalPhotos: 0
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadStats();
+  }, []);
+
+  const loadStats = async () => {
+    try {
+      // Fetch all manholes
+      const manholesResponse = await fetch('/api/manholes');
+      if (manholesResponse.ok) {
+        const manholes = await manholesResponse.json();
+
+        // Fetch visited manholes
+        const visitedResponse = await fetch('/api/manholes?visited=true');
+        const visitedManholes = visitedResponse.ok ? await visitedResponse.json() : [];
+
+        // Calculate photo count (sum of photo_count from visited manholes)
+        const totalPhotos = visitedManholes.reduce((sum: number, manhole: any) =>
+          sum + (manhole.photo_count || 0), 0);
+
+        setStats({
+          totalManholes: manholes.length,
+          visitedManholes: visitedManholes.length,
+          totalPhotos
+        });
+      }
+    } catch (error) {
+      console.error('Failed to load stats:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="container-pokemon min-h-screen safe-area-inset">
       {/* Header */}
@@ -16,20 +63,29 @@ export default function HomePage() {
 
       {/* Quick Stats */}
       <div className="card-pokemon p-6 mb-8">
-        <div className="grid grid-cols-3 gap-4 text-center">
-          <div>
-            <div className="text-2xl font-bold text-pokemon-red">0</div>
-            <div className="text-sm text-pokemon-darkBlue/70">訪問済み</div>
+        {loading ? (
+          <div className="text-center py-4">
+            <div className="loading-pokemon mb-2">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-r from-pokemon-red to-pokemon-blue loading-spin mx-auto"></div>
+            </div>
+            <p className="text-sm text-gray-600">統計を読み込み中...</p>
           </div>
-          <div>
-            <div className="text-2xl font-bold text-pokemon-blue">422</div>
-            <div className="text-sm text-pokemon-darkBlue/70">総マンホール</div>
+        ) : (
+          <div className="grid grid-cols-3 gap-4 text-center">
+            <div>
+              <div className="text-2xl font-bold text-pokemon-red">{stats.visitedManholes}</div>
+              <div className="text-sm text-pokemon-darkBlue/70">訪問済み</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-pokemon-blue">{stats.totalManholes}</div>
+              <div className="text-sm text-pokemon-darkBlue/70">総マンホール</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-pokemon-yellow">{stats.totalPhotos}</div>
+              <div className="text-sm text-pokemon-darkBlue/70">写真</div>
+            </div>
           </div>
-          <div>
-            <div className="text-2xl font-bold text-pokemon-yellow">0</div>
-            <div className="text-sm text-pokemon-darkBlue/70">写真</div>
-          </div>
-        </div>
+        )}
       </div>
 
       {/* Main Actions */}
