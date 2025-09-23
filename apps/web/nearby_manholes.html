@@ -159,6 +159,24 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     }
 
+    .pokefuta-link {
+      background: #ff6b35;
+      color: white;
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 15px;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: inline-block;
+    }
+
+    .pokefuta-link:hover {
+      background: #e55a2b;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
     .loading {
       text-align: center;
       padding: 40px;
@@ -363,6 +381,7 @@
       // Generate HTML
       const html = filteredManholes.map(manhole => {
         const mapsUrl = `https://www.google.com/maps?q=${manhole.lat},${manhole.lng}`;
+        const pokefutaUrl = `https://local.pokemon.jp/manhole/detail/${manhole.id}/`;
         return `
         <div class="manhole-item">
           <div class="manhole-info">
@@ -374,7 +393,8 @@
           </div>
           <div class="manhole-actions">
             <div class="manhole-distance">${formatDistance(manhole.distance)}</div>
-            <a href="${mapsUrl}" target="_blank" class="maps-link">🗺️ 地図で見る</a>
+            <a href="${pokefutaUrl}" target="_blank" class="pokefuta-link">⚡ 公式情報</a>
+            <a href="${mapsUrl}" target="_blank" class="maps-link">📍 Google Map</a>
           </div>
         </div>
         `;
