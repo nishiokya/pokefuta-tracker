@@ -4,6 +4,17 @@ All notable changes to the pokefuta data will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2025-09-24] - Automatic Data Update
+
+### Added (5 items)
+
+- IDs: 427, 428, 429, 430, 431
+
+**Total changes:** 5
+**Net change:** +5
+
+---
+
 ## [2025-09-13] - Automatic Data Update
 
 ### Added (422 items)
