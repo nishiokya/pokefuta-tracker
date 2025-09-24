@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Pokefuta scraper with streaming scan, per-record save, and SIGINT-safe shutdown.
+Pokefuta scraper with ID scan streaming, per-record save, and SIGINT-safe shutdown.
 
 Examples:
-  # IDスキャンをストリーム処理（推奨）
-  python scrape_pokefuta.py --scan-min 1 --scan-max 1200 --out pokefuta.scan.v1.json
+  # Default usage - scans IDs 1-500 and outputs to NDJSON
+  python scrape_pokefuta.py
 
-  # 中断にさらに強い NDJSON 出力
-  python scrape_pokefuta.py --scan-min 1 --scan-max 1200 --out pokefuta.ndjson --write-mode ndjson
+  # Custom ID range
+  python scrape_pokefuta.py --scan-min 1 --scan-max 1200
 
-  # 従来の巡回（prefページ→詳細）も同様に逐次保存
-  python scrape_pokefuta.py --out pokefuta.v1.json
+  # JSON array output
+  python scrape_pokefuta.py --write-mode array --out pokefuta.json
 """
-import argparse, json, logging, os, re, signal, sys, tempfile, time
+import argparse, csv, json, logging, os, re, signal, tempfile, time
 from dataclasses import dataclass, asdict
 from typing import Dict, Generator, Iterable, List, Optional, Set
 from urllib.parse import urljoin, urlparse, parse_qs
@@ -27,8 +27,7 @@ REQ_TIMEOUT = 20
 SLEEP_SEC = 0.6
 RETRY = 3
 
-DETAIL_HREF_PATTERNS = ("/manhole/desc/",)
-PREF_PAGE_PAT = re.compile(r"/manhole/([a-z0-9_-]+)\.html$")
+# Removed traditional crawling patterns - only ID scan is supported
 
 # --- model
 @dataclass
@@ -37,6 +36,8 @@ class Pokefuta:
     title: str
     prefecture: str
     city: str
+    address: str
+    city_url: str
     lat: float
     lng: float
     pokemons: List[str]
@@ -68,6 +69,40 @@ def append_ndjson(path: str, rec: Dict):
         f.write(json.dumps(rec, ensure_ascii=False))
         f.write("\n")
 
+# --- dataset loading
+def load_city_links(dataset_dir: str) -> Dict[tuple, str]:
+    """Load city links from city_link.tsv. Returns {(prefecture, city): url}"""
+    city_links = {}
+    city_link_path = os.path.join(dataset_dir, "city_link.tsv")
+    if os.path.exists(city_link_path):
+        with open(city_link_path, "r", encoding="utf-8") as f:
+            for line in f:
+                parts = line.strip().split('\t')
+                if len(parts) >= 3:
+                    pref, city, url = parts[0], parts[1], parts[2]
+                    # Remove special markers like （県全体案内）
+                    clean_city = re.sub(r'[（(].*[）)]', '', city).strip()
+                    if clean_city:  # Only add if city name is not empty after cleaning
+                        city_links[(pref, clean_city)] = url
+    return city_links
+
+def load_titles_addresses(dataset_dir: str) -> tuple[Dict[str, str], Dict[str, str]]:
+    """Load titles and addresses from title.tsv. Returns (titles_dict, addresses_dict)"""
+    titles = {}
+    addresses = {}
+    title_path = os.path.join(dataset_dir, "title.tsv")
+    if os.path.exists(title_path):
+        with open(title_path, "r", encoding="utf-8") as f:
+            for line in f:
+                parts = line.strip().split('\t')
+                if len(parts) >= 3:
+                    id_str, title, address = parts[0], parts[1], parts[2]
+                    if title.strip():  # Add title if not empty
+                        titles[id_str] = title.strip()
+                    if address.strip():  # Add address if not empty
+                        addresses[id_str] = address.strip()
+    return titles, addresses
+
 # --- http
 def fetch(url: str, logger: logging.Logger) -> requests.Response:
     last = None
@@ -84,7 +119,7 @@ def fetch(url: str, logger: logging.Logger) -> requests.Response:
     raise RuntimeError(f"Failed to fetch {url}: {last}")
 
 # --- parse
-def parse_detail_html(detail_url: str, html: str, logger: logging.Logger) -> Optional[Pokefuta]:
+def parse_detail_html(detail_url: str, html: str, city_links: Dict[tuple, str], titles: Dict[str, str], addresses: Dict[str, str], logger: logging.Logger) -> Optional[Pokefuta]:
     soup = BeautifulSoup(html, "html.parser")
     # coords
     lat = lng = None
@@ -221,56 +256,27 @@ def parse_detail_html(detail_url: str, html: str, logger: logging.Logger) -> Opt
     # id
     m = re.search(r"/desc/(\d+)/?", detail_url)
     pid = m.group(1) if m else ""
-    return Pokefuta(pid, title, prefecture or "", city, lat, lng, pokemons, detail_url, prefecture_site_url)
 
-def extract_from_detail(detail_url: str, logger: logging.Logger) -> Optional[Pokefuta]:
+    # Get title from dataset (prioritize dataset title over scraped title)
+    dataset_title = titles.get(pid, "")
+    final_title = dataset_title if dataset_title else title
+
+    # Get address from dataset
+    address = addresses.get(pid, "")
+
+    # Get city URL from dataset
+    city_url = ""
+    if prefecture and city:
+        city_url = city_links.get((prefecture, city), "")
+
+    return Pokefuta(pid, final_title, prefecture or "", city, address, city_url, lat, lng, pokemons, detail_url, prefecture_site_url)
+
+def extract_from_detail(detail_url: str, city_links: Dict[tuple, str], titles: Dict[str, str], addresses: Dict[str, str], logger: logging.Logger) -> Optional[Pokefuta]:
     r = fetch(detail_url, logger)
     if r.status_code == 404: return None
-    return parse_detail_html(detail_url, r.text, logger)
+    return parse_detail_html(detail_url, r.text, city_links, titles, addresses, logger)
 
-# --- url streams (yield で逐次処理)
-def stream_prefecture_pages(base_url: str, logger: logging.Logger) -> Generator[str, None, None]:
-    """BFSで都道府県ページのURLを逐次yield。"""
-    seen: Set[str] = set(); queue: List[str] = [base_url]
-    logger.info("Collecting prefecture pages from %s", base_url)
-    while queue:
-        url = queue.pop(0)
-        r = fetch(url, logger)
-        if r.status_code == 404: continue
-        soup = BeautifulSoup(r.text, "html.parser")
-        # prefecture
-        for a in soup.select("a[href]"):
-            href = a.get("href"); 
-            if not href: continue
-            absu = urljoin(url, href)
-            if any(p in absu for p in DETAIL_HREF_PATTERNS): continue
-            if PREF_PAGE_PAT.search(urlparse(absu).path) and absu not in seen:
-                seen.add(absu); logger.debug("pref: %s", absu); yield absu
-        # region discovery
-        for a in soup.select("a[href]"):
-            href = a.get("href"); 
-            if not href: continue
-            absu = urljoin(url, href); p = urlparse(absu).path
-            if p.startswith("/manhole/") and p.endswith(".html"):
-                if absu not in seen:
-                    seen.add(absu); queue.append(absu)
-        time.sleep(SLEEP_SEC)
-
-def stream_detail_links_from_pref(pref_url: str, logger: logging.Logger) -> Generator[str, None, None]:
-    """都道府県ページから詳細URLを逐次yield。"""
-    r = fetch(pref_url, logger)
-    if r.status_code == 404: return
-    soup = BeautifulSoup(r.text, "html.parser")
-    seen: Set[str] = set()
-    for a in soup.select("a[href]"):
-        href = a.get("href") or ""
-        if any(p in href for p in DETAIL_HREF_PATTERNS):
-            u = urljoin(pref_url, href)
-            if "is_modal=1" not in u:
-                u = u + ("&" if "?" in u else "?") + "is_modal=1"
-            if u not in seen:
-                seen.add(u); logger.debug("detail: %s", u); yield u
-    time.sleep(SLEEP_SEC)
+# --- ID scan streaming (only supported method)
 
 def stream_scan_ids(base_top: str, id_min: int, id_max: int, logger: logging.Logger) -> Generator[str, None, None]:
     """IDレンジを逐次yield（存在するものだけ）。"""
@@ -301,17 +307,15 @@ def main():
     global SLEEP_SEC
     parser = argparse.ArgumentParser()
     parser.add_argument("--base", default=DEFAULT_BASE, help="Top page (EN or JA).")
-    parser.add_argument("--out", default="pokefuta.v1.json", help="Output path.")
+    parser.add_argument("--out", default="pokefuta.ndjson", help="Output path.")
+    parser.add_argument("--dataset-dir", default="dataset", help="Path to dataset directory with TSV files.")
     parser.add_argument("--sleep", type=float, default=SLEEP_SEC, help="Sleep seconds.")
     parser.add_argument("--log-level", default="INFO", help="DEBUG/INFO/WARN/ERROR")
-    parser.add_argument("--write-mode", choices=["array","ndjson"], default="array", help="Save as array JSON or NDJSON.")
+    parser.add_argument("--write-mode", choices=["array","ndjson"], default="ndjson", help="Save as array JSON or NDJSON.")
 
-    # scan / crawl
-    parser.add_argument("--scan-min", type=int)
-    parser.add_argument("--scan-max", type=int)
-    parser.add_argument("--auto-scan", action="store_true")  # （簡略化のため省略実装可）
-    parser.add_argument("--start-id", type=int, default=1)
-    parser.add_argument("--miss-threshold", type=int, default=100)
+    # ID scan range
+    parser.add_argument("--scan-min", type=int, default=1, help="Minimum ID to scan")
+    parser.add_argument("--scan-max", type=int, default=500, help="Maximum ID to scan")
     parser.add_argument("--limit", type=int, default=0, help="Stop after N successes (testing).")
     args = parser.parse_args()
 
@@ -319,15 +323,15 @@ def main():
     SLEEP_SEC = max(0.2, args.sleep)
     signal.signal(signal.SIGINT, _sigint_handler)
 
-    # URLを逐次ストリーム
+    # Load datasets
+    logger.info("Loading datasets from %s", args.dataset_dir)
+    city_links = load_city_links(args.dataset_dir)
+    titles, addresses = load_titles_addresses(args.dataset_dir)
+    logger.info("Loaded %d city links, %d titles and %d addresses", len(city_links), len(titles), len(addresses))
+
+    # ID scan streaming (only method)
     def detail_url_stream() -> Iterable[str]:
-        if args.scan_min is not None and args.scan_max is not None:
-            yield from stream_scan_ids(args.base, args.scan_min, args.scan_max, logger)
-        else:
-            base = args.base if args.base.endswith("/") else args.base + "/"
-            for pref in stream_prefecture_pages(base, logger):
-                for u in stream_detail_links_from_pref(pref, logger):
-                    yield u
+        yield from stream_scan_ids(args.base, args.scan_min, args.scan_max, logger)
 
     # 逐次保存
     out_array: List[Dict] = []
@@ -339,7 +343,7 @@ def main():
             if not _running:
                 logger.warning("SIGINT received. Flushing and exiting...")
                 break
-            rec = extract_from_detail(durl, logger)
+            rec = extract_from_detail(durl, city_links, titles, addresses, logger)
             processed += 1
             if rec:
                 successes += 1
