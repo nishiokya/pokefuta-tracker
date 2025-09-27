@@ -13,9 +13,9 @@ Examples:
   # JSON array output
   python scrape_pokefuta.py --write-mode array --out pokefuta.json
 """
-import argparse, csv, json, logging, os, re, signal, tempfile, time
+import argparse, json, logging, os, re, signal, tempfile, time
 from dataclasses import dataclass, asdict
-from typing import Dict, Generator, Iterable, List, Optional, Set
+from typing import Dict, Generator, Iterable, List, Optional
 from urllib.parse import urljoin, urlparse, parse_qs
 
 import requests
@@ -61,8 +61,19 @@ def atomic_write_json_array(path: str, payload: List[Dict]):
         tmp_path = tmp.name
     os.replace(tmp_path, path)
 
-def append_ndjson(path: str, rec: Dict):
-    """Append one JSON object per line."""
+def backup_existing_file(path: str, logger: logging.Logger):
+    """Create backup of existing file with timestamp."""
+    if os.path.exists(path):
+        timestamp = time.strftime("%Y%m%d_%H%M%S")
+        backup_path = f"{path}.backup_{timestamp}"
+        try:
+            os.rename(path, backup_path)
+            logger.info("Backed up existing file: %s -> %s", path, backup_path)
+        except OSError as e:
+            logger.warning("Failed to backup existing file %s: %s", path, e)
+
+def write_ndjson(path: str, rec: Dict):
+    """Write one JSON object per line (creates new file or overwrites)."""
     d = os.path.dirname(os.path.abspath(path)) or "."
     os.makedirs(d, exist_ok=True)
     with open(path, "a", encoding="utf-8") as f:
@@ -119,7 +130,7 @@ def fetch(url: str, logger: logging.Logger) -> requests.Response:
     raise RuntimeError(f"Failed to fetch {url}: {last}")
 
 # --- parse
-def parse_detail_html(detail_url: str, html: str, city_links: Dict[tuple, str], titles: Dict[str, str], addresses: Dict[str, str], logger: logging.Logger) -> Optional[Pokefuta]:
+def parse_detail_html(detail_url: str, html: str, city_links: Dict[tuple, str], titles: Dict[str, str], addresses: Dict[str, str]) -> Optional[Pokefuta]:
     soup = BeautifulSoup(html, "html.parser")
     # coords
     lat = lng = None
@@ -203,7 +214,7 @@ def parse_detail_html(detail_url: str, html: str, city_links: Dict[tuple, str], 
     if not prefecture:
         for a in reversed(soup.select("a[href]")):
             href = a.get("href",""); txt = a.get_text(strip=True)
-            if PREF_PAGE_PAT.search(href) and txt:
+            if re.search(r"/manhole/([a-z0-9_-]+)\.html$", href) and txt:
                 # Clean up prefecture name from navigation
                 cleaned_pref = re.sub(r'(トップへ|へ戻る|に戻る)$', '', txt).strip()
                 if re.match(r'.*[都道府県]$', cleaned_pref):
@@ -274,7 +285,7 @@ def parse_detail_html(detail_url: str, html: str, city_links: Dict[tuple, str], 
 def extract_from_detail(detail_url: str, city_links: Dict[tuple, str], titles: Dict[str, str], addresses: Dict[str, str], logger: logging.Logger) -> Optional[Pokefuta]:
     r = fetch(detail_url, logger)
     if r.status_code == 404: return None
-    return parse_detail_html(detail_url, r.text, city_links, titles, addresses, logger)
+    return parse_detail_html(detail_url, r.text, city_links, titles, addresses)
 
 # --- ID scan streaming (only supported method)
 
@@ -323,6 +334,9 @@ def main():
     SLEEP_SEC = max(0.2, args.sleep)
     signal.signal(signal.SIGINT, _sigint_handler)
 
+    # Backup existing output file
+    backup_existing_file(args.out, logger)
+
     # Load datasets
     logger.info("Loading datasets from %s", args.dataset_dir)
     city_links = load_city_links(args.dataset_dir)
@@ -349,8 +363,8 @@ def main():
                 successes += 1
                 obj = asdict(rec)
                 if args.write_mode == "ndjson":
-                    append_ndjson(args.out, obj)          # ★ 1件ごと即追記
-                    logger.info("OK #%d id=%s -> %s (NDJSON appended)", successes, rec.id, args.out)
+                    write_ndjson(args.out, obj)          # ★ 1件ごと即追記
+                    logger.info("OK #%d id=%s -> %s (NDJSON written)", successes, rec.id, args.out)
                 else:
                     out_array.append(obj)
                     atomic_write_json_array(args.out, out_array)  # ★ 1件ごと即アトミック上書き

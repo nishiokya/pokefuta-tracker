@@ -31,7 +31,7 @@ jobs:
       - name: Run scraper
         run: |
           cd apps/scraper
-          python scrape_pokefuta.py --scan-min 1 --scan-max 450 --out pokefuta.raw.ndjson --write-mode ndjson --sleep 1.0
+          python scrape_pokefuta.py 
 
       - name: Clean data and check for changes
         run: |
