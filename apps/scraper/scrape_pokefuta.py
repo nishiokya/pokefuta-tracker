@@ -34,6 +34,8 @@ RETRY = 3
 class Pokefuta:
     id: str
     title: str
+    title_en: str
+    title_zh: str
     prefecture: str
     city: str
     address: str
@@ -41,6 +43,8 @@ class Pokefuta:
     lat: float
     lng: float
     pokemons: List[str]
+    pokemons_en: List[str]
+    pokemons_zh: List[str]
     detail_url: str
     prefecture_site_url: str
 
@@ -143,9 +147,12 @@ def parse_detail_html(detail_url: str, html: str, city_links: Dict[tuple, str], 
     if lat is None or lng is None:
         return None
 
-    # title (Japanese site extraction)
+    # title extraction (Japanese, English, Chinese)
     title = ""
-    # Try h1, h2 first
+    title_en = ""
+    title_zh = ""
+
+    # Try h1, h2 first for Japanese
     h = soup.find(["h1","h2"])
     if h and h.get_text(strip=True):
         title = h.get_text(strip=True)
@@ -155,8 +162,23 @@ def parse_detail_html(detail_url: str, html: str, city_links: Dict[tuple, str], 
         if title_elem:
             title = title_elem.get_text(strip=True)
 
-    # pokemons and prefecture site detection
+    # Try to find English and Chinese titles
+    # Look for language selector or multilingual content
+    for elem in soup.find_all(["span", "div", "p", "h1", "h2", "h3"]):
+        elem_text = elem.get_text(strip=True)
+        # English title detection (contains mainly Latin characters)
+        if elem_text and re.match(r'^[a-zA-Z0-9\s\-\/,\.]+$', elem_text) and len(elem_text) > 3:
+            if not title_en or len(elem_text) > len(title_en):
+                title_en = elem_text
+        # Chinese title detection (contains Chinese characters)
+        elif elem_text and re.search(r'[\u4e00-\u9fff]', elem_text) and not re.search(r'[\u3040-\u309f\u30a0-\u30ff]', elem_text):
+            if not title_zh or len(elem_text) > len(title_zh):
+                title_zh = elem_text
+
+    # pokemons and prefecture site detection (multilingual)
     pokemons: List[str] = []
+    pokemons_en: List[str] = []
+    pokemons_zh: List[str] = []
     prefecture_site_url = ""
 
     # Look for Pokemon names and prefecture site links
@@ -170,27 +192,70 @@ def parse_detail_html(detail_url: str, html: str, city_links: Dict[tuple, str], 
                 prefecture_site_url = urljoin(detail_url, href)
             continue  # Don't add to pokemon list
 
-        # Extract Pokemon names
+        # Extract Pokemon names (Japanese)
         if t and ("図鑑" in t or "ポケモン" in t or "Pokédex" in t or "ずかん" in t):
             # Extract and normalize Pokemon name
             name = re.sub(r'(図鑑|ポケモン|Pokédex|ずかん|へ|の)', '', t).strip()
             if name and len(name) > 1:
                 pokemons.append(name)
 
-    # Also look for Pokemon names in text content
-    pokemon_patterns = [
+        # Extract English Pokemon names
+        elif t and re.match(r'^[a-zA-Z\s]+$', t) and len(t) > 2:
+            # Common English Pokemon name patterns
+            if any(word.lower() in ['pokemon', 'pikachu', 'charizard', 'blastoise', 'venusaur'] for word in t.split()):
+                clean_name = re.sub(r'\b(pokemon|pokédex)\b', '', t, flags=re.IGNORECASE).strip()
+                if clean_name and clean_name not in pokemons_en:
+                    pokemons_en.append(clean_name)
+
+        # Extract Chinese Pokemon names
+        elif t and re.search(r'[\u4e00-\u9fff]', t) and not re.search(r'[\u3040-\u309f\u30a0-\u30ff]', t):
+            # Chinese characters but not Japanese hiragana/katakana
+            clean_name = re.sub(r'(图鉴|寶可夢|精灵)', '', t).strip()
+            if clean_name and len(clean_name) > 1 and clean_name not in pokemons_zh:
+                pokemons_zh.append(clean_name)
+
+    # Also look for Pokemon names in text content (multilingual)
+    full_text = soup.get_text()
+
+    # Japanese patterns
+    pokemon_patterns_ja = [
         r'ポケモン[：:]\s*([^\s、。]+)',
         r'デザイン[：:]\s*([^\s、。]+)',
         r'モチーフ[：:]\s*([^\s、。]+)'
     ]
-    for pattern in pokemon_patterns:
-        matches = re.findall(pattern, soup.get_text())
+    for pattern in pokemon_patterns_ja:
+        matches = re.findall(pattern, full_text)
         for match in matches:
             clean_name = re.sub(r'[^\w\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]', '', match).strip()
-            # Remove common suffixes
             clean_name = re.sub(r'(ずかん|図鑑|へ)$', '', clean_name).strip()
             if clean_name and clean_name not in pokemons:
                 pokemons.append(clean_name)
+
+    # English patterns
+    pokemon_patterns_en = [
+        r'Pokémon[:\s]*([A-Za-z\s]+)',
+        r'Design[:\s]*([A-Za-z\s]+)',
+        r'Featured[:\s]*([A-Za-z\s]+)'
+    ]
+    for pattern in pokemon_patterns_en:
+        matches = re.findall(pattern, full_text)
+        for match in matches:
+            clean_name = re.sub(r'[^a-zA-Z\s]', '', match).strip()
+            if clean_name and len(clean_name) > 2 and clean_name not in pokemons_en:
+                pokemons_en.append(clean_name)
+
+    # Chinese patterns
+    pokemon_patterns_zh = [
+        r'寶可夢[：:]\s*([\u4e00-\u9fff]+)',
+        r'精灵[：:]\s*([\u4e00-\u9fff]+)',
+        r'設計[：:]\s*([\u4e00-\u9fff]+)'
+    ]
+    for pattern in pokemon_patterns_zh:
+        matches = re.findall(pattern, full_text)
+        for match in matches:
+            clean_name = re.sub(r'[^\u4e00-\u9fff]', '', match).strip()
+            if clean_name and len(clean_name) > 1 and clean_name not in pokemons_zh:
+                pokemons_zh.append(clean_name)
 
     # prefecture and city extraction from title
     prefecture = ""
@@ -280,7 +345,7 @@ def parse_detail_html(detail_url: str, html: str, city_links: Dict[tuple, str], 
     if prefecture and city:
         city_url = city_links.get((prefecture, city), "")
 
-    return Pokefuta(pid, final_title, prefecture or "", city, address, city_url, lat, lng, pokemons, detail_url, prefecture_site_url)
+    return Pokefuta(pid, final_title, title_en, title_zh, prefecture or "", city, address, city_url, lat, lng, pokemons, pokemons_en, pokemons_zh, detail_url, prefecture_site_url)
 
 def extract_from_detail(detail_url: str, city_links: Dict[tuple, str], titles: Dict[str, str], addresses: Dict[str, str], logger: logging.Logger) -> Optional[Pokefuta]:
     r = fetch(detail_url, logger)
