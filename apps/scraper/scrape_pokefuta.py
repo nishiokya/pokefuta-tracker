@@ -23,6 +23,17 @@ from bs4 import BeautifulSoup
 
 DEFAULT_BASE = "https://local.pokemon.jp/manhole/"
 HEADERS = {"User-Agent": "pokefuta-tracker-scraper (+https://github.com/yourname/pokefuta-tracker)"}
+
+# Language-specific headers
+HEADERS_EN = {
+    "User-Agent": "pokefuta-tracker-scraper (+https://github.com/yourname/pokefuta-tracker)",
+    "Accept-Language": "en-US,en;q=0.9"
+}
+
+HEADERS_ZH = {
+    "User-Agent": "pokefuta-tracker-scraper (+https://github.com/yourname/pokefuta-tracker)",
+    "Accept-Language": "zh-CN,zh;q=0.9"
+}
 REQ_TIMEOUT = 20
 SLEEP_SEC = 0.6
 RETRY = 3
@@ -34,6 +45,8 @@ RETRY = 3
 class Pokefuta:
     id: str
     title: str
+    title_en: str
+    title_zh: str
     prefecture: str
     city: str
     address: str
@@ -41,6 +54,8 @@ class Pokefuta:
     lat: float
     lng: float
     pokemons: List[str]
+    pokemons_en: List[str]
+    pokemons_zh: List[str]
     detail_url: str
     prefecture_site_url: str
 
@@ -81,6 +96,29 @@ def write_ndjson(path: str, rec: Dict):
         f.write("\n")
 
 # --- dataset loading
+def find_last_id_from_file(file_path: str, logger: logging.Logger) -> int:
+    """Find the highest ID from existing NDJSON file."""
+    if not os.path.exists(file_path):
+        logger.info("No existing file found at %s, starting from ID 1", file_path)
+        return 0
+
+    max_id = 0
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            for line in f:
+                if line.strip():
+                    try:
+                        data = json.loads(line)
+                        current_id = int(data.get('id', 0))
+                        max_id = max(max_id, current_id)
+                    except (json.JSONDecodeError, ValueError, KeyError):
+                        continue
+        logger.info("Found highest existing ID: %d in %s", max_id, file_path)
+        return max_id
+    except Exception as e:
+        logger.warning("Error reading existing file %s: %s", file_path, e)
+        return 0
+
 def load_city_links(dataset_dir: str) -> Dict[tuple, str]:
     """Load city links from city_link.tsv. Returns {(prefecture, city): url}"""
     city_links = {}
@@ -115,11 +153,13 @@ def load_titles_addresses(dataset_dir: str) -> tuple[Dict[str, str], Dict[str, s
     return titles, addresses
 
 # --- http
-def fetch(url: str, logger: logging.Logger) -> requests.Response:
+def fetch(url: str, logger: logging.Logger, headers: Dict = None) -> requests.Response:
+    if headers is None:
+        headers = HEADERS
     last = None
     for i in range(RETRY):
         try:
-            r = requests.get(url, headers=HEADERS, timeout=REQ_TIMEOUT)
+            r = requests.get(url, headers=headers, timeout=REQ_TIMEOUT)
             if r.status_code == 404:
                 logger.debug("GET %s -> 404", url); return r
             r.raise_for_status()
@@ -143,8 +183,9 @@ def parse_detail_html(detail_url: str, html: str, city_links: Dict[tuple, str], 
     if lat is None or lng is None:
         return None
 
-    # title (Japanese site extraction)
+    # title extraction (Japanese only - multilingual handled separately)
     title = ""
+
     # Try h1, h2 first
     h = soup.find(["h1","h2"])
     if h and h.get_text(strip=True):
@@ -155,7 +196,7 @@ def parse_detail_html(detail_url: str, html: str, city_links: Dict[tuple, str], 
         if title_elem:
             title = title_elem.get_text(strip=True)
 
-    # pokemons and prefecture site detection
+    # pokemons and prefecture site detection (Japanese only)
     pokemons: List[str] = []
     prefecture_site_url = ""
 
@@ -170,24 +211,24 @@ def parse_detail_html(detail_url: str, html: str, city_links: Dict[tuple, str], 
                 prefecture_site_url = urljoin(detail_url, href)
             continue  # Don't add to pokemon list
 
-        # Extract Pokemon names
+        # Extract Pokemon names (Japanese)
         if t and ("図鑑" in t or "ポケモン" in t or "Pokédex" in t or "ずかん" in t):
             # Extract and normalize Pokemon name
             name = re.sub(r'(図鑑|ポケモン|Pokédex|ずかん|へ|の)', '', t).strip()
             if name and len(name) > 1:
                 pokemons.append(name)
 
-    # Also look for Pokemon names in text content
-    pokemon_patterns = [
+    # Also look for Pokemon names in text content (Japanese)
+    full_text = soup.get_text()
+    pokemon_patterns_ja = [
         r'ポケモン[：:]\s*([^\s、。]+)',
         r'デザイン[：:]\s*([^\s、。]+)',
         r'モチーフ[：:]\s*([^\s、。]+)'
     ]
-    for pattern in pokemon_patterns:
-        matches = re.findall(pattern, soup.get_text())
+    for pattern in pokemon_patterns_ja:
+        matches = re.findall(pattern, full_text)
         for match in matches:
             clean_name = re.sub(r'[^\w\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]', '', match).strip()
-            # Remove common suffixes
             clean_name = re.sub(r'(ずかん|図鑑|へ)$', '', clean_name).strip()
             if clean_name and clean_name not in pokemons:
                 pokemons.append(clean_name)
@@ -280,12 +321,83 @@ def parse_detail_html(detail_url: str, html: str, city_links: Dict[tuple, str], 
     if prefecture and city:
         city_url = city_links.get((prefecture, city), "")
 
-    return Pokefuta(pid, final_title, prefecture or "", city, address, city_url, lat, lng, pokemons, detail_url, prefecture_site_url)
+    return Pokefuta(pid, final_title, "", "", prefecture or "", city, address, city_url, lat, lng, pokemons, [], [], detail_url, prefecture_site_url)
 
 def extract_from_detail(detail_url: str, city_links: Dict[tuple, str], titles: Dict[str, str], addresses: Dict[str, str], logger: logging.Logger) -> Optional[Pokefuta]:
-    r = fetch(detail_url, logger)
-    if r.status_code == 404: return None
-    return parse_detail_html(detail_url, r.text, city_links, titles, addresses)
+    # First, get Japanese content
+    r_ja = fetch(detail_url, logger, HEADERS)
+    if r_ja.status_code == 404:
+        return None
+
+    # Parse Japanese content first
+    pokefuta_ja = parse_detail_html(detail_url, r_ja.text, city_links, titles, addresses)
+    if not pokefuta_ja:
+        return None
+
+    # If Japanese data exists, also try to get English and Chinese versions
+    title_en = ""
+    title_zh = ""
+    pokemons_en = []
+    pokemons_zh = []
+
+    try:
+        # Try English version
+        r_en = fetch(detail_url, logger, HEADERS_EN)
+        if r_en.status_code == 200:
+            soup_en = BeautifulSoup(r_en.text, "html.parser")
+            # Extract English title
+            h_en = soup_en.find(["h1","h2"])
+            if h_en and h_en.get_text(strip=True):
+                title_en = h_en.get_text(strip=True)
+
+            # Extract English Pokemon names
+            for a in soup_en.select("a[href]"):
+                t = a.get_text(strip=True)
+                if t and ("Pokédex" in t or "Pokemon" in t):
+                    name = re.sub(r'(Pokédex|Pokemon)', '', t).strip()
+                    if name and len(name) > 1 and name not in pokemons_en:
+                        pokemons_en.append(name)
+
+        time.sleep(SLEEP_SEC)  # Rate limiting between requests
+
+        # Try Chinese version
+        r_zh = fetch(detail_url, logger, HEADERS_ZH)
+        if r_zh.status_code == 200:
+            soup_zh = BeautifulSoup(r_zh.text, "html.parser")
+            # Extract Chinese title
+            h_zh = soup_zh.find(["h1","h2"])
+            if h_zh and h_zh.get_text(strip=True):
+                title_zh = h_zh.get_text(strip=True)
+
+            # Extract Chinese Pokemon names
+            for a in soup_zh.select("a[href]"):
+                t = a.get_text(strip=True)
+                if t and ("图鉴" in t or "寶可夢" in t or "精灵" in t):
+                    name = re.sub(r'(图鉴|寶可夢|精灵)', '', t).strip()
+                    if name and len(name) > 1 and name not in pokemons_zh:
+                        pokemons_zh.append(name)
+
+    except Exception as e:
+        logger.warning(f"Failed to fetch multilingual data for {detail_url}: {e}")
+
+    # Update the pokefuta object with multilingual data
+    return Pokefuta(
+        pokefuta_ja.id,
+        pokefuta_ja.title,
+        title_en,
+        title_zh,
+        pokefuta_ja.prefecture,
+        pokefuta_ja.city,
+        pokefuta_ja.address,
+        pokefuta_ja.city_url,
+        pokefuta_ja.lat,
+        pokefuta_ja.lng,
+        pokefuta_ja.pokemons,
+        pokemons_en,
+        pokemons_zh,
+        pokefuta_ja.detail_url,
+        pokefuta_ja.prefecture_site_url
+    )
 
 # --- ID scan streaming (only supported method)
 
@@ -310,6 +422,7 @@ SLEEP_SEC = 0.6
 _running = True
 def _sigint_handler(signum, frame):
     global _running
+    _ = signum, frame  # Ignore unused parameters
     _running = False
     # 2度目の Ctrl-C で即時終了
     signal.signal(signal.SIGINT, signal.SIG_DFL)
@@ -325,8 +438,9 @@ def main():
     parser.add_argument("--write-mode", choices=["array","ndjson"], default="ndjson", help="Save as array JSON or NDJSON.")
 
     # ID scan range
-    parser.add_argument("--scan-min", type=int, default=1, help="Minimum ID to scan")
+    parser.add_argument("--scan-min", type=int, help="Minimum ID to scan (default: auto-detect from existing file)")
     parser.add_argument("--scan-max", type=int, default=500, help="Maximum ID to scan")
+    parser.add_argument("--full-crawl", action="store_true", help="Crawl all IDs from 1 (ignores existing file)")
     parser.add_argument("--limit", type=int, default=0, help="Stop after N successes (testing).")
     args = parser.parse_args()
 
@@ -334,8 +448,22 @@ def main():
     SLEEP_SEC = max(0.2, args.sleep)
     signal.signal(signal.SIGINT, _sigint_handler)
 
-    # Backup existing output file
-    backup_existing_file(args.out, logger)
+    # Determine scan range
+    if args.full_crawl:
+        scan_min = 1
+        logger.info("Full crawl mode: starting from ID 1")
+    elif args.scan_min is not None:
+        scan_min = args.scan_min
+        logger.info("Manual scan range: starting from ID %d", scan_min)
+    else:
+        # Auto-detect from existing file (incremental mode)
+        last_id = find_last_id_from_file(args.out, logger)
+        scan_min = last_id + 1
+        logger.info("Incremental mode: starting from ID %d (last found: %d)", scan_min, last_id)
+
+    # Backup existing output file (only for full crawl or array mode)
+    if args.full_crawl or args.write_mode == "array":
+        backup_existing_file(args.out, logger)
 
     # Load datasets
     logger.info("Loading datasets from %s", args.dataset_dir)
@@ -345,7 +473,7 @@ def main():
 
     # ID scan streaming (only method)
     def detail_url_stream() -> Iterable[str]:
-        yield from stream_scan_ids(args.base, args.scan_min, args.scan_max, logger)
+        yield from stream_scan_ids(args.base, scan_min, args.scan_max, logger)
 
     # 逐次保存
     out_array: List[Dict] = []

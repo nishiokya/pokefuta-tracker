@@ -86,11 +86,15 @@ def clean_pokefuta_data(input_file: str, output_file: str, logger: logging.Logge
                 cleaned_item = {
                     'id': data['id'],
                     'title': data.get('title', ''),
+                    'title_en': data.get('title_en', ''),
+                    'title_zh': data.get('title_zh', ''),
                     'prefecture': extract_prefecture_from_title(data.get('title', '')) or data.get('prefecture', ''),
                     'city': extract_city_from_title(data.get('title', '')),
                     'lat': data['lat'],
                     'lng': data['lng'],
                     'pokemons': clean_pokemon_names(data.get('pokemons', [])),
+                    'pokemons_en': clean_pokemon_names(data.get('pokemons_en', [])),
+                    'pokemons_zh': clean_pokemon_names(data.get('pokemons_zh', [])),
                     'detail_url': data['detail_url'],
                     'prefecture_site_url': data.get('prefecture_site_url', '')
                 }
@@ -236,39 +240,13 @@ def update_changelog(added_ids: Set[str], removed_ids: Set[str], changelog_path:
     logger.info(f"Updated changelog: {changelog_path}")
     return True
 
-def create_summary_file(added_ids: Set[str], removed_ids: Set[str], summary_path: str, logger: logging.Logger):
-    """Create a summary file for the PR description."""
-
-    if not added_ids and not removed_ids:
-        return
-
-    summary = {
-        "date": datetime.now().strftime('%Y-%m-%d'),
-        "total_changes": len(added_ids) + len(removed_ids),
-        "added_count": len(added_ids),
-        "removed_count": len(removed_ids),
-        "net_change": len(added_ids) - len(removed_ids),
-        "added_ids": sorted(list(added_ids), key=int),
-        "removed_ids": sorted(list(removed_ids), key=int)
-    }
-
-    with open(summary_path, 'w', encoding='utf-8') as f:
-        json.dump(summary, f, ensure_ascii=False, indent=2)
-
-    logger.info(f"Created summary file: {summary_path}")
-
-def should_create_pr(added_ids: Set[str], removed_ids: Set[str]) -> bool:
-    """Determine if a PR should be created based on changes."""
-    return bool(added_ids or removed_ids)
 
 def main():
     parser = argparse.ArgumentParser(description="Clean pokefuta data and generate changelog")
     parser.add_argument("--input", default="pokefuta.ndjson", help="Input NDJSON file")
     parser.add_argument("--output", default="pokefuta.ndjson", help="Output NDJSON file")
     parser.add_argument("--changelog", default="../../CHANGELOG.md", help="Changelog file path")
-    parser.add_argument("--summary", default="change_summary.json", help="Summary file path")
     parser.add_argument("--log-level", default="INFO", help="Logging level")
-    parser.add_argument("--no-changelog", action="store_true", help="Skip changelog update")
 
     args = parser.parse_args()
 
@@ -284,24 +262,15 @@ def main():
         logger.info("Change report:")
         logger.info("\n" + report)
 
-        # Update changelog and create summary if changes detected
+        # Update changelog if changes detected
         if added_ids or removed_ids:
-            if not args.no_changelog:
-                changelog_updated = update_changelog(added_ids, removed_ids, args.changelog, logger)
-                if changelog_updated:
-                    logger.info("Changelog updated successfully")
-
-            create_summary_file(added_ids, removed_ids, args.summary, logger)
-
-            # Create a flag file to indicate PR should be created
-            with open("create_pr.flag", "w") as f:
-                f.write("1")
-
-            logger.info("PR creation flag set")
+            changelog_updated = update_changelog(added_ids, removed_ids, args.changelog, logger)
+            if changelog_updated:
+                logger.info("Changelog updated successfully")
         else:
-            logger.info("No changes detected, skipping changelog and PR creation")
+            logger.info("No changes detected, skipping changelog update")
 
-        logger.info("Data cleaning and changelog generation complete")
+        logger.info("Data cleaning complete")
 
     except Exception as e:
         logger.error(f"Error during data cleaning: {e}")
