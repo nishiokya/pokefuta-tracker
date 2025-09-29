@@ -36,7 +36,7 @@ jobs:
       - name: Clean data and check for changes
         run: |
           cd apps/scraper
-          python clean_and_notify.py --input pokefuta.raw.ndjson --output pokefuta.ndjson
+          python clean_and_notify.py 
 
       - name: Update docs for GitHub Pages
         run: |
