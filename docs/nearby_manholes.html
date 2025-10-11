@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>近くのポケモンマンホール</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 50%, #ffe66d 100%);
+    }
+
+    .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+    .header { text-align: center; color: white; margin-bottom: 30px; }
+    .header h1 { font-size: 2.5em; margin: 0 0 10px 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+
+    .location-status { background: rgba(255, 255, 255, 0.9); padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center; font-weight: bold; }
+
+    .location-button { background: #ff6b6b; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+    .location-button:hover { background: #ff5252; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.3); }
+
+    .distance-filter { background: rgba(255, 255, 255, 0.9); padding: 15px; border-radius: 10px; margin-bottom: 20px; }
+    .distance-filter label { font-weight: bold; margin-right: 10px; }
+    .distance-filter select { padding: 8px 12px; border-radius: 5px; border: 2px solid #ddd; font-size: 14px; }
+
+    .manhole-list { background: rgba(255, 255, 255, 0.95); border-radius: 15px; padding: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
+    .manhole-item { border-bottom: 1px solid #eee; padding: 20px 0; display: flex; justify-content: space-between; align-items: flex-start; }
+    .manhole-item:last-child { border-bottom: none; }
+
+    .manhole-info { flex: 1; }
+    .manhole-title { font-size: 18px; font-weight: bold; color: #333; margin-bottom: 8px; }
+    .manhole-location { color: #666; margin-bottom: 5px; }
+    .manhole-pokemon { background: #4ecdc4; color: white; padding: 4px 8px; border-radius: 12px; font-size: 12px; display: inline-block; margin-right: 5px; margin-top: 5px; }
+
+    .manhole-distance { background: #ffe66d; color: #333; padding: 8px 12px; border-radius: 20px; font-weight: bold; font-size: 14px; min-width: 80px; text-align: center; }
+
+    .manhole-actions { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+
+    .maps-link, .pokefuta-link { text-decoration: none; padding: 6px 12px; border-radius: 15px; font-size: 12px; font-weight: 600; transition: all 0.3s ease; display: inline-block; color: white; }
+    .maps-link { background: #4285f4; }
+    .maps-link:hover { background: #3367d6; transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+    .pokefuta-link { background: #ff6b35; }
+    .pokefuta-link:hover { background: #e55a2b; transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+
+    .loading { text-align: center; padding: 40px; color: #666; }
+    .error { background: #ffebee; color: #c62828; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; }
+    .no-results { text-align: center; padding: 40px; color: #666; font-size: 18px; }
+
+    @media (max-width: 600px) {
+      .container { padding: 10px; }
+      .header h1 { font-size: 2em; }
+      .manhole-item { flex-direction: column; gap: 10px; }
+      .manhole-actions { align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🕳️ 近くのポケモンマンホール</h1>
+      <p>あなたの現在地から近いポケふたを見つけましょう！</p>
+      <a href="/pokefuta-tracker/" style="display: inline-block; background: rgba(255, 255, 255, 0.2); color: white; text-decoration: none; padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 600; margin-top: 10px; border: 1px solid rgba(255, 255, 255, 0.3); transition: all 0.3s ease;" onmouseover="this.style.background='rgba(255, 255, 255, 0.3)'; this.style.transform='translateY(-1px)'" onmouseout="this.style.background='rgba(255, 255, 255, 0.2)'; this.style.transform='translateY(0)'">🗾 マップに戻る</a>
+    </div>
+
+    <div class="location-status" id="locationStatus">
+      <button class="location-button" onclick="getCurrentLocation()">📍 現在地を取得</button>
+    </div>
+
+    <div class="distance-filter" id="distanceFilter" style="display: none;">
+      <label for="distanceSelect">表示範囲:</label>
+      <select id="distanceSelect" onchange="filterManholes()">
+        <option value="1">1km以内</option>
+        <option value="3">3km以内</option>
+        <option value="5">5km以内</option>
+        <option value="10">10km以内</option>
+        <option value="20">20km以内</option>
+        <option value="50">50km以内</option>
+        <option value="999999" selected>すべて</option>
+      </select>
+    </div>
+
+    <div class="manhole-list" id="manholeList">
+      <div class="loading">位置情報を取得してマンホールを表示します</div>
+    </div>
+  </div>
+
+  <script>
+    let allManholes = [];
+    let userLocation = null;
+
+    function calculateDistance(lat1, lng1, lat2, lng2) {
+      const R = 6371;
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLng = (lng2 - lng1) * Math.PI / 180;
+      const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLng/2) * Math.sin(dLng/2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      return R * c;
+    }
+
+    function formatDistance(distance) {
+      if (distance < 1) { return Math.round(distance * 1000) + 'm'; }
+      return distance.toFixed(1) + 'km';
+    }
+
+    function getCurrentLocation() {
+      const statusDiv = document.getElementById('locationStatus');
+      statusDiv.innerHTML = '<div style="color: #666;">📍 位置情報を取得中...</div>';
+      if (!navigator.geolocation) {
+        statusDiv.innerHTML = '<div class="error">このブラウザは位置情報に対応していません</div>';
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(
+        function(position) {
+          userLocation = { lat: position.coords.latitude, lng: position.coords.longitude };
+          statusDiv.innerHTML = `<div style="color: #4caf50;">✅ 位置情報を取得しました</div>`;
+          document.getElementById('distanceFilter').style.display = 'block';
+          loadManholes();
+        },
+        function(error) {
+          let errorMessage = '位置情報の取得に失敗しました';
+          switch(error.code) {
+            case error.PERMISSION_DENIED: errorMessage = '位置情報へのアクセスが拒否されました'; break;
+            case error.POSITION_UNAVAILABLE: errorMessage = '位置情報が利用できません'; break;
+            case error.TIMEOUT: errorMessage = '位置情報の取得がタイムアウトしました'; break;
+          }
+          statusDiv.innerHTML = `<div class="error">${errorMessage}</div><button class="location-button" onclick="getCurrentLocation()" style="margin-top: 10px;">再試行</button>`;
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 300000 }
+      );
+    }
+
+    async function loadManholes() {
+      const listDiv = document.getElementById('manholeList');
+      listDiv.innerHTML = '<div class="loading">マンホールデータを読み込み中...</div>';
+      try {
+        const response = await fetch('./pokefuta.ndjson');
+        const text = await response.text();
+        const lines = text.trim().split('\n');
+        const manholeMap = new Map();
+        lines.forEach(line => {
+          if (line.trim()) {
+            const manhole = JSON.parse(line);
+            if (!manholeMap.has(manhole.id) || new Date(manhole.source_last_checked) > new Date(manholeMap.get(manhole.id).source_last_checked)) {
+              manholeMap.set(manhole.id, manhole);
+            }
+          }
+        });
+        allManholes = Array.from(manholeMap.values());
+        allManholes.forEach(manhole => {
+          if (userLocation) {
+            manhole.distance = calculateDistance(userLocation.lat, userLocation.lng, manhole.lat, manhole.lng);
+          }
+        });
+        filterManholes();
+      } catch (error) {
+        console.error('Error loading manholes:', error);
+        listDiv.innerHTML = '<div class="error">マンホールデータの読み込みに失敗しました</div>';
+      }
+    }
+
+    function filterManholes() {
+      const listDiv = document.getElementById('manholeList');
+      const maxDistance = parseFloat(document.getElementById('distanceSelect').value);
+      if (!userLocation || allManholes.length === 0) { return; }
+      const filteredManholes = allManholes.filter(m => m.distance <= maxDistance).sort((a,b) => a.distance - b.distance);
+      if (filteredManholes.length === 0) { listDiv.innerHTML = '<div class="no-results">指定した範囲内にマンホールが見つかりませんでした</div>'; return; }
+      const html = filteredManholes.map(manhole => {
+        const mapsUrl = `https://www.google.com/maps?q=${manhole.lat},${manhole.lng}`;
+        const pokefutaUrl = `https://local.pokemon.jp/manhole/detail/${manhole.id}/`;
+        return `\n        <div class=\"manhole-item\">\n          <div class=\"manhole-info\">\n            <div class=\"manhole-title\">${manhole.title || `マンホール #${manhole.id}`}</div>\n            <div class=\"manhole-location\">📍 ${manhole.prefecture} ${manhole.city}</div>\n            <div>${manhole.pokemons.map(p => `<span class=\\\"manhole-pokemon\\\">${p}</span>`).join('')}</div>\n          </div>\n          <div class=\"manhole-actions\">\n            <div class=\"manhole-distance\">${formatDistance(manhole.distance)}</div>\n            <a href=\"${pokefutaUrl}\" target=\"_blank\" class=\"pokefuta-link\">⚡ 公式情報</a>\n            <a href=\"${mapsUrl}\" target=\"_blank\" class=\"maps-link\">📍 Google Map</a>\n          </div>\n        </div>\n        `;
+      }).join('');
+      listDiv.innerHTML = html;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      if (navigator.geolocation && navigator.permissions) {
+        navigator.permissions.query({name: 'geolocation'}).then(function(result) {
+          if (result.state === 'granted') { getCurrentLocation(); }
+        }).catch(function(){});
+      }
+    });
+  </script>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LX58JGRPNV"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-LX58JGRPNV');
+  </script>
+</body>
+</html>

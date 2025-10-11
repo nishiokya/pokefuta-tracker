@@ -32,7 +32,10 @@ jobs:
         run: |
           mkdir -p docs
           cp apps/web/pokefuta_map.html docs/index.html
-          cp apps/web/nearby_manholes.html docs/nearby_manholes.html
+          # Nearby page (shortened filename)
+          cp apps/web/nearby.html docs/nearby.html
+          # Backward compatibility redirect for old URL
+          echo '<!doctype html><meta http-equiv="refresh" content="0; url=./nearby.html">' > docs/nearby_manholes.html
           cp apps/scraper/pokefuta.ndjson docs/pokefuta.ndjson
 
       - name: Upload artifact
