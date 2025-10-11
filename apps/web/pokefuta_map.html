@@ -6,450 +6,61 @@
   <title>Pokéfuta Mini Map</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-  <style>
-    html, body {
-      height: 100%;
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 50%, #ffe66d 100%);
-    }
-
-    #controls {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      z-index: 1000;
-      background: linear-gradient(180deg, #ffffff 0%, #f8fcff 100%);
-      border-radius: 16px;
-      box-shadow: 0 8px 32px rgba(255, 107, 107, 0.3);
-      max-width: 320px;
-      max-height: 85vh;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      border: 3px solid #ff6b6b;
-    }
-
-    .controls-header {
-      padding: 18px 20px 14px 20px;
-      border-bottom: 3px solid #ffe66d;
-      background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
-      border-radius: 13px 13px 0 0;
-    }
-
-    .controls-header h3 {
-      margin: 0;
-      font-size: 18px;
-      color: white;
-      font-weight: 700;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    }
-
-    .language-selector {
-      display: flex;
-      gap: 4px;
-      margin-top: 8px;
-    }
-
-    .lang-btn {
-      background: rgba(255, 255, 255, 0.2);
-      color: white;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      padding: 4px 8px;
-      border-radius: 12px;
-      cursor: pointer;
-      font-size: 11px;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      min-width: 30px;
-      text-align: center;
-    }
-
-    .lang-btn:hover {
-      background: rgba(255, 255, 255, 0.3);
-      transform: translateY(-1px);
-    }
-
-    .lang-btn.active {
-      background: rgba(255, 230, 109, 0.9);
-      color: #2c5282;
-      border-color: rgba(255, 230, 109, 1);
-    }
-
-    .nav-link {
-      display: inline-block;
-      background: rgba(255, 255, 255, 0.2);
-      color: white;
-      text-decoration: none;
-      padding: 8px 12px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 600;
-      margin-top: 8px;
-      transition: all 0.3s ease;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-    }
-
-    .nav-link:hover {
-      background: rgba(255, 255, 255, 0.3);
-      transform: translateY(-1px);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    }
-
-    .controls-content {
-      padding: 16px 20px;
-      overflow-y: auto;
-      flex: 1;
-    }
-
-    .tab-container {
-      margin-bottom: 16px;
-    }
-
-    .tab-buttons {
-      display: flex;
-      border-bottom: 3px solid #ffe66d;
-      margin-bottom: 16px;
-      background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 4px 12px rgba(255, 107, 107, 0.2);
-    }
-
-    .tab-button {
-      flex: 1;
-      padding: 14px 16px;
-      background: rgba(255, 255, 255, 0.9);
-      border: none;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      color: #2c5282;
-      transition: all 0.3s ease;
-      border-bottom: 4px solid transparent;
-    }
-
-    .tab-button:hover {
-      background: rgba(255, 230, 109, 0.4);
-      color: #1a365d;
-      transform: translateY(-2px);
-    }
-
-    .tab-button.active {
-      background: linear-gradient(135deg, #ff6b6b, #ff8a8a);
-      color: white;
-      border-bottom-color: #ffe66d;
-      box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
-    }
-
-    .tab-content {
-      display: none;
-    }
-
-    .tab-content.active {
-      display: block;
-    }
-
-    .filter-section {
-      margin-bottom: 20px;
-      background: linear-gradient(135deg, #ffffff 0%, #f0f8ff 100%);
-      padding: 16px;
-      border-radius: 12px;
-      border: 2px solid #4ecdc4;
-      box-shadow: 0 4px 12px rgba(78, 205, 196, 0.1);
-    }
-
-    .filter-section h4 {
-      margin: 0 0 12px 0;
-      font-size: 14px;
-      color: #2c5282;
-      font-weight: 600;
-    }
-
-    .pokemon-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-      gap: 10px;
-      max-height: 300px;
-      overflow-y: auto;
-      border: 2px solid #4ecdc4;
-      border-radius: 12px;
-      padding: 12px;
-      background: linear-gradient(135deg, #ffffff 0%, #f0f8ff 100%);
-    }
-
-    .pokemon-item {
-      padding: 10px 12px;
-      border: 2px solid #4ecdc4;
-      border-radius: 10px;
-      background: linear-gradient(135deg, #ffffff 0%, #f8fcff 100%);
-      cursor: pointer;
-      text-align: center;
-      font-size: 12px;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      user-select: none;
-      color: #2c5282;
-    }
-
-    .pokemon-item:hover {
-      background: linear-gradient(135deg, #ffe66d, #fff2a6);
-      border-color: #ff6b6b;
-      transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 6px 16px rgba(255, 107, 107, 0.2);
-    }
-
-    .pokemon-item.selected {
-      background: linear-gradient(135deg, #ff6b6b, #ff8a8a);
-      color: white;
-      border-color: #ffe66d;
-      box-shadow: 0 8px 20px rgba(255, 107, 107, 0.3);
-    }
-
-    .pokemon-count {
-      color: #4ecdc4;
-      font-size: 10px;
-      margin-top: 4px;
-      background: linear-gradient(135deg, #ffe66d, #fff2a6);
-      padding: 2px 6px;
-      border-radius: 8px;
-      display: inline-block;
-      border: 1px solid #4ecdc4;
-    }
-
-    .pokemon-item.selected .pokemon-count {
-      color: #2c5282;
-      background: linear-gradient(135deg, #ffe66d, #fff2a6);
-      border-color: #ffe66d;
-    }
-
-    #prefecture-filter {
-      width: 100%;
-      padding: 12px 14px;
-      border: 2px solid #4ecdc4;
-      border-radius: 8px;
-      font-size: 14px;
-      background: linear-gradient(180deg, #ffffff 0%, #f0f8ff 100%);
-      color: #2c5282;
-      font-weight: 500;
-    }
-
-    #prefecture-filter:focus {
-      outline: none;
-      border-color: #ff6b6b;
-      box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.2);
-    }
-
-    .prefecture-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
-      margin-top: 10px;
-      background: white;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 2px 8px rgba(78, 205, 196, 0.1);
-    }
-
-    .prefecture-table th,
-    .prefecture-table td {
-      padding: 8px 6px;
-      text-align: left;
-      border-bottom: 1px solid #e0f2f1;
-    }
-
-    .prefecture-table th {
-      background: linear-gradient(135deg, #4ecdc4, #26a69a);
-      font-weight: 600;
-      color: white;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .prefecture-table tr:hover {
-      background: linear-gradient(135deg, #ffe66d, #fff2a6);
-      cursor: pointer;
-    }
-
-    .prefecture-table tr.selected {
-      background: linear-gradient(135deg, #ff6b6b, #ff8a8a);
-      color: white;
-    }
-
-    .prefecture-code {
-      font-family: 'Monaco', 'Menlo', monospace;
-      background: linear-gradient(135deg, #4ecdc4, #26a69a);
-      color: white;
-      padding: 3px 7px;
-      border-radius: 6px;
-      font-size: 11px;
-      font-weight: bold;
-    }
-
-    .count-badge {
-      background: linear-gradient(135deg, #ff6b6b, #ff8a8a);
-      color: white;
-      padding: 3px 10px;
-      border-radius: 15px;
-      font-size: 11px;
-      font-weight: bold;
-      min-width: 20px;
-      text-align: center;
-      display: inline-block;
-      box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
-    }
-
-    .count-badge-zero {
-      background: linear-gradient(135deg, #e0e0e0, #cccccc);
-      color: #666;
-      padding: 3px 10px;
-      border-radius: 15px;
-      font-size: 11px;
-      font-weight: bold;
-      min-width: 20px;
-      text-align: center;
-      display: inline-block;
-    }
-
-    .prefecture-table tr.no-pokefuta {
-      opacity: 0.6;
-      cursor: default !important;
-    }
-
-    .prefecture-table tr.no-pokefuta:hover {
-      background: transparent !important;
-    }
-
-    .stats {
-      font-size: 12px;
-      color: #666;
-      border-top: 1px solid #eee;
-      padding-top: 12px;
-      margin-top: 16px;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .reset-btn {
-      background: linear-gradient(135deg, #ff6b6b, #ff8a8a);
-      color: white;
-      border: 2px solid #ffe66d;
-      padding: 12px 20px;
-      border-radius: 25px;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 700;
-      width: 100%;
-      margin-top: 16px;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
-    }
-
-    .reset-btn:hover {
-      background: linear-gradient(135deg, #4ecdc4, #26a69a);
-      border-color: #ffe66d;
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(78, 205, 196, 0.4);
-    }
-
-    .search-input {
-      width: 100%;
-      padding: 10px 14px;
-      border: 2px solid #4ecdc4;
-      border-radius: 8px;
-      font-size: 13px;
-      margin-bottom: 10px;
-      background: linear-gradient(180deg, #ffffff 0%, #f0f8ff 100%);
-      color: #2c5282;
-      font-weight: 500;
-    }
-
-    .search-input:focus {
-      outline: none;
-      border-color: #ff6b6b;
-      box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.2);
-    }
-
-    #map { height: 100%; }
-    .leaflet-popup-content-wrapper { border-radius: 12px; }
-
-    @media (max-width: 768px) {
-      #controls {
-        position: fixed;
-        top: auto;
-        bottom: 0;
-        right: 0;
-        left: 0;
-        max-width: none;
-        max-height: 50vh;
-        border-radius: 12px 12px 0 0;
-      }
-      #map {
-        height: 100%;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="./assets/theme.css" />
+  <link rel="stylesheet" href="./assets/map.css" />
 </head>
 <body>
-  <div id="controls">
+  <div id="controls" role="complementary" aria-labelledby="page-title">
     <div class="controls-header">
       <h3 id="page-title">🗾 ポケふたマップ</h3>
-      <div class="language-selector">
-        <button class="lang-btn active" onclick="switchLanguage('ja')" data-lang="ja">🇯🇵</button>
-        <button class="lang-btn" onclick="switchLanguage('en')" data-lang="en">🇺🇸</button>
-        <button class="lang-btn" onclick="switchLanguage('zh')" data-lang="zh">🇨🇳</button>
+      <div class="language-selector" role="group" aria-label="Language selector">
+        <button class="lang-btn active" onclick="switchLanguage('ja')" data-lang="ja" aria-pressed="true">🇯🇵<span class="sr-only">日本語</span></button>
+        <button class="lang-btn" onclick="switchLanguage('en')" data-lang="en" aria-pressed="false">🇺🇸<span class="sr-only">English</span></button>
+        <button class="lang-btn" onclick="switchLanguage('zh')" data-lang="zh" aria-pressed="false">��<span class="sr-only">中文</span></button>
       </div>
-  <a href="/pokefuta-tracker/nearby.html" class="nav-link" id="nav-link">📍 近くのマンホール</a>
+      <a href="/pokefuta-tracker/nearby.html" class="nav-link" id="nav-link">📍 近くのマンホール</a>
     </div>
-    <div class="controls-content">
-      <!-- Tab Interface -->
-      <div class="tab-buttons">
-        <button class="tab-button active" onclick="switchTab('prefecture')">🗾 都道府県</button>
-        <button class="tab-button" onclick="switchTab('pokemon')">🎯 ポケモン</button>
+    <div class="controls-content" role="region" aria-label="Filters and statistics">
+      <div class="tab-buttons" role="tablist" aria-label="Filter type">
+        <button class="tab-button active" role="tab" aria-selected="true" aria-controls="prefecture-tab" id="tab-prefecture" onclick="switchTab('prefecture')">🗾 都道府県</button>
+        <button class="tab-button" role="tab" aria-selected="false" aria-controls="pokemon-tab" id="tab-pokemon" onclick="switchTab('pokemon')">🎯 ポケモン</button>
       </div>
-
-      <!-- Prefecture Filter Tab -->
-      <div id="prefecture-tab" class="tab-content active">
-        <div class="filter-section">
-          <h4>都道府県で絞り込み</h4>
-          <select id="prefecture-filter">
+      <div id="prefecture-tab" class="tab-content active" role="tabpanel" tabindex="0" aria-labelledby="tab-prefecture">
+        <div class="filter-section filter-panel">
+          <h4 id="heading-pref-filter">都道府県で絞り込み</h4>
+          <label class="sr-only" for="prefecture-filter">都道府県セレクト</label>
+          <select id="prefecture-filter" aria-labelledby="heading-pref-filter">
             <option value="">すべての都道府県</option>
           </select>
         </div>
-
-        <div class="filter-section">
-          <h4>都道府県別ポケふた数</h4>
-          <input type="text" class="search-input" id="search-input" placeholder="都道府県を検索...">
-          <table class="prefecture-table" id="prefecture-table">
+        <div class="filter-section filter-panel" aria-labelledby="heading-pref-count">
+          <h4 id="heading-pref-count">都道府県別ポケふた数</h4>
+          <label class="sr-only" for="search-input">都道府県検索</label>
+          <input type="text" class="search-input" id="search-input" placeholder="都道府県を検索..." aria-describedby="pref-table-desc">
+          <table class="prefecture-table" id="prefecture-table" aria-describedby="pref-table-desc">
+            <caption id="pref-table-desc" class="sr-only">都道府県ごとのポケふた数とサイト有無</caption>
             <thead>
               <tr>
-                <th>コード</th>
-                <th>都道府県</th>
-                <th>ポケふた数</th>
-                <th>サイト</th>
+                <th scope="col">コード</th>
+                <th scope="col">都道府県</th>
+                <th scope="col">ポケふた数</th>
+                <th scope="col">サイト</th>
               </tr>
             </thead>
-            <tbody id="prefecture-table-body">
-            </tbody>
+            <tbody id="prefecture-table-body"></tbody>
           </table>
         </div>
       </div>
-
-      <!-- Pokemon Filter Tab -->
-      <div id="pokemon-tab" class="tab-content">
-        <div class="filter-section">
-          <h4>ポケモンで絞り込み</h4>
+      <div id="pokemon-tab" class="tab-content" role="tabpanel" tabindex="0" aria-labelledby="tab-pokemon" hidden>
+        <div class="filter-section filter-panel">
+          <h4 id="heading-pokemon-filter">ポケモンで絞り込み</h4>
+          <label class="sr-only" for="pokemon-search">ポケモン検索</label>
           <input type="text" class="search-input" id="pokemon-search" placeholder="ポケモンを検索...">
-          <div id="pokemon-grid" class="pokemon-grid">
-            <!-- Pokemon items will be populated here -->
-          </div>
+          <div id="pokemon-grid" class="pokemon-grid" role="list" aria-label="ポケモン一覧"></div>
         </div>
       </div>
-
-      <button class="reset-btn" onclick="resetMap()">🔄 すべて表示</button>
-
-      <div class="stats">
+      <button class="reset-btn" onclick="resetMap()" aria-live="polite">🔄 すべて表示</button>
+      <div class="stats" role="status" aria-live="polite">
         <div id="total-count">総数: <span>0</span></div>
         <div id="visible-count">表示: <span>0</span></div>
         <div id="city-count">市町村: <span>0</span></div>
@@ -624,18 +235,18 @@
             const prefectureCode = prefectureCodeMap[prefecture] || '--';
 
             const prefectureSiteLink = data.prefecture_site_url
-              ? `<br/><a href='${data.prefecture_site_url}' target='_blank' style='color: #28a745; text-decoration: none;'>🌐 ${prefecture}サイト</a>`
+              ? `<br/><a href='${data.prefecture_site_url}' target='_blank' class='popup-link popup-link--site'>🌐 ${prefecture}サイト</a>`
               : '';
 
             const cityInfo = data.city ? `<br/><b data-i18n="cityLabel">市町村:</b> ${data.city}` : '';
 
             const popupContent = `
-              <div style='min-width:200px'>
+              <div class='popup-box'>
                 <b data-i18n="idLabel">ID:</b> ${data.id}<br/>
                 <b data-i18n="titleLabel">タイトル:</b> <span class="popup-title">${data.title}</span><br/>
                 <b data-i18n="prefectureLabel">都道府県:</b> ${prefecture} <span class="prefecture-code">${prefectureCode}</span>${cityInfo}<br/>
                 <b data-i18n="pokemonLabel">ポケモン:</b> <span class="popup-pokemons">${pokemons}</span><br/>
-                <a href='${data.detail_url}' target='_blank' style='color: #007cba; text-decoration: none;' data-i18n="officialDetail">📝 公式詳細</a>${prefectureSiteLink}
+                <a href='${data.detail_url}' target='_blank' class='popup-link' data-i18n="officialDetail">📝 公式詳細</a>${prefectureSiteLink}
               </div>
             `;
 
@@ -980,41 +591,37 @@
 
     function switchTab(tabName) {
       currentTab = tabName;
-
-      // Update tab buttons
-      document.querySelectorAll('.tab-button').forEach(btn => {
-        btn.classList.remove('active');
+      const tabs = ['prefecture','pokemon'];
+      tabs.forEach(name => {
+        const btn = document.getElementById(`tab-${name}`);
+        const panel = document.getElementById(`${name}-tab`);
+        const active = name === tabName;
+        if (btn) {
+          btn.classList.toggle('active', active);
+          btn.setAttribute('aria-selected', active ? 'true':'false');
+          btn.tabIndex = active ? 0 : -1;
+        }
+        if (panel) {
+          panel.classList.toggle('active', active);
+          if (active) {
+            panel.removeAttribute('hidden');
+            panel.setAttribute('aria-hidden','false');
+          } else {
+            panel.setAttribute('hidden','true');
+            panel.setAttribute('aria-hidden','true');
+          }
+        }
       });
-      document.querySelector(`.tab-button[onclick="switchTab('${tabName}')"]`).classList.add('active');
-
-      // Update tab content
-      document.querySelectorAll('.tab-content').forEach(content => {
-        content.classList.remove('active');
-      });
-      document.getElementById(`${tabName}-tab`).classList.add('active');
-
-      // Reset current filters when switching tabs
       if (tabName === 'prefecture') {
-        // Reset Pokemon selections
         selectedPokemons = [];
-        document.querySelectorAll('#pokemon-grid .pokemon-item').forEach(item => {
-          item.classList.remove('selected');
-        });
-        document.getElementById('pokemon-search').value = '';
-
-        // Apply prefecture filter if any
+        document.querySelectorAll('#pokemon-grid .pokemon-item').forEach(item => item.classList.remove('selected'));
+        const ps = document.getElementById('pokemon-search'); if (ps) ps.value='';
         filterByPrefecture();
       } else if (tabName === 'pokemon') {
-        // Reset prefecture selections
         selectedPrefecture = '';
-        document.getElementById('prefecture-filter').value = '';
-        document.getElementById('search-input').value = '';
-        document.querySelectorAll('.prefecture-table tr').forEach(row => {
-          row.classList.remove('selected');
-          row.style.display = '';
-        });
-
-        // Apply Pokemon filter if any
+        const pf = document.getElementById('prefecture-filter'); if (pf) pf.value='';
+        const si = document.getElementById('search-input'); if (si) si.value='';
+        document.querySelectorAll('.prefecture-table tr').forEach(row => { row.classList.remove('selected'); row.style.display=''; });
         filterByPokemon();
       }
     }
@@ -1053,17 +660,12 @@
 
     function switchLanguage(lang) {
       currentLanguage = lang;
-
-      // Update active language button
       document.querySelectorAll('.lang-btn').forEach(btn => {
-        btn.classList.remove('active');
+        const active = btn.getAttribute('data-lang') === lang;
+        btn.classList.toggle('active', active);
+        btn.setAttribute('aria-pressed', active ? 'true':'false');
       });
-      document.querySelector(`[data-lang="${lang}"]`).classList.add('active');
-
-      // Update UI text
       updateUIText();
-
-      // Refresh markers to update popup content
       refreshMarkersContent();
     }
 
@@ -1135,22 +737,35 @@
         const cityInfo = data.city ? `<br/><b>${t.cityLabel}</b> ${data.city}` : '';
 
         const prefectureSiteLink = data.prefecture_site_url
-          ? `<br/><a href='${data.prefecture_site_url}' target='_blank' style='color: #28a745; text-decoration: none;'>🌐 ${prefecture}${t.prefectureSite}</a>`
+          ? `<br/><a href='${data.prefecture_site_url}' target='_blank' class='popup-link popup-link--site'>🌐 ${prefecture}${t.prefectureSite}</a>`
           : '';
 
         const popupContent = `
-          <div style='min-width:200px'>
+          <div class='popup-box'>
             <b>${t.idLabel}</b> ${data.id}<br/>
             <b>${t.titleLabel}</b> ${title}<br/>
             <b>${t.prefectureLabel}</b> ${prefecture} <span class="prefecture-code">${prefectureCode}</span>${cityInfo}<br/>
             <b>${t.pokemonLabel}</b> ${pokemons}<br/>
-            <a href='${data.detail_url}' target='_blank' style='color: #007cba; text-decoration: none;'>${t.officialDetail}</a>${prefectureSiteLink}
+            <a href='${data.detail_url}' target='_blank' class='popup-link'>${t.officialDetail}</a>${prefectureSiteLink}
           </div>
         `;
 
         marker.setPopupContent(popupContent);
       });
     }
+
+    // Keyboard navigation for tabs (Left/Right/Home/End)
+    document.addEventListener('keydown', (e) => {
+      const activeEl = document.activeElement;
+      if (activeEl && activeEl.getAttribute('role') === 'tab') {
+        const order = ['prefecture','pokemon'];
+        let idx = order.findIndex(t => `tab-${t}` === activeEl.id);
+        if (e.key === 'ArrowRight') { e.preventDefault(); idx = (idx + 1) % order.length; document.getElementById(`tab-${order[idx]}`).focus(); switchTab(order[idx]); }
+        else if (e.key === 'ArrowLeft') { e.preventDefault(); idx = (idx - 1 + order.length) % order.length; document.getElementById(`tab-${order[idx]}`).focus(); switchTab(order[idx]); }
+        else if (e.key === 'Home') { e.preventDefault(); document.getElementById('tab-prefecture').focus(); switchTab('prefecture'); }
+        else if (e.key === 'End') { e.preventDefault(); document.getElementById('tab-pokemon').focus(); switchTab('pokemon'); }
+      }
+    });
 
     // Initialize
     loadPokefutaData();

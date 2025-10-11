@@ -6,3 +6,5 @@ __pycache__/
 *.pyo
 change_summary.json
 create_pr.flag
+.DS_Store
+**/.DS_Store
