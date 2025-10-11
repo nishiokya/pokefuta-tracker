@@ -43,6 +43,8 @@ jobs:
           cp apps/scraper/pokefuta.ndjson docs/pokefuta.ndjson
           cp apps/web/pokefuta_map.html docs/index.html || true
           cp apps/web/nearby.html docs/nearby.html || true
+          rm -rf docs/assets
+          cp -r apps/web/assets docs/assets || true
           echo '<!doctype html><meta http-equiv="refresh" content="0; url=./nearby.html">' > docs/nearby_manholes.html
 
       - name: Check if PR should be created
@@ -69,6 +71,7 @@ jobs:
 
           # Add all changes
           git add apps/scraper/pokefuta.ndjson docs/pokefuta.ndjson docs/index.html docs/nearby.html docs/nearby_manholes.html CHANGELOG.md
+          git add docs/assets || true
 
           # Commit changes
           git commit -m "📊 Automatic pokefuta data update - $(date +'%Y-%m-%d')
@@ -143,6 +146,7 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add apps/scraper/pokefuta.ndjson docs/pokefuta.ndjson docs/index.html docs/nearby.html docs/nearby_manholes.html
+          git add docs/assets || true
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
