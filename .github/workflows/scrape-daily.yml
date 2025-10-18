@@ -1,8 +1,8 @@
-name: Daily Pokefuta Scraping
+name: Daily Pokefuta Incremental Update & Deploy
 
 on:
   schedule:
-    # Run daily at 10:00 UTC)
+    # Run daily at 10:00 UTC (incremental only; initial full scrape is manual)
     - cron: '0 10 * * *'
   workflow_dispatch: # Allow manual trigger
 
@@ -12,14 +12,14 @@ permissions:
   id-token: write
 
 jobs:
-  scrape-and-deploy:
+  update-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
@@ -27,18 +27,17 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-
-      - name: Run scraper
+          pip install beautifulsoup4 requests
+      - name: Run incremental updater (skip deleted in public copy)
+        id: updater
         run: |
-          cd apps/scraper
-          python scrape_pokefuta.py 
+          python apps/scraper/update_pokefuta.py \
+            --scan-max 2500 \
+            --out apps/scraper/pokefuta.ndjson \
+            --copy-to docs/pokefuta.ndjson \
+            --log-level INFO
 
-      - name: Clean data and check for changes
-        run: |
-          cd apps/scraper
-          python clean_and_notify.py 
-
-      - name: Update docs for GitHub Pages
+      - name: Update docs for GitHub Pages (assets & redirect)
         run: |
           cp apps/scraper/pokefuta.ndjson docs/pokefuta.ndjson
           cp apps/web/pokefuta_map.html docs/index.html || true
@@ -46,117 +45,34 @@ jobs:
           rm -rf docs/assets
           cp -r apps/web/assets docs/assets || true
           echo '<!doctype html><meta http-equiv="refresh" content="0; url=./nearby.html">' > docs/nearby_manholes.html
-
-      - name: Check if PR should be created
-        id: check_changes
+      - name: Detect dataset changes
+        id: diff
         run: |
-          cd apps/scraper
-          if [ -f "create_pr.flag" ]; then
-            echo "create_pr=true" >> $GITHUB_OUTPUT
-            echo "Changes detected - PR will be created"
-          else
-            echo "create_pr=false" >> $GITHUB_OUTPUT
-            echo "No changes detected"
-          fi
-
-      - name: Create PR branch if changes detected
-        if: steps.check_changes.outputs.create_pr == 'true'
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-
-          # Create new branch for PR
-          branch_name="auto-update-$(date +'%Y%m%d-%H%M%S')"
-          git checkout -b "$branch_name"
-
-          # Add all changes
-          git add apps/scraper/pokefuta.ndjson docs/pokefuta.ndjson docs/index.html docs/nearby.html docs/nearby_manholes.html CHANGELOG.md
+          git add apps/scraper/pokefuta.ndjson docs/pokefuta.ndjson CHANGELOG.md docs/index.html docs/nearby.html docs/nearby_manholes.html || true
           git add docs/assets || true
-
-          # Commit changes
-          git commit -m "📊 Automatic pokefuta data update - $(date +'%Y-%m-%d')
-
-          🤖 Generated with [Claude Code](https://claude.ai/code)
-
-          Co-Authored-By: Claude <noreply@anthropic.com>"
-
-          # Push branch
-          git push origin "$branch_name"
-
-          # Store branch name for PR creation
-          echo "BRANCH_NAME=$branch_name" >> $GITHUB_ENV
-
-      - name: Create Pull Request
-        if: steps.check_changes.outputs.create_pr == 'true'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          cd apps/scraper
-
-          # Read summary for PR body
-          if [ -f "change_summary.json" ]; then
-            # Extract data from summary
-            added_count=$(cat change_summary.json | jq -r '.added_count')
-            removed_count=$(cat change_summary.json | jq -r '.removed_count')
-            total_changes=$(cat change_summary.json | jq -r '.total_changes')
-            net_change=$(cat change_summary.json | jq -r '.net_change')
-            date=$(cat change_summary.json | jq -r '.date')
-
-            # Create PR body
-            pr_body="## 📊 Automatic Pokefuta Data Update - $date
-
-          ### 📈 Summary
-          - **Total Changes:** $total_changes
-          - **Added IDs:** $added_count
-          - **Removed IDs:** $removed_count
-          - **Net Change:** $net_change
-
-          ### 🔄 What Changed
-          This PR contains automatically detected changes to the pokefuta data:
-          - 🧹 **Data Cleaning:** Pokemon names normalized, duplicates removed
-          - 🗾 **Location Data:** Prefecture and city information updated
-          - 🌐 **Site Links:** Prefecture site URLs properly categorized
-          - 📊 **Changelog:** Updated with detailed change history
-
-          ### 🤖 Automation
-          This PR was automatically created by the daily scraping workflow.
-          - **Data Source:** Official Pokemon Local Acts website
-          - **Schedule:** Daily at 10:00 UTC
-          - **Quality:** Automatic data validation and cleaning applied
-
-          **View live map:** https://nishiokya.github.io/pokefuta-tracker/
-
-          ---
-          🤖 Generated with [Claude Code](https://claude.ai/code)"
+          if git diff --cached --quiet; then
+            echo "changed=false" >> $GITHUB_OUTPUT
           else
-            pr_body="Automatic pokefuta data update"
+            echo "changed=true" >> $GITHUB_OUTPUT
           fi
 
-          # Create PR
-          gh pr create \
-            --title "📊 Automatic pokefuta data update - $date" \
-            --body "$pr_body" \
-            --head "$BRANCH_NAME" \
-            --base main \
-            --label "automated,data-update"
+      - name: Create Pull Request (if changes)
+        if: steps.diff.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "chore: daily pokefuta dataset update"
+          title: "Daily pokefuta dataset update"
+          body: |
+            Automated daily update (dataset + docs). If approved, Pages will deploy with refreshed data.
+          branch: daily/update-pokefuta-dataset
+          labels: |-
+            data-update
+            automated
+          delete-branch: true
 
-      - name: Regular update without PR
-        if: steps.check_changes.outputs.create_pr == 'false'
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add apps/scraper/pokefuta.ndjson docs/pokefuta.ndjson docs/index.html docs/nearby.html docs/nearby_manholes.html
-          git add docs/assets || true
-          if git diff --staged --quiet; then
-            echo "No changes to commit"
-          else
-            git commit -m "🔄 Routine pokefuta data update - $(date +'%Y-%m-%d')
-
-            🤖 Generated with [Claude Code](https://claude.ai/code)
-
-            Co-Authored-By: Claude <noreply@anthropic.com>"
-            git push
-          fi
+      - name: Commit directly (no changes -> ensure no-op)
+        if: steps.diff.outputs.changed == 'false'
+        run: echo "No dataset changes detected; skipping PR creation."
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

@@ -1,0 +1,54 @@
+name: Update Pokefuta Dataset
+
+on:
+  schedule:
+    - cron: '0 3 * * *'  # 毎日 JST 12:00 相当 (UTC 03:00)
+  workflow_dispatch: {}
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install deps
+        run: |
+          pip install -r requirements.txt
+          pip install beautifulsoup4 requests
+
+      - name: Run updater
+        id: updater
+        run: |
+          python apps/scraper/update_pokefuta.py --scan-max 2000 --out apps/scraper/pokefuta.ndjson --copy-to docs/pokefuta.ndjson --log-level INFO
+
+      - name: Detect changes
+        id: diff
+        run: |
+          git add apps/scraper/pokefuta.ndjson docs/pokefuta.ndjson CHANGELOG.md
+          if git diff --cached --quiet; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Pull Request
+        if: steps.diff.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "chore: update pokefuta dataset"
+          title: "Update pokefuta dataset"
+          body: |
+            Automated update of pokefuta dataset (new/deleted/changed records).
+          branch: update/pokefuta-dataset
+          labels: |-
+            data-update
+          delete-branch: true
