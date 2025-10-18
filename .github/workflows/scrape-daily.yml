@@ -1,4 +1,4 @@
-name: Daily Pokefuta Incremental Update & Deploy
+name: Daily Pokefuta Dataset Update (PR only)
 
 on:
   schedule:
@@ -8,8 +8,7 @@ on:
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
+  pull-requests: write
 
 jobs:
   update-and-deploy:
@@ -70,20 +69,6 @@ jobs:
             automated
           delete-branch: true
 
-      - name: Commit directly (no changes -> ensure no-op)
+      - name: No changes summary
         if: steps.diff.outputs.changed == 'false'
-        run: echo "No dataset changes detected; skipping PR creation."
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-        with:
-          enablement: true
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: './docs'
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+        run: echo "No dataset changes detected; nothing to PR."

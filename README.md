@@ -7,7 +7,7 @@
 
 例:
 ```bash
-python apps/scraper/scrape_pokefuta.py --scan-max 1800 --out apps/scraper/pokefuta.ndjson
+python apps/scraper/scrape_pokefuta.py --scan-max 500 --out apps/scraper/pokefuta.ndjson
 git add apps/scraper/pokefuta.ndjson && git commit -m "feat: initial dataset"
 ```
 
