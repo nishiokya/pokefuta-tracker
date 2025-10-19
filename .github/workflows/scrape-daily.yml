@@ -9,6 +9,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  issues: write # ラベル付与に必要 (PR は issues API と統合されている)
 
 jobs:
   update-and-deploy:
@@ -68,6 +69,9 @@ jobs:
             data-update
             automated
           delete-branch: true
+          author: GitHub Action <action@github.com>
+          draft: false
+          token: ${{ secrets.GITHUB_TOKEN }} # 明示指定 (repo 設定で Read/Write 権限が必要)
 
       - name: No changes summary
         if: steps.diff.outputs.changed == 'false'
