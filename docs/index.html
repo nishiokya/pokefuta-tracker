@@ -25,6 +25,12 @@
         <button class="tab-button active" role="tab" aria-selected="true" aria-controls="prefecture-tab" id="tab-prefecture" onclick="switchTab('prefecture')">🗾 都道府県</button>
         <button class="tab-button" role="tab" aria-selected="false" aria-controls="pokemon-tab" id="tab-pokemon" onclick="switchTab('pokemon')">🎯 ポケモン</button>
       </div>
+      <!-- Added recent 1 month filter -->
+      <div class="filter-section filter-panel" id="recent-filter-wrapper">
+        <label style="cursor:pointer;">
+          <input type="checkbox" id="recent-toggle" /> <span data-i18n="recentLabel">🆕 直近1ヶ月</span>
+        </label>
+      </div>
       <div id="prefecture-tab" class="tab-content active" role="tabpanel" tabindex="0" aria-labelledby="tab-prefecture">
         <div class="filter-section filter-panel">
           <h4 id="heading-pref-filter">都道府県で絞り込み</h4>
@@ -106,167 +112,139 @@
     let pokemonCounts = {};
     let selectedPokemons = [];
     let currentTab = 'prefecture';
-    let currentLanguage = 'ja';
+    let filterRecent = false; // recent 30 days filter
+    let hasAddedAtField = false; // whether dataset has any date field
 
-    // UI text translations
-    const translations = {
-      ja: {
-        pageTitle: '🗾 ポケふたマップ',
-        navLink: '📍 近くのマンホール',
-        prefectureTab: '🗾 都道府県',
-        pokemonTab: '🎯 ポケモン',
-        prefectureFilter: '都道府県で絞り込み',
-        allPrefectures: 'すべての都道府県',
-        prefectureCount: '都道府県別ポケふた数',
-        searchPrefecture: '都道府県を検索...',
-        codeHeader: 'コード',
-        prefectureHeader: '都道府県',
-        countHeader: 'ポケふた数',
-        siteHeader: 'サイト',
-        pokemonFilter: 'ポケモンで絞り込み',
-        searchPokemon: 'ポケモンを検索...',
-        showAll: '🔄 すべて表示',
-        totalCount: '総数:',
-        visibleCount: '表示:',
-        cityCount: '市町村:',
-        idLabel: 'ID:',
-        titleLabel: 'タイトル:',
-        prefectureLabel: '都道府県:',
-        pokemonLabel: 'ポケモン:',
-        cityLabel: '市町村:',
-        officialDetail: '📝 公式詳細',
-        prefectureSite: 'サイト'
-      },
-      en: {
-        pageTitle: '🗾 Pokéfuta Map',
-        navLink: '📍 Nearby Manholes',
-        prefectureTab: '🗾 Prefecture',
-        pokemonTab: '🎯 Pokémon',
-        prefectureFilter: 'Filter by Prefecture',
-        allPrefectures: 'All Prefectures',
-        prefectureCount: 'Pokéfuta Count by Prefecture',
-        searchPrefecture: 'Search prefecture...',
-        codeHeader: 'Code',
-        prefectureHeader: 'Prefecture',
-        countHeader: 'Count',
-        siteHeader: 'Site',
-        pokemonFilter: 'Filter by Pokémon',
-        searchPokemon: 'Search Pokémon...',
-        showAll: '🔄 Show All',
-        totalCount: 'Total:',
-        visibleCount: 'Visible:',
-        cityCount: 'Cities:',
-        idLabel: 'ID:',
-        titleLabel: 'Title:',
-        prefectureLabel: 'Prefecture:',
-        pokemonLabel: 'Pokémon:',
-        cityLabel: 'City:',
-        officialDetail: '📝 Official Details',
-        prefectureSite: 'Site'
-      },
-      zh: {
-        pageTitle: '🗾 宝可盖地图',
-        navLink: '📍 附近的井盖',
-        prefectureTab: '🗾 都道府县',
-        pokemonTab: '🎯 宝可梦',
-        prefectureFilter: '按都道府县筛选',
-        allPrefectures: '所有都道府县',
-        prefectureCount: '各都道府县宝可盖数量',
-        searchPrefecture: '搜索都道府县...',
-        codeHeader: '代码',
-        prefectureHeader: '都道府县',
-        countHeader: '数量',
-        siteHeader: '网站',
-        pokemonFilter: '按宝可梦筛选',
-        searchPokemon: '搜索宝可梦...',
-        showAll: '🔄 显示全部',
-        totalCount: '总数:',
-        visibleCount: '显示:',
-        cityCount: '市町村:',
-        idLabel: 'ID:',
-        titleLabel: '标题:',
-        prefectureLabel: '都道府县:',
-        pokemonLabel: '宝可梦:',
-        cityLabel: '市町村:',
-        officialDetail: '📝 官方详情',
-        prefectureSite: '网站'
-      }
+    // ==== 単一言語 (日本語) 用 UI ラベル定数 ==== 
+    const UI_TEXT = {
+      recentLabel: '🆕 直近1ヶ月',
+      prefectureFilter: '都道府県で絞り込み',
+      allPrefectures: 'すべての都道府県',
+      prefectureCount: '都道府県別ポケふた数',
+      searchPrefecture: '都道府県を検索...',
+      codeHeader: 'コード',
+      prefectureHeader: '都道府県',
+      countHeader: 'ポケふた数',
+      siteHeader: 'サイト',
+      pokemonFilter: 'ポケモンで絞り込み',
+      searchPokemon: 'ポケモンを検索...',
+      showAll: '🔄 すべて表示',
+      totalCount: '総数:',
+      visibleCount: '表示:',
+      cityCount: '市町村:',
+      idLabel: 'ID:',
+      titleLabel: 'タイトル:',
+      prefectureLabel: '都道府県:',
+      pokemonLabel: 'ポケモン:',
+      cityLabel: '市町村:',
+      officialDetail: '📝 公式詳細',
+      prefectureSite: 'サイト'
     };
+
+    // 初期テキストは既に HTML に記述しているため updateUIText は不要
+    function updateUIText() { /* no-op (多言語削除) */ }
 
     async function loadPokefutaData() {
       try {
-        const response = await fetch('./pokefuta.ndjson');
-        const text = await response.text();
+        const res = await fetch('./pokefuta.ndjson');
+        const text = await res.text();
         const lines = text.trim().split('\n');
-
-        lines.forEach(line => {
-          if (line.trim()) {
-            const data = JSON.parse(line);
-            allData.push(data);
-
-            // Count by prefecture
-            const prefecture = data.prefecture || '不明';
-            prefectureCounts[prefecture] = (prefectureCounts[prefecture] || 0) + 1;
-
-            // Count prefecture sites
-            if (data.prefecture_site_url) {
-              prefectureSiteCounts[prefecture] = (prefectureSiteCounts[prefecture] || 0) + 1;
-            }
-
-            // Count cities
-            if (data.city) {
-              const cityKey = `${prefecture}/${data.city}`;
-              cityCounts[cityKey] = (cityCounts[cityKey] || 0) + 1;
-            }
-
-            // Count Pokemon
-            if (data.pokemons && Array.isArray(data.pokemons)) {
-              data.pokemons.forEach(pokemon => {
-                if (pokemon && pokemon.trim()) {
-                  pokemonCounts[pokemon] = (pokemonCounts[pokemon] || 0) + 1;
-                }
-              });
-            }
-
-            const pokemons = data.pokemons && data.pokemons.length > 0
-              ? data.pokemons.join(', ')
-              : '—';
-
-            const prefectureCode = prefectureCodeMap[prefecture] || '--';
-
-            const prefectureSiteLink = data.prefecture_site_url
-              ? `<br/><a href='${data.prefecture_site_url}' target='_blank' class='popup-link popup-link--site'>🌐 ${prefecture}サイト</a>`
-              : '';
-
-            const cityInfo = data.city ? `<br/><b data-i18n="cityLabel">市町村:</b> ${data.city}` : '';
-
-            const popupContent = `
-              <div class='popup-box'>
-                <b data-i18n="idLabel">ID:</b> ${data.id}<br/>
-                <b data-i18n="titleLabel">タイトル:</b> <span class="popup-title">${data.title}</span><br/>
-                <b data-i18n="prefectureLabel">都道府県:</b> ${prefecture} <span class="prefecture-code">${prefectureCode}</span>${cityInfo}<br/>
-                <b data-i18n="pokemonLabel">ポケモン:</b> <span class="popup-pokemons">${pokemons}</span><br/>
-                <a href='${data.detail_url}' target='_blank' class='popup-link' data-i18n="officialDetail">📝 公式詳細</a>${prefectureSiteLink}
-              </div>
-            `;
-
-            const marker = L.marker([data.lat, data.lng], { icon: pokefutaIcon })
-              .bindPopup(popupContent);
-
-            marker.pokefutaData = data;
-            marker.pokefutaData.prefectureCode = prefectureCode;
-            allMarkers.push(marker);
-            marker.addTo(map);
+        allData = [];
+        const latestById = new Map();
+        for (const line of lines) {
+          if (!line.trim()) continue;
+          const obj = JSON.parse(line);
+          if (!latestById.has(obj.id) || new Date(obj.source_last_checked) > new Date(latestById.get(obj.id).source_last_checked)) {
+            latestById.set(obj.id, obj);
           }
+        }
+        allData = [...latestById.values()];
+        // Detect presence of date field for recent filter
+        hasAddedAtField = allData.some(d => d.added_at || d.first_seen || d.date);
+        // Pre-compute added date object
+        allData.forEach(d => {
+          const ds = d.added_at || d.first_seen || d.date;
+          d._addedDate = ds ? new Date(ds) : null;
         });
-
+        // Build markers
+        allMarkers = [];
+        prefectureCounts = {}; prefectureSiteCounts = {}; cityCounts = {}; pokemonCounts = {};
+        allData.forEach(d => {
+          const prefecture = d.prefecture || '不明';
+          const prefectureCode = prefectureCodeMap[prefecture] || '--';
+          prefectureCounts[prefecture] = (prefectureCounts[prefecture] || 0) + 1;
+          if (d.prefecture_site_url) {
+            prefectureSiteCounts[prefecture] = (prefectureSiteCounts[prefecture] || 0) + 1;
+          }
+          if (d.city) cityCounts[d.city] = (cityCounts[d.city] || 0) + 1;
+          if (Array.isArray(d.pokemons)) {
+            d.pokemons.forEach(p => { if (p) pokemonCounts[p] = (pokemonCounts[p] || 0) + 1; });
+          }
+          const pokemonsStr = Array.isArray(d.pokemons) && d.pokemons.length ? d.pokemons.join(', ') : '—';
+          const cityInfo = d.city ? `<br/><b>${UI_TEXT.cityLabel}</b> ${d.city}` : '';
+          const prefectureSiteLink = d.prefecture_site_url ? `<br/><a href='${d.prefecture_site_url}' target='_blank' class='popup-link popup-link--site'>🌐 ${prefecture}${UI_TEXT.prefectureSite}</a>` : '';
+          const popupContent = `
+            <div class='popup-box'>
+              <b>${UI_TEXT.idLabel}</b> ${d.id}<br/>
+              <b>${UI_TEXT.titleLabel}</b> <span class="popup-title">${d.title}</span><br/>
+              <b>${UI_TEXT.prefectureLabel}</b> ${prefecture} <span class="prefecture-code">${prefectureCode}</span>${cityInfo}<br/>
+              <b>${UI_TEXT.pokemonLabel}</b> <span class="popup-pokemons">${pokemonsStr}</span><br/>
+              <a href='${d.detail_url}' target='_blank' class='popup-link'>${UI_TEXT.officialDetail}</a>${prefectureSiteLink}
+            </div>
+          `;
+          const marker = L.marker([d.lat, d.lng], { icon: pokefutaIcon }).bindPopup(popupContent);
+          marker.pokefutaData = d; marker.pokefutaData.prefectureCode = prefectureCode;
+          allMarkers.push(marker); marker.addTo(map);
+        });
         populatePrefectureFilter();
         populatePrefectureTable();
         populatePokemonGrid();
         updateStats();
-      } catch (error) {
-        console.error('Error loading pokefuta data:', error);
+        initRecentFilter();
+      } catch (e) {
+        console.error('ポケふたデータ読み込み失敗', e);
       }
+    }
+
+    function initRecentFilter() {
+      const toggle = document.getElementById('recent-toggle');
+      if (!toggle) return;
+      if (!hasAddedAtField) {
+        toggle.disabled = true;
+        toggle.title = 'データに日付フィールド (added_at / first_seen / date) が無いため利用できません';
+      }
+      toggle.addEventListener('change', e => {
+        filterRecent = e.target.checked;
+        recomputeVisibility();
+      });
+    }
+
+    function isWithinLastDays(dateObj, days) {
+      if (!dateObj) return false;
+      const now = new Date();
+      return (now - dateObj) <= days * 86400000 && (now - dateObj) >= 0;
+    }
+
+    function recomputeVisibility() {
+      let visibleCount = 0;
+      allMarkers.forEach(marker => {
+        const d = marker.pokefutaData;
+        let show = true;
+        if (selectedPrefecture) show = show && d.prefecture === selectedPrefecture;
+        if (selectedPokemons.length > 0) {
+          const mp = d.pokefutaData ? d.pokefutaData.pokemons : (d.pokemons || []);
+          const pList = d.pokemons || [];
+          show = show && selectedPokemons.some(p => pList.includes(p));
+        }
+        if (filterRecent) show = show && isWithinLastDays(d._addedDate, 30);
+        if (show) {
+          if (!map.hasLayer(marker)) marker.addTo(map);
+          visibleCount++;
+        } else {
+          if (map.hasLayer(marker)) map.removeLayer(marker);
+        }
+      });
+      updateStats(visibleCount);
     }
 
     function populatePrefectureFilter() {
@@ -372,161 +350,32 @@
       filterByPrefecture();
     }
 
-    function filterByPrefecture() {
-      const selectedPref = document.getElementById('prefecture-filter').value || selectedPrefecture;
-      let visibleCount = 0;
-
-      allMarkers.forEach(marker => {
-        const shouldShow = !selectedPref || marker.pokefutaData.prefecture === selectedPref;
-
-        if (shouldShow) {
-          if (!map.hasLayer(marker)) {
-            marker.addTo(map);
-          }
-          visibleCount++;
-        } else {
-          if (map.hasLayer(marker)) {
-            map.removeLayer(marker);
-          }
-        }
-      });
-
-      updateStats(visibleCount);
-
-      // Highlight table row
-      updateTableSelection(selectedPref);
-
-      // Adjust map view
-      if (selectedPref) {
-        fitMapToPrefecture(selectedPref);
-      }
-    }
-
-    function updateTableSelection(prefecture) {
-      document.querySelectorAll('.prefecture-table tr').forEach(row => {
-        row.classList.remove('selected');
-        const prefCell = row.cells[1];
-        if (prefCell && prefCell.textContent === prefecture) {
-          row.classList.add('selected');
-        }
-      });
-    }
-
-    function searchPrefectures() {
-      const query = document.getElementById('search-input').value.toLowerCase();
-      const rows = document.querySelectorAll('#prefecture-table-body tr');
-
-      rows.forEach(row => {
-        const prefecture = row.cells[1].textContent.toLowerCase();
-        const code = row.cells[0].textContent.toLowerCase();
-        const shouldShow = prefecture.includes(query) || code.includes(query);
-        row.style.display = shouldShow ? '' : 'none';
-      });
-    }
-
-    function fitMapToPrefecture(prefecture) {
-      const prefectureMarkers = allMarkers.filter(marker =>
-        marker.pokefutaData.prefecture === prefecture
-      );
-
-      if (prefectureMarkers.length > 0) {
-        const group = new L.featureGroup(prefectureMarkers);
-        map.fitBounds(group.getBounds(), { padding: [20, 20] });
-      }
-    }
-
-    function updateStats(visibleCount = null) {
-      const totalElement = document.querySelector('#total-count span');
-      const visibleElement = document.querySelector('#visible-count span');
-      const cityElement = document.querySelector('#city-count span');
-
-      totalElement.textContent = allMarkers.length;
-      visibleElement.textContent = visibleCount !== null ? visibleCount : allMarkers.length;
-      cityElement.textContent = Object.keys(cityCounts).length;
-    }
-
+    // ポケモングリッド生成 (日本語のみ)
     function populatePokemonGrid() {
       const grid = document.getElementById('pokemon-grid');
-
-      // Collect all Pokemon data including multilingual versions
-      const allPokemonData = {};
-
-      allData.forEach(data => {
-        // Japanese Pokemon
-        if (data.pokemons && Array.isArray(data.pokemons)) {
-          data.pokemons.forEach(pokemon => {
-            if (pokemon && pokemon.trim()) {
-              if (!allPokemonData[pokemon]) {
-                allPokemonData[pokemon] = { ja: pokemon, en: '', zh: '', count: 0 };
-              }
-              allPokemonData[pokemon].count++;
-            }
-          });
-        }
-
-        // English Pokemon
-        if (data.pokemons_en && Array.isArray(data.pokemons_en)) {
-          data.pokemons_en.forEach((pokemon, index) => {
-            if (pokemon && pokemon.trim()) {
-              const jaPokemon = data.pokemons[index] || pokemon;
-              if (!allPokemonData[jaPokemon]) {
-                allPokemonData[jaPokemon] = { ja: jaPokemon, en: pokemon, zh: '', count: 0 };
-              } else {
-                allPokemonData[jaPokemon].en = pokemon;
-              }
-            }
-          });
-        }
-
-        // Chinese Pokemon
-        if (data.pokemons_zh && Array.isArray(data.pokemons_zh)) {
-          data.pokemons_zh.forEach((pokemon, index) => {
-            if (pokemon && pokemon.trim()) {
-              const jaPokemon = data.pokemons[index] || pokemon;
-              if (!allPokemonData[jaPokemon]) {
-                allPokemonData[jaPokemon] = { ja: jaPokemon, en: '', zh: pokemon, count: 0 };
-              } else {
-                allPokemonData[jaPokemon].zh = pokemon;
-              }
-            }
-          });
+      if (!grid) return;
+      const counts = {};
+      allData.forEach(d => {
+        if (Array.isArray(d.pokemons)) {
+          d.pokemons.forEach(p => { if (p) counts[p] = (counts[p] || 0) + 1; });
         }
       });
-
-      const sortedPokemons = Object.entries(allPokemonData)
-        .sort(([a], [b]) => a.localeCompare(b, 'ja'))
-        .sort(([, dataA], [, dataB]) => dataB.count - dataA.count);
-
+      const sorted = Object.entries(counts)
+        .sort(([a],[b]) => a.localeCompare(b,'ja'))
+        .sort(([,ca],[,cb]) => cb - ca);
       grid.innerHTML = '';
-
-      sortedPokemons.forEach(([pokemon, pokemonData]) => {
+      sorted.forEach(([name,count]) => {
         const item = document.createElement('div');
         item.className = 'pokemon-item';
-
-        // Get current language display name
-        let displayName = pokemonData.ja;
-        if (currentLanguage === 'en' && pokemonData.en) {
-          displayName = pokemonData.en;
-        } else if (currentLanguage === 'zh' && pokemonData.zh) {
-          displayName = pokemonData.zh;
-        }
-
-        item.innerHTML = `
-          <div class="pokemon-name">${displayName}</div>
-          <div class="pokemon-count">${pokemonData.count}</div>
-        `;
-
-        item.addEventListener('click', () => {
-          togglePokemonSelection(pokemon, item);
-        });
-
+        item.innerHTML = `<div class="pokemon-name">${name}</div><div class="pokemon-count">${count}</div>`;
+        item.addEventListener('click', () => togglePokemonSelection(name, item));
         grid.appendChild(item);
       });
-
-      // Add search functionality for Pokemon
       const searchInput = document.getElementById('pokemon-search');
-      searchInput.removeEventListener('input', searchPokemons); // Remove existing listener
-      searchInput.addEventListener('input', searchPokemons);
+      if (searchInput) {
+        searchInput.removeEventListener('input', searchPokemons);
+        searchInput.addEventListener('input', searchPokemons);
+      }
     }
 
     function togglePokemonSelection(pokemon, item) {
@@ -554,39 +403,40 @@
       });
     }
 
-    function filterByPokemon() {
-      if (selectedPokemons.length === 0) {
-        // Show all markers if no Pokemon selected
-        allMarkers.forEach(marker => {
-          if (!map.hasLayer(marker)) {
-            marker.addTo(map);
-          }
-        });
-        updateStats();
-        return;
-      }
+    function filterByPokemon() { recomputeVisibility(); }
 
-      let visibleCount = 0;
+    function resetMap() {
+      // Reset filters for both tabs
+      document.getElementById('prefecture-filter').value = '';
+      document.getElementById('search-input').value = '';
+      document.getElementById('pokemon-search').value = '';
+      selectedPrefecture = '';
+      selectedPokemons = [];
+      filterRecent = false; const rt = document.getElementById('recent-toggle'); if (rt) rt.checked = false;
 
+      // Show all markers
       allMarkers.forEach(marker => {
-        const markerPokemons = marker.pokefutaData.pokemons || [];
-        const shouldShow = selectedPokemons.some(selectedPokemon =>
-          markerPokemons.includes(selectedPokemon)
-        );
-
-        if (shouldShow) {
-          if (!map.hasLayer(marker)) {
-            marker.addTo(map);
-          }
-          visibleCount++;
-        } else {
-          if (map.hasLayer(marker)) {
-            map.removeLayer(marker);
-          }
+        if (!map.hasLayer(marker)) {
+          marker.addTo(map);
         }
       });
 
-      updateStats(visibleCount);
+      // Show all table rows
+      document.querySelectorAll('#prefecture-table-body tr').forEach(row => {
+        row.style.display = '';
+        row.classList.remove('selected');
+      });
+
+      // Reset Pokemon selections
+      document.querySelectorAll('#pokemon-grid .pokemon-item').forEach(item => {
+        item.classList.remove('selected');
+        item.style.display = 'block';
+      });
+
+      // Reset map view
+      map.setView([36.0, 138.0], 6);
+      updateStats();
+      recomputeVisibility();
     }
 
     function switchTab(tabName) {
@@ -626,133 +476,7 @@
       }
     }
 
-    function resetMap() {
-      // Reset filters for both tabs
-      document.getElementById('prefecture-filter').value = '';
-      document.getElementById('search-input').value = '';
-      document.getElementById('pokemon-search').value = '';
-      selectedPrefecture = '';
-      selectedPokemons = [];
-
-      // Show all markers
-      allMarkers.forEach(marker => {
-        if (!map.hasLayer(marker)) {
-          marker.addTo(map);
-        }
-      });
-
-      // Show all table rows
-      document.querySelectorAll('#prefecture-table-body tr').forEach(row => {
-        row.style.display = '';
-        row.classList.remove('selected');
-      });
-
-      // Reset Pokemon selections
-      document.querySelectorAll('#pokemon-grid .pokemon-item').forEach(item => {
-        item.classList.remove('selected');
-        item.style.display = 'block';
-      });
-
-      // Reset map view
-      map.setView([36.0, 138.0], 6);
-      updateStats();
-    }
-
-    function switchLanguage(lang) {
-      currentLanguage = lang;
-      document.querySelectorAll('.lang-btn').forEach(btn => {
-        const active = btn.getAttribute('data-lang') === lang;
-        btn.classList.toggle('active', active);
-        btn.setAttribute('aria-pressed', active ? 'true':'false');
-      });
-      updateUIText();
-      refreshMarkersContent();
-    }
-
-    function updateUIText() {
-      const t = translations[currentLanguage];
-
-      // Update header
-      document.getElementById('page-title').textContent = t.pageTitle;
-      document.getElementById('nav-link').textContent = t.navLink;
-
-      // Update tab buttons
-      document.querySelector('.tab-button[onclick="switchTab(\'prefecture\')"]').innerHTML = t.prefectureTab;
-      document.querySelector('.tab-button[onclick="switchTab(\'pokemon\')"]').innerHTML = t.pokemonTab;
-
-      // Update prefecture section
-      document.querySelector('#prefecture-tab h4').textContent = t.prefectureFilter;
-      document.querySelector('#prefecture-filter option[value=""]').textContent = t.allPrefectures;
-      document.querySelectorAll('#prefecture-tab h4')[1].textContent = t.prefectureCount;
-      document.getElementById('search-input').placeholder = t.searchPrefecture;
-
-      // Update table headers
-      const headers = document.querySelectorAll('.prefecture-table th');
-      if (headers.length >= 4) {
-        headers[0].textContent = t.codeHeader;
-        headers[1].textContent = t.prefectureHeader;
-        headers[2].textContent = t.countHeader;
-        headers[3].textContent = t.siteHeader;
-      }
-
-      // Update pokemon section
-      document.querySelector('#pokemon-tab h4').textContent = t.pokemonFilter;
-      document.getElementById('pokemon-search').placeholder = t.searchPokemon;
-
-      // Update reset button
-      document.querySelector('.reset-btn').textContent = t.showAll;
-
-      // Update stats
-      document.querySelector('#total-count').innerHTML = `${t.totalCount} <span>${allMarkers.length}</span>`;
-      document.querySelector('#visible-count').innerHTML = `${t.visibleCount} <span>${document.querySelectorAll('#map .leaflet-marker-pane img').length}</span>`;
-      document.querySelector('#city-count').innerHTML = `${t.cityCount} <span>${Object.keys(cityCounts).length}</span>`;
-
-      // Refresh Pokemon grid to show names in current language
-      populatePokemonGrid();
-    }
-
-    function refreshMarkersContent() {
-      allMarkers.forEach(marker => {
-        const data = marker.pokefutaData;
-        const t = translations[currentLanguage];
-
-        // Get multilingual content
-        let title = data.title;
-        let pokemons = data.pokemons && data.pokemons.length > 0 ? data.pokemons.join(', ') : '—';
-
-        if (currentLanguage === 'en') {
-          title = data.title_en || data.title;
-          if (data.pokemons_en && data.pokemons_en.length > 0) {
-            pokemons = data.pokemons_en.join(', ');
-          }
-        } else if (currentLanguage === 'zh') {
-          title = data.title_zh || data.title;
-          if (data.pokemons_zh && data.pokemons_zh.length > 0) {
-            pokemons = data.pokemons_zh.join(', ');
-          }
-        }
-
-        const prefecture = data.prefecture || '不明';
-        const prefectureCode = data.prefectureCode || '--';
-        const cityInfo = data.city ? `<br/><b>${t.cityLabel}</b> ${data.city}` : '';
-
-        const prefectureSiteLink = data.prefecture_site_url
-          ? `<br/><a href='${data.prefecture_site_url}' target='_blank' class='popup-link popup-link--site'>🌐 ${prefecture}${t.prefectureSite}</a>`
-          : '';
-
-        const popupContent = `
-          <div class='popup-box'>
-            <b>${t.idLabel}</b> ${data.id}<br/>
-            <b>${t.titleLabel}</b> ${title}<br/>
-            <b>${t.prefectureLabel}</b> ${prefecture} <span class="prefecture-code">${prefectureCode}</span>${cityInfo}<br/>
-            <b>${t.pokemonLabel}</b> ${pokemons}<br/>
-            <a href='${data.detail_url}' target='_blank' class='popup-link'>${t.officialDetail}</a>${prefectureSiteLink}
-          </div>
-        `;
-
-        marker.setPopupContent(popupContent);
-      });
-    }
+    // 多言語機能削除のため switchLanguage / refreshMarkersContent は不要
 
     // Keyboard navigation for tabs (Left/Right/Home/End)
     document.addEventListener('keydown', (e) => {
