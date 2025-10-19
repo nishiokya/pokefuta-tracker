@@ -12,7 +12,7 @@
 <body>
   <div id="controls" role="complementary" aria-labelledby="page-title">
     <div class="controls-header">
-      <h3 id="page-title"><img src=../dataset/manhole_icon.png width="30">ポケふたマップ</h3>
+  <h3 id="page-title"><img src="./manhole_icon.png" width="30" alt="マンホールアイコン">ポケふたマップ</h3>
       <!-- 言語切替ボタンは廃止（多言語 UI 非表示）。必要になれば復活可能。 -->
       <a href="/pokefuta-tracker/nearby.html" class="nav-link" id="nav-link">📍 近くのマンホール</a>
     </div>
@@ -156,11 +156,20 @@
         }
         allData = [...latestById.values()];
         // Detect presence of date field for recent filter
-        hasAddedAtField = allData.some(d => d.added_at || d.first_seen || d.date);
-        // Pre-compute added date object
+        hasAddedAtField = allData.some(d => d.added_at || d.first_seen || d.last_updated || d.date);
+        // 日付文字列の正規化 (Safari 互換 / microseconds 除去 / +00:00 → Z)
+        function normalizeDateString(ds) {
+          if (!ds) return null;
+          let cleaned = ds.replace(/\+00:00$/, 'Z');
+          cleaned = cleaned.replace(/(\.\d{1,6})Z$/, 'Z');
+          if (!/[Z]$/.test(cleaned) && /T\d{2}:\d{2}:\d{2}$/.test(cleaned)) cleaned += 'Z';
+          const t = Date.parse(cleaned);
+          return isNaN(t) ? null : new Date(t);
+        }
+        // Pre-compute reference date (added_at > first_seen > last_updated > date)
         allData.forEach(d => {
-          const ds = d.added_at || d.first_seen || d.date;
-          d._addedDate = ds ? new Date(ds) : null;
+          const raw = d.added_at || d.first_seen || d.last_updated || d.date;
+          d._addedDate = normalizeDateString(raw);
         });
         // Build markers
         allMarkers = [];
