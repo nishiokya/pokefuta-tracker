@@ -49,9 +49,9 @@ jobs:
           cp -r apps/web/assets/* dist/assets/ || true
           echo "[dist] Copy icons"
           cp dataset/manhole_icon.png dist/manhole_icon.png || true
-          cp docs/pokefuta_icon_32.png dist/pokefuta_icon_32.png 2>/dev/null || true
-          cp docs/pokefuta_icon_24.png dist/pokefuta_icon_24.png 2>/dev/null || true
-          cp docs/pokefuta_icon_clear32.png dist/pokefuta_icon_clear32.png 2>/dev/null || true
+          cp apps/web/assets/pokefuta_icon_32.png dist/pokefuta_icon_32.png || true
+          cp apps/web/assets/pokefuta_icon_24.png dist/pokefuta_icon_24.png || true
+          cp apps/web/assets/pokefuta_icon_clear32.png dist/pokefuta_icon_clear32.png || true
           echo "[dist] Listing dist contents"; find dist -maxdepth 2 -type f -print
 
       - name: Upload artifact
