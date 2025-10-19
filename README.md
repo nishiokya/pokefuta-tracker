@@ -65,8 +65,32 @@ git diff --name-only
 
 削除検出後は `status: deleted` となり、`docs/pokefuta.ndjson` には出力されません (履歴は内部ファイルに保持)。`last_seen` / `source_last_checked` は 2025-10-19 の変更で廃止され `last_updated` に統合、差分ない取得では更新されないため PR のノイズが減ります。
 
-## GitHub Actions
-`.github/workflows/scrape-daily.yml` が毎日実行され、差分があれば PR を生成します (手動トリガ可)。
+## GitHub Actions (Artifact デプロイ方式)
+日次差分更新と公開デプロイを分離しました。
+
+### 1. データ更新 (差分検出 + PR): `.github/workflows/scrape-daily.yml`
+毎日 10:00 UTC に実行し、以下のみを行います:
+- スクレイピング差分更新 (`apps/scraper/update_pokefuta.py`)
+- 内部データファイル更新 (`apps/scraper/pokefuta.ndjson` 全レコード)
+- 差分あれば `CHANGELOG.md` 追記と PR 作成 (生成物は含めない)
+
+公開用 active レコードはワークフロー内で一時的に `/tmp/pokefuta_public.ndjson` に書き出し、コミットしません。
+
+### 2. Pages Artifact ビルド & デプロイ: `.github/workflows/pages-deploy.yml`
+毎日 10:30 UTC (更新後) に実行し、以下を行います:
+1. `dist/` を作成し active レコードのみの `pokefuta.ndjson` を生成。
+2. ソース HTML (`apps/web/*.html`) を `dist/index.html`, `dist/nearby.html` としてコピー。
+3. 旧 URL 互換用リダイレクト `dist/nearby_manholes.html` を生成。
+4. アセット/アイコンを `dist/` へ配置。
+5. `upload-pages-artifact` → `deploy-pages` で GitHub Pages に反映。
+
+`dist/` は Git にコミットせず、生成物を履歴から排除することで PR ノイズとリポジトリ肥大化を防ぎます。
+
+### フロントエンド編集ポリシー
+編集対象は **`apps/web/pokefuta_map.html`** / **`apps/web/nearby.html`** などソースのみ。公開ページは Artifact から生成されるため直接編集できません。
+
+### 移行履歴
+以前は `docs/` フォルダをコミットして公開していましたが Artifact 方式へ移行し、今後削除予定です (互換リダイレクトは Artifact 内で再生成)。
 
 ## 今後の改善アイデア
 - 多言語ポケモン名の正規化マッピング
@@ -85,7 +109,7 @@ git diff --name-only
 
 ### ページ一覧
 - **[マップビュー](https://nishiokya.github.io/pokefuta-tracker/)** - インタラクティブマップでポケふたを地図上で表示
-- **[近くのマンホール](https://nishiokya.github.io/pokefuta-tracker/nearby_manholes.html)** - 現在地から近いポケふたをリスト表示
+- **[近くのマンホール](https://nishiokya.github.io/pokefuta-tracker/nearby.html)** - 現在地から近いポケふたをリスト表示 (旧 URL `/nearby_manholes.html` はリダイレクト)
 
 ### 機能
 - 📍 日本全国のポケふたを地図上で表示
@@ -99,20 +123,22 @@ git diff --name-only
 - NDJSON形式でデータを管理
 - 自動デプロイによる定期更新
 
-## 📁 プロジェクト構成
+## 📁 プロジェクト構成 (移行後)
 
 ```
 apps/
-├── web/                      # Webインターフェース
-│   ├── pokefuta_map.html    # メインのマップページ
-│   ├── nearby_manholes.html # 近くのマンホールリストページ
-│   └── pokefuta.ndjson      # ポケふたデータ（NDJSON形式）
-├── scraper/                 # データ収集
-│   └── scrape_pokefuta.py   # スクレイピングスクリプト
-docs/                        # GitHub Pages用
-├── index.html              # 公開用マップページ
-├── nearby_manholes.html    # 公開用リストページ
-└── pokefuta.ndjson         # 公開用データファイル
-.github/workflows/           # CI/CD
-└── deploy.yml              # GitHub Pages自動デプロイ
+├── web/                      # Webインターフェース (ソース HTML と静的資産)
+│   ├── pokefuta_map.html    # メインのマップページ (ソース)
+│   ├── nearby.html          # 近くのマンホールページ (ソース)
+│   └── assets/              # CSS 等
+├── scraper/                 # データ収集ロジック
+│   ├── scrape_pokefuta.py   # 初期一括取得
+│   └── update_pokefuta.py   # 日次差分更新
+.github/workflows/           # CI/CD ワークフロー
+│   ├── scrape-daily.yml     # データ差分 + PR (生成物コミットなし)
+│   └── pages-deploy.yml     # Artifact 作成 + Pages デプロイ
+dist/                        # (生成物) Git 未コミット / Actions 内で生成
+└── (index.html / pokefuta.ndjson / assets ...)
+
+※ 旧 `docs/` は移行後削除予定 (互換リダイレクトは dist に生成)。
 ```
