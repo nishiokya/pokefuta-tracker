@@ -173,7 +173,8 @@ def build_detail_url(base_root: str, i: int) -> str:
 
 
 def now_iso() -> str:
-    return datetime.now(timezone.utc).isoformat()
+    """Return RFC3339/ISO8601 UTC timestamp (second precision) compatible with JS Date."""
+    return datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
 
 
 def main():
@@ -193,16 +194,19 @@ def main():
     existing = read_existing(args.out, logger)
     by_id: Dict[str, Dict] = {r['id']: r for r in existing if 'id' in r}
 
-    # Ensure extended fields exist
+    # Ensure extended fields exist & migrate legacy timestamps
     for r in existing:
-        # Populate extended fields for backward compatibility
         r.setdefault('first_seen', now_iso())
-        r.setdefault('last_seen', r.get('first_seen'))
         r.setdefault('status', 'active')
-        # added_at is an alias of first_seen used by web recent filter
         r.setdefault('added_at', r.get('first_seen'))
-        # source_last_checked indicates last time we re-fetched the source page (different from last_seen if unchanged)
-        r.setdefault('source_last_checked', r.get('last_seen'))
+        if 'last_updated' not in r:
+            legacy = r.get('last_seen') or r.get('source_last_checked') or r.get('first_seen')
+            r['last_updated'] = legacy
+        # Remove deprecated fields if present
+        if 'last_seen' in r:
+            r.pop('last_seen', None)
+        if 'source_last_checked' in r:
+            r.pop('source_last_checked', None)
 
     new_records: List[Dict] = []
     deleted_ids: List[str] = []
@@ -230,6 +234,7 @@ def main():
                 # Mark deletion if previously active
                 if str(i) in by_id and by_id[str(i)].get('status') == 'active':
                     by_id[str(i)]['status'] = 'deleted'
+                    by_id[str(i)]['last_updated'] = now_iso()
                     changed[str(i)] = {'status': {'old': 'active', 'new': 'deleted'}}
                     deleted_ids.append(str(i))
                 time.sleep(sleep_sec)
@@ -240,6 +245,7 @@ def main():
                 # treat as potential deletion if existed
                 if str(i) in by_id and by_id[str(i)].get('status') == 'active':
                     by_id[str(i)]['status'] = 'deleted'
+                    by_id[str(i)]['last_updated'] = now_iso()
                     changed[str(i)] = {'status': {'old': 'active', 'new': 'deleted'}}
                     deleted_ids.append(str(i))
                 time.sleep(sleep_sec)
@@ -248,10 +254,9 @@ def main():
             pid = parsed['id']
             now_ts = now_iso()
             parsed.setdefault('first_seen', now_ts)
-            parsed.setdefault('last_seen', now_ts)
             parsed.setdefault('added_at', now_ts)
-            parsed.setdefault('source_last_checked', now_ts)
             parsed.setdefault('status', 'active')
+            parsed.setdefault('last_updated', now_ts)
 
             if pid not in by_id:
                 logger.info("NEW id=%s", pid)
@@ -267,17 +272,17 @@ def main():
                 if old.get('status') == 'deleted':
                     # resurrected
                     old['status'] = 'active'
+                    old['last_updated'] = now_ts
                     d = {'status': {'old': 'deleted', 'new': 'active'}}
-                else:
-                    d = diff_record(old, parsed)
-                if d:
-                    logger.info("CHANGED id=%s fields=%s", pid, ','.join(d.keys()))
-                    old.update({k: parsed[k] for k in ['title','lat','lng','pokemons']})
-                    old['last_seen'] = now_ts
                     changed[pid] = d if pid not in changed else {**changed[pid], **d}
                 else:
-                    old['last_seen'] = now_ts
-                old['source_last_checked'] = now_ts
+                    d = diff_record(old, parsed)
+                    if d:
+                        logger.info("CHANGED id=%s fields=%s", pid, ','.join(d.keys()))
+                        old.update({k: parsed[k] for k in ['title','lat','lng','pokemons']})
+                        old['last_updated'] = now_ts
+                        changed[pid] = d if pid not in changed else {**changed[pid], **d}
+                # NOTE: unchanged active records do NOT update last_updated (diff noise削減)
             time.sleep(sleep_sec)
     except KeyboardInterrupt:
         logger.warning("Interrupted; proceeding to write partial results")

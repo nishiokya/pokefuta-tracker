@@ -28,31 +28,30 @@
 | detail_url | string | ✔ | 元詳細ページ URL | "https://local.pokemon.jp/manhole/desc/123/?is_modal=1" | 直接参照可能 |
 | prefecture_site_url | string | ❌ | 都道府県特設サイト URL | "" | 取得できた場合のみ |
 | first_seen | string (ISO8601) | ✔ | 初回検出日時 (UTC) | "2025-10-18T00:00:00.000000+00:00" | 初期化スクリプトまたはアップデータでセット |
-| last_seen | string (ISO8601) | ✔ | 最後に内容確認できた日時 (UTC) | "2025-10-18T06:15:42.123456+00:00" | 成功取得ごとに更新 (差分なくても) |
 | added_at | string (ISO8601) | ✔ | Web UI 最近追加フィルタ用エイリアス | "2025-10-18T00:00:00.000000+00:00" | = first_seen (変更不可) |
-| source_last_checked | string (ISO8601) | ✔ | ソースページ再取得日時 (UTC) | "2025-10-18T06:15:42.123456+00:00" | last_seen と同タイミング、将来差別化予定 |
+| last_updated | string (ISO8601) | ✔ | 内容が変化した/状態変化した最新の更新日時 | "2025-10-18T06:15:42.123456+00:00" | 差分や status 変化時のみ更新 (ノイズ削減) |
 | status | string | ✔ | レコード状態 | "active" | "active" または "deleted" |
 
 ### 状態遷移
 | 遷移 | 条件 | 影響 |
 |------|------|------|
-| (なし→active) | 初回取得成功 | first_seen/last_seen/added_at/source_last_checked を同一時刻で設定 |
-| active→deleted | 過去 active の ID が 404 または座標解析失敗 | status=deleted, last_seen 更新なし (初期値維持)、source_last_checked は更新可能 |
-| deleted→active | 削除扱い ID が再び取得成功 | status=active に戻し last_seen/source_last_checked 更新、変更差分があればフィールド上書き |
+| (なし→active) | 初回取得成功 | first_seen/added_at/last_updated を同一時刻で設定 |
+| active→deleted | 過去 active の ID が 404/座標解析失敗 | status=deleted, last_updated を削除確定時刻に更新 |
+| deleted→active | 削除扱い ID が再び取得成功 | status=active に戻し last_updated 更新 (差分反映) |
 
 ### 差分検出対象フィールド
 `title`, `lat`, `lng`, `pokemons` が増分アップデータで比較されます。
 - 配列フィールド (`pokemons`) は集合比較 (順序無視) で差分判定。
-- 差分がある場合 `last_seen` / `source_last_checked` を更新し CHANGELOG に記録。
+- 差分または status 変化がある場合 `last_updated` を更新し CHANGELOG に記録。差分なしの定期再取得では更新しないため PR ノイズが減少します。
 
 ### レコード例 (active)
 ```json
-{"id":"1","title":"鹿児島県/指宿市","title_en":"Poké Lids","title_zh":"寶可夢人孔蓋","prefecture":"鹿児島県","city":"指宿市","address":"","city_url":"","lat":31.237194,"lng":130.642861,"pokemons":["イーブイ"],"pokemons_en":[],"pokemons_zh":[],"detail_url":"https://local.pokemon.jp/manhole/desc/1/?is_modal=1","prefecture_site_url":"","first_seen":"2025-10-18T00:00:00.000000+00:00","last_seen":"2025-10-18T06:11:32.000000+00:00","added_at":"2025-10-18T00:00:00.000000+00:00","source_last_checked":"2025-10-18T06:11:32.000000+00:00","status":"active"}
+{"id":"1","title":"鹿児島県/指宿市","title_en":"Poké Lids","title_zh":"寶可夢人孔蓋","prefecture":"鹿児島県","city":"指宿市","address":"","city_url":"","lat":31.237194,"lng":130.642861,"pokemons":["イーブイ"],"pokemons_en":[],"pokemons_zh":[],"detail_url":"https://local.pokemon.jp/manhole/desc/1/?is_modal=1","prefecture_site_url":"","first_seen":"2025-10-18T00:00:00.000000+00:00","added_at":"2025-10-18T00:00:00.000000+00:00","last_updated":"2025-10-18T06:11:32.000000+00:00","status":"active"}
 ```
 
 ### レコード例 (deleted)
 ```json
-{"id":"42","title":"香川県/多度津町","title_en":"Poké Lids","title_zh":"寶可夢人孔蓋","prefecture":"香川県","city":"多度津町","address":"","city_url":"","lat":34.272282,"lng":133.757247,"pokemons":["ヤドン"],"pokemons_en":[],"pokemons_zh":[],"detail_url":"https://local.pokemon.jp/manhole/desc/42/?is_modal=1","prefecture_site_url":"https://local.pokemon.jp/municipality/kagawa/","first_seen":"2025-09-25T03:10:00.000000+00:00","last_seen":"2025-10-01T04:15:20.000000+00:00","added_at":"2025-09-25T03:10:00.000000+00:00","source_last_checked":"2025-10-05T05:00:00.000000+00:00","status":"deleted"}
+{"id":"42","title":"香川県/多度津町","title_en":"Poké Lids","title_zh":"寶可夢人孔蓋","prefecture":"香川県","city":"多度津町","address":"","city_url":"","lat":34.272282,"lng":133.757247,"pokemons":["ヤドン"],"pokemons_en":[],"pokemons_zh":[],"detail_url":"https://local.pokemon.jp/manhole/desc/42/?is_modal=1","prefecture_site_url":"https://local.pokemon.jp/municipality/kagawa/","first_seen":"2025-09-25T03:10:00.000000+00:00","added_at":"2025-09-25T03:10:00.000000+00:00","last_updated":"2025-10-05T05:00:00.000000+00:00","status":"deleted"}
 ```
 公開版 (`docs/pokefuta.ndjson`) には含まれません。
 
@@ -103,6 +102,7 @@
 - NDJSON は巨大化を避けるため差分のみ別ファイルに分離する構成に将来変更する可能性があります。
 - 外部再配布時は deleted レコードを除外し最新のみ提供してください。
 - 緯度経度は公式ページ内リンク依存のため精度保証はありません (→ 将来はジオコーディング再検証予定)。
+- `last_seen` / `source_last_checked` は 2025-10-19 のスキーマ改訂で廃止され `last_updated` に統合されました。
 
 ## ライセンス / 法的注意
 ポケふた情報は公式サイトの公開情報を機械的に取得しているため、再利用ポリシーやクローリングルールの変更には随時対応が必要です。過度の頻度での再取得は控えてください。

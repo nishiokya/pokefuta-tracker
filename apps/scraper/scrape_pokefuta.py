@@ -140,7 +140,8 @@ def parse_detail(detail_url: str, html: str, logger: logging.Logger) -> Optional
                 prefecture = pf
                 city = ct.rstrip("市町村区") if ct else ""
 
-    now_iso = datetime.now(timezone.utc).isoformat()
+    # Use second precision UTC format compatible with JS Date parsing
+    now_iso = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
     return {
         "id": pid,
         "title": title,
@@ -158,11 +159,10 @@ def parse_detail(detail_url: str, html: str, logger: logging.Logger) -> Optional
         "detail_url": detail_url,
         "prefecture_site_url": "",
         # extended schema (for consistency with incremental updater)
-        "first_seen": now_iso,
-        "last_seen": now_iso,
-        "added_at": now_iso,  # alias for first_seen used by web UI
-        "source_last_checked": now_iso,
-        "status": "active"
+    "first_seen": now_iso,
+    "added_at": now_iso,  # alias for first_seen used by web UI
+    "last_updated": now_iso,  # unified update timestamp
+    "status": "active"
     }
 
 
