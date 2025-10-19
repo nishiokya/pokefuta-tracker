@@ -278,6 +278,31 @@
       select.addEventListener('change', filterByPrefecture);
     }
 
+    function filterByPrefecture() {
+      selectedPrefecture = document.getElementById('prefecture-filter').value;
+      // Table row visibility
+      document.querySelectorAll('#prefecture-table-body tr').forEach(row => {
+        if (!selectedPrefecture || row.children[1].textContent === selectedPrefecture) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+      recomputeVisibility();
+    }
+
+    function updateStats(visibleOverride) {
+      const totalEl = document.querySelector('#total-count span');
+      const visibleEl = document.querySelector('#visible-count span');
+      const cityEl = document.querySelector('#city-count span');
+      if (totalEl) totalEl.textContent = String(allMarkers.length);
+      if (visibleEl) {
+        const visibleCount = typeof visibleOverride === 'number' ? visibleOverride : document.querySelectorAll('#map .leaflet-marker-pane img').length;
+        visibleEl.textContent = String(visibleCount);
+      }
+      if (cityEl) cityEl.textContent = String(Object.keys(cityCounts).length);
+    }
+
     function populatePrefectureTable() {
       const tbody = document.getElementById('prefecture-table-body');
 
