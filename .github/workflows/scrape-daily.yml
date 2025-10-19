@@ -1,4 +1,4 @@
-name: Daily Pokefuta Dataset Update (PR only)
+name: Daily Pokefuta Dataset Update (Source Only / No Pages Copy)
 
 on:
   schedule:
@@ -12,7 +12,7 @@ permissions:
   issues: write # ラベル付与に必要 (PR は issues API と統合されている)
 
 jobs:
-  update-and-deploy:
+  update:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -28,30 +28,18 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install beautifulsoup4 requests
-      - name: Run incremental updater (skip deleted in public copy)
+      - name: Run incremental updater (produces internal + active copy under /tmp)
         id: updater
         run: |
           python apps/scraper/update_pokefuta.py \
             --scan-max 2500 \
             --out apps/scraper/pokefuta.ndjson \
-            --copy-to docs/pokefuta.ndjson \
+            --copy-to /tmp/pokefuta_public.ndjson \
             --log-level INFO
-
-      - name: Update docs for GitHub Pages (assets & redirect)
-        run: |
-          cp apps/scraper/pokefuta.ndjson docs/pokefuta.ndjson
-          cp apps/web/pokefuta_map.html docs/index.html || true
-          cp apps/web/nearby.html docs/nearby.html || true
-          # Ensure manhole_icon.png is available at root (HTML now references ./manhole_icon.png)
-          cp dataset/manhole_icon.png docs/manhole_icon.png || true
-          rm -rf docs/assets
-          cp -r apps/web/assets docs/assets || true
-          echo '<!doctype html><meta http-equiv="refresh" content="0; url=./nearby.html">' > docs/nearby_manholes.html
-      - name: Detect dataset changes
+      - name: Detect dataset changes (source files only)
         id: diff
         run: |
-          git add apps/scraper/pokefuta.ndjson docs/pokefuta.ndjson CHANGELOG.md docs/index.html docs/nearby.html docs/nearby_manholes.html || true
-          git add docs/assets || true
+          git add apps/scraper/pokefuta.ndjson CHANGELOG.md || true
           if git diff --cached --quiet; then
             echo "changed=false" >> $GITHUB_OUTPUT
           else
@@ -65,7 +53,7 @@ jobs:
           commit-message: "chore: daily pokefuta dataset update"
           title: "Daily pokefuta dataset update"
           body: |
-            Automated daily update (dataset + docs). If approved, Pages will deploy with refreshed data.
+            Automated daily dataset update (source only). Pages are deployed separately via artifact workflow.
           branch: daily/update-pokefuta-dataset
           labels: |-
             data-update
@@ -75,6 +63,6 @@ jobs:
           draft: false
           token: ${{ secrets.GITHUB_TOKEN }} # 明示指定 (repo 設定で Read/Write 権限が必要)
 
-      - name: No changes summary
+      - name: No changes summary (no PR)
         if: steps.diff.outputs.changed == 'false'
         run: echo "No dataset changes detected; nothing to PR."
