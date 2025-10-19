@@ -12,7 +12,7 @@
 <body>
   <div id="controls" role="complementary" aria-labelledby="page-title">
     <div class="controls-header">
-      <h3 id="page-title"><img src=../dataset/manhole_icon.png width="30">ポケふたマップ</h3>
+  <h3 id="page-title"><img src="./dataset/manhole_icon.png" width="30" alt="Pokémon manhole cover icon">ポケふたマップ</h3>
       <!-- 言語切替ボタンは廃止（多言語 UI 非表示）。必要になれば復活可能。 -->
       <a href="/pokefuta-tracker/nearby.html" class="nav-link" id="nav-link">📍 近くのマンホール</a>
     </div>
@@ -356,6 +356,22 @@
       // Add search functionality
       const searchInput = document.getElementById('search-input');
       searchInput.addEventListener('input', searchPrefectures);
+    }
+
+    function searchPrefectures() {
+      const query = document.getElementById('search-input').value.trim();
+      const rows = document.querySelectorAll('#prefecture-table-body tr');
+      if (!query) {
+        rows.forEach(r => { r.style.display = ''; });
+        return;
+      }
+      const qLower = query.toLowerCase();
+      rows.forEach(row => {
+        const prefectureCell = row.children[1];
+        if (!prefectureCell) return;
+        const name = prefectureCell.textContent.toLowerCase();
+        row.style.display = name.includes(qLower) ? '' : 'none';
+      });
     }
 
     function selectPrefectureFromTable(prefecture, row) {

@@ -12,8 +12,12 @@
 <body>
   <div id="controls" role="complementary" aria-labelledby="page-title">
     <div class="controls-header">
-      <h3 id="page-title"><img src=../dataset/manhole_icon.png width="30">ポケふたマップ</h3>
-      <!-- 言語切替ボタンは廃止（多言語 UI 非表示）。必要になれば復活可能。 -->
+  <h3 id="page-title"><img src="./dataset/manhole_icon.png" width="30" alt="Pokémon manhole cover icon">ポケふたマップ</h3>
+      <div class="language-selector" role="group" aria-label="Language selector">
+        <button class="lang-btn active" onclick="switchLanguage('ja')" data-lang="ja" aria-pressed="true">🇯🇵<span class="sr-only">日本語</span></button>
+        <button class="lang-btn" onclick="switchLanguage('en')" data-lang="en" aria-pressed="false">🇺🇸<span class="sr-only">English</span></button>
+        <button class="lang-btn" onclick="switchLanguage('zh')" data-lang="zh" aria-pressed="false">��<span class="sr-only">中文</span></button>
+      </div>
       <a href="/pokefuta-tracker/nearby.html" class="nav-link" id="nav-link">📍 近くのマンホール</a>
     </div>
     <div class="controls-content" role="region" aria-label="Filters and statistics">
