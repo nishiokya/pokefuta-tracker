@@ -24,9 +24,8 @@ git add docs/pokefuta.ndjson && git commit -m "chore: publish initial dataset"
 3. 変更検出 (タイトル / lat / lng / pokemons の差分)
 4. スキーマ拡張フィールド更新:
 	- `first_seen`: 初回検出日時 (UTC ISO8601)
-	- `last_seen`: 内容が変化した時 or 再取得成功時の最新観測日時
-	- `added_at`: Web UI 用エイリアス (初期 = first_seen)
-	- `source_last_checked`: 直近でページを再取得した日時 (変更なくても更新)
+	- `added_at`: Web UI 最近追加フィルタ用 (常に first_seen と同値)
+	- `last_updated`: 内容差分または status 変化が発生した最新日時 (差分ない再取得では更新しない)
 	- `status`: active | deleted
 5. `apps/scraper/pokefuta.ndjson` を全レコード (deleted 含む) で更新
 6. 公開用 `docs/pokefuta.ndjson` は active のみ出力
@@ -58,14 +57,13 @@ git diff --name-only
 	"detail_url": "https://local.pokemon.jp/manhole/desc/123/?is_modal=1",
 	"prefecture_site_url": "",
 	"first_seen": "2025-10-18T00:00:00Z",
-	"last_seen": "2025-10-18T00:05:12Z",
 	"added_at": "2025-10-18T00:00:00Z",
-	"source_last_checked": "2025-10-18T00:05:12Z",
+	"last_updated": "2025-10-18T00:05:12Z",
 	"status": "active"
 }
 ```
 
-削除検出後は `status: deleted` となり、`docs/pokefuta.ndjson` には出力されません (履歴は `apps/scraper/pokefuta.ndjson` に残る)。
+削除検出後は `status: deleted` となり、`docs/pokefuta.ndjson` には出力されません (履歴は内部ファイルに保持)。`last_seen` / `source_last_checked` は 2025-10-19 の変更で廃止され `last_updated` に統合、差分ない取得では更新されないため PR のノイズが減ります。
 
 ## GitHub Actions
 `.github/workflows/scrape-daily.yml` が毎日実行され、差分があれば PR を生成します (手動トリガ可)。
