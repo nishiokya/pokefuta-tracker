@@ -69,6 +69,14 @@
     </div>
   </div>
   <div id="map"></div>
+  <!-- バナーを地図上オーバーレイとして配置 -->
+  <div id="sibling-site-banner" class="upload-banner" role="note" aria-label="兄弟サイトへの写真アップロード案内" aria-live="polite" hidden>
+    <div class="upload-banner__inner">
+      <strong class="upload-banner__title">📷 写真協力のお願い</strong>
+      <span class="upload-banner__body">マンホール写真をお持ちなら兄弟サイト <a href="https://pokefuta.com/" target="_blank" rel="noopener" class="upload-banner__link">pokefuta.com</a> にアップロードして共有できます。</span>
+      <button type="button" aria-label="案内を閉じる" id="banner-close" class="upload-banner__close" title="閉じる">✕</button>
+    </div>
+  </div>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script>
@@ -145,15 +153,38 @@
         const text = await res.text();
         const lines = text.trim().split('\n');
         allData = [];
-        const latestById = new Map();
+        // 集約: 同一 id の複数レコードが存在する場合
+        //   ・added_at / first_seen は最古値
+        //   ・last_seen / source_last_checked / last_updated は最新値
+        //   ・その他フィールドは最新レコードをベース
+        const aggById = new Map();
         for (const line of lines) {
           if (!line.trim()) continue;
-          const obj = JSON.parse(line);
-          if (!latestById.has(obj.id) || new Date(obj.source_last_checked) > new Date(latestById.get(obj.id).source_last_checked)) {
-            latestById.set(obj.id, obj);
+          let obj; try { obj = JSON.parse(line); } catch { continue; }
+          const existing = aggById.get(obj.id);
+          if (!existing) {
+            aggById.set(obj.id, { ...obj });
+          } else {
+            function earlier(a,b){ if(!a) return b; if(!b) return a; return new Date(a) <= new Date(b) ? a : b; }
+            function later(a,b){ if(!a) return b; if(!b) return a; return new Date(a) >= new Date(b) ? a : b; }
+            // keep earliest for creation-ish fields
+            existing.added_at = earlier(existing.added_at, obj.added_at);
+            existing.first_seen = earlier(existing.first_seen, obj.first_seen);
+            // keep latest for observation-ish fields
+            existing.last_seen = later(existing.last_seen, obj.last_seen);
+            existing.source_last_checked = later(existing.source_last_checked, obj.source_last_checked);
+            existing.last_updated = later(existing.last_updated, obj.last_updated);
+            // For other mutable fields (title, pokemons etc.) assume latest line is authoritative
+            Object.assign(existing, obj, {
+              added_at: existing.added_at,
+              first_seen: existing.first_seen,
+              last_seen: existing.last_seen,
+              source_last_checked: existing.source_last_checked,
+              last_updated: existing.last_updated
+            });
           }
         }
-        allData = [...latestById.values()];
+        allData = [...aggById.values()];
   // Detect presence of date field for recent filter (include source_last_checked / last_seen)
   hasAddedAtField = allData.some(d => d.added_at || d.first_seen || d.last_seen || d.source_last_checked || d.last_updated || d.date);
         // 日付文字列の正規化 (Safari 互換 / microseconds 除去 / +00:00 → Z)
@@ -194,13 +225,15 @@
           const pokemonsStr = Array.isArray(d.pokemons) && d.pokemons.length ? d.pokemons.join(', ') : '—';
           const cityInfo = d.city ? `<br/><b>${UI_TEXT.cityLabel}</b> ${d.city}` : '';
           const prefectureSiteLink = d.prefecture_site_url ? `<br/><a href='${d.prefecture_site_url}' target='_blank' class='popup-link popup-link--site'>🌐 ${prefecture}${UI_TEXT.prefectureSite}</a>` : '';
+          // 画像無い場合アップロード案内リンク (仮: d.image_url が無いと判断) ※データ構造に応じて調整可能
+          const uploadLink = !d.image_url ? `<br/><a href='https://pokefuta.com/' target='_blank' rel='noopener' class='popup-link popup-link--upload' title='写真を共有 (兄弟サイト)'>📷 写真をアップロード</a>` : '';
           const popupContent = `
             <div class='popup-box'>
               <b>${UI_TEXT.idLabel}</b> ${d.id}<br/>
               <b>${UI_TEXT.titleLabel}</b> <span class="popup-title">${d.title}</span><br/>
               <b>${UI_TEXT.prefectureLabel}</b> ${prefecture} <span class="prefecture-code">${prefectureCode}</span>${cityInfo}<br/>
               <b>${UI_TEXT.pokemonLabel}</b> <span class="popup-pokemons">${pokemonsStr}</span><br/>
-              <a href='${d.detail_url}' target='_blank' class='popup-link'>${UI_TEXT.officialDetail}</a>${prefectureSiteLink}
+              <a href='${d.detail_url}' target='_blank' class='popup-link'>${UI_TEXT.officialDetail}</a>${prefectureSiteLink}${uploadLink}
             </div>
           `;
           const marker = L.marker([d.lat, d.lng], { icon: pokefutaIcon }).bindPopup(popupContent);
@@ -212,6 +245,7 @@
         populatePokemonGrid();
         updateStats();
         initRecentFilter();
+        updateRecentSummary();
       } catch (e) {
         console.error('ポケふたデータ読み込み失敗', e);
       }
@@ -227,7 +261,41 @@
       toggle.addEventListener('change', e => {
         filterRecent = e.target.checked;
         recomputeVisibility();
+        updateRecentSummary();
       });
+    }
+
+    function countRecent(days=30){
+      const now = Date.now();
+      const span = days*86400000;
+      let c=0; allData.forEach(d=>{ if(d._addedDate){ const diff = now - d._addedDate.getTime(); if(diff>=0 && diff<=span) c++; }}); return c;
+    }
+
+    function ensureRecentSummaryElement(){
+      let el = document.getElementById('recent-summary');
+      if(!el){
+        const wrapper = document.getElementById('recent-filter-wrapper');
+        if(wrapper){
+          el = document.createElement('div');
+          el.id = 'recent-summary';
+          el.style.fontSize='0.7rem';
+          el.style.marginTop='2px';
+          el.style.color='#555';
+          wrapper.appendChild(el);
+        }
+      }
+      return el;
+    }
+
+    function updateRecentSummary(){
+      const el = ensureRecentSummaryElement();
+      if(!el) return;
+      if(!hasAddedAtField){ el.textContent='日付フィールドなし'; return; }
+      const recentCnt = countRecent(30);
+      const total = allData.length;
+      if(recentCnt===0){ el.textContent='直近30日: 0件 (新規無し)'; }
+      else if(recentCnt===total){ el.textContent=`直近30日: 全${total}件 (全て新規または30日以内)`; }
+      else { el.textContent=`直近30日: ${recentCnt} / ${total}`; }
     }
 
     function isWithinLastDays(dateObj, days) {
@@ -536,6 +604,15 @@
 
     // Initialize
     loadPokefutaData();
+    // Banner 初期化
+    (function initSiblingBanner(){
+      const banner = document.getElementById('sibling-site-banner');
+      if(!banner) return;
+      const closed = localStorage.getItem('pf_banner_closed');
+      if(!closed) banner.hidden = false;
+      const btn = document.getElementById('banner-close');
+      if(btn){ btn.addEventListener('click',()=>{ banner.hidden = true; localStorage.setItem('pf_banner_closed','1'); }); }
+    })();
   </script>
 </body>
 </html>
