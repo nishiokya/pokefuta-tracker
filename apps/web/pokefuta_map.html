@@ -154,22 +154,27 @@
           }
         }
         allData = [...latestById.values()];
-        // Detect presence of date field for recent filter
-        hasAddedAtField = allData.some(d => d.added_at || d.first_seen || d.last_updated || d.date);
+  // Detect presence of date field for recent filter (include source_last_checked / last_seen)
+  hasAddedAtField = allData.some(d => d.added_at || d.first_seen || d.last_seen || d.source_last_checked || d.last_updated || d.date);
         // 日付文字列の正規化 (Safari 互換 / microseconds 除去 / +00:00 → Z)
         function normalizeDateString(ds) {
           if (!ds) return null;
-          // Drop fractional seconds, convert +00:00 to Z
-          let cleaned = ds.replace(/\+00:00$/, 'Z');
-          cleaned = cleaned.replace(/(\.\d{1,6})Z$/, 'Z');
-          // Ensure ends with Z
-          if (!/[Z]$/.test(cleaned) && /T\d{2}:\d{2}:\d{2}$/.test(cleaned)) cleaned += 'Z';
+          let cleaned = ds.trim();
+          // If fractional seconds are more than 3 digits, trim to milliseconds (Safari 対応)
+          cleaned = cleaned.replace(/(\.\d{3})\d+(?=(Z|[+\-]\d{2}:?\d{2})?$)/, '$1');
+          // If any fractional seconds remain with more than 6 digits, drop entirely
+          cleaned = cleaned.replace(/\.\d{4,6}(?=(Z|[+\-]\d{2}:?\d{2})?$)/, match => match.slice(0,4));
+          // Convert +00:00 to Z for consistency
+          cleaned = cleaned.replace(/\+00:00$/, 'Z');
+          // If timezone missing but pattern looks like ISO, append Z
+          if (!/(Z|[+\-]\d{2}:?\d{2})$/.test(cleaned) && /T\d{2}:\d{2}:\d{2}/.test(cleaned)) cleaned += 'Z';
           const t = Date.parse(cleaned);
-            return isNaN(t) ? null : new Date(t);
+          return isNaN(t) ? null : new Date(t);
         }
-        // Pre-compute reference date (優先順位: added_at > first_seen > last_updated > date)
+        // Pre-compute reference date for "recent" filter
+        // 優先順位: added_at > first_seen > last_seen > source_last_checked > last_updated > date
         allData.forEach(d => {
-          const raw = d.added_at || d.first_seen || d.last_updated || d.date;
+          const raw = d.added_at || d.first_seen || d.last_seen || d.source_last_checked || d.last_updated || d.date;
           d._addedDate = normalizeDateString(raw);
         });
         // Build markers
@@ -217,7 +222,7 @@
       if (!toggle) return;
       if (!hasAddedAtField) {
         toggle.disabled = true;
-        toggle.title = 'データに日付フィールド (added_at / first_seen / date) が無いため利用できません';
+        toggle.title = 'データに日付フィールド (added_at / first_seen / last_updated / date) が無いため利用できません';
       }
       toggle.addEventListener('change', e => {
         filterRecent = e.target.checked;
@@ -379,6 +384,8 @@
           row.addEventListener('click', () => filterByPrefectureFromTable(prefecture));
           row.style.cursor = 'pointer';
         }
+        // Append row (BUGFIX: previously not appended, table remained empty)
+        tbody.appendChild(row);
       });
       const searchInput = document.getElementById('search-input');
       if (searchInput) searchInput.addEventListener('input', searchPrefectures);
@@ -445,8 +452,9 @@
         // document.getElementById('prefecture-filter').value = ''; // Removed as per patch requirement
       document.getElementById('search-input').value = '';
       document.getElementById('pokemon-search').value = '';
-      selectedPrefecture = '';
-          filterByPrefectureFromTable(prefecture);
+    selectedPrefecture = '';
+    filterByPrefectureFromTable('');
+    showSelectedPrefectureBadge();
       filterRecent = false; const rt = document.getElementById('recent-toggle'); if (rt) rt.checked = false;
 
       // Show all markers
