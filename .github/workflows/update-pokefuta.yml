@@ -1,8 +1,9 @@
-name: Update Pokefuta Dataset
+name: Daily Pokefuta Dataset Update (single run)
 
 on:
   schedule:
-    - cron: '0 3 * * *'  # 毎日 JST 12:00 相当 (UTC 03:00)
+    # Single daily run (UTC 03:00 ≒ JST 12:00). Adjust here if needed.
+    - cron: '0 3 * * *'
   workflow_dispatch: {}
 
 jobs:
@@ -25,10 +26,10 @@ jobs:
           pip install -r requirements.txt
           pip install beautifulsoup4 requests
 
-      - name: Run updater
+      - name: Run updater (scan up to 2500 IDs)
         id: updater
         run: |
-          python apps/scraper/update_pokefuta.py --scan-max 2000 --out apps/scraper/pokefuta.ndjson --copy-to docs/pokefuta.ndjson --log-level INFO
+          python apps/scraper/update_pokefuta.py --scan-max 2500 --out apps/scraper/pokefuta.ndjson --copy-to docs/pokefuta.ndjson --log-level INFO
 
       - name: Detect changes
         id: diff
@@ -44,11 +45,12 @@ jobs:
         if: steps.diff.outputs.changed == 'true'
         uses: peter-evans/create-pull-request@v6
         with:
-          commit-message: "chore: update pokefuta dataset"
-          title: "Update pokefuta dataset"
+          commit-message: "chore: daily pokefuta dataset update"
+          title: "Daily pokefuta dataset update"
           body: |
-            Automated update of pokefuta dataset (new/deleted/changed records).
-          branch: update/pokefuta-dataset
+            Automated daily dataset update (single workflow). Removed legacy second workflow to avoid duplicate runs.
+          branch: daily/update-pokefuta-dataset
           labels: |-
             data-update
+            automated
           delete-branch: true
