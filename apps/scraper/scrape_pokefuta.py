@@ -29,7 +29,7 @@ from __future__ import annotations
 import argparse, json, logging, os, re, signal, sys, tempfile, time
 from datetime import datetime, timezone
 from dataclasses import dataclass
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 
 import requests
 from bs4 import BeautifulSoup
@@ -225,6 +225,100 @@ def atomic_write_ndjson(path: str, rows: List[Dict]):
     os.replace(p, path)
 
 
+def load_existing(path: str, mode: str) -> List[Dict]:
+    """Load existing output file (ndjson or array). Return list of dicts or [].
+
+    Any malformed lines are skipped to be resilient against manual edits.
+    """
+    if not os.path.exists(path):
+        return []
+    records: List[Dict] = []
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            if mode == "array":
+                try:
+                    arr = json.load(f)
+                    if isinstance(arr, list):
+                        for x in arr:
+                            if isinstance(x, dict):
+                                records.append(x)
+                except Exception:
+                    return []
+            else:  # ndjson
+                for line in f:
+                    line = line.strip()
+                    if not line:
+                        continue
+                    try:
+                        obj = json.loads(line)
+                        if isinstance(obj, dict):
+                            records.append(obj)
+                    except Exception:
+                        continue
+    except Exception:
+        return []
+    return records
+
+
+CORE_COMPARE_FIELDS = [
+    "title", "title_en", "title_zh", "prefecture", "city", "address", "city_url",
+    "lat", "lng", "pokemons", "pokemons_en", "pokemons_zh", "detail_url", "prefecture_site_url", "status"
+]
+
+
+def _record_changed(new: Dict, old: Dict) -> bool:
+    for k in CORE_COMPARE_FIELDS:
+        if new.get(k) != old.get(k):
+            return True
+    return False
+
+
+def merge_with_existing(existing: List[Dict], freshly_scraped: List[Dict], now_iso: str) -> Tuple[List[Dict], bool]:
+    """Merge new scrape results with existing records preserving timestamps.
+
+    Rules:
+      * If id exists and core fields unchanged -> keep entire old record (no diff)
+      * If id exists and changed -> keep old first_seen/added_at, update last_updated=now_iso
+      * New id -> insert with its timestamps (first_seen/added_at/last_updated already set) -> diff
+      * Removed ids (present before, missing now) are retained unchanged (initial scraper doesn't handle deletions)
+    Returns (merged_records, changed_flag).
+    """
+    old_by_id = {r.get("id"): r for r in existing if r.get("id")}
+    new_by_id = {r.get("id"): r for r in freshly_scraped if r.get("id")}
+
+    changed = False
+    merged: List[Dict] = []
+
+    # Preserve existing ordering primarily
+    for old in existing:
+        oid = old.get("id")
+        if not oid:
+            continue
+        if oid in new_by_id:
+            new_rec = new_by_id[oid]
+            if _record_changed(new_rec, old):
+                # update timestamps but keep original first_seen/added_at
+                new_rec["first_seen"] = old.get("first_seen", new_rec.get("first_seen"))
+                new_rec["added_at"] = old.get("added_at", new_rec.get("added_at"))
+                new_rec["last_updated"] = now_iso
+                merged.append(new_rec)
+                changed = True
+            else:
+                merged.append(old)  # identical -> keep as-is
+            del new_by_id[oid]
+        else:
+            # Old record not re-scraped (outside scan range or deleted) -> keep
+            merged.append(old)
+
+    # Append truly new records (remaining in new_by_id)
+    for rec in freshly_scraped:
+        rid = rec.get("id")
+        if rid in new_by_id:  # still not merged
+            merged.append(rec)
+            changed = True
+    return merged, changed
+
+
 _running = True
 def _sigint_handler(signum, frame):  # noqa: D401
     global _running
@@ -296,13 +390,20 @@ def main():
         time.sleep(sleep_sec)
 
     # 保存
-    if args.write_mode == 'array':
-        atomic_write_array(args.out, results)
+    existing = load_existing(args.out, args.write_mode)
+    merged, changed_flag = merge_with_existing(existing, results, datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'))
+
+    if not changed_flag:
+        logger.info('No changes detected; skip writing (out=%s)', args.out)
     else:
-        atomic_write_ndjson(args.out, results)
+        if args.write_mode == 'array':
+            atomic_write_array(args.out, merged)
+        else:
+            atomic_write_ndjson(args.out, merged)
+        logger.info('Wrote updated dataset records=%d new_or_changed=%d out=%s', len(merged), len(merged) - len(existing), args.out)
 
     dur = time.time() - start_ts
-    logger.info('DONE processed=%d success=%d wrote=%d mode=%s out=%s elapsed=%.1fs', processed, successes, len(results), args.write_mode, args.out, dur)
+    logger.info('DONE processed=%d success=%d current_records=%d mode=%s out=%s elapsed=%.1fs changed=%s', processed, successes, len(merged if changed_flag else existing), args.write_mode, args.out, dur, changed_flag)
 
     # ヘルプ: 次のステップ
     logger.info('次回以降の定期更新は update_pokefuta.py を使用してください。')
