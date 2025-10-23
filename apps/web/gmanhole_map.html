@@ -3,7 +3,17 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ガンダム & ポケふた マンホールマップ</title>
+  <title>ガンダム & ポケふた マンホールマップ | 聖地巡礼支援</title>
+  <meta name="description" content="ガンダムマンホールとポケふたを1枚の地図で統合表示。キャラクター・ポケモン・重複地点を可視化し聖地巡礼計画に活用。">
+  <meta name="keywords" content="ガンダムマンホール,ポケふた,マンホール,ガンダム,ポケモン,聖地巡礼,地図">
+  <meta name="robots" content="index,follow">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:title" content="ガンダム & ポケふた マンホールマップ | 聖地巡礼支援">
+  <meta property="og:description" content="ガンダムマンホールとポケふたを統合。キャラクターやポケモンでフィルタ可能。">
+  <meta property="og:url" content="https://nishiokya.github.io/pokefuta-tracker/gmanhole_map.html">
+  <meta property="og:image" content="https://nishiokya.github.io/pokefuta-tracker/assets/manhole_icon.png">
+  <link rel="canonical" href="https://nishiokya.github.io/pokefuta-tracker/gmanhole_map.html">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
   <link rel="stylesheet" href="./assets/theme.css" />
   <link rel="stylesheet" href="./assets/map.css" />
@@ -33,12 +43,20 @@
     .filter-section { margin-bottom:10px; }
   </style>
   <link rel="icon" href="./assets/manhole_icon.png" type="image/png" />
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-K18NR4GZG2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} gtag('js', new Date());
+    gtag('config', 'G-K18NR4GZG2', { 'anonymize_ip': true });
+  </script>
+  <!-- End GA -->
 </head>
 <body>
   <div id="controls" role="complementary" aria-labelledby="page-title">
     <div class="controls-header">
       <h3 id="page-title">🕳 ガンダム & ポケふた マップ</h3>
-      <a href="./pokefuta_map.html" class="nav-link" id="nav-link">← ポケふた専用マップへ</a>
+  <a href="./pokefuta_map.html" class="nav-link" id="nav-link">← ポケふたマップ</a>
     </div>
     <div class="controls-content" role="region" aria-label="Filters and statistics">
       <div class="filter-section">

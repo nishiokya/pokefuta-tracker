@@ -3,19 +3,37 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Pokéfuta Mini Map</title>
+  <title>ポケふた マップ | 全国ポケモンマンホール一覧</title>
+  <meta name="description" content="全国のポケモンマンホール（ポケふた）を地図で探索。都道府県・ポケモン名・最近追加フィルタで絞り込み可能。">
+  <meta name="keywords" content="ポケふた,ポケモンマンホール,マンホール,ポケモン,聖地巡礼,地図">
+  <meta name="robots" content="index,follow">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:title" content="ポケふた マップ | 全国ポケモンマンホール一覧">
+  <meta property="og:description" content="全国のポケモンマンホール（ポケふた）を地図で探索。訪問計画や聖地巡礼に活用できます。">
+  <meta property="og:url" content="https://data.pokefuta.com/">
+  <meta property="og:image" content="https://data.pokefuta.com/assets/pokefuta_icon_32.png">
+  <link rel="canonical" href="https://data.pokefuta.com/">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
   <link rel="stylesheet" href="./assets/theme.css" />
   <link rel="stylesheet" href="./assets/map.css" />
   <link rel="icon" href="./assets/pokefuta_icon_32.png" type="image/png" />
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-K18NR4GZG2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} gtag('js', new Date());
+    gtag('config', 'G-K18NR4GZG2', { 'anonymize_ip': true });
+  </script>
+  <!-- End GA -->
 </head>
 <body>
   <div id="controls" role="complementary" aria-labelledby="page-title">
     <div class="controls-header">
   <h3 id="page-title"><img src="./assets/manhole_icon.png" width="30" alt="マンホールアイコン">ポケふたマップ</h3>
       <!-- 言語切替ボタンは廃止（多言語 UI 非表示）。必要になれば復活可能。 -->
-  <a href="/pokefuta-tracker/nearby_manholes.html" class="nav-link" id="nav-link">📍 近くのマンホール</a>
+  <a href="./gmanhole_map.html" class="nav-link" id="nav-link">� ガンダム & ポケふた統合</a>
     </div>
     <div class="controls-content" role="region" aria-label="Filters and statistics">
       <div class="tab-buttons" role="tablist" aria-label="Filter type">

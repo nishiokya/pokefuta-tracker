@@ -108,20 +108,45 @@ git diff --name-only
 インタラクティブなポケふたマップをGitHub Pagesで公開しています：
 
 ### ページ一覧
-- **[マップビュー](https://nishiokya.github.io/pokefuta-tracker/)** - インタラクティブマップでポケふたを地図上で表示
-- **[近くのマンホール](https://nishiokya.github.io/pokefuta-tracker/nearby.html)** - 現在地から近いポケふたをリスト表示 (旧 URL `/nearby_manholes.html` はリダイレクト)
+- **[マップビュー](https://data.pokefuta.com/)** - インタラクティブマップでポケふたを地図上で表示
+- **[ガンダム & ポケふた統合マップ (試験)](https://nishiokya.github.io/pokefuta-tracker/gmanhole_map.html)** - ガンダムマンホール + ポケふたを同時可視化 (重複座標ハイライト)
 
 ### 機能
 - 📍 日本全国のポケふたを地図上で表示
 - 🗾 Leafletベースのインタラクティブマップ
 - 📝 各ポケふたの詳細情報（場所、ポケモン、公式詳細ページへのリンク）
 - 📱 レスポンシブデザイン（PC・スマートフォン対応）
-- 📏 位置情報による距離計算と近いマンホールの表示
+- � フィルタ (都道府県 / ポケモン / 最近追加)
+- ※ 近くのマンホール表示機能 (旧 `nearby.html`) は廃止しました。要望があれば低精度版 / PWA 版として再検討します。
 
 ### データソース
 - スクレイピングによって取得した最新のポケふた情報
 - NDJSON形式でデータを管理
 - 自動デプロイによる定期更新
+
+## 🤖 ガンダムマンホール対応 (試験的機能)
+
+`apps/scraper/scrape_gmanhole.py` によりガンダムマンホール公式サイトの連番詳細ページから以下を抽出しています:
+
+- id / title / prefecture / city / address / image_urls / characters / series / slug / images_count
+- ジオコーディング (国土地理院 API 既定 / `--geocode-provider` 切り替え)
+- timestamps: first_seen / added_at / last_updated / status
+
+公開マップ: **[ガンダム & ポケふた統合マップ](https://nishiokya.github.io/pokefuta-tracker/gmanhole_map.html)**
+
+### スクレイプ例
+```bash
+python apps/scraper/scrape_gmanhole.py --scan-max 80 --geocode --geocode-provider gsi --out gmanhole.ndjson
+cp gmanhole.ndjson apps/web/assets/gmanhole.ndjson
+```
+
+### 今後の拡張予定
+- キャラクター/シリーズ語彙の自動強化
+- 作品別フィルタ UI
+- JIS コード付与 / GeoJSON エクスポート
+- 重複地点での統合ポップアップ
+
+フィードバック歓迎です。ガンダム側スキーマ安定後に CI 経由で自動更新へ移行予定です。
 
 ## 📁 プロジェクト構成 (移行後)
 
