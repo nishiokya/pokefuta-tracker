@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ガンダム & ポケふた マンホールマップ</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <link rel="stylesheet" href="./assets/theme.css" />
+  <link rel="stylesheet" href="./assets/map.css" />
+  <style>
+    /* Franchise specific marker styling (DivIcon) */
+    .fr-marker { width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:600; color:#fff; box-shadow:0 0 0 2px #fff, 0 2px 6px rgba(0,0,0,.35); }
+    .fr-pokemon { background:linear-gradient(135deg,#ffcc00,#ff6b00); }
+    .fr-gundam { background:linear-gradient(135deg,#0044aa,#cc0000); }
+    .fr-both { background:linear-gradient(135deg,#6a00cc,#ff0066); }
+    #controls { max-width:340px; }
+    .legend { margin-top:6px; display:flex; gap:8px; flex-wrap:wrap; }
+    .legend-item { display:flex; align-items:center; gap:4px; font-size:0.75rem; }
+    .legend-swatch { width:18px; height:18px; border-radius:50%; box-shadow:0 0 0 1px #fff,0 1px 3px rgba(0,0,0,.3); }
+    .legend-pokemon { background:linear-gradient(135deg,#ffcc00,#ff6b00); }
+    .legend-gundam { background:linear-gradient(135deg,#0044aa,#cc0000); }
+    .legend-both { background:linear-gradient(135deg,#6a00cc,#ff0066); }
+    .character-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(90px,1fr)); gap:4px; margin-top:4px; max-height:220px; overflow:auto; }
+    .character-item { background:#f5f7fa; border:1px solid #dde; padding:4px 6px; border-radius:6px; cursor:pointer; font-size:0.7rem; display:flex; flex-direction:column; gap:2px; }
+    .character-item.selected { background:#334; color:#fff; }
+    .character-count { font-size:0.65rem; opacity:0.7; }
+    .franchise-filter-group { display:flex; gap:8px; flex-wrap:wrap; margin:4px 0 8px; }
+    .franchise-filter-group label { font-size:0.8rem; cursor:pointer; display:flex; align-items:center; gap:4px; }
+    .dataset-summary { font-size:0.65rem; color:#555; margin-top:4px; }
+    .popup-box { font-size:0.8rem; line-height:1.2; }
+    .popup-box .popup-title { font-weight:600; }
+    .stat-inline { font-size:0.7rem; color:#444; margin:2px 0; }
+    .filter-section { margin-bottom:10px; }
+  </style>
+  <link rel="icon" href="./assets/manhole_icon.png" type="image/png" />
+</head>
+<body>
+  <div id="controls" role="complementary" aria-labelledby="page-title">
+    <div class="controls-header">
+      <h3 id="page-title">🕳 ガンダム & ポケふた マップ</h3>
+      <a href="./pokefuta_map.html" class="nav-link" id="nav-link">← ポケふた専用マップへ</a>
+    </div>
+    <div class="controls-content" role="region" aria-label="Filters and statistics">
+      <div class="filter-section">
+        <h4 style="margin:4px 0;">フランチャイズ表示</h4>
+        <div class="franchise-filter-group" role="group" aria-label="Franchise filters">
+          <label><input type="checkbox" id="chk-pokemon" checked aria-label="ポケモン表示" /> ポケモン</label>
+          <label><input type="checkbox" id="chk-gundam" checked aria-label="ガンダム表示" /> ガンダム</label>
+          <label><input type="checkbox" id="chk-both" checked aria-label="両方 (重複) 表示" /> 両方重複</label>
+        </div>
+        <div class="legend" aria-label="Legend">
+          <div class="legend-item"><span class="legend-swatch legend-pokemon"></span>ポケふた</div>
+          <div class="legend-item"><span class="legend-swatch legend-gundam"></span>ガンダム</div>
+          <div class="legend-item"><span class="legend-swatch legend-both"></span>座標共有/重複</div>
+        </div>
+        <div class="dataset-summary" id="dataset-summary" aria-live="polite"></div>
+      </div>
+      <div class="filter-section">
+        <h4 style="margin:4px 0;">検索</h4>
+        <input type="text" id="search-input" placeholder="タイトル / 都道府県 / 市町村" style="width:100%;" aria-label="全体検索">
+      </div>
+      <div class="filter-section">
+        <h4 style="margin:4px 0;">ガンダムキャラクター</h4>
+        <input type="text" id="character-search" placeholder="キャラクター検索" aria-label="キャラクター検索" style="width:100%;">
+        <div class="character-grid" id="character-grid" role="list" aria-label="キャラクター一覧"></div>
+      </div>
+      <div class="filter-section">
+        <h4 style="margin:4px 0;">ポケモン</h4>
+        <input type="text" id="pokemon-search" placeholder="ポケモン検索" aria-label="ポケモン検索" style="width:100%;">
+        <div class="pokemon-grid" id="pokemon-grid" role="list" aria-label="ポケモン一覧" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(90px,1fr)); gap:4px; max-height:220px; overflow:auto;"></div>
+      </div>
+      <button class="reset-btn" id="btn-reset" aria-label="全て表示にリセット">🔄 リセット</button>
+      <div class="stats" role="status" aria-live="polite">
+        <div id="total-count">総数: <span>0</span></div>
+        <div id="visible-count">表示: <span>0</span></div>
+        <div id="gundam-count">ガンダム: <span>0</span></div>
+        <div id="pokemon-count">ポケふた: <span>0</span></div>
+      </div>
+    </div>
+  </div>
+  <div id="map"></div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script>
+    const map = L.map('map').setView([36.0, 138.0], 6);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
+
+    function franchiseIcon(franchise, overlap=false) {
+      let cls = 'fr-marker ';
+      if (overlap) cls += 'fr-both';
+      else if (franchise === 'gundam') cls += 'fr-gundam';
+      else if (franchise === 'pokefuta' || franchise === 'pokemon') cls += 'fr-pokemon';
+      else cls += 'fr-pokemon';
+      const label = overlap ? '◎' : (franchise === 'gundam' ? 'G' : 'P');
+      return L.divIcon({ className: cls, html: label, iconSize: [30,30], iconAnchor:[15,15], popupAnchor:[0,-15] });
+    }
+
+    // Data containers
+    let gundamData = []; // gmanhole
+    let pokemonData = []; // pokefuta
+    let allMarkers = [];
+    let selectedCharacters = new Set();
+    let selectedPokemons = new Set();
+    let filterText = '';
+
+    async function loadDatasets() {
+      // gundam ndjson
+      try {
+        const resG = await fetch('./assets/gmanhole.ndjson');
+        const textG = await resG.text();
+        gundamData = textG.trim().split('\n').filter(l=>l.trim()).map(l=>{ try { return JSON.parse(l); } catch { return null; }}).filter(Boolean);
+      } catch(e){ console.warn('gmanhole load failed', e); }
+      // pokefuta ndjson (graceful failure)
+      try {
+        const resP = await fetch('./pokefuta.ndjson');
+        if (resP.ok) {
+          const textP = await resP.text();
+          const lines = textP.trim().split('\n');
+          // aggregate by id similar to existing map logic
+          const agg = new Map();
+          for (const line of lines) {
+            if (!line.trim()) continue; let obj; try { obj = JSON.parse(line); } catch { continue; }
+            const existing = agg.get(obj.id);
+            if (!existing) agg.set(obj.id, { ...obj }); else { Object.assign(existing, obj); }
+          }
+          pokemonData = [...agg.values()];
+        }
+      } catch(e){ console.warn('pokefuta load failed', e); }
+      document.getElementById('dataset-summary').textContent = `ガンダム: ${gundamData.length} / ポケふた: ${pokemonData.length}`;
+      buildMarkers();
+      buildCharacterGrid();
+      buildPokemonGrid();
+      updateStats();
+    }
+
+    function buildMarkers() {
+      allMarkers.forEach(m => { if (map.hasLayer(m)) map.removeLayer(m); });
+      allMarkers = [];
+      // Determine overlaps -> same lat/lng (rounded) between franchises
+      const locKey = d => d.lat != null && d.lng != null ? (d.lat.toFixed(5)+'|'+d.lng.toFixed(5)) : null;
+      const pokemonLocs = new Set(pokemonData.map(locKey).filter(Boolean));
+      const gundamLocs = new Set(gundamData.map(locKey).filter(Boolean));
+      const overlapLocs = new Set([...pokemonLocs].filter(k => gundamLocs.has(k)));
+
+      gundamData.forEach(d => {
+        if (d.lat == null || d.lng == null) return; // skip unless geocoded
+        const overlap = overlapLocs.has(locKey(d));
+        const popup = buildGundamPopup(d, overlap);
+        const marker = L.marker([d.lat, d.lng], { icon: franchiseIcon('gundam', overlap) }).bindPopup(popup);
+        marker._data = { ...d, franchise:'gundam', overlap };
+        marker.addTo(map); allMarkers.push(marker);
+      });
+      pokemonData.forEach(d => {
+        if (d.lat == null || d.lng == null) return;
+        const overlap = overlapLocs.has(locKey(d));
+        const popup = buildPokemonPopup(d, overlap);
+        const marker = L.marker([d.lat, d.lng], { icon: franchiseIcon('pokefuta', overlap) }).bindPopup(popup);
+        marker._data = { ...d, franchise:'pokefuta', overlap };
+        marker.addTo(map); allMarkers.push(marker);
+      });
+      recomputeVisibility();
+    }
+
+    function esc(s){ return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c])); }
+
+    function buildGundamPopup(d, overlap){
+      const chars = Array.isArray(d.characters)&&d.characters.length ? d.characters.join(', ') : '—';
+      const series = d.series || '—';
+      const imgs = Array.isArray(d.image_urls)&&d.image_urls.length ? `<div style='margin-top:4px;'>画像:${d.images_count}</div>`:'<div style="margin-top:4px;">画像なし</div>';
+      return `<div class='popup-box'>
+        <b>ID:</b> ${esc(d.id)}<br/><b>タイトル:</b> <span class='popup-title'>${esc(d.title)}</span><br/>
+        <b>都道府県:</b> ${esc(d.prefecture||'')} / ${esc(d.city||'')}<br/>
+        <b>キャラクター:</b> ${esc(chars)}<br/><b>シリーズ:</b> ${esc(series)}${imgs}
+        <br/><a href='${esc(d.detail_url)}' target='_blank' rel='noopener'>📝 詳細</a>${overlap?'<br/><span class="stat-inline">※ 座標重複</span>':''}
+      </div>`;
+    }
+
+    function buildPokemonPopup(d, overlap){
+      const pokes = Array.isArray(d.pokemons)&&d.pokemons.length ? d.pokemons.join(', ') : '—';
+      return `<div class='popup-box'>
+        <b>ID:</b> ${esc(d.id)}<br/><b>タイトル:</b> <span class='popup-title'>${esc(d.title)}</span><br/>
+        <b>都道府県:</b> ${esc(d.prefecture||'')} / ${esc(d.city||'')}<br/>
+        <b>ポケモン:</b> ${esc(pokes)}
+        <br/><a href='${esc(d.detail_url)}' target='_blank' rel='noopener'>📝 詳細</a>${overlap?'<br/><span class="stat-inline">※ 座標重複</span>':''}
+      </div>`;
+    }
+
+    function buildCharacterGrid(){
+      const grid = document.getElementById('character-grid'); if(!grid) return;
+      const counts = {};
+      gundamData.forEach(d=>{ if(Array.isArray(d.characters)) d.characters.forEach(c=>{ if(c) counts[c]=(counts[c]||0)+1; }); });
+      const entries = Object.entries(counts).sort((a,b)=>b[1]-a[1]).sort((a,b)=>a[0].localeCompare(b[0],'ja'));
+      grid.innerHTML='';
+      entries.forEach(([name,count])=>{
+        const div=document.createElement('div'); div.className='character-item'; div.innerHTML=`<div>${name}</div><div class='character-count'>${count}</div>`; div.addEventListener('click',()=>toggleCharacter(name,div)); grid.appendChild(div);
+      });
+      const search = document.getElementById('character-search');
+      if(search){ search.oninput=()=>{ const q=search.value.trim().toLowerCase(); grid.querySelectorAll('.character-item').forEach(it=>{ const nm=it.firstChild.textContent.toLowerCase(); it.style.display= nm.includes(q)?'flex':'none'; }); }; }
+    }
+
+    function buildPokemonGrid(){
+      const grid = document.getElementById('pokemon-grid'); if(!grid) return;
+      const counts = {};
+      pokemonData.forEach(d=>{ if(Array.isArray(d.pokemons)) d.pokemons.forEach(p=>{ if(p) counts[p]=(counts[p]||0)+1; }); });
+      const entries = Object.entries(counts).sort((a,b)=>b[1]-a[1]).sort((a,b)=>a[0].localeCompare(b[0],'ja'));
+      grid.innerHTML='';
+      entries.forEach(([name,count])=>{
+        const div=document.createElement('div'); div.className='character-item'; div.innerHTML=`<div>${name}</div><div class='character-count'>${count}</div>`; div.addEventListener('click',()=>togglePokemon(name,div)); grid.appendChild(div);
+      });
+      const search = document.getElementById('pokemon-search');
+      if(search){ search.oninput=()=>{ const q=search.value.trim().toLowerCase(); grid.querySelectorAll('.character-item').forEach(it=>{ const nm=it.firstChild.textContent.toLowerCase(); it.style.display= nm.includes(q)?'flex':'none'; }); }; }
+    }
+
+    function toggleCharacter(name, el){ if(selectedCharacters.has(name)){ selectedCharacters.delete(name); el.classList.remove('selected'); } else { selectedCharacters.add(name); el.classList.add('selected'); } recomputeVisibility(); }
+    function togglePokemon(name, el){ if(selectedPokemons.has(name)){ selectedPokemons.delete(name); el.classList.remove('selected'); } else { selectedPokemons.add(name); el.classList.add('selected'); } recomputeVisibility(); }
+
+    function recomputeVisibility(){
+      const showPokemon = document.getElementById('chk-pokemon')?.checked;
+      const showGundam = document.getElementById('chk-gundam')?.checked;
+      const showBoth = document.getElementById('chk-both')?.checked; // overlap markers appear with franchise-specific icon but flagged
+      filterText = (document.getElementById('search-input')?.value||'').trim().toLowerCase();
+      let visible=0, gCount=0, pCount=0;
+      allMarkers.forEach(m=>{
+        const d = m._data; let show = true;
+        // franchise filter
+        if(d.overlap){ show = show && (showBoth || (d.franchise==='gundam' && showGundam) || (d.franchise==='pokefuta' && showPokemon)); }
+        else if(d.franchise==='gundam'){ show = show && showGundam; } else { show = show && showPokemon; }
+        // character filter
+        if(selectedCharacters.size>0 && d.franchise==='gundam'){
+          const chars = Array.isArray(d.characters)? d.characters:[];
+          show = show && [...selectedCharacters].some(c=>chars.includes(c));
+        }
+        if(selectedPokemons.size>0 && d.franchise==='pokefuta'){
+          const pokes = Array.isArray(d.pokemons)? d.pokemons:[];
+          show = show && [...selectedPokemons].some(p=>pokes.includes(p));
+        }
+        // text search
+        if(filterText){
+          const hay = [d.title,d.prefecture,d.city,d.series, ...(d.characters||[]), ...(d.pokemons||[])].join('\n').toLowerCase();
+          show = show && hay.includes(filterText);
+        }
+        if(show){ if(!map.hasLayer(m)) m.addTo(map); visible++; if(d.franchise==='gundam') gCount++; else pCount++; } else { if(map.hasLayer(m)) map.removeLayer(m); }
+      });
+      updateStats(visible, gCount, pCount);
+    }
+
+    function updateStats(visibleOverride, gCountOverride, pCountOverride){
+      const totalEl=document.querySelector('#total-count span');
+      const visEl=document.querySelector('#visible-count span');
+      const gEl=document.querySelector('#gundam-count span');
+      const pEl=document.querySelector('#pokemon-count span');
+      if(totalEl) totalEl.textContent=String(allMarkers.length);
+      if(visEl) visEl.textContent=String(visibleOverride ?? allMarkers.length);
+      if(gEl) gEl.textContent=String(gCountOverride ?? gundamData.length);
+      if(pEl) pEl.textContent=String(pCountOverride ?? pokemonData.length);
+    }
+
+    document.getElementById('chk-pokemon').addEventListener('change', recomputeVisibility);
+    document.getElementById('chk-gundam').addEventListener('change', recomputeVisibility);
+    document.getElementById('chk-both').addEventListener('change', recomputeVisibility);
+    document.getElementById('search-input').addEventListener('input', recomputeVisibility);
+    document.getElementById('btn-reset').addEventListener('click', ()=>{
+      selectedCharacters.clear(); selectedPokemons.clear(); filterText='';
+      document.getElementById('search-input').value='';
+      document.getElementById('character-search').value='';
+      document.getElementById('pokemon-search').value='';
+      document.querySelectorAll('.character-item, .pokemon-grid .character-item').forEach(el=>el.classList.remove('selected'));
+      document.getElementById('chk-pokemon').checked=true;
+      document.getElementById('chk-gundam').checked=true;
+      document.getElementById('chk-both').checked=true;
+      recomputeVisibility();
+      map.setView([36.0,138.0],6);
+    });
+
+    loadDatasets();
+  </script>
+</body>
+</html>
