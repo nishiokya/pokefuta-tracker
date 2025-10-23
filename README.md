@@ -3,7 +3,12 @@
 初期化(大量取得)と日次/定期差分更新を分離しました。
 
 ### 1. 初期スクレイプ (手動専用)
-初回のみ `apps/scraper/scrape_pokefuta.py` を使用して一括取得します。このスクリプトは「初期化」以外では使いません (GitHub Actions に組み込まないでください)。
+初回のみ `apps/scraper/scrape_pokefuta.py` を使用して一括取- 📍 日本全国のポケふたを地図上で表示
+- 🗾 Leafletベースのインタラクティブマップ
+- 📝 各ポケふたの詳細情報（場所、ポケモン、公式詳細ページへのリンク）
+- 📱 レスポンシブデザイン（PC・スマートフォン対応）
+- 🔍 フィルタ (都道府県 / ポケモン / 最近追加)
+- 📍 近くのマンホール表示機能 (`nearby_manholes.html`)のスクリプトは「初期化」以外では使いません (GitHub Actions に組み込まないでください)。
 
 例:
 ```bash
@@ -87,7 +92,7 @@ git diff --name-only
 `dist/` は Git にコミットせず、生成物を履歴から排除することで PR ノイズとリポジトリ肥大化を防ぎます。
 
 ### フロントエンド編集ポリシー
-編集対象は **`apps/web/pokefuta_map.html`** / **`apps/web/nearby.html`** などソースのみ。公開ページは Artifact から生成されるため直接編集できません。
+編集対象は **`apps/web/index.html`** / **`apps/web/nearby_manholes.html`** などソースのみ。公開ページは Artifact から生成されるため直接編集できません。
 
 ### 移行履歴
 以前は `docs/` フォルダをコミットして公開していましたが Artifact 方式へ移行し、今後削除予定です (互換リダイレクトは Artifact 内で再生成)。
@@ -153,8 +158,8 @@ cp gmanhole.ndjson apps/web/assets/gmanhole.ndjson
 ```
 apps/
 ├── web/                      # Webインターフェース (ソース HTML と静的資産)
-│   ├── pokefuta_map.html    # メインのマップページ (ソース)
-│   ├── nearby.html          # 近くのマンホールページ (ソース)
+│   ├── index.html           # メインのマップページ (ソース)
+│   ├── nearby_manholes.html # 近くのマンホールページ (ソース)
 │   └── assets/              # CSS 等
 ├── scraper/                 # データ収集ロジック
 │   ├── scrape_pokefuta.py   # 初期一括取得

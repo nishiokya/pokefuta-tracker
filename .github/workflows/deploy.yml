@@ -31,9 +31,9 @@ jobs:
       - name: Copy files to docs
         run: |
           mkdir -p docs
-          cp apps/web/pokefuta_map.html docs/index.html
+          cp apps/web/index.html docs/index.html
           # Nearby page (shortened filename)
-          cp apps/web/nearby.html docs/nearby.html
+          cp apps/web/nearby_manholes.html docs/nearby.html
           # Static assets (CSS etc.)
           rm -rf docs/assets
             
