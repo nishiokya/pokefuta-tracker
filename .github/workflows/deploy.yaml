@@ -1,0 +1,60 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches: [ main, change-tab ]
+  workflow_dispatch: {}
+  # 任意: スケジュールで自動再デプロイ (データ更新後に反映)
+  # schedule:
+  #   - cron: '30 2 * * *'  # JST 朝11時頃 (UTC 02:30) 再デプロイ
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-deploy
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Ensure Pages directory structure
+        run: |
+          ls -al
+          # 必要に応じて最新データファイルを apps/web 下へコピー
+          if [ -f pokefuta.ndjson ]; then
+            cp pokefuta.ndjson apps/web/pokefuta.ndjson
+          elif [ ! -f apps/web/pokefuta.ndjson ]; then
+            echo 'pokefuta.ndjson not found; map may have empty data' >&2
+          fi
+          # ガンダム NDJSON (root にある場合を assets に同期) ※既に assets にあれば上書き
+          if [ -f gmanhole.ndjson ]; then
+            cp gmanhole.ndjson apps/web/assets/gmanhole.ndjson
+          fi
+          # アイコン画像 (dataset/manhole_icon.png を assets へコピー) 存在する場合のみ
+          if [ -f dataset/manhole_icon.png ]; then
+            cp dataset/manhole_icon.png apps/web/assets/manhole_icon.png
+          fi
+          # 追加の静的ファイルがあればここでコピー可
+
+      - name: Upload artifact (apps/web)
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: apps/web
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
