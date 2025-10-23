@@ -42,8 +42,8 @@ jobs:
             --copy-to dist/pokefuta.ndjson \
             --log-level WARN || echo "Updater exited (scan-max=0 path)";
           echo "[dist] Copy HTML sources"
-          cp apps/web/pokefuta_map.html dist/index.html
-          cp apps/web/nearby.html dist/nearby.html
+          cp apps/web/index.html dist/index.html
+          cp apps/web/nearby_manholes.html dist/nearby.html
           echo '<!doctype html><meta http-equiv="refresh" content="0; url=./nearby.html">' > dist/nearby_manholes.html
           echo "[dist] Copy assets (CSS + images)"
           cp -r apps/web/assets/* dist/assets/ || true
