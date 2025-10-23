@@ -1,12 +1,13 @@
-name: Deploy GitHub Pages
+name: Build & Deploy Pages
 
 on:
   push:
-    branches: [ main, change-tab ]
+    branches: [ '**' ]  # 全ブランチでビルド (main 以外は preview のみ)
+  pull_request:
+    branches: [ main ]
   workflow_dispatch: {}
-  # 任意: スケジュールで自動再デプロイ (データ更新後に反映)
   # schedule:
-  #   - cron: '30 2 * * *'  # JST 朝11時頃 (UTC 02:30) 再デプロイ
+  #   - cron: '30 2 * * *'
 
 permissions:
   contents: read
@@ -24,31 +25,40 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Ensure Pages directory structure
+      - name: Prepare static site
         run: |
+          set -e
+          echo "Branch: $GITHUB_REF_NAME"
           ls -al
-          # 必要に応じて最新データファイルを apps/web 下へコピー
+          # 同期: データファイル
           if [ -f pokefuta.ndjson ]; then
             cp pokefuta.ndjson apps/web/pokefuta.ndjson
-          elif [ ! -f apps/web/pokefuta.ndjson ]; then
-            echo 'pokefuta.ndjson not found; map may have empty data' >&2
           fi
-          # ガンダム NDJSON (root にある場合を assets に同期) ※既に assets にあれば上書き
           if [ -f gmanhole.ndjson ]; then
             cp gmanhole.ndjson apps/web/assets/gmanhole.ndjson
           fi
-          # アイコン画像 (dataset/manhole_icon.png を assets へコピー) 存在する場合のみ
           if [ -f dataset/manhole_icon.png ]; then
-            cp dataset/manhole_icon.png apps/web/assets/manhole_icon.png
+            cp dataset/manhole_icon.png apps/web/assets/manhole_icon.png || true
           fi
-          # 追加の静的ファイルがあればここでコピー可
+          # ブランチ情報バナー (optional): JSON 生成
+          echo '{"branch":"'$GITHUB_REF_NAME'","commit":"'$GITHUB_SHA'"}' > apps/web/build_meta.json
 
-      - name: Upload artifact (apps/web)
+      - name: Upload preview artifact (non-main)
+        if: ${{ github.ref_name != 'main' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: preview-${{ github.ref_name }}
+          path: apps/web
+          retention-days: 5
+
+      - name: Upload pages artifact (main only)
+        if: ${{ github.ref_name == 'main' }}
         uses: actions/upload-pages-artifact@v3
         with:
           path: apps/web
 
   deploy:
+    if: ${{ github.ref_name == 'main' }}
     needs: build
     runs-on: ubuntu-latest
     environment:
@@ -58,3 +68,10 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  note-non-main:
+    if: ${{ github.ref_name != 'main' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Explain skip
+        run: echo 'Branch $GITHUB_REF_NAME is not main; deployment skipped due to environment protection. Use the generated preview artifact instead.'
