@@ -32,15 +32,17 @@ jobs:
         run: |
           mkdir -p docs
           cp apps/web/index.html docs/index.html
+          cp apps/web/gmanhole_map.html docs/gmanhole_map.html
           # Nearby page (shortened filename)
           cp apps/web/nearby_manholes.html docs/nearby.html
           # Static assets (CSS etc.)
           rm -rf docs/assets
-            
           cp -r apps/web/assets docs/assets
+          # Data files
+          cp apps/scraper/pokefuta.ndjson docs/pokefuta.ndjson
+          cp apps/web/assets/gmanhole.ndjson docs/gmanhole.ndjson || true
           # Backward compatibility redirect for old URL
           echo '<!doctype html><meta http-equiv="refresh" content="0; url=./nearby.html">' > docs/nearby_manholes.html
-          cp apps/scraper/pokefuta.ndjson docs/pokefuta.ndjson
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
