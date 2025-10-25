@@ -121,10 +121,36 @@
 
     async function loadDatasets(){
       try {
-        const [gRes, pRes] = await Promise.all([
-          fetch('./assets/gmanhole.ndjson'),
-          fetch('./pokefuta.ndjson')
+        // Try multiple potential paths for pokefuta data
+        const pokefutaPaths = [
+          './pokefuta.ndjson',  // Current relative path
+          'pokefuta.ndjson',    // Direct filename
+          '../pokefuta.ndjson', // Parent directory
+          'https://raw.githubusercontent.com/nishiokya/pokefuta-tracker/main/docs/pokefuta.ndjson' // Fallback to GitHub raw
+        ];
+        
+        let pRes = null;
+        for (const path of pokefutaPaths) {
+          try {
+            console.log(`Trying to fetch pokefuta data from: ${path}`);
+            pRes = await fetch(path);
+            if (pRes.ok) {
+              console.log(`Successfully loaded pokefuta data from: ${path}`);
+              break;
+            }
+          } catch (e) {
+            console.warn(`Failed to fetch from ${path}:`, e);
+          }
+        }
+        
+        if (!pRes || !pRes.ok) {
+          throw new Error('Could not load pokefuta data from any path');
+        }
+        
+        const [gRes] = await Promise.all([
+          fetch('./assets/gmanhole.ndjson')
         ]);
+        
         gundamData = await parseNdjson(gRes);
         pokemonData = await parseNdjson(pRes);
         buildMarkers();

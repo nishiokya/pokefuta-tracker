@@ -152,6 +152,25 @@ python apps/scraper/scrape_gmanhole.py --scan-max 80 --geocode --geocode-provide
 cp gmanhole.ndjson apps/web/assets/gmanhole.ndjson
 ```
 
+### 緯度経度補完機能
+緯度経度が不明なガンダムマンホールを手動で補完するためのツールを提供しています：
+
+```bash
+# 緯度経度が不明なレコードをTSVファイルに抽出
+python3 extract_missing_coordinates.py
+
+# 生成されたTSVファイル (missing_gundam_coordinates.tsv) を編集して
+# lat, lng 列に緯度経度を手動入力
+
+# スクレイピング時にTSVファイルを参照して座標を補完
+# (coordinate_supplementor.py を使用)
+```
+
+TSVファイルには以下の情報が含まれます：
+- ID, タイトル, 都道府県, 市町村, 住所
+- 詳細URL, キャラクター, シリーズ情報
+- 緯度経度入力欄と備考欄
+
 ### 今後の拡張予定
 - キャラクター/シリーズ語彙の自動強化
 - 作品別フィルタ UI
