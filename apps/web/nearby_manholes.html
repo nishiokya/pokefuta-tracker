@@ -323,7 +323,32 @@
       listDiv.innerHTML = '<div class="loading">マンホールデータを読み込み中...</div>';
 
       try {
-        const response = await fetch('pokefuta.ndjson');
+        // Try multiple potential paths for pokefuta data
+        const pokefutaPaths = [
+          'pokefuta.ndjson',    // Direct filename
+          './pokefuta.ndjson',  // Current relative path
+          '../pokefuta.ndjson', // Parent directory
+          'https://raw.githubusercontent.com/nishiokya/pokefuta-tracker/main/docs/pokefuta.ndjson' // Fallback to GitHub raw
+        ];
+        
+        let response = null;
+        for (const path of pokefutaPaths) {
+          try {
+            console.log(`Trying to fetch pokefuta data from: ${path}`);
+            response = await fetch(path);
+            if (response.ok) {
+              console.log(`Successfully loaded pokefuta data from: ${path}`);
+              break;
+            }
+          } catch (e) {
+            console.warn(`Failed to fetch from ${path}:`, e);
+          }
+        }
+        
+        if (!response || !response.ok) {
+          throw new Error('Could not load pokefuta data from any path');
+        }
+        
         const text = await response.text();
         const lines = text.trim().split('\n');
 
