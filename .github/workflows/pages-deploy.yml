@@ -44,9 +44,13 @@ jobs:
           echo "[dist] Copy HTML sources"
           cp apps/web/index.html dist/index.html
           cp apps/web/nearby_manholes.html dist/nearby.html
+          cp apps/web/gmanhole_map.html dist/gmanhole_map.html
           echo '<!doctype html><meta http-equiv="refresh" content="0; url=./nearby.html">' > dist/nearby_manholes.html
           echo "[dist] Copy assets (CSS + images)"
           cp -r apps/web/assets/* dist/assets/ || true
+          echo "[dist] Copy data files"
+          cp apps/scraper/pokefuta.ndjson dist/pokefuta.ndjson || true
+          cp apps/web/assets/gmanhole.ndjson dist/gmanhole.ndjson || true
           echo "[dist] Copy manhole icon → assets"
           cp dataset/manhole_icon.png dist/assets/manhole_icon.png || true
           echo "[dist] Ensure pokefuta icons live under assets (favicon & marker variants)"
