@@ -47,8 +47,6 @@ DEFAULT_SLEEP = 0.5
 class Pokefuta:
     id: str
     title: str
-    title_en: str
-    title_zh: str
     prefecture: str
     city: str
     address: str
@@ -140,16 +138,29 @@ def parse_detail(detail_url: str, html: str, logger: logging.Logger) -> Optional
                 prefecture = pf
                 city = ct.rstrip("市町村区") if ct else ""
 
+    # 住所の取得 (テキストから住所らしき文字列を抽出)
+    address = ""
+    # 住所パターンを探す（都道府県名 + 市区町村 + 丁目・番地など）
+    text_content = soup.get_text()
+    address_patterns = [
+        r'([^。\n]*(?:県|府|道|都)[^。\n]*(?:市|区|町|村)[^。\n]*(?:\d+[-−‐]\d+[-−‐]\d+|\d+丁目|\d+番地)[^。\n]*)',
+        r'([^。\n]*(?:市|区|町|村)[^。\n]*(?:\d+[-−‐]\d+[-−‐]\d+|\d+丁目|\d+番地)[^。\n]*)',
+    ]
+    for pattern in address_patterns:
+        matches = re.findall(pattern, text_content)
+        if matches:
+            # 最も長い住所らしきものを選択
+            address = max(matches, key=len).strip()
+            break
+
     # Use second precision UTC format compatible with JS Date parsing
     now_iso = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
     return {
         "id": pid,
         "title": title,
-        "title_en": "",
-        "title_zh": "",
         "prefecture": prefecture,
         "city": city,
-        "address": "",
+        "address": address,
         "city_url": "",
         "lat": lat,
         "lng": lng,
@@ -171,9 +182,6 @@ def enrich_multilingual(detail_url: str, rec: Dict, logger: logging.Logger):
     html_en = fetch(detail_url, logger, HEADERS_EN)
     if html_en:
         soup_en = BeautifulSoup(html_en, "html.parser")
-        h = soup_en.find(["h1", "h2"])
-        if h and h.get_text(strip=True):
-            rec["title_en"] = h.get_text(strip=True)
         # simple pokemon extraction
         p_en = []
         for a in soup_en.select("a[href]"):
@@ -189,9 +197,6 @@ def enrich_multilingual(detail_url: str, rec: Dict, logger: logging.Logger):
     html_zh = fetch(detail_url, logger, HEADERS_ZH)
     if html_zh:
         soup_zh = BeautifulSoup(html_zh, "html.parser")
-        h = soup_zh.find(["h1", "h2"])
-        if h and h.get_text(strip=True):
-            rec["title_zh"] = h.get_text(strip=True)
         p_zh = []
         for a in soup_zh.select("a[href]"):
             t = a.get_text(strip=True)
@@ -261,7 +266,7 @@ def load_existing(path: str, mode: str) -> List[Dict]:
 
 
 CORE_COMPARE_FIELDS = [
-    "title", "title_en", "title_zh", "prefecture", "city", "address", "city_url",
+    "title", "prefecture", "city", "address", "city_url",
     "lat", "lng", "pokemons", "pokemons_en", "pokemons_zh", "detail_url", "prefecture_site_url", "status"
 ]
 
