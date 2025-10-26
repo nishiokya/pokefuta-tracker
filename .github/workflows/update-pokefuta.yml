@@ -1,17 +1,19 @@
-name: Daily Pokefuta Dataset Update (single run)
+name: Daily Pokefuta Dataset Update
 
 on:
   schedule:
-    # Single daily run (UTC 03:00 ≒ JST 12:00). Adjust here if needed.
-    - cron: '0 3 * * *'
-  workflow_dispatch: {}
+    # Run daily at 10:00 UTC (JST 19:00)
+    - cron: '0 10 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write # ラベル付与に必要
 
 jobs:
   update:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -21,36 +23,69 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install deps
+      - name: Install dependencies
         run: |
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install beautifulsoup4 requests
 
-      - name: Run updater (scan up to 2500 IDs)
+      - name: Run incremental updater
         id: updater
         run: |
-          python apps/scraper/update_pokefuta.py --scan-max 2500 --out apps/scraper/pokefuta.ndjson --copy-to docs/pokefuta.ndjson --log-level INFO
+          python apps/scraper/update_pokefuta.py \
+            --scan-max 500 \
+            --out apps/scraper/pokefuta.ndjson \
+            --log-level INFO
 
-      - name: Detect changes
+      - name: Copy active dataset to docs (for GitHub Pages)
+        run: |
+          # Filter out deleted records for public consumption
+          python -c "
+          import json
+          import sys
+          with open('apps/scraper/pokefuta.ndjson', 'r', encoding='utf-8') as f:
+              active_records = []
+              for line in f:
+                  if line.strip():
+                      record = json.loads(line)
+                      if record.get('status') == 'active':
+                          active_records.append(record)
+          
+          with open('docs/pokefuta.ndjson', 'w', encoding='utf-8') as f:
+              for record in active_records:
+                  json.dump(record, f, ensure_ascii=False, separators=(',', ':'))
+                  f.write('\n')
+          
+          print(f'Wrote {len(active_records)} active records to docs/pokefuta.ndjson')
+          "
+
+      - name: Detect dataset changes
         id: diff
         run: |
-          git add apps/scraper/pokefuta.ndjson docs/pokefuta.ndjson CHANGELOG.md
+          git add apps/scraper/pokefuta.ndjson docs/pokefuta.ndjson || true
           if git diff --cached --quiet; then
             echo "changed=false" >> $GITHUB_OUTPUT
           else
             echo "changed=true" >> $GITHUB_OUTPUT
           fi
 
-      - name: Create Pull Request
+      - name: Create Pull Request (if changes)
         if: steps.diff.outputs.changed == 'true'
         uses: peter-evans/create-pull-request@v6
         with:
           commit-message: "chore: daily pokefuta dataset update"
           title: "Daily pokefuta dataset update"
           body: |
-            Automated daily dataset update (single workflow). Removed legacy second workflow to avoid duplicate runs.
+            Automated daily dataset update with GitHub Pages deployment.
           branch: daily/update-pokefuta-dataset
           labels: |-
             data-update
             automated
           delete-branch: true
+          author: GitHub Action <action@github.com>
+          draft: false
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: No changes summary (no PR)
+        if: steps.diff.outputs.changed == 'false'
+        run: echo "No dataset changes detected; nothing to PR."
