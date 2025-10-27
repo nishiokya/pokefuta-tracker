@@ -4,7 +4,13 @@
 Pokefuta initial dataset scraper (手動初期化専用).
 
 このスクリプトは「初期データをまとめて生成する」ためだけに使います。
-以降の継続的な差分監視・削除/新規検出は `update_pokefuta.py` を使用してください。
+以降の継続的な差分監視・削除/新規検出は `update_pokefu        "lng": lng,
+        "pokemons": pokemons,
+        "detail_url": detail_url,
+        "prefecture_site_url": "",
+        # extended schema (for consistency with incremental updater)
+        "first_seen": now_iso,
+        "added_at": now_iso,  # alias for first_seen used by web UI用してください。
 
 主な仕様 (最小実装):
   * ID レンジを 1..N で総当たりし、存在する detail ページを抽出
@@ -26,7 +32,7 @@ Pokefuta initial dataset scraper (手動初期化専用).
   * 初期フェーズ終了後、このスクリプトを CI / 定期実行に組み込まないでください。
 """
 from __future__ import annotations
-import argparse, json, logging, os, re, signal, sys, tempfile, time
+import argparse, csv, json, logging, os, re, signal, sys, tempfile, time
 from datetime import datetime, timezone
 from dataclasses import dataclass
 from typing import Dict, List, Optional, Tuple
@@ -50,6 +56,7 @@ class Pokefuta:
     prefecture: str
     city: str
     address: str
+    building: str
     city_url: str
     lat: float
     lng: float
@@ -118,7 +125,7 @@ def parse_detail(detail_url: str, html: str, logger: logging.Logger) -> Optional
         if not txt:
             continue
         if any(k in txt for k in ["ポケモン", "図鑑", "Pokédex", "Pokemon", "Pokémon"]):
-            cleaned = re.sub(r"(ポケモン|図鑑|Pokédex|Pokémon|Pokemon)", "", txt).strip()
+            cleaned = re.sub(r"(ポケモン|図鑑|Pokédex|Pokémon|Pokemon|ずかんへ)", "", txt).strip()
             if cleaned and len(cleaned) <= 20:
                 pokemons.append(cleaned)
     # 重複排除
@@ -165,19 +172,29 @@ def parse_detail(detail_url: str, html: str, logger: logging.Logger) -> Optional
         "lat": lat,
         "lng": lng,
         "pokemons": pokemons,
-        "pokemons_en": [],
-        "pokemons_zh": [],
+        "pokemons": pokemons,
         "detail_url": detail_url,
         "prefecture_site_url": "",
         # extended schema (for consistency with incremental updater)
-    "first_seen": now_iso,
-    "added_at": now_iso,  # alias for first_seen used by web UI
-    "last_updated": now_iso,  # unified update timestamp
-    "status": "active"
+        "first_seen": now_iso,
+        "added_at": now_iso,  # alias for first_seen used by web UI
+        "last_updated": now_iso,  # unified update timestamp
+        "status": "active"
     }
 
 
-def enrich_multilingual(detail_url: str, rec: Dict, logger: logging.Logger):
+def atomic_write_array(path: str, rows: List[Dict]):
+    d = os.path.dirname(os.path.abspath(path)) or "."
+    os.makedirs(d, exist_ok=True)
+    with tempfile.NamedTemporaryFile("w", delete=False, dir=d, encoding="utf-8") as tmp:
+        json.dump(rows, tmp, ensure_ascii=False, indent=2)
+        tmp.flush(); os.fsync(tmp.fileno())
+        p = tmp.name
+    os.replace(p, path)
+
+
+def atomic_write_ndjson(path: str, rows: List[Dict]):
+    d = os.path.dirname(os.path.abspath(path)) or "."
     # English
     html_en = fetch(detail_url, logger, HEADERS_EN)
     if html_en:
@@ -266,8 +283,8 @@ def load_existing(path: str, mode: str) -> List[Dict]:
 
 
 CORE_COMPARE_FIELDS = [
-    "title", "prefecture", "city", "address", "city_url",
-    "lat", "lng", "pokemons", "pokemons_en", "pokemons_zh", "detail_url", "prefecture_site_url", "status"
+    "title", "prefecture", "city", "address", "building", "city_url",
+    "lat", "lng", "pokemons", "detail_url", "prefecture_site_url", "status"
 ]
 
 
@@ -382,11 +399,6 @@ def main():
         if not rec:  # parse failure
             time.sleep(sleep_sec)
             continue
-        if not args.no_ml:
-            try:
-                enrich_multilingual(url, rec, logger)
-            except Exception as e:  # noqa: BLE001
-                logger.debug('multilingual enrich failed id=%s err=%s', rec.get('id'), e)
         results.append(rec)
         successes += 1
         if args.limit and successes >= args.limit:

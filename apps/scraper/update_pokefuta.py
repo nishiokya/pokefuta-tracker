@@ -30,7 +30,7 @@ GitHub Actions 用想定引数:
   0: 正常終了 (差分ある/なし問わず)
   2: 異常終了 (例外)
 """
-import argparse, json, logging, os, re, signal, sys, time, tempfile
+import argparse, csv, json, logging, os, re, signal, sys, time, tempfile
 from datetime import datetime
 from typing import Dict, List, Optional
 
@@ -48,8 +48,8 @@ RETRY = 3
 DEFAULT_SLEEP = 0.4
 
 CORE_COMPARE_FIELDS = [
-    "title", "prefecture", "city", "address", "city_url",
-    "lat", "lng", "pokemons", "pokemons_en", "pokemons_zh", "detail_url", "prefecture_site_url", "status"
+    "title", "prefecture", "city", "address", "building", "city_url",
+    "lat", "lng", "pokemons", "detail_url", "prefecture_site_url", "status"
 ]
 
 def setup_logger(level: str = "INFO") -> logging.Logger:
@@ -75,7 +75,27 @@ def fetch(url: str, logger: logging.Logger, headers: Dict[str, str]) -> Optional
     return None
 
 
-def parse_detail(detail_url: str, html: str, logger: logging.Logger) -> Optional[Dict]:
+def load_title_tsv(tsv_path: str) -> Dict[str, Dict[str, str]]:
+    """Load title.tsv and return a dict mapping ID to building info."""
+    title_data = {}
+    if not os.path.exists(tsv_path):
+        return title_data
+    
+    try:
+        with open(tsv_path, 'r', encoding='utf-8') as f:
+            reader = csv.DictReader(f, delimiter='\t')
+            for row in reader:
+                title_data[row['id']] = {
+                    'building': row.get('building', '').strip(),
+                    'address': row.get('address', '').strip()
+                }
+    except Exception as e:
+        print(f"Warning: Failed to load {tsv_path}: {e}")
+    
+    return title_data
+
+
+def parse_detail(detail_url: str, html: str, logger: logging.Logger, title_data: Dict[str, Dict[str, str]] = None) -> Optional[Dict]:
     soup = BeautifulSoup(html, "html.parser")
 
     # 緯度経度 (Google Maps へのリンクから抽出)
@@ -110,7 +130,7 @@ def parse_detail(detail_url: str, html: str, logger: logging.Logger) -> Optional
         if not txt:
             continue
         if any(k in txt for k in ["ポケモン", "図鑑", "Pokédex", "Pokemon", "Pokémon"]):
-            cleaned = re.sub(r"(ポケモン|図鑑|Pokédex|Pokémon|Pokemon)", "", txt).strip()
+            cleaned = re.sub(r"(ポケモン|図鑑|Pokédex|Pokémon|Pokemon|ずかんへ)", "", txt).strip()
             if cleaned and len(cleaned) <= 20:
                 pokemons.append(cleaned)
     # 重複排除
@@ -130,8 +150,9 @@ def parse_detail(detail_url: str, html: str, logger: logging.Logger) -> Optional
                 prefecture = pf
                 city = ct.rstrip("市町村区") if ct else ""
 
-    # 住所の取得 (テキストから住所らしき文字列を抽出)
+    # 住所の取得 - Webページを優先、title.tsvをフォールバックとして利用
     address = ""
+    # まずWebページから住所らしき文字列を抽出
     text_content = soup.get_text()
     address_patterns = [
         r'([^。\n]*(?:県|府|道|都)[^。\n]*(?:市|区|町|村)[^。\n]*(?:\d+[-−‐]\d+[-−‐]\d+|\d+丁目|\d+番地)[^。\n]*)',
@@ -143,6 +164,17 @@ def parse_detail(detail_url: str, html: str, logger: logging.Logger) -> Optional
             # 最も長い住所らしきものを選択
             address = max(matches, key=len).strip()
             break
+    
+    # Webページにアドレスがない場合、title.tsvのアドレスをフォールバック
+    if not address and title_data and pid in title_data and title_data[pid]['address']:
+        address = title_data[pid]['address']
+        logger.debug("Using fallback address from title.tsv for ID %s: %s", pid, address)
+
+    # Building情報の取得（title.tsvから）
+    building_info = ""
+    if title_data and pid in title_data and title_data[pid]['building']:
+        building_info = title_data[pid]['building']
+        logger.debug("Using building info from title.tsv for ID %s: %s", pid, building_info)
 
     # Use second precision UTC format compatible with JS Date parsing
     now_iso = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
@@ -152,12 +184,11 @@ def parse_detail(detail_url: str, html: str, logger: logging.Logger) -> Optional
         "prefecture": prefecture,
         "city": city,
         "address": address,
+        "building": building_info,  # Building information from title.tsv
         "city_url": "",
         "lat": lat,
         "lng": lng,
         "pokemons": pokemons,
-        "pokemons_en": [],
-        "pokemons_zh": [],
         "detail_url": detail_url,
         "prefecture_site_url": "",
         # extended schema (for consistency with incremental updater)
@@ -166,38 +197,6 @@ def parse_detail(detail_url: str, html: str, logger: logging.Logger) -> Optional
         "last_updated": now_iso,  # unified update timestamp
         "status": "active"
     }
-
-
-def enrich_multilingual(detail_url: str, rec: Dict, logger: logging.Logger):
-    # English
-    html_en = fetch(detail_url, logger, HEADERS_EN)
-    if html_en:
-        soup_en = BeautifulSoup(html_en, "html.parser")
-        # simple pokemon extraction
-        p_en = []
-        for a in soup_en.select("a[href]"):
-            t = a.get_text(strip=True)
-            if not t:
-                continue
-            if any(k in t for k in ["Pokémon", "Pokemon", "Pokédex"]):
-                nm = re.sub(r"(Pokémon|Pokemon|Pokédex)", "", t).strip()
-                if nm:
-                    p_en.append(nm)
-        rec["pokemons_en"] = sorted({x for x in p_en if x})
-    # Chinese
-    html_zh = fetch(detail_url, logger, HEADERS_ZH)
-    if html_zh:
-        soup_zh = BeautifulSoup(html_zh, "html.parser")
-        p_zh = []
-        for a in soup_zh.select("a[href]"):
-            t = a.get_text(strip=True)
-            if not t:
-                continue
-            if any(k in t for k in ["宝可梦", "圖鑑", "图鉴"]):
-                nm = re.sub(r"(宝可梦|圖鑑|图鉴)", "", t).strip()
-                if nm:
-                    p_zh.append(nm)
-        rec["pokemons_zh"] = sorted({x for x in p_zh if x})
 
 
 def load_existing(path: str, mode: str = "ndjson") -> List[Dict]:
@@ -272,7 +271,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--base', default=DEFAULT_BASE, help='Base top page URL')
     parser.add_argument('--out', default='pokefuta.ndjson', help='Primary NDJSON output path')
-    parser.add_argument('--scan-max', type=int, default=1500, help='Max ID to scan')
+    parser.add_argument('--scan-max', type=int, default=500, help='Max ID to scan')
     parser.add_argument('--log-level', default='INFO', help='Log level')
     parser.add_argument('--sleep', type=float, default=DEFAULT_SLEEP, help='Sleep seconds between requests')
     parser.add_argument('--no-ml', dest='no_ml', action='store_true', help='Skip English/Chinese enrichment for speed')
@@ -280,6 +279,11 @@ def main():
 
     logger = setup_logger(args.log_level)
     sleep_sec = max(0.2, args.sleep)
+
+    # Load title.tsv for address information
+    title_tsv_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'dataset', 'title.tsv')
+    title_data = load_title_tsv(title_tsv_path)
+    logger.info("Loaded %d entries from title.tsv", len(title_data))
 
     existing = load_existing(args.out)
     by_id: Dict[str, Dict] = {r['id']: r for r in existing if 'id' in r}
@@ -325,7 +329,7 @@ def main():
                 time.sleep(sleep_sec)
                 continue
 
-            parsed = parse_detail(detail_url, html, logger)
+            parsed = parse_detail(detail_url, html, logger, title_data)
             if not parsed:
                 # treat as potential deletion if existed
                 if str(i) in by_id and by_id[str(i)].get('status') == 'active':
@@ -335,13 +339,6 @@ def main():
                     deleted_ids.append(str(i))
                 time.sleep(sleep_sec)
                 continue
-
-            # Enrich with multilingual data if not disabled
-            if not args.no_ml:
-                try:
-                    enrich_multilingual(detail_url, parsed, logger)
-                except Exception as e:
-                    logger.debug('multilingual enrich failed id=%s err=%s', parsed.get('id'), e)
 
             pid = parsed['id']
             now_ts = now_iso()
