@@ -247,8 +247,20 @@ def atomic_write_ndjson(path: str, records: List[Dict]):
 # --- diff logic
 
 def _record_changed(new: Dict, old: Dict) -> bool:
+    """Check if any core field has meaningfully changed.
+    
+    Treats None and empty string as equivalent to avoid false positives
+    when new fields are added to the schema.
+    """
     for k in CORE_COMPARE_FIELDS:
-        if new.get(k) != old.get(k):
+        new_val = new.get(k)
+        old_val = old.get(k)
+        
+        # Normalize None and empty string to be equivalent
+        if new_val in (None, "") and old_val in (None, ""):
+            continue
+        
+        if new_val != old_val:
             return True
     return False
 
