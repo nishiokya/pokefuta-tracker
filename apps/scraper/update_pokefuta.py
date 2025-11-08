@@ -284,6 +284,7 @@ def main():
     parser.add_argument('--base', default=DEFAULT_BASE, help='Base top page URL')
     parser.add_argument('--out', default='pokefuta.ndjson', help='Primary NDJSON output path')
     parser.add_argument('--scan-max', type=int, default=500, help='Max ID to scan')
+    parser.add_argument('--limit-new', type=int, default=None, help='Stop scanning after finding this many new records')
     parser.add_argument('--log-level', default='INFO', help='Log level')
     parser.add_argument('--sleep', type=float, default=DEFAULT_SLEEP, help='Sleep seconds between requests')
     parser.add_argument('--no-ml', dest='no_ml', action='store_true', help='Skip English/Chinese enrichment for speed')
