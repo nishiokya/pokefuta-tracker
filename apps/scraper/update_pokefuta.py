@@ -83,7 +83,7 @@ def load_title_tsv(tsv_path: str) -> Dict[str, Dict[str, str]]:
     
     try:
         with open(tsv_path, 'r', encoding='utf-8') as f:
-            reader = csv.DictReader(f, delimiter='\t')
+            reader = csv.DictReader(f, delimiter=',')
             for row in reader:
                 title_data[row['id']] = {
                     'building': row.get('building', '').strip(),
