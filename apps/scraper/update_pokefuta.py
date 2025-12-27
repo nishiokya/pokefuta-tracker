@@ -75,24 +75,67 @@ def fetch(url: str, logger: logging.Logger, headers: Dict[str, str]) -> Optional
     return None
 
 
-def load_title_tsv(tsv_path: str) -> Dict[str, Dict[str, str]]:
-    """Load title.tsv and return a dict mapping ID to building info."""
-    title_data = {}
-    if not os.path.exists(tsv_path):
-        return title_data
-    
-    try:
-        with open(tsv_path, 'r', encoding='utf-8') as f:
-            reader = csv.DictReader(f, delimiter='\t')
-            for row in reader:
-                title_data[row['id']] = {
-                    'building': row.get('building', '').strip(),
-                    'address': row.get('address', '').strip()
-                }
-    except Exception as e:
-        print(f"Warning: Failed to load {tsv_path}: {e}")
-    
+def load_title_metadata(dataset_dir: str) -> Dict[str, Dict[str, str]]:
+    """Load title metadata from CSV / TSV files (if available)."""
+    title_data: Dict[str, Dict[str, str]] = {}
+    sources = [
+        ("title.csv", ","),
+        ("title.tsv", "\t"),
+    ]
+    for filename, delimiter in sources:
+        path = os.path.join(dataset_dir, filename)
+        if not os.path.exists(path):
+            continue
+        try:
+            with open(path, 'r', encoding='utf-8-sig') as f:
+                header_sample = f.readline()
+                f.seek(0)
+                detected_delimiter = delimiter
+                if header_sample:
+                    if '\t' in header_sample and ',' not in header_sample:
+                        detected_delimiter = '\t'
+                    elif ',' in header_sample and '\t' not in header_sample:
+                        detected_delimiter = ','
+                reader = csv.DictReader(f, delimiter=detected_delimiter)
+                for row in reader:
+                    if not row:
+                        continue
+                    rid = (row.get('id') or row.get('\ufeffid') or '').strip()
+                    if not rid:
+                        continue
+                    building = (row.get('building') or row.get('建物') or '').strip()
+                    address = (row.get('address') or row.get('住所') or '').strip()
+                    title_data[rid] = {
+                        'building': building,
+                        'address': address
+                    }
+        except Exception as e:
+            print(f"Warning: Failed to load {path}: {e}")
     return title_data
+
+
+def apply_title_metadata(record: Dict, title_data: Dict[str, Dict[str, str]]) -> bool:
+    """Merge building / address metadata into a record. Returns True when updated."""
+    if not title_data or not record:
+        return False
+    rid = record.get('id')
+    if not rid:
+        return False
+    entry = title_data.get(rid)
+    if not entry:
+        return False
+
+    updated = False
+    building = entry.get('building', '').strip()
+    address = entry.get('address', '').strip()
+
+    if building and record.get('building') != building:
+        record['building'] = building
+        updated = True
+    if address and not record.get('address'):
+        record['address'] = address
+        updated = True
+    return updated
 
 
 def parse_detail(detail_url: str, html: str, logger: logging.Logger, title_data: Dict[str, Dict[str, str]] = None) -> Optional[Dict]:
@@ -165,17 +208,6 @@ def parse_detail(detail_url: str, html: str, logger: logging.Logger, title_data:
             address = max(matches, key=len).strip()
             break
     
-    # Webページにアドレスがない場合、title.tsvのアドレスをフォールバック
-    if not address and title_data and pid in title_data and title_data[pid]['address']:
-        address = title_data[pid]['address']
-        logger.debug("Using fallback address from title.tsv for ID %s: %s", pid, address)
-
-    # Building情報の取得（title.tsvから）
-    building_info = ""
-    if title_data and pid in title_data and title_data[pid]['building']:
-        building_info = title_data[pid]['building']
-        logger.debug("Using building info from title.tsv for ID %s: %s", pid, building_info)
-
     # Use second precision UTC format compatible with JS Date parsing
     now_iso = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
     return {
@@ -184,7 +216,7 @@ def parse_detail(detail_url: str, html: str, logger: logging.Logger, title_data:
         "prefecture": prefecture,
         "city": city,
         "address": address,
-        "building": building_info,  # Building information from title.tsv
+        "building": "",
         "city_url": "",
         "lat": lat,
         "lng": lng,
@@ -293,31 +325,31 @@ def main():
     logger = setup_logger(args.log_level)
     sleep_sec = max(0.2, args.sleep)
 
-    # Load title.tsv for address information
-    title_tsv_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'dataset', 'title.tsv')
-    title_data = load_title_tsv(title_tsv_path)
-    logger.info("Loaded %d entries from title.tsv", len(title_data))
+    dataset_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'dataset')
+    title_data = load_title_metadata(dataset_dir)
+    logger.info("Loaded %d entries from title metadata (csv/tsv)", len(title_data))
 
     existing = load_existing(args.out)
     by_id: Dict[str, Dict] = {r['id']: r for r in existing if 'id' in r}
 
-    # Ensure extended fields exist & migrate legacy timestamps
-    for r in existing:
+    # Ensure extended fields exist & merge static metadata before diffing
+    changed: Dict[str, Dict] = {}
+    for r in by_id.values():
         r.setdefault('first_seen', now_iso())
         r.setdefault('status', 'active')
         r.setdefault('added_at', r.get('first_seen'))
         if 'last_updated' not in r:
             legacy = r.get('last_seen') or r.get('source_last_checked') or r.get('first_seen')
             r['last_updated'] = legacy
-        # Remove deprecated fields if present
         if 'last_seen' in r:
             r.pop('last_seen', None)
         if 'source_last_checked' in r:
             r.pop('source_last_checked', None)
+        if apply_title_metadata(r, title_data):
+            changed.setdefault(r['id'], {})['title_metadata'] = True
 
     new_records: List[Dict] = []
     deleted_ids: List[str] = []
-    changed: Dict[str, Dict] = {}
 
     last_existing_id = 0
     if by_id:
@@ -359,6 +391,7 @@ def main():
             parsed.setdefault('added_at', now_ts)
             parsed.setdefault('status', 'active')
             parsed.setdefault('last_updated', now_ts)
+            apply_title_metadata(parsed, title_data)
 
             if pid not in by_id:
                 logger.info("NEW id=%s", pid)
@@ -382,7 +415,7 @@ def main():
                     if _record_changed(parsed, old):
                         logger.info("CHANGED id=%s", pid)
                         # Update specific fields
-                        for k in ['title', 'prefecture', 'city', 'address', 'lat', 'lng', 'pokemons', 'pokemons_en', 'pokemons_zh']:
+                        for k in ['title', 'prefecture', 'city', 'address', 'building', 'lat', 'lng', 'pokemons', 'pokemons_en', 'pokemons_zh']:
                             if k in parsed:
                                 old[k] = parsed[k]
                         old['last_updated'] = now_ts
