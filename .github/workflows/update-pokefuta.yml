@@ -59,10 +59,16 @@ jobs:
           print(f'Wrote {len(active_records)} active records to docs/pokefuta.ndjson')
           "
 
+      - name: Generate KML snapshot
+        run: |
+          python apps/scraper/export_kml.py \
+            --input apps/scraper/pokefuta.ndjson \
+            --output docs/pokefuta.kml
+
       - name: Detect dataset changes
         id: diff
         run: |
-          git add apps/scraper/pokefuta.ndjson docs/pokefuta.ndjson || true
+          git add apps/scraper/pokefuta.ndjson docs/pokefuta.ndjson docs/pokefuta.kml docs/index.html || true
           if git diff --cached --quiet; then
             echo "changed=false" >> $GITHUB_OUTPUT
           else
