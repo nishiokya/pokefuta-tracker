@@ -67,6 +67,22 @@ git diff --name-only
 
 削除検出後は `status: deleted` となり、`docs/pokefuta.ndjson` には出力されません (履歴は内部ファイルに保持)。`last_seen` / `source_last_checked` は 2025-10-19 の変更で廃止され `last_updated` に統合、差分ない取得では更新されないため PR のノイズが減ります。
 
+### KML エクスポート (Google My Maps / GIS 連携)
+
+`apps/scraper/export_kml.py` は各マンホールを Placemark に変換した KML を生成します。GitHub Actions でも呼ばれますがローカルでも実行可能です。
+
+```bash
+python apps/scraper/export_kml.py \
+	--input apps/scraper/pokefuta.ndjson \
+	--output docs/pokefuta.kml \
+	--document-name "Pokéfuta Manholes" \
+	--icon-url https://data.pokefuta.com/assets/pokefuta_icon_32.png
+```
+
+- `--include-deleted` を付けると deleted ステータスも含めます (デフォルトは active のみ)。
+- `--icon-url` で Placemark アイコン画像を差し替え可能です。既定は Web UI と同じ `pokefuta_icon_32.png` なので Google My Maps でもマンホールアイコンとして表示されます。
+- 出力された `docs/pokefuta.kml` は GitHub Pages 配信や Google My Maps のアップデート時に利用してください。
+
 ## GitHub Actions (Artifact デプロイ方式)
 日次差分更新と公開デプロイを分離しました。
 

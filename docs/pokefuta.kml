@@ -2,6 +2,14 @@
 <kml xmlns="http://www.opengis.net/kml/2.2">
   <Document>
     <name>Pokéfuta Manholes (active only)</name>
+    <Style id="pokefuta-icon">
+      <IconStyle>
+        <scale>1.0</scale>
+        <Icon>
+          <href>https://data.pokefuta.com/assets/pokefuta_icon_32.png</href>
+        </Icon>
+      </IconStyle>
+    </Style>
     <Placemark>
       <name>鹿児島県/指宿市 (イーブイ)</name>
       <description>Prefecture: 鹿児島県
@@ -10,6 +18,7 @@ Address: 鹿児島県指宿市湊1丁目1-1
 Detail: https://local.pokemon.jp/manhole/desc/1/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>130.642861,31.237194,0</coordinates>
       </Point>
@@ -22,6 +31,7 @@ Address: 鹿児島県指宿市湯の浜5丁目26-29
 Detail: https://local.pokemon.jp/manhole/desc/2/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>130.653028,31.228,0</coordinates>
       </Point>
@@ -33,6 +43,7 @@ City: 指宿
 Detail: https://local.pokemon.jp/manhole/desc/3/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>130.647639,31.255278,0</coordinates>
       </Point>
@@ -45,6 +56,7 @@ Address: 鹿児島県指宿市湯の浜5丁目25-18
 Detail: https://local.pokemon.jp/manhole/desc/4/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>130.651972,31.229417,0</coordinates>
       </Point>
@@ -57,6 +69,7 @@ Address: 鹿児島県指宿市湊2丁目5-33
 Detail: https://local.pokemon.jp/manhole/desc/5/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>130.645,31.238278,0</coordinates>
       </Point>
@@ -68,6 +81,7 @@ City: 指宿
 Detail: https://local.pokemon.jp/manhole/desc/6/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>130.642188,31.236833,0</coordinates>
       </Point>
@@ -79,6 +93,7 @@ City: 指宿
 Detail: https://local.pokemon.jp/manhole/desc/7/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>130.662917,31.263889,0</coordinates>
       </Point>
@@ -90,6 +105,7 @@ City: 指宿
 Detail: https://local.pokemon.jp/manhole/desc/8/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>130.644611,31.231056,0</coordinates>
       </Point>
@@ -101,6 +117,7 @@ City: 指宿
 Detail: https://local.pokemon.jp/manhole/desc/9/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>130.641389,31.235444,0</coordinates>
       </Point>
@@ -113,6 +130,7 @@ Address: 岩手県洋野町種市22-133-11
 Detail: https://local.pokemon.jp/manhole/desc/10/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.719531,40.406101,0</coordinates>
       </Point>
@@ -125,6 +143,7 @@ Address: 岩手県久慈市中町2-5-6
 Detail: https://local.pokemon.jp/manhole/desc/11/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.765832,40.189742,0</coordinates>
       </Point>
@@ -136,6 +155,7 @@ City: 野田
 Detail: https://local.pokemon.jp/manhole/desc/12/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.828678,40.082726,0</coordinates>
       </Point>
@@ -148,6 +168,7 @@ Address: 岩手県普代村9-5-3
 Detail: https://local.pokemon.jp/manhole/desc/13/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.885736,40.002821,0</coordinates>
       </Point>
@@ -159,6 +180,7 @@ City: 岩泉
 Detail: https://local.pokemon.jp/manhole/desc/14/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.796532,39.86044,0</coordinates>
       </Point>
@@ -170,6 +192,7 @@ City: 田野畑
 Detail: https://local.pokemon.jp/manhole/desc/15/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.938688,39.916682,0</coordinates>
       </Point>
@@ -181,6 +204,7 @@ City: 宮古
 Detail: https://local.pokemon.jp/manhole/desc/16/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.969701,39.639471,0</coordinates>
       </Point>
@@ -192,6 +216,7 @@ City: 山田
 Detail: https://local.pokemon.jp/manhole/desc/17/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.951043,39.464186,0</coordinates>
       </Point>
@@ -203,6 +228,7 @@ City: 大槌
 Detail: https://local.pokemon.jp/manhole/desc/18/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.90316,39.357255,0</coordinates>
       </Point>
@@ -214,6 +240,7 @@ City: 釜石
 Detail: https://local.pokemon.jp/manhole/desc/19/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.887862,39.326865,0</coordinates>
       </Point>
@@ -225,6 +252,7 @@ City: 大船渡
 Detail: https://local.pokemon.jp/manhole/desc/20/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.710256,39.085906,0</coordinates>
       </Point>
@@ -236,6 +264,7 @@ City: 陸前高田
 Detail: https://local.pokemon.jp/manhole/desc/21/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.628694,39.01675,0</coordinates>
       </Point>
@@ -247,6 +276,7 @@ City: 住田
 Detail: https://local.pokemon.jp/manhole/desc/22/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.574456,39.142287,0</coordinates>
       </Point>
@@ -258,6 +288,7 @@ City: 横浜
 Detail: https://local.pokemon.jp/manhole/desc/23/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>139.631501,35.451167,0</coordinates>
       </Point>
@@ -269,6 +300,7 @@ City: 高松
 Detail: https://local.pokemon.jp/manhole/desc/28/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>134.049052,34.338888,0</coordinates>
       </Point>
@@ -280,6 +312,7 @@ City: 丸亀
 Detail: https://local.pokemon.jp/manhole/desc/29/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>133.793951,34.292014,0</coordinates>
       </Point>
@@ -292,6 +325,7 @@ Address: 香川県坂出市駒止町1丁目4
 Detail: https://local.pokemon.jp/manhole/desc/30/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>133.856292,34.312992,0</coordinates>
       </Point>
@@ -303,6 +337,7 @@ City: 善通寺
 Detail: https://local.pokemon.jp/manhole/desc/31/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>133.7773,34.22531,0</coordinates>
       </Point>
@@ -314,6 +349,7 @@ City: 観音寺
 Detail: https://local.pokemon.jp/manhole/desc/32/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>133.655211,34.125275,0</coordinates>
       </Point>
@@ -325,6 +361,7 @@ City: さぬき
 Detail: https://local.pokemon.jp/manhole/desc/33/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>134.173241,34.321305,0</coordinates>
       </Point>
@@ -336,6 +373,7 @@ City: 東かがわ
 Detail: https://local.pokemon.jp/manhole/desc/34/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>134.333457,34.251174,0</coordinates>
       </Point>
@@ -347,6 +385,7 @@ City: 三豊
 Detail: https://local.pokemon.jp/manhole/desc/35/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>133.6322219,34.2687992,0</coordinates>
       </Point>
@@ -358,6 +397,7 @@ City: 土庄
 Detail: https://local.pokemon.jp/manhole/desc/36/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>134.187512,34.482694,0</coordinates>
       </Point>
@@ -369,6 +409,7 @@ City: 小豆島
 Detail: https://local.pokemon.jp/manhole/desc/37/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>134.2358695,34.4708542,0</coordinates>
       </Point>
@@ -380,6 +421,7 @@ City: 三木
 Detail: https://local.pokemon.jp/manhole/desc/38/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>134.134567,34.268586,0</coordinates>
       </Point>
@@ -392,6 +434,7 @@ Address: 香川県直島町2249番地55
 Detail: https://local.pokemon.jp/manhole/desc/39/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>133.975492,34.455827,0</coordinates>
       </Point>
@@ -403,6 +446,7 @@ City: 綾川
 Detail: https://local.pokemon.jp/manhole/desc/40/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>133.917073,34.250399,0</coordinates>
       </Point>
@@ -414,6 +458,7 @@ City: 琴平
 Detail: https://local.pokemon.jp/manhole/desc/41/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>133.819896,34.187735,0</coordinates>
       </Point>
@@ -425,6 +470,7 @@ City: 多度津
 Detail: https://local.pokemon.jp/manhole/desc/42/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>133.757247,34.272282,0</coordinates>
       </Point>
@@ -436,6 +482,7 @@ City: まんのう
 Detail: https://local.pokemon.jp/manhole/desc/43/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>133.871387,34.173339,0</coordinates>
       </Point>
@@ -447,6 +494,7 @@ City: 気仙沼
 Detail: https://local.pokemon.jp/manhole/desc/44/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.574667,38.905694,0</coordinates>
       </Point>
@@ -458,6 +506,7 @@ City: 南三陸
 Detail: https://local.pokemon.jp/manhole/desc/45/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.52115,38.717061,0</coordinates>
       </Point>
@@ -469,6 +518,7 @@ City: 女川
 Detail: https://local.pokemon.jp/manhole/desc/46/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.44623,38.445695,0</coordinates>
       </Point>
@@ -480,6 +530,7 @@ City: 石巻
 Detail: https://local.pokemon.jp/manhole/desc/47/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.303041,38.433844,0</coordinates>
       </Point>
@@ -491,6 +542,7 @@ City: 東松島
 Detail: https://local.pokemon.jp/manhole/desc/48/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.15671,38.379414,0</coordinates>
       </Point>
@@ -502,6 +554,7 @@ City: 松島
 Detail: https://local.pokemon.jp/manhole/desc/49/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.061207,38.368987,0</coordinates>
       </Point>
@@ -513,6 +566,7 @@ City: 塩竈
 Detail: https://local.pokemon.jp/manhole/desc/50/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.023075,38.318226,0</coordinates>
       </Point>
@@ -524,6 +578,7 @@ City: 利府
 Detail: https://local.pokemon.jp/manhole/desc/51/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.975248,38.329512,0</coordinates>
       </Point>
@@ -535,6 +590,7 @@ City: 七ヶ浜
 Detail: https://local.pokemon.jp/manhole/desc/52/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.083342,38.304315,0</coordinates>
       </Point>
@@ -547,6 +603,7 @@ Address: 宮城県多賀城市中央2丁目7番地
 Detail: https://local.pokemon.jp/manhole/desc/53/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.007158,38.291943,0</coordinates>
       </Point>
@@ -558,6 +615,7 @@ City: 仙台
 Detail: https://local.pokemon.jp/manhole/desc/54/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.872666,38.258587,0</coordinates>
       </Point>
@@ -569,6 +627,7 @@ City: 名取
 Detail: https://local.pokemon.jp/manhole/desc/55/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.954044,38.17213,0</coordinates>
       </Point>
@@ -581,6 +640,7 @@ Address: 宮城県岩沼市中央1丁目2-13
 Detail: https://local.pokemon.jp/manhole/desc/56/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.866325,38.105296,0</coordinates>
       </Point>
@@ -592,6 +652,7 @@ City: 亘理
 Detail: https://local.pokemon.jp/manhole/desc/57/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.915724,38.04217,0</coordinates>
       </Point>
@@ -603,6 +664,7 @@ City: 山元
 Detail: https://local.pokemon.jp/manhole/desc/58/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.900996,37.923988,0</coordinates>
       </Point>
@@ -614,6 +676,7 @@ City: 石狩
 Detail: https://local.pokemon.jp/manhole/desc/59/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.423898,43.585848,0</coordinates>
       </Point>
@@ -625,6 +688,7 @@ City: 恵庭
 Detail: https://local.pokemon.jp/manhole/desc/60/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.585789,42.897132,0</coordinates>
       </Point>
@@ -636,6 +700,7 @@ City: 洞爺湖
 Detail: https://local.pokemon.jp/manhole/desc/61/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.819072,42.566111,0</coordinates>
       </Point>
@@ -647,6 +712,7 @@ City: 森
 Detail: https://local.pokemon.jp/manhole/desc/62/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.572941,42.108855,0</coordinates>
       </Point>
@@ -659,6 +725,7 @@ Address: 北海道上ノ国町字原歌3番地
 Detail: https://local.pokemon.jp/manhole/desc/63/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.095409,41.808398,0</coordinates>
       </Point>
@@ -671,6 +738,7 @@ Address: 北海道士別市大通東5丁目
 Detail: https://local.pokemon.jp/manhole/desc/64/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>142.392417,44.175974,0</coordinates>
       </Point>
@@ -683,6 +751,7 @@ Address: 北海道比布町西町2丁目6番1号
 Detail: https://local.pokemon.jp/manhole/desc/65/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>142.471699,43.875033,0</coordinates>
       </Point>
@@ -695,6 +764,7 @@ Address: 北海道天塩町新開通4丁目7227番地2
 Detail: https://local.pokemon.jp/manhole/desc/66/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.74797,44.88452,0</coordinates>
       </Point>
@@ -706,6 +776,7 @@ City: 稚内
 Detail: https://local.pokemon.jp/manhole/desc/67/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.677095,45.417236,0</coordinates>
       </Point>
@@ -718,6 +789,7 @@ Address: 北海道豊富町東1条6丁目
 Detail: https://local.pokemon.jp/manhole/desc/68/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.778643,45.103245,0</coordinates>
       </Point>
@@ -729,6 +801,7 @@ City: 紋別
 Detail: https://local.pokemon.jp/manhole/desc/69/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>143.372211,44.334641,0</coordinates>
       </Point>
@@ -741,6 +814,7 @@ Address: 北海道遠軽町野上150番地
 Detail: https://local.pokemon.jp/manhole/desc/70/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>143.497131,44.021878,0</coordinates>
       </Point>
@@ -753,6 +827,7 @@ Address: 北海道大空町女満別本通1丁目
 Detail: https://local.pokemon.jp/manhole/desc/71/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>144.17137,43.915555,0</coordinates>
       </Point>
@@ -765,6 +840,7 @@ Address: 北海道新得町本通北1丁目
 Detail: https://local.pokemon.jp/manhole/desc/72/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>142.832927,43.082684,0</coordinates>
       </Point>
@@ -777,6 +853,7 @@ Address: 北海道足寄町北1条1丁目1
 Detail: https://local.pokemon.jp/manhole/desc/73/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>143.546753,43.244229,0</coordinates>
       </Point>
@@ -788,6 +865,7 @@ City: 鳥取
 Detail: https://local.pokemon.jp/manhole/desc/74/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>134.237266,35.539668,0</coordinates>
       </Point>
@@ -800,6 +878,7 @@ Address: 鳥取県米子市皆生温泉3丁目1番1号
 Detail: https://local.pokemon.jp/manhole/desc/75/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>133.361525,35.456258,0</coordinates>
       </Point>
@@ -811,6 +890,7 @@ City: 倉吉
 Detail: https://local.pokemon.jp/manhole/desc/76/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>133.850116,35.454272,0</coordinates>
       </Point>
@@ -822,6 +902,7 @@ City: 境港
 Detail: https://local.pokemon.jp/manhole/desc/77/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>133.258356,35.521481,0</coordinates>
       </Point>
@@ -833,6 +914,7 @@ City: 岩美
 Detail: https://local.pokemon.jp/manhole/desc/78/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>134.321556,35.590938,0</coordinates>
       </Point>
@@ -844,6 +926,7 @@ City: 若桜
 Detail: https://local.pokemon.jp/manhole/desc/79/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>134.400345,35.343951,0</coordinates>
       </Point>
@@ -855,6 +938,7 @@ City: 三朝
 Detail: https://local.pokemon.jp/manhole/desc/80/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>133.894397,35.409324,0</coordinates>
       </Point>
@@ -866,6 +950,7 @@ City: 湯梨浜
 Detail: https://local.pokemon.jp/manhole/desc/81/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>133.88401,35.478166,0</coordinates>
       </Point>
@@ -877,6 +962,7 @@ City: 琴浦
 Detail: https://local.pokemon.jp/manhole/desc/82/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>133.661612,35.506942,0</coordinates>
       </Point>
@@ -888,6 +974,7 @@ City: 大山
 Detail: https://local.pokemon.jp/manhole/desc/83/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>133.502093,35.504584,0</coordinates>
       </Point>
@@ -899,6 +986,7 @@ City: 南部
 Detail: https://local.pokemon.jp/manhole/desc/84/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>133.423398,35.347474,0</coordinates>
       </Point>
@@ -910,6 +998,7 @@ City: 伯耆
 Detail: https://local.pokemon.jp/manhole/desc/85/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>133.458512,35.383395,0</coordinates>
       </Point>
@@ -922,6 +1011,7 @@ Address: 鳥取県日南町生山354番地2
 Detail: https://local.pokemon.jp/manhole/desc/86/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>133.31094,35.170524,0</coordinates>
       </Point>
@@ -934,6 +1024,7 @@ Address: 鳥取県日野町根雨170番地1
 Detail: https://local.pokemon.jp/manhole/desc/87/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>133.441049,35.24192,0</coordinates>
       </Point>
@@ -946,6 +1037,7 @@ Address: 福島県新地町駅前1丁目3番地
 Detail: https://local.pokemon.jp/manhole/desc/88/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.925027,37.878748,0</coordinates>
       </Point>
@@ -957,6 +1049,7 @@ City: 相馬
 Detail: https://local.pokemon.jp/manhole/desc/89/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.963244,37.827708,0</coordinates>
       </Point>
@@ -969,6 +1062,7 @@ Address: 福島県南相馬市原町区高見町2-30-1
 Detail: https://local.pokemon.jp/manhole/desc/90/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.983041,37.63577,0</coordinates>
       </Point>
@@ -980,6 +1074,7 @@ City: 浪江
 Detail: https://local.pokemon.jp/manhole/desc/91/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.000919,37.496395,0</coordinates>
       </Point>
@@ -991,6 +1086,7 @@ City: 楢葉
 Detail: https://local.pokemon.jp/manhole/desc/92/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.9975789,37.2501442,0</coordinates>
       </Point>
@@ -1003,6 +1099,7 @@ Address: 福島県いわき市四倉町字5-218-1
 Detail: https://local.pokemon.jp/manhole/desc/93/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.9932743,37.1073084,0</coordinates>
       </Point>
@@ -1014,6 +1111,7 @@ City: 川俣
 Detail: https://local.pokemon.jp/manhole/desc/94/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.57675,37.667671,0</coordinates>
       </Point>
@@ -1025,6 +1123,7 @@ City: 田
 Detail: https://local.pokemon.jp/manhole/desc/95/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.674289,37.344423,0</coordinates>
       </Point>
@@ -1036,6 +1135,7 @@ City: 川内
 Detail: https://local.pokemon.jp/manhole/desc/96/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.82162,37.329458,0</coordinates>
       </Point>
@@ -1048,6 +1148,7 @@ Address: 香川県宇多津町浜一番丁4番地
 Detail: https://local.pokemon.jp/manhole/desc/97/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>133.8075257,34.3134259,0</coordinates>
       </Point>
@@ -1059,6 +1160,7 @@ City: 町田
 Detail: https://local.pokemon.jp/manhole/desc/98/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>139.45034,35.548108,0</coordinates>
       </Point>
@@ -1070,6 +1172,7 @@ City: 町田
 Detail: https://local.pokemon.jp/manhole/desc/99/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>139.4513,35.548171,0</coordinates>
       </Point>
@@ -1081,6 +1184,7 @@ City: 町田
 Detail: https://local.pokemon.jp/manhole/desc/100/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>139.45501,35.545302,0</coordinates>
       </Point>
@@ -1092,6 +1196,7 @@ City: 町田
 Detail: https://local.pokemon.jp/manhole/desc/101/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>139.45436,35.546111,0</coordinates>
       </Point>
@@ -1103,6 +1208,7 @@ City: 町田
 Detail: https://local.pokemon.jp/manhole/desc/102/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>139.45488,35.545645,0</coordinates>
       </Point>
@@ -1114,6 +1220,7 @@ City: 町田
 Detail: https://local.pokemon.jp/manhole/desc/103/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>139.45398,35.546713,0</coordinates>
       </Point>
@@ -1125,6 +1232,7 @@ City: 大津
 Detail: https://local.pokemon.jp/manhole/desc/104/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>135.8699,35.0102,0</coordinates>
       </Point>
@@ -1136,6 +1244,7 @@ City: 大津
 Detail: https://local.pokemon.jp/manhole/desc/105/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>135.8946,34.9981,0</coordinates>
       </Point>
@@ -1147,6 +1256,7 @@ City: 智頭
 Detail: https://local.pokemon.jp/manhole/desc/106/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>134.226103,35.265428,0</coordinates>
       </Point>
@@ -1158,6 +1268,7 @@ City: 八頭
 Detail: https://local.pokemon.jp/manhole/desc/107/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>134.339426,35.366456,0</coordinates>
       </Point>
@@ -1169,6 +1280,7 @@ City: 北栄
 Detail: https://local.pokemon.jp/manhole/desc/108/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>133.81794,35.49924,0</coordinates>
       </Point>
@@ -1181,6 +1293,7 @@ Address: 鳥取県日吉津村大字日吉津930番地
 Detail: https://local.pokemon.jp/manhole/desc/109/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>133.379578,35.441126,0</coordinates>
       </Point>
@@ -1192,6 +1305,7 @@ City: 江府
 Detail: https://local.pokemon.jp/manhole/desc/110/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>133.474089,35.295841,0</coordinates>
       </Point>
@@ -1203,6 +1317,7 @@ City: 宮崎
 Detail: https://local.pokemon.jp/manhole/desc/111/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>131.457839,31.807505,0</coordinates>
       </Point>
@@ -1214,6 +1329,7 @@ City: 都城
 Detail: https://local.pokemon.jp/manhole/desc/112/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>131.0661894,31.725213,0</coordinates>
       </Point>
@@ -1225,6 +1341,7 @@ City: 延岡
 Detail: https://local.pokemon.jp/manhole/desc/113/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>131.801103,32.684711,0</coordinates>
       </Point>
@@ -1236,6 +1353,7 @@ City: 日南
 Detail: https://local.pokemon.jp/manhole/desc/114/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>131.4017058,31.58793,0</coordinates>
       </Point>
@@ -1248,6 +1366,7 @@ Address: 宮崎県小林市野尻町東麓5160番地
 Detail: https://local.pokemon.jp/manhole/desc/115/?is_modal=1
 Last Updated: 2025-11-08T07:44:02Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>131.12641,31.95742,0</coordinates>
       </Point>
@@ -1259,6 +1378,7 @@ City: 日向
 Detail: https://local.pokemon.jp/manhole/desc/116/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>131.6277364,32.4253924,0</coordinates>
       </Point>
@@ -1270,6 +1390,7 @@ City: 串間
 Detail: https://local.pokemon.jp/manhole/desc/117/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>131.332809,31.36627,0</coordinates>
       </Point>
@@ -1282,6 +1403,7 @@ Address: 宮崎県西都市小野崎1丁目77番地
 Detail: https://local.pokemon.jp/manhole/desc/118/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>131.404508,32.106625,0</coordinates>
       </Point>
@@ -1294,6 +1416,7 @@ Address: 宮崎県えびの市大字永山1006番地1
 Detail: https://local.pokemon.jp/manhole/desc/119/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>130.80595,32.050305,0</coordinates>
       </Point>
@@ -1305,6 +1428,7 @@ City: 白石
 Detail: https://local.pokemon.jp/manhole/desc/120/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.61735,38.002511,0</coordinates>
       </Point>
@@ -1316,6 +1440,7 @@ City: 角田
 Detail: https://local.pokemon.jp/manhole/desc/121/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.807077,37.968694,0</coordinates>
       </Point>
@@ -1327,6 +1452,7 @@ City: 登米
 Detail: https://local.pokemon.jp/manhole/desc/122/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.235491,38.616649,0</coordinates>
       </Point>
@@ -1338,6 +1464,7 @@ City: 栗原
 Detail: https://local.pokemon.jp/manhole/desc/123/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.844403,38.794479,0</coordinates>
       </Point>
@@ -1350,6 +1477,7 @@ Address: 宮城県大崎市古川駅前大通１丁目５　古川駅前
 Detail: https://local.pokemon.jp/manhole/desc/124/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.967465,38.571356,0</coordinates>
       </Point>
@@ -1361,6 +1489,7 @@ City: 富谷
 Detail: https://local.pokemon.jp/manhole/desc/125/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.8875,38.398336,0</coordinates>
       </Point>
@@ -1372,6 +1501,7 @@ City: 蔵王
 Detail: https://local.pokemon.jp/manhole/desc/126/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.577192,38.123663,0</coordinates>
       </Point>
@@ -1383,6 +1513,7 @@ City: 七ヶ宿
 Detail: https://local.pokemon.jp/manhole/desc/127/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.46662,37.982523,0</coordinates>
       </Point>
@@ -1394,6 +1525,7 @@ City: 大河原
 Detail: https://local.pokemon.jp/manhole/desc/128/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.738089,38.0485032,0</coordinates>
       </Point>
@@ -1405,6 +1537,7 @@ City: 村田
 Detail: https://local.pokemon.jp/manhole/desc/129/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.717821,38.119071,0</coordinates>
       </Point>
@@ -1417,6 +1550,7 @@ Address: 宮城県柴田町船岡中央1丁目1-1
 Detail: https://local.pokemon.jp/manhole/desc/130/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.768239,38.059143,0</coordinates>
       </Point>
@@ -1428,6 +1562,7 @@ City: 川崎
 Detail: https://local.pokemon.jp/manhole/desc/131/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.643653,38.177534,0</coordinates>
       </Point>
@@ -1439,6 +1574,7 @@ City: 丸森
 Detail: https://local.pokemon.jp/manhole/desc/132/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.762531,37.913873,0</coordinates>
       </Point>
@@ -1450,6 +1586,7 @@ City: 大和
 Detail: https://local.pokemon.jp/manhole/desc/133/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.885648,38.437364,0</coordinates>
       </Point>
@@ -1461,6 +1598,7 @@ City: 大郷
 Detail: https://local.pokemon.jp/manhole/desc/134/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.992673,38.424016,0</coordinates>
       </Point>
@@ -1472,6 +1610,7 @@ City: 大衡
 Detail: https://local.pokemon.jp/manhole/desc/135/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.8902292,38.46943814,0</coordinates>
       </Point>
@@ -1483,6 +1622,7 @@ City: 色麻
 Detail: https://local.pokemon.jp/manhole/desc/136/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.86142,38.530136,0</coordinates>
       </Point>
@@ -1494,6 +1634,7 @@ City: 加美
 Detail: https://local.pokemon.jp/manhole/desc/137/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.72859,38.57215,0</coordinates>
       </Point>
@@ -1505,6 +1646,7 @@ City: 涌谷
 Detail: https://local.pokemon.jp/manhole/desc/138/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.1267433,38.5392702,0</coordinates>
       </Point>
@@ -1516,6 +1658,7 @@ City: 美里
 Detail: https://local.pokemon.jp/manhole/desc/139/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.133053,38.489061,0</coordinates>
       </Point>
@@ -1528,6 +1671,7 @@ Address: 北海道苫小牧市末広町3丁目1
 Detail: https://local.pokemon.jp/manhole/desc/140/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.61009,42.635755,0</coordinates>
       </Point>
@@ -1540,6 +1684,7 @@ Address: 北海道三笠市幾春別錦町1-212-1
 Detail: https://local.pokemon.jp/manhole/desc/141/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.9626673,43.2613165,0</coordinates>
       </Point>
@@ -1551,6 +1696,7 @@ City: 上富良野
 Detail: https://local.pokemon.jp/manhole/desc/142/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>142.479068,43.462246,0</coordinates>
       </Point>
@@ -1562,6 +1708,7 @@ City: 剣淵
 Detail: https://local.pokemon.jp/manhole/desc/143/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>142.3593096,44.1000303,0</coordinates>
       </Point>
@@ -1574,6 +1721,7 @@ Address: 新潟県小千谷市城内2-7-5
 Detail: https://local.pokemon.jp/manhole/desc/144/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>138.794792,37.314216,0</coordinates>
       </Point>
@@ -1585,6 +1733,7 @@ City: 小千谷
 Detail: https://local.pokemon.jp/manhole/desc/145/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>138.812939,37.309883,0</coordinates>
       </Point>
@@ -1597,6 +1746,7 @@ Address: 新潟県小千谷市小千谷市城内1-8-22
 Detail: https://local.pokemon.jp/manhole/desc/146/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>138.795653,37.311028,0</coordinates>
       </Point>
@@ -1608,6 +1758,7 @@ City: 小千谷
 Detail: https://local.pokemon.jp/manhole/desc/147/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>138.7835,37.314301,0</coordinates>
       </Point>
@@ -1620,6 +1771,7 @@ Address: 奈良県斑鳩町興留7丁目3番地内
 Detail: https://local.pokemon.jp/manhole/desc/148/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>135.73917,34.60189,0</coordinates>
       </Point>
@@ -1632,6 +1784,7 @@ Address: 奈良県斑鳩町興留5丁目5番28号
 Detail: https://local.pokemon.jp/manhole/desc/149/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>135.7376,34.60474,0</coordinates>
       </Point>
@@ -1644,6 +1797,7 @@ Address: 奈良県斑鳩町興留2丁目1番地内
 Detail: https://local.pokemon.jp/manhole/desc/150/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>135.73769,34.60827,0</coordinates>
       </Point>
@@ -1656,6 +1810,7 @@ Address: 奈良県斑鳩町法隆寺南1丁目2番地内
 Detail: https://local.pokemon.jp/manhole/desc/151/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>135.73755,34.60826,0</coordinates>
       </Point>
@@ -1668,6 +1823,7 @@ Address: 奈良県斑鳩町法隆寺1丁目8番25号
 Detail: https://local.pokemon.jp/manhole/desc/152/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>135.73529,34.60983,0</coordinates>
       </Point>
@@ -1679,6 +1835,7 @@ City: 小笠原
 Detail: https://local.pokemon.jp/manhole/desc/153/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>142.194033,27.094863,0</coordinates>
       </Point>
@@ -1690,6 +1847,7 @@ City: 小笠原
 Detail: https://local.pokemon.jp/manhole/desc/154/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>142.193279,27.094708,0</coordinates>
       </Point>
@@ -1701,6 +1859,7 @@ City: 小笠原
 Detail: https://local.pokemon.jp/manhole/desc/155/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>142.192781,27.094596,0</coordinates>
       </Point>
@@ -1712,6 +1871,7 @@ City: 小笠原
 Detail: https://local.pokemon.jp/manhole/desc/156/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>142.19235,27.09448,0</coordinates>
       </Point>
@@ -1723,6 +1883,7 @@ City: 八戸
 Detail: https://local.pokemon.jp/manhole/desc/157/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.558034,40.537937,0</coordinates>
       </Point>
@@ -1734,6 +1895,7 @@ City: 階上
 Detail: https://local.pokemon.jp/manhole/desc/158/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.608335,40.458437,0</coordinates>
       </Point>
@@ -1745,6 +1907,7 @@ City: 京都
 Detail: https://local.pokemon.jp/manhole/desc/159/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>135.678745,35.011863,0</coordinates>
       </Point>
@@ -1756,6 +1919,7 @@ City: 京都
 Detail: https://local.pokemon.jp/manhole/desc/160/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>135.780573,35.00337,0</coordinates>
       </Point>
@@ -1767,6 +1931,7 @@ City: 京都
 Detail: https://local.pokemon.jp/manhole/desc/161/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>135.714323,34.994784,0</coordinates>
       </Point>
@@ -1778,6 +1943,7 @@ City: 京都
 Detail: https://local.pokemon.jp/manhole/desc/162/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>135.782013,35.014858,0</coordinates>
       </Point>
@@ -1789,6 +1955,7 @@ City: 京都
 Detail: https://local.pokemon.jp/manhole/desc/163/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>135.743538,34.987804,0</coordinates>
       </Point>
@@ -1800,6 +1967,7 @@ City: 三股
 Detail: https://local.pokemon.jp/manhole/desc/164/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>131.120309,31.73375,0</coordinates>
       </Point>
@@ -1811,6 +1979,7 @@ City: 高鍋
 Detail: https://local.pokemon.jp/manhole/desc/165/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>131.532841,32.115956,0</coordinates>
       </Point>
@@ -1822,6 +1991,7 @@ City: 新富
 Detail: https://local.pokemon.jp/manhole/desc/166/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>131.495719,32.073902,0</coordinates>
       </Point>
@@ -1833,6 +2003,7 @@ City: 木城
 Detail: https://local.pokemon.jp/manhole/desc/167/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>131.4782857,32.1682457,0</coordinates>
       </Point>
@@ -1845,6 +2016,7 @@ Address: 宮崎県川南町大字平田2386番地3
 Detail: https://local.pokemon.jp/manhole/desc/168/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>131.528984,32.191491,0</coordinates>
       </Point>
@@ -1856,6 +2028,7 @@ City: 都農
 Detail: https://local.pokemon.jp/manhole/desc/169/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>131.5575768,32.2609016,0</coordinates>
       </Point>
@@ -1868,6 +2041,7 @@ Address: 宮崎県門川町大字庵川2822番地
 Detail: https://local.pokemon.jp/manhole/desc/170/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>131.676733,32.487021,0</coordinates>
       </Point>
@@ -1879,6 +2053,7 @@ City: 美郷
 Detail: https://local.pokemon.jp/manhole/desc/171/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>131.467551,32.431976,0</coordinates>
       </Point>
@@ -1890,6 +2065,7 @@ City: 台東区上野
 Detail: https://local.pokemon.jp/manhole/desc/172/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>139.776399,35.71681,0</coordinates>
       </Point>
@@ -1901,6 +2077,7 @@ City: 台東区上野
 Detail: https://local.pokemon.jp/manhole/desc/173/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>139.775397,35.717715,0</coordinates>
       </Point>
@@ -1913,6 +2090,7 @@ Address: 沖縄県那覇市牧志3丁目2
 Detail: https://local.pokemon.jp/manhole/desc/174/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>127.68942,26.21641,0</coordinates>
       </Point>
@@ -1925,6 +2103,7 @@ Address: 沖縄県宜野湾市真志喜4-2-1
 Detail: https://local.pokemon.jp/manhole/desc/175/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>127.732215,26.28139,0</coordinates>
       </Point>
@@ -1937,6 +2116,7 @@ Address: 沖縄県沖縄市胡屋5-7-1
 Detail: https://local.pokemon.jp/manhole/desc/176/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>127.803001,26.32766,0</coordinates>
       </Point>
@@ -1948,6 +2128,7 @@ City: うるま
 Detail: https://local.pokemon.jp/manhole/desc/177/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>127.826113,26.436181,0</coordinates>
       </Point>
@@ -1959,6 +2140,7 @@ City: 高原
 Detail: https://local.pokemon.jp/manhole/desc/178/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>130.960187,31.907234,0</coordinates>
       </Point>
@@ -1970,6 +2152,7 @@ City: 国富
 Detail: https://local.pokemon.jp/manhole/desc/179/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>131.321916,31.988591,0</coordinates>
       </Point>
@@ -1982,6 +2165,7 @@ Address: 宮崎県綾町大字南俣515番地
 Detail: https://local.pokemon.jp/manhole/desc/180/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>131.2537536,31.9989753,0</coordinates>
       </Point>
@@ -1993,6 +2177,7 @@ City: 西米良
 Detail: https://local.pokemon.jp/manhole/desc/181/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>131.16329,32.223238,0</coordinates>
       </Point>
@@ -2004,6 +2189,7 @@ City: 諸塚
 Detail: https://local.pokemon.jp/manhole/desc/182/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>131.331498,32.509811,0</coordinates>
       </Point>
@@ -2016,6 +2202,7 @@ Address: 宮崎県椎葉村大字下福良1829番地57
 Detail: https://local.pokemon.jp/manhole/desc/183/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>131.153831,32.458153,0</coordinates>
       </Point>
@@ -2027,6 +2214,7 @@ City: 高千穂
 Detail: https://local.pokemon.jp/manhole/desc/184/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>131.305889,32.707748,0</coordinates>
       </Point>
@@ -2038,6 +2226,7 @@ City: 日之影
 Detail: https://local.pokemon.jp/manhole/desc/185/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>131.388639,32.660643,0</coordinates>
       </Point>
@@ -2049,6 +2238,7 @@ City: 五ヶ瀬
 Detail: https://local.pokemon.jp/manhole/desc/186/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>131.210041,32.679051,0</coordinates>
       </Point>
@@ -2060,6 +2250,7 @@ City: 函館
 Detail: https://local.pokemon.jp/manhole/desc/187/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.715684,41.755926,0</coordinates>
       </Point>
@@ -2072,6 +2263,7 @@ Address: 北海道小樽市稲穂1丁目3番8号
 Detail: https://local.pokemon.jp/manhole/desc/188/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.998285,43.195544,0</coordinates>
       </Point>
@@ -2084,6 +2276,7 @@ Address: 北海道根室市牧の内146番地243　明治公園内
 Detail: https://local.pokemon.jp/manhole/desc/189/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>145.598194,43.335936,0</coordinates>
       </Point>
@@ -2096,6 +2289,7 @@ Address: 北海道登別市登別市登別港町１丁目4-9
 Detail: https://local.pokemon.jp/manhole/desc/190/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.180999,42.452786,0</coordinates>
       </Point>
@@ -2108,6 +2302,7 @@ Address: 北海道本別町北3丁目1-2
 Detail: https://local.pokemon.jp/manhole/desc/191/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>143.613441,43.125781,0</coordinates>
       </Point>
@@ -2119,6 +2314,7 @@ City: 陸別
 Detail: https://local.pokemon.jp/manhole/desc/192/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>143.742721,43.467701,0</coordinates>
       </Point>
@@ -2131,6 +2327,7 @@ Address: 北海道中標津町丸山2丁目1番地18
 Detail: https://local.pokemon.jp/manhole/desc/193/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>144.969609,43.554566,0</coordinates>
       </Point>
@@ -2142,6 +2339,7 @@ City: 倉敷
 Detail: https://local.pokemon.jp/manhole/desc/194/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>133.81388,34.43427,0</coordinates>
       </Point>
@@ -2154,6 +2352,7 @@ Address: 岡山県倉敷市中央2-6-1
 Detail: https://local.pokemon.jp/manhole/desc/195/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>133.76888,34.59556,0</coordinates>
       </Point>
@@ -2166,6 +2365,7 @@ Address: 岡山県倉敷市中央1-18-1
 Detail: https://local.pokemon.jp/manhole/desc/196/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>133.77046,34.59274,0</coordinates>
       </Point>
@@ -2178,6 +2378,7 @@ Address: 岡山県倉敷市阿知2丁目17
 Detail: https://local.pokemon.jp/manhole/desc/197/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>133.77029,34.59829,0</coordinates>
       </Point>
@@ -2189,6 +2390,7 @@ City: 北九州
 Detail: https://local.pokemon.jp/manhole/desc/198/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>130.876213,33.884982,0</coordinates>
       </Point>
@@ -2200,6 +2402,7 @@ City: 北九州
 Detail: https://local.pokemon.jp/manhole/desc/199/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>130.884609,33.890528,0</coordinates>
       </Point>
@@ -2211,6 +2414,7 @@ City: 北九州
 Detail: https://local.pokemon.jp/manhole/desc/200/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>130.807495,33.871791,0</coordinates>
       </Point>
@@ -2222,6 +2426,7 @@ City: 北九州
 Detail: https://local.pokemon.jp/manhole/desc/201/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>130.964119,33.946285,0</coordinates>
       </Point>
@@ -2233,6 +2438,7 @@ City: 北九州
 Detail: https://local.pokemon.jp/manhole/desc/202/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>130.96161,33.957206,0</coordinates>
       </Point>
@@ -2244,6 +2450,7 @@ City: 淡路
 Detail: https://local.pokemon.jp/manhole/desc/203/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>135.009441,34.601828,0</coordinates>
       </Point>
@@ -2255,6 +2462,7 @@ City: 淡路
 Detail: https://local.pokemon.jp/manhole/desc/204/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>134.938094,34.550436,0</coordinates>
       </Point>
@@ -2266,6 +2474,7 @@ City: 淡路
 Detail: https://local.pokemon.jp/manhole/desc/205/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>134.873103,34.482151,0</coordinates>
       </Point>
@@ -2278,6 +2487,7 @@ Address: 大阪府東大阪市荒本北1丁目1番1号
 Detail: https://local.pokemon.jp/manhole/desc/206/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>135.601221,34.679788,0</coordinates>
       </Point>
@@ -2289,6 +2499,7 @@ City: 東大阪
 Detail: https://local.pokemon.jp/manhole/desc/207/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>135.63989,34.66771,0</coordinates>
       </Point>
@@ -2300,6 +2511,7 @@ City: 東大阪
 Detail: https://local.pokemon.jp/manhole/desc/208/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>135.650788,34.680678,0</coordinates>
       </Point>
@@ -2311,6 +2523,7 @@ City: 東大阪
 Detail: https://local.pokemon.jp/manhole/desc/209/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>135.626309,34.667678,0</coordinates>
       </Point>
@@ -2322,6 +2535,7 @@ City: 東大阪
 Detail: https://local.pokemon.jp/manhole/desc/210/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>135.630586,34.669486,0</coordinates>
       </Point>
@@ -2333,6 +2547,7 @@ City: 所沢
 Detail: https://local.pokemon.jp/manhole/desc/211/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>139.505528,35.797482,0</coordinates>
       </Point>
@@ -2344,6 +2559,7 @@ City: 所沢
 Detail: https://local.pokemon.jp/manhole/desc/212/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>139.472881,35.786887,0</coordinates>
       </Point>
@@ -2355,6 +2571,7 @@ City: 所沢
 Detail: https://local.pokemon.jp/manhole/desc/213/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>139.471991,35.798734,0</coordinates>
       </Point>
@@ -2367,6 +2584,7 @@ Address: 北海道旭川市神楽4条6丁目1-12
 Detail: https://local.pokemon.jp/manhole/desc/214/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>142.3485094,43.7595958,0</coordinates>
       </Point>
@@ -2379,6 +2597,7 @@ Address: 北海道釧路市阿寒町上阿寒23線36番地1
 Detail: https://local.pokemon.jp/manhole/desc/215/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>144.14549,43.144027,0</coordinates>
       </Point>
@@ -2391,6 +2610,7 @@ Address: 北海道帯広市西2条南12丁目6
 Detail: https://local.pokemon.jp/manhole/desc/216/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>143.202563,42.918205,0</coordinates>
       </Point>
@@ -2403,6 +2623,7 @@ Address: 北海道網走市南3条東4丁目5-1
 Detail: https://local.pokemon.jp/manhole/desc/217/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>144.274423,44.021949,0</coordinates>
       </Point>
@@ -2415,6 +2636,7 @@ Address: 北海道赤井川村字都190番地16
 Detail: https://local.pokemon.jp/manhole/desc/218/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.844262,43.05125,0</coordinates>
       </Point>
@@ -2427,6 +2649,7 @@ Address: 北海道東川町北町1丁目1番2号
 Detail: https://local.pokemon.jp/manhole/desc/219/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>142.507039,43.698404,0</coordinates>
       </Point>
@@ -2439,6 +2662,7 @@ Address: 北海道斜里町ウトロ西186番地8
 Detail: https://local.pokemon.jp/manhole/desc/220/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>144.99062,44.06884,0</coordinates>
       </Point>
@@ -2450,6 +2674,7 @@ City: えりも
 Detail: https://local.pokemon.jp/manhole/desc/221/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>143.14619,42.01782,0</coordinates>
       </Point>
@@ -2461,6 +2686,7 @@ City: 香取
 Detail: https://local.pokemon.jp/manhole/desc/222/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.493902,35.894417,0</coordinates>
       </Point>
@@ -2472,6 +2698,7 @@ City: 香取
 Detail: https://local.pokemon.jp/manhole/desc/223/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.497568,35.888376,0</coordinates>
       </Point>
@@ -2483,6 +2710,7 @@ City: 香取
 Detail: https://local.pokemon.jp/manhole/desc/224/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.523401,35.928206,0</coordinates>
       </Point>
@@ -2494,6 +2722,7 @@ City: 香取
 Detail: https://local.pokemon.jp/manhole/desc/225/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.506419,35.896204,0</coordinates>
       </Point>
@@ -2506,6 +2735,7 @@ Address: 栃木県宇都宮市元今泉5丁目10-1
 Detail: https://local.pokemon.jp/manhole/desc/226/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>139.909489,36.56077,0</coordinates>
       </Point>
@@ -2518,6 +2748,7 @@ Address: 栃木県宇都宮市新里町丙254番地
 Detail: https://local.pokemon.jp/manhole/desc/227/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>139.83102,36.63422,0</coordinates>
       </Point>
@@ -2530,6 +2761,7 @@ Address: 栃木県宇都宮市大曽2丁目地内
 Detail: https://local.pokemon.jp/manhole/desc/228/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>139.88722,36.57228,0</coordinates>
       </Point>
@@ -2542,6 +2774,7 @@ Address: 沖縄県浦添市勢理客4-14-1
 Detail: https://local.pokemon.jp/manhole/desc/229/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>127.687899,26.245559,0</coordinates>
       </Point>
@@ -2553,6 +2786,7 @@ City: 名護
 Detail: https://local.pokemon.jp/manhole/desc/230/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>127.985744,26.587352,0</coordinates>
       </Point>
@@ -2565,6 +2799,7 @@ Address: 沖縄県糸満市西崎町4丁目19-1
 Detail: https://local.pokemon.jp/manhole/desc/231/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>127.661336,26.13828,0</coordinates>
       </Point>
@@ -2576,6 +2811,7 @@ City: 本部
 Detail: https://local.pokemon.jp/manhole/desc/232/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>127.877972,26.691694,0</coordinates>
       </Point>
@@ -2587,6 +2823,7 @@ City: 豊見城
 Detail: https://local.pokemon.jp/manhole/desc/233/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>127.656121,26.15755646,0</coordinates>
       </Point>
@@ -2598,6 +2835,7 @@ City: 南城
 Detail: https://local.pokemon.jp/manhole/desc/234/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>127.827083,26.169111,0</coordinates>
       </Point>
@@ -2609,6 +2847,7 @@ City: 石垣
 Detail: https://local.pokemon.jp/manhole/desc/235/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>124.156947,24.337418,0</coordinates>
       </Point>
@@ -2620,6 +2859,7 @@ City: 宮古島
 Detail: https://local.pokemon.jp/manhole/desc/236/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>125.263088,24.734962,0</coordinates>
       </Point>
@@ -2631,6 +2871,7 @@ City: 甲賀
 Detail: https://local.pokemon.jp/manhole/desc/237/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.170196,34.919591,0</coordinates>
       </Point>
@@ -2642,6 +2883,7 @@ City: 甲賀
 Detail: https://local.pokemon.jp/manhole/desc/238/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.165168,34.960528,0</coordinates>
       </Point>
@@ -2654,6 +2896,7 @@ Address: 滋賀県甲賀市甲賀町大久保507番地2
 Detail: https://local.pokemon.jp/manhole/desc/239/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.229399,34.900437,0</coordinates>
       </Point>
@@ -2665,6 +2908,7 @@ City: 津
 Detail: https://local.pokemon.jp/manhole/desc/240/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.5108,34.718493,0</coordinates>
       </Point>
@@ -2676,6 +2920,7 @@ City: 四日
 Detail: https://local.pokemon.jp/manhole/desc/241/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.611964,34.952407,0</coordinates>
       </Point>
@@ -2687,6 +2932,7 @@ City: 伊勢
 Detail: https://local.pokemon.jp/manhole/desc/242/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.707097,34.487787,0</coordinates>
       </Point>
@@ -2698,6 +2944,7 @@ City: 鳥羽
 Detail: https://local.pokemon.jp/manhole/desc/243/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.844825,34.48691,0</coordinates>
       </Point>
@@ -2709,6 +2956,7 @@ City: 熊野
 Detail: https://local.pokemon.jp/manhole/desc/244/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.116125,33.891753,0</coordinates>
       </Point>
@@ -2720,6 +2968,7 @@ City: 志摩
 Detail: https://local.pokemon.jp/manhole/desc/245/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.898317,34.275988,0</coordinates>
       </Point>
@@ -2731,6 +2980,7 @@ City: 伊賀
 Detail: https://local.pokemon.jp/manhole/desc/246/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.130081,34.767543,0</coordinates>
       </Point>
@@ -2742,6 +2992,7 @@ City: 福島
 Detail: https://local.pokemon.jp/manhole/desc/247/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.41091,37.80441,0</coordinates>
       </Point>
@@ -2753,6 +3004,7 @@ City: 会津若松
 Detail: https://local.pokemon.jp/manhole/desc/248/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>139.927445,37.461146,0</coordinates>
       </Point>
@@ -2765,6 +3017,7 @@ Address: 福島県郡山市開成1丁目5
 Detail: https://local.pokemon.jp/manhole/desc/249/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.35612,37.396784,0</coordinates>
       </Point>
@@ -2777,6 +3030,7 @@ Address: 福島県南会津町田島字宮本東33番地１
 Detail: https://local.pokemon.jp/manhole/desc/250/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>139.7778739,37.2057204,0</coordinates>
       </Point>
@@ -2789,6 +3043,7 @@ Address: 福島県柳津町大字柳津字下平乙161番地1
 Detail: https://local.pokemon.jp/manhole/desc/251/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>139.722662,37.528189,0</coordinates>
       </Point>
@@ -2801,6 +3056,7 @@ Address: 福島県昭和村大字佐倉字上ノ原1番地
 Detail: https://local.pokemon.jp/manhole/desc/252/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>139.630641,37.325691,0</coordinates>
       </Point>
@@ -2813,6 +3069,7 @@ Address: 福島県双葉町大字中野字高田1番地1
 Detail: https://local.pokemon.jp/manhole/desc/253/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.02692,37.45745,0</coordinates>
       </Point>
@@ -2824,6 +3081,7 @@ City: 飯舘
 Detail: https://local.pokemon.jp/manhole/desc/254/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.735552,37.698145,0</coordinates>
       </Point>
@@ -2836,6 +3094,7 @@ Address: 佐賀県佐賀市松原1丁目1-1
 Detail: https://local.pokemon.jp/manhole/desc/255/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>130.2989299,33.25075645,0</coordinates>
       </Point>
@@ -2848,6 +3107,7 @@ Address: 佐賀県佐賀市水ヶ江2丁目11-11
 Detail: https://local.pokemon.jp/manhole/desc/256/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>130.3089011,33.24833583,0</coordinates>
       </Point>
@@ -2860,6 +3120,7 @@ Address: 佐賀県佐賀市城内1丁目1-59
 Detail: https://local.pokemon.jp/manhole/desc/257/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>130.3003128,33.24900974,0</coordinates>
       </Point>
@@ -2872,6 +3133,7 @@ Address: 岩手県花巻市大通り1丁目2−21
 Detail: https://local.pokemon.jp/manhole/desc/258/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.11169,39.392034,0</coordinates>
       </Point>
@@ -2883,6 +3145,7 @@ City: 遠野
 Detail: https://local.pokemon.jp/manhole/desc/259/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.528872,39.330638,0</coordinates>
       </Point>
@@ -2894,6 +3157,7 @@ City: 一関
 Detail: https://local.pokemon.jp/manhole/desc/260/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.25527,38.98958,0</coordinates>
       </Point>
@@ -2905,6 +3169,7 @@ City: 二戸
 Detail: https://local.pokemon.jp/manhole/desc/261/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.318849,40.320335,0</coordinates>
       </Point>
@@ -2916,6 +3181,7 @@ City: 八幡平
 Detail: https://local.pokemon.jp/manhole/desc/262/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.099388,39.87958,0</coordinates>
       </Point>
@@ -2927,6 +3193,7 @@ City: 滝沢
 Detail: https://local.pokemon.jp/manhole/desc/263/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.07829,39.734,0</coordinates>
       </Point>
@@ -2938,6 +3205,7 @@ City: 岩手
 Detail: https://local.pokemon.jp/manhole/desc/264/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.213736,39.968579,0</coordinates>
       </Point>
@@ -2950,6 +3218,7 @@ Address: 岩手県紫波町紫波中央駅前1丁目
 Detail: https://local.pokemon.jp/manhole/desc/265/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.158293,39.554641,0</coordinates>
       </Point>
@@ -2961,6 +3230,7 @@ City: 西和賀
 Detail: https://local.pokemon.jp/manhole/desc/266/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.77649,39.31446,0</coordinates>
       </Point>
@@ -2972,6 +3242,7 @@ City: 平泉
 Detail: https://local.pokemon.jp/manhole/desc/267/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.108167,38.986635,0</coordinates>
       </Point>
@@ -2983,6 +3254,7 @@ City: 軽米
 Detail: https://local.pokemon.jp/manhole/desc/268/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.381779,40.322649,0</coordinates>
       </Point>
@@ -2994,6 +3266,7 @@ City: 九戸
 Detail: https://local.pokemon.jp/manhole/desc/269/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.416759,40.24854,0</coordinates>
       </Point>
@@ -3005,6 +3278,7 @@ City: 一戸
 Detail: https://local.pokemon.jp/manhole/desc/270/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.30468,40.20885,0</coordinates>
       </Point>
@@ -3016,6 +3290,7 @@ City: 豊橋
 Detail: https://local.pokemon.jp/manhole/desc/271/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>137.393843,34.768863,0</coordinates>
       </Point>
@@ -3027,6 +3302,7 @@ City: 豊橋
 Detail: https://local.pokemon.jp/manhole/desc/272/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>137.382958,34.762599,0</coordinates>
       </Point>
@@ -3038,6 +3314,7 @@ City: 豊橋
 Detail: https://local.pokemon.jp/manhole/desc/273/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>137.413953,34.695901,0</coordinates>
       </Point>
@@ -3049,6 +3326,7 @@ City: 豊橋
 Detail: https://local.pokemon.jp/manhole/desc/274/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>137.429448,34.72096,0</coordinates>
       </Point>
@@ -3060,6 +3338,7 @@ City: 富山
 Detail: https://local.pokemon.jp/manhole/desc/275/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>137.164366,36.715615,0</coordinates>
       </Point>
@@ -3071,6 +3350,7 @@ City: 富山
 Detail: https://local.pokemon.jp/manhole/desc/276/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>137.213161,36.70987,0</coordinates>
       </Point>
@@ -3082,6 +3362,7 @@ City: 富山
 Detail: https://local.pokemon.jp/manhole/desc/277/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>137.210281,36.692325,0</coordinates>
       </Point>
@@ -3093,6 +3374,7 @@ City: 当別
 Detail: https://local.pokemon.jp/manhole/desc/278/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.4485234,43.17716187047716,0</coordinates>
       </Point>
@@ -3105,6 +3387,7 @@ Address: 福島県二本松市安達ヶ原四丁目100番地
 Detail: https://local.pokemon.jp/manhole/desc/279/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.464001,37.593347,0</coordinates>
       </Point>
@@ -3116,6 +3399,7 @@ City: 伊達
 Detail: https://local.pokemon.jp/manhole/desc/280/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.691402,37.760799,0</coordinates>
       </Point>
@@ -3127,6 +3411,7 @@ City: 北塩原
 Detail: https://local.pokemon.jp/manhole/desc/281/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.089446,37.656148,0</coordinates>
       </Point>
@@ -3139,6 +3424,7 @@ Address: 福島県猪苗代町大字堅田字五百苅1番地
 Detail: https://local.pokemon.jp/manhole/desc/282/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.107569,37.538088,0</coordinates>
       </Point>
@@ -3151,6 +3437,7 @@ Address: 福島県会津美里町字宮林甲4377番地１
 Detail: https://local.pokemon.jp/manhole/desc/283/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>139.840297,37.455169,0</coordinates>
       </Point>
@@ -3162,6 +3449,7 @@ City: 西郷
 Detail: https://local.pokemon.jp/manhole/desc/284/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.15467,37.1399,0</coordinates>
       </Point>
@@ -3173,6 +3461,7 @@ City: 矢吹
 Detail: https://local.pokemon.jp/manhole/desc/285/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.335635,37.21842,0</coordinates>
       </Point>
@@ -3185,6 +3474,7 @@ Address: 福島県古殿町大字田口字平舘25番地
 Detail: https://local.pokemon.jp/manhole/desc/286/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.529308,37.092891,0</coordinates>
       </Point>
@@ -3196,6 +3486,7 @@ City: 三春
 Detail: https://local.pokemon.jp/manhole/desc/287/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.49124,37.4433,0</coordinates>
       </Point>
@@ -3207,6 +3498,7 @@ City: 下関
 Detail: https://local.pokemon.jp/manhole/desc/288/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>130.948691,33.958211,0</coordinates>
       </Point>
@@ -3218,6 +3510,7 @@ City: 下関
 Detail: https://local.pokemon.jp/manhole/desc/289/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>130.9416769,33.954627,0</coordinates>
       </Point>
@@ -3229,6 +3522,7 @@ City: 下関
 Detail: https://local.pokemon.jp/manhole/desc/290/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>130.930909,33.934094,0</coordinates>
       </Point>
@@ -3240,6 +3534,7 @@ City: 下関
 Detail: https://local.pokemon.jp/manhole/desc/291/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>130.929705,33.935457,0</coordinates>
       </Point>
@@ -3251,6 +3546,7 @@ City: 亀山
 Detail: https://local.pokemon.jp/manhole/desc/292/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.4474608,34.8594415,0</coordinates>
       </Point>
@@ -3262,6 +3558,7 @@ City: 朝日
 Detail: https://local.pokemon.jp/manhole/desc/293/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.658857,35.037263,0</coordinates>
       </Point>
@@ -3273,6 +3570,7 @@ City: 明和
 Detail: https://local.pokemon.jp/manhole/desc/294/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.6184925,34.5399661,0</coordinates>
       </Point>
@@ -3284,6 +3582,7 @@ City: 大台
 Detail: https://local.pokemon.jp/manhole/desc/295/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.34766,34.356007,0</coordinates>
       </Point>
@@ -3295,6 +3594,7 @@ City: 度会
 Detail: https://local.pokemon.jp/manhole/desc/296/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.6313249,34.4320615,0</coordinates>
       </Point>
@@ -3306,6 +3606,7 @@ City: 紀宝
 Detail: https://local.pokemon.jp/manhole/desc/297/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.028632,33.769742,0</coordinates>
       </Point>
@@ -3317,6 +3618,7 @@ City: 綾川
 Detail: https://local.pokemon.jp/manhole/desc/298/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>133.9327735,34.247395,0</coordinates>
       </Point>
@@ -3328,6 +3630,7 @@ City: 久慈
 Detail: https://local.pokemon.jp/manhole/desc/299/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.781703,40.225538,0</coordinates>
       </Point>
@@ -3339,6 +3642,7 @@ City: 鳥取
 Detail: https://local.pokemon.jp/manhole/desc/300/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>134.224478,35.53395,0</coordinates>
       </Point>
@@ -3350,6 +3654,7 @@ City: 金沢
 Detail: https://local.pokemon.jp/manhole/desc/301/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.661926,36.559162,0</coordinates>
       </Point>
@@ -3361,6 +3666,7 @@ City: 室蘭
 Detail: https://local.pokemon.jp/manhole/desc/302/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.973986,42.313837,0</coordinates>
       </Point>
@@ -3372,6 +3678,7 @@ City: 北見
 Detail: https://local.pokemon.jp/manhole/desc/303/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>143.500587,43.75359,0</coordinates>
       </Point>
@@ -3384,6 +3691,7 @@ Address: 北海道歌志内市字中村72番地2
 Detail: https://local.pokemon.jp/manhole/desc/304/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>142.005914,43.503206,0</coordinates>
       </Point>
@@ -3395,6 +3703,7 @@ City: 木古内
 Detail: https://local.pokemon.jp/manhole/desc/305/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.43558,41.678024,0</coordinates>
       </Point>
@@ -3406,6 +3715,7 @@ City: 猿払
 Detail: https://local.pokemon.jp/manhole/desc/306/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>142.177267,45.329186,0</coordinates>
       </Point>
@@ -3418,6 +3728,7 @@ Address: 北海道美幌町字新町3丁目97
 Detail: https://local.pokemon.jp/manhole/desc/307/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>144.105878,43.836455,0</coordinates>
       </Point>
@@ -3430,6 +3741,7 @@ Address: 三重県名張市朝日町1319番地5
 Detail: https://local.pokemon.jp/manhole/desc/308/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.088911,34.626212,0</coordinates>
       </Point>
@@ -3442,6 +3754,7 @@ Address: 三重県木曽岬町西対海地251番地
 Detail: https://local.pokemon.jp/manhole/desc/309/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.7318048,35.0755751,0</coordinates>
       </Point>
@@ -3454,6 +3767,7 @@ Address: 三重県東員町北大社1634番地
 Detail: https://local.pokemon.jp/manhole/desc/310/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.581108,35.073792,0</coordinates>
       </Point>
@@ -3465,6 +3779,7 @@ City: 横浜
 Detail: https://local.pokemon.jp/manhole/desc/311/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>139.644154,35.451037,0</coordinates>
       </Point>
@@ -3476,6 +3791,7 @@ City: 横浜
 Detail: https://local.pokemon.jp/manhole/desc/312/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>139.650904,35.443707,0</coordinates>
       </Point>
@@ -3487,6 +3803,7 @@ City: 横浜
 Detail: https://local.pokemon.jp/manhole/desc/313/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>139.638331,35.458698,0</coordinates>
       </Point>
@@ -3499,6 +3816,7 @@ Address: 神奈川県横浜市西区みなとみらい2-1-1
 Detail: https://local.pokemon.jp/manhole/desc/314/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>139.631688,35.453319,0</coordinates>
       </Point>
@@ -3510,6 +3828,7 @@ City: 太宰府
 Detail: https://local.pokemon.jp/manhole/desc/315/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>130.515174,33.513335,0</coordinates>
       </Point>
@@ -3522,6 +3841,7 @@ Address: 福岡県太宰府市宰府２丁目５
 Detail: https://local.pokemon.jp/manhole/desc/316/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>130.531372,33.519356,0</coordinates>
       </Point>
@@ -3534,6 +3854,7 @@ Address: 福岡県太宰府市朱雀３丁目１３
 Detail: https://local.pokemon.jp/manhole/desc/317/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>130.516571,33.505199,0</coordinates>
       </Point>
@@ -3546,6 +3867,7 @@ Address: 秋田県秋田市土崎港西１丁目9-1
 Detail: https://local.pokemon.jp/manhole/desc/318/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.061295,39.752642,0</coordinates>
       </Point>
@@ -3557,6 +3879,7 @@ City: 横手
 Detail: https://local.pokemon.jp/manhole/desc/319/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.545941,39.293561,0</coordinates>
       </Point>
@@ -3568,6 +3891,7 @@ City: 男鹿
 Detail: https://local.pokemon.jp/manhole/desc/320/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>139.84772,39.88201,0</coordinates>
       </Point>
@@ -3579,6 +3903,7 @@ City: 鹿角
 Detail: https://local.pokemon.jp/manhole/desc/321/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.785474,40.181213,0</coordinates>
       </Point>
@@ -3590,6 +3915,7 @@ City: 仙北
 Detail: https://local.pokemon.jp/manhole/desc/322/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.662631,39.699992,0</coordinates>
       </Point>
@@ -3601,6 +3927,7 @@ City: 北上
 Detail: https://local.pokemon.jp/manhole/desc/323/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.122747,39.281115,0</coordinates>
       </Point>
@@ -3613,6 +3940,7 @@ Address: 北海道美瑛町本町1丁目9番21号
 Detail: https://local.pokemon.jp/manhole/desc/324/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>142.46372,43.59198,0</coordinates>
       </Point>
@@ -3625,6 +3953,7 @@ Address: 愛媛県松山市大街道2丁目 大街道アーケード
 Detail: https://local.pokemon.jp/manhole/desc/325/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>132.77024,33.84106,0</coordinates>
       </Point>
@@ -3637,6 +3966,7 @@ Address: 愛媛県松山市朝日ヶ丘1丁目　松山総合公園展望広場
 Detail: https://local.pokemon.jp/manhole/desc/326/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>132.74078,33.84426,0</coordinates>
       </Point>
@@ -3648,6 +3978,7 @@ City: 鳴門
 Detail: https://local.pokemon.jp/manhole/desc/327/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>134.636196,34.224106,0</coordinates>
       </Point>
@@ -3659,6 +3990,7 @@ City: 鳴門
 Detail: https://local.pokemon.jp/manhole/desc/328/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>134.601709,34.181955,0</coordinates>
       </Point>
@@ -3670,6 +4002,7 @@ City: 鳴門
 Detail: https://local.pokemon.jp/manhole/desc/329/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>134.616371,34.168084,0</coordinates>
       </Point>
@@ -3682,6 +4015,7 @@ Address: 三重県鈴鹿市寺家3-10-1（※「鈴鹿市伝統産業会館」�
 Detail: https://local.pokemon.jp/manhole/desc/330/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.584609,34.823065,0</coordinates>
       </Point>
@@ -3693,6 +4027,7 @@ City: 川越
 Detail: https://local.pokemon.jp/manhole/desc/331/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.659834,35.01731,0</coordinates>
       </Point>
@@ -3704,6 +4039,7 @@ City: 多気
 Detail: https://local.pokemon.jp/manhole/desc/332/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.5537339,34.466166,0</coordinates>
       </Point>
@@ -3716,6 +4052,7 @@ Address: 三重県松阪市外五曲町１番地１
 Detail: https://local.pokemon.jp/manhole/desc/333/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.519839,34.578655,0</coordinates>
       </Point>
@@ -3727,6 +4064,7 @@ City: 玉城
 Detail: https://local.pokemon.jp/manhole/desc/334/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.5876056,34.4678411,0</coordinates>
       </Point>
@@ -3738,6 +4076,7 @@ City: 南伊勢
 Detail: https://local.pokemon.jp/manhole/desc/335/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.54891,34.268997,0</coordinates>
       </Point>
@@ -3750,6 +4089,7 @@ Address: 福井県勝山市遅羽町比島34-2-7
 Detail: https://local.pokemon.jp/manhole/desc/336/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.492007,36.056787,0</coordinates>
       </Point>
@@ -3761,6 +4101,7 @@ City: あわら
 Detail: https://local.pokemon.jp/manhole/desc/337/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.234226,36.215613,0</coordinates>
       </Point>
@@ -3773,6 +4114,7 @@ Address: 福井県越前市大屋町38-5-1
 Detail: https://local.pokemon.jp/manhole/desc/338/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.198727,35.895286,0</coordinates>
       </Point>
@@ -3785,6 +4127,7 @@ Address: 福井県永平寺町清水2-21-1
 Detail: https://local.pokemon.jp/manhole/desc/339/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.399312,36.079891,0</coordinates>
       </Point>
@@ -3797,6 +4140,7 @@ Address: 福井県高浜町塩土第1号200番地
 Detail: https://local.pokemon.jp/manhole/desc/340/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>135.54556,35.492951,0</coordinates>
       </Point>
@@ -3809,6 +4153,7 @@ Address: 福井県美浜町松原35-15-1
 Detail: https://local.pokemon.jp/manhole/desc/341/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>135.936876,35.604507,0</coordinates>
       </Point>
@@ -3820,6 +4165,7 @@ City: 和歌山
 Detail: https://local.pokemon.jp/manhole/desc/342/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>135.171405,34.2300173,0</coordinates>
       </Point>
@@ -3831,6 +4177,7 @@ City: 高野
 Detail: https://local.pokemon.jp/manhole/desc/343/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>135.583052,34.212091,0</coordinates>
       </Point>
@@ -3842,6 +4189,7 @@ City: 白浜
 Detail: https://local.pokemon.jp/manhole/desc/344/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>135.387056,33.675779,0</coordinates>
       </Point>
@@ -3854,6 +4202,7 @@ Address: 和歌山県串本町西向359番地
 Detail: https://local.pokemon.jp/manhole/desc/345/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>135.823074,33.517997,0</coordinates>
       </Point>
@@ -3865,6 +4214,7 @@ City: 那智勝浦
 Detail: https://local.pokemon.jp/manhole/desc/346/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>135.902917,33.668973,0</coordinates>
       </Point>
@@ -3876,6 +4226,7 @@ City: 静岡
 Detail: https://local.pokemon.jp/manhole/desc/347/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>138.382564,34.977499,0</coordinates>
       </Point>
@@ -3887,6 +4238,7 @@ City: 浜松
 Detail: https://local.pokemon.jp/manhole/desc/348/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>137.732587,34.704017,0</coordinates>
       </Point>
@@ -3898,6 +4250,7 @@ City: 沼津
 Detail: https://local.pokemon.jp/manhole/desc/349/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>138.854731,35.081579,0</coordinates>
       </Point>
@@ -3909,6 +4262,7 @@ City: 富士
 Detail: https://local.pokemon.jp/manhole/desc/350/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>138.617705,35.161532,0</coordinates>
       </Point>
@@ -3920,6 +4274,7 @@ City: 伊豆
 Detail: https://local.pokemon.jp/manhole/desc/351/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>138.92774,34.970285,0</coordinates>
       </Point>
@@ -3931,6 +4286,7 @@ City: 宇治
 Detail: https://local.pokemon.jp/manhole/desc/352/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>135.809787,34.890627,0</coordinates>
       </Point>
@@ -3942,6 +4298,7 @@ City: 宇治
 Detail: https://local.pokemon.jp/manhole/desc/353/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>135.805962,34.895547,0</coordinates>
       </Point>
@@ -3953,6 +4310,7 @@ City: 長崎
 Detail: https://local.pokemon.jp/manhole/desc/354/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>129.86735,32.753712,0</coordinates>
       </Point>
@@ -3964,6 +4322,7 @@ City: 佐世保
 Detail: https://local.pokemon.jp/manhole/desc/355/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>129.724169,33.163987,0</coordinates>
       </Point>
@@ -3976,6 +4335,7 @@ Address: 長崎県大村市植松3丁目135-5
 Detail: https://local.pokemon.jp/manhole/desc/356/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>129.958278,32.933111,0</coordinates>
       </Point>
@@ -3987,6 +4347,7 @@ City: 雲仙
 Detail: https://local.pokemon.jp/manhole/desc/357/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>130.261106,32.74085,0</coordinates>
       </Point>
@@ -3998,6 +4359,7 @@ City: 新上五島
 Detail: https://local.pokemon.jp/manhole/desc/358/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>129.112745,32.986402,0</coordinates>
       </Point>
@@ -4009,6 +4371,7 @@ City: 各務原
 Detail: https://local.pokemon.jp/manhole/desc/359/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.807773,35.37067,0</coordinates>
       </Point>
@@ -4020,6 +4383,7 @@ City: 下呂
 Detail: https://local.pokemon.jp/manhole/desc/360/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>137.242963,35.807771,0</coordinates>
       </Point>
@@ -4031,6 +4395,7 @@ City: 関
 Detail: https://local.pokemon.jp/manhole/desc/361/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.91225,35.490472,0</coordinates>
       </Point>
@@ -4042,6 +4407,7 @@ City: 関ケ原
 Detail: https://local.pokemon.jp/manhole/desc/362/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.46842,35.36402,0</coordinates>
       </Point>
@@ -4053,6 +4419,7 @@ City: 高山
 Detail: https://local.pokemon.jp/manhole/desc/363/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>137.257235,36.144911,0</coordinates>
       </Point>
@@ -4064,6 +4431,7 @@ City: 大野
 Detail: https://local.pokemon.jp/manhole/desc/364/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.4859314,35.9845016,0</coordinates>
       </Point>
@@ -4075,6 +4443,7 @@ City: 敦賀
 Detail: https://local.pokemon.jp/manhole/desc/365/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.074281,35.661865,0</coordinates>
       </Point>
@@ -4087,6 +4456,7 @@ Address: 福井県南越前町牧谷39-2-2
 Detail: https://local.pokemon.jp/manhole/desc/366/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.201365,35.831454,0</coordinates>
       </Point>
@@ -4098,6 +4468,7 @@ City: 小浜
 Detail: https://local.pokemon.jp/manhole/desc/367/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>135.741761,35.494981,0</coordinates>
       </Point>
@@ -4110,6 +4481,7 @@ Address: 福井県池田町池田9-6-1
 Detail: https://local.pokemon.jp/manhole/desc/368/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.339213,35.890505,0</coordinates>
       </Point>
@@ -4122,6 +4494,7 @@ Address: 福島県会津坂下町字西南町裏甲3998番地2
 Detail: https://local.pokemon.jp/manhole/desc/369/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>139.821186,37.56046,0</coordinates>
       </Point>
@@ -4134,6 +4507,7 @@ Address: 福島県鏡石町中央245番地
 Detail: https://local.pokemon.jp/manhole/desc/370/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.347153,37.251117,0</coordinates>
       </Point>
@@ -4145,6 +4519,7 @@ City: 棚倉
 Detail: https://local.pokemon.jp/manhole/desc/371/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.387151,37.029237,0</coordinates>
       </Point>
@@ -4156,6 +4531,7 @@ City: 湯川
 Detail: https://local.pokemon.jp/manhole/desc/372/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>139.862167,37.55742,0</coordinates>
       </Point>
@@ -4167,6 +4543,7 @@ City: 国見
 Detail: https://local.pokemon.jp/manhole/desc/373/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.546861,37.872639,0</coordinates>
       </Point>
@@ -4178,6 +4555,7 @@ City: 広野
 Detail: https://local.pokemon.jp/manhole/desc/374/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.0018,37.23297,0</coordinates>
       </Point>
@@ -4189,6 +4567,7 @@ City: 平田
 Detail: https://local.pokemon.jp/manhole/desc/375/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.547538,37.262128,0</coordinates>
       </Point>
@@ -4200,6 +4579,7 @@ City: 白河
 Detail: https://local.pokemon.jp/manhole/desc/376/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.212974,37.1296,0</coordinates>
       </Point>
@@ -4211,6 +4591,7 @@ City: 浜田
 Detail: https://local.pokemon.jp/manhole/desc/377/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>132.07129,34.88924,0</coordinates>
       </Point>
@@ -4222,6 +4603,7 @@ City: 出雲
 Detail: https://local.pokemon.jp/manhole/desc/378/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>132.629353,35.4330088,0</coordinates>
       </Point>
@@ -4233,6 +4615,7 @@ City: 大田
 Detail: https://local.pokemon.jp/manhole/desc/379/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>132.413128,35.145782,0</coordinates>
       </Point>
@@ -4244,6 +4627,7 @@ City: 安来
 Detail: https://local.pokemon.jp/manhole/desc/380/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>133.259012,35.428407,0</coordinates>
       </Point>
@@ -4256,6 +4640,7 @@ Address: 島根県隠岐の島町岬町1889番地12
 Detail: https://local.pokemon.jp/manhole/desc/381/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>133.3302467,36.17725248,0</coordinates>
       </Point>
@@ -4268,6 +4653,7 @@ Address: 京都府ニンテンドーミュージアム施設内（宇治市小�
 Detail: https://local.pokemon.jp/manhole/desc/382/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>135.784525,34.892561,0</coordinates>
       </Point>
@@ -4279,6 +4665,7 @@ City: 桑名
 Detail: https://local.pokemon.jp/manhole/desc/383/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.703006,35.08304,0</coordinates>
       </Point>
@@ -4290,6 +4677,7 @@ City: 尾鷲
 Detail: https://local.pokemon.jp/manhole/desc/384/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.216025,34.06078,0</coordinates>
       </Point>
@@ -4302,6 +4690,7 @@ Address: 三重県いなべ市北勢町阿下喜31番地
 Detail: https://local.pokemon.jp/manhole/desc/385/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.51618,35.15788,0</coordinates>
       </Point>
@@ -4314,6 +4703,7 @@ Address: 三重県菰野町大字潤田1281番地
 Detail: https://local.pokemon.jp/manhole/desc/386/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.506542,35.019585,0</coordinates>
       </Point>
@@ -4325,6 +4715,7 @@ City: 大紀
 Detail: https://local.pokemon.jp/manhole/desc/387/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.399061,34.297193,0</coordinates>
       </Point>
@@ -4336,6 +4727,7 @@ City: 紀北
 Detail: https://local.pokemon.jp/manhole/desc/388/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.346376,34.216869,0</coordinates>
       </Point>
@@ -4348,6 +4740,7 @@ Address: 三重県御浜町大字阿田和４９２６番地５
 Detail: https://local.pokemon.jp/manhole/desc/389/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.04345,33.80391,0</coordinates>
       </Point>
@@ -4360,6 +4753,7 @@ Address: 高知県香美市物部町大栃872番地2
 Detail: https://local.pokemon.jp/manhole/desc/390/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>133.874784,33.695608,0</coordinates>
       </Point>
@@ -4371,6 +4765,7 @@ City: 奈半利
 Detail: https://local.pokemon.jp/manhole/desc/391/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>134.017781,33.425249,0</coordinates>
       </Point>
@@ -4382,6 +4777,7 @@ City: 大豊
 Detail: https://local.pokemon.jp/manhole/desc/392/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>133.684166,33.749067,0</coordinates>
       </Point>
@@ -4393,6 +4789,7 @@ City: 日高
 Detail: https://local.pokemon.jp/manhole/desc/393/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>133.3712561,33.5335561,0</coordinates>
       </Point>
@@ -4404,6 +4801,7 @@ City: 津野
 Detail: https://local.pokemon.jp/manhole/desc/394/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>133.004184,33.476856,0</coordinates>
       </Point>
@@ -4416,6 +4814,7 @@ Address: 高知県大月町柏島600番地
 Detail: https://local.pokemon.jp/manhole/desc/395/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>132.627259,32.767739,0</coordinates>
       </Point>
@@ -4427,6 +4826,7 @@ City: 三原
 Detail: https://local.pokemon.jp/manhole/desc/396/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>132.83982,32.922536,0</coordinates>
       </Point>
@@ -4438,6 +4838,7 @@ City: 北上
 Detail: https://local.pokemon.jp/manhole/desc/397/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.1282,39.27362,0</coordinates>
       </Point>
@@ -4450,6 +4851,7 @@ Address: 岩手県盛岡市渋民80番地42
 Detail: https://local.pokemon.jp/manhole/desc/398/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.173111,39.846667,0</coordinates>
       </Point>
@@ -4462,6 +4864,7 @@ Address: 山形県山形市双葉町1-2-38
 Detail: https://local.pokemon.jp/manhole/desc/399/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.325854,38.248477,0</coordinates>
       </Point>
@@ -4473,6 +4876,7 @@ City: 寒河江
 Detail: https://local.pokemon.jp/manhole/desc/400/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.26637,38.363842,0</coordinates>
       </Point>
@@ -4484,6 +4888,7 @@ City: 大蔵
 Detail: https://local.pokemon.jp/manhole/desc/401/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.169653,38.611083,0</coordinates>
       </Point>
@@ -4495,6 +4900,7 @@ City: 小国
 Detail: https://local.pokemon.jp/manhole/desc/402/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>139.73128,38.072713,0</coordinates>
       </Point>
@@ -4506,6 +4912,7 @@ City: 鶴岡
 Detail: https://local.pokemon.jp/manhole/desc/403/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>139.684635,38.721151,0</coordinates>
       </Point>
@@ -4517,6 +4924,7 @@ City: 名古屋
 Detail: https://local.pokemon.jp/manhole/desc/404/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.9045981,35.1831277,0</coordinates>
       </Point>
@@ -4528,6 +4936,7 @@ City: 瀬戸
 Detail: https://local.pokemon.jp/manhole/desc/405/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>137.1008385,35.2257073,0</coordinates>
       </Point>
@@ -4540,6 +4949,7 @@ Address: 愛知県常滑市りんくう町２丁目　りんくうビーチ
 Detail: https://local.pokemon.jp/manhole/desc/406/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.8231592,34.88566,0</coordinates>
       </Point>
@@ -4551,6 +4961,7 @@ City: 刈谷
 Detail: https://local.pokemon.jp/manhole/desc/407/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>137.0481,35.04095,0</coordinates>
       </Point>
@@ -4562,6 +4973,7 @@ City: 西尾
 Detail: https://local.pokemon.jp/manhole/desc/408/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>137.048298,34.867221,0</coordinates>
       </Point>
@@ -4573,6 +4985,7 @@ City: 神栖
 Detail: https://local.pokemon.jp/manhole/desc/409/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.649095,35.897341,0</coordinates>
       </Point>
@@ -4584,6 +4997,7 @@ City: 筑西
 Detail: https://local.pokemon.jp/manhole/desc/410/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>139.994116,36.322445,0</coordinates>
       </Point>
@@ -4596,6 +5010,7 @@ Address: 茨城県つくば市吾妻2-7-5
 Detail: https://local.pokemon.jp/manhole/desc/411/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.110839,36.08581,0</coordinates>
       </Point>
@@ -4607,6 +5022,7 @@ City: 常陸太田
 Detail: https://local.pokemon.jp/manhole/desc/412/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.525632,36.510672,0</coordinates>
       </Point>
@@ -4618,6 +5034,7 @@ City: 水戸
 Detail: https://local.pokemon.jp/manhole/desc/413/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.452358,36.372273,0</coordinates>
       </Point>
@@ -4629,6 +5046,7 @@ City: 鳥羽
 Detail: https://local.pokemon.jp/manhole/desc/414/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.844965,34.490787,0</coordinates>
       </Point>
@@ -4640,6 +5058,7 @@ City: 鈴鹿
 Detail: https://local.pokemon.jp/manhole/desc/415/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.538663,34.852227,0</coordinates>
       </Point>
@@ -4651,6 +5070,7 @@ City: 坂井
 Detail: https://local.pokemon.jp/manhole/desc/416/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.333313,36.161806,0</coordinates>
       </Point>
@@ -4663,6 +5083,7 @@ Address: 福井県福井市手寄1丁目1　（JR福井駅東口）
 Detail: https://local.pokemon.jp/manhole/desc/417/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.223635,36.061483,0</coordinates>
       </Point>
@@ -4675,6 +5096,7 @@ Address: 福井県おおい町成海1-1-1
 Detail: https://local.pokemon.jp/manhole/desc/418/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>135.62838,35.48179,0</coordinates>
       </Point>
@@ -4687,6 +5109,7 @@ Address: 福井県鯖江市桜町3丁目8-1
 Detail: https://local.pokemon.jp/manhole/desc/419/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.181116,35.950098,0</coordinates>
       </Point>
@@ -4698,6 +5121,7 @@ City: 若狭
 Detail: https://local.pokemon.jp/manhole/desc/420/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>135.860204,35.461441,0</coordinates>
       </Point>
@@ -4709,6 +5133,7 @@ City: 越前
 Detail: https://local.pokemon.jp/manhole/desc/421/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>136.05872,35.93468,0</coordinates>
       </Point>
@@ -4720,6 +5145,7 @@ City: 北谷
 Detail: https://local.pokemon.jp/manhole/desc/422/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>127.753613,26.315733,0</coordinates>
       </Point>
@@ -4731,6 +5157,7 @@ City: 渡嘉敷
 Detail: https://local.pokemon.jp/manhole/desc/423/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>127.34735,26.14914,0</coordinates>
       </Point>
@@ -4743,6 +5170,7 @@ Address: 沖縄県座間味村座間味165番地
 Detail: https://local.pokemon.jp/manhole/desc/424/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>127.301424,26.227878,0</coordinates>
       </Point>
@@ -4754,6 +5182,7 @@ City: 久米島
 Detail: https://local.pokemon.jp/manhole/desc/425/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>126.788928,26.373985,0</coordinates>
       </Point>
@@ -4766,6 +5195,7 @@ Address: 岩手県葛巻町葛巻39-159-3
 Detail: https://local.pokemon.jp/manhole/desc/426/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.339917,39.984472,0</coordinates>
       </Point>
@@ -4777,6 +5207,7 @@ City: 島原
 Detail: https://local.pokemon.jp/manhole/desc/427/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>130.370593,32.790222,0</coordinates>
       </Point>
@@ -4788,6 +5219,7 @@ City: 壱岐
 Detail: https://local.pokemon.jp/manhole/desc/428/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>129.6557033,33.81196878,0</coordinates>
       </Point>
@@ -4799,6 +5231,7 @@ City: 時津
 Detail: https://local.pokemon.jp/manhole/desc/429/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>129.849052,32.831977,0</coordinates>
       </Point>
@@ -4810,6 +5243,7 @@ City: 東彼杵
 Detail: https://local.pokemon.jp/manhole/desc/430/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>129.9194868,33.0357304,0</coordinates>
       </Point>
@@ -4821,6 +5255,7 @@ City: 佐々
 Detail: https://local.pokemon.jp/manhole/desc/431/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>129.6589353,33.254897,0</coordinates>
       </Point>
@@ -4832,6 +5267,7 @@ City: 室戸
 Detail: https://local.pokemon.jp/manhole/desc/432/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>134.195181,33.325698,0</coordinates>
       </Point>
@@ -4844,6 +5280,7 @@ Address: 高知県安芸市矢ノ丸4丁目2-30
 Detail: https://local.pokemon.jp/manhole/desc/433/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>133.9065445,33.5043207,0</coordinates>
       </Point>
@@ -4856,6 +5293,7 @@ Address: 高知県須崎市原町1丁目9-11
 Detail: https://local.pokemon.jp/manhole/desc/434/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>133.2926446,33.39238098,0</coordinates>
       </Point>
@@ -4867,6 +5305,7 @@ City: 宿毛
 Detail: https://local.pokemon.jp/manhole/desc/435/?is_modal=1
 Last Updated: 2025-11-08T07:48:11Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>132.712575,32.915754,0</coordinates>
       </Point>
@@ -4878,6 +5317,7 @@ City: 香南
 Detail: https://local.pokemon.jp/manhole/desc/436/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>133.75346,33.534367,0</coordinates>
       </Point>
@@ -4889,6 +5329,7 @@ City: 東洋
 Detail: https://local.pokemon.jp/manhole/desc/437/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>134.29495896722574,33.543168839356774,0</coordinates>
       </Point>
@@ -4901,6 +5342,7 @@ Address: 北海道札幌市南区定山渓温泉東３丁目212
 Detail: https://local.pokemon.jp/manhole/desc/438/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.1669585,42.96615624,0</coordinates>
       </Point>
@@ -4913,6 +5355,7 @@ Address: 北海道砂川市西１条北２丁目１番２０号
 Detail: https://local.pokemon.jp/manhole/desc/439/?is_modal=1
 Last Updated: 2025-11-08T07:48:15Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.907367,43.493037,0</coordinates>
       </Point>
@@ -4924,6 +5367,7 @@ City: 由仁
 Detail: https://local.pokemon.jp/manhole/desc/440/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.78697,43.01186,0</coordinates>
       </Point>
@@ -4935,6 +5379,7 @@ City: 厚沢部
 Detail: https://local.pokemon.jp/manhole/desc/441/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.216556,41.916775,0</coordinates>
       </Point>
@@ -4946,6 +5391,7 @@ City: 幌延
 Detail: https://local.pokemon.jp/manhole/desc/442/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>141.8612,45.040817,0</coordinates>
       </Point>
@@ -4958,6 +5404,7 @@ Address: 北海道津別町共和127番地1
 Detail: https://local.pokemon.jp/manhole/desc/443/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>144.029683,43.69494344,0</coordinates>
       </Point>
@@ -4970,6 +5417,7 @@ Address: 北海道湧別町中湧別中町3020番地の1
 Detail: https://local.pokemon.jp/manhole/desc/444/?is_modal=1
 Last Updated: 2025-11-08T07:48:18Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>143.594848,44.18466,0</coordinates>
       </Point>
@@ -4981,6 +5429,7 @@ City: 別海
 Detail: https://local.pokemon.jp/manhole/desc/445/?is_modal=1
 Last Updated: 2025-11-08T07:48:19Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>145.23697,43.533265,0</coordinates>
       </Point>
@@ -4992,6 +5441,7 @@ City: 那覇
 Detail: https://local.pokemon.jp/manhole/desc/446/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>127.71657,26.22005,0</coordinates>
       </Point>
@@ -5003,6 +5453,7 @@ City: 加瀬沼公園
 Detail: https://local.pokemon.jp/manhole/desc/447/?is_modal=1
 Last Updated: 2025-11-08T07:48:21Z
 Status: active</description>
+      <styleUrl>#pokefuta-icon</styleUrl>
       <Point>
         <coordinates>140.983236,38.311641,0</coordinates>
       </Point>
