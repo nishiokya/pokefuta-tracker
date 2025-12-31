@@ -33,6 +33,11 @@ def _parse_args() -> argparse.Namespace:
         default="Pokéfuta Manholes",
         help="<Document><name> value for the KML output",
     )
+    parser.add_argument(
+        "--icon-url",
+        default="https://data.pokefuta.com/assets/pokefuta_icon_32.png",
+        help="Absolute URL for the Placemark icon (defaults to the web app Pokéfuta icon)",
+    )
     return parser.parse_args()
 
 
@@ -117,11 +122,23 @@ def _indent(elem: ET.Element, level: int = 0) -> None:
             elem.tail = indent
 
 
-def build_kml(records: List[Dict[str, Any]], *, include_deleted: bool, document_name: str) -> ET.ElementTree:
+def build_kml(
+    records: List[Dict[str, Any]], *, include_deleted: bool, document_name: str, icon_url: Optional[str] = None
+) -> ET.ElementTree:
     kml = ET.Element(f"{{{KML_NS}}}kml")
     document = ET.SubElement(kml, f"{{{KML_NS}}}Document")
     name_elem = ET.SubElement(document, f"{{{KML_NS}}}name")
     name_elem.text = document_name + (" (all statuses)" if include_deleted else " (active only)")
+
+    style_id = "pokefuta-icon"
+    if icon_url:
+        style = ET.SubElement(document, f"{{{KML_NS}}}Style", {"id": style_id})
+        icon_style = ET.SubElement(style, f"{{{KML_NS}}}IconStyle")
+        scale = ET.SubElement(icon_style, f"{{{KML_NS}}}scale")
+        scale.text = "1.0"
+        icon = ET.SubElement(icon_style, f"{{{KML_NS}}}Icon")
+        href = ET.SubElement(icon, f"{{{KML_NS}}}href")
+        href.text = icon_url
 
     def record_sort_key(rec: Dict[str, Any]):
         try:
@@ -146,6 +163,10 @@ def build_kml(records: List[Dict[str, Any]], *, include_deleted: bool, document_
         description = ET.SubElement(placemark, f"{{{KML_NS}}}description")
         description.text = _format_description(record)
 
+        if icon_url:
+            style_url = ET.SubElement(placemark, f"{{{KML_NS}}}styleUrl")
+            style_url.text = f"#{style_id}"
+
         point = ET.SubElement(placemark, f"{{{KML_NS}}}Point")
         coordinates = ET.SubElement(point, f"{{{KML_NS}}}coordinates")
         coordinates.text = f"{lng},{lat},0"
@@ -161,7 +182,12 @@ def main() -> None:
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     records = _load_records(input_path)
-    tree = build_kml(records, include_deleted=args.include_deleted, document_name=args.document_name)
+    tree = build_kml(
+        records,
+        include_deleted=args.include_deleted,
+        document_name=args.document_name,
+        icon_url=args.icon_url,
+    )
     tree.write(output_path, encoding="utf-8", xml_declaration=True)
     print(f"Wrote {output_path}")
 
