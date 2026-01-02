@@ -284,7 +284,10 @@ def load_existing(path: str, mode: str) -> List[Dict]:
 
 CORE_COMPARE_FIELDS = [
     "title", "prefecture", "city", "address", "building", "city_url",
-    "lat", "lng", "pokemons", "detail_url", "prefecture_site_url", "status"
+    "address_raw", "address_norm", "place_detail", "landmark", "access",
+    "parking", "nearby_spots", "tags", "source_urls", "verified_at",
+    "confidence", "lat", "lng", "pokemons", "detail_url",
+    "prefecture_site_url", "status"
 ]
 
 

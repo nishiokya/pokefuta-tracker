@@ -32,7 +32,7 @@ GitHub Actions 用想定引数:
 """
 import argparse, csv, json, logging, os, re, signal, sys, time, tempfile
 from datetime import datetime
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 from bs4 import BeautifulSoup
 import requests
@@ -49,8 +49,34 @@ DEFAULT_SLEEP = 0.4
 
 CORE_COMPARE_FIELDS = [
     "title", "prefecture", "city", "address", "building", "city_url",
-    "lat", "lng", "pokemons", "detail_url", "prefecture_site_url", "status"
+    "address_raw", "address_norm", "place_detail", "landmark", "access",
+    "parking", "nearby_spots", "tags", "source_urls", "verified_at",
+    "confidence", "lat", "lng", "pokemons", "detail_url",
+    "prefecture_site_url", "status"
 ]
+
+PLACEHOLDER_STRINGS = {s.lower() for s in [
+    "", "n/a", "na", "-", "－", "unknown", "不明", "未設定", "わかりません"
+]}
+
+
+def _has_content(value: Any, allow_placeholder: bool = False) -> bool:
+    if value is None:
+        return False
+    if isinstance(value, str):
+        cleaned = value.strip()
+        if not cleaned:
+            return False
+        if not allow_placeholder and cleaned.lower() in PLACEHOLDER_STRINGS:
+            return False
+        return True
+    return True
+
+
+def _split_pipe_list(value: Optional[str]) -> List[str]:
+    if not value:
+        return []
+    return [part.strip() for part in value.split('|') if part.strip()]
 
 def setup_logger(level: str = "INFO") -> logging.Logger:
     lvl = getattr(logging, level.upper(), logging.INFO)
@@ -75,9 +101,9 @@ def fetch(url: str, logger: logging.Logger, headers: Dict[str, str]) -> Optional
     return None
 
 
-def load_title_metadata(dataset_dir: str) -> Dict[str, Dict[str, str]]:
+def load_title_metadata(dataset_dir: str) -> Dict[str, Dict[str, Any]]:
     """Load title metadata from CSV / TSV files (if available)."""
-    title_data: Dict[str, Dict[str, str]] = {}
+    title_data: Dict[str, Dict[str, Any]] = {}
     sources = [
         ("title.csv", ","),
         ("title.tsv", "\t"),
@@ -103,19 +129,87 @@ def load_title_metadata(dataset_dir: str) -> Dict[str, Dict[str, str]]:
                     rid = (row.get('id') or row.get('\ufeffid') or '').strip()
                     if not rid:
                         continue
-                    building = (row.get('building') or row.get('建物') or '').strip()
-                    address = (row.get('address') or row.get('住所') or '').strip()
-                    title_data[rid] = {
-                        'building': building,
-                        'address': address
-                    }
+                    entry: Dict[str, Any] = {}
+
+                    def _clean(name: str, fallback: Optional[str] = None) -> str:
+                        raw = row.get(name)
+                        if raw is None and fallback:
+                            raw = row.get(fallback)
+                        if raw is None:
+                            return ""
+                        return str(raw).strip()
+
+                    building = _clean('building', '建物')
+                    if building:
+                        entry['building'] = building
+
+                    address_raw = _clean('address_raw') or _clean('address', '住所')
+                    if address_raw:
+                        entry['address_raw'] = address_raw
+
+                    address_norm = _clean('address_norm')
+                    if address_norm:
+                        entry['address_norm'] = address_norm
+
+                    prefecture = _clean('prefecture')
+                    if prefecture:
+                        entry['prefecture'] = prefecture
+
+                    city = _clean('city')
+                    if city:
+                        entry['city'] = city
+
+                    place_detail = _clean('place_detail')
+                    if place_detail:
+                        entry['place_detail'] = place_detail
+
+                    landmark = _clean('landmark')
+                    if landmark:
+                        entry['landmark'] = landmark
+
+                    access = _clean('access')
+                    if access:
+                        entry['access'] = access
+
+                    parking = _clean('parking')
+                    if parking:
+                        entry['parking'] = parking
+
+                    nearby_spots = _split_pipe_list(row.get('nearby_spots'))
+                    if nearby_spots:
+                        entry['nearby_spots'] = nearby_spots
+
+                    tags = _split_pipe_list(row.get('tags'))
+                    if tags:
+                        entry['tags'] = tags
+
+                    source_urls = [url for url in _split_pipe_list(row.get('source_urls')) if url]
+                    if source_urls:
+                        entry['source_urls'] = source_urls
+
+                    verified_at = _clean('verified_at')
+                    if verified_at:
+                        entry['verified_at'] = verified_at
+
+                    confidence_raw = _clean('confidence')
+                    if confidence_raw:
+                        try:
+                            entry['confidence'] = int(confidence_raw)
+                        except ValueError:
+                            try:
+                                entry['confidence'] = float(confidence_raw)
+                            except ValueError:
+                                pass
+
+                    if entry:
+                        title_data[rid] = entry
         except Exception as e:
             print(f"Warning: Failed to load {path}: {e}")
     return title_data
 
 
-def apply_title_metadata(record: Dict, title_data: Dict[str, Dict[str, str]]) -> bool:
-    """Merge building / address metadata into a record. Returns True when updated."""
+def apply_title_metadata(record: Dict, title_data: Dict[str, Dict[str, Any]]) -> bool:
+    """Merge curated metadata into a record. Returns True when updated."""
     if not title_data or not record:
         return False
     rid = record.get('id')
@@ -126,19 +220,52 @@ def apply_title_metadata(record: Dict, title_data: Dict[str, Dict[str, str]]) ->
         return False
 
     updated = False
-    building = entry.get('building', '').strip()
-    address = entry.get('address', '').strip()
 
-    if building and record.get('building') != building:
-        record['building'] = building
+    def _set_value(key: str, value: Any, *, allow_placeholder: bool = False):
+        nonlocal updated
+        if not _has_content(value, allow_placeholder=allow_placeholder):
+            return
+        if record.get(key) == value:
+            return
+        record[key] = value
         updated = True
-    if address and not record.get('address'):
-        record['address'] = address
+
+    def _set_list(key: str, values: Optional[List[str]]):
+        nonlocal updated
+        if not values:
+            return
+        normalized = [v for v in values if _has_content(v, allow_placeholder=True)]
+        if not normalized:
+            return
+        if record.get(key) == normalized:
+            return
+        record[key] = normalized
         updated = True
+
+    _set_value('building', entry.get('building'))
+    _set_value('address_raw', entry.get('address_raw'), allow_placeholder=True)
+    _set_value('address_norm', entry.get('address_norm'), allow_placeholder=True)
+    _set_value('prefecture', entry.get('prefecture'))
+    _set_value('city', entry.get('city'))
+    _set_value('place_detail', entry.get('place_detail'), allow_placeholder=True)
+    _set_value('landmark', entry.get('landmark'), allow_placeholder=True)
+    _set_value('access', entry.get('access'), allow_placeholder=True)
+    _set_value('parking', entry.get('parking'), allow_placeholder=True)
+
+    best_address = entry.get('address_norm') or entry.get('address_raw')
+    _set_value('address', best_address)
+
+    _set_list('nearby_spots', entry.get('nearby_spots'))
+    _set_list('tags', entry.get('tags'))
+    _set_list('source_urls', entry.get('source_urls'))
+
+    _set_value('verified_at', entry.get('verified_at'), allow_placeholder=True)
+    _set_value('confidence', entry.get('confidence'))
+
     return updated
 
 
-def parse_detail(detail_url: str, html: str, logger: logging.Logger, title_data: Dict[str, Dict[str, str]] = None) -> Optional[Dict]:
+def parse_detail(detail_url: str, html: str, logger: logging.Logger, title_data: Dict[str, Dict[str, Any]] = None) -> Optional[Dict]:
     soup = BeautifulSoup(html, "html.parser")
 
     # 緯度経度 (Google Maps へのリンクから抽出)
@@ -193,7 +320,7 @@ def parse_detail(detail_url: str, html: str, logger: logging.Logger, title_data:
                 prefecture = pf
                 city = ct.rstrip("市町村区") if ct else ""
 
-    # 住所の取得 - Webページを優先、title.tsvをフォールバックとして利用
+    # 住所の取得 - HTML から可能な限り抽出 (不足分は後段の title.tsv で補完)
     address = ""
     # まずWebページから住所らしき文字列を抽出
     text_content = soup.get_text()
