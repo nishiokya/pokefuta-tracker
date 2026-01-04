@@ -26,6 +26,18 @@
 - **[data/pokefuta.ndjson](data/pokefuta.ndjson)**: ポケふたの全データ (NDJSON形式)
 - **[data/gmanhole.ndjson](data/gmanhole.ndjson)**: ガンダムマンホールのデータ (NDJSON形式)
 
+### Pokemon Park KML の生成
+
+`dataset/pokemon_park.tsv` から KML スナップショットを作るには、以下のスクリプトを手動で実行します。
+
+```bash
+python3 apps/scraper/export_pokemon_park_kml.py \
+	--input dataset/pokemon_park.tsv \
+	--output docs/pokemon_park.kml
+```
+
+生成された `docs/pokemon_park.kml` は GitHub Pages などにそのまま配置できます。
+
 ## 🛠️ 開発者向け
 
 データ収集スクリプトや開発環境のセットアップについては [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) を参照してください。
