@@ -2,7 +2,9 @@
 """Convert pokefuta.ndjson into a KML snapshot."""
 
 import argparse
+import html
 import json
+import re
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 import xml.etree.ElementTree as ET
@@ -74,30 +76,67 @@ def _format_name(record: Dict[str, Any]) -> str:
 
 
 def _format_description(record: Dict[str, Any]) -> str:
-    pieces: List[str] = []
-    if record.get("prefecture"):
-        pieces.append(f"Prefecture: {record['prefecture']}")
-    if record.get("city"):
-        pieces.append(f"City: {record['city']}")
-    if record.get("address"):
-        pieces.append(f"Address: {record['address']}")
-    elif record.get("address_norm"):
-        pieces.append(f"Address: {record['address_norm']}")
-    if record.get("place_detail"):
-        pieces.append(f"Place Detail: {record['place_detail']}")
-    if record.get("building"):
-        pieces.append(f"Building: {record['building']}")
-    if record.get("tags"):
-        tags = record['tags']
-        if isinstance(tags, list) and tags:
-            pieces.append("Tags: " + ", ".join(str(tag) for tag in tags if tag))
-    if record.get("detail_url"):
-        pieces.append(f"Detail: {record['detail_url']}")
-    if record.get("last_updated"):
-        pieces.append(f"Last Updated: {record['last_updated']}")
-    if record.get("status"):
-        pieces.append(f"Status: {record['status']}")
-    return "\n".join(pieces)
+    br = "<br/>"
+    lines: List[str] = []
+
+    def _add(label: str, value: Optional[Any]) -> None:
+        if value is None:
+            return
+        if isinstance(value, list):
+            filtered = [str(v) for v in value if v]
+            if not filtered:
+                return
+            safe_value = html.escape(", ".join(filtered))
+        else:
+            value_str = str(value).strip()
+            if not value_str:
+                return
+            safe_value = html.escape(value_str)
+        lines.append(f"<strong>{label}:</strong> {safe_value}{br}")
+
+    pref = record.get("prefecture")
+    city = record.get("city")
+    location_vals = [str(v).strip() for v in [pref, city] if v]
+    if location_vals:
+        lines.append(
+            f"<strong>Location:</strong> {html.escape(' / '.join(location_vals))}{br}"
+        )
+
+    pokemons = record.get("pokemons")
+    if isinstance(pokemons, list) and pokemons:
+        _add("Pokémon", pokemons)
+
+    _add("Address", record.get("address") or record.get("address_norm"))
+    _add("Place Detail", record.get("place_detail"))
+    _add("Building", record.get("building"))
+    _add("Tags", record.get("tags"))
+
+    detail_url = record.get("detail_url")
+    if detail_url:
+        safe_url = html.escape(str(detail_url), quote=True)
+        lines.append(
+            f'<strong>Detail:</strong> <a href="{safe_url}" target="_blank" rel="noreferrer noopener">公式サイト</a>{br}'
+        )
+
+    lat = record.get("lat")
+    lng = record.get("lng")
+    if lat is not None and lng is not None:
+        safe_lat = html.escape(str(lat))
+        safe_lng = html.escape(str(lng))
+        map_url = f"https://www.google.com/maps/search/?api=1&query={safe_lat},{safe_lng}"
+        lines.append(
+            f'<strong>Map:</strong> <a href="{map_url}" target="_blank" rel="noreferrer noopener">Open in Google Maps</a>{br}'
+        )
+
+    _add("Last Updated", record.get("last_updated"))
+    _add("Status", record.get("status"))
+
+    if record.get("id") is not None:
+        lines.append(f"<em>ID: {html.escape(str(record['id']))}</em>{br}")
+
+    if not lines:
+        return "<em>No metadata</em>"
+    return "\n".join(lines)
 
 
 def _indent(elem: ET.Element, level: int = 0) -> None:
@@ -162,8 +201,22 @@ def main() -> None:
 
     records = _load_records(input_path)
     tree = build_kml(records, include_deleted=args.include_deleted, document_name=args.document_name)
-    tree.write(output_path, encoding="utf-8", xml_declaration=True)
+    xml_bytes = ET.tostring(tree.getroot(), encoding="utf-8", xml_declaration=True)
+    xml_text = xml_bytes.decode("utf-8")
+    xml_text = _wrap_description_cdata(xml_text)
+    output_path.write_text(xml_text, encoding="utf-8")
     print(f"Wrote {output_path}")
+
+
+def _wrap_description_cdata(xml_text: str) -> str:
+    pattern = re.compile(r"(<description>)(.*?)(</description>)", re.S)
+
+    def _replace(match: re.Match[str]) -> str:
+        inner = match.group(2)
+        unescaped = html.unescape(inner)
+        return f"{match.group(1)}<![CDATA[{unescaped}]]>{match.group(3)}"
+
+    return pattern.sub(_replace, xml_text)
 
 
 if __name__ == "__main__":

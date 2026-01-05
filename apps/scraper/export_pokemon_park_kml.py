@@ -3,6 +3,8 @@
 
 import argparse
 import csv
+import html
+import re
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional
 import xml.etree.ElementTree as ET
@@ -47,24 +49,55 @@ def _load_rows(path: Path) -> List[Dict[str, str]]:
 
 
 def _format_description(row: Dict[str, str]) -> str:
-    parts: List[str] = []
-    if row.get("pref_name"):
-        parts.append(f"Prefecture: {row['pref_name']}")
-    if row.get("city"):
-        parts.append(f"City: {row['city']}")
-    if row.get("pokemon"):
-        parts.append(f"Pokemon: {row['pokemon']}")
-    if row.get("park_series"):
-        parts.append(f"Series: {row['park_series']}")
-    if row.get("status"):
-        parts.append(f"Status: {row['status']}")
-    if row.get("open_date"):
-        parts.append(f"Open Date: {row['open_date']}")
+    breaks = "<br/>"
+    lines: List[str] = []
+
+    def _add(label: str, value: Optional[str]) -> None:
+        if value:
+            safe_value = html.escape(value)
+            lines.append(f"<strong>{label}:</strong> {safe_value}{breaks}")
+
+    pref = row.get("pref_name")
+    city = row.get("city")
+    if pref or city:
+        safe_pref = html.escape(pref) if pref else ""
+        safe_city = html.escape(city) if city else ""
+        location_text = " / ".join(filter(None, [safe_pref, safe_city]))
+        lines.append(f"<strong>Location:</strong> {location_text}{breaks}")
+
+    _add("Pokemon", row.get("pokemon"))
+    _add("Series", row.get("park_series"))
+    _add("Status", row.get("status"))
+    _add("Open Date", row.get("open_date"))
+
     if row.get("official_url"):
-        parts.append(f"Official: {row['official_url']}")
+        safe_url = html.escape(row["official_url"], quote=True)
+        lines.append(
+            f'<strong>Official:</strong> <a href="{safe_url}" target="_blank" rel="noreferrer noopener">詳細ページ</a>{breaks}'
+        )
+
+    lat = row.get("lat")
+    lng = row.get("lng")
+    if lat and lng:
+        safe_lat = html.escape(lat)
+        safe_lng = html.escape(lng)
+        map_url = (
+            "https://www.google.com/maps/search/?api=1&query="
+            f"{safe_lat},{safe_lng}"
+        )
+        lines.append(
+            f'<strong>Map:</strong> <a href="{map_url}" target="_blank" rel="noreferrer noopener">Open in Google Maps</a>{breaks}'
+        )
+
     if row.get("note"):
-        parts.append(f"Note: {row['note']}")
-    return "\n".join(parts)
+        safe_note = html.escape(row["note"]).replace("\n", "<br/>")
+        lines.append(f"<strong>Note:</strong> {safe_note}{breaks}")
+
+    if row.get("id"):
+        safe_id = html.escape(row["id"])
+        lines.append(f"<em>ID: {safe_id}</em>{breaks}")
+
+    return "\n".join(lines)
 
 
 def _indent(elem: ET.Element, level: int = 0) -> None:
@@ -112,6 +145,17 @@ def _build_kml(rows: Iterable[Dict[str, str]], document_name: str) -> ET.Element
     return ET.ElementTree(kml)
 
 
+def _wrap_description_cdata(xml_text: str) -> str:
+    pattern = re.compile(r"(<description>)(.*?)(</description>)", re.S)
+
+    def _replace(match: re.Match[str]) -> str:
+        inner = match.group(2)
+        unescaped = html.unescape(inner)
+        return f"{match.group(1)}<![CDATA[{unescaped}]]>{match.group(3)}"
+
+    return pattern.sub(_replace, xml_text)
+
+
 def main() -> None:
     args = _parse_args()
     input_path = Path(args.input)
@@ -120,7 +164,10 @@ def main() -> None:
 
     rows = _load_rows(input_path)
     tree = _build_kml(rows, document_name=args.document_name)
-    tree.write(output_path, encoding="utf-8", xml_declaration=True)
+    xml_bytes = ET.tostring(tree.getroot(), encoding="utf-8", xml_declaration=True)
+    xml_text = xml_bytes.decode("utf-8")
+    xml_text = _wrap_description_cdata(xml_text)
+    output_path.write_text(xml_text, encoding="utf-8")
     print(f"Wrote {output_path}")
 
 
