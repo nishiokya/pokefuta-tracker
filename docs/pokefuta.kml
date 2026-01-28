@@ -2208,11 +2208,12 @@ Status: active</description>
       <name>福岡県/北九州市 (ジュラルドン, ヤミラミ)</name>
       <description>Prefecture: 福岡県
 City: 北九州
+Address: 福岡県北九州市八幡東区東田４丁目１１
 Detail: https://local.pokemon.jp/manhole/desc/200/?is_modal=1
-Last Updated: 2025-10-27T02:17:05Z
+Last Updated: 2026-01-28T10:05:48Z
 Status: active</description>
       <Point>
-        <coordinates>130.807495,33.871791,0</coordinates>
+        <coordinates>130.807892,33.87192,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -5112,6 +5113,15 @@ Last Updated: 2025-12-27T13:01:20Z
 Status: active</description>
       <Point>
         <coordinates>140.983236,38.311641,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>ポケパーク カントー (イーブイ, ピカチュウ)</name>
+      <description>Detail: https://local.pokemon.jp/manhole/desc/448/?is_modal=1
+Last Updated: 2026-01-28T10:08:36Z
+Status: active</description>
+      <Point>
+        <coordinates>139.521513,35.62637,0</coordinates>
       </Point>
     </Placemark>
   </Document>
