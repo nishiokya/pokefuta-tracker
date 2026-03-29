@@ -245,10 +245,10 @@ Status: active</description>
       <description>Prefecture: 岩手県
 City: 住田
 Detail: https://local.pokemon.jp/manhole/desc/22/?is_modal=1
-Last Updated: 2025-10-27T02:17:05Z
+Last Updated: 2026-03-29T10:06:31Z
 Status: active</description>
       <Point>
-        <coordinates>141.574456,39.142287,0</coordinates>
+        <coordinates>141.68432,39.242903,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -2208,11 +2208,12 @@ Status: active</description>
       <name>福岡県/北九州市 (ジュラルドン, ヤミラミ)</name>
       <description>Prefecture: 福岡県
 City: 北九州
+Address: 福岡県北九州市八幡東区東田４丁目１１
 Detail: https://local.pokemon.jp/manhole/desc/200/?is_modal=1
-Last Updated: 2025-10-27T02:17:05Z
+Last Updated: 2026-03-29T10:08:33Z
 Status: active</description>
       <Point>
-        <coordinates>130.807495,33.871791,0</coordinates>
+        <coordinates>130.807892,33.87192,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -2772,10 +2773,10 @@ Status: active</description>
       <description>Prefecture: 福島県
 City: 会津若松
 Detail: https://local.pokemon.jp/manhole/desc/248/?is_modal=1
-Last Updated: 2025-10-27T02:17:05Z
+Last Updated: 2026-03-29T10:09:05Z
 Status: active</description>
       <Point>
-        <coordinates>139.927445,37.461146,0</coordinates>
+        <coordinates>139.927545,37.461098,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -5112,6 +5113,173 @@ Last Updated: 2025-12-27T13:01:20Z
 Status: active</description>
       <Point>
         <coordinates>140.983236,38.311641,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>ポケパーク カントー (イーブイ, ピカチュウ)</name>
+      <description>Detail: https://local.pokemon.jp/manhole/desc/448/?is_modal=1
+Last Updated: 2026-03-29T10:11:23Z
+Status: active</description>
+      <Point>
+        <coordinates>139.521513,35.62637,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>高知県/高知市 (トサキント, ヌオー, ローカルActs高知県ページへ)</name>
+      <description>Prefecture: 高知県
+City: 高知
+Address: 高知県高知市北本町2-10-17
+Detail: https://local.pokemon.jp/manhole/desc/449/?is_modal=1
+Last Updated: 2026-03-29T10:11:24Z
+Status: active</description>
+      <Point>
+        <coordinates>133.5431367,33.56701662,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>高知県/土佐清水市 (カラナクシ, ヌオー, ローカルActs高知県ページへ)</name>
+      <description>Prefecture: 高知県
+City: 土佐清水
+Detail: https://local.pokemon.jp/manhole/desc/450/?is_modal=1
+Last Updated: 2026-03-29T10:11:25Z
+Status: active</description>
+      <Point>
+        <coordinates>132.862367,32.791142,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>高知県/安田町 (ヌオー, メタモン, ローカルActs高知県ページへ)</name>
+      <description>Prefecture: 高知県
+City: 安田
+Address: 高知県安田町大字正弘566番地
+Detail: https://local.pokemon.jp/manhole/desc/451/?is_modal=1
+Last Updated: 2026-03-29T10:11:25Z
+Status: active</description>
+      <Point>
+        <coordinates>133.99983,33.47986,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>高知県/本山町 (アメタマ, アメモース, ヌオー, ローカルActs高知県ページへ)</name>
+      <description>Prefecture: 高知県
+City: 本山
+Detail: https://local.pokemon.jp/manhole/desc/452/?is_modal=1
+Last Updated: 2026-03-29T10:11:26Z
+Status: active</description>
+      <Point>
+        <coordinates>133.59448,33.75877,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>高知県/仁淀川町 (ヌオー, メッソン, ローカルActs高知県ページへ)</name>
+      <description>Prefecture: 高知県
+City: 仁淀川
+Detail: https://local.pokemon.jp/manhole/desc/453/?is_modal=1
+Last Updated: 2026-03-29T10:11:27Z
+Status: active</description>
+      <Point>
+        <coordinates>133.129433,33.561104,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>福島県/須賀川市 (マフォクシー, ラッキー, ローカルActs福島県ページへ)</name>
+      <description>Prefecture: 福島県
+City: 須賀川
+Detail: https://local.pokemon.jp/manhole/desc/454/?is_modal=1
+Last Updated: 2026-03-29T10:11:27Z
+Status: active</description>
+      <Point>
+        <coordinates>140.382947,37.291536,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>福島県/天栄村 (イエッサン, ラッキー, ローカルActs福島県ページへ)</name>
+      <description>Prefecture: 福島県
+City: 天栄
+Detail: https://local.pokemon.jp/manhole/desc/455/?is_modal=1
+Last Updated: 2026-03-29T10:11:28Z
+Status: active</description>
+      <Point>
+        <coordinates>140.243722,37.243406,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>福島県/下郷町 (カモネギ, チリーン, ハリマロン, ラッキー, ローカルActs福島県ページへ)</name>
+      <description>Prefecture: 福島県
+City: 下郷
+Address: 福島県下郷町大字南倉沢字木賊844番地188
+Detail: https://local.pokemon.jp/manhole/desc/456/?is_modal=1
+Last Updated: 2026-03-29T10:11:29Z
+Status: active</description>
+      <Point>
+        <coordinates>139.916146,37.203534,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>福島県/西会津町 (ピクシー, マシェード, ラッキー, ローカルActs福島県ページへ)</name>
+      <description>Prefecture: 福島県
+City: 西会津
+Detail: https://local.pokemon.jp/manhole/desc/457/?is_modal=1
+Last Updated: 2026-03-29T10:11:29Z
+Status: active</description>
+      <Point>
+        <coordinates>139.642677,37.585568,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>福島県/泉崎村 (アオガラス, ヤジロン, ラッキー, ローカルActs福島県ページへ)</name>
+      <description>Prefecture: 福島県
+City: 泉崎
+Detail: https://local.pokemon.jp/manhole/desc/458/?is_modal=1
+Last Updated: 2026-03-29T10:11:30Z
+Status: active</description>
+      <Point>
+        <coordinates>140.314605,37.157384,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>福島県/鮫川村 (サメハダー, フカマル, ラッキー, ローカルActs福島県ページへ)</name>
+      <description>Prefecture: 福島県
+City: 鮫川
+Address: 福島県鮫川村大字赤阪中野字巡ヶ作116番地
+Detail: https://local.pokemon.jp/manhole/desc/459/?is_modal=1
+Last Updated: 2026-03-29T10:11:31Z
+Status: active</description>
+      <Point>
+        <coordinates>140.50677,37.040242,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>福島県/浅川町 (バオップ, ピンプク, ラッキー, ローカルActs福島県ページへ)</name>
+      <description>Prefecture: 福島県
+City: 浅川
+Detail: https://local.pokemon.jp/manhole/desc/460/?is_modal=1
+Last Updated: 2026-03-29T10:11:31Z
+Status: active</description>
+      <Point>
+        <coordinates>140.4146001,37.0802942,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>福島県/小野町 (ゴチミル, ブリムオン, ラッキー, ローカルActs福島県ページへ)</name>
+      <description>Prefecture: 福島県
+City: 小野
+Detail: https://local.pokemon.jp/manhole/desc/461/?is_modal=1
+Last Updated: 2026-03-29T10:11:32Z
+Status: active</description>
+      <Point>
+        <coordinates>140.633912,37.279216,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>福島県/大熊町 (キテルグマ, ヌイコグマ, ヒメグマ, ラッキー, ローカルActs福島県ページへ)</name>
+      <description>Prefecture: 福島県
+City: 大熊
+Detail: https://local.pokemon.jp/manhole/desc/462/?is_modal=1
+Last Updated: 2026-03-29T10:11:33Z
+Status: active</description>
+      <Point>
+        <coordinates>140.983206,37.4099576,0</coordinates>
       </Point>
     </Placemark>
   </Document>
