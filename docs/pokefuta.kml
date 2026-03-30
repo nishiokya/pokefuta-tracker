@@ -5282,5 +5282,51 @@ Status: active</description>
         <coordinates>140.983206,37.4099576,0</coordinates>
       </Point>
     </Placemark>
+    <Placemark>
+      <name>岩手県/奥州市 (イシツブテ, カジッチュ, ガブリアス, ローカルActs岩手県ページへ)</name>
+      <description>Prefecture: 岩手県
+City: 奥州
+Detail: https://local.pokemon.jp/manhole/desc/463/?is_modal=1
+Last Updated: 2026-03-30T10:31:54Z
+Status: active</description>
+      <Point>
+        <coordinates>141.137353,39.138288,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>岩手県/雫石町 (イシツブテ, イワンコ, ウールー, ローカルActs岩手県ページへ)</name>
+      <description>Prefecture: 岩手県
+City: 雫石
+Detail: https://local.pokemon.jp/manhole/desc/464/?is_modal=1
+Last Updated: 2026-03-30T10:31:55Z
+Status: active</description>
+      <Point>
+        <coordinates>140.874287,39.706964,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>岩手県/矢巾町 (イシツブテ, キマワリ, ヒスイガーディ, ローカルActs岩手県ページへ)</name>
+      <description>Prefecture: 岩手県
+City: 矢巾
+Address: 岩手県矢巾町駅東1丁目55
+Detail: https://local.pokemon.jp/manhole/desc/465/?is_modal=1
+Last Updated: 2026-03-30T10:31:56Z
+Status: active</description>
+      <Point>
+        <coordinates>141.1498184,39.6135292,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>岩手県/金ヶ崎町 (アローライシツブテ, ブロロン, メルタン, ローカルActs岩手県ページへ)</name>
+      <description>Prefecture: 岩手県
+City: 金ヶ崎
+Address: 岩手県金ケ崎町西根伊勢分25番地7
+Detail: https://local.pokemon.jp/manhole/desc/466/?is_modal=1
+Last Updated: 2026-03-30T10:31:56Z
+Status: active</description>
+      <Point>
+        <coordinates>141.112971,39.200006,0</coordinates>
+      </Point>
+    </Placemark>
   </Document>
 </kml>
