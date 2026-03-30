@@ -23,8 +23,8 @@
 
 収集したマンホールデータは `data/` ディレクトリで公開しています。
 
-- **[data/pokefuta.ndjson](data/pokefuta.ndjson)**: ポケふたの全データ (NDJSON形式)
-- **[data/gmanhole.ndjson](data/gmanhole.ndjson)**: ガンダムマンホールのデータ (NDJSON形式)
+- **[apps/scraper/pokefuta.ndjson](apps/scraper/pokefuta.ndjson)**: ポケふたの全データ (NDJSON形式)
+- **[apps/scraper/gmanhole.ndjson](apps/scraper/gmanhole.ndjson)**: ガンダムマンホールのデータ (NDJSON形式)
 
 ### Pokemon Park KML の生成
 
@@ -33,7 +33,7 @@
 ```bash
 python3 apps/scraper/export_pokemon_park_kml.py \
 	--input dataset/pokemon_park.tsv \
-	--output docs/pokemon_park.kml
+	--output apps/scraper/pokemon_park.kml
 ```
 
 生成された `docs/pokemon_park.kml` は GitHub Pages などにそのまま配置できます。
