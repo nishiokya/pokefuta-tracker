@@ -145,83 +145,20 @@ def parse_detail(detail_url: str, html: str, logger: logging.Logger) -> Optional
                 prefecture = pf
                 city = ct.rstrip("市町村区") if ct else ""
 
-    # 住所の取得
+    # 住所の取得 (テキストから住所らしき文字列を抽出)
     address = ""
-
-    def _clean_addr(s: str) -> str:
-        s = re.sub(r"^(住所|所在地|設置場所|設置地点)[：:]\s*", "", s).strip()
-        s = re.sub(r"\s+", " ", s)
-        return s
-
-    def _extract_address_from_jsonld() -> str:
-        for script in soup.select('script[type="application/ld+json"]'):
-            try:
-                data = json.loads(script.get_text() or "")
-            except Exception:
-                continue
-            items = data if isinstance(data, list) else [data]
-            for item in items:
-                if not isinstance(item, dict):
-                    continue
-                addr = item.get("address")
-                if isinstance(addr, str) and addr.strip():
-                    return _clean_addr(addr)
-                if isinstance(addr, dict):
-                    parts = [
-                        addr.get("postalCode"),
-                        addr.get("addressRegion"),
-                        addr.get("addressLocality"),
-                        addr.get("streetAddress"),
-                    ]
-                    joined = "".join([p for p in parts if p])
-                    if joined.strip():
-                        return _clean_addr(joined)
-        return ""
-
-    # 1) JSON-LD (構造化データ)
-    address = _extract_address_from_jsonld()
-
-    # 2) ラベル付き項目 (dt/dd, th/td, 住所：〜)
-    if not address:
-        label_patterns = ["住所", "所在地", "設置場所", "設置地点", "設置住所"]
-        label_re = re.compile("|".join(label_patterns))
-        for node in soup.find_all(string=label_re):
-            if not node or not node.parent:
-                continue
-            parent = node.parent
-            text = parent.get_text(" ", strip=True)
-            # 住所：xxx の形式
-            m = re.search(r"(住所|所在地|設置場所|設置地点|設置住所)[：:]\s*(.+)", text)
-            if m and m.group(2).strip():
-                address = _clean_addr(m.group(0))
-                break
-            # dt/dd, th/td 形式
-            if parent.name in ["dt", "th"]:
-                sib = parent.find_next_sibling(["dd", "td"])
-                if sib and sib.get_text(strip=True):
-                    address = _clean_addr(sib.get_text(" ", strip=True))
-                    break
-
-    # 3) テキストから住所らしき文字列を抽出 (フォールバック)
-    if not address:
-        text_content = soup.get_text()
-        address_patterns = [
-            # 都道府県 + 市区町村 + 番地/丁目あり
-            r'([^。\n]*(?:県|府|道|都)[^。\n]*(?:市|区|町|村)[^。\n]*(?:\d+[-−‐]\d+[-−‐]\d+|\d+丁目|\d+番地)[^。\n]*)',
-            # 都道府県 + 市区町村 (番地なし)
-            r'([^。\n]*(?:県|府|道|都)[^。\n]*(?:市|区|町|村)[^。\n]{0,20})',
-            # 市区町村 + 番地/丁目あり
-            r'([^。\n]*(?:市|区|町|村)[^。\n]*(?:\d+[-−‐]\d+[-−‐]\d+|\d+丁目|\d+番地)[^。\n]*)',
-        ]
-        candidates: List[str] = []
-        for pattern in address_patterns:
-            candidates.extend(re.findall(pattern, text_content))
-        if candidates:
-            # 数字を含む候補を優先、次に最長
-            candidates = [c.strip() for c in candidates if c.strip()]
-            with_digits = [c for c in candidates if re.search(r"\d", c)]
-            picked = max(with_digits or candidates, key=len)
-            address = _clean_addr(picked)
+    # 住所パターンを探す（都道府県名 + 市区町村 + 丁目・番地など）
+    text_content = soup.get_text()
+    address_patterns = [
+        r'([^。\n]*(?:県|府|道|都)[^。\n]*(?:市|区|町|村)[^。\n]*(?:\d+[-−‐]\d+[-−‐]\d+|\d+丁目|\d+番地)[^。\n]*)',
+        r'([^。\n]*(?:市|区|町|村)[^。\n]*(?:\d+[-−‐]\d+[-−‐]\d+|\d+丁目|\d+番地)[^。\n]*)',
+    ]
+    for pattern in address_patterns:
+        matches = re.findall(pattern, text_content)
+        if matches:
+            # 最も長い住所らしきものを選択
+            address = max(matches, key=len).strip()
+            break
 
     # Use second precision UTC format compatible with JS Date parsing
     now_iso = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
@@ -244,6 +181,49 @@ def parse_detail(detail_url: str, html: str, logger: logging.Logger) -> Optional
         "last_updated": now_iso,  # unified update timestamp
         "status": "active"
     }
+
+
+def atomic_write_array(path: str, rows: List[Dict]):
+    d = os.path.dirname(os.path.abspath(path)) or "."
+    os.makedirs(d, exist_ok=True)
+    with tempfile.NamedTemporaryFile("w", delete=False, dir=d, encoding="utf-8") as tmp:
+        json.dump(rows, tmp, ensure_ascii=False, indent=2)
+        tmp.flush(); os.fsync(tmp.fileno())
+        p = tmp.name
+    os.replace(p, path)
+
+
+def atomic_write_ndjson(path: str, rows: List[Dict]):
+    d = os.path.dirname(os.path.abspath(path)) or "."
+    # English
+    html_en = fetch(detail_url, logger, HEADERS_EN)
+    if html_en:
+        soup_en = BeautifulSoup(html_en, "html.parser")
+        # simple pokemon extraction
+        p_en = []
+        for a in soup_en.select("a[href]"):
+            t = a.get_text(strip=True)
+            if not t:
+                continue
+            if any(k in t for k in ["Pokémon", "Pokemon", "Pokédex"]):
+                nm = re.sub(r"(Pokémon|Pokemon|Pokédex)", "", t).strip()
+                if nm:
+                    p_en.append(nm)
+        rec["pokemons_en"] = sorted({x for x in p_en if x})
+    # Chinese
+    html_zh = fetch(detail_url, logger, HEADERS_ZH)
+    if html_zh:
+        soup_zh = BeautifulSoup(html_zh, "html.parser")
+        p_zh = []
+        for a in soup_zh.select("a[href]"):
+            t = a.get_text(strip=True)
+            if not t:
+                continue
+            if any(k in t for k in ["宝可梦", "圖鑑", "图鉴"]):
+                nm = re.sub(r"(宝可梦|圖鑑|图鉴)", "", t).strip()
+                if nm:
+                    p_zh.append(nm)
+        rec["pokemons_zh"] = sorted({x for x in p_zh if x})
 
 
 def atomic_write_array(path: str, rows: List[Dict]):
