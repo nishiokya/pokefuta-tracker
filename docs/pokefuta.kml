@@ -5328,5 +5328,95 @@ Status: active</description>
         <coordinates>141.112971,39.200006,0</coordinates>
       </Point>
     </Placemark>
+    <Placemark>
+      <name>岩手県/盛岡市 (イシツブテ, イワンコ, ルガルガン, ローカルActs岩手県ページへ)</name>
+      <description>Prefecture: 岩手県
+City: 盛岡
+Detail: https://local.pokemon.jp/manhole/desc/467/?is_modal=1
+Last Updated: 2026-05-01T10:32:45Z
+Status: active</description>
+      <Point>
+        <coordinates>141.128421,39.694005,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>石川県/七尾市 (ギャラドス, ニョロトノ, ニョロモ)</name>
+      <description>Prefecture: 石川県
+City: 七尾
+Address: 石川県七尾市和倉町ひばり1丁目1番地
+Detail: https://local.pokemon.jp/manhole/desc/468/?is_modal=1
+Last Updated: 2026-05-01T10:32:46Z
+Status: active</description>
+      <Point>
+        <coordinates>136.923564,37.087801,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>石川県/輪島市 (ゲッコウガ, ダルマッカ)</name>
+      <description>Prefecture: 石川県
+City: 輪島
+Address: 石川県輪島市河井町20-1-131
+Detail: https://local.pokemon.jp/manhole/desc/469/?is_modal=1
+Last Updated: 2026-05-01T10:32:46Z
+Status: active</description>
+      <Point>
+        <coordinates>136.906156,37.389147,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>石川県/珠洲市 (ニンフィア, ラブカス)</name>
+      <description>Prefecture: 石川県
+City: 珠洲
+Detail: https://local.pokemon.jp/manhole/desc/470/?is_modal=1
+Last Updated: 2026-05-01T10:32:47Z
+Status: active</description>
+      <Point>
+        <coordinates>137.240367,37.39454,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>石川県/志賀町 (カイデン, サクラビス)</name>
+      <description>Prefecture: 石川県
+City: 志賀
+Detail: https://local.pokemon.jp/manhole/desc/471/?is_modal=1
+Last Updated: 2026-05-01T10:32:48Z
+Status: active</description>
+      <Point>
+        <coordinates>136.724847,37.139152,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>石川県/穴水町 (カビゴン, プラスル, マイナン)</name>
+      <description>Prefecture: 石川県
+City: 穴水
+Detail: https://local.pokemon.jp/manhole/desc/472/?is_modal=1
+Last Updated: 2026-05-01T10:32:48Z
+Status: active</description>
+      <Point>
+        <coordinates>136.905007,37.228298,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>石川県/能登町 (ハスボー, メテノ, ロゼリア)</name>
+      <description>Prefecture: 石川県
+City: 能登
+Detail: https://local.pokemon.jp/manhole/desc/473/?is_modal=1
+Last Updated: 2026-05-01T10:32:49Z
+Status: active</description>
+      <Point>
+        <coordinates>137.138718,37.333975,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>宮城県/仙台市 (ウミディグダ, チョンチー, ホエルコ, ラプラス, ローカルActs宮城県ページへ)</name>
+      <description>Prefecture: 宮城県
+City: 仙台
+Detail: https://local.pokemon.jp/manhole/desc/474/?is_modal=1
+Last Updated: 2026-05-01T10:32:50Z
+Status: active</description>
+      <Point>
+        <coordinates>140.956528,38.182602,0</coordinates>
+      </Point>
+    </Placemark>
   </Document>
 </kml>
