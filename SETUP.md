@@ -1,98 +1,220 @@
-# 🔄 Automatic PR Creation System
+# 🔄 セットアップガイドと開発ワークフロー
 
-このプロジェクトでは、ポケふたデータの変更（新規追加・削除）があった場合に自動でプルリクエストを作成し、変更履歴を追跡する機能があります。
+このドキュメントは、pokefuta-tracker プロジェクトの初期セットアップ、ディレクトリ構造、およびデータフローについて説明します。
 
-## ⚙️ システム概要
+## 📁 ディレクトリ構造
 
-### 🤖 自動化ワークフロー
-1. **データスクレイピング** - 公式サイトから最新データを取得
-2. **データクリーニング** - ポケモン名正規化、重複削除
-3. **変更検出** - 新規追加・削除されたIDを特定
-4. **変更履歴更新** - CHANGELOG.mdを自動更新
-5. **PR作成** - 変更があった場合にプルリクエストを自動作成
-
-### 📋 必要な権限
-デフォルトの`GITHUB_TOKEN`を使用するため、追加のSecrets設定は不要です。
-
-## ⚙️ 動作仕様
-
-### 📊 自動実行タイミング
-- **毎日10:00 UTC** (19:00 JST) に自動実行
-- **手動実行**も可能 (Actions タブから)
-
-### 🔄 PR作成条件
-- ✅ **新規ID追加**があった場合
-- ❌ **既存ID削除**があった場合
-- ℹ️ **変更なし**の場合は通常のコミットのみ
-
-### 📋 PR内容
-- **変更サマリー**（追加・削除数、ネット変更数）
-- **詳細ID一覧**（追加・削除されたIDの明細）
-- **CHANGELOG.md更新**
-- **自動ラベル付け**（automated, data-update）
-- **ライブマップリンク**
-
-## 🧹 データクリーニング機能
-
-### 自動実行される処理
-1. **ポケモン名正規化**
-   - 「ずかんへ」「図鑑」などの削除
-   - 重複データの除去
-
-2. **都道府県・市町村抽出**
-   - タイトルからの自動抽出
-   - データ構造の統一
-
-3. **都道府県サイトリンク分離**
-   - ポケモン名から分離
-   - 専用フィールドへの格納
-
-4. **データ品質向上**
-   - 一意性確保
-   - 形式統一
-
-## 🚀 使用例
-
-### ローカルでのテスト実行
-```bash
-cd apps/scraper
-
-# データクリーニングのみ（変更履歴更新なし）
-python clean_and_notify.py --input pokefuta.ndjson --output pokefuta.clean.ndjson --no-changelog
-
-# 変更履歴更新付き
-python clean_and_notify.py --input pokefuta.ndjson --output pokefuta.ndjson
-
-# カスタムパス指定
-python clean_and_notify.py --input raw_data.ndjson --changelog custom_changelog.md
+```
+pokefuta-tracker/
+├── apps/
+│   ├── scraper/                    # データ収集・処理エンジン
+│   │   ├── pokefuta.ndjson         # 【内部用・完全版】全レコード (active + deleted)
+│   │   ├── scrape_pokefuta.py      # 初期化スクリプト（手動専用）
+│   │   ├── update_pokefuta.py      # 日次差分更新（GitHub Actions自動）
+│   │   ├── export_kml.py           # KML生成
+│   │   ├── export_pokemon_park_kml.py # Pokemon Park KML生成
+│   │   ├── clean_and_notify.py     # データクリーニング（参考）
+│   │   ├── fill_address.py         # 住所フィールド自動補完
+│   │   └── test_pokefuta.json      # テストデータ
+│   └── web/                        # Web UI ソースコード
+│       ├── index.html              # メインマップ
+│       ├── nearby_manholes.html    # 近くのマンホール検索
+│       ├── gmanhole_map.html       # ガンダムマンホール統合マップ
+│       └── assets/                 # CSS・アイコン・リソース
+├── dataset/                        # 手動管理メタデータ
+│   ├── title.tsv                   # ポケふた詳細情報（住所、建物名、リンク等）
+│   ├── pokemon_park.tsv            # ポケモンパーク情報
+│   ├── mie_stamp_2025_v2.tsv       # 三重県スタンプ情報
+│   ├── city_link.tsv               # 市区町村リンク
+│   └── manhole_icon.png            # マンホールアイコン
+├── docs/                           # 【公開用・アクティブ版】GitHub Pages用
+│   ├── pokefuta.ndjson             # 公開データ（active レコードのみ）
+│   ├── pokefuta.kml                # KML スナップショット
+│   ├── index.html                  # ドキュメント
+│   └── DEVELOPMENT.md              # 開発者向けドキュメント
+├── dist/                           # GitHub Pages Artifact生成物（Git未追跡）
+│   ├── index.html                  # pages-deploy.yml により生成
+│   ├── pokefuta.ndjson             # 公開版データ複製
+│   ├── assets/                     # CSS・アイコン
+│   └── ...
+├── schema/
+│   └── database.sql                # DB スキーマ（予約）
+├── .github/workflows/              # GitHub Actions ワークフロー
+│   ├── update-pokefuta.yml         # 日次 10:00 UTC: データ更新 + 差分検出 + PR作成
+│   └── pages-deploy.yml            # 日次 10:30 UTC: Pages Artifact ビルド＆デプロイ
+├── SCHEMA.md                       # データスキーマ仕様書
+├── DEVELOPMENT.md                  # 開発ガイド（詳細）
+├── requirements.txt                # Python依存パッケージ
+└── README.md                       # プロジェクト概要
 ```
 
-### ログレベル調整
+## 🚀 初期セットアップ
+
+### 1. 環境構築
 ```bash
-python clean_and_notify.py --log-level DEBUG
+# リポジトリクローン
+git clone https://github.com/nishiokya/pokefuta-tracker.git
+cd pokefuta-tracker
+
+# Python仮想環境作成
+python3 -m venv .venv
+source .venv/bin/activate  # macOS/Linux
+# または
+.venv\Scripts\activate  # Windows
+
+# 依存パッケージインストール
+pip install -r requirements.txt
+pip install beautifulsoup4 requests lxml
 ```
 
-## 🔍 トラブルシューティング
+### 2. 初期データセット作成（初回のみ）
+```bash
+# Pokemon公式サイトから全ポケふたデータを一括取得
+python apps/scraper/scrape_pokefuta.py --scan-max 500 --out apps/scraper/pokefuta.ndjson
 
-### PR作成エラー
-- GitHub Actionsの権限設定を確認
-- `GITHUB_TOKEN`が正しく設定されているか確認
-- ブランチ作成権限があるか確認
+# 内部版が完成したら、公開版（active のみ）を作成
+python -c "
+import json
+with open('apps/scraper/pokefuta.ndjson', 'r', encoding='utf-8') as f:
+    active_records = [json.loads(line) for line in f if json.loads(line).get('status') == 'active']
 
-### データエラー
-- JSON形式が正しいか確認
-- 必須フィールド（id, lat, lng, detail_url）が存在するか確認
-- ファイルエンコーディングがUTF-8であることを確認
+with open('docs/pokefuta.ndjson', 'w', encoding='utf-8') as f:
+    for record in active_records:
+        json.dump(record, f, ensure_ascii=False, separators=(',', ':'))
+        f.write('\n')
+"
 
-## 📈 機能拡張
+# コミット
+git add apps/scraper/pokefuta.ndjson docs/pokefuta.ndjson
+git commit -m "feat: initialize pokefuta dataset"
+```
 
-将来的に以下の機能追加も可能：
-- **Slack/Discord通知**
-- **カスタムPRテンプレート**
-- **詳細変更差分**
-- **自動マージ機能**
-- **データ品質レポート**
+### 3. メタデータ設定
+`dataset/title.tsv` に手動で詳細情報（住所、施設名など）を入力してください。
 
----
+```bash
+# 初期テンプレート（オプション）
+# dataset/title.tsv の構造：
+# id    title    address    building    ...
+# 1     ...      ...        ...         ...
+```
 
-🤖 **Generated with [Claude Code](https://claude.ai/code)**
+## 📊 データフロー
+
+### 日次更新ワークフロー（自動）
+
+```
+10:00 UTC: update-pokefuta.yml
+├─ update_pokefuta.py --scan-max 500
+│  ├─ 新規ID検出
+│  ├─ 削除検出（404ページ）
+│  ├─ 変更検出（lat/lng/pokemons）
+│  └─ CHANGELOG.md 更新
+├─ apps/scraper/pokefuta.ndjson 更新（全レコード + deleted保持）
+├─ docs/pokefuta.ndjson 更新（active のみ）
+├─ export_kml.py で docs/pokefuta.kml 生成
+├─ 差分があれば PR 作成
+└─ PR をマージ
+
+10:30 UTC: pages-deploy.yml
+├─ dist/ ディレクトリ作成
+├─ docs/pokefuta.ndjson → dist/ コピー
+├─ apps/web/*.html → dist/ コピー
+├─ assets/ → dist/assets/ コピー
+├─ upload-pages-artifact で Artifact生成
+└─ GitHub Pages へ自動デプロイ
+```
+
+## 🔧 手動コマンド
+
+### ローカルでのテスト
+
+```bash
+# 差分更新のテスト（スキャン数制限）
+python apps/scraper/update_pokefuta.py \
+  --scan-max 100 \
+  --out apps/scraper/pokefuta.ndjson \
+  --log-level DEBUG
+
+# KML スナップショット生成
+python apps/scraper/export_kml.py \
+  --input apps/scraper/pokefuta.ndjson \
+  --output docs/pokefuta.kml
+
+# Pokemon Park KML生成
+python apps/scraper/export_pokemon_park_kml.py \
+  --input dataset/pokemon_park.tsv \
+  --output docs/pokemon_park.kml
+```
+
+### 住所フィールド自動補完
+
+```bash
+# 公式ページから住所情報を抽出して fill_address.py で自動補完
+python apps/scraper/fill_address.py \
+  --in docs/pokefuta.ndjson \
+  --out docs/pokefuta_filled.ndjson \
+  --sleep 1.0 \
+  --limit 50
+```
+
+## 📋 重要なポイント
+
+### ✅ 内部版（apps/scraper/pokefuta.ndjson）
+- **削除済みレコード（status=deleted）も保持** → 完全な履歴管理
+- **全スキーマフィールドを保持** → メタデータ拡張対応
+- **Git コミット対象** → 履歴追跡
+
+### ✅ 公開版（docs/pokefuta.ndjson）
+- **Active レコードのみ** → 軽量配信
+- **GitHub Pages・API エンドポイント** → 外部参照先
+- **GitHub Raw URL** → 他プロジェクトから利用可能
+- **Git コミット対象** → 変更追跡
+
+### ✅ Pages Artifact (dist/pokefuta.ndjson)
+- **公開版のコピー** → pages-deploy.yml で生成
+- **Git 未追跡** → リポジトリ肥大化防止
+- **毎回フレッシュ生成** → 常に最新データを配信
+
+## 🔄 自動 PR 作成システム
+
+毎日 10:00 UTC に実行される `update-pokefuta.yml` ワークフロー：
+- ポケふたデータを差分更新
+- 新規追加・削除を検出
+- CHANGELOG.md を自動更新
+- **変更があれば自動で PR を作成**
+- PR をマージすると、10:30 UTC に自動で Pages デプロイ
+
+## 🆘 トラブルシューティング
+
+### PR が作成されない
+- `.github/workflows/update-pokefuta.yml` が正しいか確認
+- `GITHUB_TOKEN` 権限を確認
+- スクレイピング対象が更新されているか確認
+
+### データファイルが古い
+- `docs/pokefuta.ndjson` の最終更新日時を確認
+- `apps/scraper/pokefuta.ndjson` のレコード数と比較
+- Pages Artifact ビルドログを確認
+
+### ローカルで動作確認したい
+```bash
+# 現在のワークフローを再現
+python apps/scraper/update_pokefuta.py --scan-max 50 --out test_output.ndjson
+
+# 公開版を作成
+python -c "
+import json
+with open('test_output.ndjson', 'r') as f:
+    records = [json.loads(line) for line in f if json.loads(line).get('status') == 'active']
+with open('test_public.ndjson', 'w') as f:
+    for r in records:
+        json.dump(r, f, ensure_ascii=False)
+        f.write('\n')
+"
+```
+
+## 📖 関連ドキュメント
+- [DEVELOPMENT.md](docs/DEVELOPMENT.md) - 開発ガイド（詳細）
+- [SCHEMA.md](SCHEMA.md) - データスキーマ仕様書
+- [README.md](README.md) - プロジェクト概要

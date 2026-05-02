@@ -13,14 +13,24 @@ python apps/scraper/scrape_pokefuta.py --scan-max 500 --out apps/scraper/pokefut
 git add apps/scraper/pokefuta.ndjson && git commit -m "feat: initial dataset"
 ```
 
-公開用コピー:
+公開用コピー（docs/ へ active レコードのみ）:
 ```bash
-cp apps/scraper/pokefuta.ndjson docs/pokefuta.ndjson
+python -c "
+import json
+with open('apps/scraper/pokefuta.ndjson', 'r', encoding='utf-8') as f:
+    active_records = [json.loads(line) for line in f if json.loads(line).get('status') == 'active']
+
+with open('docs/pokefuta.ndjson', 'w', encoding='utf-8') as f:
+    for record in active_records:
+        json.dump(record, f, ensure_ascii=False, separators=(',', ':'))
+        f.write('\n')
+"
 git add docs/pokefuta.ndjson && git commit -m "chore: publish initial dataset"
 ```
 
 ### 2. 差分アップデート (GitHub Actions / 手動検証)
-日次は `.github/workflows/scrape-daily.yml` が `apps/scraper/update_pokefuta.py` を実行します。主な処理:
+日次 10:00 UTC は `.github/workflows/update-pokefuta.yml` が `apps/scraper/update_pokefuta.py` を実行します。主な処理:
+
 1. 新規マンホール検出 (未登録 ID でページ取得成功)
 2. 削除検出 (以前 active だった ID が 404 もしくは座標抽出失敗) → status=deleted
 3. 変更検出 (タイトル / lat / lng / pokemons の差分)
@@ -29,14 +39,16 @@ git add docs/pokefuta.ndjson && git commit -m "chore: publish initial dataset"
 	- `added_at`: Web UI 最近追加フィルタ用 (常に first_seen と同値)
 	- `last_updated`: 内容差分または status 変化が発生した最新日時 (差分ない再取得では更新しない)
 	- `status`: active | deleted
-5. `apps/scraper/pokefuta.ndjson` を全レコード (deleted 含む) で更新
-6. 公開用 `docs/pokefuta.ndjson` は active のみ出力
+5. **内部用** `apps/scraper/pokefuta.ndjson` を全レコード (deleted 含む) で更新
+6. **公開用** `docs/pokefuta.ndjson` は active レコードのみ出力
 7. 差分を `CHANGELOG.md` に追記し、変更あれば自動 PR 作成
+
+**重要：** 内部版（`apps/scraper/pokefuta.ndjson`）は削除済みレコードも保持し、完全な履歴を保証します。公開版（`docs/pokefuta.ndjson`）は軽量化のため active レコードのみ配信します。
 
 ローカル検証例:
 ```bash
-python apps/scraper/update_pokefuta.py --scan-max 200 --out apps/scraper/pokefuta.ndjson --copy-to docs/pokefuta.ndjson --log-level DEBUG
-git diff --name-only
+python apps/scraper/update_pokefuta.py --scan-max 200 --out apps/scraper/pokefuta.ndjson --log-level DEBUG
+git diff apps/scraper/pokefuta.ndjson --name-only
 ```
 
 ### スキーマ拡張 (NDJSON)
@@ -70,29 +82,42 @@ git diff --name-only
 ## GitHub Actions (Artifact デプロイ方式)
 日次差分更新と公開デプロイを分離しました。
 
-### 1. データ更新 (差分検出 + PR): `.github/workflows/scrape-daily.yml`
-毎日 10:00 UTC に実行し、以下のみを行います:
+### 1. データ更新 (差分検出 + PR): `.github/workflows/update-pokefuta.yml`
+**毎日 10:00 UTC** に実行し、以下のみを行います:
 - スクレイピング差分更新 (`apps/scraper/update_pokefuta.py`)
-- 内部データファイル更新 (`apps/scraper/pokefuta.ndjson` 全レコード)
-- 差分あれば `CHANGELOG.md` 追記と PR 作成 (生成物は含めない)
-
-公開用 active レコードはワークフロー内で一時的に `/tmp/pokefuta_public.ndjson` に書き出し、コミットしません。
+- **内部用** `apps/scraper/pokefuta.ndjson` を全レコード（deleted 含む）で更新
+- **公開用** `docs/pokefuta.ndjson` を active レコードのみで更新
+- 差分あれば `CHANGELOG.md` 追記と PR 作成
+- KML スナップショット生成 (`docs/pokefuta.kml`)
 
 ### 2. Pages Artifact ビルド & デプロイ: `.github/workflows/pages-deploy.yml`
-毎日 10:30 UTC (更新後) に実行し、以下を行います:
-1. `dist/` を作成し active レコードのみの `pokefuta.ndjson` を生成。
-2. ソース HTML (`apps/web/*.html`) を `dist/index.html`, `dist/nearby.html` としてコピー。
-3. 旧 URL 互換用リダイレクト `dist/nearby_manholes.html` を生成。
-4. アセット/アイコンを `dist/` へ配置。
-5. `upload-pages-artifact` → `deploy-pages` で GitHub Pages に反映。
+**毎日 10:30 UTC** (update-pokefuta.yml 実行後) に実行し、以下を行います:
+1. `dist/` ディレクトリを作成
+2. 公開用データ (`docs/pokefuta.ndjson`) を `dist/` へコピー
+3. ソース HTML (`apps/web/*.html`) を `dist/index.html`, `dist/nearby.html` としてコピー
+4. 旧 URL 互換用リダイレクト `dist/nearby_manholes.html` を生成
+5. アセット/アイコンを `dist/assets/` へ配置
+6. `upload-pages-artifact` → `deploy-pages` で GitHub Pages に反映
 
-`dist/` は Git にコミットせず、生成物を履歴から排除することで PR ノイズとリポジトリ肥大化を防ぎます。
+**重要：** `dist/` は Git にコミットされず、毎回フレッシュに生成されます。これにより PR ノイズとリポジトリ肥大化を防ぎます。
+
+### ディレクトリ構成
+
+| ディレクトリ | 役割 | 管理方式 |
+|-----------|------|----------|
+| `apps/scraper/pokefuta.ndjson` | **内部用完全版** - 全レコード (active + deleted) の主要データソース | Git コミット・手動/自動更新 |
+| `docs/pokefuta.ndjson` | **公開用アクティブ版** - active レコードのみ。GitHub Releases、API エンドポイント、README の参照先 | Git コミット・自動更新 (update-pokefuta.yml) |
+| `docs/*.kml` | **KML スナップショット** - Google Earth 互換形式 | Git コミット・自動更新 |
+| `dist/pokefuta.ndjson` | **Pages Artifact 用** - 公開用アクティブ版の複製 | Git 未追跡・生成物 |
+| `apps/web/*.html` | **Web UI ソース** - 編集対象 | Git コミット・手動編集 |
+| `dist/*` | **Pages 公開物** - HTML + assets + data の統合 | Git 未追跡・pages-deploy.yml が生成 |
 
 ### フロントエンド編集ポリシー
 編集対象は **`apps/web/index.html`** / **`apps/web/nearby_manholes.html`** などソースのみ。公開ページは Artifact から生成されるため直接編集できません。
 
-### 移行履歴
-以前は `docs/` フォルダをコミットして公開していましたが Artifact 方式へ移行し、今後削除予定です (互換リダイレクトは Artifact 内で再生成)。
+### 削除済みレコードの管理
+- **内部版** (`apps/scraper/pokefuta.ndjson`): `status=deleted` レコードを永続保持し、削除履歴を保証
+- **公開版** (`docs/pokefuta.ndjson`): active レコードのみを配信（軽量化・ユーザー体験向上）
 
 ## 今後の改善アイデア
 - 多言語ポケモン名の正規化マッピング

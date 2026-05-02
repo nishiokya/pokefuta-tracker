@@ -37,12 +37,12 @@ jobs:
             --out apps/scraper/pokefuta.ndjson \
             --log-level INFO
 
-      - name: Copy active dataset to docs (for GitHub Pages)
+      - name: Copy active dataset to docs and dist (for GitHub Pages)
         run: |
           # Filter out deleted records for public consumption
           python -c "
           import json
-          import sys
+          import os
           with open('apps/scraper/pokefuta.ndjson', 'r', encoding='utf-8') as f:
               active_records = []
               for line in f:
@@ -51,6 +51,7 @@ jobs:
                       if record.get('status') == 'active':
                           active_records.append(record)
           
+          os.makedirs('docs', exist_ok=True)
           with open('docs/pokefuta.ndjson', 'w', encoding='utf-8') as f:
               for record in active_records:
                   json.dump(record, f, ensure_ascii=False, separators=(',', ':'))
