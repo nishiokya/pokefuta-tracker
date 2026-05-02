@@ -148,16 +148,24 @@ def parse_detail(detail_url: str, html: str, logger: logging.Logger) -> Optional
     # 住所の取得 (テキストから住所らしき文字列を抽出)
     address = ""
     # 住所パターンを探す（都道府県名 + 市区町村 + 丁目・番地など）
+    # 複数パターンを試行: 詳細 → 簡略 → 県市のみ の順で優先度を下げる
     text_content = soup.get_text()
     address_patterns = [
-        r'([^。\n]*(?:県|府|道|都)[^。\n]*(?:市|区|町|村)[^。\n]*(?:\d+[-−‐]\d+[-−‐]\d+|\d+丁目|\d+番地)[^。\n]*)',
-        r'([^。\n]*(?:市|区|町|村)[^。\n]*(?:\d+[-−‐]\d+[-−‐]\d+|\d+丁目|\d+番地)[^。\n]*)',
+        # パターン1: 県名 + 市区町村 + (丁目|番地|号|番|複合数字) ← 最優先：詳細アドレス
+        r'([^。\n]*(?:県|府|道|都)[^。\n]*(?:市|区|町|村)[^。\n]*(?:\d+[-−‐]\d+[-−‐]\d+|\d+[-−‐]\d+|\d+丁目|\d+番地|\d+号|\d+番)[^。\n]*)',
+        # パターン2: 市区町村 + (丁目|番地|号|番|複合数字)
+        r'([^。\n]*(?:市|区|町|村)[^。\n]*(?:\d+[-−‐]\d+[-−‐]\d+|\d+[-−‐]\d+|\d+丁目|\d+番地|\d+号|\d+番)[^。\n]*)',
+        # パターン3: 県名 + 市区町村のみ（丁目・番地なし）← 最後の手段：シティレベル
+        r'([^。\n]*(?:県|府|道|都)[^。\n]*(?:市|区|町|村)[^。、\n]*)',
     ]
     for pattern in address_patterns:
         matches = re.findall(pattern, text_content)
         if matches:
             # 最も長い住所らしきものを選択
             address = max(matches, key=len).strip()
+            # パターン3の場合は短すぎないか確認（県市名のみは除外）
+            if len(address) < 4 and pattern == address_patterns[2]:
+                continue
             break
 
     # Use second precision UTC format compatible with JS Date parsing
