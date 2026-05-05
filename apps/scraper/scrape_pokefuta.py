@@ -150,23 +150,91 @@ def parse_detail(detail_url: str, html: str, logger: logging.Logger) -> Optional
     # 住所パターンを探す（都道府県名 + 市区町村 + 丁目・番地など）
     # 複数パターンを試行: 詳細 → 簡略 → 県市のみ の順で優先度を下げる
     text_content = soup.get_text()
-    address_patterns = [
-        # パターン1: 県名 + 市区町村 + (丁目|番地|号|番|複合数字) ← 最優先：詳細アドレス
-        r'([^。\n]*(?:県|府|道|都)[^。\n]*(?:市|区|町|村)[^。\n]*(?:\d+[-−‐]\d+[-−‐]\d+|\d+[-−‐]\d+|\d+丁目|\d+番地|\d+号|\d+番)[^。\n]*)',
-        # パターン2: 市区町村 + (丁目|番地|号|番|複合数字)
-        r'([^。\n]*(?:市|区|町|村)[^。\n]*(?:\d+[-−‐]\d+[-−‐]\d+|\d+[-−‐]\d+|\d+丁目|\d+番地|\d+号|\d+番)[^。\n]*)',
-        # パターン3: 県名 + 市区町村のみ（丁目・番地なし）← 最後の手段：シティレベル
-        r'([^。\n]*(?:県|府|道|都)[^。\n]*(?:市|区|町|村)[^。、\n]*)',
-    ]
-    for pattern in address_patterns:
-        matches = re.findall(pattern, text_content)
+    
+    # ノイズ削除用キーワード
+    critical_noise = ['｜', 'ポケモン', 'マンホール', 'ポケふた']
+    
+    # パターン2（特定パターン）：駅・公園・センター・丁目・番地・数字などを含む
+    specific_detail_pattern = r'([\u4e00-\u9fff]*.{0,3}?(?:県|府|道|都).{0,20}?(?:市|区|町|村).{0,80}?(?:[\u4e00-\u9fff]+町[\u4e00-\u9fff]*\d*|大字[\u4e00-\u9fff]+\d+|字[\u4e00-\u9fff]+\d+|\d+[-−‐]\d+[-−‐]\d+|\d+[-−‐]\d+|\d+丁目|[\u4e00-\u9fff]+駅|[\u4e00-\u9fff]+センター|[\u4e00-\u9fff]+公園))'
+    
+    # パターン1a（町村+数字）：市町村の直後に漢字+数字
+    detailed_pattern_townnum = r'([\u4e00-\u9fff]*.{0,3}?(?:県|府|道|都).{0,20}?(?:市|区|町|村)[\u4e00-\u9fff]+\d+)'
+    
+    # パターン1b（県+市町村+漢字地名）：市町村の直後に2-3文字の漢字地名
+    detailed_pattern_placename = r'((?:県|府|道|都)[^\n。]*?(?:市|区|町|村)[\u4e00-\u9fff]{2,3}(?=[^\n。\s]|$))'
+    
+    # パターン1（より広い範囲）：県+市町村+その後の100文字以内
+    detailed_pattern = r'([\u4e00-\u9fff]*.{0,3}?(?:県|府|道|都).{0,20}?(?:市|区|町|村).{0,100}?[^\n。\s](?:\s|$))'
+    
+    # フォールバック
+    fallback_pattern = r'((?:県|府|道|都)[^\n。]*?(?:市|区|町|村))'
+    
+    # 詳細パターンを試す（優先順: 特定パターン → 町村+数字 → 地名 → 広いパターン → フォールバック）
+    lines = text_content.split('\n')
+    
+    # パターン2（特定パターン）を優先
+    for line in lines:
+        matches = re.findall(specific_detail_pattern, line)
         if matches:
-            # 最も長い住所らしきものを選択
-            address = max(matches, key=len).strip()
-            # パターン3の場合は短すぎないか確認（県市名のみは除外）
-            if len(address) < 4 and pattern == address_patterns[2]:
-                continue
+            for candidate in matches:
+                candidate = candidate.strip()
+                if not any(keyword in candidate for keyword in critical_noise):
+                    address = candidate
+                    break
+        if address:
             break
+    
+    # パターン1a（町村+数字）を試す
+    if not address:
+        for line in lines:
+            matches = re.findall(detailed_pattern_townnum, line)
+            if matches:
+                for candidate in matches:
+                    candidate = candidate.strip()
+                    if not any(keyword in candidate for keyword in critical_noise):
+                        address = candidate
+                        break
+            if address:
+                break
+    
+    # パターン1b（県+市町村+漢字地名）を試す
+    if not address:
+        for line in lines:
+            matches = re.findall(detailed_pattern_placename, line)
+            if matches:
+                for candidate in matches:
+                    candidate = candidate.strip()
+                    if not any(keyword in candidate for keyword in critical_noise):
+                        address = candidate
+                        break
+            if address:
+                break
+    
+    # パターン1（より広い範囲）を試す
+    if not address:
+        for line in lines:
+            matches = re.findall(detailed_pattern, line)
+            if matches:
+                for candidate in matches:
+                    candidate = candidate.strip()
+                    if len(candidate) > 10 and not any(keyword in candidate for keyword in critical_noise):
+                        address = candidate
+                        break
+            if address:
+                break
+    
+    # フォールバック
+    if not address:
+        for line in lines:
+            matches = re.findall(fallback_pattern, line)
+            if matches:
+                for candidate in matches:
+                    candidate = candidate.strip()
+                    if not any(keyword in candidate for keyword in critical_noise):
+                        address = candidate
+                        break
+            if address:
+                break
 
     # Use second precision UTC format compatible with JS Date parsing
     now_iso = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
@@ -203,48 +271,17 @@ def atomic_write_array(path: str, rows: List[Dict]):
 
 def atomic_write_ndjson(path: str, rows: List[Dict]):
     d = os.path.dirname(os.path.abspath(path)) or "."
-    # English
-    html_en = fetch(detail_url, logger, HEADERS_EN)
-    if html_en:
-        soup_en = BeautifulSoup(html_en, "html.parser")
-        # simple pokemon extraction
-        p_en = []
-        for a in soup_en.select("a[href]"):
-            t = a.get_text(strip=True)
-            if not t:
-                continue
-            if any(k in t for k in ["Pokémon", "Pokemon", "Pokédex"]):
-                nm = re.sub(r"(Pokémon|Pokemon|Pokédex)", "", t).strip()
-                if nm:
-                    p_en.append(nm)
-        rec["pokemons_en"] = sorted({x for x in p_en if x})
-    # Chinese
-    html_zh = fetch(detail_url, logger, HEADERS_ZH)
-    if html_zh:
-        soup_zh = BeautifulSoup(html_zh, "html.parser")
-        p_zh = []
-        for a in soup_zh.select("a[href]"):
-            t = a.get_text(strip=True)
-            if not t:
-                continue
-            if any(k in t for k in ["宝可梦", "圖鑑", "图鉴"]):
-                nm = re.sub(r"(宝可梦|圖鑑|图鉴)", "", t).strip()
-                if nm:
-                    p_zh.append(nm)
-        rec["pokemons_zh"] = sorted({x for x in p_zh if x})
-
-
-def atomic_write_array(path: str, rows: List[Dict]):
-    d = os.path.dirname(os.path.abspath(path)) or "."
     os.makedirs(d, exist_ok=True)
     with tempfile.NamedTemporaryFile("w", delete=False, dir=d, encoding="utf-8") as tmp:
-        json.dump(rows, tmp, ensure_ascii=False, indent=2)
+        for row in rows:
+            json.dump(row, tmp, ensure_ascii=False)
+            tmp.write("\n")
         tmp.flush(); os.fsync(tmp.fileno())
         p = tmp.name
     os.replace(p, path)
 
 
-def atomic_write_ndjson(path: str, rows: List[Dict]):
+def atomic_write_array(path: str, rows: List[Dict]):
     d = os.path.dirname(os.path.abspath(path)) or "."
     os.makedirs(d, exist_ok=True)
     with tempfile.NamedTemporaryFile("w", delete=False, dir=d, encoding="utf-8") as tmp:
