@@ -144,6 +144,24 @@ def parse_detail(detail_url: str, html: str, logger: logging.Logger) -> Optional
             if pf.endswith("県") or pf.endswith("府") or pf.endswith("道") or pf.endswith("都"):
                 prefecture = pf
                 city = ct.rstrip("市町村区") if ct else ""
+    
+    # prefecture/city がまだ空の場合、addressから抽出
+    if not prefecture or not city:
+        # addressから都道府県と市区町村を抽出
+        pref_pattern = r'((?:北海道|青森県|岩手県|宮城県|秋田県|山形県|福島県|茨城県|栃木県|群馬県|埼玉県|千葉県|東京都|神奈川県|新潟県|富山県|石川県|福井県|山梨県|長野県|岐阜県|愛知県|三重県|滋賀県|京都府|大阪府|兵庫県|奈良県|和歌山県|鳥取県|島根県|岡山県|広島県|山口県|徳島県|香川県|愛媛県|高知県|福岡県|佐賀県|長崎県|熊本県|大分県|宮崎県|鹿児島県|沖縄県))'
+        
+        if address:
+            # Addressから県を抽出
+            m = re.search(pref_pattern, address)
+            if m and not prefecture:
+                prefecture = m.group(1)
+            
+            # Addressから市区町村を抽出（県の後ろ）
+            if prefecture:
+                city_pattern = r'(?:' + re.escape(prefecture) + r')([^\s]*?(?:市|区|町|村))'
+                m = re.search(city_pattern, address)
+                if m and not city:
+                    city = m.group(1).rstrip("市町村区")
 
     # 住所の取得 (テキストから住所らしき文字列を抽出)
     address = ""
@@ -234,6 +252,19 @@ def parse_detail(detail_url: str, html: str, logger: logging.Logger) -> Optional
                         address = candidate
                         break
             if address:
+                break
+    
+    # Address 後処理：施設名の除去
+    if address:
+        # 施設名パターン（ポケパーク、公園、センター等）を除去
+        facility_patterns = [
+            r'[ポ公].*?(?:パーク|園|センター|公園).*$',  # ポケパーク、公園、センター等
+            r'敷地内.*$',  # 敷地内以降
+            r'[（(].*[）)].*$',  # （）内の注釈
+        ]
+        for pattern in facility_patterns:
+            address = re.sub(pattern, '', address).strip()
+            if not address:
                 break
 
     # Use second precision UTC format compatible with JS Date parsing
