@@ -15,6 +15,8 @@ create table manhole (
   location geography(Point, 4326),
   pokemons text[],
   detail_url text,
+  prefecture_site_url text,              -- 都道府県主体のページURL
+  is_prefecture_site boolean default false, -- 都道府県主体かどうか
   source_last_checked timestamptz
 );
 create index on manhole using gist(location);
