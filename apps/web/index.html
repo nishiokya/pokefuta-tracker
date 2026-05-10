@@ -366,11 +366,12 @@
           allMarkers.push(marker); marker.addTo(map);
         });
         
-        // 都道府県ごとの bounding box マップを構築
-        // マンホール2件以上: 実データのbbox、1件: 同じスケール、0件: Gist中心座標±0.5度
+        // 都道府県ごとのマンホール数と bounding box マップを構築
+        // マンホール2件以上: 実データのbbox（最小縮尺）、1件以下: Gist中心座標±0.5度（統一スケール）
         const prefectureBounds = {};
+        const prefectureMarkerCounts = {};  // 各県のマンホール数をカウント
         
-        // マンホールがある県の bbox を計算
+        // マンホールがある県の bbox と数をカウント
         const prefectureCoords = {};
         allMarkers.forEach(marker => {
           const pref = marker.pokefutaData.prefecture;
@@ -378,10 +379,12 @@
           prefectureCoords[pref].push([marker.pokefutaData.lat, marker.pokefutaData.lng]);
         });
         
-        // 各県の bbox を計算
+        // 各県の bbox を計算（2件以上のみ実データbboxを使用）
         for (const [pref, coords] of Object.entries(prefectureCoords)) {
-          if (coords.length >= 1) {
-            // マンホールがある場合、最大・最小を計算
+          prefectureMarkerCounts[pref] = coords.length;
+          
+          if (coords.length >= 2) {
+            // マンホール2件以上: 実データから最大・最小を計算（最小縮尺）
             const lats = coords.map(c => c[0]);
             const lngs = coords.map(c => c[1]);
             const minLat = Math.min(...lats);
@@ -389,12 +392,24 @@
             const minLng = Math.min(...lngs);
             const maxLng = Math.max(...lngs);
             prefectureBounds[pref] = [[minLat, minLng], [maxLat, maxLng]];
+          } else {
+            // マンホール1件: Gist中心座標±0.5度を使用（統一スケール）
+            const center = prefectureCenterCoords[pref];
+            if (center) {
+              const latOffset = 0.5;
+              const lngOffset = 0.5;
+              prefectureBounds[pref] = [
+                [center[0] - latOffset, center[1] - lngOffset],  // 南西
+                [center[0] + latOffset, center[1] + lngOffset]   // 北東
+              ];
+            }
           }
         }
         
-        // マンホールがない県は Gist 中心座標から ±0.5度
+        // マンホールがない県は全て Gist 中心座標から ±0.5度
         for (const [pref, center] of Object.entries(prefectureCenterCoords)) {
           if (!prefectureBounds[pref]) {
+            prefectureMarkerCounts[pref] = 0;  // マンホール0件
             const latOffset = 0.5;
             const lngOffset = 0.5;
             prefectureBounds[pref] = [
@@ -789,9 +804,10 @@
     });
 
     // Leafletの機能を使って都道府県のポケふたにズームする関数
-    // マンホール2件以上: 実データbbox、1件以上: 統一スケール、0件: Gist中心座標±0.5度
+    // マンホール2件以上: マンホール全て入る最小縮尺、1件以下: Gist中心座標±0.5度（統一スケール）
     function zoomToPrefecture(prefecture) {
-      console.log(`Zooming to prefecture: ${prefecture}, prefectureBounds available: ${!!prefectureBounds[prefecture]}`);
+      const markerCount = prefectureMarkerCounts[prefecture] || 0;
+      console.log(`Zooming to prefecture: ${prefecture}, marker count: ${markerCount}, prefectureBounds available: ${!!prefectureBounds[prefecture]}`);
       
       // prefectureBounds がない場合はフォールバック
       if (!prefectureBounds || !prefectureBounds[prefecture]) {
@@ -804,17 +820,25 @@
       }
       
       try {
-        // 全ケース共通: 統一スケール (padding: 50px, maxZoom: 13)
         const bounds = L.latLngBounds(prefectureBounds[prefecture]);
-        map.fitBounds(bounds, {
-          padding: [50, 50],
-          maxZoom: 13
-        });
+        
+        if (markerCount >= 2) {
+          // マンホール2件以上: マンホール全て入る最小縮尺（maxZoomなし、自動スケール）
+          map.fitBounds(bounds, {
+            padding: [50, 50]
+          });
+          console.log(`Zoomed to ${prefecture} with ${markerCount} markers (minimum zoom to fit all data)`);
+        } else {
+          // マンホール1件以下: Gist中心座標±0.5度で統一スケール (padding: 50px, maxZoom: 13)
+          map.fitBounds(bounds, {
+            padding: [50, 50],
+            maxZoom: 13
+          });
+          console.log(`Zoomed to ${prefecture} with ${markerCount} markers (unified scale)`);
+        }
         
         // 都道府県テーブル行を一時的にハイライト
         highlightPrefectureRow(prefecture);
-        
-        console.log(`Successfully zoomed to ${prefecture}`);
         
       } catch (error) {
         console.error(`Error zooming to ${prefecture}:`, error);
