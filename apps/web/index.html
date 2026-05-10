@@ -153,19 +153,19 @@
       '鹿児島県': [31.560, 130.558], '沖縄県': [26.212, 127.679]
     };
 
-    let allMarkers = [];
-    let allData = [];
-    let prefectureCounts = {};
-    let prefectureSiteCounts = {};
-    let cityCounts = {};
-    let selectedPrefecture = '';
-    let pokemonCounts = {};
-    let selectedPokemons = [];
-    let currentTab = 'prefecture';
-    let filterRecent = false; // recent 30 days filter
-    let hasAddedAtField = false; // whether dataset has any date field
-    let prefectureBounds = {};  // 都道府県ごとのbounding box（グローバルスコープ）
-    let prefectureMarkerCounts = {};  // 都道府県ごとのマンホール数（グローバルスコープ）
+    var allMarkers = [];
+    var allData = [];
+    var prefectureCounts = {};
+    var prefectureSiteCounts = {};
+    var cityCounts = {};
+    var selectedPrefecture = '';
+    var pokemonCounts = {};
+    var selectedPokemons = [];
+    var currentTab = 'prefecture';
+    var filterRecent = false; // recent 30 days filter
+    var hasAddedAtField = false; // whether dataset has any date field
+    var prefectureBounds = {};  // 都道府県ごとのbounding box（グローバルスコープ）
+    var prefectureMarkerCounts = {};  // 都道府県ごとのマンホール数（グローバルスコープ）
     const PREFECTURE_BOUNDS_OFFSET = 0.5;  // 都道府県 bounding box のオフセット（度）
 
     // URL パラメータから初期都道府県を取得する関数
