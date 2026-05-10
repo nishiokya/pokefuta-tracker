@@ -642,12 +642,15 @@
           <td style="text-align: center;">${siteIcon}</td>
         `;
         if (count > 0) {
-          // シングルクリック: フィルタリング
-          row.addEventListener('click', () => filterByPrefectureFromTable(prefecture));
-          // ダブルクリック: 地図移動
+          // シングルクリック: フィルタリング + ズーム
+          row.addEventListener('click', () => {
+            filterByPrefectureFromTable(prefecture);
+            zoomToPrefecture(prefecture);
+          });
+          // ダブルクリック: 地図移動（単独でも機能）
           row.addEventListener('dblclick', () => zoomToPrefecture(prefecture));
           row.style.cursor = 'pointer';
-          row.title = `クリック: ${prefecture}でフィルタ / ダブルクリック: 地図移動`;
+          row.title = `クリック: ${prefecture}でフィルタ+ズーム / ダブルクリック: 地図移動`;
         }
         // Append row (BUGFIX: previously not appended, table remained empty)
         tbody.appendChild(row);
