@@ -166,6 +166,7 @@
     let hasAddedAtField = false; // whether dataset has any date field
     let prefectureBounds = {};  // 都道府県ごとのbounding box（グローバルスコープ）
     let prefectureMarkerCounts = {};  // 都道府県ごとのマンホール数（グローバルスコープ）
+    const PREFECTURE_BOUNDS_OFFSET = 0.5;  // 都道府県 bounding box のオフセット（度）
 
     // URL パラメータから初期都道府県を取得する関数
     function getInitialPrefectureFromURL() {
@@ -395,28 +396,24 @@
             const maxLng = Math.max(...lngs);
             prefectureBounds[pref] = [[minLat, minLng], [maxLat, maxLng]];
           } else {
-            // マンホール1件: 実マーカー座標を中心に±0.5度を使用（統一スケール）
+            // マンホール1件: 実マーカー座標を中心に±PREFECTURE_BOUNDS_OFFSETを使用（統一スケール）
             const markerCoord = coords[0];
             if (markerCoord) {
-              const latOffset = 0.5;
-              const lngOffset = 0.5;
               prefectureBounds[pref] = [
-                [markerCoord[0] - latOffset, markerCoord[1] - lngOffset],  // 南西
-                [markerCoord[0] + latOffset, markerCoord[1] + lngOffset]   // 北東
+                [markerCoord[0] - PREFECTURE_BOUNDS_OFFSET, markerCoord[1] - PREFECTURE_BOUNDS_OFFSET],  // 南西
+                [markerCoord[0] + PREFECTURE_BOUNDS_OFFSET, markerCoord[1] + PREFECTURE_BOUNDS_OFFSET]   // 北東
               ];
             }
           }
         }
         
-        // マンホールがない県は全て Gist 中心座標から ±0.5度
+        // マンホールがない県は全て Gist 中心座標から ±PREFECTURE_BOUNDS_OFFSETで仮想 box
         for (const [pref, center] of Object.entries(prefectureCenterCoords)) {
           if (!prefectureBounds[pref]) {
             prefectureMarkerCounts[pref] = 0;  // マンホール0件
-            const latOffset = 0.5;
-            const lngOffset = 0.5;
             prefectureBounds[pref] = [
-              [center[0] - latOffset, center[1] - lngOffset],  // 南西
-              [center[0] + latOffset, center[1] + lngOffset]   // 北東
+              [center[0] - PREFECTURE_BOUNDS_OFFSET, center[1] - PREFECTURE_BOUNDS_OFFSET],  // 南西
+              [center[0] + PREFECTURE_BOUNDS_OFFSET, center[1] + PREFECTURE_BOUNDS_OFFSET]   // 北東
             ];
           }
         }
@@ -642,13 +639,30 @@
           <td style="text-align: center;">${siteIcon}</td>
         `;
         if (count > 0) {
-          // シングルクリック: フィルタリング + ズーム
+          let clickTimer = null;  // ダブルクリック制御用タイマー
+          // シングルクリック: フィルタリング + 選択中バッジ更新 + ズーム
           row.addEventListener('click', () => {
-            filterByPrefectureFromTable(prefecture);
-            zoomToPrefecture(prefecture);
+            // ダブルクリックの場合はスキップ（タイマーがあれば2回目のクリック）
+            if (clickTimer) {
+              clearTimeout(clickTimer);
+              clickTimer = null;
+              return;
+            }
+            clickTimer = setTimeout(() => {
+              filterByPrefectureFromTable(prefecture);
+              showSelectedPrefectureBadge();
+              zoomToPrefecture(prefecture);
+              clickTimer = null;
+            }, 250);  // 250ms以内の2回クリックはダブルクリックと判定
           });
           // ダブルクリック: 地図移動（単独でも機能）
-          row.addEventListener('dblclick', () => zoomToPrefecture(prefecture));
+          row.addEventListener('dblclick', () => {
+            if (clickTimer) {
+              clearTimeout(clickTimer);
+              clickTimer = null;
+            }
+            zoomToPrefecture(prefecture);
+          });
           row.style.cursor = 'pointer';
           row.title = `クリック: ${prefecture}でフィルタ+ズーム / ダブルクリック: 地図移動`;
         }
@@ -809,7 +823,8 @@
     });
 
     // Leafletの機能を使って都道府県のポケふたにズームする関数
-    // マンホール2件以上: マンホール全て入る最小縮尺、1件以下: Gist中心座標±0.5度（統一スケール）
+    // マンホール2件以上: マンホール全て入る最小縮尺（maxZoom:13で過度な拡大を防止）
+    // マンホール1件以下: 実マーカー座標 or Gist中心座標 ±0.5度で統一スケール
     function zoomToPrefecture(prefecture) {
       const markerCount = prefectureMarkerCounts[prefecture] || 0;
       console.log(`Zooming to prefecture: ${prefecture}, marker count: ${markerCount}, prefectureBounds available: ${!!prefectureBounds[prefecture]}`);
@@ -828,11 +843,12 @@
         const bounds = L.latLngBounds(prefectureBounds[prefecture]);
         
         if (markerCount >= 2) {
-          // マンホール2件以上: マンホール全て入る最小縮尺（maxZoomなし、自動スケール）
+          // マンホール2件以上: マンホール全て入る最小縮尺でズーム（maxZoom: 13で過度な拡大を防止）
           map.fitBounds(bounds, {
-            padding: [50, 50]
+            padding: [50, 50],
+            maxZoom: 13
           });
-          console.log(`Zoomed to ${prefecture} with ${markerCount} markers (minimum zoom to fit all data)`);
+          console.log(`Zoomed to ${prefecture} with ${markerCount} markers (fit all data with zoom cap)`);
         } else {
           // マンホール1件以下: Gist中心座標±0.5度で統一スケール (padding: 50px, maxZoom: 13)
           map.fitBounds(bounds, {
