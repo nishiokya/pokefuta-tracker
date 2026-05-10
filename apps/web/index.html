@@ -164,6 +164,8 @@
     let currentTab = 'prefecture';
     let filterRecent = false; // recent 30 days filter
     let hasAddedAtField = false; // whether dataset has any date field
+    let prefectureBounds = {};  // 都道府県ごとのbounding box（グローバルスコープ）
+    let prefectureMarkerCounts = {};  // 都道府県ごとのマンホール数（グローバルスコープ）
 
     // URL パラメータから初期都道府県を取得する関数
     function getInitialPrefectureFromURL() {
@@ -366,15 +368,15 @@
           allMarkers.push(marker); marker.addTo(map);
         });
         
-        // 都道府県ごとのマンホール数と bounding box マップを構築
-        // マンホール2件以上: 実データのbbox（最小縮尺）、1件以下: Gist中心座標±0.5度（統一スケール）
-        const prefectureBounds = {};
-        const prefectureMarkerCounts = {};  // 各県のマンホール数をカウント
+        // 都道府県ごとのマンホール数と bounding box マップを構築（グローバル変数を使用）
+        // マンホール2件以上: 実データのbbox（最小縮尺）、1件以下: 実マーカー座標±0.5度（統一スケール）
+        prefectureBounds = {};
+        prefectureMarkerCounts = {};
         
         // マンホールがある県の bbox と数をカウント
         const prefectureCoords = {};
         allMarkers.forEach(marker => {
-          const pref = marker.pokefutaData.prefecture;
+          const pref = marker.pokefutaData.prefecture || '不明';  // undefined を正規化
           if (!prefectureCoords[pref]) prefectureCoords[pref] = [];
           prefectureCoords[pref].push([marker.pokefutaData.lat, marker.pokefutaData.lng]);
         });
@@ -393,14 +395,14 @@
             const maxLng = Math.max(...lngs);
             prefectureBounds[pref] = [[minLat, minLng], [maxLat, maxLng]];
           } else {
-            // マンホール1件: Gist中心座標±0.5度を使用（統一スケール）
-            const center = prefectureCenterCoords[pref];
-            if (center) {
+            // マンホール1件: 実マーカー座標を中心に±0.5度を使用（統一スケール）
+            const markerCoord = coords[0];
+            if (markerCoord) {
               const latOffset = 0.5;
               const lngOffset = 0.5;
               prefectureBounds[pref] = [
-                [center[0] - latOffset, center[1] - lngOffset],  // 南西
-                [center[0] + latOffset, center[1] + lngOffset]   // 北東
+                [markerCoord[0] - latOffset, markerCoord[1] - lngOffset],  // 南西
+                [markerCoord[0] + latOffset, markerCoord[1] + lngOffset]   // 北東
               ];
             }
           }
