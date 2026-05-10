@@ -365,6 +365,45 @@
           marker.pokefutaData = d; marker.pokefutaData.prefectureCode = prefectureCode;
           allMarkers.push(marker); marker.addTo(map);
         });
+        
+        // 都道府県ごとの bounding box マップを構築
+        // マンホール2件以上: 実データのbbox、1件: 同じスケール、0件: Gist中心座標±0.5度
+        const prefectureBounds = {};
+        
+        // マンホールがある県の bbox を計算
+        const prefectureCoords = {};
+        allMarkers.forEach(marker => {
+          const pref = marker.pokefutaData.prefecture;
+          if (!prefectureCoords[pref]) prefectureCoords[pref] = [];
+          prefectureCoords[pref].push([marker.pokefutaData.lat, marker.pokefutaData.lng]);
+        });
+        
+        // 各県の bbox を計算
+        for (const [pref, coords] of Object.entries(prefectureCoords)) {
+          if (coords.length >= 1) {
+            // マンホールがある場合、最大・最小を計算
+            const lats = coords.map(c => c[0]);
+            const lngs = coords.map(c => c[1]);
+            const minLat = Math.min(...lats);
+            const maxLat = Math.max(...lats);
+            const minLng = Math.min(...lngs);
+            const maxLng = Math.max(...lngs);
+            prefectureBounds[pref] = [[minLat, minLng], [maxLat, maxLng]];
+          }
+        }
+        
+        // マンホールがない県は Gist 中心座標から ±0.5度
+        for (const [pref, center] of Object.entries(prefectureCenterCoords)) {
+          if (!prefectureBounds[pref]) {
+            const latOffset = 0.5;
+            const lngOffset = 0.5;
+            prefectureBounds[pref] = [
+              [center[0] - latOffset, center[1] - lngOffset],  // 南西
+              [center[0] + latOffset, center[1] + lngOffset]   // 北東
+            ];
+          }
+        }
+        
         populatePrefectureTable();
         populatePokemonGrid();
         updateStats();
@@ -373,7 +412,9 @@
         
         // URL パラメータから初期都道府県を選択
         const initialPref = getInitialPrefectureFromURL();
-        if (initialPref && prefectureCounts[initialPref]) {
+        console.log(`Initial prefecture from URL: ${initialPref}`);
+        if (initialPref) {
+          // マンホール有無に関わらず処理（0件の県でもズーム）
           filterByPrefectureFromTable(initialPref);
           showSelectedPrefectureBadge();
           // 地図をその都道府県にズーム
@@ -748,46 +789,32 @@
     });
 
     // Leafletの機能を使って都道府県のポケふたにズームする関数
+    // マンホール2件以上: 実データbbox、1件以上: 統一スケール、0件: Gist中心座標±0.5度
     function zoomToPrefecture(prefecture) {
-      console.log(`Zooming to prefecture: ${prefecture}`);
+      console.log(`Zooming to prefecture: ${prefecture}, prefectureBounds available: ${!!prefectureBounds[prefecture]}`);
       
-      // 指定された都道府県のマンホールマーカーを取得
-      const prefectureMarkers = allMarkers.filter(marker => {
-        const data = marker.pokefutaData;
-        return data && data.prefecture === prefecture;
-      });
-
-      if (prefectureMarkers.length === 0) {
-        console.warn(`No manholes found for prefecture: ${prefecture}`);
-        // マンホールがない場合は都道府県の中心座標にズーム
+      // prefectureBounds がない場合はフォールバック
+      if (!prefectureBounds || !prefectureBounds[prefecture]) {
+        console.warn(`No bounds found for prefecture: ${prefecture}`);
         const center = prefectureCenterCoords[prefecture];
         if (center) {
           map.setView(center, 8);
         }
         return;
       }
-
-      // LeafletのFeatureGroupを使って境界を計算
-      const group = L.featureGroup(prefectureMarkers);
       
       try {
-        if (prefectureMarkers.length === 1) {
-          // 1つのポケふたの場合：そのポケふたを中心にズーム
-          const marker = prefectureMarkers[0];
-          const data = marker.pokefutaData;
-          map.setView([data.lat, data.lng], 12);
-        } else {
-          // 複数のポケふたの場合：全てが見えるようにfitBounds
-          map.fitBounds(group.getBounds(), {
-            padding: [20, 20],
-            maxZoom: 14
-          });
-        }
+        // 全ケース共通: 統一スケール (padding: 50px, maxZoom: 13)
+        const bounds = L.latLngBounds(prefectureBounds[prefecture]);
+        map.fitBounds(bounds, {
+          padding: [50, 50],
+          maxZoom: 13
+        });
         
         // 都道府県テーブル行を一時的にハイライト
         highlightPrefectureRow(prefecture);
         
-        console.log(`Successfully zoomed to ${prefecture} with ${prefectureMarkers.length} pokefuta`);
+        console.log(`Successfully zoomed to ${prefecture}`);
         
       } catch (error) {
         console.error(`Error zooming to ${prefecture}:`, error);
