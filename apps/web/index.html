@@ -33,7 +33,7 @@
     <div class="controls-header">
       <div style="display: flex; align-items: center; justify-content: space-between;">
         <h3 id="page-title">ポケふたマップ</h3>
-        <button type="button" id="controls-toggle" class="controls-toggle-btn" aria-label="フロート表示切り替え" title="フロートを表示/非表示">−</button>
+        <button type="button" id="controls-toggle" class="controls-toggle-btn" aria-label="フロート表示切り替え" title="フロートを表示/非表示" aria-expanded="false" aria-controls="controls-content"></button>
       </div>
     </div>
     <div class="controls-content" role="region" aria-label="Filters and statistics">
@@ -43,7 +43,7 @@
         <label for="recent-toggle" style="margin:0; cursor:pointer; font-size:.75rem; font-weight:600;"><span data-i18n="recentLabel">🆕 直近1ヶ月</span></label>
         <div id="recent-summary" style="font-size:0.65rem; color:#555; margin-left:auto;"></div>
       </div>
-      <div id="prefecture-tab" class="tab-content active" role="tabpanel" tabindex="0" aria-labelledby="tab-prefecture">
+      <div id="prefecture-tab" class="tab-content active">
         <div id="selected-prefecture-badge" class="selected-prefecture-badge" style="display:none; margin:2px 0; font-size:0.85rem; background:#eef; padding:4px 8px; border-radius:6px;">
           <span class="badge-label" style="font-weight:600;">選択中:</span> <span class="badge-value"></span>
           <button type="button" class="badge-clear" style="margin-left:6px; background:#ccc; border:none; padding:2px 6px; border-radius:4px; cursor:pointer;" aria-label="選択解除" onclick="clearPrefectureSelection()">✖</button>
@@ -440,7 +440,7 @@
       });
     }
 
-    // Prefecture table toggle removed - table UI deleted
+// Prefecture table toggle機能は削除済み（テーブル自体は残存）
 
     function initControlsToggle() {
       const toggleBtn = document.getElementById('controls-toggle');
@@ -455,6 +455,7 @@
         controlsContent.classList.add('hidden');
         toggleBtn.classList.add('collapsed');
         toggleBtn.setAttribute('aria-label', 'フロート表示');
+        toggleBtn.setAttribute('aria-expanded', 'false');
       } else {
         controlsContent.classList.remove('hidden');
         toggleBtn.classList.remove('collapsed');
@@ -468,17 +469,19 @@
           controlsContent.classList.remove('hidden');
           toggleBtn.classList.remove('collapsed');
           toggleBtn.setAttribute('aria-label', 'フロート非表示');
+        toggleBtn.setAttribute('aria-expanded', 'true');
           localStorage.setItem('controlsHidden', 'false');
         } else {
           controlsContent.classList.add('hidden');
           toggleBtn.classList.add('collapsed');
           toggleBtn.setAttribute('aria-label', 'フロート表示');
+          toggleBtn.setAttribute('aria-expanded', 'false');
           localStorage.setItem('controlsHidden', 'true');
         }
       });
     }
 
-    function initSearchBoxToggle() {
+    // function initSearchBoxToggle() { // 削除済み
       const toggleBtn = document.getElementById('search-toggle');
       const searchWrapper = document.getElementById('search-box-wrapper');
       if (!toggleBtn || !searchWrapper) return;
@@ -672,12 +675,18 @@
         allPrefectures.push(['不明', prefectureCounts['不明']]);
       }
 
-      // Build map of prefecture to site URL (first one found)
+      // Build map of prefecture to site URL (first one found, http(s) & allowlist)
       const prefectureSiteUrls = {};
+      const allowedHost = 'local.pokemon.jp';
       allData.forEach(d => {
         const pref = d.prefecture || '不明';
         if (d.prefecture_site_url && !prefectureSiteUrls[pref]) {
-          prefectureSiteUrls[pref] = d.prefecture_site_url;
+          try {
+            const url = new URL(d.prefecture_site_url);
+            if ((url.protocol === 'http:' || url.protocol === 'https:') && url.hostname === allowedHost) {
+              prefectureSiteUrls[pref] = url.href;
+            }
+          } catch {}
         }
       });
 
@@ -685,9 +694,18 @@
         const row = document.createElement('tr');
         const code = prefectureCodeMap[prefecture] || '--';
         const siteUrl = prefectureSiteUrls[prefecture];
-        const siteCell = siteUrl 
-          ? `<a href="${siteUrl}" target="_blank" rel="noopener" style="color:#0066cc; text-decoration:none; font-weight:700;">🌐</a>`
-          : '—';
+        let siteCell = '—';
+        if (siteUrl) {
+          const a = document.createElement('a');
+          a.href = siteUrl;
+          a.target = '_blank';
+          a.rel = 'noopener';
+          a.style.color = '#0066cc';
+          a.style.textDecoration = 'none';
+          a.style.fontWeight = '700';
+          a.textContent = '🌐';
+          siteCell = a.outerHTML;
+        }
 
         // Style row differently if no pokefuta
         const countBadgeClass = count > 0 ? 'count-badge' : 'count-badge-zero';

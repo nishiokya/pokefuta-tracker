@@ -64,53 +64,6 @@
 #prefecture-filter, .search-input { width:100%; font:inherit; padding:6px 8px; border:var(--border-thick) solid var(--theme-shadow); background:var(--theme-cloth); font-size:.75rem; font-weight:600; margin-bottom:6px; }
 #prefecture-filter:focus, .search-input:focus { outline:3px solid var(--theme-accent2); }
 
-/* Table toggle button */
-.table-toggle-btn {
-  background: var(--theme-accent2);
-  color: #111;
-  border: var(--border-thick) solid var(--theme-shadow);
-  padding: 4px 8px;
-  font-size: .65rem;
-  font-weight: 800;
-  cursor: pointer;
-  border-radius: 4px;
-  transition: all 0.15s ease;
-  min-width: 24px;
-}
-.table-toggle-btn:hover {
-  background: var(--theme-accent);
-  color: #fff;
-}
-.table-toggle-btn.collapsed {
-  transform: rotate(-90deg);
-}
-
-/* Table wrapper for show/hide */
-.table-wrapper {
-  display: block;
-  overflow-y: auto;
-  transition: all 0.2s ease;
-  max-height: 350px;
-  margin-bottom: 2px;
-}
-.table-wrapper.hidden {
-  max-height: 0;
-  overflow: hidden;
-}
-
-/* Search box wrapper for show/hide */
-.search-wrapper {
-  display: block;
-  overflow: hidden;
-  transition: all 0.2s ease;
-  max-height: 100px;
-  margin-bottom: 6px;
-}
-.search-wrapper.hidden {
-  max-height: 0;
-  overflow: hidden;
-  margin-bottom: 0;
-}
 
 .prefecture-table { width:100%; border-collapse:collapse; font-size:.7rem; background:var(--theme-cloth); border:var(--border-thick) solid var(--theme-shadow); margin-top:0; margin-bottom:0; }
 .prefecture-table th, .prefecture-table td { padding:3px 4px; border-bottom:1px solid var(--theme-shadow); }
@@ -164,22 +117,14 @@
   .controls-content { padding:10px 12px 14px; }
   .controls-header h3 { font-size:0.9rem; }
   .nav-link { margin-top:8px; padding:6px 10px 5px; font-size:.6rem; }
-  .tab-buttons { margin:0 0 8px; }
-  .tab-button { padding:8px 6px; font-size:.7rem; }
   .filter-section { padding:9px 10px 11px; margin:0 0 10px; }
   .filter-section h4 { margin:0 0 6px; font-size:.7rem; }
   .search-input { padding:7px 8px; font-size:.7rem; }
   .prefecture-table { font-size:.65rem; }
   .prefecture-table th, .prefecture-table td { padding:4px 4px; }
   .prefecture-code { padding:1px 3px 1px; font-size:.5rem; }
-  .pokemon-grid { gap:6px; padding:6px; max-height:250px; }
-  .pokemon-item { padding:6px 5px 8px; font-size:.6rem; }
-  .pokemon-count { margin-top:2px; padding:1px 4px 1px; font-size:.5rem; }
   .stats { font-size:.55rem; margin-top:8px; padding-top:6px; gap:4px; }
 }
-
-/* Reduced motion override for map specifics */
-@media (prefers-reduced-motion: reduce) { .pokemon-item:hover, .tab-button:not(.active):hover { transform:none; } }
 
 /* Ultra-compact mobile layout for very narrow screens (< 450px) */
 @media (max-width: 450px) {
