@@ -10,7 +10,7 @@
 例:
 ```bash
 python apps/scraper/scrape_pokefuta.py --scan-max 500 --out apps/scraper/pokefuta.ndjson
-git add apps/scraper/pokefuta.ndjson && git commit -m "feat: initial dataset"
+# 注: apps/scraper/pokefuta.ndjson は .gitignore 対象なため git add しません
 ```
 
 公開用コピー（docs/ へ active レコードのみ）:
@@ -91,7 +91,7 @@ git diff apps/scraper/pokefuta.ndjson --name-only
 - KML スナップショット生成 (`docs/pokefuta.kml`)
 
 ### 2. Pages Artifact ビルド & デプロイ: `.github/workflows/pages-deploy.yml`
-**毎日 10:30 UTC** (update-pokefuta.yml 実行後) に実行し、以下を行います:
+**main ブランチへの push 時に自動実行** (`apps/web/` または `docs/` 配下の変更時)。以下を行います:
 1. `dist/` ディレクトリを作成
 2. 公開用データ (`docs/pokefuta.ndjson`) を `dist/` へコピー
 3. ソース HTML (`apps/web/*.html`) を `dist/index.html`, `dist/nearby.html` としてコピー
@@ -135,10 +135,13 @@ git diff apps/scraper/pokefuta.ndjson --name-only
 
 公開マップ: **[ガンダム & ポケふた統合マップ](https://nishiokya.github.io/pokefuta-tracker/gmanhole_map.html)**
 
+⚠️ **注**: `gmanhole_map.html` は本番環境（GitHub Pages）でのみ動作します。ローカル開発時に動作確認するには、`npm install -g serve` で `dist/` ディレクトリから起動してください。
+
 ### スクレイプ例
 ```bash
 python apps/scraper/scrape_gmanhole.py --scan-max 80 --geocode --geocode-provider gsi --out gmanhole.ndjson
 cp gmanhole.ndjson docs/gmanhole.ndjson
+git add docs/gmanhole.ndjson && git commit -m "chore: update gmanhole data"
 ```
 
 ### 緯度経度補完機能
