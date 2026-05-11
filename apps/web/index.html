@@ -465,7 +465,7 @@
 
     function initControlsToggle() {
       const toggleBtn = document.getElementById('controls-toggle');
-      const controlsContent = document.querySelector('.controls-content');
+      const controlsContent = document.getElementById('controls-content');
       if (!toggleBtn || !controlsContent) return;
       
       // Check localStorage for saved state, default to shown
@@ -491,7 +491,7 @@
           controlsContent.classList.remove('hidden');
           toggleBtn.classList.remove('collapsed');
           toggleBtn.setAttribute('aria-label', 'フロート非表示');
-        toggleBtn.setAttribute('aria-expanded', 'true');
+          toggleBtn.setAttribute('aria-expanded', 'true');
           localStorage.setItem('controlsHidden', 'false');
         } else {
           controlsContent.classList.add('hidden');
@@ -708,31 +708,6 @@
           linkEl.addEventListener('dblclick', stopRowPropagation);
         }
       });
-    }
-
-    function resetMap() {
-      // Reset filters
-      selectedPrefecture = '';
-      // URL もリセット
-      updateURLWithPrefecture(null);
-      document.querySelectorAll('#prefecture-table-body tr').forEach(row => {
-        row.style.display = '';
-        row.classList.remove('selected');
-      });
-      showSelectedPrefectureBadge();
-      filterRecent = false; const rt = document.getElementById('recent-toggle'); if (rt) rt.checked = false;
-
-      // Show all markers
-      allMarkers.forEach(marker => {
-        if (!map.hasLayer(marker)) {
-          marker.addTo(map);
-        }
-      });
-
-      // Reset map view
-      map.setView([36.0, 138.0], 6);
-      updateStats();
-      recomputeVisibility();
     }
 
     // 多言語機能削除のため switchLanguage / refreshMarkersContent は不要
