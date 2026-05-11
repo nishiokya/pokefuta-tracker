@@ -140,7 +140,6 @@
     var allMarkers = [];
     var allData = [];
     var prefectureCounts = {};
-    var prefectureSiteCounts = {};
     var cityCounts = {};
     var selectedPrefecture = '';
     var pokemonCounts = {};
@@ -325,14 +324,11 @@
         });
         // Build markers
         allMarkers = [];
-        prefectureCounts = {}; prefectureSiteCounts = {}; cityCounts = {}; pokemonCounts = {};
+        prefectureCounts = {}; cityCounts = {}; pokemonCounts = {};
         allData.forEach(d => {
           const prefecture = d.prefecture || '不明';
           const prefectureCode = prefectureCodeMap[prefecture] || '--';
           prefectureCounts[prefecture] = (prefectureCounts[prefecture] || 0) + 1;
-          if (d.prefecture_site_url) {
-            prefectureSiteCounts[prefecture] = (prefectureSiteCounts[prefecture] || 0) + 1;
-          }
           if (d.city) cityCounts[d.city] = (cityCounts[d.city] || 0) + 1;
           if (Array.isArray(d.pokemons)) {
             d.pokemons.forEach(p => { if (p) pokemonCounts[p] = (pokemonCounts[p] || 0) + 1; });
@@ -634,7 +630,7 @@
           const a = document.createElement('a');
           a.href = siteUrl;
           a.target = '_blank';
-          a.rel = 'noopener';
+          a.rel = 'noopener noreferrer';
           a.className = 'prefecture-link';
           a.ariaLabel = `${prefecture}公式サイトを新しいタブで開く`;
           a.title = `${prefecture}公式サイトを新しいタブで開く`;
