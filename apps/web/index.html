@@ -238,7 +238,7 @@
       try {
         const url = new URL(rawUrl);
         const allowedHost = 'local.pokemon.jp';
-        if ((url.protocol === 'http:' || url.protocol === 'https:') && url.hostname === allowedHost) {
+        if (url.protocol === 'https:' && url.hostname === allowedHost) {
           return url;
         }
       } catch {
