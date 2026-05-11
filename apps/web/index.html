@@ -36,7 +36,7 @@
         <button type="button" id="controls-toggle" class="controls-toggle-btn" aria-label="フロート表示切り替え" title="フロートを表示/非表示" aria-expanded="false" aria-controls="controls-content"></button>
       </div>
     </div>
-    <div class="controls-content" role="region" aria-label="Filters and statistics">
+    <div id="controls-content" class="controls-content" role="region" aria-label="Filters and statistics">
       <!-- Recent 1 month filter -->
       <div style="display:flex; align-items:center; gap:6px; margin-bottom:2px; padding:2px 0;">
         <input type="checkbox" id="recent-toggle" /> 
@@ -460,6 +460,7 @@
         controlsContent.classList.remove('hidden');
         toggleBtn.classList.remove('collapsed');
         toggleBtn.setAttribute('aria-label', 'フロート非表示');
+        toggleBtn.setAttribute('aria-expanded', 'true');
       }
       
       // Add click handler
@@ -480,14 +481,6 @@
         }
       });
     }
-
-    // function initSearchBoxToggle() { // 削除済み（未使用）
-    //   const toggleBtn = document.getElementById('search-toggle');
-    //   const searchWrapper = document.getElementById('search-box-wrapper');
-    //   if (!toggleBtn || !searchWrapper) return;
-    //   // ... 以下削除
-    // }
-
 
     function countRecent(days=30){
       const now = Date.now();
