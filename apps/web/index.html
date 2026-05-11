@@ -31,31 +31,25 @@
 <body>
   <div id="controls" role="complementary" aria-labelledby="page-title">
     <div class="controls-header">
-  <h3 id="page-title"><img src="./assets/manhole_icon.png" width="30" alt="マンホールアイコン">ポケふたマップ</h3>
-      <!-- 言語切替ボタンは廃止（多言語 UI 非表示）。必要になれば復活可能。 -->
-  <a href="./nearby_manholes.html" class="nav-link" style="margin-right: 8px;">📍 近くのマンホール</a>
-  <a href="./gmanhole_map.html" class="nav-link" id="nav-link">🤖 ガンダム & ポケふた統合</a>
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <h3 id="page-title">ポケふたマップ</h3>
+        <button type="button" id="controls-toggle" class="controls-toggle-btn" aria-label="フロート表示切り替え" title="フロートを表示/非表示">−</button>
+      </div>
     </div>
     <div class="controls-content" role="region" aria-label="Filters and statistics">
-      <div class="tab-buttons" role="tablist" aria-label="Filter type">
-        <button class="tab-button active" role="tab" aria-selected="true" aria-controls="prefecture-tab" id="tab-prefecture" onclick="switchTab('prefecture')">🗾 都道府県</button>
-        <button class="tab-button" role="tab" aria-selected="false" aria-controls="pokemon-tab" id="tab-pokemon" onclick="switchTab('pokemon')">🎯 ポケモン</button>
-      </div>
-      <!-- Added recent 1 month filter -->
-      <div class="filter-section filter-panel" id="recent-filter-wrapper">
-        <label style="cursor:pointer;">
-          <input type="checkbox" id="recent-toggle" /> <span data-i18n="recentLabel">🆕 直近1ヶ月</span>
-        </label>
+      <!-- Recent 1 month filter -->
+      <div style="display:flex; align-items:center; gap:6px; margin-bottom:2px; padding:2px 0;">
+        <input type="checkbox" id="recent-toggle" /> 
+        <label for="recent-toggle" style="margin:0; cursor:pointer; font-size:.75rem; font-weight:600;"><span data-i18n="recentLabel">🆕 直近1ヶ月</span></label>
+        <div id="recent-summary" style="font-size:0.65rem; color:#555; margin-left:auto;"></div>
       </div>
       <div id="prefecture-tab" class="tab-content active" role="tabpanel" tabindex="0" aria-labelledby="tab-prefecture">
-        <div id="selected-prefecture-badge" class="selected-prefecture-badge" style="display:none; margin:4px 0; font-size:0.85rem; background:#eef; padding:4px 8px; border-radius:6px;">
+        <div id="selected-prefecture-badge" class="selected-prefecture-badge" style="display:none; margin:2px 0; font-size:0.85rem; background:#eef; padding:4px 8px; border-radius:6px;">
           <span class="badge-label" style="font-weight:600;">選択中:</span> <span class="badge-value"></span>
           <button type="button" class="badge-clear" style="margin-left:6px; background:#ccc; border:none; padding:2px 6px; border-radius:4px; cursor:pointer;" aria-label="選択解除" onclick="clearPrefectureSelection()">✖</button>
         </div>
-        <div class="filter-section filter-panel" aria-labelledby="heading-pref-count">
-          <h4 id="heading-pref-count">都道府県別ポケふた数</h4>
-          <label class="sr-only" for="search-input">都道府県検索</label>
-          <input type="text" class="search-input" id="search-input" placeholder="都道府県を検索..." aria-describedby="pref-table-desc">
+        <h4 id="heading-pref-count" style="margin:2px 0; font-size:.75rem;">都道府県別ポケふた数</h4>
+        <div id="prefecture-table-wrapper" class="table-wrapper">
           <table class="prefecture-table" id="prefecture-table" aria-describedby="pref-table-desc">
             <caption id="pref-table-desc" class="sr-only">都道府県ごとのポケふた数とサイト有無</caption>
             <thead>
@@ -68,18 +62,8 @@
             </thead>
             <tbody id="prefecture-table-body"></tbody>
           </table>
-          <div id="search-hit-counter" style="display:none; font-size:0.75rem; margin-top:4px; color:#555;"></div>
         </div>
       </div>
-      <div id="pokemon-tab" class="tab-content" role="tabpanel" tabindex="0" aria-labelledby="tab-pokemon" hidden>
-        <div class="filter-section filter-panel">
-          <h4 id="heading-pokemon-filter">ポケモンで絞り込み</h4>
-          <label class="sr-only" for="pokemon-search">ポケモン検索</label>
-          <input type="text" class="search-input" id="pokemon-search" placeholder="ポケモンを検索...">
-          <div id="pokemon-grid" class="pokemon-grid" role="list" aria-label="ポケモン一覧"></div>
-        </div>
-      </div>
-      <button class="reset-btn" onclick="resetMap()" aria-live="polite">🔄 すべて表示</button>
       <div class="stats" role="status" aria-live="polite">
         <div id="total-count">総数: <span>0</span></div>
         <div id="visible-count">表示: <span>0</span></div>
@@ -264,7 +248,7 @@
         for (const path of pokefutaPaths) {
           try {
             console.log(`Trying to fetch pokefuta data from: ${path}`);
-            res = await fetch(path);
+            res = await fetch(path, { cache: 'no-store' });
             if (res.ok) {
               console.log(`Successfully loaded pokefuta data from: ${path}`);
               break;
@@ -302,13 +286,16 @@
             existing.last_seen = later(existing.last_seen, obj.last_seen);
             existing.source_last_checked = later(existing.source_last_checked, obj.source_last_checked);
             existing.last_updated = later(existing.last_updated, obj.last_updated);
+            // Preserve first non-empty prefecture_site_url
+            const prefUrlToKeep = existing.prefecture_site_url || obj.prefecture_site_url;
             // For other mutable fields (title, pokemons etc.) assume latest line is authoritative
             Object.assign(existing, obj, {
               added_at: existing.added_at,
               first_seen: existing.first_seen,
               last_seen: existing.last_seen,
               source_last_checked: existing.source_last_checked,
-              last_updated: existing.last_updated
+              last_updated: existing.last_updated,
+              prefecture_site_url: prefUrlToKeep
             });
           }
         }
@@ -419,9 +406,9 @@
         }
         
         populatePrefectureTable();
-        populatePokemonGrid();
         updateStats();
         initRecentFilter();
+        initControlsToggle();
         updateRecentSummary();
         
         // URL パラメータから初期都道府県を選択
@@ -453,6 +440,80 @@
       });
     }
 
+    // Prefecture table toggle removed - table UI deleted
+
+    function initControlsToggle() {
+      const toggleBtn = document.getElementById('controls-toggle');
+      const controlsContent = document.querySelector('.controls-content');
+      if (!toggleBtn || !controlsContent) return;
+      
+      // Check localStorage for saved state, default to shown
+      const controlsHidden = localStorage.getItem('controlsHidden') === 'true';
+      
+      // Set initial state
+      if (controlsHidden) {
+        controlsContent.classList.add('hidden');
+        toggleBtn.classList.add('collapsed');
+        toggleBtn.setAttribute('aria-label', 'フロート表示');
+      } else {
+        controlsContent.classList.remove('hidden');
+        toggleBtn.classList.remove('collapsed');
+        toggleBtn.setAttribute('aria-label', 'フロート非表示');
+      }
+      
+      // Add click handler
+      toggleBtn.addEventListener('click', () => {
+        const isHidden = controlsContent.classList.contains('hidden');
+        if (isHidden) {
+          controlsContent.classList.remove('hidden');
+          toggleBtn.classList.remove('collapsed');
+          toggleBtn.setAttribute('aria-label', 'フロート非表示');
+          localStorage.setItem('controlsHidden', 'false');
+        } else {
+          controlsContent.classList.add('hidden');
+          toggleBtn.classList.add('collapsed');
+          toggleBtn.setAttribute('aria-label', 'フロート表示');
+          localStorage.setItem('controlsHidden', 'true');
+        }
+      });
+    }
+
+    function initSearchBoxToggle() {
+      const toggleBtn = document.getElementById('search-toggle');
+      const searchWrapper = document.getElementById('search-box-wrapper');
+      if (!toggleBtn || !searchWrapper) return;
+      
+      // Check localStorage for saved state, default to shown
+      const searchHidden = localStorage.getItem('searchBoxHidden') === 'true';
+      
+      // Set initial state
+      if (searchHidden) {
+        searchWrapper.classList.add('hidden');
+        toggleBtn.classList.add('collapsed');
+        toggleBtn.setAttribute('aria-label', '検索ボックス表示');
+      } else {
+        searchWrapper.classList.remove('hidden');
+        toggleBtn.classList.remove('collapsed');
+        toggleBtn.setAttribute('aria-label', '検索ボックス非表示');
+      }
+      
+      // Add click handler
+      toggleBtn.addEventListener('click', () => {
+        const isHidden = searchWrapper.classList.contains('hidden');
+        if (isHidden) {
+          searchWrapper.classList.remove('hidden');
+          toggleBtn.classList.remove('collapsed');
+          toggleBtn.setAttribute('aria-label', '検索ボックス非表示');
+          localStorage.setItem('searchBoxHidden', 'false');
+        } else {
+          searchWrapper.classList.add('hidden');
+          toggleBtn.classList.add('collapsed');
+          toggleBtn.setAttribute('aria-label', '検索ボックス表示');
+          localStorage.setItem('searchBoxHidden', 'true');
+        }
+      });
+    }
+
     function countRecent(days=30){
       const now = Date.now();
       const span = days*86400000;
@@ -461,17 +522,6 @@
 
     function ensureRecentSummaryElement(){
       let el = document.getElementById('recent-summary');
-      if(!el){
-        const wrapper = document.getElementById('recent-filter-wrapper');
-        if(wrapper){
-          el = document.createElement('div');
-          el.id = 'recent-summary';
-          el.style.fontSize='0.7rem';
-          el.style.marginTop='2px';
-          el.style.color='#555';
-          wrapper.appendChild(el);
-        }
-      }
       return el;
     }
 
@@ -545,7 +595,7 @@
       selectedPrefecture = '';
       filterByPrefectureFromTable('');
       showSelectedPrefectureBadge();
-      searchPrefectures();
+      recomputeVisibility();
     }
 
     function togglePrefectureSelection(prefecture) {
@@ -600,6 +650,7 @@
       if (cityEl) cityEl.textContent = String(Object.keys(cityCounts).length);
     }
 
+    // Prefecture table function restored
     function populatePrefectureTable() {
       const tbody = document.getElementById('prefecture-table-body');
 
@@ -621,11 +672,22 @@
         allPrefectures.push(['不明', prefectureCounts['不明']]);
       }
 
+      // Build map of prefecture to site URL (first one found)
+      const prefectureSiteUrls = {};
+      allData.forEach(d => {
+        const pref = d.prefecture || '不明';
+        if (d.prefecture_site_url && !prefectureSiteUrls[pref]) {
+          prefectureSiteUrls[pref] = d.prefecture_site_url;
+        }
+      });
+
       allPrefectures.forEach(([prefecture, count]) => {
         const row = document.createElement('tr');
         const code = prefectureCodeMap[prefecture] || '--';
-        const siteCount = prefectureSiteCounts[prefecture] || 0;
-        const siteIcon = siteCount > 0 ? '🌐' : '—';
+        const siteUrl = prefectureSiteUrls[prefecture];
+        const siteCell = siteUrl 
+          ? `<a href="${siteUrl}" target="_blank" rel="noopener" style="color:#0066cc; text-decoration:none; font-weight:700;">🌐</a>`
+          : '—';
 
         // Style row differently if no pokefuta
         const countBadgeClass = count > 0 ? 'count-badge' : 'count-badge-zero';
@@ -636,7 +698,7 @@
           <td><span class="prefecture-code">${code}</span></td>
           <td>${prefecture}</td>
           <td><span class="${countBadgeClass}">${count}</span></td>
-          <td style="text-align: center;">${siteIcon}</td>
+          <td style="text-align: center;">${siteCell}</td>
         `;
         if (count > 0) {
           let clickTimer = null;  // ダブルクリック制御用タイマー
@@ -666,74 +728,13 @@
           row.style.cursor = 'pointer';
           row.title = `クリック: ${prefecture}でフィルタ+ズーム / ダブルクリック: 地図移動`;
         }
-        // Append row (BUGFIX: previously not appended, table remained empty)
+        // Append row
         tbody.appendChild(row);
       });
-      const searchInput = document.getElementById('search-input');
-      if (searchInput) searchInput.addEventListener('input', searchPrefectures);
     }
-    // selectPrefectureFromTable removed (dropdown廃止)
-
-    // ポケモングリッド生成 (日本語のみ)
-    function populatePokemonGrid() {
-      const grid = document.getElementById('pokemon-grid');
-      if (!grid) return;
-      const counts = {};
-      allData.forEach(d => {
-        if (Array.isArray(d.pokemons)) {
-          d.pokemons.forEach(p => { if (p) counts[p] = (counts[p] || 0) + 1; });
-        }
-      });
-      const sorted = Object.entries(counts)
-        .sort(([a],[b]) => a.localeCompare(b,'ja'))
-        .sort(([,ca],[,cb]) => cb - ca);
-      grid.innerHTML = '';
-      sorted.forEach(([name,count]) => {
-        const item = document.createElement('div');
-        item.className = 'pokemon-item';
-        item.innerHTML = `<div class="pokemon-name">${name}</div><div class="pokemon-count">${count}</div>`;
-        item.addEventListener('click', () => togglePokemonSelection(name, item));
-        grid.appendChild(item);
-      });
-      const searchInput = document.getElementById('pokemon-search');
-      if (searchInput) {
-        searchInput.removeEventListener('input', searchPokemons);
-        searchInput.addEventListener('input', searchPokemons);
-      }
-    }
-
-    function togglePokemonSelection(pokemon, item) {
-      const index = selectedPokemons.indexOf(pokemon);
-
-      if (index > -1) {
-        selectedPokemons.splice(index, 1);
-        item.classList.remove('selected');
-      } else {
-        selectedPokemons.push(pokemon);
-        item.classList.add('selected');
-      }
-
-      filterByPokemon();
-    }
-
-    function searchPokemons() {
-      const query = document.getElementById('pokemon-search').value.toLowerCase();
-      const items = document.querySelectorAll('#pokemon-grid .pokemon-item');
-
-      items.forEach(item => {
-        const pokemonName = item.querySelector('.pokemon-name').textContent.toLowerCase();
-        const shouldShow = pokemonName.includes(query);
-        item.style.display = shouldShow ? 'block' : 'none';
-      });
-    }
-
-          // document.getElementById('prefecture-filter').value = prefecture; // Removed dropdown update
 
     function resetMap() {
-      // Reset filters for both tabs
-        // document.getElementById('prefecture-filter').value = ''; // Removed as per patch requirement
-      document.getElementById('search-input').value = '';
-      document.getElementById('pokemon-search').value = '';
+      // Reset filters
       selectedPrefecture = '';
       // URL もリセット
       updateURLWithPrefecture(null);
@@ -742,7 +743,6 @@
         row.classList.remove('selected');
       });
       showSelectedPrefectureBadge();
-    showSelectedPrefectureBadge();
       filterRecent = false; const rt = document.getElementById('recent-toggle'); if (rt) rt.checked = false;
 
       // Show all markers
@@ -758,69 +758,13 @@
         row.classList.remove('selected');
       });
 
-      // Reset Pokemon selections
-      document.querySelectorAll('#pokemon-grid .pokemon-item').forEach(item => {
-        item.classList.remove('selected');
-        item.style.display = 'block';
-      });
-
       // Reset map view
       map.setView([36.0, 138.0], 6);
       updateStats();
       recomputeVisibility();
     }
 
-    function switchTab(tabName) {
-      currentTab = tabName;
-      const tabs = ['prefecture','pokemon'];
-      tabs.forEach(name => {
-        const btn = document.getElementById(`tab-${name}`);
-        const panel = document.getElementById(`${name}-tab`);
-        const active = name === tabName;
-        if (btn) {
-          btn.classList.toggle('active', active);
-          btn.setAttribute('aria-selected', active ? 'true':'false');
-          btn.tabIndex = active ? 0 : -1;
-        }
-        if (panel) {
-          panel.classList.toggle('active', active);
-          if (active) {
-            panel.removeAttribute('hidden');
-            panel.setAttribute('aria-hidden','false');
-          } else {
-            panel.setAttribute('hidden','true');
-            panel.setAttribute('aria-hidden','true');
-          }
-        }
-      });
-      if (tabName === 'prefecture') {
-        selectedPokemons = [];
-        document.querySelectorAll('#pokemon-grid .pokemon-item').forEach(item => item.classList.remove('selected'));
-        const ps = document.getElementById('pokemon-search'); if (ps) ps.value='';
-          filterByPrefectureFromTable(selectedPrefecture); // Updated to use new function
-      } else if (tabName === 'pokemon') {
-        selectedPrefecture = '';
-          // const pf = document.getElementById('prefecture-filter'); if (pf) pf.value=''; // Removed as per patch requirement
-        const si = document.getElementById('search-input'); if (si) si.value='';
-        document.querySelectorAll('.prefecture-table tr').forEach(row => { row.classList.remove('selected'); row.style.display=''; });
-        filterByPokemon();
-      }
-    }
-
     // 多言語機能削除のため switchLanguage / refreshMarkersContent は不要
-
-    // Keyboard navigation for tabs (Left/Right/Home/End)
-    document.addEventListener('keydown', (e) => {
-      const activeEl = document.activeElement;
-      if (activeEl && activeEl.getAttribute('role') === 'tab') {
-        const order = ['prefecture','pokemon'];
-        let idx = order.findIndex(t => `tab-${t}` === activeEl.id);
-        if (e.key === 'ArrowRight') { e.preventDefault(); idx = (idx + 1) % order.length; document.getElementById(`tab-${order[idx]}`).focus(); switchTab(order[idx]); }
-        else if (e.key === 'ArrowLeft') { e.preventDefault(); idx = (idx - 1 + order.length) % order.length; document.getElementById(`tab-${order[idx]}`).focus(); switchTab(order[idx]); }
-        else if (e.key === 'Home') { e.preventDefault(); document.getElementById('tab-prefecture').focus(); switchTab('prefecture'); }
-        else if (e.key === 'End') { e.preventDefault(); document.getElementById('tab-pokemon').focus(); switchTab('pokemon'); }
-      }
-    });
 
     // Leafletの機能を使って都道府県のポケふたにズームする関数
     // マンホール2件以上: マンホール全て入る最小縮尺（maxZoom:13で過度な拡大を防止）
@@ -858,9 +802,6 @@
           console.log(`Zoomed to ${prefecture} with ${markerCount} markers (unified scale)`);
         }
         
-        // 都道府県テーブル行を一時的にハイライト
-        highlightPrefectureRow(prefecture);
-        
       } catch (error) {
         console.error(`Error zooming to ${prefecture}:`, error);
         // エラーの場合は都道府県の中心座標にフォールバック
@@ -871,31 +812,14 @@
       }
     }
 
-    // 都道府県テーブル行をハイライトする関数
-    function highlightPrefectureRow(prefecture) {
-      const rows = document.querySelectorAll('#prefecture-table-body tr');
-      rows.forEach(row => {
-        const rowText = row.textContent;
-        if (rowText.includes(prefecture)) {
-          const originalBg = row.style.backgroundColor;
-          const originalBorder = row.style.border;
-          
-          // ハイライト効果
-          row.style.backgroundColor = '#e3f2fd';
-          row.style.border = '2px solid #2196f3';
-          row.style.boxShadow = '0 2px 8px rgba(33, 150, 243, 0.3)';
-          
-          // 2秒後に元に戻す
-          setTimeout(() => {
-            row.style.backgroundColor = originalBg;
-            row.style.border = originalBorder;
-            row.style.boxShadow = '';
-          }, 2000);
-        }
-      });
+    // Clean up legacy localStorage keys
+    function cleanupLegacyLocalStorage() {
+      localStorage.removeItem('prefectureTableHidden');
+      localStorage.removeItem('searchBoxHidden');
     }
 
     // Initialize
+    cleanupLegacyLocalStorage();
     loadPokefutaData();
     // Banner 初期化
     (function initSiblingBanner(){
