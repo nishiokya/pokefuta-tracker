@@ -617,7 +617,6 @@
 
       // Build map of prefecture to site URL (first one found, http(s) & allowlist)
       const prefectureSiteUrls = {};
-      const allowedHost = 'local.pokemon.jp';
       allData.forEach(d => {
         const pref = d.prefecture || '不明';
         if (d.prefecture_site_url && !prefectureSiteUrls[pref]) {
@@ -685,7 +684,7 @@
         // Append row
         tbody.appendChild(row);
         // Prevent row handlers from triggering when interacting with prefecture link
-        const linkEl = row.querySelector('.prefecture-link');
+        const linkEl = row.querySelector('.popup-link.popup-link--site');
         if (linkEl) {
           const stopRowPropagation = e => e.stopPropagation();
           linkEl.addEventListener('click', stopRowPropagation);
