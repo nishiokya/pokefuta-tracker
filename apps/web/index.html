@@ -363,7 +363,7 @@
             return '';
           })() : '';
           // 画像無い場合アップロード案内リンク (仮: d.image_url が無いと判断) ※データ構造に応じて調整可能
-          const uploadLink = !d.image_url ? `<br/><a href='https://pokefuta.com/' target='_blank' rel='noopener' class='popup-link popup-link--upload' title='写真を共有 (兄弟サイト)'>📷 写真をアップロード</a>` : '';
+          const uploadLink = !d.image_url ? `<br/><a href='https://pokefuta.com/' target='_blank' rel='noopener noreferrer' class='popup-link popup-link--upload' title='写真を共有 (兄弟サイト)'>📷 写真をアップロード</a>` : '';
           const popupContent = `
             <div class='popup-box'>
               <b>${UI_TEXT.idLabel}</b> ${d.id}<br/>
