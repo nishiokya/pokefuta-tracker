@@ -233,6 +233,20 @@
     // 初期テキストは既に HTML に記述しているため updateUIText は不要
     function updateUIText() { /* no-op (多言語削除) */ }
 
+    // Validate prefecture site URL (whitelist check)
+    function validatePrefectureSiteUrl(rawUrl) {
+      try {
+        const url = new URL(rawUrl);
+        const allowedHost = 'local.pokemon.jp';
+        if ((url.protocol === 'http:' || url.protocol === 'https:') && url.hostname === allowedHost) {
+          return url;
+        }
+      } catch {
+        return null;
+      }
+      return null;
+    }
+
     async function loadPokefutaData() {
       try {
         // Try multiple potential paths for pokefuta data
@@ -336,13 +350,16 @@
           const pokemonsStr = Array.isArray(d.pokemons) && d.pokemons.length ? d.pokemons.join(', ') : '—';
           const cityInfo = d.city ? `<br/><b>${UI_TEXT.cityLabel}</b> ${d.city}` : '';
           const prefectureSiteLink = d.prefecture_site_url ? (function() {
-            try {
-              const url = new URL(d.prefecture_site_url);
-              const allowedHost = 'local.pokemon.jp';
-              if ((url.protocol === 'http:' || url.protocol === 'https:') && url.hostname === allowedHost) {
-                return `<br/><a href='${url.href}' target='_blank' rel='noopener noreferrer' class='popup-link popup-link--site'>🌐 ${prefecture}${UI_TEXT.prefectureSite}</a>`;
-              }
-            } catch {}
+            const validatedUrl = validatePrefectureSiteUrl(d.prefecture_site_url);
+            if (validatedUrl) {
+              const anchor = document.createElement('a');
+              anchor.href = validatedUrl.href;
+              anchor.target = '_blank';
+              anchor.rel = 'noopener noreferrer';
+              anchor.className = 'popup-link popup-link--site';
+              anchor.textContent = `🌐 ${prefecture}${UI_TEXT.prefectureSite}`;
+              return `<br/>${anchor.outerHTML}`;
+            }
             return '';
           })() : '';
           // 画像無い場合アップロード案内リンク (仮: d.image_url が無いと判断) ※データ構造に応じて調整可能
