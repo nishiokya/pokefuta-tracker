@@ -66,7 +66,7 @@ jobs:
       - name: Detect dataset changes
         id: diff
         run: |
-          git add apps/scraper/pokefuta.ndjson docs/pokefuta.ndjson docs/pokefuta.kml || true
+          git add docs/pokefuta.ndjson docs/pokefuta.kml || true
           if git diff --cached --quiet; then
             echo "changed=false" >> $GITHUB_OUTPUT
           else
