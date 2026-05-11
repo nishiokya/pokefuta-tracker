@@ -3,93 +3,146 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>近くのポケモンマンホール</title>
+  <title>近くのポケふた検索 | 現在地から探すポケモンマンホール</title>
+  <meta name="description" content="現在地から近いポケモンマンホール（ポケふた）を距離順に表示。表示範囲を選んで、公式情報やGoogle Mapですぐに確認できます。">
+  <meta name="keywords" content="ポケふた,ポケモンマンホール,近くのマンホール,現在地,聖地巡礼,Google Map">
+  <meta name="robots" content="index,follow">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:title" content="近くのポケふた検索 | 現在地から探すポケモンマンホール">
+  <meta property="og:description" content="現在地から近いポケモンマンホール（ポケふた）を距離順に表示。表示範囲を選んで、公式情報やGoogle Mapですぐに確認できます。">
+  <meta property="og:url" content="https://data.pokefuta.com/nearby.html">
+  <meta property="og:image" content="https://data.pokefuta.com/assets/pokefuta_icon_32.png">
+  <link rel="canonical" href="https://data.pokefuta.com/nearby.html">
+  <link rel="stylesheet" href="./assets/theme.css" />
+  <link rel="icon" href="./assets/pokefuta_icon_32.png" type="image/png" />
   <style>
-    html, body {
-      height: 100%;
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 50%, #ffe66d 100%);
+    body {
+      min-height: 100%;
+      background:
+        linear-gradient(180deg, rgba(245,234,207,.95), rgba(240,230,210,.98)),
+        var(--theme-bg);
     }
 
     .container {
-      max-width: 800px;
+      max-width: 960px;
       margin: 0 auto;
-      padding: 20px;
+      padding: clamp(8px, 2vw, 20px);
     }
 
-    .header {
-      text-align: center;
-      color: white;
-      margin-bottom: 30px;
+    .page-header {
+      margin-bottom: 18px;
+      padding: 18px;
     }
 
-    .header h1 {
-      font-size: 2.5em;
-      margin: 0 0 10px 0;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    .page-header__top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .page-header h1 {
+      font-size: clamp(1.7rem, 5vw, 2.6rem);
+      line-height: 1.1;
+      margin: 0 0 8px;
+      letter-spacing: 0;
+    }
+
+    .page-header p {
+      margin: 0;
+      color: #444;
+      font-weight: 700;
+      line-height: 1.6;
+    }
+
+    .page-nav {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .tool-panel {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(220px, 280px);
+      gap: 16px;
+      align-items: stretch;
+      margin-bottom: 18px;
+    }
+
+    .location-status,
+    .distance-filter,
+    .manhole-list {
+      background: var(--theme-cloth);
+      border: var(--border-thick) solid var(--theme-shadow);
+      box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0 var(--theme-shadow);
     }
 
     .location-status {
-      background: rgba(255, 255, 255, 0.9);
-      padding: 15px;
-      border-radius: 10px;
-      margin-bottom: 20px;
-      text-align: center;
-      font-weight: bold;
+      padding: 18px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 74px;
     }
 
     .location-button {
-      background: #ff6b6b;
-      color: white;
+      background: var(--theme-accent);
+      color: #fff;
       border: none;
       padding: 12px 24px;
-      border-radius: 8px;
       font-size: 16px;
-      font-weight: bold;
+      font-weight: 800;
       cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      border: var(--border-thick) solid var(--theme-shadow);
+      box-shadow: 4px 4px 0 0 var(--theme-shadow);
+      transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
     }
 
     .location-button:hover {
-      background: #ff5252;
+      background: var(--theme-accent2);
+      color: #111;
       transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+      box-shadow: 6px 6px 0 0 var(--theme-shadow);
     }
 
     .distance-filter {
-      background: rgba(255, 255, 255, 0.9);
-      padding: 15px;
-      border-radius: 10px;
-      margin-bottom: 20px;
+      padding: 18px;
+      min-height: 74px;
     }
 
     .distance-filter label {
-      font-weight: bold;
-      margin-right: 10px;
+      display: block;
+      font-weight: 800;
+      margin: 0 0 8px;
+      font-size: .8rem;
+      letter-spacing: .5px;
     }
 
     .distance-filter select {
-      padding: 8px 12px;
-      border-radius: 5px;
-      border: 2px solid #ddd;
-      font-size: 14px;
+      width: 100%;
+      padding: 10px 12px;
+      border: var(--border-thick) solid var(--theme-shadow);
+      background: var(--theme-cloth-alt);
+      color: var(--theme-text);
+      font-size: .9rem;
+      font-weight: 800;
     }
 
     .manhole-list {
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 15px;
       padding: 20px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
     }
 
     .manhole-item {
-      border-bottom: 1px solid #eee;
-      padding: 20px 0;
+      border-bottom: var(--border-thick) solid var(--theme-shadow);
+      padding: 18px 0;
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
+      gap: 18px;
     }
 
     .manhole-item:last-child {
@@ -102,36 +155,40 @@
 
     .manhole-title {
       font-size: 18px;
-      font-weight: bold;
-      color: #333;
+      font-weight: 900;
+      color: var(--theme-text);
       margin-bottom: 8px;
     }
 
     .manhole-location {
-      color: #666;
-      margin-bottom: 5px;
+      color: #444;
+      margin-bottom: 7px;
+      font-weight: 700;
     }
 
     .manhole-pokemon {
-      background: #4ecdc4;
-      color: white;
-      padding: 4px 8px;
-      border-radius: 12px;
+      background: var(--theme-tag);
+      color: #fff;
+      padding: 5px 9px 4px;
+      border: 3px solid var(--theme-shadow);
       font-size: 12px;
+      font-weight: 800;
       display: inline-block;
       margin-right: 5px;
       margin-top: 5px;
+      box-shadow: 2px 2px 0 0 var(--theme-shadow);
     }
 
     .manhole-distance {
-      background: #ffe66d;
+      background: var(--theme-accent2);
       color: #333;
       padding: 8px 12px;
-      border-radius: 20px;
-      font-weight: bold;
+      border: var(--border-thick) solid var(--theme-shadow);
+      font-weight: 900;
       font-size: 14px;
       min-width: 80px;
       text-align: center;
+      box-shadow: 3px 3px 0 0 var(--theme-shadow);
     }
 
     .manhole-actions {
@@ -142,54 +199,48 @@
     }
 
     .maps-link {
-      background: #4285f4;
-      color: white;
-      text-decoration: none;
-      padding: 6px 12px;
-      border-radius: 15px;
-      font-size: 12px;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      display: inline-block;
+      background: var(--theme-link);
+      color: #fff;
     }
 
-    .maps-link:hover {
-      background: #3367d6;
+    .maps-link:hover,
+    .pokefuta-link:hover {
       transform: translateY(-1px);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      box-shadow: 4px 4px 0 0 var(--theme-shadow);
     }
 
     .pokefuta-link {
-      background: #ff6b35;
-      color: white;
-      text-decoration: none;
-      padding: 6px 12px;
-      border-radius: 15px;
-      font-size: 12px;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      display: inline-block;
+      background: var(--theme-accent);
+      color: #fff;
     }
 
-    .pokefuta-link:hover {
-      background: #e55a2b;
-      transform: translateY(-1px);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    .maps-link,
+    .pokefuta-link {
+      text-decoration: none;
+      padding: 7px 12px 6px;
+      font-size: 12px;
+      font-weight: 800;
+      border: 3px solid var(--theme-shadow);
+      box-shadow: 3px 3px 0 0 var(--theme-shadow);
+      transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
+      display: inline-block;
     }
 
     .loading {
       text-align: center;
       padding: 40px;
       color: #666;
+      font-weight: 800;
     }
 
     .error {
-      background: #ffebee;
-      color: #c62828;
+      background: #FDE4E4;
+      color: var(--theme-shadow);
       padding: 15px;
-      border-radius: 8px;
+      border: var(--border-thick) solid var(--theme-danger);
       margin-bottom: 20px;
       text-align: center;
+      font-weight: 800;
     }
 
     .no-results {
@@ -197,51 +248,93 @@
       padding: 40px;
       color: #666;
       font-size: 18px;
+      font-weight: 800;
     }
 
-    @media (max-width: 600px) {
-      .container {
-        padding: 10px;
+    .status-success {
+      color: var(--theme-success);
+      font-weight: 900;
+    }
+
+    .status-muted {
+      color: #555;
+      font-weight: 800;
+    }
+
+    @media (max-width: 720px) {
+      .page-header__top,
+      .page-nav {
+        display: block;
       }
 
-      .header h1 {
-        font-size: 2em;
+      .page-nav {
+        margin-top: 14px;
+      }
+
+      .page-nav .link-pill {
+        margin: 0 8px 8px 0;
+      }
+
+      .tool-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .distance-filter {
+        min-height: auto;
       }
 
       .manhole-item {
         flex-direction: column;
-        gap: 10px;
       }
 
       .manhole-actions {
         align-items: flex-start;
+        flex-direction: row;
+        flex-wrap: wrap;
       }
     }
   </style>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-K18NR4GZG2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} gtag('js', new Date());
+    gtag('config', 'G-K18NR4GZG2', { 'anonymize_ip': true });
+  </script>
+  <!-- End GA -->
 </head>
 <body>
   <div class="container">
-    <div class="header">
-      <h1>🕳️ 近くのポケモンマンホール</h1>
-      <p>あなたの現在地から近いポケふたを見つけましょう！</p>
-      <a href="./" style="display: inline-block; background: rgba(255, 255, 255, 0.2); color: white; text-decoration: none; padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 600; margin-top: 10px; border: 1px solid rgba(255, 255, 255, 0.3); transition: all 0.3s ease;" onmouseover="this.style.background='rgba(255, 255, 255, 0.3)'; this.style.transform='translateY(-1px)'" onmouseout="this.style.background='rgba(255, 255, 255, 0.2)'; this.style.transform='translateY(0)'">🗾 マップに戻る</a>
-    </div>
+    <header class="page-header nb-surface">
+      <div class="page-header__top">
+        <div>
+          <h1>近くのポケふた検索</h1>
+          <p>現在地から近いポケモンマンホールを距離順に表示します。</p>
+        </div>
+        <nav class="page-nav" aria-label="サイト内リンク">
+          <a class="link-pill alt" href="./">ポケふたマップ</a>
+          <a class="link-pill" href="./gmanhole_map.html">統合マップ</a>
+        </nav>
+      </div>
+    </header>
 
-    <div class="location-status" id="locationStatus">
-      <button class="location-button" onclick="getCurrentLocation()">📍 現在地を取得</button>
-    </div>
+    <div class="tool-panel" aria-label="近くのポケふた検索条件">
+      <div class="location-status" id="locationStatus">
+        <button class="location-button" onclick="getCurrentLocation()">現在地を取得</button>
+      </div>
 
-    <div class="distance-filter" id="distanceFilter" style="display: none;">
-      <label for="distanceSelect">表示範囲:</label>
-      <select id="distanceSelect" onchange="filterManholes()">
-        <option value="1">1km以内</option>
-        <option value="3">3km以内</option>
-        <option value="5">5km以内</option>
-        <option value="10">10km以内</option>
-        <option value="20">20km以内</option>
-        <option value="50">50km以内</option>
-        <option value="999999" selected>すべて</option>
-      </select>
+      <div class="distance-filter" id="distanceFilter" hidden>
+        <label for="distanceSelect">表示範囲</label>
+        <select id="distanceSelect" onchange="filterManholes()">
+          <option value="1">1km以内</option>
+          <option value="3">3km以内</option>
+          <option value="5">5km以内</option>
+          <option value="10">10km以内</option>
+          <option value="20">20km以内</option>
+          <option value="50">50km以内</option>
+          <option value="999999" selected>すべて</option>
+        </select>
+      </div>
     </div>
 
     <div class="manhole-list" id="manholeList">
@@ -274,10 +367,24 @@
       }
     }
 
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, (char) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[char]));
+    }
+
+    function escapeAttribute(value) {
+      return escapeHtml(value);
+    }
+
     // Get current location
     function getCurrentLocation() {
       const statusDiv = document.getElementById('locationStatus');
-      statusDiv.innerHTML = '<div style="color: #666;">📍 位置情報を取得中...</div>';
+      statusDiv.innerHTML = '<div class="status-muted">位置情報を取得中...</div>';
 
       if (!navigator.geolocation) {
         statusDiv.innerHTML = '<div class="error">このブラウザは位置情報に対応していません</div>';
@@ -290,8 +397,8 @@
             lat: position.coords.latitude,
             lng: position.coords.longitude
           };
-          statusDiv.innerHTML = `<div style="color: #4caf50;">✅ 位置情報を取得しました</div>`;
-          document.getElementById('distanceFilter').style.display = 'block';
+          statusDiv.innerHTML = '<div class="status-success">位置情報を取得しました</div>';
+          document.getElementById('distanceFilter').hidden = false;
           loadManholes();
         },
         function(error) {
@@ -405,21 +512,29 @@
 
       // Generate HTML
       const html = filteredManholes.map(manhole => {
-        const mapsUrl = `https://www.google.com/maps?q=${manhole.lat},${manhole.lng}`;
-        const pokefutaUrl = `https://local.pokemon.jp/manhole/detail/${manhole.id}/`;
+        const mapsUrl = `https://www.google.com/maps?q=${encodeURIComponent(`${manhole.lat},${manhole.lng}`)}`;
+        const pokefutaUrl = manhole.detail_url || `https://local.pokemon.jp/manhole/detail/${manhole.id}/`;
+        const title = escapeHtml(manhole.title || `マンホール #${manhole.id}`);
+        const prefecture = escapeHtml(manhole.prefecture);
+        const city = escapeHtml(manhole.city);
+        const officialHref = escapeAttribute(pokefutaUrl);
+        const mapsHref = escapeAttribute(mapsUrl);
+        const pokemonBadges = (manhole.pokemons || [])
+          .map(pokemon => `<span class="manhole-pokemon">${escapeHtml(pokemon)}</span>`)
+          .join('');
         return `
         <div class="manhole-item">
           <div class="manhole-info">
-            <div class="manhole-title">${manhole.title || `マンホール #${manhole.id}`}</div>
-            <div class="manhole-location">📍 ${manhole.prefecture} ${manhole.city}</div>
+            <div class="manhole-title">${title}</div>
+            <div class="manhole-location">📍 ${prefecture} ${city}</div>
             <div>
-              ${manhole.pokemons.map(pokemon => `<span class="manhole-pokemon">${pokemon}</span>`).join('')}
+              ${pokemonBadges}
             </div>
           </div>
           <div class="manhole-actions">
             <div class="manhole-distance">${formatDistance(manhole.distance)}</div>
-            <a href="${pokefutaUrl}" target="_blank" class="pokefuta-link">⚡ 公式情報</a>
-            <a href="${mapsUrl}" target="_blank" class="maps-link">📍 Google Map</a>
+            <a href="${officialHref}" target="_blank" rel="noopener" class="pokefuta-link">公式情報</a>
+            <a href="${mapsHref}" target="_blank" rel="noopener" class="maps-link">Google Map</a>
           </div>
         </div>
         `;
@@ -431,7 +546,7 @@
     // Initialize the app
     document.addEventListener('DOMContentLoaded', function() {
       // Auto-get location if the user has previously granted permission
-      if (navigator.geolocation) {
+      if (navigator.geolocation && navigator.permissions?.query) {
         navigator.permissions.query({name: 'geolocation'}).then(function(result) {
           if (result.state === 'granted') {
             getCurrentLocation();
@@ -442,15 +557,5 @@
       }
     });
   </script>
-
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-K18NR4GZG2"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-K18NR4GZG2');
-</script>
 </body>
 </html>
