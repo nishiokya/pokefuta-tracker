@@ -562,7 +562,6 @@
       selectedPrefecture = '';
       filterByPrefectureFromTable('');
       showSelectedPrefectureBadge();
-      recomputeVisibility();
     }
 
     function togglePrefectureSelection(prefecture) {
@@ -571,35 +570,7 @@
       } else {
         filterByPrefectureFromTable(prefecture);
         showSelectedPrefectureBadge();
-        searchPrefectures();
       }
-    }
-
-    function searchPrefectures() {
-      const q = document.getElementById('search-input')?.value?.trim() || '';
-      document.querySelectorAll('#prefecture-table-body tr').forEach(row => {
-        const name = row.children[1]?.textContent || '';
-        const match = !q || name.includes(q);
-        const rowPref = row.children[1]?.textContent;
-        const forceShow = selectedPrefecture && rowPref === selectedPrefecture;
-        row.style.display = (match || forceShow) ? '' : 'none';
-      });
-      updateSearchHitCounter();
-    }
-
-    function updateSearchHitCounter() {
-      const counter = document.getElementById('search-hit-counter');
-      if (!counter) return;
-      const q = document.getElementById('search-input')?.value?.trim();
-      if (!q) {
-        counter.style.display = 'none';
-        counter.textContent = '';
-        return;
-      }
-      let visible = 0;
-      document.querySelectorAll('#prefecture-table-body tr').forEach(r => { if (r.style.display !== 'none') visible++; });
-      counter.textContent = `検索ヒット: ${visible} 件`;
-      counter.style.display = 'block';
     }
 
     // (旧ドロップダウン機能削除済み)
@@ -665,6 +636,8 @@
           a.target = '_blank';
           a.rel = 'noopener';
           a.className = 'prefecture-link';
+          a.ariaLabel = `${prefecture}公式サイトを新しいタブで開く`;
+          a.title = `${prefecture}公式サイトを新しいタブで開く`;
           a.style.color = '#0066cc';
           a.style.textDecoration = 'none';
           a.style.fontWeight = '700';
@@ -738,12 +711,6 @@
         if (!map.hasLayer(marker)) {
           marker.addTo(map);
         }
-      });
-
-      // Show all table rows
-      document.querySelectorAll('#prefecture-table-body tr').forEach(row => {
-        row.style.display = '';
-        row.classList.remove('selected');
       });
 
       // Reset map view
