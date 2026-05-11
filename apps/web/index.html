@@ -408,7 +408,6 @@
         populatePrefectureTable();
         updateStats();
         initRecentFilter();
-        initControlsToggle();
         updateRecentSummary();
         
         // URL パラメータから初期都道府県を選択
@@ -665,6 +664,7 @@
           a.href = siteUrl;
           a.target = '_blank';
           a.rel = 'noopener';
+          a.className = 'prefecture-link';
           a.style.color = '#0066cc';
           a.style.textDecoration = 'none';
           a.style.fontWeight = '700';
@@ -713,6 +713,11 @@
         }
         // Append row
         tbody.appendChild(row);
+        // Prevent row click handler from triggering when clicking prefecture link
+        const linkEl = row.querySelector('.prefecture-link');
+        if (linkEl) {
+          linkEl.addEventListener('click', e => e.stopPropagation());
+        }
       });
     }
 
@@ -803,6 +808,7 @@
 
     // Initialize
     cleanupLegacyLocalStorage();
+    initControlsToggle(); // Initialize toggle early, before data loading
     loadPokefutaData();
     // Banner 初期化
     (function initSiblingBanner(){

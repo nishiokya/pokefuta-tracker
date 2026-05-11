@@ -64,6 +64,8 @@
 #prefecture-filter, .search-input { width:100%; font:inherit; padding:6px 8px; border:var(--border-thick) solid var(--theme-shadow); background:var(--theme-cloth); font-size:.75rem; font-weight:600; margin-bottom:6px; }
 #prefecture-filter:focus, .search-input:focus { outline:3px solid var(--theme-accent2); }
 
+/* Table wrapper for scrollable container */
+.table-wrapper { display:block; overflow-y:auto; max-height:350px; margin-bottom:2px; }
 
 .prefecture-table { width:100%; border-collapse:collapse; font-size:.7rem; background:var(--theme-cloth); border:var(--border-thick) solid var(--theme-shadow); margin-top:0; margin-bottom:0; }
 .prefecture-table th, .prefecture-table td { padding:3px 4px; border-bottom:1px solid var(--theme-shadow); }
