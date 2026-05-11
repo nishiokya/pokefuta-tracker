@@ -33,7 +33,7 @@
     <div class="controls-header">
       <div style="display: flex; align-items: center; justify-content: space-between;">
         <h3 id="page-title">ポケふたマップ</h3>
-        <button type="button" id="controls-toggle" class="controls-toggle-btn" aria-label="フロート表示切り替え" title="フロートを表示/非表示" aria-expanded="false" aria-controls="controls-content"></button>
+        <button type="button" id="controls-toggle" class="controls-toggle-btn" aria-label="フロート表示切り替え" title="フロートを表示/非表示" aria-expanded="true" aria-controls="controls-content"></button>
       </div>
     </div>
     <div id="controls-content" class="controls-content" role="region" aria-label="Filters and statistics">
@@ -335,7 +335,16 @@
           }
           const pokemonsStr = Array.isArray(d.pokemons) && d.pokemons.length ? d.pokemons.join(', ') : '—';
           const cityInfo = d.city ? `<br/><b>${UI_TEXT.cityLabel}</b> ${d.city}` : '';
-          const prefectureSiteLink = d.prefecture_site_url ? `<br/><a href='${d.prefecture_site_url}' target='_blank' class='popup-link popup-link--site'>🌐 ${prefecture}${UI_TEXT.prefectureSite}</a>` : '';
+          const prefectureSiteLink = d.prefecture_site_url ? (function() {
+            try {
+              const url = new URL(d.prefecture_site_url);
+              const allowedHost = 'local.pokemon.jp';
+              if ((url.protocol === 'http:' || url.protocol === 'https:') && url.hostname === allowedHost) {
+                return `<br/><a href='${url.href}' target='_blank' rel='noopener noreferrer' class='popup-link popup-link--site'>🌐 ${prefecture}${UI_TEXT.prefectureSite}</a>`;
+              }
+            } catch {}
+            return '';
+          })() : '';
           // 画像無い場合アップロード案内リンク (仮: d.image_url が無いと判断) ※データ構造に応じて調整可能
           const uploadLink = !d.image_url ? `<br/><a href='https://pokefuta.com/' target='_blank' rel='noopener' class='popup-link popup-link--upload' title='写真を共有 (兄弟サイト)'>📷 写真をアップロード</a>` : '';
           const popupContent = `
@@ -682,10 +691,12 @@
         }
         // Append row
         tbody.appendChild(row);
-        // Prevent row click handler from triggering when clicking prefecture link
+        // Prevent row handlers from triggering when interacting with prefecture link
         const linkEl = row.querySelector('.prefecture-link');
         if (linkEl) {
-          linkEl.addEventListener('click', e => e.stopPropagation());
+          const stopRowPropagation = e => e.stopPropagation();
+          linkEl.addEventListener('click', stopRowPropagation);
+          linkEl.addEventListener('dblclick', stopRowPropagation);
         }
       });
     }
@@ -763,10 +774,10 @@
       }
     }
 
-    // Clean up legacy localStorage keys
+    // Clean up legacy localStorage keys (searchBoxHidden was from removed search UI)
     function cleanupLegacyLocalStorage() {
       localStorage.removeItem('prefectureTableHidden');
-      localStorage.removeItem('searchBoxHidden');
+      localStorage.removeItem('searchBoxHidden'); // Removed in UI refactor
     }
 
     // Initialize
