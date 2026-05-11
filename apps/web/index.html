@@ -10,10 +10,72 @@
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ja_JP">
   <meta property="og:title" content="ポケふた マップ | 全国ポケモンマンホール一覧">
-  <meta property="og:description" content="全国のポケモンマンホール（ポケふた）を地図で探索。訪問計画や聖地巡礼に活用できます。">
+  <meta property="og:description" content="全国のポケモンマンホール（ポケふた）を地図で探索。都道府県・ポケモン名・最近追加フィルタで絞り込み可能。">
   <meta property="og:url" content="https://data.pokefuta.com/">
   <meta property="og:image" content="https://data.pokefuta.com/assets/pokefuta_icon_32.png">
   <link rel="canonical" href="https://data.pokefuta.com/">
+  <script>
+    window.PREFECTURE_CODE_MAP = Object.freeze({
+      '北海道': '01', '青森県': '02', '岩手県': '03', '宮城県': '04', '秋田県': '05',
+      '山形県': '06', '福島県': '07', '茨城県': '08', '栃木県': '09', '群馬県': '10',
+      '埼玉県': '11', '千葉県': '12', '東京都': '13', '神奈川県': '14', '新潟県': '15',
+      '富山県': '16', '石川県': '17', '福井県': '18', '山梨県': '19', '長野県': '20',
+      '岐阜県': '21', '静岡県': '22', '愛知県': '23', '三重県': '24', '滋賀県': '25',
+      '京都府': '26', '大阪府': '27', '兵庫県': '28', '奈良県': '29', '和歌山県': '30',
+      '鳥取県': '31', '島根県': '32', '岡山県': '33', '広島県': '34', '山口県': '35',
+      '徳島県': '36', '香川県': '37', '愛媛県': '38', '高知県': '39', '福岡県': '40',
+      '佐賀県': '41', '長崎県': '42', '熊本県': '43', '大分県': '44', '宮崎県': '45',
+      '鹿児島県': '46', '沖縄県': '47'
+    });
+    window.SITE_BASE_URL = 'https://data.pokefuta.com/';
+
+    window.resolvePrefectureParam = function(prefParam) {
+      if (!prefParam) return '';
+      if (prefParam.length === 2 && !isNaN(prefParam)) {
+        return Object.entries(window.PREFECTURE_CODE_MAP).find(([, code]) => code === prefParam)?.[0] || '';
+      }
+      return window.PREFECTURE_CODE_MAP[prefParam] ? prefParam : '';
+    };
+
+    window.buildPrefecturePageMeta = function(prefecture) {
+      const title = prefecture
+        ? `${prefecture}のポケふた マップ | ポケモンマンホール一覧`
+        : 'ポケふた マップ | 全国ポケモンマンホール一覧';
+      const description = prefecture
+        ? `${prefecture}のポケモンマンホール（ポケふた）を地図で確認。設置場所、市町村、登場ポケモンを一覧できます。`
+        : '全国のポケモンマンホール（ポケふた）を地図で探索。都道府県・ポケモン名・最近追加フィルタで絞り込み可能。';
+      const canonicalUrl = prefecture
+        ? `${window.SITE_BASE_URL}?pref=${encodeURIComponent(prefecture)}`
+        : window.SITE_BASE_URL;
+      return { title, description, canonicalUrl };
+    };
+
+    window.applyPrefecturePageMeta = function(prefecture) {
+      const meta = window.buildPrefecturePageMeta(prefecture);
+      document.title = meta.title;
+      document.querySelector('link[rel="canonical"]')?.setAttribute('href', meta.canonicalUrl);
+      document.querySelector('meta[name="description"]')?.setAttribute('content', meta.description);
+      document.querySelector('meta[property="og:title"]')?.setAttribute('content', meta.title);
+      document.querySelector('meta[property="og:description"]')?.setAttribute('content', meta.description);
+      document.querySelector('meta[property="og:url"]')?.setAttribute('content', meta.canonicalUrl);
+    };
+
+    window.buildCanonicalPath = function(prefecture) {
+      return prefecture ? `/?pref=${encodeURIComponent(prefecture)}` : '/';
+    };
+
+    (function initPrefectureCanonical() {
+      const params = new URLSearchParams(window.location.search);
+      const prefParam = params.get('pref');
+      const prefecture = window.resolvePrefectureParam(prefParam);
+      if (!prefecture) return;
+
+      window.applyPrefecturePageMeta(prefecture);
+      if (prefParam !== prefecture || window.location.pathname.endsWith('/index.html')) {
+        window.history.replaceState({ pref: prefecture }, '', window.buildCanonicalPath(prefecture));
+      }
+    })();
+  </script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
   <link rel="stylesheet" href="./assets/theme.css" />
@@ -103,20 +165,6 @@
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    // 都道府県コードマッピング
-    const prefectureCodeMap = {
-      '北海道': '01', '青森県': '02', '岩手県': '03', '宮城県': '04', '秋田県': '05',
-      '山形県': '06', '福島県': '07', '茨城県': '08', '栃木県': '09', '群馬県': '10',
-      '埼玉県': '11', '千葉県': '12', '東京都': '13', '神奈川県': '14', '新潟県': '15',
-      '富山県': '16', '石川県': '17', '福井県': '18', '山梨県': '19', '長野県': '20',
-      '岐阜県': '21', '静岡県': '22', '愛知県': '23', '三重県': '24', '滋賀県': '25',
-      '京都府': '26', '大阪府': '27', '兵庫県': '28', '奈良県': '29', '和歌山県': '30',
-      '鳥取県': '31', '島根県': '32', '岡山県': '33', '広島県': '34', '山口県': '35',
-      '徳島県': '36', '香川県': '37', '愛媛県': '38', '高知県': '39', '福岡県': '40',
-      '佐賀県': '41', '長崎県': '42', '熊本県': '43', '大分県': '44', '宮崎県': '45',
-      '鹿児島県': '46', '沖縄県': '47'
-    };
-
     // 都道府県中心座標マッピング（クリック時の移動用）
     const prefectureCenterCoords = {
       '北海道': [43.064, 141.347], '青森県': [40.824, 140.740], '岩手県': [39.704, 141.153],
@@ -154,53 +202,18 @@
     // URL パラメータから初期都道府県を取得する関数
     function getInitialPrefectureFromURL() {
       const params = new URLSearchParams(window.location.search);
-      let prefParam = params.get('pref');
-      if (!prefParam) return null;
-      
-      // 都道府県コードまたは都道府県名で判定
-      let prefecture = null;
-      if (prefParam.length === 2 && !isNaN(prefParam)) {
-        // コード（01-47）の場合
-        for (const [name, code] of Object.entries(prefectureCodeMap)) {
-          if (code === prefParam) {
-            prefecture = name;
-            break;
-          }
-        }
-      } else {
-        // 都道府県名の場合
-        if (prefectureCodeMap[prefParam]) {
-          prefecture = prefParam;
-        }
-      }
-      return prefecture;
+      return window.resolvePrefectureParam(params.get('pref')) || null;
     }
 
     // URL を更新する関数
     function updateURLWithPrefecture(prefecture) {
       if (prefecture) {
-        const code = prefectureCodeMap[prefecture] || '';
-        const params = new URLSearchParams();
-        params.set('pref', prefecture); // 都道府県名で統一
-        const newUrl = `${window.location.pathname}?${params.toString()}`;
-        window.history.replaceState({ pref: prefecture }, '', newUrl);
-        // canonical URL も更新（SEO 対策）
-        let canonical = document.querySelector('link[rel="canonical"]');
-        if (!canonical) {
-          canonical = document.createElement('link');
-          canonical.rel = 'canonical';
-          document.head.appendChild(canonical);
-        }
-        const baseUrl = window.location.origin + window.location.pathname;
-        canonical.href = `${baseUrl}?pref=${encodeURIComponent(prefecture)}`;
+        window.history.replaceState({ pref: prefecture }, '', window.buildCanonicalPath(prefecture));
+        window.applyPrefecturePageMeta(prefecture);
       } else {
         // URL をリセット
-        window.history.replaceState({}, '', window.location.pathname);
-        // canonical URL をリセット
-        let canonical = document.querySelector('link[rel="canonical"]');
-        if (canonical) {
-          canonical.href = window.location.origin + window.location.pathname;
-        }
+        window.history.replaceState({}, '', window.buildCanonicalPath(''));
+        window.applyPrefecturePageMeta('');
       }
     }
 
@@ -341,7 +354,7 @@
         prefectureCounts = {}; cityCounts = {}; pokemonCounts = {};
         allData.forEach(d => {
           const prefecture = d.prefecture || '不明';
-          const prefectureCode = prefectureCodeMap[prefecture] || '--';
+          const prefectureCode = window.PREFECTURE_CODE_MAP[prefecture] || '--';
           prefectureCounts[prefecture] = (prefectureCounts[prefecture] || 0) + 1;
           if (d.city) cityCounts[d.city] = (cityCounts[d.city] || 0) + 1;
           if (Array.isArray(d.pokemons)) {
@@ -615,15 +628,15 @@
       const tbody = document.getElementById('prefecture-table-body');
 
       // Create array of all 47 prefectures with their counts
-      const allPrefectures = Object.keys(prefectureCodeMap).map(prefecture => [
+      const allPrefectures = Object.keys(window.PREFECTURE_CODE_MAP).map(prefecture => [
         prefecture,
         prefectureCounts[prefecture] || 0
       ]);
 
       // Sort by prefecture code
       allPrefectures.sort(([a], [b]) => {
-        const codeA = prefectureCodeMap[a];
-        const codeB = prefectureCodeMap[b];
+        const codeA = window.PREFECTURE_CODE_MAP[a];
+        const codeB = window.PREFECTURE_CODE_MAP[b];
         return codeA.localeCompare(codeB);
       });
 
@@ -646,7 +659,7 @@
 
       allPrefectures.forEach(([prefecture, count]) => {
         const row = document.createElement('tr');
-        const code = prefectureCodeMap[prefecture] || '--';
+        const code = window.PREFECTURE_CODE_MAP[prefecture] || '--';
         const siteUrl = prefectureSiteUrls[prefecture];
         let siteCell = '—';
         if (siteUrl) {
@@ -780,13 +793,3 @@
   </script>
 </body>
 </html>
-
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-K18NR4GZG2"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-K18NR4GZG2');
-</script>

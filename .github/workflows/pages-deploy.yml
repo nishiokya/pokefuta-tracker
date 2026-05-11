@@ -33,6 +33,7 @@ jobs:
           cp apps/web/index.html dist/index.html
           cp apps/web/nearby_manholes.html dist/nearby.html
           cp apps/web/gmanhole_map.html dist/gmanhole_map.html
+          cp apps/web/sitemap.xml dist/sitemap.xml
           echo '<!doctype html><meta http-equiv="refresh" content="0; url=./nearby.html">' > dist/nearby_manholes.html
           echo "[dist] Copy assets (CSS + images)"
           cp -r apps/web/assets/* dist/assets/ || true
