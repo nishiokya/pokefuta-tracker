@@ -80,7 +80,7 @@
 収集したマンホールデータは公開リポジトリ (`docs/` ディレクトリ) で公開しています。
 
 - **[docs/pokefuta.ndjson](docs/pokefuta.ndjson)**: ポケふたの公開データ（active レコードのみ、NDJSON形式）
-- **[apps/web/assets/gmanhole.ndjson](apps/web/assets/gmanhole.ndjson)**: ガンダムマンホールのデータ (NDJSON形式)
+- **[docs/gmanhole.ndjson](docs/gmanhole.ndjson)**: ガンダムマンホールのデータ (NDJSON形式)
 
 ### Pokemon Park KML の生成
 

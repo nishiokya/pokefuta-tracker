@@ -12,7 +12,7 @@
   <meta property="og:title" content="ガンダム & ポケふた マンホールマップ | 聖地巡礼支援">
   <meta property="og:description" content="ガンダムマンホールとポケふたを統合。キャラクターやポケモンでフィルタ可能。">
   <meta property="og:url" content="https://nishiokya.github.io/pokefuta-tracker/gmanhole_map.html">
-  <meta property="og:image" content="https://nishiokya.github.io/pokefuta-tracker/assets/manhole_icon.png">
+  <meta property="og:image" content="https://nishiokya.github.io/pokefuta-tracker/assets/pokefuta_icon_32.png">
   <link rel="canonical" href="https://nishiokya.github.io/pokefuta-tracker/gmanhole_map.html">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
   <link rel="stylesheet" href="./assets/theme.css" />
@@ -42,7 +42,7 @@
     .stat-inline { font-size:0.7rem; color:#444; margin:2px 0; }
     .filter-section { margin-bottom:10px; }
   </style>
-  <link rel="icon" href="./assets/manhole_icon.png" type="image/png" />
+  <link rel="icon" href="./assets/pokefuta_icon_32.png" type="image/png" />
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-K18NR4GZG2"></script>
   <script>
@@ -168,7 +168,7 @@
         }
         
         const [gRes] = await Promise.all([
-          fetch('./assets/gmanhole.ndjson')
+          fetch('./gmanhole.ndjson')
         ]);
         
         gundamData = await parseNdjson(gRes);

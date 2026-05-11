@@ -8,13 +8,13 @@
 pokefuta-tracker/
 ├── apps/
 │   ├── scraper/                    # データ収集・処理エンジン
-│   │   ├── pokefuta.ndjson         # 【内部用・完全版】全レコード (active + deleted)
 │   │   ├── scrape_pokefuta.py      # 初期化スクリプト（手動専用）
 │   │   ├── update_pokefuta.py      # 日次差分更新（GitHub Actions自動）
 │   │   ├── export_kml.py           # KML生成
 │   │   ├── export_pokemon_park_kml.py # Pokemon Park KML生成
 │   │   ├── clean_and_notify.py     # データクリーニング（参考）
 │   │   ├── fill_address.py         # 住所フィールド自動補完
+│   │   ├── pokefuta.ndjson         # 【内部用・完全版】全レコード (active + deleted)
 │   │   └── test_pokefuta.json      # テストデータ
 │   └── web/                        # Web UI ソースコード
 │       ├── index.html              # メインマップ

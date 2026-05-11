@@ -138,7 +138,7 @@ git diff apps/scraper/pokefuta.ndjson --name-only
 ### スクレイプ例
 ```bash
 python apps/scraper/scrape_gmanhole.py --scan-max 80 --geocode --geocode-provider gsi --out gmanhole.ndjson
-cp gmanhole.ndjson apps/web/assets/gmanhole.ndjson
+cp gmanhole.ndjson docs/gmanhole.ndjson
 ```
 
 ### 緯度経度補完機能

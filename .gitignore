@@ -10,3 +10,7 @@ change_summary.json
 create_pr.flag
 .DS_Store
 **/.DS_Store
+
+# NDJSON: apps/scraper/pokefuta.ndjsonはgit管理しない
+apps/scraper/pokefuta.ndjson
+
