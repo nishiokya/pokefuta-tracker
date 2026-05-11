@@ -621,12 +621,10 @@
       allData.forEach(d => {
         const pref = d.prefecture || '不明';
         if (d.prefecture_site_url && !prefectureSiteUrls[pref]) {
-          try {
-            const url = new URL(d.prefecture_site_url);
-            if ((url.protocol === 'http:' || url.protocol === 'https:') && url.hostname === allowedHost) {
-              prefectureSiteUrls[pref] = url.href;
-            }
-          } catch {}
+          const validatedUrl = validatePrefectureSiteUrl(d.prefecture_site_url);
+          if (validatedUrl) {
+            prefectureSiteUrls[pref] = validatedUrl.href;
+          }
         }
       });
 
@@ -636,18 +634,13 @@
         const siteUrl = prefectureSiteUrls[prefecture];
         let siteCell = '—';
         if (siteUrl) {
-          const a = document.createElement('a');
-          a.href = siteUrl;
-          a.target = '_blank';
-          a.rel = 'noopener noreferrer';
-          a.className = 'prefecture-link';
-          a.ariaLabel = `${prefecture}公式サイトを新しいタブで開く`;
-          a.title = `${prefecture}公式サイトを新しいタブで開く`;
-          a.style.color = '#0066cc';
-          a.style.textDecoration = 'none';
-          a.style.fontWeight = '700';
-          a.textContent = '🌐';
-          siteCell = a.outerHTML;
+          const anchor = document.createElement('a');
+          anchor.href = siteUrl;
+          anchor.target = '_blank';
+          anchor.rel = 'noopener noreferrer';
+          anchor.className = 'popup-link popup-link--site';
+          anchor.textContent = `🌐 ${prefecture}${UI_TEXT.prefectureSite}`;
+          siteCell = anchor.outerHTML;
         }
 
         // Style row differently if no pokefuta
