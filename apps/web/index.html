@@ -481,41 +481,13 @@
       });
     }
 
-    // function initSearchBoxToggle() { // 削除済み
-      const toggleBtn = document.getElementById('search-toggle');
-      const searchWrapper = document.getElementById('search-box-wrapper');
-      if (!toggleBtn || !searchWrapper) return;
-      
-      // Check localStorage for saved state, default to shown
-      const searchHidden = localStorage.getItem('searchBoxHidden') === 'true';
-      
-      // Set initial state
-      if (searchHidden) {
-        searchWrapper.classList.add('hidden');
-        toggleBtn.classList.add('collapsed');
-        toggleBtn.setAttribute('aria-label', '検索ボックス表示');
-      } else {
-        searchWrapper.classList.remove('hidden');
-        toggleBtn.classList.remove('collapsed');
-        toggleBtn.setAttribute('aria-label', '検索ボックス非表示');
-      }
-      
-      // Add click handler
-      toggleBtn.addEventListener('click', () => {
-        const isHidden = searchWrapper.classList.contains('hidden');
-        if (isHidden) {
-          searchWrapper.classList.remove('hidden');
-          toggleBtn.classList.remove('collapsed');
-          toggleBtn.setAttribute('aria-label', '検索ボックス非表示');
-          localStorage.setItem('searchBoxHidden', 'false');
-        } else {
-          searchWrapper.classList.add('hidden');
-          toggleBtn.classList.add('collapsed');
-          toggleBtn.setAttribute('aria-label', '検索ボックス表示');
-          localStorage.setItem('searchBoxHidden', 'true');
-        }
-      });
-    }
+    // function initSearchBoxToggle() { // 削除済み（未使用）
+    //   const toggleBtn = document.getElementById('search-toggle');
+    //   const searchWrapper = document.getElementById('search-box-wrapper');
+    //   if (!toggleBtn || !searchWrapper) return;
+    //   // ... 以下削除
+    // }
+
 
     function countRecent(days=30){
       const now = Date.now();
