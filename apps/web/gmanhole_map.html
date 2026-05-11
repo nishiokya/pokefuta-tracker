@@ -11,9 +11,9 @@
   <meta property="og:locale" content="ja_JP">
   <meta property="og:title" content="ガンダム & ポケふた マンホールマップ | 聖地巡礼支援">
   <meta property="og:description" content="ガンダムマンホールとポケふたを統合。キャラクターやポケモンでフィルタ可能。">
-  <meta property="og:url" content="https://nishiokya.github.io/pokefuta-tracker/gmanhole_map.html">
-  <meta property="og:image" content="https://nishiokya.github.io/pokefuta-tracker/assets/pokefuta_icon_32.png">
-  <link rel="canonical" href="https://nishiokya.github.io/pokefuta-tracker/gmanhole_map.html">
+  <meta property="og:url" content="https://data.pokefuta.com/gmanhole_map.html">
+  <meta property="og:image" content="https://data.pokefuta.com/assets/pokefuta_icon_32.png">
+  <link rel="canonical" href="https://data.pokefuta.com/gmanhole_map.html">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
   <link rel="stylesheet" href="./assets/theme.css" />
   <link rel="stylesheet" href="./assets/map.css" />
@@ -23,7 +23,7 @@
     .fr-pokemon { background:linear-gradient(135deg,#ffcc00,#ff6b00); }
     .fr-gundam { background:linear-gradient(135deg,#0044aa,#cc0000); }
     .fr-both { background:linear-gradient(135deg,#6a00cc,#ff0066); }
-    #controls { max-width:340px; }
+    #controls { max-width:360px; }
     .legend { margin-top:6px; display:flex; gap:8px; flex-wrap:wrap; }
     .legend-item { display:flex; align-items:center; gap:4px; font-size:0.75rem; }
     .legend-swatch { width:18px; height:18px; border-radius:50%; box-shadow:0 0 0 1px #fff,0 1px 3px rgba(0,0,0,.3); }
@@ -40,7 +40,14 @@
     .popup-box { font-size:0.8rem; line-height:1.2; }
     .popup-box .popup-title { font-weight:600; }
     .stat-inline { font-size:0.7rem; color:#444; margin:2px 0; }
-    .filter-section { margin-bottom:10px; }
+    .franchise-filter-group input { margin:0; }
+    .gmanhole-display-row { display:flex; align-items:center; gap:8px; margin-bottom:2px; padding:2px 0; flex-wrap:wrap; }
+    .gmanhole-display-row .franchise-filter-group { margin:0; gap:10px; }
+    .gmanhole-display-row .legend { margin:0 0 0 auto; }
+    .prefecture-row-button { display:block; width:100%; border:0; background:transparent; color:inherit; font:inherit; font-weight:700; text-align:left; padding:0; cursor:pointer; }
+    .prefecture-row-button:hover, .prefecture-row-button:focus-visible { text-decoration:underline; }
+    #prefecture-table-body tr:hover { background:transparent; cursor:default; }
+    #prefecture-table-body tr.selected:hover { background:var(--theme-accent); }
   </style>
   <link rel="icon" href="./assets/pokefuta_icon_32.png" type="image/png" />
   <!-- Google Analytics -->
@@ -55,13 +62,13 @@
 <body>
   <div id="controls" role="complementary" aria-labelledby="page-title">
     <div class="controls-header">
-      <h3 id="page-title">🕳 ガンダム & ポケふた マップ</h3>
-  <a href="./" class="nav-link" style="margin-right: 8px;">← ポケふたマップ</a>
-  <a href="./nearby_manholes.html" class="nav-link" id="nav-link">📍 近くのマンホール</a>
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <h3 id="page-title">ガンダム & ポケふた マップ</h3>
+        <button type="button" id="controls-toggle" class="controls-toggle-btn" aria-label="フロート表示切り替え" title="フロートを表示/非表示" aria-expanded="true" aria-controls="controls-content"></button>
+      </div>
     </div>
-    <div class="controls-content" role="region" aria-label="Filters and statistics">
-      <div class="filter-section">
-        <h4 style="margin:4px 0;">表示設定</h4>
+    <div id="controls-content" class="controls-content" role="region" aria-label="Filters and statistics">
+      <div class="gmanhole-display-row">
         <div class="franchise-filter-group" role="group" aria-label="Franchise filters">
           <label><input type="checkbox" id="chk-pokemon" checked aria-label="ポケモン表示" /> ポケモン</label>
           <label><input type="checkbox" id="chk-gundam" checked aria-label="ガンダム表示" /> ガンダム</label>
@@ -72,9 +79,27 @@
           <div class="legend-item"><span class="legend-swatch legend-both"></span>座標共有/重複</div>
         </div>
       </div>
-      <div class="filter-section">
-        <h4 style="margin:4px 0;">都道府県別件数</h4>
-        <div id="prefecture-counts" style="max-height: 300px; overflow-y: auto; font-size: 0.85rem;"></div>
+      <div id="prefecture-tab" class="tab-content active">
+        <div id="selected-prefecture-badge" class="selected-prefecture-badge" style="display:none; margin:2px 0; font-size:0.85rem; background:#eef; padding:4px 8px; border-radius:6px;">
+          <span class="badge-label" style="font-weight:600;">選択中:</span> <span class="badge-value"></span>
+          <button type="button" class="badge-clear" style="margin-left:6px; background:#ccc; border:none; padding:2px 6px; border-radius:4px; cursor:pointer;" aria-label="選択解除" onclick="clearPrefectureSelection()">✖</button>
+        </div>
+        <h4 id="heading-pref-count" style="margin:2px 0; font-size:.75rem;">都道府県別マンホール数</h4>
+        <div id="prefecture-table-wrapper" class="table-wrapper">
+          <table class="prefecture-table" id="prefecture-table" aria-describedby="pref-table-desc">
+            <caption id="pref-table-desc" class="sr-only">都道府県ごとのガンダムマンホールとポケふたの件数</caption>
+            <thead>
+              <tr>
+                <th scope="col">コード</th>
+                <th scope="col">都道府県</th>
+                <th scope="col">合計</th>
+                <th scope="col">G</th>
+                <th scope="col">P</th>
+              </tr>
+            </thead>
+            <tbody id="prefecture-table-body"></tbody>
+          </table>
+        </div>
       </div>
       <div class="stats" role="status" aria-live="polite">
         <div id="total-count">総数: <span>0</span></div>
@@ -85,6 +110,17 @@
     </div>
   </div>
   <div id="map"></div>
+  <footer class="data-links" role="contentinfo" style="margin:16px auto 0; max-width:960px; text-align:center; font-size:0.9rem; color:#444;">
+    <p style="margin:0;">
+      <a href="./">ポケふたマップ</a>
+      /
+      <a href="./nearby.html">近くのマンホール</a>
+      /
+      <a href="./gmanhole.ndjson" target="_blank" rel="noopener">ガンダムNDJSON</a>
+      /
+      <a href="./pokefuta.ndjson" target="_blank" rel="noopener">ポケふたNDJSON</a>
+    </p>
+  </footer>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script>
     const map = L.map('map').setView([36.0, 138.0], 6);
@@ -104,6 +140,7 @@
     let gundamData = []; // gmanhole
     let pokemonData = []; // pokefuta
     let allMarkers = [];
+    let selectedPrefecture = '';
 
     // 都道府県コードマッピング
     const prefectureCodeMap = {
@@ -138,6 +175,20 @@
       '熊本県': [32.790, 130.742], '大分県': [33.238, 131.613], '宮崎県': [31.911, 131.424],
       '鹿児島県': [31.560, 130.558], '沖縄県': [26.212, 127.679]
     };
+
+    function getInitialPrefectureFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      const prefParam = params.get('pref');
+      if (!prefParam) return '';
+      if (prefParam.length === 2 && !isNaN(prefParam)) {
+        return Object.entries(prefectureCodeMap).find(([, code]) => code === prefParam)?.[0] || '';
+      }
+      return prefectureCodeMap[prefParam] ? prefParam : '';
+    }
+
+    function normalizePrefecture(prefecture) {
+      return prefecture || '不明';
+    }
 
     async function loadDatasets(){
       try {
@@ -176,6 +227,11 @@
         buildMarkers();
         buildPrefectureCounts();
         updateStats();
+        const initialPref = getInitialPrefectureFromURL();
+        if (initialPref) {
+          setPrefectureSelection(initialPref);
+          setTimeout(() => zoomToPrefecture(initialPref), 100);
+        }
       } catch(e){ console.error('Failed to load datasets', e); }
     }
 
@@ -186,55 +242,26 @@
       }).filter(Boolean);
     }
 
-    function buildMarkers() {
-      allMarkers.forEach(m => { if (map.hasLayer(m)) map.removeLayer(m); });
-      allMarkers = [];
-      // Determine overlaps -> same lat/lng (rounded) between franchises
-      const locKey = d => d.lat != null && d.lng != null ? (d.lat.toFixed(5)+'|'+d.lng.toFixed(5)) : null;
-      const pokemonLocs = new Set(pokemonData.map(locKey).filter(Boolean));
-      const gundamLocs = new Set(gundamData.map(locKey).filter(Boolean));
-      const overlapLocs = new Set([...pokemonLocs].filter(k => gundamLocs.has(k)));
-
-      gundamData.forEach(d => {
-        if (d.lat == null || d.lng == null) return; // skip unless geocoded
-        const overlap = overlapLocs.has(locKey(d));
-        const popup = buildGundamPopup(d, overlap);
-        const marker = L.marker([d.lat, d.lng], { icon: franchiseIcon('gundam', overlap) }).bindPopup(popup);
-        marker._data = { ...d, franchise:'gundam', overlap };
-        marker.addTo(map); allMarkers.push(marker);
-      });
-      pokemonData.forEach(d => {
-        if (d.lat == null || d.lng == null) return;
-        const overlap = overlapLocs.has(locKey(d));
-        const popup = buildPokemonPopup(d, overlap);
-        const marker = L.marker([d.lat, d.lng], { icon: franchiseIcon('pokefuta', overlap) }).bindPopup(popup);
-        marker._data = { ...d, franchise:'pokefuta', overlap };
-        marker.addTo(map); allMarkers.push(marker);
-      });
-      recomputeVisibility();
-    }
-
     function buildPrefectureCounts() {
-      const container = document.getElementById('prefecture-counts');
-      if (!container) return;
+      const tbody = document.getElementById('prefecture-table-body');
+      if (!tbody) return;
 
       const counts = {};
       
       // Count Gundam manholes by prefecture
       gundamData.forEach(d => {
-        const pref = d.prefecture || '不明';
+        const pref = normalizePrefecture(d.prefecture);
         if (!counts[pref]) counts[pref] = { gundam: 0, pokemon: 0 };
         counts[pref].gundam++;
       });
 
       // Count Pokemon manholes by prefecture
       pokemonData.forEach(d => {
-        const pref = d.prefecture || '不明';
+        const pref = normalizePrefecture(d.prefecture);
         if (!counts[pref]) counts[pref] = { gundam: 0, pokemon: 0 };
         counts[pref].pokemon++;
       });
 
-      // Sort prefectures by prefecture code order
       const sortedPrefectures = Object.entries(counts)
         .sort(([a], [b]) => {
           const codeA = prefectureCodeMap[a] || '99'; // '不明' gets '99'
@@ -242,21 +269,64 @@
           return codeA.localeCompare(codeB);
         });
 
-      container.innerHTML = sortedPrefectures.map(([pref, count]) => {
+      tbody.innerHTML = '';
+      sortedPrefectures.forEach(([pref, count]) => {
         const total = count.gundam + count.pokemon;
         const prefCode = prefectureCodeMap[pref] || '--';
-        const gundamText = count.gundam > 0 ? `ガンダム: ${count.gundam}` : '';
-        const pokemonText = count.pokemon > 0 ? `ポケモン: ${count.pokemon}` : '';
-        const details = [gundamText, pokemonText].filter(Boolean).join(', ');
-        
-        return `<div class="prefecture-item" data-prefecture="${pref}" style="padding: 4px 6px; border-bottom: 1px solid #eee; cursor: pointer; border-radius: 4px; transition: all 0.2s ease;" 
-                onmouseover="this.style.backgroundColor='#f0f8ff'; this.style.transform='translateX(2px)'" 
-                onmouseout="this.style.backgroundColor=''; this.style.transform='translateX(0)'" 
-                onclick="zoomToPrefecture('${pref}')">
-          <div style="font-weight: 600; color: #333;">${prefCode} ${pref} (${total}件)</div>
-          <div style="font-size: 0.75rem; color: #666; margin-left: 8px;">${details}</div>
-        </div>`;
-      }).join('');
+        const row = document.createElement('tr');
+        row.dataset.prefecture = pref;
+        row.innerHTML = `
+          <td><span class="prefecture-code">${prefCode}</span></td>
+          <td><button type="button" class="prefecture-row-button">${esc(pref)}</button></td>
+          <td><span class="count-badge">${total}</span></td>
+          <td>${count.gundam || 0}</td>
+          <td>${count.pokemon || 0}</td>
+        `;
+        const button = row.querySelector('.prefecture-row-button');
+        button.title = `${pref}で絞り込み+ズーム`;
+        button.addEventListener('click', () => {
+          const willSelect = selectedPrefecture !== pref;
+          setPrefectureSelection(willSelect ? pref : '');
+          if (willSelect) {
+            zoomToPrefecture(pref);
+          } else {
+            map.setView([36.0, 138.0], 6);
+          }
+        });
+        tbody.appendChild(row);
+      });
+    }
+
+    function showSelectedPrefectureBadge() {
+      const badge = document.getElementById('selected-prefecture-badge');
+      const value = badge?.querySelector('.badge-value');
+      if (!badge || !value) return;
+      if (selectedPrefecture) {
+        value.textContent = selectedPrefecture;
+        badge.style.display = 'inline-block';
+      } else {
+        value.textContent = '';
+        badge.style.display = 'none';
+      }
+    }
+
+    function updatePrefectureRows() {
+      document.querySelectorAll('#prefecture-table-body tr').forEach(row => {
+        const match = row.dataset.prefecture === selectedPrefecture;
+        row.classList.toggle('selected', match);
+      });
+    }
+
+    function setPrefectureSelection(prefecture) {
+      selectedPrefecture = prefecture || '';
+      updatePrefectureRows();
+      showSelectedPrefectureBadge();
+      recomputeVisibility();
+    }
+
+    function clearPrefectureSelection() {
+      setPrefectureSelection('');
+      map.setView([36.0, 138.0], 6);
     }
 
     // Leafletの機能を使って都道府県のマンホールにズームする関数
@@ -303,8 +373,7 @@
           });
         }
         
-        // 都道府県項目を一時的にハイライト
-        highlightPrefectureItem(prefecture);
+        updatePrefectureRows();
         
         console.log(`Successfully zoomed to ${prefecture} with ${prefectureMarkers.length} visible manholes`);
         
@@ -316,29 +385,6 @@
           map.setView(center, 8);
         }
       }
-    }
-
-    // 都道府県項目をハイライトする関数
-    function highlightPrefectureItem(prefecture) {
-      const items = document.querySelectorAll('.prefecture-item');
-      items.forEach(item => {
-        if (item.dataset.prefecture === prefecture) {
-          const originalBg = item.style.backgroundColor;
-          const originalBorder = item.style.border;
-          
-          // ハイライト効果
-          item.style.backgroundColor = '#e3f2fd';
-          item.style.border = '2px solid #2196f3';
-          item.style.boxShadow = '0 2px 8px rgba(33, 150, 243, 0.3)';
-          
-          // 2秒後に元に戻す
-          setTimeout(() => {
-            item.style.backgroundColor = originalBg;
-            item.style.border = originalBorder;
-            item.style.boxShadow = '';
-          }, 2000);
-        }
-      });
     }
 
     function buildMarkers() {
@@ -355,7 +401,7 @@
         const overlap = overlapLocs.has(locKey(d));
         const popup = buildGundamPopup(d, overlap);
         const marker = L.marker([d.lat, d.lng], { icon: franchiseIcon('gundam', overlap) }).bindPopup(popup);
-        marker._data = { ...d, franchise:'gundam', overlap };
+        marker._data = { ...d, prefecture: normalizePrefecture(d.prefecture), franchise:'gundam', overlap };
         marker.addTo(map); allMarkers.push(marker);
       });
       pokemonData.forEach(d => {
@@ -363,7 +409,7 @@
         const overlap = overlapLocs.has(locKey(d));
         const popup = buildPokemonPopup(d, overlap);
         const marker = L.marker([d.lat, d.lng], { icon: franchiseIcon('pokefuta', overlap) }).bindPopup(popup);
-        marker._data = { ...d, franchise:'pokefuta', overlap };
+        marker._data = { ...d, prefecture: normalizePrefecture(d.prefecture), franchise:'pokefuta', overlap };
         marker.addTo(map); allMarkers.push(marker);
       });
       recomputeVisibility();
@@ -393,16 +439,6 @@
       </div>`;
     }
 
-    function buildPokemonPopup(d, overlap){
-      const pokes = Array.isArray(d.pokemons)&&d.pokemons.length ? d.pokemons.join(', ') : '—';
-      return `<div class='popup-box'>
-        <b>ID:</b> ${esc(d.id)}<br/><b>タイトル:</b> <span class='popup-title'>${esc(d.title)}</span><br/>
-        <b>都道府県:</b> ${esc(d.prefecture||'')} / ${esc(d.city||'')}<br/>
-        <b>ポケモン:</b> ${esc(pokes)}
-        <br/><a href='${esc(d.detail_url)}' target='_blank' rel='noopener'>📝 詳細</a>${overlap?'<br/><span class="stat-inline">※ 座標重複</span>':''}
-      </div>`;
-    }
-
     function recomputeVisibility(){
       const showPokemon = document.getElementById('chk-pokemon')?.checked;
       const showGundam = document.getElementById('chk-gundam')?.checked;
@@ -417,6 +453,9 @@
           show = showGundam; 
         } else { 
           show = showPokemon; 
+        }
+        if (selectedPrefecture) {
+          show = show && d.prefecture === selectedPrefecture;
         }
         
         if(show){ 
@@ -442,10 +481,32 @@
       if(pEl) pEl.textContent=String(pCountOverride ?? pokemonData.length);
     }
 
+    function initControlsToggle() {
+      const toggleBtn = document.getElementById('controls-toggle');
+      const controlsContent = document.getElementById('controls-content');
+      if (!toggleBtn || !controlsContent) return;
+      const controlsHidden = localStorage.getItem('gmanholeControlsHidden') === 'true';
+
+      function applyState(hidden) {
+        controlsContent.classList.toggle('hidden', hidden);
+        toggleBtn.classList.toggle('collapsed', hidden);
+        toggleBtn.setAttribute('aria-label', hidden ? 'フロート表示' : 'フロート非表示');
+        toggleBtn.setAttribute('aria-expanded', hidden ? 'false' : 'true');
+      }
+
+      applyState(controlsHidden);
+      toggleBtn.addEventListener('click', () => {
+        const nextHidden = !controlsContent.classList.contains('hidden');
+        applyState(nextHidden);
+        localStorage.setItem('gmanholeControlsHidden', String(nextHidden));
+      });
+    }
+
     // Event listeners
     document.getElementById('chk-pokemon').addEventListener('change', recomputeVisibility);
     document.getElementById('chk-gundam').addEventListener('change', recomputeVisibility);
 
+    initControlsToggle();
     loadDatasets();
   </script>
 </body>
