@@ -3,6 +3,8 @@ name: Build & Deploy Pokefuta Pages (Artifact)
 on:
   workflow_dispatch:
   push:
+    branches:
+      - main
     paths:
       - 'apps/web/**' # HTML and assets changes
 
