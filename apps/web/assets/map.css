@@ -80,6 +80,7 @@
 .stats { font-size:.6rem; display:flex; justify-content:space-between; margin-top:2px; padding-top:2px; border-top:var(--border-thick) solid var(--theme-shadow); gap:2px; }
 
 #map { height:100%; }
+.leaflet-popup-pane { z-index: 1300; }
 .leaflet-popup-content-wrapper { border-radius:12px; }
 .leaflet-popup-content { margin:10px 12px; }
 

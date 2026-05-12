@@ -7,6 +7,7 @@ on:
       - main
     paths:
       - 'apps/web/**' # HTML and assets changes
+      - 'apps/scraper/generate_sitemap.py' # sitemap generator used during deploy
       - 'docs/**'     # dataset changes copied into dist/
       - 'dataset/manhole/image/**' # local popup photos
 
@@ -30,6 +31,8 @@ jobs:
         run: |
           set -e
           mkdir -p dist/assets
+          echo "[dist] Generate sitemap with manhole photo URLs"
+          python3 apps/scraper/generate_sitemap.py
           echo "[dist] Copy HTML sources"
           cp apps/web/index.html dist/index.html
           cp apps/web/nearby_manholes.html dist/nearby.html

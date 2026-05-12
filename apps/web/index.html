@@ -64,6 +64,28 @@
       return prefecture ? `/?pref=${encodeURIComponent(prefecture)}` : '/';
     };
 
+    window.buildManholeCanonicalPath = function(manholeId) {
+      return manholeId ? `/?manhole=${encodeURIComponent(manholeId)}` : '/';
+    };
+
+    window.applyManholePageMeta = function(manhole) {
+      if (!manhole) return;
+      const titleBase = manhole.title || `ポケふた ${manhole.id}`;
+      const pokemonText = Array.isArray(manhole.pokemons) && manhole.pokemons.length
+        ? `登場ポケモン: ${manhole.pokemons.join(', ')}。`
+        : '';
+      const placeText = [manhole.prefecture, manhole.city].filter(Boolean).join(' ');
+      const title = `${titleBase} | ポケふた マップ`;
+      const description = `${placeText ? `${placeText}の` : ''}ポケモンマンホール（ポケふた）を地図で確認。${pokemonText}`.trim();
+      const canonicalUrl = `${window.SITE_BASE_URL}?manhole=${encodeURIComponent(manhole.id)}`;
+      document.title = title;
+      document.querySelector('link[rel="canonical"]')?.setAttribute('href', canonicalUrl);
+      document.querySelector('meta[name="description"]')?.setAttribute('content', description);
+      document.querySelector('meta[property="og:title"]')?.setAttribute('content', title);
+      document.querySelector('meta[property="og:description"]')?.setAttribute('content', description);
+      document.querySelector('meta[property="og:url"]')?.setAttribute('content', canonicalUrl);
+    };
+
     (function initPrefectureCanonical() {
       const params = new URLSearchParams(window.location.search);
       const prefParam = params.get('pref');
@@ -205,6 +227,12 @@
       return window.resolvePrefectureParam(params.get('pref')) || null;
     }
 
+    function getInitialManholeIdFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      const manholeId = String(params.get('manhole') || '').trim();
+      return /^[0-9A-Za-z_-]+$/.test(manholeId) ? manholeId : null;
+    }
+
     // URL を更新する関数
     function updateURLWithPrefecture(prefecture) {
       if (prefecture) {
@@ -288,6 +316,11 @@
       return safeId ? `./manhole/image/${encodeURIComponent(safeId)}_latest.jpeg` : '';
     }
 
+    function getManholePageUrl(id) {
+      const safeId = String(id ?? '').trim();
+      return safeId ? window.buildManholeCanonicalPath(safeId) : '';
+    }
+
     function handlePopupImageError(img) {
       const frame = img.closest('.popup-photo');
       if (frame) frame.classList.add('popup-photo--missing');
@@ -340,6 +373,7 @@
       const links = [
         officialDetailLink,
         prefectureSiteLink,
+        `<a href="${getManholePageUrl(d.id)}" class="popup-link">🔗 このポケふたURL</a>`,
         `<a href="https://pokefuta.com/" target="_blank" rel="noopener noreferrer" class="popup-link popup-link--upload">📷 兄弟サイトで写真を投稿</a>`
       ].filter(Boolean).join('');
 
@@ -518,7 +552,13 @@
         initRecentFilter();
         updateRecentSummary();
         
-        // URL パラメータから初期都道府県を選択
+        // URL パラメータから初期表示を選択
+        const initialManholeId = getInitialManholeIdFromURL();
+        if (initialManholeId) {
+          console.log(`Initial manhole from URL: ${initialManholeId}`);
+          if (openManholePopup(initialManholeId)) return;
+        }
+
         const initialPref = getInitialPrefectureFromURL();
         console.log(`Initial prefecture from URL: ${initialPref}`);
         if (initialPref) {
@@ -531,6 +571,22 @@
       } catch (e) {
         console.error('ポケふたデータ読み込み失敗', e);
       }
+    }
+
+    function openManholePopup(manholeId) {
+      const marker = allMarkers.find(item => String(item.pokefutaData?.id) === String(manholeId));
+      if (!marker) {
+        console.warn(`No manhole found for id: ${manholeId}`);
+        return false;
+      }
+
+      if (!map.hasLayer(marker)) marker.addTo(map);
+      const data = marker.pokefutaData;
+      window.applyManholePageMeta(data);
+      window.history.replaceState({ manhole: data.id }, '', window.buildManholeCanonicalPath(data.id));
+      map.setView([data.lat, data.lng], Math.max(map.getZoom(), 15), { animate: false });
+      marker.openPopup();
+      return true;
     }
 
     function initRecentFilter() {
