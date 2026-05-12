@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900" fill="none">
+  <defs>
+    <style>
+      .label{font-family:-apple-system,BlinkMacSystemFont,'Noto Sans JP','Hiragino Sans',sans-serif;font-size:24px;font-weight:700;fill:#2b2b2b}
+      .small{font-size:18px;font-weight:600;fill:#2b2b2b}
+      .icon-stroke{stroke:#6F55A3;stroke-width:10;stroke-linecap:round;stroke-linejoin:round}
+      .dark-stroke{stroke:#232323;stroke-width:10;stroke-linecap:round;stroke-linejoin:round}
+      .travel-stroke{stroke:#6F55A3;stroke-width:8;stroke-linecap:round;stroke-linejoin:round}
+      .soft-card{fill:#FFF9ED;stroke:#E8D6B8;stroke-width:3;filter:url(#shadow)}
+      .circle{fill:#FFFDF8;stroke:#E8D6B8;stroke-width:3;filter:url(#shadow)}
+      .purple{fill:#6F55A3}.purple2{fill:#8B73BE}.cream{fill:#F6EEDC}.orange{fill:#F36D36}.green{fill:#2E9B57}.blue{fill:#5BA5D8}.pink{fill:#E67388}.brown{fill:#6B4A36}.dark{fill:#232323}
+    </style>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000" flood-opacity="0.10"/></filter>
+    <symbol id="icon-current-location" viewBox="0 0 96 96">
+      <circle cx="48" cy="48" r="24" class="icon-stroke" fill="none"/>
+      <path d="M48 8v16M48 72v16M8 48h16M72 48h16" class="icon-stroke"/>
+      <circle cx="48" cy="48" r="7" class="purple"/>
+    </symbol>
+    <symbol id="icon-pin" viewBox="0 0 96 96">
+      <path d="M48 86s26-27 26-50C74 21.6 62.4 10 48 10S22 21.6 22 36c0 23 26 50 26 50z" class="purple"/>
+      <circle cx="48" cy="36" r="11" fill="#fff"/>
+    </symbol>
+    <symbol id="icon-map" viewBox="0 0 96 96">
+      <path d="M12 20l22-8 28 8 22-8v64l-22 8-28-8-22 8V20z" class="icon-stroke" fill="none"/>
+      <path d="M34 12v64M62 20v64" class="icon-stroke"/>
+    </symbol>
+    <symbol id="icon-bookmark" viewBox="0 0 96 96">
+      <path d="M24 14h48v68L48 66 24 82V14z" class="icon-stroke" fill="none"/>
+    </symbol>
+    <symbol id="icon-search" viewBox="0 0 96 96">
+      <circle cx="40" cy="40" r="24" class="dark-stroke" fill="none"/>
+      <path d="M58 58l24 24" class="dark-stroke"/>
+    </symbol>
+    <symbol id="icon-filter" viewBox="0 0 96 96">
+      <path d="M16 26h64M16 48h64M16 70h64" class="icon-stroke"/>
+      <circle cx="36" cy="26" r="8" fill="#FFFDF8" class="icon-stroke"/>
+      <circle cx="60" cy="48" r="8" fill="#FFFDF8" class="icon-stroke"/>
+      <circle cx="44" cy="70" r="8" fill="#FFFDF8" class="icon-stroke"/>
+    </symbol>
+    <symbol id="icon-menu" viewBox="0 0 96 96"><path d="M18 28h60M18 48h60M18 68h60" class="dark-stroke"/></symbol>
+    <symbol id="icon-fire" viewBox="0 0 96 96">
+      <path d="M50 84c18-3 28-16 28-32 0-16-10-27-22-38 2 14-4 21-12 27 1-11-5-20-14-27 2 18-12 27-12 42 0 18 14 29 32 28z" class="orange"/>
+      <path d="M48 78c9-2 15-9 15-18 0-8-5-14-11-20 1 8-3 12-8 16 0-6-3-11-8-15 1 11-7 16-7 25 0 9 8 14 19 12z" fill="#FFF1A6"/>
+    </symbol>
+    <symbol id="icon-train" viewBox="0 0 96 96">
+      <rect x="24" y="10" width="48" height="60" rx="12" class="travel-stroke" fill="none"/>
+      <path d="M34 26h28M32 44h32M36 70l-10 14M60 70l10 14" class="travel-stroke"/>
+      <circle cx="36" cy="58" r="5" class="green"/><circle cx="60" cy="58" r="5" class="green"/>
+    </symbol>
+    <symbol id="icon-car" viewBox="0 0 96 96">
+      <path d="M20 54l8-22h40l8 22v20H20V54z" class="travel-stroke" fill="none"/>
+      <path d="M24 54h48" class="travel-stroke"/>
+      <circle cx="34" cy="74" r="7" class="blue"/><circle cx="62" cy="74" r="7" class="blue"/>
+    </symbol>
+    <symbol id="icon-walk" viewBox="0 0 96 96">
+      <circle cx="50" cy="16" r="8" class="orange"/>
+      <path d="M46 30l-10 22 16 10 8 24M56 34l16 14M36 52L24 76" class="travel-stroke" stroke="#F0A44A" fill="none"/>
+    </symbol>
+    <symbol id="icon-onsen" viewBox="0 0 96 96">
+      <path d="M20 58c10 10 46 10 56 0" class="travel-stroke" stroke="#E67388" fill="none"/>
+      <path d="M32 36c-8-10 8-12 0-24M48 38c-8-10 8-12 0-24M64 36c-8-10 8-12 0-24" class="travel-stroke" stroke="#E67388" fill="none"/>
+      <path d="M18 58c0 18 12 28 30 28s30-10 30-28" class="travel-stroke" stroke="#E67388" fill="none"/>
+    </symbol>
+    <symbol id="icon-nature" viewBox="0 0 96 96">
+      <path d="M48 12l18 26H56l18 24H58v20H38V62H22l18-24H30L48 12z" class="green"/>
+    </symbol>
+    <symbol id="icon-external" viewBox="0 0 96 96">
+      <path d="M34 18h44v44" class="travel-stroke" stroke="#1D9A8A" fill="none"/>
+      <path d="M76 20L38 58" class="travel-stroke" stroke="#1D9A8A"/>
+      <path d="M22 34v40h40" class="travel-stroke" stroke="#1D9A8A" fill="none"/>
+    </symbol>
+  </defs>
+
+  <rect width="1200" height="900" fill="#F7F1E5"/>
+  <text x="40" y="62" class="label">ポケふたマップ UIアイコン素材 SVG</text>
+
+  <!-- map controls -->
+  <text x="40" y="120" class="small">マップ操作</text>
+  <g transform="translate(40 145)"><circle r="48" cx="48" cy="48" class="circle"/><use href="#icon-current-location" x="14" y="14" width="68" height="68"/><text x="48" y="130" text-anchor="middle" class="small">現在地</text></g>
+  <g transform="translate(190 145)"><circle r="48" cx="48" cy="48" class="circle"/><use href="#icon-pin" x="18" y="14" width="60" height="70"/><text x="48" y="130" text-anchor="middle" class="small">近くを探す</text></g>
+  <g transform="translate(340 145)"><circle r="48" cx="48" cy="48" class="circle"/><path d="M48 24v48M24 48h48" class="dark-stroke"/><text x="48" y="130" text-anchor="middle" class="small">ズーム+</text></g>
+  <g transform="translate(490 145)"><circle r="48" cx="48" cy="48" class="circle"/><path d="M24 48h48" class="dark-stroke"/><text x="48" y="130" text-anchor="middle" class="small">ズーム-</text></g>
+
+  <!-- action menu -->
+  <text x="40" y="340" class="small">アクション・メニュー</text>
+  <g transform="translate(40 365)"><rect width="96" height="96" rx="24" class="soft-card"/><use href="#icon-map" x="16" y="16" width="64" height="64"/><text x="48" y="130" text-anchor="middle" class="small">都道府県</text></g>
+  <g transform="translate(190 365)"><rect width="96" height="96" rx="24" class="soft-card"/><use href="#icon-bookmark" x="18" y="14" width="60" height="68"/><text x="48" y="130" text-anchor="middle" class="small">お気に入り</text></g>
+  <g transform="translate(340 365)"><rect width="96" height="96" rx="24" class="soft-card"/><use href="#icon-fire" x="20" y="16" width="56" height="64"/><text x="48" y="130" text-anchor="middle" class="small">最近追加</text></g>
+  <g transform="translate(490 365)"><rect width="96" height="96" rx="24" class="soft-card"/><use href="#icon-search" x="16" y="16" width="64" height="64"/><text x="48" y="130" text-anchor="middle" class="small">検索</text></g>
+  <g transform="translate(640 365)"><rect width="96" height="96" rx="24" class="soft-card"/><use href="#icon-filter" x="16" y="16" width="64" height="64"/><text x="48" y="130" text-anchor="middle" class="small">フィルター</text></g>
+  <g transform="translate(790 365)"><rect width="96" height="96" rx="24" class="soft-card"/><use href="#icon-menu" x="16" y="16" width="64" height="64"/><text x="48" y="130" text-anchor="middle" class="small">メニュー</text></g>
+
+  <!-- nav bar -->
+  <text x="40" y="570" class="small">ナビゲーションバー例</text>
+  <rect x="40" y="595" width="640" height="96" rx="24" class="soft-card"/>
+  <g transform="translate(75 610)"><use href="#icon-map" width="52" height="52"/><text x="26" y="74" text-anchor="middle" class="small" fill="#6F55A3">マップ</text></g>
+  <g transform="translate(210 610)"><use href="#icon-search" width="52" height="52"/><text x="26" y="74" text-anchor="middle" class="small">探す</text></g>
+  <g transform="translate(345 610)"><use href="#icon-bookmark" width="52" height="52"/><text x="26" y="74" text-anchor="middle" class="small">保存</text></g>
+  <g transform="translate(480 610)"><use href="#icon-walk" width="52" height="52"/><text x="26" y="74" text-anchor="middle" class="small">旅記録</text></g>
+  <g transform="translate(615 610)"><use href="#icon-menu" width="52" height="52"/><text x="26" y="74" text-anchor="middle" class="small">メニュー</text></g>
+
+  <!-- badges -->
+  <text x="760" y="570" class="small">バッジ</text>
+  <rect x="760" y="605" width="110" height="48" rx="24" class="purple"/><text x="815" y="638" text-anchor="middle" fill="white" font-size="26" font-weight="800" font-family="sans-serif">NEW</text>
+  <rect x="900" y="605" width="130" height="48" rx="24" fill="#FFF9ED" stroke="#F36D36" stroke-width="3"/><use href="#icon-fire" x="910" y="613" width="32" height="32"/><text x="980" y="637" text-anchor="middle" fill="#F36D36" font-size="22" font-weight="800" font-family="sans-serif">最新</text>
+
+  <!-- travel icons -->
+  <text x="40" y="780" class="small">旅行導線アイコン</text>
+  <g transform="translate(40 810)"><use href="#icon-train" width="54" height="54"/><text x="27" y="78" text-anchor="middle" class="small">電車</text></g>
+  <g transform="translate(150 810)"><use href="#icon-car" width="54" height="54"/><text x="27" y="78" text-anchor="middle" class="small">車</text></g>
+  <g transform="translate(260 810)"><use href="#icon-walk" width="54" height="54"/><text x="27" y="78" text-anchor="middle" class="small">徒歩</text></g>
+  <g transform="translate(370 810)"><use href="#icon-onsen" width="54" height="54"/><text x="27" y="78" text-anchor="middle" class="small">温泉</text></g>
+  <g transform="translate(480 810)"><use href="#icon-nature" width="54" height="54"/><text x="27" y="78" text-anchor="middle" class="small">自然</text></g>
+  <g transform="translate(590 810)"><use href="#icon-external" width="54" height="54"/><text x="27" y="78" text-anchor="middle" class="small">外部</text></g>
+</svg>
