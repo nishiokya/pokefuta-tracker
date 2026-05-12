@@ -268,7 +268,7 @@ def main() -> int:
         raise FileNotFoundError(f"Input JSON not found: {input_path}")
 
     with input_path.open("r", encoding="utf-8") as f:
-      payload = json.load(f)
+        payload = json.load(f)
 
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
