@@ -201,7 +201,7 @@
           </label>
           <button type="button" id="locate-button" class="sheet-action-btn">
             <img src="./assets/icon-current-location.svg" alt="" aria-hidden="true">
-            近くのポケふた
+            <span id="locate-button-label">近くのポケふた</span>
           </button>
         </div>
       </div>
@@ -429,13 +429,19 @@
         }
       }
       if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(url);
-        const originalText = button.textContent;
-        button.textContent = 'コピー済み';
-        window.setTimeout(() => {
-          button.textContent = originalText || '共有';
-        }, 1400);
+        try {
+          await navigator.clipboard.writeText(url);
+          const originalText = button.textContent;
+          button.textContent = 'コピー済み';
+          window.setTimeout(() => {
+            button.textContent = originalText || '共有';
+          }, 1400);
+          return;
+        } catch (error) {
+          console.warn('クリップボードへのコピーに失敗しました', error);
+        }
       }
+      window.prompt('共有URLをコピーしてください', url);
     }
 
     document.addEventListener('click', event => {
@@ -1123,17 +1129,30 @@
       renderSpotResults(list, recentItems, {
         emptyMessage: '直近30日の追加はありません。',
         meta: d => [d.prefecture || '不明', d.title || 'ポケふた'].join(' / '),
-        badge: () => '<img src="./assets/icon-fire.svg" alt="" aria-hidden="true">NEW'
+        badge: () => '<img src="./assets/icon-fire.svg" alt="" aria-hidden="true">NEW',
+        limit: 24
+      });
+    }
+
+    function bindSpotResultList(list) {
+      if (!list || list.dataset.boundSpotResults) return;
+      list.dataset.boundSpotResults = 'true';
+      list.addEventListener('click', event => {
+        const button = event.target.closest('.prefecture-spot-item[data-manhole-id]');
+        if (!button || !list.contains(button)) return;
+        openManholePopup(button.dataset.manholeId);
+        collapseBottomSheet();
       });
     }
 
     function renderSpotResults(list, spots, options = {}) {
+      bindSpotResultList(list);
       const {
         emptyMessage = '',
         meta,
         badge,
         badgeClass = 'prefecture-spot-new',
-        limit = spots.length
+        limit = 24
       } = options;
       const visibleSpots = spots.slice(0, limit);
       if (!visibleSpots.length) {
@@ -1156,12 +1175,6 @@
           </button>
         `;
       }).join('');
-      list.querySelectorAll('.prefecture-spot-item').forEach(button => {
-        button.addEventListener('click', () => {
-          openManholePopup(button.dataset.manholeId);
-          collapseBottomSheet();
-        });
-      });
     }
 
     function renderPrefectureSpots(prefecture) {
@@ -1226,16 +1239,31 @@
 
     function initLocationSearch() {
       const button = document.getElementById('locate-button');
+      const label = document.getElementById('locate-button-label');
       if (!button) return;
+      const defaultLabel = label?.textContent || '近くのポケふた';
+      const setButtonState = (text, options = {}) => {
+        const { busy = false, resetAfter = 0 } = options;
+        button.disabled = busy;
+        button.setAttribute('aria-busy', String(busy));
+        if (label) label.textContent = text;
+        if (resetAfter) {
+          window.setTimeout(() => {
+            if (label) label.textContent = defaultLabel;
+            button.removeAttribute('aria-busy');
+          }, resetAfter);
+        }
+      };
       button.addEventListener('click', () => {
         if (!navigator.geolocation) {
+          setButtonState('現在地を使えません', { resetAfter: 1800 });
           expandBottomSheet();
           return;
         }
-        button.disabled = true;
+        setButtonState('確認中...', { busy: true });
         navigator.geolocation.getCurrentPosition(position => {
           const { latitude, longitude } = position.coords;
-          button.disabled = false;
+          setButtonState(defaultLabel);
           if (userLocationMarker) map.removeLayer(userLocationMarker);
           userLocationMarker = L.circleMarker([latitude, longitude], {
             radius: 8,
@@ -1254,7 +1282,7 @@
           map.fitBounds(group.getBounds(), { padding: [48, 48], maxZoom: 13 });
           expandBottomSheet();
         }, () => {
-          button.disabled = false;
+          setButtonState('取得できませんでした', { resetAfter: 1800 });
           expandBottomSheet();
         }, { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 });
       });
