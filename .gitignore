@@ -1,6 +1,7 @@
 # Artifact build output (not committed)
 dist/
 manhole_images/*
+docs/latest-manhole-photos.json
 *.raw.ndjson
 *.log
 __pycache__/
@@ -14,3 +15,6 @@ create_pr.flag
 # NDJSON: apps/scraper/pokefuta.ndjsonはgit管理しない
 apps/scraper/pokefuta.ndjson
 
+.env*.local
+.env.production
+.env

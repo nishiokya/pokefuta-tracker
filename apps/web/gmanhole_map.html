@@ -416,7 +416,22 @@
     }
 
     function esc(s){ return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c])); }
+    function validateDetailUrl(rawUrl) {
+      try {
+        const url = new URL(rawUrl);
+        const allowedHost = 'local.pokemon.jp';
+        if (url.protocol === 'https:' && url.hostname === allowedHost) {
+          return url.href;
+        }
+      } catch {
+        return null;
+      }
+      return null;
+    }
 
+    function getValidDetailUrl(rawUrl) {
+      return rawUrl ? (validateDetailUrl(rawUrl) || '#') : '#';
+    }
     function buildGundamPopup(d, overlap){
       const chars = Array.isArray(d.characters)&&d.characters.length ? d.characters.join(', ') : '—';
       const series = d.series || '—';
@@ -425,7 +440,7 @@
         <b>ID:</b> ${esc(d.id)}<br/><b>タイトル:</b> <span class='popup-title'>${esc(d.title)}</span><br/>
         <b>都道府県:</b> ${esc(d.prefecture||'')} / ${esc(d.city||'')}<br/>
         <b>キャラクター:</b> ${esc(chars)}<br/><b>シリーズ:</b> ${esc(series)}${imgs}
-        <br/><a href='${esc(d.detail_url)}' target='_blank' rel='noopener'>📝 詳細</a>${overlap?'<br/><span class="stat-inline">※ 座標重複</span>':''}
+        <br/><a href='${getValidDetailUrl(d.detail_url)}' target='_blank' rel='noopener'>📝 詳細</a>${overlap?'<br/><span class="stat-inline">※ 座標重複</span>':''}
       </div>`;
     }
 
@@ -435,7 +450,7 @@
         <b>ID:</b> ${esc(d.id)}<br/><b>タイトル:</b> <span class='popup-title'>${esc(d.title)}</span><br/>
         <b>都道府県:</b> ${esc(d.prefecture||'')} / ${esc(d.city||'')}<br/>
         <b>ポケモン:</b> ${esc(pokes)}
-        <br/><a href='${esc(d.detail_url)}' target='_blank' rel='noopener'>📝 詳細</a>${overlap?'<br/><span class="stat-inline">※ 座標重複</span>':''}
+        <br/><a href='${getValidDetailUrl(d.detail_url)}' target='_blank' rel='noopener'>📝 詳細</a>${overlap?'<br/><span class="stat-inline">※ 座標重複</span>':''}
       </div>`;
     }
 

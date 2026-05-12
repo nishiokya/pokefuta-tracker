@@ -260,6 +260,104 @@
       return null;
     }
 
+    function validateDetailUrl(rawUrl) {
+      try {
+        const url = new URL(rawUrl);
+        const allowedHost = 'local.pokemon.jp';
+        if (url.protocol === 'https:' && url.hostname === allowedHost) {
+          return url;
+        }
+      } catch {
+        return null;
+      }
+      return null;
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, ch => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[ch]));
+    }
+
+    function getLocalManholeImageUrl(id) {
+      const safeId = String(id ?? '').trim();
+      return safeId ? `./manhole/image/${encodeURIComponent(safeId)}_latest.jpeg` : '';
+    }
+
+    function handlePopupImageError(img) {
+      const frame = img.closest('.popup-photo');
+      if (frame) frame.classList.add('popup-photo--missing');
+      img.remove();
+    }
+
+    function buildPokefutaPopup(d) {
+      const prefecture = d.prefecture || '不明';
+      const prefectureCode = window.PREFECTURE_CODE_MAP[prefecture] || '--';
+      const pokemonsStr = Array.isArray(d.pokemons) && d.pokemons.length ? d.pokemons.join(', ') : '—';
+      const cityInfo = d.city ? `<div class="popup-meta-row"><b>${UI_TEXT.cityLabel}</b> <span>${escapeHtml(d.city)}</span></div>` : '';
+      const imageUrl = getLocalManholeImageUrl(d.id);
+      const photoAlt = `${d.title || 'ポケふた'}の写真`;
+      const photoBlock = imageUrl ? `
+        <div class="popup-photo" aria-label="マンホール写真">
+          <img src="${imageUrl}" alt="${escapeHtml(photoAlt)}" loading="lazy" decoding="async" onerror="handlePopupImageError(this)">
+          <div class="popup-photo__missing">
+            <b>写真募集中</b>
+            <span>このポケふたの写真はまだありません。</span>
+            <a href="https://pokefuta.com/" target="_blank" rel="noopener noreferrer" class="popup-link popup-link--upload">兄弟サイトで写真を投稿</a>
+          </div>
+        </div>
+      ` : '';
+      const prefectureSiteLink = d.prefecture_site_url ? (function() {
+        const validatedUrl = validatePrefectureSiteUrl(d.prefecture_site_url);
+        if (validatedUrl) {
+          const anchor = document.createElement('a');
+          anchor.href = validatedUrl.href;
+          anchor.target = '_blank';
+          anchor.rel = 'noopener noreferrer';
+          anchor.className = 'popup-link popup-link--site';
+          anchor.textContent = `🌐 ${prefecture}${UI_TEXT.prefectureSite}`;
+          return anchor.outerHTML;
+        }
+        return '';
+      })() : '';
+      const officialDetailLink = d.detail_url ? (function() {
+        const validatedUrl = validateDetailUrl(d.detail_url);
+        if (validatedUrl) {
+          const anchor = document.createElement('a');
+          anchor.href = validatedUrl.href;
+          anchor.target = '_blank';
+          anchor.rel = 'noopener noreferrer';
+          anchor.className = 'popup-link';
+          anchor.textContent = UI_TEXT.officialDetail;
+          return anchor.outerHTML;
+        }
+        return '';
+      })() : '';
+      const links = [
+        officialDetailLink,
+        prefectureSiteLink,
+        `<a href="https://pokefuta.com/" target="_blank" rel="noopener noreferrer" class="popup-link popup-link--upload">📷 兄弟サイトで写真を投稿</a>`
+      ].filter(Boolean).join('');
+
+      return `
+        <div class="popup-box popup-box--photo">
+          <div class="popup-meta">
+            <div class="popup-meta-row"><b>${UI_TEXT.idLabel}</b> <span>${escapeHtml(d.id)}</span></div>
+            <div class="popup-meta-row"><b>${UI_TEXT.titleLabel}</b> <span class="popup-title">${escapeHtml(d.title)}</span></div>
+            <div class="popup-meta-row"><b>${UI_TEXT.prefectureLabel}</b> <span>${escapeHtml(prefecture)} <span class="prefecture-code">${prefectureCode}</span></span></div>
+            ${cityInfo}
+            <div class="popup-meta-row"><b>${UI_TEXT.pokemonLabel}</b> <span class="popup-pokemons">${escapeHtml(pokemonsStr)}</span></div>
+          </div>
+          ${photoBlock}
+          <div class="popup-actions">${links}</div>
+        </div>
+      `;
+    }
+
     async function loadPokefutaData() {
       try {
         // Try multiple potential paths for pokefuta data
@@ -360,32 +458,7 @@
           if (Array.isArray(d.pokemons)) {
             d.pokemons.forEach(p => { if (p) pokemonCounts[p] = (pokemonCounts[p] || 0) + 1; });
           }
-          const pokemonsStr = Array.isArray(d.pokemons) && d.pokemons.length ? d.pokemons.join(', ') : '—';
-          const cityInfo = d.city ? `<br/><b>${UI_TEXT.cityLabel}</b> ${d.city}` : '';
-          const prefectureSiteLink = d.prefecture_site_url ? (function() {
-            const validatedUrl = validatePrefectureSiteUrl(d.prefecture_site_url);
-            if (validatedUrl) {
-              const anchor = document.createElement('a');
-              anchor.href = validatedUrl.href;
-              anchor.target = '_blank';
-              anchor.rel = 'noopener noreferrer';
-              anchor.className = 'popup-link popup-link--site';
-              anchor.textContent = `🌐 ${prefecture}${UI_TEXT.prefectureSite}`;
-              return `<br/>${anchor.outerHTML}`;
-            }
-            return '';
-          })() : '';
-          // 画像無い場合アップロード案内リンク (仮: d.image_url が無いと判断) ※データ構造に応じて調整可能
-          const uploadLink = !d.image_url ? `<br/><a href='https://pokefuta.com/' target='_blank' rel='noopener noreferrer' class='popup-link popup-link--upload' title='写真を共有 (兄弟サイト)'>📷 写真をアップロード</a>` : '';
-          const popupContent = `
-            <div class='popup-box'>
-              <b>${UI_TEXT.idLabel}</b> ${d.id}<br/>
-              <b>${UI_TEXT.titleLabel}</b> <span class="popup-title">${d.title}</span><br/>
-              <b>${UI_TEXT.prefectureLabel}</b> ${prefecture} <span class="prefecture-code">${prefectureCode}</span>${cityInfo}<br/>
-              <b>${UI_TEXT.pokemonLabel}</b> <span class="popup-pokemons">${pokemonsStr}</span><br/>
-              <a href='${d.detail_url}' target='_blank' class='popup-link'>${UI_TEXT.officialDetail}</a>${prefectureSiteLink}${uploadLink}
-            </div>
-          `;
+          const popupContent = buildPokefutaPopup(d);
           const marker = L.marker([d.lat, d.lng], { icon: pokefutaIcon }).bindPopup(popupContent);
           marker.pokefutaData = d; marker.pokefutaData.prefectureCode = prefectureCode;
           allMarkers.push(marker); marker.addTo(map);
