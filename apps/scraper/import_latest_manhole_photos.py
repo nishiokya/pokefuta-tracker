@@ -81,7 +81,9 @@ def presign_r2_get_object(storage_key: str, expires: int = 3600) -> str:
     endpoint = os.environ.get("R2_ENDPOINT") or os.environ.get("R2_PUBLIC_URL")
     bucket = os.environ.get("R2_BUCKET", "")
     if not access_key or not secret_key or not endpoint:
-        raise ValueError("R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, and R2_ENDPOINT are required")
+        raise ValueError(
+            "R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, and either R2_ENDPOINT or R2_PUBLIC_URL are required"
+        )
 
     object_url = build_r2_object_url(endpoint, bucket, storage_key)
     parsed = urlparse(object_url)
