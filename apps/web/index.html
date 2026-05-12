@@ -260,6 +260,19 @@
       return null;
     }
 
+    function validateDetailUrl(rawUrl) {
+      try {
+        const url = new URL(rawUrl);
+        const allowedHost = 'local.pokemon.jp';
+        if (url.protocol === 'https:' && url.hostname === allowedHost) {
+          return url;
+        }
+      } catch {
+        return null;
+      }
+      return null;
+    }
+
     function escapeHtml(value) {
       return String(value ?? '').replace(/[&<>"']/g, ch => ({
         '&': '&amp;',
@@ -311,9 +324,21 @@
         }
         return '';
       })() : '';
-      const officialUrl = d.detail_url ? escapeHtml(d.detail_url) : '#';
+      const officialDetailLink = d.detail_url ? (function() {
+        const validatedUrl = validateDetailUrl(d.detail_url);
+        if (validatedUrl) {
+          const anchor = document.createElement('a');
+          anchor.href = validatedUrl.href;
+          anchor.target = '_blank';
+          anchor.rel = 'noopener noreferrer';
+          anchor.className = 'popup-link';
+          anchor.textContent = UI_TEXT.officialDetail;
+          return anchor.outerHTML;
+        }
+        return '';
+      })() : '';
       const links = [
-        `<a href="${officialUrl}" target="_blank" rel="noopener noreferrer" class="popup-link">${UI_TEXT.officialDetail}</a>`,
+        officialDetailLink,
         prefectureSiteLink,
         `<a href="https://pokefuta.com/" target="_blank" rel="noopener noreferrer" class="popup-link popup-link--upload">📷 兄弟サイトで写真を投稿</a>`
       ].filter(Boolean).join('');
