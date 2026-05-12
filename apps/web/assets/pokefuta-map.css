@@ -32,6 +32,10 @@ body.pokefuta-map-page {
   color: #2b2722;
 }
 
+.pokefuta-map-page .leaflet-top.leaflet-left {
+  top: 124px;
+}
+
 .pokefuta-map-page .map-hero-card {
   position: absolute;
   z-index: 800;
@@ -50,7 +54,6 @@ body.pokefuta-map-page {
 
 .pokefuta-map-page .map-hero-card h1 {
   margin: 0;
-  max-width: 12em;
   font-size: 1.72rem;
   line-height: 1.2;
   letter-spacing: 0;
@@ -61,84 +64,19 @@ body.pokefuta-map-page {
   color: #1f1b18;
 }
 
-.pokefuta-map-page .map-hero-card h1::after {
-  content: "";
-  display: inline-block;
-  width: 52px;
-  height: 52px;
-  margin-left: 8px;
-  vertical-align: -14px;
-  border-radius: 50%;
-  background: url("./icon-pin.svg") center / 36px 36px no-repeat rgba(126, 107, 169, .12);
-  box-shadow: inset 0 0 0 1px rgba(126, 107, 169, .18);
-}
-
 .pokefuta-map-page .map-hero-card p {
-  margin: 12px 0 0;
-  max-width: 18.5em;
+  margin: 10px 0 0;
   color: #3f3730;
   font-size: .94rem;
-  line-height: 1.65;
+  line-height: 1.55;
   font-weight: 650;
 }
 
-.pokefuta-map-page .locate-cta {
-  position: absolute;
-  z-index: 850;
-  right: 16px;
-  bottom: calc(26px + env(safe-area-inset-bottom));
-  min-height: 50px;
-  padding: 0 18px;
-  border: 0;
-  border-radius: 999px;
-  background: linear-gradient(135deg, #7e5bb8, #6b4aa2);
-  color: #fff;
-  box-shadow: 0 12px 26px rgba(76, 45, 130, .32);
-  font: inherit;
-  font-size: .9rem;
+.pokefuta-map-page .map-hero-card .map-hero-meta {
+  margin-top: 8px;
+  color: #2b213a;
+  font-size: .86rem;
   font-weight: 900;
-  cursor: pointer;
-}
-
-.pokefuta-map-page .locate-cta::before {
-  content: "";
-  display: inline-block;
-  width: 22px;
-  height: 22px;
-  margin-right: 8px;
-  vertical-align: -5px;
-  background: url("./icon-current-location.svg") center / contain no-repeat;
-  filter: brightness(0) invert(1);
-}
-
-.pokefuta-map-page .locate-cta:disabled {
-  opacity: .72;
-  cursor: progress;
-}
-
-.pokefuta-map-page .locate-status {
-  position: absolute;
-  z-index: 840;
-  right: 16px;
-  bottom: calc(84px + env(safe-area-inset-bottom));
-  max-width: min(320px, calc(100vw - 32px));
-  min-height: 0;
-  padding: 8px 11px;
-  border-radius: 12px;
-  background: rgba(255, 250, 238, .9);
-  color: #4d3f35;
-  box-shadow: 0 8px 22px rgba(56, 39, 17, .12);
-  font-size: .75rem;
-  font-weight: 700;
-  opacity: 0;
-  transform: translateY(6px);
-  transition: opacity .16s ease, transform .16s ease;
-  pointer-events: none;
-}
-
-.pokefuta-map-page .locate-status:not(:empty) {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 .pokefuta-map-page #controls {
@@ -237,7 +175,7 @@ body.pokefuta-map-page {
 
 .pokefuta-map-page .sheet-action-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
 }
 
@@ -281,6 +219,15 @@ body.pokefuta-map-page {
 .pokefuta-map-page .sheet-action-btn.active {
   background: #7654aa;
   color: #fff;
+}
+
+.pokefuta-map-page .sheet-action-btn.active img {
+  filter: brightness(0) invert(1);
+}
+
+.pokefuta-map-page .sheet-action-btn:disabled {
+  opacity: .72;
+  cursor: progress;
 }
 
 .pokefuta-map-page .selected-prefecture-badge {
@@ -518,32 +465,20 @@ body.pokefuta-map-page {
 }
 
 .pokefuta-map-page .nearby-results {
-  margin-top: 14px;
-  padding: 12px;
-  border-radius: 14px;
-  background: rgba(126, 107, 169, .1);
+  margin-top: 2px;
 }
 
-.pokefuta-map-page .nearby-results h4 {
-  margin: 0 0 10px;
-  color: #2b213a;
-  font-size: .9rem;
-  font-weight: 900;
+.pokefuta-map-page .nearby-results .section-title-row {
+  margin-top: 16px;
 }
 
 .pokefuta-map-page .nearby-list,
+.pokefuta-map-page .recent-added-list,
 .pokefuta-map-page .prefecture-spots-list {
   display: grid;
   gap: 8px;
 }
 
-.pokefuta-map-page .recent-added-list {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 7px;
-}
-
-.pokefuta-map-page .nearby-item,
 .pokefuta-map-page .prefecture-spot-item {
   display: flex;
   align-items: center;
@@ -559,43 +494,6 @@ body.pokefuta-map-page {
   cursor: pointer;
 }
 
-.pokefuta-map-page .recent-added-chip {
-  display: grid;
-  align-content: start;
-  gap: 4px;
-  min-width: 0;
-  min-height: 82px;
-  padding: 6px;
-  border: 1px solid rgba(116, 82, 38, .16);
-  border-radius: 13px;
-  background: #fffaf0;
-  color: #241f1a;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-
-.pokefuta-map-page .recent-added-code {
-  display: grid;
-  width: 30px;
-  min-height: 24px;
-  place-items: center;
-  border-radius: 7px;
-  background: linear-gradient(135deg, #7e6ba9, #6d55a3);
-  color: #fff;
-  font-size: .6rem;
-  font-weight: 950;
-}
-
-.pokefuta-map-page .recent-added-pref {
-  overflow: hidden;
-  color: #75685c;
-  font-size: .64rem;
-  font-weight: 850;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
 .pokefuta-map-page .recent-added-empty {
   grid-column: 1 / -1;
   margin: 0;
@@ -609,7 +507,6 @@ body.pokefuta-map-page {
   text-align: center;
 }
 
-.pokefuta-map-page .nearby-item span,
 .pokefuta-map-page .prefecture-spot-copy {
   display: grid;
   min-width: 0;
@@ -656,12 +553,24 @@ body.pokefuta-map-page {
   line-height: 1;
 }
 
+.pokefuta-map-page .prefecture-spot-distance {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: rgba(126, 107, 169, .12);
+  color: #6b4aa2;
+  font-size: .72rem;
+  font-weight: 950;
+  line-height: 1;
+}
+
 .pokefuta-map-page .prefecture-spot-new img {
   width: 12px;
   height: 12px;
 }
 
-.pokefuta-map-page .nearby-item strong,
 .pokefuta-map-page .prefecture-spot-item strong {
   overflow: hidden;
   font-size: .86rem;
@@ -670,27 +579,10 @@ body.pokefuta-map-page {
   white-space: nowrap;
 }
 
-.pokefuta-map-page .recent-added-chip strong {
-  overflow: hidden;
-  font-size: .66rem;
-  font-weight: 950;
-  line-height: 1.25;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.pokefuta-map-page .nearby-item small,
 .pokefuta-map-page .prefecture-spot-item small {
   color: #75685c;
   font-size: .74rem;
   font-weight: 750;
-}
-
-.pokefuta-map-page .nearby-item b {
-  flex: 0 0 auto;
-  color: #6b4aa2;
-  font-size: .9rem;
-  font-weight: 900;
 }
 
 .pokefuta-map-page .recent-added-panel {
@@ -699,14 +591,6 @@ body.pokefuta-map-page {
 
 .pokefuta-map-page .prefecture-spots-panel {
   margin-top: 2px;
-}
-
-.pokefuta-map-page .stats {
-  margin-top: 14px;
-  padding-top: 10px;
-  border-top: 1px solid rgba(81, 60, 32, .14);
-  color: #6e6258;
-  font-size: .72rem;
 }
 
 .pokefuta-map-page .data-links {
@@ -842,15 +726,18 @@ body.pokefuta-map-page {
   justify-content: center;
   min-height: 40px;
   padding: 0 10px;
+  border: 0;
   border-radius: 11px;
   background: #fff;
   color: #5b5046;
   text-decoration: none;
+  font: inherit;
   font-size: .76rem;
   font-weight: 950;
   line-height: 1.2;
   text-align: center;
   box-shadow: inset 0 0 0 1px rgba(116, 82, 38, .16);
+  cursor: pointer;
 }
 
 .pokefuta-map-page .travel-popup-action--primary {
@@ -915,22 +802,16 @@ body.pokefuta-map-page {
     padding: 20px 22px;
   }
 
+  .pokefuta-map-page .leaflet-top.leaflet-left {
+    top: 180px;
+  }
+
   .pokefuta-map-page .map-hero-card h1 {
     font-size: 1.46rem;
   }
 
   .pokefuta-map-page .map-hero-card p {
     font-size: .86rem;
-  }
-
-  .pokefuta-map-page .locate-cta {
-    right: 450px;
-    bottom: 30px;
-  }
-
-  .pokefuta-map-page .locate-status {
-    right: 450px;
-    bottom: 92px;
   }
 
   .pokefuta-map-page #controls {
@@ -963,10 +844,6 @@ body.pokefuta-map-page {
   .pokefuta-map-page .controls-content {
     max-height: calc(100dvh - 126px);
     padding-bottom: 18px;
-  }
-
-  .pokefuta-map-page .recent-added-list {
-    grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 
   .pokefuta-map-page #prefecture-table-body {
@@ -1022,12 +899,8 @@ body.pokefuta-map-page {
     line-height: 1.32;
   }
 
-  .pokefuta-map-page .map-hero-card h1::after {
-    width: 34px;
-    height: 34px;
-    margin-left: 6px;
-    vertical-align: -10px;
-    background-size: 24px 24px;
+  .pokefuta-map-page .leaflet-top.leaflet-left {
+    top: 154px;
   }
 
   .pokefuta-map-page .map-hero-card p {
@@ -1047,14 +920,6 @@ body.pokefuta-map-page {
     width: min(92vw, 390px) !important;
   }
 
-  .pokefuta-map-page .locate-cta {
-    right: 14px;
-    bottom: calc(22px + env(safe-area-inset-bottom));
-    min-height: 48px;
-    padding: 0 15px;
-    font-size: .84rem;
-  }
-
   .pokefuta-map-page #controls {
     width: 100vw;
     max-width: none;
@@ -1072,23 +937,40 @@ body.pokefuta-map-page {
   }
 
   .pokefuta-map-page .prefecture-card-main {
-    grid-template-columns: 36px minmax(0, 1fr) auto;
-    gap: 8px;
-    padding: 10px;
+    grid-template-columns: 36px minmax(0, 1fr) minmax(0, auto) auto;
+    gap: 7px;
+    min-height: 48px;
+    padding: 8px 10px 6px;
   }
 
   .pokefuta-map-page .prefecture-card-meta {
-    grid-column: 2 / 4;
-    grid-row: 2;
-    justify-content: flex-start;
+    justify-content: flex-end;
+    gap: 5px;
+    font-size: .66rem;
+  }
+
+  .pokefuta-map-page .prefecture-new-badge {
+    min-height: 22px;
+    padding: 0 6px;
+    font-size: .62rem;
+  }
+
+  .pokefuta-map-page .prefecture-new-badge img {
+    width: 12px;
+    height: 12px;
+  }
+
+  .pokefuta-map-page .prefecture-site-link {
+    max-width: 7.8em;
   }
 
   .pokefuta-map-page .prefecture-card-thumb {
-    width: 48px;
-    height: 48px;
+    width: 42px;
+    height: 42px;
   }
 
   .pokefuta-map-page .prefecture-card-gallery {
-    padding: 0 10px 10px 54px;
+    gap: 6px;
+    padding: 0 10px 8px 54px;
   }
 }
