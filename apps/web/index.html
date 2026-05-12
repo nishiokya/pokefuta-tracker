@@ -155,7 +155,8 @@
   </script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"
+    integrity="sha384-pmjIAcz2bAn0xukfxADbZIb3t8oRT9Sv0rvO+BR5Csr6Dhqq+nZs59P0pPKQJkEV" crossorigin="" />
   <link rel="stylesheet" href="./assets/theme.css" />
   <link rel="stylesheet" href="./assets/map.css" />
   <link rel="stylesheet" href="./assets/pokefuta-map.css" />
@@ -258,7 +259,8 @@
   </footer>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"
+    integrity="sha384-eXVCORTRlv4FUUgS/xmOyr66XBVraen8ATNLMESp92FKXLAMiKkerixTiBvXriZr" crossorigin=""></script>
   <script>
     const pokefutaIcon = L.icon({
   iconUrl: './assets/pokefuta-marker.svg',
@@ -358,6 +360,7 @@
       pokemonLabel: 'ポケモン:',
       cityLabel: '市町村:',
       officialDetail: '📝 公式詳細',
+      officialDetailCta: '公式詳細を見る',
       prefectureSite: 'サイト'
     };
 
@@ -457,7 +460,7 @@
           anchor.target = '_blank';
           anchor.rel = 'noopener noreferrer';
           anchor.className = 'travel-popup-action travel-popup-action--primary';
-          anchor.textContent = '公式詳細を見る';
+          anchor.textContent = UI_TEXT.officialDetailCta;
           return anchor.outerHTML;
         }
         return '';
@@ -723,7 +726,7 @@
       if (!toggle) return;
       if (!hasAddedAtField) {
         toggle.disabled = true;
-        toggle.title = 'データに日付フィールド (added_at / first_seen / last_updated / date) が無いため利用できません';
+        toggle.title = 'データに日付フィールド (added_at / first_seen / last_seen / source_last_checked / last_updated / date) が無いため利用できません';
       }
       syncExploreSections();
       toggle.addEventListener('change', e => {
@@ -784,8 +787,8 @@
         const expanded = document.body.classList.contains('sheet-expanded');
         expanded ? collapseBottomSheet() : expandBottomSheet();
       });
-      document.getElementById('prefecture-open-button')?.addEventListener('click', expandBottomSheet);
       document.getElementById('prefecture-open-button')?.addEventListener('click', () => {
+        expandBottomSheet();
         showPrefectureCards = !showPrefectureCards;
         syncExploreSections();
       });
@@ -847,7 +850,6 @@
         let show = true;
         if (selectedPrefecture) show = show && d.prefecture === selectedPrefecture;
         if (selectedPokemons.length > 0) {
-          const mp = d.pokefutaData ? d.pokefutaData.pokemons : (d.pokemons || []);
           const pList = d.pokemons || [];
           show = show && selectedPokemons.some(p => pList.includes(p));
         }
@@ -869,7 +871,6 @@
       updateURLWithPrefecture(prefecture || null);
       document.querySelectorAll('#prefecture-table-body .prefecture-card').forEach(row => {
         const rowPref = row.dataset.prefecture;
-        const match = !selectedPrefecture || rowPref === selectedPrefecture;
         row.classList.toggle('selected', rowPref === selectedPrefecture && selectedPrefecture);
       });
       renderPrefectureSpots(selectedPrefecture);
