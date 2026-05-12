@@ -100,12 +100,17 @@
 
       const placeText = [manhole.prefecture, manhole.city].filter(Boolean).join('');
       const titleBase = manhole.title || `ポケふた ${manhole.id}`;
+      const baseDescription = `${placeText ? `${placeText}の` : ''}ポケモンマンホール（ポケふた）。`;
+      const pokemonDescription = cleanPokemons.length > 0
+        ? `登場ポケモン: ${cleanPokemons.join(', ')}`
+        : '';
+      const description = [baseDescription, pokemonDescription].filter(Boolean).join(' ');
 
       const jsonLd = {
         '@context': 'https://schema.org',
         '@type': 'Place',
         'name': titleBase,
-        'description': `${placeText}のポケモンマンホール（ポケふた）。登場ポケモン: ${cleanPokemons.join(', ')}`,
+        'description': description,
         'geo': {
           '@type': 'GeoCoordinates',
           'latitude': manhole.lat,
