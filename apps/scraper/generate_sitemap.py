@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+from typing import Optional
 from urllib.parse import quote
 from xml.sax.saxutils import escape
 
@@ -63,10 +64,10 @@ PREFECTURES = [
 ]
 
 
-def read_known_manhole_ids(path: Path) -> set[str]:
+def read_known_manhole_ids(path: Path) -> Optional[set[str]]:
     ids: set[str] = set()
     if not path.exists():
-        return ids
+        return None
 
     for line in path.read_text(encoding="utf-8").splitlines():
         if not line.strip():
@@ -81,14 +82,14 @@ def read_known_manhole_ids(path: Path) -> set[str]:
     return ids
 
 
-def read_photo_manhole_ids(image_dir: Path, known_ids: set[str]) -> list[str]:
+def read_photo_manhole_ids(image_dir: Path, known_ids: Optional[set[str]]) -> list[str]:
     if not image_dir.exists():
         return []
 
     ids = []
     for image_path in image_dir.glob("*_latest.jpeg"):
         manhole_id = image_path.name.removesuffix("_latest.jpeg").strip()
-        if manhole_id and (not known_ids or manhole_id in known_ids):
+        if manhole_id and (known_ids is None or manhole_id in known_ids):
             ids.append(manhole_id)
     return sorted(set(ids), key=lambda value: (len(value), value))
 

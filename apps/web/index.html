@@ -556,8 +556,7 @@
         const initialManholeId = getInitialManholeIdFromURL();
         if (initialManholeId) {
           console.log(`Initial manhole from URL: ${initialManholeId}`);
-          setTimeout(() => openManholePopup(initialManholeId), 100);
-          return;
+          if (openManholePopup(initialManholeId)) return;
         }
 
         const initialPref = getInitialPrefectureFromURL();
