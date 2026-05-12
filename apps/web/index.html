@@ -300,6 +300,7 @@
     var allData = [];
     var markerLayer = null;
     var userLocationMarker = null;
+    var latestPhotoMeta = {};
     var prefectureCounts = {};
     var cityCounts = {};
     var selectedPrefecture = '';
@@ -414,9 +415,26 @@
       return safeId ? window.buildManholeCanonicalPath(safeId) : '';
     }
 
+    function formatPhotoDate(rawDate) {
+      if (!rawDate) return '';
+      const date = new Date(rawDate);
+      if (Number.isNaN(date.getTime())) return '';
+      return new Intl.DateTimeFormat('ja-JP', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      }).format(date);
+    }
+
+    function getPhotoTakenDate(id) {
+      const meta = latestPhotoMeta[String(id)] || latestPhotoMeta[Number(id)];
+      return formatPhotoDate(meta?.shot_at || meta?.created_at);
+    }
+
     function handlePopupImageError(img) {
       const frame = img.closest('.popup-photo');
       if (frame) frame.classList.add('popup-photo--missing');
+      frame?.querySelector('.travel-popup-photo-date')?.remove();
       img.remove();
     }
 
@@ -429,9 +447,11 @@
         : '<span class="travel-popup-pokemon">ポケモン未設定</span>';
       const imageUrl = getLocalManholeImageUrl(d.id);
       const photoAlt = `${d.title || 'ポケふた'}の写真`;
+      const photoDate = getPhotoTakenDate(d.id);
       const photoBlock = imageUrl ? `
         <div class="popup-photo travel-popup-photo" aria-label="マンホール写真">
           <img src="${imageUrl}" alt="${escapeHtml(photoAlt)}" loading="lazy" decoding="async" onerror="handlePopupImageError(this)">
+          ${photoDate ? `<span class="travel-popup-photo-date">撮影日 ${escapeHtml(photoDate)}</span>` : ''}
           <div class="popup-photo__missing">
             <b>写真募集中</b>
             <span>このポケふたの写真はまだありません。</span>
@@ -487,6 +507,17 @@
           </div>
         </div>
       `;
+    }
+
+    async function loadLatestPhotoMeta() {
+      try {
+        const response = await fetch('./latest-manhole-photos.json', { cache: 'no-store' });
+        if (!response.ok) return;
+        const payload = await response.json();
+        latestPhotoMeta = payload?.photos || {};
+      } catch (error) {
+        console.warn('最新写真メタデータの読み込みに失敗しました', error);
+      }
     }
 
     async function loadPokefutaData() {
@@ -578,6 +609,7 @@
           const raw = d.added_at || d.first_seen || d.last_seen || d.source_last_checked || d.last_updated || d.date;
           d._addedDate = normalizeDateString(raw);
         });
+        await loadLatestPhotoMeta();
         initMarkerLayer();
         // Build markers
         allMarkers = [];
@@ -789,7 +821,11 @@
       });
       document.getElementById('prefecture-open-button')?.addEventListener('click', () => {
         expandBottomSheet();
-        showPrefectureCards = !showPrefectureCards;
+        showPrefectureCards = true;
+        filterRecent = false;
+        const recentToggle = document.getElementById('recent-toggle');
+        if (recentToggle) recentToggle.checked = false;
+        recomputeVisibility();
         syncExploreSections();
       });
       let startY = 0;
@@ -1043,9 +1079,11 @@
       const recentItems = [...allData]
         .filter(d => isWithinLastDays(d._addedDate, 30))
         .sort((a, b) => b._addedDate - a._addedDate);
-      const items = recentItems.length
-        ? recentItems
-        : [...allData].filter(d => d._addedDate).sort((a, b) => b._addedDate - a._addedDate);
+      if (!recentItems.length) {
+        list.innerHTML = '<p class="recent-added-empty">直近30日の追加はありません。</p>';
+        return;
+      }
+      const items = recentItems;
       list.innerHTML = items.map(d => `
         <button type="button" class="recent-added-chip" data-manhole-id="${escapeHtml(d.id)}">
           <span class="recent-added-code">${escapeHtml(window.PREFECTURE_CODE_MAP[d.prefecture] || '--')}</span>
@@ -1112,6 +1150,11 @@
         .map(d => ({ ...d, distance: distanceKm(lat, lng, Number(d.lat), Number(d.lng)) }))
         .sort((a, b) => a.distance - b.distance)
         .slice(0, 5);
+      if (!nearest.length) {
+        list.innerHTML = '';
+        section.hidden = true;
+        return;
+      }
       list.innerHTML = nearest.map(d => `
         <button type="button" class="nearby-item" data-manhole-id="${escapeHtml(d.id)}">
           <span>

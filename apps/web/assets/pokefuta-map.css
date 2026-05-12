@@ -597,6 +597,19 @@ body.pokefuta-map-page {
   white-space: nowrap;
 }
 
+.pokefuta-map-page .recent-added-empty {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 14px 12px;
+  border: 1px solid rgba(116, 82, 38, .16);
+  border-radius: 12px;
+  background: #fffaf0;
+  color: #75685c;
+  font-size: .82rem;
+  font-weight: 850;
+  text-align: center;
+}
+
 .pokefuta-map-page .nearby-item span,
 .pokefuta-map-page .prefecture-spot-item span {
   display: grid;
@@ -693,6 +706,23 @@ body.pokefuta-map-page {
   border: 0;
   border-radius: 0;
   background: #efe4cd;
+}
+
+.pokefuta-map-page .travel-popup-photo-date {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  z-index: 2;
+  display: inline-flex;
+  min-height: 26px;
+  align-items: center;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: rgba(255, 250, 240, .9);
+  color: #3a3028;
+  box-shadow: 0 4px 12px rgba(52, 35, 16, .16);
+  font-size: .72rem;
+  font-weight: 900;
 }
 
 .pokefuta-map-page .travel-popup-body {
