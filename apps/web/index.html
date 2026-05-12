@@ -292,7 +292,9 @@
         <div class="popup-photo" aria-label="マンホール写真">
           <img src="${imageUrl}" alt="${escapeHtml(photoAlt)}" loading="lazy" decoding="async" onerror="handlePopupImageError(this)">
           <div class="popup-photo__missing">
-            <span>写真はまだありません</span>
+            <b>写真募集中</b>
+            <span>このポケふたの写真はまだありません。</span>
+            <a href="https://pokefuta.com/" target="_blank" rel="noopener noreferrer" class="popup-link popup-link--upload">兄弟サイトで写真を投稿</a>
           </div>
         </div>
       ` : '';
@@ -313,12 +315,11 @@
       const links = [
         `<a href="${officialUrl}" target="_blank" rel="noopener noreferrer" class="popup-link">${UI_TEXT.officialDetail}</a>`,
         prefectureSiteLink,
-        `<a href="https://pokefuta.com/" target="_blank" rel="noopener noreferrer" class="popup-link popup-link--upload">📷 写真をアップロード</a>`
+        `<a href="https://pokefuta.com/" target="_blank" rel="noopener noreferrer" class="popup-link popup-link--upload">📷 兄弟サイトで写真を投稿</a>`
       ].filter(Boolean).join('');
 
       return `
         <div class="popup-box popup-box--photo">
-          ${photoBlock}
           <div class="popup-meta">
             <div class="popup-meta-row"><b>${UI_TEXT.idLabel}</b> <span>${escapeHtml(d.id)}</span></div>
             <div class="popup-meta-row"><b>${UI_TEXT.titleLabel}</b> <span class="popup-title">${escapeHtml(d.title)}</span></div>
@@ -326,6 +327,7 @@
             ${cityInfo}
             <div class="popup-meta-row"><b>${UI_TEXT.pokemonLabel}</b> <span class="popup-pokemons">${escapeHtml(pokemonsStr)}</span></div>
           </div>
+          ${photoBlock}
           <div class="popup-actions">${links}</div>
         </div>
       `;

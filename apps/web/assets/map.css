@@ -119,7 +119,7 @@
   position: relative;
   overflow: hidden;
   aspect-ratio: 1 / 1;
-  margin: 0 0 8px;
+  margin: 8px 0 0;
   background: var(--theme-cloth-alt);
   border: 2px solid var(--theme-shadow);
   border-radius: 8px;
@@ -137,12 +137,24 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  gap: 6px;
-  padding: 12px;
+  gap: 5px;
+  padding: 14px;
   text-align: center;
   color: #555;
-  font-weight: 700;
+  font-weight: 600;
   background: var(--theme-cloth-alt);
+  line-height: 1.35;
+}
+.popup-photo__missing b {
+  color: var(--theme-shadow);
+  font-size: .85rem;
+}
+.popup-photo__missing span {
+  font-size: .68rem;
+}
+.popup-photo__missing .popup-link {
+  font-size: .68rem;
+  font-weight: 800;
 }
 .popup-photo--missing .popup-photo__missing {
   display: flex;
