@@ -1117,10 +1117,14 @@
       heading.textContent = `${prefecture}のポケふた`;
       list.innerHTML = spots.map(d => `
         <button type="button" class="prefecture-spot-item" data-manhole-id="${escapeHtml(d.id)}">
-          <span>
+          <span class="prefecture-spot-thumb" aria-hidden="true">
+            <img src="${getLocalManholeImageUrl(d.id)}" alt="" loading="lazy" decoding="async" onerror="this.closest('.prefecture-spot-thumb').classList.add('is-missing'); this.remove();">
+          </span>
+          <span class="prefecture-spot-copy">
             <strong>${escapeHtml(d.city || '自治体未設定')}</strong>
             <small>${escapeHtml(d.title || 'ポケふた')}</small>
           </span>
+          ${isWithinLastDays(d._addedDate, 30) ? '<span class="prefecture-spot-new"><img src="./assets/icon-fire.svg" alt="" aria-hidden="true">NEW</span>' : ''}
         </button>
       `).join('');
       list.querySelectorAll('.prefecture-spot-item').forEach(button => {
