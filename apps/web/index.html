@@ -584,6 +584,7 @@
       if (!map.hasLayer(marker)) marker.addTo(map);
       const data = marker.pokefutaData;
       window.applyManholePageMeta(data);
+      window.history.replaceState({ manhole: data.id }, '', window.buildManholeCanonicalPath(data.id));
       map.setView([data.lat, data.lng], Math.max(map.getZoom(), 15), { animate: false });
       marker.openPopup();
       return true;
