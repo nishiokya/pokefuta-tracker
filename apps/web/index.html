@@ -258,12 +258,15 @@
     integrity="sha384-eXVCORTRlv4FUUgS/xmOyr66XBVraen8ATNLMESp92FKXLAMiKkerixTiBvXriZr" crossorigin=""></script>
   <script>
     const pokefutaIcon = L.icon({
-  iconUrl: './assets/pokefuta-marker.svg',
-  iconSize: [34, 40],
-  iconAnchor: [17, 38],
-  popupAnchor: [0, -34]
-});
-    const map = L.map('map', { zoomControl: true, closePopupOnClick: false }).setView([36.0, 138.0], 6);
+      iconUrl: './assets/pokefuta-marker.svg',
+      iconSize: [34, 40],
+      iconAnchor: [17, 38],
+      popupAnchor: [0, -34]
+    });
+    const isTouchMapPointer = window.matchMedia
+      ? window.matchMedia('(pointer: coarse)').matches
+      : L.Browser.mobile && L.Browser.touch;
+    const map = L.map('map', { zoomControl: true, closePopupOnClick: !isTouchMapPointer }).setView([36.0, 138.0], 6);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '&copy; OpenStreetMap contributors'
@@ -274,7 +277,7 @@
     const POPUP_TOP_PADDING = 176;
     const POPUP_BOTTOM_SHEET_PADDING = 250;
     const pokefutaPopupOptions = {
-      closeOnClick: false,
+      closeOnClick: !isTouchMapPointer,
       autoPan: true,
       // Keep popups clear of the hero card at the top and collapsed bottom sheet on mobile.
       autoPanPaddingTopLeft: L.point(POPUP_SIDE_PADDING, POPUP_TOP_PADDING),

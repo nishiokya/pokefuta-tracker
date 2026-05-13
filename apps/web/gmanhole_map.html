@@ -123,13 +123,16 @@
   </footer>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script>
-    const map = L.map('map', { closePopupOnClick: false }).setView([36.0, 138.0], 6);
+    const isTouchMapPointer = window.matchMedia
+      ? window.matchMedia('(pointer: coarse)').matches
+      : L.Browser.mobile && L.Browser.touch;
+    const map = L.map('map', { closePopupOnClick: !isTouchMapPointer }).setView([36.0, 138.0], 6);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
     const POPUP_SIDE_PADDING = 16;
     const POPUP_TOP_PADDING = 24;
     const POPUP_BOTTOM_CONTROLS_PADDING = 220;
     const franchisePopupOptions = {
-      closeOnClick: false,
+      closeOnClick: !isTouchMapPointer,
       autoPan: true,
       // Keep popups clear of viewport edges and the bottom controls panel on mobile.
       autoPanPaddingTopLeft: L.point(POPUP_SIDE_PADDING, POPUP_TOP_PADDING),
