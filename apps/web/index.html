@@ -181,13 +181,13 @@
   </main>
 
   <div id="controls" class="bottom-sheet" role="complementary" aria-labelledby="page-title">
+    <span id="page-title" class="sr-only">全体パネル</span>
     <div class="controls-header">
-      <button type="button" id="controls-toggle" class="controls-toggle-btn sheet-grip" aria-label="都道府県リストを開く" title="開く/閉じる" aria-expanded="false" aria-controls="controls-content"></button>
-      <div class="bottom-sheet-title-row">
-        <h3 id="page-title">ポケふたマップ</h3>
-      </div>
+      <button type="button" id="controls-toggle" class="controls-toggle-btn" aria-label="全体パネルを開く" title="全体パネルを開く/閉じる" aria-expanded="false" aria-controls="controls-content">
+        <span class="sheet-grip" aria-hidden="true"></span>
+      </button>
     </div>
-    <div id="controls-content" class="controls-content" role="region" aria-label="Filters and statistics">
+    <div id="controls-content" class="controls-content" role="region" aria-label="全体パネルの内容">
       <div class="sheet-summary-card">
         <div class="sheet-action-grid" aria-label="探索メニュー">
           <button type="button" id="prefecture-open-button" class="sheet-action-btn">
@@ -890,8 +890,14 @@
       const toggleBtn = document.getElementById('controls-toggle');
       const controlsContent = document.getElementById('controls-content');
       if (!toggleBtn || !controlsContent) return;
-      collapseBottomSheet();
+      const canTogglePanel = () => window.matchMedia('(max-width: 759px)').matches;
+      if (canTogglePanel()) {
+        collapseBottomSheet();
+      } else {
+        expandBottomSheet();
+      }
       toggleBtn.addEventListener('click', () => {
+        if (!canTogglePanel()) return;
         const expanded = document.body.classList.contains('sheet-expanded');
         expanded ? collapseBottomSheet() : expandBottomSheet();
       });
@@ -908,17 +914,22 @@
       let startY = 0;
       toggleBtn.addEventListener('touchstart', e => { startY = e.touches[0].clientY; }, { passive: true });
       toggleBtn.addEventListener('touchend', e => {
+        if (!canTogglePanel()) return;
         const dy = e.changedTouches[0].clientY - startY;
         if (dy < -20) expandBottomSheet();
         if (dy > 20) collapseBottomSheet();
       }, { passive: true });
+      window.matchMedia('(max-width: 759px)').addEventListener('change', event => {
+        event.matches ? collapseBottomSheet() : expandBottomSheet();
+      });
     }
 
     function expandBottomSheet() {
       document.body.classList.add('sheet-expanded');
       const toggleBtn = document.getElementById('controls-toggle');
       toggleBtn?.setAttribute('aria-expanded', 'true');
-      toggleBtn?.setAttribute('aria-label', '都道府県リストを閉じる');
+      toggleBtn?.setAttribute('aria-label', '全体パネルを閉じる');
+      toggleBtn?.setAttribute('title', '全体パネルを閉じる');
       setTimeout(() => map.invalidateSize(), 160);
     }
 
@@ -926,7 +937,8 @@
       document.body.classList.remove('sheet-expanded');
       const toggleBtn = document.getElementById('controls-toggle');
       toggleBtn?.setAttribute('aria-expanded', 'false');
-      toggleBtn?.setAttribute('aria-label', '都道府県リストを開く');
+      toggleBtn?.setAttribute('aria-label', '全体パネルを開く');
+      toggleBtn?.setAttribute('title', '全体パネルを開く');
       setTimeout(() => map.invalidateSize(), 160);
     }
 
@@ -1078,7 +1090,11 @@
           prefectureThumbnails[pref] = [];
         }
         if (d.id && prefectureThumbnails[pref] && prefectureThumbnails[pref].length < 4) {
-          prefectureThumbnails[pref].push(getLocalManholeImageUrl(d.id));
+          prefectureThumbnails[pref].push({
+            id: d.id,
+            title: d.title || 'ポケふた',
+            imageUrl: getLocalManholeImageUrl(d.id)
+          });
         }
         if (isWithinLastDays(d._addedDate, 30)) {
           prefectureRecentCounts[pref] = (prefectureRecentCounts[pref] || 0) + 1;
@@ -1118,11 +1134,11 @@
             </span>
             <span class="${countBadgeClass}">${count}枚</span>
           </div>
-          <div class="prefecture-card-gallery" aria-hidden="true">
-            ${thumbnailUrls.length ? thumbnailUrls.map(url => `
-              <span class="prefecture-card-thumb">
-                <img src="${url}" alt="" loading="lazy" decoding="async" onerror="this.closest('.prefecture-card-thumb').classList.add('is-missing'); this.remove();">
-              </span>
+          <div class="prefecture-card-gallery" aria-label="${escapeHtml(prefecture)}のマンホール写真">
+            ${thumbnailUrls.length ? thumbnailUrls.map(item => `
+              <button type="button" class="prefecture-card-thumb" data-manhole-id="${escapeHtml(item.id)}" aria-label="${escapeHtml(item.title)}の詳細を開く" title="${escapeHtml(item.title)}の詳細を開く">
+                <img src="${item.imageUrl}" alt="" loading="lazy" decoding="async" onerror="this.closest('.prefecture-card-thumb').classList.add('is-missing'); this.remove();">
+              </button>
             `).join('') : '<span class="prefecture-card-thumb is-missing"></span>'}
           </div>
         `;
@@ -1151,6 +1167,13 @@
           linkEl.addEventListener('click', stopRowPropagation);
           linkEl.addEventListener('dblclick', stopRowPropagation);
         }
+        row.querySelectorAll('.prefecture-card-thumb[data-manhole-id]').forEach(thumb => {
+          thumb.addEventListener('click', event => {
+            event.stopPropagation();
+            openManholePopup(thumb.dataset.manholeId);
+            collapseBottomSheet();
+          });
+        });
       });
     }
 
