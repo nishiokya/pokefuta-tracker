@@ -125,11 +125,15 @@
   <script>
     const map = L.map('map', { closePopupOnClick: false }).setView([36.0, 138.0], 6);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
+    const POPUP_SIDE_PADDING = 16;
+    const POPUP_TOP_PADDING = 24;
+    const POPUP_BOTTOM_CONTROLS_PADDING = 220;
     const franchisePopupOptions = {
       closeOnClick: false,
       autoPan: true,
-      autoPanPaddingTopLeft: L.point(16, 24),
-      autoPanPaddingBottomRight: L.point(16, 220)
+      // Keep popups clear of viewport edges and the bottom controls panel on mobile.
+      autoPanPaddingTopLeft: L.point(POPUP_SIDE_PADDING, POPUP_TOP_PADDING),
+      autoPanPaddingBottomRight: L.point(POPUP_SIDE_PADDING, POPUP_BOTTOM_CONTROLS_PADDING)
     };
 
     function franchiseIcon(franchise, overlap=false) {
