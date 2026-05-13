@@ -805,6 +805,7 @@
       if (L.markerClusterGroup) {
         markerLayer = L.markerClusterGroup({
           showCoverageOnHover: false,
+          removeOutsideVisibleBounds: false,
           disableClusteringAtZoom: 8,
           maxClusterRadius: 48,
           iconCreateFunction(cluster) {
