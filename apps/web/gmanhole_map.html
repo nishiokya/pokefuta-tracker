@@ -123,8 +123,14 @@
   </footer>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script>
-    const map = L.map('map').setView([36.0, 138.0], 6);
+    const map = L.map('map', { closePopupOnClick: false }).setView([36.0, 138.0], 6);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
+    const franchisePopupOptions = {
+      closeOnClick: false,
+      autoPan: true,
+      autoPanPaddingTopLeft: L.point(16, 24),
+      autoPanPaddingBottomRight: L.point(16, 220)
+    };
 
     function franchiseIcon(franchise, overlap=false) {
       let cls = 'fr-marker ';
@@ -400,7 +406,7 @@
         if (d.lat == null || d.lng == null) return; // skip unless geocoded
         const overlap = overlapLocs.has(locKey(d));
         const popup = buildGundamPopup(d, overlap);
-        const marker = L.marker([d.lat, d.lng], { icon: franchiseIcon('gundam', overlap) }).bindPopup(popup);
+        const marker = L.marker([d.lat, d.lng], { icon: franchiseIcon('gundam', overlap) }).bindPopup(popup, franchisePopupOptions);
         marker._data = { ...d, prefecture: normalizePrefecture(d.prefecture), franchise:'gundam', overlap };
         marker.addTo(map); allMarkers.push(marker);
       });
@@ -408,7 +414,7 @@
         if (d.lat == null || d.lng == null) return;
         const overlap = overlapLocs.has(locKey(d));
         const popup = buildPokemonPopup(d, overlap);
-        const marker = L.marker([d.lat, d.lng], { icon: franchiseIcon('pokefuta', overlap) }).bindPopup(popup);
+        const marker = L.marker([d.lat, d.lng], { icon: franchiseIcon('pokefuta', overlap) }).bindPopup(popup, franchisePopupOptions);
         marker._data = { ...d, prefecture: normalizePrefecture(d.prefecture), franchise:'pokefuta', overlap };
         marker.addTo(map); allMarkers.push(marker);
       });
