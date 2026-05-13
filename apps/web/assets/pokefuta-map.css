@@ -636,11 +636,21 @@ body.pokefuta-map-page {
   background: #efe4cd;
 }
 
-.pokefuta-map-page .travel-popup-photo-date {
+.pokefuta-map-page .travel-popup-photo-meta {
   position: absolute;
   right: 10px;
   bottom: 10px;
   z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 5px;
+  max-width: calc(100% - 20px);
+}
+
+.pokefuta-map-page .travel-popup-photo-date,
+.pokefuta-map-page .travel-popup-photo-author {
   display: inline-flex;
   min-height: 26px;
   align-items: center;
@@ -651,6 +661,11 @@ body.pokefuta-map-page {
   box-shadow: 0 4px 12px rgba(52, 35, 16, .16);
   font-size: .72rem;
   font-weight: 900;
+}
+
+.pokefuta-map-page .travel-popup-photo-author {
+  background: rgba(36, 31, 26, .82);
+  color: #fffaf0;
 }
 
 .pokefuta-map-page .travel-popup-body {
@@ -691,6 +706,20 @@ body.pokefuta-map-page {
   font-size: 1rem;
   font-weight: 950;
   line-height: 1.35;
+}
+
+.pokefuta-map-page .travel-popup-comment {
+  margin: 0;
+  padding: 8px 10px;
+  border-left: 3px solid #d9b65b;
+  border-radius: 8px;
+  background: rgba(255, 248, 232, .78);
+  color: #3f3730;
+  font-size: .78rem;
+  font-weight: 700;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  white-space: pre-line;
 }
 
 .pokefuta-map-page .travel-popup-pokemon-list {
