@@ -123,9 +123,15 @@
   </footer>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script>
-    const isTouchMapPointer = window.matchMedia
-      ? window.matchMedia('(pointer: coarse)').matches
-      : L.Browser.mobile && L.Browser.touch;
+    function hasTouchMapPointer() {
+      const matchesMedia = query => typeof window.matchMedia === 'function' && window.matchMedia(query).matches;
+      if (matchesMedia('(pointer: fine)')) return false;
+      return matchesMedia('(pointer: coarse)')
+        || matchesMedia('(any-pointer: coarse)')
+        || Number(navigator.maxTouchPoints || 0) > 0
+        || (L.Browser.mobile && L.Browser.touch);
+    }
+    const isTouchMapPointer = hasTouchMapPointer();
     const map = L.map('map', { closePopupOnClick: !isTouchMapPointer }).setView([36.0, 138.0], 6);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
     const POPUP_SIDE_PADDING = 16;

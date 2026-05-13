@@ -263,9 +263,15 @@
       iconAnchor: [17, 38],
       popupAnchor: [0, -34]
     });
-    const isTouchMapPointer = window.matchMedia
-      ? window.matchMedia('(pointer: coarse)').matches
-      : L.Browser.mobile && L.Browser.touch;
+    function hasTouchMapPointer() {
+      const matchesMedia = query => typeof window.matchMedia === 'function' && window.matchMedia(query).matches;
+      if (matchesMedia('(pointer: fine)')) return false;
+      return matchesMedia('(pointer: coarse)')
+        || matchesMedia('(any-pointer: coarse)')
+        || Number(navigator.maxTouchPoints || 0) > 0
+        || (L.Browser.mobile && L.Browser.touch);
+    }
+    const isTouchMapPointer = hasTouchMapPointer();
     const map = L.map('map', { zoomControl: true, closePopupOnClick: !isTouchMapPointer }).setView([36.0, 138.0], 6);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
@@ -800,6 +806,7 @@
       if (L.markerClusterGroup) {
         markerLayer = L.markerClusterGroup({
           showCoverageOnHover: false,
+          removeOutsideVisibleBounds: false,
           disableClusteringAtZoom: 8,
           maxClusterRadius: 48,
           iconCreateFunction(cluster) {
