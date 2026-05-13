@@ -1,7 +1,7 @@
 # Artifact build output (not committed)
 dist/
 manhole_images/*
-docs/latest-manhole-photos.json
+
 *.raw.ndjson
 *.log
 __pycache__/
