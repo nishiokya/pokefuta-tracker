@@ -258,18 +258,31 @@
     integrity="sha384-eXVCORTRlv4FUUgS/xmOyr66XBVraen8ATNLMESp92FKXLAMiKkerixTiBvXriZr" crossorigin=""></script>
   <script>
     const pokefutaIcon = L.icon({
-  iconUrl: './assets/pokefuta-marker.svg',
-  iconSize: [34, 40],
-  iconAnchor: [17, 38],
-  popupAnchor: [0, -34]
-});
-    const map = L.map('map', { zoomControl: true }).setView([36.0, 138.0], 6);
+      iconUrl: './assets/pokefuta-marker.svg',
+      iconSize: [34, 40],
+      iconAnchor: [17, 38],
+      popupAnchor: [0, -34]
+    });
+    const isTouchMapPointer = window.matchMedia
+      ? window.matchMedia('(pointer: coarse)').matches
+      : L.Browser.mobile && L.Browser.touch;
+    const map = L.map('map', { zoomControl: true, closePopupOnClick: !isTouchMapPointer }).setView([36.0, 138.0], 6);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
     map.on('popupopen', () => document.body.classList.add('popup-open'));
     map.on('popupclose', () => document.body.classList.remove('popup-open'));
+    const POPUP_SIDE_PADDING = 16;
+    const POPUP_TOP_PADDING = 176;
+    const POPUP_BOTTOM_SHEET_PADDING = 250;
+    const pokefutaPopupOptions = {
+      closeOnClick: !isTouchMapPointer,
+      autoPan: true,
+      // Keep popups clear of the hero card at the top and collapsed bottom sheet on mobile.
+      autoPanPaddingTopLeft: L.point(POPUP_SIDE_PADDING, POPUP_TOP_PADDING),
+      autoPanPaddingBottomRight: L.point(POPUP_SIDE_PADDING, POPUP_BOTTOM_SHEET_PADDING)
+    };
 
     // 都道府県中心座標マッピング（クリック時の移動用）
     const prefectureCenterCoords = {
@@ -676,7 +689,8 @@
             d.pokemons.forEach(p => { if (p) pokemonCounts[p] = (pokemonCounts[p] || 0) + 1; });
           }
           const popupContent = buildPokefutaPopup(d);
-          const marker = L.marker([d.lat, d.lng], { icon: pokefutaIcon }).bindPopup(popupContent);
+          const marker = L.marker([d.lat, d.lng], { icon: pokefutaIcon }).bindPopup(popupContent, pokefutaPopupOptions);
+          marker.on('click', collapseBottomSheet);
           marker.pokefutaData = d; marker.pokefutaData.prefectureCode = prefectureCode;
           allMarkers.push(marker);
           markerLayer.addLayer(marker);
