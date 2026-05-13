@@ -10,7 +10,9 @@ body.pokefuta-map-page {
 
 .pokefuta-map-page .map-stage {
   position: relative;
+  height: 100vh;
   height: 100dvh;
+  min-height: 100vh;
   min-height: 100dvh;
   overflow: hidden;
   background: #cfe8ef;
@@ -945,7 +947,9 @@ body.pokefuta-map-page {
 @media (max-width: 600px) {
   .pokefuta-map-page .map-stage {
     width: 100vw;
+    height: 100vh;
     height: 100dvh;
+    min-height: 100vh;
     min-height: 100dvh;
   }
 

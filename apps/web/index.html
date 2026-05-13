@@ -328,6 +328,18 @@
     var prefectureBounds = {};  // 都道府県ごとのbounding box（グローバルスコープ）
     var prefectureMarkerCounts = {};  // 都道府県ごとのマンホール数（グローバルスコープ）
     const PREFECTURE_BOUNDS_OFFSET = 0.5;  // 都道府県 bounding box のオフセット（度）
+    const OVERALL_PANEL_MEDIA_QUERY = '(max-width: 759px)';
+
+    function getOverallPanelMediaQuery() {
+      return typeof window.matchMedia === 'function'
+        ? window.matchMedia(OVERALL_PANEL_MEDIA_QUERY)
+        : null;
+    }
+
+    function isOverallPanelToggleable() {
+      const mediaQuery = getOverallPanelMediaQuery();
+      return mediaQuery ? mediaQuery.matches : true;
+    }
 
     // URL パラメータから初期都道府県を取得する関数
     function getInitialPrefectureFromURL() {
@@ -890,9 +902,10 @@
       const toggleBtn = document.getElementById('controls-toggle');
       const controlsContent = document.getElementById('controls-content');
       if (!toggleBtn || !controlsContent) return;
-      const canTogglePanel = () => window.matchMedia('(max-width: 759px)').matches;
+      const panelMediaQuery = getOverallPanelMediaQuery();
+      const canTogglePanel = () => panelMediaQuery ? panelMediaQuery.matches : true;
       if (canTogglePanel()) {
-        collapseBottomSheet();
+        collapseBottomSheet(true);
       } else {
         expandBottomSheet();
       }
@@ -919,9 +932,14 @@
         if (dy < -20) expandBottomSheet();
         if (dy > 20) collapseBottomSheet();
       }, { passive: true });
-      window.matchMedia('(max-width: 759px)').addEventListener('change', event => {
-        event.matches ? collapseBottomSheet() : expandBottomSheet();
-      });
+      const handlePanelQueryChange = event => {
+        event.matches ? collapseBottomSheet(true) : expandBottomSheet();
+      };
+      if (panelMediaQuery?.addEventListener) {
+        panelMediaQuery.addEventListener('change', handlePanelQueryChange);
+      } else if (panelMediaQuery?.addListener) {
+        panelMediaQuery.addListener(handlePanelQueryChange);
+      }
     }
 
     function expandBottomSheet() {
@@ -933,7 +951,8 @@
       setTimeout(() => map.invalidateSize(), 160);
     }
 
-    function collapseBottomSheet() {
+    function collapseBottomSheet(force = false) {
+      if (!force && !isOverallPanelToggleable()) return;
       document.body.classList.remove('sheet-expanded');
       const toggleBtn = document.getElementById('controls-toggle');
       toggleBtn?.setAttribute('aria-expanded', 'false');
@@ -1105,7 +1124,7 @@
         const row = document.createElement('article');
         const code = window.PREFECTURE_CODE_MAP[prefecture] || '--';
         const siteUrl = prefectureSiteUrls[prefecture];
-        const thumbnailUrls = prefectureThumbnails[prefecture] || [];
+        const thumbnailItems = prefectureThumbnails[prefecture] || [];
         const recentCount = prefectureRecentCounts[prefecture] || 0;
         let siteCell = '<span class="prefecture-site-link prefecture-site-link--empty">公式サイトなし</span>';
         if (siteUrl) {
@@ -1135,7 +1154,7 @@
             <span class="${countBadgeClass}">${count}枚</span>
           </div>
           <div class="prefecture-card-gallery" aria-label="${escapeHtml(prefecture)}のマンホール写真">
-            ${thumbnailUrls.length ? thumbnailUrls.map(item => `
+            ${thumbnailItems.length ? thumbnailItems.map(item => `
               <button type="button" class="prefecture-card-thumb" data-manhole-id="${escapeHtml(item.id)}" aria-label="${escapeHtml(item.title)}の詳細を開く" title="${escapeHtml(item.title)}の詳細を開く">
                 <img src="${item.imageUrl}" alt="" loading="lazy" decoding="async" onerror="this.closest('.prefecture-card-thumb').classList.add('is-missing'); this.remove();">
               </button>
