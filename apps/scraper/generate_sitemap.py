@@ -109,6 +109,7 @@ def url_entry(loc: str, changefreq: str, priority: str) -> str:
 def build_sitemap(photo_ids: list[str]) -> str:
     entries = [
         url_entry(BASE_URL, "daily", "1.0"),
+        url_entry(f"{BASE_URL}summary", "weekly", "0.8"),
         url_entry(f"{BASE_URL}nearby.html", "weekly", "0.6"),
         url_entry(f"{BASE_URL}gmanhole_map.html", "weekly", "0.6"),
     ]
