@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ポケふた マップ | 全国ポケモンマンホール一覧</title>
-  <meta name="description" content="全国のポケモンマンホール（ポケふた）を地図で探索。都道府県・ポケモン名・最近追加フィルタで絞り込み可能。">
+  <title>ポケふたマップ｜全国のポケモンマンホール一覧・地図</title>
+  <meta name="description" content="全国のポケふた・ポケモンマンホールを地図で探せるマップサービスです。都道府県別の一覧、設置場所、近くのポケふた探しに対応しています。">
   <meta name="keywords" content="ポケふた,ポケモンマンホール,マンホール,ポケモン,聖地巡礼,地図">
   <meta name="robots" content="index,follow">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ja_JP">
-  <meta property="og:title" content="ポケふた マップ | 全国ポケモンマンホール一覧">
-  <meta property="og:description" content="全国のポケモンマンホール（ポケふた）を地図で探索。都道府県・ポケモン名・最近追加フィルタで絞り込み可能。">
+  <meta property="og:title" content="ポケふたマップ｜全国のポケモンマンホール一覧・地図">
+  <meta property="og:description" content="全国のポケふた・ポケモンマンホールを地図で探せるマップサービスです。都道府県別の一覧、設置場所、近くのポケふた探しに対応しています。">
   <meta property="og:url" content="https://data.pokefuta.com/">
   <meta property="og:image" content="https://data.pokefuta.com/assets/pokefuta_icon_32.png">
   <link rel="canonical" href="https://data.pokefuta.com/">
@@ -40,10 +40,10 @@
     window.buildPrefecturePageMeta = function(prefecture) {
       const title = prefecture
         ? `${prefecture}のポケふた マップ | ポケモンマンホール一覧`
-        : 'ポケふた マップ | 全国ポケモンマンホール一覧';
+        : 'ポケふたマップ｜全国のポケモンマンホール一覧・地図';
       const description = prefecture
         ? `${prefecture}のポケモンマンホール（ポケふた）を地図で確認。設置場所、市町村、登場ポケモンを一覧できます。`
-        : '全国のポケモンマンホール（ポケふた）を地図で探索。都道府県・ポケモン名・最近追加フィルタで絞り込み可能。';
+        : '全国のポケふた・ポケモンマンホールを地図で探せるマップサービスです。都道府県別の一覧、設置場所、近くのポケふた探しに対応しています。';
       const canonicalUrl = prefecture
         ? `${window.SITE_BASE_URL}?pref=${encodeURIComponent(prefecture)}`
         : window.SITE_BASE_URL;
@@ -174,7 +174,7 @@
   <main class="map-stage" aria-label="ポケふた探索マップ">
     <div id="map"></div>
     <section class="map-hero-card" aria-labelledby="hero-title">
-      <h1 id="hero-title">全国470枚のポケふたを探そう</h1>
+      <h1 id="hero-title">全国のポケふた・ポケモンマンホールマップ</h1>
       <p>旅行やお出かけのついでに、ご当地マンホール「ポケふた」を見つけよう</p>
       <p class="map-hero-meta">📍 全国<span id="hero-city-count">0</span>の自治体に設置</p>
     </section>
@@ -192,7 +192,7 @@
         <div class="sheet-action-grid" aria-label="探索メニュー">
           <button type="button" id="prefecture-open-button" class="sheet-action-btn">
             <img src="./assets/icon-map.svg" alt="" aria-hidden="true">
-            都道府県から探す
+            地図で探す
           </button>
           <label class="sheet-action-btn sheet-action-btn--toggle" for="recent-toggle">
             <input type="checkbox" id="recent-toggle" />
@@ -201,10 +201,17 @@
           </label>
           <button type="button" id="locate-button" class="sheet-action-btn">
             <img src="./assets/icon-current-location.svg" alt="" aria-hidden="true">
-            <span id="locate-button-label">近くのポケふた</span>
+            <span id="locate-button-label">近くのポケふたを探す</span>
           </button>
         </div>
       </div>
+      <section class="prefecture-directory" aria-labelledby="prefecture-directory-heading">
+        <div class="section-title-row">
+          <h2 id="prefecture-directory-heading">都道府県別のポケふた一覧</h2>
+        </div>
+        <p>旅行先やお出かけ先の近くにあるポケふたを、都道府県別に探せます。</p>
+        <div id="prefecture-directory-links" class="prefecture-directory-links" aria-label="ポケふたがある都道府県"></div>
+      </section>
       <section id="nearby-results" class="nearby-results" aria-live="polite" hidden>
         <div class="section-title-row">
           <h4>近くのポケふた</h4>
@@ -764,6 +771,7 @@
         }
         
         populatePrefectureTable();
+        renderPrefectureDirectory();
         updateStats();
         initRecentFilter();
         updateRecentSummary();
@@ -1194,6 +1202,19 @@
           });
         });
       });
+    }
+
+    function renderPrefectureDirectory() {
+      const links = document.getElementById('prefecture-directory-links');
+      if (!links) return;
+      const prefectures = Object.keys(window.PREFECTURE_CODE_MAP)
+        .filter(prefecture => (prefectureCounts[prefecture] || 0) > 0)
+        .sort((a, b) => window.PREFECTURE_CODE_MAP[a].localeCompare(window.PREFECTURE_CODE_MAP[b]));
+      links.innerHTML = prefectures.map(prefecture => {
+        const count = prefectureCounts[prefecture] || 0;
+        const href = window.buildCanonicalPath(prefecture);
+        return `<a href="${href}" data-prefecture="${escapeHtml(prefecture)}">${escapeHtml(prefecture)}<span>${count}枚</span></a>`;
+      }).join('');
     }
 
     function renderRecentAdded() {

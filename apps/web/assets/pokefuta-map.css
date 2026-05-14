@@ -292,6 +292,14 @@ body.pokefuta-map-page {
   letter-spacing: 0;
 }
 
+.pokefuta-map-page .section-title-row h2 {
+  margin: 0;
+  color: #1f1b18;
+  font-size: .98rem;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
 .pokefuta-map-page .section-title-row span {
   color: #6b4aa2;
   font-size: .82rem;
@@ -301,6 +309,55 @@ body.pokefuta-map-page {
 .pokefuta-map-page .prefecture-card-list {
   max-height: none;
   overflow: visible;
+}
+
+.pokefuta-map-page .prefecture-directory {
+  margin: 14px 0 2px;
+  padding: 12px;
+  border: 1px solid rgba(116, 82, 38, .15);
+  border-radius: 14px;
+  background: rgba(255, 253, 246, .76);
+}
+
+.pokefuta-map-page .prefecture-directory .section-title-row {
+  margin: 0 0 6px;
+}
+
+.pokefuta-map-page .prefecture-directory p {
+  margin: 0 0 10px;
+  color: #5f5146;
+  font-size: .84rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.pokefuta-map-page .prefecture-directory-links {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scrollbar-width: thin;
+}
+
+.pokefuta-map-page .prefecture-directory-links a {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 0 10px;
+  border: 1px solid rgba(126, 107, 169, .22);
+  border-radius: 999px;
+  background: #fffaf0;
+  color: #342b45;
+  font-size: .82rem;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.pokefuta-map-page .prefecture-directory-links a span {
+  color: #6b4aa2;
+  font-size: .74rem;
 }
 
 .pokefuta-map-page #prefecture-table-body {
