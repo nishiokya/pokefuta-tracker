@@ -11,15 +11,18 @@ permissions:
   pull-requests: write
   issues: write # ラベル付与に必要
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   update:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.11'
 
@@ -76,7 +79,7 @@ jobs:
 
       - name: Create Pull Request (if changes)
         if: steps.diff.outputs.changed == 'true'
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v8
         with:
           commit-message: "chore: daily pokefuta dataset update"
           title: "Daily pokefuta dataset update"
