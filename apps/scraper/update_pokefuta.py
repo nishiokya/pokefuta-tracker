@@ -52,7 +52,7 @@ CORE_COMPARE_FIELDS = [
     "address_raw", "address_norm", "place_detail", "landmark", "access",
     "parking", "nearby_spots", "tags", "source_urls", "verified_at",
     "confidence", "lat", "lng", "pokemons", "detail_url",
-    "prefecture_site_url", "status"
+    "prefecture_site_url", "status", "is_prefecture_site"
 ]
 
 PLACEHOLDER_STRINGS = {s.lower() for s in [
@@ -335,6 +335,18 @@ def parse_detail(detail_url: str, html: str, logger: logging.Logger, title_data:
             address = max(matches, key=len).strip()
             break
     
+    # Detect prefecture_site_url from link text
+    prefecture_site_url = ""
+    is_prefecture_site = False
+    for a in soup.select("a[href]"):
+        txt = a.get_text(strip=True)
+        if "ローカルActs" in txt and "ページへ" in txt:
+            href = a.get("href", "")
+            if href and "/municipality/" in href:
+                prefecture_site_url = href
+                is_prefecture_site = True
+                break
+
     # Use second precision UTC format compatible with JS Date parsing
     now_iso = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
     return {
@@ -349,12 +361,13 @@ def parse_detail(detail_url: str, html: str, logger: logging.Logger, title_data:
         "lng": lng,
         "pokemons": pokemons,
         "detail_url": detail_url,
-        "prefecture_site_url": "",
+        "prefecture_site_url": prefecture_site_url,
         # extended schema (for consistency with incremental updater)
         "first_seen": now_iso,
         "added_at": now_iso,  # alias for first_seen used by web UI
         "last_updated": now_iso,  # unified update timestamp
-        "status": "active"
+        "status": "active",
+        "is_prefecture_site": is_prefecture_site
     }
 
 
