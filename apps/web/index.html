@@ -12,7 +12,11 @@
   <meta property="og:title" content="ポケふたマップ｜全国のポケモンマンホール一覧・地図">
   <meta property="og:description" content="全国のポケふた・ポケモンマンホールを地図で探せるマップサービスです。都道府県別の一覧、設置場所、近くのポケふた探しに対応しています。">
   <meta property="og:url" content="https://data.pokefuta.com/">
-  <meta property="og:image" content="https://data.pokefuta.com/assets/pokefuta_icon_32.png">
+  <meta property="og:image" content="https://data.pokefuta.com/assets/ogp/pokefuta_map_ogp.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ポケふたマップ｜全国のポケモンマンホール一覧・地図">
+  <meta name="twitter:description" content="全国のポケふた・ポケモンマンホールを地図で探せるマップサービスです。都道府県別の一覧、設置場所、近くのポケふた探しに対応しています。">
+  <meta name="twitter:image" content="https://data.pokefuta.com/assets/ogp/pokefuta_map_ogp.png">
   <link rel="canonical" href="https://data.pokefuta.com/">
   <script>
     window.PREFECTURE_CODE_MAP = Object.freeze({
@@ -39,15 +43,18 @@
 
     window.buildPrefecturePageMeta = function(prefecture) {
       const title = prefecture
-        ? `${prefecture}のポケふた マップ | ポケモンマンホール一覧`
+        ? `${prefecture}のポケふた一覧｜ポケモンマンホール設置場所マップ`
         : 'ポケふたマップ｜全国のポケモンマンホール一覧・地図';
       const description = prefecture
-        ? `${prefecture}のポケモンマンホール（ポケふた）を地図で確認。設置場所、市町村、登場ポケモンを一覧できます。`
+        ? `${prefecture}にあるポケモンマンホール「ポケふた」の設置場所を地図で確認できます。登場ポケモンや市町村別の場所を見ながら、旅行やポケふた巡りの計画に使えます。`
         : '全国のポケふた・ポケモンマンホールを地図で探せるマップサービスです。都道府県別の一覧、設置場所、近くのポケふた探しに対応しています。';
+      const keywords = prefecture
+        ? `ポケふた,${prefecture},ポケモンマンホール,マンホール,設置場所,地図,旅行,観光`
+        : 'ポケふた,ポケモンマンホール,マンホール,ポケモン,聖地巡礼,地図';
       const canonicalUrl = prefecture
         ? `${window.SITE_BASE_URL}?pref=${encodeURIComponent(prefecture)}`
         : window.SITE_BASE_URL;
-      return { title, description, canonicalUrl };
+      return { title, description, keywords, canonicalUrl };
     };
 
     window.applyPrefecturePageMeta = function(prefecture) {
@@ -55,9 +62,12 @@
       document.title = meta.title;
       document.querySelector('link[rel="canonical"]')?.setAttribute('href', meta.canonicalUrl);
       document.querySelector('meta[name="description"]')?.setAttribute('content', meta.description);
+      document.querySelector('meta[name="keywords"]')?.setAttribute('content', meta.keywords);
       document.querySelector('meta[property="og:title"]')?.setAttribute('content', meta.title);
       document.querySelector('meta[property="og:description"]')?.setAttribute('content', meta.description);
       document.querySelector('meta[property="og:url"]')?.setAttribute('content', meta.canonicalUrl);
+      document.querySelector('meta[name="twitter:title"]')?.setAttribute('content', meta.title);
+      document.querySelector('meta[name="twitter:description"]')?.setAttribute('content', meta.description);
     };
 
     window.buildCanonicalPath = function(prefecture) {
@@ -69,22 +79,74 @@
     };
 
     window.applyManholePageMeta = function(manhole) {
-      if (!manhole) return;
-      const titleBase = manhole.title || `ポケふた ${manhole.id}`;
-      const pokemonText = Array.isArray(manhole.pokemons) && manhole.pokemons.length
-        ? `登場ポケモン: ${manhole.pokemons.join(', ')}。`
-        : '';
-      const placeText = [manhole.prefecture, manhole.city].filter(Boolean).join(' ');
-      const title = `${titleBase} | ポケふた マップ`;
-      const description = `${placeText ? `${placeText}の` : ''}ポケモンマンホール（ポケふた）を地図で確認。${pokemonText}`.trim();
+      if (!manhole) {
+        // データなしの場合はデフォルトに
+        window.applyDefaultMeta();
+        return;
+      }
+      
+      const prefecture = manhole.prefecture || '';
+      const city = manhole.city || '';
+      const pokemons = Array.isArray(manhole.pokemons)
+        ? manhole.pokemons.filter(p => typeof p === 'string' && !p.includes('ローカルActs'))
+        : [];
+      const pokemonText = pokemons.length > 0 
+        ? pokemons.length === 1
+          ? pokemons[0]
+          : pokemons.join('・')
+        : 'ポケモン';
+      
+      // title: {都道府県} {市区町村}のポケふた｜{ポケモン名}のポケモンマンホール
+      const title = prefecture && city
+        ? `${prefecture} ${city}のポケふた｜${pokemonText}のポケモンマンホール`
+        : `ポケふた｜${pokemonText}のポケモンマンホール`;
+      
+      // description: {都道府県}{市区町村}に設置されたポケモンマンホール「ポケふた」を地図で確認できます。登場ポケモンは{ポケモン名}。旅行中の寄り道やポケふた巡りに便利です。
+      const placeText = prefecture && city ? `${prefecture}${city}` : (prefecture || '');
+      const description = placeText
+        ? `${placeText}に設置されたポケモンマンホール「ポケふた」を地図で確認できます。登場ポケモンは${pokemonText}。旅行中の寄り道やポケふた巡りに便利です。`
+        : `ポケモンマンホール「ポケふた」を地図で確認できます。登場ポケモンは${pokemonText}。旅行中の寄り道やポケふた巡りに便利です。`;
+      
+      // keywords: ポケふた,{都道府県},{市区町村},{ポケモン名},ポケモンマンホール,マンホール,聖地巡礼,地図
+      const keywordParts = ['ポケふた'];
+      if (prefecture) keywordParts.push(prefecture);
+      if (city) keywordParts.push(city);
+      keywordParts.push(...pokemons);
+      keywordParts.push('ポケモンマンホール', 'マンホール', '聖地巡礼', '地図');
+      const keywords = keywordParts.join(',');
+      
       const canonicalUrl = `${window.SITE_BASE_URL}?manhole=${encodeURIComponent(manhole.id)}`;
+      
       document.title = title;
       document.querySelector('link[rel="canonical"]')?.setAttribute('href', canonicalUrl);
       document.querySelector('meta[name="description"]')?.setAttribute('content', description);
+      document.querySelector('meta[name="keywords"]')?.setAttribute('content', keywords);
       document.querySelector('meta[property="og:title"]')?.setAttribute('content', title);
       document.querySelector('meta[property="og:description"]')?.setAttribute('content', description);
       document.querySelector('meta[property="og:url"]')?.setAttribute('content', canonicalUrl);
+      document.querySelector('meta[name="twitter:title"]')?.setAttribute('content', title);
+      document.querySelector('meta[name="twitter:description"]')?.setAttribute('content', description);
+      
       window.applyManholeJsonLd(manhole);
+    };
+
+    window.applyDefaultMeta = function() {
+      const defaultMeta = {
+        title: 'ポケふたマップ｜全国のポケモンマンホール一覧・地図',
+        description: '全国のポケふた・ポケモンマンホールを地図で探せるマップサービスです。都道府県別の一覧、設置場所、近くのポケふた探しに対応しています。',
+        keywords: 'ポケふた,ポケモンマンホール,マンホール,ポケモン,聖地巡礼,地図',
+        canonicalUrl: window.SITE_BASE_URL
+      };
+      
+      document.title = defaultMeta.title;
+      document.querySelector('link[rel="canonical"]')?.setAttribute('href', defaultMeta.canonicalUrl);
+      document.querySelector('meta[name="description"]')?.setAttribute('content', defaultMeta.description);
+      document.querySelector('meta[name="keywords"]')?.setAttribute('content', defaultMeta.keywords);
+      document.querySelector('meta[property="og:title"]')?.setAttribute('content', defaultMeta.title);
+      document.querySelector('meta[property="og:description"]')?.setAttribute('content', defaultMeta.description);
+      document.querySelector('meta[property="og:url"]')?.setAttribute('content', defaultMeta.canonicalUrl);
+      document.querySelector('meta[name="twitter:title"]')?.setAttribute('content', defaultMeta.title);
+      document.querySelector('meta[name="twitter:description"]')?.setAttribute('content', defaultMeta.description);
     };
 
     window.applyManholeJsonLd = function(manhole) {
@@ -141,15 +203,29 @@
       document.head.appendChild(script);
     };
 
-    (function initPrefectureCanonical() {
+    (function initPageMeta() {
       const params = new URLSearchParams(window.location.search);
+      const manholeParam = params.get('manhole');
       const prefParam = params.get('pref');
-      const prefecture = window.resolvePrefectureParam(prefParam);
-      if (!prefecture) return;
-
-      window.applyPrefecturePageMeta(prefecture);
-      if (prefParam !== prefecture || window.location.pathname.endsWith('/index.html')) {
-        window.history.replaceState({ pref: prefecture }, '', window.buildCanonicalPath(prefecture));
+      
+      // 優先度: manhole > pref > default
+      if (manholeParam) {
+        // manhole パラメータがある場合、データ取得待機
+        // (アプリケーションコードで実際のデータ取得後に applyManholePageMeta() を呼び出す)
+        // ここではまずデフォルトを適用
+        window.applyDefaultMeta();
+      } else if (prefParam) {
+        const prefecture = window.resolvePrefectureParam(prefParam);
+        if (prefecture) {
+          window.applyPrefecturePageMeta(prefecture);
+          if (prefParam !== prefecture || window.location.pathname.endsWith('/index.html')) {
+            window.history.replaceState({ pref: prefecture }, '', window.buildCanonicalPath(prefecture));
+          }
+        } else {
+          window.applyDefaultMeta();
+        }
+      } else {
+        window.applyDefaultMeta();
       }
     })();
   </script>
