@@ -433,6 +433,7 @@
     var prefectureMarkerCounts = {};  // 都道府県ごとのマンホール数（グローバルスコープ）
     const PREFECTURE_BOUNDS_OFFSET = 0.5;  // 都道府県 bounding box のオフセット（度）
     const OVERALL_PANEL_MEDIA_QUERY = '(max-width: 759px)';
+    var isInitialPageLoad = true;  // Track if this is initial page load to prevent duplicate page_views
 
     function getOverallPanelMediaQuery() {
       return typeof window.matchMedia === 'function'
@@ -462,8 +463,8 @@
       if (prefecture) {
         window.history.replaceState({ pref: prefecture }, '', window.buildCanonicalPath(prefecture));
         window.applyPrefecturePageMeta(prefecture);
-        // Send page_view for SPA navigation
-        if (window.gtag) {
+        // Send page_view for SPA navigation (skip initial page load)
+        if (window.gtag && !isInitialPageLoad) {
           gtag('event', 'page_view', {
             'page_path': `/tracker_pref/${encodeURIComponent(prefecture)}`
           });
@@ -472,8 +473,8 @@
         // URL をリセット
         window.history.replaceState({}, '', window.buildCanonicalPath(''));
         window.applyPrefecturePageMeta('');
-        // Send page_view for SPA navigation back to top
-        if (window.gtag) {
+        // Send page_view for SPA navigation back to top (skip initial page load)
+        if (window.gtag && !isInitialPageLoad) {
           gtag('event', 'page_view', {
             'page_path': '/tracker_top'
           });
@@ -934,6 +935,8 @@
           // 地図をその都道府県にズーム
           setTimeout(() => zoomToPrefecture(initialPref), 100);
         }
+        // Mark initial page load as complete to enable SPA page_view tracking
+        isInitialPageLoad = false;
       } catch (e) {
         console.error('ポケふたデータ読み込み失敗', e);
       }
@@ -950,8 +953,8 @@
       const data = marker.pokefutaData;
       window.applyManholePageMeta(data);
       window.history.replaceState({ manhole: data.id }, '', window.buildManholeCanonicalPath(data.id));
-      // Send page_view for SPA navigation to manhole detail
-      if (window.gtag) {
+      // Send page_view for SPA navigation to manhole detail (skip initial page load)
+      if (window.gtag && !isInitialPageLoad) {
         gtag('event', 'page_view', {
           'page_path': `/tracker_manhole/${encodeURIComponent(data.id)}`
         });

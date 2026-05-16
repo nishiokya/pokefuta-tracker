@@ -264,6 +264,16 @@
         .replace(/\t/g, '\\t');
     }
 
+    // Safely escape string for HTML attribute context
+    function escapeHtmlAttr(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+
     // Calculate distance between two coordinates in kilometers
     function calculateDistance(lat1, lng1, lat2, lng2) {
       const R = 6371; // Earth's radius in kilometers
@@ -445,9 +455,11 @@
         const mapsUrl = `https://www.google.com/maps?q=${manhole.lat},${manhole.lng}`;
         const pokefutaUrl = `https://local.pokemon.jp/manhole/detail/${manhole.id}/`;
         const manholeTitle = manhole.title || `マンホール #${manhole.id}`;
-        // Safely escape for JavaScript string literals
+        // Safely escape for JavaScript string literals and HTML attributes
         const safeTitleJs = escapeJs(manholeTitle);
         const safeIdJs = escapeJs(manhole.id);
+        const safeTitleAttr = escapeHtmlAttr(safeTitleJs);
+        const safeIdAttr = escapeHtmlAttr(safeIdJs);
         return `
         <div class="manhole-item">
           <div class="manhole-info">
@@ -459,8 +471,8 @@
           </div>
           <div class="manhole-actions">
             <div class="manhole-distance">${formatDistance(manhole.distance)}</div>
-            <a href="${pokefutaUrl}" target="_blank" class="pokefuta-link" onclick="if(window.trackEvent){window.trackEvent('click_official_link_nearby',{event_category:'outbound',event_label:'${safeTitleJs}',manhole_id:'${safeIdJs}'});}">⚡ 公式情報</a>
-            <a href="${mapsUrl}" target="_blank" class="maps-link" onclick="if(window.trackEvent){window.trackEvent('click_google_map',{event_category:'outbound',event_label:'${safeTitleJs}',manhole_id:'${safeIdJs}'});}">📍 Google Map</a>
+            <a href="${pokefutaUrl}" target="_blank" class="pokefuta-link" onclick="if(window.trackEvent){window.trackEvent('click_official_link_nearby',{event_category:'outbound',event_label:'${safeTitleAttr}',manhole_id:'${safeIdAttr}'});}">⚡ 公式情報</a>
+            <a href="${mapsUrl}" target="_blank" class="maps-link" onclick="if(window.trackEvent){window.trackEvent('click_google_map',{event_category:'outbound',event_label:'${safeTitleAttr}',manhole_id:'${safeIdAttr}'});}">📍 Google Map</a>
           </div>
         </div>
         `;
