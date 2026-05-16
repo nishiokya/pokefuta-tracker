@@ -228,12 +228,12 @@
     </div>
 
     <div class="location-status" id="locationStatus">
-      <button class="location-button" onclick="getCurrentLocation()">📍 現在地を取得</button>
+      <button class="location-button" onclick="getCurrentLocation(true)">📍 現在地を取得</button>
     </div>
 
     <div class="distance-filter" id="distanceFilter" style="display: none;">
       <label for="distanceSelect">表示範囲:</label>
-      <select id="distanceSelect" onchange="filterManholes()">
+      <select id="distanceSelect" onchange="filterManholes(); if(window.trackEvent){window.trackEvent('change_distance_filter',{event_category:'user_engagement',event_label:this.value+'km'});}">
         <option value="1">1km以内</option>
         <option value="3">3km以内</option>
         <option value="5">5km以内</option>
@@ -252,6 +252,37 @@
   <script>
     let allManholes = [];
     let userLocation = null;
+
+    // Safely escape string for JavaScript string literal
+    function escapeJs(str) {
+      return String(str || '')
+        .replace(/\\/g, '\\\\')
+        .replace(/'/g, "\\'")
+        .replace(/"/g, '\\"')
+        .replace(/\n/g, '\\n')
+        .replace(/\r/g, '\\r')
+        .replace(/\t/g, '\\t');
+    }
+
+    // Safely escape string for HTML attribute context
+    function escapeHtmlAttr(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+
+    // Safely escape string for HTML content (display text)
+    function escapeHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
 
     // Calculate distance between two coordinates in kilometers
     function calculateDistance(lat1, lng1, lat2, lng2) {
@@ -275,9 +306,17 @@
     }
 
     // Get current location
-    function getCurrentLocation() {
+    function getCurrentLocation(isUserClick = false) {
       const statusDiv = document.getElementById('locationStatus');
       statusDiv.innerHTML = '<div style="color: #666;">📍 位置情報を取得中...</div>';
+
+      // Track location button click only if user initiated
+      if (isUserClick && window.trackEvent) {
+        window.trackEvent('click_get_location', {
+          'event_category': 'user_engagement',
+          'event_label': 'nearby_page'
+        });
+      }
 
       if (!navigator.geolocation) {
         statusDiv.innerHTML = '<div class="error">このブラウザは位置情報に対応していません</div>';
@@ -292,6 +331,15 @@
           };
           statusDiv.innerHTML = `<div style="color: #4caf50;">✅ 位置情報を取得しました</div>`;
           document.getElementById('distanceFilter').style.display = 'block';
+
+          // Track geolocation success
+          if (window.trackEvent) {
+            window.trackEvent('geolocation_success_nearby', {
+              'event_category': 'user_engagement',
+              'event_label': 'location_acquired'
+            });
+          }
+
           loadManholes();
         },
         function(error) {
@@ -307,7 +355,16 @@
               errorMessage = '位置情報の取得がタイムアウトしました';
               break;
           }
-          statusDiv.innerHTML = `<div class="error">${errorMessage}</div><button class="location-button" onclick="getCurrentLocation()" style="margin-top: 10px;">再試行</button>`;
+
+          // Track geolocation error
+          if (window.trackEvent) {
+            window.trackEvent('geolocation_error_nearby', {
+              'event_category': 'user_engagement',
+              'event_label': `error_${error.code}`
+            });
+          }
+
+          statusDiv.innerHTML = `<div class="error">${errorMessage}</div><button class="location-button" onclick="getCurrentLocation(true)" style="margin-top: 10px;">再試行</button>`;
         },
         {
           enableHighAccuracy: true,
@@ -407,19 +464,26 @@
       const html = filteredManholes.map(manhole => {
         const mapsUrl = `https://www.google.com/maps?q=${manhole.lat},${manhole.lng}`;
         const pokefutaUrl = `https://local.pokemon.jp/manhole/detail/${manhole.id}/`;
+        const manholeTitle = manhole.title || `マンホール #${manhole.id}`;
+        // Safely escape for different contexts
+        const safeTitleHtml = escapeHtml(manholeTitle);  // For display in HTML
+        const safeTitleJs = escapeJs(manholeTitle);  // For JS string literal
+        const safeIdJs = escapeJs(manhole.id);
+        const safeTitleAttr = escapeHtmlAttr(safeTitleJs);  // For HTML attribute
+        const safeIdAttr = escapeHtmlAttr(safeIdJs);
         return `
         <div class="manhole-item">
           <div class="manhole-info">
-            <div class="manhole-title">${manhole.title || `マンホール #${manhole.id}`}</div>
-            <div class="manhole-location">📍 ${manhole.prefecture} ${manhole.city}</div>
+            <div class="manhole-title">${safeTitleHtml}</div>
+            <div class="manhole-location">📍 ${escapeHtml(manhole.prefecture)} ${escapeHtml(manhole.city)}</div>
             <div>
-              ${manhole.pokemons.map(pokemon => `<span class="manhole-pokemon">${pokemon}</span>`).join('')}
+              ${manhole.pokemons.map(pokemon => `<span class="manhole-pokemon">${escapeHtml(pokemon)}</span>`).join('')}
             </div>
           </div>
           <div class="manhole-actions">
             <div class="manhole-distance">${formatDistance(manhole.distance)}</div>
-            <a href="${pokefutaUrl}" target="_blank" class="pokefuta-link">⚡ 公式情報</a>
-            <a href="${mapsUrl}" target="_blank" class="maps-link">📍 Google Map</a>
+            <a href="${pokefutaUrl}" target="_blank" class="pokefuta-link" onclick="if(window.trackEvent){window.trackEvent('click_official_link_nearby',{event_category:'outbound',event_label:'${safeTitleAttr}',manhole_id:'${safeIdAttr}'});}">⚡ 公式情報</a>
+            <a href="${mapsUrl}" target="_blank" class="maps-link" onclick="if(window.trackEvent){window.trackEvent('click_google_map',{event_category:'outbound',event_label:'${safeTitleAttr}',manhole_id:'${safeIdAttr}'});}">📍 Google Map</a>
           </div>
         </div>
         `;
@@ -450,7 +514,15 @@
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  gtag('config', 'G-K18NR4GZG2');
+  gtag('config', 'G-K18NR4GZG2', {
+    'anonymize_ip': true,
+    'page_path': '/tracker_nearby'
+  });
+
+  // Event tracking helper function
+  window.trackEvent = function(action, params = {}) {
+    gtag('event', action, params);
+  };
 </script>
 </body>
 </html>
