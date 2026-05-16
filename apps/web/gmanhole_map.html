@@ -54,8 +54,26 @@
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-K18NR4GZG2"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);} gtag('js', new Date());
-    gtag('config', 'G-K18NR4GZG2', { 'anonymize_ip': true });
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    // Dynamic page_path for Gundam manhole map
+    const params = new URLSearchParams(window.location.search);
+    const prefParam = params.get('pref');
+    let pagePath = '/tracker_gmanhole_map';
+    if (prefParam) {
+      pagePath = `/tracker_gmanhole_map_pref/${prefParam}`;
+    }
+
+    gtag('config', 'G-K18NR4GZG2', {
+      'anonymize_ip': true,
+      'page_path': pagePath
+    });
+
+    // Event tracking helper function
+    window.trackEvent = function(action, params = {}) {
+      gtag('event', action, params);
+    };
   </script>
   <!-- End GA -->
 </head>
@@ -305,6 +323,16 @@
         button.title = `${pref}で絞り込み+ズーム`;
         button.addEventListener('click', () => {
           const willSelect = selectedPrefecture !== pref;
+
+          // Track prefecture selection
+          if (window.trackEvent && willSelect) {
+            window.trackEvent('click_prefecture_gmanhole', {
+              'event_category': 'navigation',
+              'event_label': pref,
+              'value': total
+            });
+          }
+
           setPrefectureSelection(willSelect ? pref : '');
           if (willSelect) {
             zoomToPrefecture(pref);
@@ -537,8 +565,26 @@
     }
 
     // Event listeners
-    document.getElementById('chk-pokemon').addEventListener('change', recomputeVisibility);
-    document.getElementById('chk-gundam').addEventListener('change', recomputeVisibility);
+    document.getElementById('chk-pokemon').addEventListener('change', (e) => {
+      // Track Pokemon filter toggle
+      if (window.trackEvent) {
+        window.trackEvent('toggle_pokemon_filter', {
+          'event_category': 'user_engagement',
+          'event_label': e.target.checked ? 'enabled' : 'disabled'
+        });
+      }
+      recomputeVisibility();
+    });
+    document.getElementById('chk-gundam').addEventListener('change', (e) => {
+      // Track Gundam filter toggle
+      if (window.trackEvent) {
+        window.trackEvent('toggle_gundam_filter', {
+          'event_category': 'user_engagement',
+          'event_label': e.target.checked ? 'enabled' : 'disabled'
+        });
+      }
+      recomputeVisibility();
+    });
 
     initControlsToggle();
     loadDatasets();

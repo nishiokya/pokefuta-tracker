@@ -233,7 +233,7 @@
 
     <div class="distance-filter" id="distanceFilter" style="display: none;">
       <label for="distanceSelect">表示範囲:</label>
-      <select id="distanceSelect" onchange="filterManholes()">
+      <select id="distanceSelect" onchange="filterManholes(); if(window.trackEvent){window.trackEvent('change_distance_filter',{event_category:'user_engagement',event_label:this.value+'km'});}">
         <option value="1">1km以内</option>
         <option value="3">3km以内</option>
         <option value="5">5km以内</option>
@@ -279,6 +279,14 @@
       const statusDiv = document.getElementById('locationStatus');
       statusDiv.innerHTML = '<div style="color: #666;">📍 位置情報を取得中...</div>';
 
+      // Track location button click
+      if (window.trackEvent) {
+        window.trackEvent('click_get_location', {
+          'event_category': 'user_engagement',
+          'event_label': 'nearby_page'
+        });
+      }
+
       if (!navigator.geolocation) {
         statusDiv.innerHTML = '<div class="error">このブラウザは位置情報に対応していません</div>';
         return;
@@ -292,6 +300,15 @@
           };
           statusDiv.innerHTML = `<div style="color: #4caf50;">✅ 位置情報を取得しました</div>`;
           document.getElementById('distanceFilter').style.display = 'block';
+
+          // Track geolocation success
+          if (window.trackEvent) {
+            window.trackEvent('geolocation_success_nearby', {
+              'event_category': 'user_engagement',
+              'event_label': 'location_acquired'
+            });
+          }
+
           loadManholes();
         },
         function(error) {
@@ -307,6 +324,15 @@
               errorMessage = '位置情報の取得がタイムアウトしました';
               break;
           }
+
+          // Track geolocation error
+          if (window.trackEvent) {
+            window.trackEvent('geolocation_error_nearby', {
+              'event_category': 'user_engagement',
+              'event_label': `error_${error.code}`
+            });
+          }
+
           statusDiv.innerHTML = `<div class="error">${errorMessage}</div><button class="location-button" onclick="getCurrentLocation()" style="margin-top: 10px;">再試行</button>`;
         },
         {
@@ -407,10 +433,11 @@
       const html = filteredManholes.map(manhole => {
         const mapsUrl = `https://www.google.com/maps?q=${manhole.lat},${manhole.lng}`;
         const pokefutaUrl = `https://local.pokemon.jp/manhole/detail/${manhole.id}/`;
+        const manholeTitle = manhole.title || `マンホール #${manhole.id}`;
         return `
         <div class="manhole-item">
           <div class="manhole-info">
-            <div class="manhole-title">${manhole.title || `マンホール #${manhole.id}`}</div>
+            <div class="manhole-title">${manholeTitle}</div>
             <div class="manhole-location">📍 ${manhole.prefecture} ${manhole.city}</div>
             <div>
               ${manhole.pokemons.map(pokemon => `<span class="manhole-pokemon">${pokemon}</span>`).join('')}
@@ -418,8 +445,8 @@
           </div>
           <div class="manhole-actions">
             <div class="manhole-distance">${formatDistance(manhole.distance)}</div>
-            <a href="${pokefutaUrl}" target="_blank" class="pokefuta-link">⚡ 公式情報</a>
-            <a href="${mapsUrl}" target="_blank" class="maps-link">📍 Google Map</a>
+            <a href="${pokefutaUrl}" target="_blank" class="pokefuta-link" onclick="if(window.trackEvent){window.trackEvent('click_official_link_nearby',{event_category:'outbound',event_label:'${manholeTitle.replace(/'/g, "\\'")}',manhole_id:'${manhole.id}'});}">⚡ 公式情報</a>
+            <a href="${mapsUrl}" target="_blank" class="maps-link" onclick="if(window.trackEvent){window.trackEvent('click_google_map',{event_category:'outbound',event_label:'${manholeTitle.replace(/'/g, "\\'")}',manhole_id:'${manhole.id}'});}">📍 Google Map</a>
           </div>
         </div>
         `;
@@ -450,7 +477,15 @@
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  gtag('config', 'G-K18NR4GZG2');
+  gtag('config', 'G-K18NR4GZG2', {
+    'anonymize_ip': true,
+    'page_path': '/tracker_nearby'
+  });
+
+  // Event tracking helper function
+  window.trackEvent = function(action, params = {}) {
+    gtag('event', action, params);
+  };
 </script>
 </body>
 </html>

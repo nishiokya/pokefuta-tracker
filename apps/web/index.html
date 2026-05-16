@@ -241,8 +241,29 @@
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-K18NR4GZG2"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);} gtag('js', new Date());
-    gtag('config', 'G-K18NR4GZG2', { 'anonymize_ip': true });
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    // Dynamic page_path based on URL parameters
+    const params = new URLSearchParams(window.location.search);
+    const manholeParam = params.get('manhole');
+    const prefParam = params.get('pref');
+    let pagePath = '/tracker_top';
+    if (manholeParam) {
+      pagePath = `/tracker_manhole/${manholeParam}`;
+    } else if (prefParam) {
+      pagePath = `/tracker_pref/${prefParam}`;
+    }
+
+    gtag('config', 'G-K18NR4GZG2', {
+      'anonymize_ip': true,
+      'page_path': pagePath
+    });
+
+    // Event tracking helper function
+    window.trackEvent = function(action, params = {}) {
+      gtag('event', action, params);
+    };
   </script>
   <!-- End GA -->
 </head>
@@ -534,6 +555,15 @@
       const url = button?.dataset.shareUrl;
       if (!url) return;
       const title = button.dataset.shareTitle || 'ポケふた';
+
+      // Track share event
+      if (window.trackEvent) {
+        window.trackEvent('click_share_manhole', {
+          'event_category': 'user_engagement',
+          'event_label': title
+        });
+      }
+
       if (navigator.share) {
         try {
           await navigator.share({ title, url });
@@ -647,6 +677,7 @@
           anchor.rel = 'noopener noreferrer';
           anchor.className = 'travel-popup-action travel-popup-action--primary';
           anchor.textContent = UI_TEXT.officialDetailCta;
+          anchor.setAttribute('onclick', `if(window.trackEvent){window.trackEvent('click_official_link',{event_category:'outbound',event_label:'${escapeHtml(d.title || d.id)}',manhole_id:'${escapeHtml(d.id)}'});}`);
           return anchor.outerHTML;
         }
         return '';
@@ -791,7 +822,17 @@
           }
           const popupContent = buildPokefutaPopup(d);
           const marker = L.marker([d.lat, d.lng], { icon: pokefutaIcon }).bindPopup(popupContent, pokefutaPopupOptions);
-          marker.on('click', collapseBottomSheet);
+          marker.on('click', () => {
+            // Track manhole marker click
+            if (window.trackEvent) {
+              window.trackEvent('click_manhole_marker', {
+                'event_category': 'navigation',
+                'event_label': d.prefecture || '不明',
+                'manhole_id': d.id
+              });
+            }
+            collapseBottomSheet();
+          });
           marker.pokefutaData = d; marker.pokefutaData.prefectureCode = prefectureCode;
           allMarkers.push(marker);
           markerLayer.addLayer(marker);
@@ -941,6 +982,13 @@
         if (filterRecent) {
           zoomToRecentMarkers();
           expandBottomSheet();
+        }
+        // Track event
+        if (window.trackEvent) {
+          window.trackEvent('click_recent_toggle', {
+            'event_category': 'user_engagement',
+            'event_label': filterRecent ? 'enabled' : 'disabled'
+          });
         }
       });
     }
@@ -1248,6 +1296,14 @@
         if (count > 0) {
           const button = row.querySelector('.prefecture-card-main');
           const selectPrefecture = () => {
+            // Track prefecture selection
+            if (window.trackEvent) {
+              window.trackEvent('click_prefecture', {
+                'event_category': 'navigation',
+                'event_label': prefecture,
+                'value': count
+              });
+            }
             filterByPrefectureFromTable(prefecture);
             showSelectedPrefectureBadge();
             zoomToPrefecture(prefecture);
@@ -1434,9 +1490,27 @@
           return;
         }
         setButtonState('確認中...', { busy: true });
+
+        // Track locate button click
+        if (window.trackEvent) {
+          window.trackEvent('click_locate_nearby', {
+            'event_category': 'user_engagement',
+            'event_label': 'locate_button_clicked'
+          });
+        }
+
         navigator.geolocation.getCurrentPosition(position => {
           const { latitude, longitude } = position.coords;
           setButtonState(defaultLabel);
+
+          // Track geolocation success
+          if (window.trackEvent) {
+            window.trackEvent('geolocation_success', {
+              'event_category': 'user_engagement',
+              'event_label': 'location_acquired'
+            });
+          }
+
           if (userLocationMarker) map.removeLayer(userLocationMarker);
           userLocationMarker = L.circleMarker([latitude, longitude], {
             radius: 8,
@@ -1454,8 +1528,17 @@
           const group = L.featureGroup([userLocationMarker, ...nearestMarkers]);
           map.fitBounds(group.getBounds(), { padding: [48, 48], maxZoom: 13 });
           expandBottomSheet();
-        }, () => {
+        }, (error) => {
           setButtonState('取得できませんでした', { resetAfter: 1800 });
+
+          // Track geolocation error
+          if (window.trackEvent) {
+            window.trackEvent('geolocation_error', {
+              'event_category': 'user_engagement',
+              'event_label': `error_${error.code}`
+            });
+          }
+
           expandBottomSheet();
         }, { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 });
       });
