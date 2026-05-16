@@ -462,10 +462,22 @@
       if (prefecture) {
         window.history.replaceState({ pref: prefecture }, '', window.buildCanonicalPath(prefecture));
         window.applyPrefecturePageMeta(prefecture);
+        // Send page_view for SPA navigation
+        if (window.gtag) {
+          gtag('event', 'page_view', {
+            'page_path': `/tracker_pref/${encodeURIComponent(prefecture)}`
+          });
+        }
       } else {
         // URL をリセット
         window.history.replaceState({}, '', window.buildCanonicalPath(''));
         window.applyPrefecturePageMeta('');
+        // Send page_view for SPA navigation back to top
+        if (window.gtag) {
+          gtag('event', 'page_view', {
+            'page_path': '/tracker_top'
+          });
+        }
       }
     }
 
@@ -534,6 +546,16 @@
         '"': '&quot;',
         "'": '&#39;'
       }[ch]));
+    }
+
+    function escapeJs(str) {
+      return String(str || '')
+        .replace(/\\/g, '\\\\')
+        .replace(/'/g, "\\'")
+        .replace(/"/g, '\\"')
+        .replace(/\n/g, '\\n')
+        .replace(/\r/g, '\\r')
+        .replace(/\t/g, '\\t');
     }
 
     function getLocalManholeImageUrl(id) {
@@ -677,7 +699,9 @@
           anchor.rel = 'noopener noreferrer';
           anchor.className = 'travel-popup-action travel-popup-action--primary';
           anchor.textContent = UI_TEXT.officialDetailCta;
-          anchor.setAttribute('onclick', `if(window.trackEvent){window.trackEvent('click_official_link',{event_category:'outbound',event_label:'${escapeHtml(d.title || d.id)}',manhole_id:'${escapeHtml(d.id)}'});}`);
+          const safeTitleJs = escapeJs(d.title || d.id);
+          const safeIdJs = escapeJs(d.id);
+          anchor.setAttribute('onclick', `if(window.trackEvent){window.trackEvent('click_official_link',{event_category:'outbound',event_label:'${safeTitleJs}',manhole_id:'${safeIdJs}'});}`);
           return anchor.outerHTML;
         }
         return '';
@@ -926,6 +950,12 @@
       const data = marker.pokefutaData;
       window.applyManholePageMeta(data);
       window.history.replaceState({ manhole: data.id }, '', window.buildManholeCanonicalPath(data.id));
+      // Send page_view for SPA navigation to manhole detail
+      if (window.gtag) {
+        gtag('event', 'page_view', {
+          'page_path': `/tracker_manhole/${encodeURIComponent(data.id)}`
+        });
+      }
       const openPopup = () => {
         map.setView([data.lat, data.lng], Math.max(map.getZoom(), 15), { animate: false });
         marker.openPopup();
