@@ -252,7 +252,7 @@
     if (manholeParam) {
       pagePath = `/tracker_manhole/${manholeParam}`;
     } else if (prefParam) {
-      pagePath = `/tracker_pref/${prefParam}`;
+      pagePath = `/tracker_pref/${encodeURIComponent(prefParam)}`;
     }
 
     gtag('config', 'G-K18NR4GZG2', {
@@ -923,7 +923,10 @@
         const initialManholeId = getInitialManholeIdFromURL();
         if (initialManholeId) {
           console.log(`Initial manhole from URL: ${initialManholeId}`);
-          if (openManholePopup(initialManholeId)) return;
+          openManholePopup(initialManholeId);
+          // Mark initial page load as complete before early return
+          isInitialPageLoad = false;
+          return;
         }
 
         const initialPref = getInitialPrefectureFromURL();
