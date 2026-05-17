@@ -182,15 +182,41 @@ def manhole_label(manhole: dict) -> str:
     return f"{location}のポケふた（{pokes}）"
 
 
+def _render_related_card(
+    other: dict,
+    photos: dict[str, dict],
+    extra_html: str = "",
+) -> str:
+    """Build a related-manhole list item with optional thumbnail."""
+    oid = str(other.get("id", ""))
+    label = manhole_label(other)
+    norm_oid = normalize_id(oid)
+    other_photo = photos.get(norm_oid)
+    thumb_html = ""
+    if other_photo:
+        thumb_url = other_photo.get("url") or other_photo.get("original_url") or ""
+        if thumb_url:
+            thumb_html = (
+                f"<img class='related-thumb' src=\"{escape(thumb_url)}\""
+                f" alt=\"{escape(label)}\" loading=\"lazy\">"
+            )
+    return (
+        f"<li class='related-card'>{thumb_html}"
+        f"<div class='related-card-body'>"
+        f"<a href='/manholes/{quote(oid, safe='')}/'>{escape(label)}</a>"
+        f"{extra_html}</div></li>"
+    )
+
+
 def generate_html(
     manhole: dict,
     photo: Optional[dict],
     pokemon_meta: dict[str, dict],
-    photos: dict[str, dict],
     nearby: list[tuple[dict, float]],
     same_pref: list[dict],
     pref_total: int,
     same_pokemon: list[dict],
+    photos: dict[str, dict],
     city_total: int = 0,
     same_pokemon_total: int = 0,
     nearby_count: int = 0,
@@ -262,23 +288,28 @@ def generate_html(
         if photo_url:
             og_image = photo_url
 
-            display_name = photo.get("display_name", "") or ""
-            comment = (photo.get("comment", "") or "").strip()
+            raw_name = photo.get("display_name") or ""
+            display_name = str(raw_name)[:20] if raw_name else ""
+
+            raw_comment = photo.get("comment") or ""
+            comment = " ".join(str(raw_comment).split())  # normalize whitespace
+            if len(comment) > 100:
+                comment = comment[:97] + "…"
 
             shot_date = ""
-            shot_at_raw = photo.get("shot_at", "") or ""
-            if shot_at_raw:
+            shot_at_raw = photo.get("shot_at", "")
+            if isinstance(shot_at_raw, str) and shot_at_raw:
                 try:
                     dt = datetime.datetime.fromisoformat(shot_at_raw.replace("Z", "+00:00"))
                     shot_date = f"{dt.year}年{dt.month}月{dt.day}日"
-                except ValueError:
+                except (ValueError, TypeError):
                     pass
 
             credit_parts = []
             if display_name:
                 credit_parts.append(f"📷 {escape(display_name)}")
             if shot_date:
-                credit_parts.append(escape(shot_date))
+                credit_parts.append(shot_date)
             if credit_parts:
                 inner = "".join(f"<span>{p}</span>" for p in credit_parts)
                 credit_html = f"<div class='photo-credit'>{inner}</div>"
@@ -313,8 +344,12 @@ def generate_html(
     # HERO card: stats badges
     badges: list[str] = []
     added_at = manhole.get("added_at", "") or ""
-    if added_at[:4] >= "2026":
-        badges.append(f"<span class='hero-badge hero-badge-new'>NEW {escape(added_at[:4])}年設置</span>")
+    try:
+        added_year = datetime.date.fromisoformat(added_at[:10]).year
+        if added_year >= datetime.date.today().year:
+            badges.append(f"<span class='hero-badge hero-badge-new'>NEW {added_year}年設置</span>")
+    except (ValueError, TypeError):
+        pass
     if pref_total > 0 and prefecture:
         badges.append(f"<span class='hero-badge'>{escape(prefecture)} {pref_total}枚</span>")
     if city_total >= 2 and city:
@@ -335,15 +370,9 @@ def generate_html(
     share_text_json = json.dumps(share_text, ensure_ascii=False)
     share_url_json = json.dumps(canonical_url, ensure_ascii=False)
 
-    # HERO card: photo-upload CTA (only when official URL is available)
+    # Validate official URL (used for links-grid cards)
     _parsed = urlparse(detail_url) if detail_url else None
     has_official_url = _parsed and _parsed.scheme == "https" and _parsed.hostname == "local.pokemon.jp"
-    photo_btn_html = ""
-    if has_official_url:
-        photo_btn_html = (
-            f"<a href=\"{escape(detail_url)}\" class='btn-photo' target='_blank' rel='noopener noreferrer'>"
-            f"📷 写真を投稿</a>"
-        )
 
     # Location info
     location_html = f"""
@@ -437,22 +466,9 @@ def generate_html(
     if nearby:
         nearby_html = "<section class='nearby-section section-card'><h2>近くのポケふた</h2><ul class='related-list related-list--cards'>"
         for other, dist in nearby:
-            oid = str(other.get("id", ""))
-            label = manhole_label(other)
             dist_str = f"{dist:.1f} km"
-            norm_oid = normalize_id(oid)
-            other_photo = photos.get(norm_oid)
-            thumb_html = ""
-            if other_photo:
-                thumb_url = other_photo.get("url") or other_photo.get("original_url") or ""
-                if thumb_url:
-                    thumb_html = f"<img class='related-thumb' src=\"{escape(thumb_url)}\" alt=\"{escape(label)}\" loading=\"lazy\">"
-            nearby_html += (
-                f"<li class='related-card'>{thumb_html}"
-                f"<div class='related-card-body'>"
-                f"<a href='/manholes/{quote(oid, safe='')}/'>{escape(label)}</a>"
-                f"<span class='distance'>{escape(dist_str)}</span>"
-                f"</div></li>"
+            nearby_html += _render_related_card(
+                other, photos, extra_html=f"<span class='distance'>{escape(dist_str)}</span>"
             )
         nearby_html += "</ul></section>"
 
@@ -461,21 +477,7 @@ def generate_html(
     if same_pokemon:
         same_pokemon_html = "<section class='same-pokemon-section section-card'><h2>同じポケモンのポケふた</h2><ul class='related-list related-list--cards'>"
         for other in same_pokemon:
-            oid = str(other.get("id", ""))
-            label = manhole_label(other)
-            norm_oid = normalize_id(oid)
-            other_photo = photos.get(norm_oid)
-            thumb_html = ""
-            if other_photo:
-                thumb_url = other_photo.get("url") or other_photo.get("original_url") or ""
-                if thumb_url:
-                    thumb_html = f"<img class='related-thumb' src=\"{escape(thumb_url)}\" alt=\"{escape(label)}\" loading=\"lazy\">"
-            same_pokemon_html += (
-                f"<li class='related-card'>{thumb_html}"
-                f"<div class='related-card-body'>"
-                f"<a href='/manholes/{quote(oid, safe='')}/'>{escape(label)}</a>"
-                f"</div></li>"
-            )
+            same_pokemon_html += _render_related_card(other, photos)
         same_pokemon_html += "</ul></section>"
 
     # Same prefecture section
@@ -488,21 +490,7 @@ def generate_html(
             f"<ul class='related-list related-list--cards'>"
         )
         for other in same_pref:
-            oid = str(other.get("id", ""))
-            label = manhole_label(other)
-            norm_oid = normalize_id(oid)
-            other_photo = photos.get(norm_oid)
-            thumb_html = ""
-            if other_photo:
-                thumb_url = other_photo.get("url") or other_photo.get("original_url") or ""
-                if thumb_url:
-                    thumb_html = f"<img class='related-thumb' src=\"{escape(thumb_url)}\" alt=\"{escape(label)}\" loading=\"lazy\">"
-            pref_section_html += (
-                f"<li class='related-card'>{thumb_html}"
-                f"<div class='related-card-body'>"
-                f"<a href='/manholes/{quote(oid, safe='')}/'>{escape(label)}</a>"
-                f"</div></li>"
-            )
+            pref_section_html += _render_related_card(other, photos)
         pref_section_html += "</ul></section>"
 
     # Safely serialize GA event params for inline onclick attribute.
@@ -916,24 +904,6 @@ def generate_html(
       box-shadow: 0 4px 10px rgba(26,127,232,0.30);
     }}
 
-    .btn-photo {{
-      display: block;
-      background: white;
-      color: #666;
-      text-align: center;
-      padding: 10px 14px;
-      border-radius: 10px;
-      font-size: 14px;
-      text-decoration: none;
-      border: 1px solid #d0d0d0;
-      transition: background 0.2s, border-color 0.2s;
-    }}
-
-    .btn-photo:hover {{
-      background: #f8f8f8;
-      border-color: #bbb;
-    }}
-
     .section-card {{
       background: #fff;
       border: 1px solid #ede8df;
@@ -1111,23 +1081,6 @@ def generate_html(
       color: #c0392b;
     }}
 
-    .external-link-list {{
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-top: 8px;
-    }}
-
-    .external-link-list a {{
-      color: #1a6fd4;
-      text-decoration: none;
-      font-size: 14px;
-    }}
-
-    .external-link-list a:hover {{
-      text-decoration: underline;
-    }}
   </style>
 </head>
 <body>
@@ -1261,7 +1214,7 @@ def generate_all_pages(
         same_pokemon = same_pokemon[:10]
 
         html = generate_html(
-            manhole, photo, pokemon_meta, photos, nearby, same_pref, pref_total, same_pokemon,
+            manhole, photo, pokemon_meta, nearby, same_pref, pref_total, same_pokemon, photos,
             city_total=city_total, same_pokemon_total=same_pokemon_total, nearby_count=nearby_count,
         )
 
