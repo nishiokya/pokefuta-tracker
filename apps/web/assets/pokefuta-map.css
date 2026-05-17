@@ -875,6 +875,105 @@ body.pokefuta-map-page {
   color: #168074;
 }
 
+/* Pokemon Info Card */
+.pokefuta-map-page .pokemon-info-card {
+  margin: 14px 0 0;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: rgba(255, 251, 240, 0.92);
+  border: 1px solid rgba(126, 107, 169, 0.18);
+}
+
+.pokefuta-map-page .pokemon-info-card h4 {
+  margin: 0 0 10px;
+  color: #1f1b18;
+  font-size: 0.92rem;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+.pokefuta-map-page .pokemon-info-row {
+  margin: 6px 0;
+  color: #3f3730;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  font-weight: 650;
+}
+
+.pokefuta-map-page .pokemon-info-row strong {
+  font-weight: 900;
+  color: #2a241e;
+}
+
+.pokefuta-map-page .pokemon-type-badge {
+  display: inline-block;
+  margin-right: 6px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(126, 107, 169, 0.15);
+  color: #654aa0;
+  font-size: 0.76rem;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.pokefuta-map-page .pokemon-info-multilang {
+  margin: 8px 0 0;
+  padding-top: 8px;
+  border-top: 1px solid rgba(126, 107, 169, 0.12);
+  color: #5b5046;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+/* Same Pokemon Section */
+.pokefuta-map-page .same-pokemon-section {
+  margin: 12px 0 0;
+  padding: 12px 0 0;
+  border-top: 1px solid rgba(115, 86, 42, 0.12);
+}
+
+.pokefuta-map-page .same-pokemon-section h5 {
+  margin: 0 0 8px;
+  color: #2a241e;
+  font-size: 0.88rem;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+.pokefuta-map-page .same-pokemon-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pokefuta-map-page .same-pokemon-item {
+  padding: 8px 12px;
+  border: 1px solid rgba(115, 86, 42, 0.14);
+  border-radius: 8px;
+  background: #fffaf0;
+  color: #2a241e;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 750;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.pokefuta-map-page .same-pokemon-item:hover,
+.pokefuta-map-page .same-pokemon-item:focus-visible {
+  background: rgba(126, 107, 169, 0.08);
+  border-color: rgba(126, 107, 169, 0.3);
+  outline: none;
+}
+
+.pokefuta-map-page .same-pokemon-item:active {
+  background: rgba(126, 107, 169, 0.14);
+  transform: scale(0.98);
+}
+
 .pokefuta-cluster {
   display: grid;
   place-items: center;
@@ -998,6 +1097,37 @@ body.pokefuta-map-page {
   .pokefuta-map-page .travel-popup-action {
     min-height: 34px;
     font-size: .7rem;
+  }
+
+  /* Pokemon Info Card - Desktop adjustments */
+  .pokefuta-map-page .pokemon-info-card {
+    padding: 12px 14px;
+  }
+
+  .pokefuta-map-page .pokemon-info-card h4 {
+    font-size: 0.88rem;
+  }
+
+  .pokefuta-map-page .pokemon-info-row {
+    font-size: 0.78rem;
+  }
+
+  .pokefuta-map-page .pokemon-type-badge {
+    font-size: 0.72rem;
+    padding: 2px 8px;
+  }
+
+  .pokefuta-map-page .pokemon-info-multilang {
+    font-size: 0.74rem;
+  }
+
+  .pokefuta-map-page .same-pokemon-section h5 {
+    font-size: 0.84rem;
+  }
+
+  .pokefuta-map-page .same-pokemon-item {
+    font-size: 0.78rem;
+    padding: 7px 11px;
   }
 }
 
