@@ -9,6 +9,7 @@ photos, Pokemon metadata, and CTAs for map navigation with GA4 tracking.
 from __future__ import annotations
 
 import argparse
+import datetime
 import json
 import logging
 from pathlib import Path
@@ -221,8 +222,10 @@ def generate_html(manhole: dict, photo: Optional[dict], pokemon_meta: dict[str, 
             "longitude": lng
         }
 
-    if photo and photo.get("url"):
-        jsonld["image"] = photo["url"]
+    if photo:
+        photo_image_url = photo.get("url") or photo.get("original_url")
+        if photo_image_url:
+            jsonld["image"] = photo_image_url
 
     jsonld_str = json.dumps(jsonld, ensure_ascii=False, indent=2)
 
@@ -234,6 +237,15 @@ def generate_html(manhole: dict, photo: Optional[dict], pokemon_meta: dict[str, 
   <a href="{escape(detail_url)}" target="_blank" rel="noopener noreferrer">公式サイトを見る</a>
 </p>
 """
+
+    # Safely serialize GA event params for inline onclick attribute.
+    # json.dumps handles all JS special chars; escape() makes the JSON safe
+    # inside an HTML double-quoted attribute (browser decodes &quot; before eval).
+    onclick_params = escape(json.dumps(
+        {"manhole_id": manhole_id, "prefecture": prefecture, "city": city},
+        ensure_ascii=False,
+    ))
+    current_year = datetime.date.today().year
 
     # Complete HTML
     html = f"""<!doctype html>
@@ -443,7 +455,7 @@ def generate_html(manhole: dict, photo: Optional[dict], pokemon_meta: dict[str, 
   <div class="container">
     <h1>{escape(h1)}</h1>
 
-    <a href="{escape(map_url)}" class="cta-primary" onclick="trackEvent('manhole_seo_to_map_click', {{manhole_id: '{escape(manhole_id)}', prefecture: '{escape(prefecture)}', city: '{escape(city)}'}})">
+    <a href="{escape(map_url)}" class="cta-primary" onclick="trackEvent('manhole_seo_to_map_click', {onclick_params})">
       📍 地図でこのポケふたを見る
     </a>
 
@@ -464,7 +476,7 @@ def generate_html(manhole: dict, photo: Optional[dict], pokemon_meta: dict[str, 
     {official_html}
 
     <footer>
-      <p>&copy; 2024-2026 data.pokefuta.com | ポケふた情報はポケモン公式サイトを参照しています</p>
+      <p>&copy; 2024-{current_year} data.pokefuta.com | ポケふた情報はポケモン公式サイトを参照しています</p>
     </footer>
   </div>
 </body>
