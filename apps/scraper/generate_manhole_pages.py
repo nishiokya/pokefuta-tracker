@@ -521,6 +521,14 @@ def generate_html(
     )
     share_line_url = f"https://social-plugins.line.me/lineit/share?url={quote(canonical_url)}"
     share_url_json = _js_json(canonical_url)
+    # Web Share API (used by shareManhole in links_grid)
+    _share_title = f"{city}のポケふた（{pokemon_text}）"
+    _share_text = (
+        f"{prefecture}{city}のポケふた（{pokemon_text}）を見つけました。\n"
+        f"{prefecture}には{pref_total}枚のポケふたがあります。"
+    ) if prefecture else f"{h1}を見つけました。"
+    share_title_json = _js_json(_share_title)
+    share_text_json = _js_json(_share_text)
 
     # Validate official URL (used for links-grid cards)
     _parsed = urlparse(detail_url) if detail_url else None
@@ -612,19 +620,28 @@ def generate_html(
         f" onclick=\"trackEvent('click_map_internal', {_map_onclick})\">"
         f"{_icon('icon-link-map', 'link-card-icon')}<span>全国マップ</span></a>"
     )
-    if has_official_url:
-        _photo_onclick = _attr_json({
-            "manhole_id": manhole_id,
-            "prefecture": prefecture,
-            "city": city,
-            "has_photo": has_photo_bool,
-        })
-        link_cards.append(
-            f"<a class='link-card link-card--photo' href=\"{escape(detail_url)}\""
-            f" target=\"_blank\" rel=\"noopener noreferrer\""
-            f" onclick=\"trackEvent('click_photo_upload', {_photo_onclick})\">"
-            f"{_icon('icon-link-photo', 'link-card-icon')}<span>写真を投稿</span></a>"
-        )
+    # Share cards (X / LINE / Copy / Web Share) — always shown
+    _share_onclick = _attr_json({"manhole_id": manhole_id, "prefecture": prefecture, "city": city})
+    link_cards.append(
+        f"<a class='link-card link-card--share-x' href=\"{escape(share_x_url)}\""
+        f" target=\"_blank\" rel=\"noopener noreferrer\""
+        f" onclick=\"trackEvent('click_share_x', {_share_onclick})\">"
+        f"{_icon('icon-share-x', 'link-card-icon')}<span>Xで共有</span></a>"
+    )
+    link_cards.append(
+        f"<a class='link-card link-card--share-line' href=\"{escape(share_line_url)}\""
+        f" target=\"_blank\" rel=\"noopener noreferrer\""
+        f" onclick=\"trackEvent('click_share_line', {_share_onclick})\">"
+        f"{_icon('icon-share-line', 'link-card-icon')}<span>LINEで送る</span></a>"
+    )
+    link_cards.append(
+        f"<button type='button' class='link-card link-card--copy' onclick='copyManholeUrl()'>"
+        f"{_icon('icon-link-share', 'link-card-icon')}<span>URLをコピー</span></button>"
+    )
+    link_cards.append(
+        f"<button type='button' class='link-card link-card--share' onclick='shareManhole()'>"
+        f"{_icon('icon-link-share', 'link-card-icon')}<span>共有</span></button>"
+    )
     links_grid_html = (
         f"<section class='links-section section-card'>"
         f"<h2>リンク</h2>"
@@ -725,6 +742,11 @@ def generate_html(
         f"← 全国マップへ戻る</a>"
     )
 
+    # Hero photo upload CTA
+    _photo_event = "click_photo_upload" if has_photo_bool else "click_photo_upload_placeholder"
+    _photo_label = "写真を投稿" if has_photo_bool else "最初の旅写真を投稿する"
+    _photo_cta_onclick = _attr_json({"manhole_id": manhole_id, "prefecture": prefecture, "city": city, "has_photo": has_photo_bool})
+
     # Visit CTA (Google Maps full-width card)
     visit_cta_html = ""
     if lat is not None and lng is not None:
@@ -751,9 +773,7 @@ def generate_html(
     {pokemon_tags_html}
     {stats_html}
     <div class="hero-actions">
-      <a class="btn-share btn-share--x" href="{escape(share_x_url)}" target="_blank" rel="noopener noreferrer" onclick="trackEvent('click_share_x', {_attr_json({'manhole_id': manhole_id, 'prefecture': prefecture, 'city': city})})">{_icon('icon-share-x', 'action-icon')}<span>Xで共有</span></a>
-      <a class="btn-share btn-share--line" href="{escape(share_line_url)}" target="_blank" rel="noopener noreferrer" onclick="trackEvent('click_share_line', {_attr_json({'manhole_id': manhole_id, 'prefecture': prefecture, 'city': city})})">{_icon('icon-share-line', 'action-icon')}<span>LINEで送る</span></a>
-      <button type="button" class="btn-share btn-share--copy" onclick="copyManholeUrl()">{_icon('icon-link-share', 'action-icon')}<span>URLをコピー</span></button>
+      <a class="btn-photo-upload" href="https://pokefuta.com/visits" target="_blank" rel="noopener noreferrer" onclick="trackEvent('{_photo_event}', {_photo_cta_onclick})">{_icon('icon-link-photo', 'action-icon')}<span>{escape(_photo_label)}</span></a>
     </div>
   </div>
 </div>
@@ -824,6 +844,26 @@ def generate_html(
         }},
         function() {{ alert({share_url_json}); }}
       );
+    }}
+
+    function shareManhole() {{
+      var _sp = {{
+        manhole_id: {manhole_id_js},
+        prefecture: {prefecture_js},
+        city: {city_js}
+      }};
+      trackEvent('click_share', _sp);
+      if (navigator.share) {{
+        navigator.share({{
+          title: {share_title_json},
+          text: {share_text_json},
+          url: {share_url_json}
+        }}).then(function() {{
+          trackEvent('complete_share', _sp);
+        }}).catch(function() {{}});
+      }} else {{
+        copyManholeUrl();
+      }}
     }}
   </script>
 
@@ -1129,64 +1169,34 @@ def generate_html(
 
     .hero-actions {{
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
       gap: 10px;
     }}
 
-    .btn-share {{
+    .btn-photo-upload {{
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 7px;
-      min-height: 80px;
+      gap: 10px;
+      width: 100%;
+      min-height: 52px;
       border-radius: 14px;
-      padding: 12px 8px;
-      text-align: center;
-      font-size: 13px;
+      padding: 14px 16px;
+      font-size: 15px;
       font-weight: 700;
       letter-spacing: 0.01em;
+      background: #fff0f3;
+      color: #c0394b;
+      border: 1.5px solid #f5c0ca;
+      text-decoration: none;
+      cursor: pointer;
       box-shadow: 0 1px 4px rgba(0,0,0,0.07);
       transition: background 0.15s, box-shadow 0.15s, transform 0.15s;
-      cursor: pointer;
-      width: 100%;
-      text-decoration: none;
     }}
 
-    .btn-share--x {{
-      background: #000;
-      color: #fff;
-      border: 1.5px solid #333;
-    }}
-
-    .btn-share--x:hover {{
-      background: #1a1a1a;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.25);
-      transform: translateY(-1px);
-    }}
-
-    .btn-share--line {{
-      background: #06C755;
-      color: #fff;
-      border: 1.5px solid #05a847;
-    }}
-
-    .btn-share--line:hover {{
-      background: #05a847;
-      box-shadow: 0 3px 10px rgba(6,199,85,0.3);
-      transform: translateY(-1px);
-    }}
-
-    .btn-share--copy {{
-      grid-column: 1 / -1;
-      background: #fff5f6;
-      color: #b52a38;
-      border: 1.5px solid #f5bdc5;
-    }}
-
-    .btn-share--copy:hover {{
-      background: #ffe4e7;
-      box-shadow: 0 3px 10px rgba(181,42,56,0.14);
+    .btn-photo-upload:hover {{
+      background: #ffe4ea;
+      box-shadow: 0 3px 10px rgba(192,57,75,0.14);
       transform: translateY(-1px);
     }}
 
@@ -1269,11 +1279,14 @@ def generate_html(
 
     .link-card span {{ display: block; }}
 
-    .link-card--map      {{ background: #eef4ff; color: #1a4fa0; border-color: #c0d4f5; }}
-    .link-card--official {{ background: #fff4f0; color: #c0392b; border-color: #f5c0b0; }}
-    .link-card--pref-site {{ background: #f0fff4; color: #1a6b3c; border-color: #b0e8c8; }}
-    .link-card--internal {{ background: #f8f4ff; color: #5a3fa0; border-color: #d8c8f5; }}
-    .link-card--photo    {{ background: #f8f8f8; color: #555; border-color: #ddd; }}
+    .link-card--map        {{ background: #eef4ff; color: #1a4fa0; border-color: #c0d4f5; }}
+    .link-card--official   {{ background: #fff4f0; color: #c0392b; border-color: #f5c0b0; }}
+    .link-card--pref-site  {{ background: #f0fff4; color: #1a6b3c; border-color: #b0e8c8; }}
+    .link-card--internal   {{ background: #f8f4ff; color: #5a3fa0; border-color: #d8c8f5; }}
+    .link-card--share-x    {{ background: #f5f5f5; color: #444; border-color: #d8d8d8; }}
+    .link-card--share-line {{ background: #f0faf5; color: #217a48; border-color: #b0e0c8; }}
+    .link-card--copy       {{ background: #fff4f0; color: #b04838; border-color: #f0c0b0; cursor: pointer; }}
+    .link-card--share      {{ background: #f8f4ff; color: #5a3fa0; border-color: #d8c8f5; cursor: pointer; }}
 
     .related-list--cards li {{
       display: flex;
@@ -1357,9 +1370,9 @@ def generate_html(
         font-size: 18px;
       }}
 
-      .btn-share {{
-        padding: 15px 14px;
+      .btn-photo-upload {{
         font-size: 16px;
+        min-height: 56px;
       }}
 
       .section-card {{
