@@ -365,7 +365,15 @@ def generate_html(
 
     # Photo
     og_image = f"{BASE_URL}assets/ogp/pokefuta_map_ogp.png"
-    hero_photo_html = "<div class='hero-photo-placeholder'>写真なし</div>"
+    hero_photo_html = (
+        f"<a class='hero-photo-placeholder' href='https://pokefuta.com/visits'"
+        f" target='_blank' rel='noopener noreferrer'"
+        f" onclick=\"trackEvent('click_photo_upload_placeholder', {onclick_params})\">"
+        f"<span class='placeholder-camera'>📷</span>"
+        f"<span class='placeholder-title'>まだ写真がありません</span>"
+        f"<span class='placeholder-sub'>最初の旅写真を投稿する</span>"
+        f"</a>"
+    )
 
     if photo:
         photo_url = photo.get("url", "") or photo.get("original_url", "")
@@ -918,19 +926,40 @@ def generate_html(
       width: 100%;
       aspect-ratio: 4 / 3;
       background: linear-gradient(135deg, #f5ede0 0%, #ede0cf 100%);
+      border: 2px dashed #d4b896;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      color: #b0916e;
-      font-size: 14px;
+      gap: 10px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
     }}
 
-    .hero-photo-placeholder::before {{
-      content: "📷";
-      font-size: 36px;
-      opacity: 0.5;
+    .hero-photo-placeholder:hover {{
+      background: linear-gradient(135deg, #eeddd0 0%, #e4d3be 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(180, 120, 60, 0.12);
+    }}
+
+    .placeholder-camera {{
+      font-size: 40px;
+      opacity: 0.6;
+      display: block;
+    }}
+
+    .placeholder-title {{
+      font-size: 14px;
+      font-weight: 600;
+      color: #8a6440;
+    }}
+
+    .placeholder-sub {{
+      font-size: 13px;
+      color: #b08050;
+      text-decoration: underline;
+      text-underline-offset: 3px;
     }}
 
     .hero-body {{
