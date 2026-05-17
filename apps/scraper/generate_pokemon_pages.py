@@ -83,6 +83,23 @@ def load_pokemon_metadata(path: Path) -> dict[str, dict]:
     return metadata
 
 
+# Slugs whose regional-form match must be exact to avoid cross-form contamination.
+# e.g. a manhole with only "アローラロコン" must not appear on /pokemon/vulpix/.
+FORM_EXACT_MATCH: dict[str, str] = {
+    "vulpix":          "ロコン",
+    "vulpix-alola":    "アローラロコン",
+    "ninetales":       "キュウコン",
+    "ninetales-alola": "アローラキュウコン",
+}
+
+
+def pokemon_matches_manhole(slug: str, ja_name: str, manhole_pokemons: list[str]) -> bool:
+    exact_name = FORM_EXACT_MATCH.get(slug)
+    if exact_name:
+        return exact_name in manhole_pokemons
+    return ja_name in manhole_pokemons
+
+
 def filter_pokemons(pokemons: list) -> list[str]:
     """Remove prefecture site link entries from the pokemons field."""
     if not isinstance(pokemons, list):
@@ -127,12 +144,15 @@ def build_pokemon_index(
             slug_to_meta[slug] = meta
 
     for manhole in manholes:
-        for ja_name in filter_pokemons(manhole.get("pokemons", [])):
+        manhole_pokemons = filter_pokemons(manhole.get("pokemons", []))
+        for ja_name in manhole_pokemons:
             # Try direct match, then katakana-normalized match
             slug = ja_to_slug.get(ja_name) or ja_to_slug.get(
                 _normalize_katakana(ja_name)
             )
             if not slug:
+                continue
+            if not pokemon_matches_manhole(slug, ja_name, manhole_pokemons):
                 continue
             meta = slug_to_meta[slug]
             if slug not in index:
