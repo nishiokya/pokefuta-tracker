@@ -24,6 +24,53 @@ BASE_URL = "https://data.pokefuta.com/"
 GA_MEASUREMENT_ID = "G-K18NR4GZG2"
 DEFAULT_OGP_IMAGE = f"{BASE_URL}assets/ogp/pokefuta_map_ogp.png"
 
+# Short contextual descriptions explaining regional connections.
+# Keeps wording soft ("イメージ", "語感", "連想") — no unsourced assertions.
+POKEMON_SEO_DESCRIPTIONS: dict[str, str] = {
+    "vulpix": (
+        "ロコンは北海道各地を応援するポケモンとして親しまれ、"
+        "キツネを連想させる姿や雪景色との相性から"
+        "北海道のイメージに合うポケモンとして話題になっています。"
+        "北海道内には多数のロコンのポケふたが設置されています。"
+    ),
+    "vulpix-alola": (
+        "アローラロコンは北海道を応援するポケモンとして知られ、"
+        "北海道各地に多数のポケふたが設置されています。"
+        "雪や冬景色を連想させるデザインや、キツネを思わせる姿から、"
+        "北海道のイメージに合うポケモンとして選ばれています。"
+    ),
+    "ninetales": (
+        "キュウコンはロコンの進化系として知られるポケモンです。"
+        "北海道をはじめ各地のポケふたでも人気があり、"
+        "その優雅な姿が地域の自然景観とも相性が良いとされています。"
+    ),
+    "ninetales-alola": (
+        "アローラキュウコンはアローラロコンの進化系として知られるポケモンです。"
+        "雪や氷をイメージした姿が北海道の風景と相性が良く、"
+        "冬をテーマにしたポケふたでも人気があります。"
+    ),
+    "slowpoke": (
+        "ヤドンは香川県を応援するポケモンとして知られています。"
+        "『うどん』と『ヤドン』の語感の近さでも話題になり、"
+        "香川県内ではヤドンのポケふた巡りや観光企画が人気です。"
+    ),
+    "lapras": (
+        "ラプラスは宮城県を応援するポケモンとして知られています。"
+        "海を泳ぐイメージや穏やかな雰囲気が宮城県の観光や海辺の景色とも相性が良く、"
+        "県内各地にラプラスのポケふたが設置されています。"
+    ),
+    "geodude": (
+        "イシツブテは岩手県を応援するポケモンとして知られています。"
+        "『いわて』と『イシツブテ』の語感の近さでも話題となり、"
+        "岩手県内ではポケふたや観光企画にも登場しています。"
+    ),
+    "chansey": (
+        "ラッキーは福島県を応援するポケモンとして知られています。"
+        "『福』を連想させるイメージから、"
+        "福島県内ではラッキーのポケふたや観光企画が展開されています。"
+    ),
+}
+
 # Regional form prefix mapping (pokefuta data uses these prefixes)
 _FORM_PREFIX: dict[str, str] = {
     "alola": "アローラ",
@@ -228,6 +275,7 @@ def generate_html(
     manholes: list[dict],
     related: list[tuple[str, str]],
     image_dir: Path,
+    seo_desc: str = "",
 ) -> str:
     """Return complete HTML for a Pokemon LP page."""
     names = pokemon.get("names", {})
@@ -270,6 +318,7 @@ def generate_html(
     )
 
     gen_html = f"<p class='poke-gen'>第{generation}世代</p>" if generation else ""
+    seo_desc_html = f"<p class='poke-seo-desc'>{escape(seo_desc)}</p>" if seo_desc else ""
 
     # JSON-LD
     jsonld = {
@@ -414,6 +463,16 @@ def generate_html(
     .back-link:hover {{ text-decoration: underline; }}
     .poke-hero {{
       margin-bottom: 24px;
+    }}
+    .poke-seo-desc {{
+      font-size: 14px;
+      color: #555;
+      line-height: 1.7;
+      margin-top: 12px;
+      padding: 12px 14px;
+      background: #f5f0ff;
+      border-left: 3px solid #6F55A3;
+      border-radius: 0 6px 6px 0;
     }}
     h1 {{
       font-size: 26px;
@@ -565,6 +624,7 @@ def generate_html(
     {multilang_html}
     {type_html}
     {gen_html}
+    {seo_desc_html}
   </div>
 
   <div class="section-card">
@@ -632,6 +692,7 @@ def main() -> int:
             slug, pokemon, poke_manholes,
             related=related_map.get(slug, []),
             image_dir=image_dir,
+            seo_desc=POKEMON_SEO_DESCRIPTIONS.get(slug, ""),
         )
         (out_dir / "index.html").write_text(html, encoding="utf-8")
         generated += 1
