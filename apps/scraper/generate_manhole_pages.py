@@ -33,7 +33,7 @@ def haversine(lat1: float, lng1: float, lat2: float, lng2: float) -> float:
     a = (math.sin(dlat / 2) ** 2
          + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2))
          * math.sin(dlng / 2) ** 2)
-    return R * 2 * math.asin(math.sqrt(a))
+    return R * 2 * math.asin(math.sqrt(min(1.0, max(0.0, a))))
 
 
 def normalize_id(value: Any) -> str:
@@ -278,7 +278,7 @@ def generate_html(
             dist_str = f"{dist:.1f} km"
             nearby_html += (
                 f"<li>"
-                f"<a href='/manholes/{quote(oid)}/'>{escape(label)}</a>"
+                f"<a href='/manholes/{quote(oid, safe='')}/'>{escape(label)}</a>"
                 f"<span class='distance'>{escape(dist_str)}</span>"
                 f"</li>"
             )
@@ -291,7 +291,7 @@ def generate_html(
         for other in same_pokemon:
             oid = str(other.get("id", ""))
             label = manhole_label(other)
-            same_pokemon_html += f"<li><a href='/manholes/{quote(oid)}/'>{escape(label)}</a></li>"
+            same_pokemon_html += f"<li><a href='/manholes/{quote(oid, safe='')}/'>{escape(label)}</a></li>"
         same_pokemon_html += "</ul></section>"
 
     # Same prefecture section
@@ -306,7 +306,7 @@ def generate_html(
         for other in same_pref:
             oid = str(other.get("id", ""))
             label = manhole_label(other)
-            pref_section_html += f"<li><a href='/manholes/{quote(oid)}/'>{escape(label)}</a></li>"
+            pref_section_html += f"<li><a href='/manholes/{quote(oid, safe='')}/'>{escape(label)}</a></li>"
         pref_section_html += "</ul></section>"
 
     # Safely serialize GA event params for inline onclick attribute.
