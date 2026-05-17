@@ -14,7 +14,7 @@ import json
 import logging
 from pathlib import Path
 from typing import Any, Optional
-from urllib.parse import quote
+from urllib.parse import quote, urlparse
 from xml.sax.saxutils import escape
 
 # Constants
@@ -215,7 +215,7 @@ def generate_html(manhole: dict, photo: Optional[dict], pokemon_meta: dict[str, 
         }
     }
 
-    if lat and lng:
+    if lat is not None and lng is not None:
         jsonld["geo"] = {
             "@type": "GeoCoordinates",
             "latitude": lat,
@@ -231,7 +231,8 @@ def generate_html(manhole: dict, photo: Optional[dict], pokemon_meta: dict[str, 
 
     # Official site link (if available)
     official_html = ""
-    if detail_url and "local.pokemon.jp" in detail_url:
+    _parsed = urlparse(detail_url) if detail_url else None
+    if _parsed and _parsed.scheme == "https" and _parsed.hostname == "local.pokemon.jp":
         official_html = f"""
 <p class='official-link'>
   <a href="{escape(detail_url)}" target="_blank" rel="noopener noreferrer">公式サイトを見る</a>

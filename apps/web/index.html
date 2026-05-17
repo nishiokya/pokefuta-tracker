@@ -540,6 +540,7 @@
       cityLabel: '市町村:',
       officialDetail: '📝 公式詳細',
       officialDetailCta: '公式詳細を見る',
+      detailPageCta: '詳細ページを見る',
       prefectureSite: 'サイト'
     };
 
@@ -548,19 +549,6 @@
 
     // Validate prefecture site URL (whitelist check)
     function validatePrefectureSiteUrl(rawUrl) {
-      try {
-        const url = new URL(rawUrl);
-        const allowedHost = 'local.pokemon.jp';
-        if (url.protocol === 'https:' && url.hostname === allowedHost) {
-          return url;
-        }
-      } catch {
-        return null;
-      }
-      return null;
-    }
-
-    function validateDetailUrl(rawUrl) {
       try {
         const url = new URL(rawUrl);
         const allowedHost = 'local.pokemon.jp';
@@ -730,7 +718,7 @@
         const anchor = document.createElement('a');
         anchor.href = manholeDetailUrl;
         anchor.className = 'travel-popup-action travel-popup-action--primary';
-        anchor.textContent = '詳細ページを見る';
+        anchor.textContent = UI_TEXT.detailPageCta;
         const safeTitleJs = escapeJs(d.title || d.id);
         const safeIdJs = escapeJs(d.id);
         anchor.setAttribute('onclick', `if(window.trackEvent){window.trackEvent('click_detail_page',{event_category:'navigation',event_label:'${safeTitleJs}',manhole_id:'${safeIdJs}'});}`);
