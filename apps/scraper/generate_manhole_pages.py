@@ -491,7 +491,8 @@ def generate_all_pages(
     manholes: list[dict],
     photos: dict[str, dict],
     pokemon_meta: dict[str, dict],
-    output_dir: Path
+    output_dir: Path,
+    image_dir: Path,
 ) -> tuple[int, int, int]:
     """Generate HTML pages for all manholes.
 
@@ -510,6 +511,13 @@ def generate_all_pages(
 
         norm_id = normalize_id(manhole_id)
         photo = photos.get(norm_id)
+
+        # Prefer local repo image over Cloudflare URL when available
+        local_image = image_dir / f"{manhole_id}_latest.jpeg"
+        if local_image.exists():
+            local_url = f"{BASE_URL}manhole/image/{manhole_id}_latest.jpeg"
+            photo = dict(photo or {}, url=local_url)
+            logger.debug(f"Using local image for manhole {manhole_id}")
 
         if photo:
             photos_applied += 1
@@ -548,6 +556,11 @@ def main() -> int:
         help="Path to Pokemon metadata JSON file"
     )
     parser.add_argument(
+        "--image-dir",
+        default="dataset/manhole/image",
+        help="Directory containing {id}_latest.jpeg local images"
+    )
+    parser.add_argument(
         "--output",
         default="dist",
         help="Output directory (will create manholes/ subdirectory)"
@@ -578,7 +591,7 @@ def main() -> int:
     output_dir.mkdir(parents=True, exist_ok=True)
 
     total, photos_applied, photos_missing = generate_all_pages(
-        manholes, photos, pokemon_meta, output_dir
+        manholes, photos, pokemon_meta, output_dir, Path(args.image_dir)
     )
 
     print(f"[generate_manhole_pages] total manholes: {len(manholes)}")
