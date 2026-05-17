@@ -72,6 +72,76 @@ PREFECTURE_EN: dict[str, str] = {
     "沖縄県": "Okinawa Prefecture",
 }
 
+# SVG icon symbols sourced from design/pokefuta_detail_ui_icons.svg
+_SVG_DEFS = (
+    '<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>'
+    # --- detail section heading icons ---
+    '<symbol id="icon-detail-location" viewBox="0 0 96 96">'
+    '<path fill="#FFF3D6" d="M17 24h48l14 14v34H17z"/>'
+    '<path fill="none" stroke="#6A4B36" stroke-linecap="round" stroke-linejoin="round" stroke-width="7" d="M17 24h48l14 14v34H17zM65 24v14h14"/>'
+    '<path fill="#6F55A3" d="M48 68s17-17 17-32a17 17 0 1 0-34 0c0 15 17 32 17 32z"/>'
+    '<circle cx="48" cy="36" r="7" fill="#fff"/>'
+    "</symbol>"
+    '<symbol id="icon-detail-nearby" viewBox="0 0 96 96">'
+    '<circle cx="48" cy="48" r="31" fill="#F8F1E2"/>'
+    '<path fill="none" stroke="#6F55A3" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M48 14v10M48 72v10M14 48h10M72 48h10"/>'
+    '<path fill="#6F55A3" d="M48 68s18-18 18-34a18 18 0 1 0-36 0c0 16 18 34 18 34z"/>'
+    '<circle cx="48" cy="34" r="7" fill="#fff"/>'
+    '<path fill="none" stroke="#F0A44A" stroke-width="5" stroke-linecap="round" d="M23 65s6-8 14-6 12 10 22 7 14-11 14-11"/>'
+    "</symbol>"
+    '<symbol id="icon-detail-same-pref" viewBox="0 0 96 96">'
+    '<rect x="13" y="17" width="70" height="58" rx="12" fill="#FFF3D6"/>'
+    '<rect x="13" y="17" width="70" height="58" rx="12" fill="none" stroke="#6A4B36" stroke-linecap="round" stroke-linejoin="round" stroke-width="7"/>'
+    '<path fill="#BFAF98" opacity="0.45" d="M25 62l8-23 14 8 11-16 12 31z"/>'
+    '<path fill="#6F55A3" d="M63 54s11-11 11-21a11 11 0 1 0-22 0c0 10 11 21 11 21z"/>'
+    '<circle cx="63" cy="33" r="4" fill="#fff"/>'
+    '<path fill="none" stroke="#6F55A3" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M28 30h15M28 43h12M28 56h20"/>'
+    "</symbol>"
+    # --- link grid icons ---
+    '<symbol id="icon-link-google-map" viewBox="0 0 96 96">'
+    '<rect x="12" y="16" width="72" height="64" rx="14" fill="#FFF3D6"/>'
+    '<path fill="none" stroke="#6A4B36" stroke-linecap="round" stroke-linejoin="round" stroke-width="7" d="M12 16h72v64H12z"/>'
+    '<path fill="none" stroke="#89CFF0" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M22 63c13-18 28-18 52-41"/>'
+    '<path fill="none" stroke="#2D8F46" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M20 36h56"/>'
+    '<path fill="#6F55A3" d="M50 70s18-20 18-36a18 18 0 1 0-36 0c0 16 18 36 18 36z"/>'
+    '<circle cx="50" cy="34" r="7" fill="#fff"/>'
+    "</symbol>"
+    '<symbol id="icon-link-official" viewBox="0 0 96 96">'
+    '<path fill="none" stroke="#2D8F46" stroke-linecap="round" stroke-linejoin="round" stroke-width="7" d="M33 19h44v44M75 21L38 58"/>'
+    '<rect x="18" y="34" width="44" height="43" rx="8" fill="none" stroke="#6A4B36" stroke-linecap="round" stroke-linejoin="round" stroke-width="7"/>'
+    '<path fill="#F0A44A" opacity="0.35" d="M25 25l10 9 12-16 8 17 16-7-7 16 17 8-19 6-2 19-14-13-17 10 3-19-16-9 18-4z"/>'
+    "</symbol>"
+    '<symbol id="icon-link-prefecture" viewBox="0 0 96 96">'
+    '<rect x="15" y="17" width="66" height="62" rx="12" fill="#FFF3D6"/>'
+    '<path fill="none" stroke="#6F55A3" stroke-linecap="round" stroke-linejoin="round" stroke-width="7" d="M15 17h66v62H15z"/>'
+    '<path fill="#BFAF98" opacity="0.5" d="M28 62l10-30 16 11 13-19 11 38z"/>'
+    '<circle cx="68" cy="31" r="8" fill="#2D8F46"/>'
+    '<path fill="none" stroke="#6A4B36" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M26 68h42"/>'
+    "</symbol>"
+    '<symbol id="icon-link-map" viewBox="0 0 96 96">'
+    '<path fill="none" stroke="#6F55A3" stroke-linecap="round" stroke-linejoin="round" stroke-width="7" d="M13 24l22-9 26 9 22-9v57l-22 9-26-9-22 9zM35 15v57M61 24v57"/>'
+    '<circle cx="61" cy="43" r="8" fill="#F0A44A"/>'
+    "</symbol>"
+    '<symbol id="icon-link-photo" viewBox="0 0 96 96">'
+    '<rect x="15" y="28" width="66" height="48" rx="12" fill="#FFF3D6"/>'
+    '<path fill="none" stroke="#6A4B36" stroke-linecap="round" stroke-linejoin="round" stroke-width="7" d="M15 28h66v48H15zM35 28l6-10h14l6 10"/>'
+    '<circle cx="48" cy="52" r="14" fill="#fff" stroke="#6F55A3" stroke-width="7"/>'
+    '<circle cx="70" cy="39" r="4" fill="#6F55A3"/>'
+    "</symbol>"
+    '<symbol id="icon-link-share" viewBox="0 0 96 96">'
+    '<circle cx="28" cy="48" r="12" fill="#E73A51"/>'
+    '<circle cx="68" cy="24" r="12" fill="#E73A51"/>'
+    '<circle cx="68" cy="72" r="12" fill="#E73A51"/>'
+    '<path fill="none" stroke="#E73A51" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M38 42l20-12M38 54l20 12"/>'
+    "</symbol>"
+    "</defs></svg>"
+)
+
+
+def _icon(symbol_id: str, extra_class: str = "") -> str:
+    cls = f"icon {extra_class}".strip()
+    return f'<svg class="{cls}" aria-hidden="true"><use href="#{symbol_id}"/></svg>'
+
 logger = logging.getLogger(__name__)
 
 
@@ -184,27 +254,25 @@ def manhole_label(manhole: dict) -> str:
 
 def _render_related_card(
     other: dict,
-    photos: dict[str, dict],
+    id_to_image_url: dict[str, str],
     extra_html: str = "",
 ) -> str:
-    """Build a related-manhole list item with optional thumbnail."""
-    oid = str(other.get("id", ""))
+    """Build a related-manhole list item with local thumbnail and pin icon."""
+    oid = str(other.get("id", "")).strip()
     label = manhole_label(other)
-    norm_oid = normalize_id(oid)
-    other_photo = photos.get(norm_oid)
-    thumb_html = ""
-    if other_photo:
-        thumb_url = other_photo.get("url") or other_photo.get("original_url") or ""
-        if thumb_url:
-            thumb_html = (
-                f"<img class='related-thumb' src=\"{escape(thumb_url)}\""
-                f" alt=\"{escape(label)}\" loading=\"lazy\">"
-            )
+    thumb_url = id_to_image_url.get(oid, "")
+    thumb_html = (
+        f'<div class="related-card-thumb">'
+        f'<img src="{escape(thumb_url)}" alt="" loading="lazy"'
+        f' onerror="this.closest(\'.related-card-thumb\').remove()">'
+        f"</div>"
+    ) if thumb_url else ""
     return (
         f"<li class='related-card'>{thumb_html}"
         f"<div class='related-card-body'>"
+        f'{_icon("icon-detail-location", "icon-sm")}'
         f"<a href='/manholes/{quote(oid, safe='')}/'>{escape(label)}</a>"
-        f"{extra_html}</div></li>"
+        f"</div>{extra_html}</li>"
     )
 
 
@@ -216,7 +284,7 @@ def generate_html(
     same_pref: list[dict],
     pref_total: int,
     same_pokemon: list[dict],
-    photos: dict[str, dict],
+    id_to_image_url: dict[str, str],
     city_total: int = 0,
     same_pokemon_total: int = 0,
     nearby_count: int = 0,
@@ -357,7 +425,7 @@ def generate_html(
     if same_pokemon_total > 0:
         badges.append(f"<span class='hero-badge'>同じポケモン {same_pokemon_total}枚</span>")
     if nearby_count > 0:
-        badges.append(f"<span class='hero-badge'>近くに{nearby_count}件</span>")
+        badges.append(f"<span class='hero-badge'>30km以内に{nearby_count}件</span>")
     stats_html = f"<div class='hero-stats'>{''.join(badges)}</div>" if badges else ""
 
     # HERO card: share JS data (Python-serialized to avoid injection)
@@ -424,35 +492,43 @@ def generate_html(
     jsonld_str = json.dumps(jsonld, ensure_ascii=False, indent=2)
 
     # Links grid: external + internal + photo upload (移設統合)
-    prefecture_site_url = manhole.get("prefecture_site_url", "") or ""
+    _pref_site_raw = manhole.get("prefecture_site_url", "") or ""
+    _pref_parsed = urlparse(_pref_site_raw)
+    prefecture_site_url = _pref_site_raw if _pref_parsed.scheme in ("http", "https") else ""
     link_cards: list[str] = []
     if lat is not None and lng is not None:
         maps_url = f"https://www.google.com/maps?q={lat},{lng}"
         link_cards.append(
             f"<a class='link-card link-card--map' href=\"{escape(maps_url)}\""
-            f" target=\"_blank\" rel=\"noopener noreferrer\">📍<span>Google Maps</span></a>"
+            f" target=\"_blank\" rel=\"noopener noreferrer\">"
+            f"{_icon('icon-link-google-map', 'link-card-icon')}<span>Google Maps</span></a>"
         )
     if has_official_url:
         link_cards.append(
             f"<a class='link-card link-card--official' href=\"{escape(detail_url)}\""
-            f" target=\"_blank\" rel=\"noopener noreferrer\">🔗<span>公式サイト</span></a>"
+            f" target=\"_blank\" rel=\"noopener noreferrer\">"
+            f"{_icon('icon-link-official', 'link-card-icon')}<span>公式サイト</span></a>"
         )
     if prefecture_site_url:
         link_cards.append(
             f"<a class='link-card link-card--pref-site' href=\"{escape(prefecture_site_url)}\""
-            f" target=\"_blank\" rel=\"noopener noreferrer\">🗾<span>{escape(prefecture)}の公式</span></a>"
+            f" target=\"_blank\" rel=\"noopener noreferrer\">"
+            f"{_icon('icon-link-prefecture', 'link-card-icon')}<span>{escape(prefecture)}の公式</span></a>"
         )
     if prefecture:
         link_cards.append(
-            f"<a class='link-card link-card--internal' href=\"{escape(pref_url)}\">📋<span>同じ都道府県</span></a>"
+            f"<a class='link-card link-card--internal' href=\"{escape(pref_url)}\">"
+            f"{_icon('icon-detail-same-pref', 'link-card-icon')}<span>同じ都道府県</span></a>"
         )
     link_cards.append(
-        f"<a class='link-card link-card--internal' href=\"{BASE_URL}\">🗺<span>全国マップ</span></a>"
+        f"<a class='link-card link-card--internal' href=\"{BASE_URL}\">"
+        f"{_icon('icon-link-map', 'link-card-icon')}<span>全国マップ</span></a>"
     )
     if has_official_url:
         link_cards.append(
             f"<a class='link-card link-card--photo' href=\"{escape(detail_url)}\""
-            f" target=\"_blank\" rel=\"noopener noreferrer\">📷<span>写真を投稿</span></a>"
+            f" target=\"_blank\" rel=\"noopener noreferrer\">"
+            f"{_icon('icon-link-photo', 'link-card-icon')}<span>写真を投稿</span></a>"
         )
     links_grid_html = (
         f"<section class='links-section section-card'>"
@@ -464,20 +540,28 @@ def generate_html(
     # Nearby manholes section
     nearby_html = ""
     if nearby:
-        nearby_html = "<section class='nearby-section section-card'><h2>近くのポケふた</h2><ul class='related-list related-list--cards'>"
+        nearby_html = (
+            f"<section class='nearby-section section-card'>"
+            f"<h2>{_icon('icon-detail-nearby', 'icon-lg')} 30km以内のポケふた</h2>"
+            f"<ul class='related-list related-list--cards'>"
+        )
         for other, dist in nearby:
             dist_str = f"{dist:.1f} km"
             nearby_html += _render_related_card(
-                other, photos, extra_html=f"<span class='distance'>{escape(dist_str)}</span>"
+                other, id_to_image_url, extra_html=f"<span class='distance'>{escape(dist_str)}</span>"
             )
         nearby_html += "</ul></section>"
 
     # Same pokemon manholes section
     same_pokemon_html = ""
     if same_pokemon:
-        same_pokemon_html = "<section class='same-pokemon-section section-card'><h2>同じポケモンのポケふた</h2><ul class='related-list related-list--cards'>"
+        same_pokemon_html = (
+            "<section class='same-pokemon-section section-card'>"
+            "<h2>同じポケモンのポケふた</h2>"
+            "<ul class='related-list related-list--cards'>"
+        )
         for other in same_pokemon:
-            same_pokemon_html += _render_related_card(other, photos)
+            same_pokemon_html += _render_related_card(other, id_to_image_url)
         same_pokemon_html += "</ul></section>"
 
     # Same prefecture section
@@ -485,12 +569,12 @@ def generate_html(
     if prefecture and same_pref:
         pref_section_html = (
             f"<section class='prefecture-section section-card'>"
-            f"<h2>{escape(prefecture)}のポケふた</h2>"
+            f"<h2>{_icon('icon-detail-same-pref', 'icon-lg')} {escape(prefecture)}のポケふた</h2>"
             f"<p>{escape(prefecture)}には現在{pref_total}枚のポケふたがあります。</p>"
             f"<ul class='related-list related-list--cards'>"
         )
         for other in same_pref:
-            pref_section_html += _render_related_card(other, photos)
+            pref_section_html += _render_related_card(other, id_to_image_url)
         pref_section_html += "</ul></section>"
 
     # Safely serialize GA event params for inline onclick attribute.
@@ -513,8 +597,8 @@ def generate_html(
     {pokemon_tags_html}
     {stats_html}
     <div class="hero-actions">
-      <button class="btn-share" onclick="shareManhole()">🔗 共有する</button>
-      <a href="{escape(map_url)}" class="btn-map" onclick="trackEvent('manhole_seo_to_map_click', {onclick_params})">📍 地図で見る</a>
+      <button type="button" class="btn-share" onclick="shareManhole()">{_icon('icon-link-share', 'action-icon')}<span>共有する</span></button>
+      <a href="{escape(map_url)}" class="btn-map" onclick="trackEvent('manhole_seo_to_map_click', {onclick_params})">{_icon('icon-link-map', 'action-icon')}<span>地図で見る</span></a>
     </div>
   </div>
 </div>
@@ -858,50 +942,61 @@ def generate_html(
     }}
 
     .hero-actions {{
-      display: flex;
-      flex-direction: column;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 10px;
     }}
 
-    .btn-share {{
-      display: block;
-      width: 100%;
-      background: #e8333f;
-      color: white;
+    .btn-share,
+    .btn-map {{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      min-height: 80px;
+      border-radius: 14px;
+      padding: 12px 8px;
       text-align: center;
-      padding: 16px 14px;
-      border-radius: 10px;
-      font-size: 17px;
+      font-size: 13px;
       font-weight: 700;
-      border: none;
+      letter-spacing: 0.01em;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+      transition: background 0.15s, box-shadow 0.15s, transform 0.15s;
+    }}
+
+    .btn-share {{
+      background: #fff5f6;
+      color: #b52a38;
+      border: 1.5px solid #f5bdc5;
       cursor: pointer;
-      letter-spacing: 0.02em;
-      box-shadow: 0 2px 8px rgba(220,50,60,0.30);
-      transition: background 0.2s, box-shadow 0.2s;
+      width: 100%;
     }}
 
     .btn-share:hover {{
-      background: #c82333;
-      box-shadow: 0 4px 12px rgba(220,50,60,0.35);
+      background: #ffe4e7;
+      box-shadow: 0 3px 10px rgba(181,42,56,0.14);
+      transform: translateY(-1px);
     }}
 
     .btn-map {{
-      display: block;
-      background: #1a7fe8;
-      color: white;
-      text-align: center;
-      padding: 13px 14px;
-      border-radius: 10px;
-      font-size: 15px;
-      font-weight: 700;
+      background: #f4f0ff;
+      color: #4a2f96;
+      border: 1.5px solid #cfc0f0;
       text-decoration: none;
-      box-shadow: 0 2px 6px rgba(26,127,232,0.25);
-      transition: background 0.2s, box-shadow 0.2s;
     }}
 
     .btn-map:hover {{
-      background: #0056b3;
-      box-shadow: 0 4px 10px rgba(26,127,232,0.30);
+      background: #ebe5ff;
+      box-shadow: 0 3px 10px rgba(74,47,150,0.14);
+      transform: translateY(-1px);
+    }}
+
+    .action-icon {{
+      width: 36px;
+      height: 36px;
+      display: block;
+      flex-shrink: 0;
     }}
 
     .section-card {{
@@ -976,19 +1071,47 @@ def generate_html(
       background: #f8f4ee;
     }}
 
-    .related-thumb {{
-      width: 64px;
-      height: 64px;
-      object-fit: cover;
-      border-radius: 8px;
+    .icon {{
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      vertical-align: middle;
       flex-shrink: 0;
+    }}
+
+    .icon-sm {{ width: 14px; height: 14px; }}
+    .icon-lg {{ width: 22px; height: 22px; }}
+    .link-card-icon {{ width: 38px; height: 38px; display: block; }}
+
+    .related-card-thumb {{
+      width: 60px;
+      height: 60px;
+      flex-shrink: 0;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #f0ebe3;
+    }}
+
+    .related-card-thumb img {{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }}
 
     .related-card-body {{
       flex: 1;
       display: flex;
-      flex-direction: column;
-      gap: 4px;
+      align-items: center;
+      gap: 5px;
+      min-width: 0;
+    }}
+
+    .related-card-body a {{
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }}
 
     @media (max-width: 600px) {{
@@ -1080,10 +1203,10 @@ def generate_html(
       border-color: #ff6b6b;
       color: #c0392b;
     }}
-
   </style>
 </head>
 <body>
+  {_SVG_DEFS}
   <div class="container">
     {hero_card_html}
 
@@ -1145,27 +1268,33 @@ def generate_all_pages(
         for pk in filter_pokemons(m.get("pokemons", [])):
             pokemon_index.setdefault(pk, []).append(m)
 
+    # Build GitHub Pages-safe image URL map (local files only; no Cloudflare URLs)
+    id_to_image_url: dict[str, str] = {}
+    for m in manholes:
+        mid = str(m.get("id", "")).strip()
+        if mid and (image_dir / f"{mid}_latest.jpeg").exists():
+            id_to_image_url[mid] = f"{BASE_URL}manhole/image/{mid}_latest.jpeg"
+
     for manhole in manholes:
         manhole_id = str(manhole.get("id", "")).strip()
         if not manhole_id:
             logger.warning("Skipping manhole with missing ID")
             continue
 
+        # Use local image only; merge user-photo metadata for credit overlay
+        local_url = id_to_image_url.get(manhole_id)
         norm_id = normalize_id(manhole_id)
-        photo = photos.get(norm_id)
-
-        # Prefer local repo image over Cloudflare URL when available
-        local_image = image_dir / f"{manhole_id}_latest.jpeg"
-        if local_image.exists():
-            local_url = f"{BASE_URL}manhole/image/{manhole_id}_latest.jpeg"
-            photo = dict(photo or {}, url=local_url)
-            logger.debug(f"Using local image for manhole {manhole_id}")
+        user_photo = photos.get(norm_id) or {}
+        photo: Optional[dict] = (
+            {**user_photo, "url": local_url, "original_url": local_url}
+            if local_url else None
+        )
 
         if photo:
             photos_applied += 1
         else:
             photos_missing += 1
-            logger.debug(f"No photo found for manhole {manhole_id} (normalized: {norm_id})")
+            logger.debug(f"No local image for manhole {manhole_id}")
 
         prefecture = manhole.get("prefecture", "")
         city = manhole.get("city", "")
@@ -1184,7 +1313,8 @@ def generate_all_pages(
                 dist = haversine(float(lat), float(lng), float(olat), float(olng))
                 nearby.append((other, dist))
             nearby.sort(key=lambda x: x[1])
-        nearby_count = sum(1 for _, dist in nearby if dist <= 5.0)
+        nearby = [(m, d) for m, d in nearby if d <= 30.0]
+        nearby_count = len(nearby)
         nearby = nearby[:5]
 
         # Same prefecture manholes (stable sort: city then id)
@@ -1206,7 +1336,7 @@ def generate_all_pages(
         same_pokemon: list[dict] = []
         for pk in filter_pokemons(manhole.get("pokemons", [])):
             for other in pokemon_index.get(pk, []):
-                oid = str(other.get("id", ""))
+                oid = str(other.get("id", "")).strip()
                 if oid != manhole_id and oid not in seen_ids:
                     seen_ids.add(oid)
                     same_pokemon.append(other)
@@ -1214,7 +1344,8 @@ def generate_all_pages(
         same_pokemon = same_pokemon[:10]
 
         html = generate_html(
-            manhole, photo, pokemon_meta, nearby, same_pref, pref_total, same_pokemon, photos,
+            manhole, photo, pokemon_meta, nearby, same_pref, pref_total, same_pokemon,
+            id_to_image_url,
             city_total=city_total, same_pokemon_total=same_pokemon_total, nearby_count=nearby_count,
         )
 
