@@ -134,6 +134,12 @@ _SVG_DEFS = (
     '<circle cx="68" cy="72" r="12" fill="#E73A51"/>'
     '<path fill="none" stroke="#E73A51" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M38 42l20-12M38 54l20 12"/>'
     "</symbol>"
+    '<symbol id="icon-share-x" viewBox="0 0 24 24">'
+    '<path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.766l7.73-8.835L1.254 2.25H8.08l4.259 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>'
+    "</symbol>"
+    '<symbol id="icon-share-line" viewBox="0 0 24 24">'
+    '<path fill="currentColor" d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.281.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/>'
+    "</symbol>"
     "</defs></svg>"
 )
 
@@ -317,6 +323,7 @@ def generate_html(
     city_total: int = 0,
     same_pokemon_total: int = 0,
     nearby_count: int = 0,
+    ogp_dir: Optional[Path] = None,
 ) -> str:
     """Generate complete HTML for a manhole detail page."""
     manhole_id = str(manhole.get("id", "")).strip()
@@ -458,6 +465,11 @@ def generate_html(
             f"</div>"
         )
 
+    # Per-manhole generated OGP takes priority over photo URL
+    _ogp_path = (ogp_dir / f"{manhole_id}.jpg") if ogp_dir else None
+    if _ogp_path is not None and _ogp_path.exists():
+        og_image = f"{BASE_URL}assets/ogp/manholes/{manhole_id}.jpg"
+
     # HERO card: region label
     region_parts = [p for p in [prefecture, city] if p]
     region_html = "".join(f"<span>{escape(r)}</span>" for r in region_parts)
@@ -490,13 +502,24 @@ def generate_html(
     stats_html = f"<div class='hero-stats'>{''.join(badges)}</div>" if badges else ""
 
     # HERO card: share JS data (Python-serialized to avoid injection)
-    share_title = title
-    share_text = (
-        f"{prefecture}{city}のポケふた（{pokemon_text}）を見つけました。\n"
-        f"{prefecture}には{pref_total}枚のポケふたがあります。"
-    ) if prefecture else f"{h1}を見つけました。"
-    share_title_json = _js_json(share_title)
-    share_text_json = _js_json(share_text)
+    if has_photo_bool and pokemons:
+        _x_text = (
+            f"{prefecture}{city}のポケふたを発見！\n\n"
+            f"登場ポケモン: {pokemon_text}\n"
+            f"近くのポケふたも地図で探せます。\n\n"
+            f"#ポケふた #ポケモンマンホール"
+        )
+    else:
+        _x_text = (
+            f"{prefecture}{city}のポケふた、旅写真を募集中！\n\n"
+            f"近くに行ったら投稿してみませんか？\n"
+            f"#ポケふた #ポケモンマンホール"
+        )
+    share_x_url = (
+        f"https://twitter.com/intent/tweet"
+        f"?text={quote(_x_text)}&url={quote(canonical_url)}"
+    )
+    share_line_url = f"https://social-plugins.line.me/lineit/share?url={quote(canonical_url)}"
     share_url_json = _js_json(canonical_url)
 
     # Validate official URL (used for links-grid cards)
@@ -728,7 +751,9 @@ def generate_html(
     {pokemon_tags_html}
     {stats_html}
     <div class="hero-actions">
-      <button type="button" class="btn-share btn-share--full" onclick="shareManhole()">{_icon('icon-link-share', 'action-icon')}<span>共有する</span></button>
+      <a class="btn-share btn-share--x" href="{escape(share_x_url)}" target="_blank" rel="noopener noreferrer" onclick="trackEvent('click_share_x', {_attr_json({'manhole_id': manhole_id, 'prefecture': prefecture, 'city': city})})">{_icon('icon-share-x', 'action-icon')}<span>Xで共有</span></a>
+      <a class="btn-share btn-share--line" href="{escape(share_line_url)}" target="_blank" rel="noopener noreferrer" onclick="trackEvent('click_share_line', {_attr_json({'manhole_id': manhole_id, 'prefecture': prefecture, 'city': city})})">{_icon('icon-share-line', 'action-icon')}<span>LINEで送る</span></a>
+      <button type="button" class="btn-share btn-share--copy" onclick="copyManholeUrl()">{_icon('icon-link-share', 'action-icon')}<span>URLをコピー</span></button>
     </div>
   </div>
 </div>
@@ -747,14 +772,14 @@ def generate_html(
 
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ja_JP">
-  <meta property="og:title" content="{escape(title)}">
-  <meta property="og:description" content="{escape(description)}">
+  <meta property="og:title" content="{escape(f'{city}のポケふた（{pokemon_text}）')}">
+  <meta property="og:description" content="{escape(f'{prefecture}{city}にある{pokemon_text}のポケふた。地図・写真・周辺のポケふた情報を掲載中。data.pokefuta.com')}">
   <meta property="og:url" content="{escape(canonical_url)}">
   <meta property="og:image" content="{escape(og_image)}">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="{escape(title)}">
-  <meta name="twitter:description" content="{escape(description)}">
+  <meta name="twitter:title" content="{escape(f'{city}のポケふた（{pokemon_text}）')}">
+  <meta name="twitter:description" content="{escape(f'{prefecture}{city}にある{pokemon_text}のポケふたを地図で確認。data.pokefuta.com')}">
   <meta name="twitter:image" content="{escape(og_image)}">
 
   <script type="application/ld+json">
@@ -782,28 +807,23 @@ def generate_html(
       gtag('event', action, params);
     }}
 
-    function shareManhole() {{
+    function copyManholeUrl() {{
       var _sp = {{
         manhole_id: {manhole_id_js},
         prefecture: {prefecture_js},
         city: {city_js}
       }};
-      trackEvent('click_share', _sp);
-      var d = {{
-        title: {share_title_json},
-        text: {share_text_json},
-        url: {share_url_json}
-      }};
-      if (navigator.share) {{
-        navigator.share(d).then(function() {{
-          trackEvent('complete_share', _sp);
-        }}).catch(function() {{}});
-      }} else {{
-        navigator.clipboard.writeText(d.url).then(
-          function() {{ trackEvent('share_copy_url', _sp); alert('URLをコピーしました'); }},
-          function() {{ alert(d.url); }}
-        );
-      }}
+      navigator.clipboard.writeText({share_url_json}).then(
+        function() {{
+          trackEvent('share_copy_url', _sp);
+          var t = document.getElementById('copy-toast');
+          if (t) {{
+            t.classList.add('copy-toast--visible');
+            setTimeout(function() {{ t.classList.remove('copy-toast--visible'); }}, 2000);
+          }}
+        }},
+        function() {{ alert({share_url_json}); }}
+      );
     }}
   </script>
 
@@ -1113,10 +1133,6 @@ def generate_html(
       gap: 10px;
     }}
 
-    .btn-share--full {{
-      grid-column: 1 / -1;
-    }}
-
     .btn-share {{
       display: flex;
       flex-direction: column;
@@ -1132,20 +1148,68 @@ def generate_html(
       letter-spacing: 0.01em;
       box-shadow: 0 1px 4px rgba(0,0,0,0.07);
       transition: background 0.15s, box-shadow 0.15s, transform 0.15s;
+      cursor: pointer;
+      width: 100%;
+      text-decoration: none;
     }}
 
-    .btn-share {{
+    .btn-share--x {{
+      background: #000;
+      color: #fff;
+      border: 1.5px solid #333;
+    }}
+
+    .btn-share--x:hover {{
+      background: #1a1a1a;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.25);
+      transform: translateY(-1px);
+    }}
+
+    .btn-share--line {{
+      background: #06C755;
+      color: #fff;
+      border: 1.5px solid #05a847;
+    }}
+
+    .btn-share--line:hover {{
+      background: #05a847;
+      box-shadow: 0 3px 10px rgba(6,199,85,0.3);
+      transform: translateY(-1px);
+    }}
+
+    .btn-share--copy {{
+      grid-column: 1 / -1;
       background: #fff5f6;
       color: #b52a38;
       border: 1.5px solid #f5bdc5;
-      cursor: pointer;
-      width: 100%;
     }}
 
-    .btn-share:hover {{
+    .btn-share--copy:hover {{
       background: #ffe4e7;
       box-shadow: 0 3px 10px rgba(181,42,56,0.14);
       transform: translateY(-1px);
+    }}
+
+    .copy-toast {{
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: rgba(0,0,0,0.80);
+      color: #fff;
+      padding: 10px 22px;
+      border-radius: 24px;
+      font-size: 14px;
+      font-weight: 600;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 1000;
+    }}
+
+    .copy-toast--visible {{
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
     }}
 
     .action-icon {{
@@ -1510,6 +1574,7 @@ def generate_html(
       <p>&copy; 2024-{current_year} data.pokefuta.com | ポケふた情報はポケモン公式サイトを参照しています</p>
     </footer>
   </div>
+  <div id="copy-toast" class="copy-toast">URLをコピーしました</div>
 </body>
 </html>
 """
@@ -1532,6 +1597,14 @@ def generate_all_pages(
     total = 0
     photos_applied = 0
     photos_missing = 0
+
+    # Detect pre-generated per-manhole OGP directory
+    _ogp_candidate = output_dir / "assets" / "ogp" / "manholes"
+    ogp_dir: Optional[Path] = _ogp_candidate if _ogp_candidate.is_dir() else None
+    if ogp_dir:
+        logger.info("Per-manhole OGP directory found: %s", ogp_dir)
+    else:
+        logger.info("No per-manhole OGP directory — using default og:image")
 
     # Build cross-manhole indexes once
     pref_index: dict[str, list[dict]] = {}
@@ -1631,6 +1704,7 @@ def generate_all_pages(
             manhole, photo, pokemon_meta, nearby, same_pref, pref_total, same_pokemon,
             id_to_image_url,
             city_total=city_total, same_pokemon_total=same_pokemon_total, nearby_count=nearby_count,
+            ogp_dir=ogp_dir,
         )
 
         page_dir = output_dir / "manholes" / manhole_id
