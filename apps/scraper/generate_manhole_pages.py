@@ -332,6 +332,13 @@ def generate_html(
         ensure_ascii=False,
     ))
 
+    # JSON-serialized values for safe embedding inside <script> blocks.
+    # Using json.dumps avoids breakage from quotes, backslashes, or </script>
+    # in scraped data values; escape() is HTML-only and unsafe for JS contexts.
+    manhole_id_js = json.dumps(manhole_id)
+    prefecture_js = json.dumps(prefecture, ensure_ascii=False)
+    city_js = json.dumps(city, ensure_ascii=False)
+
     # Build Pokemon info with metadata
     pokemon_info_html = ""
     if pokemons:
@@ -690,9 +697,9 @@ def generate_html(
       'page_path': '/manholes/{escape(manhole_id)}/'
     }});
     gtag('event', 'view_manhole_detail', {{
-      manhole_id: '{escape(manhole_id)}',
-      prefecture: '{escape(prefecture)}',
-      city: '{escape(city)}'
+      manhole_id: {manhole_id_js},
+      prefecture: {prefecture_js},
+      city: {city_js}
     }});
 
     function trackEvent(action, params) {{
@@ -701,9 +708,9 @@ def generate_html(
 
     function shareManhole() {{
       trackEvent('click_share', {{
-        manhole_id: '{escape(manhole_id)}',
-        prefecture: '{escape(prefecture)}',
-        city: '{escape(city)}'
+        manhole_id: {manhole_id_js},
+        prefecture: {prefecture_js},
+        city: {city_js}
       }});
       var d = {{
         title: {share_title_json},
