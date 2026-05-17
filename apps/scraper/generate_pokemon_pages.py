@@ -11,6 +11,8 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+from collections import defaultdict
+from itertools import groupby
 from pathlib import Path
 from urllib.parse import quote
 from xml.sax.saxutils import escape
@@ -21,6 +23,53 @@ logger = logging.getLogger(__name__)
 BASE_URL = "https://data.pokefuta.com/"
 GA_MEASUREMENT_ID = "G-K18NR4GZG2"
 DEFAULT_OGP_IMAGE = f"{BASE_URL}assets/ogp/pokefuta_map_ogp.png"
+
+# Short contextual descriptions explaining regional connections.
+# Keeps wording soft ("イメージ", "語感", "連想") — no unsourced assertions.
+POKEMON_SEO_DESCRIPTIONS: dict[str, str] = {
+    "vulpix": (
+        "ロコンは北海道各地を応援するポケモンとして親しまれ、"
+        "キツネを連想させる姿や雪景色との相性から"
+        "北海道のイメージに合うポケモンとして話題になっています。"
+        "北海道内には多数のロコンのポケふたが設置されています。"
+    ),
+    "vulpix-alola": (
+        "アローラロコンは北海道を応援するポケモンとして知られ、"
+        "北海道各地に多数のポケふたが設置されています。"
+        "雪や冬景色を連想させるデザインや、キツネを思わせる姿から、"
+        "北海道のイメージに合うポケモンとして選ばれています。"
+    ),
+    "ninetales": (
+        "キュウコンはロコンの進化系として知られるポケモンです。"
+        "北海道をはじめ各地のポケふたでも人気があり、"
+        "その優雅な姿が地域の自然景観とも相性が良いとされています。"
+    ),
+    "ninetales-alola": (
+        "アローラキュウコンはアローラロコンの進化系として知られるポケモンです。"
+        "雪や氷をイメージした姿が北海道の風景と相性が良く、"
+        "冬をテーマにしたポケふたでも人気があります。"
+    ),
+    "slowpoke": (
+        "ヤドンは香川県を応援するポケモンとして知られています。"
+        "『うどん』と『ヤドン』の語感の近さでも話題になり、"
+        "香川県内ではヤドンのポケふた巡りや観光企画が人気です。"
+    ),
+    "lapras": (
+        "ラプラスは宮城県を応援するポケモンとして知られています。"
+        "海を泳ぐイメージや穏やかな雰囲気が宮城県の観光や海辺の景色とも相性が良く、"
+        "県内各地にラプラスのポケふたが設置されています。"
+    ),
+    "geodude": (
+        "イシツブテは岩手県を応援するポケモンとして知られています。"
+        "『いわて』と『イシツブテ』の語感の近さでも話題となり、"
+        "岩手県内ではポケふたや観光企画にも登場しています。"
+    ),
+    "chansey": (
+        "ラッキーは福島県を応援するポケモンとして知られています。"
+        "『福』を連想させるイメージから、"
+        "福島県内ではラッキーのポケふたや観光企画が展開されています。"
+    ),
+}
 
 # Regional form prefix mapping (pokefuta data uses these prefixes)
 _FORM_PREFIX: dict[str, str] = {
@@ -81,6 +130,23 @@ def load_pokemon_metadata(path: Path) -> dict[str, dict]:
     return metadata
 
 
+# Slugs whose regional-form match must be exact to avoid cross-form contamination.
+# e.g. a manhole with only "アローラロコン" must not appear on /pokemon/vulpix/.
+FORM_EXACT_MATCH: dict[str, str] = {
+    "vulpix":          "ロコン",
+    "vulpix-alola":    "アローラロコン",
+    "ninetales":       "キュウコン",
+    "ninetales-alola": "アローラキュウコン",
+}
+
+
+def pokemon_matches_manhole(slug: str, ja_name: str, manhole_pokemons: list[str]) -> bool:
+    exact_name = FORM_EXACT_MATCH.get(slug)
+    if exact_name:
+        return exact_name in manhole_pokemons
+    return ja_name in manhole_pokemons
+
+
 def filter_pokemons(pokemons: list) -> list[str]:
     """Remove prefecture site link entries from the pokemons field."""
     if not isinstance(pokemons, list):
@@ -117,6 +183,7 @@ def build_pokemon_index(
     index: dict[str, tuple[dict, list[dict]]] = {}
     slug_to_meta: dict[str, dict] = {}
     ja_to_slug: dict[str, str] = {}
+    seen: dict[str, set[str]] = defaultdict(set)  # slug → set of manhole IDs already added
 
     for ja_name, meta in metadata.items():
         slug = meta.get("slug", "")
@@ -125,13 +192,20 @@ def build_pokemon_index(
             slug_to_meta[slug] = meta
 
     for manhole in manholes:
-        for ja_name in filter_pokemons(manhole.get("pokemons", [])):
+        manhole_pokemons = filter_pokemons(manhole.get("pokemons", []))
+        mid = str(manhole.get("id", "")).strip()
+        for ja_name in manhole_pokemons:
             # Try direct match, then katakana-normalized match
             slug = ja_to_slug.get(ja_name) or ja_to_slug.get(
                 _normalize_katakana(ja_name)
             )
             if not slug:
                 continue
+            if not pokemon_matches_manhole(slug, ja_name, manhole_pokemons):
+                continue
+            if mid in seen[slug]:
+                continue
+            seen[slug].add(mid)
             meta = slug_to_meta[slug]
             if slug not in index:
                 index[slug] = (meta, [])
@@ -140,10 +214,79 @@ def build_pokemon_index(
     return index
 
 
-def generate_html(slug: str, pokemon: dict, manholes: list[dict]) -> str:
+# Explicit override for evolution families where family_id alone doesn't capture
+# cross-form relationships (e.g. Vulpix ↔ Alolan Vulpix have different family_ids).
+RELATED_POKEMON_OVERRIDES: dict[str, list[str]] = {
+    "vulpix":          ["vulpix-alola", "ninetales", "ninetales-alola"],
+    "vulpix-alola":    ["vulpix", "ninetales", "ninetales-alola"],
+    "ninetales":       ["vulpix", "vulpix-alola", "ninetales-alola"],
+    "ninetales-alola": ["vulpix", "vulpix-alola", "ninetales"],
+}
+
+
+def build_related_map(
+    index: dict[str, tuple[dict, list[dict]]],
+    metadata: dict[str, dict],
+) -> dict[str, list[tuple[str, str]]]:
+    """Return {slug: [(related_slug, ja_name), ...]} sharing a base evolution family."""
+    slug_to_family: dict[str, str] = {}
+    slug_to_ja: dict[str, str] = {}
+    for _ja_name, meta in metadata.items():
+        slug = meta.get("slug", "")
+        fam = (meta.get("evolution") or {}).get("family_id", "")
+        if slug and fam:
+            slug_to_family[slug] = fam
+            form = meta.get("form") or ""
+            ja_name = meta.get("names", {}).get("ja", slug)
+            prefix = _FORM_PREFIX.get(form, "")
+            slug_to_ja.setdefault(slug, prefix + ja_name if prefix else ja_name)
+
+    base_to_slugs: dict[str, list[str]] = defaultdict(list)
+    for slug in index:
+        fam = slug_to_family.get(slug, "")
+        base = fam.split("-")[0] if fam else ""
+        if base:
+            base_to_slugs[base].append(slug)
+
+    result: dict[str, list[tuple[str, str]]] = {}
+    for slug in index:
+        fam = slug_to_family.get(slug, "")
+        base = fam.split("-")[0] if fam else ""
+        related = [
+            (s, slug_to_ja.get(s, s))
+            for s in sorted(base_to_slugs.get(base, []))
+            if s != slug
+        ]
+        result[slug] = related
+
+    for slug, override_slugs in RELATED_POKEMON_OVERRIDES.items():
+        if slug not in index:
+            continue
+        existing = {s for s, _ in result.get(slug, [])}
+        merged = list(result.get(slug, []))
+        for related_slug in override_slugs:
+            if related_slug not in index or related_slug in existing:
+                continue
+            merged.append((related_slug, slug_to_ja.get(related_slug, related_slug)))
+            existing.add(related_slug)
+        result[slug] = merged
+
+    return result
+
+
+def generate_html(
+    slug: str,
+    pokemon: dict,
+    manholes: list[dict],
+    related: list[tuple[str, str]],
+    image_dir: Path,
+    seo_desc: str = "",
+) -> str:
     """Return complete HTML for a Pokemon LP page."""
     names = pokemon.get("names", {})
-    name_ja = names.get("ja", slug)
+    form = pokemon.get("form") or ""
+    _prefix = _FORM_PREFIX.get(form, "")
+    name_ja = _prefix + names.get("ja", slug)
     name_en = names.get("en", "")
     name_ko = names.get("ko", "")
     name_zh = names.get("zh-Hans", "")
@@ -182,6 +325,7 @@ def generate_html(slug: str, pokemon: dict, manholes: list[dict]) -> str:
     )
 
     gen_html = f"<p class='poke-gen'>第{generation}世代</p>" if generation else ""
+    seo_desc_html = f"<p class='poke-seo-desc'>{escape(seo_desc)}</p>" if seo_desc else ""
 
     # JSON-LD
     jsonld = {
@@ -194,27 +338,63 @@ def generate_html(slug: str, pokemon: dict, manholes: list[dict]) -> str:
     }
     jsonld_str = json.dumps(jsonld, ensure_ascii=False, indent=2)
 
-    # Manhole list HTML (sorted by prefecture then city)
+    # Manhole sections grouped by prefecture (empty prefecture sorted last)
     sorted_manholes = sorted(
         manholes,
-        key=lambda m: (m.get("prefecture", ""), m.get("city", "")),
+        key=lambda m: (0 if m.get("prefecture") else 1, m.get("prefecture", ""), m.get("city", "")),
     )
-    cards_html = ""
-    for m in sorted_manholes:
-        mid = str(m.get("id", "")).strip()
-        pref = m.get("prefecture", "")
-        city = m.get("city", "")
-        label = f"{pref}{city}のポケふた"
-        pokes = filter_pokemons(m.get("pokemons", []))
-        sub = "・".join(pokes) if pokes else ""
-        cards_html += (
-            f"<li class='manhole-item'>"
-            f"<a href='/manholes/{quote(mid)}/'>"
-            f"<span class='manhole-location'>{escape(label)}</span>"
-            + (f"<span class='manhole-poke'>{escape(sub)}</span>" if sub else "")
-            + f"</a></li>"
+    sections_html = ""
+    for prefecture, group in groupby(sorted_manholes, key=lambda m: m.get("prefecture", "")):
+        display_pref = prefecture or "所在地不明"
+        pref_h2 = f"{display_pref}の{name_ja}のポケふた"
+        cards_html = ""
+        for m in group:
+            mid = str(m.get("id", "")).strip()
+            pref = m.get("prefecture", "")
+            city = m.get("city", "")
+            location = (pref + city) or m.get("title", "所在地不明")
+            label = f"{location}のポケふた"
+            pokes = filter_pokemons(m.get("pokemons", []))
+            sub = "・".join(pokes) if pokes else ""
+
+            img_html = ""
+            img_path = image_dir / f"{mid}_latest.jpeg"
+            if img_path.exists():
+                img_url = escape(f"https://data.pokefuta.com/manhole/image/{mid}_latest.jpeg")
+                alt = f"{location}の{name_ja}のポケふた"
+                img_html = (
+                    f"<img src='{img_url}' alt='{escape(alt)}'"
+                    f" loading='lazy' decoding='async' width='320' height='180'>"
+                )
+
+            cards_html += (
+                f"<li class='manhole-item'>"
+                f"<a href='/manholes/{quote(mid)}/'>"
+                + img_html
+                + f"<span class='manhole-location'>{escape(label)}</span>"
+                + (f"<span class='manhole-poke'>{escape(sub)}</span>" if sub else "")
+                + f"</a></li>"
+            )
+        sections_html += (
+            f"<section class='pref-section'>"
+            f"<h2>{escape(pref_h2)}</h2>"
+            f"<ul class='manhole-list'>{cards_html}</ul>"
+            f"</section>"
         )
-    list_html = f"<ul class='manhole-list'>{cards_html}</ul>" if cards_html else ""
+
+    # Related Pokemon section
+    related_html = ""
+    if related:
+        links = "".join(
+            f"<li><a href='/pokemon/{quote(s)}/'>{escape(ja)}</a></li>"
+            for s, ja in related
+        )
+        related_html = (
+            f"<div class='section-card related-section'>"
+            f"<h2>関連するポケモン</h2>"
+            f"<ul class='related-list'>{links}</ul>"
+            f"</div>"
+        )
 
     # slug_js for GA4 page_path
     slug_js = json.dumps(slug)
@@ -291,6 +471,16 @@ def generate_html(slug: str, pokemon: dict, manholes: list[dict]) -> str:
     .poke-hero {{
       margin-bottom: 24px;
     }}
+    .poke-seo-desc {{
+      font-size: 14px;
+      color: #555;
+      line-height: 1.7;
+      margin-top: 12px;
+      padding: 12px 14px;
+      background: #f5f0ff;
+      border-left: 3px solid #6F55A3;
+      border-radius: 0 6px 6px 0;
+    }}
     h1 {{
       font-size: 26px;
       font-weight: bold;
@@ -327,18 +517,21 @@ def generate_html(slug: str, pokemon: dict, manholes: list[dict]) -> str:
       border-radius: 8px;
       border: 1px solid #e8e8e8;
     }}
-    .section-card h2 {{
-      font-size: 18px;
-      font-weight: bold;
-      color: #1a1a1a;
-      margin-bottom: 12px;
-      padding-bottom: 8px;
-      border-bottom: 2px solid #e0e0e0;
-    }}
     .count-text {{
       font-size: 15px;
       color: #555;
-      margin-bottom: 12px;
+      margin-bottom: 16px;
+    }}
+    .pref-section {{
+      margin-bottom: 20px;
+    }}
+    .pref-section h2 {{
+      font-size: 16px;
+      font-weight: bold;
+      color: #1a1a1a;
+      margin-bottom: 10px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid #e0e0e0;
     }}
     .manhole-list {{
       list-style: none;
@@ -355,10 +548,18 @@ def generate_html(slug: str, pokemon: dict, manholes: list[dict]) -> str:
       text-decoration: none;
       color: #333;
       transition: border-color 0.15s, box-shadow 0.15s;
+      overflow: hidden;
     }}
     .manhole-item a:hover {{
       border-color: #6F55A3;
       box-shadow: 0 2px 8px rgba(111,85,163,0.15);
+    }}
+    .manhole-item a img {{
+      display: block;
+      width: calc(100% + 28px);
+      margin: -10px -14px 8px;
+      height: 160px;
+      object-fit: cover;
     }}
     .manhole-location {{
       display: block;
@@ -372,6 +573,31 @@ def generate_html(slug: str, pokemon: dict, manholes: list[dict]) -> str:
       color: #888;
       margin-top: 2px;
     }}
+    .related-section h2 {{
+      font-size: 16px;
+      font-weight: bold;
+      color: #1a1a1a;
+      margin-bottom: 10px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid #e0e0e0;
+    }}
+    .related-list {{
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }}
+    .related-list a {{
+      display: inline-block;
+      padding: 4px 14px;
+      background: #f0ebfa;
+      color: #6F55A3;
+      border-radius: 16px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: bold;
+    }}
+    .related-list a:hover {{ background: #e0d8f5; }}
     .cta-map {{
       display: block;
       background: #6F55A3;
@@ -405,13 +631,15 @@ def generate_html(slug: str, pokemon: dict, manholes: list[dict]) -> str:
     {multilang_html}
     {type_html}
     {gen_html}
+    {seo_desc_html}
   </div>
 
   <div class="section-card">
-    <h2>全国のポケふた一覧</h2>
     <p class="count-text">全国に <strong>{count}</strong> 枚の{escape(name_ja)}のポケふたがあります。</p>
-    {list_html}
+    {sections_html}
   </div>
+
+  {related_html}
 
   <a href="{escape(map_url)}" class="cta-map"
      onclick="trackEvent('click_map_cta', {{pokemon_slug: {slug_js}}})">
@@ -437,6 +665,10 @@ def main() -> int:
         help="Path to pokemon_metadata.json",
     )
     parser.add_argument(
+        "--images", default="dataset/manhole/image",
+        help="Directory containing {id}_latest.jpeg files",
+    )
+    parser.add_argument(
         "--output", default="dist/pokemon",
         help="Output directory (dist/pokemon)",
     )
@@ -455,12 +687,20 @@ def main() -> int:
     index = build_pokemon_index(manholes, metadata)
     logger.info(f"Pokemon with pokefuta: {len(index)}")
 
+    related_map = build_related_map(index, metadata)
+    image_dir = Path(args.images)
+
     output_root = Path(args.output)
     generated = 0
     for slug, (pokemon, poke_manholes) in sorted(index.items()):
         out_dir = output_root / slug
         out_dir.mkdir(parents=True, exist_ok=True)
-        html = generate_html(slug, pokemon, poke_manholes)
+        html = generate_html(
+            slug, pokemon, poke_manholes,
+            related=related_map.get(slug, []),
+            image_dir=image_dir,
+            seo_desc=POKEMON_SEO_DESCRIPTIONS.get(slug, ""),
+        )
         (out_dir / "index.html").write_text(html, encoding="utf-8")
         generated += 1
 
