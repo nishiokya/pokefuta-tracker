@@ -10,6 +10,7 @@ on:
       - 'apps/scraper/generate_sitemap.py' # sitemap generator used during deploy
       - 'apps/scraper/generate_manhole_pages.py' # manhole page generator
       - 'apps/scraper/generate_manhole_ogp.py' # OGP image generator
+      - 'apps/scraper/generate_pokemon_pages.py' # Pokemon LP generator
       - 'docs/**'     # dataset changes copied into dist/
       - 'dataset/manhole/image/**' # local popup photos
 
@@ -52,7 +53,9 @@ jobs:
           mkdir -p dist/assets
           echo "[dist] Generate static manhole detail pages"
           python3 apps/scraper/generate_manhole_pages.py
-          echo "[dist] Generate sitemap with manhole URLs"
+          echo "[dist] Generate static Pokemon LP pages"
+          python3 apps/scraper/generate_pokemon_pages.py
+          echo "[dist] Generate sitemap with manhole + pokemon URLs"
           python3 apps/scraper/generate_sitemap.py
           echo "[dist] Copy HTML sources"
           cp apps/web/index.html dist/index.html

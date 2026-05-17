@@ -3,6 +3,7 @@
     "id": "0001",
     "no": "0001",
     "form": null,
+    "slug": "bulbasaur",
     "names": {
       "ja": "フシギダネ",
       "en": "Bulbasaur",
@@ -32,6 +33,7 @@
     "id": "0002",
     "no": "0002",
     "form": null,
+    "slug": "ivysaur",
     "names": {
       "ja": "フシギソウ",
       "en": "Ivysaur",
@@ -61,6 +63,7 @@
     "id": "0003",
     "no": "0003",
     "form": null,
+    "slug": "venusaur",
     "names": {
       "ja": "フシギバナ",
       "en": "Venusaur",
@@ -90,6 +93,7 @@
     "id": "0004",
     "no": "0004",
     "form": null,
+    "slug": "charmander",
     "names": {
       "ja": "ヒトカゲ",
       "en": "Charmander",
@@ -115,6 +119,7 @@
     "id": "0005",
     "no": "0005",
     "form": null,
+    "slug": "charmeleon",
     "names": {
       "ja": "リザード",
       "en": "Charmeleon",
@@ -140,6 +145,7 @@
     "id": "0006",
     "no": "0006",
     "form": null,
+    "slug": "charizard",
     "names": {
       "ja": "リザードン",
       "en": "Charizard",
@@ -169,6 +175,7 @@
     "id": "0007",
     "no": "0007",
     "form": null,
+    "slug": "squirtle",
     "names": {
       "ja": "ゼニガメ",
       "en": "Squirtle",
@@ -194,6 +201,7 @@
     "id": "0008",
     "no": "0008",
     "form": null,
+    "slug": "wartortle",
     "names": {
       "ja": "カメール",
       "en": "Wartortle",
@@ -219,6 +227,7 @@
     "id": "0009",
     "no": "0009",
     "form": null,
+    "slug": "blastoise",
     "names": {
       "ja": "カメックス",
       "en": "Blastoise",
@@ -244,6 +253,7 @@
     "id": "0010",
     "no": "0010",
     "form": null,
+    "slug": "caterpie",
     "names": {
       "ja": "キャタピー",
       "en": "Caterpie",
@@ -264,6 +274,7 @@
     "id": "0011",
     "no": "0011",
     "form": null,
+    "slug": "metapod",
     "names": {
       "ja": "トランセル",
       "en": "Metapod",
@@ -284,6 +295,7 @@
     "id": "0012",
     "no": "0012",
     "form": null,
+    "slug": "butterfree",
     "names": {
       "ja": "バタフリー",
       "en": "Butterfree",
@@ -304,6 +316,7 @@
     "id": "0013",
     "no": "0013",
     "form": null,
+    "slug": "weedle",
     "names": {
       "ja": "ビードル",
       "en": "Weedle",
@@ -324,6 +337,7 @@
     "id": "0014",
     "no": "0014",
     "form": null,
+    "slug": "kakuna",
     "names": {
       "ja": "コクーン",
       "en": "Kakuna",
@@ -344,6 +358,7 @@
     "id": "0015",
     "no": "0015",
     "form": null,
+    "slug": "beedrill",
     "names": {
       "ja": "スピアー",
       "en": "Beedrill",
@@ -364,6 +379,7 @@
     "id": "0016",
     "no": "0016",
     "form": null,
+    "slug": "pidgey",
     "names": {
       "ja": "ポッポ",
       "en": "Pidgey",
@@ -384,6 +400,7 @@
     "id": "0017",
     "no": "0017",
     "form": null,
+    "slug": "pidgeotto",
     "names": {
       "ja": "ピジョン",
       "en": "Pidgeotto",
@@ -404,6 +421,7 @@
     "id": "0018",
     "no": "0018",
     "form": null,
+    "slug": "pidgeot",
     "names": {
       "ja": "ピジョット",
       "en": "Pidgeot",
@@ -424,6 +442,7 @@
     "id": "0019",
     "no": "0019",
     "form": null,
+    "slug": "rattata",
     "names": {
       "ja": "コラッタ",
       "en": "Rattata",
@@ -444,6 +463,7 @@
     "id": "0019-alola",
     "no": "0019",
     "form": "alola",
+    "slug": "rattata-alola",
     "names": {
       "ja": "コラッタ",
       "en": "Rattata",
@@ -464,6 +484,7 @@
     "id": "0020",
     "no": "0020",
     "form": null,
+    "slug": "raticate",
     "names": {
       "ja": "ラッタ",
       "en": "Raticate",
@@ -484,6 +505,7 @@
     "id": "0020-alola",
     "no": "0020",
     "form": "alola",
+    "slug": "raticate-alola",
     "names": {
       "ja": "ラッタ",
       "en": "Raticate",
@@ -504,6 +526,7 @@
     "id": "0021",
     "no": "0021",
     "form": null,
+    "slug": "spearow",
     "names": {
       "ja": "オニスズメ",
       "en": "Spearow",
@@ -524,6 +547,7 @@
     "id": "0022",
     "no": "0022",
     "form": null,
+    "slug": "fearow",
     "names": {
       "ja": "オニドリル",
       "en": "Fearow",
@@ -544,6 +568,7 @@
     "id": "0023",
     "no": "0023",
     "form": null,
+    "slug": "ekans",
     "names": {
       "ja": "アーボ",
       "en": "Ekans",
@@ -569,6 +594,7 @@
     "id": "0024",
     "no": "0024",
     "form": null,
+    "slug": "arbok",
     "names": {
       "ja": "アーボック",
       "en": "Arbok",
@@ -594,6 +620,7 @@
     "id": "0025",
     "no": "0025",
     "form": null,
+    "slug": "pikachu",
     "names": {
       "ja": "ピカチュウ",
       "en": "Pikachu",
@@ -619,6 +646,7 @@
     "id": "0025-alola",
     "no": "0025",
     "form": "alola",
+    "slug": "pikachu-alola",
     "names": {
       "ja": "ピカチュウ",
       "en": "Pikachu",
@@ -644,6 +672,7 @@
     "id": "0026",
     "no": "0026",
     "form": null,
+    "slug": "raichu",
     "names": {
       "ja": "ライチュウ",
       "en": "Raichu",
@@ -669,6 +698,7 @@
     "id": "0026-alola",
     "no": "0026",
     "form": "alola",
+    "slug": "raichu-alola",
     "names": {
       "ja": "ライチュウ",
       "en": "Raichu",
@@ -694,6 +724,7 @@
     "id": "0027",
     "no": "0027",
     "form": null,
+    "slug": "sandshrew",
     "names": {
       "ja": "サンド",
       "en": "Sandshrew",
@@ -719,6 +750,7 @@
     "id": "0027-alola",
     "no": "0027",
     "form": "alola",
+    "slug": "sandshrew-alola",
     "names": {
       "ja": "サンド",
       "en": "Sandshrew",
@@ -748,6 +780,7 @@
     "id": "0028",
     "no": "0028",
     "form": null,
+    "slug": "sandslash",
     "names": {
       "ja": "サンドパン",
       "en": "Sandslash",
@@ -773,6 +806,7 @@
     "id": "0028-alola",
     "no": "0028",
     "form": "alola",
+    "slug": "sandslash-alola",
     "names": {
       "ja": "サンドパン",
       "en": "Sandslash",
@@ -802,6 +836,7 @@
     "id": "0029",
     "no": "0029",
     "form": null,
+    "slug": "nidoran-f",
     "names": {
       "ja": "ニドラン♀",
       "en": "Nidoran♀",
@@ -822,6 +857,7 @@
     "id": "0030",
     "no": "0030",
     "form": null,
+    "slug": "nidorina",
     "names": {
       "ja": "ニドリーナ",
       "en": "Nidorina",
@@ -842,6 +878,7 @@
     "id": "0031",
     "no": "0031",
     "form": null,
+    "slug": "nidoqueen",
     "names": {
       "ja": "ニドクイン",
       "en": "Nidoqueen",
@@ -862,6 +899,7 @@
     "id": "0032",
     "no": "0032",
     "form": null,
+    "slug": "nidoran-m",
     "names": {
       "ja": "ニドラン♂",
       "en": "Nidoran♂",
@@ -882,6 +920,7 @@
     "id": "0033",
     "no": "0033",
     "form": null,
+    "slug": "nidorino",
     "names": {
       "ja": "ニドリーノ",
       "en": "Nidorino",
@@ -902,6 +941,7 @@
     "id": "0034",
     "no": "0034",
     "form": null,
+    "slug": "nidoking",
     "names": {
       "ja": "ニドキング",
       "en": "Nidoking",
@@ -922,6 +962,7 @@
     "id": "0035",
     "no": "0035",
     "form": null,
+    "slug": "clefairy",
     "names": {
       "ja": "ピッピ",
       "en": "Clefairy",
@@ -947,6 +988,7 @@
     "id": "0036",
     "no": "0036",
     "form": null,
+    "slug": "clefable",
     "names": {
       "ja": "ピクシー",
       "en": "Clefable",
@@ -972,6 +1014,7 @@
     "id": "0037",
     "no": "0037",
     "form": null,
+    "slug": "vulpix",
     "names": {
       "ja": "ロコン",
       "en": "Vulpix",
@@ -999,6 +1042,7 @@
     "id": "0037-alola",
     "no": "0037",
     "form": "alola",
+    "slug": "vulpix-alola",
     "names": {
       "ja": "ロコン",
       "en": "Vulpix",
@@ -1026,6 +1070,7 @@
     "id": "0038",
     "no": "0038",
     "form": null,
+    "slug": "ninetales",
     "names": {
       "ja": "キュウコン",
       "en": "Ninetales",
@@ -1051,6 +1096,7 @@
     "id": "0038-alola",
     "no": "0038",
     "form": "alola",
+    "slug": "ninetales-alola",
     "names": {
       "ja": "キュウコン",
       "en": "Ninetales",
@@ -1080,6 +1126,7 @@
     "id": "0039",
     "no": "0039",
     "form": null,
+    "slug": "jigglypuff",
     "names": {
       "ja": "プリン",
       "en": "Jigglypuff",
@@ -1109,6 +1156,7 @@
     "id": "0040",
     "no": "0040",
     "form": null,
+    "slug": "wigglytuff",
     "names": {
       "ja": "プクリン",
       "en": "Wigglytuff",
@@ -1138,6 +1186,7 @@
     "id": "0041",
     "no": "0041",
     "form": null,
+    "slug": "zubat",
     "names": {
       "ja": "ズバット",
       "en": "Zubat",
@@ -1158,6 +1207,7 @@
     "id": "0042",
     "no": "0042",
     "form": null,
+    "slug": "golbat",
     "names": {
       "ja": "ゴルバット",
       "en": "Golbat",
@@ -1178,6 +1228,7 @@
     "id": "0043",
     "no": "0043",
     "form": null,
+    "slug": "oddish",
     "names": {
       "ja": "ナゾノクサ",
       "en": "Oddish",
@@ -1207,6 +1258,7 @@
     "id": "0044",
     "no": "0044",
     "form": null,
+    "slug": "gloom",
     "names": {
       "ja": "クサイハナ",
       "en": "Gloom",
@@ -1236,6 +1288,7 @@
     "id": "0045",
     "no": "0045",
     "form": null,
+    "slug": "vileplume",
     "names": {
       "ja": "ラフレシア",
       "en": "Vileplume",
@@ -1265,6 +1318,7 @@
     "id": "0046",
     "no": "0046",
     "form": null,
+    "slug": "paras",
     "names": {
       "ja": "パラス",
       "en": "Paras",
@@ -1285,6 +1339,7 @@
     "id": "0047",
     "no": "0047",
     "form": null,
+    "slug": "parasect",
     "names": {
       "ja": "パラセクト",
       "en": "Parasect",
@@ -1305,6 +1360,7 @@
     "id": "0048",
     "no": "0048",
     "form": null,
+    "slug": "venonat",
     "names": {
       "ja": "コンパン",
       "en": "Venonat",
@@ -1334,6 +1390,7 @@
     "id": "0049",
     "no": "0049",
     "form": null,
+    "slug": "venomoth",
     "names": {
       "ja": "モルフォン",
       "en": "Venomoth",
@@ -1363,6 +1420,7 @@
     "id": "0050",
     "no": "0050",
     "form": null,
+    "slug": "diglett",
     "names": {
       "ja": "ディグダ",
       "en": "Diglett",
@@ -1388,6 +1446,7 @@
     "id": "0050-alola",
     "no": "0050",
     "form": "alola",
+    "slug": "diglett-alola",
     "names": {
       "ja": "ディグダ",
       "en": "Diglett",
@@ -1417,6 +1476,7 @@
     "id": "0051",
     "no": "0051",
     "form": null,
+    "slug": "dugtrio",
     "names": {
       "ja": "ダグトリオ",
       "en": "Dugtrio",
@@ -1442,6 +1502,7 @@
     "id": "0051-alola",
     "no": "0051",
     "form": "alola",
+    "slug": "dugtrio-alola",
     "names": {
       "ja": "ダグトリオ",
       "en": "Dugtrio",
@@ -1471,6 +1532,7 @@
     "id": "0052",
     "no": "0052",
     "form": null,
+    "slug": "meowth",
     "names": {
       "ja": "ニャース",
       "en": "Meowth",
@@ -1496,6 +1558,7 @@
     "id": "0052-alola",
     "no": "0052",
     "form": "alola",
+    "slug": "meowth-alola",
     "names": {
       "ja": "ニャース",
       "en": "Meowth",
@@ -1521,6 +1584,7 @@
     "id": "0052-galar",
     "no": "0052",
     "form": "galar",
+    "slug": "meowth-galar",
     "names": {
       "ja": "ニャース",
       "en": "Meowth",
@@ -1546,6 +1610,7 @@
     "id": "0053",
     "no": "0053",
     "form": null,
+    "slug": "persian",
     "names": {
       "ja": "ペルシアン",
       "en": "Persian",
@@ -1571,6 +1636,7 @@
     "id": "0053-alola",
     "no": "0053",
     "form": "alola",
+    "slug": "persian-alola",
     "names": {
       "ja": "ペルシアン",
       "en": "Persian",
@@ -1596,6 +1662,7 @@
     "id": "0054",
     "no": "0054",
     "form": null,
+    "slug": "psyduck",
     "names": {
       "ja": "コダック",
       "en": "Psyduck",
@@ -1621,6 +1688,7 @@
     "id": "0055",
     "no": "0055",
     "form": null,
+    "slug": "golduck",
     "names": {
       "ja": "ゴルダック",
       "en": "Golduck",
@@ -1646,6 +1714,7 @@
     "id": "0056",
     "no": "0056",
     "form": null,
+    "slug": "mankey",
     "names": {
       "ja": "マンキー",
       "en": "Mankey",
@@ -1671,6 +1740,7 @@
     "id": "0057",
     "no": "0057",
     "form": null,
+    "slug": "primeape",
     "names": {
       "ja": "オコリザル",
       "en": "Primeape",
@@ -1696,6 +1766,7 @@
     "id": "0058",
     "no": "0058",
     "form": null,
+    "slug": "growlithe",
     "names": {
       "ja": "ガーディ",
       "en": "Growlithe",
@@ -1721,6 +1792,7 @@
     "id": "0058-hisui",
     "no": "0058",
     "form": "hisui",
+    "slug": "growlithe-hisui",
     "names": {
       "ja": "ガーディ",
       "en": "Growlithe",
@@ -1746,6 +1818,7 @@
     "id": "0059",
     "no": "0059",
     "form": null,
+    "slug": "arcanine",
     "names": {
       "ja": "ウインディ",
       "en": "Arcanine",
@@ -1771,6 +1844,7 @@
     "id": "0059-hisui",
     "no": "0059",
     "form": "hisui",
+    "slug": "arcanine-hisui",
     "names": {
       "ja": "ウインディ",
       "en": "Arcanine",
@@ -1796,6 +1870,7 @@
     "id": "0060",
     "no": "0060",
     "form": null,
+    "slug": "poliwag",
     "names": {
       "ja": "ニョロモ",
       "en": "Poliwag",
@@ -1821,6 +1896,7 @@
     "id": "0061",
     "no": "0061",
     "form": null,
+    "slug": "poliwhirl",
     "names": {
       "ja": "ニョロゾ",
       "en": "Poliwhirl",
@@ -1846,6 +1922,7 @@
     "id": "0062",
     "no": "0062",
     "form": null,
+    "slug": "poliwrath",
     "names": {
       "ja": "ニョロボン",
       "en": "Poliwrath",
@@ -1875,6 +1952,7 @@
     "id": "0063",
     "no": "0063",
     "form": null,
+    "slug": "abra",
     "names": {
       "ja": "ケーシィ",
       "en": "Abra",
@@ -1895,6 +1973,7 @@
     "id": "0064",
     "no": "0064",
     "form": null,
+    "slug": "kadabra",
     "names": {
       "ja": "ユンゲラー",
       "en": "Kadabra",
@@ -1915,6 +1994,7 @@
     "id": "0065",
     "no": "0065",
     "form": null,
+    "slug": "alakazam",
     "names": {
       "ja": "フーディン",
       "en": "Alakazam",
@@ -1935,6 +2015,7 @@
     "id": "0066",
     "no": "0066",
     "form": null,
+    "slug": "machop",
     "names": {
       "ja": "ワンリキー",
       "en": "Machop",
@@ -1955,6 +2036,7 @@
     "id": "0067",
     "no": "0067",
     "form": null,
+    "slug": "machoke",
     "names": {
       "ja": "ゴーリキー",
       "en": "Machoke",
@@ -1975,6 +2057,7 @@
     "id": "0068",
     "no": "0068",
     "form": null,
+    "slug": "machamp",
     "names": {
       "ja": "カイリキー",
       "en": "Machamp",
@@ -1995,6 +2078,7 @@
     "id": "0069",
     "no": "0069",
     "form": null,
+    "slug": "bellsprout",
     "names": {
       "ja": "マダツボミ",
       "en": "Bellsprout",
@@ -2024,6 +2108,7 @@
     "id": "0070",
     "no": "0070",
     "form": null,
+    "slug": "weepinbell",
     "names": {
       "ja": "ウツドン",
       "en": "Weepinbell",
@@ -2053,6 +2138,7 @@
     "id": "0071",
     "no": "0071",
     "form": null,
+    "slug": "victreebel",
     "names": {
       "ja": "ウツボット",
       "en": "Victreebel",
@@ -2082,6 +2168,7 @@
     "id": "0072",
     "no": "0072",
     "form": null,
+    "slug": "tentacool",
     "names": {
       "ja": "メノクラゲ",
       "en": "Tentacool",
@@ -2111,6 +2198,7 @@
     "id": "0073",
     "no": "0073",
     "form": null,
+    "slug": "tentacruel",
     "names": {
       "ja": "ドククラゲ",
       "en": "Tentacruel",
@@ -2140,6 +2228,7 @@
     "id": "0074",
     "no": "0074",
     "form": null,
+    "slug": "geodude",
     "names": {
       "ja": "イシツブテ",
       "en": "Geodude",
@@ -2169,6 +2258,7 @@
     "id": "0074-alola",
     "no": "0074",
     "form": "alola",
+    "slug": "geodude-alola",
     "names": {
       "ja": "イシツブテ",
       "en": "Geodude",
@@ -2198,6 +2288,7 @@
     "id": "0075",
     "no": "0075",
     "form": null,
+    "slug": "graveler",
     "names": {
       "ja": "ゴローン",
       "en": "Graveler",
@@ -2227,6 +2318,7 @@
     "id": "0075-alola",
     "no": "0075",
     "form": "alola",
+    "slug": "graveler-alola",
     "names": {
       "ja": "ゴローン",
       "en": "Graveler",
@@ -2256,6 +2348,7 @@
     "id": "0076",
     "no": "0076",
     "form": null,
+    "slug": "golem",
     "names": {
       "ja": "ゴローニャ",
       "en": "Golem",
@@ -2285,6 +2378,7 @@
     "id": "0076-alola",
     "no": "0076",
     "form": "alola",
+    "slug": "golem-alola",
     "names": {
       "ja": "ゴローニャ",
       "en": "Golem",
@@ -2314,6 +2408,7 @@
     "id": "0077",
     "no": "0077",
     "form": null,
+    "slug": "ponyta",
     "names": {
       "ja": "ポニータ",
       "en": "Ponyta",
@@ -2334,6 +2429,7 @@
     "id": "0077-galar",
     "no": "0077",
     "form": "galar",
+    "slug": "ponyta-galar",
     "names": {
       "ja": "ポニータ",
       "en": "Ponyta",
@@ -2354,6 +2450,7 @@
     "id": "0078",
     "no": "0078",
     "form": null,
+    "slug": "rapidash",
     "names": {
       "ja": "ギャロップ",
       "en": "Rapidash",
@@ -2374,6 +2471,7 @@
     "id": "0078-galar",
     "no": "0078",
     "form": "galar",
+    "slug": "rapidash-galar",
     "names": {
       "ja": "ギャロップ",
       "en": "Rapidash",
@@ -2394,6 +2492,7 @@
     "id": "0079",
     "no": "0079",
     "form": null,
+    "slug": "slowpoke",
     "names": {
       "ja": "ヤドン",
       "en": "Slowpoke",
@@ -2423,6 +2522,7 @@
     "id": "0079-galar",
     "no": "0079",
     "form": "galar",
+    "slug": "slowpoke-galar",
     "names": {
       "ja": "ヤドン",
       "en": "Slowpoke",
@@ -2448,6 +2548,7 @@
     "id": "0080",
     "no": "0080",
     "form": null,
+    "slug": "slowbro",
     "names": {
       "ja": "ヤドラン",
       "en": "Slowbro",
@@ -2477,6 +2578,7 @@
     "id": "0080-galar",
     "no": "0080",
     "form": "galar",
+    "slug": "slowbro-galar",
     "names": {
       "ja": "ヤドラン",
       "en": "Slowbro",
@@ -2506,6 +2608,7 @@
     "id": "0081",
     "no": "0081",
     "form": null,
+    "slug": "magnemite",
     "names": {
       "ja": "コイル",
       "en": "Magnemite",
@@ -2535,6 +2638,7 @@
     "id": "0082",
     "no": "0082",
     "form": null,
+    "slug": "magneton",
     "names": {
       "ja": "レアコイル",
       "en": "Magneton",
@@ -2564,6 +2668,7 @@
     "id": "0083",
     "no": "0083",
     "form": null,
+    "slug": "farfetchd",
     "names": {
       "ja": "カモネギ",
       "en": "Farfetch’d",
@@ -2584,6 +2689,7 @@
     "id": "0083-galar",
     "no": "0083",
     "form": "galar",
+    "slug": "farfetchd-galar",
     "names": {
       "ja": "カモネギ",
       "en": "Farfetch’d",
@@ -2604,6 +2710,7 @@
     "id": "0084",
     "no": "0084",
     "form": null,
+    "slug": "doduo",
     "names": {
       "ja": "ドードー",
       "en": "Doduo",
@@ -2633,6 +2740,7 @@
     "id": "0085",
     "no": "0085",
     "form": null,
+    "slug": "dodrio",
     "names": {
       "ja": "ドードリオ",
       "en": "Dodrio",
@@ -2662,6 +2770,7 @@
     "id": "0086",
     "no": "0086",
     "form": null,
+    "slug": "seel",
     "names": {
       "ja": "パウワウ",
       "en": "Seel",
@@ -2687,6 +2796,7 @@
     "id": "0087",
     "no": "0087",
     "form": null,
+    "slug": "dewgong",
     "names": {
       "ja": "ジュゴン",
       "en": "Dewgong",
@@ -2716,6 +2826,7 @@
     "id": "0088",
     "no": "0088",
     "form": null,
+    "slug": "grimer",
     "names": {
       "ja": "ベトベター",
       "en": "Grimer",
@@ -2741,6 +2852,7 @@
     "id": "0088-alola",
     "no": "0088",
     "form": "alola",
+    "slug": "grimer-alola",
     "names": {
       "ja": "ベトベター",
       "en": "Grimer",
@@ -2770,6 +2882,7 @@
     "id": "0089",
     "no": "0089",
     "form": null,
+    "slug": "muk",
     "names": {
       "ja": "ベトベトン",
       "en": "Muk",
@@ -2795,6 +2908,7 @@
     "id": "0089-alola",
     "no": "0089",
     "form": "alola",
+    "slug": "muk-alola",
     "names": {
       "ja": "ベトベトン",
       "en": "Muk",
@@ -2824,6 +2938,7 @@
     "id": "0090",
     "no": "0090",
     "form": null,
+    "slug": "shellder",
     "names": {
       "ja": "シェルダー",
       "en": "Shellder",
@@ -2849,6 +2964,7 @@
     "id": "0091",
     "no": "0091",
     "form": null,
+    "slug": "cloyster",
     "names": {
       "ja": "パルシェン",
       "en": "Cloyster",
@@ -2878,6 +2994,7 @@
     "id": "0092",
     "no": "0092",
     "form": null,
+    "slug": "gastly",
     "names": {
       "ja": "ゴース",
       "en": "Gastly",
@@ -2907,6 +3024,7 @@
     "id": "0093",
     "no": "0093",
     "form": null,
+    "slug": "haunter",
     "names": {
       "ja": "ゴースト",
       "en": "Haunter",
@@ -2936,6 +3054,7 @@
     "id": "0094",
     "no": "0094",
     "form": null,
+    "slug": "gengar",
     "names": {
       "ja": "ゲンガー",
       "en": "Gengar",
@@ -2965,6 +3084,7 @@
     "id": "0095",
     "no": "0095",
     "form": null,
+    "slug": "onix",
     "names": {
       "ja": "イワーク",
       "en": "Onix",
@@ -2985,6 +3105,7 @@
     "id": "0096",
     "no": "0096",
     "form": null,
+    "slug": "drowzee",
     "names": {
       "ja": "スリープ",
       "en": "Drowzee",
@@ -3010,6 +3131,7 @@
     "id": "0097",
     "no": "0097",
     "form": null,
+    "slug": "hypno",
     "names": {
       "ja": "スリーパー",
       "en": "Hypno",
@@ -3035,6 +3157,7 @@
     "id": "0098",
     "no": "0098",
     "form": null,
+    "slug": "krabby",
     "names": {
       "ja": "クラブ",
       "en": "Krabby",
@@ -3055,6 +3178,7 @@
     "id": "0099",
     "no": "0099",
     "form": null,
+    "slug": "kingler",
     "names": {
       "ja": "キングラー",
       "en": "Kingler",
@@ -3075,6 +3199,7 @@
     "id": "0100",
     "no": "0100",
     "form": null,
+    "slug": "voltorb",
     "names": {
       "ja": "ビリリダマ",
       "en": "Voltorb",
@@ -3100,6 +3225,7 @@
     "id": "0100-hisui",
     "no": "0100",
     "form": "hisui",
+    "slug": "voltorb-hisui",
     "names": {
       "ja": "ビリリダマ",
       "en": "Voltorb",
@@ -3125,6 +3251,7 @@
     "id": "0101",
     "no": "0101",
     "form": null,
+    "slug": "electrode",
     "names": {
       "ja": "マルマイン",
       "en": "Electrode",
@@ -3150,6 +3277,7 @@
     "id": "0101-hisui",
     "no": "0101",
     "form": "hisui",
+    "slug": "electrode-hisui",
     "names": {
       "ja": "マルマイン",
       "en": "Electrode",
@@ -3175,6 +3303,7 @@
     "id": "0102",
     "no": "0102",
     "form": null,
+    "slug": "exeggcute",
     "names": {
       "ja": "タマタマ",
       "en": "Exeggcute",
@@ -3204,6 +3333,7 @@
     "id": "0103",
     "no": "0103",
     "form": null,
+    "slug": "exeggutor",
     "names": {
       "ja": "ナッシー",
       "en": "Exeggutor",
@@ -3233,6 +3363,7 @@
     "id": "0103-alola",
     "no": "0103",
     "form": "alola",
+    "slug": "exeggutor-alola",
     "names": {
       "ja": "ナッシー",
       "en": "Exeggutor",
@@ -3262,6 +3393,7 @@
     "id": "0104",
     "no": "0104",
     "form": null,
+    "slug": "cubone",
     "names": {
       "ja": "カラカラ",
       "en": "Cubone",
@@ -3282,6 +3414,7 @@
     "id": "0105",
     "no": "0105",
     "form": null,
+    "slug": "marowak",
     "names": {
       "ja": "ガラガラ",
       "en": "Marowak",
@@ -3302,6 +3435,7 @@
     "id": "0105-alola",
     "no": "0105",
     "form": "alola",
+    "slug": "marowak-alola",
     "names": {
       "ja": "ガラガラ",
       "en": "Marowak",
@@ -3322,6 +3456,7 @@
     "id": "0106",
     "no": "0106",
     "form": null,
+    "slug": "hitmonlee",
     "names": {
       "ja": "サワムラー",
       "en": "Hitmonlee",
@@ -3347,6 +3482,7 @@
     "id": "0107",
     "no": "0107",
     "form": null,
+    "slug": "hitmonchan",
     "names": {
       "ja": "エビワラー",
       "en": "Hitmonchan",
@@ -3372,6 +3508,7 @@
     "id": "0108",
     "no": "0108",
     "form": null,
+    "slug": "lickitung",
     "names": {
       "ja": "ベロリンガ",
       "en": "Lickitung",
@@ -3392,6 +3529,7 @@
     "id": "0109",
     "no": "0109",
     "form": null,
+    "slug": "koffing",
     "names": {
       "ja": "ドガース",
       "en": "Koffing",
@@ -3417,6 +3555,7 @@
     "id": "0110",
     "no": "0110",
     "form": null,
+    "slug": "weezing",
     "names": {
       "ja": "マタドガス",
       "en": "Weezing",
@@ -3442,6 +3581,7 @@
     "id": "0110-galar",
     "no": "0110",
     "form": "galar",
+    "slug": "weezing-galar",
     "names": {
       "ja": "マタドガス",
       "en": "Weezing",
@@ -3467,6 +3607,7 @@
     "id": "0111",
     "no": "0111",
     "form": null,
+    "slug": "rhyhorn",
     "names": {
       "ja": "サイホーン",
       "en": "Rhyhorn",
@@ -3496,6 +3637,7 @@
     "id": "0112",
     "no": "0112",
     "form": null,
+    "slug": "rhydon",
     "names": {
       "ja": "サイドン",
       "en": "Rhydon",
@@ -3525,6 +3667,7 @@
     "id": "0113",
     "no": "0113",
     "form": null,
+    "slug": "chansey",
     "names": {
       "ja": "ラッキー",
       "en": "Chansey",
@@ -3550,6 +3693,7 @@
     "id": "0114",
     "no": "0114",
     "form": null,
+    "slug": "tangela",
     "names": {
       "ja": "モンジャラ",
       "en": "Tangela",
@@ -3570,6 +3714,7 @@
     "id": "0115",
     "no": "0115",
     "form": null,
+    "slug": "kangaskhan",
     "names": {
       "ja": "ガルーラ",
       "en": "Kangaskhan",
@@ -3590,6 +3735,7 @@
     "id": "0116",
     "no": "0116",
     "form": null,
+    "slug": "horsea",
     "names": {
       "ja": "タッツー",
       "en": "Horsea",
@@ -3615,6 +3761,7 @@
     "id": "0117",
     "no": "0117",
     "form": null,
+    "slug": "seadra",
     "names": {
       "ja": "シードラ",
       "en": "Seadra",
@@ -3640,6 +3787,7 @@
     "id": "0118",
     "no": "0118",
     "form": null,
+    "slug": "goldeen",
     "names": {
       "ja": "トサキント",
       "en": "Goldeen",
@@ -3660,6 +3808,7 @@
     "id": "0119",
     "no": "0119",
     "form": null,
+    "slug": "seaking",
     "names": {
       "ja": "アズマオウ",
       "en": "Seaking",
@@ -3680,6 +3829,7 @@
     "id": "0120",
     "no": "0120",
     "form": null,
+    "slug": "staryu",
     "names": {
       "ja": "ヒトデマン",
       "en": "Staryu",
@@ -3700,6 +3850,7 @@
     "id": "0121",
     "no": "0121",
     "form": null,
+    "slug": "starmie",
     "names": {
       "ja": "スターミー",
       "en": "Starmie",
@@ -3720,6 +3871,7 @@
     "id": "0122",
     "no": "0122",
     "form": null,
+    "slug": "mr-mime",
     "names": {
       "ja": "バリヤード",
       "en": "Mr. Mime",
@@ -3740,6 +3892,7 @@
     "id": "0122-galar",
     "no": "0122",
     "form": "galar",
+    "slug": "mr-mime-galar",
     "names": {
       "ja": "バリヤード",
       "en": "Mr. Mime",
@@ -3760,6 +3913,7 @@
     "id": "0123",
     "no": "0123",
     "form": null,
+    "slug": "scyther",
     "names": {
       "ja": "ストライク",
       "en": "Scyther",
@@ -3789,6 +3943,7 @@
     "id": "0124",
     "no": "0124",
     "form": null,
+    "slug": "jynx",
     "names": {
       "ja": "ルージュラ",
       "en": "Jynx",
@@ -3809,6 +3964,7 @@
     "id": "0125",
     "no": "0125",
     "form": null,
+    "slug": "electabuzz",
     "names": {
       "ja": "エレブー",
       "en": "Electabuzz",
@@ -3834,6 +3990,7 @@
     "id": "0126",
     "no": "0126",
     "form": null,
+    "slug": "magmar",
     "names": {
       "ja": "ブーバー",
       "en": "Magmar",
@@ -3859,6 +4016,7 @@
     "id": "0127",
     "no": "0127",
     "form": null,
+    "slug": "pinsir",
     "names": {
       "ja": "カイロス",
       "en": "Pinsir",
@@ -3879,6 +4037,7 @@
     "id": "0128",
     "no": "0128",
     "form": null,
+    "slug": "tauros",
     "names": {
       "ja": "ケンタロス",
       "en": "Tauros",
@@ -3904,6 +4063,7 @@
     "id": "0128-paldea",
     "no": "0128",
     "form": "paldea",
+    "slug": "tauros-paldea",
     "names": {
       "ja": "ケンタロス",
       "en": "Tauros",
@@ -3929,6 +4089,7 @@
     "id": "0129",
     "no": "0129",
     "form": null,
+    "slug": "magikarp",
     "names": {
       "ja": "コイキング",
       "en": "Magikarp",
@@ -3954,6 +4115,7 @@
     "id": "0130",
     "no": "0130",
     "form": null,
+    "slug": "gyarados",
     "names": {
       "ja": "ギャラドス",
       "en": "Gyarados",
@@ -3983,6 +4145,7 @@
     "id": "0131",
     "no": "0131",
     "form": null,
+    "slug": "lapras",
     "names": {
       "ja": "ラプラス",
       "en": "Lapras",
@@ -4012,6 +4175,7 @@
     "id": "0132",
     "no": "0132",
     "form": null,
+    "slug": "ditto",
     "names": {
       "ja": "メタモン",
       "en": "Ditto",
@@ -4037,6 +4201,7 @@
     "id": "0133",
     "no": "0133",
     "form": null,
+    "slug": "eevee",
     "names": {
       "ja": "イーブイ",
       "en": "Eevee",
@@ -4062,6 +4227,7 @@
     "id": "0134",
     "no": "0134",
     "form": null,
+    "slug": "vaporeon",
     "names": {
       "ja": "シャワーズ",
       "en": "Vaporeon",
@@ -4087,6 +4253,7 @@
     "id": "0135",
     "no": "0135",
     "form": null,
+    "slug": "jolteon",
     "names": {
       "ja": "サンダース",
       "en": "Jolteon",
@@ -4112,6 +4279,7 @@
     "id": "0136",
     "no": "0136",
     "form": null,
+    "slug": "flareon",
     "names": {
       "ja": "ブースター",
       "en": "Flareon",
@@ -4137,6 +4305,7 @@
     "id": "0137",
     "no": "0137",
     "form": null,
+    "slug": "porygon",
     "names": {
       "ja": "ポリゴン",
       "en": "Porygon",
@@ -4162,6 +4331,7 @@
     "id": "0138",
     "no": "0138",
     "form": null,
+    "slug": "omanyte",
     "names": {
       "ja": "オムナイト",
       "en": "Omanyte",
@@ -4182,6 +4352,7 @@
     "id": "0139",
     "no": "0139",
     "form": null,
+    "slug": "omastar",
     "names": {
       "ja": "オムスター",
       "en": "Omastar",
@@ -4202,6 +4373,7 @@
     "id": "0140",
     "no": "0140",
     "form": null,
+    "slug": "kabuto",
     "names": {
       "ja": "カブト",
       "en": "Kabuto",
@@ -4222,6 +4394,7 @@
     "id": "0141",
     "no": "0141",
     "form": null,
+    "slug": "kabutops",
     "names": {
       "ja": "カブトプス",
       "en": "Kabutops",
@@ -4242,6 +4415,7 @@
     "id": "0142",
     "no": "0142",
     "form": null,
+    "slug": "aerodactyl",
     "names": {
       "ja": "プテラ",
       "en": "Aerodactyl",
@@ -4262,6 +4436,7 @@
     "id": "0143",
     "no": "0143",
     "form": null,
+    "slug": "snorlax",
     "names": {
       "ja": "カビゴン",
       "en": "Snorlax",
@@ -4287,6 +4462,7 @@
     "id": "0144",
     "no": "0144",
     "form": null,
+    "slug": "articuno",
     "names": {
       "ja": "フリーザー",
       "en": "Articuno",
@@ -4307,6 +4483,7 @@
     "id": "0144-galar",
     "no": "0144",
     "form": "galar",
+    "slug": "articuno-galar",
     "names": {
       "ja": "フリーザー",
       "en": "Articuno",
@@ -4327,6 +4504,7 @@
     "id": "0145",
     "no": "0145",
     "form": null,
+    "slug": "zapdos",
     "names": {
       "ja": "サンダー",
       "en": "Zapdos",
@@ -4347,6 +4525,7 @@
     "id": "0145-galar",
     "no": "0145",
     "form": "galar",
+    "slug": "zapdos-galar",
     "names": {
       "ja": "サンダー",
       "en": "Zapdos",
@@ -4367,6 +4546,7 @@
     "id": "0146",
     "no": "0146",
     "form": null,
+    "slug": "moltres",
     "names": {
       "ja": "ファイヤー",
       "en": "Moltres",
@@ -4387,6 +4567,7 @@
     "id": "0146-galar",
     "no": "0146",
     "form": "galar",
+    "slug": "moltres-galar",
     "names": {
       "ja": "ファイヤー",
       "en": "Moltres",
@@ -4407,6 +4588,7 @@
     "id": "0147",
     "no": "0147",
     "form": null,
+    "slug": "dratini",
     "names": {
       "ja": "ミニリュウ",
       "en": "Dratini",
@@ -4432,6 +4614,7 @@
     "id": "0148",
     "no": "0148",
     "form": null,
+    "slug": "dragonair",
     "names": {
       "ja": "ハクリュー",
       "en": "Dragonair",
@@ -4457,6 +4640,7 @@
     "id": "0149",
     "no": "0149",
     "form": null,
+    "slug": "dragonite",
     "names": {
       "ja": "カイリュー",
       "en": "Dragonite",
@@ -4486,6 +4670,7 @@
     "id": "0150",
     "no": "0150",
     "form": null,
+    "slug": "mewtwo",
     "names": {
       "ja": "ミュウツー",
       "en": "Mewtwo",
@@ -4506,6 +4691,7 @@
     "id": "0151",
     "no": "0151",
     "form": null,
+    "slug": "mew",
     "names": {
       "ja": "ミュウ",
       "en": "Mew",
@@ -4526,6 +4712,7 @@
     "id": "0152",
     "no": "0152",
     "form": null,
+    "slug": "chikorita",
     "names": {
       "ja": "チコリータ",
       "en": "Chikorita",
@@ -4551,6 +4738,7 @@
     "id": "0153",
     "no": "0153",
     "form": null,
+    "slug": "bayleef",
     "names": {
       "ja": "ベイリーフ",
       "en": "Bayleef",
@@ -4576,6 +4764,7 @@
     "id": "0154",
     "no": "0154",
     "form": null,
+    "slug": "meganium",
     "names": {
       "ja": "メガニウム",
       "en": "Meganium",
@@ -4601,6 +4790,7 @@
     "id": "0155",
     "no": "0155",
     "form": null,
+    "slug": "cyndaquil",
     "names": {
       "ja": "ヒノアラシ",
       "en": "Cyndaquil",
@@ -4626,6 +4816,7 @@
     "id": "0156",
     "no": "0156",
     "form": null,
+    "slug": "quilava",
     "names": {
       "ja": "マグマラシ",
       "en": "Quilava",
@@ -4651,6 +4842,7 @@
     "id": "0157",
     "no": "0157",
     "form": null,
+    "slug": "typhlosion",
     "names": {
       "ja": "バクフーン",
       "en": "Typhlosion",
@@ -4676,6 +4868,7 @@
     "id": "0157-hisui",
     "no": "0157",
     "form": "hisui",
+    "slug": "typhlosion-hisui",
     "names": {
       "ja": "バクフーン",
       "en": "Typhlosion",
@@ -4701,6 +4894,7 @@
     "id": "0158",
     "no": "0158",
     "form": null,
+    "slug": "totodile",
     "names": {
       "ja": "ワニノコ",
       "en": "Totodile",
@@ -4726,6 +4920,7 @@
     "id": "0159",
     "no": "0159",
     "form": null,
+    "slug": "croconaw",
     "names": {
       "ja": "アリゲイツ",
       "en": "Croconaw",
@@ -4751,6 +4946,7 @@
     "id": "0160",
     "no": "0160",
     "form": null,
+    "slug": "feraligatr",
     "names": {
       "ja": "オーダイル",
       "en": "Feraligatr",
@@ -4776,6 +4972,7 @@
     "id": "0161",
     "no": "0161",
     "form": null,
+    "slug": "sentret",
     "names": {
       "ja": "オタチ",
       "en": "Sentret",
@@ -4801,6 +4998,7 @@
     "id": "0162",
     "no": "0162",
     "form": null,
+    "slug": "furret",
     "names": {
       "ja": "オオタチ",
       "en": "Furret",
@@ -4826,6 +5024,7 @@
     "id": "0163",
     "no": "0163",
     "form": null,
+    "slug": "hoothoot",
     "names": {
       "ja": "ホーホー",
       "en": "Hoothoot",
@@ -4855,6 +5054,7 @@
     "id": "0164",
     "no": "0164",
     "form": null,
+    "slug": "noctowl",
     "names": {
       "ja": "ヨルノズク",
       "en": "Noctowl",
@@ -4884,6 +5084,7 @@
     "id": "0165",
     "no": "0165",
     "form": null,
+    "slug": "ledyba",
     "names": {
       "ja": "レディバ",
       "en": "Ledyba",
@@ -4904,6 +5105,7 @@
     "id": "0166",
     "no": "0166",
     "form": null,
+    "slug": "ledian",
     "names": {
       "ja": "レディアン",
       "en": "Ledian",
@@ -4924,6 +5126,7 @@
     "id": "0167",
     "no": "0167",
     "form": null,
+    "slug": "spinarak",
     "names": {
       "ja": "イトマル",
       "en": "Spinarak",
@@ -4953,6 +5156,7 @@
     "id": "0168",
     "no": "0168",
     "form": null,
+    "slug": "ariados",
     "names": {
       "ja": "アリアドス",
       "en": "Ariados",
@@ -4982,6 +5186,7 @@
     "id": "0169",
     "no": "0169",
     "form": null,
+    "slug": "crobat",
     "names": {
       "ja": "クロバット",
       "en": "Crobat",
@@ -5002,6 +5207,7 @@
     "id": "0170",
     "no": "0170",
     "form": null,
+    "slug": "chinchou",
     "names": {
       "ja": "チョンチー",
       "en": "Chinchou",
@@ -5031,6 +5237,7 @@
     "id": "0171",
     "no": "0171",
     "form": null,
+    "slug": "lanturn",
     "names": {
       "ja": "ランターン",
       "en": "Lanturn",
@@ -5060,6 +5267,7 @@
     "id": "0172",
     "no": "0172",
     "form": null,
+    "slug": "pichu",
     "names": {
       "ja": "ピチュー",
       "en": "Pichu",
@@ -5085,6 +5293,7 @@
     "id": "0173",
     "no": "0173",
     "form": null,
+    "slug": "cleffa",
     "names": {
       "ja": "ピィ",
       "en": "Cleffa",
@@ -5110,6 +5319,7 @@
     "id": "0174",
     "no": "0174",
     "form": null,
+    "slug": "igglybuff",
     "names": {
       "ja": "ププリン",
       "en": "Igglybuff",
@@ -5139,6 +5349,7 @@
     "id": "0175",
     "no": "0175",
     "form": null,
+    "slug": "togepi",
     "names": {
       "ja": "トゲピー",
       "en": "Togepi",
@@ -5159,6 +5370,7 @@
     "id": "0176",
     "no": "0176",
     "form": null,
+    "slug": "togetic",
     "names": {
       "ja": "トゲチック",
       "en": "Togetic",
@@ -5179,6 +5391,7 @@
     "id": "0177",
     "no": "0177",
     "form": null,
+    "slug": "natu",
     "names": {
       "ja": "ネイティ",
       "en": "Natu",
@@ -5199,6 +5412,7 @@
     "id": "0178",
     "no": "0178",
     "form": null,
+    "slug": "xatu",
     "names": {
       "ja": "ネイティオ",
       "en": "Xatu",
@@ -5219,6 +5433,7 @@
     "id": "0179",
     "no": "0179",
     "form": null,
+    "slug": "mareep",
     "names": {
       "ja": "メリープ",
       "en": "Mareep",
@@ -5244,6 +5459,7 @@
     "id": "0180",
     "no": "0180",
     "form": null,
+    "slug": "flaaffy",
     "names": {
       "ja": "モココ",
       "en": "Flaaffy",
@@ -5269,6 +5485,7 @@
     "id": "0181",
     "no": "0181",
     "form": null,
+    "slug": "ampharos",
     "names": {
       "ja": "デンリュウ",
       "en": "Ampharos",
@@ -5294,6 +5511,7 @@
     "id": "0182",
     "no": "0182",
     "form": null,
+    "slug": "bellossom",
     "names": {
       "ja": "キレイハナ",
       "en": "Bellossom",
@@ -5319,6 +5537,7 @@
     "id": "0183",
     "no": "0183",
     "form": null,
+    "slug": "marill",
     "names": {
       "ja": "マリル",
       "en": "Marill",
@@ -5348,6 +5567,7 @@
     "id": "0184",
     "no": "0184",
     "form": null,
+    "slug": "azumarill",
     "names": {
       "ja": "マリルリ",
       "en": "Azumarill",
@@ -5377,6 +5597,7 @@
     "id": "0185",
     "no": "0185",
     "form": null,
+    "slug": "sudowoodo",
     "names": {
       "ja": "ウソッキー",
       "en": "Sudowoodo",
@@ -5402,6 +5623,7 @@
     "id": "0186",
     "no": "0186",
     "form": null,
+    "slug": "politoed",
     "names": {
       "ja": "ニョロトノ",
       "en": "Politoed",
@@ -5427,6 +5649,7 @@
     "id": "0187",
     "no": "0187",
     "form": null,
+    "slug": "hoppip",
     "names": {
       "ja": "ハネッコ",
       "en": "Hoppip",
@@ -5456,6 +5679,7 @@
     "id": "0188",
     "no": "0188",
     "form": null,
+    "slug": "skiploom",
     "names": {
       "ja": "ポポッコ",
       "en": "Skiploom",
@@ -5485,6 +5709,7 @@
     "id": "0189",
     "no": "0189",
     "form": null,
+    "slug": "jumpluff",
     "names": {
       "ja": "ワタッコ",
       "en": "Jumpluff",
@@ -5514,6 +5739,7 @@
     "id": "0190",
     "no": "0190",
     "form": null,
+    "slug": "aipom",
     "names": {
       "ja": "エイパム",
       "en": "Aipom",
@@ -5539,6 +5765,7 @@
     "id": "0191",
     "no": "0191",
     "form": null,
+    "slug": "sunkern",
     "names": {
       "ja": "ヒマナッツ",
       "en": "Sunkern",
@@ -5564,6 +5791,7 @@
     "id": "0192",
     "no": "0192",
     "form": null,
+    "slug": "sunflora",
     "names": {
       "ja": "キマワリ",
       "en": "Sunflora",
@@ -5589,6 +5817,7 @@
     "id": "0193",
     "no": "0193",
     "form": null,
+    "slug": "yanma",
     "names": {
       "ja": "ヤンヤンマ",
       "en": "Yanma",
@@ -5618,6 +5847,7 @@
     "id": "0194",
     "no": "0194",
     "form": null,
+    "slug": "wooper",
     "names": {
       "ja": "ウパー",
       "en": "Wooper",
@@ -5647,6 +5877,7 @@
     "id": "0194-paldea",
     "no": "0194",
     "form": "paldea",
+    "slug": "wooper-paldea",
     "names": {
       "ja": "ウパー",
       "en": "Wooper",
@@ -5676,6 +5907,7 @@
     "id": "0195",
     "no": "0195",
     "form": null,
+    "slug": "quagsire",
     "names": {
       "ja": "ヌオー",
       "en": "Quagsire",
@@ -5705,6 +5937,7 @@
     "id": "0196",
     "no": "0196",
     "form": null,
+    "slug": "espeon",
     "names": {
       "ja": "エーフィ",
       "en": "Espeon",
@@ -5730,6 +5963,7 @@
     "id": "0197",
     "no": "0197",
     "form": null,
+    "slug": "umbreon",
     "names": {
       "ja": "ブラッキー",
       "en": "Umbreon",
@@ -5755,6 +5989,7 @@
     "id": "0198",
     "no": "0198",
     "form": null,
+    "slug": "murkrow",
     "names": {
       "ja": "ヤミカラス",
       "en": "Murkrow",
@@ -5784,6 +6019,7 @@
     "id": "0199",
     "no": "0199",
     "form": null,
+    "slug": "slowking",
     "names": {
       "ja": "ヤドキング",
       "en": "Slowking",
@@ -5813,6 +6049,7 @@
     "id": "0199-galar",
     "no": "0199",
     "form": "galar",
+    "slug": "slowking-galar",
     "names": {
       "ja": "ヤドキング",
       "en": "Slowking",
@@ -5842,6 +6079,7 @@
     "id": "0200",
     "no": "0200",
     "form": null,
+    "slug": "misdreavus",
     "names": {
       "ja": "ムウマ",
       "en": "Misdreavus",
@@ -5867,6 +6105,7 @@
     "id": "0201",
     "no": "0201",
     "form": null,
+    "slug": "unown",
     "names": {
       "ja": "アンノーン",
       "en": "Unown",
@@ -5887,6 +6126,7 @@
     "id": "0202",
     "no": "0202",
     "form": null,
+    "slug": "wobbuffet",
     "names": {
       "ja": "ソーナンス",
       "en": "Wobbuffet",
@@ -5907,6 +6147,7 @@
     "id": "0203",
     "no": "0203",
     "form": null,
+    "slug": "girafarig",
     "names": {
       "ja": "キリンリキ",
       "en": "Girafarig",
@@ -5936,6 +6177,7 @@
     "id": "0204",
     "no": "0204",
     "form": null,
+    "slug": "pineco",
     "names": {
       "ja": "クヌギダマ",
       "en": "Pineco",
@@ -5961,6 +6203,7 @@
     "id": "0205",
     "no": "0205",
     "form": null,
+    "slug": "forretress",
     "names": {
       "ja": "フォレトス",
       "en": "Forretress",
@@ -5990,6 +6233,7 @@
     "id": "0206",
     "no": "0206",
     "form": null,
+    "slug": "dunsparce",
     "names": {
       "ja": "ノコッチ",
       "en": "Dunsparce",
@@ -6015,6 +6259,7 @@
     "id": "0207",
     "no": "0207",
     "form": null,
+    "slug": "gligar",
     "names": {
       "ja": "グライガー",
       "en": "Gligar",
@@ -6044,6 +6289,7 @@
     "id": "0208",
     "no": "0208",
     "form": null,
+    "slug": "steelix",
     "names": {
       "ja": "ハガネール",
       "en": "Steelix",
@@ -6064,6 +6310,7 @@
     "id": "0209",
     "no": "0209",
     "form": null,
+    "slug": "snubbull",
     "names": {
       "ja": "ブルー",
       "en": "Snubbull",
@@ -6089,6 +6336,7 @@
     "id": "0210",
     "no": "0210",
     "form": null,
+    "slug": "granbull",
     "names": {
       "ja": "グランブル",
       "en": "Granbull",
@@ -6114,6 +6362,7 @@
     "id": "0211",
     "no": "0211",
     "form": null,
+    "slug": "qwilfish",
     "names": {
       "ja": "ハリーセン",
       "en": "Qwilfish",
@@ -6143,6 +6392,7 @@
     "id": "0211-hisui",
     "no": "0211",
     "form": "hisui",
+    "slug": "qwilfish-hisui",
     "names": {
       "ja": "ハリーセン",
       "en": "Qwilfish",
@@ -6172,6 +6422,7 @@
     "id": "0212",
     "no": "0212",
     "form": null,
+    "slug": "scizor",
     "names": {
       "ja": "ハッサム",
       "en": "Scizor",
@@ -6201,6 +6452,7 @@
     "id": "0213",
     "no": "0213",
     "form": null,
+    "slug": "shuckle",
     "names": {
       "ja": "ツボツボ",
       "en": "Shuckle",
@@ -6221,6 +6473,7 @@
     "id": "0214",
     "no": "0214",
     "form": null,
+    "slug": "heracross",
     "names": {
       "ja": "ヘラクロス",
       "en": "Heracross",
@@ -6250,6 +6503,7 @@
     "id": "0215",
     "no": "0215",
     "form": null,
+    "slug": "sneasel",
     "names": {
       "ja": "ニューラ",
       "en": "Sneasel",
@@ -6279,6 +6533,7 @@
     "id": "0215-hisui",
     "no": "0215",
     "form": "hisui",
+    "slug": "sneasel-hisui",
     "names": {
       "ja": "ニューラ",
       "en": "Sneasel",
@@ -6308,6 +6563,7 @@
     "id": "0216",
     "no": "0216",
     "form": null,
+    "slug": "teddiursa",
     "names": {
       "ja": "ヒメグマ",
       "en": "Teddiursa",
@@ -6333,6 +6589,7 @@
     "id": "0217",
     "no": "0217",
     "form": null,
+    "slug": "ursaring",
     "names": {
       "ja": "リングマ",
       "en": "Ursaring",
@@ -6358,6 +6615,7 @@
     "id": "0218",
     "no": "0218",
     "form": null,
+    "slug": "slugma",
     "names": {
       "ja": "マグマッグ",
       "en": "Slugma",
@@ -6383,6 +6641,7 @@
     "id": "0219",
     "no": "0219",
     "form": null,
+    "slug": "magcargo",
     "names": {
       "ja": "マグカルゴ",
       "en": "Magcargo",
@@ -6412,6 +6671,7 @@
     "id": "0220",
     "no": "0220",
     "form": null,
+    "slug": "swinub",
     "names": {
       "ja": "ウリムー",
       "en": "Swinub",
@@ -6441,6 +6701,7 @@
     "id": "0221",
     "no": "0221",
     "form": null,
+    "slug": "piloswine",
     "names": {
       "ja": "イノムー",
       "en": "Piloswine",
@@ -6470,6 +6731,7 @@
     "id": "0222",
     "no": "0222",
     "form": null,
+    "slug": "corsola",
     "names": {
       "ja": "サニーゴ",
       "en": "Corsola",
@@ -6490,6 +6752,7 @@
     "id": "0222-galar",
     "no": "0222",
     "form": "galar",
+    "slug": "corsola-galar",
     "names": {
       "ja": "サニーゴ",
       "en": "Corsola",
@@ -6510,6 +6773,7 @@
     "id": "0223",
     "no": "0223",
     "form": null,
+    "slug": "remoraid",
     "names": {
       "ja": "テッポウオ",
       "en": "Remoraid",
@@ -6530,6 +6794,7 @@
     "id": "0224",
     "no": "0224",
     "form": null,
+    "slug": "octillery",
     "names": {
       "ja": "オクタン",
       "en": "Octillery",
@@ -6550,6 +6815,7 @@
     "id": "0225",
     "no": "0225",
     "form": null,
+    "slug": "delibird",
     "names": {
       "ja": "デリバード",
       "en": "Delibird",
@@ -6579,6 +6845,7 @@
     "id": "0226",
     "no": "0226",
     "form": null,
+    "slug": "mantine",
     "names": {
       "ja": "マンタイン",
       "en": "Mantine",
@@ -6599,6 +6866,7 @@
     "id": "0227",
     "no": "0227",
     "form": null,
+    "slug": "skarmory",
     "names": {
       "ja": "エアームド",
       "en": "Skarmory",
@@ -6628,6 +6896,7 @@
     "id": "0228",
     "no": "0228",
     "form": null,
+    "slug": "houndour",
     "names": {
       "ja": "デルビル",
       "en": "Houndour",
@@ -6657,6 +6926,7 @@
     "id": "0229",
     "no": "0229",
     "form": null,
+    "slug": "houndoom",
     "names": {
       "ja": "ヘルガー",
       "en": "Houndoom",
@@ -6686,6 +6956,7 @@
     "id": "0230",
     "no": "0230",
     "form": null,
+    "slug": "kingdra",
     "names": {
       "ja": "キングドラ",
       "en": "Kingdra",
@@ -6715,6 +6986,7 @@
     "id": "0231",
     "no": "0231",
     "form": null,
+    "slug": "phanpy",
     "names": {
       "ja": "ゴマゾウ",
       "en": "Phanpy",
@@ -6740,6 +7012,7 @@
     "id": "0232",
     "no": "0232",
     "form": null,
+    "slug": "donphan",
     "names": {
       "ja": "ドンファン",
       "en": "Donphan",
@@ -6765,6 +7038,7 @@
     "id": "0233",
     "no": "0233",
     "form": null,
+    "slug": "porygon2",
     "names": {
       "ja": "ポリゴン２",
       "en": "Porygon2",
@@ -6790,6 +7064,7 @@
     "id": "0234",
     "no": "0234",
     "form": null,
+    "slug": "stantler",
     "names": {
       "ja": "オドシシ",
       "en": "Stantler",
@@ -6815,6 +7090,7 @@
     "id": "0235",
     "no": "0235",
     "form": null,
+    "slug": "smeargle",
     "names": {
       "ja": "ドーブル",
       "en": "Smeargle",
@@ -6840,6 +7116,7 @@
     "id": "0236",
     "no": "0236",
     "form": null,
+    "slug": "tyrogue",
     "names": {
       "ja": "バルキー",
       "en": "Tyrogue",
@@ -6865,6 +7142,7 @@
     "id": "0237",
     "no": "0237",
     "form": null,
+    "slug": "hitmontop",
     "names": {
       "ja": "カポエラー",
       "en": "Hitmontop",
@@ -6890,6 +7168,7 @@
     "id": "0238",
     "no": "0238",
     "form": null,
+    "slug": "smoochum",
     "names": {
       "ja": "ムチュール",
       "en": "Smoochum",
@@ -6910,6 +7189,7 @@
     "id": "0239",
     "no": "0239",
     "form": null,
+    "slug": "elekid",
     "names": {
       "ja": "エレキッド",
       "en": "Elekid",
@@ -6935,6 +7215,7 @@
     "id": "0240",
     "no": "0240",
     "form": null,
+    "slug": "magby",
     "names": {
       "ja": "ブビィ",
       "en": "Magby",
@@ -6960,6 +7241,7 @@
     "id": "0241",
     "no": "0241",
     "form": null,
+    "slug": "miltank",
     "names": {
       "ja": "ミルタンク",
       "en": "Miltank",
@@ -6980,6 +7262,7 @@
     "id": "0242",
     "no": "0242",
     "form": null,
+    "slug": "blissey",
     "names": {
       "ja": "ハピナス",
       "en": "Blissey",
@@ -7005,6 +7288,7 @@
     "id": "0243",
     "no": "0243",
     "form": null,
+    "slug": "raikou",
     "names": {
       "ja": "ライコウ",
       "en": "Raikou",
@@ -7025,6 +7309,7 @@
     "id": "0244",
     "no": "0244",
     "form": null,
+    "slug": "entei",
     "names": {
       "ja": "エンテイ",
       "en": "Entei",
@@ -7045,6 +7330,7 @@
     "id": "0245",
     "no": "0245",
     "form": null,
+    "slug": "suicune",
     "names": {
       "ja": "スイクン",
       "en": "Suicune",
@@ -7065,6 +7351,7 @@
     "id": "0246",
     "no": "0246",
     "form": null,
+    "slug": "larvitar",
     "names": {
       "ja": "ヨーギラス",
       "en": "Larvitar",
@@ -7094,6 +7381,7 @@
     "id": "0247",
     "no": "0247",
     "form": null,
+    "slug": "pupitar",
     "names": {
       "ja": "サナギラス",
       "en": "Pupitar",
@@ -7123,6 +7411,7 @@
     "id": "0248",
     "no": "0248",
     "form": null,
+    "slug": "tyranitar",
     "names": {
       "ja": "バンギラス",
       "en": "Tyranitar",
@@ -7152,6 +7441,7 @@
     "id": "0249",
     "no": "0249",
     "form": null,
+    "slug": "lugia",
     "names": {
       "ja": "ルギア",
       "en": "Lugia",
@@ -7172,6 +7462,7 @@
     "id": "0250",
     "no": "0250",
     "form": null,
+    "slug": "ho-oh",
     "names": {
       "ja": "ホウオウ",
       "en": "Ho-Oh",
@@ -7192,6 +7483,7 @@
     "id": "0251",
     "no": "0251",
     "form": null,
+    "slug": "celebi",
     "names": {
       "ja": "セレビィ",
       "en": "Celebi",
@@ -7212,6 +7504,7 @@
     "id": "0252",
     "no": "0252",
     "form": null,
+    "slug": "treecko",
     "names": {
       "ja": "キモリ",
       "en": "Treecko",
@@ -7237,6 +7530,7 @@
     "id": "0253",
     "no": "0253",
     "form": null,
+    "slug": "grovyle",
     "names": {
       "ja": "ジュプトル",
       "en": "Grovyle",
@@ -7262,6 +7556,7 @@
     "id": "0254",
     "no": "0254",
     "form": null,
+    "slug": "sceptile",
     "names": {
       "ja": "ジュカイン",
       "en": "Sceptile",
@@ -7287,6 +7582,7 @@
     "id": "0255",
     "no": "0255",
     "form": null,
+    "slug": "torchic",
     "names": {
       "ja": "アチャモ",
       "en": "Torchic",
@@ -7312,6 +7608,7 @@
     "id": "0256",
     "no": "0256",
     "form": null,
+    "slug": "combusken",
     "names": {
       "ja": "ワカシャモ",
       "en": "Combusken",
@@ -7341,6 +7638,7 @@
     "id": "0257",
     "no": "0257",
     "form": null,
+    "slug": "blaziken",
     "names": {
       "ja": "バシャーモ",
       "en": "Blaziken",
@@ -7370,6 +7668,7 @@
     "id": "0258",
     "no": "0258",
     "form": null,
+    "slug": "mudkip",
     "names": {
       "ja": "ミズゴロウ",
       "en": "Mudkip",
@@ -7395,6 +7694,7 @@
     "id": "0259",
     "no": "0259",
     "form": null,
+    "slug": "marshtomp",
     "names": {
       "ja": "ヌマクロー",
       "en": "Marshtomp",
@@ -7424,6 +7724,7 @@
     "id": "0260",
     "no": "0260",
     "form": null,
+    "slug": "swampert",
     "names": {
       "ja": "ラグラージ",
       "en": "Swampert",
@@ -7453,6 +7754,7 @@
     "id": "0261",
     "no": "0261",
     "form": null,
+    "slug": "poochyena",
     "names": {
       "ja": "ポチエナ",
       "en": "Poochyena",
@@ -7478,6 +7780,7 @@
     "id": "0262",
     "no": "0262",
     "form": null,
+    "slug": "mightyena",
     "names": {
       "ja": "グラエナ",
       "en": "Mightyena",
@@ -7503,6 +7806,7 @@
     "id": "0263",
     "no": "0263",
     "form": null,
+    "slug": "zigzagoon",
     "names": {
       "ja": "ジグザグマ",
       "en": "Zigzagoon",
@@ -7523,6 +7827,7 @@
     "id": "0263-galar",
     "no": "0263",
     "form": "galar",
+    "slug": "zigzagoon-galar",
     "names": {
       "ja": "ジグザグマ",
       "en": "Zigzagoon",
@@ -7543,6 +7848,7 @@
     "id": "0264",
     "no": "0264",
     "form": null,
+    "slug": "linoone",
     "names": {
       "ja": "マッスグマ",
       "en": "Linoone",
@@ -7563,6 +7869,7 @@
     "id": "0264-galar",
     "no": "0264",
     "form": "galar",
+    "slug": "linoone-galar",
     "names": {
       "ja": "マッスグマ",
       "en": "Linoone",
@@ -7583,6 +7890,7 @@
     "id": "0265",
     "no": "0265",
     "form": null,
+    "slug": "wurmple",
     "names": {
       "ja": "ケムッソ",
       "en": "Wurmple",
@@ -7603,6 +7911,7 @@
     "id": "0266",
     "no": "0266",
     "form": null,
+    "slug": "silcoon",
     "names": {
       "ja": "カラサリス",
       "en": "Silcoon",
@@ -7623,6 +7932,7 @@
     "id": "0267",
     "no": "0267",
     "form": null,
+    "slug": "beautifly",
     "names": {
       "ja": "アゲハント",
       "en": "Beautifly",
@@ -7643,6 +7953,7 @@
     "id": "0268",
     "no": "0268",
     "form": null,
+    "slug": "cascoon",
     "names": {
       "ja": "マユルド",
       "en": "Cascoon",
@@ -7663,6 +7974,7 @@
     "id": "0269",
     "no": "0269",
     "form": null,
+    "slug": "dustox",
     "names": {
       "ja": "ドクケイル",
       "en": "Dustox",
@@ -7683,6 +7995,7 @@
     "id": "0270",
     "no": "0270",
     "form": null,
+    "slug": "lotad",
     "names": {
       "ja": "ハスボー",
       "en": "Lotad",
@@ -7712,6 +8025,7 @@
     "id": "0271",
     "no": "0271",
     "form": null,
+    "slug": "lombre",
     "names": {
       "ja": "ハスブレロ",
       "en": "Lombre",
@@ -7741,6 +8055,7 @@
     "id": "0272",
     "no": "0272",
     "form": null,
+    "slug": "ludicolo",
     "names": {
       "ja": "ルンパッパ",
       "en": "Ludicolo",
@@ -7770,6 +8085,7 @@
     "id": "0273",
     "no": "0273",
     "form": null,
+    "slug": "seedot",
     "names": {
       "ja": "タネボー",
       "en": "Seedot",
@@ -7795,6 +8111,7 @@
     "id": "0274",
     "no": "0274",
     "form": null,
+    "slug": "nuzleaf",
     "names": {
       "ja": "コノハナ",
       "en": "Nuzleaf",
@@ -7824,6 +8141,7 @@
     "id": "0275",
     "no": "0275",
     "form": null,
+    "slug": "shiftry",
     "names": {
       "ja": "ダーテング",
       "en": "Shiftry",
@@ -7853,6 +8171,7 @@
     "id": "0276",
     "no": "0276",
     "form": null,
+    "slug": "taillow",
     "names": {
       "ja": "スバメ",
       "en": "Taillow",
@@ -7873,6 +8192,7 @@
     "id": "0277",
     "no": "0277",
     "form": null,
+    "slug": "swellow",
     "names": {
       "ja": "オオスバメ",
       "en": "Swellow",
@@ -7893,6 +8213,7 @@
     "id": "0278",
     "no": "0278",
     "form": null,
+    "slug": "wingull",
     "names": {
       "ja": "キャモメ",
       "en": "Wingull",
@@ -7922,6 +8243,7 @@
     "id": "0279",
     "no": "0279",
     "form": null,
+    "slug": "pelipper",
     "names": {
       "ja": "ペリッパー",
       "en": "Pelipper",
@@ -7951,6 +8273,7 @@
     "id": "0280",
     "no": "0280",
     "form": null,
+    "slug": "ralts",
     "names": {
       "ja": "ラルトス",
       "en": "Ralts",
@@ -7980,6 +8303,7 @@
     "id": "0281",
     "no": "0281",
     "form": null,
+    "slug": "kirlia",
     "names": {
       "ja": "キルリア",
       "en": "Kirlia",
@@ -8009,6 +8333,7 @@
     "id": "0282",
     "no": "0282",
     "form": null,
+    "slug": "gardevoir",
     "names": {
       "ja": "サーナイト",
       "en": "Gardevoir",
@@ -8038,6 +8363,7 @@
     "id": "0283",
     "no": "0283",
     "form": null,
+    "slug": "surskit",
     "names": {
       "ja": "アメタマ",
       "en": "Surskit",
@@ -8067,6 +8393,7 @@
     "id": "0284",
     "no": "0284",
     "form": null,
+    "slug": "masquerain",
     "names": {
       "ja": "アメモース",
       "en": "Masquerain",
@@ -8096,6 +8423,7 @@
     "id": "0285",
     "no": "0285",
     "form": null,
+    "slug": "shroomish",
     "names": {
       "ja": "キノココ",
       "en": "Shroomish",
@@ -8121,6 +8449,7 @@
     "id": "0286",
     "no": "0286",
     "form": null,
+    "slug": "breloom",
     "names": {
       "ja": "キノガッサ",
       "en": "Breloom",
@@ -8150,6 +8479,7 @@
     "id": "0287",
     "no": "0287",
     "form": null,
+    "slug": "slakoth",
     "names": {
       "ja": "ナマケロ",
       "en": "Slakoth",
@@ -8175,6 +8505,7 @@
     "id": "0288",
     "no": "0288",
     "form": null,
+    "slug": "vigoroth",
     "names": {
       "ja": "ヤルキモノ",
       "en": "Vigoroth",
@@ -8200,6 +8531,7 @@
     "id": "0289",
     "no": "0289",
     "form": null,
+    "slug": "slaking",
     "names": {
       "ja": "ケッキング",
       "en": "Slaking",
@@ -8225,6 +8557,7 @@
     "id": "0290",
     "no": "0290",
     "form": null,
+    "slug": "nincada",
     "names": {
       "ja": "ツチニン",
       "en": "Nincada",
@@ -8245,6 +8578,7 @@
     "id": "0291",
     "no": "0291",
     "form": null,
+    "slug": "ninjask",
     "names": {
       "ja": "テッカニン",
       "en": "Ninjask",
@@ -8265,6 +8599,7 @@
     "id": "0292",
     "no": "0292",
     "form": null,
+    "slug": "shedinja",
     "names": {
       "ja": "ヌケニン",
       "en": "Shedinja",
@@ -8285,6 +8620,7 @@
     "id": "0293",
     "no": "0293",
     "form": null,
+    "slug": "whismur",
     "names": {
       "ja": "ゴニョニョ",
       "en": "Whismur",
@@ -8305,6 +8641,7 @@
     "id": "0294",
     "no": "0294",
     "form": null,
+    "slug": "loudred",
     "names": {
       "ja": "ドゴーム",
       "en": "Loudred",
@@ -8325,6 +8662,7 @@
     "id": "0295",
     "no": "0295",
     "form": null,
+    "slug": "exploud",
     "names": {
       "ja": "バクオング",
       "en": "Exploud",
@@ -8345,6 +8683,7 @@
     "id": "0296",
     "no": "0296",
     "form": null,
+    "slug": "makuhita",
     "names": {
       "ja": "マクノシタ",
       "en": "Makuhita",
@@ -8370,6 +8709,7 @@
     "id": "0297",
     "no": "0297",
     "form": null,
+    "slug": "hariyama",
     "names": {
       "ja": "ハリテヤマ",
       "en": "Hariyama",
@@ -8395,6 +8735,7 @@
     "id": "0298",
     "no": "0298",
     "form": null,
+    "slug": "azurill",
     "names": {
       "ja": "ルリリ",
       "en": "Azurill",
@@ -8424,6 +8765,7 @@
     "id": "0299",
     "no": "0299",
     "form": null,
+    "slug": "nosepass",
     "names": {
       "ja": "ノズパス",
       "en": "Nosepass",
@@ -8449,6 +8791,7 @@
     "id": "0300",
     "no": "0300",
     "form": null,
+    "slug": "skitty",
     "names": {
       "ja": "エネコ",
       "en": "Skitty",
@@ -8469,6 +8812,7 @@
     "id": "0301",
     "no": "0301",
     "form": null,
+    "slug": "delcatty",
     "names": {
       "ja": "エネコロロ",
       "en": "Delcatty",
@@ -8489,6 +8833,7 @@
     "id": "0302",
     "no": "0302",
     "form": null,
+    "slug": "sableye",
     "names": {
       "ja": "ヤミラミ",
       "en": "Sableye",
@@ -8518,6 +8863,7 @@
     "id": "0303",
     "no": "0303",
     "form": null,
+    "slug": "mawile",
     "names": {
       "ja": "クチート",
       "en": "Mawile",
@@ -8538,6 +8884,7 @@
     "id": "0304",
     "no": "0304",
     "form": null,
+    "slug": "aron",
     "names": {
       "ja": "ココドラ",
       "en": "Aron",
@@ -8558,6 +8905,7 @@
     "id": "0305",
     "no": "0305",
     "form": null,
+    "slug": "lairon",
     "names": {
       "ja": "コドラ",
       "en": "Lairon",
@@ -8578,6 +8926,7 @@
     "id": "0306",
     "no": "0306",
     "form": null,
+    "slug": "aggron",
     "names": {
       "ja": "ボスゴドラ",
       "en": "Aggron",
@@ -8598,6 +8947,7 @@
     "id": "0307",
     "no": "0307",
     "form": null,
+    "slug": "meditite",
     "names": {
       "ja": "アサナン",
       "en": "Meditite",
@@ -8627,6 +8977,7 @@
     "id": "0308",
     "no": "0308",
     "form": null,
+    "slug": "medicham",
     "names": {
       "ja": "チャーレム",
       "en": "Medicham",
@@ -8656,6 +9007,7 @@
     "id": "0309",
     "no": "0309",
     "form": null,
+    "slug": "electrike",
     "names": {
       "ja": "ラクライ",
       "en": "Electrike",
@@ -8676,6 +9028,7 @@
     "id": "0310",
     "no": "0310",
     "form": null,
+    "slug": "manectric",
     "names": {
       "ja": "ライボルト",
       "en": "Manectric",
@@ -8696,6 +9049,7 @@
     "id": "0311",
     "no": "0311",
     "form": null,
+    "slug": "plusle",
     "names": {
       "ja": "プラスル",
       "en": "Plusle",
@@ -8721,6 +9075,7 @@
     "id": "0312",
     "no": "0312",
     "form": null,
+    "slug": "minun",
     "names": {
       "ja": "マイナン",
       "en": "Minun",
@@ -8746,6 +9101,7 @@
     "id": "0313",
     "no": "0313",
     "form": null,
+    "slug": "volbeat",
     "names": {
       "ja": "バルビート",
       "en": "Volbeat",
@@ -8771,6 +9127,7 @@
     "id": "0314",
     "no": "0314",
     "form": null,
+    "slug": "illumise",
     "names": {
       "ja": "イルミーゼ",
       "en": "Illumise",
@@ -8796,6 +9153,7 @@
     "id": "0315",
     "no": "0315",
     "form": null,
+    "slug": "roselia",
     "names": {
       "ja": "ロゼリア",
       "en": "Roselia",
@@ -8816,6 +9174,7 @@
     "id": "0316",
     "no": "0316",
     "form": null,
+    "slug": "gulpin",
     "names": {
       "ja": "ゴクリン",
       "en": "Gulpin",
@@ -8841,6 +9200,7 @@
     "id": "0317",
     "no": "0317",
     "form": null,
+    "slug": "swalot",
     "names": {
       "ja": "マルノーム",
       "en": "Swalot",
@@ -8866,6 +9226,7 @@
     "id": "0318",
     "no": "0318",
     "form": null,
+    "slug": "carvanha",
     "names": {
       "ja": "キバニア",
       "en": "Carvanha",
@@ -8886,6 +9247,7 @@
     "id": "0319",
     "no": "0319",
     "form": null,
+    "slug": "sharpedo",
     "names": {
       "ja": "サメハダー",
       "en": "Sharpedo",
@@ -8906,6 +9268,7 @@
     "id": "0320",
     "no": "0320",
     "form": null,
+    "slug": "wailmer",
     "names": {
       "ja": "ホエルコ",
       "en": "Wailmer",
@@ -8926,6 +9289,7 @@
     "id": "0321",
     "no": "0321",
     "form": null,
+    "slug": "wailord",
     "names": {
       "ja": "ホエルオー",
       "en": "Wailord",
@@ -8946,6 +9310,7 @@
     "id": "0322",
     "no": "0322",
     "form": null,
+    "slug": "numel",
     "names": {
       "ja": "ドンメル",
       "en": "Numel",
@@ -8975,6 +9340,7 @@
     "id": "0323",
     "no": "0323",
     "form": null,
+    "slug": "camerupt",
     "names": {
       "ja": "バクーダ",
       "en": "Camerupt",
@@ -9004,6 +9370,7 @@
     "id": "0324",
     "no": "0324",
     "form": null,
+    "slug": "torkoal",
     "names": {
       "ja": "コータス",
       "en": "Torkoal",
@@ -9029,6 +9396,7 @@
     "id": "0325",
     "no": "0325",
     "form": null,
+    "slug": "spoink",
     "names": {
       "ja": "バネブー",
       "en": "Spoink",
@@ -9054,6 +9422,7 @@
     "id": "0326",
     "no": "0326",
     "form": null,
+    "slug": "grumpig",
     "names": {
       "ja": "ブーピッグ",
       "en": "Grumpig",
@@ -9079,6 +9448,7 @@
     "id": "0327",
     "no": "0327",
     "form": null,
+    "slug": "spinda",
     "names": {
       "ja": "パッチール",
       "en": "Spinda",
@@ -9099,6 +9469,7 @@
     "id": "0328",
     "no": "0328",
     "form": null,
+    "slug": "trapinch",
     "names": {
       "ja": "ナックラー",
       "en": "Trapinch",
@@ -9124,6 +9495,7 @@
     "id": "0329",
     "no": "0329",
     "form": null,
+    "slug": "vibrava",
     "names": {
       "ja": "ビブラーバ",
       "en": "Vibrava",
@@ -9153,6 +9525,7 @@
     "id": "0330",
     "no": "0330",
     "form": null,
+    "slug": "flygon",
     "names": {
       "ja": "フライゴン",
       "en": "Flygon",
@@ -9182,6 +9555,7 @@
     "id": "0331",
     "no": "0331",
     "form": null,
+    "slug": "cacnea",
     "names": {
       "ja": "サボネア",
       "en": "Cacnea",
@@ -9207,6 +9581,7 @@
     "id": "0332",
     "no": "0332",
     "form": null,
+    "slug": "cacturne",
     "names": {
       "ja": "ノクタス",
       "en": "Cacturne",
@@ -9236,6 +9611,7 @@
     "id": "0333",
     "no": "0333",
     "form": null,
+    "slug": "swablu",
     "names": {
       "ja": "チルット",
       "en": "Swablu",
@@ -9265,6 +9641,7 @@
     "id": "0334",
     "no": "0334",
     "form": null,
+    "slug": "altaria",
     "names": {
       "ja": "チルタリス",
       "en": "Altaria",
@@ -9294,6 +9671,7 @@
     "id": "0335",
     "no": "0335",
     "form": null,
+    "slug": "zangoose",
     "names": {
       "ja": "ザングース",
       "en": "Zangoose",
@@ -9319,6 +9697,7 @@
     "id": "0336",
     "no": "0336",
     "form": null,
+    "slug": "seviper",
     "names": {
       "ja": "ハブネーク",
       "en": "Seviper",
@@ -9344,6 +9723,7 @@
     "id": "0337",
     "no": "0337",
     "form": null,
+    "slug": "lunatone",
     "names": {
       "ja": "ルナトーン",
       "en": "Lunatone",
@@ -9364,6 +9744,7 @@
     "id": "0338",
     "no": "0338",
     "form": null,
+    "slug": "solrock",
     "names": {
       "ja": "ソルロック",
       "en": "Solrock",
@@ -9384,6 +9765,7 @@
     "id": "0339",
     "no": "0339",
     "form": null,
+    "slug": "barboach",
     "names": {
       "ja": "ドジョッチ",
       "en": "Barboach",
@@ -9413,6 +9795,7 @@
     "id": "0340",
     "no": "0340",
     "form": null,
+    "slug": "whiscash",
     "names": {
       "ja": "ナマズン",
       "en": "Whiscash",
@@ -9442,6 +9825,7 @@
     "id": "0341",
     "no": "0341",
     "form": null,
+    "slug": "corphish",
     "names": {
       "ja": "ヘイガニ",
       "en": "Corphish",
@@ -9467,6 +9851,7 @@
     "id": "0342",
     "no": "0342",
     "form": null,
+    "slug": "crawdaunt",
     "names": {
       "ja": "シザリガー",
       "en": "Crawdaunt",
@@ -9496,6 +9881,7 @@
     "id": "0343",
     "no": "0343",
     "form": null,
+    "slug": "baltoy",
     "names": {
       "ja": "ヤジロン",
       "en": "Baltoy",
@@ -9516,6 +9902,7 @@
     "id": "0344",
     "no": "0344",
     "form": null,
+    "slug": "claydol",
     "names": {
       "ja": "ネンドール",
       "en": "Claydol",
@@ -9536,6 +9923,7 @@
     "id": "0345",
     "no": "0345",
     "form": null,
+    "slug": "lileep",
     "names": {
       "ja": "リリーラ",
       "en": "Lileep",
@@ -9556,6 +9944,7 @@
     "id": "0346",
     "no": "0346",
     "form": null,
+    "slug": "cradily",
     "names": {
       "ja": "ユレイドル",
       "en": "Cradily",
@@ -9576,6 +9965,7 @@
     "id": "0347",
     "no": "0347",
     "form": null,
+    "slug": "anorith",
     "names": {
       "ja": "アノプス",
       "en": "Anorith",
@@ -9596,6 +9986,7 @@
     "id": "0348",
     "no": "0348",
     "form": null,
+    "slug": "armaldo",
     "names": {
       "ja": "アーマルド",
       "en": "Armaldo",
@@ -9616,6 +10007,7 @@
     "id": "0349",
     "no": "0349",
     "form": null,
+    "slug": "feebas",
     "names": {
       "ja": "ヒンバス",
       "en": "Feebas",
@@ -9641,6 +10033,7 @@
     "id": "0350",
     "no": "0350",
     "form": null,
+    "slug": "milotic",
     "names": {
       "ja": "ミロカロス",
       "en": "Milotic",
@@ -9666,6 +10059,7 @@
     "id": "0351",
     "no": "0351",
     "form": null,
+    "slug": "castform",
     "names": {
       "ja": "ポワルン",
       "en": "Castform",
@@ -9686,6 +10080,7 @@
     "id": "0352",
     "no": "0352",
     "form": null,
+    "slug": "kecleon",
     "names": {
       "ja": "カクレオン",
       "en": "Kecleon",
@@ -9706,6 +10101,7 @@
     "id": "0353",
     "no": "0353",
     "form": null,
+    "slug": "shuppet",
     "names": {
       "ja": "カゲボウズ",
       "en": "Shuppet",
@@ -9731,6 +10127,7 @@
     "id": "0354",
     "no": "0354",
     "form": null,
+    "slug": "banette",
     "names": {
       "ja": "ジュペッタ",
       "en": "Banette",
@@ -9756,6 +10153,7 @@
     "id": "0355",
     "no": "0355",
     "form": null,
+    "slug": "duskull",
     "names": {
       "ja": "ヨマワル",
       "en": "Duskull",
@@ -9781,6 +10179,7 @@
     "id": "0356",
     "no": "0356",
     "form": null,
+    "slug": "dusclops",
     "names": {
       "ja": "サマヨール",
       "en": "Dusclops",
@@ -9806,6 +10205,7 @@
     "id": "0357",
     "no": "0357",
     "form": null,
+    "slug": "tropius",
     "names": {
       "ja": "トロピウス",
       "en": "Tropius",
@@ -9835,6 +10235,7 @@
     "id": "0358",
     "no": "0358",
     "form": null,
+    "slug": "chimecho",
     "names": {
       "ja": "チリーン",
       "en": "Chimecho",
@@ -9860,6 +10261,7 @@
     "id": "0359",
     "no": "0359",
     "form": null,
+    "slug": "absol",
     "names": {
       "ja": "アブソル",
       "en": "Absol",
@@ -9880,6 +10282,7 @@
     "id": "0360",
     "no": "0360",
     "form": null,
+    "slug": "wynaut",
     "names": {
       "ja": "ソーナノ",
       "en": "Wynaut",
@@ -9900,6 +10303,7 @@
     "id": "0361",
     "no": "0361",
     "form": null,
+    "slug": "snorunt",
     "names": {
       "ja": "ユキワラシ",
       "en": "Snorunt",
@@ -9925,6 +10329,7 @@
     "id": "0362",
     "no": "0362",
     "form": null,
+    "slug": "glalie",
     "names": {
       "ja": "オニゴーリ",
       "en": "Glalie",
@@ -9950,6 +10355,7 @@
     "id": "0363",
     "no": "0363",
     "form": null,
+    "slug": "spheal",
     "names": {
       "ja": "タマザラシ",
       "en": "Spheal",
@@ -9970,6 +10376,7 @@
     "id": "0364",
     "no": "0364",
     "form": null,
+    "slug": "sealeo",
     "names": {
       "ja": "トドグラー",
       "en": "Sealeo",
@@ -9990,6 +10397,7 @@
     "id": "0365",
     "no": "0365",
     "form": null,
+    "slug": "walrein",
     "names": {
       "ja": "トドゼルガ",
       "en": "Walrein",
@@ -10010,6 +10418,7 @@
     "id": "0366",
     "no": "0366",
     "form": null,
+    "slug": "clamperl",
     "names": {
       "ja": "パールル",
       "en": "Clamperl",
@@ -10030,6 +10439,7 @@
     "id": "0367",
     "no": "0367",
     "form": null,
+    "slug": "huntail",
     "names": {
       "ja": "ハンテール",
       "en": "Huntail",
@@ -10050,6 +10460,7 @@
     "id": "0368",
     "no": "0368",
     "form": null,
+    "slug": "gorebyss",
     "names": {
       "ja": "サクラビス",
       "en": "Gorebyss",
@@ -10070,6 +10481,7 @@
     "id": "0369",
     "no": "0369",
     "form": null,
+    "slug": "relicanth",
     "names": {
       "ja": "ジーランス",
       "en": "Relicanth",
@@ -10090,6 +10502,7 @@
     "id": "0370",
     "no": "0370",
     "form": null,
+    "slug": "luvdisc",
     "names": {
       "ja": "ラブカス",
       "en": "Luvdisc",
@@ -10115,6 +10528,7 @@
     "id": "0371",
     "no": "0371",
     "form": null,
+    "slug": "bagon",
     "names": {
       "ja": "タツベイ",
       "en": "Bagon",
@@ -10140,6 +10554,7 @@
     "id": "0372",
     "no": "0372",
     "form": null,
+    "slug": "shelgon",
     "names": {
       "ja": "コモルー",
       "en": "Shelgon",
@@ -10165,6 +10580,7 @@
     "id": "0373",
     "no": "0373",
     "form": null,
+    "slug": "salamence",
     "names": {
       "ja": "ボーマンダ",
       "en": "Salamence",
@@ -10194,6 +10610,7 @@
     "id": "0374",
     "no": "0374",
     "form": null,
+    "slug": "beldum",
     "names": {
       "ja": "ダンバル",
       "en": "Beldum",
@@ -10223,6 +10640,7 @@
     "id": "0375",
     "no": "0375",
     "form": null,
+    "slug": "metang",
     "names": {
       "ja": "メタング",
       "en": "Metang",
@@ -10252,6 +10670,7 @@
     "id": "0376",
     "no": "0376",
     "form": null,
+    "slug": "metagross",
     "names": {
       "ja": "メタグロス",
       "en": "Metagross",
@@ -10281,6 +10700,7 @@
     "id": "0377",
     "no": "0377",
     "form": null,
+    "slug": "regirock",
     "names": {
       "ja": "レジロック",
       "en": "Regirock",
@@ -10301,6 +10721,7 @@
     "id": "0378",
     "no": "0378",
     "form": null,
+    "slug": "regice",
     "names": {
       "ja": "レジアイス",
       "en": "Regice",
@@ -10321,6 +10742,7 @@
     "id": "0379",
     "no": "0379",
     "form": null,
+    "slug": "registeel",
     "names": {
       "ja": "レジスチル",
       "en": "Registeel",
@@ -10341,6 +10763,7 @@
     "id": "0380",
     "no": "0380",
     "form": null,
+    "slug": "latias",
     "names": {
       "ja": "ラティアス",
       "en": "Latias",
@@ -10361,6 +10784,7 @@
     "id": "0381",
     "no": "0381",
     "form": null,
+    "slug": "latios",
     "names": {
       "ja": "ラティオス",
       "en": "Latios",
@@ -10381,6 +10805,7 @@
     "id": "0382",
     "no": "0382",
     "form": null,
+    "slug": "kyogre",
     "names": {
       "ja": "カイオーガ",
       "en": "Kyogre",
@@ -10401,6 +10826,7 @@
     "id": "0383",
     "no": "0383",
     "form": null,
+    "slug": "groudon",
     "names": {
       "ja": "グラードン",
       "en": "Groudon",
@@ -10421,6 +10847,7 @@
     "id": "0384",
     "no": "0384",
     "form": null,
+    "slug": "rayquaza",
     "names": {
       "ja": "レックウザ",
       "en": "Rayquaza",
@@ -10441,6 +10868,7 @@
     "id": "0385",
     "no": "0385",
     "form": null,
+    "slug": "jirachi",
     "names": {
       "ja": "ジラーチ",
       "en": "Jirachi",
@@ -10461,6 +10889,7 @@
     "id": "0386",
     "no": "0386",
     "form": null,
+    "slug": "deoxys",
     "names": {
       "ja": "デオキシス",
       "en": "Deoxys",
@@ -10481,6 +10910,7 @@
     "id": "0387",
     "no": "0387",
     "form": null,
+    "slug": "turtwig",
     "names": {
       "ja": "ナエトル",
       "en": "Turtwig",
@@ -10506,6 +10936,7 @@
     "id": "0388",
     "no": "0388",
     "form": null,
+    "slug": "grotle",
     "names": {
       "ja": "ハヤシガメ",
       "en": "Grotle",
@@ -10531,6 +10962,7 @@
     "id": "0389",
     "no": "0389",
     "form": null,
+    "slug": "torterra",
     "names": {
       "ja": "ドダイトス",
       "en": "Torterra",
@@ -10560,6 +10992,7 @@
     "id": "0390",
     "no": "0390",
     "form": null,
+    "slug": "chimchar",
     "names": {
       "ja": "ヒコザル",
       "en": "Chimchar",
@@ -10585,6 +11018,7 @@
     "id": "0391",
     "no": "0391",
     "form": null,
+    "slug": "monferno",
     "names": {
       "ja": "モウカザル",
       "en": "Monferno",
@@ -10614,6 +11048,7 @@
     "id": "0392",
     "no": "0392",
     "form": null,
+    "slug": "infernape",
     "names": {
       "ja": "ゴウカザル",
       "en": "Infernape",
@@ -10643,6 +11078,7 @@
     "id": "0393",
     "no": "0393",
     "form": null,
+    "slug": "piplup",
     "names": {
       "ja": "ポッチャマ",
       "en": "Piplup",
@@ -10668,6 +11104,7 @@
     "id": "0394",
     "no": "0394",
     "form": null,
+    "slug": "prinplup",
     "names": {
       "ja": "ポッタイシ",
       "en": "Prinplup",
@@ -10693,6 +11130,7 @@
     "id": "0395",
     "no": "0395",
     "form": null,
+    "slug": "empoleon",
     "names": {
       "ja": "エンペルト",
       "en": "Empoleon",
@@ -10722,6 +11160,7 @@
     "id": "0396",
     "no": "0396",
     "form": null,
+    "slug": "starly",
     "names": {
       "ja": "ムックル",
       "en": "Starly",
@@ -10751,6 +11190,7 @@
     "id": "0397",
     "no": "0397",
     "form": null,
+    "slug": "staravia",
     "names": {
       "ja": "ムクバード",
       "en": "Staravia",
@@ -10780,6 +11220,7 @@
     "id": "0398",
     "no": "0398",
     "form": null,
+    "slug": "staraptor",
     "names": {
       "ja": "ムクホーク",
       "en": "Staraptor",
@@ -10809,6 +11250,7 @@
     "id": "0399",
     "no": "0399",
     "form": null,
+    "slug": "bidoof",
     "names": {
       "ja": "ビッパ",
       "en": "Bidoof",
@@ -10829,6 +11271,7 @@
     "id": "0400",
     "no": "0400",
     "form": null,
+    "slug": "bibarel",
     "names": {
       "ja": "ビーダル",
       "en": "Bibarel",
@@ -10849,6 +11292,7 @@
     "id": "0401",
     "no": "0401",
     "form": null,
+    "slug": "kricketot",
     "names": {
       "ja": "コロボーシ",
       "en": "Kricketot",
@@ -10874,6 +11318,7 @@
     "id": "0402",
     "no": "0402",
     "form": null,
+    "slug": "kricketune",
     "names": {
       "ja": "コロトック",
       "en": "Kricketune",
@@ -10899,6 +11344,7 @@
     "id": "0403",
     "no": "0403",
     "form": null,
+    "slug": "shinx",
     "names": {
       "ja": "コリンク",
       "en": "Shinx",
@@ -10924,6 +11370,7 @@
     "id": "0404",
     "no": "0404",
     "form": null,
+    "slug": "luxio",
     "names": {
       "ja": "ルクシオ",
       "en": "Luxio",
@@ -10949,6 +11396,7 @@
     "id": "0405",
     "no": "0405",
     "form": null,
+    "slug": "luxray",
     "names": {
       "ja": "レントラー",
       "en": "Luxray",
@@ -10974,6 +11422,7 @@
     "id": "0406",
     "no": "0406",
     "form": null,
+    "slug": "budew",
     "names": {
       "ja": "スボミー",
       "en": "Budew",
@@ -10994,6 +11443,7 @@
     "id": "0407",
     "no": "0407",
     "form": null,
+    "slug": "roserade",
     "names": {
       "ja": "ロズレイド",
       "en": "Roserade",
@@ -11014,6 +11464,7 @@
     "id": "0408",
     "no": "0408",
     "form": null,
+    "slug": "cranidos",
     "names": {
       "ja": "ズガイドス",
       "en": "Cranidos",
@@ -11039,6 +11490,7 @@
     "id": "0409",
     "no": "0409",
     "form": null,
+    "slug": "rampardos",
     "names": {
       "ja": "ラムパルド",
       "en": "Rampardos",
@@ -11064,6 +11516,7 @@
     "id": "0410",
     "no": "0410",
     "form": null,
+    "slug": "shieldon",
     "names": {
       "ja": "タテトプス",
       "en": "Shieldon",
@@ -11093,6 +11546,7 @@
     "id": "0411",
     "no": "0411",
     "form": null,
+    "slug": "bastiodon",
     "names": {
       "ja": "トリデプス",
       "en": "Bastiodon",
@@ -11122,6 +11576,7 @@
     "id": "0412",
     "no": "0412",
     "form": null,
+    "slug": "burmy",
     "names": {
       "ja": "ミノムッチ",
       "en": "Burmy",
@@ -11142,6 +11597,7 @@
     "id": "0413",
     "no": "0413",
     "form": null,
+    "slug": "wormadam",
     "names": {
       "ja": "ミノマダム",
       "en": "Wormadam",
@@ -11162,6 +11618,7 @@
     "id": "0414",
     "no": "0414",
     "form": null,
+    "slug": "mothim",
     "names": {
       "ja": "ガーメイル",
       "en": "Mothim",
@@ -11182,6 +11639,7 @@
     "id": "0415",
     "no": "0415",
     "form": null,
+    "slug": "combee",
     "names": {
       "ja": "ミツハニー",
       "en": "Combee",
@@ -11211,6 +11669,7 @@
     "id": "0416",
     "no": "0416",
     "form": null,
+    "slug": "vespiquen",
     "names": {
       "ja": "ビークイン",
       "en": "Vespiquen",
@@ -11240,6 +11699,7 @@
     "id": "0417",
     "no": "0417",
     "form": null,
+    "slug": "pachirisu",
     "names": {
       "ja": "パチリス",
       "en": "Pachirisu",
@@ -11265,6 +11725,7 @@
     "id": "0418",
     "no": "0418",
     "form": null,
+    "slug": "buizel",
     "names": {
       "ja": "ブイゼル",
       "en": "Buizel",
@@ -11290,6 +11751,7 @@
     "id": "0419",
     "no": "0419",
     "form": null,
+    "slug": "floatzel",
     "names": {
       "ja": "フローゼル",
       "en": "Floatzel",
@@ -11315,6 +11777,7 @@
     "id": "0420",
     "no": "0420",
     "form": null,
+    "slug": "cherubi",
     "names": {
       "ja": "チェリンボ",
       "en": "Cherubi",
@@ -11335,6 +11798,7 @@
     "id": "0421",
     "no": "0421",
     "form": null,
+    "slug": "cherrim",
     "names": {
       "ja": "チェリム",
       "en": "Cherrim",
@@ -11355,6 +11819,7 @@
     "id": "0422",
     "no": "0422",
     "form": null,
+    "slug": "shellos",
     "names": {
       "ja": "カラナクシ",
       "en": "Shellos",
@@ -11380,6 +11845,7 @@
     "id": "0423",
     "no": "0423",
     "form": null,
+    "slug": "gastrodon",
     "names": {
       "ja": "トリトドン",
       "en": "Gastrodon",
@@ -11409,6 +11875,7 @@
     "id": "0424",
     "no": "0424",
     "form": null,
+    "slug": "ambipom",
     "names": {
       "ja": "エテボース",
       "en": "Ambipom",
@@ -11434,6 +11901,7 @@
     "id": "0425",
     "no": "0425",
     "form": null,
+    "slug": "drifloon",
     "names": {
       "ja": "フワンテ",
       "en": "Drifloon",
@@ -11463,6 +11931,7 @@
     "id": "0426",
     "no": "0426",
     "form": null,
+    "slug": "drifblim",
     "names": {
       "ja": "フワライド",
       "en": "Drifblim",
@@ -11492,6 +11961,7 @@
     "id": "0427",
     "no": "0427",
     "form": null,
+    "slug": "buneary",
     "names": {
       "ja": "ミミロル",
       "en": "Buneary",
@@ -11512,6 +11982,7 @@
     "id": "0428",
     "no": "0428",
     "form": null,
+    "slug": "lopunny",
     "names": {
       "ja": "ミミロップ",
       "en": "Lopunny",
@@ -11532,6 +12003,7 @@
     "id": "0429",
     "no": "0429",
     "form": null,
+    "slug": "mismagius",
     "names": {
       "ja": "ムウマージ",
       "en": "Mismagius",
@@ -11557,6 +12029,7 @@
     "id": "0430",
     "no": "0430",
     "form": null,
+    "slug": "honchkrow",
     "names": {
       "ja": "ドンカラス",
       "en": "Honchkrow",
@@ -11586,6 +12059,7 @@
     "id": "0431",
     "no": "0431",
     "form": null,
+    "slug": "glameow",
     "names": {
       "ja": "ニャルマー",
       "en": "Glameow",
@@ -11606,6 +12080,7 @@
     "id": "0432",
     "no": "0432",
     "form": null,
+    "slug": "purugly",
     "names": {
       "ja": "ブニャット",
       "en": "Purugly",
@@ -11626,6 +12101,7 @@
     "id": "0433",
     "no": "0433",
     "form": null,
+    "slug": "chingling",
     "names": {
       "ja": "リーシャン",
       "en": "Chingling",
@@ -11651,6 +12127,7 @@
     "id": "0434",
     "no": "0434",
     "form": null,
+    "slug": "stunky",
     "names": {
       "ja": "スカンプー",
       "en": "Stunky",
@@ -11680,6 +12157,7 @@
     "id": "0435",
     "no": "0435",
     "form": null,
+    "slug": "skuntank",
     "names": {
       "ja": "スカタンク",
       "en": "Skuntank",
@@ -11709,6 +12187,7 @@
     "id": "0436",
     "no": "0436",
     "form": null,
+    "slug": "bronzor",
     "names": {
       "ja": "ドーミラー",
       "en": "Bronzor",
@@ -11738,6 +12217,7 @@
     "id": "0437",
     "no": "0437",
     "form": null,
+    "slug": "bronzong",
     "names": {
       "ja": "ドータクン",
       "en": "Bronzong",
@@ -11767,6 +12247,7 @@
     "id": "0438",
     "no": "0438",
     "form": null,
+    "slug": "bonsly",
     "names": {
       "ja": "ウソハチ",
       "en": "Bonsly",
@@ -11792,6 +12273,7 @@
     "id": "0439",
     "no": "0439",
     "form": null,
+    "slug": "mime-jr",
     "names": {
       "ja": "マネネ",
       "en": "Mime Jr.",
@@ -11812,6 +12294,7 @@
     "id": "0440",
     "no": "0440",
     "form": null,
+    "slug": "happiny",
     "names": {
       "ja": "ピンプク",
       "en": "Happiny",
@@ -11837,6 +12320,7 @@
     "id": "0441",
     "no": "0441",
     "form": null,
+    "slug": "chatot",
     "names": {
       "ja": "ペラップ",
       "en": "Chatot",
@@ -11857,6 +12341,7 @@
     "id": "0442",
     "no": "0442",
     "form": null,
+    "slug": "spiritomb",
     "names": {
       "ja": "ミカルゲ",
       "en": "Spiritomb",
@@ -11886,6 +12371,7 @@
     "id": "0443",
     "no": "0443",
     "form": null,
+    "slug": "gible",
     "names": {
       "ja": "フカマル",
       "en": "Gible",
@@ -11915,6 +12401,7 @@
     "id": "0444",
     "no": "0444",
     "form": null,
+    "slug": "gabite",
     "names": {
       "ja": "ガバイト",
       "en": "Gabite",
@@ -11944,6 +12431,7 @@
     "id": "0445",
     "no": "0445",
     "form": null,
+    "slug": "garchomp",
     "names": {
       "ja": "ガブリアス",
       "en": "Garchomp",
@@ -11973,6 +12461,7 @@
     "id": "0446",
     "no": "0446",
     "form": null,
+    "slug": "munchlax",
     "names": {
       "ja": "ゴンベ",
       "en": "Munchlax",
@@ -11998,6 +12487,7 @@
     "id": "0447",
     "no": "0447",
     "form": null,
+    "slug": "riolu",
     "names": {
       "ja": "リオル",
       "en": "Riolu",
@@ -12023,6 +12513,7 @@
     "id": "0448",
     "no": "0448",
     "form": null,
+    "slug": "lucario",
     "names": {
       "ja": "ルカリオ",
       "en": "Lucario",
@@ -12052,6 +12543,7 @@
     "id": "0449",
     "no": "0449",
     "form": null,
+    "slug": "hippopotas",
     "names": {
       "ja": "ヒポポタス",
       "en": "Hippopotas",
@@ -12077,6 +12569,7 @@
     "id": "0450",
     "no": "0450",
     "form": null,
+    "slug": "hippowdon",
     "names": {
       "ja": "カバルドン",
       "en": "Hippowdon",
@@ -12102,6 +12595,7 @@
     "id": "0451",
     "no": "0451",
     "form": null,
+    "slug": "skorupi",
     "names": {
       "ja": "スコルピ",
       "en": "Skorupi",
@@ -12122,6 +12616,7 @@
     "id": "0452",
     "no": "0452",
     "form": null,
+    "slug": "drapion",
     "names": {
       "ja": "ドラピオン",
       "en": "Drapion",
@@ -12142,6 +12637,7 @@
     "id": "0453",
     "no": "0453",
     "form": null,
+    "slug": "croagunk",
     "names": {
       "ja": "グレッグル",
       "en": "Croagunk",
@@ -12171,6 +12667,7 @@
     "id": "0454",
     "no": "0454",
     "form": null,
+    "slug": "toxicroak",
     "names": {
       "ja": "ドクロッグ",
       "en": "Toxicroak",
@@ -12200,6 +12697,7 @@
     "id": "0455",
     "no": "0455",
     "form": null,
+    "slug": "carnivine",
     "names": {
       "ja": "マスキッパ",
       "en": "Carnivine",
@@ -12220,6 +12718,7 @@
     "id": "0456",
     "no": "0456",
     "form": null,
+    "slug": "finneon",
     "names": {
       "ja": "ケイコウオ",
       "en": "Finneon",
@@ -12245,6 +12744,7 @@
     "id": "0457",
     "no": "0457",
     "form": null,
+    "slug": "lumineon",
     "names": {
       "ja": "ネオラント",
       "en": "Lumineon",
@@ -12270,6 +12770,7 @@
     "id": "0458",
     "no": "0458",
     "form": null,
+    "slug": "mantyke",
     "names": {
       "ja": "タマンタ",
       "en": "Mantyke",
@@ -12290,6 +12791,7 @@
     "id": "0459",
     "no": "0459",
     "form": null,
+    "slug": "snover",
     "names": {
       "ja": "ユキカブリ",
       "en": "Snover",
@@ -12319,6 +12821,7 @@
     "id": "0460",
     "no": "0460",
     "form": null,
+    "slug": "abomasnow",
     "names": {
       "ja": "ユキノオー",
       "en": "Abomasnow",
@@ -12348,6 +12851,7 @@
     "id": "0461",
     "no": "0461",
     "form": null,
+    "slug": "weavile",
     "names": {
       "ja": "マニューラ",
       "en": "Weavile",
@@ -12377,6 +12881,7 @@
     "id": "0462",
     "no": "0462",
     "form": null,
+    "slug": "magnezone",
     "names": {
       "ja": "ジバコイル",
       "en": "Magnezone",
@@ -12406,6 +12911,7 @@
     "id": "0463",
     "no": "0463",
     "form": null,
+    "slug": "lickilicky",
     "names": {
       "ja": "ベロベルト",
       "en": "Lickilicky",
@@ -12426,6 +12932,7 @@
     "id": "0464",
     "no": "0464",
     "form": null,
+    "slug": "rhyperior",
     "names": {
       "ja": "ドサイドン",
       "en": "Rhyperior",
@@ -12455,6 +12962,7 @@
     "id": "0465",
     "no": "0465",
     "form": null,
+    "slug": "tangrowth",
     "names": {
       "ja": "モジャンボ",
       "en": "Tangrowth",
@@ -12475,6 +12983,7 @@
     "id": "0466",
     "no": "0466",
     "form": null,
+    "slug": "electivire",
     "names": {
       "ja": "エレキブル",
       "en": "Electivire",
@@ -12500,6 +13009,7 @@
     "id": "0467",
     "no": "0467",
     "form": null,
+    "slug": "magmortar",
     "names": {
       "ja": "ブーバーン",
       "en": "Magmortar",
@@ -12525,6 +13035,7 @@
     "id": "0468",
     "no": "0468",
     "form": null,
+    "slug": "togekiss",
     "names": {
       "ja": "トゲキッス",
       "en": "Togekiss",
@@ -12545,6 +13056,7 @@
     "id": "0469",
     "no": "0469",
     "form": null,
+    "slug": "yanmega",
     "names": {
       "ja": "メガヤンマ",
       "en": "Yanmega",
@@ -12574,6 +13086,7 @@
     "id": "0470",
     "no": "0470",
     "form": null,
+    "slug": "leafeon",
     "names": {
       "ja": "リーフィア",
       "en": "Leafeon",
@@ -12599,6 +13112,7 @@
     "id": "0471",
     "no": "0471",
     "form": null,
+    "slug": "glaceon",
     "names": {
       "ja": "グレイシア",
       "en": "Glaceon",
@@ -12624,6 +13138,7 @@
     "id": "0472",
     "no": "0472",
     "form": null,
+    "slug": "gliscor",
     "names": {
       "ja": "グライオン",
       "en": "Gliscor",
@@ -12653,6 +13168,7 @@
     "id": "0473",
     "no": "0473",
     "form": null,
+    "slug": "mamoswine",
     "names": {
       "ja": "マンムー",
       "en": "Mamoswine",
@@ -12682,6 +13198,7 @@
     "id": "0474",
     "no": "0474",
     "form": null,
+    "slug": "porygon-z",
     "names": {
       "ja": "ポリゴンＺ",
       "en": "Porygon-Z",
@@ -12707,6 +13224,7 @@
     "id": "0475",
     "no": "0475",
     "form": null,
+    "slug": "gallade",
     "names": {
       "ja": "エルレイド",
       "en": "Gallade",
@@ -12736,6 +13254,7 @@
     "id": "0476",
     "no": "0476",
     "form": null,
+    "slug": "probopass",
     "names": {
       "ja": "ダイノーズ",
       "en": "Probopass",
@@ -12765,6 +13284,7 @@
     "id": "0477",
     "no": "0477",
     "form": null,
+    "slug": "dusknoir",
     "names": {
       "ja": "ヨノワール",
       "en": "Dusknoir",
@@ -12790,6 +13310,7 @@
     "id": "0478",
     "no": "0478",
     "form": null,
+    "slug": "froslass",
     "names": {
       "ja": "ユキメノコ",
       "en": "Froslass",
@@ -12819,6 +13340,7 @@
     "id": "0479",
     "no": "0479",
     "form": null,
+    "slug": "rotom",
     "names": {
       "ja": "ロトム",
       "en": "Rotom",
@@ -12848,6 +13370,7 @@
     "id": "0480",
     "no": "0480",
     "form": null,
+    "slug": "uxie",
     "names": {
       "ja": "ユクシー",
       "en": "Uxie",
@@ -12868,6 +13391,7 @@
     "id": "0481",
     "no": "0481",
     "form": null,
+    "slug": "mesprit",
     "names": {
       "ja": "エムリット",
       "en": "Mesprit",
@@ -12888,6 +13412,7 @@
     "id": "0482",
     "no": "0482",
     "form": null,
+    "slug": "azelf",
     "names": {
       "ja": "アグノム",
       "en": "Azelf",
@@ -12908,6 +13433,7 @@
     "id": "0483",
     "no": "0483",
     "form": null,
+    "slug": "dialga",
     "names": {
       "ja": "ディアルガ",
       "en": "Dialga",
@@ -12928,6 +13454,7 @@
     "id": "0484",
     "no": "0484",
     "form": null,
+    "slug": "palkia",
     "names": {
       "ja": "パルキア",
       "en": "Palkia",
@@ -12948,6 +13475,7 @@
     "id": "0485",
     "no": "0485",
     "form": null,
+    "slug": "heatran",
     "names": {
       "ja": "ヒードラン",
       "en": "Heatran",
@@ -12968,6 +13496,7 @@
     "id": "0486",
     "no": "0486",
     "form": null,
+    "slug": "regigigas",
     "names": {
       "ja": "レジギガス",
       "en": "Regigigas",
@@ -12988,6 +13517,7 @@
     "id": "0487",
     "no": "0487",
     "form": null,
+    "slug": "giratina",
     "names": {
       "ja": "ギラティナ",
       "en": "Giratina",
@@ -13008,6 +13538,7 @@
     "id": "0488",
     "no": "0488",
     "form": null,
+    "slug": "cresselia",
     "names": {
       "ja": "クレセリア",
       "en": "Cresselia",
@@ -13028,6 +13559,7 @@
     "id": "0489",
     "no": "0489",
     "form": null,
+    "slug": "phione",
     "names": {
       "ja": "フィオネ",
       "en": "Phione",
@@ -13048,6 +13580,7 @@
     "id": "0490",
     "no": "0490",
     "form": null,
+    "slug": "manaphy",
     "names": {
       "ja": "マナフィ",
       "en": "Manaphy",
@@ -13068,6 +13601,7 @@
     "id": "0491",
     "no": "0491",
     "form": null,
+    "slug": "darkrai",
     "names": {
       "ja": "ダークライ",
       "en": "Darkrai",
@@ -13088,6 +13622,7 @@
     "id": "0492",
     "no": "0492",
     "form": null,
+    "slug": "shaymin",
     "names": {
       "ja": "シェイミ",
       "en": "Shaymin",
@@ -13108,6 +13643,7 @@
     "id": "0493",
     "no": "0493",
     "form": null,
+    "slug": "arceus",
     "names": {
       "ja": "アルセウス",
       "en": "Arceus",
@@ -13128,6 +13664,7 @@
     "id": "0494",
     "no": "0494",
     "form": null,
+    "slug": "victini",
     "names": {
       "ja": "ビクティニ",
       "en": "Victini",
@@ -13148,6 +13685,7 @@
     "id": "0495",
     "no": "0495",
     "form": null,
+    "slug": "snivy",
     "names": {
       "ja": "ツタージャ",
       "en": "Snivy",
@@ -13173,6 +13711,7 @@
     "id": "0496",
     "no": "0496",
     "form": null,
+    "slug": "servine",
     "names": {
       "ja": "ジャノビー",
       "en": "Servine",
@@ -13198,6 +13737,7 @@
     "id": "0497",
     "no": "0497",
     "form": null,
+    "slug": "serperior",
     "names": {
       "ja": "ジャローダ",
       "en": "Serperior",
@@ -13223,6 +13763,7 @@
     "id": "0498",
     "no": "0498",
     "form": null,
+    "slug": "tepig",
     "names": {
       "ja": "ポカブ",
       "en": "Tepig",
@@ -13248,6 +13789,7 @@
     "id": "0499",
     "no": "0499",
     "form": null,
+    "slug": "pignite",
     "names": {
       "ja": "チャオブー",
       "en": "Pignite",
@@ -13277,6 +13819,7 @@
     "id": "0500",
     "no": "0500",
     "form": null,
+    "slug": "emboar",
     "names": {
       "ja": "エンブオー",
       "en": "Emboar",
@@ -13306,6 +13849,7 @@
     "id": "0501",
     "no": "0501",
     "form": null,
+    "slug": "oshawott",
     "names": {
       "ja": "ミジュマル",
       "en": "Oshawott",
@@ -13331,6 +13875,7 @@
     "id": "0502",
     "no": "0502",
     "form": null,
+    "slug": "dewott",
     "names": {
       "ja": "フタチマル",
       "en": "Dewott",
@@ -13356,6 +13901,7 @@
     "id": "0503",
     "no": "0503",
     "form": null,
+    "slug": "samurott",
     "names": {
       "ja": "ダイケンキ",
       "en": "Samurott",
@@ -13381,6 +13927,7 @@
     "id": "0503-hisui",
     "no": "0503",
     "form": "hisui",
+    "slug": "samurott-hisui",
     "names": {
       "ja": "ダイケンキ",
       "en": "Samurott",
@@ -13406,6 +13953,7 @@
     "id": "0504",
     "no": "0504",
     "form": null,
+    "slug": "patrat",
     "names": {
       "ja": "ミネズミ",
       "en": "Patrat",
@@ -13426,6 +13974,7 @@
     "id": "0505",
     "no": "0505",
     "form": null,
+    "slug": "watchog",
     "names": {
       "ja": "ミルホッグ",
       "en": "Watchog",
@@ -13446,6 +13995,7 @@
     "id": "0506",
     "no": "0506",
     "form": null,
+    "slug": "lillipup",
     "names": {
       "ja": "ヨーテリー",
       "en": "Lillipup",
@@ -13466,6 +14016,7 @@
     "id": "0507",
     "no": "0507",
     "form": null,
+    "slug": "herdier",
     "names": {
       "ja": "ハーデリア",
       "en": "Herdier",
@@ -13486,6 +14037,7 @@
     "id": "0508",
     "no": "0508",
     "form": null,
+    "slug": "stoutland",
     "names": {
       "ja": "ムーランド",
       "en": "Stoutland",
@@ -13506,6 +14058,7 @@
     "id": "0509",
     "no": "0509",
     "form": null,
+    "slug": "purrloin",
     "names": {
       "ja": "チョロネコ",
       "en": "Purrloin",
@@ -13526,6 +14079,7 @@
     "id": "0510",
     "no": "0510",
     "form": null,
+    "slug": "liepard",
     "names": {
       "ja": "レパルダス",
       "en": "Liepard",
@@ -13546,6 +14100,7 @@
     "id": "0511",
     "no": "0511",
     "form": null,
+    "slug": "pansage",
     "names": {
       "ja": "ヤナップ",
       "en": "Pansage",
@@ -13566,6 +14121,7 @@
     "id": "0512",
     "no": "0512",
     "form": null,
+    "slug": "simisage",
     "names": {
       "ja": "ヤナッキー",
       "en": "Simisage",
@@ -13586,6 +14142,7 @@
     "id": "0513",
     "no": "0513",
     "form": null,
+    "slug": "pansear",
     "names": {
       "ja": "バオップ",
       "en": "Pansear",
@@ -13606,6 +14163,7 @@
     "id": "0514",
     "no": "0514",
     "form": null,
+    "slug": "simisear",
     "names": {
       "ja": "バオッキー",
       "en": "Simisear",
@@ -13626,6 +14184,7 @@
     "id": "0515",
     "no": "0515",
     "form": null,
+    "slug": "panpour",
     "names": {
       "ja": "ヒヤップ",
       "en": "Panpour",
@@ -13646,6 +14205,7 @@
     "id": "0516",
     "no": "0516",
     "form": null,
+    "slug": "simipour",
     "names": {
       "ja": "ヒヤッキー",
       "en": "Simipour",
@@ -13666,6 +14226,7 @@
     "id": "0517",
     "no": "0517",
     "form": null,
+    "slug": "munna",
     "names": {
       "ja": "ムンナ",
       "en": "Munna",
@@ -13686,6 +14247,7 @@
     "id": "0518",
     "no": "0518",
     "form": null,
+    "slug": "musharna",
     "names": {
       "ja": "ムシャーナ",
       "en": "Musharna",
@@ -13706,6 +14268,7 @@
     "id": "0519",
     "no": "0519",
     "form": null,
+    "slug": "pidove",
     "names": {
       "ja": "マメパト",
       "en": "Pidove",
@@ -13726,6 +14289,7 @@
     "id": "0520",
     "no": "0520",
     "form": null,
+    "slug": "tranquill",
     "names": {
       "ja": "ハトーボー",
       "en": "Tranquill",
@@ -13746,6 +14310,7 @@
     "id": "0521",
     "no": "0521",
     "form": null,
+    "slug": "unfezant",
     "names": {
       "ja": "ケンホロウ",
       "en": "Unfezant",
@@ -13766,6 +14331,7 @@
     "id": "0522",
     "no": "0522",
     "form": null,
+    "slug": "blitzle",
     "names": {
       "ja": "シママ",
       "en": "Blitzle",
@@ -13791,6 +14357,7 @@
     "id": "0523",
     "no": "0523",
     "form": null,
+    "slug": "zebstrika",
     "names": {
       "ja": "ゼブライカ",
       "en": "Zebstrika",
@@ -13816,6 +14383,7 @@
     "id": "0524",
     "no": "0524",
     "form": null,
+    "slug": "roggenrola",
     "names": {
       "ja": "ダンゴロ",
       "en": "Roggenrola",
@@ -13836,6 +14404,7 @@
     "id": "0525",
     "no": "0525",
     "form": null,
+    "slug": "boldore",
     "names": {
       "ja": "ガントル",
       "en": "Boldore",
@@ -13856,6 +14425,7 @@
     "id": "0526",
     "no": "0526",
     "form": null,
+    "slug": "gigalith",
     "names": {
       "ja": "ギガイアス",
       "en": "Gigalith",
@@ -13876,6 +14446,7 @@
     "id": "0527",
     "no": "0527",
     "form": null,
+    "slug": "woobat",
     "names": {
       "ja": "コロモリ",
       "en": "Woobat",
@@ -13896,6 +14467,7 @@
     "id": "0528",
     "no": "0528",
     "form": null,
+    "slug": "swoobat",
     "names": {
       "ja": "ココロモリ",
       "en": "Swoobat",
@@ -13916,6 +14488,7 @@
     "id": "0529",
     "no": "0529",
     "form": null,
+    "slug": "drilbur",
     "names": {
       "ja": "モグリュー",
       "en": "Drilbur",
@@ -13941,6 +14514,7 @@
     "id": "0530",
     "no": "0530",
     "form": null,
+    "slug": "excadrill",
     "names": {
       "ja": "ドリュウズ",
       "en": "Excadrill",
@@ -13970,6 +14544,7 @@
     "id": "0531",
     "no": "0531",
     "form": null,
+    "slug": "audino",
     "names": {
       "ja": "タブンネ",
       "en": "Audino",
@@ -13990,6 +14565,7 @@
     "id": "0532",
     "no": "0532",
     "form": null,
+    "slug": "timburr",
     "names": {
       "ja": "ドッコラー",
       "en": "Timburr",
@@ -14015,6 +14591,7 @@
     "id": "0533",
     "no": "0533",
     "form": null,
+    "slug": "gurdurr",
     "names": {
       "ja": "ドテッコツ",
       "en": "Gurdurr",
@@ -14040,6 +14617,7 @@
     "id": "0534",
     "no": "0534",
     "form": null,
+    "slug": "conkeldurr",
     "names": {
       "ja": "ローブシン",
       "en": "Conkeldurr",
@@ -14065,6 +14643,7 @@
     "id": "0535",
     "no": "0535",
     "form": null,
+    "slug": "tympole",
     "names": {
       "ja": "オタマロ",
       "en": "Tympole",
@@ -14085,6 +14664,7 @@
     "id": "0536",
     "no": "0536",
     "form": null,
+    "slug": "palpitoad",
     "names": {
       "ja": "ガマガル",
       "en": "Palpitoad",
@@ -14105,6 +14685,7 @@
     "id": "0537",
     "no": "0537",
     "form": null,
+    "slug": "seismitoad",
     "names": {
       "ja": "ガマゲロゲ",
       "en": "Seismitoad",
@@ -14125,6 +14706,7 @@
     "id": "0538",
     "no": "0538",
     "form": null,
+    "slug": "throh",
     "names": {
       "ja": "ナゲキ",
       "en": "Throh",
@@ -14145,6 +14727,7 @@
     "id": "0539",
     "no": "0539",
     "form": null,
+    "slug": "sawk",
     "names": {
       "ja": "ダゲキ",
       "en": "Sawk",
@@ -14165,6 +14748,7 @@
     "id": "0540",
     "no": "0540",
     "form": null,
+    "slug": "sewaddle",
     "names": {
       "ja": "クルミル",
       "en": "Sewaddle",
@@ -14194,6 +14778,7 @@
     "id": "0541",
     "no": "0541",
     "form": null,
+    "slug": "swadloon",
     "names": {
       "ja": "クルマユ",
       "en": "Swadloon",
@@ -14223,6 +14808,7 @@
     "id": "0542",
     "no": "0542",
     "form": null,
+    "slug": "leavanny",
     "names": {
       "ja": "ハハコモリ",
       "en": "Leavanny",
@@ -14252,6 +14838,7 @@
     "id": "0543",
     "no": "0543",
     "form": null,
+    "slug": "venipede",
     "names": {
       "ja": "フシデ",
       "en": "Venipede",
@@ -14272,6 +14859,7 @@
     "id": "0544",
     "no": "0544",
     "form": null,
+    "slug": "whirlipede",
     "names": {
       "ja": "ホイーガ",
       "en": "Whirlipede",
@@ -14292,6 +14880,7 @@
     "id": "0545",
     "no": "0545",
     "form": null,
+    "slug": "scolipede",
     "names": {
       "ja": "ペンドラー",
       "en": "Scolipede",
@@ -14312,6 +14901,7 @@
     "id": "0546",
     "no": "0546",
     "form": null,
+    "slug": "cottonee",
     "names": {
       "ja": "モンメン",
       "en": "Cottonee",
@@ -14341,6 +14931,7 @@
     "id": "0547",
     "no": "0547",
     "form": null,
+    "slug": "whimsicott",
     "names": {
       "ja": "エルフーン",
       "en": "Whimsicott",
@@ -14370,6 +14961,7 @@
     "id": "0548",
     "no": "0548",
     "form": null,
+    "slug": "petilil",
     "names": {
       "ja": "チュリネ",
       "en": "Petilil",
@@ -14395,6 +14987,7 @@
     "id": "0549",
     "no": "0549",
     "form": null,
+    "slug": "lilligant",
     "names": {
       "ja": "ドレディア",
       "en": "Lilligant",
@@ -14420,6 +15013,7 @@
     "id": "0549-hisui",
     "no": "0549",
     "form": "hisui",
+    "slug": "lilligant-hisui",
     "names": {
       "ja": "ドレディア",
       "en": "Lilligant",
@@ -14445,6 +15039,7 @@
     "id": "0550",
     "no": "0550",
     "form": null,
+    "slug": "basculin",
     "names": {
       "ja": "バスラオ",
       "en": "Basculin",
@@ -14470,6 +15065,7 @@
     "id": "0551",
     "no": "0551",
     "form": null,
+    "slug": "sandile",
     "names": {
       "ja": "メグロコ",
       "en": "Sandile",
@@ -14499,6 +15095,7 @@
     "id": "0552",
     "no": "0552",
     "form": null,
+    "slug": "krokorok",
     "names": {
       "ja": "ワルビル",
       "en": "Krokorok",
@@ -14528,6 +15125,7 @@
     "id": "0553",
     "no": "0553",
     "form": null,
+    "slug": "krookodile",
     "names": {
       "ja": "ワルビアル",
       "en": "Krookodile",
@@ -14557,6 +15155,7 @@
     "id": "0554",
     "no": "0554",
     "form": null,
+    "slug": "darumaka",
     "names": {
       "ja": "ダルマッカ",
       "en": "Darumaka",
@@ -14577,6 +15176,7 @@
     "id": "0554-galar",
     "no": "0554",
     "form": "galar",
+    "slug": "darumaka-galar",
     "names": {
       "ja": "ダルマッカ",
       "en": "Darumaka",
@@ -14597,6 +15197,7 @@
     "id": "0555",
     "no": "0555",
     "form": null,
+    "slug": "darmanitan",
     "names": {
       "ja": "ヒヒダルマ",
       "en": "Darmanitan",
@@ -14617,6 +15218,7 @@
     "id": "0555-galar",
     "no": "0555",
     "form": "galar",
+    "slug": "darmanitan-galar",
     "names": {
       "ja": "ヒヒダルマ",
       "en": "Darmanitan",
@@ -14637,6 +15239,7 @@
     "id": "0556",
     "no": "0556",
     "form": null,
+    "slug": "maractus",
     "names": {
       "ja": "マラカッチ",
       "en": "Maractus",
@@ -14657,6 +15260,7 @@
     "id": "0557",
     "no": "0557",
     "form": null,
+    "slug": "dwebble",
     "names": {
       "ja": "イシズマイ",
       "en": "Dwebble",
@@ -14677,6 +15281,7 @@
     "id": "0558",
     "no": "0558",
     "form": null,
+    "slug": "crustle",
     "names": {
       "ja": "イワパレス",
       "en": "Crustle",
@@ -14697,6 +15302,7 @@
     "id": "0559",
     "no": "0559",
     "form": null,
+    "slug": "scraggy",
     "names": {
       "ja": "ズルッグ",
       "en": "Scraggy",
@@ -14726,6 +15332,7 @@
     "id": "0560",
     "no": "0560",
     "form": null,
+    "slug": "scrafty",
     "names": {
       "ja": "ズルズキン",
       "en": "Scrafty",
@@ -14755,6 +15362,7 @@
     "id": "0561",
     "no": "0561",
     "form": null,
+    "slug": "sigilyph",
     "names": {
       "ja": "シンボラー",
       "en": "Sigilyph",
@@ -14775,6 +15383,7 @@
     "id": "0562",
     "no": "0562",
     "form": null,
+    "slug": "yamask",
     "names": {
       "ja": "デスマス",
       "en": "Yamask",
@@ -14795,6 +15404,7 @@
     "id": "0562-galar",
     "no": "0562",
     "form": "galar",
+    "slug": "yamask-galar",
     "names": {
       "ja": "デスマス",
       "en": "Yamask",
@@ -14815,6 +15425,7 @@
     "id": "0563",
     "no": "0563",
     "form": null,
+    "slug": "cofagrigus",
     "names": {
       "ja": "デスカーン",
       "en": "Cofagrigus",
@@ -14835,6 +15446,7 @@
     "id": "0564",
     "no": "0564",
     "form": null,
+    "slug": "tirtouga",
     "names": {
       "ja": "プロトーガ",
       "en": "Tirtouga",
@@ -14855,6 +15467,7 @@
     "id": "0565",
     "no": "0565",
     "form": null,
+    "slug": "carracosta",
     "names": {
       "ja": "アバゴーラ",
       "en": "Carracosta",
@@ -14875,6 +15488,7 @@
     "id": "0566",
     "no": "0566",
     "form": null,
+    "slug": "archen",
     "names": {
       "ja": "アーケン",
       "en": "Archen",
@@ -14895,6 +15509,7 @@
     "id": "0567",
     "no": "0567",
     "form": null,
+    "slug": "archeops",
     "names": {
       "ja": "アーケオス",
       "en": "Archeops",
@@ -14915,6 +15530,7 @@
     "id": "0568",
     "no": "0568",
     "form": null,
+    "slug": "trubbish",
     "names": {
       "ja": "ヤブクロン",
       "en": "Trubbish",
@@ -14935,6 +15551,7 @@
     "id": "0569",
     "no": "0569",
     "form": null,
+    "slug": "garbodor",
     "names": {
       "ja": "ダストダス",
       "en": "Garbodor",
@@ -14955,6 +15572,7 @@
     "id": "0570",
     "no": "0570",
     "form": null,
+    "slug": "zorua",
     "names": {
       "ja": "ゾロア",
       "en": "Zorua",
@@ -14980,6 +15598,7 @@
     "id": "0570-hisui",
     "no": "0570",
     "form": "hisui",
+    "slug": "zorua-hisui",
     "names": {
       "ja": "ゾロア",
       "en": "Zorua",
@@ -15005,6 +15624,7 @@
     "id": "0571",
     "no": "0571",
     "form": null,
+    "slug": "zoroark",
     "names": {
       "ja": "ゾロアーク",
       "en": "Zoroark",
@@ -15030,6 +15650,7 @@
     "id": "0571-hisui",
     "no": "0571",
     "form": "hisui",
+    "slug": "zoroark-hisui",
     "names": {
       "ja": "ゾロアーク",
       "en": "Zoroark",
@@ -15055,6 +15676,7 @@
     "id": "0572",
     "no": "0572",
     "form": null,
+    "slug": "minccino",
     "names": {
       "ja": "チラーミィ",
       "en": "Minccino",
@@ -15080,6 +15702,7 @@
     "id": "0573",
     "no": "0573",
     "form": null,
+    "slug": "cinccino",
     "names": {
       "ja": "チラチーノ",
       "en": "Cinccino",
@@ -15105,6 +15728,7 @@
     "id": "0574",
     "no": "0574",
     "form": null,
+    "slug": "gothita",
     "names": {
       "ja": "ゴチム",
       "en": "Gothita",
@@ -15130,6 +15754,7 @@
     "id": "0575",
     "no": "0575",
     "form": null,
+    "slug": "gothorita",
     "names": {
       "ja": "ゴチミル",
       "en": "Gothorita",
@@ -15155,6 +15780,7 @@
     "id": "0576",
     "no": "0576",
     "form": null,
+    "slug": "gothitelle",
     "names": {
       "ja": "ゴチルゼル",
       "en": "Gothitelle",
@@ -15180,6 +15806,7 @@
     "id": "0577",
     "no": "0577",
     "form": null,
+    "slug": "solosis",
     "names": {
       "ja": "ユニラン",
       "en": "Solosis",
@@ -15205,6 +15832,7 @@
     "id": "0578",
     "no": "0578",
     "form": null,
+    "slug": "duosion",
     "names": {
       "ja": "ダブラン",
       "en": "Duosion",
@@ -15230,6 +15858,7 @@
     "id": "0579",
     "no": "0579",
     "form": null,
+    "slug": "reuniclus",
     "names": {
       "ja": "ランクルス",
       "en": "Reuniclus",
@@ -15255,6 +15884,7 @@
     "id": "0580",
     "no": "0580",
     "form": null,
+    "slug": "ducklett",
     "names": {
       "ja": "コアルヒー",
       "en": "Ducklett",
@@ -15284,6 +15914,7 @@
     "id": "0581",
     "no": "0581",
     "form": null,
+    "slug": "swanna",
     "names": {
       "ja": "スワンナ",
       "en": "Swanna",
@@ -15313,6 +15944,7 @@
     "id": "0582",
     "no": "0582",
     "form": null,
+    "slug": "vanillite",
     "names": {
       "ja": "バニプッチ",
       "en": "Vanillite",
@@ -15333,6 +15965,7 @@
     "id": "0583",
     "no": "0583",
     "form": null,
+    "slug": "vanillish",
     "names": {
       "ja": "バニリッチ",
       "en": "Vanillish",
@@ -15353,6 +15986,7 @@
     "id": "0584",
     "no": "0584",
     "form": null,
+    "slug": "vanilluxe",
     "names": {
       "ja": "バイバニラ",
       "en": "Vanilluxe",
@@ -15373,6 +16007,7 @@
     "id": "0585",
     "no": "0585",
     "form": null,
+    "slug": "deerling",
     "names": {
       "ja": "シキジカ",
       "en": "Deerling",
@@ -15402,6 +16037,7 @@
     "id": "0586",
     "no": "0586",
     "form": null,
+    "slug": "sawsbuck",
     "names": {
       "ja": "メブキジカ",
       "en": "Sawsbuck",
@@ -15431,6 +16067,7 @@
     "id": "0587",
     "no": "0587",
     "form": null,
+    "slug": "emolga",
     "names": {
       "ja": "エモンガ",
       "en": "Emolga",
@@ -15451,6 +16088,7 @@
     "id": "0588",
     "no": "0588",
     "form": null,
+    "slug": "karrablast",
     "names": {
       "ja": "カブルモ",
       "en": "Karrablast",
@@ -15471,6 +16109,7 @@
     "id": "0589",
     "no": "0589",
     "form": null,
+    "slug": "escavalier",
     "names": {
       "ja": "シュバルゴ",
       "en": "Escavalier",
@@ -15491,6 +16130,7 @@
     "id": "0590",
     "no": "0590",
     "form": null,
+    "slug": "foongus",
     "names": {
       "ja": "タマゲタケ",
       "en": "Foongus",
@@ -15520,6 +16160,7 @@
     "id": "0591",
     "no": "0591",
     "form": null,
+    "slug": "amoonguss",
     "names": {
       "ja": "モロバレル",
       "en": "Amoonguss",
@@ -15549,6 +16190,7 @@
     "id": "0592",
     "no": "0592",
     "form": null,
+    "slug": "frillish",
     "names": {
       "ja": "プルリル",
       "en": "Frillish",
@@ -15569,6 +16211,7 @@
     "id": "0593",
     "no": "0593",
     "form": null,
+    "slug": "jellicent",
     "names": {
       "ja": "ブルンゲル",
       "en": "Jellicent",
@@ -15589,6 +16232,7 @@
     "id": "0594",
     "no": "0594",
     "form": null,
+    "slug": "alomomola",
     "names": {
       "ja": "ママンボウ",
       "en": "Alomomola",
@@ -15614,6 +16258,7 @@
     "id": "0595",
     "no": "0595",
     "form": null,
+    "slug": "joltik",
     "names": {
       "ja": "バチュル",
       "en": "Joltik",
@@ -15643,6 +16288,7 @@
     "id": "0596",
     "no": "0596",
     "form": null,
+    "slug": "galvantula",
     "names": {
       "ja": "デンチュラ",
       "en": "Galvantula",
@@ -15672,6 +16318,7 @@
     "id": "0597",
     "no": "0597",
     "form": null,
+    "slug": "ferroseed",
     "names": {
       "ja": "テッシード",
       "en": "Ferroseed",
@@ -15692,6 +16339,7 @@
     "id": "0598",
     "no": "0598",
     "form": null,
+    "slug": "ferrothorn",
     "names": {
       "ja": "ナットレイ",
       "en": "Ferrothorn",
@@ -15712,6 +16360,7 @@
     "id": "0599",
     "no": "0599",
     "form": null,
+    "slug": "klink",
     "names": {
       "ja": "ギアル",
       "en": "Klink",
@@ -15732,6 +16381,7 @@
     "id": "0600",
     "no": "0600",
     "form": null,
+    "slug": "klang",
     "names": {
       "ja": "ギギアル",
       "en": "Klang",
@@ -15752,6 +16402,7 @@
     "id": "0601",
     "no": "0601",
     "form": null,
+    "slug": "klinklang",
     "names": {
       "ja": "ギギギアル",
       "en": "Klinklang",
@@ -15772,6 +16423,7 @@
     "id": "0602",
     "no": "0602",
     "form": null,
+    "slug": "tynamo",
     "names": {
       "ja": "シビシラス",
       "en": "Tynamo",
@@ -15797,6 +16449,7 @@
     "id": "0603",
     "no": "0603",
     "form": null,
+    "slug": "eelektrik",
     "names": {
       "ja": "シビビール",
       "en": "Eelektrik",
@@ -15822,6 +16475,7 @@
     "id": "0604",
     "no": "0604",
     "form": null,
+    "slug": "eelektross",
     "names": {
       "ja": "シビルドン",
       "en": "Eelektross",
@@ -15847,6 +16501,7 @@
     "id": "0605",
     "no": "0605",
     "form": null,
+    "slug": "elgyem",
     "names": {
       "ja": "リグレー",
       "en": "Elgyem",
@@ -15867,6 +16522,7 @@
     "id": "0606",
     "no": "0606",
     "form": null,
+    "slug": "beheeyem",
     "names": {
       "ja": "オーベム",
       "en": "Beheeyem",
@@ -15887,6 +16543,7 @@
     "id": "0607",
     "no": "0607",
     "form": null,
+    "slug": "litwick",
     "names": {
       "ja": "ヒトモシ",
       "en": "Litwick",
@@ -15916,6 +16573,7 @@
     "id": "0608",
     "no": "0608",
     "form": null,
+    "slug": "lampent",
     "names": {
       "ja": "ランプラー",
       "en": "Lampent",
@@ -15945,6 +16603,7 @@
     "id": "0609",
     "no": "0609",
     "form": null,
+    "slug": "chandelure",
     "names": {
       "ja": "シャンデラ",
       "en": "Chandelure",
@@ -15974,6 +16633,7 @@
     "id": "0610",
     "no": "0610",
     "form": null,
+    "slug": "axew",
     "names": {
       "ja": "キバゴ",
       "en": "Axew",
@@ -15999,6 +16659,7 @@
     "id": "0611",
     "no": "0611",
     "form": null,
+    "slug": "fraxure",
     "names": {
       "ja": "オノンド",
       "en": "Fraxure",
@@ -16024,6 +16685,7 @@
     "id": "0612",
     "no": "0612",
     "form": null,
+    "slug": "haxorus",
     "names": {
       "ja": "オノノクス",
       "en": "Haxorus",
@@ -16049,6 +16711,7 @@
     "id": "0613",
     "no": "0613",
     "form": null,
+    "slug": "cubchoo",
     "names": {
       "ja": "クマシュン",
       "en": "Cubchoo",
@@ -16074,6 +16737,7 @@
     "id": "0614",
     "no": "0614",
     "form": null,
+    "slug": "beartic",
     "names": {
       "ja": "ツンベアー",
       "en": "Beartic",
@@ -16099,6 +16763,7 @@
     "id": "0615",
     "no": "0615",
     "form": null,
+    "slug": "cryogonal",
     "names": {
       "ja": "フリージオ",
       "en": "Cryogonal",
@@ -16124,6 +16789,7 @@
     "id": "0616",
     "no": "0616",
     "form": null,
+    "slug": "shelmet",
     "names": {
       "ja": "チョボマキ",
       "en": "Shelmet",
@@ -16144,6 +16810,7 @@
     "id": "0617",
     "no": "0617",
     "form": null,
+    "slug": "accelgor",
     "names": {
       "ja": "アギルダー",
       "en": "Accelgor",
@@ -16164,6 +16831,7 @@
     "id": "0618",
     "no": "0618",
     "form": null,
+    "slug": "stunfisk",
     "names": {
       "ja": "マッギョ",
       "en": "Stunfisk",
@@ -16184,6 +16852,7 @@
     "id": "0618-galar",
     "no": "0618",
     "form": "galar",
+    "slug": "stunfisk-galar",
     "names": {
       "ja": "マッギョ",
       "en": "Stunfisk",
@@ -16204,6 +16873,7 @@
     "id": "0619",
     "no": "0619",
     "form": null,
+    "slug": "mienfoo",
     "names": {
       "ja": "コジョフー",
       "en": "Mienfoo",
@@ -16229,6 +16899,7 @@
     "id": "0620",
     "no": "0620",
     "form": null,
+    "slug": "mienshao",
     "names": {
       "ja": "コジョンド",
       "en": "Mienshao",
@@ -16254,6 +16925,7 @@
     "id": "0621",
     "no": "0621",
     "form": null,
+    "slug": "druddigon",
     "names": {
       "ja": "クリムガン",
       "en": "Druddigon",
@@ -16274,6 +16946,7 @@
     "id": "0622",
     "no": "0622",
     "form": null,
+    "slug": "golett",
     "names": {
       "ja": "ゴビット",
       "en": "Golett",
@@ -16303,6 +16976,7 @@
     "id": "0623",
     "no": "0623",
     "form": null,
+    "slug": "golurk",
     "names": {
       "ja": "ゴルーグ",
       "en": "Golurk",
@@ -16332,6 +17006,7 @@
     "id": "0624",
     "no": "0624",
     "form": null,
+    "slug": "pawniard",
     "names": {
       "ja": "コマタナ",
       "en": "Pawniard",
@@ -16361,6 +17036,7 @@
     "id": "0625",
     "no": "0625",
     "form": null,
+    "slug": "bisharp",
     "names": {
       "ja": "キリキザン",
       "en": "Bisharp",
@@ -16390,6 +17066,7 @@
     "id": "0626",
     "no": "0626",
     "form": null,
+    "slug": "bouffalant",
     "names": {
       "ja": "バッフロン",
       "en": "Bouffalant",
@@ -16410,6 +17087,7 @@
     "id": "0627",
     "no": "0627",
     "form": null,
+    "slug": "rufflet",
     "names": {
       "ja": "ワシボン",
       "en": "Rufflet",
@@ -16439,6 +17117,7 @@
     "id": "0628",
     "no": "0628",
     "form": null,
+    "slug": "braviary",
     "names": {
       "ja": "ウォーグル",
       "en": "Braviary",
@@ -16468,6 +17147,7 @@
     "id": "0628-hisui",
     "no": "0628",
     "form": "hisui",
+    "slug": "braviary-hisui",
     "names": {
       "ja": "ウォーグル",
       "en": "Braviary",
@@ -16497,6 +17177,7 @@
     "id": "0629",
     "no": "0629",
     "form": null,
+    "slug": "vullaby",
     "names": {
       "ja": "バルチャイ",
       "en": "Vullaby",
@@ -16526,6 +17207,7 @@
     "id": "0630",
     "no": "0630",
     "form": null,
+    "slug": "mandibuzz",
     "names": {
       "ja": "バルジーナ",
       "en": "Mandibuzz",
@@ -16555,6 +17237,7 @@
     "id": "0631",
     "no": "0631",
     "form": null,
+    "slug": "heatmor",
     "names": {
       "ja": "クイタラン",
       "en": "Heatmor",
@@ -16575,6 +17258,7 @@
     "id": "0632",
     "no": "0632",
     "form": null,
+    "slug": "durant",
     "names": {
       "ja": "アイアント",
       "en": "Durant",
@@ -16595,6 +17279,7 @@
     "id": "0633",
     "no": "0633",
     "form": null,
+    "slug": "deino",
     "names": {
       "ja": "モノズ",
       "en": "Deino",
@@ -16624,6 +17309,7 @@
     "id": "0634",
     "no": "0634",
     "form": null,
+    "slug": "zweilous",
     "names": {
       "ja": "ジヘッド",
       "en": "Zweilous",
@@ -16653,6 +17339,7 @@
     "id": "0635",
     "no": "0635",
     "form": null,
+    "slug": "hydreigon",
     "names": {
       "ja": "サザンドラ",
       "en": "Hydreigon",
@@ -16682,6 +17369,7 @@
     "id": "0636",
     "no": "0636",
     "form": null,
+    "slug": "larvesta",
     "names": {
       "ja": "メラルバ",
       "en": "Larvesta",
@@ -16711,6 +17399,7 @@
     "id": "0637",
     "no": "0637",
     "form": null,
+    "slug": "volcarona",
     "names": {
       "ja": "ウルガモス",
       "en": "Volcarona",
@@ -16740,6 +17429,7 @@
     "id": "0638",
     "no": "0638",
     "form": null,
+    "slug": "cobalion",
     "names": {
       "ja": "コバルオン",
       "en": "Cobalion",
@@ -16760,6 +17450,7 @@
     "id": "0639",
     "no": "0639",
     "form": null,
+    "slug": "terrakion",
     "names": {
       "ja": "テラキオン",
       "en": "Terrakion",
@@ -16780,6 +17471,7 @@
     "id": "0640",
     "no": "0640",
     "form": null,
+    "slug": "virizion",
     "names": {
       "ja": "ビリジオン",
       "en": "Virizion",
@@ -16800,6 +17492,7 @@
     "id": "0641",
     "no": "0641",
     "form": null,
+    "slug": "tornadus",
     "names": {
       "ja": "トルネロス",
       "en": "Tornadus",
@@ -16820,6 +17513,7 @@
     "id": "0642",
     "no": "0642",
     "form": null,
+    "slug": "thundurus",
     "names": {
       "ja": "ボルトロス",
       "en": "Thundurus",
@@ -16840,6 +17534,7 @@
     "id": "0643",
     "no": "0643",
     "form": null,
+    "slug": "reshiram",
     "names": {
       "ja": "レシラム",
       "en": "Reshiram",
@@ -16860,6 +17555,7 @@
     "id": "0644",
     "no": "0644",
     "form": null,
+    "slug": "zekrom",
     "names": {
       "ja": "ゼクロム",
       "en": "Zekrom",
@@ -16880,6 +17576,7 @@
     "id": "0645",
     "no": "0645",
     "form": null,
+    "slug": "landorus",
     "names": {
       "ja": "ランドロス",
       "en": "Landorus",
@@ -16900,6 +17597,7 @@
     "id": "0646",
     "no": "0646",
     "form": null,
+    "slug": "kyurem",
     "names": {
       "ja": "キュレム",
       "en": "Kyurem",
@@ -16920,6 +17618,7 @@
     "id": "0647",
     "no": "0647",
     "form": null,
+    "slug": "keldeo",
     "names": {
       "ja": "ケルディオ",
       "en": "Keldeo",
@@ -16940,6 +17639,7 @@
     "id": "0648",
     "no": "0648",
     "form": null,
+    "slug": "meloetta",
     "names": {
       "ja": "メロエッタ",
       "en": "Meloetta",
@@ -16960,6 +17660,7 @@
     "id": "0649",
     "no": "0649",
     "form": null,
+    "slug": "genesect",
     "names": {
       "ja": "ゲノセクト",
       "en": "Genesect",
@@ -16980,6 +17681,7 @@
     "id": "0650",
     "no": "0650",
     "form": null,
+    "slug": "chespin",
     "names": {
       "ja": "ハリマロン",
       "en": "Chespin",
@@ -17005,6 +17707,7 @@
     "id": "0651",
     "no": "0651",
     "form": null,
+    "slug": "quilladin",
     "names": {
       "ja": "ハリボーグ",
       "en": "Quilladin",
@@ -17030,6 +17733,7 @@
     "id": "0652",
     "no": "0652",
     "form": null,
+    "slug": "chesnaught",
     "names": {
       "ja": "ブリガロン",
       "en": "Chesnaught",
@@ -17059,6 +17763,7 @@
     "id": "0653",
     "no": "0653",
     "form": null,
+    "slug": "fennekin",
     "names": {
       "ja": "フォッコ",
       "en": "Fennekin",
@@ -17084,6 +17789,7 @@
     "id": "0654",
     "no": "0654",
     "form": null,
+    "slug": "braixen",
     "names": {
       "ja": "テールナー",
       "en": "Braixen",
@@ -17109,6 +17815,7 @@
     "id": "0655",
     "no": "0655",
     "form": null,
+    "slug": "delphox",
     "names": {
       "ja": "マフォクシー",
       "en": "Delphox",
@@ -17138,6 +17845,7 @@
     "id": "0656",
     "no": "0656",
     "form": null,
+    "slug": "froakie",
     "names": {
       "ja": "ケロマツ",
       "en": "Froakie",
@@ -17163,6 +17871,7 @@
     "id": "0657",
     "no": "0657",
     "form": null,
+    "slug": "frogadier",
     "names": {
       "ja": "ゲコガシラ",
       "en": "Frogadier",
@@ -17188,6 +17897,7 @@
     "id": "0658",
     "no": "0658",
     "form": null,
+    "slug": "greninja",
     "names": {
       "ja": "ゲッコウガ",
       "en": "Greninja",
@@ -17217,6 +17927,7 @@
     "id": "0659",
     "no": "0659",
     "form": null,
+    "slug": "bunnelby",
     "names": {
       "ja": "ホルビー",
       "en": "Bunnelby",
@@ -17237,6 +17948,7 @@
     "id": "0660",
     "no": "0660",
     "form": null,
+    "slug": "diggersby",
     "names": {
       "ja": "ホルード",
       "en": "Diggersby",
@@ -17257,6 +17969,7 @@
     "id": "0661",
     "no": "0661",
     "form": null,
+    "slug": "fletchling",
     "names": {
       "ja": "ヤヤコマ",
       "en": "Fletchling",
@@ -17286,6 +17999,7 @@
     "id": "0662",
     "no": "0662",
     "form": null,
+    "slug": "fletchinder",
     "names": {
       "ja": "ヒノヤコマ",
       "en": "Fletchinder",
@@ -17315,6 +18029,7 @@
     "id": "0663",
     "no": "0663",
     "form": null,
+    "slug": "talonflame",
     "names": {
       "ja": "ファイアロー",
       "en": "Talonflame",
@@ -17344,6 +18059,7 @@
     "id": "0664",
     "no": "0664",
     "form": null,
+    "slug": "scatterbug",
     "names": {
       "ja": "コフキムシ",
       "en": "Scatterbug",
@@ -17369,6 +18085,7 @@
     "id": "0665",
     "no": "0665",
     "form": null,
+    "slug": "spewpa",
     "names": {
       "ja": "コフーライ",
       "en": "Spewpa",
@@ -17394,6 +18111,7 @@
     "id": "0666",
     "no": "0666",
     "form": null,
+    "slug": "vivillon",
     "names": {
       "ja": "ビビヨン",
       "en": "Vivillon",
@@ -17423,6 +18141,7 @@
     "id": "0667",
     "no": "0667",
     "form": null,
+    "slug": "litleo",
     "names": {
       "ja": "シシコ",
       "en": "Litleo",
@@ -17452,6 +18171,7 @@
     "id": "0668",
     "no": "0668",
     "form": null,
+    "slug": "pyroar",
     "names": {
       "ja": "カエンジシ",
       "en": "Pyroar",
@@ -17481,6 +18201,7 @@
     "id": "0669",
     "no": "0669",
     "form": null,
+    "slug": "flabebe",
     "names": {
       "ja": "フラベベ",
       "en": "Flabébé",
@@ -17506,6 +18227,7 @@
     "id": "0670",
     "no": "0670",
     "form": null,
+    "slug": "floette",
     "names": {
       "ja": "フラエッテ",
       "en": "Floette",
@@ -17531,6 +18253,7 @@
     "id": "0671",
     "no": "0671",
     "form": null,
+    "slug": "florges",
     "names": {
       "ja": "フラージェス",
       "en": "Florges",
@@ -17556,6 +18279,7 @@
     "id": "0672",
     "no": "0672",
     "form": null,
+    "slug": "skiddo",
     "names": {
       "ja": "メェークル",
       "en": "Skiddo",
@@ -17581,6 +18305,7 @@
     "id": "0673",
     "no": "0673",
     "form": null,
+    "slug": "gogoat",
     "names": {
       "ja": "ゴーゴート",
       "en": "Gogoat",
@@ -17606,6 +18331,7 @@
     "id": "0674",
     "no": "0674",
     "form": null,
+    "slug": "pancham",
     "names": {
       "ja": "ヤンチャム",
       "en": "Pancham",
@@ -17626,6 +18352,7 @@
     "id": "0675",
     "no": "0675",
     "form": null,
+    "slug": "pangoro",
     "names": {
       "ja": "ゴロンダ",
       "en": "Pangoro",
@@ -17646,6 +18373,7 @@
     "id": "0676",
     "no": "0676",
     "form": null,
+    "slug": "furfrou",
     "names": {
       "ja": "トリミアン",
       "en": "Furfrou",
@@ -17666,6 +18394,7 @@
     "id": "0677",
     "no": "0677",
     "form": null,
+    "slug": "espurr",
     "names": {
       "ja": "ニャスパー",
       "en": "Espurr",
@@ -17691,6 +18420,7 @@
     "id": "0678",
     "no": "0678",
     "form": null,
+    "slug": "meowstic",
     "names": {
       "ja": "ニャオニクス",
       "en": "Meowstic",
@@ -17716,6 +18446,7 @@
     "id": "0679",
     "no": "0679",
     "form": null,
+    "slug": "honedge",
     "names": {
       "ja": "ヒトツキ",
       "en": "Honedge",
@@ -17736,6 +18467,7 @@
     "id": "0680",
     "no": "0680",
     "form": null,
+    "slug": "doublade",
     "names": {
       "ja": "ニダンギル",
       "en": "Doublade",
@@ -17756,6 +18488,7 @@
     "id": "0681",
     "no": "0681",
     "form": null,
+    "slug": "aegislash",
     "names": {
       "ja": "ギルガルド",
       "en": "Aegislash",
@@ -17776,6 +18509,7 @@
     "id": "0682",
     "no": "0682",
     "form": null,
+    "slug": "spritzee",
     "names": {
       "ja": "シュシュプ",
       "en": "Spritzee",
@@ -17796,6 +18530,7 @@
     "id": "0683",
     "no": "0683",
     "form": null,
+    "slug": "aromatisse",
     "names": {
       "ja": "フレフワン",
       "en": "Aromatisse",
@@ -17816,6 +18551,7 @@
     "id": "0684",
     "no": "0684",
     "form": null,
+    "slug": "swirlix",
     "names": {
       "ja": "ペロッパフ",
       "en": "Swirlix",
@@ -17836,6 +18572,7 @@
     "id": "0685",
     "no": "0685",
     "form": null,
+    "slug": "slurpuff",
     "names": {
       "ja": "ペロリーム",
       "en": "Slurpuff",
@@ -17856,6 +18593,7 @@
     "id": "0686",
     "no": "0686",
     "form": null,
+    "slug": "inkay",
     "names": {
       "ja": "マーイーカ",
       "en": "Inkay",
@@ -17885,6 +18623,7 @@
     "id": "0687",
     "no": "0687",
     "form": null,
+    "slug": "malamar",
     "names": {
       "ja": "カラマネロ",
       "en": "Malamar",
@@ -17914,6 +18653,7 @@
     "id": "0688",
     "no": "0688",
     "form": null,
+    "slug": "binacle",
     "names": {
       "ja": "カメテテ",
       "en": "Binacle",
@@ -17934,6 +18674,7 @@
     "id": "0689",
     "no": "0689",
     "form": null,
+    "slug": "barbaracle",
     "names": {
       "ja": "ガメノデス",
       "en": "Barbaracle",
@@ -17954,6 +18695,7 @@
     "id": "0690",
     "no": "0690",
     "form": null,
+    "slug": "skrelp",
     "names": {
       "ja": "クズモー",
       "en": "Skrelp",
@@ -17983,6 +18725,7 @@
     "id": "0691",
     "no": "0691",
     "form": null,
+    "slug": "dragalge",
     "names": {
       "ja": "ドラミドロ",
       "en": "Dragalge",
@@ -18012,6 +18755,7 @@
     "id": "0692",
     "no": "0692",
     "form": null,
+    "slug": "clauncher",
     "names": {
       "ja": "ウデッポウ",
       "en": "Clauncher",
@@ -18037,6 +18781,7 @@
     "id": "0693",
     "no": "0693",
     "form": null,
+    "slug": "clawitzer",
     "names": {
       "ja": "ブロスター",
       "en": "Clawitzer",
@@ -18062,6 +18807,7 @@
     "id": "0694",
     "no": "0694",
     "form": null,
+    "slug": "helioptile",
     "names": {
       "ja": "エリキテル",
       "en": "Helioptile",
@@ -18082,6 +18828,7 @@
     "id": "0695",
     "no": "0695",
     "form": null,
+    "slug": "heliolisk",
     "names": {
       "ja": "エレザード",
       "en": "Heliolisk",
@@ -18102,6 +18849,7 @@
     "id": "0696",
     "no": "0696",
     "form": null,
+    "slug": "tyrunt",
     "names": {
       "ja": "チゴラス",
       "en": "Tyrunt",
@@ -18122,6 +18870,7 @@
     "id": "0697",
     "no": "0697",
     "form": null,
+    "slug": "tyrantrum",
     "names": {
       "ja": "ガチゴラス",
       "en": "Tyrantrum",
@@ -18142,6 +18891,7 @@
     "id": "0698",
     "no": "0698",
     "form": null,
+    "slug": "amaura",
     "names": {
       "ja": "アマルス",
       "en": "Amaura",
@@ -18162,6 +18912,7 @@
     "id": "0699",
     "no": "0699",
     "form": null,
+    "slug": "aurorus",
     "names": {
       "ja": "アマルルガ",
       "en": "Aurorus",
@@ -18182,6 +18933,7 @@
     "id": "0700",
     "no": "0700",
     "form": null,
+    "slug": "sylveon",
     "names": {
       "ja": "ニンフィア",
       "en": "Sylveon",
@@ -18207,6 +18959,7 @@
     "id": "0701",
     "no": "0701",
     "form": null,
+    "slug": "hawlucha",
     "names": {
       "ja": "ルチャブル",
       "en": "Hawlucha",
@@ -18236,6 +18989,7 @@
     "id": "0702",
     "no": "0702",
     "form": null,
+    "slug": "dedenne",
     "names": {
       "ja": "デデンネ",
       "en": "Dedenne",
@@ -18265,6 +19019,7 @@
     "id": "0703",
     "no": "0703",
     "form": null,
+    "slug": "carbink",
     "names": {
       "ja": "メレシー",
       "en": "Carbink",
@@ -18294,6 +19049,7 @@
     "id": "0704",
     "no": "0704",
     "form": null,
+    "slug": "goomy",
     "names": {
       "ja": "ヌメラ",
       "en": "Goomy",
@@ -18319,6 +19075,7 @@
     "id": "0705",
     "no": "0705",
     "form": null,
+    "slug": "sliggoo",
     "names": {
       "ja": "ヌメイル",
       "en": "Sliggoo",
@@ -18344,6 +19101,7 @@
     "id": "0705-hisui",
     "no": "0705",
     "form": "hisui",
+    "slug": "sliggoo-hisui",
     "names": {
       "ja": "ヌメイル",
       "en": "Sliggoo",
@@ -18369,6 +19127,7 @@
     "id": "0706",
     "no": "0706",
     "form": null,
+    "slug": "goodra",
     "names": {
       "ja": "ヌメルゴン",
       "en": "Goodra",
@@ -18394,6 +19153,7 @@
     "id": "0706-hisui",
     "no": "0706",
     "form": "hisui",
+    "slug": "goodra-hisui",
     "names": {
       "ja": "ヌメルゴン",
       "en": "Goodra",
@@ -18419,6 +19179,7 @@
     "id": "0707",
     "no": "0707",
     "form": null,
+    "slug": "klefki",
     "names": {
       "ja": "クレッフィ",
       "en": "Klefki",
@@ -18448,6 +19209,7 @@
     "id": "0708",
     "no": "0708",
     "form": null,
+    "slug": "phantump",
     "names": {
       "ja": "ボクレー",
       "en": "Phantump",
@@ -18477,6 +19239,7 @@
     "id": "0709",
     "no": "0709",
     "form": null,
+    "slug": "trevenant",
     "names": {
       "ja": "オーロット",
       "en": "Trevenant",
@@ -18506,6 +19269,7 @@
     "id": "0710",
     "no": "0710",
     "form": null,
+    "slug": "pumpkaboo",
     "names": {
       "ja": "バケッチャ",
       "en": "Pumpkaboo",
@@ -18526,6 +19290,7 @@
     "id": "0711",
     "no": "0711",
     "form": null,
+    "slug": "gourgeist",
     "names": {
       "ja": "パンプジン",
       "en": "Gourgeist",
@@ -18546,6 +19311,7 @@
     "id": "0712",
     "no": "0712",
     "form": null,
+    "slug": "bergmite",
     "names": {
       "ja": "カチコール",
       "en": "Bergmite",
@@ -18571,6 +19337,7 @@
     "id": "0713",
     "no": "0713",
     "form": null,
+    "slug": "avalugg",
     "names": {
       "ja": "クレベース",
       "en": "Avalugg",
@@ -18596,6 +19363,7 @@
     "id": "0713-hisui",
     "no": "0713",
     "form": "hisui",
+    "slug": "avalugg-hisui",
     "names": {
       "ja": "クレベース",
       "en": "Avalugg",
@@ -18621,6 +19389,7 @@
     "id": "0714",
     "no": "0714",
     "form": null,
+    "slug": "noibat",
     "names": {
       "ja": "オンバット",
       "en": "Noibat",
@@ -18650,6 +19419,7 @@
     "id": "0715",
     "no": "0715",
     "form": null,
+    "slug": "noivern",
     "names": {
       "ja": "オンバーン",
       "en": "Noivern",
@@ -18679,6 +19449,7 @@
     "id": "0716",
     "no": "0716",
     "form": null,
+    "slug": "xerneas",
     "names": {
       "ja": "ゼルネアス",
       "en": "Xerneas",
@@ -18699,6 +19470,7 @@
     "id": "0717",
     "no": "0717",
     "form": null,
+    "slug": "yveltal",
     "names": {
       "ja": "イベルタル",
       "en": "Yveltal",
@@ -18719,6 +19491,7 @@
     "id": "0718",
     "no": "0718",
     "form": null,
+    "slug": "zygarde",
     "names": {
       "ja": "ジガルデ",
       "en": "Zygarde",
@@ -18739,6 +19512,7 @@
     "id": "0719",
     "no": "0719",
     "form": null,
+    "slug": "diancie",
     "names": {
       "ja": "ディアンシー",
       "en": "Diancie",
@@ -18759,6 +19533,7 @@
     "id": "0720",
     "no": "0720",
     "form": null,
+    "slug": "hoopa",
     "names": {
       "ja": "フーパ",
       "en": "Hoopa",
@@ -18779,6 +19554,7 @@
     "id": "0721",
     "no": "0721",
     "form": null,
+    "slug": "volcanion",
     "names": {
       "ja": "ボルケニオン",
       "en": "Volcanion",
@@ -18799,6 +19575,7 @@
     "id": "0722",
     "no": "0722",
     "form": null,
+    "slug": "rowlet",
     "names": {
       "ja": "モクロー",
       "en": "Rowlet",
@@ -18828,6 +19605,7 @@
     "id": "0723",
     "no": "0723",
     "form": null,
+    "slug": "dartrix",
     "names": {
       "ja": "フクスロー",
       "en": "Dartrix",
@@ -18857,6 +19635,7 @@
     "id": "0724",
     "no": "0724",
     "form": null,
+    "slug": "decidueye",
     "names": {
       "ja": "ジュナイパー",
       "en": "Decidueye",
@@ -18886,6 +19665,7 @@
     "id": "0724-hisui",
     "no": "0724",
     "form": "hisui",
+    "slug": "decidueye-hisui",
     "names": {
       "ja": "ジュナイパー",
       "en": "Decidueye",
@@ -18915,6 +19695,7 @@
     "id": "0725",
     "no": "0725",
     "form": null,
+    "slug": "litten",
     "names": {
       "ja": "ニャビー",
       "en": "Litten",
@@ -18940,6 +19721,7 @@
     "id": "0726",
     "no": "0726",
     "form": null,
+    "slug": "torracat",
     "names": {
       "ja": "ニャヒート",
       "en": "Torracat",
@@ -18965,6 +19747,7 @@
     "id": "0727",
     "no": "0727",
     "form": null,
+    "slug": "incineroar",
     "names": {
       "ja": "ガオガエン",
       "en": "Incineroar",
@@ -18994,6 +19777,7 @@
     "id": "0728",
     "no": "0728",
     "form": null,
+    "slug": "popplio",
     "names": {
       "ja": "アシマリ",
       "en": "Popplio",
@@ -19019,6 +19803,7 @@
     "id": "0729",
     "no": "0729",
     "form": null,
+    "slug": "brionne",
     "names": {
       "ja": "オシャマリ",
       "en": "Brionne",
@@ -19044,6 +19829,7 @@
     "id": "0730",
     "no": "0730",
     "form": null,
+    "slug": "primarina",
     "names": {
       "ja": "アシレーヌ",
       "en": "Primarina",
@@ -19073,6 +19859,7 @@
     "id": "0731",
     "no": "0731",
     "form": null,
+    "slug": "pikipek",
     "names": {
       "ja": "ツツケラ",
       "en": "Pikipek",
@@ -19102,6 +19889,7 @@
     "id": "0732",
     "no": "0732",
     "form": null,
+    "slug": "trumbeak",
     "names": {
       "ja": "ケララッパ",
       "en": "Trumbeak",
@@ -19131,6 +19919,7 @@
     "id": "0733",
     "no": "0733",
     "form": null,
+    "slug": "toucannon",
     "names": {
       "ja": "ドデカバシ",
       "en": "Toucannon",
@@ -19160,6 +19949,7 @@
     "id": "0734",
     "no": "0734",
     "form": null,
+    "slug": "yungoos",
     "names": {
       "ja": "ヤングース",
       "en": "Yungoos",
@@ -19185,6 +19975,7 @@
     "id": "0735",
     "no": "0735",
     "form": null,
+    "slug": "gumshoos",
     "names": {
       "ja": "デカグース",
       "en": "Gumshoos",
@@ -19210,6 +20001,7 @@
     "id": "0736",
     "no": "0736",
     "form": null,
+    "slug": "grubbin",
     "names": {
       "ja": "アゴジムシ",
       "en": "Grubbin",
@@ -19235,6 +20027,7 @@
     "id": "0737",
     "no": "0737",
     "form": null,
+    "slug": "charjabug",
     "names": {
       "ja": "デンヂムシ",
       "en": "Charjabug",
@@ -19264,6 +20057,7 @@
     "id": "0738",
     "no": "0738",
     "form": null,
+    "slug": "vikavolt",
     "names": {
       "ja": "クワガノン",
       "en": "Vikavolt",
@@ -19293,6 +20087,7 @@
     "id": "0739",
     "no": "0739",
     "form": null,
+    "slug": "crabrawler",
     "names": {
       "ja": "マケンカニ",
       "en": "Crabrawler",
@@ -19318,6 +20113,7 @@
     "id": "0740",
     "no": "0740",
     "form": null,
+    "slug": "crabominable",
     "names": {
       "ja": "ケケンカニ",
       "en": "Crabominable",
@@ -19347,6 +20143,7 @@
     "id": "0741",
     "no": "0741",
     "form": null,
+    "slug": "oricorio",
     "names": {
       "ja": "オドリドリ",
       "en": "Oricorio",
@@ -19376,6 +20173,7 @@
     "id": "0742",
     "no": "0742",
     "form": null,
+    "slug": "cutiefly",
     "names": {
       "ja": "アブリー",
       "en": "Cutiefly",
@@ -19405,6 +20203,7 @@
     "id": "0743",
     "no": "0743",
     "form": null,
+    "slug": "ribombee",
     "names": {
       "ja": "アブリボン",
       "en": "Ribombee",
@@ -19434,6 +20233,7 @@
     "id": "0744",
     "no": "0744",
     "form": null,
+    "slug": "rockruff",
     "names": {
       "ja": "イワンコ",
       "en": "Rockruff",
@@ -19459,6 +20259,7 @@
     "id": "0745",
     "no": "0745",
     "form": null,
+    "slug": "lycanroc",
     "names": {
       "ja": "ルガルガン",
       "en": "Lycanroc",
@@ -19484,6 +20285,7 @@
     "id": "0746",
     "no": "0746",
     "form": null,
+    "slug": "wishiwashi",
     "names": {
       "ja": "ヨワシ",
       "en": "Wishiwashi",
@@ -19504,6 +20306,7 @@
     "id": "0747",
     "no": "0747",
     "form": null,
+    "slug": "mareanie",
     "names": {
       "ja": "ヒドイデ",
       "en": "Mareanie",
@@ -19533,6 +20336,7 @@
     "id": "0748",
     "no": "0748",
     "form": null,
+    "slug": "toxapex",
     "names": {
       "ja": "ドヒドイデ",
       "en": "Toxapex",
@@ -19562,6 +20366,7 @@
     "id": "0749",
     "no": "0749",
     "form": null,
+    "slug": "mudbray",
     "names": {
       "ja": "ドロバンコ",
       "en": "Mudbray",
@@ -19587,6 +20392,7 @@
     "id": "0750",
     "no": "0750",
     "form": null,
+    "slug": "mudsdale",
     "names": {
       "ja": "バンバドロ",
       "en": "Mudsdale",
@@ -19612,6 +20418,7 @@
     "id": "0751",
     "no": "0751",
     "form": null,
+    "slug": "dewpider",
     "names": {
       "ja": "シズクモ",
       "en": "Dewpider",
@@ -19641,6 +20448,7 @@
     "id": "0752",
     "no": "0752",
     "form": null,
+    "slug": "araquanid",
     "names": {
       "ja": "オニシズクモ",
       "en": "Araquanid",
@@ -19670,6 +20478,7 @@
     "id": "0753",
     "no": "0753",
     "form": null,
+    "slug": "fomantis",
     "names": {
       "ja": "カリキリ",
       "en": "Fomantis",
@@ -19695,6 +20504,7 @@
     "id": "0754",
     "no": "0754",
     "form": null,
+    "slug": "lurantis",
     "names": {
       "ja": "ラランテス",
       "en": "Lurantis",
@@ -19720,6 +20530,7 @@
     "id": "0755",
     "no": "0755",
     "form": null,
+    "slug": "morelull",
     "names": {
       "ja": "ネマシュ",
       "en": "Morelull",
@@ -19740,6 +20551,7 @@
     "id": "0756",
     "no": "0756",
     "form": null,
+    "slug": "shiinotic",
     "names": {
       "ja": "マシェード",
       "en": "Shiinotic",
@@ -19760,6 +20572,7 @@
     "id": "0757",
     "no": "0757",
     "form": null,
+    "slug": "salandit",
     "names": {
       "ja": "ヤトウモリ",
       "en": "Salandit",
@@ -19789,6 +20602,7 @@
     "id": "0758",
     "no": "0758",
     "form": null,
+    "slug": "salazzle",
     "names": {
       "ja": "エンニュート",
       "en": "Salazzle",
@@ -19818,6 +20632,7 @@
     "id": "0759",
     "no": "0759",
     "form": null,
+    "slug": "stufful",
     "names": {
       "ja": "ヌイコグマ",
       "en": "Stufful",
@@ -19838,6 +20653,7 @@
     "id": "0760",
     "no": "0760",
     "form": null,
+    "slug": "bewear",
     "names": {
       "ja": "キテルグマ",
       "en": "Bewear",
@@ -19858,6 +20674,7 @@
     "id": "0761",
     "no": "0761",
     "form": null,
+    "slug": "bounsweet",
     "names": {
       "ja": "アマカジ",
       "en": "Bounsweet",
@@ -19883,6 +20700,7 @@
     "id": "0762",
     "no": "0762",
     "form": null,
+    "slug": "steenee",
     "names": {
       "ja": "アママイコ",
       "en": "Steenee",
@@ -19908,6 +20726,7 @@
     "id": "0763",
     "no": "0763",
     "form": null,
+    "slug": "tsareena",
     "names": {
       "ja": "アマージョ",
       "en": "Tsareena",
@@ -19933,6 +20752,7 @@
     "id": "0764",
     "no": "0764",
     "form": null,
+    "slug": "comfey",
     "names": {
       "ja": "キュワワー",
       "en": "Comfey",
@@ -19958,6 +20778,7 @@
     "id": "0765",
     "no": "0765",
     "form": null,
+    "slug": "oranguru",
     "names": {
       "ja": "ヤレユータン",
       "en": "Oranguru",
@@ -19987,6 +20808,7 @@
     "id": "0766",
     "no": "0766",
     "form": null,
+    "slug": "passimian",
     "names": {
       "ja": "ナゲツケサル",
       "en": "Passimian",
@@ -20012,6 +20834,7 @@
     "id": "0767",
     "no": "0767",
     "form": null,
+    "slug": "wimpod",
     "names": {
       "ja": "コソクムシ",
       "en": "Wimpod",
@@ -20032,6 +20855,7 @@
     "id": "0768",
     "no": "0768",
     "form": null,
+    "slug": "golisopod",
     "names": {
       "ja": "グソクムシャ",
       "en": "Golisopod",
@@ -20052,6 +20876,7 @@
     "id": "0769",
     "no": "0769",
     "form": null,
+    "slug": "sandygast",
     "names": {
       "ja": "スナバァ",
       "en": "Sandygast",
@@ -20081,6 +20906,7 @@
     "id": "0770",
     "no": "0770",
     "form": null,
+    "slug": "palossand",
     "names": {
       "ja": "シロデスナ",
       "en": "Palossand",
@@ -20110,6 +20936,7 @@
     "id": "0771",
     "no": "0771",
     "form": null,
+    "slug": "pyukumuku",
     "names": {
       "ja": "ナマコブシ",
       "en": "Pyukumuku",
@@ -20130,6 +20957,7 @@
     "id": "0772",
     "no": "0772",
     "form": null,
+    "slug": "type-null",
     "names": {
       "ja": "タイプ：ヌル",
       "en": "Type: Null",
@@ -20150,6 +20978,7 @@
     "id": "0773",
     "no": "0773",
     "form": null,
+    "slug": "silvally",
     "names": {
       "ja": "シルヴァディ",
       "en": "Silvally",
@@ -20170,6 +20999,7 @@
     "id": "0774",
     "no": "0774",
     "form": null,
+    "slug": "minior",
     "names": {
       "ja": "メテノ",
       "en": "Minior",
@@ -20199,6 +21029,7 @@
     "id": "0775",
     "no": "0775",
     "form": null,
+    "slug": "komala",
     "names": {
       "ja": "ネッコアラ",
       "en": "Komala",
@@ -20224,6 +21055,7 @@
     "id": "0776",
     "no": "0776",
     "form": null,
+    "slug": "turtonator",
     "names": {
       "ja": "バクガメス",
       "en": "Turtonator",
@@ -20244,6 +21076,7 @@
     "id": "0777",
     "no": "0777",
     "form": null,
+    "slug": "togedemaru",
     "names": {
       "ja": "トゲデマル",
       "en": "Togedemaru",
@@ -20264,6 +21097,7 @@
     "id": "0778",
     "no": "0778",
     "form": null,
+    "slug": "mimikyu",
     "names": {
       "ja": "ミミッキュ",
       "en": "Mimikyu",
@@ -20293,6 +21127,7 @@
     "id": "0779",
     "no": "0779",
     "form": null,
+    "slug": "bruxish",
     "names": {
       "ja": "ハギギシリ",
       "en": "Bruxish",
@@ -20322,6 +21157,7 @@
     "id": "0780",
     "no": "0780",
     "form": null,
+    "slug": "drampa",
     "names": {
       "ja": "ジジーロン",
       "en": "Drampa",
@@ -20342,6 +21178,7 @@
     "id": "0781",
     "no": "0781",
     "form": null,
+    "slug": "dhelmise",
     "names": {
       "ja": "ダダリン",
       "en": "Dhelmise",
@@ -20362,6 +21199,7 @@
     "id": "0782",
     "no": "0782",
     "form": null,
+    "slug": "jangmo-o",
     "names": {
       "ja": "ジャラコ",
       "en": "Jangmo-o",
@@ -20387,6 +21225,7 @@
     "id": "0783",
     "no": "0783",
     "form": null,
+    "slug": "hakamo-o",
     "names": {
       "ja": "ジャランゴ",
       "en": "Hakamo-o",
@@ -20416,6 +21255,7 @@
     "id": "0784",
     "no": "0784",
     "form": null,
+    "slug": "kommo-o",
     "names": {
       "ja": "ジャラランガ",
       "en": "Kommo-o",
@@ -20445,6 +21285,7 @@
     "id": "0785",
     "no": "0785",
     "form": null,
+    "slug": "tapu-koko",
     "names": {
       "ja": "カプ・コケコ",
       "en": "Tapu Koko",
@@ -20465,6 +21306,7 @@
     "id": "0786",
     "no": "0786",
     "form": null,
+    "slug": "tapu-lele",
     "names": {
       "ja": "カプ・テテフ",
       "en": "Tapu Lele",
@@ -20485,6 +21327,7 @@
     "id": "0787",
     "no": "0787",
     "form": null,
+    "slug": "tapu-bulu",
     "names": {
       "ja": "カプ・ブルル",
       "en": "Tapu Bulu",
@@ -20505,6 +21348,7 @@
     "id": "0788",
     "no": "0788",
     "form": null,
+    "slug": "tapu-fini",
     "names": {
       "ja": "カプ・レヒレ",
       "en": "Tapu Fini",
@@ -20525,6 +21369,7 @@
     "id": "0789",
     "no": "0789",
     "form": null,
+    "slug": "cosmog",
     "names": {
       "ja": "コスモッグ",
       "en": "Cosmog",
@@ -20545,6 +21390,7 @@
     "id": "0790",
     "no": "0790",
     "form": null,
+    "slug": "cosmoem",
     "names": {
       "ja": "コスモウム",
       "en": "Cosmoem",
@@ -20565,6 +21411,7 @@
     "id": "0791",
     "no": "0791",
     "form": null,
+    "slug": "solgaleo",
     "names": {
       "ja": "ソルガレオ",
       "en": "Solgaleo",
@@ -20585,6 +21432,7 @@
     "id": "0792",
     "no": "0792",
     "form": null,
+    "slug": "lunala",
     "names": {
       "ja": "ルナアーラ",
       "en": "Lunala",
@@ -20605,6 +21453,7 @@
     "id": "0793",
     "no": "0793",
     "form": null,
+    "slug": "nihilego",
     "names": {
       "ja": "ウツロイド",
       "en": "Nihilego",
@@ -20625,6 +21474,7 @@
     "id": "0794",
     "no": "0794",
     "form": null,
+    "slug": "buzzwole",
     "names": {
       "ja": "マッシブーン",
       "en": "Buzzwole",
@@ -20645,6 +21495,7 @@
     "id": "0795",
     "no": "0795",
     "form": null,
+    "slug": "pheromosa",
     "names": {
       "ja": "フェローチェ",
       "en": "Pheromosa",
@@ -20665,6 +21516,7 @@
     "id": "0796",
     "no": "0796",
     "form": null,
+    "slug": "xurkitree",
     "names": {
       "ja": "デンジュモク",
       "en": "Xurkitree",
@@ -20685,6 +21537,7 @@
     "id": "0797",
     "no": "0797",
     "form": null,
+    "slug": "celesteela",
     "names": {
       "ja": "テッカグヤ",
       "en": "Celesteela",
@@ -20705,6 +21558,7 @@
     "id": "0798",
     "no": "0798",
     "form": null,
+    "slug": "kartana",
     "names": {
       "ja": "カミツルギ",
       "en": "Kartana",
@@ -20725,6 +21579,7 @@
     "id": "0799",
     "no": "0799",
     "form": null,
+    "slug": "guzzlord",
     "names": {
       "ja": "アクジキング",
       "en": "Guzzlord",
@@ -20745,6 +21600,7 @@
     "id": "0800",
     "no": "0800",
     "form": null,
+    "slug": "necrozma",
     "names": {
       "ja": "ネクロズマ",
       "en": "Necrozma",
@@ -20765,6 +21621,7 @@
     "id": "0801",
     "no": "0801",
     "form": null,
+    "slug": "magearna",
     "names": {
       "ja": "マギアナ",
       "en": "Magearna",
@@ -20785,6 +21642,7 @@
     "id": "0802",
     "no": "0802",
     "form": null,
+    "slug": "marshadow",
     "names": {
       "ja": "マーシャドー",
       "en": "Marshadow",
@@ -20805,6 +21663,7 @@
     "id": "0803",
     "no": "0803",
     "form": null,
+    "slug": "poipole",
     "names": {
       "ja": "ベベノム",
       "en": "Poipole",
@@ -20825,6 +21684,7 @@
     "id": "0804",
     "no": "0804",
     "form": null,
+    "slug": "naganadel",
     "names": {
       "ja": "アーゴヨン",
       "en": "Naganadel",
@@ -20845,6 +21705,7 @@
     "id": "0805",
     "no": "0805",
     "form": null,
+    "slug": "stakataka",
     "names": {
       "ja": "ツンデツンデ",
       "en": "Stakataka",
@@ -20865,6 +21726,7 @@
     "id": "0806",
     "no": "0806",
     "form": null,
+    "slug": "blacephalon",
     "names": {
       "ja": "ズガドーン",
       "en": "Blacephalon",
@@ -20885,6 +21747,7 @@
     "id": "0807",
     "no": "0807",
     "form": null,
+    "slug": "zeraora",
     "names": {
       "ja": "ゼラオラ",
       "en": "Zeraora",
@@ -20905,6 +21768,7 @@
     "id": "0808",
     "no": "0808",
     "form": null,
+    "slug": "meltan",
     "names": {
       "ja": "メルタン",
       "en": "Meltan",
@@ -20925,6 +21789,7 @@
     "id": "0809",
     "no": "0809",
     "form": null,
+    "slug": "melmetal",
     "names": {
       "ja": "メルメタル",
       "en": "Melmetal",
@@ -20945,6 +21810,7 @@
     "id": "0810",
     "no": "0810",
     "form": null,
+    "slug": "grookey",
     "names": {
       "ja": "サルノリ",
       "en": "Grookey",
@@ -20970,6 +21836,7 @@
     "id": "0811",
     "no": "0811",
     "form": null,
+    "slug": "thwackey",
     "names": {
       "ja": "バチンキー",
       "en": "Thwackey",
@@ -20995,6 +21862,7 @@
     "id": "0812",
     "no": "0812",
     "form": null,
+    "slug": "rillaboom",
     "names": {
       "ja": "ゴリランダー",
       "en": "Rillaboom",
@@ -21020,6 +21888,7 @@
     "id": "0813",
     "no": "0813",
     "form": null,
+    "slug": "scorbunny",
     "names": {
       "ja": "ヒバニー",
       "en": "Scorbunny",
@@ -21045,6 +21914,7 @@
     "id": "0814",
     "no": "0814",
     "form": null,
+    "slug": "raboot",
     "names": {
       "ja": "ラビフット",
       "en": "Raboot",
@@ -21070,6 +21940,7 @@
     "id": "0815",
     "no": "0815",
     "form": null,
+    "slug": "cinderace",
     "names": {
       "ja": "エースバーン",
       "en": "Cinderace",
@@ -21095,6 +21966,7 @@
     "id": "0816",
     "no": "0816",
     "form": null,
+    "slug": "sobble",
     "names": {
       "ja": "メッソン",
       "en": "Sobble",
@@ -21120,6 +21992,7 @@
     "id": "0817",
     "no": "0817",
     "form": null,
+    "slug": "drizzile",
     "names": {
       "ja": "ジメレオン",
       "en": "Drizzile",
@@ -21145,6 +22018,7 @@
     "id": "0818",
     "no": "0818",
     "form": null,
+    "slug": "inteleon",
     "names": {
       "ja": "インテレオン",
       "en": "Inteleon",
@@ -21170,6 +22044,7 @@
     "id": "0819",
     "no": "0819",
     "form": null,
+    "slug": "skwovet",
     "names": {
       "ja": "ホシガリス",
       "en": "Skwovet",
@@ -21195,6 +22070,7 @@
     "id": "0820",
     "no": "0820",
     "form": null,
+    "slug": "greedent",
     "names": {
       "ja": "ヨクバリス",
       "en": "Greedent",
@@ -21220,6 +22096,7 @@
     "id": "0821",
     "no": "0821",
     "form": null,
+    "slug": "rookidee",
     "names": {
       "ja": "ココガラ",
       "en": "Rookidee",
@@ -21245,6 +22122,7 @@
     "id": "0822",
     "no": "0822",
     "form": null,
+    "slug": "corvisquire",
     "names": {
       "ja": "アオガラス",
       "en": "Corvisquire",
@@ -21270,6 +22148,7 @@
     "id": "0823",
     "no": "0823",
     "form": null,
+    "slug": "corviknight",
     "names": {
       "ja": "アーマーガア",
       "en": "Corviknight",
@@ -21299,6 +22178,7 @@
     "id": "0824",
     "no": "0824",
     "form": null,
+    "slug": "blipbug",
     "names": {
       "ja": "サッチムシ",
       "en": "Blipbug",
@@ -21319,6 +22199,7 @@
     "id": "0825",
     "no": "0825",
     "form": null,
+    "slug": "dottler",
     "names": {
       "ja": "レドームシ",
       "en": "Dottler",
@@ -21339,6 +22220,7 @@
     "id": "0826",
     "no": "0826",
     "form": null,
+    "slug": "orbeetle",
     "names": {
       "ja": "イオルブ",
       "en": "Orbeetle",
@@ -21359,6 +22241,7 @@
     "id": "0827",
     "no": "0827",
     "form": null,
+    "slug": "nickit",
     "names": {
       "ja": "クスネ",
       "en": "Nickit",
@@ -21379,6 +22262,7 @@
     "id": "0828",
     "no": "0828",
     "form": null,
+    "slug": "thievul",
     "names": {
       "ja": "フォクスライ",
       "en": "Thievul",
@@ -21399,6 +22283,7 @@
     "id": "0829",
     "no": "0829",
     "form": null,
+    "slug": "gossifleur",
     "names": {
       "ja": "ヒメンカ",
       "en": "Gossifleur",
@@ -21419,6 +22304,7 @@
     "id": "0830",
     "no": "0830",
     "form": null,
+    "slug": "eldegoss",
     "names": {
       "ja": "ワタシラガ",
       "en": "Eldegoss",
@@ -21439,6 +22325,7 @@
     "id": "0831",
     "no": "0831",
     "form": null,
+    "slug": "wooloo",
     "names": {
       "ja": "ウールー",
       "en": "Wooloo",
@@ -21459,6 +22346,7 @@
     "id": "0832",
     "no": "0832",
     "form": null,
+    "slug": "dubwool",
     "names": {
       "ja": "バイウールー",
       "en": "Dubwool",
@@ -21479,6 +22367,7 @@
     "id": "0833",
     "no": "0833",
     "form": null,
+    "slug": "chewtle",
     "names": {
       "ja": "カムカメ",
       "en": "Chewtle",
@@ -21504,6 +22393,7 @@
     "id": "0834",
     "no": "0834",
     "form": null,
+    "slug": "drednaw",
     "names": {
       "ja": "カジリガメ",
       "en": "Drednaw",
@@ -21533,6 +22423,7 @@
     "id": "0835",
     "no": "0835",
     "form": null,
+    "slug": "yamper",
     "names": {
       "ja": "ワンパチ",
       "en": "Yamper",
@@ -21553,6 +22444,7 @@
     "id": "0836",
     "no": "0836",
     "form": null,
+    "slug": "boltund",
     "names": {
       "ja": "パルスワン",
       "en": "Boltund",
@@ -21573,6 +22465,7 @@
     "id": "0837",
     "no": "0837",
     "form": null,
+    "slug": "rolycoly",
     "names": {
       "ja": "タンドン",
       "en": "Rolycoly",
@@ -21598,6 +22491,7 @@
     "id": "0838",
     "no": "0838",
     "form": null,
+    "slug": "carkol",
     "names": {
       "ja": "トロッゴン",
       "en": "Carkol",
@@ -21627,6 +22521,7 @@
     "id": "0839",
     "no": "0839",
     "form": null,
+    "slug": "coalossal",
     "names": {
       "ja": "セキタンザン",
       "en": "Coalossal",
@@ -21656,6 +22551,7 @@
     "id": "0840",
     "no": "0840",
     "form": null,
+    "slug": "applin",
     "names": {
       "ja": "カジッチュ",
       "en": "Applin",
@@ -21685,6 +22581,7 @@
     "id": "0841",
     "no": "0841",
     "form": null,
+    "slug": "flapple",
     "names": {
       "ja": "アップリュー",
       "en": "Flapple",
@@ -21714,6 +22611,7 @@
     "id": "0842",
     "no": "0842",
     "form": null,
+    "slug": "appletun",
     "names": {
       "ja": "タルップル",
       "en": "Appletun",
@@ -21743,6 +22641,7 @@
     "id": "0843",
     "no": "0843",
     "form": null,
+    "slug": "silicobra",
     "names": {
       "ja": "スナヘビ",
       "en": "Silicobra",
@@ -21768,6 +22667,7 @@
     "id": "0844",
     "no": "0844",
     "form": null,
+    "slug": "sandaconda",
     "names": {
       "ja": "サダイジャ",
       "en": "Sandaconda",
@@ -21793,6 +22693,7 @@
     "id": "0845",
     "no": "0845",
     "form": null,
+    "slug": "cramorant",
     "names": {
       "ja": "ウッウ",
       "en": "Cramorant",
@@ -21822,6 +22723,7 @@
     "id": "0846",
     "no": "0846",
     "form": null,
+    "slug": "arrokuda",
     "names": {
       "ja": "サシカマス",
       "en": "Arrokuda",
@@ -21847,6 +22749,7 @@
     "id": "0847",
     "no": "0847",
     "form": null,
+    "slug": "barraskewda",
     "names": {
       "ja": "カマスジョー",
       "en": "Barraskewda",
@@ -21872,6 +22775,7 @@
     "id": "0848",
     "no": "0848",
     "form": null,
+    "slug": "toxel",
     "names": {
       "ja": "エレズン",
       "en": "Toxel",
@@ -21901,6 +22805,7 @@
     "id": "0849",
     "no": "0849",
     "form": null,
+    "slug": "toxtricity",
     "names": {
       "ja": "ストリンダー",
       "en": "Toxtricity",
@@ -21930,6 +22835,7 @@
     "id": "0850",
     "no": "0850",
     "form": null,
+    "slug": "sizzlipede",
     "names": {
       "ja": "ヤクデ",
       "en": "Sizzlipede",
@@ -21950,6 +22856,7 @@
     "id": "0851",
     "no": "0851",
     "form": null,
+    "slug": "centiskorch",
     "names": {
       "ja": "マルヤクデ",
       "en": "Centiskorch",
@@ -21970,6 +22877,7 @@
     "id": "0852",
     "no": "0852",
     "form": null,
+    "slug": "clobbopus",
     "names": {
       "ja": "タタッコ",
       "en": "Clobbopus",
@@ -21990,6 +22898,7 @@
     "id": "0853",
     "no": "0853",
     "form": null,
+    "slug": "grapploct",
     "names": {
       "ja": "オトスパス",
       "en": "Grapploct",
@@ -22010,6 +22919,7 @@
     "id": "0854",
     "no": "0854",
     "form": null,
+    "slug": "sinistea",
     "names": {
       "ja": "ヤバチャ",
       "en": "Sinistea",
@@ -22035,6 +22945,7 @@
     "id": "0855",
     "no": "0855",
     "form": null,
+    "slug": "polteageist",
     "names": {
       "ja": "ポットデス",
       "en": "Polteageist",
@@ -22060,6 +22971,7 @@
     "id": "0856",
     "no": "0856",
     "form": null,
+    "slug": "hatenna",
     "names": {
       "ja": "ミブリム",
       "en": "Hatenna",
@@ -22085,6 +22997,7 @@
     "id": "0857",
     "no": "0857",
     "form": null,
+    "slug": "hattrem",
     "names": {
       "ja": "テブリム",
       "en": "Hattrem",
@@ -22110,6 +23023,7 @@
     "id": "0858",
     "no": "0858",
     "form": null,
+    "slug": "hatterene",
     "names": {
       "ja": "ブリムオン",
       "en": "Hatterene",
@@ -22139,6 +23053,7 @@
     "id": "0859",
     "no": "0859",
     "form": null,
+    "slug": "impidimp",
     "names": {
       "ja": "ベロバー",
       "en": "Impidimp",
@@ -22168,6 +23083,7 @@
     "id": "0860",
     "no": "0860",
     "form": null,
+    "slug": "morgrem",
     "names": {
       "ja": "ギモー",
       "en": "Morgrem",
@@ -22197,6 +23113,7 @@
     "id": "0861",
     "no": "0861",
     "form": null,
+    "slug": "grimmsnarl",
     "names": {
       "ja": "オーロンゲ",
       "en": "Grimmsnarl",
@@ -22226,6 +23143,7 @@
     "id": "0862",
     "no": "0862",
     "form": null,
+    "slug": "obstagoon",
     "names": {
       "ja": "タチフサグマ",
       "en": "Obstagoon",
@@ -22246,6 +23164,7 @@
     "id": "0863",
     "no": "0863",
     "form": null,
+    "slug": "perrserker",
     "names": {
       "ja": "ニャイキング",
       "en": "Perrserker",
@@ -22266,6 +23185,7 @@
     "id": "0864",
     "no": "0864",
     "form": null,
+    "slug": "cursola",
     "names": {
       "ja": "サニゴーン",
       "en": "Cursola",
@@ -22286,6 +23206,7 @@
     "id": "0865",
     "no": "0865",
     "form": null,
+    "slug": "sirfetchd",
     "names": {
       "ja": "ネギガナイト",
       "en": "Sirfetch’d",
@@ -22306,6 +23227,7 @@
     "id": "0866",
     "no": "0866",
     "form": null,
+    "slug": "mr-rime",
     "names": {
       "ja": "バリコオル",
       "en": "Mr. Rime",
@@ -22326,6 +23248,7 @@
     "id": "0867",
     "no": "0867",
     "form": null,
+    "slug": "runerigus",
     "names": {
       "ja": "デスバーン",
       "en": "Runerigus",
@@ -22346,6 +23269,7 @@
     "id": "0868",
     "no": "0868",
     "form": null,
+    "slug": "milcery",
     "names": {
       "ja": "マホミル",
       "en": "Milcery",
@@ -22371,6 +23295,7 @@
     "id": "0869",
     "no": "0869",
     "form": null,
+    "slug": "alcremie",
     "names": {
       "ja": "マホイップ",
       "en": "Alcremie",
@@ -22396,6 +23321,7 @@
     "id": "0870",
     "no": "0870",
     "form": null,
+    "slug": "falinks",
     "names": {
       "ja": "タイレーツ",
       "en": "Falinks",
@@ -22421,6 +23347,7 @@
     "id": "0871",
     "no": "0871",
     "form": null,
+    "slug": "pincurchin",
     "names": {
       "ja": "バチンウニ",
       "en": "Pincurchin",
@@ -22446,6 +23373,7 @@
     "id": "0872",
     "no": "0872",
     "form": null,
+    "slug": "snom",
     "names": {
       "ja": "ユキハミ",
       "en": "Snom",
@@ -22475,6 +23403,7 @@
     "id": "0873",
     "no": "0873",
     "form": null,
+    "slug": "frosmoth",
     "names": {
       "ja": "モスノウ",
       "en": "Frosmoth",
@@ -22504,6 +23433,7 @@
     "id": "0874",
     "no": "0874",
     "form": null,
+    "slug": "stonjourner",
     "names": {
       "ja": "イシヘンジン",
       "en": "Stonjourner",
@@ -22529,6 +23459,7 @@
     "id": "0875",
     "no": "0875",
     "form": null,
+    "slug": "eiscue",
     "names": {
       "ja": "コオリッポ",
       "en": "Eiscue",
@@ -22554,6 +23485,7 @@
     "id": "0876",
     "no": "0876",
     "form": null,
+    "slug": "indeedee",
     "names": {
       "ja": "イエッサン",
       "en": "Indeedee",
@@ -22583,6 +23515,7 @@
     "id": "0877",
     "no": "0877",
     "form": null,
+    "slug": "morpeko",
     "names": {
       "ja": "モルペコ",
       "en": "Morpeko",
@@ -22612,6 +23545,7 @@
     "id": "0878",
     "no": "0878",
     "form": null,
+    "slug": "cufant",
     "names": {
       "ja": "ゾウドウ",
       "en": "Cufant",
@@ -22637,6 +23571,7 @@
     "id": "0879",
     "no": "0879",
     "form": null,
+    "slug": "copperajah",
     "names": {
       "ja": "ダイオウドウ",
       "en": "Copperajah",
@@ -22662,6 +23597,7 @@
     "id": "0880",
     "no": "0880",
     "form": null,
+    "slug": "dracozolt",
     "names": {
       "ja": "パッチラゴン",
       "en": "Dracozolt",
@@ -22682,6 +23618,7 @@
     "id": "0881",
     "no": "0881",
     "form": null,
+    "slug": "arctozolt",
     "names": {
       "ja": "パッチルドン",
       "en": "Arctozolt",
@@ -22702,6 +23639,7 @@
     "id": "0882",
     "no": "0882",
     "form": null,
+    "slug": "dracovish",
     "names": {
       "ja": "ウオノラゴン",
       "en": "Dracovish",
@@ -22722,6 +23660,7 @@
     "id": "0883",
     "no": "0883",
     "form": null,
+    "slug": "arctovish",
     "names": {
       "ja": "ウオチルドン",
       "en": "Arctovish",
@@ -22742,6 +23681,7 @@
     "id": "0884",
     "no": "0884",
     "form": null,
+    "slug": "duraludon",
     "names": {
       "ja": "ジュラルドン",
       "en": "Duraludon",
@@ -22771,6 +23711,7 @@
     "id": "0885",
     "no": "0885",
     "form": null,
+    "slug": "dreepy",
     "names": {
       "ja": "ドラメシヤ",
       "en": "Dreepy",
@@ -22800,6 +23741,7 @@
     "id": "0886",
     "no": "0886",
     "form": null,
+    "slug": "drakloak",
     "names": {
       "ja": "ドロンチ",
       "en": "Drakloak",
@@ -22829,6 +23771,7 @@
     "id": "0887",
     "no": "0887",
     "form": null,
+    "slug": "dragapult",
     "names": {
       "ja": "ドラパルト",
       "en": "Dragapult",
@@ -22858,6 +23801,7 @@
     "id": "0888",
     "no": "0888",
     "form": null,
+    "slug": "zacian",
     "names": {
       "ja": "ザシアン",
       "en": "Zacian",
@@ -22878,6 +23822,7 @@
     "id": "0889",
     "no": "0889",
     "form": null,
+    "slug": "zamazenta",
     "names": {
       "ja": "ザマゼンタ",
       "en": "Zamazenta",
@@ -22898,6 +23843,7 @@
     "id": "0890",
     "no": "0890",
     "form": null,
+    "slug": "eternatus",
     "names": {
       "ja": "ムゲンダイナ",
       "en": "Eternatus",
@@ -22918,6 +23864,7 @@
     "id": "0891",
     "no": "0891",
     "form": null,
+    "slug": "kubfu",
     "names": {
       "ja": "ダクマ",
       "en": "Kubfu",
@@ -22938,6 +23885,7 @@
     "id": "0892",
     "no": "0892",
     "form": null,
+    "slug": "urshifu",
     "names": {
       "ja": "ウーラオス",
       "en": "Urshifu",
@@ -22958,6 +23906,7 @@
     "id": "0893",
     "no": "0893",
     "form": null,
+    "slug": "zarude",
     "names": {
       "ja": "ザルード",
       "en": "Zarude",
@@ -22978,6 +23927,7 @@
     "id": "0894",
     "no": "0894",
     "form": null,
+    "slug": "regieleki",
     "names": {
       "ja": "レジエレキ",
       "en": "Regieleki",
@@ -22998,6 +23948,7 @@
     "id": "0895",
     "no": "0895",
     "form": null,
+    "slug": "regidrago",
     "names": {
       "ja": "レジドラゴ",
       "en": "Regidrago",
@@ -23018,6 +23969,7 @@
     "id": "0896",
     "no": "0896",
     "form": null,
+    "slug": "glastrier",
     "names": {
       "ja": "ブリザポス",
       "en": "Glastrier",
@@ -23038,6 +23990,7 @@
     "id": "0897",
     "no": "0897",
     "form": null,
+    "slug": "spectrier",
     "names": {
       "ja": "レイスポス",
       "en": "Spectrier",
@@ -23058,6 +24011,7 @@
     "id": "0898",
     "no": "0898",
     "form": null,
+    "slug": "calyrex",
     "names": {
       "ja": "バドレックス",
       "en": "Calyrex",
@@ -23078,6 +24032,7 @@
     "id": "0899",
     "no": "0899",
     "form": null,
+    "slug": "wyrdeer",
     "names": {
       "ja": "アヤシシ",
       "en": "Wyrdeer",
@@ -23098,6 +24053,7 @@
     "id": "0900",
     "no": "0900",
     "form": null,
+    "slug": "kleavor",
     "names": {
       "ja": "バサギリ",
       "en": "Kleavor",
@@ -23127,6 +24083,7 @@
     "id": "0901",
     "no": "0901",
     "form": null,
+    "slug": "ursaluna",
     "names": {
       "ja": "ガチグマ",
       "en": "Ursaluna",
@@ -23156,6 +24113,7 @@
     "id": "0902",
     "no": "0902",
     "form": null,
+    "slug": "basculegion",
     "names": {
       "ja": "イダイトウ",
       "en": "Basculegion",
@@ -23185,6 +24143,7 @@
     "id": "0903",
     "no": "0903",
     "form": null,
+    "slug": "sneasler",
     "names": {
       "ja": "オオニューラ",
       "en": "Sneasler",
@@ -23205,6 +24164,7 @@
     "id": "0904",
     "no": "0904",
     "form": null,
+    "slug": "overqwil",
     "names": {
       "ja": "ハリーマン",
       "en": "Overqwil",
@@ -23234,6 +24194,7 @@
     "id": "0905",
     "no": "0905",
     "form": null,
+    "slug": "enamorus",
     "names": {
       "ja": "ラブトロス",
       "en": "Enamorus",
@@ -23254,6 +24215,7 @@
     "id": "0906",
     "no": "0906",
     "form": null,
+    "slug": "sprigatito",
     "names": {
       "ja": "ニャオハ",
       "en": "Sprigatito",
@@ -23279,6 +24241,7 @@
     "id": "0907",
     "no": "0907",
     "form": null,
+    "slug": "floragato",
     "names": {
       "ja": "ニャローテ",
       "en": "Floragato",
@@ -23304,6 +24267,7 @@
     "id": "0908",
     "no": "0908",
     "form": null,
+    "slug": "meowscarada",
     "names": {
       "ja": "マスカーニャ",
       "en": "Meowscarada",
@@ -23333,6 +24297,7 @@
     "id": "0909",
     "no": "0909",
     "form": null,
+    "slug": "fuecoco",
     "names": {
       "ja": "ホゲータ",
       "en": "Fuecoco",
@@ -23358,6 +24323,7 @@
     "id": "0910",
     "no": "0910",
     "form": null,
+    "slug": "crocalor",
     "names": {
       "ja": "アチゲータ",
       "en": "Crocalor",
@@ -23383,6 +24349,7 @@
     "id": "0911",
     "no": "0911",
     "form": null,
+    "slug": "skeledirge",
     "names": {
       "ja": "ラウドボーン",
       "en": "Skeledirge",
@@ -23412,6 +24379,7 @@
     "id": "0912",
     "no": "0912",
     "form": null,
+    "slug": "quaxly",
     "names": {
       "ja": "クワッス",
       "en": "Quaxly",
@@ -23437,6 +24405,7 @@
     "id": "0913",
     "no": "0913",
     "form": null,
+    "slug": "quaxwell",
     "names": {
       "ja": "ウェルカモ",
       "en": "Quaxwell",
@@ -23462,6 +24431,7 @@
     "id": "0914",
     "no": "0914",
     "form": null,
+    "slug": "quaquaval",
     "names": {
       "ja": "ウェーニバル",
       "en": "Quaquaval",
@@ -23491,6 +24461,7 @@
     "id": "0915",
     "no": "0915",
     "form": null,
+    "slug": "lechonk",
     "names": {
       "ja": "グルトン",
       "en": "Lechonk",
@@ -23516,6 +24487,7 @@
     "id": "0916",
     "no": "0916",
     "form": null,
+    "slug": "oinkologne",
     "names": {
       "ja": "パフュートン",
       "en": "Oinkologne",
@@ -23541,6 +24513,7 @@
     "id": "0917",
     "no": "0917",
     "form": null,
+    "slug": "tarountula",
     "names": {
       "ja": "タマンチュラ",
       "en": "Tarountula",
@@ -23566,6 +24539,7 @@
     "id": "0918",
     "no": "0918",
     "form": null,
+    "slug": "spidops",
     "names": {
       "ja": "ワナイダー",
       "en": "Spidops",
@@ -23591,6 +24565,7 @@
     "id": "0919",
     "no": "0919",
     "form": null,
+    "slug": "nymble",
     "names": {
       "ja": "マメバッタ",
       "en": "Nymble",
@@ -23616,6 +24591,7 @@
     "id": "0920",
     "no": "0920",
     "form": null,
+    "slug": "lokix",
     "names": {
       "ja": "エクスレッグ",
       "en": "Lokix",
@@ -23645,6 +24621,7 @@
     "id": "0921",
     "no": "0921",
     "form": null,
+    "slug": "pawmi",
     "names": {
       "ja": "パモ",
       "en": "Pawmi",
@@ -23670,6 +24647,7 @@
     "id": "0922",
     "no": "0922",
     "form": null,
+    "slug": "pawmo",
     "names": {
       "ja": "パモット",
       "en": "Pawmo",
@@ -23699,6 +24677,7 @@
     "id": "0923",
     "no": "0923",
     "form": null,
+    "slug": "pawmot",
     "names": {
       "ja": "パーモット",
       "en": "Pawmot",
@@ -23728,6 +24707,7 @@
     "id": "0924",
     "no": "0924",
     "form": null,
+    "slug": "tandemaus",
     "names": {
       "ja": "ワッカネズミ",
       "en": "Tandemaus",
@@ -23753,6 +24733,7 @@
     "id": "0925",
     "no": "0925",
     "form": null,
+    "slug": "maushold",
     "names": {
       "ja": "イッカネズミ",
       "en": "Maushold",
@@ -23778,6 +24759,7 @@
     "id": "0926",
     "no": "0926",
     "form": null,
+    "slug": "fidough",
     "names": {
       "ja": "パピモッチ",
       "en": "Fidough",
@@ -23803,6 +24785,7 @@
     "id": "0927",
     "no": "0927",
     "form": null,
+    "slug": "dachsbun",
     "names": {
       "ja": "バウッツェル",
       "en": "Dachsbun",
@@ -23828,6 +24811,7 @@
     "id": "0928",
     "no": "0928",
     "form": null,
+    "slug": "smoliv",
     "names": {
       "ja": "ミニーブ",
       "en": "Smoliv",
@@ -23857,6 +24841,7 @@
     "id": "0929",
     "no": "0929",
     "form": null,
+    "slug": "dolliv",
     "names": {
       "ja": "オリーニョ",
       "en": "Dolliv",
@@ -23886,6 +24871,7 @@
     "id": "0930",
     "no": "0930",
     "form": null,
+    "slug": "arboliva",
     "names": {
       "ja": "オリーヴァ",
       "en": "Arboliva",
@@ -23915,6 +24901,7 @@
     "id": "0931",
     "no": "0931",
     "form": null,
+    "slug": "squawkabilly",
     "names": {
       "ja": "イキリンコ",
       "en": "Squawkabilly",
@@ -23944,6 +24931,7 @@
     "id": "0932",
     "no": "0932",
     "form": null,
+    "slug": "nacli",
     "names": {
       "ja": "コジオ",
       "en": "Nacli",
@@ -23969,6 +24957,7 @@
     "id": "0933",
     "no": "0933",
     "form": null,
+    "slug": "naclstack",
     "names": {
       "ja": "ジオヅム",
       "en": "Naclstack",
@@ -23994,6 +24983,7 @@
     "id": "0934",
     "no": "0934",
     "form": null,
+    "slug": "garganacl",
     "names": {
       "ja": "キョジオーン",
       "en": "Garganacl",
@@ -24019,6 +25009,7 @@
     "id": "0935",
     "no": "0935",
     "form": null,
+    "slug": "charcadet",
     "names": {
       "ja": "カルボウ",
       "en": "Charcadet",
@@ -24044,6 +25035,7 @@
     "id": "0936",
     "no": "0936",
     "form": null,
+    "slug": "armarouge",
     "names": {
       "ja": "グレンアルマ",
       "en": "Armarouge",
@@ -24073,6 +25065,7 @@
     "id": "0937",
     "no": "0937",
     "form": null,
+    "slug": "ceruledge",
     "names": {
       "ja": "ソウブレイズ",
       "en": "Ceruledge",
@@ -24102,6 +25095,7 @@
     "id": "0938",
     "no": "0938",
     "form": null,
+    "slug": "tadbulb",
     "names": {
       "ja": "ズピカ",
       "en": "Tadbulb",
@@ -24127,6 +25121,7 @@
     "id": "0939",
     "no": "0939",
     "form": null,
+    "slug": "bellibolt",
     "names": {
       "ja": "ハラバリー",
       "en": "Bellibolt",
@@ -24152,6 +25147,7 @@
     "id": "0940",
     "no": "0940",
     "form": null,
+    "slug": "wattrel",
     "names": {
       "ja": "カイデン",
       "en": "Wattrel",
@@ -24181,6 +25177,7 @@
     "id": "0941",
     "no": "0941",
     "form": null,
+    "slug": "kilowattrel",
     "names": {
       "ja": "タイカイデン",
       "en": "Kilowattrel",
@@ -24210,6 +25207,7 @@
     "id": "0942",
     "no": "0942",
     "form": null,
+    "slug": "maschiff",
     "names": {
       "ja": "オラチフ",
       "en": "Maschiff",
@@ -24235,6 +25233,7 @@
     "id": "0943",
     "no": "0943",
     "form": null,
+    "slug": "mabosstiff",
     "names": {
       "ja": "マフィティフ",
       "en": "Mabosstiff",
@@ -24260,6 +25259,7 @@
     "id": "0944",
     "no": "0944",
     "form": null,
+    "slug": "shroodle",
     "names": {
       "ja": "シルシュルー",
       "en": "Shroodle",
@@ -24289,6 +25289,7 @@
     "id": "0945",
     "no": "0945",
     "form": null,
+    "slug": "grafaiai",
     "names": {
       "ja": "タギングル",
       "en": "Grafaiai",
@@ -24318,6 +25319,7 @@
     "id": "0946",
     "no": "0946",
     "form": null,
+    "slug": "bramblin",
     "names": {
       "ja": "アノクサ",
       "en": "Bramblin",
@@ -24347,6 +25349,7 @@
     "id": "0947",
     "no": "0947",
     "form": null,
+    "slug": "brambleghast",
     "names": {
       "ja": "アノホラグサ",
       "en": "Brambleghast",
@@ -24376,6 +25379,7 @@
     "id": "0948",
     "no": "0948",
     "form": null,
+    "slug": "toedscool",
     "names": {
       "ja": "ノノクラゲ",
       "en": "Toedscool",
@@ -24405,6 +25409,7 @@
     "id": "0949",
     "no": "0949",
     "form": null,
+    "slug": "toedscruel",
     "names": {
       "ja": "リククラゲ",
       "en": "Toedscruel",
@@ -24434,6 +25439,7 @@
     "id": "0950",
     "no": "0950",
     "form": null,
+    "slug": "klawf",
     "names": {
       "ja": "ガケガニ",
       "en": "Klawf",
@@ -24459,6 +25465,7 @@
     "id": "0951",
     "no": "0951",
     "form": null,
+    "slug": "capsakid",
     "names": {
       "ja": "カプサイジ",
       "en": "Capsakid",
@@ -24484,6 +25491,7 @@
     "id": "0952",
     "no": "0952",
     "form": null,
+    "slug": "scovillain",
     "names": {
       "ja": "スコヴィラン",
       "en": "Scovillain",
@@ -24513,6 +25521,7 @@
     "id": "0953",
     "no": "0953",
     "form": null,
+    "slug": "rellor",
     "names": {
       "ja": "シガロコ",
       "en": "Rellor",
@@ -24538,6 +25547,7 @@
     "id": "0954",
     "no": "0954",
     "form": null,
+    "slug": "rabsca",
     "names": {
       "ja": "ベラカス",
       "en": "Rabsca",
@@ -24567,6 +25577,7 @@
     "id": "0955",
     "no": "0955",
     "form": null,
+    "slug": "flittle",
     "names": {
       "ja": "ヒラヒナ",
       "en": "Flittle",
@@ -24592,6 +25603,7 @@
     "id": "0956",
     "no": "0956",
     "form": null,
+    "slug": "espathra",
     "names": {
       "ja": "クエスパトラ",
       "en": "Espathra",
@@ -24617,6 +25629,7 @@
     "id": "0957",
     "no": "0957",
     "form": null,
+    "slug": "tinkatink",
     "names": {
       "ja": "カヌチャン",
       "en": "Tinkatink",
@@ -24646,6 +25659,7 @@
     "id": "0958",
     "no": "0958",
     "form": null,
+    "slug": "tinkatuff",
     "names": {
       "ja": "ナカヌチャン",
       "en": "Tinkatuff",
@@ -24675,6 +25689,7 @@
     "id": "0959",
     "no": "0959",
     "form": null,
+    "slug": "tinkaton",
     "names": {
       "ja": "デカヌチャン",
       "en": "Tinkaton",
@@ -24704,6 +25719,7 @@
     "id": "0960",
     "no": "0960",
     "form": null,
+    "slug": "wiglett",
     "names": {
       "ja": "ウミディグダ",
       "en": "Wiglett",
@@ -24729,6 +25745,7 @@
     "id": "0961",
     "no": "0961",
     "form": null,
+    "slug": "wugtrio",
     "names": {
       "ja": "ウミトリオ",
       "en": "Wugtrio",
@@ -24754,6 +25771,7 @@
     "id": "0962",
     "no": "0962",
     "form": null,
+    "slug": "bombirdier",
     "names": {
       "ja": "オトシドリ",
       "en": "Bombirdier",
@@ -24783,6 +25801,7 @@
     "id": "0963",
     "no": "0963",
     "form": null,
+    "slug": "finizen",
     "names": {
       "ja": "ナミイルカ",
       "en": "Finizen",
@@ -24808,6 +25827,7 @@
     "id": "0964",
     "no": "0964",
     "form": null,
+    "slug": "palafin",
     "names": {
       "ja": "イルカマン",
       "en": "Palafin",
@@ -24833,6 +25853,7 @@
     "id": "0965",
     "no": "0965",
     "form": null,
+    "slug": "varoom",
     "names": {
       "ja": "ブロロン",
       "en": "Varoom",
@@ -24862,6 +25883,7 @@
     "id": "0966",
     "no": "0966",
     "form": null,
+    "slug": "revavroom",
     "names": {
       "ja": "ブロロローム",
       "en": "Revavroom",
@@ -24891,6 +25913,7 @@
     "id": "0967",
     "no": "0967",
     "form": null,
+    "slug": "cyclizar",
     "names": {
       "ja": "モトトカゲ",
       "en": "Cyclizar",
@@ -24920,6 +25943,7 @@
     "id": "0968",
     "no": "0968",
     "form": null,
+    "slug": "orthworm",
     "names": {
       "ja": "ミミズズ",
       "en": "Orthworm",
@@ -24945,6 +25969,7 @@
     "id": "0969",
     "no": "0969",
     "form": null,
+    "slug": "glimmet",
     "names": {
       "ja": "キラーメ",
       "en": "Glimmet",
@@ -24974,6 +25999,7 @@
     "id": "0970",
     "no": "0970",
     "form": null,
+    "slug": "glimmora",
     "names": {
       "ja": "キラフロル",
       "en": "Glimmora",
@@ -25003,6 +26029,7 @@
     "id": "0971",
     "no": "0971",
     "form": null,
+    "slug": "greavard",
     "names": {
       "ja": "ボチ",
       "en": "Greavard",
@@ -25028,6 +26055,7 @@
     "id": "0972",
     "no": "0972",
     "form": null,
+    "slug": "houndstone",
     "names": {
       "ja": "ハカドッグ",
       "en": "Houndstone",
@@ -25053,6 +26081,7 @@
     "id": "0973",
     "no": "0973",
     "form": null,
+    "slug": "flamigo",
     "names": {
       "ja": "カラミンゴ",
       "en": "Flamigo",
@@ -25082,6 +26111,7 @@
     "id": "0974",
     "no": "0974",
     "form": null,
+    "slug": "cetoddle",
     "names": {
       "ja": "アルクジラ",
       "en": "Cetoddle",
@@ -25107,6 +26137,7 @@
     "id": "0975",
     "no": "0975",
     "form": null,
+    "slug": "cetitan",
     "names": {
       "ja": "ハルクジラ",
       "en": "Cetitan",
@@ -25132,6 +26163,7 @@
     "id": "0976",
     "no": "0976",
     "form": null,
+    "slug": "veluza",
     "names": {
       "ja": "ミガルーサ",
       "en": "Veluza",
@@ -25161,6 +26193,7 @@
     "id": "0977",
     "no": "0977",
     "form": null,
+    "slug": "dondozo",
     "names": {
       "ja": "ヘイラッシャ",
       "en": "Dondozo",
@@ -25186,6 +26219,7 @@
     "id": "0978",
     "no": "0978",
     "form": null,
+    "slug": "tatsugiri",
     "names": {
       "ja": "シャリタツ",
       "en": "Tatsugiri",
@@ -25215,6 +26249,7 @@
     "id": "0979",
     "no": "0979",
     "form": null,
+    "slug": "annihilape",
     "names": {
       "ja": "コノヨザル",
       "en": "Annihilape",
@@ -25244,6 +26279,7 @@
     "id": "0980",
     "no": "0980",
     "form": null,
+    "slug": "clodsire",
     "names": {
       "ja": "ドオー",
       "en": "Clodsire",
@@ -25273,6 +26309,7 @@
     "id": "0981",
     "no": "0981",
     "form": null,
+    "slug": "farigiraf",
     "names": {
       "ja": "リキキリン",
       "en": "Farigiraf",
@@ -25302,6 +26339,7 @@
     "id": "0982",
     "no": "0982",
     "form": null,
+    "slug": "dudunsparce",
     "names": {
       "ja": "ノココッチ",
       "en": "Dudunsparce",
@@ -25327,6 +26365,7 @@
     "id": "0983",
     "no": "0983",
     "form": null,
+    "slug": "kingambit",
     "names": {
       "ja": "ドドゲザン",
       "en": "Kingambit",
@@ -25356,6 +26395,7 @@
     "id": "0984",
     "no": "0984",
     "form": null,
+    "slug": "great-tusk",
     "names": {
       "ja": "イダイナキバ",
       "en": "Great Tusk",
@@ -25385,6 +26425,7 @@
     "id": "0985",
     "no": "0985",
     "form": null,
+    "slug": "scream-tail",
     "names": {
       "ja": "サケブシッポ",
       "en": "Scream Tail",
@@ -25414,6 +26455,7 @@
     "id": "0986",
     "no": "0986",
     "form": null,
+    "slug": "brute-bonnet",
     "names": {
       "ja": "アラブルタケ",
       "en": "Brute Bonnet",
@@ -25443,6 +26485,7 @@
     "id": "0987",
     "no": "0987",
     "form": null,
+    "slug": "flutter-mane",
     "names": {
       "ja": "ハバタクカミ",
       "en": "Flutter Mane",
@@ -25472,6 +26515,7 @@
     "id": "0988",
     "no": "0988",
     "form": null,
+    "slug": "slither-wing",
     "names": {
       "ja": "チヲハウハネ",
       "en": "Slither Wing",
@@ -25501,6 +26545,7 @@
     "id": "0989",
     "no": "0989",
     "form": null,
+    "slug": "sandy-shocks",
     "names": {
       "ja": "スナノケガワ",
       "en": "Sandy Shocks",
@@ -25530,6 +26575,7 @@
     "id": "0990",
     "no": "0990",
     "form": null,
+    "slug": "iron-treads",
     "names": {
       "ja": "テツノワダチ",
       "en": "Iron Treads",
@@ -25559,6 +26605,7 @@
     "id": "0991",
     "no": "0991",
     "form": null,
+    "slug": "iron-bundle",
     "names": {
       "ja": "テツノツツミ",
       "en": "Iron Bundle",
@@ -25588,6 +26635,7 @@
     "id": "0992",
     "no": "0992",
     "form": null,
+    "slug": "iron-hands",
     "names": {
       "ja": "テツノカイナ",
       "en": "Iron Hands",
@@ -25617,6 +26665,7 @@
     "id": "0993",
     "no": "0993",
     "form": null,
+    "slug": "iron-jugulis",
     "names": {
       "ja": "テツノコウベ",
       "en": "Iron Jugulis",
@@ -25646,6 +26695,7 @@
     "id": "0994",
     "no": "0994",
     "form": null,
+    "slug": "iron-moth",
     "names": {
       "ja": "テツノドクガ",
       "en": "Iron Moth",
@@ -25675,6 +26725,7 @@
     "id": "0995",
     "no": "0995",
     "form": null,
+    "slug": "iron-thorns",
     "names": {
       "ja": "テツノイバラ",
       "en": "Iron Thorns",
@@ -25704,6 +26755,7 @@
     "id": "0996",
     "no": "0996",
     "form": null,
+    "slug": "frigibax",
     "names": {
       "ja": "セビエ",
       "en": "Frigibax",
@@ -25733,6 +26785,7 @@
     "id": "0997",
     "no": "0997",
     "form": null,
+    "slug": "arctibax",
     "names": {
       "ja": "セゴール",
       "en": "Arctibax",
@@ -25762,6 +26815,7 @@
     "id": "0998",
     "no": "0998",
     "form": null,
+    "slug": "baxcalibur",
     "names": {
       "ja": "セグレイブ",
       "en": "Baxcalibur",
@@ -25791,6 +26845,7 @@
     "id": "0999",
     "no": "0999",
     "form": null,
+    "slug": "gimmighoul",
     "names": {
       "ja": "コレクレー",
       "en": "Gimmighoul",
@@ -25816,6 +26871,7 @@
     "id": "1000",
     "no": "1000",
     "form": null,
+    "slug": "gholdengo",
     "names": {
       "ja": "サーフゴー",
       "en": "Gholdengo",
@@ -25845,6 +26901,7 @@
     "id": "1001",
     "no": "1001",
     "form": null,
+    "slug": "wo-chien",
     "names": {
       "ja": "チオンジェン",
       "en": "Wo-Chien",
@@ -25874,6 +26931,7 @@
     "id": "1002",
     "no": "1002",
     "form": null,
+    "slug": "chien-pao",
     "names": {
       "ja": "パオジアン",
       "en": "Chien-Pao",
@@ -25903,6 +26961,7 @@
     "id": "1003",
     "no": "1003",
     "form": null,
+    "slug": "ting-lu",
     "names": {
       "ja": "ディンルー",
       "en": "Ting-Lu",
@@ -25932,6 +26991,7 @@
     "id": "1004",
     "no": "1004",
     "form": null,
+    "slug": "chi-yu",
     "names": {
       "ja": "イーユイ",
       "en": "Chi-Yu",
@@ -25961,6 +27021,7 @@
     "id": "1005",
     "no": "1005",
     "form": null,
+    "slug": "roaring-moon",
     "names": {
       "ja": "トドロクツキ",
       "en": "Roaring Moon",
@@ -25990,6 +27051,7 @@
     "id": "1006",
     "no": "1006",
     "form": null,
+    "slug": "iron-valiant",
     "names": {
       "ja": "テツノブジン",
       "en": "Iron Valiant",
@@ -26019,6 +27081,7 @@
     "id": "1007",
     "no": "1007",
     "form": null,
+    "slug": "koraidon",
     "names": {
       "ja": "コライドン",
       "en": "Koraidon",
@@ -26048,6 +27111,7 @@
     "id": "1008",
     "no": "1008",
     "form": null,
+    "slug": "miraidon",
     "names": {
       "ja": "ミライドン",
       "en": "Miraidon",
@@ -26077,6 +27141,7 @@
     "id": "1009",
     "no": "1009",
     "form": null,
+    "slug": "walking-wake",
     "names": {
       "ja": "ウネルミナモ",
       "en": "Walking Wake",
@@ -26106,6 +27171,7 @@
     "id": "1010",
     "no": "1010",
     "form": null,
+    "slug": "iron-leaves",
     "names": {
       "ja": "テツノイサハ",
       "en": "Iron Leaves",
@@ -26135,6 +27201,7 @@
     "id": "1011",
     "no": "1011",
     "form": null,
+    "slug": "dipplin",
     "names": {
       "ja": "カミッチュ",
       "en": "Dipplin",
@@ -26164,6 +27231,7 @@
     "id": "1012",
     "no": "1012",
     "form": null,
+    "slug": "poltchageist",
     "names": {
       "ja": "チャデス",
       "en": "Poltchageist",
@@ -26193,6 +27261,7 @@
     "id": "1013",
     "no": "1013",
     "form": null,
+    "slug": "sinistcha",
     "names": {
       "ja": "ヤバソチャ",
       "en": "Sinistcha",
@@ -26222,6 +27291,7 @@
     "id": "1014",
     "no": "1014",
     "form": null,
+    "slug": "okidogi",
     "names": {
       "ja": "イイネイヌ",
       "en": "Okidogi",
@@ -26251,6 +27321,7 @@
     "id": "1015",
     "no": "1015",
     "form": null,
+    "slug": "munkidori",
     "names": {
       "ja": "マシマシラ",
       "en": "Munkidori",
@@ -26280,6 +27351,7 @@
     "id": "1016",
     "no": "1016",
     "form": null,
+    "slug": "fezandipiti",
     "names": {
       "ja": "キチキギス",
       "en": "Fezandipiti",
@@ -26309,6 +27381,7 @@
     "id": "1017",
     "no": "1017",
     "form": null,
+    "slug": "ogerpon",
     "names": {
       "ja": "オーガポン",
       "en": "Ogerpon",
@@ -26334,6 +27407,7 @@
     "id": "1018",
     "no": "1018",
     "form": null,
+    "slug": "archaludon",
     "names": {
       "ja": "ブリジュラス",
       "en": "Archaludon",
@@ -26363,6 +27437,7 @@
     "id": "1019",
     "no": "1019",
     "form": null,
+    "slug": "hydrapple",
     "names": {
       "ja": "カミツオロチ",
       "en": "Hydrapple",
@@ -26392,6 +27467,7 @@
     "id": "1020",
     "no": "1020",
     "form": null,
+    "slug": "gouging-fire",
     "names": {
       "ja": "ウガツホムラ",
       "en": "Gouging Fire",
@@ -26421,6 +27497,7 @@
     "id": "1021",
     "no": "1021",
     "form": null,
+    "slug": "raging-bolt",
     "names": {
       "ja": "タケルライコ",
       "en": "Raging Bolt",
@@ -26450,6 +27527,7 @@
     "id": "1022",
     "no": "1022",
     "form": null,
+    "slug": "iron-boulder",
     "names": {
       "ja": "テツノイワオ",
       "en": "Iron Boulder",
@@ -26479,6 +27557,7 @@
     "id": "1023",
     "no": "1023",
     "form": null,
+    "slug": "iron-crown",
     "names": {
       "ja": "テツノカシラ",
       "en": "Iron Crown",
@@ -26508,6 +27587,7 @@
     "id": "1024",
     "no": "1024",
     "form": null,
+    "slug": "terapagos",
     "names": {
       "ja": "テラパゴス",
       "en": "Terapagos",
@@ -26533,6 +27613,7 @@
     "id": "1025",
     "no": "1025",
     "form": null,
+    "slug": "pecharunt",
     "names": {
       "ja": "モモワロウ",
       "en": "Pecharunt",
