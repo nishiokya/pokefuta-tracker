@@ -72,34 +72,90 @@ PREFECTURE_EN: dict[str, str] = {
     "沖縄県": "Okinawa Prefecture",
 }
 
-# SVG icon symbols sourced from design/pokefuta_ui_icons.svg
+# SVG icon symbols sourced from design/pokefuta_detail_ui_icons.svg
 _SVG_DEFS = (
-    '<svg width="0" height="0" style="position:absolute" aria-hidden="true">'
-    "<defs>"
-    '<symbol id="icon-pin" viewBox="0 0 96 96">'
-    '<path d="M48 86s26-27 26-50C74 21.6 62.4 10 48 10S22 21.6 22 36c0 23 26 50 26 50z" fill="#6F55A3"/>'
-    '<circle cx="48" cy="36" r="11" fill="#fff"/>'
+    '<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>'
+    # --- detail section heading icons ---
+    '<symbol id="icon-detail-location" viewBox="0 0 96 96">'
+    '<path fill="#FFF3D6" d="M17 24h48l14 14v34H17z"/>'
+    '<path fill="none" stroke="#6A4B36" stroke-linecap="round" stroke-linejoin="round" stroke-width="7" d="M17 24h48l14 14v34H17zM65 24v14h14"/>'
+    '<path fill="#6F55A3" d="M48 68s17-17 17-32a17 17 0 1 0-34 0c0 15 17 32 17 32z"/>'
+    '<circle cx="48" cy="36" r="7" fill="#fff"/>'
     "</symbol>"
-    '<symbol id="icon-map" viewBox="0 0 96 96">'
-    '<path d="M12 20l22-8 28 8 22-8v64l-22 8-28-8-22 8V20z" stroke="#6F55A3" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" fill="none"/>'
-    '<path d="M34 12v64M62 20v64" stroke="#6F55A3" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>'
+    '<symbol id="icon-detail-pokemon" viewBox="0 0 96 96">'
+    '<rect x="18" y="12" width="60" height="72" rx="12" fill="#FFF3D6"/>'
+    '<rect x="18" y="12" width="60" height="72" rx="12" fill="none" stroke="#6A4B36" stroke-linecap="round" stroke-linejoin="round" stroke-width="7"/>'
+    '<circle cx="48" cy="39" r="18" fill="#6F55A3" opacity="0.15"/>'
+    '<path fill="none" stroke="#6F55A3" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M35 46c4 6 9 9 13 9s9-3 13-9M36 35c4-4 8-6 12-6s8 2 12 6"/>'
+    '<circle cx="40" cy="39" r="3" fill="#6F55A3"/>'
+    '<circle cx="56" cy="39" r="3" fill="#6F55A3"/>'
+    '<path fill="none" stroke="#6A4B36" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M31 67h34"/>'
     "</symbol>"
-    '<symbol id="icon-external" viewBox="0 0 96 96">'
-    '<path d="M34 18h44v44" stroke="#1D9A8A" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>'
-    '<path d="M76 20L38 58" stroke="#1D9A8A" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>'
-    '<path d="M22 34v40h40" stroke="#1D9A8A" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>'
+    '<symbol id="icon-detail-nearby" viewBox="0 0 96 96">'
+    '<circle cx="48" cy="48" r="31" fill="#F8F1E2"/>'
+    '<path fill="none" stroke="#6F55A3" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M48 14v10M48 72v10M14 48h10M72 48h10"/>'
+    '<path fill="#6F55A3" d="M48 68s18-18 18-34a18 18 0 1 0-36 0c0 16 18 34 18 34z"/>'
+    '<circle cx="48" cy="34" r="7" fill="#fff"/>'
+    '<path fill="none" stroke="#F0A44A" stroke-width="5" stroke-linecap="round" d="M23 65s6-8 14-6 12 10 22 7 14-11 14-11"/>'
     "</symbol>"
-    '<symbol id="icon-walk" viewBox="0 0 96 96">'
-    '<circle cx="50" cy="16" r="8" fill="#F36D36"/>'
-    '<path d="M46 30l-10 22 16 10 8 24M56 34l16 14M36 52L24 76" stroke="#F0A44A" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>'
+    '<symbol id="icon-detail-same-pref" viewBox="0 0 96 96">'
+    '<rect x="13" y="17" width="70" height="58" rx="12" fill="#FFF3D6"/>'
+    '<rect x="13" y="17" width="70" height="58" rx="12" fill="none" stroke="#6A4B36" stroke-linecap="round" stroke-linejoin="round" stroke-width="7"/>'
+    '<path fill="#BFAF98" opacity="0.45" d="M25 62l8-23 14 8 11-16 12 31z"/>'
+    '<path fill="#6F55A3" d="M63 54s11-11 11-21a11 11 0 1 0-22 0c0 10 11 21 11 21z"/>'
+    '<circle cx="63" cy="33" r="4" fill="#fff"/>'
+    '<path fill="none" stroke="#6F55A3" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M28 30h15M28 43h12M28 56h20"/>'
     "</symbol>"
-    '<symbol id="icon-current-location" viewBox="0 0 96 96">'
-    '<circle cx="48" cy="48" r="24" stroke="#6F55A3" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" fill="none"/>'
-    '<path d="M48 8v16M48 72v16M8 48h16M72 48h16" stroke="#6F55A3" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>'
-    '<circle cx="48" cy="48" r="7" fill="#6F55A3"/>'
+    '<symbol id="icon-detail-same-city" viewBox="0 0 96 96">'
+    '<path fill="#FFF3D6" d="M17 73V39l18-13 18 13v34z"/>'
+    '<path fill="none" stroke="#6A4B36" stroke-linecap="round" stroke-linejoin="round" stroke-width="7" d="M17 73V39l18-13 18 13v34M53 73V46h26v27"/>'
+    '<path fill="none" stroke="#6F55A3" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M29 73V57h12v16M62 57h8M62 67h8"/>'
+    '<path fill="#6F55A3" d="M72 44s12-12 12-23a12 12 0 1 0-24 0c0 11 12 23 12 23z"/>'
+    '<circle cx="72" cy="21" r="4" fill="#fff"/>'
     "</symbol>"
-    "</defs>"
-    "</svg>"
+    # --- link grid icons ---
+    '<symbol id="icon-link-google-map" viewBox="0 0 96 96">'
+    '<rect x="12" y="16" width="72" height="64" rx="14" fill="#FFF3D6"/>'
+    '<path fill="none" stroke="#6A4B36" stroke-linecap="round" stroke-linejoin="round" stroke-width="7" d="M12 16h72v64H12z"/>'
+    '<path fill="none" stroke="#89CFF0" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M22 63c13-18 28-18 52-41"/>'
+    '<path fill="none" stroke="#2D8F46" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M20 36h56"/>'
+    '<path fill="#6F55A3" d="M50 70s18-20 18-36a18 18 0 1 0-36 0c0 16 18 36 18 36z"/>'
+    '<circle cx="50" cy="34" r="7" fill="#fff"/>'
+    "</symbol>"
+    '<symbol id="icon-link-official" viewBox="0 0 96 96">'
+    '<path fill="none" stroke="#2D8F46" stroke-linecap="round" stroke-linejoin="round" stroke-width="7" d="M33 19h44v44M75 21L38 58"/>'
+    '<rect x="18" y="34" width="44" height="43" rx="8" fill="none" stroke="#6A4B36" stroke-linecap="round" stroke-linejoin="round" stroke-width="7"/>'
+    '<path fill="#F0A44A" opacity="0.35" d="M25 25l10 9 12-16 8 17 16-7-7 16 17 8-19 6-2 19-14-13-17 10 3-19-16-9 18-4z"/>'
+    "</symbol>"
+    '<symbol id="icon-link-prefecture" viewBox="0 0 96 96">'
+    '<rect x="15" y="17" width="66" height="62" rx="12" fill="#FFF3D6"/>'
+    '<path fill="none" stroke="#6F55A3" stroke-linecap="round" stroke-linejoin="round" stroke-width="7" d="M15 17h66v62H15z"/>'
+    '<path fill="#BFAF98" opacity="0.5" d="M28 62l10-30 16 11 13-19 11 38z"/>'
+    '<circle cx="68" cy="31" r="8" fill="#2D8F46"/>'
+    '<path fill="none" stroke="#6A4B36" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M26 68h42"/>'
+    "</symbol>"
+    '<symbol id="icon-link-map" viewBox="0 0 96 96">'
+    '<path fill="none" stroke="#6F55A3" stroke-linecap="round" stroke-linejoin="round" stroke-width="7" d="M13 24l22-9 26 9 22-9v57l-22 9-26-9-22 9zM35 15v57M61 24v57"/>'
+    '<circle cx="61" cy="43" r="8" fill="#F0A44A"/>'
+    "</symbol>"
+    '<symbol id="icon-link-photo" viewBox="0 0 96 96">'
+    '<rect x="15" y="28" width="66" height="48" rx="12" fill="#FFF3D6"/>'
+    '<path fill="none" stroke="#6A4B36" stroke-linecap="round" stroke-linejoin="round" stroke-width="7" d="M15 28h66v48H15zM35 28l6-10h14l6 10"/>'
+    '<circle cx="48" cy="52" r="14" fill="#fff" stroke="#6F55A3" stroke-width="7"/>'
+    '<circle cx="70" cy="39" r="4" fill="#6F55A3"/>'
+    "</symbol>"
+    '<symbol id="icon-link-share" viewBox="0 0 96 96">'
+    '<circle cx="28" cy="48" r="12" fill="#E73A51"/>'
+    '<circle cx="68" cy="24" r="12" fill="#E73A51"/>'
+    '<circle cx="68" cy="72" r="12" fill="#E73A51"/>'
+    '<path fill="none" stroke="#E73A51" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M38 42l20-12M38 54l20 12"/>'
+    "</symbol>"
+    '<symbol id="icon-section-card" viewBox="0 0 96 96">'
+    '<rect x="14" y="18" width="68" height="60" rx="14" fill="#FFF3D6"/>'
+    '<rect x="14" y="18" width="68" height="60" rx="14" fill="none" stroke="#6A4B36" stroke-linecap="round" stroke-linejoin="round" stroke-width="7"/>'
+    '<path fill="none" stroke="#6F55A3" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M28 34h40M28 48h32M28 62h24"/>'
+    "</symbol>"
+    "</defs></svg>"
 )
 
 
@@ -235,9 +291,9 @@ def _render_related_card(
     return (
         f"<li class='related-card'>{thumb_html}"
         f"<div class='related-card-body'>"
-        f'{_icon("icon-pin", "icon-sm")}'
+        f'{_icon("icon-detail-location", "icon-sm")}'
         f"<a href='/manholes/{quote(oid, safe='')}/'>{escape(label)}</a>"
-        f"{extra_html}</div></li>"
+        f"</div>{extra_html}</li>"
     )
 
 
@@ -463,29 +519,35 @@ def generate_html(
         maps_url = f"https://www.google.com/maps?q={lat},{lng}"
         link_cards.append(
             f"<a class='link-card link-card--map' href=\"{escape(maps_url)}\""
-            f" target=\"_blank\" rel=\"noopener noreferrer\">📍<span>Google Maps</span></a>"
+            f" target=\"_blank\" rel=\"noopener noreferrer\">"
+            f"{_icon('icon-link-google-map', 'link-card-icon')}<span>Google Maps</span></a>"
         )
     if has_official_url:
         link_cards.append(
             f"<a class='link-card link-card--official' href=\"{escape(detail_url)}\""
-            f" target=\"_blank\" rel=\"noopener noreferrer\">🔗<span>公式サイト</span></a>"
+            f" target=\"_blank\" rel=\"noopener noreferrer\">"
+            f"{_icon('icon-link-official', 'link-card-icon')}<span>公式サイト</span></a>"
         )
     if prefecture_site_url:
         link_cards.append(
             f"<a class='link-card link-card--pref-site' href=\"{escape(prefecture_site_url)}\""
-            f" target=\"_blank\" rel=\"noopener noreferrer\">🗾<span>{escape(prefecture)}の公式</span></a>"
+            f" target=\"_blank\" rel=\"noopener noreferrer\">"
+            f"{_icon('icon-link-prefecture', 'link-card-icon')}<span>{escape(prefecture)}の公式</span></a>"
         )
     if prefecture:
         link_cards.append(
-            f"<a class='link-card link-card--internal' href=\"{escape(pref_url)}\">📋<span>同じ都道府県</span></a>"
+            f"<a class='link-card link-card--internal' href=\"{escape(pref_url)}\">"
+            f"{_icon('icon-detail-same-pref', 'link-card-icon')}<span>同じ都道府県</span></a>"
         )
     link_cards.append(
-        f"<a class='link-card link-card--internal' href=\"{BASE_URL}\">🗺<span>全国マップ</span></a>"
+        f"<a class='link-card link-card--internal' href=\"{BASE_URL}\">"
+        f"{_icon('icon-link-map', 'link-card-icon')}<span>全国マップ</span></a>"
     )
     if has_official_url:
         link_cards.append(
             f"<a class='link-card link-card--photo' href=\"{escape(detail_url)}\""
-            f" target=\"_blank\" rel=\"noopener noreferrer\">📷<span>写真を投稿</span></a>"
+            f" target=\"_blank\" rel=\"noopener noreferrer\">"
+            f"{_icon('icon-link-photo', 'link-card-icon')}<span>写真を投稿</span></a>"
         )
     links_grid_html = (
         f"<section class='links-section section-card'>"
@@ -499,7 +561,7 @@ def generate_html(
     if nearby:
         nearby_html = (
             f"<section class='nearby-section section-card'>"
-            f"<h2>{_icon('icon-walk', 'icon-lg')} 30km以内のポケふた</h2>"
+            f"<h2>{_icon('icon-detail-nearby', 'icon-lg')} 30km以内のポケふた</h2>"
             f"<ul class='related-list related-list--cards'>"
         )
         for other, dist in nearby:
@@ -526,7 +588,7 @@ def generate_html(
     if prefecture and same_pref:
         pref_section_html = (
             f"<section class='prefecture-section section-card'>"
-            f"<h2>{_icon('icon-map', 'icon-lg')} {escape(prefecture)}のポケふた</h2>"
+            f"<h2>{_icon('icon-detail-same-pref', 'icon-lg')} {escape(prefecture)}のポケふた</h2>"
             f"<p>{escape(prefecture)}には現在{pref_total}枚のポケふたがあります。</p>"
             f"<ul class='related-list related-list--cards'>"
         )
@@ -554,8 +616,8 @@ def generate_html(
     {pokemon_tags_html}
     {stats_html}
     <div class="hero-actions">
-      <button class="btn-share" onclick="shareManhole()">🔗 共有する</button>
-      <a href="{escape(map_url)}" class="btn-map" onclick="trackEvent('manhole_seo_to_map_click', {onclick_params})">{_icon('icon-map')} 地図で見る</a>
+      <button class="btn-share" onclick="shareManhole()">{_icon('icon-link-share', 'action-icon')}<span>共有する</span></button>
+      <a href="{escape(map_url)}" class="btn-map" onclick="trackEvent('manhole_seo_to_map_click', {onclick_params})">{_icon('icon-link-map', 'action-icon')}<span>地図で見る</span></a>
     </div>
   </div>
 </div>
@@ -899,50 +961,61 @@ def generate_html(
     }}
 
     .hero-actions {{
-      display: flex;
-      flex-direction: column;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 10px;
     }}
 
-    .btn-share {{
-      display: block;
-      width: 100%;
-      background: #e8333f;
-      color: white;
+    .btn-share,
+    .btn-map {{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      min-height: 80px;
+      border-radius: 14px;
+      padding: 12px 8px;
       text-align: center;
-      padding: 16px 14px;
-      border-radius: 10px;
-      font-size: 17px;
+      font-size: 13px;
       font-weight: 700;
-      border: none;
+      letter-spacing: 0.01em;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+      transition: background 0.15s, box-shadow 0.15s, transform 0.15s;
+    }}
+
+    .btn-share {{
+      background: #fff5f6;
+      color: #b52a38;
+      border: 1.5px solid #f5bdc5;
       cursor: pointer;
-      letter-spacing: 0.02em;
-      box-shadow: 0 2px 8px rgba(220,50,60,0.30);
-      transition: background 0.2s, box-shadow 0.2s;
+      width: 100%;
     }}
 
     .btn-share:hover {{
-      background: #c82333;
-      box-shadow: 0 4px 12px rgba(220,50,60,0.35);
+      background: #ffe4e7;
+      box-shadow: 0 3px 10px rgba(181,42,56,0.14);
+      transform: translateY(-1px);
     }}
 
     .btn-map {{
-      display: block;
-      background: #1a7fe8;
-      color: white;
-      text-align: center;
-      padding: 13px 14px;
-      border-radius: 10px;
-      font-size: 15px;
-      font-weight: 700;
+      background: #f4f0ff;
+      color: #4a2f96;
+      border: 1.5px solid #cfc0f0;
       text-decoration: none;
-      box-shadow: 0 2px 6px rgba(26,127,232,0.25);
-      transition: background 0.2s, box-shadow 0.2s;
     }}
 
     .btn-map:hover {{
-      background: #0056b3;
-      box-shadow: 0 4px 10px rgba(26,127,232,0.30);
+      background: #ebe5ff;
+      box-shadow: 0 3px 10px rgba(74,47,150,0.14);
+      transform: translateY(-1px);
+    }}
+
+    .action-icon {{
+      width: 36px;
+      height: 36px;
+      display: block;
+      flex-shrink: 0;
     }}
 
     .section-card {{
@@ -1017,21 +1090,6 @@ def generate_html(
       background: #f8f4ee;
     }}
 
-    .related-thumb {{
-      width: 64px;
-      height: 64px;
-      object-fit: cover;
-      border-radius: 8px;
-      flex-shrink: 0;
-    }}
-
-    .related-card-body {{
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }}
-
     @media (max-width: 600px) {{
       body {{
         padding: 6px;
@@ -1080,6 +1138,7 @@ def generate_html(
 
     .icon-sm {{ width: 14px; height: 14px; }}
     .icon-lg {{ width: 22px; height: 22px; }}
+    .link-card-icon {{ width: 38px; height: 38px; display: block; }}
 
     .related-card-thumb {{
       width: 60px;
