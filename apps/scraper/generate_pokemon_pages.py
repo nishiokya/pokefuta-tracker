@@ -183,6 +183,7 @@ def build_pokemon_index(
     index: dict[str, tuple[dict, list[dict]]] = {}
     slug_to_meta: dict[str, dict] = {}
     ja_to_slug: dict[str, str] = {}
+    seen: dict[str, set[str]] = defaultdict(set)  # slug → set of manhole IDs already added
 
     for ja_name, meta in metadata.items():
         slug = meta.get("slug", "")
@@ -192,6 +193,7 @@ def build_pokemon_index(
 
     for manhole in manholes:
         manhole_pokemons = filter_pokemons(manhole.get("pokemons", []))
+        mid = str(manhole.get("id", "")).strip()
         for ja_name in manhole_pokemons:
             # Try direct match, then katakana-normalized match
             slug = ja_to_slug.get(ja_name) or ja_to_slug.get(
@@ -201,6 +203,9 @@ def build_pokemon_index(
                 continue
             if not pokemon_matches_manhole(slug, ja_name, manhole_pokemons):
                 continue
+            if mid in seen[slug]:
+                continue
+            seen[slug].add(mid)
             meta = slug_to_meta[slug]
             if slug not in index:
                 index[slug] = (meta, [])
@@ -279,7 +284,9 @@ def generate_html(
 ) -> str:
     """Return complete HTML for a Pokemon LP page."""
     names = pokemon.get("names", {})
-    name_ja = names.get("ja", slug)
+    form = pokemon.get("form") or ""
+    _prefix = _FORM_PREFIX.get(form, "")
+    name_ja = _prefix + names.get("ja", slug)
     name_en = names.get("en", "")
     name_ko = names.get("ko", "")
     name_zh = names.get("zh-Hans", "")
@@ -331,10 +338,10 @@ def generate_html(
     }
     jsonld_str = json.dumps(jsonld, ensure_ascii=False, indent=2)
 
-    # Manhole sections grouped by prefecture
+    # Manhole sections grouped by prefecture (empty prefecture sorted last)
     sorted_manholes = sorted(
         manholes,
-        key=lambda m: (m.get("prefecture", ""), m.get("city", "")),
+        key=lambda m: (0 if m.get("prefecture") else 1, m.get("prefecture", ""), m.get("city", "")),
     )
     sections_html = ""
     for prefecture, group in groupby(sorted_manholes, key=lambda m: m.get("prefecture", "")):
@@ -353,7 +360,7 @@ def generate_html(
             img_html = ""
             img_path = image_dir / f"{mid}_latest.jpeg"
             if img_path.exists():
-                img_url = f"https://data.pokefuta.com/manhole/image/{mid}_latest.jpeg"
+                img_url = escape(f"https://data.pokefuta.com/manhole/image/{mid}_latest.jpeg")
                 alt = f"{location}の{name_ja}のポケふた"
                 img_html = (
                     f"<img src='{img_url}' alt='{escape(alt)}'"
