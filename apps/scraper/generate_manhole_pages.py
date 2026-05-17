@@ -12,6 +12,7 @@ import argparse
 import datetime
 import json
 import logging
+import math
 from pathlib import Path
 from typing import Any, Optional
 from urllib.parse import quote, urlparse
@@ -22,6 +23,17 @@ BASE_URL = "https://data.pokefuta.com/"
 GA_MEASUREMENT_ID = "G-K18NR4GZG2"
 
 logger = logging.getLogger(__name__)
+
+
+def haversine(lat1: float, lng1: float, lat2: float, lng2: float) -> float:
+    """Return great-circle distance in km."""
+    R = 6371.0
+    dlat = math.radians(lat2 - lat1)
+    dlng = math.radians(lng2 - lng1)
+    a = (math.sin(dlat / 2) ** 2
+         + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2))
+         * math.sin(dlng / 2) ** 2)
+    return R * 2 * math.asin(math.sqrt(a))
 
 
 def normalize_id(value: Any) -> str:
@@ -111,7 +123,24 @@ def filter_pokemons(pokemons: list) -> list[str]:
     ]
 
 
-def generate_html(manhole: dict, photo: Optional[dict], pokemon_meta: dict[str, dict]) -> str:
+def manhole_label(manhole: dict) -> str:
+    """Build a plain-text display label for a manhole (for use in link text)."""
+    pref = manhole.get("prefecture", "")
+    city = manhole.get("city", "")
+    pokes = "・".join(filter_pokemons(manhole.get("pokemons", []))) or "ポケモン"
+    location = f"{pref}{city}" if (pref or city) else manhole.get("title", "")
+    return f"{location}のポケふた（{pokes}）"
+
+
+def generate_html(
+    manhole: dict,
+    photo: Optional[dict],
+    pokemon_meta: dict[str, dict],
+    nearby: list[tuple[dict, float]],
+    same_pref: list[dict],
+    pref_total: int,
+    same_pokemon: list[dict],
+) -> str:
     """Generate complete HTML for a manhole detail page."""
     manhole_id = str(manhole.get("id", "")).strip()
     prefecture = manhole.get("prefecture", "")
@@ -238,6 +267,47 @@ def generate_html(manhole: dict, photo: Optional[dict], pokemon_meta: dict[str, 
   <a href="{escape(detail_url)}" target="_blank" rel="noopener noreferrer">公式サイトを見る</a>
 </p>
 """
+
+    # Nearby manholes section
+    nearby_html = ""
+    if nearby:
+        nearby_html = "<section class='nearby-section'><h2>近くのポケふた</h2><ul class='related-list'>"
+        for other, dist in nearby:
+            oid = str(other.get("id", ""))
+            label = manhole_label(other)
+            dist_str = f"{dist:.1f} km"
+            nearby_html += (
+                f"<li>"
+                f"<a href='/manholes/{quote(oid)}/'>{escape(label)}</a>"
+                f"<span class='distance'>{escape(dist_str)}</span>"
+                f"</li>"
+            )
+        nearby_html += "</ul></section>"
+
+    # Same pokemon manholes section
+    same_pokemon_html = ""
+    if same_pokemon:
+        same_pokemon_html = "<section class='same-pokemon-section'><h2>同じポケモンのポケふた</h2><ul class='related-list'>"
+        for other in same_pokemon:
+            oid = str(other.get("id", ""))
+            label = manhole_label(other)
+            same_pokemon_html += f"<li><a href='/manholes/{quote(oid)}/'>{escape(label)}</a></li>"
+        same_pokemon_html += "</ul></section>"
+
+    # Same prefecture section
+    pref_section_html = ""
+    if prefecture and same_pref:
+        pref_section_html = (
+            f"<section class='prefecture-section'>"
+            f"<h2>{escape(prefecture)}のポケふた</h2>"
+            f"<p>{escape(prefecture)}には現在{pref_total}枚のポケふたがあります。</p>"
+            f"<ul class='related-list'>"
+        )
+        for other in same_pref:
+            oid = str(other.get("id", ""))
+            label = manhole_label(other)
+            pref_section_html += f"<li><a href='/manholes/{quote(oid)}/'>{escape(label)}</a></li>"
+        pref_section_html += "</ul></section>"
 
     # Safely serialize GA event params for inline onclick attribute.
     # json.dumps handles all JS special chars; escape() makes the JSON safe
@@ -433,6 +503,42 @@ def generate_html(manhole: dict, photo: Optional[dict], pokemon_meta: dict[str, 
       font-size: 14px;
     }}
 
+    .related-list {{
+      list-style: none;
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }}
+
+    .related-list a {{
+      color: #007bff;
+      text-decoration: none;
+      flex: 1;
+    }}
+
+    .related-list a:hover {{
+      text-decoration: underline;
+    }}
+
+    .related-list li {{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      background: #f8f9fa;
+      border-radius: 6px;
+      border: 1px solid #e0e0e0;
+      flex-wrap: wrap;
+      gap: 4px;
+    }}
+
+    .distance {{
+      font-size: 13px;
+      color: #666;
+      white-space: nowrap;
+    }}
+
     @media (max-width: 600px) {{
       body {{
         padding: 8px;
@@ -465,6 +571,12 @@ def generate_html(manhole: dict, photo: Optional[dict], pokemon_meta: dict[str, 
     {pokemon_info_html}
 
     {location_html}
+
+    {nearby_html}
+
+    {same_pokemon_html}
+
+    {pref_section_html}
 
     <section class='navigation-section'>
       <h2>他のポケふたを見る</h2>
@@ -503,6 +615,18 @@ def generate_all_pages(
     photos_applied = 0
     photos_missing = 0
 
+    # Build cross-manhole indexes once
+    pref_index: dict[str, list[dict]] = {}
+    for m in manholes:
+        pref = m.get("prefecture", "")
+        if pref:
+            pref_index.setdefault(pref, []).append(m)
+
+    pokemon_index: dict[str, list[dict]] = {}
+    for m in manholes:
+        for pk in filter_pokemons(m.get("pokemons", [])):
+            pokemon_index.setdefault(pk, []).append(m)
+
     for manhole in manholes:
         manhole_id = str(manhole.get("id", "")).strip()
         if not manhole_id:
@@ -525,7 +649,47 @@ def generate_all_pages(
             photos_missing += 1
             logger.debug(f"No photo found for manhole {manhole_id} (normalized: {norm_id})")
 
-        html = generate_html(manhole, photo, pokemon_meta)
+        prefecture = manhole.get("prefecture", "")
+        lat = manhole.get("lat")
+        lng = manhole.get("lng")
+
+        # Nearby manholes (requires lat/lng)
+        nearby: list[tuple[dict, float]] = []
+        if lat is not None and lng is not None:
+            for other in manholes:
+                if str(other.get("id", "")) == manhole_id:
+                    continue
+                olat, olng = other.get("lat"), other.get("lng")
+                if olat is None or olng is None:
+                    continue
+                dist = haversine(float(lat), float(lng), float(olat), float(olng))
+                nearby.append((other, dist))
+            nearby.sort(key=lambda x: x[1])
+            nearby = nearby[:5]
+
+        # Same prefecture manholes (stable sort: city then id)
+        same_pref_all = [
+            m for m in pref_index.get(prefecture, [])
+            if str(m.get("id", "")) != manhole_id
+        ]
+        same_pref = sorted(
+            same_pref_all,
+            key=lambda m: (m.get("city", ""), str(m.get("id", "")))
+        )[:20]
+        pref_total = len(pref_index.get(prefecture, []))
+
+        # Same pokemon manholes (deduplicated: one entry per manhole)
+        seen_ids: set[str] = set()
+        same_pokemon: list[dict] = []
+        for pk in filter_pokemons(manhole.get("pokemons", [])):
+            for other in pokemon_index.get(pk, []):
+                oid = str(other.get("id", ""))
+                if oid != manhole_id and oid not in seen_ids:
+                    seen_ids.add(oid)
+                    same_pokemon.append(other)
+        same_pokemon = same_pokemon[:10]
+
+        html = generate_html(manhole, photo, pokemon_meta, nearby, same_pref, pref_total, same_pokemon)
 
         page_dir = output_dir / "manholes" / manhole_id
         page_dir.mkdir(parents=True, exist_ok=True)
