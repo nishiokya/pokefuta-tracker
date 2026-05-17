@@ -83,7 +83,8 @@ def _download_fallback(url: str, dest: Path) -> Optional[Path]:
         return dest
     try:
         logger.warning("No system Japanese font found — downloading fallback to /tmp ...")
-        urllib.request.urlretrieve(url, dest)
+        with urllib.request.urlopen(url, timeout=30) as resp:
+            dest.write_bytes(resp.read())
         logger.info("Downloaded fallback font: %s", dest)
         return dest
     except Exception as exc:
@@ -259,10 +260,10 @@ def _draw_right_panel(
 
 def _draw_bottom_bar(draw: ImageDraw.ImageDraw, fonts: dict) -> None:
     draw.rectangle([0, BOTTOM_Y, CANVAS_W, CANVAS_H], fill=BOTTOM_BG)
-    w = _text_w(draw, BOTTOM_TEXT, fonts["bottom"])
     bb = _text_bbox(draw, BOTTOM_TEXT, fonts["bottom"])
+    text_w = bb[2] - bb[0]
     text_h = bb[3] - bb[1]
-    x = (CANVAS_W - w) // 2
+    x = (CANVAS_W - text_w) // 2
     y = BOTTOM_Y + (BOTTOM_H - text_h) // 2
     draw.text((x, y), BOTTOM_TEXT, font=fonts["bottom"], fill=BOTTOM_TEXT_COLOR)
 
@@ -327,9 +328,8 @@ def generate_all_ogp(
             skipped += 1
             continue
 
-        local_jpeg: Optional[Path] = image_dir / f"{mid}_latest.jpeg"
-        if not local_jpeg.exists():
-            local_jpeg = None
+        _candidate = image_dir / f"{mid}_latest.jpeg"
+        local_jpeg: Optional[Path] = _candidate if _candidate.exists() else None
 
         if generate_ogp_image(manhole, local_jpeg, output_path, fonts):
             generated += 1
