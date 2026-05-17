@@ -82,15 +82,6 @@ _SVG_DEFS = (
     '<path fill="#6F55A3" d="M48 68s17-17 17-32a17 17 0 1 0-34 0c0 15 17 32 17 32z"/>'
     '<circle cx="48" cy="36" r="7" fill="#fff"/>'
     "</symbol>"
-    '<symbol id="icon-detail-pokemon" viewBox="0 0 96 96">'
-    '<rect x="18" y="12" width="60" height="72" rx="12" fill="#FFF3D6"/>'
-    '<rect x="18" y="12" width="60" height="72" rx="12" fill="none" stroke="#6A4B36" stroke-linecap="round" stroke-linejoin="round" stroke-width="7"/>'
-    '<circle cx="48" cy="39" r="18" fill="#6F55A3" opacity="0.15"/>'
-    '<path fill="none" stroke="#6F55A3" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M35 46c4 6 9 9 13 9s9-3 13-9M36 35c4-4 8-6 12-6s8 2 12 6"/>'
-    '<circle cx="40" cy="39" r="3" fill="#6F55A3"/>'
-    '<circle cx="56" cy="39" r="3" fill="#6F55A3"/>'
-    '<path fill="none" stroke="#6A4B36" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M31 67h34"/>'
-    "</symbol>"
     '<symbol id="icon-detail-nearby" viewBox="0 0 96 96">'
     '<circle cx="48" cy="48" r="31" fill="#F8F1E2"/>'
     '<path fill="none" stroke="#6F55A3" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M48 14v10M48 72v10M14 48h10M72 48h10"/>'
@@ -105,13 +96,6 @@ _SVG_DEFS = (
     '<path fill="#6F55A3" d="M63 54s11-11 11-21a11 11 0 1 0-22 0c0 10 11 21 11 21z"/>'
     '<circle cx="63" cy="33" r="4" fill="#fff"/>'
     '<path fill="none" stroke="#6F55A3" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M28 30h15M28 43h12M28 56h20"/>'
-    "</symbol>"
-    '<symbol id="icon-detail-same-city" viewBox="0 0 96 96">'
-    '<path fill="#FFF3D6" d="M17 73V39l18-13 18 13v34z"/>'
-    '<path fill="none" stroke="#6A4B36" stroke-linecap="round" stroke-linejoin="round" stroke-width="7" d="M17 73V39l18-13 18 13v34M53 73V46h26v27"/>'
-    '<path fill="none" stroke="#6F55A3" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M29 73V57h12v16M62 57h8M62 67h8"/>'
-    '<path fill="#6F55A3" d="M72 44s12-12 12-23a12 12 0 1 0-24 0c0 11 12 23 12 23z"/>'
-    '<circle cx="72" cy="21" r="4" fill="#fff"/>'
     "</symbol>"
     # --- link grid icons ---
     '<symbol id="icon-link-google-map" viewBox="0 0 96 96">'
@@ -149,11 +133,6 @@ _SVG_DEFS = (
     '<circle cx="68" cy="24" r="12" fill="#E73A51"/>'
     '<circle cx="68" cy="72" r="12" fill="#E73A51"/>'
     '<path fill="none" stroke="#E73A51" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M38 42l20-12M38 54l20 12"/>'
-    "</symbol>"
-    '<symbol id="icon-section-card" viewBox="0 0 96 96">'
-    '<rect x="14" y="18" width="68" height="60" rx="14" fill="#FFF3D6"/>'
-    '<rect x="14" y="18" width="68" height="60" rx="14" fill="none" stroke="#6A4B36" stroke-linecap="round" stroke-linejoin="round" stroke-width="7"/>'
-    '<path fill="none" stroke="#6F55A3" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M28 34h40M28 48h32M28 62h24"/>'
     "</symbol>"
     "</defs></svg>"
 )
@@ -279,7 +258,7 @@ def _render_related_card(
     extra_html: str = "",
 ) -> str:
     """Build a related-manhole list item with local thumbnail and pin icon."""
-    oid = str(other.get("id", ""))
+    oid = str(other.get("id", "")).strip()
     label = manhole_label(other)
     thumb_url = id_to_image_url.get(oid, "")
     thumb_html = (
@@ -513,7 +492,9 @@ def generate_html(
     jsonld_str = json.dumps(jsonld, ensure_ascii=False, indent=2)
 
     # Links grid: external + internal + photo upload (移設統合)
-    prefecture_site_url = manhole.get("prefecture_site_url", "") or ""
+    _pref_site_raw = manhole.get("prefecture_site_url", "") or ""
+    _pref_parsed = urlparse(_pref_site_raw)
+    prefecture_site_url = _pref_site_raw if _pref_parsed.scheme in ("http", "https") else ""
     link_cards: list[str] = []
     if lat is not None and lng is not None:
         maps_url = f"https://www.google.com/maps?q={lat},{lng}"
@@ -616,7 +597,7 @@ def generate_html(
     {pokemon_tags_html}
     {stats_html}
     <div class="hero-actions">
-      <button class="btn-share" onclick="shareManhole()">{_icon('icon-link-share', 'action-icon')}<span>共有する</span></button>
+      <button type="button" class="btn-share" onclick="shareManhole()">{_icon('icon-link-share', 'action-icon')}<span>共有する</span></button>
       <a href="{escape(map_url)}" class="btn-map" onclick="trackEvent('manhole_seo_to_map_click', {onclick_params})">{_icon('icon-link-map', 'action-icon')}<span>地図で見る</span></a>
     </div>
   </div>
@@ -1090,44 +1071,6 @@ def generate_html(
       background: #f8f4ee;
     }}
 
-    @media (max-width: 600px) {{
-      body {{
-        padding: 6px;
-        background: #fff8ec;
-      }}
-
-      .container {{
-        padding: 12px;
-        border-radius: 10px;
-      }}
-
-      .hero-card {{
-        border-radius: 12px;
-      }}
-
-      .hero-body {{
-        padding: 14px 14px 18px;
-      }}
-
-      h1.hero-title {{
-        font-size: 18px;
-      }}
-
-      .btn-share {{
-        padding: 15px 14px;
-        font-size: 16px;
-      }}
-
-      .section-card {{
-        padding: 14px;
-        border-radius: 8px;
-      }}
-
-      .pokemon-list {{
-        grid-template-columns: 1fr;
-      }}
-    }}
-
     .icon {{
       display: inline-block;
       width: 18px;
@@ -1169,6 +1112,44 @@ def generate_html(
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+    }}
+
+    @media (max-width: 600px) {{
+      body {{
+        padding: 6px;
+        background: #fff8ec;
+      }}
+
+      .container {{
+        padding: 12px;
+        border-radius: 10px;
+      }}
+
+      .hero-card {{
+        border-radius: 12px;
+      }}
+
+      .hero-body {{
+        padding: 14px 14px 18px;
+      }}
+
+      h1.hero-title {{
+        font-size: 18px;
+      }}
+
+      .btn-share {{
+        padding: 15px 14px;
+        font-size: 16px;
+      }}
+
+      .section-card {{
+        padding: 14px;
+        border-radius: 8px;
+      }}
+
+      .pokemon-list {{
+        grid-template-columns: 1fr;
+      }}
     }}
 
     .pokemon-card .multilingual-names {{
@@ -1355,7 +1336,7 @@ def generate_all_pages(
         same_pokemon: list[dict] = []
         for pk in filter_pokemons(manhole.get("pokemons", [])):
             for other in pokemon_index.get(pk, []):
-                oid = str(other.get("id", ""))
+                oid = str(other.get("id", "")).strip()
                 if oid != manhole_id and oid not in seen_ids:
                     seen_ids.add(oid)
                     same_pokemon.append(other)
