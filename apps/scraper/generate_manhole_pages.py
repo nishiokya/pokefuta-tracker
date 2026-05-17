@@ -22,6 +22,42 @@ from xml.sax.saxutils import escape
 BASE_URL = "https://data.pokefuta.com/"
 GA_MEASUREMENT_ID = "G-K18NR4GZG2"
 
+# SVG icon symbols sourced from design/pokefuta_ui_icons.svg
+_SVG_DEFS = (
+    '<svg width="0" height="0" style="position:absolute" aria-hidden="true">'
+    "<defs>"
+    '<symbol id="icon-pin" viewBox="0 0 96 96">'
+    '<path d="M48 86s26-27 26-50C74 21.6 62.4 10 48 10S22 21.6 22 36c0 23 26 50 26 50z" fill="#6F55A3"/>'
+    '<circle cx="48" cy="36" r="11" fill="#fff"/>'
+    "</symbol>"
+    '<symbol id="icon-map" viewBox="0 0 96 96">'
+    '<path d="M12 20l22-8 28 8 22-8v64l-22 8-28-8-22 8V20z" stroke="#6F55A3" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" fill="none"/>'
+    '<path d="M34 12v64M62 20v64" stroke="#6F55A3" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>'
+    "</symbol>"
+    '<symbol id="icon-external" viewBox="0 0 96 96">'
+    '<path d="M34 18h44v44" stroke="#1D9A8A" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>'
+    '<path d="M76 20L38 58" stroke="#1D9A8A" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>'
+    '<path d="M22 34v40h40" stroke="#1D9A8A" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>'
+    "</symbol>"
+    '<symbol id="icon-walk" viewBox="0 0 96 96">'
+    '<circle cx="50" cy="16" r="8" fill="#F36D36"/>'
+    '<path d="M46 30l-10 22 16 10 8 24M56 34l16 14M36 52L24 76" stroke="#F0A44A" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>'
+    "</symbol>"
+    '<symbol id="icon-current-location" viewBox="0 0 96 96">'
+    '<circle cx="48" cy="48" r="24" stroke="#6F55A3" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" fill="none"/>'
+    '<path d="M48 8v16M48 72v16M8 48h16M72 48h16" stroke="#6F55A3" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>'
+    '<circle cx="48" cy="48" r="7" fill="#6F55A3"/>'
+    "</symbol>"
+    "</defs>"
+    "</svg>"
+)
+
+
+def _icon(symbol_id: str, extra_class: str = "") -> str:
+    cls = f"icon {extra_class}".strip()
+    return f'<svg class="{cls}" aria-hidden="true"><use href="#{symbol_id}"/></svg>'
+
+
 logger = logging.getLogger(__name__)
 
 
@@ -143,6 +179,7 @@ def generate_html(
     city_total: int = 0,
     same_pokemon_total: int = 0,
     nearby_count: int = 0,
+    id_to_image_url: Optional[dict[str, str]] = None,
 ) -> str:
     """Generate complete HTML for a manhole detail page."""
     manhole_id = str(manhole.get("id", "")).strip()
@@ -230,7 +267,7 @@ def generate_html(
     if same_pokemon_total > 0:
         badges.append(f"<span class='hero-badge'>同じポケモン {same_pokemon_total}枚</span>")
     if nearby_count > 0:
-        badges.append(f"<span class='hero-badge'>近くに{nearby_count}件</span>")
+        badges.append(f"<span class='hero-badge'>30km以内に{nearby_count}件</span>")
     stats_html = f"<div class='hero-stats'>{''.join(badges)}</div>" if badges else ""
 
     # HERO card: share JS data (Python-serialized to avoid injection)
@@ -305,23 +342,37 @@ def generate_html(
     # Official site link (if available)
     official_html = ""
     if has_official_url:
-        official_html = f"""
-<p class='official-link'>
-  <a href="{escape(detail_url)}" target="_blank" rel="noopener noreferrer">公式サイトを見る</a>
-</p>
-"""
+        official_html = (
+            f"<p class='official-link'>"
+            f'<a href="{escape(detail_url)}" target="_blank" rel="noopener noreferrer">'
+            f"{_icon('icon-external')} 公式サイトを見る</a></p>"
+        )
 
     # Nearby manholes section
+    _img_map = id_to_image_url or {}
     nearby_html = ""
     if nearby:
-        nearby_html = "<section class='nearby-section section-card'><h2>近くのポケふた</h2><ul class='related-list'>"
+        nearby_html = (
+            f"<section class='nearby-section section-card'>"
+            f"<h2>{_icon('icon-walk', 'icon-lg')} 30km以内のポケふた</h2>"
+            f"<ul class='related-list'>"
+        )
         for other, dist in nearby:
             oid = str(other.get("id", ""))
             label = manhole_label(other)
             dist_str = f"{dist:.1f} km"
+            thumb_url = _img_map.get(oid, "")
+            thumb_html = (
+                f'<div class="related-card-thumb">'
+                f'<img src="{escape(thumb_url)}" alt="" loading="lazy"'
+                f' onerror="this.closest(\'.related-card-thumb\').remove()">'
+                f"</div>"
+            ) if thumb_url else ""
             nearby_html += (
                 f"<li>"
-                f"<a href='/manholes/{quote(oid, safe='')}/'>{escape(label)}</a>"
+                f"{thumb_html}"
+                f'<div class="related-card-body">{_icon("icon-pin", "icon-sm")}'
+                f"<a href='/manholes/{quote(oid, safe='')}/'>{escape(label)}</a></div>"
                 f"<span class='distance'>{escape(dist_str)}</span>"
                 f"</li>"
             )
@@ -330,11 +381,28 @@ def generate_html(
     # Same pokemon manholes section
     same_pokemon_html = ""
     if same_pokemon:
-        same_pokemon_html = "<section class='same-pokemon-section section-card'><h2>同じポケモンのポケふた</h2><ul class='related-list'>"
+        same_pokemon_html = (
+            "<section class='same-pokemon-section section-card'>"
+            "<h2>同じポケモンのポケふた</h2>"
+            "<ul class='related-list'>"
+        )
         for other in same_pokemon:
             oid = str(other.get("id", ""))
             label = manhole_label(other)
-            same_pokemon_html += f"<li><a href='/manholes/{quote(oid, safe='')}/'>{escape(label)}</a></li>"
+            thumb_url = _img_map.get(oid, "")
+            thumb_html = (
+                f'<div class="related-card-thumb">'
+                f'<img src="{escape(thumb_url)}" alt="" loading="lazy"'
+                f' onerror="this.closest(\'.related-card-thumb\').remove()">'
+                f"</div>"
+            ) if thumb_url else ""
+            same_pokemon_html += (
+                f"<li>"
+                f"{thumb_html}"
+                f'<div class="related-card-body">{_icon("icon-pin", "icon-sm")}'
+                f"<a href='/manholes/{quote(oid, safe='')}/'>{escape(label)}</a></div>"
+                f"</li>"
+            )
         same_pokemon_html += "</ul></section>"
 
     # Same prefecture section
@@ -342,14 +410,27 @@ def generate_html(
     if prefecture and same_pref:
         pref_section_html = (
             f"<section class='prefecture-section section-card'>"
-            f"<h2>{escape(prefecture)}のポケふた</h2>"
+            f"<h2>{_icon('icon-map', 'icon-lg')} {escape(prefecture)}のポケふた</h2>"
             f"<p>{escape(prefecture)}には現在{pref_total}枚のポケふたがあります。</p>"
             f"<ul class='related-list'>"
         )
         for other in same_pref:
             oid = str(other.get("id", ""))
             label = manhole_label(other)
-            pref_section_html += f"<li><a href='/manholes/{quote(oid, safe='')}/'>{escape(label)}</a></li>"
+            thumb_url = _img_map.get(oid, "")
+            thumb_html = (
+                f'<div class="related-card-thumb">'
+                f'<img src="{escape(thumb_url)}" alt="" loading="lazy"'
+                f' onerror="this.closest(\'.related-card-thumb\').remove()">'
+                f"</div>"
+            ) if thumb_url else ""
+            pref_section_html += (
+                f"<li>"
+                f"{thumb_html}"
+                f'<div class="related-card-body">{_icon("icon-pin", "icon-sm")}'
+                f"<a href='/manholes/{quote(oid, safe='')}/'>{escape(label)}</a></div>"
+                f"</li>"
+            )
         pref_section_html += "</ul></section>"
 
     # Safely serialize GA event params for inline onclick attribute.
@@ -372,7 +453,7 @@ def generate_html(
     {stats_html}
     <div class="hero-actions">
       <button class="btn-share" onclick="shareManhole()">🔗 共有する</button>
-      <a href="{escape(map_url)}" class="btn-map" onclick="trackEvent('manhole_seo_to_map_click', {onclick_params})">📍 地図で見る</a>
+      <a href="{escape(map_url)}" class="btn-map" onclick="trackEvent('manhole_seo_to_map_click', {onclick_params})">{_icon('icon-map')} 地図で見る</a>
       {photo_btn_html}
     </div>
   </div>
@@ -836,9 +917,52 @@ def generate_html(
         grid-template-columns: 1fr;
       }}
     }}
+
+    .icon {{
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      vertical-align: middle;
+      flex-shrink: 0;
+    }}
+
+    .icon-sm {{ width: 14px; height: 14px; }}
+    .icon-lg {{ width: 22px; height: 22px; }}
+
+    .related-card-thumb {{
+      width: 60px;
+      height: 60px;
+      flex-shrink: 0;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #f0ebe3;
+    }}
+
+    .related-card-thumb img {{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }}
+
+    .related-card-body {{
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      min-width: 0;
+    }}
+
+    .related-card-body a {{
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }}
   </style>
 </head>
 <body>
+  {_SVG_DEFS}
   <div class="container">
     {hero_card_html}
 
@@ -855,8 +979,8 @@ def generate_html(
     <section class='navigation-section'>
       <h2>他のポケふたを見る</h2>
       <p>
-        <a href="{escape(pref_url)}" class="cta-secondary">同じ都道府県のポケふたを見る</a>
-        <a href="{BASE_URL}" class="cta-secondary">全国マップを見る</a>
+        <a href="{escape(pref_url)}" class="cta-secondary">{_icon('icon-map')} {escape(prefecture)}のポケふたを見る</a>
+        <a href="{BASE_URL}" class="cta-secondary">{_icon('icon-current-location')} 全国マップを見る</a>
       </p>
     </section>
 
@@ -908,27 +1032,28 @@ def generate_all_pages(
         for pk in filter_pokemons(m.get("pokemons", [])):
             pokemon_index.setdefault(pk, []).append(m)
 
+    # Build GitHub Pages-safe image URL map (local files only; no Cloudflare URLs)
+    id_to_image_url: dict[str, str] = {}
+    for m in manholes:
+        mid = str(m.get("id", "")).strip()
+        if mid and (image_dir / f"{mid}_latest.jpeg").exists():
+            id_to_image_url[mid] = f"{BASE_URL}manhole/image/{mid}_latest.jpeg"
+
     for manhole in manholes:
         manhole_id = str(manhole.get("id", "")).strip()
         if not manhole_id:
             logger.warning("Skipping manhole with missing ID")
             continue
 
-        norm_id = normalize_id(manhole_id)
-        photo = photos.get(norm_id)
-
-        # Prefer local repo image over Cloudflare URL when available
-        local_image = image_dir / f"{manhole_id}_latest.jpeg"
-        if local_image.exists():
-            local_url = f"{BASE_URL}manhole/image/{manhole_id}_latest.jpeg"
-            photo = dict(photo or {}, url=local_url)
-            logger.debug(f"Using local image for manhole {manhole_id}")
+        # Use local image only — Cloudflare R2 URLs are not served on GitHub Pages
+        local_url = id_to_image_url.get(manhole_id)
+        photo: Optional[dict] = {"url": local_url} if local_url else None
 
         if photo:
             photos_applied += 1
         else:
             photos_missing += 1
-            logger.debug(f"No photo found for manhole {manhole_id} (normalized: {norm_id})")
+            logger.debug(f"No local image for manhole {manhole_id}")
 
         prefecture = manhole.get("prefecture", "")
         city = manhole.get("city", "")
@@ -947,7 +1072,8 @@ def generate_all_pages(
                 dist = haversine(float(lat), float(lng), float(olat), float(olng))
                 nearby.append((other, dist))
             nearby.sort(key=lambda x: x[1])
-        nearby_count = sum(1 for _, dist in nearby if dist <= 5.0)
+        nearby = [(m, d) for m, d in nearby if d <= 30.0]
+        nearby_count = len(nearby)
         nearby = nearby[:5]
 
         # Same prefecture manholes (stable sort: city then id)
@@ -979,6 +1105,7 @@ def generate_all_pages(
         html = generate_html(
             manhole, photo, pokemon_meta, nearby, same_pref, pref_total, same_pokemon,
             city_total=city_total, same_pokemon_total=same_pokemon_total, nearby_count=nearby_count,
+            id_to_image_url=id_to_image_url,
         )
 
         page_dir = output_dir / "manholes" / manhole_id
