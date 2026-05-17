@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate /pokemon/index.html — a hub page listing all Pokemon with pokefuta."""
+"""Generate /pokemon/index.html — SEO hub listing all Pokemon with pokefuta."""
 
 from __future__ import annotations
 
@@ -17,7 +17,6 @@ from generate_pokemon_pages import (
     DEFAULT_OGP_IMAGE,
     GA_MEASUREMENT_ID,
     _FORM_PREFIX,
-    _normalize_katakana,
     build_pokemon_index,
     load_pokemon_metadata,
     read_manholes,
@@ -29,13 +28,23 @@ logger = logging.getLogger(__name__)
 CANONICAL_URL = f"{BASE_URL}pokemon/"
 TITLE = "ポケふたに登場するポケモン一覧 | 全国のポケモンマンホールマップ"
 DESCRIPTION = (
-    "全国のポケふた（ポケモンマンホール）に登場するポケモンの一覧です。"
-    "気になるポケモンをタップすると、そのポケモンが描かれたポケふたを地図で探せます。"
+    "全国各地に設置された「ポケふた（ポケモンマンホール）」に登場するポケモン一覧です。"
+    "北海道のロコンや香川県のヤドン、宮城県のラプラスなど、地域を応援するポケモンとして"
+    "描かれたポケふたも人気があります。気になるポケモンから、全国のポケふたや設置自治体を探せます。"
 )
+
+# 地域連携ポケモン（slug → 紹介文）
+REGIONAL_POKEMON: list[tuple[str, str]] = [
+    ("vulpix",       "北海道を応援するポケモン"),
+    ("vulpix-alola", "北海道を応援するポケモン"),
+    ("slowpoke",     "香川県を応援するポケモン"),
+    ("lapras",       "宮城県を応援するポケモン"),
+    ("geodude",      "岩手県を応援するポケモン"),
+    ("chansey",      "福島県を応援するポケモン"),
+]
 
 
 def _get_display_name(slug: str, meta: dict) -> tuple[str, str]:
-    """Return (name_ja, name_en) with regional form prefix applied."""
     names = meta.get("names", {})
     form = meta.get("form") or ""
     prefix = _FORM_PREFIX.get(form, "")
@@ -44,30 +53,59 @@ def _get_display_name(slug: str, meta: dict) -> tuple[str, str]:
     return name_ja, name_en
 
 
-def generate_html(pokemon_index: dict[str, tuple[dict, list[dict]]]) -> str:
-    count = len(pokemon_index)
+def _region_summary(manholes: list[dict], count: int) -> str:
+    prefs = sorted({m.get("prefecture", "") for m in manholes if m.get("prefecture")})
+    region_text = prefs[0] if len(prefs) == 1 else f"{len(prefs)}都道府県"
+    return f"{count}枚 / {region_text}"
 
-    sorted_slugs = sorted(
-        pokemon_index.keys(),
-        key=lambda s: (
-            int(pokemon_index[s][0].get("no") or 9999),
-            pokemon_index[s][0].get("form") or "",
-        ),
+
+def _card_html(slug: str, meta: dict, manholes: list[dict], css_class: str = "poke-item") -> str:
+    name_ja, name_en = _get_display_name(slug, meta)
+    count = len(manholes)
+    summary = _region_summary(manholes, count)
+    en_html = f"<span class='poke-en'>{escape(name_en)}</span>" if name_en else ""
+    return (
+        f"<li class='{css_class}'>"
+        f"<a href='/pokemon/{quote(slug)}/'>"
+        f"<span class='poke-name'>{escape(name_ja)}</span>"
+        f"{en_html}"
+        f"<span class='poke-summary'>{escape(summary)}</span>"
+        f"</a></li>\n"
     )
 
+
+def generate_html(pokemon_index: dict[str, tuple[dict, list[dict]]]) -> str:
+    total_count = len(pokemon_index)
+
+    # 地域連携セクション
+    regional_items_html = ""
+    for slug, tagline in REGIONAL_POKEMON:
+        if slug not in pokemon_index:
+            continue
+        meta, manholes = pokemon_index[slug]
+        name_ja, name_en = _get_display_name(slug, meta)
+        count = len(manholes)
+        summary = _region_summary(manholes, count)
+        en_html = f"<span class='poke-en'>{escape(name_en)}</span>" if name_en else ""
+        regional_items_html += (
+            f"<li class='regional-item'>"
+            f"<a href='/pokemon/{quote(slug)}/'>"
+            f"<span class='poke-name'>{escape(name_ja)}</span>"
+            f"{en_html}"
+            f"<span class='poke-tagline'>{escape(tagline)}</span>"
+            f"<span class='poke-summary'>{escape(summary)}</span>"
+            f"</a></li>\n"
+        )
+
+    # 全ポケモン一覧（登場マンホール数の多い順）
+    sorted_slugs = sorted(
+        pokemon_index.keys(),
+        key=lambda s: -len(pokemon_index[s][1]),
+    )
     items_html = ""
     for slug in sorted_slugs:
         meta, manholes = pokemon_index[slug]
-        name_ja, name_en = _get_display_name(slug, meta)
-        manhole_count = len(manholes)
-        sub = f"（{name_en}）" if name_en else ""
-        items_html += (
-            f"<li class='poke-item'>"
-            f"<a href='/pokemon/{quote(slug)}/'>"
-            f"<span class='poke-name'>{escape(name_ja)}{escape(sub)}</span>"
-            f"<span class='poke-count'>{manhole_count}枚</span>"
-            f"</a></li>\n"
-        )
+        items_html += _card_html(slug, meta, manholes)
 
     jsonld_collection = json.dumps({
         "@context": "https://schema.org",
@@ -123,7 +161,7 @@ def generate_html(pokemon_index: dict[str, tuple[dict, list[dict]]]) -> str:
     function gtag(){{dataLayer.push(arguments);}}
     gtag('js', new Date());
     gtag('config', '{GA_MEASUREMENT_ID}', {{'page_path': '/pokemon/'}});
-    gtag('event', 'view_pokemon_index', {{'pokemon_count': {count}}});
+    gtag('event', 'view_pokemon_index', {{'pokemon_count': {total_count}}});
   </script>
 
   <style>
@@ -154,21 +192,35 @@ def generate_html(pokemon_index: dict[str, tuple[dict, list[dict]]]) -> str:
       color: #1a1a1a;
       margin-bottom: 8px;
     }}
+    h2 {{
+      font-size: 17px;
+      font-weight: bold;
+      color: #1a1a1a;
+      margin: 24px 0 10px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid #e0e0e0;
+    }}
     .lead {{
       font-size: 14px;
       color: #555;
-      margin-bottom: 20px;
+      line-height: 1.75;
+      margin-bottom: 4px;
     }}
-    .poke-list {{
+    /* 共通カードリスト */
+    .poke-list, .regional-list {{
       list-style: none;
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 6px;
     }}
-    .poke-item a {{
+    .regional-list {{
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }}
+    .poke-list {{
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    }}
+    .poke-item a, .regional-item a {{
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      flex-direction: column;
       padding: 8px 12px;
       background: #fafafa;
       border: 1px solid #e8e8e8;
@@ -176,13 +228,38 @@ def generate_html(pokemon_index: dict[str, tuple[dict, list[dict]]]) -> str:
       text-decoration: none;
       color: #333;
       transition: border-color 0.15s, box-shadow 0.15s;
+      height: 100%;
     }}
-    .poke-item a:hover {{
+    .poke-item a:hover, .regional-item a:hover {{
       border-color: #6F55A3;
       box-shadow: 0 2px 8px rgba(111,85,163,0.12);
     }}
-    .poke-name {{ font-size: 14px; font-weight: bold; }}
-    .poke-count {{ font-size: 12px; color: #888; white-space: nowrap; margin-left: 8px; }}
+    .regional-item a {{
+      background: #f5f0ff;
+      border-color: #d8ccf0;
+    }}
+    .poke-name {{
+      font-size: 15px;
+      font-weight: bold;
+      color: #1a1a1a;
+    }}
+    .poke-en {{
+      font-size: 12px;
+      color: #888;
+      margin-top: 1px;
+    }}
+    .poke-tagline {{
+      font-size: 12px;
+      color: #6F55A3;
+      margin-top: 4px;
+      font-weight: bold;
+    }}
+    .poke-summary {{
+      font-size: 12px;
+      color: #666;
+      margin-top: auto;
+      padding-top: 4px;
+    }}
     .cta-map {{
       display: block;
       background: #6F55A3;
@@ -216,8 +293,17 @@ def generate_html(pokemon_index: dict[str, tuple[dict, list[dict]]]) -> str:
   </nav>
 
   <h1>ポケふたに登場するポケモン一覧</h1>
-  <p class="lead">全国 <strong>{count}</strong> 体のポケモンが描かれたポケふたを地図で探せます。</p>
+  <p class="lead">
+    全国各地に設置された「ポケふた（ポケモンマンホール）」に登場するポケモン一覧です。
+    北海道のロコンや香川県のヤドン、宮城県のラプラスなど、地域を応援するポケモンとして描かれたポケふたも人気があります。
+    気になるポケモンから、全国のポケふたや設置自治体を探せます。
+  </p>
 
+  <h2>地域を応援するポケモン</h2>
+  <ul class="regional-list">
+{regional_items_html}  </ul>
+
+  <h2>全ポケモン一覧（{total_count}体）</h2>
   <ul class="poke-list">
 {items_html}  </ul>
 
