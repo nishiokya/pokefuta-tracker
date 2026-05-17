@@ -1,0 +1,66 @@
+<svg width="390" height="1200" viewBox="0 0 390 1200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="390" height="1200" fill="#F7F3EA"/>
+
+  <!-- Header -->
+  <rect x="16" y="16" width="358" height="44" rx="14" fill="#FFFFFF"/>
+  <text x="32" y="44" font-size="14" fill="#5B4A36">← 全国マップへ戻る</text>
+
+  <!-- Hero photo -->
+  <rect x="16" y="76" width="358" height="260" rx="24" fill="#D9D9D9"/>
+  <rect x="30" y="90" width="330" height="210" rx="18" fill="#BFD7EA"/>
+  <circle cx="105" cy="180" r="52" fill="#FFB347"/>
+  <circle cx="245" cy="180" r="58" fill="#86C5DA"/>
+  <text x="48" y="322" font-size="13" fill="#FFFFFF">STAMP PHOTO HERO</text>
+
+  <!-- Title card -->
+  <rect x="16" y="348" width="358" height="132" rx="22" fill="#FFFFFF"/>
+  <text x="32" y="378" font-size="13" fill="#9A7A3F">愛知県・名古屋市中区</text>
+  <text x="32" y="410" font-size="22" font-weight="700" fill="#2C2C2C">コイキング・ネッコアラ</text>
+  <text x="32" y="438" font-size="13" fill="#6F6F6F">全国470枚のポケふたを旅先で発見しよう</text>
+  <rect x="32" y="452" width="92" height="22" rx="11" fill="#FFF1C7"/>
+  <text x="45" y="468" font-size="11" fill="#8A6718">30km以内に7件</text>
+
+  <!-- Primary CTA -->
+  <rect x="16" y="496" width="174" height="58" rx="18" fill="#FFEEF0"/>
+  <text x="64" y="531" font-size="15" font-weight="700" fill="#D94A5D">共有する</text>
+
+  <rect x="200" y="496" width="174" height="58" rx="18" fill="#EEF3FF"/>
+  <text x="248" y="531" font-size="15" font-weight="700" fill="#4667D9">写真を投稿</text>
+
+  <!-- Visit CTA -->
+  <rect x="16" y="568" width="358" height="64" rx="20" fill="#FFFFFF"/>
+  <circle cx="48" cy="600" r="16" fill="#DDF4E7"/>
+  <text x="76" y="596" font-size="15" font-weight="700" fill="#2C2C2C">Google Mapsで行き方を見る</text>
+  <text x="76" y="616" font-size="12" fill="#777777">現地訪問へのメイン導線</text>
+
+  <!-- Info compact -->
+  <rect x="16" y="648" width="358" height="112" rx="20" fill="#FFFFFF"/>
+  <text x="32" y="678" font-size="15" font-weight="700" fill="#2C2C2C">設置場所</text>
+  <text x="32" y="706" font-size="13" fill="#555555">愛知県 名古屋市中区</text>
+  <text x="32" y="730" font-size="13" fill="#555555">栄エリア・観光と一緒に寄りやすい場所</text>
+
+  <!-- Pokemon cards -->
+  <text x="16" y="794" font-size="16" font-weight="700" fill="#2C2C2C">登場ポケモン</text>
+  <rect x="16" y="808" width="172" height="88" rx="18" fill="#FFFFFF"/>
+  <text x="32" y="840" font-size="15" font-weight="700" fill="#2C2C2C">コイキング</text>
+  <text x="32" y="864" font-size="12" fill="#777777">同じポケふたを見る →</text>
+
+  <rect x="202" y="808" width="172" height="88" rx="18" fill="#FFFFFF"/>
+  <text x="218" y="840" font-size="15" font-weight="700" fill="#2C2C2C">ネッコアラ</text>
+  <text x="218" y="864" font-size="12" fill="#777777">同じポケふたを見る →</text>
+
+  <!-- Nearby -->
+  <text x="16" y="936" font-size="16" font-weight="700" fill="#2C2C2C">次に寄れるポケふた</text>
+  <rect x="16" y="950" width="358" height="68" rx="18" fill="#FFFFFF"/>
+  <circle cx="50" cy="984" r="20" fill="#E2D6C8"/>
+  <text x="82" y="978" font-size="14" font-weight="700" fill="#2C2C2C">愛知県瀬戸市のポケふた</text>
+  <text x="82" y="1000" font-size="12" fill="#777777">18.4km</text>
+
+  <rect x="16" y="1030" width="358" height="68" rx="18" fill="#FFFFFF"/>
+  <circle cx="50" cy="1064" r="20" fill="#E2D6C8"/>
+  <text x="82" y="1058" font-size="14" font-weight="700" fill="#2C2C2C">三重県桑名市のポケふた</text>
+  <text x="82" y="1080" font-size="12" fill="#777777">19.7km</text>
+
+  <!-- Footer note -->
+  <text x="16" y="1148" font-size="12" fill="#999999">Phase 1: 情報DBから、共有したくなる旅スタンプ詳細へ</text>
+</svg>

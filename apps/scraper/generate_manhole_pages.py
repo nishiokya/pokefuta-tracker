@@ -252,6 +252,29 @@ def manhole_label(manhole: dict) -> str:
     return f"{location}のポケふた（{pokes}）"
 
 
+def _attr_json(data: dict) -> str:
+    """Serialize dict as JSON safe for use inside an HTML double-quoted onclick attribute.
+
+    json.dumps produces valid JSON strings; escape() with the quotes mapping
+    converts all " to &quot; so they don't terminate the enclosing HTML attribute.
+    Browsers decode &quot; → " before evaluating onclick, so the JS receives
+    a proper object literal.
+    """
+    return escape(json.dumps(data, ensure_ascii=False), {'"': '&quot;'})
+
+
+def _js_json(value) -> str:
+    """Serialize value as JSON safe for embedding inside an inline <script> block.
+
+    json.dumps alone does NOT escape the </script> sequence, which a browser
+    HTML parser treats as closing the script tag regardless of JS context — a
+    potential XSS / page-break vector. Replacing '</' with '<\\/' is the
+    standard workaround: browsers parse the escaped form as a literal '</'
+    inside the JS string, so the runtime value is unchanged.
+    """
+    return json.dumps(value, ensure_ascii=False).replace("</", "<\\/")
+
+
 def _render_related_card(
     other: dict,
     id_to_image_url: dict[str, str],
@@ -324,26 +347,24 @@ def generate_html(
     map_url = f"{BASE_URL}?manhole={quote(manhole_id)}"
     pref_url = f"{BASE_URL}?pref={quote(prefecture)}"
 
-    # Safely serialize GA event params for inline onclick attribute.
-    # json.dumps handles all JS special chars; escape() makes the JSON safe
-    # inside an HTML double-quoted attribute (browser decodes &quot; before eval).
-    onclick_params = escape(json.dumps(
-        {"manhole_id": manhole_id, "prefecture": prefecture, "city": city},
-        ensure_ascii=False,
-    ))
+    # _js_json() serializes values for safe embedding inside <script> blocks:
+    # json.dumps handles quotes/backslashes; the </  → <\/ replacement prevents
+    # premature </script> tag closure from scraped data values.
+    manhole_id_js = _js_json(manhole_id)
+    prefecture_js = _js_json(prefecture)
+    city_js = _js_json(city)
 
-    # JSON-serialized values for safe embedding inside <script> blocks.
-    # Using json.dumps avoids breakage from quotes, backslashes, or </script>
-    # in scraped data values; escape() is HTML-only and unsafe for JS contexts.
-    manhole_id_js = json.dumps(manhole_id)
-    prefecture_js = json.dumps(prefecture, ensure_ascii=False)
-    city_js = json.dumps(city, ensure_ascii=False)
+    # _attr_json() serializes dicts as JSON with " escaped to &quot; so they
+    # are safe inside HTML double-quoted onclick attributes.
+    onclick_params = _attr_json(
+        {"manhole_id": manhole_id, "prefecture": prefecture, "city": city}
+    )
 
     # Source-differentiated params for Google Maps — same event name but
     # distinguishable in GA4 by where the tap came from.
     _base = {"manhole_id": manhole_id, "prefecture": prefecture, "city": city}
-    gmaps_onclick_hero  = escape(json.dumps({**_base, "source": "hero"},  ensure_ascii=False))
-    gmaps_onclick_links = escape(json.dumps({**_base, "source": "links"}, ensure_ascii=False))
+    gmaps_onclick_hero  = _attr_json({**_base, "source": "hero"})
+    gmaps_onclick_links = _attr_json({**_base, "source": "links"})
 
     # Build Pokemon info with metadata
     pokemon_info_html = ""
@@ -376,63 +397,66 @@ def generate_html(
 
         pokemon_info_html += "</div></section>"
 
-    # Photo
+    # photo_url is the single source of truth for whether a real photo exists.
+    # has_photo_bool, og_image, and hero rendering all derive from this value.
     og_image = f"{BASE_URL}assets/ogp/pokefuta_map_ogp.png"
+    photo_url = (photo.get("url", "") or photo.get("original_url", "")) if photo else ""
+    has_photo_bool = bool(photo_url)
+    has_photo_js = json.dumps(has_photo_bool)
+
     hero_photo_html = (
         f"<a class='hero-photo-placeholder' href='https://pokefuta.com/visits'"
         f" target='_blank' rel='noopener noreferrer'"
-        f" onclick=\"trackEvent('click_photo_upload_placeholder', {onclick_params})\">"
+        f" onclick=\"trackEvent('click_photo_upload_placeholder', {_attr_json({'manhole_id': manhole_id, 'prefecture': prefecture, 'city': city, 'has_photo': False})})\">"
         f"<span class='placeholder-camera' aria-hidden='true'>📷</span>"
         f"<span class='placeholder-title'>まだ写真がありません</span>"
         f"<span class='placeholder-sub'>最初の旅写真を投稿する</span>"
         f"</a>"
     )
 
-    if photo:
-        photo_url = photo.get("url", "") or photo.get("original_url", "")
-        if photo_url:
-            og_image = photo_url
+    if photo_url:
+        og_image = photo_url
 
-            raw_name = photo.get("display_name") or ""
-            display_name = str(raw_name)[:20] if raw_name else ""
+        raw_name = photo.get("display_name") or ""
+        display_name = str(raw_name)[:20] if raw_name else ""
 
-            raw_comment = photo.get("comment") or ""
-            comment = " ".join(str(raw_comment).split())  # normalize whitespace
-            if len(comment) > 100:
-                comment = comment[:97] + "…"
+        raw_comment = photo.get("comment") or ""
+        comment = " ".join(str(raw_comment).split())  # normalize whitespace
+        if len(comment) > 100:
+            comment = comment[:97] + "…"
 
-            shot_date = ""
-            shot_at_raw = photo.get("shot_at", "")
-            if isinstance(shot_at_raw, str) and shot_at_raw:
-                try:
-                    dt = datetime.datetime.fromisoformat(shot_at_raw.replace("Z", "+00:00"))
-                    shot_date = f"{dt.year}年{dt.month}月{dt.day}日"
-                except (ValueError, TypeError):
-                    pass
+        shot_date = ""
+        shot_at_raw = photo.get("shot_at", "")
+        if isinstance(shot_at_raw, str) and shot_at_raw:
+            try:
+                dt = datetime.datetime.fromisoformat(shot_at_raw.replace("Z", "+00:00"))
+                shot_date = f"{dt.year}年{dt.month}月{dt.day}日"
+            except (ValueError, TypeError):
+                pass
 
-            credit_parts = []
-            if display_name:
-                credit_parts.append(f"📷 {escape(display_name)}")
-            if shot_date:
-                credit_parts.append(shot_date)
-            if credit_parts:
-                inner = "".join(f"<span>{p}</span>" for p in credit_parts)
-                credit_html = f"<div class='photo-credit'>{inner}</div>"
-            else:
-                credit_html = ""
+        credit_parts = []
+        if display_name:
+            credit_parts.append(f"📷 {escape(display_name)}")
+        if shot_date:
+            credit_parts.append(shot_date)
+        if credit_parts:
+            inner = "".join(f"<span>{p}</span>" for p in credit_parts)
+            credit_html = f"<div class='photo-credit'>{inner}</div>"
+        else:
+            credit_html = ""
 
-            comment_html = (
-                f"<div class='photo-comment'>{escape(comment)}</div>"
-                if comment else ""
-            )
+        comment_html = (
+            f"<div class='photo-comment'>{escape(comment)}</div>"
+            if comment else ""
+        )
 
-            hero_photo_html = (
-                f"<div class='hero-photo'>"
-                f"<img src=\"{escape(photo_url)}\" alt=\"{escape(h1)}の写真\" loading=\"lazy\">"
-                f"{credit_html}"
-                f"{comment_html}"
-                f"</div>"
-            )
+        hero_photo_html = (
+            f"<div class='hero-photo'>"
+            f"<img src=\"{escape(photo_url)}\" alt=\"{escape(h1)}の写真\" loading=\"lazy\">"
+            f"{credit_html}"
+            f"{comment_html}"
+            f"</div>"
+        )
 
     # HERO card: region label
     region_parts = [p for p in [prefecture, city] if p]
@@ -471,9 +495,9 @@ def generate_html(
         f"{prefecture}{city}のポケふた（{pokemon_text}）を見つけました。\n"
         f"{prefecture}には{pref_total}枚のポケふたがあります。"
     ) if prefecture else f"{h1}を見つけました。"
-    share_title_json = json.dumps(share_title, ensure_ascii=False)
-    share_text_json = json.dumps(share_text, ensure_ascii=False)
-    share_url_json = json.dumps(canonical_url, ensure_ascii=False)
+    share_title_json = _js_json(share_title)
+    share_text_json = _js_json(share_text)
+    share_url_json = _js_json(canonical_url)
 
     # Validate official URL (used for links-grid cards)
     _parsed = urlparse(detail_url) if detail_url else None
@@ -559,14 +583,23 @@ def generate_html(
             f"<a class='link-card link-card--internal' href=\"{escape(pref_url)}\">"
             f"{_icon('icon-detail-same-pref', 'link-card-icon')}<span>同じ都道府県</span></a>"
         )
+    _map_onclick = _attr_json({"manhole_id": manhole_id, "source": "links_map"})
     link_cards.append(
-        f"<a class='link-card link-card--internal' href=\"{BASE_URL}\">"
+        f"<a class='link-card link-card--internal' href=\"{escape(BASE_URL)}\""
+        f" onclick=\"trackEvent('click_map_internal', {_map_onclick})\">"
         f"{_icon('icon-link-map', 'link-card-icon')}<span>全国マップ</span></a>"
     )
     if has_official_url:
+        _photo_onclick = _attr_json({
+            "manhole_id": manhole_id,
+            "prefecture": prefecture,
+            "city": city,
+            "has_photo": has_photo_bool,
+        })
         link_cards.append(
             f"<a class='link-card link-card--photo' href=\"{escape(detail_url)}\""
-            f" target=\"_blank\" rel=\"noopener noreferrer\">"
+            f" target=\"_blank\" rel=\"noopener noreferrer\""
+            f" onclick=\"trackEvent('click_photo_upload', {_photo_onclick})\">"
             f"{_icon('icon-link-photo', 'link-card-icon')}<span>写真を投稿</span></a>"
         )
     links_grid_html = (
@@ -586,11 +619,16 @@ def generate_html(
         )
         for other, dist in nearby:
             dist_str = f"{dist:.1f} km"
+            _nearby_params = _attr_json({
+                "from_manhole_id": manhole_id,
+                "to_manhole_id": str(other.get("id", "")).strip(),
+                "distance_km": round(dist, 1),
+            })
             nearby_html += _render_related_card(
                 other, id_to_image_url,
                 extra_html=f"<span class='distance'>{escape(dist_str)}</span>",
                 event_name="click_nearby_manhole",
-                onclick_params=onclick_params,
+                onclick_params=_nearby_params,
             )
         nearby_html += "</ul></section>"
 
@@ -602,11 +640,19 @@ def generate_html(
             "<h2>同じポケモンのポケふた</h2>"
             "<ul class='related-list related-list--cards'>"
         )
+        _current_poke_set = set(pokemons)
         for other in same_pokemon:
+            _other_pokemons = filter_pokemons(other.get("pokemons", []))
+            _shared = [p for p in _other_pokemons if p in _current_poke_set]
+            _sp_params = _attr_json({
+                "from_manhole_id": manhole_id,
+                "to_manhole_id": str(other.get("id", "")).strip(),
+                "pokemon_names": ",".join(_shared) if _shared else "",
+            })
             same_pokemon_html += _render_related_card(
                 other, id_to_image_url,
                 event_name="click_same_pokemon_manhole",
-                onclick_params=onclick_params,
+                onclick_params=_sp_params,
             )
         same_pokemon_html += "</ul></section>"
 
@@ -620,18 +666,40 @@ def generate_html(
             f"<ul class='related-list related-list--cards'>"
         )
         for other in same_pref:
+            _pref_params = _attr_json({
+                "from_manhole_id": manhole_id,
+                "to_manhole_id": str(other.get("id", "")).strip(),
+                "prefecture": prefecture,
+            })
             pref_section_html += _render_related_card(
                 other, id_to_image_url,
                 event_name="click_prefecture_manhole",
-                onclick_params=onclick_params,
+                onclick_params=_pref_params,
             )
         pref_section_html += "</ul></section>"
 
     current_year = datetime.date.today().year
 
+    # X (Twitter) follow section
+    _follow_onclick = _attr_json({"manhole_id": manhole_id, "prefecture": prefecture})
+    follow_x_html = (
+        f"<section class='follow-section'>"
+        f"<a href='https://x.com/pokemonmanhole'"
+        f" target='_blank' rel='noopener noreferrer'"
+        f" class='follow-x-card'"
+        f" onclick=\"trackEvent('click_follow_x', {_follow_onclick})\">"
+        f"<div class='follow-x-title'>最新のポケふた旅情報</div>"
+        f"<div class='follow-x-body'>新設ポケふた・旅写真・全国の発見情報を更新中</div>"
+        f"<div class='follow-x-cta'>Xでフォローする →</div>"
+        f"</a></section>"
+    )
+
     # Back button HTML
+    _back_onclick = _attr_json({"manhole_id": manhole_id, "source": "back_btn"})
     back_btn_html = (
-        f"<a href=\"{escape(map_url)}\" class=\"back-btn\">← 全国マップへ戻る</a>"
+        f"<a href=\"{escape(map_url)}\" class=\"back-btn\""
+        f" onclick=\"trackEvent('click_map_internal', {_back_onclick})\">"
+        f"← 全国マップへ戻る</a>"
     )
 
     # Visit CTA (Google Maps full-width card)
@@ -705,7 +773,9 @@ def generate_html(
     gtag('event', 'view_manhole_detail', {{
       manhole_id: {manhole_id_js},
       prefecture: {prefecture_js},
-      city: {city_js}
+      city: {city_js},
+      pokemon_count: {len(pokemons)},
+      has_photo: {has_photo_js}
     }});
 
     function trackEvent(action, params) {{
@@ -713,21 +783,24 @@ def generate_html(
     }}
 
     function shareManhole() {{
-      trackEvent('click_share', {{
+      var _sp = {{
         manhole_id: {manhole_id_js},
         prefecture: {prefecture_js},
         city: {city_js}
-      }});
+      }};
+      trackEvent('click_share', _sp);
       var d = {{
         title: {share_title_json},
         text: {share_text_json},
         url: {share_url_json}
       }};
       if (navigator.share) {{
-        navigator.share(d).catch(function() {{}});
+        navigator.share(d).then(function() {{
+          trackEvent('complete_share', _sp);
+        }}).catch(function() {{}});
       }} else {{
         navigator.clipboard.writeText(d.url).then(
-          function() {{ alert('URLをコピーしました'); }},
+          function() {{ trackEvent('share_copy_url', _sp); alert('URLをコピーしました'); }},
           function() {{ alert(d.url); }}
         );
       }}
@@ -1370,6 +1443,44 @@ def generate_html(
     .pokemon-same-link:hover {{
       text-decoration: underline;
     }}
+
+    .follow-section {{
+      margin: 16px 0;
+    }}
+
+    .follow-x-card {{
+      display: block;
+      background: #000;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 12px;
+      padding: 16px 20px;
+      transition: background 0.15s, transform 0.15s;
+    }}
+
+    .follow-x-card:hover {{
+      background: #1a1a1a;
+      transform: translateY(-1px);
+    }}
+
+    .follow-x-title {{
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }}
+
+    .follow-x-body {{
+      font-size: 12px;
+      color: #aaa;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }}
+
+    .follow-x-cta {{
+      font-size: 13px;
+      font-weight: 600;
+      color: #1d9bf0;
+    }}
   </style>
 </head>
 <body>
@@ -1392,6 +1503,8 @@ def generate_html(
     {pref_section_html}
 
     {links_grid_html}
+
+    {follow_x_html}
 
     <footer>
       <p>&copy; 2024-{current_year} data.pokefuta.com | ポケふた情報はポケモン公式サイトを参照しています</p>
