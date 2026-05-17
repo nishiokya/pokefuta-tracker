@@ -13,28 +13,18 @@ import datetime
 import json
 import logging
 import math
+import sys
 from pathlib import Path
 from typing import Any, Optional
 from urllib.parse import quote, urlparse
 from xml.sax.saxutils import escape
 
+sys.path.insert(0, str(Path(__file__).parent))
+from generate_pokemon_pages import _FORM_PREFIX, _normalize_katakana  # noqa: E402
+
 # Constants
 BASE_URL = "https://data.pokefuta.com/"
 GA_MEASUREMENT_ID = "G-K18NR4GZG2"
-
-_FORM_PREFIX: dict[str, str] = {
-    "alola": "アローラ",
-    "galar": "ガラル",
-    "hisui": "ヒスイ",
-    "paldea": "パルデア",
-}
-
-
-def _normalize_katakana(text: str) -> str:
-    return "".join(
-        chr(ord(c) + 0x60) if "ぁ" <= c <= "ゖ" else c
-        for c in text
-    )
 
 
 def build_ja_to_slug(raw_data: list) -> dict[str, str]:
@@ -434,7 +424,7 @@ def generate_html(
             _slug = (ja_to_slug or {}).get(poke_name) or (ja_to_slug or {}).get(_normalize_katakana(poke_name), "")
             pokemon_info_html += f"<div class='pokemon-card'>"
             if _slug:
-                pokemon_info_html += f"<h3><a href='/pokemon/{quote(_slug)}/' style='color:inherit;text-decoration:none;'>{escape(poke_name)}</a></h3>"
+                pokemon_info_html += f"<h3><a href='/pokemon/{quote(_slug)}/'>{escape(poke_name)}</a></h3>"
             else:
                 pokemon_info_html += f"<h3>{escape(poke_name)}</h3>"
             if multilingual_parts:
@@ -1006,6 +996,13 @@ def generate_html(
       padding: 16px;
       border-radius: 8px;
       border: 1px solid #e0e0e0;
+    }}
+    .pokemon-card h3 a {{
+      color: inherit;
+      text-decoration: none;
+    }}
+    .pokemon-card h3 a:hover, .pokemon-card h3 a:focus {{
+      text-decoration: underline;
     }}
 
     .pokemon-card .en-name {{
@@ -1825,7 +1822,11 @@ def main() -> int:
 
     photos = load_photos(Path(args.photos))
     pokemon_meta = load_pokemon_metadata(Path(args.pokemon))
-    _raw_pokemon = json.loads(Path(args.pokemon).read_text(encoding="utf-8")) if Path(args.pokemon).exists() else []
+    try:
+        _raw_pokemon = json.loads(Path(args.pokemon).read_text(encoding="utf-8")) if Path(args.pokemon).exists() else []
+    except (json.JSONDecodeError, OSError) as e:
+        logger.warning(f"Could not load pokemon metadata for slug map: {e}")
+        _raw_pokemon = []
     ja_to_slug = build_ja_to_slug(_raw_pokemon)
 
     output_dir = Path(args.output)

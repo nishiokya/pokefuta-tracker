@@ -431,7 +431,7 @@ def generate_html(
   "itemListElement": [
     {{"@type": "ListItem", "position": 1, "name": "全国マップ", "item": "{escape(BASE_URL)}"}},
     {{"@type": "ListItem", "position": 2, "name": "ポケモン一覧", "item": "{escape(BASE_URL)}pokemon/"}},
-    {{"@type": "ListItem", "position": 3, "name": "{escape(name_ja)}"}}
+    {{"@type": "ListItem", "position": 3, "name": "{escape(name_ja)}", "item": "{escape(canonical_url)}"}}
   ]
 }}
   </script>
@@ -471,14 +471,6 @@ def generate_html(
       padding: 20px;
       box-shadow: 0 4px 16px rgba(0,0,0,0.08);
     }}
-    .back-link {{
-      display: inline-block;
-      color: #6F55A3;
-      text-decoration: none;
-      font-size: 14px;
-      margin-bottom: 16px;
-    }}
-    .back-link:hover {{ text-decoration: underline; }}
     .poke-hero {{
       margin-bottom: 24px;
     }}

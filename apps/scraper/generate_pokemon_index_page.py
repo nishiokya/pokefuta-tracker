@@ -70,7 +70,7 @@ def _card_html(slug: str, meta: dict, manholes: list[dict], css_class: str = "po
         f"<span class='poke-name'>{escape(name_ja)}</span>"
         f"{en_html}"
         f"<span class='poke-summary'>{escape(summary)}</span>"
-        f"</a></li>\n"
+        f"</a></li>"
     )
 
 
@@ -78,7 +78,7 @@ def generate_html(pokemon_index: dict[str, tuple[dict, list[dict]]]) -> str:
     total_count = len(pokemon_index)
 
     # 地域連携セクション
-    regional_items_html = ""
+    regional_items: list[str] = []
     for slug, tagline in REGIONAL_POKEMON:
         if slug not in pokemon_index:
             continue
@@ -87,25 +87,27 @@ def generate_html(pokemon_index: dict[str, tuple[dict, list[dict]]]) -> str:
         count = len(manholes)
         summary = _region_summary(manholes, count)
         en_html = f"<span class='poke-en'>{escape(name_en)}</span>" if name_en else ""
-        regional_items_html += (
+        regional_items.append(
             f"<li class='regional-item'>"
             f"<a href='/pokemon/{quote(slug)}/'>"
             f"<span class='poke-name'>{escape(name_ja)}</span>"
             f"{en_html}"
             f"<span class='poke-tagline'>{escape(tagline)}</span>"
             f"<span class='poke-summary'>{escape(summary)}</span>"
-            f"</a></li>\n"
+            f"</a></li>"
         )
+    regional_items_html = "\n".join(regional_items) + "\n" if regional_items else ""
 
     # 全ポケモン一覧（登場マンホール数の多い順）
     sorted_slugs = sorted(
         pokemon_index.keys(),
         key=lambda s: -len(pokemon_index[s][1]),
     )
-    items_html = ""
+    items: list[str] = []
     for slug in sorted_slugs:
         meta, manholes = pokemon_index[slug]
-        items_html += _card_html(slug, meta, manholes)
+        items.append(_card_html(slug, meta, manholes))
+    items_html = "".join(items)
 
     jsonld_collection = json.dumps({
         "@context": "https://schema.org",
@@ -121,7 +123,7 @@ def generate_html(pokemon_index: dict[str, tuple[dict, list[dict]]]) -> str:
         "@type": "BreadcrumbList",
         "itemListElement": [
             {"@type": "ListItem", "position": 1, "name": "全国マップ", "item": BASE_URL},
-            {"@type": "ListItem", "position": 2, "name": "ポケモン一覧"},
+            {"@type": "ListItem", "position": 2, "name": "ポケモン一覧", "item": CANONICAL_URL},
         ],
     }, ensure_ascii=False, indent=2)
 
