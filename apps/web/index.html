@@ -679,40 +679,16 @@
         : '<span class="travel-popup-pokemon">ポケモン未設定</span>';
       const imageUrl = getLocalManholeImageUrl(d.id);
       const photoAlt = `${d.title || 'ポケふた'}の写真`;
-      const photoMeta = getLatestPhotoMeta(d.id);
-      const photoDate = getPhotoTakenDate(d.id);
-      const displayName = String(photoMeta?.display_name || '').trim();
-      const photoComment = String(photoMeta?.comment || '').trim();
-      const photoMetaItems = [
-        photoDate ? `<span class="travel-popup-photo-date">撮影日 ${escapeHtml(photoDate)}</span>` : '',
-        displayName ? `<span class="travel-popup-photo-author">${escapeHtml(displayName)}</span>` : ''
-      ].filter(Boolean).join('');
-      const shareUrl = getAbsoluteManholePageUrl(d.id);
-      const shareTitle = `${d.title || 'ポケふた'} | ポケふたマップ`;
+      const photoComment = String(getLatestPhotoMeta(d.id)?.comment || '').trim();
       const photoBlock = imageUrl ? `
         <div class="popup-photo travel-popup-photo" aria-label="マンホール写真">
           <img src="${imageUrl}" alt="${escapeHtml(photoAlt)}" loading="lazy" decoding="async" onerror="handlePopupImageError(this)">
-          ${photoMetaItems ? `<div class="travel-popup-photo-meta">${photoMetaItems}</div>` : ''}
           <div class="popup-photo__missing">
             <b>写真募集中</b>
             <span>このポケふたの写真はまだありません。</span>
-            <a href="https://pokefuta.com/" target="_blank" rel="noopener noreferrer" class="popup-link popup-link--upload">兄弟サイトで写真を投稿</a>
           </div>
         </div>
       ` : '';
-      const prefectureSiteLink = d.prefecture_site_url ? (function() {
-        const validatedUrl = validatePrefectureSiteUrl(d.prefecture_site_url);
-        if (validatedUrl) {
-          const anchor = document.createElement('a');
-          anchor.href = validatedUrl.href;
-          anchor.target = '_blank';
-          anchor.rel = 'noopener noreferrer';
-          anchor.className = 'travel-popup-action travel-popup-action--secondary';
-          anchor.textContent = `${prefecture}${UI_TEXT.prefectureSite}`;
-          return anchor.outerHTML;
-        }
-        return '';
-      })() : '';
       const officialDetailLink = d.id ? (function() {
         const manholeDetailUrl = `${window.SITE_BASE_URL}manholes/${encodeURIComponent(d.id)}/`;
         const anchor = document.createElement('a');
@@ -724,16 +700,6 @@
         anchor.setAttribute('onclick', `if(window.trackEvent){window.trackEvent('click_detail_page',{event_category:'navigation',event_label:'${safeTitleJs}',manhole_id:'${safeIdJs}'});}`);
         return anchor.outerHTML;
       })() : '';
-      const links = [
-        officialDetailLink,
-        prefectureSiteLink,
-        shareUrl ? `<button type="button" class="travel-popup-action travel-popup-action--secondary" data-share-url="${escapeHtml(shareUrl)}" data-share-title="${escapeHtml(shareTitle)}">共有</button>` : '',
-        `<a href="https://pokefuta.com/" target="_blank" rel="noopener noreferrer" class="travel-popup-action travel-popup-action--secondary travel-popup-action--upload">写真を投稿</a>`
-      ].filter(Boolean).join('');
-
-      // Pokemon Info Cards and Same Pokemon section (only if metadata loaded)
-      const pokemonCards = buildPokemonInfoCards(pokemons);
-      const samePokemonSection = buildSamePokemonSection(pokemons, d.id);
 
       return `
         <div class="popup-box popup-box--photo travel-popup-card">
@@ -747,9 +713,7 @@
             <h3 class="travel-popup-title">${escapeHtml(d.title || 'ポケふた')}</h3>
             ${photoComment ? `<p class="travel-popup-comment">${escapeHtml(photoComment)}</p>` : ''}
             <div class="travel-popup-pokemon-list" aria-label="登場ポケモン">${pokemonsHtml}</div>
-            <div class="popup-actions travel-popup-actions">${links}</div>
-            ${pokemonCards}
-            ${samePokemonSection}
+            <div class="popup-actions travel-popup-actions travel-popup-actions--single">${officialDetailLink}</div>
           </div>
         </div>
       `;

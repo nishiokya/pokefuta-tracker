@@ -844,6 +844,10 @@ body.pokefuta-map-page {
   border: 0;
 }
 
+.pokefuta-map-page .travel-popup-actions--single {
+  grid-template-columns: 1fr;
+}
+
 .pokefuta-map-page .travel-popup-action {
   display: inline-flex;
   align-items: center;
