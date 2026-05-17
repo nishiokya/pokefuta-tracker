@@ -270,7 +270,7 @@ def _render_related_card(
         f"</div>"
     ) if thumb_url else ""
     onclick_attr = (
-        f' onclick="trackEvent(\'{event_name}\', {onclick_params})"'
+        f' onclick="trackEvent({escape(json.dumps(event_name), {chr(34): "&quot;"})}, {onclick_params})"'
         if event_name and onclick_params else ""
     )
     return (
@@ -339,6 +339,12 @@ def generate_html(
     prefecture_js = json.dumps(prefecture, ensure_ascii=False)
     city_js = json.dumps(city, ensure_ascii=False)
 
+    # Source-differentiated params for Google Maps — same event name but
+    # distinguishable in GA4 by where the tap came from.
+    _base = {"manhole_id": manhole_id, "prefecture": prefecture, "city": city}
+    gmaps_onclick_hero  = escape(json.dumps({**_base, "source": "hero"},  ensure_ascii=False))
+    gmaps_onclick_links = escape(json.dumps({**_base, "source": "links"}, ensure_ascii=False))
+
     # Build Pokemon info with metadata
     pokemon_info_html = ""
     if pokemons:
@@ -376,7 +382,7 @@ def generate_html(
         f"<a class='hero-photo-placeholder' href='https://pokefuta.com/visits'"
         f" target='_blank' rel='noopener noreferrer'"
         f" onclick=\"trackEvent('click_photo_upload_placeholder', {onclick_params})\">"
-        f"<span class='placeholder-camera'>📷</span>"
+        f"<span class='placeholder-camera' aria-hidden='true'>📷</span>"
         f"<span class='placeholder-title'>まだ写真がありません</span>"
         f"<span class='placeholder-sub'>最初の旅写真を投稿する</span>"
         f"</a>"
@@ -532,7 +538,7 @@ def generate_html(
         link_cards.append(
             f"<a class='link-card link-card--map' href=\"{escape(maps_url)}\""
             f" target=\"_blank\" rel=\"noopener noreferrer\""
-            f" onclick=\"trackEvent('click_google_maps', {onclick_params})\">"
+            f" onclick=\"trackEvent('click_google_maps', {gmaps_onclick_links})\">"
             f"{_icon('icon-link-google-map', 'link-card-icon')}<span>Google Maps</span></a>"
         )
     if has_official_url:
@@ -635,7 +641,7 @@ def generate_html(
         visit_cta_html = (
             f'<a href="{escape(gmaps_url)}" class="visit-cta"'
             f' target="_blank" rel="noopener noreferrer"'
-            f' onclick="trackEvent(\'click_google_maps\', {onclick_params})">'
+            f' onclick="trackEvent(\'click_google_maps\', {gmaps_onclick_hero})">'
             f'<span class="visit-cta-icon">{_icon("icon-link-google-map", "visit-cta-map-icon")}</span>'
             f'<span class="visit-cta-body">'
             f'<span class="visit-cta-main">Google Mapsで行き方を見る</span>'
@@ -694,7 +700,7 @@ def generate_html(
     function gtag(){{dataLayer.push(arguments);}}
     gtag('js', new Date());
     gtag('config', '{GA_MEASUREMENT_ID}', {{
-      'page_path': '/manholes/{escape(manhole_id)}/'
+      'page_path': '/manholes/' + {manhole_id_js} + '/'
     }});
     gtag('event', 'view_manhole_detail', {{
       manhole_id: {manhole_id_js},
@@ -1038,8 +1044,7 @@ def generate_html(
       grid-column: 1 / -1;
     }}
 
-    .btn-share,
-    .btn-map {{
+    .btn-share {{
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -1067,19 +1072,6 @@ def generate_html(
     .btn-share:hover {{
       background: #ffe4e7;
       box-shadow: 0 3px 10px rgba(181,42,56,0.14);
-      transform: translateY(-1px);
-    }}
-
-    .btn-map {{
-      background: #f4f0ff;
-      color: #4a2f96;
-      border: 1.5px solid #cfc0f0;
-      text-decoration: none;
-    }}
-
-    .btn-map:hover {{
-      background: #ebe5ff;
-      box-shadow: 0 3px 10px rgba(74,47,150,0.14);
       transform: translateY(-1px);
     }}
 
