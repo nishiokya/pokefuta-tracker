@@ -11,6 +11,8 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+from collections import defaultdict
+from itertools import groupby
 from pathlib import Path
 from urllib.parse import quote
 from xml.sax.saxutils import escape
@@ -140,7 +142,47 @@ def build_pokemon_index(
     return index
 
 
-def generate_html(slug: str, pokemon: dict, manholes: list[dict]) -> str:
+def build_related_map(
+    index: dict[str, tuple[dict, list[dict]]],
+    metadata: dict[str, dict],
+) -> dict[str, list[tuple[str, str]]]:
+    """Return {slug: [(related_slug, ja_name), ...]} sharing a base evolution family."""
+    slug_to_family: dict[str, str] = {}
+    slug_to_ja: dict[str, str] = {}
+    for _ja_name, meta in metadata.items():
+        slug = meta.get("slug", "")
+        fam = (meta.get("evolution") or {}).get("family_id", "")
+        if slug and fam:
+            slug_to_family[slug] = fam
+            slug_to_ja.setdefault(slug, meta.get("names", {}).get("ja", slug))
+
+    base_to_slugs: dict[str, list[str]] = defaultdict(list)
+    for slug in index:
+        fam = slug_to_family.get(slug, "")
+        base = fam.split("-")[0] if fam else ""
+        if base:
+            base_to_slugs[base].append(slug)
+
+    result: dict[str, list[tuple[str, str]]] = {}
+    for slug in index:
+        fam = slug_to_family.get(slug, "")
+        base = fam.split("-")[0] if fam else ""
+        related = [
+            (s, slug_to_ja.get(s, s))
+            for s in sorted(base_to_slugs.get(base, []))
+            if s != slug
+        ]
+        result[slug] = related
+    return result
+
+
+def generate_html(
+    slug: str,
+    pokemon: dict,
+    manholes: list[dict],
+    related: list[tuple[str, str]],
+    image_dir: Path,
+) -> str:
     """Return complete HTML for a Pokemon LP page."""
     names = pokemon.get("names", {})
     name_ja = names.get("ja", slug)
@@ -194,27 +236,61 @@ def generate_html(slug: str, pokemon: dict, manholes: list[dict]) -> str:
     }
     jsonld_str = json.dumps(jsonld, ensure_ascii=False, indent=2)
 
-    # Manhole list HTML (sorted by prefecture then city)
+    # Manhole sections grouped by prefecture
     sorted_manholes = sorted(
         manholes,
         key=lambda m: (m.get("prefecture", ""), m.get("city", "")),
     )
-    cards_html = ""
-    for m in sorted_manholes:
-        mid = str(m.get("id", "")).strip()
-        pref = m.get("prefecture", "")
-        city = m.get("city", "")
-        label = f"{pref}{city}のポケふた"
-        pokes = filter_pokemons(m.get("pokemons", []))
-        sub = "・".join(pokes) if pokes else ""
-        cards_html += (
-            f"<li class='manhole-item'>"
-            f"<a href='/manholes/{quote(mid)}/'>"
-            f"<span class='manhole-location'>{escape(label)}</span>"
-            + (f"<span class='manhole-poke'>{escape(sub)}</span>" if sub else "")
-            + f"</a></li>"
+    sections_html = ""
+    for prefecture, group in groupby(sorted_manholes, key=lambda m: m.get("prefecture", "")):
+        pref_h2 = f"{prefecture}の{name_ja}のポケふた"
+        cards_html = ""
+        for m in group:
+            mid = str(m.get("id", "")).strip()
+            pref = m.get("prefecture", "")
+            city = m.get("city", "")
+            label = f"{pref}{city}のポケふた"
+            pokes = filter_pokemons(m.get("pokemons", []))
+            sub = "・".join(pokes) if pokes else ""
+
+            img_html = ""
+            img_path = image_dir / f"{mid}_latest.jpeg"
+            if img_path.exists():
+                img_url = f"https://data.pokefuta.com/manhole/image/{mid}_latest.jpeg"
+                alt = f"{pref}{city}の{name_ja}のポケふた"
+                img_html = (
+                    f"<img src='{img_url}' alt='{escape(alt)}'"
+                    f" loading='lazy' decoding='async' width='320' height='180'>"
+                )
+
+            cards_html += (
+                f"<li class='manhole-item'>"
+                f"<a href='/manholes/{quote(mid)}/'>"
+                + img_html
+                + f"<span class='manhole-location'>{escape(label)}</span>"
+                + (f"<span class='manhole-poke'>{escape(sub)}</span>" if sub else "")
+                + f"</a></li>"
+            )
+        sections_html += (
+            f"<section class='pref-section'>"
+            f"<h2>{escape(pref_h2)}</h2>"
+            f"<ul class='manhole-list'>{cards_html}</ul>"
+            f"</section>"
         )
-    list_html = f"<ul class='manhole-list'>{cards_html}</ul>" if cards_html else ""
+
+    # Related Pokemon section
+    related_html = ""
+    if related:
+        links = "".join(
+            f"<li><a href='/pokemon/{quote(s)}/'>{escape(ja)}</a></li>"
+            for s, ja in related
+        )
+        related_html = (
+            f"<div class='section-card related-section'>"
+            f"<h2>関連するポケモン</h2>"
+            f"<ul class='related-list'>{links}</ul>"
+            f"</div>"
+        )
 
     # slug_js for GA4 page_path
     slug_js = json.dumps(slug)
@@ -327,18 +403,21 @@ def generate_html(slug: str, pokemon: dict, manholes: list[dict]) -> str:
       border-radius: 8px;
       border: 1px solid #e8e8e8;
     }}
-    .section-card h2 {{
-      font-size: 18px;
-      font-weight: bold;
-      color: #1a1a1a;
-      margin-bottom: 12px;
-      padding-bottom: 8px;
-      border-bottom: 2px solid #e0e0e0;
-    }}
     .count-text {{
       font-size: 15px;
       color: #555;
-      margin-bottom: 12px;
+      margin-bottom: 16px;
+    }}
+    .pref-section {{
+      margin-bottom: 20px;
+    }}
+    .pref-section h2 {{
+      font-size: 16px;
+      font-weight: bold;
+      color: #1a1a1a;
+      margin-bottom: 10px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid #e0e0e0;
     }}
     .manhole-list {{
       list-style: none;
@@ -355,10 +434,18 @@ def generate_html(slug: str, pokemon: dict, manholes: list[dict]) -> str:
       text-decoration: none;
       color: #333;
       transition: border-color 0.15s, box-shadow 0.15s;
+      overflow: hidden;
     }}
     .manhole-item a:hover {{
       border-color: #6F55A3;
       box-shadow: 0 2px 8px rgba(111,85,163,0.15);
+    }}
+    .manhole-item a img {{
+      display: block;
+      width: calc(100% + 28px);
+      margin: -10px -14px 8px;
+      height: 160px;
+      object-fit: cover;
     }}
     .manhole-location {{
       display: block;
@@ -372,6 +459,31 @@ def generate_html(slug: str, pokemon: dict, manholes: list[dict]) -> str:
       color: #888;
       margin-top: 2px;
     }}
+    .related-section h2 {{
+      font-size: 16px;
+      font-weight: bold;
+      color: #1a1a1a;
+      margin-bottom: 10px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid #e0e0e0;
+    }}
+    .related-list {{
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }}
+    .related-list a {{
+      display: inline-block;
+      padding: 4px 14px;
+      background: #f0ebfa;
+      color: #6F55A3;
+      border-radius: 16px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: bold;
+    }}
+    .related-list a:hover {{ background: #e0d8f5; }}
     .cta-map {{
       display: block;
       background: #6F55A3;
@@ -408,10 +520,11 @@ def generate_html(slug: str, pokemon: dict, manholes: list[dict]) -> str:
   </div>
 
   <div class="section-card">
-    <h2>全国のポケふた一覧</h2>
     <p class="count-text">全国に <strong>{count}</strong> 枚の{escape(name_ja)}のポケふたがあります。</p>
-    {list_html}
+    {sections_html}
   </div>
+
+  {related_html}
 
   <a href="{escape(map_url)}" class="cta-map"
      onclick="trackEvent('click_map_cta', {{pokemon_slug: {slug_js}}})">
@@ -437,6 +550,10 @@ def main() -> int:
         help="Path to pokemon_metadata.json",
     )
     parser.add_argument(
+        "--images", default="dataset/manhole/image",
+        help="Directory containing {id}_latest.jpeg files",
+    )
+    parser.add_argument(
         "--output", default="dist/pokemon",
         help="Output directory (dist/pokemon)",
     )
@@ -455,12 +572,19 @@ def main() -> int:
     index = build_pokemon_index(manholes, metadata)
     logger.info(f"Pokemon with pokefuta: {len(index)}")
 
+    related_map = build_related_map(index, metadata)
+    image_dir = Path(args.images)
+
     output_root = Path(args.output)
     generated = 0
     for slug, (pokemon, poke_manholes) in sorted(index.items()):
         out_dir = output_root / slug
         out_dir.mkdir(parents=True, exist_ok=True)
-        html = generate_html(slug, pokemon, poke_manholes)
+        html = generate_html(
+            slug, pokemon, poke_manholes,
+            related=related_map.get(slug, []),
+            image_dir=image_dir,
+        )
         (out_dir / "index.html").write_text(html, encoding="utf-8")
         generated += 1
 
