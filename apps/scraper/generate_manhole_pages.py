@@ -395,7 +395,7 @@ def generate_html(
     hero_photo_html = (
         f"<a class='hero-photo-placeholder' href='https://pokefuta.com/visits'"
         f" target='_blank' rel='noopener noreferrer'"
-        f" onclick=\"trackEvent('click_photo_upload_placeholder', {onclick_params})\">"
+        f" onclick=\"trackEvent('click_photo_upload_placeholder', {_attr_json({'manhole_id': manhole_id, 'prefecture': prefecture, 'city': city, 'has_photo': False})})\">"
         f"<span class='placeholder-camera' aria-hidden='true'>📷</span>"
         f"<span class='placeholder-title'>まだ写真がありません</span>"
         f"<span class='placeholder-sub'>最初の旅写真を投稿する</span>"
@@ -633,11 +633,11 @@ def generate_html(
         _current_poke_set = set(pokemons)
         for other in same_pokemon:
             _other_pokemons = filter_pokemons(other.get("pokemons", []))
-            _shared = [p for p in _other_pokemons if p in _current_poke_set] or _other_pokemons[:1]
+            _shared = [p for p in _other_pokemons if p in _current_poke_set]
             _sp_params = _attr_json({
                 "from_manhole_id": manhole_id,
                 "to_manhole_id": str(other.get("id", "")).strip(),
-                "pokemon_names": _shared,
+                "pokemon_names": ",".join(_shared) if _shared else "",
             })
             same_pokemon_html += _render_related_card(
                 other, id_to_image_url,
