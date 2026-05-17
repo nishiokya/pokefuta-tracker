@@ -142,6 +142,16 @@ def build_pokemon_index(
     return index
 
 
+# Explicit override for evolution families where family_id alone doesn't capture
+# cross-form relationships (e.g. Vulpix ↔ Alolan Vulpix have different family_ids).
+RELATED_POKEMON_OVERRIDES: dict[str, list[str]] = {
+    "vulpix":          ["vulpix-alola", "ninetales", "ninetales-alola"],
+    "vulpix-alola":    ["vulpix", "ninetales", "ninetales-alola"],
+    "ninetales":       ["vulpix", "vulpix-alola", "ninetales-alola"],
+    "ninetales-alola": ["vulpix", "vulpix-alola", "ninetales"],
+}
+
+
 def build_related_map(
     index: dict[str, tuple[dict, list[dict]]],
     metadata: dict[str, dict],
@@ -173,6 +183,19 @@ def build_related_map(
             if s != slug
         ]
         result[slug] = related
+
+    for slug, override_slugs in RELATED_POKEMON_OVERRIDES.items():
+        if slug not in index:
+            continue
+        existing = {s for s, _ in result.get(slug, [])}
+        merged = list(result.get(slug, []))
+        for related_slug in override_slugs:
+            if related_slug not in index or related_slug in existing:
+                continue
+            merged.append((related_slug, slug_to_ja.get(related_slug, related_slug)))
+            existing.add(related_slug)
+        result[slug] = merged
+
     return result
 
 
