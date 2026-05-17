@@ -55,7 +55,12 @@ def _get_display_name(slug: str, meta: dict) -> tuple[str, str]:
 
 def _region_summary(manholes: list[dict], count: int) -> str:
     prefs = sorted({m.get("prefecture", "") for m in manholes if m.get("prefecture")})
-    region_text = prefs[0] if len(prefs) == 1 else f"{len(prefs)}都道府県"
+    if not prefs:
+        region_text = "所在地不明"
+    elif len(prefs) == 1:
+        region_text = prefs[0]
+    else:
+        region_text = f"{len(prefs)}都道府県"
     return f"{count}枚 / {region_text}"
 
 

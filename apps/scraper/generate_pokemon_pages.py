@@ -338,6 +338,16 @@ def generate_html(
     }
     jsonld_str = json.dumps(jsonld, ensure_ascii=False, indent=2)
 
+    jsonld_breadcrumb_str = json.dumps({
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "全国マップ", "item": BASE_URL},
+            {"@type": "ListItem", "position": 2, "name": "ポケモン一覧", "item": f"{BASE_URL}pokemon/"},
+            {"@type": "ListItem", "position": 3, "name": name_ja, "item": canonical_url},
+        ],
+    }, ensure_ascii=False, indent=2)
+
     # Manhole sections grouped by prefecture (empty prefecture sorted last)
     sorted_manholes = sorted(
         manholes,
@@ -425,15 +435,7 @@ def generate_html(
 {jsonld_str}
   </script>
   <script type="application/ld+json">
-{{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {{"@type": "ListItem", "position": 1, "name": "全国マップ", "item": "{escape(BASE_URL)}"}},
-    {{"@type": "ListItem", "position": 2, "name": "ポケモン一覧", "item": "{escape(BASE_URL)}pokemon/"}},
-    {{"@type": "ListItem", "position": 3, "name": "{escape(name_ja)}", "item": "{escape(canonical_url)}"}}
-  ]
-}}
+{jsonld_breadcrumb_str}
   </script>
 
   <!-- Google Analytics -->

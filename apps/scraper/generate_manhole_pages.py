@@ -421,7 +421,8 @@ def generate_html(
             zh_hant = names.get("zh-Hant", "")
             multilingual_parts = [n for n in [en_name, ko_name, zh_hans, zh_hant] if n]
 
-            _slug = (ja_to_slug or {}).get(poke_name) or (ja_to_slug or {}).get(_normalize_katakana(poke_name), "")
+            _jts = ja_to_slug or {}
+            _slug = _jts.get(poke_name) or _jts.get(_normalize_katakana(poke_name), "")
             pokemon_info_html += f"<div class='pokemon-card'>"
             if _slug:
                 pokemon_info_html += f"<h3><a href='/pokemon/{quote(_slug)}/'>{escape(poke_name)}</a></h3>"
