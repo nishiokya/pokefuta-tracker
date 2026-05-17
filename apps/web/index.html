@@ -84,39 +84,63 @@
         window.applyDefaultMeta();
         return;
       }
-      
+
       const prefecture = manhole.prefecture || '';
       const city = manhole.city || '';
       const pokemons = Array.isArray(manhole.pokemons)
         ? manhole.pokemons.filter(p => typeof p === 'string' && !p.includes('ローカルActs'))
         : [];
-      const pokemonText = pokemons.length > 0 
-        ? pokemons.length === 1
-          ? pokemons[0]
-          : pokemons.join('・')
-        : 'ポケモン';
-      
-      // title: {都道府県} {市区町村}のポケふた｜{ポケモン名}のポケモンマンホール
-      const title = prefecture && city
-        ? `${prefecture} ${city}のポケふた｜${pokemonText}のポケモンマンホール`
-        : `ポケふた｜${pokemonText}のポケモンマンホール`;
-      
-      // description: {都道府県}{市区町村}に設置されたポケモンマンホール「ポケふた」を地図で確認できます。登場ポケモンは{ポケモン名}。旅行中の寄り道やポケふた巡りに便利です。
+
+      // Enhanced Pokemon text with English names
+      let pokemonText = 'ポケモン';
+      let pokemonTextEn = '';
+
+      if (pokemons.length > 0) {
+        if (pokemons.length === 1) {
+          pokemonText = pokemons[0];
+          const meta = getPokemonMetadata(pokemons[0]);
+          if (meta && meta.names) {
+            pokemonTextEn = meta.names.en;
+          }
+        } else {
+          pokemonText = pokemons.join('・');
+        }
+      }
+
+      // title: {ポケモン名}のポケふた | {都道府県}{市区町村} | Pokefuta Map
+      const locationPart = prefecture && city
+        ? `${prefecture}${city}`
+        : prefecture || '';
+      const title = locationPart
+        ? `${pokemonText}のポケふた | ${locationPart} | Pokefuta Map`
+        : `${pokemonText}のポケふた | Pokefuta Map`;
+
+      // description: {都道府県}{市区町村}にある{ポケモン名}（English）のポケふた。場所・写真・訪問記録を地図で確認できます。
       const placeText = prefecture && city ? `${prefecture}${city}` : (prefecture || '');
+      const pokemonWithEn = pokemonTextEn ? `${pokemonText}（${pokemonTextEn}）` : pokemonText;
       const description = placeText
-        ? `${placeText}に設置されたポケモンマンホール「ポケふた」を地図で確認できます。登場ポケモンは${pokemonText}。旅行中の寄り道やポケふた巡りに便利です。`
-        : `ポケモンマンホール「ポケふた」を地図で確認できます。登場ポケモンは${pokemonText}。旅行中の寄り道やポケふた巡りに便利です。`;
-      
-      // keywords: ポケふた,{都道府県},{市区町村},{ポケモン名},ポケモンマンホール,マンホール,聖地巡礼,地図
+        ? `${placeText}にある${pokemonWithEn}のポケふた。場所・写真・訪問記録を地図で確認できます。`
+        : `${pokemonWithEn}のポケふた。場所・写真・訪問記録を地図で確認できます。`;
+
+      // keywords: include multilingual Pokemon names
       const keywordParts = ['ポケふた'];
       if (prefecture) keywordParts.push(prefecture);
       if (city) keywordParts.push(city);
-      keywordParts.push(...pokemons);
-      keywordParts.push('ポケモンマンホール', 'マンホール', '聖地巡礼', '地図');
+
+      pokemons.forEach(nameJa => {
+        keywordParts.push(nameJa);
+        const meta = getPokemonMetadata(nameJa);
+        if (meta && meta.names) {
+          if (meta.names.en) keywordParts.push(meta.names.en);
+          if (meta.names.ko) keywordParts.push(meta.names.ko);
+        }
+      });
+
+      keywordParts.push('ポケモンマンホール', 'Pokemon Manhole', 'マンホール', '聖地巡礼', '地図');
       const keywords = keywordParts.join(',');
-      
+
       const canonicalUrl = `${window.SITE_BASE_URL}?manhole=${encodeURIComponent(manhole.id)}`;
-      
+
       document.title = title;
       document.querySelector('link[rel="canonical"]')?.setAttribute('href', canonicalUrl);
       document.querySelector('meta[name="description"]')?.setAttribute('content', description);
@@ -126,7 +150,7 @@
       document.querySelector('meta[property="og:url"]')?.setAttribute('content', canonicalUrl);
       document.querySelector('meta[name="twitter:title"]')?.setAttribute('content', title);
       document.querySelector('meta[name="twitter:description"]')?.setAttribute('content', description);
-      
+
       window.applyManholeJsonLd(manhole);
     };
 
@@ -163,9 +187,20 @@
       const placeText = [manhole.prefecture, manhole.city].filter(Boolean).join('');
       const titleBase = manhole.title || `ポケふた ${manhole.id}`;
       const baseDescription = `${placeText ? `${placeText}の` : ''}ポケモンマンホール（ポケふた）。`;
-      const pokemonDescription = cleanPokemons.length > 0
-        ? `登場ポケモン: ${cleanPokemons.join(', ')}`
-        : '';
+
+      // Enhanced Pokemon description with multilingual names
+      let pokemonDescription = '';
+      if (cleanPokemons.length > 0) {
+        const pokemonInfoList = cleanPokemons.map(nameJa => {
+          const meta = getPokemonMetadata(nameJa);
+          if (meta && meta.names && meta.names.en) {
+            return `${nameJa} (${meta.names.en})`;
+          }
+          return nameJa;
+        });
+        pokemonDescription = `登場ポケモン: ${pokemonInfoList.join(', ')}`;
+      }
+
       const description = [baseDescription, pokemonDescription].filter(Boolean).join(' ');
 
       const jsonLd = {
@@ -192,8 +227,15 @@
         jsonLd['image'] = `https://data.pokefuta.com/manhole/image/${encodeURIComponent(manhole.id)}_latest.jpeg`;
       }
 
-      // keywords にポケモン名を追加
-      const keywordsArray = ['ポケふた', 'ポケモンマンホール', titleBase, ...cleanPokemons];
+      // keywords with multilingual Pokemon names
+      const keywordsArray = ['ポケふた', 'ポケモンマンホール', 'Pokemon Manhole', titleBase];
+      cleanPokemons.forEach(nameJa => {
+        keywordsArray.push(nameJa);
+        const meta = getPokemonMetadata(nameJa);
+        if (meta && meta.names) {
+          if (meta.names.en) keywordsArray.push(meta.names.en);
+        }
+      });
       jsonLd['keywords'] = keywordsArray.join(', ');
 
       const script = document.createElement('script');
@@ -338,14 +380,6 @@
         </div>
       </div>
       <span id="recent-summary" class="sr-only"></span>
-    </div>
-  </div>
-  <!-- バナーを地図上オーバーレイとして配置 -->
-  <div id="sibling-site-banner" class="upload-banner" role="note" aria-label="兄弟サイトへの写真アップロード案内" aria-live="polite" hidden>
-    <div class="upload-banner__inner">
-      <strong class="upload-banner__title">📷 写真協力のお願い</strong>
-      <span class="upload-banner__body">マンホール写真をお持ちなら兄弟サイト <a href="https://pokefuta.com/" target="_blank" rel="noopener" class="upload-banner__link">pokefuta.com</a> にアップロードして共有できます。</span>
-      <button type="button" aria-label="案内を閉じる" id="banner-close" class="upload-banner__close" title="閉じる">✕</button>
     </div>
   </div>
   <footer class="data-links" role="contentinfo" style="margin:16px auto 0; max-width:960px; text-align:center; font-size:0.9rem; color:#444;">
@@ -714,6 +748,10 @@
         `<a href="https://pokefuta.com/" target="_blank" rel="noopener noreferrer" class="travel-popup-action travel-popup-action--secondary travel-popup-action--upload">写真を投稿</a>`
       ].filter(Boolean).join('');
 
+      // Pokemon Info Cards and Same Pokemon section (only if metadata loaded)
+      const pokemonCards = buildPokemonInfoCards(pokemons);
+      const samePokemonSection = buildSamePokemonSection(pokemons, d.id);
+
       return `
         <div class="popup-box popup-box--photo travel-popup-card">
           ${photoBlock}
@@ -727,6 +765,8 @@
             ${photoComment ? `<p class="travel-popup-comment">${escapeHtml(photoComment)}</p>` : ''}
             <div class="travel-popup-pokemon-list" aria-label="登場ポケモン">${pokemonsHtml}</div>
             <div class="popup-actions travel-popup-actions">${links}</div>
+            ${pokemonCards}
+            ${samePokemonSection}
           </div>
         </div>
       `;
@@ -741,6 +781,118 @@
       } catch (error) {
         console.warn('最新写真メタデータの読み込みに失敗しました', error);
       }
+    }
+
+    // Pokemon metadata loader (non-blocking, graceful degradation)
+    var pokemonMetadata = null;
+
+    async function loadPokemonMetadata() {
+      try {
+        const res = await fetch('./pokemon_metadata.json', { cache: 'default' });
+        if (!res.ok) return null;
+        const data = await res.json();
+        if (!Array.isArray(data)) return null;
+        // Create fast lookup map by Japanese name
+        pokemonMetadata = new Map(data.map(p => [p.names?.ja, p]).filter(([k]) => k));
+        console.log(`Pokemon metadata loaded: ${pokemonMetadata.size} entries`);
+        return pokemonMetadata;
+      } catch (error) {
+        console.warn('Pokemon metadata not available', error);
+        return null;
+      }
+    }
+
+    function getPokemonMetadata(nameJa) {
+      if (!pokemonMetadata || !nameJa) return null;
+      return pokemonMetadata.get(nameJa) || null;
+    }
+
+    function buildPokemonInfoCards(pokemons) {
+      if (!pokemonMetadata || !Array.isArray(pokemons) || pokemons.length === 0) return '';
+
+      const cards = pokemons.slice(0, 2).map(nameJa => {
+        const meta = getPokemonMetadata(nameJa);
+        if (!meta || !meta.names) return '';
+
+        const types = Array.isArray(meta.types) ? meta.types.map(t =>
+          `<span class="pokemon-type-badge">${escapeHtml(t.ja || '')} ${t.en ? `(${escapeHtml(t.en)})` : ''}</span>`
+        ).join('') : '';
+
+        const multilang = [meta.names.en, meta.names.ko, meta.names['zh-Hans']]
+          .filter(Boolean)
+          .map(escapeHtml)
+          .join(' / ');
+
+        return `
+          <div class="pokemon-info-card">
+            <h4>${escapeHtml(nameJa)} / ${escapeHtml(meta.names.en || nameJa)}</h4>
+            ${types ? `<div class="pokemon-info-row"><strong>タイプ:</strong> ${types}</div>` : ''}
+            ${meta.generation ? `<div class="pokemon-info-row"><strong>世代:</strong> 第${meta.generation}世代</div>` : ''}
+            ${multilang ? `<div class="pokemon-info-multilang">${multilang}</div>` : ''}
+          </div>
+        `;
+      }).filter(Boolean);
+
+      return cards.join('');
+    }
+
+    function buildSamePokemonSection(pokemons, currentId) {
+      if (!Array.isArray(pokemons) || pokemons.length === 0) return '';
+
+      // Find all manholes with same Pokemon, excluding current one
+      const matches = allData.filter(d =>
+        d.id !== currentId &&
+        Array.isArray(d.pokemons) &&
+        d.pokemons.some(p => pokemons.includes(p))
+      );
+
+      // Deduplicate by manhole ID (keep first occurrence)
+      const seenIds = new Set();
+      const uniqueMatches = matches.filter(d => {
+        if (seenIds.has(d.id)) return false;
+        seenIds.add(d.id);
+        return true;
+      });
+
+      // Sort by prefecture then city
+      uniqueMatches.sort((a, b) => {
+        const prefA = a.prefecture || '';
+        const prefB = b.prefecture || '';
+        if (prefA !== prefB) return prefA.localeCompare(prefB, 'ja');
+        return (a.city || '').localeCompare(b.city || '', 'ja');
+      });
+
+      // Take max 5 items
+      const displayMatches = uniqueMatches.slice(0, 5);
+
+      if (displayMatches.length === 0) return '';
+
+      const items = displayMatches.map(d => {
+        const safeTitleJs = escapeJs(d.title || d.id);
+        const safeIdJs = escapeJs(d.id);
+
+        // Extract Pokemon names for this manhole
+        const pokemonNames = Array.isArray(d.pokemons)
+          ? d.pokemons.filter(p => !p.includes('ローカルActs')).slice(0, 2).join('・')
+          : '';
+        const pokemonDisplay = pokemonNames ? ` (${pokemonNames})` : '';
+
+        return `
+          <button type="button" class="same-pokemon-item"
+                  data-manhole-id="${escapeHtml(d.id)}"
+                  onclick="openManholePopup('${safeIdJs}'); collapseBottomSheet();"
+                  title="${escapeHtml(d.title || 'ポケふた')}を開く">
+            ${escapeHtml(d.prefecture || '不明')} ${escapeHtml(d.city || '')}${escapeHtml(pokemonDisplay)}
+          </button>
+        `;
+      }).join('');
+
+      return `
+        <div class="same-pokemon-section">
+          <h5>同じポケモンのポケふた</h5>
+          <div class="same-pokemon-list">${items}</div>
+        </div>
+      `;
     }
 
     async function loadPokefutaData() {
@@ -833,6 +985,8 @@
           d._addedDate = normalizeDateString(raw);
         });
         await loadLatestPhotoMeta();
+        // Load Pokemon metadata asynchronously (non-blocking)
+        loadPokemonMetadata().catch(err => console.warn('Pokemon metadata loading failed', err));
         initMarkerLayer();
         // Build markers
         allMarkers = [];
@@ -1639,16 +1793,6 @@
     initControlsToggle(); // Initialize toggle early, before data loading
     initLocationSearch();
     loadPokefutaData();
-    // Banner 初期化
-    (function initSiblingBanner(){
-      const banner = document.getElementById('sibling-site-banner');
-      if(!banner) return;
-      if (document.body.classList.contains('pokefuta-map-page')) return;
-      const closed = localStorage.getItem('pf_banner_closed');
-      if(!closed) banner.hidden = false;
-      const btn = document.getElementById('banner-close');
-      if(btn){ btn.addEventListener('click',()=>{ banner.hidden = true; localStorage.setItem('pf_banner_closed','1'); }); }
-    })();
   </script>
 </body>
 </html>
