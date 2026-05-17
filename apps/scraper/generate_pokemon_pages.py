@@ -164,7 +164,10 @@ def build_related_map(
         fam = (meta.get("evolution") or {}).get("family_id", "")
         if slug and fam:
             slug_to_family[slug] = fam
-            slug_to_ja.setdefault(slug, meta.get("names", {}).get("ja", slug))
+            form = meta.get("form") or ""
+            ja_name = meta.get("names", {}).get("ja", slug)
+            prefix = _FORM_PREFIX.get(form, "")
+            slug_to_ja.setdefault(slug, prefix + ja_name if prefix else ja_name)
 
     base_to_slugs: dict[str, list[str]] = defaultdict(list)
     for slug in index:
@@ -266,13 +269,15 @@ def generate_html(
     )
     sections_html = ""
     for prefecture, group in groupby(sorted_manholes, key=lambda m: m.get("prefecture", "")):
-        pref_h2 = f"{prefecture}の{name_ja}のポケふた"
+        display_pref = prefecture or "所在地不明"
+        pref_h2 = f"{display_pref}の{name_ja}のポケふた"
         cards_html = ""
         for m in group:
             mid = str(m.get("id", "")).strip()
             pref = m.get("prefecture", "")
             city = m.get("city", "")
-            label = f"{pref}{city}のポケふた"
+            location = (pref + city) or m.get("title", "所在地不明")
+            label = f"{location}のポケふた"
             pokes = filter_pokemons(m.get("pokemons", []))
             sub = "・".join(pokes) if pokes else ""
 
@@ -280,7 +285,7 @@ def generate_html(
             img_path = image_dir / f"{mid}_latest.jpeg"
             if img_path.exists():
                 img_url = f"https://data.pokefuta.com/manhole/image/{mid}_latest.jpeg"
-                alt = f"{pref}{city}の{name_ja}のポケふた"
+                alt = f"{location}の{name_ja}のポケふた"
                 img_html = (
                     f"<img src='{img_url}' alt='{escape(alt)}'"
                     f" loading='lazy' decoding='async' width='320' height='180'>"

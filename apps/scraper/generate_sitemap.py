@@ -110,11 +110,13 @@ def _normalize_katakana(text: str) -> str:
 def read_pokemon_slugs(ndjson_path: Path, metadata_path: Path) -> list[str]:
     """Return sorted slug list for Pokemon that appear on at least one pokefuta."""
     if not metadata_path.exists():
+        logger.warning(f"Pokemon metadata not found: {metadata_path} — skipping Pokemon URLs")
         return []
 
     try:
         meta_list = json.loads(metadata_path.read_text(encoding="utf-8"))
-    except (json.JSONDecodeError, OSError):
+    except (json.JSONDecodeError, OSError) as exc:
+        logger.warning(f"Failed to read Pokemon metadata ({exc}) — skipping Pokemon URLs")
         return []
 
     # Build ja_name → slug (base form preferred over regional variants)
