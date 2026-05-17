@@ -119,10 +119,13 @@ def generate_html(pokemon_index: dict[str, tuple[dict, list[dict]]]) -> str:
         _get_display_name(s, pokemon_index[s][0])[0]
         for s in sorted_slugs[:3]
     )
-    top1_count = len(pokemon_index[sorted_slugs[0]][1]) if sorted_slugs else 0
+    top3_min_count = (
+        min(len(pokemon_index[s][1]) for s in sorted_slugs[:3])
+        if sorted_slugs else 0
+    )
     popular_intro = escape(
         f"登場回数が多いポケモンほど、全国各地で出会いやすいポケモンです。"
-        f"{top3_names}などは{top1_count}枚以上のポケふたに登場しており、"
+        f"{top3_names}などは{top3_min_count}枚以上のポケふたに登場しており、"
         f"初めてポケふた巡りをする方にも見つけやすいポケモンです。"
         f"気になるポケモンをタップして、設置場所や旅のルートを確認しましょう。"
     )

@@ -71,6 +71,7 @@ POKEMON_SEO_DESCRIPTIONS: dict[str, str] = {
     ),
 }
 
+
 def generate_ai_summary(name_ja: str, manholes: list[dict]) -> str:
     """Return a natural-language summary describing where this Pokemon appears."""
     count = len(manholes)
@@ -81,11 +82,10 @@ def generate_ai_summary(name_ja: str, manholes: list[dict]) -> str:
         dist = f"{name_ja}のポケふたは現在{count}枚確認されています。"
     elif n == 1:
         dist = f"{name_ja}のポケふたは{prefs[0]}に{count}枚設置されています。"
-    elif n <= 3:
-        dist = (
-            f"{name_ja}のポケふたは{'・'.join(prefs)}など{n}都道府県、"
-            f"合計{count}枚設置されています。"
-        )
+    elif n == 2:
+        dist = f"{name_ja}のポケふたは{'・'.join(prefs)}の{n}都道府県、合計{count}枚設置されています。"
+    elif n == 3:
+        dist = f"{name_ja}のポケふたは{'・'.join(prefs)}の{n}都道府県、合計{count}枚設置されています。"
     else:
         dist = (
             f"{name_ja}のポケふたは全国{n}都道府県・{count}枚設置されています。"

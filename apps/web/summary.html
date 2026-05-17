@@ -220,6 +220,12 @@
       line-height: 1.75;
     }
 
+    .summary-section:empty,
+    #ai-summary-section:empty,
+    #discovery-section:empty {
+      display: none;
+    }
+
     .summary-list li a.summary-link {
       font-size: .78rem;
       margin-left: 6px;
@@ -395,7 +401,6 @@
       if (!ranking.length) return '';
       const top1 = ranking[0];
       const top3 = ranking.slice(0, 3).map(r => r.prefecture).join('・');
-      const avgActive = Math.round(total / (summary.length - empty.length));
       const emptyCount = empty.length;
       let text = `全国には${total}枚のポケふたが設置されています。`;
       text += `最も多いのは${top1.prefecture}（${top1.count}枚）で、${top3}などに多く分布しています。`;
@@ -407,6 +412,7 @@
     }
 
     function generateDiscoveryCards(summary, ranking, total, empty) {
+      if (!ranking.length || !total) return '';
       const installed = summary.filter(item => item.count > 0);
       const top1 = ranking[0];
       const avg = installed.length ? Math.round(total / installed.length) : 0;
@@ -437,7 +443,8 @@
       const top = sorted[0];
       const second = sorted[1];
       if (!top) return '';
-      let text = `地方別では${top[0]}（${top[1]}枚）が最も多く、${second ? `次いで${second[0]}（${second[1]}枚）` : ''}となっています。`;
+      let text = `地方別では${top[0]}（${top[1]}枚）が最も多く`;
+      text += second ? `、次いで${second[0]}（${second[1]}枚）となっています。` : `となっています。`;
       text += `ポケふたは地方自治体・観光協会との連携で設置されることが多く、観光地や駅周辺に置かれているケースが目立ちます。`;
       text += `地域を旅しながら複数のポケふたを巡るルートを作るのも人気の楽しみ方です。`;
       return `<p>${escapeHtml(text)}</p>`;
