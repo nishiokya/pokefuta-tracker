@@ -182,8 +182,8 @@ def url_entry(loc: str, changefreq: str, priority: str) -> str:
 def build_sitemap(manhole_ids: list[str], pokemon_slugs: list[str] | None = None) -> str:
     entries = [
         url_entry(BASE_URL, "daily", "1.0"),
-        url_entry(f"{BASE_URL}summary", "weekly", "0.8"),
-        url_entry(f"{BASE_URL}pokemon/", "weekly", "0.8"),
+        url_entry(f"{BASE_URL}summary", "weekly", "0.9"),
+        url_entry(f"{BASE_URL}pokemon/", "weekly", "0.9"),
         url_entry(f"{BASE_URL}nearby.html", "weekly", "0.6"),
         url_entry(f"{BASE_URL}gmanhole_map.html", "weekly", "0.6"),
     ]
@@ -202,7 +202,7 @@ def build_sitemap(manhole_ids: list[str], pokemon_slugs: list[str] | None = None
     # Pokemon LP pages
     for slug in pokemon_slugs or []:
         entries.append(
-            url_entry(f"{BASE_URL}pokemon/{quote(slug)}/", "weekly", "0.7")
+            url_entry(f"{BASE_URL}pokemon/{quote(slug)}/", "weekly", "0.1")
         )
 
     return "\n".join(

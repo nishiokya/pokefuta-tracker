@@ -71,6 +71,35 @@ POKEMON_SEO_DESCRIPTIONS: dict[str, str] = {
     ),
 }
 
+def generate_ai_summary(name_ja: str, manholes: list[dict]) -> str:
+    """Return a natural-language summary describing where this Pokemon appears."""
+    count = len(manholes)
+    prefs = sorted({m.get("prefecture") for m in manholes if m.get("prefecture")})
+    n = len(prefs)
+
+    if n == 0:
+        dist = f"{name_ja}のポケふたは現在{count}枚確認されています。"
+    elif n == 1:
+        dist = f"{name_ja}のポケふたは{prefs[0]}に{count}枚設置されています。"
+    elif n <= 3:
+        dist = (
+            f"{name_ja}のポケふたは{'・'.join(prefs)}など{n}都道府県、"
+            f"合計{count}枚設置されています。"
+        )
+    else:
+        dist = (
+            f"{name_ja}のポケふたは全国{n}都道府県・{count}枚設置されています。"
+            f"{'・'.join(prefs[:2])}をはじめ、各地で出会えます。"
+        )
+
+    if n >= 3:
+        travel = "複数の都道府県を旅行しながら巡るのもおすすめです。"
+    else:
+        travel = "設置地域を訪れながら探してみてください。"
+
+    return dist + travel
+
+
 # Regional form prefix mapping (pokefuta data uses these prefixes)
 _FORM_PREFIX: dict[str, str] = {
     "alola": "アローラ",
@@ -327,6 +356,9 @@ def generate_html(
     gen_html = f"<p class='poke-gen'>第{generation}世代</p>" if generation else ""
     seo_desc_html = f"<p class='poke-seo-desc'>{escape(seo_desc)}</p>" if seo_desc else ""
 
+    ai_summary_text = generate_ai_summary(name_ja, manholes)
+    ai_summary_html = f"<div class='ai-summary-box'><p>{escape(ai_summary_text)}</p></div>"
+
     # JSON-LD
     jsonld = {
         "@context": "https://schema.org",
@@ -385,9 +417,17 @@ def generate_html(
                 + (f"<span class='manhole-poke'>{escape(sub)}</span>" if sub else "")
                 + f"</a></li>"
             )
+        pref_map_link = ""
+        if prefecture:
+            pref_encoded = quote(prefecture)
+            pref_map_link = (
+                f"<a class='pref-map-link' href='/?pref={pref_encoded}'>"
+                f"{escape(prefecture)}の地図で見る →</a>"
+            )
         sections_html += (
             f"<section class='pref-section'>"
             f"<h2>{escape(pref_h2)}</h2>"
+            f"{pref_map_link}"
             f"<ul class='manhole-list'>{cards_html}</ul>"
             f"</section>"
         )
@@ -486,6 +526,25 @@ def generate_html(
       border-left: 3px solid #6F55A3;
       border-radius: 0 6px 6px 0;
     }}
+    .ai-summary-box {{
+      margin-top: 12px;
+      padding: 12px 14px;
+      background: #f0faf9;
+      border-left: 3px solid #176f68;
+      border-radius: 0 6px 6px 0;
+      font-size: 14px;
+      color: #2d5c58;
+      line-height: 1.75;
+    }}
+    .pref-map-link {{
+      display: inline-block;
+      font-size: 12px;
+      color: #6F55A3;
+      text-decoration: none;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }}
+    .pref-map-link:hover {{ text-decoration: underline; }}
     h1 {{
       font-size: 26px;
       font-weight: bold;
@@ -647,6 +706,7 @@ def generate_html(
     {type_html}
     {gen_html}
     {seo_desc_html}
+    {ai_summary_html}
   </div>
 
   <div class="section-card">

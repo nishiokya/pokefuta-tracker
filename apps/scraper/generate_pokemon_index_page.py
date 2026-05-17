@@ -114,6 +114,19 @@ def generate_html(pokemon_index: dict[str, tuple[dict, list[dict]]]) -> str:
         items.append(_card_html(slug, meta, manholes))
     items_html = "".join(items)
 
+    # 「多く登場するポケモン」説明テキスト（動的生成）
+    top3_names = "・".join(
+        _get_display_name(s, pokemon_index[s][0])[0]
+        for s in sorted_slugs[:3]
+    )
+    top1_count = len(pokemon_index[sorted_slugs[0]][1]) if sorted_slugs else 0
+    popular_intro = escape(
+        f"登場回数が多いポケモンほど、全国各地で出会いやすいポケモンです。"
+        f"{top3_names}などは{top1_count}枚以上のポケふたに登場しており、"
+        f"初めてポケふた巡りをする方にも見つけやすいポケモンです。"
+        f"気になるポケモンをタップして、設置場所や旅のルートを確認しましょう。"
+    )
+
     jsonld_collection = json.dumps({
         "@context": "https://schema.org",
         "@type": "CollectionPage",
@@ -267,6 +280,24 @@ def generate_html(pokemon_index: dict[str, tuple[dict, list[dict]]]) -> str:
       margin-top: auto;
       padding-top: 4px;
     }}
+    .popular-intro {{
+      font-size: 13px;
+      color: #555;
+      line-height: 1.7;
+      margin: 0 0 10px;
+      padding: 10px 14px;
+      background: #f5f0ff;
+      border-left: 3px solid #6F55A3;
+      border-radius: 0 6px 6px 0;
+    }}
+    .map-nav-hint {{
+      font-size: 13px;
+      color: #666;
+      margin: 16px 0 4px;
+      text-align: center;
+    }}
+    .map-nav-hint a {{ color: #6F55A3; text-decoration: none; font-weight: bold; }}
+    .map-nav-hint a:hover {{ text-decoration: underline; }}
     .cta-map {{
       display: block;
       background: #6F55A3;
@@ -311,8 +342,11 @@ def generate_html(pokemon_index: dict[str, tuple[dict, list[dict]]]) -> str:
 {regional_items_html}  </ul>
 
   <h2>全ポケモン一覧（{total_count}体）</h2>
+  <p class="popular-intro">{popular_intro}</p>
   <ul class="poke-list">
 {items_html}  </ul>
+
+  <p class="map-nav-hint">都道府県ごとのポケふたは<a href="{escape(BASE_URL)}">全国マップ</a>から地域を選んで確認できます。</p>
 
   <a href="{escape(BASE_URL)}" class="cta-map">地図で全国のポケふたを探す →</a>
 
