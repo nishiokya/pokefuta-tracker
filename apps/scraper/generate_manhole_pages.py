@@ -22,6 +22,56 @@ from xml.sax.saxutils import escape
 BASE_URL = "https://data.pokefuta.com/"
 GA_MEASUREMENT_ID = "G-K18NR4GZG2"
 
+PREFECTURE_EN: dict[str, str] = {
+    "北海道": "Hokkaido",
+    "青森県": "Aomori Prefecture",
+    "岩手県": "Iwate Prefecture",
+    "宮城県": "Miyagi Prefecture",
+    "秋田県": "Akita Prefecture",
+    "山形県": "Yamagata Prefecture",
+    "福島県": "Fukushima Prefecture",
+    "茨城県": "Ibaraki Prefecture",
+    "栃木県": "Tochigi Prefecture",
+    "群馬県": "Gunma Prefecture",
+    "埼玉県": "Saitama Prefecture",
+    "千葉県": "Chiba Prefecture",
+    "東京都": "Tokyo",
+    "神奈川県": "Kanagawa Prefecture",
+    "新潟県": "Niigata Prefecture",
+    "富山県": "Toyama Prefecture",
+    "石川県": "Ishikawa Prefecture",
+    "福井県": "Fukui Prefecture",
+    "山梨県": "Yamanashi Prefecture",
+    "長野県": "Nagano Prefecture",
+    "岐阜県": "Gifu Prefecture",
+    "静岡県": "Shizuoka Prefecture",
+    "愛知県": "Aichi Prefecture",
+    "三重県": "Mie Prefecture",
+    "滋賀県": "Shiga Prefecture",
+    "京都府": "Kyoto Prefecture",
+    "大阪府": "Osaka Prefecture",
+    "兵庫県": "Hyogo Prefecture",
+    "奈良県": "Nara Prefecture",
+    "和歌山県": "Wakayama Prefecture",
+    "鳥取県": "Tottori Prefecture",
+    "島根県": "Shimane Prefecture",
+    "岡山県": "Okayama Prefecture",
+    "広島県": "Hiroshima Prefecture",
+    "山口県": "Yamaguchi Prefecture",
+    "徳島県": "Tokushima Prefecture",
+    "香川県": "Kagawa Prefecture",
+    "愛媛県": "Ehime Prefecture",
+    "高知県": "Kochi Prefecture",
+    "福岡県": "Fukuoka Prefecture",
+    "佐賀県": "Saga Prefecture",
+    "長崎県": "Nagasaki Prefecture",
+    "熊本県": "Kumamoto Prefecture",
+    "大分県": "Oita Prefecture",
+    "宮崎県": "Miyazaki Prefecture",
+    "鹿児島県": "Kagoshima Prefecture",
+    "沖縄県": "Okinawa Prefecture",
+}
+
 # SVG icon symbols sourced from design/pokefuta_ui_icons.svg
 _SVG_DEFS = (
     '<svg width="0" height="0" style="position:absolute" aria-hidden="true">'
@@ -56,7 +106,6 @@ _SVG_DEFS = (
 def _icon(symbol_id: str, extra_class: str = "") -> str:
     cls = f"icon {extra_class}".strip()
     return f'<svg class="{cls}" aria-hidden="true"><use href="#{symbol_id}"/></svg>'
-
 
 logger = logging.getLogger(__name__)
 
@@ -168,6 +217,30 @@ def manhole_label(manhole: dict) -> str:
     return f"{location}のポケふた（{pokes}）"
 
 
+def _render_related_card(
+    other: dict,
+    id_to_image_url: dict[str, str],
+    extra_html: str = "",
+) -> str:
+    """Build a related-manhole list item with local thumbnail and pin icon."""
+    oid = str(other.get("id", ""))
+    label = manhole_label(other)
+    thumb_url = id_to_image_url.get(oid, "")
+    thumb_html = (
+        f'<div class="related-card-thumb">'
+        f'<img src="{escape(thumb_url)}" alt="" loading="lazy"'
+        f' onerror="this.closest(\'.related-card-thumb\').remove()">'
+        f"</div>"
+    ) if thumb_url else ""
+    return (
+        f"<li class='related-card'>{thumb_html}"
+        f"<div class='related-card-body'>"
+        f'{_icon("icon-pin", "icon-sm")}'
+        f"<a href='/manholes/{quote(oid, safe='')}/'>{escape(label)}</a>"
+        f"{extra_html}</div></li>"
+    )
+
+
 def generate_html(
     manhole: dict,
     photo: Optional[dict],
@@ -176,10 +249,10 @@ def generate_html(
     same_pref: list[dict],
     pref_total: int,
     same_pokemon: list[dict],
+    id_to_image_url: dict[str, str],
     city_total: int = 0,
     same_pokemon_total: int = 0,
     nearby_count: int = 0,
-    id_to_image_url: Optional[dict[str, str]] = None,
 ) -> str:
     """Generate complete HTML for a manhole detail page."""
     manhole_id = str(manhole.get("id", "")).strip()
@@ -222,10 +295,15 @@ def generate_html(
             types_ja = [t.get("ja", "") for t in types_data if isinstance(t, dict)]
             generation = meta.get("generation")
 
+            ko_name = names.get("ko", "")
+            zh_hans = names.get("zh-Hans", "")
+            zh_hant = names.get("zh-Hant", "")
+            multilingual_parts = [n for n in [en_name, ko_name, zh_hans, zh_hant] if n]
+
             pokemon_info_html += f"<div class='pokemon-card'>"
             pokemon_info_html += f"<h3>{escape(poke_name)}</h3>"
-            if en_name:
-                pokemon_info_html += f"<p class='en-name'>{escape(en_name)}</p>"
+            if multilingual_parts:
+                pokemon_info_html += f"<p class='multilingual-names'>{escape(' / '.join(multilingual_parts))}</p>"
             if types_ja:
                 pokemon_info_html += f"<p class='types'>タイプ: {escape('・'.join(types_ja))}</p>"
             if generation:
@@ -242,15 +320,53 @@ def generate_html(
         photo_url = photo.get("url", "") or photo.get("original_url", "")
         if photo_url:
             og_image = photo_url
+
+            raw_name = photo.get("display_name") or ""
+            display_name = str(raw_name)[:20] if raw_name else ""
+
+            raw_comment = photo.get("comment") or ""
+            comment = " ".join(str(raw_comment).split())  # normalize whitespace
+            if len(comment) > 100:
+                comment = comment[:97] + "…"
+
+            shot_date = ""
+            shot_at_raw = photo.get("shot_at", "")
+            if isinstance(shot_at_raw, str) and shot_at_raw:
+                try:
+                    dt = datetime.datetime.fromisoformat(shot_at_raw.replace("Z", "+00:00"))
+                    shot_date = f"{dt.year}年{dt.month}月{dt.day}日"
+                except (ValueError, TypeError):
+                    pass
+
+            credit_parts = []
+            if display_name:
+                credit_parts.append(f"📷 {escape(display_name)}")
+            if shot_date:
+                credit_parts.append(shot_date)
+            if credit_parts:
+                inner = "".join(f"<span>{p}</span>" for p in credit_parts)
+                credit_html = f"<div class='photo-credit'>{inner}</div>"
+            else:
+                credit_html = ""
+
+            comment_html = (
+                f"<div class='photo-comment'>{escape(comment)}</div>"
+                if comment else ""
+            )
+
             hero_photo_html = (
                 f"<div class='hero-photo'>"
                 f"<img src=\"{escape(photo_url)}\" alt=\"{escape(h1)}の写真\" loading=\"lazy\">"
+                f"{credit_html}"
+                f"{comment_html}"
                 f"</div>"
             )
 
     # HERO card: region label
     region_parts = [p for p in [prefecture, city] if p]
     region_html = "".join(f"<span>{escape(r)}</span>" for r in region_parts)
+    pref_en = PREFECTURE_EN.get(prefecture, "")
+    region_en_html = f"<div class='hero-region-en'>{escape(pref_en)}</div>" if pref_en else ""
 
     # HERO card: pokemon tags
     pokemon_tags_html = ""
@@ -260,6 +376,13 @@ def generate_html(
 
     # HERO card: stats badges
     badges: list[str] = []
+    added_at = manhole.get("added_at", "") or ""
+    try:
+        added_year = datetime.date.fromisoformat(added_at[:10]).year
+        if added_year >= datetime.date.today().year:
+            badges.append(f"<span class='hero-badge hero-badge-new'>NEW {added_year}年設置</span>")
+    except (ValueError, TypeError):
+        pass
     if pref_total > 0 and prefecture:
         badges.append(f"<span class='hero-badge'>{escape(prefecture)} {pref_total}枚</span>")
     if city_total >= 2 and city:
@@ -280,15 +403,9 @@ def generate_html(
     share_text_json = json.dumps(share_text, ensure_ascii=False)
     share_url_json = json.dumps(canonical_url, ensure_ascii=False)
 
-    # HERO card: photo-upload CTA (only when official URL is available)
+    # Validate official URL (used for links-grid cards)
     _parsed = urlparse(detail_url) if detail_url else None
     has_official_url = _parsed and _parsed.scheme == "https" and _parsed.hostname == "local.pokemon.jp"
-    photo_btn_html = ""
-    if has_official_url:
-        photo_btn_html = (
-            f"<a href=\"{escape(detail_url)}\" class='btn-photo' target='_blank' rel='noopener noreferrer'>"
-            f"📷 写真を投稿</a>"
-        )
 
     # Location info
     location_html = f"""
@@ -339,42 +456,56 @@ def generate_html(
 
     jsonld_str = json.dumps(jsonld, ensure_ascii=False, indent=2)
 
-    # Official site link (if available)
-    official_html = ""
-    if has_official_url:
-        official_html = (
-            f"<p class='official-link'>"
-            f'<a href="{escape(detail_url)}" target="_blank" rel="noopener noreferrer">'
-            f"{_icon('icon-external')} 公式サイトを見る</a></p>"
+    # Links grid: external + internal + photo upload (移設統合)
+    prefecture_site_url = manhole.get("prefecture_site_url", "") or ""
+    link_cards: list[str] = []
+    if lat is not None and lng is not None:
+        maps_url = f"https://www.google.com/maps?q={lat},{lng}"
+        link_cards.append(
+            f"<a class='link-card link-card--map' href=\"{escape(maps_url)}\""
+            f" target=\"_blank\" rel=\"noopener noreferrer\">📍<span>Google Maps</span></a>"
         )
+    if has_official_url:
+        link_cards.append(
+            f"<a class='link-card link-card--official' href=\"{escape(detail_url)}\""
+            f" target=\"_blank\" rel=\"noopener noreferrer\">🔗<span>公式サイト</span></a>"
+        )
+    if prefecture_site_url:
+        link_cards.append(
+            f"<a class='link-card link-card--pref-site' href=\"{escape(prefecture_site_url)}\""
+            f" target=\"_blank\" rel=\"noopener noreferrer\">🗾<span>{escape(prefecture)}の公式</span></a>"
+        )
+    if prefecture:
+        link_cards.append(
+            f"<a class='link-card link-card--internal' href=\"{escape(pref_url)}\">📋<span>同じ都道府県</span></a>"
+        )
+    link_cards.append(
+        f"<a class='link-card link-card--internal' href=\"{BASE_URL}\">🗺<span>全国マップ</span></a>"
+    )
+    if has_official_url:
+        link_cards.append(
+            f"<a class='link-card link-card--photo' href=\"{escape(detail_url)}\""
+            f" target=\"_blank\" rel=\"noopener noreferrer\">📷<span>写真を投稿</span></a>"
+        )
+    links_grid_html = (
+        f"<section class='links-section section-card'>"
+        f"<h2>リンク</h2>"
+        f"<div class='link-grid'>{''.join(link_cards)}</div>"
+        f"</section>"
+    ) if link_cards else ""
 
     # Nearby manholes section
-    _img_map = id_to_image_url or {}
     nearby_html = ""
     if nearby:
         nearby_html = (
             f"<section class='nearby-section section-card'>"
             f"<h2>{_icon('icon-walk', 'icon-lg')} 30km以内のポケふた</h2>"
-            f"<ul class='related-list'>"
+            f"<ul class='related-list related-list--cards'>"
         )
         for other, dist in nearby:
-            oid = str(other.get("id", ""))
-            label = manhole_label(other)
             dist_str = f"{dist:.1f} km"
-            thumb_url = _img_map.get(oid, "")
-            thumb_html = (
-                f'<div class="related-card-thumb">'
-                f'<img src="{escape(thumb_url)}" alt="" loading="lazy"'
-                f' onerror="this.closest(\'.related-card-thumb\').remove()">'
-                f"</div>"
-            ) if thumb_url else ""
-            nearby_html += (
-                f"<li>"
-                f"{thumb_html}"
-                f'<div class="related-card-body">{_icon("icon-pin", "icon-sm")}'
-                f"<a href='/manholes/{quote(oid, safe='')}/'>{escape(label)}</a></div>"
-                f"<span class='distance'>{escape(dist_str)}</span>"
-                f"</li>"
+            nearby_html += _render_related_card(
+                other, id_to_image_url, extra_html=f"<span class='distance'>{escape(dist_str)}</span>"
             )
         nearby_html += "</ul></section>"
 
@@ -384,25 +515,10 @@ def generate_html(
         same_pokemon_html = (
             "<section class='same-pokemon-section section-card'>"
             "<h2>同じポケモンのポケふた</h2>"
-            "<ul class='related-list'>"
+            "<ul class='related-list related-list--cards'>"
         )
         for other in same_pokemon:
-            oid = str(other.get("id", ""))
-            label = manhole_label(other)
-            thumb_url = _img_map.get(oid, "")
-            thumb_html = (
-                f'<div class="related-card-thumb">'
-                f'<img src="{escape(thumb_url)}" alt="" loading="lazy"'
-                f' onerror="this.closest(\'.related-card-thumb\').remove()">'
-                f"</div>"
-            ) if thumb_url else ""
-            same_pokemon_html += (
-                f"<li>"
-                f"{thumb_html}"
-                f'<div class="related-card-body">{_icon("icon-pin", "icon-sm")}'
-                f"<a href='/manholes/{quote(oid, safe='')}/'>{escape(label)}</a></div>"
-                f"</li>"
-            )
+            same_pokemon_html += _render_related_card(other, id_to_image_url)
         same_pokemon_html += "</ul></section>"
 
     # Same prefecture section
@@ -412,25 +528,10 @@ def generate_html(
             f"<section class='prefecture-section section-card'>"
             f"<h2>{_icon('icon-map', 'icon-lg')} {escape(prefecture)}のポケふた</h2>"
             f"<p>{escape(prefecture)}には現在{pref_total}枚のポケふたがあります。</p>"
-            f"<ul class='related-list'>"
+            f"<ul class='related-list related-list--cards'>"
         )
         for other in same_pref:
-            oid = str(other.get("id", ""))
-            label = manhole_label(other)
-            thumb_url = _img_map.get(oid, "")
-            thumb_html = (
-                f'<div class="related-card-thumb">'
-                f'<img src="{escape(thumb_url)}" alt="" loading="lazy"'
-                f' onerror="this.closest(\'.related-card-thumb\').remove()">'
-                f"</div>"
-            ) if thumb_url else ""
-            pref_section_html += (
-                f"<li>"
-                f"{thumb_html}"
-                f'<div class="related-card-body">{_icon("icon-pin", "icon-sm")}'
-                f"<a href='/manholes/{quote(oid, safe='')}/'>{escape(label)}</a></div>"
-                f"</li>"
-            )
+            pref_section_html += _render_related_card(other, id_to_image_url)
         pref_section_html += "</ul></section>"
 
     # Safely serialize GA event params for inline onclick attribute.
@@ -448,13 +549,13 @@ def generate_html(
   {hero_photo_html}
   <div class="hero-body">
     <div class="hero-region">{region_html}</div>
+    {region_en_html}
     <h1 class="hero-title">{escape(h1)}</h1>
     {pokemon_tags_html}
     {stats_html}
     <div class="hero-actions">
       <button class="btn-share" onclick="shareManhole()">🔗 共有する</button>
       <a href="{escape(map_url)}" class="btn-map" onclick="trackEvent('manhole_seo_to_map_click', {onclick_params})">{_icon('icon-map')} 地図で見る</a>
-      {photo_btn_html}
     </div>
   </div>
 </div>
@@ -666,7 +767,7 @@ def generate_html(
       margin-top: 0;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
     }}
 
     .related-list a {{
@@ -844,40 +945,91 @@ def generate_html(
       box-shadow: 0 4px 10px rgba(26,127,232,0.30);
     }}
 
-    .btn-photo {{
-      display: block;
-      background: white;
-      color: #666;
-      text-align: center;
-      padding: 10px 14px;
-      border-radius: 10px;
-      font-size: 14px;
-      text-decoration: none;
-      border: 1px solid #d0d0d0;
-      transition: background 0.2s, border-color 0.2s;
-    }}
-
-    .btn-photo:hover {{
-      background: #f8f8f8;
-      border-color: #bbb;
-    }}
-
     .section-card {{
       background: #fff;
       border: 1px solid #ede8df;
       border-radius: 10px;
       padding: 16px 18px;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
       box-shadow: 0 1px 4px rgba(0,0,0,0.05);
     }}
 
     .section-card h2 {{
       font-size: 15px;
       font-weight: 600;
-      margin: 0 0 12px;
+      margin: 0 0 10px;
       padding-bottom: 8px;
       border-bottom: 1px solid #ede8df;
       color: #444;
+    }}
+
+    .link-grid {{
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }}
+
+    .link-card {{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 72px;
+      border-radius: 12px;
+      padding: 12px 8px;
+      text-align: center;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.4;
+      gap: 4px;
+      border: 1px solid #e6e0d6;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }}
+
+    .link-card:hover {{
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.10);
+    }}
+
+    .link-card span {{ display: block; }}
+
+    .link-card--map      {{ background: #eef4ff; color: #1a4fa0; border-color: #c0d4f5; }}
+    .link-card--official {{ background: #fff4f0; color: #c0392b; border-color: #f5c0b0; }}
+    .link-card--pref-site {{ background: #f0fff4; color: #1a6b3c; border-color: #b0e8c8; }}
+    .link-card--internal {{ background: #f8f4ff; color: #5a3fa0; border-color: #d8c8f5; }}
+    .link-card--photo    {{ background: #f8f8f8; color: #555; border-color: #ddd; }}
+
+    .related-list--cards li {{
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      border-radius: 12px;
+      padding: 10px 12px;
+      background: #fff;
+      border: 1px solid #e8e3db;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      transition: background 0.15s;
+    }}
+
+    .related-list--cards li:hover {{
+      background: #f8f4ee;
+    }}
+
+    .related-thumb {{
+      width: 64px;
+      height: 64px;
+      object-fit: cover;
+      border-radius: 8px;
+      flex-shrink: 0;
+    }}
+
+    .related-card-body {{
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
     }}
 
     @media (max-width: 600px) {{
@@ -959,12 +1111,66 @@ def generate_html(
       text-overflow: ellipsis;
       white-space: nowrap;
     }}
+
+    .pokemon-card .multilingual-names {{
+      font-size: 13px;
+      color: #666;
+      margin-top: 2px;
+    }}
+
+    .hero-region-en {{
+      font-size: 12px;
+      color: #aaa;
+      margin-bottom: 8px;
+      letter-spacing: 0.03em;
+    }}
+
+    .hero-photo {{
+      position: relative;
+    }}
+
+    .photo-credit {{
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      background: rgba(0,0,0,0.55);
+      color: #fff;
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 20px;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }}
+
+    .photo-comment {{
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0,0,0,0.50);
+      color: #fff;
+      font-size: 13px;
+      padding: 8px 12px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }}
+
+    .hero-badge-new {{
+      background: #fff0f0;
+      border-color: #ff6b6b;
+      color: #c0392b;
+    }}
   </style>
 </head>
 <body>
   {_SVG_DEFS}
   <div class="container">
     {hero_card_html}
+
+    {links_grid_html}
 
     {pokemon_info_html}
 
@@ -975,16 +1181,6 @@ def generate_html(
     {same_pokemon_html}
 
     {pref_section_html}
-
-    <section class='navigation-section'>
-      <h2>他のポケふたを見る</h2>
-      <p>
-        <a href="{escape(pref_url)}" class="cta-secondary">{_icon('icon-map')} {escape(prefecture)}のポケふたを見る</a>
-        <a href="{BASE_URL}" class="cta-secondary">{_icon('icon-current-location')} 全国マップを見る</a>
-      </p>
-    </section>
-
-    {official_html}
 
     <footer>
       <p>&copy; 2024-{current_year} data.pokefuta.com | ポケふた情報はポケモン公式サイトを参照しています</p>
@@ -1045,9 +1241,14 @@ def generate_all_pages(
             logger.warning("Skipping manhole with missing ID")
             continue
 
-        # Use local image only — Cloudflare R2 URLs are not served on GitHub Pages
+        # Use local image only; merge user-photo metadata for credit overlay
         local_url = id_to_image_url.get(manhole_id)
-        photo: Optional[dict] = {"url": local_url} if local_url else None
+        norm_id = normalize_id(manhole_id)
+        user_photo = photos.get(norm_id) or {}
+        photo: Optional[dict] = (
+            {**user_photo, "url": local_url, "original_url": local_url}
+            if local_url else None
+        )
 
         if photo:
             photos_applied += 1
@@ -1104,8 +1305,8 @@ def generate_all_pages(
 
         html = generate_html(
             manhole, photo, pokemon_meta, nearby, same_pref, pref_total, same_pokemon,
+            id_to_image_url,
             city_total=city_total, same_pokemon_total=same_pokemon_total, nearby_count=nearby_count,
-            id_to_image_url=id_to_image_url,
         )
 
         page_dir = output_dir / "manholes" / manhole_id
