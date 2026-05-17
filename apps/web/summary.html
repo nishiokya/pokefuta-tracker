@@ -161,6 +161,76 @@
       text-decoration: none;
     }
 
+    .ai-summary-box {
+      margin: 0 0 20px;
+      padding: 16px 18px;
+      background: #f0faf9;
+      border-left: 4px solid #176f68;
+      border-radius: 0 8px 8px 0;
+      font-size: 1rem;
+      color: #2d5c58;
+      line-height: 1.8;
+    }
+
+    .discovery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .discovery-card {
+      padding: 14px;
+      border: 1px solid rgba(93, 67, 35, .14);
+      border-radius: 8px;
+      background: #fffdf7;
+    }
+
+    .discovery-card strong {
+      display: block;
+      font-size: 1.25rem;
+      line-height: 1.2;
+      margin-bottom: 4px;
+      color: #176f68;
+    }
+
+    .discovery-card span {
+      display: block;
+      font-size: .84rem;
+      color: #5a4f47;
+      font-weight: 750;
+    }
+
+    .regional-trend-box {
+      padding: 14px 16px;
+      border: 1px solid rgba(93, 67, 35, .14);
+      border-radius: 8px;
+      background: #fffaf0;
+      font-size: .95rem;
+      color: #574b41;
+      line-height: 1.8;
+    }
+
+    .empty-note {
+      margin-top: 10px;
+      font-size: .9rem;
+      color: #716154;
+      line-height: 1.75;
+    }
+
+    .summary-section:empty,
+    #ai-summary-section:empty,
+    #discovery-section:empty {
+      display: none;
+    }
+
+    .summary-list li a.summary-link {
+      font-size: .78rem;
+      margin-left: 6px;
+    }
+
     @media (max-width: 700px) {
       .summary-stats {
         grid-template-columns: 1fr;
@@ -168,6 +238,10 @@
 
       .summary-hero h1 {
         font-size: 2rem;
+      }
+
+      .discovery-grid {
+        grid-template-columns: repeat(2, 1fr);
       }
     }
   </style>
@@ -179,6 +253,8 @@
       <h1>ポケふたは全国に何個ある？</h1>
       <p>全国のポケふた・ポケモンマンホールを、既存データから都道府県別に集計しています。</p>
     </nav>
+
+    <div id="ai-summary-section"></div>
 
     <section class="summary-stats" aria-label="全国集計">
       <div class="summary-stat">
@@ -194,6 +270,8 @@
         <strong id="empty-prefecture-count">-</strong>
       </div>
     </section>
+
+    <section id="discovery-section" class="summary-section" aria-label="発見"></section>
 
     <section class="summary-section" aria-labelledby="prefecture-count-heading">
       <h2 id="prefecture-count-heading">都道府県別の設置数一覧</h2>
@@ -216,17 +294,24 @@
     <section class="summary-section" aria-labelledby="ranking-heading">
       <h2 id="ranking-heading">ポケふたが多い県ランキング</h2>
       <ol id="ranking-list" class="summary-list"></ol>
+      <p style="margin-top:10px;font-size:.875rem;color:#574b41;">各都道府県の地図は、<a class="summary-link" href="/">全国マップ</a>から地域を選んで確認できます。</p>
+    </section>
+
+    <section id="regional-trend-section" class="summary-section" aria-labelledby="regional-trend-heading">
+      <h2 id="regional-trend-heading">地域の分布傾向</h2>
+      <div id="regional-trend-box" class="regional-trend-box"></div>
     </section>
 
     <section class="summary-section" aria-labelledby="empty-prefecture-heading">
       <h2 id="empty-prefecture-heading">ポケふたがない県</h2>
-      <ul id="empty-prefecture-list" class="summary-list"></ul>
+      <p class="empty-note">まだポケふたが設置されていない県もあります。今後新しい地域へ広がる可能性があり、"次はどこに設置されるか"を予想する楽しみもあります。</p>
+      <ul id="empty-prefecture-list" class="summary-list" style="margin-top:10px;"></ul>
     </section>
 
     <section class="summary-section" aria-labelledby="map-link-heading">
       <h2 id="map-link-heading">全国マップで探す</h2>
-      <p>設置場所や近くのポケふたは、地図上で確認できます。</p>
-      <a class="summary-cta" href="/">地図で全国のポケふたを探す</a>
+      <p>設置場所や近くのポケふたは、地図上で確認できます。都道府県フィルターで絞り込んで巡るルートを考えてみましょう。</p>
+      <a class="summary-cta" href="/">地図で全国のポケふたを探す →</a>
     </section>
   </main>
 
@@ -300,11 +385,80 @@
         .sort((a, b) => a.code.localeCompare(b.code));
     }
 
+    const REGION_MAP = {
+      '北海道': '北海道',
+      '青森県': '東北', '岩手県': '東北', '宮城県': '東北', '秋田県': '東北', '山形県': '東北', '福島県': '東北',
+      '茨城県': '関東', '栃木県': '関東', '群馬県': '関東', '埼玉県': '関東', '千葉県': '関東', '東京都': '関東', '神奈川県': '関東',
+      '新潟県': '中部', '富山県': '中部', '石川県': '中部', '福井県': '中部', '山梨県': '中部', '長野県': '中部',
+      '岐阜県': '中部', '静岡県': '中部', '愛知県': '中部',
+      '三重県': '近畿', '滋賀県': '近畿', '京都府': '近畿', '大阪府': '近畿', '兵庫県': '近畿', '奈良県': '近畿', '和歌山県': '近畿',
+      '鳥取県': '中国', '島根県': '中国', '岡山県': '中国', '広島県': '中国', '山口県': '中国',
+      '徳島県': '四国', '香川県': '四国', '愛媛県': '四国', '高知県': '四国',
+      '福岡県': '九州', '佐賀県': '九州', '長崎県': '九州', '熊本県': '九州', '大分県': '九州', '宮崎県': '九州', '鹿児島県': '九州', '沖縄県': '九州'
+    };
+
+    function generateAISummary(summary, ranking, total, empty) {
+      if (!ranking.length) return '';
+      const top1 = ranking[0];
+      const top3 = ranking.slice(0, 3).map(r => r.prefecture).join('・');
+      const emptyCount = empty.length;
+      let text = `全国には${total}枚のポケふたが設置されています。`;
+      text += `最も多いのは${top1.prefecture}（${top1.count}枚）で、${top3}などに多く分布しています。`;
+      if (emptyCount > 0) {
+        text += `まだ${emptyCount}県では設置されていませんが、今後の広がりも期待されます。`;
+      }
+      text += `ポケふたは地方観光や地域振興との結びつきが強く、旅行しながら巡る楽しみ方が特徴です。`;
+      return `<div class="ai-summary-box"><p>${escapeHtml(text)}</p></div>`;
+    }
+
+    function generateDiscoveryCards(summary, ranking, total, empty) {
+      if (!ranking.length || !total) return '';
+      const installed = summary.filter(item => item.count > 0);
+      const top1 = ranking[0];
+      const avg = installed.length ? Math.round(total / installed.length) : 0;
+      const maxConc = Math.round((top1.count / total) * 100);
+
+      const cards = [
+        { stat: `${top1.count}枚`, desc: `${top1.prefecture}だけで全国${maxConc}%` },
+        { stat: `${installed.length}都道府県`, desc: 'ポケふた設置済み' },
+        { stat: `${avg}枚`, desc: '設置済み県の平均枚数' },
+      ];
+      if (empty.length > 0) {
+        cards.push({ stat: `${empty.length}県`, desc: 'まだ未設置の県がある' });
+      }
+
+      const items = cards.map(c =>
+        `<li class="discovery-card"><strong>${escapeHtml(c.stat)}</strong><span>${escapeHtml(c.desc)}</span></li>`
+      ).join('');
+      return `<ul class="discovery-grid">${items}</ul>`;
+    }
+
+    function generateRegionalTrend(summary, ranking) {
+      const regionCounts = {};
+      summary.forEach(item => {
+        const region = REGION_MAP[item.prefecture] || 'その他';
+        regionCounts[region] = (regionCounts[region] || 0) + item.count;
+      });
+      const sorted = Object.entries(regionCounts).sort((a, b) => b[1] - a[1]);
+      const top = sorted[0];
+      const second = sorted[1];
+      if (!top) return '';
+      let text = `地方別では${top[0]}（${top[1]}枚）が最も多く`;
+      text += second ? `、次いで${second[0]}（${second[1]}枚）となっています。` : `となっています。`;
+      text += `ポケふたは地方自治体・観光協会との連携で設置されることが多く、観光地や駅周辺に置かれているケースが目立ちます。`;
+      text += `地域を旅しながら複数のポケふたを巡るルートを作るのも人気の楽しみ方です。`;
+      return `<p>${escapeHtml(text)}</p>`;
+    }
+
     function render(summary) {
       const total = summary.reduce((sum, item) => sum + item.count, 0);
       const installed = summary.filter(item => item.count > 0);
       const empty = summary.filter(item => item.count === 0);
       const ranking = [...installed].sort((a, b) => b.count - a.count || a.code.localeCompare(b.code)).slice(0, 10);
+
+      document.getElementById('ai-summary-section').innerHTML = generateAISummary(summary, ranking, total, empty);
+      document.getElementById('discovery-section').innerHTML = generateDiscoveryCards(summary, ranking, total, empty);
+      document.getElementById('regional-trend-box').innerHTML = generateRegionalTrend(summary, ranking);
 
       document.getElementById('total-count').textContent = `${total}枚`;
       document.getElementById('installed-prefecture-count').textContent = `${installed.length}都道府県`;
@@ -322,12 +476,16 @@
         `;
       }).join('');
 
-      document.getElementById('ranking-list').innerHTML = ranking.map(item => `
-        <li>
-          ${escapeHtml(item.prefecture)}
-          <small>${item.count}枚</small>
-        </li>
-      `).join('');
+      document.getElementById('ranking-list').innerHTML = ranking.map(item => {
+        const href = `/?pref=${encodeURIComponent(item.prefecture)}`;
+        return `
+          <li>
+            ${escapeHtml(item.prefecture)}
+            <small>${item.count}枚</small>
+            <a class="summary-link" href="${href}">地図で見る</a>
+          </li>
+        `;
+      }).join('');
 
       document.getElementById('empty-prefecture-list').innerHTML = empty.length
         ? empty.map(item => `<li>${escapeHtml(item.prefecture)}</li>`).join('')
