@@ -140,6 +140,9 @@ def generate_html(
     same_pref: list[dict],
     pref_total: int,
     same_pokemon: list[dict],
+    city_total: int = 0,
+    same_pokemon_total: int = 0,
+    nearby_count: int = 0,
 ) -> str:
     """Generate complete HTML for a manhole detail page."""
     manhole_id = str(manhole.get("id", "")).strip()
@@ -173,7 +176,7 @@ def generate_html(
     # Build Pokemon info with metadata
     pokemon_info_html = ""
     if pokemons:
-        pokemon_info_html = "<section class='pokemon-section'><h2>登場ポケモン</h2><div class='pokemon-list'>"
+        pokemon_info_html = "<section class='pokemon-section section-card'><h2>登場ポケモン</h2><div class='pokemon-list'>"
         for poke_name in pokemons:
             meta = pokemon_meta.get(poke_name, {})
             names = meta.get("names", {})
@@ -194,24 +197,65 @@ def generate_html(
 
         pokemon_info_html += "</div></section>"
 
-    # Photo section
-    photo_html = ""
+    # Photo
     og_image = f"{BASE_URL}assets/ogp/pokefuta_map_ogp.png"
+    hero_photo_html = "<div class='hero-photo-placeholder'>写真なし</div>"
 
     if photo:
         photo_url = photo.get("url", "") or photo.get("original_url", "")
         if photo_url:
             og_image = photo_url
-            photo_html = f"""
-<section class='photo-section'>
-  <h2>写真</h2>
-  <img src="{escape(photo_url)}" alt="{escape(h1)}の写真" loading="lazy">
-</section>
-"""
+            hero_photo_html = (
+                f"<div class='hero-photo'>"
+                f"<img src=\"{escape(photo_url)}\" alt=\"{escape(h1)}の写真\" loading=\"lazy\">"
+                f"</div>"
+            )
+
+    # HERO card: region label
+    region_parts = [p for p in [prefecture, city] if p]
+    region_html = "".join(f"<span>{escape(r)}</span>" for r in region_parts)
+
+    # HERO card: pokemon tags
+    pokemon_tags_html = ""
+    if pokemons:
+        tags = "".join(f"<span class='hero-tag'>{escape(p)}</span>" for p in pokemons)
+        pokemon_tags_html = f"<div class='hero-pokemon-tags'>{tags}</div>"
+
+    # HERO card: stats badges
+    badges: list[str] = []
+    if pref_total > 0 and prefecture:
+        badges.append(f"<span class='hero-badge'>{escape(prefecture)} {pref_total}枚</span>")
+    if city_total >= 2 and city:
+        badges.append(f"<span class='hero-badge'>{escape(city)} {city_total}枚</span>")
+    if same_pokemon_total > 0:
+        badges.append(f"<span class='hero-badge'>同じポケモン {same_pokemon_total}枚</span>")
+    if nearby_count > 0:
+        badges.append(f"<span class='hero-badge'>近くに{nearby_count}件</span>")
+    stats_html = f"<div class='hero-stats'>{''.join(badges)}</div>" if badges else ""
+
+    # HERO card: share JS data (Python-serialized to avoid injection)
+    share_title = title
+    share_text = (
+        f"{prefecture}{city}のポケふた（{pokemon_text}）を見つけました。\n"
+        f"{prefecture}には{pref_total}枚のポケふたがあります。"
+    ) if prefecture else f"{h1}を見つけました。"
+    share_title_json = json.dumps(share_title, ensure_ascii=False)
+    share_text_json = json.dumps(share_text, ensure_ascii=False)
+    share_url_json = json.dumps(canonical_url, ensure_ascii=False)
+
+    # HERO card: photo-upload CTA (only when official URL is available)
+    _parsed = urlparse(detail_url) if detail_url else None
+    has_official_url = _parsed and _parsed.scheme == "https" and _parsed.hostname == "local.pokemon.jp"
+    photo_btn_html = ""
+    if has_official_url:
+        photo_btn_html = (
+            f"<a href=\"{escape(detail_url)}\" class='btn-photo' target='_blank' rel='noopener noreferrer'>"
+            f"📷 写真を投稿</a>"
+        )
 
     # Location info
     location_html = f"""
-<section class='location-section'>
+<section class='location-section section-card'>
   <h2>設置場所</h2>
   <dl>
     <dt>都道府県</dt>
@@ -260,8 +304,7 @@ def generate_html(
 
     # Official site link (if available)
     official_html = ""
-    _parsed = urlparse(detail_url) if detail_url else None
-    if _parsed and _parsed.scheme == "https" and _parsed.hostname == "local.pokemon.jp":
+    if has_official_url:
         official_html = f"""
 <p class='official-link'>
   <a href="{escape(detail_url)}" target="_blank" rel="noopener noreferrer">公式サイトを見る</a>
@@ -271,7 +314,7 @@ def generate_html(
     # Nearby manholes section
     nearby_html = ""
     if nearby:
-        nearby_html = "<section class='nearby-section'><h2>近くのポケふた</h2><ul class='related-list'>"
+        nearby_html = "<section class='nearby-section section-card'><h2>近くのポケふた</h2><ul class='related-list'>"
         for other, dist in nearby:
             oid = str(other.get("id", ""))
             label = manhole_label(other)
@@ -287,7 +330,7 @@ def generate_html(
     # Same pokemon manholes section
     same_pokemon_html = ""
     if same_pokemon:
-        same_pokemon_html = "<section class='same-pokemon-section'><h2>同じポケモンのポケふた</h2><ul class='related-list'>"
+        same_pokemon_html = "<section class='same-pokemon-section section-card'><h2>同じポケモンのポケふた</h2><ul class='related-list'>"
         for other in same_pokemon:
             oid = str(other.get("id", ""))
             label = manhole_label(other)
@@ -298,7 +341,7 @@ def generate_html(
     pref_section_html = ""
     if prefecture and same_pref:
         pref_section_html = (
-            f"<section class='prefecture-section'>"
+            f"<section class='prefecture-section section-card'>"
             f"<h2>{escape(prefecture)}のポケふた</h2>"
             f"<p>{escape(prefecture)}には現在{pref_total}枚のポケふたがあります。</p>"
             f"<ul class='related-list'>"
@@ -317,6 +360,24 @@ def generate_html(
         ensure_ascii=False,
     ))
     current_year = datetime.date.today().year
+
+    # HERO card HTML
+    hero_card_html = f"""
+<div class="hero-card">
+  {hero_photo_html}
+  <div class="hero-body">
+    <div class="hero-region">{region_html}</div>
+    <h1 class="hero-title">{escape(h1)}</h1>
+    {pokemon_tags_html}
+    {stats_html}
+    <div class="hero-actions">
+      <button class="btn-share" onclick="shareManhole()">🔗 共有する</button>
+      <a href="{escape(map_url)}" class="btn-map" onclick="trackEvent('manhole_seo_to_map_click', {onclick_params})">📍 地図で見る</a>
+      {photo_btn_html}
+    </div>
+  </div>
+</div>
+"""
 
     # Complete HTML
     html = f"""<!doctype html>
@@ -358,6 +419,22 @@ def generate_html(
     function trackEvent(action, params) {{
       gtag('event', action, params);
     }}
+
+    function shareManhole() {{
+      var d = {{
+        title: {share_title_json},
+        text: {share_text_json},
+        url: {share_url_json}
+      }};
+      if (navigator.share) {{
+        navigator.share(d).catch(function() {{}});
+      }} else {{
+        navigator.clipboard.writeText(d.url).then(
+          function() {{ alert('URLをコピーしました'); }},
+          function() {{ alert(d.url); }}
+        );
+      }}
+    }}
   </script>
 
   <style>
@@ -371,7 +448,7 @@ def generate_html(
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       line-height: 1.6;
       color: #333;
-      background: #f5f5f5;
+      background: #fff8ec;
       padding: 16px;
     }}
 
@@ -379,9 +456,9 @@ def generate_html(
       max-width: 800px;
       margin: 0 auto;
       background: white;
-      border-radius: 8px;
-      padding: 24px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
     }}
 
     h1 {{
@@ -505,15 +582,16 @@ def generate_html(
 
     .related-list {{
       list-style: none;
-      margin-top: 12px;
+      margin-top: 0;
       display: flex;
       flex-direction: column;
       gap: 8px;
     }}
 
     .related-list a {{
-      color: #007bff;
+      color: #1a6fd4;
       text-decoration: none;
+      font-weight: 500;
       flex: 1;
     }}
 
@@ -525,12 +603,17 @@ def generate_html(
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 8px 12px;
-      background: #f8f9fa;
-      border-radius: 6px;
-      border: 1px solid #e0e0e0;
+      padding: 10px 14px;
+      background: #fafaf8;
+      border-radius: 8px;
+      border: 1px solid #e8e3db;
       flex-wrap: wrap;
       gap: 4px;
+      transition: background 0.15s;
+    }}
+
+    .related-list li:hover {{
+      background: #f3ede4;
     }}
 
     .distance {{
@@ -539,17 +622,214 @@ def generate_html(
       white-space: nowrap;
     }}
 
+    /* HERO card */
+    .hero-card {{
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid #e8d8c0;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.10);
+    }}
+
+    .hero-photo img {{
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      display: block;
+    }}
+
+    .hero-photo-placeholder {{
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      background: linear-gradient(135deg, #f5ede0 0%, #ede0cf 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #b0916e;
+      font-size: 14px;
+    }}
+
+    .hero-photo-placeholder::before {{
+      content: "📷";
+      font-size: 36px;
+      opacity: 0.5;
+    }}
+
+    .hero-body {{
+      padding: 20px 20px 24px;
+    }}
+
+    .hero-region {{
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 6px;
+      letter-spacing: 0.02em;
+    }}
+
+    .hero-region span + span::before {{
+      content: " › ";
+    }}
+
+    h1.hero-title {{
+      font-size: 21px;
+      font-weight: 700;
+      margin-bottom: 14px;
+      line-height: 1.45;
+      color: #1a1a1a;
+      letter-spacing: -0.01em;
+    }}
+
+    .hero-pokemon-tags {{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 14px;
+    }}
+
+    .hero-tag {{
+      background: #fff8e1;
+      border: 1px solid #f9c940;
+      border-radius: 20px;
+      padding: 3px 11px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #7a5c00;
+    }}
+
+    .hero-stats {{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-bottom: 18px;
+    }}
+
+    .hero-badge {{
+      background: #eef0ff;
+      border: 1px solid #b8c0f0;
+      border-radius: 20px;
+      padding: 4px 13px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #3a4fc7;
+      letter-spacing: 0.01em;
+    }}
+
+    .hero-actions {{
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }}
+
+    .btn-share {{
+      display: block;
+      width: 100%;
+      background: #e8333f;
+      color: white;
+      text-align: center;
+      padding: 16px 14px;
+      border-radius: 10px;
+      font-size: 17px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      letter-spacing: 0.02em;
+      box-shadow: 0 2px 8px rgba(220,50,60,0.30);
+      transition: background 0.2s, box-shadow 0.2s;
+    }}
+
+    .btn-share:hover {{
+      background: #c82333;
+      box-shadow: 0 4px 12px rgba(220,50,60,0.35);
+    }}
+
+    .btn-map {{
+      display: block;
+      background: #1a7fe8;
+      color: white;
+      text-align: center;
+      padding: 13px 14px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 2px 6px rgba(26,127,232,0.25);
+      transition: background 0.2s, box-shadow 0.2s;
+    }}
+
+    .btn-map:hover {{
+      background: #0056b3;
+      box-shadow: 0 4px 10px rgba(26,127,232,0.30);
+    }}
+
+    .btn-photo {{
+      display: block;
+      background: white;
+      color: #666;
+      text-align: center;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 14px;
+      text-decoration: none;
+      border: 1px solid #d0d0d0;
+      transition: background 0.2s, border-color 0.2s;
+    }}
+
+    .btn-photo:hover {{
+      background: #f8f8f8;
+      border-color: #bbb;
+    }}
+
+    .section-card {{
+      background: #fff;
+      border: 1px solid #ede8df;
+      border-radius: 10px;
+      padding: 16px 18px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }}
+
+    .section-card h2 {{
+      font-size: 15px;
+      font-weight: 600;
+      margin: 0 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #ede8df;
+      color: #444;
+    }}
+
     @media (max-width: 600px) {{
       body {{
-        padding: 8px;
+        padding: 6px;
+        background: #fff8ec;
       }}
 
       .container {{
-        padding: 16px;
+        padding: 12px;
+        border-radius: 10px;
       }}
 
-      h1 {{
-        font-size: 20px;
+      .hero-card {{
+        border-radius: 12px;
+      }}
+
+      .hero-body {{
+        padding: 14px 14px 18px;
+      }}
+
+      h1.hero-title {{
+        font-size: 18px;
+      }}
+
+      .btn-share {{
+        padding: 15px 14px;
+        font-size: 16px;
+      }}
+
+      .section-card {{
+        padding: 14px;
+        border-radius: 8px;
       }}
 
       .pokemon-list {{
@@ -560,13 +840,7 @@ def generate_html(
 </head>
 <body>
   <div class="container">
-    <h1>{escape(h1)}</h1>
-
-    <a href="{escape(map_url)}" class="cta-primary" onclick="trackEvent('manhole_seo_to_map_click', {onclick_params})">
-      📍 地図でこのポケふたを見る
-    </a>
-
-    {photo_html}
+    {hero_card_html}
 
     {pokemon_info_html}
 
@@ -622,6 +896,13 @@ def generate_all_pages(
         if pref:
             pref_index.setdefault(pref, []).append(m)
 
+    city_index: dict[str, list[dict]] = {}
+    for m in manholes:
+        pref = m.get("prefecture", "")
+        city = m.get("city", "")
+        if pref or city:
+            city_index.setdefault(f"{pref}_{city}", []).append(m)
+
     pokemon_index: dict[str, list[dict]] = {}
     for m in manholes:
         for pk in filter_pokemons(m.get("pokemons", [])):
@@ -650,6 +931,7 @@ def generate_all_pages(
             logger.debug(f"No photo found for manhole {manhole_id} (normalized: {norm_id})")
 
         prefecture = manhole.get("prefecture", "")
+        city = manhole.get("city", "")
         lat = manhole.get("lat")
         lng = manhole.get("lng")
 
@@ -665,7 +947,8 @@ def generate_all_pages(
                 dist = haversine(float(lat), float(lng), float(olat), float(olng))
                 nearby.append((other, dist))
             nearby.sort(key=lambda x: x[1])
-            nearby = nearby[:5]
+        nearby_count = sum(1 for _, dist in nearby if dist <= 5.0)
+        nearby = nearby[:5]
 
         # Same prefecture manholes (stable sort: city then id)
         same_pref_all = [
@@ -678,6 +961,9 @@ def generate_all_pages(
         )[:20]
         pref_total = len(pref_index.get(prefecture, []))
 
+        # City total
+        city_total = len(city_index.get(f"{prefecture}_{city}", []))
+
         # Same pokemon manholes (deduplicated: one entry per manhole)
         seen_ids: set[str] = set()
         same_pokemon: list[dict] = []
@@ -687,9 +973,13 @@ def generate_all_pages(
                 if oid != manhole_id and oid not in seen_ids:
                     seen_ids.add(oid)
                     same_pokemon.append(other)
+        same_pokemon_total = len(seen_ids)
         same_pokemon = same_pokemon[:10]
 
-        html = generate_html(manhole, photo, pokemon_meta, nearby, same_pref, pref_total, same_pokemon)
+        html = generate_html(
+            manhole, photo, pokemon_meta, nearby, same_pref, pref_total, same_pokemon,
+            city_total=city_total, same_pokemon_total=same_pokemon_total, nearby_count=nearby_count,
+        )
 
         page_dir = output_dir / "manholes" / manhole_id
         page_dir.mkdir(parents=True, exist_ok=True)
