@@ -263,6 +263,18 @@ def _attr_json(data: dict) -> str:
     return escape(json.dumps(data, ensure_ascii=False), {'"': '&quot;'})
 
 
+def _js_json(value) -> str:
+    """Serialize value as JSON safe for embedding inside an inline <script> block.
+
+    json.dumps alone does NOT escape the </script> sequence, which a browser
+    HTML parser treats as closing the script tag regardless of JS context — a
+    potential XSS / page-break vector. Replacing '</' with '<\\/' is the
+    standard workaround: browsers parse the escaped form as a literal '</'
+    inside the JS string, so the runtime value is unchanged.
+    """
+    return json.dumps(value, ensure_ascii=False).replace("</", "<\\/")
+
+
 def _render_related_card(
     other: dict,
     id_to_image_url: dict[str, str],
@@ -335,12 +347,12 @@ def generate_html(
     map_url = f"{BASE_URL}?manhole={quote(manhole_id)}"
     pref_url = f"{BASE_URL}?pref={quote(prefecture)}"
 
-    # JSON-serialized values for safe embedding inside <script> blocks.
-    # Using json.dumps avoids breakage from quotes, backslashes, or </script>
-    # in scraped data values; escape() is HTML-only and unsafe for JS contexts.
-    manhole_id_js = json.dumps(manhole_id)
-    prefecture_js = json.dumps(prefecture, ensure_ascii=False)
-    city_js = json.dumps(city, ensure_ascii=False)
+    # _js_json() serializes values for safe embedding inside <script> blocks:
+    # json.dumps handles quotes/backslashes; the </  → <\/ replacement prevents
+    # premature </script> tag closure from scraped data values.
+    manhole_id_js = _js_json(manhole_id)
+    prefecture_js = _js_json(prefecture)
+    city_js = _js_json(city)
 
     # _attr_json() serializes dicts as JSON with " escaped to &quot; so they
     # are safe inside HTML double-quoted onclick attributes.
@@ -385,11 +397,11 @@ def generate_html(
 
         pokemon_info_html += "</div></section>"
 
-    # Photo — has_photo_bool is True only when a real image URL is present,
-    # matching the hero placeholder display logic exactly.
+    # photo_url is the single source of truth for whether a real photo exists.
+    # has_photo_bool, og_image, and hero rendering all derive from this value.
     og_image = f"{BASE_URL}assets/ogp/pokefuta_map_ogp.png"
-    _photo_url_check = (photo.get("url", "") or photo.get("original_url", "")) if photo else ""
-    has_photo_bool = bool(_photo_url_check)
+    photo_url = (photo.get("url", "") or photo.get("original_url", "")) if photo else ""
+    has_photo_bool = bool(photo_url)
     has_photo_js = json.dumps(has_photo_bool)
 
     hero_photo_html = (
@@ -402,51 +414,49 @@ def generate_html(
         f"</a>"
     )
 
-    if photo:
-        photo_url = photo.get("url", "") or photo.get("original_url", "")
-        if photo_url:
-            og_image = photo_url
+    if photo_url:
+        og_image = photo_url
 
-            raw_name = photo.get("display_name") or ""
-            display_name = str(raw_name)[:20] if raw_name else ""
+        raw_name = photo.get("display_name") or ""
+        display_name = str(raw_name)[:20] if raw_name else ""
 
-            raw_comment = photo.get("comment") or ""
-            comment = " ".join(str(raw_comment).split())  # normalize whitespace
-            if len(comment) > 100:
-                comment = comment[:97] + "…"
+        raw_comment = photo.get("comment") or ""
+        comment = " ".join(str(raw_comment).split())  # normalize whitespace
+        if len(comment) > 100:
+            comment = comment[:97] + "…"
 
-            shot_date = ""
-            shot_at_raw = photo.get("shot_at", "")
-            if isinstance(shot_at_raw, str) and shot_at_raw:
-                try:
-                    dt = datetime.datetime.fromisoformat(shot_at_raw.replace("Z", "+00:00"))
-                    shot_date = f"{dt.year}年{dt.month}月{dt.day}日"
-                except (ValueError, TypeError):
-                    pass
+        shot_date = ""
+        shot_at_raw = photo.get("shot_at", "")
+        if isinstance(shot_at_raw, str) and shot_at_raw:
+            try:
+                dt = datetime.datetime.fromisoformat(shot_at_raw.replace("Z", "+00:00"))
+                shot_date = f"{dt.year}年{dt.month}月{dt.day}日"
+            except (ValueError, TypeError):
+                pass
 
-            credit_parts = []
-            if display_name:
-                credit_parts.append(f"📷 {escape(display_name)}")
-            if shot_date:
-                credit_parts.append(shot_date)
-            if credit_parts:
-                inner = "".join(f"<span>{p}</span>" for p in credit_parts)
-                credit_html = f"<div class='photo-credit'>{inner}</div>"
-            else:
-                credit_html = ""
+        credit_parts = []
+        if display_name:
+            credit_parts.append(f"📷 {escape(display_name)}")
+        if shot_date:
+            credit_parts.append(shot_date)
+        if credit_parts:
+            inner = "".join(f"<span>{p}</span>" for p in credit_parts)
+            credit_html = f"<div class='photo-credit'>{inner}</div>"
+        else:
+            credit_html = ""
 
-            comment_html = (
-                f"<div class='photo-comment'>{escape(comment)}</div>"
-                if comment else ""
-            )
+        comment_html = (
+            f"<div class='photo-comment'>{escape(comment)}</div>"
+            if comment else ""
+        )
 
-            hero_photo_html = (
-                f"<div class='hero-photo'>"
-                f"<img src=\"{escape(photo_url)}\" alt=\"{escape(h1)}の写真\" loading=\"lazy\">"
-                f"{credit_html}"
-                f"{comment_html}"
-                f"</div>"
-            )
+        hero_photo_html = (
+            f"<div class='hero-photo'>"
+            f"<img src=\"{escape(photo_url)}\" alt=\"{escape(h1)}の写真\" loading=\"lazy\">"
+            f"{credit_html}"
+            f"{comment_html}"
+            f"</div>"
+        )
 
     # HERO card: region label
     region_parts = [p for p in [prefecture, city] if p]
@@ -485,9 +495,9 @@ def generate_html(
         f"{prefecture}{city}のポケふた（{pokemon_text}）を見つけました。\n"
         f"{prefecture}には{pref_total}枚のポケふたがあります。"
     ) if prefecture else f"{h1}を見つけました。"
-    share_title_json = json.dumps(share_title, ensure_ascii=False)
-    share_text_json = json.dumps(share_text, ensure_ascii=False)
-    share_url_json = json.dumps(canonical_url, ensure_ascii=False)
+    share_title_json = _js_json(share_title)
+    share_text_json = _js_json(share_text)
+    share_url_json = _js_json(canonical_url)
 
     # Validate official URL (used for links-grid cards)
     _parsed = urlparse(detail_url) if detail_url else None
@@ -575,7 +585,7 @@ def generate_html(
         )
     _map_onclick = _attr_json({"manhole_id": manhole_id, "source": "links_map"})
     link_cards.append(
-        f"<a class='link-card link-card--internal' href=\"{BASE_URL}\""
+        f"<a class='link-card link-card--internal' href=\"{escape(BASE_URL)}\""
         f" onclick=\"trackEvent('click_map_internal', {_map_onclick})\">"
         f"{_icon('icon-link-map', 'link-card-icon')}<span>全国マップ</span></a>"
     )
