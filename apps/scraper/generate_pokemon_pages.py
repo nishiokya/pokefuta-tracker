@@ -424,6 +424,17 @@ def generate_html(
   <script type="application/ld+json">
 {jsonld_str}
   </script>
+  <script type="application/ld+json">
+{{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {{"@type": "ListItem", "position": 1, "name": "全国マップ", "item": "{escape(BASE_URL)}"}},
+    {{"@type": "ListItem", "position": 2, "name": "ポケモン一覧", "item": "{escape(BASE_URL)}pokemon/"}},
+    {{"@type": "ListItem", "position": 3, "name": "{escape(name_ja)}"}}
+  ]
+}}
+  </script>
 
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id={GA_MEASUREMENT_ID}"></script>
@@ -619,12 +630,22 @@ def generate_html(
       color: #aaa;
     }}
     footer a {{ color: #6F55A3; text-decoration: none; }}
+    .breadcrumb {{ font-size: 13px; color: #888; margin-bottom: 14px; }}
+    .breadcrumb ol {{ list-style: none; display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }}
+    .breadcrumb li + li::before {{ content: "›"; margin-right: 4px; color: #ccc; }}
+    .breadcrumb a {{ color: #6F55A3; text-decoration: none; }}
+    .breadcrumb a:hover {{ text-decoration: underline; }}
   </style>
 </head>
 <body>
 <div class="container">
-  <a href="{escape(map_url)}" class="back-link"
-     onclick="trackEvent('click_back_to_map', {{pokemon_slug: {slug_js}}})">← 全国マップへ戻る</a>
+  <nav aria-label="パンくずリスト" class="breadcrumb">
+    <ol>
+      <li><a href="/">全国マップ</a></li>
+      <li><a href="/pokemon/">ポケモン一覧</a></li>
+      <li aria-current="page">{escape(name_ja)}</li>
+    </ol>
+  </nav>
 
   <div class="poke-hero">
     <h1>{escape(name_ja)}のポケふた一覧</h1>

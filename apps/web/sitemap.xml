@@ -11,6 +11,11 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://data.pokefuta.com/pokemon/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://data.pokefuta.com/nearby.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
