@@ -64,10 +64,11 @@ PREFECTURES = [
 ]
 
 
-def read_known_manhole_ids(path: Path) -> Optional[set[str]]:
-    ids: set[str] = set()
+def read_all_manhole_ids(path: Path) -> list[str]:
+    """Read all manhole IDs from the dataset."""
+    ids = []
     if not path.exists():
-        return None
+        return ids
 
     for line in path.read_text(encoding="utf-8").splitlines():
         if not line.strip():
@@ -78,19 +79,8 @@ def read_known_manhole_ids(path: Path) -> Optional[set[str]]:
             continue
         manhole_id = str(record.get("id") or "").strip()
         if manhole_id:
-            ids.add(manhole_id)
-    return ids
-
-
-def read_photo_manhole_ids(image_dir: Path, known_ids: Optional[set[str]]) -> list[str]:
-    if not image_dir.exists():
-        return []
-
-    ids = []
-    for image_path in image_dir.glob("*_latest.jpeg"):
-        manhole_id = image_path.name.removesuffix("_latest.jpeg").strip()
-        if manhole_id and (known_ids is None or manhole_id in known_ids):
             ids.append(manhole_id)
+
     return sorted(set(ids), key=lambda value: (len(value), value))
 
 
@@ -106,7 +96,7 @@ def url_entry(loc: str, changefreq: str, priority: str) -> str:
     )
 
 
-def build_sitemap(photo_ids: list[str]) -> str:
+def build_sitemap(manhole_ids: list[str]) -> str:
     entries = [
         url_entry(BASE_URL, "daily", "1.0"),
         url_entry(f"{BASE_URL}summary", "weekly", "0.8"),
@@ -119,9 +109,10 @@ def build_sitemap(photo_ids: list[str]) -> str:
             url_entry(f"{BASE_URL}?pref={quote(prefecture)}", "weekly", "0.7")
         )
 
-    for manhole_id in photo_ids:
+    # Add static manhole detail pages (primary SEO target)
+    for manhole_id in manhole_ids:
         entries.append(
-            url_entry(f"{BASE_URL}?manhole={quote(manhole_id)}", "weekly", "0.8")
+            url_entry(f"{BASE_URL}manholes/{quote(manhole_id)}/", "weekly", "0.8")
         )
 
     return "\n".join(
@@ -138,16 +129,18 @@ def build_sitemap(photo_ids: list[str]) -> str:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data", default="docs/pokefuta.ndjson")
-    parser.add_argument("--image-dir", default="dataset/manhole/image")
     parser.add_argument("--output", default="apps/web/sitemap.xml")
     args = parser.parse_args()
 
-    known_ids = read_known_manhole_ids(Path(args.data))
-    photo_ids = read_photo_manhole_ids(Path(args.image_dir), known_ids)
+    manhole_ids = read_all_manhole_ids(Path(args.data))
+    if not manhole_ids:
+        print("No manhole IDs found in dataset")
+        return 1
+
     output_path = Path(args.output)
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(build_sitemap(photo_ids), encoding="utf-8")
-    print(f"wrote {output_path} with {len(photo_ids)} manhole photo URLs")
+    output_path.write_text(build_sitemap(manhole_ids), encoding="utf-8")
+    print(f"[generate_sitemap] wrote {output_path} with {len(manhole_ids)} manhole URLs")
     return 0
 
 

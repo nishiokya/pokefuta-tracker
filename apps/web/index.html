@@ -725,21 +725,16 @@
         }
         return '';
       })() : '';
-      const officialDetailLink = d.detail_url ? (function() {
-        const validatedUrl = validateDetailUrl(d.detail_url);
-        if (validatedUrl) {
-          const anchor = document.createElement('a');
-          anchor.href = validatedUrl.href;
-          anchor.target = '_blank';
-          anchor.rel = 'noopener noreferrer';
-          anchor.className = 'travel-popup-action travel-popup-action--primary';
-          anchor.textContent = UI_TEXT.officialDetailCta;
-          const safeTitleJs = escapeJs(d.title || d.id);
-          const safeIdJs = escapeJs(d.id);
-          anchor.setAttribute('onclick', `if(window.trackEvent){window.trackEvent('click_official_link',{event_category:'outbound',event_label:'${safeTitleJs}',manhole_id:'${safeIdJs}'});}`);
-          return anchor.outerHTML;
-        }
-        return '';
+      const officialDetailLink = d.id ? (function() {
+        const manholeDetailUrl = `${window.SITE_BASE_URL}manholes/${encodeURIComponent(d.id)}/`;
+        const anchor = document.createElement('a');
+        anchor.href = manholeDetailUrl;
+        anchor.className = 'travel-popup-action travel-popup-action--primary';
+        anchor.textContent = '詳細ページを見る';
+        const safeTitleJs = escapeJs(d.title || d.id);
+        const safeIdJs = escapeJs(d.id);
+        anchor.setAttribute('onclick', `if(window.trackEvent){window.trackEvent('click_detail_page',{event_category:'navigation',event_label:'${safeTitleJs}',manhole_id:'${safeIdJs}'});}`);
+        return anchor.outerHTML;
       })() : '';
       const links = [
         officialDetailLink,

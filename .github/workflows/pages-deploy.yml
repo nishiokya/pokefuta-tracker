@@ -8,6 +8,7 @@ on:
     paths:
       - 'apps/web/**' # HTML and assets changes
       - 'apps/scraper/generate_sitemap.py' # sitemap generator used during deploy
+      - 'apps/scraper/generate_manhole_pages.py' # manhole page generator
       - 'docs/**'     # dataset changes copied into dist/
       - 'dataset/manhole/image/**' # local popup photos
 
@@ -34,7 +35,9 @@ jobs:
         run: |
           set -e
           mkdir -p dist/assets
-          echo "[dist] Generate sitemap with manhole photo URLs"
+          echo "[dist] Generate static manhole detail pages"
+          python3 apps/scraper/generate_manhole_pages.py
+          echo "[dist] Generate sitemap with manhole URLs"
           python3 apps/scraper/generate_sitemap.py
           echo "[dist] Copy HTML sources"
           cp apps/web/index.html dist/index.html
@@ -54,6 +57,7 @@ jobs:
           cp docs/pokefuta.ndjson dist/pokefuta.ndjson || true
           cp docs/gmanhole.ndjson dist/gmanhole.ndjson || true
           cp docs/latest-manhole-photos.json dist/latest-manhole-photos.json
+          cp docs/pokemon_metadata.json dist/pokemon_metadata.json || true
           echo "[dist] Listing dist contents"
           find dist -maxdepth 2 -type f -print | sort
 
