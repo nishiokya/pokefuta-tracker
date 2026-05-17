@@ -9,6 +9,7 @@ on:
       - 'apps/web/**' # HTML and assets changes
       - 'apps/scraper/generate_sitemap.py' # sitemap generator used during deploy
       - 'apps/scraper/generate_manhole_pages.py' # manhole page generator
+      - 'apps/scraper/generate_manhole_ogp.py' # OGP image generator
       - 'docs/**'     # dataset changes copied into dist/
       - 'dataset/manhole/image/**' # local popup photos
 
@@ -30,6 +31,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+
+      - name: Install Python dependencies
+        run: pip3 install -r requirements.txt
+
+      - name: Install Japanese fonts (Noto Sans CJK)
+        run: sudo apt-get update -y && sudo apt-get install -y fonts-noto-cjk
+
+      - name: Generate per-manhole OGP images
+        run: |
+          mkdir -p dist/assets/ogp/manholes
+          python3 apps/scraper/generate_manhole_ogp.py \
+            --manholes docs/pokefuta.ndjson \
+            --image-dir dataset/manhole/image \
+            --output dist/assets/ogp/manholes
 
       - name: Prepare dist directory (site + data)
         run: |

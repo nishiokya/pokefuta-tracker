@@ -134,6 +134,12 @@ _SVG_DEFS = (
     '<circle cx="68" cy="72" r="12" fill="#E73A51"/>'
     '<path fill="none" stroke="#E73A51" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M38 42l20-12M38 54l20 12"/>'
     "</symbol>"
+    '<symbol id="icon-share-x" viewBox="0 0 24 24">'
+    '<path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.766l7.73-8.835L1.254 2.25H8.08l4.259 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>'
+    "</symbol>"
+    '<symbol id="icon-share-line" viewBox="0 0 24 24">'
+    '<path fill="currentColor" d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.281.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/>'
+    "</symbol>"
     "</defs></svg>"
 )
 
@@ -317,6 +323,7 @@ def generate_html(
     city_total: int = 0,
     same_pokemon_total: int = 0,
     nearby_count: int = 0,
+    ogp_dir: Optional[Path] = None,
 ) -> str:
     """Generate complete HTML for a manhole detail page."""
     manhole_id = str(manhole.get("id", "")).strip()
@@ -458,6 +465,11 @@ def generate_html(
             f"</div>"
         )
 
+    # Per-manhole generated OGP takes priority over photo URL
+    _ogp_path = (ogp_dir / f"{manhole_id}.jpg") if ogp_dir else None
+    if _ogp_path is not None and _ogp_path.exists():
+        og_image = f"{BASE_URL}assets/ogp/manholes/{manhole_id}.jpg"
+
     # HERO card: region label
     region_parts = [p for p in [prefecture, city] if p]
     region_html = "".join(f"<span>{escape(r)}</span>" for r in region_parts)
@@ -490,14 +502,33 @@ def generate_html(
     stats_html = f"<div class='hero-stats'>{''.join(badges)}</div>" if badges else ""
 
     # HERO card: share JS data (Python-serialized to avoid injection)
-    share_title = title
-    share_text = (
+    if has_photo_bool and pokemons:
+        _x_text = (
+            f"{prefecture}{city}のポケふたを発見！\n\n"
+            f"登場ポケモン: {pokemon_text}\n"
+            f"近くのポケふたも地図で探せます。\n\n"
+            f"#ポケふた #ポケモンマンホール"
+        )
+    else:
+        _x_text = (
+            f"{prefecture}{city}のポケふた、旅写真を募集中！\n\n"
+            f"近くに行ったら投稿してみませんか？\n"
+            f"#ポケふた #ポケモンマンホール"
+        )
+    share_x_url = (
+        f"https://twitter.com/intent/tweet"
+        f"?text={quote(_x_text)}&url={quote(canonical_url)}"
+    )
+    share_line_url = f"https://social-plugins.line.me/lineit/share?url={quote(canonical_url)}"
+    share_url_json = _js_json(canonical_url)
+    # Web Share API (used by shareManhole in links_grid)
+    _share_title = f"{city}のポケふた（{pokemon_text}）"
+    _share_text = (
         f"{prefecture}{city}のポケふた（{pokemon_text}）を見つけました。\n"
         f"{prefecture}には{pref_total}枚のポケふたがあります。"
     ) if prefecture else f"{h1}を見つけました。"
-    share_title_json = _js_json(share_title)
-    share_text_json = _js_json(share_text)
-    share_url_json = _js_json(canonical_url)
+    share_title_json = _js_json(_share_title)
+    share_text_json = _js_json(_share_text)
 
     # Validate official URL (used for links-grid cards)
     _parsed = urlparse(detail_url) if detail_url else None
@@ -589,19 +620,28 @@ def generate_html(
         f" onclick=\"trackEvent('click_map_internal', {_map_onclick})\">"
         f"{_icon('icon-link-map', 'link-card-icon')}<span>全国マップ</span></a>"
     )
-    if has_official_url:
-        _photo_onclick = _attr_json({
-            "manhole_id": manhole_id,
-            "prefecture": prefecture,
-            "city": city,
-            "has_photo": has_photo_bool,
-        })
-        link_cards.append(
-            f"<a class='link-card link-card--photo' href=\"{escape(detail_url)}\""
-            f" target=\"_blank\" rel=\"noopener noreferrer\""
-            f" onclick=\"trackEvent('click_photo_upload', {_photo_onclick})\">"
-            f"{_icon('icon-link-photo', 'link-card-icon')}<span>写真を投稿</span></a>"
-        )
+    # Share cards (X / LINE / Copy / Web Share) — always shown
+    _share_onclick = _attr_json({"manhole_id": manhole_id, "prefecture": prefecture, "city": city})
+    link_cards.append(
+        f"<a class='link-card link-card--share-x' href=\"{escape(share_x_url)}\""
+        f" target=\"_blank\" rel=\"noopener noreferrer\""
+        f" onclick=\"trackEvent('click_share_x', {_share_onclick})\">"
+        f"{_icon('icon-share-x', 'link-card-icon')}<span>Xで共有</span></a>"
+    )
+    link_cards.append(
+        f"<a class='link-card link-card--share-line' href=\"{escape(share_line_url)}\""
+        f" target=\"_blank\" rel=\"noopener noreferrer\""
+        f" onclick=\"trackEvent('click_share_line', {_share_onclick})\">"
+        f"{_icon('icon-share-line', 'link-card-icon')}<span>LINEで送る</span></a>"
+    )
+    link_cards.append(
+        f"<button type='button' class='link-card link-card--copy' onclick='copyManholeUrl()'>"
+        f"{_icon('icon-link-share', 'link-card-icon')}<span>URLをコピー</span></button>"
+    )
+    link_cards.append(
+        f"<button type='button' class='link-card link-card--share' onclick='shareManhole()'>"
+        f"{_icon('icon-link-share', 'link-card-icon')}<span>共有</span></button>"
+    )
     links_grid_html = (
         f"<section class='links-section section-card'>"
         f"<h2>リンク</h2>"
@@ -702,6 +742,11 @@ def generate_html(
         f"← 全国マップへ戻る</a>"
     )
 
+    # Hero photo upload CTA
+    _photo_event = "click_photo_upload" if has_photo_bool else "click_photo_upload_placeholder"
+    _photo_label = "写真を投稿" if has_photo_bool else "最初の旅写真を投稿する"
+    _photo_cta_onclick = _attr_json({"manhole_id": manhole_id, "prefecture": prefecture, "city": city, "has_photo": has_photo_bool})
+
     # Visit CTA (Google Maps full-width card)
     visit_cta_html = ""
     if lat is not None and lng is not None:
@@ -728,7 +773,7 @@ def generate_html(
     {pokemon_tags_html}
     {stats_html}
     <div class="hero-actions">
-      <button type="button" class="btn-share btn-share--full" onclick="shareManhole()">{_icon('icon-link-share', 'action-icon')}<span>共有する</span></button>
+      <a class="btn-photo-upload" href="https://pokefuta.com/visits" target="_blank" rel="noopener noreferrer" onclick="trackEvent('{_photo_event}', {_photo_cta_onclick})">{_icon('icon-link-photo', 'action-icon')}<span>{escape(_photo_label)}</span></a>
     </div>
   </div>
 </div>
@@ -747,14 +792,14 @@ def generate_html(
 
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ja_JP">
-  <meta property="og:title" content="{escape(title)}">
-  <meta property="og:description" content="{escape(description)}">
+  <meta property="og:title" content="{escape(f'{city}のポケふた（{pokemon_text}）')}">
+  <meta property="og:description" content="{escape(f'{prefecture}{city}にある{pokemon_text}のポケふた。地図・写真・周辺のポケふた情報を掲載中。data.pokefuta.com')}">
   <meta property="og:url" content="{escape(canonical_url)}">
   <meta property="og:image" content="{escape(og_image)}">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="{escape(title)}">
-  <meta name="twitter:description" content="{escape(description)}">
+  <meta name="twitter:title" content="{escape(f'{city}のポケふた（{pokemon_text}）')}">
+  <meta name="twitter:description" content="{escape(f'{prefecture}{city}にある{pokemon_text}のポケふたを地図で確認。data.pokefuta.com')}">
   <meta name="twitter:image" content="{escape(og_image)}">
 
   <script type="application/ld+json">
@@ -782,6 +827,25 @@ def generate_html(
       gtag('event', action, params);
     }}
 
+    function copyManholeUrl() {{
+      var _sp = {{
+        manhole_id: {manhole_id_js},
+        prefecture: {prefecture_js},
+        city: {city_js}
+      }};
+      navigator.clipboard.writeText({share_url_json}).then(
+        function() {{
+          trackEvent('share_copy_url', _sp);
+          var t = document.getElementById('copy-toast');
+          if (t) {{
+            t.classList.add('copy-toast--visible');
+            setTimeout(function() {{ t.classList.remove('copy-toast--visible'); }}, 2000);
+          }}
+        }},
+        function() {{ alert({share_url_json}); }}
+      );
+    }}
+
     function shareManhole() {{
       var _sp = {{
         manhole_id: {manhole_id_js},
@@ -789,20 +853,16 @@ def generate_html(
         city: {city_js}
       }};
       trackEvent('click_share', _sp);
-      var d = {{
-        title: {share_title_json},
-        text: {share_text_json},
-        url: {share_url_json}
-      }};
       if (navigator.share) {{
-        navigator.share(d).then(function() {{
+        navigator.share({{
+          title: {share_title_json},
+          text: {share_text_json},
+          url: {share_url_json}
+        }}).then(function() {{
           trackEvent('complete_share', _sp);
         }}).catch(function() {{}});
       }} else {{
-        navigator.clipboard.writeText(d.url).then(
-          function() {{ trackEvent('share_copy_url', _sp); alert('URLをコピーしました'); }},
-          function() {{ alert(d.url); }}
-        );
+        copyManholeUrl();
       }}
     }}
   </script>
@@ -1109,43 +1169,57 @@ def generate_html(
 
     .hero-actions {{
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
       gap: 10px;
     }}
 
-    .btn-share--full {{
-      grid-column: 1 / -1;
-    }}
-
-    .btn-share {{
+    .btn-photo-upload {{
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 7px;
-      min-height: 80px;
+      gap: 10px;
+      width: 100%;
+      min-height: 52px;
       border-radius: 14px;
-      padding: 12px 8px;
-      text-align: center;
-      font-size: 13px;
+      padding: 14px 16px;
+      font-size: 15px;
       font-weight: 700;
       letter-spacing: 0.01em;
+      background: #fff0f3;
+      color: #c0394b;
+      border: 1.5px solid #f5c0ca;
+      text-decoration: none;
+      cursor: pointer;
       box-shadow: 0 1px 4px rgba(0,0,0,0.07);
       transition: background 0.15s, box-shadow 0.15s, transform 0.15s;
     }}
 
-    .btn-share {{
-      background: #fff5f6;
-      color: #b52a38;
-      border: 1.5px solid #f5bdc5;
-      cursor: pointer;
-      width: 100%;
+    .btn-photo-upload:hover {{
+      background: #ffe4ea;
+      box-shadow: 0 3px 10px rgba(192,57,75,0.14);
+      transform: translateY(-1px);
     }}
 
-    .btn-share:hover {{
-      background: #ffe4e7;
-      box-shadow: 0 3px 10px rgba(181,42,56,0.14);
-      transform: translateY(-1px);
+    .copy-toast {{
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: rgba(0,0,0,0.80);
+      color: #fff;
+      padding: 10px 22px;
+      border-radius: 24px;
+      font-size: 14px;
+      font-weight: 600;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 1000;
+    }}
+
+    .copy-toast--visible {{
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
     }}
 
     .action-icon {{
@@ -1205,11 +1279,14 @@ def generate_html(
 
     .link-card span {{ display: block; }}
 
-    .link-card--map      {{ background: #eef4ff; color: #1a4fa0; border-color: #c0d4f5; }}
-    .link-card--official {{ background: #fff4f0; color: #c0392b; border-color: #f5c0b0; }}
-    .link-card--pref-site {{ background: #f0fff4; color: #1a6b3c; border-color: #b0e8c8; }}
-    .link-card--internal {{ background: #f8f4ff; color: #5a3fa0; border-color: #d8c8f5; }}
-    .link-card--photo    {{ background: #f8f8f8; color: #555; border-color: #ddd; }}
+    .link-card--map        {{ background: #eef4ff; color: #1a4fa0; border-color: #c0d4f5; }}
+    .link-card--official   {{ background: #fff4f0; color: #c0392b; border-color: #f5c0b0; }}
+    .link-card--pref-site  {{ background: #f0fff4; color: #1a6b3c; border-color: #b0e8c8; }}
+    .link-card--internal   {{ background: #f8f4ff; color: #5a3fa0; border-color: #d8c8f5; }}
+    .link-card--share-x    {{ background: #f5f5f5; color: #444; border-color: #d8d8d8; }}
+    .link-card--share-line {{ background: #f0faf5; color: #217a48; border-color: #b0e0c8; }}
+    .link-card--copy       {{ background: #fff4f0; color: #b04838; border-color: #f0c0b0; cursor: pointer; }}
+    .link-card--share      {{ background: #f8f4ff; color: #5a3fa0; border-color: #d8c8f5; cursor: pointer; }}
 
     .related-list--cards li {{
       display: flex;
@@ -1293,9 +1370,9 @@ def generate_html(
         font-size: 18px;
       }}
 
-      .btn-share {{
-        padding: 15px 14px;
+      .btn-photo-upload {{
         font-size: 16px;
+        min-height: 56px;
       }}
 
       .section-card {{
@@ -1510,6 +1587,7 @@ def generate_html(
       <p>&copy; 2024-{current_year} data.pokefuta.com | ポケふた情報はポケモン公式サイトを参照しています</p>
     </footer>
   </div>
+  <div id="copy-toast" class="copy-toast">URLをコピーしました</div>
 </body>
 </html>
 """
@@ -1532,6 +1610,14 @@ def generate_all_pages(
     total = 0
     photos_applied = 0
     photos_missing = 0
+
+    # Detect pre-generated per-manhole OGP directory
+    _ogp_candidate = output_dir / "assets" / "ogp" / "manholes"
+    ogp_dir: Optional[Path] = _ogp_candidate if _ogp_candidate.is_dir() else None
+    if ogp_dir:
+        logger.info("Per-manhole OGP directory found: %s", ogp_dir)
+    else:
+        logger.info("No per-manhole OGP directory — using default og:image")
 
     # Build cross-manhole indexes once
     pref_index: dict[str, list[dict]] = {}
@@ -1631,6 +1717,7 @@ def generate_all_pages(
             manhole, photo, pokemon_meta, nearby, same_pref, pref_total, same_pokemon,
             id_to_image_url,
             city_total=city_total, same_pokemon_total=same_pokemon_total, nearby_count=nearby_count,
+            ogp_dir=ogp_dir,
         )
 
         page_dir = output_dir / "manholes" / manhole_id
