@@ -13,14 +13,44 @@ import datetime
 import json
 import logging
 import math
+import sys
 from pathlib import Path
 from typing import Any, Optional
 from urllib.parse import quote, urlparse
 from xml.sax.saxutils import escape
 
+sys.path.insert(0, str(Path(__file__).parent))
+from generate_pokemon_pages import _FORM_PREFIX, _normalize_katakana  # noqa: E402
+
 # Constants
 BASE_URL = "https://data.pokefuta.com/"
 GA_MEASUREMENT_ID = "G-K18NR4GZG2"
+
+
+def build_ja_to_slug(raw_data: list) -> dict[str, str]:
+    """Build ja_name → slug map with regional form and katakana normalization."""
+    result: dict[str, str] = {}
+    for pokemon in raw_data:
+        if not isinstance(pokemon, dict):
+            continue
+        names = pokemon.get("names", {})
+        ja_name = names.get("ja", "")
+        slug = pokemon.get("slug", "")
+        form = pokemon.get("form") or ""
+        if not ja_name or not slug:
+            continue
+        if ja_name not in result or not form:
+            result[ja_name] = slug
+        prefix = _FORM_PREFIX.get(form, "")
+        if prefix:
+            combined = prefix + ja_name
+            if combined not in result:
+                result[combined] = slug
+    for key in list(result.keys()):
+        normalized = _normalize_katakana(key)
+        if normalized != key and normalized not in result:
+            result[normalized] = result[key]
+    return result
 
 PREFECTURE_EN: dict[str, str] = {
     "北海道": "Hokkaido",
@@ -324,6 +354,7 @@ def generate_html(
     same_pokemon_total: int = 0,
     nearby_count: int = 0,
     ogp_dir: Optional[Path] = None,
+    ja_to_slug: dict[str, str] | None = None,
 ) -> str:
     """Generate complete HTML for a manhole detail page."""
     manhole_id = str(manhole.get("id", "")).strip()
@@ -390,8 +421,13 @@ def generate_html(
             zh_hant = names.get("zh-Hant", "")
             multilingual_parts = [n for n in [en_name, ko_name, zh_hans, zh_hant] if n]
 
+            _jts = ja_to_slug or {}
+            _slug = _jts.get(poke_name) or _jts.get(_normalize_katakana(poke_name), "")
             pokemon_info_html += f"<div class='pokemon-card'>"
-            pokemon_info_html += f"<h3>{escape(poke_name)}</h3>"
+            if _slug:
+                pokemon_info_html += f"<h3><a href='/pokemon/{quote(_slug)}/'>{escape(poke_name)}</a></h3>"
+            else:
+                pokemon_info_html += f"<h3>{escape(poke_name)}</h3>"
             if multilingual_parts:
                 pokemon_info_html += f"<p class='multilingual-names'>{escape(' / '.join(multilingual_parts))}</p>"
             if types_ja:
@@ -961,6 +997,13 @@ def generate_html(
       padding: 16px;
       border-radius: 8px;
       border: 1px solid #e0e0e0;
+    }}
+    .pokemon-card h3 a {{
+      color: inherit;
+      text-decoration: none;
+    }}
+    .pokemon-card h3 a:hover, .pokemon-card h3 a:focus {{
+      text-decoration: underline;
     }}
 
     .pokemon-card .en-name {{
@@ -1601,6 +1644,7 @@ def generate_all_pages(
     pokemon_meta: dict[str, dict],
     output_dir: Path,
     image_dir: Path,
+    ja_to_slug: dict[str, str] | None = None,
 ) -> tuple[int, int, int]:
     """Generate HTML pages for all manholes.
 
@@ -1717,7 +1761,7 @@ def generate_all_pages(
             manhole, photo, pokemon_meta, nearby, same_pref, pref_total, same_pokemon,
             id_to_image_url,
             city_total=city_total, same_pokemon_total=same_pokemon_total, nearby_count=nearby_count,
-            ogp_dir=ogp_dir,
+            ogp_dir=ogp_dir, ja_to_slug=ja_to_slug,
         )
 
         page_dir = output_dir / "manholes" / manhole_id
@@ -1779,12 +1823,19 @@ def main() -> int:
 
     photos = load_photos(Path(args.photos))
     pokemon_meta = load_pokemon_metadata(Path(args.pokemon))
+    try:
+        _raw_pokemon = json.loads(Path(args.pokemon).read_text(encoding="utf-8")) if Path(args.pokemon).exists() else []
+    except (json.JSONDecodeError, OSError) as e:
+        logger.warning(f"Could not load pokemon metadata for slug map: {e}")
+        _raw_pokemon = []
+    ja_to_slug = build_ja_to_slug(_raw_pokemon)
 
     output_dir = Path(args.output)
     output_dir.mkdir(parents=True, exist_ok=True)
 
     total, photos_applied, photos_missing = generate_all_pages(
-        manholes, photos, pokemon_meta, output_dir, Path(args.image_dir)
+        manholes, photos, pokemon_meta, output_dir, Path(args.image_dir),
+        ja_to_slug=ja_to_slug,
     )
 
     print(f"[generate_manhole_pages] total manholes: {len(manholes)}")

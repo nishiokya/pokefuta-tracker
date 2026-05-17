@@ -338,6 +338,16 @@ def generate_html(
     }
     jsonld_str = json.dumps(jsonld, ensure_ascii=False, indent=2)
 
+    jsonld_breadcrumb_str = json.dumps({
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "全国マップ", "item": BASE_URL},
+            {"@type": "ListItem", "position": 2, "name": "ポケモン一覧", "item": f"{BASE_URL}pokemon/"},
+            {"@type": "ListItem", "position": 3, "name": name_ja, "item": canonical_url},
+        ],
+    }, ensure_ascii=False, indent=2)
+
     # Manhole sections grouped by prefecture (empty prefecture sorted last)
     sorted_manholes = sorted(
         manholes,
@@ -424,6 +434,9 @@ def generate_html(
   <script type="application/ld+json">
 {jsonld_str}
   </script>
+  <script type="application/ld+json">
+{jsonld_breadcrumb_str}
+  </script>
 
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id={GA_MEASUREMENT_ID}"></script>
@@ -460,14 +473,6 @@ def generate_html(
       padding: 20px;
       box-shadow: 0 4px 16px rgba(0,0,0,0.08);
     }}
-    .back-link {{
-      display: inline-block;
-      color: #6F55A3;
-      text-decoration: none;
-      font-size: 14px;
-      margin-bottom: 16px;
-    }}
-    .back-link:hover {{ text-decoration: underline; }}
     .poke-hero {{
       margin-bottom: 24px;
     }}
@@ -619,12 +624,22 @@ def generate_html(
       color: #aaa;
     }}
     footer a {{ color: #6F55A3; text-decoration: none; }}
+    .breadcrumb {{ font-size: 13px; color: #888; margin-bottom: 14px; }}
+    .breadcrumb ol {{ list-style: none; display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }}
+    .breadcrumb li + li::before {{ content: "›"; margin-right: 4px; color: #ccc; }}
+    .breadcrumb a {{ color: #6F55A3; text-decoration: none; }}
+    .breadcrumb a:hover {{ text-decoration: underline; }}
   </style>
 </head>
 <body>
 <div class="container">
-  <a href="{escape(map_url)}" class="back-link"
-     onclick="trackEvent('click_back_to_map', {{pokemon_slug: {slug_js}}})">← 全国マップへ戻る</a>
+  <nav aria-label="パンくずリスト" class="breadcrumb">
+    <ol>
+      <li><a href="/">全国マップ</a></li>
+      <li><a href="/pokemon/">ポケモン一覧</a></li>
+      <li aria-current="page">{escape(name_ja)}</li>
+    </ol>
+  </nav>
 
   <div class="poke-hero">
     <h1>{escape(name_ja)}のポケふた一覧</h1>
