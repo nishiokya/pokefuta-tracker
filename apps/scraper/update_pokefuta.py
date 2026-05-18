@@ -96,6 +96,52 @@ def fetch(url: str, logger: logging.Logger, headers: Dict[str, str]) -> Optional
     return None
 
 
+def load_manhole_titles_master(dataset_dir: str) -> Dict:
+    """Load full dataset/manhole_titles.json and return the raw master dict."""
+    path = os.path.join(dataset_dir, 'manhole_titles.json')
+    if not os.path.exists(path):
+        return {}
+    try:
+        with open(path, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except Exception as e:
+        print(f"Warning: Failed to load {path}: {e}", file=sys.stderr)
+        return {}
+
+
+def _compute_and_attach_titles(all_records: List[Dict], dataset_dir: str,
+                                logger: logging.Logger) -> None:
+    """Compute 称号 titles for all records and store as manhole["titles"]."""
+    try:
+        from manhole_titles import build_title_context
+        from manhole_titles import nearby_count as _nc
+        from manhole_titles import compute_titles
+    except ImportError as exc:
+        logger.warning("manhole_titles module not found; skipping title computation: %s", exc)
+        return
+
+    master = load_manhole_titles_master(dataset_dir)
+    if not master:
+        logger.warning("manhole_titles.json not loaded; skipping title computation")
+        return
+
+    ctx = build_title_context(all_records, master)
+    attached = 0
+    for r in all_records:
+        if r.get("status") != "active":
+            r.pop("titles", None)
+            continue
+        mid = str(r.get("id", ""))
+        n = _nc(mid, r.get("lat"), r.get("lng"), ctx["coords"])
+        titles = compute_titles(r, ctx, nc=n)
+        if titles:
+            r["titles"] = titles
+            attached += 1
+        else:
+            r.pop("titles", None)
+    logger.info("Titles attached for %d active records", attached)
+
+
 def load_manhole_titles_json(dataset_dir: str) -> Tuple[Dict[str, Dict[str, Any]], List[Dict]]:
     """Load dataset/manhole_titles.json.
 
@@ -546,6 +592,9 @@ def main():
         except Exception:
             return (999999, True)
     all_records.sort(key=sort_key)
+
+    # Compute titles for all records and store in pokefuta.ndjson
+    _compute_and_attach_titles(all_records, dataset_dir, logger)
 
     atomic_write_ndjson(args.out, all_records)
     logger.info("Wrote %d records to %s", len(all_records), args.out)

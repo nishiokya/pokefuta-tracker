@@ -218,6 +218,71 @@
       "url": "https://www.city.abashiri.hokkaido.jp/site/suidobu/1523.html"
     },
     {
+      "prefecture": "北海道",
+      "city": "比布町",
+      "url": "https://www.town.pippu.hokkaido.jp/cms/section/soumu/pokemonmanhole/pokemonmanhole.html"
+    },
+    {
+      "prefecture": "北海道",
+      "city": "森町",
+      "url": "https://www.town.hokkaido-mori.lg.jp/soshiki/kikakushinko/186.html"
+    },
+    {
+      "prefecture": "北海道",
+      "city": "豊富町",
+      "url": "https://www.town.toyotomi.hokkaido.jp/section/kensetuka/ufvuj50000000frx.html"
+    },
+    {
+      "prefecture": "北海道",
+      "city": "天塩町",
+      "url": "https://www.teshiotown.hokkaido.jp/?p=18124"
+    },
+    {
+      "prefecture": "北海道",
+      "city": "赤井川村",
+      "url": "https://www.akaigawa.com/facility/kind/pokemon-manhole/"
+    },
+    {
+      "prefecture": "北海道",
+      "city": "砂川市",
+      "url": "https://www.city.sunagawa.hokkaido.jp/shisei/kaihatsu/2025-1107-1619-45.html"
+    },
+    {
+      "prefecture": "北海道",
+      "city": "当別町",
+      "url": "https://www.town.tobetsu.hokkaido.jp/site/kouhou/37634.html"
+    },
+    {
+      "prefecture": "北海道",
+      "city": "由仁町",
+      "url": "https://www.town.yuni.lg.jp/newstopics/18495"
+    },
+    {
+      "prefecture": "北海道",
+      "city": "美幌町",
+      "url": "https://www.town.bihoro.hokkaido.jp/page/2555.html"
+    },
+    {
+      "prefecture": "北海道",
+      "city": "根室市",
+      "url": "https://www.city.nemuro.hokkaido.jp/lifeinfo/kakuka/kensetsusuidoubu/gesuidouka/oshirase/9348.html"
+    },
+    {
+      "prefecture": "北海道",
+      "city": "函館市",
+      "url": "https://www.hakobura.jp/news/138"
+    },
+    {
+      "prefecture": "北海道",
+      "city": "三笠市",
+      "url": "https://www.city.mikasa.hokkaido.jp/museum/detail/00009998.html"
+    },
+    {
+      "prefecture": "北海道",
+      "city": "上富良野町",
+      "url": "https://www.town.kamifurano.hokkaido.jp/contents/06sansin/0610shokan/pokefuta.pdf"
+    },
+    {
       "prefecture": "宮城県",
       "city": "仙台市",
       "url": "https://www.city.sendai.jp/sesakukoho/gaiyo/shichoshitsu/kaiken/2024/05/14pokemonroute2.html"
@@ -916,7 +981,9 @@
     "187": {
       "tags": [
         "seaside"
-      ]
+      ],
+      "building": "函館公園内旧函館博物館二号前",
+      "verified_at": "2021-07-15"
     },
     "19": {
       "tags": [
@@ -977,7 +1044,9 @@
     "67": {
       "tags": [
         "seaside"
-      ]
+      ],
+      "building": "キタカラ敷地内",
+      "verified_at": "2019-12-11"
     },
     "434": {
       "tags": [
@@ -993,7 +1062,8 @@
     "217": {
       "tags": [
         "seaside"
-      ]
+      ],
+      "building": "道の駅「流氷街道網走」"
     },
     "10": {
       "tags": [
@@ -1133,7 +1203,9 @@
     "62": {
       "tags": [
         "seaside"
-      ]
+      ],
+      "building": "森駅前（森商工会議所玄関前）",
+      "verified_at": "2020-11-02"
     },
     "234": {
       "tags": [
@@ -1455,6 +1527,56 @@
       "tags": [
         "lakeside"
       ]
+    },
+    "68": {
+      "building": "定住支援センター「ふらっと★きた」敷地内",
+      "verified_at": "2019-12-10"
+    },
+    "66": {
+      "building": "道の駅 てしお 正面入り口横",
+      "verified_at": "2019-11-29"
+    },
+    "218": {
+      "building": "道の駅あかいがわ敷地内",
+      "verified_at": "2021-11-13"
+    },
+    "278": {
+      "building": "北欧の風 道の駅とうべつ",
+      "verified_at": "2022-11-07"
+    },
+    "440": {
+      "building": "文化交流館ふれーる"
+    },
+    "307": {
+      "building": "美幌駅前",
+      "verified_at": "2023-06-05"
+    },
+    "189": {
+      "building": "明治公園内の噴水広場の一角",
+      "verified_at": "2021-07-07"
+    },
+    "65": {
+      "building": "JR比布駅前広場"
+    },
+    "439": {
+      "building": "砂川市まちなか交流施設すないる",
+      "verified_at": "2025-10-26"
+    },
+    "140": {
+      "building": "出光カルチャーパーク",
+      "verified_at": "2020-11-02"
+    },
+    "141": {
+      "building": "三笠市立博物館",
+      "verified_at": "2020-11-02"
+    },
+    "142": {
+      "building": "日の出公園",
+      "verified_at": "2020-11-02"
+    },
+    "143": {
+      "building": "絵本の館",
+      "verified_at": "2020-11-02"
     }
   },
   "lakes": [
