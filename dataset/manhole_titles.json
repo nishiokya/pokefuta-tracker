@@ -110,6 +110,79 @@
         "235"
       ],
       "note": "実データ確認済み(2026-05-18): id235 は日本最南かつ最西も兼ねる"
+    },
+    {
+      "island": "隠岐の島",
+      "prefecture": "島根県",
+      "city": "隠岐の島",
+      "ids": [
+        "381"
+      ]
+    },
+    {
+      "island": "壱岐島",
+      "prefecture": "長崎県",
+      "city": "壱岐",
+      "ids": [
+        "428"
+      ]
+    },
+    {
+      "island": "五島列島",
+      "prefecture": "長崎県",
+      "city": "新上五島",
+      "ids": [
+        "358"
+      ]
+    },
+    {
+      "island": "小笠原諸島",
+      "prefecture": "東京都",
+      "city": "小笠原",
+      "ids": [
+        "153",
+        "154",
+        "155",
+        "156"
+      ]
+    },
+    {
+      "island": "沖縄",
+      "prefecture": "沖縄県",
+      "city": null,
+      "note": "city=null はprefecture全体一致。石垣島エントリはids優先で上書き"
+    },
+    {
+      "island": "粟島",
+      "prefecture": "香川県",
+      "city": "三豊",
+      "ids": [
+        "35"
+      ]
+    },
+    {
+      "island": "直島",
+      "prefecture": "香川県",
+      "city": "直島",
+      "ids": [
+        "39"
+      ]
+    },
+    {
+      "island": "小豆島",
+      "prefecture": "香川県",
+      "city": "土庄",
+      "ids": [
+        "36"
+      ]
+    },
+    {
+      "island": "小豆島",
+      "prefecture": "香川県",
+      "city": "小豆島",
+      "ids": [
+        "37"
+      ]
     }
   ],
   "city_links": [
