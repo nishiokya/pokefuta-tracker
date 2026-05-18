@@ -532,6 +532,8 @@ def generate_html(
         pokemon_tags_html = f"<div class='hero-pokemon-tags'>{tags}</div>"
 
     # HERO card: stats badges
+    titles: list[dict] = manhole.get("titles", []) or []
+    title_keys: set[str] = {t["key"] for t in titles}
     badges: list[str] = []
     added_at = manhole.get("added_at", "") or ""
     try:
@@ -540,29 +542,38 @@ def generate_html(
             badges.append(f"<span class='hero-badge hero-badge-new'>NEW {added_year}年設置</span>")
     except (ValueError, TypeError):
         pass
-    if pref_total > 0 and prefecture:
+    # Title badges (top 3, from pokefuta.ndjson) — prepended before stats badges
+    for t in titles[:3]:
+        label = f"{escape(t['emoji'])} {escape(t['label'])}" if t.get("emoji") else escape(t["label"])
+        badges.append(f"<span class='hero-badge hero-badge-title'>{label}</span>")
+    # Stats badges with suppression rules (§2.3)
+    suppress_pref = title_keys & {"only_in_pref", "unique_pokemon"}
+    suppress_nearby = "lone" in title_keys
+    if pref_total > 0 and prefecture and not suppress_pref:
         badges.append(f"<span class='hero-badge'>{escape(prefecture)} {pref_total}枚</span>")
     if city_total >= 2 and city:
         badges.append(f"<span class='hero-badge'>{escape(city)} {city_total}枚</span>")
     if same_pokemon_total > 0:
         badges.append(f"<span class='hero-badge'>同じポケモン {same_pokemon_total}枚</span>")
-    if nearby_count > 0:
+    if nearby_count > 0 and not suppress_nearby:
         badges.append(f"<span class='hero-badge'>30km以内に{nearby_count}件</span>")
     stats_html = f"<div class='hero-stats'>{''.join(badges)}</div>" if badges else ""
 
     # HERO card: share JS data (Python-serialized to avoid injection)
+    _title_hashtags = " ".join(t["hashtag"] for t in titles[:2] if t.get("hashtag"))
+    _base_hashtags = f"{_title_hashtags} #ポケふた #ポケモンマンホール".strip()
     if has_photo_bool and pokemons:
         _x_text = (
             f"{prefecture}{city}のポケふたを発見！\n\n"
             f"登場ポケモン: {pokemon_text}\n"
             f"近くのポケふたも地図で探せます。\n\n"
-            f"#ポケふた #ポケモンマンホール"
+            f"{_base_hashtags}"
         )
     else:
         _x_text = (
             f"{prefecture}{city}のポケふた、旅写真を募集中！\n\n"
             f"近くに行ったら投稿してみませんか？\n"
-            f"#ポケふた #ポケモンマンホール"
+            f"{_base_hashtags}"
         )
     share_x_url = (
         f"https://twitter.com/intent/tweet"

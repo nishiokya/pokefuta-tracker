@@ -58,7 +58,7 @@
 
 ### 2.1 単一ソースモジュール
 
-新規 `apps/scraper/manhole_titles.py`:
+`apps/scraper/manhole_titles.py`（実装済み）:
 
 ```python
 # Title = {"key": str, "label": str, "hashtag": str, "emoji": str, "priority": int}
@@ -67,11 +67,19 @@ def build_title_context(manholes: list[dict], master: dict) -> dict:
     """全件を1回走査して算出に必要な集計を作る（最北/最南/最東/最西の id,
     prefecture 件数, ポケモン件数, 最新/最古 added_at, 設置数1位の県 など）。"""
 
+def nearby_count(mid: str, lat, lng, coords: list) -> int:
+    """haversine で 30km 以内の件数を返す。"""
+
 def compute_titles(manhole: dict, ctx: dict,
                     *, nearby_count: int) -> list[dict]:
     """1マンホールの称号リストを priority 降順で返す。
-    ティア1は ctx から、ティア2は master（islands / 語彙定義）から判定。"""
+    ティア1は ctx から、ティア2は manhole["tags"] と ctx.islands/lakes から判定。"""
 ```
+
+> **呼び出し元**: `update_pokefuta.py` が `build_title_context` → `compute_titles` を呼んで
+> 結果を `pokefuta.ndjson` の `titles` フィールドに書き込む。
+> LP ジェネレータは `manhole.get("titles", [])` を読むだけでよく、
+> `manhole_titles.json` を直接参照しない。
 
 ### 2.2 既存処理の再利用（重複実装しない）
 
@@ -100,10 +108,14 @@ def compute_titles(manhole: dict, ctx: dict,
 ## 3. 管理方法
 
 ```
+【update_pokefuta.py 実行時】
 docs/pokefuta.ndjson ───────────┐
-                                ├─→ build_title_context → compute_titles ─→ ①ページ ②OGP ③シェア文
+                                ├─→ build_title_context → compute_titles → pokefuta.ndjson (titles フィールド)
 dataset/manhole_titles.json ────┘
 （手動マスタ: 離島リスト＋語彙定義）
+
+【generate_*.py 実行時】
+docs/pokefuta.ndjson (titles フィールド) ─→ ①詳細ページ ②OGP ③シェア文
 ```
 
 ### 3.1 ティア1（自動算出）— 操作不要

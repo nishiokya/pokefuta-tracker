@@ -441,6 +441,13 @@ def compose_manhole(
         bb = _bbox(draw, ln, pf)
         y += (bb[3] - bb[1]) + 8
 
+    # 称号ピル (top-1 title from pokefuta.ndjson, drawn if space allows before chip area)
+    titles = manhole.get("titles", []) or []
+    if titles and y + 40 <= 350:
+        top = titles[0]
+        pill_text = f"{top['emoji']} {top['label']}" if top.get("emoji") else top["label"]
+        _draw_pill(draw, LEFT_X, y + 6, pill_text, fonts["label"])
+
     # 3 exploration chip values (cards fixed at y 356..440 in the SVG)
     pref_total = stats["pref_count"].get(pref, 0)
     primary = pokemons[0] if pokemons else ""
