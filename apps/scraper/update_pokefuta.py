@@ -126,8 +126,10 @@ def load_manhole_titles_json(dataset_dir: str) -> Tuple[Dict[str, Dict[str, Any]
 def build_city_url_index(city_links: List[Dict]) -> Dict[Tuple[str, str], str]:
     """Build (prefecture, normalized_city) -> url index from city_links.
 
-    Both "指宿市" and stripped "指宿" map to the same URL so ndjson's
-    city values (which strip 市/区/町/村 suffix) match correctly.
+    For each entry indexes both the original name and the suffix-stripped form
+    (e.g. "指宿市" → also "指宿") so ndjson city values match.
+    Uses re.sub to strip exactly one trailing suffix character, avoiding
+    over-stripping of names like "四日市市" (would wrongly become "四日").
     """
     idx: Dict[Tuple[str, str], str] = {}
     for entry in city_links:
@@ -137,10 +139,31 @@ def build_city_url_index(city_links: List[Dict]) -> Dict[Tuple[str, str], str]:
         if not (pref and city and url):
             continue
         idx[(pref, city)] = url
-        stripped = city.rstrip('市区町村')
+        stripped = re.sub(r'[市区町村]$', '', city)
         if stripped != city:
             idx[(pref, stripped)] = url
     return idx
+
+
+def lookup_city_url(city_url_idx: Dict[Tuple[str, str], str], pref: str, city: str) -> str:
+    """Resolve city_url for a record, with ward-level and prefecture fallbacks.
+
+    Lookup order:
+      1. Exact city match (e.g. "指宿" or "指宿市")
+      2. Parent designated-city match for ward-level values
+         (e.g. "名古屋市中区" → try "名古屋市")
+      3. Prefecture-wide fallback ("（県全体案内）")
+    """
+    url = city_url_idx.get((pref, city), '')
+    if url:
+        return url
+    # Ward-level: "名古屋市中区" → parent "名古屋市"
+    m = re.match(r'(.+市)(.+[区])$', city)
+    if m:
+        url = city_url_idx.get((pref, m.group(1)), '')
+        if url:
+            return url
+    return city_url_idx.get((pref, '（県全体案内）'), '')
 
 
 def apply_title_metadata(record: Dict, title_data: Dict[str, Dict[str, Any]]) -> bool:
@@ -425,13 +448,12 @@ def main():
             r.pop('source_last_checked', None)
         if apply_title_metadata(r, title_data):
             changed.setdefault(r['id'], {})['title_metadata'] = True
-        # Populate city_url from city_links if not already set (no last_updated bump)
-        if not r.get('city_url'):
-            pref = r.get('prefecture', '')
-            city = r.get('city', '')
-            url = city_url_idx.get((pref, city), '') or city_url_idx.get((pref, '（県全体案内）'), '')
-            if url:
-                r['city_url'] = url
+        # Always sync city_url from city_links (source of truth, no last_updated bump)
+        pref = r.get('prefecture', '')
+        city = r.get('city', '')
+        url = lookup_city_url(city_url_idx, pref, city)
+        if url and r.get('city_url') != url:
+            r['city_url'] = url
 
     new_records: List[Dict] = []
     deleted_ids: List[str] = []
@@ -477,13 +499,12 @@ def main():
             parsed.setdefault('status', 'active')
             parsed.setdefault('last_updated', now_ts)
             apply_title_metadata(parsed, title_data)
-            # Populate city_url from city_links for new records
-            if not parsed.get('city_url'):
-                pref = parsed.get('prefecture', '')
-                city = parsed.get('city', '')
-                url = city_url_idx.get((pref, city), '') or city_url_idx.get((pref, '（県全体案内）'), '')
-                if url:
-                    parsed['city_url'] = url
+            # Sync city_url from city_links for new records
+            pref = parsed.get('prefecture', '')
+            city = parsed.get('city', '')
+            url = lookup_city_url(city_url_idx, pref, city)
+            if url:
+                parsed['city_url'] = url
 
             if pid not in by_id:
                 logger.info("NEW id=%s", pid)
