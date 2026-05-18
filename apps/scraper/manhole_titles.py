@@ -24,6 +24,26 @@ def _filter_pokemons(raw: list) -> list[str]:
     return [p for p in raw if isinstance(p, str) and p.strip() and "ローカルActs" not in p]
 
 
+def _beats_min(v: float, best: Optional[float], mid: str, best_id: Optional[str]) -> bool:
+    """Return True if v should replace the current minimum best."""
+    if best is None:
+        return True
+    try:
+        return v < best or (v == best and int(mid) < int(best_id))
+    except ValueError:
+        return v < best
+
+
+def _beats_max(v: float, best: Optional[float], mid: str, best_id: Optional[str]) -> bool:
+    """Return True if v should replace the current maximum best."""
+    if best is None:
+        return True
+    try:
+        return v > best or (v == best and int(mid) < int(best_id))
+    except ValueError:
+        return v > best
+
+
 def build_title_context(manholes: list[dict], master: dict) -> dict:
     """Scan all active manholes once to build aggregates needed for title computation.
 
@@ -65,28 +85,13 @@ def build_title_context(manholes: list[dict], master: dict) -> dict:
         if lat_raw is not None and lng_raw is not None:
             lat, lng = float(lat_raw), float(lng_raw)
             coords.append((mid, lat, lng))
-            # Tie-break: lower id wins (id ascending = earlier = priority)
-            def _beats_min(v, best, best_id):
-                if best is None:
-                    return True
-                try:
-                    return v < best or (v == best and int(mid) < int(best_id))
-                except ValueError:
-                    return v < best
-            def _beats_max(v, best, best_id):
-                if best is None:
-                    return True
-                try:
-                    return v > best or (v == best and int(mid) < int(best_id))
-                except ValueError:
-                    return v > best
-            if _beats_max(lat, north_lat, north_id):
+            if _beats_max(lat, north_lat, mid, north_id):
                 north_lat, north_id = lat, mid
-            if _beats_min(lat, south_lat, south_id):
+            if _beats_min(lat, south_lat, mid, south_id):
                 south_lat, south_id = lat, mid
-            if _beats_max(lng, east_lng, east_id):
+            if _beats_max(lng, east_lng, mid, east_id):
                 east_lng, east_id = lng, mid
-            if _beats_min(lng, west_lng, west_id):
+            if _beats_min(lng, west_lng, mid, west_id):
                 west_lng, west_id = lng, mid
 
         added = m.get("added_at") or ""
@@ -131,12 +136,13 @@ def nearby_count(mid: str, lat, lng, coords: list[tuple]) -> int:
     )
 
 
-def compute_titles(manhole: dict, ctx: dict, *, nearby_count: int) -> list[dict]:
-    """Return title list (priority desc) for one manhole.
+def compute_titles(manhole: dict, ctx: dict, *, nc: int) -> list[dict]:
+    """Return title list (priority desc) for one active manhole.
 
     Each title dict: {"key": str, "label": str, "emoji": str, "hashtag": str, "priority": int}
     Tier 1 titles are derived from ctx (built from all active manholes).
     Tier 2 titles use ctx["islands"] / ctx["lakes"] / manhole["tags"] from pokefuta.ndjson.
+    nc: number of active manholes within 30 km (pre-computed by caller).
     """
     vocab: dict = ctx["vocabulary"]
     mid = str(manhole.get("id", "")).strip()
@@ -151,13 +157,19 @@ def compute_titles(manhole: dict, ctx: dict, *, nearby_count: int) -> list[dict]
             return None
         label = v.get("label", key)
         hashtag = v.get("hashtag", "")
+        hashtag_extra = v.get("hashtag_extra", "")
         # Replace standard placeholders
         label = label.replace("{prefecture}", pref).replace("{city}", city)
         hashtag = hashtag.replace("{prefecture}", pref).replace("{city}", city)
+        hashtag_extra = hashtag_extra.replace("{prefecture}", pref).replace("{city}", city)
         # Replace extra placeholders from overrides
         for k, val in overrides.items():
             label = label.replace(f"{{{k}}}", str(val))
             hashtag = hashtag.replace(f"{{{k}}}", str(val))
+            hashtag_extra = hashtag_extra.replace(f"{{{k}}}", str(val))
+        # Combine hashtag_extra (e.g. "#{island}") into hashtag field
+        if hashtag_extra:
+            hashtag = f"{hashtag} {hashtag_extra}".strip()
         return {
             "key": key,
             "label": label,
@@ -171,52 +183,64 @@ def compute_titles(manhole: dict, ctx: dict, *, nearby_count: int) -> list[dict]
     # --- Tier 1: auto-calculated ---
 
     if ctx["north_id"] == mid:
-        t = _entry("north_end"); t and results.append(t)
+        if t := _entry("north_end"):
+            results.append(t)
     if ctx["south_id"] == mid:
-        t = _entry("south_end"); t and results.append(t)
+        if t := _entry("south_end"):
+            results.append(t)
     if ctx["east_id"] == mid:
-        t = _entry("east_end"); t and results.append(t)
+        if t := _entry("east_end"):
+            results.append(t)
     if ctx["west_id"] == mid:
-        t = _entry("west_end"); t and results.append(t)
+        if t := _entry("west_end"):
+            results.append(t)
 
     pokemons = _filter_pokemons(manhole.get("pokemons", []))
 
     # unique_pokemon: at least one pokemon on this manhole appears nowhere else
     if pokemons and any(ctx["pokemon_count"].get(pk, 0) == 1 for pk in pokemons):
-        t = _entry("unique_pokemon"); t and results.append(t)
+        if t := _entry("unique_pokemon"):
+            results.append(t)
 
     # only_in_pref: this prefecture has exactly 1 active manhole
     pref_unique = pref and ctx["pref_count"].get(pref, 0) == 1
     if pref_unique:
-        t = _entry("only_in_pref"); t and results.append(t)
+        if t := _entry("only_in_pref"):
+            results.append(t)
 
-    # rare_pokemon: primary pokemon total <= 3 (count >= 2 to avoid overlap with unique_pokemon)
+    # rare_pokemon: primary pokemon total 2-3 (excludes count=1 covered by unique_pokemon)
     if pokemons:
         primary_count = ctx["pokemon_count"].get(pokemons[0], 0)
         if 2 <= primary_count <= 3:
-            t = _entry("rare_pokemon", count=primary_count); t and results.append(t)
+            if t := _entry("rare_pokemon", count=primary_count):
+                results.append(t)
 
-    # lone: no other active manhole within 30 km
-    if nearby_count == 0:
-        t = _entry("lone"); t and results.append(t)
+    # lone: no other active manhole within 30 km (requires valid coordinates)
+    if nc == 0 and manhole.get("lat") is not None:
+        if t := _entry("lone"):
+            results.append(t)
 
     # only_in_city: city has exactly 1 manhole AND only_in_pref is NOT set
     city_key = f"{pref}|{city}"
     if (pref or city) and ctx["city_count"].get(city_key, 0) == 1 and not pref_unique:
-        t = _entry("only_in_city"); t and results.append(t)
+        if t := _entry("only_in_city"):
+            results.append(t)
 
     # pref_top: manhole's prefecture is the one with the most manholes nationwide
     if pref and pref == ctx["top_pref"]:
-        t = _entry("pref_top", count=ctx["top_pref_count"]); t and results.append(t)
+        if t := _entry("pref_top", count=ctx["top_pref_count"]):
+            results.append(t)
 
     # newest: added_at matches the globally newest date
     if added and ctx["newest_date"] and added[:10] == ctx["newest_date"][:10]:
-        t = _entry("newest"); t and results.append(t)
+        if t := _entry("newest"):
+            results.append(t)
 
     # pioneer: id <= threshold
     try:
         if int(mid) <= ctx["pioneer_threshold"]:
-            t = _entry("pioneer"); t and results.append(t)
+            if t := _entry("pioneer"):
+                results.append(t)
     except ValueError:
         pass
 
@@ -225,36 +249,40 @@ def compute_titles(manhole: dict, ctx: dict, *, nearby_count: int) -> list[dict]
     # remote_island: check islands list (ids take priority over prefecture+city match)
     for island_entry in ctx["islands"]:
         ids = [str(i) for i in (island_entry.get("ids") or [])]
+        island_name = island_entry.get("island", "")
         if ids:
             if mid in ids:
-                t = _entry("remote_island", island=island_entry.get("island", ""))
-                t and results.append(t)
+                if t := _entry("remote_island", island=island_name):
+                    results.append(t)
                 break
         else:
             if (island_entry.get("prefecture") == pref and
                     island_entry.get("city") == city):
-                t = _entry("remote_island", island=island_entry.get("island", ""))
-                t and results.append(t)
+                if t := _entry("remote_island", island=island_name):
+                    results.append(t)
                 break
 
     # seaside: tags contains "beach" or "seaside"
     if any(tag in ("beach", "seaside") for tag in tags):
-        t = _entry("seaside"); t and results.append(t)
+        if t := _entry("seaside"):
+            results.append(t)
 
     # lakeside: check lakes list
     for lake_entry in ctx["lakes"]:
         ids = [str(i) for i in (lake_entry.get("ids") or [])]
+        lake_name = lake_entry.get("lake", "")
         if ids:
             if mid in ids:
-                t = _entry("lakeside", lake=lake_entry.get("lake", ""))
-                t and results.append(t)
+                if t := _entry("lakeside", lake=lake_name):
+                    results.append(t)
                 break
         else:
             if (lake_entry.get("prefecture") == pref and
                     lake_entry.get("city") == city):
-                t = _entry("lakeside", lake=lake_entry.get("lake", ""))
-                t and results.append(t)
+                if t := _entry("lakeside", lake=lake_name):
+                    results.append(t)
                 break
 
-    results.sort(key=lambda x: (-x["priority"], x["key"]))
+    # Sort by priority desc; stable sort preserves catalog insertion order for ties
+    results.sort(key=lambda x: -x["priority"])
     return results
