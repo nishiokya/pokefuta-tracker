@@ -30,9 +30,9 @@ GitHub Actions 用想定引数:
   0: 正常終了 (差分ある/なし問わず)
   2: 異常終了 (例外)
 """
-import argparse, csv, json, logging, os, re, signal, sys, time, tempfile
+import argparse, json, logging, os, re, signal, sys, time, tempfile
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 from bs4 import BeautifulSoup
 import requests
@@ -47,11 +47,11 @@ REQ_TIMEOUT = 15
 RETRY = 3
 DEFAULT_SLEEP = 0.4
 
+# ウェブスクレイプ由来フィールド — 変化時に last_updated を更新する
+# 手動メタデータ(tags/address_norm/building など)はここに含めない
 CORE_COMPARE_FIELDS = [
-    "title", "prefecture", "city", "address", "building", "city_url",
-    "address_raw", "address_norm", "place_detail", "landmark", "access",
-    "parking", "nearby_spots", "tags", "source_urls", "verified_at",
-    "confidence", "lat", "lng", "pokemons", "detail_url",
+    "title", "prefecture", "city", "address",
+    "lat", "lng", "pokemons", "detail_url",
     "prefecture_site_url", "status", "is_prefecture_site"
 ]
 
@@ -72,11 +72,6 @@ def _has_content(value: Any, allow_placeholder: bool = False) -> bool:
         return True
     return True
 
-
-def _split_pipe_list(value: Optional[str]) -> List[str]:
-    if not value:
-        return []
-    return [part.strip() for part in value.split('|') if part.strip()]
 
 def setup_logger(level: str = "INFO") -> logging.Logger:
     lvl = getattr(logging, level.upper(), logging.INFO)
@@ -101,111 +96,51 @@ def fetch(url: str, logger: logging.Logger, headers: Dict[str, str]) -> Optional
     return None
 
 
-def load_title_metadata(dataset_dir: str) -> Dict[str, Dict[str, Any]]:
-    """Load title metadata from CSV / TSV files (if available)."""
-    title_data: Dict[str, Dict[str, Any]] = {}
-    sources = [
-        ("title.csv", ","),
-        ("title.tsv", "\t"),
-    ]
-    for filename, delimiter in sources:
-        path = os.path.join(dataset_dir, filename)
-        if not os.path.exists(path):
+def load_manhole_titles_json(dataset_dir: str) -> Tuple[Dict[str, Dict[str, Any]], List[Dict]]:
+    """Load dataset/manhole_titles.json.
+
+    Returns (manholes_by_id, city_links_list).
+    manholes_by_id: {"404": {"building": ..., "tags": [...], ...}, ...}
+    city_links_list: [{"prefecture": ..., "city": ..., "url": ...}, ...]
+    """
+    path = os.path.join(dataset_dir, 'manhole_titles.json')
+    if not os.path.exists(path):
+        print(f"Warning: {path} not found")
+        return {}, []
+    try:
+        with open(path, 'r', encoding='utf-8') as f:
+            master = json.load(f)
+    except Exception as e:
+        print(f"Warning: Failed to load {path}: {e}")
+        return {}, []
+
+    manholes: Dict[str, Dict[str, Any]] = {
+        str(rid): entry
+        for rid, entry in master.get('manholes', {}).items()
+        if isinstance(entry, dict)
+    }
+    city_links: List[Dict] = master.get('city_links', [])
+    return manholes, city_links
+
+
+def build_city_url_index(city_links: List[Dict]) -> Dict[Tuple[str, str], str]:
+    """Build (prefecture, normalized_city) -> url index from city_links.
+
+    Both "指宿市" and stripped "指宿" map to the same URL so ndjson's
+    city values (which strip 市/区/町/村 suffix) match correctly.
+    """
+    idx: Dict[Tuple[str, str], str] = {}
+    for entry in city_links:
+        pref = (entry.get('prefecture') or '').strip()
+        city = (entry.get('city') or '').strip()
+        url = (entry.get('url') or '').strip()
+        if not (pref and city and url):
             continue
-        try:
-            with open(path, 'r', encoding='utf-8-sig') as f:
-                header_sample = f.readline()
-                f.seek(0)
-                detected_delimiter = delimiter
-                if header_sample:
-                    if '\t' in header_sample and ',' not in header_sample:
-                        detected_delimiter = '\t'
-                    elif ',' in header_sample and '\t' not in header_sample:
-                        detected_delimiter = ','
-                reader = csv.DictReader(f, delimiter=detected_delimiter)
-                for row in reader:
-                    if not row:
-                        continue
-                    rid = (row.get('id') or row.get('\ufeffid') or '').strip()
-                    if not rid:
-                        continue
-                    entry: Dict[str, Any] = {}
-
-                    def _clean(name: str, fallback: Optional[str] = None) -> str:
-                        raw = row.get(name)
-                        if raw is None and fallback:
-                            raw = row.get(fallback)
-                        if raw is None:
-                            return ""
-                        return str(raw).strip()
-
-                    building = _clean('building', '建物')
-                    if building:
-                        entry['building'] = building
-
-                    address_raw = _clean('address_raw') or _clean('address', '住所')
-                    if address_raw:
-                        entry['address_raw'] = address_raw
-
-                    address_norm = _clean('address_norm')
-                    if address_norm:
-                        entry['address_norm'] = address_norm
-
-                    prefecture = _clean('prefecture')
-                    if prefecture:
-                        entry['prefecture'] = prefecture
-
-                    city = _clean('city')
-                    if city:
-                        entry['city'] = city
-
-                    place_detail = _clean('place_detail')
-                    if place_detail:
-                        entry['place_detail'] = place_detail
-
-                    landmark = _clean('landmark')
-                    if landmark:
-                        entry['landmark'] = landmark
-
-                    access = _clean('access')
-                    if access:
-                        entry['access'] = access
-
-                    parking = _clean('parking')
-                    if parking:
-                        entry['parking'] = parking
-
-                    nearby_spots = _split_pipe_list(row.get('nearby_spots'))
-                    if nearby_spots:
-                        entry['nearby_spots'] = nearby_spots
-
-                    tags = _split_pipe_list(row.get('tags'))
-                    if tags:
-                        entry['tags'] = tags
-
-                    source_urls = [url for url in _split_pipe_list(row.get('source_urls')) if url]
-                    if source_urls:
-                        entry['source_urls'] = source_urls
-
-                    verified_at = _clean('verified_at')
-                    if verified_at:
-                        entry['verified_at'] = verified_at
-
-                    confidence_raw = _clean('confidence')
-                    if confidence_raw:
-                        try:
-                            entry['confidence'] = int(confidence_raw)
-                        except ValueError:
-                            try:
-                                entry['confidence'] = float(confidence_raw)
-                            except ValueError:
-                                pass
-
-                    if entry:
-                        title_data[rid] = entry
-        except Exception as e:
-            print(f"Warning: Failed to load {path}: {e}")
-    return title_data
+        idx[(pref, city)] = url
+        stripped = city.rstrip('市区町村')
+        if stripped != city:
+            idx[(pref, stripped)] = url
+    return idx
 
 
 def apply_title_metadata(record: Dict, title_data: Dict[str, Dict[str, Any]]) -> bool:
@@ -466,13 +401,15 @@ def main():
     sleep_sec = max(0.2, args.sleep)
 
     dataset_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'dataset')
-    title_data = load_title_metadata(dataset_dir)
-    logger.info("Loaded %d entries from title metadata (csv/tsv)", len(title_data))
+    title_data, city_links = load_manhole_titles_json(dataset_dir)
+    city_url_idx = build_city_url_index(city_links)
+    logger.info("Loaded %d manholes, %d city_links from manhole_titles.json", len(title_data), len(city_links))
 
     existing = load_existing(args.out)
     by_id: Dict[str, Dict] = {r['id']: r for r in existing if 'id' in r}
 
-    # Ensure extended fields exist & merge static metadata before diffing
+    # Ensure extended fields exist & merge static metadata before diffing.
+    # Metadata changes (tags, building, city_url …) do NOT bump last_updated.
     changed: Dict[str, Dict] = {}
     for r in by_id.values():
         r.setdefault('first_seen', now_iso())
@@ -487,6 +424,13 @@ def main():
             r.pop('source_last_checked', None)
         if apply_title_metadata(r, title_data):
             changed.setdefault(r['id'], {})['title_metadata'] = True
+        # Populate city_url from city_links if not already set (no last_updated bump)
+        if not r.get('city_url'):
+            pref = r.get('prefecture', '')
+            city = r.get('city', '')
+            url = city_url_idx.get((pref, city), '') or city_url_idx.get((pref, '（県全体案内）'), '')
+            if url:
+                r['city_url'] = url
 
     new_records: List[Dict] = []
     deleted_ids: List[str] = []
@@ -532,6 +476,13 @@ def main():
             parsed.setdefault('status', 'active')
             parsed.setdefault('last_updated', now_ts)
             apply_title_metadata(parsed, title_data)
+            # Populate city_url from city_links for new records
+            if not parsed.get('city_url'):
+                pref = parsed.get('prefecture', '')
+                city = parsed.get('city', '')
+                url = city_url_idx.get((pref, city), '') or city_url_idx.get((pref, '（県全体案内）'), '')
+                if url:
+                    parsed['city_url'] = url
 
             if pid not in by_id:
                 logger.info("NEW id=%s", pid)
