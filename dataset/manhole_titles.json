@@ -110,12 +110,6 @@
         "235"
       ],
       "note": "実データ確認済み(2026-05-18): id235 は日本最南かつ最西も兼ねる"
-    },
-    {
-      "island": "佐渡島",
-      "prefecture": "新潟県",
-      "city": "佐渡",
-      "ids": []
     }
   ],
   "city_links": [
@@ -320,8 +314,6 @@
     },
     "406": {
       "building": "りんくうビーチ",
-      "prefecture": "わかりません",
-      "city": "わかりません",
       "verified_at": "2025-12-27",
       "tags": [
         "beach",
@@ -812,8 +804,7 @@
       "verified_at": "2025-12-27",
       "tags": [
         "seaside",
-        "tourism",
-        "duplicate_location"
+        "tourism"
       ],
       "confidence": 3
     }
