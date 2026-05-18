@@ -47,9 +47,7 @@
 | `remote_island` | 🏝 離島のポケふた（{島名}） | `#離島ポケふた` `#{島名}` | マスタの `islands` に当該 id / `prefecture+city` が登録 | 95 |
 | `seaside` | 🌊 海が見えるポケふた | `#海沿いポケふた` | `manhole_titles.json` の `manholes."<id>".tags` に `beach` か `seaside` を含む | 40 |
 
-> `seaside` は新規データ取得をせず統合JSONの `manholes."<id>".tags`（旧 `title.tsv` 由来）の値を再利用するだけの位置づけ。
-> 海岸線距離・標高による自動判定は本仕様のスコープ外（将来拡張）。
-
+> `seaside` は地図で目視確認したIDを `manholes."<id>".tags` に手動登録する運用。現在 **116件** 登録済み。海岸線自動判定は将来拡張。
 ---
 
 ## 2. 算出ロジック（実装時に従う設計）

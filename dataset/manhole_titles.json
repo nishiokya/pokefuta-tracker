@@ -392,7 +392,8 @@
       "verified_at": "2025-12-27",
       "tags": [
         "beach",
-        "tourism"
+        "tourism",
+        "seaside"
       ],
       "confidence": 1
     },
@@ -529,7 +530,8 @@
       "verified_at": "2025-12-27",
       "tags": [
         "geosite",
-        "tourism"
+        "tourism",
+        "seaside"
       ],
       "confidence": 3
     },
@@ -543,7 +545,8 @@
       "verified_at": "2025-12-27",
       "tags": [
         "park",
-        "tourism"
+        "tourism",
+        "seaside"
       ],
       "confidence": 3
     },
@@ -656,7 +659,8 @@
       "tags": [
         "roadside",
         "family",
-        "tourism"
+        "tourism",
+        "seaside"
       ],
       "confidence": 3
     },
@@ -710,7 +714,8 @@
       "verified_at": "2025-12-27",
       "tags": [
         "museum",
-        "tourism"
+        "tourism",
+        "seaside"
       ],
       "confidence": 3
     },
@@ -782,7 +787,8 @@
       "verified_at": "2025-12-27",
       "tags": [
         "viewpoint",
-        "tourism"
+        "tourism",
+        "seaside"
       ],
       "confidence": 3
     },
@@ -882,6 +888,541 @@
         "tourism"
       ],
       "confidence": 3
+    },
+    "428": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "423": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "15": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "187": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "19": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "358": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "69": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "432": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "403": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "75": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "155": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "12": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "320": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "117": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "435": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "67": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "434": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "77": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "217": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "10": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "349": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "111": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "288": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "378": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "232": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "78": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "391": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "49": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "236": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "425": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "468": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "4": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "355": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "108": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "289": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "93": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "430": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "7": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "153": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "424": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "2": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "395": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "55": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "290": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "291": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "18": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "62": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "234": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "97": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "318": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "381": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "436": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "313": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "194": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "17": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "377": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "36": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "156": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "367": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "203": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "306": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "231": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "327": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "445": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "35": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "175": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "50": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "63": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "365": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "57": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "52": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "345": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "221": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "199": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "235": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "380": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "165": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "437": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "201": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "418": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "450": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "312": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "311": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "471": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "37": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "154": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "82": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "427": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "474": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "89": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "45": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "354": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "422": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "202": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "314": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "113": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "233": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "429": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "16": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "157": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "229": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "470": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "340": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "204": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "44": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "39": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "46": {
+      "tags": [
+        "seaside"
+      ]
     }
   }
 }
