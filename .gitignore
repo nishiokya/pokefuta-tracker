@@ -1,6 +1,7 @@
 # Artifact build output (not committed)
 dist/
 manhole_images/*
+design/
 
 *.raw.ndjson
 *.log
