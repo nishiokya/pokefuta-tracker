@@ -101,6 +101,13 @@
       "label": "海が見えるポケふた",
       "hashtag": "#海沿いポケふた",
       "priority": 40
+    },
+    "lakeside": {
+      "enabled": true,
+      "emoji": "🏞",
+      "label": "湖畔のポケふた（{lake}）",
+      "hashtag": "#湖畔ポケふた",
+      "priority": 38
     }
   },
   "islands": [
@@ -936,7 +943,8 @@
     },
     "75": {
       "tags": [
-        "seaside"
+        "seaside",
+        "lakeside"
       ]
     },
     "155": {
@@ -976,7 +984,8 @@
     },
     "77": {
       "tags": [
-        "seaside"
+        "seaside",
+        "lakeside"
       ]
     },
     "217": {
@@ -1266,7 +1275,8 @@
     },
     "380": {
       "tags": [
-        "seaside"
+        "seaside",
+        "lakeside"
       ]
     },
     "165": {
@@ -1423,6 +1433,64 @@
       "tags": [
         "seaside"
       ]
+    },
+    "104": {
+      "tags": [
+        "lakeside"
+      ]
+    },
+    "61": {
+      "tags": [
+        "lakeside"
+      ]
+    },
+    "105": {
+      "tags": [
+        "lakeside"
+      ]
+    },
+    "282": {
+      "tags": [
+        "lakeside"
+      ]
     }
-  }
+  },
+  "lakes": [
+    {
+      "lake": "洞爺湖",
+      "prefecture": "北海道",
+      "city": "洞爺湖",
+      "ids": [
+        "61"
+      ]
+    },
+    {
+      "lake": "琵琶湖",
+      "prefecture": "滋賀県",
+      "city": "大津",
+      "ids": [
+        "104",
+        "105"
+      ]
+    },
+    {
+      "lake": "中海",
+      "prefecture": null,
+      "city": null,
+      "ids": [
+        "75",
+        "77",
+        "380"
+      ],
+      "note": "汽水湖。seasideタグと重複付与。island: ids優先マッチングと同じロジック"
+    },
+    {
+      "lake": "猪苗代湖",
+      "prefecture": "福島県",
+      "city": "猪苗代",
+      "ids": [
+        "282"
+      ]
+    }
+  ]
 }
