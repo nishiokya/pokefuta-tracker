@@ -279,6 +279,15 @@ def filter_pokemons(pokemons: list) -> list[str]:
     ]
 
 
+def format_pokemon_label(pokemons: list[str]) -> str:
+    """Pokemon name label for OGP/social meta: max 3 names, then ' ほか'."""
+    if not pokemons:
+        return "ポケモン"
+    if len(pokemons) <= 3:
+        return "・".join(pokemons)
+    return "・".join(pokemons[:3]) + " ほか"
+
+
 def manhole_label(manhole: dict) -> str:
     """Build a plain-text display label for a manhole (for use in link text)."""
     pref = manhole.get("prefecture", "")
@@ -368,6 +377,10 @@ def generate_html(
 
     # Generate unique title and description
     pokemon_text = "・".join(pokemons) if pokemons else "ポケモン"
+    # Meta-only label: max 3 names + ' ほか'. Used solely in og:/twitter: tags.
+    pokemon_label = format_pokemon_label(pokemons)
+    # 自治体名が欠落する場合は都道府県名を優先（og:/twitter: タイトル用）
+    city_label = city if city else prefecture
 
     title = f"{prefecture}{city}のポケふた｜{pokemon_text} | data.pokefuta.com"
 
@@ -502,9 +515,9 @@ def generate_html(
         )
 
     # Per-manhole generated OGP takes priority over photo URL
-    _ogp_path = (ogp_dir / f"{manhole_id}.jpg") if ogp_dir else None
+    _ogp_path = (ogp_dir / f"{manhole_id}.png") if ogp_dir else None
     if _ogp_path is not None and _ogp_path.exists():
-        og_image = f"{BASE_URL}assets/ogp/manholes/{manhole_id}.jpg"
+        og_image = f"{BASE_URL}assets/ogp/manholes/{manhole_id}.png"
 
     # HERO card: region label
     region_parts = [p for p in [prefecture, city] if p]
@@ -826,16 +839,17 @@ def generate_html(
   <meta name="robots" content="index,follow">
   <link rel="canonical" href="{escape(canonical_url)}">
 
-  <meta property="og:type" content="website">
+  <meta property="og:type" content="article">
   <meta property="og:locale" content="ja_JP">
-  <meta property="og:title" content="{escape(f'{city}のポケふた（{pokemon_text}）')}">
-  <meta property="og:description" content="{escape(f'{prefecture}{city}にある{pokemon_text}のポケふた。地図・写真・周辺のポケふた情報を掲載中。data.pokefuta.com')}">
+  <meta property="og:site_name" content="ポケふたマップ">
+  <meta property="og:title" content="{escape(f'{city_label}のポケふた｜{pokemon_label}｜ポケふたマップ')}">
+  <meta property="og:description" content="{escape(f'{prefecture}{city}に設置されている{pokemon_label}のポケふた。場所・写真・地図で確認できます。')}">
   <meta property="og:url" content="{escape(canonical_url)}">
   <meta property="og:image" content="{escape(og_image)}">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="{escape(f'{city}のポケふた（{pokemon_text}）')}">
-  <meta name="twitter:description" content="{escape(f'{prefecture}{city}にある{pokemon_text}のポケふたを地図で確認。data.pokefuta.com')}">
+  <meta name="twitter:title" content="{escape(f'{city_label}のポケふた｜{pokemon_label}')}">
+  <meta name="twitter:description" content="{escape(f'{prefecture}{city}のポケふたを地図で確認できます。')}">
   <meta name="twitter:image" content="{escape(og_image)}">
 
   <script type="application/ld+json">
