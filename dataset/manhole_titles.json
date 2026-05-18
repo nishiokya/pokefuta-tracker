@@ -1,5 +1,5 @@
 {
-  "_doc": "マンホール手動管理マスタ(統合版)。称号(vocabulary/islands)・id別メタデータ(manholes←旧title.tsv)・自治体公式URL(city_links←旧city_link.tsv)を1ファイルに集約。仕様は docs/MANHOLE_TITLES.md を参照。クローラー側の読み込みは別対応。",
+  "_doc": "マンホール手動管理マスタ(統合版)。称号(vocabulary/islands/lakes)・id別メタデータ(manholes←旧title.tsv)・自治体公式URL(city_links←旧city_link.tsv)を1ファイルに集約。仕様は docs/MANHOLE_TITLES.md を参照。クローラー側の読み込みは別対応。",
   "version": 2,
   "vocabulary": {
     "north_end": {
@@ -35,7 +35,9 @@
       "emoji": "🏝",
       "label": "離島のポケふた（{island}）",
       "hashtag": "#離島ポケふた",
-      "priority": 95
+      "hashtag_extra": "#{island}",
+      "priority": 95,
+      "note": "hashtag_extra はX共有時に hashtag の後ろに追加する島名ハッシュタグ（例: #石垣島）。compute_titles が islands[].island を埋め込む"
     },
     "unique_pokemon": {
       "enabled": true,

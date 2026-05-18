@@ -48,8 +48,10 @@
 |-----|----------------|---------|------|----------|
 | `remote_island` | 🏝 離島のポケふた（{island}） | `#離島ポケふた` + 実行時に `#{island}`（島名）を追加生成 | マスタの `islands` に当該 id / `prefecture+city` が登録 | 95 |
 | `seaside` | 🌊 海が見えるポケふた | `#海沿いポケふた` | `manhole_titles.json` の `manholes."<id>".tags` に `beach` か `seaside` を含む | 40 |
+| `lakeside` | 🏞 湖畔のポケふた（{lake}） | `#湖畔ポケふた` | マスタの `lakes` に当該 id / `prefecture+city` が登録 | 38 |
 
 > `seaside` は地図で目視確認したIDを `manholes."<id>".tags` に手動登録する運用。現在 **116件** 登録済み。海岸線自動判定は将来拡張。
+> `lakeside` は `lakes` ブロックで湖ごとに ids を管理。現在 **4湖7件** 登録済み。`seaside` との重複付与あり（例: 中海は汽水湖のため両タグを持つ）。
 ---
 
 ## 2. 算出ロジック（実装時に従う設計）
