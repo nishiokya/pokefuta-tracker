@@ -245,7 +245,7 @@
     {
       "prefecture": "北海道",
       "city": "砂川市",
-      "url": "https://sunagawa-kankou.com/enjoy/16761/"
+      "url": "https://www.city.sunagawa.hokkaido.jp/shisei/kaihatsu/2025-1107-1619-45.html"
     },
     {
       "prefecture": "北海道",
@@ -271,6 +271,16 @@
       "prefecture": "北海道",
       "city": "函館市",
       "url": "https://www.hakobura.jp/news/138"
+    },
+    {
+      "prefecture": "北海道",
+      "city": "三笠市",
+      "url": "https://www.city.mikasa.hokkaido.jp/museum/detail/00009998.html"
+    },
+    {
+      "prefecture": "北海道",
+      "city": "上富良野町",
+      "url": "https://www.town.kamifurano.hokkaido.jp/contents/06sansin/0610shokan/pokefuta.pdf"
     },
     {
       "prefecture": "宮城県",
@@ -1193,7 +1203,9 @@
     "62": {
       "tags": [
         "seaside"
-      ]
+      ],
+      "building": "森駅前（森商工会議所玄関前）",
+      "verified_at": "2020-11-02"
     },
     "234": {
       "tags": [
@@ -1542,6 +1554,29 @@
     "189": {
       "building": "明治公園内の噴水広場の一角",
       "verified_at": "2021-07-07"
+    },
+    "65": {
+      "building": "JR比布駅前広場"
+    },
+    "439": {
+      "building": "砂川市まちなか交流施設すないる",
+      "verified_at": "2025-10-26"
+    },
+    "140": {
+      "building": "出光カルチャーパーク",
+      "verified_at": "2020-11-02"
+    },
+    "141": {
+      "building": "三笠市立博物館",
+      "verified_at": "2020-11-02"
+    },
+    "142": {
+      "building": "日の出公",
+      "verified_at": "2020-11-02"
+    },
+    "143": {
+      "building": "絵本の館",
+      "verified_at": "2020-11-02"
     }
   },
   "lakes": [
