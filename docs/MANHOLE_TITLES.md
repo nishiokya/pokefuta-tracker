@@ -133,11 +133,13 @@ dataset/manhole_titles.json ────┘
     { "prefecture": "北海道", "city": "稚内市", "url": "https://www.city.wakkanai.hokkaido.jp/..." }
     /* 31件。city が「（県全体案内）」の行は都道府県全体の案内ページ */
   ],
-  "manholes": {          // 旧 title.tsv: id 別の手動メタデータ（空欄は省略）
+  "manholes": {          // id 別の手動メタデータ（空欄は省略）
     "404": { "building": "金シャチ横丁　宗春ゾーン（東門エリア）", "prefecture": "愛知県",
              "city": "名古屋市中区", "address_norm": "愛知県名古屋市中区二の丸1番2・3号",
              "tags": ["food", "tourism"], "verified_at": "2025-12-27", "confidence": 3 }
-    /* 39件。tags は `|` 区切りを配列化。confidence は整数 */
+    /* 旧 title.tsv 由来: 39件（building/address/confidence あり）+
+       地図目視確認の tags-only エントリ（seaside 116件・lakeside 7件 等）を含む。
+       tags は `|` 区切りを配列化。confidence は整数 */
   }
 }
 ```
