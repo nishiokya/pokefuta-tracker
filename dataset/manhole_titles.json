@@ -91,7 +91,9 @@
       "emoji": "🥇",
       "label": "初期ポケふた",
       "hashtag": "#元祖ポケふた",
-      "priority": 45
+      "priority": 45,
+      "id_threshold": 30,
+      "note": "int(id) <= id_threshold で判定。公式サイトのID登録順 = 設置時期順の近似"
     },
     "seaside": {
       "enabled": true,

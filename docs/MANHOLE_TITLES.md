@@ -33,7 +33,7 @@
 | `only_in_city` | 🏘 ○○で唯一のポケふた | `#ご当地ポケふた` | 同 `prefecture+city` が自分のみ かつ `only_in_pref` 不成立 | 60 |
 | `pref_top` | 🏆 ○○は設置数日本一（○枚） | `#ポケふた聖地` | `prefecture` 件数が全国最多の県に属する | 55 |
 | `newest` | 🆕 最新設置ロット | `#新作ポケふた` | `added_at` が全件中の最新日付に一致 | 50 |
-| `pioneer` | 🥇 初期ポケふた | `#元祖ポケふた` | `added_at` の年が最古年に一致 | 45 |
+| `pioneer` | 🥇 初期ポケふた | `#元祖ポケふた` | `int(id) <= vocabulary.pioneer.id_threshold`（デフォルト **30**） | 45 |
 
 > `label` の `○○` は実行時に `prefecture` / `city` / 件数で置換する。
 
