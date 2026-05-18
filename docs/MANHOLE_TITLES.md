@@ -14,13 +14,15 @@
 
 称号には `key`（内部ID）・`label`（バッジ文言）・`emoji`・`hashtag`（X 用）・
 `priority`（数値が大きいほど上位表示）を持たせる。
+`label` と `emoji` はストレージ上は別フィールド。以下の表の「label（バッジ）」列は
+**実行時の表示例（emoji + label を結合した形）** であり、JSON の `label` に絵文字は含まない。
 
 ### ティア1: 自動算出称号（人手メンテ不要）
 
 `docs/pokefuta.ndjson` だけから算出できる。データ更新で自動的に追従するため、
 **運用上さわるものは無い**。
 
-| key | label（バッジ） | hashtag | 算出条件 | priority |
+| key | label（バッジ）表示例 | hashtag | 算出条件 | priority |
 |-----|----------------|---------|----------|----------|
 | `north_end` | 🧭 日本最北のポケふた | `#日本最北のポケふた` | active 全件で `lat` 最大の1件 | 100 |
 | `south_end` | 🧭 日本最南のポケふた | `#日本最南のポケふた` | `lat` 最小の1件 | 100 |
@@ -42,9 +44,9 @@
 判定に必要なデータ（島の所属・海岸線・標高）がリポジトリに無いため、
 `dataset/manhole_titles.json` の手動マスタで管理する。
 
-| key | label（バッジ） | hashtag | 判定 | priority |
+| key | label（バッジ）表示例 | hashtag | 判定 | priority |
 |-----|----------------|---------|------|----------|
-| `remote_island` | 🏝 離島のポケふた（{島名}） | `#離島ポケふた` `#{島名}` | マスタの `islands` に当該 id / `prefecture+city` が登録 | 95 |
+| `remote_island` | 🏝 離島のポケふた（{island}） | `#離島ポケふた` + 実行時に `#{island}`（島名）を追加生成 | マスタの `islands` に当該 id / `prefecture+city` が登録 | 95 |
 | `seaside` | 🌊 海が見えるポケふた | `#海沿いポケふた` | `manhole_titles.json` の `manholes."<id>".tags` に `beach` か `seaside` を含む | 40 |
 
 > `seaside` は地図で目視確認したIDを `manholes."<id>".tags` に手動登録する運用。現在 **116件** 登録済み。海岸線自動判定は将来拡張。
@@ -174,7 +176,7 @@ dataset/manhole_titles.json ────┘
 > `tags`（カテゴリタグ）の性質のため、修復時に `tags` 列へ寄せた。
 > 称号 `seaside` の判定も今後はこの `manholes."<id>".tags` の `beach`/`seaside` を見る。
 
-### 3.3 SCHEMA.md への追記方針
+### 3.4 SCHEMA.md への追記方針
 
 `SCHEMA.md` に「`dataset/manhole_titles.json` 由来の称号」節を追加し、
 本ファイルへの参照と、`islands` / `vocabulary` の編集が PR 化される運用を明記する
