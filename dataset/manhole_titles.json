@@ -1,0 +1,1498 @@
+{
+  "_doc": "マンホール手動管理マスタ(統合版)。称号(vocabulary/islands/lakes)・id別メタデータ(manholes←旧title.tsv)・自治体公式URL(city_links←旧city_link.tsv)を1ファイルに集約。仕様は docs/MANHOLE_TITLES.md を参照。クローラー側の読み込みは別対応。",
+  "version": 2,
+  "vocabulary": {
+    "north_end": {
+      "enabled": true,
+      "emoji": "🧭",
+      "label": "日本最北のポケふた",
+      "hashtag": "#日本最北のポケふた",
+      "priority": 100
+    },
+    "south_end": {
+      "enabled": true,
+      "emoji": "🧭",
+      "label": "日本最南のポケふた",
+      "hashtag": "#日本最南のポケふた",
+      "priority": 100
+    },
+    "east_end": {
+      "enabled": true,
+      "emoji": "🧭",
+      "label": "日本最東のポケふた",
+      "hashtag": "#日本最東のポケふた",
+      "priority": 100
+    },
+    "west_end": {
+      "enabled": true,
+      "emoji": "🧭",
+      "label": "日本最西のポケふた",
+      "hashtag": "#日本最西のポケふた",
+      "priority": 100
+    },
+    "remote_island": {
+      "enabled": true,
+      "emoji": "🏝",
+      "label": "離島のポケふた（{island}）",
+      "hashtag": "#離島ポケふた",
+      "hashtag_extra": "#{island}",
+      "priority": 95,
+      "note": "hashtag_extra はX共有時に hashtag の後ろに追加する島名ハッシュタグ（例: #石垣島）。compute_titles が islands[].island を埋め込む"
+    },
+    "unique_pokemon": {
+      "enabled": true,
+      "emoji": "⭐",
+      "label": "このポケモンは全国でここだけ",
+      "hashtag": "#激レアポケふた",
+      "priority": 90
+    },
+    "only_in_pref": {
+      "enabled": true,
+      "emoji": "🗾",
+      "label": "{prefecture}で唯一のポケふた",
+      "hashtag": "#{prefecture}唯一のポケふた",
+      "priority": 80
+    },
+    "rare_pokemon": {
+      "enabled": true,
+      "emoji": "🌟",
+      "label": "レアポケふた（全国{count}枚）",
+      "hashtag": "#レアポケふた",
+      "priority": 70
+    },
+    "lone": {
+      "enabled": true,
+      "emoji": "🌲",
+      "label": "ぽつんと一枚（30km圏に他なし）",
+      "hashtag": "#秘境ポケふた",
+      "priority": 65
+    },
+    "only_in_city": {
+      "enabled": true,
+      "emoji": "🏘",
+      "label": "{city}で唯一のポケふた",
+      "hashtag": "#ご当地ポケふた",
+      "priority": 60
+    },
+    "pref_top": {
+      "enabled": true,
+      "emoji": "🏆",
+      "label": "{prefecture}は設置数日本一（{count}枚）",
+      "hashtag": "#ポケふた聖地",
+      "priority": 55
+    },
+    "newest": {
+      "enabled": true,
+      "emoji": "🆕",
+      "label": "最新設置ロット",
+      "hashtag": "#新作ポケふた",
+      "priority": 50
+    },
+    "pioneer": {
+      "enabled": true,
+      "emoji": "🥇",
+      "label": "初期ポケふた",
+      "hashtag": "#元祖ポケふた",
+      "priority": 45,
+      "id_threshold": 30,
+      "note": "int(id) <= id_threshold で判定。公式サイトのID登録順 = 設置時期順の近似"
+    },
+    "seaside": {
+      "enabled": true,
+      "emoji": "🌊",
+      "label": "海が見えるポケふた",
+      "hashtag": "#海沿いポケふた",
+      "priority": 40
+    },
+    "lakeside": {
+      "enabled": true,
+      "emoji": "🏞",
+      "label": "湖畔のポケふた（{lake}）",
+      "hashtag": "#湖畔ポケふた",
+      "priority": 38
+    }
+  },
+  "islands": [
+    {
+      "island": "石垣島",
+      "prefecture": "沖縄県",
+      "city": "石垣",
+      "ids": [
+        "235"
+      ],
+      "note": "実データ確認済み(2026-05-18): id235 は日本最南かつ最西も兼ねる"
+    },
+    {
+      "island": "隠岐の島",
+      "prefecture": "島根県",
+      "city": "隠岐の島",
+      "ids": [
+        "381"
+      ]
+    },
+    {
+      "island": "壱岐島",
+      "prefecture": "長崎県",
+      "city": "壱岐",
+      "ids": [
+        "428"
+      ]
+    },
+    {
+      "island": "五島列島",
+      "prefecture": "長崎県",
+      "city": "新上五島",
+      "ids": [
+        "358"
+      ]
+    },
+    {
+      "island": "小笠原諸島",
+      "prefecture": "東京都",
+      "city": "小笠原",
+      "ids": [
+        "153",
+        "154",
+        "155",
+        "156"
+      ]
+    },
+    {
+      "island": "沖縄",
+      "prefecture": "沖縄県",
+      "city": null,
+      "note": "city=null はprefecture全体一致。石垣島エントリはids優先で上書き"
+    },
+    {
+      "island": "粟島",
+      "prefecture": "香川県",
+      "city": "三豊",
+      "ids": [
+        "35"
+      ]
+    },
+    {
+      "island": "直島",
+      "prefecture": "香川県",
+      "city": "直島",
+      "ids": [
+        "39"
+      ]
+    },
+    {
+      "island": "小豆島",
+      "prefecture": "香川県",
+      "city": "土庄",
+      "ids": [
+        "36"
+      ]
+    },
+    {
+      "island": "小豆島",
+      "prefecture": "香川県",
+      "city": "小豆島",
+      "ids": [
+        "37"
+      ]
+    }
+  ],
+  "city_links": [
+    {
+      "prefecture": "北海道",
+      "city": "稚内市",
+      "url": "https://www.city.wakkanai.hokkaido.jp/kurashi/sumaisuido/gesui/pokemonmh.html"
+    },
+    {
+      "prefecture": "北海道",
+      "city": "苫小牧市",
+      "url": "https://www.city.tomakomai.hokkaido.jp/kurashi/jogesuido/sokatsu/pokefuta.html"
+    },
+    {
+      "prefecture": "北海道",
+      "city": "旭川市",
+      "url": "https://www.city.asahikawa.hokkaido.jp/kurashi/364/365/367/d074273.html"
+    },
+    {
+      "prefecture": "北海道",
+      "city": "網走市",
+      "url": "https://www.city.abashiri.hokkaido.jp/site/suidobu/1523.html"
+    },
+    {
+      "prefecture": "宮城県",
+      "city": "仙台市",
+      "url": "https://www.city.sendai.jp/sesakukoho/gaiyo/shichoshitsu/kaiken/2024/05/14pokemonroute2.html"
+    },
+    {
+      "prefecture": "宮城県",
+      "city": "（県全体案内）",
+      "url": "https://www.pref.miyagi.jp/soshiki/kankou/laplce.html"
+    },
+    {
+      "prefecture": "岩手県",
+      "city": "盛岡市",
+      "url": "https://www.city.morioka.iwate.jp/_res/projects/default_project/_page_/001/047/502/250319mitinoeki.pdf"
+    },
+    {
+      "prefecture": "岩手県",
+      "city": "（県全体案内）",
+      "url": "https://www.pref.iwate.jp/sangyoukoyou/kankou/1070652/1086892.html"
+    },
+    {
+      "prefecture": "富山県",
+      "city": "富山市",
+      "url": "https://www.city.toyama.lg.jp/_res/projects/default_project/_page_/001/007/710/pokehutasyuuyuu_jp.pdf"
+    },
+    {
+      "prefecture": "福井県",
+      "city": "（県全体案内）",
+      "url": "https://www2.pref.fukui.lg.jp/press/view.php?cod=fEU14e1724727748Q2"
+    },
+    {
+      "prefecture": "鳥取県",
+      "city": "（県全体案内）",
+      "url": "https://www.pref.tottori.lg.jp/336003.htm"
+    },
+    {
+      "prefecture": "香川県",
+      "city": "（県全体案内）",
+      "url": "https://www.pref.kagawa.lg.jp/kocho/chijipage/chijiblog/2023/20230421.html"
+    },
+    {
+      "prefecture": "東京都",
+      "city": "町田市",
+      "url": "https://www.city.machida.tokyo.jp/shisei/city_promotion/pokemonmanhole.html"
+    },
+    {
+      "prefecture": "東京都",
+      "city": "小笠原村",
+      "url": "https://www.vill.ogasawara.tokyo.jp/sightseeing/designmanhole/pokemon_manhole/"
+    },
+    {
+      "prefecture": "愛知県",
+      "city": "名古屋市",
+      "url": "https://www.city.nagoya.jp/kankobunkakoryu/page/0000186650.html"
+    },
+    {
+      "prefecture": "愛知県",
+      "city": "瀬戸市",
+      "url": "https://www.city.seto.aichi.jp/docs/2025/06/13/00505309499/00505309499.html"
+    },
+    {
+      "prefecture": "愛知県",
+      "city": "西尾市",
+      "url": "https://www.city.nishio.aichi.jp/sportskanko/kanko/1001472/1011041.html"
+    },
+    {
+      "prefecture": "愛知県",
+      "city": "刈谷市",
+      "url": "https://www.city.kariya.lg.jp/kurashi/road_park/park/1017263/1017293/pokemon.html"
+    },
+    {
+      "prefecture": "愛知県",
+      "city": "常滑市",
+      "url": "https://www.tokoname-kankou.net/news/detail/138/"
+    },
+    {
+      "prefecture": "愛知県",
+      "city": "豊橋市",
+      "url": "https://www.city.toyohashi.lg.jp/53062.htm"
+    },
+    {
+      "prefecture": "静岡県",
+      "city": "富士市",
+      "url": "https://www.city.fuji.shizuoka.jp/1005050000/p003337.html"
+    },
+    {
+      "prefecture": "静岡県",
+      "city": "沼津市",
+      "url": "https://numazukanko.jp/feature/numazu-pokehuta/top"
+    },
+    {
+      "prefecture": "福岡県",
+      "city": "北九州市",
+      "url": "https://www.city.kitakyushu.lg.jp/suidou/s01101007.html"
+    },
+    {
+      "prefecture": "福岡県",
+      "city": "太宰府市",
+      "url": "https://www.city.dazaifu.lg.jp/uploaded/attachment/19251.pdf"
+    },
+    {
+      "prefecture": "沖縄県",
+      "city": "宜野湾市",
+      "url": "https://www.city.ginowan.lg.jp/kanko_bunka_sports/kanko_rekishi/1/8938.html"
+    },
+    {
+      "prefecture": "沖縄県",
+      "city": "浦添市",
+      "url": "https://www.city.urasoe.lg.jp/doc/620ee3c15b66e2516e5e088b/"
+    },
+    {
+      "prefecture": "鹿児島県",
+      "city": "指宿市",
+      "url": "https://www.city.ibusuki.lg.jp/main/info/page014900.html"
+    },
+    {
+      "prefecture": "愛媛県",
+      "city": "松山市",
+      "url": "https://www.city.matsuyama.ehime.jp/kanko/kankokanren/pokemonmanhole.html"
+    },
+    {
+      "prefecture": "岐阜県",
+      "city": "関ヶ原町",
+      "url": "https://www.town.sekigahara.gifu.jp/5656.htm"
+    },
+    {
+      "prefecture": "三重県",
+      "city": "いなべ市",
+      "url": "https://www.city.inabe.mie.jp/sangyo/kanko/1014545.html"
+    },
+    {
+      "prefecture": "三重県",
+      "city": "菰野町",
+      "url": "https://www2.town.komono.mie.jp/www/contents/1742359133701/index.html"
+    }
+  ],
+  "manholes": {
+    "404": {
+      "building": "金シャチ横丁　宗春ゾーン（東門エリア）",
+      "address_raw": "名古屋市中区二の丸1番2・3号",
+      "address_norm": "愛知県名古屋市中区二の丸1番2・3号",
+      "prefecture": "愛知県",
+      "city": "名古屋市中区",
+      "place_detail": "宗春ゾーン（東門エリア）",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "food",
+        "tourism"
+      ],
+      "confidence": 3
+    },
+    "405": {
+      "building": "瀬戸蔵 正面玄関北側",
+      "address_raw": "愛知県瀬戸市蔵所町1-1",
+      "address_norm": "愛知県瀬戸市蔵所町1-1",
+      "prefecture": "愛知県",
+      "city": "瀬戸市",
+      "place_detail": "正面玄関北側",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "museum",
+        "tourism"
+      ],
+      "confidence": 3
+    },
+    "408": {
+      "building": "西尾市歴史公園",
+      "address_raw": "西尾市錦城町231番地1",
+      "address_norm": "愛知県西尾市錦城町231番地1",
+      "prefecture": "愛知県",
+      "city": "西尾市",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "park",
+        "history",
+        "tourism"
+      ],
+      "confidence": 3
+    },
+    "406": {
+      "building": "りんくうビーチ",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "beach",
+        "tourism",
+        "seaside"
+      ],
+      "confidence": 1
+    },
+    "407": {
+      "building": "刈谷ハイウェイオアシス内にある「オアシス館刈谷 INFOBOX」正面玄関前",
+      "address_raw": "愛知県刈谷市東境町吉野25-1",
+      "address_norm": "愛知県刈谷市東境町吉野25-1",
+      "prefecture": "愛知県",
+      "city": "刈谷市",
+      "place_detail": "「オアシス館刈谷 INFOBOX」正面玄関前",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "roadside",
+        "family",
+        "tourism"
+      ],
+      "confidence": 3
+    },
+    "271": {
+      "building": "愛知県/豊橋市（バクフーン）",
+      "address_raw": "愛知県豊橋市",
+      "address_norm": "愛知県豊橋市",
+      "prefecture": "愛知県",
+      "city": "豊橋市",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "pokemon_lid",
+        "city_level_address"
+      ],
+      "confidence": 2
+    },
+    "272": {
+      "building": "愛知県/豊橋市（アゴジムシ・アブリボン）",
+      "address_raw": "愛知県豊橋市",
+      "address_norm": "愛知県豊橋市",
+      "prefecture": "愛知県",
+      "city": "豊橋市",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "pokemon_lid",
+        "city_level_address"
+      ],
+      "confidence": 2
+    },
+    "273": {
+      "building": "愛知県/豊橋市（デンヂムシ・スターミー）",
+      "address_raw": "愛知県豊橋市",
+      "address_norm": "愛知県豊橋市",
+      "prefecture": "愛知県",
+      "city": "豊橋市",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "pokemon_lid",
+        "city_level_address"
+      ],
+      "confidence": 2
+    },
+    "274": {
+      "building": "愛知県/豊橋市（クワガノン・カブト）",
+      "address_raw": "愛知県豊橋市",
+      "address_norm": "愛知県豊橋市",
+      "prefecture": "愛知県",
+      "city": "豊橋市",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "pokemon_lid",
+        "city_level_address"
+      ],
+      "confidence": 2
+    },
+    "240": {
+      "building": "津市まん中広場",
+      "address_raw": "津市大門7-15（津市まん中広場内）",
+      "address_norm": "三重県津市大門7-15",
+      "prefecture": "三重県",
+      "city": "津市",
+      "place_detail": "（津市まん中広場内）",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "park",
+        "tourism"
+      ],
+      "confidence": 3
+    },
+    "241": {
+      "building": "中央緑地公園",
+      "address_raw": "四日市市日永東1-3-21（中央緑地公園内）",
+      "address_norm": "三重県四日市市日永東1-3-21",
+      "prefecture": "三重県",
+      "city": "四日市市",
+      "place_detail": "（中央緑地公園内）",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "park",
+        "sports",
+        "tourism"
+      ],
+      "confidence": 3
+    },
+    "242": {
+      "building": "外宮前広場",
+      "address_raw": "伊勢市吹上1-1-4（外宮前広場）",
+      "address_norm": "三重県伊勢市吹上1-1-4",
+      "prefecture": "三重県",
+      "city": "伊勢市",
+      "place_detail": "（外宮前広場）",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "shrine",
+        "tourism"
+      ],
+      "confidence": 3
+    },
+    "243": {
+      "building": "ドルフィン公園",
+      "address_raw": "鳥羽市鳥羽1-2383-42（ドルフィン公園）",
+      "address_norm": "三重県鳥羽市鳥羽1-2383-42",
+      "prefecture": "三重県",
+      "city": "鳥羽市",
+      "place_detail": "（ドルフィン公園）",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "seaside",
+        "tourism"
+      ],
+      "confidence": 3
+    },
+    "244": {
+      "building": "鬼ヶ城センター",
+      "address_raw": "熊野市木本町1835-7",
+      "address_norm": "三重県熊野市木本町1835-7",
+      "prefecture": "三重県",
+      "city": "熊野市",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "geosite",
+        "tourism",
+        "seaside"
+      ],
+      "confidence": 3
+    },
+    "245": {
+      "building": "八幡さん公園",
+      "address_raw": "志摩市大王町波切276（八幡さん公園）",
+      "address_norm": "三重県志摩市大王町波切276",
+      "prefecture": "三重県",
+      "city": "志摩市",
+      "place_detail": "（八幡さん公園）",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "park",
+        "tourism",
+        "seaside"
+      ],
+      "confidence": 3
+    },
+    "246": {
+      "building": "上野市駅前",
+      "address_raw": "伊賀市上野丸之内61-2（上野市駅前）",
+      "address_norm": "三重県伊賀市上野丸之内61-2",
+      "prefecture": "三重県",
+      "city": "伊賀市",
+      "place_detail": "（上野市駅前）",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "station",
+        "tourism"
+      ],
+      "confidence": 3
+    },
+    "292": {
+      "building": "亀山公園 時計台付近",
+      "address_raw": "亀山市若山町7-10（亀山公園 時計台付近）",
+      "address_norm": "三重県亀山市若山町7-10",
+      "prefecture": "三重県",
+      "city": "亀山市",
+      "place_detail": "時計台付近",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "park",
+        "tourism"
+      ],
+      "confidence": 3
+    },
+    "293": {
+      "building": "ふれあいパーク",
+      "address_raw": "三重郡朝日町柿2278（ふれあいパーク）",
+      "address_norm": "三重県三重郡朝日町柿2278",
+      "prefecture": "三重県",
+      "city": "三重郡朝日町",
+      "place_detail": "（ふれあいパーク）",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "park",
+        "family",
+        "tourism"
+      ],
+      "confidence": 3
+    },
+    "294": {
+      "building": "いつきのみや地域交流センター",
+      "address_raw": "多気郡明和町斎宮2604-49",
+      "address_norm": "三重県多気郡明和町斎宮2604-49",
+      "prefecture": "三重県",
+      "city": "多気郡明和町",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "culture",
+        "museum",
+        "tourism"
+      ],
+      "confidence": 3
+    },
+    "295": {
+      "building": "奥伊勢フォレストピア",
+      "address_raw": "多気郡大台町薗993",
+      "address_norm": "三重県多気郡大台町薗993",
+      "prefecture": "三重県",
+      "city": "多気郡大台町",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "resort",
+        "nature",
+        "tourism"
+      ],
+      "confidence": 3
+    },
+    "383": {
+      "building": "なばなの里",
+      "address_raw": "桑名市長島町駒江漆畑270",
+      "address_norm": "三重県桑名市長島町駒江漆畑270",
+      "prefecture": "三重県",
+      "city": "桑名市",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "illumination",
+        "tourism"
+      ],
+      "confidence": 3
+    },
+    "296": {
+      "building": "宮リバー度会パーク",
+      "address_raw": "度会郡度会町大野木1260（宮リバー度会パーク内）",
+      "address_norm": "三重県度会郡度会町大野木1260",
+      "prefecture": "三重県",
+      "city": "度会郡度会町",
+      "place_detail": "（宮リバー度会パーク内）",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "park",
+        "river",
+        "tourism"
+      ],
+      "confidence": 3
+    },
+    "297": {
+      "building": "道の駅 紀宝町ウミガメ公園",
+      "address_raw": "南牟婁郡紀宝町井田568-7",
+      "address_norm": "三重県南牟婁郡紀宝町井田568-7",
+      "prefecture": "三重県",
+      "city": "南牟婁郡紀宝町",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "roadside",
+        "family",
+        "tourism",
+        "seaside"
+      ],
+      "confidence": 3
+    },
+    "308": {
+      "building": "朝日公園",
+      "address_raw": "名張市平尾3225-10（朝日公園）",
+      "address_norm": "三重県名張市平尾3225-10",
+      "prefecture": "三重県",
+      "city": "名張市",
+      "place_detail": "（朝日公園）",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "park",
+        "tourism"
+      ],
+      "confidence": 3
+    },
+    "309": {
+      "building": "木曽岬町立図書館",
+      "address_raw": "桑名郡木曽岬町大字西対海地251",
+      "address_norm": "三重県桑名郡木曽岬町大字西対海地251",
+      "prefecture": "三重県",
+      "city": "桑名郡木曽岬町",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "library",
+        "town"
+      ],
+      "confidence": 3
+    },
+    "310": {
+      "building": "東員町中部公園",
+      "address_raw": "員弁郡東員町北大社1634",
+      "address_norm": "三重県員弁郡東員町北大社1634",
+      "prefecture": "三重県",
+      "city": "員弁郡東員町",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "park",
+        "family",
+        "tourism"
+      ],
+      "confidence": 3
+    },
+    "330": {
+      "building": "鈴鹿市伝統産業会館",
+      "address_raw": "鈴鹿市寺家3-10-1",
+      "address_norm": "三重県鈴鹿市寺家3-10-1",
+      "prefecture": "三重県",
+      "city": "鈴鹿市",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "museum",
+        "tourism",
+        "seaside"
+      ],
+      "confidence": 3
+    },
+    "331": {
+      "building": "川越富洲原駅 西口",
+      "address_raw": "三重郡川越町豊田275（川越富洲原駅西口）",
+      "address_norm": "三重県三重郡川越町豊田275",
+      "prefecture": "三重県",
+      "city": "三重郡川越町",
+      "place_detail": "西口",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "station",
+        "town"
+      ],
+      "confidence": 3
+    },
+    "332": {
+      "building": "ごかつら池 ふるさと村",
+      "address_raw": "多気郡多気町五桂992（ごかつら池 ふるさと村）",
+      "address_norm": "三重県多気郡多気町五桂992",
+      "prefecture": "三重県",
+      "city": "多気郡多気町",
+      "place_detail": "（ごかつら池 ふるさと村）",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "nature",
+        "camp",
+        "tourism"
+      ],
+      "confidence": 3
+    },
+    "333": {
+      "building": "鈴の森公園",
+      "address_raw": "松阪市外五曲町1（鈴の森公園）",
+      "address_norm": "三重県松阪市外五曲町1",
+      "prefecture": "三重県",
+      "city": "松阪市",
+      "place_detail": "（鈴の森公園）",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "park",
+        "tourism"
+      ],
+      "confidence": 3
+    },
+    "334": {
+      "building": "アスピア玉城 ふれあいの館",
+      "address_raw": "度会郡玉城町原4266（アスピア玉城内）",
+      "address_norm": "三重県度会郡玉城町原4266",
+      "prefecture": "三重県",
+      "city": "度会郡玉城町",
+      "place_detail": "アスピア玉城内",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "facility",
+        "family",
+        "tourism"
+      ],
+      "confidence": 3
+    },
+    "335": {
+      "building": "見江島展望台",
+      "address_raw": "度会郡南伊勢町五ヶ所浦3917（見江島展望台）",
+      "address_norm": "三重県度会郡南伊勢町五ヶ所浦3917",
+      "prefecture": "三重県",
+      "city": "度会郡南伊勢町",
+      "place_detail": "（見江島展望台）",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "viewpoint",
+        "tourism",
+        "seaside"
+      ],
+      "confidence": 3
+    },
+    "384": {
+      "building": "夢古道おわせ",
+      "address_raw": "尾鷲市向井12-4",
+      "address_norm": "三重県尾鷲市向井12-4",
+      "prefecture": "三重県",
+      "city": "尾鷲市",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "onsen",
+        "tourism"
+      ],
+      "confidence": 3
+    },
+    "385": {
+      "building": "にぎわいの森",
+      "address_raw": "いなべ市北勢町阿下喜31",
+      "address_norm": "三重県いなべ市北勢町阿下喜31",
+      "prefecture": "三重県",
+      "city": "いなべ市",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "food",
+        "market",
+        "tourism"
+      ],
+      "confidence": 3
+    },
+    "386": {
+      "building": "菰野町福祉公園",
+      "address_raw": "三重郡菰野町潤田1250（福祉公園）",
+      "address_norm": "三重県三重郡菰野町潤田1250",
+      "prefecture": "三重県",
+      "city": "三重郡菰野町",
+      "place_detail": "福祉公園",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "park",
+        "family"
+      ],
+      "confidence": 3
+    },
+    "387": {
+      "building": "山海の郷 紀勢",
+      "address_raw": "度会郡大紀町崎2154-1",
+      "address_norm": "三重県度会郡大紀町崎2154-1",
+      "prefecture": "三重県",
+      "city": "度会郡大紀町",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "roadside",
+        "tourism"
+      ],
+      "confidence": 3
+    },
+    "388": {
+      "building": "道の駅 紀伊長島マンボウ",
+      "address_raw": "北牟婁郡紀北町東長島2410-73（道の駅 紀伊長島マンボウ）",
+      "address_norm": "三重県北牟婁郡紀北町東長島2410-73",
+      "prefecture": "三重県",
+      "city": "北牟婁郡紀北町",
+      "place_detail": "（道の駅 紀伊長島マンボウ）",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "roadside",
+        "food",
+        "tourism"
+      ],
+      "confidence": 3
+    },
+    "389": {
+      "building": "道の駅 パーク七里御浜",
+      "address_raw": "南牟婁郡御浜町阿田和4926-5",
+      "address_norm": "三重県南牟婁郡御浜町阿田和4926-5",
+      "prefecture": "三重県",
+      "city": "南牟婁郡御浜町",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "roadside",
+        "seaside",
+        "tourism"
+      ],
+      "confidence": 3
+    },
+    "414": {
+      "building": "ドルフィン公園",
+      "address_raw": "鳥羽市鳥羽1-2383-42（ドルフィン公園）",
+      "address_norm": "三重県鳥羽市鳥羽1-2383-42",
+      "prefecture": "三重県",
+      "city": "鳥羽市",
+      "place_detail": "（ドルフィン公園）",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "seaside",
+        "tourism"
+      ],
+      "confidence": 3
+    },
+    "428": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "423": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "15": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "187": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "19": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "358": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "69": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "432": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "403": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "75": {
+      "tags": [
+        "seaside",
+        "lakeside"
+      ]
+    },
+    "155": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "12": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "320": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "117": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "435": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "67": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "434": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "77": {
+      "tags": [
+        "seaside",
+        "lakeside"
+      ]
+    },
+    "217": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "10": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "349": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "111": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "288": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "378": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "232": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "78": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "391": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "49": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "236": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "425": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "468": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "4": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "355": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "108": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "289": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "93": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "430": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "7": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "153": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "424": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "2": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "395": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "55": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "290": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "291": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "18": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "62": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "234": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "97": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "318": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "381": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "436": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "313": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "194": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "17": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "377": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "36": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "156": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "367": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "203": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "306": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "231": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "327": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "445": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "35": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "175": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "50": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "63": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "365": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "57": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "52": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "345": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "221": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "199": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "235": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "380": {
+      "tags": [
+        "seaside",
+        "lakeside"
+      ]
+    },
+    "165": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "437": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "201": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "418": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "450": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "312": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "311": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "471": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "37": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "154": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "82": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "427": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "474": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "89": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "45": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "354": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "422": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "202": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "314": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "113": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "233": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "429": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "16": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "157": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "229": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "470": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "340": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "204": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "44": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "39": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "46": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "104": {
+      "tags": [
+        "lakeside"
+      ]
+    },
+    "61": {
+      "tags": [
+        "lakeside"
+      ]
+    },
+    "105": {
+      "tags": [
+        "lakeside"
+      ]
+    },
+    "282": {
+      "tags": [
+        "lakeside"
+      ]
+    }
+  },
+  "lakes": [
+    {
+      "lake": "洞爺湖",
+      "prefecture": "北海道",
+      "city": "洞爺湖",
+      "ids": [
+        "61"
+      ]
+    },
+    {
+      "lake": "琵琶湖",
+      "prefecture": "滋賀県",
+      "city": "大津",
+      "ids": [
+        "104",
+        "105"
+      ]
+    },
+    {
+      "lake": "中海",
+      "prefecture": null,
+      "city": null,
+      "ids": [
+        "75",
+        "77",
+        "380"
+      ],
+      "note": "汽水湖。seasideタグと重複付与。island: ids優先マッチングと同じロジック"
+    },
+    {
+      "lake": "猪苗代湖",
+      "prefecture": "福島県",
+      "city": "猪苗代",
+      "ids": [
+        "282"
+      ]
+    }
+  ]
+}
