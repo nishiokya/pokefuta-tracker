@@ -229,10 +229,11 @@ def parse_detail(detail_url: str, html: str, logger: logging.Logger, title_data:
             title = t2.get_text(strip=True)
 
     # ポケモン名 (簡易: アンカーテキストなどに「ポケモン」「図鑑」含むものから抽出)
+    # "ローカルActs北海道ページへ" のような都道府県遷移リンクは除外する
     pokemons: List[str] = []
     for a in soup.select("a[href]"):
         txt = a.get_text(strip=True)
-        if not txt:
+        if not txt or "ローカルActs" in txt:
             continue
         if any(k in txt for k in ["ポケモン", "図鑑", "Pokédex", "Pokemon", "Pokémon"]):
             cleaned = re.sub(r"(ポケモン|図鑑|Pokédex|Pokémon|Pokemon|ずかんへ)", "", txt).strip()
