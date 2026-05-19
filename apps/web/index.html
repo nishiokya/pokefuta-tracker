@@ -726,7 +726,7 @@
         : _shareHashtags;
       const safeShareUrl = escapeHtml(shareUrl);
       const safeShareTitle = escapeHtml(shareTitle);
-      const safeShareText = escapeHtml(_shareText);
+      const safeShareText = escapeHtml(_shareText).replace(/\n/g, '&#10;');
       const photoBlock = imageUrl ? `
         <div class="popup-photo travel-popup-photo" aria-label="マンホール写真">
           <img src="${imageUrl}" alt="${escapeHtml(photoAlt)}" loading="lazy" decoding="async" onerror="handlePopupImageError(this)">

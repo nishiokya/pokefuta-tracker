@@ -391,16 +391,19 @@ def generate_html(
     )
 
     # og:/twitter: meta tags — inject top title when available
-    _titles_early: list[dict] = manhole.get("titles", []) or []
-    _top_title = _titles_early[0] if _titles_early else None
-    if _top_title:
-        _top_label = f"{_top_title.get('emoji', '')} {_top_title['label']}".strip()
+    titles: list[dict] = manhole.get("titles", []) or []
+    _top = titles[0] if titles else None
+    if _top:
+        _top_prefix = f"{_top['emoji']} " if _top.get('emoji') else ""
+        _top_label = f"{_top_prefix}{_top['label']}"
         _og_title = f"{_top_label}｜{city_label}のポケふた（{pokemon_label}）｜ポケふたマップ"
         _og_desc = f"{_top_label}！{prefecture}{city}に設置されている{pokemon_label}のポケふた。場所・写真・地図で確認できます。"
+        _tw_title = f"{_top_label}｜{city_label}のポケふた（{pokemon_label}）"
         _tw_desc = f"{_top_label}！{prefecture}{city}のポケふたを地図で確認できます。"
     else:
         _og_title = f"{city_label}のポケふた｜{pokemon_label}｜ポケふたマップ"
         _og_desc = f"{prefecture}{city}に設置されている{pokemon_label}のポケふた。場所・写真・地図で確認できます。"
+        _tw_title = f"{city_label}のポケふた｜{pokemon_label}"
         _tw_desc = f"{prefecture}{city}のポケふたを地図で確認できます。"
 
     h1 = f"{prefecture}{city}のポケふた"
@@ -545,7 +548,6 @@ def generate_html(
         pokemon_tags_html = f"<div class='hero-pokemon-tags'>{tags}</div>"
 
     # HERO card: stats badges
-    titles: list[dict] = manhole.get("titles", []) or []
     title_keys: set[str] = {t["key"] for t in titles}
     badges: list[str] = []
     added_at = manhole.get("added_at", "") or ""
@@ -597,8 +599,7 @@ def generate_html(
     # Web Share API (used by shareManhole in links_grid)
     _share_title = f"{city}のポケふた（{pokemon_text}）"
     _top_title_line = (
-        f"{titles[0].get('emoji', '')} {titles[0]['label']}のポケふた！\n".lstrip()
-        if titles else ""
+        f"{_top_prefix}{_top['label']}のポケふた！\n" if _top else ""
     )
     _share_text = (
         f"{_top_title_line}"
@@ -877,7 +878,7 @@ def generate_html(
   <meta property="og:image" content="{escape(og_image)}">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="{escape(_og_title)}">
+  <meta name="twitter:title" content="{escape(_tw_title)}">
   <meta name="twitter:description" content="{escape(_tw_desc)}">
   <meta name="twitter:image" content="{escape(og_image)}">
 
