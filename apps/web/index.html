@@ -621,6 +621,7 @@
       const url = button?.dataset.shareUrl;
       if (!url) return;
       const title = button.dataset.shareTitle || 'ポケふた';
+      const text = button.dataset.shareText || '';
 
       // Track share event
       if (window.trackEvent) {
@@ -632,7 +633,7 @@
 
       if (navigator.share) {
         try {
-          await navigator.share({ title, url });
+          await navigator.share({ title, text: text || undefined, url });
           return;
         } catch (error) {
           if (error?.name === 'AbortError') return;
@@ -710,6 +711,22 @@
       ].filter(Boolean).join('');
       const shareUrl = getAbsoluteManholePageUrl(d.id);
       const shareTitle = `${d.title || 'ポケふた'} | ポケふたマップ`;
+      const titles = Array.isArray(d.titles) ? d.titles : [];
+      const titleBadgesHtml = titles.length
+        ? '<div class="travel-popup-badges">'
+          + titles.map(t => '<span class="travel-popup-badge">'
+            + escapeHtml((t.emoji ? t.emoji + ' ' : '') + t.label)
+            + '</span>').join('')
+          + '</div>'
+        : '';
+      const _titleHashtags = titles.map(t => t.hashtag || '').filter(Boolean).join(' ');
+      const _shareHashtags = (_titleHashtags + ' #ポケふた #ポケモンマンホール').trim();
+      const _shareText = titles.length
+        ? (titles[0].emoji ? titles[0].emoji + ' ' : '') + titles[0].label + 'のポケふた！\n' + _shareHashtags
+        : _shareHashtags;
+      const safeShareUrl = escapeHtml(shareUrl);
+      const safeShareTitle = escapeHtml(shareTitle);
+      const safeShareText = escapeHtml(_shareText);
       const photoBlock = imageUrl ? `
         <div class="popup-photo travel-popup-photo" aria-label="マンホール写真">
           <img src="${imageUrl}" alt="${escapeHtml(photoAlt)}" loading="lazy" decoding="async" onerror="handlePopupImageError(this)">
@@ -743,9 +760,13 @@
               ${d.city ? `<b>${escapeHtml(d.city)}</b>` : ''}
             </div>
             <h3 class="travel-popup-title">${escapeHtml(d.title || 'ポケふた')}</h3>
+            ${titleBadgesHtml}
             ${photoComment ? `<p class="travel-popup-comment">${escapeHtml(photoComment)}</p>` : ''}
             <div class="travel-popup-pokemon-list" aria-label="登場ポケモン">${pokemonsHtml}</div>
-            <div class="popup-actions travel-popup-actions travel-popup-actions--single">${officialDetailLink}</div>
+            <div class="popup-actions travel-popup-actions">
+              ${officialDetailLink}
+              <button class="travel-popup-action travel-popup-action--share" data-share-url="${safeShareUrl}" data-share-title="${safeShareTitle}" data-share-text="${safeShareText}" aria-label="シェア">シェア</button>
+            </div>
           </div>
         </div>
       `;
