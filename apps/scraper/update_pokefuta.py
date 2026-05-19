@@ -247,21 +247,16 @@ def apply_title_metadata(record: Dict, title_data: Dict[str, Dict[str, Any]]) ->
         updated = True
 
     _set_value('building', entry.get('building'))
-    _set_value('address_raw', entry.get('address_raw'), allow_placeholder=True)
-    _set_value('address_norm', entry.get('address_norm'), allow_placeholder=True)
     _set_value('prefecture', entry.get('prefecture'))
     _set_value('city', entry.get('city'))
     _set_value('place_detail', entry.get('place_detail'), allow_placeholder=True)
     _set_value('landmark', entry.get('landmark'), allow_placeholder=True)
     _set_value('access', entry.get('access'), allow_placeholder=True)
-    _set_value('parking', entry.get('parking'), allow_placeholder=True)
 
     best_address = entry.get('address_norm') or entry.get('address_raw')
     _set_value('address', best_address)
 
-    _set_list('nearby_spots', entry.get('nearby_spots'))
     _set_list('tags', entry.get('tags'))
-    _set_list('source_urls', entry.get('source_urls'))
 
     _set_value('verified_at', entry.get('verified_at'), allow_placeholder=True)
     _set_value('confidence', entry.get('confidence'))
@@ -492,6 +487,8 @@ def main():
             r.pop('last_seen', None)
         if 'source_last_checked' in r:
             r.pop('source_last_checked', None)
+        for _f in ('parking', 'nearby_spots', 'source_urls', 'address_raw', 'address_norm'):
+            r.pop(_f, None)
         if apply_title_metadata(r, title_data):
             changed.setdefault(r['id'], {})['title_metadata'] = True
         # Always sync city_url from city_links (source of truth, no last_updated bump)
