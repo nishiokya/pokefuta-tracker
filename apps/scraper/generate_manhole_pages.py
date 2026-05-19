@@ -390,6 +390,22 @@ def generate_html(
         f"場所・写真・地図・周辺のポケふた情報を掲載。"
     )
 
+    # og:/twitter: meta tags — inject top title when available
+    titles: list[dict] = manhole.get("titles", []) or []
+    _top = titles[0] if titles else None
+    if _top:
+        _top_prefix = f"{_top['emoji']} " if _top.get('emoji') else ""
+        _top_label = f"{_top_prefix}{_top['label']}"
+        _og_title = f"{_top_label}｜{city_label}のポケふた（{pokemon_label}）｜ポケふたマップ"
+        _og_desc = f"{_top_label}！{prefecture}{city}に設置されている{pokemon_label}のポケふた。場所・写真・地図で確認できます。"
+        _tw_title = f"{_top_label}｜{city_label}のポケふた（{pokemon_label}）"
+        _tw_desc = f"{_top_label}！{prefecture}{city}のポケふたを地図で確認できます。"
+    else:
+        _og_title = f"{city_label}のポケふた｜{pokemon_label}｜ポケふたマップ"
+        _og_desc = f"{prefecture}{city}に設置されている{pokemon_label}のポケふた。場所・写真・地図で確認できます。"
+        _tw_title = f"{city_label}のポケふた｜{pokemon_label}"
+        _tw_desc = f"{prefecture}{city}のポケふたを地図で確認できます。"
+
     h1 = f"{prefecture}{city}のポケふた"
     if pokemons:
         h1 += f"（{pokemon_text}）"
@@ -532,7 +548,6 @@ def generate_html(
         pokemon_tags_html = f"<div class='hero-pokemon-tags'>{tags}</div>"
 
     # HERO card: stats badges
-    titles: list[dict] = manhole.get("titles", []) or []
     title_keys: set[str] = {t["key"] for t in titles}
     badges: list[str] = []
     added_at = manhole.get("added_at", "") or ""
@@ -542,8 +557,8 @@ def generate_html(
             badges.append(f"<span class='hero-badge hero-badge-new'>NEW {added_year}年設置</span>")
     except (ValueError, TypeError):
         pass
-    # Title badges (top 3, from pokefuta.ndjson) — prepended before stats badges
-    for t in titles[:3]:
+    # Title badges (all, from pokefuta.ndjson) — prepended before stats badges
+    for t in titles:
         label = f"{escape(t['emoji'])} {escape(t['label'])}" if t.get("emoji") else escape(t["label"])
         badges.append(f"<span class='hero-badge hero-badge-title'>{label}</span>")
     # Stats badges with suppression rules (§2.3)
@@ -560,7 +575,7 @@ def generate_html(
     stats_html = f"<div class='hero-stats'>{''.join(badges)}</div>" if badges else ""
 
     # HERO card: share JS data (Python-serialized to avoid injection)
-    _title_hashtags = " ".join(t["hashtag"] for t in titles[:2] if t.get("hashtag"))
+    _title_hashtags = " ".join(t["hashtag"] for t in titles if t.get("hashtag"))
     _base_hashtags = f"{_title_hashtags} #ポケふた #ポケモンマンホール".strip()
     if has_photo_bool and pokemons:
         _x_text = (
@@ -583,7 +598,11 @@ def generate_html(
     share_url_json = _js_json(canonical_url)
     # Web Share API (used by shareManhole in links_grid)
     _share_title = f"{city}のポケふた（{pokemon_text}）"
+    _top_title_line = (
+        f"{_top_prefix}{_top['label']}のポケふた！\n" if _top else ""
+    )
     _share_text = (
+        f"{_top_title_line}"
         f"{prefecture}{city}のポケふた（{pokemon_text}）を見つけました。\n"
         f"{prefecture}には{pref_total}枚のポケふたがあります。"
     ) if prefecture else f"{h1}を見つけました。"
@@ -853,14 +872,14 @@ def generate_html(
   <meta property="og:type" content="article">
   <meta property="og:locale" content="ja_JP">
   <meta property="og:site_name" content="ポケふたマップ">
-  <meta property="og:title" content="{escape(f'{city_label}のポケふた｜{pokemon_label}｜ポケふたマップ')}">
-  <meta property="og:description" content="{escape(f'{prefecture}{city}に設置されている{pokemon_label}のポケふた。場所・写真・地図で確認できます。')}">
+  <meta property="og:title" content="{escape(_og_title)}">
+  <meta property="og:description" content="{escape(_og_desc)}">
   <meta property="og:url" content="{escape(canonical_url)}">
   <meta property="og:image" content="{escape(og_image)}">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="{escape(f'{city_label}のポケふた｜{pokemon_label}')}">
-  <meta name="twitter:description" content="{escape(f'{prefecture}{city}のポケふたを地図で確認できます。')}">
+  <meta name="twitter:title" content="{escape(_tw_title)}">
+  <meta name="twitter:description" content="{escape(_tw_desc)}">
   <meta name="twitter:image" content="{escape(og_image)}">
 
   <script type="application/ld+json">
