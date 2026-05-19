@@ -37,6 +37,8 @@ from typing import Any, Dict, List, Optional, Tuple
 from bs4 import BeautifulSoup
 import requests
 
+from address_parser import extract_address_from_html
+
 # Constants (unified with scrape_pokefuta.py)
 DEFAULT_BASE = "https://local.pokemon.jp/manhole/"
 HEADERS = {"User-Agent": "pokefuta-tracker-updater (+https://github.com/nishiokya/pokefuta-tracker)"}
@@ -320,20 +322,8 @@ def parse_detail(detail_url: str, html: str, logger: logging.Logger, title_data:
                 prefecture = pf
                 city = ct.rstrip("市町村区") if ct else ""
 
-    # 住所の取得 - HTML から可能な限り抽出 (不足分は後段の title.tsv で補完)
-    address = ""
-    # まずWebページから住所らしき文字列を抽出
-    text_content = soup.get_text()
-    address_patterns = [
-        r'([^。\n]*(?:県|府|道|都)[^。\n]*(?:市|区|町|村)[^。\n]*(?:\d+[-−‐]\d+[-−‐]\d+|\d+丁目|\d+番地)[^。\n]*)',
-        r'([^。\n]*(?:市|区|町|村)[^。\n]*(?:\d+[-−‐]\d+[-−‐]\d+|\d+丁目|\d+番地)[^。\n]*)',
-    ]
-    for pattern in address_patterns:
-        matches = re.findall(pattern, text_content)
-        if matches:
-            # 最も長い住所らしきものを選択
-            address = max(matches, key=len).strip()
-            break
+    # 住所の取得 - address_parser の共通ロジックを使用
+    address = extract_address_from_html(html)
     
     # Detect prefecture_site_url from link text
     prefecture_site_url = ""
@@ -489,6 +479,7 @@ def main():
             r.pop('source_last_checked', None)
         for _f in ('parking', 'nearby_spots', 'source_urls', 'address_raw', 'address_norm'):
             r.pop(_f, None)
+        r.setdefault('is_prefecture_site', False)
         if apply_title_metadata(r, title_data):
             changed.setdefault(r['id'], {})['title_metadata'] = True
         # Always sync city_url from city_links (source of truth, no last_updated bump)
