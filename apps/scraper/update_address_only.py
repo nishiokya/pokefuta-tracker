@@ -144,10 +144,10 @@ def update_address_only(input_path: str, output_path: str, logger: logging.Logge
     for record in existing_records:
         record_id = record.get('id')
         
-        # Re-fetch and re-extract address even if already filled (for filtering noise)
-        # if record.get('address'):
-        #     skipped += 1
-        #     continue
+        # Skip records that already have an address (only fill empty ones)
+        if record.get('address'):
+            skipped += 1
+            continue
         
         # Try to fetch and extract address
         detail_url = record.get('detail_url')
