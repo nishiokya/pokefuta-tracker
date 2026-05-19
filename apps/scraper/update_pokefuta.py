@@ -541,6 +541,8 @@ def main():
             parsed.setdefault('added_at', now_ts)
             parsed.setdefault('status', 'active')
             parsed.setdefault('last_updated', now_ts)
+            for _f in ('parking', 'nearby_spots', 'source_urls', 'address_raw', 'address_norm'):
+                parsed.pop(_f, None)
             apply_title_metadata(parsed, title_data)
             # Sync city_url from city_links for new records
             pref = parsed.get('prefecture', '')
