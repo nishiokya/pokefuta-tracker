@@ -434,6 +434,11 @@
         "seaside"
       ]
     },
+    "6": {
+      "tags": [
+        "station_front"
+      ]
+    },
     "7": {
       "tags": [
         "seaside"
@@ -543,7 +548,8 @@
       "building": "森駅前（森商工会議所玄関前）",
       "verified_at": "2020-11-02",
       "tags": [
-        "seaside"
+        "seaside",
+        "station_front"
       ]
     },
     "63": {
@@ -552,7 +558,10 @@
       ]
     },
     "65": {
-      "building": "JR比布駅前広場"
+      "building": "JR比布駅前広場",
+      "tags": [
+        "station_front"
+      ]
     },
     "66": {
       "building": "道の駅 てしお 正面入り口横",
@@ -879,7 +888,8 @@
       "verified_at": "2025-12-27",
       "tags": [
         "station",
-        "tourism"
+        "tourism",
+        "station_front"
       ],
       "confidence": 3
     },
