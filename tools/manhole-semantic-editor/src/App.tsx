@@ -8,6 +8,7 @@ import { AddMunicipalityUrlTask } from './tasks/addMunicipalityUrl/AddMunicipali
 import { VerifyOfficialUrlTask } from './tasks/verifyOfficialUrl/VerifyOfficialUrlTask'
 import { VerifyTitleTask } from './tasks/verifyTitle/VerifyTitleTask'
 import { AssignStationTagsTask } from './tasks/assignStationTags/AssignStationTagsTask'
+import { AssignTourismTagsTask } from './tasks/assignTourismTags/AssignTourismTagsTask'
 import { AdminBulkEditTask } from './tasks/adminBulkEdit/AdminBulkEditTask'
 
 type ActiveTask = 'home' | TaskType
@@ -104,7 +105,7 @@ export default function App() {
     if (!titles) return null
     switch (activeTask) {
       case 'assign_location_tags':
-        return <AssignLocationTagsTask {...commonProps} titles={titles} onSave={handleSavePatch} />
+        return <AssignLocationTagsTask {...commonProps} titles={titles} onSaveMany={handleSavePatches} />
       case 'add_municipality_url':
         return <AddMunicipalityUrlTask {...commonProps} titles={titles} onSave={handleSavePatch} />
       case 'verify_official_url':
@@ -112,9 +113,9 @@ export default function App() {
       case 'verify_title':
         return <VerifyTitleTask {...commonProps} titles={titles} onSave={handleSavePatch} />
       case 'assign_station_tags':
-        return <AssignStationTagsTask {...commonProps} titles={titles} onSave={handleSavePatch} />
+        return <AssignStationTagsTask {...commonProps} titles={titles} onSaveMany={handleSavePatches} />
       case 'assign_tourism_tags':
-        return <AssignLocationTagsTask {...commonProps} titles={titles} onSave={handleSavePatch} />
+        return <AssignTourismTagsTask {...commonProps} titles={titles} onSaveMany={handleSavePatches} />
       case 'admin_edit_manhole':
         return <AdminSingleEdit records={records} titles={titles} onSave={handleSavePatch} saving={saving} />
       case 'admin_bulk_edit':
