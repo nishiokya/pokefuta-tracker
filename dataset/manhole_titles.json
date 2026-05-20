@@ -923,7 +923,10 @@
       "verified_at": "2025-12-27",
       "tags": [
         "pokemon_lid",
-        "city_level_address"
+        "city_level_address",
+        "park",
+        "museum",
+        "history"
       ],
       "confidence": 2
     },
@@ -949,7 +952,8 @@
       "verified_at": "2025-12-27",
       "tags": [
         "pokemon_lid",
-        "city_level_address"
+        "city_level_address",
+        "food"
       ],
       "confidence": 2
     },
@@ -962,7 +966,10 @@
       "verified_at": "2025-12-27",
       "tags": [
         "pokemon_lid",
-        "city_level_address"
+        "city_level_address",
+        "park",
+        "tourism",
+        "museum"
       ],
       "confidence": 2
     },
@@ -1445,7 +1452,9 @@
       "verified_at": "2025-12-27",
       "tags": [
         "food",
-        "tourism"
+        "tourism",
+        "history",
+        "park"
       ],
       "confidence": 3
     },
@@ -1484,7 +1493,9 @@
       "tags": [
         "roadside",
         "family",
-        "tourism"
+        "tourism",
+        "park",
+        "food"
       ],
       "confidence": 3
     },
@@ -1498,7 +1509,8 @@
       "tags": [
         "park",
         "history",
-        "tourism"
+        "tourism",
+        "museum"
       ],
       "confidence": 3
     },
