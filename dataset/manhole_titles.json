@@ -434,6 +434,11 @@
         "seaside"
       ]
     },
+    "6": {
+      "tags": [
+        "station_front"
+      ]
+    },
     "7": {
       "tags": [
         "seaside"
@@ -552,7 +557,10 @@
       ]
     },
     "65": {
-      "building": "JR比布駅前広場"
+      "building": "JR比布駅前広場",
+      "tags": [
+        "station_front"
+      ]
     },
     "66": {
       "building": "道の駅 てしお 正面入り口横",
