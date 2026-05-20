@@ -419,124 +419,364 @@
     }
   ],
   "manholes": {
-    "404": {
-      "building": "金シャチ横丁　宗春ゾーン（東門エリア）",
-      "address_raw": "名古屋市中区二の丸1番2・3号",
-      "address_norm": "愛知県名古屋市中区二の丸1番2・3号",
-      "prefecture": "愛知県",
-      "city": "名古屋市中区",
-      "place_detail": "宗春ゾーン（東門エリア）",
-      "verified_at": "2025-12-27",
+    "2": {
       "tags": [
-        "food",
-        "tourism"
-      ],
-      "confidence": 3
-    },
-    "405": {
-      "building": "瀬戸蔵 正面玄関北側",
-      "address_raw": "愛知県瀬戸市蔵所町1-1",
-      "address_norm": "愛知県瀬戸市蔵所町1-1",
-      "prefecture": "愛知県",
-      "city": "瀬戸市",
-      "place_detail": "正面玄関北側",
-      "verified_at": "2025-12-27",
-      "tags": [
-        "museum",
-        "tourism"
-      ],
-      "confidence": 3
-    },
-    "408": {
-      "building": "西尾市歴史公園",
-      "address_raw": "西尾市錦城町231番地1",
-      "address_norm": "愛知県西尾市錦城町231番地1",
-      "prefecture": "愛知県",
-      "city": "西尾市",
-      "verified_at": "2025-12-27",
-      "tags": [
-        "park",
-        "history",
-        "tourism"
-      ],
-      "confidence": 3
-    },
-    "406": {
-      "building": "りんくうビーチ",
-      "verified_at": "2025-12-27",
-      "tags": [
-        "beach",
-        "tourism",
         "seaside"
-      ],
-      "confidence": 1
+      ]
     },
-    "407": {
-      "building": "刈谷ハイウェイオアシス内にある「オアシス館刈谷 INFOBOX」正面玄関前",
-      "address_raw": "愛知県刈谷市東境町吉野25-1",
-      "address_norm": "愛知県刈谷市東境町吉野25-1",
-      "prefecture": "愛知県",
-      "city": "刈谷市",
-      "place_detail": "「オアシス館刈谷 INFOBOX」正面玄関前",
-      "verified_at": "2025-12-27",
+    "4": {
       "tags": [
-        "roadside",
-        "family",
-        "tourism"
-      ],
-      "confidence": 3
+        "seaside"
+      ]
     },
-    "271": {
-      "building": "愛知県/豊橋市（バクフーン）",
-      "address_raw": "愛知県豊橋市",
-      "address_norm": "愛知県豊橋市",
-      "prefecture": "愛知県",
-      "city": "豊橋市",
-      "verified_at": "2025-12-27",
+    "7": {
       "tags": [
-        "pokemon_lid",
-        "city_level_address"
-      ],
-      "confidence": 2
+        "seaside"
+      ]
     },
-    "272": {
-      "building": "愛知県/豊橋市（アゴジムシ・アブリボン）",
-      "address_raw": "愛知県豊橋市",
-      "address_norm": "愛知県豊橋市",
-      "prefecture": "愛知県",
-      "city": "豊橋市",
-      "verified_at": "2025-12-27",
+    "10": {
       "tags": [
-        "pokemon_lid",
-        "city_level_address"
-      ],
-      "confidence": 2
+        "seaside"
+      ]
     },
-    "273": {
-      "building": "愛知県/豊橋市（デンヂムシ・スターミー）",
-      "address_raw": "愛知県豊橋市",
-      "address_norm": "愛知県豊橋市",
-      "prefecture": "愛知県",
-      "city": "豊橋市",
-      "verified_at": "2025-12-27",
+    "12": {
       "tags": [
-        "pokemon_lid",
-        "city_level_address"
-      ],
-      "confidence": 2
+        "seaside"
+      ]
     },
-    "274": {
-      "building": "愛知県/豊橋市（クワガノン・カブト）",
-      "address_raw": "愛知県豊橋市",
-      "address_norm": "愛知県豊橋市",
-      "prefecture": "愛知県",
-      "city": "豊橋市",
-      "verified_at": "2025-12-27",
+    "15": {
       "tags": [
-        "pokemon_lid",
-        "city_level_address"
-      ],
-      "confidence": 2
+        "seaside"
+      ]
+    },
+    "16": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "17": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "18": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "19": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "35": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "36": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "37": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "39": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "44": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "45": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "46": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "49": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "50": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "52": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "55": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "57": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "61": {
+      "tags": [
+        "lakeside"
+      ]
+    },
+    "62": {
+      "building": "森駅前（森商工会議所玄関前）",
+      "verified_at": "2020-11-02",
+      "tags": [
+        "seaside"
+      ]
+    },
+    "63": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "65": {
+      "building": "JR比布駅前広場"
+    },
+    "66": {
+      "building": "道の駅 てしお 正面入り口横",
+      "verified_at": "2019-11-29"
+    },
+    "67": {
+      "building": "キタカラ敷地内",
+      "verified_at": "2019-12-11",
+      "tags": [
+        "seaside"
+      ]
+    },
+    "68": {
+      "building": "定住支援センター「ふらっと★きた」敷地内",
+      "verified_at": "2019-12-10"
+    },
+    "69": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "75": {
+      "tags": [
+        "seaside",
+        "lakeside"
+      ]
+    },
+    "77": {
+      "tags": [
+        "seaside",
+        "lakeside"
+      ]
+    },
+    "78": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "82": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "89": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "93": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "97": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "104": {
+      "tags": [
+        "lakeside"
+      ]
+    },
+    "105": {
+      "tags": [
+        "lakeside"
+      ]
+    },
+    "108": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "111": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "113": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "117": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "140": {
+      "building": "出光カルチャーパーク",
+      "verified_at": "2020-11-02"
+    },
+    "141": {
+      "building": "三笠市立博物館",
+      "verified_at": "2020-11-02"
+    },
+    "142": {
+      "building": "日の出公園",
+      "verified_at": "2020-11-02"
+    },
+    "143": {
+      "building": "絵本の館",
+      "verified_at": "2020-11-02"
+    },
+    "153": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "154": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "155": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "156": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "157": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "165": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "175": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "187": {
+      "building": "函館公園内旧函館博物館二号前",
+      "verified_at": "2021-07-15",
+      "tags": [
+        "seaside"
+      ]
+    },
+    "189": {
+      "building": "明治公園内の噴水広場の一角",
+      "verified_at": "2021-07-07"
+    },
+    "194": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "199": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "201": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "202": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "203": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "204": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "217": {
+      "building": "道の駅「流氷街道網走」",
+      "tags": [
+        "seaside"
+      ]
+    },
+    "218": {
+      "building": "道の駅あかいがわ敷地内",
+      "verified_at": "2021-11-13"
+    },
+    "221": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "229": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "231": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "232": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "233": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "234": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "235": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "236": {
+      "tags": [
+        "seaside"
+      ]
     },
     "240": {
       "building": "津市まん中広場",
@@ -638,6 +878,87 @@
       ],
       "confidence": 3
     },
+    "271": {
+      "building": "愛知県/豊橋市（バクフーン）",
+      "address_raw": "愛知県豊橋市",
+      "address_norm": "愛知県豊橋市",
+      "prefecture": "愛知県",
+      "city": "豊橋市",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "pokemon_lid",
+        "city_level_address"
+      ],
+      "confidence": 2
+    },
+    "272": {
+      "building": "愛知県/豊橋市（アゴジムシ・アブリボン）",
+      "address_raw": "愛知県豊橋市",
+      "address_norm": "愛知県豊橋市",
+      "prefecture": "愛知県",
+      "city": "豊橋市",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "pokemon_lid",
+        "city_level_address"
+      ],
+      "confidence": 2
+    },
+    "273": {
+      "building": "愛知県/豊橋市（デンヂムシ・スターミー）",
+      "address_raw": "愛知県豊橋市",
+      "address_norm": "愛知県豊橋市",
+      "prefecture": "愛知県",
+      "city": "豊橋市",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "pokemon_lid",
+        "city_level_address"
+      ],
+      "confidence": 2
+    },
+    "274": {
+      "building": "愛知県/豊橋市（クワガノン・カブト）",
+      "address_raw": "愛知県豊橋市",
+      "address_norm": "愛知県豊橋市",
+      "prefecture": "愛知県",
+      "city": "豊橋市",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "pokemon_lid",
+        "city_level_address"
+      ],
+      "confidence": 2
+    },
+    "278": {
+      "building": "北欧の風 道の駅とうべつ",
+      "verified_at": "2022-11-07"
+    },
+    "282": {
+      "tags": [
+        "lakeside"
+      ]
+    },
+    "288": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "289": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "290": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "291": {
+      "tags": [
+        "seaside"
+      ]
+    },
     "292": {
       "building": "亀山公園 時計台付近",
       "address_raw": "亀山市若山町7-10（亀山公園 時計台付近）",
@@ -695,19 +1016,6 @@
       ],
       "confidence": 3
     },
-    "383": {
-      "building": "なばなの里",
-      "address_raw": "桑名市長島町駒江漆畑270",
-      "address_norm": "三重県桑名市長島町駒江漆畑270",
-      "prefecture": "三重県",
-      "city": "桑名市",
-      "verified_at": "2025-12-27",
-      "tags": [
-        "illumination",
-        "tourism"
-      ],
-      "confidence": 3
-    },
     "296": {
       "building": "宮リバー度会パーク",
       "address_raw": "度会郡度会町大野木1260（宮リバー度会パーク内）",
@@ -737,6 +1045,15 @@
         "seaside"
       ],
       "confidence": 3
+    },
+    "306": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "307": {
+      "building": "美幌駅前",
+      "verified_at": "2023-06-05"
     },
     "308": {
       "building": "朝日公園",
@@ -778,6 +1095,41 @@
         "tourism"
       ],
       "confidence": 3
+    },
+    "311": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "312": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "313": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "314": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "318": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "320": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "327": {
+      "tags": [
+        "seaside"
+      ]
     },
     "330": {
       "building": "鈴鹿市伝統産業会館",
@@ -866,6 +1218,80 @@
       ],
       "confidence": 3
     },
+    "340": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "345": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "349": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "354": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "355": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "358": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "365": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "367": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "377": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "378": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "380": {
+      "tags": [
+        "seaside",
+        "lakeside"
+      ]
+    },
+    "381": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "383": {
+      "building": "なばなの里",
+      "address_raw": "桑名市長島町駒江漆畑270",
+      "address_norm": "三重県桑名市長島町駒江漆畑270",
+      "prefecture": "三重県",
+      "city": "桑名市",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "illumination",
+        "tourism"
+      ],
+      "confidence": 3
+    },
     "384": {
       "building": "夢古道おわせ",
       "address_raw": "尾鷲市向井12-4",
@@ -949,6 +1375,88 @@
       ],
       "confidence": 3
     },
+    "391": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "395": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "403": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "404": {
+      "building": "金シャチ横丁　宗春ゾーン（東門エリア）",
+      "address_raw": "名古屋市中区二の丸1番2・3号",
+      "address_norm": "愛知県名古屋市中区二の丸1番2・3号",
+      "prefecture": "愛知県",
+      "city": "名古屋市中区",
+      "place_detail": "宗春ゾーン（東門エリア）",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "food",
+        "tourism"
+      ],
+      "confidence": 3
+    },
+    "405": {
+      "building": "瀬戸蔵 正面玄関北側",
+      "address_raw": "愛知県瀬戸市蔵所町1-1",
+      "address_norm": "愛知県瀬戸市蔵所町1-1",
+      "prefecture": "愛知県",
+      "city": "瀬戸市",
+      "place_detail": "正面玄関北側",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "museum",
+        "tourism"
+      ],
+      "confidence": 3
+    },
+    "406": {
+      "building": "りんくうビーチ",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "beach",
+        "tourism",
+        "seaside"
+      ],
+      "confidence": 1
+    },
+    "407": {
+      "building": "刈谷ハイウェイオアシス内にある「オアシス館刈谷 INFOBOX」正面玄関前",
+      "address_raw": "愛知県刈谷市東境町吉野25-1",
+      "address_norm": "愛知県刈谷市東境町吉野25-1",
+      "prefecture": "愛知県",
+      "city": "刈谷市",
+      "place_detail": "「オアシス館刈谷 INFOBOX」正面玄関前",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "roadside",
+        "family",
+        "tourism"
+      ],
+      "confidence": 3
+    },
+    "408": {
+      "building": "西尾市歴史公園",
+      "address_raw": "西尾市錦城町231番地1",
+      "address_norm": "愛知県西尾市錦城町231番地1",
+      "prefecture": "愛知県",
+      "city": "西尾市",
+      "verified_at": "2025-12-27",
+      "tags": [
+        "park",
+        "history",
+        "tourism"
+      ],
+      "confidence": 3
+    },
     "414": {
       "building": "ドルフィン公園",
       "address_raw": "鳥羽市鳥羽1-2383-42（ドルフィン公園）",
@@ -963,472 +1471,7 @@
       ],
       "confidence": 3
     },
-    "428": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "423": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "15": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "187": {
-      "tags": [
-        "seaside"
-      ],
-      "building": "函館公園内旧函館博物館二号前",
-      "verified_at": "2021-07-15"
-    },
-    "19": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "358": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "69": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "432": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "403": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "75": {
-      "tags": [
-        "seaside",
-        "lakeside"
-      ]
-    },
-    "155": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "12": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "320": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "117": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "435": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "67": {
-      "tags": [
-        "seaside"
-      ],
-      "building": "キタカラ敷地内",
-      "verified_at": "2019-12-11"
-    },
-    "434": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "77": {
-      "tags": [
-        "seaside",
-        "lakeside"
-      ]
-    },
-    "217": {
-      "tags": [
-        "seaside"
-      ],
-      "building": "道の駅「流氷街道網走」"
-    },
-    "10": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "349": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "111": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "288": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "378": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "232": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "78": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "391": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "49": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "236": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "425": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "468": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "4": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "355": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "108": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "289": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "93": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "430": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "7": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "153": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "424": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "2": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "395": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "55": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "290": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "291": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "18": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "62": {
-      "tags": [
-        "seaside"
-      ],
-      "building": "森駅前（森商工会議所玄関前）",
-      "verified_at": "2020-11-02"
-    },
-    "234": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "97": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "318": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "381": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "436": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "313": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "194": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "17": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "377": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "36": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "156": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "367": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "203": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "306": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "231": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "327": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "445": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "35": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "175": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "50": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "63": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "365": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "57": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "52": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "345": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "221": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "199": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "235": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "380": {
-      "tags": [
-        "seaside",
-        "lakeside"
-      ]
-    },
-    "165": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "437": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "201": {
-      "tags": [
-        "seaside"
-      ]
-    },
     "418": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "450": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "312": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "311": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "471": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "37": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "154": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "82": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "427": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "474": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "89": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "45": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "354": {
       "tags": [
         "seaside"
       ]
@@ -1438,22 +1481,27 @@
         "seaside"
       ]
     },
-    "202": {
+    "423": {
       "tags": [
         "seaside"
       ]
     },
-    "314": {
+    "424": {
       "tags": [
         "seaside"
       ]
     },
-    "113": {
+    "425": {
       "tags": [
         "seaside"
       ]
     },
-    "233": {
+    "427": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "428": {
       "tags": [
         "seaside"
       ]
@@ -1463,17 +1511,54 @@
         "seaside"
       ]
     },
-    "16": {
+    "430": {
       "tags": [
         "seaside"
       ]
     },
-    "157": {
+    "432": {
       "tags": [
         "seaside"
       ]
     },
-    "229": {
+    "434": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "435": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "436": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "437": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "439": {
+      "building": "砂川市まちなか交流施設すないる",
+      "verified_at": "2025-10-26"
+    },
+    "440": {
+      "building": "文化交流館ふれーる"
+    },
+    "445": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "450": {
+      "tags": [
+        "seaside"
+      ]
+    },
+    "468": {
       "tags": [
         "seaside"
       ]
@@ -1483,100 +1568,15 @@
         "seaside"
       ]
     },
-    "340": {
+    "471": {
       "tags": [
         "seaside"
       ]
     },
-    "204": {
+    "474": {
       "tags": [
         "seaside"
       ]
-    },
-    "44": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "39": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "46": {
-      "tags": [
-        "seaside"
-      ]
-    },
-    "104": {
-      "tags": [
-        "lakeside"
-      ]
-    },
-    "61": {
-      "tags": [
-        "lakeside"
-      ]
-    },
-    "105": {
-      "tags": [
-        "lakeside"
-      ]
-    },
-    "282": {
-      "tags": [
-        "lakeside"
-      ]
-    },
-    "68": {
-      "building": "定住支援センター「ふらっと★きた」敷地内",
-      "verified_at": "2019-12-10"
-    },
-    "66": {
-      "building": "道の駅 てしお 正面入り口横",
-      "verified_at": "2019-11-29"
-    },
-    "218": {
-      "building": "道の駅あかいがわ敷地内",
-      "verified_at": "2021-11-13"
-    },
-    "278": {
-      "building": "北欧の風 道の駅とうべつ",
-      "verified_at": "2022-11-07"
-    },
-    "440": {
-      "building": "文化交流館ふれーる"
-    },
-    "307": {
-      "building": "美幌駅前",
-      "verified_at": "2023-06-05"
-    },
-    "189": {
-      "building": "明治公園内の噴水広場の一角",
-      "verified_at": "2021-07-07"
-    },
-    "65": {
-      "building": "JR比布駅前広場"
-    },
-    "439": {
-      "building": "砂川市まちなか交流施設すないる",
-      "verified_at": "2025-10-26"
-    },
-    "140": {
-      "building": "出光カルチャーパーク",
-      "verified_at": "2020-11-02"
-    },
-    "141": {
-      "building": "三笠市立博物館",
-      "verified_at": "2020-11-02"
-    },
-    "142": {
-      "building": "日の出公園",
-      "verified_at": "2020-11-02"
-    },
-    "143": {
-      "building": "絵本の館",
-      "verified_at": "2020-11-02"
     }
   },
   "lakes": [
