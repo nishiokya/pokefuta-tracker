@@ -16,9 +16,8 @@ function run(cmd, opts = {}) {
 function getJSTTimestamp() {
   const now = new Date()
   const jst = new Date(now.getTime() + 9 * 60 * 60 * 1000)
-  const date = jst.toISOString().slice(0, 10).replace(/-/g, '')
-  const time = jst.toISOString().slice(11, 16).replace(':', '')
-  return `${date}-${time}`
+  const iso = jst.toISOString()
+  return iso.slice(0, 10).replace(/-/g, '') + iso.slice(11, 19).replace(/:/g, '')
 }
 
 function buildPRBody(patches) {

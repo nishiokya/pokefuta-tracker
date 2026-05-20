@@ -1,35 +1,39 @@
-import type { PokefutaRecord, ManholeTitlesJson, SemanticPatch } from '../../semantic/semanticPatch'
+import type { PokefutaRecord, ManholeTitlesJson, SemanticPatch, ManholeEntry } from '../../semantic/semanticPatch'
+import { MapTagsTask } from '../shared/MapTagsTask'
+
+const STATION_TAGS = ['in_station', 'station_front', 'near_station', 'rail_access_good'] as const
+
+const TAG_LABEL: Record<(typeof STATION_TAGS)[number], string> = {
+  in_station: '🚉 駅構内',
+  station_front: '🏢 駅前',
+  near_station: '🚶 駅近',
+  rail_access_good: '🚆 アクセス良',
+}
+
+function stationHint(r: PokefutaRecord, entry: ManholeEntry | undefined): boolean {
+  return (
+    r.address.includes('駅') ||
+    (entry?.building ?? '').includes('駅') ||
+    (entry?.place_detail ?? '').includes('駅')
+  )
+}
 
 type Props = {
   records: PokefutaRecord[]
   titles: ManholeTitlesJson
-  onSave: (patch: SemanticPatch) => Promise<void>
+  onSaveMany: (patches: SemanticPatch[]) => Promise<void>
   saving: boolean
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function AssignStationTagsTask(_props: Props) {
+export function AssignStationTagsTask(props: Props) {
   return (
-    <div>
-      <h2 style={{ marginBottom: 16 }}>駅近・駅構内タグを付ける</h2>
-      <div style={{
-        border: '2px dashed #d1d5db',
-        borderRadius: 8,
-        padding: 40,
-        textAlign: 'center',
-        color: '#6b7280',
-      }}>
-        <p style={{ fontSize: 18, marginBottom: 8 }}>🚉 実装予定</p>
-        <p style={{ fontSize: 14 }}>
-          駅近マンホールを検索・タグ付けする機能は将来実装予定です。
-        </p>
-        <p style={{ fontSize: 13, marginTop: 12 }}>
-          対象タグ: <code>in_station</code> / <code>station_front</code> / <code>near_station</code> / <code>rail_access_good</code>
-        </p>
-        <p style={{ fontSize: 13, marginTop: 8, color: '#9ca3af' }}>
-          将来的に Station Proximity Agent からの提案をレビューするUIをここに統合します。
-        </p>
-      </div>
-    </div>
+    <MapTagsTask
+      {...props}
+      title="駅近・駅構内タグを付ける"
+      taskType="assign_station_tags"
+      tags={STATION_TAGS}
+      tagLabels={TAG_LABEL}
+      hintFilter={{ label: '駅キーワードのみ', fn: stationHint, defaultOn: true }}
+    />
   )
 }
