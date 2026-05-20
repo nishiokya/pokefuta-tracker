@@ -339,6 +339,11 @@
     },
     {
       "prefecture": "愛知県",
+      "city": "名古屋市中区",
+      "url": "https://www.city.nagoya.jp/kankou/kankouinfo/1013741/1035282.html"
+    },
+    {
+      "prefecture": "愛知県",
       "city": "瀬戸市",
       "url": "https://www.city.seto.aichi.jp/docs/2025/06/13/00505309499/00505309499.html"
     },
@@ -416,11 +421,6 @@
       "prefecture": "三重県",
       "city": "菰野町",
       "url": "https://www2.town.komono.mie.jp/www/contents/1742359133701/index.html"
-    },
-    {
-      "prefecture": "愛知県",
-      "city": "名古屋市中区",
-      "url": "https://www.city.nagoya.jp/kankou/kankouinfo/1013741/1035282.html"
     }
   ],
   "manholes": {
