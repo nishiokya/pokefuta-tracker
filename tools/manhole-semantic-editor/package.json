@@ -1,0 +1,26 @@
+{
+  "name": "manhole-semantic-editor",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "validate": "node scripts/validate-editor-changes.js",
+    "create-pr": "node scripts/create-pr.js",
+    "lint-titles": "node scripts/lint-titles.js",
+    "lint-titles:check": "node scripts/lint-titles.js --check"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.0",
+    "typescript": "^5.5.3",
+    "vite": "^5.4.0"
+  }
+}
