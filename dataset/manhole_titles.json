@@ -104,6 +104,20 @@
       "hashtag": "#海沿いポケふた",
       "priority": 40
     },
+    "station_front": {
+      "enabled": true,
+      "emoji": "🚉",
+      "label": "駅前のポケふた",
+      "hashtag": "#駅前ポケふた",
+      "priority": 36
+    },
+    "near_station": {
+      "enabled": true,
+      "emoji": "🚃",
+      "label": "駅近ポケふた",
+      "hashtag": "#駅近ポケふた",
+      "priority": 34
+    },
     "lakeside": {
       "enabled": true,
       "emoji": "🏞",

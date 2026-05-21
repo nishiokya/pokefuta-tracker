@@ -370,6 +370,8 @@ def generate_html(
     prefecture = manhole.get("prefecture", "")
     city = manhole.get("city", "")
     address = manhole.get("address", "")
+    building = manhole.get("building", "")
+    access = manhole.get("access", "")
     pokemons = filter_pokemons(manhole.get("pokemons", []))
     detail_url = manhole.get("detail_url", "")
     lat = manhole.get("lat")
@@ -623,10 +625,20 @@ def generate_html(
     <dt>市区町村</dt>
     <dd>{escape(city)}</dd>
 """
+    if building:
+        location_html += f"""
+    <dt>施設・場所</dt>
+    <dd>{escape(building)}</dd>
+"""
     if address:
         location_html += f"""
     <dt>住所</dt>
     <dd>{escape(address)}</dd>
+"""
+    if access:
+        location_html += f"""
+    <dt>アクセス</dt>
+    <dd>{escape(access)}</dd>
 """
     location_html += """
   </dl>
