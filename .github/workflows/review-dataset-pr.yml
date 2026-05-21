@@ -1,0 +1,52 @@
+name: Review Dataset PR
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'apps/scraper/pokefuta.ndjson'
+
+permissions:
+  pull-requests: write
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Get base NDJSON
+        run: |
+          git show origin/${{ github.base_ref }}:apps/scraper/pokefuta.ndjson \
+            > /tmp/base.ndjson 2>/dev/null || touch /tmp/base.ndjson
+
+      - name: Run diff analysis
+        id: analyze
+        run: |
+          python .github/scripts/analyze_dataset_diff.py \
+            /tmp/base.ndjson apps/scraper/pokefuta.ndjson \
+            > /tmp/report.md
+          echo "needs_review=$([[ $? -ne 0 ]] && echo true || echo false)" >> $GITHUB_OUTPUT
+        continue-on-error: true
+
+      - name: Find existing report comment
+        id: find-comment
+        uses: peter-evans/find-comment@v3
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: 'データセット差分レポート'
+
+      - name: Post or update report comment
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          comment-id: ${{ steps.find-comment.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body-file: /tmp/report.md
+          edit-mode: replace

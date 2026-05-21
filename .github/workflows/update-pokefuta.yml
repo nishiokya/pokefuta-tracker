@@ -56,7 +56,7 @@ jobs:
           os.makedirs('docs', exist_ok=True)
           with open('docs/pokefuta.ndjson', 'w', encoding='utf-8') as f:
               for record in active_records:
-                  json.dump(record, f, ensure_ascii=False, separators=(',', ':'))
+                  json.dump(record, f, ensure_ascii=False, separators=(',', ':'), sort_keys=True)
                   f.write('\n')
           print(f'Wrote {len(active_records)} active records to docs/pokefuta.ndjson')
           "
