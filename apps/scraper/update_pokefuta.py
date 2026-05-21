@@ -401,7 +401,7 @@ def atomic_write_ndjson(path: str, records: List[Dict]):
     os.makedirs(d, exist_ok=True)
     with tempfile.NamedTemporaryFile("w", delete=False, dir=d, encoding="utf-8") as tmp:
         for rec in records:
-            tmp.write(json.dumps(rec, ensure_ascii=False) + "\n")
+            tmp.write(json.dumps(rec, ensure_ascii=False, sort_keys=True) + "\n")
         tmp.flush(); os.fsync(tmp.fileno())
         p = tmp.name
     os.replace(p, path)
