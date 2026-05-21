@@ -267,6 +267,14 @@ def compute_titles(manhole: dict, ctx: dict, *, nc: int) -> list[dict]:
         if t := _entry("seaside"):
             results.append(t)
 
+    # station_front / near_station: 駅前・駅近タグ（より具体的な方のみ表示）
+    if "station_front" in tags:
+        if t := _entry("station_front"):
+            results.append(t)
+    elif "near_station" in tags:
+        if t := _entry("near_station"):
+            results.append(t)
+
     # lakeside: check lakes list
     for lake_entry in ctx["lakes"]:
         ids = [str(i) for i in (lake_entry.get("ids") or [])]
