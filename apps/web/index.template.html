@@ -1021,7 +1021,7 @@
           d._addedDate = normalizeDateString(raw);
         });
         await loadLatestPhotoMeta();
-        // Load Pokemon metadata asynchronously (non-blocking)
+        // Await Pokemon metadata so popup HTML and page meta use translated names
         await loadPokemonMetadata().catch(err => console.warn('Pokemon metadata loading failed', err));
         initMarkerLayer();
         // Build markers
