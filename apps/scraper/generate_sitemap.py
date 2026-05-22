@@ -203,11 +203,19 @@ def build_sitemap(manhole_ids: list[str], pokemon_slugs: list[str] | None = None
             url_entry(f"{BASE_URL}manholes/{quote(manhole_id)}/", "weekly", "0.8")
         )
 
-    # Pokemon LP pages
+    # Pokemon LP pages (Japanese root)
     for slug in pokemon_slugs or []:
         entries.append(
             url_entry(f"{BASE_URL}pokemon/{quote(slug)}/", "weekly", "0.1")
         )
+
+    # Pokemon LP pages (multilingual)
+    for lang in I18N_LANGS:
+        entries.append(url_entry(f"{BASE_URL}{lang}/pokemon/", "weekly", "0.9"))
+        for slug in pokemon_slugs or []:
+            entries.append(
+                url_entry(f"{BASE_URL}{lang}/pokemon/{quote(slug)}/", "weekly", "0.1")
+            )
 
     return "\n".join(
         [
