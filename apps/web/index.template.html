@@ -687,6 +687,20 @@
       img.remove();
     }
 
+    function translateTitle(t, manhole) {
+      const I = window.I18N;
+      const tmpl = I.titleLabels && I.titleLabels[t.key];
+      if (!tmpl) return t.label;
+      const mNum = t.label.match(/[（(](?:全国|全國)?(\d+)(?:枚|個|개)[）)]/);
+      const mParen = t.label.match(/[（(]([^）)]+)[）)]/);
+      return tmpl
+        .replace('{city}', (manhole && manhole.city) || '')
+        .replace('{prefecture}', translatePref((manhole && manhole.prefecture) || ''))
+        .replace('{count}', mNum ? mNum[1] : '?')
+        .replace('{island}', mParen ? mParen[1] : '')
+        .replace('{lake}', mParen ? mParen[1] : '');
+    }
+
     function buildPokefutaPopup(d) {
       const I = window.I18N;
       const prefecture = translatePref(d.prefecture) || I.unknownPref;
@@ -711,14 +725,14 @@
       const titleBadgesHtml = titles.length
         ? '<div class="travel-popup-badges">'
           + titles.map(t => '<span class="travel-popup-badge">'
-            + escapeHtml((t.emoji ? t.emoji + ' ' : '') + t.label)
+            + escapeHtml((t.emoji ? t.emoji + ' ' : '') + translateTitle(t, d))
             + '</span>').join('')
           + '</div>'
         : '';
       const _titleHashtags = titles.map(t => t.hashtag || '').filter(Boolean).join(' ');
       const _shareHashtags = (_titleHashtags + I.shareHashtags).trim();
       const _shareText = titles.length
-        ? (titles[0].emoji ? titles[0].emoji + ' ' : '') + titles[0].label + I.shareTextSuffix + _shareHashtags
+        ? (titles[0].emoji ? titles[0].emoji + ' ' : '') + translateTitle(titles[0], d) + I.shareTextSuffix + _shareHashtags
         : _shareHashtags;
       const safeShareUrl = escapeHtml(shareUrl);
       const safeShareTitle = escapeHtml(shareTitle);
@@ -788,8 +802,30 @@
         if (!res.ok) return null;
         const data = await res.json();
         if (!Array.isArray(data)) return null;
-        // Create fast lookup map by Japanese name
-        pokemonMetadata = new Map(data.map(p => [p.names?.ja, p]).filter(([k]) => k));
+        // Build lookup map: base forms keyed by Japanese name, regional forms by prefixed name
+        const FORM_PREFIXES = {
+          ja: { alola: 'アローラ', galar: 'ガラル', hisui: 'ヒスイ', paldea: 'パルデア' },
+          en: { alola: 'Alolan ', galar: 'Galarian ', hisui: 'Hisuian ', paldea: 'Paldean ' },
+          ko: { alola: '알로라 ', galar: '가라르 ', hisui: '히스이 ', paldea: '팔데아 ' },
+          'zh-Hans': { alola: '阿罗拉', galar: '伽勒尔', hisui: '洗翠', paldea: '帕底亚' },
+          'zh-Hant': { alola: '阿羅拉', galar: '伽勒爾', hisui: '洗翠', paldea: '帕底亞' }
+        };
+        pokemonMetadata = new Map();
+        data.forEach(p => {
+          if (!p.names?.ja) return;
+          const formKey = p.form && FORM_PREFIXES.ja[p.form];
+          if (formKey) {
+            const key = formKey + p.names.ja;
+            const names = { ...p.names };
+            for (const [lang, prefMap] of Object.entries(FORM_PREFIXES)) {
+              const pfx = prefMap[p.form];
+              if (pfx && names[lang]) names[lang] = pfx + names[lang];
+            }
+            pokemonMetadata.set(key, { ...p, names });
+          } else {
+            pokemonMetadata.set(p.names.ja, p);
+          }
+        });
         console.log(`Pokemon metadata loaded: ${pokemonMetadata.size} entries`);
         return pokemonMetadata;
       } catch (error) {
@@ -800,7 +836,9 @@
 
     function getPokemonMetadata(nameJa) {
       if (!pokemonMetadata || !nameJa) return null;
-      return pokemonMetadata.get(nameJa) || null;
+      // Normalize hiragana → katakana to handle mixed-kana variants (e.g. ゴンべ → ゴンベ)
+      const normalized = nameJa.replace(/[ぁ-ん]/g, c => String.fromCharCode(c.charCodeAt(0) + 0x60));
+      return pokemonMetadata.get(nameJa) || (normalized !== nameJa ? pokemonMetadata.get(normalized) : null) || null;
     }
 
     function buildPokemonInfoCards(pokemons) {
@@ -871,7 +909,7 @@
 
         // Extract Pokemon names for this manhole
         const pokemonNames = Array.isArray(d.pokemons)
-          ? d.pokemons.filter(p => !p.includes('ローカルActs')).slice(0, 2).join(' / ')
+          ? d.pokemons.filter(p => !p.includes('ローカルActs')).slice(0, 2).map(p => getPokemonDisplayName(p)).join(' / ')
           : '';
         const pokemonDisplay = pokemonNames ? ` (${pokemonNames})` : '';
 
@@ -880,7 +918,7 @@
                   data-manhole-id="${escapeHtml(d.id)}"
                   onclick="openManholePopup('${safeIdJs}'); collapseBottomSheet();"
                   title="${escapeHtml(d.title || I.manholeTitle)}${I.openSuffix}">
-            ${escapeHtml(d.prefecture || I.unknownPref)} ${escapeHtml(d.city || '')}${escapeHtml(pokemonDisplay)}
+            ${escapeHtml(translatePref(d.prefecture) || I.unknownPref)} ${escapeHtml(d.city || '')}${escapeHtml(pokemonDisplay)}
           </button>
         `;
       }).join('');
@@ -1346,7 +1384,7 @@
       const val = badge?.querySelector('.badge-value');
       if (!badge || !val) return;
       if (selectedPrefecture) {
-        val.textContent = selectedPrefecture;
+        val.textContent = translatePref(selectedPrefecture);
         badge.style.display = 'inline-block';
       } else {
         badge.style.display = 'none';
