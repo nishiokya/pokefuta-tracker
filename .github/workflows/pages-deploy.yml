@@ -14,6 +14,7 @@ on:
       - 'apps/scraper/generate_pokemon_index_page.py' # Pokemon index page generator
       - 'docs/**'     # dataset changes copied into dist/
       - 'dataset/manhole/image/**' # local popup photos
+      - 'tools/**'      # i18n build scripts
 
 permissions:
   contents: read
@@ -70,6 +71,8 @@ jobs:
           cp apps/web/nearby_manholes.html dist/nearby.html
           cp apps/web/gmanhole_map.html dist/gmanhole_map.html
           cp apps/web/sitemap.xml dist/sitemap.xml
+          echo "[dist] Build multilingual pages (en / zh-TW / zh-CN / ko)"
+          python3 tools/build_i18n.py
           echo '<!doctype html><meta http-equiv="refresh" content="0; url=./nearby.html">' > dist/nearby_manholes.html
           echo "[dist] Copy assets (CSS + images)"
           cp -r apps/web/assets/* dist/assets/ || true

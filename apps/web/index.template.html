@@ -1,23 +1,23 @@
 <!doctype html>
-<html lang="ja">
+<html lang="%%LANG%%">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ポケふたマップ｜全国のポケモンマンホール一覧・地図</title>
-  <meta name="description" content="全国のポケふた・ポケモンマンホールを地図で探せるマップサービスです。都道府県別の一覧、設置場所、近くのポケふた探しに対応しています。">
-  <meta name="keywords" content="ポケふた,ポケモンマンホール,マンホール,ポケモン,聖地巡礼,地図">
+  <title>%%PAGE_TITLE%%</title>
+  <meta name="description" content="%%META_DESCRIPTION%%">
+  <meta name="keywords" content="%%META_KEYWORDS%%">
   <meta name="robots" content="index,follow">
   <meta property="og:type" content="website">
-  <meta property="og:locale" content="ja_JP">
-  <meta property="og:title" content="ポケふたマップ｜全国のポケモンマンホール一覧・地図">
-  <meta property="og:description" content="全国のポケふた・ポケモンマンホールを地図で探せるマップサービスです。都道府県別の一覧、設置場所、近くのポケふた探しに対応しています。">
-  <meta property="og:url" content="https://data.pokefuta.com/">
+  <meta property="og:locale" content="%%OG_LOCALE%%">
+  <meta property="og:title" content="%%PAGE_TITLE%%">
+  <meta property="og:description" content="%%META_DESCRIPTION%%">
+  <meta property="og:url" content="%%CANONICAL_URL%%">
   <meta property="og:image" content="https://data.pokefuta.com/assets/ogp/pokefuta_map_ogp.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="ポケふたマップ｜全国のポケモンマンホール一覧・地図">
-  <meta name="twitter:description" content="全国のポケふた・ポケモンマンホールを地図で探せるマップサービスです。都道府県別の一覧、設置場所、近くのポケふた探しに対応しています。">
+  <meta name="twitter:title" content="%%PAGE_TITLE%%">
+  <meta name="twitter:description" content="%%META_DESCRIPTION%%">
   <meta name="twitter:image" content="https://data.pokefuta.com/assets/ogp/pokefuta_map_ogp.png">
-  <link rel="canonical" href="https://data.pokefuta.com/">
+  <link rel="canonical" href="%%CANONICAL_URL%%">
   <link rel="alternate" hreflang="ja"      href="https://data.pokefuta.com/">
   <link rel="alternate" hreflang="en"      href="https://data.pokefuta.com/en/">
   <link rel="alternate" hreflang="zh-TW"   href="https://data.pokefuta.com/zh-TW/">
@@ -25,6 +25,9 @@
   <link rel="alternate" hreflang="ko"      href="https://data.pokefuta.com/ko/">
   <link rel="alternate" hreflang="x-default" href="https://data.pokefuta.com/">
   <script>
+    // i18n: build-time injected per language
+    window.I18N = %%I18N_OBJECT%%;
+
     window.PREFECTURE_CODE_MAP = Object.freeze({
       '北海道': '01', '青森県': '02', '岩手県': '03', '宮城県': '04', '秋田県': '05',
       '山形県': '06', '福島県': '07', '茨城県': '08', '栃木県': '09', '群馬県': '10',
@@ -37,7 +40,8 @@
       '佐賀県': '41', '長崎県': '42', '熊本県': '43', '大分県': '44', '宮崎県': '45',
       '鹿児島県': '46', '沖縄県': '47'
     });
-    window.SITE_BASE_URL = 'https://data.pokefuta.com/';
+    window.SITE_ROOT_URL = 'https://data.pokefuta.com/';
+    window.SITE_BASE_URL = '%%CANONICAL_URL%%';
 
     window.resolvePrefectureParam = function(prefParam) {
       if (!prefParam) return '';
@@ -48,15 +52,16 @@
     };
 
     window.buildPrefecturePageMeta = function(prefecture) {
+      const I = window.I18N;
       const title = prefecture
-        ? `${prefecture}のポケふた一覧｜ポケモンマンホール設置場所マップ`
-        : 'ポケふたマップ｜全国のポケモンマンホール一覧・地図';
+        ? `${prefecture}${I.prefTitleSuffix}`
+        : I.defaultTitle;
       const description = prefecture
-        ? `${prefecture}にあるポケモンマンホール「ポケふた」の設置場所を地図で確認できます。登場ポケモンや市町村別の場所を見ながら、旅行やポケふた巡りの計画に使えます。`
-        : '全国のポケふた・ポケモンマンホールを地図で探せるマップサービスです。都道府県別の一覧、設置場所、近くのポケふた探しに対応しています。';
+        ? `${I.prefDescPrefix}${prefecture}${I.prefDescSuffix}`
+        : I.defaultDescription;
       const keywords = prefecture
-        ? `ポケふた,${prefecture},ポケモンマンホール,マンホール,設置場所,地図,旅行,観光`
-        : 'ポケふた,ポケモンマンホール,マンホール,ポケモン,聖地巡礼,地図';
+        ? `${I.prefKeywordsPrefix}${prefecture}${I.prefKeywordsSuffix}`
+        : I.defaultKeywords;
       const canonicalUrl = prefecture
         ? `${window.SITE_BASE_URL}?pref=${encodeURIComponent(prefecture)}`
         : window.SITE_BASE_URL;
@@ -77,11 +82,11 @@
     };
 
     window.buildCanonicalPath = function(prefecture) {
-      return prefecture ? `/?pref=${encodeURIComponent(prefecture)}` : '/';
+      return prefecture ? `?pref=${encodeURIComponent(prefecture)}` : './';
     };
 
     window.buildManholeCanonicalPath = function(manholeId) {
-      return manholeId ? `/?manhole=${encodeURIComponent(manholeId)}` : '/';
+      return manholeId ? `?manhole=${encodeURIComponent(manholeId)}` : './';
     };
 
     window.applyManholePageMeta = function(manhole) {
@@ -98,7 +103,8 @@
         : [];
 
       // Enhanced Pokemon text with English names
-      let pokemonText = 'ポケモン';
+      const I = window.I18N;
+      let pokemonText = I.defaultPokemonText;
       let pokemonTextEn = '';
 
       if (pokemons.length > 0) {
@@ -109,7 +115,7 @@
             pokemonTextEn = meta.names.en;
           }
         } else {
-          pokemonText = pokemons.join('・');
+          pokemonText = pokemons.join(window.I18N.pokemonJoiner || '・');
         }
       }
 
@@ -118,18 +124,16 @@
         ? `${prefecture}${city}`
         : prefecture || '';
       const title = locationPart
-        ? `${pokemonText}のポケふた | ${locationPart} | Pokefuta Map`
-        : `${pokemonText}のポケふた | Pokefuta Map`;
+        ? `${pokemonText}${I.manholeTitleInfix}${locationPart} | Pokefuta Map`
+        : `${pokemonText}${I.manholeTitleInfix}Pokefuta Map`;
 
-      // description: {都道府県}{市区町村}にある{ポケモン名}（English）のポケふた。場所・写真・訪問記録を地図で確認できます。
       const placeText = prefecture && city ? `${prefecture}${city}` : (prefecture || '');
       const pokemonWithEn = pokemonTextEn ? `${pokemonText}（${pokemonTextEn}）` : pokemonText;
       const description = placeText
-        ? `${placeText}にある${pokemonWithEn}のポケふた。場所・写真・訪問記録を地図で確認できます。`
-        : `${pokemonWithEn}のポケふた。場所・写真・訪問記録を地図で確認できます。`;
+        ? I.manholeDescTemplate.replace('{place}', placeText).replace('{pokemon}', pokemonWithEn)
+        : I.manholeDescNoPlaceTemplate.replace('{pokemon}', pokemonWithEn);
 
-      // keywords: include multilingual Pokemon names
-      const keywordParts = ['ポケふた'];
+      const keywordParts = [I.baseKeyword];
       if (prefecture) keywordParts.push(prefecture);
       if (city) keywordParts.push(city);
 
@@ -142,7 +146,7 @@
         }
       });
 
-      keywordParts.push('ポケモンマンホール', 'Pokemon Manhole', 'マンホール', '聖地巡礼', '地図');
+      keywordParts.push(...I.manholeKeywordsEnd);
       const keywords = keywordParts.join(',');
 
       const canonicalUrl = `${window.SITE_BASE_URL}?manhole=${encodeURIComponent(manhole.id)}`;
@@ -161,10 +165,11 @@
     };
 
     window.applyDefaultMeta = function() {
+      const I = window.I18N;
       const defaultMeta = {
-        title: 'ポケふたマップ｜全国のポケモンマンホール一覧・地図',
-        description: '全国のポケふた・ポケモンマンホールを地図で探せるマップサービスです。都道府県別の一覧、設置場所、近くのポケふた探しに対応しています。',
-        keywords: 'ポケふた,ポケモンマンホール,マンホール,ポケモン,聖地巡礼,地図',
+        title: I.defaultTitle,
+        description: I.defaultDescription,
+        keywords: I.defaultKeywords,
         canonicalUrl: window.SITE_BASE_URL
       };
       
@@ -190,11 +195,13 @@
         ? manhole.pokemons.filter(p => !p.includes('ローカルActs')).slice(0, 3)
         : [];
 
+      const I = window.I18N;
       const placeText = [manhole.prefecture, manhole.city].filter(Boolean).join('');
-      const titleBase = manhole.title || `ポケふた ${manhole.id}`;
-      const baseDescription = `${placeText ? `${placeText}の` : ''}ポケモンマンホール（ポケふた）。`;
+      const titleBase = manhole.title || `${I.manholeTitle} ${manhole.id}`;
+      const baseDescription = placeText
+        ? I.jsonLdDescTemplate.replace('{place}', placeText)
+        : I.jsonLdDescNoPlace;
 
-      // Enhanced Pokemon description with multilingual names
       let pokemonDescription = '';
       if (cleanPokemons.length > 0) {
         const pokemonInfoList = cleanPokemons.map(nameJa => {
@@ -204,7 +211,7 @@
           }
           return nameJa;
         });
-        pokemonDescription = `登場ポケモン: ${pokemonInfoList.join(', ')}`;
+        pokemonDescription = `${I.pokemonDescPrefix}${pokemonInfoList.join(', ')}`;
       }
 
       const description = [baseDescription, pokemonDescription].filter(Boolean).join(' ');
@@ -222,8 +229,7 @@
         'address': {
           '@type': 'PostalAddress',
           'addressRegion': manhole.prefecture || '',
-          'addressLocality': manhole.city || '',
-          'streetAddress': ''
+          'addressLocality': manhole.city || ''
         },
         'url': `${window.SITE_BASE_URL}?manhole=${encodeURIComponent(manhole.id)}`
       };
@@ -234,7 +240,7 @@
       }
 
       // keywords with multilingual Pokemon names
-      const keywordsArray = ['ポケふた', 'ポケモンマンホール', 'Pokemon Manhole', titleBase];
+      const keywordsArray = [I.baseKeyword, I.manholeKeyword, 'Pokemon Manhole', titleBase];
       cleanPokemons.forEach(nameJa => {
         keywordsArray.push(nameJa);
         const meta = getPokemonMetadata(nameJa);
@@ -281,10 +287,10 @@
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"
     integrity="sha384-pmjIAcz2bAn0xukfxADbZIb3t8oRT9Sv0rvO+BR5Csr6Dhqq+nZs59P0pPKQJkEV" crossorigin="" />
-  <link rel="stylesheet" href="./assets/theme.css" />
-  <link rel="stylesheet" href="./assets/map.css" />
-  <link rel="stylesheet" href="./assets/pokefuta-map.css" />
-  <link rel="icon" href="./assets/pokefuta-marker.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="%%BASE_PATH%%assets/theme.css" />
+  <link rel="stylesheet" href="%%BASE_PATH%%assets/map.css" />
+  <link rel="stylesheet" href="%%BASE_PATH%%assets/pokefuta-map.css" />
+  <link rel="icon" href="%%BASE_PATH%%assets/pokefuta-marker.svg" type="image/svg+xml" />
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-K18NR4GZG2"></script>
   <script>
@@ -316,105 +322,92 @@
   <!-- End GA -->
 </head>
 <body class="pokefuta-map-page">
-  <main class="map-stage" aria-label="ポケふた探索マップ">
+  <main class="map-stage" aria-label="%%MAP_ARIA%%">
     <div id="map"></div>
     <section class="map-hero-card" aria-labelledby="hero-title">
-      <h1 id="hero-title">全国のポケふた・ポケモンマンホールマップ</h1>
-      <p>旅行やお出かけのついでに、ご当地マンホール「ポケふた」を見つけよう</p>
-      <p class="map-hero-meta">📍 全国<span id="hero-city-count">0</span>の自治体に設置</p>
+      <h1 id="hero-title">%%HERO_TITLE%%</h1>
+      <p>%%HERO_SUBTITLE%%</p>
+      <p class="map-hero-meta">%%HERO_CITY_PREFIX%%<span id="hero-city-count">0</span>%%HERO_CITY_SUFFIX%%</p>
     </section>
   </main>
 
   <div id="controls" class="bottom-sheet" role="complementary" aria-labelledby="page-title">
-    <span id="page-title" class="sr-only">全体パネル</span>
+    <span id="page-title" class="sr-only">%%PANEL_TITLE%%</span>
     <div class="controls-header">
-      <button type="button" id="controls-toggle" class="controls-toggle-btn" aria-label="全体パネルを開く" title="全体パネルを開く/閉じる" aria-expanded="false" aria-controls="controls-content">
+      <button type="button" id="controls-toggle" class="controls-toggle-btn" aria-label="%%CONTROLS_TOGGLE_ARIA%%" title="%%CONTROLS_TOGGLE_TITLE%%" aria-expanded="false" aria-controls="controls-content">
         <span class="sheet-grip" aria-hidden="true"></span>
       </button>
     </div>
-    <div id="controls-content" class="controls-content" role="region" aria-label="全体パネルの内容">
+    <div id="controls-content" class="controls-content" role="region" aria-label="%%PANEL_CONTENT_ARIA%%">
       <div class="sheet-summary-card">
-        <div class="sheet-action-grid" aria-label="探索メニュー">
+        <div class="sheet-action-grid" aria-label="%%EXPLORE_MENU_ARIA%%">
           <button type="button" id="prefecture-open-button" class="sheet-action-btn">
-            <img src="./assets/icon-map.svg" alt="" aria-hidden="true">
-            地図で探す
+            <img src="%%BASE_PATH%%assets/icon-map.svg" alt="" aria-hidden="true">
+            %%PREF_BUTTON_LABEL%%
           </button>
           <label class="sheet-action-btn sheet-action-btn--toggle" for="recent-toggle">
             <input type="checkbox" id="recent-toggle" />
-            <img src="./assets/icon-fire.svg" alt="" aria-hidden="true">
-            新着ポケふた
+            <img src="%%BASE_PATH%%assets/icon-fire.svg" alt="" aria-hidden="true">
+            %%RECENT_BUTTON_LABEL%%
           </label>
           <button type="button" id="locate-button" class="sheet-action-btn">
-            <img src="./assets/icon-current-location.svg" alt="" aria-hidden="true">
-            <span id="locate-button-label">近くのポケふたを探す</span>
+            <img src="%%BASE_PATH%%assets/icon-current-location.svg" alt="" aria-hidden="true">
+            <span id="locate-button-label">%%LOCATE_LABEL%%</span>
           </button>
         </div>
       </div>
       <section class="prefecture-directory" aria-labelledby="prefecture-directory-heading">
         <div class="section-title-row">
-          <h2 id="prefecture-directory-heading">都道府県別のポケふた一覧</h2>
+          <h2 id="prefecture-directory-heading">%%PREF_DIR_HEADING%%</h2>
         </div>
-        <p>旅行先やお出かけ先の近くにあるポケふたを、都道府県別に探せます。</p>
-        <div id="prefecture-directory-links" class="prefecture-directory-links" aria-label="ポケふたがある都道府県"></div>
+        <p>%%PREF_DIR_DESC%%</p>
+        <div id="prefecture-directory-links" class="prefecture-directory-links" aria-label="%%PREF_DIR_LINKS_ARIA%%"></div>
       </section>
       <section id="nearby-results" class="nearby-results" aria-live="polite" hidden>
         <div class="section-title-row">
-          <h4>近くのポケふた</h4>
+          <h4>%%NEARBY_HEADING%%</h4>
         </div>
         <div id="nearby-list" class="nearby-list"></div>
       </section>
       <section id="recent-added-panel" class="recent-added-panel" aria-labelledby="recent-added-heading" hidden>
         <div class="section-title-row">
-          <h4 id="recent-added-heading">新着ポケふた</h4>
+          <h4 id="recent-added-heading">%%RECENT_HEADING%%</h4>
         </div>
         <div id="recent-added-list" class="recent-added-list"></div>
       </section>
       <div id="prefecture-tab" class="tab-content active">
         <div id="selected-prefecture-badge" class="selected-prefecture-badge" style="display:none;">
-          <span class="badge-label" style="font-weight:600;">選択中:</span> <span class="badge-value"></span>
-          <button type="button" class="badge-clear" aria-label="選択解除" onclick="clearPrefectureSelection()">×</button>
+          <span class="badge-label" style="font-weight:600;">%%BADGE_LABEL%%</span> <span class="badge-value"></span>
+          <button type="button" class="badge-clear" aria-label="%%BADGE_CLEAR_ARIA%%" onclick="clearPrefectureSelection()">×</button>
         </div>
         <section id="prefecture-spots-panel" class="prefecture-spots-panel" hidden>
           <div class="section-title-row">
-            <h4 id="prefecture-spots-heading">県内のポケふた</h4>
+            <h4 id="prefecture-spots-heading">%%PREF_SPOTS_HEADING%%</h4>
           </div>
           <div id="prefecture-spots-list" class="prefecture-spots-list"></div>
         </section>
         <div id="prefecture-table-wrapper" class="prefecture-card-list" aria-describedby="pref-table-desc">
-          <p id="pref-table-desc" class="sr-only">都道府県ごとのポケふた数と公式サイトリンク</p>
+          <p id="pref-table-desc" class="sr-only">%%PREF_TABLE_DESC%%</p>
           <div id="prefecture-table-body"></div>
         </div>
       </div>
       <span id="recent-summary" class="sr-only"></span>
     </div>
   </div>
-  <nav aria-label="人気のポケモン" style="margin:16px auto 0; max-width:960px; padding:12px 16px; background:#fff8ec; border-radius:8px; border:1px solid #e8e0d0;">
-    <p style="font-size:0.85rem; font-weight:bold; color:#6F55A3; margin:0 0 4px;">人気のポケモン</p>
-    <p style="margin:0 0 8px;"><a href="/pokemon/" style="font-size:0.85rem; color:#6F55A3; font-weight:bold;">→ ポケモン一覧を見る</a></p>
+  <nav aria-label="%%POPULAR_NAV_ARIA%%" style="margin:16px auto 0; max-width:960px; padding:12px 16px; background:#fff8ec; border-radius:8px; border:1px solid #e8e0d0;">
+    <p style="font-size:0.85rem; font-weight:bold; color:#6F55A3; margin:0 0 4px;">%%POPULAR_HEADING%%</p>
+    <p style="margin:0 0 8px;"><a href="/pokemon/" style="font-size:0.85rem; color:#6F55A3; font-weight:bold;">%%POPULAR_LINK%%</a></p>
     <ul style="list-style:none; display:flex; flex-wrap:wrap; gap:8px; margin:0; padding:0;">
-      <li><a href="/pokemon/chansey/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">ラッキー</a></li>
-      <li><a href="/pokemon/lapras/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">ラプラス</a></li>
-      <li><a href="/pokemon/vulpix-alola/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">アローラロコン</a></li>
-      <li><a href="/pokemon/oshawott/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">ミジュマル</a></li>
-      <li><a href="/pokemon/vulpix/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">ロコン</a></li>
-      <li><a href="/pokemon/geodude/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">イシツブテ</a></li>
-      <li><a href="/pokemon/quagsire/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">ヌオー</a></li>
-      <li><a href="/pokemon/exeggutor/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">ナッシー</a></li>
-      <li><a href="/pokemon/dragonite/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">カイリュー</a></li>
-      <li><a href="/pokemon/slowpoke/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">ヤドン</a></li>
-      <li><a href="/pokemon/sandshrew/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">サンド</a></li>
-      <li><a href="/pokemon/pikachu/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">ピカチュウ</a></li>
-      <li><a href="/pokemon/eevee/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">イーブイ</a></li>
-      <li><a href="/pokemon/snorlax/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">カビゴン</a></li>
+%%POPULAR_ITEMS%%
     </ul>
   </nav>
 
   <footer class="data-links" role="contentinfo" style="margin:16px auto 0; max-width:960px; text-align:center; font-size:0.9rem; color:#444;">
     <p style="margin:0;">
-      📡 データエクスポート:
-      <a href="./pokefuta.ndjson" target="_blank" rel="noopener">NDJSON</a>
+      %%FOOTER_EXPORT%%
+      <a href="%%BASE_PATH%%pokefuta.ndjson" target="_blank" rel="noopener">NDJSON</a>
       /
-      <a href="./pokefuta.kml" target="_blank" rel="noopener">KML</a>
+      <a href="%%BASE_PATH%%pokefuta.kml" target="_blank" rel="noopener">KML</a>
     </p>
   </footer>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
@@ -423,7 +416,7 @@
     integrity="sha384-eXVCORTRlv4FUUgS/xmOyr66XBVraen8ATNLMESp92FKXLAMiKkerixTiBvXriZr" crossorigin=""></script>
   <script>
     const pokefutaIcon = L.icon({
-      iconUrl: './assets/pokefuta-marker.svg',
+      iconUrl: '%%BASE_PATH%%assets/pokefuta-marker.svg',
       iconSize: [34, 40],
       iconAnchor: [17, 38],
       popupAnchor: [0, -34]
@@ -543,33 +536,7 @@
       }
     }
 
-    // ==== 単一言語 (日本語) 用 UI ラベル定数 ==== 
-    const UI_TEXT = {
-      recentLabel: '🆕 直近1ヶ月',
-      prefectureFilter: '都道府県で絞り込み',
-      allPrefectures: 'すべての都道府県',
-      prefectureCount: '都道府県別ポケふた数',
-      searchPrefecture: '都道府県を検索...',
-      codeHeader: 'コード',
-      prefectureHeader: '都道府県',
-      countHeader: 'ポケふた数',
-      siteHeader: 'サイト',
-      pokemonFilter: 'ポケモンで絞り込み',
-      searchPokemon: 'ポケモンを検索...',
-      showAll: '🔄 すべて表示',
-      totalCount: '総数:',
-      visibleCount: '表示:',
-      cityCount: '市町村:',
-      idLabel: 'ID:',
-      titleLabel: 'タイトル:',
-      prefectureLabel: '都道府県:',
-      pokemonLabel: 'ポケモン:',
-      cityLabel: '市町村:',
-      officialDetail: '📝 公式詳細',
-      officialDetailCta: '公式詳細を見る',
-      detailPageCta: '詳細ページを見る',
-      prefectureSite: 'サイト'
-    };
+    const UI_TEXT = window.I18N.UI;
 
     // 初期テキストは既に HTML に記述しているため updateUIText は不要
     function updateUIText() { /* no-op (多言語削除) */ }
@@ -610,7 +577,7 @@
 
     function getLocalManholeImageUrl(id) {
       const safeId = String(id ?? '').trim();
-      return safeId ? `./manhole/image/${encodeURIComponent(safeId)}_latest.jpeg` : '';
+      return safeId ? `%%BASE_PATH%%manhole/image/${encodeURIComponent(safeId)}_latest.jpeg` : '';
     }
 
     function getManholePageUrl(id) {
@@ -626,7 +593,7 @@
     async function shareManholeUrl(button) {
       const url = button?.dataset.shareUrl;
       if (!url) return;
-      const title = button.dataset.shareTitle || 'ポケふた';
+      const title = button.dataset.shareTitle || window.I18N.manholeTitle;
       const text = button.dataset.shareText || '';
 
       // Track share event
@@ -649,16 +616,16 @@
         try {
           await navigator.clipboard.writeText(url);
           const originalText = button.textContent;
-          button.textContent = 'コピー済み';
+          button.textContent = window.I18N.copyDone;
           window.setTimeout(() => {
-            button.textContent = originalText || '共有';
+            button.textContent = originalText || window.I18N.shareLabel;
           }, 1400);
           return;
         } catch (error) {
           console.warn('クリップボードへのコピーに失敗しました', error);
         }
       }
-      window.prompt('共有URLをコピーしてください', url);
+      window.prompt(window.I18N.shareCopyPrompt, url);
     }
 
     document.addEventListener('click', event => {
@@ -674,7 +641,7 @@
       if (!rawDate) return '';
       const date = new Date(rawDate);
       if (Number.isNaN(date.getTime())) return '';
-      return new Intl.DateTimeFormat('ja-JP', {
+      return new Intl.DateTimeFormat(window.I18N.intlLocale, {
         year: 'numeric',
         month: 'long',
         day: 'numeric'
@@ -699,24 +666,25 @@
     }
 
     function buildPokefutaPopup(d) {
-      const prefecture = d.prefecture || '不明';
+      const I = window.I18N;
+      const prefecture = d.prefecture || I.unknownPref;
       const prefectureCode = window.PREFECTURE_CODE_MAP[prefecture] || '--';
       const pokemons = Array.isArray(d.pokemons) && d.pokemons.length ? d.pokemons : [];
       const pokemonsHtml = pokemons.length
         ? pokemons.map(pokemon => `<span class="travel-popup-pokemon">${escapeHtml(pokemon)}</span>`).join('')
-        : '<span class="travel-popup-pokemon">ポケモン未設定</span>';
+        : `<span class="travel-popup-pokemon">${I.noPokemon}</span>`;
       const imageUrl = getLocalManholeImageUrl(d.id);
-      const photoAlt = `${d.title || 'ポケふた'}の写真`;
+      const photoAlt = `${d.title || I.manholeTitle}${I.photoAltSuffix}`;
       const photoMeta = getLatestPhotoMeta(d.id);
       const photoDate = getPhotoTakenDate(d.id);
       const displayName = String(photoMeta?.display_name || '').trim();
       const photoComment = String(photoMeta?.comment || '').trim();
       const photoMetaItems = [
-        photoDate ? `<span class="travel-popup-photo-date">撮影日 ${escapeHtml(photoDate)}</span>` : '',
+        photoDate ? `<span class="travel-popup-photo-date">${I.photoDatePrefix}${escapeHtml(photoDate)}</span>` : '',
         displayName ? `<span class="travel-popup-photo-author">${escapeHtml(displayName)}</span>` : ''
       ].filter(Boolean).join('');
       const shareUrl = getAbsoluteManholePageUrl(d.id);
-      const shareTitle = `${d.title || 'ポケふた'} | ポケふたマップ`;
+      const shareTitle = `${d.title || I.manholeTitle}${I.shareTitleSuffix}`;
       const titles = Array.isArray(d.titles) ? d.titles : [];
       const titleBadgesHtml = titles.length
         ? '<div class="travel-popup-badges">'
@@ -726,26 +694,26 @@
           + '</div>'
         : '';
       const _titleHashtags = titles.map(t => t.hashtag || '').filter(Boolean).join(' ');
-      const _shareHashtags = (_titleHashtags + ' #ポケふた #ポケモンマンホール').trim();
+      const _shareHashtags = (_titleHashtags + I.shareHashtags).trim();
       const _shareText = titles.length
-        ? (titles[0].emoji ? titles[0].emoji + ' ' : '') + titles[0].label + 'のポケふた！\n' + _shareHashtags
+        ? (titles[0].emoji ? titles[0].emoji + ' ' : '') + titles[0].label + I.shareTextSuffix + _shareHashtags
         : _shareHashtags;
       const safeShareUrl = escapeHtml(shareUrl);
       const safeShareTitle = escapeHtml(shareTitle);
       const safeShareText = escapeHtml(_shareText).replace(/\n/g, '&#10;');
       const photoBlock = imageUrl ? `
-        <div class="popup-photo travel-popup-photo" aria-label="マンホール写真">
+        <div class="popup-photo travel-popup-photo" aria-label="${I.manholePhotoAria}">
           <img src="${imageUrl}" alt="${escapeHtml(photoAlt)}" loading="lazy" decoding="async" onerror="handlePopupImageError(this)">
           ${photoMetaItems ? `<div class="travel-popup-photo-meta">${photoMetaItems}</div>` : ''}
           <div class="popup-photo__missing">
-            <b>写真募集中</b>
-            <span>このポケふたの写真はまだありません。</span>
-            <a href="https://pokefuta.com/visits" target="_blank" rel="noopener noreferrer" class="popup-link popup-link--upload">写真を投稿</a>
+            <b>${I.photoWanted}</b>
+            <span>${I.photoMissing}</span>
+            <a href="https://pokefuta.com/visits" target="_blank" rel="noopener noreferrer" class="popup-link popup-link--upload">${I.uploadPhoto}</a>
           </div>
         </div>
       ` : '';
       const officialDetailLink = d.id ? (function() {
-        const manholeDetailUrl = `${window.SITE_BASE_URL}manholes/${encodeURIComponent(d.id)}/`;
+        const manholeDetailUrl = `${window.SITE_ROOT_URL}manholes/${encodeURIComponent(d.id)}/`;
         const anchor = document.createElement('a');
         anchor.href = manholeDetailUrl;
         anchor.className = 'travel-popup-action travel-popup-action--primary';
@@ -765,13 +733,13 @@
               <span>${escapeHtml(prefecture)}</span>
               ${d.city ? `<b>${escapeHtml(d.city)}</b>` : ''}
             </div>
-            <h3 class="travel-popup-title">${escapeHtml(d.title || 'ポケふた')}</h3>
+            <h3 class="travel-popup-title">${escapeHtml(d.title || I.manholeTitle)}</h3>
             ${titleBadgesHtml}
             ${photoComment ? `<p class="travel-popup-comment">${escapeHtml(photoComment)}</p>` : ''}
-            <div class="travel-popup-pokemon-list" aria-label="登場ポケモン">${pokemonsHtml}</div>
+            <div class="travel-popup-pokemon-list" aria-label="${I.pokemonListAria}">${pokemonsHtml}</div>
             <div class="popup-actions travel-popup-actions">
               ${officialDetailLink}
-              <button class="travel-popup-action travel-popup-action--share" data-share-url="${safeShareUrl}" data-share-title="${safeShareTitle}" data-share-text="${safeShareText}" aria-label="シェア">シェア</button>
+              <button class="travel-popup-action travel-popup-action--share" data-share-url="${safeShareUrl}" data-share-title="${safeShareTitle}" data-share-text="${safeShareText}" aria-label="${I.shareButton}">${I.shareButton}</button>
             </div>
           </div>
         </div>
@@ -780,7 +748,7 @@
 
     async function loadLatestPhotoMeta() {
       try {
-        const response = await fetch('./latest-manhole-photos.json', { cache: 'no-store' });
+        const response = await fetch('%%BASE_PATH%%latest-manhole-photos.json', { cache: 'no-store' });
         if (!response.ok) return;
         const payload = await response.json();
         latestPhotoMeta = payload?.photos || {};
@@ -794,7 +762,7 @@
 
     async function loadPokemonMetadata() {
       try {
-        const res = await fetch('./pokemon_metadata.json', { cache: 'default' });
+        const res = await fetch('%%BASE_PATH%%pokemon_metadata.json', { cache: 'default' });
         if (!res.ok) return null;
         const data = await res.json();
         if (!Array.isArray(data)) return null;
@@ -814,6 +782,7 @@
     }
 
     function buildPokemonInfoCards(pokemons) {
+      const I = window.I18N;
       if (!pokemonMetadata || !Array.isArray(pokemons) || pokemons.length === 0) return '';
 
       const cards = pokemons.slice(0, 2).map(nameJa => {
@@ -832,8 +801,8 @@
         return `
           <div class="pokemon-info-card">
             <h4>${escapeHtml(nameJa)} / ${escapeHtml(meta.names.en || nameJa)}</h4>
-            ${types ? `<div class="pokemon-info-row"><strong>タイプ:</strong> ${types}</div>` : ''}
-            ${meta.generation ? `<div class="pokemon-info-row"><strong>世代:</strong> 第${meta.generation}世代</div>` : ''}
+            ${types ? `<div class="pokemon-info-row"><strong>${I.typeLabel}</strong> ${types}</div>` : ''}
+            ${meta.generation ? `<div class="pokemon-info-row"><strong>${I.genLabel}</strong> ${I.genFormat.replace('{n}', meta.generation)}</div>` : ''}
             ${multilang ? `<div class="pokemon-info-multilang">${multilang}</div>` : ''}
           </div>
         `;
@@ -843,6 +812,7 @@
     }
 
     function buildSamePokemonSection(pokemons, currentId) {
+      const I = window.I18N;
       if (!Array.isArray(pokemons) || pokemons.length === 0) return '';
 
       // Find all manholes with same Pokemon, excluding current one
@@ -879,7 +849,7 @@
 
         // Extract Pokemon names for this manhole
         const pokemonNames = Array.isArray(d.pokemons)
-          ? d.pokemons.filter(p => !p.includes('ローカルActs')).slice(0, 2).join('・')
+          ? d.pokemons.filter(p => !p.includes('ローカルActs')).slice(0, 2).join(' / ')
           : '';
         const pokemonDisplay = pokemonNames ? ` (${pokemonNames})` : '';
 
@@ -887,15 +857,15 @@
           <button type="button" class="same-pokemon-item"
                   data-manhole-id="${escapeHtml(d.id)}"
                   onclick="openManholePopup('${safeIdJs}'); collapseBottomSheet();"
-                  title="${escapeHtml(d.title || 'ポケふた')}を開く">
-            ${escapeHtml(d.prefecture || '不明')} ${escapeHtml(d.city || '')}${escapeHtml(pokemonDisplay)}
+                  title="${escapeHtml(d.title || I.manholeTitle)}${I.openSuffix}">
+            ${escapeHtml(d.prefecture || I.unknownPref)} ${escapeHtml(d.city || '')}${escapeHtml(pokemonDisplay)}
           </button>
         `;
       }).join('');
 
       return `
         <div class="same-pokemon-section">
-          <h5>同じポケモンのポケふた</h5>
+          <h5>${I.samePokemonHeading}</h5>
           <div class="same-pokemon-list">${items}</div>
         </div>
       `;
@@ -1163,7 +1133,7 @@
       if (!toggle) return;
       if (!hasAddedAtField) {
         toggle.disabled = true;
-        toggle.title = 'データに日付フィールド (added_at / first_seen / last_seen / source_last_checked / last_updated / date) が無いため利用できません';
+        toggle.title = window.I18N.recentDisabledTitle;
       }
       syncExploreSections();
       toggle.addEventListener('change', e => {
@@ -1274,8 +1244,8 @@
       document.body.classList.add('sheet-expanded');
       const toggleBtn = document.getElementById('controls-toggle');
       toggleBtn?.setAttribute('aria-expanded', 'true');
-      toggleBtn?.setAttribute('aria-label', '全体パネルを閉じる');
-      toggleBtn?.setAttribute('title', '全体パネルを閉じる');
+      toggleBtn?.setAttribute('aria-label', window.I18N.panelCloseLabel);
+      toggleBtn?.setAttribute('title', window.I18N.panelCloseLabel);
       setTimeout(() => map.invalidateSize(), 160);
     }
 
@@ -1284,8 +1254,8 @@
       document.body.classList.remove('sheet-expanded');
       const toggleBtn = document.getElementById('controls-toggle');
       toggleBtn?.setAttribute('aria-expanded', 'false');
-      toggleBtn?.setAttribute('aria-label', '全体パネルを開く');
-      toggleBtn?.setAttribute('title', '全体パネルを開く');
+      toggleBtn?.setAttribute('aria-label', window.I18N.panelOpenLabel);
+      toggleBtn?.setAttribute('title', window.I18N.panelOpenLabel);
       setTimeout(() => map.invalidateSize(), 160);
     }
 
@@ -1303,7 +1273,7 @@
     function updateRecentSummary(){
       const el = ensureRecentSummaryElement();
       if(!el) return;
-      if(!hasAddedAtField){ el.textContent='日付フィールドなし'; return; }
+      if(!hasAddedAtField){ el.textContent=window.I18N.recentDisabledTitle; return; }
       const recentCnt = countRecent(30);
       const total = allData.length;
       el.textContent=`${recentCnt} / ${total}`;
@@ -1454,7 +1424,8 @@
         const siteUrl = prefectureSiteUrls[prefecture];
         const thumbnailItems = prefectureThumbnails[prefecture] || [];
         const recentCount = prefectureRecentCounts[prefecture] || 0;
-        let siteCell = '<span class="prefecture-site-link prefecture-site-link--empty">公式サイトなし</span>';
+        const I = window.I18N;
+        let siteCell = `<span class="prefecture-site-link prefecture-site-link--empty">${I.noSite}</span>`;
         if (siteUrl) {
           const anchor = document.createElement('a');
           anchor.href = siteUrl;
@@ -1476,14 +1447,14 @@
             <span class="prefecture-code">${code}</span>
             <span class="prefecture-card-name">${prefecture}</span>
             <span class="prefecture-card-meta">
-              ${recentCount > 0 ? `<span class="prefecture-new-badge"><img src="./assets/icon-fire.svg" alt="" aria-hidden="true">NEW</span>` : ''}
+              ${recentCount > 0 ? `<span class="prefecture-new-badge"><img src="%%BASE_PATH%%assets/icon-fire.svg" alt="" aria-hidden="true">NEW</span>` : ''}
               ${siteCell}
             </span>
-            <span class="${countBadgeClass}">${count}枚</span>
+            <span class="${countBadgeClass}">${count}${I.countSuffix}</span>
           </div>
-          <div class="prefecture-card-gallery" aria-label="${escapeHtml(prefecture)}のマンホール写真">
+          <div class="prefecture-card-gallery" aria-label="${escapeHtml(prefecture)}${I.galleryAriaSuffix}">
             ${thumbnailItems.length ? thumbnailItems.map(item => `
-              <button type="button" class="prefecture-card-thumb" data-manhole-id="${escapeHtml(item.id)}" aria-label="${escapeHtml(item.title)}の詳細を開く" title="${escapeHtml(item.title)}の詳細を開く">
+              <button type="button" class="prefecture-card-thumb" data-manhole-id="${escapeHtml(item.id)}" aria-label="${escapeHtml(item.title)}${I.openDetailSuffix}" title="${escapeHtml(item.title)}${I.openDetailSuffix}">
                 <img src="${item.imageUrl}" alt="" loading="lazy" decoding="async" onerror="this.closest('.prefecture-card-thumb').classList.add('is-missing'); this.remove();">
               </button>
             `).join('') : '<span class="prefecture-card-thumb is-missing"></span>'}
@@ -1511,7 +1482,7 @@
             event.preventDefault();
             selectPrefecture();
           });
-          button.title = `${prefecture}のポケふたを地図で見る`;
+          button.title = I.prefCardTitleFormat.replace('{pref}', prefecture);
         }
         // Append row
         tbody.appendChild(row);
@@ -1541,7 +1512,7 @@
       links.innerHTML = prefectures.map(prefecture => {
         const count = prefectureCounts[prefecture] || 0;
         const href = window.buildCanonicalPath(prefecture);
-        return `<a href="${href}" data-prefecture="${escapeHtml(prefecture)}">${escapeHtml(prefecture)}<span>${count}枚</span></a>`;
+        return `<a href="${href}" data-prefecture="${escapeHtml(prefecture)}">${escapeHtml(prefecture)}<span>${count}${window.I18N.countSuffix}</span></a>`;
       }).join('');
     }
 
@@ -1552,9 +1523,9 @@
         .filter(d => isWithinLastDays(d._addedDate, 30))
         .sort((a, b) => b._addedDate - a._addedDate);
       renderSpotResults(list, recentItems, {
-        emptyMessage: '直近30日の追加はありません。',
-        meta: d => [d.prefecture || '不明', d.title || 'ポケふた'].join(' / '),
-        badge: () => '<img src="./assets/icon-fire.svg" alt="" aria-hidden="true">NEW',
+        emptyMessage: window.I18N.recentEmpty,
+        meta: d => [d.prefecture || window.I18N.unknownPref, d.title || window.I18N.manholeTitle].join(' / '),
+        badge: () => `<img src="%%BASE_PATH%%assets/icon-fire.svg" alt="" aria-hidden="true">NEW`,
         limit: 24
       });
     }
@@ -1585,7 +1556,7 @@
         return;
       }
       list.innerHTML = visibleSpots.map(d => {
-        const metaText = meta ? meta(d) : (d.title || 'ポケふた');
+        const metaText = meta ? meta(d) : (d.title || window.I18N.manholeTitle);
         const badgeText = badge ? badge(d) : '';
         return `
           <button type="button" class="prefecture-spot-item" data-manhole-id="${escapeHtml(d.id)}">
@@ -1593,7 +1564,7 @@
               <img src="${getLocalManholeImageUrl(d.id)}" alt="" loading="lazy" decoding="async" onerror="this.closest('.prefecture-spot-thumb').classList.add('is-missing'); this.remove();">
             </span>
             <span class="prefecture-spot-copy">
-              <strong>${escapeHtml(d.city || '自治体未設定')}</strong>
+              <strong>${escapeHtml(d.city || window.I18N.unknownCity)}</strong>
               <small>${escapeHtml(metaText)}</small>
             </span>
             ${badgeText ? `<span class="${badgeClass}">${badgeText}</span>` : ''}
@@ -1615,10 +1586,10 @@
       const spots = allData
         .filter(d => d.prefecture === prefecture)
         .sort((a, b) => String(a.city || '').localeCompare(String(b.city || ''), 'ja'));
-      heading.textContent = `${prefecture}のポケふた`;
+      heading.textContent = window.I18N.prefSpotsHeadingFormat.replace('{pref}', prefecture);
       renderSpotResults(list, spots, {
         limit: 24,
-        badge: d => isWithinLastDays(d._addedDate, 30) ? '<img src="./assets/icon-fire.svg" alt="" aria-hidden="true">NEW' : ''
+        badge: d => isWithinLastDays(d._addedDate, 30) ? '<img src="%%BASE_PATH%%assets/icon-fire.svg" alt="" aria-hidden="true">NEW' : ''
       });
       panel.hidden = spots.length === 0;
     }
@@ -1649,7 +1620,7 @@
         return;
       }
       renderSpotResults(list, nearest, {
-        meta: d => [d.prefecture || '不明', d.title || 'ポケふた'].join(' / '),
+        meta: d => [d.prefecture || window.I18N.unknownPref, d.title || window.I18N.manholeTitle].join(' / '),
         badge: d => `${d.distance.toFixed(1)}km`,
         badgeClass: 'prefecture-spot-distance'
       });
@@ -1666,7 +1637,7 @@
       const button = document.getElementById('locate-button');
       const label = document.getElementById('locate-button-label');
       if (!button) return;
-      const defaultLabel = label?.textContent || '近くのポケふた';
+      const defaultLabel = label?.textContent || window.I18N.locateLabel;
       const setButtonState = (text, options = {}) => {
         const { busy = false, resetAfter = 0 } = options;
         button.disabled = busy;
@@ -1681,11 +1652,11 @@
       };
       button.addEventListener('click', () => {
         if (!navigator.geolocation) {
-          setButtonState('現在地を使えません', { resetAfter: 1800 });
+          setButtonState(window.I18N.locateUnavailable, { resetAfter: 1800 });
           expandBottomSheet();
           return;
         }
-        setButtonState('確認中...', { busy: true });
+        setButtonState(window.I18N.locateChecking, { busy: true });
 
         // Track locate button click
         if (window.trackEvent) {
@@ -1725,7 +1696,7 @@
           map.fitBounds(group.getBounds(), { padding: [48, 48], maxZoom: 13 });
           expandBottomSheet();
         }, (error) => {
-          setButtonState('取得できませんでした', { resetAfter: 1800 });
+          setButtonState(window.I18N.locateFailed, { resetAfter: 1800 });
 
           // Track geolocation error
           if (window.trackEvent) {
