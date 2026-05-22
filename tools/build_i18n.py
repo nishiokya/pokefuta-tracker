@@ -29,9 +29,11 @@ def build(lang: str) -> None:
     template = TEMPLATE.read_text(encoding='utf-8')
     strings: dict = json.loads(strings_path.read_text(encoding='utf-8'))
 
-    if PREF_FILE.exists():
-        pref_data = json.loads(PREF_FILE.read_text(encoding='utf-8'))
-        strings['PREFECTURE_NAMES_JSON'] = json.dumps(pref_data, ensure_ascii=False).replace('</', '<\\/')
+    if not PREF_FILE.exists():
+        print(f'[ERROR] Required file not found: {PREF_FILE}')
+        sys.exit(1)
+    pref_data = json.loads(PREF_FILE.read_text(encoding='utf-8'))
+    strings['PREFECTURE_NAMES_JSON'] = json.dumps(pref_data, ensure_ascii=False).replace('</', '<\\/')
 
     result = template
     for key, value in strings.items():
