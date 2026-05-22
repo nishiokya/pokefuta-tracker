@@ -90,6 +90,8 @@
     "shareLabel": "分享",
     "shareCopyPrompt": "请复制分享网址",
     "recentDisabledTitle": "无法使用（数据中没有日期字段）",
+    "panelOpenLabel": "开启总面板",
+    "panelCloseLabel": "关闭总面板",
     "UI": {
       "recentLabel": "🆕 最近30天",
       "prefectureFilter": "按都道府县筛选",

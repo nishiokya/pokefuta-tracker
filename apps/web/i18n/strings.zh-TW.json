@@ -90,6 +90,8 @@
     "shareLabel": "分享",
     "shareCopyPrompt": "請複製分享網址",
     "recentDisabledTitle": "無法使用（資料中沒有日期欄位）",
+    "panelOpenLabel": "開啟總面板",
+    "panelCloseLabel": "關閉總面板",
     "UI": {
       "recentLabel": "🆕 最近30天",
       "prefectureFilter": "依都道府縣篩選",

@@ -32,7 +32,8 @@ def build(lang: str) -> None:
     for key, value in strings.items():
         if isinstance(value, (dict, list)):
             # Serialize nested objects to JSON (used for I18N_OBJECT injection)
-            result = result.replace(f'%%{key}%%', json.dumps(value, ensure_ascii=False))
+            safe_json = json.dumps(value, ensure_ascii=False).replace('</', '<\\/')
+            result = result.replace(f'%%{key}%%', safe_json)
         else:
             result = result.replace(f'%%{key}%%', str(value))
 

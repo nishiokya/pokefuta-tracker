@@ -90,6 +90,8 @@
     "shareLabel": "공유",
     "shareCopyPrompt": "공유 URL을 복사하세요",
     "recentDisabledTitle": "사용 불가 (데이터에 날짜 필드 없음)",
+    "panelOpenLabel": "전체 패널 열기",
+    "panelCloseLabel": "전체 패널 닫기",
     "UI": {
       "recentLabel": "🆕 최근 30일",
       "prefectureFilter": "도도부현으로 필터",

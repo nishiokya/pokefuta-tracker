@@ -90,6 +90,8 @@
     "shareLabel": "共有",
     "shareCopyPrompt": "共有URLをコピーしてください",
     "recentDisabledTitle": "データに日付フィールド (added_at / first_seen / last_seen / source_last_checked / last_updated / date) が無いため利用できません",
+    "panelOpenLabel": "全体パネルを開く",
+    "panelCloseLabel": "全体パネルを閉じる",
     "UI": {
       "recentLabel": "🆕 直近1ヶ月",
       "prefectureFilter": "都道府県で絞り込み",

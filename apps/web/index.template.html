@@ -40,7 +40,8 @@
       '佐賀県': '41', '長崎県': '42', '熊本県': '43', '大分県': '44', '宮崎県': '45',
       '鹿児島県': '46', '沖縄県': '47'
     });
-    window.SITE_BASE_URL = 'https://data.pokefuta.com/';
+    window.SITE_ROOT_URL = 'https://data.pokefuta.com/';
+    window.SITE_BASE_URL = '%%CANONICAL_URL%%';
 
     window.resolvePrefectureParam = function(prefParam) {
       if (!prefParam) return '';
@@ -81,11 +82,11 @@
     };
 
     window.buildCanonicalPath = function(prefecture) {
-      return prefecture ? `/?pref=${encodeURIComponent(prefecture)}` : '/';
+      return prefecture ? `?pref=${encodeURIComponent(prefecture)}` : './';
     };
 
     window.buildManholeCanonicalPath = function(manholeId) {
-      return manholeId ? `/?manhole=${encodeURIComponent(manholeId)}` : '/';
+      return manholeId ? `?manhole=${encodeURIComponent(manholeId)}` : './';
     };
 
     window.applyManholePageMeta = function(manhole) {
@@ -535,33 +536,7 @@
       }
     }
 
-    // ==== 単一言語 (日本語) 用 UI ラベル定数 ==== 
-    const UI_TEXT = {
-      recentLabel: '🆕 直近1ヶ月',
-      prefectureFilter: '都道府県で絞り込み',
-      allPrefectures: 'すべての都道府県',
-      prefectureCount: '都道府県別ポケふた数',
-      searchPrefecture: '都道府県を検索...',
-      codeHeader: 'コード',
-      prefectureHeader: '都道府県',
-      countHeader: 'ポケふた数',
-      siteHeader: 'サイト',
-      pokemonFilter: 'ポケモンで絞り込み',
-      searchPokemon: 'ポケモンを検索...',
-      showAll: '🔄 すべて表示',
-      totalCount: '総数:',
-      visibleCount: '表示:',
-      cityCount: '市町村:',
-      idLabel: 'ID:',
-      titleLabel: 'タイトル:',
-      prefectureLabel: '都道府県:',
-      pokemonLabel: 'ポケモン:',
-      cityLabel: '市町村:',
-      officialDetail: '📝 公式詳細',
-      officialDetailCta: '公式詳細を見る',
-      detailPageCta: '詳細ページを見る',
-      prefectureSite: 'サイト'
-    };
+    const UI_TEXT = window.I18N.UI;
 
     // 初期テキストは既に HTML に記述しているため updateUIText は不要
     function updateUIText() { /* no-op (多言語削除) */ }
@@ -618,7 +593,7 @@
     async function shareManholeUrl(button) {
       const url = button?.dataset.shareUrl;
       if (!url) return;
-      const title = button.dataset.shareTitle || 'ポケふた';
+      const title = button.dataset.shareTitle || window.I18N.manholeTitle;
       const text = button.dataset.shareText || '';
 
       // Track share event
@@ -721,7 +696,7 @@
       const _titleHashtags = titles.map(t => t.hashtag || '').filter(Boolean).join(' ');
       const _shareHashtags = (_titleHashtags + I.shareHashtags).trim();
       const _shareText = titles.length
-        ? (titles[0].emoji ? titles[0].emoji + ' ' : '') + titles[0].label + 'のポケふた！\n' + _shareHashtags
+        ? (titles[0].emoji ? titles[0].emoji + ' ' : '') + titles[0].label + I.shareTextSuffix + _shareHashtags
         : _shareHashtags;
       const safeShareUrl = escapeHtml(shareUrl);
       const safeShareTitle = escapeHtml(shareTitle);
@@ -738,7 +713,7 @@
         </div>
       ` : '';
       const officialDetailLink = d.id ? (function() {
-        const manholeDetailUrl = `${window.SITE_BASE_URL}manholes/${encodeURIComponent(d.id)}/`;
+        const manholeDetailUrl = `${window.SITE_ROOT_URL}manholes/${encodeURIComponent(d.id)}/`;
         const anchor = document.createElement('a');
         anchor.href = manholeDetailUrl;
         anchor.className = 'travel-popup-action travel-popup-action--primary';
@@ -883,7 +858,7 @@
                   data-manhole-id="${escapeHtml(d.id)}"
                   onclick="openManholePopup('${safeIdJs}'); collapseBottomSheet();"
                   title="${escapeHtml(d.title || I.manholeTitle)}${I.openSuffix}">
-            ${escapeHtml(d.prefecture || '不明')} ${escapeHtml(d.city || '')}${escapeHtml(pokemonDisplay)}
+            ${escapeHtml(d.prefecture || I.unknownPref)} ${escapeHtml(d.city || '')}${escapeHtml(pokemonDisplay)}
           </button>
         `;
       }).join('');
@@ -1269,8 +1244,8 @@
       document.body.classList.add('sheet-expanded');
       const toggleBtn = document.getElementById('controls-toggle');
       toggleBtn?.setAttribute('aria-expanded', 'true');
-      toggleBtn?.setAttribute('aria-label', '全体パネルを閉じる');
-      toggleBtn?.setAttribute('title', '全体パネルを閉じる');
+      toggleBtn?.setAttribute('aria-label', window.I18N.panelCloseLabel);
+      toggleBtn?.setAttribute('title', window.I18N.panelCloseLabel);
       setTimeout(() => map.invalidateSize(), 160);
     }
 
@@ -1279,8 +1254,8 @@
       document.body.classList.remove('sheet-expanded');
       const toggleBtn = document.getElementById('controls-toggle');
       toggleBtn?.setAttribute('aria-expanded', 'false');
-      toggleBtn?.setAttribute('aria-label', '全体パネルを開く');
-      toggleBtn?.setAttribute('title', '全体パネルを開く');
+      toggleBtn?.setAttribute('aria-label', window.I18N.panelOpenLabel);
+      toggleBtn?.setAttribute('title', window.I18N.panelOpenLabel);
       setTimeout(() => map.invalidateSize(), 160);
     }
 
@@ -1298,7 +1273,7 @@
     function updateRecentSummary(){
       const el = ensureRecentSummaryElement();
       if(!el) return;
-      if(!hasAddedAtField){ el.textContent='日付フィールドなし'; return; }
+      if(!hasAddedAtField){ el.textContent=window.I18N.recentDisabledTitle; return; }
       const recentCnt = countRecent(30);
       const total = allData.length;
       el.textContent=`${recentCnt} / ${total}`;

@@ -90,6 +90,8 @@
     "shareLabel": "Share",
     "shareCopyPrompt": "Copy the share URL",
     "recentDisabledTitle": "Not available (no date field in data)",
+    "panelOpenLabel": "Open main panel",
+    "panelCloseLabel": "Close main panel",
     "UI": {
       "recentLabel": "🆕 Last 30 days",
       "prefectureFilter": "Filter by Prefecture",
