@@ -42,6 +42,25 @@
     });
     window.SITE_ROOT_URL = 'https://data.pokefuta.com/';
     window.SITE_BASE_URL = '%%CANONICAL_URL%%';
+    window.PREFECTURE_NAMES = %%PREFECTURE_NAMES_JSON%%;
+
+    (function () {
+      const _langMap = {'zh-CN': 'zh-Hans', 'zh-TW': 'zh-Hant'};
+      const _lang = (window.I18N && window.I18N.lang) || 'ja';
+      const _key = _langMap[_lang] || _lang;
+
+      window.translatePref = function (jaName) {
+        if (!jaName || _lang === 'ja') return jaName;
+        return (window.PREFECTURE_NAMES[jaName] || {})[_key] || jaName;
+      };
+
+      window.getPokemonDisplayName = function (jaName) {
+        if (_lang === 'ja') return jaName;
+        // getPokemonMetadata is a hoisted function declaration; called after loadPokemonMetadata()
+        const meta = getPokemonMetadata(jaName);
+        return (meta && meta.names[_key]) || jaName;
+      };
+    })();
 
     window.resolvePrefectureParam = function(prefParam) {
       if (!prefParam) return '';
@@ -53,14 +72,15 @@
 
     window.buildPrefecturePageMeta = function(prefecture) {
       const I = window.I18N;
-      const title = prefecture
-        ? `${prefecture}${I.prefTitleSuffix}`
+      const prefDisplay = translatePref(prefecture);
+      const title = prefDisplay
+        ? `${prefDisplay}${I.prefTitleSuffix}`
         : I.defaultTitle;
-      const description = prefecture
-        ? `${I.prefDescPrefix}${prefecture}${I.prefDescSuffix}`
+      const description = prefDisplay
+        ? `${I.prefDescPrefix}${prefDisplay}${I.prefDescSuffix}`
         : I.defaultDescription;
-      const keywords = prefecture
-        ? `${I.prefKeywordsPrefix}${prefecture}${I.prefKeywordsSuffix}`
+      const keywords = prefDisplay
+        ? `${I.prefKeywordsPrefix}${prefDisplay}${I.prefKeywordsSuffix}`
         : I.defaultKeywords;
       const canonicalUrl = prefecture
         ? `${window.SITE_BASE_URL}?pref=${encodeURIComponent(prefecture)}`
@@ -109,32 +129,34 @@
 
       if (pokemons.length > 0) {
         if (pokemons.length === 1) {
-          pokemonText = pokemons[0];
+          pokemonText = getPokemonDisplayName(pokemons[0]);
           const meta = getPokemonMetadata(pokemons[0]);
           if (meta && meta.names) {
             pokemonTextEn = meta.names.en;
           }
         } else {
-          pokemonText = pokemons.join(window.I18N.pokemonJoiner || '・');
+          pokemonText = pokemons.map(n => getPokemonDisplayName(n)).join(window.I18N.pokemonJoiner || '・');
         }
       }
 
       // title: {ポケモン名}のポケふた | {都道府県}{市区町村} | Pokefuta Map
-      const locationPart = prefecture && city
-        ? `${prefecture}${city}`
-        : prefecture || '';
+      const prefDisplay = translatePref(prefecture);
+      const locationPart = prefDisplay && city
+        ? `${prefDisplay}${city}`
+        : prefDisplay || '';
       const title = locationPart
         ? `${pokemonText}${I.manholeTitleInfix}${locationPart} | Pokefuta Map`
         : `${pokemonText}${I.manholeTitleInfix}Pokefuta Map`;
 
-      const placeText = prefecture && city ? `${prefecture}${city}` : (prefecture || '');
-      const pokemonWithEn = pokemonTextEn ? `${pokemonText}（${pokemonTextEn}）` : pokemonText;
+      const placeText = prefDisplay && city ? `${prefDisplay}${city}` : (prefDisplay || '');
+      const pokemonWithEn = pokemonTextEn && pokemonTextEn !== pokemonText ? `${pokemonText}（${pokemonTextEn}）` : pokemonText;
       const description = placeText
         ? I.manholeDescTemplate.replace('{place}', placeText).replace('{pokemon}', pokemonWithEn)
         : I.manholeDescNoPlaceTemplate.replace('{pokemon}', pokemonWithEn);
 
       const keywordParts = [I.baseKeyword];
       if (prefecture) keywordParts.push(prefecture);
+      if (prefDisplay && prefDisplay !== prefecture) keywordParts.push(prefDisplay);
       if (city) keywordParts.push(city);
 
       pokemons.forEach(nameJa => {
@@ -667,11 +689,11 @@
 
     function buildPokefutaPopup(d) {
       const I = window.I18N;
-      const prefecture = d.prefecture || I.unknownPref;
-      const prefectureCode = window.PREFECTURE_CODE_MAP[prefecture] || '--';
+      const prefecture = translatePref(d.prefecture) || I.unknownPref;
+      const prefectureCode = window.PREFECTURE_CODE_MAP[d.prefecture] || '--';
       const pokemons = Array.isArray(d.pokemons) && d.pokemons.length ? d.pokemons : [];
       const pokemonsHtml = pokemons.length
-        ? pokemons.map(pokemon => `<span class="travel-popup-pokemon">${escapeHtml(pokemon)}</span>`).join('')
+        ? pokemons.map(pokemon => `<span class="travel-popup-pokemon">${escapeHtml(getPokemonDisplayName(pokemon))}</span>`).join('')
         : `<span class="travel-popup-pokemon">${I.noPokemon}</span>`;
       const imageUrl = getLocalManholeImageUrl(d.id);
       const photoAlt = `${d.title || I.manholeTitle}${I.photoAltSuffix}`;
@@ -1432,7 +1454,7 @@
           anchor.target = '_blank';
           anchor.rel = 'noopener noreferrer';
           anchor.className = 'prefecture-site-link';
-          anchor.textContent = `${prefecture}${UI_TEXT.prefectureSite}`;
+          anchor.textContent = `${translatePref(prefecture)}${UI_TEXT.prefectureSite}`;
           siteCell = anchor.outerHTML;
         }
 
@@ -1445,14 +1467,14 @@
         row.innerHTML = `
           <div class="prefecture-card-main" role="button" tabindex="${count === 0 ? '-1' : '0'}" aria-disabled="${count === 0 ? 'true' : 'false'}">
             <span class="prefecture-code">${code}</span>
-            <span class="prefecture-card-name">${prefecture}</span>
+            <span class="prefecture-card-name">${translatePref(prefecture)}</span>
             <span class="prefecture-card-meta">
               ${recentCount > 0 ? `<span class="prefecture-new-badge"><img src="%%BASE_PATH%%assets/icon-fire.svg" alt="" aria-hidden="true">NEW</span>` : ''}
               ${siteCell}
             </span>
             <span class="${countBadgeClass}">${count}${I.countSuffix}</span>
           </div>
-          <div class="prefecture-card-gallery" aria-label="${escapeHtml(prefecture)}${I.galleryAriaSuffix}">
+          <div class="prefecture-card-gallery" aria-label="${escapeHtml(translatePref(prefecture))}${I.galleryAriaSuffix}">
             ${thumbnailItems.length ? thumbnailItems.map(item => `
               <button type="button" class="prefecture-card-thumb" data-manhole-id="${escapeHtml(item.id)}" aria-label="${escapeHtml(item.title)}${I.openDetailSuffix}" title="${escapeHtml(item.title)}${I.openDetailSuffix}">
                 <img src="${item.imageUrl}" alt="" loading="lazy" decoding="async" onerror="this.closest('.prefecture-card-thumb').classList.add('is-missing'); this.remove();">
@@ -1482,7 +1504,7 @@
             event.preventDefault();
             selectPrefecture();
           });
-          button.title = I.prefCardTitleFormat.replace('{pref}', prefecture);
+          button.title = I.prefCardTitleFormat.replace('{pref}', translatePref(prefecture));
         }
         // Append row
         tbody.appendChild(row);
@@ -1586,7 +1608,7 @@
       const spots = allData
         .filter(d => d.prefecture === prefecture)
         .sort((a, b) => String(a.city || '').localeCompare(String(b.city || ''), 'ja'));
-      heading.textContent = window.I18N.prefSpotsHeadingFormat.replace('{pref}', prefecture);
+      heading.textContent = window.I18N.prefSpotsHeadingFormat.replace('{pref}', translatePref(prefecture));
       renderSpotResults(list, spots, {
         limit: 24,
         badge: d => isWithinLastDays(d._addedDate, 30) ? '<img src="%%BASE_PATH%%assets/icon-fire.svg" alt="" aria-hidden="true">NEW' : ''
