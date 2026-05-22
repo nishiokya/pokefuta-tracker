@@ -11,6 +11,7 @@ from xml.sax.saxutils import escape
 
 
 BASE_URL = "https://data.pokefuta.com/"
+I18N_LANGS = ["en", "zh-TW", "zh-CN", "ko"]
 
 PREFECTURES = [
     "北海道",
@@ -187,6 +188,9 @@ def build_sitemap(manhole_ids: list[str], pokemon_slugs: list[str] | None = None
         url_entry(f"{BASE_URL}nearby.html", "weekly", "0.6"),
         url_entry(f"{BASE_URL}gmanhole_map.html", "weekly", "0.6"),
     ]
+
+    for lang in I18N_LANGS:
+        entries.append(url_entry(f"{BASE_URL}{lang}/", "weekly", "0.9"))
 
     for prefecture in PREFECTURES:
         entries.append(

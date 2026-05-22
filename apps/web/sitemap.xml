@@ -26,6 +26,26 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://data.pokefuta.com/en/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://data.pokefuta.com/zh-TW/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://data.pokefuta.com/zh-CN/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://data.pokefuta.com/ko/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://data.pokefuta.com/?pref=%E5%8C%97%E6%B5%B7%E9%81%93</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -5279,25 +5299,5 @@
     <loc>https://data.pokefuta.com/pokemon/zigzagoon/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.1</priority>
-  </url>
-  <url>
-    <loc>https://data.pokefuta.com/en/</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://data.pokefuta.com/zh-TW/</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://data.pokefuta.com/zh-CN/</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://data.pokefuta.com/ko/</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
   </url>
 </urlset>
