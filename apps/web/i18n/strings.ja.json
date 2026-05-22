@@ -54,6 +54,7 @@
     "manholeKeywordsEnd": ["ポケモンマンホール", "Pokemon Manhole", "マンホール", "聖地巡礼", "地図"],
     "jsonLdDescTemplate": "{place}のポケモンマンホール（ポケふた）。",
     "jsonLdDescNoPlace": "ポケモンマンホール（ポケふた）。",
+    "pokemonJoiner": "・",
     "pokemonDescPrefix": "登場ポケモン: ",
     "noPokemon": "ポケモン未設定",
     "unknownPref": "不明",

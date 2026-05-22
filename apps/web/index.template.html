@@ -114,7 +114,7 @@
             pokemonTextEn = meta.names.en;
           }
         } else {
-          pokemonText = pokemons.join('・');
+          pokemonText = pokemons.join(window.I18N.pokemonJoiner || '・');
         }
       }
 

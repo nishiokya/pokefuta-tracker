@@ -54,6 +54,7 @@
     "manholeKeywordsEnd": ["Pokemon Manhole", "Pokemon Manhole Cover", "Japan", "travel", "map"],
     "jsonLdDescTemplate": "Pokémon manhole cover (Pokéfuta) in {place}.",
     "jsonLdDescNoPlace": "Pokémon manhole cover (Pokéfuta) in Japan.",
+    "pokemonJoiner": " / ",
     "pokemonDescPrefix": "Featured Pokémon: ",
     "noPokemon": "No Pokémon",
     "unknownPref": "Unknown",

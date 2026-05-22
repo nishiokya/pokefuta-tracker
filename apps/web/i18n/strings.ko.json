@@ -54,6 +54,7 @@
     "manholeKeywordsEnd": ["포켓몬 맨홀", "Pokemon Manhole", "일본", "여행", "지도"],
     "jsonLdDescTemplate": "{place}의 포켓몬 맨홀(포케후타).",
     "jsonLdDescNoPlace": "일본의 포켓몬 맨홀(포케후타).",
+    "pokemonJoiner": " / ",
     "pokemonDescPrefix": "등장 포켓몬: ",
     "noPokemon": "포켓몬 미설정",
     "unknownPref": "불명",

@@ -54,6 +54,7 @@
     "manholeKeywordsEnd": ["宝可梦井盖", "Pokemon Manhole", "日本", "旅游", "地图"],
     "jsonLdDescTemplate": "{place}的宝可梦井盖（Pokéfuta）。",
     "jsonLdDescNoPlace": "日本的宝可梦井盖（Pokéfuta）。",
+    "pokemonJoiner": "・",
     "pokemonDescPrefix": "登场宝可梦：",
     "noPokemon": "未设定宝可梦",
     "unknownPref": "不明",

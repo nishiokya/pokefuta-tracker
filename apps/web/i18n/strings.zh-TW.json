@@ -54,6 +54,7 @@
     "manholeKeywordsEnd": ["神奇寶貝人孔蓋", "Pokemon Manhole", "日本", "旅遊", "地圖"],
     "jsonLdDescTemplate": "{place}的神奇寶貝人孔蓋（Pokéfuta）。",
     "jsonLdDescNoPlace": "日本的神奇寶貝人孔蓋（Pokéfuta）。",
+    "pokemonJoiner": "・",
     "pokemonDescPrefix": "登場神奇寶貝：",
     "noPokemon": "未設定神奇寶貝",
     "unknownPref": "不明",
