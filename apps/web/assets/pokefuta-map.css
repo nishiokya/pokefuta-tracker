@@ -835,6 +835,17 @@ body.pokefuta-map-page {
   font-weight: 900;
 }
 
+.pokefuta-map-page a.travel-popup-pokemon {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.pokefuta-map-page a.travel-popup-pokemon:hover,
+.pokefuta-map-page a.travel-popup-pokemon:focus-visible {
+  background: rgba(101, 74, 160, .22);
+  color: #4a3080;
+}
+
 .pokefuta-map-page .travel-popup-actions {
   display: grid;
   grid-template-columns: 1fr 1fr;
