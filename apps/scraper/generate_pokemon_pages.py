@@ -628,8 +628,10 @@ def generate_html(
             pref_ja = m.get("prefecture", "")
             city = m.get("city", "")
             pref_display = translate_pref(pref_ja) if pref_ja else ""
-            location = (pref_display + city) or m.get("title", unknown_location)
-            label = f"{location}のポケふた" if lang == "ja" else f"{display_name} Pokéfuta in {location}" if lang == "en" else location
+            if pref_display and city:
+                location = pref_display + city if lang == "ja" else f"{pref_display} {city}"
+            else:
+                location = pref_display or city or m.get("title", unknown_location)
             pokes = filter_pokemons(m.get("pokemons", []))
             sub = "・".join(pokes) if pokes else ""
 

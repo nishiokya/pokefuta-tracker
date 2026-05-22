@@ -284,7 +284,6 @@ def generate_html(
     total_count = len(pokemon_index)
     url_prefix = lang_config["url_prefix"]
     map_href = f"/{url_prefix}" if url_prefix else "/"
-    pokemon_list_url = f"/{url_prefix}pokemon/" if url_prefix else "/pokemon/"
     canonical_url = f"{BASE_URL}{url_prefix}pokemon/"
     map_url = f"{BASE_URL}{url_prefix}"
 
@@ -337,7 +336,8 @@ def generate_html(
     items_html = "".join(items)
 
     # Popular intro text
-    top3_names = "・".join(
+    name_joiner = lang_config.get("pref_joiner", "・")
+    top3_names = name_joiner.join(
         _get_display_name(pokemon_index[s][0], lang_config)
         for s in sorted_slugs[:3]
     )
