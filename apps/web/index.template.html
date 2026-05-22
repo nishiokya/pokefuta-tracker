@@ -60,14 +60,15 @@
         const meta = getPokemonMetadata(jaName);
         return (meta && meta.names[_key]) || jaName;
       };
-
-      window.getPokemonLpUrl = function (jaName) {
-        const meta = getPokemonMetadata(jaName);
-        if (!meta || !meta.slug) return null;
-        const prefix = _lang === 'ja' ? '' : _lang + '/';
-        return `${window.SITE_ROOT_URL}${prefix}pokemon/${meta.slug}/`;
-      };
     })();
+
+    window.getPokemonLpUrl = function(jaName) {
+      const meta = getPokemonMetadata(jaName);
+      if (!meta || !meta.slug) return null;
+      const lang = (window.I18N && window.I18N.lang) || 'ja';
+      const prefix = lang === 'ja' ? '' : lang + '/';
+      return `${window.SITE_ROOT_URL}${prefix}pokemon/${meta.slug}/`;
+    };
 
     window.resolvePrefectureParam = function(prefParam) {
       if (!prefParam) return '';
@@ -718,7 +719,7 @@
             const displayName = escapeHtml(getPokemonDisplayName(pokemon));
             const url = getPokemonLpUrl(pokemon);
             return url
-              ? `<a href="${escapeHtml(url)}" class="travel-popup-pokemon travel-popup-pokemon--link" target="_blank" rel="noopener noreferrer">${displayName}</a>`
+              ? `<a href="${escapeHtml(url)}" class="travel-popup-pokemon" target="_blank" rel="noopener noreferrer">${displayName}</a>`
               : `<span class="travel-popup-pokemon">${displayName}</span>`;
           }).join('')
         : `<span class="travel-popup-pokemon">${I.noPokemon}</span>`;
