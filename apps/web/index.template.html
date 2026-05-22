@@ -45,9 +45,9 @@
     window.PREFECTURE_NAMES = %%PREFECTURE_NAMES_JSON%%;
 
     (function () {
-      var _langMap = {'zh-CN': 'zh-Hans', 'zh-TW': 'zh-Hant'};
-      var _lang = (window.I18N && window.I18N.lang) || 'ja';
-      var _key = _langMap[_lang] || _lang;
+      const _langMap = {'zh-CN': 'zh-Hans', 'zh-TW': 'zh-Hant'};
+      const _lang = (window.I18N && window.I18N.lang) || 'ja';
+      const _key = _langMap[_lang] || _lang;
 
       window.translatePref = function (jaName) {
         if (!jaName || _lang === 'ja') return jaName;
@@ -56,7 +56,8 @@
 
       window.getPokemonDisplayName = function (jaName) {
         if (_lang === 'ja') return jaName;
-        var meta = getPokemonMetadata(jaName);
+        // getPokemonMetadata is a hoisted function declaration; called after loadPokemonMetadata()
+        const meta = getPokemonMetadata(jaName);
         return (meta && meta.names[_key]) || jaName;
       };
     })();
@@ -154,7 +155,8 @@
         : I.manholeDescNoPlaceTemplate.replace('{pokemon}', pokemonWithEn);
 
       const keywordParts = [I.baseKeyword];
-      if (prefDisplay) keywordParts.push(prefDisplay);
+      if (prefecture) keywordParts.push(prefecture);
+      if (prefDisplay && prefDisplay !== prefecture) keywordParts.push(prefDisplay);
       if (city) keywordParts.push(city);
 
       pokemons.forEach(nameJa => {
