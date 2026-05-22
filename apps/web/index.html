@@ -703,7 +703,12 @@
       const prefectureCode = window.PREFECTURE_CODE_MAP[prefecture] || '--';
       const pokemons = Array.isArray(d.pokemons) && d.pokemons.length ? d.pokemons : [];
       const pokemonsHtml = pokemons.length
-        ? pokemons.map(pokemon => `<span class="travel-popup-pokemon">${escapeHtml(pokemon)}</span>`).join('')
+        ? pokemons.map(pokemon => {
+            const url = getPokemonLpUrl(pokemon);
+            return url
+              ? `<a href="${escapeHtml(url)}" class="travel-popup-pokemon" target="_blank" rel="noopener noreferrer">${escapeHtml(pokemon)}</a>`
+              : `<span class="travel-popup-pokemon">${escapeHtml(pokemon)}</span>`;
+          }).join('')
         : '<span class="travel-popup-pokemon">ポケモン未設定</span>';
       const imageUrl = getLocalManholeImageUrl(d.id);
       const photoAlt = `${d.title || 'ポケふた'}の写真`;
@@ -811,6 +816,12 @@
     function getPokemonMetadata(nameJa) {
       if (!pokemonMetadata || !nameJa) return null;
       return pokemonMetadata.get(nameJa) || null;
+    }
+
+    function getPokemonLpUrl(jaName) {
+      const meta = getPokemonMetadata(jaName);
+      if (!meta || !meta.slug) return null;
+      return `${window.SITE_BASE_URL}pokemon/${meta.slug}/`;
     }
 
     function buildPokemonInfoCards(pokemons) {

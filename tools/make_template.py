@@ -383,6 +383,42 @@ t = t.replace(
 )
 
 # ──────────────────────────────────────────
+# I-2. getPokemonLpUrl — Japanese → i18n-aware
+# ──────────────────────────────────────────
+
+t = t.replace(
+    '''    function getPokemonLpUrl(jaName) {
+      const meta = getPokemonMetadata(jaName);
+      if (!meta || !meta.slug) return null;
+      return `${window.SITE_BASE_URL}pokemon/${meta.slug}/`;
+    }''',
+    '''    window.getPokemonLpUrl = function(jaName) {
+      const meta = getPokemonMetadata(jaName);
+      if (!meta || !meta.slug) return null;
+      const lang = (window.I18N && window.I18N.lang) || 'ja';
+      const prefix = lang === 'ja' ? '' : lang + '/';
+      return `${window.SITE_ROOT_URL}${prefix}pokemon/${meta.slug}/`;
+    };''',
+    1
+)
+t = t.replace(
+    '''        ? pokemons.map(pokemon => {
+            const url = getPokemonLpUrl(pokemon);
+            return url
+              ? `<a href="${escapeHtml(url)}" class="travel-popup-pokemon" target="_blank" rel="noopener noreferrer">${escapeHtml(pokemon)}</a>`
+              : `<span class="travel-popup-pokemon">${escapeHtml(pokemon)}</span>`;
+          }).join('')''',
+    '''        ? pokemons.map(pokemon => {
+            const displayName = escapeHtml(getPokemonDisplayName(pokemon));
+            const url = getPokemonLpUrl(pokemon);
+            return url
+              ? `<a href="${escapeHtml(url)}" class="travel-popup-pokemon" target="_blank" rel="noopener noreferrer">${displayName}</a>`
+              : `<span class="travel-popup-pokemon">${displayName}</span>`;
+          }).join('')''',
+    1
+)
+
+# ──────────────────────────────────────────
 # J. buildPokemonInfoCards — use window.I18N
 # ──────────────────────────────────────────
 

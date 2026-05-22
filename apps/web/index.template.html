@@ -62,6 +62,14 @@
       };
     })();
 
+    window.getPokemonLpUrl = function(jaName) {
+      const meta = getPokemonMetadata(jaName);
+      if (!meta || !meta.slug) return null;
+      const lang = (window.I18N && window.I18N.lang) || 'ja';
+      const prefix = lang === 'ja' ? '' : lang + '/';
+      return `${window.SITE_ROOT_URL}${prefix}pokemon/${meta.slug}/`;
+    };
+
     window.resolvePrefectureParam = function(prefParam) {
       if (!prefParam) return '';
       if (prefParam.length === 2 && !isNaN(prefParam)) {
@@ -707,7 +715,13 @@
       const prefectureCode = window.PREFECTURE_CODE_MAP[d.prefecture] || '--';
       const pokemons = Array.isArray(d.pokemons) && d.pokemons.length ? d.pokemons : [];
       const pokemonsHtml = pokemons.length
-        ? pokemons.map(pokemon => `<span class="travel-popup-pokemon">${escapeHtml(getPokemonDisplayName(pokemon))}</span>`).join('')
+        ? pokemons.map(pokemon => {
+            const displayName = escapeHtml(getPokemonDisplayName(pokemon));
+            const url = getPokemonLpUrl(pokemon);
+            return url
+              ? `<a href="${escapeHtml(url)}" class="travel-popup-pokemon" target="_blank" rel="noopener noreferrer">${displayName}</a>`
+              : `<span class="travel-popup-pokemon">${displayName}</span>`;
+          }).join('')
         : `<span class="travel-popup-pokemon">${I.noPokemon}</span>`;
       const imageUrl = getLocalManholeImageUrl(d.id);
       const photoAlt = `${d.title || I.manholeTitle}${I.photoAltSuffix}`;
