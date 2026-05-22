@@ -1022,7 +1022,7 @@
         });
         await loadLatestPhotoMeta();
         // Load Pokemon metadata asynchronously (non-blocking)
-        loadPokemonMetadata().catch(err => console.warn('Pokemon metadata loading failed', err));
+        await loadPokemonMetadata().catch(err => console.warn('Pokemon metadata loading failed', err));
         initMarkerLayer();
         // Build markers
         allMarkers = [];
