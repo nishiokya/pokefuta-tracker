@@ -9,8 +9,6 @@
   "MAP_ARIA": "ポケふた探索マップ",
   "HERO_TITLE": "全国のポケふた・ポケモンマンホールマップ",
   "HERO_SUBTITLE": "旅行やお出かけのついでに、ご当地マンホール「ポケふた」を見つけよう",
-  "HERO_CITY_PREFIX": "📍 全国",
-  "HERO_CITY_SUFFIX": "の自治体に設置",
   "PANEL_TITLE": "全体パネル",
   "PANEL_CONTENT_ARIA": "全体パネルの内容",
   "EXPLORE_MENU_ARIA": "探索メニュー",
@@ -31,7 +29,7 @@
   "PREF_SPOTS_HEADING": "県内のポケふた",
   "POPULAR_NAV_ARIA": "人気のポケモン",
   "POPULAR_HEADING": "人気のポケモン",
-  "POPULAR_LINK": "→ ポケモン一覧を見る",
+  "POPULAR_LINK": "好きなポケモンのポケふたを探す →",
   "POPULAR_ITEMS": "      <li><a href=\"/pokemon/chansey/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">ラッキー</a></li>\n      <li><a href=\"/pokemon/lapras/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">ラプラス</a></li>\n      <li><a href=\"/pokemon/vulpix-alola/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">アローラロコン</a></li>\n      <li><a href=\"/pokemon/oshawott/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">ミジュマル</a></li>\n      <li><a href=\"/pokemon/vulpix/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">ロコン</a></li>\n      <li><a href=\"/pokemon/geodude/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">イシツブテ</a></li>\n      <li><a href=\"/pokemon/quagsire/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">ヌオー</a></li>\n      <li><a href=\"/pokemon/exeggutor/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">ナッシー</a></li>\n      <li><a href=\"/pokemon/dragonite/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">カイリュー</a></li>\n      <li><a href=\"/pokemon/slowpoke/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">ヤドン</a></li>\n      <li><a href=\"/pokemon/sandshrew/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">サンド</a></li>\n      <li><a href=\"/pokemon/pikachu/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">ピカチュウ</a></li>\n      <li><a href=\"/pokemon/eevee/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">イーブイ</a></li>\n      <li><a href=\"/pokemon/snorlax/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">カビゴン</a></li>",
   "FOOTER_EXPORT": "📡 データエクスポート:",
   "I18N_OBJECT": {
