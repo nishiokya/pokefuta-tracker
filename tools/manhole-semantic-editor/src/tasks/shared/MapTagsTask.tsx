@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef, useEffect } from 'react'
+import { useState, useMemo, useRef, useEffect, useCallback } from 'react'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import type { PokefutaRecord, ManholeTitlesJson, SemanticPatch, ManholeEntry, TaskType } from '../../semantic/semanticPatch'
@@ -6,6 +6,27 @@ import { validatePatch } from '../../semantic/semanticPatchValidator'
 import { newPatchId } from '../../util'
 
 const PAGE_SIZE = 10
+
+const PREF_ORDER = [
+  '北海道','青森県','岩手県','宮城県','秋田県','山形県','福島県',
+  '茨城県','栃木県','群馬県','埼玉県','千葉県','東京都','神奈川県',
+  '新潟県','富山県','石川県','福井県','山梨県','長野県','岐阜県',
+  '静岡県','愛知県','三重県','滋賀県','京都府','大阪府','兵庫県',
+  '奈良県','和歌山県','鳥取県','島根県','岡山県','広島県','山口県',
+  '徳島県','香川県','愛媛県','高知県','福岡県','佐賀県','長崎県',
+  '熊本県','大分県','宮崎県','鹿児島県','沖縄県',
+]
+
+function sortByPrefCode(prefs: string[]): string[] {
+  return [...prefs].sort((a, b) => {
+    const ai = PREF_ORDER.indexOf(a)
+    const bi = PREF_ORDER.indexOf(b)
+    if (ai === -1 && bi === -1) return a.localeCompare(b, 'ja')
+    if (ai === -1) return 1
+    if (bi === -1) return -1
+    return ai - bi
+  })
+}
 
 function makeIcon(color: string) {
   return L.divIcon({
@@ -60,7 +81,7 @@ export function MapTagsTask({
   const markersRef = useRef<Map<string, L.Marker>>(new Map())
 
   const prefectures = useMemo(
-    () => [...new Set(records.map(r => r.prefecture))].sort(),
+    () => sortByPrefCode([...new Set(records.map(r => r.prefecture))]),
     [records]
   )
 
@@ -204,6 +225,16 @@ export function MapTagsTask({
     setPending(new Map())
   }
 
+  const [copiedId, setCopiedId] = useState<string | null>(null)
+
+  const copyAddress = useCallback((e: React.MouseEvent, id: string, address: string) => {
+    e.stopPropagation()
+    navigator.clipboard.writeText(address).then(() => {
+      setCopiedId(id)
+      setTimeout(() => setCopiedId(c => c === id ? null : c), 1500)
+    })
+  }, [])
+
   const pendingCount = pending.size
 
   return (
@@ -293,7 +324,30 @@ export function MapTagsTask({
                     <div style={{ fontSize: 11, color: '#6b7280' }}>{titles.manholes[r.id].building}</div>
                   )}
                 </td>
-                <td style={{ fontSize: 12, maxWidth: 200, wordBreak: 'break-all' }}>{r.address}</td>
+                <td style={{ fontSize: 12, maxWidth: 200, wordBreak: 'break-all' }}>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: 4 }}>
+                    <span style={{ flex: 1 }}>{r.address}</span>
+                    <button
+                      onClick={e => copyAddress(e, r.id, r.address)}
+                      title="住所をコピー"
+                      style={{
+                        flexShrink: 0,
+                        padding: '1px 5px',
+                        fontSize: 11,
+                        lineHeight: 1.4,
+                        background: copiedId === r.id ? '#d1fae5' : '#f3f4f6',
+                        color: copiedId === r.id ? '#059669' : '#374151',
+                        border: '1px solid',
+                        borderColor: copiedId === r.id ? '#6ee7b7' : '#d1d5db',
+                        borderRadius: 4,
+                        cursor: 'pointer',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      {copiedId === r.id ? '✓' : '📋'}
+                    </button>
+                  </div>
+                </td>
                 <td onClick={e => e.stopPropagation()}>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
                     {tags.map(tag => (

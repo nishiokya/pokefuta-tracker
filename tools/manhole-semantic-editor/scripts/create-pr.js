@@ -119,6 +119,15 @@ try {
 
 // Discard working copy modification of titles before switching (we have it in memory)
 run(`git checkout -- "${TITLES_PATH}"`)
+
+// Stash any other uncommitted changes so git checkout main succeeds
+const otherDirty = run('git status --porcelain').split('\n').filter(l => l.trim() && !l.includes('changes.ndjson'))
+const needsStash = otherDirty.length > 0
+if (needsStash) {
+  run('git stash push --include-untracked -m "create-pr-temp"')
+  console.log('📦 他の変更を一時stashしました')
+}
+
 run('git checkout main')
 try {
   run('git pull origin main --ff-only', { stdio: 'pipe' })
@@ -163,4 +172,16 @@ console.log('✅ PR作成完了:', prUrl)
 // 9. Clear session patches
 fs.writeFileSync(PATCHES_PATH, '', 'utf-8')
 console.log('✅ workspace/changes.ndjson をクリアしました')
+
+// 10. Return to previous branch and restore stash
+run(`git checkout ${previousBranch}`)
+if (needsStash) {
+  try {
+    run('git stash pop')
+    console.log('📦 stashを復元しました')
+  } catch (e) {
+    console.warn('⚠️  stash popに失敗しました。手動で `git stash pop` を実行してください。', e.message)
+  }
+}
+
 console.log('\n🎉 完了:', prUrl)
