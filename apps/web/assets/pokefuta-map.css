@@ -81,6 +81,21 @@ body.pokefuta-map-page {
   font-weight: 900;
 }
 
+.pokefuta-map-page .map-hero-card .hero-pokemon-link {
+  display: inline-block;
+  margin-top: 10px;
+  color: #6F55A3;
+  font-size: .82rem;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.pokefuta-map-page .map-hero-card .hero-pokemon-link:hover,
+.pokefuta-map-page .map-hero-card .hero-pokemon-link:focus-visible {
+  text-decoration: underline;
+  color: #4a3080;
+}
+
 .pokefuta-map-page #controls {
   position: fixed;
   z-index: 1000;
