@@ -324,7 +324,16 @@ def parse_detail(detail_url: str, html: str, logger: logging.Logger, title_data:
 
     # 住所の取得 - address_parser の共通ロジックを使用
     address = extract_address_from_html(html)
-    
+
+    if not prefecture and address:
+        for m_pref in re.finditer(r'(北海道|東京都|大阪府|京都府|[一-鿿]{2,3}[都道府県])', address):
+            rest = address[m_pref.end():]
+            m_city = re.match(r'([^\s]*?(?:市|区|町|村))', rest)
+            if m_city and len(m_city.group(1)) <= 6:
+                prefecture = m_pref.group(1)
+                city = re.sub(r'[市区町村]$', '', m_city.group(1))
+                break
+
     # Detect prefecture_site_url from link text
     prefecture_site_url = ""
     is_prefecture_site = False
