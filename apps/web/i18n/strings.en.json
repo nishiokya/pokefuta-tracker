@@ -9,8 +9,6 @@
   "MAP_ARIA": "Pokéfuta exploration map",
   "HERO_TITLE": "Pokémon Manhole (Pokéfuta) Map of Japan",
   "HERO_SUBTITLE": "Discover regional Pokémon manholes on your travels around Japan",
-  "HERO_CITY_PREFIX": "📍 Installed in ",
-  "HERO_CITY_SUFFIX": " municipalities nationwide",
   "PANEL_TITLE": "Main panel",
   "PANEL_CONTENT_ARIA": "Main panel contents",
   "EXPLORE_MENU_ARIA": "Explore menu",
@@ -31,7 +29,7 @@
   "PREF_SPOTS_HEADING": "Pokéfuta in this prefecture",
   "POPULAR_NAV_ARIA": "Popular Pokémon",
   "POPULAR_HEADING": "Popular Pokémon",
-  "POPULAR_LINK": "→ View all Pokémon",
+  "POPULAR_LINK": "Find your favorite Pokémon's Pokéfuta →",
   "POPULAR_ITEMS": "      <li><a href=\"/pokemon/chansey/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">Chansey</a></li>\n      <li><a href=\"/pokemon/lapras/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">Lapras</a></li>\n      <li><a href=\"/pokemon/vulpix-alola/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">Alolan Vulpix</a></li>\n      <li><a href=\"/pokemon/oshawott/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">Oshawott</a></li>\n      <li><a href=\"/pokemon/vulpix/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">Vulpix</a></li>\n      <li><a href=\"/pokemon/geodude/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">Geodude</a></li>\n      <li><a href=\"/pokemon/quagsire/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">Quagsire</a></li>\n      <li><a href=\"/pokemon/exeggutor/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">Exeggutor</a></li>\n      <li><a href=\"/pokemon/dragonite/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">Dragonite</a></li>\n      <li><a href=\"/pokemon/slowpoke/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">Slowpoke</a></li>\n      <li><a href=\"/pokemon/sandshrew/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">Sandshrew</a></li>\n      <li><a href=\"/pokemon/pikachu/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">Pikachu</a></li>\n      <li><a href=\"/pokemon/eevee/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">Eevee</a></li>\n      <li><a href=\"/pokemon/snorlax/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">Snorlax</a></li>",
   "FOOTER_EXPORT": "📡 Data Export:",
   "I18N_OBJECT": {

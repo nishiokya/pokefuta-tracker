@@ -9,8 +9,6 @@
   "MAP_ARIA": "神奇寶貝人孔蓋探索地圖",
   "HERO_TITLE": "日本全國神奇寶貝人孔蓋（Pokéfuta）地圖",
   "HERO_SUBTITLE": "在日本旅遊時，尋找各地的神奇寶貝人孔蓋吧！",
-  "HERO_CITY_PREFIX": "📍 全國共 ",
-  "HERO_CITY_SUFFIX": " 個自治體設置中",
   "PANEL_TITLE": "主要面板",
   "PANEL_CONTENT_ARIA": "主要面板內容",
   "EXPLORE_MENU_ARIA": "探索選單",
@@ -31,7 +29,7 @@
   "PREF_SPOTS_HEADING": "該縣的 Pokéfuta",
   "POPULAR_NAV_ARIA": "熱門神奇寶貝",
   "POPULAR_HEADING": "熱門神奇寶貝",
-  "POPULAR_LINK": "→ 查看全部神奇寶貝",
+  "POPULAR_LINK": "找你喜歡的神奇寶貝的 Pokéfuta →",
   "POPULAR_ITEMS": "      <li><a href=\"/pokemon/chansey/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">幸福蛋</a></li>\n      <li><a href=\"/pokemon/lapras/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">拉普拉斯</a></li>\n      <li><a href=\"/pokemon/vulpix-alola/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">阿羅拉六尾</a></li>\n      <li><a href=\"/pokemon/oshawott/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">水水獺</a></li>\n      <li><a href=\"/pokemon/vulpix/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">六尾</a></li>\n      <li><a href=\"/pokemon/geodude/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">小拳石</a></li>\n      <li><a href=\"/pokemon/quagsire/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">沼王</a></li>\n      <li><a href=\"/pokemon/exeggutor/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">椰蛋樹</a></li>\n      <li><a href=\"/pokemon/dragonite/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">快龍</a></li>\n      <li><a href=\"/pokemon/slowpoke/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">呆呆獸</a></li>\n      <li><a href=\"/pokemon/sandshrew/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">穿山鼠</a></li>\n      <li><a href=\"/pokemon/pikachu/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">皮卡丘</a></li>\n      <li><a href=\"/pokemon/eevee/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">伊布</a></li>\n      <li><a href=\"/pokemon/snorlax/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">卡比獸</a></li>",
   "FOOTER_EXPORT": "📡 資料匯出：",
   "I18N_OBJECT": {

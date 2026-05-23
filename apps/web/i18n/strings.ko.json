@@ -9,8 +9,6 @@
   "MAP_ARIA": "포케후타 탐색 지도",
   "HERO_TITLE": "일본 전국 포켓몬 맨홀(포케후타) 지도",
   "HERO_SUBTITLE": "일본 여행 중에 각 지역의 포켓몬 맨홀을 찾아보세요!",
-  "HERO_CITY_PREFIX": "📍 전국 ",
-  "HERO_CITY_SUFFIX": "개 지자체에 설치됨",
   "PANEL_TITLE": "메인 패널",
   "PANEL_CONTENT_ARIA": "메인 패널 내용",
   "EXPLORE_MENU_ARIA": "탐색 메뉴",
@@ -31,7 +29,7 @@
   "PREF_SPOTS_HEADING": "해당 현의 포케후타",
   "POPULAR_NAV_ARIA": "인기 포켓몬",
   "POPULAR_HEADING": "인기 포켓몬",
-  "POPULAR_LINK": "→ 포켓몬 목록 보기",
+  "POPULAR_LINK": "좋아하는 포켓몬의 포케후타 찾기 →",
   "POPULAR_ITEMS": "      <li><a href=\"/pokemon/chansey/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">럭키</a></li>\n      <li><a href=\"/pokemon/lapras/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">라프라스</a></li>\n      <li><a href=\"/pokemon/vulpix-alola/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">알로라 식스테일</a></li>\n      <li><a href=\"/pokemon/oshawott/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">수댕이</a></li>\n      <li><a href=\"/pokemon/vulpix/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">식스테일</a></li>\n      <li><a href=\"/pokemon/geodude/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">꼬마돌</a></li>\n      <li><a href=\"/pokemon/quagsire/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">누오</a></li>\n      <li><a href=\"/pokemon/exeggutor/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">나시</a></li>\n      <li><a href=\"/pokemon/dragonite/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">망나뇽</a></li>\n      <li><a href=\"/pokemon/slowpoke/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">야돈</a></li>\n      <li><a href=\"/pokemon/sandshrew/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">모래두지</a></li>\n      <li><a href=\"/pokemon/pikachu/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">피카츄</a></li>\n      <li><a href=\"/pokemon/eevee/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">이브이</a></li>\n      <li><a href=\"/pokemon/snorlax/\" style=\"font-size:0.85rem; color:#6F55A3; text-decoration:none;\">잠만보</a></li>",
   "FOOTER_EXPORT": "📡 데이터 내보내기:",
   "I18N_OBJECT": {
