@@ -15,10 +15,10 @@ GitHub Actions からは呼ばれない手動実行ツール群。
 
 ## 依存パッケージ
 
-`enrich_photo_comments.py` のみ追加パッケージが必要。
+`import_latest_manhole_photos.py` と `enrich_photo_comments.py` は追加パッケージが必要。
 
 ```bash
-pip install anthropic
+pip install -r requirements.txt
 ```
 
 その他のスクリプトは標準ライブラリのみで動作する。
@@ -34,8 +34,12 @@ python apps/tools/check_quality.py
 # 写真コメント解析（要 pip install anthropic・ANTHROPIC_API_KEY）
 python apps/tools/enrich_photo_comments.py
 
-# 写真インポート
-python apps/tools/import_latest_manhole_photos.py
+# 写真インポート（週次手動更新）
+# 1. apps/web/latest-manhole-photos.json を更新してから実行
+cp apps/web/latest-manhole-photos.json docs/latest-manhole-photos.json
+# 2. R2 presign でダウンロード（.env.local に R2_ACCESS_KEY_ID / R2_SECRET_ACCESS_KEY / R2_ENDPOINT が必要）
+python3 apps/tools/import_latest_manhole_photos.py --presign-r2
+# → dataset/manhole/image/{id}_latest.jpeg が更新される
 
 # ポケモンパーク KML 生成
 python apps/tools/export_pokemon_park_kml.py
