@@ -22,10 +22,9 @@ pokefuta-tracker/
 │       ├── gmanhole_map.html       # ガンダムマンホール統合マップ
 │       └── assets/                 # CSS・アイコン・リソース
 ├── dataset/                        # 手動管理メタデータ
-│   ├── title.tsv                   # ポケふた詳細情報（住所、建物名、リンク等）
+│   ├── manhole_titles.json         # マンホールメタデータ統合マスタ（称号・詳細情報・自治体URL）
 │   ├── pokemon_park.tsv            # ポケモンパーク情報
 │   ├── mie_stamp_2025_v2.tsv       # 三重県スタンプ情報
-│   ├── city_link.tsv               # 市区町村リンク
 │   └── manhole_icon.png            # マンホールアイコン
 ├── docs/                           # 【公開用・アクティブ版】GitHub Pages用
 │   ├── pokefuta.ndjson             # 公開データ（active レコードのみ）
@@ -90,14 +89,7 @@ git commit -m "feat: initialize pokefuta dataset"
 ```
 
 ### 3. メタデータ設定
-`dataset/title.tsv` に手動で詳細情報（住所、施設名など）を入力してください。
-
-```bash
-# 初期テンプレート（オプション）
-# dataset/title.tsv の構造：
-# id    title    address    building    ...
-# 1     ...      ...        ...         ...
-```
+`dataset/manhole_titles.json` の `manholes` ブロックに手動で詳細情報（住所、施設名など）を入力してください。自治体公式URLは `city_links` ブロックで管理します。
 
 ## 📊 データフロー
 

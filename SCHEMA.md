@@ -16,21 +16,16 @@
 | title | string | ✔ | 日本語タイトル / 見出し (ページ h1/h2) | "鹿児島県/指宿市" | 空文字の場合あり |
 | title_en | string | ❌ | 英語版ページからのタイトル | "Poké Lids" | 取得失敗時は空 |
 | title_zh | string | ❌ | 中国語版ページからのタイトル | "寶可夢人孔蓋" | 取得失敗時は空 |
-| prefecture | string | ❌ | 都道府県 | "鹿児島県" | HTML 推測 + `dataset/title.tsv` 補正 |
+| prefecture | string | ❌ | 都道府県 | "鹿児島県" | HTML 推測 + `manhole_titles.json` 補正 |
 | city | string | ❌ | 市区町村 | "指宿市" | 町村名まで判明すれば上書き |
-| address | string | ❌ | 公開用住所 (正規化済みを優先) | "鹿児島県指宿市十二町" | `title.tsv` の `address_norm` → `address_raw` → HTML 順に利用 |
-| building | string | ❌ | 設置施設・建物名 | "鹿児島中央駅" | `title.tsv` の `building` |
-| address_raw | string | ❌ | 手入力の住所 (未正規化) | "鹿児島県鹿児島市中央町1-1" | `title.tsv` の `address_raw` |
-| address_norm | string | ❌ | 正規化住所 | "鹿児島県鹿児島市中央町1-1" | `title.tsv` の `address_norm` |
-| place_detail | string | ❌ | 施設内の位置や補足 | "駅前広場" | `title.tsv` `place_detail` |
-| landmark | string | ❌ | 目印となる地物 | "アミュ広場" | `title.tsv` `landmark` |
-| access | string | ❌ | アクセス情報 | "JR鹿児島中央駅直結" | `title.tsv` `access` |
-| parking | string | ❌ | 駐車場情報 | "隣接コインパーキング有" | `title.tsv` `parking` |
-| nearby_spots | string[] | ❌ | 周辺スポットタグ | ["アミュプラザ鹿児島"] | `title.tsv` `nearby_spots` を `|` 区切りで配列化 |
-| tags | string[] | ❌ | カテゴリタグ | ["station","tourism"] | `title.tsv` `tags` |
-| source_urls | string[] | ❌ | 参考リンク集 | ["https://example.com/info"] | `title.tsv` `source_urls` |
-| verified_at | string (date) | ❌ | メタデータ最終確認日 (JST) | "2025-12-27" | `title.tsv` `verified_at` |
-| confidence | number | ❌ | メタデータ確信度 (1-3など) | 3 | `title.tsv` `confidence` |
+| address | string | ❌ | 公開用住所 (正規化済みを優先) | "鹿児島県指宿市十二町" | `manhole_titles.json (.manholes[id])` の `address_norm` → `address_raw` → HTML 順に合成 |
+| building | string | ❌ | 設置施設・建物名 | "鹿児島中央駅" | `manhole_titles.json (.manholes[id])` の `building` |
+| place_detail | string | ❌ | 施設内の位置や補足 | "駅前広場" | `manhole_titles.json (.manholes[id])` の `place_detail` |
+| landmark | string | ❌ | 目印となる地物 | "アミュ広場" | `manhole_titles.json (.manholes[id])` の `landmark` |
+| access | string | ❌ | アクセス情報 | "JR鹿児島中央駅直結" | `manhole_titles.json (.manholes[id])` の `access` |
+| tags | string[] | ❌ | カテゴリタグ | ["station","tourism"] | `manhole_titles.json (.manholes[id])` の `tags` |
+| verified_at | string (date) | ❌ | メタデータ最終確認日 (JST) | "2025-12-27" | `manhole_titles.json (.manholes[id])` の `verified_at` |
+| confidence | number | ❌ | メタデータ確信度 (1-3など) | 3 | `manhole_titles.json (.manholes[id])` の `confidence` |
 | city_url | string | ❌ | 市区町村公式 URL (未実装) | "" | 予約 (将来拡張) |
 | lat | number | ✔ | 緯度 (WGS84) | 31.237194 | Google Maps リンク `q=` パラメータ抽出 |
 | lng | number | ✔ | 経度 (WGS84) | 130.642861 | 同上 |
@@ -44,12 +39,12 @@
 | last_updated | string (ISO8601) | ✔ | 内容が変化した/状態変化した最新の更新日時 | "2025-12-27T06:15:42Z" | 差分や status 変化時のみ更新 (ノイズ削減) |
 | status | string | ✔ | レコード状態 | "active" | "active" または "deleted" |
 
-### `dataset/title.tsv` 由来のフィールド
-- `building` / `address_raw` / `address_norm` / `place_detail` / `landmark` / `access` / `parking`
-- `nearby_spots` / `tags` / `source_urls`
+### `dataset/manhole_titles.json` 由来のフィールド
+- `building` / `place_detail` / `landmark` / `access` / `tags`
 - `verified_at` / `confidence`
+- `address` は `address_norm` → `address_raw` の優先順で合成（`address_raw` / `address_norm` 自体は NDJSON に出力されない）
 
-これらは手動管理の `dataset/title.tsv` (必要に応じて `title.csv`) から読み込まれ、`apply_title_metadata()` が NDJSON の各レコードへ自動反映します。ファイルを更新するだけでワークフロー実行時に差分が検出され、GitHub Actions が PR を作成します。
+これらは手動管理の `dataset/manhole_titles.json` (`.manholes` ブロック) から読み込まれ、`apply_title_metadata()` が NDJSON の各レコードへ自動反映します。ファイルを更新するだけでワークフロー実行時に差分が検出され、GitHub Actions が PR を作成します。
 
 ### 状態遷移
 | 遷移 | 条件 | 影響 |
@@ -61,7 +56,7 @@
 ### 差分検出対象フィールド
 `CORE_COMPARE_FIELDS`（title / prefecture / city / address / building / address_norm / address_raw / lat / lng / pokemons など）と `status` を比較します。
 - 配列フィールド (`pokemons`, `tags`, `nearby_spots`, `source_urls`) は集合ではなく配列比較ですが、スクレイパー/メタデータ更新時は同一順序で書き出すため意図せぬ diff は発生しません。
-- `dataset/title.tsv` を編集しただけでも `apply_title_metadata()` が差分として検知し、`last_updated` と CHANGELOG が更新されます。
+- `dataset/manhole_titles.json` を編集しただけでも `apply_title_metadata()` が差分として検知し、`last_updated` と CHANGELOG が更新されます。
 - 差分なしの定期再取得では `last_updated` を触らず PR ノイズを抑えます。
 
 ### レコード例 (active)
