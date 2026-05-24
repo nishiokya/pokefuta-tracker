@@ -15,10 +15,10 @@ GitHub Actions からは呼ばれない手動実行ツール群。
 
 ## 依存パッケージ
 
-`enrich_photo_comments.py` のみ追加パッケージが必要。
+`import_latest_manhole_photos.py` と `enrich_photo_comments.py` は追加パッケージが必要。
 
 ```bash
-pip install anthropic
+pip install -r requirements.txt
 ```
 
 その他のスクリプトは標準ライブラリのみで動作する。
