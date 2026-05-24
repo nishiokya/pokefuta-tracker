@@ -15,8 +15,18 @@ GitHub Actions からは呼ばれない手動実行ツール群。
 
 ## 実行方法
 
+プロジェクトルートから実行する（各スクリプトのデフォルトパスがルート相対のため）。
+
 ```bash
-cd apps/tools
-python check_quality.py
-python enrich_photo_comments.py  # 要 ANTHROPIC_API_KEY
+# データ品質チェック（pokefuta.ndjson は自動解決）
+python apps/tools/check_quality.py
+
+# 写真コメント解析（要 ANTHROPIC_API_KEY）
+python apps/tools/enrich_photo_comments.py
+
+# 写真インポート
+python apps/tools/import_latest_manhole_photos.py
+
+# ポケモンパーク KML 生成
+python apps/tools/export_pokemon_park_kml.py
 ```

@@ -1,5 +1,5 @@
 manhole_titles.jsonは手動で更新している
-pokefuta.ndjsonはapp/scraperで更新している
+pokefuta.ndjsonはapps/scraperで更新している
 latest-manhole-photos.json　はpokefuta.comからもらっている
 
 ## ディレクトリ構成
