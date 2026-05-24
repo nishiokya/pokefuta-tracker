@@ -108,6 +108,7 @@ SUMMARY_STRINGS: dict[str, dict] = {
             "中部": "中部", "近畿": "近畿", "中国": "中国",
             "四国": "四国", "九州": "九州",
         },
+        "discovery_aria": "発見",
         "regional_top2": "地方別では{r1name}（{r1count}枚）が最も多く、次いで{r2name}（{r2count}枚）となっています。",
         "regional_top1": "地方別では{r1name}（{r1count}枚）が最も多くなっています。",
         "regional_outro": "ポケふたは地方自治体・観光協会との連携で設置されることが多く、観光地や駅周辺に置かれているケースが目立ちます。地域を旅しながら複数のポケふたを巡るルートを作るのも人気の楽しみ方です。",
@@ -162,6 +163,7 @@ SUMMARY_STRINGS: dict[str, dict] = {
             "中部": "Chubu", "近畿": "Kinki", "中国": "Chugoku",
             "四国": "Shikoku", "九州": "Kyushu",
         },
+        "discovery_aria": "Discovery",
         "regional_top2": "By region, {r1name} leads with {r1count} Pokéfuta, followed by {r2name} ({r2count}).",
         "regional_top1": "By region, {r1name} has the most with {r1count} Pokéfuta.",
         "regional_outro": "Pokéfuta are often installed through partnerships with local governments and tourism associations, frequently found near tourist spots and train stations. Planning a multi-region route is a popular way to enjoy them.",
@@ -216,6 +218,7 @@ SUMMARY_STRINGS: dict[str, dict] = {
             "中部": "中部", "近畿": "近畿", "中国": "中国",
             "四国": "四国", "九州": "九州",
         },
+        "discovery_aria": "发现",
         "regional_top2": "按地区统计，{r1name}（{r1count}个）最多，其次是{r2name}（{r2count}个）。",
         "regional_top1": "按地区统计，{r1name}（{r1count}个）最多。",
         "regional_outro": "宝可梦井盖多通过地方政府和观光协会合作设置，常见于旅游胜地和车站周边。边旅行边规划多地巡游路线也是广受欢迎的玩法。",
@@ -270,6 +273,7 @@ SUMMARY_STRINGS: dict[str, dict] = {
             "中部": "中部", "近畿": "近畿", "中国": "中國",
             "四国": "四國", "九州": "九州",
         },
+        "discovery_aria": "發現",
         "regional_top2": "按地區統計，{r1name}（{r1count}個）最多，其次是{r2name}（{r2count}個）。",
         "regional_top1": "按地區統計，{r1name}（{r1count}個）最多。",
         "regional_outro": "寶可夢人孔蓋多透過地方政府和觀光協會合作設置，常見於旅遊勝地和車站周邊。邊旅行邊規劃多地巡遊路線也是廣受歡迎的玩法。",
@@ -324,6 +328,7 @@ SUMMARY_STRINGS: dict[str, dict] = {
             "中部": "주부", "近畿": "긴키", "中国": "주고쿠",
             "四国": "시코쿠", "九州": "규슈",
         },
+        "discovery_aria": "발견",
         "regional_top2": "지역별로는 {r1name}（{r1count}개）이 가장 많으며, 다음은 {r2name}（{r2count}개）입니다.",
         "regional_top1": "지역별로는 {r1name}（{r1count}개）이 가장 많습니다.",
         "regional_outro": "포케후타는 지방자치단체・관광협회와의 협력으로 설치되는 경우가 많으며, 관광지나 역 주변에 위치한 경우가 눈에 띕니다. 지역을 여행하면서 여러 포케후타를 순회하는 경로를 만드는 것도 인기 있는 즐기는 방법입니다.",
@@ -672,7 +677,7 @@ def _build_discovery_section(s: dict, stats: dict, tr) -> str:
         for c in cards
     )
     return (
-        f'\n    <section class="summary-section" aria-label="discovery">'
+        f'\n    <section class="summary-section" aria-label="{escape(s["discovery_aria"])}">'
         f'\n      <ul class="discovery-grid">\n        {items}\n      </ul>'
         f'\n    </section>\n'
     )

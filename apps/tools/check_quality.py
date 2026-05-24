@@ -3,8 +3,8 @@ from pathlib import Path
 import json
 
 _candidates = [
-    Path(__file__).parent.parent / 'scraper' / 'pokefuta.ndjson',
     Path(__file__).parent.parent.parent / 'docs' / 'pokefuta.ndjson',
+    Path(__file__).parent.parent / 'scraper' / 'pokefuta.ndjson',
 ]
 DATA = next((p for p in _candidates if p.exists()), _candidates[-1])
 

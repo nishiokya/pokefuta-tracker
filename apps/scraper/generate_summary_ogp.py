@@ -13,9 +13,6 @@ Design:
 """
 from __future__ import annotations
 
-import math
-import subprocess
-import shutil
 from pathlib import Path
 from typing import Optional
 
@@ -106,10 +103,6 @@ def _bbox(draw: ImageDraw.ImageDraw, text: str, font):
         return draw.textbbox((0, 0), text, font=font)
     except Exception:
         return (0, 0, len(text) * 12, 16)
-
-
-def _center_x(draw: ImageDraw.ImageDraw, text: str, font, canvas_w: int = CANVAS_W) -> int:
-    return (canvas_w - _w(draw, text, font)) // 2
 
 
 # ---------------------------------------------------------------------------
