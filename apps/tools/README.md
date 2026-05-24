@@ -13,6 +13,16 @@ GitHub Actions からは呼ばれない手動実行ツール群。
 | `export_pokemon_park_kml.py` | `dataset/pokemon_park.tsv` → KML 変換 |
 | `check_quality.py` | `pokefuta.ndjson` の address フィールド完全性チェック |
 
+## 依存パッケージ
+
+`enrich_photo_comments.py` のみ追加パッケージが必要。
+
+```bash
+pip install anthropic
+```
+
+その他のスクリプトは標準ライブラリのみで動作する。
+
 ## 実行方法
 
 プロジェクトルートから実行する（各スクリプトのデフォルトパスがルート相対のため）。
@@ -21,7 +31,7 @@ GitHub Actions からは呼ばれない手動実行ツール群。
 # データ品質チェック（pokefuta.ndjson は自動解決）
 python apps/tools/check_quality.py
 
-# 写真コメント解析（要 ANTHROPIC_API_KEY）
+# 写真コメント解析（要 pip install anthropic・ANTHROPIC_API_KEY）
 python apps/tools/enrich_photo_comments.py
 
 # 写真インポート
