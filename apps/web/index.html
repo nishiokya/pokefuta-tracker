@@ -1628,7 +1628,7 @@
         .sort((a, b) => String(a.city || '').localeCompare(String(b.city || ''), 'ja'));
       heading.textContent = `${prefecture}のポケふた`;
       renderSpotResults(list, spots, {
-        limit: 24,
+        limit: Infinity,
         badge: d => isWithinLastDays(d._addedDate, 30) ? '<img src="./assets/icon-fire.svg" alt="" aria-hidden="true">NEW' : ''
       });
       panel.hidden = spots.length === 0;
