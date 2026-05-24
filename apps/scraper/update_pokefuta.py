@@ -51,10 +51,13 @@ DEFAULT_SLEEP = 0.4
 
 # ウェブスクレイプ由来フィールド — 変化時に last_updated を更新する
 # 手動メタデータ(tags/address_norm/building など)はここに含めない
+# 更新ループで実際に上書きするフィールドのみ比較対象にすること。
+# is_prefecture_site / prefecture_site_url / status / detail_url を除外している理由:
+# 更新ループがそれらを書き換えないため、ウェブ側の変化を検知しても
+# last_updated だけが毎回 bump され続けるスプリアス diff を生む。
 CORE_COMPARE_FIELDS = [
     "title", "prefecture", "city", "address",
-    "lat", "lng", "pokemons", "detail_url",
-    "prefecture_site_url", "status", "is_prefecture_site"
+    "lat", "lng", "pokemons",
 ]
 
 PLACEHOLDER_STRINGS = {s.lower() for s in [
