@@ -18,17 +18,12 @@
 | title_zh | string | ❌ | 中国語版ページからのタイトル | "寶可夢人孔蓋" | 取得失敗時は空 |
 | prefecture | string | ❌ | 都道府県 | "鹿児島県" | HTML 推測 + `manhole_titles.json` 補正 |
 | city | string | ❌ | 市区町村 | "指宿市" | 町村名まで判明すれば上書き |
-| address | string | ❌ | 公開用住所 (正規化済みを優先) | "鹿児島県指宿市十二町" | `manhole_titles.json` の `address_norm` → `address_raw` → HTML 順に利用 |
+| address | string | ❌ | 公開用住所 (正規化済みを優先) | "鹿児島県指宿市十二町" | `manhole_titles.json (.manholes[id])` の `address_norm` → `address_raw` → HTML 順に合成 |
 | building | string | ❌ | 設置施設・建物名 | "鹿児島中央駅" | `manhole_titles.json (.manholes[id])` の `building` |
-| address_raw | string | ❌ | 手入力の住所 (未正規化) | "鹿児島県鹿児島市中央町1-1" | `manhole_titles.json (.manholes[id])` の `address_raw` |
-| address_norm | string | ❌ | 正規化住所 | "鹿児島県鹿児島市中央町1-1" | `manhole_titles.json (.manholes[id])` の `address_norm` |
 | place_detail | string | ❌ | 施設内の位置や補足 | "駅前広場" | `manhole_titles.json (.manholes[id])` の `place_detail` |
 | landmark | string | ❌ | 目印となる地物 | "アミュ広場" | `manhole_titles.json (.manholes[id])` の `landmark` |
 | access | string | ❌ | アクセス情報 | "JR鹿児島中央駅直結" | `manhole_titles.json (.manholes[id])` の `access` |
-| parking | string | ❌ | 駐車場情報 | "隣接コインパーキング有" | `manhole_titles.json (.manholes[id])` の `parking` |
-| nearby_spots | string[] | ❌ | 周辺スポットタグ | ["アミュプラザ鹿児島"] | `manhole_titles.json (.manholes[id])` の `nearby_spots` |
 | tags | string[] | ❌ | カテゴリタグ | ["station","tourism"] | `manhole_titles.json (.manholes[id])` の `tags` |
-| source_urls | string[] | ❌ | 参考リンク集 | ["https://example.com/info"] | `manhole_titles.json (.manholes[id])` の `source_urls` |
 | verified_at | string (date) | ❌ | メタデータ最終確認日 (JST) | "2025-12-27" | `manhole_titles.json (.manholes[id])` の `verified_at` |
 | confidence | number | ❌ | メタデータ確信度 (1-3など) | 3 | `manhole_titles.json (.manholes[id])` の `confidence` |
 | city_url | string | ❌ | 市区町村公式 URL (未実装) | "" | 予約 (将来拡張) |
@@ -45,9 +40,9 @@
 | status | string | ✔ | レコード状態 | "active" | "active" または "deleted" |
 
 ### `dataset/manhole_titles.json` 由来のフィールド
-- `building` / `address_raw` / `address_norm` / `place_detail` / `landmark` / `access` / `parking`
-- `nearby_spots` / `tags` / `source_urls`
+- `building` / `place_detail` / `landmark` / `access` / `tags`
 - `verified_at` / `confidence`
+- `address` は `address_norm` → `address_raw` の優先順で合成（`address_raw` / `address_norm` 自体は NDJSON に出力されない）
 
 これらは手動管理の `dataset/manhole_titles.json` (`.manholes` ブロック) から読み込まれ、`apply_title_metadata()` が NDJSON の各レコードへ自動反映します。ファイルを更新するだけでワークフロー実行時に差分が検出され、GitHub Actions が PR を作成します。
 
