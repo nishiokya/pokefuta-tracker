@@ -2,7 +2,11 @@
 from pathlib import Path
 import json
 
-DATA = Path(__file__).parent.parent / 'scraper' / 'pokefuta.ndjson'
+_candidates = [
+    Path(__file__).parent.parent / 'scraper' / 'pokefuta.ndjson',
+    Path(__file__).parent.parent.parent / 'docs' / 'pokefuta.ndjson',
+]
+DATA = next((p for p in _candidates if p.exists()), _candidates[-1])
 
 good = fallback = suspicious = total = 0
 with open(DATA) as f:
