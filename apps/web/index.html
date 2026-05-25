@@ -798,9 +798,8 @@
             ${titleBadgesHtml}
             ${photoComment ? `<p class="travel-popup-comment">${escapeHtml(photoComment)}</p>` : ''}
             <div class="travel-popup-pokemon-list" aria-label="登場ポケモン">${pokemonsHtml}</div>
-            <div class="popup-actions travel-popup-actions">
+            <div class="popup-actions travel-popup-actions travel-popup-actions--single">
               ${officialDetailLink}
-              <button class="travel-popup-action travel-popup-action--share" data-share-url="${safeShareUrl}" data-share-title="${safeShareTitle}" data-share-text="${safeShareText}" aria-label="シェア">シェア</button>
             </div>
           </div>
         </div>

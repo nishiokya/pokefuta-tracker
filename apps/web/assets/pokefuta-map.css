@@ -844,7 +844,8 @@ body.pokefuta-map-page {
 }
 
 .pokefuta-map-page a.travel-popup-pokemon {
-  text-decoration: none;
+  text-decoration: underline;
+  text-underline-offset: 2px;
   cursor: pointer;
 }
 
