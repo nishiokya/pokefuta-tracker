@@ -332,7 +332,7 @@
     var lang = (navigator.languages && navigator.languages[0]) || navigator.language || '';
     if (/^ja/i.test(lang)) return;
     var map = [
-      { re: /^zh-(tw|hant)/i, path: '/zh-TW/', label: '查看繁體中文版 →' },
+      { re: /^zh-(tw|hant|hk)/i, path: '/zh-TW/', label: '查看繁體中文版 →' },
       { re: /^zh/i,           path: '/zh-CN/', label: '查看简体中文版 →' },
       { re: /^ko/i,           path: '/ko/',    label: '한국어로 보기 →' },
       { re: /^en/i,           path: '/en/',    label: 'View in English →' },
@@ -431,6 +431,9 @@
   </nav>
 
   <footer class="data-links" role="contentinfo" style="margin:16px auto 0; max-width:960px; text-align:center; font-size:0.9rem; color:#444;">
+    <p style="margin:0 0 4px;">
+      <a href="https://x.com/pokemonmanhole" target="_blank" rel="noopener noreferrer" style="color:#888; font-size:0.82rem; text-decoration:none;">𝕏 @pokemonmanhole — 公式更新情報</a>
+    </p>
     <p style="margin:0;">
       📡 データエクスポート:
       <a href="./pokefuta.ndjson" target="_blank" rel="noopener">NDJSON</a>
