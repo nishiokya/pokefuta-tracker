@@ -550,7 +550,7 @@ def generate_html(
         def _hero_tag(p: str) -> str:
             _slug = _jts_hero.get(p) or _jts_hero.get(_normalize_katakana(p), "")
             if _slug:
-                return f"<a class='hero-tag hero-tag--link' href='/pokemon/{quote(_slug)}/'>{escape(p)}</a>"
+                return f"<a class='hero-tag' href='/pokemon/{quote(_slug)}/'>{escape(p)}</a>"
             return f"<span class='hero-tag'>{escape(p)}</span>"
         tags = "".join(_hero_tag(p) for p in pokemons)
         pokemon_tags_html = f"<div class='hero-pokemon-tags'>{tags}</div>"
@@ -914,25 +914,6 @@ def generate_html(
       gtag('event', action, params);
     }}
 
-    function copyManholeUrl() {{
-      var _sp = {{
-        manhole_id: {manhole_id_js},
-        prefecture: {prefecture_js},
-        city: {city_js}
-      }};
-      navigator.clipboard.writeText({share_url_json}).then(
-        function() {{
-          trackEvent('share_copy_url', _sp);
-          var t = document.getElementById('copy-toast');
-          if (t) {{
-            t.classList.add('copy-toast--visible');
-            setTimeout(function() {{ t.classList.remove('copy-toast--visible'); }}, 2000);
-          }}
-        }},
-        function() {{ alert({share_url_json}); }}
-      );
-    }}
-
     function shareManhole() {{
       var _sp = {{
         manhole_id: {manhole_id_js},
@@ -949,7 +930,7 @@ def generate_html(
           trackEvent('complete_share', _sp);
         }}).catch(function() {{}});
       }} else {{
-        copyManholeUrl();
+        navigator.clipboard.writeText({share_url_json}).catch(function() {{ alert({share_url_json}); }});
       }}
     }}
   </script>
@@ -1307,28 +1288,6 @@ def generate_html(
       transform: translateY(-1px);
     }}
 
-    .copy-toast {{
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%) translateY(20px);
-      background: rgba(0,0,0,0.80);
-      color: #fff;
-      padding: 10px 22px;
-      border-radius: 24px;
-      font-size: 14px;
-      font-weight: 600;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s, transform 0.2s;
-      z-index: 1000;
-    }}
-
-    .copy-toast--visible {{
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }}
-
     .action-icon {{
       width: 36px;
       height: 36px;
@@ -1386,13 +1345,11 @@ def generate_html(
 
     .link-card span {{ display: block; }}
 
-    .link-card--map        {{ background: #eef4ff; color: #1a4fa0; border-color: #c0d4f5; }}
     .link-card--official   {{ background: #fff4f0; color: #c0392b; border-color: #f5c0b0; }}
     .link-card--pref-site  {{ background: #f0fff4; color: #1a6b3c; border-color: #b0e8c8; }}
     .link-card--internal   {{ background: #f8f4ff; color: #5a3fa0; border-color: #d8c8f5; }}
     .link-card--share-x    {{ background: #f5f5f5; color: #444; border-color: #d8d8d8; }}
     .link-card--share-line {{ background: #f0faf5; color: #217a48; border-color: #b0e0c8; }}
-    .link-card--copy       {{ background: #fff4f0; color: #b04838; border-color: #f0c0b0; cursor: pointer; }}
     .link-card--share      {{ background: #f8f4ff; color: #5a3fa0; border-color: #d8c8f5; cursor: pointer; }}
 
     .related-list--cards li {{
@@ -1694,7 +1651,6 @@ def generate_html(
       <p>&copy; 2024-{current_year} data.pokefuta.com | ポケふた情報はポケモン公式サイトを参照しています</p>
     </footer>
   </div>
-  <div id="copy-toast" class="copy-toast">URLをコピーしました</div>
 </body>
 </html>
 """
