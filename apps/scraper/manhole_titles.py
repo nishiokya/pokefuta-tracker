@@ -197,10 +197,11 @@ def compute_titles(manhole: dict, ctx: dict, *, nc: int) -> list[dict]:
 
     pokemons = _filter_pokemons(manhole.get("pokemons", []))
 
-    # unique_pokemon: at least one pokemon on this manhole appears nowhere else
-    if pokemons and any(ctx["pokemon_count"].get(pk, 0) == 1 for pk in pokemons):
-        if t := _entry("unique_pokemon"):
-            results.append(t)
+    # unique_pokemon: one badge per pokemon that appears nowhere else nationwide
+    for pk in pokemons:
+        if ctx["pokemon_count"].get(pk, 0) == 1:
+            if t := _entry("unique_pokemon", pokemon=pk):
+                results.append(t)
 
     # only_in_pref: this prefecture has exactly 1 active manhole
     pref_unique = pref and ctx["pref_count"].get(pref, 0) == 1

@@ -42,7 +42,7 @@
     "unique_pokemon": {
       "enabled": true,
       "emoji": "⭐",
-      "label": "このポケモンは全国でここだけ",
+      "label": "{pokemon}は全国でここだけ",
       "hashtag": "#激レアポケふた",
       "priority": 90
     },
