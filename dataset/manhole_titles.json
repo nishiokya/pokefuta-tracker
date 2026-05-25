@@ -60,12 +60,19 @@
       "hashtag": "#レアポケふた",
       "priority": 70
     },
+    "lone_100": {
+      "enabled": true,
+      "emoji": "🏝",
+      "label": "ぽつんと一枚（100km圏に他なし）",
+      "hashtag": "#秘境ポケふた",
+      "priority": 75
+    },
     "lone": {
       "enabled": true,
       "emoji": "🌲",
-      "label": "ぽつんと一枚（30km圏に他なし）",
+      "label": "ぽつんと一枚（50km圏に他なし）",
       "hashtag": "#秘境ポケふた",
-      "priority": 65
+      "priority": 67
     },
     "only_in_city": {
       "enabled": true,
