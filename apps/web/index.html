@@ -322,8 +322,29 @@
       <h1 id="hero-title">全国のポケふた・ポケモンマンホールマップ</h1>
       <p>旅行やお出かけのついでに、ご当地マンホール「ポケふた」を見つけよう</p>
       <a href="/pokemon/" class="hero-pokemon-link" onclick="if(window.trackEvent){window.trackEvent('click_pokemon_lp_hero',{event_category:'navigation',event_label:'hero_card'})}">好きなポケモンのポケふたを探す →</a>
+      <a id="i18n-notice" href="" hidden
+         style="display:block; margin-top:8px; padding-top:8px; border-top:1px solid rgba(110,80,44,.12); font-size:0.78rem; font-weight:700; color:#4a7c59; text-decoration:none;"
+      ></a>
     </section>
   </main>
+  <script>
+  (function () {
+    var lang = (navigator.languages && navigator.languages[0]) || navigator.language || '';
+    if (/^ja/i.test(lang)) return;
+    var map = [
+      { re: /^zh-(tw|hant)/i, path: '/zh-TW/', label: '查看繁體中文版 →' },
+      { re: /^zh/i,           path: '/zh-CN/', label: '查看简体中文版 →' },
+      { re: /^ko/i,           path: '/ko/',    label: '한국어로 보기 →' },
+      { re: /^en/i,           path: '/en/',    label: 'View in English →' },
+    ];
+    var entry = map.find(function (m) { return m.re.test(lang); }) || map[3];
+    var el = document.getElementById('i18n-notice');
+    if (!el) return;
+    el.href = entry.path;
+    el.textContent = entry.label;
+    el.removeAttribute('hidden');
+  })();
+  </script>
 
   <div id="controls" class="bottom-sheet" role="complementary" aria-labelledby="page-title">
     <span id="page-title" class="sr-only">全体パネル</span>
