@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "lsof -ti:8000 >/dev/null 2>&1 || nohup python3 -m http.server 8000 --directory apps/web >/tmp/pokefuta-server.log 2>&1 &",
+            "async": true,
+            "statusMessage": "http://localhost:8000 を起動中..."
+          }
+        ]
+      }
+    ]
+  }
+}
