@@ -546,7 +546,13 @@ def generate_html(
     # HERO card: pokemon tags
     pokemon_tags_html = ""
     if pokemons:
-        tags = "".join(f"<span class='hero-tag'>{escape(p)}</span>" for p in pokemons)
+        _jts_hero = ja_to_slug or {}
+        def _hero_tag(p: str) -> str:
+            _slug = _jts_hero.get(p) or _jts_hero.get(_normalize_katakana(p), "")
+            if _slug:
+                return f"<a class='hero-tag hero-tag--link' href='/pokemon/{quote(_slug)}/'>{escape(p)}</a>"
+            return f"<span class='hero-tag'>{escape(p)}</span>"
+        tags = "".join(_hero_tag(p) for p in pokemons)
         pokemon_tags_html = f"<div class='hero-pokemon-tags'>{tags}</div>"
 
     # HERO card: stats badges
@@ -679,14 +685,25 @@ def generate_html(
     _pref_parsed = urlparse(_pref_site_raw)
     prefecture_site_url = _pref_site_raw if _pref_parsed.scheme in ("http", "https") else ""
     link_cards: list[str] = []
-    if lat is not None and lng is not None:
-        maps_url = f"https://www.google.com/maps?q={lat},{lng}"
-        link_cards.append(
-            f"<a class='link-card link-card--map' href=\"{escape(maps_url)}\""
-            f" target=\"_blank\" rel=\"noopener noreferrer\""
-            f" onclick=\"trackEvent('click_google_maps', {gmaps_onclick_links})\">"
-            f"{_icon('icon-link-google-map', 'link-card-icon')}<span>Google Maps</span></a>"
-        )
+    # Share first: X / LINE / Web Share
+    _share_onclick = _attr_json({"manhole_id": manhole_id, "prefecture": prefecture, "city": city})
+    link_cards.append(
+        f"<a class='link-card link-card--share-x' href=\"{escape(share_x_url)}\""
+        f" target=\"_blank\" rel=\"noopener noreferrer\""
+        f" onclick=\"trackEvent('click_share_x', {_share_onclick})\">"
+        f"{_icon('icon-share-x', 'link-card-icon')}<span>Xで共有</span></a>"
+    )
+    link_cards.append(
+        f"<a class='link-card link-card--share-line' href=\"{escape(share_line_url)}\""
+        f" target=\"_blank\" rel=\"noopener noreferrer\""
+        f" onclick=\"trackEvent('click_share_line', {_share_onclick})\">"
+        f"{_icon('icon-share-line', 'link-card-icon')}<span>LINEで送る</span></a>"
+    )
+    link_cards.append(
+        f"<button type='button' class='link-card link-card--share' onclick='shareManhole()'>"
+        f"{_icon('icon-link-share', 'link-card-icon')}<span>共有</span></button>"
+    )
+    # Navigation: Official / Prefecture / Same Pref / National Map
     if has_official_url:
         link_cards.append(
             f"<a class='link-card link-card--official' href=\"{escape(detail_url)}\""
@@ -710,28 +727,6 @@ def generate_html(
         f"<a class='link-card link-card--internal' href=\"{escape(BASE_URL)}\""
         f" onclick=\"trackEvent('click_map_internal', {_map_onclick})\">"
         f"{_icon('icon-link-map', 'link-card-icon')}<span>全国マップ</span></a>"
-    )
-    # Share cards (X / LINE / Copy / Web Share) — always shown
-    _share_onclick = _attr_json({"manhole_id": manhole_id, "prefecture": prefecture, "city": city})
-    link_cards.append(
-        f"<a class='link-card link-card--share-x' href=\"{escape(share_x_url)}\""
-        f" target=\"_blank\" rel=\"noopener noreferrer\""
-        f" onclick=\"trackEvent('click_share_x', {_share_onclick})\">"
-        f"{_icon('icon-share-x', 'link-card-icon')}<span>Xで共有</span></a>"
-    )
-    link_cards.append(
-        f"<a class='link-card link-card--share-line' href=\"{escape(share_line_url)}\""
-        f" target=\"_blank\" rel=\"noopener noreferrer\""
-        f" onclick=\"trackEvent('click_share_line', {_share_onclick})\">"
-        f"{_icon('icon-share-line', 'link-card-icon')}<span>LINEで送る</span></a>"
-    )
-    link_cards.append(
-        f"<button type='button' class='link-card link-card--copy' onclick='copyManholeUrl()'>"
-        f"{_icon('icon-link-share', 'link-card-icon')}<span>URLをコピー</span></button>"
-    )
-    link_cards.append(
-        f"<button type='button' class='link-card link-card--share' onclick='shareManhole()'>"
-        f"{_icon('icon-link-share', 'link-card-icon')}<span>共有</span></button>"
     )
     links_grid_html = (
         f"<section class='links-section section-card'>"
@@ -1074,16 +1069,19 @@ def generate_html(
     }}
 
     dl {{
-      margin-top: 12px;
+      display: grid;
+      grid-template-columns: 5em 1fr;
+      gap: 3px 8px;
+      margin-top: 8px;
     }}
 
     dt {{
       font-weight: bold;
-      margin-top: 8px;
+      margin-top: 0;
     }}
 
     dd {{
-      margin-left: 16px;
+      margin-left: 0;
       color: #555;
     }}
 
@@ -1248,6 +1246,16 @@ def generate_html(
       color: #7a5c00;
     }}
 
+    a.hero-tag {{
+      text-decoration: none;
+      color: #7a5c00;
+    }}
+
+    a.hero-tag:hover {{
+      background: #fde98a;
+      border-color: #e6b800;
+    }}
+
     .hero-stats {{
       display: flex;
       flex-wrap: wrap;
@@ -1348,8 +1356,8 @@ def generate_html(
 
     .link-grid {{
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
     }}
 
     .link-card {{
@@ -1357,12 +1365,12 @@ def generate_html(
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      min-height: 72px;
+      min-height: 64px;
       border-radius: 12px;
-      padding: 12px 8px;
+      padding: 10px 6px;
       text-align: center;
       text-decoration: none;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
       line-height: 1.4;
       gap: 4px;
