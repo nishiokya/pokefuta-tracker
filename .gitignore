@@ -15,6 +15,7 @@ create_pr.flag
 
 # NDJSON: apps/scraper/pokefuta.ndjsonはgit管理しない
 apps/scraper/pokefuta.ndjson
+pokefuta.ndjson
 
 .env*.local
 .env.production
