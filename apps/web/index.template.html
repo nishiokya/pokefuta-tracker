@@ -688,6 +688,13 @@
         displayName ? `<span class="travel-popup-photo-author">${escapeHtml(displayName)}</span>` : ''
       ].filter(Boolean).join('');
       const titles = Array.isArray(d.titles) ? d.titles : [];
+      const titleBadgesHtml = titles.length
+        ? '<div class="travel-popup-badges">'
+          + titles.map(t => '<span class="travel-popup-badge">'
+            + escapeHtml((t.emoji ? t.emoji + ' ' : '') + translateTitle(t, d))
+            + '</span>').join('')
+          + '</div>'
+        : '';
       const photoBlock = imageUrl ? `
         <div class="popup-photo travel-popup-photo" aria-label="${I.manholePhotoAria}">
           <img src="${imageUrl}" alt="${escapeHtml(photoAlt)}" loading="lazy" decoding="async" onerror="handlePopupImageError(this)">
