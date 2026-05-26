@@ -125,7 +125,7 @@ def build_title_context(manholes: list[dict], master: dict) -> dict:
     }
 
 
-def nearby_count(mid: str, lat, lng, coords: list[tuple], km: float = 30.0) -> int:
+def nearby_count(mid: str, lat, lng, coords: list[tuple], km: float) -> int:
     """Count active manholes within `km` km using precomputed coords list."""
     if lat is None or lng is None:
         return 0
@@ -136,7 +136,7 @@ def nearby_count(mid: str, lat, lng, coords: list[tuple], km: float = 30.0) -> i
     )
 
 
-def compute_titles(manhole: dict, ctx: dict, *, nc50: int = 0, nc100: int = 0) -> list[dict]:
+def compute_titles(manhole: dict, ctx: dict, *, nc50: int, nc100: int) -> list[dict]:
     """Return title list (priority desc) for one active manhole.
 
     Each title dict: {"key": str, "label": str, "emoji": str, "hashtag": str, "priority": int}
