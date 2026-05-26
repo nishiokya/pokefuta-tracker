@@ -24,6 +24,7 @@ DIST = ROOT / "dist"
 
 BASE_URL = "https://data.pokefuta.com"
 OGP_IMAGE = f"{BASE_URL}/assets/ogp/pokefuta_summary_ogp.png"
+SUMMARY_SHARE_URL = f"{BASE_URL}/summary"
 
 PREFECTURE_ORDER: list[str] = [
     "北海道", "青森県", "岩手県", "宮城県", "秋田県",
@@ -65,13 +66,13 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "out_path": "summary/index.html",
         "canonical": f"{BASE_URL}/summary",
         "map_base_href": "/",
-        "page_title": "ポケふたは全国に何個ある？都道府県別の数・多い県ランキング",
-        "meta_desc": "全国のポケふた・ポケモンマンホールの総数、都道府県別の設置数、多い県、まだ設置されていない県をまとめています。",
+        "page_title": "ポケふたは全国に何個ある？都道府県別ランキングと雑学",
+        "meta_desc": "全国{total}枚のポケふたを都道府県別に集計。{top1pref}{top1count}枚、{top2pref}{top2count}枚、{top3pref}{top3count}枚など、旅に出たくなるポケふた雑学を紹介します。",
         "breadcrumb_aria": "パンくず",
         "nav_home_text": "全国マップ",
         "nav_home_href": "/",
         "h1": "ポケふたは全国に何個ある？",
-        "subtitle": "全国のポケふた・ポケモンマンホールを、既存データから都道府県別に集計しています。",
+        "subtitle": "全国に広がるポケふたは、地域によって設置数に大きな違いがあります。{top1pref}は{top1count}枚、{top2pref}は{top2count}枚、{top3pref}は{top3count}枚。旅行先で近くのポケふたを探したり、次に巡る地域を考えたりするために、都道府県別の設置数をまとめました。",
         "stats_aria": "全国集計",
         "stat_total": "全国の総数",
         "stat_installed": "設置済み都道府県",
@@ -109,6 +110,10 @@ SUMMARY_STRINGS: dict[str, dict] = {
             "四国": "四国", "九州": "九州",
         },
         "discovery_aria": "発見",
+        "daily_fact_heading": "今日のポケふた雑学",
+        "fact_section_heading": "ポケふた雑学",
+        "share_x_text": "Xで共有",
+        "view_map_text": "地図で見る",
         "regional_top2": "地方別では{r1name}（{r1count}枚）が最も多く、次いで{r2name}（{r2count}枚）となっています。",
         "regional_top1": "地方別では{r1name}（{r1count}枚）が最も多くなっています。",
         "regional_outro": "ポケふたは地方自治体・観光協会との連携で設置されることが多く、観光地や駅周辺に置かれているケースが目立ちます。地域を旅しながら複数のポケふたを巡るルートを作るのも人気の楽しみ方です。",
@@ -404,6 +409,126 @@ _CSS = """\
       line-height: 1.1;
     }
 
+    .daily-fact-card {
+      display: grid;
+      gap: 14px;
+      margin: 0 0 22px;
+      padding: 18px;
+      border: 1px solid rgba(23, 111, 104, .24);
+      border-radius: 8px;
+      background: #fffdf7;
+      box-shadow: 0 14px 30px rgba(54, 40, 22, .08);
+    }
+
+    .daily-fact-label {
+      display: inline-flex;
+      width: fit-content;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: #e5f4f2;
+      color: #176f68;
+      font-size: .8rem;
+      font-weight: 900;
+    }
+
+    .daily-fact-card h2 {
+      margin: 0;
+    }
+
+    .daily-fact-card strong {
+      display: block;
+      max-width: 760px;
+      font-size: clamp(1.45rem, 6vw, 2.35rem);
+      line-height: 1.22;
+      letter-spacing: 0;
+    }
+
+    .daily-fact-card p {
+      margin: 0;
+      color: #574b41;
+      font-weight: 750;
+    }
+
+    .summary-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .summary-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 0 14px;
+      border-radius: 8px;
+      background: #176f68;
+      color: #fff;
+      font-size: .9rem;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    .summary-action.secondary {
+      background: #fff6e6;
+      color: #176f68;
+      border: 1px solid rgba(23, 111, 104, .22);
+    }
+
+    .fact-card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .summary-fact-card {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 100%;
+      padding: 15px;
+      border: 1px solid rgba(93, 67, 35, .14);
+      border-radius: 8px;
+      background: #fffdf7;
+    }
+
+    .summary-fact-card h3 {
+      margin: 0;
+      font-size: 1.05rem;
+      line-height: 1.35;
+      letter-spacing: 0;
+    }
+
+    .summary-fact-number {
+      display: block;
+      color: #176f68;
+      font-size: 2.1rem;
+      font-weight: 950;
+      line-height: 1;
+    }
+
+    .summary-fact-main,
+    .summary-fact-note {
+      margin: 0;
+      color: #574b41;
+      font-size: .92rem;
+      font-weight: 750;
+      line-height: 1.65;
+    }
+
+    .summary-fact-note {
+      color: #716154;
+      font-size: .84rem;
+    }
+
+    .summary-fact-card .summary-actions {
+      margin-top: auto;
+    }
+
     .summary-section {
       margin-top: 28px;
     }
@@ -557,6 +682,10 @@ _CSS = """\
       .discovery-grid {
         grid-template-columns: repeat(2, 1fr);
       }
+
+      .fact-card-grid {
+        grid-template-columns: 1fr;
+      }
     }"""
 
 _HREFLANG = """\
@@ -683,6 +812,294 @@ def _build_discovery_section(s: dict, stats: dict, tr) -> str:
     )
 
 
+def _twitter_intent_url(text: str) -> str:
+    return (
+        "https://twitter.com/intent/tweet"
+        f"?text={quote(text, safe='')}"
+        f"&url={quote(SUMMARY_SHARE_URL, safe='')}"
+    )
+
+
+def _map_href(pref_ja: str | None = None) -> str:
+    return f"/?pref={quote(pref_ja)}" if pref_ja else "/"
+
+
+def _track_attrs(event_name: str, fact: dict, target_url: str) -> str:
+    return (
+        f'data-summary-event="{escape(event_name)}" '
+        f'data-fact-id="{escape(fact["id"])}" '
+        f'data-fact-title="{escape(fact["title"])}" '
+        f'data-target-url="{escape(target_url)}"'
+    )
+
+
+def _top_rank_context(stats: dict) -> dict[str, str | int]:
+    ranking = stats["ranking"]
+    fallback = {"pref": "ポケふた設置県", "count": 0}
+    top1 = ranking[0] if len(ranking) > 0 else fallback
+    top2 = ranking[1] if len(ranking) > 1 else top1
+    top3 = ranking[2] if len(ranking) > 2 else top2
+    return {
+        "total": stats["total"],
+        "top1pref": top1["pref"],
+        "top1count": top1["count"],
+        "top2pref": top2["pref"],
+        "top2count": top2["count"],
+        "top3pref": top3["pref"],
+        "top3count": top3["count"],
+    }
+
+
+def _format_summary_text(value: str, s: dict, stats: dict) -> str:
+    if s.get("pref_key") != "ja":
+        return value
+    return value.format(**_top_rank_context(stats))
+
+
+def _build_ja_facts(stats: dict) -> list[dict]:
+    counts = {item["pref"]: item["count"] for item in stats["by_pref"]}
+    total = stats["total"]
+    hokkaido = counts.get("北海道", 0)
+    fukushima = counts.get("福島県", 0)
+    miyagi = counts.get("宮城県", 0)
+    iwate = counts.get("岩手県", 0)
+    mie = counts.get("三重県", 0)
+    tohoku = stats["regional"].get("東北", 0)
+    empty_names = "・".join(item["pref"] for item in stats["empty"])
+    installed_count = len(stats["installed"])
+    empty_count = len(stats["empty"])
+    hokkaido_pct = round((hokkaido / total) * 100) if total else 0
+    top3 = "・".join(item["pref"] for item in stats["ranking"][:3])
+    empty_main = (
+        f"まだ{empty_count}県には設置されていません。"
+        if empty_count
+        else "すべての都道府県に設置されています。"
+    )
+    empty_share = (
+        f"まだ{empty_count}県には設置されていません"
+        if empty_count
+        else "すべての都道府県に設置されています"
+    )
+
+    facts = [
+        {
+            "id": "hokkaido",
+            "title": f"北海道だけで{hokkaido}枚",
+            "stat": f"{hokkaido}枚",
+            "main": f"北海道には{hokkaido}枚のポケふたがあります。全国{total}枚の約{hokkaido_pct}%です。",
+            "note": "広い北海道では、ポケふた巡りも立派な旅になります。",
+            "share_text": (
+                f"北海道だけでポケふたは{hokkaido}枚。\n"
+                f"全国{total}枚の約{hokkaido_pct}%が北海道にあります\n"
+                "ポケふたの都道府県別ランキングを見る\n"
+                "#ポケふた #ポケモンマンホール"
+            ),
+            "map_href": _map_href("北海道"),
+            "map_label": "北海道を地図で見る",
+        },
+        {
+            "id": "installed-prefectures",
+            "title": f"設置済みは{installed_count}都道府県",
+            "stat": f"{installed_count}都道府県",
+            "main": f"ポケふた設置済みは{installed_count}都道府県。{empty_main}",
+            "note": "全国に広がりつつも、まだ空白地帯があります。",
+            "share_text": (
+                f"ポケふた設置済みは{installed_count}都道府県。\n"
+                f"{empty_share}\n"
+                "ポケふたの都道府県別ランキングを見る\n"
+                "#ポケふた #ポケモンマンホール"
+            ),
+            "map_href": _map_href(),
+            "map_label": "全国マップを見る",
+        },
+        {
+            "id": "tohoku",
+            "title": f"東北は{tohoku}枚の密集エリア",
+            "stat": f"{tohoku}枚",
+            "main": f"東北地方には{tohoku}枚のポケふたがあります。全国でも特に密度の高いエリアです。",
+            "note": "福島県、宮城県、岩手県など、巡りがいのある県が並びます。",
+            "share_text": (
+                f"東北地方には{tohoku}枚のポケふたがあります。\n"
+                "全国でも特に密度の高いエリアです\n"
+                "ポケふたの都道府県別ランキングを見る\n"
+                "#ポケふた #ポケモンマンホール"
+            ),
+            "map_href": _map_href(),
+            "map_label": "全国マップを見る",
+        },
+        {
+            "id": "top-prefectures",
+            "title": "多い県トップ3",
+            "stat": "TOP3",
+            "main": f"ポケふたが多い県トップ3は、{top3}です。",
+            "note": "上位は北日本の存在感が大きめです。",
+            "share_text": (
+                f"ポケふたが多い県トップ3は、{top3}です。\n"
+                "ポケふたの都道府県別ランキングを見る\n"
+                "#ポケふた #ポケモンマンホール"
+            ),
+            "map_href": _map_href(),
+            "map_label": "ランキングを見る",
+        },
+        {
+            "id": "fukushima",
+            "title": "福島県は全国2位",
+            "stat": f"{fukushima}枚",
+            "main": f"福島県には{fukushima}枚のポケふたがあります。北海道に次ぐ全国2位です。",
+            "note": "県内を巡るだけでも、かなり濃いポケふた旅になります。",
+            "share_text": (
+                f"福島県には{fukushima}枚のポケふたがあります。\n"
+                "北海道に次ぐ全国2位です\n"
+                "ポケふたの都道府県別ランキングを見る\n"
+                "#ポケふた #ポケモンマンホール"
+            ),
+            "map_href": _map_href("福島県"),
+            "map_label": "福島県を地図で見る",
+        },
+        {
+            "id": "miyagi-iwate",
+            "title": "宮城県と岩手県も強い",
+            "stat": f"{miyagi}+{iwate}枚",
+            "main": f"宮城県には{miyagi}枚、岩手県には{iwate}枚。東北はポケふた巡りの有力エリアです。",
+            "note": "東北旅行の目的地選びにも使いやすい数字です。",
+            "share_text": (
+                f"宮城県には{miyagi}枚、岩手県には{iwate}枚。\n"
+                "東北はポケふた巡りの有力エリアです\n"
+                "ポケふたの都道府県別ランキングを見る\n"
+                "#ポケふた #ポケモンマンホール"
+            ),
+            "map_href": _map_href("宮城県"),
+            "map_label": "宮城県を地図で見る",
+        },
+        {
+            "id": "mie",
+            "title": f"三重県は{mie}枚",
+            "stat": f"{mie}枚",
+            "main": f"三重県には{mie}枚のポケふたがあります。近畿・東海エリアでも存在感があります。",
+            "note": "関西・東海方面の旅程にも組み込みやすい地域です。",
+            "share_text": (
+                f"三重県には{mie}枚のポケふたがあります。\n"
+                "近畿・東海エリアでも存在感があります\n"
+                "ポケふたの都道府県別ランキングを見る\n"
+                "#ポケふた #ポケモンマンホール"
+            ),
+            "map_href": _map_href("三重県"),
+            "map_label": "三重県を地図で見る",
+        },
+    ]
+    if empty_count:
+        facts.append({
+            "id": "empty-prefectures",
+            "title": "まだポケふたがない県",
+            "stat": f"{empty_count}県",
+            "main": f"{empty_names}には、まだポケふたがありません。",
+            "note": "次にどこへ広がるのかを予想する楽しみもあります。",
+            "share_text": (
+                f"未設置県は、{empty_names}です。\n"
+                "次にどこへ広がるのか気になります\n"
+                "ポケふたの都道府県別ランキングを見る\n"
+                "#ポケふた #ポケモンマンホール"
+            ),
+            "map_href": _map_href(),
+            "map_label": "全国マップを見る",
+        })
+    return facts
+
+
+def _build_ja_fact_sections(s: dict, stats: dict) -> tuple[str, str]:
+    if s.get("pref_key") != "ja":
+        return "", ""
+
+    facts = _build_ja_facts(stats)
+    daily_fact = facts[0]
+
+    def action_links(fact: dict) -> str:
+        share_href = _twitter_intent_url(fact["share_text"])
+        map_href = fact["map_href"]
+        return (
+            '<div class="summary-actions">'
+            f'<a class="summary-action" href="{escape(share_href)}" '
+            'target="_blank" rel="noopener noreferrer" '
+            f'{_track_attrs("summary_share_x_click", fact, SUMMARY_SHARE_URL)}>'
+            f'{escape(s["share_x_text"])}</a>'
+            f'<a class="summary-action secondary" href="{escape(map_href)}" '
+            f'{_track_attrs("summary_map_click", fact, map_href)}>'
+            f'{escape(fact["map_label"])}</a>'
+            '</div>'
+        )
+
+    daily_html = (
+        f'\n    <section class="daily-fact-card" aria-labelledby="daily-fact-heading" '
+        f'data-fact-id="{escape(daily_fact["id"])}" '
+        f'data-fact-title="{escape(daily_fact["title"])}">'
+        f'\n      <span class="daily-fact-label">{escape(s["daily_fact_heading"])}</span>'
+        f'\n      <h2 id="daily-fact-heading"><strong>{escape(daily_fact["main"])}</strong></h2>'
+        f'\n      <p>{escape(daily_fact["note"])}</p>'
+        f'\n      {action_links(daily_fact)}'
+        f'\n    </section>\n'
+    )
+
+    card_items = "\n        ".join(
+        f'<li>'
+        f'<article class="summary-fact-card" data-fact-id="{escape(fact["id"])}" '
+        f'data-fact-title="{escape(fact["title"])}">'
+        f'<span class="summary-fact-number">{escape(fact["stat"])}</span>'
+        f'<h3>{escape(fact["title"])}</h3>'
+        f'<p class="summary-fact-main">{escape(fact["main"])}</p>'
+        f'<p class="summary-fact-note">{escape(fact["note"])}</p>'
+        f'{action_links(fact)}'
+        f'</article>'
+        f'</li>'
+        for fact in facts
+    )
+    list_html = (
+        f'\n    <section class="summary-section" aria-labelledby="fact-list-heading">'
+        f'\n      <h2 id="fact-list-heading">{escape(s["fact_section_heading"])}</h2>'
+        f'\n      <ul class="fact-card-grid">\n        {card_items}\n      </ul>'
+        f'\n    </section>\n'
+    )
+
+    return daily_html, list_html
+
+
+def _build_ja_tracking_script(s: dict) -> str:
+    if s.get("pref_key") != "ja":
+        return ""
+    return """\
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-K18NR4GZG2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-K18NR4GZG2', {
+      'anonymize_ip': true,
+      'page_path': '/summary'
+    });
+
+    document.addEventListener('click', function (event) {
+      if (!window.gtag) return;
+
+      const target = event.target.closest('[data-summary-event]');
+      const card = event.target.closest('.daily-fact-card[data-fact-id], .summary-fact-card[data-fact-id]');
+      if (card && !target) {
+        window.gtag('event', 'summary_fact_card_click', {
+          fact_id: card.dataset.factId || '',
+          fact_title: card.dataset.factTitle || '',
+          target_url: window.location.href
+        });
+      }
+
+      if (!target) return;
+      window.gtag('event', target.dataset.summaryEvent, {
+        fact_id: target.dataset.factId || '',
+        fact_title: target.dataset.factTitle || '',
+        target_url: target.dataset.targetUrl || target.href || ''
+      });
+    });
+  </script>
+"""
+
+
 def _build_regional_section(s: dict, stats: dict) -> str:
     regional = stats["regional"]
     region_names = s["region_names"]
@@ -730,7 +1147,9 @@ def render_page(s: dict, stats: dict, pref_names: dict) -> str:
 
     ai_html = _build_ai_summary(s, stats, tr)
     discovery_html = _build_discovery_section(s, stats, tr)
+    daily_fact_html, fact_list_html = _build_ja_fact_sections(s, stats)
     regional_html = _build_regional_section(s, stats)
+    tracking_script = _build_ja_tracking_script(s)
 
     def map_link(pref_ja: str) -> str:
         href = f'{map_base}?pref={quote(pref_ja)}'
@@ -763,7 +1182,8 @@ def render_page(s: dict, stats: dict, pref_names: dict) -> str:
         empty_items = f'<li class="summary-empty">{escape(s["no_empty"])}</li>'
 
     pt = escape(s["page_title"])
-    md = escape(s["meta_desc"])
+    md = escape(_format_summary_text(s["meta_desc"], s, stats))
+    subtitle = escape(_format_summary_text(s["subtitle"], s, stats))
     can = escape(s["canonical"])
 
     return f"""<!doctype html>
@@ -796,9 +1216,10 @@ def render_page(s: dict, stats: dict, pref_names: dict) -> str:
     <nav class="summary-hero" aria-label="{escape(s['breadcrumb_aria'])}">
       <a href="{escape(s['nav_home_href'])}">{escape(s['nav_home_text'])}</a>
       <h1>{escape(s['h1'])}</h1>
-      <p>{escape(s['subtitle'])}</p>
+      <p>{subtitle}</p>
     </nav>
 
+    {daily_fact_html}
     {ai_html}
     <section class="summary-stats" aria-label="{escape(s['stats_aria'])}">
       <div class="summary-stat">
@@ -814,6 +1235,7 @@ def render_page(s: dict, stats: dict, pref_names: dict) -> str:
         <strong>{escape(s['empty_fmt'].format(count=len(empty)))}</strong>
       </div>
     </section>
+    {fact_list_html}
     {discovery_html}
     <section class="summary-section" aria-labelledby="prefecture-count-heading">
       <h2 id="prefecture-count-heading">{escape(s['h2_pref_count'])}</h2>
@@ -855,6 +1277,7 @@ def render_page(s: dict, stats: dict, pref_names: dict) -> str:
       <a class="summary-cta" href="{escape(s['nav_home_href'])}">{escape(s['cta_text'])}</a>
     </section>
   </main>
+{tracking_script}
 </body>
 </html>"""
 
