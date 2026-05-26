@@ -647,52 +647,6 @@
       return path ? new URL(path, window.location.origin).href : '';
     }
 
-    async function shareManholeUrl(button) {
-      const url = button?.dataset.shareUrl;
-      if (!url) return;
-      const title = button.dataset.shareTitle || 'ポケふた';
-      const text = button.dataset.shareText || '';
-
-      // Track share event
-      if (window.trackEvent) {
-        window.trackEvent('click_share_manhole', {
-          'event_category': 'user_engagement',
-          'event_label': title
-        });
-      }
-
-      if (navigator.share) {
-        try {
-          await navigator.share({ title, text: text || undefined, url });
-          return;
-        } catch (error) {
-          if (error?.name === 'AbortError') return;
-        }
-      }
-      if (navigator.clipboard?.writeText) {
-        try {
-          await navigator.clipboard.writeText(url);
-          const originalText = button.textContent;
-          button.textContent = 'コピー済み';
-          window.setTimeout(() => {
-            button.textContent = originalText || '共有';
-          }, 1400);
-          return;
-        } catch (error) {
-          console.warn('クリップボードへのコピーに失敗しました', error);
-        }
-      }
-      window.prompt('共有URLをコピーしてください', url);
-    }
-
-    document.addEventListener('click', event => {
-      const shareButton = event.target.closest('[data-share-url]');
-      if (!shareButton) return;
-      event.preventDefault();
-      shareManholeUrl(shareButton).catch(error => {
-        console.warn('URLの共有に失敗しました', error);
-      });
-    });
 
     function formatPhotoDate(rawDate) {
       if (!rawDate) return '';
@@ -744,8 +698,6 @@
         photoDate ? `<span class="travel-popup-photo-date">撮影日 ${escapeHtml(photoDate)}</span>` : '',
         displayName ? `<span class="travel-popup-photo-author">${escapeHtml(displayName)}</span>` : ''
       ].filter(Boolean).join('');
-      const shareUrl = getAbsoluteManholePageUrl(d.id);
-      const shareTitle = `${d.title || 'ポケふた'} | ポケふたマップ`;
       const titles = Array.isArray(d.titles) ? d.titles : [];
       const titleBadgesHtml = titles.length
         ? '<div class="travel-popup-badges">'
@@ -754,14 +706,6 @@
             + '</span>').join('')
           + '</div>'
         : '';
-      const _titleHashtags = titles.map(t => t.hashtag || '').filter(Boolean).join(' ');
-      const _shareHashtags = (_titleHashtags + ' #ポケふた #ポケモンマンホール').trim();
-      const _shareText = titles.length
-        ? (titles[0].emoji ? titles[0].emoji + ' ' : '') + titles[0].label + 'のポケふた！\n' + _shareHashtags
-        : _shareHashtags;
-      const safeShareUrl = escapeHtml(shareUrl);
-      const safeShareTitle = escapeHtml(shareTitle);
-      const safeShareText = escapeHtml(_shareText).replace(/\n/g, '&#10;');
       const photoBlock = imageUrl ? `
         <div class="popup-photo travel-popup-photo" aria-label="マンホール写真">
           <img src="${imageUrl}" alt="${escapeHtml(photoAlt)}" loading="lazy" decoding="async" onerror="handlePopupImageError(this)">

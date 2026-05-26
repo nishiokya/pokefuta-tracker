@@ -125,24 +125,24 @@ def build_title_context(manholes: list[dict], master: dict) -> dict:
     }
 
 
-def nearby_count(mid: str, lat, lng, coords: list[tuple]) -> int:
-    """Count active manholes within 30 km using precomputed coords list."""
+def nearby_count(mid: str, lat, lng, coords: list[tuple], km: float) -> int:
+    """Count active manholes within `km` km using precomputed coords list."""
     if lat is None or lng is None:
         return 0
     flat, flng = float(lat), float(lng)
     return sum(
         1 for oid, olat, olng in coords
-        if oid != mid and _haversine(flat, flng, olat, olng) <= 30.0
+        if oid != mid and _haversine(flat, flng, olat, olng) <= km
     )
 
 
-def compute_titles(manhole: dict, ctx: dict, *, nc: int) -> list[dict]:
+def compute_titles(manhole: dict, ctx: dict, *, nc50: int, nc100: int) -> list[dict]:
     """Return title list (priority desc) for one active manhole.
 
     Each title dict: {"key": str, "label": str, "emoji": str, "hashtag": str, "priority": int}
     Tier 1 titles are derived from ctx (built from all active manholes).
     Tier 2 titles use ctx["islands"] / ctx["lakes"] / manhole["tags"] from pokefuta.ndjson.
-    nc: number of active manholes within 30 km (pre-computed by caller).
+    nc100: active manholes within 100 km; nc50: within 50 km (pre-computed by caller).
     """
     vocab: dict = ctx["vocabulary"]
     mid = str(manhole.get("id", "")).strip()
@@ -216,10 +216,14 @@ def compute_titles(manhole: dict, ctx: dict, *, nc: int) -> list[dict]:
             if t := _entry("rare_pokemon", count=primary_count):
                 results.append(t)
 
-    # lone: no other active manhole within 30 km (requires valid coordinates)
-    if nc == 0 and manhole.get("lat") is not None:
-        if t := _entry("lone"):
-            results.append(t)
+    # lone_100 / lone: ぽつんと一枚。100km圏→lone_100、50km圏→lone（上位が該当すれば下位は付与しない）
+    if manhole.get("lat") is not None:
+        if nc100 == 0:
+            if t := _entry("lone_100"):
+                results.append(t)
+        elif nc50 == 0:
+            if t := _entry("lone"):
+                results.append(t)
 
     # only_in_city: city has exactly 1 manhole AND only_in_pref is NOT set
     city_key = f"{pref}|{city}"

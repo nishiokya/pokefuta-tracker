@@ -929,8 +929,17 @@ def generate_html(
         }}).then(function() {{
           trackEvent('complete_share', _sp);
         }}).catch(function() {{}});
+      }} else if (navigator.clipboard && navigator.clipboard.writeText) {{
+        navigator.clipboard.writeText({share_url_json}).then(function() {{
+          trackEvent('share_copy_url', _sp);
+          var _t = document.createElement('div');
+          _t.textContent = 'URLをコピーしました';
+          _t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.8);color:#fff;padding:8px 20px;border-radius:20px;font-size:14px;z-index:9999;pointer-events:none';
+          document.body.appendChild(_t);
+          setTimeout(function() {{ document.body.removeChild(_t); }}, 2000);
+        }}).catch(function() {{ alert({share_url_json}); }});
       }} else {{
-        navigator.clipboard.writeText({share_url_json}).catch(function() {{ alert({share_url_json}); }});
+        alert({share_url_json});
       }}
     }}
   </script>

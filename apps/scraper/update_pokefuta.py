@@ -137,8 +137,9 @@ def _compute_and_attach_titles(all_records: List[Dict], dataset_dir: str,
             r.pop("titles", None)
             continue
         mid = str(r.get("id", ""))
-        n = _nc(mid, r.get("lat"), r.get("lng"), ctx["coords"])
-        titles = compute_titles(r, ctx, nc=n)
+        n50 = _nc(mid, r.get("lat"), r.get("lng"), ctx["coords"], km=50.0)
+        n100 = _nc(mid, r.get("lat"), r.get("lng"), ctx["coords"], km=100.0)
+        titles = compute_titles(r, ctx, nc50=n50, nc100=n100)
         if titles:
             r["titles"] = titles
             attached += 1
