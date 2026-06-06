@@ -23,6 +23,7 @@ PREFECTURES_JSON = ROOT / "apps" / "web" / "i18n" / "prefectures.json"
 DIST = ROOT / "dist"
 POKEMON_METADATA_JSON = ROOT / "docs" / "pokemon_metadata.json"
 PHOTOS_JSON = ROOT / "docs" / "latest-manhole-photos.json"
+IMAGE_DIR = ROOT / "dataset" / "manhole" / "image"
 
 BASE_URL = "https://data.pokefuta.com"
 OGP_IMAGE = f"{BASE_URL}/assets/ogp/pokefuta_summary_ogp.png"
@@ -855,8 +856,9 @@ _CSS = """\
 
     .photo-card img {
       width: 100%;
-      aspect-ratio: 1 / 1;
-      object-fit: cover;
+      aspect-ratio: 4 / 3;
+      object-fit: contain;
+      background: #fffaf0;
       border-radius: 6px;
       border: 1px solid rgba(93, 67, 35, .12);
     }
@@ -1549,10 +1551,17 @@ def _build_latest_photos_section(
         title = record.get("title", "")
         pokemons = "・".join(record.get("pokemons", [])[:2])
         location = f"{pref}{city}" if pref and city else title
-        url = photo.get("url") or ""
+        local_image = IMAGE_DIR / f"{mid}_latest.jpeg"
+        url = (
+            f"{BASE_URL}/manhole/image/{quote(mid, safe='')}_latest.jpeg"
+            if mid and local_image.exists()
+            else photo.get("url") or ""
+        )
         date = (photo.get("created_at") or "")[:10]
         manhole_href = f"/manholes/{mid}/"
         display_title = pokemons or title
+        if not url:
+            continue
         cards.append(
             f'<a class="photo-card" href="{escape(manhole_href)}">'
             f'<img src="{escape(url)}" alt="{escape(display_title)}" loading="lazy" decoding="async">'
