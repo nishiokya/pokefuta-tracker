@@ -47,9 +47,12 @@ python3 apps/scraper/generate_social_posts.py
    {"id": "候補のid", "used_at": "YYYY-MM-DD"}
    ```
 7. 投稿文（body の内容）をそのままユーザーに表示する（コピーしやすいように）
-8. 以下を実行して OGP 画像を生成する：
+8. 以下を実行して投稿画像を生成する：
    ```bash
    cd "$(git rev-parse --show-toplevel)"
    python3 apps/scraper/generate_social_ogp.py
    ```
-9. 「画像: docs/social-post-ogp.png」を投稿文の下に表示する
+   - `prefecture_rank` タイプ: 都道府県マップ＋マンホール写真＋ポケモン統計の
+     リッチSVGを自動生成（GeoJSON取得・ndjson参照・ローカル画像埋め込み）
+   - その他タイプ: `docs/ogp_template/{type}.svg` のプレースホルダーを置換
+9. `docs/social-post-image.jpg` を Read ツールで読み込み、投稿文の下に表示する
