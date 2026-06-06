@@ -148,6 +148,9 @@ LP_STRINGS: dict[str, dict[str, str]] = {
         "pref_section_heading": "{pref}の{name}のポケふた",
         "pref_map_link": "{pref}の地図で見る →",
         "related_heading": "関連するポケモン",
+        "same_type_heading": "同じタイプのポケモン",
+        "same_generation_heading": "同じ世代のポケモン",
+        "summary_link": "ポケふた統計・一覧ハブ",
         "count_text": "全国に <strong>{count}</strong> 枚の{name}のポケふたがあります。",
         "cta": "地図で全国のポケふたを探す →",
         "breadcrumb_aria": "パンくずリスト",
@@ -170,6 +173,9 @@ LP_STRINGS: dict[str, dict[str, str]] = {
         "pref_section_heading": "{name} Pokéfuta in {pref}",
         "pref_map_link": "View {pref} on map →",
         "related_heading": "Related Pokémon",
+        "same_type_heading": "Same Type",
+        "same_generation_heading": "Same Generation",
+        "summary_link": "Pokefuta Summary Hub",
         "count_text": "There are <strong>{count}</strong> {name} Pokéfuta nationwide.",
         "cta": "Explore all Pokéfuta on the map →",
         "breadcrumb_aria": "Breadcrumb",
@@ -192,6 +198,9 @@ LP_STRINGS: dict[str, dict[str, str]] = {
         "pref_section_heading": "{pref}的{name}宝可梦井盖",
         "pref_map_link": "在地图上查看{pref} →",
         "related_heading": "相关宝可梦",
+        "same_type_heading": "相同属性的宝可梦",
+        "same_generation_heading": "相同世代的宝可梦",
+        "summary_link": "宝可梦井盖统计中心",
         "count_text": "全国共有 <strong>{count}</strong> 个{name}宝可梦井盖。",
         "cta": "在地图上查找全国宝可梦井盖 →",
         "breadcrumb_aria": "面包屑导航",
@@ -214,6 +223,9 @@ LP_STRINGS: dict[str, dict[str, str]] = {
         "pref_section_heading": "{pref}的{name}寶可夢人孔蓋",
         "pref_map_link": "在地圖上查看{pref} →",
         "related_heading": "相關寶可夢",
+        "same_type_heading": "相同屬性的寶可夢",
+        "same_generation_heading": "相同世代的寶可夢",
+        "summary_link": "寶可夢人孔蓋統計中心",
         "count_text": "全國共有 <strong>{count}</strong> 個{name}寶可夢人孔蓋。",
         "cta": "在地圖上查找全國寶可夢人孔蓋 →",
         "breadcrumb_aria": "麵包屑導覽",
@@ -236,6 +248,9 @@ LP_STRINGS: dict[str, dict[str, str]] = {
         "pref_section_heading": "{pref}의 {name} 포케후타",
         "pref_map_link": "{pref} 지도로 보기 →",
         "related_heading": "관련 포켓몬",
+        "same_type_heading": "같은 타입 포켓몬",
+        "same_generation_heading": "같은 세대 포켓몬",
+        "summary_link": "포케후타 통계 허브",
         "count_text": "전국에 <strong>{count}</strong>개의 {name} 포케후타가 있습니다.",
         "cta": "지도에서 전국의 포케후타 찾기 →",
         "breadcrumb_aria": "이동 경로",
@@ -497,6 +512,59 @@ def build_related_map(
     return result
 
 
+def build_taxonomy_related_map(
+    index: dict[str, tuple[dict, list[dict]]],
+) -> dict[str, dict[str, list[tuple[str, dict]]]]:
+    """Return same-type and same-generation related Pokemon for visible LPs."""
+    type_to_slugs: dict[str, list[str]] = defaultdict(list)
+    generation_to_slugs: dict[int, list[str]] = defaultdict(list)
+
+    for slug, (meta, _manholes) in index.items():
+        for type_data in meta.get("types", []):
+            if isinstance(type_data, dict) and type_data.get("ja"):
+                type_to_slugs[type_data["ja"]].append(slug)
+        generation = meta.get("generation")
+        if isinstance(generation, int):
+            generation_to_slugs[generation].append(slug)
+
+    def sort_key(slug: str) -> tuple[int, str]:
+        meta, manholes = index[slug]
+        name = meta.get("names", {}).get("ja", slug)
+        return (-len(manholes), name)
+
+    result: dict[str, dict[str, list[tuple[str, dict]]]] = {}
+    for slug, (meta, _manholes) in index.items():
+        same_type_slugs: list[str] = []
+        seen = {slug}
+        for type_data in meta.get("types", []):
+            type_key = type_data.get("ja") if isinstance(type_data, dict) else ""
+            for related_slug in sorted(type_to_slugs.get(type_key, []), key=sort_key):
+                if related_slug in seen:
+                    continue
+                same_type_slugs.append(related_slug)
+                seen.add(related_slug)
+                if len(same_type_slugs) >= 8:
+                    break
+            if len(same_type_slugs) >= 8:
+                break
+
+        same_generation_slugs: list[str] = []
+        generation = meta.get("generation")
+        if isinstance(generation, int):
+            for related_slug in sorted(generation_to_slugs.get(generation, []), key=sort_key):
+                if related_slug == slug:
+                    continue
+                same_generation_slugs.append(related_slug)
+                if len(same_generation_slugs) >= 8:
+                    break
+
+        result[slug] = {
+            "same_type": [(s, index[s][0]) for s in same_type_slugs],
+            "same_generation": [(s, index[s][0]) for s in same_generation_slugs],
+        }
+    return result
+
+
 def _hreflang_links(slug: str) -> str:
     """Generate hreflang <link> tags for all language variants of a Pokemon page."""
     lines = []
@@ -514,6 +582,7 @@ def generate_html(
     pokemon: dict,
     manholes: list[dict],
     related: list[tuple[str, dict]],
+    taxonomy_related: dict[str, list[tuple[str, dict]]],
     image_dir: Path,
     lang: str,
     lang_config: dict,
@@ -542,6 +611,7 @@ def generate_html(
     map_url = f"{BASE_URL}{url_prefix}"
     pokemon_list_url = f"/{url_prefix}pokemon/" if url_prefix else "/pokemon/"
     map_href = f"/{url_prefix}" if url_prefix else "/"
+    summary_href = f"/{url_prefix}summary/" if url_prefix else "/summary/"
 
     count = len(manholes)
 
@@ -669,18 +739,42 @@ def generate_html(
             f"</section>"
         )
 
-    # Related Pokemon section
-    related_html = ""
-    if related:
-        links = "".join(
+    def related_links_html(related_items: list[tuple[str, dict]]) -> str:
+        return "".join(
             f"<li><a href='/{url_prefix}pokemon/{quote(s)}/'>"
             f"{escape(_get_display_name(meta, lang_config))}</a></li>"
-            for s, meta in related
+            for s, meta in related_items
         )
+
+    related_blocks: list[str] = []
+    if related:
+        related_blocks.append(
+            f"<section>"
+            f"<h2>{escape(strings['related_heading'])}</h2>"
+            f"<ul class='related-list'>{related_links_html(related)}</ul>"
+            f"</section>"
+        )
+    same_type = taxonomy_related.get("same_type", []) if taxonomy_related else []
+    if same_type:
+        related_blocks.append(
+            f"<section>"
+            f"<h2>{escape(strings['same_type_heading'])}</h2>"
+            f"<ul class='related-list'>{related_links_html(same_type)}</ul>"
+            f"</section>"
+        )
+    same_generation = taxonomy_related.get("same_generation", []) if taxonomy_related else []
+    if same_generation:
+        related_blocks.append(
+            f"<section>"
+            f"<h2>{escape(strings['same_generation_heading'])}</h2>"
+            f"<ul class='related-list'>{related_links_html(same_generation)}</ul>"
+            f"</section>"
+        )
+    related_html = ""
+    if related_blocks:
         related_html = (
             f"<div class='section-card related-section'>"
-            f"<h2>{escape(strings['related_heading'])}</h2>"
-            f"<ul class='related-list'>{links}</ul>"
+            f"{''.join(related_blocks)}"
             f"</div>"
         )
 
@@ -906,6 +1000,24 @@ def generate_html(
       font-weight: bold;
     }}
     .related-list a:hover {{ background: #e0d8f5; }}
+    .back-links {{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }}
+    .back-links a {{
+      display: inline-block;
+      padding: 6px 12px;
+      border: 1px solid #d8ccf0;
+      border-radius: 999px;
+      color: #6F55A3;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: bold;
+      background: #fbf9ff;
+    }}
+    .back-links a:hover {{ background: #f0ebfa; }}
     .cta-map {{
       display: block;
       background: #6F55A3;
@@ -951,6 +1063,11 @@ def generate_html(
     {gen_html}
     {seo_desc_html}
     {ai_summary_html}
+    <div class="back-links">
+      <a href="{escape(pokemon_list_url)}">{escape(breadcrumb_pokemon)}</a>
+      <a href="{escape(summary_href)}">{escape(strings["summary_link"])}</a>
+      <a href="{escape(map_href)}">{escape(breadcrumb_home)}</a>
+    </div>
   </div>
 
   <div class="section-card">
@@ -1017,6 +1134,7 @@ def main() -> int:
     logger.info(f"Pokemon with pokefuta: {len(index)}")
 
     related_map = build_related_map(index, metadata)
+    taxonomy_related_map = build_taxonomy_related_map(index)
     image_dir = Path(args.images)
     output_root = Path(args.output_root)
 
@@ -1052,6 +1170,7 @@ def main() -> int:
                 pokemon=pokemon,
                 manholes=poke_manholes,
                 related=related_map.get(slug, []),
+                taxonomy_related=taxonomy_related_map.get(slug, {}),
                 image_dir=image_dir,
                 lang=lang,
                 lang_config=lc,
