@@ -422,12 +422,13 @@ def _generation_label(generation: object, strings: dict) -> str:
     if isinstance(generation, int):
         if generation >= 5:
             return strings["generation_later_label"]
-        return strings["generation_label"].format(gen=generation)
+        if 1 <= generation <= 4:
+            return strings["generation_label"].format(gen=generation)
     return strings["unknown_generation"]
 
 
-def _photo_url(mid: str, photo: dict | None, image_dir: Path) -> str:
-    if mid and (image_dir / f"{mid}_latest.jpeg").exists():
+def _photo_url(mid: str, photo: dict | None, available_images: frozenset[str]) -> str:
+    if mid and mid in available_images:
         return f"{BASE_URL}manhole/image/{quote(mid, safe='')}_latest.jpeg"
     if photo and isinstance(photo.get("url"), str):
         return photo["url"]
@@ -437,7 +438,7 @@ def _photo_url(mid: str, photo: dict | None, image_dir: Path) -> str:
 def _select_latest_image(
     manholes: list[dict],
     photos_data: dict,
-    image_dir: Path,
+    available_images: frozenset[str],
     display_name: str,
     translate_pref: Callable[[str], str],
     lang: str,
@@ -453,7 +454,7 @@ def _select_latest_image(
     ]
     for photo in sorted(photo_candidates, key=lambda p: p.get("created_at", ""), reverse=True):
         mid = str(photo.get("manhole_id", "")).strip()
-        url = _photo_url(mid, photo, image_dir)
+        url = _photo_url(mid, photo, available_images)
         if not url:
             continue
         location = _location_text(records_by_id.get(mid, {}), translate_pref, lang)
@@ -468,7 +469,7 @@ def _select_latest_image(
 
     for manhole in sorted(manholes, key=lambda m: str(m.get("id", ""))):
         mid = str(manhole.get("id", "")).strip()
-        url = _photo_url(mid, None, image_dir)
+        url = _photo_url(mid, None, available_images)
         if not url:
             continue
         location = _location_text(manhole, translate_pref, lang)
@@ -493,6 +494,10 @@ def _build_pokemon_cards(
     image_dir: Path,
 ) -> list[dict]:
     url_prefix = lang_config["url_prefix"]
+    available_images = frozenset(
+        p.stem.removesuffix("_latest")
+        for p in image_dir.glob("*_latest.jpeg")
+    ) if image_dir.exists() else frozenset()
     cards = []
     for slug, (meta, manholes) in pokemon_index.items():
         display_name = _get_display_name(meta, lang_config)
@@ -502,7 +507,6 @@ def _build_pokemon_cards(
         card = {
             "slug": slug,
             "href": _pokemon_href(url_prefix, slug),
-            "meta": meta,
             "name": display_name,
             "name_en": meta.get("names", {}).get("en", ""),
             "count": count,
@@ -514,7 +518,7 @@ def _build_pokemon_cards(
             "summary": _region_summary(manholes, count, strings, translate_pref),
         }
         card["latest_image"] = _select_latest_image(
-            manholes, photos_data, image_dir, display_name,
+            manholes, photos_data, available_images, display_name,
             translate_pref, lang, strings,
         )
         cards.append(card)
@@ -552,6 +556,7 @@ def generate_html(
         pokemon_index, lang, lang_config, strings, translate_pref,
         photos_data, image_dir,
     )
+    cards_by_slug = {c["slug"]: c for c in cards}
 
     def image_html(card: dict, class_name: str = "card-photo") -> str:
         image = card.get("latest_image")
@@ -614,7 +619,7 @@ def generate_html(
     for slug in REGIONAL_POKEMON_SLUGS:
         if slug not in pokemon_index:
             continue
-        card = next((c for c in cards if c["slug"] == slug), None)
+        card = cards_by_slug.get(slug)
         if not card:
             continue
         tagline = REGIONAL_TAGLINES.get(slug, {}).get(lang, REGIONAL_TAGLINES.get(slug, {}).get("en", ""))
@@ -657,7 +662,7 @@ def generate_html(
         )
     ranking_html = "\n".join(ranking_items)
 
-    featured_cards = [card for slug in FEATURED_POKEMON_SLUGS for card in cards if card["slug"] == slug]
+    featured_cards = [cards_by_slug[slug] for slug in FEATURED_POKEMON_SLUGS if slug in cards_by_slug]
     featured_html = "".join(card_html(card, "featured-card") for card in featured_cards)
 
     type_groups: dict[str, list[dict]] = defaultdict(list)

@@ -772,12 +772,9 @@ def generate_html(
         )
     related_html = ""
     if related_blocks:
-        links = "".join(
-            related_blocks
-        )
         related_html = (
             f"<div class='section-card related-section'>"
-            f"{links}"
+            f"{''.join(related_blocks)}"
             f"</div>"
         )
 
