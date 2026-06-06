@@ -11,6 +11,7 @@ Outputs:
 
 from __future__ import annotations
 
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -26,7 +27,9 @@ PHOTOS_JSON = ROOT / "docs" / "latest-manhole-photos.json"
 IMAGE_DIR = ROOT / "dataset" / "manhole" / "image"
 
 BASE_URL = "https://data.pokefuta.com"
-OGP_IMAGE = f"{BASE_URL}/assets/ogp/pokefuta_summary_ogp.png"
+_OGP_PNG = ROOT / "apps" / "web" / "assets" / "ogp" / "pokefuta_summary_ogp.png"
+_ogp_hash = hashlib.md5(_OGP_PNG.read_bytes()).hexdigest()[:8] if _OGP_PNG.exists() else "0"
+OGP_IMAGE = f"{BASE_URL}/assets/ogp/pokefuta_summary_ogp.png?v={_ogp_hash}"
 SUMMARY_SHARE_URL = f"{BASE_URL}/summary"
 
 PREFECTURE_ORDER: list[str] = [
