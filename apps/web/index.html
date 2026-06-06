@@ -395,6 +395,10 @@
           <span class="badge-label" style="font-weight:600;">選択中:</span> <span class="badge-value"></span>
           <button type="button" class="badge-clear" aria-label="選択解除" onclick="clearPrefectureSelection()">×</button>
         </div>
+        <div id="selected-pokemon-badge" class="selected-prefecture-badge" style="display:none;">
+          <span class="badge-label" style="font-weight:600;">ポケモン:</span> <span class="badge-value"></span>
+          <button type="button" class="badge-clear" aria-label="ポケモンフィルター解除" onclick="clearPokemonFilter()">×</button>
+        </div>
         <section id="prefecture-spots-panel" class="prefecture-spots-panel" hidden>
           <div class="section-title-row">
             <h4 id="prefecture-spots-heading">県内のポケふた</h4>
@@ -682,10 +686,8 @@
       const pokemons = Array.isArray(d.pokemons) && d.pokemons.length ? d.pokemons : [];
       const pokemonsHtml = pokemons.length
         ? pokemons.map(pokemon => {
-            const url = getPokemonLpUrl(pokemon);
-            return url
-              ? `<a href="${escapeHtml(url)}" class="travel-popup-pokemon" target="_blank" rel="noopener noreferrer">${escapeHtml(pokemon)}</a>`
-              : `<span class="travel-popup-pokemon">${escapeHtml(pokemon)}</span>`;
+            const safeJs = escapeJs(pokemon);
+            return `<button type="button" class="travel-popup-pokemon travel-popup-pokemon--filter" onclick="filterByPokemon('${safeJs}')">${escapeHtml(pokemon)}</button>`;
           }).join('')
         : '<span class="travel-popup-pokemon">ポケモン未設定</span>';
       const imageUrl = getLocalManholeImageUrl(d.id);
@@ -1356,6 +1358,33 @@
       filterByPrefectureFromTable('');
       showSelectedPrefectureBadge();
       renderPrefectureSpots('');
+    }
+
+    function filterByPokemon(name) {
+      if (!name) return;
+      selectedPokemons = selectedPokemons.length === 1 && selectedPokemons[0] === name ? [] : [name];
+      showSelectedPokemonBadge();
+      recomputeVisibility();
+      map.closePopup();
+    }
+
+    function showSelectedPokemonBadge() {
+      const badge = document.getElementById('selected-pokemon-badge');
+      const val = badge?.querySelector('.badge-value');
+      if (!badge || !val) return;
+      if (selectedPokemons.length > 0) {
+        val.textContent = selectedPokemons.join(', ');
+        badge.style.display = 'inline-block';
+      } else {
+        badge.style.display = 'none';
+        val.textContent = '';
+      }
+    }
+
+    function clearPokemonFilter() {
+      selectedPokemons = [];
+      showSelectedPokemonBadge();
+      recomputeVisibility();
     }
 
     function togglePrefectureSelection(prefecture) {
