@@ -11,10 +11,16 @@ python3 apps/scraper/generate_social_posts.py
 
 1. `docs/social-post-candidates.json` を読み込む（全候補リスト）
 2. `docs/social-post-history.json` を読み込む（使用済みID管理）。ファイルが存在しない場合は `{"used": []}` として扱う
-3. 今日の日付・曜日・月・季節を踏まえて、最も面白い・タイムリーな候補を1件選ぶ
-   - `history.used` にある `id` で `used_at` が30日以内のものは選ばない
-   - 曜日ローテーションに縛られなくてよい。今日にふさわしいと思う候補を選ぶ
-   - 例：夏休み前なら旅行訴求が強い `prefecture_rank` や `rare_area`、最新投稿があれば `latest_photo` など
+3. 今日の曜日に対応するタイプを選ぶ（スケジュール厳守）：
+   - 月・日 → `prefecture_rank`
+   - 火    → `travel_trivia`
+   - 水    → `latest_photo`
+   - 木    → `pokemon_rank`
+   - 金    → `rare_area`
+   - 土    → `no_photo`
+
+   そのタイプの候補の中から、`history.used` にある `id` で `used_at` が30日以内のものを除外した上で最適な1件を選ぶ。
+   （同タイプの候補が全て30日除外済みの場合のみ、他タイプから代替してよい）
 4. 選んだ候補の `raw_data` をもとに X 投稿文を書く（以下のルールを守ること）：
    - 本文は140文字前後（URLを除いた文章部分）
    - 最初の1行に数字か驚きを入れる
@@ -41,3 +47,9 @@ python3 apps/scraper/generate_social_posts.py
    {"id": "候補のid", "used_at": "YYYY-MM-DD"}
    ```
 7. 投稿文（body の内容）をそのままユーザーに表示する（コピーしやすいように）
+8. 以下を実行して OGP 画像を生成する：
+   ```bash
+   cd "$(git rev-parse --show-toplevel)"
+   python3 apps/scraper/generate_social_ogp.py
+   ```
+9. 「画像: docs/social-post-ogp.png」を投稿文の下に表示する
