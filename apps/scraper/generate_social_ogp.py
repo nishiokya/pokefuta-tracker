@@ -29,13 +29,20 @@ IMAGE_DIR = ROOT / "dataset" / "manhole" / "image"
 # ---------------------------------------------------------------------------
 
 def svg_to_png(svg_bytes: bytes, out_path: Path) -> None:
-    result = subprocess.run(
-        ["rsvg-convert", "-f", "png", "-w", "1200", "-h", "630", "-o", str(out_path), "-"],
-        input=svg_bytes,
-        capture_output=True,
-    )
-    if result.returncode != 0:
-        raise RuntimeError(f"rsvg-convert failed: {result.stderr.decode()}")
+    try:
+        subprocess.run(
+            ["rsvg-convert", "-f", "png", "-w", "1200", "-h", "630", "-o", str(out_path), "-"],
+            input=svg_bytes,
+            capture_output=True,
+            check=True,
+        )
+    except FileNotFoundError:
+        sys.exit(
+            "[generate_social_ogp] rsvg-convert が見つかりません。"
+            " brew install librsvg でインストールしてください。"
+        )
+    except subprocess.CalledProcessError as e:
+        sys.exit(f"[generate_social_ogp] rsvg-convert failed: {e.stderr.decode()}")
 
 
 # ---------------------------------------------------------------------------
@@ -155,14 +162,16 @@ _BUILDERS = {
 def main() -> None:
     if not DAILY_JSON.exists():
         sys.exit("[generate_social_ogp] docs/social-post-daily.json が見つかりません。先に /social-post を実行してください。")
+    if not CANDIDATES_JSON.exists():
+        sys.exit("[generate_social_ogp] docs/social-post-candidates.json が見つかりません。先に generate_social_posts.py を実行してください。")
 
-    daily = json.loads(DAILY_JSON.read_text())
+    daily = json.loads(DAILY_JSON.read_text(encoding="utf-8"))
     post_id = daily["id"]
     post_type = daily["type"]
 
-    candidates = [json.loads(l) for l in CANDIDATES_JSON.read_text().splitlines() if l.strip()] \
+    candidates = [json.loads(l) for l in CANDIDATES_JSON.read_text(encoding="utf-8").splitlines() if l.strip()] \
         if CANDIDATES_JSON.suffix == ".ndjson" \
-        else json.loads(CANDIDATES_JSON.read_text())
+        else json.loads(CANDIDATES_JSON.read_text(encoding="utf-8"))
 
     candidate = next((c for c in candidates if c["id"] == post_id), None)
     if candidate is None:
@@ -179,7 +188,7 @@ def main() -> None:
     if not template_path.exists():
         sys.exit(f"[generate_social_ogp] テンプレートが見つかりません: {template_path}")
 
-    svg_text = template_path.read_text()
+    svg_text = template_path.read_text(encoding="utf-8")
     for key, value in placeholders.items():
         svg_text = svg_text.replace(key, value)
 
