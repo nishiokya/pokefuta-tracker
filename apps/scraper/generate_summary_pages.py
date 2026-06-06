@@ -1109,6 +1109,12 @@ FACT_COPY: dict[str, dict] = {
         "hashtags": ["#ポケふた", "#ポケモンマンホール"],
         "empty_status": "まだ{empty_count}県には設置されていません。",
         "empty_share_lead": "まだ設置されていない県は{empty_count}県あります。",
+        "empty_image_subtitle": "未設置は{empty_count}県",
+        "all_installed_status": "すべての都道府県に設置されています。",
+        "all_installed_share_lead": "すべての都道府県にポケふたがあります。",
+        "all_installed_image_subtitle": "全都道府県に設置済み",
+        "list_separator": "・",
+        "top3_separator": "・",
         "map_all": "全国マップを見る",
         "map_rank": "ランキングを見る",
         "map_pref": "{pref}を地図で見る",
@@ -1141,7 +1147,7 @@ FACT_COPY: dict[str, dict] = {
                 "image_type": "summary_installed_prefectures",
                 "image_title": "ポケふた設置済み",
                 "image_main_value": "{installed_count}都道府県",
-                "image_subtitle": "未設置は{empty_count}県",
+                "image_subtitle": "{empty_image_subtitle}",
                 "image_footer": "全国{total}枚のポケふた一覧",
             },
             "tohoku": {
@@ -1247,6 +1253,12 @@ FACT_COPY: dict[str, dict] = {
         "hashtags": ["#Pokefuta", "#PokemonManhole"],
         "empty_status": "{empty_count} prefectures still have none.",
         "empty_share_lead": "{empty_count} prefectures still have no Pokefuta.",
+        "empty_image_subtitle": "{empty_count} still without one",
+        "all_installed_status": "Every prefecture now has Pokefuta.",
+        "all_installed_share_lead": "All prefectures now have Pokefuta.",
+        "all_installed_image_subtitle": "all prefectures covered",
+        "list_separator": ", ",
+        "top3_separator": ", ",
         "map_all": "View the Japan map",
         "map_rank": "View rankings",
         "map_pref": "View {pref} on the map",
@@ -1279,7 +1291,7 @@ FACT_COPY: dict[str, dict] = {
                 "image_type": "summary_installed_prefectures",
                 "image_title": "Prefectures with Pokefuta",
                 "image_main_value": "{installed_count}",
-                "image_subtitle": "{empty_count} still without one",
+                "image_subtitle": "{empty_image_subtitle}",
                 "image_footer": "Nationwide Pokefuta list",
             },
             "tohoku": {
@@ -1388,6 +1400,12 @@ FACT_COPY["zh-CN"] = {
     "hashtags": ["#Pokefuta", "#PokemonManhole"],
     "empty_status": "仍有{empty_count}个县尚未设置。",
     "empty_share_lead": "仍有{empty_count}个县没有宝可梦井盖。",
+    "empty_image_subtitle": "未设置为{empty_count}县",
+    "all_installed_status": "所有都道府县都已设置宝可梦井盖。",
+    "all_installed_share_lead": "所有都道府县现在都有宝可梦井盖。",
+    "all_installed_image_subtitle": "所有都道府县均已设置",
+    "list_separator": "、",
+    "top3_separator": "、",
     "map_all": "查看全国地图",
     "map_rank": "查看排行榜",
     "map_pref": "在地图上查看{pref}",
@@ -1398,6 +1416,10 @@ FACT_COPY["zh-TW"] = {
     "section": "寶可夢人孔蓋小知識",
     "empty_status": "仍有{empty_count}個縣尚未設置。",
     "empty_share_lead": "仍有{empty_count}個縣沒有寶可夢人孔蓋。",
+    "empty_image_subtitle": "未設置為{empty_count}縣",
+    "all_installed_status": "所有都道府縣都已設置寶可夢人孔蓋。",
+    "all_installed_share_lead": "所有都道府縣現在都有寶可夢人孔蓋。",
+    "all_installed_image_subtitle": "所有都道府縣均已設置",
     "map_all": "查看全國地圖",
     "map_rank": "查看排行榜",
     "map_pref": "在地圖上查看{pref}",
@@ -1410,6 +1432,12 @@ FACT_COPY["ko"] = {
     "hashtags": ["#Pokefuta", "#PokemonManhole"],
     "empty_status": "아직 {empty_count}개 현에는 설치되어 있지 않습니다.",
     "empty_share_lead": "아직 포케후타가 없는 현은 {empty_count}곳입니다.",
+    "empty_image_subtitle": "미설치는 {empty_count}개 현",
+    "all_installed_status": "모든 도도부현에 포케후타가 설치되어 있습니다.",
+    "all_installed_share_lead": "모든 도도부현에서 포케후타를 만날 수 있습니다.",
+    "all_installed_image_subtitle": "모든 도도부현 설치 완료",
+    "list_separator": "・",
+    "top3_separator": "・",
     "map_all": "전국 지도 보기",
     "map_rank": "랭킹 보기",
     "map_pref": "지도에서 {pref} 보기",
@@ -1444,7 +1472,7 @@ FACT_COPY["zh-CN"]["facts"] = {
         "image_type": "summary_installed_prefectures",
         "image_title": "已设置宝可梦井盖",
         "image_main_value": "{installed_count}个都道府县",
-        "image_subtitle": "未设置为{empty_count}县",
+        "image_subtitle": "{empty_image_subtitle}",
         "image_footer": "全国{total}个宝可梦井盖一览",
     },
     "tohoku": {
@@ -1571,7 +1599,7 @@ FACT_COPY["zh-TW"]["facts"] = {
         "image_type": "summary_installed_prefectures",
         "image_title": "已設置寶可夢人孔蓋",
         "image_main_value": "{installed_count}個都道府縣",
-        "image_subtitle": "未設置為{empty_count}縣",
+        "image_subtitle": "{empty_image_subtitle}",
         "image_footer": "全國{total}個寶可夢人孔蓋一覽",
     },
     "tohoku": {
@@ -1698,7 +1726,7 @@ FACT_COPY["ko"]["facts"] = {
         "image_type": "summary_installed_prefectures",
         "image_title": "포케후타 설치 완료",
         "image_main_value": "{installed_count}개 도도부현",
-        "image_subtitle": "미설치는 {empty_count}개 현",
+        "image_subtitle": "{empty_image_subtitle}",
         "image_footer": "전국 {total}개 포케후타 일람",
     },
     "tohoku": {
@@ -1813,14 +1841,25 @@ def _build_facts(s: dict, stats: dict, tr) -> list[dict]:
     iwate = counts.get("岩手県", 0)
     mie = counts.get("三重県", 0)
     tohoku = stats["regional"].get("東北", 0)
-    empty_names = "・".join(item["pref"] for item in stats["empty"])
     installed_count = len(stats["installed"])
     empty_count = len(stats["empty"])
     hokkaido_pct = round((hokkaido / total) * 100) if total else 0
-    top3 = " / ".join(tr(item["pref"]) for item in stats["ranking"][:3])
-    empty_names = " / ".join(tr(item["pref"]) for item in stats["empty"])
-    empty_status = copy["empty_status"].format(empty_count=empty_count)
-    empty_share_lead = copy["empty_share_lead"].format(empty_count=empty_count)
+    top3 = copy["top3_separator"].join(
+        tr(item["pref"]) for item in stats["ranking"][:3]
+    )
+    empty_names = copy["list_separator"].join(
+        tr(item["pref"]) for item in stats["empty"]
+    )
+    if empty_count:
+        empty_status = copy["empty_status"].format(empty_count=empty_count)
+        empty_share_lead = copy["empty_share_lead"].format(empty_count=empty_count)
+        empty_image_subtitle = copy["empty_image_subtitle"].format(
+            empty_count=empty_count
+        )
+    else:
+        empty_status = copy["all_installed_status"]
+        empty_share_lead = copy["all_installed_share_lead"]
+        empty_image_subtitle = copy["all_installed_image_subtitle"]
     region_names = s.get("region_names", {})
     ctx = {
         "total": total,
@@ -1842,6 +1881,7 @@ def _build_facts(s: dict, stats: dict, tr) -> list[dict]:
         "empty_names": empty_names,
         "empty_status": empty_status,
         "empty_share_lead": empty_share_lead,
+        "empty_image_subtitle": empty_image_subtitle,
         "top3": top3,
     }
 
@@ -1869,8 +1909,6 @@ def _build_facts(s: dict, stats: dict, tr) -> list[dict]:
         ):
             fact[key] = template[key].format(**ctx)
         facts.append(fact)
-    if empty_count:
-        facts[-1]["map_label"] = copy["map_all"]
     return facts
 
 
