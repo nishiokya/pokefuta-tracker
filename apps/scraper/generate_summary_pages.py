@@ -21,6 +21,8 @@ ROOT = Path(__file__).parent.parent.parent
 NDJSON = ROOT / "docs" / "pokefuta.ndjson"
 PREFECTURES_JSON = ROOT / "apps" / "web" / "i18n" / "prefectures.json"
 DIST = ROOT / "dist"
+POKEMON_METADATA_JSON = ROOT / "docs" / "pokemon_metadata.json"
+PHOTOS_JSON = ROOT / "docs" / "latest-manhole-photos.json"
 
 BASE_URL = "https://data.pokefuta.com"
 OGP_IMAGE = f"{BASE_URL}/assets/ogp/pokefuta_summary_ogp.png"
@@ -66,13 +68,13 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "out_path": "summary/index.html",
         "canonical": f"{BASE_URL}/summary",
         "map_base_href": "/",
-        "page_title": "ポケふたは全国に何個ある？都道府県別ランキングと雑学",
-        "meta_desc": "全国{total}枚のポケふたを都道府県別に集計。{top1pref}{top1count}枚、{top2pref}{top2count}枚、{top3pref}{top3count}枚など、旅に出たくなるポケふた雑学を紹介します。",
+        "page_title": "全国のポケモンマンホール（ポケふた）一覧・分布マップ",
+        "meta_desc": "全国{total}枚のポケモンマンホール「ポケふた」を都道府県別・ポケモン別に検索。旅行先のポケふた探しにご活用ください。",
         "breadcrumb_aria": "パンくず",
         "nav_home_text": "全国マップ",
         "nav_home_href": "/",
-        "h1": "ポケふたは全国に何個ある？",
-        "subtitle": "全国に広がるポケふたは、地域によって設置数に大きな違いがあります。{top1pref}は{top1count}枚、{top2pref}は{top2count}枚、{top3pref}は{top3count}枚。旅行先で近くのポケふたを探したり、次に巡る地域を考えたりするために、都道府県別の設置数をまとめました。",
+        "h1": "全国のポケモンマンホール（ポケふた）一覧",
+        "subtitle": "全国{total}枚のポケモンマンホール（ポケふた）を都道府県別・ポケモン別に探せます。旅行先やお出かけ先のポケふた探しにご活用ください。",
         "stats_aria": "全国集計",
         "stat_total": "全国の総数",
         "stat_installed": "設置済み都道府県",
@@ -87,7 +89,7 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "map_link_text": "地図で見る",
         "table_no_map": "-",
         "count_unit": "枚",
-        "h2_ranking": "ポケふたが多い県ランキング",
+        "h2_ranking": "ポケふたの多い都道府県ランキング",
         "ranking_note": '各都道府県の地図は、<a class="summary-link" href="/">全国マップ</a>から地域を選んで確認できます。',
         "h2_regional": "地域の分布傾向",
         "h2_empty": "ポケふたがない県",
@@ -117,6 +119,33 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "regional_top2": "地方別では{r1name}（{r1count}枚）が最も多く、次いで{r2name}（{r2count}枚）となっています。",
         "regional_top1": "地方別では{r1name}（{r1count}枚）が最も多くなっています。",
         "regional_outro": "ポケふたは地方自治体・観光協会との連携で設置されることが多く、観光地や駅周辺に置かれているケースが目立ちます。地域を旅しながら複数のポケふたを巡るルートを作るのも人気の楽しみ方です。",
+        "search_hub": {
+            "h2": "ポケふたを探す",
+            "card_pref_title": "都道府県から探す",
+            "card_pref_desc": "47都道府県の設置数一覧",
+            "card_pokemon_title": "ポケモンから探す",
+            "card_pokemon_desc": "ポケモン別の一覧ページ",
+            "card_map_title": "地図で探す",
+            "card_map_desc": "インタラクティブマップで確認",
+        },
+        "popular_pokemon": {
+            "h2": "人気ポケモンのポケふた",
+        },
+        "latest_photos": {
+            "h2": "最新追加写真",
+            "note": "ユーザーが投稿した最新のポケふた写真です。タップするとポケふた詳細ページへ移動します。",
+        },
+        "no_photos": {
+            "h2": "まだ写真が投稿されていないポケふた",
+            "total": "{count}枚のポケふたに写真がまだありません",
+            "cta": "あなたが最初の投稿者になれます。",
+        },
+        "pokemon_ranking": {
+            "h2": "ポケモンランキング",
+            "h3_count": "ポケふた数ランキング",
+            "h3_pref": "登場自治体数ランキング",
+            "pref_count_unit": "自治体",
+        },
     },
     "en": {
         "html_lang": "en",
@@ -172,6 +201,24 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "regional_top2": "By region, {r1name} leads with {r1count} Pokéfuta, followed by {r2name} ({r2count}).",
         "regional_top1": "By region, {r1name} has the most with {r1count} Pokéfuta.",
         "regional_outro": "Pokéfuta are often installed through partnerships with local governments and tourism associations, frequently found near tourist spots and train stations. Planning a multi-region route is a popular way to enjoy them.",
+        "search_hub": {
+            "h2": "Find Pokéfuta",
+            "card_pref_title": "By Prefecture",
+            "card_pref_desc": "Count list for all 47 prefectures",
+            "card_pokemon_title": "By Pokémon",
+            "card_pokemon_desc": "Browse by Pokémon species",
+            "card_map_title": "On the Map",
+            "card_map_desc": "Interactive map view",
+        },
+        "popular_pokemon": {
+            "h2": "Popular Pokémon on Pokéfuta",
+        },
+        "pokemon_ranking": {
+            "h2": "Pokémon Rankings",
+            "h3_count": "By Pokéfuta Count",
+            "h3_pref": "By Municipalities",
+            "pref_count_unit": " municipalities",
+        },
     },
     "zh-CN": {
         "html_lang": "zh-CN",
@@ -227,6 +274,24 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "regional_top2": "按地区统计，{r1name}（{r1count}个）最多，其次是{r2name}（{r2count}个）。",
         "regional_top1": "按地区统计，{r1name}（{r1count}个）最多。",
         "regional_outro": "宝可梦井盖多通过地方政府和观光协会合作设置，常见于旅游胜地和车站周边。边旅行边规划多地巡游路线也是广受欢迎的玩法。",
+        "search_hub": {
+            "h2": "寻找宝可梦井盖",
+            "card_pref_title": "按都道府县搜索",
+            "card_pref_desc": "47个都道府县设置数量一览",
+            "card_pokemon_title": "按宝可梦搜索",
+            "card_pokemon_desc": "按宝可梦种类浏览",
+            "card_map_title": "在地图上搜索",
+            "card_map_desc": "互动地图查看",
+        },
+        "popular_pokemon": {
+            "h2": "热门宝可梦井盖",
+        },
+        "pokemon_ranking": {
+            "h2": "宝可梦排行榜",
+            "h3_count": "按井盖数量排名",
+            "h3_pref": "按出现市区町村数排名",
+            "pref_count_unit": "个市区町村",
+        },
     },
     "zh-TW": {
         "html_lang": "zh-TW",
@@ -282,6 +347,24 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "regional_top2": "按地區統計，{r1name}（{r1count}個）最多，其次是{r2name}（{r2count}個）。",
         "regional_top1": "按地區統計，{r1name}（{r1count}個）最多。",
         "regional_outro": "寶可夢人孔蓋多透過地方政府和觀光協會合作設置，常見於旅遊勝地和車站周邊。邊旅行邊規劃多地巡遊路線也是廣受歡迎的玩法。",
+        "search_hub": {
+            "h2": "尋找寶可夢人孔蓋",
+            "card_pref_title": "按都道府縣搜尋",
+            "card_pref_desc": "47個都道府縣設置數量一覽",
+            "card_pokemon_title": "按寶可夢搜尋",
+            "card_pokemon_desc": "按寶可夢種類瀏覽",
+            "card_map_title": "在地圖上搜尋",
+            "card_map_desc": "互動地圖查看",
+        },
+        "popular_pokemon": {
+            "h2": "熱門寶可夢人孔蓋",
+        },
+        "pokemon_ranking": {
+            "h2": "寶可夢排行榜",
+            "h3_count": "按人孔蓋數量排名",
+            "h3_pref": "按出現市區町村數排名",
+            "pref_count_unit": "個市區町村",
+        },
     },
     "ko": {
         "html_lang": "ko",
@@ -337,6 +420,24 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "regional_top2": "지역별로는 {r1name}（{r1count}개）이 가장 많으며, 다음은 {r2name}（{r2count}개）입니다.",
         "regional_top1": "지역별로는 {r1name}（{r1count}개）이 가장 많습니다.",
         "regional_outro": "포케후타는 지방자치단체・관광협회와의 협력으로 설치되는 경우가 많으며, 관광지나 역 주변에 위치한 경우가 눈에 띕니다. 지역을 여행하면서 여러 포케후타를 순회하는 경로를 만드는 것도 인기 있는 즐기는 방법입니다.",
+        "search_hub": {
+            "h2": "포케후타 찾기",
+            "card_pref_title": "도도부현으로 찾기",
+            "card_pref_desc": "47개 도도부현 설치 수량 일람",
+            "card_pokemon_title": "포켓몬으로 찾기",
+            "card_pokemon_desc": "포켓몬 종류별 일람",
+            "card_map_title": "지도에서 찾기",
+            "card_map_desc": "인터랙티브 지도로 확인",
+        },
+        "popular_pokemon": {
+            "h2": "인기 포켓몬 포케후타",
+        },
+        "pokemon_ranking": {
+            "h2": "포켓몬 랭킹",
+            "h3_count": "포케후타 수 랭킹",
+            "h3_pref": "등장 시구정촌 수 랭킹",
+            "pref_count_unit": "개 시구정촌",
+        },
     },
 }
 
@@ -670,6 +771,127 @@ _CSS = """\
       margin-left: 6px;
     }
 
+    .search-hub-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .search-hub-card {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 18px 14px;
+      background: #fffaf0;
+      border: 1px solid rgba(23, 111, 104, .24);
+      border-radius: 8px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .search-hub-card:hover {
+      background: #e5f4f2;
+    }
+
+    .search-hub-card strong {
+      color: #176f68;
+      font-size: 1rem;
+      font-weight: 900;
+    }
+
+    .search-hub-card span {
+      color: #574b41;
+      font-size: .875rem;
+    }
+
+    .pokemon-popular-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      margin: 12px 0 0;
+    }
+
+    .pokemon-card {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 12px;
+      background: #fffaf0;
+      border: 1px solid rgba(93, 67, 35, .14);
+      border-radius: 8px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .pokemon-card:hover {
+      background: #e5f4f2;
+    }
+
+    .pokemon-card strong {
+      font-size: .95rem;
+      font-weight: 850;
+    }
+
+    .pokemon-card span {
+      color: #574b41;
+      font-size: .84rem;
+    }
+
+    .photos-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin: 12px 0 0;
+    }
+
+    .photo-card {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .photo-card img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid rgba(93, 67, 35, .12);
+    }
+
+    .photo-card-title {
+      font-size: .84rem;
+      font-weight: 800;
+      line-height: 1.35;
+    }
+
+    .photo-card-meta {
+      font-size: .76rem;
+      color: #716154;
+    }
+
+    .pokemon-ranking-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 12px;
+    }
+
+    .pokemon-ranking-cols h3 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+      font-weight: 900;
+    }
+
+    .section-note {
+      margin: 6px 0 0;
+      font-size: .9rem;
+      color: #574b41;
+      line-height: 1.7;
+    }
+
     @media (max-width: 700px) {
       .summary-stats {
         grid-template-columns: 1fr;
@@ -684,6 +906,22 @@ _CSS = """\
       }
 
       .fact-card-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .search-hub-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .pokemon-popular-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .photos-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .pokemon-ranking-cols {
         grid-template-columns: 1fr;
       }
     }"""
@@ -1130,7 +1368,295 @@ def _build_regional_section(s: dict, stats: dict) -> str:
     )
 
 
-def render_page(s: dict, stats: dict, pref_names: dict) -> str:
+_FORM_PREFIX: dict[str, str] = {
+    "alola": "アローラ",
+    "galar": "ガラル",
+    "hisui": "ヒスイ",
+    "paldea": "パルデア",
+}
+
+
+def _normalize_katakana(text: str) -> str:
+    """Convert hiragana to katakana for loose matching (e.g. ゴンべ → ゴンベ)."""
+    return "".join(chr(ord(c) + 0x60) if "ぁ" <= c <= "ゖ" else c for c in text)
+
+
+def load_pokemon_metadata_with_slugs(path: Path) -> dict[str, dict]:
+    """Load docs/pokemon_metadata.json (has slug field) indexed by ja name.
+
+    Mirrors the lookup logic in generate_pokemon_pages.load_pokemon_metadata:
+    - Base form wins over regional variants for the bare ja_name key.
+    - Regional prefix variants (e.g. "アローラロコン") are added as extra keys.
+    - Katakana normalization handles hiragana/katakana mismatches (e.g. ゴンべ).
+    """
+    if not path.exists():
+        return {}
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return {}
+    result: dict[str, dict] = {}
+    for entry in data:
+        if not isinstance(entry, dict):
+            continue
+        ja_name = entry.get("names", {}).get("ja", "")
+        slug = entry.get("slug", "")
+        form = entry.get("form") or ""
+        if not ja_name or not slug:
+            continue
+        # Base form (form is empty/null) always wins for the bare ja_name key.
+        if ja_name not in result or not form:
+            result[ja_name] = entry
+        # Add prefixed key for regional forms (e.g. "アローラロコン").
+        prefix = _FORM_PREFIX.get(form, "")
+        if prefix:
+            combined = prefix + ja_name
+            if combined not in result:
+                result[combined] = entry
+    # Katakana normalization: cover hiragana/katakana mismatches in ndjson data.
+    for key in list(result.keys()):
+        normalized = _normalize_katakana(key)
+        if normalized != key and normalized not in result:
+            result[normalized] = result[key]
+    return result
+
+
+def load_photos(path: Path) -> dict:
+    """Load latest-manhole-photos.json."""
+    if not path.exists():
+        return {"photos": {}}
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return {"photos": {}}
+
+
+def build_pokemon_stats(records: list[dict], pokemon_metadata: dict) -> dict:
+    """Return pokemon stats: by_count and by_city_count sorted desc."""
+    manhole_counts: dict[str, int] = {}
+    city_sets: dict[str, set] = {}
+
+    for record in records:
+        if record.get("status") != "active":
+            continue
+        pref = record.get("prefecture", "")
+        city = record.get("city", "")
+        city_key = f"{pref}/{city}"
+        for poke_ja in record.get("pokemons", []):
+            manhole_counts[poke_ja] = manhole_counts.get(poke_ja, 0) + 1
+            city_sets.setdefault(poke_ja, set()).add(city_key)
+
+    entries = []
+    for ja_name, count in manhole_counts.items():
+        meta = pokemon_metadata.get(ja_name)
+        if not meta:
+            continue
+        slug = meta.get("slug", "")
+        if not slug:
+            continue
+        entries.append({
+            "ja_name": ja_name,
+            "slug": slug,
+            "count": count,
+            "city_count": len(city_sets.get(ja_name, set())),
+        })
+
+    by_count = sorted(entries, key=lambda x: (-x["count"], x["ja_name"]))
+    by_city_count = sorted(entries, key=lambda x: (-x["city_count"], x["ja_name"]))
+    return {"by_count": by_count, "by_city_count": by_city_count}
+
+
+def _pokemon_lp_url(map_base: str, slug: str) -> str:
+    return escape(f"{map_base}pokemon/{quote(slug)}/")
+
+
+def _build_search_hub_section(s: dict) -> str:
+    hub = s.get("search_hub")
+    if not hub:
+        return ""
+    map_base = s["map_base_href"]
+    cards = [
+        (hub["card_pref_title"], hub["card_pref_desc"], "#prefecture-count-heading"),
+        (hub["card_pokemon_title"], hub["card_pokemon_desc"], f"{map_base}pokemon/"),
+        (hub["card_map_title"], hub["card_map_desc"], s["nav_home_href"]),
+    ]
+    cards_html = "\n".join(
+        f'<a class="search-hub-card" href="{escape(href)}">'
+        f'<strong>{escape(title)}</strong>'
+        f'<span>{escape(desc)}</span>'
+        f'</a>'
+        for title, desc, href in cards
+    )
+    h2 = escape(hub["h2"])
+    return (
+        f'\n    <section class="summary-section" aria-labelledby="search-hub-heading">'
+        f'\n      <h2 id="search-hub-heading">{h2}</h2>'
+        f'\n      <div class="search-hub-grid">\n{cards_html}\n      </div>'
+        f'\n    </section>\n'
+    )
+
+
+def _build_popular_pokemon_section(s: dict, pokemon_stats: dict) -> str:
+    if not pokemon_stats.get("by_count"):
+        return ""
+    poke_s = s.get("popular_pokemon")
+    if not poke_s:
+        return ""
+    map_base = s["map_base_href"]
+    count_unit = s["count_unit"]
+    top = pokemon_stats["by_count"][:12]
+
+    cards_html = "\n".join(
+        f'<a class="pokemon-card" href="{_pokemon_lp_url(map_base, p["slug"])}">'
+        f'<strong>{escape(p["ja_name"])}</strong>'
+        f'<span>{p["count"]}{escape(count_unit)}</span>'
+        f'</a>'
+        for p in top
+    )
+    h2 = escape(poke_s["h2"])
+    return (
+        f'\n    <section class="summary-section" aria-labelledby="popular-pokemon-heading">'
+        f'\n      <h2 id="popular-pokemon-heading">{h2}</h2>'
+        f'\n      <div class="pokemon-popular-grid">\n{cards_html}\n      </div>'
+        f'\n    </section>\n'
+    )
+
+
+def _build_latest_photos_section(
+    s: dict, records_by_id: dict, photos_data: dict
+) -> str:
+    if s.get("pref_key") != "ja":
+        return ""
+    photos_s = s.get("latest_photos")
+    if not photos_s:
+        return ""
+    photos = photos_data.get("photos", {})
+    if not photos:
+        return ""
+
+    sorted_photos = sorted(
+        photos.values(),
+        key=lambda p: p.get("created_at", ""),
+        reverse=True,
+    )[:6]
+
+    cards = []
+    for photo in sorted_photos:
+        mid = str(photo.get("manhole_id", ""))
+        record = records_by_id.get(mid, {})
+        pref = record.get("prefecture", "")
+        city = record.get("city", "")
+        title = record.get("title", "")
+        pokemons = "・".join(record.get("pokemons", [])[:2])
+        location = f"{pref}{city}" if pref and city else title
+        url = photo.get("url") or ""
+        date = (photo.get("created_at") or "")[:10]
+        manhole_href = f"/manholes/{mid}/"
+        display_title = pokemons or title
+        cards.append(
+            f'<a class="photo-card" href="{escape(manhole_href)}">'
+            f'<img src="{escape(url)}" alt="{escape(display_title)}" loading="lazy" decoding="async">'
+            f'<span class="photo-card-title">{escape(display_title)}</span>'
+            f'<span class="photo-card-meta">{escape(location)} · {escape(date)}</span>'
+            f'</a>'
+        )
+
+    if not cards:
+        return ""
+
+    h2 = escape(photos_s["h2"])
+    note = escape(photos_s["note"])
+    return (
+        f'\n    <section class="summary-section" aria-labelledby="latest-photos-heading">'
+        f'\n      <h2 id="latest-photos-heading">{h2}</h2>'
+        f'\n      <p class="section-note">{note}</p>'
+        f'\n      <div class="photos-grid">\n{"".join(cards)}\n      </div>'
+        f'\n    </section>\n'
+    )
+
+
+def _build_no_photos_section(
+    s: dict, records_by_id: dict, photos_data: dict
+) -> str:
+    if s.get("pref_key") != "ja":
+        return ""
+    np_s = s.get("no_photos")
+    if not np_s:
+        return ""
+    photo_ids = set(str(k) for k in photos_data.get("photos", {}).keys())
+    no_photo = [
+        r for r in records_by_id.values()
+        if r.get("status") == "active" and str(r.get("id", "")) not in photo_ids
+    ]
+    if not no_photo:
+        return ""
+
+    by_pref: dict[str, int] = {}
+    for r in no_photo:
+        pref = r.get("prefecture", "その他")
+        by_pref[pref] = by_pref.get(pref, 0) + 1
+
+    total = len(no_photo)
+    top_prefs = sorted(by_pref.items(), key=lambda x: -x[1])[:8]
+    pref_items = "\n".join(
+        f'<li class="summary-list-item">'
+        f'<a class="summary-link" href="{escape(f"/?pref={quote(pref)}")}">{escape(pref)}</a>'
+        f'<small>{count}枚</small>'
+        f'</li>'
+        for pref, count in top_prefs
+    )
+    h2 = escape(np_s["h2"])
+    total_text = escape(np_s["total"].format(count=total))
+    cta = escape(np_s["cta"])
+    return (
+        f'\n    <section class="summary-section" aria-labelledby="no-photos-heading">'
+        f'\n      <h2 id="no-photos-heading">{h2}</h2>'
+        f'\n      <p class="section-note">{total_text}。{cta}</p>'
+        f'\n      <ul class="summary-list" style="margin-top:12px;">{pref_items}</ul>'
+        f'\n    </section>\n'
+    )
+
+
+def _build_pokemon_ranking_section(s: dict, pokemon_stats: dict) -> str:
+    if not pokemon_stats:
+        return ""
+    pk_s = s.get("pokemon_ranking")
+    if not pk_s:
+        return ""
+    map_base = s["map_base_href"]
+    count_unit = s["count_unit"]
+    pref_unit = pk_s.get("pref_count_unit", "")
+
+    def rank_items(entries: list[dict], value_key: str, unit: str) -> str:
+        return "\n".join(
+            f'<li>'
+            f'<a class="summary-link" href="{_pokemon_lp_url(map_base, p["slug"])}">'
+            f'{escape(p["ja_name"])}</a>'
+            f'<small>{p[value_key]}{escape(unit)}</small>'
+            f'</li>'
+            for p in entries[:10]
+        )
+
+    count_items = rank_items(pokemon_stats["by_count"], "count", count_unit)
+    city_items = rank_items(pokemon_stats["by_city_count"], "city_count", pref_unit)
+
+    h2 = escape(pk_s["h2"])
+    h3_count = escape(pk_s["h3_count"])
+    h3_pref = escape(pk_s["h3_pref"])
+    return (
+        f'\n    <section class="summary-section" aria-labelledby="pokemon-ranking-heading">'
+        f'\n      <h2 id="pokemon-ranking-heading">{h2}</h2>'
+        f'\n      <div class="pokemon-ranking-cols">'
+        f'\n        <div><h3>{h3_count}</h3>'
+        f'<ol class="summary-list">{count_items}</ol></div>'
+        f'\n        <div><h3>{h3_pref}</h3>'
+        f'<ol class="summary-list">{city_items}</ol></div>'
+        f'\n      </div>'
+        f'\n    </section>\n'
+    )
+
+
+def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, records_by_id: dict, photos_data: dict) -> str:
     pref_key = s["pref_key"]
 
     def tr(ja_name: str) -> str:
@@ -1150,6 +1676,11 @@ def render_page(s: dict, stats: dict, pref_names: dict) -> str:
     daily_fact_html, fact_list_html = _build_ja_fact_sections(s, stats)
     regional_html = _build_regional_section(s, stats)
     tracking_script = _build_ja_tracking_script(s)
+    search_hub_html = _build_search_hub_section(s)
+    popular_pokemon_html = _build_popular_pokemon_section(s, pokemon_stats)
+    latest_photos_html = _build_latest_photos_section(s, records_by_id, photos_data)
+    no_photos_html = _build_no_photos_section(s, records_by_id, photos_data)
+    pokemon_ranking_html = _build_pokemon_ranking_section(s, pokemon_stats)
 
     def map_link(pref_ja: str) -> str:
         href = f'{map_base}?pref={quote(pref_ja)}'
@@ -1218,7 +1749,7 @@ def render_page(s: dict, stats: dict, pref_names: dict) -> str:
       <h1>{escape(s['h1'])}</h1>
       <p>{subtitle}</p>
     </nav>
-
+    {search_hub_html}
     {daily_fact_html}
     {ai_html}
     <section class="summary-stats" aria-label="{escape(s['stats_aria'])}">
@@ -1235,6 +1766,9 @@ def render_page(s: dict, stats: dict, pref_names: dict) -> str:
         <strong>{escape(s['empty_fmt'].format(count=len(empty)))}</strong>
       </div>
     </section>
+    {popular_pokemon_html}
+    {latest_photos_html}
+    {no_photos_html}
     {fact_list_html}
     {discovery_html}
     <section class="summary-section" aria-labelledby="prefecture-count-heading">
@@ -1262,6 +1796,7 @@ def render_page(s: dict, stats: dict, pref_names: dict) -> str:
       </ol>
       <p style="margin-top:10px;font-size:.875rem;color:#574b41;">{s['ranking_note']}</p>
     </section>
+    {pokemon_ranking_html}
     {regional_html}
     <section class="summary-section" aria-labelledby="empty-prefecture-heading">
       <h2 id="empty-prefecture-heading">{escape(s['h2_empty'])}</h2>
@@ -1295,8 +1830,14 @@ def main() -> None:
     stats = build_stats(records)
     print(f"[INFO] {stats['total']} manholes across {len(stats['installed'])} prefectures")
 
+    pokemon_metadata = load_pokemon_metadata_with_slugs(POKEMON_METADATA_JSON)
+    photos_data = load_photos(PHOTOS_JSON)
+    pokemon_stats = build_pokemon_stats(records, pokemon_metadata)
+    records_by_id = {str(r.get("id", "")): r for r in records}
+    print(f"[INFO] {len(pokemon_stats['by_count'])} pokemon with slugs, {len(photos_data.get('photos', {}))} photos")
+
     for lang, s in SUMMARY_STRINGS.items():
-        html = render_page(s, stats, pref_names)
+        html = render_page(s, stats, pref_names, pokemon_stats, records_by_id, photos_data)
         out = DIST / s["out_path"]
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(html, encoding="utf-8")
