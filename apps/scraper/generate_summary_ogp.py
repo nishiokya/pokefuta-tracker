@@ -14,6 +14,7 @@ Design:
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 from typing import Optional
 
@@ -42,6 +43,8 @@ NDJSON = ROOT / "docs/pokefuta.ndjson"
 
 def _compute_stats() -> tuple[int, int]:
     """Return (total_count, installed_pref_count) from pokefuta.ndjson."""
+    if not NDJSON.exists():
+        sys.exit(f"[generate_summary_ogp] {NDJSON} が見つかりません。")
     by_id: dict[str, dict] = {}
     with NDJSON.open(encoding="utf-8") as f:
         for line in f:
@@ -244,7 +247,7 @@ def draw_rounded_rect(draw: ImageDraw.ImageDraw,
 # Compose
 # ---------------------------------------------------------------------------
 
-def compose() -> Image.Image:
+def compose(total_count: int, installed_pref: int) -> Image.Image:
     img = Image.new("RGBA", (CANVAS_W, CANVAS_H), (*BG_COLOR, 255))
     d = ImageDraw.Draw(img)
     fonts = load_fonts()
@@ -362,7 +365,6 @@ def compose() -> Image.Image:
     y += (sb2[3] - sb2[1]) + 36
 
     # --- Stat boxes: two separate pill-style cards ---
-    total_count, installed_pref = _compute_stats()
     stat_items = [
         (str(installed_pref), "都道府県"),
         (str(total_count), "設置枚数"),
@@ -411,7 +413,8 @@ def compose() -> Image.Image:
 # ---------------------------------------------------------------------------
 
 def main() -> None:
-    img = compose()
+    total_count, installed_pref = _compute_stats()
+    img = compose(total_count, installed_pref)
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     img.save(str(OUTPUT), "PNG", optimize=True)
     print(f"Saved: {OUTPUT}  ({img.width}×{img.height})")
