@@ -1,6 +1,6 @@
 Sync the latest manhole photos. Run these two steps in order:
 
-1. Copy `apps/web/latest-manhole-photos.json` to `docs/latest-manhole-photos.json`
+1. Copy `../pokefuta/public/data/latest-manhole-photos.json` to both `apps/web/latest-manhole-photos.json` and `docs/latest-manhole-photos.json`
 2. Run `python3 apps/tools/import_latest_manhole_photos.py --presign-r2` from the project root
 
 Prerequisite: `.env.local` must contain the following variables:
