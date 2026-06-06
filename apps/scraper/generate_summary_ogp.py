@@ -13,6 +13,7 @@ Design:
 """
 from __future__ import annotations
 
+import json
 from pathlib import Path
 from typing import Optional
 
@@ -34,7 +35,35 @@ PURPLE_MARKER = (111,  85, 163)   # pokefuta marker purple (#6F55A3)
 RED_MARKER    = (216,  68,  68)   # marker top arc
 BLUE_MARKER   = ( 91, 165, 216)   # marker bottom arc
 
-OUTPUT = Path("apps/web/assets/ogp/pokefuta_summary_ogp.png")
+ROOT   = Path(__file__).resolve().parents[2]
+OUTPUT = ROOT / "apps/web/assets/ogp/pokefuta_summary_ogp.png"
+NDJSON = ROOT / "docs/pokefuta.ndjson"
+
+
+def _compute_stats() -> tuple[int, int]:
+    """Return (total_count, installed_pref_count) from pokefuta.ndjson."""
+    by_id: dict[str, dict] = {}
+    with NDJSON.open(encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                r = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            rid = str(r.get("id", "")).strip()
+            if rid:
+                by_id[rid] = {**by_id.get(rid, {}), **r}
+    records = list(by_id.values())
+    pref_counts: dict[str, int] = {}
+    for r in records:
+        pref = r.get("prefecture", "")
+        if pref:
+            pref_counts[pref] = pref_counts.get(pref, 0) + 1
+    total = sum(pref_counts.values())
+    installed = sum(1 for c in pref_counts.values() if c > 0)
+    return total, installed
 
 # ---------------------------------------------------------------------------
 # Fonts
@@ -333,9 +362,10 @@ def compose() -> Image.Image:
     y += (sb2[3] - sb2[1]) + 36
 
     # --- Stat boxes: two separate pill-style cards ---
+    total_count, installed_pref = _compute_stats()
     stat_items = [
-        ("47", "都道府県"),
-        ("900+", "設置枚数"),
+        (str(installed_pref), "都道府県"),
+        (str(total_count), "設置枚数"),
     ]
     box_h = 72
     box_gap = 16
