@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /*.ndjson$
+Disallow: /pokemon_metadata.json
+Disallow: /latest-manhole-photos.json
