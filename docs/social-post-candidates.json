@@ -1,0 +1,1043 @@
+[
+  {
+    "id": "pref01-rank01",
+    "type": "prefecture_rank",
+    "title": "北海道のポケふた（50枚・全国1位）",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_prefecture_rank",
+    "source": "summary",
+    "raw_data": {
+      "pref": "北海道",
+      "count": 50,
+      "total": 470,
+      "rank": 1,
+      "percent": 10.6
+    }
+  },
+  {
+    "id": "pref07-rank02",
+    "type": "prefecture_rank",
+    "title": "福島県のポケふた（43枚・全国2位）",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_prefecture_rank",
+    "source": "summary",
+    "raw_data": {
+      "pref": "福島県",
+      "count": 43,
+      "total": 470,
+      "rank": 2,
+      "percent": 9.1
+    }
+  },
+  {
+    "id": "pref04-rank03",
+    "type": "prefecture_rank",
+    "title": "宮城県のポケふた（37枚・全国3位）",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_prefecture_rank",
+    "source": "summary",
+    "raw_data": {
+      "pref": "宮城県",
+      "count": 37,
+      "total": 470,
+      "rank": 3,
+      "percent": 7.9
+    }
+  },
+  {
+    "id": "pref03-rank04",
+    "type": "prefecture_rank",
+    "title": "岩手県のポケふた（36枚・全国4位）",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_prefecture_rank",
+    "source": "summary",
+    "raw_data": {
+      "pref": "岩手県",
+      "count": 36,
+      "total": 470,
+      "rank": 4,
+      "percent": 7.7
+    }
+  },
+  {
+    "id": "pref24-rank05",
+    "type": "prefecture_rank",
+    "title": "三重県のポケふた（31枚・全国5位）",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_prefecture_rank",
+    "source": "summary",
+    "raw_data": {
+      "pref": "三重県",
+      "count": 31,
+      "total": 470,
+      "rank": 5,
+      "percent": 6.6
+    }
+  },
+  {
+    "id": "pref45-rank06",
+    "type": "prefecture_rank",
+    "title": "宮崎県のポケふた（26枚・全国6位）",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_prefecture_rank",
+    "source": "summary",
+    "raw_data": {
+      "pref": "宮崎県",
+      "count": 26,
+      "total": 470,
+      "rank": 6,
+      "percent": 5.5
+    }
+  },
+  {
+    "id": "pref31-rank07",
+    "type": "prefecture_rank",
+    "title": "鳥取県のポケふた（20枚・全国7位）",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_prefecture_rank",
+    "source": "summary",
+    "raw_data": {
+      "pref": "鳥取県",
+      "count": 20,
+      "total": 470,
+      "rank": 7,
+      "percent": 4.3
+    }
+  },
+  {
+    "id": "pref37-rank08",
+    "type": "prefecture_rank",
+    "title": "香川県のポケふた（18枚・全国8位）",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_prefecture_rank",
+    "source": "summary",
+    "raw_data": {
+      "pref": "香川県",
+      "count": 18,
+      "total": 470,
+      "rank": 8,
+      "percent": 3.8
+    }
+  },
+  {
+    "id": "pref39-rank09",
+    "type": "prefecture_rank",
+    "title": "高知県のポケふた（18枚・全国9位）",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_prefecture_rank",
+    "source": "summary",
+    "raw_data": {
+      "pref": "高知県",
+      "count": 18,
+      "total": 470,
+      "rank": 9,
+      "percent": 3.8
+    }
+  },
+  {
+    "id": "pref18-rank10",
+    "type": "prefecture_rank",
+    "title": "福井県のポケふた（17枚・全国10位）",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_prefecture_rank",
+    "source": "summary",
+    "raw_data": {
+      "pref": "福井県",
+      "count": 17,
+      "total": 470,
+      "rank": 10,
+      "percent": 3.6
+    }
+  },
+  {
+    "id": "pokemon-rank01-chansey",
+    "type": "pokemon_rank",
+    "title": "ラッキーのポケふた（登場数1位）",
+    "url": "https://data.pokefuta.com/pokemon/chansey/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "pokemon_rank",
+    "source": "summary",
+    "raw_data": {
+      "ja_name": "ラッキー",
+      "slug": "chansey",
+      "count": 44,
+      "city_count": 44,
+      "rank": 1
+    }
+  },
+  {
+    "id": "pokemon-rank02-vulpix-alola",
+    "type": "pokemon_rank",
+    "title": "アローラロコンのポケふた（登場数2位）",
+    "url": "https://data.pokefuta.com/pokemon/vulpix-alola/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "pokemon_rank",
+    "source": "summary",
+    "raw_data": {
+      "ja_name": "アローラロコン",
+      "slug": "vulpix-alola",
+      "count": 37,
+      "city_count": 37,
+      "rank": 2
+    }
+  },
+  {
+    "id": "pokemon-rank03-lapras",
+    "type": "pokemon_rank",
+    "title": "ラプラスのポケふた（登場数3位）",
+    "url": "https://data.pokefuta.com/pokemon/lapras/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "pokemon_rank",
+    "source": "summary",
+    "raw_data": {
+      "ja_name": "ラプラス",
+      "slug": "lapras",
+      "count": 37,
+      "city_count": 36,
+      "rank": 3
+    }
+  },
+  {
+    "id": "pokemon-rank04-oshawott",
+    "type": "pokemon_rank",
+    "title": "ミジュマルのポケふた（登場数4位）",
+    "url": "https://data.pokefuta.com/pokemon/oshawott/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "pokemon_rank",
+    "source": "summary",
+    "raw_data": {
+      "ja_name": "ミジュマル",
+      "slug": "oshawott",
+      "count": 31,
+      "city_count": 30,
+      "rank": 4
+    }
+  },
+  {
+    "id": "pokemon-rank05-vulpix",
+    "type": "pokemon_rank",
+    "title": "ロコンのポケふた（登場数5位）",
+    "url": "https://data.pokefuta.com/pokemon/vulpix/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "pokemon_rank",
+    "source": "summary",
+    "raw_data": {
+      "ja_name": "ロコン",
+      "slug": "vulpix",
+      "count": 27,
+      "city_count": 27,
+      "rank": 5
+    }
+  },
+  {
+    "id": "pokemon-rank06-geodude",
+    "type": "pokemon_rank",
+    "title": "イシツブテのポケふた（登場数6位）",
+    "url": "https://data.pokefuta.com/pokemon/geodude/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "pokemon_rank",
+    "source": "summary",
+    "raw_data": {
+      "ja_name": "イシツブテ",
+      "slug": "geodude",
+      "count": 22,
+      "city_count": 21,
+      "rank": 6
+    }
+  },
+  {
+    "id": "pokemon-rank07-quagsire",
+    "type": "pokemon_rank",
+    "title": "ヌオーのポケふた（登場数7位）",
+    "url": "https://data.pokefuta.com/pokemon/quagsire/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "pokemon_rank",
+    "source": "summary",
+    "raw_data": {
+      "ja_name": "ヌオー",
+      "slug": "quagsire",
+      "count": 19,
+      "city_count": 19,
+      "rank": 7
+    }
+  },
+  {
+    "id": "pokemon-rank08-dragonite",
+    "type": "pokemon_rank",
+    "title": "カイリューのポケふた（登場数8位）",
+    "url": "https://data.pokefuta.com/pokemon/dragonite/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "pokemon_rank",
+    "source": "summary",
+    "raw_data": {
+      "ja_name": "カイリュー",
+      "slug": "dragonite",
+      "count": 18,
+      "city_count": 17,
+      "rank": 8
+    }
+  },
+  {
+    "id": "pokemon-rank09-exeggutor",
+    "type": "pokemon_rank",
+    "title": "ナッシーのポケふた（登場数9位）",
+    "url": "https://data.pokefuta.com/pokemon/exeggutor/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "pokemon_rank",
+    "source": "summary",
+    "raw_data": {
+      "ja_name": "ナッシー",
+      "slug": "exeggutor",
+      "count": 18,
+      "city_count": 18,
+      "rank": 9
+    }
+  },
+  {
+    "id": "pokemon-rank10-sandshrew",
+    "type": "pokemon_rank",
+    "title": "サンドのポケふた（登場数10位）",
+    "url": "https://data.pokefuta.com/pokemon/sandshrew/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "pokemon_rank",
+    "source": "summary",
+    "raw_data": {
+      "ja_name": "サンド",
+      "slug": "sandshrew",
+      "count": 17,
+      "city_count": 16,
+      "rank": 10
+    }
+  },
+  {
+    "id": "pref02-rare",
+    "type": "rare_area",
+    "title": "青森県のポケふたはわずか2枚",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_rare_area",
+    "source": "summary",
+    "raw_data": {
+      "pref": "青森県",
+      "count": 2,
+      "total": 470
+    }
+  },
+  {
+    "id": "pref09-rare",
+    "type": "rare_area",
+    "title": "栃木県のポケふたはわずか3枚",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_rare_area",
+    "source": "summary",
+    "raw_data": {
+      "pref": "栃木県",
+      "count": 3,
+      "total": 470
+    }
+  },
+  {
+    "id": "pref11-rare",
+    "type": "rare_area",
+    "title": "埼玉県のポケふたはわずか3枚",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_rare_area",
+    "source": "summary",
+    "raw_data": {
+      "pref": "埼玉県",
+      "count": 3,
+      "total": 470
+    }
+  },
+  {
+    "id": "pref16-rare",
+    "type": "rare_area",
+    "title": "富山県のポケふたはわずか3枚",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_rare_area",
+    "source": "summary",
+    "raw_data": {
+      "pref": "富山県",
+      "count": 3,
+      "total": 470
+    }
+  },
+  {
+    "id": "pref28-rare",
+    "type": "rare_area",
+    "title": "兵庫県のポケふたはわずか3枚",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_rare_area",
+    "source": "summary",
+    "raw_data": {
+      "pref": "兵庫県",
+      "count": 3,
+      "total": 470
+    }
+  },
+  {
+    "id": "pref36-rare",
+    "type": "rare_area",
+    "title": "徳島県のポケふたはわずか3枚",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_rare_area",
+    "source": "summary",
+    "raw_data": {
+      "pref": "徳島県",
+      "count": 3,
+      "total": 470
+    }
+  },
+  {
+    "id": "pref38-rare",
+    "type": "rare_area",
+    "title": "愛媛県のポケふたはわずか2枚",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_rare_area",
+    "source": "summary",
+    "raw_data": {
+      "pref": "愛媛県",
+      "count": 2,
+      "total": 470
+    }
+  },
+  {
+    "id": "pref41-rare",
+    "type": "rare_area",
+    "title": "佐賀県のポケふたはわずか3枚",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_rare_area",
+    "source": "summary",
+    "raw_data": {
+      "pref": "佐賀県",
+      "count": 3,
+      "total": 470
+    }
+  },
+  {
+    "id": "photo-220-62b9eb76",
+    "type": "latest_photo",
+    "title": "最新写真：北海道/斜里町",
+    "url": "https://data.pokefuta.com/manholes/220/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "220",
+      "title": "北海道/斜里町",
+      "pref": "北海道",
+      "city": "斜里",
+      "pokemon": "パルキア",
+      "pokemon_list": [
+        "パルキア",
+        "ロコン"
+      ],
+      "created_at": "2026-06-03T02:32:14.472542+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/1f7a16d7-8ee9-4011-8d36-b1517a38a073.jpg"
+    }
+  },
+  {
+    "id": "photo-217-f72ceb3e",
+    "type": "latest_photo",
+    "title": "最新写真：北海道/網走市",
+    "url": "https://data.pokefuta.com/manholes/217/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "217",
+      "title": "北海道/網走市",
+      "pref": "北海道",
+      "city": "網走",
+      "pokemon": "アローラロコン",
+      "pokemon_list": [
+        "アローラロコン",
+        "マニューラ"
+      ],
+      "created_at": "2026-06-02T07:30:41.996332+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/735b02d4-8338-4970-b0bd-a29db9e41df7.jpg"
+    }
+  },
+  {
+    "id": "photo-71-ac803346",
+    "type": "latest_photo",
+    "title": "最新写真：北海道/大空町",
+    "url": "https://data.pokefuta.com/manholes/71/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "71",
+      "title": "北海道/大空町",
+      "pref": "北海道",
+      "city": "大空",
+      "pokemon": "ムクホーク",
+      "pokemon_list": [
+        "ムクホーク",
+        "ロコン"
+      ],
+      "created_at": "2026-06-02T07:30:12.199062+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/ac462b6d-b110-4a2c-8f6e-82ffdac20687.jpg"
+    }
+  },
+  {
+    "id": "photo-307-25948fd4",
+    "type": "latest_photo",
+    "title": "最新写真：北海道/美幌町",
+    "url": "https://data.pokefuta.com/manholes/307/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "307",
+      "title": "北海道/美幌町",
+      "pref": "北海道",
+      "city": "美幌",
+      "pokemon": "アローラロコン",
+      "pokemon_list": [
+        "アローラロコン",
+        "ハネッコ",
+        "ロコン"
+      ],
+      "created_at": "2026-06-02T07:29:36.337134+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/12917081-59ef-4fcd-aa30-67c6cafcbf93.jpg"
+    }
+  },
+  {
+    "id": "photo-303-82c87f31",
+    "type": "latest_photo",
+    "title": "最新写真：北海道/北見市",
+    "url": "https://data.pokefuta.com/manholes/303/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "303",
+      "title": "北海道/北見市",
+      "pref": "北海道",
+      "city": "北見",
+      "pokemon": "アローラロコン",
+      "pokemon_list": [
+        "アローラロコン",
+        "ロコン"
+      ],
+      "created_at": "2026-06-02T07:28:30.504037+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/99e184b3-f0b7-4858-904f-81efad0f275e.jpg"
+    }
+  },
+  {
+    "id": "photo-142-7509d52e",
+    "type": "latest_photo",
+    "title": "最新写真：北海道/上富良野町",
+    "url": "https://data.pokefuta.com/manholes/142/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "142",
+      "title": "北海道/上富良野町",
+      "pref": "北海道",
+      "city": "上富良野",
+      "pokemon": "アローラロコン",
+      "pokemon_list": [
+        "アローラロコン",
+        "エネコロロ"
+      ],
+      "created_at": "2026-06-02T07:27:35.02828+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/68938c28-d909-410b-8b37-4af1532354d5.jpg"
+    }
+  },
+  {
+    "id": "photo-324-f8c28ec5",
+    "type": "latest_photo",
+    "title": "最新写真：北海道/美瑛町",
+    "url": "https://data.pokefuta.com/manholes/324/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "324",
+      "title": "北海道/美瑛町",
+      "pref": "北海道",
+      "city": "美瑛",
+      "pokemon": "アローラロコン",
+      "pokemon_list": [
+        "アローラロコン",
+        "ヒスイウォーグル"
+      ],
+      "created_at": "2026-06-02T07:27:01.583466+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/58e329f8-1b8b-49f4-a7ed-aa9083d963ff.jpg"
+    }
+  },
+  {
+    "id": "photo-214-eb69a0b6",
+    "type": "latest_photo",
+    "title": "最新写真：北海道/旭川市",
+    "url": "https://data.pokefuta.com/manholes/214/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "214",
+      "title": "北海道/旭川市",
+      "pref": "北海道",
+      "city": "旭川",
+      "pokemon": "アローラロコン",
+      "pokemon_list": [
+        "アローラロコン",
+        "クマシュン",
+        "コオリッポ"
+      ],
+      "created_at": "2026-06-02T07:25:41.649719+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/58ead7b9-ac2b-4ba2-8e3a-52044012b82b.jpg"
+    }
+  },
+  {
+    "id": "photo-190-66931efd",
+    "type": "latest_photo",
+    "title": "最新写真：北海道/登別市",
+    "url": "https://data.pokefuta.com/manholes/190/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "190",
+      "title": "北海道/登別市",
+      "pref": "北海道",
+      "city": "登別",
+      "pokemon": "キテルグマ",
+      "pokemon_list": [
+        "キテルグマ",
+        "ロコン"
+      ],
+      "created_at": "2026-05-24T14:35:01.187701+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/05/755f79ac-3dcd-4d02-9932-46d49ce35665.jpg"
+    }
+  },
+  {
+    "id": "photo-141-866ab293",
+    "type": "latest_photo",
+    "title": "最新写真：北海道/三笠市",
+    "url": "https://data.pokefuta.com/manholes/141/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "141",
+      "title": "北海道/三笠市",
+      "pref": "北海道",
+      "city": "三笠",
+      "pokemon": "オムナイト",
+      "pokemon_list": [
+        "オムナイト",
+        "ズガイドス",
+        "ロコン"
+      ],
+      "created_at": "2026-05-24T14:30:56.930694+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/05/63295206-f77c-4ab2-a7d1-79faadbded8c.jpg"
+    }
+  },
+  {
+    "id": "photo-272-f0406523",
+    "type": "latest_photo",
+    "title": "最新写真：愛知県/豊橋市",
+    "url": "https://data.pokefuta.com/manholes/272/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "272",
+      "title": "愛知県/豊橋市",
+      "pref": "愛知県",
+      "city": "豊橋市",
+      "pokemon": "アゴジムシ",
+      "pokemon_list": [
+        "アゴジムシ",
+        "アブリボン"
+      ],
+      "created_at": "2026-05-24T00:46:17.867307+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/05/02167329-16b6-410e-a14f-e7d13e8219fd.jpg"
+    }
+  },
+  {
+    "id": "photo-404-9c19966f",
+    "type": "latest_photo",
+    "title": "最新写真：愛知県/名古屋市",
+    "url": "https://data.pokefuta.com/manholes/404/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "404",
+      "title": "愛知県/名古屋市",
+      "pref": "愛知県",
+      "city": "名古屋市中区",
+      "pokemon": "コイキング",
+      "pokemon_list": [
+        "コイキング",
+        "ネッコアラ"
+      ],
+      "created_at": "2026-05-10T16:34:21.982399+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/05/7b277c01-81d5-4507-be22-94738e3d752a.jpg"
+    }
+  },
+  {
+    "id": "pref07-nophoto",
+    "type": "no_photo",
+    "title": "福島県：写真なしポケふた43枚",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_no_photo",
+    "source": "summary",
+    "raw_data": {
+      "pref": "福島県",
+      "no_photo_count": 43,
+      "total_count": 43
+    }
+  },
+  {
+    "id": "pref04-nophoto",
+    "type": "no_photo",
+    "title": "宮城県：写真なしポケふた37枚",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_no_photo",
+    "source": "summary",
+    "raw_data": {
+      "pref": "宮城県",
+      "no_photo_count": 37,
+      "total_count": 37
+    }
+  },
+  {
+    "id": "pref03-nophoto",
+    "type": "no_photo",
+    "title": "岩手県：写真なしポケふた36枚",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_no_photo",
+    "source": "summary",
+    "raw_data": {
+      "pref": "岩手県",
+      "no_photo_count": 36,
+      "total_count": 36
+    }
+  },
+  {
+    "id": "pref45-nophoto",
+    "type": "no_photo",
+    "title": "宮崎県：写真なしポケふた26枚",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_no_photo",
+    "source": "summary",
+    "raw_data": {
+      "pref": "宮崎県",
+      "no_photo_count": 26,
+      "total_count": 26
+    }
+  },
+  {
+    "id": "pref37-nophoto",
+    "type": "no_photo",
+    "title": "香川県：写真なしポケふた18枚",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_no_photo",
+    "source": "summary",
+    "raw_data": {
+      "pref": "香川県",
+      "no_photo_count": 18,
+      "total_count": 18
+    }
+  },
+  {
+    "id": "trivia-total-count",
+    "type": "travel_trivia",
+    "title": "全国のポケふたは470枚",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "summary",
+    "raw_data": {
+      "fact_type": "total_count",
+      "values": {
+        "total": 470
+      }
+    }
+  },
+  {
+    "id": "trivia-empty-prefs",
+    "type": "travel_trivia",
+    "title": "ポケふた未設置県：6県",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "summary",
+    "raw_data": {
+      "fact_type": "empty_prefs",
+      "values": {
+        "empty_count": 6,
+        "pref_names": [
+          "群馬県",
+          "山梨県",
+          "長野県",
+          "広島県",
+          "熊本県",
+          "大分県"
+        ]
+      }
+    }
+  },
+  {
+    "id": "trivia-regional-top",
+    "type": "travel_trivia",
+    "title": "ポケふたが最も多い地方：東北（128枚）",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "summary",
+    "raw_data": {
+      "fact_type": "regional_top",
+      "values": {
+        "region": "東北",
+        "count": 128,
+        "total": 470
+      }
+    }
+  },
+  {
+    "id": "trivia-pokemon-variety",
+    "type": "travel_trivia",
+    "title": "ポケふたに登場するポケモンは534種類",
+    "url": "https://data.pokefuta.com/pokemon/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "summary",
+    "raw_data": {
+      "fact_type": "pokemon_variety",
+      "values": {
+        "species_count": 534
+      }
+    }
+  },
+  {
+    "id": "trivia-widest-chansey",
+    "type": "travel_trivia",
+    "title": "ラッキーのポケふたは44市区町村に設置",
+    "url": "https://data.pokefuta.com/pokemon/chansey/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "summary",
+    "raw_data": {
+      "fact_type": "pokemon_widest_spread",
+      "values": {
+        "ja_name": "ラッキー",
+        "slug": "chansey",
+        "city_count": 44
+      }
+    }
+  },
+  {
+    "id": "trivia-top3-ranking",
+    "type": "travel_trivia",
+    "title": "都道府県TOP3（北海道・福島県・宮城県）",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "summary",
+    "raw_data": {
+      "fact_type": "top3_ranking",
+      "values": {
+        "top3": [
+          {
+            "rank": 1,
+            "pref": "北海道",
+            "count": 50
+          },
+          {
+            "rank": 2,
+            "pref": "福島県",
+            "count": 43
+          },
+          {
+            "rank": 3,
+            "pref": "宮城県",
+            "count": 37
+          }
+        ],
+        "total": 470
+      }
+    }
+  }
+]
