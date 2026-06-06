@@ -21,5 +21,6 @@ pokefuta.ndjson
 .env.production
 .env
 
-# SNS投稿履歴（ローカル管理、リポジトリに含めない）
+# SNS投稿（ローカル管理、リポジトリに含めない）
 docs/social-post-history.json
+docs/social-post-daily.json

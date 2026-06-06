@@ -182,7 +182,7 @@ def build_pokemon_stats(records: list[dict], pokemon_metadata: dict) -> dict:
 
     entries = []
     for ja_name, count in manhole_counts.items():
-        meta = pokemon_metadata.get(ja_name)
+        meta = pokemon_metadata.get(ja_name) or pokemon_metadata.get(_normalize_katakana(ja_name))
         if not meta:
             continue
         slug = meta.get("slug", "")
@@ -312,7 +312,7 @@ def gen_latest_photo_candidates(photos_data: dict, records_by_id: dict) -> list[
     return candidates
 
 
-def gen_no_photo_candidates(stats: dict, records: list[dict], photos_data: dict) -> list[dict]:
+def gen_no_photo_candidates(records: list[dict], photos_data: dict) -> list[dict]:
     photo_ids = {str(k) for k in photos_data.get("photos", {}).keys()}
     pref_no_photo: dict[str, int] = {}
     pref_total: dict[str, int] = {}
@@ -376,7 +376,7 @@ def gen_travel_trivia_candidates(stats: dict, pokemon_stats: dict) -> list[dict]
             "source": "summary",
             "raw_data": {
                 "fact_type": "empty_prefs",
-                "values": {"empty_count": len(empty_prefs), "pref_names": empty_prefs[:5]},
+                "values": {"empty_count": len(empty_prefs), "pref_names": empty_prefs},
             },
         },
         {
@@ -469,7 +469,7 @@ def main() -> int:
     candidates.extend(gen_pokemon_rank_candidates(pokemon_stats))
     candidates.extend(gen_rare_area_candidates(stats))
     candidates.extend(gen_latest_photo_candidates(photos_data, records_by_id))
-    candidates.extend(gen_no_photo_candidates(stats, records, photos_data))
+    candidates.extend(gen_no_photo_candidates(records, photos_data))
     candidates.extend(gen_travel_trivia_candidates(stats, pokemon_stats))
 
     CANDIDATES_JSON.write_text(

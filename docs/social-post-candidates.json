@@ -941,7 +941,8 @@
           "山梨県",
           "長野県",
           "広島県",
-          "熊本県"
+          "熊本県",
+          "大分県"
         ]
       }
     }
@@ -969,7 +970,7 @@
   {
     "id": "trivia-pokemon-variety",
     "type": "travel_trivia",
-    "title": "ポケふたに登場するポケモンは533種類",
+    "title": "ポケふたに登場するポケモンは534種類",
     "url": "https://data.pokefuta.com/pokemon/",
     "hashtags": [
       "#ポケふた",
@@ -980,7 +981,7 @@
     "raw_data": {
       "fact_type": "pokemon_variety",
       "values": {
-        "species_count": 533
+        "species_count": 534
       }
     }
   },

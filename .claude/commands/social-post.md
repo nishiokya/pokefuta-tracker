@@ -10,7 +10,7 @@ python3 apps/scraper/generate_social_posts.py
 ## 手順
 
 1. `docs/social-post-candidates.json` を読み込む（全候補リスト）
-2. `docs/social-post-history.json` を読み込む（使用済みID管理）
+2. `docs/social-post-history.json` を読み込む（使用済みID管理）。ファイルが存在しない場合は `{"used": []}` として扱う
 3. 今日の日付・曜日・月・季節を踏まえて、最も面白い・タイムリーな候補を1件選ぶ
    - `history.used` にある `id` で `used_at` が30日以内のものは選ばない
    - 曜日ローテーションに縛られなくてよい。今日にふさわしいと思う候補を選ぶ
@@ -36,7 +36,7 @@ python3 apps/scraper/generate_social_posts.py
      "selected_reason": "選んだ理由を一言"
    }
    ```
-6. `docs/social-post-history.json` の `used` 配列に追記して保存する：
+6. `docs/social-post-history.json` の `used` 配列に追記して保存する（ファイルが存在しない場合は新規作成）：
    ```json
    {"id": "候補のid", "used_at": "YYYY-MM-DD"}
    ```
