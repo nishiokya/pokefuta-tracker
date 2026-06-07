@@ -1,7 +1,7 @@
 import type { PokefutaRecord, ManholeTitlesJson, SemanticPatch } from '../../semantic/semanticPatch'
 import { MapTagsTask } from '../shared/MapTagsTask'
 
-const LOCATION_TAGS = ['seaside', 'beach', 'lakeside', 'river', 'remote_island'] as const
+const LOCATION_TAGS = ['seaside', 'beach', 'lakeside', 'river', 'remote_island', 'roadside'] as const
 
 const TAG_LABEL: Record<(typeof LOCATION_TAGS)[number], string> = {
   seaside: '🌊 海沿い',
@@ -9,6 +9,7 @@ const TAG_LABEL: Record<(typeof LOCATION_TAGS)[number], string> = {
   lakeside: '🏞 湖畔',
   river: '🌊 川沿い',
   remote_island: '🏝 離島',
+  roadside: '🛣 道の駅',
 }
 
 type Props = {

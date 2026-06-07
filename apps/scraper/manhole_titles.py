@@ -272,12 +272,27 @@ def compute_titles(manhole: dict, ctx: dict, *, nc50: int, nc100: int) -> list[d
         if t := _entry("seaside"):
             results.append(t)
 
+    # roadside: 道の駅タグ
+    if "roadside" in tags:
+        if t := _entry("roadside"):
+            results.append(t)
+
+    # world_heritage: 世界遺産タグ
+    if "world_heritage" in tags:
+        if t := _entry("world_heritage"):
+            results.append(t)
+
     # station_front / near_station: 駅前・駅近タグ（より具体的な方のみ表示）
     if "station_front" in tags:
         if t := _entry("station_front"):
             results.append(t)
     elif "near_station" in tags:
         if t := _entry("near_station"):
+            results.append(t)
+
+    # far_station: 駅から遠いタグ（駅近系と独立）
+    if "far_station" in tags:
+        if t := _entry("far_station"):
             results.append(t)
 
     # lakeside: check lakes list

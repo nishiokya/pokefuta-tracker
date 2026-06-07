@@ -1,5 +1,6 @@
 import type { SemanticPatch, ManholeTitlesJson } from './semanticPatch'
 import { normCity } from './semanticPatchApplier'
+import { VALID_TAGS as VALID_TAGS_ARRAY } from './validTags'
 
 export type ValidationResult = {
   valid: boolean
@@ -7,11 +8,7 @@ export type ValidationResult = {
   errors: string[]
 }
 
-const VALID_TAGS = new Set([
-  'seaside', 'beach', 'lakeside', 'river', 'remote_island',
-  'in_station', 'station_front', 'near_station', 'rail_access_good',
-  'tourism', 'park', 'museum', 'history', 'food',
-])
+const VALID_TAGS: Set<string> = new Set(VALID_TAGS_ARRAY)
 
 export function validatePatch(
   patch: SemanticPatch,
