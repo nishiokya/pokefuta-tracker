@@ -1282,7 +1282,7 @@
       ]
     },
     "271": {
-      "building": "愛知県/豊橋市（バクフーン）",
+      "building": "豊橋公園内",
       "address_raw": "愛知県豊橋市",
       "address_norm": "愛知県豊橋市",
       "prefecture": "愛知県",
@@ -1293,25 +1293,30 @@
         "city_level_address",
         "park",
         "museum",
-        "history"
+        "history",
+        "rail_access_good"
       ],
       "confidence": 2
     },
     "272": {
-      "building": "愛知県/豊橋市（アゴジムシ・アブリボン）",
+      "building": "豊橋駅南口駅前広場",
       "address_raw": "愛知県豊橋市",
       "address_norm": "愛知県豊橋市",
       "prefecture": "愛知県",
       "city": "豊橋市",
+      "place_detail": "豊橋鉄道の新豊橋駅の周辺です",
       "verified_at": "2025-12-27",
       "tags": [
         "pokemon_lid",
-        "city_level_address"
+        "city_level_address",
+        "station_front",
+        "tourism",
+        "food"
       ],
       "confidence": 2
     },
     "273": {
-      "building": "愛知県/豊橋市（デンヂムシ・スターミー）",
+      "building": "豊橋総合動植物公園中央門",
       "address_raw": "愛知県豊橋市",
       "address_norm": "愛知県豊橋市",
       "prefecture": "愛知県",
@@ -1320,12 +1325,15 @@
       "tags": [
         "pokemon_lid",
         "city_level_address",
-        "food"
+        "food",
+        "park",
+        "museum",
+        "rail_access_good"
       ],
       "confidence": 2
     },
     "274": {
-      "building": "愛知県/豊橋市（クワガノン・カブト）",
+      "building": "道の駅とよはし",
       "address_raw": "愛知県豊橋市",
       "address_norm": "愛知県豊橋市",
       "prefecture": "愛知県",
@@ -1336,7 +1344,10 @@
         "city_level_address",
         "park",
         "tourism",
-        "museum"
+        "museum",
+        "roadside",
+        "food",
+        "far_station"
       ],
       "confidence": 2
     },
@@ -1736,33 +1747,48 @@
       ]
     },
     "359": {
+      "building": "オアシスパーク南側入り口",
       "tags": [
         "tourism",
-        "park"
+        "park",
+        "river",
+        "food"
       ]
     },
     "360": {
+      "building": "下呂市観光交流センター「湯めぐり館」",
       "tags": [
-        "tourism"
+        "tourism",
+        "near_station"
       ]
     },
     "361": {
+      "building": "関シティターミナル前",
       "tags": [
         "tourism",
-        "museum"
+        "museum",
+        "near_station",
+        "history"
       ]
     },
     "362": {
+      "building": "関ケ原駅北ポケットパーク",
       "tags": [
         "tourism",
         "museum",
         "history",
-        "park"
+        "park",
+        "near_station"
       ]
     },
     "363": {
+      "building": "飛騨高山にぎわい交流館「大政」",
+      "place_detail": "南側歩道上",
       "tags": [
-        "tourism"
+        "tourism",
+        "near_station",
+        "history",
+        "food"
       ]
     },
     "365": {
@@ -1925,7 +1951,8 @@
         "food",
         "tourism",
         "history",
-        "park"
+        "park",
+        "station_front"
       ],
       "confidence": 3
     },
@@ -1939,12 +1966,14 @@
       "verified_at": "2025-12-27",
       "tags": [
         "museum",
-        "tourism"
+        "tourism",
+        "near_station"
       ],
       "confidence": 3
     },
     "406": {
       "building": "りんくうビーチ",
+      "place_detail": "りんくうビーチの駐車場は入庫から30分までは無料",
       "verified_at": "2025-12-27",
       "tags": [
         "beach",
@@ -1966,7 +1995,8 @@
         "family",
         "tourism",
         "park",
-        "food"
+        "food",
+        "lakeside"
       ],
       "confidence": 3
     },
@@ -1976,12 +2006,14 @@
       "address_norm": "愛知県西尾市錦城町231番地1",
       "prefecture": "愛知県",
       "city": "西尾市",
+      "place_detail": "二之丸天守台の下の芝生",
       "verified_at": "2025-12-27",
       "tags": [
         "park",
         "history",
         "tourism",
-        "museum"
+        "museum",
+        "rail_access_good"
       ],
       "confidence": 3
     },
