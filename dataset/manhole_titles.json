@@ -152,6 +152,69 @@
       "label": "世界遺産エリアのポケふた",
       "hashtag": "#世界遺産ポケふた",
       "priority": 85
+    },
+    "beach": {
+      "enabled": true,
+      "emoji": "🏖",
+      "label": "ビーチのポケふた",
+      "hashtag": "#ビーチポケふた",
+      "priority": 39
+    },
+    "river": {
+      "enabled": true,
+      "emoji": "🏞",
+      "label": "川辺のポケふた",
+      "hashtag": "#川辺ポケふた",
+      "priority": 37
+    },
+    "in_station": {
+      "enabled": true,
+      "emoji": "🚉",
+      "label": "駅構内のポケふた",
+      "hashtag": "#駅構内ポケふた",
+      "priority": 37
+    },
+    "rail_access_good": {
+      "enabled": true,
+      "emoji": "🚆",
+      "label": "電車アクセス良好のポケふた",
+      "hashtag": "#ポケふた電車旅",
+      "priority": 32
+    },
+    "tourism": {
+      "enabled": true,
+      "emoji": "🗺",
+      "label": "観光地のポケふた",
+      "hashtag": "#観光ポケふた",
+      "priority": 36
+    },
+    "park": {
+      "enabled": true,
+      "emoji": "🌳",
+      "label": "公園のポケふた",
+      "hashtag": "#公園ポケふた",
+      "priority": 35
+    },
+    "museum": {
+      "enabled": true,
+      "emoji": "🏛",
+      "label": "博物館・美術館のポケふた",
+      "hashtag": "#博物館ポケふた",
+      "priority": 35
+    },
+    "history": {
+      "enabled": true,
+      "emoji": "⛩",
+      "label": "史跡・名所のポケふた",
+      "hashtag": "#歴史ポケふた",
+      "priority": 35
+    },
+    "food": {
+      "enabled": true,
+      "emoji": "🍜",
+      "label": "グルメ・食の名所のポケふた",
+      "hashtag": "#グルメポケふた",
+      "priority": 33
     }
   },
   "islands": [

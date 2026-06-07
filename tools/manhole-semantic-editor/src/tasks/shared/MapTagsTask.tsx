@@ -75,6 +75,7 @@ export type MapTagsTaskProps = {
   titles: ManholeTitlesJson
   onSaveMany: (patches: SemanticPatch[]) => Promise<void>
   saving: boolean
+  initialSearch?: string
 }
 
 export function MapTagsTask({
@@ -89,8 +90,9 @@ export function MapTagsTask({
   titles,
   onSaveMany,
   saving,
+  initialSearch = '',
 }: MapTagsTaskProps) {
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = useState(initialSearch)
   const [prefFilter, setPrefFilter] = useState('')
   const [showFilter, setShowFilter] = useState<'all' | 'has_tag' | 'no_tag'>('all')
   const [hintOn, setHintOn] = useState(hintFilter?.defaultOn ?? false)
@@ -168,9 +170,13 @@ export function MapTagsTask({
     if (pageItems.length === 0) return
 
     pageItems.forEach(r => {
+      const badges = (r.titles ?? [])
+        .map(t => `<span style="display:inline-block;margin:1px 2px;padding:1px 6px;border-radius:999px;background:#f1f5f9;font-size:10px;white-space:nowrap">${esc(t.emoji ? t.emoji + ' ' : '')}${esc(t.label)}</span>`)
+        .join('')
+      const badgesHtml = badges ? `<div style="margin-top:4px">${badges}</div>` : ''
       const marker = L.marker([r.lat, r.lng], { icon: makeIcon('#3b82f6') })
         .addTo(map)
-        .bindPopup(`<b>#${r.id}</b> ${esc(r.prefecture)} ${esc(r.city)}<br><span style="font-size:11px">${esc(r.address)}</span>`)
+        .bindPopup(`<b>#${r.id}</b> ${esc(r.prefecture)} ${esc(r.city)}<br><span style="font-size:11px">${esc(r.address)}</span>${badgesHtml}`)
         .on('click', () => setSelectedId(id => id === r.id ? null : r.id))
       markersRef.current.set(r.id, marker)
     })

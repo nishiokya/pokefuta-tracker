@@ -54,9 +54,10 @@ type Props = {
   titles: ManholeTitlesJson
   onSaveMany: (patches: SemanticPatch[]) => Promise<void>
   saving: boolean
+  initialSearch?: string
 }
 
-export function AssignAllTagsTask(props: Props) {
+export function AssignAllTagsTask({ initialSearch, ...props }: Props) {
   return (
     <MapTagsTask
       {...props}
@@ -65,6 +66,7 @@ export function AssignAllTagsTask(props: Props) {
       tagGroups={TAG_GROUPS}
       tagLabels={TAG_LABELS}
       osmPoi={OSM_CONFIGS}
+      initialSearch={initialSearch}
     />
   )
 }

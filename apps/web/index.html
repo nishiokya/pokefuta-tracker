@@ -371,6 +371,13 @@
           </button>
         </div>
       </div>
+      <section class="tag-directory" aria-labelledby="tag-directory-heading">
+        <div class="section-title-row">
+          <h2 id="tag-directory-heading">特徴で探す</h2>
+        </div>
+        <p>テーマ別にポケふたを絞り込んで地図に表示します。もう一度タップで解除。</p>
+        <div id="tag-directory-chips" class="tag-directory-chips" aria-label="テーマ別タグ"></div>
+      </section>
       <section class="prefecture-directory" aria-labelledby="prefecture-directory-heading">
         <div class="section-title-row">
           <h2 id="prefecture-directory-heading">都道府県別のポケふた一覧</h2>
@@ -518,6 +525,27 @@
     const PREFECTURE_BOUNDS_OFFSET = 0.5;  // 都道府県 bounding box のオフセット（度）
     const OVERALL_PANEL_MEDIA_QUERY = '(max-width: 759px)';
     var isInitialPageLoad = true;  // Track if this is initial page load to prevent duplicate page_views
+    var activeTagFilter = null;  // タグフィルタ（null = 全件）
+
+    const TAG_META = {
+      seaside:          { emoji: '🌊', label: '海沿い' },
+      beach:            { emoji: '🏖', label: 'ビーチ' },
+      lakeside:         { emoji: '🌅', label: '湖畔' },
+      river:            { emoji: '🏞', label: '川辺' },
+      remote_island:    { emoji: '🏝', label: '離島' },
+      roadside:         { emoji: '🛤', label: '道の駅' },
+      in_station:       { emoji: '🚉', label: '駅構内' },
+      station_front:    { emoji: '🚃', label: '駅前' },
+      near_station:     { emoji: '🚶', label: '駅近' },
+      rail_access_good: { emoji: '🚆', label: '電車アクセス良好' },
+      far_station:      { emoji: '🚗', label: '駅から遠い' },
+      tourism:          { emoji: '🗺', label: '観光地' },
+      park:             { emoji: '🌳', label: '公園' },
+      museum:           { emoji: '🏛', label: '博物館・美術館' },
+      history:          { emoji: '⛩', label: '史跡・名所' },
+      food:             { emoji: '🍜', label: 'グルメ・食の名所' },
+      world_heritage:   { emoji: '🌐', label: '世界遺産' },
+    };
 
     function getOverallPanelMediaQuery() {
       return typeof window.matchMedia === 'function'
@@ -1071,6 +1099,12 @@
           }
         }
         
+        const tagCounts = {};
+        allData.forEach(d => {
+          if (!Array.isArray(d.tags)) return;
+          d.tags.forEach(t => { tagCounts[t] = (tagCounts[t] || 0) + 1; });
+        });
+        renderTagDirectory(tagCounts);
         populatePrefectureTable();
         renderPrefectureDirectory();
         updateStats();
@@ -1321,6 +1355,7 @@
         let show = true;
         if (selectedPrefecture) show = show && d.prefecture === selectedPrefecture;
         if (filterRecent) show = show && isWithinLastDays(d._addedDate, 30);
+        if (activeTagFilter) show = show && Array.isArray(d.tags) && d.tags.includes(activeTagFilter);
         if (show) {
           if (markerLayer && !markerLayer.hasLayer(marker)) markerLayer.addLayer(marker);
           visibleCount++;
@@ -1523,6 +1558,30 @@
             openManholePopup(thumb.dataset.manholeId);
             collapseBottomSheet();
           });
+        });
+      });
+    }
+
+    function renderTagDirectory(tagCounts) {
+      const container = document.getElementById('tag-directory-chips');
+      if (!container) return;
+      const sorted = Object.entries(tagCounts)
+        .filter(([, count]) => count > 0)
+        .sort(([, a], [, b]) => b - a);
+      container.innerHTML = sorted.map(([tag, count]) => {
+        const meta = TAG_META[tag] || { emoji: '🏷', label: tag };
+        return `<button class="tag-chip" data-tag="${tag}" aria-pressed="false">${meta.emoji} ${meta.label} <span class="tag-count">${count}枚</span></button>`;
+      }).join('');
+      container.querySelectorAll('.tag-chip').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const tag = btn.dataset.tag;
+          const isActive = activeTagFilter === tag;
+          activeTagFilter = isActive ? null : tag;
+          container.querySelectorAll('.tag-chip').forEach(b => {
+            b.classList.toggle('active', b.dataset.tag === activeTagFilter);
+            b.setAttribute('aria-pressed', String(b.dataset.tag === activeTagFilter));
+          });
+          recomputeVisibility();
         });
       });
     }
