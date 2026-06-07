@@ -1,5 +1,12 @@
 import type { PokefutaRecord, ManholeTitlesJson, SemanticPatch } from '../../semantic/semanticPatch'
 import { MapTagsTask } from '../shared/MapTagsTask'
+import type { OsmPoiConfig } from '../shared/MapTagsTask'
+
+const OSM_CONFIGS: OsmPoiConfig[] = [
+  { type: 'museum', label: '博物館', defaultTag: 'museum', radiusM: 100 },
+  { type: 'park', label: '公園', defaultTag: 'park', radiusM: 100 },
+]
+
 
 const TOURISM_TAGS = ['tourism', 'park', 'museum', 'history', 'food', 'world_heritage'] as const
 
@@ -27,6 +34,7 @@ export function AssignTourismTagsTask(props: Props) {
       taskType="assign_tourism_tags"
       tags={TOURISM_TAGS}
       tagLabels={TAG_LABEL}
+      osmPoi={OSM_CONFIGS}
     />
   )
 }

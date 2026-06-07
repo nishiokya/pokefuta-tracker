@@ -1,5 +1,6 @@
 import type { PokefutaRecord, ManholeTitlesJson, SemanticPatch, ManholeEntry } from '../../semantic/semanticPatch'
 import { MapTagsTask } from '../shared/MapTagsTask'
+import type { OsmPoiConfig } from '../shared/MapTagsTask'
 
 const STATION_TAGS = ['in_station', 'station_front', 'near_station', 'rail_access_good', 'far_station'] as const
 
@@ -10,6 +11,15 @@ const TAG_LABEL: Record<(typeof STATION_TAGS)[number], string> = {
   rail_access_good: '🚆 アクセス良',
   far_station: '🚗 駅から遠い',
 }
+
+const OSM_CONFIGS: OsmPoiConfig[] = [
+  {
+    type: 'station',
+    label: '駅',
+    defaultTag: (d) => d < 50 ? 'in_station' : d < 200 ? 'station_front' : 'near_station',
+    radiusM: 100,
+  },
+]
 
 function stationHint(r: PokefutaRecord, entry: ManholeEntry | undefined): boolean {
   return (
@@ -35,6 +45,7 @@ export function AssignStationTagsTask(props: Props) {
       tags={STATION_TAGS}
       tagLabels={TAG_LABEL}
       hintFilter={{ label: '駅キーワードのみ', fn: stationHint, defaultOn: true }}
+      osmPoi={OSM_CONFIGS}
     />
   )
 }

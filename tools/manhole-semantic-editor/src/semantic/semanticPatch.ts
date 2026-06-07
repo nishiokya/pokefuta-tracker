@@ -1,6 +1,7 @@
 export type TaskType =
   | 'add_municipality_url'
   | 'verify_official_url'
+  | 'assign_all_tags'
   | 'assign_location_tags'
   | 'assign_station_tags'
   | 'assign_tourism_tags'

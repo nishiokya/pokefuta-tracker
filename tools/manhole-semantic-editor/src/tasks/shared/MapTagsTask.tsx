@@ -4,12 +4,22 @@ import 'leaflet/dist/leaflet.css'
 import type { PokefutaRecord, ManholeTitlesJson, SemanticPatch, ManholeEntry, TaskType } from '../../semantic/semanticPatch'
 import { validatePatch } from '../../semantic/semanticPatchValidator'
 import { newPatchId } from '../../util'
+import { fetchNearbyPoisBatch } from '../../osm/osmFetcher'
+import type { OsmPoi, OsmPoiType } from '../../osm/osmFetcher'
+
+export type OsmPoiConfig = {
+  type: OsmPoiType
+  label: string
+  defaultTag: string | ((distanceM: number) => string)
+  radiusM?: number
+}
+
 
 function esc(s: string): string {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 }
 
-const PAGE_SIZE = 10
+const PAGE_SIZE = 50
 
 const PREF_ORDER = [
   '北海道','青森県','岩手県','宮城県','秋田県','山形県','福島県',
@@ -48,12 +58,19 @@ export type HintFilter = {
   defaultOn?: boolean
 }
 
+export type TagGroup = {
+  label: string
+  tags: readonly string[]
+}
+
 export type MapTagsTaskProps = {
   title: string
   taskType: TaskType
-  tags: readonly string[]
+  tags?: readonly string[]
+  tagGroups?: TagGroup[]
   tagLabels: Record<string, string>
   hintFilter?: HintFilter
+  osmPoi?: OsmPoiConfig[]
   records: PokefutaRecord[]
   titles: ManholeTitlesJson
   onSaveMany: (patches: SemanticPatch[]) => Promise<void>
@@ -63,9 +80,11 @@ export type MapTagsTaskProps = {
 export function MapTagsTask({
   title,
   taskType,
-  tags,
+  tags: tagsProp,
+  tagGroups,
   tagLabels,
   hintFilter,
+  osmPoi,
   records,
   titles,
   onSaveMany,
@@ -76,13 +95,24 @@ export function MapTagsTask({
   const [showFilter, setShowFilter] = useState<'all' | 'has_tag' | 'no_tag'>('all')
   const [hintOn, setHintOn] = useState(hintFilter?.defaultOn ?? false)
   const [pending, setPending] = useState<Map<string, Set<string>>>(new Map())
+  const [pendingBuilding, setPendingBuilding] = useState<Map<string, string>>(new Map())
+  const [pendingPlaceDetail, setPendingPlaceDetail] = useState<Map<string, string>>(new Map())
   const [saveError, setSaveError] = useState<string | null>(null)
   const [page, setPage] = useState(0)
   const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [nearbyPois, setNearbyPois] = useState<OsmPoi[]>([])
+  const [poisLoading, setPoisLoading] = useState(false)
+  const [poisError, setPoisError] = useState<string | null>(null)
 
   const mapDivRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<L.Map | null>(null)
   const markersRef = useRef<Map<string, L.Marker>>(new Map())
+  const poiMarkersRef = useRef<L.Marker[]>([])
+
+  const tags = useMemo(
+    () => tagsProp ?? (tagGroups?.flatMap(g => [...g.tags]) ?? []),
+    [tagsProp, tagGroups]
+  )
 
   const prefectures = useMemo(
     () => sortByPrefCode([...new Set(records.map(r => r.prefecture))]),
@@ -132,6 +162,8 @@ export function MapTagsTask({
 
     markersRef.current.forEach(m => m.remove())
     markersRef.current.clear()
+    poiMarkersRef.current.forEach(m => m.remove())
+    poiMarkersRef.current = []
 
     if (pageItems.length === 0) return
 
@@ -148,8 +180,53 @@ export function MapTagsTask({
     return () => {
       markersRef.current.forEach(m => m.remove())
       markersRef.current.clear()
+      poiMarkersRef.current.forEach(m => m.remove())
+      poiMarkersRef.current = []
     }
   }, [pageItems])
+
+  // Fetch nearby OSM POIs when selection changes (debounced + sequential to avoid rate limits)
+  useEffect(() => {
+    poiMarkersRef.current.forEach(m => m.remove())
+    poiMarkersRef.current = []
+    setNearbyPois([])
+    setPoisError(null)
+
+    if (!osmPoi?.length || !selectedId) return
+    const sel = pageItems.find(r => r.id === selectedId)
+    if (!sel) return
+
+    let cancelled = false
+    const timer = setTimeout(async () => {
+      if (cancelled) return
+      setPoisLoading(true)
+      try {
+        const pois = await fetchNearbyPoisBatch(
+          osmPoi.map(c => ({ type: c.type, radiusM: c.radiusM })),
+          sel.lat,
+          sel.lng,
+        )
+        if (cancelled) return
+        setNearbyPois(pois)
+        const map = mapRef.current
+        if (map) {
+          pois.slice(0, 20).forEach(poi => {
+            const m = L.marker([poi.lat, poi.lng], { icon: makeIcon('#6b7280') })
+              .addTo(map)
+              .bindPopup(`<b>${esc(poi.name)}</b><br><span style="font-size:11px">${poi.distanceM}m</span>`)
+            poiMarkersRef.current.push(m)
+          })
+        }
+      } catch (e) {
+        if (!cancelled) setPoisError(e instanceof Error ? e.message : String(e))
+      } finally {
+        if (!cancelled) setPoisLoading(false)
+      }
+    }, 600)
+
+    return () => { cancelled = true; clearTimeout(timer) }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedId, pageItems])
 
   // Sync marker icons when selection or pending changes
   useEffect(() => {
@@ -201,6 +278,27 @@ export function MapTagsTask({
     })
   }
 
+  function handleSetPoi(manholeId: string, poi: OsmPoi, cfg: OsmPoiConfig) {
+    const tag = typeof cfg.defaultTag === 'function' ? cfg.defaultTag(poi.distanceM) : cfg.defaultTag
+    setPendingBuilding(prev => { const n = new Map(prev); n.set(manholeId, poi.name); return n })
+    setPending(prev => {
+      const next = new Map(prev)
+      const base = new Set(titles.manholes[manholeId]?.tags ?? [])
+      const current = next.has(manholeId) ? new Set(next.get(manholeId)) : new Set(base)
+      current.add(tag)
+      next.set(manholeId, current)
+      return next
+    })
+  }
+
+  function clearPendingBuilding(id: string) {
+    setPendingBuilding(prev => { const n = new Map(prev); n.delete(id); return n })
+  }
+
+  function clearPendingPlaceDetail(id: string) {
+    setPendingPlaceDetail(prev => { const n = new Map(prev); n.delete(id); return n })
+  }
+
   async function handleSaveAll() {
     setSaveError(null)
     const patches: SemanticPatch[] = []
@@ -237,8 +335,30 @@ export function MapTagsTask({
       }
     }
 
+    const buildingIds = new Set([...pendingBuilding.keys(), ...pendingPlaceDetail.keys()])
+    for (const id of buildingIds) {
+      const building = pendingBuilding.get(id)
+      const place_detail = pendingPlaceDetail.get(id)
+      const payload: Record<string, string> = {}
+      if (building !== undefined && building !== (titles.manholes[id]?.building ?? '')) payload.building = building
+      if (place_detail !== undefined && place_detail !== (titles.manholes[id]?.place_detail ?? '')) payload.place_detail = place_detail
+      if (Object.keys(payload).length > 0) {
+        patches.push({
+          id: newPatchId(),
+          createdAt: new Date().toISOString(),
+          taskType,
+          operation: 'set_title',
+          target: 'manholes',
+          manholeIds: [parseInt(id, 10)],
+          payload,
+        })
+      }
+    }
+
     if (patches.length > 0) await onSaveMany(patches)
     setPending(new Map())
+    setPendingBuilding(new Map())
+    setPendingPlaceDetail(new Map())
   }
 
   const [copiedId, setCopiedId] = useState<string | null>(null)
@@ -251,7 +371,7 @@ export function MapTagsTask({
     })
   }, [])
 
-  const pendingCount = pending.size
+  const pendingCount = new Set([...pending.keys(), ...pendingBuilding.keys(), ...pendingPlaceDetail.keys()]).size
 
   return (
     <div>
@@ -297,7 +417,7 @@ export function MapTagsTask({
 
       <div style={{ display: 'flex', gap: 16, marginBottom: 8, fontSize: 12, color: '#6b7280', alignItems: 'center' }}>
         <span>凡例:</span>
-        {[['#3b82f6', 'タグなし'], ['#22c55e', 'タグあり'], ['#ef4444', '選択中']].map(([color, label]) => (
+        {([['#3b82f6', 'タグなし'], ['#22c55e', 'タグあり'], ['#ef4444', '選択中'], ...(osmPoi?.length ? [['#6b7280', 'OSM施設']] : [])] as [string, string][]).map(([color, label]) => (
           <span key={label} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
             <span style={{ width: 10, height: 10, borderRadius: '50%', background: color, display: 'inline-block', border: '1px solid white', boxShadow: '0 0 2px rgba(0,0,0,0.4)' }} />
             {label}
@@ -307,6 +427,36 @@ export function MapTagsTask({
       </div>
 
       <div ref={mapDivRef} style={{ height: 340, borderRadius: 8, border: '1px solid #e5e7eb', marginBottom: 12, overflow: 'hidden' }} />
+
+      {osmPoi?.length && selectedId && (poisLoading || !!poisError || nearbyPois.length > 0) && (
+        <div style={{ background: '#fff7ed', border: '1px solid #fed7aa', borderRadius: 8, padding: '10px 14px', marginBottom: 12 }}>
+          <div style={{ fontSize: 13, fontWeight: 600, color: '#9a3412', marginBottom: 6 }}>近くの施設</div>
+          {poisLoading && <div style={{ fontSize: 12, color: '#6b7280' }}>読み込み中…</div>}
+          {poisError && <div style={{ fontSize: 12, color: '#dc2626' }}>{poisError}</div>}
+          {osmPoi.map(cfg => {
+            const typePois = nearbyPois.filter(p => p.type === cfg.type)
+            if (!poisLoading && typePois.length === 0) return null
+            return (
+              <div key={cfg.type} style={{ marginBottom: 6 }}>
+                <div style={{ fontSize: 11, color: '#78716c', marginBottom: 3 }}>── {cfg.label}</div>
+                {typePois.slice(0, 5).map(poi => (
+                  <div key={poi.osmId} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 3 }}>
+                    <span style={{ flex: 1, fontSize: 13 }}>{poi.name}</span>
+                    <span style={{ fontSize: 11, color: '#9ca3af', minWidth: 44, textAlign: 'right' }}>{poi.distanceM}m</span>
+                    <button
+                      className="btn"
+                      style={{ padding: '2px 10px', fontSize: 12, background: '#6b7280', color: 'white', border: 'none', borderRadius: 4, cursor: 'pointer', flexShrink: 0 }}
+                      onClick={() => handleSetPoi(selectedId, poi, cfg)}
+                    >
+                      設定
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )
+          })}
+        </div>
+      )}
 
       <table className="table">
         <thead>
@@ -336,9 +486,50 @@ export function MapTagsTask({
                 <td style={{ fontFamily: 'monospace' }}>{r.id}</td>
                 <td>
                   <div>{r.prefecture} {r.city}</div>
-                  {titles.manholes[r.id]?.building && (
-                    <div style={{ fontSize: 11, color: '#6b7280' }}>{titles.manholes[r.id].building}</div>
-                  )}
+                  <div style={{ marginTop: 4, display: 'flex', flexDirection: 'column', gap: 3 }} onClick={e => e.stopPropagation()}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+                      <input
+                        key={`building-${r.id}-${pendingBuilding.get(r.id) ?? ''}`}
+                        type="text"
+                        defaultValue={pendingBuilding.get(r.id) ?? titles.manholes[r.id]?.building ?? ''}
+                        onBlur={e => {
+                          const val = e.target.value.trim()
+                          setPendingBuilding(prev => {
+                            const n = new Map(prev)
+                            if (val === (titles.manholes[r.id]?.building ?? '')) n.delete(r.id)
+                            else n.set(r.id, val)
+                            return n
+                          })
+                        }}
+                        placeholder="📍 施設名"
+                        style={{ flex: 1, padding: '2px 5px', fontSize: 11, border: `1px solid ${pendingBuilding.has(r.id) ? '#f97316' : '#e5e7eb'}`, borderRadius: 4, color: pendingBuilding.has(r.id) ? '#f97316' : '#374151', minWidth: 0, background: 'transparent' }}
+                      />
+                      {pendingBuilding.has(r.id) && (
+                        <button onClick={e => { e.stopPropagation(); clearPendingBuilding(r.id) }} style={{ padding: '0 3px', fontSize: 10, lineHeight: 1.6, background: 'transparent', border: '1px solid #f97316', borderRadius: 3, color: '#f97316', cursor: 'pointer', flexShrink: 0 }} title="クリア">×</button>
+                      )}
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+                      <input
+                        key={`desc-${r.id}-${pendingPlaceDetail.get(r.id) ?? ''}`}
+                        type="text"
+                        defaultValue={pendingPlaceDetail.get(r.id) ?? titles.manholes[r.id]?.place_detail ?? ''}
+                        onBlur={e => {
+                          const val = e.target.value.trim()
+                          setPendingPlaceDetail(prev => {
+                            const n = new Map(prev)
+                            if (val === (titles.manholes[r.id]?.place_detail ?? '')) n.delete(r.id)
+                            else n.set(r.id, val)
+                            return n
+                          })
+                        }}
+                        placeholder="💬 解説"
+                        style={{ flex: 1, padding: '2px 5px', fontSize: 11, border: `1px solid ${pendingPlaceDetail.has(r.id) ? '#8b5cf6' : '#e5e7eb'}`, borderRadius: 4, color: pendingPlaceDetail.has(r.id) ? '#8b5cf6' : '#6b7280', minWidth: 0, background: 'transparent' }}
+                      />
+                      {pendingPlaceDetail.has(r.id) && (
+                        <button onClick={e => { e.stopPropagation(); clearPendingPlaceDetail(r.id) }} style={{ padding: '0 3px', fontSize: 10, lineHeight: 1.6, background: 'transparent', border: '1px solid #8b5cf6', borderRadius: 3, color: '#8b5cf6', cursor: 'pointer', flexShrink: 0 }} title="クリア">×</button>
+                      )}
+                    </div>
+                  </div>
                 </td>
                 <td style={{ fontSize: 12, maxWidth: 200, wordBreak: 'break-all' }}>
                   <div style={{ display: 'flex', alignItems: 'flex-start', gap: 4 }}>
@@ -365,18 +556,40 @@ export function MapTagsTask({
                   </div>
                 </td>
                 <td onClick={e => e.stopPropagation()}>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-                    {tags.map(tag => (
-                      <button
-                        key={tag}
-                        className={`tag ${effectiveTags.has(tag) ? 'tag-active' : 'tag-inactive'}`}
-                        onClick={() => toggleTag(r.id, tag)}
-                        title={tag}
-                      >
-                        {tagLabels[tag] ?? tag}
-                      </button>
-                    ))}
-                  </div>
+                  {tagGroups ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+                      {tagGroups.map(group => (
+                        <div key={group.label}>
+                          <div style={{ fontSize: 10, color: '#9ca3af', marginBottom: 2 }}>{group.label}</div>
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
+                            {group.tags.map(tag => (
+                              <button
+                                key={tag}
+                                className={`tag ${effectiveTags.has(tag) ? 'tag-active' : 'tag-inactive'}`}
+                                onClick={() => toggleTag(r.id, tag)}
+                                title={tag}
+                              >
+                                {tagLabels[tag] ?? tag}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+                      {tags.map(tag => (
+                        <button
+                          key={tag}
+                          className={`tag ${effectiveTags.has(tag) ? 'tag-active' : 'tag-inactive'}`}
+                          onClick={() => toggleTag(r.id, tag)}
+                          title={tag}
+                        >
+                          {tagLabels[tag] ?? tag}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </td>
               </tr>
             )
