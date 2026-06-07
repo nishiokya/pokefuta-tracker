@@ -1,7 +1,7 @@
 import type { PokefutaRecord, ManholeTitlesJson, SemanticPatch } from '../../semantic/semanticPatch'
 import { MapTagsTask } from '../shared/MapTagsTask'
 
-const TOURISM_TAGS = ['tourism', 'park', 'museum', 'history', 'food'] as const
+const TOURISM_TAGS = ['tourism', 'park', 'museum', 'history', 'food', 'world_heritage'] as const
 
 const TAG_LABEL: Record<(typeof TOURISM_TAGS)[number], string> = {
   tourism: '🗺 観光',
@@ -9,6 +9,7 @@ const TAG_LABEL: Record<(typeof TOURISM_TAGS)[number], string> = {
   museum: '🏛 博物館',
   history: '🏯 歴史',
   food: '🍜 グルメ',
+  world_heritage: '🏛 世界遺産',
 }
 
 type Props = {

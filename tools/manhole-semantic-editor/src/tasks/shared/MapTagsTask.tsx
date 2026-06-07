@@ -155,7 +155,19 @@ export function MapTagsTask({
       const hasTag = tags.some(t => currentTags.has(t))
       const isSelected = id === selectedId
       marker.setIcon(makeIcon(isSelected ? '#ef4444' : hasTag ? '#22c55e' : '#3b82f6'))
-      if (isSelected) marker.openPopup()
+      if (isSelected) {
+        const r = pageItems.find(p => p.id === id)
+        if (r) {
+          const allTags = [...currentTags].sort()
+          const tagsHtml = allTags.length > 0
+            ? `<div style="margin-top:5px;display:flex;flex-wrap:wrap;gap:3px">${allTags.map(t => `<span style="background:#f3f4f6;border:1px solid #d1d5db;border-radius:4px;padding:1px 6px;font-size:11px;color:#374151">${t}</span>`).join('')}</div>`
+            : `<div style="margin-top:4px;font-size:11px;color:#9ca3af">タグなし</div>`
+          marker.setPopupContent(
+            `<b>#${r.id}</b> ${r.prefecture} ${r.city}<br><span style="font-size:11px">${r.address}</span>${tagsHtml}`
+          )
+        }
+        marker.openPopup()
+      }
     })
 
     if (selectedId) {

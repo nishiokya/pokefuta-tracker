@@ -1,13 +1,14 @@
 import type { PokefutaRecord, ManholeTitlesJson, SemanticPatch, ManholeEntry } from '../../semantic/semanticPatch'
 import { MapTagsTask } from '../shared/MapTagsTask'
 
-const STATION_TAGS = ['in_station', 'station_front', 'near_station', 'rail_access_good'] as const
+const STATION_TAGS = ['in_station', 'station_front', 'near_station', 'rail_access_good', 'far_station'] as const
 
 const TAG_LABEL: Record<(typeof STATION_TAGS)[number], string> = {
   in_station: '🚉 駅構内',
   station_front: '🏢 駅前',
   near_station: '🚶 駅近',
   rail_access_good: '🚆 アクセス良',
+  far_station: '🚗 駅から遠い',
 }
 
 function stationHint(r: PokefutaRecord, entry: ManholeEntry | undefined): boolean {

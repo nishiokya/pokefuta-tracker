@@ -4,9 +4,9 @@ import { generateConfirmationText } from '../../semantic/semanticPatchApplier'
 import { newPatchId } from '../../util'
 
 const VALID_TAGS = [
-  'seaside', 'beach', 'lakeside', 'river', 'remote_island',
-  'in_station', 'station_front', 'near_station', 'rail_access_good',
-  'tourism', 'park', 'museum', 'history', 'food',
+  'seaside', 'beach', 'lakeside', 'river', 'remote_island', 'roadside',
+  'in_station', 'station_front', 'near_station', 'rail_access_good', 'far_station',
+  'tourism', 'park', 'museum', 'history', 'food', 'world_heritage',
 ]
 
 type Props = {

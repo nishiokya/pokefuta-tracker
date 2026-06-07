@@ -131,6 +131,27 @@
       "label": "湖畔のポケふた（{lake}）",
       "hashtag": "#湖畔ポケふた",
       "priority": 38
+    },
+    "roadside": {
+      "enabled": true,
+      "emoji": "🛣",
+      "label": "道の駅のポケふた",
+      "hashtag": "#道の駅ポケふた",
+      "priority": 38
+    },
+    "far_station": {
+      "enabled": true,
+      "emoji": "🚗",
+      "label": "駅から遠いポケふた",
+      "hashtag": "#ポツンとポケふた",
+      "priority": 33
+    },
+    "world_heritage": {
+      "enabled": true,
+      "emoji": "🏛",
+      "label": "世界遺産エリアのポケふた",
+      "hashtag": "#世界遺産ポケふた",
+      "priority": 85
     }
   },
   "islands": [
@@ -658,7 +679,8 @@
     },
     "104": {
       "tags": [
-        "lakeside"
+        "lakeside",
+        "world_heritage"
       ]
     },
     "105": {
@@ -707,6 +729,31 @@
       "building": "絵本の館",
       "verified_at": "2020-11-02"
     },
+    "148": {
+      "tags": [
+        "world_heritage"
+      ]
+    },
+    "149": {
+      "tags": [
+        "world_heritage"
+      ]
+    },
+    "150": {
+      "tags": [
+        "world_heritage"
+      ]
+    },
+    "151": {
+      "tags": [
+        "world_heritage"
+      ]
+    },
+    "152": {
+      "tags": [
+        "world_heritage"
+      ]
+    },
     "153": {
       "tags": [
         "seaside"
@@ -732,14 +779,45 @@
         "seaside"
       ]
     },
+    "159": {
+      "tags": [
+        "world_heritage"
+      ]
+    },
+    "160": {
+      "tags": [
+        "world_heritage"
+      ]
+    },
+    "161": {
+      "tags": [
+        "world_heritage"
+      ]
+    },
+    "162": {
+      "tags": [
+        "world_heritage"
+      ]
+    },
+    "163": {
+      "tags": [
+        "world_heritage"
+      ]
+    },
     "165": {
       "tags": [
         "seaside"
       ]
     },
+    "174": {
+      "tags": [
+        "world_heritage"
+      ]
+    },
     "175": {
       "tags": [
-        "seaside"
+        "seaside",
+        "world_heritage"
       ]
     },
     "187": {
@@ -758,19 +836,27 @@
         "seaside"
       ]
     },
+    "198": {
+      "tags": [
+        "world_heritage"
+      ]
+    },
     "199": {
       "tags": [
-        "seaside"
+        "seaside",
+        "world_heritage"
       ]
     },
     "201": {
       "tags": [
-        "seaside"
+        "seaside",
+        "world_heritage"
       ]
     },
     "202": {
       "tags": [
-        "seaside"
+        "seaside",
+        "world_heritage"
       ]
     },
     "203": {
@@ -793,6 +879,11 @@
       "building": "道の駅あかいがわ敷地内",
       "verified_at": "2021-11-13"
     },
+    "220": {
+      "tags": [
+        "world_heritage"
+      ]
+    },
     "221": {
       "tags": [
         "seaside"
@@ -800,7 +891,8 @@
     },
     "229": {
       "tags": [
-        "seaside"
+        "seaside",
+        "world_heritage"
       ]
     },
     "231": {
@@ -815,7 +907,8 @@
     },
     "233": {
       "tags": [
-        "seaside"
+        "seaside",
+        "world_heritage"
       ]
     },
     "234": {
@@ -940,6 +1033,11 @@
         "station_front"
       ]
     },
+    "267": {
+      "tags": [
+        "world_heritage"
+      ]
+    },
     "271": {
       "building": "愛知県/豊橋市（バクフーン）",
       "address_raw": "愛知県豊橋市",
@@ -1010,22 +1108,26 @@
     },
     "288": {
       "tags": [
-        "seaside"
+        "seaside",
+        "world_heritage"
       ]
     },
     "289": {
       "tags": [
-        "seaside"
+        "seaside",
+        "world_heritage"
       ]
     },
     "290": {
       "tags": [
-        "seaside"
+        "seaside",
+        "world_heritage"
       ]
     },
     "291": {
       "tags": [
-        "seaside"
+        "seaside",
+        "world_heritage"
       ]
     },
     "292": {
@@ -1326,6 +1428,11 @@
         "seaside"
       ]
     },
+    "357": {
+      "tags": [
+        "world_heritage"
+      ]
+    },
     "358": {
       "tags": [
         "seaside"
@@ -1379,6 +1486,11 @@
     "378": {
       "tags": [
         "seaside"
+      ]
+    },
+    "379": {
+      "tags": [
+        "world_heritage"
       ]
     },
     "380": {
@@ -1670,6 +1782,11 @@
     "445": {
       "tags": [
         "seaside"
+      ]
+    },
+    "446": {
+      "tags": [
+        "world_heritage"
       ]
     },
     "448": {
