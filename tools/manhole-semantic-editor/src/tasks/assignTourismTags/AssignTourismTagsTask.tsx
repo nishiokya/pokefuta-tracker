@@ -7,6 +7,7 @@ const OSM_CONFIGS: OsmPoiConfig[] = [
   { type: 'park', label: '公園', defaultTag: 'park', radiusM: 100 },
 ]
 
+
 const TOURISM_TAGS = ['tourism', 'park', 'museum', 'history', 'food', 'world_heritage'] as const
 
 const TAG_LABEL: Record<(typeof TOURISM_TAGS)[number], string> = {
