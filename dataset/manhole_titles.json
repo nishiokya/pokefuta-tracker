@@ -1117,6 +1117,12 @@
       ],
       "confidence": 3
     },
+    "301": {
+      "tags": [
+        "museum",
+        "park"
+      ]
+    },
     "306": {
       "tags": [
         "seaside"
@@ -1323,6 +1329,36 @@
     "358": {
       "tags": [
         "seaside"
+      ]
+    },
+    "359": {
+      "tags": [
+        "tourism",
+        "park"
+      ]
+    },
+    "360": {
+      "tags": [
+        "tourism"
+      ]
+    },
+    "361": {
+      "tags": [
+        "tourism",
+        "museum"
+      ]
+    },
+    "362": {
+      "tags": [
+        "tourism",
+        "museum",
+        "history",
+        "park"
+      ]
+    },
+    "363": {
+      "tags": [
+        "tourism"
       ]
     },
     "365": {
@@ -1637,10 +1673,10 @@
       ]
     },
     "448": {
-      "prefecture": "東京都",
-      "city": "稲城市",
       "building": "ポケパーク カントー",
-      "address_norm": "東京都稲城市矢野口4015-1 ポケパーク カントー敷地内"
+      "address_norm": "東京都稲城市矢野口4015-1 ポケパーク カントー敷地内",
+      "prefecture": "東京都",
+      "city": "稲城市"
     },
     "450": {
       "tags": [
