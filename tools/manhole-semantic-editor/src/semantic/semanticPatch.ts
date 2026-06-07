@@ -8,6 +8,7 @@ export type TaskType =
   | 'verify_title'
   | 'admin_edit_manhole'
   | 'admin_bulk_edit'
+  | 'tag_reverse_lookup'
 
 export type OperationType =
   | 'set_municipality_url'
@@ -89,6 +90,14 @@ export type ManholeTitlesJson = {
   lakes?: LakeEntry[]
 }
 
+export type TitleBadge = {
+  key: string
+  label: string
+  emoji: string
+  hashtag: string
+  priority: number
+}
+
 export type PokefutaRecord = {
   id: string
   title: string
@@ -108,6 +117,7 @@ export type PokefutaRecord = {
   is_prefecture_site: boolean
   building: string
   tags?: string[]
+  titles?: TitleBadge[]
 }
 
 // Agent extension types (future use)

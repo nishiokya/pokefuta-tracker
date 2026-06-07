@@ -75,6 +75,7 @@ export type MapTagsTaskProps = {
   titles: ManholeTitlesJson
   onSaveMany: (patches: SemanticPatch[]) => Promise<void>
   saving: boolean
+  initialSearch?: string
 }
 
 export function MapTagsTask({
@@ -89,8 +90,11 @@ export function MapTagsTask({
   titles,
   onSaveMany,
   saving,
+  initialSearch = '',
 }: MapTagsTaskProps) {
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = useState(initialSearch)
+
+  useEffect(() => { setSearch(initialSearch ?? '') }, [initialSearch])
   const [prefFilter, setPrefFilter] = useState('')
   const [showFilter, setShowFilter] = useState<'all' | 'has_tag' | 'no_tag'>('all')
   const [hintOn, setHintOn] = useState(hintFilter?.defaultOn ?? false)
@@ -123,7 +127,10 @@ export function MapTagsTask({
     return records.filter(r => {
       if (r.status !== 'active') return false
       if (prefFilter && r.prefecture !== prefFilter) return false
-      if (search && !`${r.id} ${r.prefecture} ${r.city} ${r.address}`.includes(search)) return false
+      if (search) {
+        const exactId = /^\d+$/.test(search)
+        if (exactId ? r.id !== search : !`${r.id} ${r.prefecture} ${r.city} ${r.address}`.includes(search)) return false
+      }
       if (hintFilter && hintOn && !hintFilter.fn(r, titles.manholes[r.id])) return false
       const currentTags = titles.manholes[r.id]?.tags ?? []
       const hasAnyTag = tags.some(t => currentTags.includes(t))
@@ -155,6 +162,14 @@ export function MapTagsTask({
     }
   }, [])
 
+  function buildPopupHtml(r: import('../../semantic/semanticPatch').PokefutaRecord, extraHtml = ''): string {
+    const badges = (r.titles ?? [])
+      .map(t => `<span style="display:inline-block;margin:1px 2px;padding:1px 6px;border-radius:999px;background:#f1f5f9;font-size:10px;white-space:nowrap">${esc(t.emoji ? t.emoji + ' ' : '')}${esc(t.label)}</span>`)
+      .join('')
+    const badgesHtml = badges ? `<div style="margin-top:4px">${badges}</div>` : ''
+    return `<b>#${r.id}</b> ${esc(r.prefecture)} ${esc(r.city)}<br><span style="font-size:11px">${esc(r.address)}</span>${badgesHtml}${extraHtml}`
+  }
+
   // Rebuild markers on page change
   useEffect(() => {
     const map = mapRef.current
@@ -170,7 +185,7 @@ export function MapTagsTask({
     pageItems.forEach(r => {
       const marker = L.marker([r.lat, r.lng], { icon: makeIcon('#3b82f6') })
         .addTo(map)
-        .bindPopup(`<b>#${r.id}</b> ${esc(r.prefecture)} ${esc(r.city)}<br><span style="font-size:11px">${esc(r.address)}</span>`)
+        .bindPopup(buildPopupHtml(r))
         .on('click', () => setSelectedId(id => id === r.id ? null : r.id))
       markersRef.current.set(r.id, marker)
     })
@@ -243,9 +258,7 @@ export function MapTagsTask({
           const tagsHtml = allTags.length > 0
             ? `<div style="margin-top:5px;display:flex;flex-wrap:wrap;gap:3px">${allTags.map(t => `<span style="background:#f3f4f6;border:1px solid #d1d5db;border-radius:4px;padding:1px 6px;font-size:11px;color:#374151">${esc(t)}</span>`).join('')}</div>`
             : `<div style="margin-top:4px;font-size:11px;color:#9ca3af">タグなし</div>`
-          marker.setPopupContent(
-            `<b>#${r.id}</b> ${esc(r.prefecture)} ${esc(r.city)}<br><span style="font-size:11px">${esc(r.address)}</span>${tagsHtml}`
-          )
+          marker.setPopupContent(buildPopupHtml(r, tagsHtml))
         }
         marker.openPopup()
       }

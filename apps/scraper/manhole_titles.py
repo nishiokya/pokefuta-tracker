@@ -267,9 +267,17 @@ def compute_titles(manhole: dict, ctx: dict, *, nc50: int, nc100: int) -> list[d
                     results.append(t)
                 break
 
-    # seaside: tags contains "beach" or "seaside"
-    if any(tag in ("beach", "seaside") for tag in tags):
+    # seaside / beach: 海沿い・ビーチ（beachはseasideより具体的な方を優先表示）
+    if "beach" in tags:
+        if t := _entry("beach"):
+            results.append(t)
+    elif "seaside" in tags:
         if t := _entry("seaside"):
+            results.append(t)
+
+    # river: 川辺タグ
+    if "river" in tags:
+        if t := _entry("river"):
             results.append(t)
 
     # roadside: 道の駅タグ
@@ -282,12 +290,37 @@ def compute_titles(manhole: dict, ctx: dict, *, nc50: int, nc100: int) -> list[d
         if t := _entry("world_heritage"):
             results.append(t)
 
-    # station_front / near_station: 駅前・駅近タグ（より具体的な方のみ表示）
-    if "station_front" in tags:
+    # tourism / park / museum / history / food: 観光系タグ
+    if "tourism" in tags:
+        if t := _entry("tourism"):
+            results.append(t)
+    if "park" in tags:
+        if t := _entry("park"):
+            results.append(t)
+    if "museum" in tags:
+        if t := _entry("museum"):
+            results.append(t)
+    if "history" in tags:
+        if t := _entry("history"):
+            results.append(t)
+    if "food" in tags:
+        if t := _entry("food"):
+            results.append(t)
+
+    # in_station / station_front / near_station: 駅系タグ（より具体的な方のみ表示）
+    if "in_station" in tags:
+        if t := _entry("in_station"):
+            results.append(t)
+    elif "station_front" in tags:
         if t := _entry("station_front"):
             results.append(t)
     elif "near_station" in tags:
         if t := _entry("near_station"):
+            results.append(t)
+
+    # rail_access_good: 電車アクセス良好タグ（駅近系と独立）
+    if "rail_access_good" in tags:
+        if t := _entry("rail_access_good"):
             results.append(t)
 
     # far_station: 駅から遠いタグ（駅近系と独立）

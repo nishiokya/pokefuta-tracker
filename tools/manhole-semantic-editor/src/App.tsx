@@ -7,6 +7,7 @@ import { AddMunicipalityUrlTask } from './tasks/addMunicipalityUrl/AddMunicipali
 import { VerifyOfficialUrlTask } from './tasks/verifyOfficialUrl/VerifyOfficialUrlTask'
 import { AssignAllTagsTask } from './tasks/assignAllTags/AssignAllTagsTask'
 import { AdminBulkEditTask } from './tasks/adminBulkEdit/AdminBulkEditTask'
+import { TagReverseLookupTask } from './tasks/tagReverseLookup/TagReverseLookupTask'
 
 type ActiveTask = 'home' | TaskType
 
@@ -16,6 +17,7 @@ const TASK_MENU: Array<{ group: string; items: Array<{ id: TaskType; label: stri
     items: [
       { id: 'add_municipality_url', label: '自治体URLを追加する', icon: '🏛', desc: '市区町村の公式案内ページ' },
       { id: 'assign_all_tags', label: '全タグを付ける', icon: '🏷', desc: '場所・駅・観光 すべてのタグ＋OSM連携・施設名設定' },
+      { id: 'tag_reverse_lookup', label: 'タグ別マンホール一覧', icon: '🔍', desc: 'タグごとに設定済みマンホールを逆引き' },
     ],
   },
   {
@@ -27,8 +29,20 @@ const TASK_MENU: Array<{ group: string; items: Array<{ id: TaskType; label: stri
   },
 ]
 
+const ALL_TASK_IDS = new Set<string>(TASK_MENU.flatMap(g => g.items.map(i => i.id)))
+
+function hashToTask(hash: string): ActiveTask {
+  const id = hash.replace(/^#/, '')
+  return (ALL_TASK_IDS.has(id) ? id : 'home') as ActiveTask
+}
+
+function taskToHash(task: ActiveTask): string {
+  return task === 'home' ? '#home' : `#${task}`
+}
+
 export default function App() {
-  const [activeTask, setActiveTask] = useState<ActiveTask>('home')
+  const [activeTask, setActiveTaskState] = useState<ActiveTask>(() => hashToTask(window.location.hash))
+  const [editInitialSearch, setEditInitialSearch] = useState<string | undefined>(undefined)
   const [titles, setTitles] = useState<ManholeTitlesJson | null>(null)
   const [records, setRecords] = useState<PokefutaRecord[]>([])
   const [sessionPatches, setSessionPatches] = useState<SemanticPatch[]>([])
@@ -37,6 +51,18 @@ export default function App() {
   const [saving, setSaving] = useState(false)
   const [prStatus, setPrStatus] = useState<string | null>(null)
   const [prRunning, setPrRunning] = useState(false)
+
+  // URL hash → state sync (browser back/forward)
+  useEffect(() => {
+    const onHashChange = () => setActiveTaskState(hashToTask(window.location.hash))
+    window.addEventListener('hashchange', onHashChange)
+    return () => window.removeEventListener('hashchange', onHashChange)
+  }, [])
+
+  const setActiveTask = useCallback((task: ActiveTask) => {
+    window.location.hash = taskToHash(task)
+    setActiveTaskState(task)
+  }, [])
 
   useEffect(() => {
     Promise.all([loadPokefutaRecords(), loadTitles(), loadSessionPatches()])
@@ -94,19 +120,31 @@ export default function App() {
 
   const commonProps = { records, saving }
 
+  function handleNavigateToEdit(manholeId: string) {
+    setEditInitialSearch(manholeId)
+    setActiveTask('assign_all_tags')
+  }
+
+  function navigate(task: ActiveTask) {
+    setEditInitialSearch(undefined)
+    setActiveTask(task)
+  }
+
   function renderTask() {
     if (!titles) return null
     switch (activeTask) {
       case 'assign_all_tags':
-        return <AssignAllTagsTask {...commonProps} titles={titles} onSaveMany={handleSavePatches} />
+        return <AssignAllTagsTask {...commonProps} titles={titles} onSaveMany={handleSavePatches} initialSearch={editInitialSearch} />
       case 'add_municipality_url':
         return <AddMunicipalityUrlTask {...commonProps} titles={titles} onSave={handleSavePatch} />
       case 'verify_official_url':
         return <VerifyOfficialUrlTask {...commonProps} titles={titles} onSave={handleSavePatch} />
       case 'admin_bulk_edit':
         return <AdminBulkEditTask {...commonProps} titles={titles} onSaveMany={handleSavePatches} />
+      case 'tag_reverse_lookup':
+        return <TagReverseLookupTask titles={titles} records={records} onNavigateToEdit={handleNavigateToEdit} />
       default:
-        return <Home onSelectTask={setActiveTask} />
+        return <Home onSelectTask={navigate} />
     }
   }
 
@@ -140,9 +178,13 @@ export default function App() {
 
         <ul className="task-menu">
           <li>
-            <button className={activeTask === 'home' ? 'active' : ''} onClick={() => setActiveTask('home')}>
+            <a
+              href="#home"
+              className={`task-menu-link${activeTask === 'home' ? ' active' : ''}`}
+              onClick={() => setEditInitialSearch(undefined)}
+            >
               🏠 ホーム
-            </button>
+            </a>
           </li>
           {TASK_MENU.map(group => (
             <li key={group.group}>
@@ -150,12 +192,13 @@ export default function App() {
               <ul className="task-menu" style={{ padding: 0 }}>
                 {group.items.map(item => (
                   <li key={item.id}>
-                    <button
-                      className={activeTask === item.id ? 'active' : ''}
-                      onClick={() => setActiveTask(item.id)}
+                    <a
+                      href={`#${item.id}`}
+                      className={`task-menu-link${activeTask === item.id ? ' active' : ''}`}
+                      onClick={() => setEditInitialSearch(undefined)}
                     >
                       {item.icon} {item.label}
-                    </button>
+                    </a>
                   </li>
                 ))}
               </ul>
@@ -220,4 +263,3 @@ function Home({ onSelectTask }: { onSelectTask: (t: ActiveTask) => void }) {
     </div>
   )
 }
-

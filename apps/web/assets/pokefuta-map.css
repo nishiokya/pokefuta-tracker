@@ -1307,3 +1307,48 @@ body.pokefuta-map-page {
     padding: 0 10px 8px 54px;
   }
 }
+
+/* タグディレクトリ */
+.tag-directory {
+  padding: 16px 16px 8px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.tag-directory-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.tag-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  border: 1.5px solid #c4b5d4;
+  background: #f8f4ff;
+  color: #4b3a6e;
+  cursor: pointer;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.tag-chip:hover {
+  border-color: #7c5cbf;
+  background: #ede9fe;
+}
+
+.tag-chip.active {
+  background: #7c5cbf;
+  color: #fff;
+  border-color: #7c5cbf;
+}
+
+.tag-chip .tag-count {
+  font-size: 0.75rem;
+  opacity: 0.75;
+  margin-left: 2px;
+}
