@@ -18,8 +18,11 @@ from __future__ import annotations
 import base64
 import json
 import math
+import os
 import subprocess
 import sys
+import tempfile
+import urllib.error
 import urllib.request
 from collections import Counter
 from pathlib import Path
@@ -55,7 +58,6 @@ def svg_to_png(svg_bytes: bytes, out_path: Path) -> None:
 
 def svg_to_jpg(svg_path: Path, out_path: Path) -> None:
     """SVG → PNG (tmp) → JPEG via rsvg-convert + sips (macOS)."""
-    import tempfile, os
     with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
         tmp_path = tmp.name
     try:
@@ -75,13 +77,22 @@ def svg_to_jpg(svg_path: Path, out_path: Path) -> None:
         os.unlink(tmp_path) if os.path.exists(tmp_path) else None
 
 
+def _xe(s: str) -> str:
+    """Minimal XML/SVG text escaping."""
+    return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+
 # ---------------------------------------------------------------------------
 # GeoJSON / RDP helpers
 # ---------------------------------------------------------------------------
 
 def _fetch_prefecture_outline(pref_name: str) -> list[list[float]]:
     """Return simplified [lng, lat] polygon for the given prefecture."""
-    data = json.loads(urllib.request.urlopen(GEOJSON_URL).read())
+    try:
+        data = json.loads(urllib.request.urlopen(GEOJSON_URL, timeout=10).read())
+    except (urllib.error.URLError, OSError) as e:
+        print(f"[generate_social_ogp] GeoJSON取得失敗 ({e})", file=sys.stderr)
+        return []
     feat = next(
         (f for f in data["features"] if f["properties"].get("nam_ja") == pref_name),
         None,
@@ -186,7 +197,7 @@ def _build_prefecture_rank_svg(raw: dict) -> str:
     R = 48  # photo circle radius
 
     path_d = ("M " + " L ".join(
-        f"{to_svg(lat, lng)[0]},{to_svg(lat, lng)[1]}" for lng, lat in outline_pts
+        "{},{}".format(*to_svg(lat, lng)) for lng, lat in outline_pts
     ) + " Z") if outline_pts else ""
 
     # Place photo circles (greedy non-overlap)
@@ -216,7 +227,7 @@ def _build_prefecture_rank_svg(raw: dict) -> str:
                   f'x="{px-R}" y="{py-R}" width="{R*2}" height="{R*2}" '
                   f'clip-path="url(#c{pid})" preserveAspectRatio="xMidYMid slice"/>\n')
         lbls  += (f'<text x="{px}" y="{py+R+14}" class="jp" font-size="12" font-weight="700" '
-                  f'fill="rgba(255,255,255,0.65)" text-anchor="middle">{label}</text>\n')
+                  f'fill="rgba(255,255,255,0.65)" text-anchor="middle">{_xe(label)}</text>\n')
 
     dots = ""
     for m in all_manholes:
@@ -347,7 +358,7 @@ def _build_pokemon_section(
     for i, (name, cnt) in enumerate(top[:2]):
         w = round(cnt / max(top[0][1], 1) * bar_w) if top else 0
         out += (f'<text x="52" y="{y+4}" class="jp" font-size="14" font-weight="700" '
-                f'fill="rgba(255,255,255,0.75)">{name}</text>\n')
+                f'fill="rgba(255,255,255,0.75)">{_xe(name)}</text>\n')
         out += (f'<text x="{52+bar_w}" y="{y+4}" class="jp" font-size="13" '
                 f'fill="#F5C842" text-anchor="end">{cnt}箇所</text>\n')
         out += f'<rect x="52" y="{y+8}" width="{bar_w}" height="9" rx="4.5" fill="rgba(255,255,255,0.1)"/>\n'
@@ -364,7 +375,7 @@ def _build_pokemon_section(
             out += (f'<rect x="{cx}" y="{cy-16}" width="{w}" height="22" rx="11" '
                     f'fill="rgba(100,160,230,0.12)" stroke="rgba(140,190,255,0.3)" stroke-width="1"/>\n')
             out += (f'<text x="{cx+w//2}" y="{cy}" class="jp" font-size="12" '
-                    f'fill="rgba(255,255,255,0.6)" text-anchor="middle">{name}</text>\n')
+                    f'fill="rgba(255,255,255,0.6)" text-anchor="middle">{_xe(name)}</text>\n')
             cx += w + 6
     return out
 
