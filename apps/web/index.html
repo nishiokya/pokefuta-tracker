@@ -595,15 +595,14 @@
     }
 
     // ==== セカンダリタグ（バッジ変換なし・popup はアイコンのみ表示） ====
-    const SECONDARY_TAG_EMOJI = Object.freeze({
-      tourism: '🗺', park: '🌳', museum: '🏛', history: '🏯',
-      food: '🍜', rail_access_good: '🚆', river: '🏞', in_station: '🚉',
-    })
-    const SECONDARY_TAG_LABEL = Object.freeze({
-      tourism: '観光スポット', park: '公園', museum: '博物館',
-      history: '歴史スポット', food: 'グルメ', rail_access_good: '電車でアクセス◎',
-      river: '川・渓谷', in_station: '駅構内',
-    })
+    // TAG_META から自動生成（単一ソース管理）
+    const SECONDARY_TAG_KEYS = ['tourism','park','museum','history','food','rail_access_good','river','in_station'];
+    const SECONDARY_TAG_EMOJI = Object.freeze(Object.fromEntries(
+      SECONDARY_TAG_KEYS.map(k => [k, TAG_META[k]?.emoji]).filter(([,v]) => v)
+    ));
+    const SECONDARY_TAG_LABEL = Object.freeze(Object.fromEntries(
+      SECONDARY_TAG_KEYS.map(k => [k, TAG_META[k]?.label]).filter(([,v]) => v)
+    ));
 
     // ==== 単一言語 (日本語) 用 UI ラベル定数 ====
     const UI_TEXT = {
