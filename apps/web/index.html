@@ -566,7 +566,18 @@
       }
     }
 
-    // ==== 単一言語 (日本語) 用 UI ラベル定数 ==== 
+    // ==== セカンダリタグ（バッジ変換なし・popup はアイコンのみ表示） ====
+    const SECONDARY_TAG_EMOJI = Object.freeze({
+      tourism: '🗺', park: '🌳', museum: '🏛', history: '🏯',
+      food: '🍜', rail_access_good: '🚆', river: '🏞', in_station: '🚉',
+    })
+    const SECONDARY_TAG_LABEL = Object.freeze({
+      tourism: '観光スポット', park: '公園', museum: '博物館',
+      history: '歴史スポット', food: 'グルメ', rail_access_good: '電車でアクセス◎',
+      river: '川・渓谷', in_station: '駅構内',
+    })
+
+    // ==== 単一言語 (日本語) 用 UI ラベル定数 ====
     const UI_TEXT = {
       recentLabel: '🆕 直近1ヶ月',
       prefectureFilter: '都道府県で絞り込み',
@@ -705,6 +716,14 @@
             + '</span>').join('')
           + '</div>'
         : '';
+      const secondaryTags = (Array.isArray(d.tags) ? d.tags : []).filter(t => SECONDARY_TAG_EMOJI[t])
+      const secondaryIconsHtml = secondaryTags.length
+        ? '<div class="travel-popup-tag-icons">'
+          + secondaryTags.map(t =>
+              `<span class="travel-popup-tag-icon" title="${escapeHtml(SECONDARY_TAG_LABEL[t] || t)}">${SECONDARY_TAG_EMOJI[t]}</span>`
+            ).join('')
+          + '</div>'
+        : '';
       const photoBlock = imageUrl ? `
         <div class="popup-photo travel-popup-photo" aria-label="マンホール写真">
           <img src="${imageUrl}" alt="${escapeHtml(photoAlt)}" loading="lazy" decoding="async" onerror="handlePopupImageError(this)">
@@ -741,6 +760,7 @@
             ${d.building ? `<p class="travel-popup-building">📍 ${escapeHtml(d.building)}</p>` : ''}
             ${d.place_detail ? `<p class="travel-popup-description">${escapeHtml(d.place_detail)}</p>` : ''}
             ${titleBadgesHtml}
+            ${secondaryIconsHtml}
             ${photoComment ? `<p class="travel-popup-comment">${escapeHtml(photoComment)}</p>` : ''}
             <div class="travel-popup-pokemon-list" aria-label="登場ポケモン">${pokemonsHtml}</div>
             <div class="popup-actions travel-popup-actions travel-popup-actions--single">

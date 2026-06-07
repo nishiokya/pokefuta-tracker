@@ -26,6 +26,17 @@ from generate_pokemon_pages import _FORM_PREFIX, _normalize_katakana  # noqa: E4
 BASE_URL = "https://data.pokefuta.com/"
 GA_MEASUREMENT_ID = "G-K18NR4GZG2"
 
+SECONDARY_TAG_LABELS: dict[str, tuple[str, str]] = {
+    'tourism':          ('🗺', '観光スポット'),
+    'park':             ('🌳', '公園'),
+    'museum':           ('🏛', '博物館・展示施設'),
+    'history':          ('🏯', '歴史スポット'),
+    'food':             ('🍜', 'グルメ'),
+    'rail_access_good': ('🚆', '電車でアクセス◎'),
+    'river':            ('🏞', '川・渓谷'),
+    'in_station':       ('🚉', '駅構内'),
+}
+
 
 def build_ja_to_slug(raw_data: list) -> dict[str, str]:
     """Build ja_name → slug map with regional form and katakana normalization."""
@@ -569,6 +580,11 @@ def generate_html(
     for t in titles:
         label = f"{escape(t['emoji'])} {escape(t['label'])}" if t.get("emoji") else escape(t["label"])
         badges.append(f"<span class='hero-badge hero-badge-title'>{label}</span>")
+    # Secondary tag badges (tourism/park/museum/history/food/rail_access_good/river/in_station)
+    for tag in (manhole.get("tags") or []):
+        if tag in SECONDARY_TAG_LABELS:
+            em, lbl = SECONDARY_TAG_LABELS[tag]
+            badges.append(f"<span class='hero-badge hero-badge-secondary'>{escape(em)} {escape(lbl)}</span>")
     # Stats badges with suppression rules (§2.3)
     suppress_pref = title_keys & {"only_in_pref", "unique_pokemon"}
     suppress_nearby = "lone" in title_keys
@@ -1262,6 +1278,12 @@ def generate_html(
       font-weight: 600;
       color: #3a4fc7;
       letter-spacing: 0.01em;
+    }}
+
+    .hero-badge-secondary {{
+      background: #f0f9ff;
+      border-color: #bae6fd;
+      color: #0369a1;
     }}
 
     .hero-actions {{
