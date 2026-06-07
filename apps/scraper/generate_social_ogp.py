@@ -99,8 +99,12 @@ def _fetch_prefecture_outline(pref_name: str) -> list[list[float]]:
     )
     if feat is None:
         return []
-    coords = feat["geometry"]["coordinates"]
-    main_ring = sorted(coords, key=lambda p: len(p[0]), reverse=True)[0][0]
+    geom = feat["geometry"]
+    coords = geom["coordinates"]
+    if geom["type"] == "MultiPolygon":
+        main_ring = sorted(coords, key=lambda p: len(p[0]), reverse=True)[0][0]
+    else:
+        main_ring = coords[0]  # Polygon: outer ring
     return _rdp(main_ring, 0.011)
 
 
