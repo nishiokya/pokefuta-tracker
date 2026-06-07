@@ -95,6 +95,7 @@ export function MapTagsTask({
   const [hintOn, setHintOn] = useState(hintFilter?.defaultOn ?? false)
   const [pending, setPending] = useState<Map<string, Set<string>>>(new Map())
   const [pendingBuilding, setPendingBuilding] = useState<Map<string, string>>(new Map())
+  const [pendingPlaceDetail, setPendingPlaceDetail] = useState<Map<string, string>>(new Map())
   const [saveError, setSaveError] = useState<string | null>(null)
   const [page, setPage] = useState(0)
   const [selectedId, setSelectedId] = useState<string | null>(null)
@@ -293,6 +294,10 @@ export function MapTagsTask({
     setPendingBuilding(prev => { const n = new Map(prev); n.delete(id); return n })
   }
 
+  function clearPendingPlaceDetail(id: string) {
+    setPendingPlaceDetail(prev => { const n = new Map(prev); n.delete(id); return n })
+  }
+
   async function handleSaveAll() {
     setSaveError(null)
     const patches: SemanticPatch[] = []
@@ -329,8 +334,14 @@ export function MapTagsTask({
       }
     }
 
-    for (const [id, building] of pendingBuilding.entries()) {
-      if (building !== (titles.manholes[id]?.building ?? '')) {
+    const buildingIds = new Set([...pendingBuilding.keys(), ...pendingPlaceDetail.keys()])
+    for (const id of buildingIds) {
+      const building = pendingBuilding.get(id)
+      const place_detail = pendingPlaceDetail.get(id)
+      const payload: Record<string, string> = {}
+      if (building !== undefined && building !== (titles.manholes[id]?.building ?? '')) payload.building = building
+      if (place_detail !== undefined && place_detail !== (titles.manholes[id]?.place_detail ?? '')) payload.place_detail = place_detail
+      if (Object.keys(payload).length > 0) {
         patches.push({
           id: newPatchId(),
           createdAt: new Date().toISOString(),
@@ -338,7 +349,7 @@ export function MapTagsTask({
           operation: 'set_title',
           target: 'manholes',
           manholeIds: [parseInt(id, 10)],
-          payload: { building },
+          payload,
         })
       }
     }
@@ -346,6 +357,7 @@ export function MapTagsTask({
     if (patches.length > 0) await onSaveMany(patches)
     setPending(new Map())
     setPendingBuilding(new Map())
+    setPendingPlaceDetail(new Map())
   }
 
   const [copiedId, setCopiedId] = useState<string | null>(null)
@@ -358,7 +370,7 @@ export function MapTagsTask({
     })
   }, [])
 
-  const pendingCount = new Set([...pending.keys(), ...pendingBuilding.keys()]).size
+  const pendingCount = new Set([...pending.keys(), ...pendingBuilding.keys(), ...pendingPlaceDetail.keys()]).size
 
   return (
     <div>
@@ -473,43 +485,50 @@ export function MapTagsTask({
                 <td style={{ fontFamily: 'monospace' }}>{r.id}</td>
                 <td>
                   <div>{r.prefecture} {r.city}</div>
-                  {isSelected ? (
-                    <div style={{ marginTop: 4 }} onClick={e => e.stopPropagation()}>
-                      <div style={{ fontSize: 10, color: '#9ca3af', marginBottom: 2 }}>施設名（地図ポップアップ・詳細ページに表示）</div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                        <input
-                          key={`building-${r.id}-${pendingBuilding.get(r.id) ?? ''}`}
-                          type="text"
-                          defaultValue={pendingBuilding.get(r.id) ?? titles.manholes[r.id]?.building ?? ''}
-                          onBlur={e => {
-                            const val = e.target.value.trim()
-                            setPendingBuilding(prev => {
-                              const n = new Map(prev)
-                              if (val === (titles.manholes[r.id]?.building ?? '')) {
-                                n.delete(r.id)
-                              } else {
-                                n.set(r.id, val)
-                              }
-                              return n
-                            })
-                          }}
-                          placeholder="例: 道の駅 てしお"
-                          style={{ flex: 1, padding: '3px 6px', fontSize: 11, border: '1px solid #d1d5db', borderRadius: 4, color: '#374151', minWidth: 0 }}
-                        />
-                        {pendingBuilding.has(r.id) && (
-                          <button
-                            onClick={e => { e.stopPropagation(); clearPendingBuilding(r.id) }}
-                            style={{ padding: '0 4px', fontSize: 10, lineHeight: 1.6, background: 'transparent', border: '1px solid #f97316', borderRadius: 3, color: '#f97316', cursor: 'pointer', flexShrink: 0 }}
-                            title="クリア"
-                          >×</button>
-                        )}
-                      </div>
+                  <div style={{ marginTop: 4, display: 'flex', flexDirection: 'column', gap: 3 }} onClick={e => e.stopPropagation()}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+                      <input
+                        key={`building-${r.id}-${pendingBuilding.get(r.id) ?? ''}`}
+                        type="text"
+                        defaultValue={pendingBuilding.get(r.id) ?? titles.manholes[r.id]?.building ?? ''}
+                        onBlur={e => {
+                          const val = e.target.value.trim()
+                          setPendingBuilding(prev => {
+                            const n = new Map(prev)
+                            if (val === (titles.manholes[r.id]?.building ?? '')) n.delete(r.id)
+                            else n.set(r.id, val)
+                            return n
+                          })
+                        }}
+                        placeholder="📍 施設名"
+                        style={{ flex: 1, padding: '2px 5px', fontSize: 11, border: `1px solid ${pendingBuilding.has(r.id) ? '#f97316' : '#e5e7eb'}`, borderRadius: 4, color: pendingBuilding.has(r.id) ? '#f97316' : '#374151', minWidth: 0, background: 'transparent' }}
+                      />
+                      {pendingBuilding.has(r.id) && (
+                        <button onClick={e => { e.stopPropagation(); clearPendingBuilding(r.id) }} style={{ padding: '0 3px', fontSize: 10, lineHeight: 1.6, background: 'transparent', border: '1px solid #f97316', borderRadius: 3, color: '#f97316', cursor: 'pointer', flexShrink: 0 }} title="クリア">×</button>
+                      )}
                     </div>
-                  ) : (pendingBuilding.has(r.id) || titles.manholes[r.id]?.building) ? (
-                    <div style={{ fontSize: 11, color: pendingBuilding.has(r.id) ? '#f97316' : '#6b7280', marginTop: 2 }}>
-                      📍 {pendingBuilding.get(r.id) ?? titles.manholes[r.id]?.building}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+                      <input
+                        key={`desc-${r.id}-${pendingPlaceDetail.get(r.id) ?? ''}`}
+                        type="text"
+                        defaultValue={pendingPlaceDetail.get(r.id) ?? titles.manholes[r.id]?.place_detail ?? ''}
+                        onBlur={e => {
+                          const val = e.target.value.trim()
+                          setPendingPlaceDetail(prev => {
+                            const n = new Map(prev)
+                            if (val === (titles.manholes[r.id]?.place_detail ?? '')) n.delete(r.id)
+                            else n.set(r.id, val)
+                            return n
+                          })
+                        }}
+                        placeholder="💬 解説"
+                        style={{ flex: 1, padding: '2px 5px', fontSize: 11, border: `1px solid ${pendingPlaceDetail.has(r.id) ? '#8b5cf6' : '#e5e7eb'}`, borderRadius: 4, color: pendingPlaceDetail.has(r.id) ? '#8b5cf6' : '#6b7280', minWidth: 0, background: 'transparent' }}
+                      />
+                      {pendingPlaceDetail.has(r.id) && (
+                        <button onClick={e => { e.stopPropagation(); clearPendingPlaceDetail(r.id) }} style={{ padding: '0 3px', fontSize: 10, lineHeight: 1.6, background: 'transparent', border: '1px solid #8b5cf6', borderRadius: 3, color: '#8b5cf6', cursor: 'pointer', flexShrink: 0 }} title="クリア">×</button>
+                      )}
                     </div>
-                  ) : null}
+                  </div>
                 </td>
                 <td style={{ fontSize: 12, maxWidth: 200, wordBreak: 'break-all' }}>
                   <div style={{ display: 'flex', alignItems: 'flex-start', gap: 4 }}>

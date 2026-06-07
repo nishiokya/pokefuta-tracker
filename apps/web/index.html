@@ -739,6 +739,7 @@
             </div>
             <h3 class="travel-popup-title">${escapeHtml(d.title || 'ポケふた')}</h3>
             ${d.building ? `<p class="travel-popup-building">📍 ${escapeHtml(d.building)}</p>` : ''}
+            ${d.place_detail ? `<p class="travel-popup-description">${escapeHtml(d.place_detail)}</p>` : ''}
             ${titleBadgesHtml}
             ${photoComment ? `<p class="travel-popup-comment">${escapeHtml(photoComment)}</p>` : ''}
             <div class="travel-popup-pokemon-list" aria-label="登場ポケモン">${pokemonsHtml}</div>
