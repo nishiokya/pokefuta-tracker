@@ -3,12 +3,9 @@ import './styles.css'
 import type { ManholeTitlesJson, PokefutaRecord, SemanticPatch, TaskType } from './semantic/semanticPatch'
 import { loadPokefutaRecords } from './data/loadReadonlyNdjson'
 import { loadTitles, loadSessionPatches, savePatch as savePatchToBackend, savePatches as savePatchesToBackend } from './data/loadSemanticJson'
-import { AssignLocationTagsTask } from './tasks/assignLocationTags/AssignLocationTagsTask'
 import { AddMunicipalityUrlTask } from './tasks/addMunicipalityUrl/AddMunicipalityUrlTask'
 import { VerifyOfficialUrlTask } from './tasks/verifyOfficialUrl/VerifyOfficialUrlTask'
-import { VerifyTitleTask } from './tasks/verifyTitle/VerifyTitleTask'
-import { AssignStationTagsTask } from './tasks/assignStationTags/AssignStationTagsTask'
-import { AssignTourismTagsTask } from './tasks/assignTourismTags/AssignTourismTagsTask'
+import { AssignAllTagsTask } from './tasks/assignAllTags/AssignAllTagsTask'
 import { AdminBulkEditTask } from './tasks/adminBulkEdit/AdminBulkEditTask'
 
 type ActiveTask = 'home' | TaskType
@@ -18,17 +15,13 @@ const TASK_MENU: Array<{ group: string; items: Array<{ id: TaskType; label: stri
     group: '通常作業',
     items: [
       { id: 'add_municipality_url', label: '自治体URLを追加する', icon: '🏛', desc: '市区町村の公式案内ページ' },
-      { id: 'verify_official_url', label: '公式URLを確認する', icon: '🔗', desc: 'official_url フィールド' },
-      { id: 'assign_location_tags', label: '海・湖・離島タグを付ける', icon: '🌊', desc: 'seaside / lakeside / remote_island' },
-      { id: 'assign_station_tags', label: '駅近・駅構内タグを付ける', icon: '🚉', desc: 'in_station / near_station など' },
-      { id: 'assign_tourism_tags', label: '観光地タグを付ける', icon: '🗺', desc: 'tourism / park / museum など' },
-      { id: 'verify_title', label: 'titleを確認する', icon: '✏️', desc: 'confidence / verified_at' },
+      { id: 'assign_all_tags', label: '全タグを付ける', icon: '🏷', desc: '場所・駅・観光 すべてのタグ＋OSM連携・施設名設定' },
     ],
   },
   {
     group: 'Admin',
     items: [
-      { id: 'admin_edit_manhole', label: '特定マンホール編集', icon: '🔧', desc: 'ID指定で直接編集', admin: true },
+      { id: 'verify_official_url', label: '公式URLを確認する', icon: '🔗', desc: 'official_url フィールド', admin: true },
       { id: 'admin_bulk_edit', label: '一括編集', icon: '⚙️', desc: '複数件を条件で一括変更', admin: true },
     ],
   },
@@ -104,20 +97,12 @@ export default function App() {
   function renderTask() {
     if (!titles) return null
     switch (activeTask) {
-      case 'assign_location_tags':
-        return <AssignLocationTagsTask {...commonProps} titles={titles} onSaveMany={handleSavePatches} />
+      case 'assign_all_tags':
+        return <AssignAllTagsTask {...commonProps} titles={titles} onSaveMany={handleSavePatches} />
       case 'add_municipality_url':
         return <AddMunicipalityUrlTask {...commonProps} titles={titles} onSave={handleSavePatch} />
       case 'verify_official_url':
         return <VerifyOfficialUrlTask {...commonProps} titles={titles} onSave={handleSavePatch} />
-      case 'verify_title':
-        return <VerifyTitleTask {...commonProps} titles={titles} onSave={handleSavePatch} />
-      case 'assign_station_tags':
-        return <AssignStationTagsTask {...commonProps} titles={titles} onSaveMany={handleSavePatches} />
-      case 'assign_tourism_tags':
-        return <AssignTourismTagsTask {...commonProps} titles={titles} onSaveMany={handleSavePatches} />
-      case 'admin_edit_manhole':
-        return <AdminSingleEdit records={records} titles={titles} onSave={handleSavePatch} saving={saving} />
       case 'admin_bulk_edit':
         return <AdminBulkEditTask {...commonProps} titles={titles} onSaveMany={handleSavePatches} />
       default:
@@ -236,112 +221,3 @@ function Home({ onSelectTask }: { onSelectTask: (t: ActiveTask) => void }) {
   )
 }
 
-function AdminSingleEdit({
-  records,
-  titles,
-  onSave,
-  saving,
-}: {
-  records: PokefutaRecord[]
-  titles: ManholeTitlesJson
-  onSave: (p: SemanticPatch) => Promise<void>
-  saving: boolean
-}) {
-  const [idInput, setIdInput] = useState('')
-  const [tagInput, setTagInput] = useState('')
-  const [official_url, setOfficialUrl] = useState('')
-  const [building, setBuilding] = useState('')
-  const [saved, setSaved] = useState(false)
-
-  const record = records.find(r => r.id === idInput)
-  const entry = titles.manholes[idInput]
-
-  useEffect(() => {
-    if (entry) {
-      setTagInput((entry.tags ?? []).join(', '))
-      setOfficialUrl(entry.official_url ?? '')
-      setBuilding(entry.building ?? '')
-    } else {
-      setTagInput('')
-      setOfficialUrl('')
-      setBuilding('')
-    }
-    setSaved(false)
-  }, [idInput, entry])
-
-  async function handleSave() {
-    if (!record) return
-    const newTags = tagInput.split(',').map(t => t.trim()).filter(Boolean)
-    const currentTags = entry?.tags ?? []
-    const added = newTags.filter(t => !currentTags.includes(t))
-    const removed = currentTags.filter(t => !newTags.includes(t))
-
-    const id = parseInt(idInput, 10)
-    const patches: SemanticPatch[] = []
-
-    if (added.length > 0) {
-      patches.push({ id: `${Date.now()}-a`, createdAt: new Date().toISOString(), taskType: 'admin_edit_manhole', operation: 'add_tags', target: 'manholes', manholeIds: [id], payload: { tags: added } })
-    }
-    if (removed.length > 0) {
-      patches.push({ id: `${Date.now()}-r`, createdAt: new Date().toISOString(), taskType: 'admin_edit_manhole', operation: 'remove_tags', target: 'manholes', manholeIds: [id], payload: { tags: removed } })
-    }
-    if (official_url !== (entry?.official_url ?? '')) {
-      patches.push({ id: `${Date.now()}-u`, createdAt: new Date().toISOString(), taskType: 'admin_edit_manhole', operation: 'set_official_url', target: 'manholes', manholeIds: [id], payload: { url: official_url } })
-    }
-    if (building !== (entry?.building ?? '')) {
-      patches.push({ id: `${Date.now()}-b`, createdAt: new Date().toISOString(), taskType: 'admin_edit_manhole', operation: 'set_title', target: 'manholes', manholeIds: [id], payload: { building } })
-    }
-
-    for (const p of patches) await onSave(p)
-    setSaved(true)
-  }
-
-  return (
-    <div>
-      <h2 style={{ marginBottom: 16 }}>Admin: 特定マンホール編集</h2>
-      <div style={{ display: 'flex', gap: 12, marginBottom: 20, alignItems: 'flex-end' }}>
-        <label>
-          <div style={{ fontSize: 12, color: '#6b7280', marginBottom: 4 }}>マンホール ID</div>
-          <input
-            type="number"
-            value={idInput}
-            onChange={e => setIdInput(e.target.value)}
-            placeholder="例: 404"
-            style={{ padding: '8px 12px', border: '1px solid #d1d5db', borderRadius: 6, fontSize: 14, width: 120 }}
-          />
-        </label>
-        {record && (
-          <div style={{ fontSize: 13, color: '#6b7280' }}>
-            {record.prefecture} {record.city} / {record.pokemons.join(', ')}
-          </div>
-        )}
-        {idInput && !record && (
-          <div style={{ fontSize: 13, color: '#dc2626' }}>ID が存在しません</div>
-        )}
-      </div>
-
-      {record && (
-        <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 8, padding: 20, maxWidth: 600 }}>
-          <div style={{ marginBottom: 16 }}>
-            <label style={{ fontSize: 12, color: '#6b7280', display: 'block', marginBottom: 4 }}>building</label>
-            <input value={building} onChange={e => setBuilding(e.target.value)} style={{ width: '100%', padding: '8px 10px', border: '1px solid #d1d5db', borderRadius: 4, fontSize: 13 }} />
-          </div>
-          <div style={{ marginBottom: 16 }}>
-            <label style={{ fontSize: 12, color: '#6b7280', display: 'block', marginBottom: 4 }}>tags（カンマ区切り）</label>
-            <input value={tagInput} onChange={e => setTagInput(e.target.value)} style={{ width: '100%', padding: '8px 10px', border: '1px solid #d1d5db', borderRadius: 4, fontSize: 13 }} />
-          </div>
-          <div style={{ marginBottom: 20 }}>
-            <label style={{ fontSize: 12, color: '#6b7280', display: 'block', marginBottom: 4 }}>official_url</label>
-            <input type="url" value={official_url} onChange={e => setOfficialUrl(e.target.value)} style={{ width: '100%', padding: '8px 10px', border: '1px solid #d1d5db', borderRadius: 4, fontSize: 13 }} />
-          </div>
-          <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-            <button className="btn btn-primary" onClick={handleSave} disabled={saving}>
-              {saving ? '保存中…' : '保存'}
-            </button>
-            {saved && <span style={{ color: '#16a34a', fontSize: 13 }}>✓ 保存済み</span>}
-          </div>
-        </div>
-      )}
-    </div>
-  )
-}
