@@ -261,8 +261,8 @@ def compute_titles(manhole: dict, ctx: dict, *, nc50: int, nc100: int) -> list[d
                     results.append(t)
                 break
         else:
-            if (island_entry.get("prefecture") == pref and
-                    island_entry.get("city") == city):
+            if (island_entry.get("prefecture") in (None, pref) and
+                    island_entry.get("city") in (None, city)):
                 if t := _entry("remote_island", island=island_name):
                     results.append(t)
                 break
@@ -338,8 +338,8 @@ def compute_titles(manhole: dict, ctx: dict, *, nc50: int, nc100: int) -> list[d
                     results.append(t)
                 break
         else:
-            if (lake_entry.get("prefecture") == pref and
-                    lake_entry.get("city") == city):
+            if (lake_entry.get("prefecture") in (None, pref) and
+                    lake_entry.get("city") in (None, city)):
                 if t := _entry("lakeside", lake=lake_name):
                     results.append(t)
                 break
