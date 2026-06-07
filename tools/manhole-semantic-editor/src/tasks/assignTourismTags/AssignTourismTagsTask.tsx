@@ -9,7 +9,7 @@ const TAG_LABEL: Record<(typeof TOURISM_TAGS)[number], string> = {
   museum: '🏛 博物館',
   history: '🏯 歴史',
   food: '🍜 グルメ',
-  world_heritage: '🏛 世界遺産',
+  world_heritage: '🏯 世界遺産',
 }
 
 type Props = {

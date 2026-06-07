@@ -2,12 +2,7 @@ import { useState, useMemo } from 'react'
 import type { PokefutaRecord, ManholeTitlesJson, SemanticPatch, OperationType } from '../../semantic/semanticPatch'
 import { generateConfirmationText } from '../../semantic/semanticPatchApplier'
 import { newPatchId } from '../../util'
-
-const VALID_TAGS = [
-  'seaside', 'beach', 'lakeside', 'river', 'remote_island', 'roadside',
-  'in_station', 'station_front', 'near_station', 'rail_access_good', 'far_station',
-  'tourism', 'park', 'museum', 'history', 'food', 'world_heritage',
-]
+import { VALID_TAGS } from '../../semantic/validTags'
 
 type Props = {
   records: PokefutaRecord[]

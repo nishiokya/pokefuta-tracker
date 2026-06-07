@@ -5,6 +5,10 @@ import type { PokefutaRecord, ManholeTitlesJson, SemanticPatch, ManholeEntry, Ta
 import { validatePatch } from '../../semantic/semanticPatchValidator'
 import { newPatchId } from '../../util'
 
+function esc(s: string): string {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+}
+
 const PAGE_SIZE = 10
 
 const PREF_ORDER = [
@@ -134,7 +138,7 @@ export function MapTagsTask({
     pageItems.forEach(r => {
       const marker = L.marker([r.lat, r.lng], { icon: makeIcon('#3b82f6') })
         .addTo(map)
-        .bindPopup(`<b>#${r.id}</b> ${r.prefecture} ${r.city}<br><span style="font-size:11px">${r.address}</span>`)
+        .bindPopup(`<b>#${r.id}</b> ${esc(r.prefecture)} ${esc(r.city)}<br><span style="font-size:11px">${esc(r.address)}</span>`)
         .on('click', () => setSelectedId(id => id === r.id ? null : r.id))
       markersRef.current.set(r.id, marker)
     })
@@ -160,10 +164,10 @@ export function MapTagsTask({
         if (r) {
           const allTags = [...currentTags].sort()
           const tagsHtml = allTags.length > 0
-            ? `<div style="margin-top:5px;display:flex;flex-wrap:wrap;gap:3px">${allTags.map(t => `<span style="background:#f3f4f6;border:1px solid #d1d5db;border-radius:4px;padding:1px 6px;font-size:11px;color:#374151">${t}</span>`).join('')}</div>`
+            ? `<div style="margin-top:5px;display:flex;flex-wrap:wrap;gap:3px">${allTags.map(t => `<span style="background:#f3f4f6;border:1px solid #d1d5db;border-radius:4px;padding:1px 6px;font-size:11px;color:#374151">${esc(t)}</span>`).join('')}</div>`
             : `<div style="margin-top:4px;font-size:11px;color:#9ca3af">タグなし</div>`
           marker.setPopupContent(
-            `<b>#${r.id}</b> ${r.prefecture} ${r.city}<br><span style="font-size:11px">${r.address}</span>${tagsHtml}`
+            `<b>#${r.id}</b> ${esc(r.prefecture)} ${esc(r.city)}<br><span style="font-size:11px">${esc(r.address)}</span>${tagsHtml}`
           )
         }
         marker.openPopup()
