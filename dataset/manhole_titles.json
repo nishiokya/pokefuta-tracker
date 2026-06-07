@@ -1747,33 +1747,48 @@
       ]
     },
     "359": {
+      "building": "オアシスパーク南側入り口",
       "tags": [
         "tourism",
-        "park"
+        "park",
+        "river",
+        "food"
       ]
     },
     "360": {
+      "building": "下呂市観光交流センター「湯めぐり館」",
       "tags": [
-        "tourism"
+        "tourism",
+        "near_station"
       ]
     },
     "361": {
+      "building": "関シティターミナル前",
       "tags": [
         "tourism",
-        "museum"
+        "museum",
+        "near_station",
+        "history"
       ]
     },
     "362": {
+      "building": "関ケ原駅北ポケットパーク",
       "tags": [
         "tourism",
         "museum",
         "history",
-        "park"
+        "park",
+        "near_station"
       ]
     },
     "363": {
+      "building": "飛騨高山にぎわい交流館「大政」",
+      "place_detail": "南側歩道上",
       "tags": [
-        "tourism"
+        "tourism",
+        "near_station",
+        "history",
+        "food"
       ]
     },
     "365": {
