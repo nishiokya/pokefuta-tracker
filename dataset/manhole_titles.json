@@ -591,9 +591,25 @@
         "seaside"
       ]
     },
-    "61": {
+    "59": {
+      "building": "浜益温泉玄関前",
       "tags": [
-        "lakeside"
+        "tourism",
+        "river"
+      ]
+    },
+    "60": {
+      "building": "道と川の駅 花ロードえにわ",
+      "tags": [
+        "roadside"
+      ]
+    },
+    "61": {
+      "building": "洞爺湖畔洞龍の湯付近",
+      "tags": [
+        "lakeside",
+        "park",
+        "tourism"
       ]
     },
     "62": {
@@ -605,8 +621,17 @@
       ]
     },
     "63": {
+      "building": "道の駅 上ノ国もんじゅ",
       "tags": [
-        "seaside"
+        "seaside",
+        "roadside"
+      ]
+    },
+    "64": {
+      "building": "道の駅 羊のまち 侍・しべつ",
+      "tags": [
+        "roadside",
+        "food"
       ]
     },
     "65": {
@@ -617,22 +642,60 @@
     },
     "66": {
       "building": "道の駅 てしお 正面入り口横",
-      "verified_at": "2019-11-29"
+      "verified_at": "2019-11-29",
+      "tags": [
+        "roadside"
+      ]
     },
     "67": {
       "building": "キタカラ敷地内",
       "verified_at": "2019-12-11",
       "tags": [
-        "seaside"
+        "seaside",
+        "station_front",
+        "tourism",
+        "history"
       ]
     },
     "68": {
       "building": "定住支援センター「ふらっと★きた」敷地内",
-      "verified_at": "2019-12-10"
+      "verified_at": "2019-12-10",
+      "tags": [
+        "far_station"
+      ]
     },
     "69": {
+      "building": "紋別市海洋公園",
       "tags": [
-        "seaside"
+        "seaside",
+        "park",
+        "tourism",
+        "roadside"
+      ]
+    },
+    "70": {
+      "building": "道の駅遠軽 森のオホーツク",
+      "tags": [
+        "roadside",
+        "food"
+      ]
+    },
+    "71": {
+      "building": "JR北海道 石北本線 女満別駅の駅前広場の前",
+      "tags": [
+        "station_front"
+      ]
+    },
+    "72": {
+      "building": "新得駅前広場",
+      "tags": [
+        "near_station"
+      ]
+    },
+    "73": {
+      "building": "道の駅あしょろ銀河ホール21",
+      "tags": [
+        "roadside"
       ]
     },
     "75": {
@@ -715,19 +778,38 @@
     },
     "140": {
       "building": "出光カルチャーパーク",
-      "verified_at": "2020-11-02"
+      "verified_at": "2020-11-02",
+      "tags": [
+        "park",
+        "rail_access_good"
+      ]
     },
     "141": {
-      "building": "三笠市立博物館",
-      "verified_at": "2020-11-02"
+      "building": "三笠市立博物館正面玄関",
+      "verified_at": "2020-11-02",
+      "tags": [
+        "museum",
+        "history",
+        "tourism",
+        "park"
+      ]
     },
     "142": {
       "building": "日の出公園",
-      "verified_at": "2020-11-02"
+      "verified_at": "2020-11-02",
+      "tags": [
+        "park",
+        "tourism"
+      ]
     },
     "143": {
-      "building": "絵本の館",
-      "verified_at": "2020-11-02"
+      "building": "剣淵町絵本の館",
+      "verified_at": "2020-11-02",
+      "tags": [
+        "rail_access_good",
+        "park",
+        "museum"
+      ]
     },
     "148": {
       "tags": [
@@ -824,12 +906,59 @@
       "building": "函館公園内旧函館博物館二号前",
       "verified_at": "2021-07-15",
       "tags": [
-        "seaside"
+        "seaside",
+        "park",
+        "rail_access_good",
+        "tourism"
+      ]
+    },
+    "188": {
+      "building": "サンモール一番街",
+      "tags": [
+        "tourism",
+        "food",
+        "rail_access_good"
       ]
     },
     "189": {
       "building": "明治公園内の噴水広場の一角",
-      "verified_at": "2021-07-07"
+      "verified_at": "2021-07-07",
+      "tags": [
+        "history",
+        "park",
+        "tourism"
+      ]
+    },
+    "190": {
+      "building": "登別市観光交流センター「ヌプル」前",
+      "tags": [
+        "tourism",
+        "station_front",
+        "food"
+      ]
+    },
+    "191": {
+      "building": "道の駅ステラほんべつ前",
+      "tags": [
+        "roadside",
+        "tourism",
+        "food"
+      ]
+    },
+    "192": {
+      "building": "道の駅オーロラタウン93りくべつ前",
+      "tags": [
+        "tourism",
+        "park",
+        "food",
+        "roadside"
+      ]
+    },
+    "193": {
+      "building": "中標津町総合体育館330°アリーナ",
+      "tags": [
+        "park"
+      ]
     },
     "194": {
       "tags": [
@@ -869,24 +998,75 @@
         "seaside"
       ]
     },
-    "217": {
-      "building": "道の駅「流氷街道網走」",
+    "214": {
+      "building": "道の駅あさひかわ",
       "tags": [
-        "seaside"
+        "roadside",
+        "rail_access_good",
+        "tourism",
+        "food"
+      ]
+    },
+    "215": {
+      "building": "道の駅阿寒丹頂の里クレインズテラス",
+      "tags": [
+        "roadside",
+        "tourism",
+        "food"
+      ]
+    },
+    "216": {
+      "building": "帯広駅北口広場",
+      "tags": [
+        "station_front",
+        "tourism",
+        "food"
+      ]
+    },
+    "217": {
+      "building": "道の駅流氷街道網走",
+      "tags": [
+        "seaside",
+        "roadside",
+        "tourism",
+        "food",
+        "near_station"
       ]
     },
     "218": {
-      "building": "道の駅あかいがわ敷地内",
-      "verified_at": "2021-11-13"
+      "building": "道の駅あかいがわ",
+      "verified_at": "2021-11-13",
+      "tags": [
+        "roadside",
+        "food",
+        "river"
+      ]
+    },
+    "219": {
+      "building": "東川町複合交流施設せんとぴゅあ2",
+      "tags": [
+        "tourism",
+        "food"
+      ]
     },
     "220": {
+      "building": "道の駅うとろ・シリエトク",
       "tags": [
-        "world_heritage"
+        "world_heritage",
+        "roadside",
+        "seaside",
+        "history",
+        "tourism",
+        "park",
+        "food"
       ]
     },
     "221": {
+      "building": "えりも町灯台公園",
       "tags": [
-        "seaside"
+        "seaside",
+        "park",
+        "tourism"
       ]
     },
     "229": {
@@ -1098,8 +1278,14 @@
       "confidence": 2
     },
     "278": {
-      "building": "北欧の風 道の駅とうべつ",
-      "verified_at": "2022-11-07"
+      "building": "北欧の風道の駅とうべつ",
+      "verified_at": "2022-11-07",
+      "tags": [
+        "rail_access_good",
+        "tourism",
+        "roadside",
+        "food"
+      ]
     },
     "282": {
       "tags": [
@@ -1225,16 +1411,56 @@
         "park"
       ]
     },
-    "306": {
+    "302": {
+      "building": "えみらん（DENZAI環境科学館・図書館）",
       "tags": [
-        "seaside"
+        "seaside",
+        "rail_access_good",
+        "museum"
+      ]
+    },
+    "303": {
+      "building": "道の駅おんねゆ温泉",
+      "tags": [
+        "roadside",
+        "food",
+        "tourism",
+        "river"
+      ]
+    },
+    "304": {
+      "building": "道の駅うたしないチロルの湯",
+      "tags": [
+        "river",
+        "tourism",
+        "food",
+        "roadside"
+      ]
+    },
+    "305": {
+      "building": "道の駅みそぎの郷きこない",
+      "tags": [
+        "station_front",
+        "roadside",
+        "tourism",
+        "food"
+      ]
+    },
+    "306": {
+      "building": "道の駅さるふつ公園",
+      "tags": [
+        "seaside",
+        "roadside",
+        "park"
       ]
     },
     "307": {
       "building": "美幌駅前",
       "verified_at": "2023-06-05",
       "tags": [
-        "station_front"
+        "station_front",
+        "tourism",
+        "food"
       ]
     },
     "308": {
@@ -1308,6 +1534,14 @@
     "320": {
       "tags": [
         "seaside"
+      ]
+    },
+    "324": {
+      "building": "ホテル ラヴニール・",
+      "tags": [
+        "station_front",
+        "food",
+        "history"
       ]
     },
     "327": {
@@ -1772,16 +2006,68 @@
         "seaside"
       ]
     },
+    "438": {
+      "building": "定山渓観光案内所",
+      "tags": [
+        "tourism",
+        "food",
+        "river"
+      ]
+    },
     "439": {
       "building": "砂川市まちなか交流施設すないる",
-      "verified_at": "2025-10-26"
+      "verified_at": "2025-10-26",
+      "tags": [
+        "near_station",
+        "tourism"
+      ]
     },
     "440": {
-      "building": "文化交流館ふれーる"
+      "building": "文化交流館ふれーる",
+      "tags": [
+        "tourism",
+        "museum",
+        "near_station"
+      ]
+    },
+    "441": {
+      "building": "道の駅あっさぶ",
+      "tags": [
+        "roadside",
+        "tourism",
+        "food"
+      ]
+    },
+    "442": {
+      "building": "ほろのべトナカイ観光牧場",
+      "tags": [
+        "tourism",
+        "park"
+      ]
+    },
+    "443": {
+      "building": "つべつ木材工芸館 キノス",
+      "tags": [
+        "tourism",
+        "park"
+      ]
+    },
+    "444": {
+      "building": "道の駅かみゆうべつ温泉チューリップの湯",
+      "tags": [
+        "roadside",
+        "tourism",
+        "park",
+        "food"
+      ]
     },
     "445": {
+      "building": "道の駅おだいとう",
       "tags": [
-        "seaside"
+        "seaside",
+        "roadside",
+        "tourism",
+        "food"
       ]
     },
     "446": {
