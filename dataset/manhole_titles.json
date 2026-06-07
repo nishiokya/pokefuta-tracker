@@ -596,22 +596,26 @@
     },
     "35": {
       "tags": [
-        "seaside"
+        "seaside",
+        "remote_island"
       ]
     },
     "36": {
       "tags": [
-        "seaside"
+        "seaside",
+        "remote_island"
       ]
     },
     "37": {
       "tags": [
-        "seaside"
+        "seaside",
+        "remote_island"
       ]
     },
     "39": {
       "tags": [
-        "seaside"
+        "seaside",
+        "remote_island"
       ]
     },
     "44": {
@@ -901,22 +905,26 @@
     },
     "153": {
       "tags": [
-        "seaside"
+        "seaside",
+        "remote_island"
       ]
     },
     "154": {
       "tags": [
-        "seaside"
+        "seaside",
+        "remote_island"
       ]
     },
     "155": {
       "tags": [
-        "seaside"
+        "seaside",
+        "remote_island"
       ]
     },
     "156": {
       "tags": [
-        "seaside"
+        "seaside",
+        "remote_island"
       ]
     },
     "157": {
@@ -956,13 +964,15 @@
     },
     "174": {
       "tags": [
-        "world_heritage"
+        "world_heritage",
+        "remote_island"
       ]
     },
     "175": {
       "tags": [
         "seaside",
-        "world_heritage"
+        "world_heritage",
+        "remote_island"
       ]
     },
     "187": {
@@ -1135,38 +1145,45 @@
     "229": {
       "tags": [
         "seaside",
-        "world_heritage"
+        "world_heritage",
+        "remote_island"
       ]
     },
     "231": {
       "tags": [
-        "seaside"
+        "seaside",
+        "remote_island"
       ]
     },
     "232": {
       "tags": [
-        "seaside"
+        "seaside",
+        "remote_island"
       ]
     },
     "233": {
       "tags": [
         "seaside",
-        "world_heritage"
+        "world_heritage",
+        "remote_island"
       ]
     },
     "234": {
       "tags": [
-        "seaside"
+        "seaside",
+        "remote_island"
       ]
     },
     "235": {
       "tags": [
-        "seaside"
+        "seaside",
+        "remote_island"
       ]
     },
     "236": {
       "tags": [
-        "seaside"
+        "seaside",
+        "remote_island"
       ]
     },
     "240": {
@@ -1732,7 +1749,8 @@
     },
     "358": {
       "tags": [
-        "seaside"
+        "seaside",
+        "remote_island"
       ]
     },
     "359": {
@@ -1798,7 +1816,8 @@
     },
     "381": {
       "tags": [
-        "seaside"
+        "seaside",
+        "remote_island"
       ]
     },
     "383": {
@@ -2006,22 +2025,26 @@
     },
     "422": {
       "tags": [
-        "seaside"
+        "seaside",
+        "remote_island"
       ]
     },
     "423": {
       "tags": [
-        "seaside"
+        "seaside",
+        "remote_island"
       ]
     },
     "424": {
       "tags": [
-        "seaside"
+        "seaside",
+        "remote_island"
       ]
     },
     "425": {
       "tags": [
-        "seaside"
+        "seaside",
+        "remote_island"
       ]
     },
     "427": {
@@ -2031,7 +2054,8 @@
     },
     "428": {
       "tags": [
-        "seaside"
+        "seaside",
+        "remote_island"
       ]
     },
     "429": {
@@ -2135,7 +2159,8 @@
     },
     "446": {
       "tags": [
-        "world_heritage"
+        "world_heritage",
+        "remote_island"
       ]
     },
     "448": {
@@ -2172,6 +2197,21 @@
     "474": {
       "tags": [
         "seaside"
+      ]
+    },
+    "176": {
+      "tags": [
+        "remote_island"
+      ]
+    },
+    "177": {
+      "tags": [
+        "remote_island"
+      ]
+    },
+    "230": {
+      "tags": [
+        "remote_island"
       ]
     }
   },
