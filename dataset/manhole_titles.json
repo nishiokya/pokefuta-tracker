@@ -975,6 +975,16 @@
         "remote_island"
       ]
     },
+    "176": {
+      "tags": [
+        "remote_island"
+      ]
+    },
+    "177": {
+      "tags": [
+        "remote_island"
+      ]
+    },
     "187": {
       "building": "函館公園内旧函館博物館二号前",
       "verified_at": "2021-07-15",
@@ -1146,6 +1156,11 @@
       "tags": [
         "seaside",
         "world_heritage",
+        "remote_island"
+      ]
+    },
+    "230": {
+      "tags": [
         "remote_island"
       ]
     },
@@ -2197,21 +2212,6 @@
     "474": {
       "tags": [
         "seaside"
-      ]
-    },
-    "176": {
-      "tags": [
-        "remote_island"
-      ]
-    },
-    "177": {
-      "tags": [
-        "remote_island"
-      ]
-    },
-    "230": {
-      "tags": [
-        "remote_island"
       ]
     }
   },
