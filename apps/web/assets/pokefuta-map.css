@@ -196,7 +196,7 @@ body.pokefuta-map-page {
 }
 
 .pokefuta-map-page .controls-content {
-  padding: 12px 16px calc(18px + env(safe-area-inset-bottom));
+  padding: 8px 12px calc(14px + env(safe-area-inset-bottom));
   overflow-y: auto;
   overscroll-behavior: contain;
 }
@@ -206,12 +206,16 @@ body.pokefuta-map-page {
 .pokefuta-map-page .sheet-utility-section {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 12px;
+  gap: 6px;
+  padding: 10px;
   border: 1px solid rgba(116, 82, 38, .15);
   border-radius: 14px;
   background: rgba(255, 253, 246, .82);
   box-shadow: 0 4px 14px rgba(80, 54, 20, .07);
+}
+
+.pokefuta-map-page .sheet-explore-section {
+  margin-bottom: 8px;
 }
 
 .pokefuta-map-page .sheet-utility-section {
@@ -376,7 +380,7 @@ body.pokefuta-map-page {
 }
 
 .pokefuta-map-page .section-title-row {
-  margin: 16px 2px 10px;
+  margin: 10px 2px 6px;
 }
 
 .pokefuta-map-page .section-title-row h4 {
@@ -407,8 +411,8 @@ body.pokefuta-map-page {
 }
 
 .pokefuta-map-page .prefecture-directory {
-  margin: 14px 0 2px;
-  padding: 12px;
+  margin: 10px 0 2px;
+  padding: 10px;
   border: 1px solid rgba(116, 82, 38, .15);
   border-radius: 14px;
   background: rgba(255, 253, 246, .76);
@@ -1403,28 +1407,69 @@ body.pokefuta-map-page {
 
 /* タグディレクトリ */
 .tag-directory {
-  padding: 16px 16px 8px;
+  padding: 10px 10px 6px;
   border-bottom: 1px solid #f1f5f9;
+}
+
+.tag-directory-desc {
+  margin: 0 2px 4px;
+  color: #4a3e30;
+  font-size: .84rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.tag-directory-subdesc {
+  margin: 0 2px 8px;
+  color: #7a6e64;
+  font-size: .72rem;
+  font-weight: 650;
+  line-height: 1.5;
 }
 
 .tag-directory-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 7px;
+}
+
+.tag-directory-chips--secondary {
+  margin-top: 6px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(116, 82, 38, .1);
+}
+
+.tag-directory-toggle-btn {
+  display: block;
+  width: 100%;
   margin-top: 8px;
+  padding: 6px 0;
+  border: 0;
+  border-radius: 8px;
+  background: rgba(118, 84, 170, .07);
+  color: #6344a0;
+  font: inherit;
+  font-size: .78rem;
+  font-weight: 800;
+  text-align: center;
+  cursor: pointer;
+}
+
+.tag-directory-toggle-btn:hover {
+  background: rgba(118, 84, 170, .13);
 }
 
 .tag-chip {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 5px 14px;
+  padding: 5px 12px;
   border-radius: 999px;
   border: 1.5px solid #c4b5d4;
   background: #f8f4ff;
   color: #4b3a6e;
   cursor: pointer;
-  font-size: 0.85rem;
+  font-size: 0.83rem;
   line-height: 1.4;
   transition: background 0.15s, border-color 0.15s, color 0.15s;
 }
@@ -1441,7 +1486,12 @@ body.pokefuta-map-page {
 }
 
 .tag-chip .tag-count {
-  font-size: 0.75rem;
+  font-size: 0.73rem;
   opacity: 0.75;
   margin-left: 2px;
+}
+
+.tag-directory-chips--secondary .tag-chip {
+  opacity: 0.82;
+  font-size: 0.78rem;
 }
