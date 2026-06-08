@@ -1438,6 +1438,7 @@ body.pokefuta-map-page {
   padding-top: 8px;
   border-top: 1px solid rgba(116, 82, 38, .1);
 }
+.tag-directory-chips[hidden] { display: none; }
 
 .tag-directory-toggle-btn {
   display: block;
