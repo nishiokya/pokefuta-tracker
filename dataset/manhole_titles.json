@@ -831,7 +831,10 @@
       ]
     },
     "91": {
-      "building": "道の駅なみえ"
+      "building": "道の駅なみえ",
+      "tags": [
+        "roadside"
+      ]
     },
     "92": {
       "building": "道の駅ならは",
@@ -1484,7 +1487,7 @@
       "confidence": 2
     },
     "273": {
-      "building": "道の駅とよはし",
+      "building": "豊橋総合動植物公園中央門",
       "address_raw": "愛知県豊橋市",
       "address_norm": "愛知県豊橋市",
       "prefecture": "愛知県",
@@ -1494,13 +1497,14 @@
         "pokemon_lid",
         "city_level_address",
         "food",
-        "far_station",
-        "roadside"
+        "park",
+        "museum",
+        "rail_access_good"
       ],
       "confidence": 2
     },
     "274": {
-      "building": "豊橋総合動植物公園中央門",
+      "building": "道の駅とよはし",
       "address_raw": "愛知県豊橋市",
       "address_norm": "愛知県豊橋市",
       "prefecture": "愛知県",
@@ -1512,8 +1516,9 @@
         "park",
         "tourism",
         "museum",
+        "roadside",
         "food",
-        "rail_access_good"
+        "far_station"
       ],
       "confidence": 2
     },
