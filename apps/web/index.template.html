@@ -24,6 +24,12 @@
   <link rel="alternate" hreflang="zh-Hans" href="https://data.pokefuta.com/zh-CN/">
   <link rel="alternate" hreflang="ko"      href="https://data.pokefuta.com/ko/">
   <link rel="alternate" hreflang="x-default" href="https://data.pokefuta.com/">
+  <link rel="alternate" hreflang="ja"      href="https://data.pokefuta.com/">
+  <link rel="alternate" hreflang="en"      href="https://data.pokefuta.com/en/">
+  <link rel="alternate" hreflang="zh-TW"   href="https://data.pokefuta.com/zh-TW/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://data.pokefuta.com/zh-CN/">
+  <link rel="alternate" hreflang="ko"      href="https://data.pokefuta.com/ko/">
+  <link rel="alternate" hreflang="x-default" href="https://data.pokefuta.com/">
   <script>
     // i18n: build-time injected per language
     window.I18N = %%I18N_OBJECT%%;
@@ -40,35 +46,7 @@
       '佐賀県': '41', '長崎県': '42', '熊本県': '43', '大分県': '44', '宮崎県': '45',
       '鹿児島県': '46', '沖縄県': '47'
     });
-    window.SITE_ROOT_URL = 'https://data.pokefuta.com/';
-    window.SITE_BASE_URL = '%%CANONICAL_URL%%';
-    window.PREFECTURE_NAMES = %%PREFECTURE_NAMES_JSON%%;
-
-    (function () {
-      const _langMap = {'zh-CN': 'zh-Hans', 'zh-TW': 'zh-Hant'};
-      const _lang = (window.I18N && window.I18N.lang) || 'ja';
-      const _key = _langMap[_lang] || _lang;
-
-      window.translatePref = function (jaName) {
-        if (!jaName || _lang === 'ja') return jaName;
-        return (window.PREFECTURE_NAMES[jaName] || {})[_key] || jaName;
-      };
-
-      window.getPokemonDisplayName = function (jaName) {
-        if (_lang === 'ja') return jaName;
-        // getPokemonMetadata is a hoisted function declaration; called after loadPokemonMetadata()
-        const meta = getPokemonMetadata(jaName);
-        return (meta && meta.names[_key]) || jaName;
-      };
-    })();
-
-    window.getPokemonLpUrl = function(jaName) {
-      const meta = getPokemonMetadata(jaName);
-      if (!meta || !meta.slug) return null;
-      const lang = (window.I18N && window.I18N.lang) || 'ja';
-      const prefix = lang === 'ja' ? '' : lang + '/';
-      return `${window.SITE_ROOT_URL}${prefix}pokemon/${meta.slug}/`;
-    };
+    window.SITE_BASE_URL = 'https://data.pokefuta.com/';
 
     window.resolvePrefectureParam = function(prefParam) {
       if (!prefParam) return '';
@@ -80,15 +58,14 @@
 
     window.buildPrefecturePageMeta = function(prefecture) {
       const I = window.I18N;
-      const prefDisplay = translatePref(prefecture);
-      const title = prefDisplay
-        ? `${prefDisplay}${I.prefTitleSuffix}`
+      const title = prefecture
+        ? `${prefecture}${I.prefTitleSuffix}`
         : I.defaultTitle;
-      const description = prefDisplay
-        ? `${I.prefDescPrefix}${prefDisplay}${I.prefDescSuffix}`
+      const description = prefecture
+        ? `${I.prefDescPrefix}${prefecture}${I.prefDescSuffix}`
         : I.defaultDescription;
-      const keywords = prefDisplay
-        ? `${I.prefKeywordsPrefix}${prefDisplay}${I.prefKeywordsSuffix}`
+      const keywords = prefecture
+        ? `${I.prefKeywordsPrefix}${prefecture}${I.prefKeywordsSuffix}`
         : I.defaultKeywords;
       const canonicalUrl = prefecture
         ? `${window.SITE_BASE_URL}?pref=${encodeURIComponent(prefecture)}`
@@ -110,11 +87,11 @@
     };
 
     window.buildCanonicalPath = function(prefecture) {
-      return prefecture ? `?pref=${encodeURIComponent(prefecture)}` : './';
+      return prefecture ? `/?pref=${encodeURIComponent(prefecture)}` : '/';
     };
 
     window.buildManholeCanonicalPath = function(manholeId) {
-      return manholeId ? `?manhole=${encodeURIComponent(manholeId)}` : './';
+      return manholeId ? `/?manhole=${encodeURIComponent(manholeId)}` : '/';
     };
 
     window.applyManholePageMeta = function(manhole) {
@@ -137,34 +114,32 @@
 
       if (pokemons.length > 0) {
         if (pokemons.length === 1) {
-          pokemonText = getPokemonDisplayName(pokemons[0]);
+          pokemonText = pokemons[0];
           const meta = getPokemonMetadata(pokemons[0]);
           if (meta && meta.names) {
             pokemonTextEn = meta.names.en;
           }
         } else {
-          pokemonText = pokemons.map(n => getPokemonDisplayName(n)).join(window.I18N.pokemonJoiner || '・');
+          pokemonText = pokemons.join('・');
         }
       }
 
       // title: {ポケモン名}のポケふた | {都道府県}{市区町村} | Pokefuta Map
-      const prefDisplay = translatePref(prefecture);
-      const locationPart = prefDisplay && city
-        ? `${prefDisplay}${city}`
-        : prefDisplay || '';
+      const locationPart = prefecture && city
+        ? `${prefecture}${city}`
+        : prefecture || '';
       const title = locationPart
         ? `${pokemonText}${I.manholeTitleInfix}${locationPart} | Pokefuta Map`
         : `${pokemonText}${I.manholeTitleInfix}Pokefuta Map`;
 
-      const placeText = prefDisplay && city ? `${prefDisplay}${city}` : (prefDisplay || '');
-      const pokemonWithEn = pokemonTextEn && pokemonTextEn !== pokemonText ? `${pokemonText}（${pokemonTextEn}）` : pokemonText;
+      const placeText = prefecture && city ? `${prefecture}${city}` : (prefecture || '');
+      const pokemonWithEn = pokemonTextEn ? `${pokemonText}（${pokemonTextEn}）` : pokemonText;
       const description = placeText
         ? I.manholeDescTemplate.replace('{place}', placeText).replace('{pokemon}', pokemonWithEn)
         : I.manholeDescNoPlaceTemplate.replace('{pokemon}', pokemonWithEn);
 
       const keywordParts = [I.baseKeyword];
       if (prefecture) keywordParts.push(prefecture);
-      if (prefDisplay && prefDisplay !== prefecture) keywordParts.push(prefDisplay);
       if (city) keywordParts.push(city);
 
       pokemons.forEach(nameJa => {
@@ -259,7 +234,8 @@
         'address': {
           '@type': 'PostalAddress',
           'addressRegion': manhole.prefecture || '',
-          'addressLocality': manhole.city || ''
+          'addressLocality': manhole.city || '',
+          'streetAddress': ''
         },
         'url': `${window.SITE_BASE_URL}?manhole=${encodeURIComponent(manhole.id)}`
       };
@@ -357,9 +333,30 @@
     <section class="map-hero-card" aria-labelledby="hero-title">
       <h1 id="hero-title">%%HERO_TITLE%%</h1>
       <p>%%HERO_SUBTITLE%%</p>
-<a href="%%POKEMON_LP_HREF%%" class="hero-pokemon-link" onclick="if(window.trackEvent){window.trackEvent('click_pokemon_lp_hero',{event_category:'navigation',event_label:'hero_card'})}">%%POPULAR_LINK%%</a>
+      <a href="/pokemon/" class="hero-pokemon-link" onclick="if(window.trackEvent){window.trackEvent('click_pokemon_lp_hero',{event_category:'navigation',event_label:'hero_card'})}">好きなポケモンのポケふたを探す →</a>
+      <a id="i18n-notice" href="" hidden
+         style="display:block; margin-top:8px; padding-top:8px; border-top:1px solid rgba(110,80,44,.12); font-size:0.78rem; font-weight:700; color:#4a7c59; text-decoration:none;"
+      ></a>
     </section>
   </main>
+  <script>
+  (function () {
+    var lang = (navigator.languages && navigator.languages[0]) || navigator.language || '';
+    if (/^ja/i.test(lang)) return;
+    var map = [
+      { re: /^zh-(tw|hant|hk)/i, path: '/zh-TW/', label: '查看繁體中文版 →' },
+      { re: /^zh/i,           path: '/zh-CN/', label: '查看简体中文版 →' },
+      { re: /^ko/i,           path: '/ko/',    label: '한국어로 보기 →' },
+      { re: /^en/i,           path: '/en/',    label: 'View in English →' },
+    ];
+    var entry = map.find(function (m) { return m.re.test(lang); }) || map[3];
+    var el = document.getElementById('i18n-notice');
+    if (!el) return;
+    el.href = entry.path;
+    el.textContent = entry.label;
+    el.removeAttribute('hidden');
+  })();
+  </script>
 
   <div id="controls" class="bottom-sheet" role="complementary" aria-labelledby="page-title">
     <span id="page-title" class="sr-only">%%PANEL_TITLE%%</span>
@@ -369,23 +366,42 @@
       </button>
     </div>
     <div id="controls-content" class="controls-content" role="region" aria-label="%%PANEL_CONTENT_ARIA%%">
-      <div class="sheet-summary-card">
-        <div class="sheet-action-grid" aria-label="%%EXPLORE_MENU_ARIA%%">
-          <button type="button" id="prefecture-open-button" class="sheet-action-btn">
-            <img src="%%BASE_PATH%%assets/icon-map.svg" alt="" aria-hidden="true">
-            %%PREF_BUTTON_LABEL%%
+      <div class="sheet-explore-section">
+        <p class="sheet-section-label">探す</p>
+        <button type="button" id="prefecture-open-button" class="sheet-primary-btn" aria-pressed="false">
+          <img src="%%BASE_PATH%%assets/icon-map.svg" alt="" aria-hidden="true">
+          都道府県から探す
+        </button>
+        <button type="button" id="feature-open-button" class="sheet-secondary-btn" aria-pressed="false">
+          <img src="./assets/icon-tag.svg" alt="" aria-hidden="true">
+          テーマで絞り込む
+        </button>
+      </div>
+      <div class="sheet-utility-section">
+        <p class="sheet-section-label">便利機能</p>
+        <div class="sheet-utility-btns">
+          <button type="button" id="locate-button" class="sheet-utility-btn">
+            <img src="%%BASE_PATH%%assets/icon-current-location.svg" alt="" aria-hidden="true">
+            <span id="locate-button-label">現在地から近いポケふたを探す</span>
           </button>
-          <label class="sheet-action-btn sheet-action-btn--toggle" for="recent-toggle">
+          <label class="sheet-utility-btn sheet-utility-btn--toggle" for="recent-toggle">
             <input type="checkbox" id="recent-toggle" />
             <img src="%%BASE_PATH%%assets/icon-fire.svg" alt="" aria-hidden="true">
-            %%RECENT_BUTTON_LABEL%%
+            新着ポケふたを見る
           </label>
-          <button type="button" id="locate-button" class="sheet-action-btn">
-            <img src="%%BASE_PATH%%assets/icon-current-location.svg" alt="" aria-hidden="true">
-            <span id="locate-button-label">%%LOCATE_LABEL%%</span>
-          </button>
         </div>
+        <p class="sheet-locate-desc">現在地を使って、近くのポケふたを距離順に表示します。位置情報は検索のためだけに使用します。</p>
       </div>
+      <section class="tag-directory" aria-labelledby="tag-directory-heading" hidden>
+        <div class="section-title-row">
+          <h2 id="tag-directory-heading">テーマでポケふた巡り</h2>
+        </div>
+        <p class="tag-directory-desc">道の駅・世界遺産・離島・海沿いなど、旅の目的になるポケふたをテーマ別に探せます。</p>
+        <p class="tag-directory-subdesc">タグをタップすると地図上の表示を絞り込みます。もう一度タップで解除。</p>
+        <div id="tag-directory-chips" class="tag-directory-chips" aria-label="テーマ別タグ"></div>
+        <div id="tag-directory-more" class="tag-directory-chips tag-directory-chips--secondary" aria-label="その他のテーマタグ" hidden></div>
+        <button type="button" id="tag-directory-toggle" class="tag-directory-toggle-btn" aria-expanded="false" aria-controls="tag-directory-more" hidden>もっと見る</button>
+      </section>
       <section class="prefecture-directory" aria-labelledby="prefecture-directory-heading">
         <div class="section-title-row">
           <h2 id="prefecture-directory-heading">%%PREF_DIR_HEADING%%</h2>
@@ -417,18 +433,31 @@
           <div id="prefecture-spots-list" class="prefecture-spots-list"></div>
         </section>
         <div id="prefecture-table-wrapper" class="prefecture-card-list" aria-describedby="pref-table-desc">
-          <p id="pref-table-desc" class="sr-only">%%PREF_TABLE_DESC%%</p>
+          <p id="pref-table-desc" class="sr-only">都道府県ごとのポケふた数と公式サイトリンク</p>
           <div id="prefecture-table-body"></div>
         </div>
       </div>
       <span id="recent-summary" class="sr-only"></span>
     </div>
   </div>
-  <nav aria-label="%%POPULAR_NAV_ARIA%%" style="margin:16px auto 0; max-width:960px; padding:12px 16px; background:#fff8ec; border-radius:8px; border:1px solid #e8e0d0;">
-    <p style="font-size:0.85rem; font-weight:bold; color:#6F55A3; margin:0 0 4px;">%%POPULAR_HEADING%%</p>
-    <p style="margin:0 0 8px;"><a href="/pokemon/" style="font-size:0.85rem; color:#6F55A3; font-weight:bold;">%%POPULAR_LINK%%</a></p>
+  <nav aria-label="人気のポケモン" style="margin:16px auto 0; max-width:960px; padding:12px 16px; background:#fff8ec; border-radius:8px; border:1px solid #e8e0d0;">
+    <p style="font-size:0.85rem; font-weight:bold; color:#6F55A3; margin:0 0 4px;">人気のポケモン</p>
+    <p style="margin:0 0 8px;"><a href="/pokemon/" style="font-size:0.85rem; color:#6F55A3; font-weight:bold;">好きなポケモンのポケふたを探す →</a></p>
     <ul style="list-style:none; display:flex; flex-wrap:wrap; gap:8px; margin:0; padding:0;">
-%%POPULAR_ITEMS%%
+      <li><a href="/pokemon/chansey/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">ラッキー</a></li>
+      <li><a href="/pokemon/lapras/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">ラプラス</a></li>
+      <li><a href="/pokemon/vulpix-alola/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">アローラロコン</a></li>
+      <li><a href="/pokemon/oshawott/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">ミジュマル</a></li>
+      <li><a href="/pokemon/vulpix/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">ロコン</a></li>
+      <li><a href="/pokemon/geodude/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">イシツブテ</a></li>
+      <li><a href="/pokemon/quagsire/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">ヌオー</a></li>
+      <li><a href="/pokemon/exeggutor/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">ナッシー</a></li>
+      <li><a href="/pokemon/dragonite/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">カイリュー</a></li>
+      <li><a href="/pokemon/slowpoke/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">ヤドン</a></li>
+      <li><a href="/pokemon/sandshrew/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">サンド</a></li>
+      <li><a href="/pokemon/pikachu/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">ピカチュウ</a></li>
+      <li><a href="/pokemon/eevee/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">イーブイ</a></li>
+      <li><a href="/pokemon/snorlax/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">カビゴン</a></li>
     </ul>
   </nav>
 
@@ -510,7 +539,6 @@
     var cityCounts = {};
     var selectedPrefecture = '';
     var pokemonCounts = {};
-    var selectedPokemons = [];
     var currentTab = 'prefecture';
     var filterRecent = false; // recent 30 days filter
     var showPrefectureCards = true;
@@ -521,6 +549,30 @@
     const PREFECTURE_BOUNDS_OFFSET = 0.5;  // 都道府県 bounding box のオフセット（度）
     const OVERALL_PANEL_MEDIA_QUERY = '(max-width: 759px)';
     var isInitialPageLoad = true;  // Track if this is initial page load to prevent duplicate page_views
+    var activeTagFilter = null;  // タグフィルタ（null = 全件）
+    var showTagDirectory = false;
+    const TAG_DIRECTORY_MIN_COUNT = 5;  // この件数未満のタグはチップに表示しない
+    const TAG_PRIORITY = ['roadside', 'world_heritage', 'remote_island', 'seaside', 'tourism', 'station_front', 'food', 'museum', 'history', 'rail_access_good'];
+
+    const TAG_META = {
+      seaside:          { emoji: '🌊', label: '海沿い' },
+      beach:            { emoji: '🏖', label: 'ビーチ' },
+      lakeside:         { emoji: '🌅', label: '湖畔' },
+      river:            { emoji: '🏞', label: '川辺' },
+      remote_island:    { emoji: '🏝', label: '離島' },
+      roadside:         { emoji: '🛤', label: '道の駅' },
+      in_station:       { emoji: '🚉', label: '駅構内' },
+      station_front:    { emoji: '🚃', label: '駅前' },
+      near_station:     { emoji: '🚶', label: '駅近' },
+      rail_access_good: { emoji: '🚆', label: '電車アクセス良好' },
+      far_station:      { emoji: '🚗', label: '駅から遠い' },
+      tourism:          { emoji: '🗺', label: '観光地' },
+      park:             { emoji: '🌳', label: '公園' },
+      museum:           { emoji: '🏛', label: '博物館・美術館' },
+      history:          { emoji: '⛩', label: '史跡・名所' },
+      food:             { emoji: '🍜', label: 'グルメ・食の名所' },
+      world_heritage:   { emoji: '🌐', label: '世界遺産' },
+    };
 
     function getOverallPanelMediaQuery() {
       return typeof window.matchMedia === 'function'
@@ -569,10 +621,20 @@
       }
     }
 
+    // ==== セカンダリタグ（バッジ変換なし・popup はアイコンのみ表示） ====
+    // TAG_META から自動生成（単一ソース管理）
+    const SECONDARY_TAG_KEYS = ['tourism','park','museum','history','food','rail_access_good','river','in_station'];
+    const SECONDARY_TAG_EMOJI = Object.freeze(Object.fromEntries(
+      SECONDARY_TAG_KEYS.map(k => [k, TAG_META[k]?.emoji]).filter(([,v]) => v)
+    ));
+    const SECONDARY_TAG_LABEL = Object.freeze(Object.fromEntries(
+      SECONDARY_TAG_KEYS.map(k => [k, TAG_META[k]?.label]).filter(([,v]) => v)
+    ));
+
+    // UI labels: sourced from build-time injected window.I18N.UI
     const UI_TEXT = window.I18N.UI;
 
-    // 初期テキストは既に HTML に記述しているため updateUIText は不要
-    function updateUIText() { /* no-op (多言語削除) */ }
+    function updateUIText() { /* no-op */ }
 
     // Validate prefecture site URL (whitelist check)
     function validatePrefectureSiteUrl(rawUrl) {
@@ -652,24 +714,10 @@
       img.remove();
     }
 
-    function translateTitle(t, manhole) {
-      const I = window.I18N;
-      const tmpl = I.titleLabels && I.titleLabels[t.key];
-      if (!tmpl) return t.label;
-      const mNum = t.label.match(/[（(](?:全国|全國)?(\d+)(?:枚|個|개)[）)]/);
-      const mParen = t.label.match(/[（(]([^）)]+)[）)]/);
-      return tmpl
-        .replace('{city}', (manhole && manhole.city) || '')
-        .replace('{prefecture}', translatePref((manhole && manhole.prefecture) || ''))
-        .replace('{count}', mNum ? mNum[1] : '?')
-        .replace('{island}', mParen ? mParen[1] : '')
-        .replace('{lake}', mParen ? mParen[1] : '');
-    }
-
     function buildPokefutaPopup(d) {
       const I = window.I18N;
-      const prefecture = translatePref(d.prefecture) || I.unknownPref;
-      const prefectureCode = window.PREFECTURE_CODE_MAP[d.prefecture] || '--';
+      const prefecture = d.prefecture || I.unknownPref;
+      const prefectureCode = window.PREFECTURE_CODE_MAP[prefecture] || '--';
       const pokemons = Array.isArray(d.pokemons) && d.pokemons.length ? d.pokemons : [];
       const pokemonsHtml = pokemons.length
         ? pokemons.map(pokemon => {
@@ -694,8 +742,16 @@
       const titleBadgesHtml = titles.length
         ? '<div class="travel-popup-badges">'
           + titles.map(t => '<span class="travel-popup-badge">'
-            + escapeHtml((t.emoji ? t.emoji + ' ' : '') + translateTitle(t, d))
+            + escapeHtml((t.emoji ? t.emoji + ' ' : '') + t.label)
             + '</span>').join('')
+          + '</div>'
+        : '';
+      const secondaryTags = (Array.isArray(d.tags) ? d.tags : []).filter(t => SECONDARY_TAG_EMOJI[t])
+      const secondaryIconsHtml = secondaryTags.length
+        ? '<div class="travel-popup-tag-icons">'
+          + secondaryTags.map(t =>
+              `<span class="travel-popup-tag-icon" title="${escapeHtml(SECONDARY_TAG_LABEL[t] || t)}">${SECONDARY_TAG_EMOJI[t]}</span>`
+            ).join('')
           + '</div>'
         : '';
       const photoBlock = imageUrl ? `
@@ -710,7 +766,7 @@
         </div>
       ` : '';
       const officialDetailLink = d.id ? (function() {
-        const manholeDetailUrl = `${window.SITE_ROOT_URL}manholes/${encodeURIComponent(d.id)}/`;
+        const manholeDetailUrl = `${window.SITE_BASE_URL}manholes/${encodeURIComponent(d.id)}/`;
         const anchor = document.createElement('a');
         anchor.href = manholeDetailUrl;
         anchor.className = 'travel-popup-action travel-popup-action--primary';
@@ -731,7 +787,10 @@
               ${d.city ? `<b>${escapeHtml(d.city)}</b>` : ''}
             </div>
             <h3 class="travel-popup-title">${escapeHtml(d.title || I.manholeTitle)}</h3>
+            ${d.building ? `<p class="travel-popup-building">📍 ${escapeHtml(d.building)}</p>` : ''}
+            ${d.place_detail ? `<p class="travel-popup-description">${escapeHtml(d.place_detail)}</p>` : ''}
             ${titleBadgesHtml}
+            ${secondaryIconsHtml}
             ${photoComment ? `<p class="travel-popup-comment">${escapeHtml(photoComment)}</p>` : ''}
             <div class="travel-popup-pokemon-list" aria-label="${I.pokemonListAria}">${pokemonsHtml}</div>
             <div class="popup-actions travel-popup-actions travel-popup-actions--single">
@@ -762,30 +821,8 @@
         if (!res.ok) return null;
         const data = await res.json();
         if (!Array.isArray(data)) return null;
-        // Build lookup map: base forms keyed by Japanese name, regional forms by prefixed name
-        const FORM_PREFIXES = {
-          ja: { alola: 'アローラ', galar: 'ガラル', hisui: 'ヒスイ', paldea: 'パルデア' },
-          en: { alola: 'Alolan ', galar: 'Galarian ', hisui: 'Hisuian ', paldea: 'Paldean ' },
-          ko: { alola: '알로라 ', galar: '가라르 ', hisui: '히스이 ', paldea: '팔데아 ' },
-          'zh-Hans': { alola: '阿罗拉', galar: '伽勒尔', hisui: '洗翠', paldea: '帕底亚' },
-          'zh-Hant': { alola: '阿羅拉', galar: '伽勒爾', hisui: '洗翠', paldea: '帕底亞' }
-        };
-        pokemonMetadata = new Map();
-        data.forEach(p => {
-          if (!p.names?.ja) return;
-          const formKey = p.form && FORM_PREFIXES.ja[p.form];
-          if (formKey) {
-            const key = formKey + p.names.ja;
-            const names = { ...p.names };
-            for (const [lang, prefMap] of Object.entries(FORM_PREFIXES)) {
-              const pfx = prefMap[p.form];
-              if (pfx && names[lang]) names[lang] = pfx + names[lang];
-            }
-            pokemonMetadata.set(key, { ...p, names });
-          } else {
-            pokemonMetadata.set(p.names.ja, p);
-          }
-        });
+        // Create fast lookup map by Japanese name
+        pokemonMetadata = new Map(data.map(p => [p.names?.ja, p]).filter(([k]) => k));
         console.log(`Pokemon metadata loaded: ${pokemonMetadata.size} entries`);
         return pokemonMetadata;
       } catch (error) {
@@ -796,10 +833,16 @@
 
     function getPokemonMetadata(nameJa) {
       if (!pokemonMetadata || !nameJa) return null;
-      // Normalize hiragana → katakana to handle mixed-kana variants (e.g. ゴンべ → ゴンベ)
-      const normalized = nameJa.replace(/[ぁ-ん]/g, c => String.fromCharCode(c.charCodeAt(0) + 0x60));
-      return pokemonMetadata.get(nameJa) || (normalized !== nameJa ? pokemonMetadata.get(normalized) : null) || null;
+      return pokemonMetadata.get(nameJa) || null;
     }
+
+    window.getPokemonLpUrl = function(jaName) {
+      const meta = getPokemonMetadata(jaName);
+      if (!meta || !meta.slug) return null;
+      const lang = (window.I18N && window.I18N.lang) || 'ja';
+      const prefix = lang === 'ja' ? '' : lang + '/';
+      return `${window.SITE_ROOT_URL}${prefix}pokemon/${meta.slug}/`;
+    };
 
     function buildPokemonInfoCards(pokemons) {
       const I = window.I18N;
@@ -869,7 +912,7 @@
 
         // Extract Pokemon names for this manhole
         const pokemonNames = Array.isArray(d.pokemons)
-          ? d.pokemons.filter(p => !p.includes('ローカルActs')).slice(0, 2).map(p => getPokemonDisplayName(p)).join(' / ')
+          ? d.pokemons.filter(p => !p.includes('ローカルActs')).slice(0, 2).join(' / ')
           : '';
         const pokemonDisplay = pokemonNames ? ` (${pokemonNames})` : '';
 
@@ -878,7 +921,7 @@
                   data-manhole-id="${escapeHtml(d.id)}"
                   onclick="openManholePopup('${safeIdJs}'); collapseBottomSheet();"
                   title="${escapeHtml(d.title || I.manholeTitle)}${I.openSuffix}">
-            ${escapeHtml(translatePref(d.prefecture) || I.unknownPref)} ${escapeHtml(d.city || '')}${escapeHtml(pokemonDisplay)}
+            ${escapeHtml(d.prefecture || '不明')} ${escapeHtml(d.city || '')}${escapeHtml(pokemonDisplay)}
           </button>
         `;
       }).join('');
@@ -981,8 +1024,8 @@
           d._addedDate = normalizeDateString(raw);
         });
         await loadLatestPhotoMeta();
-        // Await Pokemon metadata so popup HTML and page meta use translated names
-        await loadPokemonMetadata().catch(err => console.warn('Pokemon metadata loading failed', err));
+        // Load Pokemon metadata asynchronously (non-blocking)
+        loadPokemonMetadata().catch(err => console.warn('Pokemon metadata loading failed', err));
         initMarkerLayer();
         // Build markers
         allMarkers = [];
@@ -1062,6 +1105,12 @@
           }
         }
         
+        const tagCounts = {};
+        allData.forEach(d => {
+          if (!Array.isArray(d.tags)) return;
+          d.tags.forEach(t => { tagCounts[t] = (tagCounts[t] || 0) + 1; });
+        });
+        renderTagDirectory(tagCounts);
         populatePrefectureTable();
         renderPrefectureDirectory();
         updateStats();
@@ -1161,6 +1210,7 @@
         if (filterRecent) {
           showPrefectureCards = false;
           showNearbyResults = false;
+          showTagDirectory = false;
         }
         syncExploreSections();
         recomputeVisibility();
@@ -1181,17 +1231,22 @@
 
     function syncExploreSections() {
       const prefButton = document.getElementById('prefecture-open-button');
-      const recentButton = document.querySelector('.sheet-action-btn--toggle');
       const nearbyButton = document.getElementById('locate-button');
+      const recentButton = document.querySelector('label[for="recent-toggle"]');
+      const featureButton = document.getElementById('feature-open-button');
       const prefectureList = document.getElementById('prefecture-table-wrapper');
       const recentPanel = document.getElementById('recent-added-panel');
       const nearbyPanel = document.getElementById('nearby-results');
 
-      prefButton?.classList.toggle('active', showPrefectureCards);
       prefButton?.setAttribute('aria-pressed', String(showPrefectureCards));
       recentButton?.classList.toggle('active', filterRecent);
+      recentButton?.setAttribute('aria-pressed', String(filterRecent));
       nearbyButton?.classList.toggle('active', showNearbyResults);
       nearbyButton?.setAttribute('aria-pressed', String(showNearbyResults));
+      featureButton?.classList.toggle('active', showTagDirectory);
+      featureButton?.setAttribute('aria-pressed', String(showTagDirectory));
+      const tagSection = document.querySelector('.tag-directory');
+      if (tagSection) tagSection.hidden = !showTagDirectory;
       if (prefectureList) prefectureList.hidden = !showPrefectureCards;
       if (recentPanel) recentPanel.hidden = !filterRecent;
       if (nearbyPanel) nearbyPanel.hidden = !showNearbyResults || !nearbyPanel.dataset.hasResults;
@@ -1237,10 +1292,31 @@
         showPrefectureCards = true;
         showNearbyResults = false;
         filterRecent = false;
+        showTagDirectory = false;
         const recentToggle = document.getElementById('recent-toggle');
         if (recentToggle) recentToggle.checked = false;
         recomputeVisibility();
         syncExploreSections();
+      });
+      document.getElementById('feature-open-button')?.addEventListener('click', () => {
+        showTagDirectory = !showTagDirectory;
+        expandBottomSheet();
+        syncExploreSections();
+        if (window.trackEvent) {
+          window.trackEvent('click_feature_directory', {
+            'event_category': 'user_engagement',
+            'event_label': showTagDirectory ? 'opened' : 'closed'
+          });
+        }
+        if (showTagDirectory) {
+          requestAnimationFrame(() => {
+            const section = document.querySelector('.tag-directory');
+            const controlsContent = document.getElementById('controls-content');
+            if (!section || !controlsContent) return;
+            const top = Math.max(0, section.offsetTop - controlsContent.offsetTop - 8);
+            controlsContent.scrollTo({ top, behavior: 'smooth' });
+          });
+        }
       });
       let startY = 0;
       toggleBtn.addEventListener('touchstart', e => { startY = e.touches[0].clientY; }, { passive: true });
@@ -1264,8 +1340,8 @@
       document.body.classList.add('sheet-expanded');
       const toggleBtn = document.getElementById('controls-toggle');
       toggleBtn?.setAttribute('aria-expanded', 'true');
-      toggleBtn?.setAttribute('aria-label', window.I18N.panelCloseLabel);
-      toggleBtn?.setAttribute('title', window.I18N.panelCloseLabel);
+      toggleBtn?.setAttribute('aria-label', '全体パネルを閉じる');
+      toggleBtn?.setAttribute('title', '全体パネルを閉じる');
       setTimeout(() => map.invalidateSize(), 160);
     }
 
@@ -1274,8 +1350,8 @@
       document.body.classList.remove('sheet-expanded');
       const toggleBtn = document.getElementById('controls-toggle');
       toggleBtn?.setAttribute('aria-expanded', 'false');
-      toggleBtn?.setAttribute('aria-label', window.I18N.panelOpenLabel);
-      toggleBtn?.setAttribute('title', window.I18N.panelOpenLabel);
+      toggleBtn?.setAttribute('aria-label', '全体パネルを開く');
+      toggleBtn?.setAttribute('title', '全体パネルを開く');
       setTimeout(() => map.invalidateSize(), 160);
     }
 
@@ -1293,7 +1369,7 @@
     function updateRecentSummary(){
       const el = ensureRecentSummaryElement();
       if(!el) return;
-      if(!hasAddedAtField){ el.textContent=window.I18N.recentDisabledTitle; return; }
+      if(!hasAddedAtField){ el.textContent='日付フィールドなし'; return; }
       const recentCnt = countRecent(30);
       const total = allData.length;
       el.textContent=`${recentCnt} / ${total}`;
@@ -1311,11 +1387,8 @@
         const d = marker.pokefutaData;
         let show = true;
         if (selectedPrefecture) show = show && d.prefecture === selectedPrefecture;
-        if (selectedPokemons.length > 0) {
-          const pList = d.pokemons || [];
-          show = show && selectedPokemons.some(p => pList.includes(p));
-        }
-  if (filterRecent) show = show && isWithinLastDays(d._addedDate, 30);
+        if (filterRecent) show = show && isWithinLastDays(d._addedDate, 30);
+        if (activeTagFilter) show = show && Array.isArray(d.tags) && d.tags.includes(activeTagFilter);
         if (show) {
           if (markerLayer && !markerLayer.hasLayer(marker)) markerLayer.addLayer(marker);
           visibleCount++;
@@ -1344,7 +1417,7 @@
       const val = badge?.querySelector('.badge-value');
       if (!badge || !val) return;
       if (selectedPrefecture) {
-        val.textContent = translatePref(selectedPrefecture);
+        val.textContent = selectedPrefecture;
         badge.style.display = 'inline-block';
       } else {
         badge.style.display = 'none';
@@ -1426,7 +1499,7 @@
         if (d.id && !prefectureThumbnails[pref]) {
           prefectureThumbnails[pref] = [];
         }
-        if (d.id && prefectureThumbnails[pref] && prefectureThumbnails[pref].length < 4) {
+        if (d.id && prefectureThumbnails[pref] && prefectureThumbnails[pref].length < 8) {
           prefectureThumbnails[pref].push({
             id: d.id,
             title: d.title || 'ポケふた',
@@ -1452,7 +1525,7 @@
           anchor.target = '_blank';
           anchor.rel = 'noopener noreferrer';
           anchor.className = 'prefecture-site-link';
-          anchor.textContent = `${translatePref(prefecture)}${UI_TEXT.prefectureSite}`;
+          anchor.textContent = `${prefecture}${UI_TEXT.prefectureSite}`;
           siteCell = anchor.outerHTML;
         }
 
@@ -1465,14 +1538,14 @@
         row.innerHTML = `
           <div class="prefecture-card-main" role="button" tabindex="${count === 0 ? '-1' : '0'}" aria-disabled="${count === 0 ? 'true' : 'false'}">
             <span class="prefecture-code">${code}</span>
-            <span class="prefecture-card-name">${translatePref(prefecture)}</span>
+            <span class="prefecture-card-name">${prefecture}</span>
             <span class="prefecture-card-meta">
               ${recentCount > 0 ? `<span class="prefecture-new-badge"><img src="%%BASE_PATH%%assets/icon-fire.svg" alt="" aria-hidden="true">NEW</span>` : ''}
               ${siteCell}
             </span>
             <span class="${countBadgeClass}">${count}${I.countSuffix}</span>
           </div>
-          <div class="prefecture-card-gallery" aria-label="${escapeHtml(translatePref(prefecture))}${I.galleryAriaSuffix}">
+          <div class="prefecture-card-gallery" aria-label="${escapeHtml(prefecture)}${I.galleryAriaSuffix}">
             ${thumbnailItems.length ? thumbnailItems.map(item => `
               <button type="button" class="prefecture-card-thumb" data-manhole-id="${escapeHtml(item.id)}" aria-label="${escapeHtml(item.title)}${I.openDetailSuffix}" title="${escapeHtml(item.title)}${I.openDetailSuffix}">
                 <img src="${item.imageUrl}" alt="" loading="lazy" decoding="async" onerror="this.closest('.prefecture-card-thumb').classList.add('is-missing'); this.remove();">
@@ -1502,7 +1575,7 @@
             event.preventDefault();
             selectPrefecture();
           });
-          button.title = I.prefCardTitleFormat.replace('{pref}', translatePref(prefecture));
+          button.title = I.prefCardTitleFormat.replace('{pref}', prefecture);
         }
         // Append row
         tbody.appendChild(row);
@@ -1521,6 +1594,75 @@
           });
         });
       });
+    }
+
+    function renderTagDirectory(tagCounts) {
+      const container = document.getElementById('tag-directory-chips');
+      const moreContainer = document.getElementById('tag-directory-more');
+      const toggleBtn = document.getElementById('tag-directory-toggle');
+      if (!container) return;
+      const sorted = Object.entries(tagCounts)
+        .filter(([tag, count]) => TAG_META[tag] && count >= TAG_DIRECTORY_MIN_COUNT)
+        .sort(([tagA, a], [tagB, b]) => {
+          const priA = TAG_PRIORITY.indexOf(tagA);
+          const priB = TAG_PRIORITY.indexOf(tagB);
+          if (priA >= 0 && priB >= 0) return priA - priB;
+          if (priA >= 0) return -1;
+          if (priB >= 0) return 1;
+          return b - a;
+        });
+      const primaryTags = sorted.filter(([tag]) => TAG_PRIORITY.includes(tag));
+      const secondaryTags = sorted.filter(([tag]) => !TAG_PRIORITY.includes(tag));
+      function makeChip(tag, count) {
+        const meta = TAG_META[tag];
+        return `<button class="tag-chip" data-tag="${tag}" data-count="${count}" aria-pressed="false">${meta.emoji} ${meta.label} <span class="tag-count">${count}枚</span></button>`;
+      }
+      container.innerHTML = primaryTags.map(([tag, count]) => makeChip(tag, count)).join('');
+      if (moreContainer) {
+        moreContainer.innerHTML = secondaryTags.map(([tag, count]) => makeChip(tag, count)).join('');
+        if (toggleBtn) toggleBtn.hidden = secondaryTags.length === 0;
+      }
+      function updateAllChips() {
+        [container, moreContainer].filter(Boolean).forEach(c => {
+          c.querySelectorAll('.tag-chip').forEach(b => {
+            b.classList.toggle('active', b.dataset.tag === activeTagFilter);
+            b.setAttribute('aria-pressed', String(b.dataset.tag === activeTagFilter));
+          });
+        });
+      }
+      function bindChips(el) {
+        el.querySelectorAll('.tag-chip').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const tag = btn.dataset.tag;
+            const isActive = activeTagFilter === tag;
+            activeTagFilter = isActive ? null : tag;
+            updateAllChips();
+            recomputeVisibility();
+            syncExploreSections();
+            if (!isActive && window.trackEvent) {
+              window.trackEvent('feature_filter_click', {
+                feature: tag,
+                feature_label: TAG_META[tag]?.label || tag,
+                result_count: parseInt(btn.dataset.count, 10),
+                source: 'top_feature_section'
+              });
+            }
+          });
+        });
+      }
+      bindChips(container);
+      if (moreContainer) bindChips(moreContainer);
+      if (toggleBtn && moreContainer) {
+        toggleBtn.addEventListener('click', () => {
+          const willExpand = moreContainer.hidden;
+          moreContainer.hidden = !willExpand;
+          toggleBtn.textContent = willExpand ? '閉じる' : 'もっと見る';
+          toggleBtn.setAttribute('aria-expanded', String(willExpand));
+          if (window.trackEvent) {
+            window.trackEvent('feature_more_toggle', { expanded: willExpand });
+          }
+        });
+      }
     }
 
     function renderPrefectureDirectory() {
@@ -1606,9 +1748,9 @@
       const spots = allData
         .filter(d => d.prefecture === prefecture)
         .sort((a, b) => String(a.city || '').localeCompare(String(b.city || ''), 'ja'));
-      heading.textContent = window.I18N.prefSpotsHeadingFormat.replace('{pref}', translatePref(prefecture));
+      heading.textContent = window.I18N.prefSpotsHeadingFormat.replace('{pref}', prefecture);
       renderSpotResults(list, spots, {
-        limit: 24,
+        limit: Infinity,
         badge: d => isWithinLastDays(d._addedDate, 30) ? '<img src="%%BASE_PATH%%assets/icon-fire.svg" alt="" aria-hidden="true">NEW' : ''
       });
       panel.hidden = spots.length === 0;
@@ -1648,6 +1790,7 @@
       showNearbyResults = true;
       showPrefectureCards = false;
       filterRecent = false;
+      showTagDirectory = false;
       const recentToggle = document.getElementById('recent-toggle');
       if (recentToggle) recentToggle.checked = false;
       syncExploreSections();
