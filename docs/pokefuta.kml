@@ -157,6 +157,8 @@ Status: active</description>
       <description>Prefecture: 岩手県
 City: 普代
 Address: 岩手県普代村9-5-3
+Building: 道の駅青の国ふだい
+Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/13/?is_modal=1
 Last Updated: 2026-05-24T10:30:07Z
 Status: active</description>
@@ -404,7 +406,8 @@ Status: active</description>
       <description>Prefecture: 香川県
 City: 小豆島
 Address: 香川県小豆島町室生2084-1
-Tags: seaside, remote_island
+Building: 道の駅小豆島ふるさと村
+Tags: remote_island, roadside, seaside
 Detail: https://local.pokemon.jp/manhole/desc/37/?is_modal=1
 Last Updated: 2026-05-24T10:30:28Z
 Status: active</description>
@@ -791,7 +794,7 @@ Status: active</description>
 City: 稚内
 Address: 北海道稚内市中央3-5
 Building: キタカラ敷地内
-Tags: seaside, station_front, tourism, history
+Tags: history, roadside, seaside, station_front, tourism
 Detail: https://local.pokemon.jp/manhole/desc/67/?is_modal=1
 Last Updated: 2026-05-24T10:30:52Z
 Status: active</description>
@@ -951,6 +954,8 @@ Status: active</description>
       <description>Prefecture: 鳥取県
 City: 若桜
 Address: 鳥取県若桜町若桜983-2
+Building: 道の駅若桜
+Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/79/?is_modal=1
 Last Updated: 2026-05-24T10:31:01Z
 Status: active</description>
@@ -1000,6 +1005,8 @@ Status: active</description>
       <description>Prefecture: 鳥取県
 City: 大山
 Address: 鳥取県大山町名和951-6
+Building: 道の駅大山恵みの里
+Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/83/?is_modal=1
 Last Updated: 2026-05-24T10:31:04Z
 Status: active</description>
@@ -1036,6 +1043,8 @@ Status: active</description>
       <description>Prefecture: 鳥取県
 City: 日南
 Address: 鳥取県日南町生山354
+Building: 道の駅にちなん日野川の郷
+Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/86/?is_modal=1
 Last Updated: 2026-05-24T10:31:07Z
 Status: active</description>
@@ -1086,6 +1095,8 @@ Status: active</description>
       <description>Prefecture: 福島県
 City: 南相馬
 Address: 福島県南相馬市原町区高見町2-30-1
+Building: 道の駅南相馬
+Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/90/?is_modal=1
 Last Updated: 2026-05-24T10:31:10Z
 Status: active</description>
@@ -1098,6 +1109,7 @@ Status: active</description>
       <description>Prefecture: 福島県
 City: 浪江
 Address: 福島県浪江町大字幾世橋字知命寺60
+Building: 道の駅なみえ
 Detail: https://local.pokemon.jp/manhole/desc/91/?is_modal=1
 Last Updated: 2026-05-24T10:31:11Z
 Status: active</description>
@@ -1110,6 +1122,8 @@ Status: active</description>
       <description>Prefecture: 福島県
 City: 楢葉
 Address: 福島県楢葉町大字山田岡字大堤入22
+Building: 道の駅ならは
+Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/92/?is_modal=1
 Last Updated: 2026-05-24T10:31:12Z
 Status: active</description>
@@ -1122,7 +1136,8 @@ Status: active</description>
       <description>Prefecture: 福島県
 City: いわき
 Address: 福島県いわき市四倉町字5-218-1
-Tags: seaside
+Building: 道の駅よつくら港
+Tags: roadside, seaside
 Detail: https://local.pokemon.jp/manhole/desc/93/?is_modal=1
 Last Updated: 2026-05-24T10:31:13Z
 Status: active</description>
@@ -1135,6 +1150,8 @@ Status: active</description>
       <description>Prefecture: 福島県
 City: 川俣
 Address: 福島県川俣町大字鶴沢字東13
+Building: 道の駅川俣
+Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/94/?is_modal=1
 Last Updated: 2026-05-24T10:31:13Z
 Status: active</description>
@@ -1171,7 +1188,8 @@ Status: active</description>
       <description>Prefecture: 香川県
 City: 宇多津
 Address: 香川県宇多津町浜一番丁4
-Tags: seaside
+Building: 道の駅恋人の聖地 うたづ臨海公園
+Tags: roadside, seaside
 Detail: https://local.pokemon.jp/manhole/desc/97/?is_modal=1
 Last Updated: 2026-05-24T10:31:16Z
 Status: active</description>
@@ -1294,6 +1312,8 @@ Status: active</description>
       <description>Prefecture: 鳥取県
 City: 八頭
 Address: 鳥取県八頭町徳丸625
+Building: 道の駅はっとう
+Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/107/?is_modal=1
 Last Updated: 2026-05-24T10:31:24Z
 Status: active</description>
@@ -1331,6 +1351,8 @@ Status: active</description>
       <description>Prefecture: 鳥取県
 City: 江府
 Address: 鳥取県江府町佐川908-3
+Building: 道の駅奥大山
+Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/110/?is_modal=1
 Last Updated: 2026-05-24T10:31:26Z
 Status: active</description>
@@ -1368,7 +1390,8 @@ Status: active</description>
       <description>Prefecture: 宮崎県
 City: 延岡
 Address: 宮崎県延岡市北浦町古江3337-1
-Tags: seaside
+Building: 道の駅北浦
+Tags: roadside, seaside
 Detail: https://local.pokemon.jp/manhole/desc/113/?is_modal=1
 Last Updated: 2026-05-24T10:31:28Z
 Status: active</description>
@@ -1442,6 +1465,8 @@ Status: active</description>
       <description>Prefecture: 宮崎県
 City: えびの
 Address: 宮崎県えびの市大字永山1006
+Building: 道の駅えびの
+Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/119/?is_modal=1
 Last Updated: 2026-05-24T10:31:33Z
 Status: active</description>
@@ -1466,6 +1491,8 @@ Status: active</description>
       <description>Prefecture: 宮城県
 City: 角田
 Address: 宮城県角田市枝野字北島81
+Building: 道の駅かくだ
+Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/121/?is_modal=1
 Last Updated: 2026-05-24T10:31:35Z
 Status: active</description>
@@ -1490,6 +1517,8 @@ Status: active</description>
       <description>Prefecture: 宮城県
 City: 栗原
 Address: 宮城県栗原市花山字本沢北ノ前112-1
+Building: 道の駅路田里はなやま
+Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/123/?is_modal=1
 Last Updated: 2026-05-24T10:31:37Z
 Status: active</description>
@@ -1502,6 +1531,7 @@ Status: active</description>
       <description>Prefecture: 宮城県
 City: 大崎
 Address: 宮城県大崎市古川駅
+Building: 古川駅前
 Tags: near_station
 Detail: https://local.pokemon.jp/manhole/desc/124/?is_modal=1
 Last Updated: 2026-05-24T10:31:37Z
@@ -1623,6 +1653,8 @@ Status: active</description>
       <description>Prefecture: 宮城県
 City: 大郷
 Address: 宮城県大郷町中村字北浦51
+Building: 道の駅おおさと
+Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/134/?is_modal=1
 Last Updated: 2026-05-24T10:31:46Z
 Status: active</description>
@@ -1929,6 +1961,8 @@ Status: active</description>
       <description>Prefecture: 青森県
 City: 階上
 Address: 青森県階上町大字道仏字耳ケ吠3-3
+Building: 道の駅はしかみ
+Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/158/?is_modal=1
 Last Updated: 2026-05-11T11:01:46Z
 Status: active</description>
@@ -2263,6 +2297,8 @@ Status: active</description>
       <description>Prefecture: 宮崎県
 City: 日之影
 Address: 宮崎県日之影町大字七折8705
+Building: 道の駅青雲橋
+Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/185/?is_modal=1
 Last Updated: 2026-05-24T10:32:25Z
 Status: active</description>
@@ -2560,6 +2596,8 @@ Status: active</description>
       <description>Prefecture: 大阪府
 City: 東大阪
 Address: 大阪府東大阪市東石切町2-4
+Building: 東石切公園
+Tags: park, rail_access_good
 Detail: https://local.pokemon.jp/manhole/desc/208/?is_modal=1
 Last Updated: 2026-05-19T13:38:09Z
 Status: active</description>
@@ -2572,6 +2610,8 @@ Status: active</description>
       <description>Prefecture: 大阪府
 City: 東大阪
 Address: 大阪府東大阪市松原南1-1
+Building: 花園中央公園
+Tags: museum, park, near_station
 Detail: https://local.pokemon.jp/manhole/desc/209/?is_modal=1
 Last Updated: 2026-05-11T11:02:17Z
 Status: active</description>
@@ -2584,6 +2624,8 @@ Status: active</description>
       <description>Prefecture: 大阪府
 City: 東大阪
 Address: 大阪府東大阪市松原南2-6
+Building: 花園中央公園
+Tags: park, near_station
 Detail: https://local.pokemon.jp/manhole/desc/210/?is_modal=1
 Last Updated: 2026-05-11T11:02:18Z
 Status: active</description>
@@ -2780,6 +2822,8 @@ Status: active</description>
       <description>Prefecture: 千葉県
 City: 香取
 Address: 千葉県香取市佐原イ4053-3
+Building: 道の駅水の郷さわら
+Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/225/?is_modal=1
 Last Updated: 2026-05-11T11:02:27Z
 Status: active</description>
@@ -2854,7 +2898,8 @@ Status: active</description>
       <description>Prefecture: 沖縄県
 City: 糸満
 Address: 沖縄県糸満市西崎町4丁目19-1
-Tags: seaside, remote_island
+Building: 道の駅いとまん
+Tags: remote_island, roadside, seaside
 Detail: https://local.pokemon.jp/manhole/desc/231/?is_modal=1
 Last Updated: 2026-05-24T10:33:00Z
 Status: active</description>
@@ -3084,6 +3129,7 @@ Status: active</description>
       <description>Prefecture: 福島県
 City: 会津若松
 Address: 福島県会津若松市門田町大字堤沢村上164
+Building: 会津総合運動公園
 Detail: https://local.pokemon.jp/manhole/desc/248/?is_modal=1
 Last Updated: 2026-05-24T10:33:13Z
 Status: active</description>
@@ -3144,6 +3190,7 @@ Status: active</description>
       <description>Prefecture: 福島県
 City: 双葉
 Address: 福島県双葉町大字中野字高田1
+Building: 双葉町産業交流センター
 Detail: https://local.pokemon.jp/manhole/desc/253/?is_modal=1
 Last Updated: 2026-05-24T10:33:16Z
 Status: active</description>
@@ -3252,6 +3299,8 @@ Status: active</description>
       <description>Prefecture: 岩手県
 City: 八幡平
 Address: 岩手県八幡平市大更第2地割154−36
+Building: 道の駅にしね
+Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/262/?is_modal=1
 Last Updated: 2026-05-24T10:33:23Z
 Status: active</description>
@@ -3276,6 +3325,8 @@ Status: active</description>
       <description>Prefecture: 岩手県
 City: 岩手
 Address: 岩手県岩手町五日市第10地割121−20
+Building: 道の駅石神の丘
+Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/264/?is_modal=1
 Last Updated: 2026-05-24T10:33:25Z
 Status: active</description>
@@ -3288,6 +3339,7 @@ Status: active</description>
       <description>Prefecture: 岩手県
 City: 紫波
 Address: 岩手県紫波町紫波中央駅
+Building: 紫波中央駅前
 Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/265/?is_modal=1
 Last Updated: 2026-05-24T10:33:26Z
@@ -3338,6 +3390,8 @@ Status: active</description>
       <description>Prefecture: 岩手県
 City: 九戸
 Address: 岩手県九戸村山屋第2地割28−1
+Building: 道の駅おりつめ
+Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/269/?is_modal=1
 Last Updated: 2026-05-24T10:33:29Z
 Status: active</description>
@@ -3505,7 +3559,8 @@ Status: active</description>
       <description>Prefecture: 福島県
 City: 猪苗代
 Address: 福島県猪苗代町大字堅田字五百苅1
-Tags: lakeside
+Building: 道の駅猪苗代
+Tags: lakeside, roadside
 Detail: https://local.pokemon.jp/manhole/desc/282/?is_modal=1
 Last Updated: 2026-05-24T10:33:38Z
 Status: active</description>
@@ -3554,6 +3609,8 @@ Status: active</description>
       <description>Prefecture: 福島県
 City: 古殿
 Address: 福島県古殿町大字田口字平舘25
+Building: 道の駅ふるどの
+Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/286/?is_modal=1
 Last Updated: 2026-05-24T10:33:41Z
 Status: active</description>
@@ -3729,6 +3786,8 @@ Status: active</description>
       <description>Prefecture: 岩手県
 City: 久慈
 Address: 岩手県久慈市夏井町第7
+Building: 道の駅いわて北三陸
+Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/299/?is_modal=1
 Last Updated: 2026-05-24T10:33:51Z
 Status: active</description>
@@ -3981,7 +4040,8 @@ Status: active</description>
       <description>Prefecture: 秋田県
 City: 秋田
 Address: 秋田県秋田市土崎港西１丁目9-1
-Tags: seaside
+Building: セリオン
+Tags: roadside, seaside
 Detail: https://local.pokemon.jp/manhole/desc/318/?is_modal=1
 Last Updated: 2026-05-11T11:03:23Z
 Status: active</description>
@@ -4043,6 +4103,7 @@ Status: active</description>
       <description>Prefecture: 岩手県
 City: 北上
 Address: 岩手県北上市川岸一丁目１
+Building: さくらPORT・スクエア
 Detail: https://local.pokemon.jp/manhole/desc/323/?is_modal=1
 Last Updated: 2026-05-24T10:34:11Z
 Status: active</description>
@@ -4056,7 +4117,7 @@ Status: active</description>
 City: 美瑛
 Address: 北海道美瑛町本町1丁目9
 Building: ホテル ラヴニール
-Tags: station_front, food, history
+Tags: food, history, roadside, station_front
 Detail: https://local.pokemon.jp/manhole/desc/324/?is_modal=1
 Last Updated: 2026-05-24T10:34:11Z
 Status: active</description>
@@ -4598,6 +4659,8 @@ Status: active</description>
       <description>Prefecture: 福井県
 City: 南越前
 Address: 福井県南越前町牧谷39-2-2
+Building: 道の駅南えちぜん山海里
+Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/366/?is_modal=1
 Last Updated: 2026-05-24T10:34:45Z
 Status: active</description>
@@ -4731,7 +4794,8 @@ Status: active</description>
       <description>Prefecture: 島根県
 City: 浜田
 Address: 島根県浜田市原井町1203-1
-Tags: seaside
+Building: 道の駅ゆうひパーク浜田
+Tags: roadside, seaside
 Detail: https://local.pokemon.jp/manhole/desc/377/?is_modal=1
 Last Updated: 2026-05-19T13:40:04Z
 Status: active</description>
@@ -4757,7 +4821,8 @@ Status: active</description>
       <description>Prefecture: 島根県
 City: 大田
 Address: 島根県大田市仁摩町大国42-1
-Tags: world_heritage
+Building: 道の駅ごいせ仁摩
+Tags: roadside, world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/379/?is_modal=1
 Last Updated: 2026-05-19T13:40:05Z
 Status: active</description>
@@ -5190,6 +5255,8 @@ Status: active</description>
       <description>Prefecture: 茨城県
 City: 常陸太田
 Address: 茨城県常陸太田市下河合町1016-1
+Building: 道の駅ひたちおおた
+Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/412/?is_modal=1
 Last Updated: 2026-05-19T13:40:28Z
 Status: active</description>
@@ -5366,6 +5433,8 @@ Status: active</description>
       <description>Prefecture: 岩手県
 City: 葛巻
 Address: 岩手県葛巻町葛巻39-159-3
+Building: 道の駅くずまき高原
+Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/426/?is_modal=1
 Last Updated: 2026-05-24T10:35:33Z
 Status: active</description>
@@ -5417,7 +5486,8 @@ Status: active</description>
       <description>Prefecture: 長崎県
 City: 東彼杵
 Address: 長崎県東彼杵町彼杵宿郷747-2
-Tags: seaside
+Building: 道の駅彼杵の荘
+Tags: roadside, seaside
 Detail: https://local.pokemon.jp/manhole/desc/430/?is_modal=1
 Last Updated: 2026-05-24T10:35:35Z
 Status: active</description>
@@ -5480,7 +5550,8 @@ Status: active</description>
       <description>Prefecture: 高知県
 City: 宿毛
 Address: 高知県宿毛市小筑紫町田
-Tags: seaside
+Building: 道の駅すくも
+Tags: roadside, seaside
 Detail: https://local.pokemon.jp/manhole/desc/435/?is_modal=1
 Last Updated: 2026-05-24T10:35:40Z
 Status: active</description>
@@ -5493,7 +5564,8 @@ Status: active</description>
       <description>Prefecture: 高知県
 City: 香南
 Address: 高知県香南市夜須町坪井
-Tags: seaside
+Building: 道の駅やす
+Tags: roadside, seaside
 Detail: https://local.pokemon.jp/manhole/desc/436/?is_modal=1
 Last Updated: 2026-05-24T10:35:40Z
 Status: active</description>
@@ -5644,6 +5716,7 @@ Status: active</description>
       <description>Prefecture: 宮城県
 City: 加瀬沼公園
 Address: 、宮城県の西南部に位置し、塩竈市、多賀城市、利府町
+Building: 加瀬沼公園
 Detail: https://local.pokemon.jp/manhole/desc/447/?is_modal=1
 Last Updated: 2026-05-24T10:35:49Z
 Status: active</description>
@@ -5754,6 +5827,8 @@ Status: active</description>
       <description>Prefecture: 福島県
 City: 下郷
 Address: 福島県下郷町大字南倉沢字木賊844
+Building: 道の駅しもごう
+Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/456/?is_modal=1
 Last Updated: 2026-05-24T10:35:56Z
 Status: active</description>
@@ -5766,6 +5841,8 @@ Status: active</description>
       <description>Prefecture: 福島県
 City: 西会津
 Address: 福島県西会津町野沢字下條乙1969
+Building: 道の駅にしあいづ
+Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/457/?is_modal=1
 Last Updated: 2026-05-24T10:35:56Z
 Status: active</description>
@@ -5802,6 +5879,7 @@ Status: active</description>
       <description>Prefecture: 福島県
 City: 浅川
 Address: 福島県浅川町本町西裏
+Building: JR磐城浅川駅前広場
 Detail: https://local.pokemon.jp/manhole/desc/460/?is_modal=1
 Last Updated: 2026-05-24T10:35:59Z
 Status: active</description>
@@ -5974,6 +6052,7 @@ Status: active</description>
       <description>Prefecture: 宮城県
 City: 仙台
 Address: 宮城県仙台市若林区藤塚地内　海岸公園
+Building: 海岸公園（藤塚地区）
 Tags: seaside
 Detail: https://local.pokemon.jp/manhole/desc/474/?is_modal=1
 Last Updated: 2026-05-24T10:36:10Z
