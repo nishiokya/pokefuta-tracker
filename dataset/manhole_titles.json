@@ -831,7 +831,16 @@
       ]
     },
     "91": {
-      "building": "道の駅なみえ"
+      "building": "道の駅なみえ",
+      "tags": [
+        "roadside"
+      ]
+    },
+    "92": {
+      "building": "道の駅ならは",
+      "tags": [
+        "roadside"
+      ]
     },
     "92": {
       "building": "道の駅ならは",
