@@ -51,12 +51,13 @@ def download_and_parse():
     if not props:
         raise ValueError("#property header not found")
 
+    min_cols = len(props) + 1  # subject URI + all property columns
     stations = []
     for line in lines:
         if line.startswith("#") or not line.strip():
             continue
         parts = line.split("\t")
-        if len(parts) < 11:
+        if len(parts) < min_cols:
             continue
 
         # parts[0] = subject URI, parts[1:] = property values
@@ -126,7 +127,10 @@ def load_pokefuta():
     records = []
     with open(POKEFUTA_NDJSON) as f:
         for line in f:
-            r = json.loads(line.strip())
+            line = line.strip()
+            if not line:
+                continue
+            r = json.loads(line)
             if r.get("status") == "active":
                 records.append(r)
     print(f"Loaded {len(records)} active pokefuta")
