@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 """Generate social post image (SVG + JPEG) and OGP PNG for today's post.
 
-For `prefecture_rank`: builds a rich dark-theme SVG with prefecture map,
-manhole photo thumbnails, and Pokémon stats — no template file needed.
-For all other types: substitutes placeholders in docs/ogp_template/{type}.svg.
+Loads the Claude Design theme SVG (trivia/ranking/rare), replaces text
+elements by ID, recalculates chip layout, and rasterises to JPEG + PNG.
 
 Outputs:
-  docs/social-post-image.svg  — full-resolution SVG (all types)
+  docs/social-post-image.svg  — full-resolution SVG
   docs/social-post-image.jpg  — JPEG for Twitter/X attachment
   docs/social-post-ogp.png    — OGP PNG (1200×630) for link previews
 
@@ -15,15 +14,12 @@ Usage:
 """
 from __future__ import annotations
 
-import base64
 import json
-import math
 import os
+import re
 import subprocess
 import sys
 import tempfile
-import urllib.error
-import urllib.request
 from collections import Counter
 from pathlib import Path
 
@@ -34,10 +30,13 @@ TEMPLATE_DIR = ROOT / "docs" / "ogp_template"
 OUTPUT_SVG = ROOT / "docs" / "social-post-image.svg"
 OUTPUT_JPG = ROOT / "docs" / "social-post-image.jpg"
 OUTPUT_PNG = ROOT / "docs" / "social-post-ogp.png"
-IMAGE_DIR = ROOT / "dataset" / "manhole" / "image"
 NDJSON = ROOT / "pokefuta.ndjson"
 
-GEOJSON_URL = "https://raw.githubusercontent.com/dataofjapan/land/master/japan.geojson"
+_ACCENT_COLOR = {
+    "trivia":  "#57E0BE",
+    "ranking": "#F2C24C",
+    "rare":    "#FF9466",
+}
 
 
 # ---------------------------------------------------------------------------
@@ -83,584 +82,417 @@ def _xe(s: str) -> str:
 
 
 # ---------------------------------------------------------------------------
-# GeoJSON / RDP helpers
+# Prefecture coordinates (for hero pin on dot-matrix Japan map)
 # ---------------------------------------------------------------------------
 
-def _fetch_prefecture_outline(pref_name: str) -> list[list[float]]:
-    """Return simplified [lng, lat] polygon for the given prefecture."""
-    try:
-        data = json.loads(urllib.request.urlopen(GEOJSON_URL, timeout=10).read())
-    except (urllib.error.URLError, OSError) as e:
-        print(f"[generate_social_ogp] GeoJSON取得失敗 ({e})", file=sys.stderr)
-        return []
-    feat = next(
-        (f for f in data["features"] if f["properties"].get("nam_ja") == pref_name),
-        None,
+_PREF_LATLNG: dict[str, tuple[float, float]] = {
+    "北海道": (43.06, 141.35), "青森県": (40.82, 140.74), "岩手県": (39.70, 141.15),
+    "宮城県": (38.27, 140.87), "秋田県": (39.72, 140.10), "山形県": (38.24, 140.36),
+    "福島県": (37.75, 140.47), "茨城県": (36.34, 140.45), "栃木県": (36.57, 139.88),
+    "群馬県": (36.39, 139.06), "埼玉県": (35.86, 139.65), "千葉県": (35.60, 140.12),
+    "東京都": (35.69, 139.69), "神奈川県": (35.45, 139.64), "新潟県": (37.90, 139.02),
+    "富山県": (36.70, 137.21), "石川県": (36.59, 136.63), "福井県": (36.07, 136.22),
+    "山梨県": (35.66, 138.57), "長野県": (36.65, 138.18), "岐阜県": (35.39, 136.72),
+    "静岡県": (34.98, 138.38), "愛知県": (35.18, 137.15), "三重県": (34.73, 136.51),
+    "滋賀県": (35.00, 135.87), "京都府": (35.02, 135.76), "大阪府": (34.69, 135.50),
+    "兵庫県": (34.69, 135.18), "奈良県": (34.69, 135.83), "和歌山県": (34.23, 135.17),
+    "鳥取県": (35.50, 134.24), "島根県": (35.47, 133.06), "岡山県": (34.66, 133.93),
+    "広島県": (34.40, 132.46), "山口県": (34.19, 131.47), "徳島県": (34.07, 134.56),
+    "香川県": (34.34, 134.04), "愛媛県": (33.84, 132.77), "高知県": (33.56, 133.53),
+    "福岡県": (33.61, 130.42), "佐賀県": (33.24, 130.30), "長崎県": (32.74, 129.87),
+    "熊本県": (32.79, 130.74), "大分県": (33.24, 131.61), "宮崎県": (31.91, 131.42),
+    "鹿児島県": (31.56, 130.56), "沖縄県": (26.21, 127.68),
+}
+
+
+def _latlon_to_hero_xy(lat: float, lng: float) -> tuple[float, float]:
+    """Convert lat/lng to dot-matrix map hero pin pixel coords.
+
+    Calibrated from BUILD_NOTES pin positions:
+      hokkaido [32,2], sendai [28,8], tokyo [25,13], osaka [18,17], fukuoka [7,22]
+    col = 1.856*lng + 0.350*lat - 246.78
+    row = -0.695*lng - 1.205*lat + 153.10
+    gx  = 688 + col*10 + 5
+    gy  = 124 + row*(380/31) + (380/31)/2
+    """
+    col = max(0.0, min(39.0, 1.856 * lng + 0.350 * lat - 246.78))
+    row = max(0.0, min(30.0, -0.695 * lng - 1.205 * lat + 153.10))
+    ch = 380 / 31
+    return round(688 + col * 10 + 5, 1), round(124 + row * ch + ch / 2, 1)
+
+
+# ---------------------------------------------------------------------------
+# SVG mutation helpers
+# ---------------------------------------------------------------------------
+
+def _set_text(svg: str, element_id: str, content: str) -> str:
+    """Replace text element content by id (assumes no nested tspan)."""
+    return re.sub(
+        rf'(<text[^>]*id="{element_id}"[^>]*>)[^<]*(</text>)',
+        lambda m: m.group(1) + _xe(content) + m.group(2),
+        svg,
     )
-    if feat is None:
-        return []
-    geom = feat["geometry"]
-    coords = geom["coordinates"]
-    if geom["type"] == "MultiPolygon":
-        main_ring = sorted(coords, key=lambda p: len(p[0]), reverse=True)[0][0]
-    else:
-        main_ring = coords[0]  # Polygon: outer ring
-    return _rdp(main_ring, 0.011)
 
 
-def _rdp(pts: list, eps: float) -> list:
-    if len(pts) < 3:
-        return pts
-    def _dist(p, a, b):
-        ax, ay = a; bx, by = b; px, py = p
-        dx, dy = bx - ax, by - ay
-        if dx == 0 and dy == 0:
-            return math.hypot(px - ax, py - ay)
-        t = max(0.0, min(1.0, ((px - ax) * dx + (py - ay) * dy) / (dx * dx + dy * dy)))
-        return math.hypot(px - (ax + t * dx), py - (ay + t * dy))
-    dm, idx = 0.0, 0
-    for i in range(1, len(pts) - 1):
-        d = _dist(pts[i], pts[0], pts[-1])
-        if d > dm:
-            dm, idx = d, i
-    if dm > eps:
-        return _rdp(pts[: idx + 1], eps)[:-1] + _rdp(pts[idx:], eps)
-    return [pts[0], pts[-1]]
+def _set_main_unit_x(svg: str, unit_x: int) -> str:
+    """Update x attr on #main-unit text element."""
+    idx = svg.find('id="main-unit"')
+    if idx == -1:
+        return svg
+    tag_start = svg.rfind("<text", 0, idx)
+    tag_end = svg.find(">", idx)
+    if tag_start == -1 or tag_end == -1:
+        return svg
+    old_tag = svg[tag_start : tag_end + 1]
+    new_tag = re.sub(r'\bx="[^"]*"', f'x="{unit_x}"', old_tag)
+    return svg[:tag_start] + new_tag + svg[tag_end + 1 :]
+
+
+def _set_hero_pin(svg: str, hx: float, hy: float) -> str:
+    """Move teardrop hero-pin group to given SVG pixel coords."""
+    idx = svg.find("M0 4C")
+    if idx == -1:
+        return svg
+    g_start = svg.rfind("<g", 0, idx)
+    g_end = svg.find(">", g_start)
+    if g_start == -1 or g_end == -1:
+        return svg
+    old_tag = svg[g_start : g_end + 1]
+    new_tag = re.sub(r"translate\([^)]+\)", f"translate({hx} {hy})", old_tag)
+    return svg[:g_start] + new_tag + svg[g_end + 1 :]
+
+
+def _replace_chips_section(svg: str, chips: list[str], theme: str) -> str:
+    """Replace entire chips group with new chip data using proper widths.
+
+    Chip width formula: len(text)*21 + 42  (21px/char for Japanese + 15*2 pad + 12 dot+margin)
+    """
+    accent = _ACCENT_COLOR.get(theme, "#57E0BE")
+    start_tag = '<g id="chips">'
+    chips_start = svg.find(start_tag)
+    if chips_start == -1:
+        return svg
+
+    # Find matching closing </g> by depth counting
+    depth = 1
+    i = chips_start + len(start_tag)
+    while i < len(svg) and depth > 0:
+        if svg[i] == "<":
+            if svg[i : i + 4] == "</g>":
+                depth -= 1
+                i += 4
+            elif svg[i : i + 2] == "<g":
+                depth += 1
+                i += 2
+            else:
+                i += 1
+        else:
+            i += 1
+    chips_end = i
+
+    new_chips = '<g id="chips">'
+    x = 76
+    for ci, chip_text in enumerate(chips[:6], 1):
+        if not chip_text:
+            continue
+        chip_w = len(chip_text) * 21 + 42
+        new_chips += (
+            f'<g><rect id="chip-bg-{ci}" x="{x}" y="504" width="{chip_w}" height="38" rx="19" '
+            f'fill="#FFFFFF" fill-opacity="0.06" stroke="{accent}" stroke-opacity="0.5"></rect>'
+            f'<circle cx="{x + 14}" cy="523" r="3.2" fill="{accent}"></circle>'
+            f'<text id="chip-{ci}" class="jp" x="{x + 25}" y="530" font-size="21" font-weight="700" fill="#EAF0FF">'
+            f"{_xe(chip_text)}</text></g>"
+        )
+        x += chip_w + 11
+    new_chips += "</g>"
+
+    return svg[:chips_start] + new_chips + svg[chips_end:]
 
 
 # ---------------------------------------------------------------------------
-# Prefecture-rank rich SVG builder
+# NDJSON helper
 # ---------------------------------------------------------------------------
 
-def _build_prefecture_rank_svg(raw: dict) -> str:
-    pref: str = raw["pref"]
-    count: int = raw["count"]
-    total: int = raw["total"]
-    rank: int = raw["rank"]
-    percent: float = raw["percent"]
-
-    # -- Prefecture outline ---------------------------------------------------
-    outline_pts = _fetch_prefecture_outline(pref)
-
-    # -- Manhole data for this prefecture ------------------------------------
-    all_manholes: list[dict] = []
+def _top_pokemons_for_pref(pref: str, n: int = 6) -> list[str]:
+    counter: Counter = Counter()
     if NDJSON.exists():
         for line in NDJSON.read_text(encoding="utf-8").splitlines():
             line = line.strip()
             if not line:
                 continue
             d = json.loads(line)
-            if d.get("prefecture") == pref and d.get("lat") and d.get("lng"):
-                all_manholes.append(d)
-
-    # Pokemon stats
-    pokemon_counter: Counter = Counter()
-    for m in all_manholes:
-        for p in m.get("pokemons", []):
-            pokemon_counter[p] += 1
-    top_pokemon = pokemon_counter.most_common(2)      # [(name, count), ...]
-    other_pokemon = [p for p, _ in pokemon_counter.most_common(20)
-                     if p not in {t[0] for t in top_pokemon}][:10]
-
-    # Pick photo manholes (up to 8 with local images, spread geographically)
-    image_ids = {f.stem.replace("_latest", "") for f in IMAGE_DIR.glob("*_latest.jpeg")}
-    photo_candidates = [m for m in all_manholes if str(m["id"]) in image_ids]
-    photo_manholes = _pick_spread(photo_candidates, n=8)
-
-    # -- Coordinate system ---------------------------------------------------
-    # Right panel: x 585..1185 (600 px wide), y 30..595 (565 px tall)
-    PANEL_X, PANEL_Y, PANEL_W, PANEL_H = 585, 30, 600, 565
-    PAD = 40
-
-    if outline_pts:
-        lngs = [p[0] for p in outline_pts]
-        lats = [p[1] for p in outline_pts]
-    else:
-        lngs = [m["lng"] for m in all_manholes] or [130.0, 146.0]
-        lats = [m["lat"] for m in all_manholes] or [30.0, 46.0]
-
-    lng_min, lng_max = min(lngs), max(lngs)
-    lat_min, lat_max = min(lats), max(lats)
-    lng_range = max(lng_max - lng_min, 0.1)
-    lat_range = max(lat_max - lat_min, 0.1)
-
-    avail_w = PANEL_W - 2 * PAD
-    avail_h = PANEL_H - 2 * PAD
-    scale = min(avail_w / lng_range, avail_h / lat_range)
-    map_w = lng_range * scale
-    map_h = lat_range * scale
-    x_off = PANEL_X + PAD + (avail_w - map_w) / 2
-    y_off = PANEL_Y + PAD + (avail_h - map_h) / 2 + map_h
-
-    def to_svg(lat: float, lng: float) -> tuple[float, float]:
-        x = x_off + (lng - lng_min) * scale
-        y = y_off - (lat - lat_min) * scale
-        return round(x, 1), round(y, 1)
-
-    # -- Build SVG fragments -------------------------------------------------
-    R = 48  # photo circle radius
-
-    path_d = ("M " + " L ".join(
-        "{},{}".format(*to_svg(lat, lng)) for lng, lat in outline_pts
-    ) + " Z") if outline_pts else ""
-
-    # Place photo circles (greedy non-overlap)
-    photo_placements: list[tuple] = []  # (id, label, lat, lng, px, py)
-    placed_centers: list[tuple[float, float]] = []
-    for m in photo_manholes:
-        pid = str(m["id"])
-        lat, lng = m["lat"], m["lng"]
-        mx, my = to_svg(lat, lng)
-        px, py = _find_placement(mx, my, placed_centers, R,
-                                 PANEL_X, PANEL_X + PANEL_W, PANEL_Y, PANEL_Y + PANEL_H)
-        placed_centers.append((px, py))
-        photo_placements.append((pid, m.get("city", ""), lat, lng, px, py))
-
-    photo_ids = {p[0] for p in photo_placements}
-
-    clips = lines = imgs = lbls = ""
-    for pid, label, lat, lng, px, py in photo_placements:
-        mx, my = to_svg(lat, lng)
-        b64 = base64.b64encode((IMAGE_DIR / f"{pid}_latest.jpeg").read_bytes()).decode()
-        clips += f'<clipPath id="c{pid}"><circle cx="{px}" cy="{py}" r="{R}"/></clipPath>\n'
-        lines += (f'<line x1="{mx}" y1="{my}" x2="{px}" y2="{py}" '
-                  f'stroke="rgba(255,255,255,0.2)" stroke-width="1.2" stroke-dasharray="4 3"/>\n')
-        imgs  += (f'<circle cx="{px}" cy="{py}" r="{R+3.5}" fill="#1a2a4a" '
-                  f'stroke="#F5C842" stroke-width="2" stroke-opacity="0.6"/>\n')
-        imgs  += (f'<image href="data:image/jpeg;base64,{b64}" '
-                  f'x="{px-R}" y="{py-R}" width="{R*2}" height="{R*2}" '
-                  f'clip-path="url(#c{pid})" preserveAspectRatio="xMidYMid slice"/>\n')
-        lbls  += (f'<text x="{px}" y="{py+R+14}" class="jp" font-size="12" font-weight="700" '
-                  f'fill="rgba(255,255,255,0.65)" text-anchor="middle">{_xe(label)}</text>\n')
-
-    dots = ""
-    for m in all_manholes:
-        x, y = to_svg(m["lat"], m["lng"])
-        pid = str(m["id"])
-        if pid in photo_ids:
-            dots += f'<circle cx="{x}" cy="{y}" r="4" fill="#FF6B6B" opacity="0.9"/>\n'
-        else:
-            dots += (f'<circle cx="{x}" cy="{y}" r="3.5" fill="#F5C842" '
-                     f'fill-opacity="0.65" stroke="#F5C842" stroke-width="0.5" stroke-opacity="0.4"/>\n')
-
-    # Pokemon bar + chip section
-    BAR_W = 430
-    pokemon_section = _build_pokemon_section(top_pokemon, other_pokemon, BAR_W)
-
-    map_label = f"{pref}のポケふた設置マップ（{count}箇所）"
-
-    return f'''<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
-<defs>
-  <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
-    <stop offset="0" stop-color="#0C1B33"/><stop offset="0.55" stop-color="#14103C"/><stop offset="1" stop-color="#0F1E42"/>
-  </linearGradient>
-  <radialGradient id="glow_r" cx="78%" cy="44%" r="42%">
-    <stop offset="0" stop-color="#2E1780" stop-opacity="0.5"/><stop offset="1" stop-color="#0C1B33" stop-opacity="0"/>
-  </radialGradient>
-  <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0" stop-color="#FFE566"/><stop offset="1" stop-color="#F5A623"/>
-  </linearGradient>
-  <radialGradient id="badge_glow" cx="50%" cy="50%" r="50%">
-    <stop offset="0" stop-color="#F5C842" stop-opacity="0.22"/><stop offset="1" stop-color="#F5C842" stop-opacity="0"/>
-  </radialGradient>
-  <filter id="nglow" x="-25%" y="-25%" width="150%" height="150%">
-    <feGaussianBlur stdDeviation="5" result="b"/>
-    <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-  </filter>
-  <style>.jp{{font-family:'Hiragino Sans','Yu Gothic UI','Noto Sans CJK JP',sans-serif;}}.en{{font-family:'Helvetica Neue',Arial,sans-serif;}}</style>
-  {clips}
-</defs>
-<rect width="1200" height="630" fill="url(#bg)"/>
-<rect width="1200" height="630" fill="url(#glow_r)"/>
-<g fill="white">
-  <circle cx="72" cy="25" r="1.1" opacity="0.4"/><circle cx="138" cy="14" r="0.9" opacity="0.3"/>
-  <circle cx="254" cy="20" r="1" opacity="0.35"/><circle cx="378" cy="12" r="1.2" opacity="0.4"/>
-  <circle cx="420" cy="52" r="1.7" opacity="0.45"/><circle cx="514" cy="6" r="1.3" opacity="0.35"/>
-  <circle cx="160" cy="58" r="1.3" opacity="0.3"/><circle cx="870" cy="18" r="1.4" opacity="0.25"/>
-</g>
-<line x1="578" y1="30" x2="578" y2="598" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-<!-- LEFT: text -->
-<rect x="52" y="44" width="228" height="30" rx="15"
-      fill="#F5C842" fill-opacity="0.1" stroke="#F5C842" stroke-opacity="0.45" stroke-width="1.5"/>
-<text x="166" y="64" class="jp" font-size="13" font-weight="700" fill="#F5C842" text-anchor="middle">都道府県別ランキング</text>
-<text x="48" y="175" class="jp" font-size="94" font-weight="900" fill="#FFFFFF" opacity="0.95">{pref}</text>
-<text x="48" y="285" class="en" font-size="100" font-weight="900" fill="url(#gold)" filter="url(#nglow)">{count}</text>
-<text x="{48 + len(str(count)) * 60}" y="272" class="jp" font-size="36" font-weight="700" fill="#F5C842">枚</text>
-<circle cx="390" cy="250" r="52" fill="url(#badge_glow)"/>
-<circle cx="390" cy="250" r="43" fill="#F5C842" fill-opacity="0.07" stroke="#F5C842" stroke-width="2" stroke-opacity="0.5"/>
-<text x="390" y="234" class="jp" font-size="13" font-weight="700" fill="#F5C842" text-anchor="middle" opacity="0.8">全国</text>
-<text x="390" y="264" class="en" font-size="33" font-weight="900" fill="#FFE566" text-anchor="middle" filter="url(#nglow)">{rank}</text>
-<text x="390" y="283" class="jp" font-size="15" font-weight="700" fill="#F5C842" text-anchor="middle" opacity="0.85">位</text>
-<text x="52" y="316" class="jp" font-size="16" fill="rgba(255,255,255,0.42)">全国{total}枚中　{percent}% を占める</text>
-<rect x="52" y="326" width="{BAR_W}" height="1" fill="#F5C842" opacity="0.22"/>
-{pokemon_section}
-<!-- RIGHT: map -->
-<path d="{path_d}" fill="rgba(90,150,220,0.09)" stroke="rgba(140,200,255,0.5)" stroke-width="1.8" stroke-linejoin="round"/>
-{lines}{dots}{imgs}{lbls}
-<text x="{PANEL_X + PANEL_W//2}" y="590" class="jp" font-size="11"
-      fill="rgba(255,255,255,0.18)" text-anchor="middle">{map_label}</text>
-<!-- FOOTER -->
-<rect x="0" y="601" width="1200" height="29" fill="rgba(0,0,0,0.32)"/>
-<line x1="0" y1="601" x2="1200" y2="601" stroke="#F5C842" stroke-width="1" stroke-opacity="0.15"/>
-<circle cx="68" cy="615" r="7" fill="#F5C842" opacity="0.55"/>
-<circle cx="68" cy="615" r="3.5" fill="#0C1B33"/>
-<text x="83" y="620" class="jp" font-size="15" font-weight="700" fill="rgba(255,255,255,0.72)">ポケふたマップ</text>
-<text x="228" y="620" class="jp" font-size="11" fill="rgba(255,255,255,0.28)">全国ポケモンマンホール情報サイト</text>
-<text x="1142" y="620" class="en" font-size="13" font-weight="600" fill="rgba(255,255,255,0.35)" text-anchor="end">data.pokefuta.com</text>
-</svg>'''
-
-
-def _pick_spread(candidates: list[dict], n: int) -> list[dict]:
-    """Pick up to n manholes spread geographically via greedy farthest-point."""
-    if not candidates:
-        return []
-    if len(candidates) <= n:
-        return candidates
-    chosen = [candidates[0]]
-    for _ in range(n - 1):
-        best, best_d = None, -1.0
-        for c in candidates:
-            if c in chosen:
-                continue
-            d = min(math.hypot(c["lat"] - x["lat"], c["lng"] - x["lng"]) for x in chosen)
-            if d > best_d:
-                best_d, best = d, c
-        if best:
-            chosen.append(best)
-    return chosen
-
-
-def _find_placement(
-    mx: float, my: float,
-    placed: list[tuple[float, float]],
-    R: int,
-    x_min: float, x_max: float, y_min: float, y_max: float,
-) -> tuple[float, float]:
-    """Find a non-overlapping circle center near (mx, my)."""
-    min_dist = R * 2 + 6
-    for dist in range(30, 120, 12):
-        for deg in range(0, 360, 20):
-            rad = math.radians(deg)
-            px = mx + dist * math.cos(rad)
-            py = my + dist * math.sin(rad)
-            if not (x_min + R < px < x_max - R and y_min + R < py < y_max - R):
-                continue
-            if all(math.hypot(px - ox, py - oy) >= min_dist for ox, oy in placed):
-                return px, py
-    return mx, my  # fallback
-
-
-def _build_pokemon_section(
-    top: list[tuple[str, int]],
-    others: list[str],
-    bar_w: int,
-) -> str:
-    out = '<text x="52" y="350" class="jp" font-size="13" font-weight="700" fill="rgba(255,255,255,0.38)">登場するポケモン</text>\n'
-
-    colors = ["url(#gold)", "rgba(140,200,255,0.7)"]
-    y = 370
-    for i, (name, cnt) in enumerate(top[:2]):
-        w = round(cnt / max(top[0][1], 1) * bar_w) if top else 0
-        out += (f'<text x="52" y="{y+4}" class="jp" font-size="14" font-weight="700" '
-                f'fill="rgba(255,255,255,0.75)">{_xe(name)}</text>\n')
-        out += (f'<text x="{52+bar_w}" y="{y+4}" class="jp" font-size="13" '
-                f'fill="#F5C842" text-anchor="end">{cnt}箇所</text>\n')
-        out += f'<rect x="52" y="{y+8}" width="{bar_w}" height="9" rx="4.5" fill="rgba(255,255,255,0.1)"/>\n'
-        out += f'<rect x="52" y="{y+8}" width="{w}" height="9" rx="4.5" fill="{colors[i]}" opacity="0.85"/>\n'
-        y += 34
-
-    if others:
-        out += f'<text x="52" y="{y+12}" class="jp" font-size="12" fill="rgba(255,255,255,0.32)">その他の登場ポケモン</text>\n'
-        cx, cy = 52, y + 32
-        for name in others:
-            w = len(name) * 14 + 18
-            if cx + w > 530:
-                cx, cy = 52, cy + 28
-            out += (f'<rect x="{cx}" y="{cy-16}" width="{w}" height="22" rx="11" '
-                    f'fill="rgba(100,160,230,0.12)" stroke="rgba(140,190,255,0.3)" stroke-width="1"/>\n')
-            out += (f'<text x="{cx+w//2}" y="{cy}" class="jp" font-size="12" '
-                    f'fill="rgba(255,255,255,0.6)" text-anchor="middle">{_xe(name)}</text>\n')
-            cx += w + 6
-    return out
+            if d.get("prefecture") == pref:
+                for p in d.get("pokemons", []):
+                    counter[p] += 1
+    return [p for p, _ in counter.most_common(n)]
 
 
 # ---------------------------------------------------------------------------
-# Template-based builders (other types)
+# Design template renderer
 # ---------------------------------------------------------------------------
 
-def _placeholders_travel_trivia(raw: dict) -> dict:
+def _render_design_template(theme: str, v: dict) -> str:
+    """Load pokefuta_ogp_{theme}.svg and substitute content by element ID.
+
+    Required keys in v: categoryLabel, titleLine1, titleLine2, kicker,
+      mainNumber, mainUnit, chips (list[str] max 6), description, mapCaption.
+    Optional: heroLat, heroLng (float) — relocates the teardrop hero pin.
+    """
+    tmpl_path = TEMPLATE_DIR / f"pokefuta_ogp_{theme}.svg"
+    if not tmpl_path.exists():
+        sys.exit(f"[generate_social_ogp] テンプレートが見つかりません: {tmpl_path}")
+
+    svg = tmpl_path.read_text(encoding="utf-8")
+
+    main_num = str(v.get("mainNumber", ""))
+    svg = _set_text(svg, "cat-label",          v.get("categoryLabel", ""))
+    svg = _set_text(svg, "title-1",            v.get("titleLine1", ""))
+    svg = _set_text(svg, "title-2",            v.get("titleLine2", ""))
+    svg = _set_text(svg, "num-kicker",         v.get("kicker", ""))
+    svg = _set_text(svg, "main-number",        main_num)
+    svg = _set_text(svg, "main-number-glow",   main_num)
+    svg = _set_text(svg, "main-unit",          v.get("mainUnit", ""))
+    svg = _set_text(svg, "description",        v.get("description", ""))
+    svg = _set_text(svg, "map-caption",        v.get("mapCaption", ""))
+    svg = _set_text(svg, "footer-name",        v.get("footerLabel", "ポケふたマップ"))
+    svg = _set_text(svg, "footer-url",         v.get("footerUrl", "data.pokefuta.com"))
+
+    # main-unit x: 74 + digit_count*70 + 14
+    digits = len(main_num.lstrip("-+")) or 1
+    svg = _set_main_unit_x(svg, 74 + digits * 70 + 14)
+
+    # Chips: rebuild with correct widths
+    svg = _replace_chips_section(svg, v.get("chips", []), theme)
+
+    # Hero pin relocation
+    hero_lat = v.get("heroLat")
+    hero_lng = v.get("heroLng")
+    if hero_lat is not None and hero_lng is not None:
+        hx, hy = _latlon_to_hero_xy(hero_lat, hero_lng)
+        svg = _set_hero_pin(svg, hx, hy)
+
+    return svg
+
+
+# ---------------------------------------------------------------------------
+# Per-type variable builders
+# ---------------------------------------------------------------------------
+
+def _vars_prefecture_rank(raw: dict) -> dict:
+    pref = raw["pref"]
+    lat, lng = _PREF_LATLNG.get(pref, (35.69, 139.69))
+    return {
+        "categoryLabel": "RANKING",
+        "titleLine1": f"{pref}の",
+        "titleLine2": "ポケふた",
+        "kicker": f"都道府県別ランキング 全国{raw['rank']}位",
+        "mainNumber": str(raw["count"]),
+        "mainUnit": "枚",
+        "chips": _top_pokemons_for_pref(pref),
+        "description": f"全国{raw['total']}枚中 {raw['percent']}%",
+        "mapCaption": f"{pref}設置マップ",
+        "heroLat": lat,
+        "heroLng": lng,
+    }
+
+
+def _vars_pokemon_rank(raw: dict) -> dict:
+    return {
+        "categoryLabel": "RANKING",
+        "titleLine1": raw["ja_name"],
+        "titleLine2": "の設置数",
+        "kicker": f"ポケモン別ランキング 全国{raw['rank']}位",
+        "mainNumber": str(raw["count"]),
+        "mainUnit": "枚",
+        "chips": [],
+        "description": f"{raw['city_count']}市区町村に設置",
+        "mapCaption": "全国マップ",
+    }
+
+
+def _vars_travel_trivia(raw: dict) -> dict:
     ft = raw["fact_type"]
     v = raw["values"]
+    base: dict = {
+        "categoryLabel": "TRIVIA",
+        "mainUnit": "",
+        "chips": [],
+        "description": "",
+        "mapCaption": "全国マップ",
+    }
     if ft == "total_count":
-        line1, line2, line3, line4 = str(v["total"]), "全国ポケふた設置数", "", ""
+        base.update({
+            "titleLine1": "全国ポケふた",
+            "titleLine2": "設置総数",
+            "kicker": "現在のデータより",
+            "mainNumber": str(v["total"]),
+            "mainUnit": "枚",
+            "description": "全国ポケモンマンホール情報",
+        })
     elif ft == "empty_prefs":
-        line1 = f"{v['empty_count']}県"
-        line2 = "ポケふた未設置の都道府県"
-        line3 = "・".join(v["pref_names"])
-        line4 = ""
+        base.update({
+            "titleLine1": "ポケふた未設置の",
+            "titleLine2": "都道府県",
+            "kicker": f"{v['empty_count']}県が現在未設置",
+            "mainNumber": str(v["empty_count"]),
+            "mainUnit": "県",
+            "chips": v.get("pref_names", [])[:6],
+            "description": "設置エリア拡大を期待！",
+        })
     elif ft == "regional_top":
-        line1, line2 = v["region"], "ポケふたが最も多い地方"
-        line3, line4 = f"{v['count']}枚 / 全国{v['total']}枚", ""
+        base.update({
+            "titleLine1": v["region"],
+            "titleLine2": "地方が最多",
+            "kicker": f"全国{v['total']}枚中",
+            "mainNumber": str(v["count"]),
+            "mainUnit": "枚",
+            "description": f"{v['region']}地方に集中",
+        })
     elif ft == "pokemon_variety":
-        line1, line2, line3, line4 = str(v["species_count"]), "登場するポケモンの種類数", "", ""
+        base.update({
+            "titleLine1": "登場ポケモン",
+            "titleLine2": "種類数",
+            "kicker": "全国集計",
+            "mainNumber": str(v["species_count"]),
+            "mainUnit": "種",
+            "description": "多彩なポケモンが全国に",
+        })
     elif ft == "pokemon_widest_spread":
-        line1 = str(v["city_count"])
-        line2, line3, line4 = f"{v['ja_name']}の設置市区町村数", "全国最多の分布", ""
+        base.update({
+            "titleLine1": v["ja_name"],
+            "titleLine2": "が最多分布",
+            "kicker": "設置市区町村 全国1位",
+            "mainNumber": str(v["city_count"]),
+            "mainUnit": "市区町村",
+            "description": f"{v['ja_name']}は全国最多分布",
+        })
     elif ft == "top3_ranking":
-        line1, line2 = "TOP3", "都道府県別ランキング"
-        line3 = f"①{v['top3'][0]['pref']} {v['top3'][0]['count']}枚　②{v['top3'][1]['pref']} {v['top3'][1]['count']}枚"
-        line4 = f"③{v['top3'][2]['pref']} {v['top3'][2]['count']}枚"
-    else:
-        line1 = line2 = line3 = line4 = ""
-    return {"{{LINE1}}": line1, "{{LINE2}}": line2, "{{LINE3}}": line3, "{{LINE4}}": line4}
+        top3 = v["top3"]
+        base.update({
+            "titleLine1": "都道府県別",
+            "titleLine2": "TOP3",
+            "kicker": f"1位: {top3[0]['pref']} {top3[0]['count']}枚",
+            "mainNumber": str(top3[0]["count"]),
+            "mainUnit": "枚",
+            "chips": [
+                f"①{top3[0]['pref']} {top3[0]['count']}枚",
+                f"②{top3[1]['pref']} {top3[1]['count']}枚",
+                f"③{top3[2]['pref']} {top3[2]['count']}枚",
+            ],
+            "description": "都道府県別ランキング",
+        })
+    return base
 
 
-def _placeholders_latest_photo(raw: dict) -> dict:
-    pokemon_str = "・".join(raw.get("pokemon_list", [raw["pokemon"]]))
-    date_str = raw["created_at"][:10].replace("-", "/")
-    photo_path = IMAGE_DIR / f"{raw['manhole_id']}_latest.jpeg"
-    if photo_path.exists():
-        b64 = base64.b64encode(photo_path.read_bytes()).decode()
-        photo_elem = (
-            f'<image href="data:image/jpeg;base64,{b64}" '
-            f'x="770" y="157" width="310" height="310" '
-            f'preserveAspectRatio="xMidYMid slice" clip-path="url(#photoClip)"/>'
-        )
-    else:
-        photo_elem = ('<text x="925" y="318" class="reg" font-size="16" '
-                      'fill="#9A7A3F" text-anchor="middle">写真なし</text>')
+def _vars_rare_area(raw: dict) -> dict:
+    pref = raw["pref"]
+    lat, lng = _PREF_LATLNG.get(pref, (35.69, 139.69))
+    percent = round(raw["count"] / max(raw["total"], 1) * 100, 1)
     return {
-        "{{PREF}}": raw["pref"], "{{CITY}}": raw["city"],
-        "{{POKEMON}}": pokemon_str, "{{DATE}}": date_str,
-        "{{PHOTO_ELEMENT}}": photo_elem,
+        "categoryLabel": "RARE",
+        "titleLine1": f"{pref}の",
+        "titleLine2": "ポケふた",
+        "kicker": "まだ少ない地域",
+        "mainNumber": str(raw["count"]),
+        "mainUnit": "枚",
+        "chips": [],
+        "description": f"全国{raw['total']}枚中 {percent}%",
+        "mapCaption": f"{pref}設置マップ",
+        "heroLat": lat,
+        "heroLng": lng,
     }
 
 
-def _placeholders_pokemon_rank(raw: dict) -> dict:
+def _vars_no_photo(raw: dict) -> dict:
+    pref = raw["pref"]
+    lat, lng = _PREF_LATLNG.get(pref, (35.69, 139.69))
     return {
-        "{{POKEMON}}": raw["ja_name"], "{{RANK}}": str(raw["rank"]),
-        "{{COUNT}}": str(raw["count"]), "{{CITY_COUNT}}": str(raw["city_count"]),
+        "categoryLabel": "RARE",
+        "titleLine1": f"{pref}の",
+        "titleLine2": "写真募集中",
+        "kicker": "写真未投稿マンホール",
+        "mainNumber": str(raw["no_photo_count"]),
+        "mainUnit": "枚",
+        "chips": [],
+        "description": f"設置{raw['total_count']}枚中 {raw['no_photo_count']}枚が未投稿",
+        "mapCaption": f"{pref}マップ",
+        "heroLat": lat,
+        "heroLng": lng,
     }
 
 
-def _placeholders_rare_area(raw: dict) -> dict:
-    return {"{{PREF}}": raw["pref"], "{{COUNT}}": str(raw["count"]), "{{TOTAL}}": str(raw["total"])}
-
-
-def _placeholders_no_photo(raw: dict) -> dict:
+def _vars_latest_photo(raw: dict) -> dict:
+    pokemon_list = raw.get("pokemon_list", [raw.get("pokemon", "")])
+    date_str = raw.get("created_at", "")[:10].replace("-", "/")
     return {
-        "{{PREF}}": raw["pref"],
-        "{{NO_PHOTO_COUNT}}": str(raw["no_photo_count"]),
-        "{{TOTAL_COUNT}}": str(raw["total_count"]),
+        "categoryLabel": "TRIVIA",
+        "titleLine1": f"{raw['pref']} {raw['city']}",
+        "titleLine2": "新着ポケふた",
+        "kicker": f"投稿: {date_str}",
+        "mainNumber": str(len(pokemon_list)),
+        "mainUnit": "種",
+        "chips": pokemon_list[:6],
+        "description": "最新ポケふた情報",
+        "mapCaption": f"{raw['city']}マップ",
     }
 
 
-_TEMPLATE_BUILDERS = {
-    "travel_trivia": _placeholders_travel_trivia,
-    "latest_photo": _placeholders_latest_photo,
-    "pokemon_rank": _placeholders_pokemon_rank,
-    "rare_area": _placeholders_rare_area,
-    "no_photo": _placeholders_no_photo,
+def _vars_michineki(raw: dict) -> dict:
+    all_pokemons = [p for m in raw["manholes"] for p in m.get("pokemons", [])]
+    chips = [p for p, _ in Counter(all_pokemons).most_common(6)]
+    station_name = raw["station_name"]
+    if len(station_name) > 12:
+        station_name = station_name[:12] + "…"
+    return {
+        "categoryLabel": "RANKING",
+        "titleLine1": station_name,
+        "titleLine2": "道の駅チャレンジ",
+        "kicker": f"半径{raw['radius_km']}km以内",
+        "mainNumber": str(raw["manhole_count"]),
+        "mainUnit": "枚",
+        "chips": chips,
+        "description": f"{raw['pref']}のポケふた",
+        "mapCaption": "設置エリアマップ",
+        "heroLat": raw["lat"],
+        "heroLng": raw["lng"],
+    }
+
+
+def _vars_remote_island(raw: dict) -> dict:
+    return {
+        "categoryLabel": "RARE",
+        "titleLine1": raw["island_name"],
+        "titleLine2": "のポケふた",
+        "kicker": f"{raw['pref']} {raw['city']}",
+        "mainNumber": str(raw["manhole_count"]),
+        "mainUnit": "枚",
+        "chips": raw.get("top_pokemons", [])[:6],
+        "description": "離島のポケモンマンホール",
+        "mapCaption": "日本マップ",
+    }
+
+
+_DESIGN_THEME: dict[str, str] = {
+    "prefecture_rank": "ranking",
+    "pokemon_rank":    "ranking",
+    "travel_trivia":   "trivia",
+    "rare_area":       "rare",
+    "no_photo":        "rare",
+    "latest_photo":    "trivia",
+    "michineki":       "ranking",
+    "remote_island":   "rare",
 }
 
-
-# ---------------------------------------------------------------------------
-# Area map SVG builder (michineki / remote_island)
-# ---------------------------------------------------------------------------
-
-def _build_area_map_svg(
-    headline: str,
-    subline: str,
-    count: int,
-    pref: str,
-    manholes: list[dict],
-    top_pokemons: list[str],
-    special_point: dict | None = None,
-    extra_label: str = "",
-) -> str:
-    """Dark-theme 2-panel SVG for area-based types (no prefecture outline)."""
-    PANEL_X, PANEL_Y, PANEL_W, PANEL_H = 585, 30, 600, 565
-    PAD = 50
-
-    all_lats = [m["lat"] for m in manholes if m.get("lat")]
-    all_lngs = [m["lng"] for m in manholes if m.get("lng")]
-    if special_point:
-        all_lats.append(special_point["lat"])
-        all_lngs.append(special_point["lng"])
-    if not all_lats:
-        all_lats, all_lngs = [35.0], [136.0]
-
-    lat_min, lat_max = min(all_lats), max(all_lats)
-    lng_min, lng_max = min(all_lngs), max(all_lngs)
-    if lat_max - lat_min < 0.05:
-        mid = (lat_min + lat_max) / 2
-        lat_min, lat_max = mid - 0.1, mid + 0.1
-    if lng_max - lng_min < 0.05:
-        mid = (lng_min + lng_max) / 2
-        lng_min, lng_max = mid - 0.2, mid + 0.2
-
-    lat_pad = (lat_max - lat_min) * 0.3
-    lng_pad = (lng_max - lng_min) * 0.3
-    lat_min -= lat_pad; lat_max += lat_pad
-    lng_min -= lng_pad; lng_max += lng_pad
-
-    lng_range = lng_max - lng_min
-    lat_range = lat_max - lat_min
-    avail_w = PANEL_W - 2 * PAD
-    avail_h = PANEL_H - 2 * PAD
-    scale = min(avail_w / lng_range, avail_h / lat_range)
-    map_w = lng_range * scale
-    map_h = lat_range * scale
-    x_off = PANEL_X + PAD + (avail_w - map_w) / 2
-    y_off = PANEL_Y + PAD + (avail_h - map_h) / 2 + map_h
-
-    def to_svg(lat: float, lng: float) -> tuple[float, float]:
-        x = x_off + (lng - lng_min) * scale
-        y = y_off - (lat - lat_min) * scale
-        return round(x, 1), round(y, 1)
-
-    image_ids = {f.stem.replace("_latest", "") for f in IMAGE_DIR.glob("*_latest.jpeg")}
-    photo_candidates = [m for m in manholes if str(m.get("id", "")) in image_ids and m.get("lat") and m.get("lng")]
-    photo_manholes = _pick_spread(photo_candidates, n=5)
-
-    R = 42
-    clips = lines_svg = imgs = lbls = ""
-    placed_centers: list[tuple[float, float]] = []
-    photo_ids: set[str] = set()
-
-    for m in photo_manholes:
-        pid = str(m["id"])
-        lat, lng = m["lat"], m["lng"]
-        mx, my = to_svg(lat, lng)
-        px, py = _find_placement(mx, my, placed_centers, R,
-                                 PANEL_X, PANEL_X + PANEL_W, PANEL_Y, PANEL_Y + PANEL_H)
-        placed_centers.append((px, py))
-        photo_ids.add(pid)
-        b64 = base64.b64encode((IMAGE_DIR / f"{pid}_latest.jpeg").read_bytes()).decode()
-        clips += f'<clipPath id="c{pid}"><circle cx="{px}" cy="{py}" r="{R}"/></clipPath>\n'
-        lines_svg += (f'<line x1="{mx}" y1="{my}" x2="{px}" y2="{py}" '
-                      f'stroke="rgba(255,255,255,0.2)" stroke-width="1.2" stroke-dasharray="4 3"/>\n')
-        imgs += (f'<circle cx="{px}" cy="{py}" r="{R+3.5}" fill="#1a2a4a" '
-                 f'stroke="#F5C842" stroke-width="2" stroke-opacity="0.6"/>\n')
-        imgs += (f'<image href="data:image/jpeg;base64,{b64}" '
-                 f'x="{px-R}" y="{py-R}" width="{R*2}" height="{R*2}" '
-                 f'clip-path="url(#c{pid})" preserveAspectRatio="xMidYMid slice"/>\n')
-        city = m.get("city", "")
-        lbls += (f'<text x="{px}" y="{py+R+14}" class="jp" font-size="12" font-weight="700" '
-                 f'fill="rgba(255,255,255,0.65)" text-anchor="middle">{_xe(city)}</text>\n')
-
-    dots = ""
-    for m in manholes:
-        if not m.get("lat") or not m.get("lng"):
-            continue
-        x, y = to_svg(m["lat"], m["lng"])
-        if str(m.get("id", "")) in photo_ids:
-            dots += f'<circle cx="{x}" cy="{y}" r="4" fill="#FF6B6B" opacity="0.9"/>\n'
-        else:
-            dots += (f'<circle cx="{x}" cy="{y}" r="5" fill="#F5C842" '
-                     f'fill-opacity="0.7" stroke="#FFE566" stroke-width="1"/>\n')
-
-    special_svg = ""
-    if special_point:
-        sx, sy = to_svg(special_point["lat"], special_point["lng"])
-        label = _xe(special_point.get("label", ""))
-        special_svg = (
-            f'<circle cx="{sx}" cy="{sy}" r="12" fill="#00C875" opacity="0.9" stroke="white" stroke-width="2"/>\n'
-            f'<text x="{sx}" y="{sy+5}" font-size="13" text-anchor="middle" fill="white" font-weight="700">★</text>\n'
-            f'<text x="{sx}" y="{sy+28}" class="jp" font-size="11" fill="rgba(0,220,130,0.9)" text-anchor="middle">{label}</text>\n'
-        )
-
-    BAR_W = 430
-    pokemon_chips = ""
-    if top_pokemons:
-        pokemon_chips += '<text x="52" y="415" class="jp" font-size="13" font-weight="700" fill="rgba(255,255,255,0.38)">登場するポケモン</text>\n'
-        cx_p, cy_p = 52, 438
-        for name in top_pokemons[:6]:
-            w = len(name) * 14 + 18
-            if cx_p + w > 530:
-                cx_p, cy_p = 52, cy_p + 28
-            pokemon_chips += (f'<rect x="{cx_p}" y="{cy_p-16}" width="{w}" height="22" rx="11" '
-                              f'fill="rgba(100,160,230,0.12)" stroke="rgba(140,190,255,0.3)" stroke-width="1"/>\n')
-            pokemon_chips += (f'<text x="{cx_p+w//2}" y="{cy_p}" class="jp" font-size="12" '
-                              f'fill="rgba(255,255,255,0.6)" text-anchor="middle">{_xe(name)}</text>\n')
-            cx_p += w + 6
-
-    hl_len = len(headline)
-    hl_size = "44" if hl_len >= 10 else ("52" if hl_len >= 7 else "64")
-
-    return f'''<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
-<defs>
-  <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
-    <stop offset="0" stop-color="#0C1B33"/><stop offset="0.55" stop-color="#14103C"/><stop offset="1" stop-color="#0F1E42"/>
-  </linearGradient>
-  <radialGradient id="glow_r" cx="78%" cy="44%" r="42%">
-    <stop offset="0" stop-color="#2E1780" stop-opacity="0.5"/><stop offset="1" stop-color="#0C1B33" stop-opacity="0"/>
-  </radialGradient>
-  <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0" stop-color="#FFE566"/><stop offset="1" stop-color="#F5A623"/>
-  </linearGradient>
-  <filter id="nglow" x="-25%" y="-25%" width="150%" height="150%">
-    <feGaussianBlur stdDeviation="5" result="b"/>
-    <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-  </filter>
-  <style>.jp{{font-family:'Hiragino Sans','Yu Gothic UI','Noto Sans CJK JP',sans-serif;}}.en{{font-family:'Helvetica Neue',Arial,sans-serif;}}</style>
-  {clips}
-</defs>
-<rect width="1200" height="630" fill="url(#bg)"/>
-<rect width="1200" height="630" fill="url(#glow_r)"/>
-<line x1="578" y1="30" x2="578" y2="598" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-<!-- LEFT -->
-<rect x="52" y="44" width="228" height="30" rx="15"
-      fill="#F5C842" fill-opacity="0.1" stroke="#F5C842" stroke-opacity="0.45" stroke-width="1.5"/>
-<text x="166" y="64" class="jp" font-size="13" font-weight="700" fill="#F5C842" text-anchor="middle">{_xe(subline)}</text>
-<text x="48" y="{130 + (64 - int(hl_size)) * 2}" class="jp" font-size="{hl_size}" font-weight="900" fill="#FFFFFF" opacity="0.95">{_xe(headline)}</text>
-<text x="48" y="270" class="en" font-size="100" font-weight="900" fill="url(#gold)" filter="url(#nglow)">{count}</text>
-<text x="{48 + len(str(count)) * 60}" y="257" class="jp" font-size="36" font-weight="700" fill="#F5C842">枚</text>
-<text x="52" y="300" class="jp" font-size="16" fill="rgba(255,255,255,0.42)">{_xe(pref)}</text>
-<text x="52" y="324" class="jp" font-size="14" fill="rgba(255,255,255,0.30)">{_xe(extra_label)}</text>
-<rect x="52" y="338" width="{BAR_W}" height="1" fill="#F5C842" opacity="0.22"/>
-{pokemon_chips}
-<!-- RIGHT: map -->
-{lines_svg}{dots}{special_svg}{imgs}{lbls}
-<text x="{PANEL_X + PANEL_W//2}" y="590" class="jp" font-size="11"
-      fill="rgba(255,255,255,0.18)" text-anchor="middle">{_xe(headline)}のポケふた設置マップ</text>
-<!-- FOOTER -->
-<rect x="0" y="601" width="1200" height="29" fill="rgba(0,0,0,0.32)"/>
-<line x1="0" y1="601" x2="1200" y2="601" stroke="#F5C842" stroke-width="1" stroke-opacity="0.15"/>
-<circle cx="68" cy="615" r="7" fill="#F5C842" opacity="0.55"/>
-<circle cx="68" cy="615" r="3.5" fill="#0C1B33"/>
-<text x="83" y="620" class="jp" font-size="15" font-weight="700" fill="rgba(255,255,255,0.72)">ポケふたマップ</text>
-<text x="228" y="620" class="jp" font-size="11" fill="rgba(255,255,255,0.28)">全国ポケモンマンホール情報サイト</text>
-<text x="1142" y="620" class="en" font-size="13" font-weight="600" fill="rgba(255,255,255,0.35)" text-anchor="end">data.pokefuta.com</text>
-</svg>'''
-
-
-def _build_michineki_svg(raw: dict) -> str:
-    all_pokemons = [p for m in raw["manholes"] for p in m.get("pokemons", [])]
-    top_pokemons = [p for p, _ in Counter(all_pokemons).most_common(6)]
-    return _build_area_map_svg(
-        headline=raw["station_name"],
-        subline="道の駅チャレンジ",
-        count=raw["manhole_count"],
-        pref=raw["pref"],
-        manholes=raw["manholes"],
-        top_pokemons=top_pokemons,
-        special_point={"lat": raw["lat"], "lng": raw["lng"], "label": "道の駅"},
-        extra_label=f'半径{raw["radius_km"]}km以内に{raw["manhole_count"]}枚',
-    )
-
-
-def _build_remote_island_svg(raw: dict) -> str:
-    return _build_area_map_svg(
-        headline=raw["island_name"],
-        subline="離島のポケふた",
-        count=raw["manhole_count"],
-        pref=raw["pref"],
-        manholes=raw["manholes"],
-        top_pokemons=raw.get("top_pokemons", []),
-        special_point=None,
-        extra_label=f'{raw["pref"]} {raw["city"]}',
-    )
+_DESIGN_VAR_BUILDERS = {
+    "prefecture_rank": _vars_prefecture_rank,
+    "pokemon_rank":    _vars_pokemon_rank,
+    "travel_trivia":   _vars_travel_trivia,
+    "rare_area":       _vars_rare_area,
+    "no_photo":        _vars_no_photo,
+    "latest_photo":    _vars_latest_photo,
+    "michineki":       _vars_michineki,
+    "remote_island":   _vars_remote_island,
+}
 
 
 # ---------------------------------------------------------------------------
@@ -670,7 +502,9 @@ def _build_remote_island_svg(raw: dict) -> str:
 def main() -> None:
     for path in (DAILY_JSON, CANDIDATES_JSON):
         if not path.exists():
-            sys.exit(f"[generate_social_ogp] {path.name} が見つかりません。先に /social-post を実行してください。")
+            sys.exit(
+                f"[generate_social_ogp] {path.name} が見つかりません。先に /social-post を実行してください。"
+            )
 
     daily = json.loads(DAILY_JSON.read_text(encoding="utf-8"))
     post_id = daily["id"]
@@ -683,25 +517,14 @@ def main() -> None:
 
     raw = candidate["raw_data"]
 
-    # Generate SVG text
-    if post_type == "prefecture_rank":
-        print(f"[generate_social_ogp] {raw['pref']} の地図・写真データを取得中…")
-        svg_text = _build_prefecture_rank_svg(raw)
-    elif post_type == "michineki":
-        print(f"[generate_social_ogp] {raw['station_name']} の地図を生成中…")
-        svg_text = _build_michineki_svg(raw)
-    elif post_type == "remote_island":
-        print(f"[generate_social_ogp] {raw['island_name']} の地図を生成中…")
-        svg_text = _build_remote_island_svg(raw)
-    elif post_type in _TEMPLATE_BUILDERS:
-        template_path = TEMPLATE_DIR / f"{post_type}.svg"
-        if not template_path.exists():
-            sys.exit(f"[generate_social_ogp] テンプレートが見つかりません: {template_path}")
-        svg_text = template_path.read_text(encoding="utf-8")
-        for key, value in _TEMPLATE_BUILDERS[post_type](raw).items():
-            svg_text = svg_text.replace(key, value)
-    else:
+    theme = _DESIGN_THEME.get(post_type)
+    var_builder = _DESIGN_VAR_BUILDERS.get(post_type)
+    if theme is None or var_builder is None:
         sys.exit(f"[generate_social_ogp] 未対応タイプ: {post_type}")
+
+    print(f"[generate_social_ogp] {post_type} → {theme} テンプレートで生成中…")
+    vars_dict = var_builder(raw)
+    svg_text = _render_design_template(theme, vars_dict)
 
     OUTPUT_SVG.write_text(svg_text, encoding="utf-8")
     print(f"[generate_social_ogp] SVG → {OUTPUT_SVG}")
