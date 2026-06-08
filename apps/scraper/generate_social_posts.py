@@ -8,6 +8,7 @@ Body text generation is delegated to Claude (via the /social-post skill).
 from __future__ import annotations
 
 import json
+import math
 from collections import Counter
 from pathlib import Path
 from urllib.parse import quote
@@ -17,6 +18,20 @@ NDJSON = ROOT / "docs" / "pokefuta.ndjson"
 PHOTOS_JSON = ROOT / "docs" / "latest-manhole-photos.json"
 POKEMON_METADATA_JSON = ROOT / "docs" / "pokemon_metadata.json"
 CANDIDATES_JSON = ROOT / "docs" / "social-post-candidates.json"
+MICHINEKI_JSON = ROOT / "dataset" / "michineki.json"
+
+MICHINEKI_RADIUS_KM = 10
+MICHINEKI_MIN_COUNT = 3
+
+ISLAND_CITY_MAP: list[dict] = [
+    {"island_name": "小笠原諸島", "pref": "東京都",  "city": "小笠原"},
+    {"island_name": "小豆島",     "pref": "香川県",  "city": "小豆島"},
+    {"island_name": "直島",       "pref": "香川県",  "city": "直島"},
+    {"island_name": "隠岐諸島",   "pref": "島根県",  "city": "隠岐の島"},
+    {"island_name": "宮古島",     "pref": "沖縄県",  "city": "宮古島"},
+    {"island_name": "久米島",     "pref": "沖縄県",  "city": "久米島"},
+    {"island_name": "五島列島",   "pref": "長崎県",  "city": "新上五島"},
+]
 
 BASE_URL = "https://data.pokefuta.com/"
 
@@ -73,6 +88,24 @@ def _filter_pokemons(pokemons: object) -> list[str]:
 def _pref_slug(pref: str) -> str:
     idx = PREFECTURE_ORDER.index(pref) + 1 if pref in PREFECTURE_ORDER else 0
     return f"pref{idx:02d}"
+
+
+def _haversine(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
+    R = 6371.0
+    dlat = math.radians(lat2 - lat1)
+    dlon = math.radians(lon2 - lon1)
+    a = (math.sin(dlat / 2) ** 2
+         + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon / 2) ** 2)
+    return R * 2 * math.asin(math.sqrt(a))
+
+
+def load_michineki(path: Path) -> list[dict]:
+    if not path.exists():
+        return []
+    try:
+        return json.loads(path.read_text(encoding="utf-8")).get("@graph", [])
+    except (json.JSONDecodeError, OSError):
+        return []
 
 
 def load_records(path: Path) -> list[dict]:
@@ -450,6 +483,102 @@ def gen_travel_trivia_candidates(stats: dict, pokemon_stats: dict) -> list[dict]
     return candidates
 
 
+def gen_michineki_candidates(records: list[dict], michineki: list[dict]) -> list[dict]:
+    active = [r for r in records if r.get("status") == "active" and r.get("lat") and r.get("lng")]
+    candidates = []
+    for station in michineki:
+        geo = station.get("geo", {})
+        slat, slng = geo.get("latitude"), geo.get("longitude")
+        if not slat or not slng:
+            continue
+        nearby = sorted(
+            [
+                {
+                    "id": r["id"],
+                    "title": r.get("title", ""),
+                    "city": r.get("city", ""),
+                    "pokemons": _filter_pokemons(r.get("pokemons", []))[:2],
+                    "dist_km": round(_haversine(slat, slng, r["lat"], r["lng"]), 2),
+                    "lat": r["lat"],
+                    "lng": r["lng"],
+                }
+                for r in active
+                if _haversine(slat, slng, r["lat"], r["lng"]) <= MICHINEKI_RADIUS_KM
+            ],
+            key=lambda x: x["dist_km"],
+        )
+        if len(nearby) < MICHINEKI_MIN_COUNT:
+            continue
+        pref = station.get("address", {}).get("addressRegion", "")
+        sid = station.get("identifier", "")
+        candidates.append({
+            "id": f"michineki-{sid}",
+            "type": "michineki",
+            "title": f"{station['name']}周辺のポケふた（{len(nearby)}枚）",
+            "url": station.get("url", f"{BASE_URL}summary/"),
+            "hashtags": ["#ポケふた", "#ポケモンマンホール"],
+            "imageType": "michineki",
+            "source": "michineki",
+            "raw_data": {
+                "station_id": sid,
+                "station_name": station["name"],
+                "pref": pref,
+                "lat": slat,
+                "lng": slng,
+                "manhole_count": len(nearby),
+                "radius_km": MICHINEKI_RADIUS_KM,
+                "manholes": nearby,
+            },
+        })
+    return candidates
+
+
+def gen_remote_island_candidates(records: list[dict]) -> list[dict]:
+    by_pref_city: dict[tuple, list] = {}
+    for r in records:
+        if r.get("status") != "active":
+            continue
+        key = (r.get("prefecture", ""), r.get("city", ""))
+        by_pref_city.setdefault(key, []).append(r)
+
+    candidates = []
+    for island in ISLAND_CITY_MAP:
+        manholes = by_pref_city.get((island["pref"], island["city"]), [])
+        if not manholes:
+            continue
+        poke_counter: Counter = Counter()
+        for m in manholes:
+            for p in _filter_pokemons(m.get("pokemons", [])):
+                poke_counter[p] += 1
+        candidates.append({
+            "id": f"island-{island['city']}",
+            "type": "remote_island",
+            "title": f"{island['island_name']}のポケふた（{len(manholes)}枚）",
+            "url": f"{BASE_URL}summary/",
+            "hashtags": ["#ポケふた", "#ポケモンマンホール"],
+            "imageType": "remote_island",
+            "source": "remote_island",
+            "raw_data": {
+                "island_name": island["island_name"],
+                "pref": island["pref"],
+                "city": island["city"],
+                "manhole_count": len(manholes),
+                "manholes": [
+                    {
+                        "id": m["id"],
+                        "title": m.get("title", ""),
+                        "pokemons": _filter_pokemons(m.get("pokemons", []))[:3],
+                        "lat": m.get("lat"),
+                        "lng": m.get("lng"),
+                    }
+                    for m in manholes
+                ],
+                "top_pokemons": [p for p, _ in poke_counter.most_common(3)],
+            },
+        })
+    return candidates
+
+
 def main() -> int:
     if not NDJSON.exists():
         print(f"[ERROR] {NDJSON} not found")
@@ -460,6 +589,7 @@ def main() -> int:
     records_by_id = {str(r.get("id", "")): r for r in active_records}
     pokemon_metadata = load_pokemon_metadata(POKEMON_METADATA_JSON)
     photos_data = load_photos(PHOTOS_JSON)
+    michineki = load_michineki(MICHINEKI_JSON)
 
     stats = build_stats(active_records)
     pokemon_stats = build_pokemon_stats(active_records, pokemon_metadata)
@@ -471,6 +601,8 @@ def main() -> int:
     candidates.extend(gen_latest_photo_candidates(photos_data, records_by_id))
     candidates.extend(gen_no_photo_candidates(records, photos_data))
     candidates.extend(gen_travel_trivia_candidates(stats, pokemon_stats))
+    candidates.extend(gen_michineki_candidates(active_records, michineki))
+    candidates.extend(gen_remote_island_candidates(active_records))
 
     CANDIDATES_JSON.write_text(
         json.dumps(candidates, ensure_ascii=False, indent=2), encoding="utf-8"

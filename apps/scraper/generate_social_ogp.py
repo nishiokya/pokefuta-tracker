@@ -465,6 +465,205 @@ _TEMPLATE_BUILDERS = {
 
 
 # ---------------------------------------------------------------------------
+# Area map SVG builder (michineki / remote_island)
+# ---------------------------------------------------------------------------
+
+def _build_area_map_svg(
+    headline: str,
+    subline: str,
+    count: int,
+    pref: str,
+    manholes: list[dict],
+    top_pokemons: list[str],
+    special_point: dict | None = None,
+    extra_label: str = "",
+) -> str:
+    """Dark-theme 2-panel SVG for area-based types (no prefecture outline)."""
+    PANEL_X, PANEL_Y, PANEL_W, PANEL_H = 585, 30, 600, 565
+    PAD = 50
+
+    all_lats = [m["lat"] for m in manholes if m.get("lat")]
+    all_lngs = [m["lng"] for m in manholes if m.get("lng")]
+    if special_point:
+        all_lats.append(special_point["lat"])
+        all_lngs.append(special_point["lng"])
+    if not all_lats:
+        all_lats, all_lngs = [35.0], [136.0]
+
+    lat_min, lat_max = min(all_lats), max(all_lats)
+    lng_min, lng_max = min(all_lngs), max(all_lngs)
+    if lat_max - lat_min < 0.05:
+        mid = (lat_min + lat_max) / 2
+        lat_min, lat_max = mid - 0.1, mid + 0.1
+    if lng_max - lng_min < 0.05:
+        mid = (lng_min + lng_max) / 2
+        lng_min, lng_max = mid - 0.2, mid + 0.2
+
+    lat_pad = (lat_max - lat_min) * 0.3
+    lng_pad = (lng_max - lng_min) * 0.3
+    lat_min -= lat_pad; lat_max += lat_pad
+    lng_min -= lng_pad; lng_max += lng_pad
+
+    lng_range = lng_max - lng_min
+    lat_range = lat_max - lat_min
+    avail_w = PANEL_W - 2 * PAD
+    avail_h = PANEL_H - 2 * PAD
+    scale = min(avail_w / lng_range, avail_h / lat_range)
+    map_w = lng_range * scale
+    map_h = lat_range * scale
+    x_off = PANEL_X + PAD + (avail_w - map_w) / 2
+    y_off = PANEL_Y + PAD + (avail_h - map_h) / 2 + map_h
+
+    def to_svg(lat: float, lng: float) -> tuple[float, float]:
+        x = x_off + (lng - lng_min) * scale
+        y = y_off - (lat - lat_min) * scale
+        return round(x, 1), round(y, 1)
+
+    image_ids = {f.stem.replace("_latest", "") for f in IMAGE_DIR.glob("*_latest.jpeg")}
+    photo_candidates = [m for m in manholes if str(m.get("id", "")) in image_ids and m.get("lat") and m.get("lng")]
+    photo_manholes = _pick_spread(photo_candidates, n=5)
+
+    R = 42
+    clips = lines_svg = imgs = lbls = ""
+    placed_centers: list[tuple[float, float]] = []
+    photo_ids: set[str] = set()
+
+    for m in photo_manholes:
+        pid = str(m["id"])
+        lat, lng = m["lat"], m["lng"]
+        mx, my = to_svg(lat, lng)
+        px, py = _find_placement(mx, my, placed_centers, R,
+                                 PANEL_X, PANEL_X + PANEL_W, PANEL_Y, PANEL_Y + PANEL_H)
+        placed_centers.append((px, py))
+        photo_ids.add(pid)
+        b64 = base64.b64encode((IMAGE_DIR / f"{pid}_latest.jpeg").read_bytes()).decode()
+        clips += f'<clipPath id="c{pid}"><circle cx="{px}" cy="{py}" r="{R}"/></clipPath>\n'
+        lines_svg += (f'<line x1="{mx}" y1="{my}" x2="{px}" y2="{py}" '
+                      f'stroke="rgba(255,255,255,0.2)" stroke-width="1.2" stroke-dasharray="4 3"/>\n')
+        imgs += (f'<circle cx="{px}" cy="{py}" r="{R+3.5}" fill="#1a2a4a" '
+                 f'stroke="#F5C842" stroke-width="2" stroke-opacity="0.6"/>\n')
+        imgs += (f'<image href="data:image/jpeg;base64,{b64}" '
+                 f'x="{px-R}" y="{py-R}" width="{R*2}" height="{R*2}" '
+                 f'clip-path="url(#c{pid})" preserveAspectRatio="xMidYMid slice"/>\n')
+        city = m.get("city", "")
+        lbls += (f'<text x="{px}" y="{py+R+14}" class="jp" font-size="12" font-weight="700" '
+                 f'fill="rgba(255,255,255,0.65)" text-anchor="middle">{_xe(city)}</text>\n')
+
+    dots = ""
+    for m in manholes:
+        if not m.get("lat") or not m.get("lng"):
+            continue
+        x, y = to_svg(m["lat"], m["lng"])
+        if str(m.get("id", "")) in photo_ids:
+            dots += f'<circle cx="{x}" cy="{y}" r="4" fill="#FF6B6B" opacity="0.9"/>\n'
+        else:
+            dots += (f'<circle cx="{x}" cy="{y}" r="5" fill="#F5C842" '
+                     f'fill-opacity="0.7" stroke="#FFE566" stroke-width="1"/>\n')
+
+    special_svg = ""
+    if special_point:
+        sx, sy = to_svg(special_point["lat"], special_point["lng"])
+        label = _xe(special_point.get("label", ""))
+        special_svg = (
+            f'<circle cx="{sx}" cy="{sy}" r="12" fill="#00C875" opacity="0.9" stroke="white" stroke-width="2"/>\n'
+            f'<text x="{sx}" y="{sy+5}" font-size="13" text-anchor="middle" fill="white" font-weight="700">★</text>\n'
+            f'<text x="{sx}" y="{sy+28}" class="jp" font-size="11" fill="rgba(0,220,130,0.9)" text-anchor="middle">{label}</text>\n'
+        )
+
+    BAR_W = 430
+    pokemon_chips = ""
+    if top_pokemons:
+        pokemon_chips += '<text x="52" y="415" class="jp" font-size="13" font-weight="700" fill="rgba(255,255,255,0.38)">登場するポケモン</text>\n'
+        cx_p, cy_p = 52, 438
+        for name in top_pokemons[:6]:
+            w = len(name) * 14 + 18
+            if cx_p + w > 530:
+                cx_p, cy_p = 52, cy_p + 28
+            pokemon_chips += (f'<rect x="{cx_p}" y="{cy_p-16}" width="{w}" height="22" rx="11" '
+                              f'fill="rgba(100,160,230,0.12)" stroke="rgba(140,190,255,0.3)" stroke-width="1"/>\n')
+            pokemon_chips += (f'<text x="{cx_p+w//2}" y="{cy_p}" class="jp" font-size="12" '
+                              f'fill="rgba(255,255,255,0.6)" text-anchor="middle">{_xe(name)}</text>\n')
+            cx_p += w + 6
+
+    hl_len = len(headline)
+    hl_size = "44" if hl_len >= 10 else ("52" if hl_len >= 7 else "64")
+
+    return f'''<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#0C1B33"/><stop offset="0.55" stop-color="#14103C"/><stop offset="1" stop-color="#0F1E42"/>
+  </linearGradient>
+  <radialGradient id="glow_r" cx="78%" cy="44%" r="42%">
+    <stop offset="0" stop-color="#2E1780" stop-opacity="0.5"/><stop offset="1" stop-color="#0C1B33" stop-opacity="0"/>
+  </radialGradient>
+  <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#FFE566"/><stop offset="1" stop-color="#F5A623"/>
+  </linearGradient>
+  <filter id="nglow" x="-25%" y="-25%" width="150%" height="150%">
+    <feGaussianBlur stdDeviation="5" result="b"/>
+    <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <style>.jp{{font-family:'Hiragino Sans','Yu Gothic UI','Noto Sans CJK JP',sans-serif;}}.en{{font-family:'Helvetica Neue',Arial,sans-serif;}}</style>
+  {clips}
+</defs>
+<rect width="1200" height="630" fill="url(#bg)"/>
+<rect width="1200" height="630" fill="url(#glow_r)"/>
+<line x1="578" y1="30" x2="578" y2="598" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+<!-- LEFT -->
+<rect x="52" y="44" width="228" height="30" rx="15"
+      fill="#F5C842" fill-opacity="0.1" stroke="#F5C842" stroke-opacity="0.45" stroke-width="1.5"/>
+<text x="166" y="64" class="jp" font-size="13" font-weight="700" fill="#F5C842" text-anchor="middle">{_xe(subline)}</text>
+<text x="48" y="{130 + (64 - int(hl_size)) * 2}" class="jp" font-size="{hl_size}" font-weight="900" fill="#FFFFFF" opacity="0.95">{_xe(headline)}</text>
+<text x="48" y="270" class="en" font-size="100" font-weight="900" fill="url(#gold)" filter="url(#nglow)">{count}</text>
+<text x="{48 + len(str(count)) * 60}" y="257" class="jp" font-size="36" font-weight="700" fill="#F5C842">枚</text>
+<text x="52" y="300" class="jp" font-size="16" fill="rgba(255,255,255,0.42)">{_xe(pref)}</text>
+<text x="52" y="324" class="jp" font-size="14" fill="rgba(255,255,255,0.30)">{_xe(extra_label)}</text>
+<rect x="52" y="338" width="{BAR_W}" height="1" fill="#F5C842" opacity="0.22"/>
+{pokemon_chips}
+<!-- RIGHT: map -->
+{lines_svg}{dots}{special_svg}{imgs}{lbls}
+<text x="{PANEL_X + PANEL_W//2}" y="590" class="jp" font-size="11"
+      fill="rgba(255,255,255,0.18)" text-anchor="middle">{_xe(headline)}のポケふた設置マップ</text>
+<!-- FOOTER -->
+<rect x="0" y="601" width="1200" height="29" fill="rgba(0,0,0,0.32)"/>
+<line x1="0" y1="601" x2="1200" y2="601" stroke="#F5C842" stroke-width="1" stroke-opacity="0.15"/>
+<circle cx="68" cy="615" r="7" fill="#F5C842" opacity="0.55"/>
+<circle cx="68" cy="615" r="3.5" fill="#0C1B33"/>
+<text x="83" y="620" class="jp" font-size="15" font-weight="700" fill="rgba(255,255,255,0.72)">ポケふたマップ</text>
+<text x="228" y="620" class="jp" font-size="11" fill="rgba(255,255,255,0.28)">全国ポケモンマンホール情報サイト</text>
+<text x="1142" y="620" class="en" font-size="13" font-weight="600" fill="rgba(255,255,255,0.35)" text-anchor="end">data.pokefuta.com</text>
+</svg>'''
+
+
+def _build_michineki_svg(raw: dict) -> str:
+    all_pokemons = [p for m in raw["manholes"] for p in m.get("pokemons", [])]
+    top_pokemons = [p for p, _ in Counter(all_pokemons).most_common(6)]
+    return _build_area_map_svg(
+        headline=raw["station_name"],
+        subline="道の駅チャレンジ",
+        count=raw["manhole_count"],
+        pref=raw["pref"],
+        manholes=raw["manholes"],
+        top_pokemons=top_pokemons,
+        special_point={"lat": raw["lat"], "lng": raw["lng"], "label": "道の駅"},
+        extra_label=f'半径{raw["radius_km"]}km以内に{raw["manhole_count"]}枚',
+    )
+
+
+def _build_remote_island_svg(raw: dict) -> str:
+    return _build_area_map_svg(
+        headline=raw["island_name"],
+        subline="離島のポケふた",
+        count=raw["manhole_count"],
+        pref=raw["pref"],
+        manholes=raw["manholes"],
+        top_pokemons=raw.get("top_pokemons", []),
+        special_point=None,
+        extra_label=f'{raw["pref"]} {raw["city"]}',
+    )
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
@@ -488,6 +687,12 @@ def main() -> None:
     if post_type == "prefecture_rank":
         print(f"[generate_social_ogp] {raw['pref']} の地図・写真データを取得中…")
         svg_text = _build_prefecture_rank_svg(raw)
+    elif post_type == "michineki":
+        print(f"[generate_social_ogp] {raw['station_name']} の地図を生成中…")
+        svg_text = _build_michineki_svg(raw)
+    elif post_type == "remote_island":
+        print(f"[generate_social_ogp] {raw['island_name']} の地図を生成中…")
+        svg_text = _build_remote_island_svg(raw)
     elif post_type in _TEMPLATE_BUILDERS:
         template_path = TEMPLATE_DIR / f"{post_type}.svg"
         if not template_path.exists():

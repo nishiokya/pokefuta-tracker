@@ -16,7 +16,8 @@ python3 apps/scraper/generate_social_posts.py
    - 火    → `travel_trivia`
    - 水    → `latest_photo`
    - 木    → `pokemon_rank`
-   - 金    → `rare_area`
+   - 金    → `rare_area` / `michineki` / `remote_island` の3週ローテ
+             （`history.used` を見て、この3タイプの中で最も `used_at` が古いもの、または未使用のタイプを優先する）
    - 土    → `no_photo`
 
    そのタイプの候補の中から、`history.used` にある `id` で `used_at` が30日以内のものを除外した上で最適な1件を選ぶ。
