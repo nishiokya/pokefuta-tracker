@@ -1,4 +1,4 @@
-export type OsmPoiType = 'rest_area' | 'station' | 'museum' | 'park'
+export type OsmPoiType = 'rest_area' | 'station' | 'museum' | 'park' | 'michineki'
 
 export type OsmPoi = {
   osmId: string
@@ -82,6 +82,18 @@ function parseElements(
 const RATE_LIMIT_MSG = 'Overpass APIのレート制限に達しました。しばらく待ってから再試行してください'
 const cache = new Map<string, OsmPoi[]>()
 
+type MichinekiStation = { id: string; name: string; lat: number; lng: number }
+let michinekiStations: MichinekiStation[] | null = null
+const michinekiCache = new Map<string, OsmPoi[]>()
+
+async function loadMichinekiStations(): Promise<MichinekiStation[]> {
+  if (michinekiStations) return michinekiStations
+  const resp = await fetch('/__editor/data/michineki')
+  if (!resp.ok) throw new Error(`道の駅データの読み込みに失敗しました: ${resp.status}`)
+  michinekiStations = await resp.json() as MichinekiStation[]
+  return michinekiStations
+}
+
 async function queryOverpass(query: string): Promise<{ elements?: Record<string, unknown>[] }> {
   const body = `data=${encodeURIComponent(query)}`
   let lastErr: Error = new Error('No endpoint available')
@@ -110,11 +122,39 @@ export async function fetchNearbyPoisBatch(
   lat: number,
   lng: number,
 ): Promise<OsmPoi[]> {
-  const cacheKey = `${lat.toFixed(4)}:${lng.toFixed(4)}:${configs.map(c => `${c.type}@${c.radiusM ?? 2000}`).join(',')}`
-  if (cache.has(cacheKey)) return cache.get(cacheKey)!
+  const osmConfigs = configs.filter(c => c.type !== 'michineki')
+  const michinekiConfig = configs.find(c => c.type === 'michineki')
 
-  const data = await queryOverpass(buildBatchQuery(configs, lat, lng))
-  const pois = parseElements(data, lat, lng)
-  cache.set(cacheKey, pois)
-  return pois
+  const results: OsmPoi[] = []
+
+  if (osmConfigs.length > 0) {
+    const cacheKey = `${lat.toFixed(4)}:${lng.toFixed(4)}:${osmConfigs.map(c => `${c.type}@${c.radiusM ?? 2000}`).join(',')}`
+    if (cache.has(cacheKey)) {
+      results.push(...cache.get(cacheKey)!)
+    } else {
+      const data = await queryOverpass(buildBatchQuery(osmConfigs, lat, lng))
+      const pois = parseElements(data, lat, lng)
+      cache.set(cacheKey, pois)
+      results.push(...pois)
+    }
+  }
+
+  if (michinekiConfig) {
+    const r = michinekiConfig.radiusM ?? 2000
+    const mCacheKey = `michineki:${lat.toFixed(4)}:${lng.toFixed(4)}:${r}`
+    if (michinekiCache.has(mCacheKey)) {
+      results.push(...michinekiCache.get(mCacheKey)!)
+    } else {
+      const stations = await loadMichinekiStations()
+      const pois: OsmPoi[] = stations
+        .map(s => ({ ...s, distanceM: Math.round(haversineM(lat, lng, s.lat, s.lng)) }))
+        .filter(s => s.distanceM <= r)
+        .map(s => ({ osmId: s.id, name: s.name, lat: s.lat, lng: s.lng, type: 'michineki' as OsmPoiType, distanceM: s.distanceM }))
+        .sort((a, b) => a.distanceM - b.distanceM)
+      michinekiCache.set(mCacheKey, pois)
+      results.push(...pois)
+    }
+  }
+
+  return results.sort((a, b) => a.distanceM - b.distanceM)
 }
