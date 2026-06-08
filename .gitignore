@@ -17,6 +17,9 @@ create_pr.flag
 apps/scraper/pokefuta.ndjson
 pokefuta.ndjson
 
+# 道の駅JSONLDはimport_michineki.pyで都度再生成する
+dataset/michineki.json
+
 .env*.local
 .env.production
 .env
