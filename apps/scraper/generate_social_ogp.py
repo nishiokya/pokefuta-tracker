@@ -37,6 +37,11 @@ _ACCENT_COLOR = {
     "ranking": "#F2C24C",
     "rare":    "#FF9466",
 }
+_ACCENT_BRIGHT = {
+    "trivia":  "#7CF2D6",
+    "ranking": "#FFD86B",
+    "rare":    "#FFB088",
+}
 
 
 # ---------------------------------------------------------------------------
@@ -162,6 +167,81 @@ def _set_hero_pin(svg: str, hx: float, hy: float) -> str:
     return svg[:g_start] + new_tag + svg[g_end + 1 :]
 
 
+def _replace_group(svg: str, group_id: str, new_content: str) -> str:
+    """Replace an entire <g id="group_id">...</g> block with new_content."""
+    idx = svg.find(f'id="{group_id}"')
+    if idx == -1:
+        return svg
+    g_start = svg.rfind("<g", 0, idx)
+    depth, i = 1, g_start + 3
+    while i < len(svg) and depth > 0:
+        if svg[i : i + 2] == "<g":
+            depth += 1
+            i += 2
+        elif svg[i : i + 4] == "</g>":
+            depth -= 1
+            i += 4
+        else:
+            i += 1
+    return svg[:g_start] + new_content + svg[i:]
+
+
+def _replace_map_with_pref_dots(svg: str, manholes: list[dict], theme: str) -> str:
+    """Replace map-dots + map-route groups with prefecture manhole point map.
+
+    Maps all manholes to the same panel space (MAPX=688..1088, MAPY=124..504)
+    using a scaled lat/lng → pixel transform.  Every 4th dot gets a brighter,
+    slightly larger glyph for visual interest.
+    """
+    if not manholes:
+        return svg
+
+    accent = _ACCENT_COLOR.get(theme, "#F2C24C")
+    bright = _ACCENT_BRIGHT.get(theme, "#FFD86B")
+
+    # Map panel coordinate space (from BUILD_NOTES)
+    MAPX, MAPY, MAPW, MAPH = 688, 124, 400, 380
+    PAD = 22
+
+    lats = [m["lat"] for m in manholes]
+    lngs = [m["lng"] for m in manholes]
+    lat_c = (min(lats) + max(lats)) / 2
+    lng_c = (min(lngs) + max(lngs)) / 2
+
+    lat_range = max(max(lats) - min(lats), 0.08)
+    lng_range = max(max(lngs) - min(lngs), 0.12)
+    pad_factor = 0.18
+    lat_min = lat_c - lat_range * (0.5 + pad_factor)
+    lat_max = lat_c + lat_range * (0.5 + pad_factor)
+    lng_min = lng_c - lng_range * (0.5 + pad_factor)
+    lng_max = lng_c + lng_range * (0.5 + pad_factor)
+    lat_range = lat_max - lat_min
+    lng_range = lng_max - lng_min
+
+    avail_w = MAPW - 2 * PAD
+    avail_h = MAPH - 2 * PAD
+    scale = min(avail_w / lng_range, avail_h / lat_range)
+    map_w = lng_range * scale
+    map_h = lat_range * scale
+    x_off = MAPX + PAD + (avail_w - map_w) / 2
+    y_off = MAPY + PAD + (avail_h - map_h) / 2 + map_h
+
+    def to_xy(lat: float, lng: float) -> tuple[float, float]:
+        return round(x_off + (lng - lng_min) * scale, 1), round(y_off - (lat - lat_min) * scale, 1)
+
+    dots: list[str] = []
+    for n, m in enumerate(manholes):
+        x, y = to_xy(m["lat"], m["lng"])
+        if n % 4 == 0:
+            dots.append(f'<circle cx="{x}" cy="{y}" r="4.5" fill="{bright}" opacity="0.92"></circle>')
+        else:
+            dots.append(f'<circle cx="{x}" cy="{y}" r="3.2" fill="{accent}" opacity="0.55"></circle>')
+
+    svg = _replace_group(svg, "map-dots", f'<g id="map-dots">{"".join(dots)}</g>')
+    svg = _replace_group(svg, "map-route", '<g id="map-route"></g>')
+    return svg
+
+
 def _replace_chips_section(svg: str, chips: list[str], theme: str) -> str:
     """Replace entire chips group with new chip data using proper widths.
 
@@ -212,6 +292,20 @@ def _replace_chips_section(svg: str, chips: list[str], theme: str) -> str:
 # ---------------------------------------------------------------------------
 # NDJSON helper
 # ---------------------------------------------------------------------------
+
+def _load_pref_manholes(pref: str) -> list[dict]:
+    """Load all manholes with lat/lng for a prefecture from NDJSON."""
+    result = []
+    if NDJSON.exists():
+        for line in NDJSON.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            d = json.loads(line)
+            if d.get("prefecture") == pref and d.get("lat") and d.get("lng"):
+                result.append(d)
+    return result
+
 
 def _top_pokemons_for_pref(pref: str, n: int = 6) -> list[str]:
     counter: Counter = Counter()
@@ -264,12 +358,17 @@ def _render_design_template(theme: str, v: dict) -> str:
     # Chips: rebuild with correct widths
     svg = _replace_chips_section(svg, v.get("chips", []), theme)
 
-    # Hero pin relocation
-    hero_lat = v.get("heroLat")
-    hero_lng = v.get("heroLng")
-    if hero_lat is not None and hero_lng is not None:
-        hx, hy = _latlon_to_hero_xy(hero_lat, hero_lng)
-        svg = _set_hero_pin(svg, hx, hy)
+    # Prefecture-specific dot map (overrides Japan dot matrix when present)
+    manholes = v.get("manholes")
+    if manholes:
+        svg = _replace_map_with_pref_dots(svg, manholes, theme)
+    else:
+        # Default: move teardrop hero pin to target lat/lng
+        hero_lat = v.get("heroLat")
+        hero_lng = v.get("heroLng")
+        if hero_lat is not None and hero_lng is not None:
+            hx, hy = _latlon_to_hero_xy(hero_lat, hero_lng)
+            svg = _set_hero_pin(svg, hx, hy)
 
     return svg
 
@@ -280,7 +379,7 @@ def _render_design_template(theme: str, v: dict) -> str:
 
 def _vars_prefecture_rank(raw: dict) -> dict:
     pref = raw["pref"]
-    lat, lng = _PREF_LATLNG.get(pref, (35.69, 139.69))
+    manholes = _load_pref_manholes(pref)
     return {
         "categoryLabel": "RANKING",
         "titleLine1": f"{pref}の",
@@ -291,8 +390,7 @@ def _vars_prefecture_rank(raw: dict) -> dict:
         "chips": _top_pokemons_for_pref(pref),
         "description": f"全国{raw['total']}枚中 {raw['percent']}%",
         "mapCaption": f"{pref}設置マップ",
-        "heroLat": lat,
-        "heroLng": lng,
+        "manholes": manholes,
     }
 
 
