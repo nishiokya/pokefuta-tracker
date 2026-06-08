@@ -201,70 +201,157 @@ body.pokefuta-map-page {
   overscroll-behavior: contain;
 }
 
-.pokefuta-map-page .sheet-summary-card {
-  display: grid;
+/* 探す / 便利機能 セクション */
+.pokefuta-map-page .sheet-explore-section,
+.pokefuta-map-page .sheet-utility-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   padding: 12px;
   border: 1px solid rgba(116, 82, 38, .15);
   border-radius: 14px;
   background: rgba(255, 253, 246, .82);
-  box-shadow: 0 6px 18px rgba(80, 54, 20, .08);
+  box-shadow: 0 4px 14px rgba(80, 54, 20, .07);
 }
 
-.pokefuta-map-page .sheet-action-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
+.pokefuta-map-page .sheet-utility-section {
+  background: rgba(255, 253, 246, .6);
+  box-shadow: none;
 }
 
-.pokefuta-map-page .sheet-action-btn {
-  display: inline-flex;
+.pokefuta-map-page .sheet-section-label {
+  margin: 0;
+  font-size: .72rem;
+  font-weight: 700;
+  color: #9a8a7a;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+/* 主CTA — 常に紫塗り */
+.pokefuta-map-page .sheet-primary-btn {
+  display: flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
-  min-height: 58px;
-  padding: 9px 12px;
-  border: 1px solid rgba(115, 86, 42, .16);
+  gap: 8px;
+  min-height: 54px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 12px;
+  background: #7654aa;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(118, 84, 170, .28);
+  font: inherit;
+  font-size: .9rem;
+  font-weight: 900;
+  line-height: 1.2;
+  text-align: center;
+  cursor: pointer;
+}
+
+.pokefuta-map-page .sheet-primary-btn img {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  filter: brightness(0) invert(1);
+}
+
+.pokefuta-map-page .sheet-primary-btn:hover {
+  background: #6344a0;
+}
+
+/* 補助ボタン — 白背景・薄い枠線 */
+.pokefuta-map-page .sheet-secondary-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 46px;
+  padding: 9px 14px;
+  border: 1px solid rgba(115, 86, 42, .2);
   border-radius: 12px;
   background: #fffaf0;
   color: #2a241e;
-  box-shadow: 0 5px 14px rgba(80, 54, 20, .08);
   font: inherit;
   font-size: .86rem;
-  font-weight: 900;
+  font-weight: 800;
+  line-height: 1.2;
+  text-align: center;
+  cursor: pointer;
+}
+
+.pokefuta-map-page .sheet-secondary-btn img {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+}
+
+.pokefuta-map-page .sheet-secondary-btn.active {
+  background: rgba(118, 84, 170, .1);
+  border-color: rgba(118, 84, 170, .3);
+  color: #4a2d8a;
+}
+
+/* 便利機能ボタン行 */
+.pokefuta-map-page .sheet-utility-btns {
+  display: flex;
+  gap: 8px;
+}
+
+.pokefuta-map-page .sheet-utility-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 1px solid rgba(115, 86, 42, .16);
+  border-radius: 10px;
+  background: #fffaf0;
+  color: #2a241e;
+  box-shadow: 0 2px 8px rgba(80, 54, 20, .06);
+  font: inherit;
+  font-size: .8rem;
+  font-weight: 800;
   line-height: 1.25;
   text-align: center;
   cursor: pointer;
 }
 
-.pokefuta-map-page .sheet-action-btn img {
+.pokefuta-map-page .sheet-utility-btn img {
   flex: 0 0 auto;
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
 }
 
-.pokefuta-map-page .sheet-action-btn--toggle {
+.pokefuta-map-page .sheet-utility-btn--toggle {
   position: relative;
 }
 
-.pokefuta-map-page .sheet-action-btn--toggle input {
+.pokefuta-map-page .sheet-utility-btn--toggle input {
   position: absolute;
   width: 1px;
   height: 1px;
   opacity: 0;
 }
 
-.pokefuta-map-page .sheet-action-btn.active {
-  background: #7654aa;
-  color: #fff;
+.pokefuta-map-page .sheet-utility-btn.active {
+  background: rgba(118, 84, 170, .1);
+  border-color: rgba(118, 84, 170, .25);
+  color: #4a2d8a;
 }
 
-.pokefuta-map-page .sheet-action-btn.active img {
-  filter: brightness(0) invert(1);
-}
-
-.pokefuta-map-page .sheet-action-btn:disabled {
+.pokefuta-map-page .sheet-utility-btn:disabled {
   opacity: .72;
   cursor: progress;
+}
+
+.pokefuta-map-page .sheet-locate-desc {
+  margin: 0;
+  font-size: .72rem;
+  color: #7a6e64;
+  line-height: 1.55;
 }
 
 .pokefuta-map-page .selected-prefecture-badge {
@@ -1259,14 +1346,20 @@ body.pokefuta-map-page {
     transform: translateY(calc(100% - 44px - env(safe-area-inset-bottom)));
   }
 
-  .pokefuta-map-page .sheet-action-grid {
-    gap: 8px;
+  .pokefuta-map-page .sheet-primary-btn {
+    min-height: 50px;
+    font-size: .86rem;
   }
 
-  .pokefuta-map-page .sheet-action-btn {
-    min-height: 54px;
-    padding: 8px 9px;
-    font-size: .8rem;
+  .pokefuta-map-page .sheet-secondary-btn {
+    min-height: 42px;
+    font-size: .82rem;
+  }
+
+  .pokefuta-map-page .sheet-utility-btn {
+    min-height: 40px;
+    font-size: .76rem;
+    padding: 7px 8px;
   }
 
   .pokefuta-map-page .prefecture-card-main {
