@@ -842,10 +842,10 @@
       ]
     },
     "124": {
+      "building": "古川駅前",
       "tags": [
         "near_station"
-      ],
-      "building": "古川駅前"
+      ]
     },
     "140": {
       "building": "出光カルチャーパーク",
@@ -1314,10 +1314,10 @@
       "building": "双葉町産業交流センター"
     },
     "265": {
+      "building": "紫波中央駅前",
       "tags": [
         "station_front"
-      ],
-      "building": "紫波中央駅前"
+      ]
     },
     "267": {
       "tags": [
@@ -2262,10 +2262,10 @@
       ]
     },
     "474": {
+      "building": "海岸公園（藤塚地区）",
       "tags": [
         "seaside"
-      ],
-      "building": "海岸公園（藤塚地区）"
+      ]
     }
   },
   "lakes": [

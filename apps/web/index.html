@@ -1214,6 +1214,7 @@
         if (filterRecent) {
           showPrefectureCards = false;
           showNearbyResults = false;
+          showTagDirectory = false;
         }
         syncExploreSections();
         recomputeVisibility();
@@ -1233,6 +1234,7 @@
     }
 
     function syncExploreSections() {
+      const prefButton = document.getElementById('prefecture-open-button');
       const nearbyButton = document.getElementById('locate-button');
       const recentButton = document.querySelector('label[for="recent-toggle"]');
       const featureButton = document.getElementById('feature-open-button');
@@ -1240,7 +1242,9 @@
       const recentPanel = document.getElementById('recent-added-panel');
       const nearbyPanel = document.getElementById('nearby-results');
 
+      prefButton?.setAttribute('aria-pressed', String(showPrefectureCards));
       recentButton?.classList.toggle('active', filterRecent);
+      recentButton?.setAttribute('aria-pressed', String(filterRecent));
       nearbyButton?.classList.toggle('active', showNearbyResults);
       nearbyButton?.setAttribute('aria-pressed', String(showNearbyResults));
       featureButton?.classList.toggle('active', showTagDirectory);
@@ -1292,6 +1296,7 @@
         showPrefectureCards = true;
         showNearbyResults = false;
         filterRecent = false;
+        showTagDirectory = false;
         const recentToggle = document.getElementById('recent-toggle');
         if (recentToggle) recentToggle.checked = false;
         recomputeVisibility();
@@ -1751,6 +1756,7 @@
       showNearbyResults = true;
       showPrefectureCards = false;
       filterRecent = false;
+      showTagDirectory = false;
       const recentToggle = document.getElementById('recent-toggle');
       if (recentToggle) recentToggle.checked = false;
       syncExploreSections();
