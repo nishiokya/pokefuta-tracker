@@ -382,10 +382,13 @@
       </div>
       <section class="tag-directory" aria-labelledby="tag-directory-heading" hidden>
         <div class="section-title-row">
-          <h2 id="tag-directory-heading">特徴で絞り込む</h2>
+          <h2 id="tag-directory-heading">テーマでポケふた巡り</h2>
         </div>
-        <p>海沿い・観光地・駅前など、一部のポケふたをテーマ別に探せます。もう一度タップで解除。</p>
+        <p class="tag-directory-desc">道の駅・世界遺産・離島・海沿いなど、旅の目的になるポケふたをテーマ別に探せます。</p>
+        <p class="tag-directory-subdesc">タグをタップすると地図上の表示を絞り込みます。もう一度タップで解除。</p>
         <div id="tag-directory-chips" class="tag-directory-chips" aria-label="テーマ別タグ"></div>
+        <div id="tag-directory-more" class="tag-directory-chips tag-directory-chips--secondary" hidden></div>
+        <button type="button" id="tag-directory-toggle" class="tag-directory-toggle-btn" hidden>もっと見る</button>
       </section>
       <section class="prefecture-directory" aria-labelledby="prefecture-directory-heading">
         <div class="section-title-row">
@@ -537,6 +540,7 @@
     var activeTagFilter = null;  // タグフィルタ（null = 全件）
     var showTagDirectory = false;
     const TAG_DIRECTORY_MIN_COUNT = 5;  // この件数未満のタグはチップに表示しない
+    const TAG_PRIORITY = ['roadside', 'world_heritage', 'remote_island', 'seaside', 'tourism', 'station_front', 'food', 'museum', 'history', 'rail_access_good'];
 
     const TAG_META = {
       seaside:          { emoji: '🌊', label: '海沿い' },
@@ -1503,7 +1507,7 @@
         if (d.id && !prefectureThumbnails[pref]) {
           prefectureThumbnails[pref] = [];
         }
-        if (d.id && prefectureThumbnails[pref] && prefectureThumbnails[pref].length < 4) {
+        if (d.id && prefectureThumbnails[pref] && prefectureThumbnails[pref].length < 8) {
           prefectureThumbnails[pref].push({
             id: d.id,
             title: d.title || 'ポケふた',
@@ -1601,34 +1605,70 @@
 
     function renderTagDirectory(tagCounts) {
       const container = document.getElementById('tag-directory-chips');
+      const moreContainer = document.getElementById('tag-directory-more');
+      const toggleBtn = document.getElementById('tag-directory-toggle');
       if (!container) return;
       const sorted = Object.entries(tagCounts)
         .filter(([tag, count]) => TAG_META[tag] && count >= TAG_DIRECTORY_MIN_COUNT)
-        .sort(([, a], [, b]) => b - a);
-      container.innerHTML = sorted.map(([tag, count]) => {
-        const meta = TAG_META[tag] || { emoji: '🏷', label: tag };
+        .sort(([tagA, a], [tagB, b]) => {
+          const priA = TAG_PRIORITY.indexOf(tagA);
+          const priB = TAG_PRIORITY.indexOf(tagB);
+          if (priA >= 0 && priB >= 0) return priA - priB;
+          if (priA >= 0) return -1;
+          if (priB >= 0) return 1;
+          return b - a;
+        });
+      const primaryTags = sorted.filter(([tag]) => TAG_PRIORITY.includes(tag));
+      const secondaryTags = sorted.filter(([tag]) => !TAG_PRIORITY.includes(tag));
+      function makeChip(tag, count) {
+        const meta = TAG_META[tag];
         return `<button class="tag-chip" data-tag="${tag}" data-count="${count}" aria-pressed="false">${meta.emoji} ${meta.label} <span class="tag-count">${count}枚</span></button>`;
-      }).join('');
-      container.querySelectorAll('.tag-chip').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const tag = btn.dataset.tag;
-          const isActive = activeTagFilter === tag;
-          activeTagFilter = isActive ? null : tag;
-          container.querySelectorAll('.tag-chip').forEach(b => {
+      }
+      container.innerHTML = primaryTags.map(([tag, count]) => makeChip(tag, count)).join('');
+      if (moreContainer) {
+        moreContainer.innerHTML = secondaryTags.map(([tag, count]) => makeChip(tag, count)).join('');
+        if (toggleBtn) toggleBtn.hidden = secondaryTags.length === 0;
+      }
+      function updateAllChips() {
+        [container, moreContainer].filter(Boolean).forEach(c => {
+          c.querySelectorAll('.tag-chip').forEach(b => {
             b.classList.toggle('active', b.dataset.tag === activeTagFilter);
             b.setAttribute('aria-pressed', String(b.dataset.tag === activeTagFilter));
           });
-          recomputeVisibility();
-          syncExploreSections();
-          if (!isActive && window.trackEvent) {
-            window.trackEvent('feature_filter_click', {
-              feature: tag,
-              result_count: parseInt(btn.dataset.count, 10),
-              source: 'top_page'
-            });
+        });
+      }
+      function bindChips(el) {
+        el.querySelectorAll('.tag-chip').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const tag = btn.dataset.tag;
+            const isActive = activeTagFilter === tag;
+            activeTagFilter = isActive ? null : tag;
+            updateAllChips();
+            recomputeVisibility();
+            syncExploreSections();
+            if (!isActive && window.trackEvent) {
+              window.trackEvent('feature_filter_click', {
+                feature: tag,
+                feature_label: TAG_META[tag]?.label || tag,
+                result_count: parseInt(btn.dataset.count, 10),
+                source: 'top_feature_section'
+              });
+            }
+          });
+        });
+      }
+      bindChips(container);
+      if (moreContainer) bindChips(moreContainer);
+      if (toggleBtn && moreContainer) {
+        toggleBtn.addEventListener('click', () => {
+          const willExpand = moreContainer.hidden;
+          moreContainer.hidden = !willExpand;
+          toggleBtn.textContent = willExpand ? '閉じる' : 'もっと見る';
+          if (window.trackEvent) {
+            window.trackEvent('feature_more_toggle', { expanded: willExpand });
           }
         });
-      });
+      }
     }
 
     function renderPrefectureDirectory() {
