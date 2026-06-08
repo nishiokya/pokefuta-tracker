@@ -564,6 +564,12 @@
         "seaside"
       ]
     },
+    "13": {
+      "building": "道の駅青の国ふだい",
+      "tags": [
+        "roadside"
+      ]
+    },
     "15": {
       "tags": [
         "seaside",
@@ -607,9 +613,11 @@
       ]
     },
     "37": {
+      "building": "道の駅小豆島ふるさと村",
       "tags": [
-        "seaside",
-        "remote_island"
+        "remote_island",
+        "roadside",
+        "seaside"
       ]
     },
     "39": {
@@ -718,10 +726,11 @@
       "building": "キタカラ敷地内",
       "verified_at": "2019-12-11",
       "tags": [
+        "history",
+        "roadside",
         "seaside",
         "station_front",
-        "tourism",
-        "history"
+        "tourism"
       ]
     },
     "68": {
@@ -782,9 +791,27 @@
         "seaside"
       ]
     },
+    "79": {
+      "building": "道の駅若桜",
+      "tags": [
+        "roadside"
+      ]
+    },
     "82": {
       "tags": [
         "seaside"
+      ]
+    },
+    "83": {
+      "building": "道の駅大山恵みの里",
+      "tags": [
+        "roadside"
+      ]
+    },
+    "86": {
+      "building": "道の駅にちなん日野川の郷",
+      "tags": [
+        "roadside"
       ]
     },
     "88": {
@@ -797,16 +824,38 @@
         "seaside"
       ]
     },
+    "90": {
+      "building": "道の駅南相馬",
+      "tags": [
+        "roadside"
+      ]
+    },
     "91": {
       "building": "道の駅なみえ"
     },
-    "93": {
+    "92": {
+      "building": "道の駅ならは",
       "tags": [
+        "roadside"
+      ]
+    },
+    "93": {
+      "building": "道の駅よつくら港",
+      "tags": [
+        "roadside",
         "seaside"
       ]
     },
-    "97": {
+    "94": {
+      "building": "道の駅川俣",
       "tags": [
+        "roadside"
+      ]
+    },
+    "97": {
+      "building": "道の駅恋人の聖地 うたづ臨海公園",
+      "tags": [
+        "roadside",
         "seaside"
       ]
     },
@@ -821,9 +870,21 @@
         "lakeside"
       ]
     },
+    "107": {
+      "building": "道の駅はっとう",
+      "tags": [
+        "roadside"
+      ]
+    },
     "108": {
       "tags": [
         "seaside"
+      ]
+    },
+    "110": {
+      "building": "道の駅奥大山",
+      "tags": [
+        "roadside"
       ]
     },
     "111": {
@@ -832,7 +893,9 @@
       ]
     },
     "113": {
+      "building": "道の駅北浦",
       "tags": [
+        "roadside",
         "seaside"
       ]
     },
@@ -841,10 +904,34 @@
         "seaside"
       ]
     },
+    "119": {
+      "building": "道の駅えびの",
+      "tags": [
+        "roadside"
+      ]
+    },
+    "121": {
+      "building": "道の駅かくだ",
+      "tags": [
+        "roadside"
+      ]
+    },
+    "123": {
+      "building": "道の駅路田里はなやま",
+      "tags": [
+        "roadside"
+      ]
+    },
     "124": {
       "building": "古川駅前",
       "tags": [
         "near_station"
+      ]
+    },
+    "134": {
+      "building": "道の駅おおさと",
+      "tags": [
+        "roadside"
       ]
     },
     "140": {
@@ -936,6 +1023,12 @@
         "seaside"
       ]
     },
+    "158": {
+      "building": "道の駅はしかみ",
+      "tags": [
+        "roadside"
+      ]
+    },
     "159": {
       "tags": [
         "world_heritage"
@@ -987,6 +1080,12 @@
     "177": {
       "tags": [
         "remote_island"
+      ]
+    },
+    "185": {
+      "building": "道の駅青雲橋",
+      "tags": [
+        "roadside"
       ]
     },
     "187": {
@@ -1156,6 +1255,12 @@
         "tourism"
       ]
     },
+    "225": {
+      "building": "道の駅水の郷さわら",
+      "tags": [
+        "roadside"
+      ]
+    },
     "229": {
       "tags": [
         "seaside",
@@ -1169,9 +1274,11 @@
       ]
     },
     "231": {
+      "building": "道の駅いとまん",
       "tags": [
-        "seaside",
-        "remote_island"
+        "remote_island",
+        "roadside",
+        "seaside"
       ]
     },
     "232": {
@@ -1313,6 +1420,18 @@
     "253": {
       "building": "双葉町産業交流センター"
     },
+    "262": {
+      "building": "道の駅にしね",
+      "tags": [
+        "roadside"
+      ]
+    },
+    "264": {
+      "building": "道の駅石神の丘",
+      "tags": [
+        "roadside"
+      ]
+    },
     "265": {
       "building": "紫波中央駅前",
       "tags": [
@@ -1322,6 +1441,12 @@
     "267": {
       "tags": [
         "world_heritage"
+      ]
+    },
+    "269": {
+      "building": "道の駅おりつめ",
+      "tags": [
+        "roadside"
       ]
     },
     "271": {
@@ -1405,8 +1530,16 @@
       ]
     },
     "282": {
+      "building": "道の駅猪苗代",
       "tags": [
-        "lakeside"
+        "lakeside",
+        "roadside"
+      ]
+    },
+    "286": {
+      "building": "道の駅ふるどの",
+      "tags": [
+        "roadside"
       ]
     },
     "288": {
@@ -1521,6 +1654,12 @@
         "seaside"
       ],
       "confidence": 3
+    },
+    "299": {
+      "building": "道の駅いわて北三陸",
+      "tags": [
+        "roadside"
+      ]
     },
     "301": {
       "tags": [
@@ -1644,7 +1783,9 @@
       ]
     },
     "318": {
+      "building": "セリオン",
       "tags": [
+        "roadside",
         "seaside"
       ]
     },
@@ -1659,9 +1800,10 @@
     "324": {
       "building": "ホテル ラヴニール",
       "tags": [
-        "station_front",
         "food",
-        "history"
+        "history",
+        "roadside",
+        "station_front"
       ]
     },
     "327": {
@@ -1843,13 +1985,21 @@
         "seaside"
       ]
     },
+    "366": {
+      "building": "道の駅南えちぜん山海里",
+      "tags": [
+        "roadside"
+      ]
+    },
     "367": {
       "tags": [
         "seaside"
       ]
     },
     "377": {
+      "building": "道の駅ゆうひパーク浜田",
       "tags": [
+        "roadside",
         "seaside"
       ]
     },
@@ -1859,7 +2009,9 @@
       ]
     },
     "379": {
+      "building": "道の駅ごいせ仁摩",
       "tags": [
+        "roadside",
         "world_heritage"
       ]
     },
@@ -2065,6 +2217,12 @@
       ],
       "confidence": 3
     },
+    "412": {
+      "building": "道の駅ひたちおおた",
+      "tags": [
+        "roadside"
+      ]
+    },
     "414": {
       "building": "ドルフィン公園",
       "address_raw": "鳥羽市鳥羽1-2383-42（ドルフィン公園）",
@@ -2108,6 +2266,12 @@
         "remote_island"
       ]
     },
+    "426": {
+      "building": "道の駅くずまき高原",
+      "tags": [
+        "roadside"
+      ]
+    },
     "427": {
       "tags": [
         "seaside"
@@ -2125,7 +2289,9 @@
       ]
     },
     "430": {
+      "building": "道の駅彼杵の荘",
       "tags": [
+        "roadside",
         "seaside"
       ]
     },
@@ -2140,12 +2306,16 @@
       ]
     },
     "435": {
+      "building": "道の駅すくも",
       "tags": [
+        "roadside",
         "seaside"
       ]
     },
     "436": {
+      "building": "道の駅やす",
       "tags": [
+        "roadside",
         "seaside"
       ]
     },
@@ -2236,6 +2406,18 @@
     "450": {
       "tags": [
         "seaside"
+      ]
+    },
+    "456": {
+      "building": "道の駅しもごう",
+      "tags": [
+        "roadside"
+      ]
+    },
+    "457": {
+      "building": "道の駅にしあいづ",
+      "tags": [
+        "roadside"
       ]
     },
     "460": {

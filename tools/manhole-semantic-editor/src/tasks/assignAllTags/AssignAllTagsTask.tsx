@@ -38,7 +38,7 @@ const TAG_LABELS: Record<string, string> = {
 }
 
 const OSM_CONFIGS: OsmPoiConfig[] = [
-  { type: 'rest_area', label: '道の駅', defaultTag: 'roadside', radiusM: 100 },
+  { type: 'michineki', label: '道の駅', defaultTag: 'roadside', radiusM: 200 },
   {
     type: 'station',
     label: '駅',

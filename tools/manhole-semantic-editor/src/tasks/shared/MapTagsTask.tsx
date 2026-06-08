@@ -226,7 +226,7 @@ export function MapTagsTask({
         const map = mapRef.current
         if (map) {
           pois.slice(0, 20).forEach(poi => {
-            const m = L.marker([poi.lat, poi.lng], { icon: makeIcon('#6b7280') })
+            const m = L.marker([poi.lat, poi.lng], { icon: makeIcon(poi.type === 'michineki' ? '#7c3aed' : '#6b7280') })
               .addTo(map)
               .bindPopup(`<b>${esc(poi.name)}</b><br><span style="font-size:11px">${poi.distanceM}m</span>`)
             poiMarkersRef.current.push(m)
@@ -430,7 +430,7 @@ export function MapTagsTask({
 
       <div style={{ display: 'flex', gap: 16, marginBottom: 8, fontSize: 12, color: '#6b7280', alignItems: 'center' }}>
         <span>凡例:</span>
-        {([['#3b82f6', 'タグなし'], ['#22c55e', 'タグあり'], ['#ef4444', '選択中'], ...(osmPoi?.length ? [['#6b7280', 'OSM施設']] : [])] as [string, string][]).map(([color, label]) => (
+        {([['#3b82f6', 'タグなし'], ['#22c55e', 'タグあり'], ['#ef4444', '選択中'], ...(osmPoi?.some(c => c.type !== 'michineki') ? [['#6b7280', 'OSM施設']] : []), ...(osmPoi?.some(c => c.type === 'michineki') ? [['#7c3aed', '道の駅']] : [])] as [string, string][]).map(([color, label]) => (
           <span key={label} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
             <span style={{ width: 10, height: 10, borderRadius: '50%', background: color, display: 'inline-block', border: '1px solid white', boxShadow: '0 0 2px rgba(0,0,0,0.4)' }} />
             {label}

@@ -8,6 +8,7 @@ import type { IncomingMessage, ServerResponse } from 'node:http'
 const REPO_ROOT = path.resolve(__dirname, '../..')
 const NDJSON_PATH = path.join(REPO_ROOT, 'docs/pokefuta.ndjson')
 const TITLES_PATH = path.join(REPO_ROOT, 'dataset/manhole_titles.json')
+const MICHINEKI_PATH = path.join(REPO_ROOT, 'dataset/michineki.json')
 const WORKSPACE_DIR = path.join(__dirname, 'workspace')
 const PATCHES_PATH = path.join(WORKSPACE_DIR, 'changes.ndjson')
 const SCRIPTS_DIR = path.join(__dirname, 'scripts')
@@ -27,6 +28,19 @@ async function handleEditorRequest(
     const raw = fs.readFileSync(NDJSON_PATH, 'utf-8')
     const records = raw.trim().split('\n').filter(Boolean).map(l => JSON.parse(l))
     jsonRes(res, records)
+    return
+  }
+
+  if (method === 'GET' && subpath === '/data/michineki') {
+    const raw = fs.readFileSync(MICHINEKI_PATH, 'utf-8')
+    const jsonld = JSON.parse(raw) as { '@graph': Array<{ identifier: string; name: string; geo: { latitude: number; longitude: number } }> }
+    const stations = (jsonld['@graph'] ?? []).map(s => ({
+      id: s.identifier,
+      name: s.name,
+      lat: s.geo.latitude,
+      lng: s.geo.longitude,
+    }))
+    jsonRes(res, stations)
     return
   }
 
