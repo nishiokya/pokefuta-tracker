@@ -831,10 +831,7 @@
       ]
     },
     "91": {
-      "building": "道の駅なみえ",
-      "tags": [
-        "roadside"
-      ]
+      "building": "道の駅なみえ"
     },
     "92": {
       "building": "道の駅ならは",
@@ -1191,6 +1188,28 @@
     "204": {
       "tags": [
         "seaside"
+      ]
+    },
+    "208": {
+      "building": "東石切公園",
+      "tags": [
+        "park",
+        "rail_access_good"
+      ]
+    },
+    "209": {
+      "building": "花園中央公園",
+      "tags": [
+        "museum",
+        "park",
+        "near_station"
+      ]
+    },
+    "210": {
+      "building": "花園中央公園",
+      "tags": [
+        "park",
+        "near_station"
       ]
     },
     "214": {
