@@ -541,6 +541,7 @@
     var showTagDirectory = false;
     const TAG_DIRECTORY_MIN_COUNT = 5;  // この件数未満のタグはチップに表示しない
     const TAG_PRIORITY = ['roadside', 'world_heritage', 'remote_island', 'seaside', 'tourism', 'station_front', 'food', 'museum', 'history', 'rail_access_good'];
+    const FEATURED_TAGS = ['roadside', 'remote_island', 'station_front', 'world_heritage', 'seaside'];
 
     const TAG_META = {
       seaside:          { emoji: '🌊', label: '海沿い' },
@@ -1618,8 +1619,10 @@
           if (priB >= 0) return 1;
           return b - a;
         });
-      const primaryTags = sorted.filter(([tag]) => TAG_PRIORITY.includes(tag));
-      const secondaryTags = sorted.filter(([tag]) => !TAG_PRIORITY.includes(tag));
+      const primaryTags = FEATURED_TAGS
+        .filter(tag => tagCounts[tag] >= TAG_DIRECTORY_MIN_COUNT && TAG_META[tag])
+        .map(tag => [tag, tagCounts[tag]]);
+      const secondaryTags = sorted.filter(([tag]) => !FEATURED_TAGS.includes(tag));
       function makeChip(tag, count) {
         const meta = TAG_META[tag];
         return `<button class="tag-chip" data-tag="${tag}" data-count="${count}" aria-pressed="false">${meta.emoji} ${meta.label} <span class="tag-count">${count}枚</span></button>`;
