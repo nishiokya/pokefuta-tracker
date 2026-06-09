@@ -534,24 +534,67 @@
     }
   ],
   "manholes": {
-    "2": {
+    "1": {
+      "building": "指宿警察署　指宿中央交番",
       "tags": [
-        "seaside"
+        "station_front",
+        "tourism",
+        "food"
+      ]
+    },
+    "2": {
+      "building": "夫婦露天風呂の宿吟松",
+      "place_detail": "吟松付近の歩道",
+      "tags": [
+        "seaside",
+        "tourism"
+      ]
+    },
+    "3": {
+      "building": "ふれあいプラザなのはな館敷",
+      "tags": [
+        "park",
+        "tourism"
       ]
     },
     "4": {
+      "building": "砂むし会館砂楽",
+      "place_detail": "正面階段下にお引越ししました。",
       "tags": [
-        "seaside"
+        "seaside",
+        "tourism"
+      ]
+    },
+    "5": {
+      "building": "セントラルパーク指宿",
+      "tags": [
+        "park",
+        "tourism"
       ]
     },
     "6": {
+      "building": "指宿駅裏",
       "tags": [
-        "station_front"
+        "station_front",
+        "tourism"
       ]
     },
     "7": {
+      "building": "指宿エコキャンプ場",
+      "place_detail": "知林ヶ島付近",
       "tags": [
-        "seaside"
+        "seaside",
+        "tourism"
+      ]
+    },
+    "8": {
+      "building": "時遊館COCCOはしむれ"
+    },
+    "9": {
+      "building": "指宿市 指宿図書館",
+      "tags": [
+        "park",
+        "near_station"
       ]
     },
     "10": {
