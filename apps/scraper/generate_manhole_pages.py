@@ -433,6 +433,7 @@ def generate_html(
     manhole_id_js = _js_json(manhole_id)
     prefecture_js = _js_json(prefecture)
     city_js = _js_json(city)
+    pref_slug = PREFECTURE_EN.get(prefecture, "").lower().replace(" prefecture", "")
 
     # _attr_json() serializes dicts as JSON with " escaped to &quot; so they
     # are safe inside HTML double-quoted onclick attributes.
@@ -919,6 +920,7 @@ def generate_html(
       'page_path': '/manholes/' + {manhole_id_js} + '/',
       site_type: 'map',
       page_type: 'map_manhole',
+      prefecture: '{pref_slug}',
     }});
     gtag('event', 'view_manhole_detail', {{
       manhole_id: {manhole_id_js},

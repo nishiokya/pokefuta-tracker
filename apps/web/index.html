@@ -320,7 +320,8 @@
 
     let mapGA4Params = { site_type: 'map', page_type: 'map_top' };
     if (manholeParam) {
-      mapGA4Params = { site_type: 'map', page_type: 'map_manhole' };
+      // prefecture slug unknown until data loads; suppress auto page_view and send manually from openManholePopup
+      mapGA4Params = { site_type: 'map', page_type: 'map_manhole', send_page_view: false };
     } else if (resolvedPref) {
       mapGA4Params = {
         site_type: 'map',
@@ -1203,9 +1204,9 @@
       const data = marker.pokefutaData;
       window.applyManholePageMeta(data);
       window.history.replaceState({ manhole: data.id }, '', window.buildManholeCanonicalPath(data.id));
-      // Send page_view for SPA navigation to manhole detail (skip initial page load)
+      // Send page_view for manhole detail (always: covers both initial ?manhole= load and SPA navigation)
       window.currentGA4PageType = 'map_manhole';
-      if (window.gtag && !isInitialPageLoad) {
+      if (window.gtag) {
         gtag('event', 'page_view', {
           'page_path': `/tracker_manhole/${encodeURIComponent(data.id)}`,
           site_type: 'map',
