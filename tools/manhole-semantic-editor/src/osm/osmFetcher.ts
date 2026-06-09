@@ -94,75 +94,70 @@ async function loadMichinekiStations(): Promise<MichinekiStation[]> {
   return michinekiStations
 }
 
-async function queryOverpass(query: string): Promise<{ elements?: Record<string, unknown>[] }> {
+async function queryOverpass(query: string, timeoutMs = 6000): Promise<{ elements?: Record<string, unknown>[] }> {
   const body = `data=${encodeURIComponent(query)}`
   let lastErr: Error = new Error('No endpoint available')
   for (const endpoint of ENDPOINTS) {
+    const ac = new AbortController()
+    const timer = setTimeout(() => ac.abort(), timeoutMs)
     try {
       const resp = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body,
+        signal: ac.signal,
       })
-      if (resp.status === 429) { lastErr = new Error(RATE_LIMIT_MSG); continue }
+      clearTimeout(timer)
+      if (resp.status === 429 || resp.status >= 500) { lastErr = new Error(`Overpass API error: ${resp.status}`); continue }
       if (!resp.ok) throw new Error(`Overpass API error: ${resp.status}`)
       const text = await resp.text()
       if (text.includes('rate_limited') || text.includes('runtime error')) { lastErr = new Error(RATE_LIMIT_MSG); continue }
       return JSON.parse(text)
     } catch (e) {
-      if (e instanceof Error && e.message === RATE_LIMIT_MSG) { lastErr = e; continue }
+      clearTimeout(timer)
+      if (e instanceof DOMException && e.name === 'AbortError') { lastErr = new Error(`Overpass timeout (${endpoint})`); continue }
+      if (e instanceof Error && (e.message === RATE_LIMIT_MSG || e.message.startsWith('Overpass'))) { lastErr = e; continue }
       throw e
     }
   }
   throw lastErr
 }
 
-const MAIN_TAG_KEYS = ['amenity', 'shop', 'tourism', 'leisure', 'historic', 'man_made', 'office', 'landuse', 'highway', 'railway', 'natural', 'building']
-
-function mainTag(tags: Record<string, string>): { key: string; val: string } | null {
-  for (const k of MAIN_TAG_KEYS) {
-    if (tags[k]) return { key: k, val: tags[k] }
-  }
-  return null
-}
-
 export type ClickPoi = {
   osmId: string
   name: string
-  tagKey: string
-  tagVal: string
+  category: string
   lat: number
   lng: number
-  distanceM: number
+  distanceM: number  // -1 = unknown
 }
 
+const YAHOO_APPID = 'nishioka'
 const clickPoiCache = new Map<string, ClickPoi[]>()
 
-export async function fetchClickPois(lat: number, lng: number, radiusM = 30): Promise<ClickPoi[]> {
-  const cacheKey = `${lat.toFixed(5)}:${lng.toFixed(5)}:${radiusM}`
+export async function fetchClickPois(lat: number, lng: number): Promise<ClickPoi[]> {
+  const cacheKey = `yahoo-local:${lat.toFixed(5)}:${lng.toFixed(5)}`
   if (clickPoiCache.has(cacheKey)) return clickPoiCache.get(cacheKey)!
 
-  const query = `[out:json][timeout:5];\n(\n  node(around:${radiusM},${lat},${lng})[name];\n  way(around:${radiusM},${lat},${lng})[name];\n);\nout center;`
-  const data = await queryOverpass(query)
+  const url = `/__editor/data/yahoo-local?lat=${lat}&lon=${lng}`
+  const resp = await fetch(url)
+  if (!resp.ok) throw new Error(`Yahoo Local Search error: ${resp.status}`)
+  const data = await resp.json() as { Feature?: Record<string, unknown>[] }
 
-  const pois: ClickPoi[] = (data.elements ?? [])
-    .filter(el => (el.tags as Record<string, string> | undefined)?.name)
-    .map(el => {
-      const tags = el.tags as Record<string, string>
-      const elLat = (el.lat ?? (el.center as Record<string, number> | undefined)?.lat) as number
-      const elLng = (el.lon ?? (el.center as Record<string, number> | undefined)?.lon) as number
-      const mt = mainTag(tags)
+  const pois: ClickPoi[] = (data.Feature ?? [])
+    .map(f => {
+      const coords = ((f.Geometry as { Coordinates?: string } | undefined)?.Coordinates ?? '').split(',').map(Number)
+      const fLng = coords[0], fLat = coords[1]
       return {
-        osmId: String(el.id),
-        name: tags.name,
-        tagKey: mt?.key ?? 'name',
-        tagVal: mt?.val ?? '',
-        lat: elLat,
-        lng: elLng,
-        distanceM: Math.round(haversineM(lat, lng, elLat, elLng)),
+        osmId: String(f.Id ?? ''),
+        name: String(f.Name ?? ''),
+        category: ((f.Category as string[] | undefined)?.[0]) ?? '',
+        lat: fLat,
+        lng: fLng,
+        distanceM: (!isNaN(fLat) && !isNaN(fLng)) ? Math.round(haversineM(lat, lng, fLat, fLng)) : -1,
       }
     })
-    .filter(p => p.lat != null && p.lng != null)
+    .filter(p => p.name)
     .sort((a, b) => a.distanceM - b.distanceM)
 
   clickPoiCache.set(cacheKey, pois)

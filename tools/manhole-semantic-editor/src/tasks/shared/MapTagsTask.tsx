@@ -485,7 +485,7 @@ export function MapTagsTask({
         <div style={{ background: '#fffbeb', border: '1px solid #fcd34d', borderRadius: 8, padding: '10px 14px', marginBottom: 12 }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
             <div style={{ fontSize: 13, fontWeight: 600, color: '#92400e' }}>
-              クリック地点 30m圏内
+              クリック地点 100m圏内
               {mapClickPos && <span style={{ fontWeight: 400, fontSize: 11, color: '#78716c', marginLeft: 8 }}>{mapClickPos.lat.toFixed(5)}, {mapClickPos.lng.toFixed(5)}</span>}
             </div>
             <button onClick={() => setMapClickPos(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af', fontSize: 14, lineHeight: 1 }}>✕</button>
@@ -494,13 +494,13 @@ export function MapTagsTask({
           {mapClickError && <div style={{ fontSize: 12, color: '#dc2626' }}>{mapClickError}</div>}
           {mapClickPois !== null && !mapClickLoading && (
             mapClickPois.length === 0
-              ? <div style={{ fontSize: 12, color: '#6b7280' }}>30m圏内に名前付き OSM フィーチャーが見つかりません</div>
+              ? <div style={{ fontSize: 12, color: '#6b7280' }}>100m圏内に施設が見つかりません</div>
               : <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                 {mapClickPois.map(poi => (
                   <div key={poi.osmId} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     <span style={{ flex: 1, fontSize: 13 }}>{poi.name}</span>
-                    <span style={{ fontSize: 11, color: '#9ca3af', fontFamily: 'monospace' }}>{poi.tagKey}={poi.tagVal}</span>
-                    <span style={{ fontSize: 11, color: '#9ca3af', minWidth: 36, textAlign: 'right' }}>{poi.distanceM}m</span>
+                    <span style={{ fontSize: 11, color: '#9ca3af' }}>{poi.category}</span>
+                    {poi.distanceM >= 0 && <span style={{ fontSize: 11, color: '#9ca3af', minWidth: 36, textAlign: 'right' }}>{poi.distanceM}m</span>}
                     <button
                       style={{ padding: '2px 10px', fontSize: 12, background: selectedId ? '#f59e0b' : '#e5e7eb', color: selectedId ? 'white' : '#9ca3af', border: 'none', borderRadius: 4, cursor: selectedId ? 'pointer' : 'default', flexShrink: 0 }}
                       disabled={!selectedId}
