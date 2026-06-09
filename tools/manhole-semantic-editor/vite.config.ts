@@ -22,12 +22,26 @@ async function handleEditorRequest(
   method: string,
   subpath: string,
   body: string,
-  res: ServerResponse
+  res: ServerResponse,
+  query: string = ''
 ): Promise<void> {
   if (method === 'GET' && subpath === '/data/ndjson') {
     const raw = fs.readFileSync(NDJSON_PATH, 'utf-8')
     const records = raw.trim().split('\n').filter(Boolean).map(l => JSON.parse(l))
     jsonRes(res, records)
+    return
+  }
+
+  if (method === 'GET' && subpath === '/data/yahoo-local') {
+    const params = new URLSearchParams(query)
+    const lat = params.get('lat')
+    const lon = params.get('lon')
+    if (!lat || !lon) { jsonRes(res, { error: 'lat/lon required' }, 400); return }
+    const yahooUrl = `https://map.yahooapis.jp/search/local/V1/localSearch?appid=nishioka&lat=${lat}&lon=${lon}&dist=0.1&sort=review&output=json`
+    const r = await fetch(yahooUrl)
+    const text = await r.text()
+    res.writeHead(r.status, { 'Content-Type': 'application/json; charset=utf-8' })
+    res.end(text)
     return
   }
 
@@ -108,12 +122,12 @@ function editorApiPlugin(): Plugin {
     name: 'manhole-editor-api',
     configureServer(server) {
       server.middlewares.use('/__editor', (req: IncomingMessage, res: ServerResponse) => {
-        const subpath = (req.url ?? '/').split('?')[0]
+        const [subpath, qs] = (req.url ?? '/').split('?')
         const method = req.method ?? 'GET'
         let body = ''
         req.on('data', (chunk: Buffer) => { body += chunk.toString() })
         req.on('end', () => {
-          handleEditorRequest(method, subpath, body, res).catch(err => {
+          handleEditorRequest(method, subpath, body, res, qs ?? '').catch(err => {
             res.writeHead(500, { 'Content-Type': 'application/json' })
             res.end(JSON.stringify({ error: String(err) }))
           })

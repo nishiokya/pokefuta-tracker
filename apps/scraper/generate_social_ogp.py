@@ -480,19 +480,9 @@ def _vars_travel_trivia(raw: dict) -> dict:
             "description": "都道府県別ランキング",
         })
     elif ft == "first_pokefuta":
-        manholes = _load_pref_manholes("鹿児島県")
         base.update({
-            "categoryLabel": "RARE",
-            "titleLine1": "ポケふた第1号",
-            "titleLine2": "2018年12月設置",
-            "kicker": f"{v['pref']}{v['city']} {v['location']}",
-            "mainNumber": "2018",
-            "mainUnit": "年",
-            "chips": [v["pokemon"], v["city"], v["location"], "2018.12.20"],
-            "description": v["reason"],
-            "mapCaption": "鹿児島県指宿市マップ",
-            "manholes": manholes,
-            "_theme": "rare",
+            "categoryLabel": "FIRST",
+            "_theme": "first_pokefuta",
         })
     elif ft == "ibusuki_eevee_9":
         manholes = _load_pref_manholes("鹿児島県")
