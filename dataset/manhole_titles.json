@@ -559,6 +559,11 @@
         "seaside"
       ]
     },
+    "11": {
+      "tags": [
+        "roadside"
+      ]
+    },
     "12": {
       "tags": [
         "seaside"
@@ -2093,6 +2098,11 @@
         "roadside"
       ]
     },
+    "373": {
+      "tags": [
+        "roadside"
+      ]
+    },
     "377": {
       "building": "道の駅ゆうひパーク浜田",
       "tags": [
@@ -2231,6 +2241,11 @@
         "seaside"
       ]
     },
+    "402": {
+      "tags": [
+        "roadside"
+      ]
+    },
     "403": {
       "tags": [
         "seaside"
@@ -2341,7 +2356,13 @@
     },
     "418": {
       "tags": [
-        "seaside"
+        "seaside",
+        "roadside"
+      ]
+    },
+    "419": {
+      "tags": [
+        "roadside"
       ]
     },
     "422": {
@@ -2557,7 +2578,8 @@
     },
     "471": {
       "tags": [
-        "seaside"
+        "seaside",
+        "roadside"
       ]
     },
     "472": {
