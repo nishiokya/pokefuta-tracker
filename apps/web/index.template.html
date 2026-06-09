@@ -322,16 +322,16 @@
     const params = new URLSearchParams(window.location.search);
     const manholeParam = params.get('manhole');
     const prefParam = params.get('pref');
+    const resolvedPref = prefParam ? window.resolvePrefectureParam(prefParam) : '';
     let pagePath = '/tracker_top';
     if (manholeParam) {
       pagePath = `/tracker_manhole/${manholeParam}`;
-    } else if (prefParam) {
-      pagePath = `/tracker_pref/${encodeURIComponent(prefParam)}`;
+    } else if (resolvedPref) {
+      pagePath = `/tracker_pref/${encodeURIComponent(resolvedPref)}`;
     }
 
     let mapGA4Params = {};
     if (!manholeParam) {
-      const resolvedPref = prefParam ? window.resolvePrefectureParam(prefParam) : '';
       if (resolvedPref) {
         mapGA4Params = {
           page_type: 'map_prefecture',
