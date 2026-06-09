@@ -327,7 +327,7 @@
     if (manholeParam) {
       pagePath = `/tracker_manhole/${manholeParam}`;
     } else if (resolvedPref) {
-      pagePath = `/tracker_pref/${encodeURIComponent(resolvedPref)}`;
+      pagePath = `/tracker_pref/${window.PREFECTURE_SLUG_MAP[resolvedPref] || encodeURIComponent(resolvedPref)}`;
     }
 
     let mapGA4Params = { site_type: 'map', page_type: 'map_top' };
@@ -637,7 +637,7 @@
         window.currentGA4PageType = 'map_prefecture';
         if (window.gtag && !isInitialPageLoad) {
           gtag('event', 'page_view', {
-            page_path: `/tracker_pref/${encodeURIComponent(prefecture)}`,
+            page_path: `/tracker_pref/${window.PREFECTURE_SLUG_MAP[prefecture] || encodeURIComponent(prefecture)}`,
             site_type: 'map',
             page_type: 'map_prefecture',
             prefecture: window.PREFECTURE_SLUG_MAP[prefecture] || prefecture,
