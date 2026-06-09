@@ -9,6 +9,7 @@ export type TaskType =
   | 'admin_edit_manhole'
   | 'admin_bulk_edit'
   | 'tag_reverse_lookup'
+  | 'michineki_nearby'
 
 export type OperationType =
   | 'set_municipality_url'

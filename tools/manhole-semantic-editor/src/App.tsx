@@ -8,6 +8,7 @@ import { VerifyOfficialUrlTask } from './tasks/verifyOfficialUrl/VerifyOfficialU
 import { AssignAllTagsTask } from './tasks/assignAllTags/AssignAllTagsTask'
 import { AdminBulkEditTask } from './tasks/adminBulkEdit/AdminBulkEditTask'
 import { TagReverseLookupTask } from './tasks/tagReverseLookup/TagReverseLookupTask'
+import { MichinekiNearbyTask } from './tasks/michinekiNearby/MichinekiNearbyTask'
 
 type ActiveTask = 'home' | TaskType
 
@@ -18,6 +19,7 @@ const TASK_MENU: Array<{ group: string; items: Array<{ id: TaskType; label: stri
       { id: 'add_municipality_url', label: '自治体URLを追加する', icon: '🏛', desc: '市区町村の公式案内ページ' },
       { id: 'assign_all_tags', label: '全タグを付ける', icon: '🏷', desc: '場所・駅・観光 すべてのタグ＋OSM連携・施設名設定' },
       { id: 'tag_reverse_lookup', label: 'タグ別マンホール一覧', icon: '🔍', desc: 'タグごとに設定済みマンホールを逆引き' },
+      { id: 'michineki_nearby', label: '道の駅 300m圏内', icon: '🏪', desc: '道の駅と300m以内のポケふたを一覧・紐づけ' },
     ],
   },
   {
@@ -143,6 +145,8 @@ export default function App() {
         return <AdminBulkEditTask {...commonProps} titles={titles} onSaveMany={handleSavePatches} />
       case 'tag_reverse_lookup':
         return <TagReverseLookupTask titles={titles} records={records} onNavigateToEdit={handleNavigateToEdit} />
+      case 'michineki_nearby':
+        return <MichinekiNearbyTask {...commonProps} titles={titles} onSaveMany={handleSavePatches} />
       default:
         return <Home onSelectTask={navigate} />
     }
