@@ -117,6 +117,58 @@ async function queryOverpass(query: string): Promise<{ elements?: Record<string,
   throw lastErr
 }
 
+const MAIN_TAG_KEYS = ['amenity', 'shop', 'tourism', 'leisure', 'historic', 'man_made', 'office', 'landuse', 'highway', 'railway', 'natural', 'building']
+
+function mainTag(tags: Record<string, string>): { key: string; val: string } | null {
+  for (const k of MAIN_TAG_KEYS) {
+    if (tags[k]) return { key: k, val: tags[k] }
+  }
+  return null
+}
+
+export type ClickPoi = {
+  osmId: string
+  name: string
+  tagKey: string
+  tagVal: string
+  lat: number
+  lng: number
+  distanceM: number
+}
+
+const clickPoiCache = new Map<string, ClickPoi[]>()
+
+export async function fetchClickPois(lat: number, lng: number, radiusM = 30): Promise<ClickPoi[]> {
+  const cacheKey = `${lat.toFixed(5)}:${lng.toFixed(5)}:${radiusM}`
+  if (clickPoiCache.has(cacheKey)) return clickPoiCache.get(cacheKey)!
+
+  const query = `[out:json][timeout:5];\n(\n  node(around:${radiusM},${lat},${lng})[name];\n  way(around:${radiusM},${lat},${lng})[name];\n);\nout center;`
+  const data = await queryOverpass(query)
+
+  const pois: ClickPoi[] = (data.elements ?? [])
+    .filter(el => (el.tags as Record<string, string> | undefined)?.name)
+    .map(el => {
+      const tags = el.tags as Record<string, string>
+      const elLat = (el.lat ?? (el.center as Record<string, number> | undefined)?.lat) as number
+      const elLng = (el.lon ?? (el.center as Record<string, number> | undefined)?.lon) as number
+      const mt = mainTag(tags)
+      return {
+        osmId: String(el.id),
+        name: tags.name,
+        tagKey: mt?.key ?? 'name',
+        tagVal: mt?.val ?? '',
+        lat: elLat,
+        lng: elLng,
+        distanceM: Math.round(haversineM(lat, lng, elLat, elLng)),
+      }
+    })
+    .filter(p => p.lat != null && p.lng != null)
+    .sort((a, b) => a.distanceM - b.distanceM)
+
+  clickPoiCache.set(cacheKey, pois)
+  return pois
+}
+
 export async function fetchNearbyPoisBatch(
   configs: PoiFetchConfig[],
   lat: number,

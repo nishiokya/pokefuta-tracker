@@ -4,8 +4,8 @@ import 'leaflet/dist/leaflet.css'
 import type { PokefutaRecord, ManholeTitlesJson, SemanticPatch, ManholeEntry, TaskType } from '../../semantic/semanticPatch'
 import { validatePatch } from '../../semantic/semanticPatchValidator'
 import { newPatchId } from '../../util'
-import { fetchNearbyPoisBatch } from '../../osm/osmFetcher'
-import type { OsmPoi, OsmPoiType } from '../../osm/osmFetcher'
+import { fetchNearbyPoisBatch, fetchClickPois } from '../../osm/osmFetcher'
+import type { OsmPoi, OsmPoiType, ClickPoi } from '../../osm/osmFetcher'
 
 export type OsmPoiConfig = {
   type: OsmPoiType
@@ -108,10 +108,16 @@ export function MapTagsTask({
   const [poisLoading, setPoisLoading] = useState(false)
   const [poisError, setPoisError] = useState<string | null>(null)
 
+  const [mapClickPos, setMapClickPos] = useState<{ lat: number; lng: number } | null>(null)
+  const [mapClickPois, setMapClickPois] = useState<ClickPoi[] | null>(null)
+  const [mapClickLoading, setMapClickLoading] = useState(false)
+  const [mapClickError, setMapClickError] = useState<string | null>(null)
+
   const mapDivRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<L.Map | null>(null)
   const markersRef = useRef<Map<string, L.Marker>>(new Map())
   const poiMarkersRef = useRef<L.Marker[]>([])
+  const clickMarkerRef = useRef<L.Marker | null>(null)
 
   const tags = useMemo(
     () => tagsProp ?? (tagGroups?.flatMap(g => [...g.tags]) ?? []),
@@ -155,6 +161,9 @@ export function MapTagsTask({
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     }).addTo(map)
+    map.on('click', (e: L.LeafletMouseEvent) => {
+      setMapClickPos({ lat: e.latlng.lat, lng: e.latlng.lng })
+    })
     mapRef.current = map
     return () => {
       map.remove()
@@ -183,7 +192,7 @@ export function MapTagsTask({
     if (pageItems.length === 0) return
 
     pageItems.forEach(r => {
-      const marker = L.marker([r.lat, r.lng], { icon: makeIcon('#3b82f6') })
+      const marker = L.marker([r.lat, r.lng], { icon: makeIcon('#3b82f6'), bubblingMouseEvents: false })
         .addTo(map)
         .bindPopup(buildPopupHtml(r))
         .on('click', () => setSelectedId(id => id === r.id ? null : r.id))
@@ -242,6 +251,37 @@ export function MapTagsTask({
     return () => { cancelled = true; clearTimeout(timer) }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedId, pageItems])
+
+  // Fetch POIs when map is clicked
+  useEffect(() => {
+    if (clickMarkerRef.current) { clickMarkerRef.current.remove(); clickMarkerRef.current = null }
+    setMapClickPois(null)
+    setMapClickError(null)
+    if (!mapClickPos) return
+
+    const map = mapRef.current
+    if (map) {
+      const m = L.marker([mapClickPos.lat, mapClickPos.lng], {
+        icon: L.divIcon({
+          className: '',
+          html: '<div style="width:16px;height:16px;border-radius:50%;background:#f59e0b;border:3px solid white;box-shadow:0 1px 6px rgba(0,0,0,0.6)"></div>',
+          iconSize: [16, 16],
+          iconAnchor: [8, 8],
+        }),
+        interactive: false,
+      }).addTo(map)
+      clickMarkerRef.current = m
+    }
+
+    let cancelled = false
+    setMapClickLoading(true)
+    fetchClickPois(mapClickPos.lat, mapClickPos.lng).then(pois => {
+      if (!cancelled) { setMapClickPois(pois); setMapClickLoading(false) }
+    }).catch(e => {
+      if (!cancelled) { setMapClickError(e instanceof Error ? e.message : String(e)); setMapClickLoading(false) }
+    })
+    return () => { cancelled = true }
+  }, [mapClickPos])
 
   // Sync marker icons when selection or pending changes
   useEffect(() => {
@@ -440,6 +480,42 @@ export function MapTagsTask({
       </div>
 
       <div ref={mapDivRef} style={{ height: 340, borderRadius: 8, border: '1px solid #e5e7eb', marginBottom: 12, overflow: 'hidden' }} />
+
+      {(mapClickLoading || mapClickError !== null || mapClickPois !== null) && (
+        <div style={{ background: '#fffbeb', border: '1px solid #fcd34d', borderRadius: 8, padding: '10px 14px', marginBottom: 12 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: '#92400e' }}>
+              クリック地点 30m圏内
+              {mapClickPos && <span style={{ fontWeight: 400, fontSize: 11, color: '#78716c', marginLeft: 8 }}>{mapClickPos.lat.toFixed(5)}, {mapClickPos.lng.toFixed(5)}</span>}
+            </div>
+            <button onClick={() => setMapClickPos(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af', fontSize: 14, lineHeight: 1 }}>✕</button>
+          </div>
+          {mapClickLoading && <div style={{ fontSize: 12, color: '#6b7280' }}>Overpass API に問い合わせ中…</div>}
+          {mapClickError && <div style={{ fontSize: 12, color: '#dc2626' }}>{mapClickError}</div>}
+          {mapClickPois !== null && !mapClickLoading && (
+            mapClickPois.length === 0
+              ? <div style={{ fontSize: 12, color: '#6b7280' }}>30m圏内に名前付き OSM フィーチャーが見つかりません</div>
+              : <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                {mapClickPois.map(poi => (
+                  <div key={poi.osmId} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <span style={{ flex: 1, fontSize: 13 }}>{poi.name}</span>
+                    <span style={{ fontSize: 11, color: '#9ca3af', fontFamily: 'monospace' }}>{poi.tagKey}={poi.tagVal}</span>
+                    <span style={{ fontSize: 11, color: '#9ca3af', minWidth: 36, textAlign: 'right' }}>{poi.distanceM}m</span>
+                    <button
+                      style={{ padding: '2px 10px', fontSize: 12, background: selectedId ? '#f59e0b' : '#e5e7eb', color: selectedId ? 'white' : '#9ca3af', border: 'none', borderRadius: 4, cursor: selectedId ? 'pointer' : 'default', flexShrink: 0 }}
+                      disabled={!selectedId}
+                      onClick={() => {
+                        if (!selectedId) return
+                        setPendingBuilding(prev => { const n = new Map(prev); n.set(selectedId, poi.name); return n })
+                      }}
+                    >→ building</button>
+                  </div>
+                ))}
+                {!selectedId && <div style={{ fontSize: 11, color: '#92400e', marginTop: 4 }}>レコードを選択してから「→ building」を押してください</div>}
+              </div>
+          )}
+        </div>
+      )}
 
       {osmPoi?.length && selectedId && (poisLoading || !!poisError || nearbyPois.length > 0) && (
         <div style={{ background: '#fff7ed', border: '1px solid #fed7aa', borderRadius: 8, padding: '10px 14px', marginBottom: 12 }}>
