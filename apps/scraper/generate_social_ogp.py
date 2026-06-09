@@ -541,17 +541,17 @@ def _vars_no_photo(raw: dict) -> dict:
 
 def _vars_latest_photo(raw: dict) -> dict:
     pokemon_list = raw.get("pokemon_list", [raw.get("pokemon", "")])
+    pokemon_str = " × ".join(p for p in pokemon_list if p)
     date_str = raw.get("created_at", "")[:10].replace("-", "/")
     return {
-        "categoryLabel": "TRIVIA",
-        "titleLine1": f"{raw['pref']} {raw['city']}",
-        "titleLine2": "新着ポケふた",
-        "kicker": f"投稿: {date_str}",
-        "mainNumber": str(len(pokemon_list)),
-        "mainUnit": "種",
-        "chips": pokemon_list[:6],
-        "description": "最新ポケふた情報",
-        "mapCaption": f"{raw['city']}マップ",
+        "_theme": "latest_photo",
+        "pref":         raw.get("pref", ""),
+        "city":         raw.get("city", ""),
+        "pokemon":      pokemon_str,
+        "date":         date_str,
+        "display_name": raw.get("display_name", ""),
+        "photo_rank":   raw.get("photo_rank", "recent"),
+        "image_url":    raw.get("image_url", ""),
     }
 
 
@@ -590,13 +590,46 @@ def _vars_remote_island(raw: dict) -> dict:
     }
 
 
+def _render_latest_photo_template(v: dict) -> str:
+    """Render latest_photo.svg by mustache-style {{KEY}} substitution."""
+    import base64
+    import urllib.request
+
+    tmpl_path = TEMPLATE_DIR / "latest_photo.svg"
+    if not tmpl_path.exists():
+        sys.exit(f"[generate_social_ogp] テンプレートが見つかりません: {tmpl_path}")
+    svg = tmpl_path.read_text(encoding="utf-8")
+
+    svg = svg.replace("{{PREF}}",    _xe(v.get("pref", "")))
+    svg = svg.replace("{{CITY}}",    _xe(v.get("city", "")))
+    svg = svg.replace("{{POKEMON}}", _xe(v.get("pokemon", "")))
+    svg = svg.replace("{{DATE}}",    _xe(v.get("date", "")))
+
+    image_url = v.get("image_url", "")
+    photo_el = ""
+    if image_url:
+        try:
+            with urllib.request.urlopen(image_url, timeout=15) as resp:
+                b64 = base64.b64encode(resp.read()).decode("ascii")
+            photo_el = (
+                f'<image x="770" y="157" width="310" height="310" '
+                f'clip-path="url(#photoClip)" preserveAspectRatio="xMidYMid slice" '
+                f'href="data:image/jpeg;base64,{b64}"/>'
+            )
+        except Exception as e:
+            print(f"[generate_social_ogp] 写真取得スキップ: {e}", file=sys.stderr)
+
+    svg = svg.replace("{{PHOTO_ELEMENT}}", photo_el)
+    return svg
+
+
 _DESIGN_THEME: dict[str, str] = {
     "prefecture_rank": "ranking",
     "pokemon_rank":    "ranking",
     "travel_trivia":   "trivia",
     "rare_area":       "rare",
     "no_photo":        "rare",
-    "latest_photo":    "trivia",
+    "latest_photo":    "latest_photo",
     "michineki":       "ranking",
     "remote_island":   "rare",
 }
@@ -643,7 +676,10 @@ def main() -> None:
     vars_dict = var_builder(raw)
     theme = vars_dict.pop("_theme", theme)
     print(f"[generate_social_ogp] {post_type} → {theme} テンプレートで生成中…")
-    svg_text = _render_design_template(theme, vars_dict)
+    if theme == "latest_photo":
+        svg_text = _render_latest_photo_template(vars_dict)
+    else:
+        svg_text = _render_design_template(theme, vars_dict)
 
     OUTPUT_SVG.write_text(svg_text, encoding="utf-8")
     print(f"[generate_social_ogp] SVG → {OUTPUT_SVG}")
