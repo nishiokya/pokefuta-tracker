@@ -579,7 +579,8 @@
     "16": {
       "tags": [
         "seaside",
-        "station_front"
+        "station_front",
+        "roadside"
       ]
     },
     "17": {
@@ -626,6 +627,11 @@
         "remote_island"
       ]
     },
+    "40": {
+      "tags": [
+        "roadside"
+      ]
+    },
     "44": {
       "tags": [
         "seaside"
@@ -638,7 +644,8 @@
     },
     "46": {
       "tags": [
-        "seaside"
+        "seaside",
+        "roadside"
       ]
     },
     "49": {
@@ -799,7 +806,8 @@
     },
     "82": {
       "tags": [
-        "seaside"
+        "seaside",
+        "roadside"
       ]
     },
     "83": {
@@ -831,10 +839,7 @@
       ]
     },
     "91": {
-      "building": "道の駅なみえ"
-    },
-    "92": {
-      "building": "道の駅ならは",
+      "building": "道の駅なみえ",
       "tags": [
         "roadside"
       ]
@@ -932,6 +937,11 @@
       "building": "古川駅前",
       "tags": [
         "near_station"
+      ]
+    },
+    "129": {
+      "tags": [
+        "roadside"
       ]
     },
     "134": {
@@ -1065,6 +1075,11 @@
         "seaside"
       ]
     },
+    "169": {
+      "tags": [
+        "roadside"
+      ]
+    },
     "174": {
       "tags": [
         "world_heritage",
@@ -1182,7 +1197,8 @@
     },
     "203": {
       "tags": [
-        "seaside"
+        "seaside",
+        "roadside"
       ]
     },
     "204": {
@@ -1289,6 +1305,11 @@
         "roadside"
       ]
     },
+    "227": {
+      "tags": [
+        "roadside"
+      ]
+    },
     "229": {
       "tags": [
         "seaside",
@@ -1319,7 +1340,8 @@
       "tags": [
         "seaside",
         "world_heritage",
-        "remote_island"
+        "remote_island",
+        "roadside"
       ]
     },
     "234": {
@@ -1442,11 +1464,31 @@
       ],
       "confidence": 3
     },
+    "247": {
+      "tags": [
+        "roadside"
+      ]
+    },
     "248": {
       "building": "会津総合運動公園"
     },
+    "251": {
+      "tags": [
+        "roadside"
+      ]
+    },
+    "252": {
+      "tags": [
+        "roadside"
+      ]
+    },
     "253": {
       "building": "双葉町産業交流センター"
+    },
+    "254": {
+      "tags": [
+        "roadside"
+      ]
     },
     "262": {
       "building": "道の駅にしね",
@@ -1524,7 +1566,8 @@
         "food",
         "park",
         "museum",
-        "rail_access_good"
+        "rail_access_good",
+        "roadside"
       ],
       "confidence": 2
     },
@@ -1819,7 +1862,13 @@
     },
     "320": {
       "tags": [
-        "seaside"
+        "seaside",
+        "roadside"
+      ]
+    },
+    "321": {
+      "tags": [
+        "roadside"
       ]
     },
     "323": {
@@ -1927,6 +1976,16 @@
       ],
       "confidence": 3
     },
+    "338": {
+      "tags": [
+        "roadside"
+      ]
+    },
+    "339": {
+      "tags": [
+        "roadside"
+      ]
+    },
     "340": {
       "tags": [
         "seaside"
@@ -1940,6 +1999,11 @@
     "349": {
       "tags": [
         "seaside"
+      ]
+    },
+    "350": {
+      "tags": [
+        "roadside"
       ]
     },
     "354": {
@@ -2022,6 +2086,11 @@
     "367": {
       "tags": [
         "seaside"
+      ]
+    },
+    "372": {
+      "tags": [
+        "roadside"
       ]
     },
     "377": {
@@ -2245,6 +2314,11 @@
       ],
       "confidence": 3
     },
+    "410": {
+      "tags": [
+        "roadside"
+      ]
+    },
     "412": {
       "building": "道の駅ひたちおおた",
       "tags": [
@@ -2436,6 +2510,11 @@
         "seaside"
       ]
     },
+    "455": {
+      "tags": [
+        "roadside"
+      ]
+    },
     "456": {
       "building": "道の駅しもごう",
       "tags": [
@@ -2451,6 +2530,11 @@
     "460": {
       "building": "JR磐城浅川駅前広場"
     },
+    "464": {
+      "tags": [
+        "roadside"
+      ]
+    },
     "465": {
       "tags": [
         "near_station"
@@ -2461,6 +2545,11 @@
         "seaside"
       ]
     },
+    "469": {
+      "tags": [
+        "roadside"
+      ]
+    },
     "470": {
       "tags": [
         "seaside"
@@ -2469,6 +2558,11 @@
     "471": {
       "tags": [
         "seaside"
+      ]
+    },
+    "472": {
+      "tags": [
+        "roadside"
       ]
     },
     "474": {
