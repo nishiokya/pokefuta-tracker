@@ -2001,7 +2001,9 @@ def _build_tracking_script(s: dict) -> str:
     gtag('js', new Date());
     gtag('config', 'G-K18NR4GZG2', {
       'anonymize_ip': true,
-      'page_path': window.location.pathname
+      'page_path': window.location.pathname,
+      site_type: 'map',
+      page_type: 'summary',
     });
 
     document.addEventListener('click', function (event) {

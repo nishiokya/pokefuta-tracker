@@ -63,15 +63,18 @@
     const params = new URLSearchParams(window.location.search);
     const prefParam = params.get('pref');
     let pagePath = '/tracker_gmanhole_map';
+    let gmanholeGA4Params = { site_type: 'map', page_type: 'map_gmanhole' };
     if (prefParam) {
       // Normalize prefecture code to name
       const normalizedPref = (prefParam.length === 2 && !isNaN(prefParam)) ? (CODE_TO_PREF[prefParam] || prefParam) : prefParam;
       pagePath = `/tracker_gmanhole_map_pref/${encodeURIComponent(normalizedPref)}`;
+      gmanholeGA4Params.prefecture = normalizedPref;
     }
 
     gtag('config', 'G-K18NR4GZG2', {
       'anonymize_ip': true,
-      'page_path': pagePath
+      'page_path': pagePath,
+      ...gmanholeGA4Params,
     });
 
     // Event tracking helper function
@@ -339,7 +342,7 @@
 
           // Track prefecture selection
           if (window.trackEvent && willSelect) {
-            window.trackEvent('click_prefecture_gmanhole', {
+            window.trackEvent('click_prefecture', {
               'event_category': 'navigation',
               'event_label': pref,
               'value': total

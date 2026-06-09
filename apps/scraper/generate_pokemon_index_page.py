@@ -816,7 +816,7 @@ def generate_html(
     window.dataLayer = window.dataLayer || [];
     function gtag(){{dataLayer.push(arguments);}}
     gtag('js', new Date());
-    gtag('config', '{GA_MEASUREMENT_ID}', {{'page_path': '/{url_prefix}pokemon/'}});
+    gtag('config', '{GA_MEASUREMENT_ID}', {{'page_path': '/{url_prefix}pokemon/', site_type: 'map', page_type: 'pokemon_index'}});
     gtag('event', 'view_pokemon_index', {{'pokemon_count': {total_count}, 'lang': '{lang}'}});
   </script>
 

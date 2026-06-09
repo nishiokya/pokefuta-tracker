@@ -916,7 +916,9 @@ def generate_html(
     function gtag(){{dataLayer.push(arguments);}}
     gtag('js', new Date());
     gtag('config', '{GA_MEASUREMENT_ID}', {{
-      'page_path': '/manholes/' + {manhole_id_js} + '/'
+      'page_path': '/manholes/' + {manhole_id_js} + '/',
+      site_type: 'map',
+      page_type: 'map_manhole',
     }});
     gtag('event', 'view_manhole_detail', {{
       manhole_id: {manhole_id_js},
