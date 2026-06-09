@@ -318,16 +318,16 @@
       pagePath = `/tracker_pref/${encodeURIComponent(resolvedPref)}`;
     }
 
-    let mapGA4Params = {};
-    if (!manholeParam) {
-      if (resolvedPref) {
-        mapGA4Params = {
-          page_type: 'map_prefecture',
-          prefecture: window.PREFECTURE_SLUG_MAP[resolvedPref] || resolvedPref,
-        };
-      } else {
-        mapGA4Params = { page_type: 'map_index' };
-      }
+    let mapGA4Params = { site_type: 'map', page_type: 'map_top' };
+    if (manholeParam) {
+      // prefecture slug unknown until data loads; suppress auto page_view and send manually from openManholePopup
+      mapGA4Params = { site_type: 'map', page_type: 'map_manhole', send_page_view: false };
+    } else if (resolvedPref) {
+      mapGA4Params = {
+        site_type: 'map',
+        page_type: 'map_prefecture',
+        prefecture: window.PREFECTURE_SLUG_MAP[resolvedPref] || resolvedPref,
+      };
     }
 
     gtag('config', 'G-K18NR4GZG2', {
@@ -335,6 +335,9 @@
       page_path: pagePath,
       ...mapGA4Params,
     });
+
+    // Current page_type for dynamic event params (updated on SPA navigation)
+    window.currentGA4PageType = mapGA4Params.page_type || 'map_top';
 
     // Event tracking helper function
     window.trackEvent = function(action, params = {}) {
@@ -620,9 +623,11 @@
         window.history.replaceState({ pref: prefecture }, '', window.buildCanonicalPath(prefecture));
         window.applyPrefecturePageMeta(prefecture);
         // Send page_view for SPA navigation (skip initial page load)
+        window.currentGA4PageType = 'map_prefecture';
         if (window.gtag && !isInitialPageLoad) {
           gtag('event', 'page_view', {
             page_path: `/tracker_pref/${encodeURIComponent(prefecture)}`,
+            site_type: 'map',
             page_type: 'map_prefecture',
             prefecture: window.PREFECTURE_SLUG_MAP[prefecture] || prefecture,
           });
@@ -631,11 +636,13 @@
         // URL をリセット
         window.history.replaceState({}, '', window.buildCanonicalPath(''));
         window.applyPrefecturePageMeta('');
+        window.currentGA4PageType = 'map_top';
         // Send page_view for SPA navigation back to top (skip initial page load)
         if (window.gtag && !isInitialPageLoad) {
           gtag('event', 'page_view', {
             page_path: '/tracker_top',
-            page_type: 'map_index',
+            site_type: 'map',
+            page_type: 'map_top',
           });
         }
       }
@@ -1086,7 +1093,9 @@
               window.trackEvent('click_manhole_marker', {
                 'event_category': 'navigation',
                 'event_label': d.prefecture || '不明',
-                'manhole_id': d.id
+                'manhole_id': d.id,
+                site_type: 'map',
+                page_type: window.currentGA4PageType || 'map_top',
               });
             }
             collapseBottomSheet();
@@ -1195,10 +1204,14 @@
       const data = marker.pokefutaData;
       window.applyManholePageMeta(data);
       window.history.replaceState({ manhole: data.id }, '', window.buildManholeCanonicalPath(data.id));
-      // Send page_view for SPA navigation to manhole detail (skip initial page load)
-      if (window.gtag && !isInitialPageLoad) {
+      // Send page_view for manhole detail (always: covers both initial ?manhole= load and SPA navigation)
+      window.currentGA4PageType = 'map_manhole';
+      if (window.gtag) {
         gtag('event', 'page_view', {
-          'page_path': `/tracker_manhole/${encodeURIComponent(data.id)}`
+          'page_path': `/tracker_manhole/${encodeURIComponent(data.id)}`,
+          site_type: 'map',
+          page_type: 'map_manhole',
+          prefecture: window.PREFECTURE_SLUG_MAP[data.prefecture] || data.prefecture || '',
         });
       }
       const openPopup = () => {

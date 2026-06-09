@@ -822,7 +822,9 @@ def generate_html(
     function gtag(){{dataLayer.push(arguments);}}
     gtag('js', new Date());
     gtag('config', '{GA_MEASUREMENT_ID}', {{
-      'page_path': '/{url_prefix}pokemon/' + {slug_js} + '/'
+      'page_path': '/{url_prefix}pokemon/' + {slug_js} + '/',
+      site_type: 'map',
+      page_type: 'pokemon_lp',
     }});
     gtag('event', 'view_pokemon_lp', {{
       pokemon_slug: {slug_js},
