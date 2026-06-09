@@ -37,6 +37,20 @@
       '佐賀県': '41', '長崎県': '42', '熊本県': '43', '大分県': '44', '宮崎県': '45',
       '鹿児島県': '46', '沖縄県': '47'
     });
+    window.PREFECTURE_SLUG_MAP = Object.freeze({
+      '北海道': 'hokkaido',  '青森県': 'aomori',    '岩手県': 'iwate',     '宮城県': 'miyagi',
+      '秋田県': 'akita',     '山形県': 'yamagata',  '福島県': 'fukushima', '茨城県': 'ibaraki',
+      '栃木県': 'tochigi',   '群馬県': 'gunma',     '埼玉県': 'saitama',   '千葉県': 'chiba',
+      '東京都': 'tokyo',     '神奈川県': 'kanagawa','新潟県': 'niigata',   '富山県': 'toyama',
+      '石川県': 'ishikawa',  '福井県': 'fukui',     '山梨県': 'yamanashi', '長野県': 'nagano',
+      '岐阜県': 'gifu',      '静岡県': 'shizuoka',  '愛知県': 'aichi',     '三重県': 'mie',
+      '滋賀県': 'shiga',     '京都府': 'kyoto',     '大阪府': 'osaka',     '兵庫県': 'hyogo',
+      '奈良県': 'nara',      '和歌山県': 'wakayama','鳥取県': 'tottori',   '島根県': 'shimane',
+      '岡山県': 'okayama',   '広島県': 'hiroshima', '山口県': 'yamaguchi', '徳島県': 'tokushima',
+      '香川県': 'kagawa',    '愛媛県': 'ehime',     '高知県': 'kochi',     '福岡県': 'fukuoka',
+      '佐賀県': 'saga',      '長崎県': 'nagasaki',  '熊本県': 'kumamoto',  '大分県': 'oita',
+      '宮崎県': 'miyazaki',  '鹿児島県': 'kagoshima','沖縄県': 'okinawa'
+    });
     window.SITE_BASE_URL = 'https://data.pokefuta.com/';
 
     window.resolvePrefectureParam = function(prefParam) {
@@ -303,9 +317,23 @@
       pagePath = `/tracker_pref/${encodeURIComponent(prefParam)}`;
     }
 
+    let mapGA4Params = {};
+    if (!manholeParam) {
+      const resolvedPref = prefParam ? window.resolvePrefectureParam(prefParam) : '';
+      if (resolvedPref) {
+        mapGA4Params = {
+          page_type: 'map_prefecture',
+          prefecture: window.PREFECTURE_SLUG_MAP[resolvedPref] || resolvedPref,
+        };
+      } else {
+        mapGA4Params = { page_type: 'map_index' };
+      }
+    }
+
     gtag('config', 'G-K18NR4GZG2', {
-      'anonymize_ip': true,
-      'page_path': pagePath
+      anonymize_ip: true,
+      page_path: pagePath,
+      ...mapGA4Params,
     });
 
     // Event tracking helper function
@@ -594,7 +622,9 @@
         // Send page_view for SPA navigation (skip initial page load)
         if (window.gtag && !isInitialPageLoad) {
           gtag('event', 'page_view', {
-            'page_path': `/tracker_pref/${encodeURIComponent(prefecture)}`
+            page_path: `/tracker_pref/${encodeURIComponent(prefecture)}`,
+            page_type: 'map_prefecture',
+            prefecture: window.PREFECTURE_SLUG_MAP[prefecture] || prefecture,
           });
         }
       } else {
@@ -604,7 +634,8 @@
         // Send page_view for SPA navigation back to top (skip initial page load)
         if (window.gtag && !isInitialPageLoad) {
           gtag('event', 'page_view', {
-            'page_path': '/tracker_top'
+            page_path: '/tracker_top',
+            page_type: 'map_index',
           });
         }
       }
