@@ -2,13 +2,13 @@
   <defs>
   
     <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630">
-      <stop stop-color="#141E58"></stop>
-      <stop offset="1" stop-color="#0D1538"></stop>
+      <stop stop-color="#1C1552"></stop>
+      <stop offset="1" stop-color="#120C36"></stop>
     </linearGradient>
     <radialGradient id="glow" cx="76%" cy="34%" r="60%">
-      <stop stop-color="#F2C24C" stop-opacity="0.30"></stop>
-      <stop offset="42%" stop-color="#F2C24C" stop-opacity="0.10"></stop>
-      <stop offset="100%" stop-color="#0D1538" stop-opacity="0"></stop>
+      <stop stop-color="#FF9466" stop-opacity="0.30"></stop>
+      <stop offset="42%" stop-color="#FF9466" stop-opacity="0.10"></stop>
+      <stop offset="100%" stop-color="#120C36" stop-opacity="0"></stop>
     </radialGradient>
     <pattern id="grid" width="56" height="56" patternUnits="userSpaceOnUse">
       <path d="M56 0H0V56" fill="none" stroke="#9FB0E0" stroke-opacity="0.06"></path>
@@ -35,60 +35,64 @@
 
   
   <g id="map">
-    <g filter="url(#soft)"><rect x="648" y="84" width="480" height="446" rx="30" fill="#0B1330" fill-opacity="0.55" stroke="#F2C24C" stroke-opacity="0.28"></rect></g>
+    <g filter="url(#soft)"><rect x="648" y="84" width="480" height="446" rx="30" fill="#0B1330" fill-opacity="0.55" stroke="#FF9466" stroke-opacity="0.28"></rect></g>
     <g clip-path="url(#panelClip)">
       <rect x="648" y="84" width="480" height="446" fill="url(#grid)"></rect>
-      <circle cx="923" cy="301.7" r="185" fill="none" stroke="#F2C24C" stroke-width="1" opacity="0.16"></circle><circle cx="923" cy="301.7" r="128" fill="none" stroke="#F2C24C" stroke-width="1" opacity="0.13"></circle><circle cx="923" cy="301.7" r="72" fill="none" stroke="#F2C24C" stroke-width="1" opacity="0.1"></circle>
-      <g id="map-dots"><circle cx="1018.9" cy="196.8" r="4.5" fill="#FFD86B" opacity="0.92"></circle><circle cx="1006.2" cy="241.4" r="3.2" fill="#F2C24C" opacity="0.55"></circle><circle cx="988.5" cy="305.5" r="3.2" fill="#F2C24C" opacity="0.55"></circle><circle cx="954.7" cy="308.3" r="3.2" fill="#F2C24C" opacity="0.55"></circle><circle cx="920.1" cy="321.2" r="4.5" fill="#FFD86B" opacity="0.92"></circle><circle cx="897.6" cy="323.6" r="3.2" fill="#F2C24C" opacity="0.55"></circle><circle cx="888.6" cy="335.6" r="3.2" fill="#F2C24C" opacity="0.55"></circle><circle cx="877.3" cy="333.0" r="3.2" fill="#F2C24C" opacity="0.55"></circle><circle cx="902.8" cy="338.9" r="4.5" fill="#FFD86B" opacity="0.92"></circle><circle cx="884.8" cy="341.8" r="3.2" fill="#F2C24C" opacity="0.55"></circle><circle cx="853.0" cy="349.7" r="3.2" fill="#F2C24C" opacity="0.55"></circle><circle cx="872.3" cy="370.1" r="3.2" fill="#F2C24C" opacity="0.55"></circle><circle cx="851.5" cy="385.9" r="4.5" fill="#FFD86B" opacity="0.92"></circle><circle cx="863.2" cy="400.8" r="3.2" fill="#F2C24C" opacity="0.55"></circle><circle cx="859.7" cy="428.8" r="3.2" fill="#F2C24C" opacity="0.55"></circle><circle cx="792.7" cy="410.2" r="3.2" fill="#F2C24C" opacity="0.55"></circle><circle cx="837.5" cy="418.2" r="4.5" fill="#FFD86B" opacity="0.92"></circle><circle cx="938.8" cy="265.1" r="3.2" fill="#F2C24C" opacity="0.55"></circle><circle cx="846.4" cy="223.1" r="3.2" fill="#F2C24C" opacity="0.55"></circle><circle cx="875.4" cy="275.8" r="3.2" fill="#F2C24C" opacity="0.55"></circle><circle cx="856.5" cy="316.7" r="4.5" fill="#FFD86B" opacity="0.92"></circle><circle cx="783.2" cy="381.6" r="3.2" fill="#F2C24C" opacity="0.55"></circle><circle cx="757.1" cy="414.9" r="3.2" fill="#F2C24C" opacity="0.55"></circle><circle cx="821.2" cy="399.3" r="3.2" fill="#F2C24C" opacity="0.55"></circle><circle cx="816.5" cy="382.7" r="4.5" fill="#FFD86B" opacity="0.92"></circle><circle cx="828.4" cy="396.8" r="3.2" fill="#F2C24C" opacity="0.55"></circle><circle cx="798.9" cy="368.9" r="3.2" fill="#F2C24C" opacity="0.55"></circle><circle cx="827.0" cy="431.2" r="3.2" fill="#F2C24C" opacity="0.55"></circle><circle cx="856.1" cy="307.5" r="4.5" fill="#FFD86B" opacity="0.92"></circle><circle cx="881.4" cy="310.6" r="3.2" fill="#F2C24C" opacity="0.55"></circle><circle cx="857.2" cy="299.9" r="3.2" fill="#F2C24C" opacity="0.55"></circle><circle cx="850.4" cy="285.6" r="3.2" fill="#F2C24C" opacity="0.55"></circle><circle cx="819.0" cy="275.6" r="4.5" fill="#FFD86B" opacity="0.92"></circle><circle cx="913.1" cy="283.4" r="3.2" fill="#F2C24C" opacity="0.55"></circle><circle cx="914.6" cy="295.3" r="3.2" fill="#F2C24C" opacity="0.55"></circle><circle cx="879.2" cy="337.2" r="3.2" fill="#F2C24C" opacity="0.55"></circle><circle cx="872.9" cy="367.7" r="4.5" fill="#FFD86B" opacity="0.92"></circle></g>
+      <circle cx="923" cy="301.7" r="185" fill="none" stroke="#FF9466" stroke-width="1" opacity="0.16"></circle><circle cx="923" cy="301.7" r="128" fill="none" stroke="#FF9466" stroke-width="1" opacity="0.13"></circle><circle cx="923" cy="301.7" r="72" fill="none" stroke="#FF9466" stroke-width="1" opacity="0.1"></circle>
+      <g id="map-dots"><circle cx="867.7" cy="333.1" r="4.5" fill="#FFB088" opacity="0.92"></circle><circle cx="889.9" cy="353.1" r="3.2" fill="#FF9466" opacity="0.55"></circle><circle cx="878.2" cy="293.6" r="3.2" fill="#FF9466" opacity="0.55"></circle><circle cx="887.6" cy="350.1" r="3.2" fill="#FF9466" opacity="0.55"></circle><circle cx="872.4" cy="330.7" r="4.5" fill="#FFB088" opacity="0.92"></circle><circle cx="866.3" cy="333.9" r="3.2" fill="#FF9466" opacity="0.55"></circle><circle cx="911.5" cy="274.9" r="3.2" fill="#FF9466" opacity="0.55"></circle><circle cx="871.5" cy="346.5" r="3.2" fill="#FF9466" opacity="0.55"></circle><circle cx="864.5" cy="336.9" r="4.5" fill="#FFB088" opacity="0.92"></circle></g>
       <g id="map-route"></g>
     </g>
     
     <g id="map-caption-pill">
-      <rect x="668" y="476" width="332" height="40" rx="20" fill="#0B1330" fill-opacity="0.7" stroke="#F2C24C" stroke-opacity="0.4"></rect>
-      <circle cx="690" cy="496" r="4.5" fill="#FFD86B"></circle>
-      <text id="map-caption" class="jp" x="704" y="503" font-size="18" font-weight="700" fill="#C9D4F2">宮城県設置マップ</text>
+      <rect x="668" y="476" width="332" height="40" rx="20" fill="#0B1330" fill-opacity="0.7" stroke="#FF9466" stroke-opacity="0.4"></rect>
+      <circle cx="690" cy="496" r="4.5" fill="#FFB088"></circle>
+      <text id="map-caption" class="jp" x="704" y="503" font-size="18" font-weight="700" fill="#C9D4F2">鹿児島県指宿市マップ</text>
     </g>
-    
+    <g id="stamp" transform="translate(936 132) rotate(-12)">
+      <circle cx="0" cy="0" r="56" fill="#120C36" fill-opacity="0.5" stroke="#FFB088" stroke-width="3.5" stroke-dasharray="9 7"></circle>
+      <text class="mono" x="0" y="-6" text-anchor="middle" font-size="19" font-weight="900" fill="#FFB088">RARE</text>
+      <text class="jp" x="0" y="24" text-anchor="middle" font-size="22" font-weight="900" fill="#FFFFFF">発見</text>
+    </g>
   </g>
 
   
   <g id="content">
     
     <g id="category">
-      <rect x="76" y="84" width="135" height="44" rx="22" fill="#F2C24C" fill-opacity="0.14" stroke="#F2C24C" stroke-opacity="0.7"></rect>
-      <circle cx="100" cy="106" r="5" fill="#FFD86B" filter="url(#pinGlow)"></circle>
-      <text id="cat-label" class="mono" x="114" y="113" font-size="17" font-weight="900" letter-spacing="0.12em" fill="#FFD86B">RANKING</text>
+      <rect x="76" y="84" width="96" height="44" rx="22" fill="#FF9466" fill-opacity="0.14" stroke="#FF9466" stroke-opacity="0.7"></rect>
+      <circle cx="100" cy="106" r="5" fill="#FFB088" filter="url(#pinGlow)"></circle>
+      <text id="cat-label" class="mono" x="114" y="113" font-size="17" font-weight="900" letter-spacing="0.12em" fill="#FFB088">RARE</text>
     </g>
 
     
-    <text id="title-1" class="jp" x="76" y="208" font-size="56" font-weight="900" fill="#FFFFFF" letter-spacing="-0.01em">宮城県の</text>
-    <text id="title-2" class="jp" x="76" y="272" font-size="56" font-weight="900" fill="#FFFFFF" letter-spacing="-0.01em">ポケふた</text>
+    <text id="title-1" class="jp" x="76" y="208" font-size="56" font-weight="900" fill="#FFFFFF" letter-spacing="-0.01em">ポケふた第1号</text>
+    <text id="title-2" class="jp" x="76" y="272" font-size="56" font-weight="900" fill="#FFFFFF" letter-spacing="-0.01em">2018年12月設置</text>
 
-    <rect x="76" y="296" width="360" height="2" rx="1" fill="#F2C24C" opacity="0.7"></rect>
-
-    
-    <text id="num-kicker" class="jp" x="76" y="338" font-size="24" font-weight="800" fill="#FFD86B">都道府県別ランキング 全国3位</text>
-    <text id="main-number-glow" class="en" x="74" y="446" font-size="118" font-weight="900" fill="#FFD86B" letter-spacing="-0.05em" filter="url(#numGlow)" opacity="0.55">37</text>
-    <text id="main-number" class="en" x="74" y="446" font-size="118" font-weight="900" fill="#FFD86B" letter-spacing="-0.05em">37</text>
-    <text id="main-unit" class="jp" x="228" y="436" font-size="42" font-weight="900" fill="#FFFFFF">枚</text>
+    <rect x="76" y="296" width="360" height="2" rx="1" fill="#FF9466" opacity="0.7"></rect>
 
     
-    <text id="description" class="jp" x="76" y="490" font-size="22" font-weight="700" fill="#9FAAD2">全国470枚中 7.9%</text>
+    <text id="num-kicker" class="jp" x="76" y="338" font-size="24" font-weight="800" fill="#FFD86B">鹿児島県指宿市 指宿駅前</text>
+    <text id="main-number-glow" class="en" x="74" y="446" font-size="118" font-weight="900" fill="#FFB088" letter-spacing="-0.05em" filter="url(#numGlow)" opacity="0.55">2018</text>
+    <text id="main-number" class="en" x="74" y="446" font-size="118" font-weight="900" fill="#FFB088" letter-spacing="-0.05em">2018</text>
+    <text id="main-unit" class="jp" x="368" y="436" font-size="42" font-weight="900" fill="#FFFFFF">年</text>
 
     
-    <g id="chips"><g><rect id="chip-bg-1" x="76" y="504" width="126" height="38" rx="19" fill="#FFFFFF" fill-opacity="0.06" stroke="#F2C24C" stroke-opacity="0.5"></rect><circle cx="90" cy="523" r="3.2" fill="#F2C24C"></circle><text id="chip-1" class="jp" x="101" y="530" font-size="21" font-weight="700" fill="#EAF0FF">ラプラス</text></g><g><rect id="chip-bg-2" x="213" y="504" width="126" height="38" rx="19" fill="#FFFFFF" fill-opacity="0.06" stroke="#F2C24C" stroke-opacity="0.5"></rect><circle cx="227" cy="523" r="3.2" fill="#F2C24C"></circle><text id="chip-2" class="jp" x="238" y="530" font-size="21" font-weight="700" fill="#EAF0FF">ニャース</text></g><g><rect id="chip-bg-3" x="350" y="504" width="147" height="38" rx="19" fill="#FFFFFF" fill-opacity="0.06" stroke="#F2C24C" stroke-opacity="0.5"></rect><circle cx="364" cy="523" r="3.2" fill="#F2C24C"></circle><text id="chip-3" class="jp" x="375" y="530" font-size="21" font-weight="700" fill="#EAF0FF">イシツブテ</text></g><g><rect id="chip-bg-4" x="508" y="504" width="126" height="38" rx="19" fill="#FFFFFF" fill-opacity="0.06" stroke="#F2C24C" stroke-opacity="0.5"></rect><circle cx="522" cy="523" r="3.2" fill="#F2C24C"></circle><text id="chip-4" class="jp" x="533" y="530" font-size="21" font-weight="700" fill="#EAF0FF">オクタン</text></g><g><rect id="chip-bg-5" x="645" y="504" width="126" height="38" rx="19" fill="#FFFFFF" fill-opacity="0.06" stroke="#F2C24C" stroke-opacity="0.5"></rect><circle cx="659" cy="523" r="3.2" fill="#F2C24C"></circle><text id="chip-5" class="jp" x="670" y="530" font-size="21" font-weight="700" fill="#EAF0FF">キャモメ</text></g><g><rect id="chip-bg-6" x="782" y="504" width="105" height="38" rx="19" fill="#FFFFFF" fill-opacity="0.06" stroke="#F2C24C" stroke-opacity="0.5"></rect><circle cx="796" cy="523" r="3.2" fill="#F2C24C"></circle><text id="chip-6" class="jp" x="807" y="530" font-size="21" font-weight="700" fill="#EAF0FF">エネコ</text></g></g>
+    <text id="description" class="jp" x="76" y="490" font-size="22" font-weight="700" fill="#B3A9D6">いーぶいすき＝指宿（いぶすき）の語呂合わせ</text>
+
+    
+    <g id="chips"><g><rect id="chip-bg-1" x="76" y="504" width="126" height="38" rx="19" fill="#FFFFFF" fill-opacity="0.06" stroke="#FF9466" stroke-opacity="0.5"></rect><circle cx="90" cy="523" r="3.2" fill="#FF9466"></circle><text id="chip-1" class="jp" x="101" y="530" font-size="21" font-weight="700" fill="#EAF0FF">イーブイ</text></g><g><rect id="chip-bg-2" x="213" y="504" width="105" height="38" rx="19" fill="#FFFFFF" fill-opacity="0.06" stroke="#FF9466" stroke-opacity="0.5"></rect><circle cx="227" cy="523" r="3.2" fill="#FF9466"></circle><text id="chip-2" class="jp" x="238" y="530" font-size="21" font-weight="700" fill="#EAF0FF">指宿市</text></g><g><rect id="chip-bg-3" x="329" y="504" width="126" height="38" rx="19" fill="#FFFFFF" fill-opacity="0.06" stroke="#FF9466" stroke-opacity="0.5"></rect><circle cx="343" cy="523" r="3.2" fill="#FF9466"></circle><text id="chip-3" class="jp" x="354" y="530" font-size="21" font-weight="700" fill="#EAF0FF">指宿駅前</text></g><g><rect id="chip-bg-4" x="466" y="504" width="252" height="38" rx="19" fill="#FFFFFF" fill-opacity="0.06" stroke="#FF9466" stroke-opacity="0.5"></rect><circle cx="480" cy="523" r="3.2" fill="#FF9466"></circle><text id="chip-4" class="jp" x="491" y="530" font-size="21" font-weight="700" fill="#EAF0FF">2018.12.20</text></g></g>
   </g>
 
   
   <g id="footer">
     <rect x="0" y="546" width="1200" height="84" fill="#0A1026"></rect>
-    <rect x="0" y="546" width="1200" height="2.5" fill="#F2C24C" opacity="0.85"></rect>
+    <rect x="0" y="546" width="1200" height="2.5" fill="#FF9466" opacity="0.85"></rect>
     
     <g id="brand-mark" transform="translate(58 588)">
-      <circle r="22" fill="none" stroke="#F2C24C" stroke-width="2.4"></circle>
-      <circle r="15" fill="none" stroke="#FFD86B" stroke-width="1.6" stroke-opacity="0.8"></circle>
-      <circle r="4.5" fill="#FFD86B"></circle>
-      <g stroke="#F2C24C" stroke-width="2" stroke-linecap="round">
+      <circle r="22" fill="none" stroke="#FF9466" stroke-width="2.4"></circle>
+      <circle r="15" fill="none" stroke="#FFB088" stroke-width="1.6" stroke-opacity="0.8"></circle>
+      <circle r="4.5" fill="#FFB088"></circle>
+      <g stroke="#FF9466" stroke-width="2" stroke-linecap="round">
         <line x1="0" y1="-22" x2="0" y2="-16"></line><line x1="0" y1="16" x2="0" y2="22"></line>
         <line x1="-22" y1="0" x2="-16" y2="0"></line><line x1="16" y1="0" x2="22" y2="0"></line>
         <line x1="15.5" y1="15.5" x2="11" y2="11"></line><line x1="-15.5" y1="15.5" x2="-11" y2="11"></line>
@@ -97,7 +101,7 @@
     </g>
     <text id="footer-name" class="jp" x="94" y="582" font-size="26" font-weight="900" fill="#FFFFFF">ポケふたマップ</text>
     <text id="footer-sub" class="jp" x="94" y="608" font-size="15" font-weight="700" fill="#9FAAD2">日本全国のご当地マンホール雑学</text>
-    <text id="footer-url" class="mono" x="1142" y="582" text-anchor="end" font-size="20" font-weight="900" fill="#FFD86B">data.pokefuta.com</text>
+    <text id="footer-url" class="mono" x="1142" y="582" text-anchor="end" font-size="20" font-weight="900" fill="#FFB088">data.pokefuta.com</text>
     <text id="footer-note" class="jp" x="1142" y="608" text-anchor="end" font-size="15" font-weight="700" fill="#9FAAD2">全国470枚以上を地図で掲載</text>
     <g transform="translate(1142 552)">
       <circle cx="-36" cy="0" r="0"></circle>
