@@ -303,16 +303,31 @@ def gen_rare_area_candidates(stats: dict) -> list[dict]:
     return candidates
 
 
+_PHOTO_RANK_ORDER = {"first_ever": 0, "long_gap": 1, "recent": 2}
+
+
 def gen_latest_photo_candidates(photos_data: dict, records_by_id: dict) -> list[dict]:
+    from datetime import datetime, timezone
+
     photos = photos_data.get("photos", {})
     r2_base = photos_data.get("image", {}).get("r2_public_base_url", "")
+    now = datetime.now(timezone.utc)
+
+    # 都市ごとに写真があるマンホール数をカウント（photo_rank判定に使用）
+    city_photo_count: dict[tuple, int] = {}
+    for mid in photos:
+        rec = records_by_id.get(str(mid), {})
+        key = (rec.get("prefecture", ""), rec.get("city", ""))
+        if key[0]:
+            city_photo_count[key] = city_photo_count.get(key, 0) + 1
+
     sorted_photos = sorted(
         photos.values(),
         key=lambda p: p.get("created_at", ""),
         reverse=True,
-    )[:12]
+    )[:20]  # 重複除去後に12件に絞るため多めに取る
 
-    candidates = []
+    raw_candidates = []
     for photo in sorted_photos:
         manhole_id = str(photo.get("manhole_id", ""))
         record = records_by_id.get(manhole_id, {})
@@ -323,7 +338,19 @@ def gen_latest_photo_candidates(photos_data: dict, records_by_id: dict) -> list[
         storage_key = photo.get("storage_key", "")
         image_url = photo.get("url") or (f"{r2_base}/{storage_key}" if storage_key and r2_base else "")
         photo_id_short = (photo.get("photo_id") or "")[:8]
-        candidates.append({
+
+        created_at_str = photo.get("created_at", "")
+        try:
+            created_dt = datetime.fromisoformat(created_at_str)
+            age_days = (now - created_dt).days
+        except ValueError:
+            age_days = 0
+
+        city_key = (pref, city)
+        n = city_photo_count.get(city_key, 0)
+        photo_rank = "first_ever" if n == 1 else ("long_gap" if age_days >= 180 else "recent")
+
+        raw_candidates.append({
             "id": f"photo-{manhole_id}-{photo_id_short}",
             "type": "latest_photo",
             "title": f"最新写真：{title}",
@@ -338,11 +365,25 @@ def gen_latest_photo_candidates(photos_data: dict, records_by_id: dict) -> list[
                 "city": city,
                 "pokemon": pokemons[0] if pokemons else "",
                 "pokemon_list": pokemons,
-                "created_at": photo.get("created_at", ""),
+                "created_at": created_at_str,
                 "image_url": image_url,
+                "display_name": photo.get("display_name", ""),
+                "photo_rank": photo_rank,
             },
         })
-    return candidates
+
+    # 同一都市は best rank のみ残す
+    seen: dict[tuple, dict] = {}
+    for c in raw_candidates:
+        key = (c["raw_data"]["pref"], c["raw_data"]["city"])
+        if key not in seen or _PHOTO_RANK_ORDER[c["raw_data"]["photo_rank"]] < _PHOTO_RANK_ORDER[seen[key]["raw_data"]["photo_rank"]]:
+            seen[key] = c
+
+    candidates = sorted(
+        seen.values(),
+        key=lambda c: (_PHOTO_RANK_ORDER[c["raw_data"]["photo_rank"]], c["raw_data"]["created_at"]),
+    )
+    return list(candidates)[:12]
 
 
 def gen_no_photo_candidates(records: list[dict], photos_data: dict) -> list[dict]:
