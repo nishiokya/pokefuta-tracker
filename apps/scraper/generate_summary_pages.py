@@ -30,7 +30,7 @@ BASE_URL = "https://data.pokefuta.com"
 _OGP_PNG = ROOT / "apps" / "web" / "assets" / "ogp" / "pokefuta_summary_ogp.png"
 _ogp_hash = hashlib.md5(_OGP_PNG.read_bytes()).hexdigest()[:8] if _OGP_PNG.exists() else "0"
 OGP_IMAGE = f"{BASE_URL}/assets/ogp/pokefuta_summary_ogp.png?v={_ogp_hash}"
-SUMMARY_SHARE_URL = f"{BASE_URL}/summary"
+SUMMARY_SHARE_URL = f"{BASE_URL}/summary/"
 
 PREFECTURE_ORDER: list[str] = [
     "北海道", "青森県", "岩手県", "宮城県", "秋田県",
@@ -70,7 +70,7 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "og_locale": "ja_JP",
         "pref_key": "ja",
         "out_path": "summary/index.html",
-        "canonical": f"{BASE_URL}/summary",
+        "canonical": f"{BASE_URL}/summary/",
         "map_base_href": "/",
         "page_title": "全国のポケモンマンホール（ポケふた）一覧・分布マップ",
         "meta_desc": "全国{total}枚のポケモンマンホール「ポケふた」を都道府県別・ポケモン別に検索。旅行先のポケふた探しにご活用ください。",
@@ -156,7 +156,7 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "og_locale": "en_US",
         "pref_key": "en",
         "out_path": "en/summary/index.html",
-        "canonical": f"{BASE_URL}/en/summary",
+        "canonical": f"{BASE_URL}/en/summary/",
         "map_base_href": "/en/",
         "page_title": "How Many Pokéfuta Exist Nationwide? Count & Rankings by Prefecture",
         "meta_desc": "Explore the total number of Pokémon manholes (Pokéfuta) nationwide, the count by prefecture, top-ranking prefectures, and prefectures with none installed.",
@@ -229,7 +229,7 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "og_locale": "zh_CN",
         "pref_key": "zh-Hans",
         "out_path": "zh-CN/summary/index.html",
-        "canonical": f"{BASE_URL}/zh-CN/summary",
+        "canonical": f"{BASE_URL}/zh-CN/summary/",
         "map_base_href": "/zh-CN/",
         "page_title": "全国共有多少个宝可梦井盖？分都道府县数量与排行榜",
         "meta_desc": "整理了全国宝可梦井盖（Pokéfuta）的总数、各都道府县的设置数量、数量最多的县以及尚未设置的县。",
@@ -302,7 +302,7 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "og_locale": "zh_TW",
         "pref_key": "zh-Hant",
         "out_path": "zh-TW/summary/index.html",
-        "canonical": f"{BASE_URL}/zh-TW/summary",
+        "canonical": f"{BASE_URL}/zh-TW/summary/",
         "map_base_href": "/zh-TW/",
         "page_title": "全國共有多少個寶可夢人孔蓋？各都道府縣數量與排行榜",
         "meta_desc": "整理了全國寶可夢人孔蓋（Pokéfuta）的總數、各都道府縣的設置數量、數量最多的縣以及尚未設置的縣。",
@@ -375,7 +375,7 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "og_locale": "ko_KR",
         "pref_key": "ko",
         "out_path": "ko/summary/index.html",
-        "canonical": f"{BASE_URL}/ko/summary",
+        "canonical": f"{BASE_URL}/ko/summary/",
         "map_base_href": "/ko/",
         "page_title": "포케후타는 전국에 몇 개 있을까? 도도부현별 수량 및 랭킹",
         "meta_desc": "전국 포케후타(포켓몬 맨홀)의 총 수량, 도도부현별 설치 수, 가장 많은 현, 아직 설치되지 않은 현을 정리했습니다.",
