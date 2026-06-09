@@ -479,6 +479,36 @@ def _vars_travel_trivia(raw: dict) -> dict:
             ],
             "description": "都道府県別ランキング",
         })
+    elif ft == "first_pokefuta":
+        manholes = _load_pref_manholes("鹿児島県")
+        base.update({
+            "categoryLabel": "RARE",
+            "titleLine1": "ポケふた第1号",
+            "titleLine2": "2018年12月設置",
+            "kicker": f"{v['pref']}{v['city']} {v['location']}",
+            "mainNumber": "2018",
+            "mainUnit": "年",
+            "chips": [v["pokemon"], v["city"], v["location"], "2018.12.20"],
+            "description": v["reason"],
+            "mapCaption": "鹿児島県指宿市マップ",
+            "manholes": manholes,
+            "_theme": "rare",
+        })
+    elif ft == "ibusuki_eevee_9":
+        manholes = _load_pref_manholes("鹿児島県")
+        base.update({
+            "categoryLabel": "RARE",
+            "titleLine1": "指宿市に",
+            "titleLine2": "イーブイ系9枚",
+            "kicker": f"{v['pokemon']}＋進化形8種が集結",
+            "mainNumber": str(v["count"]),
+            "mainUnit": "枚",
+            "chips": ["イーブイ", "シャワーズ", "ブースター", "サンダース", "エーフィ", "ブラッキー"],
+            "description": f"鹿児島県{v['city']}に全種集結",
+            "mapCaption": "鹿児島県指宿市マップ",
+            "manholes": manholes,
+            "_theme": "rare",
+        })
     return base
 
 
@@ -620,8 +650,9 @@ def main() -> None:
     if theme is None or var_builder is None:
         sys.exit(f"[generate_social_ogp] 未対応タイプ: {post_type}")
 
-    print(f"[generate_social_ogp] {post_type} → {theme} テンプレートで生成中…")
     vars_dict = var_builder(raw)
+    theme = vars_dict.pop("_theme", theme)
+    print(f"[generate_social_ogp] {post_type} → {theme} テンプレートで生成中…")
     svg_text = _render_design_template(theme, vars_dict)
 
     OUTPUT_SVG.write_text(svg_text, encoding="utf-8")

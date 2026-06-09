@@ -480,6 +480,48 @@ def gen_travel_trivia_candidates(stats: dict, pokemon_stats: dict) -> list[dict]
             },
         })
 
+    candidates += [
+        {
+            "id": "trivia-first-pokefuta",
+            "type": "travel_trivia",
+            "title": "ポケふた第1号（2018年12月・指宿市・イーブイ）",
+            "url": f"{BASE_URL}manholes/1/",
+            "hashtags": ["#ポケふた", "#ポケモンマンホール"],
+            "imageType": "summary_trivia",
+            "source": "summary",
+            "raw_data": {
+                "fact_type": "first_pokefuta",
+                "values": {
+                    "date": "2018年12月20日",
+                    "pref": "鹿児島県",
+                    "city": "指宿市",
+                    "location": "指宿駅前",
+                    "pokemon": "イーブイ",
+                    "reason": "いーぶいすき＝指宿（いぶすき）の語呂合わせ",
+                },
+            },
+        },
+        {
+            "id": "trivia-ibusuki-eevee-9",
+            "type": "travel_trivia",
+            "title": "指宿市にイーブイ進化系含む9枚のポケふた",
+            "url": f"{BASE_URL}summary/",
+            "hashtags": ["#ポケふた", "#ポケモンマンホール"],
+            "imageType": "summary_trivia",
+            "source": "summary",
+            "raw_data": {
+                "fact_type": "ibusuki_eevee_9",
+                "values": {
+                    "city": "指宿市",
+                    "pref": "鹿児島県",
+                    "count": 9,
+                    "pokemon": "イーブイ",
+                    "evolution_note": "イーブイ＋進化形8種",
+                },
+            },
+        },
+    ]
+
     return candidates
 
 

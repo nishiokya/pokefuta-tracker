@@ -196,18 +196,18 @@ export function MichinekiNearbyTask({ records, titles, onSaveMany, saving }: Pro
     return <div className="error-banner">道の駅データ読み込みエラー: {loadError}</div>
   }
 
-  if (stations.length === 0) {
-    return <div style={{ color: '#6b7280' }}>道の駅データを読み込んでいます…</div>
-  }
-
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
         <div>
           <h2 style={{ margin: 0 }}>道の駅 × ポケふた 300m圏内</h2>
-          <p style={{ margin: '4px 0 0', fontSize: 13, color: '#6b7280' }}>
-            全{pairs.length}ペア（300m以内）— 「紐づけ」= <code>roadside</code> タグ
-          </p>
+          {stations.length === 0 ? (
+            <p style={{ margin: '4px 0 0', fontSize: 13, color: '#6b7280' }}>道の駅データを読み込んでいます…</p>
+          ) : (
+            <p style={{ margin: '4px 0 0', fontSize: 13, color: '#6b7280' }}>
+              全{pairs.length}ペア（300m以内）— 「紐づけ」= <code>roadside</code> タグ
+            </p>
+          )}
         </div>
         {dirtyIds.length > 0 && (
           <button className="btn btn-primary" onClick={handleSave} disabled={saving}>
@@ -222,33 +222,37 @@ export function MichinekiNearbyTask({ records, titles, onSaveMany, saving }: Pro
         </div>
       )}
 
-      <div className="filter-bar" style={{ marginBottom: 12 }}>
-        <input
-          placeholder="地名・ポケモン名・道の駅名で絞り込み"
-          value={search}
-          onChange={e => { setSearch(e.target.value); setSelectedIdx(null) }}
-          style={{ width: 280 }}
-        />
-        <select value={showFilter} onChange={e => { setShowFilter(e.target.value as typeof showFilter); setSelectedIdx(null) }}>
-          <option value="all">全件 ({pairs.length})</option>
-          <option value="linked">紐づけ済み</option>
-          <option value="unlinked">未紐づけ</option>
-        </select>
-        <span style={{ fontSize: 13, color: '#6b7280' }}>{filtered.length}件表示</span>
-      </div>
+      {stations.length > 0 && (
+        <div className="filter-bar" style={{ marginBottom: 12 }}>
+          <input
+            placeholder="地名・ポケモン名・道の駅名で絞り込み"
+            value={search}
+            onChange={e => { setSearch(e.target.value); setSelectedIdx(null) }}
+            style={{ width: 280 }}
+          />
+          <select value={showFilter} onChange={e => { setShowFilter(e.target.value as typeof showFilter); setSelectedIdx(null) }}>
+            <option value="all">全件 ({pairs.length})</option>
+            <option value="linked">紐づけ済み</option>
+            <option value="unlinked">未紐づけ</option>
+          </select>
+          <span style={{ fontSize: 13, color: '#6b7280' }}>{filtered.length}件表示</span>
+        </div>
+      )}
 
-      <div style={{ display: 'flex', gap: 8, marginBottom: 8, fontSize: 12, color: '#6b7280', alignItems: 'center' }}>
-        <span>凡例:</span>
-        {([['#22c55e', '●', '紐づけ済み（ポケふた）'], ['#3b82f6', '●', '未紐づけ（ポケふた）'], ['#ef4444', '●', '選択中（ポケふた）'], ['#7c3aed', '■', '道の駅']] as [string, string, string][]).map(([c, s, l]) => (
-          <span key={l} style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
-            <span style={{ color: c }}>{s}</span>{l}
-          </span>
-        ))}
-      </div>
+      {stations.length > 0 && (
+        <div style={{ display: 'flex', gap: 8, marginBottom: 8, fontSize: 12, color: '#6b7280', alignItems: 'center' }}>
+          <span>凡例:</span>
+          {([['#22c55e', '●', '紐づけ済み（ポケふた）'], ['#3b82f6', '●', '未紐づけ（ポケふた）'], ['#ef4444', '●', '選択中（ポケふた）'], ['#7c3aed', '■', '道の駅']] as [string, string, string][]).map(([c, s, l]) => (
+            <span key={l} style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+              <span style={{ color: c }}>{s}</span>{l}
+            </span>
+          ))}
+        </div>
+      )}
 
       <div ref={mapDivRef} style={{ height: 320, borderRadius: 8, border: '1px solid #e5e7eb', marginBottom: 12, overflow: 'hidden' }} />
 
-      <table className="table">
+      {stations.length > 0 && <table className="table">
         <thead>
           <tr>
             <th style={{ width: 48 }}>距離</th>
@@ -296,7 +300,7 @@ export function MichinekiNearbyTask({ records, titles, onSaveMany, saving }: Pro
             )
           })}
         </tbody>
-      </table>
+      </table>}
     </div>
   )
 }
