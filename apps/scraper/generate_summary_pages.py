@@ -937,12 +937,12 @@ _CSS = """\
     }"""
 
 _HREFLANG = """\
-  <link rel="alternate" hreflang="ja"      href="https://data.pokefuta.com/summary">
-  <link rel="alternate" hreflang="en"      href="https://data.pokefuta.com/en/summary">
-  <link rel="alternate" hreflang="zh-TW"   href="https://data.pokefuta.com/zh-TW/summary">
-  <link rel="alternate" hreflang="zh-Hans" href="https://data.pokefuta.com/zh-CN/summary">
-  <link rel="alternate" hreflang="ko"      href="https://data.pokefuta.com/ko/summary">
-  <link rel="alternate" hreflang="x-default" href="https://data.pokefuta.com/summary">"""
+  <link rel="alternate" hreflang="ja"      href="https://data.pokefuta.com/summary/">
+  <link rel="alternate" hreflang="en"      href="https://data.pokefuta.com/en/summary/">
+  <link rel="alternate" hreflang="zh-TW"   href="https://data.pokefuta.com/zh-TW/summary/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://data.pokefuta.com/zh-CN/summary/">
+  <link rel="alternate" hreflang="ko"      href="https://data.pokefuta.com/ko/summary/">
+  <link rel="alternate" hreflang="x-default" href="https://data.pokefuta.com/summary/">"""
 
 
 def load_records(path: Path) -> list[dict]:
