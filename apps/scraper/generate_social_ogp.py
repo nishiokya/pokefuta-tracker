@@ -16,12 +16,12 @@ from __future__ import annotations
 
 import base64
 import json
+import math
 import os
 import re
 import subprocess
 import sys
 import tempfile
-import urllib.error
 import urllib.request
 from collections import Counter
 from pathlib import Path
@@ -49,6 +49,28 @@ _ACCENT_BRIGHT = {
     "ranking": "#FFD86B",
     "rare":    "#FFB088",
 }
+
+_REGION_PREFIXES = ["アローラ", "ガラル", "ヒスイ", "パルデア"]
+
+
+def _poke_base_name(p: str) -> str:
+    for pfx in _REGION_PREFIXES:
+        p = p.replace(pfx, "").strip()
+    return p
+
+
+def _poke_short_label(p: str) -> str:
+    for pfx in _REGION_PREFIXES:
+        if p.startswith(pfx):
+            return pfx
+    return _poke_base_name(p)
+
+
+def _poke_sub_label(p: str) -> str:
+    for pfx in _REGION_PREFIXES:
+        if p.startswith(pfx):
+            return f"{pfx}版"
+    return "通常版"
 
 
 # ---------------------------------------------------------------------------
@@ -220,7 +242,7 @@ def _manhole_zoom_bounds(manholes: list[dict], pref_bounds: tuple) -> tuple:
     """Compute view bounds centered on the manhole cluster.
 
     When manholes are tightly clustered (photos mode), zoom into them while
-    keeping the view proportional.  Padding is 3× the cluster span so the
+    keeping the view proportional.  Padding is 5× the cluster span so the
     prefecture outline provides context without overwhelming the thumbnails.
     """
     m_lngs = [m["lng"] for m in manholes]
@@ -708,42 +730,28 @@ def _vars_rare_area(raw: dict) -> dict:
 
     # Detect "all same base pokemon" variant family (e.g. ニャース3兄弟)
     if 2 <= len(manholes) <= 5:
-        _REGION_PREFIXES = ["アローラ", "ガラル", "ヒスイ", "パルデア"]
-
-        def _base_name(p: str) -> str:
-            for pfx in _REGION_PREFIXES:
-                p = p.replace(pfx, "").strip()
-            return p
-
-        def _short_label(p: str) -> str:
-            for pfx in _REGION_PREFIXES:
-                if p.startswith(pfx):
-                    return pfx
-            return _base_name(p)
-
-        def _sub_label(p: str) -> str:
-            for pfx in _REGION_PREFIXES:
-                if p.startswith(pfx):
-                    return f"{pfx}版"
-            return "通常版"
-
         first_pokemons = [(m.get("pokemons") or [""])[0] for m in manholes]
-        base_names = {_base_name(p) for p in first_pokemons if p}
+        base_names = {_poke_base_name(p) for p in first_pokemons if p}
 
         if len(base_names) == 1:
             base_poke = list(base_names)[0]
-            pref_short = pref.rstrip("都道府県")
+            pref_short = pref[:-1] if pref[-1] in "都道府県" else pref
             first_city = manholes[0].get("city", "") if manholes else ""
+            # Build kicker from the actual variant prefixes present
+            found_pfx = [pfx for pfx in _REGION_PREFIXES if any(p.startswith(pfx) for p in first_pokemons)]
+            has_normal = any(not any(p.startswith(pfx) for pfx in _REGION_PREFIXES) for p in first_pokemons if p)
+            regions = (["通常"] if has_normal else []) + found_pfx
+            kicker = "・".join(regions) + " 地域変種がひとつの市に集合"
             base.update({
                 "titleLine1": f"{pref_short}の{raw['count']}枚、",
                 "titleLine2": f"全部{base_poke}",
-                "kicker": f"通常・アローラ・ガラル 地域変種がひとつの市に集合",
+                "kicker": kicker,
                 "description": f"{pref}{first_city}",
                 "chips": first_pokemons,
-                "pokeLabels":    [_short_label(p) for p in first_pokemons],
-                "pokeSubLabels": [_sub_label(p)   for p in first_pokemons],
+                "pokeLabels":    [_poke_short_label(p) for p in first_pokemons],
+                "pokeSubLabels": [_poke_sub_label(p)   for p in first_pokemons],
                 "stampText":  "地域変種\nコンプリート",
-                "footerCta":  "全国470枚から、次の旅先を探す",
+                "footerCta":  f"全国{raw['total']}枚から、次の旅先を探す",
                 "_theme": "rare_few",
             })
             # 佐賀-specific: ニャース × 気球 overrides
@@ -857,9 +865,11 @@ def _render_rare_few_horizontal(v: dict) -> str:
     svg = _set_main_unit_x(svg, 74 + len(main_num) * 70 + 14)
     svg = _replace_chips_section(svg, v.get("chips", []), "rare")
     if cat_label != "RARE":
+        # Approximate badge width: text_x(114) - rect_x(76) + JP char width(19) × chars + padding(16)
+        badge_w = max(96, 38 + len(cat_label) * 19 + 16)
         svg = svg.replace(
             'x="76" y="84" width="96" height="44" rx="22" fill="#FF9466" fill-opacity="0.14"',
-            'x="76" y="84" width="152" height="44" rx="22" fill="#FF9466" fill-opacity="0.14"',
+            f'x="76" y="84" width="{badge_w}" height="44" rx="22" fill="#FF9466" fill-opacity="0.14"',
         )
 
     accent = "#FF9466"
@@ -964,16 +974,11 @@ def _render_rare_few_horizontal(v: dict) -> str:
                 f'font-size="14" font-weight="600" fill="#B3A9D6" opacity="0.85">{_xe(sub)}</text>'
             )
 
-    defs_svg = f'<defs>{"".join(defs)}</defs>' if defs else ""
-    svg = _replace_group(svg, "map-dots",  f'<g id="map-dots">{defs_svg}{"".join(elems)}</g>')
-    svg = _replace_group(svg, "map-route", '<g id="map-route"></g>')
-    svg = _replace_group(svg, "map-caption-pill", '<g id="map-caption-pill"></g>')
-
-    # Replace RARE stamp with variant badge
+    # Stamp rendered last inside map-dots so it draws on top of balloons
     stamp_text = v.get("stampText", "地域変種\nコンプリート")
     line1, _, line2 = stamp_text.partition("\n")
-    new_stamp = (
-        f'<g id="stamp" transform="translate(1038 132) rotate(-10)">'
+    elems.append(
+        f'<g transform="translate(1038 132) rotate(-10)">'
         f'<circle cx="0" cy="0" r="60" fill="#120C36" fill-opacity="0.55" '
         f'stroke="{bright}" stroke-width="3" stroke-dasharray="8 5"/>'
         f'<text class="jp" x="0" y="-8" text-anchor="middle" font-size="16" '
@@ -982,7 +987,12 @@ def _render_rare_few_horizontal(v: dict) -> str:
         f'font-weight="900" fill="#FFFFFF">{_xe(line2)}</text>'
         f'</g>'
     )
-    svg = _replace_group(svg, "stamp", new_stamp)
+
+    defs_svg = f'<defs>{"".join(defs)}</defs>' if defs else ""
+    svg = _replace_group(svg, "map-dots",  f'<g id="map-dots">{defs_svg}{"".join(elems)}</g>')
+    svg = _replace_group(svg, "map-route", '<g id="map-route"></g>')
+    svg = _replace_group(svg, "map-caption-pill", '<g id="map-caption-pill"></g>')
+    svg = _replace_group(svg, "stamp", '<g id="stamp"></g>')
 
     return svg
 
@@ -993,8 +1003,6 @@ def _render_ibusuki_eevee_complete(v: dict) -> str:
     Center: Eevee.  Outer ring (clockwise from top): 8 evolutions.
     Dim Ibusuki peninsula wireframe as background texture.
     """
-    import math
-
     tmpl_path = TEMPLATE_DIR / "pokefuta_ogp_rare.svg"
     svg = tmpl_path.read_text(encoding="utf-8")
 
@@ -1166,9 +1174,6 @@ def _render_ibusuki_eevee_complete(v: dict) -> str:
 
 def _render_latest_photo_template(v: dict) -> str:
     """Render latest_photo.svg by mustache-style {{KEY}} substitution."""
-    import base64
-    import urllib.request
-
     tmpl_path = TEMPLATE_DIR / "latest_photo.svg"
     if not tmpl_path.exists():
         sys.exit(f"[generate_social_ogp] テンプレートが見つかりません: {tmpl_path}")

@@ -1473,6 +1473,12 @@ FACT_COPY: dict[str, dict] = {
                 "image_subtitle": "Regular / Alolan / Galarian",
                 "image_footer": "Pokefuta in Saga City",
                 "map_pref": "佐賀県",
+                "links": [
+                    {"text": "Meowth (Saga City)", "href": "/manholes/255/"},
+                    {"text": "Alolan Meowth (Saga City)", "href": "/manholes/256/"},
+                    {"text": "Galarian Meowth (Saga City)", "href": "/manholes/257/"},
+                    {"text": "Saga City Water Bureau (official)", "href": "https://www.city.saga.lg.jp/", "external": True},
+                ],
             },
         },
     },
