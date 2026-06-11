@@ -639,6 +639,18 @@ _CSS = """\
       margin-top: auto;
     }
 
+    .summary-fact-links {
+      margin: 0;
+      padding-left: 1.2em;
+      font-size: .84rem;
+      color: #574b41;
+      line-height: 1.9;
+    }
+    .summary-fact-links a {
+      color: #176f68;
+      text-decoration: underline;
+    }
+
     .summary-section {
       margin-top: 28px;
     }
@@ -1264,6 +1276,28 @@ FACT_COPY: dict[str, dict] = {
                 "image_footer": "鹿児島県指宿市のポケふた",
                 "map_pref": "鹿児島県",
             },
+            "saga-nyansu": {
+                "type": "local_trivia",
+                "title": "佐賀市のポケふたはなぜニャース？ 気球の街との関係",
+                "stat": "3枚",
+                "main": "佐賀県佐賀市には、ニャース・アローラニャース・ガラルニャースの3枚があります。3枚すべてに気球がデザインされており、「気球のまち佐賀」との縁を感じさせます。",
+                "note": "佐賀はバルーンフェスタで知られる気球の街。ニャースのデザインと気球には、何か関係があるのかもしれません。",
+                "share_title": "佐賀のポケふた3枚、全部ニャース系。",
+                "share_lead": "通常・アローラ・ガラルの3地方変種が、佐賀市にそろっています。",
+                "share_body": "しかも3枚すべてに気球デザイン。「気球の街」佐賀らしい一枚です。",
+                "image_type": "summary_rare_area",
+                "image_title": "佐賀の3枚、全部ニャース",
+                "image_main_value": "3枚",
+                "image_subtitle": "通常・アローラ・ガラル",
+                "image_footer": "佐賀市のポケモンマンホール",
+                "map_pref": "佐賀県",
+                "links": [
+                    {"text": "ニャース（佐賀市）", "href": "/manholes/255/"},
+                    {"text": "アローラニャース（佐賀市）", "href": "/manholes/256/"},
+                    {"text": "ガラルニャース（佐賀市）", "href": "/manholes/257/"},
+                    {"text": "佐賀市上下水道局（公式サイト）", "href": "https://www.city.saga.lg.jp/", "external": True},
+                ],
+            },
         },
     },
     "en": {
@@ -1423,6 +1457,22 @@ FACT_COPY: dict[str, dict] = {
                 "image_subtitle": "Eevee + 8 evolutions",
                 "image_footer": "Ibusuki City, Kagoshima",
                 "map_pref": "鹿児島県",
+            },
+            "saga-nyansu": {
+                "type": "local_trivia",
+                "title": "Why is Saga City all Meowth? The balloon connection.",
+                "stat": "3",
+                "main": "Saga City has 3 Pokefuta: Meowth, Alolan Meowth, and Galarian Meowth. All three feature balloon designs, fitting for a city famous for its hot air balloon festival.",
+                "note": "Saga is known for its Hot Air Balloon World Championship. The Meowth designs and balloons may share a deeper connection.",
+                "share_title": "All 3 Pokefuta in Saga City are Meowth variants.",
+                "share_lead": "Regular, Alolan, and Galarian Meowth are all in Saga City.",
+                "share_body": "All three feature balloon designs — fitting for Japan's balloon city.",
+                "image_type": "summary_rare_area",
+                "image_title": "All 3 are Meowth in Saga",
+                "image_main_value": "3",
+                "image_subtitle": "Regular / Alolan / Galarian",
+                "image_footer": "Pokefuta in Saga City",
+                "map_pref": "佐賀県",
             },
         },
     },
@@ -1986,6 +2036,7 @@ def _build_facts(s: dict, stats: dict, tr) -> list[dict]:
             "image_subtitle", "image_footer",
         ):
             fact[key] = template[key].format(**ctx)
+        fact["links"] = template.get("links", [])
         facts.append(fact)
     return facts
 
@@ -2038,6 +2089,18 @@ def _build_fact_sections(s: dict, stats: dict, tr) -> tuple[str, str]:
         f'\n    </section>\n'
     )
 
+    def _fact_links_html(fact: dict) -> str:
+        links = fact.get("links", [])
+        if not links:
+            return ""
+        items = "".join(
+            f'<li><a href="{escape(lnk["href"])}"'
+            + (' target="_blank" rel="noopener noreferrer"' if lnk.get("external") else "")
+            + f'>{escape(lnk["text"])}</a></li>'
+            for lnk in links
+        )
+        return f'<ul class="summary-fact-links">{items}</ul>'
+
     card_items = "\n        ".join(
         f'<li>'
         f'<article class="summary-fact-card" data-fact-id="{escape(fact["id"])}" '
@@ -2051,6 +2114,7 @@ def _build_fact_sections(s: dict, stats: dict, tr) -> tuple[str, str]:
         f'<h3>{escape(fact["title"])}</h3>'
         f'<p class="summary-fact-main">{escape(fact["main"])}</p>'
         f'<p class="summary-fact-note">{escape(fact["note"])}</p>'
+        f'{_fact_links_html(fact)}'
         f'{action_links(fact)}'
         f'</article>'
         f'</li>'

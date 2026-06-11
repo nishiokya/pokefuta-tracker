@@ -14,12 +14,15 @@ Usage:
 """
 from __future__ import annotations
 
+import base64
 import json
 import os
 import re
 import subprocess
 import sys
 import tempfile
+import urllib.error
+import urllib.request
 from collections import Counter
 from pathlib import Path
 
@@ -31,6 +34,10 @@ OUTPUT_SVG = ROOT / "docs" / "social-post-image.svg"
 OUTPUT_JPG = ROOT / "docs" / "social-post-image.jpg"
 OUTPUT_PNG = ROOT / "docs" / "social-post-ogp.png"
 NDJSON = ROOT / "pokefuta.ndjson"
+MANHOLE_IMAGE_DIR = ROOT / "dataset" / "manhole" / "image"
+PREF_BOUNDARY_DIR = ROOT / "dataset" / "prefecture_boundaries"
+_JAPAN_GEOJSON_URL = "https://raw.githubusercontent.com/dataofjapan/land/master/japan.geojson"
+_WIRE_PHOTO_LIMIT = 15  # embed photo circles when <= this many manholes in the prefecture
 
 _ACCENT_COLOR = {
     "trivia":  "#57E0BE",
@@ -127,6 +134,176 @@ def _latlon_to_hero_xy(lat: float, lng: float) -> tuple[float, float]:
 
 
 # ---------------------------------------------------------------------------
+# Prefecture wire-frame map helpers
+# ---------------------------------------------------------------------------
+
+def _simplify_ring(ring: list, max_pts: int = 250) -> list:
+    n = len(ring)
+    if n <= max_pts:
+        return ring
+    step = max(2, n // max_pts)
+    simplified = ring[::step]
+    if simplified[0] != simplified[-1]:
+        simplified.append(ring[-1])
+    return simplified
+
+
+def _load_pref_rings(pref: str) -> tuple[list, tuple]:
+    """Load prefecture boundary polygon rings from cache or download.
+
+    Returns (all_polygons, bounds) where:
+      all_polygons: list of polygons; each polygon is [exterior_ring, *hole_rings]
+      bounds: (min_lng, min_lat, max_lng, max_lat)
+    """
+    cache_path = PREF_BOUNDARY_DIR / f"{pref}.json"
+    if cache_path.exists():
+        data = json.loads(cache_path.read_text(encoding="utf-8"))
+        return data["polygons"], tuple(data["bounds"])
+
+    PREF_BOUNDARY_DIR.mkdir(parents=True, exist_ok=True)
+
+    japan_cache = PREF_BOUNDARY_DIR / "_japan.geojson"
+    if not japan_cache.exists():
+        print("[generate_social_ogp] japan.geojson をダウンロード中…", file=sys.stderr)
+        req = urllib.request.Request(
+            _JAPAN_GEOJSON_URL, headers={"User-Agent": "pokefuta-ogp/1.0"},
+        )
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            japan_cache.write_bytes(resp.read())
+
+    japan = json.loads(japan_cache.read_text(encoding="utf-8"))
+    feature = next(
+        (f for f in japan["features"] if f["properties"].get("nam_ja") == pref), None,
+    )
+    if not feature:
+        raise RuntimeError(f"都道府県が見つかりません: {pref}")
+
+    geom = feature["geometry"]
+    all_polygons = [geom["coordinates"]] if geom["type"] == "Polygon" else geom["coordinates"]
+    all_polygons = [[_simplify_ring(ring) for ring in poly] for poly in all_polygons]
+
+    flat = [c for poly in all_polygons for ring in poly for c in ring]
+    lngs = [c[0] for c in flat]
+    lats = [c[1] for c in flat]
+    bounds = (min(lngs), min(lats), max(lngs), max(lats))
+
+    cache_path.write_text(
+        json.dumps({"polygons": all_polygons, "bounds": list(bounds)}, separators=(",", ":")),
+        encoding="utf-8",
+    )
+    return all_polygons, bounds
+
+
+_MAP_PANEL_X, _MAP_PANEL_Y, _MAP_PANEL_W, _MAP_PANEL_H = 688, 124, 400, 380
+_MAP_PAD = 22
+
+
+def _geo_to_panel_xy(lng: float, lat: float, bounds: tuple) -> tuple[float, float]:
+    """Project GeoJSON [lng, lat] into the SVG map panel pixel space."""
+    min_lng, min_lat, max_lng, max_lat = bounds
+    avail_w = _MAP_PANEL_W - 2 * _MAP_PAD
+    avail_h = _MAP_PANEL_H - 2 * _MAP_PAD
+    lng_range = max(max_lng - min_lng, 0.01)
+    lat_range = max(max_lat - min_lat, 0.01)
+    scale = min(avail_w / lng_range, avail_h / lat_range)
+    map_w = lng_range * scale
+    map_h = lat_range * scale
+    x_off = _MAP_PANEL_X + _MAP_PAD + (avail_w - map_w) / 2
+    y_off = _MAP_PANEL_Y + _MAP_PAD + (avail_h - map_h) / 2 + map_h
+    return (
+        round(x_off + (lng - min_lng) * scale, 1),
+        round(y_off - (lat - min_lat) * scale, 1),
+    )
+
+
+def _manhole_zoom_bounds(manholes: list[dict], pref_bounds: tuple) -> tuple:
+    """Compute view bounds centered on the manhole cluster.
+
+    When manholes are tightly clustered (photos mode), zoom into them while
+    keeping the view proportional.  Padding is 3× the cluster span so the
+    prefecture outline provides context without overwhelming the thumbnails.
+    """
+    m_lngs = [m["lng"] for m in manholes]
+    m_lats = [m["lat"] for m in manholes]
+    lng_span = max(max(m_lngs) - min(m_lngs), 0.015)
+    lat_span = max(max(m_lats) - min(m_lats), 0.015)
+    # Keep aspect ratio consistent with a square-ish cluster view
+    span = max(lng_span, lat_span) * 5.0
+    cx = (min(m_lngs) + max(m_lngs)) / 2
+    cy = (min(m_lats) + max(m_lats)) / 2
+    # Clamp to prefecture extent so we don't zoom outside the polygon
+    min_lng, min_lat, max_lng, max_lat = pref_bounds
+    return (
+        max(cx - span, min_lng),
+        max(cy - span, min_lat),
+        min(cx + span, max_lng),
+        min(cy + span, max_lat),
+    )
+
+
+def _render_pref_wire_map(svg: str, pref: str, manholes: list[dict], theme: str) -> str:
+    """Replace map panel with wire-frame prefecture boundary + manhole circles."""
+    accent = _ACCENT_COLOR.get(theme, "#F2C24C")
+    bright = _ACCENT_BRIGHT.get(theme, "#FFD86B")
+
+    all_polygons, pref_bounds = _load_pref_rings(pref)
+
+    use_photos = len(manholes) <= _WIRE_PHOTO_LIMIT
+    # Zoom to manhole cluster for photo mode; use full prefecture for dot mode
+    bounds = _manhole_zoom_bounds(manholes, pref_bounds) if use_photos else pref_bounds
+
+    path_parts: list[str] = []
+    for poly in all_polygons:
+        d = ""
+        for ring in poly:
+            pts = [_geo_to_panel_xy(c[0], c[1], bounds) for c in ring]
+            d += f"M{pts[0][0]} {pts[0][1]}"
+            for x, y in pts[1:]:
+                d += f"L{x} {y}"
+            d += "Z"
+        path_parts.append(
+            f'<path d="{d}" fill="{accent}" fill-opacity="0.07" '
+            f'stroke="{accent}" stroke-opacity="0.7" stroke-width="1.5" '
+            f'stroke-linejoin="round" stroke-linecap="round"/>'
+        )
+
+    defs: list[str] = []
+    circles: list[str] = []
+    r = 18
+
+    for m in manholes:
+        x, y = _geo_to_panel_xy(m["lng"], m["lat"], bounds)
+        mid = str(m.get("id", ""))
+        img_path = MANHOLE_IMAGE_DIR / f"{mid}_latest.jpeg"
+        if use_photos and mid and img_path.exists():
+            clip_id = f"wmc{mid}"
+            b64 = base64.b64encode(img_path.read_bytes()).decode("ascii")
+            defs.append(
+                f'<clipPath id="{clip_id}"><circle cx="{x}" cy="{y}" r="{r}"/></clipPath>'
+            )
+            circles.append(
+                f'<circle cx="{x}" cy="{y}" r="{r + 2.5}" fill="#FFFFFF" opacity="0.9"/>'
+                f'<image href="data:image/jpeg;base64,{b64}" '
+                f'x="{x - r}" y="{y - r}" width="{r * 2}" height="{r * 2}" '
+                f'clip-path="url(#{clip_id})" preserveAspectRatio="xMidYMid slice"/>'
+            )
+        else:
+            circles.append(
+                f'<circle cx="{x}" cy="{y}" r="4.5" fill="{bright}" opacity="0.92"/>'
+            )
+
+    defs_svg = f'<defs>{"".join(defs)}</defs>' if defs else ""
+    new_group = (
+        f'<g id="map-dots">{defs_svg}'
+        f'{"".join(path_parts)}'
+        f'{"".join(circles)}</g>'
+    )
+    svg = _replace_group(svg, "map-dots", new_group)
+    svg = _replace_group(svg, "map-route", '<g id="map-route"></g>')
+    return svg
+
+
+# ---------------------------------------------------------------------------
 # SVG mutation helpers
 # ---------------------------------------------------------------------------
 
@@ -186,15 +363,20 @@ def _replace_group(svg: str, group_id: str, new_content: str) -> str:
     return svg[:g_start] + new_content + svg[i:]
 
 
-def _replace_map_with_pref_dots(svg: str, manholes: list[dict], theme: str) -> str:
+def _replace_map_with_pref_dots(svg: str, manholes: list[dict], theme: str, map_pref: str = "") -> str:
     """Replace map-dots + map-route groups with prefecture manhole point map.
 
-    Maps all manholes to the same panel space (MAPX=688..1088, MAPY=124..504)
-    using a scaled lat/lng → pixel transform.  Every 4th dot gets a brighter,
-    slightly larger glyph for visual interest.
+    When map_pref is provided, renders a GeoJSON wire-frame outline first.
+    Falls back to scaled dot map on any error.
     """
     if not manholes:
         return svg
+
+    if map_pref:
+        try:
+            return _render_pref_wire_map(svg, map_pref, manholes, theme)
+        except Exception as e:
+            print(f"[generate_social_ogp] ワイヤーマップ失敗（{map_pref}: {e}）、ドットで代替", file=sys.stderr)
 
     accent = _ACCENT_COLOR.get(theme, "#F2C24C")
     bright = _ACCENT_BRIGHT.get(theme, "#FFD86B")
@@ -360,8 +542,9 @@ def _render_design_template(theme: str, v: dict) -> str:
 
     # Prefecture-specific dot map (overrides Japan dot matrix when present)
     manholes = v.get("manholes")
+    map_pref = v.get("mapPref", "")
     if manholes:
-        svg = _replace_map_with_pref_dots(svg, manholes, theme)
+        svg = _replace_map_with_pref_dots(svg, manholes, theme, map_pref)
     else:
         # Default: move teardrop hero pin to target lat/lng
         hero_lat = v.get("heroLat")
@@ -391,6 +574,7 @@ def _vars_prefecture_rank(raw: dict) -> dict:
         "description": f"全国{raw['total']}枚中 {raw['percent']}%",
         "mapCaption": f"{pref}設置マップ",
         "manholes": manholes,
+        "mapPref": pref,
     }
 
 
@@ -487,17 +671,15 @@ def _vars_travel_trivia(raw: dict) -> dict:
     elif ft == "ibusuki_eevee_9":
         manholes = _load_pref_manholes("鹿児島県")
         base.update({
-            "categoryLabel": "RARE",
-            "titleLine1": "指宿市に",
-            "titleLine2": "イーブイ系9枚",
-            "kicker": f"{v['pokemon']}＋進化形8種が集結",
+            "titleLine1": "イーブイ系",
+            "titleLine2": "コンプリート",
+            "kicker": "全国唯一・全9種が鹿児島県指宿市に集結",
             "mainNumber": str(v["count"]),
             "mainUnit": "枚",
             "chips": ["イーブイ", "シャワーズ", "ブースター", "サンダース", "エーフィ", "ブラッキー"],
-            "description": f"鹿児島県{v['city']}に全種集結",
-            "mapCaption": "鹿児島県指宿市マップ",
+            "description": f"鹿児島県{v['city']}に全9種が揃う全国唯一の場所",
             "manholes": manholes,
-            "_theme": "rare",
+            "_theme": "ibusuki_eevee_complete",
         })
     return base
 
@@ -506,7 +688,9 @@ def _vars_rare_area(raw: dict) -> dict:
     pref = raw["pref"]
     lat, lng = _PREF_LATLNG.get(pref, (35.69, 139.69))
     percent = round(raw["count"] / max(raw["total"], 1) * 100, 1)
-    return {
+    manholes = _load_pref_manholes(pref)
+
+    base = {
         "categoryLabel": "RARE",
         "titleLine1": f"{pref}の",
         "titleLine2": "ポケふた",
@@ -516,14 +700,68 @@ def _vars_rare_area(raw: dict) -> dict:
         "chips": [],
         "description": f"全国{raw['total']}枚中 {percent}%",
         "mapCaption": f"{pref}設置マップ",
+        "manholes": manholes,
+        "mapPref": pref,
         "heroLat": lat,
         "heroLng": lng,
     }
+
+    # Detect "all same base pokemon" variant family (e.g. ニャース3兄弟)
+    if 2 <= len(manholes) <= 5:
+        _REGION_PREFIXES = ["アローラ", "ガラル", "ヒスイ", "パルデア"]
+
+        def _base_name(p: str) -> str:
+            for pfx in _REGION_PREFIXES:
+                p = p.replace(pfx, "").strip()
+            return p
+
+        def _short_label(p: str) -> str:
+            for pfx in _REGION_PREFIXES:
+                if p.startswith(pfx):
+                    return pfx
+            return _base_name(p)
+
+        def _sub_label(p: str) -> str:
+            for pfx in _REGION_PREFIXES:
+                if p.startswith(pfx):
+                    return f"{pfx}版"
+            return "通常版"
+
+        first_pokemons = [(m.get("pokemons") or [""])[0] for m in manholes]
+        base_names = {_base_name(p) for p in first_pokemons if p}
+
+        if len(base_names) == 1:
+            base_poke = list(base_names)[0]
+            pref_short = pref.rstrip("都道府県")
+            first_city = manholes[0].get("city", "") if manholes else ""
+            base.update({
+                "titleLine1": f"{pref_short}の{raw['count']}枚、",
+                "titleLine2": f"全部{base_poke}",
+                "kicker": f"通常・アローラ・ガラル 地域変種がひとつの市に集合",
+                "description": f"{pref}{first_city}",
+                "chips": first_pokemons,
+                "pokeLabels":    [_short_label(p) for p in first_pokemons],
+                "pokeSubLabels": [_sub_label(p)   for p in first_pokemons],
+                "stampText":  "地域変種\nコンプリート",
+                "footerCta":  "全国470枚から、次の旅先を探す",
+                "_theme": "rare_few",
+            })
+            # 佐賀-specific: ニャース × 気球 overrides
+            if pref == "佐賀県" and base_poke == "ニャース":
+                base.update({
+                    "kicker": "しかも全部、気球デザイン。",
+                    "categoryLabel": "佐賀市限定",
+                    "stampText": "佐賀市\n限定",
+                    "hasBalloons": True,
+                })
+
+    return base
 
 
 def _vars_no_photo(raw: dict) -> dict:
     pref = raw["pref"]
     lat, lng = _PREF_LATLNG.get(pref, (35.69, 139.69))
+    manholes = _load_pref_manholes(pref)
     return {
         "categoryLabel": "RARE",
         "titleLine1": f"{pref}の",
@@ -534,6 +772,8 @@ def _vars_no_photo(raw: dict) -> dict:
         "chips": [],
         "description": f"設置{raw['total_count']}枚中 {raw['no_photo_count']}枚が未投稿",
         "mapCaption": f"{pref}マップ",
+        "manholes": manholes,
+        "mapPref": pref,
         "heroLat": lat,
         "heroLng": lng,
     }
@@ -588,6 +828,340 @@ def _vars_remote_island(raw: dict) -> dict:
         "description": "離島のポケモンマンホール",
         "mapCaption": "日本マップ",
     }
+
+
+def _render_rare_few_horizontal(v: dict) -> str:
+    """Render rare_area posts with ≤5 manholes: 3-photo horizontal card layout.
+
+    Photos are evenly distributed across the right panel.
+    Pokemon name + variant label shown below each photo.
+    """
+    tmpl_path = TEMPLATE_DIR / "pokefuta_ogp_rare.svg"
+    svg = tmpl_path.read_text(encoding="utf-8")
+
+    # --- Left-side text ---
+    main_num = str(v.get("mainNumber", ""))
+    cat_label = v.get("categoryLabel", "RARE")
+    svg = _set_text(svg, "cat-label",        cat_label)
+    svg = _set_text(svg, "title-1",          v.get("titleLine1", ""))
+    svg = _set_text(svg, "title-2",          v.get("titleLine2", ""))
+    svg = _set_text(svg, "num-kicker",       v.get("kicker", ""))
+    svg = _set_text(svg, "main-number",      main_num)
+    svg = _set_text(svg, "main-number-glow", main_num)
+    svg = _set_text(svg, "main-unit",        v.get("mainUnit", "枚"))
+    svg = _set_text(svg, "description",      v.get("description", ""))
+    svg = _set_text(svg, "map-caption",      "")
+    svg = _set_text(svg, "footer-name",      "ポケふたマップ")
+    svg = _set_text(svg, "footer-url",       "data.pokefuta.com")
+    svg = _set_text(svg, "footer-note",      v.get("footerCta", "全国470枚から、次の旅先を探す"))
+    svg = _set_main_unit_x(svg, 74 + len(main_num) * 70 + 14)
+    svg = _replace_chips_section(svg, v.get("chips", []), "rare")
+    if cat_label != "RARE":
+        svg = svg.replace(
+            'x="76" y="84" width="96" height="44" rx="22" fill="#FF9466" fill-opacity="0.14"',
+            'x="76" y="84" width="152" height="44" rx="22" fill="#FF9466" fill-opacity="0.14"',
+        )
+
+    accent = "#FF9466"
+    bright = "#FFB088"
+    gold = "#FFD86B"
+
+    manholes     = v.get("manholes", [])
+    poke_labels  = v.get("pokeLabels", [])
+    poke_subs    = v.get("pokeSubLabels", [])
+    n = max(len(manholes), 1)
+
+    defs: list[str] = []
+    elems: list[str] = []
+
+    # Dim prefecture wireframe as background texture
+    pref = v.get("mapPref", "")
+    if pref:
+        try:
+            all_polys, bounds = _load_pref_rings(pref)
+            for poly in all_polys:
+                d = ""
+                for ring in poly:
+                    pts = [_geo_to_panel_xy(c[0], c[1], bounds) for c in ring]
+                    d += f"M{pts[0][0]} {pts[0][1]}"
+                    for x, y in pts[1:]:
+                        d += f"L{x} {y}"
+                    d += "Z"
+                elems.append(
+                    f'<path d="{d}" fill="{accent}" fill-opacity="0.05" '
+                    f'stroke="{bright}" stroke-opacity="0.14" stroke-width="0.8"/>'
+                )
+        except Exception as e:
+            print(f"[generate_social_ogp] 背景マップスキップ: {e}", file=sys.stderr)
+
+    # Hot air balloons above each photo (佐賀 ニャース variant)
+    if v.get("hasBalloons"):
+        PANEL_X_B, PANEL_W_B = 648, 480
+        bsec_w = PANEL_W_B / n
+        BCY, BRX, BRY = 132, 19, 26
+        for i in range(n):
+            bcx = round(PANEL_X_B + bsec_w * (i + 0.5), 1)
+            brope_y = BCY + BRY           # 158
+            bgond_y = brope_y + 14         # 172
+            bcid = f"bclip{i}"
+            defs.append(
+                f'<clipPath id="{bcid}"><ellipse cx="{bcx}" cy="{BCY}" rx="{BRX}" ry="{BRY}"/></clipPath>'
+            )
+            elems.extend([
+                # Envelope fill
+                f'<ellipse cx="{bcx}" cy="{BCY}" rx="{BRX}" ry="{BRY}" fill="#F4A040" stroke="#C47820" stroke-width="1.5"/>',
+                # Top red cap
+                f'<path d="M{bcx-BRX},{BCY} Q{bcx},{BCY - int(BRY*1.25)} {bcx+BRX},{BCY} Z" '
+                f'fill="#CC2200" opacity="0.62" clip-path="url(#{bcid})"/>',
+                # Vertical stripe lines
+                f'<line x1="{bcx - BRX//3}" y1="{BCY - BRY}" x2="{bcx - BRX//3}" y2="{BCY + BRY}" '
+                f'stroke="#FFE070" stroke-width="1.3" clip-path="url(#{bcid})" opacity="0.75"/>',
+                f'<line x1="{bcx + BRX//3}" y1="{BCY - BRY}" x2="{bcx + BRX//3}" y2="{BCY + BRY}" '
+                f'stroke="#FFE070" stroke-width="1.3" clip-path="url(#{bcid})" opacity="0.75"/>',
+                # Ropes
+                f'<line x1="{bcx - BRX + 5}" y1="{brope_y}" x2="{bcx - 9}" y2="{bgond_y}" stroke="#B8902A" stroke-width="1.2"/>',
+                f'<line x1="{bcx + BRX - 5}" y1="{brope_y}" x2="{bcx + 9}" y2="{bgond_y}" stroke="#B8902A" stroke-width="1.2"/>',
+                # Gondola
+                f'<rect x="{bcx - 11}" y="{bgond_y}" width="22" height="10" rx="2" fill="#7A4820" stroke="#5A3410" stroke-width="1"/>',
+            ])
+
+    # Photo row: divide panel into N equal sections
+    PANEL_X, PANEL_W = 648, 480
+    section_w = PANEL_W / n
+    PHOTO_Y  = 262
+    LABEL_Y  = 340
+    SUB_Y    = 362
+    R = 57
+
+    for i, m in enumerate(manholes):
+        cx = round(PANEL_X + section_w * (i + 0.5), 1)
+        mid = str(m.get("id", ""))
+        img_path = MANHOLE_IMAGE_DIR / f"{mid}_latest.jpeg"
+        label = poke_labels[i] if i < len(poke_labels) else ""
+        sub   = poke_subs[i]   if i < len(poke_subs)   else ""
+
+        if mid and img_path.exists():
+            cid = f"rfw{mid}"
+            b64 = base64.b64encode(img_path.read_bytes()).decode("ascii")
+            defs.append(f'<clipPath id="{cid}"><circle cx="{cx}" cy="{PHOTO_Y}" r="{R}"/></clipPath>')
+            elems.append(
+                f'<circle cx="{cx}" cy="{PHOTO_Y}" r="{R + 3}" fill="#FFFFFF" opacity="0.88"/>'
+                f'<image href="data:image/jpeg;base64,{b64}" '
+                f'x="{cx - R}" y="{PHOTO_Y - R}" width="{R * 2}" height="{R * 2}" '
+                f'clip-path="url(#{cid})" preserveAspectRatio="xMidYMid slice"/>'
+            )
+        else:
+            elems.append(f'<circle cx="{cx}" cy="{PHOTO_Y}" r="{R}" fill="{bright}" opacity="0.5"/>')
+
+        if label:
+            elems.append(
+                f'<text class="jp" x="{cx}" y="{LABEL_Y}" text-anchor="middle" '
+                f'font-size="20" font-weight="800" fill="{gold}">{_xe(label)}</text>'
+            )
+        if sub:
+            elems.append(
+                f'<text class="jp" x="{cx}" y="{SUB_Y}" text-anchor="middle" '
+                f'font-size="14" font-weight="600" fill="#B3A9D6" opacity="0.85">{_xe(sub)}</text>'
+            )
+
+    defs_svg = f'<defs>{"".join(defs)}</defs>' if defs else ""
+    svg = _replace_group(svg, "map-dots",  f'<g id="map-dots">{defs_svg}{"".join(elems)}</g>')
+    svg = _replace_group(svg, "map-route", '<g id="map-route"></g>')
+    svg = _replace_group(svg, "map-caption-pill", '<g id="map-caption-pill"></g>')
+
+    # Replace RARE stamp with variant badge
+    stamp_text = v.get("stampText", "地域変種\nコンプリート")
+    line1, _, line2 = stamp_text.partition("\n")
+    new_stamp = (
+        f'<g id="stamp" transform="translate(1038 132) rotate(-10)">'
+        f'<circle cx="0" cy="0" r="60" fill="#120C36" fill-opacity="0.55" '
+        f'stroke="{bright}" stroke-width="3" stroke-dasharray="8 5"/>'
+        f'<text class="jp" x="0" y="-8" text-anchor="middle" font-size="16" '
+        f'font-weight="900" fill="{bright}">{_xe(line1)}</text>'
+        f'<text class="jp" x="0" y="22" text-anchor="middle" font-size="16" '
+        f'font-weight="900" fill="#FFFFFF">{_xe(line2)}</text>'
+        f'</g>'
+    )
+    svg = _replace_group(svg, "stamp", new_stamp)
+
+    return svg
+
+
+def _render_ibusuki_eevee_complete(v: dict) -> str:
+    """Render ibusuki_eevee_9 OGP: circular manhole photo arrangement.
+
+    Center: Eevee.  Outer ring (clockwise from top): 8 evolutions.
+    Dim Ibusuki peninsula wireframe as background texture.
+    """
+    import math
+
+    tmpl_path = TEMPLATE_DIR / "pokefuta_ogp_rare.svg"
+    svg = tmpl_path.read_text(encoding="utf-8")
+
+    # --- Left-side text ---
+    main_num = str(v.get("mainNumber", "9"))
+    svg = _set_text(svg, "cat-label",        "COMPLETE")
+    svg = _set_text(svg, "title-1",          v.get("titleLine1", "イーブイ系"))
+    svg = _set_text(svg, "title-2",          v.get("titleLine2", "コンプリート"))
+    svg = _set_text(svg, "num-kicker",       v.get("kicker", "全9種 鹿児島県指宿市に集結"))
+    svg = _set_text(svg, "main-number",      main_num)
+    svg = _set_text(svg, "main-number-glow", main_num)
+    svg = _set_text(svg, "main-unit",        "枚")
+    svg = _set_text(svg, "description",      v.get("description", ""))
+    svg = _set_text(svg, "map-caption",      "鹿児島県 指宿市")
+    svg = _set_text(svg, "footer-name",      "ポケふたマップ")
+    svg = _set_text(svg, "footer-url",       "data.pokefuta.com")
+    svg = _set_main_unit_x(svg, 74 + 1 * 70 + 14)
+    svg = _replace_chips_section(svg, v.get("chips", []), "rare")
+    # Widen category badge rect for "COMPLETE"
+    svg = svg.replace(
+        'x="76" y="84" width="96" height="44" rx="22" fill="#FF9466" fill-opacity="0.14"',
+        'x="76" y="84" width="184" height="44" rx="22" fill="#FF9466" fill-opacity="0.14"',
+    )
+
+    # --- Manhole ordering: Eevee center, 8 evolutions clockwise from top ---
+    _OUTER_ORDER = [
+        "シャワーズ", "ブースター", "サンダース", "エーフィ",
+        "ブラッキー", "リーフィア", "グレイシア", "ニンフィア",
+    ]
+
+    def first_pokemon(m: dict) -> str:
+        return (m.get("pokemons") or [""])[0]
+
+    manholes = v.get("manholes", [])
+    center_m = next((m for m in manholes if first_pokemon(m) == "イーブイ"), None)
+    remaining = [m for m in manholes if first_pokemon(m) != "イーブイ"]
+    outer_ms: list[dict] = []
+    pool = list(remaining)
+    for name in _OUTER_ORDER:
+        match = next((m for m in pool if first_pokemon(m) == name), None)
+        if match:
+            outer_ms.append(match)
+            pool.remove(match)
+    outer_ms.extend(pool)
+
+    # --- Circle geometry ---
+    CX, CY = 888, 278
+    OUTER_R = 143   # distance: center → outer photo center
+    R_CENTER = 62   # Eevee photo radius
+    R_OUTER = 44    # evolution photo radius
+    bright = "#FFB088"
+    gold = "#FFD86B"
+
+    defs: list[str] = []
+    elems: list[str] = []
+
+    # Ibusuki peninsula wireframe as dim background (Satsuma Peninsula bbox)
+    try:
+        all_polys, _ = _load_pref_rings("鹿児島県")
+        IB_BOUNDS = (130.40, 31.00, 131.00, 31.70)
+        min_lng, min_lat, max_lng, max_lat = IB_BOUNDS
+        PX, PY, PW, PH, IPAD = 648, 84, 480, 446, 28
+        avail_w = PW - 2 * IPAD
+        avail_h = PH - 2 * IPAD
+        ib_scale = min(avail_w / (max_lng - min_lng), avail_h / (max_lat - min_lat))
+        ib_mw = (max_lng - min_lng) * ib_scale
+        ib_mh = (max_lat - min_lat) * ib_scale
+        ib_xoff = PX + IPAD + (avail_w - ib_mw) / 2
+        ib_yoff = PY + IPAD + (avail_h - ib_mh) / 2 + ib_mh
+
+        def ib_xy(lng: float, lat: float) -> tuple[float, float]:
+            return (
+                round(ib_xoff + (lng - min_lng) * ib_scale, 1),
+                round(ib_yoff - (lat - min_lat) * ib_scale, 1),
+            )
+
+        for poly in all_polys:
+            d = ""
+            for ring in poly:
+                pts = [ib_xy(c[0], c[1]) for c in ring]
+                d += f"M{pts[0][0]} {pts[0][1]}"
+                for x, y in pts[1:]:
+                    d += f"L{x} {y}"
+                d += "Z"
+            elems.append(
+                f'<path d="{d}" fill="#FF9466" fill-opacity="0.03" '
+                f'stroke="{bright}" stroke-opacity="0.12" stroke-width="0.8"/>'
+            )
+    except Exception as e:
+        print(f"[generate_social_ogp] 指宿背景マップスキップ: {e}", file=sys.stderr)
+
+    # Outer completion ring (dashed circle around all photos)
+    ring_r = OUTER_R + R_OUTER + 10
+    elems.append(
+        f'<circle cx="{CX}" cy="{CY}" r="{ring_r}" fill="none" '
+        f'stroke="{bright}" stroke-width="1.5" stroke-opacity="0.28" '
+        f'stroke-dasharray="5 9"/>'
+    )
+
+    # Ray lines: center → outer photo positions
+    for i in range(8):
+        angle = math.radians(-90 + i * 45)
+        ox = round(CX + OUTER_R * math.cos(angle), 1)
+        oy = round(CY + OUTER_R * math.sin(angle), 1)
+        elems.append(
+            f'<line x1="{CX}" y1="{CY}" x2="{ox}" y2="{oy}" '
+            f'stroke="{bright}" stroke-width="1" stroke-opacity="0.18" stroke-dasharray="4 7"/>'
+        )
+
+    # Outer photos (8 evolutions, clockwise from top)
+    for i, m in enumerate(outer_ms[:8]):
+        angle = math.radians(-90 + i * 45)
+        ox = round(CX + OUTER_R * math.cos(angle), 1)
+        oy = round(CY + OUTER_R * math.sin(angle), 1)
+        mid = str(m.get("id", ""))
+        img_path = MANHOLE_IMAGE_DIR / f"{mid}_latest.jpeg"
+        if mid and img_path.exists():
+            cid = f"eec{mid}"
+            b64 = base64.b64encode(img_path.read_bytes()).decode("ascii")
+            defs.append(f'<clipPath id="{cid}"><circle cx="{ox}" cy="{oy}" r="{R_OUTER}"/></clipPath>')
+            elems.append(
+                f'<circle cx="{ox}" cy="{oy}" r="{R_OUTER + 2.5}" fill="#FFFFFF" opacity="0.85"/>'
+                f'<image href="data:image/jpeg;base64,{b64}" '
+                f'x="{ox - R_OUTER}" y="{oy - R_OUTER}" '
+                f'width="{R_OUTER * 2}" height="{R_OUTER * 2}" '
+                f'clip-path="url(#{cid})" preserveAspectRatio="xMidYMid slice"/>'
+            )
+        else:
+            elems.append(f'<circle cx="{ox}" cy="{oy}" r="{R_OUTER}" fill="{bright}" opacity="0.5"/>')
+
+    # Center photo (Eevee) — larger, gold ring
+    if center_m:
+        mid = str(center_m.get("id", ""))
+        img_path = MANHOLE_IMAGE_DIR / f"{mid}_latest.jpeg"
+        if mid and img_path.exists():
+            cid = f"eec{mid}"
+            b64 = base64.b64encode(img_path.read_bytes()).decode("ascii")
+            defs.append(f'<clipPath id="{cid}"><circle cx="{CX}" cy="{CY}" r="{R_CENTER}"/></clipPath>')
+            elems.append(
+                f'<circle cx="{CX}" cy="{CY}" r="{R_CENTER + 4}" fill="#FFFFFF" opacity="0.95"/>'
+                f'<image href="data:image/jpeg;base64,{b64}" '
+                f'x="{CX - R_CENTER}" y="{CY - R_CENTER}" '
+                f'width="{R_CENTER * 2}" height="{R_CENTER * 2}" '
+                f'clip-path="url(#{cid})" preserveAspectRatio="xMidYMid slice"/>'
+                f'<circle cx="{CX}" cy="{CY}" r="{R_CENTER + 4}" '
+                f'fill="none" stroke="{gold}" stroke-width="3" opacity="0.95"/>'
+            )
+
+    # Replace map-dots and map-route
+    defs_svg = f'<defs>{"".join(defs)}</defs>' if defs else ""
+    svg = _replace_group(svg, "map-dots", f'<g id="map-dots">{defs_svg}{"".join(elems)}</g>')
+    svg = _replace_group(svg, "map-route", '<g id="map-route"></g>')
+
+    # Replace RARE stamp → ALL 9 badge (upper-right, clear of the photo ring)
+    new_stamp = (
+        '<g id="stamp" transform="translate(1068 122)">'
+        f'<circle cx="0" cy="0" r="50" fill="#120C36" fill-opacity="0.65" '
+        f'stroke="{bright}" stroke-width="3" stroke-dasharray="8 5"/>'
+        f'<text class="mono" x="0" y="-5" text-anchor="middle" font-size="11" '
+        f'font-weight="900" letter-spacing="0.18em" fill="{bright}">ALL</text>'
+        f'<text class="en" x="0" y="28" text-anchor="middle" font-size="36" '
+        f'font-weight="900" fill="#FFFFFF">9</text>'
+        '</g>'
+    )
+    svg = _replace_group(svg, "stamp", new_stamp)
+
+    return svg
 
 
 def _render_latest_photo_template(v: dict) -> str:
@@ -678,6 +1252,10 @@ def main() -> None:
     print(f"[generate_social_ogp] {post_type} → {theme} テンプレートで生成中…")
     if theme == "latest_photo":
         svg_text = _render_latest_photo_template(vars_dict)
+    elif theme == "ibusuki_eevee_complete":
+        svg_text = _render_ibusuki_eevee_complete(vars_dict)
+    elif theme == "rare_few":
+        svg_text = _render_rare_few_horizontal(vars_dict)
     else:
         svg_text = _render_design_template(theme, vars_dict)
 
