@@ -61,7 +61,15 @@ python3 apps/scraper/generate_social_posts.py
    cd "$(git rev-parse --show-toplevel)"
    python3 apps/scraper/generate_social_ogp.py
    ```
-   - `prefecture_rank` タイプ: 都道府県マップ＋マンホール写真＋ポケモン統計の
-     リッチSVGを自動生成（GeoJSON取得・ndjson参照・ローカル画像埋め込み）
-   - その他タイプ: `docs/ogp_template/{type}.svg` のプレースホルダーを置換
+   **テーマ別OGP生成ルール：**
+   - `prefecture_rank` / `rare_area` / `no_photo` — GeoJSON ワイヤーフレーム都道府県マップ
+     - マンホール数 ≤15: 写真サムネイル（円形・マンホール位置にズーム）
+     - マンホール数 >15: カラードット（県全体を俯瞰）
+     - GeoJSONは `dataset/prefecture_boundaries/` にキャッシュ（初回のみDL）
+   - `travel_trivia` (ibusuki_eevee_9) — 専用テーマ `ibusuki_eevee_complete`
+     - イーブイ中央（金枠）＋進化形8種を円形配置
+     - バッジ「ALL 9」、タイトル「イーブイ系コンプリート」
+     - 指宿半島ワイヤーフレームを背景テクスチャとして使用
+   - `latest_photo` — `docs/ogp_template/latest_photo.svg` に写真を base64 埋め込み
+   - その他タイプ — `docs/ogp_template/pokefuta_ogp_{theme}.svg` のプレースホルダーを置換
 9. `docs/social-post-image.jpg` を Read ツールで読み込み、投稿文の下に表示する

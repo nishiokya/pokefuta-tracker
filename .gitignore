@@ -28,3 +28,6 @@ dataset/michineki.json
 docs/social-post-history.json
 docs/social-post-daily.json
 docs/social-post-ogp.png
+
+# 都道府県ワイヤーマップGeoJSONキャッシュ（都度ダウンロード）
+dataset/prefecture_boundaries/
