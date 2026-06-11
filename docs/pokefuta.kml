@@ -7,6 +7,8 @@
       <description>Prefecture: 鹿児島県
 City: 指宿
 Address: 鹿児島県指宿市湊1丁目1-1
+Building: 指宿警察署　指宿中央交番
+Tags: station_front, tourism, food
 Detail: https://local.pokemon.jp/manhole/desc/1/?is_modal=1
 Last Updated: 2026-05-11T11:00:09Z
 Status: active</description>
@@ -19,7 +21,9 @@ Status: active</description>
       <description>Prefecture: 鹿児島県
 City: 指宿
 Address: 鹿児島県指宿市湯の浜5丁目26-29
-Tags: seaside
+Place Detail: 吟松付近の歩道
+Building: 夫婦露天風呂の宿吟松
+Tags: seaside, tourism
 Detail: https://local.pokemon.jp/manhole/desc/2/?is_modal=1
 Last Updated: 2026-05-11T11:00:10Z
 Status: active</description>
@@ -32,6 +36,8 @@ Status: active</description>
       <description>Prefecture: 鹿児島県
 City: 指宿
 Address: 鹿児島県指宿市東方9300−1
+Building: ふれあいプラザなのはな館敷
+Tags: park, tourism
 Detail: https://local.pokemon.jp/manhole/desc/3/?is_modal=1
 Last Updated: 2026-05-11T11:00:10Z
 Status: active</description>
@@ -44,7 +50,9 @@ Status: active</description>
       <description>Prefecture: 鹿児島県
 City: 指宿
 Address: 鹿児島県指宿市湯の浜5丁目25-18
-Tags: seaside
+Place Detail: 正面階段下にお引越ししました。
+Building: 砂むし会館砂楽
+Tags: seaside, tourism
 Detail: https://local.pokemon.jp/manhole/desc/4/?is_modal=1
 Last Updated: 2026-05-11T11:00:11Z
 Status: active</description>
@@ -57,6 +65,8 @@ Status: active</description>
       <description>Prefecture: 鹿児島県
 City: 指宿
 Address: 鹿児島県指宿市湊2丁目5-33
+Building: セントラルパーク指宿
+Tags: park, tourism
 Detail: https://local.pokemon.jp/manhole/desc/5/?is_modal=1
 Last Updated: 2026-05-11T11:00:12Z
 Status: active</description>
@@ -69,7 +79,8 @@ Status: active</description>
       <description>Prefecture: 鹿児島県
 City: 指宿
 Address: 鹿児島県指宿市十二町指宿駅
-Tags: station_front
+Building: 指宿駅裏
+Tags: station_front, tourism
 Detail: https://local.pokemon.jp/manhole/desc/6/?is_modal=1
 Last Updated: 2026-05-11T11:00:12Z
 Status: active</description>
@@ -82,7 +93,9 @@ Status: active</description>
       <description>Prefecture: 鹿児島県
 City: 指宿
 Address: 鹿児島県指宿市東方11915-5
-Tags: seaside
+Place Detail: 知林ヶ島付近
+Building: 指宿エコキャンプ場
+Tags: seaside, tourism
 Detail: https://local.pokemon.jp/manhole/desc/7/?is_modal=1
 Last Updated: 2026-05-11T11:00:13Z
 Status: active</description>
@@ -95,6 +108,7 @@ Status: active</description>
       <description>Prefecture: 鹿児島県
 City: 指宿
 Address: 鹿児島県指宿市十二町2290
+Building: 時遊館COCCOはしむれ
 Detail: https://local.pokemon.jp/manhole/desc/8/?is_modal=1
 Last Updated: 2026-05-11T11:00:14Z
 Status: active</description>
@@ -107,6 +121,8 @@ Status: active</description>
       <description>Prefecture: 鹿児島県
 City: 指宿
 Address: 鹿児島県指宿市十二町2190
+Building: 指宿市 指宿図書館
+Tags: park, near_station
 Detail: https://local.pokemon.jp/manhole/desc/9/?is_modal=1
 Last Updated: 2026-05-11T11:00:14Z
 Status: active</description>
@@ -132,6 +148,7 @@ Status: active</description>
       <description>Prefecture: 岩手県
 City: 久慈
 Address: 岩手県久慈市中町2-5-6
+Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/11/?is_modal=1
 Last Updated: 2026-05-24T10:30:06Z
 Status: active</description>
@@ -4760,6 +4777,7 @@ Status: active</description>
       <description>Prefecture: 福島県
 City: 国見
 Address: 福島県国見町大字藤田字日渡二18
+Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/373/?is_modal=1
 Last Updated: 2026-05-24T10:34:50Z
 Status: active</description>
@@ -5133,6 +5151,7 @@ Status: active</description>
       <description>Prefecture: 山形県
 City: 小国
 Address: 山形県小国町小国小坂町616
+Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/402/?is_modal=1
 Last Updated: 2026-05-11T11:04:14Z
 Status: active</description>
@@ -5347,7 +5366,7 @@ Status: active</description>
       <description>Prefecture: 福井県
 City: おおい
 Address: 福井県おおい町成海1-1-1
-Tags: seaside
+Tags: seaside, roadside
 Detail: https://local.pokemon.jp/manhole/desc/418/?is_modal=1
 Last Updated: 2026-05-24T10:35:27Z
 Status: active</description>
@@ -5360,6 +5379,7 @@ Status: active</description>
       <description>Prefecture: 福井県
 City: 鯖江
 Address: 福井県鯖江市桜町3丁目8-1
+Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/419/?is_modal=1
 Last Updated: 2026-05-24T10:35:27Z
 Status: active</description>
@@ -5500,11 +5520,11 @@ Status: active</description>
       <name>長崎県/東彼杵町 (ジュペッタ, デンリュウ, ワタッコ)</name>
       <description>Prefecture: 長崎県
 City: 東彼杵
-Address: 長崎県東彼杵町彼杵宿郷747-2
+Address: 長崎県東彼杵町彼杵宿郷４７２
 Building: 道の駅彼杵の荘
 Tags: roadside, seaside
 Detail: https://local.pokemon.jp/manhole/desc/430/?is_modal=1
-Last Updated: 2026-05-24T10:35:35Z
+Last Updated: 2026-06-11T11:33:13Z
 Status: active</description>
       <Point>
         <coordinates>129.9194868,33.0357304,0</coordinates>
@@ -6033,7 +6053,7 @@ Status: active</description>
       <description>Prefecture: 石川県
 City: 志賀
 Address: 石川県志賀町富来領家町
-Tags: seaside
+Tags: seaside, roadside
 Detail: https://local.pokemon.jp/manhole/desc/471/?is_modal=1
 Last Updated: 2026-05-11T11:04:56Z
 Status: active</description>
