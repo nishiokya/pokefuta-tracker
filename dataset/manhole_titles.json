@@ -602,11 +602,6 @@
         "seaside"
       ]
     },
-    "11": {
-      "tags": [
-        "roadside"
-      ]
-    },
     "12": {
       "tags": [
         "seaside"
@@ -1783,7 +1778,9 @@
     "301": {
       "tags": [
         "museum",
-        "park"
+        "park",
+        "tourism",
+        "rail_access_good"
       ]
     },
     "302": {
@@ -2141,11 +2138,6 @@
         "roadside"
       ]
     },
-    "373": {
-      "tags": [
-        "roadside"
-      ]
-    },
     "377": {
       "building": "道の駅ゆうひパーク浜田",
       "tags": [
@@ -2284,11 +2276,6 @@
         "seaside"
       ]
     },
-    "402": {
-      "tags": [
-        "roadside"
-      ]
-    },
     "403": {
       "tags": [
         "seaside"
@@ -2399,13 +2386,7 @@
     },
     "418": {
       "tags": [
-        "seaside",
-        "roadside"
-      ]
-    },
-    "419": {
-      "tags": [
-        "roadside"
+        "seaside"
       ]
     },
     "422": {
@@ -2605,29 +2586,43 @@
       ]
     },
     "468": {
+      "building": "和倉温泉湯っ足りパーク",
       "tags": [
-        "seaside"
+        "seaside",
+        "park",
+        "rail_access_good"
       ]
     },
     "469": {
+      "building": "輪島市文化会館",
       "tags": [
-        "roadside"
+        "roadside",
+        "tourism",
+        "food"
       ]
     },
     "470": {
+      "building": "見附公園",
       "tags": [
-        "seaside"
+        "seaside",
+        "park"
       ]
     },
     "471": {
+      "building": "道の駅とぎ海街道",
       "tags": [
         "seaside",
-        "roadside"
+        "roadside",
+        "tourism"
       ]
     },
     "472": {
+      "building": "穴水駅",
       "tags": [
-        "roadside"
+        "roadside",
+        "station_front",
+        "tourism",
+        "food"
       ]
     },
     "474": {
