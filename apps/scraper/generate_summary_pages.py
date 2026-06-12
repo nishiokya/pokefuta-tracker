@@ -2866,7 +2866,10 @@ def main() -> None:
     print(f"[INFO] {len(pokemon_stats['by_count'])} pokemon with slugs, {len(photos_data.get('photos', {}))} photos")
 
     pref_trivia_path = ROOT / "dataset" / "prefecture_trivia.json"
-    pref_trivia_data: list[dict] = json.loads(pref_trivia_path.read_text(encoding="utf-8")) if pref_trivia_path.exists() else []
+    try:
+        pref_trivia_data: list[dict] = json.loads(pref_trivia_path.read_text(encoding="utf-8")) if pref_trivia_path.exists() else []
+    except (json.JSONDecodeError, OSError):
+        pref_trivia_data = []
     print(f"[INFO] {len(pref_trivia_data)} prefecture trivia entries")
 
     for lang, s in SUMMARY_STRINGS.items():

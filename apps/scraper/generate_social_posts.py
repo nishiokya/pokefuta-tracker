@@ -699,7 +699,10 @@ def main() -> int:
     michineki = load_michineki(MICHINEKI_JSON)
 
     pref_trivia_path = ROOT / "dataset" / "prefecture_trivia.json"
-    pref_trivia_data: list[dict] = json.loads(pref_trivia_path.read_text(encoding="utf-8")) if pref_trivia_path.exists() else []
+    try:
+        pref_trivia_data: list[dict] = json.loads(pref_trivia_path.read_text(encoding="utf-8")) if pref_trivia_path.exists() else []
+    except (json.JSONDecodeError, OSError):
+        pref_trivia_data = []
 
     stats = build_stats(active_records)
     pokemon_stats = build_pokemon_stats(active_records, pokemon_metadata)
