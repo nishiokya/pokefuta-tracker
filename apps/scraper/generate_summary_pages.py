@@ -770,6 +770,103 @@ _CSS = """\
       font-weight: 750;
     }
 
+    .pref-trivia-section h2 {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    .pref-trivia-grid {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+
+    .pref-trivia-card {
+      background: #fffdf7;
+      border-radius: 8px;
+      padding: 1rem;
+      border: 1px solid rgba(93, 67, 35, .14);
+    }
+
+    .trivia-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: .5rem;
+    }
+
+    .trivia-pref {
+      font-size: .85rem;
+      color: #5a4f47;
+    }
+
+    .trivia-pokemon {
+      font-weight: bold;
+      font-size: 1rem;
+      color: #176f68;
+    }
+
+    .pref-trivia-card p {
+      font-size: .9rem;
+      margin: 0 0 .5rem;
+      color: #3a3330;
+    }
+
+    .trivia-status {
+      display: inline-block;
+      font-size: .72rem;
+      font-weight: bold;
+      padding: 2px 7px;
+      border-radius: 99px;
+      margin-bottom: .5rem;
+    }
+
+    .trivia-status--ongoing {
+      background: #e8f4f3;
+      color: #176f68;
+    }
+
+    .trivia-status--complete {
+      background: #fff3cd;
+      color: #7a5a00;
+    }
+
+    .trivia-images {
+      list-style: none;
+      padding: 0;
+      margin: .75rem 0 0;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+    }
+
+    .trivia-images a {
+      display: block;
+    }
+
+    .trivia-images img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: contain;
+      background: #f7f0df;
+      border-radius: 6px;
+      border: 1px solid rgba(93, 67, 35, .12);
+    }
+
+    .trivia-links {
+      list-style: none;
+      padding: 0;
+      margin: .5rem 0 0;
+      font-size: .8rem;
+    }
+
+    .trivia-links a {
+      color: #176f68;
+    }
+
     .regional-trend-box {
       padding: 14px 16px;
       border: 1px solid rgba(93, 67, 35, .14);
@@ -1023,6 +1120,76 @@ def _build_ai_summary(s: dict, stats: dict, tr) -> str:
         text += s["ai_empty"].format(empty_count=len(empty))
     text += s["ai_outro"]
     return f'<div class="ai-summary-box"><p>{escape(text)}</p></div>\n'
+
+
+def _build_pref_trivia_section(s: dict, trivia_data: list[dict], tr) -> str:
+    if s.get("pref_key") != "ja" or not trivia_data:
+        return ""
+    heading = "都道府県の応援ポケモン"
+    status_labels = {"ongoing": "進行中", "complete": "コンプ"}
+    status_classes = {"ongoing": "trivia-status--ongoing", "complete": "trivia-status--complete"}
+    items = []
+    for entry in trivia_data:
+        pref = escape(entry["prefecture"])
+        pokemon = escape(entry["pokemon"])
+        summary_text = escape(entry["summary"])
+
+        status = entry.get("status", "ongoing")
+        status_label = status_labels.get(status, "進行中")
+        status_cls = status_classes.get(status, "trivia-status--ongoing")
+        status_html = f'<span class="trivia-status {escape(status_cls)}">{escape(status_label)}</span>'
+
+        images_html = ""
+        manhole_ids = entry.get("manhole_ids") or []
+        if status == "complete" and manhole_ids:
+            img_links = []
+            links_by_id = {
+                int(lk["href"].rstrip("/").rsplit("/", 1)[-1]): lk
+                for lk in entry.get("links", [])
+                if lk.get("href", "").startswith("/manholes/")
+            }
+            for mid in manhole_ids:
+                local_image = IMAGE_DIR / f"{mid}_latest.jpeg"
+                if not local_image.exists():
+                    continue
+                img_url = f"{BASE_URL}/manhole/image/{mid}_latest.jpeg"
+                href = f"/manholes/{mid}/"
+                alt = escape(links_by_id.get(mid, {}).get("text", str(mid)))
+                img_links.append(
+                    f'<li><a href="{escape(href)}">'
+                    f'<img src="{escape(img_url)}" alt="{alt}" loading="lazy" decoding="async">'
+                    f'</a></li>'
+                )
+            if img_links:
+                images_html = '<ul class="trivia-images">' + "".join(img_links) + "</ul>"
+
+        links_html = ""
+        if entry.get("links"):
+            links_html = '<ul class="trivia-links">' + "".join(
+                f'<li><a href="{escape(lk["href"])}">{escape(lk["text"])}</a></li>'
+                for lk in entry["links"]
+            ) + "</ul>"
+
+        items.append(
+            f'<li class="pref-trivia-card">'
+            f'<div class="trivia-header">'
+            f'<span class="trivia-pref">{pref}</span>'
+            f'<span class="trivia-pokemon">{pokemon}</span>'
+            f'</div>'
+            f'{status_html}'
+            f'<p>{summary_text}</p>'
+            f'{images_html}'
+            f'{links_html}'
+            f'</li>'
+        )
+    items_html = "\n        ".join(items)
+    return (
+        f'\n    <section class="summary-section pref-trivia-section" '
+        f'aria-label="{escape(heading)}">'
+        f'\n      <h2>{escape(heading)}</h2>'
+        f'\n      <ul class="pref-trivia-grid">\n        {items_html}\n      </ul>'
+        f'\n    </section>\n'
+    )
 
 
 def _build_discovery_section(s: dict, stats: dict, tr) -> str:
@@ -2501,7 +2668,7 @@ def _build_pokemon_ranking_section(s: dict, pokemon_stats: dict) -> str:
     )
 
 
-def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, records_by_id: dict, photos_data: dict) -> str:
+def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, records_by_id: dict, photos_data: dict, pref_trivia_data: list[dict] | None = None) -> str:
     pref_key = s["pref_key"]
 
     def tr(ja_name: str) -> str:
@@ -2519,6 +2686,7 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
     ai_html = _build_ai_summary(s, stats, tr)
     discovery_html = _build_discovery_section(s, stats, tr)
     daily_fact_html, fact_list_html = _build_fact_sections(s, stats, tr)
+    pref_trivia_html = _build_pref_trivia_section(s, pref_trivia_data or [], tr)
     regional_html = _build_regional_section(s, stats)
     tracking_script = _build_tracking_script(s)
     search_hub_html = _build_search_hub_section(s)
@@ -2615,6 +2783,7 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
     {latest_photos_html}
     {no_photos_html}
     {fact_list_html}
+    {pref_trivia_html}
     {discovery_html}
     <section class="summary-section" aria-labelledby="prefecture-count-heading">
       <h2 id="prefecture-count-heading">{escape(s['h2_pref_count'])}</h2>
@@ -2681,8 +2850,12 @@ def main() -> None:
     records_by_id = {str(r.get("id", "")): r for r in records}
     print(f"[INFO] {len(pokemon_stats['by_count'])} pokemon with slugs, {len(photos_data.get('photos', {}))} photos")
 
+    pref_trivia_path = ROOT / "dataset" / "prefecture_trivia.json"
+    pref_trivia_data: list[dict] = json.loads(pref_trivia_path.read_text(encoding="utf-8")) if pref_trivia_path.exists() else []
+    print(f"[INFO] {len(pref_trivia_data)} prefecture trivia entries")
+
     for lang, s in SUMMARY_STRINGS.items():
-        html = render_page(s, stats, pref_names, pokemon_stats, records_by_id, photos_data)
+        html = render_page(s, stats, pref_names, pokemon_stats, records_by_id, photos_data, pref_trivia_data)
         out = DIST / s["out_path"]
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(html, encoding="utf-8")

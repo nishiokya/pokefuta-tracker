@@ -1,0 +1,103 @@
+[
+  {
+    "id": "hokkaido-vulpix",
+    "prefecture": "北海道",
+    "pokemon": "ロコン",
+    "alt_pokemon": "アローラロコン",
+    "title": "北海道の応援ポケモンはロコン",
+    "summary": "雪国・北海道のイメージにぴったりのロコン。アローラロコンも設置されており、北の大地で2種類に出会えます。",
+    "status": "ongoing",
+    "source_url": "https://local.pokemon.jp/",
+    "map_pref": "北海道",
+    "manhole_ids": [],
+    "links": []
+  },
+  {
+    "id": "iwate-geodude",
+    "prefecture": "岩手県",
+    "pokemon": "イシツブテ",
+    "title": "岩手県の応援ポケモンはイシツブテ",
+    "summary": "「岩手」という地名とイシツブテの語呂合わせが縁。県内各地に設置されています。",
+    "status": "ongoing",
+    "source_url": "https://local.pokemon.jp/",
+    "map_pref": "岩手県",
+    "manhole_ids": [],
+    "links": []
+  },
+  {
+    "id": "miyagi-lapras",
+    "prefecture": "宮城県",
+    "pokemon": "ラプラス",
+    "title": "宮城県の応援ポケモンはラプラス",
+    "summary": "松島の海をイメージしたラプラス。宮城の豊かな海辺の風景と重なります。",
+    "status": "ongoing",
+    "source_url": "https://local.pokemon.jp/",
+    "map_pref": "宮城県",
+    "manhole_ids": [],
+    "links": []
+  },
+  {
+    "id": "fukushima-chansey",
+    "prefecture": "福島県",
+    "pokemon": "ラッキー",
+    "title": "福島県の応援ポケモンはラッキー",
+    "summary": "「福」の字が縁で選ばれたラッキー。幸運を運ぶイメージが福島県とぴったりで、県内に多く設置されています。",
+    "status": "ongoing",
+    "source_url": "https://local.pokemon.jp/",
+    "map_pref": "福島県",
+    "manhole_ids": [],
+    "links": []
+  },
+  {
+    "id": "kagawa-slowpoke",
+    "prefecture": "香川県",
+    "pokemon": "ヤドン",
+    "title": "香川県の応援ポケモンはヤドン",
+    "summary": "香川県は2021年に公式で「ヤドン県」を一時採用した実績あり。冗談ではなく公式です。その縁で県内各地にヤドンのポケふたが設置されています。",
+    "status": "ongoing",
+    "source_url": "https://local.pokemon.jp/",
+    "map_pref": "香川県",
+    "manhole_ids": [],
+    "links": []
+  },
+  {
+    "id": "mie-oshawott",
+    "prefecture": "三重県",
+    "pokemon": "ミジュマル",
+    "title": "三重県の応援ポケモンはミジュマル",
+    "summary": "「みえ」と「みず」のイメージが重なるミジュマル。伊勢志摩の海の雰囲気とも相性が良く、県内各地に設置されています。",
+    "status": "ongoing",
+    "source_url": "https://local.pokemon.jp/",
+    "map_pref": "三重県",
+    "manhole_ids": [],
+    "links": []
+  },
+  {
+    "id": "miyazaki-exeggutor",
+    "prefecture": "宮崎県",
+    "pokemon": "ナッシー",
+    "title": "宮崎県の応援ポケモンはナッシー",
+    "summary": "温暖な南国・宮崎の雰囲気にぴったりのナッシー。県木のフェニックス（ヤシ科）とも相性抜群で、南国感あふれる設置地点が多いです。",
+    "status": "ongoing",
+    "source_url": "https://local.pokemon.jp/",
+    "map_pref": "宮崎県",
+    "manhole_ids": [],
+    "links": []
+  },
+  {
+    "id": "saga-meowth",
+    "prefecture": "佐賀県",
+    "pokemon": "ニャース",
+    "title": "佐賀市のポケふたはなぜニャース？ 気球の街との関係",
+    "summary": "佐賀市には通常・アローラ・ガラルニャースの3枚があります。3枚すべてに気球デザインがあり、「気球のまち佐賀」との縁を感じさせます。",
+    "status": "complete",
+    "source_url": "https://local.pokemon.jp/",
+    "map_pref": "佐賀県",
+    "manhole_ids": [255, 256, 257],
+    "links": [
+      {"text": "ニャース（佐賀市）", "href": "/manholes/255/"},
+      {"text": "アローラニャース（佐賀市）", "href": "/manholes/256/"},
+      {"text": "ガラルニャース（佐賀市）", "href": "/manholes/257/"}
+    ]
+  }
+]

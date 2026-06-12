@@ -566,6 +566,30 @@ def gen_travel_trivia_candidates(stats: dict, pokemon_stats: dict) -> list[dict]
     return candidates
 
 
+def gen_pref_trivia_candidates(trivia_data: list[dict]) -> list[dict]:
+    candidates = []
+    for entry in trivia_data:
+        candidates.append({
+            "id": f"pref-trivia-{entry['id']}",
+            "type": "pref_trivia",
+            "title": entry["title"],
+            "url": f"{BASE_URL}summary/",
+            "hashtags": ["#ポケふた", "#ポケモンマンホール"],
+            "imageType": "summary_trivia",
+            "source": "pref_trivia",
+            "raw_data": {
+                "fact_type": "pref_trivia",
+                "values": {
+                    "prefecture": entry["prefecture"],
+                    "pokemon": entry["pokemon"],
+                    "summary": entry["summary"],
+                    "map_pref": entry.get("map_pref", entry["prefecture"]),
+                },
+            },
+        })
+    return candidates
+
+
 def gen_michineki_candidates(records: list[dict], michineki: list[dict]) -> list[dict]:
     active = [r for r in records if r.get("status") == "active" and r.get("lat") and r.get("lng")]
     candidates = []
@@ -674,6 +698,9 @@ def main() -> int:
     photos_data = load_photos(PHOTOS_JSON)
     michineki = load_michineki(MICHINEKI_JSON)
 
+    pref_trivia_path = ROOT / "dataset" / "prefecture_trivia.json"
+    pref_trivia_data: list[dict] = json.loads(pref_trivia_path.read_text(encoding="utf-8")) if pref_trivia_path.exists() else []
+
     stats = build_stats(active_records)
     pokemon_stats = build_pokemon_stats(active_records, pokemon_metadata)
 
@@ -686,6 +713,7 @@ def main() -> int:
     candidates.extend(gen_travel_trivia_candidates(stats, pokemon_stats))
     candidates.extend(gen_michineki_candidates(active_records, michineki))
     candidates.extend(gen_remote_island_candidates(active_records))
+    candidates.extend(gen_pref_trivia_candidates(pref_trivia_data))
 
     CANDIDATES_JSON.write_text(
         json.dumps(candidates, ensure_ascii=False, indent=2), encoding="utf-8"

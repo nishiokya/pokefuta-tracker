@@ -4325,5 +4325,173 @@
         "デンリュウ"
       ]
     }
+  },
+  {
+    "id": "pref-trivia-hokkaido-vulpix",
+    "type": "pref_trivia",
+    "title": "北海道の応援ポケモンはロコン",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "pref_trivia",
+      "values": {
+        "prefecture": "北海道",
+        "pokemon": "ロコン",
+        "summary": "雪国・北海道のイメージにぴったりのロコン。アローラロコンも設置されており、北の大地で2種類に出会えます。",
+        "map_pref": "北海道"
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-iwate-geodude",
+    "type": "pref_trivia",
+    "title": "岩手県の応援ポケモンはイシツブテ",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "pref_trivia",
+      "values": {
+        "prefecture": "岩手県",
+        "pokemon": "イシツブテ",
+        "summary": "「岩手」という地名とイシツブテの語呂合わせが縁。県内各地に設置されています。",
+        "map_pref": "岩手県"
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-miyagi-lapras",
+    "type": "pref_trivia",
+    "title": "宮城県の応援ポケモンはラプラス",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "pref_trivia",
+      "values": {
+        "prefecture": "宮城県",
+        "pokemon": "ラプラス",
+        "summary": "松島の海をイメージしたラプラス。宮城の豊かな海辺の風景と重なります。",
+        "map_pref": "宮城県"
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-fukushima-chansey",
+    "type": "pref_trivia",
+    "title": "福島県の応援ポケモンはラッキー",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "pref_trivia",
+      "values": {
+        "prefecture": "福島県",
+        "pokemon": "ラッキー",
+        "summary": "「福」の字が縁で選ばれたラッキー。幸運を運ぶイメージが福島県とぴったりで、県内に多く設置されています。",
+        "map_pref": "福島県"
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-kagawa-slowpoke",
+    "type": "pref_trivia",
+    "title": "香川県の応援ポケモンはヤドン",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "pref_trivia",
+      "values": {
+        "prefecture": "香川県",
+        "pokemon": "ヤドン",
+        "summary": "香川県は2021年に公式で「ヤドン県」を一時採用した実績あり。冗談ではなく公式です。その縁で県内各地にヤドンのポケふたが設置されています。",
+        "map_pref": "香川県"
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-mie-oshawott",
+    "type": "pref_trivia",
+    "title": "三重県の応援ポケモンはミジュマル",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "pref_trivia",
+      "values": {
+        "prefecture": "三重県",
+        "pokemon": "ミジュマル",
+        "summary": "「みえ」と「みず」のイメージが重なるミジュマル。伊勢志摩の海の雰囲気とも相性が良く、県内各地に設置されています。",
+        "map_pref": "三重県"
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-miyazaki-exeggutor",
+    "type": "pref_trivia",
+    "title": "宮崎県の応援ポケモンはナッシー",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "pref_trivia",
+      "values": {
+        "prefecture": "宮崎県",
+        "pokemon": "ナッシー",
+        "summary": "温暖な南国・宮崎の雰囲気にぴったりのナッシー。県木のフェニックス（ヤシ科）とも相性抜群で、南国感あふれる設置地点が多いです。",
+        "map_pref": "宮崎県"
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-saga-meowth",
+    "type": "pref_trivia",
+    "title": "佐賀市のポケふたはなぜニャース？ 気球の街との関係",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "pref_trivia",
+      "values": {
+        "prefecture": "佐賀県",
+        "pokemon": "ニャース",
+        "summary": "佐賀市には通常・アローラ・ガラルニャースの3枚があります。3枚すべてに気球デザインがあり、「気球のまち佐賀」との縁を感じさせます。",
+        "map_pref": "佐賀県"
+      }
+    }
   }
 ]
