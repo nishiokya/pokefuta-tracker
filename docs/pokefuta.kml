@@ -3838,7 +3838,7 @@ Status: active</description>
       <description>Prefecture: 石川県
 City: 金沢
 Address: 石川県金沢市出羽町3-2
-Tags: museum, park
+Tags: museum, park, tourism, rail_access_good
 Detail: https://local.pokemon.jp/manhole/desc/301/?is_modal=1
 Last Updated: 2026-05-19T13:39:12Z
 Status: active</description>
@@ -5366,7 +5366,7 @@ Status: active</description>
       <description>Prefecture: 福井県
 City: おおい
 Address: 福井県おおい町成海1-1-1
-Tags: seaside, roadside
+Tags: seaside
 Detail: https://local.pokemon.jp/manhole/desc/418/?is_modal=1
 Last Updated: 2026-05-24T10:35:27Z
 Status: active</description>
@@ -6014,7 +6014,8 @@ Status: active</description>
       <description>Prefecture: 石川県
 City: 七尾
 Address: 石川県七尾市和倉町
-Tags: seaside
+Building: 和倉温泉湯っ足りパーク
+Tags: seaside, park, rail_access_good
 Detail: https://local.pokemon.jp/manhole/desc/468/?is_modal=1
 Last Updated: 2026-05-19T13:41:06Z
 Status: active</description>
@@ -6027,7 +6028,8 @@ Status: active</description>
       <description>Prefecture: 石川県
 City: 輪島
 Address: 石川県輪島市河井町20-1-131
-Tags: roadside
+Building: 輪島市文化会館
+Tags: roadside, tourism, food
 Detail: https://local.pokemon.jp/manhole/desc/469/?is_modal=1
 Last Updated: 2026-05-11T11:04:55Z
 Status: active</description>
@@ -6040,7 +6042,8 @@ Status: active</description>
       <description>Prefecture: 石川県
 City: 珠洲
 Address: 石川県珠洲市宝立町鵜島二47-1
-Tags: seaside
+Building: 見附公園
+Tags: seaside, park
 Detail: https://local.pokemon.jp/manhole/desc/470/?is_modal=1
 Last Updated: 2026-05-19T13:41:07Z
 Status: active</description>
@@ -6053,7 +6056,8 @@ Status: active</description>
       <description>Prefecture: 石川県
 City: 志賀
 Address: 石川県志賀町富来領家町
-Tags: seaside, roadside
+Building: 道の駅とぎ海街道
+Tags: seaside, roadside, tourism
 Detail: https://local.pokemon.jp/manhole/desc/471/?is_modal=1
 Last Updated: 2026-05-11T11:04:56Z
 Status: active</description>
@@ -6066,7 +6070,8 @@ Status: active</description>
       <description>Prefecture: 石川県
 City: 穴水
 Address: 石川県穴水町字大町
-Tags: roadside
+Building: 穴水駅
+Tags: roadside, station_front, tourism, food
 Detail: https://local.pokemon.jp/manhole/desc/472/?is_modal=1
 Last Updated: 2026-05-11T11:04:57Z
 Status: active</description>
