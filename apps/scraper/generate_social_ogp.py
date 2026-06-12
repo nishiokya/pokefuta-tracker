@@ -1202,10 +1202,28 @@ def _render_latest_photo_template(v: dict) -> str:
     return svg
 
 
+def _vars_pref_trivia(raw: dict) -> dict:
+    v = raw["values"]
+    pref = v.get("prefecture", "")
+    pokemon = v.get("pokemon", "")
+    return {
+        "categoryLabel": "TRIVIA",
+        "titleLine1": f"{pref}の",
+        "titleLine2": "応援ポケモン",
+        "kicker": "都道府県キャラクター",
+        "mainNumber": pokemon,
+        "mainUnit": "",
+        "chips": [],
+        "description": v.get("summary", f"{pref}のポケモンマンホール"),
+        "mapCaption": f"{pref}のポケふた",
+    }
+
+
 _DESIGN_THEME: dict[str, str] = {
     "prefecture_rank": "ranking",
     "pokemon_rank":    "ranking",
     "travel_trivia":   "trivia",
+    "pref_trivia":     "trivia",
     "rare_area":       "rare",
     "no_photo":        "rare",
     "latest_photo":    "latest_photo",
@@ -1217,6 +1235,7 @@ _DESIGN_VAR_BUILDERS = {
     "prefecture_rank": _vars_prefecture_rank,
     "pokemon_rank":    _vars_pokemon_rank,
     "travel_trivia":   _vars_travel_trivia,
+    "pref_trivia":     _vars_pref_trivia,
     "rare_area":       _vars_rare_area,
     "no_photo":        _vars_no_photo,
     "latest_photo":    _vars_latest_photo,

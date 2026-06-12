@@ -4325,5 +4325,257 @@
         "デンリュウ"
       ]
     }
+  },
+  {
+    "id": "pref-trivia-hokkaido-vulpix",
+    "type": "pref_trivia",
+    "title": "北海道の応援ポケモンはロコン",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "pref_trivia",
+      "values": {
+        "prefecture": "北海道",
+        "pokemon": "ロコン",
+        "summary": "雪国・北海道のイメージにぴったりのロコン。アローラロコンも設置されており、北の大地で2種類に出会えます。",
+        "map_pref": "北海道"
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-iwate-geodude",
+    "type": "pref_trivia",
+    "title": "岩手県の応援ポケモンはイシツブテ",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "pref_trivia",
+      "values": {
+        "prefecture": "岩手県",
+        "pokemon": "イシツブテ",
+        "summary": "「岩手」という地名とイシツブテの語呂合わせが縁。県内各地に設置されています。",
+        "map_pref": "岩手県"
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-miyagi-lapras",
+    "type": "pref_trivia",
+    "title": "宮城県の応援ポケモンはラプラス",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "pref_trivia",
+      "values": {
+        "prefecture": "宮城県",
+        "pokemon": "ラプラス",
+        "summary": "松島の海をイメージしたラプラス。宮城の豊かな海辺の風景と重なります。",
+        "map_pref": "宮城県"
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-fukushima-chansey",
+    "type": "pref_trivia",
+    "title": "福島県の応援ポケモンはラッキー",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "pref_trivia",
+      "values": {
+        "prefecture": "福島県",
+        "pokemon": "ラッキー",
+        "summary": "「福」の字が縁で選ばれたラッキー。幸運を運ぶイメージが福島県とぴったりで、県内に多く設置されています。",
+        "map_pref": "福島県"
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-tottori-sandshrew",
+    "type": "pref_trivia",
+    "title": "鳥取県の応援ポケモンはサンド",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "pref_trivia",
+      "values": {
+        "prefecture": "鳥取県",
+        "pokemon": "サンド",
+        "summary": "「砂丘のまち」鳥取ならではの選択。通常のすがたとアローラのすがたの2種が設置されており、鳥取砂丘との縁は一目瞭然です。",
+        "map_pref": "鳥取県"
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-fukui-dragonite",
+    "type": "pref_trivia",
+    "title": "福井県の応援ポケモンはカイリュー",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "pref_trivia",
+      "values": {
+        "prefecture": "福井県",
+        "pokemon": "カイリュー",
+        "summary": "九頭竜川をはじめ「竜」の地名が多い福井。カイリューは県内17枚すべてに登場するほど定着しています。",
+        "map_pref": "福井県"
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-kagawa-slowpoke",
+    "type": "pref_trivia",
+    "title": "香川県の応援ポケモンはヤドン",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "pref_trivia",
+      "values": {
+        "prefecture": "香川県",
+        "pokemon": "ヤドン",
+        "summary": "香川県は2021年に公式で「ヤドン県」を一時採用した実績あり。冗談ではなく公式です。その縁で県内各地にヤドンのポケふたが設置されています。",
+        "map_pref": "香川県"
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-kochi-quagsire",
+    "type": "pref_trivia",
+    "title": "高知県の応援ポケモンはヌオー",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "pref_trivia",
+      "values": {
+        "prefecture": "高知県",
+        "pokemon": "ヌオー",
+        "summary": "日本最後の清流・四万十川をイメージしたヌオー。水辺をのんびり過ごすイメージが高知の川文化と重なります。県内18枚すべてにヌオーが登場します。",
+        "map_pref": "高知県"
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-mie-oshawott",
+    "type": "pref_trivia",
+    "title": "三重県の応援ポケモンはミジュマル",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "pref_trivia",
+      "values": {
+        "prefecture": "三重県",
+        "pokemon": "ミジュマル",
+        "summary": "「みえ」と「みず」のイメージが重なるミジュマル。伊勢志摩の海の雰囲気とも相性が良く、県内各地に設置されています。",
+        "map_pref": "三重県"
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-nagasaki-ampharos",
+    "type": "pref_trivia",
+    "title": "長崎県の応援ポケモンはデンリュウ",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "pref_trivia",
+      "values": {
+        "prefecture": "長崎県",
+        "pokemon": "デンリュウ",
+        "summary": "「灯台のポケモン」デンリュウが選ばれた長崎。港町・長崎の灯台文化と重なり、県内10枚すべてにデンリュウが登場します。",
+        "map_pref": "長崎県"
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-miyazaki-exeggutor",
+    "type": "pref_trivia",
+    "title": "宮崎県の応援ポケモンはナッシー",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "pref_trivia",
+      "values": {
+        "prefecture": "宮崎県",
+        "pokemon": "ナッシー",
+        "summary": "温暖な南国・宮崎の雰囲気にぴったりのナッシー。県木のフェニックス（ヤシ科）とも相性抜群で、南国感あふれる設置地点が多いです。",
+        "map_pref": "宮崎県"
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-okinawa-growlithe",
+    "type": "pref_trivia",
+    "title": "沖縄県の応援ポケモンはガーディ",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "pref_trivia",
+      "values": {
+        "prefecture": "沖縄県",
+        "pokemon": "ガーディ",
+        "summary": "沖縄の守り神・シーサーを思わせるガーディ。魔除けの獅子犬と炎のポケモンのイメージが重なり、県内各地に設置されています。",
+        "map_pref": "沖縄県"
+      }
+    }
   }
 ]
