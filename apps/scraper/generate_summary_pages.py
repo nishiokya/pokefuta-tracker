@@ -809,6 +809,12 @@ _CSS = """\
       color: #176f68;
     }
 
+    .trivia-count {
+      font-size: .8rem;
+      color: #5a4f47;
+      margin-left: .35rem;
+    }
+
     .pref-trivia-card p {
       font-size: .9rem;
       margin: 0 0 .5rem;
@@ -1140,6 +1146,8 @@ def _build_pref_trivia_section(s: dict, trivia_data: list[dict], tr) -> str:
         pref = escape(entry["prefecture"])
         pokemon = escape(entry["pokemon"])
         summary_text = escape(entry["summary"])
+        count = entry.get("count")
+        count_html = f'<span class="trivia-count">{count}枚</span>' if count else ""
 
         status = entry.get("status", "ongoing")
         source_url = entry.get("source_url", "")
@@ -1190,6 +1198,7 @@ def _build_pref_trivia_section(s: dict, trivia_data: list[dict], tr) -> str:
             f'<div class="trivia-header">'
             f'<span class="trivia-pref">{pref}</span>'
             f'<span class="trivia-pokemon">{pokemon}</span>'
+            f'{count_html}'
             f'</div>'
             f'{status_html}'
             f'<p>{summary_text}</p>'
