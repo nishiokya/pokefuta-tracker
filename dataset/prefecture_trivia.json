@@ -49,6 +49,31 @@
     "links": []
   },
   {
+    "id": "tottori-sandshrew",
+    "prefecture": "鳥取県",
+    "pokemon": "サンド",
+    "alt_pokemon": "アローラのすがた",
+    "title": "鳥取県の応援ポケモンはサンド",
+    "summary": "「砂丘のまち」鳥取ならではの選択。通常のすがたとアローラのすがたの2種が設置されており、鳥取砂丘との縁は一目瞭然です。",
+    "status": "ongoing",
+    "source_url": "https://local.pokemon.jp/",
+    "map_pref": "鳥取県",
+    "manhole_ids": [],
+    "links": []
+  },
+  {
+    "id": "fukui-dragonite",
+    "prefecture": "福井県",
+    "pokemon": "カイリュー",
+    "title": "福井県の応援ポケモンはカイリュー",
+    "summary": "九頭竜川をはじめ「竜」の地名が多い福井。カイリューは県内17枚すべてに登場するほど定着しています。",
+    "status": "ongoing",
+    "source_url": "https://local.pokemon.jp/",
+    "map_pref": "福井県",
+    "manhole_ids": [],
+    "links": []
+  },
+  {
     "id": "kagawa-slowpoke",
     "prefecture": "香川県",
     "pokemon": "ヤドン",
@@ -57,6 +82,18 @@
     "status": "ongoing",
     "source_url": "https://local.pokemon.jp/",
     "map_pref": "香川県",
+    "manhole_ids": [],
+    "links": []
+  },
+  {
+    "id": "kochi-quagsire",
+    "prefecture": "高知県",
+    "pokemon": "ヌオー",
+    "title": "高知県の応援ポケモンはヌオー",
+    "summary": "日本最後の清流・四万十川をイメージしたヌオー。水辺をのんびり過ごすイメージが高知の川文化と重なります。県内18枚すべてにヌオーが登場します。",
+    "status": "ongoing",
+    "source_url": "https://local.pokemon.jp/",
+    "map_pref": "高知県",
     "manhole_ids": [],
     "links": []
   },
@@ -73,6 +110,18 @@
     "links": []
   },
   {
+    "id": "nagasaki-ampharos",
+    "prefecture": "長崎県",
+    "pokemon": "デンリュウ",
+    "title": "長崎県の応援ポケモンはデンリュウ",
+    "summary": "「灯台のポケモン」デンリュウが選ばれた長崎。港町・長崎の灯台文化と重なり、県内10枚すべてにデンリュウが登場します。",
+    "status": "ongoing",
+    "source_url": "https://local.pokemon.jp/",
+    "map_pref": "長崎県",
+    "manhole_ids": [],
+    "links": []
+  },
+  {
     "id": "miyazaki-exeggutor",
     "prefecture": "宮崎県",
     "pokemon": "ナッシー",
@@ -85,19 +134,15 @@
     "links": []
   },
   {
-    "id": "saga-meowth",
-    "prefecture": "佐賀県",
-    "pokemon": "ニャース",
-    "title": "佐賀市のポケふたはなぜニャース？ 気球の街との関係",
-    "summary": "佐賀市には通常・アローラ・ガラルニャースの3枚があります。3枚すべてに気球デザインがあり、「気球のまち佐賀」との縁を感じさせます。",
-    "status": "complete",
+    "id": "okinawa-growlithe",
+    "prefecture": "沖縄県",
+    "pokemon": "ガーディ",
+    "title": "沖縄県の応援ポケモンはガーディ",
+    "summary": "沖縄の守り神・シーサーを思わせるガーディ。魔除けの獅子犬と炎のポケモンのイメージが重なり、県内各地に設置されています。",
+    "status": "ongoing",
     "source_url": "https://local.pokemon.jp/",
-    "map_pref": "佐賀県",
-    "manhole_ids": [255, 256, 257],
-    "links": [
-      {"text": "ニャース（佐賀市）", "href": "/manholes/255/"},
-      {"text": "アローラニャース（佐賀市）", "href": "/manholes/256/"},
-      {"text": "ガラルニャース（佐賀市）", "href": "/manholes/257/"}
-    ]
+    "map_pref": "沖縄県",
+    "manhole_ids": [],
+    "links": []
   }
 ]

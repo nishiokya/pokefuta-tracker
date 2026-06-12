@@ -822,6 +822,7 @@ _CSS = """\
       padding: 2px 7px;
       border-radius: 99px;
       margin-bottom: .5rem;
+      text-decoration: none;
     }
 
     .trivia-status--ongoing {
@@ -829,9 +830,17 @@ _CSS = """\
       color: #176f68;
     }
 
+    .trivia-status--ongoing:hover {
+      background: #d0ece9;
+    }
+
     .trivia-status--complete {
       background: #fff3cd;
       color: #7a5a00;
+    }
+
+    .trivia-status--complete:hover {
+      background: #ffe9a0;
     }
 
     .trivia-images {
@@ -1126,8 +1135,6 @@ def _build_pref_trivia_section(s: dict, trivia_data: list[dict], tr) -> str:
     if s.get("pref_key") != "ja" or not trivia_data:
         return ""
     heading = "都道府県の応援ポケモン"
-    status_labels = {"ongoing": "進行中", "complete": "コンプ"}
-    status_classes = {"ongoing": "trivia-status--ongoing", "complete": "trivia-status--complete"}
     items = []
     for entry in trivia_data:
         pref = escape(entry["prefecture"])
@@ -1135,9 +1142,17 @@ def _build_pref_trivia_section(s: dict, trivia_data: list[dict], tr) -> str:
         summary_text = escape(entry["summary"])
 
         status = entry.get("status", "ongoing")
-        status_label = status_labels.get(status, "進行中")
-        status_cls = status_classes.get(status, "trivia-status--ongoing")
-        status_html = f'<span class="trivia-status {escape(status_cls)}">{escape(status_label)}</span>'
+        source_url = entry.get("source_url", "")
+        status_label = "コンプ" if status == "complete" else "公式サイト"
+        status_cls = "trivia-status--complete" if status == "complete" else "trivia-status--ongoing"
+        if source_url:
+            status_html = (
+                f'<a class="trivia-status {escape(status_cls)}" '
+                f'href="{escape(source_url)}" target="_blank" rel="noopener noreferrer">'
+                f'{escape(status_label)}</a>'
+            )
+        else:
+            status_html = f'<span class="trivia-status {escape(status_cls)}">{escape(status_label)}</span>'
 
         images_html = ""
         manhole_ids = entry.get("manhole_ids") or []

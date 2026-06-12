@@ -4411,6 +4411,48 @@
     }
   },
   {
+    "id": "pref-trivia-tottori-sandshrew",
+    "type": "pref_trivia",
+    "title": "鳥取県の応援ポケモンはサンド",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "pref_trivia",
+      "values": {
+        "prefecture": "鳥取県",
+        "pokemon": "サンド",
+        "summary": "「砂丘のまち」鳥取ならではの選択。通常のすがたとアローラのすがたの2種が設置されており、鳥取砂丘との縁は一目瞭然です。",
+        "map_pref": "鳥取県"
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-fukui-dragonite",
+    "type": "pref_trivia",
+    "title": "福井県の応援ポケモンはカイリュー",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "pref_trivia",
+      "values": {
+        "prefecture": "福井県",
+        "pokemon": "カイリュー",
+        "summary": "九頭竜川をはじめ「竜」の地名が多い福井。カイリューは県内17枚すべてに登場するほど定着しています。",
+        "map_pref": "福井県"
+      }
+    }
+  },
+  {
     "id": "pref-trivia-kagawa-slowpoke",
     "type": "pref_trivia",
     "title": "香川県の応援ポケモンはヤドン",
@@ -4428,6 +4470,27 @@
         "pokemon": "ヤドン",
         "summary": "香川県は2021年に公式で「ヤドン県」を一時採用した実績あり。冗談ではなく公式です。その縁で県内各地にヤドンのポケふたが設置されています。",
         "map_pref": "香川県"
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-kochi-quagsire",
+    "type": "pref_trivia",
+    "title": "高知県の応援ポケモンはヌオー",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "pref_trivia",
+      "values": {
+        "prefecture": "高知県",
+        "pokemon": "ヌオー",
+        "summary": "日本最後の清流・四万十川をイメージしたヌオー。水辺をのんびり過ごすイメージが高知の川文化と重なります。県内18枚すべてにヌオーが登場します。",
+        "map_pref": "高知県"
       }
     }
   },
@@ -4453,6 +4516,27 @@
     }
   },
   {
+    "id": "pref-trivia-nagasaki-ampharos",
+    "type": "pref_trivia",
+    "title": "長崎県の応援ポケモンはデンリュウ",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "pref_trivia",
+      "values": {
+        "prefecture": "長崎県",
+        "pokemon": "デンリュウ",
+        "summary": "「灯台のポケモン」デンリュウが選ばれた長崎。港町・長崎の灯台文化と重なり、県内10枚すべてにデンリュウが登場します。",
+        "map_pref": "長崎県"
+      }
+    }
+  },
+  {
     "id": "pref-trivia-miyazaki-exeggutor",
     "type": "pref_trivia",
     "title": "宮崎県の応援ポケモンはナッシー",
@@ -4474,9 +4558,9 @@
     }
   },
   {
-    "id": "pref-trivia-saga-meowth",
+    "id": "pref-trivia-okinawa-growlithe",
     "type": "pref_trivia",
-    "title": "佐賀市のポケふたはなぜニャース？ 気球の街との関係",
+    "title": "沖縄県の応援ポケモンはガーディ",
     "url": "https://data.pokefuta.com/summary/",
     "hashtags": [
       "#ポケふた",
@@ -4487,10 +4571,10 @@
     "raw_data": {
       "fact_type": "pref_trivia",
       "values": {
-        "prefecture": "佐賀県",
-        "pokemon": "ニャース",
-        "summary": "佐賀市には通常・アローラ・ガラルニャースの3枚があります。3枚すべてに気球デザインがあり、「気球のまち佐賀」との縁を感じさせます。",
-        "map_pref": "佐賀県"
+        "prefecture": "沖縄県",
+        "pokemon": "ガーディ",
+        "summary": "沖縄の守り神・シーサーを思わせるガーディ。魔除けの獅子犬と炎のポケモンのイメージが重なり、県内各地に設置されています。",
+        "map_pref": "沖縄県"
       }
     }
   }
