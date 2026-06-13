@@ -51,6 +51,9 @@ class DiscoveryHubTests(unittest.TestCase):
         self.assertIn("getHeroThemeCount(themeKey)", source)
         self.assertIn("getUniqueHeroPokemon(manhole)", source)
         self.assertIn("window.I18N?.intlLocale || 'ja-JP'", source)
+        self.assertIn("const pokemonMetadataPromise = loadPokemonMetadata();", source)
+        self.assertIn("marker.setPopupContent(buildPokefutaPopup(marker.pokefutaData))", source)
+        self.assertNotIn("await loadPokemonMetadata();", source)
         self.assertNotIn("countTemplate.replace('{count}', candidates.length)", source)
         self.assertNotIn("pokemon: reason", source)
 

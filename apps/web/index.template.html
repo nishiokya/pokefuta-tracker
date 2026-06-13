@@ -1351,9 +1351,8 @@
           const raw = d.added_at || d.first_seen || d.last_seen || d.source_last_checked || d.last_updated || d.date;
           d._addedDate = normalizeDateString(raw);
         });
+        const pokemonMetadataPromise = loadPokemonMetadata();
         await loadLatestPhotoMeta();
-        await loadPokemonMetadata();
-        renderHeroDiscovery();
         initMarkerLayer();
         // Build markers
         allMarkers = [];
@@ -1384,6 +1383,12 @@
           marker.pokefutaData = d; marker.pokefutaData.prefectureCode = prefectureCode;
           allMarkers.push(marker);
           markerLayer.addLayer(marker);
+        });
+        pokemonMetadataPromise.then(() => {
+          allMarkers.forEach(marker => {
+            marker.setPopupContent(buildPokefutaPopup(marker.pokefutaData));
+          });
+          renderHeroDiscovery();
         });
         
         // 都道府県ごとのマンホール数と bounding box マップを構築（グローバル変数を使用）
