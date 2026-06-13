@@ -1043,10 +1043,6 @@ _CSS = """\
       white-space: nowrap;
     }
 
-    .summary-hero h1 span + span::before {
-      content: " ";
-    }
-
     .summary-hero .summary-hero-subtitle {
       max-width: 520px;
       margin: 0;
@@ -1311,10 +1307,6 @@ _CSS = """\
 
       .summary-hero h1 span {
         display: block;
-      }
-
-      .summary-hero h1 span + span::before {
-        content: none;
       }
 
       .summary-hero-visual {
