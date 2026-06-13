@@ -14,8 +14,9 @@ from __future__ import annotations
 import hashlib
 import json
 import sys
+from collections import Counter
 from pathlib import Path
-from urllib.parse import quote
+from urllib.parse import quote, urlparse
 from xml.sax.saxutils import escape
 
 ROOT = Path(__file__).parent.parent.parent
@@ -64,6 +65,19 @@ REGION_MAP: dict[str, str] = {
     "鹿児島県": "九州", "沖縄県": "九州",
 }
 
+PREFECTURE_LOCAL_TRIVIA: dict[str, dict[str, str]] = {
+    "佐賀県": {
+        "pokemon": "ニャース3種",
+        "fact": "佐賀市にはニャース・アローラニャース・ガラルニャースの3枚があり、すべてに気球が描かれています。バルーンフェスタで知られる「気球のまち佐賀」ならではのデザインです。",
+        "official_url": "https://www.city.saga.lg.jp/",
+        "official_label": "佐賀市公式サイト",
+    },
+    "鹿児島県": {
+        "pokemon": "イーブイ系",
+        "fact": "ポケふた第1号は2018年12月20日、指宿駅前に設置されたイーブイ。「いーぶいすき＝指宿」の語呂合わせが縁です。指宿市には進化形8種類を含む9枚が揃い、市内だけでイーブイ系をコンプリートできます。",
+    },
+}
+
 SUMMARY_STRINGS: dict[str, dict] = {
     "ja": {
         "html_lang": "ja",
@@ -78,6 +92,8 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "nav_home_text": "全国マップ",
         "nav_home_href": "/",
         "h1": "全国のポケモンマンホール（ポケふた）一覧",
+        "hero_title_lines": ("ポケふた", "データマップ"),
+        "hero_kicker": "ポケモンマンホール データガイド",
         "subtitle": "全国{total}枚のポケモンマンホール（ポケふた）を都道府県別・ポケモン別に探せます。旅行先やお出かけ先のポケふた探しにご活用ください。",
         "stats_aria": "全国集計",
         "stat_total": "全国の総数",
@@ -86,13 +102,18 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "total_fmt": "{count}枚",
         "installed_fmt": "{count}都道府県",
         "empty_fmt": "{count}県",
-        "h2_pref_count": "都道府県別の設置数一覧",
+        "h2_pref_count": "都道府県のポケふた・ポケモン情報",
         "th_pref": "都道府県",
         "th_count": "ポケふた数",
         "th_map": "地図",
         "map_link_text": "地図で見る",
-        "table_no_map": "-",
+        "table_no_map": "—",
         "count_unit": "枚",
+        "no_pokemon_label": "未設置",
+        "empty_pref_fact": "今後の設置を待つエリアです。",
+        "pref_fact_dominant": "{pokemon}が県内{appearances}枚に登場。",
+        "pref_fact_single_city": "1自治体に{count}枚が集まっています。",
+        "pref_fact_generic": "{city_count}自治体で{species_count}種のポケモンに出会えます。",
         "h2_ranking": "ポケふたの多い都道府県ランキング",
         "ranking_note": '各都道府県の地図は、<a class="summary-link" href="/">全国マップ</a>から地域を選んで確認できます。',
         "h2_regional": "地域の分布傾向",
@@ -164,6 +185,8 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "nav_home_text": "Japan Map",
         "nav_home_href": "/en/",
         "h1": "How Many Pokéfuta Are There Nationwide?",
+        "hero_title_lines": ("Pokéfuta", "Data Map"),
+        "hero_kicker": "Pokémon Manhole Data Guide",
         "subtitle": "Pokéfuta (Pokémon manhole covers) counted and sorted by prefecture from the latest dataset.",
         "stats_aria": "Nationwide Statistics",
         "stat_total": "Total Nationwide",
@@ -179,6 +202,11 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "map_link_text": "View map",
         "table_no_map": "—",
         "count_unit": "",
+        "no_pokemon_label": "Not installed",
+        "empty_pref_fact": "This prefecture is still waiting for its first Pokéfuta.",
+        "pref_fact_dominant": "{appearances} covers feature {pokemon}.",
+        "pref_fact_single_city": "All {count} covers are concentrated in one municipality.",
+        "pref_fact_generic": "{species_count} Pokémon across {city_count} municipalities.",
         "h2_ranking": "Top Prefectures by Pokéfuta Count",
         "ranking_note": 'Browse each prefecture\'s Pokéfuta on the <a class="summary-link" href="/en/">Japan Map</a>.',
         "h2_regional": "Regional Distribution",
@@ -237,6 +265,8 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "nav_home_text": "全国地图",
         "nav_home_href": "/zh-CN/",
         "h1": "全国共有多少个宝可梦井盖？",
+        "hero_title_lines": ("宝可梦井盖", "数据地图"),
+        "hero_kicker": "宝可梦井盖数据指南",
         "subtitle": "基于现有数据，按都道府县统计了全国的宝可梦井盖（宝可梦人孔盖）数量。",
         "stats_aria": "全国统计",
         "stat_total": "全国总数",
@@ -252,6 +282,11 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "map_link_text": "查看地图",
         "table_no_map": "—",
         "count_unit": "个",
+        "no_pokemon_label": "尚未设置",
+        "empty_pref_fact": "该地区仍在等待首个宝可梦井盖。",
+        "pref_fact_dominant": "{pokemon}出现在县内{appearances}个井盖上。",
+        "pref_fact_single_city": "{count}个井盖集中设置在1个市区町村。",
+        "pref_fact_generic": "可在{city_count}个市区町村遇见{species_count}种宝可梦。",
         "h2_ranking": "宝可梦井盖最多的县排名",
         "ranking_note": '各都道府县的地图可通过<a class="summary-link" href="/zh-CN/">全国地图</a>选择地区查看。',
         "h2_regional": "地区分布情况",
@@ -310,6 +345,8 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "nav_home_text": "全國地圖",
         "nav_home_href": "/zh-TW/",
         "h1": "全國共有多少個寶可夢人孔蓋？",
+        "hero_title_lines": ("寶可夢人孔蓋", "資料地圖"),
+        "hero_kicker": "寶可夢人孔蓋資料指南",
         "subtitle": "基於現有資料，按都道府縣統計了全國的寶可夢人孔蓋數量。",
         "stats_aria": "全國統計",
         "stat_total": "全國總數",
@@ -325,6 +362,11 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "map_link_text": "查看地圖",
         "table_no_map": "—",
         "count_unit": "個",
+        "no_pokemon_label": "尚未設置",
+        "empty_pref_fact": "此地區仍在等待第一個寶可夢人孔蓋。",
+        "pref_fact_dominant": "{pokemon}出現在縣內{appearances}個人孔蓋上。",
+        "pref_fact_single_city": "{count}個人孔蓋集中設置在1個市區町村。",
+        "pref_fact_generic": "可在{city_count}個市區町村遇見{species_count}種寶可夢。",
         "h2_ranking": "寶可夢人孔蓋最多的縣排行",
         "ranking_note": '各都道府縣的地圖可透過<a class="summary-link" href="/zh-TW/">全國地圖</a>選擇地區查看。',
         "h2_regional": "地區分布情況",
@@ -383,6 +425,8 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "nav_home_text": "전국 지도",
         "nav_home_href": "/ko/",
         "h1": "포케후타는 전국에 몇 개 있을까?",
+        "hero_title_lines": ("포케후타", "데이터 지도"),
+        "hero_kicker": "포켓몬 맨홀 데이터 가이드",
         "subtitle": "기존 데이터를 바탕으로 전국의 포케후타(포켓몬 맨홀)를 도도부현별로 집계했습니다.",
         "stats_aria": "전국 집계",
         "stat_total": "전국 총 수량",
@@ -398,6 +442,11 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "map_link_text": "지도에서 보기",
         "table_no_map": "—",
         "count_unit": "개",
+        "no_pokemon_label": "미설치",
+        "empty_pref_fact": "아직 첫 포케후타 설치를 기다리고 있는 지역입니다.",
+        "pref_fact_dominant": "{pokemon} 등장 포케후타가 현내 {appearances}개 있습니다.",
+        "pref_fact_single_city": "1개 시구정촌에 {count}개의 포케후타가 모여 있습니다.",
+        "pref_fact_generic": "{city_count}개 시구정촌에서 {species_count}종의 포켓몬을 만날 수 있습니다.",
         "h2_ranking": "포케후타가 많은 현 랭킹",
         "ranking_note": '각 도도부현의 지도는 <a class="summary-link" href="/ko/">전국 지도</a>에서 지역을 선택하여 확인할 수 있습니다.',
         "h2_regional": "지역별 분포 현황",
@@ -770,118 +819,6 @@ _CSS = """\
       font-weight: 750;
     }
 
-    .pref-trivia-section h2 {
-      font-size: 1.1rem;
-      margin-bottom: 1rem;
-    }
-
-    .pref-trivia-grid {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1rem;
-    }
-
-    .pref-trivia-card {
-      background: #fffdf7;
-      border-radius: 8px;
-      padding: 1rem;
-      border: 1px solid rgba(93, 67, 35, .14);
-    }
-
-    .trivia-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: .5rem;
-    }
-
-    .trivia-pref {
-      font-size: .85rem;
-      color: #5a4f47;
-    }
-
-    .trivia-pokemon {
-      font-weight: bold;
-      font-size: 1rem;
-      color: #176f68;
-    }
-
-    .trivia-count {
-      font-size: .8rem;
-      color: #5a4f47;
-      margin-left: .35rem;
-    }
-
-    .pref-trivia-card p {
-      font-size: .9rem;
-      margin: 0 0 .5rem;
-      color: #3a3330;
-    }
-
-    .trivia-status {
-      display: inline-block;
-      font-size: .72rem;
-      font-weight: bold;
-      padding: 2px 7px;
-      border-radius: 99px;
-      margin-bottom: .5rem;
-      text-decoration: none;
-    }
-
-    .trivia-status--ongoing {
-      background: #e8f4f3;
-      color: #176f68;
-    }
-
-    .trivia-status--ongoing:hover {
-      background: #d0ece9;
-    }
-
-    .trivia-status--complete {
-      background: #fff3cd;
-      color: #7a5a00;
-    }
-
-    .trivia-status--complete:hover {
-      background: #ffe9a0;
-    }
-
-    .trivia-images {
-      list-style: none;
-      padding: 0;
-      margin: .75rem 0 0;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
-    }
-
-    .trivia-images a {
-      display: block;
-    }
-
-    .trivia-images img {
-      width: 100%;
-      aspect-ratio: 1 / 1;
-      object-fit: contain;
-      background: #f7f0df;
-      border-radius: 6px;
-      border: 1px solid rgba(93, 67, 35, .12);
-    }
-
-    .trivia-links {
-      list-style: none;
-      padding: 0;
-      margin: .5rem 0 0;
-      font-size: .8rem;
-    }
-
-    .trivia-links a {
-      color: #176f68;
-    }
-
     .regional-trend-box {
       padding: 14px 16px;
       border: 1px solid rgba(93, 67, 35, .14);
@@ -907,15 +844,15 @@ _CSS = """\
     .search-hub-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      margin: 18px 0 0;
+      gap: 8px;
+      margin: 6px 0 0;
     }
 
     .search-hub-card {
       display: flex;
       flex-direction: column;
-      gap: 6px;
-      padding: 18px 14px;
+      gap: 1px;
+      padding: 9px 10px;
       background: #fffaf0;
       border: 1px solid rgba(23, 111, 104, .24);
       border-radius: 8px;
@@ -929,13 +866,14 @@ _CSS = """\
 
     .search-hub-card strong {
       color: #176f68;
-      font-size: 1rem;
+      font-size: .9rem;
       font-weight: 900;
     }
 
     .search-hub-card span {
       color: #574b41;
-      font-size: .875rem;
+      font-size: .72rem;
+      line-height: 1.35;
     }
 
     .pokemon-popular-grid {
@@ -1026,13 +964,380 @@ _CSS = """\
       line-height: 1.7;
     }
 
+    /* Travel-poster redesign */
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background:
+        radial-gradient(circle at 12px 12px, rgba(86, 64, 42, .035) 1px, transparent 1.5px) 0 0 / 24px 24px,
+        #f7f0df;
+      color: #27201c;
+      font-family: "Hiragino Maru Gothic ProN", "Yu Gothic", "YuGothic", system-ui, sans-serif;
+    }
+
+    .summary-page {
+      max-width: 1120px;
+      padding: 20px 18px 64px;
+    }
+
+    .summary-hero {
+      position: relative;
+      min-height: 130px;
+      height: 130px;
+      margin-bottom: 22px;
+      padding: 12px clamp(18px, 3vw, 34px);
+      overflow: hidden;
+      border: 4px solid rgba(255, 255, 255, .72);
+      border-radius: 22px;
+      background: linear-gradient(102deg, rgba(255, 250, 233, .99) 0 47%, rgba(200, 234, 238, .92) 70%, rgba(168, 218, 226, .97));
+      box-shadow: 0 18px 44px rgba(77, 56, 30, .14);
+      isolation: isolate;
+    }
+
+    .summary-hero-breadcrumb {
+      position: relative;
+      z-index: 6;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      color: #27201c !important;
+      font-size: .72rem;
+    }
+
+    .summary-hero-breadcrumb::before {
+      width: 13px;
+      height: 13px;
+      content: "";
+      background: url("/assets/pokefuta-marker.svg") center / contain no-repeat;
+    }
+
+    .summary-hero-copy {
+      position: relative;
+      z-index: 5;
+      max-width: 430px;
+      padding-top: 1px;
+    }
+
+    .summary-hero .summary-hero-kicker {
+      margin: 0 0 2px;
+      color: #27201c;
+      font-size: .58rem;
+      font-weight: 900;
+      letter-spacing: .05em;
+    }
+
+    .summary-hero h1 {
+      max-width: 430px;
+      margin: 0;
+      font-size: clamp(1.65rem, 3.3vw, 2.55rem);
+      font-weight: 950;
+      line-height: .99;
+      letter-spacing: -.07em;
+      text-wrap: balance;
+    }
+
+    .summary-hero h1 span {
+      display: inline;
+      white-space: nowrap;
+    }
+
+    .summary-hero .summary-hero-subtitle {
+      max-width: 520px;
+      margin: 0;
+      color: #6b5d50;
+      font-size: clamp(.88rem, 1.6vw, 1.03rem);
+      font-weight: 750;
+      display: none;
+    }
+
+    .summary-hero-visual {
+      position: absolute;
+      z-index: 2;
+      inset: 0 0 0 44%;
+      pointer-events: none;
+    }
+
+    .summary-hero-visual::before {
+      position: absolute;
+      inset: 18px -30px 50px 0;
+      content: "";
+      opacity: .44;
+      background:
+        linear-gradient(150deg, transparent 0 49%, rgba(255,255,255,.8) 50% 51%, transparent 52%) 0 0 / 86px 52px,
+        radial-gradient(ellipse at 50% 90%, rgba(59, 132, 129, .24), transparent 55%);
+    }
+
+    .hero-route {
+      position: absolute;
+      right: 6%;
+      bottom: 20px;
+      width: 72%;
+      height: 45%;
+      transform: rotate(-10deg);
+      border-bottom: 3px dotted rgba(87, 64, 143, .72);
+      border-radius: 0 0 55% 45%;
+    }
+
+    .hero-pin {
+      position: absolute;
+      width: clamp(16px, 2vw, 24px);
+      filter: drop-shadow(0 5px 3px rgba(52, 36, 20, .18));
+    }
+
+    .hero-pin.pin-1 { left: 18%; bottom: 19%; transform: rotate(-8deg); }
+    .hero-pin.pin-2 { left: 41%; bottom: 28%; transform: rotate(6deg); }
+    .hero-pin.pin-3 { left: 64%; bottom: 43%; transform: rotate(-5deg); }
+    .hero-pin.pin-4 { right: 9%; top: 12%; transform: rotate(7deg); }
+
+    .summary-hero-badge {
+      position: absolute;
+      z-index: 5;
+      top: 11px;
+      right: clamp(125px, 17vw, 190px);
+      display: grid;
+      width: 102px;
+      aspect-ratio: 1;
+      place-content: center;
+      border: 3px solid rgba(255, 255, 255, .72);
+      border-radius: 50%;
+      background: #57408f;
+      color: #fff;
+      text-align: center;
+      box-shadow: 0 12px 25px rgba(63, 43, 111, .28), inset 0 0 0 2px rgba(255,255,255,.25);
+    }
+
+    .summary-hero-badge span,
+    .summary-hero-badge small {
+      display: block;
+      font-size: .52rem;
+      font-weight: 850;
+      line-height: 1.25;
+    }
+
+    .summary-hero-badge strong {
+      display: block;
+      color: #f5c83d;
+      font-size: 2rem;
+      line-height: 1;
+    }
+
+    .summary-hero-photo {
+      position: absolute;
+      z-index: 4;
+      margin: 0;
+      overflow: hidden;
+      border: 4px solid #40372f;
+      border-radius: 50%;
+      background: #756c61;
+      box-shadow: 0 16px 25px rgba(54, 41, 26, .25);
+    }
+
+    .summary-hero-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .summary-hero-photo.photo-main {
+      right: -14px;
+      bottom: -34px;
+      width: 150px;
+      aspect-ratio: 1;
+      transform: rotate(8deg);
+    }
+
+    .summary-stat,
+    .daily-fact-card,
+    .summary-fact-card,
+    .summary-table-wrap,
+    .summary-list li,
+    .summary-empty,
+    .discovery-card,
+    .regional-trend-box,
+    .search-hub-card,
+    .pokemon-card {
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(77, 56, 30, .06);
+    }
+
+    .summary-stat strong,
+    .summary-section h2,
+    .summary-fact-number,
+    .discovery-card strong,
+    .search-hub-card strong {
+      color: #57408f;
+    }
+
+    .summary-action,
+    .summary-cta {
+      border-radius: 999px;
+      background: #57408f;
+    }
+
+    .summary-section {
+      margin-top: 38px;
+    }
+
+    .summary-section h2 {
+      font-size: clamp(1.35rem, 3vw, 1.75rem);
+      letter-spacing: -.03em;
+    }
+
+    .photo-card {
+      padding: 8px;
+      border: 1px solid rgba(93, 67, 35, .14);
+      border-radius: 16px;
+      background: #fffaf0;
+      box-shadow: 0 8px 18px rgba(77, 56, 30, .06);
+    }
+
+    .photo-card img {
+      object-fit: cover;
+      border: 0;
+      border-radius: 11px;
+    }
+
+    .prefecture-info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .prefecture-info-card {
+      display: grid;
+      grid-template-columns: minmax(84px, .7fr) minmax(0, 1.8fr) auto;
+      gap: 6px 10px;
+      align-items: center;
+      padding: 10px 12px;
+      border: 1px solid rgba(93, 67, 35, .14);
+      border-radius: 13px;
+      background: #fffaf0;
+      color: inherit;
+      text-decoration: none;
+      box-shadow: 0 5px 12px rgba(77, 56, 30, .05);
+    }
+
+    .prefecture-info-card[href]:hover {
+      background: #f4f0fb;
+      border-color: rgba(87, 64, 143, .28);
+    }
+
+    .prefecture-info-card h3 {
+      margin: 0;
+      color: #3d2b72;
+      font-size: 1rem;
+      line-height: 1.25;
+    }
+
+    .prefecture-info-pokemon {
+      min-width: 0;
+      color: #574b41;
+      font-size: .78rem;
+      font-weight: 800;
+      line-height: 1.35;
+    }
+
+    .prefecture-info-label {
+      display: inline-flex;
+      width: fit-content;
+      margin-right: 5px;
+      padding: 1px 6px;
+      border-radius: 999px;
+      background: #eee7fb;
+      color: #57408f;
+      font-size: .62rem;
+      font-weight: 900;
+      vertical-align: 1px;
+    }
+
+    .prefecture-info-count {
+      color: #57408f;
+      font-size: 1.05rem;
+      font-weight: 950;
+      white-space: nowrap;
+    }
+
+    .prefecture-info-fact {
+      grid-column: 1 / -1;
+      margin: 0;
+      color: #716154;
+      font-size: .72rem;
+      line-height: 1.4;
+    }
+
+    .prefecture-info-actions {
+      grid-column: 1 / -1;
+      display: flex;
+      gap: 10px;
+      margin-top: -1px;
+      font-size: .68rem;
+      font-weight: 850;
+    }
+
+    .prefecture-info-actions a {
+      color: #57408f;
+      text-decoration: none;
+    }
+
     @media (max-width: 700px) {
+      .summary-page {
+        padding: 8px 8px 32px;
+      }
+
+      .summary-hero {
+        min-height: 153px;
+        height: 153px;
+        padding: 10px 14px;
+        border-width: 4px;
+        border-radius: 18px;
+        background: linear-gradient(115deg, rgba(255,250,233,.99) 0 48%, rgba(180,225,232,.96) 78%);
+        margin-bottom: 10px;
+      }
+
+      .summary-hero-copy {
+        padding-top: 3px;
+      }
+
+      .summary-hero h1 {
+        max-width: 58%;
+        font-size: clamp(1.55rem, 7vw, 1.85rem);
+      }
+
+      .summary-hero h1 span {
+        display: block;
+      }
+
+      .summary-hero-visual {
+        inset: 0 0 0 42%;
+      }
+
+      .summary-hero-badge {
+        top: 17px;
+        right: 86px;
+        bottom: auto;
+        left: auto;
+        width: 86px;
+      }
+
+      .summary-hero-photo.photo-main {
+        right: -20px;
+        bottom: -22px;
+        width: 118px;
+      }
+
       .summary-stats {
         grid-template-columns: 1fr;
       }
 
-      .summary-hero h1 {
-        font-size: 2rem;
+      .summary-section {
+        margin-top: 12px;
+      }
+
+      .summary-section h2 {
+        margin-bottom: 7px;
+        font-size: 1.25rem;
       }
 
       .discovery-grid {
@@ -1044,7 +1349,62 @@ _CSS = """\
       }
 
       .search-hub-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 5px;
+      }
+
+      .search-hub-card {
+        min-width: 0;
+        padding: 7px 5px;
+        border-radius: 10px;
+        text-align: center;
+      }
+
+      .search-hub-card strong {
+        font-size: .72rem;
+        line-height: 1.25;
+      }
+
+      .search-hub-card span {
+        display: none;
+      }
+
+      .prefecture-info-grid {
         grid-template-columns: 1fr;
+        gap: 5px;
+      }
+
+      .prefecture-info-card {
+        grid-template-columns: 74px minmax(0, 1fr) auto;
+        gap: 3px 7px;
+        padding: 7px 9px;
+        border-radius: 10px;
+      }
+
+      .prefecture-info-card h3 {
+        font-size: .9rem;
+      }
+
+      .prefecture-info-pokemon {
+        font-size: .7rem;
+      }
+
+      .prefecture-info-count {
+        font-size: .9rem;
+      }
+
+      .prefecture-info-fact {
+        font-size: .66rem;
+      }
+
+      .prefecture-info-label {
+        padding: 0 4px;
+        font-size: .56rem;
+      }
+
+      .prefecture-info-actions {
+        gap: 8px;
+        font-size: .62rem;
       }
 
       .pokemon-popular-grid {
@@ -1137,85 +1497,6 @@ def _build_ai_summary(s: dict, stats: dict, tr) -> str:
     return f'<div class="ai-summary-box"><p>{escape(text)}</p></div>\n'
 
 
-def _build_pref_trivia_section(s: dict, trivia_data: list[dict], tr) -> str:
-    if s.get("pref_key") != "ja" or not trivia_data:
-        return ""
-    heading = "都道府県の応援ポケモン"
-    items = []
-    for entry in trivia_data:
-        pref = escape(entry["prefecture"])
-        pokemon = escape(entry["pokemon"])
-        summary_text = escape(entry["summary"])
-        count = entry.get("count")
-        count_html = f'<span class="trivia-count">{count}枚</span>' if count else ""
-
-        status = entry.get("status", "ongoing")
-        source_url = entry.get("source_url", "")
-        status_label = "コンプ" if status == "complete" else "公式サイト"
-        status_cls = "trivia-status--complete" if status == "complete" else "trivia-status--ongoing"
-        if source_url:
-            status_html = (
-                f'<a class="trivia-status {escape(status_cls)}" '
-                f'href="{escape(source_url)}" target="_blank" rel="noopener noreferrer">'
-                f'{escape(status_label)}</a>'
-            )
-        else:
-            status_html = f'<span class="trivia-status {escape(status_cls)}">{escape(status_label)}</span>'
-
-        images_html = ""
-        manhole_ids = entry.get("manhole_ids") or []
-        if status == "complete" and manhole_ids:
-            img_links = []
-            links_by_id = {
-                int(lk["href"].rstrip("/").rsplit("/", 1)[-1]): lk
-                for lk in entry.get("links", [])
-                if lk.get("href", "").startswith("/manholes/")
-            }
-            for mid in manhole_ids:
-                local_image = IMAGE_DIR / f"{mid}_latest.jpeg"
-                if not local_image.exists():
-                    continue
-                img_url = f"{BASE_URL}/manhole/image/{mid}_latest.jpeg"
-                href = f"/manholes/{mid}/"
-                alt = escape(links_by_id.get(mid, {}).get("text", str(mid)))
-                img_links.append(
-                    f'<li><a href="{escape(href)}">'
-                    f'<img src="{escape(img_url)}" alt="{alt}" loading="lazy" decoding="async">'
-                    f'</a></li>'
-                )
-            if img_links:
-                images_html = '<ul class="trivia-images">' + "".join(img_links) + "</ul>"
-
-        links_html = ""
-        if entry.get("links"):
-            links_html = '<ul class="trivia-links">' + "".join(
-                f'<li><a href="{escape(lk["href"])}">{escape(lk["text"])}</a></li>'
-                for lk in entry["links"]
-            ) + "</ul>"
-
-        items.append(
-            f'<li class="pref-trivia-card">'
-            f'<div class="trivia-header">'
-            f'<span class="trivia-pref">{pref}</span>'
-            f'<span class="trivia-pokemon">{pokemon}</span>'
-            f'{count_html}'
-            f'</div>'
-            f'{status_html}'
-            f'<p>{summary_text}</p>'
-            f'{images_html}'
-            f'{links_html}'
-            f'</li>'
-        )
-    items_html = "\n        ".join(items)
-    return (
-        f'\n    <section class="summary-section pref-trivia-section" '
-        f'aria-label="{escape(heading)}">'
-        f'\n      <h2>{escape(heading)}</h2>'
-        f'\n      <ul class="pref-trivia-grid">\n        {items_html}\n      </ul>'
-        f'\n    </section>\n'
-    )
-
-
 def _build_discovery_section(s: dict, stats: dict, tr) -> str:
     total = stats["total"]
     installed = stats["installed"]
@@ -1275,6 +1556,15 @@ def _map_href(map_base: str, pref_ja: str | None = None) -> str:
     return f"{map_base}?pref={quote(pref_ja)}" if pref_ja else map_base
 
 
+def _safe_https_url(value: str | None, fallback: str) -> str:
+    candidate = str(value or "").strip()
+    try:
+        parsed = urlparse(candidate)
+    except ValueError:
+        return fallback
+    return candidate if parsed.scheme == "https" and parsed.netloc else fallback
+
+
 def _track_attrs(event_name: str, fact: dict, target_url: str) -> str:
     return (
         f'data-summary-event="{escape(event_name)}" '
@@ -1312,7 +1602,7 @@ FACT_COPY: dict[str, dict] = {
     "ja": {
         "daily": "今日のポケふた雑学",
         "section": "ポケふた雑学",
-        "share": "Xで共有",
+        "share": "この雑学をXで共有",
         "hashtags": ["#ポケふた", "#ポケモンマンホール"],
         "empty_status": "まだ{empty_count}県には設置されていません。",
         "empty_share_lead": "まだ設置されていない県は{empty_count}県あります。",
@@ -2315,7 +2605,7 @@ def _build_fact_sections(s: dict, stats: dict, tr) -> tuple[str, str]:
         f'{action_links(fact)}'
         f'</article>'
         f'</li>'
-        for fact in facts
+        for fact in facts[1:]
     )
     list_html = (
         f'\n    <section class="summary-section" aria-labelledby="fact-list-heading">'
@@ -2466,8 +2756,6 @@ def build_pokemon_stats(records: list[dict], pokemon_metadata: dict) -> dict:
     city_sets: dict[str, set] = {}
 
     for record in records:
-        if record.get("status") != "active":
-            continue
         pref = record.get("prefecture", "")
         city = record.get("city", "")
         city_key = f"{pref}/{city}"
@@ -2521,6 +2809,151 @@ def _build_search_hub_section(s: dict) -> str:
         f'\n    <section class="summary-section" aria-labelledby="search-hub-heading">'
         f'\n      <h2 id="search-hub-heading">{h2}</h2>'
         f'\n      <div class="search-hub-grid">\n{cards_html}\n      </div>'
+        f'\n    </section>\n'
+    )
+
+
+def _build_prefecture_info_section(
+    s: dict, stats: dict, records: list[dict], trivia_data: list[dict], tr
+) -> str:
+    records_by_pref: dict[str, list[dict]] = {
+        pref: [] for pref in PREFECTURE_ORDER
+    }
+    for record in records:
+        pref = record.get("prefecture", "")
+        if pref in records_by_pref:
+            records_by_pref[pref].append(record)
+
+    is_ja = s.get("pref_key") == "ja"
+    support_by_pref = {
+        entry["prefecture"]: entry
+        for entry in trivia_data
+        if entry.get("prefecture")
+    } if is_ja else {}
+    count_unit = s["count_unit"]
+    cards = []
+    for item in stats["by_pref"]:
+        pref = item["pref"]
+        pref_records = records_by_pref[pref]
+        city_count = len({
+            record.get("city")
+            for record in pref_records
+            if record.get("city")
+        })
+        pokemon_counts = Counter(
+            pokemon
+            for record in pref_records
+            for pokemon in record.get("pokemons", [])
+        )
+        top_pokemon = pokemon_counts.most_common(1)
+        pokemon_label = top_pokemon[0][0] if top_pokemon else s["no_pokemon_label"]
+        support = support_by_pref.get(pref)
+        local_trivia = PREFECTURE_LOCAL_TRIVIA.get(pref) if is_ja else None
+
+        if local_trivia:
+            pokemon_label = local_trivia["pokemon"]
+            display_count = item["count"]
+            fact = local_trivia["fact"]
+        elif support:
+            pokemon_label = support["pokemon"]
+            display_count = item["count"]
+            fact = support["summary"]
+        elif not pref_records:
+            display_count = item["count"]
+            fact = s["empty_pref_fact"]
+        elif top_pokemon and top_pokemon[0][1] >= max(2, len(pref_records) // 2):
+            display_count = item["count"]
+            name, appearances = top_pokemon[0]
+            fact = s["pref_fact_dominant"].format(
+                pokemon=name, appearances=appearances
+            )
+        elif city_count == 1 and len(pref_records) > 1:
+            display_count = item["count"]
+            fact = s["pref_fact_single_city"].format(count=len(pref_records))
+        else:
+            display_count = item["count"]
+            species_count = len(pokemon_counts)
+            fact = s["pref_fact_generic"].format(
+                city_count=city_count, species_count=species_count
+            )
+
+        if local_trivia:
+            open_tag = '<article class="prefecture-info-card local-trivia-card">'
+            close_tag = "</article>"
+            pokemon_html = (
+                f'<span class="prefecture-info-pokemon">'
+                f'<span class="prefecture-info-label">ご当地雑学</span>'
+                f'{escape(pokemon_label)}</span>'
+            )
+            official_html = ""
+            if local_trivia.get("official_url"):
+                official_html = (
+                    f'<a href="{escape(local_trivia["official_url"])}" target="_blank" '
+                    f'rel="noopener noreferrer">'
+                    f'{escape(local_trivia.get("official_label", "公式サイト"))}</a>'
+                )
+            actions_html = (
+                f'<div class="prefecture-info-actions">'
+                f'{official_html}'
+                f'<a href="{escape(_map_href(s["map_base_href"], pref))}">'
+                f'{escape(s["map_link_text"])}</a>'
+                f'</div>'
+            )
+        elif support:
+            official_url = _safe_https_url(
+                support.get("source_url"), "https://local.pokemon.jp/"
+            )
+            open_tag = '<article class="prefecture-info-card support-pokemon-card">'
+            close_tag = "</article>"
+            pokemon_html = (
+                f'<span class="prefecture-info-pokemon">'
+                f'<span class="prefecture-info-label">応援ポケモン</span>'
+                f'{escape(pokemon_label)}</span>'
+            )
+            actions_html = (
+                f'<div class="prefecture-info-actions">'
+                f'<a href="{escape(official_url)}" target="_blank" '
+                f'rel="noopener noreferrer">公式サイト</a>'
+                f'<a href="{escape(_map_href(s["map_base_href"], pref))}">'
+                f'{escape(s["map_link_text"])}</a>'
+                f'</div>'
+            )
+        elif pref_records:
+            open_tag = (
+                f'<a class="prefecture-info-card" '
+                f'href="{escape(_map_href(s["map_base_href"], pref))}">'
+            )
+            close_tag = "</a>"
+            pokemon_html = (
+                f'<span class="prefecture-info-pokemon">'
+                f'{escape(pokemon_label)}</span>'
+            )
+            actions_html = ""
+        else:
+            open_tag = '<article class="prefecture-info-card">'
+            close_tag = "</article>"
+            pokemon_html = (
+                f'<span class="prefecture-info-pokemon">'
+                f'{escape(pokemon_label)}</span>'
+            )
+            actions_html = ""
+        cards.append(
+            open_tag
+            +
+            f'<h3>{escape(tr(pref))}</h3>'
+            f'{pokemon_html}'
+            f'<strong class="prefecture-info-count">{display_count}{escape(count_unit)}</strong>'
+            f'<p class="prefecture-info-fact">{escape(fact)}</p>'
+            f'{actions_html}'
+            f'{close_tag}'
+        )
+
+    return (
+        f'\n    <section class="summary-section prefecture-info-section" '
+        f'aria-labelledby="prefecture-count-heading">'
+        f'\n      <h2 id="prefecture-count-heading">{escape(s["h2_pref_count"])}</h2>'
+        f'\n      <div class="prefecture-info-grid">\n'
+        f'{"".join(cards)}\n      </div>'
         f'\n    </section>\n'
     )
 
@@ -2710,10 +3143,12 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
     ai_html = _build_ai_summary(s, stats, tr)
     discovery_html = _build_discovery_section(s, stats, tr)
     daily_fact_html, fact_list_html = _build_fact_sections(s, stats, tr)
-    pref_trivia_html = _build_pref_trivia_section(s, pref_trivia_data or [], tr)
     regional_html = _build_regional_section(s, stats)
     tracking_script = _build_tracking_script(s)
     search_hub_html = _build_search_hub_section(s)
+    prefecture_info_html = _build_prefecture_info_section(
+        s, stats, list(records_by_id.values()), pref_trivia_data or [], tr
+    )
     popular_pokemon_html = _build_popular_pokemon_section(s, pokemon_stats)
     latest_photos_html = _build_latest_photos_section(s, records_by_id, photos_data)
     no_photos_html = _build_no_photos_section(s, records_by_id, photos_data)
@@ -2722,15 +3157,6 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
     def map_link(pref_ja: str) -> str:
         href = f'{map_base}?pref={quote(pref_ja)}'
         return f'<a class="summary-link" href="{escape(href)}">{escape(s["map_link_text"])}</a>'
-
-    table_rows = "\n            ".join(
-        f"<tr>"
-        f"<td>{escape(tr(item['pref']))}</td>"
-        f"<td>{item['count']}{escape(count_unit)}</td>"
-        f"<td>{map_link(item['pref']) if item['count'] > 0 else escape(s['table_no_map'])}</td>"
-        f"</tr>"
-        for item in stats["by_pref"]
-    )
 
     ranking_items = "\n        ".join(
         f"<li>"
@@ -2753,6 +3179,7 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
     md = escape(_format_summary_text(s["meta_desc"], s, stats))
     subtitle = escape(_format_summary_text(s["subtitle"], s, stats))
     can = escape(s["canonical"])
+    hero_title = " ".join(f"<span>{escape(line)}</span>" for line in s["hero_title_lines"])
 
     return f"""<!doctype html>
 <html lang="{s['html_lang']}">
@@ -2768,10 +3195,14 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
   <meta property="og:description" content="{md}">
   <meta property="og:url" content="{can}">
   <meta property="og:image" content="{OGP_IMAGE}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="{pt}">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="{pt}">
   <meta name="twitter:description" content="{md}">
   <meta name="twitter:image" content="{OGP_IMAGE}">
+  <meta name="twitter:image:alt" content="{pt}">
   <link rel="canonical" href="{can}">
 {_HREFLANG}
   <link rel="icon" href="https://data.pokefuta.com/assets/pokefuta-marker.svg" type="image/svg+xml">
@@ -2781,14 +3212,36 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
 </head>
 <body>
   <main class="summary-page">
-    <nav class="summary-hero" aria-label="{escape(s['breadcrumb_aria'])}">
-      <a href="{escape(s['nav_home_href'])}">{escape(s['nav_home_text'])}</a>
-      <h1>{escape(s['h1'])}</h1>
-      <p>{subtitle}</p>
-    </nav>
-    {search_hub_html}
+    <header class="summary-hero">
+      <nav aria-label="{escape(s['breadcrumb_aria'])}">
+        <a class="summary-hero-breadcrumb" href="{escape(s['nav_home_href'])}">{escape(s['nav_home_text'])}</a>
+      </nav>
+      <div class="summary-hero-copy">
+        <p class="summary-hero-kicker">{escape(s['hero_kicker'])}</p>
+        <h1>{hero_title}</h1>
+        <p class="summary-hero-subtitle">{subtitle}</p>
+      </div>
+      <div class="summary-hero-visual" aria-hidden="true">
+        <span class="hero-route"></span>
+        <img class="hero-pin pin-1" src="/assets/pokefuta-marker.svg" alt="">
+        <img class="hero-pin pin-2" src="/assets/pokefuta-marker.svg" alt="">
+        <img class="hero-pin pin-3" src="/assets/pokefuta-marker.svg" alt="">
+        <img class="hero-pin pin-4" src="/assets/pokefuta-marker.svg" alt="">
+      </div>
+      <div class="summary-hero-badge" aria-label="{escape(s['stats_aria'])}">
+        <span>{escape(s['stat_total'])}</span>
+        <strong>{total}</strong>
+        <small>{escape(s['total_fmt'].format(count=total))} / {escape(s['installed_fmt'].format(count=len(installed)))}</small>
+      </div>
+      <figure class="summary-hero-photo photo-main">
+        <img src="/manhole/image/141_latest.jpeg" alt="" width="720" height="720">
+      </figure>
+    </header>
     {daily_fact_html}
-    {ai_html}
+    {search_hub_html}
+    {latest_photos_html}
+    {fact_list_html}
+    {popular_pokemon_html}
     <section class="summary-stats" aria-label="{escape(s['stats_aria'])}">
       <div class="summary-stat">
         <span>{escape(s['stat_total'])}</span>
@@ -2803,30 +3256,9 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
         <strong>{escape(s['empty_fmt'].format(count=len(empty)))}</strong>
       </div>
     </section>
-    {popular_pokemon_html}
-    {latest_photos_html}
-    {no_photos_html}
-    {fact_list_html}
-    {pref_trivia_html}
+    {ai_html}
     {discovery_html}
-    <section class="summary-section" aria-labelledby="prefecture-count-heading">
-      <h2 id="prefecture-count-heading">{escape(s['h2_pref_count'])}</h2>
-      <div class="summary-table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th scope="col">{escape(s['th_pref'])}</th>
-              <th scope="col">{escape(s['th_count'])}</th>
-              <th scope="col">{escape(s['th_map'])}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {table_rows}
-          </tbody>
-        </table>
-      </div>
-    </section>
-
+    {prefecture_info_html}
     <section class="summary-section" aria-labelledby="ranking-heading">
       <h2 id="ranking-heading">{escape(s['h2_ranking'])}</h2>
       <ol class="summary-list">
@@ -2836,6 +3268,7 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
     </section>
     {pokemon_ranking_html}
     {regional_html}
+    {no_photos_html}
     <section class="summary-section" aria-labelledby="empty-prefecture-heading">
       <h2 id="empty-prefecture-heading">{escape(s['h2_empty'])}</h2>
       <p class="empty-note">{escape(s['empty_note'])}</p>
@@ -2864,7 +3297,11 @@ def main() -> None:
     if PREFECTURES_JSON.exists():
         pref_names = json.loads(PREFECTURES_JSON.read_text(encoding="utf-8"))
 
-    records = load_records(NDJSON)
+    records = [
+        record
+        for record in load_records(NDJSON)
+        if record.get("status", "active") == "active"
+    ]
     stats = build_stats(records)
     print(f"[INFO] {stats['total']} manholes across {len(stats['installed'])} prefectures")
 
