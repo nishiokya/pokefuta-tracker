@@ -66,8 +66,11 @@
     "manholePhotoAria": "井盖照片",
     "pokemonListAria": "登场宝可梦",
     "photoWanted": "征集照片",
-    "photoMissing": "此 Pokéfuta 暂无照片。",
+    "photoMissing": "目前尚无照片",
     "uploadPhoto": "上传照片",
+    "photoViewCta": "查看照片",
+    "firstPhotoUploadCta": "上传第一张照片",
+    "googleMapsCta": "在 Google Maps 查看",
     "shareButton": "分享",
     "typeLabel": "属性：",
     "genLabel": "世代：",
@@ -134,7 +137,7 @@
       "cityLabel": "市町村：",
       "officialDetail": "📝 官方",
       "officialDetailCta": "查看官方详细信息",
-      "detailPageCta": "查看详细页面",
+      "detailPageCta": "查看详情",
       "prefectureSite": "　网站"
     }
   }
