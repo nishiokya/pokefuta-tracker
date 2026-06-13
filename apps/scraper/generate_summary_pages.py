@@ -3221,7 +3221,9 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
 <body>
   <main class="summary-page">
     <header class="summary-hero">
-      <a class="summary-hero-breadcrumb" href="{escape(s['nav_home_href'])}">{escape(s['nav_home_text'])}</a>
+      <nav aria-label="{escape(s['breadcrumb_aria'])}">
+        <a class="summary-hero-breadcrumb" href="{escape(s['nav_home_href'])}">{escape(s['nav_home_text'])}</a>
+      </nav>
       <div class="summary-hero-copy">
         <p class="summary-hero-kicker">{escape(s['hero_kicker'])}</p>
         <h1>{hero_title}</h1>
