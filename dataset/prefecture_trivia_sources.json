@@ -1,0 +1,167 @@
+{
+  "_doc": "都道府県トリビアの手動マスタ。件数・自治体数・出現率は書かず、公式情報で確認した由来だけを管理する。",
+  "version": 1,
+  "pokemon_groups": [
+    {
+      "id": "vulpix-family",
+      "prefecture": "北海道",
+      "label": "ロコン系",
+      "pokemon": ["ロコン", "アローラロコン"]
+    },
+    {
+      "id": "sandshrew-family",
+      "prefecture": "鳥取県",
+      "label": "サンド系",
+      "pokemon": ["サンド", "アローラサンド"]
+    },
+    {
+      "id": "meowth-forms",
+      "prefecture": "佐賀県",
+      "label": "ニャース3種",
+      "pokemon": ["ニャース", "アローラニャース", "ガラルニャース"]
+    },
+    {
+      "id": "exeggutor-family",
+      "prefecture": "宮崎県",
+      "label": "ナッシー系",
+      "pokemon": ["ナッシー", "アローラナッシー"]
+    }
+  ],
+  "editorial_trivia": [
+    {
+      "id": "tokyo-pokepark-kanto-admission",
+      "prefecture": "東京都",
+      "type": "local_connection",
+      "text": "稲城市のポケパーク カントー内にも1枚あり、見るにはポケパーク カントーへの入場が必要です",
+      "source_url": "https://local.pokemon.jp/manhole/desc/448/",
+      "source_label": "ポケふた公式",
+      "verified_at": "2026-06-13"
+    },
+    {
+      "id": "hokkaido-support-vulpix",
+      "prefecture": "北海道",
+      "type": "support_pokemon",
+      "text": "北海道の推しポケモンは、雪景色にもなじむアローラロコンとロコンです",
+      "source_url": "https://local.pokemon.jp/municipality/hokkaido/",
+      "source_label": "ポケモンローカルActs",
+      "verified_at": "2026-06-13"
+    },
+    {
+      "id": "iwate-geodude-wordplay",
+      "prefecture": "岩手県",
+      "type": "wordplay",
+      "text": "岩タイプで「岩」に「手」が付いたイシツブテが、いわて応援ポケモンを務めています",
+      "source_url": "https://local.pokemon.jp/municipality/iwate/",
+      "source_label": "ポケモンローカルActs",
+      "verified_at": "2026-06-13"
+    },
+    {
+      "id": "miyagi-support-lapras",
+      "prefecture": "宮城県",
+      "type": "support_pokemon",
+      "text": "宮城県ではラプラスがみやぎ応援ポケモンとして地域の魅力を発信しています",
+      "source_url": "https://local.pokemon.jp/municipality/miyagi/",
+      "source_label": "ポケモンローカルActs",
+      "verified_at": "2026-06-13"
+    },
+    {
+      "id": "fukushima-support-chansey",
+      "prefecture": "福島県",
+      "type": "support_pokemon",
+      "text": "福島県では、幸せを運ぶといわれるラッキーがふくしま応援ポケモンを務めています",
+      "source_url": "https://local.pokemon.jp/municipality/fukushima/",
+      "source_label": "ポケモンローカルActs",
+      "verified_at": "2026-06-13"
+    },
+    {
+      "id": "niigata-ojiya-koi",
+      "prefecture": "新潟県",
+      "type": "local_connection",
+      "text": "錦鯉発祥の地として知られる小千谷にちなみ、コイキングのポケふたが設置されています",
+      "source_url": "https://www.city.ojiya.niigata.jp/site/kanko/pokemon.html",
+      "source_label": "小千谷市",
+      "verified_at": "2026-06-13"
+    },
+    {
+      "id": "fukui-support-dragonite",
+      "prefecture": "福井県",
+      "type": "support_pokemon",
+      "text": "福井県ではカイリューがふくい応援ポケモンとして地域を盛り上げています",
+      "source_url": "https://local.pokemon.jp/municipality/fukui/",
+      "source_label": "ポケモンローカルActs",
+      "verified_at": "2026-06-13"
+    },
+    {
+      "id": "mie-support-oshawott",
+      "prefecture": "三重県",
+      "type": "support_pokemon",
+      "text": "三重県ではミジュマルがみえ応援ポケモンとして地域の魅力を発信しています",
+      "source_url": "https://local.pokemon.jp/municipality/mie/",
+      "source_label": "ポケモンローカルActs",
+      "verified_at": "2026-06-13"
+    },
+    {
+      "id": "tottori-sand",
+      "prefecture": "鳥取県",
+      "type": "local_connection",
+      "text": "鳥取砂丘をはじめ砂で知られる鳥取県では、サンドとアローラサンドが推しポケモンです",
+      "source_url": "https://local.pokemon.jp/municipality/tottori/",
+      "source_label": "ポケモンローカルActs",
+      "verified_at": "2026-06-13"
+    },
+    {
+      "id": "kagawa-slowpoke-wordplay",
+      "prefecture": "香川県",
+      "type": "wordplay",
+      "text": "香川県では「うどん」と音の響きが似ているヤドンが推しポケモンです",
+      "source_url": "https://local.pokemon.jp/municipality/kagawa/",
+      "source_label": "ポケモンローカルActs",
+      "verified_at": "2026-06-13"
+    },
+    {
+      "id": "kochi-support-quagsire",
+      "prefecture": "高知県",
+      "type": "support_pokemon",
+      "text": "高知県では、水辺に生息するヌオーがこうちだいすきポケモンとして活動しています",
+      "source_url": "https://local.pokemon.jp/municipality/kochi/",
+      "source_label": "ポケモンローカルActs",
+      "verified_at": "2026-06-13"
+    },
+    {
+      "id": "nagasaki-support-ampharos",
+      "prefecture": "長崎県",
+      "type": "support_pokemon",
+      "text": "長崎県では、尻尾の光が遠くまで届くデンリュウがながさき未来応援ポケモンを務めています",
+      "source_url": "https://local.pokemon.jp/municipality/nagasaki/",
+      "source_label": "ポケモンローカルActs",
+      "verified_at": "2026-06-13"
+    },
+    {
+      "id": "miyazaki-support-exeggutor",
+      "prefecture": "宮崎県",
+      "type": "support_pokemon",
+      "text": "南国のイメージに合うナッシーとアローラナッシーが、宮崎だいすきポケモンとして活動しています",
+      "source_url": "https://local.pokemon.jp/municipality/miyazaki/",
+      "source_label": "ポケモンローカルActs",
+      "verified_at": "2026-06-13"
+    },
+    {
+      "id": "kagoshima-ibusuki-eevee",
+      "prefecture": "鹿児島県",
+      "type": "wordplay",
+      "text": "「イーブイすき」と「いぶすき」の語呂合わせをきっかけに、指宿へイーブイのポケふたが設置されました",
+      "source_url": "https://www.city.ibusuki.lg.jp/main/info/page014900.html",
+      "source_label": "指宿市",
+      "verified_at": "2026-06-13"
+    },
+    {
+      "id": "okinawa-support-growlithe",
+      "prefecture": "沖縄県",
+      "type": "support_pokemon",
+      "text": "沖縄県では、シーサーを思わせるガーディが沖縄応援ポケモンとして活動しています",
+      "source_url": "https://local.pokemon.jp/municipality/okinawa/",
+      "source_label": "ポケモンローカルActs",
+      "verified_at": "2026-06-13"
+    }
+  ]
+}

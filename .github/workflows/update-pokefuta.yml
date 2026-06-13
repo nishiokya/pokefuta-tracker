@@ -67,10 +67,19 @@ jobs:
             --input apps/scraper/pokefuta.ndjson \
             --output docs/pokefuta.kml
 
+      - name: Generate prefecture trivia and social candidates
+        run: |
+          python apps/scraper/generate_prefecture_trivia.py
+          python apps/scraper/generate_social_posts.py
+
       - name: Detect dataset changes
         id: diff
         run: |
-          git add docs/pokefuta.ndjson docs/pokefuta.kml || true
+          git add \
+            docs/pokefuta.ndjson \
+            docs/pokefuta.kml \
+            docs/social-post-candidates.json \
+            dataset/prefecture_trivia.json || true
           if git diff --cached --quiet; then
             echo "changed=false" >> $GITHUB_OUTPUT
           else

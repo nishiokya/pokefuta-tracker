@@ -14,7 +14,9 @@ on:
       - 'apps/scraper/generate_pokemon_index_page.py' # Pokemon index page generator
       - 'apps/scraper/generate_summary_pages.py' # summary page generator
       - 'apps/scraper/generate_summary_ogp.py' # summary page OGP generator
+      - 'apps/scraper/generate_prefecture_trivia.py' # prefecture trivia generator
       - 'docs/**'     # dataset changes copied into dist/
+      - 'dataset/prefecture_trivia*.json' # generated trivia and editorial sources
       - 'dataset/manhole/image/**' # local popup photos
       - 'tools/**'      # i18n build scripts
 
@@ -58,6 +60,8 @@ jobs:
         run: |
           set -e
           mkdir -p dist/assets
+          echo "[dist] Validate generated prefecture trivia"
+          python3 apps/scraper/generate_prefecture_trivia.py --check
           echo "[dist] Generate static manhole detail pages"
           python3 apps/scraper/generate_manhole_pages.py
           echo "[dist] Generate static Pokemon LP pages"

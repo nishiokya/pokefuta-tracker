@@ -1109,2963 +1109,6 @@
     }
   },
   {
-    "id": "michineki-04003",
-    "type": "michineki",
-    "title": "道の駅三本木周辺のポケふた（3枚）",
-    "url": "https://it-social.net/roadside_station/?04003",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "04003",
-      "station_name": "道の駅三本木",
-      "pref": "宮城県",
-      "lat": 38.521611,
-      "lng": 140.938388,
-      "manhole_count": 3,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "124",
-          "title": "宮城県/大崎市",
-          "city": "大崎",
-          "pokemons": [
-            "オニスズメ",
-            "ダグトリオ"
-          ],
-          "dist_km": 6.08,
-          "lat": 38.571356,
-          "lng": 140.967465
-        },
-        {
-          "id": "136",
-          "title": "宮城県/色麻町",
-          "city": "色麻",
-          "pokemons": [
-            "ハスブレロ",
-            "ラプラス"
-          ],
-          "dist_km": 6.76,
-          "lat": 38.530136,
-          "lng": 140.86142
-        },
-        {
-          "id": "135",
-          "title": "宮城県/大衡村",
-          "city": "大衡",
-          "pokemons": [
-            "プルリル",
-            "ラブカス"
-          ],
-          "dist_km": 7.16,
-          "lat": 38.46943814,
-          "lng": 140.8902292
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-04006",
-    "type": "michineki",
-    "title": "道の駅おおさと周辺のポケふた（4枚）",
-    "url": "https://it-social.net/roadside_station/?04006",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "04006",
-      "station_name": "道の駅おおさと",
-      "pref": "宮城県",
-      "lat": 38.424053,
-      "lng": 140.992791,
-      "manhole_count": 4,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "134",
-          "title": "宮城県/大郷町",
-          "city": "大郷",
-          "pokemons": [
-            "チュリネ",
-            "ラプラス"
-          ],
-          "dist_km": 0.01,
-          "lat": 38.424016,
-          "lng": 140.992673
-        },
-        {
-          "id": "49",
-          "title": "宮城県/松島町",
-          "city": "松島",
-          "pokemons": [
-            "ラプラス"
-          ],
-          "dist_km": 8.55,
-          "lat": 38.368987,
-          "lng": 141.061207
-        },
-        {
-          "id": "133",
-          "title": "宮城県/大和町",
-          "city": "大和",
-          "pokemons": [
-            "タマゲタケ",
-            "ドダイトス"
-          ],
-          "dist_km": 9.45,
-          "lat": 38.437364,
-          "lng": 140.885648
-        },
-        {
-          "id": "125",
-          "title": "宮城県/富谷市",
-          "city": "富谷",
-          "pokemons": [
-            "ブルー",
-            "ラプラス"
-          ],
-          "dist_km": 9.61,
-          "lat": 38.398336,
-          "lng": 140.8875
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-04012",
-    "type": "michineki",
-    "title": "道の駅村田周辺のポケふた（4枚）",
-    "url": "https://it-social.net/roadside_station/?04012",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "04012",
-      "station_name": "道の駅村田",
-      "pref": "宮城県",
-      "lat": 38.118639,
-      "lng": 140.717279,
-      "manhole_count": 4,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "129",
-          "title": "宮城県/村田町",
-          "city": "村田",
-          "pokemons": [
-            "ベロベルト",
-            "ラプラス"
-          ],
-          "dist_km": 0.07,
-          "lat": 38.119071,
-          "lng": 140.717821
-        },
-        {
-          "id": "130",
-          "title": "宮城県/柴田町",
-          "city": "柴田",
-          "pokemons": [
-            "フラベベ",
-            "ラプラス"
-          ],
-          "dist_km": 7.98,
-          "lat": 38.059143,
-          "lng": 140.768239
-        },
-        {
-          "id": "128",
-          "title": "宮城県/大河原町",
-          "city": "大河原",
-          "pokemons": [
-            "チェリム",
-            "ラプラス"
-          ],
-          "dist_km": 8.01,
-          "lat": 38.0485032,
-          "lng": 140.738089
-        },
-        {
-          "id": "131",
-          "title": "宮城県/川崎町",
-          "city": "川崎",
-          "pokemons": [
-            "ラプラス"
-          ],
-          "dist_km": 9.18,
-          "lat": 38.177534,
-          "lng": 140.643653
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-04015",
-    "type": "michineki",
-    "title": "道の駅かくだ周辺のポケふた（3枚）",
-    "url": "https://it-social.net/roadside_station/?04015",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "04015",
-      "station_name": "道の駅かくだ",
-      "pref": "宮城県",
-      "lat": 37.968556,
-      "lng": 140.807611,
-      "manhole_count": 3,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "121",
-          "title": "宮城県/角田市",
-          "city": "角田",
-          "pokemons": [
-            "ラティアス",
-            "ラプラス"
-          ],
-          "dist_km": 0.05,
-          "lat": 37.968694,
-          "lng": 140.807077
-        },
-        {
-          "id": "132",
-          "title": "宮城県/丸森町",
-          "city": "丸森",
-          "pokemons": [
-            "ニャスパー",
-            "ニャース"
-          ],
-          "dist_km": 7.25,
-          "lat": 37.913873,
-          "lng": 140.762531
-        },
-        {
-          "id": "58",
-          "title": "宮城県/山元町",
-          "city": "山元",
-          "pokemons": [
-            "ラッキー",
-            "ラプラス"
-          ],
-          "dist_km": 9.57,
-          "lat": 37.923988,
-          "lng": 140.900996
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-07010",
-    "type": "michineki",
-    "title": "道の駅会津柳津周辺のポケふた（3枚）",
-    "url": "https://it-social.net/roadside_station/?07010",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "07010",
-      "station_name": "道の駅会津柳津",
-      "pref": "福島県",
-      "lat": 37.527693,
-      "lng": 139.7221754,
-      "manhole_count": 3,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "251",
-          "title": "福島県/柳津町",
-          "city": "柳津",
-          "pokemons": [
-            "ピンプク",
-            "ラッキー"
-          ],
-          "dist_km": 0.07,
-          "lat": 37.528189,
-          "lng": 139.722662
-        },
-        {
-          "id": "369",
-          "title": "福島県/会津坂下町",
-          "city": "会津坂下",
-          "pokemons": [
-            "カイリキー",
-            "ラッキー"
-          ],
-          "dist_km": 9.46,
-          "lat": 37.56046,
-          "lng": 139.821186
-        },
-        {
-          "id": "457",
-          "title": "福島県/西会津町",
-          "city": "西会津",
-          "pokemons": [
-            "ピクシー",
-            "マシェード"
-          ],
-          "dist_km": 9.51,
-          "lat": 37.585568,
-          "lng": 139.642677
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-07014",
-    "type": "michineki",
-    "title": "道の駅たまかわ周辺のポケふた（3枚）",
-    "url": "https://it-social.net/roadside_station/?07014",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "07014",
-      "station_name": "道の駅たまかわ",
-      "pref": "福島県",
-      "lat": 37.2228324,
-      "lng": 140.4181372,
-      "manhole_count": 3,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "370",
-          "title": "福島県/鏡石町",
-          "city": "鏡石",
-          "pokemons": [
-            "ミルタンク",
-            "メリープ"
-          ],
-          "dist_km": 7.03,
-          "lat": 37.251117,
-          "lng": 140.347153
-        },
-        {
-          "id": "285",
-          "title": "福島県/矢吹町",
-          "city": "矢吹",
-          "pokemons": [
-            "ファイアロー",
-            "ラッキー"
-          ],
-          "dist_km": 7.32,
-          "lat": 37.21842,
-          "lng": 140.335635
-        },
-        {
-          "id": "454",
-          "title": "福島県/須賀川市",
-          "city": "須賀川",
-          "pokemons": [
-            "マフォクシー",
-            "ラッキー"
-          ],
-          "dist_km": 8.25,
-          "lat": 37.291536,
-          "lng": 140.382947
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-07023",
-    "type": "michineki",
-    "title": "道の駅季の里天栄周辺のポケふた（3枚）",
-    "url": "https://it-social.net/roadside_station/?07023",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "07023",
-      "station_name": "道の駅季の里天栄",
-      "pref": "福島県",
-      "lat": 37.2436603,
-      "lng": 140.2447857,
-      "manhole_count": 3,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "455",
-          "title": "福島県/天栄村",
-          "city": "天栄",
-          "pokemons": [
-            "イエッサン",
-            "ラッキー"
-          ],
-          "dist_km": 0.1,
-          "lat": 37.243406,
-          "lng": 140.243722
-        },
-        {
-          "id": "285",
-          "title": "福島県/矢吹町",
-          "city": "矢吹",
-          "pokemons": [
-            "ファイアロー",
-            "ラッキー"
-          ],
-          "dist_km": 8.52,
-          "lat": 37.21842,
-          "lng": 140.335635
-        },
-        {
-          "id": "370",
-          "title": "福島県/鏡石町",
-          "city": "鏡石",
-          "pokemons": [
-            "ミルタンク",
-            "メリープ"
-          ],
-          "dist_km": 9.1,
-          "lat": 37.251117,
-          "lng": 140.347153
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-07034",
-    "type": "michineki",
-    "title": "道の駅なみえ周辺のポケふた（3枚）",
-    "url": "https://it-social.net/roadside_station/?07034",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "07034",
-      "station_name": "道の駅なみえ",
-      "pref": "福島県",
-      "lat": 37.496278,
-      "lng": 141.000278,
-      "manhole_count": 3,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "91",
-          "title": "福島県/浪江町",
-          "city": "浪江",
-          "pokemons": [
-            "ラッキー"
-          ],
-          "dist_km": 0.06,
-          "lat": 37.496395,
-          "lng": 141.000919
-        },
-        {
-          "id": "253",
-          "title": "福島県/双葉町",
-          "city": "双葉",
-          "pokemons": [
-            "ヒマナッツ",
-            "ラッキー"
-          ],
-          "dist_km": 4.92,
-          "lat": 37.45745,
-          "lng": 141.02692
-        },
-        {
-          "id": "462",
-          "title": "福島県/大熊町",
-          "city": "大熊",
-          "pokemons": [
-            "キテルグマ",
-            "ヌイコグマ"
-          ],
-          "dist_km": 9.72,
-          "lat": 37.4099576,
-          "lng": 140.983206
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-08008",
-    "type": "michineki",
-    "title": "道の駅いたこ周辺のポケふた（3枚）",
-    "url": "https://it-social.net/roadside_station/?08008",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "08008",
-      "station_name": "道の駅いたこ",
-      "pref": "茨城県",
-      "lat": 35.9461322,
-      "lng": 140.5892448,
-      "manhole_count": 3,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "224",
-          "title": "千葉県/香取市",
-          "city": "香取",
-          "pokemons": [
-            "フラージェス",
-            "ヤヤコマ"
-          ],
-          "dist_km": 6.25,
-          "lat": 35.928206,
-          "lng": 140.523401
-        },
-        {
-          "id": "409",
-          "title": "茨城県/神栖市",
-          "city": "神栖",
-          "pokemons": [
-            "オトシドリ",
-            "マラカッチ"
-          ],
-          "dist_km": 7.65,
-          "lat": 35.897341,
-          "lng": 140.649095
-        },
-        {
-          "id": "225",
-          "title": "千葉県/香取市",
-          "city": "香取",
-          "pokemons": [
-            "タネボー",
-            "ハスボー"
-          ],
-          "dist_km": 9.3,
-          "lat": 35.896204,
-          "lng": 140.506419
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-12021",
-    "type": "michineki",
-    "title": "道の駅水の郷さわら周辺のポケふた（4枚）",
-    "url": "https://it-social.net/roadside_station/?12021",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "12021",
-      "station_name": "道の駅水の郷さわら",
-      "pref": "千葉県",
-      "lat": 35.896313,
-      "lng": 140.505908,
-      "manhole_count": 4,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "225",
-          "title": "千葉県/香取市",
-          "city": "香取",
-          "pokemons": [
-            "タネボー",
-            "ハスボー"
-          ],
-          "dist_km": 0.05,
-          "lat": 35.896204,
-          "lng": 140.506419
-        },
-        {
-          "id": "222",
-          "title": "千葉県/香取市",
-          "city": "香取",
-          "pokemons": [
-            "ガラルカモネギ"
-          ],
-          "dist_km": 1.1,
-          "lat": 35.894417,
-          "lng": 140.493902
-        },
-        {
-          "id": "223",
-          "title": "千葉県/香取市",
-          "city": "香取",
-          "pokemons": [
-            "ココガラ",
-            "タイレーツ"
-          ],
-          "dist_km": 1.16,
-          "lat": 35.888376,
-          "lng": 140.497568
-        },
-        {
-          "id": "224",
-          "title": "千葉県/香取市",
-          "city": "香取",
-          "pokemons": [
-            "フラージェス",
-            "ヤヤコマ"
-          ],
-          "dist_km": 3.88,
-          "lat": 35.928206,
-          "lng": 140.523401
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-15009",
-    "type": "michineki",
-    "title": "道の駅ちぢみの里おぢや周辺のポケふた（4枚）",
-    "url": "https://it-social.net/roadside_station/?15009",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "15009",
-      "station_name": "道の駅ちぢみの里おぢや",
-      "pref": "新潟県",
-      "lat": 37.305143,
-      "lng": 138.822908,
-      "manhole_count": 4,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "145",
-          "title": "新潟県/小千谷市",
-          "city": "小千谷",
-          "pokemons": [
-            "コイキング"
-          ],
-          "dist_km": 1.03,
-          "lat": 37.309883,
-          "lng": 138.812939
-        },
-        {
-          "id": "146",
-          "title": "新潟県/小千谷市",
-          "city": "小千谷",
-          "pokemons": [
-            "コイキング",
-            "ヒンバス"
-          ],
-          "dist_km": 2.5,
-          "lat": 37.311028,
-          "lng": 138.795653
-        },
-        {
-          "id": "144",
-          "title": "新潟県/小千谷市",
-          "city": "小千谷",
-          "pokemons": [
-            "コイキング"
-          ],
-          "dist_km": 2.68,
-          "lat": 37.314216,
-          "lng": 138.794792
-        },
-        {
-          "id": "147",
-          "title": "新潟県/小千谷市",
-          "city": "小千谷",
-          "pokemons": [
-            "コイキング",
-            "ピジョン"
-          ],
-          "dist_km": 3.63,
-          "lat": 37.314301,
-          "lng": 138.7835
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-15032",
-    "type": "michineki",
-    "title": "道の駅越後川口周辺のポケふた（4枚）",
-    "url": "https://it-social.net/roadside_station/?15032",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "15032",
-      "station_name": "道の駅越後川口",
-      "pref": "新潟県",
-      "lat": 37.2608955,
-      "lng": 138.8676387,
-      "manhole_count": 4,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "145",
-          "title": "新潟県/小千谷市",
-          "city": "小千谷",
-          "pokemons": [
-            "コイキング"
-          ],
-          "dist_km": 7.29,
-          "lat": 37.309883,
-          "lng": 138.812939
-        },
-        {
-          "id": "146",
-          "title": "新潟県/小千谷市",
-          "city": "小千谷",
-          "pokemons": [
-            "コイキング",
-            "ヒンバス"
-          ],
-          "dist_km": 8.46,
-          "lat": 37.311028,
-          "lng": 138.795653
-        },
-        {
-          "id": "144",
-          "title": "新潟県/小千谷市",
-          "city": "小千谷",
-          "pokemons": [
-            "コイキング"
-          ],
-          "dist_km": 8.76,
-          "lat": 37.314216,
-          "lng": 138.794792
-        },
-        {
-          "id": "147",
-          "title": "新潟県/小千谷市",
-          "city": "小千谷",
-          "pokemons": [
-            "コイキング",
-            "ピジョン"
-          ],
-          "dist_km": 9.52,
-          "lat": 37.314301,
-          "lng": 138.7835
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-18016",
-    "type": "michineki",
-    "title": "道の駅恐竜渓谷かつやま周辺のポケふた（3枚）",
-    "url": "https://it-social.net/roadside_station/?18016",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "18016",
-      "station_name": "道の駅恐竜渓谷かつやま",
-      "pref": "福井県",
-      "lat": 36.072056,
-      "lng": 136.47875,
-      "manhole_count": 3,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "336",
-          "title": "福井県/勝山市",
-          "city": "勝山",
-          "pokemons": [
-            "アーケン",
-            "カイリュー"
-          ],
-          "dist_km": 2.07,
-          "lat": 36.056787,
-          "lng": 136.492007
-        },
-        {
-          "id": "339",
-          "title": "福井県/永平寺町",
-          "city": "永平寺",
-          "pokemons": [
-            "カイリュー",
-            "ダクマ"
-          ],
-          "dist_km": 7.19,
-          "lat": 36.079891,
-          "lng": 136.399312
-        },
-        {
-          "id": "364",
-          "title": "福井県/大野市",
-          "city": "大野",
-          "pokemons": [
-            "カイリュー"
-          ],
-          "dist_km": 9.76,
-          "lat": 35.9845016,
-          "lng": 136.4859314
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-18019",
-    "type": "michineki",
-    "title": "道の駅越前たけふ周辺のポケふた（3枚）",
-    "url": "https://it-social.net/roadside_station/?18019",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "18019",
-      "station_name": "道の駅越前たけふ",
-      "pref": "福井県",
-      "lat": 35.895139,
-      "lng": 136.198111,
-      "manhole_count": 3,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "338",
-          "title": "福井県/越前市",
-          "city": "越前",
-          "pokemons": [
-            "エレズン",
-            "カイリュー"
-          ],
-          "dist_km": 0.06,
-          "lat": 35.895286,
-          "lng": 136.198727
-        },
-        {
-          "id": "419",
-          "title": "福井県/鯖江市",
-          "city": "鯖江",
-          "pokemons": [
-            "カイリュー",
-            "サッチムシ"
-          ],
-          "dist_km": 6.3,
-          "lat": 35.950098,
-          "lng": 136.181116
-        },
-        {
-          "id": "366",
-          "title": "福井県/南越前町",
-          "city": "南越前",
-          "pokemons": [
-            "カイリュー",
-            "バタフリー"
-          ],
-          "dist_km": 7.09,
-          "lat": 35.831454,
-          "lng": 136.201365
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-23017",
-    "type": "michineki",
-    "title": "道の駅とよはし周辺のポケふた（4枚）",
-    "url": "https://it-social.net/roadside_station/?23017",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "23017",
-      "station_name": "道の駅とよはし",
-      "pref": "愛知県",
-      "lat": 34.696222,
-      "lng": 137.414833,
-      "manhole_count": 4,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "273",
-          "title": "愛知県/豊橋市",
-          "city": "豊橋市",
-          "pokemons": [
-            "スターミー",
-            "デンヂムシ"
-          ],
-          "dist_km": 0.09,
-          "lat": 34.695901,
-          "lng": 137.413953
-        },
-        {
-          "id": "274",
-          "title": "愛知県/豊橋市",
-          "city": "豊橋市",
-          "pokemons": [
-            "カブト",
-            "クワガノン"
-          ],
-          "dist_km": 3.06,
-          "lat": 34.72096,
-          "lng": 137.429448
-        },
-        {
-          "id": "272",
-          "title": "愛知県/豊橋市",
-          "city": "豊橋市",
-          "pokemons": [
-            "アゴジムシ",
-            "アブリボン"
-          ],
-          "dist_km": 7.93,
-          "lat": 34.762599,
-          "lng": 137.382958
-        },
-        {
-          "id": "271",
-          "title": "愛知県/豊橋市",
-          "city": "豊橋市",
-          "pokemons": [
-            "バクフーン"
-          ],
-          "dist_km": 8.3,
-          "lat": 34.768863,
-          "lng": 137.393843
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-24014",
-    "type": "michineki",
-    "title": "道の駅あやま周辺のポケふた（3枚）",
-    "url": "https://it-social.net/roadside_station/?24014",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "24014",
-      "station_name": "道の駅あやま",
-      "pref": "三重県",
-      "lat": 34.8445672,
-      "lng": 136.1709955,
-      "manhole_count": 3,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "239",
-          "title": "滋賀県/甲賀市",
-          "city": "甲賀",
-          "pokemons": [
-            "ゲコガシラ",
-            "ゲッコウガ"
-          ],
-          "dist_km": 8.18,
-          "lat": 34.900437,
-          "lng": 136.229399
-        },
-        {
-          "id": "237",
-          "title": "滋賀県/甲賀市",
-          "city": "甲賀",
-          "pokemons": [
-            "ゲッコウガ"
-          ],
-          "dist_km": 8.34,
-          "lat": 34.919591,
-          "lng": 136.170196
-        },
-        {
-          "id": "246",
-          "title": "三重県/伊賀市",
-          "city": "伊賀市",
-          "pokemons": [
-            "アギルダー",
-            "ミジュマル"
-          ],
-          "dist_km": 9.34,
-          "lat": 34.767543,
-          "lng": 136.130081
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-24016",
-    "type": "michineki",
-    "title": "道の駅津かわげ周辺のポケふた（4枚）",
-    "url": "https://it-social.net/roadside_station/?24016",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "24016",
-      "station_name": "道の駅津かわげ",
-      "pref": "三重県",
-      "lat": 34.7967069,
-      "lng": 136.5179906,
-      "manhole_count": 4,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "415",
-          "title": "三重県/鈴鹿市",
-          "city": "鈴鹿",
-          "pokemons": [
-            "ミジュマル"
-          ],
-          "dist_km": 6.46,
-          "lat": 34.852227,
-          "lng": 136.538663
-        },
-        {
-          "id": "330",
-          "title": "三重県/鈴鹿市",
-          "city": "鈴鹿市",
-          "pokemons": [
-            "ミジュマル",
-            "モトトカゲ"
-          ],
-          "dist_km": 6.75,
-          "lat": 34.823065,
-          "lng": 136.584609
-        },
-        {
-          "id": "240",
-          "title": "三重県/津市",
-          "city": "津市",
-          "pokemons": [
-            "ミジュマル"
-          ],
-          "dist_km": 8.72,
-          "lat": 34.718493,
-          "lng": 136.5108
-        },
-        {
-          "id": "292",
-          "title": "三重県/亀山市",
-          "city": "亀山市",
-          "pokemons": [
-            "ドダイトス",
-            "ミジュマル"
-          ],
-          "dist_km": 9.49,
-          "lat": 34.8594415,
-          "lng": 136.4474608
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-28016",
-    "type": "michineki",
-    "title": "道の駅うずしお周辺のポケふた（3枚）",
-    "url": "https://it-social.net/roadside_station/?28016",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "28016",
-      "station_name": "道の駅うずしお",
-      "pref": "兵庫県",
-      "lat": 34.2420275,
-      "lng": 134.6597796,
-      "manhole_count": 3,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "327",
-          "title": "徳島県/鳴門市",
-          "city": "鳴門",
-          "pokemons": [
-            "スイクン"
-          ],
-          "dist_km": 2.94,
-          "lat": 34.224106,
-          "lng": 134.636196
-        },
-        {
-          "id": "328",
-          "title": "徳島県/鳴門市",
-          "city": "鳴門",
-          "pokemons": [
-            "キングドラ",
-            "シードラ"
-          ],
-          "dist_km": 8.55,
-          "lat": 34.181955,
-          "lng": 134.601709
-        },
-        {
-          "id": "329",
-          "title": "徳島県/鳴門市",
-          "city": "鳴門",
-          "pokemons": [
-            "ディグダ",
-            "ニョロゾ"
-          ],
-          "dist_km": 9.14,
-          "lat": 34.168084,
-          "lng": 134.616371
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-29005",
-    "type": "michineki",
-    "title": "道の駅ふたかみパーク當麻周辺のポケふた（4枚）",
-    "url": "https://it-social.net/roadside_station/?29005",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "29005",
-      "station_name": "道の駅ふたかみパーク當麻",
-      "pref": "奈良県",
-      "lat": 34.5265079,
-      "lng": 135.6932765,
-      "manhole_count": 4,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "148",
-          "title": "奈良県/斑鳩町",
-          "city": "斑鳩",
-          "pokemons": [
-            "ドータクン",
-            "バオッキー"
-          ],
-          "dist_km": 9.38,
-          "lat": 34.60189,
-          "lng": 135.73917
-        },
-        {
-          "id": "149",
-          "title": "奈良県/斑鳩町",
-          "city": "斑鳩",
-          "pokemons": [
-            "ガーディ",
-            "マダツボミ"
-          ],
-          "dist_km": 9.6,
-          "lat": 34.60474,
-          "lng": 135.7376
-        },
-        {
-          "id": "151",
-          "title": "奈良県/斑鳩町",
-          "city": "斑鳩",
-          "pokemons": [
-            "シキジカ",
-            "ヒノヤコマ"
-          ],
-          "dist_km": 9.95,
-          "lat": 34.60826,
-          "lng": 135.73755
-        },
-        {
-          "id": "150",
-          "title": "奈良県/斑鳩町",
-          "city": "斑鳩",
-          "pokemons": [
-            "チリーン",
-            "ブビィ"
-          ],
-          "dist_km": 9.96,
-          "lat": 34.60827,
-          "lng": 135.73769
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-29010",
-    "type": "michineki",
-    "title": "道の駅大和路へぐり周辺のポケふた（9枚）",
-    "url": "https://it-social.net/roadside_station/?29010",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "29010",
-      "station_name": "道の駅大和路へぐり",
-      "pref": "奈良県",
-      "lat": 34.6235384,
-      "lng": 135.7062481,
-      "manhole_count": 9,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "152",
-          "title": "奈良県/斑鳩町",
-          "city": "斑鳩",
-          "pokemons": [
-            "エンテイ"
-          ],
-          "dist_km": 3.06,
-          "lat": 34.60983,
-          "lng": 135.73529
-        },
-        {
-          "id": "151",
-          "title": "奈良県/斑鳩町",
-          "city": "斑鳩",
-          "pokemons": [
-            "シキジカ",
-            "ヒノヤコマ"
-          ],
-          "dist_km": 3.33,
-          "lat": 34.60826,
-          "lng": 135.73755
-        },
-        {
-          "id": "150",
-          "title": "奈良県/斑鳩町",
-          "city": "斑鳩",
-          "pokemons": [
-            "チリーン",
-            "ブビィ"
-          ],
-          "dist_km": 3.34,
-          "lat": 34.60827,
-          "lng": 135.73769
-        },
-        {
-          "id": "149",
-          "title": "奈良県/斑鳩町",
-          "city": "斑鳩",
-          "pokemons": [
-            "ガーディ",
-            "マダツボミ"
-          ],
-          "dist_km": 3.55,
-          "lat": 34.60474,
-          "lng": 135.7376
-        },
-        {
-          "id": "148",
-          "title": "奈良県/斑鳩町",
-          "city": "斑鳩",
-          "pokemons": [
-            "ドータクン",
-            "バオッキー"
-          ],
-          "dist_km": 3.86,
-          "lat": 34.60189,
-          "lng": 135.73917
-        },
-        {
-          "id": "207",
-          "title": "大阪府/東大阪市",
-          "city": "東大阪",
-          "pokemons": [
-            "ギアル",
-            "ギギアル"
-          ],
-          "dist_km": 7.81,
-          "lat": 34.66771,
-          "lng": 135.63989
-        },
-        {
-          "id": "208",
-          "title": "大阪府/東大阪市",
-          "city": "東大阪",
-          "pokemons": [
-            "エレキッド",
-            "クチート"
-          ],
-          "dist_km": 8.13,
-          "lat": 34.680678,
-          "lng": 135.650788
-        },
-        {
-          "id": "210",
-          "title": "大阪府/東大阪市",
-          "city": "東大阪",
-          "pokemons": [
-            "トゲデマル",
-            "ワンパチ"
-          ],
-          "dist_km": 8.6,
-          "lat": 34.669486,
-          "lng": 135.630586
-        },
-        {
-          "id": "209",
-          "title": "大阪府/東大阪市",
-          "city": "東大阪",
-          "pokemons": [
-            "ライコウ"
-          ],
-          "dist_km": 8.81,
-          "lat": 34.667678,
-          "lng": 135.626309
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-29014",
-    "type": "michineki",
-    "title": "道の駅レスティ 唐古・鍵周辺のポケふた（5枚）",
-    "url": "https://it-social.net/roadside_station/?29014",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "29014",
-      "station_name": "道の駅レスティ 唐古・鍵",
-      "pref": "奈良県",
-      "lat": 34.571407,
-      "lng": 135.797418,
-      "manhole_count": 5,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "148",
-          "title": "奈良県/斑鳩町",
-          "city": "斑鳩",
-          "pokemons": [
-            "ドータクン",
-            "バオッキー"
-          ],
-          "dist_km": 6.32,
-          "lat": 34.60189,
-          "lng": 135.73917
-        },
-        {
-          "id": "149",
-          "title": "奈良県/斑鳩町",
-          "city": "斑鳩",
-          "pokemons": [
-            "ガーディ",
-            "マダツボミ"
-          ],
-          "dist_km": 6.61,
-          "lat": 34.60474,
-          "lng": 135.7376
-        },
-        {
-          "id": "150",
-          "title": "奈良県/斑鳩町",
-          "city": "斑鳩",
-          "pokemons": [
-            "チリーン",
-            "ブビィ"
-          ],
-          "dist_km": 6.83,
-          "lat": 34.60827,
-          "lng": 135.73769
-        },
-        {
-          "id": "151",
-          "title": "奈良県/斑鳩町",
-          "city": "斑鳩",
-          "pokemons": [
-            "シキジカ",
-            "ヒノヤコマ"
-          ],
-          "dist_km": 6.84,
-          "lat": 34.60826,
-          "lng": 135.73755
-        },
-        {
-          "id": "152",
-          "title": "奈良県/斑鳩町",
-          "city": "斑鳩",
-          "pokemons": [
-            "エンテイ"
-          ],
-          "dist_km": 7.11,
-          "lat": 34.60983,
-          "lng": 135.73529
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-31001",
-    "type": "michineki",
-    "title": "道の駅大栄周辺のポケふた（3枚）",
-    "url": "https://it-social.net/roadside_station/?31001",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "31001",
-      "station_name": "道の駅大栄",
-      "pref": "鳥取県",
-      "lat": 35.4987404,
-      "lng": 133.7617796,
-      "manhole_count": 3,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "108",
-          "title": "鳥取県/北栄町",
-          "city": "北栄",
-          "pokemons": [
-            "アローラサンド",
-            "サンド"
-          ],
-          "dist_km": 5.08,
-          "lat": 35.49924,
-          "lng": 133.81794
-        },
-        {
-          "id": "82",
-          "title": "鳥取県/琴浦町",
-          "city": "琴浦",
-          "pokemons": [
-            "アローラサンド",
-            "サンド"
-          ],
-          "dist_km": 9.11,
-          "lat": 35.506942,
-          "lng": 133.661612
-        },
-        {
-          "id": "76",
-          "title": "鳥取県/倉吉市",
-          "city": "倉吉",
-          "pokemons": [
-            "アローラサンド",
-            "サンド"
-          ],
-          "dist_km": 9.4,
-          "lat": 35.454272,
-          "lng": 133.850116
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-31003",
-    "type": "michineki",
-    "title": "道の駅北条公園周辺のポケふた（3枚）",
-    "url": "https://it-social.net/roadside_station/?31003",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "31003",
-      "station_name": "道の駅北条公園",
-      "pref": "鳥取県",
-      "lat": 35.4981997,
-      "lng": 133.8199605,
-      "manhole_count": 3,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "108",
-          "title": "鳥取県/北栄町",
-          "city": "北栄",
-          "pokemons": [
-            "アローラサンド",
-            "サンド"
-          ],
-          "dist_km": 0.22,
-          "lat": 35.49924,
-          "lng": 133.81794
-        },
-        {
-          "id": "76",
-          "title": "鳥取県/倉吉市",
-          "city": "倉吉",
-          "pokemons": [
-            "アローラサンド",
-            "サンド"
-          ],
-          "dist_km": 5.6,
-          "lat": 35.454272,
-          "lng": 133.850116
-        },
-        {
-          "id": "81",
-          "title": "鳥取県/湯梨浜町",
-          "city": "湯梨浜",
-          "pokemons": [
-            "サンド",
-            "シェルダー"
-          ],
-          "dist_km": 6.21,
-          "lat": 35.478166,
-          "lng": 133.88401
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-31007",
-    "type": "michineki",
-    "title": "道の駅はわい周辺のポケふた（4枚）",
-    "url": "https://it-social.net/roadside_station/?31007",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "31007",
-      "station_name": "道の駅はわい",
-      "pref": "鳥取県",
-      "lat": 35.4942979,
-      "lng": 133.8904755,
-      "manhole_count": 4,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "81",
-          "title": "鳥取県/湯梨浜町",
-          "city": "湯梨浜",
-          "pokemons": [
-            "サンド",
-            "シェルダー"
-          ],
-          "dist_km": 1.89,
-          "lat": 35.478166,
-          "lng": 133.88401
-        },
-        {
-          "id": "76",
-          "title": "鳥取県/倉吉市",
-          "city": "倉吉",
-          "pokemons": [
-            "アローラサンド",
-            "サンド"
-          ],
-          "dist_km": 5.76,
-          "lat": 35.454272,
-          "lng": 133.850116
-        },
-        {
-          "id": "108",
-          "title": "鳥取県/北栄町",
-          "city": "北栄",
-          "pokemons": [
-            "アローラサンド",
-            "サンド"
-          ],
-          "dist_km": 6.59,
-          "lat": 35.49924,
-          "lng": 133.81794
-        },
-        {
-          "id": "80",
-          "title": "鳥取県/三朝町",
-          "city": "三朝",
-          "pokemons": [
-            "アローラサンド",
-            "ケロマツ"
-          ],
-          "dist_km": 9.46,
-          "lat": 35.409324,
-          "lng": 133.894397
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-31012",
-    "type": "michineki",
-    "title": "燕趙園周辺のポケふた（4枚）",
-    "url": "https://it-social.net/roadside_station/?31012",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "31012",
-      "station_name": "燕趙園",
-      "pref": "鳥取県",
-      "lat": 35.4646909,
-      "lng": 133.8926402,
-      "manhole_count": 4,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "81",
-          "title": "鳥取県/湯梨浜町",
-          "city": "湯梨浜",
-          "pokemons": [
-            "サンド",
-            "シェルダー"
-          ],
-          "dist_km": 1.69,
-          "lat": 35.478166,
-          "lng": 133.88401
-        },
-        {
-          "id": "76",
-          "title": "鳥取県/倉吉市",
-          "city": "倉吉",
-          "pokemons": [
-            "アローラサンド",
-            "サンド"
-          ],
-          "dist_km": 4.02,
-          "lat": 35.454272,
-          "lng": 133.850116
-        },
-        {
-          "id": "80",
-          "title": "鳥取県/三朝町",
-          "city": "三朝",
-          "pokemons": [
-            "アローラサンド",
-            "ケロマツ"
-          ],
-          "dist_km": 6.16,
-          "lat": 35.409324,
-          "lng": 133.894397
-        },
-        {
-          "id": "108",
-          "title": "鳥取県/北栄町",
-          "city": "北栄",
-          "pokemons": [
-            "アローラサンド",
-            "サンド"
-          ],
-          "dist_km": 7.78,
-          "lat": 35.49924,
-          "lng": 133.81794
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-31013",
-    "type": "michineki",
-    "title": "道の駅きなんせ岩美周辺のポケふた（3枚）",
-    "url": "https://it-social.net/roadside_station/?31013",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "31013",
-      "station_name": "道の駅きなんせ岩美",
-      "pref": "鳥取県",
-      "lat": 35.56741079,
-      "lng": 134.3259855,
-      "manhole_count": 3,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "78",
-          "title": "鳥取県/岩美町",
-          "city": "岩美",
-          "pokemons": [
-            "サンド",
-            "ネイティオ"
-          ],
-          "dist_km": 2.65,
-          "lat": 35.590938,
-          "lng": 134.321556
-        },
-        {
-          "id": "74",
-          "title": "鳥取県/鳥取市",
-          "city": "鳥取",
-          "pokemons": [
-            "アローラサンド",
-            "サンド"
-          ],
-          "dist_km": 8.6,
-          "lat": 35.539668,
-          "lng": 134.237266
-        },
-        {
-          "id": "300",
-          "title": "鳥取県/鳥取市",
-          "city": "鳥取",
-          "pokemons": [
-            "アローラサンド",
-            "サンド"
-          ],
-          "dist_km": 9.91,
-          "lat": 35.53395,
-          "lng": 134.224478
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-31014",
-    "type": "michineki",
-    "title": "道の駅奥大山周辺のポケふた（4枚）",
-    "url": "https://it-social.net/roadside_station/?31014",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "31014",
-      "station_name": "道の駅奥大山",
-      "pref": "鳥取県",
-      "lat": 35.2961102,
-      "lng": 133.4740758,
-      "manhole_count": 4,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "110",
-          "title": "鳥取県/江府町",
-          "city": "江府",
-          "pokemons": [
-            "アローラサンド",
-            "サンド"
-          ],
-          "dist_km": 0.03,
-          "lat": 35.295841,
-          "lng": 133.474089
-        },
-        {
-          "id": "87",
-          "title": "鳥取県/日野町",
-          "city": "日野",
-          "pokemons": [
-            "アローラサンド",
-            "サンド"
-          ],
-          "dist_km": 6.73,
-          "lat": 35.24192,
-          "lng": 133.441049
-        },
-        {
-          "id": "84",
-          "title": "鳥取県/南部町",
-          "city": "南部",
-          "pokemons": [
-            "アローラサンド",
-            "サンド"
-          ],
-          "dist_km": 7.33,
-          "lat": 35.347474,
-          "lng": 133.423398
-        },
-        {
-          "id": "85",
-          "title": "鳥取県/伯耆町",
-          "city": "伯耆",
-          "pokemons": [
-            "アローラサンド",
-            "オニゴーリ"
-          ],
-          "dist_km": 9.81,
-          "lat": 35.383395,
-          "lng": 133.458512
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-32027",
-    "type": "michineki",
-    "title": "道の駅あらエッサ周辺のポケふた（3枚）",
-    "url": "https://it-social.net/roadside_station/?32027",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "32027",
-      "station_name": "道の駅あらエッサ",
-      "pref": "島根県",
-      "lat": 35.4095485,
-      "lng": 133.3124056,
-      "manhole_count": 3,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "380",
-          "title": "島根県/安来市",
-          "city": "安来",
-          "pokemons": [
-            "ドジョッチ",
-            "バリヤード"
-          ],
-          "dist_km": 5.27,
-          "lat": 35.428407,
-          "lng": 133.259012
-        },
-        {
-          "id": "75",
-          "title": "鳥取県/米子市",
-          "city": "米子",
-          "pokemons": [
-            "カモネギ",
-            "サンド"
-          ],
-          "dist_km": 6.84,
-          "lat": 35.456258,
-          "lng": 133.361525
-        },
-        {
-          "id": "109",
-          "title": "鳥取県/日吉津村",
-          "city": "日吉津",
-          "pokemons": [
-            "サンド",
-            "メタモン"
-          ],
-          "dist_km": 7.03,
-          "lat": 35.441126,
-          "lng": 133.379578
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-36018",
-    "type": "michineki",
-    "title": "道の駅くるくる なると周辺のポケふた（3枚）",
-    "url": "https://it-social.net/roadside_station/?36018",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "36018",
-      "station_name": "道の駅くるくる なると",
-      "pref": "徳島県",
-      "lat": 34.158139,
-      "lng": 134.579889,
-      "manhole_count": 3,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "328",
-          "title": "徳島県/鳴門市",
-          "city": "鳴門",
-          "pokemons": [
-            "キングドラ",
-            "シードラ"
-          ],
-          "dist_km": 3.32,
-          "lat": 34.181955,
-          "lng": 134.601709
-        },
-        {
-          "id": "329",
-          "title": "徳島県/鳴門市",
-          "city": "鳴門",
-          "pokemons": [
-            "ディグダ",
-            "ニョロゾ"
-          ],
-          "dist_km": 3.53,
-          "lat": 34.168084,
-          "lng": 134.616371
-        },
-        {
-          "id": "327",
-          "title": "徳島県/鳴門市",
-          "city": "鳴門",
-          "pokemons": [
-            "スイクン"
-          ],
-          "dist_km": 8.98,
-          "lat": 34.224106,
-          "lng": 134.636196
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-37001",
-    "type": "michineki",
-    "title": "道の駅瀬戸大橋記念公園周辺のポケふた（4枚）",
-    "url": "https://it-social.net/roadside_station/?37001",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "37001",
-      "station_name": "道の駅瀬戸大橋記念公園",
-      "pref": "香川県",
-      "lat": 34.3526893,
-      "lng": 133.8261282,
-      "manhole_count": 4,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "97",
-          "title": "香川県/宇多津町",
-          "city": "宇多津",
-          "pokemons": [
-            "ガラルヤドン",
-            "ヌオー"
-          ],
-          "dist_km": 4.69,
-          "lat": 34.3134259,
-          "lng": 133.8075257
-        },
-        {
-          "id": "30",
-          "title": "香川県/坂出市",
-          "city": "坂出",
-          "pokemons": [
-            "ヤドン"
-          ],
-          "dist_km": 5.21,
-          "lat": 34.312992,
-          "lng": 133.856292
-        },
-        {
-          "id": "29",
-          "title": "香川県/丸亀市",
-          "city": "丸亀",
-          "pokemons": [
-            "ヤドン"
-          ],
-          "dist_km": 7.37,
-          "lat": 34.292014,
-          "lng": 133.793951
-        },
-        {
-          "id": "194",
-          "title": "岡山県/倉敷市",
-          "city": "倉敷",
-          "pokemons": [
-            "ルカリオ"
-          ],
-          "dist_km": 9.14,
-          "lat": 34.43427,
-          "lng": 133.81388
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-37004",
-    "type": "michineki",
-    "title": "道の駅ふれあいパークみの周辺のポケふた（5枚）",
-    "url": "https://it-social.net/roadside_station/?37004",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "37004",
-      "station_name": "道の駅ふれあいパークみの",
-      "pref": "香川県",
-      "lat": 34.2263483,
-      "lng": 133.7228554,
-      "manhole_count": 5,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "31",
-          "title": "香川県/善通寺市",
-          "city": "善通寺",
-          "pokemons": [
-            "ヤドラン",
-            "ヤドン"
-          ],
-          "dist_km": 5.01,
-          "lat": 34.22531,
-          "lng": 133.7773
-        },
-        {
-          "id": "42",
-          "title": "香川県/多度津町",
-          "city": "多度津",
-          "pokemons": [
-            "ヤドン"
-          ],
-          "dist_km": 6.01,
-          "lat": 34.272282,
-          "lng": 133.757247
-        },
-        {
-          "id": "35",
-          "title": "香川県/三豊市",
-          "city": "三豊",
-          "pokemons": [
-            "シェルダー",
-            "ヤドン"
-          ],
-          "dist_km": 9.57,
-          "lat": 34.2687992,
-          "lng": 133.6322219
-        },
-        {
-          "id": "29",
-          "title": "香川県/丸亀市",
-          "city": "丸亀",
-          "pokemons": [
-            "ヤドン"
-          ],
-          "dist_km": 9.8,
-          "lat": 34.292014,
-          "lng": 133.793951
-        },
-        {
-          "id": "41",
-          "title": "香川県/琴平町",
-          "city": "琴平",
-          "pokemons": [
-            "ヤドン"
-          ],
-          "dist_km": 9.9,
-          "lat": 34.187735,
-          "lng": 133.819896
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-37007",
-    "type": "michineki",
-    "title": "道の駅空の夢もみの木パーク周辺のポケふた（3枚）",
-    "url": "https://it-social.net/roadside_station/?37007",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "37007",
-      "station_name": "道の駅空の夢もみの木パーク",
-      "pref": "香川県",
-      "lat": 34.1548496,
-      "lng": 133.8215512,
-      "manhole_count": 3,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "41",
-          "title": "香川県/琴平町",
-          "city": "琴平",
-          "pokemons": [
-            "ヤドン"
-          ],
-          "dist_km": 3.66,
-          "lat": 34.187735,
-          "lng": 133.819896
-        },
-        {
-          "id": "43",
-          "title": "香川県/まんのう町",
-          "city": "まんのう",
-          "pokemons": [
-            "ヤドン"
-          ],
-          "dist_km": 5.03,
-          "lat": 34.173339,
-          "lng": 133.871387
-        },
-        {
-          "id": "31",
-          "title": "香川県/善通寺市",
-          "city": "善通寺",
-          "pokemons": [
-            "ヤドラン",
-            "ヤドン"
-          ],
-          "dist_km": 8.83,
-          "lat": 34.22531,
-          "lng": 133.7773
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-37008",
-    "type": "michineki",
-    "title": "道の駅みろく周辺のポケふた（3枚）",
-    "url": "https://it-social.net/roadside_station/?37008",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "37008",
-      "station_name": "道の駅みろく",
-      "pref": "香川県",
-      "lat": 34.25819,
-      "lng": 134.2424659,
-      "manhole_count": 3,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "34",
-          "title": "香川県/東かがわ市",
-          "city": "東かがわ",
-          "pokemons": [
-            "ヤドン"
-          ],
-          "dist_km": 8.4,
-          "lat": 34.251174,
-          "lng": 134.333457
-        },
-        {
-          "id": "33",
-          "title": "香川県/さぬき市",
-          "city": "さぬき",
-          "pokemons": [
-            "ピッピ",
-            "ヤドン"
-          ],
-          "dist_km": 9.47,
-          "lat": 34.321305,
-          "lng": 134.173241
-        },
-        {
-          "id": "38",
-          "title": "香川県/三木町",
-          "city": "三木",
-          "pokemons": [
-            "ヤドン"
-          ],
-          "dist_km": 9.98,
-          "lat": 34.268586,
-          "lng": 134.134567
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-37010",
-    "type": "michineki",
-    "title": "道の駅滝宮周辺のポケふた（4枚）",
-    "url": "https://it-social.net/roadside_station/?37010",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "37010",
-      "station_name": "道の駅滝宮",
-      "pref": "香川県",
-      "lat": 34.2497767902,
-      "lng": 133.917359488,
-      "manhole_count": 4,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "40",
-          "title": "香川県/綾川町",
-          "city": "綾川",
-          "pokemons": [
-            "ヤドン"
-          ],
-          "dist_km": 0.07,
-          "lat": 34.250399,
-          "lng": 133.917073
-        },
-        {
-          "id": "298",
-          "title": "香川県/綾川町",
-          "city": "綾川",
-          "pokemons": [
-            "ガラルヤドン",
-            "シェルダー"
-          ],
-          "dist_km": 1.44,
-          "lat": 34.247395,
-          "lng": 133.9327735
-        },
-        {
-          "id": "30",
-          "title": "香川県/坂出市",
-          "city": "坂出",
-          "pokemons": [
-            "ヤドン"
-          ],
-          "dist_km": 8.99,
-          "lat": 34.312992,
-          "lng": 133.856292
-        },
-        {
-          "id": "43",
-          "title": "香川県/まんのう町",
-          "city": "まんのう",
-          "pokemons": [
-            "ヤドン"
-          ],
-          "dist_km": 9.49,
-          "lat": 34.173339,
-          "lng": 133.871387
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-37012",
-    "type": "michineki",
-    "title": "道の駅恋人の聖地 うたづ臨海公園周辺のポケふた（4枚）",
-    "url": "https://it-social.net/roadside_station/?37012",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "37012",
-      "station_name": "道の駅恋人の聖地 うたづ臨海公園",
-      "pref": "香川県",
-      "lat": 34.31338818,
-      "lng": 133.807966,
-      "manhole_count": 4,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "97",
-          "title": "香川県/宇多津町",
-          "city": "宇多津",
-          "pokemons": [
-            "ガラルヤドン",
-            "ヌオー"
-          ],
-          "dist_km": 0.04,
-          "lat": 34.3134259,
-          "lng": 133.8075257
-        },
-        {
-          "id": "29",
-          "title": "香川県/丸亀市",
-          "city": "丸亀",
-          "pokemons": [
-            "ヤドン"
-          ],
-          "dist_km": 2.7,
-          "lat": 34.292014,
-          "lng": 133.793951
-        },
-        {
-          "id": "30",
-          "title": "香川県/坂出市",
-          "city": "坂出",
-          "pokemons": [
-            "ヤドン"
-          ],
-          "dist_km": 4.44,
-          "lat": 34.312992,
-          "lng": 133.856292
-        },
-        {
-          "id": "42",
-          "title": "香川県/多度津町",
-          "city": "多度津",
-          "pokemons": [
-            "ヤドン"
-          ],
-          "dist_km": 6.53,
-          "lat": 34.272282,
-          "lng": 133.757247
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-37018",
-    "type": "michineki",
-    "title": "道の駅源平の里むれ周辺のポケふた（3枚）",
-    "url": "https://it-social.net/roadside_station/?37018",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "37018",
-      "station_name": "道の駅源平の里むれ",
-      "pref": "香川県",
-      "lat": 34.3337252,
-      "lng": 134.1574969,
-      "manhole_count": 3,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "33",
-          "title": "香川県/さぬき市",
-          "city": "さぬき",
-          "pokemons": [
-            "ピッピ",
-            "ヤドン"
-          ],
-          "dist_km": 2.0,
-          "lat": 34.321305,
-          "lng": 134.173241
-        },
-        {
-          "id": "38",
-          "title": "香川県/三木町",
-          "city": "三木",
-          "pokemons": [
-            "ヤドン"
-          ],
-          "dist_km": 7.54,
-          "lat": 34.268586,
-          "lng": 134.134567
-        },
-        {
-          "id": "28",
-          "title": "香川県/高松市",
-          "city": "高松",
-          "pokemons": [
-            "ヤドン"
-          ],
-          "dist_km": 9.97,
-          "lat": 34.338888,
-          "lng": 134.049052
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-39012",
-    "type": "michineki",
-    "title": "道の駅大山周辺のポケふた（3枚）",
-    "url": "https://it-social.net/roadside_station/?39012",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "39012",
-      "station_name": "道の駅大山",
-      "pref": "高知県",
-      "lat": 33.47009977,
-      "lng": 133.9440693,
-      "manhole_count": 3,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "433",
-          "title": "高知県/安芸市",
-          "city": "安芸",
-          "pokemons": [
-            "ヌオー",
-            "ホーホー"
-          ],
-          "dist_km": 5.16,
-          "lat": 33.5043207,
-          "lng": 133.9065445
-        },
-        {
-          "id": "451",
-          "title": "高知県/安田町",
-          "city": "安田",
-          "pokemons": [
-            "ヌオー",
-            "メタモン"
-          ],
-          "dist_km": 5.28,
-          "lat": 33.47986,
-          "lng": 133.99983
-        },
-        {
-          "id": "391",
-          "title": "高知県/奈半利町",
-          "city": "奈半利",
-          "pokemons": [
-            "サニーゴ",
-            "ヌオー"
-          ],
-          "dist_km": 8.46,
-          "lat": 33.425249,
-          "lng": 134.017781
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-45013",
-    "type": "michineki",
-    "title": "道の駅高千穂周辺のポケふた（3枚）",
-    "url": "https://it-social.net/roadside_station/?45013",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "45013",
-      "station_name": "道の駅高千穂",
-      "pref": "宮崎県",
-      "lat": 32.7084429,
-      "lng": 131.3004346,
-      "manhole_count": 3,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "184",
-          "title": "宮崎県/高千穂町",
-          "city": "高千穂",
-          "pokemons": [
-            "ナッシー",
-            "レジギガス"
-          ],
-          "dist_km": 0.52,
-          "lat": 32.707748,
-          "lng": 131.305889
-        },
-        {
-          "id": "186",
-          "title": "宮崎県/五ヶ瀬町",
-          "city": "五ヶ瀬",
-          "pokemons": [
-            "ナッシー",
-            "レジアイス"
-          ],
-          "dist_km": 9.07,
-          "lat": 32.679051,
-          "lng": 131.210041
-        },
-        {
-          "id": "185",
-          "title": "宮崎県/日之影町",
-          "city": "日之影",
-          "pokemons": [
-            "ナッシー",
-            "レジスチル"
-          ],
-          "dist_km": 9.82,
-          "lat": 32.660643,
-          "lng": 131.388639
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-46015",
-    "type": "michineki",
-    "title": "道の駅いぶすき周辺のポケふた（7枚）",
-    "url": "https://it-social.net/roadside_station/?46015",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "46015",
-      "station_name": "道の駅いぶすき",
-      "pref": "鹿児島県",
-      "lat": 31.3022146,
-      "lng": 130.5900439,
-      "manhole_count": 7,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "3",
-          "title": "鹿児島県/指宿市",
-          "city": "指宿",
-          "pokemons": [
-            "サンダース"
-          ],
-          "dist_km": 7.56,
-          "lat": 31.255278,
-          "lng": 130.647639
-        },
-        {
-          "id": "7",
-          "title": "鹿児島県/指宿市",
-          "city": "指宿",
-          "pokemons": [
-            "リーフィア"
-          ],
-          "dist_km": 8.13,
-          "lat": 31.263889,
-          "lng": 130.662917
-        },
-        {
-          "id": "1",
-          "title": "鹿児島県/指宿市",
-          "city": "指宿",
-          "pokemons": [
-            "イーブイ"
-          ],
-          "dist_km": 8.8,
-          "lat": 31.237194,
-          "lng": 130.642861
-        },
-        {
-          "id": "6",
-          "title": "鹿児島県/指宿市",
-          "city": "指宿",
-          "pokemons": [
-            "ブラッキー"
-          ],
-          "dist_km": 8.8,
-          "lat": 31.236833,
-          "lng": 130.642188
-        },
-        {
-          "id": "5",
-          "title": "鹿児島県/指宿市",
-          "city": "指宿",
-          "pokemons": [
-            "エーフィ"
-          ],
-          "dist_km": 8.82,
-          "lat": 31.238278,
-          "lng": 130.645
-        },
-        {
-          "id": "9",
-          "title": "鹿児島県/指宿市",
-          "city": "指宿",
-          "pokemons": [
-            "ニンフィア"
-          ],
-          "dist_km": 8.88,
-          "lat": 31.235444,
-          "lng": 130.641389
-        },
-        {
-          "id": "8",
-          "title": "鹿児島県/指宿市",
-          "city": "指宿",
-          "pokemons": [
-            "グレイシア"
-          ],
-          "dist_km": 9.46,
-          "lat": 31.231056,
-          "lng": 130.644611
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-46019",
-    "type": "michineki",
-    "title": "道の駅山川港活お海道周辺のポケふた（9枚）",
-    "url": "https://it-social.net/roadside_station/?46019",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "46019",
-      "station_name": "道の駅山川港活お海道",
-      "pref": "鹿児島県",
-      "lat": 31.2030165,
-      "lng": 130.6349136,
-      "manhole_count": 9,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "8",
-          "title": "鹿児島県/指宿市",
-          "city": "指宿",
-          "pokemons": [
-            "グレイシア"
-          ],
-          "dist_km": 3.25,
-          "lat": 31.231056,
-          "lng": 130.644611
-        },
-        {
-          "id": "2",
-          "title": "鹿児島県/指宿市",
-          "city": "指宿",
-          "pokemons": [
-            "シャワーズ"
-          ],
-          "dist_km": 3.27,
-          "lat": 31.228,
-          "lng": 130.653028
-        },
-        {
-          "id": "4",
-          "title": "鹿児島県/指宿市",
-          "city": "指宿",
-          "pokemons": [
-            "ブースター"
-          ],
-          "dist_km": 3.35,
-          "lat": 31.229417,
-          "lng": 130.651972
-        },
-        {
-          "id": "9",
-          "title": "鹿児島県/指宿市",
-          "city": "指宿",
-          "pokemons": [
-            "ニンフィア"
-          ],
-          "dist_km": 3.66,
-          "lat": 31.235444,
-          "lng": 130.641389
-        },
-        {
-          "id": "6",
-          "title": "鹿児島県/指宿市",
-          "city": "指宿",
-          "pokemons": [
-            "ブラッキー"
-          ],
-          "dist_km": 3.82,
-          "lat": 31.236833,
-          "lng": 130.642188
-        },
-        {
-          "id": "1",
-          "title": "鹿児島県/指宿市",
-          "city": "指宿",
-          "pokemons": [
-            "イーブイ"
-          ],
-          "dist_km": 3.87,
-          "lat": 31.237194,
-          "lng": 130.642861
-        },
-        {
-          "id": "5",
-          "title": "鹿児島県/指宿市",
-          "city": "指宿",
-          "pokemons": [
-            "エーフィ"
-          ],
-          "dist_km": 4.04,
-          "lat": 31.238278,
-          "lng": 130.645
-        },
-        {
-          "id": "3",
-          "title": "鹿児島県/指宿市",
-          "city": "指宿",
-          "pokemons": [
-            "サンダース"
-          ],
-          "dist_km": 5.94,
-          "lat": 31.255278,
-          "lng": 130.647639
-        },
-        {
-          "id": "7",
-          "title": "鹿児島県/指宿市",
-          "city": "指宿",
-          "pokemons": [
-            "リーフィア"
-          ],
-          "dist_km": 7.27,
-          "lat": 31.263889,
-          "lng": 130.662917
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-47004",
-    "type": "michineki",
-    "title": "道の駅かでな周辺のポケふた（3枚）",
-    "url": "https://it-social.net/roadside_station/?47004",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "47004",
-      "station_name": "道の駅かでな",
-      "pref": "沖縄県",
-      "lat": 26.3681116,
-      "lng": 127.7741485,
-      "manhole_count": 3,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "176",
-          "title": "沖縄県/沖縄市",
-          "city": "沖縄",
-          "pokemons": [
-            "バチンキー",
-            "ラランテス"
-          ],
-          "dist_km": 5.34,
-          "lat": 26.32766,
-          "lng": 127.803001
-        },
-        {
-          "id": "422",
-          "title": "沖縄県/北谷町",
-          "city": "北谷",
-          "pokemons": [
-            "ガーディ"
-          ],
-          "dist_km": 6.17,
-          "lat": 26.315733,
-          "lng": 127.753613
-        },
-        {
-          "id": "177",
-          "title": "沖縄県/うるま市",
-          "city": "うるま",
-          "pokemons": [
-            "ケンタロス"
-          ],
-          "dist_km": 9.17,
-          "lat": 26.436181,
-          "lng": 127.826113
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-47005",
-    "type": "michineki",
-    "title": "道の駅喜名番所周辺のポケふた（3枚）",
-    "url": "https://it-social.net/roadside_station/?47005",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "47005",
-      "station_name": "道の駅喜名番所",
-      "pref": "沖縄県",
-      "lat": 26.3993416,
-      "lng": 127.758204,
-      "manhole_count": 3,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "177",
-          "title": "沖縄県/うるま市",
-          "city": "うるま",
-          "pokemons": [
-            "ケンタロス"
-          ],
-          "dist_km": 7.91,
-          "lat": 26.436181,
-          "lng": 127.826113
-        },
-        {
-          "id": "176",
-          "title": "沖縄県/沖縄市",
-          "city": "沖縄",
-          "pokemons": [
-            "バチンキー",
-            "ラランテス"
-          ],
-          "dist_km": 9.14,
-          "lat": 26.32766,
-          "lng": 127.803001
-        },
-        {
-          "id": "422",
-          "title": "沖縄県/北谷町",
-          "city": "北谷",
-          "pokemons": [
-            "ガーディ"
-          ],
-          "dist_km": 9.31,
-          "lat": 26.315733,
-          "lng": 127.753613
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-47006",
-    "type": "michineki",
-    "title": "道の駅豊崎周辺のポケふた（4枚）",
-    "url": "https://it-social.net/roadside_station/?47006",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "47006",
-      "station_name": "道の駅豊崎",
-      "pref": "沖縄県",
-      "lat": 26.1576946,
-      "lng": 127.6553335,
-      "manhole_count": 4,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "233",
-          "title": "沖縄県/豊見城市",
-          "city": "豊見城",
-          "pokemons": [
-            "キバゴ",
-            "ジャラコ"
-          ],
-          "dist_km": 0.08,
-          "lat": 26.15755646,
-          "lng": 127.656121
-        },
-        {
-          "id": "231",
-          "title": "沖縄県/糸満市",
-          "city": "糸満",
-          "pokemons": [
-            "カメール",
-            "スナバァ"
-          ],
-          "dist_km": 2.24,
-          "lat": 26.13828,
-          "lng": 127.661336
-        },
-        {
-          "id": "174",
-          "title": "沖縄県/那覇市",
-          "city": "那覇",
-          "pokemons": [
-            "ウインディ"
-          ],
-          "dist_km": 7.36,
-          "lat": 26.21641,
-          "lng": 127.68942
-        },
-        {
-          "id": "446",
-          "title": "沖縄県/那覇市",
-          "city": "那覇",
-          "pokemons": [
-            "ガーディ"
-          ],
-          "dist_km": 9.24,
-          "lat": 26.22005,
-          "lng": 127.71657
-        }
-      ]
-    }
-  },
-  {
-    "id": "michineki-47007",
-    "type": "michineki",
-    "title": "道の駅いとまん周辺のポケふた（3枚）",
-    "url": "https://it-social.net/roadside_station/?47007",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "michineki",
-    "source": "michineki",
-    "raw_data": {
-      "station_id": "47007",
-      "station_name": "道の駅いとまん",
-      "pref": "沖縄県",
-      "lat": 26.1384965,
-      "lng": 127.661156,
-      "manhole_count": 3,
-      "radius_km": 10,
-      "manholes": [
-        {
-          "id": "231",
-          "title": "沖縄県/糸満市",
-          "city": "糸満",
-          "pokemons": [
-            "カメール",
-            "スナバァ"
-          ],
-          "dist_km": 0.03,
-          "lat": 26.13828,
-          "lng": 127.661336
-        },
-        {
-          "id": "233",
-          "title": "沖縄県/豊見城市",
-          "city": "豊見城",
-          "pokemons": [
-            "キバゴ",
-            "ジャラコ"
-          ],
-          "dist_km": 2.18,
-          "lat": 26.15755646,
-          "lng": 127.656121
-        },
-        {
-          "id": "174",
-          "title": "沖縄県/那覇市",
-          "city": "那覇",
-          "pokemons": [
-            "ウインディ"
-          ],
-          "dist_km": 9.11,
-          "lat": 26.21641,
-          "lng": 127.68942
-        }
-      ]
-    }
-  },
-  {
     "id": "island-小笠原",
     "type": "remote_island",
     "title": "小笠原諸島のポケふた（4枚）",
@@ -4327,9 +1370,9 @@
     }
   },
   {
-    "id": "pref-trivia-hokkaido-vulpix",
+    "id": "pref-trivia-hokkaido-support-vulpix",
     "type": "pref_trivia",
-    "title": "北海道の応援ポケモンはロコン",
+    "title": "北海道のポケふたトリビア",
     "url": "https://data.pokefuta.com/summary/",
     "hashtags": [
       "#ポケふた",
@@ -4338,19 +1381,21 @@
     "imageType": "summary_trivia",
     "source": "pref_trivia",
     "raw_data": {
-      "fact_type": "pref_trivia",
+      "fact_type": "support_pokemon",
       "values": {
         "prefecture": "北海道",
-        "pokemon": "ロコン",
-        "summary": "雪国・北海道のイメージにぴったりのロコン。アローラロコンも設置されており、北の大地で2種類に出会えます。",
-        "map_pref": "北海道"
+        "manhole_count": 50,
+        "summary": "北海道の推しポケモンは、雪景色にもなじむアローラロコンとロコンです",
+        "map_pref": "北海道",
+        "source_type": "official",
+        "source_url": "https://local.pokemon.jp/municipality/hokkaido/"
       }
     }
   },
   {
-    "id": "pref-trivia-iwate-geodude",
+    "id": "pref-trivia-北海道-vulpix-family-100",
     "type": "pref_trivia",
-    "title": "岩手県の応援ポケモンはイシツブテ",
+    "title": "北海道のポケふたトリビア",
     "url": "https://data.pokefuta.com/summary/",
     "hashtags": [
       "#ポケふた",
@@ -4359,19 +1404,44 @@
     "imageType": "summary_trivia",
     "source": "pref_trivia",
     "raw_data": {
-      "fact_type": "pref_trivia",
+      "fact_type": "pokemon_group_100",
+      "values": {
+        "prefecture": "北海道",
+        "manhole_count": 50,
+        "summary": "県内50枚すべてにロコン系が登場します",
+        "map_pref": "北海道",
+        "source_type": "dataset",
+        "source_url": ""
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-iwate-geodude-wordplay",
+    "type": "pref_trivia",
+    "title": "岩手県のポケふたトリビア",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "wordplay",
       "values": {
         "prefecture": "岩手県",
-        "pokemon": "イシツブテ",
-        "summary": "「岩手」という地名とイシツブテの語呂合わせが縁。県内各地に設置されています。",
-        "map_pref": "岩手県"
+        "manhole_count": 36,
+        "summary": "岩タイプで「岩」に「手」が付いたイシツブテが、いわて応援ポケモンを務めています",
+        "map_pref": "岩手県",
+        "source_type": "official",
+        "source_url": "https://local.pokemon.jp/municipality/iwate/"
       }
     }
   },
   {
-    "id": "pref-trivia-miyagi-lapras",
+    "id": "pref-trivia-岩手県-top-pokemon",
     "type": "pref_trivia",
-    "title": "宮城県の応援ポケモンはラプラス",
+    "title": "岩手県のポケふたトリビア",
     "url": "https://data.pokefuta.com/summary/",
     "hashtags": [
       "#ポケふた",
@@ -4380,19 +1450,44 @@
     "imageType": "summary_trivia",
     "source": "pref_trivia",
     "raw_data": {
-      "fact_type": "pref_trivia",
+      "fact_type": "top_pokemon",
+      "values": {
+        "prefecture": "岩手県",
+        "manhole_count": 36,
+        "summary": "最も多く登場するのはイシツブテで、20枚に描かれています",
+        "map_pref": "岩手県",
+        "source_type": "dataset",
+        "source_url": ""
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-miyagi-support-lapras",
+    "type": "pref_trivia",
+    "title": "宮城県のポケふたトリビア",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "support_pokemon",
       "values": {
         "prefecture": "宮城県",
-        "pokemon": "ラプラス",
-        "summary": "松島の海をイメージしたラプラス。宮城の豊かな海辺の風景と重なります。",
-        "map_pref": "宮城県"
+        "manhole_count": 37,
+        "summary": "宮城県ではラプラスがみやぎ応援ポケモンとして地域の魅力を発信しています",
+        "map_pref": "宮城県",
+        "source_type": "official",
+        "source_url": "https://local.pokemon.jp/municipality/miyagi/"
       }
     }
   },
   {
-    "id": "pref-trivia-fukushima-chansey",
+    "id": "pref-trivia-宮城県-ラプラス-100",
     "type": "pref_trivia",
-    "title": "福島県の応援ポケモンはラッキー",
+    "title": "宮城県のポケふたトリビア",
     "url": "https://data.pokefuta.com/summary/",
     "hashtags": [
       "#ポケふた",
@@ -4401,19 +1496,44 @@
     "imageType": "summary_trivia",
     "source": "pref_trivia",
     "raw_data": {
-      "fact_type": "pref_trivia",
+      "fact_type": "pokemon_100",
+      "values": {
+        "prefecture": "宮城県",
+        "manhole_count": 37,
+        "summary": "県内37枚すべてにラプラスが登場します",
+        "map_pref": "宮城県",
+        "source_type": "dataset",
+        "source_url": ""
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-fukushima-support-chansey",
+    "type": "pref_trivia",
+    "title": "福島県のポケふたトリビア",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "support_pokemon",
       "values": {
         "prefecture": "福島県",
-        "pokemon": "ラッキー",
-        "summary": "「福」の字が縁で選ばれたラッキー。幸運を運ぶイメージが福島県とぴったりで、県内に多く設置されています。",
-        "map_pref": "福島県"
+        "manhole_count": 43,
+        "summary": "福島県では、幸せを運ぶといわれるラッキーがふくしま応援ポケモンを務めています",
+        "map_pref": "福島県",
+        "source_type": "official",
+        "source_url": "https://local.pokemon.jp/municipality/fukushima/"
       }
     }
   },
   {
-    "id": "pref-trivia-tottori-sandshrew",
+    "id": "pref-trivia-福島県-ラッキー-100",
     "type": "pref_trivia",
-    "title": "鳥取県の応援ポケモンはサンド",
+    "title": "福島県のポケふたトリビア",
     "url": "https://data.pokefuta.com/summary/",
     "hashtags": [
       "#ポケふた",
@@ -4422,19 +1542,21 @@
     "imageType": "summary_trivia",
     "source": "pref_trivia",
     "raw_data": {
-      "fact_type": "pref_trivia",
+      "fact_type": "pokemon_100",
       "values": {
-        "prefecture": "鳥取県",
-        "pokemon": "サンド",
-        "summary": "「砂丘のまち」鳥取ならではの選択。通常のすがたとアローラのすがたの2種が設置されており、鳥取砂丘との縁は一目瞭然です。",
-        "map_pref": "鳥取県"
+        "prefecture": "福島県",
+        "manhole_count": 43,
+        "summary": "県内43枚すべてにラッキーが登場します",
+        "map_pref": "福島県",
+        "source_type": "dataset",
+        "source_url": ""
       }
     }
   },
   {
-    "id": "pref-trivia-fukui-dragonite",
+    "id": "pref-trivia-栃木県-single-municipality",
     "type": "pref_trivia",
-    "title": "福井県の応援ポケモンはカイリュー",
+    "title": "栃木県のポケふたトリビア",
     "url": "https://data.pokefuta.com/summary/",
     "hashtags": [
       "#ポケふた",
@@ -4443,19 +1565,274 @@
     "imageType": "summary_trivia",
     "source": "pref_trivia",
     "raw_data": {
-      "fact_type": "pref_trivia",
+      "fact_type": "single_municipality",
+      "values": {
+        "prefecture": "栃木県",
+        "manhole_count": 3,
+        "summary": "県内3枚のポケふたはすべて宇都宮にあります",
+        "map_pref": "栃木県",
+        "source_type": "dataset",
+        "source_url": ""
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-埼玉県-single-municipality",
+    "type": "pref_trivia",
+    "title": "埼玉県のポケふたトリビア",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "single_municipality",
+      "values": {
+        "prefecture": "埼玉県",
+        "manhole_count": 3,
+        "summary": "県内3枚のポケふたはすべて所沢にあります",
+        "map_pref": "埼玉県",
+        "source_type": "dataset",
+        "source_url": ""
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-千葉県-single-municipality",
+    "type": "pref_trivia",
+    "title": "千葉県のポケふたトリビア",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "single_municipality",
+      "values": {
+        "prefecture": "千葉県",
+        "manhole_count": 4,
+        "summary": "県内4枚のポケふたはすべて香取にあります",
+        "map_pref": "千葉県",
+        "source_type": "dataset",
+        "source_url": ""
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-tokyo-pokepark-kanto-admission",
+    "type": "pref_trivia",
+    "title": "東京都のポケふたトリビア",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "local_connection",
+      "values": {
+        "prefecture": "東京都",
+        "manhole_count": 13,
+        "summary": "稲城市のポケパーク カントー内にも1枚あり、見るにはポケパーク カントーへの入場が必要です",
+        "map_pref": "東京都",
+        "source_type": "official",
+        "source_url": "https://local.pokemon.jp/manhole/desc/448/"
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-東京都-municipality-concentration",
+    "type": "pref_trivia",
+    "title": "東京都のポケふたトリビア",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "municipality_concentration",
+      "values": {
+        "prefecture": "東京都",
+        "manhole_count": 13,
+        "summary": "最多は町田の6枚で、次いで小笠原の4枚です",
+        "map_pref": "東京都",
+        "source_type": "dataset",
+        "source_url": ""
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-神奈川県-single-municipality",
+    "type": "pref_trivia",
+    "title": "神奈川県のポケふたトリビア",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "single_municipality",
+      "values": {
+        "prefecture": "神奈川県",
+        "manhole_count": 5,
+        "summary": "県内5枚のポケふたはすべて横浜にあります",
+        "map_pref": "神奈川県",
+        "source_type": "dataset",
+        "source_url": ""
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-神奈川県-ピカチュウ-100",
+    "type": "pref_trivia",
+    "title": "神奈川県のポケふたトリビア",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "pokemon_100",
+      "values": {
+        "prefecture": "神奈川県",
+        "manhole_count": 5,
+        "summary": "県内5枚すべてにピカチュウが登場します",
+        "map_pref": "神奈川県",
+        "source_type": "dataset",
+        "source_url": ""
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-niigata-ojiya-koi",
+    "type": "pref_trivia",
+    "title": "新潟県のポケふたトリビア",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "local_connection",
+      "values": {
+        "prefecture": "新潟県",
+        "manhole_count": 4,
+        "summary": "錦鯉発祥の地として知られる小千谷にちなみ、コイキングのポケふたが設置されています",
+        "map_pref": "新潟県",
+        "source_type": "official",
+        "source_url": "https://www.city.ojiya.niigata.jp/site/kanko/pokemon.html"
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-新潟県-single-municipality",
+    "type": "pref_trivia",
+    "title": "新潟県のポケふたトリビア",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "single_municipality",
+      "values": {
+        "prefecture": "新潟県",
+        "manhole_count": 4,
+        "summary": "県内4枚のポケふたはすべて小千谷にあります",
+        "map_pref": "新潟県",
+        "source_type": "dataset",
+        "source_url": ""
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-新潟県-コイキング-100",
+    "type": "pref_trivia",
+    "title": "新潟県のポケふたトリビア",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "pokemon_100",
+      "values": {
+        "prefecture": "新潟県",
+        "manhole_count": 4,
+        "summary": "県内4枚すべてにコイキングが登場します",
+        "map_pref": "新潟県",
+        "source_type": "dataset",
+        "source_url": ""
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-富山県-single-municipality",
+    "type": "pref_trivia",
+    "title": "富山県のポケふたトリビア",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "single_municipality",
+      "values": {
+        "prefecture": "富山県",
+        "manhole_count": 3,
+        "summary": "県内3枚のポケふたはすべて富山にあります",
+        "map_pref": "富山県",
+        "source_type": "dataset",
+        "source_url": ""
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-fukui-support-dragonite",
+    "type": "pref_trivia",
+    "title": "福井県のポケふたトリビア",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "support_pokemon",
       "values": {
         "prefecture": "福井県",
-        "pokemon": "カイリュー",
-        "summary": "九頭竜川をはじめ「竜」の地名が多い福井。カイリューは県内17枚すべてに登場するほど定着しています。",
-        "map_pref": "福井県"
+        "manhole_count": 17,
+        "summary": "福井県ではカイリューがふくい応援ポケモンとして地域を盛り上げています",
+        "map_pref": "福井県",
+        "source_type": "official",
+        "source_url": "https://local.pokemon.jp/municipality/fukui/"
       }
     }
   },
   {
-    "id": "pref-trivia-kagawa-slowpoke",
+    "id": "pref-trivia-福井県-カイリュー-100",
     "type": "pref_trivia",
-    "title": "香川県の応援ポケモンはヤドン",
+    "title": "福井県のポケふたトリビア",
     "url": "https://data.pokefuta.com/summary/",
     "hashtags": [
       "#ポケふた",
@@ -4464,19 +1841,21 @@
     "imageType": "summary_trivia",
     "source": "pref_trivia",
     "raw_data": {
-      "fact_type": "pref_trivia",
+      "fact_type": "pokemon_100",
       "values": {
-        "prefecture": "香川県",
-        "pokemon": "ヤドン",
-        "summary": "香川県は2021年に公式で「ヤドン県」を一時採用した実績あり。冗談ではなく公式です。その縁で県内各地にヤドンのポケふたが設置されています。",
-        "map_pref": "香川県"
+        "prefecture": "福井県",
+        "manhole_count": 17,
+        "summary": "県内17枚すべてにカイリューが登場します",
+        "map_pref": "福井県",
+        "source_type": "dataset",
+        "source_url": ""
       }
     }
   },
   {
-    "id": "pref-trivia-kochi-quagsire",
+    "id": "pref-trivia-愛知県-municipality-concentration",
     "type": "pref_trivia",
-    "title": "高知県の応援ポケモンはヌオー",
+    "title": "愛知県のポケふたトリビア",
     "url": "https://data.pokefuta.com/summary/",
     "hashtags": [
       "#ポケふた",
@@ -4485,19 +1864,21 @@
     "imageType": "summary_trivia",
     "source": "pref_trivia",
     "raw_data": {
-      "fact_type": "pref_trivia",
+      "fact_type": "municipality_concentration",
       "values": {
-        "prefecture": "高知県",
-        "pokemon": "ヌオー",
-        "summary": "日本最後の清流・四万十川をイメージしたヌオー。水辺をのんびり過ごすイメージが高知の川文化と重なります。県内18枚すべてにヌオーが登場します。",
-        "map_pref": "高知県"
+        "prefecture": "愛知県",
+        "manhole_count": 9,
+        "summary": "豊橋市に4枚が集まり、ほかの5自治体は各1枚です",
+        "map_pref": "愛知県",
+        "source_type": "dataset",
+        "source_url": ""
       }
     }
   },
   {
-    "id": "pref-trivia-mie-oshawott",
+    "id": "pref-trivia-mie-support-oshawott",
     "type": "pref_trivia",
-    "title": "三重県の応援ポケモンはミジュマル",
+    "title": "三重県のポケふたトリビア",
     "url": "https://data.pokefuta.com/summary/",
     "hashtags": [
       "#ポケふた",
@@ -4506,19 +1887,21 @@
     "imageType": "summary_trivia",
     "source": "pref_trivia",
     "raw_data": {
-      "fact_type": "pref_trivia",
+      "fact_type": "support_pokemon",
       "values": {
         "prefecture": "三重県",
-        "pokemon": "ミジュマル",
-        "summary": "「みえ」と「みず」のイメージが重なるミジュマル。伊勢志摩の海の雰囲気とも相性が良く、県内各地に設置されています。",
-        "map_pref": "三重県"
+        "manhole_count": 31,
+        "summary": "三重県ではミジュマルがみえ応援ポケモンとして地域の魅力を発信しています",
+        "map_pref": "三重県",
+        "source_type": "official",
+        "source_url": "https://local.pokemon.jp/municipality/mie/"
       }
     }
   },
   {
-    "id": "pref-trivia-nagasaki-ampharos",
+    "id": "pref-trivia-三重県-ミジュマル-100",
     "type": "pref_trivia",
-    "title": "長崎県の応援ポケモンはデンリュウ",
+    "title": "三重県のポケふたトリビア",
     "url": "https://data.pokefuta.com/summary/",
     "hashtags": [
       "#ポケふた",
@@ -4527,19 +1910,481 @@
     "imageType": "summary_trivia",
     "source": "pref_trivia",
     "raw_data": {
-      "fact_type": "pref_trivia",
+      "fact_type": "pokemon_100",
+      "values": {
+        "prefecture": "三重県",
+        "manhole_count": 31,
+        "summary": "県内31枚すべてにミジュマルが登場します",
+        "map_pref": "三重県",
+        "source_type": "dataset",
+        "source_url": ""
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-滋賀県-municipality-concentration",
+    "type": "pref_trivia",
+    "title": "滋賀県のポケふたトリビア",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "municipality_concentration",
+      "values": {
+        "prefecture": "滋賀県",
+        "manhole_count": 5,
+        "summary": "最多は甲賀の3枚で、次いで大津の2枚です",
+        "map_pref": "滋賀県",
+        "source_type": "dataset",
+        "source_url": ""
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-滋賀県-top-pokemon",
+    "type": "pref_trivia",
+    "title": "滋賀県のポケふたトリビア",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "top_pokemon",
+      "values": {
+        "prefecture": "滋賀県",
+        "manhole_count": 5,
+        "summary": "最も多く登場するのはゲッコウガで、3枚に描かれています",
+        "map_pref": "滋賀県",
+        "source_type": "dataset",
+        "source_url": ""
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-京都府-municipality-concentration",
+    "type": "pref_trivia",
+    "title": "京都府のポケふたトリビア",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "municipality_concentration",
+      "values": {
+        "prefecture": "京都府",
+        "manhole_count": 8,
+        "summary": "最多は京都の5枚で、次いで宇治の3枚です",
+        "map_pref": "京都府",
+        "source_type": "dataset",
+        "source_url": ""
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-大阪府-single-municipality",
+    "type": "pref_trivia",
+    "title": "大阪府のポケふたトリビア",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "single_municipality",
+      "values": {
+        "prefecture": "大阪府",
+        "manhole_count": 5,
+        "summary": "県内5枚のポケふたはすべて東大阪にあります",
+        "map_pref": "大阪府",
+        "source_type": "dataset",
+        "source_url": ""
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-兵庫県-single-municipality",
+    "type": "pref_trivia",
+    "title": "兵庫県のポケふたトリビア",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "single_municipality",
+      "values": {
+        "prefecture": "兵庫県",
+        "manhole_count": 3,
+        "summary": "県内3枚のポケふたはすべて淡路にあります",
+        "map_pref": "兵庫県",
+        "source_type": "dataset",
+        "source_url": ""
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-奈良県-single-municipality",
+    "type": "pref_trivia",
+    "title": "奈良県のポケふたトリビア",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "single_municipality",
+      "values": {
+        "prefecture": "奈良県",
+        "manhole_count": 5,
+        "summary": "県内5枚のポケふたはすべて斑鳩にあります",
+        "map_pref": "奈良県",
+        "source_type": "dataset",
+        "source_url": ""
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-tottori-sand",
+    "type": "pref_trivia",
+    "title": "鳥取県のポケふたトリビア",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "local_connection",
+      "values": {
+        "prefecture": "鳥取県",
+        "manhole_count": 20,
+        "summary": "鳥取砂丘をはじめ砂で知られる鳥取県では、サンドとアローラサンドが推しポケモンです",
+        "map_pref": "鳥取県",
+        "source_type": "official",
+        "source_url": "https://local.pokemon.jp/municipality/tottori/"
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-鳥取県-sandshrew-family-100",
+    "type": "pref_trivia",
+    "title": "鳥取県のポケふたトリビア",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "pokemon_group_100",
+      "values": {
+        "prefecture": "鳥取県",
+        "manhole_count": 20,
+        "summary": "県内20枚すべてにサンド系が登場します",
+        "map_pref": "鳥取県",
+        "source_type": "dataset",
+        "source_url": ""
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-岡山県-single-municipality",
+    "type": "pref_trivia",
+    "title": "岡山県のポケふたトリビア",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "single_municipality",
+      "values": {
+        "prefecture": "岡山県",
+        "manhole_count": 4,
+        "summary": "県内4枚のポケふたはすべて倉敷にあります",
+        "map_pref": "岡山県",
+        "source_type": "dataset",
+        "source_url": ""
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-山口県-single-municipality",
+    "type": "pref_trivia",
+    "title": "山口県のポケふたトリビア",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "single_municipality",
+      "values": {
+        "prefecture": "山口県",
+        "manhole_count": 4,
+        "summary": "県内4枚のポケふたはすべて下関にあります",
+        "map_pref": "山口県",
+        "source_type": "dataset",
+        "source_url": ""
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-徳島県-single-municipality",
+    "type": "pref_trivia",
+    "title": "徳島県のポケふたトリビア",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "single_municipality",
+      "values": {
+        "prefecture": "徳島県",
+        "manhole_count": 3,
+        "summary": "県内3枚のポケふたはすべて鳴門にあります",
+        "map_pref": "徳島県",
+        "source_type": "dataset",
+        "source_url": ""
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-kagawa-slowpoke-wordplay",
+    "type": "pref_trivia",
+    "title": "香川県のポケふたトリビア",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "wordplay",
+      "values": {
+        "prefecture": "香川県",
+        "manhole_count": 18,
+        "summary": "香川県では「うどん」と音の響きが似ているヤドンが推しポケモンです",
+        "map_pref": "香川県",
+        "source_type": "official",
+        "source_url": "https://local.pokemon.jp/municipality/kagawa/"
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-香川県-top-pokemon",
+    "type": "pref_trivia",
+    "title": "香川県のポケふたトリビア",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "top_pokemon",
+      "values": {
+        "prefecture": "香川県",
+        "manhole_count": 18,
+        "summary": "最も多く登場するのはヤドンで、17枚に描かれています",
+        "map_pref": "香川県",
+        "source_type": "dataset",
+        "source_url": ""
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-愛媛県-single-municipality",
+    "type": "pref_trivia",
+    "title": "愛媛県のポケふたトリビア",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "single_municipality",
+      "values": {
+        "prefecture": "愛媛県",
+        "manhole_count": 2,
+        "summary": "県内2枚のポケふたはすべて松山にあります",
+        "map_pref": "愛媛県",
+        "source_type": "dataset",
+        "source_url": ""
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-kochi-support-quagsire",
+    "type": "pref_trivia",
+    "title": "高知県のポケふたトリビア",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "support_pokemon",
+      "values": {
+        "prefecture": "高知県",
+        "manhole_count": 18,
+        "summary": "高知県では、水辺に生息するヌオーがこうちだいすきポケモンとして活動しています",
+        "map_pref": "高知県",
+        "source_type": "official",
+        "source_url": "https://local.pokemon.jp/municipality/kochi/"
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-高知県-ヌオー-100",
+    "type": "pref_trivia",
+    "title": "高知県のポケふたトリビア",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "pokemon_100",
+      "values": {
+        "prefecture": "高知県",
+        "manhole_count": 18,
+        "summary": "県内18枚すべてにヌオーが登場します",
+        "map_pref": "高知県",
+        "source_type": "dataset",
+        "source_url": ""
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-福岡県-municipality-concentration",
+    "type": "pref_trivia",
+    "title": "福岡県のポケふたトリビア",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "municipality_concentration",
+      "values": {
+        "prefecture": "福岡県",
+        "manhole_count": 8,
+        "summary": "最多は北九州の5枚で、次いで太宰府の3枚です",
+        "map_pref": "福岡県",
+        "source_type": "dataset",
+        "source_url": ""
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-佐賀県-single-municipality",
+    "type": "pref_trivia",
+    "title": "佐賀県のポケふたトリビア",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "single_municipality",
+      "values": {
+        "prefecture": "佐賀県",
+        "manhole_count": 3,
+        "summary": "県内3枚のポケふたはすべて佐賀にあります",
+        "map_pref": "佐賀県",
+        "source_type": "dataset",
+        "source_url": ""
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-佐賀県-meowth-forms-100",
+    "type": "pref_trivia",
+    "title": "佐賀県のポケふたトリビア",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "pokemon_group_100",
+      "values": {
+        "prefecture": "佐賀県",
+        "manhole_count": 3,
+        "summary": "県内3枚すべてにニャース3種が登場します",
+        "map_pref": "佐賀県",
+        "source_type": "dataset",
+        "source_url": ""
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-nagasaki-support-ampharos",
+    "type": "pref_trivia",
+    "title": "長崎県のポケふたトリビア",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "support_pokemon",
       "values": {
         "prefecture": "長崎県",
-        "pokemon": "デンリュウ",
-        "summary": "「灯台のポケモン」デンリュウが選ばれた長崎。港町・長崎の灯台文化と重なり、県内10枚すべてにデンリュウが登場します。",
-        "map_pref": "長崎県"
+        "manhole_count": 10,
+        "summary": "長崎県では、尻尾の光が遠くまで届くデンリュウがながさき未来応援ポケモンを務めています",
+        "map_pref": "長崎県",
+        "source_type": "official",
+        "source_url": "https://local.pokemon.jp/municipality/nagasaki/"
       }
     }
   },
   {
-    "id": "pref-trivia-miyazaki-exeggutor",
+    "id": "pref-trivia-長崎県-デンリュウ-100",
     "type": "pref_trivia",
-    "title": "宮崎県の応援ポケモンはナッシー",
+    "title": "長崎県のポケふたトリビア",
     "url": "https://data.pokefuta.com/summary/",
     "hashtags": [
       "#ポケふた",
@@ -4548,19 +2393,44 @@
     "imageType": "summary_trivia",
     "source": "pref_trivia",
     "raw_data": {
-      "fact_type": "pref_trivia",
+      "fact_type": "pokemon_100",
+      "values": {
+        "prefecture": "長崎県",
+        "manhole_count": 10,
+        "summary": "県内10枚すべてにデンリュウが登場します",
+        "map_pref": "長崎県",
+        "source_type": "dataset",
+        "source_url": ""
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-miyazaki-support-exeggutor",
+    "type": "pref_trivia",
+    "title": "宮崎県のポケふたトリビア",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "support_pokemon",
       "values": {
         "prefecture": "宮崎県",
-        "pokemon": "ナッシー",
-        "summary": "温暖な南国・宮崎の雰囲気にぴったりのナッシー。県木のフェニックス（ヤシ科）とも相性抜群で、南国感あふれる設置地点が多いです。",
-        "map_pref": "宮崎県"
+        "manhole_count": 26,
+        "summary": "南国のイメージに合うナッシーとアローラナッシーが、宮崎だいすきポケモンとして活動しています",
+        "map_pref": "宮崎県",
+        "source_type": "official",
+        "source_url": "https://local.pokemon.jp/municipality/miyazaki/"
       }
     }
   },
   {
-    "id": "pref-trivia-okinawa-growlithe",
+    "id": "pref-trivia-宮崎県-exeggutor-family-100",
     "type": "pref_trivia",
-    "title": "沖縄県の応援ポケモンはガーディ",
+    "title": "宮崎県のポケふたトリビア",
     "url": "https://data.pokefuta.com/summary/",
     "hashtags": [
       "#ポケふた",
@@ -4569,12 +2439,106 @@
     "imageType": "summary_trivia",
     "source": "pref_trivia",
     "raw_data": {
-      "fact_type": "pref_trivia",
+      "fact_type": "pokemon_group_100",
+      "values": {
+        "prefecture": "宮崎県",
+        "manhole_count": 26,
+        "summary": "県内26枚すべてにナッシー系が登場します",
+        "map_pref": "宮崎県",
+        "source_type": "dataset",
+        "source_url": ""
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-kagoshima-ibusuki-eevee",
+    "type": "pref_trivia",
+    "title": "鹿児島県のポケふたトリビア",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "wordplay",
+      "values": {
+        "prefecture": "鹿児島県",
+        "manhole_count": 9,
+        "summary": "「イーブイすき」と「いぶすき」の語呂合わせをきっかけに、指宿へイーブイのポケふたが設置されました",
+        "map_pref": "鹿児島県",
+        "source_type": "official",
+        "source_url": "https://www.city.ibusuki.lg.jp/main/info/page014900.html"
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-鹿児島県-single-municipality",
+    "type": "pref_trivia",
+    "title": "鹿児島県のポケふたトリビア",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "single_municipality",
+      "values": {
+        "prefecture": "鹿児島県",
+        "manhole_count": 9,
+        "summary": "県内9枚のポケふたはすべて指宿にあります",
+        "map_pref": "鹿児島県",
+        "source_type": "dataset",
+        "source_url": ""
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-okinawa-support-growlithe",
+    "type": "pref_trivia",
+    "title": "沖縄県のポケふたトリビア",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "support_pokemon",
       "values": {
         "prefecture": "沖縄県",
-        "pokemon": "ガーディ",
-        "summary": "沖縄の守り神・シーサーを思わせるガーディ。魔除けの獅子犬と炎のポケモンのイメージが重なり、県内各地に設置されています。",
-        "map_pref": "沖縄県"
+        "manhole_count": 17,
+        "summary": "沖縄県では、シーサーを思わせるガーディが沖縄応援ポケモンとして活動しています",
+        "map_pref": "沖縄県",
+        "source_type": "official",
+        "source_url": "https://local.pokemon.jp/municipality/okinawa/"
+      }
+    }
+  },
+  {
+    "id": "pref-trivia-沖縄県-top-pokemon",
+    "type": "pref_trivia",
+    "title": "沖縄県のポケふたトリビア",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "top_pokemon",
+      "values": {
+        "prefecture": "沖縄県",
+        "manhole_count": 17,
+        "summary": "最も多く登場するのはガーディで、5枚に描かれています",
+        "map_pref": "沖縄県",
+        "source_type": "dataset",
+        "source_url": ""
       }
     }
   }
