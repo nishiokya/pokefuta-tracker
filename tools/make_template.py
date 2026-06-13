@@ -295,38 +295,15 @@ t = t.replace(
 # ──────────────────────────────────────────
 
 # Find and replace the entire UI_TEXT block
-ui_text_old = '''    // ==== 単一言語 (日本語) 用 UI ラベル定数 ====
-    const UI_TEXT = {
-      recentLabel: '🆕 直近1ヶ月',
-      prefectureFilter: '都道府県で絞り込み',
-      allPrefectures: 'すべての都道府県',
-      prefectureCount: '都道府県別ポケふた数',
-      searchPrefecture: '都道府県を検索...',
-      codeHeader: 'コード',
-      prefectureHeader: '都道府県',
-      countHeader: 'ポケふた数',
-      siteHeader: 'サイト',
-      pokemonFilter: 'ポケモンで絞り込み',
-      searchPokemon: 'ポケモンを検索...',
-      showAll: '🔄 すべて表示',
-      totalCount: '総数:',
-      visibleCount: '表示:',
-      cityCount: '市町村:',
-      idLabel: 'ID:',
-      titleLabel: 'タイトル:',
-      prefectureLabel: '都道府県:',
-      pokemonLabel: 'ポケモン:',
-      cityLabel: '市町村:',
-      officialDetail: '📝 公式詳細',
-      officialDetailCta: '公式詳細を見る',
-      detailPageCta: '詳細ページを見る',
-      prefectureSite: 'サイト'
-    };
-
-    // 初期テキストは既に HTML に記述しているため updateUIText は不要
-    function updateUIText() { /* no-op (多言語削除) */ }'''
-ui_text_new = "    // UI labels: sourced from build-time injected window.I18N.UI\n    const UI_TEXT = window.I18N.UI;\n\n    function updateUIText() { /* no-op */ }"
-t = t.replace(ui_text_old, ui_text_new, 1)
+t = re.sub(
+    r"    // ==== 単一言語 \(日本語\) 用 UI ラベル定数 ====\n"
+    r"    const UI_TEXT = \{.*?^    \};",
+    "    // UI labels: sourced from build-time injected window.I18N.UI\n"
+    "    const UI_TEXT = window.I18N.UI;",
+    t,
+    count=1,
+    flags=re.MULTILINE | re.DOTALL,
+)
 
 # ──────────────────────────────────────────
 # I. buildPokefutaPopup — use window.I18N
@@ -366,9 +343,29 @@ t = t.replace(
     '        <div class="popup-photo travel-popup-photo" aria-label="${I.manholePhotoAria}">', 1
 )
 t = t.replace(
-    '            <b>写真募集中</b>\n            <span>このポケふたの写真はまだありません。</span>\n            <a href="https://pokefuta.com/visits" target="_blank" rel="noopener noreferrer" class="popup-link popup-link--upload">写真を投稿</a>',
-    '            <b>${I.photoWanted}</b>\n            <span>${I.photoMissing}</span>\n            <a href="https://pokefuta.com/visits" target="_blank" rel="noopener noreferrer" class="popup-link popup-link--upload">${I.uploadPhoto}</a>',
-    1
+    '            <b>写真募集中</b>\n            <span>全国でまだ写真0枚</span>',
+    '            <b>${I.photoWanted}</b>\n            <span>${I.photoMissing}</span>',
+)
+t = t.replace(
+    '        <div class="popup-photo travel-popup-photo popup-photo--missing" aria-label="写真募集中">',
+    '        <div class="popup-photo travel-popup-photo popup-photo--missing" aria-label="${I.photoWanted}">',
+    1,
+)
+t = t.replace("        anchor.textContent = '詳細を見る';", "        anchor.textContent = UI_TEXT.detailPageCta;", 1)
+t = t.replace(
+    '              onclick="if(window.trackEvent){window.trackEvent(\'popup_click_photo\',{${eventParams}});}">写真を見る</a>`',
+    '              onclick="if(window.trackEvent){window.trackEvent(\'popup_click_photo\',{${eventParams}});}">${I.photoViewCta}</a>`',
+    1,
+)
+t = t.replace(
+    '              onclick="if(window.trackEvent){window.trackEvent(\'popup_click_upload\',{${eventParams}});}">最初の写真を投稿</a>`;',
+    '              onclick="if(window.trackEvent){window.trackEvent(\'popup_click_upload\',{${eventParams}});}">${I.firstPhotoUploadCta}</a>`;',
+    1,
+)
+t = t.replace(
+    '              onclick="if(window.trackEvent){window.trackEvent(\'popup_click_google_maps\',{${eventParams}});}">Google Mapsで行く</a>`',
+    '              onclick="if(window.trackEvent){window.trackEvent(\'popup_click_google_maps\',{${eventParams}});}">${I.googleMapsCta}</a>`',
+    1,
 )
 t = t.replace(
     '            <h3 class="travel-popup-title">${escapeHtml(d.title || \'ポケふた\')}</h3>',
@@ -411,7 +408,7 @@ t = t.replace(
               : `<span class="travel-popup-pokemon">${escapeHtml(pokemon)}</span>`;
           }).join('')''',
     '''        ? pokemons.map(pokemon => {
-            const displayName = escapeHtml(getPokemonDisplayName(pokemon));
+            const displayName = escapeHtml(getHeroPokemonDisplayName(pokemon));
             const url = getPokemonLpUrl(pokemon);
             return url
               ? `<a href="${escapeHtml(url)}" class="travel-popup-pokemon" target="_blank" rel="noopener noreferrer">${displayName}</a>`

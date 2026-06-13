@@ -881,6 +881,22 @@
         .sort((a, b) => String(a.id).localeCompare(String(b.id), 'en', { numeric: true }));
     }
 
+    function getHeroThemeCount(themeKey) {
+      return allData.filter(manhole => hasHeroTitle(manhole, themeKey)).length;
+    }
+
+    function getUniqueHeroPokemon(manhole) {
+      const pokemonCounts = new Map();
+      allData.forEach(item => {
+        new Set(item.pokemons || []).forEach(name => {
+          if (name && !name.includes('ローカルActs')) {
+            pokemonCounts.set(name, (pokemonCounts.get(name) || 0) + 1);
+          }
+        });
+      });
+      return (manhole.pokemons || []).find(name => pokemonCounts.get(name) === 1) || '';
+    }
+
     function getSummaryHubUrl(anchor) {
       const lang = window.I18N?.lang || 'ja';
       const prefix = lang === 'ja' ? '/' : `/${lang}/`;
@@ -904,9 +920,10 @@
         manhole,
         category: 'fresh',
         categoryLabel: strings.categories.fresh.label,
-        pokemon: getHeroPokemonText(manhole),
+        title: getHeroPokemonText(manhole),
         place: [manhole.prefecture, manhole.city].filter(Boolean).join(' ') || window.I18N?.unknownPref || '不明',
         reason: photoDate ? strings.freshDate.replace('{date}', photoDate) : strings.categories.fresh.label,
+        imageAlt: getHeroPokemonText(manhole),
         imageUrl: getLocalManholeImageUrl(manhole.id),
         destinationUrl: getManholePageUrl(manhole.id),
         destinationHub: 'map_popup',
@@ -921,21 +938,27 @@
       if (!candidates.length) return null;
       const manhole = candidates[stableHash(`${dateKey}:${category}:${themeKey}:representative`) % candidates.length];
       const strings = HERO_DISCOVERY_TEXT;
+      let title = '';
       let reason = '';
       if (category === 'travel') {
-        reason = `${strings.travelThemes[themeKey]} ${strings.countTemplate.replace('{count}', candidates.length)}`;
+        title = strings.travelThemes[themeKey];
+        reason = strings.countTemplate.replace('{count}', getHeroThemeCount(themeKey));
       } else if (themeKey === 'unique_pokemon') {
-        reason = strings.uniqueTemplate.replace('{pokemon}', getHeroPokemonText(manhole));
+        const uniquePokemon = getUniqueHeroPokemon(manhole);
+        title = uniquePokemon ? getHeroPokemonDisplayName(uniquePokemon) : strings.rareThemes[themeKey];
+        reason = strings.uniqueTemplate.replace('{pokemon}', title);
       } else {
-        reason = strings.rareThemes[themeKey];
+        title = strings.rareThemes[themeKey];
+        reason = getHeroPokemonText(manhole);
       }
       return {
         manhole,
         category,
         categoryLabel: strings.categories[category].label,
-        pokemon: reason,
+        title,
         place: [manhole.prefecture, manhole.city].filter(Boolean).join(' ') || window.I18N?.unknownPref || '不明',
         reason,
+        imageAlt: getHeroPokemonText(manhole),
         imageUrl: getLocalManholeImageUrl(manhole.id),
         destinationUrl: getSummaryHubUrl(category === 'travel' ? 'travel-discovery' : 'rare-discovery'),
         destinationHub: category === 'travel' ? 'summary_travel' : 'summary_rare',
@@ -965,19 +988,19 @@
       if (featured) {
         const image = link.querySelector('.hero-feature-media img');
         image.src = recommendation.imageUrl;
-        image.alt = `${recommendation.place} ${recommendation.pokemon}${window.I18N?.photoAltSuffix || 'の写真'}`;
+        image.alt = `${recommendation.place} ${recommendation.imageAlt}${window.I18N?.photoAltSuffix || 'の写真'}`;
         image.addEventListener('error', () => {
           link.classList.add('is-image-missing');
           image.remove();
         }, { once: true });
         link.querySelector('.hero-feature-eyebrow').textContent = recommendation.categoryLabel;
-        link.querySelector('.hero-feature-title').textContent = recommendation.pokemon;
+        link.querySelector('.hero-feature-title').textContent = recommendation.title;
         link.querySelector('.hero-feature-place').textContent = recommendation.place;
         link.querySelector('.hero-feature-reason').textContent = recommendation.reason;
         link.querySelector('.hero-feature-cta').textContent = HERO_DISCOVERY_TEXT.ctas[recommendation.category];
       } else {
         link.querySelector('.hero-discovery-link-label').textContent = recommendation.categoryLabel;
-        link.querySelector('strong').textContent = recommendation.pokemon;
+        link.querySelector('strong').textContent = recommendation.title;
         link.querySelector('.hero-discovery-link-place').textContent =
           `${recommendation.place} · ${HERO_DISCOVERY_TEXT.ctas[recommendation.category]}`;
       }

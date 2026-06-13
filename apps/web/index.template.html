@@ -701,33 +701,8 @@
       SECONDARY_TAG_KEYS.map(k => [k, TAG_META[k]?.label]).filter(([,v]) => v)
     ));
 
-    // ==== 単一言語 (日本語) 用 UI ラベル定数 ====
-    const UI_TEXT = {
-      recentLabel: '🆕 直近1ヶ月',
-      prefectureFilter: '都道府県で絞り込み',
-      allPrefectures: 'すべての都道府県',
-      prefectureCount: '都道府県別ポケふた数',
-      searchPrefecture: '都道府県を検索...',
-      codeHeader: 'コード',
-      prefectureHeader: '都道府県',
-      countHeader: 'ポケふた数',
-      siteHeader: 'サイト',
-      pokemonFilter: 'ポケモンで絞り込み',
-      searchPokemon: 'ポケモンを検索...',
-      showAll: '🔄 すべて表示',
-      totalCount: '総数:',
-      visibleCount: '表示:',
-      cityCount: '市町村:',
-      idLabel: 'ID:',
-      titleLabel: 'タイトル:',
-      prefectureLabel: '都道府県:',
-      pokemonLabel: 'ポケモン:',
-      cityLabel: '市町村:',
-      officialDetail: '📝 公式詳細',
-      officialDetailCta: '公式詳細を見る',
-      detailPageCta: '詳細ページを見る',
-      prefectureSite: 'サイト'
-    };
+    // UI labels: sourced from build-time injected window.I18N.UI
+    const UI_TEXT = window.I18N.UI;
     const HERO_DISCOVERY_TEXT = window.I18N.heroDiscovery;
 
     // 初期テキストは既に HTML に記述しているため updateUIText は不要
@@ -864,6 +839,22 @@
         .sort((a, b) => String(a.id).localeCompare(String(b.id), 'en', { numeric: true }));
     }
 
+    function getHeroThemeCount(themeKey) {
+      return allData.filter(manhole => hasHeroTitle(manhole, themeKey)).length;
+    }
+
+    function getUniqueHeroPokemon(manhole) {
+      const pokemonCounts = new Map();
+      allData.forEach(item => {
+        new Set(item.pokemons || []).forEach(name => {
+          if (name && !name.includes('ローカルActs')) {
+            pokemonCounts.set(name, (pokemonCounts.get(name) || 0) + 1);
+          }
+        });
+      });
+      return (manhole.pokemons || []).find(name => pokemonCounts.get(name) === 1) || '';
+    }
+
     function getSummaryHubUrl(anchor) {
       const lang = window.I18N?.lang || 'ja';
       const prefix = lang === 'ja' ? '/' : `/${lang}/`;
@@ -887,9 +878,10 @@
         manhole,
         category: 'fresh',
         categoryLabel: strings.categories.fresh.label,
-        pokemon: getHeroPokemonText(manhole),
+        title: getHeroPokemonText(manhole),
         place: [manhole.prefecture, manhole.city].filter(Boolean).join(' ') || window.I18N?.unknownPref || '不明',
         reason: photoDate ? strings.freshDate.replace('{date}', photoDate) : strings.categories.fresh.label,
+        imageAlt: getHeroPokemonText(manhole),
         imageUrl: getLocalManholeImageUrl(manhole.id),
         destinationUrl: getManholePageUrl(manhole.id),
         destinationHub: 'map_popup',
@@ -904,21 +896,27 @@
       if (!candidates.length) return null;
       const manhole = candidates[stableHash(`${dateKey}:${category}:${themeKey}:representative`) % candidates.length];
       const strings = HERO_DISCOVERY_TEXT;
+      let title = '';
       let reason = '';
       if (category === 'travel') {
-        reason = `${strings.travelThemes[themeKey]} ${strings.countTemplate.replace('{count}', candidates.length)}`;
+        title = strings.travelThemes[themeKey];
+        reason = strings.countTemplate.replace('{count}', getHeroThemeCount(themeKey));
       } else if (themeKey === 'unique_pokemon') {
-        reason = strings.uniqueTemplate.replace('{pokemon}', getHeroPokemonText(manhole));
+        const uniquePokemon = getUniqueHeroPokemon(manhole);
+        title = uniquePokemon ? getHeroPokemonDisplayName(uniquePokemon) : strings.rareThemes[themeKey];
+        reason = strings.uniqueTemplate.replace('{pokemon}', title);
       } else {
-        reason = strings.rareThemes[themeKey];
+        title = strings.rareThemes[themeKey];
+        reason = getHeroPokemonText(manhole);
       }
       return {
         manhole,
         category,
         categoryLabel: strings.categories[category].label,
-        pokemon: reason,
+        title,
         place: [manhole.prefecture, manhole.city].filter(Boolean).join(' ') || window.I18N?.unknownPref || '不明',
         reason,
+        imageAlt: getHeroPokemonText(manhole),
         imageUrl: getLocalManholeImageUrl(manhole.id),
         destinationUrl: getSummaryHubUrl(category === 'travel' ? 'travel-discovery' : 'rare-discovery'),
         destinationHub: category === 'travel' ? 'summary_travel' : 'summary_rare',
@@ -948,19 +946,19 @@
       if (featured) {
         const image = link.querySelector('.hero-feature-media img');
         image.src = recommendation.imageUrl;
-        image.alt = `${recommendation.place} ${recommendation.pokemon}${window.I18N?.photoAltSuffix || 'の写真'}`;
+        image.alt = `${recommendation.place} ${recommendation.imageAlt}${window.I18N?.photoAltSuffix || 'の写真'}`;
         image.addEventListener('error', () => {
           link.classList.add('is-image-missing');
           image.remove();
         }, { once: true });
         link.querySelector('.hero-feature-eyebrow').textContent = recommendation.categoryLabel;
-        link.querySelector('.hero-feature-title').textContent = recommendation.pokemon;
+        link.querySelector('.hero-feature-title').textContent = recommendation.title;
         link.querySelector('.hero-feature-place').textContent = recommendation.place;
         link.querySelector('.hero-feature-reason').textContent = recommendation.reason;
         link.querySelector('.hero-feature-cta').textContent = HERO_DISCOVERY_TEXT.ctas[recommendation.category];
       } else {
         link.querySelector('.hero-discovery-link-label').textContent = recommendation.categoryLabel;
-        link.querySelector('strong').textContent = recommendation.pokemon;
+        link.querySelector('strong').textContent = recommendation.title;
         link.querySelector('.hero-discovery-link-place').textContent =
           `${recommendation.place} · ${HERO_DISCOVERY_TEXT.ctas[recommendation.category]}`;
       }
@@ -1035,7 +1033,7 @@
       const pokemons = Array.isArray(d.pokemons) && d.pokemons.length ? d.pokemons : [];
       const pokemonsHtml = pokemons.length
         ? pokemons.map(pokemon => {
-            const displayName = escapeHtml(getPokemonDisplayName(pokemon));
+            const displayName = escapeHtml(getHeroPokemonDisplayName(pokemon));
             const url = getPokemonLpUrl(pokemon);
             return url
               ? `<a href="${escapeHtml(url)}" class="travel-popup-pokemon" target="_blank" rel="noopener noreferrer">${displayName}</a>`
@@ -1074,15 +1072,15 @@
           </a>
           ${photoMetaItems ? `<div class="travel-popup-photo-meta">${photoMetaItems}</div>` : ''}
           <div class="popup-photo__missing">
-            <b>写真募集中</b>
-            <span>全国でまだ写真0枚</span>
+            <b>${I.photoWanted}</b>
+            <span>${I.photoMissing}</span>
           </div>
         </div>
       ` : `
-        <div class="popup-photo travel-popup-photo popup-photo--missing" aria-label="写真募集中">
+        <div class="popup-photo travel-popup-photo popup-photo--missing" aria-label="${I.photoWanted}">
           <div class="popup-photo__missing">
-            <b>写真募集中</b>
-            <span>全国でまだ写真0枚</span>
+            <b>${I.photoWanted}</b>
+            <span>${I.photoMissing}</span>
           </div>
         </div>
       `;
@@ -1091,21 +1089,21 @@
         const anchor = document.createElement('a');
         anchor.href = manholeDetailUrl;
         anchor.className = 'travel-popup-action travel-popup-action--detail';
-        anchor.textContent = '詳細を見る';
+        anchor.textContent = UI_TEXT.detailPageCta;
         anchor.setAttribute('onclick', `if(window.trackEvent){window.trackEvent('popup_click_detail',{${eventParams}});}`);
         return anchor.outerHTML;
       })() : '';
       const primaryAction = hasPhoto
         ? `<a href="${photoPageUrl}" target="_blank" rel="noopener noreferrer" class="travel-popup-action travel-popup-action--primary"
-              onclick="if(window.trackEvent){window.trackEvent('popup_click_photo',{${eventParams}});}">写真を見る</a>`
+              onclick="if(window.trackEvent){window.trackEvent('popup_click_photo',{${eventParams}});}">${I.photoViewCta}</a>`
         : `<a href="${uploadUrl}" target="_blank" rel="noopener noreferrer" class="travel-popup-action travel-popup-action--primary travel-popup-action--upload"
-              onclick="if(window.trackEvent){window.trackEvent('popup_click_upload',{${eventParams}});}">最初の写真を投稿</a>`;
+              onclick="if(window.trackEvent){window.trackEvent('popup_click_upload',{${eventParams}});}">${I.firstPhotoUploadCta}</a>`;
       const mapsUrl = Number.isFinite(Number(d.lat)) && Number.isFinite(Number(d.lng))
         ? `https://www.google.com/maps?q=${encodeURIComponent(`${d.lat},${d.lng}`)}`
         : '';
       const mapsAction = mapsUrl
         ? `<a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" class="travel-popup-action travel-popup-action--maps"
-              onclick="if(window.trackEvent){window.trackEvent('popup_click_google_maps',{${eventParams}});}">Google Mapsで行く</a>`
+              onclick="if(window.trackEvent){window.trackEvent('popup_click_google_maps',{${eventParams}});}">${I.googleMapsCta}</a>`
         : '';
 
       return `

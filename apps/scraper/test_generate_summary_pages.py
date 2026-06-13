@@ -48,6 +48,25 @@ class DiscoveryHubTests(unittest.TestCase):
         self.assertIn("'rare-discovery'", source)
         self.assertIn("destination_hub: recommendation.destinationHub", source)
         self.assertIn("getDailyRotationIndex", source)
+        self.assertIn("getHeroThemeCount(themeKey)", source)
+        self.assertIn("getUniqueHeroPokemon(manhole)", source)
+        self.assertNotIn("countTemplate.replace('{count}', candidates.length)", source)
+        self.assertNotIn("pokemon: reason", source)
+
+    def test_generated_template_keeps_popup_copy_localized(self):
+        template = (summary.ROOT / "apps/web/index.template.html").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("const UI_TEXT = window.I18N.UI;", template)
+        self.assertIn("${I.photoWanted}", template)
+        self.assertIn("${I.photoMissing}", template)
+        self.assertIn("${I.photoViewCta}", template)
+        self.assertIn("${I.firstPhotoUploadCta}", template)
+        self.assertIn("${I.googleMapsCta}", template)
+        self.assertIn("anchor.textContent = UI_TEXT.detailPageCta;", template)
+        self.assertIn("getHeroPokemonDisplayName(pokemon)", template)
+        self.assertNotIn("getPokemonDisplayName(pokemon)", template)
+        self.assertNotIn("const UI_TEXT = {", template)
 
     def test_i18n_hero_strings_have_all_destinations(self):
         i18n_dir = summary.ROOT / "apps/web/i18n"
