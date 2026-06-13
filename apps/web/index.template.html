@@ -309,7 +309,7 @@
     integrity="sha384-pmjIAcz2bAn0xukfxADbZIb3t8oRT9Sv0rvO+BR5Csr6Dhqq+nZs59P0pPKQJkEV" crossorigin="" />
   <link rel="stylesheet" href="%%BASE_PATH%%assets/theme.css" />
   <link rel="stylesheet" href="%%BASE_PATH%%assets/map.css" />
-  <link rel="stylesheet" href="%%BASE_PATH%%assets/pokefuta-map.css" />
+  <link rel="stylesheet" href="%%BASE_PATH%%assets/pokefuta-map.css?v=20260613-popup-actions" />
   <link rel="icon" href="%%BASE_PATH%%assets/pokefuta-marker.svg" type="image/svg+xml" />
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-K18NR4GZG2"></script>
@@ -769,9 +769,9 @@
       const imageUrl = getLocalManholeImageUrl(d.id);
       const photoAlt = `${d.title || I.manholeTitle}${I.photoAltSuffix}`;
       const photoMeta = getLatestPhotoMeta(d.id);
+      const hasPhoto = Boolean(photoMeta?.url || photoMeta?.original_url || photoMeta?.storage_key);
       const photoDate = getPhotoTakenDate(d.id);
       const displayName = String(photoMeta?.display_name || '').trim();
-      const photoComment = String(photoMeta?.comment || '').trim();
       const photoMetaItems = [
         photoDate ? `<span class="travel-popup-photo-date">${I.photoDatePrefix}${escapeHtml(photoDate)}</span>` : '',
         displayName ? `<span class="travel-popup-photo-author">${escapeHtml(displayName)}</span>` : ''
@@ -779,41 +779,58 @@
       const titles = Array.isArray(d.titles) ? d.titles : [];
       const titleBadgesHtml = titles.length
         ? '<div class="travel-popup-badges">'
-          + titles.map(t => '<span class="travel-popup-badge">'
+          + titles.slice(0, 1).map(t => '<span class="travel-popup-badge">'
             + escapeHtml((t.emoji ? t.emoji + ' ' : '') + t.label)
             + '</span>').join('')
           + '</div>'
         : '';
-      const secondaryTags = (Array.isArray(d.tags) ? d.tags : []).filter(t => SECONDARY_TAG_EMOJI[t])
-      const secondaryIconsHtml = secondaryTags.length
-        ? '<div class="travel-popup-tag-icons">'
-          + secondaryTags.map(t =>
-              `<span class="travel-popup-tag-icon" title="${escapeHtml(SECONDARY_TAG_LABEL[t] || t)}">${SECONDARY_TAG_EMOJI[t]}</span>`
-            ).join('')
-          + '</div>'
-        : '';
-      const photoBlock = imageUrl ? `
+      const manholeId = encodeURIComponent(String(d.id || ''));
+      const photoPageUrl = `https://pokefuta.com/manhole/${manholeId}`;
+      const uploadUrl = 'https://pokefuta.com/upload';
+      const safeIdJs = escapeJs(d.id);
+      const safePrefectureJs = escapeJs(prefecture);
+      const eventParams = `event_category:'popup_navigation',manhole_id:'${safeIdJs}',prefecture:'${safePrefectureJs}'`;
+      const photoBlock = hasPhoto && imageUrl ? `
         <div class="popup-photo travel-popup-photo" aria-label="${I.manholePhotoAria}">
-          <img src="${imageUrl}" alt="${escapeHtml(photoAlt)}" loading="lazy" decoding="async" onerror="handlePopupImageError(this)">
+          <a href="${photoPageUrl}" target="_blank" rel="noopener noreferrer" class="travel-popup-photo-link"
+             onclick="if(window.trackEvent){window.trackEvent('popup_click_photo',{${eventParams}});}">
+            <img src="${imageUrl}" alt="${escapeHtml(photoAlt)}" loading="lazy" decoding="async" onerror="handlePopupImageError(this)">
+          </a>
           ${photoMetaItems ? `<div class="travel-popup-photo-meta">${photoMetaItems}</div>` : ''}
           <div class="popup-photo__missing">
             <b>${I.photoWanted}</b>
             <span>${I.photoMissing}</span>
-            <a href="https://pokefuta.com/visits" target="_blank" rel="noopener noreferrer" class="popup-link popup-link--upload">${I.uploadPhoto}</a>
           </div>
         </div>
-      ` : '';
-      const officialDetailLink = d.id ? (function() {
+      ` : `
+        <div class="popup-photo travel-popup-photo popup-photo--missing" aria-label="${I.photoWanted}">
+          <div class="popup-photo__missing">
+            <b>${I.photoWanted}</b>
+            <span>${I.photoMissing}</span>
+          </div>
+        </div>
+      `;
+      const detailLink = d.id ? (function() {
         const manholeDetailUrl = `${window.SITE_BASE_URL}manholes/${encodeURIComponent(d.id)}/`;
         const anchor = document.createElement('a');
         anchor.href = manholeDetailUrl;
-        anchor.className = 'travel-popup-action travel-popup-action--primary';
+        anchor.className = 'travel-popup-action travel-popup-action--detail';
         anchor.textContent = UI_TEXT.detailPageCta;
-        const safeTitleJs = escapeJs(d.title || d.id);
-        const safeIdJs = escapeJs(d.id);
-        anchor.setAttribute('onclick', `if(window.trackEvent){window.trackEvent('click_detail_page',{event_category:'navigation',event_label:'${safeTitleJs}',manhole_id:'${safeIdJs}'});}`);
+        anchor.setAttribute('onclick', `if(window.trackEvent){window.trackEvent('popup_click_detail',{${eventParams}});}`);
         return anchor.outerHTML;
       })() : '';
+      const primaryAction = hasPhoto
+        ? `<a href="${photoPageUrl}" target="_blank" rel="noopener noreferrer" class="travel-popup-action travel-popup-action--primary"
+              onclick="if(window.trackEvent){window.trackEvent('popup_click_photo',{${eventParams}});}">${I.photoViewCta}</a>`
+        : `<a href="${uploadUrl}" target="_blank" rel="noopener noreferrer" class="travel-popup-action travel-popup-action--primary travel-popup-action--upload"
+              onclick="if(window.trackEvent){window.trackEvent('popup_click_upload',{${eventParams}});}">${I.firstPhotoUploadCta}</a>`;
+      const mapsUrl = Number.isFinite(Number(d.lat)) && Number.isFinite(Number(d.lng))
+        ? `https://www.google.com/maps?q=${encodeURIComponent(`${d.lat},${d.lng}`)}`
+        : '';
+      const mapsAction = mapsUrl
+        ? `<a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" class="travel-popup-action travel-popup-action--maps"
+              onclick="if(window.trackEvent){window.trackEvent('popup_click_google_maps',{${eventParams}});}">${I.googleMapsCta}</a>`
+        : '';
 
       return `
         <div class="popup-box popup-box--photo travel-popup-card">
@@ -826,13 +843,12 @@
             </div>
             <h3 class="travel-popup-title">${escapeHtml(d.title || I.manholeTitle)}</h3>
             ${d.building ? `<p class="travel-popup-building">📍 ${escapeHtml(d.building)}</p>` : ''}
-            ${d.place_detail ? `<p class="travel-popup-description">${escapeHtml(d.place_detail)}</p>` : ''}
             ${titleBadgesHtml}
-            ${secondaryIconsHtml}
-            ${photoComment ? `<p class="travel-popup-comment">${escapeHtml(photoComment)}</p>` : ''}
             <div class="travel-popup-pokemon-list" aria-label="${I.pokemonListAria}">${pokemonsHtml}</div>
-            <div class="popup-actions travel-popup-actions travel-popup-actions--single">
-              ${officialDetailLink}
+            <div class="popup-actions travel-popup-actions">
+              ${primaryAction}
+              ${mapsAction}
+              ${detailLink}
             </div>
           </div>
         </div>
@@ -872,6 +888,18 @@
     function getPokemonMetadata(nameJa) {
       if (!pokemonMetadata || !nameJa) return null;
       return pokemonMetadata.get(nameJa) || null;
+    }
+
+    function getPokemonDisplayName(nameJa) {
+      const names = getPokemonMetadata(nameJa)?.names;
+      const lang = window.I18N?.lang || 'ja';
+      const localizedName = {
+        en: names?.en,
+        ko: names?.ko,
+        'zh-TW': names?.['zh-Hant'],
+        'zh-CN': names?.['zh-Hans']
+      }[lang];
+      return localizedName || nameJa;
     }
 
     window.getPokemonLpUrl = function(jaName) {

@@ -66,8 +66,11 @@
     "manholePhotoAria": "マンホール写真",
     "pokemonListAria": "登場ポケモン",
     "photoWanted": "写真募集中",
-    "photoMissing": "このポケふたの写真はまだありません。",
+    "photoMissing": "全国でまだ写真0枚",
     "uploadPhoto": "写真を投稿",
+    "photoViewCta": "写真を見る",
+    "firstPhotoUploadCta": "最初の写真を投稿",
+    "googleMapsCta": "Google Mapsで行く",
     "shareButton": "シェア",
     "typeLabel": "タイプ:",
     "genLabel": "世代:",
@@ -114,7 +117,7 @@
       "cityLabel": "市町村:",
       "officialDetail": "📝 公式詳細",
       "officialDetailCta": "公式詳細を見る",
-      "detailPageCta": "詳細ページを見る",
+      "detailPageCta": "詳細を見る",
       "prefectureSite": "サイト"
     }
   }

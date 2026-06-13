@@ -803,17 +803,26 @@ body.pokefuta-map-page {
   margin: 0;
 }
 
-.pokefuta-map-page .leaflet-popup-close-button {
-  top: 8px;
-  right: 8px;
-  width: 30px;
-  height: 30px;
+.pokefuta-map-page .leaflet-container a.leaflet-popup-close-button {
+  top: 7px;
+  right: 7px;
+  z-index: 10;
+  width: 36px;
+  height: 36px;
+  border: 2px solid rgba(42, 36, 30, .24);
   border-radius: 999px;
-  background: rgba(255, 250, 240, .88);
+  background: #fffaf0;
   color: #2a241e;
-  font-size: 20px;
-  line-height: 28px;
-  box-shadow: 0 4px 12px rgba(52, 35, 16, .18);
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 31px;
+  box-shadow: 0 5px 14px rgba(52, 35, 16, .24);
+}
+
+.pokefuta-map-page .leaflet-container a.leaflet-popup-close-button:hover,
+.pokefuta-map-page .leaflet-container a.leaflet-popup-close-button:focus-visible {
+  background: #2a241e;
+  color: #fffaf0;
 }
 
 .pokefuta-map-page .travel-popup-card {
@@ -828,6 +837,12 @@ body.pokefuta-map-page {
   border: 0;
   border-radius: 0;
   background: #efe4cd;
+}
+
+.pokefuta-map-page .travel-popup-photo-link {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .pokefuta-map-page .travel-popup-photo-meta {
@@ -965,15 +980,11 @@ body.pokefuta-map-page {
 
 .pokefuta-map-page .travel-popup-actions {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 8px;
   margin: 0;
   padding: 2px 0 0;
   border: 0;
-}
-
-.pokefuta-map-page .travel-popup-actions--single {
-  grid-template-columns: 1fr;
 }
 
 .pokefuta-map-page .travel-popup-action {
@@ -1004,7 +1015,27 @@ body.pokefuta-map-page {
 }
 
 .pokefuta-map-page .travel-popup-action--upload {
+  background: linear-gradient(135deg, #168074, #0f6d64);
+  color: #fff;
+  box-shadow: 0 8px 18px rgba(15, 109, 100, .2);
+}
+
+.pokefuta-map-page .travel-popup-action--maps {
+  background: #fff;
+  color: #3d5f98;
+  box-shadow: inset 0 0 0 1.5px rgba(61, 95, 152, .28);
+}
+
+.pokefuta-map-page .travel-popup-action--detail {
+  background: #fff;
+  color: #71665c;
+  box-shadow: inset 0 0 0 1.5px rgba(113, 102, 92, .28);
+}
+
+.pokefuta-map-page .travel-popup-action--detail:hover,
+.pokefuta-map-page .travel-popup-action--detail:focus-visible {
   color: #168074;
+  box-shadow: inset 0 0 0 1.5px rgba(22, 128, 116, .45);
 }
 
 .pokefuta-map-page .travel-popup-badges {

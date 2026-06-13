@@ -66,8 +66,11 @@
     "manholePhotoAria": "人孔蓋照片",
     "pokemonListAria": "登場神奇寶貝",
     "photoWanted": "徵求照片",
-    "photoMissing": "此 Pokéfuta 尚無照片。",
+    "photoMissing": "目前尚無照片",
     "uploadPhoto": "上傳照片",
+    "photoViewCta": "查看照片",
+    "firstPhotoUploadCta": "上傳第一張照片",
+    "googleMapsCta": "在 Google Maps 查看",
     "shareButton": "分享",
     "typeLabel": "屬性：",
     "genLabel": "世代：",
@@ -134,7 +137,7 @@
       "cityLabel": "市町村：",
       "officialDetail": "📝 官方",
       "officialDetailCta": "查看官方詳細資訊",
-      "detailPageCta": "查看詳細頁面",
+      "detailPageCta": "查看詳情",
       "prefectureSite": "　網站"
     }
   }

@@ -66,8 +66,11 @@
     "manholePhotoAria": "맨홀 사진",
     "pokemonListAria": "등장 포켓몬",
     "photoWanted": "사진 모집 중",
-    "photoMissing": "이 포케후타의 사진은 아직 없습니다.",
+    "photoMissing": "아직 사진이 없습니다",
     "uploadPhoto": "사진 업로드",
+    "photoViewCta": "사진 보기",
+    "firstPhotoUploadCta": "첫 사진 올리기",
+    "googleMapsCta": "Google Maps에서 보기",
     "shareButton": "공유",
     "typeLabel": "타입:",
     "genLabel": "세대:",
@@ -134,7 +137,7 @@
       "cityLabel": "시정촌:",
       "officialDetail": "📝 공식",
       "officialDetailCta": "공식 상세 보기",
-      "detailPageCta": "상세 페이지 보기",
+      "detailPageCta": "상세 보기",
       "prefectureSite": " 사이트"
     }
   }
