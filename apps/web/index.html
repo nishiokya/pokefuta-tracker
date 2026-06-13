@@ -1312,10 +1312,7 @@
           keyboard: true
         });
         marker.on('click', () => {
-          zoomToPrefecture(prefecture);
-          if (map.getZoom() <= PREFECTURE_OVERVIEW_MAX_ZOOM) {
-            map.setZoom(PREFECTURE_OVERVIEW_MAX_ZOOM + 1, { animate: false });
-          }
+          zoomToPrefecture(prefecture, PREFECTURE_OVERVIEW_MAX_ZOOM + 1);
         });
         prefectureOverviewLayer.addLayer(marker);
       });
@@ -2016,7 +2013,7 @@
     // Leafletの機能を使って都道府県のポケふたにズームする関数
     // マンホール2件以上: マンホール全て入る最小縮尺（maxZoom:13で過度な拡大を防止）
     // マンホール1件以下: 実マーカー座標 or Gist中心座標 ±0.5度で統一スケール
-    function zoomToPrefecture(prefecture) {
+    function zoomToPrefecture(prefecture, minimumZoom = null) {
       const markerCount = prefectureMarkerCounts[prefecture] || 0;
       console.log(`Zooming to prefecture: ${prefecture}, marker count: ${markerCount}, prefectureBounds available: ${!!prefectureBounds[prefecture]}`);
       
@@ -2025,7 +2022,7 @@
         console.warn(`No bounds found for prefecture: ${prefecture}`);
         const center = prefectureCenterCoords[prefecture];
         if (center) {
-          map.setView(center, 8);
+          map.setView(center, Math.max(8, minimumZoom || 0), { animate: minimumZoom === null });
         }
         return;
       }
@@ -2037,16 +2034,21 @@
           // マンホール2件以上: マンホール全て入る最小縮尺でズーム（maxZoom: 13で過度な拡大を防止）
           map.fitBounds(bounds, {
             padding: [50, 50],
-            maxZoom: 13
+            maxZoom: 13,
+            animate: minimumZoom === null
           });
           console.log(`Zoomed to ${prefecture} with ${markerCount} markers (fit all data with zoom cap)`);
         } else {
           // マンホール1件以下: Gist中心座標±0.5度で統一スケール (padding: 50px, maxZoom: 13)
           map.fitBounds(bounds, {
             padding: [50, 50],
-            maxZoom: 13
+            maxZoom: 13,
+            animate: minimumZoom === null
           });
           console.log(`Zoomed to ${prefecture} with ${markerCount} markers (unified scale)`);
+        }
+        if (minimumZoom !== null && map.getZoom() < minimumZoom) {
+          map.setZoom(minimumZoom, { animate: false });
         }
         
       } catch (error) {
@@ -2054,7 +2056,7 @@
         // エラーの場合は都道府県の中心座標にフォールバック
         const center = prefectureCenterCoords[prefecture];
         if (center) {
-          map.setView(center, 8);
+          map.setView(center, Math.max(8, minimumZoom || 0), { animate: minimumZoom === null });
         }
       }
     }
