@@ -94,6 +94,18 @@
     "recentDisabledTitle": "사용 불가 (데이터에 날짜 필드 없음)",
     "panelOpenLabel": "전체 패널 열기",
     "panelCloseLabel": "전체 패널 닫기",
+    "heroDiscovery": {
+      "heading": "오늘은 어떤 포케후타를 만나러 갈까요?",
+      "freshDate": "{date}에 도착한 새 사진",
+      "countTemplate": "일본 전국 {count}개",
+      "uniqueTemplate": "{pokemon} 포케후타는 일본 전국에 1개",
+      "ctas": {"fresh": "지도에서 사진 보기 →", "travel": "특집 보기 →", "rare": "랭킹 보기 →"},
+      "categories": {
+        "travel": {"label": "여행 떠나기"}, "rare": {"label": "희귀 포케후타"}, "fresh": {"label": "새로운 발견"}
+      },
+      "travelThemes": {"remote_island": "외딴섬의 포케후타", "roadside": "미치노에키의 포케후타", "station_front": "역 앞의 포케후타", "world_heritage": "세계유산 근처의 포케후타"},
+      "rareThemes": {"unique_pokemon": "일본에서 오직 이곳뿐", "north_end": "일본 최북단 포케후타", "south_end": "일본 최남단 포케후타", "east_end": "일본 최동단 포케후타", "west_end": "일본 최서단 포케후타", "lone": "외딴 비경의 포케후타"}
+    },
     "titleLabels": {
       "north_end": "일본 최북단 포케후타",
       "south_end": "일본 최남단 포케후타",

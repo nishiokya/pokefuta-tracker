@@ -54,6 +54,11 @@ body.pokefuta-map-page {
   backdrop-filter: blur(10px);
 }
 
+.pokefuta-map-page .hero-fallback[hidden],
+.pokefuta-map-page .hero-discovery[hidden] {
+  display: none;
+}
+
 .pokefuta-map-page .map-hero-card h1 {
   margin: 0;
   font-size: 1.72rem;
@@ -87,6 +92,143 @@ body.pokefuta-map-page {
 .pokefuta-map-page .map-hero-card .hero-pokemon-link:focus-visible {
   text-decoration: underline;
   color: #4a3080;
+}
+
+.pokefuta-map-page .hero-discovery-heading {
+  margin: 0 0 9px;
+  color: #594a3e;
+  font-size: .72rem;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.pokefuta-map-page .hero-feature {
+  display: grid;
+  grid-template-columns: 116px minmax(0, 1fr);
+  min-height: 122px;
+  border-radius: 13px;
+  background: #fffdf7;
+  color: #1f1b18;
+  box-shadow: 0 7px 18px rgba(66, 43, 18, .13);
+  overflow: hidden;
+  text-decoration: none;
+  transition: transform .16s ease, box-shadow .16s ease;
+}
+
+.pokefuta-map-page .hero-feature:hover,
+.pokefuta-map-page .hero-feature:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(66, 43, 18, .18);
+}
+
+.pokefuta-map-page .hero-feature-media {
+  min-height: 122px;
+  background: linear-gradient(145deg, #d9c7a7, #f2e6cc);
+}
+
+.pokefuta-map-page .hero-feature-media img {
+  width: 100%;
+  height: 100%;
+  min-height: 122px;
+  object-fit: cover;
+}
+
+.pokefuta-map-page .hero-feature.is-image-missing {
+  grid-template-columns: 1fr;
+}
+
+.pokefuta-map-page .hero-feature.is-image-missing .hero-feature-media {
+  display: none;
+}
+
+.pokefuta-map-page .hero-feature-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 10px 12px;
+}
+
+.pokefuta-map-page .hero-feature-eyebrow,
+.pokefuta-map-page .hero-discovery-link-label {
+  color: #7654aa;
+  font-size: .66rem;
+  font-weight: 900;
+}
+
+.pokefuta-map-page .hero-feature-title {
+  display: -webkit-box;
+  margin-top: 3px;
+  overflow: hidden;
+  font-size: 1rem;
+  line-height: 1.25;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.pokefuta-map-page .hero-feature-place,
+.pokefuta-map-page .hero-discovery-link-place {
+  margin-top: 3px;
+  color: #6d6259;
+  font-size: .68rem;
+  font-weight: 750;
+}
+
+.pokefuta-map-page .hero-feature-reason {
+  display: -webkit-box;
+  margin-top: 5px;
+  overflow: hidden;
+  color: #3f3730;
+  font-size: .7rem;
+  font-weight: 750;
+  line-height: 1.35;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.pokefuta-map-page .hero-feature-cta {
+  margin-top: 7px;
+  color: #7654aa;
+  font-size: .7rem;
+  font-weight: 900;
+}
+
+.pokefuta-map-page .hero-discovery-links {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+  margin-top: 8px;
+}
+
+.pokefuta-map-page .hero-discovery-link {
+  display: flex;
+  min-width: 0;
+  min-height: 62px;
+  flex-direction: column;
+  justify-content: center;
+  padding: 8px 10px;
+  border: 1px solid rgba(110, 80, 44, .13);
+  border-radius: 11px;
+  background: rgba(255, 253, 247, .82);
+  color: #1f1b18;
+  text-decoration: none;
+}
+
+.pokefuta-map-page .hero-discovery-link:hover,
+.pokefuta-map-page .hero-discovery-link:focus-visible {
+  border-color: rgba(118, 84, 170, .45);
+  background: #fffdf7;
+}
+
+.pokefuta-map-page .hero-discovery-link strong {
+  margin-top: 2px;
+  overflow: hidden;
+  font-size: .76rem;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .pokefuta-map-page #controls {
@@ -1260,13 +1402,13 @@ body.pokefuta-map-page {
     top: 28px;
     left: 28px;
     right: auto;
-    width: min(360px, calc(100vw - 500px));
-    min-width: 300px;
+    width: min(390px, calc(100vw - 500px));
+    min-width: 330px;
     padding: 20px 22px;
   }
 
   .pokefuta-map-page .leaflet-top.leaflet-left {
-    top: 180px;
+    top: 344px;
   }
 
   .pokefuta-map-page .map-hero-card h1 {
@@ -1383,7 +1525,7 @@ body.pokefuta-map-page {
   .pokefuta-map-page .map-hero-card {
     left: 14px;
     right: 14px;
-    padding: 12px 14px;
+    padding: 10px 12px;
     transition: opacity .16s ease, transform .16s ease, visibility .16s ease;
   }
 
@@ -1394,13 +1536,65 @@ body.pokefuta-map-page {
   }
 
   .pokefuta-map-page .leaflet-top.leaflet-left {
-    top: 154px;
+    top: 270px;
   }
 
   .pokefuta-map-page .map-hero-card p {
     margin-top: 7px;
     font-size: .74rem;
     line-height: 1.5;
+  }
+
+  .pokefuta-map-page .hero-discovery-heading {
+    margin-bottom: 6px;
+    font-size: .64rem;
+  }
+
+  .pokefuta-map-page .hero-feature {
+    grid-template-columns: 94px minmax(0, 1fr);
+    min-height: 98px;
+  }
+
+  .pokefuta-map-page .hero-feature-media,
+  .pokefuta-map-page .hero-feature-media img {
+    min-height: 98px;
+  }
+
+  .pokefuta-map-page .hero-feature-copy {
+    padding: 7px 9px;
+  }
+
+  .pokefuta-map-page .hero-feature-title {
+    font-size: .86rem;
+  }
+
+  .pokefuta-map-page .hero-feature-reason {
+    margin-top: 3px;
+    font-size: .64rem;
+    -webkit-line-clamp: 1;
+  }
+
+  .pokefuta-map-page .hero-feature-cta {
+    margin-top: 4px;
+    font-size: .64rem;
+  }
+
+  .pokefuta-map-page .hero-discovery-links {
+    gap: 5px;
+    margin-top: 6px;
+  }
+
+  .pokefuta-map-page .hero-discovery-link {
+    min-height: 48px;
+    padding: 6px 8px;
+  }
+
+  .pokefuta-map-page .hero-discovery-link strong {
+    font-size: .7rem;
+  }
+
+  .pokefuta-map-page .hero-discovery-link-place {
+    font-size: .6rem;
   }
 
   .pokefuta-map-page.popup-open .map-hero-card {

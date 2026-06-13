@@ -143,6 +143,13 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "popular_pokemon": {
             "h2": "人気ポケモンのポケふた",
         },
+        "discovery_hubs": {
+            "travel_h2": "旅のテーマから探す", "travel_note": "行き先の雰囲気から、次に会いに行くポケふたを探せます。",
+            "rare_h2": "レアなポケふたを探す", "rare_note": "全国でここだけのポケモンや、日本の四端、秘境の一枚を集めました。",
+            "details": "このテーマのポケふたを見る", "count": "{count}枚", "unique_count": "{count}種",
+            "travel": {"remote_island": "離島", "roadside": "道の駅", "station_front": "駅前", "world_heritage": "世界遺産"},
+            "rare": {"unique": "全国1枚しかないポケモン", "extremes": "日本の四端", "lone": "秘境・ぽつんと一枚"},
+        },
         "latest_photos": {
             "h2": "最新追加写真",
             "note": "ユーザーが投稿した最新のポケふた写真です。タップするとポケふた詳細ページへ移動します。",
@@ -232,6 +239,13 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "popular_pokemon": {
             "h2": "Popular Pokémon on Pokéfuta",
         },
+        "discovery_hubs": {
+            "travel_h2": "Explore by travel theme", "travel_note": "Choose your next Pokéfuta destination by the kind of journey you want.",
+            "rare_h2": "Find rare Pokéfuta", "rare_note": "Discover one-of-a-kind Pokémon, Japan's four extremes, and remote locations.",
+            "details": "View Pokéfuta in this theme", "count": "{count} Pokéfuta", "unique_count": "{count} Pokémon",
+            "travel": {"remote_island": "Remote islands", "roadside": "Roadside stations", "station_front": "Train stations", "world_heritage": "World Heritage"},
+            "rare": {"unique": "Pokémon found on only one Pokéfuta", "extremes": "Japan's four extremes", "lone": "Remote and solitary"},
+        },
         "pokemon_ranking": {
             "h2": "Pokémon Rankings",
             "h3_count": "By Pokéfuta Count",
@@ -311,6 +325,13 @@ SUMMARY_STRINGS: dict[str, dict] = {
         },
         "popular_pokemon": {
             "h2": "热门宝可梦井盖",
+        },
+        "discovery_hubs": {
+            "travel_h2": "按旅行主题探索", "travel_note": "从想去的风景出发，寻找下一个 Pokéfuta。",
+            "rare_h2": "寻找稀有 Pokéfuta", "rare_note": "探索全国唯一、日本四端与秘境中的 Pokéfuta。",
+            "details": "查看此主题的 Pokéfuta", "count": "{count} 枚", "unique_count": "{count} 种宝可梦",
+            "travel": {"remote_island": "离岛", "roadside": "道之驿", "station_front": "车站前", "world_heritage": "世界遗产"},
+            "rare": {"unique": "全国仅一枚的宝可梦", "extremes": "日本四端", "lone": "秘境与孤立地点"},
         },
         "pokemon_ranking": {
             "h2": "宝可梦排行榜",
@@ -392,6 +413,13 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "popular_pokemon": {
             "h2": "熱門寶可夢人孔蓋",
         },
+        "discovery_hubs": {
+            "travel_h2": "依旅行主題探索", "travel_note": "從想去的風景出發，尋找下一個 Pokéfuta。",
+            "rare_h2": "尋找稀有 Pokéfuta", "rare_note": "探索全國唯一、日本四端與秘境中的 Pokéfuta。",
+            "details": "查看此主題的 Pokéfuta", "count": "{count} 枚", "unique_count": "{count} 種寶可夢",
+            "travel": {"remote_island": "離島", "roadside": "道之驛", "station_front": "車站前", "world_heritage": "世界遺產"},
+            "rare": {"unique": "全國僅一枚的寶可夢", "extremes": "日本四端", "lone": "秘境與孤立地點"},
+        },
         "pokemon_ranking": {
             "h2": "寶可夢排行榜",
             "h3_count": "按人孔蓋數量排名",
@@ -471,6 +499,13 @@ SUMMARY_STRINGS: dict[str, dict] = {
         },
         "popular_pokemon": {
             "h2": "인기 포켓몬 포케후타",
+        },
+        "discovery_hubs": {
+            "travel_h2": "여행 테마로 찾기", "travel_note": "가고 싶은 풍경에서 다음 포케후타 여행지를 찾아보세요.",
+            "rare_h2": "희귀 포케후타 찾기", "rare_note": "일본 전국 유일, 사방 끝, 비경의 포케후타를 만나보세요.",
+            "details": "이 테마의 포케후타 보기", "count": "{count}개", "unique_count": "포켓몬 {count}종",
+            "travel": {"remote_island": "외딴섬", "roadside": "미치노에키", "station_front": "역 앞", "world_heritage": "세계유산"},
+            "rare": {"unique": "전국에 하나뿐인 포켓몬", "extremes": "일본 사방 끝", "lone": "비경과 외딴 장소"},
         },
         "pokemon_ranking": {
             "h2": "포켓몬 랭킹",
@@ -929,6 +964,69 @@ _CSS = """\
     .photo-card-meta {
       font-size: .76rem;
       color: #716154;
+    }
+
+    .discovery-hub-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .discovery-hub-card {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      min-width: 0;
+      overflow: hidden;
+      border: 1px solid rgba(93, 67, 35, .14);
+      border-radius: 12px;
+      background: #fffdf7;
+    }
+
+    .discovery-hub-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: #fffaf0;
+    }
+
+    .discovery-hub-copy {
+      display: grid;
+      gap: 7px;
+      padding: 4px 14px 14px;
+    }
+
+    .discovery-hub-copy h3 {
+      margin: 0;
+      font-size: 1.05rem;
+    }
+
+    .discovery-hub-count {
+      color: #176f68;
+      font-size: 1.45rem;
+      font-weight: 950;
+      line-height: 1.1;
+    }
+
+    .discovery-hub-links {
+      display: grid;
+      gap: 4px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .discovery-hub-links a {
+      color: #176f68;
+      font-size: .84rem;
+      font-weight: 850;
+      text-decoration: none;
+    }
+
+    #travel-discovery,
+    #rare-discovery {
+      scroll-margin-top: 16px;
     }
 
     .pokemon-ranking-cols {
@@ -2659,6 +2757,9 @@ def _build_tracking_script(s: dict) -> str:
         fact_id: target.dataset.factId || '',
         fact_title: target.dataset.factTitle || '',
         image_type: target.dataset.imageType || '',
+        content_type: target.dataset.contentType || '',
+        content_id: target.dataset.contentId || '',
+        destination_hub: target.dataset.destinationHub || '',
         target_url: target.dataset.targetUrl || target.href || ''
       });
     });
@@ -3025,6 +3126,110 @@ def _build_popular_pokemon_section(s: dict, pokemon_stats: dict) -> str:
     )
 
 
+def _has_title(record: dict, key: str) -> bool:
+    keys = {title.get("key") for title in record.get("titles", [])}
+    return bool(keys & {"lone", "lone_100"}) if key == "lone" else key in keys
+
+
+def _localized_pokemon_name(name: str, s: dict, pokemon_metadata: dict) -> str:
+    if s["pref_key"] == "ja":
+        return name
+    names = pokemon_metadata.get(name, {}).get("names", {})
+    return names.get(s["pref_key"]) or names.get("en") or name
+
+
+def _build_discovery_hub_sections(
+    s: dict, records_by_id: dict, pokemon_metadata: dict
+) -> str:
+    copy = s.get("discovery_hubs")
+    if not copy:
+        return ""
+    records = list(records_by_id.values())
+
+    def image_url(record: dict) -> str:
+        mid = str(record.get("id", ""))
+        if not mid or not (IMAGE_DIR / f"{mid}_latest.jpeg").exists():
+            return ""
+        return f"/manhole/image/{quote(mid, safe='')}_latest.jpeg"
+
+    def record_label(record: dict) -> str:
+        pokemon = next(
+            (name for name in record.get("pokemons", []) if "ローカルActs" not in name),
+            record.get("title", ""),
+        )
+        display = _localized_pokemon_name(pokemon, s, pokemon_metadata)
+        place = " ".join(filter(None, [record.get("prefecture"), record.get("city")]))
+        return f"{display} · {place}" if place else display
+
+    def card(title: str, count_text: str, candidates: list[dict], content_id: str) -> str:
+        candidates = sorted(
+            candidates,
+            key=lambda record: str(record.get("id", "")).zfill(8),
+        )
+        pictured = [record for record in candidates if image_url(record)]
+        representative = pictured[0] if pictured else (candidates[0] if candidates else {})
+        image = image_url(representative)
+        image_html = (
+            f'<img src="{escape(image)}" alt="{escape(record_label(representative))}" '
+            f'loading="lazy" decoding="async">'
+            if image else ""
+        )
+        links = "".join(
+            f'<li><a href="/manholes/{quote(str(record.get("id", "")), safe="")}/" '
+            f'data-summary-event="summary_discovery_detail_click" '
+            f'data-content-type="discovery_detail" data-content-id="{escape(content_id)}" '
+            f'data-destination-hub="manhole_detail">{escape(record_label(record))}</a></li>'
+            for record in (pictured or candidates)[:3]
+        )
+        return (
+            f'<article class="discovery-hub-card">{image_html}'
+            f'<div class="discovery-hub-copy"><h3>{escape(title)}</h3>'
+            f'<strong class="discovery-hub-count">{escape(count_text)}</strong>'
+            f'<span>{escape(copy["details"])}</span>'
+            f'<ul class="discovery-hub-links">{links}</ul></div></article>'
+        )
+
+    travel_cards = []
+    for key in ("remote_island", "roadside", "station_front", "world_heritage"):
+        candidates = [record for record in records if _has_title(record, key)]
+        travel_cards.append(card(
+            copy["travel"][key],
+            copy["count"].format(count=len(candidates)),
+            candidates,
+            key,
+        ))
+
+    pokemon_records: dict[str, list[dict]] = {}
+    for record in records:
+        for pokemon in set(record.get("pokemons", [])):
+            if pokemon and "ローカルActs" not in pokemon:
+                pokemon_records.setdefault(pokemon, []).append(record)
+    unique_records = [items[0] for items in pokemon_records.values() if len(items) == 1]
+    extreme_records = [
+        record for record in records
+        if any(_has_title(record, key) for key in ("north_end", "south_end", "east_end", "west_end"))
+    ]
+    lone_records = [record for record in records if _has_title(record, "lone")]
+    rare_cards = [
+        card(copy["rare"]["unique"], copy["unique_count"].format(count=len(unique_records)), unique_records, "unique_pokemon"),
+        card(copy["rare"]["extremes"], copy["count"].format(count=len(extreme_records)), extreme_records, "extremes"),
+        card(copy["rare"]["lone"], copy["count"].format(count=len(lone_records)), lone_records, "lone"),
+    ]
+
+    return (
+        f'\n    <section id="travel-discovery" class="summary-section" aria-labelledby="travel-discovery-heading">'
+        f'\n      <h2 id="travel-discovery-heading">{escape(copy["travel_h2"])}</h2>'
+        f'\n      <p class="section-note">{escape(copy["travel_note"])}</p>'
+        f'\n      <div class="discovery-hub-grid">{"".join(travel_cards)}</div>'
+        f'\n    </section>'
+        f'\n    <section id="rare-discovery" class="summary-section" aria-labelledby="rare-discovery-heading">'
+        f'\n      <h2 id="rare-discovery-heading">{escape(copy["rare_h2"])}</h2>'
+        f'\n      <p class="section-note">{escape(copy["rare_note"])}</p>'
+        f'\n      <div class="discovery-hub-grid">{"".join(rare_cards)}</div>'
+        f'\n    </section>\n'
+    )
+
+
 def _build_latest_photos_section(
     s: dict, records_by_id: dict, photos_data: dict
 ) -> str:
@@ -3166,7 +3371,7 @@ def _build_pokemon_ranking_section(s: dict, pokemon_stats: dict) -> str:
     )
 
 
-def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, records_by_id: dict, photos_data: dict, pref_trivia_data: list[dict] | None = None) -> str:
+def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, records_by_id: dict, photos_data: dict, pokemon_metadata: dict, pref_trivia_data: list[dict] | None = None) -> str:
     pref_key = s["pref_key"]
 
     def tr(ja_name: str) -> str:
@@ -3192,6 +3397,7 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
     )
     popular_pokemon_html = _build_popular_pokemon_section(s, pokemon_stats)
     latest_photos_html = _build_latest_photos_section(s, records_by_id, photos_data)
+    discovery_hubs_html = _build_discovery_hub_sections(s, records_by_id, pokemon_metadata)
     no_photos_html = _build_no_photos_section(s, records_by_id, photos_data)
     pokemon_ranking_html = _build_pokemon_ranking_section(s, pokemon_stats)
 
@@ -3281,6 +3487,7 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
     {daily_fact_html}
     {search_hub_html}
     {latest_photos_html}
+    {discovery_hubs_html}
     {fact_list_html}
     {popular_pokemon_html}
     <section class="summary-stats" aria-label="{escape(s['stats_aria'])}">
@@ -3360,7 +3567,7 @@ def main() -> None:
     print(f"[INFO] {len(pref_trivia_data)} prefecture trivia entries")
 
     for lang, s in SUMMARY_STRINGS.items():
-        html = render_page(s, stats, pref_names, pokemon_stats, records_by_id, photos_data, pref_trivia_data)
+        html = render_page(s, stats, pref_names, pokemon_stats, records_by_id, photos_data, pokemon_metadata, pref_trivia_data)
         out = DIST / s["out_path"]
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(html, encoding="utf-8")

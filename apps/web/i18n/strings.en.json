@@ -94,6 +94,18 @@
     "recentDisabledTitle": "Not available (no date field in data)",
     "panelOpenLabel": "Open main panel",
     "panelCloseLabel": "Close main panel",
+    "heroDiscovery": {
+      "heading": "Which Pokéfuta will you meet today?",
+      "freshDate": "A new photo from {date}",
+      "countTemplate": "{count} across Japan",
+      "uniqueTemplate": "{pokemon} appears on only one Pokéfuta in Japan",
+      "ctas": {"fresh": "View on the map →", "travel": "Explore the feature →", "rare": "View the ranking →"},
+      "categories": {
+        "travel": {"label": "Start a journey"}, "rare": {"label": "Find a rarity"}, "fresh": {"label": "Fresh discovery"}
+      },
+      "travelThemes": {"remote_island": "Pokéfuta on remote islands", "roadside": "Pokéfuta at roadside stations", "station_front": "Pokéfuta by train stations", "world_heritage": "Pokéfuta near World Heritage sites"},
+      "rareThemes": {"unique_pokemon": "Found only here in Japan", "north_end": "Japan's northernmost Pokéfuta", "south_end": "Japan's southernmost Pokéfuta", "east_end": "Japan's easternmost Pokéfuta", "west_end": "Japan's westernmost Pokéfuta", "lone": "Pokéfuta in far-flung places"}
+    },
     "titleLabels": {
       "north_end": "Northernmost Pokéfuta in Japan",
       "south_end": "Southernmost Pokéfuta in Japan",
