@@ -14,6 +14,12 @@ MODULE = importlib.util.module_from_spec(SPEC)
 assert SPEC.loader
 SPEC.loader.exec_module(MODULE)
 
+OGP_MODULE_PATH = Path(__file__).with_name("generate_social_ogp.py")
+OGP_SPEC = importlib.util.spec_from_file_location("generate_social_ogp", OGP_MODULE_PATH)
+OGP_MODULE = importlib.util.module_from_spec(OGP_SPEC)
+assert OGP_SPEC.loader
+OGP_SPEC.loader.exec_module(OGP_MODULE)
+
 ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -152,6 +158,35 @@ class GeneratePrefectureTriviaTest(unittest.TestCase):
             with self.subTest(source=json.dumps(sources, ensure_ascii=False)[:80]):
                 with self.assertRaises(MODULE.ValidationError):
                     MODULE.validate_sources(sources, self.records)
+
+    def test_social_ogp_uses_new_trivia_schema(self) -> None:
+        variables = OGP_MODULE._vars_pref_trivia({
+            "fact_type": "municipality_concentration",
+            "values": {
+                "prefecture": "愛知県",
+                "manhole_count": 9,
+                "summary": "豊橋市に4枚が集まり、ほかの5自治体は各1枚です",
+            },
+        })
+        self.assertEqual("自治体分布", variables["titleLine2"])
+        self.assertEqual("9", variables["mainNumber"])
+        self.assertEqual("枚", variables["mainUnit"])
+        self.assertEqual(
+            "豊橋市に4枚が集まり、ほかの5自治体は各1枚です",
+            variables["description"],
+        )
+
+    def test_social_ogp_keeps_legacy_schema_compatibility(self) -> None:
+        variables = OGP_MODULE._vars_pref_trivia({
+            "values": {
+                "prefecture": "北海道",
+                "pokemon": "ロコン",
+                "summary": "北海道の応援ポケモンはロコンです",
+            },
+        })
+        self.assertEqual("応援ポケモン", variables["titleLine2"])
+        self.assertEqual("ロコン", variables["mainNumber"])
+        self.assertEqual("", variables["mainUnit"])
 
 
 if __name__ == "__main__":

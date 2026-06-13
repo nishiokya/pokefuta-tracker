@@ -1206,13 +1206,40 @@ def _vars_pref_trivia(raw: dict) -> dict:
     v = raw["values"]
     pref = v.get("prefecture", "")
     pokemon = v.get("pokemon", "")
+    if pokemon:
+        return {
+            "categoryLabel": "TRIVIA",
+            "titleLine1": f"{pref}の",
+            "titleLine2": "応援ポケモン",
+            "kicker": "都道府県キャラクター",
+            "mainNumber": pokemon,
+            "mainUnit": "",
+            "chips": [],
+            "description": v.get("summary", f"{pref}のポケモンマンホール"),
+            "mapCaption": f"{pref}のポケふた",
+        }
+
+    fact_type = raw.get("fact_type", "pref_trivia")
+    labels = {
+        "single_municipality": ("1自治体に集中", "自治体別データ"),
+        "municipality_concentration": ("自治体分布", "自治体別データ"),
+        "pokemon_100": ("全ふたに登場", "ポケモン出現率100%"),
+        "pokemon_group_100": ("全ふたに登場", "ポケモン出現率100%"),
+        "top_pokemon": ("登場ポケモン", "県内トップ"),
+        "support_pokemon": ("応援ポケモン", "公式ご当地ポケモン"),
+        "wordplay": ("ご当地トリビア", "名前の由来"),
+        "local_connection": ("ご当地トリビア", "地域とのつながり"),
+    }
+    title_line2, kicker = labels.get(
+        fact_type, ("ポケふたトリビア", "都道府県データ")
+    )
     return {
         "categoryLabel": "TRIVIA",
         "titleLine1": f"{pref}の",
-        "titleLine2": "応援ポケモン",
-        "kicker": "都道府県キャラクター",
-        "mainNumber": pokemon,
-        "mainUnit": "",
+        "titleLine2": title_line2,
+        "kicker": kicker,
+        "mainNumber": str(v.get("manhole_count", "")),
+        "mainUnit": "枚" if v.get("manhole_count") is not None else "",
         "chips": [],
         "description": v.get("summary", f"{pref}のポケモンマンホール"),
         "mapCaption": f"{pref}のポケふた",
