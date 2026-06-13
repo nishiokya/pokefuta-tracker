@@ -13,6 +13,7 @@ on:
       - 'apps/scraper/generate_pokemon_pages.py' # Pokemon LP generator
       - 'apps/scraper/generate_pokemon_index_page.py' # Pokemon index page generator
       - 'apps/scraper/generate_summary_pages.py' # summary page generator
+      - 'apps/scraper/generate_summary_ogp.py' # summary page OGP generator
       - 'docs/**'     # dataset changes copied into dist/
       - 'dataset/manhole/image/**' # local popup photos
       - 'tools/**'      # i18n build scripts
@@ -63,6 +64,8 @@ jobs:
           python3 apps/scraper/generate_pokemon_pages.py
           echo "[dist] Generate Pokemon index page"
           python3 apps/scraper/generate_pokemon_index_page.py
+          echo "[dist] Generate summary OGP image"
+          python3 apps/scraper/generate_summary_ogp.py
           echo "[dist] Generate summary pages (ja/en/zh-CN/zh-TW/ko)"
           python3 apps/scraper/generate_summary_pages.py
           echo "[dist] Generate sitemap with manhole + pokemon URLs"
