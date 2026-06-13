@@ -987,6 +987,10 @@ body.pokefuta-map-page {
   border: 0;
 }
 
+.pokefuta-map-page .travel-popup-actions--has-photo {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .pokefuta-map-page .travel-popup-action {
   display: inline-flex;
   align-items: center;
@@ -1012,6 +1016,10 @@ body.pokefuta-map-page {
   background: linear-gradient(135deg, #7e5bb8, #6b4aa2);
   color: #fff;
   box-shadow: 0 8px 18px rgba(76, 45, 130, .2);
+}
+
+.pokefuta-map-page .travel-popup-actions--has-photo .travel-popup-action--primary {
+  grid-column: auto;
 }
 
 .pokefuta-map-page .travel-popup-action--upload {
@@ -1200,6 +1208,37 @@ body.pokefuta-map-page {
 
 .pokefuta-cluster--large span {
   font-size: 1.2rem;
+}
+
+.prefecture-overview-marker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 42px !important;
+  height: 42px !important;
+  margin: -21px 0 0 -21px !important;
+  border: 2px solid rgba(255, 255, 255, .94);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #9374c8, #624095 76%);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(67, 38, 111, .32);
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.prefecture-overview-name {
+  max-width: 36px;
+  overflow: hidden;
+  font-size: .58rem;
+  line-height: 1;
+  text-overflow: clip;
+}
+
+.prefecture-overview-count {
+  margin-top: 2px;
+  font-size: .9rem;
+  line-height: 1;
 }
 
 @media (min-width: 760px) {
