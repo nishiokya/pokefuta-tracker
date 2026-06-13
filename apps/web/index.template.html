@@ -309,7 +309,7 @@
     integrity="sha384-pmjIAcz2bAn0xukfxADbZIb3t8oRT9Sv0rvO+BR5Csr6Dhqq+nZs59P0pPKQJkEV" crossorigin="" />
   <link rel="stylesheet" href="%%BASE_PATH%%assets/theme.css" />
   <link rel="stylesheet" href="%%BASE_PATH%%assets/map.css" />
-  <link rel="stylesheet" href="%%BASE_PATH%%assets/pokefuta-map.css?v=20260613-popup-actions" />
+  <link rel="stylesheet" href="%%BASE_PATH%%assets/pokefuta-map.css?v=20260613-popup-actions-grid" />
   <link rel="icon" href="%%BASE_PATH%%assets/pokefuta-marker.svg" type="image/svg+xml" />
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-K18NR4GZG2"></script>
@@ -564,6 +564,7 @@
     var allMarkers = [];
     var allData = [];
     var markerLayer = null;
+    var prefectureOverviewLayer = L.layerGroup();
     var userLocationMarker = null;
     var latestPhotoMeta = {};
     var prefectureCounts = {};
@@ -578,6 +579,7 @@
     var prefectureBounds = {};  // 都道府県ごとのbounding box（グローバルスコープ）
     var prefectureMarkerCounts = {};  // 都道府県ごとのマンホール数（グローバルスコープ）
     const PREFECTURE_BOUNDS_OFFSET = 0.5;  // 都道府県 bounding box のオフセット（度）
+    const PREFECTURE_OVERVIEW_MAX_ZOOM = 6;
     const OVERALL_PANEL_MEDIA_QUERY = '(max-width: 759px)';
     var isInitialPageLoad = true;  // Track if this is initial page load to prevent duplicate page_views
     var activeTagFilter = null;  // タグフィルタ（null = 全件）
@@ -845,7 +847,7 @@
             ${d.building ? `<p class="travel-popup-building">📍 ${escapeHtml(d.building)}</p>` : ''}
             ${titleBadgesHtml}
             <div class="travel-popup-pokemon-list" aria-label="${I.pokemonListAria}">${pokemonsHtml}</div>
-            <div class="popup-actions travel-popup-actions">
+            <div class="popup-actions travel-popup-actions${hasPhoto ? ' travel-popup-actions--has-photo' : ''}">
               ${primaryAction}
               ${mapsAction}
               ${detailLink}
@@ -1186,6 +1188,7 @@
         updateRecentSummary();
         renderRecentAdded();
         syncExploreSections();
+        refreshMapMarkerLayers();
         // URL パラメータから初期表示を選択
         const initialManholeId = getInitialManholeIdFromURL();
         if (initialManholeId) {
@@ -1220,6 +1223,8 @@
       }
 
       if (markerLayer && !markerLayer.hasLayer(marker)) markerLayer.addLayer(marker);
+      if (prefectureOverviewLayer && map.hasLayer(prefectureOverviewLayer)) map.removeLayer(prefectureOverviewLayer);
+      if (markerLayer && !map.hasLayer(markerLayer)) markerLayer.addTo(map);
       const data = marker.pokefutaData;
       window.applyManholePageMeta(data);
       window.history.replaceState({ manhole: data.id }, '', window.buildManholeCanonicalPath(data.id));
@@ -1268,6 +1273,71 @@
       }
       markerLayer.addTo(map);
     }
+
+    function markerMatchesActiveFilters(marker) {
+      const d = marker.pokefutaData;
+      if (selectedPrefecture && d.prefecture !== selectedPrefecture) return false;
+      if (filterRecent && !isWithinLastDays(d._addedDate, 30)) return false;
+      if (activeTagFilter && (!Array.isArray(d.tags) || !d.tags.includes(activeTagFilter))) return false;
+      return true;
+    }
+
+    function rebuildPrefectureOverviewLayer() {
+      prefectureOverviewLayer.clearLayers();
+      const summaries = {};
+
+      allMarkers.forEach(marker => {
+        if (!markerMatchesActiveFilters(marker)) return;
+        const d = marker.pokefutaData;
+        const prefecture = d.prefecture || '不明';
+        if (!summaries[prefecture]) summaries[prefecture] = { count: 0, lat: 0, lng: 0 };
+        summaries[prefecture].count++;
+        summaries[prefecture].lat += Number(d.lat);
+        summaries[prefecture].lng += Number(d.lng);
+      });
+
+      Object.entries(summaries).forEach(([prefecture, summary]) => {
+        const center = prefectureCenterCoords[prefecture] || [
+          summary.lat / summary.count,
+          summary.lng / summary.count
+        ];
+        const shortPrefecture = prefecture === '北海道'
+          ? prefecture
+          : prefecture.replace(/[都府県]$/, '');
+        const icon = L.divIcon({
+          html: `<span class="prefecture-overview-name">${escapeHtml(shortPrefecture)}</span><span class="prefecture-overview-count">${summary.count}</span>`,
+          className: 'prefecture-overview-marker',
+          iconSize: null
+        });
+        const marker = L.marker(center, {
+          icon,
+          title: `${prefecture}: ${summary.count}枚`,
+          keyboard: true
+        });
+        marker.on('click', () => {
+          zoomToPrefecture(prefecture);
+          if (map.getZoom() <= PREFECTURE_OVERVIEW_MAX_ZOOM) {
+            map.setZoom(PREFECTURE_OVERVIEW_MAX_ZOOM + 1, { animate: false });
+          }
+        });
+        prefectureOverviewLayer.addLayer(marker);
+      });
+    }
+
+    function refreshMapMarkerLayers() {
+      if (!markerLayer) return;
+      const showPrefectureOverview = map.getZoom() <= PREFECTURE_OVERVIEW_MAX_ZOOM;
+      if (showPrefectureOverview) {
+        rebuildPrefectureOverviewLayer();
+        if (map.hasLayer(markerLayer)) map.removeLayer(markerLayer);
+        if (!map.hasLayer(prefectureOverviewLayer)) prefectureOverviewLayer.addTo(map);
+      } else {
+        if (map.hasLayer(prefectureOverviewLayer)) map.removeLayer(prefectureOverviewLayer);
+        if (!map.hasLayer(markerLayer)) markerLayer.addTo(map);
+      }
+    }
+
+    map.on('zoomend', refreshMapMarkerLayers);
 
     function initRecentFilter() {
       const toggle = document.getElementById('recent-toggle');
@@ -1456,11 +1526,7 @@
     function recomputeVisibility() {
       let visibleCount = 0;
       allMarkers.forEach(marker => {
-        const d = marker.pokefutaData;
-        let show = true;
-        if (selectedPrefecture) show = show && d.prefecture === selectedPrefecture;
-        if (filterRecent) show = show && isWithinLastDays(d._addedDate, 30);
-        if (activeTagFilter) show = show && Array.isArray(d.tags) && d.tags.includes(activeTagFilter);
+        const show = markerMatchesActiveFilters(marker);
         if (show) {
           if (markerLayer && !markerLayer.hasLayer(marker)) markerLayer.addLayer(marker);
           visibleCount++;
@@ -1468,6 +1534,7 @@
           if (markerLayer && markerLayer.hasLayer(marker)) markerLayer.removeLayer(marker);
         }
       });
+      refreshMapMarkerLayers();
       updateStats(visibleCount);
     }
 
