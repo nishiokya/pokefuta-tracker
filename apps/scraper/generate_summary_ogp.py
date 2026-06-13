@@ -46,10 +46,21 @@ def font(path: Optional[Path], size: int) -> ImageFont.ImageFont:
 
 
 def load_stats() -> tuple[int, int]:
-    records = []
-    for line in NDJSON.read_text(encoding="utf-8").splitlines():
-        if line.strip():
-            records.append(json.loads(line))
+    by_id: dict[str, dict] = {}
+    with NDJSON.open(encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                record = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            record_id = str(record.get("id", "")).strip()
+            if not record_id:
+                continue
+            by_id[record_id] = {**by_id.get(record_id, {}), **record}
+    records = list(by_id.values())
     active = [record for record in records if record.get("status", "active") == "active"]
     prefectures = {record.get("prefecture") for record in active if record.get("prefecture")}
     return len(active), len(prefectures)
@@ -66,7 +77,8 @@ def paper_texture(size: tuple[int, int]) -> Image.Image:
 
 
 def circle_photo(path: Path, size: int, border: int = 9) -> Image.Image:
-    source = ImageOps.exif_transpose(Image.open(path)).convert("RGB")
+    with Image.open(path) as opened:
+        source = ImageOps.exif_transpose(opened).convert("RGB")
     source = ImageOps.fit(source, (size, size), method=Image.Resampling.LANCZOS)
     mask = Image.new("L", (size, size), 0)
     ImageDraw.Draw(mask).ellipse((0, 0, size - 1, size - 1), fill=255)

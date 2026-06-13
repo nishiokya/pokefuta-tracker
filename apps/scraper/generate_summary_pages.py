@@ -93,6 +93,7 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "nav_home_href": "/",
         "h1": "全国のポケモンマンホール（ポケふた）一覧",
         "hero_title_lines": ("ポケふた", "データマップ"),
+        "hero_kicker": "ポケモンマンホール データガイド",
         "subtitle": "全国{total}枚のポケモンマンホール（ポケふた）を都道府県別・ポケモン別に探せます。旅行先やお出かけ先のポケふた探しにご活用ください。",
         "hero_ribbon": "旅の思い出に、ポケふた探しの冒険を！",
         "stats_aria": "全国集計",
@@ -181,6 +182,7 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "nav_home_href": "/en/",
         "h1": "How Many Pokéfuta Are There Nationwide?",
         "hero_title_lines": ("Pokéfuta", "Data Map"),
+        "hero_kicker": "Pokémon Manhole Data Guide",
         "subtitle": "Pokéfuta (Pokémon manhole covers) counted and sorted by prefecture from the latest dataset.",
         "hero_ribbon": "Turn your next trip into a Pokéfuta adventure!",
         "stats_aria": "Nationwide Statistics",
@@ -256,6 +258,7 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "nav_home_href": "/zh-CN/",
         "h1": "全国共有多少个宝可梦井盖？",
         "hero_title_lines": ("宝可梦井盖", "数据地图"),
+        "hero_kicker": "宝可梦井盖数据指南",
         "subtitle": "基于现有数据，按都道府县统计了全国的宝可梦井盖（宝可梦人孔盖）数量。",
         "hero_ribbon": "让寻找宝可梦井盖成为旅行中的冒险！",
         "stats_aria": "全国统计",
@@ -331,6 +334,7 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "nav_home_href": "/zh-TW/",
         "h1": "全國共有多少個寶可夢人孔蓋？",
         "hero_title_lines": ("寶可夢人孔蓋", "資料地圖"),
+        "hero_kicker": "寶可夢人孔蓋資料指南",
         "subtitle": "基於現有資料，按都道府縣統計了全國的寶可夢人孔蓋數量。",
         "hero_ribbon": "讓尋找寶可夢人孔蓋成為旅行中的冒險！",
         "stats_aria": "全國統計",
@@ -406,6 +410,7 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "nav_home_href": "/ko/",
         "h1": "포케후타는 전국에 몇 개 있을까?",
         "hero_title_lines": ("포케후타", "데이터 지도"),
+        "hero_kicker": "포켓몬 맨홀 데이터 가이드",
         "subtitle": "기존 데이터를 바탕으로 전국의 포케후타(포켓몬 맨홀)를 도도부현별로 집계했습니다.",
         "hero_ribbon": "여행의 추억에 포케후타를 찾는 모험을!",
         "stats_aria": "전국 집계",
@@ -792,118 +797,6 @@ _CSS = """\
       font-size: .84rem;
       color: #5a4f47;
       font-weight: 750;
-    }
-
-    .pref-trivia-section h2 {
-      font-size: 1.1rem;
-      margin-bottom: 1rem;
-    }
-
-    .pref-trivia-grid {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1rem;
-    }
-
-    .pref-trivia-card {
-      background: #fffdf7;
-      border-radius: 8px;
-      padding: 1rem;
-      border: 1px solid rgba(93, 67, 35, .14);
-    }
-
-    .trivia-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: .5rem;
-    }
-
-    .trivia-pref {
-      font-size: .85rem;
-      color: #5a4f47;
-    }
-
-    .trivia-pokemon {
-      font-weight: bold;
-      font-size: 1rem;
-      color: #176f68;
-    }
-
-    .trivia-count {
-      font-size: .8rem;
-      color: #5a4f47;
-      margin-left: .35rem;
-    }
-
-    .pref-trivia-card p {
-      font-size: .9rem;
-      margin: 0 0 .5rem;
-      color: #3a3330;
-    }
-
-    .trivia-status {
-      display: inline-block;
-      font-size: .72rem;
-      font-weight: bold;
-      padding: 2px 7px;
-      border-radius: 99px;
-      margin-bottom: .5rem;
-      text-decoration: none;
-    }
-
-    .trivia-status--ongoing {
-      background: #e8f4f3;
-      color: #176f68;
-    }
-
-    .trivia-status--ongoing:hover {
-      background: #d0ece9;
-    }
-
-    .trivia-status--complete {
-      background: #fff3cd;
-      color: #7a5a00;
-    }
-
-    .trivia-status--complete:hover {
-      background: #ffe9a0;
-    }
-
-    .trivia-images {
-      list-style: none;
-      padding: 0;
-      margin: .75rem 0 0;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
-    }
-
-    .trivia-images a {
-      display: block;
-    }
-
-    .trivia-images img {
-      width: 100%;
-      aspect-ratio: 1 / 1;
-      object-fit: contain;
-      background: #f7f0df;
-      border-radius: 6px;
-      border: 1px solid rgba(93, 67, 35, .12);
-    }
-
-    .trivia-links {
-      list-style: none;
-      padding: 0;
-      margin: .5rem 0 0;
-      font-size: .8rem;
-    }
-
-    .trivia-links a {
-      color: #176f68;
     }
 
     .regional-trend-box {
@@ -1622,85 +1515,6 @@ def _build_ai_summary(s: dict, stats: dict, tr) -> str:
         text += s["ai_empty"].format(empty_count=len(empty))
     text += s["ai_outro"]
     return f'<div class="ai-summary-box"><p>{escape(text)}</p></div>\n'
-
-
-def _build_pref_trivia_section(s: dict, trivia_data: list[dict], tr) -> str:
-    if s.get("pref_key") != "ja" or not trivia_data:
-        return ""
-    heading = "都道府県の応援ポケモン"
-    items = []
-    for entry in trivia_data:
-        pref = escape(entry["prefecture"])
-        pokemon = escape(entry["pokemon"])
-        summary_text = escape(entry["summary"])
-        count = entry.get("count")
-        count_html = f'<span class="trivia-count">{count}枚</span>' if count else ""
-
-        status = entry.get("status", "ongoing")
-        source_url = entry.get("source_url", "")
-        status_label = "コンプ" if status == "complete" else "公式サイト"
-        status_cls = "trivia-status--complete" if status == "complete" else "trivia-status--ongoing"
-        if source_url:
-            status_html = (
-                f'<a class="trivia-status {escape(status_cls)}" '
-                f'href="{escape(source_url)}" target="_blank" rel="noopener noreferrer">'
-                f'{escape(status_label)}</a>'
-            )
-        else:
-            status_html = f'<span class="trivia-status {escape(status_cls)}">{escape(status_label)}</span>'
-
-        images_html = ""
-        manhole_ids = entry.get("manhole_ids") or []
-        if status == "complete" and manhole_ids:
-            img_links = []
-            links_by_id = {
-                int(lk["href"].rstrip("/").rsplit("/", 1)[-1]): lk
-                for lk in entry.get("links", [])
-                if lk.get("href", "").startswith("/manholes/")
-            }
-            for mid in manhole_ids:
-                local_image = IMAGE_DIR / f"{mid}_latest.jpeg"
-                if not local_image.exists():
-                    continue
-                img_url = f"{BASE_URL}/manhole/image/{mid}_latest.jpeg"
-                href = f"/manholes/{mid}/"
-                alt = escape(links_by_id.get(mid, {}).get("text", str(mid)))
-                img_links.append(
-                    f'<li><a href="{escape(href)}">'
-                    f'<img src="{escape(img_url)}" alt="{alt}" loading="lazy" decoding="async">'
-                    f'</a></li>'
-                )
-            if img_links:
-                images_html = '<ul class="trivia-images">' + "".join(img_links) + "</ul>"
-
-        links_html = ""
-        if entry.get("links"):
-            links_html = '<ul class="trivia-links">' + "".join(
-                f'<li><a href="{escape(lk["href"])}">{escape(lk["text"])}</a></li>'
-                for lk in entry["links"]
-            ) + "</ul>"
-
-        items.append(
-            f'<li class="pref-trivia-card">'
-            f'<div class="trivia-header">'
-            f'<span class="trivia-pref">{pref}</span>'
-            f'<span class="trivia-pokemon">{pokemon}</span>'
-            f'{count_html}'
-            f'</div>'
-            f'{status_html}'
-            f'<p>{summary_text}</p>'
-            f'{images_html}'
-            f'{links_html}'
-            f'</li>'
-        )
-    items_html = "\n        ".join(items)
-    return (
-        f'\n    <section class="summary-section pref-trivia-section" '
-        f'aria-label="{escape(heading)}">'
-        f'\n      <h2>{escape(heading)}</h2>'
-        f'\n      <ul class="pref-trivia-grid">\n        {items_html}\n      </ul>'
-        f'\n    </section>\n'
-    )
 
 
 def _build_discovery_section(s: dict, stats: dict, tr) -> str:
@@ -3428,7 +3242,7 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
     <header class="summary-hero">
       <a class="summary-hero-breadcrumb" href="{escape(s['nav_home_href'])}">{escape(s['nav_home_text'])}</a>
       <div class="summary-hero-copy">
-        <p class="summary-hero-kicker">POKÉMON MANHOLE DATA GUIDE</p>
+        <p class="summary-hero-kicker">{escape(s['hero_kicker'])}</p>
         <h1 aria-label="{escape(s['h1'])}">{hero_title}</h1>
         <p class="summary-hero-subtitle">{subtitle}</p>
         <span class="summary-hero-ribbon">{escape(s['hero_ribbon'])}</span>
