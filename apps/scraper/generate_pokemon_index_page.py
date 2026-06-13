@@ -694,7 +694,8 @@ def _build_latest_photo_cards(
         if not image_url:
             continue
         pokemon_names = pokemon_names_by_id.get(mid, [])
-        title = "・".join(pokemon_names[:2]) or manhole.get("title", "")
+        name_joiner = lang_config.get("pref_joiner", "・")
+        title = name_joiner.join(pokemon_names[:2]) or manhole.get("title", "")
         location = _location_text(manhole, translate_pref, lang)
         created_at = str(photo.get("created_at", ""))
         cards.append({

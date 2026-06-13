@@ -19,6 +19,10 @@ class LatestPhotoCardsTest(unittest.TestCase):
                 {"names": {"ja": "ヤドン", "en": "Slowpoke"}},
                 [manhole],
             ),
+            "pikachu": (
+                {"names": {"ja": "ピカチュウ", "en": "Pikachu"}},
+                [manhole],
+            ),
         }
         photos_data = {
             "photos": {
@@ -29,7 +33,7 @@ class LatestPhotoCardsTest(unittest.TestCase):
                 },
             },
         }
-        lang_config = {"name_key": "en"}
+        lang_config = {"name_key": "en", "pref_joiner": " / "}
 
         with tempfile.TemporaryDirectory() as tmpdir:
             cards = _build_latest_photo_cards(
@@ -43,7 +47,7 @@ class LatestPhotoCardsTest(unittest.TestCase):
 
         self.assertEqual(len(cards), 1)
         self.assertEqual(cards[0]["href"], "/manholes/42/")
-        self.assertEqual(cards[0]["title"], "Slowpoke")
+        self.assertEqual(cards[0]["title"], "Slowpoke / Pikachu")
         self.assertEqual(cards[0]["location"], "Kagawa 高松市")
 
 
