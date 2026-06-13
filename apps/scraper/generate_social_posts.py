@@ -568,25 +568,32 @@ def gen_travel_trivia_candidates(stats: dict, pokemon_stats: dict) -> list[dict]
 
 def gen_pref_trivia_candidates(trivia_data: list[dict]) -> list[dict]:
     candidates = []
-    for entry in trivia_data:
-        candidates.append({
-            "id": f"pref-trivia-{entry['id']}",
-            "type": "pref_trivia",
-            "title": entry["title"],
-            "url": f"{BASE_URL}summary/",
-            "hashtags": ["#ポケふた", "#ポケモンマンホール"],
-            "imageType": "summary_trivia",
-            "source": "pref_trivia",
-            "raw_data": {
-                "fact_type": "pref_trivia",
-                "values": {
-                    "prefecture": entry["prefecture"],
-                    "pokemon": entry["pokemon"],
-                    "summary": entry["summary"],
-                    "map_pref": entry.get("map_pref", entry["prefecture"]),
+    for prefecture_entry in trivia_data:
+        prefecture = prefecture_entry.get("prefecture", "")
+        manhole_count = prefecture_entry.get("manhole_count", 0)
+        for trivia in prefecture_entry.get("trivia", []):
+            if not trivia.get("id") or not trivia.get("text"):
+                continue
+            candidates.append({
+                "id": f"pref-trivia-{trivia['id']}",
+                "type": "pref_trivia",
+                "title": f"{prefecture}のポケふたトリビア",
+                "url": f"{BASE_URL}summary/",
+                "hashtags": ["#ポケふた", "#ポケモンマンホール"],
+                "imageType": "summary_trivia",
+                "source": "pref_trivia",
+                "raw_data": {
+                    "fact_type": trivia.get("type", "pref_trivia"),
+                    "values": {
+                        "prefecture": prefecture,
+                        "manhole_count": manhole_count,
+                        "summary": trivia["text"],
+                        "map_pref": prefecture,
+                        "source_type": trivia.get("source_type", "dataset"),
+                        "source_url": trivia.get("source_url", ""),
+                    },
                 },
-            },
-        })
+            })
     return candidates
 
 

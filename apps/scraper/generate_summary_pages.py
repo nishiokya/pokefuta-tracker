@@ -65,19 +65,6 @@ REGION_MAP: dict[str, str] = {
     "鹿児島県": "九州", "沖縄県": "九州",
 }
 
-PREFECTURE_LOCAL_TRIVIA: dict[str, dict[str, str]] = {
-    "佐賀県": {
-        "pokemon": "ニャース3種",
-        "fact": "佐賀市にはニャース・アローラニャース・ガラルニャースの3枚があり、すべてに気球が描かれています。バルーンフェスタで知られる「気球のまち佐賀」ならではのデザインです。",
-        "official_url": "https://www.city.saga.lg.jp/",
-        "official_label": "佐賀市公式サイト",
-    },
-    "鹿児島県": {
-        "pokemon": "イーブイ系",
-        "fact": "ポケふた第1号は2018年12月20日、指宿駅前に設置されたイーブイ。「いーぶいすき＝指宿」の語呂合わせが縁です。指宿市には進化形8種類を含む9枚が揃い、市内だけでイーブイ系をコンプリートできます。",
-    },
-}
-
 SUMMARY_STRINGS: dict[str, dict] = {
     "ja": {
         "html_lang": "ja",
@@ -1266,6 +1253,17 @@ _CSS = """\
       font-size: .72rem;
       line-height: 1.4;
     }
+    .prefecture-info-facts {
+      grid-column: 1 / -1;
+      margin: 0;
+      padding-left: 1.1rem;
+      color: #716154;
+      font-size: .72rem;
+      line-height: 1.4;
+    }
+    .prefecture-info-facts li + li {
+      margin-top: .3rem;
+    }
 
     .prefecture-info-actions {
       grid-column: 1 / -1;
@@ -1394,6 +1392,9 @@ _CSS = """\
       }
 
       .prefecture-info-fact {
+        font-size: .66rem;
+      }
+      .prefecture-info-facts {
         font-size: .66rem;
       }
 
@@ -2446,6 +2447,12 @@ FACT_COPY["ko"]["facts"] = {
     },
 }
 
+LEGACY_EDITORIAL_FACT_IDS = {
+    "first-pokefuta",
+    "ibusuki-eevee-9",
+    "saga-nyansu",
+}
+
 
 def _localized_fact_copy(lang: str) -> dict:
     return FACT_COPY.get(lang, FACT_COPY["en"])
@@ -2502,6 +2509,8 @@ def _build_facts(s: dict, stats: dict, tr) -> list[dict]:
 
     facts = []
     for fact_id, template in copy["facts"].items():
+        if fact_id in LEGACY_EDITORIAL_FACT_IDS:
+            continue
         if fact_id == "empty-prefectures" and not empty_count:
             continue
         fact = {
@@ -2825,7 +2834,7 @@ def _build_prefecture_info_section(
             records_by_pref[pref].append(record)
 
     is_ja = s.get("pref_key") == "ja"
-    support_by_pref = {
+    trivia_by_pref = {
         entry["prefecture"]: entry
         for entry in trivia_data
         if entry.get("prefecture")
@@ -2847,17 +2856,47 @@ def _build_prefecture_info_section(
         )
         top_pokemon = pokemon_counts.most_common(1)
         pokemon_label = top_pokemon[0][0] if top_pokemon else s["no_pokemon_label"]
-        support = support_by_pref.get(pref)
-        local_trivia = PREFECTURE_LOCAL_TRIVIA.get(pref) if is_ja else None
+        pref_trivia = trivia_by_pref.get(pref) if is_ja else None
 
-        if local_trivia:
-            pokemon_label = local_trivia["pokemon"]
+        if pref_trivia:
+            coverage = pref_trivia.get("pokemon_coverage", [])
+            full_coverage = [
+                entry for entry in coverage
+                if entry.get("coverage_percent") == 100
+            ]
+            top_coverage = max(
+                full_coverage,
+                key=lambda entry: (
+                    len(entry.get("pokemon", [])),
+                    entry.get("cover_count", 0),
+                ),
+                default=None,
+            )
+            if top_coverage:
+                pokemon_label = top_coverage.get("label", pokemon_label)
+            else:
+                trivia_types = {
+                    entry.get("type")
+                    for entry in pref_trivia.get("trivia", [])
+                }
+                if "municipality_concentration" in trivia_types:
+                    pokemon_label = "自治体分布"
+                elif "single_municipality" in trivia_types:
+                    pokemon_label = "1自治体に集中"
+                elif pref_records:
+                    pokemon_label = "県内データ"
             display_count = item["count"]
-            fact = local_trivia["fact"]
-        elif support:
-            pokemon_label = support["pokemon"]
-            display_count = item["count"]
-            fact = support["summary"]
+            selected_trivia = pref_trivia.get("trivia", [])[:3]
+            if not pref_records:
+                selected_trivia = [{
+                    "type": "empty",
+                    "text": s["empty_pref_fact"],
+                    "source_type": "dataset",
+                }]
+            facts = [entry.get("text", "") for entry in selected_trivia if entry.get("text")]
+            fact = facts[0] if facts else s["pref_fact_generic"].format(
+                city_count=city_count, species_count=len(pokemon_counts)
+            )
         elif not pref_records:
             display_count = item["count"]
             fact = s["empty_pref_fact"]
@@ -2877,43 +2916,43 @@ def _build_prefecture_info_section(
                 city_count=city_count, species_count=species_count
             )
 
-        if local_trivia:
+        if pref_trivia:
             open_tag = '<article class="prefecture-info-card local-trivia-card">'
             close_tag = "</article>"
             pokemon_html = (
                 f'<span class="prefecture-info-pokemon">'
-                f'<span class="prefecture-info-label">ご当地雑学</span>'
+                f'<span class="prefecture-info-label">都道府県トリビア</span>'
                 f'{escape(pokemon_label)}</span>'
             )
+            facts_html = "".join(
+                f"<li>{escape(entry['text'])}</li>"
+                for entry in selected_trivia
+                if entry.get("text")
+            )
+            fact_html = (
+                f'<ul class="prefecture-info-facts">{facts_html}</ul>'
+                if facts_html
+                else f'<p class="prefecture-info-fact">{escape(fact)}</p>'
+            )
+            official = next(
+                (
+                    entry
+                    for entry in selected_trivia
+                    if entry.get("source_type") == "official"
+                    and _safe_https_url(entry.get("source_url"), "")
+                ),
+                None,
+            )
             official_html = ""
-            if local_trivia.get("official_url"):
+            if official:
                 official_html = (
-                    f'<a href="{escape(local_trivia["official_url"])}" target="_blank" '
+                    f'<a href="{escape(official["source_url"])}" target="_blank" '
                     f'rel="noopener noreferrer">'
-                    f'{escape(local_trivia.get("official_label", "公式サイト"))}</a>'
+                    f'{escape(official.get("source_label", "公式サイト"))}</a>'
                 )
             actions_html = (
                 f'<div class="prefecture-info-actions">'
                 f'{official_html}'
-                f'<a href="{escape(_map_href(s["map_base_href"], pref))}">'
-                f'{escape(s["map_link_text"])}</a>'
-                f'</div>'
-            )
-        elif support:
-            official_url = _safe_https_url(
-                support.get("source_url"), "https://local.pokemon.jp/"
-            )
-            open_tag = '<article class="prefecture-info-card support-pokemon-card">'
-            close_tag = "</article>"
-            pokemon_html = (
-                f'<span class="prefecture-info-pokemon">'
-                f'<span class="prefecture-info-label">応援ポケモン</span>'
-                f'{escape(pokemon_label)}</span>'
-            )
-            actions_html = (
-                f'<div class="prefecture-info-actions">'
-                f'<a href="{escape(official_url)}" target="_blank" '
-                f'rel="noopener noreferrer">公式サイト</a>'
                 f'<a href="{escape(_map_href(s["map_base_href"], pref))}">'
                 f'{escape(s["map_link_text"])}</a>'
                 f'</div>'
@@ -2929,6 +2968,7 @@ def _build_prefecture_info_section(
                 f'{escape(pokemon_label)}</span>'
             )
             actions_html = ""
+            fact_html = f'<p class="prefecture-info-fact">{escape(fact)}</p>'
         else:
             open_tag = '<article class="prefecture-info-card">'
             close_tag = "</article>"
@@ -2937,13 +2977,14 @@ def _build_prefecture_info_section(
                 f'{escape(pokemon_label)}</span>'
             )
             actions_html = ""
+            fact_html = f'<p class="prefecture-info-fact">{escape(fact)}</p>'
         cards.append(
             open_tag
             +
             f'<h3>{escape(tr(pref))}</h3>'
             f'{pokemon_html}'
             f'<strong class="prefecture-info-count">{display_count}{escape(count_unit)}</strong>'
-            f'<p class="prefecture-info-fact">{escape(fact)}</p>'
+            f'{fact_html}'
             f'{actions_html}'
             f'{close_tag}'
         )

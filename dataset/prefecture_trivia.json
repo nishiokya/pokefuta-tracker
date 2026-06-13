@@ -1,160 +1,8875 @@
 [
   {
-    "id": "hokkaido-vulpix",
     "prefecture": "北海道",
-    "pokemon": "ロコン",
-    "alt_pokemon": "アローラロコン",
-    "count": 27,
-    "title": "北海道の応援ポケモンはロコン",
-    "summary": "雪国・北海道のイメージにぴったりのロコン。アローラロコンも設置されており、北の大地で2種類に出会えます。",
-    "status": "ongoing",
-    "source_url": "https://local.pokemon.jp/",
-    "map_pref": "北海道",
-    "manhole_ids": [],
-    "links": []
+    "manhole_count": 50,
+    "municipality_count": 50,
+    "municipalities": [
+      "えりも",
+      "三笠",
+      "上ノ国",
+      "上富良野",
+      "中標津",
+      "函館",
+      "別海",
+      "剣淵",
+      "北見",
+      "厚沢部",
+      "士別",
+      "大空",
+      "天塩",
+      "室蘭",
+      "小樽",
+      "帯広",
+      "幌延",
+      "当別",
+      "恵庭",
+      "斜里",
+      "新得",
+      "旭川",
+      "木古内",
+      "本別",
+      "札幌",
+      "東川",
+      "根室",
+      "森",
+      "歌志内",
+      "比布",
+      "洞爺湖",
+      "津別",
+      "湧別",
+      "猿払",
+      "由仁",
+      "登別",
+      "石狩",
+      "砂川",
+      "稚内",
+      "紋別",
+      "網走",
+      "美幌",
+      "美瑛",
+      "苫小牧",
+      "豊富",
+      "赤井川",
+      "足寄",
+      "遠軽",
+      "釧路",
+      "陸別"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "えりも",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "三笠",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "上ノ国",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "上富良野",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "中標津",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "函館",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "別海",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "剣淵",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "北見",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "厚沢部",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "士別",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "大空",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "天塩",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "室蘭",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "小樽",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "帯広",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "幌延",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "当別",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "恵庭",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "斜里",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "新得",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "旭川",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "木古内",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "本別",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "札幌",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "東川",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "根室",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "森",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "歌志内",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "比布",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "洞爺湖",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "津別",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "湧別",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "猿払",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "由仁",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "登別",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "石狩",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "砂川",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "稚内",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "紋別",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "網走",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "美幌",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "美瑛",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "苫小牧",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "豊富",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "赤井川",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "足寄",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "遠軽",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "釧路",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "陸別",
+        "manhole_count": 1
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "アローラロコン",
+        "label": "アローラロコン",
+        "pokemon": [
+          "アローラロコン"
+        ],
+        "cover_count": 37,
+        "coverage_percent": 74.0
+      },
+      {
+        "id": "ロコン",
+        "label": "ロコン",
+        "pokemon": [
+          "ロコン"
+        ],
+        "cover_count": 27,
+        "coverage_percent": 54.0
+      },
+      {
+        "id": "アグノム",
+        "label": "アグノム",
+        "pokemon": [
+          "アグノム"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "アブリー",
+        "label": "アブリー",
+        "pokemon": [
+          "アブリー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "アローラキュウコン",
+        "label": "アローラキュウコン",
+        "pokemon": [
+          "アローラキュウコン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "イルミーゼ",
+        "label": "イルミーゼ",
+        "pokemon": [
+          "イルミーゼ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "ウリムー",
+        "label": "ウリムー",
+        "pokemon": [
+          "ウリムー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "エイパム",
+        "label": "エイパム",
+        "pokemon": [
+          "エイパム"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "エネコロロ",
+        "label": "エネコロロ",
+        "pokemon": [
+          "エネコロロ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "エムリット",
+        "label": "エムリット",
+        "pokemon": [
+          "エムリット"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "オムナイト",
+        "label": "オムナイト",
+        "pokemon": [
+          "オムナイト"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "カチコール",
+        "label": "カチコール",
+        "pokemon": [
+          "カチコール"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "キテルグマ",
+        "label": "キテルグマ",
+        "pokemon": [
+          "キテルグマ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "キュウコン",
+        "label": "キュウコン",
+        "pokemon": [
+          "キュウコン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "クマシュン",
+        "label": "クマシュン",
+        "pokemon": [
+          "クマシュン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "ケッキング",
+        "label": "ケッキング",
+        "pokemon": [
+          "ケッキング"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "コオリッポ",
+        "label": "コオリッポ",
+        "pokemon": [
+          "コオリッポ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "ジュナイパー",
+        "label": "ジュナイパー",
+        "pokemon": [
+          "ジュナイパー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "ズガイドス",
+        "label": "ズガイドス",
+        "pokemon": [
+          "ズガイドス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "タマザラシ",
+        "label": "タマザラシ",
+        "pokemon": [
+          "タマザラシ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "ディアルガ",
+        "label": "ディアルガ",
+        "pokemon": [
+          "ディアルガ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "トゲキッス",
+        "label": "トゲキッス",
+        "pokemon": [
+          "トゲキッス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "トドグラー",
+        "label": "トドグラー",
+        "pokemon": [
+          "トドグラー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "ドロバンコ",
+        "label": "ドロバンコ",
+        "pokemon": [
+          "ドロバンコ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "ナエトル",
+        "label": "ナエトル",
+        "pokemon": [
+          "ナエトル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "ハネッコ",
+        "label": "ハネッコ",
+        "pokemon": [
+          "ハネッコ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "バチュル",
+        "label": "バチュル",
+        "pokemon": [
+          "バチュル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "バニプッチ",
+        "label": "バニプッチ",
+        "pokemon": [
+          "バニプッチ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "バリコオル",
+        "label": "バリコオル",
+        "pokemon": [
+          "バリコオル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "パルキア",
+        "label": "パルキア",
+        "pokemon": [
+          "パルキア"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "ヒコザル",
+        "label": "ヒコザル",
+        "pokemon": [
+          "ヒコザル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "ヒスイウォーグル",
+        "label": "ヒスイウォーグル",
+        "pokemon": [
+          "ヒスイウォーグル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "ヒトツキ",
+        "label": "ヒトツキ",
+        "pokemon": [
+          "ヒトツキ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "ヒメグマ",
+        "label": "ヒメグマ",
+        "pokemon": [
+          "ヒメグマ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "ヒメンカ",
+        "label": "ヒメンカ",
+        "pokemon": [
+          "ヒメンカ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "フラベベ",
+        "label": "フラベベ",
+        "pokemon": [
+          "フラベベ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "ペロリーム",
+        "label": "ペロリーム",
+        "pokemon": [
+          "ペロリーム"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "ポッチャマ",
+        "label": "ポッチャマ",
+        "pokemon": [
+          "ポッチャマ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "ポットデス",
+        "label": "ポットデス",
+        "pokemon": [
+          "ポットデス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "マニューラ",
+        "label": "マニューラ",
+        "pokemon": [
+          "マニューラ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "マーイーカ",
+        "label": "マーイーカ",
+        "pokemon": [
+          "マーイーカ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "ミノマダム",
+        "label": "ミノマダム",
+        "pokemon": [
+          "ミノマダム"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "ミブリム",
+        "label": "ミブリム",
+        "pokemon": [
+          "ミブリム"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "ミルタンク",
+        "label": "ミルタンク",
+        "pokemon": [
+          "ミルタンク"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "ムクホーク",
+        "label": "ムクホーク",
+        "pokemon": [
+          "ムクホーク"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "メタモン",
+        "label": "メタモン",
+        "pokemon": [
+          "メタモン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "メブキジカ",
+        "label": "メブキジカ",
+        "pokemon": [
+          "メブキジカ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "メリープ",
+        "label": "メリープ",
+        "pokemon": [
+          "メリープ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "ヤクデ",
+        "label": "ヤクデ",
+        "pokemon": [
+          "ヤクデ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "ヤバチャ",
+        "label": "ヤバチャ",
+        "pokemon": [
+          "ヤバチャ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "ユキメノコ",
+        "label": "ユキメノコ",
+        "pokemon": [
+          "ユキメノコ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "ユクシー",
+        "label": "ユクシー",
+        "pokemon": [
+          "ユクシー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "ルガルガン",
+        "label": "ルガルガン",
+        "pokemon": [
+          "ルガルガン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "ワカシャモ",
+        "label": "ワカシャモ",
+        "pokemon": [
+          "ワカシャモ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.0
+      },
+      {
+        "id": "vulpix-family",
+        "label": "ロコン系",
+        "pokemon": [
+          "ロコン",
+          "アローラロコン"
+        ],
+        "cover_count": 50,
+        "coverage_percent": 100.0
+      }
+    ],
+    "trivia": [
+      {
+        "id": "hokkaido-support-vulpix",
+        "type": "support_pokemon",
+        "text": "北海道の推しポケモンは、雪景色にもなじむアローラロコンとロコンです",
+        "source_type": "official",
+        "source_url": "https://local.pokemon.jp/municipality/hokkaido/",
+        "source_label": "ポケモンローカルActs",
+        "verified_at": "2026-06-13"
+      },
+      {
+        "id": "北海道-vulpix-family-100",
+        "type": "pokemon_group_100",
+        "text": "県内50枚すべてにロコン系が登場します",
+        "source_type": "dataset"
+      }
+    ]
   },
   {
-    "id": "iwate-geodude",
+    "prefecture": "青森県",
+    "manhole_count": 2,
+    "municipality_count": 2,
+    "municipalities": [
+      "八戸",
+      "階上"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "八戸",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "階上",
+        "manhole_count": 1
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "イシツブテ",
+        "label": "イシツブテ",
+        "pokemon": [
+          "イシツブテ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 50.0
+      },
+      {
+        "id": "キャモメ",
+        "label": "キャモメ",
+        "pokemon": [
+          "キャモメ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 50.0
+      },
+      {
+        "id": "ナマコブシ",
+        "label": "ナマコブシ",
+        "pokemon": [
+          "ナマコブシ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 50.0
+      },
+      {
+        "id": "バチンウニ",
+        "label": "バチンウニ",
+        "pokemon": [
+          "バチンウニ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 50.0
+      },
+      {
+        "id": "ユキハミ",
+        "label": "ユキハミ",
+        "pokemon": [
+          "ユキハミ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 50.0
+      }
+    ],
+    "trivia": []
+  },
+  {
     "prefecture": "岩手県",
-    "pokemon": "イシツブテ",
-    "count": 20,
-    "title": "岩手県の応援ポケモンはイシツブテ",
-    "summary": "「岩手」という地名とイシツブテの語呂合わせが縁。県内各地に設置されています。",
-    "status": "ongoing",
-    "source_url": "https://local.pokemon.jp/",
-    "map_pref": "岩手県",
-    "manhole_ids": [],
-    "links": []
+    "manhole_count": 36,
+    "municipality_count": 33,
+    "municipalities": [
+      "一戸",
+      "一関",
+      "久慈",
+      "九戸",
+      "二戸",
+      "住田",
+      "八幡平",
+      "北上",
+      "大槌",
+      "大船渡",
+      "奥州",
+      "宮古",
+      "山田",
+      "岩手",
+      "岩泉",
+      "平泉",
+      "普代",
+      "洋野",
+      "滝沢",
+      "田野畑",
+      "盛岡",
+      "矢巾",
+      "紫波",
+      "花巻",
+      "葛巻",
+      "西和賀",
+      "軽米",
+      "遠野",
+      "野田",
+      "金ヶ崎",
+      "釜石",
+      "陸前高田",
+      "雫石"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "久慈",
+        "manhole_count": 2
+      },
+      {
+        "municipality": "北上",
+        "manhole_count": 2
+      },
+      {
+        "municipality": "盛岡",
+        "manhole_count": 2
+      },
+      {
+        "municipality": "一戸",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "一関",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "九戸",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "二戸",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "住田",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "八幡平",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "大槌",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "大船渡",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "奥州",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "宮古",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "山田",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "岩手",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "岩泉",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "平泉",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "普代",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "洋野",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "滝沢",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "田野畑",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "矢巾",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "紫波",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "花巻",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "葛巻",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "西和賀",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "軽米",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "遠野",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "野田",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "金ヶ崎",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "釜石",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "陸前高田",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "雫石",
+        "manhole_count": 1
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "イシツブテ",
+        "label": "イシツブテ",
+        "pokemon": [
+          "イシツブテ"
+        ],
+        "cover_count": 20,
+        "coverage_percent": 55.6
+      },
+      {
+        "id": "アローライシツブテ",
+        "label": "アローライシツブテ",
+        "pokemon": [
+          "アローライシツブテ"
+        ],
+        "cover_count": 4,
+        "coverage_percent": 11.1
+      },
+      {
+        "id": "イワンコ",
+        "label": "イワンコ",
+        "pokemon": [
+          "イワンコ"
+        ],
+        "cover_count": 4,
+        "coverage_percent": 11.1
+      },
+      {
+        "id": "プテラ",
+        "label": "プテラ",
+        "pokemon": [
+          "プテラ"
+        ],
+        "cover_count": 2,
+        "coverage_percent": 5.6
+      },
+      {
+        "id": "アママイコ",
+        "label": "アママイコ",
+        "pokemon": [
+          "アママイコ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "アマルス",
+        "label": "アマルス",
+        "pokemon": [
+          "アマルス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "イワーク",
+        "label": "イワーク",
+        "pokemon": [
+          "イワーク"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "ウソッキー",
+        "label": "ウソッキー",
+        "pokemon": [
+          "ウソッキー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "ウールー",
+        "label": "ウールー",
+        "pokemon": [
+          "ウールー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "オムナイト",
+        "label": "オムナイト",
+        "pokemon": [
+          "オムナイト"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "オーガポン",
+        "label": "オーガポン",
+        "pokemon": [
+          "オーガポン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "カジッチュ",
+        "label": "カジッチュ",
+        "pokemon": [
+          "カジッチュ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "カブト",
+        "label": "カブト",
+        "pokemon": [
+          "カブト"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "カミッチュ",
+        "label": "カミッチュ",
+        "pokemon": [
+          "カミッチュ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "ガブリアス",
+        "label": "ガブリアス",
+        "pokemon": [
+          "ガブリアス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "キマワリ",
+        "label": "キマワリ",
+        "pokemon": [
+          "キマワリ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "キリキザン",
+        "label": "キリキザン",
+        "pokemon": [
+          "キリキザン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "クレセリア",
+        "label": "クレセリア",
+        "pokemon": [
+          "クレセリア"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "ココドラ",
+        "label": "ココドラ",
+        "pokemon": [
+          "ココドラ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "コスモッグ",
+        "label": "コスモッグ",
+        "pokemon": [
+          "コスモッグ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "ゴローニャ",
+        "label": "ゴローニャ",
+        "pokemon": [
+          "ゴローニャ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "サイホーン",
+        "label": "サイホーン",
+        "pokemon": [
+          "サイホーン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "タテトプス",
+        "label": "タテトプス",
+        "pokemon": [
+          "タテトプス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "ダンゴロ",
+        "label": "ダンゴロ",
+        "pokemon": [
+          "ダンゴロ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "チゴラス",
+        "label": "チゴラス",
+        "pokemon": [
+          "チゴラス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "ツボツボ",
+        "label": "ツボツボ",
+        "pokemon": [
+          "ツボツボ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "ドサイドン",
+        "label": "ドサイドン",
+        "pokemon": [
+          "ドサイドン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "ドロバンコ",
+        "label": "ドロバンコ",
+        "pokemon": [
+          "ドロバンコ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "ナゲツケサル",
+        "label": "ナゲツケサル",
+        "pokemon": [
+          "ナゲツケサル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "ノズパス",
+        "label": "ノズパス",
+        "pokemon": [
+          "ノズパス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "ハスブレロ",
+        "label": "ハスブレロ",
+        "pokemon": [
+          "ハスブレロ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "ヒスイガーディ",
+        "label": "ヒスイガーディ",
+        "pokemon": [
+          "ヒスイガーディ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "ビーダル",
+        "label": "ビーダル",
+        "pokemon": [
+          "ビーダル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "フクスロー",
+        "label": "フクスロー",
+        "pokemon": [
+          "フクスロー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "ブロロン",
+        "label": "ブロロン",
+        "pokemon": [
+          "ブロロン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "ホーホー",
+        "label": "ホーホー",
+        "pokemon": [
+          "ホーホー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "マホミル",
+        "label": "マホミル",
+        "pokemon": [
+          "マホミル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "ミノムッチ",
+        "label": "ミノムッチ",
+        "pokemon": [
+          "ミノムッチ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "ミルタンク",
+        "label": "ミルタンク",
+        "pokemon": [
+          "ミルタンク"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "メタモン",
+        "label": "メタモン",
+        "pokemon": [
+          "メタモン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "メブキジカ",
+        "label": "メブキジカ",
+        "pokemon": [
+          "メブキジカ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "メルタン",
+        "label": "メルタン",
+        "pokemon": [
+          "メルタン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "ヤジロン",
+        "label": "ヤジロン",
+        "pokemon": [
+          "ヤジロン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "ユキワラシ",
+        "label": "ユキワラシ",
+        "pokemon": [
+          "ユキワラシ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "ヨーギラス",
+        "label": "ヨーギラス",
+        "pokemon": [
+          "ヨーギラス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "ルガルガン",
+        "label": "ルガルガン",
+        "pokemon": [
+          "ルガルガン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "ルチャブル",
+        "label": "ルチャブル",
+        "pokemon": [
+          "ルチャブル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "ルナトーン",
+        "label": "ルナトーン",
+        "pokemon": [
+          "ルナトーン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "ルンパッパ",
+        "label": "ルンパッパ",
+        "pokemon": [
+          "ルンパッパ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      },
+      {
+        "id": "レックウザ",
+        "label": "レックウザ",
+        "pokemon": [
+          "レックウザ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.8
+      }
+    ],
+    "trivia": [
+      {
+        "id": "iwate-geodude-wordplay",
+        "type": "wordplay",
+        "text": "岩タイプで「岩」に「手」が付いたイシツブテが、いわて応援ポケモンを務めています",
+        "source_type": "official",
+        "source_url": "https://local.pokemon.jp/municipality/iwate/",
+        "source_label": "ポケモンローカルActs",
+        "verified_at": "2026-06-13"
+      },
+      {
+        "id": "岩手県-top-pokemon",
+        "type": "top_pokemon",
+        "text": "最も多く登場するのはイシツブテで、20枚に描かれています",
+        "source_type": "dataset"
+      }
+    ]
   },
   {
-    "id": "miyagi-lapras",
     "prefecture": "宮城県",
-    "pokemon": "ラプラス",
-    "count": 37,
-    "title": "宮城県の応援ポケモンはラプラス",
-    "summary": "松島の海をイメージしたラプラス。宮城の豊かな海辺の風景と重なります。",
-    "status": "ongoing",
-    "source_url": "https://local.pokemon.jp/",
-    "map_pref": "宮城県",
-    "manhole_ids": [],
-    "links": []
+    "manhole_count": 37,
+    "municipality_count": 36,
+    "municipalities": [
+      "七ヶ宿",
+      "七ヶ浜",
+      "丸森",
+      "亘理",
+      "仙台",
+      "利府",
+      "加瀬沼公園",
+      "加美",
+      "南三陸",
+      "名取",
+      "塩竈",
+      "多賀城",
+      "大和",
+      "大崎",
+      "大河原",
+      "大衡",
+      "大郷",
+      "女川",
+      "富谷",
+      "山元",
+      "岩沼",
+      "川崎",
+      "村田",
+      "東松島",
+      "松島",
+      "柴田",
+      "栗原",
+      "気仙沼",
+      "涌谷",
+      "登米",
+      "白石",
+      "石巻",
+      "美里",
+      "色麻",
+      "蔵王",
+      "角田"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "仙台",
+        "manhole_count": 2
+      },
+      {
+        "municipality": "七ヶ宿",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "七ヶ浜",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "丸森",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "亘理",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "利府",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "加瀬沼公園",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "加美",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "南三陸",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "名取",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "塩竈",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "多賀城",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "大和",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "大崎",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "大河原",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "大衡",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "大郷",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "女川",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "富谷",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "山元",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "岩沼",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "川崎",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "村田",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "東松島",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "松島",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "柴田",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "栗原",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "気仙沼",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "涌谷",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "登米",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "白石",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "石巻",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "美里",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "色麻",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "蔵王",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "角田",
+        "manhole_count": 1
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "ラプラス",
+        "label": "ラプラス",
+        "pokemon": [
+          "ラプラス"
+        ],
+        "cover_count": 37,
+        "coverage_percent": 100.0
+      },
+      {
+        "id": "ニャース",
+        "label": "ニャース",
+        "pokemon": [
+          "ニャース"
+        ],
+        "cover_count": 2,
+        "coverage_percent": 5.4
+      },
+      {
+        "id": "イシツブテ",
+        "label": "イシツブテ",
+        "pokemon": [
+          "イシツブテ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "ウミディグダ",
+        "label": "ウミディグダ",
+        "pokemon": [
+          "ウミディグダ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "エネコ",
+        "label": "エネコ",
+        "pokemon": [
+          "エネコ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "オクタン",
+        "label": "オクタン",
+        "pokemon": [
+          "オクタン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "オニスズメ",
+        "label": "オニスズメ",
+        "pokemon": [
+          "オニスズメ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "キャモメ",
+        "label": "キャモメ",
+        "pokemon": [
+          "キャモメ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "クスネ",
+        "label": "クスネ",
+        "pokemon": [
+          "クスネ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "コアルヒー",
+        "label": "コアルヒー",
+        "pokemon": [
+          "コアルヒー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "ジラーチ",
+        "label": "ジラーチ",
+        "pokemon": [
+          "ジラーチ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "スバメ",
+        "label": "スバメ",
+        "pokemon": [
+          "スバメ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "スワンナ",
+        "label": "スワンナ",
+        "pokemon": [
+          "スワンナ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "タッツー",
+        "label": "タッツー",
+        "pokemon": [
+          "タッツー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "タマゲタケ",
+        "label": "タマゲタケ",
+        "pokemon": [
+          "タマゲタケ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "タマンタ",
+        "label": "タマンタ",
+        "pokemon": [
+          "タマンタ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "ダグトリオ",
+        "label": "ダグトリオ",
+        "pokemon": [
+          "ダグトリオ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "チェリム",
+        "label": "チェリム",
+        "pokemon": [
+          "チェリム"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "チュリネ",
+        "label": "チュリネ",
+        "pokemon": [
+          "チュリネ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "チョンチー",
+        "label": "チョンチー",
+        "pokemon": [
+          "チョンチー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "チルット",
+        "label": "チルット",
+        "pokemon": [
+          "チルット"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "トゲピー",
+        "label": "トゲピー",
+        "pokemon": [
+          "トゲピー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "ドダイトス",
+        "label": "ドダイトス",
+        "pokemon": [
+          "ドダイトス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "ドードリオ",
+        "label": "ドードリオ",
+        "pokemon": [
+          "ドードリオ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "ドードー",
+        "label": "ドードー",
+        "pokemon": [
+          "ドードー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "ニャスパー",
+        "label": "ニャスパー",
+        "pokemon": [
+          "ニャスパー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "ニャビー",
+        "label": "ニャビー",
+        "pokemon": [
+          "ニャビー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "ニャルマー",
+        "label": "ニャルマー",
+        "pokemon": [
+          "ニャルマー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "ハスブレロ",
+        "label": "ハスブレロ",
+        "pokemon": [
+          "ハスブレロ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "ハスボー",
+        "label": "ハスボー",
+        "pokemon": [
+          "ハスボー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "バンバドロ",
+        "label": "バンバドロ",
+        "pokemon": [
+          "バンバドロ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "ヒトデマン",
+        "label": "ヒトデマン",
+        "pokemon": [
+          "ヒトデマン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "ビーダル",
+        "label": "ビーダル",
+        "pokemon": [
+          "ビーダル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "フラベベ",
+        "label": "フラベベ",
+        "pokemon": [
+          "フラベベ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "ブルー",
+        "label": "ブルー",
+        "pokemon": [
+          "ブルー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "プラスル",
+        "label": "プラスル",
+        "pokemon": [
+          "プラスル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "プルリル",
+        "label": "プルリル",
+        "pokemon": [
+          "プルリル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "ベロベルト",
+        "label": "ベロベルト",
+        "pokemon": [
+          "ベロベルト"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "ホエルコ",
+        "label": "ホエルコ",
+        "pokemon": [
+          "ホエルコ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "マイナン",
+        "label": "マイナン",
+        "pokemon": [
+          "マイナン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "マメパト",
+        "label": "マメパト",
+        "pokemon": [
+          "マメパト"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "ムックル",
+        "label": "ムックル",
+        "pokemon": [
+          "ムックル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "メタモン",
+        "label": "メタモン",
+        "pokemon": [
+          "メタモン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "ユキノオー",
+        "label": "ユキノオー",
+        "pokemon": [
+          "ユキノオー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "ラッキー",
+        "label": "ラッキー",
+        "pokemon": [
+          "ラッキー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "ラティアス",
+        "label": "ラティアス",
+        "pokemon": [
+          "ラティアス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "ラティオス",
+        "label": "ラティオス",
+        "pokemon": [
+          "ラティオス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "ラブカス",
+        "label": "ラブカス",
+        "pokemon": [
+          "ラブカス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      },
+      {
+        "id": "ロゼリア",
+        "label": "ロゼリア",
+        "pokemon": [
+          "ロゼリア"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.7
+      }
+    ],
+    "trivia": [
+      {
+        "id": "miyagi-support-lapras",
+        "type": "support_pokemon",
+        "text": "宮城県ではラプラスがみやぎ応援ポケモンとして地域の魅力を発信しています",
+        "source_type": "official",
+        "source_url": "https://local.pokemon.jp/municipality/miyagi/",
+        "source_label": "ポケモンローカルActs",
+        "verified_at": "2026-06-13"
+      },
+      {
+        "id": "宮城県-ラプラス-100",
+        "type": "pokemon_100",
+        "text": "県内37枚すべてにラプラスが登場します",
+        "source_type": "dataset"
+      }
+    ]
   },
   {
-    "id": "fukushima-chansey",
+    "prefecture": "秋田県",
+    "manhole_count": 5,
+    "municipality_count": 5,
+    "municipalities": [
+      "仙北",
+      "横手",
+      "男鹿",
+      "秋田",
+      "鹿角"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "仙北",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "横手",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "男鹿",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "秋田",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "鹿角",
+        "manhole_count": 1
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "イワンコ",
+        "label": "イワンコ",
+        "pokemon": [
+          "イワンコ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "オニゴーリ",
+        "label": "オニゴーリ",
+        "pokemon": [
+          "オニゴーリ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "カラカラ",
+        "label": "カラカラ",
+        "pokemon": [
+          "カラカラ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ガラルデスマス",
+        "label": "ガラルデスマス",
+        "pokemon": [
+          "ガラルデスマス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ガーディ",
+        "label": "ガーディ",
+        "pokemon": [
+          "ガーディ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "グランブル",
+        "label": "グランブル",
+        "pokemon": [
+          "グランブル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ハクリュー",
+        "label": "ハクリュー",
+        "pokemon": [
+          "ハクリュー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "バウッツェル",
+        "label": "バウッツェル",
+        "pokemon": [
+          "バウッツェル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "パピモッチ",
+        "label": "パピモッチ",
+        "pokemon": [
+          "パピモッチ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ヘルガー",
+        "label": "ヘルガー",
+        "pokemon": [
+          "ヘルガー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ユキワラシ",
+        "label": "ユキワラシ",
+        "pokemon": [
+          "ユキワラシ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ワシボン",
+        "label": "ワシボン",
+        "pokemon": [
+          "ワシボン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      }
+    ],
+    "trivia": []
+  },
+  {
+    "prefecture": "山形県",
+    "manhole_count": 5,
+    "municipality_count": 5,
+    "municipalities": [
+      "大蔵",
+      "寒河江",
+      "小国",
+      "山形",
+      "鶴岡"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "大蔵",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "寒河江",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "小国",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "山形",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "鶴岡",
+        "manhole_count": 1
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "アルクジラ",
+        "label": "アルクジラ",
+        "pokemon": [
+          "アルクジラ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ガラルヒヒダルマ",
+        "label": "ガラルヒヒダルマ",
+        "pokemon": [
+          "ガラルヒヒダルマ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "クマシュン",
+        "label": "クマシュン",
+        "pokemon": [
+          "クマシュン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "チェリム",
+        "label": "チェリム",
+        "pokemon": [
+          "チェリム"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "チェリンボ",
+        "label": "チェリンボ",
+        "pokemon": [
+          "チェリンボ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ツンベアー",
+        "label": "ツンベアー",
+        "pokemon": [
+          "ツンベアー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "テールナー",
+        "label": "テールナー",
+        "pokemon": [
+          "テールナー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ドククラゲ",
+        "label": "ドククラゲ",
+        "pokemon": [
+          "ドククラゲ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ドレディア",
+        "label": "ドレディア",
+        "pokemon": [
+          "ドレディア"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ブルンゲル",
+        "label": "ブルンゲル",
+        "pokemon": [
+          "ブルンゲル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "プルリル",
+        "label": "プルリル",
+        "pokemon": [
+          "プルリル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ポポッコ",
+        "label": "ポポッコ",
+        "pokemon": [
+          "ポポッコ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "メノクラゲ",
+        "label": "メノクラゲ",
+        "pokemon": [
+          "メノクラゲ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ラフレシア",
+        "label": "ラフレシア",
+        "pokemon": [
+          "ラフレシア"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ランプラー",
+        "label": "ランプラー",
+        "pokemon": [
+          "ランプラー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      }
+    ],
+    "trivia": []
+  },
+  {
     "prefecture": "福島県",
-    "pokemon": "ラッキー",
-    "count": 43,
-    "title": "福島県の応援ポケモンはラッキー",
-    "summary": "「福」の字が縁で選ばれたラッキー。幸運を運ぶイメージが福島県とぴったりで、県内に多く設置されています。",
-    "status": "ongoing",
-    "source_url": "https://local.pokemon.jp/",
-    "map_pref": "福島県",
-    "manhole_ids": [],
-    "links": []
+    "manhole_count": 43,
+    "municipality_count": 43,
+    "municipalities": [
+      "いわき",
+      "三春",
+      "下郷",
+      "二本松",
+      "伊達",
+      "会津坂下",
+      "会津美里",
+      "会津若松",
+      "北塩原",
+      "南会津",
+      "南相馬",
+      "双葉",
+      "古殿",
+      "国見",
+      "大熊",
+      "天栄",
+      "小野",
+      "川俣",
+      "川内",
+      "平田",
+      "広野",
+      "新地",
+      "昭和",
+      "柳津",
+      "棚倉",
+      "楢葉",
+      "泉崎",
+      "浅川",
+      "浪江",
+      "湯川",
+      "猪苗代",
+      "田",
+      "白河",
+      "相馬",
+      "矢吹",
+      "福島",
+      "西会津",
+      "西郷",
+      "郡山",
+      "鏡石",
+      "須賀川",
+      "飯舘",
+      "鮫川"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "いわき",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "三春",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "下郷",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "二本松",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "伊達",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "会津坂下",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "会津美里",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "会津若松",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "北塩原",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "南会津",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "南相馬",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "双葉",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "古殿",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "国見",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "大熊",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "天栄",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "小野",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "川俣",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "川内",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "平田",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "広野",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "新地",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "昭和",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "柳津",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "棚倉",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "楢葉",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "泉崎",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "浅川",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "浪江",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "湯川",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "猪苗代",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "田",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "白河",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "相馬",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "矢吹",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "福島",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "西会津",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "西郷",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "郡山",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "鏡石",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "須賀川",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "飯舘",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "鮫川",
+        "manhole_count": 1
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "ラッキー",
+        "label": "ラッキー",
+        "pokemon": [
+          "ラッキー"
+        ],
+        "cover_count": 43,
+        "coverage_percent": 100.0
+      },
+      {
+        "id": "ピンプク",
+        "label": "ピンプク",
+        "pokemon": [
+          "ピンプク"
+        ],
+        "cover_count": 3,
+        "coverage_percent": 7.0
+      },
+      {
+        "id": "アオガラス",
+        "label": "アオガラス",
+        "pokemon": [
+          "アオガラス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "アブリー",
+        "label": "アブリー",
+        "pokemon": [
+          "アブリー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "イエッサン",
+        "label": "イエッサン",
+        "pokemon": [
+          "イエッサン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "ウパー",
+        "label": "ウパー",
+        "pokemon": [
+          "ウパー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "エルレイド",
+        "label": "エルレイド",
+        "pokemon": [
+          "エルレイド"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "オドシシ",
+        "label": "オドシシ",
+        "pokemon": [
+          "オドシシ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "カイリキー",
+        "label": "カイリキー",
+        "pokemon": [
+          "カイリキー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "カジリガメ",
+        "label": "カジリガメ",
+        "pokemon": [
+          "カジリガメ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "カプサイジ",
+        "label": "カプサイジ",
+        "pokemon": [
+          "カプサイジ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "カモネギ",
+        "label": "カモネギ",
+        "pokemon": [
+          "カモネギ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "カラサリス",
+        "label": "カラサリス",
+        "pokemon": [
+          "カラサリス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "キテルグマ",
+        "label": "キテルグマ",
+        "pokemon": [
+          "キテルグマ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "キレイハナ",
+        "label": "キレイハナ",
+        "pokemon": [
+          "キレイハナ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "ギャロップ",
+        "label": "ギャロップ",
+        "pokemon": [
+          "ギャロップ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "クルマユ",
+        "label": "クルマユ",
+        "pokemon": [
+          "クルマユ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "クルミル",
+        "label": "クルミル",
+        "pokemon": [
+          "クルミル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "ゴチミル",
+        "label": "ゴチミル",
+        "pokemon": [
+          "ゴチミル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "ゴリランダー",
+        "label": "ゴリランダー",
+        "pokemon": [
+          "ゴリランダー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "サシカマス",
+        "label": "サシカマス",
+        "pokemon": [
+          "サシカマス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "サメハダー",
+        "label": "サメハダー",
+        "pokemon": [
+          "サメハダー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "スコヴィラン",
+        "label": "スコヴィラン",
+        "pokemon": [
+          "スコヴィラン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "スワンナ",
+        "label": "スワンナ",
+        "pokemon": [
+          "スワンナ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "タブンネ",
+        "label": "タブンネ",
+        "pokemon": [
+          "タブンネ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "ダルマッカ",
+        "label": "ダルマッカ",
+        "pokemon": [
+          "ダルマッカ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "チリーン",
+        "label": "チリーン",
+        "pokemon": [
+          "チリーン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "ドッコラー",
+        "label": "ドッコラー",
+        "pokemon": [
+          "ドッコラー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "ドレディア",
+        "label": "ドレディア",
+        "pokemon": [
+          "ドレディア"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "ニョロトノ",
+        "label": "ニョロトノ",
+        "pokemon": [
+          "ニョロトノ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "ヌイコグマ",
+        "label": "ヌイコグマ",
+        "pokemon": [
+          "ヌイコグマ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "ハピナス",
+        "label": "ハピナス",
+        "pokemon": [
+          "ハピナス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "ハヤシガメ",
+        "label": "ハヤシガメ",
+        "pokemon": [
+          "ハヤシガメ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "ハリマロン",
+        "label": "ハリマロン",
+        "pokemon": [
+          "ハリマロン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "バオップ",
+        "label": "バオップ",
+        "pokemon": [
+          "バオップ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "バニリッチ",
+        "label": "バニリッチ",
+        "pokemon": [
+          "バニリッチ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "ヒマナッツ",
+        "label": "ヒマナッツ",
+        "pokemon": [
+          "ヒマナッツ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "ヒメグマ",
+        "label": "ヒメグマ",
+        "pokemon": [
+          "ヒメグマ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "ピクシー",
+        "label": "ピクシー",
+        "pokemon": [
+          "ピクシー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "ファイアロー",
+        "label": "ファイアロー",
+        "pokemon": [
+          "ファイアロー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "フカマル",
+        "label": "フカマル",
+        "pokemon": [
+          "フカマル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "フラエッテ",
+        "label": "フラエッテ",
+        "pokemon": [
+          "フラエッテ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "ブリムオン",
+        "label": "ブリムオン",
+        "pokemon": [
+          "ブリムオン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "プリン",
+        "label": "プリン",
+        "pokemon": [
+          "プリン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "ヘラクロス",
+        "label": "ヘラクロス",
+        "pokemon": [
+          "ヘラクロス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "ペロッパフ",
+        "label": "ペロッパフ",
+        "pokemon": [
+          "ペロッパフ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "ポニータ",
+        "label": "ポニータ",
+        "pokemon": [
+          "ポニータ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "マシェード",
+        "label": "マシェード",
+        "pokemon": [
+          "マシェード"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "マフォクシー",
+        "label": "マフォクシー",
+        "pokemon": [
+          "マフォクシー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "マユルド",
+        "label": "マユルド",
+        "pokemon": [
+          "マユルド"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "ミルタンク",
+        "label": "ミルタンク",
+        "pokemon": [
+          "ミルタンク"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "メリープ",
+        "label": "メリープ",
+        "pokemon": [
+          "メリープ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "モルペコ",
+        "label": "モルペコ",
+        "pokemon": [
+          "モルペコ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "ヤジロン",
+        "label": "ヤジロン",
+        "pokemon": [
+          "ヤジロン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "ヤンヤンマ",
+        "label": "ヤンヤンマ",
+        "pokemon": [
+          "ヤンヤンマ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "ヨワシ",
+        "label": "ヨワシ",
+        "pokemon": [
+          "ヨワシ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "ラビフット",
+        "label": "ラビフット",
+        "pokemon": [
+          "ラビフット"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "ラルトス",
+        "label": "ラルトス",
+        "pokemon": [
+          "ラルトス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      },
+      {
+        "id": "ロズレイド",
+        "label": "ロズレイド",
+        "pokemon": [
+          "ロズレイド"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 2.3
+      }
+    ],
+    "trivia": [
+      {
+        "id": "fukushima-support-chansey",
+        "type": "support_pokemon",
+        "text": "福島県では、幸せを運ぶといわれるラッキーがふくしま応援ポケモンを務めています",
+        "source_type": "official",
+        "source_url": "https://local.pokemon.jp/municipality/fukushima/",
+        "source_label": "ポケモンローカルActs",
+        "verified_at": "2026-06-13"
+      },
+      {
+        "id": "福島県-ラッキー-100",
+        "type": "pokemon_100",
+        "text": "県内43枚すべてにラッキーが登場します",
+        "source_type": "dataset"
+      }
+    ]
   },
   {
-    "id": "tottori-sandshrew",
-    "prefecture": "鳥取県",
-    "pokemon": "サンド",
-    "alt_pokemon": "アローラのすがた",
-    "count": 17,
-    "title": "鳥取県の応援ポケモンはサンド",
-    "summary": "「砂丘のまち」鳥取ならではの選択。通常のすがたとアローラのすがたの2種が設置されており、鳥取砂丘との縁は一目瞭然です。",
-    "status": "ongoing",
-    "source_url": "https://local.pokemon.jp/",
-    "map_pref": "鳥取県",
-    "manhole_ids": [],
-    "links": []
+    "prefecture": "茨城県",
+    "manhole_count": 5,
+    "municipality_count": 5,
+    "municipalities": [
+      "つくば",
+      "常陸太田",
+      "水戸",
+      "神栖",
+      "筑西"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "つくば",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "常陸太田",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "水戸",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "神栖",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "筑西",
+        "manhole_count": 1
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "オトシドリ",
+        "label": "オトシドリ",
+        "pokemon": [
+          "オトシドリ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "グレッグル",
+        "label": "グレッグル",
+        "pokemon": [
+          "グレッグル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ジャローダ",
+        "label": "ジャローダ",
+        "pokemon": [
+          "ジャローダ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ナットレイ",
+        "label": "ナットレイ",
+        "pokemon": [
+          "ナットレイ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ハラバリー",
+        "label": "ハラバリー",
+        "pokemon": [
+          "ハラバリー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ハーデリア",
+        "label": "ハーデリア",
+        "pokemon": [
+          "ハーデリア"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ボーマンダ",
+        "label": "ボーマンダ",
+        "pokemon": [
+          "ボーマンダ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "マラカッチ",
+        "label": "マラカッチ",
+        "pokemon": [
+          "マラカッチ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ルチャブル",
+        "label": "ルチャブル",
+        "pokemon": [
+          "ルチャブル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "レックウザ",
+        "label": "レックウザ",
+        "pokemon": [
+          "レックウザ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      }
+    ],
+    "trivia": []
   },
   {
-    "id": "fukui-dragonite",
+    "prefecture": "栃木県",
+    "manhole_count": 3,
+    "municipality_count": 1,
+    "municipalities": [
+      "宇都宮"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "宇都宮",
+        "manhole_count": 3
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "イワパレス",
+        "label": "イワパレス",
+        "pokemon": [
+          "イワパレス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 33.3
+      },
+      {
+        "id": "エレブー",
+        "label": "エレブー",
+        "pokemon": [
+          "エレブー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 33.3
+      },
+      {
+        "id": "ホシガリス",
+        "label": "ホシガリス",
+        "pokemon": [
+          "ホシガリス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 33.3
+      },
+      {
+        "id": "ボルトロス",
+        "label": "ボルトロス",
+        "pokemon": [
+          "ボルトロス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 33.3
+      },
+      {
+        "id": "ラクライ",
+        "label": "ラクライ",
+        "pokemon": [
+          "ラクライ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 33.3
+      }
+    ],
+    "trivia": [
+      {
+        "id": "栃木県-single-municipality",
+        "type": "single_municipality",
+        "text": "県内3枚のポケふたはすべて宇都宮にあります",
+        "source_type": "dataset"
+      }
+    ]
+  },
+  {
+    "prefecture": "群馬県",
+    "manhole_count": 0,
+    "municipality_count": 0,
+    "municipalities": [],
+    "municipality_distribution": [],
+    "pokemon_coverage": [],
+    "trivia": []
+  },
+  {
+    "prefecture": "埼玉県",
+    "manhole_count": 3,
+    "municipality_count": 1,
+    "municipalities": [
+      "所沢"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "所沢",
+        "manhole_count": 3
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "アーマーガア",
+        "label": "アーマーガア",
+        "pokemon": [
+          "アーマーガア"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 33.3
+      },
+      {
+        "id": "エアームド",
+        "label": "エアームド",
+        "pokemon": [
+          "エアームド"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 33.3
+      },
+      {
+        "id": "カイリュー",
+        "label": "カイリュー",
+        "pokemon": [
+          "カイリュー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 33.3
+      },
+      {
+        "id": "ハクリュー",
+        "label": "ハクリュー",
+        "pokemon": [
+          "ハクリュー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 33.3
+      },
+      {
+        "id": "ミニリュウ",
+        "label": "ミニリュウ",
+        "pokemon": [
+          "ミニリュウ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 33.3
+      }
+    ],
+    "trivia": [
+      {
+        "id": "埼玉県-single-municipality",
+        "type": "single_municipality",
+        "text": "県内3枚のポケふたはすべて所沢にあります",
+        "source_type": "dataset"
+      }
+    ]
+  },
+  {
+    "prefecture": "千葉県",
+    "manhole_count": 4,
+    "municipality_count": 1,
+    "municipalities": [
+      "香取"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "香取",
+        "manhole_count": 4
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "ガラルカモネギ",
+        "label": "ガラルカモネギ",
+        "pokemon": [
+          "ガラルカモネギ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 25.0
+      },
+      {
+        "id": "ココガラ",
+        "label": "ココガラ",
+        "pokemon": [
+          "ココガラ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 25.0
+      },
+      {
+        "id": "タイレーツ",
+        "label": "タイレーツ",
+        "pokemon": [
+          "タイレーツ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 25.0
+      },
+      {
+        "id": "タネボー",
+        "label": "タネボー",
+        "pokemon": [
+          "タネボー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 25.0
+      },
+      {
+        "id": "ハスボー",
+        "label": "ハスボー",
+        "pokemon": [
+          "ハスボー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 25.0
+      },
+      {
+        "id": "フラージェス",
+        "label": "フラージェス",
+        "pokemon": [
+          "フラージェス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 25.0
+      },
+      {
+        "id": "ムクバード",
+        "label": "ムクバード",
+        "pokemon": [
+          "ムクバード"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 25.0
+      },
+      {
+        "id": "ヤヤコマ",
+        "label": "ヤヤコマ",
+        "pokemon": [
+          "ヤヤコマ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 25.0
+      }
+    ],
+    "trivia": [
+      {
+        "id": "千葉県-single-municipality",
+        "type": "single_municipality",
+        "text": "県内4枚のポケふたはすべて香取にあります",
+        "source_type": "dataset"
+      }
+    ]
+  },
+  {
+    "prefecture": "東京都",
+    "manhole_count": 13,
+    "municipality_count": 4,
+    "municipalities": [
+      "台東区上野",
+      "小笠原",
+      "町田",
+      "稲城市"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "町田",
+        "manhole_count": 6
+      },
+      {
+        "municipality": "小笠原",
+        "manhole_count": 4
+      },
+      {
+        "municipality": "台東区上野",
+        "manhole_count": 2
+      },
+      {
+        "municipality": "稲城市",
+        "manhole_count": 1
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "イーブイ",
+        "label": "イーブイ",
+        "pokemon": [
+          "イーブイ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 7.7
+      },
+      {
+        "id": "カメックス",
+        "label": "カメックス",
+        "pokemon": [
+          "カメックス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 7.7
+      },
+      {
+        "id": "キャタピー",
+        "label": "キャタピー",
+        "pokemon": [
+          "キャタピー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 7.7
+      },
+      {
+        "id": "コラッタ",
+        "label": "コラッタ",
+        "pokemon": [
+          "コラッタ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 7.7
+      },
+      {
+        "id": "ゼニガメ",
+        "label": "ゼニガメ",
+        "pokemon": [
+          "ゼニガメ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 7.7
+      },
+      {
+        "id": "ソーナノ",
+        "label": "ソーナノ",
+        "pokemon": [
+          "ソーナノ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 7.7
+      },
+      {
+        "id": "チゴラス",
+        "label": "チゴラス",
+        "pokemon": [
+          "チゴラス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 7.7
+      },
+      {
+        "id": "ドーミラー",
+        "label": "ドーミラー",
+        "pokemon": [
+          "ドーミラー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 7.7
+      },
+      {
+        "id": "ナゾノクサ",
+        "label": "ナゾノクサ",
+        "pokemon": [
+          "ナゾノクサ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 7.7
+      },
+      {
+        "id": "ニョロモ",
+        "label": "ニョロモ",
+        "pokemon": [
+          "ニョロモ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 7.7
+      },
+      {
+        "id": "ヒトカゲ",
+        "label": "ヒトカゲ",
+        "pokemon": [
+          "ヒトカゲ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 7.7
+      },
+      {
+        "id": "ビードル",
+        "label": "ビードル",
+        "pokemon": [
+          "ビードル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 7.7
+      },
+      {
+        "id": "ピカチュウ",
+        "label": "ピカチュウ",
+        "pokemon": [
+          "ピカチュウ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 7.7
+      },
+      {
+        "id": "フシギダネ",
+        "label": "フシギダネ",
+        "pokemon": [
+          "フシギダネ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 7.7
+      },
+      {
+        "id": "フシギバナ",
+        "label": "フシギバナ",
+        "pokemon": [
+          "フシギバナ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 7.7
+      },
+      {
+        "id": "ポッポ",
+        "label": "ポッポ",
+        "pokemon": [
+          "ポッポ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 7.7
+      },
+      {
+        "id": "ミュウ",
+        "label": "ミュウ",
+        "pokemon": [
+          "ミュウ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 7.7
+      },
+      {
+        "id": "ヤジロン",
+        "label": "ヤジロン",
+        "pokemon": [
+          "ヤジロン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 7.7
+      },
+      {
+        "id": "リザードン",
+        "label": "リザードン",
+        "pokemon": [
+          "リザードン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 7.7
+      }
+    ],
+    "trivia": [
+      {
+        "id": "tokyo-pokepark-kanto-admission",
+        "type": "local_connection",
+        "text": "稲城市のポケパーク カントー内にも1枚あり、見るにはポケパーク カントーへの入場が必要です",
+        "source_type": "official",
+        "source_url": "https://local.pokemon.jp/manhole/desc/448/",
+        "source_label": "ポケふた公式",
+        "verified_at": "2026-06-13"
+      },
+      {
+        "id": "東京都-municipality-concentration",
+        "type": "municipality_concentration",
+        "text": "最多は町田の6枚で、次いで小笠原の4枚です",
+        "source_type": "dataset"
+      }
+    ]
+  },
+  {
+    "prefecture": "神奈川県",
+    "manhole_count": 5,
+    "municipality_count": 1,
+    "municipalities": [
+      "横浜"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "横浜",
+        "manhole_count": 5
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "ピカチュウ",
+        "label": "ピカチュウ",
+        "pokemon": [
+          "ピカチュウ"
+        ],
+        "cover_count": 5,
+        "coverage_percent": 100.0
+      },
+      {
+        "id": "コダック",
+        "label": "コダック",
+        "pokemon": [
+          "コダック"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ゴンべ",
+        "label": "ゴンべ",
+        "pokemon": [
+          "ゴンべ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ビクティニ",
+        "label": "ビクティニ",
+        "pokemon": [
+          "ビクティニ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ペリッパー",
+        "label": "ペリッパー",
+        "pokemon": [
+          "ペリッパー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ライチュウ",
+        "label": "ライチュウ",
+        "pokemon": [
+          "ライチュウ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ワンリキー",
+        "label": "ワンリキー",
+        "pokemon": [
+          "ワンリキー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      }
+    ],
+    "trivia": [
+      {
+        "id": "神奈川県-single-municipality",
+        "type": "single_municipality",
+        "text": "県内5枚のポケふたはすべて横浜にあります",
+        "source_type": "dataset"
+      },
+      {
+        "id": "神奈川県-ピカチュウ-100",
+        "type": "pokemon_100",
+        "text": "県内5枚すべてにピカチュウが登場します",
+        "source_type": "dataset"
+      }
+    ]
+  },
+  {
+    "prefecture": "新潟県",
+    "manhole_count": 4,
+    "municipality_count": 1,
+    "municipalities": [
+      "小千谷"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "小千谷",
+        "manhole_count": 4
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "コイキング",
+        "label": "コイキング",
+        "pokemon": [
+          "コイキング"
+        ],
+        "cover_count": 4,
+        "coverage_percent": 100.0
+      },
+      {
+        "id": "ヒンバス",
+        "label": "ヒンバス",
+        "pokemon": [
+          "ヒンバス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 25.0
+      },
+      {
+        "id": "ピジョン",
+        "label": "ピジョン",
+        "pokemon": [
+          "ピジョン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 25.0
+      }
+    ],
+    "trivia": [
+      {
+        "id": "niigata-ojiya-koi",
+        "type": "local_connection",
+        "text": "錦鯉発祥の地として知られる小千谷にちなみ、コイキングのポケふたが設置されています",
+        "source_type": "official",
+        "source_url": "https://www.city.ojiya.niigata.jp/site/kanko/pokemon.html",
+        "source_label": "小千谷市",
+        "verified_at": "2026-06-13"
+      },
+      {
+        "id": "新潟県-single-municipality",
+        "type": "single_municipality",
+        "text": "県内4枚のポケふたはすべて小千谷にあります",
+        "source_type": "dataset"
+      },
+      {
+        "id": "新潟県-コイキング-100",
+        "type": "pokemon_100",
+        "text": "県内4枚すべてにコイキングが登場します",
+        "source_type": "dataset"
+      }
+    ]
+  },
+  {
+    "prefecture": "富山県",
+    "manhole_count": 3,
+    "municipality_count": 1,
+    "municipalities": [
+      "富山"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "富山",
+        "manhole_count": 3
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "アブソル",
+        "label": "アブソル",
+        "pokemon": [
+          "アブソル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 33.3
+      },
+      {
+        "id": "キュワワー",
+        "label": "キュワワー",
+        "pokemon": [
+          "キュワワー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 33.3
+      },
+      {
+        "id": "マーイーカ",
+        "label": "マーイーカ",
+        "pokemon": [
+          "マーイーカ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 33.3
+      },
+      {
+        "id": "レディバ",
+        "label": "レディバ",
+        "pokemon": [
+          "レディバ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 33.3
+      }
+    ],
+    "trivia": [
+      {
+        "id": "富山県-single-municipality",
+        "type": "single_municipality",
+        "text": "県内3枚のポケふたはすべて富山にあります",
+        "source_type": "dataset"
+      }
+    ]
+  },
+  {
+    "prefecture": "石川県",
+    "manhole_count": 7,
+    "municipality_count": 7,
+    "municipalities": [
+      "七尾",
+      "志賀",
+      "珠洲",
+      "穴水",
+      "能登",
+      "輪島",
+      "金沢"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "七尾",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "志賀",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "珠洲",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "穴水",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "能登",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "輪島",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "金沢",
+        "manhole_count": 1
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "カイデン",
+        "label": "カイデン",
+        "pokemon": [
+          "カイデン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 14.3
+      },
+      {
+        "id": "カビゴン",
+        "label": "カビゴン",
+        "pokemon": [
+          "カビゴン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 14.3
+      },
+      {
+        "id": "ギャラドス",
+        "label": "ギャラドス",
+        "pokemon": [
+          "ギャラドス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 14.3
+      },
+      {
+        "id": "ゲッコウガ",
+        "label": "ゲッコウガ",
+        "pokemon": [
+          "ゲッコウガ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 14.3
+      },
+      {
+        "id": "サクラビス",
+        "label": "サクラビス",
+        "pokemon": [
+          "サクラビス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 14.3
+      },
+      {
+        "id": "ダルマッカ",
+        "label": "ダルマッカ",
+        "pokemon": [
+          "ダルマッカ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 14.3
+      },
+      {
+        "id": "ニョロトノ",
+        "label": "ニョロトノ",
+        "pokemon": [
+          "ニョロトノ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 14.3
+      },
+      {
+        "id": "ニョロモ",
+        "label": "ニョロモ",
+        "pokemon": [
+          "ニョロモ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 14.3
+      },
+      {
+        "id": "ニンフィア",
+        "label": "ニンフィア",
+        "pokemon": [
+          "ニンフィア"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 14.3
+      },
+      {
+        "id": "ハスボー",
+        "label": "ハスボー",
+        "pokemon": [
+          "ハスボー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 14.3
+      },
+      {
+        "id": "プラスル",
+        "label": "プラスル",
+        "pokemon": [
+          "プラスル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 14.3
+      },
+      {
+        "id": "マイナン",
+        "label": "マイナン",
+        "pokemon": [
+          "マイナン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 14.3
+      },
+      {
+        "id": "ミロカロス",
+        "label": "ミロカロス",
+        "pokemon": [
+          "ミロカロス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 14.3
+      },
+      {
+        "id": "メテノ",
+        "label": "メテノ",
+        "pokemon": [
+          "メテノ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 14.3
+      },
+      {
+        "id": "ラブカス",
+        "label": "ラブカス",
+        "pokemon": [
+          "ラブカス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 14.3
+      },
+      {
+        "id": "ロゼリア",
+        "label": "ロゼリア",
+        "pokemon": [
+          "ロゼリア"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 14.3
+      }
+    ],
+    "trivia": []
+  },
+  {
     "prefecture": "福井県",
-    "pokemon": "カイリュー",
-    "count": 17,
-    "title": "福井県の応援ポケモンはカイリュー",
-    "summary": "九頭竜川をはじめ「竜」の地名が多い福井。カイリューは県内17枚すべてに登場するほど定着しています。",
-    "status": "ongoing",
-    "source_url": "https://local.pokemon.jp/",
-    "map_pref": "福井県",
-    "manhole_ids": [],
-    "links": []
+    "manhole_count": 17,
+    "municipality_count": 16,
+    "municipalities": [
+      "あわら",
+      "おおい",
+      "勝山",
+      "南越前",
+      "坂井",
+      "大野",
+      "小浜",
+      "敦賀",
+      "永平寺",
+      "池田",
+      "福井",
+      "美浜",
+      "若狭",
+      "越前",
+      "高浜",
+      "鯖江"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "越前",
+        "manhole_count": 2
+      },
+      {
+        "municipality": "あわら",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "おおい",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "勝山",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "南越前",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "坂井",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "大野",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "小浜",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "敦賀",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "永平寺",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "池田",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "福井",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "美浜",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "若狭",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "高浜",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "鯖江",
+        "manhole_count": 1
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "カイリュー",
+        "label": "カイリュー",
+        "pokemon": [
+          "カイリュー"
+        ],
+        "cover_count": 17,
+        "coverage_percent": 100.0
+      },
+      {
+        "id": "アーケン",
+        "label": "アーケン",
+        "pokemon": [
+          "アーケン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "ウミディグダ",
+        "label": "ウミディグダ",
+        "pokemon": [
+          "ウミディグダ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "エレズン",
+        "label": "エレズン",
+        "pokemon": [
+          "エレズン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "ガチゴラス",
+        "label": "ガチゴラス",
+        "pokemon": [
+          "ガチゴラス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "クワッス",
+        "label": "クワッス",
+        "pokemon": [
+          "クワッス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "ケーシィ",
+        "label": "ケーシィ",
+        "pokemon": [
+          "ケーシィ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "コアルヒー",
+        "label": "コアルヒー",
+        "pokemon": [
+          "コアルヒー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "ココガラ",
+        "label": "ココガラ",
+        "pokemon": [
+          "ココガラ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "サッチムシ",
+        "label": "サッチムシ",
+        "pokemon": [
+          "サッチムシ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "シャリタツ",
+        "label": "シャリタツ",
+        "pokemon": [
+          "シャリタツ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "ジグザグマ",
+        "label": "ジグザグマ",
+        "pokemon": [
+          "ジグザグマ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "ジャラランガ",
+        "label": "ジャラランガ",
+        "pokemon": [
+          "ジャラランガ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "ダクマ",
+        "label": "ダクマ",
+        "pokemon": [
+          "ダクマ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "トゲチック",
+        "label": "トゲチック",
+        "pokemon": [
+          "トゲチック"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "ニャオニクス",
+        "label": "ニャオニクス",
+        "pokemon": [
+          "ニャオニクス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "ハクリュー",
+        "label": "ハクリュー",
+        "pokemon": [
+          "ハクリュー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "バタフリー",
+        "label": "バタフリー",
+        "pokemon": [
+          "バタフリー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "ヒトツキ",
+        "label": "ヒトツキ",
+        "pokemon": [
+          "ヒトツキ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "ヒドイデ",
+        "label": "ヒドイデ",
+        "pokemon": [
+          "ヒドイデ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "プクリン",
+        "label": "プクリン",
+        "pokemon": [
+          "プクリン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "マッギョ",
+        "label": "マッギョ",
+        "pokemon": [
+          "マッギョ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "マフィティフ",
+        "label": "マフィティフ",
+        "pokemon": [
+          "マフィティフ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "ミニリュウ",
+        "label": "ミニリュウ",
+        "pokemon": [
+          "ミニリュウ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "モルペコ",
+        "label": "モルペコ",
+        "pokemon": [
+          "モルペコ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      }
+    ],
+    "trivia": [
+      {
+        "id": "fukui-support-dragonite",
+        "type": "support_pokemon",
+        "text": "福井県ではカイリューがふくい応援ポケモンとして地域を盛り上げています",
+        "source_type": "official",
+        "source_url": "https://local.pokemon.jp/municipality/fukui/",
+        "source_label": "ポケモンローカルActs",
+        "verified_at": "2026-06-13"
+      },
+      {
+        "id": "福井県-カイリュー-100",
+        "type": "pokemon_100",
+        "text": "県内17枚すべてにカイリューが登場します",
+        "source_type": "dataset"
+      }
+    ]
   },
   {
-    "id": "kagawa-slowpoke",
-    "prefecture": "香川県",
-    "pokemon": "ヤドン",
-    "count": 17,
-    "title": "香川県の応援ポケモンはヤドン",
-    "summary": "香川県は2021年に公式で「ヤドン県」を一時採用した実績あり。冗談ではなく公式です。その縁で県内各地にヤドンのポケふたが設置されています。",
-    "status": "ongoing",
-    "source_url": "https://local.pokemon.jp/",
-    "map_pref": "香川県",
-    "manhole_ids": [],
-    "links": []
+    "prefecture": "山梨県",
+    "manhole_count": 0,
+    "municipality_count": 0,
+    "municipalities": [],
+    "municipality_distribution": [],
+    "pokemon_coverage": [],
+    "trivia": []
   },
   {
-    "id": "kochi-quagsire",
-    "prefecture": "高知県",
-    "pokemon": "ヌオー",
-    "count": 18,
-    "title": "高知県の応援ポケモンはヌオー",
-    "summary": "日本最後の清流・四万十川をイメージしたヌオー。水辺をのんびり過ごすイメージが高知の川文化と重なります。県内18枚すべてにヌオーが登場します。",
-    "status": "ongoing",
-    "source_url": "https://local.pokemon.jp/",
-    "map_pref": "高知県",
-    "manhole_ids": [],
-    "links": []
+    "prefecture": "長野県",
+    "manhole_count": 0,
+    "municipality_count": 0,
+    "municipalities": [],
+    "municipality_distribution": [],
+    "pokemon_coverage": [],
+    "trivia": []
   },
   {
-    "id": "mie-oshawott",
+    "prefecture": "岐阜県",
+    "manhole_count": 5,
+    "municipality_count": 5,
+    "municipalities": [
+      "下呂",
+      "各務原",
+      "関",
+      "関ケ原",
+      "高山"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "下呂",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "各務原",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "関",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "関ケ原",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "高山",
+        "manhole_count": 1
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "ウッウ",
+        "label": "ウッウ",
+        "pokemon": [
+          "ウッウ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "オタマロ",
+        "label": "オタマロ",
+        "pokemon": [
+          "オタマロ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ガマガル",
+        "label": "ガマガル",
+        "pokemon": [
+          "ガマガル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ガマゲロゲ",
+        "label": "ガマゲロゲ",
+        "pokemon": [
+          "ガマゲロゲ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "コマタナ",
+        "label": "コマタナ",
+        "pokemon": [
+          "コマタナ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ドジョッチ",
+        "label": "ドジョッチ",
+        "pokemon": [
+          "ドジョッチ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ドドゲザン",
+        "label": "ドドゲザン",
+        "pokemon": [
+          "ドドゲザン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ナマズン",
+        "label": "ナマズン",
+        "pokemon": [
+          "ナマズン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "バオップ",
+        "label": "バオップ",
+        "pokemon": [
+          "バオップ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ヒヤップ",
+        "label": "ヒヤップ",
+        "pokemon": [
+          "ヒヤップ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ヤナップ",
+        "label": "ヤナップ",
+        "pokemon": [
+          "ヤナップ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      }
+    ],
+    "trivia": []
+  },
+  {
+    "prefecture": "静岡県",
+    "manhole_count": 5,
+    "municipality_count": 5,
+    "municipalities": [
+      "伊豆",
+      "富士",
+      "沼津",
+      "浜松",
+      "静岡"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "伊豆",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "富士",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "沼津",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "浜松",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "静岡",
+        "manhole_count": 1
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "ゴロンダ",
+        "label": "ゴロンダ",
+        "pokemon": [
+          "ゴロンダ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "サクラビス",
+        "label": "サクラビス",
+        "pokemon": [
+          "サクラビス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "シビルドン",
+        "label": "シビルドン",
+        "pokemon": [
+          "シビルドン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ジーランス",
+        "label": "ジーランス",
+        "pokemon": [
+          "ジーランス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ハンテール",
+        "label": "ハンテール",
+        "pokemon": [
+          "ハンテール"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ファイヤー",
+        "label": "ファイヤー",
+        "pokemon": [
+          "ファイヤー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "フシギソウ",
+        "label": "フシギソウ",
+        "pokemon": [
+          "フシギソウ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ムクホーク",
+        "label": "ムクホーク",
+        "pokemon": [
+          "ムクホーク"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "メロエッタ",
+        "label": "メロエッタ",
+        "pokemon": [
+          "メロエッタ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ヤンチャム",
+        "label": "ヤンチャム",
+        "pokemon": [
+          "ヤンチャム"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      }
+    ],
+    "trivia": []
+  },
+  {
+    "prefecture": "愛知県",
+    "manhole_count": 9,
+    "municipality_count": 6,
+    "municipalities": [
+      "刈谷市",
+      "名古屋市中区",
+      "常滑",
+      "瀬戸市",
+      "西尾市",
+      "豊橋市"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "豊橋市",
+        "manhole_count": 4
+      },
+      {
+        "municipality": "刈谷市",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "名古屋市中区",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "常滑",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "瀬戸市",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "西尾市",
+        "manhole_count": 1
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "アゴジムシ",
+        "label": "アゴジムシ",
+        "pokemon": [
+          "アゴジムシ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 11.1
+      },
+      {
+        "id": "アブリボン",
+        "label": "アブリボン",
+        "pokemon": [
+          "アブリボン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 11.1
+      },
+      {
+        "id": "アローラニャース",
+        "label": "アローラニャース",
+        "pokemon": [
+          "アローラニャース"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 11.1
+      },
+      {
+        "id": "カブト",
+        "label": "カブト",
+        "pokemon": [
+          "カブト"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 11.1
+      },
+      {
+        "id": "キバゴ",
+        "label": "キバゴ",
+        "pokemon": [
+          "キバゴ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 11.1
+      },
+      {
+        "id": "クワガノン",
+        "label": "クワガノン",
+        "pokemon": [
+          "クワガノン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 11.1
+      },
+      {
+        "id": "コイキング",
+        "label": "コイキング",
+        "pokemon": [
+          "コイキング"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 11.1
+      },
+      {
+        "id": "ゴクリン",
+        "label": "ゴクリン",
+        "pokemon": [
+          "ゴクリン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 11.1
+      },
+      {
+        "id": "ジュカイン",
+        "label": "ジュカイン",
+        "pokemon": [
+          "ジュカイン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 11.1
+      },
+      {
+        "id": "スターミー",
+        "label": "スターミー",
+        "pokemon": [
+          "スターミー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 11.1
+      },
+      {
+        "id": "タツベイ",
+        "label": "タツベイ",
+        "pokemon": [
+          "タツベイ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 11.1
+      },
+      {
+        "id": "デンヂムシ",
+        "label": "デンヂムシ",
+        "pokemon": [
+          "デンヂムシ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 11.1
+      },
+      {
+        "id": "ニャヒート",
+        "label": "ニャヒート",
+        "pokemon": [
+          "ニャヒート"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 11.1
+      },
+      {
+        "id": "ネッコアラ",
+        "label": "ネッコアラ",
+        "pokemon": [
+          "ネッコアラ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 11.1
+      },
+      {
+        "id": "バクフーン",
+        "label": "バクフーン",
+        "pokemon": [
+          "バクフーン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 11.1
+      },
+      {
+        "id": "ピジョット",
+        "label": "ピジョット",
+        "pokemon": [
+          "ピジョット"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 11.1
+      },
+      {
+        "id": "ブーバー",
+        "label": "ブーバー",
+        "pokemon": [
+          "ブーバー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 11.1
+      },
+      {
+        "id": "マホイップ",
+        "label": "マホイップ",
+        "pokemon": [
+          "マホイップ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 11.1
+      }
+    ],
+    "trivia": [
+      {
+        "id": "愛知県-municipality-concentration",
+        "type": "municipality_concentration",
+        "text": "豊橋市に4枚が集まり、ほかの5自治体は各1枚です",
+        "source_type": "dataset"
+      }
+    ]
+  },
+  {
     "prefecture": "三重県",
-    "pokemon": "ミジュマル",
-    "count": 31,
-    "title": "三重県の応援ポケモンはミジュマル",
-    "summary": "「みえ」と「みず」のイメージが重なるミジュマル。伊勢志摩の海の雰囲気とも相性が良く、県内各地に設置されています。",
-    "status": "ongoing",
-    "source_url": "https://local.pokemon.jp/",
-    "map_pref": "三重県",
-    "manhole_ids": [],
-    "links": []
+    "manhole_count": 31,
+    "municipality_count": 30,
+    "municipalities": [
+      "いなべ市",
+      "三重郡川越町",
+      "三重郡朝日町",
+      "三重郡菰野町",
+      "亀山市",
+      "伊勢市",
+      "伊賀市",
+      "北牟婁郡紀北町",
+      "南牟婁郡御浜町",
+      "南牟婁郡紀宝町",
+      "名張市",
+      "員弁郡東員町",
+      "四日市市",
+      "多気郡多気町",
+      "多気郡大台町",
+      "多気郡明和町",
+      "尾鷲市",
+      "度会郡南伊勢町",
+      "度会郡大紀町",
+      "度会郡度会町",
+      "度会郡玉城町",
+      "志摩市",
+      "松阪市",
+      "桑名市",
+      "桑名郡木曽岬町",
+      "津市",
+      "熊野市",
+      "鈴鹿",
+      "鈴鹿市",
+      "鳥羽市"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "鳥羽市",
+        "manhole_count": 2
+      },
+      {
+        "municipality": "いなべ市",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "三重郡川越町",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "三重郡朝日町",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "三重郡菰野町",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "亀山市",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "伊勢市",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "伊賀市",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "北牟婁郡紀北町",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "南牟婁郡御浜町",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "南牟婁郡紀宝町",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "名張市",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "員弁郡東員町",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "四日市市",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "多気郡多気町",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "多気郡大台町",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "多気郡明和町",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "尾鷲市",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "度会郡南伊勢町",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "度会郡大紀町",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "度会郡度会町",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "度会郡玉城町",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "志摩市",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "松阪市",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "桑名市",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "桑名郡木曽岬町",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "津市",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "熊野市",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "鈴鹿",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "鈴鹿市",
+        "manhole_count": 1
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "ミジュマル",
+        "label": "ミジュマル",
+        "pokemon": [
+          "ミジュマル"
+        ],
+        "cover_count": 31,
+        "coverage_percent": 100.0
+      },
+      {
+        "id": "アギルダー",
+        "label": "アギルダー",
+        "pokemon": [
+          "アギルダー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.2
+      },
+      {
+        "id": "アマカジ",
+        "label": "アマカジ",
+        "pokemon": [
+          "アマカジ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.2
+      },
+      {
+        "id": "アメタマ",
+        "label": "アメタマ",
+        "pokemon": [
+          "アメタマ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.2
+      },
+      {
+        "id": "エルフーン",
+        "label": "エルフーン",
+        "pokemon": [
+          "エルフーン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.2
+      },
+      {
+        "id": "グルトン",
+        "label": "グルトン",
+        "pokemon": [
+          "グルトン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.2
+      },
+      {
+        "id": "ゴマゾウ",
+        "label": "ゴマゾウ",
+        "pokemon": [
+          "ゴマゾウ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.2
+      },
+      {
+        "id": "ゴーゴート",
+        "label": "ゴーゴート",
+        "pokemon": [
+          "ゴーゴート"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.2
+      },
+      {
+        "id": "ゴーリキー",
+        "label": "ゴーリキー",
+        "pokemon": [
+          "ゴーリキー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.2
+      },
+      {
+        "id": "ジャランゴ",
+        "label": "ジャランゴ",
+        "pokemon": [
+          "ジャランゴ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.2
+      },
+      {
+        "id": "ジュゴン",
+        "label": "ジュゴン",
+        "pokemon": [
+          "ジュゴン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.2
+      },
+      {
+        "id": "スバメ",
+        "label": "スバメ",
+        "pokemon": [
+          "スバメ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.2
+      },
+      {
+        "id": "ダイケンキ",
+        "label": "ダイケンキ",
+        "pokemon": [
+          "ダイケンキ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.2
+      },
+      {
+        "id": "ダブラン",
+        "label": "ダブラン",
+        "pokemon": [
+          "ダブラン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.2
+      },
+      {
+        "id": "ドゴーム",
+        "label": "ドゴーム",
+        "pokemon": [
+          "ドゴーム"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.2
+      },
+      {
+        "id": "ドダイトス",
+        "label": "ドダイトス",
+        "pokemon": [
+          "ドダイトス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.2
+      },
+      {
+        "id": "ニャイキング",
+        "label": "ニャイキング",
+        "pokemon": [
+          "ニャイキング"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.2
+      },
+      {
+        "id": "ニャース",
+        "label": "ニャース",
+        "pokemon": [
+          "ニャース"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.2
+      },
+      {
+        "id": "ヌイコグマ",
+        "label": "ヌイコグマ",
+        "pokemon": [
+          "ヌイコグマ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.2
+      },
+      {
+        "id": "ネンドール",
+        "label": "ネンドール",
+        "pokemon": [
+          "ネンドール"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.2
+      },
+      {
+        "id": "バネブー",
+        "label": "バネブー",
+        "pokemon": [
+          "バネブー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.2
+      },
+      {
+        "id": "パチリス",
+        "label": "パチリス",
+        "pokemon": [
+          "パチリス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.2
+      },
+      {
+        "id": "パールル",
+        "label": "パールル",
+        "pokemon": [
+          "パールル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.2
+      },
+      {
+        "id": "ビリジオン",
+        "label": "ビリジオン",
+        "pokemon": [
+          "ビリジオン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.2
+      },
+      {
+        "id": "フタチマル",
+        "label": "フタチマル",
+        "pokemon": [
+          "フタチマル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.2
+      },
+      {
+        "id": "フラージェス",
+        "label": "フラージェス",
+        "pokemon": [
+          "フラージェス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.2
+      },
+      {
+        "id": "プラスル",
+        "label": "プラスル",
+        "pokemon": [
+          "プラスル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.2
+      },
+      {
+        "id": "プロトーガ",
+        "label": "プロトーガ",
+        "pokemon": [
+          "プロトーガ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.2
+      },
+      {
+        "id": "マイナン",
+        "label": "マイナン",
+        "pokemon": [
+          "マイナン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.2
+      },
+      {
+        "id": "マネネ",
+        "label": "マネネ",
+        "pokemon": [
+          "マネネ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.2
+      },
+      {
+        "id": "ママンボウ",
+        "label": "ママンボウ",
+        "pokemon": [
+          "ママンボウ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.2
+      },
+      {
+        "id": "マリル",
+        "label": "マリル",
+        "pokemon": [
+          "マリル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.2
+      },
+      {
+        "id": "ミルタンク",
+        "label": "ミルタンク",
+        "pokemon": [
+          "ミルタンク"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.2
+      },
+      {
+        "id": "メェークル",
+        "label": "メェークル",
+        "pokemon": [
+          "メェークル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.2
+      },
+      {
+        "id": "メタモン",
+        "label": "メタモン",
+        "pokemon": [
+          "メタモン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.2
+      },
+      {
+        "id": "モトトカゲ",
+        "label": "モトトカゲ",
+        "pokemon": [
+          "モトトカゲ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.2
+      },
+      {
+        "id": "ヤナップ",
+        "label": "ヤナップ",
+        "pokemon": [
+          "ヤナップ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.2
+      },
+      {
+        "id": "ランクルス",
+        "label": "ランクルス",
+        "pokemon": [
+          "ランクルス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.2
+      },
+      {
+        "id": "リオル",
+        "label": "リオル",
+        "pokemon": [
+          "リオル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.2
+      },
+      {
+        "id": "リーシャン",
+        "label": "リーシャン",
+        "pokemon": [
+          "リーシャン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.2
+      }
+    ],
+    "trivia": [
+      {
+        "id": "mie-support-oshawott",
+        "type": "support_pokemon",
+        "text": "三重県ではミジュマルがみえ応援ポケモンとして地域の魅力を発信しています",
+        "source_type": "official",
+        "source_url": "https://local.pokemon.jp/municipality/mie/",
+        "source_label": "ポケモンローカルActs",
+        "verified_at": "2026-06-13"
+      },
+      {
+        "id": "三重県-ミジュマル-100",
+        "type": "pokemon_100",
+        "text": "県内31枚すべてにミジュマルが登場します",
+        "source_type": "dataset"
+      }
+    ]
   },
   {
-    "id": "nagasaki-ampharos",
+    "prefecture": "滋賀県",
+    "manhole_count": 5,
+    "municipality_count": 2,
+    "municipalities": [
+      "大津",
+      "甲賀"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "甲賀",
+        "manhole_count": 3
+      },
+      {
+        "municipality": "大津",
+        "manhole_count": 2
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "ゲッコウガ",
+        "label": "ゲッコウガ",
+        "pokemon": [
+          "ゲッコウガ"
+        ],
+        "cover_count": 3,
+        "coverage_percent": 60.0
+      },
+      {
+        "id": "ギャラドス",
+        "label": "ギャラドス",
+        "pokemon": [
+          "ギャラドス"
+        ],
+        "cover_count": 2,
+        "coverage_percent": 40.0
+      },
+      {
+        "id": "ゲコガシラ",
+        "label": "ゲコガシラ",
+        "pokemon": [
+          "ゲコガシラ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      }
+    ],
+    "trivia": [
+      {
+        "id": "滋賀県-municipality-concentration",
+        "type": "municipality_concentration",
+        "text": "最多は甲賀の3枚で、次いで大津の2枚です",
+        "source_type": "dataset"
+      },
+      {
+        "id": "滋賀県-top-pokemon",
+        "type": "top_pokemon",
+        "text": "最も多く登場するのはゲッコウガで、3枚に描かれています",
+        "source_type": "dataset"
+      }
+    ]
+  },
+  {
+    "prefecture": "京都府",
+    "manhole_count": 8,
+    "municipality_count": 2,
+    "municipalities": [
+      "京都",
+      "宇治"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "京都",
+        "manhole_count": 5
+      },
+      {
+        "municipality": "宇治",
+        "manhole_count": 3
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "ダーテング",
+        "label": "ダーテング",
+        "pokemon": [
+          "ダーテング"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 12.5
+      },
+      {
+        "id": "チコリータ",
+        "label": "チコリータ",
+        "pokemon": [
+          "チコリータ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 12.5
+      },
+      {
+        "id": "チャデス",
+        "label": "チャデス",
+        "pokemon": [
+          "チャデス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 12.5
+      },
+      {
+        "id": "パッチール",
+        "label": "パッチール",
+        "pokemon": [
+          "パッチール"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 12.5
+      },
+      {
+        "id": "ヒノアラシ",
+        "label": "ヒノアラシ",
+        "pokemon": [
+          "ヒノアラシ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 12.5
+      },
+      {
+        "id": "ヒバニー",
+        "label": "ヒバニー",
+        "pokemon": [
+          "ヒバニー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 12.5
+      },
+      {
+        "id": "ヒヒダルマ",
+        "label": "ヒヒダルマ",
+        "pokemon": [
+          "ヒヒダルマ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 12.5
+      },
+      {
+        "id": "ピィ",
+        "label": "ピィ",
+        "pokemon": [
+          "ピィ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 12.5
+      },
+      {
+        "id": "ピカチュウ",
+        "label": "ピカチュウ",
+        "pokemon": [
+          "ピカチュウ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 12.5
+      },
+      {
+        "id": "ピチュー",
+        "label": "ピチュー",
+        "pokemon": [
+          "ピチュー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 12.5
+      },
+      {
+        "id": "ププリン",
+        "label": "ププリン",
+        "pokemon": [
+          "ププリン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 12.5
+      },
+      {
+        "id": "ホウオウ",
+        "label": "ホウオウ",
+        "pokemon": [
+          "ホウオウ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 12.5
+      },
+      {
+        "id": "マリルリ",
+        "label": "マリルリ",
+        "pokemon": [
+          "マリルリ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 12.5
+      },
+      {
+        "id": "ヤバソチャ",
+        "label": "ヤバソチャ",
+        "pokemon": [
+          "ヤバソチャ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 12.5
+      },
+      {
+        "id": "ワニノコ",
+        "label": "ワニノコ",
+        "pokemon": [
+          "ワニノコ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 12.5
+      }
+    ],
+    "trivia": [
+      {
+        "id": "京都府-municipality-concentration",
+        "type": "municipality_concentration",
+        "text": "最多は京都の5枚で、次いで宇治の3枚です",
+        "source_type": "dataset"
+      }
+    ]
+  },
+  {
+    "prefecture": "大阪府",
+    "manhole_count": 5,
+    "municipality_count": 1,
+    "municipalities": [
+      "東大阪"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "東大阪",
+        "manhole_count": 5
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "エレキッド",
+        "label": "エレキッド",
+        "pokemon": [
+          "エレキッド"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ギアル",
+        "label": "ギアル",
+        "pokemon": [
+          "ギアル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ギギアル",
+        "label": "ギギアル",
+        "pokemon": [
+          "ギギアル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "クチート",
+        "label": "クチート",
+        "pokemon": [
+          "クチート"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "コイル",
+        "label": "コイル",
+        "pokemon": [
+          "コイル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "トゲデマル",
+        "label": "トゲデマル",
+        "pokemon": [
+          "トゲデマル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ライコウ",
+        "label": "ライコウ",
+        "pokemon": [
+          "ライコウ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "レアコイル",
+        "label": "レアコイル",
+        "pokemon": [
+          "レアコイル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ワンパチ",
+        "label": "ワンパチ",
+        "pokemon": [
+          "ワンパチ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      }
+    ],
+    "trivia": [
+      {
+        "id": "大阪府-single-municipality",
+        "type": "single_municipality",
+        "text": "県内5枚のポケふたはすべて東大阪にあります",
+        "source_type": "dataset"
+      }
+    ]
+  },
+  {
+    "prefecture": "兵庫県",
+    "manhole_count": 3,
+    "municipality_count": 1,
+    "municipalities": [
+      "淡路"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "淡路",
+        "manhole_count": 3
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "トリトドン",
+        "label": "トリトドン",
+        "pokemon": [
+          "トリトドン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 33.3
+      },
+      {
+        "id": "パルシェン",
+        "label": "パルシェン",
+        "pokemon": [
+          "パルシェン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 33.3
+      },
+      {
+        "id": "フレフワン",
+        "label": "フレフワン",
+        "pokemon": [
+          "フレフワン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 33.3
+      },
+      {
+        "id": "ベイリーフ",
+        "label": "ベイリーフ",
+        "pokemon": [
+          "ベイリーフ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 33.3
+      },
+      {
+        "id": "ルギア",
+        "label": "ルギア",
+        "pokemon": [
+          "ルギア"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 33.3
+      }
+    ],
+    "trivia": [
+      {
+        "id": "兵庫県-single-municipality",
+        "type": "single_municipality",
+        "text": "県内3枚のポケふたはすべて淡路にあります",
+        "source_type": "dataset"
+      }
+    ]
+  },
+  {
+    "prefecture": "奈良県",
+    "manhole_count": 5,
+    "municipality_count": 1,
+    "municipalities": [
+      "斑鳩"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "斑鳩",
+        "manhole_count": 5
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "エンテイ",
+        "label": "エンテイ",
+        "pokemon": [
+          "エンテイ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ガーディ",
+        "label": "ガーディ",
+        "pokemon": [
+          "ガーディ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "シキジカ",
+        "label": "シキジカ",
+        "pokemon": [
+          "シキジカ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "チリーン",
+        "label": "チリーン",
+        "pokemon": [
+          "チリーン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ドータクン",
+        "label": "ドータクン",
+        "pokemon": [
+          "ドータクン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "バオッキー",
+        "label": "バオッキー",
+        "pokemon": [
+          "バオッキー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ヒノヤコマ",
+        "label": "ヒノヤコマ",
+        "pokemon": [
+          "ヒノヤコマ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ブビィ",
+        "label": "ブビィ",
+        "pokemon": [
+          "ブビィ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "マダツボミ",
+        "label": "マダツボミ",
+        "pokemon": [
+          "マダツボミ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      }
+    ],
+    "trivia": [
+      {
+        "id": "奈良県-single-municipality",
+        "type": "single_municipality",
+        "text": "県内5枚のポケふたはすべて斑鳩にあります",
+        "source_type": "dataset"
+      }
+    ]
+  },
+  {
+    "prefecture": "和歌山県",
+    "manhole_count": 5,
+    "municipality_count": 5,
+    "municipalities": [
+      "串本",
+      "和歌山",
+      "白浜",
+      "那智勝浦",
+      "高野"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "串本",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "和歌山",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "白浜",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "那智勝浦",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "高野",
+        "manhole_count": 1
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "アシレーヌ",
+        "label": "アシレーヌ",
+        "pokemon": [
+          "アシレーヌ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ウーラオス",
+        "label": "ウーラオス",
+        "pokemon": [
+          "ウーラオス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ジバコイル",
+        "label": "ジバコイル",
+        "pokemon": [
+          "ジバコイル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "セレビィ",
+        "label": "セレビィ",
+        "pokemon": [
+          "セレビィ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ナミイルカ",
+        "label": "ナミイルカ",
+        "pokemon": [
+          "ナミイルカ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ピィ",
+        "label": "ピィ",
+        "pokemon": [
+          "ピィ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ヤンチャム",
+        "label": "ヤンチャム",
+        "pokemon": [
+          "ヤンチャム"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "リグレー",
+        "label": "リグレー",
+        "pokemon": [
+          "リグレー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "レントラー",
+        "label": "レントラー",
+        "pokemon": [
+          "レントラー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      }
+    ],
+    "trivia": []
+  },
+  {
+    "prefecture": "鳥取県",
+    "manhole_count": 20,
+    "municipality_count": 19,
+    "municipalities": [
+      "三朝",
+      "伯耆",
+      "倉吉",
+      "八頭",
+      "北栄",
+      "南部",
+      "境港",
+      "大山",
+      "岩美",
+      "日南",
+      "日吉津",
+      "日野",
+      "智頭",
+      "江府",
+      "湯梨浜",
+      "琴浦",
+      "米子",
+      "若桜",
+      "鳥取"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "鳥取",
+        "manhole_count": 2
+      },
+      {
+        "municipality": "三朝",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "伯耆",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "倉吉",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "八頭",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "北栄",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "南部",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "境港",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "大山",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "岩美",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "日南",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "日吉津",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "日野",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "智頭",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "江府",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "湯梨浜",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "琴浦",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "米子",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "若桜",
+        "manhole_count": 1
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "サンド",
+        "label": "サンド",
+        "pokemon": [
+          "サンド"
+        ],
+        "cover_count": 17,
+        "coverage_percent": 85.0
+      },
+      {
+        "id": "アローラサンド",
+        "label": "アローラサンド",
+        "pokemon": [
+          "アローラサンド"
+        ],
+        "cover_count": 14,
+        "coverage_percent": 70.0
+      },
+      {
+        "id": "アローラサンドパン",
+        "label": "アローラサンドパン",
+        "pokemon": [
+          "アローラサンドパン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.0
+      },
+      {
+        "id": "イルミーゼ",
+        "label": "イルミーゼ",
+        "pokemon": [
+          "イルミーゼ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.0
+      },
+      {
+        "id": "ウソッキー",
+        "label": "ウソッキー",
+        "pokemon": [
+          "ウソッキー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.0
+      },
+      {
+        "id": "オニゴーリ",
+        "label": "オニゴーリ",
+        "pokemon": [
+          "オニゴーリ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.0
+      },
+      {
+        "id": "カモネギ",
+        "label": "カモネギ",
+        "pokemon": [
+          "カモネギ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.0
+      },
+      {
+        "id": "クラブ",
+        "label": "クラブ",
+        "pokemon": [
+          "クラブ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.0
+      },
+      {
+        "id": "ケロマツ",
+        "label": "ケロマツ",
+        "pokemon": [
+          "ケロマツ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.0
+      },
+      {
+        "id": "サンドパン",
+        "label": "サンドパン",
+        "pokemon": [
+          "サンドパン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.0
+      },
+      {
+        "id": "シェルダー",
+        "label": "シェルダー",
+        "pokemon": [
+          "シェルダー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.0
+      },
+      {
+        "id": "スワンナ",
+        "label": "スワンナ",
+        "pokemon": [
+          "スワンナ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.0
+      },
+      {
+        "id": "チルット",
+        "label": "チルット",
+        "pokemon": [
+          "チルット"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.0
+      },
+      {
+        "id": "ナックラー",
+        "label": "ナックラー",
+        "pokemon": [
+          "ナックラー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.0
+      },
+      {
+        "id": "ネイティオ",
+        "label": "ネイティオ",
+        "pokemon": [
+          "ネイティオ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.0
+      },
+      {
+        "id": "バルビート",
+        "label": "バルビート",
+        "pokemon": [
+          "バルビート"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.0
+      },
+      {
+        "id": "ヒトモシ",
+        "label": "ヒトモシ",
+        "pokemon": [
+          "ヒトモシ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.0
+      },
+      {
+        "id": "ホルビー",
+        "label": "ホルビー",
+        "pokemon": [
+          "ホルビー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.0
+      },
+      {
+        "id": "ミミロル",
+        "label": "ミミロル",
+        "pokemon": [
+          "ミミロル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.0
+      },
+      {
+        "id": "メタモン",
+        "label": "メタモン",
+        "pokemon": [
+          "メタモン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.0
+      },
+      {
+        "id": "ユキカブリ",
+        "label": "ユキカブリ",
+        "pokemon": [
+          "ユキカブリ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.0
+      },
+      {
+        "id": "sandshrew-family",
+        "label": "サンド系",
+        "pokemon": [
+          "サンド",
+          "アローラサンド"
+        ],
+        "cover_count": 20,
+        "coverage_percent": 100.0
+      }
+    ],
+    "trivia": [
+      {
+        "id": "tottori-sand",
+        "type": "local_connection",
+        "text": "鳥取砂丘をはじめ砂で知られる鳥取県では、サンドとアローラサンドが推しポケモンです",
+        "source_type": "official",
+        "source_url": "https://local.pokemon.jp/municipality/tottori/",
+        "source_label": "ポケモンローカルActs",
+        "verified_at": "2026-06-13"
+      },
+      {
+        "id": "鳥取県-sandshrew-family-100",
+        "type": "pokemon_group_100",
+        "text": "県内20枚すべてにサンド系が登場します",
+        "source_type": "dataset"
+      }
+    ]
+  },
+  {
+    "prefecture": "島根県",
+    "manhole_count": 5,
+    "municipality_count": 5,
+    "municipalities": [
+      "出雲",
+      "大田",
+      "安来",
+      "浜田",
+      "隠岐の島"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "出雲",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "大田",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "安来",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "浜田",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "隠岐の島",
+        "manhole_count": 1
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "エルレイド",
+        "label": "エルレイド",
+        "pokemon": [
+          "エルレイド"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "オムスター",
+        "label": "オムスター",
+        "pokemon": [
+          "オムスター"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "サザンドラ",
+        "label": "サザンドラ",
+        "pokemon": [
+          "サザンドラ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "デデンネ",
+        "label": "デデンネ",
+        "pokemon": [
+          "デデンネ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ドジョッチ",
+        "label": "ドジョッチ",
+        "pokemon": [
+          "ドジョッチ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "バリヤード",
+        "label": "バリヤード",
+        "pokemon": [
+          "バリヤード"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "マッギョ",
+        "label": "マッギョ",
+        "pokemon": [
+          "マッギョ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ミミロップ",
+        "label": "ミミロップ",
+        "pokemon": [
+          "ミミロップ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ラブカス",
+        "label": "ラブカス",
+        "pokemon": [
+          "ラブカス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ワッカネズミ",
+        "label": "ワッカネズミ",
+        "pokemon": [
+          "ワッカネズミ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      }
+    ],
+    "trivia": []
+  },
+  {
+    "prefecture": "岡山県",
+    "manhole_count": 4,
+    "municipality_count": 1,
+    "municipalities": [
+      "倉敷"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "倉敷",
+        "manhole_count": 4
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "アゲハント",
+        "label": "アゲハント",
+        "pokemon": [
+          "アゲハント"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 25.0
+      },
+      {
+        "id": "ケンホロウ",
+        "label": "ケンホロウ",
+        "pokemon": [
+          "ケンホロウ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 25.0
+      },
+      {
+        "id": "サルノリ",
+        "label": "サルノリ",
+        "pokemon": [
+          "サルノリ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 25.0
+      },
+      {
+        "id": "ポチエナ",
+        "label": "ポチエナ",
+        "pokemon": [
+          "ポチエナ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 25.0
+      },
+      {
+        "id": "ルカリオ",
+        "label": "ルカリオ",
+        "pokemon": [
+          "ルカリオ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 25.0
+      },
+      {
+        "id": "ワタシラガ",
+        "label": "ワタシラガ",
+        "pokemon": [
+          "ワタシラガ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 25.0
+      }
+    ],
+    "trivia": [
+      {
+        "id": "岡山県-single-municipality",
+        "type": "single_municipality",
+        "text": "県内4枚のポケふたはすべて倉敷にあります",
+        "source_type": "dataset"
+      }
+    ]
+  },
+  {
+    "prefecture": "広島県",
+    "manhole_count": 0,
+    "municipality_count": 0,
+    "municipalities": [],
+    "municipality_distribution": [],
+    "pokemon_coverage": [],
+    "trivia": []
+  },
+  {
+    "prefecture": "山口県",
+    "manhole_count": 4,
+    "municipality_count": 1,
+    "municipalities": [
+      "下関"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "下関",
+        "manhole_count": 4
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "アーボ",
+        "label": "アーボ",
+        "pokemon": [
+          "アーボ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 25.0
+      },
+      {
+        "id": "エンペルト",
+        "label": "エンペルト",
+        "pokemon": [
+          "エンペルト"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 25.0
+      },
+      {
+        "id": "チョンチー",
+        "label": "チョンチー",
+        "pokemon": [
+          "チョンチー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 25.0
+      },
+      {
+        "id": "ドガース",
+        "label": "ドガース",
+        "pokemon": [
+          "ドガース"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 25.0
+      },
+      {
+        "id": "ハリーセン",
+        "label": "ハリーセン",
+        "pokemon": [
+          "ハリーセン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 25.0
+      },
+      {
+        "id": "ホエルコ",
+        "label": "ホエルコ",
+        "pokemon": [
+          "ホエルコ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 25.0
+      }
+    ],
+    "trivia": [
+      {
+        "id": "山口県-single-municipality",
+        "type": "single_municipality",
+        "text": "県内4枚のポケふたはすべて下関にあります",
+        "source_type": "dataset"
+      }
+    ]
+  },
+  {
+    "prefecture": "徳島県",
+    "manhole_count": 3,
+    "municipality_count": 1,
+    "municipalities": [
+      "鳴門"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "鳴門",
+        "manhole_count": 3
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "キングドラ",
+        "label": "キングドラ",
+        "pokemon": [
+          "キングドラ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 33.3
+      },
+      {
+        "id": "シードラ",
+        "label": "シードラ",
+        "pokemon": [
+          "シードラ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 33.3
+      },
+      {
+        "id": "スイクン",
+        "label": "スイクン",
+        "pokemon": [
+          "スイクン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 33.3
+      },
+      {
+        "id": "ディグダ",
+        "label": "ディグダ",
+        "pokemon": [
+          "ディグダ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 33.3
+      },
+      {
+        "id": "ニョロゾ",
+        "label": "ニョロゾ",
+        "pokemon": [
+          "ニョロゾ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 33.3
+      },
+      {
+        "id": "ニョロモ",
+        "label": "ニョロモ",
+        "pokemon": [
+          "ニョロモ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 33.3
+      }
+    ],
+    "trivia": [
+      {
+        "id": "徳島県-single-municipality",
+        "type": "single_municipality",
+        "text": "県内3枚のポケふたはすべて鳴門にあります",
+        "source_type": "dataset"
+      }
+    ]
+  },
+  {
+    "prefecture": "香川県",
+    "manhole_count": 18,
+    "municipality_count": 17,
+    "municipalities": [
+      "さぬき",
+      "まんのう",
+      "三木",
+      "三豊",
+      "丸亀",
+      "善通寺",
+      "土庄",
+      "坂出",
+      "多度津",
+      "宇多津",
+      "小豆島",
+      "東かがわ",
+      "琴平",
+      "直島",
+      "綾川",
+      "観音寺",
+      "高松"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "綾川",
+        "manhole_count": 2
+      },
+      {
+        "municipality": "さぬき",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "まんのう",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "三木",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "三豊",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "丸亀",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "善通寺",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "土庄",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "坂出",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "多度津",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "宇多津",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "小豆島",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "東かがわ",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "琴平",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "直島",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "観音寺",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "高松",
+        "manhole_count": 1
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "ヤドン",
+        "label": "ヤドン",
+        "pokemon": [
+          "ヤドン"
+        ],
+        "cover_count": 17,
+        "coverage_percent": 94.4
+      },
+      {
+        "id": "ガラルヤドン",
+        "label": "ガラルヤドン",
+        "pokemon": [
+          "ガラルヤドン"
+        ],
+        "cover_count": 2,
+        "coverage_percent": 11.1
+      },
+      {
+        "id": "シェルダー",
+        "label": "シェルダー",
+        "pokemon": [
+          "シェルダー"
+        ],
+        "cover_count": 2,
+        "coverage_percent": 11.1
+      },
+      {
+        "id": "コイキング",
+        "label": "コイキング",
+        "pokemon": [
+          "コイキング"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.6
+      },
+      {
+        "id": "ヌオー",
+        "label": "ヌオー",
+        "pokemon": [
+          "ヌオー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.6
+      },
+      {
+        "id": "ピッピ",
+        "label": "ピッピ",
+        "pokemon": [
+          "ピッピ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.6
+      },
+      {
+        "id": "メタモン",
+        "label": "メタモン",
+        "pokemon": [
+          "メタモン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.6
+      },
+      {
+        "id": "ヤドキング",
+        "label": "ヤドキング",
+        "pokemon": [
+          "ヤドキング"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.6
+      },
+      {
+        "id": "ヤドラン",
+        "label": "ヤドラン",
+        "pokemon": [
+          "ヤドラン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.6
+      }
+    ],
+    "trivia": [
+      {
+        "id": "kagawa-slowpoke-wordplay",
+        "type": "wordplay",
+        "text": "香川県では「うどん」と音の響きが似ているヤドンが推しポケモンです",
+        "source_type": "official",
+        "source_url": "https://local.pokemon.jp/municipality/kagawa/",
+        "source_label": "ポケモンローカルActs",
+        "verified_at": "2026-06-13"
+      },
+      {
+        "id": "香川県-top-pokemon",
+        "type": "top_pokemon",
+        "text": "最も多く登場するのはヤドンで、17枚に描かれています",
+        "source_type": "dataset"
+      }
+    ]
+  },
+  {
+    "prefecture": "愛媛県",
+    "manhole_count": 2,
+    "municipality_count": 1,
+    "municipalities": [
+      "松山"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "松山",
+        "manhole_count": 2
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "アマカジ",
+        "label": "アマカジ",
+        "pokemon": [
+          "アマカジ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 50.0
+      },
+      {
+        "id": "アマージョ",
+        "label": "アマージョ",
+        "pokemon": [
+          "アマージョ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 50.0
+      },
+      {
+        "id": "シュバルゴ",
+        "label": "シュバルゴ",
+        "pokemon": [
+          "シュバルゴ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 50.0
+      },
+      {
+        "id": "ネギガナイト",
+        "label": "ネギガナイト",
+        "pokemon": [
+          "ネギガナイト"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 50.0
+      }
+    ],
+    "trivia": [
+      {
+        "id": "愛媛県-single-municipality",
+        "type": "single_municipality",
+        "text": "県内2枚のポケふたはすべて松山にあります",
+        "source_type": "dataset"
+      }
+    ]
+  },
+  {
+    "prefecture": "高知県",
+    "manhole_count": 18,
+    "municipality_count": 18,
+    "municipalities": [
+      "三原",
+      "仁淀川",
+      "土佐清水",
+      "大月",
+      "大豊",
+      "奈半利",
+      "安田",
+      "安芸",
+      "室戸",
+      "宿毛",
+      "日高",
+      "本山",
+      "東洋",
+      "津野",
+      "須崎",
+      "香南",
+      "香美",
+      "高知"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "三原",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "仁淀川",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "土佐清水",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "大月",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "大豊",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "奈半利",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "安田",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "安芸",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "室戸",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "宿毛",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "日高",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "本山",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "東洋",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "津野",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "須崎",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "香南",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "香美",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "高知",
+        "manhole_count": 1
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "ヌオー",
+        "label": "ヌオー",
+        "pokemon": [
+          "ヌオー"
+        ],
+        "cover_count": 18,
+        "coverage_percent": 100.0
+      },
+      {
+        "id": "アメタマ",
+        "label": "アメタマ",
+        "pokemon": [
+          "アメタマ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.6
+      },
+      {
+        "id": "アメモース",
+        "label": "アメモース",
+        "pokemon": [
+          "アメモース"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.6
+      },
+      {
+        "id": "ウパー",
+        "label": "ウパー",
+        "pokemon": [
+          "ウパー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.6
+      },
+      {
+        "id": "カラナクシ",
+        "label": "カラナクシ",
+        "pokemon": [
+          "カラナクシ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.6
+      },
+      {
+        "id": "ケイコウオ",
+        "label": "ケイコウオ",
+        "pokemon": [
+          "ケイコウオ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.6
+      },
+      {
+        "id": "コジオ",
+        "label": "コジオ",
+        "pokemon": [
+          "コジオ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.6
+      },
+      {
+        "id": "コマタナ",
+        "label": "コマタナ",
+        "pokemon": [
+          "コマタナ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.6
+      },
+      {
+        "id": "サニーゴ",
+        "label": "サニーゴ",
+        "pokemon": [
+          "サニーゴ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.6
+      },
+      {
+        "id": "シズクモ",
+        "label": "シズクモ",
+        "pokemon": [
+          "シズクモ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.6
+      },
+      {
+        "id": "シビシラス",
+        "label": "シビシラス",
+        "pokemon": [
+          "シビシラス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.6
+      },
+      {
+        "id": "チルタリス",
+        "label": "チルタリス",
+        "pokemon": [
+          "チルタリス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.6
+      },
+      {
+        "id": "トサキント",
+        "label": "トサキント",
+        "pokemon": [
+          "トサキント"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.6
+      },
+      {
+        "id": "ドオー",
+        "label": "ドオー",
+        "pokemon": [
+          "ドオー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.6
+      },
+      {
+        "id": "ノクタス",
+        "label": "ノクタス",
+        "pokemon": [
+          "ノクタス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.6
+      },
+      {
+        "id": "ピィ",
+        "label": "ピィ",
+        "pokemon": [
+          "ピィ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.6
+      },
+      {
+        "id": "フィオネ",
+        "label": "フィオネ",
+        "pokemon": [
+          "フィオネ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.6
+      },
+      {
+        "id": "フローゼル",
+        "label": "フローゼル",
+        "pokemon": [
+          "フローゼル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.6
+      },
+      {
+        "id": "ブイゼル",
+        "label": "ブイゼル",
+        "pokemon": [
+          "ブイゼル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.6
+      },
+      {
+        "id": "ホーホー",
+        "label": "ホーホー",
+        "pokemon": [
+          "ホーホー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.6
+      },
+      {
+        "id": "マンタイン",
+        "label": "マンタイン",
+        "pokemon": [
+          "マンタイン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.6
+      },
+      {
+        "id": "メタモン",
+        "label": "メタモン",
+        "pokemon": [
+          "メタモン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.6
+      },
+      {
+        "id": "メッソン",
+        "label": "メッソン",
+        "pokemon": [
+          "メッソン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.6
+      },
+      {
+        "id": "モノズ",
+        "label": "モノズ",
+        "pokemon": [
+          "モノズ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.6
+      },
+      {
+        "id": "ヤンヤンマ",
+        "label": "ヤンヤンマ",
+        "pokemon": [
+          "ヤンヤンマ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.6
+      },
+      {
+        "id": "リリーラ",
+        "label": "リリーラ",
+        "pokemon": [
+          "リリーラ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.6
+      }
+    ],
+    "trivia": [
+      {
+        "id": "kochi-support-quagsire",
+        "type": "support_pokemon",
+        "text": "高知県では、水辺に生息するヌオーがこうちだいすきポケモンとして活動しています",
+        "source_type": "official",
+        "source_url": "https://local.pokemon.jp/municipality/kochi/",
+        "source_label": "ポケモンローカルActs",
+        "verified_at": "2026-06-13"
+      },
+      {
+        "id": "高知県-ヌオー-100",
+        "type": "pokemon_100",
+        "text": "県内18枚すべてにヌオーが登場します",
+        "source_type": "dataset"
+      }
+    ]
+  },
+  {
+    "prefecture": "福岡県",
+    "manhole_count": 8,
+    "municipality_count": 2,
+    "municipalities": [
+      "北九州",
+      "太宰府"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "北九州",
+        "manhole_count": 5
+      },
+      {
+        "municipality": "太宰府",
+        "manhole_count": 3
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "アローラダグトリオ",
+        "label": "アローラダグトリオ",
+        "pokemon": [
+          "アローラダグトリオ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 12.5
+      },
+      {
+        "id": "キルリア",
+        "label": "キルリア",
+        "pokemon": [
+          "キルリア"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 12.5
+      },
+      {
+        "id": "ギルガルド",
+        "label": "ギルガルド",
+        "pokemon": [
+          "ギルガルド"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 12.5
+      },
+      {
+        "id": "サーナイト",
+        "label": "サーナイト",
+        "pokemon": [
+          "サーナイト"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 12.5
+      },
+      {
+        "id": "ジュラルドン",
+        "label": "ジュラルドン",
+        "pokemon": [
+          "ジュラルドン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 12.5
+      },
+      {
+        "id": "トロッゴン",
+        "label": "トロッゴン",
+        "pokemon": [
+          "トロッゴン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 12.5
+      },
+      {
+        "id": "トロピウス",
+        "label": "トロピウス",
+        "pokemon": [
+          "トロピウス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 12.5
+      },
+      {
+        "id": "フーディン",
+        "label": "フーディン",
+        "pokemon": [
+          "フーディン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 12.5
+      },
+      {
+        "id": "ボスゴドラ",
+        "label": "ボスゴドラ",
+        "pokemon": [
+          "ボスゴドラ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 12.5
+      },
+      {
+        "id": "メブキジカ",
+        "label": "メブキジカ",
+        "pokemon": [
+          "メブキジカ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 12.5
+      },
+      {
+        "id": "ヤドキング",
+        "label": "ヤドキング",
+        "pokemon": [
+          "ヤドキング"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 12.5
+      },
+      {
+        "id": "ヤミラミ",
+        "label": "ヤミラミ",
+        "pokemon": [
+          "ヤミラミ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 12.5
+      },
+      {
+        "id": "ヤヤコマ",
+        "label": "ヤヤコマ",
+        "pokemon": [
+          "ヤヤコマ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 12.5
+      },
+      {
+        "id": "ヤレユータン",
+        "label": "ヤレユータン",
+        "pokemon": [
+          "ヤレユータン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 12.5
+      },
+      {
+        "id": "ルナトーン",
+        "label": "ルナトーン",
+        "pokemon": [
+          "ルナトーン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 12.5
+      }
+    ],
+    "trivia": [
+      {
+        "id": "福岡県-municipality-concentration",
+        "type": "municipality_concentration",
+        "text": "最多は北九州の5枚で、次いで太宰府の3枚です",
+        "source_type": "dataset"
+      }
+    ]
+  },
+  {
+    "prefecture": "佐賀県",
+    "manhole_count": 3,
+    "municipality_count": 1,
+    "municipalities": [
+      "佐賀"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "佐賀",
+        "manhole_count": 3
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "アローラニャース",
+        "label": "アローラニャース",
+        "pokemon": [
+          "アローラニャース"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 33.3
+      },
+      {
+        "id": "ガラルニャース",
+        "label": "ガラルニャース",
+        "pokemon": [
+          "ガラルニャース"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 33.3
+      },
+      {
+        "id": "ニャース",
+        "label": "ニャース",
+        "pokemon": [
+          "ニャース"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 33.3
+      },
+      {
+        "id": "meowth-forms",
+        "label": "ニャース3種",
+        "pokemon": [
+          "ニャース",
+          "アローラニャース",
+          "ガラルニャース"
+        ],
+        "cover_count": 3,
+        "coverage_percent": 100.0
+      }
+    ],
+    "trivia": [
+      {
+        "id": "佐賀県-single-municipality",
+        "type": "single_municipality",
+        "text": "県内3枚のポケふたはすべて佐賀にあります",
+        "source_type": "dataset"
+      },
+      {
+        "id": "佐賀県-meowth-forms-100",
+        "type": "pokemon_group_100",
+        "text": "県内3枚すべてにニャース3種が登場します",
+        "source_type": "dataset"
+      }
+    ]
+  },
+  {
     "prefecture": "長崎県",
-    "pokemon": "デンリュウ",
-    "count": 10,
-    "title": "長崎県の応援ポケモンはデンリュウ",
-    "summary": "「灯台のポケモン」デンリュウが選ばれた長崎。港町・長崎の灯台文化と重なり、県内10枚すべてにデンリュウが登場します。",
-    "status": "ongoing",
-    "source_url": "https://local.pokemon.jp/",
-    "map_pref": "長崎県",
-    "manhole_ids": [],
-    "links": []
+    "manhole_count": 10,
+    "municipality_count": 10,
+    "municipalities": [
+      "佐々",
+      "佐世保",
+      "壱岐",
+      "大",
+      "島原",
+      "新上五島",
+      "時津",
+      "東彼杵",
+      "長崎",
+      "雲仙"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "佐々",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "佐世保",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "壱岐",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "大",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "島原",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "新上五島",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "時津",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "東彼杵",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "長崎",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "雲仙",
+        "manhole_count": 1
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "デンリュウ",
+        "label": "デンリュウ",
+        "pokemon": [
+          "デンリュウ"
+        ],
+        "cover_count": 10,
+        "coverage_percent": 100.0
+      },
+      {
+        "id": "イキリンコ",
+        "label": "イキリンコ",
+        "pokemon": [
+          "イキリンコ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 10.0
+      },
+      {
+        "id": "イルカマン",
+        "label": "イルカマン",
+        "pokemon": [
+          "イルカマン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 10.0
+      },
+      {
+        "id": "オタチ",
+        "label": "オタチ",
+        "pokemon": [
+          "オタチ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 10.0
+      },
+      {
+        "id": "キモリ",
+        "label": "キモリ",
+        "pokemon": [
+          "キモリ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 10.0
+      },
+      {
+        "id": "キャモメ",
+        "label": "キャモメ",
+        "pokemon": [
+          "キャモメ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 10.0
+      },
+      {
+        "id": "コータス",
+        "label": "コータス",
+        "pokemon": [
+          "コータス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 10.0
+      },
+      {
+        "id": "ゴローン",
+        "label": "ゴローン",
+        "pokemon": [
+          "ゴローン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 10.0
+      },
+      {
+        "id": "シビシラス",
+        "label": "シビシラス",
+        "pokemon": [
+          "シビシラス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 10.0
+      },
+      {
+        "id": "シビビール",
+        "label": "シビビール",
+        "pokemon": [
+          "シビビール"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 10.0
+      },
+      {
+        "id": "ジュペッタ",
+        "label": "ジュペッタ",
+        "pokemon": [
+          "ジュペッタ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 10.0
+      },
+      {
+        "id": "タマザラシ",
+        "label": "タマザラシ",
+        "pokemon": [
+          "タマザラシ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 10.0
+      },
+      {
+        "id": "チェリム",
+        "label": "チェリム",
+        "pokemon": [
+          "チェリム"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 10.0
+      },
+      {
+        "id": "トゲピー",
+        "label": "トゲピー",
+        "pokemon": [
+          "トゲピー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 10.0
+      },
+      {
+        "id": "ドレディア",
+        "label": "ドレディア",
+        "pokemon": [
+          "ドレディア"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 10.0
+      },
+      {
+        "id": "ノズパス",
+        "label": "ノズパス",
+        "pokemon": [
+          "ノズパス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 10.0
+      },
+      {
+        "id": "バクーダ",
+        "label": "バクーダ",
+        "pokemon": [
+          "バクーダ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 10.0
+      },
+      {
+        "id": "ヒラヒナ",
+        "label": "ヒラヒナ",
+        "pokemon": [
+          "ヒラヒナ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 10.0
+      },
+      {
+        "id": "ホーホー",
+        "label": "ホーホー",
+        "pokemon": [
+          "ホーホー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 10.0
+      },
+      {
+        "id": "ワタッコ",
+        "label": "ワタッコ",
+        "pokemon": [
+          "ワタッコ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 10.0
+      }
+    ],
+    "trivia": [
+      {
+        "id": "nagasaki-support-ampharos",
+        "type": "support_pokemon",
+        "text": "長崎県では、尻尾の光が遠くまで届くデンリュウがながさき未来応援ポケモンを務めています",
+        "source_type": "official",
+        "source_url": "https://local.pokemon.jp/municipality/nagasaki/",
+        "source_label": "ポケモンローカルActs",
+        "verified_at": "2026-06-13"
+      },
+      {
+        "id": "長崎県-デンリュウ-100",
+        "type": "pokemon_100",
+        "text": "県内10枚すべてにデンリュウが登場します",
+        "source_type": "dataset"
+      }
+    ]
   },
   {
-    "id": "miyazaki-exeggutor",
+    "prefecture": "熊本県",
+    "manhole_count": 0,
+    "municipality_count": 0,
+    "municipalities": [],
+    "municipality_distribution": [],
+    "pokemon_coverage": [],
+    "trivia": []
+  },
+  {
+    "prefecture": "大分県",
+    "manhole_count": 0,
+    "municipality_count": 0,
+    "municipalities": [],
+    "municipality_distribution": [],
+    "pokemon_coverage": [],
+    "trivia": []
+  },
+  {
     "prefecture": "宮崎県",
-    "pokemon": "ナッシー",
-    "count": 18,
-    "title": "宮崎県の応援ポケモンはナッシー",
-    "summary": "温暖な南国・宮崎の雰囲気にぴったりのナッシー。県木のフェニックス（ヤシ科）とも相性抜群で、南国感あふれる設置地点が多いです。",
-    "status": "ongoing",
-    "source_url": "https://local.pokemon.jp/",
-    "map_pref": "宮崎県",
-    "manhole_ids": [],
-    "links": []
+    "manhole_count": 26,
+    "municipality_count": 26,
+    "municipalities": [
+      "えびの",
+      "三股",
+      "串間",
+      "五ヶ瀬",
+      "国富",
+      "宮崎",
+      "小林",
+      "川南",
+      "延岡",
+      "新富",
+      "日之影",
+      "日南",
+      "日向",
+      "木城",
+      "椎葉",
+      "綾",
+      "美郷",
+      "西米良",
+      "西都",
+      "諸塚",
+      "都城",
+      "都農",
+      "門川",
+      "高千穂",
+      "高原",
+      "高鍋"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "えびの",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "三股",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "串間",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "五ヶ瀬",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "国富",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "宮崎",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "小林",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "川南",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "延岡",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "新富",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "日之影",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "日南",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "日向",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "木城",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "椎葉",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "綾",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "美郷",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "西米良",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "西都",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "諸塚",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "都城",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "都農",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "門川",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "高千穂",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "高原",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "高鍋",
+        "manhole_count": 1
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "ナッシー",
+        "label": "ナッシー",
+        "pokemon": [
+          "ナッシー"
+        ],
+        "cover_count": 18,
+        "coverage_percent": 69.2
+      },
+      {
+        "id": "アローラナッシー",
+        "label": "アローラナッシー",
+        "pokemon": [
+          "アローラナッシー"
+        ],
+        "cover_count": 9,
+        "coverage_percent": 34.6
+      },
+      {
+        "id": "アローラライチュウ",
+        "label": "アローラライチュウ",
+        "pokemon": [
+          "アローラライチュウ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.8
+      },
+      {
+        "id": "オドリドリ",
+        "label": "オドリドリ",
+        "pokemon": [
+          "オドリドリ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.8
+      },
+      {
+        "id": "ガラルポニータ",
+        "label": "ガラルポニータ",
+        "pokemon": [
+          "ガラルポニータ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.8
+      },
+      {
+        "id": "キマワリ",
+        "label": "キマワリ",
+        "pokemon": [
+          "キマワリ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.8
+      },
+      {
+        "id": "コロモリ",
+        "label": "コロモリ",
+        "pokemon": [
+          "コロモリ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.8
+      },
+      {
+        "id": "コータス",
+        "label": "コータス",
+        "pokemon": [
+          "コータス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.8
+      },
+      {
+        "id": "ゴクリン",
+        "label": "ゴクリン",
+        "pokemon": [
+          "ゴクリン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.8
+      },
+      {
+        "id": "ゴルーグ",
+        "label": "ゴルーグ",
+        "pokemon": [
+          "ゴルーグ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.8
+      },
+      {
+        "id": "シンボラー",
+        "label": "シンボラー",
+        "pokemon": [
+          "シンボラー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.8
+      },
+      {
+        "id": "タマタマ",
+        "label": "タマタマ",
+        "pokemon": [
+          "タマタマ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.8
+      },
+      {
+        "id": "ダイノーズ",
+        "label": "ダイノーズ",
+        "pokemon": [
+          "ダイノーズ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.8
+      },
+      {
+        "id": "ナマケロ",
+        "label": "ナマケロ",
+        "pokemon": [
+          "ナマケロ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.8
+      },
+      {
+        "id": "ヌマクロー",
+        "label": "ヌマクロー",
+        "pokemon": [
+          "ヌマクロー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.8
+      },
+      {
+        "id": "ブイゼル",
+        "label": "ブイゼル",
+        "pokemon": [
+          "ブイゼル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.8
+      },
+      {
+        "id": "ポワルン",
+        "label": "ポワルン",
+        "pokemon": [
+          "ポワルン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.8
+      },
+      {
+        "id": "マクノシタ",
+        "label": "マクノシタ",
+        "pokemon": [
+          "マクノシタ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.8
+      },
+      {
+        "id": "マケンカニ",
+        "label": "マケンカニ",
+        "pokemon": [
+          "マケンカニ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.8
+      },
+      {
+        "id": "ムチュール",
+        "label": "ムチュール",
+        "pokemon": [
+          "ムチュール"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.8
+      },
+      {
+        "id": "メタモン",
+        "label": "メタモン",
+        "pokemon": [
+          "メタモン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.8
+      },
+      {
+        "id": "メテノ",
+        "label": "メテノ",
+        "pokemon": [
+          "メテノ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.8
+      },
+      {
+        "id": "モクロー",
+        "label": "モクロー",
+        "pokemon": [
+          "モクロー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.8
+      },
+      {
+        "id": "レジアイス",
+        "label": "レジアイス",
+        "pokemon": [
+          "レジアイス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.8
+      },
+      {
+        "id": "レジギガス",
+        "label": "レジギガス",
+        "pokemon": [
+          "レジギガス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.8
+      },
+      {
+        "id": "レジスチル",
+        "label": "レジスチル",
+        "pokemon": [
+          "レジスチル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.8
+      },
+      {
+        "id": "レジロック",
+        "label": "レジロック",
+        "pokemon": [
+          "レジロック"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 3.8
+      },
+      {
+        "id": "exeggutor-family",
+        "label": "ナッシー系",
+        "pokemon": [
+          "ナッシー",
+          "アローラナッシー"
+        ],
+        "cover_count": 26,
+        "coverage_percent": 100.0
+      }
+    ],
+    "trivia": [
+      {
+        "id": "miyazaki-support-exeggutor",
+        "type": "support_pokemon",
+        "text": "南国のイメージに合うナッシーとアローラナッシーが、宮崎だいすきポケモンとして活動しています",
+        "source_type": "official",
+        "source_url": "https://local.pokemon.jp/municipality/miyazaki/",
+        "source_label": "ポケモンローカルActs",
+        "verified_at": "2026-06-13"
+      },
+      {
+        "id": "宮崎県-exeggutor-family-100",
+        "type": "pokemon_group_100",
+        "text": "県内26枚すべてにナッシー系が登場します",
+        "source_type": "dataset"
+      }
+    ]
   },
   {
-    "id": "okinawa-growlithe",
+    "prefecture": "鹿児島県",
+    "manhole_count": 9,
+    "municipality_count": 1,
+    "municipalities": [
+      "指宿"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "指宿",
+        "manhole_count": 9
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "イーブイ",
+        "label": "イーブイ",
+        "pokemon": [
+          "イーブイ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 11.1
+      },
+      {
+        "id": "エーフィ",
+        "label": "エーフィ",
+        "pokemon": [
+          "エーフィ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 11.1
+      },
+      {
+        "id": "グレイシア",
+        "label": "グレイシア",
+        "pokemon": [
+          "グレイシア"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 11.1
+      },
+      {
+        "id": "サンダース",
+        "label": "サンダース",
+        "pokemon": [
+          "サンダース"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 11.1
+      },
+      {
+        "id": "シャワーズ",
+        "label": "シャワーズ",
+        "pokemon": [
+          "シャワーズ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 11.1
+      },
+      {
+        "id": "ニンフィア",
+        "label": "ニンフィア",
+        "pokemon": [
+          "ニンフィア"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 11.1
+      },
+      {
+        "id": "ブラッキー",
+        "label": "ブラッキー",
+        "pokemon": [
+          "ブラッキー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 11.1
+      },
+      {
+        "id": "ブースター",
+        "label": "ブースター",
+        "pokemon": [
+          "ブースター"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 11.1
+      },
+      {
+        "id": "リーフィア",
+        "label": "リーフィア",
+        "pokemon": [
+          "リーフィア"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 11.1
+      }
+    ],
+    "trivia": [
+      {
+        "id": "kagoshima-ibusuki-eevee",
+        "type": "wordplay",
+        "text": "「イーブイすき」と「いぶすき」の語呂合わせをきっかけに、指宿へイーブイのポケふたが設置されました",
+        "source_type": "official",
+        "source_url": "https://www.city.ibusuki.lg.jp/main/info/page014900.html",
+        "source_label": "指宿市",
+        "verified_at": "2026-06-13"
+      },
+      {
+        "id": "鹿児島県-single-municipality",
+        "type": "single_municipality",
+        "text": "県内9枚のポケふたはすべて指宿にあります",
+        "source_type": "dataset"
+      }
+    ]
+  },
+  {
     "prefecture": "沖縄県",
-    "pokemon": "ガーディ",
-    "count": 5,
-    "title": "沖縄県の応援ポケモンはガーディ",
-    "summary": "沖縄の守り神・シーサーを思わせるガーディ。魔除けの獅子犬と炎のポケモンのイメージが重なり、県内各地に設置されています。",
-    "status": "ongoing",
-    "source_url": "https://local.pokemon.jp/",
-    "map_pref": "沖縄県",
-    "manhole_ids": [],
-    "links": []
+    "manhole_count": 17,
+    "municipality_count": 16,
+    "municipalities": [
+      "うるま",
+      "久米島",
+      "北谷",
+      "南城",
+      "名護",
+      "宜野湾",
+      "宮古島",
+      "座間味",
+      "本部",
+      "沖縄",
+      "浦添",
+      "渡嘉敷",
+      "石垣",
+      "糸満",
+      "豊見城",
+      "那覇"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "那覇",
+        "manhole_count": 2
+      },
+      {
+        "municipality": "うるま",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "久米島",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "北谷",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "南城",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "名護",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "宜野湾",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "宮古島",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "座間味",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "本部",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "沖縄",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "浦添",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "渡嘉敷",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "石垣",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "糸満",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "豊見城",
+        "manhole_count": 1
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "ガーディ",
+        "label": "ガーディ",
+        "pokemon": [
+          "ガーディ"
+        ],
+        "cover_count": 5,
+        "coverage_percent": 29.4
+      },
+      {
+        "id": "ウインディ",
+        "label": "ウインディ",
+        "pokemon": [
+          "ウインディ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "ウデッポウ",
+        "label": "ウデッポウ",
+        "pokemon": [
+          "ウデッポウ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "エモンガ",
+        "label": "エモンガ",
+        "pokemon": [
+          "エモンガ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "カイオーガ",
+        "label": "カイオーガ",
+        "pokemon": [
+          "カイオーガ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "カメール",
+        "label": "カメール",
+        "pokemon": [
+          "カメール"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "キバゴ",
+        "label": "キバゴ",
+        "pokemon": [
+          "キバゴ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "ケンタロス",
+        "label": "ケンタロス",
+        "pokemon": [
+          "ケンタロス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "サニーゴ",
+        "label": "サニーゴ",
+        "pokemon": [
+          "サニーゴ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "ザングース",
+        "label": "ザングース",
+        "pokemon": [
+          "ザングース"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "ジャラコ",
+        "label": "ジャラコ",
+        "pokemon": [
+          "ジャラコ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "スナバァ",
+        "label": "スナバァ",
+        "pokemon": [
+          "スナバァ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "ソルロック",
+        "label": "ソルロック",
+        "pokemon": [
+          "ソルロック"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "ツツケラ",
+        "label": "ツツケラ",
+        "pokemon": [
+          "ツツケラ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "テッポウオ",
+        "label": "テッポウオ",
+        "pokemon": [
+          "テッポウオ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "ハブネーク",
+        "label": "ハブネーク",
+        "pokemon": [
+          "ハブネーク"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "バチンキー",
+        "label": "バチンキー",
+        "pokemon": [
+          "バチンキー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "ホエルオー",
+        "label": "ホエルオー",
+        "pokemon": [
+          "ホエルオー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "ホエルコ",
+        "label": "ホエルコ",
+        "pokemon": [
+          "ホエルコ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "ポポッコ",
+        "label": "ポポッコ",
+        "pokemon": [
+          "ポポッコ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "マンタイン",
+        "label": "マンタイン",
+        "pokemon": [
+          "マンタイン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "ヤトウモリ",
+        "label": "ヤトウモリ",
+        "pokemon": [
+          "ヤトウモリ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "ラブカス",
+        "label": "ラブカス",
+        "pokemon": [
+          "ラブカス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "ラランテス",
+        "label": "ラランテス",
+        "pokemon": [
+          "ラランテス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      },
+      {
+        "id": "ルリリ",
+        "label": "ルリリ",
+        "pokemon": [
+          "ルリリ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 5.9
+      }
+    ],
+    "trivia": [
+      {
+        "id": "okinawa-support-growlithe",
+        "type": "support_pokemon",
+        "text": "沖縄県では、シーサーを思わせるガーディが沖縄応援ポケモンとして活動しています",
+        "source_type": "official",
+        "source_url": "https://local.pokemon.jp/municipality/okinawa/",
+        "source_label": "ポケモンローカルActs",
+        "verified_at": "2026-06-13"
+      },
+      {
+        "id": "沖縄県-top-pokemon",
+        "type": "top_pokemon",
+        "text": "最も多く登場するのはガーディで、5枚に描かれています",
+        "source_type": "dataset"
+      }
+    ]
   }
 ]
