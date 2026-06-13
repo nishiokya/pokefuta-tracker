@@ -309,7 +309,7 @@
     integrity="sha384-pmjIAcz2bAn0xukfxADbZIb3t8oRT9Sv0rvO+BR5Csr6Dhqq+nZs59P0pPKQJkEV" crossorigin="" />
   <link rel="stylesheet" href="%%BASE_PATH%%assets/theme.css" />
   <link rel="stylesheet" href="%%BASE_PATH%%assets/map.css" />
-  <link rel="stylesheet" href="%%BASE_PATH%%assets/pokefuta-map.css?v=20260613-popup-actions-grid" />
+  <link rel="stylesheet" href="%%BASE_PATH%%assets/pokefuta-map.css?v=20260613-discovery-hub" />
   <link rel="icon" href="%%BASE_PATH%%assets/pokefuta-marker.svg" type="image/svg+xml" />
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-K18NR4GZG2"></script>
@@ -362,9 +362,38 @@
   <main class="map-stage" aria-label="%%MAP_ARIA%%">
     <div id="map"></div>
     <section class="map-hero-card" aria-labelledby="hero-title">
-      <h1 id="hero-title">%%HERO_TITLE%%</h1>
-      <p>%%HERO_SUBTITLE%%</p>
-      <a href="/pokemon/" class="hero-pokemon-link" onclick="if(window.trackEvent){window.trackEvent('click_pokemon_lp_hero',{event_category:'navigation',event_label:'hero_card'})}">好きなポケモンのポケふたを探す →</a>
+      <div id="hero-fallback" class="hero-fallback">
+        <h1 id="hero-title">%%HERO_TITLE%%</h1>
+        <p>%%HERO_SUBTITLE%%</p>
+        <a href="/pokemon/" class="hero-pokemon-link" onclick="if(window.trackEvent){window.trackEvent('click_pokemon_lp_hero',{event_category:'navigation',event_label:'hero_card'})}">好きなポケモンのポケふたを探す →</a>
+      </div>
+      <div id="hero-discovery" class="hero-discovery" hidden>
+        <p class="hero-discovery-heading"></p>
+        <a class="hero-feature" href="">
+          <span class="hero-feature-media">
+            <img src="" alt="" decoding="async">
+          </span>
+          <span class="hero-feature-copy">
+            <span class="hero-feature-eyebrow"></span>
+            <strong class="hero-feature-title"></strong>
+            <span class="hero-feature-place"></span>
+            <span class="hero-feature-reason"></span>
+            <span class="hero-feature-cta"></span>
+          </span>
+        </a>
+        <div class="hero-discovery-links" aria-label="今日の発見">
+          <a class="hero-discovery-link" href="" data-position="secondary_1">
+            <span class="hero-discovery-link-label"></span>
+            <strong></strong>
+            <span class="hero-discovery-link-place"></span>
+          </a>
+          <a class="hero-discovery-link" href="" data-position="secondary_2">
+            <span class="hero-discovery-link-label"></span>
+            <strong></strong>
+            <span class="hero-discovery-link-place"></span>
+          </a>
+        </div>
+      </div>
       <a id="i18n-notice" href="" hidden
          style="display:block; margin-top:8px; padding-top:8px; border-top:1px solid rgba(110,80,44,.12); font-size:0.78rem; font-weight:700; color:#4a7c59; text-decoration:none;"
       ></a>
@@ -586,6 +615,7 @@
     var showTagDirectory = false;
     const TAG_DIRECTORY_MIN_COUNT = 5;  // この件数未満のタグはチップに表示しない
     const TAG_PRIORITY = ['roadside', 'world_heritage', 'remote_island', 'seaside', 'tourism', 'station_front', 'food', 'museum', 'history', 'rail_access_good'];
+    const FEATURED_TAGS = ['roadside', 'remote_island', 'station_front', 'world_heritage', 'seaside'];
 
     const TAG_META = {
       seaside:          { emoji: '🌊', label: '海沿い' },
@@ -671,10 +701,37 @@
       SECONDARY_TAG_KEYS.map(k => [k, TAG_META[k]?.label]).filter(([,v]) => v)
     ));
 
-    // UI labels: sourced from build-time injected window.I18N.UI
-    const UI_TEXT = window.I18N.UI;
+    // ==== 単一言語 (日本語) 用 UI ラベル定数 ====
+    const UI_TEXT = {
+      recentLabel: '🆕 直近1ヶ月',
+      prefectureFilter: '都道府県で絞り込み',
+      allPrefectures: 'すべての都道府県',
+      prefectureCount: '都道府県別ポケふた数',
+      searchPrefecture: '都道府県を検索...',
+      codeHeader: 'コード',
+      prefectureHeader: '都道府県',
+      countHeader: 'ポケふた数',
+      siteHeader: 'サイト',
+      pokemonFilter: 'ポケモンで絞り込み',
+      searchPokemon: 'ポケモンを検索...',
+      showAll: '🔄 すべて表示',
+      totalCount: '総数:',
+      visibleCount: '表示:',
+      cityCount: '市町村:',
+      idLabel: 'ID:',
+      titleLabel: 'タイトル:',
+      prefectureLabel: '都道府県:',
+      pokemonLabel: 'ポケモン:',
+      cityLabel: '市町村:',
+      officialDetail: '📝 公式詳細',
+      officialDetailCta: '公式詳細を見る',
+      detailPageCta: '詳細ページを見る',
+      prefectureSite: 'サイト'
+    };
+    const HERO_DISCOVERY_TEXT = window.I18N.heroDiscovery;
 
-    function updateUIText() { /* no-op */ }
+    // 初期テキストは既に HTML に記述しているため updateUIText は不要
+    function updateUIText() { /* no-op (多言語削除) */ }
 
     // Validate prefecture site URL (whitelist check)
     function validatePrefectureSiteUrl(rawUrl) {
@@ -730,7 +787,8 @@
       if (!rawDate) return '';
       const date = new Date(rawDate);
       if (Number.isNaN(date.getTime())) return '';
-      return new Intl.DateTimeFormat(window.I18N.intlLocale, {
+      return new Intl.DateTimeFormat(window.I18N?.lang || 'ja-JP', {
+        timeZone: 'Asia/Tokyo',
         year: 'numeric',
         month: 'long',
         day: 'numeric'
@@ -745,6 +803,222 @@
     function getPhotoTakenDate(id) {
       const meta = getLatestPhotoMeta(id);
       return formatPhotoDate(meta?.shot_at || meta?.created_at);
+    }
+
+    const HERO_TRAVEL_THEME_KEYS = ['remote_island', 'roadside', 'station_front', 'world_heritage'];
+    const HERO_RARE_THEME_KEYS = ['unique_pokemon', 'north_end', 'south_end', 'east_end', 'west_end', 'lone'];
+
+    function getJapanDateKey(date = new Date()) {
+      return new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'Asia/Tokyo',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      }).format(date);
+    }
+
+    function stableHash(value) {
+      let hash = 2166136261;
+      for (let index = 0; index < value.length; index += 1) {
+        hash ^= value.charCodeAt(index);
+        hash = Math.imul(hash, 16777619);
+      }
+      return hash >>> 0;
+    }
+
+    function getDailyRotationIndex(dateKey, itemCount, offset = 0) {
+      const dayNumber = Math.floor(Date.parse(`${dateKey}T00:00:00Z`) / 86400000);
+      return (dayNumber + offset) % itemCount;
+    }
+
+    function hasHeroTitle(manhole, key) {
+      if (key === 'lone') {
+        return (manhole.titles || []).some(title => title.key === 'lone' || title.key === 'lone_100');
+      }
+      return (manhole.titles || []).some(title => title.key === key);
+    }
+
+    function getHeroPokemonDisplayName(nameJa) {
+      const names = getPokemonMetadata(nameJa)?.names;
+      const lang = window.I18N?.lang || 'ja';
+      return {
+        en: names?.en,
+        ko: names?.ko,
+        'zh-TW': names?.['zh-Hant'],
+        'zh-CN': names?.['zh-Hans']
+      }[lang] || nameJa;
+    }
+
+    function getHeroPokemonText(manhole) {
+      const pokemons = Array.isArray(manhole.pokemons)
+        ? manhole.pokemons.filter(name => name && !name.includes('ローカルActs')).slice(0, 2)
+        : [];
+      return pokemons.length
+        ? pokemons.map(getHeroPokemonDisplayName).join(window.I18N?.pokemonJoiner || '・')
+        : (manhole.title || window.I18N?.manholeTitle || 'ポケふた');
+    }
+
+    function getHeroThemeCandidates(themeKey) {
+      return allData
+        .filter(manhole => getLatestPhotoMeta(manhole.id) && hasHeroTitle(manhole, themeKey))
+        .sort((a, b) => String(a.id).localeCompare(String(b.id), 'en', { numeric: true }));
+    }
+
+    function getSummaryHubUrl(anchor) {
+      const lang = window.I18N?.lang || 'ja';
+      const prefix = lang === 'ja' ? '/' : `/${lang}/`;
+      return `${prefix}summary/#${anchor}`;
+    }
+
+    function buildFreshHeroRecommendation() {
+      const manhole = allData
+        .filter(item => getLatestPhotoMeta(item.id))
+        .sort((a, b) => {
+          const aPhoto = getLatestPhotoMeta(a.id);
+          const bPhoto = getLatestPhotoMeta(b.id);
+          return (Date.parse(bPhoto?.created_at || bPhoto?.shot_at || '') || 0)
+            - (Date.parse(aPhoto?.created_at || aPhoto?.shot_at || '') || 0);
+        })[0];
+      if (!manhole) return null;
+      const strings = HERO_DISCOVERY_TEXT;
+      const photo = getLatestPhotoMeta(manhole.id);
+      const photoDate = formatPhotoDate(photo?.created_at);
+      return {
+        manhole,
+        category: 'fresh',
+        categoryLabel: strings.categories.fresh.label,
+        pokemon: getHeroPokemonText(manhole),
+        place: [manhole.prefecture, manhole.city].filter(Boolean).join(' ') || window.I18N?.unknownPref || '不明',
+        reason: photoDate ? strings.freshDate.replace('{date}', photoDate) : strings.categories.fresh.label,
+        imageUrl: getLocalManholeImageUrl(manhole.id),
+        destinationUrl: getManholePageUrl(manhole.id),
+        destinationHub: 'map_popup',
+        contentType: 'latest_photo',
+        contentId: photo?.photo_id || String(manhole.id),
+        photo
+      };
+    }
+
+    function buildThemeHeroRecommendation(category, themeKey, dateKey) {
+      const candidates = getHeroThemeCandidates(themeKey);
+      if (!candidates.length) return null;
+      const manhole = candidates[stableHash(`${dateKey}:${category}:${themeKey}:representative`) % candidates.length];
+      const strings = HERO_DISCOVERY_TEXT;
+      let reason = '';
+      if (category === 'travel') {
+        reason = `${strings.travelThemes[themeKey]} ${strings.countTemplate.replace('{count}', candidates.length)}`;
+      } else if (themeKey === 'unique_pokemon') {
+        reason = strings.uniqueTemplate.replace('{pokemon}', getHeroPokemonText(manhole));
+      } else {
+        reason = strings.rareThemes[themeKey];
+      }
+      return {
+        manhole,
+        category,
+        categoryLabel: strings.categories[category].label,
+        pokemon: reason,
+        place: [manhole.prefecture, manhole.city].filter(Boolean).join(' ') || window.I18N?.unknownPref || '不明',
+        reason,
+        imageUrl: getLocalManholeImageUrl(manhole.id),
+        destinationUrl: getSummaryHubUrl(category === 'travel' ? 'travel-discovery' : 'rare-discovery'),
+        destinationHub: category === 'travel' ? 'summary_travel' : 'summary_rare',
+        contentType: category === 'travel' ? 'travel_theme' : 'rare_fact',
+        contentId: themeKey
+      };
+    }
+
+    function trackHeroRecommendation(action, recommendation, position) {
+      if (!window.trackEvent || !recommendation) return;
+      window.trackEvent(action, {
+        event_category: 'hero_discovery',
+        event_label: recommendation.category,
+        recommendation_type: recommendation.category,
+        manhole_id: recommendation.manhole.id,
+        content_type: recommendation.contentType,
+        content_id: recommendation.contentId,
+        destination_hub: recommendation.destinationHub,
+        position,
+        site_type: 'map',
+        page_type: window.currentGA4PageType || 'map_top'
+      });
+    }
+
+    function configureHeroLink(link, recommendation, position, featured = false) {
+      link.href = recommendation.destinationUrl;
+      if (featured) {
+        const image = link.querySelector('.hero-feature-media img');
+        image.src = recommendation.imageUrl;
+        image.alt = `${recommendation.place} ${recommendation.pokemon}${window.I18N?.photoAltSuffix || 'の写真'}`;
+        image.addEventListener('error', () => {
+          link.classList.add('is-image-missing');
+          image.remove();
+        }, { once: true });
+        link.querySelector('.hero-feature-eyebrow').textContent = recommendation.categoryLabel;
+        link.querySelector('.hero-feature-title').textContent = recommendation.pokemon;
+        link.querySelector('.hero-feature-place').textContent = recommendation.place;
+        link.querySelector('.hero-feature-reason').textContent = recommendation.reason;
+        link.querySelector('.hero-feature-cta').textContent = HERO_DISCOVERY_TEXT.ctas[recommendation.category];
+      } else {
+        link.querySelector('.hero-discovery-link-label').textContent = recommendation.categoryLabel;
+        link.querySelector('strong').textContent = recommendation.pokemon;
+        link.querySelector('.hero-discovery-link-place').textContent =
+          `${recommendation.place} · ${HERO_DISCOVERY_TEXT.ctas[recommendation.category]}`;
+      }
+      link.addEventListener('click', event => {
+        if (recommendation.category === 'fresh') {
+          event.preventDefault();
+          trackHeroRecommendation('click_hero_new_photo', recommendation, position);
+          collapseBottomSheet();
+          openManholePopup(recommendation.manhole.id);
+          return;
+        }
+        trackHeroRecommendation('click_hero_discovery', recommendation, position);
+      });
+    }
+
+    function renderHeroDiscovery() {
+      const discovery = document.getElementById('hero-discovery');
+      const fallback = document.getElementById('hero-fallback');
+      if (!discovery || !fallback) return;
+
+      const dateKey = getJapanDateKey();
+      const availableTravelKeys = HERO_TRAVEL_THEME_KEYS.filter(key => getHeroThemeCandidates(key).length);
+      const availableRareKeys = HERO_RARE_THEME_KEYS.filter(key => getHeroThemeCandidates(key).length);
+      if (!availableTravelKeys.length || !availableRareKeys.length) return;
+      const travelKey = availableTravelKeys[getDailyRotationIndex(dateKey, availableTravelKeys.length)];
+      const rareKey = availableRareKeys[getDailyRotationIndex(dateKey, availableRareKeys.length, 2)];
+      const byCategory = {
+        fresh: buildFreshHeroRecommendation(),
+        travel: buildThemeHeroRecommendation('travel', travelKey, dateKey),
+        rare: buildThemeHeroRecommendation('rare', rareKey, dateKey)
+      };
+      const categories = ['travel', 'rare', 'fresh'];
+      const featuredIndex = getDailyRotationIndex(dateKey, categories.length, 1);
+      const orderedCategories = [
+        categories[featuredIndex],
+        categories[(featuredIndex + 1) % categories.length],
+        categories[(featuredIndex + 2) % categories.length]
+      ];
+      const recommendations = orderedCategories.map(category => byCategory[category]).filter(Boolean);
+      if (recommendations.length < 3) return;
+
+      const [featured, ...secondary] = recommendations;
+      const heroCard = discovery.closest('.map-hero-card');
+      const featureLink = discovery.querySelector('.hero-feature');
+      heroCard?.removeAttribute('aria-labelledby');
+      heroCard?.setAttribute('aria-label', HERO_DISCOVERY_TEXT.heading);
+      discovery.querySelector('.hero-discovery-heading').textContent = HERO_DISCOVERY_TEXT.heading;
+      discovery.querySelector('.hero-discovery-links').setAttribute('aria-label', HERO_DISCOVERY_TEXT.heading);
+      configureHeroLink(featureLink, featured, 'featured', true);
+
+      discovery.querySelectorAll('.hero-discovery-link').forEach((link, index) => {
+        const recommendation = secondary[index];
+        configureHeroLink(link, recommendation, link.dataset.position);
+      });
+
+      fallback.hidden = true;
+      discovery.hidden = false;
+      trackHeroRecommendation('view_hero_recommendation', featured, 'featured');
     }
 
     function handlePopupImageError(img) {
@@ -800,15 +1074,15 @@
           </a>
           ${photoMetaItems ? `<div class="travel-popup-photo-meta">${photoMetaItems}</div>` : ''}
           <div class="popup-photo__missing">
-            <b>${I.photoWanted}</b>
-            <span>${I.photoMissing}</span>
+            <b>写真募集中</b>
+            <span>全国でまだ写真0枚</span>
           </div>
         </div>
       ` : `
-        <div class="popup-photo travel-popup-photo popup-photo--missing" aria-label="${I.photoWanted}">
+        <div class="popup-photo travel-popup-photo popup-photo--missing" aria-label="写真募集中">
           <div class="popup-photo__missing">
-            <b>${I.photoWanted}</b>
-            <span>${I.photoMissing}</span>
+            <b>写真募集中</b>
+            <span>全国でまだ写真0枚</span>
           </div>
         </div>
       `;
@@ -817,21 +1091,21 @@
         const anchor = document.createElement('a');
         anchor.href = manholeDetailUrl;
         anchor.className = 'travel-popup-action travel-popup-action--detail';
-        anchor.textContent = UI_TEXT.detailPageCta;
+        anchor.textContent = '詳細を見る';
         anchor.setAttribute('onclick', `if(window.trackEvent){window.trackEvent('popup_click_detail',{${eventParams}});}`);
         return anchor.outerHTML;
       })() : '';
       const primaryAction = hasPhoto
         ? `<a href="${photoPageUrl}" target="_blank" rel="noopener noreferrer" class="travel-popup-action travel-popup-action--primary"
-              onclick="if(window.trackEvent){window.trackEvent('popup_click_photo',{${eventParams}});}">${I.photoViewCta}</a>`
+              onclick="if(window.trackEvent){window.trackEvent('popup_click_photo',{${eventParams}});}">写真を見る</a>`
         : `<a href="${uploadUrl}" target="_blank" rel="noopener noreferrer" class="travel-popup-action travel-popup-action--primary travel-popup-action--upload"
-              onclick="if(window.trackEvent){window.trackEvent('popup_click_upload',{${eventParams}});}">${I.firstPhotoUploadCta}</a>`;
+              onclick="if(window.trackEvent){window.trackEvent('popup_click_upload',{${eventParams}});}">最初の写真を投稿</a>`;
       const mapsUrl = Number.isFinite(Number(d.lat)) && Number.isFinite(Number(d.lng))
         ? `https://www.google.com/maps?q=${encodeURIComponent(`${d.lat},${d.lng}`)}`
         : '';
       const mapsAction = mapsUrl
         ? `<a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" class="travel-popup-action travel-popup-action--maps"
-              onclick="if(window.trackEvent){window.trackEvent('popup_click_google_maps',{${eventParams}});}">${I.googleMapsCta}</a>`
+              onclick="if(window.trackEvent){window.trackEvent('popup_click_google_maps',{${eventParams}});}">Google Mapsで行く</a>`
         : '';
 
       return `
@@ -890,18 +1164,6 @@
     function getPokemonMetadata(nameJa) {
       if (!pokemonMetadata || !nameJa) return null;
       return pokemonMetadata.get(nameJa) || null;
-    }
-
-    function getPokemonDisplayName(nameJa) {
-      const names = getPokemonMetadata(nameJa)?.names;
-      const lang = window.I18N?.lang || 'ja';
-      const localizedName = {
-        en: names?.en,
-        ko: names?.ko,
-        'zh-TW': names?.['zh-Hant'],
-        'zh-CN': names?.['zh-Hans']
-      }[lang];
-      return localizedName || nameJa;
     }
 
     window.getPokemonLpUrl = function(jaName) {
@@ -1092,8 +1354,8 @@
           d._addedDate = normalizeDateString(raw);
         });
         await loadLatestPhotoMeta();
-        // Load Pokemon metadata asynchronously (non-blocking)
-        loadPokemonMetadata().catch(err => console.warn('Pokemon metadata loading failed', err));
+        await loadPokemonMetadata();
+        renderHeroDiscovery();
         initMarkerLayer();
         // Build markers
         allMarkers = [];
@@ -1747,8 +2009,10 @@
           if (priB >= 0) return 1;
           return b - a;
         });
-      const primaryTags = sorted.filter(([tag]) => TAG_PRIORITY.includes(tag));
-      const secondaryTags = sorted.filter(([tag]) => !TAG_PRIORITY.includes(tag));
+      const primaryTags = FEATURED_TAGS
+        .filter(tag => tagCounts[tag] >= TAG_DIRECTORY_MIN_COUNT && TAG_META[tag])
+        .map(tag => [tag, tagCounts[tag]]);
+      const secondaryTags = sorted.filter(([tag]) => !FEATURED_TAGS.includes(tag));
       function makeChip(tag, count) {
         const meta = TAG_META[tag];
         return `<button class="tag-chip" data-tag="${tag}" data-count="${count}" aria-pressed="false">${meta.emoji} ${meta.label} <span class="tag-count">${count}枚</span></button>`;

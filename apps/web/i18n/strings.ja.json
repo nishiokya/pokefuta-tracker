@@ -94,6 +94,18 @@
     "recentDisabledTitle": "データに日付フィールド (added_at / first_seen / last_seen / source_last_checked / last_updated / date) が無いため利用できません",
     "panelOpenLabel": "全体パネルを開く",
     "panelCloseLabel": "全体パネルを閉じる",
+    "heroDiscovery": {
+      "heading": "今日、どのポケふたに会いに行く？",
+      "freshDate": "{date}に届いた一枚",
+      "countTemplate": "全国{count}枚",
+      "uniqueTemplate": "{pokemon}のポケふたは全国1枚",
+      "ctas": {"fresh": "地図で写真を見る →", "travel": "特集を見る →", "rare": "ランキングを見る →"},
+      "categories": {
+        "travel": {"label": "旅に出る"}, "rare": {"label": "レアを探す"}, "fresh": {"label": "新しい一枚"}
+      },
+      "travelThemes": {"remote_island": "離島にあるポケふた", "roadside": "道の駅にあるポケふた", "station_front": "駅前にあるポケふた", "world_heritage": "世界遺産の近くにあるポケふた"},
+      "rareThemes": {"unique_pokemon": "全国でここだけ", "north_end": "日本最北端のポケふた", "south_end": "日本最南端のポケふた", "east_end": "日本最東端のポケふた", "west_end": "日本最西端のポケふた", "lone": "ぽつんと離れた秘境のポケふた"}
+    },
     "UI": {
       "recentLabel": "🆕 直近1ヶ月",
       "prefectureFilter": "都道府県で絞り込み",

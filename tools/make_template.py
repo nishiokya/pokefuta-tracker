@@ -245,9 +245,11 @@ t = t.replace(
     '  <link rel="stylesheet" href="./assets/map.css" />',
     '  <link rel="stylesheet" href="%%BASE_PATH%%assets/map.css" />', 1
 )
-t = t.replace(
-    '  <link rel="stylesheet" href="./assets/pokefuta-map.css" />',
-    '  <link rel="stylesheet" href="%%BASE_PATH%%assets/pokefuta-map.css" />', 1
+t = re.sub(
+    r'  <link rel="stylesheet" href="\./assets/pokefuta-map\.css([^"]*)" />',
+    r'  <link rel="stylesheet" href="%%BASE_PATH%%assets/pokefuta-map.css\1" />',
+    t,
+    count=1
 )
 t = t.replace(
     '  <link rel="icon" href="./assets/pokefuta-marker.svg" type="image/svg+xml" />',
@@ -567,6 +569,41 @@ t = t.replace(
     "      heading.textContent = window.I18N.prefSpotsHeadingFormat.replace('{pref}', prefecture);", 1
 )
 
+t = t.replace(
+    """    const HERO_DISCOVERY_TEXT = {
+      heading: '今日、どのポケふたに会いに行く？',
+      freshDate: '{date}に届いた一枚',
+      countTemplate: '全国{count}枚',
+      uniqueTemplate: '{pokemon}のポケふたは全国1枚',
+      ctas: {
+        fresh: '地図で写真を見る →',
+        travel: '特集を見る →',
+        rare: 'ランキングを見る →'
+      },
+      categories: {
+        travel: { label: '旅に出る' },
+        rare: { label: 'レアを探す' },
+        fresh: { label: '新しい一枚' }
+      },
+      travelThemes: {
+        remote_island: '離島にあるポケふた',
+        roadside: '道の駅にあるポケふた',
+        station_front: '駅前にあるポケふた',
+        world_heritage: '世界遺産の近くにあるポケふた'
+      },
+      rareThemes: {
+        unique_pokemon: '全国でここだけ',
+        north_end: '日本最北端のポケふた',
+        south_end: '日本最南端のポケふた',
+        east_end: '日本最東端のポケふた',
+        west_end: '日本最西端のポケふた',
+        lone: 'ぽつんと離れた秘境のポケふた'
+      }
+    };""",
+    "    const HERO_DISCOVERY_TEXT = window.I18N.heroDiscovery;",
+    1
+)
+
 # ──────────────────────────────────────────
 # Q. initLocationSearch — use window.I18N
 # ──────────────────────────────────────────
@@ -606,12 +643,12 @@ t = t.replace(
     '  <main class="map-stage" aria-label="%%MAP_ARIA%%">', 1
 )
 t = t.replace(
-    '      <h1 id="hero-title">全国のポケふた・ポケモンマンホールマップ</h1>',
-    '      <h1 id="hero-title">%%HERO_TITLE%%</h1>', 1
+    '        <h1 id="hero-title">全国のポケふた・ポケモンマンホールマップ</h1>',
+    '        <h1 id="hero-title">%%HERO_TITLE%%</h1>', 1
 )
 t = t.replace(
-    '      <p>旅行やお出かけのついでに、ご当地マンホール「ポケふた」を見つけよう</p>',
-    '      <p>%%HERO_SUBTITLE%%</p>', 1
+    '        <p>旅行やお出かけのついでに、ご当地マンホール「ポケふた」を見つけよう</p>',
+    '        <p>%%HERO_SUBTITLE%%</p>', 1
 )
 t = t.replace(
     '      <p class="map-hero-meta">📍 全国<span id="hero-city-count">0</span>の自治体に設置</p>',
