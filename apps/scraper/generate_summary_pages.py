@@ -108,8 +108,10 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "th_count": "ポケふた数",
         "th_map": "地図",
         "map_link_text": "地図で見る",
-        "table_no_map": "-",
+        "table_no_map": "—",
         "count_unit": "枚",
+        "no_pokemon_label": "未設置",
+        "empty_pref_fact": "今後の設置を待つエリアです。",
         "h2_ranking": "ポケふたの多い都道府県ランキング",
         "ranking_note": '各都道府県の地図は、<a class="summary-link" href="/">全国マップ</a>から地域を選んで確認できます。',
         "h2_regional": "地域の分布傾向",
@@ -199,6 +201,8 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "map_link_text": "View map",
         "table_no_map": "—",
         "count_unit": "",
+        "no_pokemon_label": "Not installed",
+        "empty_pref_fact": "This prefecture is still waiting for its first Pokéfuta.",
         "h2_ranking": "Top Prefectures by Pokéfuta Count",
         "ranking_note": 'Browse each prefecture\'s Pokéfuta on the <a class="summary-link" href="/en/">Japan Map</a>.',
         "h2_regional": "Regional Distribution",
@@ -275,6 +279,8 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "map_link_text": "查看地图",
         "table_no_map": "—",
         "count_unit": "个",
+        "no_pokemon_label": "尚未设置",
+        "empty_pref_fact": "该地区仍在等待首个宝可梦井盖。",
         "h2_ranking": "宝可梦井盖最多的县排名",
         "ranking_note": '各都道府县的地图可通过<a class="summary-link" href="/zh-CN/">全国地图</a>选择地区查看。',
         "h2_regional": "地区分布情况",
@@ -351,6 +357,8 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "map_link_text": "查看地圖",
         "table_no_map": "—",
         "count_unit": "個",
+        "no_pokemon_label": "尚未設置",
+        "empty_pref_fact": "此地區仍在等待第一個寶可夢人孔蓋。",
         "h2_ranking": "寶可夢人孔蓋最多的縣排行",
         "ranking_note": '各都道府縣的地圖可透過<a class="summary-link" href="/zh-TW/">全國地圖</a>選擇地區查看。',
         "h2_regional": "地區分布情況",
@@ -427,6 +435,8 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "map_link_text": "지도에서 보기",
         "table_no_map": "—",
         "count_unit": "개",
+        "no_pokemon_label": "미설치",
+        "empty_pref_fact": "아직 첫 포케후타 설치를 기다리고 있는 지역입니다.",
         "h2_ranking": "포케후타가 많은 현 랭킹",
         "ranking_note": '각 도도부현의 지도는 <a class="summary-link" href="/ko/">전국 지도</a>에서 지역을 선택하여 확인할 수 있습니다.',
         "h2_regional": "지역별 분포 현황",
@@ -2859,7 +2869,7 @@ def _build_prefecture_info_section(
             for pokemon in record.get("pokemons", [])
         )
         top_pokemon = pokemon_counts.most_common(1)
-        pokemon_label = top_pokemon[0][0] if top_pokemon else "未設置"
+        pokemon_label = top_pokemon[0][0] if top_pokemon else s["no_pokemon_label"]
         support = support_by_pref.get(pref)
         local_trivia = PREFECTURE_LOCAL_TRIVIA.get(pref) if is_ja else None
 
@@ -2873,7 +2883,7 @@ def _build_prefecture_info_section(
             fact = support["summary"]
         elif not pref_records:
             display_count = item["count"]
-            fact = "今後の設置を待つエリアです。" if is_ja else s["no_empty"]
+            fact = s["empty_pref_fact"]
         elif top_pokemon and top_pokemon[0][1] >= max(2, len(pref_records) // 2):
             display_count = item["count"]
             name, appearances = top_pokemon[0]

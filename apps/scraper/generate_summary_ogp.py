@@ -42,24 +42,32 @@ def find_font(paths: list[str]) -> Optional[Path]:
 
 
 def font(path: Optional[Path], size: int) -> ImageFont.ImageFont:
-    return ImageFont.truetype(str(path), size, index=0) if path else ImageFont.load_default()
+    if path:
+        try:
+            return ImageFont.truetype(str(path), size, index=0)
+        except (OSError, ValueError):
+            pass
+    return ImageFont.load_default()
 
 
 def load_stats() -> tuple[int, int]:
     by_id: dict[str, dict] = {}
-    with NDJSON.open(encoding="utf-8") as f:
-        for line in f:
-            line = line.strip()
-            if not line:
-                continue
-            try:
-                record = json.loads(line)
-            except json.JSONDecodeError:
-                continue
-            record_id = str(record.get("id", "")).strip()
-            if not record_id:
-                continue
-            by_id[record_id] = {**by_id.get(record_id, {}), **record}
+    try:
+        with NDJSON.open(encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    record = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+                record_id = str(record.get("id", "")).strip()
+                if not record_id:
+                    continue
+                by_id[record_id] = {**by_id.get(record_id, {}), **record}
+    except OSError as exc:
+        raise SystemExit(f"[generate_summary_ogp] Failed to read {NDJSON}: {exc}") from exc
     records = list(by_id.values())
     active = [record for record in records if record.get("status", "active") == "active"]
     prefectures = {record.get("prefecture") for record in active if record.get("prefecture")}
