@@ -283,6 +283,133 @@ LP_INDEX_STRINGS: dict[str, dict] = {
     },
 }
 
+INDEX_ENHANCEMENT_STRINGS: dict[str, dict] = {
+    "ja": {
+        "kicker": "ポケモンマンホール データガイド",
+        "hero_stat": "登場ポケモン",
+        "hero_stat_unit": "体",
+        "fact_heading": "ポケモン別に見るポケふた雑学",
+        "fact_rank_title": "いちばん多く登場するのは{name}",
+        "fact_rank_body": "{name}は全国{count}枚のポケふたに登場し、登場数ランキング1位です。",
+        "fact_first_title": "第1号は指宿市のイーブイ",
+        "fact_first_body": "最初のポケふたは2018年12月20日に鹿児島県指宿市へ設置されました。「いーぶいすき」と指宿の語呂合わせも見どころです。",
+        "fact_regional_title": "地域を応援するポケモンから探せる",
+        "fact_regional_body": "ラッキー、ラプラス、ロコンなど、地域と結びついたポケモンのポケふたをまとめて探せます。",
+        "fact_link": "詳しく見る",
+        "latest_heading": "最新のポケふた写真",
+        "latest_lead": "写真館に届いた最新の投稿です。写真をタップすると、設置場所や登場ポケモンを確認できます。",
+        "latest_cta": "写真付きのポケふたをもっと見る",
+        "photo_date": "{date}",
+        "faq_heading": "ポケモン別ポケふたのよくある質問",
+        "faq": [
+            (
+                "好きなポケモンのポケふたはどう探せますか？",
+                "このページの全ポケモン一覧、タイプ別、世代別から選べます。各ポケモンのページでは、設置されている都道府県と市区町村を確認できます。",
+            ),
+            (
+                "ポケふたに最も多く登場するポケモンは？",
+                "現在の掲載データでは{name}が{count}枚で最多です。設置情報の更新に合わせてランキングも自動更新されます。",
+            ),
+            (
+                "実際のポケふた写真は見られますか？",
+                "最新写真や各ポケモンのカードから、ユーザー投稿写真のあるポケふた詳細ページへ移動できます。",
+            ),
+        ],
+    },
+    "en": {
+        "kicker": "Pokémon Manhole Data Guide",
+        "hero_stat": "Featured Pokémon",
+        "hero_stat_unit": "",
+        "fact_heading": "Pokefuta facts by Pokémon",
+        "fact_rank_title": "{name} appears most often",
+        "fact_rank_body": "{name} appears on {count} Pokefuta, the highest total in the current dataset.",
+        "fact_first_title": "The first Pokefuta featured Eevee",
+        "fact_first_body": "Japan's first Pokefuta was installed in Ibusuki, Kagoshima on December 20, 2018.",
+        "fact_regional_title": "Find Pokémon connected to regions",
+        "fact_regional_body": "Browse Pokefuta featuring regional ambassadors such as Chansey, Lapras, and Vulpix.",
+        "fact_link": "Explore",
+        "latest_heading": "Latest Pokefuta photos",
+        "latest_lead": "Recent community photos. Open a photo to see its location and featured Pokémon.",
+        "latest_cta": "See more Pokefuta with photos",
+        "photo_date": "{date}",
+        "faq_heading": "Pokefuta by Pokémon FAQ",
+        "faq": [
+            ("How can I find Pokefuta for my favorite Pokémon?", "Use the full list, type groups, or generation groups on this page. Each Pokémon page lists its locations."),
+            ("Which Pokémon appears on the most Pokefuta?", "{name} currently leads with {count} appearances. The ranking updates with the dataset."),
+            ("Can I see real Pokefuta photos?", "Yes. Recent photos and Pokémon cards link to detail pages with community-submitted images when available."),
+        ],
+    },
+    "zh-CN": {
+        "kicker": "宝可梦井盖数据指南",
+        "hero_stat": "登场宝可梦",
+        "hero_stat_unit": "只",
+        "fact_heading": "按宝可梦了解井盖小知识",
+        "fact_rank_title": "登场最多的是{name}",
+        "fact_rank_body": "{name}在全国{count}个宝可梦井盖中登场，位居当前排行榜第一。",
+        "fact_first_title": "第一块是指宿市的伊布",
+        "fact_first_body": "日本第一块宝可梦井盖于2018年12月20日设置在鹿儿岛县指宿市。",
+        "fact_regional_title": "查找代表各地区的宝可梦",
+        "fact_regional_body": "可集中查找吉利蛋、拉普拉斯、六尾等与地区紧密相关的宝可梦井盖。",
+        "fact_link": "查看详情",
+        "latest_heading": "最新宝可梦井盖照片",
+        "latest_lead": "来自照片馆的最新投稿。点击照片可查看设置地点和登场宝可梦。",
+        "latest_cta": "查看更多带照片的宝可梦井盖",
+        "photo_date": "{date}",
+        "faq_heading": "按宝可梦查找井盖的常见问题",
+        "faq": [
+            ("如何查找喜欢的宝可梦井盖？", "可从本页的全部宝可梦、属性或世代分类中选择。各宝可梦页面会列出设置地点。"),
+            ("哪只宝可梦登场次数最多？", "当前数据中{name}以{count}次位居第一，排行榜会随数据更新。"),
+            ("可以查看真实的宝可梦井盖照片吗？", "可以。最新照片和宝可梦卡片会链接到含有用户投稿照片的详情页。"),
+        ],
+    },
+    "zh-TW": {
+        "kicker": "寶可夢人孔蓋資料指南",
+        "hero_stat": "登場寶可夢",
+        "hero_stat_unit": "隻",
+        "fact_heading": "按寶可夢了解人孔蓋小知識",
+        "fact_rank_title": "登場最多的是{name}",
+        "fact_rank_body": "{name}在全國{count}個寶可夢人孔蓋中登場，位居目前排行榜第一。",
+        "fact_first_title": "第一個是指宿市的伊布",
+        "fact_first_body": "日本第一個寶可夢人孔蓋於2018年12月20日設置在鹿兒島縣指宿市。",
+        "fact_regional_title": "查找代表各地區的寶可夢",
+        "fact_regional_body": "可集中查找吉利蛋、拉普拉斯、六尾等與地區緊密相關的寶可夢人孔蓋。",
+        "fact_link": "查看詳情",
+        "latest_heading": "最新寶可夢人孔蓋照片",
+        "latest_lead": "來自照片館的最新投稿。點擊照片可查看設置地點和登場寶可夢。",
+        "latest_cta": "查看更多附照片的寶可夢人孔蓋",
+        "photo_date": "{date}",
+        "faq_heading": "按寶可夢查找人孔蓋的常見問題",
+        "faq": [
+            ("如何查找喜歡的寶可夢人孔蓋？", "可從本頁的全部寶可夢、屬性或世代分類中選擇。各寶可夢頁面會列出設置地點。"),
+            ("哪隻寶可夢登場次數最多？", "目前資料中{name}以{count}次位居第一，排行榜會隨資料更新。"),
+            ("可以查看真實的寶可夢人孔蓋照片嗎？", "可以。最新照片和寶可夢卡片會連結到含有使用者投稿照片的詳細頁面。"),
+        ],
+    },
+    "ko": {
+        "kicker": "포켓몬 맨홀 데이터 가이드",
+        "hero_stat": "등장 포켓몬",
+        "hero_stat_unit": "마리",
+        "fact_heading": "포켓몬별 포케후타 상식",
+        "fact_rank_title": "가장 많이 등장하는 포켓몬은 {name}",
+        "fact_rank_body": "{name}은 전국 {count}개의 포케후타에 등장해 현재 순위 1위입니다.",
+        "fact_first_title": "첫 포케후타는 이부스키의 이브이",
+        "fact_first_body": "일본 최초의 포케후타는 2018년 12월 20일 가고시마현 이부스키시에 설치되었습니다.",
+        "fact_regional_title": "지역을 대표하는 포켓몬 찾기",
+        "fact_regional_body": "럭키, 라프라스, 식스테일처럼 지역과 연결된 포켓몬의 포케후타를 모아 볼 수 있습니다.",
+        "fact_link": "자세히 보기",
+        "latest_heading": "최신 포케후타 사진",
+        "latest_lead": "사진관에 올라온 최신 게시물입니다. 사진을 누르면 설치 장소와 등장 포켓몬을 확인할 수 있습니다.",
+        "latest_cta": "사진이 있는 포케후타 더 보기",
+        "photo_date": "{date}",
+        "faq_heading": "포켓몬별 포케후타 자주 묻는 질문",
+        "faq": [
+            ("좋아하는 포켓몬의 포케후타는 어떻게 찾나요?", "전체 목록, 타입별, 세대별 분류에서 선택할 수 있습니다. 각 포켓몬 페이지에서 설치 장소를 확인할 수 있습니다."),
+            ("포케후타에 가장 많이 등장하는 포켓몬은?", "현재 데이터에서는 {name}이 {count}회로 가장 많으며, 순위는 데이터와 함께 갱신됩니다."),
+            ("실제 포케후타 사진을 볼 수 있나요?", "네. 최신 사진과 포켓몬 카드에서 사용자 사진이 있는 상세 페이지로 이동할 수 있습니다."),
+        ],
+    },
+}
+
 # Regional Pokémon taglines per language: slug → {lang: tagline}
 REGIONAL_TAGLINES: dict[str, dict[str, str]] = {
     "vulpix": {
@@ -525,6 +652,64 @@ def _build_pokemon_cards(
     return sorted(cards, key=lambda c: (-c["count"], c["name"]))
 
 
+def _build_latest_photo_cards(
+    pokemon_index: dict[str, tuple[dict, list[dict]]],
+    photos_data: dict,
+    image_dir: Path,
+    lang_config: dict,
+    translate_pref: Callable[[str], str],
+    lang: str,
+    limit: int = 6,
+) -> list[dict]:
+    records_by_id: dict[str, dict] = {}
+    pokemon_names_by_id: dict[str, list[str]] = defaultdict(list)
+    for meta, manholes in pokemon_index.values():
+        display_name = _get_display_name(meta, lang_config)
+        for manhole in manholes:
+            mid = str(manhole.get("id", "")).strip()
+            if mid:
+                records_by_id[mid] = manhole
+                if display_name and display_name not in pokemon_names_by_id[mid]:
+                    pokemon_names_by_id[mid].append(display_name)
+
+    photos = photos_data.get("photos", {}) if isinstance(photos_data, dict) else {}
+    available_images = frozenset(
+        p.stem.removesuffix("_latest")
+        for p in image_dir.glob("*_latest.jpeg")
+    ) if image_dir.exists() else frozenset()
+    candidates = sorted(
+        (p for p in photos.values() if isinstance(p, dict)),
+        key=lambda p: str(p.get("created_at", "")),
+        reverse=True,
+    )
+
+    cards: list[dict] = []
+    seen_ids: set[str] = set()
+    for photo in candidates:
+        mid = str(photo.get("manhole_id", "")).strip()
+        manhole = records_by_id.get(mid)
+        if not mid or not manhole or mid in seen_ids:
+            continue
+        image_url = _photo_url(mid, photo, available_images)
+        if not image_url:
+            continue
+        pokemon_names = pokemon_names_by_id.get(mid, [])
+        title = "・".join(pokemon_names[:2]) or manhole.get("title", "")
+        location = _location_text(manhole, translate_pref, lang)
+        created_at = str(photo.get("created_at", ""))
+        cards.append({
+            "href": f"/manholes/{quote(mid)}/",
+            "image_url": image_url,
+            "title": title,
+            "location": location,
+            "date": created_at[:10],
+        })
+        seen_ids.add(mid)
+        if len(cards) >= limit:
+            break
+    return cards
+
+
 def _hreflang_links_index() -> str:
     """Generate hreflang <link> tags for all language variants of the Pokemon index."""
     lines = []
@@ -557,6 +742,10 @@ def generate_html(
         photos_data, image_dir,
     )
     cards_by_slug = {c["slug"]: c for c in cards}
+    enhancement = INDEX_ENHANCEMENT_STRINGS[lang]
+    latest_photos = _build_latest_photo_cards(
+        pokemon_index, photos_data, image_dir, lang_config, translate_pref, lang,
+    )
 
     def image_html(card: dict, class_name: str = "card-photo") -> str:
         image = card.get("latest_image")
@@ -733,6 +922,74 @@ def generate_html(
     popular_intro = escape(
         strings["popular_intro"].format(top3=top3_names, min_count=top3_min_count)
     )
+    top_card = cards[0] if cards else {
+        "name": strings["region_summary_unknown"],
+        "count": 0,
+        "href": map_href,
+    }
+
+    fact_cards = [
+        {
+            "stat": strings["count_label"].format(count=top_card["count"]),
+            "title": enhancement["fact_rank_title"].format(name=top_card["name"]),
+            "body": enhancement["fact_rank_body"].format(
+                name=top_card["name"], count=top_card["count"]
+            ),
+            "href": top_card["href"],
+        },
+        {
+            "stat": "2018.12",
+            "title": enhancement["fact_first_title"],
+            "body": enhancement["fact_first_body"],
+            "href": f"/{url_prefix}pokemon/eevee/",
+        },
+        {
+            "stat": str(len(REGIONAL_POKEMON_SLUGS)),
+            "title": enhancement["fact_regional_title"],
+            "body": enhancement["fact_regional_body"],
+            "href": "#regional-pokemon",
+        },
+    ]
+    facts_html = "".join(
+        f'<article class="fact-card">'
+        f'<span class="fact-stat">{escape(fact["stat"])}</span>'
+        f'<h3>{escape(fact["title"])}</h3>'
+        f'<p>{escape(fact["body"])}</p>'
+        f'<a href="{escape(fact["href"])}">{escape(enhancement["fact_link"])} →</a>'
+        f'</article>'
+        for fact in fact_cards
+    )
+
+    latest_photos_html = "".join(
+        f'<a class="photo-card" href="{escape(photo["href"])}">'
+        f'<img src="{escape(photo["image_url"])}" '
+        f'alt="{escape(photo["title"])} {escape(photo["location"])}" '
+        f'loading="lazy" decoding="async" width="480" height="360">'
+        f'<span class="photo-card-copy"><strong>{escape(photo["title"])}</strong>'
+        f'<small>{escape(photo["location"])}'
+        f'{(" · " + escape(enhancement["photo_date"].format(date=photo["date"]))) if photo["date"] else ""}'
+        f'</small></span></a>'
+        for photo in latest_photos
+    )
+    latest_section_html = ""
+    if latest_photos_html:
+        latest_section_html = (
+            f'<section class="page-section" aria-labelledby="latest-photos-heading">'
+            f'<h2 id="latest-photos-heading">{escape(enhancement["latest_heading"])}</h2>'
+            f'<p class="section-lead">{escape(enhancement["latest_lead"])}</p>'
+            f'<div class="photos-grid">{latest_photos_html}</div>'
+            f'<p class="section-link"><a href="{escape(summary_href)}#latest-photos-heading">'
+            f'{escape(enhancement["latest_cta"])} →</a></p></section>'
+        )
+
+    faq_items = [
+        (question, answer.format(name=top_card["name"], count=top_card["count"]))
+        for question, answer in enhancement["faq"]
+    ]
+    faq_html = "".join(
+        f'<details><summary>{escape(question)}</summary><p>{escape(answer)}</p></details>'
+        for question, answer in faq_items
+    )
 
     all_heading = escape(strings["all_heading"].format(total=total_count))
     regional_heading = escape(strings["regional_heading"])
@@ -776,6 +1033,18 @@ def generate_html(
             for rank, card in enumerate(cards[:10], start=1)
         ],
     }, ensure_ascii=False, indent=2)
+    jsonld_faq = json.dumps({
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": question,
+                "acceptedAnswer": {"@type": "Answer", "text": answer},
+            }
+            for question, answer in faq_items
+        ],
+    }, ensure_ascii=False, indent=2)
 
     return f"""<!doctype html>
 <html lang="{lang_config['html_lang']}">
@@ -809,6 +1078,9 @@ def generate_html(
   <script type="application/ld+json">
 {jsonld_item_list}
   </script>
+  <script type="application/ld+json">
+{jsonld_faq}
+  </script>
 
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id={GA_MEASUREMENT_ID}"></script>
@@ -830,7 +1102,9 @@ def generate_html(
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       line-height: 1.6;
       color: #333;
-      background: #f7f8f3;
+      background:
+        radial-gradient(circle at 1px 1px, rgba(87, 64, 143, .08) 1px, transparent 1.2px) 0 0 / 18px 18px,
+        #f7f0df;
       padding: 16px;
       overflow-wrap: anywhere;
     }}
@@ -838,36 +1112,140 @@ def generate_html(
       width: 100%;
       max-width: 1080px;
       margin: 0 auto;
-      background: white;
-      border-radius: 8px;
-      padding: 22px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      padding: 0 0 28px;
     }}
-    .breadcrumb {{ font-size: 13px; color: #888; margin-bottom: 16px; }}
+    .page-hero {{
+      position: relative;
+      overflow: hidden;
+      min-height: 220px;
+      padding: 24px;
+      border: 1px solid rgba(87, 64, 143, .16);
+      border-radius: 24px;
+      background: linear-gradient(108deg, rgba(255,250,233,.99) 0 54%, rgba(184,225,232,.97) 100%);
+      box-shadow: 0 12px 28px rgba(88, 73, 62, .1);
+    }}
+    .page-hero::after {{
+      content: "";
+      position: absolute;
+      width: 240px;
+      height: 240px;
+      right: -62px;
+      bottom: -112px;
+      border-radius: 50%;
+      background: #756c61;
+      border: 8px solid rgba(255,255,255,.7);
+    }}
+    .hero-copy {{ position: relative; z-index: 1; max-width: 720px; }}
+    .hero-kicker {{
+      margin: 12px 0 2px;
+      font-size: 12px;
+      font-weight: 800;
+      color: #57408f;
+      letter-spacing: .08em;
+    }}
+    .hero-badge {{
+      position: absolute;
+      z-index: 2;
+      right: 100px;
+      top: 30px;
+      width: 132px;
+      height: 132px;
+      display: grid;
+      place-content: center;
+      text-align: center;
+      border-radius: 50%;
+      background: #57408f;
+      color: #fff;
+      border: 5px solid rgba(255,255,255,.72);
+      box-shadow: 0 8px 20px rgba(87,64,143,.25);
+    }}
+    .hero-badge span, .hero-badge small {{ display: block; font-size: 11px; }}
+    .hero-badge strong {{ display: block; font-size: 34px; line-height: 1.05; color: #ffe17c; }}
+    .breadcrumb {{ font-size: 13px; color: #777; margin-bottom: 8px; }}
     .breadcrumb ol {{ list-style: none; display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }}
     .breadcrumb li + li::before {{ content: "›"; margin-right: 4px; color: #ccc; }}
     .breadcrumb a {{ color: #6F55A3; text-decoration: none; }}
     .breadcrumb a:hover {{ text-decoration: underline; }}
     h1 {{
-      font-size: 28px;
+      font-size: clamp(32px, 5vw, 50px);
       font-weight: bold;
       color: #1a1a1a;
       margin-bottom: 8px;
+      letter-spacing: -.04em;
     }}
     h2 {{
-      font-size: 17px;
+      font-size: 25px;
       font-weight: bold;
-      color: #1a1a1a;
-      margin: 24px 0 10px;
-      padding-bottom: 6px;
-      border-bottom: 2px solid #e0e0e0;
+      color: #57408f;
+      margin: 0 0 14px;
+      padding: 0;
+      border: 0;
     }}
     .lead {{
       font-size: 15px;
       color: #555;
       line-height: 1.75;
-      margin-bottom: 14px;
+      margin-bottom: 0;
+      max-width: 720px;
     }}
+    .page-section {{
+      margin-top: 22px;
+      padding: 22px;
+      border: 1px solid rgba(88,73,62,.16);
+      border-radius: 18px;
+      background: rgba(255,253,247,.92);
+      box-shadow: 0 8px 22px rgba(88,73,62,.06);
+    }}
+    .section-lead {{ margin: -8px 0 14px; color: #665f57; font-size: 14px; }}
+    .section-link {{ margin-top: 12px; text-align: right; }}
+    .section-link a {{ color: #57408f; font-weight: 800; text-decoration: none; }}
+    .fact-grid {{
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }}
+    .fact-card {{
+      padding: 16px;
+      border-radius: 15px;
+      background: #fffaf0;
+      border: 1px solid #ded3bd;
+    }}
+    .fact-stat {{
+      display: inline-block;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: #e5f4f2;
+      color: #176f68;
+      font-weight: 900;
+      font-size: 13px;
+    }}
+    .fact-card h3 {{ margin: 10px 0 6px; font-size: 17px; line-height: 1.4; }}
+    .fact-card p {{ color: #665f57; font-size: 13px; }}
+    .fact-card a {{ display: inline-block; margin-top: 10px; color: #57408f; font-weight: 800; text-decoration: none; }}
+    .photos-grid {{
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }}
+    .photo-card {{
+      overflow: hidden;
+      border: 1px solid #ded3bd;
+      border-radius: 14px;
+      background: #fffaf0;
+      color: #332f2a;
+      text-decoration: none;
+    }}
+    .photo-card img {{ display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }}
+    .photo-card-copy {{ display: flex; flex-direction: column; padding: 9px 10px 10px; }}
+    .photo-card-copy strong {{ font-size: 14px; }}
+    .photo-card-copy small {{ color: #756c61; }}
+    .faq-list {{ display: grid; gap: 8px; }}
+    .faq-list details {{ border: 1px solid #ded3bd; border-radius: 12px; background: #fffaf0; padding: 12px 14px; }}
+    .faq-list summary {{ cursor: pointer; font-weight: 800; color: #332f2a; }}
+    .faq-list p {{ margin-top: 8px; color: #665f57; font-size: 14px; }}
+    .page-section .hub-grid, .page-section .ranking-list,
+    .page-section .featured-grid, .page-section .taxonomy-grid,
+    .page-section .poke-list, .page-section .regional-list {{ margin-bottom: 0; }}
     .hub-grid, .poke-list, .regional-list, .featured-grid, .taxonomy-grid {{
       list-style: none;
       display: grid;
@@ -880,9 +1258,9 @@ def generate_html(
     .hub-card {{
       display: block;
       padding: 14px;
-      background: #f0faf9;
-      border: 1px solid #c9e9e4;
-      border-radius: 8px;
+      background: #fffaf0;
+      border: 1px solid #ded3bd;
+      border-radius: 14px;
       color: #176f68;
       text-decoration: none;
       font-weight: bold;
@@ -904,9 +1282,9 @@ def generate_html(
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      background: #fafafa;
-      border: 1px solid #e8e8e8;
-      border-radius: 8px;
+      background: #fffaf0;
+      border: 1px solid #ded3bd;
+      border-radius: 14px;
       text-decoration: none;
       color: #333;
       transition: border-color 0.15s, box-shadow 0.15s;
@@ -1031,10 +1409,10 @@ def generate_html(
       border-radius: 0 6px 6px 0;
     }}
     .taxonomy-card {{
-      border: 1px solid #e8e8e8;
-      border-radius: 8px;
+      border: 1px solid #ded3bd;
+      border-radius: 14px;
       padding: 12px;
-      background: #fcfcfb;
+      background: #fffaf0;
     }}
     .taxonomy-card h3 {{
       font-size: 15px;
@@ -1097,13 +1475,16 @@ def generate_html(
     footer a {{ color: #6F55A3; text-decoration: none; }}
     @media (max-width: 620px) {{
       body {{ padding: 10px; }}
-      .container {{
-        width: auto;
-        max-width: calc(100vw - 20px);
-        padding: 16px;
-      }}
+      .container {{ width: auto; max-width: calc(100vw - 20px); }}
+      .page-hero, .page-section {{ padding: 16px; border-radius: 16px; }}
+      .page-hero {{ min-height: 260px; padding-bottom: 110px; }}
+      .page-hero::after {{ width: 170px; height: 170px; right: -48px; bottom: -74px; }}
+      .hero-badge {{ width: 104px; height: 104px; right: 56px; top: auto; bottom: 16px; }}
+      .hero-badge strong {{ font-size: 27px; }}
       h1 {{ font-size: 24px; }}
       .hub-grid {{ grid-template-columns: 1fr; }}
+      .fact-grid {{ grid-template-columns: 1fr; }}
+      .photos-grid {{ grid-template-columns: repeat(2, 1fr); }}
       .ranking-item a {{
         grid-template-columns: 50px 84px minmax(0, 1fr);
       }}
@@ -1112,16 +1493,26 @@ def generate_html(
 </head>
 <body>
 <div class="container">
-  <nav aria-label="{breadcrumb_aria}" class="breadcrumb">
-    <ol>
-      <li><a href="{escape(map_href)}">{breadcrumb_home}</a></li>
-      <li aria-current="page">{escape(strings['og_title'])}</li>
-    </ol>
-  </nav>
+  <header class="page-hero">
+    <div class="hero-copy">
+      <nav aria-label="{breadcrumb_aria}" class="breadcrumb">
+        <ol>
+          <li><a href="{escape(map_href)}">{breadcrumb_home}</a></li>
+          <li aria-current="page">{escape(strings['og_title'])}</li>
+        </ol>
+      </nav>
+      <p class="hero-kicker">{escape(enhancement["kicker"])}</p>
+      <h1>{h1}</h1>
+      <p class="lead">{lead}</p>
+    </div>
+    <div class="hero-badge" aria-label="{escape(enhancement["hero_stat"])} {total_count}">
+      <span>{escape(enhancement["hero_stat"])}</span>
+      <strong>{total_count}</strong>
+      <small>{escape(enhancement["hero_stat_unit"])}</small>
+    </div>
+  </header>
 
-  <h1>{h1}</h1>
-  <p class="lead">{lead}</p>
-  <section aria-labelledby="hub-heading">
+  <section class="page-section" aria-labelledby="hub-heading">
     <h2 id="hub-heading">{escape(strings["hub_heading"])}</h2>
     <div class="hub-grid">
       <a class="hub-card" href="#pokemon-list">{escape(strings["hub_name"])}</a>
@@ -1132,46 +1523,63 @@ def generate_html(
     <p class="map-nav-hint"><a href="{escape(summary_href)}">{escape(strings["summary_link"])}</a></p>
   </section>
 
-  <section aria-labelledby="pokemon-ranking">
+  <section class="page-section" aria-labelledby="pokemon-facts">
+    <h2 id="pokemon-facts">{escape(enhancement["fact_heading"])}</h2>
+    <div class="fact-grid">{facts_html}</div>
+  </section>
+
+  {latest_section_html}
+
+  <section class="page-section" aria-labelledby="pokemon-ranking">
     <h2 id="pokemon-ranking">{escape(strings["ranking_heading"])}</h2>
     <ol class="ranking-list">
 {ranking_html}
     </ol>
   </section>
 
-  <section aria-labelledby="featured-pokemon">
+  <section class="page-section" aria-labelledby="featured-pokemon">
     <h2 id="featured-pokemon">{escape(strings["featured_heading"])}</h2>
     <div class="featured-grid">
 {featured_html}
     </div>
   </section>
 
-  <h2>{regional_heading}</h2>
+  <section class="page-section" aria-labelledby="regional-pokemon">
+  <h2 id="regional-pokemon">{regional_heading}</h2>
   <ul class="regional-list">
 {regional_items_html}  </ul>
+  </section>
 
-  <section aria-labelledby="pokemon-types">
+  <section class="page-section" aria-labelledby="pokemon-types">
     <h2 id="pokemon-types">{escape(strings["type_heading"])}</h2>
     <div class="taxonomy-grid">
 {type_html}
     </div>
   </section>
 
-  <section aria-labelledby="pokemon-generations">
+  <section class="page-section" aria-labelledby="pokemon-generations">
     <h2 id="pokemon-generations">{escape(strings["generation_heading"])}</h2>
     <div class="taxonomy-grid">
 {generation_html}
     </div>
   </section>
 
+  <section class="page-section" aria-labelledby="pokemon-list">
   <h2 id="pokemon-list">{all_heading}</h2>
   <p class="popular-intro">{popular_intro}</p>
   <ul class="poke-list">
 {items_html}  </ul>
+  </section>
 
-  <p class="map-nav-hint">{map_nav_hint}</p>
+  <section class="page-section" aria-labelledby="pokemon-faq">
+    <h2 id="pokemon-faq">{escape(enhancement["faq_heading"])}</h2>
+    <div class="faq-list">{faq_html}</div>
+  </section>
 
-  <a href="{escape(map_url)}" class="cta-map">{cta}</a>
+  <section class="page-section">
+    <p class="map-nav-hint">{map_nav_hint}</p>
+    <a href="{escape(map_url)}" class="cta-map">{cta}</a>
+  </section>
 
   <footer>
     <p><a href="{escape(BASE_URL)}">data.pokefuta.com</a> &mdash; {footer_text}</p>
