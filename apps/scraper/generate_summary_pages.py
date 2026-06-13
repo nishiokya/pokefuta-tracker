@@ -1152,16 +1152,6 @@ _CSS = """\
       transform: rotate(8deg);
     }
 
-    .summary-hero-photo.photo-small {
-      display: none;
-    }
-
-    .summary-hero-photo.photo-tiny {
-      display: none;
-      aspect-ratio: 1;
-      transform: rotate(13deg);
-    }
-
     .summary-stat,
     .daily-fact-card,
     .summary-fact-card,
@@ -1343,14 +1333,6 @@ _CSS = """\
         right: -20px;
         bottom: -22px;
         width: 118px;
-      }
-
-      .summary-hero-photo.photo-small {
-        display: none;
-      }
-
-      .summary-hero-photo.photo-tiny {
-        display: none;
       }
 
       .summary-stats {
@@ -3184,15 +3166,6 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
         href = f'{map_base}?pref={quote(pref_ja)}'
         return f'<a class="summary-link" href="{escape(href)}">{escape(s["map_link_text"])}</a>'
 
-    table_rows = "\n            ".join(
-        f"<tr>"
-        f"<td>{escape(tr(item['pref']))}</td>"
-        f"<td>{item['count']}{escape(count_unit)}</td>"
-        f"<td>{map_link(item['pref']) if item['count'] > 0 else escape(s['table_no_map'])}</td>"
-        f"</tr>"
-        for item in stats["by_pref"]
-    )
-
     ranking_items = "\n        ".join(
         f"<li>"
         f"{escape(tr(item['pref']))}"
@@ -3214,7 +3187,7 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
     md = escape(_format_summary_text(s["meta_desc"], s, stats))
     subtitle = escape(_format_summary_text(s["subtitle"], s, stats))
     can = escape(s["canonical"])
-    hero_title = "".join(f"<span>{escape(line)}</span>" for line in s["hero_title_lines"])
+    hero_title = " ".join(f"<span>{escape(line)}</span>" for line in s["hero_title_lines"])
 
     return f"""<!doctype html>
 <html lang="{s['html_lang']}">
@@ -3251,7 +3224,7 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
       <a class="summary-hero-breadcrumb" href="{escape(s['nav_home_href'])}">{escape(s['nav_home_text'])}</a>
       <div class="summary-hero-copy">
         <p class="summary-hero-kicker">{escape(s['hero_kicker'])}</p>
-        <h1 aria-label="{escape(s['h1'])}">{hero_title}</h1>
+        <h1>{hero_title}</h1>
         <p class="summary-hero-subtitle">{subtitle}</p>
       </div>
       <div class="summary-hero-visual" aria-hidden="true">
@@ -3268,12 +3241,6 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
       </div>
       <figure class="summary-hero-photo photo-main">
         <img src="/manhole/image/141_latest.jpeg" alt="" width="720" height="720">
-      </figure>
-      <figure class="summary-hero-photo photo-small">
-        <img src="/manhole/image/188_latest.jpeg" alt="" width="720" height="720">
-      </figure>
-      <figure class="summary-hero-photo photo-tiny">
-        <img src="/manhole/image/105_latest.jpeg" alt="" width="720" height="720">
       </figure>
     </header>
     {daily_fact_html}
