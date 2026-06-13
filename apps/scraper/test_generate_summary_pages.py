@@ -50,6 +50,7 @@ class DiscoveryHubTests(unittest.TestCase):
         self.assertIn("getDailyRotationIndex", source)
         self.assertIn("getHeroThemeCount(themeKey)", source)
         self.assertIn("getUniqueHeroPokemon(manhole)", source)
+        self.assertIn("window.I18N?.intlLocale || 'ja-JP'", source)
         self.assertNotIn("countTemplate.replace('{count}', candidates.length)", source)
         self.assertNotIn("pokemon: reason", source)
 

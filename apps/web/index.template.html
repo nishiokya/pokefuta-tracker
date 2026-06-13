@@ -762,7 +762,7 @@
       if (!rawDate) return '';
       const date = new Date(rawDate);
       if (Number.isNaN(date.getTime())) return '';
-      return new Intl.DateTimeFormat(window.I18N?.lang || 'ja-JP', {
+      return new Intl.DateTimeFormat(window.I18N?.intlLocale || 'ja-JP', {
         timeZone: 'Asia/Tokyo',
         year: 'numeric',
         month: 'long',
