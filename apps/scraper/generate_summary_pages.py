@@ -16,7 +16,7 @@ import json
 import sys
 from collections import Counter
 from pathlib import Path
-from urllib.parse import quote
+from urllib.parse import quote, urlparse
 from xml.sax.saxutils import escape
 
 ROOT = Path(__file__).parent.parent.parent
@@ -95,7 +95,6 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "hero_title_lines": ("ポケふた", "データマップ"),
         "hero_kicker": "ポケモンマンホール データガイド",
         "subtitle": "全国{total}枚のポケモンマンホール（ポケふた）を都道府県別・ポケモン別に探せます。旅行先やお出かけ先のポケふた探しにご活用ください。",
-        "hero_ribbon": "旅の思い出に、ポケふた探しの冒険を！",
         "stats_aria": "全国集計",
         "stat_total": "全国の総数",
         "stat_installed": "設置済み都道府県",
@@ -186,7 +185,6 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "hero_title_lines": ("Pokéfuta", "Data Map"),
         "hero_kicker": "Pokémon Manhole Data Guide",
         "subtitle": "Pokéfuta (Pokémon manhole covers) counted and sorted by prefecture from the latest dataset.",
-        "hero_ribbon": "Turn your next trip into a Pokéfuta adventure!",
         "stats_aria": "Nationwide Statistics",
         "stat_total": "Total Nationwide",
         "stat_installed": "Prefectures with Pokéfuta",
@@ -264,7 +262,6 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "hero_title_lines": ("宝可梦井盖", "数据地图"),
         "hero_kicker": "宝可梦井盖数据指南",
         "subtitle": "基于现有数据，按都道府县统计了全国的宝可梦井盖（宝可梦人孔盖）数量。",
-        "hero_ribbon": "让寻找宝可梦井盖成为旅行中的冒险！",
         "stats_aria": "全国统计",
         "stat_total": "全国总数",
         "stat_installed": "已设置都道府县",
@@ -342,7 +339,6 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "hero_title_lines": ("寶可夢人孔蓋", "資料地圖"),
         "hero_kicker": "寶可夢人孔蓋資料指南",
         "subtitle": "基於現有資料，按都道府縣統計了全國的寶可夢人孔蓋數量。",
-        "hero_ribbon": "讓尋找寶可夢人孔蓋成為旅行中的冒險！",
         "stats_aria": "全國統計",
         "stat_total": "全國總數",
         "stat_installed": "已設置都道府縣",
@@ -420,7 +416,6 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "hero_title_lines": ("포케후타", "데이터 지도"),
         "hero_kicker": "포켓몬 맨홀 데이터 가이드",
         "subtitle": "기존 데이터를 바탕으로 전국의 포케후타(포켓몬 맨홀)를 도도부현별로 집계했습니다.",
-        "hero_ribbon": "여행의 추억에 포케후타를 찾는 모험을!",
         "stats_aria": "전국 집계",
         "stat_total": "전국 총 수량",
         "stat_installed": "설치된 도도부현",
@@ -1046,20 +1041,6 @@ _CSS = """\
       display: none;
     }
 
-    .summary-hero-ribbon {
-      display: inline-flex;
-      margin-top: 20px;
-      padding: 7px 18px 6px;
-      transform: rotate(-1deg);
-      background: #f5c83d;
-      color: #27201c;
-      font-size: clamp(.8rem, 1.5vw, 1rem);
-      font-weight: 950;
-      line-height: 1.35;
-      clip-path: polygon(2% 8%, 100% 0, 97% 92%, 0 100%);
-      display: none;
-    }
-
     .summary-hero-visual {
       position: absolute;
       z-index: 2;
@@ -1584,6 +1565,15 @@ def _twitter_intent_url(text: str, url: str) -> str:
 
 def _map_href(map_base: str, pref_ja: str | None = None) -> str:
     return f"{map_base}?pref={quote(pref_ja)}" if pref_ja else map_base
+
+
+def _safe_https_url(value: str | None, fallback: str) -> str:
+    candidate = str(value or "").strip()
+    try:
+        parsed = urlparse(candidate)
+    except ValueError:
+        return fallback
+    return candidate if parsed.scheme == "https" and parsed.netloc else fallback
 
 
 def _track_attrs(event_name: str, fact: dict, target_url: str) -> str:
@@ -2879,7 +2869,7 @@ def _build_prefecture_info_section(
             fact = local_trivia["fact"]
         elif support:
             pokemon_label = support["pokemon"]
-            display_count = support.get("count", pokemon_counts.get(pokemon_label, 0))
+            display_count = item["count"]
             fact = support["summary"]
         elif not pref_records:
             display_count = item["count"]
@@ -2931,6 +2921,9 @@ def _build_prefecture_info_section(
                 f'</div>'
             )
         elif support:
+            official_url = _safe_https_url(
+                support.get("source_url"), "https://local.pokemon.jp/"
+            )
             open_tag = '<article class="prefecture-info-card support-pokemon-card">'
             close_tag = "</article>"
             pokemon_html = (
@@ -2940,7 +2933,7 @@ def _build_prefecture_info_section(
             )
             actions_html = (
                 f'<div class="prefecture-info-actions">'
-                f'<a href="{escape(support.get("source_url", "https://local.pokemon.jp/"))}" target="_blank" '
+                f'<a href="{escape(official_url)}" target="_blank" '
                 f'rel="noopener noreferrer">公式サイト</a>'
                 f'<a href="{escape(_map_href(s["map_base_href"], pref))}">'
                 f'{escape(s["map_link_text"])}</a>'
@@ -3255,7 +3248,6 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
         <p class="summary-hero-kicker">{escape(s['hero_kicker'])}</p>
         <h1 aria-label="{escape(s['h1'])}">{hero_title}</h1>
         <p class="summary-hero-subtitle">{subtitle}</p>
-        <span class="summary-hero-ribbon">{escape(s['hero_ribbon'])}</span>
       </div>
       <div class="summary-hero-visual" aria-hidden="true">
         <span class="hero-route"></span>
