@@ -111,6 +111,9 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "count_unit": "枚",
         "no_pokemon_label": "未設置",
         "empty_pref_fact": "今後の設置を待つエリアです。",
+        "pref_fact_dominant": "{pokemon}が県内{appearances}枚に登場。",
+        "pref_fact_single_city": "1自治体に{count}枚が集まっています。",
+        "pref_fact_generic": "{city_count}自治体で{species_count}種のポケモンに出会えます。",
         "h2_ranking": "ポケふたの多い都道府県ランキング",
         "ranking_note": '各都道府県の地図は、<a class="summary-link" href="/">全国マップ</a>から地域を選んで確認できます。',
         "h2_regional": "地域の分布傾向",
@@ -201,6 +204,9 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "count_unit": "",
         "no_pokemon_label": "Not installed",
         "empty_pref_fact": "This prefecture is still waiting for its first Pokéfuta.",
+        "pref_fact_dominant": "{appearances} covers feature {pokemon}.",
+        "pref_fact_single_city": "All {count} covers are concentrated in one municipality.",
+        "pref_fact_generic": "{species_count} Pokémon across {city_count} municipalities.",
         "h2_ranking": "Top Prefectures by Pokéfuta Count",
         "ranking_note": 'Browse each prefecture\'s Pokéfuta on the <a class="summary-link" href="/en/">Japan Map</a>.',
         "h2_regional": "Regional Distribution",
@@ -278,6 +284,9 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "count_unit": "个",
         "no_pokemon_label": "尚未设置",
         "empty_pref_fact": "该地区仍在等待首个宝可梦井盖。",
+        "pref_fact_dominant": "{pokemon}出现在县内{appearances}个井盖上。",
+        "pref_fact_single_city": "{count}个井盖集中设置在1个市区町村。",
+        "pref_fact_generic": "可在{city_count}个市区町村遇见{species_count}种宝可梦。",
         "h2_ranking": "宝可梦井盖最多的县排名",
         "ranking_note": '各都道府县的地图可通过<a class="summary-link" href="/zh-CN/">全国地图</a>选择地区查看。',
         "h2_regional": "地区分布情况",
@@ -355,6 +364,9 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "count_unit": "個",
         "no_pokemon_label": "尚未設置",
         "empty_pref_fact": "此地區仍在等待第一個寶可夢人孔蓋。",
+        "pref_fact_dominant": "{pokemon}出現在縣內{appearances}個人孔蓋上。",
+        "pref_fact_single_city": "{count}個人孔蓋集中設置在1個市區町村。",
+        "pref_fact_generic": "可在{city_count}個市區町村遇見{species_count}種寶可夢。",
         "h2_ranking": "寶可夢人孔蓋最多的縣排行",
         "ranking_note": '各都道府縣的地圖可透過<a class="summary-link" href="/zh-TW/">全國地圖</a>選擇地區查看。',
         "h2_regional": "地區分布情況",
@@ -432,6 +444,9 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "count_unit": "개",
         "no_pokemon_label": "미설치",
         "empty_pref_fact": "아직 첫 포케후타 설치를 기다리고 있는 지역입니다.",
+        "pref_fact_dominant": "{pokemon} 등장 포케후타가 현내 {appearances}개 있습니다.",
+        "pref_fact_single_city": "1개 시구정촌에 {count}개의 포케후타가 모여 있습니다.",
+        "pref_fact_generic": "{city_count}개 시구정촌에서 {species_count}종의 포켓몬을 만날 수 있습니다.",
         "h2_ranking": "포케후타가 많은 현 랭킹",
         "ranking_note": '각 도도부현의 지도는 <a class="summary-link" href="/ko/">전국 지도</a>에서 지역을 선택하여 확인할 수 있습니다.',
         "h2_regional": "지역별 분포 현황",
@@ -2767,8 +2782,6 @@ def build_pokemon_stats(records: list[dict], pokemon_metadata: dict) -> dict:
     city_sets: dict[str, set] = {}
 
     for record in records:
-        if record.get("status") != "active":
-            continue
         pref = record.get("prefecture", "")
         city = record.get("city", "")
         city_key = f"{pref}/{city}"
@@ -2834,7 +2847,7 @@ def _build_prefecture_info_section(
     }
     for record in records:
         pref = record.get("prefecture", "")
-        if record.get("status", "active") == "active" and pref in records_by_pref:
+        if pref in records_by_pref:
             records_by_pref[pref].append(record)
 
     is_ja = s.get("pref_key") == "ja"
@@ -2877,25 +2890,17 @@ def _build_prefecture_info_section(
         elif top_pokemon and top_pokemon[0][1] >= max(2, len(pref_records) // 2):
             display_count = item["count"]
             name, appearances = top_pokemon[0]
-            fact = (
-                f"{name}が県内{appearances}枚に登場。"
-                if is_ja
-                else f"{appearances} feature {name}."
+            fact = s["pref_fact_dominant"].format(
+                pokemon=name, appearances=appearances
             )
         elif city_count == 1 and len(pref_records) > 1:
             display_count = item["count"]
-            fact = (
-                f"1自治体に{len(pref_records)}枚が集まっています。"
-                if is_ja
-                else f"{len(pref_records)} are concentrated in one municipality."
-            )
+            fact = s["pref_fact_single_city"].format(count=len(pref_records))
         else:
             display_count = item["count"]
             species_count = len(pokemon_counts)
-            fact = (
-                f"{city_count}自治体で{species_count}種のポケモンに出会えます。"
-                if is_ja
-                else f"{species_count} Pokémon across {city_count} municipalities."
+            fact = s["pref_fact_generic"].format(
+                city_count=city_count, species_count=species_count
             )
 
         if local_trivia:
@@ -3331,7 +3336,11 @@ def main() -> None:
     if PREFECTURES_JSON.exists():
         pref_names = json.loads(PREFECTURES_JSON.read_text(encoding="utf-8"))
 
-    records = load_records(NDJSON)
+    records = [
+        record
+        for record in load_records(NDJSON)
+        if record.get("status", "active") == "active"
+    ]
     stats = build_stats(records)
     print(f"[INFO] {stats['total']} manholes across {len(stats['installed'])} prefectures")
 
