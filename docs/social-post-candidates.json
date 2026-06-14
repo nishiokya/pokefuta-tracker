@@ -516,34 +516,6 @@
     }
   },
   {
-    "id": "photo-141-866ab293",
-    "type": "latest_photo",
-    "title": "最新写真：北海道/三笠市",
-    "url": "https://data.pokefuta.com/manholes/141/",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "latest_photo",
-    "source": "photos",
-    "raw_data": {
-      "manhole_id": "141",
-      "title": "北海道/三笠市",
-      "pref": "北海道",
-      "city": "三笠",
-      "pokemon": "オムナイト",
-      "pokemon_list": [
-        "オムナイト",
-        "ズガイドス",
-        "ロコン"
-      ],
-      "created_at": "2026-05-24T14:30:56.930694+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/05/63295206-f77c-4ab2-a7d1-79faadbded8c.jpg",
-      "display_name": "tako",
-      "photo_rank": "first_ever"
-    }
-  },
-  {
     "id": "photo-190-66931efd",
     "type": "latest_photo",
     "title": "最新写真：北海道/登別市",
@@ -789,10 +761,10 @@
     }
   },
   {
-    "id": "photo-272-f0406523",
+    "id": "photo-376-8a1d8aca",
     "type": "latest_photo",
-    "title": "最新写真：愛知県/豊橋市",
-    "url": "https://data.pokefuta.com/manholes/272/",
+    "title": "最新写真：福島県/白河市",
+    "url": "https://data.pokefuta.com/manholes/376/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -800,19 +772,47 @@
     "imageType": "latest_photo",
     "source": "photos",
     "raw_data": {
-      "manhole_id": "272",
-      "title": "愛知県/豊橋市",
-      "pref": "愛知県",
-      "city": "豊橋市",
-      "pokemon": "アゴジムシ",
+      "manhole_id": "376",
+      "title": "福島県/白河市",
+      "pref": "福島県",
+      "city": "白河",
+      "pokemon": "ダルマッカ",
       "pokemon_list": [
-        "アゴジムシ",
-        "アブリボン"
+        "ダルマッカ",
+        "ラッキー"
       ],
-      "created_at": "2026-05-24T00:46:17.867307+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/05/02167329-16b6-410e-a14f-e7d13e8219fd.jpg",
-      "display_name": "tako",
-      "photo_rank": "recent"
+      "created_at": "2026-06-14T04:20:48.017456+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/210eb9fa-6934-4989-b19a-6ca6297b4a45.jpg",
+      "display_name": "ぴえろ",
+      "photo_rank": "first_ever"
+    }
+  },
+  {
+    "id": "photo-363-78234012",
+    "type": "latest_photo",
+    "title": "最新写真：岐阜県/高山市",
+    "url": "https://data.pokefuta.com/manholes/363/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "363",
+      "title": "岐阜県/高山市",
+      "pref": "岐阜県",
+      "city": "高山",
+      "pokemon": "バオップ",
+      "pokemon_list": [
+        "バオップ",
+        "ヒヤップ",
+        "ヤナップ"
+      ],
+      "created_at": "2026-06-14T06:13:55.684498+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/aaf194d2-ce7f-41fd-a1cd-fda6aa4ea266.jpg",
+      "display_name": "Giulia",
+      "photo_rank": "first_ever"
     }
   },
   {
@@ -844,7 +844,7 @@
   {
     "id": "pref07-nophoto",
     "type": "no_photo",
-    "title": "福島県：写真なしポケふた43枚",
+    "title": "福島県：写真なしポケふた42枚",
     "url": "https://data.pokefuta.com/summary/",
     "hashtags": [
       "#ポケふた",
@@ -854,7 +854,7 @@
     "source": "summary",
     "raw_data": {
       "pref": "福島県",
-      "no_photo_count": 43,
+      "no_photo_count": 42,
       "total_count": 43
     }
   },
