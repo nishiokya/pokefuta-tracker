@@ -53,6 +53,11 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
             "旅行やポケふた巡りの計画にご活用ください。",
             html,
         )
+        self.assertLess(
+            html.index('id="trivia-heading"'),
+            html.index('id="map-heading"'),
+        )
+        self.assertIn("まず知りたい", html)
 
     def test_empty_prefecture_meta_description_is_complete(self) -> None:
         html = MODULE.build_page(
@@ -66,6 +71,10 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         self.assertIn(
             "現在の設置枚数や全国のポケモンマンホール情報を確認できます。",
             html,
+        )
+        self.assertLess(
+            html.index('id="trivia-heading"'),
+            html.index('id="map-heading"'),
         )
 
     def test_tied_counts_share_rank(self) -> None:

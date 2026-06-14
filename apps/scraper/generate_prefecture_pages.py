@@ -398,7 +398,15 @@ def build_page(
     .manhole-copy {{ min-width: 0; }}
     .manhole-copy strong, .manhole-copy small {{ display: block; }}
     .manhole-copy small {{ overflow: hidden; color: #75685c; text-overflow: ellipsis; white-space: nowrap; }}
-    .trivia-card {{ border-left: 5px solid #7e6ba9; }}
+    .trivia-card {{
+      border-left: 5px solid #7e6ba9;
+      background: linear-gradient(135deg, #fffaf0, #f4effd);
+    }}
+    .trivia-kicker {{
+      display: inline-flex; margin: 0 0 6px; padding: 3px 9px;
+      border-radius: 999px; background: #6b4aa2; color: white;
+      font-size: .72rem; font-weight: 900;
+    }}
     .trivia-card p {{ margin: 0; font-size: 1.05rem; font-weight: 750; }}
     .trivia-source {{ margin-top: 8px; font-size: .78rem; }}
     .empty-state {{ margin: 0; color: #75685c; }}
@@ -440,6 +448,12 @@ def build_page(
       </div>
     </header>
 
+    <section class="trivia-card" aria-labelledby="trivia-heading">
+      <span class="trivia-kicker">まず知りたい</span>
+      <h2 id="trivia-heading">{escape(prefecture)}のポケふたトリビア</h2>
+      {trivia_html}
+    </section>
+
     <section aria-labelledby="map-heading">
       <h2 id="map-heading">{escape(prefecture)}の設置マップ</h2>
       <div id="prefecture-map" class="{map_empty_class.strip()}"></div>
@@ -454,11 +468,6 @@ def build_page(
     <section id="manhole-list" aria-labelledby="manhole-heading">
       <h2 id="manhole-heading">{escape(prefecture)}のマンホール一覧</h2>
       <div class="manhole-grid">{manhole_html}</div>
-    </section>
-
-    <section class="trivia-card" aria-labelledby="trivia-heading">
-      <h2 id="trivia-heading">{escape(prefecture)}のポケふたトリビア</h2>
-      {trivia_html}
     </section>
 
     <section aria-labelledby="related-heading">
