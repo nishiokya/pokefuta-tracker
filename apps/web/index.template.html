@@ -309,7 +309,7 @@
     integrity="sha384-pmjIAcz2bAn0xukfxADbZIb3t8oRT9Sv0rvO+BR5Csr6Dhqq+nZs59P0pPKQJkEV" crossorigin="" />
   <link rel="stylesheet" href="%%BASE_PATH%%assets/theme.css" />
   <link rel="stylesheet" href="%%BASE_PATH%%assets/map.css" />
-  <link rel="stylesheet" href="%%BASE_PATH%%assets/pokefuta-map.css?v=20260613-discovery-hub" />
+  <link rel="stylesheet" href="%%BASE_PATH%%assets/pokefuta-map.css?v=20260614-hero-toggle" />
   <link rel="icon" href="%%BASE_PATH%%assets/pokefuta-marker.svg" type="image/svg+xml" />
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-K18NR4GZG2"></script>
@@ -362,41 +362,47 @@
   <main class="map-stage" aria-label="%%MAP_ARIA%%">
     <div id="map"></div>
     <section class="map-hero-card" aria-labelledby="hero-title">
-      <div id="hero-fallback" class="hero-fallback">
-        <h1 id="hero-title">%%HERO_TITLE%%</h1>
-        <p>%%HERO_SUBTITLE%%</p>
-        <a href="/pokemon/" class="hero-pokemon-link" onclick="if(window.trackEvent){window.trackEvent('click_pokemon_lp_hero',{event_category:'navigation',event_label:'hero_card'})}">好きなポケモンのポケふたを探す →</a>
-      </div>
-      <div id="hero-discovery" class="hero-discovery" hidden>
-        <p class="hero-discovery-heading"></p>
-        <a class="hero-feature" href="">
-          <span class="hero-feature-media">
-            <img src="" alt="" decoding="async">
-          </span>
-          <span class="hero-feature-copy">
-            <span class="hero-feature-eyebrow"></span>
-            <strong class="hero-feature-title"></strong>
-            <span class="hero-feature-place"></span>
-            <span class="hero-feature-reason"></span>
-            <span class="hero-feature-cta"></span>
-          </span>
-        </a>
-        <div class="hero-discovery-links" aria-label="今日の発見">
-          <a class="hero-discovery-link" href="" data-position="secondary_1">
-            <span class="hero-discovery-link-label"></span>
-            <strong></strong>
-            <span class="hero-discovery-link-place"></span>
-          </a>
-          <a class="hero-discovery-link" href="" data-position="secondary_2">
-            <span class="hero-discovery-link-label"></span>
-            <strong></strong>
-            <span class="hero-discovery-link-place"></span>
-          </a>
+      <button type="button" id="hero-card-toggle" class="hero-card-toggle" aria-expanded="true" aria-controls="hero-card-content">
+        <span class="hero-card-toggle-icon" aria-hidden="true"></span>
+        <span class="hero-card-toggle-label">地図を広く見る</span>
+      </button>
+      <div id="hero-card-content" class="hero-card-content">
+        <div id="hero-fallback" class="hero-fallback">
+          <h1 id="hero-title">%%HERO_TITLE%%</h1>
+          <p>%%HERO_SUBTITLE%%</p>
+          <a href="/pokemon/" class="hero-pokemon-link" onclick="if(window.trackEvent){window.trackEvent('click_pokemon_lp_hero',{event_category:'navigation',event_label:'hero_card'})}">好きなポケモンのポケふたを探す →</a>
         </div>
+        <div id="hero-discovery" class="hero-discovery" hidden>
+          <p class="hero-discovery-heading"></p>
+          <a class="hero-feature" href="">
+            <span class="hero-feature-media">
+              <img src="" alt="" decoding="async">
+            </span>
+            <span class="hero-feature-copy">
+              <span class="hero-feature-eyebrow"></span>
+              <strong class="hero-feature-title"></strong>
+              <span class="hero-feature-place"></span>
+              <span class="hero-feature-reason"></span>
+              <span class="hero-feature-cta"></span>
+            </span>
+          </a>
+          <div class="hero-discovery-links" aria-label="今日の発見">
+            <a class="hero-discovery-link" href="" data-position="secondary_1">
+              <span class="hero-discovery-link-label"></span>
+              <strong></strong>
+              <span class="hero-discovery-link-place"></span>
+            </a>
+            <a class="hero-discovery-link" href="" data-position="secondary_2">
+              <span class="hero-discovery-link-label"></span>
+              <strong></strong>
+              <span class="hero-discovery-link-place"></span>
+            </a>
+          </div>
+        </div>
+        <a id="i18n-notice" href="" hidden
+           style="display:block; margin-top:8px; padding-top:8px; border-top:1px solid rgba(110,80,44,.12); font-size:0.78rem; font-weight:700; color:#4a7c59; text-decoration:none;"
+        ></a>
       </div>
-      <a id="i18n-notice" href="" hidden
-         style="display:block; margin-top:8px; padding-top:8px; border-top:1px solid rgba(110,80,44,.12); font-size:0.78rem; font-weight:700; color:#4a7c59; text-decoration:none;"
-      ></a>
     </section>
   </main>
   <script>
@@ -569,6 +575,77 @@
       autoPanPaddingTopLeft: L.point(POPUP_SIDE_PADDING, POPUP_TOP_PADDING),
       autoPanPaddingBottomRight: L.point(POPUP_SIDE_PADDING, POPUP_BOTTOM_SHEET_PADDING)
     };
+    const HERO_CARD_STORAGE_KEY = 'pokefutaHeroCardCollapsed';
+
+    function getHeroCardToggleLabels() {
+      const lang = document.documentElement.lang.toLowerCase();
+      if (lang.startsWith('zh-tw') || lang.startsWith('zh-hant')) {
+        return { collapse: '放大地圖', expand: '顯示推薦卡片' };
+      }
+      if (lang.startsWith('zh')) {
+        return { collapse: '放大地图', expand: '显示推荐卡片' };
+      }
+      if (lang.startsWith('ko')) {
+        return { collapse: '지도를 넓게 보기', expand: '추천 카드 표시' };
+      }
+      if (lang.startsWith('en')) {
+        return { collapse: 'Show more map', expand: 'Show discovery card' };
+      }
+      return { collapse: '地図を広く見る', expand: 'カードを表示' };
+    }
+
+    function setHeroCardCollapsed(collapsed, persist = false) {
+      const heroCard = document.querySelector('.map-hero-card');
+      const toggle = document.getElementById('hero-card-toggle');
+      const label = toggle?.querySelector('.hero-card-toggle-label');
+      if (!heroCard || !toggle || !label) return;
+
+      const labels = getHeroCardToggleLabels();
+      heroCard.classList.toggle('is-collapsed', collapsed);
+      document.body.classList.toggle('hero-collapsed', collapsed);
+      toggle.setAttribute('aria-expanded', String(!collapsed));
+      toggle.setAttribute('aria-label', collapsed ? labels.expand : labels.collapse);
+      toggle.title = collapsed ? labels.expand : labels.collapse;
+      label.textContent = collapsed ? labels.expand : labels.collapse;
+      pokefutaPopupOptions.autoPanPaddingTopLeft = L.point(
+        POPUP_SIDE_PADDING,
+        collapsed ? 84 : POPUP_TOP_PADDING
+      );
+
+      if (persist) {
+        try {
+          localStorage.setItem(HERO_CARD_STORAGE_KEY, collapsed ? '1' : '0');
+        } catch (error) {
+          console.warn('Could not save hero card state:', error);
+        }
+      }
+      requestAnimationFrame(() => map.invalidateSize());
+    }
+
+    function initHeroCardToggle() {
+      const toggle = document.getElementById('hero-card-toggle');
+      if (!toggle) return;
+
+      let collapsed = false;
+      try {
+        collapsed = localStorage.getItem(HERO_CARD_STORAGE_KEY) === '1';
+      } catch (error) {
+        console.warn('Could not read hero card state:', error);
+      }
+      setHeroCardCollapsed(collapsed);
+
+      toggle.addEventListener('click', () => {
+        const nextCollapsed = toggle.getAttribute('aria-expanded') === 'true';
+        setHeroCardCollapsed(nextCollapsed, true);
+        if (window.trackEvent) {
+          window.trackEvent(nextCollapsed ? 'collapse_hero_card' : 'expand_hero_card', {
+            event_category: 'map_ui',
+            event_label: 'hero_card'
+          });
+        }
+      });
+    }
+    initHeroCardToggle();
 
     // 都道府県中心座標マッピング（クリック時の移動用）
     const prefectureCenterCoords = {
