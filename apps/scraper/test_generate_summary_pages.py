@@ -77,6 +77,27 @@ class DiscoveryHubTests(unittest.TestCase):
         self.assertIn(">1枚</strong>", html)
         self.assertIn(">2枚</strong>", html)
 
+    def test_gundam_crossover_prioritizes_experience_over_distance(self):
+        spots = [
+            {
+                "rank": 1,
+                "pokefuta_id": "66",
+                "headline": "ロコンとドムを同時回収できる町",
+                "story": "2つの公式マンホールコンテンツを一度に巡れます。",
+                "proximity_label": "同じ道の駅・入口の反対側・徒歩10秒",
+                "onsite_tip": "入口の反対側も確認。見落とし注意です。",
+                "experience_tags": ["同じ道の駅", "入口の反対側", "徒歩10秒"],
+            }
+        ]
+        html = summary._build_discovery_hub_sections(
+            summary.SUMMARY_STRINGS["ja"], self.records_by_id, self.metadata, spots
+        )
+        self.assertIn("一緒に巡れるスポット 第1位", html)
+        self.assertIn("ロコンとドムを同時回収できる町", html)
+        self.assertIn("入口の反対側・徒歩10秒", html)
+        self.assertIn("現地メモ:", html)
+        self.assertNotIn("ガンダムマンホールまで約500m以内", html)
+
     def test_hero_uses_popup_and_summary_hubs(self):
         source = (summary.ROOT / "apps/web/index.html").read_text(encoding="utf-8")
         self.assertIn("click_hero_new_photo", source)
