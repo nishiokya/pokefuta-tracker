@@ -98,6 +98,24 @@ class DiscoveryHubTests(unittest.TestCase):
         self.assertIn("現地メモ:", html)
         self.assertNotIn("ガンダムマンホールまで約500m以内", html)
 
+    def test_gundam_official_url_is_attribute_escaped(self):
+        spots = [
+            {
+                "rank": 1,
+                "pokefuta_id": "66",
+                "headline": "テスト",
+                "gundam_official_url": 'https://example.com/" onclick="alert(1)',
+            }
+        ]
+        html = summary._build_discovery_hub_sections(
+            summary.SUMMARY_STRINGS["ja"], self.records_by_id, self.metadata, spots
+        )
+        self.assertIn(
+            'href="https://example.com/&quot; onclick=&quot;alert(1)"',
+            html,
+        )
+        self.assertNotIn('href="https://example.com/" onclick="alert(1)"', html)
+
     def test_hero_uses_popup_and_summary_hubs(self):
         source = (summary.ROOT / "apps/web/index.html").read_text(encoding="utf-8")
         self.assertIn("click_hero_new_photo", source)

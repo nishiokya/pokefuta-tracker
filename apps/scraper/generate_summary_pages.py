@@ -41,6 +41,11 @@ _ogp_hash = hashlib.md5(_OGP_PNG.read_bytes()).hexdigest()[:8] if _OGP_PNG.exist
 OGP_IMAGE = f"{BASE_URL}/assets/ogp/pokefuta_summary_ogp.png?v={_ogp_hash}"
 SUMMARY_SHARE_URL = f"{BASE_URL}/summary/"
 
+
+def _escape_attr(value: object) -> str:
+    return escape(str(value), {'"': "&quot;", "'": "&#x27;"})
+
+
 REGION_MAP: dict[str, str] = {
     "北海道": "北海道",
     "青森県": "東北", "岩手県": "東北", "宮城県": "東北",
@@ -3289,7 +3294,7 @@ def _build_discovery_hub_sections(
         )
         official_url = spot.get("gundam_official_url", "")
         official_link = (
-            f'<a href="{escape(official_url)}" target="_blank" rel="noopener noreferrer">'
+            f'<a href="{_escape_attr(official_url)}" target="_blank" rel="noopener noreferrer">'
             f'ガンダムマンホール公式を見る</a>'
             if official_url else ""
         )
