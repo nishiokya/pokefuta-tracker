@@ -66,6 +66,7 @@ export function AssignAllTagsTask({ initialSearch, ...props }: Props) {
       tagGroups={TAG_GROUPS}
       tagLabels={TAG_LABELS}
       osmPoi={OSM_CONFIGS}
+      externalManholeMaps
       initialSearch={initialSearch}
     />
   )

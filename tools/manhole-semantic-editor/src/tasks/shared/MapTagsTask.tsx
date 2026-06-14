@@ -52,6 +52,27 @@ function makeIcon(color: string) {
   })
 }
 
+function makeMapSourceIcon(label: 'M' | 'G', color: string) {
+  return L.divIcon({
+    className: '',
+    html: `<div style="width:22px;height:22px;border-radius:5px;background:${color};border:2px solid white;box-shadow:0 1px 5px rgba(0,0,0,0.55);color:white;font:bold 12px/18px system-ui;text-align:center">${label}</div>`,
+    iconSize: [22, 22],
+    iconAnchor: [11, 11],
+    popupAnchor: [0, -13],
+  })
+}
+
+type ExternalManholeRecord = {
+  id: string
+  name: string
+  description?: string
+  address: string
+  lat: number
+  lng: number
+  url: string
+  source: 'manholemap' | 'gundam'
+}
+
 export type HintFilter = {
   label: string
   fn: (r: PokefutaRecord, entry: ManholeEntry | undefined) => boolean
@@ -76,6 +97,7 @@ export type MapTagsTaskProps = {
   onSaveMany: (patches: SemanticPatch[]) => Promise<void>
   saving: boolean
   initialSearch?: string
+  externalManholeMaps?: boolean
 }
 
 export function MapTagsTask({
@@ -91,6 +113,7 @@ export function MapTagsTask({
   onSaveMany,
   saving,
   initialSearch = '',
+  externalManholeMaps = false,
 }: MapTagsTaskProps) {
   const [search, setSearch] = useState(initialSearch)
 
@@ -107,6 +130,8 @@ export function MapTagsTask({
   const [nearbyPois, setNearbyPois] = useState<OsmPoi[]>([])
   const [poisLoading, setPoisLoading] = useState(false)
   const [poisError, setPoisError] = useState<string | null>(null)
+  const [externalManholes, setExternalManholes] = useState<ExternalManholeRecord[]>([])
+  const [externalMapsError, setExternalMapsError] = useState<string | null>(null)
 
   const [mapClickPos, setMapClickPos] = useState<{ lat: number; lng: number } | null>(null)
   const [mapClickPois, setMapClickPois] = useState<ClickPoi[] | null>(null)
@@ -117,6 +142,7 @@ export function MapTagsTask({
   const mapRef = useRef<L.Map | null>(null)
   const markersRef = useRef<Map<string, L.Marker>>(new Map())
   const poiMarkersRef = useRef<L.Marker[]>([])
+  const externalMarkersRef = useRef<L.Marker[]>([])
   const clickMarkerRef = useRef<L.Marker | null>(null)
 
   const tags = useMemo(
@@ -170,6 +196,68 @@ export function MapTagsTask({
       mapRef.current = null
     }
   }, [])
+
+  useEffect(() => {
+    if (!externalManholeMaps) return
+    let cancelled = false
+    Promise.all([
+      fetch('/__editor/data/manholemap').then(r => {
+        if (!r.ok) throw new Error(`Manhole Map: HTTP ${r.status}`)
+        return r.json() as Promise<Array<Omit<ExternalManholeRecord, 'source'>>>
+      }),
+      fetch('/__editor/data/gmanhole').then(r => {
+        if (!r.ok) throw new Error(`ガンダムマンホール: HTTP ${r.status}`)
+        return r.json() as Promise<Array<Omit<ExternalManholeRecord, 'source'>>>
+      }),
+    ]).then(([manholeMap, gundam]) => {
+      if (cancelled) return
+      setExternalManholes([
+        ...manholeMap.map(record => ({ ...record, source: 'manholemap' as const })),
+        ...gundam.map(record => ({ ...record, source: 'gundam' as const })),
+      ])
+    }).catch(error => {
+      if (!cancelled) setExternalMapsError(error instanceof Error ? error.message : String(error))
+    })
+    return () => { cancelled = true }
+  }, [externalManholeMaps])
+
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map || !externalManholeMaps || externalManholes.length === 0) return
+
+    const renderVisibleMarkers = () => {
+      externalMarkersRef.current.forEach(marker => marker.remove())
+      externalMarkersRef.current = []
+      const bounds = map.getBounds().pad(0.15)
+      const visible = externalManholes
+        .filter(record => bounds.contains([record.lat, record.lng]))
+        .slice(0, 500)
+
+      for (const record of visible) {
+        const isGundam = record.source === 'gundam'
+        const description = record.description
+          ? `<br><span style="font-size:11px">${esc(record.description)}</span>`
+          : ''
+        const marker = L.marker([record.lat, record.lng], {
+          icon: makeMapSourceIcon(isGundam ? 'G' : 'M', isGundam ? '#dc2626' : '#7c3aed'),
+          zIndexOffset: 300,
+        })
+          .addTo(map)
+          .bindPopup(
+            `<b>${isGundam ? 'ガンダムマンホール' : 'Manhole Map'}</b><br>${esc(record.name)}${description}<br><span style="font-size:11px">${esc(record.address)}</span><br><a href="${esc(record.url)}" target="_blank" rel="noreferrer">元ページ</a>`,
+          )
+        externalMarkersRef.current.push(marker)
+      }
+    }
+
+    renderVisibleMarkers()
+    map.on('moveend', renderVisibleMarkers)
+    return () => {
+      map.off('moveend', renderVisibleMarkers)
+      externalMarkersRef.current.forEach(marker => marker.remove())
+      externalMarkersRef.current = []
+    }
+  }, [externalManholeMaps, externalManholes])
 
   function buildPopupHtml(r: import('../../semantic/semanticPatch').PokefutaRecord, extraHtml = ''): string {
     const badges = (r.titles ?? [])
@@ -476,8 +564,26 @@ export function MapTagsTask({
             {label}
           </span>
         ))}
+        {externalManholeMaps && (
+          <>
+            <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+              <span style={{ width: 16, height: 16, borderRadius: 3, background: '#7c3aed', color: 'white', fontSize: 9, fontWeight: 700, lineHeight: '16px', textAlign: 'center' }}>M</span>
+              Manhole Map
+            </span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+              <span style={{ width: 16, height: 16, borderRadius: 3, background: '#dc2626', color: 'white', fontSize: 9, fontWeight: 700, lineHeight: '16px', textAlign: 'center' }}>G</span>
+              ガンダム
+            </span>
+          </>
+        )}
         <span style={{ marginLeft: 'auto' }}>マーカーをクリックで詳細</span>
       </div>
+
+      {externalMapsError && (
+        <div style={{ fontSize: 12, color: '#b45309', marginBottom: 8 }}>
+          外部マンホール地図の読み込みエラー: {externalMapsError}
+        </div>
+      )}
 
       <div ref={mapDivRef} style={{ height: 340, borderRadius: 8, border: '1px solid #e5e7eb', marginBottom: 12, overflow: 'hidden' }} />
 

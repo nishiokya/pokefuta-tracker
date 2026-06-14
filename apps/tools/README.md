@@ -13,6 +13,7 @@ GitHub Actions からは呼ばれない手動実行ツール群。
 | `export_pokemon_park_kml.py` | `dataset/pokemon_park.tsv` → KML 変換 |
 | `check_quality.py` | `pokefuta.ndjson` の address フィールド完全性チェック |
 | `import_michineki.py` | 道の駅JSONLDの生成・pokefutaへの roadside 自動登録（[詳細](#import_michinekipy)） |
+| `import_manholemap.py` | Manhole Map公開データの全件取得・JSON-LD生成 |
 
 ## 依存パッケージ
 
@@ -32,6 +33,11 @@ pip install -r requirements.txt
 # 道の駅JSONLD再生成 + roadside自動登録
 python3 apps/tools/import_michineki.py          # 本番適用
 python3 apps/tools/import_michineki.py --dry-run # 確認のみ
+
+# Manhole Map 全件JSON-LD生成（2回目以降は都道府県別キャッシュを使用）
+python3 apps/tools/import_manholemap.py
+# 最新データを再取得
+python3 apps/tools/import_manholemap.py --refresh
 
 # データ品質チェック（pokefuta.ndjson は自動解決）
 python apps/tools/check_quality.py
@@ -87,3 +93,20 @@ python3 apps/tools/import_michineki.py
 |---|---|---|
 | `dataset/michineki.json` | gitignore（再生成） | 道の駅 ~1200件 JSON-LD |
 | `dataset/manhole_titles.json` | git管理 | roadside タグ・building名 追記済み |
+
+## import_manholemap.py
+
+`https://manholemap.juge.me/searchmisc` の公開検索結果を都道府県単位で取得し、
+緯度経度、住所、タグ、説明、投稿者、日時、評価数、元ページ・画像URLを
+schema.orgベースのJSON-LDへ変換します。画像自体はダウンロードしません。
+
+出力とキャッシュは再生成可能なためgitignore対象です。
+
+```bash
+python3 apps/tools/import_manholemap.py
+cd tools/manhole-semantic-editor
+npm run dev
+```
+
+エディターの「近くのマンホールを探す」で、ポケふたから100m〜3km以内の
+Manhole Map投稿を地図・距離・説明・タグから確認できます。
