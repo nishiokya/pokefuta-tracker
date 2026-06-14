@@ -1,222 +1,479 @@
 {
+  "北海道|豊富町|北海道天塩郡豊富町字豊富駅前通": {
+    "lat": 45.10487,
+    "lng": 141.772842,
+    "provider": "gsi",
+    "strategy": "official_address",
+    "score": 76,
+    "query": "北海道天塩郡豊富町字豊富駅前通",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
+  },
+  "北海道|豊富町|北海道天塩郡豊富町字温泉": {
+    "lat": 45.079037,
+    "lng": 141.825745,
+    "provider": "gsi",
+    "strategy": "official_address",
+    "score": 75,
+    "query": "北海道天塩郡豊富町字温泉",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
+  },
   "北海道|天塩町|北海道天塩郡天塩町字サラキシ5807番地4": {
-    "lat": 44.888172,
-    "lng": 141.745346,
-    "provider": "gsi"
+    "lat": 44.984165,
+    "lng": 141.820526,
+    "provider": "gsi",
+    "strategy": "address_without_number",
+    "score": 75,
+    "query": "北海道天塩郡天塩町字サラキシ",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "北海道|天塩町|北海道天塩郡天塩町新開通4丁目7227番地の2": {
-    "lat": 44.888172,
-    "lng": 141.745346,
-    "provider": "gsi"
+    "lat": 44.88457188,
+    "lng": 141.7477548,
+    "provider": "yahoo",
+    "strategy": "official_address",
+    "score": 98,
+    "query": "北海道天塩郡天塩町新開通4丁目7227番地の2",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "北海道|稚内市|北海道稚内市港1丁目6番地28号": {
-    "lat": 45.415691,
-    "lng": 141.673111,
-    "provider": "gsi"
+    "lat": 45.40845631,
+    "lng": 141.67663168,
+    "provider": "yahoo",
+    "strategy": "official_address",
+    "score": 98,
+    "query": "北海道稚内市港1丁目6番地28号",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "北海道|稚内市|北海道稚内市開運2丁目7番1号": {
-    "lat": 45.415691,
-    "lng": 141.673111,
-    "provider": "gsi"
+    "lat": 45.41539182,
+    "lng": 141.6829503,
+    "provider": "yahoo",
+    "strategy": "official_address",
+    "score": 99,
+    "query": "北海道稚内市開運2丁目7番1号",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
+  },
+  "神奈川県|小田原市|神奈川県小田原市栄町2丁目9 ダイヤ街商店街内": {
+    "lat": 35.25457325,
+    "lng": 139.15905295,
+    "provider": "yahoo",
+    "strategy": "official_address",
+    "score": 90,
+    "query": "神奈川県小田原市栄町2丁目9 ダイヤ街商店街内",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "神奈川県|相模原市|神奈川県相模原市中央区淵野辺3丁目19付近交差点": {
-    "lat": 35.571388,
-    "lng": 139.373337,
-    "provider": "gsi"
+    "lat": 35.56975499,
+    "lng": 139.39514379,
+    "provider": "yahoo",
+    "strategy": "official_address",
+    "score": 92,
+    "query": "神奈川県相模原市中央区淵野辺3丁目19付近交差点",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
-  "神奈川県|相模原市|神奈川県相模原市中央区由野台3丁目1-1": {
-    "lat": 35.571388,
-    "lng": 139.373337,
-    "provider": "gsi"
+  "神奈川県|相模原市|神奈川県相模原市中央区由野台3丁目1ー1": {
+    "lat": 35.55840664,
+    "lng": 139.39527197,
+    "provider": "yahoo",
+    "strategy": "official_address",
+    "score": 99,
+    "query": "神奈川県相模原市中央区由野台3丁目1ー1",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "栃木県|壬生町|栃木県下都賀郡壬生町おもちゃのまち三丁目6-20": {
-    "lat": 36.442177,
-    "lng": 139.814667,
-    "provider": "gsi"
+    "lat": 36.46541266,
+    "lng": 139.83832226,
+    "provider": "yahoo",
+    "strategy": "official_address",
+    "score": 99,
+    "query": "栃木県下都賀郡壬生町おもちゃのまち三丁目6-20",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "栃木県|壬生町|栃木県下都賀郡壬生町幸町一丁目21-1": {
-    "lat": 36.442177,
-    "lng": 139.814667,
-    "provider": "gsi"
+    "lat": 36.46584847,
+    "lng": 139.82991188,
+    "provider": "yahoo",
+    "strategy": "official_address",
+    "score": 99,
+    "query": "栃木県下都賀郡壬生町幸町一丁目21-1",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "島根県|松江市|島根県松江市黒田町509-1付近": {
-    "lat": 35.557938,
-    "lng": 133.077332,
-    "provider": "gsi"
+    "lat": 35.47925496,
+    "lng": 133.04615485,
+    "provider": "yahoo",
+    "strategy": "official_address",
+    "score": 99,
+    "query": "島根県松江市黒田町509-1付近",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
+  },
+  "島根県|松江市|島根県松江市袖師町 岸公園内": {
+    "lat": 35.455315,
+    "lng": 133.050323,
+    "provider": "gsi",
+    "strategy": "official_address",
+    "score": 76,
+    "query": "島根県松江市袖師町 岸公園内",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "滋賀県|大津市|滋賀県大津市打出浜15": {
-    "lat": 35.043274,
-    "lng": 135.855301,
-    "provider": "gsi"
+    "lat": 35.00753846,
+    "lng": 135.87475258,
+    "provider": "yahoo",
+    "strategy": "official_address",
+    "score": 95,
+    "query": "滋賀県大津市打出浜15",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "滋賀県|大津市|滋賀県大津市浜町2": {
-    "lat": 35.043274,
-    "lng": 135.855301,
-    "provider": "gsi"
+    "lat": 35.01028532,
+    "lng": 135.86823649,
+    "provider": "yahoo",
+    "strategy": "official_address",
+    "score": 99,
+    "query": "滋賀県大津市浜町2",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "佐賀県|有田町|佐賀県西松浦郡有田町上幸平一丁目1258-1地先": {
-    "lat": 33.210556,
-    "lng": 129.849167,
-    "provider": "gsi"
+    "lat": 33.191868,
+    "lng": 129.901443,
+    "provider": "gsi",
+    "strategy": "official_address",
+    "score": 70,
+    "query": "佐賀県西松浦郡有田町上幸平一丁目1258-1地先",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "佐賀県|有田町|佐賀県西松浦郡有田町泉山一丁目380-1": {
-    "lat": 33.210556,
-    "lng": 129.849167,
-    "provider": "gsi"
+    "lat": 33.194229,
+    "lng": 129.908661,
+    "provider": "gsi",
+    "strategy": "official_address",
+    "score": 71,
+    "query": "佐賀県西松浦郡有田町泉山一丁目380-1",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "北海道|遠軽町|北海道紋別郡遠軽町岩見通南1丁目1番地2": {
-    "lat": 44.061962,
-    "lng": 143.528046,
-    "provider": "gsi"
+    "lat": 44.05914159,
+    "lng": 143.52059157,
+    "provider": "yahoo",
+    "strategy": "official_address",
+    "score": 99,
+    "query": "北海道紋別郡遠軽町岩見通南1丁目1番地2",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "北海道|遠軽町|北海道紋別郡遠軽町野上150番地1": {
-    "lat": 44.061962,
-    "lng": 143.528046,
-    "provider": "gsi"
+    "lat": 44.02194777,
+    "lng": 143.4957571,
+    "provider": "yahoo",
+    "strategy": "official_address",
+    "score": 99,
+    "query": "北海道紋別郡遠軽町野上150番地1",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
+  },
+  "静岡県|静岡市|静岡県静岡市駿河区南町18-1地先": {
+    "lat": 34.97130146,
+    "lng": 138.391153,
+    "provider": "yahoo",
+    "strategy": "official_address",
+    "score": 99,
+    "query": "静岡県静岡市駿河区南町18-1地先",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
+  },
+  "静岡県|静岡市|静岡県静岡市葵区東静岡一丁目1番地先": {
+    "lat": 34.98426674,
+    "lng": 138.41111189,
+    "provider": "yahoo",
+    "strategy": "official_address",
+    "score": 91,
+    "query": "静岡県静岡市葵区東静岡一丁目1番地先",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "愛知県|豊田市|愛知県豊田市足助町宮ノ後27番地3": {
-    "lat": 35.082565,
-    "lng": 137.156235,
-    "provider": "gsi"
+    "lat": 35.135353,
+    "lng": 137.318207,
+    "provider": "gsi",
+    "strategy": "title_locality",
+    "score": 81,
+    "query": "愛知県豊田市足助支所",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "愛知県|豊田市|愛知県豊田市喜多町2丁目144番地": {
-    "lat": 35.082565,
-    "lng": 137.156235,
-    "provider": "gsi"
+    "lat": 35.087315,
+    "lng": 137.157471,
+    "provider": "gsi",
+    "strategy": "official_address",
+    "score": 76,
+    "query": "愛知県豊田市喜多町2丁目144番地",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "千葉県|山武市|千葉県山武市蓮沼ハ4826番地": {
-    "lat": 35.602943,
-    "lng": 140.413544,
-    "provider": "gsi"
+    "lat": 35.60179529,
+    "lng": 140.50159366,
+    "provider": "yahoo",
+    "strategy": "official_address",
+    "score": 99,
+    "query": "千葉県山武市蓮沼ハ4826番地",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "千葉県|山武市|千葉県山武市埴谷1904番地5": {
-    "lat": 35.602943,
-    "lng": 140.413544,
-    "provider": "gsi"
+    "lat": 35.64208508,
+    "lng": 140.36724508,
+    "provider": "yahoo",
+    "strategy": "official_address",
+    "score": 99,
+    "query": "千葉県山武市埴谷1904番地5",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "大阪府|柏原市|大阪府柏原市国分西1丁目2番付近": {
-    "lat": 34.588097,
-    "lng": 135.626572,
-    "provider": "gsi"
+    "lat": 34.566659,
+    "lng": 135.63456455,
+    "provider": "yahoo",
+    "strategy": "official_address",
+    "score": 92,
+    "query": "大阪府柏原市国分西1丁目2番付近",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "大阪府|柏原市|大阪府柏原市清州2丁目4番付近": {
-    "lat": 34.588097,
-    "lng": 135.626572,
-    "provider": "gsi"
+    "lat": 34.58913154,
+    "lng": 135.624151,
+    "provider": "yahoo",
+    "strategy": "official_address",
+    "score": 92,
+    "query": "大阪府柏原市清州2丁目4番付近",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "岡山県|勝央町|岡山県勝田郡勝央町太平台43番": {
-    "lat": 35.03754,
-    "lng": 134.12793,
-    "provider": "gsi"
+    "lat": 35.04620576,
+    "lng": 134.11036027,
+    "provider": "yahoo",
+    "strategy": "official_address",
+    "score": 99,
+    "query": "岡山県勝田郡勝央町太平台43番",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "岡山県|勝央町|岡山県勝田郡勝央町勝間田765番3": {
-    "lat": 35.03754,
-    "lng": 134.12793,
-    "provider": "gsi"
+    "lat": 35.03579573,
+    "lng": 134.11925972,
+    "provider": "yahoo",
+    "strategy": "official_address",
+    "score": 99,
+    "query": "岡山県勝田郡勝央町勝間田765番3",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "鹿児島県|出水市|鹿児島県出水市麓町10-39": {
-    "lat": 32.090275,
-    "lng": 130.353165,
-    "provider": "gsi"
+    "lat": 32.07556496,
+    "lng": 130.35923009,
+    "provider": "yahoo",
+    "strategy": "official_address",
+    "score": 99,
+    "query": "鹿児島県出水市麓町10-39",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "鹿児島県|出水市|鹿児島県出水市文化町1000": {
-    "lat": 32.090275,
-    "lng": 130.353165,
-    "provider": "gsi"
+    "lat": 32.09820143,
+    "lng": 130.34334776,
+    "provider": "yahoo",
+    "strategy": "official_address",
+    "score": 99,
+    "query": "鹿児島県出水市文化町1000",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "岡山県|井原市|岡山県井原市美星町大倉1723番地70": {
-    "lat": 34.597778,
-    "lng": 133.463882,
-    "provider": "gsi"
+    "lat": 34.67200503,
+    "lng": 133.54539661,
+    "provider": "yahoo",
+    "strategy": "official_address",
+    "score": 99,
+    "query": "岡山県井原市美星町大倉1723番地70",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "岡山県|井原市|岡山県井原市井原町315番地": {
-    "lat": 34.597778,
-    "lng": 133.463882,
-    "provider": "gsi"
+    "lat": 34.59801873,
+    "lng": 133.46352814,
+    "provider": "yahoo",
+    "strategy": "official_address",
+    "score": 98,
+    "query": "岡山県井原市井原町315番地",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "青森県|むつ市|青森県むつ市桜木町3番1号": {
-    "lat": 41.293053,
-    "lng": 141.18306,
-    "provider": "gsi"
+    "lat": 41.25659841,
+    "lng": 141.13922219,
+    "provider": "yahoo",
+    "strategy": "official_address",
+    "score": 99,
+    "query": "青森県むつ市桜木町3番1号",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "青森県|むつ市|青森県むつ市下北町4番13号": {
-    "lat": 41.293053,
-    "lng": 141.18306,
-    "provider": "gsi"
+    "lat": 41.28310482,
+    "lng": 141.18979203,
+    "provider": "yahoo",
+    "strategy": "official_address",
+    "score": 99,
+    "query": "青森県むつ市下北町4番13号",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "京都府|京丹後市|京都府京丹後市丹後町竹野313番地の1": {
-    "lat": 35.624168,
-    "lng": 135.061111,
-    "provider": "gsi"
+    "lat": 35.73899757,
+    "lng": 135.10528325,
+    "provider": "yahoo",
+    "strategy": "official_address",
+    "score": 98,
+    "query": "京都府京丹後市丹後町竹野313番地の1",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "京都府|京丹後市|京都府京丹後市網野町浜詰44番地": {
-    "lat": 35.624168,
-    "lng": 135.061111,
-    "provider": "gsi"
+    "lat": 35.6626169,
+    "lng": 134.9671044,
+    "provider": "yahoo",
+    "strategy": "official_address",
+    "score": 99,
+    "query": "京都府京丹後市網野町浜詰44番地",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "新潟県|南魚沼市|新潟県南魚沼市六日町101-8": {
-    "lat": 37.08699,
-    "lng": 138.924423,
-    "provider": "gsi"
+    "lat": 37.06736845,
+    "lng": 138.87701426,
+    "provider": "yahoo",
+    "strategy": "official_address",
+    "score": 99,
+    "query": "新潟県南魚沼市六日町101-8",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "新潟県|南魚沼市|新潟県南魚沼市下一日市855": {
-    "lat": 37.08699,
-    "lng": 138.924423,
-    "provider": "gsi"
+    "lat": 37.0036383,
+    "lng": 138.81899961,
+    "provider": "yahoo",
+    "strategy": "official_address",
+    "score": 99,
+    "query": "新潟県南魚沼市下一日市855",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "山梨県|甲府市|山梨県甲府市丸の内一丁目7番4号付近の歩道": {
-    "lat": 35.694988,
-    "lng": 138.533508,
-    "provider": "gsi"
+    "lat": 35.66573441,
+    "lng": 138.56841764,
+    "provider": "yahoo",
+    "strategy": "official_address",
+    "score": 96,
+    "query": "山梨県甲府市丸の内一丁目7番4号付近の歩道",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
-  "山梨県|甲府市|山梨県甲府市丸の内一丁目1番　「アシストエンジニアリングよっちゃばれ広場」南側歩道": {
-    "lat": 35.694988,
-    "lng": 138.533508,
-    "provider": "gsi"
+  "山梨県|甲府市|山梨県甲府市丸の内一丁目1番 「アシストエンジニアリングよっちゃばれ広場」南側歩道": {
+    "lat": 35.66654822,
+    "lng": 138.56948971,
+    "provider": "yahoo",
+    "strategy": "official_address",
+    "score": 85,
+    "query": "山梨県甲府市丸の内一丁目1番 「アシストエンジニアリングよっちゃばれ広場」南側歩道",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "愛媛県|松山市|愛媛県松山市道後湯之町20番21地先 道後商店街": {
-    "lat": 33.846317,
-    "lng": 132.749191,
-    "provider": "gsi"
+    "lat": 33.85222813,
+    "lng": 132.78562032,
+    "provider": "yahoo",
+    "strategy": "official_address",
+    "score": 96,
+    "query": "愛媛県松山市道後湯之町20番21地先 道後商店街",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
-  "愛媛県|松山市|愛媛県松山市大街道三丁目2番46地先 ロ-プウェ-商店街": {
-    "lat": 33.846317,
-    "lng": 132.749191,
-    "provider": "gsi"
+  "愛媛県|松山市|愛媛県松山市大街道三丁目2番46地先 ロープウェー商店街": {
+    "lat": 33.84465091,
+    "lng": 132.77193259,
+    "provider": "yahoo",
+    "strategy": "official_address",
+    "score": 94,
+    "query": "愛媛県松山市大街道三丁目2番46地先 ロープウェー商店街",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
+  },
+  "長野県|小諸市|長野県小諸市相生町一丁目1番9号 停車場ガーデン": {
+    "lat": 36.32765777,
+    "lng": 138.42144462,
+    "provider": "yahoo",
+    "strategy": "official_address",
+    "score": 94,
+    "query": "長野県小諸市相生町一丁目1番9号 停車場ガーデン",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "長野県|小諸市|長野県小諸市大字大久保1100番地 あぐりの湯こもろ": {
-    "lat": 36.32753,
-    "lng": 138.425873,
-    "provider": "gsi"
+    "lat": 36.32372471,
+    "lng": 138.39462184,
+    "provider": "yahoo",
+    "strategy": "official_address",
+    "score": 94,
+    "query": "長野県小諸市大字大久保1100番地 あぐりの湯こもろ",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "千葉県|香取市|千葉県香取市長岡1828-1 橘ふれあい公園内": {
-    "lat": 35.897739,
-    "lng": 140.499298,
-    "provider": "gsi"
+    "lat": 35.81011188,
+    "lng": 140.58770359,
+    "provider": "yahoo",
+    "strategy": "official_address",
+    "score": 95,
+    "query": "千葉県香取市長岡1828-1 橘ふれあい公園内",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "千葉県|香取市|千葉県香取市小見川4872-22 くろべ運動公園内": {
-    "lat": 35.897739,
-    "lng": 140.499298,
-    "provider": "gsi"
+    "lat": 35.85843116,
+    "lng": 140.61121941,
+    "provider": "yahoo",
+    "strategy": "official_address",
+    "score": 95,
+    "query": "千葉県香取市小見川4872-22 くろべ運動公園内",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "岩手県|平泉町|岩手県西磐井郡平泉町平泉字伽羅楽112-2地先": {
-    "lat": 38.986588,
-    "lng": 141.113846,
-    "provider": "gsi"
+    "lat": 38.99191985,
+    "lng": 141.12156811,
+    "provider": "yahoo",
+    "strategy": "official_address",
+    "score": 99,
+    "query": "岩手県西磐井郡平泉町平泉字伽羅楽112-2地先",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "岩手県|平泉町|岩手県西磐井郡平泉町平泉字志羅山112-5地先": {
-    "lat": 38.986588,
-    "lng": 141.113846,
-    "provider": "gsi"
+    "lat": 38.987892,
+    "lng": 141.11232,
+    "provider": "gsi",
+    "strategy": "official_address",
+    "score": 73,
+    "query": "岩手県西磐井郡平泉町平泉字志羅山112-5地先",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
+  },
+  "兵庫県|姫路市|兵庫県姫路市大手前通り 西二階町入口": {
+    "lat": 34.832298,
+    "lng": 134.689774,
+    "provider": "gsi",
+    "strategy": "title_locality",
+    "score": 90,
+    "query": "兵庫県姫路市西二階町",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
+  },
+  "兵庫県|姫路市|兵庫県姫路市大手前通り 二階町入口": {
+    "lat": 34.831528,
+    "lng": 134.693314,
+    "provider": "gsi",
+    "strategy": "title_locality",
+    "score": 90,
+    "query": "兵庫県姫路市二階町",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "茨城県|水戸市|茨城県水戸市泉町1-171": {
-    "lat": 36.365852,
-    "lng": 140.471588,
-    "provider": "gsi"
+    "lat": 36.378368,
+    "lng": 140.465088,
+    "provider": "gsi",
+    "strategy": "official_address",
+    "score": 81,
+    "query": "茨城県水戸市泉町1-171",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "茨城県|水戸市|茨城県水戸市三の丸1-130-1": {
-    "lat": 36.365852,
-    "lng": 140.471588,
-    "provider": "gsi"
+    "lat": 36.374908,
+    "lng": 140.475891,
+    "provider": "gsi",
+    "strategy": "official_address",
+    "score": 79,
+    "query": "茨城県水戸市三の丸1-130-1",
+    "updated_at": "2026-06-14T07:14:36.247995Z"
   }
 }

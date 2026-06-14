@@ -11,6 +11,7 @@ const TITLES_PATH = path.join(REPO_ROOT, 'dataset/manhole_titles.json')
 const MICHINEKI_PATH = path.join(REPO_ROOT, 'dataset/michineki.json')
 const MANHOLEMAP_PATH = path.join(REPO_ROOT, 'dataset/manholemap.json')
 const GMANHOLE_PATH = path.join(REPO_ROOT, 'docs/gmanhole.ndjson')
+const GMANHOLE_GEOCODE_AUDIT_PATH = path.join(REPO_ROOT, 'dataset/gmanhole_geocode_audit.json')
 const WORKSPACE_DIR = path.join(__dirname, 'workspace')
 const PATCHES_PATH = path.join(WORKSPACE_DIR, 'changes.ndjson')
 const SCRIPTS_DIR = path.join(__dirname, 'scripts')
@@ -128,6 +129,17 @@ async function handleEditorRequest(
         lng: record.lng,
         url: record.detail_url ?? '',
       })))
+    return
+  }
+
+  if (method === 'GET' && subpath === '/data/gmanhole-geocode-audit') {
+    if (!fs.existsSync(GMANHOLE_GEOCODE_AUDIT_PATH)) {
+      jsonRes(res, { error: 'dataset/gmanhole_geocode_audit.json not found' }, 404)
+      return
+    }
+    const raw = fs.readFileSync(GMANHOLE_GEOCODE_AUDIT_PATH, 'utf-8')
+    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' })
+    res.end(raw)
     return
   }
 

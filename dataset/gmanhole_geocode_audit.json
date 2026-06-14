@@ -1,0 +1,6395 @@
+{
+  "generated_at": "2026-06-14T07:14:36.247995Z",
+  "records": [
+    {
+      "id": "1",
+      "title": "豊富町観光情報センター",
+      "prefecture": "北海道",
+      "city": "豊富町",
+      "status": "selected",
+      "address": "北海道天塩郡豊富町字豊富駅前通",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=1",
+      "old_coordinate": {
+        "lat": 45.10487,
+        "lng": 141.772842
+      },
+      "selected": {
+        "provider": "gsi",
+        "strategy": "official_address",
+        "query": "北海道天塩郡豊富町字豊富駅前通",
+        "rank": 1,
+        "label": "北海道豊富町豊富駅前通",
+        "lat": 45.10487,
+        "lng": 141.772842,
+        "score": 76,
+        "reason": "GSI住所候補（文字一致 69%）"
+      },
+      "selection_reason": "公式住所を変更せずに得たGSI候補を優先採用",
+      "old_distance_km": 0.0,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "北海道天塩郡豊富町字豊富駅前通",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "北海道天塩郡豊富町字豊富駅前通",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "北海道 豊富町 豊富町観光情報センター",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "北海道天塩郡豊富町字豊富駅前通",
+          "result_count": 4,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "北海道天塩郡豊富町字豊富駅前通",
+          "rank": 1,
+          "label": "北海道豊富町豊富駅前通",
+          "lat": 45.10487,
+          "lng": 141.772842,
+          "score": 76,
+          "reason": "GSI住所候補（文字一致 69%）"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "北海道天塩郡豊富町字豊富駅前通",
+          "rank": 1,
+          "label": "北海道天塩郡豊富町豊富駅前通（字）",
+          "lat": 45.10615157,
+          "lng": 141.775974,
+          "score": 83,
+          "reason": "Yahoo住所候補（一致レベル 3 / 文字一致 100%）",
+          "matching_level": 3,
+          "address_type": "町・大字",
+          "government_code": "01516"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "北海道天塩郡豊富町字豊富駅前通",
+          "rank": 2,
+          "label": "北海道天塩郡豊富町豊富駅前通（字）2546",
+          "lat": 45.10615157,
+          "lng": 141.775974,
+          "score": 99,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 100%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "01516"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "北海道天塩郡豊富町字豊富駅前通",
+          "rank": 3,
+          "label": "北海道天塩郡豊富町豊富駅前通（字）2546-227",
+          "lat": 45.10614046,
+          "lng": 141.77577957,
+          "score": 97,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 100%）",
+          "matching_level": 6,
+          "address_type": "枝番",
+          "government_code": "01516"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "北海道天塩郡豊富町字豊富駅前通",
+          "rank": 4,
+          "label": "北海道天塩郡豊富町豊富駅前通（字）2546-20",
+          "lat": 45.10615157,
+          "lng": 141.775974,
+          "score": 95,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 100%）",
+          "matching_level": 6,
+          "address_type": "枝番",
+          "government_code": "01516"
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "title": "湯の杜ぽっけ",
+      "prefecture": "北海道",
+      "city": "豊富町",
+      "status": "selected",
+      "address": "北海道天塩郡豊富町字温泉",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=2",
+      "old_coordinate": {
+        "lat": 45.079037,
+        "lng": 141.825745
+      },
+      "selected": {
+        "provider": "gsi",
+        "strategy": "official_address",
+        "query": "北海道天塩郡豊富町字温泉",
+        "rank": 1,
+        "label": "北海道豊富町温泉",
+        "lat": 45.079037,
+        "lng": 141.825745,
+        "score": 75,
+        "reason": "GSI住所候補（文字一致 67%）"
+      },
+      "selection_reason": "公式住所を変更せずに得たGSI候補を優先採用",
+      "old_distance_km": 0.0,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "北海道天塩郡豊富町字温泉",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "北海道天塩郡豊富町字温泉",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "北海道 豊富町 湯の杜ぽっけ",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "北海道天塩郡豊富町字温泉",
+          "result_count": 1,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "北海道天塩郡豊富町字温泉",
+          "rank": 1,
+          "label": "北海道豊富町温泉",
+          "lat": 45.079037,
+          "lng": 141.825745,
+          "score": 75,
+          "reason": "GSI住所候補（文字一致 67%）"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "北海道天塩郡豊富町字温泉",
+          "rank": 1,
+          "label": "北海道天塩郡豊富町豊富温泉（字）",
+          "lat": 45.0739465,
+          "lng": 141.84000612,
+          "score": 83,
+          "reason": "Yahoo住所候補（一致レベル 3 / 文字一致 100%）",
+          "matching_level": 3,
+          "address_type": "町・大字",
+          "government_code": "01516"
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "title": "てしお温泉夕映",
+      "prefecture": "北海道",
+      "city": "天塩町",
+      "status": "selected",
+      "address": "北海道天塩郡天塩町字サラキシ5807番地4",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=3",
+      "old_coordinate": {
+        "lat": 44.984165,
+        "lng": 141.820526
+      },
+      "selected": {
+        "provider": "gsi",
+        "strategy": "address_without_number",
+        "query": "北海道天塩郡天塩町字サラキシ",
+        "rank": 1,
+        "label": "北海道天塩町サッカヘシ",
+        "lat": 44.984165,
+        "lng": 141.820526,
+        "score": 75,
+        "reason": "GSI住所候補（文字一致 67%）"
+      },
+      "selection_reason": "公式住所のGSI候補を優先し、文字一致が最も高い候補を採用",
+      "old_distance_km": 0.0,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "北海道天塩郡天塩町字サラキシ5807番地4",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "北海道天塩郡天塩町字サラキシ",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "北海道天塩郡天塩町字サラキシ5807番地4",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "北海道 天塩町 てしお温泉夕映",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "北海道天塩郡天塩町字サラキシ5807番地4",
+          "result_count": 0,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "北海道天塩郡天塩町字サラキシ5807番地4",
+          "rank": 1,
+          "label": "北海道天塩町サッカヘシ",
+          "lat": 44.984165,
+          "lng": 141.820526,
+          "score": 64,
+          "reason": "GSI住所候補（文字一致 42%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "北海道天塩郡天塩町字サラキシ",
+          "rank": 1,
+          "label": "北海道天塩町サッカヘシ",
+          "lat": 44.984165,
+          "lng": 141.820526,
+          "score": 75,
+          "reason": "GSI住所候補（文字一致 67%）"
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "title": "道の駅てしお",
+      "prefecture": "北海道",
+      "city": "天塩町",
+      "status": "selected",
+      "address": "北海道天塩郡天塩町新開通4丁目7227番地の2",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=4",
+      "old_coordinate": {
+        "lat": 44.884033,
+        "lng": 141.747711
+      },
+      "selected": {
+        "provider": "yahoo",
+        "strategy": "official_address",
+        "query": "北海道天塩郡天塩町新開通4丁目7227番地の2",
+        "rank": 1,
+        "label": "北海道天塩郡天塩町新開通4丁目7227-2",
+        "lat": 44.88457188,
+        "lng": 141.7477548,
+        "score": 98,
+        "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 83%）",
+        "matching_level": 6,
+        "address_type": "枝番",
+        "government_code": "01487"
+      },
+      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
+      "old_distance_km": 0.06,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "北海道天塩郡天塩町新開通4丁目7227番地の2",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "北海道天塩郡天塩町新開通4丁目",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "北海道天塩郡天塩町新開通4丁目7227番地の2",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "北海道 天塩町 道の駅てしお",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "北海道天塩郡天塩町新開通4丁目7227番地の2",
+          "result_count": 1,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "北海道天塩郡天塩町新開通4丁目7227番地の2",
+          "rank": 1,
+          "label": "北海道天塩町新開通四丁目",
+          "lat": 44.884033,
+          "lng": 141.747711,
+          "score": 72,
+          "reason": "GSI住所候補（文字一致 61%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "北海道天塩郡天塩町新開通4丁目",
+          "rank": 1,
+          "label": "北海道天塩町新開通四丁目",
+          "lat": 44.884033,
+          "lng": 141.747711,
+          "score": 83,
+          "reason": "GSI住所候補（文字一致 85%）"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "北海道天塩郡天塩町新開通4丁目7227番地の2",
+          "rank": 1,
+          "label": "北海道天塩郡天塩町新開通4丁目7227-2",
+          "lat": 44.88457188,
+          "lng": 141.7477548,
+          "score": 98,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 83%）",
+          "matching_level": 6,
+          "address_type": "枝番",
+          "government_code": "01487"
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "title": "稚内副港市場",
+      "prefecture": "北海道",
+      "city": "稚内市",
+      "status": "selected",
+      "address": "北海道稚内市港1丁目6番地28号",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=5",
+      "old_coordinate": {
+        "lat": 45.408722,
+        "lng": 141.676346
+      },
+      "selected": {
+        "provider": "yahoo",
+        "strategy": "official_address",
+        "query": "北海道稚内市港1丁目6番地28号",
+        "rank": 1,
+        "label": "北海道稚内市港1丁目6-28",
+        "lat": 45.40845631,
+        "lng": 141.67663168,
+        "score": 98,
+        "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 81%）",
+        "matching_level": 6,
+        "address_type": "地番・戸番",
+        "government_code": "01214"
+      },
+      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
+      "old_distance_km": 0.037,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "北海道稚内市港1丁目6番地28号",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "北海道稚内市港1丁目",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "北海道稚内市港1丁目6番地28号",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "北海道 稚内市 稚内副港市場",
+          "result_count": 2,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "北海道稚内市港1丁目6番地28号",
+          "result_count": 1,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "北海道稚内市港1丁目6番地28号",
+          "rank": 1,
+          "label": "北海道稚内市港一丁目６番",
+          "lat": 45.408722,
+          "lng": 141.676346,
+          "score": 76,
+          "reason": "GSI住所候補（文字一致 69%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "北海道稚内市港1丁目",
+          "rank": 1,
+          "label": "北海道稚内市港一丁目",
+          "lat": 45.408653,
+          "lng": 141.675217,
+          "score": 86,
+          "reason": "GSI住所候補（文字一致 90%）"
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "北海道 稚内市 稚内副港市場",
+          "rank": 1,
+          "label": "北海道開発局 茶, 天神南小樽停車場線, 稲穂二丁目, 稲穂, 小樽市, 後志総合振興局, 北海道, 北海道地方, 047-0033, 日本",
+          "lat": 43.1949365,
+          "lng": 140.9959449,
+          "score": 89,
+          "reason": "Nominatim place_name候補（文字一致 56%）",
+          "category": "amenity",
+          "type": "grit_bin"
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "北海道 稚内市 稚内副港市場",
+          "rank": 2,
+          "label": "北海道電力株式会社, 天神南小樽停車場線, 富岡一丁目, 緑, 小樽市, 後志総合振興局, 北海道, 北海道地方, 047-8660, 日本",
+          "lat": 43.1945745,
+          "lng": 140.9935006,
+          "score": 87,
+          "reason": "Nominatim place_name候補（文字一致 56%）",
+          "category": "office",
+          "type": "company"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "北海道稚内市港1丁目6番地28号",
+          "rank": 1,
+          "label": "北海道稚内市港1丁目6-28",
+          "lat": 45.40845631,
+          "lng": 141.67663168,
+          "score": 98,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 81%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "01214"
+        }
+      ]
+    },
+    {
+      "id": "6",
+      "title": "稚内フェリーターミナル",
+      "prefecture": "北海道",
+      "city": "稚内市",
+      "status": "selected",
+      "address": "北海道稚内市開運2丁目7番1号",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=6",
+      "old_coordinate": {
+        "lat": 45.415649,
+        "lng": 141.683319
+      },
+      "selected": {
+        "provider": "yahoo",
+        "strategy": "official_address",
+        "query": "北海道稚内市開運2丁目7番1号",
+        "rank": 1,
+        "label": "北海道稚内市開運2丁目7-1",
+        "lat": 45.41539182,
+        "lng": 141.6829503,
+        "score": 99,
+        "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 87%）",
+        "matching_level": 6,
+        "address_type": "地番・戸番",
+        "government_code": "01214"
+      },
+      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
+      "old_distance_km": 0.041,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "北海道稚内市開運2丁目7番1号",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "北海道稚内市開運2丁目",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "北海道稚内市開運2丁目7番1号",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "北海道 稚内市 稚内フェリーターミナル",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "北海道稚内市開運2丁目7番1号",
+          "result_count": 1,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "北海道稚内市開運2丁目7番1号",
+          "rank": 1,
+          "label": "北海道稚内市開運二丁目７番１号",
+          "lat": 45.415649,
+          "lng": 141.683319,
+          "score": 87,
+          "reason": "GSI住所候補（文字一致 93%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "北海道稚内市開運2丁目",
+          "rank": 1,
+          "label": "北海道稚内市開運二丁目",
+          "lat": 45.416355,
+          "lng": 141.679611,
+          "score": 86,
+          "reason": "GSI住所候補（文字一致 91%）"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "北海道稚内市開運2丁目7番1号",
+          "rank": 1,
+          "label": "北海道稚内市開運2丁目7-1",
+          "lat": 45.41539182,
+          "lng": 141.6829503,
+          "score": 99,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 87%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "01214"
+        }
+      ]
+    },
+    {
+      "id": "7",
+      "title": "小田原城",
+      "prefecture": "神奈川県",
+      "city": "小田原市",
+      "status": "selected",
+      "address": "神奈川県小田原市栄町2丁目9 ダイヤ街商店街内",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=7",
+      "old_coordinate": {
+        "lat": 35.254902,
+        "lng": 139.15921
+      },
+      "selected": {
+        "provider": "yahoo",
+        "strategy": "official_address",
+        "query": "神奈川県小田原市栄町2丁目9 ダイヤ街商店街内",
+        "rank": 1,
+        "label": "神奈川県小田原市栄町2丁目9",
+        "lat": 35.25457325,
+        "lng": 139.15905295,
+        "score": 90,
+        "reason": "Yahoo住所候補（一致レベル 5 / 文字一致 67%）",
+        "matching_level": 5,
+        "address_type": "街区",
+        "government_code": "14206"
+      },
+      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
+      "old_distance_km": 0.039,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "神奈川県小田原市栄町2丁目9 ダイヤ街商店街内",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "神奈川県小田原市栄町2丁目9 ダイヤ街商店街内",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "神奈川県 小田原市 小田原城",
+          "result_count": 3,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "神奈川県小田原市栄町2丁目9 ダイヤ街商店街内",
+          "result_count": 5,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "神奈川県小田原市栄町2丁目9 ダイヤ街商店街内",
+          "rank": 1,
+          "label": "神奈川県小田原市栄町二丁目９番",
+          "lat": 35.254902,
+          "lng": 139.15921,
+          "score": 73,
+          "reason": "GSI住所候補（文字一致 62%）"
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "神奈川県 小田原市 小田原城",
+          "rank": 1,
+          "label": "神奈川県立小田原高等学校, 1, 城山三丁目, 小田原市, 神奈川県, 250-0045, 日本",
+          "lat": 35.2535898,
+          "lng": 139.1485399,
+          "score": 98,
+          "reason": "Nominatim place_name候補（文字一致 100%）",
+          "category": "amenity",
+          "type": "school"
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "神奈川県 小田原市 小田原城",
+          "rank": 2,
+          "label": "豊川駐在所, 3, 成田, 小田原市, 神奈川県, 250-0862, 日本",
+          "lat": 35.2926465,
+          "lng": 139.1655512,
+          "score": 94,
+          "reason": "Nominatim place_name候補（文字一致 89%）",
+          "category": "amenity",
+          "type": "police"
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "神奈川県 小田原市 小田原城",
+          "rank": 3,
+          "label": "神奈川県西湘地域県政総合センター, 小田原山北線, 城山一丁目, 小田原市, 神奈川県, 250-0042, 日本",
+          "lat": 35.262779,
+          "lng": 139.152989,
+          "score": 94,
+          "reason": "Nominatim place_name候補（文字一致 100%）",
+          "category": "amenity",
+          "type": "public_building"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "神奈川県小田原市栄町2丁目9 ダイヤ街商店街内",
+          "rank": 1,
+          "label": "神奈川県小田原市栄町2丁目9",
+          "lat": 35.25457325,
+          "lng": 139.15905295,
+          "score": 90,
+          "reason": "Yahoo住所候補（一致レベル 5 / 文字一致 67%）",
+          "matching_level": 5,
+          "address_type": "街区",
+          "government_code": "14206"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "神奈川県小田原市栄町2丁目9 ダイヤ街商店街内",
+          "rank": 2,
+          "label": "神奈川県小田原市栄町2丁目9-39",
+          "lat": 35.25491487,
+          "lng": 139.15921958,
+          "score": 94,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 67%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "14206"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "神奈川県小田原市栄町2丁目9 ダイヤ街商店街内",
+          "rank": 3,
+          "label": "神奈川県小田原市栄町2丁目9-33",
+          "lat": 35.25536202,
+          "lng": 139.15870293,
+          "score": 92,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 67%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "14206"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "神奈川県小田原市栄町2丁目9 ダイヤ街商店街内",
+          "rank": 4,
+          "label": "神奈川県小田原市栄町2丁目9-46",
+          "lat": 35.25407889,
+          "lng": 139.15966403,
+          "score": 90,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 67%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "14206"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "神奈川県小田原市栄町2丁目9 ダイヤ街商店街内",
+          "rank": 5,
+          "label": "神奈川県小田原市栄町2丁目9-1",
+          "lat": 35.2541483,
+          "lng": 139.15878911,
+          "score": 88,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 67%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "14206"
+        }
+      ]
+    },
+    {
+      "id": "8",
+      "title": "小田原漁港",
+      "prefecture": "神奈川県",
+      "city": "小田原市",
+      "status": "selected",
+      "address": "神奈川県小田原市栄町2丁目9 ダイヤ街商店街内",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=8",
+      "old_coordinate": {
+        "lat": 35.254902,
+        "lng": 139.15921
+      },
+      "selected": {
+        "provider": "yahoo",
+        "strategy": "official_address",
+        "query": "神奈川県小田原市栄町2丁目9 ダイヤ街商店街内",
+        "rank": 1,
+        "label": "神奈川県小田原市栄町2丁目9",
+        "lat": 35.25457325,
+        "lng": 139.15905295,
+        "score": 90,
+        "reason": "Yahoo住所候補（一致レベル 5 / 文字一致 67%）",
+        "matching_level": 5,
+        "address_type": "街区",
+        "government_code": "14206"
+      },
+      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
+      "old_distance_km": 0.039,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "神奈川県小田原市栄町2丁目9 ダイヤ街商店街内",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "神奈川県小田原市栄町2丁目9 ダイヤ街商店街内",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "神奈川県 小田原市 小田原漁港",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "神奈川県小田原市栄町2丁目9 ダイヤ街商店街内",
+          "result_count": 5,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "神奈川県小田原市栄町2丁目9 ダイヤ街商店街内",
+          "rank": 1,
+          "label": "神奈川県小田原市栄町二丁目９番",
+          "lat": 35.254902,
+          "lng": 139.15921,
+          "score": 73,
+          "reason": "GSI住所候補（文字一致 62%）"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "神奈川県小田原市栄町2丁目9 ダイヤ街商店街内",
+          "rank": 1,
+          "label": "神奈川県小田原市栄町2丁目9",
+          "lat": 35.25457325,
+          "lng": 139.15905295,
+          "score": 90,
+          "reason": "Yahoo住所候補（一致レベル 5 / 文字一致 67%）",
+          "matching_level": 5,
+          "address_type": "街区",
+          "government_code": "14206"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "神奈川県小田原市栄町2丁目9 ダイヤ街商店街内",
+          "rank": 2,
+          "label": "神奈川県小田原市栄町2丁目9-39",
+          "lat": 35.25491487,
+          "lng": 139.15921958,
+          "score": 94,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 67%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "14206"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "神奈川県小田原市栄町2丁目9 ダイヤ街商店街内",
+          "rank": 3,
+          "label": "神奈川県小田原市栄町2丁目9-33",
+          "lat": 35.25536202,
+          "lng": 139.15870293,
+          "score": 92,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 67%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "14206"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "神奈川県小田原市栄町2丁目9 ダイヤ街商店街内",
+          "rank": 4,
+          "label": "神奈川県小田原市栄町2丁目9-46",
+          "lat": 35.25407889,
+          "lng": 139.15966403,
+          "score": 90,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 67%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "14206"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "神奈川県小田原市栄町2丁目9 ダイヤ街商店街内",
+          "rank": 5,
+          "label": "神奈川県小田原市栄町2丁目9-1",
+          "lat": 35.2541483,
+          "lng": 139.15878911,
+          "score": 88,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 67%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "14206"
+        }
+      ]
+    },
+    {
+      "id": "9",
+      "title": "淵野辺駅北口 商店街内",
+      "prefecture": "神奈川県",
+      "city": "相模原市",
+      "status": "selected",
+      "address": "神奈川県相模原市中央区淵野辺3丁目19付近交差点",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=9",
+      "old_coordinate": {
+        "lat": 35.569752,
+        "lng": 139.395248
+      },
+      "selected": {
+        "provider": "yahoo",
+        "strategy": "official_address",
+        "query": "神奈川県相模原市中央区淵野辺3丁目19付近交差点",
+        "rank": 1,
+        "label": "神奈川県相模原市中央区淵野辺3丁目19",
+        "lat": 35.56975499,
+        "lng": 139.39514379,
+        "score": 92,
+        "reason": "Yahoo住所候補（一致レベル 5 / 文字一致 79%）",
+        "matching_level": 5,
+        "address_type": "街区",
+        "government_code": "14152"
+      },
+      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
+      "old_distance_km": 0.009,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "神奈川県相模原市中央区淵野辺3丁目19付近交差点",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "神奈川県相模原市商店街内",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "神奈川県相模原市中央区淵野辺3丁目19付近交差点",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "神奈川県 相模原市 淵野辺駅北口 商店街内",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "神奈川県相模原市中央区淵野辺3丁目19付近交差点",
+          "result_count": 5,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "神奈川県相模原市中央区淵野辺3丁目19付近交差点",
+          "rank": 1,
+          "label": "神奈川県相模原市中央区淵野辺三丁目１９番",
+          "lat": 35.569752,
+          "lng": 139.395248,
+          "score": 79,
+          "reason": "GSI住所候補（文字一致 75%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "神奈川県相模原市商店街内",
+          "rank": 1,
+          "label": "神奈川県相模原市",
+          "lat": 35.571388,
+          "lng": 139.373337,
+          "score": 75,
+          "reason": "GSI住所候補（文字一致 67%）"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "神奈川県相模原市中央区淵野辺3丁目19付近交差点",
+          "rank": 1,
+          "label": "神奈川県相模原市中央区淵野辺3丁目19",
+          "lat": 35.56975499,
+          "lng": 139.39514379,
+          "score": 92,
+          "reason": "Yahoo住所候補（一致レベル 5 / 文字一致 79%）",
+          "matching_level": 5,
+          "address_type": "街区",
+          "government_code": "14152"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "神奈川県相模原市中央区淵野辺3丁目19付近交差点",
+          "rank": 2,
+          "label": "神奈川県相模原市中央区淵野辺3丁目19-13",
+          "lat": 35.56949114,
+          "lng": 139.39520769,
+          "score": 96,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 79%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "14152"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "神奈川県相模原市中央区淵野辺3丁目19付近交差点",
+          "rank": 3,
+          "label": "神奈川県相模原市中央区淵野辺3丁目19-4",
+          "lat": 35.56995496,
+          "lng": 139.395166,
+          "score": 94,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 79%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "14152"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "神奈川県相模原市中央区淵野辺3丁目19付近交差点",
+          "rank": 4,
+          "label": "神奈川県相模原市中央区淵野辺3丁目19-17",
+          "lat": 35.56969666,
+          "lng": 139.39478271,
+          "score": 92,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 79%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "14152"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "神奈川県相模原市中央区淵野辺3丁目19付近交差点",
+          "rank": 5,
+          "label": "神奈川県相模原市中央区淵野辺3丁目19-16",
+          "lat": 35.56958556,
+          "lng": 139.39498825,
+          "score": 90,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 79%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "14152"
+        }
+      ]
+    },
+    {
+      "id": "10",
+      "title": "JAXA相模原キャンパス正門前",
+      "prefecture": "神奈川県",
+      "city": "相模原市",
+      "status": "selected",
+      "address": "神奈川県相模原市中央区由野台3丁目1ー1",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=10",
+      "old_coordinate": {
+        "lat": 35.558235,
+        "lng": 139.393341
+      },
+      "selected": {
+        "provider": "yahoo",
+        "strategy": "official_address",
+        "query": "神奈川県相模原市中央区由野台3丁目1ー1",
+        "rank": 1,
+        "label": "神奈川県相模原市中央区由野台3丁目1-1",
+        "lat": 35.55840664,
+        "lng": 139.39527197,
+        "score": 99,
+        "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 95%）",
+        "matching_level": 6,
+        "address_type": "地番・戸番",
+        "government_code": "14152"
+      },
+      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
+      "old_distance_km": 0.176,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "神奈川県相模原市中央区由野台3丁目1ー1",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "神奈川県相模原市中央区由野台3丁目",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "神奈川県相模原市中央区由野台3丁目1ー1",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "神奈川県 相模原市 JAXA相模原キャンパス正門前",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "神奈川県相模原市中央区由野台3丁目1ー1",
+          "result_count": 1,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "神奈川県相模原市中央区由野台3丁目1ー1",
+          "rank": 1,
+          "label": "神奈川県相模原市中央区由野台三丁目１番",
+          "lat": 35.558235,
+          "lng": 139.393341,
+          "score": 85,
+          "reason": "GSI住所候補（文字一致 89%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "神奈川県相模原市中央区由野台3丁目",
+          "rank": 1,
+          "label": "神奈川県相模原市中央区由野台三丁目",
+          "lat": 35.557751,
+          "lng": 139.395615,
+          "score": 87,
+          "reason": "GSI住所候補（文字一致 94%）"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "神奈川県相模原市中央区由野台3丁目1ー1",
+          "rank": 1,
+          "label": "神奈川県相模原市中央区由野台3丁目1-1",
+          "lat": 35.55840664,
+          "lng": 139.39527197,
+          "score": 99,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 95%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "14152"
+        }
+      ]
+    },
+    {
+      "id": "11",
+      "title": "おもちゃのまちバンダイミュージアム入口付近",
+      "prefecture": "栃木県",
+      "city": "壬生町",
+      "status": "selected",
+      "address": "栃木県下都賀郡壬生町おもちゃのまち三丁目6-20",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=11",
+      "old_coordinate": {
+        "lat": 36.464748,
+        "lng": 139.838806
+      },
+      "selected": {
+        "provider": "yahoo",
+        "strategy": "official_address",
+        "query": "栃木県下都賀郡壬生町おもちゃのまち三丁目6-20",
+        "rank": 1,
+        "label": "栃木県下都賀郡壬生町おもちゃのまち3丁目6-20",
+        "lat": 36.46541266,
+        "lng": 139.83832226,
+        "score": 99,
+        "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 95%）",
+        "matching_level": 6,
+        "address_type": "地番・戸番",
+        "government_code": "09361"
+      },
+      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
+      "old_distance_km": 0.086,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "栃木県下都賀郡壬生町おもちゃのまち三丁目6-20",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "栃木県下都賀郡壬生町おもちゃのまち三丁目",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "栃木県壬生町おもちゃのまちバンダイミュージアム入口",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "栃木県下都賀郡壬生町おもちゃのまち三丁目6-20",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "栃木県 壬生町 おもちゃのまちバンダイミュージアム入口付近",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "栃木県下都賀郡壬生町おもちゃのまち三丁目6-20",
+          "result_count": 1,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "栃木県下都賀郡壬生町おもちゃのまち三丁目6-20",
+          "rank": 1,
+          "label": "栃木県壬生町おもちゃのまち三丁目６番２０号",
+          "lat": 36.464748,
+          "lng": 139.838806,
+          "score": 82,
+          "reason": "GSI住所候補（文字一致 82%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "栃木県下都賀郡壬生町おもちゃのまち三丁目",
+          "rank": 1,
+          "label": "栃木県壬生町おもちゃのまち三丁目",
+          "lat": 36.463768,
+          "lng": 139.841019,
+          "score": 81,
+          "reason": "GSI住所候補（文字一致 79%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "栃木県壬生町おもちゃのまちバンダイミュージアム入口",
+          "rank": 1,
+          "label": "栃木県壬生町おもちゃのまち",
+          "lat": 36.464123,
+          "lng": 139.836746,
+          "score": 68,
+          "reason": "GSI住所候補（文字一致 50%）"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "栃木県下都賀郡壬生町おもちゃのまち三丁目6-20",
+          "rank": 1,
+          "label": "栃木県下都賀郡壬生町おもちゃのまち3丁目6-20",
+          "lat": 36.46541266,
+          "lng": 139.83832226,
+          "score": 99,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 95%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "09361"
+        }
+      ]
+    },
+    {
+      "id": "12",
+      "title": "おもちゃのまち駅東口広場付近",
+      "prefecture": "栃木県",
+      "city": "壬生町",
+      "status": "selected",
+      "address": "栃木県下都賀郡壬生町幸町一丁目21-1",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=12",
+      "old_coordinate": {
+        "lat": 36.465919,
+        "lng": 139.82991
+      },
+      "selected": {
+        "provider": "yahoo",
+        "strategy": "official_address",
+        "query": "栃木県下都賀郡壬生町幸町一丁目21-1",
+        "rank": 1,
+        "label": "栃木県下都賀郡壬生町幸町1丁目21-1",
+        "lat": 36.46584847,
+        "lng": 139.82991188,
+        "score": 99,
+        "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 94%）",
+        "matching_level": 6,
+        "address_type": "地番・戸番",
+        "government_code": "09361"
+      },
+      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
+      "old_distance_km": 0.008,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "栃木県下都賀郡壬生町幸町一丁目21-1",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "栃木県下都賀郡壬生町幸町一丁目",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "栃木県壬生町おもちゃのまち駅東口広場",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "栃木県下都賀郡壬生町幸町一丁目21-1",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "栃木県 壬生町 おもちゃのまち駅東口広場付近",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "栃木県下都賀郡壬生町幸町一丁目21-1",
+          "result_count": 1,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "栃木県下都賀郡壬生町幸町一丁目21-1",
+          "rank": 1,
+          "label": "栃木県壬生町幸町一丁目２１番１号",
+          "lat": 36.465919,
+          "lng": 139.82991,
+          "score": 79,
+          "reason": "GSI住所候補（文字一致 75%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "栃木県下都賀郡壬生町幸町一丁目",
+          "rank": 1,
+          "label": "栃木県壬生町幸町一丁目",
+          "lat": 36.464226,
+          "lng": 139.82959,
+          "score": 77,
+          "reason": "GSI住所候補（文字一致 71%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "栃木県壬生町おもちゃのまち駅東口広場",
+          "rank": 1,
+          "label": "栃木県壬生町おもちゃのまち",
+          "lat": 36.464123,
+          "lng": 139.836746,
+          "score": 77,
+          "reason": "GSI住所候補（文字一致 71%）"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "栃木県下都賀郡壬生町幸町一丁目21-1",
+          "rank": 1,
+          "label": "栃木県下都賀郡壬生町幸町1丁目21-1",
+          "lat": 36.46584847,
+          "lng": 139.82991188,
+          "score": 99,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 94%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "09361"
+        }
+      ]
+    },
+    {
+      "id": "13",
+      "title": "島根県松江市黒田町509-1付近",
+      "prefecture": "島根県",
+      "city": "松江市",
+      "status": "selected",
+      "address": "島根県松江市黒田町509-1付近",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=13",
+      "old_coordinate": {
+        "lat": 35.478424,
+        "lng": 133.047119
+      },
+      "selected": {
+        "provider": "yahoo",
+        "strategy": "official_address",
+        "query": "島根県松江市黒田町509-1付近",
+        "rank": 1,
+        "label": "島根県松江市黒田町509-1",
+        "lat": 35.47925496,
+        "lng": 133.04615485,
+        "score": 99,
+        "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 87%）",
+        "matching_level": 6,
+        "address_type": "枝番",
+        "government_code": "32201"
+      },
+      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
+      "old_distance_km": 0.127,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "島根県松江市黒田町509-1付近",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "島根県松江市島根県松江市黒田町509-1",
+          "result_count": 5,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "島根県松江市黒田町509-1付近",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "島根県 松江市 島根県松江市黒田町509-1付近",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "島根県松江市黒田町509-1付近",
+          "result_count": 1,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "島根県松江市黒田町509-1付近",
+          "rank": 1,
+          "label": "島根県松江市黒田町５０９番地",
+          "lat": 35.478424,
+          "lng": 133.047119,
+          "score": 81,
+          "reason": "GSI住所候補（文字一致 80%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "島根県松江市島根県松江市黒田町509-1",
+          "rank": 1,
+          "label": "島根県松江市島根町加賀",
+          "lat": 35.557938,
+          "lng": 133.077332,
+          "score": 69,
+          "reason": "GSI住所候補（文字一致 54%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "島根県松江市島根県松江市黒田町509-1",
+          "rank": 2,
+          "label": "島根県松江市島根町多古",
+          "lat": 35.598721,
+          "lng": 133.093445,
+          "score": 67,
+          "reason": "GSI住所候補（文字一致 54%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "島根県松江市島根県松江市黒田町509-1",
+          "rank": 3,
+          "label": "島根県松江市島根町大芦",
+          "lat": 35.546463,
+          "lng": 133.054749,
+          "score": 65,
+          "reason": "GSI住所候補（文字一致 54%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "島根県松江市島根県松江市黒田町509-1",
+          "rank": 4,
+          "label": "島根県松江市島根町野井",
+          "lat": 35.582497,
+          "lng": 133.115265,
+          "score": 63,
+          "reason": "GSI住所候補（文字一致 54%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "島根県松江市島根県松江市黒田町509-1",
+          "rank": 5,
+          "label": "島根県松江市島根町野波",
+          "lat": 35.57058,
+          "lng": 133.101913,
+          "score": 61,
+          "reason": "GSI住所候補（文字一致 54%）"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "島根県松江市黒田町509-1付近",
+          "rank": 1,
+          "label": "島根県松江市黒田町509-1",
+          "lat": 35.47925496,
+          "lng": 133.04615485,
+          "score": 99,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 87%）",
+          "matching_level": 6,
+          "address_type": "枝番",
+          "government_code": "32201"
+        }
+      ]
+    },
+    {
+      "id": "14",
+      "title": "岸公園内",
+      "prefecture": "島根県",
+      "city": "松江市",
+      "status": "selected",
+      "address": "島根県松江市袖師町 岸公園内",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=14",
+      "old_coordinate": {
+        "lat": 35.455315,
+        "lng": 133.050323
+      },
+      "selected": {
+        "provider": "gsi",
+        "strategy": "official_address",
+        "query": "島根県松江市袖師町 岸公園内",
+        "rank": 1,
+        "label": "島根県松江市袖師町",
+        "lat": 35.455315,
+        "lng": 133.050323,
+        "score": 76,
+        "reason": "GSI住所候補（文字一致 69%）"
+      },
+      "selection_reason": "公式住所を変更せずに得たGSI候補を優先採用",
+      "old_distance_km": 0.0,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "島根県松江市袖師町 岸公園内",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "島根県松江市袖師町 岸公園内",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "島根県 松江市 岸公園内",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "島根県松江市袖師町 岸公園内",
+          "result_count": 0,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "島根県松江市袖師町 岸公園内",
+          "rank": 1,
+          "label": "島根県松江市袖師町",
+          "lat": 35.455315,
+          "lng": 133.050323,
+          "score": 76,
+          "reason": "GSI住所候補（文字一致 69%）"
+        }
+      ]
+    },
+    {
+      "id": "15",
+      "title": "大津湖岸なぎさ公園 打出の森",
+      "prefecture": "滋賀県",
+      "city": "大津市",
+      "status": "selected",
+      "address": "滋賀県大津市打出浜15",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=15",
+      "old_coordinate": {
+        "lat": 35.00491,
+        "lng": 135.87738
+      },
+      "selected": {
+        "provider": "yahoo",
+        "strategy": "official_address",
+        "query": "滋賀県大津市打出浜15",
+        "rank": 1,
+        "label": "滋賀県大津市打出浜15",
+        "lat": 35.00753846,
+        "lng": 135.87475258,
+        "score": 95,
+        "reason": "Yahoo住所候補（一致レベル 5 / 文字一致 100%）",
+        "matching_level": 5,
+        "address_type": "街区",
+        "government_code": "25201"
+      },
+      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
+      "old_distance_km": 0.378,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "滋賀県大津市打出浜15",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "滋賀県大津市打出浜",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "滋賀県大津市打出の森",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "滋賀県大津市打出浜15",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "滋賀県 大津市 大津湖岸なぎさ公園 打出の森",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "滋賀県大津市打出浜15",
+          "result_count": 5,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "滋賀県大津市打出浜",
+          "rank": 1,
+          "label": "滋賀県大津市打出浜",
+          "lat": 35.00491,
+          "lng": 135.87738,
+          "score": 90,
+          "reason": "GSI住所候補（文字一致 100%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "滋賀県大津市打出の森",
+          "rank": 1,
+          "label": "滋賀県大津市打出浜",
+          "lat": 35.00491,
+          "lng": 135.87738,
+          "score": 81,
+          "reason": "GSI住所候補（文字一致 80%）"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "滋賀県大津市打出浜15",
+          "rank": 1,
+          "label": "滋賀県大津市打出浜15",
+          "lat": 35.00753846,
+          "lng": 135.87475258,
+          "score": 95,
+          "reason": "Yahoo住所候補（一致レベル 5 / 文字一致 100%）",
+          "matching_level": 5,
+          "address_type": "街区",
+          "government_code": "25201"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "滋賀県大津市打出浜15",
+          "rank": 2,
+          "label": "滋賀県大津市打出浜15-1",
+          "lat": 35.00710241,
+          "lng": 135.87679961,
+          "score": 99,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 100%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "25201"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "滋賀県大津市打出浜15",
+          "rank": 3,
+          "label": "滋賀県大津市打出浜15-5",
+          "lat": 35.00769957,
+          "lng": 135.87541918,
+          "score": 97,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 100%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "25201"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "滋賀県大津市打出浜15",
+          "rank": 4,
+          "label": "滋賀県大津市打出浜15-4",
+          "lat": 35.00764679,
+          "lng": 135.87558861,
+          "score": 95,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 100%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "25201"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "滋賀県大津市打出浜15",
+          "rank": 5,
+          "label": "滋賀県大津市打出浜15-3",
+          "lat": 35.00765235,
+          "lng": 135.87576359,
+          "score": 93,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 100%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "25201"
+        }
+      ]
+    },
+    {
+      "id": "16",
+      "title": "大津湖岸なぎさ公園 おまつり広場",
+      "prefecture": "滋賀県",
+      "city": "大津市",
+      "status": "selected",
+      "address": "滋賀県大津市浜町2",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=16",
+      "old_coordinate": {
+        "lat": 35.010731,
+        "lng": 135.867355
+      },
+      "selected": {
+        "provider": "yahoo",
+        "strategy": "official_address",
+        "query": "滋賀県大津市浜町2",
+        "rank": 1,
+        "label": "滋賀県大津市浜町2-40",
+        "lat": 35.01028532,
+        "lng": 135.86823649,
+        "score": 99,
+        "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 100%）",
+        "matching_level": 6,
+        "address_type": "地番・戸番",
+        "government_code": "25201"
+      },
+      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
+      "old_distance_km": 0.094,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "滋賀県大津市浜町2",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "滋賀県大津市浜町",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "滋賀県大津市おまつり広場",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "滋賀県大津市浜町2",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "滋賀県 大津市 大津湖岸なぎさ公園 おまつり広場",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "滋賀県大津市浜町2",
+          "result_count": 4,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "滋賀県大津市浜町2",
+          "rank": 1,
+          "label": "滋賀県大津市浜町２番",
+          "lat": 35.010731,
+          "lng": 135.867355,
+          "score": 90,
+          "reason": "GSI住所候補（文字一致 100%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "滋賀県大津市浜町",
+          "rank": 1,
+          "label": "滋賀県大津市浜町",
+          "lat": 35.009945,
+          "lng": 135.867386,
+          "score": 90,
+          "reason": "GSI住所候補（文字一致 100%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "滋賀県大津市おまつり広場",
+          "rank": 1,
+          "label": "滋賀県大津市",
+          "lat": 35.017776,
+          "lng": 135.854721,
+          "score": 68,
+          "reason": "GSI住所候補（文字一致 50%）"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "滋賀県大津市浜町2",
+          "rank": 1,
+          "label": "滋賀県大津市浜町2-40",
+          "lat": 35.01028532,
+          "lng": 135.86823649,
+          "score": 99,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 100%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "25201"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "滋賀県大津市浜町2",
+          "rank": 2,
+          "label": "滋賀県大津市浜町2",
+          "lat": 35.01023252,
+          "lng": 135.86686996,
+          "score": 93,
+          "reason": "Yahoo住所候補（一致レベル 5 / 文字一致 100%）",
+          "matching_level": 5,
+          "address_type": "街区",
+          "government_code": "25201"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "滋賀県大津市浜町2",
+          "rank": 3,
+          "label": "滋賀県大津市浜町2-49",
+          "lat": 35.0101187,
+          "lng": 135.86923639,
+          "score": 97,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 100%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "25201"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "滋賀県大津市浜町2",
+          "rank": 4,
+          "label": "滋賀県大津市浜町2-1",
+          "lat": 35.01085191,
+          "lng": 135.86681718,
+          "score": 95,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 100%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "25201"
+        }
+      ]
+    },
+    {
+      "id": "17",
+      "title": "辻精磁社 横（トンバイ塀通り）",
+      "prefecture": "佐賀県",
+      "city": "有田町",
+      "status": "selected",
+      "address": "佐賀県西松浦郡有田町上幸平一丁目1258-1地先",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=17",
+      "old_coordinate": {
+        "lat": 33.191868,
+        "lng": 129.901443
+      },
+      "selected": {
+        "provider": "gsi",
+        "strategy": "official_address",
+        "query": "佐賀県西松浦郡有田町上幸平一丁目1258-1地先",
+        "rank": 1,
+        "label": "佐賀県有田町上幸平一丁目",
+        "lat": 33.191868,
+        "lng": 129.901443,
+        "score": 70,
+        "reason": "GSI住所候補（文字一致 55%）"
+      },
+      "selection_reason": "公式住所を変更せずに得たGSI候補を優先採用",
+      "old_distance_km": 0.0,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "佐賀県西松浦郡有田町上幸平一丁目1258-1地先",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "佐賀県有田町横(トンバイ塀通り)",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "佐賀県西松浦郡有田町上幸平一丁目1258-1地先",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "佐賀県 有田町 辻精磁社 横（トンバイ塀通り）",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "佐賀県西松浦郡有田町上幸平一丁目1258-1地先",
+          "result_count": 0,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "佐賀県西松浦郡有田町上幸平一丁目1258-1地先",
+          "rank": 1,
+          "label": "佐賀県有田町上幸平一丁目",
+          "lat": 33.191868,
+          "lng": 129.901443,
+          "score": 70,
+          "reason": "GSI住所候補（文字一致 55%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "佐賀県有田町横(トンバイ塀通り)",
+          "rank": 1,
+          "label": "佐賀県有田町",
+          "lat": 33.210556,
+          "lng": 129.849167,
+          "score": 64,
+          "reason": "GSI住所候補（文字一致 43%）"
+        }
+      ]
+    },
+    {
+      "id": "18",
+      "title": "泉山磁石場 展望所",
+      "prefecture": "佐賀県",
+      "city": "有田町",
+      "status": "selected",
+      "address": "佐賀県西松浦郡有田町泉山一丁目380-1",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=18",
+      "old_coordinate": {
+        "lat": 33.194229,
+        "lng": 129.908661
+      },
+      "selected": {
+        "provider": "gsi",
+        "strategy": "official_address",
+        "query": "佐賀県西松浦郡有田町泉山一丁目380-1",
+        "rank": 1,
+        "label": "佐賀県有田町泉山一丁目",
+        "lat": 33.194229,
+        "lng": 129.908661,
+        "score": 71,
+        "reason": "GSI住所候補（文字一致 58%）"
+      },
+      "selection_reason": "公式住所を変更せずに得たGSI候補を優先採用",
+      "old_distance_km": 0.0,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "佐賀県西松浦郡有田町泉山一丁目380-1",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "佐賀県西松浦郡有田町泉山一丁目",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "佐賀県有田町展望所",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "佐賀県西松浦郡有田町泉山一丁目380-1",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "佐賀県 有田町 泉山磁石場 展望所",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "佐賀県西松浦郡有田町泉山一丁目380-1",
+          "result_count": 0,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "佐賀県西松浦郡有田町泉山一丁目380-1",
+          "rank": 1,
+          "label": "佐賀県有田町泉山一丁目",
+          "lat": 33.194229,
+          "lng": 129.908661,
+          "score": 71,
+          "reason": "GSI住所候補（文字一致 58%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "佐賀県西松浦郡有田町泉山一丁目",
+          "rank": 1,
+          "label": "佐賀県有田町泉山一丁目",
+          "lat": 33.194229,
+          "lng": 129.908661,
+          "score": 78,
+          "reason": "GSI住所候補（文字一致 73%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "佐賀県有田町展望所",
+          "rank": 1,
+          "label": "佐賀県有田町",
+          "lat": 33.210556,
+          "lng": 129.849167,
+          "score": 75,
+          "reason": "GSI住所候補（文字一致 67%）"
+        }
+      ]
+    },
+    {
+      "id": "19",
+      "title": "メトロプラザ 商工会議所側入口前",
+      "prefecture": "北海道",
+      "city": "遠軽町",
+      "status": "selected",
+      "address": "北海道紋別郡遠軽町岩見通南1丁目1番地2",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=19",
+      "old_coordinate": {
+        "lat": 44.059521,
+        "lng": 143.520737
+      },
+      "selected": {
+        "provider": "yahoo",
+        "strategy": "official_address",
+        "query": "北海道紋別郡遠軽町岩見通南1丁目1番地2",
+        "rank": 1,
+        "label": "北海道紋別郡遠軽町岩見通南1丁目1-2",
+        "lat": 44.05914159,
+        "lng": 143.52059157,
+        "score": 99,
+        "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 89%）",
+        "matching_level": 6,
+        "address_type": "枝番",
+        "government_code": "01555"
+      },
+      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
+      "old_distance_km": 0.044,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "北海道紋別郡遠軽町岩見通南1丁目1番地2",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "北海道紋別郡遠軽町岩見通南1丁目",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "北海道遠軽町商工会議所側入口前",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "北海道紋別郡遠軽町岩見通南1丁目1番地2",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "北海道 遠軽町 メトロプラザ 商工会議所側入口前",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "北海道紋別郡遠軽町岩見通南1丁目1番地2",
+          "result_count": 1,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "北海道紋別郡遠軽町岩見通南1丁目1番地2",
+          "rank": 1,
+          "label": "北海道遠軽町岩見通南一丁目１番地",
+          "lat": 44.059521,
+          "lng": 143.520737,
+          "score": 81,
+          "reason": "GSI住所候補（文字一致 79%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "北海道紋別郡遠軽町岩見通南1丁目",
+          "rank": 1,
+          "label": "北海道遠軽町岩見通南一丁目",
+          "lat": 44.058872,
+          "lng": 143.520615,
+          "score": 79,
+          "reason": "GSI住所候補（文字一致 75%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "北海道遠軽町商工会議所側入口前",
+          "rank": 1,
+          "label": "北海道遠軽町",
+          "lat": 44.061962,
+          "lng": 143.528046,
+          "score": 63,
+          "reason": "GSI住所候補（文字一致 40%）"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "北海道紋別郡遠軽町岩見通南1丁目1番地2",
+          "rank": 1,
+          "label": "北海道紋別郡遠軽町岩見通南1丁目1-2",
+          "lat": 44.05914159,
+          "lng": 143.52059157,
+          "score": 99,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 89%）",
+          "matching_level": 6,
+          "address_type": "枝番",
+          "government_code": "01555"
+        }
+      ]
+    },
+    {
+      "id": "20",
+      "title": "道の駅遠軽 森のオホーツク 臨時売店横",
+      "prefecture": "北海道",
+      "city": "遠軽町",
+      "status": "selected",
+      "address": "北海道紋別郡遠軽町野上150番地1",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=20",
+      "old_coordinate": {
+        "lat": 44.007004,
+        "lng": 143.470901
+      },
+      "selected": {
+        "provider": "yahoo",
+        "strategy": "official_address",
+        "query": "北海道紋別郡遠軽町野上150番地1",
+        "rank": 1,
+        "label": "北海道紋別郡遠軽町野上150-1",
+        "lat": 44.02194777,
+        "lng": 143.4957571,
+        "score": 99,
+        "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 88%）",
+        "matching_level": 6,
+        "address_type": "枝番",
+        "government_code": "01555"
+      },
+      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
+      "old_distance_km": 2.591,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "北海道紋別郡遠軽町野上150番地1",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "北海道紋別郡遠軽町野上",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "北海道遠軽町臨時売店横",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "北海道紋別郡遠軽町野上150番地1",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "北海道 遠軽町 道の駅遠軽 森のオホーツク 臨時売店横",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "北海道紋別郡遠軽町野上150番地1",
+          "result_count": 1,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "北海道紋別郡遠軽町野上150番地1",
+          "rank": 1,
+          "label": "北海道遠軽町野上",
+          "lat": 44.007004,
+          "lng": 143.470901,
+          "score": 68,
+          "reason": "GSI住所候補（文字一致 50%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "北海道紋別郡遠軽町野上",
+          "rank": 1,
+          "label": "北海道遠軽町野上",
+          "lat": 44.007004,
+          "lng": 143.470901,
+          "score": 78,
+          "reason": "GSI住所候補（文字一致 73%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "北海道遠軽町臨時売店横",
+          "rank": 1,
+          "label": "北海道遠軽町",
+          "lat": 44.061962,
+          "lng": 143.528046,
+          "score": 70,
+          "reason": "GSI住所候補（文字一致 55%）"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "北海道紋別郡遠軽町野上150番地1",
+          "rank": 1,
+          "label": "北海道紋別郡遠軽町野上150-1",
+          "lat": 44.02194777,
+          "lng": 143.4957571,
+          "score": 99,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 88%）",
+          "matching_level": 6,
+          "address_type": "枝番",
+          "government_code": "01555"
+        }
+      ]
+    },
+    {
+      "id": "21",
+      "title": "サウスポット静岡 北側歩道",
+      "prefecture": "静岡県",
+      "city": "静岡市",
+      "status": "selected",
+      "address": "静岡県静岡市駿河区南町18-1地先",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=21",
+      "old_coordinate": {
+        "lat": 34.971268,
+        "lng": 138.391113
+      },
+      "selected": {
+        "provider": "yahoo",
+        "strategy": "official_address",
+        "query": "静岡県静岡市駿河区南町18-1地先",
+        "rank": 1,
+        "label": "静岡県静岡市駿河区南町18-1",
+        "lat": 34.97130146,
+        "lng": 138.391153,
+        "score": 99,
+        "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 85%）",
+        "matching_level": 6,
+        "address_type": "地番・戸番",
+        "government_code": "22102"
+      },
+      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
+      "old_distance_km": 0.005,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "静岡県静岡市駿河区南町18-1地先",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "静岡県静岡市駿河区南町18-1地先",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "静岡県 静岡市 サウスポット静岡 北側歩道",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "静岡県静岡市駿河区南町18-1地先",
+          "result_count": 1,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "静岡県静岡市駿河区南町18-1地先",
+          "rank": 1,
+          "label": "静岡県静岡市駿河区南町１８番",
+          "lat": 34.971268,
+          "lng": 138.391113,
+          "score": 83,
+          "reason": "GSI住所候補（文字一致 85%）"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "静岡県静岡市駿河区南町18-1地先",
+          "rank": 1,
+          "label": "静岡県静岡市駿河区南町18-1",
+          "lat": 34.97130146,
+          "lng": 138.391153,
+          "score": 99,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 85%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "22102"
+        }
+      ]
+    },
+    {
+      "id": "22",
+      "title": "JR東静岡駅 北口付近",
+      "prefecture": "静岡県",
+      "city": "静岡市",
+      "status": "selected",
+      "address": "静岡県静岡市葵区東静岡一丁目1番地先",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=22",
+      "old_coordinate": {
+        "lat": 34.985561,
+        "lng": 138.411743
+      },
+      "selected": {
+        "provider": "yahoo",
+        "strategy": "official_address",
+        "query": "静岡県静岡市葵区東静岡一丁目1番地先",
+        "rank": 1,
+        "label": "静岡県静岡市葵区東静岡1丁目1",
+        "lat": 34.98426674,
+        "lng": 138.41111189,
+        "score": 91,
+        "reason": "Yahoo住所候補（一致レベル 5 / 文字一致 71%）",
+        "matching_level": 5,
+        "address_type": "街区",
+        "government_code": "22101"
+      },
+      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
+      "old_distance_km": 0.155,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "静岡県静岡市葵区東静岡一丁目1番地先",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "静岡県静岡市葵区東静岡一丁目1番地先",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "静岡県 静岡市 JR東静岡駅 北口付近",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "静岡県静岡市葵区東静岡一丁目1番地先",
+          "result_count": 5,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "静岡県静岡市葵区東静岡一丁目1番地先",
+          "rank": 1,
+          "label": "静岡県静岡市葵区東静岡一丁目１番",
+          "lat": 34.985561,
+          "lng": 138.411743,
+          "score": 84,
+          "reason": "GSI住所候補（文字一致 86%）"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "静岡県静岡市葵区東静岡一丁目1番地先",
+          "rank": 1,
+          "label": "静岡県静岡市葵区東静岡1丁目1",
+          "lat": 34.98426674,
+          "lng": 138.41111189,
+          "score": 91,
+          "reason": "Yahoo住所候補（一致レベル 5 / 文字一致 71%）",
+          "matching_level": 5,
+          "address_type": "街区",
+          "government_code": "22101"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "静岡県静岡市葵区東静岡一丁目1番地先",
+          "rank": 2,
+          "label": "静岡県静岡市葵区東静岡1丁目1-10",
+          "lat": 34.98574157,
+          "lng": 138.41147293,
+          "score": 95,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 71%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "22101"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "静岡県静岡市葵区東静岡一丁目1番地先",
+          "rank": 3,
+          "label": "静岡県静岡市葵区東静岡1丁目1-39",
+          "lat": 34.98595546,
+          "lng": 138.41269227,
+          "score": 93,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 71%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "22101"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "静岡県静岡市葵区東静岡一丁目1番地先",
+          "rank": 4,
+          "label": "静岡県静岡市葵区東静岡1丁目1-40",
+          "lat": 34.98577214,
+          "lng": 138.4123173,
+          "score": 91,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 71%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "22101"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "静岡県静岡市葵区東静岡一丁目1番地先",
+          "rank": 5,
+          "label": "静岡県静岡市葵区東静岡1丁目1-57",
+          "lat": 34.98493055,
+          "lng": 138.41129241,
+          "score": 89,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 71%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "22101"
+        }
+      ]
+    },
+    {
+      "id": "23",
+      "title": "足助支所敷地内",
+      "prefecture": "愛知県",
+      "city": "豊田市",
+      "status": "selected",
+      "address": "愛知県豊田市足助町宮ノ後27番地3",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=23",
+      "old_coordinate": {
+        "lat": 35.135353,
+        "lng": 137.318207
+      },
+      "selected": {
+        "provider": "gsi",
+        "strategy": "title_locality",
+        "query": "愛知県豊田市足助支所",
+        "rank": 1,
+        "label": "愛知県豊田市足助町",
+        "lat": 35.135353,
+        "lng": 137.318207,
+        "score": 81,
+        "reason": "GSI住所候補（文字一致 80%）"
+      },
+      "selection_reason": "公式住所のGSI候補を優先し、文字一致が最も高い候補を採用",
+      "old_distance_km": 0.0,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "愛知県豊田市足助町宮ノ後27番地3",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "愛知県豊田市足助町宮ノ後",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "愛知県豊田市足助支所",
+          "result_count": 2,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "愛知県豊田市足助町宮ノ後27番地3",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "愛知県 豊田市 足助支所敷地内",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "愛知県豊田市足助町宮ノ後27番地3",
+          "result_count": 0,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "愛知県豊田市足助町宮ノ後27番地3",
+          "rank": 1,
+          "label": "愛知県豊田市足助町",
+          "lat": 35.135353,
+          "lng": 137.318207,
+          "score": 69,
+          "reason": "GSI住所候補（文字一致 53%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "愛知県豊田市足助町宮ノ後",
+          "rank": 1,
+          "label": "愛知県豊田市足助町",
+          "lat": 35.135353,
+          "lng": 137.318207,
+          "score": 79,
+          "reason": "GSI住所候補（文字一致 75%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "愛知県豊田市足助支所",
+          "rank": 1,
+          "label": "愛知県豊田市足助町",
+          "lat": 35.135353,
+          "lng": 137.318207,
+          "score": 81,
+          "reason": "GSI住所候補（文字一致 80%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "愛知県豊田市足助支所",
+          "rank": 2,
+          "label": "愛知県豊田市足助白山町",
+          "lat": 35.151131,
+          "lng": 137.318375,
+          "score": 79,
+          "reason": "GSI住所候補（文字一致 80%）"
+        }
+      ]
+    },
+    {
+      "id": "24",
+      "title": "GAZAビル南広場付近",
+      "prefecture": "愛知県",
+      "city": "豊田市",
+      "status": "selected",
+      "address": "愛知県豊田市喜多町2丁目144番地",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=24",
+      "old_coordinate": {
+        "lat": 35.087315,
+        "lng": 137.157471
+      },
+      "selected": {
+        "provider": "gsi",
+        "strategy": "official_address",
+        "query": "愛知県豊田市喜多町2丁目144番地",
+        "rank": 1,
+        "label": "愛知県豊田市喜多町二丁目",
+        "lat": 35.087315,
+        "lng": 137.157471,
+        "score": 76,
+        "reason": "GSI住所候補（文字一致 69%）"
+      },
+      "selection_reason": "公式住所を変更せずに得たGSI候補を優先採用",
+      "old_distance_km": 0.0,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "愛知県豊田市喜多町2丁目144番地",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "愛知県豊田市喜多町2丁目",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "愛知県豊田市GAZAビル南広場",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "愛知県豊田市喜多町2丁目144番地",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "愛知県 豊田市 GAZAビル南広場付近",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "愛知県豊田市喜多町2丁目144番地",
+          "result_count": 0,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "愛知県豊田市喜多町2丁目144番地",
+          "rank": 1,
+          "label": "愛知県豊田市喜多町二丁目",
+          "lat": 35.087315,
+          "lng": 137.157471,
+          "score": 76,
+          "reason": "GSI住所候補（文字一致 69%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "愛知県豊田市喜多町2丁目",
+          "rank": 1,
+          "label": "愛知県豊田市喜多町二丁目",
+          "lat": 35.087315,
+          "lng": 137.157471,
+          "score": 86,
+          "reason": "GSI住所候補（文字一致 92%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "愛知県豊田市GAZAビル南広場",
+          "rank": 1,
+          "label": "愛知県豊田市",
+          "lat": 35.082565,
+          "lng": 137.156235,
+          "score": 64,
+          "reason": "GSI住所候補（文字一致 43%）"
+        }
+      ]
+    },
+    {
+      "id": "25",
+      "title": "道の駅オライはすぬま",
+      "prefecture": "千葉県",
+      "city": "山武市",
+      "status": "selected",
+      "address": "千葉県山武市蓮沼ハ4826番地",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=25",
+      "old_coordinate": {
+        "lat": 35.6017,
+        "lng": 140.502029
+      },
+      "selected": {
+        "provider": "yahoo",
+        "strategy": "official_address",
+        "query": "千葉県山武市蓮沼ハ4826番地",
+        "rank": 1,
+        "label": "千葉県山武市蓮沼ハ4826",
+        "lat": 35.60179529,
+        "lng": 140.50159366,
+        "score": 99,
+        "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 87%）",
+        "matching_level": 6,
+        "address_type": "地番・戸番",
+        "government_code": "12237"
+      },
+      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
+      "old_distance_km": 0.041,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "千葉県山武市蓮沼ハ4826番地",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "千葉県山武市蓮沼ハ",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "千葉県山武市蓮沼ハ4826番地",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "千葉県 山武市 道の駅オライはすぬま",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "千葉県山武市蓮沼ハ4826番地",
+          "result_count": 1,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "千葉県山武市蓮沼ハ4826番地",
+          "rank": 1,
+          "label": "千葉県山武市蓮沼ハ４８２６番地",
+          "lat": 35.6017,
+          "lng": 140.502029,
+          "score": 90,
+          "reason": "GSI住所候補（文字一致 100%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "千葉県山武市蓮沼ハ",
+          "rank": 1,
+          "label": "千葉県山武市蓮沼ハ",
+          "lat": 35.600491,
+          "lng": 140.494736,
+          "score": 90,
+          "reason": "GSI住所候補（文字一致 100%）"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "千葉県山武市蓮沼ハ4826番地",
+          "rank": 1,
+          "label": "千葉県山武市蓮沼ハ4826",
+          "lat": 35.60179529,
+          "lng": 140.50159366,
+          "score": 99,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 87%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "12237"
+        }
+      ]
+    },
+    {
+      "id": "26",
+      "title": "さんぶの森公園",
+      "prefecture": "千葉県",
+      "city": "山武市",
+      "status": "selected",
+      "address": "千葉県山武市埴谷1904番地5",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=26",
+      "old_coordinate": {
+        "lat": 35.642735,
+        "lng": 140.366791
+      },
+      "selected": {
+        "provider": "yahoo",
+        "strategy": "official_address",
+        "query": "千葉県山武市埴谷1904番地5",
+        "rank": 1,
+        "label": "千葉県山武市埴谷1904-5",
+        "lat": 35.64208508,
+        "lng": 140.36724508,
+        "score": 99,
+        "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 87%）",
+        "matching_level": 6,
+        "address_type": "枝番",
+        "government_code": "12237"
+      },
+      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
+      "old_distance_km": 0.083,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "千葉県山武市埴谷1904番地5",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "千葉県山武市埴谷",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "千葉県山武市埴谷1904番地5",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "千葉県 山武市 さんぶの森公園",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "千葉県山武市埴谷1904番地5",
+          "result_count": 1,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "千葉県山武市埴谷1904番地5",
+          "rank": 1,
+          "label": "千葉県山武市埴谷１９０４番地",
+          "lat": 35.642735,
+          "lng": 140.366791,
+          "score": 87,
+          "reason": "GSI住所候補（文字一致 93%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "千葉県山武市埴谷",
+          "rank": 1,
+          "label": "千葉県山武市埴谷",
+          "lat": 35.650951,
+          "lng": 140.38063,
+          "score": 90,
+          "reason": "GSI住所候補（文字一致 100%）"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "千葉県山武市埴谷1904番地5",
+          "rank": 1,
+          "label": "千葉県山武市埴谷1904-5",
+          "lat": 35.64208508,
+          "lng": 140.36724508,
+          "score": 99,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 87%）",
+          "matching_level": 6,
+          "address_type": "枝番",
+          "government_code": "12237"
+        }
+      ]
+    },
+    {
+      "id": "27",
+      "title": "国分西商店会",
+      "prefecture": "大阪府",
+      "city": "柏原市",
+      "status": "selected",
+      "address": "大阪府柏原市国分西1丁目2番付近",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=27",
+      "old_coordinate": {
+        "lat": 34.566608,
+        "lng": 135.634811
+      },
+      "selected": {
+        "provider": "yahoo",
+        "strategy": "official_address",
+        "query": "大阪府柏原市国分西1丁目2番付近",
+        "rank": 1,
+        "label": "大阪府柏原市国分西1丁目2",
+        "lat": 34.566659,
+        "lng": 135.63456455,
+        "score": 92,
+        "reason": "Yahoo住所候補（一致レベル 5 / 文字一致 81%）",
+        "matching_level": 5,
+        "address_type": "街区",
+        "government_code": "27221"
+      },
+      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
+      "old_distance_km": 0.023,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "大阪府柏原市国分西1丁目2番付近",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "大阪府柏原市国分西1丁目2番付近",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "大阪府 柏原市 国分西商店会",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "大阪府柏原市国分西1丁目2番付近",
+          "result_count": 4,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "大阪府柏原市国分西1丁目2番付近",
+          "rank": 1,
+          "label": "大阪府柏原市国分西一丁目２番",
+          "lat": 34.566608,
+          "lng": 135.634811,
+          "score": 82,
+          "reason": "GSI住所候補（文字一致 81%）"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "大阪府柏原市国分西1丁目2番付近",
+          "rank": 1,
+          "label": "大阪府柏原市国分西1丁目2",
+          "lat": 34.566659,
+          "lng": 135.63456455,
+          "score": 92,
+          "reason": "Yahoo住所候補（一致レベル 5 / 文字一致 81%）",
+          "matching_level": 5,
+          "address_type": "街区",
+          "government_code": "27221"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "大阪府柏原市国分西1丁目2番付近",
+          "rank": 2,
+          "label": "大阪府柏原市国分西1丁目2-26",
+          "lat": 34.56650624,
+          "lng": 135.63486452,
+          "score": 96,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 81%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "27221"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "大阪府柏原市国分西1丁目2番付近",
+          "rank": 3,
+          "label": "大阪府柏原市国分西1丁目2-22",
+          "lat": 34.56678121,
+          "lng": 135.63480897,
+          "score": 94,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 81%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "27221"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "大阪府柏原市国分西1丁目2番付近",
+          "rank": 4,
+          "label": "大阪府柏原市国分西1丁目2-24",
+          "lat": 34.56668678,
+          "lng": 135.63482841,
+          "score": 92,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 81%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "27221"
+        }
+      ]
+    },
+    {
+      "id": "28",
+      "title": "オガタ通り商店街",
+      "prefecture": "大阪府",
+      "city": "柏原市",
+      "status": "selected",
+      "address": "大阪府柏原市清州2丁目4番付近",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=28",
+      "old_coordinate": {
+        "lat": 34.588963,
+        "lng": 135.623611
+      },
+      "selected": {
+        "provider": "yahoo",
+        "strategy": "official_address",
+        "query": "大阪府柏原市清州2丁目4番付近",
+        "rank": 1,
+        "label": "大阪府柏原市清州2丁目4",
+        "lat": 34.58913154,
+        "lng": 135.624151,
+        "score": 92,
+        "reason": "Yahoo住所候補（一致レベル 5 / 文字一致 80%）",
+        "matching_level": 5,
+        "address_type": "街区",
+        "government_code": "27221"
+      },
+      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
+      "old_distance_km": 0.053,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "大阪府柏原市清州2丁目4番付近",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "大阪府柏原市清州2丁目4番付近",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "大阪府 柏原市 オガタ通り商店街",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "大阪府柏原市清州2丁目4番付近",
+          "result_count": 5,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "大阪府柏原市清州2丁目4番付近",
+          "rank": 1,
+          "label": "大阪府柏原市清州二丁目４番",
+          "lat": 34.588963,
+          "lng": 135.623611,
+          "score": 81,
+          "reason": "GSI住所候補（文字一致 80%）"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "大阪府柏原市清州2丁目4番付近",
+          "rank": 1,
+          "label": "大阪府柏原市清州2丁目4",
+          "lat": 34.58913154,
+          "lng": 135.624151,
+          "score": 92,
+          "reason": "Yahoo住所候補（一致レベル 5 / 文字一致 80%）",
+          "matching_level": 5,
+          "address_type": "街区",
+          "government_code": "27221"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "大阪府柏原市清州2丁目4番付近",
+          "rank": 2,
+          "label": "大阪府柏原市清州2丁目4-19",
+          "lat": 34.58917597,
+          "lng": 135.62461208,
+          "score": 96,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 80%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "27221"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "大阪府柏原市清州2丁目4番付近",
+          "rank": 3,
+          "label": "大阪府柏原市清州2丁目4-30",
+          "lat": 34.58887045,
+          "lng": 135.6234622,
+          "score": 94,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 80%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "27221"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "大阪府柏原市清州2丁目4番付近",
+          "rank": 4,
+          "label": "大阪府柏原市清州2丁目4-29",
+          "lat": 34.58894545,
+          "lng": 135.62357051,
+          "score": 92,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 80%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "27221"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "大阪府柏原市清州2丁目4番付近",
+          "rank": 5,
+          "label": "大阪府柏原市清州2丁目4-28",
+          "lat": 34.58894545,
+          "lng": 135.6236955,
+          "score": 90,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 80%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "27221"
+        }
+      ]
+    },
+    {
+      "id": "29",
+      "title": "緑地運動公園内",
+      "prefecture": "岡山県",
+      "city": "勝央町",
+      "status": "selected",
+      "address": "岡山県勝田郡勝央町太平台43番",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=29",
+      "old_coordinate": {
+        "lat": 35.046021,
+        "lng": 134.11171
+      },
+      "selected": {
+        "provider": "yahoo",
+        "strategy": "official_address",
+        "query": "岡山県勝田郡勝央町太平台43番",
+        "rank": 1,
+        "label": "岡山県勝田郡勝央町太平台43",
+        "lat": 35.04620576,
+        "lng": 134.11036027,
+        "score": 99,
+        "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 93%）",
+        "matching_level": 6,
+        "address_type": "地番・戸番",
+        "government_code": "33622"
+      },
+      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
+      "old_distance_km": 0.125,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "岡山県勝田郡勝央町太平台43番",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "岡山県勝田郡勝央町太平台",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "岡山県勝央町緑地運動",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "岡山県勝田郡勝央町太平台43番",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "岡山県 勝央町 緑地運動公園内",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "岡山県勝田郡勝央町太平台43番",
+          "result_count": 1,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "岡山県勝田郡勝央町太平台43番",
+          "rank": 1,
+          "label": "岡山県勝央町太平台４３番地",
+          "lat": 35.046021,
+          "lng": 134.11171,
+          "score": 84,
+          "reason": "GSI住所候補（文字一致 86%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "岡山県勝田郡勝央町太平台",
+          "rank": 1,
+          "label": "岡山県勝央町太平台",
+          "lat": 35.051846,
+          "lng": 134.108627,
+          "score": 82,
+          "reason": "GSI住所候補（文字一致 82%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "岡山県勝央町緑地運動",
+          "rank": 1,
+          "label": "岡山県勝央町",
+          "lat": 35.041855,
+          "lng": 134.116135,
+          "score": 72,
+          "reason": "GSI住所候補（文字一致 60%）"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "岡山県勝田郡勝央町太平台43番",
+          "rank": 1,
+          "label": "岡山県勝田郡勝央町太平台43",
+          "lat": 35.04620576,
+          "lng": 134.11036027,
+          "score": 99,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 93%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "33622"
+        }
+      ]
+    },
+    {
+      "id": "30",
+      "title": "JR勝間田駅（屋外待合スペース）",
+      "prefecture": "岡山県",
+      "city": "勝央町",
+      "status": "selected",
+      "address": "岡山県勝田郡勝央町勝間田765番3",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=30",
+      "old_coordinate": {
+        "lat": 35.035652,
+        "lng": 134.118774
+      },
+      "selected": {
+        "provider": "yahoo",
+        "strategy": "official_address",
+        "query": "岡山県勝田郡勝央町勝間田765番3",
+        "rank": 1,
+        "label": "岡山県勝田郡勝央町勝間田765-3",
+        "lat": 35.03579573,
+        "lng": 134.11925972,
+        "score": 99,
+        "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 93%）",
+        "matching_level": 6,
+        "address_type": "枝番",
+        "government_code": "33622"
+      },
+      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
+      "old_distance_km": 0.047,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "岡山県勝田郡勝央町勝間田765番3",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "岡山県勝田郡勝央町勝間田",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "岡山県勝田郡勝央町勝間田765番3",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "岡山県 勝央町 JR勝間田駅（屋外待合スペース）",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "岡山県勝田郡勝央町勝間田765番3",
+          "result_count": 1,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "岡山県勝田郡勝央町勝間田765番3",
+          "rank": 1,
+          "label": "岡山県勝央町勝間田７６５番地",
+          "lat": 35.035652,
+          "lng": 134.118774,
+          "score": 84,
+          "reason": "GSI住所候補（文字一致 86%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "岡山県勝田郡勝央町勝間田",
+          "rank": 1,
+          "label": "岡山県勝央町勝間田",
+          "lat": 35.041718,
+          "lng": 134.115799,
+          "score": 85,
+          "reason": "GSI住所候補（文字一致 89%）"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "岡山県勝田郡勝央町勝間田765番3",
+          "rank": 1,
+          "label": "岡山県勝田郡勝央町勝間田765-3",
+          "lat": 35.03579573,
+          "lng": 134.11925972,
+          "score": 99,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 93%）",
+          "matching_level": 6,
+          "address_type": "枝番",
+          "government_code": "33622"
+        }
+      ]
+    },
+    {
+      "id": "31",
+      "title": "出水麓歴史館",
+      "prefecture": "鹿児島県",
+      "city": "出水市",
+      "status": "selected",
+      "address": "鹿児島県出水市麓町10-39",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=31",
+      "old_coordinate": {
+        "lat": 32.07523,
+        "lng": 130.359177
+      },
+      "selected": {
+        "provider": "yahoo",
+        "strategy": "official_address",
+        "query": "鹿児島県出水市麓町10-39",
+        "rank": 1,
+        "label": "鹿児島県出水市麓町10-39",
+        "lat": 32.07556496,
+        "lng": 130.35923009,
+        "score": 99,
+        "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 100%）",
+        "matching_level": 6,
+        "address_type": "地番・戸番",
+        "government_code": "46208"
+      },
+      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
+      "old_distance_km": 0.038,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "鹿児島県出水市麓町10-39",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "鹿児島県出水市麓町",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "鹿児島県出水市麓町10-39",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "鹿児島県 出水市 出水麓歴史館",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "鹿児島県出水市麓町10-39",
+          "result_count": 1,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "鹿児島県出水市麓町10-39",
+          "rank": 1,
+          "label": "鹿児島県出水市麓町１０番３９号",
+          "lat": 32.07523,
+          "lng": 130.359177,
+          "score": 90,
+          "reason": "GSI住所候補（文字一致 100%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "鹿児島県出水市麓町",
+          "rank": 1,
+          "label": "鹿児島県出水市麓町",
+          "lat": 32.074802,
+          "lng": 130.360031,
+          "score": 90,
+          "reason": "GSI住所候補（文字一致 100%）"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "鹿児島県出水市麓町10-39",
+          "rank": 1,
+          "label": "鹿児島県出水市麓町10-39",
+          "lat": 32.07556496,
+          "lng": 130.35923009,
+          "score": 99,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 100%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "46208"
+        }
+      ]
+    },
+    {
+      "id": "32",
+      "title": "クレインパークいずみ",
+      "prefecture": "鹿児島県",
+      "city": "出水市",
+      "status": "selected",
+      "address": "鹿児島県出水市文化町1000",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=32",
+      "old_coordinate": {
+        "lat": 32.098309,
+        "lng": 130.34285
+      },
+      "selected": {
+        "provider": "yahoo",
+        "strategy": "official_address",
+        "query": "鹿児島県出水市文化町1000",
+        "rank": 1,
+        "label": "鹿児島県出水市文化町1000",
+        "lat": 32.09820143,
+        "lng": 130.34334776,
+        "score": 99,
+        "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 100%）",
+        "matching_level": 6,
+        "address_type": "地番・戸番",
+        "government_code": "46208"
+      },
+      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
+      "old_distance_km": 0.048,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "鹿児島県出水市文化町1000",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "鹿児島県出水市文化町",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "鹿児島県出水市文化町1000",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "鹿児島県 出水市 クレインパークいずみ",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "鹿児島県出水市文化町1000",
+          "result_count": 1,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "鹿児島県出水市文化町1000",
+          "rank": 1,
+          "label": "鹿児島県出水市文化町１０００番地",
+          "lat": 32.098309,
+          "lng": 130.34285,
+          "score": 90,
+          "reason": "GSI住所候補（文字一致 100%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "鹿児島県出水市文化町",
+          "rank": 1,
+          "label": "鹿児島県出水市文化町",
+          "lat": 32.095085,
+          "lng": 130.340378,
+          "score": 90,
+          "reason": "GSI住所候補（文字一致 100%）"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "鹿児島県出水市文化町1000",
+          "rank": 1,
+          "label": "鹿児島県出水市文化町1000",
+          "lat": 32.09820143,
+          "lng": 130.34334776,
+          "score": 99,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 100%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "46208"
+        }
+      ]
+    },
+    {
+      "id": "33",
+      "title": "美星天文台",
+      "prefecture": "岡山県",
+      "city": "井原市",
+      "status": "selected",
+      "address": "岡山県井原市美星町大倉1723番地70",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=33",
+      "old_coordinate": {
+        "lat": 34.671993,
+        "lng": 133.552078
+      },
+      "selected": {
+        "provider": "yahoo",
+        "strategy": "official_address",
+        "query": "岡山県井原市美星町大倉1723番地70",
+        "rank": 1,
+        "label": "岡山県井原市美星町大倉1723-70",
+        "lat": 34.67200503,
+        "lng": 133.54539661,
+        "score": 99,
+        "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 89%）",
+        "matching_level": 6,
+        "address_type": "枝番",
+        "government_code": "33207"
+      },
+      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
+      "old_distance_km": 0.611,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "岡山県井原市美星町大倉1723番地70",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "岡山県井原市美星町大倉",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "岡山県井原市美星町大倉1723番地70",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "岡山県 井原市 美星天文台",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "岡山県井原市美星町大倉1723番地70",
+          "result_count": 1,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "岡山県井原市美星町大倉1723番地70",
+          "rank": 1,
+          "label": "岡山県井原市美星町大倉",
+          "lat": 34.671993,
+          "lng": 133.552078,
+          "score": 72,
+          "reason": "GSI住所候補（文字一致 61%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "岡山県井原市美星町大倉",
+          "rank": 1,
+          "label": "岡山県井原市美星町大倉",
+          "lat": 34.671993,
+          "lng": 133.552078,
+          "score": 90,
+          "reason": "GSI住所候補（文字一致 100%）"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "岡山県井原市美星町大倉1723番地70",
+          "rank": 1,
+          "label": "岡山県井原市美星町大倉1723-70",
+          "lat": 34.67200503,
+          "lng": 133.54539661,
+          "score": 99,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 89%）",
+          "matching_level": 6,
+          "address_type": "枝番",
+          "government_code": "33207"
+        }
+      ]
+    },
+    {
+      "id": "34",
+      "title": "井原市立平櫛田中美術館",
+      "prefecture": "岡山県",
+      "city": "井原市",
+      "status": "selected",
+      "address": "岡山県井原市井原町315番地",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=34",
+      "old_coordinate": {
+        "lat": 34.597874,
+        "lng": 133.46405
+      },
+      "selected": {
+        "provider": "yahoo",
+        "strategy": "official_address",
+        "query": "岡山県井原市井原町315番地",
+        "rank": 1,
+        "label": "岡山県井原市井原町315",
+        "lat": 34.59801873,
+        "lng": 133.46352814,
+        "score": 98,
+        "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 83%）",
+        "matching_level": 6,
+        "address_type": "地番・戸番",
+        "government_code": "33207"
+      },
+      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
+      "old_distance_km": 0.05,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "岡山県井原市井原町315番地",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "岡山県井原市井原町",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "岡山県井原市井原町315番地",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "岡山県 井原市 井原市立平櫛田中美術館",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "岡山県井原市井原町315番地",
+          "result_count": 1,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "岡山県井原市井原町315番地",
+          "rank": 1,
+          "label": "岡山県井原市井原町３１５番地",
+          "lat": 34.597874,
+          "lng": 133.46405,
+          "score": 90,
+          "reason": "GSI住所候補（文字一致 100%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "岡山県井原市井原町",
+          "rank": 1,
+          "label": "岡山県井原市井原町",
+          "lat": 34.606007,
+          "lng": 133.448822,
+          "score": 90,
+          "reason": "GSI住所候補（文字一致 100%）"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "岡山県井原市井原町315番地",
+          "rank": 1,
+          "label": "岡山県井原市井原町315",
+          "lat": 34.59801873,
+          "lng": 133.46352814,
+          "score": 98,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 83%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "33207"
+        }
+      ]
+    },
+    {
+      "id": "35",
+      "title": "北の防人大湊安渡館",
+      "prefecture": "青森県",
+      "city": "むつ市",
+      "status": "selected",
+      "address": "青森県むつ市桜木町3番1号",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=35",
+      "old_coordinate": {
+        "lat": 41.256542,
+        "lng": 141.13942
+      },
+      "selected": {
+        "provider": "yahoo",
+        "strategy": "official_address",
+        "query": "青森県むつ市桜木町3番1号",
+        "rank": 1,
+        "label": "青森県むつ市桜木町3-1",
+        "lat": 41.25659841,
+        "lng": 141.13922219,
+        "score": 99,
+        "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 85%）",
+        "matching_level": 6,
+        "address_type": "地番・戸番",
+        "government_code": "02208"
+      },
+      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
+      "old_distance_km": 0.018,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "青森県むつ市桜木町3番1号",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "青森県むつ市桜木町",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "青森県むつ市桜木町3番1号",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "青森県 むつ市 北の防人大湊安渡館",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "青森県むつ市桜木町3番1号",
+          "result_count": 1,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "青森県むつ市桜木町3番1号",
+          "rank": 1,
+          "label": "青森県むつ市桜木町３番１号",
+          "lat": 41.256542,
+          "lng": 141.13942,
+          "score": 90,
+          "reason": "GSI住所候補（文字一致 100%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "青森県むつ市桜木町",
+          "rank": 1,
+          "label": "青森県むつ市桜木町",
+          "lat": 41.251194,
+          "lng": 141.132355,
+          "score": 90,
+          "reason": "GSI住所候補（文字一致 100%）"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "青森県むつ市桜木町3番1号",
+          "rank": 1,
+          "label": "青森県むつ市桜木町3-1",
+          "lat": 41.25659841,
+          "lng": 141.13922219,
+          "score": 99,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 85%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "02208"
+        }
+      ]
+    },
+    {
+      "id": "36",
+      "title": "JR下北駅",
+      "prefecture": "青森県",
+      "city": "むつ市",
+      "status": "selected",
+      "address": "青森県むつ市下北町4番13号",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=36",
+      "old_coordinate": {
+        "lat": 41.282932,
+        "lng": 141.190811
+      },
+      "selected": {
+        "provider": "yahoo",
+        "strategy": "official_address",
+        "query": "青森県むつ市下北町4番13号",
+        "rank": 1,
+        "label": "青森県むつ市下北町4-13",
+        "lat": 41.28310482,
+        "lng": 141.18979203,
+        "score": 99,
+        "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 86%）",
+        "matching_level": 6,
+        "address_type": "地番・戸番",
+        "government_code": "02208"
+      },
+      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
+      "old_distance_km": 0.087,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "青森県むつ市下北町4番13号",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "青森県むつ市下北町",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "青森県むつ市下北町4番13号",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "青森県 むつ市 JR下北駅",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "青森県むつ市下北町4番13号",
+          "result_count": 1,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "青森県むつ市下北町4番13号",
+          "rank": 1,
+          "label": "青森県むつ市下北町４番１３号",
+          "lat": 41.282932,
+          "lng": 141.190811,
+          "score": 90,
+          "reason": "GSI住所候補（文字一致 100%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "青森県むつ市下北町",
+          "rank": 1,
+          "label": "青森県むつ市下北町",
+          "lat": 41.285366,
+          "lng": 141.191391,
+          "score": 90,
+          "reason": "GSI住所候補（文字一致 100%）"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "青森県むつ市下北町4番13号",
+          "rank": 1,
+          "label": "青森県むつ市下北町4-13",
+          "lat": 41.28310482,
+          "lng": 141.18979203,
+          "score": 99,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 86%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "02208"
+        }
+      ]
+    },
+    {
+      "id": "37",
+      "title": "道の駅てんきてんき丹後",
+      "prefecture": "京都府",
+      "city": "京丹後市",
+      "status": "selected",
+      "address": "京都府京丹後市丹後町竹野313番地の1",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=37",
+      "old_coordinate": {
+        "lat": 35.742149,
+        "lng": 135.110992
+      },
+      "selected": {
+        "provider": "yahoo",
+        "strategy": "official_address",
+        "query": "京都府京丹後市丹後町竹野313番地の1",
+        "rank": 1,
+        "label": "京都府京丹後市丹後町竹野313-1",
+        "lat": 35.73899757,
+        "lng": 135.10528325,
+        "score": 98,
+        "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 79%）",
+        "matching_level": 6,
+        "address_type": "枝番",
+        "government_code": "26212"
+      },
+      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
+      "old_distance_km": 0.623,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "京都府京丹後市丹後町竹野313番地の1",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "京都府京丹後市丹後町竹野",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "京都府京丹後市丹後町竹野313番地の1",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "京都府 京丹後市 道の駅てんきてんき丹後",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "京都府京丹後市丹後町竹野313番地の1",
+          "result_count": 1,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "京都府京丹後市丹後町竹野313番地の1",
+          "rank": 1,
+          "label": "京都府京丹後市丹後町竹野",
+          "lat": 35.742149,
+          "lng": 135.110992,
+          "score": 74,
+          "reason": "GSI住所候補（文字一致 64%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "京都府京丹後市丹後町竹野",
+          "rank": 1,
+          "label": "京都府京丹後市丹後町竹野",
+          "lat": 35.742149,
+          "lng": 135.110992,
+          "score": 90,
+          "reason": "GSI住所候補（文字一致 100%）"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "京都府京丹後市丹後町竹野313番地の1",
+          "rank": 1,
+          "label": "京都府京丹後市丹後町竹野313-1",
+          "lat": 35.73899757,
+          "lng": 135.10528325,
+          "score": 98,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 79%）",
+          "matching_level": 6,
+          "address_type": "枝番",
+          "government_code": "26212"
+        }
+      ]
+    },
+    {
+      "id": "38",
+      "title": "浜詰夕日の丘",
+      "prefecture": "京都府",
+      "city": "京丹後市",
+      "status": "selected",
+      "address": "京都府京丹後市網野町浜詰44番地",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=38",
+      "old_coordinate": {
+        "lat": 35.663986,
+        "lng": 134.971466
+      },
+      "selected": {
+        "provider": "yahoo",
+        "strategy": "official_address",
+        "query": "京都府京丹後市網野町浜詰44番地",
+        "rank": 1,
+        "label": "京都府京丹後市網野町浜詰44",
+        "lat": 35.6626169,
+        "lng": 134.9671044,
+        "score": 99,
+        "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 86%）",
+        "matching_level": 6,
+        "address_type": "地番・戸番",
+        "government_code": "26212"
+      },
+      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
+      "old_distance_km": 0.422,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "京都府京丹後市網野町浜詰44番地",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "京都府京丹後市網野町浜詰",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "京都府京丹後市網野町浜詰44番地",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "京都府 京丹後市 浜詰夕日の丘",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "京都府京丹後市網野町浜詰44番地",
+          "result_count": 5,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "京都府京丹後市網野町浜詰44番地",
+          "rank": 1,
+          "label": "京都府京丹後市網野町浜詰",
+          "lat": 35.663986,
+          "lng": 134.971466,
+          "score": 80,
+          "reason": "GSI住所候補（文字一致 79%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "京都府京丹後市網野町浜詰",
+          "rank": 1,
+          "label": "京都府京丹後市網野町浜詰",
+          "lat": 35.663986,
+          "lng": 134.971466,
+          "score": 90,
+          "reason": "GSI住所候補（文字一致 100%）"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "京都府京丹後市網野町浜詰44番地",
+          "rank": 1,
+          "label": "京都府京丹後市網野町浜詰44",
+          "lat": 35.6626169,
+          "lng": 134.9671044,
+          "score": 99,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 86%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "26212"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "京都府京丹後市網野町浜詰44番地",
+          "rank": 2,
+          "label": "京都府京丹後市網野町浜詰44-9",
+          "lat": 35.66274743,
+          "lng": 134.96672388,
+          "score": 97,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 86%）",
+          "matching_level": 6,
+          "address_type": "枝番",
+          "government_code": "26212"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "京都府京丹後市網野町浜詰44番地",
+          "rank": 3,
+          "label": "京都府京丹後市網野町浜詰44-26",
+          "lat": 35.66332514,
+          "lng": 134.96712384,
+          "score": 95,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 86%）",
+          "matching_level": 6,
+          "address_type": "枝番",
+          "government_code": "26212"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "京都府京丹後市網野町浜詰44番地",
+          "rank": 4,
+          "label": "京都府京丹後市網野町浜詰44-19",
+          "lat": 35.66330291,
+          "lng": 134.96662943,
+          "score": 93,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 86%）",
+          "matching_level": 6,
+          "address_type": "枝番",
+          "government_code": "26212"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "京都府京丹後市網野町浜詰44番地",
+          "rank": 5,
+          "label": "京都府京丹後市網野町浜詰44-16",
+          "lat": 35.6631085,
+          "lng": 134.96665999,
+          "score": 91,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 86%）",
+          "matching_level": 6,
+          "address_type": "枝番",
+          "government_code": "26212"
+        }
+      ]
+    },
+    {
+      "id": "39",
+      "title": "南魚沼市図書館 返却ボックス前",
+      "prefecture": "新潟県",
+      "city": "南魚沼市",
+      "status": "selected",
+      "address": "新潟県南魚沼市六日町101-8",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=39",
+      "old_coordinate": {
+        "lat": 37.067184,
+        "lng": 138.877151
+      },
+      "selected": {
+        "provider": "yahoo",
+        "strategy": "official_address",
+        "query": "新潟県南魚沼市六日町101-8",
+        "rank": 1,
+        "label": "新潟県南魚沼市六日町101-8",
+        "lat": 37.06736845,
+        "lng": 138.87701426,
+        "score": 99,
+        "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 100%）",
+        "matching_level": 6,
+        "address_type": "枝番",
+        "government_code": "15226"
+      },
+      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
+      "old_distance_km": 0.024,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "新潟県南魚沼市六日町101-8",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "新潟県南魚沼市六日町",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "新潟県南魚沼市返却ボックス前",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "新潟県南魚沼市六日町101-8",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "新潟県 南魚沼市 南魚沼市図書館 返却ボックス前",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "新潟県南魚沼市六日町101-8",
+          "result_count": 1,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "新潟県南魚沼市六日町101-8",
+          "rank": 1,
+          "label": "新潟県南魚沼市六日町１０１番地",
+          "lat": 37.067184,
+          "lng": 138.877151,
+          "score": 87,
+          "reason": "GSI住所候補（文字一致 92%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "新潟県南魚沼市六日町",
+          "rank": 1,
+          "label": "新潟県南魚沼市六日町",
+          "lat": 37.06958,
+          "lng": 138.879044,
+          "score": 90,
+          "reason": "GSI住所候補（文字一致 100%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "新潟県南魚沼市返却ボックス前",
+          "rank": 1,
+          "label": "新潟県南魚沼市",
+          "lat": 37.065556,
+          "lng": 138.876114,
+          "score": 68,
+          "reason": "GSI住所候補（文字一致 50%）"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "新潟県南魚沼市六日町101-8",
+          "rank": 1,
+          "label": "新潟県南魚沼市六日町101-8",
+          "lat": 37.06736845,
+          "lng": 138.87701426,
+          "score": 99,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 100%）",
+          "matching_level": 6,
+          "address_type": "枝番",
+          "government_code": "15226"
+        }
+      ]
+    },
+    {
+      "id": "40",
+      "title": "道の駅南魚沼「雪あかり」",
+      "prefecture": "新潟県",
+      "city": "南魚沼市",
+      "status": "selected",
+      "address": "新潟県南魚沼市下一日市855",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=40",
+      "old_coordinate": {
+        "lat": 37.003124,
+        "lng": 138.818863
+      },
+      "selected": {
+        "provider": "yahoo",
+        "strategy": "official_address",
+        "query": "新潟県南魚沼市下一日市855",
+        "rank": 1,
+        "label": "新潟県南魚沼市下一日市855",
+        "lat": 37.0036383,
+        "lng": 138.81899961,
+        "score": 99,
+        "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 100%）",
+        "matching_level": 6,
+        "address_type": "地番・戸番",
+        "government_code": "15226"
+      },
+      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
+      "old_distance_km": 0.058,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "新潟県南魚沼市下一日市855",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "新潟県南魚沼市下一日市",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "新潟県南魚沼市下一日市855",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "新潟県 南魚沼市 道の駅南魚沼「雪あかり」",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "新潟県南魚沼市下一日市855",
+          "result_count": 1,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "新潟県南魚沼市下一日市855",
+          "rank": 1,
+          "label": "新潟県南魚沼市下一日市８５５番地",
+          "lat": 37.003124,
+          "lng": 138.818863,
+          "score": 90,
+          "reason": "GSI住所候補（文字一致 100%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "新潟県南魚沼市下一日市",
+          "rank": 1,
+          "label": "新潟県南魚沼市下一日市",
+          "lat": 37.004414,
+          "lng": 138.814713,
+          "score": 90,
+          "reason": "GSI住所候補（文字一致 100%）"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "新潟県南魚沼市下一日市855",
+          "rank": 1,
+          "label": "新潟県南魚沼市下一日市855",
+          "lat": 37.0036383,
+          "lng": 138.81899961,
+          "score": 99,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 100%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "15226"
+        }
+      ]
+    },
+    {
+      "id": "41",
+      "title": "丸の内一丁目７番４号付近 歩道",
+      "prefecture": "山梨県",
+      "city": "甲府市",
+      "status": "selected",
+      "address": "山梨県甲府市丸の内一丁目7番4号付近の歩道",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=41",
+      "old_coordinate": {
+        "lat": 35.66571,
+        "lng": 138.568283
+      },
+      "selected": {
+        "provider": "yahoo",
+        "strategy": "official_address",
+        "query": "山梨県甲府市丸の内一丁目7番4号付近の歩道",
+        "rank": 1,
+        "label": "山梨県甲府市丸の内1丁目7-4",
+        "lat": 35.66573441,
+        "lng": 138.56841764,
+        "score": 96,
+        "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 65%）",
+        "matching_level": 6,
+        "address_type": "地番・戸番",
+        "government_code": "19201"
+      },
+      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
+      "old_distance_km": 0.012,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "山梨県甲府市丸の内一丁目7番4号付近の歩道",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "山梨県甲府市丸の内一丁目7番4号付近の歩道",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "山梨県 甲府市 丸の内一丁目７番４号付近 歩道",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "山梨県甲府市丸の内一丁目7番4号付近の歩道",
+          "result_count": 1,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "山梨県甲府市丸の内一丁目7番4号付近の歩道",
+          "rank": 1,
+          "label": "山梨県甲府市丸の内一丁目７番４号",
+          "lat": 35.66571,
+          "lng": 138.568283,
+          "score": 81,
+          "reason": "GSI住所候補（文字一致 80%）"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "山梨県甲府市丸の内一丁目7番4号付近の歩道",
+          "rank": 1,
+          "label": "山梨県甲府市丸の内1丁目7-4",
+          "lat": 35.66573441,
+          "lng": 138.56841764,
+          "score": 96,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 65%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "19201"
+        }
+      ]
+    },
+    {
+      "id": "42",
+      "title": "よっちゃばれ広場 南側歩道",
+      "prefecture": "山梨県",
+      "city": "甲府市",
+      "status": "selected",
+      "address": "山梨県甲府市丸の内一丁目1番 「アシストエンジニアリングよっちゃばれ広場」南側歩道",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=42",
+      "old_coordinate": {
+        "lat": 35.668373,
+        "lng": 138.566513
+      },
+      "selected": {
+        "provider": "yahoo",
+        "strategy": "official_address",
+        "query": "山梨県甲府市丸の内一丁目1番 「アシストエンジニアリングよっちゃばれ広場」南側歩道",
+        "rank": 1,
+        "label": "山梨県甲府市丸の内1丁目1",
+        "lat": 35.66654822,
+        "lng": 138.56948971,
+        "score": 85,
+        "reason": "Yahoo住所候補（一致レベル 5 / 文字一致 33%）",
+        "matching_level": 5,
+        "address_type": "街区",
+        "government_code": "19201"
+      },
+      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
+      "old_distance_km": 0.337,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "山梨県甲府市丸の内一丁目1番 「アシストエンジニアリングよっちゃばれ広場」南側歩道",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "山梨県甲府市丸の内一丁目1番 「アシストエンジニアリングよっちゃばれ広場」南側歩道",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "山梨県 甲府市 よっちゃばれ広場 南側歩道",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "山梨県甲府市丸の内一丁目1番 「アシストエンジニアリングよっちゃばれ広場」南側歩道",
+          "result_count": 5,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "山梨県甲府市丸の内一丁目1番 「アシストエンジニアリングよっちゃばれ広場」南側歩道",
+          "rank": 1,
+          "label": "山梨県甲府市丸の内一丁目１番",
+          "lat": 35.668373,
+          "lng": 138.566513,
+          "score": 62,
+          "reason": "GSI住所候補（文字一致 39%）"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "山梨県甲府市丸の内一丁目1番 「アシストエンジニアリングよっちゃばれ広場」南側歩道",
+          "rank": 1,
+          "label": "山梨県甲府市丸の内1丁目1",
+          "lat": 35.66654822,
+          "lng": 138.56948971,
+          "score": 85,
+          "reason": "Yahoo住所候補（一致レベル 5 / 文字一致 33%）",
+          "matching_level": 5,
+          "address_type": "街区",
+          "government_code": "19201"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "山梨県甲府市丸の内一丁目1番 「アシストエンジニアリングよっちゃばれ広場」南側歩道",
+          "rank": 2,
+          "label": "山梨県甲府市丸の内1丁目1-11",
+          "lat": 35.66705363,
+          "lng": 138.56683443,
+          "score": 89,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 33%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "19201"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "山梨県甲府市丸の内一丁目1番 「アシストエンジニアリングよっちゃばれ広場」南側歩道",
+          "rank": 3,
+          "label": "山梨県甲府市丸の内1丁目1-25",
+          "lat": 35.66683713,
+          "lng": 138.57145616,
+          "score": 87,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 33%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "19201"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "山梨県甲府市丸の内一丁目1番 「アシストエンジニアリングよっちゃばれ広場」南側歩道",
+          "rank": 4,
+          "label": "山梨県甲府市丸の内1丁目1-18",
+          "lat": 35.6680924,
+          "lng": 138.56733156,
+          "score": 85,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 33%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "19201"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "山梨県甲府市丸の内一丁目1番 「アシストエンジニアリングよっちゃばれ広場」南側歩道",
+          "rank": 5,
+          "label": "山梨県甲府市丸の内1丁目1-1",
+          "lat": 35.66685659,
+          "lng": 138.5722033,
+          "score": 83,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 33%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "19201"
+        }
+      ]
+    },
+    {
+      "id": "43",
+      "title": "道後商店街",
+      "prefecture": "愛媛県",
+      "city": "松山市",
+      "status": "selected",
+      "address": "愛媛県松山市道後湯之町20番21地先 道後商店街",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=43",
+      "old_coordinate": {
+        "lat": 33.852089,
+        "lng": 132.785599
+      },
+      "selected": {
+        "provider": "yahoo",
+        "strategy": "official_address",
+        "query": "愛媛県松山市道後湯之町20番21地先 道後商店街",
+        "rank": 1,
+        "label": "愛媛県松山市道後湯之町20-21",
+        "lat": 33.85222813,
+        "lng": 132.78562032,
+        "score": 96,
+        "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 70%）",
+        "matching_level": 6,
+        "address_type": "地番・戸番",
+        "government_code": "38201"
+      },
+      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
+      "old_distance_km": 0.016,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "愛媛県松山市道後湯之町20番21地先 道後商店街",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "愛媛県松山市道後湯之町20番21地先 道後商店街",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "愛媛県 松山市 道後商店街",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "愛媛県松山市道後湯之町20番21地先 道後商店街",
+          "result_count": 1,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "愛媛県松山市道後湯之町20番21地先 道後商店街",
+          "rank": 1,
+          "label": "愛媛県松山市道後湯之町２０番２１号",
+          "lat": 33.852089,
+          "lng": 132.785599,
+          "score": 79,
+          "reason": "GSI住所候補（文字一致 75%）"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "愛媛県松山市道後湯之町20番21地先 道後商店街",
+          "rank": 1,
+          "label": "愛媛県松山市道後湯之町20-21",
+          "lat": 33.85222813,
+          "lng": 132.78562032,
+          "score": 96,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 70%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "38201"
+        }
+      ]
+    },
+    {
+      "id": "44",
+      "title": "ロープウェー商店街",
+      "prefecture": "愛媛県",
+      "city": "松山市",
+      "status": "selected",
+      "address": "愛媛県松山市大街道三丁目2番46地先 ロープウェー商店街",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=44",
+      "old_coordinate": {
+        "lat": 33.843357,
+        "lng": 132.769653
+      },
+      "selected": {
+        "provider": "yahoo",
+        "strategy": "official_address",
+        "query": "愛媛県松山市大街道三丁目2番46地先 ロープウェー商店街",
+        "rank": 1,
+        "label": "愛媛県松山市大街道3丁目2-46",
+        "lat": 33.84465091,
+        "lng": 132.77193259,
+        "score": 94,
+        "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 56%）",
+        "matching_level": 6,
+        "address_type": "地番・戸番",
+        "government_code": "38201"
+      },
+      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
+      "old_distance_km": 0.255,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "愛媛県松山市大街道三丁目2番46地先 ロープウェー商店街",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "愛媛県松山市大街道三丁目2番46地先 ロープウェー商店街",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "愛媛県 松山市 ロープウェー商店街",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "愛媛県松山市大街道三丁目2番46地先 ロープウェー商店街",
+          "result_count": 1,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "愛媛県松山市大街道三丁目2番46地先 ロープウェー商店街",
+          "rank": 1,
+          "label": "愛媛県松山市大街道三丁目２番",
+          "lat": 33.843357,
+          "lng": 132.769653,
+          "score": 70,
+          "reason": "GSI住所候補（文字一致 56%）"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "愛媛県松山市大街道三丁目2番46地先 ロープウェー商店街",
+          "rank": 1,
+          "label": "愛媛県松山市大街道3丁目2-46",
+          "lat": 33.84465091,
+          "lng": 132.77193259,
+          "score": 94,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 56%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "38201"
+        }
+      ]
+    },
+    {
+      "id": "45",
+      "title": "停車場ガーデン",
+      "prefecture": "長野県",
+      "city": "小諸市",
+      "status": "selected",
+      "address": "長野県小諸市相生町一丁目1番9号 停車場ガーデン",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=45",
+      "old_coordinate": {
+        "lat": 36.326756,
+        "lng": 138.421707
+      },
+      "selected": {
+        "provider": "yahoo",
+        "strategy": "official_address",
+        "query": "長野県小諸市相生町一丁目1番9号 停車場ガーデン",
+        "rank": 1,
+        "label": "長野県小諸市相生町1丁目1-9",
+        "lat": 36.32765777,
+        "lng": 138.42144462,
+        "score": 94,
+        "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 57%）",
+        "matching_level": 6,
+        "address_type": "地番・戸番",
+        "government_code": "20208"
+      },
+      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
+      "old_distance_km": 0.103,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "長野県小諸市相生町一丁目1番9号 停車場ガーデン",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "長野県小諸市相生町一丁目1番9号 停車場ガーデン",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "長野県 小諸市 停車場ガーデン",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "長野県小諸市相生町一丁目1番9号 停車場ガーデン",
+          "result_count": 1,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "長野県小諸市相生町一丁目1番9号 停車場ガーデン",
+          "rank": 1,
+          "label": "長野県小諸市相生町一丁目１番",
+          "lat": 36.326756,
+          "lng": 138.421707,
+          "score": 72,
+          "reason": "GSI住所候補（文字一致 61%）"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "長野県小諸市相生町一丁目1番9号 停車場ガーデン",
+          "rank": 1,
+          "label": "長野県小諸市相生町1丁目1-9",
+          "lat": 36.32765777,
+          "lng": 138.42144462,
+          "score": 94,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 57%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "20208"
+        }
+      ]
+    },
+    {
+      "id": "46",
+      "title": "あぐりの湯こもろ",
+      "prefecture": "長野県",
+      "city": "小諸市",
+      "status": "selected",
+      "address": "長野県小諸市大字大久保1100番地 あぐりの湯こもろ",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=46",
+      "old_coordinate": {
+        "lat": 36.319553,
+        "lng": 138.383423
+      },
+      "selected": {
+        "provider": "yahoo",
+        "strategy": "official_address",
+        "query": "長野県小諸市大字大久保1100番地 あぐりの湯こもろ",
+        "rank": 1,
+        "label": "長野県小諸市大久保（大字）1100",
+        "lat": 36.32372471,
+        "lng": 138.39462184,
+        "score": 94,
+        "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 55%）",
+        "matching_level": 6,
+        "address_type": "地番・戸番",
+        "government_code": "20208"
+      },
+      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
+      "old_distance_km": 1.105,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "長野県小諸市大字大久保1100番地 あぐりの湯こもろ",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "長野県小諸市大字大久保1100番地 あぐりの湯こもろ",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "長野県 小諸市 あぐりの湯こもろ",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "長野県小諸市大字大久保1100番地 あぐりの湯こもろ",
+          "result_count": 1,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "長野県小諸市大字大久保1100番地 あぐりの湯こもろ",
+          "rank": 1,
+          "label": "長野県小諸市大久保",
+          "lat": 36.319553,
+          "lng": 138.383423,
+          "score": 63,
+          "reason": "GSI住所候補（文字一致 41%）"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "長野県小諸市大字大久保1100番地 あぐりの湯こもろ",
+          "rank": 1,
+          "label": "長野県小諸市大久保（大字）1100",
+          "lat": 36.32372471,
+          "lng": 138.39462184,
+          "score": 94,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 55%）",
+          "matching_level": 6,
+          "address_type": "地番・戸番",
+          "government_code": "20208"
+        }
+      ]
+    },
+    {
+      "id": "47",
+      "title": "橘ふれあい公園内",
+      "prefecture": "千葉県",
+      "city": "香取市",
+      "status": "selected",
+      "address": "千葉県香取市長岡1828-1 橘ふれあい公園内",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=47",
+      "old_coordinate": {
+        "lat": 35.897739,
+        "lng": 140.499298
+      },
+      "selected": {
+        "provider": "yahoo",
+        "strategy": "official_address",
+        "query": "千葉県香取市長岡1828-1 橘ふれあい公園内",
+        "rank": 1,
+        "label": "千葉県香取市長岡1828-1",
+        "lat": 35.81011188,
+        "lng": 140.58770359,
+        "score": 95,
+        "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 58%）",
+        "matching_level": 6,
+        "address_type": "枝番",
+        "government_code": "12236"
+      },
+      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
+      "old_distance_km": 12.587,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "千葉県香取市長岡1828-1 橘ふれあい公園内",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "千葉県香取市橘ふれあい",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "千葉県香取市長岡1828-1 橘ふれあい公園内",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "千葉県 香取市 橘ふれあい公園内",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "千葉県香取市長岡1828-1 橘ふれあい公園内",
+          "result_count": 1,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "千葉県香取市長岡1828-1 橘ふれあい公園内",
+          "rank": 1,
+          "label": "千葉県香取市長岡",
+          "lat": 35.798317,
+          "lng": 140.586502,
+          "score": 64,
+          "reason": "GSI住所候補（文字一致 42%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "千葉県香取市橘ふれあい",
+          "rank": 1,
+          "label": "千葉県香取市",
+          "lat": 35.897739,
+          "lng": 140.499298,
+          "score": 70,
+          "reason": "GSI住所候補（文字一致 55%）"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "千葉県香取市長岡1828-1 橘ふれあい公園内",
+          "rank": 1,
+          "label": "千葉県香取市長岡1828-1",
+          "lat": 35.81011188,
+          "lng": 140.58770359,
+          "score": 95,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 58%）",
+          "matching_level": 6,
+          "address_type": "枝番",
+          "government_code": "12236"
+        }
+      ]
+    },
+    {
+      "id": "48",
+      "title": "くろべ運動公園内",
+      "prefecture": "千葉県",
+      "city": "香取市",
+      "status": "selected",
+      "address": "千葉県香取市小見川4872-22 くろべ運動公園内",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=48",
+      "old_coordinate": {
+        "lat": 35.857723,
+        "lng": 140.609726
+      },
+      "selected": {
+        "provider": "yahoo",
+        "strategy": "official_address",
+        "query": "千葉県香取市小見川4872-22 くろべ運動公園内",
+        "rank": 1,
+        "label": "千葉県香取市小見川4872-22",
+        "lat": 35.85843116,
+        "lng": 140.61121941,
+        "score": 95,
+        "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 62%）",
+        "matching_level": 6,
+        "address_type": "枝番",
+        "government_code": "12236"
+      },
+      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
+      "old_distance_km": 0.156,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "千葉県香取市小見川4872-22 くろべ運動公園内",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "千葉県香取市くろべ運動",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "千葉県香取市小見川4872-22 くろべ運動公園内",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "千葉県 香取市 くろべ運動公園内",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "千葉県香取市小見川4872-22 くろべ運動公園内",
+          "result_count": 1,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "千葉県香取市小見川4872-22 くろべ運動公園内",
+          "rank": 1,
+          "label": "千葉県香取市小見川４８７２番地",
+          "lat": 35.857723,
+          "lng": 140.609726,
+          "score": 73,
+          "reason": "GSI住所候補（文字一致 62%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "千葉県香取市くろべ運動",
+          "rank": 1,
+          "label": "千葉県香取市",
+          "lat": 35.897739,
+          "lng": 140.499298,
+          "score": 70,
+          "reason": "GSI住所候補（文字一致 55%）"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "千葉県香取市小見川4872-22 くろべ運動公園内",
+          "rank": 1,
+          "label": "千葉県香取市小見川4872-22",
+          "lat": 35.85843116,
+          "lng": 140.61121941,
+          "score": 95,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 62%）",
+          "matching_level": 6,
+          "address_type": "枝番",
+          "government_code": "12236"
+        }
+      ]
+    },
+    {
+      "id": "49",
+      "title": "伽羅楽112-2地先",
+      "prefecture": "岩手県",
+      "city": "平泉町",
+      "status": "selected",
+      "address": "岩手県西磐井郡平泉町平泉字伽羅楽112-2地先",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=49",
+      "old_coordinate": {
+        "lat": 38.991306,
+        "lng": 141.117584
+      },
+      "selected": {
+        "provider": "yahoo",
+        "strategy": "official_address",
+        "query": "岩手県西磐井郡平泉町平泉字伽羅楽112-2地先",
+        "rank": 1,
+        "label": "岩手県西磐井郡平泉町平泉伽羅楽（字）112-2",
+        "lat": 38.99191985,
+        "lng": 141.12156811,
+        "score": 99,
+        "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 89%）",
+        "matching_level": 6,
+        "address_type": "枝番",
+        "government_code": "03402"
+      },
+      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
+      "old_distance_km": 0.351,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "岩手県西磐井郡平泉町平泉字伽羅楽112-2地先",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "岩手県西磐井郡平泉町平泉字伽羅楽112-2地先",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "岩手県 平泉町 伽羅楽112-2地先",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "岩手県西磐井郡平泉町平泉字伽羅楽112-2地先",
+          "result_count": 1,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "岩手県西磐井郡平泉町平泉字伽羅楽112-2地先",
+          "rank": 1,
+          "label": "岩手県平泉町平泉伽羅楽",
+          "lat": 38.991306,
+          "lng": 141.117584,
+          "score": 68,
+          "reason": "GSI住所候補（文字一致 50%）"
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "岩手県西磐井郡平泉町平泉字伽羅楽112-2地先",
+          "rank": 1,
+          "label": "岩手県西磐井郡平泉町平泉伽羅楽（字）112-2",
+          "lat": 38.99191985,
+          "lng": 141.12156811,
+          "score": 99,
+          "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 89%）",
+          "matching_level": 6,
+          "address_type": "枝番",
+          "government_code": "03402"
+        }
+      ]
+    },
+    {
+      "id": "50",
+      "title": "志羅山112-5地先",
+      "prefecture": "岩手県",
+      "city": "平泉町",
+      "status": "selected",
+      "address": "岩手県西磐井郡平泉町平泉字志羅山112-5地先",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=50",
+      "old_coordinate": {
+        "lat": 38.987892,
+        "lng": 141.11232
+      },
+      "selected": {
+        "provider": "gsi",
+        "strategy": "official_address",
+        "query": "岩手県西磐井郡平泉町平泉字志羅山112-5地先",
+        "rank": 1,
+        "label": "岩手県平泉町平泉志羅山１１２番地",
+        "lat": 38.987892,
+        "lng": 141.11232,
+        "score": 73,
+        "reason": "GSI住所候補（文字一致 63%）"
+      },
+      "selection_reason": "公式住所を変更せずに得たGSI候補を優先採用",
+      "old_distance_km": 0.0,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "岩手県西磐井郡平泉町平泉字志羅山112-5地先",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "岩手県西磐井郡平泉町平泉字志羅山112-5地先",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "岩手県 平泉町 志羅山112-5地先",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "岩手県西磐井郡平泉町平泉字志羅山112-5地先",
+          "result_count": 0,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "岩手県西磐井郡平泉町平泉字志羅山112-5地先",
+          "rank": 1,
+          "label": "岩手県平泉町平泉志羅山１１２番地",
+          "lat": 38.987892,
+          "lng": 141.11232,
+          "score": 73,
+          "reason": "GSI住所候補（文字一致 63%）"
+        }
+      ]
+    },
+    {
+      "id": "51",
+      "title": "大手前通り 西二階町入口",
+      "prefecture": "兵庫県",
+      "city": "姫路市",
+      "status": "selected",
+      "address": "兵庫県姫路市大手前通り 西二階町入口",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=51",
+      "old_coordinate": {
+        "lat": 34.832298,
+        "lng": 134.689774
+      },
+      "selected": {
+        "provider": "gsi",
+        "strategy": "title_locality",
+        "query": "兵庫県姫路市西二階町",
+        "rank": 1,
+        "label": "兵庫県姫路市西二階町",
+        "lat": 34.832298,
+        "lng": 134.689774,
+        "score": 90,
+        "reason": "GSI住所候補（文字一致 100%）"
+      },
+      "selection_reason": "公式住所のGSI候補を優先し、文字一致が最も高い候補を採用",
+      "old_distance_km": 0.0,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "兵庫県姫路市大手前通り 西二階町入口",
+          "result_count": 5,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "兵庫県姫路市西二階町",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "兵庫県姫路市大手前通り 西二階町入口",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "兵庫県 姫路市 大手前通り 西二階町入口",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "兵庫県姫路市大手前通り 西二階町入口",
+          "result_count": 0,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "兵庫県姫路市大手前通り 西二階町入口",
+          "rank": 1,
+          "label": "兵庫県姫路市大塩町",
+          "lat": 34.777809,
+          "lng": 134.763367,
+          "score": 66,
+          "reason": "GSI住所候補（文字一致 47%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "兵庫県姫路市大手前通り 西二階町入口",
+          "rank": 2,
+          "label": "兵庫県姫路市大塩町宮前",
+          "lat": 34.777729,
+          "lng": 134.758652,
+          "score": 67,
+          "reason": "GSI住所候補（文字一致 53%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "兵庫県姫路市大手前通り 西二階町入口",
+          "rank": 3,
+          "label": "兵庫県姫路市大塩町汐咲",
+          "lat": 34.778385,
+          "lng": 134.756714,
+          "score": 62,
+          "reason": "GSI住所候補（文字一致 47%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "兵庫県姫路市大手前通り 西二階町入口",
+          "rank": 4,
+          "label": "兵庫県姫路市大黒壱丁町",
+          "lat": 34.834488,
+          "lng": 134.699509,
+          "score": 60,
+          "reason": "GSI住所候補（文字一致 47%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "兵庫県姫路市大手前通り 西二階町入口",
+          "rank": 5,
+          "label": "兵庫県姫路市大寿台",
+          "lat": 34.870102,
+          "lng": 134.685928,
+          "score": 56,
+          "reason": "GSI住所候補（文字一致 41%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "兵庫県姫路市西二階町",
+          "rank": 1,
+          "label": "兵庫県姫路市西二階町",
+          "lat": 34.832298,
+          "lng": 134.689774,
+          "score": 90,
+          "reason": "GSI住所候補（文字一致 100%）"
+        }
+      ]
+    },
+    {
+      "id": "52",
+      "title": "大手前通り 二階町入口",
+      "prefecture": "兵庫県",
+      "city": "姫路市",
+      "status": "selected",
+      "address": "兵庫県姫路市大手前通り 二階町入口",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=52",
+      "old_coordinate": {
+        "lat": 34.831528,
+        "lng": 134.693314
+      },
+      "selected": {
+        "provider": "gsi",
+        "strategy": "title_locality",
+        "query": "兵庫県姫路市二階町",
+        "rank": 1,
+        "label": "兵庫県姫路市二階町",
+        "lat": 34.831528,
+        "lng": 134.693314,
+        "score": 90,
+        "reason": "GSI住所候補（文字一致 100%）"
+      },
+      "selection_reason": "公式住所のGSI候補を優先し、文字一致が最も高い候補を採用",
+      "old_distance_km": 0.0,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "兵庫県姫路市大手前通り 二階町入口",
+          "result_count": 5,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "兵庫県姫路市二階町",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "兵庫県姫路市大手前通り 二階町入口",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "兵庫県 姫路市 大手前通り 二階町入口",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "兵庫県姫路市大手前通り 二階町入口",
+          "result_count": 0,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "兵庫県姫路市大手前通り 二階町入口",
+          "rank": 1,
+          "label": "兵庫県姫路市大塩町",
+          "lat": 34.777809,
+          "lng": 134.763367,
+          "score": 68,
+          "reason": "GSI住所候補（文字一致 50%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "兵庫県姫路市大手前通り 二階町入口",
+          "rank": 2,
+          "label": "兵庫県姫路市大塩町宮前",
+          "lat": 34.777729,
+          "lng": 134.758652,
+          "score": 68,
+          "reason": "GSI住所候補（文字一致 56%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "兵庫県姫路市大手前通り 二階町入口",
+          "rank": 3,
+          "label": "兵庫県姫路市大塩町汐咲",
+          "lat": 34.778385,
+          "lng": 134.756714,
+          "score": 64,
+          "reason": "GSI住所候補（文字一致 50%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "兵庫県姫路市大手前通り 二階町入口",
+          "rank": 4,
+          "label": "兵庫県姫路市大黒壱丁町",
+          "lat": 34.834488,
+          "lng": 134.699509,
+          "score": 62,
+          "reason": "GSI住所候補（文字一致 50%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "兵庫県姫路市大手前通り 二階町入口",
+          "rank": 5,
+          "label": "兵庫県姫路市大寿台",
+          "lat": 34.870102,
+          "lng": 134.685928,
+          "score": 57,
+          "reason": "GSI住所候補（文字一致 44%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "兵庫県姫路市二階町",
+          "rank": 1,
+          "label": "兵庫県姫路市二階町",
+          "lat": 34.831528,
+          "lng": 134.693314,
+          "score": 90,
+          "reason": "GSI住所候補（文字一致 100%）"
+        }
+      ]
+    },
+    {
+      "id": "53",
+      "title": "芸術館通り歩道",
+      "prefecture": "茨城県",
+      "city": "水戸市",
+      "status": "selected",
+      "address": "茨城県水戸市泉町1-171",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=53",
+      "old_coordinate": {
+        "lat": 36.378368,
+        "lng": 140.465088
+      },
+      "selected": {
+        "provider": "gsi",
+        "strategy": "official_address",
+        "query": "茨城県水戸市泉町1-171",
+        "rank": 1,
+        "label": "茨城県水戸市泉町一丁目",
+        "lat": 36.378368,
+        "lng": 140.465088,
+        "score": 81,
+        "reason": "GSI住所候補（文字一致 80%）"
+      },
+      "selection_reason": "公式住所を変更せずに得たGSI候補を優先採用",
+      "old_distance_km": 0.0,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "茨城県水戸市泉町1-171",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "茨城県水戸市泉町",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "茨城県水戸市芸術館通り",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "茨城県水戸市泉町1-171",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "茨城県 水戸市 芸術館通り歩道",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "茨城県水戸市泉町1-171",
+          "result_count": 0,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "茨城県水戸市泉町1-171",
+          "rank": 1,
+          "label": "茨城県水戸市泉町一丁目",
+          "lat": 36.378368,
+          "lng": 140.465088,
+          "score": 81,
+          "reason": "GSI住所候補（文字一致 80%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "茨城県水戸市泉町",
+          "rank": 1,
+          "label": "茨城県水戸市泉町",
+          "lat": 36.378368,
+          "lng": 140.465088,
+          "score": 90,
+          "reason": "GSI住所候補（文字一致 100%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "title_locality",
+          "query": "茨城県水戸市芸術館通り",
+          "rank": 1,
+          "label": "茨城県水戸市",
+          "lat": 36.365852,
+          "lng": 140.471588,
+          "score": 70,
+          "reason": "GSI住所候補（文字一致 55%）"
+        }
+      ]
+    },
+    {
+      "id": "54",
+      "title": "水戸城大手門広場",
+      "prefecture": "茨城県",
+      "city": "水戸市",
+      "status": "selected",
+      "address": "茨城県水戸市三の丸1-130-1",
+      "detail_url": "https://www.g-manhole.net/about/detail.php?id=54",
+      "old_coordinate": {
+        "lat": 36.374908,
+        "lng": 140.475891
+      },
+      "selected": {
+        "provider": "gsi",
+        "strategy": "official_address",
+        "query": "茨城県水戸市三の丸1-130-1",
+        "rank": 1,
+        "label": "茨城県水戸市三の丸一丁目",
+        "lat": 36.374908,
+        "lng": 140.475891,
+        "score": 79,
+        "reason": "GSI住所候補（文字一致 75%）"
+      },
+      "selection_reason": "公式住所を変更せずに得たGSI候補を優先採用",
+      "old_distance_km": 0.0,
+      "attempts": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "茨城県水戸市三の丸1-130-1",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "茨城県水戸市三の丸",
+          "result_count": 1,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "official_address",
+          "query": "茨城県水戸市三の丸1-130-1",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "nominatim",
+          "strategy": "place_name",
+          "query": "茨城県 水戸市 水戸城大手門広場",
+          "result_count": 0,
+          "error": null
+        },
+        {
+          "provider": "yahoo",
+          "strategy": "official_address",
+          "query": "茨城県水戸市三の丸1-130-1",
+          "result_count": 0,
+          "error": null
+        }
+      ],
+      "candidates": [
+        {
+          "provider": "gsi",
+          "strategy": "official_address",
+          "query": "茨城県水戸市三の丸1-130-1",
+          "rank": 1,
+          "label": "茨城県水戸市三の丸一丁目",
+          "lat": 36.374908,
+          "lng": 140.475891,
+          "score": 79,
+          "reason": "GSI住所候補（文字一致 75%）"
+        },
+        {
+          "provider": "gsi",
+          "strategy": "address_without_number",
+          "query": "茨城県水戸市三の丸",
+          "rank": 1,
+          "label": "茨城県水戸市三の丸",
+          "lat": 36.374908,
+          "lng": 140.475891,
+          "score": 90,
+          "reason": "GSI住所候補（文字一致 100%）"
+        }
+      ]
+    },
+    {
+      "id": "55",
+      "title": "Warning:  Trying to access array offset on value of type null in/var/www/www.g-manhole.net/about/detail.phpon line76",
+      "status": "invalid_source_page",
+      "address": "",
+      "old_coordinate": null,
+      "selected": null,
+      "selection_reason": "公式ページがPHP Warningで実在レコードを返していない",
+      "attempts": [],
+      "candidates": []
+    },
+    {
+      "id": "56",
+      "title": "Warning:  Trying to access array offset on value of type null in/var/www/www.g-manhole.net/about/detail.phpon line76",
+      "status": "invalid_source_page",
+      "address": "",
+      "old_coordinate": null,
+      "selected": null,
+      "selection_reason": "公式ページがPHP Warningで実在レコードを返していない",
+      "attempts": [],
+      "candidates": []
+    },
+    {
+      "id": "57",
+      "title": "Warning:  Trying to access array offset on value of type null in/var/www/www.g-manhole.net/about/detail.phpon line76",
+      "status": "invalid_source_page",
+      "address": "",
+      "old_coordinate": null,
+      "selected": null,
+      "selection_reason": "公式ページがPHP Warningで実在レコードを返していない",
+      "attempts": [],
+      "candidates": []
+    },
+    {
+      "id": "58",
+      "title": "Warning:  Trying to access array offset on value of type null in/var/www/www.g-manhole.net/about/detail.phpon line76",
+      "status": "invalid_source_page",
+      "address": "",
+      "old_coordinate": null,
+      "selected": null,
+      "selection_reason": "公式ページがPHP Warningで実在レコードを返していない",
+      "attempts": [],
+      "candidates": []
+    },
+    {
+      "id": "59",
+      "title": "Warning:  Trying to access array offset on value of type null in/var/www/www.g-manhole.net/about/detail.phpon line76",
+      "status": "invalid_source_page",
+      "address": "",
+      "old_coordinate": null,
+      "selected": null,
+      "selection_reason": "公式ページがPHP Warningで実在レコードを返していない",
+      "attempts": [],
+      "candidates": []
+    },
+    {
+      "id": "60",
+      "title": "Warning:  Trying to access array offset on value of type null in/var/www/www.g-manhole.net/about/detail.phpon line76",
+      "status": "invalid_source_page",
+      "address": "",
+      "old_coordinate": null,
+      "selected": null,
+      "selection_reason": "公式ページがPHP Warningで実在レコードを返していない",
+      "attempts": [],
+      "candidates": []
+    },
+    {
+      "id": "61",
+      "title": "Warning:  Trying to access array offset on value of type null in/var/www/www.g-manhole.net/about/detail.phpon line76",
+      "status": "invalid_source_page",
+      "address": "",
+      "old_coordinate": null,
+      "selected": null,
+      "selection_reason": "公式ページがPHP Warningで実在レコードを返していない",
+      "attempts": [],
+      "candidates": []
+    },
+    {
+      "id": "62",
+      "title": "Warning:  Trying to access array offset on value of type null in/var/www/www.g-manhole.net/about/detail.phpon line76",
+      "status": "invalid_source_page",
+      "address": "",
+      "old_coordinate": null,
+      "selected": null,
+      "selection_reason": "公式ページがPHP Warningで実在レコードを返していない",
+      "attempts": [],
+      "candidates": []
+    },
+    {
+      "id": "63",
+      "title": "Warning:  Trying to access array offset on value of type null in/var/www/www.g-manhole.net/about/detail.phpon line76",
+      "status": "invalid_source_page",
+      "address": "",
+      "old_coordinate": null,
+      "selected": null,
+      "selection_reason": "公式ページがPHP Warningで実在レコードを返していない",
+      "attempts": [],
+      "candidates": []
+    },
+    {
+      "id": "64",
+      "title": "Warning:  Trying to access array offset on value of type null in/var/www/www.g-manhole.net/about/detail.phpon line76",
+      "status": "invalid_source_page",
+      "address": "",
+      "old_coordinate": null,
+      "selected": null,
+      "selection_reason": "公式ページがPHP Warningで実在レコードを返していない",
+      "attempts": [],
+      "candidates": []
+    },
+    {
+      "id": "65",
+      "title": "Warning:  Trying to access array offset on value of type null in/var/www/www.g-manhole.net/about/detail.phpon line76",
+      "status": "invalid_source_page",
+      "address": "",
+      "old_coordinate": null,
+      "selected": null,
+      "selection_reason": "公式ページがPHP Warningで実在レコードを返していない",
+      "attempts": [],
+      "candidates": []
+    },
+    {
+      "id": "66",
+      "title": "Warning:  Trying to access array offset on value of type null in/var/www/www.g-manhole.net/about/detail.phpon line76",
+      "status": "invalid_source_page",
+      "address": "",
+      "old_coordinate": null,
+      "selected": null,
+      "selection_reason": "公式ページがPHP Warningで実在レコードを返していない",
+      "attempts": [],
+      "candidates": []
+    },
+    {
+      "id": "67",
+      "title": "Warning:  Trying to access array offset on value of type null in/var/www/www.g-manhole.net/about/detail.phpon line76",
+      "status": "invalid_source_page",
+      "address": "",
+      "old_coordinate": null,
+      "selected": null,
+      "selection_reason": "公式ページがPHP Warningで実在レコードを返していない",
+      "attempts": [],
+      "candidates": []
+    },
+    {
+      "id": "68",
+      "title": "Warning:  Trying to access array offset on value of type null in/var/www/www.g-manhole.net/about/detail.phpon line76",
+      "status": "invalid_source_page",
+      "address": "",
+      "old_coordinate": null,
+      "selected": null,
+      "selection_reason": "公式ページがPHP Warningで実在レコードを返していない",
+      "attempts": [],
+      "candidates": []
+    },
+    {
+      "id": "69",
+      "title": "Warning:  Trying to access array offset on value of type null in/var/www/www.g-manhole.net/about/detail.phpon line76",
+      "status": "invalid_source_page",
+      "address": "",
+      "old_coordinate": null,
+      "selected": null,
+      "selection_reason": "公式ページがPHP Warningで実在レコードを返していない",
+      "attempts": [],
+      "candidates": []
+    },
+    {
+      "id": "70",
+      "title": "Warning:  Trying to access array offset on value of type null in/var/www/www.g-manhole.net/about/detail.phpon line76",
+      "status": "invalid_source_page",
+      "address": "",
+      "old_coordinate": null,
+      "selected": null,
+      "selection_reason": "公式ページがPHP Warningで実在レコードを返していない",
+      "attempts": [],
+      "candidates": []
+    },
+    {
+      "id": "71",
+      "title": "Warning:  Trying to access array offset on value of type null in/var/www/www.g-manhole.net/about/detail.phpon line76",
+      "status": "invalid_source_page",
+      "address": "",
+      "old_coordinate": null,
+      "selected": null,
+      "selection_reason": "公式ページがPHP Warningで実在レコードを返していない",
+      "attempts": [],
+      "candidates": []
+    },
+    {
+      "id": "72",
+      "title": "Warning:  Trying to access array offset on value of type null in/var/www/www.g-manhole.net/about/detail.phpon line76",
+      "status": "invalid_source_page",
+      "address": "",
+      "old_coordinate": null,
+      "selected": null,
+      "selection_reason": "公式ページがPHP Warningで実在レコードを返していない",
+      "attempts": [],
+      "candidates": []
+    },
+    {
+      "id": "73",
+      "title": "Warning:  Trying to access array offset on value of type null in/var/www/www.g-manhole.net/about/detail.phpon line76",
+      "status": "invalid_source_page",
+      "address": "",
+      "old_coordinate": null,
+      "selected": null,
+      "selection_reason": "公式ページがPHP Warningで実在レコードを返していない",
+      "attempts": [],
+      "candidates": []
+    },
+    {
+      "id": "74",
+      "title": "Warning:  Trying to access array offset on value of type null in/var/www/www.g-manhole.net/about/detail.phpon line76",
+      "status": "invalid_source_page",
+      "address": "",
+      "old_coordinate": null,
+      "selected": null,
+      "selection_reason": "公式ページがPHP Warningで実在レコードを返していない",
+      "attempts": [],
+      "candidates": []
+    },
+    {
+      "id": "75",
+      "title": "Warning:  Trying to access array offset on value of type null in/var/www/www.g-manhole.net/about/detail.phpon line76",
+      "status": "invalid_source_page",
+      "address": "",
+      "old_coordinate": null,
+      "selected": null,
+      "selection_reason": "公式ページがPHP Warningで実在レコードを返していない",
+      "attempts": [],
+      "candidates": []
+    },
+    {
+      "id": "76",
+      "title": "Warning:  Trying to access array offset on value of type null in/var/www/www.g-manhole.net/about/detail.phpon line76",
+      "status": "invalid_source_page",
+      "address": "",
+      "old_coordinate": null,
+      "selected": null,
+      "selection_reason": "公式ページがPHP Warningで実在レコードを返していない",
+      "attempts": [],
+      "candidates": []
+    },
+    {
+      "id": "77",
+      "title": "Warning:  Trying to access array offset on value of type null in/var/www/www.g-manhole.net/about/detail.phpon line76",
+      "status": "invalid_source_page",
+      "address": "",
+      "old_coordinate": null,
+      "selected": null,
+      "selection_reason": "公式ページがPHP Warningで実在レコードを返していない",
+      "attempts": [],
+      "candidates": []
+    },
+    {
+      "id": "78",
+      "title": "Warning:  Trying to access array offset on value of type null in/var/www/www.g-manhole.net/about/detail.phpon line76",
+      "status": "invalid_source_page",
+      "address": "",
+      "old_coordinate": null,
+      "selected": null,
+      "selection_reason": "公式ページがPHP Warningで実在レコードを返していない",
+      "attempts": [],
+      "candidates": []
+    },
+    {
+      "id": "79",
+      "title": "Warning:  Trying to access array offset on value of type null in/var/www/www.g-manhole.net/about/detail.phpon line76",
+      "status": "invalid_source_page",
+      "address": "",
+      "old_coordinate": null,
+      "selected": null,
+      "selection_reason": "公式ページがPHP Warningで実在レコードを返していない",
+      "attempts": [],
+      "candidates": []
+    },
+    {
+      "id": "80",
+      "title": "Warning:  Trying to access array offset on value of type null in/var/www/www.g-manhole.net/about/detail.phpon line76",
+      "status": "invalid_source_page",
+      "address": "",
+      "old_coordinate": null,
+      "selected": null,
+      "selection_reason": "公式ページがPHP Warningで実在レコードを返していない",
+      "attempts": [],
+      "candidates": []
+    }
+  ]
+}
