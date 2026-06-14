@@ -64,7 +64,7 @@ export function GmanholeGeocoderTask() {
   const [audit, setAudit] = useState<GeocodeAudit | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [search, setSearch] = useState('')
-  const [status, setStatus] = useState<'all' | GeocodeAuditRecord['status']>('all')
+  const [status, setStatus] = useState<'all' | GeocodeAuditRecord['status']>('selected')
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const mapDivRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<L.Map | null>(null)

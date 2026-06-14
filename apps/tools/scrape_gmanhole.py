@@ -162,6 +162,9 @@ def parse_detail(detail_url: str, html: str, logger: logging.Logger) -> Optional
     h3 = soup.find("h3")
     if h3 and h3.get_text(strip=True):
         title = h3.get_text(strip=True)
+    if title.startswith("Warning:") or not prefecture or not city:
+        logger.info("skip invalid source page id=%s title=%s", pid, title)
+        return None
     if not title:
         # fallback: 最初の住所候補 or 固定文字
         title = address or "ガンダムマンホール"
