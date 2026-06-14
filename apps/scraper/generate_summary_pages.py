@@ -19,6 +19,13 @@ from pathlib import Path
 from urllib.parse import quote, urlparse
 from xml.sax.saxutils import escape
 
+try:
+    from apps.scraper.prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS
+except ModuleNotFoundError as exc:
+    if exc.name != "apps":
+        raise
+    from prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS
+
 ROOT = Path(__file__).parent.parent.parent
 NDJSON = ROOT / "docs" / "pokefuta.ndjson"
 PREFECTURES_JSON = ROOT / "apps" / "web" / "i18n" / "prefectures.json"
@@ -32,38 +39,6 @@ _OGP_PNG = ROOT / "apps" / "web" / "assets" / "ogp" / "pokefuta_summary_ogp.png"
 _ogp_hash = hashlib.md5(_OGP_PNG.read_bytes()).hexdigest()[:8] if _OGP_PNG.exists() else "0"
 OGP_IMAGE = f"{BASE_URL}/assets/ogp/pokefuta_summary_ogp.png?v={_ogp_hash}"
 SUMMARY_SHARE_URL = f"{BASE_URL}/summary/"
-
-PREFECTURE_ORDER: list[str] = [
-    "北海道", "青森県", "岩手県", "宮城県", "秋田県",
-    "山形県", "福島県", "茨城県", "栃木県", "群馬県",
-    "埼玉県", "千葉県", "東京都", "神奈川県", "新潟県",
-    "富山県", "石川県", "福井県", "山梨県", "長野県",
-    "岐阜県", "静岡県", "愛知県", "三重県", "滋賀県",
-    "京都府", "大阪府", "兵庫県", "奈良県", "和歌山県",
-    "鳥取県", "島根県", "岡山県", "広島県", "山口県",
-    "徳島県", "香川県", "愛媛県", "高知県", "福岡県",
-    "佐賀県", "長崎県", "熊本県", "大分県", "宮崎県",
-    "鹿児島県", "沖縄県",
-]
-
-PREFECTURE_SLUGS: dict[str, str] = {
-    "北海道": "hokkaido", "青森県": "aomori", "岩手県": "iwate",
-    "宮城県": "miyagi", "秋田県": "akita", "山形県": "yamagata",
-    "福島県": "fukushima", "茨城県": "ibaraki", "栃木県": "tochigi",
-    "群馬県": "gunma", "埼玉県": "saitama", "千葉県": "chiba",
-    "東京都": "tokyo", "神奈川県": "kanagawa", "新潟県": "niigata",
-    "富山県": "toyama", "石川県": "ishikawa", "福井県": "fukui",
-    "山梨県": "yamanashi", "長野県": "nagano", "岐阜県": "gifu",
-    "静岡県": "shizuoka", "愛知県": "aichi", "三重県": "mie",
-    "滋賀県": "shiga", "京都府": "kyoto", "大阪府": "osaka",
-    "兵庫県": "hyogo", "奈良県": "nara", "和歌山県": "wakayama",
-    "鳥取県": "tottori", "島根県": "shimane", "岡山県": "okayama",
-    "広島県": "hiroshima", "山口県": "yamaguchi", "徳島県": "tokushima",
-    "香川県": "kagawa", "愛媛県": "ehime", "高知県": "kochi",
-    "福岡県": "fukuoka", "佐賀県": "saga", "長崎県": "nagasaki",
-    "熊本県": "kumamoto", "大分県": "oita", "宮崎県": "miyazaki",
-    "鹿児島県": "kagoshima", "沖縄県": "okinawa",
-}
 
 REGION_MAP: dict[str, str] = {
     "北海道": "北海道",
@@ -3446,16 +3421,18 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
     def map_link(pref_ja: str) -> str:
         if s.get("pref_key") == "ja":
             href = _prefecture_href(pref_ja)
+            link_text = "詳しく見る"
             tracking = (
                 f' data-summary-event="summary_prefecture_click"'
                 f' data-prefecture="{escape(PREFECTURE_SLUGS.get(pref_ja, pref_ja))}"'
             )
         else:
             href = f'{map_base}?pref={quote(pref_ja)}'
+            link_text = s["map_link_text"]
             tracking = ""
         return (
             f'<a class="summary-link" href="{escape(href)}"{tracking}>'
-            f'{escape(s["map_link_text"])}</a>'
+            f'{escape(link_text)}</a>'
         )
 
     ranking_items = "\n        ".join(
