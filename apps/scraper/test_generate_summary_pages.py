@@ -29,16 +29,53 @@ class DiscoveryHubTests(unittest.TestCase):
                 )
                 self.assertIn('id="travel-discovery"', html)
                 self.assertIn('id="rare-discovery"', html)
-                self.assertGreaterEqual(html.count("discovery-hub-card"), 7)
+                self.assertGreaterEqual(html.count("discovery-hub-card"), 9)
                 self.assertIn('data-destination-hub="manhole_detail"', html)
 
     def test_travel_counts_match_title_data(self):
         html = summary._build_discovery_hub_sections(
             summary.SUMMARY_STRINGS["ja"], self.records_by_id, self.metadata
         )
-        for key in ("remote_island", "roadside", "station_front", "world_heritage"):
+        for key in (
+            "remote_island",
+            "roadside",
+            "station_front",
+            "world_heritage",
+            "near_gundam_manhole",
+            "gundam_manhole_city",
+        ):
             count = sum(summary._has_title(record, key) for record in self.records)
             self.assertIn(f">{count}枚</strong>", html)
+
+    def test_gundam_hubs_use_title_data(self):
+        records = {
+            "66": {
+                "id": "66",
+                "prefecture": "北海道",
+                "city": "天塩町",
+                "pokemons": ["ロコン"],
+                "titles": [
+                    {"key": "near_gundam_manhole"},
+                    {"key": "gundam_manhole_city"},
+                ],
+            },
+            "67": {
+                "id": "67",
+                "prefecture": "北海道",
+                "city": "稚内市",
+                "pokemons": ["アローラロコン"],
+                "titles": [{"key": "gundam_manhole_city"}],
+            },
+        }
+        html = summary._build_discovery_hub_sections(
+            summary.SUMMARY_STRINGS["ja"], records, self.metadata
+        )
+        self.assertIn("ガンダムマンホールまで約500m以内", html)
+        self.assertIn("ガンダムマンホールのあるまち", html)
+        self.assertIn('data-content-id="near_gundam_manhole"', html)
+        self.assertIn('data-content-id="gundam_manhole_city"', html)
+        self.assertIn(">1枚</strong>", html)
+        self.assertIn(">2枚</strong>", html)
 
     def test_hero_uses_popup_and_summary_hubs(self):
         source = (summary.ROOT / "apps/web/index.html").read_text(encoding="utf-8")

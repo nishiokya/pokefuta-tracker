@@ -104,6 +104,22 @@
       "id_threshold": 30,
       "note": "int(id) <= id_threshold で判定。公式サイトのID登録順 = 設置時期順の近似"
     },
+    "near_gundam_manhole": {
+      "enabled": true,
+      "emoji": "🤖",
+      "label": "ガンダムマンホールまで約500m以内",
+      "hashtag": "#ガンダムマンホール近接",
+      "priority": 44,
+      "note": "ポケふたとガンダムマンホールの直線距離が約500m以内（目安として500.9mを含む）"
+    },
+    "gundam_manhole_city": {
+      "enabled": true,
+      "emoji": "🤖",
+      "label": "{city}にはガンダムマンホールもある",
+      "hashtag": "#ガンダムマンホールのあるまち",
+      "priority": 31,
+      "note": "同じ自治体内に設置中のガンダムマンホールが1基以上ある"
+    },
     "seaside": {
       "enabled": true,
       "emoji": "🌊",
@@ -769,7 +785,9 @@
       "building": "道の駅 てしお 正面入り口横",
       "verified_at": "2019-11-29",
       "tags": [
-        "roadside"
+        "roadside",
+        "near_gundam_manhole",
+        "gundam_manhole_city"
       ]
     },
     "67": {
@@ -780,14 +798,18 @@
         "roadside",
         "seaside",
         "station_front",
-        "tourism"
+        "tourism",
+        "near_gundam_manhole",
+        "gundam_manhole_city"
       ]
     },
     "68": {
       "building": "定住支援センター「ふらっと★きた」敷地内",
       "verified_at": "2019-12-10",
       "tags": [
-        "far_station"
+        "far_station",
+        "near_gundam_manhole",
+        "gundam_manhole_city"
       ]
     },
     "69": {
@@ -803,7 +825,9 @@
       "building": "道の駅遠軽 森のオホーツク",
       "tags": [
         "roadside",
-        "food"
+        "food",
+        "near_gundam_manhole",
+        "gundam_manhole_city"
       ]
     },
     "71": {
@@ -916,12 +940,15 @@
     "104": {
       "tags": [
         "lakeside",
-        "world_heritage"
+        "world_heritage",
+        "near_gundam_manhole",
+        "gundam_manhole_city"
       ]
     },
     "105": {
       "tags": [
-        "lakeside"
+        "lakeside",
+        "gundam_manhole_city"
       ]
     },
     "107": {
@@ -1342,10 +1369,26 @@
         "tourism"
       ]
     },
+    "222": {
+      "tags": [
+        "gundam_manhole_city"
+      ]
+    },
+    "223": {
+      "tags": [
+        "gundam_manhole_city"
+      ]
+    },
+    "224": {
+      "tags": [
+        "gundam_manhole_city"
+      ]
+    },
     "225": {
       "building": "道の駅水の郷さわら",
       "tags": [
-        "roadside"
+        "roadside",
+        "gundam_manhole_city"
       ]
     },
     "227": {
@@ -1553,7 +1596,9 @@
     },
     "267": {
       "tags": [
-        "world_heritage"
+        "world_heritage",
+        "near_gundam_manhole",
+        "gundam_manhole_city"
       ]
     },
     "269": {
@@ -1928,6 +1973,17 @@
         "station_front"
       ]
     },
+    "325": {
+      "tags": [
+        "near_gundam_manhole",
+        "gundam_manhole_city"
+      ]
+    },
+    "326": {
+      "tags": [
+        "gundam_manhole_city"
+      ]
+    },
     "327": {
       "tags": [
         "seaside"
@@ -2039,6 +2095,11 @@
     "345": {
       "tags": [
         "seaside"
+      ]
+    },
+    "347": {
+      "tags": [
+        "gundam_manhole_city"
       ]
     },
     "349": {
@@ -2368,6 +2429,11 @@
       "building": "道の駅ひたちおおた",
       "tags": [
         "roadside"
+      ]
+    },
+    "413": {
+      "tags": [
+        "gundam_manhole_city"
       ]
     },
     "414": {
