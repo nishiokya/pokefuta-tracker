@@ -597,12 +597,14 @@
     function setHeroCardCollapsed(collapsed, persist = false) {
       const heroCard = document.querySelector('.map-hero-card');
       const toggle = document.getElementById('hero-card-toggle');
+      const content = document.getElementById('hero-card-content');
       const label = toggle?.querySelector('.hero-card-toggle-label');
-      if (!heroCard || !toggle || !label) return;
+      if (!heroCard || !toggle || !content || !label) return;
 
       const labels = getHeroCardToggleLabels();
       heroCard.classList.toggle('is-collapsed', collapsed);
       document.body.classList.toggle('hero-collapsed', collapsed);
+      content.hidden = collapsed;
       toggle.setAttribute('aria-expanded', String(!collapsed));
       toggle.setAttribute('aria-label', collapsed ? labels.expand : labels.collapse);
       toggle.title = collapsed ? labels.expand : labels.collapse;
