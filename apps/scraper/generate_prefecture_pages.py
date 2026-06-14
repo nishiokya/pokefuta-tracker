@@ -173,6 +173,21 @@ def _trivia_html(prefecture: str, trivia_entry: dict | None, count: int) -> str:
     )
 
 
+def _pokemon_card(name: str, count: int, pokemon_slugs: dict[str, str]) -> str:
+    slug = pokemon_slugs.get(name) or pokemon_slugs.get(_normalize_katakana(name))
+    content = (
+        f"<strong>{escape(name)}</strong>"
+        f"<span>{count}枚のポケふたに登場</span>"
+    )
+    if slug:
+        return (
+            f'<a class="pokemon-card" href="/pokemon/{quote(slug)}/" '
+            f'data-track="prefecture_pokemon_click" '
+            f'data-destination="{escape(slug)}">{content}</a>'
+        )
+    return f'<article class="pokemon-card">{content}</article>'
+
+
 def _pokemon_cards(records: list[dict], pokemon_slugs: dict[str, str]) -> str:
     counts = Counter(
         pokemon
@@ -181,22 +196,24 @@ def _pokemon_cards(records: list[dict], pokemon_slugs: dict[str, str]) -> str:
     )
     if not counts:
         return '<p class="empty-state">現在、掲載できるポケモンはいません。</p>'
-    cards = []
-    for name, count in sorted(counts.items(), key=lambda item: (-item[1], item[0])):
-        slug = pokemon_slugs.get(name) or pokemon_slugs.get(_normalize_katakana(name))
-        content = (
-            f"<strong>{escape(name)}</strong>"
-            f"<span>{count}枚のポケふたに登場</span>"
-        )
-        if slug:
-            cards.append(
-                f'<a class="pokemon-card" href="/pokemon/{quote(slug)}/" '
-                f'data-track="prefecture_pokemon_click" '
-                f'data-destination="{escape(slug)}">{content}</a>'
-            )
-        else:
-            cards.append(f'<article class="pokemon-card">{content}</article>')
-    return "".join(cards)
+    ranked = sorted(counts.items(), key=lambda item: (-item[1], item[0]))
+    featured = "".join(
+        _pokemon_card(name, count, pokemon_slugs)
+        for name, count in ranked[:12]
+    )
+    remaining = ranked[12:]
+    if not remaining:
+        return featured
+    more = "".join(
+        _pokemon_card(name, count, pokemon_slugs)
+        for name, count in remaining
+    )
+    return (
+        f'{featured}<details class="pokemon-more">'
+        f'<summary>ほか{len(remaining)}種類のポケモンを見る</summary>'
+        f'<div class="pokemon-more-grid">{more}</div>'
+        f'</details>'
+    )
 
 
 def _manhole_cards(records: list[dict]) -> str:
@@ -246,6 +263,28 @@ def _related_prefectures(prefecture: str) -> str:
     )
 
 
+def _hero_intro(
+    prefecture: str,
+    count: int,
+    trivia_entry: dict | None,
+) -> str:
+    if not count:
+        return (
+            f"{prefecture}では、現在ポケふたの設置を確認できていません。"
+            "新しい設置情報が入り次第、このページへ追加します。"
+        )
+
+    municipality_count = (trivia_entry or {}).get("municipality_count", 0)
+    intro = f"{prefecture}には{count}枚のポケふたがあります。"
+    if municipality_count:
+        intro += f"県内{municipality_count}自治体に広がっています。"
+    trivia = (trivia_entry or {}).get("trivia", [])
+    if trivia and trivia[0].get("text"):
+        fact = str(trivia[0]["text"]).rstrip("。")
+        intro += f"{fact}。"
+    return intro
+
+
 def build_page(
     prefecture: str,
     slug: str,
@@ -272,6 +311,7 @@ def build_page(
         )
     )
     rank_label = f"全国{rank}位" if rank else "現在未設置"
+    hero_intro = _hero_intro(prefecture, count, trivia_entry)
     map_points = [
         {
             "id": str(record.get("id", "")),
@@ -367,6 +407,8 @@ def build_page(
       text-decoration: none;
     }}
     .button.secondary {{ background: #6b4aa2; }}
+    .button.pokefuta {{ background: #b5483c; }}
+    .button.photo {{ background: #2d846c; }}
     section {{
       margin-top: 22px; padding: 20px; border: 1px solid rgba(93,67,35,.14);
       border-radius: 19px; background: #fffaf0;
@@ -383,6 +425,16 @@ def build_page(
     }}
     .pokemon-card strong {{ color: #3d2b72; }}
     .pokemon-card span {{ color: #75685c; font-size: .75rem; font-weight: 750; }}
+    .pokemon-more {{ grid-column: 1 / -1; }}
+    .pokemon-more summary {{
+      width: fit-content; margin: 12px auto 0; padding: 8px 14px;
+      border-radius: 999px; background: #eee7fb; color: #57408f;
+      cursor: pointer; font-size: .82rem; font-weight: 900;
+    }}
+    .pokemon-more-grid {{
+      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px; margin-top: 12px;
+    }}
     .manhole-grid {{ display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }}
     .manhole-card {{
       display: grid; grid-template-columns: 72px minmax(0,1fr); align-items: center;
@@ -420,7 +472,7 @@ def build_page(
     .leaflet-popup-content a {{ font-weight: 850; }}
     @media (max-width: 700px) {{
       .hero {{ padding: 22px 18px; }}
-      .pokemon-grid, .manhole-grid {{ grid-template-columns: 1fr; }}
+      .pokemon-grid, .pokemon-more-grid, .manhole-grid {{ grid-template-columns: 1fr; }}
       #prefecture-map {{ height: 360px; }}
       section {{ padding: 16px; }}
     }}
@@ -436,13 +488,17 @@ def build_page(
     <header class="hero">
       <p class="hero-kicker">都道府県別 ポケふたガイド</p>
       <h1>{escape(prefecture)}のポケふた</h1>
-      <p>{escape(description)}</p>
+      <p>{escape(hero_intro)}</p>
       <div class="stats" aria-label="{escape(prefecture)}の集計">
         <div class="stat"><span>設置枚数</span><strong>{count}枚</strong></div>
         <div class="stat"><span>全国順位</span><strong>{escape(rank_label)}</strong></div>
       </div>
       <div class="hero-actions">
         <a class="button" href="#manhole-list">マンホール一覧を見る</a>
+        <a class="button pokefuta" href="https://pokefuta.com/visits"
+          data-track="prefecture_visit_cta_click" data-destination="pokefuta_visits">訪問記録を残す</a>
+        <a class="button photo" href="https://pokefuta.com/"
+          data-track="prefecture_photo_cta_click" data-destination="pokefuta_photos">写真を見る</a>
         <a class="button secondary" href="{escape(map_href)}"
           data-track="prefecture_map_click" data-destination="map">全国マップで見る</a>
       </div>
@@ -460,14 +516,14 @@ def build_page(
       <p class="map-note">マーカーを選ぶと、各ポケふたの詳細ページへ移動できます。</p>
     </section>
 
-    <section aria-labelledby="pokemon-heading">
-      <h2 id="pokemon-heading">{escape(prefecture)}で会えるポケモン</h2>
-      <div class="pokemon-grid">{pokemon_html}</div>
-    </section>
-
     <section id="manhole-list" aria-labelledby="manhole-heading">
       <h2 id="manhole-heading">{escape(prefecture)}のマンホール一覧</h2>
       <div class="manhole-grid">{manhole_html}</div>
+    </section>
+
+    <section aria-labelledby="pokemon-heading">
+      <h2 id="pokemon-heading">{escape(prefecture)}で会えるポケモン</h2>
+      <div class="pokemon-grid">{pokemon_html}</div>
     </section>
 
     <section aria-labelledby="related-heading">

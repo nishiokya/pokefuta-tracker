@@ -58,6 +58,25 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
             html.index('id="map-heading"'),
         )
         self.assertIn("まず知りたい", html)
+        self.assertIn(
+            "福井県には17枚のポケふたがあります。県内16自治体に広がっています。",
+            html,
+        )
+        self.assertIn("https://pokefuta.com/visits", html)
+        self.assertIn('href="https://pokefuta.com/"', html)
+        self.assertIn("prefecture_visit_cta_click", html)
+        self.assertIn("prefecture_photo_cta_click", html)
+        self.assertLess(
+            html.index('id="manhole-heading"'),
+            html.index('id="pokemon-heading"'),
+        )
+        self.assertIn("ほか13種類のポケモンを見る", html)
+        self.assertEqual(25, html.count('class="pokemon-card"'))
+        first_pokemon_section = html[
+            html.index('<div class="pokemon-grid">'):
+            html.index('<details class="pokemon-more">')
+        ]
+        self.assertEqual(12, first_pokemon_section.count('class="pokemon-card"'))
 
     def test_empty_prefecture_meta_description_is_complete(self) -> None:
         html = MODULE.build_page(
@@ -75,6 +94,10 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         self.assertLess(
             html.index('id="trivia-heading"'),
             html.index('id="map-heading"'),
+        )
+        self.assertIn(
+            "群馬県では、現在ポケふたの設置を確認できていません。",
+            html,
         )
 
     def test_tied_counts_share_rank(self) -> None:
