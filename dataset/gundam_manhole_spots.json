@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "description": "ポケふたとガンダムマンホールを一緒に巡る現地体験の手動マスター",
+  "spots": [
+    {
+      "id": "teshio-roadside-pair",
+      "rank": 1,
+      "featured": true,
+      "prefecture": "北海道",
+      "city": "天塩町",
+      "pokefuta_id": "66",
+      "gundam_manhole_id": "4",
+      "headline": "ロコンとドムを同時回収できる町",
+      "story": "北海道天塩町では、ポケふた（ロコン）とガンダムマンホール（ドム）が道の駅てしおの入口を挟んで設置されています。移動距離は数メートル。全国でも珍しい「2つの公式マンホールコンテンツ」を一度に巡れるスポットです。",
+      "proximity_label": "同じ道の駅・入口の反対側・徒歩10秒",
+      "onsite_tip": "片方を見つけたら、道の駅てしおの正面入口を挟んだ反対側も確認。見落とし注意です。",
+      "experience_tags": [
+        "同じ道の駅",
+        "入口の反対側",
+        "徒歩10秒"
+      ],
+      "distance_m": 17.9,
+      "pokefuta_characters": [
+        "アローラロコン",
+        "ロコン"
+      ],
+      "gundam_characters": [
+        "ドム"
+      ],
+      "gundam_official_url": "https://www.g-manhole.net/about/detail.php?id=4",
+      "verified_at": "2026-06-14"
+    }
+  ]
+}

@@ -19,6 +19,7 @@ on:
       - 'apps/scraper/prefectures.py' # shared prefecture names and URL slugs
       - 'docs/**'     # dataset changes copied into dist/
       - 'dataset/prefecture_trivia*.json' # generated trivia and editorial sources
+      - 'dataset/gundam_manhole_spots.json' # curated Pokefuta/Gundam crossover experiences
       - 'dataset/manhole/image/**' # local popup photos
       - 'tools/**'      # i18n build scripts
 

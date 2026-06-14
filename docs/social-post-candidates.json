@@ -1370,6 +1370,46 @@
     }
   },
   {
+    "id": "gundam-crossover-teshio-roadside-pair",
+    "type": "gundam_crossover",
+    "title": "ロコンとドムを同時回収できる町",
+    "url": "https://data.pokefuta.com/manholes/66/",
+    "hashtags": [
+      "#ポケふた",
+      "#ガンダムマンホール",
+      "#マンホール巡り"
+    ],
+    "imageType": "summary_trivia",
+    "source": "summary",
+    "raw_data": {
+      "fact_type": "gundam_crossover",
+      "values": {
+        "rank": 1,
+        "prefecture": "北海道",
+        "city": "天塩町",
+        "headline": "ロコンとドムを同時回収できる町",
+        "summary": "北海道天塩町では、ポケふた（ロコン）とガンダムマンホール（ドム）が道の駅てしおの入口を挟んで設置されています。移動距離は数メートル。全国でも珍しい「2つの公式マンホールコンテンツ」を一度に巡れるスポットです。",
+        "proximity_label": "同じ道の駅・入口の反対側・徒歩10秒",
+        "onsite_tip": "片方を見つけたら、道の駅てしおの正面入口を挟んだ反対側も確認。見落とし注意です。",
+        "experience_tags": [
+          "同じ道の駅",
+          "入口の反対側",
+          "徒歩10秒"
+        ],
+        "pokefuta_id": "66",
+        "gundam_manhole_id": "4",
+        "pokefuta_characters": [
+          "アローラロコン",
+          "ロコン"
+        ],
+        "gundam_characters": [
+          "ドム"
+        ],
+        "distance_m": 17.9
+      }
+    }
+  },
+  {
     "id": "pref-trivia-hokkaido-support-vulpix",
     "type": "pref_trivia",
     "title": "北海道のポケふたトリビア",

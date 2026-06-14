@@ -33,12 +33,18 @@ DIST = ROOT / "dist"
 POKEMON_METADATA_JSON = ROOT / "docs" / "pokemon_metadata.json"
 PHOTOS_JSON = ROOT / "docs" / "latest-manhole-photos.json"
 IMAGE_DIR = ROOT / "dataset" / "manhole" / "image"
+GUNDAM_SPOTS_JSON = ROOT / "dataset" / "gundam_manhole_spots.json"
 
 BASE_URL = "https://data.pokefuta.com"
 _OGP_PNG = ROOT / "apps" / "web" / "assets" / "ogp" / "pokefuta_summary_ogp.png"
 _ogp_hash = hashlib.md5(_OGP_PNG.read_bytes()).hexdigest()[:8] if _OGP_PNG.exists() else "0"
 OGP_IMAGE = f"{BASE_URL}/assets/ogp/pokefuta_summary_ogp.png?v={_ogp_hash}"
 SUMMARY_SHARE_URL = f"{BASE_URL}/summary/"
+
+
+def _escape_attr(value: object) -> str:
+    return escape(str(value), {'"': "&quot;", "'": "&#x27;"})
+
 
 REGION_MAP: dict[str, str] = {
     "北海道": "北海道",
@@ -1016,6 +1022,74 @@ _CSS = """\
       font-size: .84rem;
       font-weight: 850;
       text-decoration: none;
+    }
+
+    .gundam-crossover {
+      display: grid;
+      gap: 14px;
+      margin-top: 16px;
+      padding: 18px;
+      border: 2px solid #6356a5;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #f5f1ff, #fff9e8);
+    }
+
+    .gundam-crossover-rank {
+      width: fit-content;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #6356a5;
+      color: #fff;
+      font-size: .78rem;
+      font-weight: 900;
+    }
+
+    .gundam-crossover h3 {
+      margin: 0;
+      font-size: clamp(1.25rem, 3vw, 1.65rem);
+    }
+
+    .gundam-crossover-proximity {
+      color: #176f68;
+      font-size: 1.05rem;
+      font-weight: 950;
+    }
+
+    .gundam-crossover-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .gundam-crossover-tags li {
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid rgba(99, 86, 165, .25);
+      font-size: .8rem;
+      font-weight: 800;
+    }
+
+    .gundam-crossover-tip {
+      margin: 0;
+      padding: 10px 12px;
+      border-left: 4px solid #e08a26;
+      background: rgba(255, 255, 255, .72);
+      font-weight: 750;
+    }
+
+    .gundam-crossover-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .gundam-crossover-links a {
+      color: #176f68;
+      font-weight: 850;
     }
 
     #travel-discovery,
@@ -3156,7 +3230,10 @@ def _localized_pokemon_name(name: str, s: dict, pokemon_metadata: dict) -> str:
 
 
 def _build_discovery_hub_sections(
-    s: dict, records_by_id: dict, pokemon_metadata: dict
+    s: dict,
+    records_by_id: dict,
+    pokemon_metadata: dict,
+    gundam_spots: list[dict] | None = None,
 ) -> str:
     copy = s.get("discovery_hubs")
     if not copy:
@@ -3206,15 +3283,46 @@ def _build_discovery_hub_sections(
             f'<ul class="discovery-hub-links">{links}</ul></div></article>'
         )
 
+    crossover_html = ""
+    if s.get("pref_key") == "ja" and gundam_spots:
+        ranked = sorted(gundam_spots, key=lambda spot: spot.get("rank", 999))
+        spot = ranked[0]
+        pokefuta_id = str(spot.get("pokefuta_id", ""))
+        tags = "".join(
+            f"<li>{escape(str(tag))}</li>"
+            for tag in spot.get("experience_tags", [])
+        )
+        official_url = _safe_https_url(spot.get("gundam_official_url"), "")
+        official_link = (
+            f'<a href="{_escape_attr(official_url)}" target="_blank" rel="noopener noreferrer">'
+            f'ガンダムマンホール公式を見る</a>'
+            if official_url else ""
+        )
+        crossover_html = (
+            f'<div class="gundam-crossover">'
+            f'<span class="gundam-crossover-rank">一緒に巡れるスポット 第{spot.get("rank", 1)}位</span>'
+            f'<h3>{escape(str(spot.get("headline", "")))}</h3>'
+            f'<strong class="gundam-crossover-proximity">{escape(str(spot.get("proximity_label", "")))}</strong>'
+            f'<p>{escape(str(spot.get("story", "")))}</p>'
+            f'<ul class="gundam-crossover-tags">{tags}</ul>'
+            f'<p class="gundam-crossover-tip">現地メモ: {escape(str(spot.get("onsite_tip", "")))}</p>'
+            f'<div class="gundam-crossover-links">'
+            f'<a href="/manholes/{quote(pokefuta_id, safe="")}/">ポケふた詳細を見る</a>'
+            f'{official_link}</div></div>'
+        )
+
     travel_cards = []
-    for key in (
+    travel_keys = [
         "remote_island",
         "roadside",
         "station_front",
         "world_heritage",
         "near_gundam_manhole",
         "gundam_manhole_city",
-    ):
+    ]
+    if crossover_html:
+        travel_keys.remove("near_gundam_manhole")
+    for key in travel_keys:
         candidates = [record for record in records if _has_title(record, key)]
         travel_cards.append(card(
             copy["travel"][key],
@@ -3244,6 +3352,7 @@ def _build_discovery_hub_sections(
         f'\n    <section id="travel-discovery" class="summary-section" aria-labelledby="travel-discovery-heading">'
         f'\n      <h2 id="travel-discovery-heading">{escape(copy["travel_h2"])}</h2>'
         f'\n      <p class="section-note">{escape(copy["travel_note"])}</p>'
+        f'\n      {crossover_html}'
         f'\n      <div class="discovery-hub-grid">{"".join(travel_cards)}</div>'
         f'\n    </section>'
         f'\n    <section id="rare-discovery" class="summary-section" aria-labelledby="rare-discovery-heading">'
@@ -3395,7 +3504,7 @@ def _build_pokemon_ranking_section(s: dict, pokemon_stats: dict) -> str:
     )
 
 
-def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, records_by_id: dict, photos_data: dict, pokemon_metadata: dict, pref_trivia_data: list[dict] | None = None) -> str:
+def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, records_by_id: dict, photos_data: dict, pokemon_metadata: dict, pref_trivia_data: list[dict] | None = None, gundam_spots: list[dict] | None = None) -> str:
     pref_key = s["pref_key"]
 
     def tr(ja_name: str) -> str:
@@ -3421,7 +3530,9 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
     )
     popular_pokemon_html = _build_popular_pokemon_section(s, pokemon_stats)
     latest_photos_html = _build_latest_photos_section(s, records_by_id, photos_data)
-    discovery_hubs_html = _build_discovery_hub_sections(s, records_by_id, pokemon_metadata)
+    discovery_hubs_html = _build_discovery_hub_sections(
+        s, records_by_id, pokemon_metadata, gundam_spots
+    )
     no_photos_html = _build_no_photos_section(s, records_by_id, photos_data)
     pokemon_ranking_html = _build_pokemon_ranking_section(s, pokemon_stats)
 
@@ -3603,8 +3714,19 @@ def main() -> None:
         pref_trivia_data = []
     print(f"[INFO] {len(pref_trivia_data)} prefecture trivia entries")
 
+    try:
+        gundam_spots = json.loads(
+            GUNDAM_SPOTS_JSON.read_text(encoding="utf-8")
+        ).get("spots", []) if GUNDAM_SPOTS_JSON.exists() else []
+    except (json.JSONDecodeError, OSError):
+        gundam_spots = []
+    print(f"[INFO] {len(gundam_spots)} Gundam crossover spots")
+
     for lang, s in SUMMARY_STRINGS.items():
-        html = render_page(s, stats, pref_names, pokemon_stats, records_by_id, photos_data, pokemon_metadata, pref_trivia_data)
+        html = render_page(
+            s, stats, pref_names, pokemon_stats, records_by_id, photos_data,
+            pokemon_metadata, pref_trivia_data, gundam_spots
+        )
         out = DIST / s["out_path"]
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(html, encoding="utf-8")

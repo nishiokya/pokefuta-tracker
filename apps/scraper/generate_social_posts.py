@@ -26,6 +26,7 @@ PHOTOS_JSON = ROOT / "docs" / "latest-manhole-photos.json"
 POKEMON_METADATA_JSON = ROOT / "docs" / "pokemon_metadata.json"
 CANDIDATES_JSON = ROOT / "docs" / "social-post-candidates.json"
 MICHINEKI_JSON = ROOT / "dataset" / "michineki.json"
+GUNDAM_SPOTS_JSON = ROOT / "dataset" / "gundam_manhole_spots.json"
 
 MICHINEKI_RADIUS_KM = 10
 MICHINEKI_MIN_COUNT = 3
@@ -103,6 +104,15 @@ def load_michineki(path: Path) -> list[dict]:
         return []
     try:
         return json.loads(path.read_text(encoding="utf-8")).get("@graph", [])
+    except (json.JSONDecodeError, OSError):
+        return []
+
+
+def load_gundam_spots(path: Path) -> list[dict]:
+    if not path.exists():
+        return []
+    try:
+        return json.loads(path.read_text(encoding="utf-8")).get("spots", [])
     except (json.JSONDecodeError, OSError):
         return []
 
@@ -692,6 +702,46 @@ def gen_remote_island_candidates(records: list[dict]) -> list[dict]:
     return candidates
 
 
+def gen_gundam_crossover_candidates(spots: list[dict]) -> list[dict]:
+    candidates = []
+    for spot in sorted(spots, key=lambda item: item.get("rank", 999)):
+        pokefuta_id = str(spot.get("pokefuta_id", "")).strip()
+        if not pokefuta_id:
+            continue
+        candidates.append({
+            "id": f"gundam-crossover-{spot.get('id', pokefuta_id)}",
+            "type": "gundam_crossover",
+            "title": spot.get("headline", ""),
+            "url": f"{BASE_URL}manholes/{quote(pokefuta_id)}/",
+            "hashtags": [
+                "#ポケふた",
+                "#ガンダムマンホール",
+                "#マンホール巡り",
+            ],
+            "imageType": "summary_trivia",
+            "source": "summary",
+            "raw_data": {
+                "fact_type": "gundam_crossover",
+                "values": {
+                    "rank": spot.get("rank"),
+                    "prefecture": spot.get("prefecture", ""),
+                    "city": spot.get("city", ""),
+                    "headline": spot.get("headline", ""),
+                    "summary": spot.get("story", ""),
+                    "proximity_label": spot.get("proximity_label", ""),
+                    "onsite_tip": spot.get("onsite_tip", ""),
+                    "experience_tags": spot.get("experience_tags", []),
+                    "pokefuta_id": pokefuta_id,
+                    "gundam_manhole_id": str(spot.get("gundam_manhole_id", "")),
+                    "pokefuta_characters": spot.get("pokefuta_characters", []),
+                    "gundam_characters": spot.get("gundam_characters", []),
+                    "distance_m": spot.get("distance_m"),
+                },
+            },
+        })
+    return candidates
+
+
 def main() -> int:
     if not NDJSON.exists():
         print(f"[ERROR] {NDJSON} not found")
@@ -703,6 +753,7 @@ def main() -> int:
     pokemon_metadata = load_pokemon_metadata(POKEMON_METADATA_JSON)
     photos_data = load_photos(PHOTOS_JSON)
     michineki = load_michineki(MICHINEKI_JSON)
+    gundam_spots = load_gundam_spots(GUNDAM_SPOTS_JSON)
 
     pref_trivia_path = ROOT / "dataset" / "prefecture_trivia.json"
     try:
@@ -722,6 +773,7 @@ def main() -> int:
     candidates.extend(gen_travel_trivia_candidates(stats, pokemon_stats))
     candidates.extend(gen_michineki_candidates(active_records, michineki))
     candidates.extend(gen_remote_island_candidates(active_records))
+    candidates.extend(gen_gundam_crossover_candidates(gundam_spots))
     candidates.extend(gen_pref_trivia_candidates(pref_trivia_data))
 
     CANDIDATES_JSON.write_text(
