@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-06-08T14:06:36.492472Z",
+  "generated_at": "2026-06-14T08:53:19.000336Z",
   "source": "pokefuta photo table",
   "image": {
     "r2_public_base_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image"
   },
-  "count": 125,
+  "count": 127,
   "photos": {
     "1": {
       "manhole_id": 1,
@@ -1580,6 +1580,36 @@
       "shot_at": "2025-10-26T04:13:21+00:00",
       "comment": null,
       "display_name": "tako"
+    },
+    "363": {
+      "manhole_id": 363,
+      "photo_id": "78234012-3801-45be-a126-234ae6b36bc3",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/aaf194d2-ce7f-41fd-a1cd-fda6aa4ea266.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/aaf194d2-ce7f-41fd-a1cd-fda6aa4ea266.jpg",
+      "storage_key": "photos/original/2026/06/aaf194d2-ce7f-41fd-a1cd-fda6aa4ea266.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1028344,
+      "created_at": "2026-06-14T06:13:55.684498+00:00",
+      "shot_at": "2026-06-14T06:06:04+00:00",
+      "comment": null,
+      "display_name": "Giulia"
+    },
+    "376": {
+      "manhole_id": 376,
+      "photo_id": "8a1d8aca-09ad-4405-8f95-b89523c4bd85",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/210eb9fa-6934-4989-b19a-6ca6297b4a45.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/210eb9fa-6934-4989-b19a-6ca6297b4a45.jpg",
+      "storage_key": "photos/original/2026/06/210eb9fa-6934-4989-b19a-6ca6297b4a45.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1264723,
+      "created_at": "2026-06-14T04:20:48.017456+00:00",
+      "shot_at": "2026-06-14T04:20:46.497+00:00",
+      "comment": "白河駅広場の近く！",
+      "display_name": "ぴえろ"
     },
     "383": {
       "manhole_id": 383,
