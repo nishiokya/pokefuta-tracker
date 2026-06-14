@@ -3292,7 +3292,7 @@ def _build_discovery_hub_sections(
             f"<li>{escape(str(tag))}</li>"
             for tag in spot.get("experience_tags", [])
         )
-        official_url = spot.get("gundam_official_url", "")
+        official_url = _safe_https_url(spot.get("gundam_official_url"), "")
         official_link = (
             f'<a href="{_escape_attr(official_url)}" target="_blank" rel="noopener noreferrer">'
             f'ガンダムマンホール公式を見る</a>'
