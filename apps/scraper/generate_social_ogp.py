@@ -37,7 +37,7 @@ NDJSON = ROOT / "pokefuta.ndjson"
 MANHOLE_IMAGE_DIR = ROOT / "dataset" / "manhole" / "image"
 PREF_BOUNDARY_DIR = ROOT / "dataset" / "prefecture_boundaries"
 _JAPAN_GEOJSON_URL = "https://raw.githubusercontent.com/dataofjapan/land/master/japan.geojson"
-_WIRE_PHOTO_LIMIT = 15  # embed photo circles when <= this many manholes in the prefecture
+_WIRE_PHOTO_LIMIT = 20  # embed photo circles when <= this many manholes in the prefecture
 
 _ACCENT_COLOR = {
     "trivia":  "#57E0BE",
