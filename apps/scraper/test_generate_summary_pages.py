@@ -155,8 +155,11 @@ class DiscoveryHubTests(unittest.TestCase):
                     encoding="utf-8"
                 )
                 self.assertIn(
-                    "near_gundam_manhole: { emoji: '🤖', "
-                    "label: 'ガンダムマンホール' }",
+                    "label: 'ガンダムマンホール',",
+                    source,
+                )
+                self.assertIn(
+                    "description: 'ガンダムマンホールまで約500m以内のポケふた',",
                     source,
                 )
                 self.assertIn(
@@ -167,6 +170,11 @@ class DiscoveryHubTests(unittest.TestCase):
                 self.assertNotIn(
                     "const FEATURED_TAGS = ['roadside', 'remote_island', "
                     "'station_front'",
+                    source,
+                )
+                self.assertIn(
+                    'aria-label="${description} ${count}枚" '
+                    'title="${description}"',
                     source,
                 )
 
