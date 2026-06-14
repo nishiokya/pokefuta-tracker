@@ -152,7 +152,11 @@ if (mode === 'gmanhole') {
   fs.writeFileSync(prBodyFile, prBody, 'utf-8')
   let prUrl = ''
   try {
-    prUrl = run(`gh pr create --title "Manage verified Gundam manhole locations" --body-file "${prBodyFile}"`)
+    try {
+      prUrl = run(`gh pr view "${branch}" --json url --jq .url`)
+    } catch {
+      prUrl = run(`gh pr create --title "Manage verified Gundam manhole locations" --body-file "${prBodyFile}"`)
+    }
   } finally {
     fs.existsSync(prBodyFile) && fs.unlinkSync(prBodyFile)
   }

@@ -171,6 +171,23 @@ class GeocodeGmanholeTest(unittest.TestCase):
         self.assertEqual(reason, "GSI候補を採用")
         self.assertEqual(record["installed_at"], "2025-09-10")
 
+    def test_unchanged_override_metadata_can_be_detected(self):
+        record = {
+            "status": "active",
+            "verified_at": "2026-06-14",
+            "official_url": "https://example.com/source",
+        }
+        override = {
+            "status": "active",
+            "verified_at": "2026-06-14",
+            "official_url": "https://example.com/source",
+        }
+        self.assertFalse(geocoder.override_metadata_changed(record, override))
+        self.assertTrue(geocoder.override_metadata_changed(
+            record,
+            {**override, "official_url": "https://example.com/changed"},
+        ))
+
 
 if __name__ == "__main__":
     unittest.main()

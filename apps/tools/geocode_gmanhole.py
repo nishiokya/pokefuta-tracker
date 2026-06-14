@@ -17,6 +17,15 @@ from typing import Any
 
 USER_AGENT = "pokefuta-tracker-gmanhole-geocoder/1.0"
 WARNING_TITLE = "Warning:"
+OVERRIDE_METADATA_FIELDS = (
+    "status",
+    "installation_status",
+    "installed_at",
+    "verified_at",
+    "official_url",
+    "source_url",
+    "note",
+)
 
 
 def load_ndjson(path: Path) -> list[dict[str, Any]]:
@@ -260,6 +269,13 @@ def apply_override(
     return manual, "手動管理データの確認済み座標を採用"
 
 
+def override_metadata_changed(record: dict[str, Any], override: dict[str, Any] | None) -> bool:
+    return bool(override) and any(
+        field in override and record.get(field) != override[field]
+        for field in OVERRIDE_METADATA_FIELDS
+    )
+
+
 def gsi_queries(record: dict[str, Any], address: str) -> list[tuple[str, str]]:
     queries = [("official_address", address)]
     without_number = re.sub(r"\s*[0-9]+(?:[-ーの番地号0-9]*)?\s*$", "", address).strip()
@@ -396,7 +412,8 @@ def main() -> None:
                     attempts.append({"provider": "nominatim", "strategy": strategy, "query": query, "result_count": 0, "error": str(error)})
                 time.sleep(max(args.nominatim_sleep, 1.0))
 
-        for field in ("installation_status", "installed_at", "verified_at", "official_url", "source_url", "note"):
+        override_changed = override_metadata_changed(record, override)
+        for field in OVERRIDE_METADATA_FIELDS[1:]:
             record.pop(field, None)
         selected, selection_reason = select_candidate(candidates)
         selected, selection_reason = apply_override(
@@ -413,7 +430,7 @@ def main() -> None:
                 record.get("geocode_provider") != selected["provider"],
                 record.get("geocode_strategy") != selected["strategy"],
                 record.get("geocode_score") != selected["score"],
-                override is not None,
+                override_changed,
             ])
             record["lat"] = selected["lat"]
             record["lng"] = selected["lng"]
