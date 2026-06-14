@@ -264,9 +264,12 @@ def build_page(
     description = (
         f"{prefecture}にあるポケふた{count}枚の設置場所、登場ポケモン、"
         f"マンホール一覧、全国順位を紹介します。"
+        "旅行やポケふた巡りの計画にご活用ください。"
         if count
-        else f"{prefecture}のポケふた設置状況を紹介します。"
-        "現在の設置枚数や全国のポケモンマンホール情報を確認できます。"
+        else (
+            f"{prefecture}のポケふた設置状況を紹介します。"
+            "現在の設置枚数や全国のポケモンマンホール情報を確認できます。"
+        )
     )
     rank_label = f"全国{rank}位" if rank else "現在未設置"
     map_points = [

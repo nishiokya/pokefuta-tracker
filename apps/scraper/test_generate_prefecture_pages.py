@@ -49,6 +49,24 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         self.assertIn("/pokemon/dragonite/", html)
         self.assertIn("/manholes/", html)
         self.assertIn("prefecture_manhole_click", html)
+        self.assertIn(
+            "旅行やポケふた巡りの計画にご活用ください。",
+            html,
+        )
+
+    def test_empty_prefecture_meta_description_is_complete(self) -> None:
+        html = MODULE.build_page(
+            "群馬県",
+            "gunma",
+            [],
+            None,
+            self.pokemon_slugs,
+            self.trivia["群馬県"],
+        )
+        self.assertIn(
+            "現在の設置枚数や全国のポケモンマンホール情報を確認できます。",
+            html,
+        )
 
     def test_tied_counts_share_rank(self) -> None:
         records = [
