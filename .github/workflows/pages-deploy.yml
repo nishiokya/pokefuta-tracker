@@ -16,6 +16,7 @@ on:
       - 'apps/scraper/generate_summary_ogp.py' # summary page OGP generator
       - 'apps/scraper/generate_prefecture_pages.py' # prefecture page generator
       - 'apps/scraper/generate_prefecture_trivia.py' # prefecture trivia generator
+      - 'apps/scraper/prefectures.py' # shared prefecture names and URL slugs
       - 'docs/**'     # dataset changes copied into dist/
       - 'dataset/prefecture_trivia*.json' # generated trivia and editorial sources
       - 'dataset/manhole/image/**' # local popup photos

@@ -66,6 +66,8 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         self.assertIn('href="https://pokefuta.com/"', html)
         self.assertIn("prefecture_visit_cta_click", html)
         self.assertIn("prefecture_photo_cta_click", html)
+        self.assertIn("'page_path': '/prefectures/' + \"fukui\" + '/'", html)
+        self.assertIn("site_type: 'map'", html)
         self.assertLess(
             html.index('id="manhole-heading"'),
             html.index('id="pokemon-heading"'),

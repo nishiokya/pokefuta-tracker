@@ -528,6 +528,8 @@ def build_page(
     function gtag() {{ dataLayer.push(arguments); }}
     gtag('js', new Date());
     gtag('config', 'G-K18NR4GZG2', {{
+      'page_path': '/prefectures/' + {_json_for_script(slug)} + '/',
+      site_type: 'map',
       page_type: 'prefecture',
       prefecture: {_json_for_script(slug)}
     }});
