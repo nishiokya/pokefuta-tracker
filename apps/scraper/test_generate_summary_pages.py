@@ -86,6 +86,35 @@ class DiscoveryHubTests(unittest.TestCase):
                     {"remote_island", "roadside", "station_front", "world_heritage"},
                 )
 
+    def test_japanese_prefecture_cards_link_to_static_pages(self):
+        records = summary.load_records(summary.NDJSON)
+        stats = summary.build_stats(records)
+        html = summary._build_prefecture_info_section(
+            summary.SUMMARY_STRINGS["ja"],
+            stats,
+            records,
+            [],
+            lambda value: value,
+        )
+        self.assertIn('href="/prefectures/fukui/"', html)
+        self.assertIn('href="/prefectures/gunma/"', html)
+        self.assertIn('data-summary-event="summary_prefecture_click"', html)
+
+    def test_japanese_ranking_uses_landing_page_cta(self):
+        records = summary.load_records(summary.NDJSON)
+        stats = summary.build_stats(records)
+        html = summary.render_page(
+            summary.SUMMARY_STRINGS["ja"],
+            stats,
+            {},
+            {},
+            {},
+            {},
+            {},
+        )
+        self.assertIn('href="/prefectures/', html)
+        self.assertIn(">詳しく見る</a>", html)
+
 
 if __name__ == "__main__":
     unittest.main()

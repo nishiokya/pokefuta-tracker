@@ -14,7 +14,9 @@ on:
       - 'apps/scraper/generate_pokemon_index_page.py' # Pokemon index page generator
       - 'apps/scraper/generate_summary_pages.py' # summary page generator
       - 'apps/scraper/generate_summary_ogp.py' # summary page OGP generator
+      - 'apps/scraper/generate_prefecture_pages.py' # prefecture page generator
       - 'apps/scraper/generate_prefecture_trivia.py' # prefecture trivia generator
+      - 'apps/scraper/prefectures.py' # shared prefecture names and URL slugs
       - 'docs/**'     # dataset changes copied into dist/
       - 'dataset/prefecture_trivia*.json' # generated trivia and editorial sources
       - 'dataset/manhole/image/**' # local popup photos
@@ -72,6 +74,8 @@ jobs:
           python3 apps/scraper/generate_summary_ogp.py
           echo "[dist] Generate summary pages (ja/en/zh-CN/zh-TW/ko)"
           python3 apps/scraper/generate_summary_pages.py
+          echo "[dist] Generate prefecture landing pages (47 prefectures)"
+          python3 apps/scraper/generate_prefecture_pages.py
           echo "[dist] Generate sitemap with manhole + pokemon URLs"
           python3 apps/scraper/generate_sitemap.py
           echo "[dist] Copy HTML sources"

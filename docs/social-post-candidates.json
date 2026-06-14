@@ -3,7 +3,7 @@
     "id": "pref01-rank01",
     "type": "prefecture_rank",
     "title": "北海道のポケふた（50枚・全国1位）",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/hokkaido/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -22,7 +22,7 @@
     "id": "pref07-rank02",
     "type": "prefecture_rank",
     "title": "福島県のポケふた（43枚・全国2位）",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/fukushima/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -41,7 +41,7 @@
     "id": "pref04-rank03",
     "type": "prefecture_rank",
     "title": "宮城県のポケふた（37枚・全国3位）",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/miyagi/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -60,7 +60,7 @@
     "id": "pref03-rank04",
     "type": "prefecture_rank",
     "title": "岩手県のポケふた（36枚・全国4位）",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/iwate/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -79,7 +79,7 @@
     "id": "pref24-rank05",
     "type": "prefecture_rank",
     "title": "三重県のポケふた（31枚・全国5位）",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/mie/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -98,7 +98,7 @@
     "id": "pref45-rank06",
     "type": "prefecture_rank",
     "title": "宮崎県のポケふた（26枚・全国6位）",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/miyazaki/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -117,7 +117,7 @@
     "id": "pref31-rank07",
     "type": "prefecture_rank",
     "title": "鳥取県のポケふた（20枚・全国7位）",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/tottori/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -136,7 +136,7 @@
     "id": "pref37-rank08",
     "type": "prefecture_rank",
     "title": "香川県のポケふた（18枚・全国8位）",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/kagawa/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -155,7 +155,7 @@
     "id": "pref39-rank09",
     "type": "prefecture_rank",
     "title": "高知県のポケふた（18枚・全国9位）",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/kochi/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -174,7 +174,7 @@
     "id": "pref18-rank10",
     "type": "prefecture_rank",
     "title": "福井県のポケふた（17枚・全国10位）",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/fukui/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -383,7 +383,7 @@
     "id": "pref02-rare",
     "type": "rare_area",
     "title": "青森県のポケふたはわずか2枚",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/aomori/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -400,7 +400,7 @@
     "id": "pref09-rare",
     "type": "rare_area",
     "title": "栃木県のポケふたはわずか3枚",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/tochigi/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -417,7 +417,7 @@
     "id": "pref11-rare",
     "type": "rare_area",
     "title": "埼玉県のポケふたはわずか3枚",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/saitama/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -434,7 +434,7 @@
     "id": "pref16-rare",
     "type": "rare_area",
     "title": "富山県のポケふたはわずか3枚",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/toyama/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -451,7 +451,7 @@
     "id": "pref28-rare",
     "type": "rare_area",
     "title": "兵庫県のポケふたはわずか3枚",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/hyogo/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -468,7 +468,7 @@
     "id": "pref36-rare",
     "type": "rare_area",
     "title": "徳島県のポケふたはわずか3枚",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/tokushima/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -485,7 +485,7 @@
     "id": "pref38-rare",
     "type": "rare_area",
     "title": "愛媛県のポケふたはわずか2枚",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/ehime/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -502,7 +502,7 @@
     "id": "pref41-rare",
     "type": "rare_area",
     "title": "佐賀県のポケふたはわずか3枚",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/saga/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -1373,7 +1373,7 @@
     "id": "pref-trivia-hokkaido-support-vulpix",
     "type": "pref_trivia",
     "title": "北海道のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/hokkaido/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -1396,7 +1396,7 @@
     "id": "pref-trivia-北海道-vulpix-family-100",
     "type": "pref_trivia",
     "title": "北海道のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/hokkaido/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -1419,7 +1419,7 @@
     "id": "pref-trivia-iwate-geodude-wordplay",
     "type": "pref_trivia",
     "title": "岩手県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/iwate/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -1442,7 +1442,7 @@
     "id": "pref-trivia-岩手県-top-pokemon",
     "type": "pref_trivia",
     "title": "岩手県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/iwate/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -1465,7 +1465,7 @@
     "id": "pref-trivia-miyagi-support-lapras",
     "type": "pref_trivia",
     "title": "宮城県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/miyagi/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -1488,7 +1488,7 @@
     "id": "pref-trivia-宮城県-ラプラス-100",
     "type": "pref_trivia",
     "title": "宮城県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/miyagi/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -1511,7 +1511,7 @@
     "id": "pref-trivia-fukushima-support-chansey",
     "type": "pref_trivia",
     "title": "福島県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/fukushima/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -1534,7 +1534,7 @@
     "id": "pref-trivia-福島県-ラッキー-100",
     "type": "pref_trivia",
     "title": "福島県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/fukushima/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -1557,7 +1557,7 @@
     "id": "pref-trivia-栃木県-single-municipality",
     "type": "pref_trivia",
     "title": "栃木県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/tochigi/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -1580,7 +1580,7 @@
     "id": "pref-trivia-埼玉県-single-municipality",
     "type": "pref_trivia",
     "title": "埼玉県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/saitama/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -1603,7 +1603,7 @@
     "id": "pref-trivia-千葉県-single-municipality",
     "type": "pref_trivia",
     "title": "千葉県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/chiba/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -1626,7 +1626,7 @@
     "id": "pref-trivia-tokyo-pokepark-kanto-admission",
     "type": "pref_trivia",
     "title": "東京都のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/tokyo/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -1649,7 +1649,7 @@
     "id": "pref-trivia-東京都-municipality-concentration",
     "type": "pref_trivia",
     "title": "東京都のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/tokyo/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -1672,7 +1672,7 @@
     "id": "pref-trivia-神奈川県-single-municipality",
     "type": "pref_trivia",
     "title": "神奈川県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/kanagawa/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -1695,7 +1695,7 @@
     "id": "pref-trivia-神奈川県-ピカチュウ-100",
     "type": "pref_trivia",
     "title": "神奈川県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/kanagawa/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -1718,7 +1718,7 @@
     "id": "pref-trivia-niigata-ojiya-koi",
     "type": "pref_trivia",
     "title": "新潟県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/niigata/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -1741,7 +1741,7 @@
     "id": "pref-trivia-新潟県-single-municipality",
     "type": "pref_trivia",
     "title": "新潟県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/niigata/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -1764,7 +1764,7 @@
     "id": "pref-trivia-新潟県-コイキング-100",
     "type": "pref_trivia",
     "title": "新潟県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/niigata/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -1787,7 +1787,7 @@
     "id": "pref-trivia-富山県-single-municipality",
     "type": "pref_trivia",
     "title": "富山県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/toyama/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -1810,7 +1810,7 @@
     "id": "pref-trivia-fukui-support-dragonite",
     "type": "pref_trivia",
     "title": "福井県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/fukui/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -1833,7 +1833,7 @@
     "id": "pref-trivia-福井県-カイリュー-100",
     "type": "pref_trivia",
     "title": "福井県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/fukui/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -1856,7 +1856,7 @@
     "id": "pref-trivia-愛知県-municipality-concentration",
     "type": "pref_trivia",
     "title": "愛知県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/aichi/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -1879,7 +1879,7 @@
     "id": "pref-trivia-mie-support-oshawott",
     "type": "pref_trivia",
     "title": "三重県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/mie/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -1902,7 +1902,7 @@
     "id": "pref-trivia-三重県-ミジュマル-100",
     "type": "pref_trivia",
     "title": "三重県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/mie/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -1925,7 +1925,7 @@
     "id": "pref-trivia-滋賀県-municipality-concentration",
     "type": "pref_trivia",
     "title": "滋賀県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/shiga/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -1948,7 +1948,7 @@
     "id": "pref-trivia-滋賀県-top-pokemon",
     "type": "pref_trivia",
     "title": "滋賀県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/shiga/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -1971,7 +1971,7 @@
     "id": "pref-trivia-京都府-municipality-concentration",
     "type": "pref_trivia",
     "title": "京都府のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/kyoto/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -1994,7 +1994,7 @@
     "id": "pref-trivia-大阪府-single-municipality",
     "type": "pref_trivia",
     "title": "大阪府のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/osaka/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -2017,7 +2017,7 @@
     "id": "pref-trivia-兵庫県-single-municipality",
     "type": "pref_trivia",
     "title": "兵庫県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/hyogo/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -2040,7 +2040,7 @@
     "id": "pref-trivia-奈良県-single-municipality",
     "type": "pref_trivia",
     "title": "奈良県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/nara/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -2063,7 +2063,7 @@
     "id": "pref-trivia-tottori-sand",
     "type": "pref_trivia",
     "title": "鳥取県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/tottori/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -2086,7 +2086,7 @@
     "id": "pref-trivia-鳥取県-sandshrew-family-100",
     "type": "pref_trivia",
     "title": "鳥取県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/tottori/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -2109,7 +2109,7 @@
     "id": "pref-trivia-岡山県-single-municipality",
     "type": "pref_trivia",
     "title": "岡山県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/okayama/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -2132,7 +2132,7 @@
     "id": "pref-trivia-山口県-single-municipality",
     "type": "pref_trivia",
     "title": "山口県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/yamaguchi/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -2155,7 +2155,7 @@
     "id": "pref-trivia-徳島県-single-municipality",
     "type": "pref_trivia",
     "title": "徳島県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/tokushima/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -2178,7 +2178,7 @@
     "id": "pref-trivia-kagawa-slowpoke-wordplay",
     "type": "pref_trivia",
     "title": "香川県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/kagawa/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -2201,7 +2201,7 @@
     "id": "pref-trivia-香川県-top-pokemon",
     "type": "pref_trivia",
     "title": "香川県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/kagawa/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -2224,7 +2224,7 @@
     "id": "pref-trivia-愛媛県-single-municipality",
     "type": "pref_trivia",
     "title": "愛媛県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/ehime/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -2247,7 +2247,7 @@
     "id": "pref-trivia-kochi-support-quagsire",
     "type": "pref_trivia",
     "title": "高知県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/kochi/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -2270,7 +2270,7 @@
     "id": "pref-trivia-高知県-ヌオー-100",
     "type": "pref_trivia",
     "title": "高知県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/kochi/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -2293,7 +2293,7 @@
     "id": "pref-trivia-福岡県-municipality-concentration",
     "type": "pref_trivia",
     "title": "福岡県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/fukuoka/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -2316,7 +2316,7 @@
     "id": "pref-trivia-佐賀県-single-municipality",
     "type": "pref_trivia",
     "title": "佐賀県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/saga/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -2339,7 +2339,7 @@
     "id": "pref-trivia-佐賀県-meowth-forms-100",
     "type": "pref_trivia",
     "title": "佐賀県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/saga/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -2362,7 +2362,7 @@
     "id": "pref-trivia-nagasaki-support-ampharos",
     "type": "pref_trivia",
     "title": "長崎県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/nagasaki/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -2385,7 +2385,7 @@
     "id": "pref-trivia-長崎県-デンリュウ-100",
     "type": "pref_trivia",
     "title": "長崎県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/nagasaki/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -2408,7 +2408,7 @@
     "id": "pref-trivia-miyazaki-support-exeggutor",
     "type": "pref_trivia",
     "title": "宮崎県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/miyazaki/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -2431,7 +2431,7 @@
     "id": "pref-trivia-宮崎県-exeggutor-family-100",
     "type": "pref_trivia",
     "title": "宮崎県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/miyazaki/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -2454,7 +2454,7 @@
     "id": "pref-trivia-kagoshima-ibusuki-eevee",
     "type": "pref_trivia",
     "title": "鹿児島県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/kagoshima/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -2477,7 +2477,7 @@
     "id": "pref-trivia-鹿児島県-single-municipality",
     "type": "pref_trivia",
     "title": "鹿児島県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/kagoshima/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -2500,7 +2500,7 @@
     "id": "pref-trivia-okinawa-support-growlithe",
     "type": "pref_trivia",
     "title": "沖縄県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/okinawa/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -2523,7 +2523,7 @@
     "id": "pref-trivia-沖縄県-top-pokemon",
     "type": "pref_trivia",
     "title": "沖縄県のポケふたトリビア",
-    "url": "https://data.pokefuta.com/summary/",
+    "url": "https://data.pokefuta.com/prefectures/okinawa/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"

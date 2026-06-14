@@ -19,6 +19,13 @@ from pathlib import Path
 from urllib.parse import quote, urlparse
 from xml.sax.saxutils import escape
 
+try:
+    from apps.scraper.prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS
+except ModuleNotFoundError as exc:
+    if exc.name != "apps":
+        raise
+    from prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS
+
 ROOT = Path(__file__).parent.parent.parent
 NDJSON = ROOT / "docs" / "pokefuta.ndjson"
 PREFECTURES_JSON = ROOT / "apps" / "web" / "i18n" / "prefectures.json"
@@ -32,19 +39,6 @@ _OGP_PNG = ROOT / "apps" / "web" / "assets" / "ogp" / "pokefuta_summary_ogp.png"
 _ogp_hash = hashlib.md5(_OGP_PNG.read_bytes()).hexdigest()[:8] if _OGP_PNG.exists() else "0"
 OGP_IMAGE = f"{BASE_URL}/assets/ogp/pokefuta_summary_ogp.png?v={_ogp_hash}"
 SUMMARY_SHARE_URL = f"{BASE_URL}/summary/"
-
-PREFECTURE_ORDER: list[str] = [
-    "北海道", "青森県", "岩手県", "宮城県", "秋田県",
-    "山形県", "福島県", "茨城県", "栃木県", "群馬県",
-    "埼玉県", "千葉県", "東京都", "神奈川県", "新潟県",
-    "富山県", "石川県", "福井県", "山梨県", "長野県",
-    "岐阜県", "静岡県", "愛知県", "三重県", "滋賀県",
-    "京都府", "大阪府", "兵庫県", "奈良県", "和歌山県",
-    "鳥取県", "島根県", "岡山県", "広島県", "山口県",
-    "徳島県", "香川県", "愛媛県", "高知県", "福岡県",
-    "佐賀県", "長崎県", "熊本県", "大分県", "宮崎県",
-    "鹿児島県", "沖縄県",
-]
 
 REGION_MAP: dict[str, str] = {
     "北海道": "北海道",
@@ -1655,6 +1649,11 @@ def _map_href(map_base: str, pref_ja: str | None = None) -> str:
     return f"{map_base}?pref={quote(pref_ja)}" if pref_ja else map_base
 
 
+def _prefecture_href(pref_ja: str) -> str:
+    slug = PREFECTURE_SLUGS.get(pref_ja, "")
+    return f"/prefectures/{slug}/" if slug else _map_href("/", pref_ja)
+
+
 def _safe_https_url(value: str | None, fallback: str) -> str:
     candidate = str(value or "").strip()
     try:
@@ -2759,6 +2758,7 @@ def _build_tracking_script(s: dict) -> str:
         image_type: target.dataset.imageType || '',
         content_type: target.dataset.contentType || '',
         content_id: target.dataset.contentId || '',
+        prefecture: target.dataset.prefecture || '',
         destination_hub: target.dataset.destinationHub || '',
         target_url: target.dataset.targetUrl || target.href || ''
       });
@@ -3017,6 +3017,7 @@ def _build_prefecture_info_section(
                 city_count=city_count, species_count=species_count
             )
 
+        page_href = _prefecture_href(pref)
         if pref_trivia:
             open_tag = '<article class="prefecture-info-card local-trivia-card">'
             close_tag = "</article>"
@@ -3053,11 +3054,27 @@ def _build_prefecture_info_section(
                 )
             actions_html = (
                 f'<div class="prefecture-info-actions">'
+                f'<a href="{escape(page_href)}" data-summary-event="summary_prefecture_click" '
+                f'data-prefecture="{escape(PREFECTURE_SLUGS.get(pref, pref))}">'
+                f'詳しく見る</a>'
                 f'{official_html}'
                 f'<a href="{escape(_map_href(s["map_base_href"], pref))}">'
                 f'{escape(s["map_link_text"])}</a>'
                 f'</div>'
             )
+        elif is_ja:
+            open_tag = (
+                f'<a class="prefecture-info-card" '
+                f'href="{escape(page_href)}" data-summary-event="summary_prefecture_click" '
+                f'data-prefecture="{escape(PREFECTURE_SLUGS.get(pref, pref))}">'
+            )
+            close_tag = "</a>"
+            pokemon_html = (
+                f'<span class="prefecture-info-pokemon">'
+                f'{escape(pokemon_label)}</span>'
+            )
+            actions_html = ""
+            fact_html = f'<p class="prefecture-info-fact">{escape(fact)}</p>'
         elif pref_records:
             open_tag = (
                 f'<a class="prefecture-info-card" '
@@ -3402,8 +3419,21 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
     pokemon_ranking_html = _build_pokemon_ranking_section(s, pokemon_stats)
 
     def map_link(pref_ja: str) -> str:
-        href = f'{map_base}?pref={quote(pref_ja)}'
-        return f'<a class="summary-link" href="{escape(href)}">{escape(s["map_link_text"])}</a>'
+        if s.get("pref_key") == "ja":
+            href = _prefecture_href(pref_ja)
+            link_text = "詳しく見る"
+            tracking = (
+                f' data-summary-event="summary_prefecture_click"'
+                f' data-prefecture="{escape(PREFECTURE_SLUGS.get(pref_ja, pref_ja))}"'
+            )
+        else:
+            href = f'{map_base}?pref={quote(pref_ja)}'
+            link_text = s["map_link_text"]
+            tracking = ""
+        return (
+            f'<a class="summary-link" href="{escape(href)}"{tracking}>'
+            f'{escape(link_text)}</a>'
+        )
 
     ranking_items = "\n        ".join(
         f"<li>"
