@@ -8,6 +8,21 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const REPO_ROOT = path.resolve(__dirname, '../../..')
 const PATCHES_PATH = path.join(__dirname, '../workspace/changes.ndjson')
 const TITLES_PATH = path.join(REPO_ROOT, 'dataset/manhole_titles.json')
+const GMANHOLE_FILES = [
+  'apps/tools/geocode_gmanhole.py',
+  'apps/tools/test_geocode_gmanhole.py',
+  'dataset/gmanhole_overrides.json',
+  'dataset/gmanhole_geocode_audit.json',
+  'docs/gmanhole.ndjson',
+  'gmanhole_geocode_cache.json',
+  'tools/manhole-semantic-editor/README.md',
+  'tools/manhole-semantic-editor/scripts/create-pr.js',
+  'tools/manhole-semantic-editor/scripts/validate-editor-changes.js',
+  'tools/manhole-semantic-editor/src/App.tsx',
+  'tools/manhole-semantic-editor/src/semantic/semanticPatch.ts',
+  'tools/manhole-semantic-editor/src/tasks/gmanholeGeocoder/GmanholeGeocoderTask.tsx',
+  'tools/manhole-semantic-editor/vite.config.ts',
+]
 
 function run(cmd, opts = {}) {
   return execSync(cmd, { cwd: REPO_ROOT, encoding: 'utf-8', ...opts }).trim()
@@ -20,7 +35,7 @@ function getJSTTimestamp() {
   return iso.slice(0, 10).replace(/-/g, '') + iso.slice(11, 19).replace(/:/g, '')
 }
 
-function buildPRBody(patches) {
+function buildPRBody(patches, mode) {
   const byTask = {}
   for (const p of patches) {
     byTask[p.taskType] = (byTask[p.taskType] ?? 0) + 1
@@ -30,6 +45,10 @@ function buildPRBody(patches) {
     .join('\n')
 
   const totalManholes = new Set(patches.flatMap(p => p.manholeIds ?? [])).size
+
+  const guardrails = mode === 'gmanhole'
+    ? '- ガンダム座標管理に必要なファイルだけをコミット\n- 写真JSONなど既存の無関係な変更は含めていません'
+    : '- docs/pokefuta.ndjson は変更されていません\n- dataset/manhole_titles.json のみ変更されています'
 
   return `## Summary
 
@@ -47,14 +66,12 @@ ${taskLines}
 
 ## Guardrails
 
-- docs/pokefuta.ndjson は変更されていません
-- dataset/manhole_titles.json のみ変更されています
+${guardrails}
 
 ## Validation
 
 - [x] JSON parse OK
 - [x] schema OK
-- [x] docs/*.ndjson 汚染なし
 - [x] changes.ndjson で操作ログ確認済み
 
 🤖 Generated with Semantic Manhole Metadata Editor`
@@ -74,25 +91,42 @@ if (!patchesRaw) {
 }
 const patches = patchesRaw.split('\n').filter(Boolean).map(l => JSON.parse(l))
 console.log(`✅ ${patches.length}件のパッチを読み込みました`)
+const isGmanholeMode = patches.some(p => p.taskType === 'gmanhole_geocoder')
+const isTitlesMode = patches.some(p => p.taskType !== 'gmanhole_geocoder')
+if (isGmanholeMode && isTitlesMode) {
+  console.error('❌ ガンダム座標編集と通常のsemantic編集は別々にPRを作成してください。')
+  process.exit(1)
+}
+const mode = isGmanholeMode ? 'gmanhole' : 'titles'
 
 // 2. Check for forbidden diffs
 const allChanged = run('git diff --name-only HEAD')
 const forbidden = allChanged.split('\n').filter(f =>
-  f.match(/^docs\/.*\.ndjson$/) || f.match(/^apps\/scraper\/.*\.ndjson$/)
+  (f.match(/^docs\/.*\.ndjson$/) && !(mode === 'gmanhole' && f === 'docs/gmanhole.ndjson'))
+  || f.match(/^apps\/scraper\/.*\.ndjson$/)
 )
 if (forbidden.length > 0) {
   console.error('❌ クローラー管轄ファイルが変更されています:', forbidden.join(', '))
   process.exit(1)
 }
-console.log('✅ docs/*.ndjson は変更されていません')
+console.log('✅ 禁止対象のNDJSONは変更されていません')
 
 // 3. Check titles changed
-const titlesStatus = run(`git status --porcelain "${TITLES_PATH}"`)
-if (!titlesStatus) {
+const titlesStatus = mode === 'titles' ? run(`git status --porcelain "${TITLES_PATH}"`) : ''
+const gmanholeStatus = mode === 'gmanhole'
+  ? run(`git status --porcelain -- ${GMANHOLE_FILES.map(file => `"${file}"`).join(' ')}`)
+  : ''
+if (mode === 'titles' && !titlesStatus) {
   console.error('❌ dataset/manhole_titles.json に変更がありません。PRを作成するものがありません。')
   process.exit(1)
 }
-console.log('✅ dataset/manhole_titles.json に変更があります')
+if (mode === 'gmanhole' && !gmanholeStatus) {
+  console.error('❌ ガンダム座標関連ファイルに変更がありません。')
+  process.exit(1)
+}
+console.log(mode === 'gmanhole'
+  ? '✅ ガンダム座標関連ファイルに変更があります'
+  : '✅ dataset/manhole_titles.json に変更があります')
 
 // 4. Check gh is available
 try {
@@ -100,6 +134,36 @@ try {
 } catch {
   console.error('❌ gh CLI が認証されていません。`gh auth login` を実行してください。')
   process.exit(1)
+}
+
+if (mode === 'gmanhole') {
+  const branch = run('git rev-parse --abbrev-ref HEAD')
+  if (branch === 'main') {
+    console.error('❌ ガンダム座標編集は作業ブランチ上でPRを作成してください。')
+    process.exit(1)
+  }
+  run(`git add -- ${GMANHOLE_FILES.map(file => `"${file}"`).join(' ')}`)
+  run(`git commit -m "Manage verified Gundam manhole locations"`)
+  console.log('✅ コミット完了')
+  run(`git push -u origin ${branch}`)
+  console.log('✅ プッシュ完了')
+  const prBody = buildPRBody(patches, mode)
+  const prBodyFile = path.join(__dirname, '../workspace/pr_body.tmp.md')
+  fs.writeFileSync(prBodyFile, prBody, 'utf-8')
+  let prUrl = ''
+  try {
+    try {
+      prUrl = run(`gh pr view "${branch}" --json url --jq .url`)
+    } catch {
+      prUrl = run(`gh pr create --title "Manage verified Gundam manhole locations" --body-file "${prBodyFile}"`)
+    }
+  } finally {
+    fs.existsSync(prBodyFile) && fs.unlinkSync(prBodyFile)
+  }
+  fs.writeFileSync(PATCHES_PATH, '', 'utf-8')
+  console.log('✅ workspace/changes.ndjson をクリアしました')
+  console.log('\n🎉 完了:', prUrl)
+  process.exit(0)
 }
 
 // 5. Save the Editor's output, then base new branch on fresh main
@@ -152,7 +216,7 @@ run(`git push -u origin ${branch}`)
 console.log('✅ プッシュ完了')
 
 // 8. Create PR
-const prBody = buildPRBody(patches)
+const prBody = buildPRBody(patches, mode)
 const prTitle = `Update manhole semantic metadata (${getJSTTimestamp().slice(0, 8)})`
 const prBodyFile = path.join(__dirname, '../workspace/pr_body.tmp.md')
 fs.writeFileSync(prBodyFile, prBody, 'utf-8')

@@ -12,6 +12,8 @@ const MICHINEKI_PATH = path.join(REPO_ROOT, 'dataset/michineki.json')
 const MANHOLEMAP_PATH = path.join(REPO_ROOT, 'dataset/manholemap.json')
 const GMANHOLE_PATH = path.join(REPO_ROOT, 'docs/gmanhole.ndjson')
 const GMANHOLE_GEOCODE_AUDIT_PATH = path.join(REPO_ROOT, 'dataset/gmanhole_geocode_audit.json')
+const GMANHOLE_OVERRIDES_PATH = path.join(REPO_ROOT, 'dataset/gmanhole_overrides.json')
+const GMANHOLE_GEOCODER_PATH = path.join(REPO_ROOT, 'apps/tools/geocode_gmanhole.py')
 const WORKSPACE_DIR = path.join(__dirname, 'workspace')
 const PATCHES_PATH = path.join(WORKSPACE_DIR, 'changes.ndjson')
 const SCRIPTS_DIR = path.join(__dirname, 'scripts')
@@ -19,6 +21,29 @@ const SCRIPTS_DIR = path.join(__dirname, 'scripts')
 function jsonRes(res: ServerResponse, data: unknown, status = 200): void {
   res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8' })
   res.end(JSON.stringify(data))
+}
+
+function runGmanholeGeocoder(): Promise<void> {
+  return new Promise((resolve, reject) => {
+    execFile(
+      'python3',
+      [
+        GMANHOLE_GEOCODER_PATH,
+        '--reuse-audit',
+        GMANHOLE_GEOCODE_AUDIT_PATH,
+        '--skip-yahoo',
+        '--skip-nominatim',
+      ],
+      { cwd: REPO_ROOT },
+      (error, stdout, stderr) => {
+        if (error) {
+          reject(new Error([error.message, stdout, stderr].filter(Boolean).join('\n')))
+          return
+        }
+        resolve()
+      },
+    )
+  })
 }
 
 async function handleEditorRequest(
@@ -140,6 +165,96 @@ async function handleEditorRequest(
     const raw = fs.readFileSync(GMANHOLE_GEOCODE_AUDIT_PATH, 'utf-8')
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' })
     res.end(raw)
+    return
+  }
+
+  if (method === 'POST' && subpath === '/data/gmanhole-override') {
+    const input = JSON.parse(body) as {
+      id?: unknown
+      lat?: unknown
+      lng?: unknown
+      official_url?: unknown
+      note?: unknown
+    }
+    const id = String(input.id ?? '')
+    const lat = Number(input.lat)
+    const lng = Number(input.lng)
+    const officialUrl = String(input.official_url ?? '').trim()
+    const note = String(input.note ?? '').trim()
+
+    if (!/^\d+$/.test(id)) {
+      jsonRes(res, { error: '有効なマンホールIDが必要です' }, 400)
+      return
+    }
+    if (!Number.isFinite(lat) || lat < -90 || lat > 90) {
+      jsonRes(res, { error: '緯度は -90〜90 の数値で入力してください' }, 400)
+      return
+    }
+    if (!Number.isFinite(lng) || lng < -180 || lng > 180) {
+      jsonRes(res, { error: '経度は -180〜180 の数値で入力してください' }, 400)
+      return
+    }
+    if (officialUrl && !/^https?:\/\//i.test(officialUrl)) {
+      jsonRes(res, { error: '公式URLは http:// または https:// で入力してください' }, 400)
+      return
+    }
+
+    const audit = JSON.parse(fs.readFileSync(GMANHOLE_GEOCODE_AUDIT_PATH, 'utf-8')) as {
+      records?: Array<{ id: string }>
+    }
+    if (!audit.records?.some(record => String(record.id) === id)) {
+      jsonRes(res, { error: `ガンダムマンホール #${id} が見つかりません` }, 404)
+      return
+    }
+
+    const previousRaw = fs.existsSync(GMANHOLE_OVERRIDES_PATH)
+      ? fs.readFileSync(GMANHOLE_OVERRIDES_PATH, 'utf-8')
+      : '{}\n'
+    const overrides = JSON.parse(previousRaw) as Record<string, Record<string, unknown>>
+    const previous = overrides[id] ?? {}
+    const next: Record<string, unknown> = {
+      ...previous,
+      lat,
+      lng,
+      verified_at: new Date().toISOString().slice(0, 10),
+    }
+    delete next.source_url
+    if (officialUrl) next.official_url = officialUrl
+    else delete next.official_url
+    if (note) next.note = note
+    else delete next.note
+    overrides[id] = next
+
+    const tmp = `${GMANHOLE_OVERRIDES_PATH}.tmp`
+    fs.writeFileSync(tmp, JSON.stringify(overrides, null, 2) + '\n', 'utf-8')
+    fs.renameSync(tmp, GMANHOLE_OVERRIDES_PATH)
+    try {
+      await runGmanholeGeocoder()
+    } catch (error) {
+      fs.writeFileSync(GMANHOLE_OVERRIDES_PATH, previousRaw, 'utf-8')
+      jsonRes(res, { error: error instanceof Error ? error.message : String(error) }, 500)
+      return
+    }
+
+    const refreshedAudit = JSON.parse(fs.readFileSync(GMANHOLE_GEOCODE_AUDIT_PATH, 'utf-8'))
+    const patch = {
+      id: `${Date.now()}-gmanhole-${id}`,
+      createdAt: new Date().toISOString(),
+      taskType: 'gmanhole_geocoder',
+      operation: 'set_gmanhole_override',
+      target: 'gmanholes',
+      manholeIds: [Number(id)],
+      payload: {
+        lat,
+        lng,
+        official_url: officialUrl,
+      },
+      note,
+      confidence: 'verified',
+    }
+    if (!fs.existsSync(WORKSPACE_DIR)) fs.mkdirSync(WORKSPACE_DIR, { recursive: true })
+    fs.appendFileSync(PATCHES_PATH, JSON.stringify(patch) + '\n', 'utf-8')
+    jsonRes(res, { ok: true, audit: refreshedAudit, patch })
     return
   }
 

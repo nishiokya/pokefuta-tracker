@@ -1,0 +1,63 @@
+{
+  "3": {
+    "status": "active",
+    "installation_status": "installed",
+    "lat": 44.87680906,
+    "lng": 141.74445238,
+    "verified_at": "2026-06-14",
+    "official_url": "https://www.teshiotown.hokkaido.jp/?page_id=6984",
+    "note": "公式住所の5807番地4はジオコーダーで解決できないため、隣接する設置施設「てしお温泉夕映」（5807番地の5）の確認済み座標を採用"
+  },
+  "17": {
+    "lat": 33.191868,
+    "lng": 129.901443,
+    "verified_at": "2026-06-14",
+    "official_url": "https://gundam-official.com/news/i/news/hot-topics/01_12392"
+  },
+  "18": {
+    "lat": 33.1938532,
+    "lng": 129.9097407,
+    "verified_at": "2026-06-14",
+    "official_url": "https://www.arita.jp/spot/post_16.html"
+  },
+  "23": {
+    "lat": 35.1344529,
+    "lng": 137.3126789,
+    "verified_at": "2026-06-14",
+    "official_url": "https://www.city.toyota.aichi.jp/kurashi/jyogesuidou/1062795/1062800/1062803/1058093/index.html"
+  },
+  "42": {
+    "lat": 35.6666756,
+    "lng": 138.5680228,
+    "verified_at": "2026-06-14",
+    "official_url": "https://www.kitagucchi.com/what-nouth.html"
+  },
+  "46": {
+    "lat": 36.3247637,
+    "lng": 138.3964692,
+    "verified_at": "2026-06-14",
+    "official_url": "https://agri-yu.com/"
+  },
+  "47": {
+    "lat": 35.8109487,
+    "lng": 140.587239,
+    "verified_at": "2026-06-14",
+    "official_url": "https://gundam-official.com/news/i/news/hot-topics/01_17415"
+  },
+  "51": {
+    "status": "active",
+    "installation_status": "installed",
+    "installed_at": "2025-09-10",
+    "verified_at": "2026-06-14",
+    "official_url": "https://www.city.himeji.lg.jp/kurashi/0000031294.html",
+    "note": "期間限定だったのは展示。西二階町入口へのマンホール設置は2025年9月10日に完了"
+  },
+  "52": {
+    "status": "active",
+    "installation_status": "installed",
+    "installed_at": "2025-09-10",
+    "verified_at": "2026-06-14",
+    "official_url": "https://www.city.himeji.lg.jp/kurashi/0000031294.html",
+    "note": "期間限定だったのは展示。二階町入口へのマンホール設置は2025年9月10日に完了"
+  }
+}

@@ -1,4 +1,6 @@
 import importlib.util
+import json
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -12,6 +14,15 @@ SPEC.loader.exec_module(geocoder)
 
 
 class GeocodeGmanholeTest(unittest.TestCase):
+    def test_load_overrides_returns_empty_for_missing_file(self):
+        self.assertEqual(geocoder.load_overrides(Path("/tmp/does-not-exist.json")), {})
+
+    def test_load_overrides_keys_records_by_string_id(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "overrides.json"
+            path.write_text(json.dumps({"3": {"status": "active"}}), encoding="utf-8")
+            self.assertEqual(geocoder.load_overrides(path), {"3": {"status": "active"}})
+
     def test_full_address_does_not_duplicate_prefecture_and_city(self):
         self.assertEqual(
             geocoder.ensure_full_address(
@@ -114,6 +125,68 @@ class GeocodeGmanholeTest(unittest.TestCase):
         }
         selected, _ = geocoder.select_candidate([yahoo, gsi])
         self.assertIs(selected, gsi)
+
+    def test_manual_coordinate_override_wins_and_preserves_status_metadata(self):
+        record = {"id": "3", "status": "active"}
+        candidates = []
+        selected, reason = geocoder.apply_override(
+            record,
+            {
+                "status": "active",
+                "installation_status": "installed",
+                "lat": 44.87680906,
+                "lng": 141.74445238,
+                "verified_at": "2026-06-14",
+                "official_url": "https://example.com/source",
+                "note": "施設位置を確認",
+            },
+            candidates,
+            None,
+            "候補なし",
+        )
+        self.assertEqual(selected["provider"], "manual")
+        self.assertEqual(selected["strategy"], "verified_override")
+        self.assertEqual(selected["lat"], 44.87680906)
+        self.assertEqual(selected["query"], "https://example.com/source")
+        self.assertEqual(candidates, [selected])
+        self.assertEqual(record["installation_status"], "installed")
+        self.assertEqual(record["official_url"], "https://example.com/source")
+        self.assertIn("手動管理", reason)
+
+    def test_status_only_override_keeps_geocoder_selection(self):
+        record = {"id": "51", "status": "active"}
+        geocoded = {"provider": "gsi", "lat": 34.8, "lng": 134.6}
+        selected, reason = geocoder.apply_override(
+            record,
+            {
+                "status": "active",
+                "installation_status": "installed",
+                "installed_at": "2025-09-10",
+            },
+            [],
+            geocoded,
+            "GSI候補を採用",
+        )
+        self.assertIs(selected, geocoded)
+        self.assertEqual(reason, "GSI候補を採用")
+        self.assertEqual(record["installed_at"], "2025-09-10")
+
+    def test_unchanged_override_metadata_can_be_detected(self):
+        record = {
+            "status": "active",
+            "verified_at": "2026-06-14",
+            "official_url": "https://example.com/source",
+        }
+        override = {
+            "status": "active",
+            "verified_at": "2026-06-14",
+            "official_url": "https://example.com/source",
+        }
+        self.assertFalse(geocoder.override_metadata_changed(record, override))
+        self.assertTrue(geocoder.override_metadata_changed(
+            record,
+            {**override, "official_url": "https://example.com/changed"},
+        ))
 
 
 if __name__ == "__main__":

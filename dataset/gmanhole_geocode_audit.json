@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-14T07:14:36.247995Z",
+  "generated_at": "2026-06-14T08:27:20.206404Z",
   "records": [
     {
       "id": "1",
@@ -222,18 +222,18 @@
         "lng": 141.820526
       },
       "selected": {
-        "provider": "gsi",
-        "strategy": "address_without_number",
-        "query": "北海道天塩郡天塩町字サラキシ",
+        "provider": "manual",
+        "strategy": "verified_override",
+        "query": "https://www.teshiotown.hokkaido.jp/?page_id=6984",
         "rank": 1,
-        "label": "北海道天塩町サッカヘシ",
-        "lat": 44.984165,
-        "lng": 141.820526,
-        "score": 75,
-        "reason": "GSI住所候補（文字一致 67%）"
+        "label": "公式住所の5807番地4はジオコーダーで解決できないため、隣接する設置施設「てしお温泉夕映」（5807番地の5）の確認済み座標を採用",
+        "lat": 44.87680906,
+        "lng": 141.74445238,
+        "score": 100,
+        "reason": "手動確認済み（2026-06-14）"
       },
-      "selection_reason": "公式住所のGSI候補を優先し、文字一致が最も高い候補を採用",
-      "old_distance_km": 0.0,
+      "selection_reason": "手動管理データの確認済み座標を採用",
+      "old_distance_km": 13.355,
       "attempts": [
         {
           "provider": "gsi",
@@ -293,8 +293,28 @@
           "lng": 141.820526,
           "score": 75,
           "reason": "GSI住所候補（文字一致 67%）"
+        },
+        {
+          "provider": "manual",
+          "strategy": "verified_override",
+          "query": "https://www.teshiotown.hokkaido.jp/?page_id=6984",
+          "rank": 1,
+          "label": "公式住所の5807番地4はジオコーダーで解決できないため、隣接する設置施設「てしお温泉夕映」（5807番地の5）の確認済み座標を採用",
+          "lat": 44.87680906,
+          "lng": 141.74445238,
+          "score": 100,
+          "reason": "手動確認済み（2026-06-14）"
         }
-      ]
+      ],
+      "override": {
+        "status": "active",
+        "installation_status": "installed",
+        "lat": 44.87680906,
+        "lng": 141.74445238,
+        "verified_at": "2026-06-14",
+        "official_url": "https://www.teshiotown.hokkaido.jp/?page_id=6984",
+        "note": "公式住所の5807番地4はジオコーダーで解決できないため、隣接する設置施設「てしお温泉夕映」（5807番地の5）の確認済み座標を採用"
+      }
     },
     {
       "id": "4",
@@ -2026,17 +2046,17 @@
         "lng": 129.901443
       },
       "selected": {
-        "provider": "gsi",
-        "strategy": "official_address",
-        "query": "佐賀県西松浦郡有田町上幸平一丁目1258-1地先",
+        "provider": "manual",
+        "strategy": "verified_override",
+        "query": "https://gundam-official.com/news/i/news/hot-topics/01_12392",
         "rank": 1,
-        "label": "佐賀県有田町上幸平一丁目",
+        "label": "手動確認済み座標",
         "lat": 33.191868,
         "lng": 129.901443,
-        "score": 70,
-        "reason": "GSI住所候補（文字一致 55%）"
+        "score": 100,
+        "reason": "手動確認済み（2026-06-14）"
       },
-      "selection_reason": "公式住所を変更せずに得たGSI候補を優先採用",
+      "selection_reason": "手動管理データの確認済み座標を採用",
       "old_distance_km": 0.0,
       "attempts": [
         {
@@ -2097,8 +2117,25 @@
           "lng": 129.849167,
           "score": 64,
           "reason": "GSI住所候補（文字一致 43%）"
+        },
+        {
+          "provider": "manual",
+          "strategy": "verified_override",
+          "query": "https://gundam-official.com/news/i/news/hot-topics/01_12392",
+          "rank": 1,
+          "label": "手動確認済み座標",
+          "lat": 33.191868,
+          "lng": 129.901443,
+          "score": 100,
+          "reason": "手動確認済み（2026-06-14）"
         }
-      ]
+      ],
+      "override": {
+        "lat": 33.191868,
+        "lng": 129.901443,
+        "verified_at": "2026-06-14",
+        "official_url": "https://gundam-official.com/news/i/news/hot-topics/01_12392"
+      }
     },
     {
       "id": "18",
@@ -2113,18 +2150,18 @@
         "lng": 129.908661
       },
       "selected": {
-        "provider": "gsi",
-        "strategy": "official_address",
-        "query": "佐賀県西松浦郡有田町泉山一丁目380-1",
+        "provider": "manual",
+        "strategy": "verified_override",
+        "query": "https://www.arita.jp/spot/post_16.html",
         "rank": 1,
-        "label": "佐賀県有田町泉山一丁目",
-        "lat": 33.194229,
-        "lng": 129.908661,
-        "score": 71,
-        "reason": "GSI住所候補（文字一致 58%）"
+        "label": "手動確認済み座標",
+        "lat": 33.1938532,
+        "lng": 129.9097407,
+        "score": 100,
+        "reason": "手動確認済み（2026-06-14）"
       },
-      "selection_reason": "公式住所を変更せずに得たGSI候補を優先採用",
-      "old_distance_km": 0.0,
+      "selection_reason": "手動管理データの確認済み座標を採用",
+      "old_distance_km": 0.109,
       "attempts": [
         {
           "provider": "gsi",
@@ -2202,8 +2239,25 @@
           "lng": 129.849167,
           "score": 75,
           "reason": "GSI住所候補（文字一致 67%）"
+        },
+        {
+          "provider": "manual",
+          "strategy": "verified_override",
+          "query": "https://www.arita.jp/spot/post_16.html",
+          "rank": 1,
+          "label": "手動確認済み座標",
+          "lat": 33.1938532,
+          "lng": 129.9097407,
+          "score": 100,
+          "reason": "手動確認済み（2026-06-14）"
         }
-      ]
+      ],
+      "override": {
+        "lat": 33.1938532,
+        "lng": 129.9097407,
+        "verified_at": "2026-06-14",
+        "official_url": "https://www.arita.jp/spot/post_16.html"
+      }
     },
     {
       "id": "19",
@@ -2690,18 +2744,18 @@
         "lng": 137.318207
       },
       "selected": {
-        "provider": "gsi",
-        "strategy": "title_locality",
-        "query": "愛知県豊田市足助支所",
+        "provider": "manual",
+        "strategy": "verified_override",
+        "query": "https://www.city.toyota.aichi.jp/kurashi/jyogesuidou/1062795/1062800/1062803/1058093/index.html",
         "rank": 1,
-        "label": "愛知県豊田市足助町",
-        "lat": 35.135353,
-        "lng": 137.318207,
-        "score": 81,
-        "reason": "GSI住所候補（文字一致 80%）"
+        "label": "手動確認済み座標",
+        "lat": 35.1344529,
+        "lng": 137.3126789,
+        "score": 100,
+        "reason": "手動確認済み（2026-06-14）"
       },
-      "selection_reason": "公式住所のGSI候補を優先し、文字一致が最も高い候補を採用",
-      "old_distance_km": 0.0,
+      "selection_reason": "手動管理データの確認済み座標を採用",
+      "old_distance_km": 0.513,
       "attempts": [
         {
           "provider": "gsi",
@@ -2790,8 +2844,25 @@
           "lng": 137.318375,
           "score": 79,
           "reason": "GSI住所候補（文字一致 80%）"
+        },
+        {
+          "provider": "manual",
+          "strategy": "verified_override",
+          "query": "https://www.city.toyota.aichi.jp/kurashi/jyogesuidou/1062795/1062800/1062803/1058093/index.html",
+          "rank": 1,
+          "label": "手動確認済み座標",
+          "lat": 35.1344529,
+          "lng": 137.3126789,
+          "score": 100,
+          "reason": "手動確認済み（2026-06-14）"
         }
-      ]
+      ],
+      "override": {
+        "lat": 35.1344529,
+        "lng": 137.3126789,
+        "verified_at": "2026-06-14",
+        "official_url": "https://www.city.toyota.aichi.jp/kurashi/jyogesuidou/1062795/1062800/1062803/1058093/index.html"
+      }
     },
     {
       "id": "24",
@@ -4815,21 +4886,18 @@
         "lng": 138.566513
       },
       "selected": {
-        "provider": "yahoo",
-        "strategy": "official_address",
-        "query": "山梨県甲府市丸の内一丁目1番 「アシストエンジニアリングよっちゃばれ広場」南側歩道",
+        "provider": "manual",
+        "strategy": "verified_override",
+        "query": "https://www.kitagucchi.com/what-nouth.html",
         "rank": 1,
-        "label": "山梨県甲府市丸の内1丁目1",
-        "lat": 35.66654822,
-        "lng": 138.56948971,
-        "score": 85,
-        "reason": "Yahoo住所候補（一致レベル 5 / 文字一致 33%）",
-        "matching_level": 5,
-        "address_type": "街区",
-        "government_code": "19201"
+        "label": "手動確認済み座標",
+        "lat": 35.6666756,
+        "lng": 138.5680228,
+        "score": 100,
+        "reason": "手動確認済み（2026-06-14）"
       },
-      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
-      "old_distance_km": 0.337,
+      "selection_reason": "手動管理データの確認済み座標を採用",
+      "old_distance_km": 0.233,
       "attempts": [
         {
           "provider": "gsi",
@@ -4941,8 +5009,25 @@
           "matching_level": 6,
           "address_type": "地番・戸番",
           "government_code": "19201"
+        },
+        {
+          "provider": "manual",
+          "strategy": "verified_override",
+          "query": "https://www.kitagucchi.com/what-nouth.html",
+          "rank": 1,
+          "label": "手動確認済み座標",
+          "lat": 35.6666756,
+          "lng": 138.5680228,
+          "score": 100,
+          "reason": "手動確認済み（2026-06-14）"
         }
-      ]
+      ],
+      "override": {
+        "lat": 35.6666756,
+        "lng": 138.5680228,
+        "verified_at": "2026-06-14",
+        "official_url": "https://www.kitagucchi.com/what-nouth.html"
+      }
     },
     {
       "id": "43",
@@ -5215,21 +5300,18 @@
         "lng": 138.383423
       },
       "selected": {
-        "provider": "yahoo",
-        "strategy": "official_address",
-        "query": "長野県小諸市大字大久保1100番地 あぐりの湯こもろ",
+        "provider": "manual",
+        "strategy": "verified_override",
+        "query": "https://agri-yu.com/",
         "rank": 1,
-        "label": "長野県小諸市大久保（大字）1100",
-        "lat": 36.32372471,
-        "lng": 138.39462184,
-        "score": 94,
-        "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 55%）",
-        "matching_level": 6,
-        "address_type": "地番・戸番",
-        "government_code": "20208"
+        "label": "手動確認済み座標",
+        "lat": 36.3247637,
+        "lng": 138.3964692,
+        "score": 100,
+        "reason": "手動確認済み（2026-06-14）"
       },
-      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
-      "old_distance_km": 1.105,
+      "selection_reason": "手動管理データの確認済み座標を採用",
+      "old_distance_km": 1.305,
       "attempts": [
         {
           "provider": "gsi",
@@ -5285,8 +5367,25 @@
           "matching_level": 6,
           "address_type": "地番・戸番",
           "government_code": "20208"
+        },
+        {
+          "provider": "manual",
+          "strategy": "verified_override",
+          "query": "https://agri-yu.com/",
+          "rank": 1,
+          "label": "手動確認済み座標",
+          "lat": 36.3247637,
+          "lng": 138.3964692,
+          "score": 100,
+          "reason": "手動確認済み（2026-06-14）"
         }
-      ]
+      ],
+      "override": {
+        "lat": 36.3247637,
+        "lng": 138.3964692,
+        "verified_at": "2026-06-14",
+        "official_url": "https://agri-yu.com/"
+      }
     },
     {
       "id": "47",
@@ -5301,21 +5400,18 @@
         "lng": 140.499298
       },
       "selected": {
-        "provider": "yahoo",
-        "strategy": "official_address",
-        "query": "千葉県香取市長岡1828-1 橘ふれあい公園内",
+        "provider": "manual",
+        "strategy": "verified_override",
+        "query": "https://gundam-official.com/news/i/news/hot-topics/01_17415",
         "rank": 1,
-        "label": "千葉県香取市長岡1828-1",
-        "lat": 35.81011188,
-        "lng": 140.58770359,
-        "score": 95,
-        "reason": "Yahoo住所候補（一致レベル 6 / 文字一致 58%）",
-        "matching_level": 6,
-        "address_type": "枝番",
-        "government_code": "12236"
+        "label": "手動確認済み座標",
+        "lat": 35.8109487,
+        "lng": 140.587239,
+        "score": 100,
+        "reason": "手動確認済み（2026-06-14）"
       },
-      "selection_reason": "Yahooが公式住所を街区・地番以上の精度で解決したため優先採用",
-      "old_distance_km": 12.587,
+      "selection_reason": "手動管理データの確認済み座標を採用",
+      "old_distance_km": 12.488,
       "attempts": [
         {
           "provider": "gsi",
@@ -5389,8 +5485,25 @@
           "matching_level": 6,
           "address_type": "枝番",
           "government_code": "12236"
+        },
+        {
+          "provider": "manual",
+          "strategy": "verified_override",
+          "query": "https://gundam-official.com/news/i/news/hot-topics/01_17415",
+          "rank": 1,
+          "label": "手動確認済み座標",
+          "lat": 35.8109487,
+          "lng": 140.587239,
+          "score": 100,
+          "reason": "手動確認済み（2026-06-14）"
         }
-      ]
+      ],
+      "override": {
+        "lat": 35.8109487,
+        "lng": 140.587239,
+        "verified_at": "2026-06-14",
+        "official_url": "https://gundam-official.com/news/i/news/hot-topics/01_17415"
+      }
     },
     {
       "id": "48",
@@ -5780,7 +5893,15 @@
           "score": 90,
           "reason": "GSI住所候補（文字一致 100%）"
         }
-      ]
+      ],
+      "override": {
+        "status": "active",
+        "installation_status": "installed",
+        "installed_at": "2025-09-10",
+        "verified_at": "2026-06-14",
+        "official_url": "https://www.city.himeji.lg.jp/kurashi/0000031294.html",
+        "note": "期間限定だったのは展示。西二階町入口へのマンホール設置は2025年9月10日に完了"
+      }
     },
     {
       "id": "52",
@@ -5911,7 +6032,15 @@
           "score": 90,
           "reason": "GSI住所候補（文字一致 100%）"
         }
-      ]
+      ],
+      "override": {
+        "status": "active",
+        "installation_status": "installed",
+        "installed_at": "2025-09-10",
+        "verified_at": "2026-06-14",
+        "official_url": "https://www.city.himeji.lg.jp/kurashi/0000031294.html",
+        "note": "期間限定だったのは展示。二階町入口へのマンホール設置は2025年9月10日に完了"
+      }
     },
     {
       "id": "53",
