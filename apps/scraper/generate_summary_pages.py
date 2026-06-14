@@ -46,6 +46,25 @@ PREFECTURE_ORDER: list[str] = [
     "鹿児島県", "沖縄県",
 ]
 
+PREFECTURE_SLUGS: dict[str, str] = {
+    "北海道": "hokkaido", "青森県": "aomori", "岩手県": "iwate",
+    "宮城県": "miyagi", "秋田県": "akita", "山形県": "yamagata",
+    "福島県": "fukushima", "茨城県": "ibaraki", "栃木県": "tochigi",
+    "群馬県": "gunma", "埼玉県": "saitama", "千葉県": "chiba",
+    "東京都": "tokyo", "神奈川県": "kanagawa", "新潟県": "niigata",
+    "富山県": "toyama", "石川県": "ishikawa", "福井県": "fukui",
+    "山梨県": "yamanashi", "長野県": "nagano", "岐阜県": "gifu",
+    "静岡県": "shizuoka", "愛知県": "aichi", "三重県": "mie",
+    "滋賀県": "shiga", "京都府": "kyoto", "大阪府": "osaka",
+    "兵庫県": "hyogo", "奈良県": "nara", "和歌山県": "wakayama",
+    "鳥取県": "tottori", "島根県": "shimane", "岡山県": "okayama",
+    "広島県": "hiroshima", "山口県": "yamaguchi", "徳島県": "tokushima",
+    "香川県": "kagawa", "愛媛県": "ehime", "高知県": "kochi",
+    "福岡県": "fukuoka", "佐賀県": "saga", "長崎県": "nagasaki",
+    "熊本県": "kumamoto", "大分県": "oita", "宮崎県": "miyazaki",
+    "鹿児島県": "kagoshima", "沖縄県": "okinawa",
+}
+
 REGION_MAP: dict[str, str] = {
     "北海道": "北海道",
     "青森県": "東北", "岩手県": "東北", "宮城県": "東北",
@@ -1655,6 +1674,11 @@ def _map_href(map_base: str, pref_ja: str | None = None) -> str:
     return f"{map_base}?pref={quote(pref_ja)}" if pref_ja else map_base
 
 
+def _prefecture_href(pref_ja: str) -> str:
+    slug = PREFECTURE_SLUGS.get(pref_ja, "")
+    return f"/prefectures/{slug}/" if slug else _map_href("/", pref_ja)
+
+
 def _safe_https_url(value: str | None, fallback: str) -> str:
     candidate = str(value or "").strip()
     try:
@@ -2759,6 +2783,7 @@ def _build_tracking_script(s: dict) -> str:
         image_type: target.dataset.imageType || '',
         content_type: target.dataset.contentType || '',
         content_id: target.dataset.contentId || '',
+        prefecture: target.dataset.prefecture || '',
         destination_hub: target.dataset.destinationHub || '',
         target_url: target.dataset.targetUrl || target.href || ''
       });
@@ -3017,6 +3042,7 @@ def _build_prefecture_info_section(
                 city_count=city_count, species_count=species_count
             )
 
+        page_href = _prefecture_href(pref)
         if pref_trivia:
             open_tag = '<article class="prefecture-info-card local-trivia-card">'
             close_tag = "</article>"
@@ -3053,11 +3079,27 @@ def _build_prefecture_info_section(
                 )
             actions_html = (
                 f'<div class="prefecture-info-actions">'
+                f'<a href="{escape(page_href)}" data-summary-event="summary_prefecture_click" '
+                f'data-prefecture="{escape(PREFECTURE_SLUGS.get(pref, pref))}">'
+                f'詳しく見る</a>'
                 f'{official_html}'
                 f'<a href="{escape(_map_href(s["map_base_href"], pref))}">'
                 f'{escape(s["map_link_text"])}</a>'
                 f'</div>'
             )
+        elif is_ja:
+            open_tag = (
+                f'<a class="prefecture-info-card" '
+                f'href="{escape(page_href)}" data-summary-event="summary_prefecture_click" '
+                f'data-prefecture="{escape(PREFECTURE_SLUGS.get(pref, pref))}">'
+            )
+            close_tag = "</a>"
+            pokemon_html = (
+                f'<span class="prefecture-info-pokemon">'
+                f'{escape(pokemon_label)}</span>'
+            )
+            actions_html = ""
+            fact_html = f'<p class="prefecture-info-fact">{escape(fact)}</p>'
         elif pref_records:
             open_tag = (
                 f'<a class="prefecture-info-card" '
@@ -3402,8 +3444,19 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
     pokemon_ranking_html = _build_pokemon_ranking_section(s, pokemon_stats)
 
     def map_link(pref_ja: str) -> str:
-        href = f'{map_base}?pref={quote(pref_ja)}'
-        return f'<a class="summary-link" href="{escape(href)}">{escape(s["map_link_text"])}</a>'
+        if s.get("pref_key") == "ja":
+            href = _prefecture_href(pref_ja)
+            tracking = (
+                f' data-summary-event="summary_prefecture_click"'
+                f' data-prefecture="{escape(PREFECTURE_SLUGS.get(pref_ja, pref_ja))}"'
+            )
+        else:
+            href = f'{map_base}?pref={quote(pref_ja)}'
+            tracking = ""
+        return (
+            f'<a class="summary-link" href="{escape(href)}"{tracking}>'
+            f'{escape(s["map_link_text"])}</a>'
+        )
 
     ranking_items = "\n        ".join(
         f"<li>"

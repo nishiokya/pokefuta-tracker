@@ -1,0 +1,68 @@
+from __future__ import annotations
+
+import importlib.util
+import tempfile
+import unittest
+from pathlib import Path
+
+MODULE_PATH = Path(__file__).with_name("generate_prefecture_pages.py")
+SPEC = importlib.util.spec_from_file_location("generate_prefecture_pages", MODULE_PATH)
+MODULE = importlib.util.module_from_spec(SPEC)
+assert SPEC and SPEC.loader
+SPEC.loader.exec_module(MODULE)
+
+
+class GeneratePrefecturePagesTest(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.records = MODULE.load_records(MODULE.DEFAULT_MANHOLES)
+        cls.pokemon_slugs = MODULE.load_pokemon_slugs(MODULE.DEFAULT_POKEMON)
+        cls.trivia = MODULE.load_trivia(MODULE.DEFAULT_TRIVIA)
+
+    def test_generates_all_47_prefectures_including_empty(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory)
+            count = MODULE.generate_all(
+                self.records, self.pokemon_slugs, self.trivia, output
+            )
+            self.assertEqual(47, count)
+            self.assertEqual(47, len(list(output.glob("*/index.html"))))
+            gunma = (output / "gunma" / "index.html").read_text(encoding="utf-8")
+            self.assertIn("現在未設置", gunma)
+            self.assertIn("canonical", gunma)
+
+    def test_fukui_page_has_required_sections_and_links(self) -> None:
+        records = [r for r in self.records if r.get("prefecture") == "福井県"]
+        html = MODULE.build_page(
+            "福井県",
+            "fukui",
+            records,
+            MODULE.build_rankings(self.records)["福井県"],
+            self.pokemon_slugs,
+            self.trivia["福井県"],
+        )
+        self.assertIn("福井県のポケふた17枚", html)
+        self.assertIn("福井県の設置マップ", html)
+        self.assertIn("福井県で会えるポケモン", html)
+        self.assertIn("福井県のマンホール一覧", html)
+        self.assertIn("福井県のポケふたトリビア", html)
+        self.assertIn("/pokemon/dragonite/", html)
+        self.assertIn("/manholes/", html)
+        self.assertIn("prefecture_manhole_click", html)
+
+    def test_tied_counts_share_rank(self) -> None:
+        records = [
+            {"id": "1", "status": "active", "prefecture": "青森県"},
+            {"id": "2", "status": "active", "prefecture": "岩手県"},
+            {"id": "3", "status": "active", "prefecture": "宮城県"},
+            {"id": "4", "status": "active", "prefecture": "宮城県"},
+        ]
+        ranks = MODULE.build_rankings(records)
+        self.assertEqual(1, ranks["宮城県"])
+        self.assertEqual(2, ranks["青森県"])
+        self.assertEqual(2, ranks["岩手県"])
+        self.assertIsNone(ranks["秋田県"])
+
+
+if __name__ == "__main__":
+    unittest.main()

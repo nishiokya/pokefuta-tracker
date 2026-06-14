@@ -48,6 +48,25 @@ PREFECTURE_ORDER: list[str] = [
     "鹿児島県", "沖縄県",
 ]
 
+PREFECTURE_URL_SLUGS: dict[str, str] = {
+    "北海道": "hokkaido", "青森県": "aomori", "岩手県": "iwate",
+    "宮城県": "miyagi", "秋田県": "akita", "山形県": "yamagata",
+    "福島県": "fukushima", "茨城県": "ibaraki", "栃木県": "tochigi",
+    "群馬県": "gunma", "埼玉県": "saitama", "千葉県": "chiba",
+    "東京都": "tokyo", "神奈川県": "kanagawa", "新潟県": "niigata",
+    "富山県": "toyama", "石川県": "ishikawa", "福井県": "fukui",
+    "山梨県": "yamanashi", "長野県": "nagano", "岐阜県": "gifu",
+    "静岡県": "shizuoka", "愛知県": "aichi", "三重県": "mie",
+    "滋賀県": "shiga", "京都府": "kyoto", "大阪府": "osaka",
+    "兵庫県": "hyogo", "奈良県": "nara", "和歌山県": "wakayama",
+    "鳥取県": "tottori", "島根県": "shimane", "岡山県": "okayama",
+    "広島県": "hiroshima", "山口県": "yamaguchi", "徳島県": "tokushima",
+    "香川県": "kagawa", "愛媛県": "ehime", "高知県": "kochi",
+    "福岡県": "fukuoka", "佐賀県": "saga", "長崎県": "nagasaki",
+    "熊本県": "kumamoto", "大分県": "oita", "宮崎県": "miyazaki",
+    "鹿児島県": "kagoshima", "沖縄県": "okinawa",
+}
+
 REGION_MAP: dict[str, str] = {
     "北海道": "北海道",
     "青森県": "東北", "岩手県": "東北", "宮城県": "東北",
@@ -88,6 +107,11 @@ def _filter_pokemons(pokemons: object) -> list[str]:
 def _pref_slug(pref: str) -> str:
     idx = PREFECTURE_ORDER.index(pref) + 1 if pref in PREFECTURE_ORDER else 0
     return f"pref{idx:02d}"
+
+
+def _pref_url(pref: str) -> str:
+    slug = PREFECTURE_URL_SLUGS.get(pref, "")
+    return f"{BASE_URL}prefectures/{slug}/" if slug else f"{BASE_URL}summary/"
 
 
 def _haversine(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
@@ -244,7 +268,7 @@ def gen_prefecture_rank_candidates(stats: dict) -> list[dict]:
             "id": f"{_pref_slug(pref)}-rank{i:02d}",
             "type": "prefecture_rank",
             "title": f"{pref}のポケふた（{count}枚・全国{i}位）",
-            "url": f"{BASE_URL}summary/",
+            "url": _pref_url(pref),
             "hashtags": ["#ポケふた", "#ポケモンマンホール"],
             "imageType": "summary_prefecture_rank",
             "source": "summary",
@@ -294,7 +318,7 @@ def gen_rare_area_candidates(stats: dict) -> list[dict]:
             "id": f"{_pref_slug(pref)}-rare",
             "type": "rare_area",
             "title": f"{pref}のポケふたはわずか{count}枚",
-            "url": f"{BASE_URL}summary/",
+            "url": _pref_url(pref),
             "hashtags": ["#ポケふた", "#ポケモンマンホール"],
             "imageType": "summary_rare_area",
             "source": "summary",
@@ -578,7 +602,7 @@ def gen_pref_trivia_candidates(trivia_data: list[dict]) -> list[dict]:
                 "id": f"pref-trivia-{trivia['id']}",
                 "type": "pref_trivia",
                 "title": f"{prefecture}のポケふたトリビア",
-                "url": f"{BASE_URL}summary/",
+                "url": _pref_url(prefecture),
                 "hashtags": ["#ポケふた", "#ポケモンマンホール"],
                 "imageType": "summary_trivia",
                 "source": "pref_trivia",
