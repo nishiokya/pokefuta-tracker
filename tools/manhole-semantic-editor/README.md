@@ -42,6 +42,17 @@ docs/*.ndjson
 | 6 | titleを確認する | `confidence` / `verified_at` を更新 |
 | 7 | Admin: 特定マンホール編集 | ID指定で直接編集 |
 | 8 | Admin: 一括編集 | 条件フィルタで複数件を一括変更（要確認テキスト入力） |
+| 9 | 近くのマンホールを探す | Manhole Map投稿をポケふたからの距離順に閲覧 |
+
+## Manhole Map データ
+
+「近くのマンホールを探す」は、事前に生成した読み取り専用JSON-LDを使います。
+
+```bash
+python3 apps/tools/import_manholemap.py
+```
+
+生成先の `dataset/manholemap.json` と都道府県別キャッシュはgitignore対象です。
 
 ## PR を作成する
 

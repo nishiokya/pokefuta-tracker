@@ -9,6 +9,7 @@ import { AssignAllTagsTask } from './tasks/assignAllTags/AssignAllTagsTask'
 import { AdminBulkEditTask } from './tasks/adminBulkEdit/AdminBulkEditTask'
 import { TagReverseLookupTask } from './tasks/tagReverseLookup/TagReverseLookupTask'
 import { MichinekiNearbyTask } from './tasks/michinekiNearby/MichinekiNearbyTask'
+import { ManholeMapNearbyTask } from './tasks/manholeMapNearby/ManholeMapNearbyTask'
 
 type ActiveTask = 'home' | TaskType
 
@@ -20,6 +21,7 @@ const TASK_MENU: Array<{ group: string; items: Array<{ id: TaskType; label: stri
       { id: 'assign_all_tags', label: '全タグを付ける', icon: '🏷', desc: '場所・駅・観光 すべてのタグ＋OSM連携・施設名設定' },
       { id: 'tag_reverse_lookup', label: 'タグ別マンホール一覧', icon: '🔍', desc: 'タグごとに設定済みマンホールを逆引き' },
       { id: 'michineki_nearby', label: '道の駅 300m圏内', icon: '🏪', desc: '道の駅と300m以内のポケふたを一覧・紐づけ' },
+      { id: 'manholemap_nearby', label: '近くのマンホールを探す', icon: '🗺', desc: 'Manhole Map投稿を距離・説明から調査' },
     ],
   },
   {
@@ -147,6 +149,8 @@ export default function App() {
         return <TagReverseLookupTask titles={titles} records={records} onNavigateToEdit={handleNavigateToEdit} />
       case 'michineki_nearby':
         return <MichinekiNearbyTask {...commonProps} titles={titles} onSaveMany={handleSavePatches} />
+      case 'manholemap_nearby':
+        return <ManholeMapNearbyTask records={records} />
       default:
         return <Home onSelectTask={navigate} />
     }
