@@ -11,6 +11,7 @@ export type TaskType =
   | 'tag_reverse_lookup'
   | 'michineki_nearby'
   | 'manholemap_nearby'
+  | 'gmanhole_geocoder'
 
 export type OperationType =
   | 'set_municipality_url'

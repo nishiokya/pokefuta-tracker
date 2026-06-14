@@ -147,16 +147,24 @@ def parse_detail(detail_url: str, html: str, logger: logging.Logger) -> Optional
             city = pm.group(2)
             break
 
-    # 住所候補: prefecture + city を含み数字があり、かつ『マンホール』行ではない
-    for t in texts:
-        if prefecture and city and prefecture in t and city in t and "マンホール" not in t and _addr_re.search(t):
-            address = t
-            break
+    # 公式ページの住所欄を優先する。都道府県が省略された住所もあるため、
+    # ページ全体の文字列探索は後方互換の fallback としてのみ使う。
+    map_address = soup.select_one(".map_add")
+    if map_address and map_address.get_text(strip=True):
+        address = map_address.get_text(" ", strip=True)
+    else:
+        for t in texts:
+            if prefecture and city and prefecture in t and city in t and "マンホール" not in t and _addr_re.search(t):
+                address = t
+                break
 
     # タイトル: ページ先頭付近の h3 が場所名 (例: 芸術館通り歩道)
     h3 = soup.find("h3")
     if h3 and h3.get_text(strip=True):
         title = h3.get_text(strip=True)
+    if title.startswith("Warning:") or not prefecture or not city:
+        logger.info("skip invalid source page id=%s title=%s", pid, title)
+        return None
     if not title:
         # fallback: 最初の住所候補 or 固定文字
         title = address or "ガンダムマンホール"
@@ -380,7 +388,7 @@ def main():
         # 全角数字→半角 / 全角-hyphen様 -> - / 余分な空白除去
         trans = str.maketrans({
             '０':'0','１':'1','２':'2','３':'3','４':'4','５':'5','６':'6','７':'7','８':'8','９':'9',
-            '－':'-','―':'-','ー':'-'
+            '－':'-','―':'-'
         })
         addr = addr.translate(trans)
         # 連続ハイフン縮約
@@ -400,7 +408,13 @@ def main():
         provider = args.geocode_provider
         if provider == 'gsi':
             # 国土地理院 (GSI) AddressSearch API: https://msearch.gsi.go.jp/address-search/AddressSearch?q=<addr>
-            q = f"{prefecture}{city}{norm_addr}"  # シンプル連結
+            # address に都道府県・市町村が含まれる場合は重複させない。
+            # 旧実装の重複クエリは自治体代表点への誤フォールバックを起こした。
+            q = norm_addr
+            if prefecture not in q:
+                q = prefecture + q
+            if city and city not in q:
+                q = prefecture + city + norm_addr
             try:
                 resp = requests.get(
                     'https://msearch.gsi.go.jp/address-search/AddressSearch',

@@ -43,6 +43,19 @@ docs/*.ndjson
 | 7 | Admin: 特定マンホール編集 | ID指定で直接編集 |
 | 8 | Admin: 一括編集 | 条件フィルタで複数件を一括変更（要確認テキスト入力） |
 | 9 | 近くのマンホールを探す | Manhole Map投稿をポケふたからの距離順に閲覧 |
+| 10 | ガンダム座標を確認する | 採用座標、旧座標、全候補、問い合わせ・フォールバック履歴を監査 |
+
+## ガンダム座標監査
+
+`dataset/gmanhole_geocode_audit.json` は読み取り専用で表示します。再生成:
+
+```bash
+python3 apps/tools/geocode_gmanhole.py
+```
+
+候補は国土地理院、Yahoo!ジオコーダー、Nominatimから取得します。Yahooは
+`AddressMatchingLevel` が街区・地番以上の候補だけを優先採用し、粗い結果は
+他プロバイダーへフォールバックします。
 
 ## Manhole Map データ
 
