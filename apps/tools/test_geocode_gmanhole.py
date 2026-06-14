@@ -5,8 +5,9 @@ from pathlib import Path
 
 MODULE_PATH = Path(__file__).with_name("geocode_gmanhole.py")
 SPEC = importlib.util.spec_from_file_location("geocode_gmanhole", MODULE_PATH)
+if SPEC is None or SPEC.loader is None:
+    raise ImportError(f"Unable to load geocoder module from {MODULE_PATH}")
 geocoder = importlib.util.module_from_spec(SPEC)
-assert SPEC and SPEC.loader
 SPEC.loader.exec_module(geocoder)
 
 

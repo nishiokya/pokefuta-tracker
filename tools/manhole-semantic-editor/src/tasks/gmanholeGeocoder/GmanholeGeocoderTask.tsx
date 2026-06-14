@@ -60,6 +60,16 @@ function statusLabel(status: GeocodeAuditRecord['status']) {
   return '無効ページ'
 }
 
+function candidatePopup(candidate: GeocodeCandidate): HTMLElement {
+  const container = document.createElement('div')
+  const title = document.createElement('strong')
+  title.textContent = `${candidate.provider} / ${candidate.strategy}`
+  container.append(title, document.createElement('br'))
+  container.append(document.createTextNode(candidate.label), document.createElement('br'))
+  container.append(document.createTextNode(`score=${candidate.score}`))
+  return container
+}
+
 export function GmanholeGeocoderTask() {
   const [audit, setAudit] = useState<GeocodeAudit | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -149,9 +159,7 @@ export function GmanholeGeocoderTask() {
           ),
           zIndexOffset: isSelected ? 500 : 100,
         },
-      ).addTo(map).bindPopup(
-        `<b>${candidate.provider} / ${candidate.strategy}</b><br>${candidate.label}<br>score=${candidate.score}`,
-      )
+      ).addTo(map).bindPopup(candidatePopup(candidate))
       layersRef.current.push(marker)
       points.push([candidate.lat, candidate.lng])
     })
