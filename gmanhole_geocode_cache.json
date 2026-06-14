@@ -18,13 +18,13 @@
     "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "北海道|天塩町|北海道天塩郡天塩町字サラキシ5807番地4": {
-    "lat": 44.984165,
-    "lng": 141.820526,
-    "provider": "gsi",
-    "strategy": "address_without_number",
-    "score": 75,
-    "query": "北海道天塩郡天塩町字サラキシ",
-    "updated_at": "2026-06-14T07:14:36.247995Z"
+    "lat": 44.87680906,
+    "lng": 141.74445238,
+    "provider": "manual",
+    "strategy": "verified_override",
+    "score": 100,
+    "query": "https://www.teshiotown.hokkaido.jp/?page_id=6984",
+    "updated_at": "2026-06-14T07:41:02.182089Z"
   },
   "北海道|天塩町|北海道天塩郡天塩町新開通4丁目7227番地の2": {
     "lat": 44.88457188,
@@ -137,20 +137,20 @@
   "佐賀県|有田町|佐賀県西松浦郡有田町上幸平一丁目1258-1地先": {
     "lat": 33.191868,
     "lng": 129.901443,
-    "provider": "gsi",
-    "strategy": "official_address",
-    "score": 70,
-    "query": "佐賀県西松浦郡有田町上幸平一丁目1258-1地先",
-    "updated_at": "2026-06-14T07:14:36.247995Z"
+    "provider": "manual",
+    "strategy": "verified_override",
+    "score": 100,
+    "query": "https://gundam-official.com/news/i/news/hot-topics/01_12392",
+    "updated_at": "2026-06-14T08:06:18.709844Z"
   },
   "佐賀県|有田町|佐賀県西松浦郡有田町泉山一丁目380-1": {
-    "lat": 33.194229,
-    "lng": 129.908661,
-    "provider": "gsi",
-    "strategy": "official_address",
-    "score": 71,
-    "query": "佐賀県西松浦郡有田町泉山一丁目380-1",
-    "updated_at": "2026-06-14T07:14:36.247995Z"
+    "lat": 33.1938532,
+    "lng": 129.9097407,
+    "provider": "manual",
+    "strategy": "verified_override",
+    "score": 100,
+    "query": "https://www.arita.jp/spot/post_16.html",
+    "updated_at": "2026-06-14T08:09:01.875335Z"
   },
   "北海道|遠軽町|北海道紋別郡遠軽町岩見通南1丁目1番地2": {
     "lat": 44.05914159,
@@ -189,13 +189,13 @@
     "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "愛知県|豊田市|愛知県豊田市足助町宮ノ後27番地3": {
-    "lat": 35.135353,
-    "lng": 137.318207,
-    "provider": "gsi",
-    "strategy": "title_locality",
-    "score": 81,
-    "query": "愛知県豊田市足助支所",
-    "updated_at": "2026-06-14T07:14:36.247995Z"
+    "lat": 35.1344529,
+    "lng": 137.3126789,
+    "provider": "manual",
+    "strategy": "verified_override",
+    "score": 100,
+    "query": "https://www.city.toyota.aichi.jp/kurashi/jyogesuidou/1062795/1062800/1062803/1058093/index.html",
+    "updated_at": "2026-06-14T08:13:39.343291Z"
   },
   "愛知県|豊田市|愛知県豊田市喜多町2丁目144番地": {
     "lat": 35.087315,
@@ -360,13 +360,13 @@
     "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "山梨県|甲府市|山梨県甲府市丸の内一丁目1番 「アシストエンジニアリングよっちゃばれ広場」南側歩道": {
-    "lat": 35.66654822,
-    "lng": 138.56948971,
-    "provider": "yahoo",
-    "strategy": "official_address",
-    "score": 85,
-    "query": "山梨県甲府市丸の内一丁目1番 「アシストエンジニアリングよっちゃばれ広場」南側歩道",
-    "updated_at": "2026-06-14T07:14:36.247995Z"
+    "lat": 35.6666756,
+    "lng": 138.5680228,
+    "provider": "manual",
+    "strategy": "verified_override",
+    "score": 100,
+    "query": "https://www.kitagucchi.com/what-nouth.html",
+    "updated_at": "2026-06-14T08:27:20.206404Z"
   },
   "愛媛県|松山市|愛媛県松山市道後湯之町20番21地先 道後商店街": {
     "lat": 33.85222813,
@@ -396,22 +396,22 @@
     "updated_at": "2026-06-14T07:14:36.247995Z"
   },
   "長野県|小諸市|長野県小諸市大字大久保1100番地 あぐりの湯こもろ": {
-    "lat": 36.32372471,
-    "lng": 138.39462184,
-    "provider": "yahoo",
-    "strategy": "official_address",
-    "score": 94,
-    "query": "長野県小諸市大字大久保1100番地 あぐりの湯こもろ",
-    "updated_at": "2026-06-14T07:14:36.247995Z"
+    "lat": 36.3247637,
+    "lng": 138.3964692,
+    "provider": "manual",
+    "strategy": "verified_override",
+    "score": 100,
+    "query": "https://agri-yu.com/",
+    "updated_at": "2026-06-14T08:15:22.892610Z"
   },
   "千葉県|香取市|千葉県香取市長岡1828-1 橘ふれあい公園内": {
-    "lat": 35.81011188,
-    "lng": 140.58770359,
-    "provider": "yahoo",
-    "strategy": "official_address",
-    "score": 95,
-    "query": "千葉県香取市長岡1828-1 橘ふれあい公園内",
-    "updated_at": "2026-06-14T07:14:36.247995Z"
+    "lat": 35.8109487,
+    "lng": 140.587239,
+    "provider": "manual",
+    "strategy": "verified_override",
+    "score": 100,
+    "query": "https://gundam-official.com/news/i/news/hot-topics/01_17415",
+    "updated_at": "2026-06-14T08:03:54.576181Z"
   },
   "千葉県|香取市|千葉県香取市小見川4872-22 くろべ運動公園内": {
     "lat": 35.85843116,

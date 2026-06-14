@@ -105,6 +105,10 @@ export default function App() {
     }
   }, [titles])
 
+  const handleExternalPatchSaved = useCallback((patch: SemanticPatch) => {
+    setSessionPatches(prev => [...prev, patch])
+  }, [])
+
   async function handleCreatePR() {
     setPrRunning(true)
     setPrStatus(null)
@@ -154,7 +158,7 @@ export default function App() {
       case 'manholemap_nearby':
         return <ManholeMapNearbyTask records={records} />
       case 'gmanhole_geocoder':
-        return <GmanholeGeocoderTask />
+        return <GmanholeGeocoderTask onPatchSaved={handleExternalPatchSaved} />
       default:
         return <Home onSelectTask={navigate} />
     }

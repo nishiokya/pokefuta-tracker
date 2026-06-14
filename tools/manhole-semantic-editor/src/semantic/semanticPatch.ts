@@ -21,10 +21,11 @@ export type OperationType =
   | 'set_title'
   | 'set_confidence'
   | 'set_address'
+  | 'set_gmanhole_override'
 
 export type ConfidenceLevel = 'low' | 'medium' | 'high' | 'verified'
 
-export type PatchTarget = 'manholes' | 'city_links' | 'islands' | 'lakes'
+export type PatchTarget = 'manholes' | 'gmanholes' | 'city_links' | 'islands' | 'lakes'
 
 export type CityLinkEntry = {
   prefecture: string

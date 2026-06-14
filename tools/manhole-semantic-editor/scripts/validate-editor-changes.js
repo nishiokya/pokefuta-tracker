@@ -7,8 +7,24 @@ import { fileURLToPath } from 'node:url'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const REPO_ROOT = path.resolve(__dirname, '../../..')
 const PATCHES_PATH = path.join(__dirname, '../workspace/changes.ndjson')
+const GMANHOLE_ALLOWED = new Set([
+  'apps/tools/geocode_gmanhole.py',
+  'apps/tools/test_geocode_gmanhole.py',
+  'dataset/gmanhole_overrides.json',
+  'dataset/gmanhole_geocode_audit.json',
+  'docs/gmanhole.ndjson',
+  'gmanhole_geocode_cache.json',
+  'tools/manhole-semantic-editor/README.md',
+  'tools/manhole-semantic-editor/scripts/create-pr.js',
+  'tools/manhole-semantic-editor/scripts/validate-editor-changes.js',
+  'tools/manhole-semantic-editor/src/App.tsx',
+  'tools/manhole-semantic-editor/src/semantic/semanticPatch.ts',
+  'tools/manhole-semantic-editor/src/tasks/gmanholeGeocoder/GmanholeGeocoderTask.tsx',
+  'tools/manhole-semantic-editor/vite.config.ts',
+])
 
 let hasError = false
+let patches = []
 
 function fail(msg) {
   console.error('❌', msg)
@@ -30,7 +46,7 @@ if (!fs.existsSync(PATCHES_PATH)) {
     const lines = raw.split('\n').filter(Boolean)
     let parseOk = true
     for (const [i, line] of lines.entries()) {
-      try { JSON.parse(line) } catch {
+      try { patches.push(JSON.parse(line)) } catch {
         fail(`changes.ndjson の ${i + 1} 行目が不正な JSON です`)
         parseOk = false
       }
@@ -47,9 +63,11 @@ try {
     ...allChanged.split('\n').filter(Boolean),
     ...staged.split('\n').filter(Boolean),
   ])]
+  const gmanholeMode = patches.length > 0 && patches.every(p => p.taskType === 'gmanhole_geocoder')
 
   const forbidden = changedFiles.filter(f =>
-    f.match(/^docs\/.*\.ndjson$/) || f.match(/^apps\/scraper\/.*\.ndjson$/)
+    (f.match(/^docs\/.*\.ndjson$/) && !(gmanholeMode && f === 'docs/gmanhole.ndjson'))
+    || f.match(/^apps\/scraper\/.*\.ndjson$/)
   )
   if (forbidden.length > 0) {
     fail(`クローラー管轄ファイルが変更されています:\n  ${forbidden.join('\n  ')}`)
@@ -58,15 +76,15 @@ try {
   }
 
   const titlesChanged = changedFiles.some(f => f === 'dataset/manhole_titles.json')
-  if (!titlesChanged) {
+  if (!gmanholeMode && !titlesChanged) {
     console.warn('⚠️  dataset/manhole_titles.json に変更がありません（PR作成はスキップされます）')
-  } else {
+  } else if (!gmanholeMode) {
     ok('dataset/manhole_titles.json が変更されています')
   }
 
   // Warn about unexpected files
   const unexpected = changedFiles.filter(f =>
-    f !== 'dataset/manhole_titles.json' &&
+    (gmanholeMode ? !GMANHOLE_ALLOWED.has(f) : f !== 'dataset/manhole_titles.json') &&
     !f.match(/^docs\/.*\.ndjson$/) &&
     !f.match(/^apps\/scraper\/.*\.ndjson$/)
   )

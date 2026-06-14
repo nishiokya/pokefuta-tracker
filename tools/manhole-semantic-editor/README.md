@@ -47,7 +47,9 @@ docs/*.ndjson
 
 ## ガンダム座標監査
 
-`dataset/gmanhole_geocode_audit.json` は読み取り専用で表示します。再生成:
+`dataset/gmanhole_geocode_audit.json` は監査データとして表示します。画面から強制座標、
+公式・確認元URL、確認メモを保存すると `dataset/gmanhole_overrides.json` が更新され、
+監査データと `docs/gmanhole.ndjson` に反映されます。再生成:
 
 ```bash
 python3 apps/tools/geocode_gmanhole.py
@@ -69,7 +71,9 @@ python3 apps/tools/import_manholemap.py
 
 ## PR を作成する
 
-セッション中の変更は `workspace/changes.ndjson` に記録されます。
+セッション中の変更は `workspace/changes.ndjson` に記録されます。ガンダム座標の
+強制変更も、保存成功時に操作ログへ追加され、サイドバーの変更件数とPR作成対象へ
+反映されます。
 
 サイドバーの「PR を作成する」ボタンを押すか：
 

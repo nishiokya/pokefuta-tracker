@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
+import type { SemanticPatch } from '../../semantic/semanticPatch'
 
 type Coordinate = { lat: number; lng: number }
 
@@ -33,6 +34,17 @@ type GeocodeAuditRecord = {
   address: string
   detail_url?: string
   old_coordinate: Coordinate | null
+  override?: {
+    status?: string
+    installation_status?: string
+    installed_at?: string
+    verified_at?: string
+    official_url?: string
+    source_url?: string
+    note?: string
+    lat?: number
+    lng?: number
+  } | null
   selected: GeocodeCandidate | null
   selection_reason: string
   old_distance_km?: number | null
@@ -43,6 +55,50 @@ type GeocodeAuditRecord = {
 type GeocodeAudit = {
   generated_at: string
   records: GeocodeAuditRecord[]
+}
+
+type SortOrder = 'suspicious' | 'score' | 'distance' | 'id'
+
+function reviewPriority(record: GeocodeAuditRecord): { score: number; reasons: string[] } {
+  if (!record.selected) {
+    return {
+      score: record.status === 'unresolved' ? 200 : 0,
+      reasons: record.status === 'unresolved' ? ['採用候補なし'] : [],
+    }
+  }
+  if (record.selected.provider === 'manual' && record.selected.strategy === 'verified_override') {
+    return { score: -1, reasons: ['手動確認済み'] }
+  }
+
+  let score = Math.max(0, 100 - record.selected.score)
+  const reasons: string[] = []
+  if (record.selected.score < 80) reasons.push(`低スコア ${record.selected.score}`)
+
+  const strategyWeights: Record<string, number> = {
+    address_without_number: 30,
+    title_locality: 35,
+    place_name: 40,
+  }
+  const strategyWeight = strategyWeights[record.selected.strategy] ?? 0
+  if (strategyWeight > 0) {
+    score += strategyWeight
+    reasons.push(`曖昧な検索 ${record.selected.strategy}`)
+  }
+
+  const distance = record.old_distance_km ?? 0
+  if (distance >= 10) {
+    score += 50
+    reasons.push(`旧座標から ${distance.toFixed(1)}km`)
+  } else if (distance >= 1) {
+    score += 30
+    reasons.push(`旧座標から ${distance.toFixed(1)}km`)
+  } else if (distance >= 0.3) {
+    score += 15
+    reasons.push(`旧座標から ${distance.toFixed(1)}km`)
+  }
+
+  if (reasons.length === 0) reasons.push('目立つ警告なし')
+  return { score, reasons }
 }
 
 function markerIcon(label: string, color: string, size = 24) {
@@ -70,15 +126,28 @@ function candidatePopup(candidate: GeocodeCandidate): HTMLElement {
   return container
 }
 
-export function GmanholeGeocoderTask() {
+type Props = {
+  onPatchSaved?: (patch: SemanticPatch) => void
+}
+
+export function GmanholeGeocoderTask({ onPatchSaved }: Props) {
   const [audit, setAudit] = useState<GeocodeAudit | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [search, setSearch] = useState('')
   const [status, setStatus] = useState<'all' | GeocodeAuditRecord['status']>('selected')
+  const [sortOrder, setSortOrder] = useState<SortOrder>('suspicious')
   const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [overrideLat, setOverrideLat] = useState('')
+  const [overrideLng, setOverrideLng] = useState('')
+  const [overrideOfficialUrl, setOverrideOfficialUrl] = useState('')
+  const [overrideNote, setOverrideNote] = useState('')
+  const [draftCoordinate, setDraftCoordinate] = useState<Coordinate | null>(null)
+  const [saveState, setSaveState] = useState<'idle' | 'saving' | 'saved'>('idle')
+  const [saveError, setSaveError] = useState<string | null>(null)
   const mapDivRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<L.Map | null>(null)
   const layersRef = useRef<L.Layer[]>([])
+  const draftMarkerRef = useRef<L.Marker | null>(null)
 
   useEffect(() => {
     fetch('/__editor/data/gmanhole-geocode-audit')
@@ -88,7 +157,10 @@ export function GmanholeGeocoderTask() {
       })
       .then(data => {
         setAudit(data)
-        setSelectedId(data.records.find(record => record.selected)?.id ?? data.records[0]?.id ?? null)
+        const mostSuspicious = data.records
+          .filter(record => record.status === 'selected')
+          .sort((left, right) => reviewPriority(right).score - reviewPriority(left).score)[0]
+        setSelectedId(mostSuspicious?.id ?? data.records[0]?.id ?? null)
       })
       .catch(reason => setError(reason instanceof Error ? reason.message : String(reason)))
   }, [])
@@ -99,8 +171,18 @@ export function GmanholeGeocoderTask() {
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap contributors',
     }).addTo(map)
+    map.on('click', event => {
+      const lat = Number(event.latlng.lat.toFixed(7))
+      const lng = Number(event.latlng.lng.toFixed(7))
+      setOverrideLat(String(lat))
+      setOverrideLng(String(lng))
+      setDraftCoordinate({ lat, lng })
+      setSaveState('idle')
+      setSaveError(null)
+    })
     mapRef.current = map
     return () => {
+      draftMarkerRef.current = null
       map.remove()
       mapRef.current = null
     }
@@ -109,16 +191,75 @@ export function GmanholeGeocoderTask() {
   const records = useMemo(() => {
     if (!audit) return []
     const needle = search.trim().toLowerCase()
-    return audit.records.filter(record => {
+    const filtered = audit.records.filter(record => {
       if (status !== 'all' && record.status !== status) return false
       if (!needle) return true
       return `${record.id} ${record.title} ${record.prefecture ?? ''} ${record.city ?? ''} ${record.address}`
         .toLowerCase()
         .includes(needle)
     })
-  }, [audit, search, status])
+    return filtered.sort((left, right) => {
+      if (sortOrder === 'suspicious') {
+        return reviewPriority(right).score - reviewPriority(left).score
+          || Number(left.id) - Number(right.id)
+      }
+      if (sortOrder === 'score') {
+        return (left.selected?.score ?? -1) - (right.selected?.score ?? -1)
+          || Number(left.id) - Number(right.id)
+      }
+      if (sortOrder === 'distance') {
+        return (right.old_distance_km ?? -1) - (left.old_distance_km ?? -1)
+          || Number(left.id) - Number(right.id)
+      }
+      return Number(left.id) - Number(right.id)
+    })
+  }, [audit, search, sortOrder, status])
 
   const selected = audit?.records.find(record => record.id === selectedId) ?? null
+
+  useEffect(() => {
+    if (!selected) return
+    setOverrideLat(String(selected.override?.lat ?? selected.selected?.lat ?? ''))
+    setOverrideLng(String(selected.override?.lng ?? selected.selected?.lng ?? ''))
+    setOverrideOfficialUrl(selected.override?.official_url ?? selected.override?.source_url ?? '')
+    setOverrideNote(selected.override?.note ?? '')
+    setDraftCoordinate(null)
+    setSaveState('idle')
+    setSaveError(null)
+  }, [selectedId, selected?.id])
+
+  async function saveOverride() {
+    if (!selected) return
+    setSaveState('saving')
+    setSaveError(null)
+    try {
+      const response = await fetch('/__editor/data/gmanhole-override', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: selected.id,
+          lat: overrideLat,
+          lng: overrideLng,
+          official_url: overrideOfficialUrl,
+          note: overrideNote,
+        }),
+      })
+      const result = await response.json() as {
+        ok?: boolean
+        audit?: GeocodeAudit
+        patch?: SemanticPatch
+        error?: string
+      }
+      if (!response.ok || !result.audit) throw new Error(result.error ?? `HTTP ${response.status}`)
+      setAudit(result.audit)
+      setDraftCoordinate(null)
+      setSaveState('saved')
+      if (result.patch) onPatchSaved?.(result.patch)
+    } catch (reason) {
+      setSaveState('idle')
+      setSaveError(reason instanceof Error ? reason.message : String(reason))
+    }
+  }
 
   useEffect(() => {
     const map = mapRef.current
@@ -168,6 +309,19 @@ export function GmanholeGeocoderTask() {
     else if (points.length > 1) map.fitBounds(L.latLngBounds(points).pad(0.2), { maxZoom: 17 })
   }, [selected])
 
+  useEffect(() => {
+    const map = mapRef.current
+    draftMarkerRef.current?.remove()
+    draftMarkerRef.current = null
+    if (!map || !draftCoordinate) return
+    draftMarkerRef.current = L.marker(
+      [draftCoordinate.lat, draftCoordinate.lng],
+      { icon: markerIcon('仮', '#0891b2', 30), zIndexOffset: 700 },
+    ).addTo(map).bindPopup(
+      `保存前の座標<br>${draftCoordinate.lat.toFixed(7)}, ${draftCoordinate.lng.toFixed(7)}`,
+    ).openPopup()
+  }, [draftCoordinate])
+
   if (error) return <div className="error-banner">監査データの読み込みに失敗しました: {error}</div>
   if (!audit) return <div>ジオコーダー監査データを読み込んでいます…</div>
 
@@ -195,6 +349,12 @@ export function GmanholeGeocoderTask() {
           <option value="unresolved">未解決</option>
           <option value="invalid_source_page">無効ページ</option>
         </select>
+        <select value={sortOrder} onChange={event => setSortOrder(event.target.value as SortOrder)}>
+          <option value="suspicious">要確認度が高い順</option>
+          <option value="score">採用scoreが低い順</option>
+          <option value="distance">旧座標から遠い順</option>
+          <option value="id">ID順</option>
+        </select>
         <span style={{ color: '#6b7280' }}>{records.length}件</span>
       </div>
 
@@ -202,7 +362,7 @@ export function GmanholeGeocoderTask() {
         <div style={{ maxHeight: 'calc(100vh - 190px)', overflow: 'auto', background: 'white', border: '1px solid #e5e7eb', borderRadius: 8 }}>
           <table className="table">
             <thead>
-              <tr><th>ID</th><th>設置場所</th><th>状態</th><th>採用</th></tr>
+              <tr><th>ID</th><th>設置場所</th><th>状態 / 要確認</th><th>採用</th></tr>
             </thead>
             <tbody>
               {records.map(record => (
@@ -216,7 +376,15 @@ export function GmanholeGeocoderTask() {
                     <strong>{record.title}</strong>
                     <div style={{ color: '#6b7280', fontSize: 11 }}>{record.address}</div>
                   </td>
-                  <td>{statusLabel(record.status)}</td>
+                  <td>
+                    <div>{statusLabel(record.status)}</div>
+                    <strong style={{ color: reviewPriority(record).score >= 40 ? '#dc2626' : '#6b7280' }}>
+                      {reviewPriority(record).score > 0 ? reviewPriority(record).score : '—'}
+                    </strong>
+                    <div style={{ color: '#6b7280', fontSize: 11 }}>
+                      {reviewPriority(record).reasons.join(' / ')}
+                    </div>
+                  </td>
                   <td>
                     {record.selected
                       ? <><strong>{record.selected.provider}</strong><div style={{ fontSize: 11 }}>score {record.selected.score}</div></>
@@ -230,6 +398,9 @@ export function GmanholeGeocoderTask() {
 
         <div>
           <div ref={mapDivRef} style={{ height: 360, border: '1px solid #e5e7eb', borderRadius: 8, marginBottom: 12 }} />
+          <div style={{ color: '#475569', fontSize: 12, marginTop: -6, marginBottom: 12 }}>
+            地図をクリックすると、緯度・経度欄へ反映して「仮」マーカーを表示します。保存ボタンを押すまで確定されません。
+          </div>
           {selected && (
             <div style={{ background: 'white', border: '1px solid #e5e7eb', borderRadius: 8, padding: 16 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
@@ -238,6 +409,88 @@ export function GmanholeGeocoderTask() {
                   <div style={{ color: '#6b7280', marginTop: 4 }}>{selected.address}</div>
                 </div>
                 {selected.detail_url && <a href={selected.detail_url} target="_blank" rel="noreferrer">公式ページ</a>}
+              </div>
+
+              {selected.override && (
+                <div style={{ marginTop: 12, padding: 10, borderRadius: 6, background: '#ecfeff', border: '1px solid #a5f3fc' }}>
+                  <strong>手動管理データ</strong>
+                  <div style={{ marginTop: 4 }}>
+                    表示: {selected.override.status ?? '未指定'}
+                    {' / '}設置状態: {selected.override.installation_status ?? '未指定'}
+                    {selected.override.installed_at && ` / 設置日: ${selected.override.installed_at}`}
+                    {selected.override.verified_at && ` / 確認日: ${selected.override.verified_at}`}
+                  </div>
+                  {selected.override.note && <div style={{ marginTop: 4 }}>{selected.override.note}</div>}
+                  {(selected.override.official_url || selected.override.source_url) && (
+                    <div style={{ marginTop: 4 }}>
+                      <a href={selected.override.official_url ?? selected.override.source_url} target="_blank" rel="noreferrer">公式・確認元URLを開く</a>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <div style={{ marginTop: 12, padding: 12, borderRadius: 6, background: '#f8fafc', border: '1px solid #cbd5e1' }}>
+                <strong>座標を強制変更</strong>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginTop: 8 }}>
+                  <label>
+                    <div style={{ fontSize: 12, color: '#475569' }}>緯度</div>
+                    <input
+                      type="number"
+                      step="any"
+                      min="-90"
+                      max="90"
+                      value={overrideLat}
+                      onChange={event => setOverrideLat(event.target.value)}
+                      style={{ width: '100%' }}
+                    />
+                  </label>
+                  <label>
+                    <div style={{ fontSize: 12, color: '#475569' }}>経度</div>
+                    <input
+                      type="number"
+                      step="any"
+                      min="-180"
+                      max="180"
+                      value={overrideLng}
+                      onChange={event => setOverrideLng(event.target.value)}
+                      style={{ width: '100%' }}
+                    />
+                  </label>
+                </div>
+                <label style={{ display: 'block', marginTop: 8 }}>
+                  <div style={{ fontSize: 12, color: '#475569' }}>公式・確認元URL</div>
+                  <input
+                    type="url"
+                    placeholder="https://..."
+                    value={overrideOfficialUrl}
+                    onChange={event => setOverrideOfficialUrl(event.target.value)}
+                    style={{ width: '100%' }}
+                  />
+                </label>
+                <label style={{ display: 'block', marginTop: 8 }}>
+                  <div style={{ fontSize: 12, color: '#475569' }}>確認メモ</div>
+                  <input
+                    value={overrideNote}
+                    onChange={event => setOverrideNote(event.target.value)}
+                    placeholder="現地写真や公式ページで確認した内容"
+                    style={{ width: '100%' }}
+                  />
+                </label>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 10 }}>
+                  <button type="button" onClick={saveOverride} disabled={saveState === 'saving'}>
+                    {saveState === 'saving' ? '保存・反映中…' : '強制座標を保存して反映'}
+                  </button>
+                  {saveState === 'saved' && <span style={{ color: '#15803d' }}>保存しました</span>}
+                  {saveError && <span style={{ color: '#dc2626' }}>{saveError}</span>}
+                </div>
+              </div>
+
+              <div style={{ marginTop: 12, padding: 10, borderRadius: 6, background: '#fff7ed', border: '1px solid #fed7aa' }}>
+                <strong>要確認度 {reviewPriority(selected).score > 0 ? reviewPriority(selected).score : '—'}</strong>
+                <div style={{ marginTop: 4 }}>{reviewPriority(selected).reasons.join(' / ')}</div>
+                <div style={{ marginTop: 4, color: '#6b7280', fontSize: 11 }}>
+                  低スコア、住所省略・名称検索、旧座標からの距離をもとにした目視確認用の順位です。
+                </div>
               </div>
 
               <div style={{ marginTop: 12, padding: 10, borderRadius: 6, background: selected.selected ? '#f0fdf4' : '#fef2f2' }}>
