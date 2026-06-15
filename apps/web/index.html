@@ -293,8 +293,6 @@
   </script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"
-    integrity="sha384-pmjIAcz2bAn0xukfxADbZIb3t8oRT9Sv0rvO+BR5Csr6Dhqq+nZs59P0pPKQJkEV" crossorigin="" />
   <link rel="stylesheet" href="./assets/theme.css" />
   <link rel="stylesheet" href="./assets/map.css" />
   <link rel="stylesheet" href="./assets/pokefuta-map.css?v=20260614-hero-toggle" />
@@ -480,12 +478,6 @@
           <span class="badge-label" style="font-weight:600;">選択中:</span> <span class="badge-value"></span>
           <button type="button" class="badge-clear" aria-label="選択解除" onclick="clearPrefectureSelection()">×</button>
         </div>
-        <section id="prefecture-spots-panel" class="prefecture-spots-panel" hidden>
-          <div class="section-title-row">
-            <h4 id="prefecture-spots-heading">県内のポケふた</h4>
-          </div>
-          <div id="prefecture-spots-list" class="prefecture-spots-list"></div>
-        </section>
         <div id="prefecture-table-wrapper" class="prefecture-card-list" aria-describedby="pref-table-desc">
           <p id="pref-table-desc" class="sr-only">都道府県ごとのポケふた数と公式サイトリンク</p>
           <div id="prefecture-table-body"></div>
@@ -528,8 +520,6 @@
   </footer>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"
-    integrity="sha384-eXVCORTRlv4FUUgS/xmOyr66XBVraen8ATNLMESp92FKXLAMiKkerixTiBvXriZr" crossorigin=""></script>
   <script>
     const pokefutaIcon = L.icon({
       iconUrl: './assets/pokefuta-marker.svg',
@@ -1627,35 +1617,13 @@
         map.setView([data.lat, data.lng], Math.max(map.getZoom(), 15), { animate: false });
         marker.openPopup();
       };
-      if (markerLayer && typeof markerLayer.zoomToShowLayer === 'function') {
-        markerLayer.zoomToShowLayer(marker, openPopup);
-      } else {
-        openPopup();
-      }
+      openPopup();
       return true;
     }
 
     function initMarkerLayer() {
       if (markerLayer && map.hasLayer(markerLayer)) map.removeLayer(markerLayer);
-      if (L.markerClusterGroup) {
-        markerLayer = L.markerClusterGroup({
-          showCoverageOnHover: false,
-          removeOutsideVisibleBounds: false,
-          disableClusteringAtZoom: 8,
-          maxClusterRadius: 48,
-          iconCreateFunction(cluster) {
-            const count = cluster.getChildCount();
-            const size = count >= 100 ? 'large' : count >= 20 ? 'medium' : 'small';
-            return L.divIcon({
-              html: `<span>${count}</span>`,
-              className: `pokefuta-cluster pokefuta-cluster--${size}`,
-              iconSize: L.point(size === 'large' ? 58 : size === 'medium' ? 50 : 42, size === 'large' ? 58 : size === 'medium' ? 50 : 42)
-            });
-          }
-        });
-      } else {
-        markerLayer = L.layerGroup();
-      }
+      markerLayer = L.layerGroup();
       markerLayer.addTo(map);
     }
 
@@ -1929,7 +1897,6 @@
         const rowPref = row.dataset.prefecture;
         row.classList.toggle('selected', rowPref === selectedPrefecture && selectedPrefecture);
       });
-      renderPrefectureSpots(selectedPrefecture);
       recomputeVisibility();
     }
 
@@ -1961,7 +1928,6 @@
       selectedPrefecture = '';
       filterByPrefectureFromTable('');
       showSelectedPrefectureBadge();
-      renderPrefectureSpots('');
     }
 
     function togglePrefectureSelection(prefecture) {
@@ -2020,7 +1986,7 @@
         if (d.id && !prefectureThumbnails[pref]) {
           prefectureThumbnails[pref] = [];
         }
-        if (d.id && prefectureThumbnails[pref] && prefectureThumbnails[pref].length < 8) {
+        if (d.id && prefectureThumbnails[pref]) {
           prefectureThumbnails[pref].push({
             id: d.id,
             title: d.title || 'ポケふた',
@@ -2066,7 +2032,7 @@
             <span class="${countBadgeClass}">${count}枚</span>
           </div>
           <div class="prefecture-card-gallery" aria-label="${escapeHtml(prefecture)}のマンホール写真">
-            ${thumbnailItems.length ? thumbnailItems.map(item => `
+            ${thumbnailItems.length ? thumbnailItems.slice(0, 8).map(item => `
               <button type="button" class="prefecture-card-thumb" data-manhole-id="${escapeHtml(item.id)}" aria-label="${escapeHtml(item.title)}の詳細を開く" title="${escapeHtml(item.title)}の詳細を開く">
                 <img src="${item.imageUrl}" alt="" loading="lazy" decoding="async" onerror="this.closest('.prefecture-card-thumb').classList.add('is-missing'); this.remove();">
               </button>
@@ -2087,7 +2053,6 @@
             filterByPrefectureFromTable(prefecture);
             showSelectedPrefectureBadge();
             zoomToPrefecture(prefecture);
-            focusSelectedPrefecturePanel();
           };
           button.addEventListener('click', selectPrefecture);
           button.addEventListener('keydown', event => {
