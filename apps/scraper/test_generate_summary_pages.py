@@ -148,6 +148,36 @@ class DiscoveryHubTests(unittest.TestCase):
         self.assertNotIn("countTemplate.replace('{count}', candidates.length)", source)
         self.assertNotIn("pokemon: reason", source)
 
+    def test_map_theme_directory_features_nearby_gundam_manholes(self):
+        for filename in ("index.html", "index.template.html"):
+            with self.subTest(filename=filename):
+                source = (summary.ROOT / "apps/web" / filename).read_text(
+                    encoding="utf-8"
+                )
+                self.assertIn(
+                    "label: 'ガンダムマンホール',",
+                    source,
+                )
+                self.assertIn(
+                    "description: 'ガンダムマンホールまで約500m以内のポケふた',",
+                    source,
+                )
+                self.assertIn(
+                    "const FEATURED_TAGS = ['roadside', 'remote_island', "
+                    "'world_heritage', 'near_gundam_manhole', 'seaside'];",
+                    source,
+                )
+                self.assertNotIn(
+                    "const FEATURED_TAGS = ['roadside', 'remote_island', "
+                    "'station_front'",
+                    source,
+                )
+                self.assertIn(
+                    'aria-label="${description} ${count}枚" '
+                    'title="${description}"',
+                    source,
+                )
+
     def test_generated_template_keeps_popup_copy_localized(self):
         template = (summary.ROOT / "apps/web/index.template.html").read_text(
             encoding="utf-8"

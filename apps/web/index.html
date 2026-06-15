@@ -450,7 +450,7 @@
         <div class="section-title-row">
           <h2 id="tag-directory-heading">テーマでポケふた巡り</h2>
         </div>
-        <p class="tag-directory-desc">道の駅・世界遺産・離島・海沿いなど、旅の目的になるポケふたをテーマ別に探せます。</p>
+        <p class="tag-directory-desc">道の駅・世界遺産・離島・ガンダムマンホールなど、旅の目的になるポケふたをテーマ別に探せます。</p>
         <p class="tag-directory-subdesc">タグをタップすると地図上の表示を絞り込みます。もう一度タップで解除。</p>
         <div id="tag-directory-chips" class="tag-directory-chips" aria-label="テーマ別タグ"></div>
         <div id="tag-directory-more" class="tag-directory-chips tag-directory-chips--secondary" aria-label="その他のテーマタグ" hidden></div>
@@ -681,8 +681,8 @@
     var activeTagFilter = null;  // タグフィルタ（null = 全件）
     var showTagDirectory = false;
     const TAG_DIRECTORY_MIN_COUNT = 5;  // この件数未満のタグはチップに表示しない
-    const TAG_PRIORITY = ['roadside', 'world_heritage', 'remote_island', 'seaside', 'tourism', 'station_front', 'food', 'museum', 'history', 'rail_access_good'];
-    const FEATURED_TAGS = ['roadside', 'remote_island', 'station_front', 'world_heritage', 'seaside'];
+    const TAG_PRIORITY = ['roadside', 'world_heritage', 'remote_island', 'near_gundam_manhole', 'seaside', 'tourism', 'station_front', 'food', 'museum', 'history', 'rail_access_good'];
+    const FEATURED_TAGS = ['roadside', 'remote_island', 'world_heritage', 'near_gundam_manhole', 'seaside'];
 
     const TAG_META = {
       seaside:          { emoji: '🌊', label: '海沿い' },
@@ -702,6 +702,11 @@
       history:          { emoji: '⛩', label: '史跡・名所' },
       food:             { emoji: '🍜', label: 'グルメ・食の名所' },
       world_heritage:   { emoji: '🌐', label: '世界遺産' },
+      near_gundam_manhole: {
+        emoji: '🤖',
+        label: 'ガンダムマンホール',
+        description: 'ガンダムマンホールまで約500m以内のポケふた',
+      },
     };
 
     function getOverallPanelMediaQuery() {
@@ -2132,7 +2137,8 @@
       const secondaryTags = sorted.filter(([tag]) => !FEATURED_TAGS.includes(tag));
       function makeChip(tag, count) {
         const meta = TAG_META[tag];
-        return `<button class="tag-chip" data-tag="${tag}" data-count="${count}" aria-pressed="false">${meta.emoji} ${meta.label} <span class="tag-count">${count}枚</span></button>`;
+        const description = meta.description || meta.label;
+        return `<button class="tag-chip" data-tag="${tag}" data-count="${count}" aria-label="${description} ${count}枚" title="${description}" aria-pressed="false">${meta.emoji} ${meta.label} <span class="tag-count">${count}枚</span></button>`;
       }
       container.innerHTML = primaryTags.map(([tag, count]) => makeChip(tag, count)).join('');
       if (moreContainer) {
