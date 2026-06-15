@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-06-14T08:53:19.000336Z",
+  "generated_at": "2026-06-15T11:21:16.026825Z",
   "source": "pokefuta photo table",
   "image": {
     "r2_public_base_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image"
   },
-  "count": 127,
+  "count": 131,
   "photos": {
     "1": {
       "manhole_id": 1,
@@ -155,6 +155,21 @@
       "shot_at": "2026-01-04T08:13:06+00:00",
       "comment": null,
       "display_name": "ロイ"
+    },
+    "54": {
+      "manhole_id": 54,
+      "photo_id": "0bc53f77-f438-4647-ae1f-4be7b1e8f6b5",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/3e7c4903-938e-4de6-a0b6-d2ad03bfde37.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/3e7c4903-938e-4de6-a0b6-d2ad03bfde37.jpg",
+      "storage_key": "photos/original/2026/06/3e7c4903-938e-4de6-a0b6-d2ad03bfde37.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1006655,
+      "created_at": "2026-06-14T13:25:08.57604+00:00",
+      "shot_at": "2026-06-13T15:35:26+00:00",
+      "comment": null,
+      "display_name": "Sky134z"
     },
     "59": {
       "manhole_id": 59,
@@ -410,6 +425,51 @@
       "shot_at": "2025-03-09T04:17:31+00:00",
       "comment": "大津市は、公園南側",
       "display_name": "tako"
+    },
+    "125": {
+      "manhole_id": 125,
+      "photo_id": "ab2974a9-d2d1-4b72-86fe-553f54851dbd",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/5f4ecc14-bcf3-457a-afe8-e9284ea3523e.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/5f4ecc14-bcf3-457a-afe8-e9284ea3523e.jpg",
+      "storage_key": "photos/original/2026/06/5f4ecc14-bcf3-457a-afe8-e9284ea3523e.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1446158,
+      "created_at": "2026-06-14T13:27:20.73437+00:00",
+      "shot_at": "2026-06-12T02:46:02+00:00",
+      "comment": null,
+      "display_name": "Sky134z"
+    },
+    "133": {
+      "manhole_id": 133,
+      "photo_id": "249ed8d5-f36d-4bfa-b091-e73da208b95a",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/38987fcb-880b-408a-99d6-6c02db21e357.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/38987fcb-880b-408a-99d6-6c02db21e357.jpg",
+      "storage_key": "photos/original/2026/06/38987fcb-880b-408a-99d6-6c02db21e357.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1470013,
+      "created_at": "2026-06-14T13:28:32.693357+00:00",
+      "shot_at": "2026-06-12T02:23:57+00:00",
+      "comment": null,
+      "display_name": "Sky134z"
+    },
+    "135": {
+      "manhole_id": 135,
+      "photo_id": "b5c38bd6-a4b2-4fac-a890-be45ef8803f5",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/ecdd7585-b8bf-4697-95e0-755f027d2877.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/ecdd7585-b8bf-4697-95e0-755f027d2877.jpg",
+      "storage_key": "photos/original/2026/06/ecdd7585-b8bf-4697-95e0-755f027d2877.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1492191,
+      "created_at": "2026-06-14T13:28:00.862032+00:00",
+      "shot_at": "2026-06-12T01:43:14+00:00",
+      "comment": null,
+      "display_name": "Sky134z"
     },
     "140": {
       "manhole_id": 140,
@@ -1920,6 +1980,16 @@
         "content": "rわr",
         "created_at": "2026-05-15T11:55:00.013485+00:00",
         "updated_at": "2026-05-15T11:55:00.013485+00:00",
+        "display_name": "tako"
+      }
+    ],
+    "220": [
+      {
+        "id": "c11cbefe-e9fb-4e85-aa43-01db5a56cf93",
+        "manhole_id": 220,
+        "content": "ちょっとわかりにくいかも",
+        "created_at": "2026-06-14T15:35:15.644682+00:00",
+        "updated_at": "2026-06-14T15:35:15.644682+00:00",
         "display_name": "tako"
       }
     ],
