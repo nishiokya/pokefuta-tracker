@@ -1948,7 +1948,7 @@
             <span class="${countBadgeClass}">${count}枚</span>
           </div>
           <div class="prefecture-card-gallery" aria-label="${escapeHtml(prefecture)}のマンホール写真">
-            ${thumbnailItems.length ? thumbnailItems.map(item => `
+            ${thumbnailItems.length ? thumbnailItems.slice(0, 8).map(item => `
               <button type="button" class="prefecture-card-thumb" data-manhole-id="${escapeHtml(item.id)}" aria-label="${escapeHtml(item.title)}の詳細を開く" title="${escapeHtml(item.title)}の詳細を開く">
                 <img src="${item.imageUrl}" alt="" loading="lazy" decoding="async" onerror="this.closest('.prefecture-card-thumb').classList.add('is-missing'); this.remove();">
               </button>
