@@ -677,9 +677,10 @@ body.pokefuta-map-page {
 
 .pokefuta-map-page .prefecture-card-gallery {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
-  padding: 0 12px 12px 64px;
-  overflow: hidden;
+  padding: 4px 12px 12px;
+  overflow: visible;
 }
 
 .pokefuta-map-page .prefecture-card-thumb {
@@ -1665,7 +1666,7 @@ body.pokefuta-map-page {
 
   .pokefuta-map-page .prefecture-card-gallery {
     gap: 6px;
-    padding: 0 10px 8px 54px;
+    padding: 4px 10px 10px;
   }
 }
 

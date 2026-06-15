@@ -474,12 +474,6 @@
           <span class="badge-label" style="font-weight:600;">選択中:</span> <span class="badge-value"></span>
           <button type="button" class="badge-clear" aria-label="選択解除" onclick="clearPrefectureSelection()">×</button>
         </div>
-        <section id="prefecture-spots-panel" class="prefecture-spots-panel" hidden>
-          <div class="section-title-row">
-            <h4 id="prefecture-spots-heading">県内のポケふた</h4>
-          </div>
-          <div id="prefecture-spots-list" class="prefecture-spots-list"></div>
-        </section>
         <div id="prefecture-table-wrapper" class="prefecture-card-list" aria-describedby="pref-table-desc">
           <p id="pref-table-desc" class="sr-only">都道府県ごとのポケふた数と公式サイトリンク</p>
           <div id="prefecture-table-body"></div>
@@ -1553,25 +1547,7 @@
 
     function initMarkerLayer() {
       if (markerLayer && map.hasLayer(markerLayer)) map.removeLayer(markerLayer);
-      if (L.markerClusterGroup) {
-        markerLayer = L.markerClusterGroup({
-          showCoverageOnHover: false,
-          removeOutsideVisibleBounds: false,
-          disableClusteringAtZoom: 8,
-          maxClusterRadius: 48,
-          iconCreateFunction(cluster) {
-            const count = cluster.getChildCount();
-            const size = count >= 100 ? 'large' : count >= 20 ? 'medium' : 'small';
-            return L.divIcon({
-              html: `<span>${count}</span>`,
-              className: `pokefuta-cluster pokefuta-cluster--${size}`,
-              iconSize: L.point(size === 'large' ? 58 : size === 'medium' ? 50 : 42, size === 'large' ? 58 : size === 'medium' ? 50 : 42)
-            });
-          }
-        });
-      } else {
-        markerLayer = L.layerGroup();
-      }
+      markerLayer = L.layerGroup();
       markerLayer.addTo(map);
     }
 
@@ -1845,7 +1821,6 @@
         const rowPref = row.dataset.prefecture;
         row.classList.toggle('selected', rowPref === selectedPrefecture && selectedPrefecture);
       });
-      renderPrefectureSpots(selectedPrefecture);
       recomputeVisibility();
     }
 
@@ -1877,7 +1852,6 @@
       selectedPrefecture = '';
       filterByPrefectureFromTable('');
       showSelectedPrefectureBadge();
-      renderPrefectureSpots('');
     }
 
     function togglePrefectureSelection(prefecture) {
@@ -1936,7 +1910,7 @@
         if (d.id && !prefectureThumbnails[pref]) {
           prefectureThumbnails[pref] = [];
         }
-        if (d.id && prefectureThumbnails[pref] && prefectureThumbnails[pref].length < 8) {
+        if (d.id && prefectureThumbnails[pref]) {
           prefectureThumbnails[pref].push({
             id: d.id,
             title: d.title || 'ポケふた',
@@ -2003,7 +1977,6 @@
             filterByPrefectureFromTable(prefecture);
             showSelectedPrefectureBadge();
             zoomToPrefecture(prefecture);
-            focusSelectedPrefecturePanel();
           };
           button.addEventListener('click', selectPrefecture);
           button.addEventListener('keydown', event => {
