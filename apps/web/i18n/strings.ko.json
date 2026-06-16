@@ -50,7 +50,13 @@
     "manholeTitleInfix": " 포케후타 | ",
     "manholeDescTemplate": "{place}에 있는 {pokemon} 포케후타. 지도에서 위치와 사진을 확인하세요.",
     "manholeDescNoPlaceTemplate": "일본에 있는 {pokemon} 포케후타. 지도에서 위치와 사진을 확인하세요.",
-    "manholeKeywordsEnd": ["포켓몬 맨홀", "Pokemon Manhole", "일본", "여행", "지도"],
+    "manholeKeywordsEnd": [
+      "포켓몬 맨홀",
+      "Pokemon Manhole",
+      "일본",
+      "여행",
+      "지도"
+    ],
     "jsonLdDescTemplate": "{place}의 포켓몬 맨홀(포케후타).",
     "jsonLdDescNoPlace": "일본의 포켓몬 맨홀(포케후타).",
     "pokemonJoiner": " / ",
@@ -99,12 +105,36 @@
       "freshDate": "{date}에 도착한 새 사진",
       "countTemplate": "일본 전국 {count}개",
       "uniqueTemplate": "{pokemon} 포케후타는 일본 전국에 1개",
-      "ctas": {"fresh": "지도에서 사진 보기 →", "travel": "특집 보기 →", "rare": "랭킹 보기 →"},
-      "categories": {
-        "travel": {"label": "여행 떠나기"}, "rare": {"label": "희귀 포케후타"}, "fresh": {"label": "새로운 발견"}
+      "ctas": {
+        "fresh": "지도에서 사진 보기 →",
+        "travel": "특집 보기 →",
+        "rare": "랭킹 보기 →"
       },
-      "travelThemes": {"remote_island": "외딴섬의 포케후타", "roadside": "미치노에키의 포케후타", "station_front": "역 앞의 포케후타", "world_heritage": "세계유산 근처의 포케후타"},
-      "rareThemes": {"unique_pokemon": "일본에서 오직 이곳뿐", "north_end": "일본 최북단 포케후타", "south_end": "일본 최남단 포케후타", "east_end": "일본 최동단 포케후타", "west_end": "일본 최서단 포케후타", "lone": "외딴 비경의 포케후타"}
+      "categories": {
+        "travel": {
+          "label": "여행 떠나기"
+        },
+        "rare": {
+          "label": "희귀 포케후타"
+        },
+        "fresh": {
+          "label": "새로운 발견"
+        }
+      },
+      "travelThemes": {
+        "remote_island": "외딴섬의 포케후타",
+        "roadside": "미치노에키의 포케후타",
+        "station_front": "역 앞의 포케후타",
+        "world_heritage": "세계유산 근처의 포케후타"
+      },
+      "rareThemes": {
+        "unique_pokemon": "일본에서 오직 이곳뿐",
+        "north_end": "일본 최북단 포케후타",
+        "south_end": "일본 최남단 포케후타",
+        "east_end": "일본 최동단 포케후타",
+        "west_end": "일본 최서단 포케후타",
+        "lone": "외딴 비경의 포케후타"
+      }
     },
     "titleLabels": {
       "north_end": "일본 최북단 포케후타",
@@ -152,5 +182,33 @@
       "detailPageCta": "상세 보기",
       "prefectureSite": " 사이트"
     }
-  }
+  },
+  "APPBAR_PREFIX": "일본 ",
+  "APPBAR_SUFFIX": " 개",
+  "TOP_H1": "일본 전국 포케후타 탐색",
+  "TOP_INTRO": "일본 47개 도도부현의 <b>포케후타（포켓몬 맨홀）</b>를 수록했습니다. 거주지 근처나 여행지에서 <b>피카츄·이브이·라프라스</b> 등 좋아하는 포켓몬 맨홀을 찾아보세요.",
+  "STAT_POKEFUTA": "개 포케후타",
+  "STAT_PREF": "개 도도부현",
+  "STAT_POKEMON": "종 포켓몬",
+  "SEC2_TITLE": "오늘은 어떤 포케후타를 만나러 갈까요?",
+  "SEC2_DAILY": "매일 업데이트",
+  "SEC3_TITLE": "지도로 찾기",
+  "SEC3_MAP_TITLE": "일본 지도에서 근처 포케후타 찾기",
+  "SEC3_MAP_SUB": "도도부현 핀을 탭하면 전체화면 지도가 열립니다",
+  "SEC3_MAP_CTA": "🗺 전체화면 지도 열기",
+  "SEC4_TITLE": "도도부현으로 찾기",
+  "SEC4_PREF_LABEL": "47 도도부현",
+  "SEC4_SHOW_ALL": "전체 보기 (47 도도부현)",
+  "SEC5_TITLE": "테마로 찾기",
+  "SEC5_THEME_LABEL": "테마로 찾기",
+  "SEC5_THEME_MORE": "지도에서 탐색 →",
+  "TAG_ROADSIDE": "🛤 도로 휴게소",
+  "TAG_ISLAND": "🏝 섬",
+  "TAG_WORLD_HERITAGE": "🌐 세계유산",
+  "TAG_GUNDAM": "건담 맨홀",
+  "TAG_SEASIDE": "🌊 해변",
+  "TAG_TOURISM": "🗺 관광지",
+  "TAG_HISTORY": "⛩ 역사 명소",
+  "SEC5_POKEMON_LABEL": "인기 포켓몬으로 찾기",
+  "SEC5_POKEMON_MORE": "전체 →"
 }

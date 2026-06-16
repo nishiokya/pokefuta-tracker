@@ -50,7 +50,13 @@
     "manholeTitleInfix": " Pokéfuta | ",
     "manholeDescTemplate": "{pokemon} Pokéfuta in {place}. See location and photos on the map.",
     "manholeDescNoPlaceTemplate": "{pokemon} Pokéfuta in Japan. See location and photos on the map.",
-    "manholeKeywordsEnd": ["Pokemon Manhole", "Pokemon Manhole Cover", "Japan", "travel", "map"],
+    "manholeKeywordsEnd": [
+      "Pokemon Manhole",
+      "Pokemon Manhole Cover",
+      "Japan",
+      "travel",
+      "map"
+    ],
     "jsonLdDescTemplate": "Pokémon manhole cover (Pokéfuta) in {place}.",
     "jsonLdDescNoPlace": "Pokémon manhole cover (Pokéfuta) in Japan.",
     "pokemonJoiner": " / ",
@@ -99,12 +105,36 @@
       "freshDate": "A new photo from {date}",
       "countTemplate": "{count} across Japan",
       "uniqueTemplate": "{pokemon} appears on only one Pokéfuta in Japan",
-      "ctas": {"fresh": "View on the map →", "travel": "Explore the feature →", "rare": "View the ranking →"},
-      "categories": {
-        "travel": {"label": "Start a journey"}, "rare": {"label": "Find a rarity"}, "fresh": {"label": "Fresh discovery"}
+      "ctas": {
+        "fresh": "View on the map →",
+        "travel": "Explore the feature →",
+        "rare": "View the ranking →"
       },
-      "travelThemes": {"remote_island": "Pokéfuta on remote islands", "roadside": "Pokéfuta at roadside stations", "station_front": "Pokéfuta by train stations", "world_heritage": "Pokéfuta near World Heritage sites"},
-      "rareThemes": {"unique_pokemon": "Found only here in Japan", "north_end": "Japan's northernmost Pokéfuta", "south_end": "Japan's southernmost Pokéfuta", "east_end": "Japan's easternmost Pokéfuta", "west_end": "Japan's westernmost Pokéfuta", "lone": "Pokéfuta in far-flung places"}
+      "categories": {
+        "travel": {
+          "label": "Start a journey"
+        },
+        "rare": {
+          "label": "Find a rarity"
+        },
+        "fresh": {
+          "label": "Fresh discovery"
+        }
+      },
+      "travelThemes": {
+        "remote_island": "Pokéfuta on remote islands",
+        "roadside": "Pokéfuta at roadside stations",
+        "station_front": "Pokéfuta by train stations",
+        "world_heritage": "Pokéfuta near World Heritage sites"
+      },
+      "rareThemes": {
+        "unique_pokemon": "Found only here in Japan",
+        "north_end": "Japan's northernmost Pokéfuta",
+        "south_end": "Japan's southernmost Pokéfuta",
+        "east_end": "Japan's easternmost Pokéfuta",
+        "west_end": "Japan's westernmost Pokéfuta",
+        "lone": "Pokéfuta in far-flung places"
+      }
     },
     "titleLabels": {
       "north_end": "Northernmost Pokéfuta in Japan",
@@ -152,5 +182,33 @@
       "detailPageCta": "View details",
       "prefectureSite": " Site"
     }
-  }
+  },
+  "APPBAR_PREFIX": "Japan ",
+  "APPBAR_SUFFIX": " covers",
+  "TOP_H1": "Explore Pokéfuta across Japan",
+  "TOP_INTRO": "Covers all <b>Pokéfuta (Pokémon manholes)</b> in Japan’s 47 prefectures. Find your favourite Pokémon’s manhole cover — <b>Pikachu, Eevee, Lapras</b> and more — near your home or travel destination.",
+  "STAT_POKEFUTA": "Pokéfuta",
+  "STAT_PREF": "Prefectures",
+  "STAT_POKEMON": "Pokémon",
+  "SEC2_TITLE": "Which Pokéfuta will you visit today?",
+  "SEC2_DAILY": "Updated daily",
+  "SEC3_TITLE": "Search by Map",
+  "SEC3_MAP_TITLE": "Find Pokéfuta near you on Japan’s map",
+  "SEC3_MAP_SUB": "Tap a prefecture pin to open the full-screen map",
+  "SEC3_MAP_CTA": "🗺 Open full-screen map",
+  "SEC4_TITLE": "Search by Prefecture",
+  "SEC4_PREF_LABEL": "All 47 Prefectures",
+  "SEC4_SHOW_ALL": "Show all (47 Prefectures)",
+  "SEC5_TITLE": "Search by Theme",
+  "SEC5_THEME_LABEL": "Browse by Theme",
+  "SEC5_THEME_MORE": "Explore on Map →",
+  "TAG_ROADSIDE": "🛤 Roadside Stations",
+  "TAG_ISLAND": "🏝 Remote Islands",
+  "TAG_WORLD_HERITAGE": "🌐 World Heritage",
+  "TAG_GUNDAM": "Gundam MH",
+  "TAG_SEASIDE": "🌊 Seaside",
+  "TAG_TOURISM": "🗺 Sightseeing",
+  "TAG_HISTORY": "⛩ Historic Sites",
+  "SEC5_POKEMON_LABEL": "Search by Popular Pokémon",
+  "SEC5_POKEMON_MORE": "All →"
 }

@@ -50,7 +50,13 @@
     "manholeTitleInfix": " Pokéfuta | ",
     "manholeDescTemplate": "{place}的{pokemon} Pokéfuta。在地圖上確認地點與照片。",
     "manholeDescNoPlaceTemplate": "日本的{pokemon} Pokéfuta。在地圖上確認地點與照片。",
-    "manholeKeywordsEnd": ["神奇寶貝人孔蓋", "Pokemon Manhole", "日本", "旅遊", "地圖"],
+    "manholeKeywordsEnd": [
+      "神奇寶貝人孔蓋",
+      "Pokemon Manhole",
+      "日本",
+      "旅遊",
+      "地圖"
+    ],
     "jsonLdDescTemplate": "{place}的神奇寶貝人孔蓋（Pokéfuta）。",
     "jsonLdDescNoPlace": "日本的神奇寶貝人孔蓋（Pokéfuta）。",
     "pokemonJoiner": "・",
@@ -99,12 +105,36 @@
       "freshDate": "{date} 收到的新照片",
       "countTemplate": "日本全國共 {count} 枚",
       "uniqueTemplate": "{pokemon} 的 Pokéfuta 在日本全國僅此一枚",
-      "ctas": {"fresh": "在地圖上看照片 →", "travel": "查看特輯 →", "rare": "查看排行 →"},
-      "categories": {
-        "travel": {"label": "踏上旅程"}, "rare": {"label": "尋找稀有"}, "fresh": {"label": "最新發現"}
+      "ctas": {
+        "fresh": "在地圖上看照片 →",
+        "travel": "查看特輯 →",
+        "rare": "查看排行 →"
       },
-      "travelThemes": {"remote_island": "離島上的 Pokéfuta", "roadside": "道之驛的 Pokéfuta", "station_front": "車站前的 Pokéfuta", "world_heritage": "世界遺產附近的 Pokéfuta"},
-      "rareThemes": {"unique_pokemon": "日本全國僅此一處", "north_end": "日本最北的 Pokéfuta", "south_end": "日本最南的 Pokéfuta", "east_end": "日本最東的 Pokéfuta", "west_end": "日本最西的 Pokéfuta", "lone": "秘境中的 Pokéfuta"}
+      "categories": {
+        "travel": {
+          "label": "踏上旅程"
+        },
+        "rare": {
+          "label": "尋找稀有"
+        },
+        "fresh": {
+          "label": "最新發現"
+        }
+      },
+      "travelThemes": {
+        "remote_island": "離島上的 Pokéfuta",
+        "roadside": "道之驛的 Pokéfuta",
+        "station_front": "車站前的 Pokéfuta",
+        "world_heritage": "世界遺產附近的 Pokéfuta"
+      },
+      "rareThemes": {
+        "unique_pokemon": "日本全國僅此一處",
+        "north_end": "日本最北的 Pokéfuta",
+        "south_end": "日本最南的 Pokéfuta",
+        "east_end": "日本最東的 Pokéfuta",
+        "west_end": "日本最西的 Pokéfuta",
+        "lone": "秘境中的 Pokéfuta"
+      }
     },
     "titleLabels": {
       "north_end": "日本最北 Pokéfuta",
@@ -152,5 +182,33 @@
       "detailPageCta": "查看詳情",
       "prefectureSite": "　網站"
     }
-  }
+  },
+  "APPBAR_PREFIX": "日本 ",
+  "APPBAR_SUFFIX": " 個",
+  "TOP_H1": "探索全日本神奇寶貝人孔蓋",
+  "TOP_INTRO": "收錄日本47個都道府縣的<b>神奇寶貝人孔蓋（Pokéfuta）</b>。無論在住家附近還是旅遊途中，都能找到<b>皮卡丘・伊布・拉普拉斯</b>等喜愛的神奇寶貝人孔蓋。",
+  "STAT_POKEFUTA": "個人孔蓋",
+  "STAT_PREF": "個都道府縣",
+  "STAT_POKEMON": "種神奇寶貝",
+  "SEC2_TITLE": "今天想找哪個神奇寶貝人孔蓋？",
+  "SEC2_DAILY": "每日更新",
+  "SEC3_TITLE": "地圖搜尋",
+  "SEC3_MAP_TITLE": "在日本地圖上找附近的人孔蓋",
+  "SEC3_MAP_SUB": "點擊縣市圖釘，開啟全螢幕地圖",
+  "SEC3_MAP_CTA": "🗺 開啟全螢幕地圖",
+  "SEC4_TITLE": "依縣市搜尋",
+  "SEC4_PREF_LABEL": "47都道府縣",
+  "SEC4_SHOW_ALL": "顯示全部（47都道府縣）",
+  "SEC5_TITLE": "依主題搜尋",
+  "SEC5_THEME_LABEL": "依主題搜尋",
+  "SEC5_THEME_MORE": "在地圖上探索 →",
+  "TAG_ROADSIDE": "🛤 道路驛站",
+  "TAG_ISLAND": "🏝 離島",
+  "TAG_WORLD_HERITAGE": "🌐 世界遺產",
+  "TAG_GUNDAM": "鋼彈人孔",
+  "TAG_SEASIDE": "🌊 海邊",
+  "TAG_TOURISM": "🗺 觀光景點",
+  "TAG_HISTORY": "⛩ 史蹟名所",
+  "SEC5_POKEMON_LABEL": "依人氣神奇寶貝搜尋",
+  "SEC5_POKEMON_MORE": "全部 →"
 }
