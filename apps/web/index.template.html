@@ -192,6 +192,7 @@
       <a class="map-gateway-card" href="%%BASE_PATH%%map.html" onclick="trackEvent('click_map_gateway')">
         <div id="mini-map" class="map-gateway-minimap" aria-hidden="true"></div>
         <span class="map-gateway-badge">🗺 %%APPBAR_PREFIX%%<b id="map-badge-count">—</b>%%APPBAR_SUFFIX%%</span>
+        <span class="map-gateway-attr">© OpenStreetMap © CARTO</span>
         <div class="map-gateway-overlay">
           <div class="map-gateway-title">%%SEC3_MAP_TITLE%%</div>
           <div class="map-gateway-sub">%%SEC3_MAP_SUB%%</div>
@@ -355,6 +356,45 @@
       setText('hero-small-place-' + i, s.place);
     });
 
+    // ── Mini-map pin coords + shared renderer (called from fetch OR map init) ──
+    var PREF_COORDS = {
+      '北海道':[43.2,142.8],'青森県':[40.8,140.7],'岩手県':[39.7,141.2],'宮城県':[38.4,140.8],
+      '秋田県':[39.7,140.1],'山形県':[38.5,140.3],'福島県':[37.4,140.5],'茨城県':[36.3,140.3],
+      '栃木県':[36.5,139.9],'群馬県':[36.4,138.9],'埼玉県':[36.0,139.4],'千葉県':[35.6,140.1],
+      '東京都':[35.7,139.7],'神奈川県':[35.5,139.5],'新潟県':[37.6,139.0],'富山県':[36.7,137.2],
+      '石川県':[36.6,136.6],'福井県':[36.1,136.2],'山梨県':[35.7,138.6],'長野県':[36.2,138.0],
+      '岐阜県':[35.8,137.0],'静岡県':[34.9,138.4],'愛知県':[35.1,137.0],'三重県':[34.7,136.5],
+      '滋賀県':[35.1,136.2],'京都府':[35.2,135.8],'大阪府':[34.7,135.5],'兵庫県':[34.9,135.2],
+      '奈良県':[34.4,135.8],'和歌山県':[33.9,135.2],'鳥取県':[35.5,134.3],'島根県':[35.1,133.1],
+      '岡山県':[34.7,133.9],'広島県':[34.5,132.5],'山口県':[34.2,131.5],'徳島県':[34.0,134.5],
+      '香川県':[34.3,134.0],'愛媛県':[33.9,132.8],'高知県':[33.6,133.5],'福岡県':[33.6,130.4],
+      '佐賀県':[33.3,130.2],'長崎県':[32.8,129.9],'熊本県':[32.8,130.7],'大分県':[33.2,131.6],
+      '宮崎県':[31.9,131.4],'鹿児島県':[31.6,130.6],'沖縄県':[26.2,127.7]
+    };
+
+    window._renderMiniPins = function() {
+      var map = window._miniMap;
+      var counts = window._prefCountMap;
+      if (!map || !counts || window._miniPinsRendered) return;
+      window._miniPinsRendered = true;
+      var prefMax = Math.max.apply(null, Object.keys(counts).map(function(k) { return counts[k]; }));
+      Object.keys(counts).forEach(function(pref) {
+        var c = PREF_COORDS[pref];
+        if (!c) return;
+        var cnt = counts[pref];
+        var big = cnt >= prefMax * 0.7;
+        var sz = big ? 42 : 36;
+        var shortName = pref.replace(/[県都府]$/, '');
+        var icon = L.divIcon({
+          html: '<div class="mini-pin' + (big ? ' mini-pin--lg' : '') + '">'
+            + '<span class="mini-pin-name">' + shortName + '</span>'
+            + '<span class="mini-pin-count">' + cnt + '</span></div>',
+          className: '', iconSize: [sz, sz], iconAnchor: [sz / 2, sz / 2],
+        });
+        L.marker(c, { icon: icon }).addTo(map);
+      });
+    };
+
     // ── Load pokefuta.ndjson → stats + prefecture links ──────────────────────
     var POKEMON_COUNTS = {};
     var prefCountMap = {};
@@ -443,40 +483,9 @@
           });
         }
 
-        // Mini-map prefecture count pins
-        var PREF_COORDS = {
-          '北海道':[43.2,142.8],'青森県':[40.8,140.7],'岩手県':[39.7,141.2],'宮城県':[38.4,140.8],
-          '秋田県':[39.7,140.1],'山形県':[38.5,140.3],'福島県':[37.4,140.5],'茨城県':[36.3,140.3],
-          '栃木県':[36.5,139.9],'群馬県':[36.4,138.9],'埼玉県':[36.0,139.4],'千葉県':[35.6,140.1],
-          '東京都':[35.7,139.7],'神奈川県':[35.5,139.5],'新潟県':[37.6,139.0],'富山県':[36.7,137.2],
-          '石川県':[36.6,136.6],'福井県':[36.1,136.2],'山梨県':[35.7,138.6],'長野県':[36.2,138.0],
-          '岐阜県':[35.8,137.0],'静岡県':[34.9,138.4],'愛知県':[35.1,137.0],'三重県':[34.7,136.5],
-          '滋賀県':[35.1,136.2],'京都府':[35.2,135.8],'大阪府':[34.7,135.5],'兵庫県':[34.9,135.2],
-          '奈良県':[34.4,135.8],'和歌山県':[33.9,135.2],'鳥取県':[35.5,134.3],'島根県':[35.1,133.1],
-          '岡山県':[34.7,133.9],'広島県':[34.5,132.5],'山口県':[34.2,131.5],'徳島県':[34.0,134.5],
-          '香川県':[34.3,134.0],'愛媛県':[33.9,132.8],'高知県':[33.6,133.5],'福岡県':[33.6,130.4],
-          '佐賀県':[33.3,130.2],'長崎県':[32.8,129.9],'熊本県':[32.8,130.7],'大分県':[33.2,131.6],
-          '宮崎県':[31.9,131.4],'鹿児島県':[31.6,130.6],'沖縄県':[26.2,127.7]
-        };
-        var miniMapInst = window._miniMap;
-        if (miniMapInst) {
-          var prefMax = Math.max.apply(null, Object.keys(prefCountMap).map(function(k) { return prefCountMap[k]; }));
-          Object.keys(prefCountMap).forEach(function(pref) {
-            var coords = PREF_COORDS[pref];
-            if (!coords) return;
-            var cnt = prefCountMap[pref];
-            var big = cnt >= prefMax * 0.7;
-            var sz = big ? 42 : 36;
-            var shortName = pref.replace(/[県都府]$/, '');
-            var icon = L.divIcon({
-              html: '<div class="mini-pin' + (big ? ' mini-pin--lg' : '') + '">'
-                + '<span class="mini-pin-name">' + shortName + '</span>'
-                + '<span class="mini-pin-count">' + cnt + '</span></div>',
-              className: '', iconSize: [sz, sz], iconAnchor: [sz / 2, sz / 2],
-            });
-            L.marker(coords, { icon: icon }).addTo(miniMapInst);
-          });
-        }
+        // Mini-map pins — delegate to shared renderer (race-safe)
+        window._prefCountMap = prefCountMap;
+        window._renderMiniPins();
       })
       .catch(function() {});
 
@@ -504,6 +513,7 @@
       subdomains: 'abcd', maxZoom: 19,
     }).addTo(miniMap);
     window._miniMap = miniMap;
+    if (window._renderMiniPins) window._renderMiniPins();
     if (typeof IntersectionObserver !== 'undefined') {
       new IntersectionObserver(function(entries, obs) {
         if (entries[0].isIntersecting) { miniMap.invalidateSize(); obs.disconnect(); }
