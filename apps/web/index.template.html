@@ -82,7 +82,7 @@
   </script>
   <!-- End GA -->
   <link rel="stylesheet" href="%%BASE_PATH%%assets/theme.css" />
-  <link rel="stylesheet" href="%%BASE_PATH%%assets/top-page.css?v=20260616c" />
+  <link rel="stylesheet" href="%%BASE_PATH%%assets/top-page.css?v=20260617a" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
   <link rel="icon" href="%%BASE_PATH%%assets/pokefuta-marker.svg" type="image/svg+xml" />
 </head>
@@ -186,10 +186,12 @@
           <span class="sec-num">3</span>
           <h2 class="sec-title">%%SEC3_TITLE%%</h2>
         </div>
+        <span class="sec-file-label">/ map.html</span>
       </div>
 
       <a class="map-gateway-card" href="%%BASE_PATH%%map.html" onclick="trackEvent('click_map_gateway')">
         <div id="mini-map" class="map-gateway-minimap" aria-hidden="true"></div>
+        <span class="map-gateway-badge">🗺 %%APPBAR_PREFIX%%<b id="map-badge-count">—</b>%%APPBAR_SUFFIX%%</span>
         <div class="map-gateway-overlay">
           <div class="map-gateway-title">%%SEC3_MAP_TITLE%%</div>
           <div class="map-gateway-sub">%%SEC3_MAP_SUB%%</div>
@@ -386,6 +388,7 @@
         setNum('stat-pref', Object.keys(prefCountMap).length);
         setNum('stat-pokemon', pokemonSet.size);
         setNum('appbar-count', totalCount);
+        setNum('map-badge-count', totalCount);
 
         var chipMap = {
           'ピカチュウ': 'chip-pikachu',
@@ -457,13 +460,19 @@
         };
         var miniMapInst = window._miniMap;
         if (miniMapInst) {
+          var prefMax = Math.max.apply(null, Object.keys(prefCountMap).map(function(k) { return prefCountMap[k]; }));
           Object.keys(prefCountMap).forEach(function(pref) {
             var coords = PREF_COORDS[pref];
             if (!coords) return;
             var cnt = prefCountMap[pref];
+            var big = cnt >= prefMax * 0.7;
+            var sz = big ? 42 : 36;
+            var shortName = pref.replace(/[県都府]$/, '');
             var icon = L.divIcon({
-              html: '<div class="mini-pin">' + cnt + '</div>',
-              className: '', iconSize: [28, 22], iconAnchor: [14, 11],
+              html: '<div class="mini-pin' + (big ? ' mini-pin--lg' : '') + '">'
+                + '<span class="mini-pin-name">' + shortName + '</span>'
+                + '<span class="mini-pin-count">' + cnt + '</span></div>',
+              className: '', iconSize: [sz, sz], iconAnchor: [sz / 2, sz / 2],
             });
             L.marker(coords, { icon: icon }).addTo(miniMapInst);
           });
@@ -490,8 +499,10 @@
       zoomControl: false, scrollWheelZoom: false, dragging: false,
       touchZoom: false, doubleClickZoom: false, boxZoom: false,
       keyboard: false, attributionControl: false,
-    }).setView([36.5, 137.0], 5);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(miniMap);
+    }).setView([37.6, 137.5], 4);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      subdomains: 'abcd', maxZoom: 19,
+    }).addTo(miniMap);
     window._miniMap = miniMap;
     if (typeof IntersectionObserver !== 'undefined') {
       new IntersectionObserver(function(entries, obs) {

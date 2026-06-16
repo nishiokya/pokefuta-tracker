@@ -156,6 +156,13 @@ a { color: inherit; text-decoration: none; }
   line-height: 1.35;
 }
 
+.sec-file-label {
+  font-family: 'IBM Plex Mono', 'Courier New', monospace;
+  font-size: 10px;
+  color: var(--top-purple-light);
+  flex-shrink: 0;
+}
+
 /* ── Section 1: Intro ── */
 .top-h1 {
   margin: 7px 0 10px;
@@ -394,7 +401,7 @@ a { color: inherit; text-decoration: none; }
 .map-gateway-card {
   display: block;
   position: relative;
-  height: 236px;
+  height: 380px;
   border-radius: var(--top-radius-card-lg);
   overflow: hidden;
   border: 1px solid #C5D8E1;
@@ -410,6 +417,25 @@ a { color: inherit; text-decoration: none; }
   z-index: 0;
 }
 
+/* top-left live count badge */
+.map-gateway-badge {
+  position: absolute;
+  top: 11px;
+  left: 11px;
+  z-index: 2;
+  pointer-events: none;
+  background: rgba(255,255,255,.92);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+  color: var(--top-purple-dark);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 11px;
+  border-radius: var(--top-radius-pill);
+  box-shadow: 0 1px 4px rgba(0,0,0,.14);
+  white-space: nowrap;
+}
+
 .map-gateway-overlay {
   position: absolute;
   inset: 0;
@@ -417,45 +443,68 @@ a { color: inherit; text-decoration: none; }
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 16px;
-  background: linear-gradient(to top, rgba(0,0,0,.45) 0%, rgba(0,0,0,0) 60%);
+  padding: 26px 13px 13px;
+  background: linear-gradient(to top, rgba(26,38,46,.9) 40%, rgba(26,38,46,0));
 }
 
 .map-gateway-title {
-  font-size: 16px;
-  font-weight: 800;
+  font-size: 14.5px;
+  font-weight: 700;
   color: #fff;
   line-height: 1.3;
+  text-shadow: 0 1px 4px rgba(0,0,0,.35);
 }
 
 .map-gateway-sub {
-  font-size: 11.5px;
-  color: rgba(255,255,255,.85);
-  margin-top: 3px;
+  font-size: 10.5px;
+  color: rgba(255,255,255,.82);
+  margin-top: 2px;
 }
 
 .map-gateway-cta {
-  margin-top: 8px;
-  display: inline-block;
-  background: rgba(255,255,255,.92);
-  color: var(--top-purple-dark);
-  font-size: 12px;
-  font-weight: 700;
-  padding: 5px 12px;
-  border-radius: 999px;
-  align-self: flex-start;
-}
-
-.mini-pin {
+  display: block;
+  margin-top: 11px;
   background: var(--top-purple);
   color: #fff;
+  font-size: 14.5px;
+  font-weight: 700;
+  padding: 13px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 5px 14px rgba(108,92,166,.5);
+}
+
+/* design-style circular count pins (non-interactive) */
+.mini-pin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--top-radius-pill);
+  background: var(--top-purple);
+  color: #fff;
+  border: 2px solid #fff;
+  box-shadow: 0 3px 7px rgba(0,0,0,.3);
+  line-height: 1;
+}
+
+.mini-pin--lg {
+  width: 42px;
+  height: 42px;
+  background: var(--top-purple-dark);
+}
+
+.mini-pin-name {
   font-size: 9px;
   font-weight: 700;
-  border-radius: 4px;
-  padding: 2px 4px;
-  white-space: nowrap;
-  box-shadow: 0 1px 3px rgba(0,0,0,.35);
-  line-height: 1.2;
+}
+
+.mini-pin-count {
+  font-size: 11px;
+  font-weight: 700;
+  font-family: 'IBM Plex Mono', monospace;
 }
 
 /* Prefecture text links */
