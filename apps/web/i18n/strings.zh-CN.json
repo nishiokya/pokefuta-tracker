@@ -50,7 +50,13 @@
     "manholeTitleInfix": " Pokéfuta | ",
     "manholeDescTemplate": "{place}的{pokemon} Pokéfuta。在地图上确认地点与照片。",
     "manholeDescNoPlaceTemplate": "日本的{pokemon} Pokéfuta。在地图上确认地点与照片。",
-    "manholeKeywordsEnd": ["宝可梦井盖", "Pokemon Manhole", "日本", "旅游", "地图"],
+    "manholeKeywordsEnd": [
+      "宝可梦井盖",
+      "Pokemon Manhole",
+      "日本",
+      "旅游",
+      "地图"
+    ],
     "jsonLdDescTemplate": "{place}的宝可梦井盖（Pokéfuta）。",
     "jsonLdDescNoPlace": "日本的宝可梦井盖（Pokéfuta）。",
     "pokemonJoiner": "・",
@@ -99,12 +105,36 @@
       "freshDate": "{date} 收到的新照片",
       "countTemplate": "日本全国共 {count} 枚",
       "uniqueTemplate": "{pokemon} 的 Pokéfuta 在日本全国仅此一枚",
-      "ctas": {"fresh": "在地图上看照片 →", "travel": "查看专题 →", "rare": "查看排行 →"},
-      "categories": {
-        "travel": {"label": "踏上旅程"}, "rare": {"label": "寻找稀有"}, "fresh": {"label": "最新发现"}
+      "ctas": {
+        "fresh": "在地图上看照片 →",
+        "travel": "查看专题 →",
+        "rare": "查看排行 →"
       },
-      "travelThemes": {"remote_island": "离岛上的 Pokéfuta", "roadside": "道之驿的 Pokéfuta", "station_front": "车站前的 Pokéfuta", "world_heritage": "世界遗产附近的 Pokéfuta"},
-      "rareThemes": {"unique_pokemon": "日本全国仅此一处", "north_end": "日本最北的 Pokéfuta", "south_end": "日本最南的 Pokéfuta", "east_end": "日本最东的 Pokéfuta", "west_end": "日本最西的 Pokéfuta", "lone": "秘境中的 Pokéfuta"}
+      "categories": {
+        "travel": {
+          "label": "踏上旅程"
+        },
+        "rare": {
+          "label": "寻找稀有"
+        },
+        "fresh": {
+          "label": "最新发现"
+        }
+      },
+      "travelThemes": {
+        "remote_island": "离岛上的 Pokéfuta",
+        "roadside": "道之驿的 Pokéfuta",
+        "station_front": "车站前的 Pokéfuta",
+        "world_heritage": "世界遗产附近的 Pokéfuta"
+      },
+      "rareThemes": {
+        "unique_pokemon": "日本全国仅此一处",
+        "north_end": "日本最北的 Pokéfuta",
+        "south_end": "日本最南的 Pokéfuta",
+        "east_end": "日本最东的 Pokéfuta",
+        "west_end": "日本最西的 Pokéfuta",
+        "lone": "秘境中的 Pokéfuta"
+      }
     },
     "titleLabels": {
       "north_end": "日本最北 Pokéfuta",
@@ -152,5 +182,38 @@
       "detailPageCta": "查看详情",
       "prefectureSite": "　网站"
     }
-  }
+  },
+  "APPBAR_PREFIX": "日本 ",
+  "APPBAR_SUFFIX": " 个",
+  "TOP_H1": "探索日本全国宝可梦井盖",
+  "TOP_INTRO": "收录日本47个都道府县的<b>宝可梦井盖（Pokéfuta）</b>。无论在住家附近还是旅游途中，都能找到<b>皮卡丘·伊布·拉普拉斯</b>等喜爱的宝可梦井盖。",
+  "STAT_POKEFUTA": "个井盖",
+  "STAT_PREF": "个都道府县",
+  "STAT_POKEMON": "种宝可梦",
+  "SEC2_TITLE": "今天想找哪个宝可梦井盖？",
+  "SEC2_DAILY": "每日更新",
+  "SEC3_TITLE": "地图搜索",
+  "SEC3_MAP_TITLE": "在日本地图上找附近的井盖",
+  "SEC3_MAP_SUB": "点击都道府县图钉，打开全屏地图",
+  "SEC3_MAP_CTA": "🗺 打开全屏地图",
+  "SEC4_TITLE": "按都道府县搜索",
+  "SEC4_PREF_LABEL": "47都道府县",
+  "SEC4_SHOW_ALL": "显示全部（47都道府县）",
+  "SEC5_TITLE": "按主题搜索",
+  "SEC5_THEME_LABEL": "按主题搜索",
+  "SEC5_THEME_MORE": "在地图上探索 →",
+  "TAG_ROADSIDE": "🛤 道路休息站",
+  "TAG_ISLAND": "🏝 离岛",
+  "TAG_WORLD_HERITAGE": "🌐 世界遗产",
+  "TAG_GUNDAM": "高达人孔",
+  "TAG_SEASIDE": "🌊 海边",
+  "TAG_TOURISM": "🗺 观光景点",
+  "TAG_HISTORY": "⛩ 历史名胜",
+  "SEC5_POKEMON_LABEL": "按热门宝可梦搜索",
+  "SEC5_POKEMON_MORE": "全部 →",
+  "POKEMON_PIKACHU": "皮卡丘",
+  "POKEMON_EEVEE": "伊布",
+  "POKEMON_LAPRAS": "拉普拉斯",
+  "POKEMON_SNORLAX": "卡比兽",
+  "POKEMON_SLOWPOKE": "呆呆兽"
 }
