@@ -75,11 +75,11 @@ def build(lang: str) -> None:
 
 
 def main() -> None:
-    index_template = ROOT / 'apps' / 'web' / 'index.template.html'
-    if not index_template.exists():
-        print(f'[ERROR] Template not found: {index_template}')
-        print('  Run: python tools/make_template.py')
-        sys.exit(1)
+    for tmpl_name in ('index.template.html', 'map.template.html'):
+        tmpl_path = ROOT / 'apps' / 'web' / tmpl_name
+        if not tmpl_path.exists():
+            print(f'[ERROR] Template not found: {tmpl_path}')
+            sys.exit(1)
 
     targets = sys.argv[1:] if len(sys.argv) > 1 else LANGS
     for lang in targets:
