@@ -458,46 +458,6 @@ a { color: inherit; text-decoration: none; }
   line-height: 1.2;
 }
 
-/* Navigation grid (used by map.html hero card via pokefuta-map.css) */
-.map-nav-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 2px;
-}
-
-.map-nav-card {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 14px 14px 13px;
-  background: var(--top-card-bg);
-  border: 1px solid var(--top-border);
-  border-radius: var(--top-radius-card-lg);
-  text-decoration: none;
-  color: var(--top-text);
-  box-shadow: 0 2px 6px rgba(0,0,0,.06);
-  gap: 3px;
-}
-
-.map-nav-icon {
-  font-size: 22px;
-  line-height: 1;
-  margin-bottom: 4px;
-}
-
-.map-nav-title {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--top-purple-dark);
-}
-
-.map-nav-sub {
-  font-size: 10.5px;
-  color: var(--top-text-faint);
-  line-height: 1.35;
-}
-
 /* Prefecture text links */
 .top-pref-card {
   margin-top: 11px;
@@ -566,47 +526,7 @@ a { color: inherit; text-decoration: none; }
   font-family: inherit;
 }
 
-/* ── Section 4: Hub ── */
-.hub-primary-cta {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: var(--top-purple);
-  border-radius: 14px;
-  padding: 14px;
-  margin-bottom: 10px;
-  text-decoration: none;
-  box-shadow: 0 4px 12px rgba(108, 92, 166, 0.28);
-}
-
-.hub-cta-icon {
-  font-size: 21px;
-  flex-shrink: 0;
-}
-
-.hub-cta-text {
-  flex: 1;
-  min-width: 0;
-}
-
-.hub-cta-title {
-  font-size: 14.5px;
-  font-weight: 700;
-  color: #fff;
-}
-
-.hub-cta-sub {
-  font-size: 11px;
-  color: rgba(255,255,255,.82);
-  margin-top: 2px;
-}
-
-.hub-cta-arrow {
-  color: rgba(255,255,255,.9);
-  font-size: 18px;
-  flex-shrink: 0;
-}
-
+/* ── Section 5: Hub ── */
 .hub-card {
   background: var(--top-card-bg);
   border: 1px solid var(--top-border);
@@ -684,8 +604,6 @@ a { color: inherit; text-decoration: none; }
 /* ── Tap states ── */
 @media (hover: hover) {
   .hub-chip:hover,
-  .hub-primary-cta:hover,
-  .map-nav-card:hover,
   .hero-featured-card:hover,
   .hero-small-card:hover {
     opacity: 0.88;
@@ -697,8 +615,6 @@ a { color: inherit; text-decoration: none; }
 
 @media (hover: none) {
   .hub-chip:active,
-  .hub-primary-cta:active,
-  .map-nav-card:active,
   .hero-featured-card:active,
   .hero-small-card:active {
     opacity: 0.8;

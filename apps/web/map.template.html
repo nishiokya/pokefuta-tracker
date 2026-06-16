@@ -24,12 +24,6 @@
   <link rel="alternate" hreflang="zh-Hans" href="https://data.pokefuta.com/zh-CN/">
   <link rel="alternate" hreflang="ko"      href="https://data.pokefuta.com/ko/">
   <link rel="alternate" hreflang="x-default" href="https://data.pokefuta.com/">
-  <link rel="alternate" hreflang="ja"      href="https://data.pokefuta.com/">
-  <link rel="alternate" hreflang="en"      href="https://data.pokefuta.com/en/">
-  <link rel="alternate" hreflang="zh-TW"   href="https://data.pokefuta.com/zh-TW/">
-  <link rel="alternate" hreflang="zh-Hans" href="https://data.pokefuta.com/zh-CN/">
-  <link rel="alternate" hreflang="ko"      href="https://data.pokefuta.com/ko/">
-  <link rel="alternate" hreflang="x-default" href="https://data.pokefuta.com/">
   <script>
     // i18n: build-time injected per language
     window.I18N = %%I18N_OBJECT%%;
@@ -81,9 +75,10 @@
       const keywords = prefecture
         ? `${I.prefKeywordsPrefix}${prefecture}${I.prefKeywordsSuffix}`
         : I.defaultKeywords;
+      const mapPageUrl = window.location.origin + window.location.pathname;
       const canonicalUrl = prefecture
-        ? `${window.SITE_BASE_URL}?pref=${encodeURIComponent(prefecture)}`
-        : window.SITE_BASE_URL;
+        ? `${mapPageUrl}?pref=${encodeURIComponent(prefecture)}`
+        : mapPageUrl;
       return { title, description, keywords, canonicalUrl };
     };
 
@@ -101,11 +96,11 @@
     };
 
     window.buildCanonicalPath = function(prefecture) {
-      return prefecture ? `/?pref=${encodeURIComponent(prefecture)}` : '/';
+      return prefecture ? `${window.location.pathname}?pref=${encodeURIComponent(prefecture)}` : window.location.pathname;
     };
 
     window.buildManholeCanonicalPath = function(manholeId) {
-      return manholeId ? `/?manhole=${encodeURIComponent(manholeId)}` : '/';
+      return manholeId ? `${window.location.pathname}?manhole=${encodeURIComponent(manholeId)}` : window.location.pathname;
     };
 
     window.applyManholePageMeta = function(manhole) {
@@ -168,7 +163,7 @@
       keywordParts.push(...I.manholeKeywordsEnd);
       const keywords = keywordParts.join(',');
 
-      const canonicalUrl = `${window.SITE_BASE_URL}?manhole=${encodeURIComponent(manhole.id)}`;
+      const canonicalUrl = `${window.location.origin}${window.location.pathname}?manhole=${encodeURIComponent(manhole.id)}`;
 
       document.title = title;
       document.querySelector('link[rel="canonical"]')?.setAttribute('href', canonicalUrl);
@@ -189,9 +184,9 @@
         title: I.defaultTitle,
         description: I.defaultDescription,
         keywords: I.defaultKeywords,
-        canonicalUrl: window.SITE_BASE_URL
+        canonicalUrl: window.location.origin + window.location.pathname
       };
-      
+
       document.title = defaultMeta.title;
       document.querySelector('link[rel="canonical"]')?.setAttribute('href', defaultMeta.canonicalUrl);
       document.querySelector('meta[name="description"]')?.setAttribute('content', defaultMeta.description);
@@ -251,7 +246,7 @@
           'addressLocality': manhole.city || '',
           'streetAddress': ''
         },
-        'url': `${window.SITE_BASE_URL}?manhole=${encodeURIComponent(manhole.id)}`
+        'url': `${window.location.origin}${window.location.pathname}?manhole=${encodeURIComponent(manhole.id)}`
       };
 
       // 画像 URL があれば追加
@@ -364,13 +359,13 @@
         <span class="hero-card-toggle-icon" aria-hidden="true"></span>
         <span class="hero-card-toggle-label">地図を広く見る</span>
       </button>
-      <a href="%%BASE_PATH%%index.html" class="map-back-to-top">← トップに戻る</a>
+      <a href="index.html" class="map-back-to-top">← トップに戻る</a>
       <div id="hero-card-content" class="hero-card-content">
         <h1 id="hero-title" class="sr-only">%%HERO_TITLE%%</h1>
         <nav class="map-hero-nav-grid" aria-label="サイト内ナビゲーション">
-          <a class="map-hero-nav-item" href="%%BASE_PATH%%index.html">🏠<span>トップ</span></a>
-          <a class="map-hero-nav-item" href="%%BASE_PATH%%../summary/">📋<span>サマリー</span></a>
-          <a class="map-hero-nav-item" href="%%BASE_PATH%%../pokemon/">⭐<span>ポケモン</span></a>
+          <a class="map-hero-nav-item" href="index.html">🏠<span>トップ</span></a>
+          <a class="map-hero-nav-item" href="summary/">📋<span>サマリー</span></a>
+          <a class="map-hero-nav-item" href="pokemon/">⭐<span>ポケモン</span></a>
           <button type="button" class="map-hero-nav-item" onclick="document.getElementById('prefecture-open-button')?.click()">🏙<span>都道府県から探す</span></button>
           <button type="button" class="map-hero-nav-item" onclick="document.getElementById('feature-open-button')?.click()">🎯<span>目的から探す</span></button>
         </nav>
@@ -385,15 +380,15 @@
     var lang = (navigator.languages && navigator.languages[0]) || navigator.language || '';
     if (/^ja/i.test(lang)) return;
     var map = [
-      { re: /^zh-(tw|hant|hk)/i, path: '/zh-TW/', label: '查看繁體中文版 →' },
-      { re: /^zh/i,           path: '/zh-CN/', label: '查看简体中文版 →' },
-      { re: /^ko/i,           path: '/ko/',    label: '한국어로 보기 →' },
-      { re: /^en/i,           path: '/en/',    label: 'View in English →' },
+      { re: /^zh-(tw|hant|hk)/i, path: '/zh-TW/map.html', label: '查看繁體中文版 →' },
+      { re: /^zh/i,           path: '/zh-CN/map.html', label: '查看简体中文版 →' },
+      { re: /^ko/i,           path: '/ko/map.html',    label: '한국어로 보기 →' },
+      { re: /^en/i,           path: '/en/map.html',    label: 'View in English →' },
     ];
     var entry = map.find(function (m) { return m.re.test(lang); }) || map[3];
     var el = document.getElementById('i18n-notice');
     if (!el) return;
-    el.href = entry.path;
+    el.href = entry.path + window.location.search;
     el.textContent = entry.label;
     el.removeAttribute('hidden');
   })();
@@ -414,7 +409,7 @@
           都道府県から探す
         </button>
         <button type="button" id="feature-open-button" class="sheet-secondary-btn" aria-pressed="false">
-          <img src="./assets/icon-tag.svg" alt="" aria-hidden="true">
+          <img src="%%BASE_PATH%%assets/icon-tag.svg" alt="" aria-hidden="true">
           テーマで絞り込む
         </button>
       </div>
@@ -1226,7 +1221,7 @@
       if (!meta || !meta.slug) return null;
       const lang = (window.I18N && window.I18N.lang) || 'ja';
       const prefix = lang === 'ja' ? '' : lang + '/';
-      return `${window.SITE_ROOT_URL}${prefix}pokemon/${meta.slug}/`;
+      return `${window.SITE_BASE_URL}${prefix}pokemon/${meta.slug}/`;
     };
 
     function buildPokemonInfoCards(pokemons) {

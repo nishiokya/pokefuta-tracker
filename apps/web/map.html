@@ -71,9 +71,10 @@
       const keywords = prefecture
         ? `ポケふた,${prefecture},ポケモンマンホール,マンホール,設置場所,地図,旅行,観光`
         : 'ポケふた,ポケモンマンホール,マンホール,ポケモン,聖地巡礼,地図';
+      const mapPageUrl = window.location.origin + window.location.pathname;
       const canonicalUrl = prefecture
-        ? `${window.SITE_BASE_URL}?pref=${encodeURIComponent(prefecture)}`
-        : window.SITE_BASE_URL;
+        ? `${mapPageUrl}?pref=${encodeURIComponent(prefecture)}`
+        : mapPageUrl;
       return { title, description, keywords, canonicalUrl };
     };
 
@@ -91,11 +92,11 @@
     };
 
     window.buildCanonicalPath = function(prefecture) {
-      return prefecture ? `/?pref=${encodeURIComponent(prefecture)}` : '/';
+      return prefecture ? `${window.location.pathname}?pref=${encodeURIComponent(prefecture)}` : window.location.pathname;
     };
 
     window.buildManholeCanonicalPath = function(manholeId) {
-      return manholeId ? `/?manhole=${encodeURIComponent(manholeId)}` : '/';
+      return manholeId ? `${window.location.pathname}?manhole=${encodeURIComponent(manholeId)}` : window.location.pathname;
     };
 
     window.applyManholePageMeta = function(manhole) {
@@ -179,9 +180,9 @@
         title: 'ポケふたマップ｜全国のポケモンマンホール一覧・地図',
         description: '全国のポケふた・ポケモンマンホールを地図で探せるマップサービスです。都道府県別の一覧、設置場所、近くのポケふた探しに対応しています。',
         keywords: 'ポケふた,ポケモンマンホール,マンホール,ポケモン,聖地巡礼,地図',
-        canonicalUrl: window.SITE_BASE_URL
+        canonicalUrl: window.location.origin + window.location.pathname
       };
-      
+
       document.title = defaultMeta.title;
       document.querySelector('link[rel="canonical"]')?.setAttribute('href', defaultMeta.canonicalUrl);
       document.querySelector('meta[name="description"]')?.setAttribute('content', defaultMeta.description);
@@ -239,7 +240,7 @@
           'addressLocality': manhole.city || '',
           'streetAddress': ''
         },
-        'url': `${window.SITE_BASE_URL}?manhole=${encodeURIComponent(manhole.id)}`
+        'url': `${window.location.origin}${window.location.pathname}?manhole=${encodeURIComponent(manhole.id)}`
       };
 
       // 画像 URL があれば追加
@@ -373,15 +374,15 @@
     var lang = (navigator.languages && navigator.languages[0]) || navigator.language || '';
     if (/^ja/i.test(lang)) return;
     var map = [
-      { re: /^zh-(tw|hant|hk)/i, path: '/zh-TW/', label: '查看繁體中文版 →' },
-      { re: /^zh/i,           path: '/zh-CN/', label: '查看简体中文版 →' },
-      { re: /^ko/i,           path: '/ko/',    label: '한국어로 보기 →' },
-      { re: /^en/i,           path: '/en/',    label: 'View in English →' },
+      { re: /^zh-(tw|hant|hk)/i, path: '/zh-TW/map.html', label: '查看繁體中文版 →' },
+      { re: /^zh/i,           path: '/zh-CN/map.html', label: '查看简体中文版 →' },
+      { re: /^ko/i,           path: '/ko/map.html',    label: '한국어로 보기 →' },
+      { re: /^en/i,           path: '/en/map.html',    label: 'View in English →' },
     ];
     var entry = map.find(function (m) { return m.re.test(lang); }) || map[3];
     var el = document.getElementById('i18n-notice');
     if (!el) return;
-    el.href = entry.path;
+    el.href = entry.path + window.location.search;
     el.textContent = entry.label;
     el.removeAttribute('hidden');
   })();
