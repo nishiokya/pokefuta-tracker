@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Build multilingual index.html files from index.template.html + i18n strings.
+"""Build multilingual HTML files from template + i18n strings.
+
+Processes index.template.html → dist/{lang}/index.html
+         map.template.html   → dist/{lang}/map.html
 
 Usage:
   python tools/build_i18n.py              # build all 4 languages
@@ -12,12 +15,46 @@ import pathlib
 import sys
 
 ROOT = pathlib.Path(__file__).parent.parent
-TEMPLATE = ROOT / 'apps' / 'web' / 'index.template.html'
 I18N_DIR = ROOT / 'apps' / 'web' / 'i18n'
 PREF_FILE = ROOT / 'apps' / 'web' / 'i18n' / 'prefectures.json'
 DIST = ROOT / 'dist'
 
 LANGS = ['en', 'zh-TW', 'zh-CN', 'ko']
+
+# Each entry: (template path, output filename)
+TEMPLATES = [
+    (ROOT / 'apps' / 'web' / 'index.template.html', 'index.html'),
+    (ROOT / 'apps' / 'web' / 'map.template.html',   'map.html'),
+]
+
+
+def build_template(template_path: pathlib.Path, out_name: str, lang: str, strings: dict, pref_data) -> None:
+    if not template_path.exists():
+        print(f'[SKIP] Template not found: {template_path}')
+        return
+
+    template = template_path.read_text(encoding='utf-8')
+    merged = dict(strings)
+    merged['PREFECTURE_NAMES_JSON'] = json.dumps(pref_data, ensure_ascii=False).replace('</', '<\\/')
+
+    result = template
+    for key, value in merged.items():
+        if isinstance(value, (dict, list)):
+            safe_json = json.dumps(value, ensure_ascii=False).replace('</', '<\\/')
+            result = result.replace(f'%%{key}%%', safe_json)
+        else:
+            result = result.replace(f'%%{key}%%', str(value))
+
+    out = DIST / lang / out_name
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(result, encoding='utf-8')
+    print(f'[OK]  dist/{lang}/{out_name} ({len(result):,} bytes)')
+
+    import re
+    remaining = re.findall(r'%%\w+%%', result)
+    if remaining:
+        unique = sorted(set(remaining))
+        print(f'  [WARN] unreplaced markers: {unique}')
 
 
 def build(lang: str) -> None:
@@ -26,42 +63,23 @@ def build(lang: str) -> None:
         print(f'[SKIP] {strings_path} not found')
         return
 
-    template = TEMPLATE.read_text(encoding='utf-8')
     strings: dict = json.loads(strings_path.read_text(encoding='utf-8'))
 
     if not PREF_FILE.exists():
         print(f'[ERROR] Required file not found: {PREF_FILE}')
         sys.exit(1)
     pref_data = json.loads(PREF_FILE.read_text(encoding='utf-8'))
-    strings['PREFECTURE_NAMES_JSON'] = json.dumps(pref_data, ensure_ascii=False).replace('</', '<\\/')
 
-    result = template
-    for key, value in strings.items():
-        if isinstance(value, (dict, list)):
-            # Serialize nested objects to JSON (used for I18N_OBJECT injection)
-            safe_json = json.dumps(value, ensure_ascii=False).replace('</', '<\\/')
-            result = result.replace(f'%%{key}%%', safe_json)
-        else:
-            result = result.replace(f'%%{key}%%', str(value))
-
-    out = DIST / lang / 'index.html'
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(result, encoding='utf-8')
-    print(f'[OK]  dist/{lang}/index.html ({len(result):,} bytes)')
-
-    # Warn about any unreplaced markers
-    import re
-    remaining = re.findall(r'%%\w+%%', result)
-    if remaining:
-        unique = sorted(set(remaining))
-        print(f'  [WARN] unreplaced markers: {unique}')
+    for template_path, out_name in TEMPLATES:
+        build_template(template_path, out_name, lang, strings, pref_data)
 
 
 def main() -> None:
-    if not TEMPLATE.exists():
-        print(f'[ERROR] Template not found: {TEMPLATE}')
-        print('  Run: python tools/make_template.py')
-        sys.exit(1)
+    for tmpl_name in ('index.template.html', 'map.template.html'):
+        tmpl_path = ROOT / 'apps' / 'web' / tmpl_name
+        if not tmpl_path.exists():
+            print(f'[ERROR] Template not found: {tmpl_path}')
+            sys.exit(1)
 
     targets = sys.argv[1:] if len(sys.argv) > 1 else LANGS
     for lang in targets:

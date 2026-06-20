@@ -1874,3 +1874,48 @@ body.pokefuta-map-page {
   opacity: 0.82;
   font-size: 0.78rem;
 }
+
+/* ── Hero card nav grid ── */
+.map-hero-nav-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+  margin-top: 10px;
+}
+
+.map-hero-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 10px 6px 9px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
+  text-decoration: none;
+  color: #4a3728;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid rgba(110, 80, 44, 0.15);
+  text-align: center;
+  font-family: inherit;
+  line-height: 1.3;
+}
+
+.map-hero-nav-item:last-child {
+  grid-column: 1 / -1;
+}
+
+@media (hover: hover) {
+  .map-hero-nav-item:hover {
+    background: rgba(255, 255, 255, 1);
+    border-color: rgba(110, 80, 44, 0.3);
+  }
+}
+
+@media (hover: none) {
+  .map-hero-nav-item:active {
+    background: rgba(255, 255, 255, 1);
+  }
+}

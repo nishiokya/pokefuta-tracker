@@ -1,0 +1,2387 @@
+<!doctype html>
+<html lang="%%LANG%%">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>%%PAGE_TITLE%%</title>
+  <meta name="description" content="%%META_DESCRIPTION%%">
+  <meta name="keywords" content="%%META_KEYWORDS%%">
+  <meta name="robots" content="index,follow">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="%%OG_LOCALE%%">
+  <meta property="og:title" content="%%PAGE_TITLE%%">
+  <meta property="og:description" content="%%META_DESCRIPTION%%">
+  <meta property="og:url" content="%%CANONICAL_URL%%">
+  <meta property="og:image" content="https://data.pokefuta.com/assets/ogp/pokefuta_map_ogp.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="%%PAGE_TITLE%%">
+  <meta name="twitter:description" content="%%META_DESCRIPTION%%">
+  <meta name="twitter:image" content="https://data.pokefuta.com/assets/ogp/pokefuta_map_ogp.png">
+  <link rel="canonical" href="%%CANONICAL_URL%%">
+  <link rel="alternate" hreflang="ja"      href="https://data.pokefuta.com/">
+  <link rel="alternate" hreflang="en"      href="https://data.pokefuta.com/en/">
+  <link rel="alternate" hreflang="zh-TW"   href="https://data.pokefuta.com/zh-TW/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://data.pokefuta.com/zh-CN/">
+  <link rel="alternate" hreflang="ko"      href="https://data.pokefuta.com/ko/">
+  <link rel="alternate" hreflang="x-default" href="https://data.pokefuta.com/">
+  <script>
+    // i18n: build-time injected per language
+    window.I18N = %%I18N_OBJECT%%;
+
+    window.PREFECTURE_CODE_MAP = Object.freeze({
+      '北海道': '01', '青森県': '02', '岩手県': '03', '宮城県': '04', '秋田県': '05',
+      '山形県': '06', '福島県': '07', '茨城県': '08', '栃木県': '09', '群馬県': '10',
+      '埼玉県': '11', '千葉県': '12', '東京都': '13', '神奈川県': '14', '新潟県': '15',
+      '富山県': '16', '石川県': '17', '福井県': '18', '山梨県': '19', '長野県': '20',
+      '岐阜県': '21', '静岡県': '22', '愛知県': '23', '三重県': '24', '滋賀県': '25',
+      '京都府': '26', '大阪府': '27', '兵庫県': '28', '奈良県': '29', '和歌山県': '30',
+      '鳥取県': '31', '島根県': '32', '岡山県': '33', '広島県': '34', '山口県': '35',
+      '徳島県': '36', '香川県': '37', '愛媛県': '38', '高知県': '39', '福岡県': '40',
+      '佐賀県': '41', '長崎県': '42', '熊本県': '43', '大分県': '44', '宮崎県': '45',
+      '鹿児島県': '46', '沖縄県': '47'
+    });
+    window.PREFECTURE_SLUG_MAP = Object.freeze({
+      '北海道': 'hokkaido',  '青森県': 'aomori',    '岩手県': 'iwate',     '宮城県': 'miyagi',
+      '秋田県': 'akita',     '山形県': 'yamagata',  '福島県': 'fukushima', '茨城県': 'ibaraki',
+      '栃木県': 'tochigi',   '群馬県': 'gunma',     '埼玉県': 'saitama',   '千葉県': 'chiba',
+      '東京都': 'tokyo',     '神奈川県': 'kanagawa','新潟県': 'niigata',   '富山県': 'toyama',
+      '石川県': 'ishikawa',  '福井県': 'fukui',     '山梨県': 'yamanashi', '長野県': 'nagano',
+      '岐阜県': 'gifu',      '静岡県': 'shizuoka',  '愛知県': 'aichi',     '三重県': 'mie',
+      '滋賀県': 'shiga',     '京都府': 'kyoto',     '大阪府': 'osaka',     '兵庫県': 'hyogo',
+      '奈良県': 'nara',      '和歌山県': 'wakayama','鳥取県': 'tottori',   '島根県': 'shimane',
+      '岡山県': 'okayama',   '広島県': 'hiroshima', '山口県': 'yamaguchi', '徳島県': 'tokushima',
+      '香川県': 'kagawa',    '愛媛県': 'ehime',     '高知県': 'kochi',     '福岡県': 'fukuoka',
+      '佐賀県': 'saga',      '長崎県': 'nagasaki',  '熊本県': 'kumamoto',  '大分県': 'oita',
+      '宮崎県': 'miyazaki',  '鹿児島県': 'kagoshima','沖縄県': 'okinawa'
+    });
+    window.SITE_BASE_URL = 'https://data.pokefuta.com/';
+
+    window.resolvePrefectureParam = function(prefParam) {
+      if (!prefParam) return '';
+      if (prefParam.length === 2 && !isNaN(prefParam)) {
+        return Object.entries(window.PREFECTURE_CODE_MAP).find(([, code]) => code === prefParam)?.[0] || '';
+      }
+      return window.PREFECTURE_CODE_MAP[prefParam] ? prefParam : '';
+    };
+
+    window.buildPrefecturePageMeta = function(prefecture) {
+      const I = window.I18N;
+      const title = prefecture
+        ? `${prefecture}${I.prefTitleSuffix}`
+        : I.defaultTitle;
+      const description = prefecture
+        ? `${I.prefDescPrefix}${prefecture}${I.prefDescSuffix}`
+        : I.defaultDescription;
+      const keywords = prefecture
+        ? `${I.prefKeywordsPrefix}${prefecture}${I.prefKeywordsSuffix}`
+        : I.defaultKeywords;
+      const mapPageUrl = window.location.origin + window.location.pathname;
+      const canonicalUrl = prefecture
+        ? `${mapPageUrl}?pref=${encodeURIComponent(prefecture)}`
+        : mapPageUrl;
+      return { title, description, keywords, canonicalUrl };
+    };
+
+    window.applyPrefecturePageMeta = function(prefecture) {
+      const meta = window.buildPrefecturePageMeta(prefecture);
+      document.title = meta.title;
+      document.querySelector('link[rel="canonical"]')?.setAttribute('href', meta.canonicalUrl);
+      document.querySelector('meta[name="description"]')?.setAttribute('content', meta.description);
+      document.querySelector('meta[name="keywords"]')?.setAttribute('content', meta.keywords);
+      document.querySelector('meta[property="og:title"]')?.setAttribute('content', meta.title);
+      document.querySelector('meta[property="og:description"]')?.setAttribute('content', meta.description);
+      document.querySelector('meta[property="og:url"]')?.setAttribute('content', meta.canonicalUrl);
+      document.querySelector('meta[name="twitter:title"]')?.setAttribute('content', meta.title);
+      document.querySelector('meta[name="twitter:description"]')?.setAttribute('content', meta.description);
+    };
+
+    window.buildCanonicalPath = function(prefecture) {
+      return prefecture ? `${window.location.pathname}?pref=${encodeURIComponent(prefecture)}` : window.location.pathname;
+    };
+
+    window.buildManholeCanonicalPath = function(manholeId) {
+      return manholeId ? `${window.location.pathname}?manhole=${encodeURIComponent(manholeId)}` : window.location.pathname;
+    };
+
+    window.applyManholePageMeta = function(manhole) {
+      if (!manhole) {
+        // データなしの場合はデフォルトに
+        window.applyDefaultMeta();
+        return;
+      }
+
+      const prefecture = manhole.prefecture || '';
+      const city = manhole.city || '';
+      const pokemons = Array.isArray(manhole.pokemons)
+        ? manhole.pokemons.filter(p => typeof p === 'string' && !p.includes('ローカルActs'))
+        : [];
+
+      // Enhanced Pokemon text with English names
+      const I = window.I18N;
+      let pokemonText = I.defaultPokemonText;
+      let pokemonTextEn = '';
+
+      if (pokemons.length > 0) {
+        if (pokemons.length === 1) {
+          pokemonText = pokemons[0];
+          const meta = getPokemonMetadata(pokemons[0]);
+          if (meta && meta.names) {
+            pokemonTextEn = meta.names.en;
+          }
+        } else {
+          pokemonText = pokemons.join('・');
+        }
+      }
+
+      // title: {ポケモン名}のポケふた | {都道府県}{市区町村} | Pokefuta Map
+      const locationPart = prefecture && city
+        ? `${prefecture}${city}`
+        : prefecture || '';
+      const title = locationPart
+        ? `${pokemonText}${I.manholeTitleInfix}${locationPart} | Pokefuta Map`
+        : `${pokemonText}${I.manholeTitleInfix}Pokefuta Map`;
+
+      const placeText = prefecture && city ? `${prefecture}${city}` : (prefecture || '');
+      const pokemonWithEn = pokemonTextEn ? `${pokemonText}（${pokemonTextEn}）` : pokemonText;
+      const description = placeText
+        ? I.manholeDescTemplate.replace('{place}', placeText).replace('{pokemon}', pokemonWithEn)
+        : I.manholeDescNoPlaceTemplate.replace('{pokemon}', pokemonWithEn);
+
+      const keywordParts = [I.baseKeyword];
+      if (prefecture) keywordParts.push(prefecture);
+      if (city) keywordParts.push(city);
+
+      pokemons.forEach(nameJa => {
+        keywordParts.push(nameJa);
+        const meta = getPokemonMetadata(nameJa);
+        if (meta && meta.names) {
+          if (meta.names.en) keywordParts.push(meta.names.en);
+          if (meta.names.ko) keywordParts.push(meta.names.ko);
+        }
+      });
+
+      keywordParts.push(...I.manholeKeywordsEnd);
+      const keywords = keywordParts.join(',');
+
+      const canonicalUrl = `${window.location.origin}${window.location.pathname}?manhole=${encodeURIComponent(manhole.id)}`;
+
+      document.title = title;
+      document.querySelector('link[rel="canonical"]')?.setAttribute('href', canonicalUrl);
+      document.querySelector('meta[name="description"]')?.setAttribute('content', description);
+      document.querySelector('meta[name="keywords"]')?.setAttribute('content', keywords);
+      document.querySelector('meta[property="og:title"]')?.setAttribute('content', title);
+      document.querySelector('meta[property="og:description"]')?.setAttribute('content', description);
+      document.querySelector('meta[property="og:url"]')?.setAttribute('content', canonicalUrl);
+      document.querySelector('meta[name="twitter:title"]')?.setAttribute('content', title);
+      document.querySelector('meta[name="twitter:description"]')?.setAttribute('content', description);
+
+      window.applyManholeJsonLd(manhole);
+    };
+
+    window.applyDefaultMeta = function() {
+      const I = window.I18N;
+      const defaultMeta = {
+        title: I.defaultTitle,
+        description: I.defaultDescription,
+        keywords: I.defaultKeywords,
+        canonicalUrl: window.location.origin + window.location.pathname
+      };
+
+      document.title = defaultMeta.title;
+      document.querySelector('link[rel="canonical"]')?.setAttribute('href', defaultMeta.canonicalUrl);
+      document.querySelector('meta[name="description"]')?.setAttribute('content', defaultMeta.description);
+      document.querySelector('meta[name="keywords"]')?.setAttribute('content', defaultMeta.keywords);
+      document.querySelector('meta[property="og:title"]')?.setAttribute('content', defaultMeta.title);
+      document.querySelector('meta[property="og:description"]')?.setAttribute('content', defaultMeta.description);
+      document.querySelector('meta[property="og:url"]')?.setAttribute('content', defaultMeta.canonicalUrl);
+      document.querySelector('meta[name="twitter:title"]')?.setAttribute('content', defaultMeta.title);
+      document.querySelector('meta[name="twitter:description"]')?.setAttribute('content', defaultMeta.description);
+    };
+
+    window.applyManholeJsonLd = function(manhole) {
+      if (!manhole) return;
+      // 既存のJSON-LDを削除
+      const existingScript = document.querySelector('script[type="application/ld+json"][data-manhole-id]');
+      if (existingScript) existingScript.remove();
+
+      // ポケモン名から"ローカルActs"を除外
+      const cleanPokemons = Array.isArray(manhole.pokemons)
+        ? manhole.pokemons.filter(p => !p.includes('ローカルActs')).slice(0, 3)
+        : [];
+
+      const I = window.I18N;
+      const placeText = [manhole.prefecture, manhole.city].filter(Boolean).join('');
+      const titleBase = manhole.title || `${I.manholeTitle} ${manhole.id}`;
+      const baseDescription = placeText
+        ? I.jsonLdDescTemplate.replace('{place}', placeText)
+        : I.jsonLdDescNoPlace;
+
+      let pokemonDescription = '';
+      if (cleanPokemons.length > 0) {
+        const pokemonInfoList = cleanPokemons.map(nameJa => {
+          const meta = getPokemonMetadata(nameJa);
+          if (meta && meta.names && meta.names.en) {
+            return `${nameJa} (${meta.names.en})`;
+          }
+          return nameJa;
+        });
+        pokemonDescription = `${I.pokemonDescPrefix}${pokemonInfoList.join(', ')}`;
+      }
+
+      const description = [baseDescription, pokemonDescription].filter(Boolean).join(' ');
+
+      const jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'Place',
+        'name': titleBase,
+        'description': description,
+        'geo': {
+          '@type': 'GeoCoordinates',
+          'latitude': manhole.lat,
+          'longitude': manhole.lng
+        },
+        'address': {
+          '@type': 'PostalAddress',
+          'addressRegion': manhole.prefecture || '',
+          'addressLocality': manhole.city || '',
+          'streetAddress': ''
+        },
+        'url': `${window.location.origin}${window.location.pathname}?manhole=${encodeURIComponent(manhole.id)}`
+      };
+
+      // 画像 URL があれば追加
+      if (manhole.id) {
+        jsonLd['image'] = `https://data.pokefuta.com/manhole/image/${encodeURIComponent(manhole.id)}_latest.jpeg`;
+      }
+
+      // keywords with multilingual Pokemon names
+      const keywordsArray = [I.baseKeyword, I.manholeKeyword, 'Pokemon Manhole', titleBase];
+      cleanPokemons.forEach(nameJa => {
+        keywordsArray.push(nameJa);
+        const meta = getPokemonMetadata(nameJa);
+        if (meta && meta.names) {
+          if (meta.names.en) keywordsArray.push(meta.names.en);
+        }
+      });
+      jsonLd['keywords'] = keywordsArray.join(', ');
+
+      const script = document.createElement('script');
+      script.type = 'application/ld+json';
+      script.setAttribute('data-manhole-id', manhole.id);
+      script.textContent = JSON.stringify(jsonLd);
+      document.head.appendChild(script);
+    };
+
+    (function initPageMeta() {
+      const params = new URLSearchParams(window.location.search);
+      const manholeParam = params.get('manhole');
+      const prefParam = params.get('pref');
+      
+      // 優先度: manhole > pref > default
+      if (manholeParam) {
+        // manhole パラメータがある場合、データ取得待機
+        // (アプリケーションコードで実際のデータ取得後に applyManholePageMeta() を呼び出す)
+        // ここではまずデフォルトを適用
+        window.applyDefaultMeta();
+      } else if (prefParam) {
+        const prefecture = window.resolvePrefectureParam(prefParam);
+        if (prefecture) {
+          window.applyPrefecturePageMeta(prefecture);
+          if (prefParam !== prefecture || window.location.pathname.endsWith('/index.html')) {
+            window.history.replaceState({ pref: prefecture }, '', window.buildCanonicalPath(prefecture));
+          }
+        } else {
+          window.applyDefaultMeta();
+        }
+      } else {
+        window.applyDefaultMeta();
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <link rel="stylesheet" href="%%BASE_PATH%%assets/theme.css" />
+  <link rel="stylesheet" href="%%BASE_PATH%%assets/map.css" />
+  <link rel="stylesheet" href="%%BASE_PATH%%assets/pokefuta-map.css?v=20260614-hero-toggle" />
+  <link rel="icon" href="%%BASE_PATH%%assets/pokefuta-marker.svg" type="image/svg+xml" />
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-K18NR4GZG2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    // Dynamic page_path based on URL parameters
+    const params = new URLSearchParams(window.location.search);
+    const manholeParam = params.get('manhole');
+    const prefParam = params.get('pref');
+    const resolvedPref = prefParam ? window.resolvePrefectureParam(prefParam) : '';
+    let pagePath = '/tracker_top';
+    if (manholeParam) {
+      pagePath = `/tracker_manhole/${manholeParam}`;
+    } else if (resolvedPref) {
+      pagePath = `/tracker_pref/${window.PREFECTURE_SLUG_MAP[resolvedPref] || encodeURIComponent(resolvedPref)}`;
+    }
+
+    let mapGA4Params = { site_type: 'map', page_type: 'map_top' };
+    if (manholeParam) {
+      // prefecture slug unknown until data loads; suppress auto page_view and send manually from openManholePopup
+      mapGA4Params = { site_type: 'map', page_type: 'map_manhole', send_page_view: false };
+    } else if (resolvedPref) {
+      mapGA4Params = {
+        site_type: 'map',
+        page_type: 'map_prefecture',
+        prefecture: window.PREFECTURE_SLUG_MAP[resolvedPref] || resolvedPref,
+      };
+    }
+
+    gtag('config', 'G-K18NR4GZG2', {
+      anonymize_ip: true,
+      page_path: pagePath,
+      ...mapGA4Params,
+    });
+
+    // Current page_type for dynamic event params (updated on SPA navigation)
+    window.currentGA4PageType = mapGA4Params.page_type || 'map_top';
+
+    // Event tracking helper function
+    window.trackEvent = function(action, params = {}) {
+      gtag('event', action, params);
+    };
+  </script>
+  <!-- End GA -->
+</head>
+<body class="pokefuta-map-page">
+  <main class="map-stage" aria-label="%%MAP_ARIA%%">
+    <div id="map"></div>
+    <section class="map-hero-card" aria-labelledby="hero-title">
+      <button type="button" id="hero-card-toggle" class="hero-card-toggle" aria-expanded="true" aria-controls="hero-card-content">
+        <span class="hero-card-toggle-icon" aria-hidden="true"></span>
+        <span class="hero-card-toggle-label">地図を広く見る</span>
+      </button>
+      <a href="index.html" class="map-back-to-top">← トップに戻る</a>
+      <div id="hero-card-content" class="hero-card-content">
+        <h1 id="hero-title" class="sr-only">%%HERO_TITLE%%</h1>
+        <nav class="map-hero-nav-grid" aria-label="サイト内ナビゲーション">
+          <a class="map-hero-nav-item" href="index.html">🏠<span>トップ</span></a>
+          <a class="map-hero-nav-item" href="summary/">📋<span>サマリー</span></a>
+          <a class="map-hero-nav-item" href="pokemon/">⭐<span>ポケモン</span></a>
+          <button type="button" class="map-hero-nav-item" onclick="document.getElementById('prefecture-open-button')?.click()">🏙<span>都道府県から探す</span></button>
+          <button type="button" class="map-hero-nav-item" onclick="document.getElementById('feature-open-button')?.click()">🎯<span>目的から探す</span></button>
+        </nav>
+        <a id="i18n-notice" href="" hidden
+           style="display:block; margin-top:8px; padding-top:8px; border-top:1px solid rgba(110,80,44,.12); font-size:0.78rem; font-weight:700; color:#4a7c59; text-decoration:none;"
+        ></a>
+      </div>
+    </section>
+  </main>
+  <script>
+  (function () {
+    var lang = (navigator.languages && navigator.languages[0]) || navigator.language || '';
+    if (/^ja/i.test(lang)) return;
+    var map = [
+      { re: /^zh-(tw|hant|hk)/i, path: '/zh-TW/map.html', label: '查看繁體中文版 →' },
+      { re: /^zh/i,           path: '/zh-CN/map.html', label: '查看简体中文版 →' },
+      { re: /^ko/i,           path: '/ko/map.html',    label: '한국어로 보기 →' },
+      { re: /^en/i,           path: '/en/map.html',    label: 'View in English →' },
+    ];
+    var entry = map.find(function (m) { return m.re.test(lang); }) || map[3];
+    var el = document.getElementById('i18n-notice');
+    if (!el) return;
+    el.href = entry.path + window.location.search;
+    el.textContent = entry.label;
+    el.removeAttribute('hidden');
+  })();
+  </script>
+
+  <div id="controls" class="bottom-sheet" role="complementary" aria-labelledby="page-title">
+    <span id="page-title" class="sr-only">%%PANEL_TITLE%%</span>
+    <div class="controls-header">
+      <button type="button" id="controls-toggle" class="controls-toggle-btn" aria-label="%%CONTROLS_TOGGLE_ARIA%%" title="%%CONTROLS_TOGGLE_TITLE%%" aria-expanded="false" aria-controls="controls-content">
+        <span class="sheet-grip" aria-hidden="true"></span>
+      </button>
+    </div>
+    <div id="controls-content" class="controls-content" role="region" aria-label="%%PANEL_CONTENT_ARIA%%">
+      <div class="sheet-explore-section">
+        <p class="sheet-section-label">探す</p>
+        <button type="button" id="prefecture-open-button" class="sheet-primary-btn" aria-pressed="false">
+          <img src="%%BASE_PATH%%assets/icon-map.svg" alt="" aria-hidden="true">
+          都道府県から探す
+        </button>
+        <button type="button" id="feature-open-button" class="sheet-secondary-btn" aria-pressed="false">
+          <img src="%%BASE_PATH%%assets/icon-tag.svg" alt="" aria-hidden="true">
+          テーマで絞り込む
+        </button>
+      </div>
+      <div class="sheet-utility-section">
+        <p class="sheet-section-label">便利機能</p>
+        <div class="sheet-utility-btns">
+          <button type="button" id="locate-button" class="sheet-utility-btn">
+            <img src="%%BASE_PATH%%assets/icon-current-location.svg" alt="" aria-hidden="true">
+            <span id="locate-button-label">現在地から近いポケふたを探す</span>
+          </button>
+          <label class="sheet-utility-btn sheet-utility-btn--toggle" for="recent-toggle">
+            <input type="checkbox" id="recent-toggle" />
+            <img src="%%BASE_PATH%%assets/icon-fire.svg" alt="" aria-hidden="true">
+            新着ポケふたを見る
+          </label>
+        </div>
+        <p class="sheet-locate-desc">現在地を使って、近くのポケふたを距離順に表示します。位置情報は検索のためだけに使用します。</p>
+      </div>
+      <section class="tag-directory" aria-labelledby="tag-directory-heading" hidden>
+        <div class="section-title-row">
+          <h2 id="tag-directory-heading">テーマでポケふた巡り</h2>
+        </div>
+        <p class="tag-directory-desc">道の駅・世界遺産・離島・ガンダムマンホールなど、旅の目的になるポケふたをテーマ別に探せます。</p>
+        <p class="tag-directory-subdesc">タグをタップすると地図上の表示を絞り込みます。もう一度タップで解除。</p>
+        <div id="tag-directory-chips" class="tag-directory-chips" aria-label="テーマ別タグ"></div>
+        <div id="tag-directory-more" class="tag-directory-chips tag-directory-chips--secondary" aria-label="その他のテーマタグ" hidden></div>
+        <button type="button" id="tag-directory-toggle" class="tag-directory-toggle-btn" aria-expanded="false" aria-controls="tag-directory-more" hidden>もっと見る</button>
+      </section>
+      <section class="prefecture-directory" aria-labelledby="prefecture-directory-heading">
+        <div class="section-title-row">
+          <h2 id="prefecture-directory-heading">%%PREF_DIR_HEADING%%</h2>
+        </div>
+        <p>%%PREF_DIR_DESC%%</p>
+        <div id="prefecture-directory-links" class="prefecture-directory-links" aria-label="%%PREF_DIR_LINKS_ARIA%%"></div>
+      </section>
+      <section id="nearby-results" class="nearby-results" aria-live="polite" hidden>
+        <div class="section-title-row">
+          <h4>%%NEARBY_HEADING%%</h4>
+        </div>
+        <div id="nearby-list" class="nearby-list"></div>
+      </section>
+      <section id="recent-added-panel" class="recent-added-panel" aria-labelledby="recent-added-heading" hidden>
+        <div class="section-title-row">
+          <h4 id="recent-added-heading">%%RECENT_HEADING%%</h4>
+        </div>
+        <div id="recent-added-list" class="recent-added-list"></div>
+      </section>
+      <div id="prefecture-tab" class="tab-content active">
+        <div id="selected-prefecture-badge" class="selected-prefecture-badge" style="display:none;">
+          <span class="badge-label" style="font-weight:600;">%%BADGE_LABEL%%</span> <span class="badge-value"></span>
+          <button type="button" class="badge-clear" aria-label="%%BADGE_CLEAR_ARIA%%" onclick="clearPrefectureSelection()">×</button>
+        </div>
+        <section id="prefecture-spots-panel" class="prefecture-spots-panel" hidden>
+          <div class="section-title-row">
+            <h4 id="prefecture-spots-heading">%%PREF_SPOTS_HEADING%%</h4>
+          </div>
+          <div id="prefecture-spots-list" class="prefecture-spots-list"></div>
+        </section>
+        <div id="prefecture-table-wrapper" class="prefecture-card-list" aria-describedby="pref-table-desc">
+          <p id="pref-table-desc" class="sr-only">都道府県ごとのポケふた数と公式サイトリンク</p>
+          <div id="prefecture-table-body"></div>
+        </div>
+      </div>
+      <span id="recent-summary" class="sr-only"></span>
+    </div>
+  </div>
+  <nav aria-label="人気のポケモン" style="margin:16px auto 0; max-width:960px; padding:12px 16px; background:#fff8ec; border-radius:8px; border:1px solid #e8e0d0;">
+    <p style="font-size:0.85rem; font-weight:bold; color:#6F55A3; margin:0 0 4px;">人気のポケモン</p>
+    <p style="margin:0 0 8px;"><a href="/pokemon/" style="font-size:0.85rem; color:#6F55A3; font-weight:bold;">好きなポケモンのポケふたを探す →</a></p>
+    <ul style="list-style:none; display:flex; flex-wrap:wrap; gap:8px; margin:0; padding:0;">
+      <li><a href="/pokemon/chansey/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">ラッキー</a></li>
+      <li><a href="/pokemon/lapras/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">ラプラス</a></li>
+      <li><a href="/pokemon/vulpix-alola/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">アローラロコン</a></li>
+      <li><a href="/pokemon/oshawott/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">ミジュマル</a></li>
+      <li><a href="/pokemon/vulpix/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">ロコン</a></li>
+      <li><a href="/pokemon/geodude/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">イシツブテ</a></li>
+      <li><a href="/pokemon/quagsire/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">ヌオー</a></li>
+      <li><a href="/pokemon/exeggutor/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">ナッシー</a></li>
+      <li><a href="/pokemon/dragonite/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">カイリュー</a></li>
+      <li><a href="/pokemon/slowpoke/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">ヤドン</a></li>
+      <li><a href="/pokemon/sandshrew/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">サンド</a></li>
+      <li><a href="/pokemon/pikachu/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">ピカチュウ</a></li>
+      <li><a href="/pokemon/eevee/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">イーブイ</a></li>
+      <li><a href="/pokemon/snorlax/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">カビゴン</a></li>
+    </ul>
+  </nav>
+
+  <footer class="data-links" role="contentinfo" style="margin:16px auto 0; max-width:960px; text-align:center; font-size:0.9rem; color:#444;">
+    <p style="margin:0 0 4px;">
+      <a href="https://x.com/pokemonmanhole" target="_blank" rel="noopener noreferrer" style="color:#888; font-size:0.82rem; text-decoration:none;">𝕏 @pokemonmanhole — 公式更新情報</a>
+    </p>
+    <p style="margin:0;">
+      %%FOOTER_EXPORT%%
+      <a href="%%BASE_PATH%%pokefuta.ndjson" target="_blank" rel="noopener">NDJSON</a>
+      /
+      <a href="%%BASE_PATH%%pokefuta.kml" target="_blank" rel="noopener">KML</a>
+    </p>
+  </footer>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script>
+    const pokefutaIcon = L.icon({
+      iconUrl: '%%BASE_PATH%%assets/pokefuta-marker.svg',
+      iconSize: [34, 40],
+      iconAnchor: [17, 38],
+      popupAnchor: [0, -34]
+    });
+    function hasTouchMapPointer() {
+      const matchesMedia = query => typeof window.matchMedia === 'function' && window.matchMedia(query).matches;
+      if (matchesMedia('(pointer: fine)')) return false;
+      return matchesMedia('(pointer: coarse)')
+        || matchesMedia('(any-pointer: coarse)')
+        || Number(navigator.maxTouchPoints || 0) > 0
+        || (L.Browser.mobile && L.Browser.touch);
+    }
+    const isTouchMapPointer = hasTouchMapPointer();
+    const map = L.map('map', { zoomControl: true, closePopupOnClick: !isTouchMapPointer }).setView([36.0, 138.0], 6);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+    map.on('popupopen', () => document.body.classList.add('popup-open'));
+    map.on('popupclose', () => document.body.classList.remove('popup-open'));
+    const POPUP_SIDE_PADDING = 16;
+    const POPUP_TOP_PADDING = 176;
+    const POPUP_BOTTOM_SHEET_PADDING = 250;
+    const pokefutaPopupOptions = {
+      closeOnClick: !isTouchMapPointer,
+      autoPan: true,
+      // Keep popups clear of the hero card at the top and collapsed bottom sheet on mobile.
+      autoPanPaddingTopLeft: L.point(POPUP_SIDE_PADDING, POPUP_TOP_PADDING),
+      autoPanPaddingBottomRight: L.point(POPUP_SIDE_PADDING, POPUP_BOTTOM_SHEET_PADDING)
+    };
+    const HERO_CARD_STORAGE_KEY = 'pokefutaHeroCardCollapsed';
+
+    function getHeroCardToggleLabels() {
+      const lang = document.documentElement.lang.toLowerCase();
+      if (lang.startsWith('zh-tw') || lang.startsWith('zh-hant')) {
+        return { collapse: '放大地圖', expand: '顯示推薦卡片' };
+      }
+      if (lang.startsWith('zh')) {
+        return { collapse: '放大地图', expand: '显示推荐卡片' };
+      }
+      if (lang.startsWith('ko')) {
+        return { collapse: '지도를 넓게 보기', expand: '추천 카드 표시' };
+      }
+      if (lang.startsWith('en')) {
+        return { collapse: 'Show more map', expand: 'Show discovery card' };
+      }
+      return { collapse: '地図を広く見る', expand: 'カードを表示' };
+    }
+
+    function setHeroCardCollapsed(collapsed, persist = false) {
+      const heroCard = document.querySelector('.map-hero-card');
+      const toggle = document.getElementById('hero-card-toggle');
+      const content = document.getElementById('hero-card-content');
+      const label = toggle?.querySelector('.hero-card-toggle-label');
+      if (!heroCard || !toggle || !content || !label) return;
+
+      const labels = getHeroCardToggleLabels();
+      heroCard.classList.toggle('is-collapsed', collapsed);
+      document.body.classList.toggle('hero-collapsed', collapsed);
+      content.hidden = collapsed;
+      toggle.setAttribute('aria-expanded', String(!collapsed));
+      toggle.setAttribute('aria-label', collapsed ? labels.expand : labels.collapse);
+      toggle.title = collapsed ? labels.expand : labels.collapse;
+      label.textContent = collapsed ? labels.expand : labels.collapse;
+      pokefutaPopupOptions.autoPanPaddingTopLeft = L.point(
+        POPUP_SIDE_PADDING,
+        collapsed ? 84 : POPUP_TOP_PADDING
+      );
+
+      if (persist) {
+        try {
+          localStorage.setItem(HERO_CARD_STORAGE_KEY, collapsed ? '1' : '0');
+        } catch (error) {
+          console.warn('Could not save hero card state:', error);
+        }
+      }
+      requestAnimationFrame(() => map.invalidateSize());
+    }
+
+    function initHeroCardToggle() {
+      const toggle = document.getElementById('hero-card-toggle');
+      if (!toggle) return;
+
+      let collapsed = false;
+      try {
+        collapsed = localStorage.getItem(HERO_CARD_STORAGE_KEY) === '1';
+      } catch (error) {
+        console.warn('Could not read hero card state:', error);
+      }
+      setHeroCardCollapsed(collapsed);
+
+      toggle.addEventListener('click', () => {
+        const nextCollapsed = toggle.getAttribute('aria-expanded') === 'true';
+        setHeroCardCollapsed(nextCollapsed, true);
+        if (window.trackEvent) {
+          window.trackEvent(nextCollapsed ? 'collapse_hero_card' : 'expand_hero_card', {
+            event_category: 'map_ui',
+            event_label: 'hero_card'
+          });
+        }
+      });
+    }
+    initHeroCardToggle();
+
+    // 都道府県中心座標マッピング（クリック時の移動用）
+    const prefectureCenterCoords = {
+      '北海道': [43.064, 141.347], '青森県': [40.824, 140.740], '岩手県': [39.704, 141.153],
+      '宮城県': [38.269, 140.872], '秋田県': [39.719, 140.103], '山形県': [38.240, 140.363],
+      '福島県': [37.750, 140.468], '茨城県': [36.342, 140.447], '栃木県': [36.566, 139.883],
+      '群馬県': [36.391, 139.061], '埼玉県': [35.857, 139.649], '千葉県': [35.605, 140.123],
+      '東京都': [35.690, 139.692], '神奈川県': [35.448, 139.643], '新潟県': [37.902, 139.023],
+      '富山県': [36.695, 137.211], '石川県': [36.595, 136.626], '福井県': [36.065, 136.222],
+      '山梨県': [35.664, 138.568], '長野県': [36.651, 138.181], '岐阜県': [35.391, 136.722],
+      '静岡県': [34.977, 138.383], '愛知県': [35.180, 136.907], '三重県': [34.730, 136.509],
+      '滋賀県': [35.004, 135.869], '京都府': [35.021, 135.756], '大阪府': [34.686, 135.520],
+      '兵庫県': [34.691, 135.183], '奈良県': [34.685, 135.833], '和歌山県': [34.226, 135.167],
+      '鳥取県': [35.504, 134.238], '島根県': [35.472, 133.051], '岡山県': [34.662, 133.935],
+      '広島県': [34.396, 132.460], '山口県': [34.186, 131.471], '徳島県': [34.066, 134.559],
+      '香川県': [34.340, 134.043], '愛媛県': [33.842, 132.766], '高知県': [33.560, 133.531],
+      '福岡県': [33.607, 130.418], '佐賀県': [33.250, 130.299], '長崎県': [32.745, 129.874],
+      '熊本県': [32.790, 130.742], '大分県': [33.238, 131.613], '宮崎県': [31.911, 131.424],
+      '鹿児島県': [31.560, 130.558], '沖縄県': [26.212, 127.679]
+    };
+
+    var allMarkers = [];
+    var allData = [];
+    var markerLayer = null;
+    var prefectureOverviewLayer = L.layerGroup();
+    var userLocationMarker = null;
+    var latestPhotoMeta = {};
+    var prefectureCounts = {};
+    var cityCounts = {};
+    var selectedPrefecture = '';
+    var pokemonCounts = {};
+    var currentTab = 'prefecture';
+    var filterRecent = false; // recent 30 days filter
+    var showPrefectureCards = true;
+    var showNearbyResults = false;
+    var hasAddedAtField = false; // whether dataset has any date field
+    var prefectureBounds = {};  // 都道府県ごとのbounding box（グローバルスコープ）
+    var prefectureMarkerCounts = {};  // 都道府県ごとのマンホール数（グローバルスコープ）
+    const PREFECTURE_BOUNDS_OFFSET = 0.5;  // 都道府県 bounding box のオフセット（度）
+    const PREFECTURE_OVERVIEW_MAX_ZOOM = 6;
+    const OVERALL_PANEL_MEDIA_QUERY = '(max-width: 759px)';
+    var isInitialPageLoad = true;  // Track if this is initial page load to prevent duplicate page_views
+    var activeTagFilter = null;  // タグフィルタ（null = 全件）
+    var showTagDirectory = false;
+    const TAG_DIRECTORY_MIN_COUNT = 5;  // この件数未満のタグはチップに表示しない
+    const TAG_PRIORITY = ['roadside', 'world_heritage', 'remote_island', 'near_gundam_manhole', 'seaside', 'tourism', 'station_front', 'food', 'museum', 'history', 'rail_access_good'];
+    const FEATURED_TAGS = ['roadside', 'remote_island', 'world_heritage', 'near_gundam_manhole', 'seaside'];
+
+    const TAG_META = {
+      seaside:          { emoji: '🌊', label: '海沿い' },
+      beach:            { emoji: '🏖', label: 'ビーチ' },
+      lakeside:         { emoji: '🌅', label: '湖畔' },
+      river:            { emoji: '🏞', label: '川辺' },
+      remote_island:    { emoji: '🏝', label: '離島' },
+      roadside:         { emoji: '🛤', label: '道の駅' },
+      in_station:       { emoji: '🚉', label: '駅構内' },
+      station_front:    { emoji: '🚃', label: '駅前' },
+      near_station:     { emoji: '🚶', label: '駅近' },
+      rail_access_good: { emoji: '🚆', label: '電車アクセス良好' },
+      far_station:      { emoji: '🚗', label: '駅から遠い' },
+      tourism:          { emoji: '🗺', label: '観光地' },
+      park:             { emoji: '🌳', label: '公園' },
+      museum:           { emoji: '🏛', label: '博物館・美術館' },
+      history:          { emoji: '⛩', label: '史跡・名所' },
+      food:             { emoji: '🍜', label: 'グルメ・食の名所' },
+      world_heritage:   { emoji: '🌐', label: '世界遺産' },
+      near_gundam_manhole: {
+        emoji: '🤖',
+        label: 'ガンダムマンホール',
+        description: 'ガンダムマンホールまで約500m以内のポケふた',
+      },
+    };
+
+    function getOverallPanelMediaQuery() {
+      return typeof window.matchMedia === 'function'
+        ? window.matchMedia(OVERALL_PANEL_MEDIA_QUERY)
+        : null;
+    }
+
+    function isOverallPanelToggleable() {
+      const mediaQuery = getOverallPanelMediaQuery();
+      return mediaQuery ? mediaQuery.matches : true;
+    }
+
+    // URL パラメータから初期都道府県を取得する関数
+    function getInitialPrefectureFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      return window.resolvePrefectureParam(params.get('pref')) || null;
+    }
+
+    function getInitialManholeIdFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      const manholeId = String(params.get('manhole') || '').trim();
+      return /^[0-9A-Za-z_-]+$/.test(manholeId) ? manholeId : null;
+    }
+
+    // URL を更新する関数
+    function updateURLWithPrefecture(prefecture) {
+      if (prefecture) {
+        window.history.replaceState({ pref: prefecture }, '', window.buildCanonicalPath(prefecture));
+        window.applyPrefecturePageMeta(prefecture);
+        // Send page_view for SPA navigation (skip initial page load)
+        window.currentGA4PageType = 'map_prefecture';
+        if (window.gtag && !isInitialPageLoad) {
+          gtag('event', 'page_view', {
+            page_path: `/tracker_pref/${window.PREFECTURE_SLUG_MAP[prefecture] || encodeURIComponent(prefecture)}`,
+            site_type: 'map',
+            page_type: 'map_prefecture',
+            prefecture: window.PREFECTURE_SLUG_MAP[prefecture] || prefecture,
+          });
+        }
+      } else {
+        // URL をリセット
+        window.history.replaceState({}, '', window.buildCanonicalPath(''));
+        window.applyPrefecturePageMeta('');
+        window.currentGA4PageType = 'map_top';
+        // Send page_view for SPA navigation back to top (skip initial page load)
+        if (window.gtag && !isInitialPageLoad) {
+          gtag('event', 'page_view', {
+            page_path: '/tracker_top',
+            site_type: 'map',
+            page_type: 'map_top',
+          });
+        }
+      }
+    }
+
+    // ==== セカンダリタグ（バッジ変換なし・popup はアイコンのみ表示） ====
+    // TAG_META から自動生成（単一ソース管理）
+    const SECONDARY_TAG_KEYS = ['tourism','park','museum','history','food','rail_access_good','river','in_station'];
+    const SECONDARY_TAG_EMOJI = Object.freeze(Object.fromEntries(
+      SECONDARY_TAG_KEYS.map(k => [k, TAG_META[k]?.emoji]).filter(([,v]) => v)
+    ));
+    const SECONDARY_TAG_LABEL = Object.freeze(Object.fromEntries(
+      SECONDARY_TAG_KEYS.map(k => [k, TAG_META[k]?.label]).filter(([,v]) => v)
+    ));
+
+    // UI labels: sourced from build-time injected window.I18N.UI
+    const UI_TEXT = window.I18N.UI;
+    const HERO_DISCOVERY_TEXT = window.I18N.heroDiscovery;
+
+    // 初期テキストは既に HTML に記述しているため updateUIText は不要
+    function updateUIText() { /* no-op (多言語削除) */ }
+
+    // Validate prefecture site URL (whitelist check)
+    function validatePrefectureSiteUrl(rawUrl) {
+      try {
+        const url = new URL(rawUrl);
+        const allowedHost = 'local.pokemon.jp';
+        if (url.protocol === 'https:' && url.hostname === allowedHost) {
+          return url;
+        }
+      } catch {
+        return null;
+      }
+      return null;
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, ch => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[ch]));
+    }
+
+    function escapeJs(str) {
+      return String(str || '')
+        .replace(/\\/g, '\\\\')
+        .replace(/'/g, "\\'")
+        .replace(/"/g, '\\"')
+        .replace(/\n/g, '\\n')
+        .replace(/\r/g, '\\r')
+        .replace(/\t/g, '\\t');
+    }
+
+    function getLocalManholeImageUrl(id) {
+      const safeId = String(id ?? '').trim();
+      return safeId ? `%%BASE_PATH%%manhole/image/${encodeURIComponent(safeId)}_latest.jpeg` : '';
+    }
+
+    function getManholePageUrl(id) {
+      const safeId = String(id ?? '').trim();
+      return safeId ? window.buildManholeCanonicalPath(safeId) : '';
+    }
+
+    function getAbsoluteManholePageUrl(id) {
+      const path = getManholePageUrl(id);
+      return path ? new URL(path, window.location.origin).href : '';
+    }
+
+
+    function formatPhotoDate(rawDate) {
+      if (!rawDate) return '';
+      const date = new Date(rawDate);
+      if (Number.isNaN(date.getTime())) return '';
+      return new Intl.DateTimeFormat(window.I18N?.intlLocale || 'ja-JP', {
+        timeZone: 'Asia/Tokyo',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      }).format(date);
+    }
+
+    function getLatestPhotoMeta(id) {
+      const meta = latestPhotoMeta[String(id)] || latestPhotoMeta[Number(id)];
+      return meta || null;
+    }
+
+    function getPhotoTakenDate(id) {
+      const meta = getLatestPhotoMeta(id);
+      return formatPhotoDate(meta?.shot_at || meta?.created_at);
+    }
+
+    const HERO_TRAVEL_THEME_KEYS = ['remote_island', 'roadside', 'station_front', 'world_heritage'];
+    const HERO_RARE_THEME_KEYS = ['unique_pokemon', 'north_end', 'south_end', 'east_end', 'west_end', 'lone'];
+
+    function getJapanDateKey(date = new Date()) {
+      return new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'Asia/Tokyo',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      }).format(date);
+    }
+
+    function stableHash(value) {
+      let hash = 2166136261;
+      for (let index = 0; index < value.length; index += 1) {
+        hash ^= value.charCodeAt(index);
+        hash = Math.imul(hash, 16777619);
+      }
+      return hash >>> 0;
+    }
+
+    function getDailyRotationIndex(dateKey, itemCount, offset = 0) {
+      const dayNumber = Math.floor(Date.parse(`${dateKey}T00:00:00Z`) / 86400000);
+      return (dayNumber + offset) % itemCount;
+    }
+
+    function hasHeroTitle(manhole, key) {
+      if (key === 'lone') {
+        return (manhole.titles || []).some(title => title.key === 'lone' || title.key === 'lone_100');
+      }
+      return (manhole.titles || []).some(title => title.key === key);
+    }
+
+    function getHeroPokemonDisplayName(nameJa) {
+      const names = getPokemonMetadata(nameJa)?.names;
+      const lang = window.I18N?.lang || 'ja';
+      return {
+        en: names?.en,
+        ko: names?.ko,
+        'zh-TW': names?.['zh-Hant'],
+        'zh-CN': names?.['zh-Hans']
+      }[lang] || nameJa;
+    }
+
+    function getHeroPokemonText(manhole) {
+      const pokemons = Array.isArray(manhole.pokemons)
+        ? manhole.pokemons.filter(name => name && !name.includes('ローカルActs')).slice(0, 2)
+        : [];
+      return pokemons.length
+        ? pokemons.map(getHeroPokemonDisplayName).join(window.I18N?.pokemonJoiner || '・')
+        : (manhole.title || window.I18N?.manholeTitle || 'ポケふた');
+    }
+
+    function getHeroThemeCandidates(themeKey) {
+      return allData
+        .filter(manhole => getLatestPhotoMeta(manhole.id) && hasHeroTitle(manhole, themeKey))
+        .sort((a, b) => String(a.id).localeCompare(String(b.id), 'en', { numeric: true }));
+    }
+
+    function getHeroThemeCount(themeKey) {
+      return allData.filter(manhole => hasHeroTitle(manhole, themeKey)).length;
+    }
+
+    function getUniqueHeroPokemon(manhole) {
+      const pokemonCounts = new Map();
+      allData.forEach(item => {
+        new Set(item.pokemons || []).forEach(name => {
+          if (name && !name.includes('ローカルActs')) {
+            pokemonCounts.set(name, (pokemonCounts.get(name) || 0) + 1);
+          }
+        });
+      });
+      return (manhole.pokemons || []).find(name => pokemonCounts.get(name) === 1) || '';
+    }
+
+    function getSummaryHubUrl(anchor) {
+      const lang = window.I18N?.lang || 'ja';
+      const prefix = lang === 'ja' ? '/' : `/${lang}/`;
+      return `${prefix}summary/#${anchor}`;
+    }
+
+    function buildFreshHeroRecommendation() {
+      const manhole = allData
+        .filter(item => getLatestPhotoMeta(item.id))
+        .sort((a, b) => {
+          const aPhoto = getLatestPhotoMeta(a.id);
+          const bPhoto = getLatestPhotoMeta(b.id);
+          return (Date.parse(bPhoto?.created_at || bPhoto?.shot_at || '') || 0)
+            - (Date.parse(aPhoto?.created_at || aPhoto?.shot_at || '') || 0);
+        })[0];
+      if (!manhole) return null;
+      const strings = HERO_DISCOVERY_TEXT;
+      const photo = getLatestPhotoMeta(manhole.id);
+      const photoDate = formatPhotoDate(photo?.created_at);
+      return {
+        manhole,
+        category: 'fresh',
+        categoryLabel: strings.categories.fresh.label,
+        title: getHeroPokemonText(manhole),
+        place: [manhole.prefecture, manhole.city].filter(Boolean).join(' ') || window.I18N?.unknownPref || '不明',
+        reason: photoDate ? strings.freshDate.replace('{date}', photoDate) : strings.categories.fresh.label,
+        imageAlt: getHeroPokemonText(manhole),
+        imageUrl: getLocalManholeImageUrl(manhole.id),
+        destinationUrl: getManholePageUrl(manhole.id),
+        destinationHub: 'map_popup',
+        contentType: 'latest_photo',
+        contentId: photo?.photo_id || String(manhole.id),
+        photo
+      };
+    }
+
+    function buildThemeHeroRecommendation(category, themeKey, dateKey) {
+      const candidates = getHeroThemeCandidates(themeKey);
+      if (!candidates.length) return null;
+      const manhole = candidates[stableHash(`${dateKey}:${category}:${themeKey}:representative`) % candidates.length];
+      const strings = HERO_DISCOVERY_TEXT;
+      let title = '';
+      let reason = '';
+      if (category === 'travel') {
+        title = strings.travelThemes[themeKey];
+        reason = strings.countTemplate.replace('{count}', getHeroThemeCount(themeKey));
+      } else if (themeKey === 'unique_pokemon') {
+        const uniquePokemon = getUniqueHeroPokemon(manhole);
+        title = uniquePokemon ? getHeroPokemonDisplayName(uniquePokemon) : strings.rareThemes[themeKey];
+        reason = strings.uniqueTemplate.replace('{pokemon}', title);
+      } else {
+        title = strings.rareThemes[themeKey];
+        reason = getHeroPokemonText(manhole);
+      }
+      return {
+        manhole,
+        category,
+        categoryLabel: strings.categories[category].label,
+        title,
+        place: [manhole.prefecture, manhole.city].filter(Boolean).join(' ') || window.I18N?.unknownPref || '不明',
+        reason,
+        imageAlt: getHeroPokemonText(manhole),
+        imageUrl: getLocalManholeImageUrl(manhole.id),
+        destinationUrl: getSummaryHubUrl(category === 'travel' ? 'travel-discovery' : 'rare-discovery'),
+        destinationHub: category === 'travel' ? 'summary_travel' : 'summary_rare',
+        contentType: category === 'travel' ? 'travel_theme' : 'rare_fact',
+        contentId: themeKey
+      };
+    }
+
+    function trackHeroRecommendation(action, recommendation, position) {
+      if (!window.trackEvent || !recommendation) return;
+      window.trackEvent(action, {
+        event_category: 'hero_discovery',
+        event_label: recommendation.category,
+        recommendation_type: recommendation.category,
+        manhole_id: recommendation.manhole.id,
+        content_type: recommendation.contentType,
+        content_id: recommendation.contentId,
+        destination_hub: recommendation.destinationHub,
+        position,
+        site_type: 'map',
+        page_type: window.currentGA4PageType || 'map_top'
+      });
+    }
+
+    function configureHeroLink(link, recommendation, position, featured = false) {
+      link.href = recommendation.destinationUrl;
+      if (featured) {
+        const image = link.querySelector('.hero-feature-media img');
+        image.src = recommendation.imageUrl;
+        image.alt = `${recommendation.place} ${recommendation.imageAlt}${window.I18N?.photoAltSuffix || 'の写真'}`;
+        image.addEventListener('error', () => {
+          link.classList.add('is-image-missing');
+          image.remove();
+        }, { once: true });
+        link.querySelector('.hero-feature-eyebrow').textContent = recommendation.categoryLabel;
+        link.querySelector('.hero-feature-title').textContent = recommendation.title;
+        link.querySelector('.hero-feature-place').textContent = recommendation.place;
+        link.querySelector('.hero-feature-reason').textContent = recommendation.reason;
+        link.querySelector('.hero-feature-cta').textContent = HERO_DISCOVERY_TEXT.ctas[recommendation.category];
+      } else {
+        link.querySelector('.hero-discovery-link-label').textContent = recommendation.categoryLabel;
+        link.querySelector('strong').textContent = recommendation.title;
+        link.querySelector('.hero-discovery-link-place').textContent =
+          `${recommendation.place} · ${HERO_DISCOVERY_TEXT.ctas[recommendation.category]}`;
+      }
+      link.addEventListener('click', event => {
+        if (recommendation.category === 'fresh') {
+          event.preventDefault();
+          trackHeroRecommendation('click_hero_new_photo', recommendation, position);
+          collapseBottomSheet();
+          openManholePopup(recommendation.manhole.id);
+          return;
+        }
+        trackHeroRecommendation('click_hero_discovery', recommendation, position);
+      });
+    }
+
+    function renderHeroDiscovery() {
+      const discovery = document.getElementById('hero-discovery');
+      const fallback = document.getElementById('hero-fallback');
+      if (!discovery || !fallback) return;
+
+      const dateKey = getJapanDateKey();
+      const availableTravelKeys = HERO_TRAVEL_THEME_KEYS.filter(key => getHeroThemeCandidates(key).length);
+      const availableRareKeys = HERO_RARE_THEME_KEYS.filter(key => getHeroThemeCandidates(key).length);
+      if (!availableTravelKeys.length || !availableRareKeys.length) return;
+      const travelKey = availableTravelKeys[getDailyRotationIndex(dateKey, availableTravelKeys.length)];
+      const rareKey = availableRareKeys[getDailyRotationIndex(dateKey, availableRareKeys.length, 2)];
+      const byCategory = {
+        fresh: buildFreshHeroRecommendation(),
+        travel: buildThemeHeroRecommendation('travel', travelKey, dateKey),
+        rare: buildThemeHeroRecommendation('rare', rareKey, dateKey)
+      };
+      const categories = ['travel', 'rare', 'fresh'];
+      const featuredIndex = getDailyRotationIndex(dateKey, categories.length, 1);
+      const orderedCategories = [
+        categories[featuredIndex],
+        categories[(featuredIndex + 1) % categories.length],
+        categories[(featuredIndex + 2) % categories.length]
+      ];
+      const recommendations = orderedCategories.map(category => byCategory[category]).filter(Boolean);
+      if (recommendations.length < 3) return;
+
+      const [featured, ...secondary] = recommendations;
+      const heroCard = discovery.closest('.map-hero-card');
+      const featureLink = discovery.querySelector('.hero-feature');
+      heroCard?.removeAttribute('aria-labelledby');
+      heroCard?.setAttribute('aria-label', HERO_DISCOVERY_TEXT.heading);
+      discovery.querySelector('.hero-discovery-heading').textContent = HERO_DISCOVERY_TEXT.heading;
+      discovery.querySelector('.hero-discovery-links').setAttribute('aria-label', HERO_DISCOVERY_TEXT.heading);
+      configureHeroLink(featureLink, featured, 'featured', true);
+
+      discovery.querySelectorAll('.hero-discovery-link').forEach((link, index) => {
+        const recommendation = secondary[index];
+        configureHeroLink(link, recommendation, link.dataset.position);
+      });
+
+      fallback.hidden = true;
+      discovery.hidden = false;
+      trackHeroRecommendation('view_hero_recommendation', featured, 'featured');
+    }
+
+    function handlePopupImageError(img) {
+      const frame = img.closest('.popup-photo');
+      if (frame) frame.classList.add('popup-photo--missing');
+      frame?.querySelector('.travel-popup-photo-meta')?.remove();
+      img.remove();
+    }
+
+    function buildPokefutaPopup(d) {
+      const I = window.I18N;
+      const prefecture = d.prefecture || I.unknownPref;
+      const prefectureCode = window.PREFECTURE_CODE_MAP[prefecture] || '--';
+      const pokemons = Array.isArray(d.pokemons) && d.pokemons.length ? d.pokemons : [];
+      const pokemonsHtml = pokemons.length
+        ? pokemons.map(pokemon => {
+            const displayName = escapeHtml(getHeroPokemonDisplayName(pokemon));
+            const url = getPokemonLpUrl(pokemon);
+            return url
+              ? `<a href="${escapeHtml(url)}" class="travel-popup-pokemon" target="_blank" rel="noopener noreferrer">${displayName}</a>`
+              : `<span class="travel-popup-pokemon">${displayName}</span>`;
+          }).join('')
+        : `<span class="travel-popup-pokemon">${I.noPokemon}</span>`;
+      const imageUrl = getLocalManholeImageUrl(d.id);
+      const photoAlt = `${d.title || I.manholeTitle}${I.photoAltSuffix}`;
+      const photoMeta = getLatestPhotoMeta(d.id);
+      const hasPhoto = Boolean(photoMeta?.url || photoMeta?.original_url || photoMeta?.storage_key);
+      const photoDate = getPhotoTakenDate(d.id);
+      const displayName = String(photoMeta?.display_name || '').trim();
+      const photoMetaItems = [
+        photoDate ? `<span class="travel-popup-photo-date">${I.photoDatePrefix}${escapeHtml(photoDate)}</span>` : '',
+        displayName ? `<span class="travel-popup-photo-author">${escapeHtml(displayName)}</span>` : ''
+      ].filter(Boolean).join('');
+      const titles = Array.isArray(d.titles) ? d.titles : [];
+      const titleBadgesHtml = titles.length
+        ? '<div class="travel-popup-badges">'
+          + titles.slice(0, 1).map(t => '<span class="travel-popup-badge">'
+            + escapeHtml((t.emoji ? t.emoji + ' ' : '') + t.label)
+            + '</span>').join('')
+          + '</div>'
+        : '';
+      const manholeId = encodeURIComponent(String(d.id || ''));
+      const photoPageUrl = `https://pokefuta.com/manhole/${manholeId}`;
+      const uploadUrl = 'https://pokefuta.com/upload';
+      const safeIdJs = escapeJs(d.id);
+      const safePrefectureJs = escapeJs(prefecture);
+      const eventParams = `event_category:'popup_navigation',manhole_id:'${safeIdJs}',prefecture:'${safePrefectureJs}'`;
+      const photoBlock = hasPhoto && imageUrl ? `
+        <div class="popup-photo travel-popup-photo" aria-label="${I.manholePhotoAria}">
+          <a href="${photoPageUrl}" target="_blank" rel="noopener noreferrer" class="travel-popup-photo-link"
+             onclick="if(window.trackEvent){window.trackEvent('popup_click_photo',{${eventParams}});}">
+            <img src="${imageUrl}" alt="${escapeHtml(photoAlt)}" loading="lazy" decoding="async" onerror="handlePopupImageError(this)">
+          </a>
+          ${photoMetaItems ? `<div class="travel-popup-photo-meta">${photoMetaItems}</div>` : ''}
+          <div class="popup-photo__missing">
+            <b>${I.photoWanted}</b>
+            <span>${I.photoMissing}</span>
+          </div>
+        </div>
+      ` : `
+        <div class="popup-photo travel-popup-photo popup-photo--missing" aria-label="${I.photoWanted}">
+          <div class="popup-photo__missing">
+            <b>${I.photoWanted}</b>
+            <span>${I.photoMissing}</span>
+          </div>
+        </div>
+      `;
+      const detailLink = d.id ? (function() {
+        const manholeDetailUrl = `${window.SITE_BASE_URL}manholes/${encodeURIComponent(d.id)}/`;
+        const anchor = document.createElement('a');
+        anchor.href = manholeDetailUrl;
+        anchor.className = 'travel-popup-action travel-popup-action--detail';
+        anchor.textContent = UI_TEXT.detailPageCta;
+        anchor.setAttribute('onclick', `if(window.trackEvent){window.trackEvent('popup_click_detail',{${eventParams}});}`);
+        return anchor.outerHTML;
+      })() : '';
+      const primaryAction = hasPhoto
+        ? `<a href="${photoPageUrl}" target="_blank" rel="noopener noreferrer" class="travel-popup-action travel-popup-action--primary"
+              onclick="if(window.trackEvent){window.trackEvent('popup_click_photo',{${eventParams}});}">${I.photoViewCta}</a>`
+        : `<a href="${uploadUrl}" target="_blank" rel="noopener noreferrer" class="travel-popup-action travel-popup-action--primary travel-popup-action--upload"
+              onclick="if(window.trackEvent){window.trackEvent('popup_click_upload',{${eventParams}});}">${I.firstPhotoUploadCta}</a>`;
+      const mapsUrl = Number.isFinite(Number(d.lat)) && Number.isFinite(Number(d.lng))
+        ? `https://www.google.com/maps?q=${encodeURIComponent(`${d.lat},${d.lng}`)}`
+        : '';
+      const mapsAction = mapsUrl
+        ? `<a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" class="travel-popup-action travel-popup-action--maps"
+              onclick="if(window.trackEvent){window.trackEvent('popup_click_google_maps',{${eventParams}});}">${I.googleMapsCta}</a>`
+        : '';
+
+      return `
+        <div class="popup-box popup-box--photo travel-popup-card">
+          ${photoBlock}
+          <div class="travel-popup-body">
+            <div class="travel-popup-place">
+              <span class="travel-popup-code">${prefectureCode}</span>
+              <span>${escapeHtml(prefecture)}</span>
+              ${d.city ? `<b>${escapeHtml(d.city)}</b>` : ''}
+            </div>
+            <h3 class="travel-popup-title">${escapeHtml(d.title || I.manholeTitle)}</h3>
+            ${d.building ? `<p class="travel-popup-building">📍 ${escapeHtml(d.building)}</p>` : ''}
+            ${titleBadgesHtml}
+            <div class="travel-popup-pokemon-list" aria-label="${I.pokemonListAria}">${pokemonsHtml}</div>
+            <div class="popup-actions travel-popup-actions${hasPhoto ? ' travel-popup-actions--has-photo' : ''}">
+              ${primaryAction}
+              ${mapsAction}
+              ${detailLink}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    async function loadLatestPhotoMeta() {
+      try {
+        const response = await fetch('%%BASE_PATH%%latest-manhole-photos.json', { cache: 'no-store' });
+        if (!response.ok) return;
+        const payload = await response.json();
+        latestPhotoMeta = payload?.photos || {};
+      } catch (error) {
+        console.warn('最新写真メタデータの読み込みに失敗しました', error);
+      }
+    }
+
+    // Pokemon metadata loader (non-blocking, graceful degradation)
+    var pokemonMetadata = null;
+
+    async function loadPokemonMetadata() {
+      try {
+        const res = await fetch('%%BASE_PATH%%pokemon_metadata.json', { cache: 'default' });
+        if (!res.ok) return null;
+        const data = await res.json();
+        if (!Array.isArray(data)) return null;
+        // Create fast lookup map by Japanese name
+        pokemonMetadata = new Map(data.map(p => [p.names?.ja, p]).filter(([k]) => k));
+        console.log(`Pokemon metadata loaded: ${pokemonMetadata.size} entries`);
+        return pokemonMetadata;
+      } catch (error) {
+        console.warn('Pokemon metadata not available', error);
+        return null;
+      }
+    }
+
+    function getPokemonMetadata(nameJa) {
+      if (!pokemonMetadata || !nameJa) return null;
+      return pokemonMetadata.get(nameJa) || null;
+    }
+
+    window.getPokemonLpUrl = function(jaName) {
+      const meta = getPokemonMetadata(jaName);
+      if (!meta || !meta.slug) return null;
+      const lang = (window.I18N && window.I18N.lang) || 'ja';
+      const prefix = lang === 'ja' ? '' : lang + '/';
+      return `${window.SITE_BASE_URL}${prefix}pokemon/${meta.slug}/`;
+    };
+
+    function buildPokemonInfoCards(pokemons) {
+      const I = window.I18N;
+      if (!pokemonMetadata || !Array.isArray(pokemons) || pokemons.length === 0) return '';
+
+      const cards = pokemons.slice(0, 2).map(nameJa => {
+        const meta = getPokemonMetadata(nameJa);
+        if (!meta || !meta.names) return '';
+
+        const types = Array.isArray(meta.types) ? meta.types.map(t =>
+          `<span class="pokemon-type-badge">${escapeHtml(t.ja || '')} ${t.en ? `(${escapeHtml(t.en)})` : ''}</span>`
+        ).join('') : '';
+
+        const multilang = [meta.names.en, meta.names.ko, meta.names['zh-Hans']]
+          .filter(Boolean)
+          .map(escapeHtml)
+          .join(' / ');
+
+        return `
+          <div class="pokemon-info-card">
+            <h4>${escapeHtml(nameJa)} / ${escapeHtml(meta.names.en || nameJa)}</h4>
+            ${types ? `<div class="pokemon-info-row"><strong>${I.typeLabel}</strong> ${types}</div>` : ''}
+            ${meta.generation ? `<div class="pokemon-info-row"><strong>${I.genLabel}</strong> ${I.genFormat.replace('{n}', meta.generation)}</div>` : ''}
+            ${multilang ? `<div class="pokemon-info-multilang">${multilang}</div>` : ''}
+          </div>
+        `;
+      }).filter(Boolean);
+
+      return cards.join('');
+    }
+
+    function buildSamePokemonSection(pokemons, currentId) {
+      const I = window.I18N;
+      if (!Array.isArray(pokemons) || pokemons.length === 0) return '';
+
+      // Find all manholes with same Pokemon, excluding current one
+      const matches = allData.filter(d =>
+        d.id !== currentId &&
+        Array.isArray(d.pokemons) &&
+        d.pokemons.some(p => pokemons.includes(p))
+      );
+
+      // Deduplicate by manhole ID (keep first occurrence)
+      const seenIds = new Set();
+      const uniqueMatches = matches.filter(d => {
+        if (seenIds.has(d.id)) return false;
+        seenIds.add(d.id);
+        return true;
+      });
+
+      // Sort by prefecture then city
+      uniqueMatches.sort((a, b) => {
+        const prefA = a.prefecture || '';
+        const prefB = b.prefecture || '';
+        if (prefA !== prefB) return prefA.localeCompare(prefB, 'ja');
+        return (a.city || '').localeCompare(b.city || '', 'ja');
+      });
+
+      // Take max 5 items
+      const displayMatches = uniqueMatches.slice(0, 5);
+
+      if (displayMatches.length === 0) return '';
+
+      const items = displayMatches.map(d => {
+        const safeTitleJs = escapeJs(d.title || d.id);
+        const safeIdJs = escapeJs(d.id);
+
+        // Extract Pokemon names for this manhole
+        const pokemonNames = Array.isArray(d.pokemons)
+          ? d.pokemons.filter(p => !p.includes('ローカルActs')).slice(0, 2).join(' / ')
+          : '';
+        const pokemonDisplay = pokemonNames ? ` (${pokemonNames})` : '';
+
+        return `
+          <button type="button" class="same-pokemon-item"
+                  data-manhole-id="${escapeHtml(d.id)}"
+                  onclick="openManholePopup('${safeIdJs}'); collapseBottomSheet();"
+                  title="${escapeHtml(d.title || I.manholeTitle)}${I.openSuffix}">
+            ${escapeHtml(d.prefecture || '不明')} ${escapeHtml(d.city || '')}${escapeHtml(pokemonDisplay)}
+          </button>
+        `;
+      }).join('');
+
+      return `
+        <div class="same-pokemon-section">
+          <h5>${I.samePokemonHeading}</h5>
+          <div class="same-pokemon-list">${items}</div>
+        </div>
+      `;
+    }
+
+    async function loadPokefutaData() {
+      try {
+        // Try multiple potential paths for pokefuta data
+        const pokefutaPaths = [
+          './pokefuta.ndjson',  // Current relative path
+          'pokefuta.ndjson',    // Direct filename
+          '../pokefuta.ndjson', // Parent directory
+          'https://raw.githubusercontent.com/nishiokya/pokefuta-tracker/main/docs/pokefuta.ndjson' // Fallback to GitHub raw
+        ];
+        
+        let res = null;
+        for (const path of pokefutaPaths) {
+          try {
+            console.log(`Trying to fetch pokefuta data from: ${path}`);
+            res = await fetch(path, { cache: 'no-store' });
+            if (res.ok) {
+              console.log(`Successfully loaded pokefuta data from: ${path}`);
+              break;
+            }
+          } catch (e) {
+            console.warn(`Failed to fetch from ${path}:`, e);
+          }
+        }
+        
+        if (!res || !res.ok) {
+          throw new Error('Could not load pokefuta data from any path');
+        }
+        
+        const text = await res.text();
+        const lines = text.trim().split('\n');
+        allData = [];
+        // 集約: 同一 id の複数レコードが存在する場合
+        //   ・added_at / first_seen は最古値
+        //   ・last_seen / source_last_checked / last_updated は最新値
+        //   ・その他フィールドは最新レコードをベース
+        const aggById = new Map();
+        for (const line of lines) {
+          if (!line.trim()) continue;
+          let obj; try { obj = JSON.parse(line); } catch { continue; }
+          const existing = aggById.get(obj.id);
+          if (!existing) {
+            aggById.set(obj.id, { ...obj });
+          } else {
+            function earlier(a,b){ if(!a) return b; if(!b) return a; return new Date(a) <= new Date(b) ? a : b; }
+            function later(a,b){ if(!a) return b; if(!b) return a; return new Date(a) >= new Date(b) ? a : b; }
+            // keep earliest for creation-ish fields
+            existing.added_at = earlier(existing.added_at, obj.added_at);
+            existing.first_seen = earlier(existing.first_seen, obj.first_seen);
+            // keep latest for observation-ish fields
+            existing.last_seen = later(existing.last_seen, obj.last_seen);
+            existing.source_last_checked = later(existing.source_last_checked, obj.source_last_checked);
+            existing.last_updated = later(existing.last_updated, obj.last_updated);
+            // Preserve first non-empty prefecture_site_url
+            const prefUrlToKeep = existing.prefecture_site_url || obj.prefecture_site_url;
+            // For other mutable fields (title, pokemons etc.) assume latest line is authoritative
+            Object.assign(existing, obj, {
+              added_at: existing.added_at,
+              first_seen: existing.first_seen,
+              last_seen: existing.last_seen,
+              source_last_checked: existing.source_last_checked,
+              last_updated: existing.last_updated,
+              prefecture_site_url: prefUrlToKeep
+            });
+          }
+        }
+        allData = [...aggById.values()];
+  // Detect presence of date field for recent filter (include source_last_checked / last_seen)
+  hasAddedAtField = allData.some(d => d.added_at || d.first_seen || d.last_seen || d.source_last_checked || d.last_updated || d.date);
+        // 日付文字列の正規化 (Safari 互換 / microseconds 除去 / +00:00 → Z)
+        function normalizeDateString(ds) {
+          if (!ds) return null;
+          let cleaned = ds.trim();
+          // If fractional seconds are more than 3 digits, trim to milliseconds (Safari 対応)
+          cleaned = cleaned.replace(/(\.\d{3})\d+(?=(Z|[+\-]\d{2}:?\d{2})?$)/, '$1');
+          // If any fractional seconds remain with more than 6 digits, drop entirely
+          cleaned = cleaned.replace(/\.\d{4,6}(?=(Z|[+\-]\d{2}:?\d{2})?$)/, match => match.slice(0,4));
+          // Convert +00:00 to Z for consistency
+          cleaned = cleaned.replace(/\+00:00$/, 'Z');
+          // If timezone missing but pattern looks like ISO, append Z
+          if (!/(Z|[+\-]\d{2}:?\d{2})$/.test(cleaned) && /T\d{2}:\d{2}:\d{2}/.test(cleaned)) cleaned += 'Z';
+          const t = Date.parse(cleaned);
+          return isNaN(t) ? null : new Date(t);
+        }
+        // Pre-compute reference date for "recent" filter
+        // 優先順位: added_at > first_seen > last_seen > source_last_checked > last_updated > date
+        allData.forEach(d => {
+          const raw = d.added_at || d.first_seen || d.last_seen || d.source_last_checked || d.last_updated || d.date;
+          d._addedDate = normalizeDateString(raw);
+        });
+        const pokemonMetadataPromise = loadPokemonMetadata();
+        await loadLatestPhotoMeta();
+        initMarkerLayer();
+        // Build markers
+        allMarkers = [];
+        prefectureCounts = {}; cityCounts = {}; pokemonCounts = {};
+        allData.forEach(d => {
+          const prefecture = d.prefecture || '不明';
+          const prefectureCode = window.PREFECTURE_CODE_MAP[prefecture] || '--';
+          prefectureCounts[prefecture] = (prefectureCounts[prefecture] || 0) + 1;
+          if (d.city) cityCounts[d.city] = (cityCounts[d.city] || 0) + 1;
+          if (Array.isArray(d.pokemons)) {
+            d.pokemons.forEach(p => { if (p) pokemonCounts[p] = (pokemonCounts[p] || 0) + 1; });
+          }
+          const popupContent = buildPokefutaPopup(d);
+          const marker = L.marker([d.lat, d.lng], { icon: pokefutaIcon }).bindPopup(popupContent, pokefutaPopupOptions);
+          marker.on('click', () => {
+            // Track manhole marker click
+            if (window.trackEvent) {
+              window.trackEvent('click_manhole_marker', {
+                'event_category': 'navigation',
+                'event_label': d.prefecture || '不明',
+                'manhole_id': d.id,
+                site_type: 'map',
+                page_type: window.currentGA4PageType || 'map_top',
+              });
+            }
+            collapseBottomSheet();
+          });
+          marker.pokefutaData = d; marker.pokefutaData.prefectureCode = prefectureCode;
+          allMarkers.push(marker);
+          markerLayer.addLayer(marker);
+        });
+        pokemonMetadataPromise.then(() => {
+          allMarkers.forEach(marker => {
+            marker.setPopupContent(buildPokefutaPopup(marker.pokefutaData));
+          });
+          renderHeroDiscovery();
+        });
+        
+        // 都道府県ごとのマンホール数と bounding box マップを構築（グローバル変数を使用）
+        // マンホール2件以上: 実データのbbox（最小縮尺）、1件以下: 実マーカー座標±0.5度（統一スケール）
+        prefectureBounds = {};
+        prefectureMarkerCounts = {};
+        
+        // マンホールがある県の bbox と数をカウント
+        const prefectureCoords = {};
+        allMarkers.forEach(marker => {
+          const pref = marker.pokefutaData.prefecture || '不明';  // undefined を正規化
+          if (!prefectureCoords[pref]) prefectureCoords[pref] = [];
+          prefectureCoords[pref].push([marker.pokefutaData.lat, marker.pokefutaData.lng]);
+        });
+        
+        // 各県の bbox を計算（2件以上のみ実データbboxを使用）
+        for (const [pref, coords] of Object.entries(prefectureCoords)) {
+          prefectureMarkerCounts[pref] = coords.length;
+          
+          if (coords.length >= 2) {
+            // マンホール2件以上: 実データから最大・最小を計算（最小縮尺）
+            const lats = coords.map(c => c[0]);
+            const lngs = coords.map(c => c[1]);
+            const minLat = Math.min(...lats);
+            const maxLat = Math.max(...lats);
+            const minLng = Math.min(...lngs);
+            const maxLng = Math.max(...lngs);
+            prefectureBounds[pref] = [[minLat, minLng], [maxLat, maxLng]];
+          } else {
+            // マンホール1件: 実マーカー座標を中心に±PREFECTURE_BOUNDS_OFFSETを使用（統一スケール）
+            const markerCoord = coords[0];
+            if (markerCoord) {
+              prefectureBounds[pref] = [
+                [markerCoord[0] - PREFECTURE_BOUNDS_OFFSET, markerCoord[1] - PREFECTURE_BOUNDS_OFFSET],  // 南西
+                [markerCoord[0] + PREFECTURE_BOUNDS_OFFSET, markerCoord[1] + PREFECTURE_BOUNDS_OFFSET]   // 北東
+              ];
+            }
+          }
+        }
+        
+        // マンホールがない県は全て Gist 中心座標から ±PREFECTURE_BOUNDS_OFFSETで仮想 box
+        for (const [pref, center] of Object.entries(prefectureCenterCoords)) {
+          if (!prefectureBounds[pref]) {
+            prefectureMarkerCounts[pref] = 0;  // マンホール0件
+            prefectureBounds[pref] = [
+              [center[0] - PREFECTURE_BOUNDS_OFFSET, center[1] - PREFECTURE_BOUNDS_OFFSET],  // 南西
+              [center[0] + PREFECTURE_BOUNDS_OFFSET, center[1] + PREFECTURE_BOUNDS_OFFSET]   // 北東
+            ];
+          }
+        }
+        
+        const tagCounts = {};
+        allData.forEach(d => {
+          if (!Array.isArray(d.tags)) return;
+          d.tags.forEach(t => { tagCounts[t] = (tagCounts[t] || 0) + 1; });
+        });
+        renderTagDirectory(tagCounts);
+        populatePrefectureTable();
+        renderPrefectureDirectory();
+        updateStats();
+        initRecentFilter();
+        updateRecentSummary();
+        renderRecentAdded();
+        syncExploreSections();
+        refreshMapMarkerLayers();
+        // URL パラメータから初期表示を選択
+        const initialManholeId = getInitialManholeIdFromURL();
+        if (initialManholeId) {
+          console.log(`Initial manhole from URL: ${initialManholeId}`);
+          openManholePopup(initialManholeId);
+          // Mark initial page load as complete before early return
+          isInitialPageLoad = false;
+          return;
+        }
+
+        const initialPref = getInitialPrefectureFromURL();
+        console.log(`Initial prefecture from URL: ${initialPref}`);
+        if (initialPref) {
+          // マンホール有無に関わらず処理（0件の県でもズーム）
+          filterByPrefectureFromTable(initialPref);
+          showSelectedPrefectureBadge();
+          // 地図をその都道府県にズーム
+          setTimeout(() => zoomToPrefecture(initialPref), 100);
+        }
+        const tagParam = new URLSearchParams(window.location.search).get('tag');
+        if (tagParam) {
+          activeTagFilter = tagParam;
+          document.querySelectorAll('.tag-chip').forEach(b => {
+            b.classList.toggle('active', b.dataset.tag === tagParam);
+            b.setAttribute('aria-pressed', String(b.dataset.tag === tagParam));
+          });
+          recomputeVisibility();
+          syncExploreSections();
+        }
+        // Mark initial page load as complete to enable SPA page_view tracking
+        isInitialPageLoad = false;
+      } catch (e) {
+        console.error('ポケふたデータ読み込み失敗', e);
+      }
+    }
+
+    function openManholePopup(manholeId) {
+      const marker = allMarkers.find(item => String(item.pokefutaData?.id) === String(manholeId));
+      if (!marker) {
+        console.warn(`No manhole found for id: ${manholeId}`);
+        return false;
+      }
+
+      if (markerLayer && !markerLayer.hasLayer(marker)) markerLayer.addLayer(marker);
+      if (prefectureOverviewLayer && map.hasLayer(prefectureOverviewLayer)) map.removeLayer(prefectureOverviewLayer);
+      if (markerLayer && !map.hasLayer(markerLayer)) markerLayer.addTo(map);
+      const data = marker.pokefutaData;
+      window.applyManholePageMeta(data);
+      window.history.replaceState({ manhole: data.id }, '', window.buildManholeCanonicalPath(data.id));
+      // Send page_view for manhole detail (always: covers both initial ?manhole= load and SPA navigation)
+      window.currentGA4PageType = 'map_manhole';
+      if (window.gtag) {
+        gtag('event', 'page_view', {
+          'page_path': `/tracker_manhole/${encodeURIComponent(data.id)}`,
+          site_type: 'map',
+          page_type: 'map_manhole',
+          prefecture: window.PREFECTURE_SLUG_MAP[data.prefecture] || data.prefecture || '',
+        });
+      }
+      const openPopup = () => {
+        map.setView([data.lat, data.lng], Math.max(map.getZoom(), 15), { animate: false });
+        marker.openPopup();
+      };
+      openPopup();
+      return true;
+    }
+
+    function initMarkerLayer() {
+      if (markerLayer && map.hasLayer(markerLayer)) map.removeLayer(markerLayer);
+      markerLayer = L.layerGroup();
+      markerLayer.addTo(map);
+    }
+
+    function markerMatchesActiveFilters(marker) {
+      const d = marker.pokefutaData;
+      if (selectedPrefecture && d.prefecture !== selectedPrefecture) return false;
+      if (filterRecent && !isWithinLastDays(d._addedDate, 30)) return false;
+      if (activeTagFilter && (!Array.isArray(d.tags) || !d.tags.includes(activeTagFilter))) return false;
+      return true;
+    }
+
+    function rebuildPrefectureOverviewLayer() {
+      prefectureOverviewLayer.clearLayers();
+      const summaries = {};
+
+      allMarkers.forEach(marker => {
+        if (!markerMatchesActiveFilters(marker)) return;
+        const d = marker.pokefutaData;
+        const prefecture = d.prefecture || '不明';
+        if (!summaries[prefecture]) summaries[prefecture] = { count: 0, lat: 0, lng: 0 };
+        summaries[prefecture].count++;
+        summaries[prefecture].lat += Number(d.lat);
+        summaries[prefecture].lng += Number(d.lng);
+      });
+
+      Object.entries(summaries).forEach(([prefecture, summary]) => {
+        const center = prefectureCenterCoords[prefecture] || [
+          summary.lat / summary.count,
+          summary.lng / summary.count
+        ];
+        const shortPrefecture = prefecture === '北海道'
+          ? prefecture
+          : prefecture.replace(/[都府県]$/, '');
+        const icon = L.divIcon({
+          html: `<span class="prefecture-overview-name">${escapeHtml(shortPrefecture)}</span><span class="prefecture-overview-count">${summary.count}</span>`,
+          className: 'prefecture-overview-marker',
+          iconSize: null
+        });
+        const marker = L.marker(center, {
+          icon,
+          title: `${prefecture}: ${summary.count}枚`,
+          keyboard: true
+        });
+        marker.on('click', () => {
+          zoomToPrefecture(prefecture, PREFECTURE_OVERVIEW_MAX_ZOOM + 1);
+        });
+        prefectureOverviewLayer.addLayer(marker);
+      });
+    }
+
+    function refreshMapMarkerLayers() {
+      if (!markerLayer) return;
+      const showPrefectureOverview = map.getZoom() <= PREFECTURE_OVERVIEW_MAX_ZOOM;
+      if (showPrefectureOverview) {
+        rebuildPrefectureOverviewLayer();
+        if (map.hasLayer(markerLayer)) map.removeLayer(markerLayer);
+        if (!map.hasLayer(prefectureOverviewLayer)) prefectureOverviewLayer.addTo(map);
+      } else {
+        if (map.hasLayer(prefectureOverviewLayer)) map.removeLayer(prefectureOverviewLayer);
+        if (!map.hasLayer(markerLayer)) markerLayer.addTo(map);
+      }
+    }
+
+    map.on('zoomend', refreshMapMarkerLayers);
+
+    function initRecentFilter() {
+      const toggle = document.getElementById('recent-toggle');
+      if (!toggle) return;
+      if (!hasAddedAtField) {
+        toggle.disabled = true;
+        toggle.title = window.I18N.recentDisabledTitle;
+      }
+      syncExploreSections();
+      toggle.addEventListener('change', e => {
+        filterRecent = e.target.checked;
+        if (filterRecent) {
+          showPrefectureCards = false;
+          showNearbyResults = false;
+          showTagDirectory = false;
+        }
+        syncExploreSections();
+        recomputeVisibility();
+        updateRecentSummary();
+        if (filterRecent) {
+          zoomToRecentMarkers();
+          expandBottomSheet();
+        }
+        // Track event
+        if (window.trackEvent) {
+          window.trackEvent('click_recent_toggle', {
+            'event_category': 'user_engagement',
+            'event_label': filterRecent ? 'enabled' : 'disabled'
+          });
+        }
+      });
+    }
+
+    function syncExploreSections() {
+      const prefButton = document.getElementById('prefecture-open-button');
+      const nearbyButton = document.getElementById('locate-button');
+      const recentButton = document.querySelector('label[for="recent-toggle"]');
+      const featureButton = document.getElementById('feature-open-button');
+      const prefectureList = document.getElementById('prefecture-table-wrapper');
+      const recentPanel = document.getElementById('recent-added-panel');
+      const nearbyPanel = document.getElementById('nearby-results');
+
+      prefButton?.setAttribute('aria-pressed', String(showPrefectureCards));
+      recentButton?.classList.toggle('active', filterRecent);
+      recentButton?.setAttribute('aria-pressed', String(filterRecent));
+      nearbyButton?.classList.toggle('active', showNearbyResults);
+      nearbyButton?.setAttribute('aria-pressed', String(showNearbyResults));
+      featureButton?.classList.toggle('active', showTagDirectory);
+      featureButton?.setAttribute('aria-pressed', String(showTagDirectory));
+      const tagSection = document.querySelector('.tag-directory');
+      if (tagSection) tagSection.hidden = !showTagDirectory;
+      if (prefectureList) prefectureList.hidden = !showPrefectureCards;
+      if (recentPanel) recentPanel.hidden = !filterRecent;
+      if (nearbyPanel) nearbyPanel.hidden = !showNearbyResults || !nearbyPanel.dataset.hasResults;
+    }
+
+    function zoomToRecentMarkers() {
+      const recentMarkers = allMarkers.filter(marker => {
+        const d = marker.pokefutaData;
+        return isWithinLastDays(d?._addedDate, 30);
+      });
+      if (!recentMarkers.length) return;
+      try {
+        const group = L.featureGroup(recentMarkers);
+        map.fitBounds(group.getBounds(), {
+          padding: [56, 56],
+          maxZoom: 11
+        });
+      } catch (error) {
+        console.warn('Could not zoom to recent markers:', error);
+      }
+    }
+
+// Prefecture table toggle機能は削除済み（テーブル自体は残存）
+
+    function initControlsToggle() {
+      const toggleBtn = document.getElementById('controls-toggle');
+      const controlsContent = document.getElementById('controls-content');
+      if (!toggleBtn || !controlsContent) return;
+      const panelMediaQuery = getOverallPanelMediaQuery();
+      const canTogglePanel = () => panelMediaQuery ? panelMediaQuery.matches : true;
+      if (canTogglePanel()) {
+        collapseBottomSheet(true);
+      } else {
+        expandBottomSheet();
+      }
+      toggleBtn.addEventListener('click', () => {
+        if (!canTogglePanel()) return;
+        const expanded = document.body.classList.contains('sheet-expanded');
+        expanded ? collapseBottomSheet() : expandBottomSheet();
+      });
+      document.getElementById('prefecture-open-button')?.addEventListener('click', () => {
+        expandBottomSheet();
+        showPrefectureCards = true;
+        showNearbyResults = false;
+        filterRecent = false;
+        showTagDirectory = false;
+        const recentToggle = document.getElementById('recent-toggle');
+        if (recentToggle) recentToggle.checked = false;
+        recomputeVisibility();
+        syncExploreSections();
+      });
+      document.getElementById('feature-open-button')?.addEventListener('click', () => {
+        showTagDirectory = !showTagDirectory;
+        expandBottomSheet();
+        syncExploreSections();
+        if (window.trackEvent) {
+          window.trackEvent('click_feature_directory', {
+            'event_category': 'user_engagement',
+            'event_label': showTagDirectory ? 'opened' : 'closed'
+          });
+        }
+        if (showTagDirectory) {
+          requestAnimationFrame(() => {
+            const section = document.querySelector('.tag-directory');
+            const controlsContent = document.getElementById('controls-content');
+            if (!section || !controlsContent) return;
+            const top = Math.max(0, section.offsetTop - controlsContent.offsetTop - 8);
+            controlsContent.scrollTo({ top, behavior: 'smooth' });
+          });
+        }
+      });
+      let startY = 0;
+      toggleBtn.addEventListener('touchstart', e => { startY = e.touches[0].clientY; }, { passive: true });
+      toggleBtn.addEventListener('touchend', e => {
+        if (!canTogglePanel()) return;
+        const dy = e.changedTouches[0].clientY - startY;
+        if (dy < -20) expandBottomSheet();
+        if (dy > 20) collapseBottomSheet();
+      }, { passive: true });
+      const handlePanelQueryChange = event => {
+        event.matches ? collapseBottomSheet(true) : expandBottomSheet();
+      };
+      if (panelMediaQuery?.addEventListener) {
+        panelMediaQuery.addEventListener('change', handlePanelQueryChange);
+      } else if (panelMediaQuery?.addListener) {
+        panelMediaQuery.addListener(handlePanelQueryChange);
+      }
+    }
+
+    function expandBottomSheet() {
+      document.body.classList.add('sheet-expanded');
+      const toggleBtn = document.getElementById('controls-toggle');
+      toggleBtn?.setAttribute('aria-expanded', 'true');
+      toggleBtn?.setAttribute('aria-label', '全体パネルを閉じる');
+      toggleBtn?.setAttribute('title', '全体パネルを閉じる');
+      setTimeout(() => map.invalidateSize(), 160);
+    }
+
+    function collapseBottomSheet(force = false) {
+      if (!force && !isOverallPanelToggleable()) return;
+      document.body.classList.remove('sheet-expanded');
+      const toggleBtn = document.getElementById('controls-toggle');
+      toggleBtn?.setAttribute('aria-expanded', 'false');
+      toggleBtn?.setAttribute('aria-label', '全体パネルを開く');
+      toggleBtn?.setAttribute('title', '全体パネルを開く');
+      setTimeout(() => map.invalidateSize(), 160);
+    }
+
+    function countRecent(days=30){
+      const now = Date.now();
+      const span = days*86400000;
+      let c=0; allData.forEach(d=>{ if(d._addedDate){ const diff = now - d._addedDate.getTime(); if(diff>=0 && diff<=span) c++; }}); return c;
+    }
+
+    function ensureRecentSummaryElement(){
+      let el = document.getElementById('recent-summary');
+      return el;
+    }
+
+    function updateRecentSummary(){
+      const el = ensureRecentSummaryElement();
+      if(!el) return;
+      if(!hasAddedAtField){ el.textContent='日付フィールドなし'; return; }
+      const recentCnt = countRecent(30);
+      const total = allData.length;
+      el.textContent=`${recentCnt} / ${total}`;
+    }
+
+    function isWithinLastDays(dateObj, days) {
+      if (!dateObj) return false;
+      const now = new Date();
+      return (now - dateObj) <= days * 86400000 && (now - dateObj) >= 0;
+    }
+
+    function recomputeVisibility() {
+      let visibleCount = 0;
+      allMarkers.forEach(marker => {
+        const show = markerMatchesActiveFilters(marker);
+        if (show) {
+          if (markerLayer && !markerLayer.hasLayer(marker)) markerLayer.addLayer(marker);
+          visibleCount++;
+        } else {
+          if (markerLayer && markerLayer.hasLayer(marker)) markerLayer.removeLayer(marker);
+        }
+      });
+      refreshMapMarkerLayers();
+      updateStats(visibleCount);
+    }
+
+    // テーブル行クリック絞り込み用（ドロップダウン廃止）
+    function filterByPrefectureFromTable(prefecture) {
+      selectedPrefecture = prefecture || '';
+      // URL も更新する
+      updateURLWithPrefecture(prefecture || null);
+      document.querySelectorAll('#prefecture-table-body .prefecture-card').forEach(row => {
+        const rowPref = row.dataset.prefecture;
+        row.classList.toggle('selected', rowPref === selectedPrefecture && selectedPrefecture);
+      });
+      renderPrefectureSpots(selectedPrefecture);
+      recomputeVisibility();
+    }
+
+    function showSelectedPrefectureBadge() {
+      const badge = document.getElementById('selected-prefecture-badge');
+      const val = badge?.querySelector('.badge-value');
+      if (!badge || !val) return;
+      if (selectedPrefecture) {
+        val.textContent = selectedPrefecture;
+        badge.style.display = 'inline-block';
+      } else {
+        badge.style.display = 'none';
+        val.textContent = '';
+      }
+    }
+
+    function focusSelectedPrefecturePanel() {
+      const controlsContent = document.getElementById('controls-content');
+      const badge = document.getElementById('selected-prefecture-badge');
+      if (!controlsContent || !badge || !selectedPrefecture) return;
+      expandBottomSheet();
+      requestAnimationFrame(() => {
+        const top = Math.max(0, badge.offsetTop - controlsContent.offsetTop - 8);
+        controlsContent.scrollTo({ top, behavior: 'smooth' });
+      });
+    }
+
+    function clearPrefectureSelection() {
+      selectedPrefecture = '';
+      filterByPrefectureFromTable('');
+      showSelectedPrefectureBadge();
+      renderPrefectureSpots('');
+    }
+
+    function togglePrefectureSelection(prefecture) {
+      if (selectedPrefecture === prefecture) {
+        clearPrefectureSelection();
+      } else {
+        filterByPrefectureFromTable(prefecture);
+        showSelectedPrefectureBadge();
+      }
+    }
+
+    // (旧ドロップダウン機能削除済み)
+    // ↑ ドロップダウン関連は不要になったため後で削除予定
+
+    function updateStats(visibleOverride) {
+      const cityEl = document.getElementById('hero-city-count');
+      if (cityEl) cityEl.textContent = String(Object.keys(cityCounts).length);
+    }
+
+    // Prefecture table function restored
+    function populatePrefectureTable() {
+      const tbody = document.getElementById('prefecture-table-body');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      // Create array of all 47 prefectures with their counts
+      const allPrefectures = Object.keys(window.PREFECTURE_CODE_MAP).map(prefecture => [
+        prefecture,
+        prefectureCounts[prefecture] || 0
+      ]);
+
+      // Sort by prefecture code
+      allPrefectures.sort(([a], [b]) => {
+        const codeA = window.PREFECTURE_CODE_MAP[a];
+        const codeB = window.PREFECTURE_CODE_MAP[b];
+        return codeA.localeCompare(codeB);
+      });
+
+      // Add 不明 at the end if exists
+      if (prefectureCounts['不明']) {
+        allPrefectures.push(['不明', prefectureCounts['不明']]);
+      }
+
+      // Build map of prefecture to site URL (first one found, http(s) & allowlist)
+      const prefectureSiteUrls = {};
+      const prefectureThumbnails = {};
+      const prefectureRecentCounts = {};
+      allData.forEach(d => {
+        const pref = d.prefecture || '不明';
+        if (d.prefecture_site_url && !prefectureSiteUrls[pref]) {
+          const validatedUrl = validatePrefectureSiteUrl(d.prefecture_site_url);
+          if (validatedUrl) {
+            prefectureSiteUrls[pref] = validatedUrl.href;
+          }
+        }
+        if (d.id && !prefectureThumbnails[pref]) {
+          prefectureThumbnails[pref] = [];
+        }
+        if (d.id && prefectureThumbnails[pref] && prefectureThumbnails[pref].length < 8) {
+          prefectureThumbnails[pref].push({
+            id: d.id,
+            title: d.title || 'ポケふた',
+            imageUrl: getLocalManholeImageUrl(d.id)
+          });
+        }
+        if (isWithinLastDays(d._addedDate, 30)) {
+          prefectureRecentCounts[pref] = (prefectureRecentCounts[pref] || 0) + 1;
+        }
+      });
+
+      allPrefectures.forEach(([prefecture, count]) => {
+        const row = document.createElement('article');
+        const code = window.PREFECTURE_CODE_MAP[prefecture] || '--';
+        const siteUrl = prefectureSiteUrls[prefecture];
+        const thumbnailItems = prefectureThumbnails[prefecture] || [];
+        const recentCount = prefectureRecentCounts[prefecture] || 0;
+        const I = window.I18N;
+        let siteCell = `<span class="prefecture-site-link prefecture-site-link--empty">${I.noSite}</span>`;
+        if (siteUrl) {
+          const anchor = document.createElement('a');
+          anchor.href = siteUrl;
+          anchor.target = '_blank';
+          anchor.rel = 'noopener noreferrer';
+          anchor.className = 'prefecture-site-link';
+          anchor.textContent = `${prefecture}${UI_TEXT.prefectureSite}`;
+          siteCell = anchor.outerHTML;
+        }
+
+        // Style row differently if no pokefuta
+        const countBadgeClass = count > 0 ? 'count-badge' : 'count-badge-zero';
+        const rowClass = count === 0 ? 'no-pokefuta' : '';
+
+        row.className = `prefecture-card ${rowClass}`;
+        row.dataset.prefecture = prefecture;
+        row.innerHTML = `
+          <div class="prefecture-card-main" role="button" tabindex="${count === 0 ? '-1' : '0'}" aria-disabled="${count === 0 ? 'true' : 'false'}">
+            <span class="prefecture-code">${code}</span>
+            <span class="prefecture-card-name">${prefecture}</span>
+            <span class="prefecture-card-meta">
+              ${recentCount > 0 ? `<span class="prefecture-new-badge"><img src="%%BASE_PATH%%assets/icon-fire.svg" alt="" aria-hidden="true">NEW</span>` : ''}
+              ${siteCell}
+            </span>
+            <span class="${countBadgeClass}">${count}${I.countSuffix}</span>
+          </div>
+          <div class="prefecture-card-gallery" aria-label="${escapeHtml(prefecture)}${I.galleryAriaSuffix}">
+            ${thumbnailItems.length ? thumbnailItems.map(item => `
+              <button type="button" class="prefecture-card-thumb" data-manhole-id="${escapeHtml(item.id)}" aria-label="${escapeHtml(item.title)}${I.openDetailSuffix}" title="${escapeHtml(item.title)}${I.openDetailSuffix}">
+                <img src="${item.imageUrl}" alt="" loading="lazy" decoding="async" onerror="this.closest('.prefecture-card-thumb').classList.add('is-missing'); this.remove();">
+              </button>
+            `).join('') : '<span class="prefecture-card-thumb is-missing"></span>'}
+          </div>
+        `;
+        if (count > 0) {
+          const button = row.querySelector('.prefecture-card-main');
+          const selectPrefecture = () => {
+            // Track prefecture selection
+            if (window.trackEvent) {
+              window.trackEvent('click_prefecture', {
+                'event_category': 'navigation',
+                'event_label': prefecture,
+                'value': count
+              });
+            }
+            filterByPrefectureFromTable(prefecture);
+            showSelectedPrefectureBadge();
+            zoomToPrefecture(prefecture);
+            focusSelectedPrefecturePanel();
+          };
+          button.addEventListener('click', selectPrefecture);
+          button.addEventListener('keydown', event => {
+            if (event.key !== 'Enter' && event.key !== ' ') return;
+            event.preventDefault();
+            selectPrefecture();
+          });
+          button.title = I.prefCardTitleFormat.replace('{pref}', prefecture);
+        }
+        // Append row
+        tbody.appendChild(row);
+        // Prevent row handlers from triggering when interacting with prefecture link
+        const linkEl = row.querySelector('.prefecture-site-link');
+        if (linkEl) {
+          const stopRowPropagation = e => e.stopPropagation();
+          linkEl.addEventListener('click', stopRowPropagation);
+          linkEl.addEventListener('dblclick', stopRowPropagation);
+        }
+        row.querySelectorAll('.prefecture-card-thumb[data-manhole-id]').forEach(thumb => {
+          thumb.addEventListener('click', event => {
+            event.stopPropagation();
+            openManholePopup(thumb.dataset.manholeId);
+            collapseBottomSheet();
+          });
+        });
+      });
+    }
+
+    function renderTagDirectory(tagCounts) {
+      const container = document.getElementById('tag-directory-chips');
+      const moreContainer = document.getElementById('tag-directory-more');
+      const toggleBtn = document.getElementById('tag-directory-toggle');
+      if (!container) return;
+      const sorted = Object.entries(tagCounts)
+        .filter(([tag, count]) => TAG_META[tag] && count >= TAG_DIRECTORY_MIN_COUNT)
+        .sort(([tagA, a], [tagB, b]) => {
+          const priA = TAG_PRIORITY.indexOf(tagA);
+          const priB = TAG_PRIORITY.indexOf(tagB);
+          if (priA >= 0 && priB >= 0) return priA - priB;
+          if (priA >= 0) return -1;
+          if (priB >= 0) return 1;
+          return b - a;
+        });
+      const primaryTags = FEATURED_TAGS
+        .filter(tag => tagCounts[tag] >= TAG_DIRECTORY_MIN_COUNT && TAG_META[tag])
+        .map(tag => [tag, tagCounts[tag]]);
+      const secondaryTags = sorted.filter(([tag]) => !FEATURED_TAGS.includes(tag));
+      function makeChip(tag, count) {
+        const meta = TAG_META[tag];
+        const description = meta.description || meta.label;
+        return `<button class="tag-chip" data-tag="${tag}" data-count="${count}" aria-label="${description} ${count}枚" title="${description}" aria-pressed="false">${meta.emoji} ${meta.label} <span class="tag-count">${count}枚</span></button>`;
+      }
+      container.innerHTML = primaryTags.map(([tag, count]) => makeChip(tag, count)).join('');
+      if (moreContainer) {
+        moreContainer.innerHTML = secondaryTags.map(([tag, count]) => makeChip(tag, count)).join('');
+        if (toggleBtn) toggleBtn.hidden = secondaryTags.length === 0;
+      }
+      function updateAllChips() {
+        [container, moreContainer].filter(Boolean).forEach(c => {
+          c.querySelectorAll('.tag-chip').forEach(b => {
+            b.classList.toggle('active', b.dataset.tag === activeTagFilter);
+            b.setAttribute('aria-pressed', String(b.dataset.tag === activeTagFilter));
+          });
+        });
+      }
+      function bindChips(el) {
+        el.querySelectorAll('.tag-chip').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const tag = btn.dataset.tag;
+            const isActive = activeTagFilter === tag;
+            activeTagFilter = isActive ? null : tag;
+            updateAllChips();
+            recomputeVisibility();
+            syncExploreSections();
+            if (!isActive && window.trackEvent) {
+              window.trackEvent('feature_filter_click', {
+                feature: tag,
+                feature_label: TAG_META[tag]?.label || tag,
+                result_count: parseInt(btn.dataset.count, 10),
+                source: 'top_feature_section'
+              });
+            }
+          });
+        });
+      }
+      bindChips(container);
+      if (moreContainer) bindChips(moreContainer);
+      if (toggleBtn && moreContainer) {
+        toggleBtn.addEventListener('click', () => {
+          const willExpand = moreContainer.hidden;
+          moreContainer.hidden = !willExpand;
+          toggleBtn.textContent = willExpand ? '閉じる' : 'もっと見る';
+          toggleBtn.setAttribute('aria-expanded', String(willExpand));
+          if (window.trackEvent) {
+            window.trackEvent('feature_more_toggle', { expanded: willExpand });
+          }
+        });
+      }
+    }
+
+    function renderPrefectureDirectory() {
+      const links = document.getElementById('prefecture-directory-links');
+      if (!links) return;
+      const prefectures = Object.keys(window.PREFECTURE_CODE_MAP)
+        .filter(prefecture => (prefectureCounts[prefecture] || 0) > 0)
+        .sort((a, b) => window.PREFECTURE_CODE_MAP[a].localeCompare(window.PREFECTURE_CODE_MAP[b]));
+      links.innerHTML = prefectures.map(prefecture => {
+        const count = prefectureCounts[prefecture] || 0;
+        const href = window.buildCanonicalPath(prefecture);
+        return `<a href="${href}" data-prefecture="${escapeHtml(prefecture)}">${escapeHtml(prefecture)}<span>${count}${window.I18N.countSuffix}</span></a>`;
+      }).join('');
+    }
+
+    function renderRecentAdded() {
+      const list = document.getElementById('recent-added-list');
+      if (!list) return;
+      const recentItems = [...allData]
+        .filter(d => isWithinLastDays(d._addedDate, 30))
+        .sort((a, b) => b._addedDate - a._addedDate);
+      renderSpotResults(list, recentItems, {
+        emptyMessage: window.I18N.recentEmpty,
+        meta: d => [d.prefecture || window.I18N.unknownPref, d.title || window.I18N.manholeTitle].join(' / '),
+        badge: () => `<img src="%%BASE_PATH%%assets/icon-fire.svg" alt="" aria-hidden="true">NEW`,
+        limit: 24
+      });
+    }
+
+    function bindSpotResultList(list) {
+      if (!list || list.dataset.boundSpotResults) return;
+      list.dataset.boundSpotResults = 'true';
+      list.addEventListener('click', event => {
+        const button = event.target.closest('.prefecture-spot-item[data-manhole-id]');
+        if (!button || !list.contains(button)) return;
+        openManholePopup(button.dataset.manholeId);
+        collapseBottomSheet();
+      });
+    }
+
+    function renderSpotResults(list, spots, options = {}) {
+      bindSpotResultList(list);
+      const {
+        emptyMessage = '',
+        meta,
+        badge,
+        badgeClass = 'prefecture-spot-new',
+        limit = 24
+      } = options;
+      const visibleSpots = spots.slice(0, limit);
+      if (!visibleSpots.length) {
+        list.innerHTML = emptyMessage ? `<p class="recent-added-empty">${escapeHtml(emptyMessage)}</p>` : '';
+        return;
+      }
+      list.innerHTML = visibleSpots.map(d => {
+        const metaText = meta ? meta(d) : (d.title || window.I18N.manholeTitle);
+        const badgeText = badge ? badge(d) : '';
+        return `
+          <button type="button" class="prefecture-spot-item" data-manhole-id="${escapeHtml(d.id)}">
+            <span class="prefecture-spot-thumb" aria-hidden="true">
+              <img src="${getLocalManholeImageUrl(d.id)}" alt="" loading="lazy" decoding="async" onerror="this.closest('.prefecture-spot-thumb').classList.add('is-missing'); this.remove();">
+            </span>
+            <span class="prefecture-spot-copy">
+              <strong>${escapeHtml(d.city || window.I18N.unknownCity)}</strong>
+              <small>${escapeHtml(metaText)}</small>
+            </span>
+            ${badgeText ? `<span class="${badgeClass}">${badgeText}</span>` : ''}
+          </button>
+        `;
+      }).join('');
+    }
+
+    function renderPrefectureSpots(prefecture) {
+      const panel = document.getElementById('prefecture-spots-panel');
+      const list = document.getElementById('prefecture-spots-list');
+      const heading = document.getElementById('prefecture-spots-heading');
+      if (!panel || !list || !heading) return;
+      if (!prefecture) {
+        panel.hidden = true;
+        list.innerHTML = '';
+        return;
+      }
+      const spots = allData
+        .filter(d => d.prefecture === prefecture)
+        .sort((a, b) => String(a.city || '').localeCompare(String(b.city || ''), 'ja'));
+      heading.textContent = window.I18N.prefSpotsHeadingFormat.replace('{pref}', prefecture);
+      renderSpotResults(list, spots, {
+        limit: Infinity,
+        badge: d => isWithinLastDays(d._addedDate, 30) ? '<img src="%%BASE_PATH%%assets/icon-fire.svg" alt="" aria-hidden="true">NEW' : ''
+      });
+      panel.hidden = spots.length === 0;
+    }
+
+    function distanceKm(aLat, aLng, bLat, bLng) {
+      const toRad = deg => deg * Math.PI / 180;
+      const r = 6371;
+      const dLat = toRad(bLat - aLat);
+      const dLng = toRad(bLng - aLng);
+      const s = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(aLat)) * Math.cos(toRad(bLat)) * Math.sin(dLng / 2) ** 2;
+      return 2 * r * Math.asin(Math.sqrt(s));
+    }
+
+    function renderNearbyResults(lat, lng) {
+      const section = document.getElementById('nearby-results');
+      const list = document.getElementById('nearby-list');
+      if (!section || !list) return;
+      const nearest = allData
+        .filter(d => d.lat != null && d.lng != null)
+        .map(d => ({ ...d, distance: distanceKm(lat, lng, Number(d.lat), Number(d.lng)) }))
+        .sort((a, b) => a.distance - b.distance)
+        .slice(0, 5);
+      if (!nearest.length) {
+        list.innerHTML = '';
+        section.dataset.hasResults = '';
+        showNearbyResults = false;
+        syncExploreSections();
+        return;
+      }
+      renderSpotResults(list, nearest, {
+        meta: d => [d.prefecture || window.I18N.unknownPref, d.title || window.I18N.manholeTitle].join(' / '),
+        badge: d => `${d.distance.toFixed(1)}km`,
+        badgeClass: 'prefecture-spot-distance'
+      });
+      section.dataset.hasResults = 'true';
+      showNearbyResults = true;
+      showPrefectureCards = false;
+      filterRecent = false;
+      showTagDirectory = false;
+      const recentToggle = document.getElementById('recent-toggle');
+      if (recentToggle) recentToggle.checked = false;
+      syncExploreSections();
+    }
+
+    function initLocationSearch() {
+      const button = document.getElementById('locate-button');
+      const label = document.getElementById('locate-button-label');
+      if (!button) return;
+      const defaultLabel = label?.textContent || window.I18N.locateLabel;
+      const setButtonState = (text, options = {}) => {
+        const { busy = false, resetAfter = 0 } = options;
+        button.disabled = busy;
+        button.setAttribute('aria-busy', String(busy));
+        if (label) label.textContent = text;
+        if (resetAfter) {
+          window.setTimeout(() => {
+            if (label) label.textContent = defaultLabel;
+            button.removeAttribute('aria-busy');
+          }, resetAfter);
+        }
+      };
+      button.addEventListener('click', () => {
+        if (!navigator.geolocation) {
+          setButtonState(window.I18N.locateUnavailable, { resetAfter: 1800 });
+          expandBottomSheet();
+          return;
+        }
+        setButtonState(window.I18N.locateChecking, { busy: true });
+
+        // Track locate button click
+        if (window.trackEvent) {
+          window.trackEvent('click_locate_nearby', {
+            'event_category': 'user_engagement',
+            'event_label': 'locate_button_clicked'
+          });
+        }
+
+        navigator.geolocation.getCurrentPosition(position => {
+          const { latitude, longitude } = position.coords;
+          setButtonState(defaultLabel);
+
+          // Track geolocation success
+          if (window.trackEvent) {
+            window.trackEvent('geolocation_success', {
+              'event_category': 'user_engagement',
+              'event_label': 'location_acquired'
+            });
+          }
+
+          if (userLocationMarker) map.removeLayer(userLocationMarker);
+          userLocationMarker = L.circleMarker([latitude, longitude], {
+            radius: 8,
+            color: '#ffffff',
+            weight: 3,
+            fillColor: '#2f80ed',
+            fillOpacity: 0.95
+          }).addTo(map);
+          renderNearbyResults(latitude, longitude);
+          const nearestMarkers = allMarkers
+            .map(marker => ({ marker, d: marker.pokefutaData, distance: distanceKm(latitude, longitude, marker.pokefutaData.lat, marker.pokefutaData.lng) }))
+            .sort((a, b) => a.distance - b.distance)
+            .slice(0, 5)
+            .map(item => item.marker);
+          const group = L.featureGroup([userLocationMarker, ...nearestMarkers]);
+          map.fitBounds(group.getBounds(), { padding: [48, 48], maxZoom: 13 });
+          expandBottomSheet();
+        }, (error) => {
+          setButtonState(window.I18N.locateFailed, { resetAfter: 1800 });
+
+          // Track geolocation error
+          if (window.trackEvent) {
+            window.trackEvent('geolocation_error', {
+              'event_category': 'user_engagement',
+              'event_label': `error_${error.code}`
+            });
+          }
+
+          expandBottomSheet();
+        }, { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 });
+      });
+    }
+
+    // 多言語機能削除のため switchLanguage / refreshMarkersContent は不要
+
+    // Leafletの機能を使って都道府県のポケふたにズームする関数
+    // マンホール2件以上: マンホール全て入る最小縮尺（maxZoom:13で過度な拡大を防止）
+    // マンホール1件以下: 実マーカー座標 or Gist中心座標 ±0.5度で統一スケール
+    function zoomToPrefecture(prefecture, minimumZoom = null) {
+      const markerCount = prefectureMarkerCounts[prefecture] || 0;
+      console.log(`Zooming to prefecture: ${prefecture}, marker count: ${markerCount}, prefectureBounds available: ${!!prefectureBounds[prefecture]}`);
+      
+      // prefectureBounds がない場合はフォールバック
+      if (!prefectureBounds || !prefectureBounds[prefecture]) {
+        console.warn(`No bounds found for prefecture: ${prefecture}`);
+        const center = prefectureCenterCoords[prefecture];
+        if (center) {
+          map.setView(center, Math.max(8, minimumZoom || 0), { animate: minimumZoom === null });
+        }
+        return;
+      }
+      
+      try {
+        const bounds = L.latLngBounds(prefectureBounds[prefecture]);
+        
+        if (markerCount >= 2) {
+          // マンホール2件以上: マンホール全て入る最小縮尺でズーム（maxZoom: 13で過度な拡大を防止）
+          map.fitBounds(bounds, {
+            padding: [50, 50],
+            maxZoom: 13,
+            animate: minimumZoom === null
+          });
+          console.log(`Zoomed to ${prefecture} with ${markerCount} markers (fit all data with zoom cap)`);
+        } else {
+          // マンホール1件以下: Gist中心座標±0.5度で統一スケール (padding: 50px, maxZoom: 13)
+          map.fitBounds(bounds, {
+            padding: [50, 50],
+            maxZoom: 13,
+            animate: minimumZoom === null
+          });
+          console.log(`Zoomed to ${prefecture} with ${markerCount} markers (unified scale)`);
+        }
+        if (minimumZoom !== null && map.getZoom() < minimumZoom) {
+          map.setZoom(minimumZoom, { animate: false });
+        }
+        
+      } catch (error) {
+        console.error(`Error zooming to ${prefecture}:`, error);
+        // エラーの場合は都道府県の中心座標にフォールバック
+        const center = prefectureCenterCoords[prefecture];
+        if (center) {
+          map.setView(center, Math.max(8, minimumZoom || 0), { animate: minimumZoom === null });
+        }
+      }
+    }
+
+    // Clean up legacy localStorage keys (searchBoxHidden was from removed search UI)
+    function cleanupLegacyLocalStorage() {
+      localStorage.removeItem('prefectureTableHidden');
+      localStorage.removeItem('searchBoxHidden'); // Removed in UI refactor
+    }
+
+    // Initialize
+    cleanupLegacyLocalStorage();
+    initControlsToggle(); // Initialize toggle early, before data loading
+    initLocationSearch();
+    loadPokefutaData();
+  </script>
+</body>
+</html>

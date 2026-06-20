@@ -7,6 +7,12 @@ _pid=$(lsof -ti:8000 2>/dev/null)
 
 ROOT="$(git rev-parse --show-toplevel)" || { echo "[dev] ERROR: not in a git repo"; exit 1; }
 
+if [ ! -d "$ROOT/dist" ]; then
+  echo "[dev] ERROR: dist/ is missing. Run the static build/generation first."
+  exit 1
+fi
+mkdir -p "$ROOT/dist/assets"
+
 # Sync apps/web/ → dist/ (dist/index.html is the text-first page, not overwritten)
 cp "$ROOT/apps/web/index.html"       "$ROOT/dist/map.html"          && echo "[dev] synced map.html"          || echo "[dev] WARN: map.html sync failed"
 cp "$ROOT/apps/web/nearby_manholes.html" "$ROOT/dist/nearby.html"   && echo "[dev] synced nearby.html"       || echo "[dev] WARN: nearby.html sync failed"
