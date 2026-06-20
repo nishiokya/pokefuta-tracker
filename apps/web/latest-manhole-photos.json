@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-06-15T11:21:16.026825Z",
+  "generated_at": "2026-06-20T23:01:49.776456Z",
   "source": "pokefuta photo table",
   "image": {
     "r2_public_base_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image"
   },
-  "count": 131,
+  "count": 135,
   "photos": {
     "1": {
       "manhole_id": 1,
@@ -695,6 +695,36 @@
       "shot_at": "2026-03-28T21:14:39+00:00",
       "comment": "中標津町総合体育館(330ﾟアリーナ)の道を渡った駐車場と歩道の間にあります",
       "display_name": "tako"
+    },
+    "195": {
+      "manhole_id": 195,
+      "photo_id": "95d2c632-7af1-45e7-b8f3-5eaaa87b6a1c",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/8cf1f991-cf12-44a6-ad12-2039e6dee020.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/8cf1f991-cf12-44a6-ad12-2039e6dee020.jpg",
+      "storage_key": "photos/original/2026/06/8cf1f991-cf12-44a6-ad12-2039e6dee020.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1203358,
+      "created_at": "2026-06-20T14:42:32.740104+00:00",
+      "shot_at": "2026-06-20T13:22:06+00:00",
+      "comment": null,
+      "display_name": "いろはす"
+    },
+    "196": {
+      "manhole_id": 196,
+      "photo_id": "53d3acee-92f3-4107-8fe7-96328387ff6f",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/db44298f-273f-4fff-848b-0117b8778f12.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/db44298f-273f-4fff-848b-0117b8778f12.jpg",
+      "storage_key": "photos/original/2026/06/db44298f-273f-4fff-848b-0117b8778f12.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1074590,
+      "created_at": "2026-06-20T14:42:18.609805+00:00",
+      "shot_at": "2026-06-20T13:14:23+00:00",
+      "comment": null,
+      "display_name": "いろはす"
     },
     "214": {
       "manhole_id": 214,
@@ -1611,6 +1641,21 @@
       "comment": null,
       "display_name": "tako"
     },
+    "360": {
+      "manhole_id": 360,
+      "photo_id": "76c11556-b6d4-4a68-9c8e-b0c0defed1c8",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/e3197cbc-650f-499f-b14f-e2f39e1842f1.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/e3197cbc-650f-499f-b14f-e2f39e1842f1.jpg",
+      "storage_key": "photos/original/2026/06/e3197cbc-650f-499f-b14f-e2f39e1842f1.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1454969,
+      "created_at": "2026-06-20T08:59:25.632677+00:00",
+      "shot_at": "2026-06-20T08:09:05+00:00",
+      "comment": "雨だと少し水没するようです",
+      "display_name": "tako"
+    },
     "361": {
       "manhole_id": 361,
       "photo_id": "e2c952eb-de7a-45cc-b60f-6a47e898e882",
@@ -1865,6 +1910,21 @@
       "shot_at": "2026-01-11T04:11:52+00:00",
       "comment": null,
       "display_name": "hirochinn0519"
+    },
+    "429": {
+      "manhole_id": 429,
+      "photo_id": "b6992532-6c29-490d-b868-85cf9d42ff87",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/a70114a9-3e0d-43f5-96ad-e28483924422.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/a70114a9-3e0d-43f5-96ad-e28483924422.jpg",
+      "storage_key": "photos/original/2026/06/a70114a9-3e0d-43f5-96ad-e28483924422.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1339722,
+      "created_at": "2026-06-18T10:34:17.264947+00:00",
+      "shot_at": "2026-06-15T02:56:41+00:00",
+      "comment": null,
+      "display_name": "ishihara165"
     },
     "438": {
       "manhole_id": 438,
