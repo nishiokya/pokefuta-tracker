@@ -121,6 +121,23 @@ body.pokefuta-map-page {
   display: none;
 }
 
+/* 展開時はnav-gridにトップリンクがあるので非表示。折りたたみ時のみ表示 */
+.pokefuta-map-page .map-hero-card:not(.is-collapsed) .map-back-to-top {
+  display: none;
+}
+
+.pokefuta-map-page .map-back-to-top {
+  display: block;
+  margin-top: 4px;
+  padding: 4px 2px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #4a3728;
+  text-decoration: none;
+  opacity: 0.75;
+  white-space: nowrap;
+}
+
 .pokefuta-map-page .map-hero-card.is-collapsed .hero-card-toggle {
   position: relative;
   top: auto;
