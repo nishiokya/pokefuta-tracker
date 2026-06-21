@@ -689,6 +689,14 @@ a { color: inherit; text-decoration: none; }
    All HTML/JS is reused unchanged; this is a presentation-only enhancement.
    ════════════════════════════════════════════════════════════════════════ */
 
+/* Small tablet: tighten the side gutters before the full tablet width kicks in. */
+@media (min-width: 600px) {
+  :root {
+    --top-max-w: 560px;
+    --top-pad: 20px;
+  }
+}
+
 /* Tablet: widen the single column and ease the reading measure. */
 @media (min-width: 768px) {
   :root {
