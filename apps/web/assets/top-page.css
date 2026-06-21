@@ -710,21 +710,22 @@ a { color: inherit; text-decoration: none; }
   }
   .brand-name { font-size: 18px; }
 
-  /* Section grid — deterministic placement regardless of source order. */
+  /* Section grid — placement follows DOM order (intro → hero → map → pref →
+     hub) so visual order matches keyboard / screen-reader order. minmax(0,1fr)
+     keeps long content from forcing tracks wider than the container. */
   .top-main {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     grid-template-areas:
       "intro intro"
-      "map   map"
-      "hero  pref"
-      "hub   hub";
+      "hero  map"
+      "pref  hub";
     column-gap: 28px;
     align-items: start;
   }
   #sec-intro { grid-area: intro; }
-  #sec-map   { grid-area: map; }
   #sec-hero  { grid-area: hero; }
+  #sec-map   { grid-area: map; }
   #sec-pref  { grid-area: pref; }
   #sec-hub   { grid-area: hub; }
 
@@ -732,7 +733,7 @@ a { color: inherit; text-decoration: none; }
   .top-h1 { font-size: 30px; }
   .top-intro-text { max-width: 760px; }
 
-  /* The map gateway becomes the full-width desktop hero. */
+  /* The map gateway becomes a tall desktop hero in its column. */
   .map-gateway-card { height: 440px; }
 
   /* Today's two small cards sit side-by-side with the featured one. */
