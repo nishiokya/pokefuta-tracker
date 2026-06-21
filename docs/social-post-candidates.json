@@ -516,115 +516,6 @@
     }
   },
   {
-    "id": "photo-303-82c87f31",
-    "type": "latest_photo",
-    "title": "最新写真：北海道/北見市",
-    "url": "https://data.pokefuta.com/manholes/303/",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "latest_photo",
-    "source": "photos",
-    "raw_data": {
-      "manhole_id": "303",
-      "title": "北海道/北見市",
-      "pref": "北海道",
-      "city": "北見",
-      "pokemon": "アローラロコン",
-      "pokemon_list": [
-        "アローラロコン",
-        "ロコン"
-      ],
-      "created_at": "2026-06-02T07:28:30.504037+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/99e184b3-f0b7-4858-904f-81efad0f275e.jpg",
-      "display_name": "dichlorosulfane",
-      "photo_rank": "first_ever"
-    }
-  },
-  {
-    "id": "photo-307-25948fd4",
-    "type": "latest_photo",
-    "title": "最新写真：北海道/美幌町",
-    "url": "https://data.pokefuta.com/manholes/307/",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "latest_photo",
-    "source": "photos",
-    "raw_data": {
-      "manhole_id": "307",
-      "title": "北海道/美幌町",
-      "pref": "北海道",
-      "city": "美幌",
-      "pokemon": "アローラロコン",
-      "pokemon_list": [
-        "アローラロコン",
-        "ハネッコ",
-        "ロコン"
-      ],
-      "created_at": "2026-06-02T07:29:36.337134+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/12917081-59ef-4fcd-aa30-67c6cafcbf93.jpg",
-      "display_name": "dichlorosulfane",
-      "photo_rank": "first_ever"
-    }
-  },
-  {
-    "id": "photo-71-ac803346",
-    "type": "latest_photo",
-    "title": "最新写真：北海道/大空町",
-    "url": "https://data.pokefuta.com/manholes/71/",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "latest_photo",
-    "source": "photos",
-    "raw_data": {
-      "manhole_id": "71",
-      "title": "北海道/大空町",
-      "pref": "北海道",
-      "city": "大空",
-      "pokemon": "ムクホーク",
-      "pokemon_list": [
-        "ムクホーク",
-        "ロコン"
-      ],
-      "created_at": "2026-06-02T07:30:12.199062+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/ac462b6d-b110-4a2c-8f6e-82ffdac20687.jpg",
-      "display_name": "dichlorosulfane",
-      "photo_rank": "first_ever"
-    }
-  },
-  {
-    "id": "photo-217-f72ceb3e",
-    "type": "latest_photo",
-    "title": "最新写真：北海道/網走市",
-    "url": "https://data.pokefuta.com/manholes/217/",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "latest_photo",
-    "source": "photos",
-    "raw_data": {
-      "manhole_id": "217",
-      "title": "北海道/網走市",
-      "pref": "北海道",
-      "city": "網走",
-      "pokemon": "アローラロコン",
-      "pokemon_list": [
-        "アローラロコン",
-        "マニューラ"
-      ],
-      "created_at": "2026-06-02T07:30:41.996332+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/735b02d4-8338-4970-b0bd-a29db9e41df7.jpg",
-      "display_name": "dichlorosulfane",
-      "photo_rank": "first_ever"
-    }
-  },
-  {
     "id": "photo-220-62b9eb76",
     "type": "latest_photo",
     "title": "最新写真：北海道/斜里町",
@@ -817,6 +708,63 @@
     }
   },
   {
+    "id": "photo-429-b6992532",
+    "type": "latest_photo",
+    "title": "最新写真：長崎県/時津町",
+    "url": "https://data.pokefuta.com/manholes/429/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "429",
+      "title": "長崎県/時津町",
+      "pref": "長崎県",
+      "city": "時津",
+      "pokemon": "オタチ",
+      "pokemon_list": [
+        "オタチ",
+        "ゴローン",
+        "デンリュウ",
+        "ホーホー"
+      ],
+      "created_at": "2026-06-18T10:34:17.264947+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/a70114a9-3e0d-43f5-96ad-e28483924422.jpg",
+      "display_name": "ishihara165",
+      "photo_rank": "first_ever"
+    }
+  },
+  {
+    "id": "photo-360-76c11556",
+    "type": "latest_photo",
+    "title": "最新写真：岐阜県/下呂市",
+    "url": "https://data.pokefuta.com/manholes/360/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "360",
+      "title": "岐阜県/下呂市",
+      "pref": "岐阜県",
+      "city": "下呂",
+      "pokemon": "オタマロ",
+      "pokemon_list": [
+        "オタマロ",
+        "ガマガル",
+        "ガマゲロゲ"
+      ],
+      "created_at": "2026-06-20T08:59:25.632677+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/e3197cbc-650f-499f-b14f-e2f39e1842f1.jpg",
+      "display_name": "tako",
+      "photo_rank": "first_ever"
+    }
+  },
+  {
     "id": "photo-2-3743c530",
     "type": "latest_photo",
     "title": "最新写真：鹿児島県/指宿市",
@@ -838,6 +786,33 @@
       ],
       "created_at": "2026-06-08T12:44:04.97427+00:00",
       "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/cbc4abfc-c5c0-4a92-9043-0134687eb9b1.jpg",
+      "display_name": "いろはす",
+      "photo_rank": "recent"
+    }
+  },
+  {
+    "id": "photo-195-95d2c632",
+    "type": "latest_photo",
+    "title": "最新写真：岡山県/倉敷市",
+    "url": "https://data.pokefuta.com/manholes/195/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "195",
+      "title": "岡山県/倉敷市",
+      "pref": "岡山県",
+      "city": "倉敷",
+      "pokemon": "アゲハント",
+      "pokemon_list": [
+        "アゲハント",
+        "ポチエナ"
+      ],
+      "created_at": "2026-06-20T14:42:32.740104+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/8cf1f991-cf12-44a6-ad12-2039e6dee020.jpg",
       "display_name": "いろはす",
       "photo_rank": "recent"
     }
