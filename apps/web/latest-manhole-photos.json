@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-06-20T23:01:49.776456Z",
+  "generated_at": "2026-06-21T10:41:37.750324Z",
   "source": "pokefuta photo table",
   "image": {
     "r2_public_base_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image"
   },
-  "count": 135,
+  "count": 137,
   "photos": {
     "1": {
       "manhole_id": 1,
@@ -696,6 +696,21 @@
       "comment": "中標津町総合体育館(330ﾟアリーナ)の道を渡った駐車場と歩道の間にあります",
       "display_name": "tako"
     },
+    "194": {
+      "manhole_id": 194,
+      "photo_id": "35444c66-f162-4dfa-82fe-5c41ee1eda7f",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/82ea8ddf-6c38-42a2-80a7-6904731f9b12.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/82ea8ddf-6c38-42a2-80a7-6904731f9b12.jpg",
+      "storage_key": "photos/original/2026/06/82ea8ddf-6c38-42a2-80a7-6904731f9b12.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1416267,
+      "created_at": "2026-06-21T04:01:37.635399+00:00",
+      "shot_at": "2026-06-21T03:49:12+00:00",
+      "comment": null,
+      "display_name": "いろはす"
+    },
     "195": {
       "manhole_id": 195,
       "photo_id": "95d2c632-7af1-45e7-b8f3-5eaaa87b6a1c",
@@ -723,6 +738,21 @@
       "file_size": 1074590,
       "created_at": "2026-06-20T14:42:18.609805+00:00",
       "shot_at": "2026-06-20T13:14:23+00:00",
+      "comment": null,
+      "display_name": "いろはす"
+    },
+    "197": {
+      "manhole_id": 197,
+      "photo_id": "0eb35d78-b2d2-407b-a8df-70a4bdd5a69a",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/bce468b2-6ddb-4cfe-8a0a-c9cf1fc0bef9.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/bce468b2-6ddb-4cfe-8a0a-c9cf1fc0bef9.jpg",
+      "storage_key": "photos/original/2026/06/bce468b2-6ddb-4cfe-8a0a-c9cf1fc0bef9.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1541253,
+      "created_at": "2026-06-21T04:01:26.603507+00:00",
+      "shot_at": "2026-06-21T02:48:02+00:00",
       "comment": null,
       "display_name": "いろはす"
     },
@@ -1688,18 +1718,18 @@
     },
     "363": {
       "manhole_id": 363,
-      "photo_id": "78234012-3801-45be-a126-234ae6b36bc3",
-      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/aaf194d2-ce7f-41fd-a1cd-fda6aa4ea266.jpg",
-      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/aaf194d2-ce7f-41fd-a1cd-fda6aa4ea266.jpg",
-      "storage_key": "photos/original/2026/06/aaf194d2-ce7f-41fd-a1cd-fda6aa4ea266.jpg",
+      "photo_id": "49f89999-59a4-4588-be96-5ddc1ceb9395",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/2c766cdd-7b49-4572-ab57-21ea7745a666.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/2c766cdd-7b49-4572-ab57-21ea7745a666.jpg",
+      "storage_key": "photos/original/2026/06/2c766cdd-7b49-4572-ab57-21ea7745a666.jpg",
       "content_type": "image/jpeg",
       "width": null,
       "height": null,
-      "file_size": 1028344,
-      "created_at": "2026-06-14T06:13:55.684498+00:00",
-      "shot_at": "2026-06-14T06:06:04+00:00",
+      "file_size": 1667296,
+      "created_at": "2026-06-21T02:08:13.994552+00:00",
+      "shot_at": "2026-06-21T02:06:21+00:00",
       "comment": null,
-      "display_name": "Giulia"
+      "display_name": "tako"
     },
     "376": {
       "manhole_id": 376,
