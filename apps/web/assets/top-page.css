@@ -681,3 +681,67 @@ a { color: inherit; text-decoration: none; }
     opacity: 0.8;
   }
 }
+
+/* ════════════════════════════════════════════════════════════════════════
+   PC / Desktop layout (PC版)
+   Layers a wide, multi-column desktop experience over the SP-first design.
+   Tablet ≥768px: roomier single column. Desktop ≥960px: 2-column grid.
+   All HTML/JS is reused unchanged; this is a presentation-only enhancement.
+   ════════════════════════════════════════════════════════════════════════ */
+
+/* Tablet: widen the single column and ease the reading measure. */
+@media (min-width: 768px) {
+  :root {
+    --top-max-w: 700px;
+    --top-pad: 24px;
+  }
+  .top-h1 { font-size: 26px; }
+}
+
+/* Desktop: 2-column grid with full-width intro/map/hub bands. */
+@media (min-width: 960px) {
+  :root {
+    --top-max-w: 1080px;
+  }
+
+  .top-app-bar-inner {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+  .brand-name { font-size: 18px; }
+
+  /* Section grid — deterministic placement regardless of source order. */
+  .top-main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "intro intro"
+      "map   map"
+      "hero  pref"
+      "hub   hub";
+    column-gap: 28px;
+    align-items: start;
+  }
+  #sec-intro { grid-area: intro; }
+  #sec-map   { grid-area: map; }
+  #sec-hero  { grid-area: hero; }
+  #sec-pref  { grid-area: pref; }
+  #sec-hub   { grid-area: hub; }
+
+  /* Intro reads as a hero band. */
+  .top-h1 { font-size: 30px; }
+  .top-intro-text { max-width: 760px; }
+
+  /* The map gateway becomes the full-width desktop hero. */
+  .map-gateway-card { height: 440px; }
+
+  /* Today's two small cards sit side-by-side with the featured one. */
+  .hero-small-grid { gap: 12px; }
+}
+
+/* Wide desktop: a touch more breathing room. */
+@media (min-width: 1280px) {
+  :root {
+    --top-max-w: 1180px;
+  }
+}
