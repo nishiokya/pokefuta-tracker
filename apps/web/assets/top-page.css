@@ -33,6 +33,10 @@ body.pokefuta-top-page {
   font-family: 'Noto Sans JP', system-ui, -apple-system, sans-serif;
   color: var(--top-text);
   -webkit-font-smoothing: antialiased;
+  /* Numbered-block counter. Auto-numbers only the *visible* .sec-num badges, so
+     mobile (no header nav, separate map section) reads 1–5 and desktop (header
+     nav = 1, map hero merged) also reads 1–5 — no manual renumbering, no gaps. */
+  counter-reset: top-sec;
 }
 
 a { color: inherit; text-decoration: none; }
@@ -93,6 +97,24 @@ a { color: inherit; text-decoration: none; }
   font-weight: 700;
 }
 
+/* Right-side group: desktop nav links + count badge. */
+.top-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Horizontal nav — desktop only; mobile keeps the brand + count badge. */
+.top-nav {
+  display: none;
+}
+
+/* Header's "1" badge — desktop only (hidden on mobile so it isn't counted). */
+.nav-num {
+  display: none;
+  align-self: center;
+}
+
 /* ── Main layout ── */
 .top-main {
   max-width: var(--top-max-w);
@@ -125,7 +147,10 @@ a { color: inherit; text-decoration: none; }
   justify-content: center;
   font-family: 'IBM Plex Mono', monospace;
   flex-shrink: 0;
+  counter-increment: top-sec;
 }
+
+.sec-num::before { content: counter(top-sec); }
 
 .sec-eyebrow-text {
   font-family: 'IBM Plex Mono', 'Courier New', monospace;
@@ -706,7 +731,8 @@ a { color: inherit; text-decoration: none; }
   .top-h1 { font-size: 26px; }
 }
 
-/* Desktop: 2-column grid with full-width intro/map/hub bands. */
+/* Desktop: the PC design — single full-width column, each section owning its
+   own internal grid (per 改善のポイント SP改善版 → PC展開). */
 @media (min-width: 960px) {
   :root {
     --top-max-w: 1080px;
@@ -716,36 +742,163 @@ a { color: inherit; text-decoration: none; }
     padding-top: 12px;
     padding-bottom: 12px;
   }
-  .brand-name { font-size: 18px; }
+  .brand-name { font-size: 20px; }
 
-  /* Section grid — placement follows DOM order (intro → hero → map → pref →
-     hub) so visual order matches keyboard / screen-reader order. minmax(0,1fr)
-     keeps long content from forcing tracks wider than the container. */
+  /* ── 1. Header nav (horizontal links + count pill) ── */
+  .nav-num { display: inline-flex; }
+  .top-nav {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .top-nav-right { gap: 22px; }
+  .top-nav-link {
+    font-size: 14px;
+    font-weight: 500;
+    color: #4B4B53;
+    white-space: nowrap;
+    text-decoration: none;
+  }
+  .top-nav-link:hover { color: var(--top-purple); }
+  .top-nav-link--active { font-weight: 700; color: var(--top-purple-dark); }
+
+  /* Single full-width column. Intro + map share one "maphero" band so the map
+     renders edge-to-edge with the H1 panel overlaid on its left. DOM order
+     (intro → hero → map → pref → hub) is preserved; the panel paints above the
+     map via z-index, not reordering. */
   .top-main {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
-      "intro intro"
-      "hero  map"
-      "pref  hub";
-    column-gap: 28px;
-    align-items: start;
+      "maphero"
+      "hero"
+      "pref"
+      "hub";
+    row-gap: 8px;
   }
-  #sec-intro { grid-area: intro; }
+  #sec-intro { grid-area: maphero; }
   #sec-hero  { grid-area: hero; }
-  #sec-map   { grid-area: map; }
+  #sec-map   { grid-area: maphero; }
   #sec-pref  { grid-area: pref; }
   #sec-hub   { grid-area: hub; }
 
-  /* Intro reads as a hero band. */
-  .top-h1 { font-size: 30px; }
-  .top-intro-text { max-width: 760px; }
+  /* Roomier section headings to match the design. */
+  .sec-title { font-size: 20px; }
+  .sec-num { width: 24px; height: 24px; }
 
-  /* The map gateway becomes a tall desktop hero in its column. */
-  .map-gateway-card { height: 440px; }
+  /* ── 2. Map hero: full-bleed, tall; H1 panel overlay; CTA pill ── */
+  #sec-map {
+    position: relative;
+    z-index: 1;
+    padding: 0;
+    align-self: stretch;
+  }
+  /* The map section's own "地図から探す" header is redundant with the H1 panel;
+     hiding it also keeps its .sec-num out of the counter (no number gap). */
+  #sec-map .sec-header { display: none; }
+  .map-gateway-card {
+    height: 470px;
+    border-radius: var(--top-radius-card-lg);
+  }
+  /* The bottom dark overlay collapses to a single CTA pill (bottom-right);
+     H1 / intro / stats now live in the overlaid left panel. */
+  .map-gateway-overlay {
+    inset: auto 0 0 auto;
+    width: auto;
+    padding: 18px;
+    background: none;
+  }
+  .map-gateway-title,
+  .map-gateway-sub { display: none; }
+  .map-gateway-cta {
+    display: inline-block;
+    margin: 0;
+    padding: 12px 22px;
+  }
+  /* Count badge clears the left panel. */
+  .map-gateway-badge { left: auto; right: 11px; }
 
-  /* Today's two small cards sit side-by-side with the featured one. */
-  .hero-small-grid { gap: 12px; }
+  /* Intro → overlaid left panel (cream → transparent fade), full hero height.
+     pointer-events:none lets clicks fall through to the map link beneath. */
+  #sec-intro {
+    position: relative;
+    z-index: 2;
+    align-self: stretch;
+    justify-self: start;
+    width: min(486px, 52%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 40px;
+    pointer-events: none;
+    border-radius: var(--top-radius-card-lg) 0 0 var(--top-radius-card-lg);
+    background: linear-gradient(to right,
+      rgba(250, 246, 236, 0.97) 0%,
+      rgba(250, 246, 236, 0.95) 62%,
+      rgba(250, 246, 236, 0) 100%);
+  }
+  .top-h1 { font-size: 36px; line-height: 1.28; }
+  .top-intro-text { max-width: 400px; font-size: 13.5px; }
+  .top-stats-row { max-width: 380px; }
+  .stat-num { font-size: 22px; }
+
+  /* ── 3. Today's hero: featured (1.55fr) + two stacked horizontal cards ── */
+  #sec-hero {
+    display: grid;
+    grid-template-columns: 1.55fr 1fr;
+    grid-template-areas:
+      "hd   hd"
+      "feat small";
+    column-gap: 16px;
+    row-gap: 14px;
+  }
+  #sec-hero .sec-header { grid-area: hd; margin-bottom: 0; }
+  #sec-hero .hero-featured-card {
+    grid-area: feat;
+    display: flex;
+    flex-direction: column;
+  }
+  #sec-hero .hero-featured-media { flex: 1; height: auto; min-height: 248px; }
+  #sec-hero .hero-featured-title { font-size: 21px; }
+  #sec-hero .hero-small-grid {
+    grid-area: small;
+    margin-top: 0;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 16px;
+  }
+  #sec-hero .hero-small-card { display: flex; }
+  #sec-hero .hero-small-media { width: 128px; height: auto; flex-shrink: 0; }
+  #sec-hero .hero-small-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 14px 16px;
+  }
+  #sec-hero .hero-small-title { font-size: 15px; }
+  #sec-hero .hero-small-place { font-size: 12px; }
+
+  /* ── 4. Prefectures: 4-column link grid ── */
+  .top-pref-links {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 34px;
+  }
+  .pref-link-item { padding: 12px 0; }
+  .pref-link-name { font-size: 14px; }
+  .pref-show-all-btn { max-width: 320px; margin: 12px auto 0; }
+
+  /* ── 5. Purpose hub: 2-column card grid ── */
+  #sec-hub {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 16px;
+    align-items: start;
+  }
+  #sec-hub .sec-eyebrow { grid-column: 1 / -1; }
+  .hub-card { margin-bottom: 0; padding: 18px 20px; }
+  .hub-card-header { font-size: 15px; }
 }
 
 /* Wide desktop: a touch more breathing room. */
