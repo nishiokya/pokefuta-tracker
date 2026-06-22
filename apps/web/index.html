@@ -480,18 +480,33 @@
         }
 
         // Show a partial list; expand on button click. Desktop's 4-column grid
-        // shows 12 (3 rows); the SP single column shows 3.
-        var PREF_INIT = (window.matchMedia && window.matchMedia('(min-width: 960px)').matches) ? 12 : 3;
+        // shows 12 (3 rows); the SP single column shows 3. Re-applied when the
+        // viewport crosses the 960px breakpoint, preserving the expanded state.
         var prefItems = linksEl ? Array.prototype.slice.call(linksEl.querySelectorAll('.pref-link-item')) : [];
-        prefItems.forEach(function(item, i) { if (i >= PREF_INIT) item.style.display = 'none'; });
         var showAllBtn = document.getElementById('pref-show-all');
-        if (showAllBtn && prefItems.length > PREF_INIT) {
-          showAllBtn.hidden = false;
+        var prefExpanded = false;
+        var prefDesktopMQ = window.matchMedia ? window.matchMedia('(min-width: 960px)') : null;
+
+        function applyPrefCollapse() {
+          var initial = (prefDesktopMQ && prefDesktopMQ.matches) ? 12 : 3;
+          var collapse = !prefExpanded && prefItems.length > initial;
+          prefItems.forEach(function(item, i) {
+            item.style.display = (collapse && i >= initial) ? 'none' : '';
+          });
+          if (showAllBtn) showAllBtn.hidden = !collapse;
+        }
+
+        if (showAllBtn) {
           showAllBtn.addEventListener('click', function() {
-            prefItems.forEach(function(item) { item.style.display = ''; });
-            showAllBtn.hidden = true;
+            prefExpanded = true;
+            applyPrefCollapse();
           });
         }
+        if (prefDesktopMQ) {
+          if (prefDesktopMQ.addEventListener) prefDesktopMQ.addEventListener('change', applyPrefCollapse);
+          else if (prefDesktopMQ.addListener) prefDesktopMQ.addListener(applyPrefCollapse); // Safari < 14
+        }
+        applyPrefCollapse();
 
         // Mini-map pins — delegate to shared renderer (race-safe)
         window._prefCountMap = prefCountMap;
