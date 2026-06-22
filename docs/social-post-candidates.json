@@ -516,33 +516,6 @@
     }
   },
   {
-    "id": "photo-220-62b9eb76",
-    "type": "latest_photo",
-    "title": "最新写真：北海道/斜里町",
-    "url": "https://data.pokefuta.com/manholes/220/",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "latest_photo",
-    "source": "photos",
-    "raw_data": {
-      "manhole_id": "220",
-      "title": "北海道/斜里町",
-      "pref": "北海道",
-      "city": "斜里",
-      "pokemon": "パルキア",
-      "pokemon_list": [
-        "パルキア",
-        "ロコン"
-      ],
-      "created_at": "2026-06-03T02:32:14.472542+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/1f7a16d7-8ee9-4011-8d36-b1517a38a073.jpg",
-      "display_name": "dichlorosulfane",
-      "photo_rank": "first_ever"
-    }
-  },
-  {
     "id": "photo-376-8a1d8aca",
     "type": "latest_photo",
     "title": "最新写真：福島県/白河市",
@@ -566,34 +539,6 @@
       "created_at": "2026-06-14T04:20:48.017456+00:00",
       "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/210eb9fa-6934-4989-b19a-6ca6297b4a45.jpg",
       "display_name": "ぴえろ",
-      "photo_rank": "first_ever"
-    }
-  },
-  {
-    "id": "photo-363-78234012",
-    "type": "latest_photo",
-    "title": "最新写真：岐阜県/高山市",
-    "url": "https://data.pokefuta.com/manholes/363/",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "latest_photo",
-    "source": "photos",
-    "raw_data": {
-      "manhole_id": "363",
-      "title": "岐阜県/高山市",
-      "pref": "岐阜県",
-      "city": "高山",
-      "pokemon": "バオップ",
-      "pokemon_list": [
-        "バオップ",
-        "ヒヤップ",
-        "ヤナップ"
-      ],
-      "created_at": "2026-06-14T06:13:55.684498+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/aaf194d2-ce7f-41fd-a1cd-fda6aa4ea266.jpg",
-      "display_name": "Giulia",
       "photo_rank": "first_ever"
     }
   },
@@ -765,6 +710,34 @@
     }
   },
   {
+    "id": "photo-363-49f89999",
+    "type": "latest_photo",
+    "title": "最新写真：岐阜県/高山市",
+    "url": "https://data.pokefuta.com/manholes/363/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "363",
+      "title": "岐阜県/高山市",
+      "pref": "岐阜県",
+      "city": "高山",
+      "pokemon": "バオップ",
+      "pokemon_list": [
+        "バオップ",
+        "ヒヤップ",
+        "ヤナップ"
+      ],
+      "created_at": "2026-06-21T02:08:13.994552+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/2c766cdd-7b49-4572-ab57-21ea7745a666.jpg",
+      "display_name": "tako",
+      "photo_rank": "first_ever"
+    }
+  },
+  {
     "id": "photo-2-3743c530",
     "type": "latest_photo",
     "title": "最新写真：鹿児島県/指宿市",
@@ -791,10 +764,10 @@
     }
   },
   {
-    "id": "photo-195-95d2c632",
+    "id": "photo-194-35444c66",
     "type": "latest_photo",
     "title": "最新写真：岡山県/倉敷市",
-    "url": "https://data.pokefuta.com/manholes/195/",
+    "url": "https://data.pokefuta.com/manholes/194/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -802,17 +775,16 @@
     "imageType": "latest_photo",
     "source": "photos",
     "raw_data": {
-      "manhole_id": "195",
+      "manhole_id": "194",
       "title": "岡山県/倉敷市",
       "pref": "岡山県",
       "city": "倉敷",
-      "pokemon": "アゲハント",
+      "pokemon": "ルカリオ",
       "pokemon_list": [
-        "アゲハント",
-        "ポチエナ"
+        "ルカリオ"
       ],
-      "created_at": "2026-06-20T14:42:32.740104+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/8cf1f991-cf12-44a6-ad12-2039e6dee020.jpg",
+      "created_at": "2026-06-21T04:01:37.635399+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/82ea8ddf-6c38-42a2-80a7-6904731f9b12.jpg",
       "display_name": "いろはす",
       "photo_rank": "recent"
     }
