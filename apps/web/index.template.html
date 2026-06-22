@@ -92,12 +92,22 @@
   <header class="top-app-bar">
     <div class="top-app-bar-inner">
       <div class="top-brand">
+        <span class="sec-num nav-num"></span>
         <span class="brand-name">ポケふた</span>
         <span class="brand-sub">DATABASE</span>
       </div>
-      <a href="%%BASE_PATH%%map.html" class="top-count-badge" id="top-count-badge" onclick="trackEvent('click_appbar_count')">
-        %%APPBAR_PREFIX%%<b id="appbar-count">—</b>%%APPBAR_SUFFIX%%
-      </a>
+      <div class="top-nav-right">
+        <nav class="top-nav" aria-label="%%NAV_ARIA%%">
+          <a class="top-nav-link top-nav-link--active" href="%%BASE_PATH%%map.html" onclick="trackEvent('click_nav',{nav:'map'})">%%NAV_MAP%%</a>
+          <a class="top-nav-link" href="#sec-pref" onclick="trackEvent('click_nav',{nav:'pref'})">%%NAV_PREF%%</a>
+          <a class="top-nav-link" href="%%BASE_PATH%%pokemon/" onclick="trackEvent('click_nav',{nav:'pokemon'})">%%NAV_POKEMON%%</a>
+          <a class="top-nav-link" href="#sec-hub" onclick="trackEvent('click_nav',{nav:'theme'})">%%NAV_THEME%%</a>
+          <a class="top-nav-link" href="#sec-hero" onclick="trackEvent('click_nav',{nav:'ranking'})">%%NAV_RANKING%%</a>
+        </nav>
+        <a href="%%BASE_PATH%%map.html" class="top-count-badge" id="top-count-badge" onclick="trackEvent('click_appbar_count')">
+          %%APPBAR_PREFIX%%<b id="appbar-count">—</b>%%APPBAR_SUFFIX%%
+        </a>
+      </div>
     </div>
   </header>
 
@@ -106,7 +116,7 @@
     <!-- ===== 1. H1 + INTRO + STATS ===== -->
     <section class="top-section" id="sec-intro">
       <div class="sec-eyebrow">
-        <span class="sec-num">1</span>
+        <span class="sec-num"></span>
         <span class="sec-eyebrow-text">POKÉMON MANHOLE / ポケモンマンホール</span>
       </div>
       <h1 class="top-h1">%%TOP_H1%%</h1>
@@ -133,7 +143,7 @@
     <section class="top-section" id="sec-hero">
       <div class="sec-header">
         <div class="sec-eyebrow">
-          <span class="sec-num">2</span>
+          <span class="sec-num"></span>
           <h2 class="sec-title">%%SEC2_TITLE%%</h2>
         </div>
         <span class="hero-update-label">%%SEC2_DAILY%%</span>
@@ -183,7 +193,7 @@
     <section class="top-section" id="sec-map">
       <div class="sec-header">
         <div class="sec-eyebrow">
-          <span class="sec-num">3</span>
+          <span class="sec-num"></span>
           <h2 class="sec-title">%%SEC3_TITLE%%</h2>
         </div>
         <span class="sec-file-label">/ map.html</span>
@@ -204,7 +214,7 @@
     <!-- ===== 4. PREFECTURE LIST ===== -->
     <section class="top-section" id="sec-pref">
       <div class="sec-eyebrow">
-        <span class="sec-num">4</span>
+        <span class="sec-num"></span>
         <h2 class="sec-title">%%SEC4_TITLE%%</h2>
       </div>
 
@@ -220,7 +230,7 @@
     <!-- ===== 5. PURPOSE HUB ===== -->
     <section class="top-section" id="sec-hub">
       <div class="sec-eyebrow">
-        <span class="sec-num">5</span>
+        <span class="sec-num"></span>
         <h2 class="sec-title">%%SEC5_TITLE%%</h2>
       </div>
 
@@ -470,18 +480,34 @@
           }).join('');
         }
 
-        // Show first 6 prefectures; expand on button click
-        var PREF_INIT = 3;
+        // Show a partial list; expand on button click. Desktop's 4-column grid
+        // shows 12 (3 rows); the SP single column shows 3. Re-applied when the
+        // viewport crosses the 960px breakpoint, preserving the expanded state.
         var prefItems = linksEl ? Array.prototype.slice.call(linksEl.querySelectorAll('.pref-link-item')) : [];
-        prefItems.forEach(function(item, i) { if (i >= PREF_INIT) item.style.display = 'none'; });
         var showAllBtn = document.getElementById('pref-show-all');
-        if (showAllBtn && prefItems.length > PREF_INIT) {
-          showAllBtn.hidden = false;
+        var prefExpanded = false;
+        var prefDesktopMQ = window.matchMedia ? window.matchMedia('(min-width: 960px)') : null;
+
+        function applyPrefCollapse() {
+          var initial = (prefDesktopMQ && prefDesktopMQ.matches) ? 12 : 3;
+          var collapse = !prefExpanded && prefItems.length > initial;
+          prefItems.forEach(function(item, i) {
+            item.style.display = (collapse && i >= initial) ? 'none' : '';
+          });
+          if (showAllBtn) showAllBtn.hidden = !collapse;
+        }
+
+        if (showAllBtn) {
           showAllBtn.addEventListener('click', function() {
-            prefItems.forEach(function(item) { item.style.display = ''; });
-            showAllBtn.hidden = true;
+            prefExpanded = true;
+            applyPrefCollapse();
           });
         }
+        if (prefDesktopMQ) {
+          if (prefDesktopMQ.addEventListener) prefDesktopMQ.addEventListener('change', applyPrefCollapse);
+          else if (prefDesktopMQ.addListener) prefDesktopMQ.addListener(applyPrefCollapse); // Safari < 14
+        }
+        applyPrefCollapse();
 
         // Mini-map pins — delegate to shared renderer (race-safe)
         window._prefCountMap = prefCountMap;
