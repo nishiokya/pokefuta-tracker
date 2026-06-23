@@ -56,7 +56,7 @@
     });
     window.SITE_BASE_URL = 'https://data.pokefuta.com/';
 
-    // Redirect legacy ?pref= / ?manhole= deep-links to map.html
+    // Redirect deep-links (?pref= / ?manhole= / ?tag= / ?view=) to map.html
     (function() {
       var p = new URLSearchParams(location.search);
       if (p.has('pref') || p.has('manhole') || p.has('tag') || p.has('view')) {
