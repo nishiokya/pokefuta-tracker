@@ -312,9 +312,9 @@
     const resolvedPref = prefParam ? window.resolvePrefectureParam(prefParam) : '';
     let pagePath = '/map';
     if (manholeParam) {
-      pagePath = `/manhole/${manholeParam}`;
+      pagePath = `/manholes/${manholeParam}/`;
     } else if (resolvedPref) {
-      pagePath = `/pref/${window.PREFECTURE_SLUG_MAP[resolvedPref] || encodeURIComponent(resolvedPref)}`;
+      pagePath = `/prefectures/${window.PREFECTURE_SLUG_MAP[resolvedPref] || encodeURIComponent(resolvedPref)}/`;
     }
 
     let mapGA4Params = { site_type: 'map', page_type: 'map_top' };
@@ -709,7 +709,7 @@
         window.currentGA4PageType = 'map_prefecture';
         if (window.gtag && !isInitialPageLoad) {
           gtag('event', 'page_view', {
-            page_path: `/pref/${window.PREFECTURE_SLUG_MAP[prefecture] || encodeURIComponent(prefecture)}`,
+            page_path: `/prefectures/${window.PREFECTURE_SLUG_MAP[prefecture] || encodeURIComponent(prefecture)}/`,
             site_type: 'map',
             page_type: 'map_prefecture',
             prefecture: window.PREFECTURE_SLUG_MAP[prefecture] || prefecture,
@@ -1599,7 +1599,7 @@
       window.currentGA4PageType = 'map_manhole';
       if (window.gtag) {
         gtag('event', 'page_view', {
-          'page_path': `/manhole/${encodeURIComponent(data.id)}`,
+          'page_path': `/manholes/${encodeURIComponent(data.id)}/`,
           site_type: 'map',
           page_type: 'map_manhole',
           prefecture: window.PREFECTURE_SLUG_MAP[data.prefecture] || data.prefecture || '',

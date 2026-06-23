@@ -75,8 +75,9 @@
     });
     window.trackEvent = function(action, params) {
       gtag('event', action, Object.assign(
-        { site_type: 'map', page_type: 'top_page' },
-        params || {}
+        {},
+        params || {},
+        { site_type: 'map', page_type: 'top_page' }
       ));
     };
   </script>
