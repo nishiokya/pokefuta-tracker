@@ -152,6 +152,11 @@ a { color: inherit; text-decoration: none; }
 
 .sec-num::before { content: counter(top-sec); }
 
+/* セクション番号バッジ（①〜⑤・ヘッダーの①）は意味がないため全て非表示。
+   ブレークポイントごとに display を切り替える既存ルールを確実に上書きする。 */
+.sec-num,
+.nav-num { display: none !important; }
+
 .sec-eyebrow-text {
   font-family: 'IBM Plex Mono', 'Courier New', monospace;
   font-size: 10px;
@@ -511,36 +516,38 @@ a { color: inherit; text-decoration: none; }
   box-shadow: 0 5px 14px rgba(108,92,166,.5);
 }
 
-/* design-style circular count pins (non-interactive) */
-.mini-pin {
-  display: flex;
+/* Per-prefecture count pins — map.html の .prefecture-overview-marker をベースに、
+   都道府県名と件数を明確に2行で表示（円を少し大きめに）。 */
+.prefecture-overview-marker {
+  /* leaflet.css が top-page.css より後に読まれるため display を !important で確実に上書き */
+  display: flex !important;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: var(--top-radius-pill);
-  background: var(--top-purple);
+  width: 46px !important;
+  height: 46px !important;
+  margin: -23px 0 0 -23px !important;
+  border: 2px solid rgba(255, 255, 255, .94);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #9374c8, #624095 76%);
   color: #fff;
-  border: 2px solid #fff;
-  box-shadow: 0 3px 7px rgba(0,0,0,.3);
+  box-shadow: 0 4px 12px rgba(67, 38, 111, .32);
+  white-space: nowrap;
+}
+
+.prefecture-overview-name {
+  display: block;
+  font-size: 8px;
+  font-weight: 700;
   line-height: 1;
 }
 
-.mini-pin--lg {
-  width: 42px;
-  height: 42px;
-  background: var(--top-purple-dark);
-}
-
-.mini-pin-name {
-  font-size: 9px;
-  font-weight: 700;
-}
-
-.mini-pin-count {
-  font-size: 11px;
-  font-weight: 700;
+.prefecture-overview-count {
+  display: block;
+  margin-top: 3px;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1;
   font-family: 'IBM Plex Mono', monospace;
 }
 
@@ -763,9 +770,10 @@ a { color: inherit; text-decoration: none; }
   .top-nav-link--active { font-weight: 700; color: var(--top-purple-dark); }
 
   /* Single full-width column. Intro + map share one "maphero" band so the map
-     renders edge-to-edge with the H1 panel overlaid on its left. DOM order
-     (intro → hero → map → pref → hub) is preserved; the panel paints above the
-     map via z-index, not reordering. */
+     renders edge-to-edge with the H1 panel overlaid on its left. DOM order is
+     (intro → map → hero → pref → hub) — intro leads so the H1 + stats sit on top
+     on mobile, with the map directly below; on desktop grid-template-areas +
+     z-index pin the layout regardless of order (intro panel paints above the map). */
   .top-main {
     display: grid;
     grid-template-columns: minmax(0, 1fr);

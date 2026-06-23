@@ -53,10 +53,10 @@
     });
     window.SITE_BASE_URL = 'https://data.pokefuta.com/';
 
-    // Redirect legacy ?pref= / ?manhole= deep-links to map.html
+    // Redirect deep-links (?pref= / ?manhole= / ?tag= / ?view=) to map.html
     (function() {
       var p = new URLSearchParams(location.search);
-      if (p.has('pref') || p.has('manhole')) {
+      if (p.has('pref') || p.has('manhole') || p.has('tag') || p.has('view')) {
         location.replace('map.html' + location.search);
       }
     })();
@@ -79,7 +79,7 @@
   </script>
   <!-- End GA -->
   <link rel="stylesheet" href="./assets/theme.css" />
-  <link rel="stylesheet" href="./assets/top-page.css?v=20260621a" />
+  <link rel="stylesheet" href="./assets/top-page.css?v=20260623d" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
   <link rel="icon" href="./assets/pokefuta-marker.svg" type="image/svg+xml" />
 </head>
@@ -140,6 +140,28 @@
       </div>
     </section>
 
+    <!-- ===== MAP GATEWAY (under intro on mobile; full-bleed hero on desktop) ===== -->
+    <section class="top-section" id="sec-map">
+      <div class="sec-header">
+        <div class="sec-eyebrow">
+          <span class="sec-num"></span>
+          <h2 class="sec-title">地図から探す</h2>
+        </div>
+        <span class="sec-file-label">/ map.html</span>
+      </div>
+
+      <a class="map-gateway-card" href="map.html" onclick="trackEvent('click_map_gateway')">
+        <div id="mini-map" class="map-gateway-minimap" aria-hidden="true"></div>
+        <span class="map-gateway-badge">🗺 全国 <b id="map-badge-count">—</b>枚</span>
+        <span class="map-gateway-attr">© OpenStreetMap contributors</span>
+        <div class="map-gateway-overlay">
+          <div class="map-gateway-title">日本地図で近くのポケふたを探す</div>
+          <div class="map-gateway-sub">都道府県別の件数ピンから全画面マップへ</div>
+          <div class="map-gateway-cta">🗺 地図を全画面で開く</div>
+        </div>
+      </a>
+    </section>
+
     <!-- ===== 2. TODAY'S HERO ===== -->
     <section class="top-section" id="sec-hero">
       <div class="sec-header">
@@ -192,28 +214,6 @@
       </div>
     </section>
 
-    <!-- ===== 3. MAP GATEWAY ===== -->
-    <section class="top-section" id="sec-map">
-      <div class="sec-header">
-        <div class="sec-eyebrow">
-          <span class="sec-num"></span>
-          <h2 class="sec-title">地図から探す</h2>
-        </div>
-        <span class="sec-file-label">/ map.html</span>
-      </div>
-
-      <a class="map-gateway-card" href="map.html" onclick="trackEvent('click_map_gateway')">
-        <div id="mini-map" class="map-gateway-minimap" aria-hidden="true"></div>
-        <span class="map-gateway-badge">🗺 全国 <b id="map-badge-count">—</b>枚</span>
-        <span class="map-gateway-attr">© OpenStreetMap © CARTO</span>
-        <div class="map-gateway-overlay">
-          <div class="map-gateway-title">日本地図で近くのポケふたを探す</div>
-          <div class="map-gateway-sub">都道府県別の件数ピンから全画面マップへ</div>
-          <div class="map-gateway-cta">🗺 地図を全画面で開く</div>
-        </div>
-      </a>
-    </section>
-
     <!-- ===== 4. PREFECTURE LIST ===== -->
     <section class="top-section" id="sec-pref">
       <div class="sec-eyebrow">
@@ -241,7 +241,7 @@
       <div class="hub-card">
         <div class="hub-card-header">
           <span>テーマから探す</span>
-          <a class="hub-card-more" href="map.html" onclick="trackEvent('click_hub_tag_all')">地図で探す →</a>
+          <a class="hub-card-more" href="map.html?view=theme" onclick="trackEvent('click_hub_tag_all')">地図で探す →</a>
         </div>
         <div class="hub-chips">
           <a class="hub-chip" href="map.html?tag=roadside" onclick="trackEvent('click_hub_tag',{tag:'roadside'})">🛤 道の駅</a>
@@ -388,19 +388,16 @@
       var counts = window._prefCountMap;
       if (!map || !counts || window._miniPinsRendered) return;
       window._miniPinsRendered = true;
-      var prefMax = Math.max.apply(null, Object.keys(counts).map(function(k) { return counts[k]; }));
       Object.keys(counts).forEach(function(pref) {
         var c = PREF_COORDS[pref];
         if (!c) return;
         var cnt = counts[pref];
-        var big = cnt >= prefMax * 0.7;
-        var sz = big ? 42 : 36;
-        var shortName = pref.replace(/[県都府]$/, '');
+        var shortName = pref === '北海道' ? pref : pref.replace(/[都府県]$/, '');
+        // map.html の都道府県オーバービューマーカーと同じデザイン
         var icon = L.divIcon({
-          html: '<div class="mini-pin' + (big ? ' mini-pin--lg' : '') + '">'
-            + '<span class="mini-pin-name">' + shortName + '</span>'
-            + '<span class="mini-pin-count">' + cnt + '</span></div>',
-          className: '', iconSize: [sz, sz], iconAnchor: [sz / 2, sz / 2],
+          html: '<span class="prefecture-overview-name">' + shortName + '</span>'
+            + '<span class="prefecture-overview-count">' + cnt + '</span>',
+          className: 'prefecture-overview-marker', iconSize: null,
         });
         L.marker(c, { icon: icon }).addTo(map);
       });
@@ -531,13 +528,15 @@
   (function() {
     var miniMapEl = document.getElementById('mini-map');
     if (!miniMapEl || typeof L === 'undefined') return;
+    // SP（スマホ）は2段階ズームイン（7）、デスクトップは全国が収まる5
+    var _miniZoom = window.matchMedia('(min-width: 960px)').matches ? 5 : 7;
     var miniMap = L.map('mini-map', {
       zoomControl: false, scrollWheelZoom: false, dragging: false,
       touchZoom: false, doubleClickZoom: false, boxZoom: false,
       keyboard: false, attributionControl: false,
-    }).setView([37.6, 137.5], 4);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-      subdomains: 'abcd', maxZoom: 19,
+    }).setView([37.6, 137.5], _miniZoom);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
     }).addTo(miniMap);
     window._miniMap = miniMap;
     if (window._renderMiniPins) window._renderMiniPins();

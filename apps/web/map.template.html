@@ -1525,7 +1525,9 @@
           // 地図をその都道府県にズーム
           setTimeout(() => zoomToPrefecture(initialPref), 100);
         }
-        const tagParam = new URLSearchParams(window.location.search).get('tag');
+        const urlParams = new URLSearchParams(window.location.search);
+        const tagParam = urlParams.get('tag');
+        const viewParam = urlParams.get('view');
         if (tagParam) {
           activeTagFilter = tagParam;
           document.querySelectorAll('.tag-chip').forEach(b => {
@@ -1533,7 +1535,9 @@
             b.setAttribute('aria-pressed', String(b.dataset.tag === tagParam));
           });
           recomputeVisibility();
-          syncExploreSections();
+          openThemeDirectory(); // テーマ絞り込みパネルを開く（タグ選択済み）
+        } else if (viewParam === 'theme') {
+          openThemeDirectory(); // タグ未選択でテーマ一覧パネルを開く
         }
         // Mark initial page load as complete to enable SPA page_view tracking
         isInitialPageLoad = false;
@@ -1715,6 +1719,24 @@
 
 // Prefecture table toggle機能は削除済み（テーブル自体は残存）
 
+    function scrollTagDirectoryIntoView() {
+      requestAnimationFrame(() => {
+        const section = document.querySelector('.tag-directory');
+        const controlsContent = document.getElementById('controls-content');
+        if (!section || !controlsContent) return;
+        const top = Math.max(0, section.offsetTop - controlsContent.offsetTop - 8);
+        controlsContent.scrollTo({ top, behavior: 'smooth' });
+      });
+    }
+
+    // テーマで絞り込むパネルを開く（トグルではなく常に開く）。?tag= / ?view=theme 着地時に使用。
+    function openThemeDirectory() {
+      showTagDirectory = true;
+      expandBottomSheet();
+      syncExploreSections();
+      scrollTagDirectoryIntoView();
+    }
+
     function initControlsToggle() {
       const toggleBtn = document.getElementById('controls-toggle');
       const controlsContent = document.getElementById('controls-content');
@@ -1752,15 +1774,7 @@
             'event_label': showTagDirectory ? 'opened' : 'closed'
           });
         }
-        if (showTagDirectory) {
-          requestAnimationFrame(() => {
-            const section = document.querySelector('.tag-directory');
-            const controlsContent = document.getElementById('controls-content');
-            if (!section || !controlsContent) return;
-            const top = Math.max(0, section.offsetTop - controlsContent.offsetTop - 8);
-            controlsContent.scrollTo({ top, behavior: 'smooth' });
-          });
-        }
+        if (showTagDirectory) scrollTagDirectoryIntoView();
       });
       let startY = 0;
       toggleBtn.addEventListener('touchstart', e => { startY = e.touches[0].clientY; }, { passive: true });
