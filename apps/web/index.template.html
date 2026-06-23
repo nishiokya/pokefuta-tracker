@@ -73,11 +73,15 @@
     gtag('config', 'G-K18NR4GZG2', {
       anonymize_ip: true,
       page_path: '/top',
-      site_type: 'top',
+      site_type: 'map',
       page_type: 'top_page',
     });
     window.trackEvent = function(action, params) {
-      gtag('event', action, params || {});
+      gtag('event', action, Object.assign(
+        {},
+        params || {},
+        { site_type: 'map', page_type: 'top_page' }
+      ));
     };
   </script>
   <!-- End GA -->

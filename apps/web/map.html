@@ -310,11 +310,11 @@
     const manholeParam = params.get('manhole');
     const prefParam = params.get('pref');
     const resolvedPref = prefParam ? window.resolvePrefectureParam(prefParam) : '';
-    let pagePath = '/tracker_top';
+    let pagePath = '/map';
     if (manholeParam) {
-      pagePath = `/tracker_manhole/${manholeParam}`;
+      pagePath = `/manholes/${manholeParam}/`;
     } else if (resolvedPref) {
-      pagePath = `/tracker_pref/${window.PREFECTURE_SLUG_MAP[resolvedPref] || encodeURIComponent(resolvedPref)}`;
+      pagePath = `/prefectures/${window.PREFECTURE_SLUG_MAP[resolvedPref] || encodeURIComponent(resolvedPref)}/`;
     }
 
     let mapGA4Params = { site_type: 'map', page_type: 'map_top' };
@@ -709,7 +709,7 @@
         window.currentGA4PageType = 'map_prefecture';
         if (window.gtag && !isInitialPageLoad) {
           gtag('event', 'page_view', {
-            page_path: `/tracker_pref/${window.PREFECTURE_SLUG_MAP[prefecture] || encodeURIComponent(prefecture)}`,
+            page_path: `/prefectures/${window.PREFECTURE_SLUG_MAP[prefecture] || encodeURIComponent(prefecture)}/`,
             site_type: 'map',
             page_type: 'map_prefecture',
             prefecture: window.PREFECTURE_SLUG_MAP[prefecture] || prefecture,
@@ -723,7 +723,7 @@
         // Send page_view for SPA navigation back to top (skip initial page load)
         if (window.gtag && !isInitialPageLoad) {
           gtag('event', 'page_view', {
-            page_path: '/tracker_top',
+            page_path: '/map',
             site_type: 'map',
             page_type: 'map_top',
           });
@@ -1599,7 +1599,7 @@
       window.currentGA4PageType = 'map_manhole';
       if (window.gtag) {
         gtag('event', 'page_view', {
-          'page_path': `/tracker_manhole/${encodeURIComponent(data.id)}`,
+          'page_path': `/manholes/${encodeURIComponent(data.id)}/`,
           site_type: 'map',
           page_type: 'map_manhole',
           prefecture: window.PREFECTURE_SLUG_MAP[data.prefecture] || data.prefecture || '',
