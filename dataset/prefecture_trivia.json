@@ -4033,7 +4033,7 @@
   },
   {
     "prefecture": "石川県",
-    "manhole_count": 7,
+    "manhole_count": 8,
     "municipality_count": 7,
     "municipalities": [
       "七尾",
@@ -4045,6 +4045,10 @@
       "金沢"
     ],
     "municipality_distribution": [
+      {
+        "municipality": "輪島",
+        "manhole_count": 2
+      },
       {
         "municipality": "七尾",
         "manhole_count": 1
@@ -4066,10 +4070,6 @@
         "manhole_count": 1
       },
       {
-        "municipality": "輪島",
-        "manhole_count": 1
-      },
-      {
         "municipality": "金沢",
         "manhole_count": 1
       }
@@ -4082,7 +4082,7 @@
           "カイデン"
         ],
         "cover_count": 1,
-        "coverage_percent": 14.3
+        "coverage_percent": 12.5
       },
       {
         "id": "カビゴン",
@@ -4091,7 +4091,7 @@
           "カビゴン"
         ],
         "cover_count": 1,
-        "coverage_percent": 14.3
+        "coverage_percent": 12.5
       },
       {
         "id": "ギャラドス",
@@ -4100,7 +4100,7 @@
           "ギャラドス"
         ],
         "cover_count": 1,
-        "coverage_percent": 14.3
+        "coverage_percent": 12.5
       },
       {
         "id": "ゲッコウガ",
@@ -4109,7 +4109,7 @@
           "ゲッコウガ"
         ],
         "cover_count": 1,
-        "coverage_percent": 14.3
+        "coverage_percent": 12.5
       },
       {
         "id": "サクラビス",
@@ -4118,7 +4118,16 @@
           "サクラビス"
         ],
         "cover_count": 1,
-        "coverage_percent": 14.3
+        "coverage_percent": 12.5
+      },
+      {
+        "id": "タツベイ",
+        "label": "タツベイ",
+        "pokemon": [
+          "タツベイ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 12.5
       },
       {
         "id": "ダルマッカ",
@@ -4127,7 +4136,7 @@
           "ダルマッカ"
         ],
         "cover_count": 1,
-        "coverage_percent": 14.3
+        "coverage_percent": 12.5
       },
       {
         "id": "ニョロトノ",
@@ -4136,7 +4145,7 @@
           "ニョロトノ"
         ],
         "cover_count": 1,
-        "coverage_percent": 14.3
+        "coverage_percent": 12.5
       },
       {
         "id": "ニョロモ",
@@ -4145,7 +4154,7 @@
           "ニョロモ"
         ],
         "cover_count": 1,
-        "coverage_percent": 14.3
+        "coverage_percent": 12.5
       },
       {
         "id": "ニンフィア",
@@ -4154,7 +4163,7 @@
           "ニンフィア"
         ],
         "cover_count": 1,
-        "coverage_percent": 14.3
+        "coverage_percent": 12.5
       },
       {
         "id": "ハスボー",
@@ -4163,7 +4172,7 @@
           "ハスボー"
         ],
         "cover_count": 1,
-        "coverage_percent": 14.3
+        "coverage_percent": 12.5
       },
       {
         "id": "プラスル",
@@ -4172,7 +4181,16 @@
           "プラスル"
         ],
         "cover_count": 1,
-        "coverage_percent": 14.3
+        "coverage_percent": 12.5
+      },
+      {
+        "id": "ボーマンダ",
+        "label": "ボーマンダ",
+        "pokemon": [
+          "ボーマンダ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 12.5
       },
       {
         "id": "マイナン",
@@ -4181,7 +4199,7 @@
           "マイナン"
         ],
         "cover_count": 1,
-        "coverage_percent": 14.3
+        "coverage_percent": 12.5
       },
       {
         "id": "ミロカロス",
@@ -4190,7 +4208,7 @@
           "ミロカロス"
         ],
         "cover_count": 1,
-        "coverage_percent": 14.3
+        "coverage_percent": 12.5
       },
       {
         "id": "メテノ",
@@ -4199,7 +4217,7 @@
           "メテノ"
         ],
         "cover_count": 1,
-        "coverage_percent": 14.3
+        "coverage_percent": 12.5
       },
       {
         "id": "ラブカス",
@@ -4208,7 +4226,7 @@
           "ラブカス"
         ],
         "cover_count": 1,
-        "coverage_percent": 14.3
+        "coverage_percent": 12.5
       },
       {
         "id": "ロゼリア",
@@ -4217,7 +4235,7 @@
           "ロゼリア"
         ],
         "cover_count": 1,
-        "coverage_percent": 14.3
+        "coverage_percent": 12.5
       }
     ],
     "trivia": []
@@ -7740,21 +7758,30 @@
   },
   {
     "prefecture": "長崎県",
-    "manhole_count": 10,
-    "municipality_count": 10,
+    "manhole_count": 15,
+    "municipality_count": 15,
     "municipalities": [
+      "五島",
       "佐々",
       "佐世保",
       "壱岐",
       "大",
+      "対馬",
       "島原",
       "新上五島",
       "時津",
       "東彼杵",
+      "波佐見",
+      "西海",
+      "諫早",
       "長崎",
       "雲仙"
     ],
     "municipality_distribution": [
+      {
+        "municipality": "五島",
+        "manhole_count": 1
+      },
       {
         "municipality": "佐々",
         "manhole_count": 1
@@ -7769,6 +7796,10 @@
       },
       {
         "municipality": "大",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "対馬",
         "manhole_count": 1
       },
       {
@@ -7788,6 +7819,18 @@
         "manhole_count": 1
       },
       {
+        "municipality": "波佐見",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "西海",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "諫早",
+        "manhole_count": 1
+      },
+      {
         "municipality": "長崎",
         "manhole_count": 1
       },
@@ -7803,7 +7846,7 @@
         "pokemon": [
           "デンリュウ"
         ],
-        "cover_count": 10,
+        "cover_count": 15,
         "coverage_percent": 100.0
       },
       {
@@ -7813,7 +7856,7 @@
           "イキリンコ"
         ],
         "cover_count": 1,
-        "coverage_percent": 10.0
+        "coverage_percent": 6.7
       },
       {
         "id": "イルカマン",
@@ -7822,7 +7865,7 @@
           "イルカマン"
         ],
         "cover_count": 1,
-        "coverage_percent": 10.0
+        "coverage_percent": 6.7
       },
       {
         "id": "オタチ",
@@ -7831,7 +7874,25 @@
           "オタチ"
         ],
         "cover_count": 1,
-        "coverage_percent": 10.0
+        "coverage_percent": 6.7
+      },
+      {
+        "id": "カイロス",
+        "label": "カイロス",
+        "pokemon": [
+          "カイロス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 6.7
+      },
+      {
+        "id": "キノガッサ",
+        "label": "キノガッサ",
+        "pokemon": [
+          "キノガッサ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 6.7
       },
       {
         "id": "キモリ",
@@ -7840,7 +7901,7 @@
           "キモリ"
         ],
         "cover_count": 1,
-        "coverage_percent": 10.0
+        "coverage_percent": 6.7
       },
       {
         "id": "キャモメ",
@@ -7849,7 +7910,7 @@
           "キャモメ"
         ],
         "cover_count": 1,
-        "coverage_percent": 10.0
+        "coverage_percent": 6.7
       },
       {
         "id": "コータス",
@@ -7858,7 +7919,7 @@
           "コータス"
         ],
         "cover_count": 1,
-        "coverage_percent": 10.0
+        "coverage_percent": 6.7
       },
       {
         "id": "ゴローン",
@@ -7867,7 +7928,7 @@
           "ゴローン"
         ],
         "cover_count": 1,
-        "coverage_percent": 10.0
+        "coverage_percent": 6.7
       },
       {
         "id": "シビシラス",
@@ -7876,7 +7937,7 @@
           "シビシラス"
         ],
         "cover_count": 1,
-        "coverage_percent": 10.0
+        "coverage_percent": 6.7
       },
       {
         "id": "シビビール",
@@ -7885,7 +7946,7 @@
           "シビビール"
         ],
         "cover_count": 1,
-        "coverage_percent": 10.0
+        "coverage_percent": 6.7
       },
       {
         "id": "ジュペッタ",
@@ -7894,7 +7955,16 @@
           "ジュペッタ"
         ],
         "cover_count": 1,
-        "coverage_percent": 10.0
+        "coverage_percent": 6.7
+      },
+      {
+        "id": "タイカイデン",
+        "label": "タイカイデン",
+        "pokemon": [
+          "タイカイデン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 6.7
       },
       {
         "id": "タマザラシ",
@@ -7903,7 +7973,7 @@
           "タマザラシ"
         ],
         "cover_count": 1,
-        "coverage_percent": 10.0
+        "coverage_percent": 6.7
       },
       {
         "id": "チェリム",
@@ -7912,7 +7982,7 @@
           "チェリム"
         ],
         "cover_count": 1,
-        "coverage_percent": 10.0
+        "coverage_percent": 6.7
       },
       {
         "id": "トゲピー",
@@ -7921,7 +7991,16 @@
           "トゲピー"
         ],
         "cover_count": 1,
-        "coverage_percent": 10.0
+        "coverage_percent": 6.7
+      },
+      {
+        "id": "トリトドン",
+        "label": "トリトドン",
+        "pokemon": [
+          "トリトドン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 6.7
       },
       {
         "id": "ドレディア",
@@ -7930,7 +8009,7 @@
           "ドレディア"
         ],
         "cover_count": 1,
-        "coverage_percent": 10.0
+        "coverage_percent": 6.7
       },
       {
         "id": "ノズパス",
@@ -7939,7 +8018,16 @@
           "ノズパス"
         ],
         "cover_count": 1,
-        "coverage_percent": 10.0
+        "coverage_percent": 6.7
+      },
+      {
+        "id": "ハッサム",
+        "label": "ハッサム",
+        "pokemon": [
+          "ハッサム"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 6.7
       },
       {
         "id": "バクーダ",
@@ -7948,7 +8036,7 @@
           "バクーダ"
         ],
         "cover_count": 1,
-        "coverage_percent": 10.0
+        "coverage_percent": 6.7
       },
       {
         "id": "ヒラヒナ",
@@ -7957,7 +8045,7 @@
           "ヒラヒナ"
         ],
         "cover_count": 1,
-        "coverage_percent": 10.0
+        "coverage_percent": 6.7
       },
       {
         "id": "ホーホー",
@@ -7966,7 +8054,43 @@
           "ホーホー"
         ],
         "cover_count": 1,
-        "coverage_percent": 10.0
+        "coverage_percent": 6.7
+      },
+      {
+        "id": "メタグロス",
+        "label": "メタグロス",
+        "pokemon": [
+          "メタグロス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 6.7
+      },
+      {
+        "id": "メリープ",
+        "label": "メリープ",
+        "pokemon": [
+          "メリープ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 6.7
+      },
+      {
+        "id": "モココ",
+        "label": "モココ",
+        "pokemon": [
+          "モココ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 6.7
+      },
+      {
+        "id": "レパルダス",
+        "label": "レパルダス",
+        "pokemon": [
+          "レパルダス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 6.7
       },
       {
         "id": "ワタッコ",
@@ -7975,7 +8099,7 @@
           "ワタッコ"
         ],
         "cover_count": 1,
-        "coverage_percent": 10.0
+        "coverage_percent": 6.7
       }
     ],
     "trivia": [
@@ -7991,7 +8115,7 @@
       {
         "id": "長崎県-デンリュウ-100",
         "type": "pokemon_100",
-        "text": "県内10枚すべてにデンリュウが登場します",
+        "text": "県内15枚すべてにデンリュウが登場します",
         "source_type": "dataset"
       }
     ]
