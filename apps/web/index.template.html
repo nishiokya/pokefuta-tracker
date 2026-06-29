@@ -117,6 +117,18 @@
 
   <main class="top-main">
 
+    <!-- ===== 0. NEW RELEASES (shown only when manholes were added in the last month) ===== -->
+    <section class="top-section" id="sec-newrelease" hidden>
+      <div class="sec-header">
+        <div class="sec-eyebrow">
+          <span class="sec-num"></span>
+          <h2 class="sec-title">%%NEWREL_TITLE%%</h2>
+        </div>
+        <span class="newrel-update-label">%%NEWREL_LABEL%%</span>
+      </div>
+      <div class="newrel-scroller" id="newrel-scroller"></div>
+    </section>
+
     <!-- ===== 1. H1 + INTRO + STATS ===== -->
     <section class="top-section" id="sec-intro">
       <div class="sec-eyebrow">
@@ -412,6 +424,11 @@
     var totalCount = 0;
     var pokemonSet = new Set();
 
+    // New releases: manholes added to the dataset within the last month
+    var NEW_WINDOW_DAYS = 30;
+    var newReleaseCutoff = Date.now() - NEW_WINDOW_DAYS * 86400000;
+    var newReleases = [];
+
     fetch(BASE_PATH + 'pokefuta.ndjson')
       .then(function(r) { return r.text(); })
       .then(function(text) {
@@ -432,6 +449,15 @@
                 }
               });
             }
+            var addedMs = m.added_at ? Date.parse(m.added_at) : NaN;
+            if (!isNaN(addedMs) && addedMs >= newReleaseCutoff) {
+              newReleases.push({
+                id: m.id,
+                pokemons: (Array.isArray(m.pokemons) ? m.pokemons : []).filter(function(p) { return p && !p.includes('ローカルActs'); }),
+                title: m.title || '',
+                addedMs: addedMs
+              });
+            }
           } catch (e) {}
         });
 
@@ -440,6 +466,9 @@
         setNum('stat-pokemon', pokemonSet.size);
         setNum('appbar-count', totalCount);
         setNum('map-badge-count', totalCount);
+
+        // New releases banner (topmost section; stays hidden when empty)
+        renderNewReleases(newReleases);
 
         var chipMap = {
           'ピカチュウ': 'chip-pikachu',
@@ -523,6 +552,35 @@
     function setNum(id, val) {
       var el = document.getElementById(id);
       if (el) el.textContent = val.toLocaleString();
+    }
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, function(c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+      });
+    }
+    function renderNewReleases(list) {
+      var section = document.getElementById('sec-newrelease');
+      var scroller = document.getElementById('newrel-scroller');
+      if (!section || !scroller || !list || !list.length) return;
+      list.sort(function(a, b) { return b.addedMs - a.addedMs; });
+      scroller.innerHTML = list.map(function(m) {
+        var place = (m.title || '').replace('/', ' ');
+        var names = m.pokemons.join('・');
+        var href = BASE_PATH + 'map.html?manhole=' + encodeURIComponent(m.id);
+        var img = BASE_PATH + 'manhole/image/' + encodeURIComponent(m.id) + '_latest.jpeg';
+        return '<a class="newrel-card" href="' + href + '" onclick="trackEvent(\'click_newrelease\',{manhole:\'' + escapeHtml(m.id) + '\'})">'
+          + '<div class="newrel-media">'
+          +   '<img class="newrel-img" src="' + img + '" alt="' + escapeHtml(names || place) + '" loading="lazy" onerror="this.style.display=\'none\'">'
+          +   '<span class="newrel-badge">🆕 新作</span>'
+          + '</div>'
+          + '<div class="newrel-body">'
+          +   '<div class="newrel-title">' + escapeHtml(names || 'ポケふた') + '</div>'
+          +   '<div class="newrel-place">' + escapeHtml(place) + '</div>'
+          + '</div>'
+          + '</a>';
+      }).join('');
+      section.hidden = false;
+      if (window.trackEvent) trackEvent('view_newrelease', { count: list.length });
     }
   })();
   </script>
