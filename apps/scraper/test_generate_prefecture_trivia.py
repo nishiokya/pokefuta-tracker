@@ -105,7 +105,7 @@ class GeneratePrefectureTriviaTest(unittest.TestCase):
             "福島県": ("ラッキー", 43),
             "三重県": ("ミジュマル", 31),
             "福井県": ("カイリュー", 17),
-            "長崎県": ("デンリュウ", 10),
+            "長崎県": ("デンリュウ", 15),
             "高知県": ("ヌオー", 18),
         }
         for prefecture, (label, count) in expected.items():

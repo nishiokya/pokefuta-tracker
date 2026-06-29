@@ -6112,5 +6112,77 @@ Status: active</description>
         <coordinates>140.956528,38.182602,0</coordinates>
       </Point>
     </Placemark>
+    <Placemark>
+      <name>石川県/輪島市 (タツベイ, ボーマンダ)</name>
+      <description>Prefecture: 石川県
+City: 輪島
+Address: 石川県輪島市・のと里山空港敷地内（輪島市三井町洲衛10-11-1
+Detail: https://local.pokemon.jp/manhole/desc/475/?is_modal=1
+Last Updated: 2026-06-28T10:46:54Z
+Status: active</description>
+      <Point>
+        <coordinates>136.957244,37.295752,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>長崎県/諫早市 (デンリュウ, メタグロス)</name>
+      <description>Prefecture: 長崎県
+City: 諫早
+Address: 長崎県諫早市永昌東町2
+Detail: https://local.pokemon.jp/manhole/desc/476/?is_modal=1
+Last Updated: 2026-06-28T10:46:55Z
+Status: active</description>
+      <Point>
+        <coordinates>130.042015,32.851951,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>長崎県/対馬市 (キノガッサ, デンリュウ, レパルダス)</name>
+      <description>Prefecture: 長崎県
+City: 対馬
+Address: 長崎県対馬市厳原町今屋敷672-1
+Detail: https://local.pokemon.jp/manhole/desc/477/?is_modal=1
+Last Updated: 2026-06-28T10:46:56Z
+Status: active</description>
+      <Point>
+        <coordinates>129.289139,34.202685,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>長崎県/五島市 (デンリュウ, メリープ, モココ)</name>
+      <description>Prefecture: 長崎県
+City: 五島
+Address: 長崎県五島市野々切町1333-3
+Detail: https://local.pokemon.jp/manhole/desc/478/?is_modal=1
+Last Updated: 2026-06-28T10:46:56Z
+Status: active</description>
+      <Point>
+        <coordinates>128.847861,32.641898,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>長崎県/西海市 (タイカイデン, デンリュウ, トリトドン)</name>
+      <description>Prefecture: 長崎県
+City: 西海
+Address: 長崎県西海市大島町1374-4
+Detail: https://local.pokemon.jp/manhole/desc/479/?is_modal=1
+Last Updated: 2026-06-28T10:46:57Z
+Status: active</description>
+      <Point>
+        <coordinates>129.637485,33.036768,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>長崎県/波佐見町 (カイロス, デンリュウ, ハッサム)</name>
+      <description>Prefecture: 長崎県
+City: 波佐見
+Address: 長崎県波佐見町井石郷2255-2
+Detail: https://local.pokemon.jp/manhole/desc/480/?is_modal=1
+Last Updated: 2026-06-28T10:46:57Z
+Status: active</description>
+      <Point>
+        <coordinates>129.910858,33.141048,0</coordinates>
+      </Point>
+    </Placemark>
   </Document>
 </kml>

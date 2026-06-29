@@ -13,9 +13,9 @@
     "raw_data": {
       "pref": "北海道",
       "count": 50,
-      "total": 470,
+      "total": 476,
       "rank": 1,
-      "percent": 10.6
+      "percent": 10.5
     }
   },
   {
@@ -32,9 +32,9 @@
     "raw_data": {
       "pref": "福島県",
       "count": 43,
-      "total": 470,
+      "total": 476,
       "rank": 2,
-      "percent": 9.1
+      "percent": 9.0
     }
   },
   {
@@ -51,9 +51,9 @@
     "raw_data": {
       "pref": "宮城県",
       "count": 37,
-      "total": 470,
+      "total": 476,
       "rank": 3,
-      "percent": 7.9
+      "percent": 7.8
     }
   },
   {
@@ -70,9 +70,9 @@
     "raw_data": {
       "pref": "岩手県",
       "count": 36,
-      "total": 470,
+      "total": 476,
       "rank": 4,
-      "percent": 7.7
+      "percent": 7.6
     }
   },
   {
@@ -89,9 +89,9 @@
     "raw_data": {
       "pref": "三重県",
       "count": 31,
-      "total": 470,
+      "total": 476,
       "rank": 5,
-      "percent": 6.6
+      "percent": 6.5
     }
   },
   {
@@ -108,7 +108,7 @@
     "raw_data": {
       "pref": "宮崎県",
       "count": 26,
-      "total": 470,
+      "total": 476,
       "rank": 6,
       "percent": 5.5
     }
@@ -127,9 +127,9 @@
     "raw_data": {
       "pref": "鳥取県",
       "count": 20,
-      "total": 470,
+      "total": 476,
       "rank": 7,
-      "percent": 4.3
+      "percent": 4.2
     }
   },
   {
@@ -146,7 +146,7 @@
     "raw_data": {
       "pref": "香川県",
       "count": 18,
-      "total": 470,
+      "total": 476,
       "rank": 8,
       "percent": 3.8
     }
@@ -165,7 +165,7 @@
     "raw_data": {
       "pref": "高知県",
       "count": 18,
-      "total": 470,
+      "total": 476,
       "rank": 9,
       "percent": 3.8
     }
@@ -184,7 +184,7 @@
     "raw_data": {
       "pref": "福井県",
       "count": 17,
-      "total": 470,
+      "total": 476,
       "rank": 10,
       "percent": 3.6
     }
@@ -393,7 +393,7 @@
     "raw_data": {
       "pref": "青森県",
       "count": 2,
-      "total": 470
+      "total": 476
     }
   },
   {
@@ -410,7 +410,7 @@
     "raw_data": {
       "pref": "栃木県",
       "count": 3,
-      "total": 470
+      "total": 476
     }
   },
   {
@@ -427,7 +427,7 @@
     "raw_data": {
       "pref": "埼玉県",
       "count": 3,
-      "total": 470
+      "total": 476
     }
   },
   {
@@ -444,7 +444,7 @@
     "raw_data": {
       "pref": "富山県",
       "count": 3,
-      "total": 470
+      "total": 476
     }
   },
   {
@@ -461,7 +461,7 @@
     "raw_data": {
       "pref": "兵庫県",
       "count": 3,
-      "total": 470
+      "total": 476
     }
   },
   {
@@ -478,7 +478,7 @@
     "raw_data": {
       "pref": "徳島県",
       "count": 3,
-      "total": 470
+      "total": 476
     }
   },
   {
@@ -495,7 +495,7 @@
     "raw_data": {
       "pref": "愛媛県",
       "count": 2,
-      "total": 470
+      "total": 476
     }
   },
   {
@@ -512,7 +512,7 @@
     "raw_data": {
       "pref": "佐賀県",
       "count": 3,
-      "total": 470
+      "total": 476
     }
   },
   {
@@ -877,7 +877,7 @@
   {
     "id": "trivia-total-count",
     "type": "travel_trivia",
-    "title": "全国のポケふたは470枚",
+    "title": "全国のポケふたは476枚",
     "url": "https://data.pokefuta.com/summary/",
     "hashtags": [
       "#ポケふた",
@@ -888,7 +888,7 @@
     "raw_data": {
       "fact_type": "total_count",
       "values": {
-        "total": 470
+        "total": 476
       }
     }
   },
@@ -934,14 +934,14 @@
       "values": {
         "region": "東北",
         "count": 128,
-        "total": 470
+        "total": 476
       }
     }
   },
   {
     "id": "trivia-pokemon-variety",
     "type": "travel_trivia",
-    "title": "ポケふたに登場するポケモンは534種類",
+    "title": "ポケふたに登場するポケモンは541種類",
     "url": "https://data.pokefuta.com/pokemon/",
     "hashtags": [
       "#ポケふた",
@@ -952,7 +952,7 @@
     "raw_data": {
       "fact_type": "pokemon_variety",
       "values": {
-        "species_count": 534
+        "species_count": 541
       }
     }
   },
@@ -1007,7 +1007,7 @@
             "count": 37
           }
         ],
-        "total": 470
+        "total": 476
       }
     }
   },
@@ -2361,7 +2361,7 @@
       "fact_type": "support_pokemon",
       "values": {
         "prefecture": "長崎県",
-        "manhole_count": 10,
+        "manhole_count": 15,
         "summary": "長崎県では、尻尾の光が遠くまで届くデンリュウがながさき未来応援ポケモンを務めています",
         "map_pref": "長崎県",
         "source_type": "official",
@@ -2384,8 +2384,8 @@
       "fact_type": "pokemon_100",
       "values": {
         "prefecture": "長崎県",
-        "manhole_count": 10,
-        "summary": "県内10枚すべてにデンリュウが登場します",
+        "manhole_count": 15,
+        "summary": "県内15枚すべてにデンリュウが登場します",
         "map_pref": "長崎県",
         "source_type": "dataset",
         "source_url": ""
