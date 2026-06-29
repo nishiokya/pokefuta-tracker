@@ -427,6 +427,94 @@ a { color: inherit; text-decoration: none; }
   margin-top: 3px;
 }
 
+/* ── Section 0: New releases (topmost; revealed by JS only when recent) ── */
+#sec-newrelease[hidden] { display: none; }
+
+.newrel-update-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--top-eyebrow);
+  background: #FCEFE3;
+  padding: 3px 10px;
+  border-radius: var(--top-radius-pill);
+  white-space: nowrap;
+}
+
+.newrel-scroller {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 4px;
+}
+.newrel-scroller::-webkit-scrollbar { height: 6px; }
+.newrel-scroller::-webkit-scrollbar-thumb {
+  background: var(--top-border);
+  border-radius: 3px;
+}
+
+.newrel-card {
+  flex: 0 0 auto;
+  width: 150px;
+  scroll-snap-align: start;
+  background: var(--top-card-bg);
+  border: 1px solid var(--top-border);
+  border-radius: 13px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+}
+
+.newrel-media {
+  height: 96px;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(140deg, #F3D9C2, #E7B894);
+}
+
+.newrel-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.newrel-badge {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  background: var(--top-eyebrow);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: var(--top-radius-pill);
+}
+
+.newrel-body { padding: 8px 10px 10px; }
+
+.newrel-title {
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.newrel-place {
+  font-size: 10px;
+  color: var(--top-text-faint);
+  margin-top: 3px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* ── Section 3: Map gateway (Leaflet mini-map card) ── */
 .map-gateway-card {
   display: block;
@@ -789,6 +877,18 @@ a { color: inherit; text-decoration: none; }
   #sec-map   { grid-area: maphero; }
   #sec-pref  { grid-area: pref; }
   #sec-hub   { grid-area: hub; }
+  #sec-newrelease { grid-area: newrelease; }
+
+  /* When new releases exist, prepend a topmost row so the band leads the page.
+     Hidden (the common case) leaves the base 4-row layout untouched — no gap. */
+  .top-main:has(> #sec-newrelease:not([hidden])) {
+    grid-template-areas:
+      "newrelease"
+      "maphero"
+      "hero"
+      "pref"
+      "hub";
+  }
 
   /* Roomier section headings to match the design. */
   .sec-title { font-size: 20px; }
