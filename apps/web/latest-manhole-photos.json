@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-06-28T12:34:30.497586Z",
+  "generated_at": "2026-07-01T08:47:33.860176Z",
   "source": "pokefuta photo table",
   "image": {
     "r2_public_base_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image"
   },
-  "count": 140,
+  "count": 142,
   "photos": {
     "1": {
       "manhole_id": 1,
@@ -800,6 +800,36 @@
       "shot_at": "2026-06-21T02:48:02+00:00",
       "comment": null,
       "display_name": "いろはす"
+    },
+    "206": {
+      "manhole_id": 206,
+      "photo_id": "a7d91a34-cf24-4860-8390-810033025468",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/3d16fc9f-dbd0-4516-86cd-b0602bd9d1bc.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/3d16fc9f-dbd0-4516-86cd-b0602bd9d1bc.jpg",
+      "storage_key": "photos/original/2026/06/3d16fc9f-dbd0-4516-86cd-b0602bd9d1bc.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1758829,
+      "created_at": "2026-06-30T05:54:13.590065+00:00",
+      "shot_at": "2026-06-30T05:53:46+00:00",
+      "comment": "ニャンコ",
+      "display_name": null
+    },
+    "210": {
+      "manhole_id": 210,
+      "photo_id": "ee640fc3-dfa3-485a-96ec-c91dafe3166e",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/1d4021e3-2a47-41bc-b90e-8ce03c7a7998.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/1d4021e3-2a47-41bc-b90e-8ce03c7a7998.jpg",
+      "storage_key": "photos/original/2026/06/1d4021e3-2a47-41bc-b90e-8ce03c7a7998.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1416371,
+      "created_at": "2026-06-30T07:32:07.151394+00:00",
+      "shot_at": "2026-06-30T07:30:54+00:00",
+      "comment": null,
+      "display_name": null
     },
     "214": {
       "manhole_id": 214,
