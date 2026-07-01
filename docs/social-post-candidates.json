@@ -710,7 +710,7 @@
     }
   },
   {
-    "id": "photo-363-49f89999",
+    "id": "photo-363-4feed956",
     "type": "latest_photo",
     "title": "最新写真：岐阜県/高山市",
     "url": "https://data.pokefuta.com/manholes/363/",
@@ -731,8 +731,8 @@
         "ヒヤップ",
         "ヤナップ"
       ],
-      "created_at": "2026-06-21T02:08:13.994552+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/2c766cdd-7b49-4572-ab57-21ea7745a666.jpg",
+      "created_at": "2026-06-21T12:49:52.400004+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/64d5126b-3eb2-443c-a256-707c879c6804.jpg",
       "display_name": "tako",
       "photo_rank": "first_ever"
     }
@@ -785,6 +785,58 @@
       ],
       "created_at": "2026-06-21T04:01:37.635399+00:00",
       "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/82ea8ddf-6c38-42a2-80a7-6904731f9b12.jpg",
+      "display_name": "いろはす",
+      "photo_rank": "recent"
+    }
+  },
+  {
+    "id": "photo-104-cedf4828",
+    "type": "latest_photo",
+    "title": "最新写真：滋賀県/大津市",
+    "url": "https://data.pokefuta.com/manholes/104/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "104",
+      "title": "滋賀県/大津市",
+      "pref": "滋賀県",
+      "city": "大津",
+      "pokemon": "ギャラドス",
+      "pokemon_list": [
+        "ギャラドス"
+      ],
+      "created_at": "2026-06-21T12:43:19.590166+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/700217e3-0de7-4850-bd8f-65518a1390f1.jpg",
+      "display_name": "tako",
+      "photo_rank": "recent"
+    }
+  },
+  {
+    "id": "photo-152-f7ba9034",
+    "type": "latest_photo",
+    "title": "最新写真：奈良県/斑鳩町",
+    "url": "https://data.pokefuta.com/manholes/152/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "152",
+      "title": "奈良県/斑鳩町",
+      "pref": "奈良県",
+      "city": "斑鳩",
+      "pokemon": "エンテイ",
+      "pokemon_list": [
+        "エンテイ"
+      ],
+      "created_at": "2026-06-28T04:17:22.27754+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/9c5c9a3f-aecb-422e-9386-6789dece65d9.jpg",
       "display_name": "いろはす",
       "photo_rank": "recent"
     }
