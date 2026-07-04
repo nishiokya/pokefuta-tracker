@@ -2696,6 +2696,50 @@
       "tags": [
         "seaside"
       ]
+    },
+    "475": {
+      "building": "のと里山空港",
+      "tags": [
+        "tourism"
+      ]
+    },
+    "476": {
+      "building": "諫早駅前",
+      "tags": [
+        "station_front",
+        "rail_access_good"
+      ]
+    },
+    "477": {
+      "building": "対馬観光物産協会",
+      "tags": [
+        "tourism",
+        "remote_island"
+      ]
+    },
+    "478": {
+      "building": "鐙瀬ビジターセンター",
+      "tags": [
+        "tourism",
+        "museum",
+        "remote_island"
+      ]
+    },
+    "479": {
+      "building": "大島大橋公園",
+      "tags": [
+        "seaside",
+        "park",
+        "tourism"
+      ]
+    },
+    "480": {
+      "building": "波佐見やきもの公園",
+      "tags": [
+        "park",
+        "museum",
+        "tourism"
+      ]
     }
   },
   "lakes": [
