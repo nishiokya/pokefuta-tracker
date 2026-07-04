@@ -6117,6 +6117,8 @@ Status: active</description>
       <description>Prefecture: 石川県
 City: 輪島
 Address: 石川県輪島市・のと里山空港敷地内（輪島市三井町洲衛10-11-1
+Building: のと里山空港
+Tags: tourism
 Detail: https://local.pokemon.jp/manhole/desc/475/?is_modal=1
 Last Updated: 2026-06-28T10:46:54Z
 Status: active</description>
@@ -6129,6 +6131,8 @@ Status: active</description>
       <description>Prefecture: 長崎県
 City: 諫早
 Address: 長崎県諫早市永昌東町2
+Building: 諫早駅前
+Tags: station_front, rail_access_good
 Detail: https://local.pokemon.jp/manhole/desc/476/?is_modal=1
 Last Updated: 2026-06-28T10:46:55Z
 Status: active</description>
@@ -6141,6 +6145,8 @@ Status: active</description>
       <description>Prefecture: 長崎県
 City: 対馬
 Address: 長崎県対馬市厳原町今屋敷672-1
+Building: 対馬観光物産協会
+Tags: tourism, remote_island
 Detail: https://local.pokemon.jp/manhole/desc/477/?is_modal=1
 Last Updated: 2026-06-28T10:46:56Z
 Status: active</description>
@@ -6153,6 +6159,8 @@ Status: active</description>
       <description>Prefecture: 長崎県
 City: 五島
 Address: 長崎県五島市野々切町1333-3
+Building: 鐙瀬ビジターセンター
+Tags: tourism, museum, remote_island
 Detail: https://local.pokemon.jp/manhole/desc/478/?is_modal=1
 Last Updated: 2026-06-28T10:46:56Z
 Status: active</description>
@@ -6165,6 +6173,8 @@ Status: active</description>
       <description>Prefecture: 長崎県
 City: 西海
 Address: 長崎県西海市大島町1374-4
+Building: 大島大橋公園
+Tags: seaside, park, tourism
 Detail: https://local.pokemon.jp/manhole/desc/479/?is_modal=1
 Last Updated: 2026-06-28T10:46:57Z
 Status: active</description>
@@ -6177,6 +6187,8 @@ Status: active</description>
       <description>Prefecture: 長崎県
 City: 波佐見
 Address: 長崎県波佐見町井石郷2255-2
+Building: 波佐見やきもの公園
+Tags: park, museum, tourism
 Detail: https://local.pokemon.jp/manhole/desc/480/?is_modal=1
 Last Updated: 2026-06-28T10:46:57Z
 Status: active</description>
