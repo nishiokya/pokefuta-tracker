@@ -359,8 +359,8 @@
     let characterData = []; // character_manholes (ZLS/ロマサガ/弱虫ペダル/ちびまる子 など)
     let allMarkers = [];
     let selectedPrefecture = '';
-    let showNearbyResults = false;
     let userLocationMarker = null;
+    let lastNearbyLocation = null; // 現在地検索後、フィルタ変更時にリストを再計算するため保持
     // Note: prefectureCodeMap and codeToPrefectureMap are defined globally in head script
 
     // 都道府県の中心座標マッピング（緯度, 経度）
@@ -793,26 +793,11 @@
     }
 
     function recomputeVisibility(){
-      const showPokemon = document.getElementById('chk-pokemon')?.checked;
-      const showGundam = document.getElementById('chk-gundam')?.checked;
-      const showCharacter = document.getElementById('chk-character')?.checked;
       let visible=0, gCount=0, pCount=0, cCount=0;
 
       allMarkers.forEach(m=>{
         const d = m._data;
-        let show = true;
-
-        // Simple franchise filter
-        if(d.franchise==='gundam'){
-          show = showGundam;
-        } else if(d.franchise==='character'){
-          show = showCharacter;
-        } else {
-          show = showPokemon;
-        }
-        if (selectedPrefecture) {
-          show = show && d.prefecture === selectedPrefecture;
-        }
+        const show = isMarkerVisibleByFilters(d);
 
         if(show){
           if(!map.hasLayer(m)) m.addTo(map);
@@ -825,6 +810,10 @@
         }
       });
       updateStats(visible, gCount, pCount, cCount);
+      // 現在地検索済みなら、フィルタ変更に合わせて近くのリストも再計算する
+      if (lastNearbyLocation) {
+        renderNearbyResults(lastNearbyLocation.lat, lastNearbyLocation.lng);
+      }
     }
 
     function updateStats(visibleOverride, gCountOverride, pCountOverride, cCountOverride){
@@ -842,8 +831,7 @@
 
     function initControlsToggle() {
       const toggleBtn = document.getElementById('controls-toggle');
-      const controlsContent = document.getElementById('controls-content');
-      if (!toggleBtn || !controlsContent) return;
+      if (!toggleBtn) return;
       const panelMediaQuery = getOverallPanelMediaQuery();
       const canTogglePanel = () => panelMediaQuery ? panelMediaQuery.matches : true;
       if (canTogglePanel()) {
@@ -913,6 +901,13 @@
       return Boolean(document.getElementById('chk-pokemon')?.checked);
     }
 
+    // 作品チェック + 都道府県選択の両方を満たすか（マーカー表示・近くのリスト・クリック時で共通利用）
+    function isMarkerVisibleByFilters(d) {
+      if (!franchiseChecked(d.franchise)) return false;
+      if (selectedPrefecture && d.prefecture !== selectedPrefecture) return false;
+      return true;
+    }
+
     function nearbyMetaText(d) {
       if (d.franchise === 'gundam') return `ガンダム / ${d.title || ''}`;
       if (d.franchise === 'character') return `${d.work || 'キャラ'} / ${d.character || d.title || ''}`;
@@ -924,14 +919,13 @@
       const list = document.getElementById('nearby-list');
       if (!section || !list) return;
       const nearest = allMarkers
-        .filter(m => franchiseChecked(m._data.franchise))
+        .filter(m => isMarkerVisibleByFilters(m._data))
         .map(m => ({ m, d: m._data, distance: distanceKm(lat, lng, Number(m._data.lat), Number(m._data.lng)) }))
         .sort((a, b) => a.distance - b.distance)
         .slice(0, 5);
       if (!nearest.length) {
         list.innerHTML = '';
         section.hidden = true;
-        showNearbyResults = false;
         return;
       }
       list.innerHTML = nearest.map(({ m, d, distance }) => {
@@ -950,7 +944,6 @@
           </button>`;
       }).join('');
       section.hidden = false;
-      showNearbyResults = true;
     }
 
     function bindNearbyList() {
@@ -959,8 +952,8 @@
         const btn = e.target.closest('.prefecture-spot-item');
         if (!btn) return;
         const marker = allMarkers[Number(btn.dataset.markerIndex)];
-        if (!marker) return;
-        if (!map.hasLayer(marker)) marker.addTo(map);
+        // フィルタで非表示のマーカーを地図に復活させない（リストはフィルタ変更で再計算される）
+        if (!marker || !map.hasLayer(marker)) return;
         map.setView(marker.getLatLng(), Math.max(map.getZoom(), 14));
         marker.openPopup();
         collapseBottomSheet();
@@ -1014,9 +1007,10 @@
             fillColor: '#2f80ed',
             fillOpacity: 0.95
           }).addTo(map);
+          lastNearbyLocation = { lat: latitude, lng: longitude };
           renderNearbyResults(latitude, longitude);
           const nearestMarkers = allMarkers
-            .filter(m => franchiseChecked(m._data.franchise))
+            .filter(m => isMarkerVisibleByFilters(m._data))
             .map(m => ({ m, distance: distanceKm(latitude, longitude, Number(m._data.lat), Number(m._data.lng)) }))
             .sort((a, b) => a.distance - b.distance)
             .slice(0, 5)
