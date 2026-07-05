@@ -1,4 +1,6 @@
 /* Shared site header, injected into every built HTML page. */
+:root { --site-header-height: 52px; }
+
 .site-header {
   position: relative;
   z-index: 10000;
@@ -74,6 +76,8 @@
 }
 
 @media (max-width: 720px) {
+  :root { --site-header-height: 71px; }
+
   .site-header__inner {
     min-height: 0;
     padding: 8px 10px 7px;
@@ -110,14 +114,14 @@
 /* Full-screen maps must reserve room for the shared header. */
 body.has-site-header.pokefuta-map-page .map-stage,
 body.has-site-header > #map {
-  height: calc(100dvh - 52px);
-  min-height: calc(100dvh - 52px);
+  height: calc(100dvh - var(--site-header-height, 52px));
+  min-height: calc(100dvh - var(--site-header-height, 52px));
 }
 
 @media (max-width: 720px) {
   body.has-site-header.pokefuta-map-page .map-stage,
   body.has-site-header > #map {
-    height: calc(100dvh - 84px);
-    min-height: calc(100dvh - 84px);
+    height: calc(100dvh - var(--site-header-height));
+    min-height: calc(100dvh - var(--site-header-height));
   }
 }
