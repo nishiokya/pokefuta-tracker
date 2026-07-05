@@ -99,12 +99,12 @@
       </div>
       <div class="top-nav-right">
         <nav class="top-nav" aria-label="メインナビ">
-          <a class="top-nav-link top-nav-link--active" href="map.html" onclick="trackEvent('click_nav',{nav:'map'})">地図から探す</a>
-          <a class="top-nav-link" href="#sec-pref" onclick="trackEvent('click_nav',{nav:'pref'})">都道府県</a>
-          <a class="top-nav-link" href="/pokemon/" onclick="trackEvent('click_nav',{nav:'pokemon'})">ポケモン</a>
-          <a class="top-nav-link" href="#sec-hub" onclick="trackEvent('click_nav',{nav:'theme'})">テーマ</a>
-          <a class="top-nav-link" href="#sec-hero" onclick="trackEvent('click_nav',{nav:'ranking'})">ランキング</a>
-          <a class="top-nav-link" href="gmanhole_map.html" onclick="trackEvent('click_nav',{nav:'character'})">キャラマンホール</a>
+          <a class="top-nav-link" href="./" onclick="trackEvent('click_nav',{nav:'top'})">トップ</a>
+          <a class="top-nav-link" href="map.html" onclick="trackEvent('click_nav',{nav:'map'})">地図</a>
+          <a class="top-nav-link" href="summary/" onclick="trackEvent('click_nav',{nav:'summary'})">全国一覧</a>
+          <a class="top-nav-link" href="pokemon/" onclick="trackEvent('click_nav',{nav:'pokemon'})">ポケモン</a>
+          <a class="top-nav-link" href="nearby.html" onclick="trackEvent('click_nav',{nav:'nearby'})">現在地付近</a>
+          <a class="top-nav-link" href="gmanhole_map.html" onclick="trackEvent('click_nav',{nav:'character'})">キャラMH</a>
         </nav>
         <a href="map.html" class="top-count-badge" id="top-count-badge" onclick="trackEvent('click_appbar_count')">
           全国 <b id="appbar-count">—</b> 枚

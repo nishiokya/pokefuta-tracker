@@ -1,0 +1,127 @@
+/* Shared site header, injected into every built HTML page. */
+:root { --site-header-height: 52px; }
+
+.site-header {
+  position: relative;
+  z-index: 10000;
+  flex: 0 0 auto;
+  background: rgba(250, 246, 236, .96);
+  border-bottom: 1px solid #ece5d2;
+  color: #2b2b30;
+  font-family: "Noto Sans JP", system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.site-header,
+.site-header *,
+.site-header *::before,
+.site-header *::after {
+  box-sizing: border-box;
+}
+
+.site-header__inner {
+  width: min(1080px, 100%);
+  min-height: 52px;
+  margin: 0 auto;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.site-header__brand {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  flex: 0 0 auto;
+  color: #4f4080;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.site-header__brand-name {
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: -.01em;
+}
+
+.site-header__brand-sub {
+  color: #9a8fc0;
+  font-family: "IBM Plex Mono", "Courier New", monospace;
+  font-size: 9px;
+  letter-spacing: .18em;
+}
+
+.site-header__nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-left: auto;
+}
+
+.site-header__link {
+  color: #4b4b53;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.site-header__link:hover,
+.site-header__link:focus-visible {
+  color: #6c5ca6;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+@media (max-width: 720px) {
+  :root { --site-header-height: 71px; }
+
+  .site-header__inner {
+    min-height: 0;
+    padding: 8px 10px 7px;
+    display: block;
+  }
+
+  .site-header__brand {
+    justify-content: center;
+    margin-bottom: 7px;
+  }
+
+  .site-header__brand-name { font-size: 16px; }
+
+  .site-header__nav {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 3px;
+    margin: 0;
+  }
+
+  .site-header__link {
+    padding: 6px 1px;
+    overflow: hidden;
+    border-radius: 7px;
+    background: #eeeaf7;
+    color: #4f4080;
+    font-size: 10px;
+    font-weight: 700;
+    text-align: center;
+    text-overflow: ellipsis;
+  }
+}
+
+/* Full-screen maps must reserve room for the shared header. */
+body.has-site-header.pokefuta-map-page .map-stage,
+body.has-site-header > #map {
+  height: calc(100dvh - var(--site-header-height, 52px));
+  min-height: calc(100dvh - var(--site-header-height, 52px));
+}
+
+@media (max-width: 720px) {
+  body.has-site-header.pokefuta-map-page .map-stage,
+  body.has-site-header > #map {
+    height: calc(100dvh - var(--site-header-height));
+    min-height: calc(100dvh - var(--site-header-height));
+  }
+}
