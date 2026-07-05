@@ -738,32 +738,6 @@
     }
   },
   {
-    "id": "photo-2-3743c530",
-    "type": "latest_photo",
-    "title": "最新写真：鹿児島県/指宿市",
-    "url": "https://data.pokefuta.com/manholes/2/",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "latest_photo",
-    "source": "photos",
-    "raw_data": {
-      "manhole_id": "2",
-      "title": "鹿児島県/指宿市",
-      "pref": "鹿児島県",
-      "city": "指宿",
-      "pokemon": "シャワーズ",
-      "pokemon_list": [
-        "シャワーズ"
-      ],
-      "created_at": "2026-06-08T12:44:04.97427+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/cbc4abfc-c5c0-4a92-9043-0134687eb9b1.jpg",
-      "display_name": "いろはす",
-      "photo_rank": "recent"
-    }
-  },
-  {
     "id": "photo-194-35444c66",
     "type": "latest_photo",
     "title": "最新写真：岡山県/倉敷市",
@@ -838,6 +812,33 @@
       "created_at": "2026-06-28T04:17:22.27754+00:00",
       "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/9c5c9a3f-aecb-422e-9386-6789dece65d9.jpg",
       "display_name": "いろはす",
+      "photo_rank": "recent"
+    }
+  },
+  {
+    "id": "photo-210-ee640fc3",
+    "type": "latest_photo",
+    "title": "最新写真：大阪府/東大阪市",
+    "url": "https://data.pokefuta.com/manholes/210/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "210",
+      "title": "大阪府/東大阪市",
+      "pref": "大阪府",
+      "city": "東大阪",
+      "pokemon": "トゲデマル",
+      "pokemon_list": [
+        "トゲデマル",
+        "ワンパチ"
+      ],
+      "created_at": "2026-06-30T07:32:07.151394+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/1d4021e3-2a47-41bc-b90e-8ce03c7a7998.jpg",
+      "display_name": null,
       "photo_rank": "recent"
     }
   },
