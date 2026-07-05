@@ -359,7 +359,9 @@ def apply_marker_style(record: Dict[str, Any]) -> Dict[str, Any]:
     """作品ごとのマーカー表示情報をレコードへ付与する。"""
     style = MARKER_STYLES.get(record.get("work", ""))
     if style:
-        record.update(style)
+        for key, value in style.items():
+            if not record.get(key):
+                record[key] = value
     return record
 
 

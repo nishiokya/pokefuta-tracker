@@ -323,8 +323,9 @@
       return WORK_FALLBACK_COLORS[hash % WORK_FALLBACK_COLORS.length];
     }
     function markerColor(record) {
-      return /^#[0-9a-f]{6}$/i.test(String(record.marker_color || ''))
-        ? record.marker_color
+      const color = String(record.marker_color || '').trim();
+      return /^#[0-9a-f]{6}$/i.test(color)
+        ? color
         : fallbackWorkColor(record.work);
     }
     function markerLabel(record) {

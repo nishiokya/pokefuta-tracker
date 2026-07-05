@@ -64,19 +64,29 @@ export function CharacterManholesTask() {
 
   // 種別(作品)ごとの件数と色
   const works = useMemo(() => {
-    const counts = new Map<string, number>()
-    for (const record of records) counts.set(record.work, (counts.get(record.work) ?? 0) + 1)
-    return [...counts.entries()]
-      .sort((a, b) => b[1] - a[1])
-      .map(([work, count], index) => {
-        const markerRecord = records.find(record => record.work === work)
+    const stats = new Map<string, { count: number; markerLabel: string; markerColor: string }>()
+    for (const record of records) {
+      const current = stats.get(record.work)
+      if (current) {
+        current.count += 1
+      } else {
+        stats.set(record.work, {
+          count: 1,
+          markerLabel: record.markerLabel.trim(),
+          markerColor: record.markerColor.trim(),
+        })
+      }
+    }
+    return [...stats.entries()]
+      .sort((a, b) => b[1].count - a[1].count)
+      .map(([work, stat], index) => {
         return {
           work,
-          count,
-          color: /^#[0-9a-f]{6}$/i.test(markerRecord?.markerColor ?? '')
-            ? markerRecord!.markerColor
+          count: stat.count,
+          color: /^#[0-9a-f]{6}$/i.test(stat.markerColor)
+            ? stat.markerColor
             : WORK_COLORS[index % WORK_COLORS.length],
-          label: markerRecord?.markerLabel || 'キ',
+          label: stat.markerLabel || 'キ',
         }
       })
   }, [records])

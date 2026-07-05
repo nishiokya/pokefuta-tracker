@@ -6,8 +6,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 MODULE_PATH = Path(__file__).with_name("collect_character_manholes.py")
 SPEC = importlib.util.spec_from_file_location("collect_character_manholes", MODULE_PATH)
+if SPEC is None or SPEC.loader is None:
+    raise RuntimeError(f"Could not load {MODULE_PATH}")
 collector = importlib.util.module_from_spec(SPEC)
-assert SPEC and SPEC.loader
 SPEC.loader.exec_module(collector)
 
 
@@ -28,6 +29,18 @@ class CharacterManholeCollectorTests(unittest.TestCase):
 
         self.assertEqual(record["marker_label"], "東")
         self.assertEqual(record["marker_color"], "#14b8a6")
+
+    def test_manual_marker_style_is_preserved(self):
+        record = collector.apply_marker_style(
+            {
+                "work": "東海オンエア",
+                "marker_label": "岡",
+                "marker_color": "#123456",
+            }
+        )
+
+        self.assertEqual(record["marker_label"], "岡")
+        self.assertEqual(record["marker_color"], "#123456")
 
     def test_generated_dataset_contains_aichi_and_marker_styles(self):
         records = [
