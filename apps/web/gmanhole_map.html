@@ -212,7 +212,7 @@
         <h4 id="heading-pref-count" style="margin:2px 0; font-size:.75rem;">都道府県別マンホール数</h4>
         <div id="prefecture-table-wrapper" class="table-wrapper">
           <table class="prefecture-table" id="prefecture-table" aria-describedby="pref-table-desc">
-            <caption id="pref-table-desc" class="sr-only">都道府県ごとのキャラクターマンホールとポケふたの件数</caption>
+            <caption id="pref-table-desc" class="sr-only">都道府県ごとのガンダム・キャラクター・ポケふたマンホールの件数</caption>
             <thead>
               <tr>
                 <th scope="col">コード</th>
@@ -422,6 +422,9 @@
         buildMarkers();
         buildCharacterLegend();
         buildPrefectureCounts();
+        // ヘッダーバッジは収録総数（フィルタに追従しない。トップページの「全国n枚」と同じ扱い）
+        const appbarEl = document.getElementById('appbar-count');
+        if (appbarEl) appbarEl.textContent = String(gundamData.length + characterData.length);
         const initialPref = getInitialPrefectureFromURL();
         if (initialPref) {
           setPrefectureSelection(initialPref);
@@ -736,8 +739,6 @@
       if(gEl) gEl.textContent=String(gCountOverride ?? gundamData.length);
       if(pEl) pEl.textContent=String(pCountOverride ?? pokemonData.length);
       if(cEl) cEl.textContent=String(cCountOverride ?? characterData.length);
-      const appbarEl=document.getElementById('appbar-count');
-      if(appbarEl) appbarEl.textContent=String(gundamData.length + characterData.length);
     }
 
     function initControlsToggle() {
