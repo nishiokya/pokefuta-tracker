@@ -117,11 +117,13 @@
         <div class="franchise-filter-group" role="group" aria-label="Franchise filters">
           <label><input type="checkbox" id="chk-pokemon" checked aria-label="ポケモン表示" /> ポケモン</label>
           <label><input type="checkbox" id="chk-gundam" checked aria-label="ガンダム表示" /> ガンダム</label>
+          <label><input type="checkbox" id="chk-character" checked aria-label="キャラマンホール表示" /> キャラ</label>
         </div>
         <div class="legend" aria-label="Legend">
           <div class="legend-item"><span class="legend-swatch legend-pokemon"></span>ポケふた</div>
           <div class="legend-item"><span class="legend-swatch legend-gundam"></span>ガンダム</div>
           <div class="legend-item"><span class="legend-swatch legend-both"></span>座標共有/重複</div>
+          <span id="char-legend" style="display:contents"></span>
         </div>
       </div>
       <div id="prefecture-tab" class="tab-content active">
@@ -151,6 +153,7 @@
         <div id="visible-count">表示: <span>0</span></div>
         <div id="gundam-count">ガンダム: <span>0</span></div>
         <div id="pokemon-count">ポケふた: <span>0</span></div>
+        <div id="character-count">キャラ: <span>0</span></div>
       </div>
     </div>
   </div>
@@ -203,9 +206,33 @@
       return L.divIcon({ className: cls, html: label, iconSize: [30,30], iconAnchor:[15,15], popupAnchor:[0,-15] });
     }
 
+    // 種別(作品)ごとの識別色
+    const WORK_COLORS = {
+      'ゾンビランドサガ': '#10b981',
+      'ロマンシング サガ': '#f59e0b',
+      '弱虫ペダル': '#ec4899',
+      'ちびまる子ちゃん': '#8b5cf6'
+    };
+    const WORK_FALLBACK_COLORS = ['#14b8a6', '#f97316', '#6366f1', '#e11d48', '#0891b2'];
+    function workColor(work) {
+      if (WORK_COLORS[work]) return WORK_COLORS[work];
+      // 未知の作品には安定した色を割り当てる
+      let hash = 0;
+      for (let i = 0; i < String(work).length; i++) hash = (hash * 31 + work.charCodeAt(i)) >>> 0;
+      return WORK_FALLBACK_COLORS[hash % WORK_FALLBACK_COLORS.length];
+    }
+    function characterIcon(work) {
+      return L.divIcon({
+        className: '',
+        html: `<div class="fr-marker" style="background:${workColor(work)}">キ</div>`,
+        iconSize: [30, 30], iconAnchor: [15, 15], popupAnchor: [0, -15]
+      });
+    }
+
     // Data containers
     let gundamData = []; // gmanhole
     let pokemonData = []; // pokefuta
+    let characterData = []; // character_manholes (ZLS/ロマサガ/弱虫ペダル/ちびまる子 など)
     let allMarkers = [];
     let selectedPrefecture = '';
     // Note: prefectureCodeMap and codeToPrefectureMap are defined globally in head script
@@ -278,7 +305,13 @@
         
         gundamData = await parseNdjson(gRes);
         pokemonData = await parseNdjson(pRes);
+        // キャラマンホール(任意レイヤー)。取得失敗してもマップは動作させる。
+        try {
+          const cRes = await fetch('./character_manholes.ndjson');
+          if (cRes.ok) characterData = await parseNdjson(cRes);
+        } catch (e) { console.warn('character manholes not loaded', e); }
         buildMarkers();
+        buildCharacterLegend();
         buildPrefectureCounts();
         updateStats();
         const initialPref = getInitialPrefectureFromURL();
@@ -401,13 +434,15 @@
       const prefectureMarkers = allMarkers.filter(marker => {
         const showPokemon = document.getElementById('chk-pokemon')?.checked;
         const showGundam = document.getElementById('chk-gundam')?.checked;
+        const showCharacter = document.getElementById('chk-character')?.checked;
         const data = marker._data;
-        
+
         // 表示設定に応じてフィルタ
         let shouldShow = false;
         if (data.franchise === 'gundam' && showGundam) shouldShow = true;
         if (data.franchise === 'pokefuta' && showPokemon) shouldShow = true;
-        
+        if (data.franchise === 'character' && showCharacter) shouldShow = true;
+
         return shouldShow && data.prefecture === prefecture;
       });
 
@@ -476,7 +511,23 @@
         marker._data = { ...d, prefecture: normalizePrefecture(d.prefecture), franchise:'pokefuta', overlap };
         marker.addTo(map); allMarkers.push(marker);
       });
+      characterData.forEach(d => {
+        if (d.lat == null || d.lng == null) return;
+        const popup = buildCharacterPopup(d);
+        const marker = L.marker([d.lat, d.lng], { icon: characterIcon(d.work) }).bindPopup(popup, franchisePopupOptions);
+        marker._data = { ...d, prefecture: normalizePrefecture(d.prefecture), franchise:'character' };
+        marker.addTo(map); allMarkers.push(marker);
+      });
       recomputeVisibility();
+    }
+
+    function buildCharacterLegend() {
+      const el = document.getElementById('char-legend');
+      if (!el) return;
+      const works = [...new Set(characterData.map(d => d.work).filter(Boolean))];
+      el.innerHTML = works.map(w =>
+        `<div class="legend-item"><span class="legend-swatch" style="background:${workColor(w)}"></span>${esc(w)}</div>`
+      ).join('');
     }
 
     function esc(s){ return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c])); }
@@ -518,46 +569,69 @@
       </div>`;
     }
 
+    // http/https 以外(javascript: 等)はリンク化しない
+    function safeHttpUrl(raw){
+      const v = String(raw||'').trim();
+      return /^https?:\/\//i.test(v) ? v : '';
+    }
+
+    function buildCharacterPopup(d){
+      const url = safeHttpUrl(d.source_url);
+      return `<div class='popup-box'>
+        <b>作品:</b> ${esc(d.work)}<br/><b>キャラ:</b> <span class='popup-title'>${esc(d.character)}</span><br/>
+        <b>設置場所:</b> ${esc(d.landmark||'')}<br/>
+        <b>都道府県:</b> ${esc(d.prefecture||'')} / ${esc(d.city||'')}<br/>
+        <b>住所:</b> ${esc(d.address||'')}
+        ${url?`<br/><a href='${esc(url)}' target='_blank' rel='noopener'>📝 出典</a>`:''}
+      </div>`;
+    }
+
     function recomputeVisibility(){
       const showPokemon = document.getElementById('chk-pokemon')?.checked;
       const showGundam = document.getElementById('chk-gundam')?.checked;
-      let visible=0, gCount=0, pCount=0;
-      
+      const showCharacter = document.getElementById('chk-character')?.checked;
+      let visible=0, gCount=0, pCount=0, cCount=0;
+
       allMarkers.forEach(m=>{
-        const d = m._data; 
+        const d = m._data;
         let show = true;
-        
+
         // Simple franchise filter
-        if(d.franchise==='gundam'){ 
-          show = showGundam; 
-        } else { 
-          show = showPokemon; 
+        if(d.franchise==='gundam'){
+          show = showGundam;
+        } else if(d.franchise==='character'){
+          show = showCharacter;
+        } else {
+          show = showPokemon;
         }
         if (selectedPrefecture) {
           show = show && d.prefecture === selectedPrefecture;
         }
-        
-        if(show){ 
-          if(!map.hasLayer(m)) m.addTo(map); 
-          visible++; 
-          if(d.franchise==='gundam') gCount++; 
-          else pCount++; 
-        } else { 
-          if(map.hasLayer(m)) map.removeLayer(m); 
+
+        if(show){
+          if(!map.hasLayer(m)) m.addTo(map);
+          visible++;
+          if(d.franchise==='gundam') gCount++;
+          else if(d.franchise==='character') cCount++;
+          else pCount++;
+        } else {
+          if(map.hasLayer(m)) map.removeLayer(m);
         }
       });
-      updateStats(visible, gCount, pCount);
+      updateStats(visible, gCount, pCount, cCount);
     }
 
-    function updateStats(visibleOverride, gCountOverride, pCountOverride){
+    function updateStats(visibleOverride, gCountOverride, pCountOverride, cCountOverride){
       const totalEl=document.querySelector('#total-count span');
       const visEl=document.querySelector('#visible-count span');
       const gEl=document.querySelector('#gundam-count span');
       const pEl=document.querySelector('#pokemon-count span');
+      const cEl=document.querySelector('#character-count span');
       if(totalEl) totalEl.textContent=String(allMarkers.length);
       if(visEl) visEl.textContent=String(visibleOverride ?? allMarkers.length);
       if(gEl) gEl.textContent=String(gCountOverride ?? gundamData.length);
       if(pEl) pEl.textContent=String(pCountOverride ?? pokemonData.length);
+      if(cEl) cEl.textContent=String(cCountOverride ?? characterData.length);
     }
 
     function initControlsToggle() {
@@ -596,6 +670,15 @@
       // Track Gundam filter toggle
       if (window.trackEvent) {
         window.trackEvent('toggle_gundam_filter', {
+          'event_category': 'user_engagement',
+          'event_label': e.target.checked ? 'enabled' : 'disabled'
+        });
+      }
+      recomputeVisibility();
+    });
+    document.getElementById('chk-character').addEventListener('change', (e) => {
+      if (window.trackEvent) {
+        window.trackEvent('toggle_character_filter', {
           'event_category': 'user_engagement',
           'event_label': e.target.checked ? 'enabled' : 'disabled'
         });
