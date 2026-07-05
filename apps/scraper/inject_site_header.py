@@ -25,7 +25,7 @@ HEADER_TEMPLATE = """<header class="site-header">
 </header>"""
 
 NAV_LABELS = {
-    "ja": ("メインナビゲーション", "地図", "ポケモン", "キャラマンホール"),
+    "ja": ("メインナビゲーション", "マップ", "ポケモン", "キャラマンホール"),
     "en": ("Main navigation", "Map", "Pokémon", "Character Manholes"),
     "zh-TW": ("主導覽", "地圖", "神奇寶貝", "角色人孔蓋"),
     "zh-CN": ("主导航", "地图", "宝可梦", "角色井盖"),

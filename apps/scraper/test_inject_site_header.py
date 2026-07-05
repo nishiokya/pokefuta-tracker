@@ -16,6 +16,7 @@ class InjectSiteHeaderTest(unittest.TestCase):
         result = inject("<!doctype html><html><head></head><body><main></main></body></html>")
         self.assertIn('href="./assets/site-header.css"', result)
         self.assertIn('class="site-header"', result)
+        self.assertIn('href="./map.html">マップ</a>', result)
         self.assertIn('<body class="has-site-header">', result)
 
     def test_preserves_existing_body_classes(self):
