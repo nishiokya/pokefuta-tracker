@@ -15,6 +15,7 @@ on:
       - 'apps/scraper/generate_summary_pages.py' # summary page generator
       - 'apps/scraper/generate_summary_ogp.py' # summary page OGP generator
       - 'apps/scraper/generate_prefecture_pages.py' # prefecture page generator
+      - 'apps/scraper/inject_site_header.py' # shared header injector
       - 'apps/scraper/generate_prefecture_trivia.py' # prefecture trivia generator
       - 'apps/scraper/prefectures.py' # shared prefecture names and URL slugs
       - 'docs/**'     # dataset changes copied into dist/
@@ -88,6 +89,8 @@ jobs:
           echo "[dist] Build multilingual pages (en / zh-TW / zh-CN / ko)"
           python3 tools/build_i18n.py
           echo '<!doctype html><meta http-equiv="refresh" content="0; url=./nearby.html">' > dist/nearby_manholes.html
+          echo "[dist] Inject shared site header into every HTML page"
+          python3 apps/scraper/inject_site_header.py dist
           echo "[dist] Copy assets (CSS + images)"
           cp -r apps/web/assets/* dist/assets/ || true
           echo "[dist] Copy local manhole photos"
