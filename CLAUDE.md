@@ -1,6 +1,7 @@
 manhole_titles.jsonは手動で更新している
 pokefuta.ndjsonはapps/scraperで更新している
 latest-manhole-photos.json　はpokefuta.comからもらっている（週次手動更新）
+docs/api/*.json は bake-app-data.yml が Supabase から日次生成（pokefuta.com アプリの /api/manholes・/api/site-stats がこれを読む）
 - apps/web/ を更新したら `/import-photos` スキルを実行 → docs/ 同期 + dataset/manhole/image/ ダウンロード
 
 ## ディレクトリ構成
