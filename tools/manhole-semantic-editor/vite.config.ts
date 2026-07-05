@@ -182,6 +182,8 @@ async function handleEditorRequest(
       lat?: number | null
       lng?: number | null
       source_url?: string
+      marker_label?: string
+      marker_color?: string
       status?: string
     }>
     const characterOut = records
@@ -198,6 +200,8 @@ async function handleEditorRequest(
         lat: record.lat,
         lng: record.lng,
         url: safeHttpUrl(record.source_url),
+        markerLabel: record.marker_label ?? '',
+        markerColor: record.marker_color ?? '',
       }))
 
     // ガンダムは独自パイプライン(docs/gmanhole.ndjson)が真実の源。複製せず動的にマージし、
