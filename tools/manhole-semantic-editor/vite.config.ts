@@ -11,6 +11,7 @@ const TITLES_PATH = path.join(REPO_ROOT, 'dataset/manhole_titles.json')
 const MICHINEKI_PATH = path.join(REPO_ROOT, 'dataset/michineki.json')
 const MANHOLEMAP_PATH = path.join(REPO_ROOT, 'dataset/manholemap.json')
 const GMANHOLE_PATH = path.join(REPO_ROOT, 'docs/gmanhole.ndjson')
+const CHARACTER_MANHOLE_PATH = path.join(REPO_ROOT, 'docs/character_manholes.ndjson')
 const GMANHOLE_GEOCODE_AUDIT_PATH = path.join(REPO_ROOT, 'dataset/gmanhole_geocode_audit.json')
 const GMANHOLE_OVERRIDES_PATH = path.join(REPO_ROOT, 'dataset/gmanhole_overrides.json')
 const GMANHOLE_GEOCODER_PATH = path.join(REPO_ROOT, 'apps/tools/geocode_gmanhole.py')
@@ -154,6 +155,82 @@ async function handleEditorRequest(
         lng: record.lng,
         url: record.detail_url ?? '',
       })))
+    return
+  }
+
+  if (method === 'GET' && subpath === '/data/character-manholes') {
+    if (!fs.existsSync(CHARACTER_MANHOLE_PATH)) {
+      jsonRes(res, { error: 'docs/character_manholes.ndjson not found. Run: python3 apps/scraper/collect_character_manholes.py' }, 404)
+      return
+    }
+    const raw = fs.readFileSync(CHARACTER_MANHOLE_PATH, 'utf-8')
+    const records = raw.trim().split('\n').filter(Boolean).map(line => JSON.parse(line)) as Array<{
+      id: string
+      work?: string
+      title?: string
+      character?: string
+      landmark?: string
+      prefecture?: string
+      city?: string
+      address?: string
+      lat?: number | null
+      lng?: number | null
+      source_url?: string
+      status?: string
+    }>
+    const characterOut = records
+      .filter(record => record.status === 'active' && Number.isFinite(record.lat) && Number.isFinite(record.lng))
+      .map(record => ({
+        id: record.id,
+        work: record.work ?? '',
+        title: record.title ?? '',
+        character: record.character ?? '',
+        landmark: record.landmark ?? '',
+        prefecture: record.prefecture ?? '',
+        city: record.city ?? '',
+        address: record.address ?? '',
+        lat: record.lat,
+        lng: record.lng,
+        url: record.source_url ?? '',
+      }))
+
+    // ガンダムは独自パイプライン(docs/gmanhole.ndjson)が真実の源。複製せず動的にマージし、
+    // 種別「機動戦士ガンダム」として同じ一覧に載せる。characters は多くが未設定のため
+    // landmark に設置場所(title)、character は判明分のみを入れる。
+    const gundamOut: typeof characterOut = []
+    if (fs.existsSync(GMANHOLE_PATH)) {
+      const graw = fs.readFileSync(GMANHOLE_PATH, 'utf-8')
+      const grecords = graw.trim().split('\n').filter(Boolean).map(line => JSON.parse(line)) as Array<{
+        id: string
+        title?: string
+        prefecture?: string
+        city?: string
+        address?: string
+        characters?: string[]
+        lat?: number | null
+        lng?: number | null
+        detail_url?: string
+        status?: string
+      }>
+      for (const record of grecords) {
+        if (record.status !== 'active' || !Number.isFinite(record.lat) || !Number.isFinite(record.lng)) continue
+        gundamOut.push({
+          id: `gundam-${record.id}`,
+          work: '機動戦士ガンダム',
+          title: record.title ?? '',
+          character: Array.isArray(record.characters) ? record.characters.join('・') : '',
+          landmark: record.title ?? '',
+          prefecture: record.prefecture ?? '',
+          city: record.city ?? '',
+          address: record.address ?? '',
+          lat: record.lat,
+          lng: record.lng,
+          url: record.detail_url ?? '',
+        })
+      }
+    }
+
+    jsonRes(res, [...characterOut, ...gundamOut])
     return
   }
 

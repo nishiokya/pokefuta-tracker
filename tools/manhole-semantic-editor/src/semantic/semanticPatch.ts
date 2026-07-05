@@ -12,6 +12,7 @@ export type TaskType =
   | 'michineki_nearby'
   | 'manholemap_nearby'
   | 'gmanhole_geocoder'
+  | 'character_manholes'
 
 export type OperationType =
   | 'set_municipality_url'

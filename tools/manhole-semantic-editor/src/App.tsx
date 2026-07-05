@@ -11,6 +11,7 @@ import { TagReverseLookupTask } from './tasks/tagReverseLookup/TagReverseLookupT
 import { MichinekiNearbyTask } from './tasks/michinekiNearby/MichinekiNearbyTask'
 import { ManholeMapNearbyTask } from './tasks/manholeMapNearby/ManholeMapNearbyTask'
 import { GmanholeGeocoderTask } from './tasks/gmanholeGeocoder/GmanholeGeocoderTask'
+import { CharacterManholesTask } from './tasks/characterManholes/CharacterManholesTask'
 
 type ActiveTask = 'home' | TaskType
 
@@ -24,6 +25,7 @@ const TASK_MENU: Array<{ group: string; items: Array<{ id: TaskType; label: stri
       { id: 'michineki_nearby', label: '道の駅 300m圏内', icon: '🏪', desc: '道の駅と300m以内のポケふたを一覧・紐づけ' },
       { id: 'manholemap_nearby', label: '近くのマンホールを探す', icon: '🗺', desc: 'Manhole Map投稿を距離・説明から調査' },
       { id: 'gmanhole_geocoder', label: 'ガンダム座標を確認する', icon: '📍', desc: '採用座標・候補・フォールバックを監査' },
+      { id: 'character_manholes', label: 'キャラマンホール一覧', icon: '🎭', desc: 'ポケふた以外のキャラマンホールを種別ごとに表示' },
     ],
   },
   {
@@ -159,6 +161,8 @@ export default function App() {
         return <ManholeMapNearbyTask records={records} />
       case 'gmanhole_geocoder':
         return <GmanholeGeocoderTask onPatchSaved={handleExternalPatchSaved} />
+      case 'character_manholes':
+        return <CharacterManholesTask />
       default:
         return <Home onSelectTask={navigate} />
     }
