@@ -706,7 +706,7 @@ body.pokefuta-map-page {
   font-size: .74rem;
 }
 
-.pokefuta-map-page #prefecture-table-body {
+.pokefuta-map-page .prefecture-card-list #prefecture-table-body {
   display: grid;
   gap: 10px;
 }
@@ -1559,7 +1559,7 @@ body.pokefuta-map-page {
     padding-bottom: 18px;
   }
 
-  .pokefuta-map-page #prefecture-table-body {
+  .pokefuta-map-page .prefecture-card-list #prefecture-table-body {
     grid-template-columns: 1fr;
   }
 
