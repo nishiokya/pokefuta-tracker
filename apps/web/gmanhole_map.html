@@ -329,7 +329,7 @@
       return mediaQuery ? mediaQuery.matches : true;
     }
 
-    function franchiseIcon(franchise, overlap=false) {
+    function franchiseIcon(franchise) {
       let cls = 'fr-marker ';
       if (franchise === 'gundam') cls += 'fr-gundam';
       else if (franchise === 'pokefuta' || franchise === 'pokemon') cls += 'fr-pokemon';
@@ -369,6 +369,7 @@
     let characterData = []; // character_manholes (ZLS/ロマサガ/弱虫ペダル/ちびまる子 など)
     let allMarkers = [];
     let selectedPrefecture = '';
+    const characterWorkCheckboxes = new Map();
     let userLocationMarker = null;
     let lastNearbyLocation = null; // 現在地検索後、フィルタ変更時にリストを再計算するため保持
     // Note: prefectureCodeMap and codeToPrefectureMap are defined globally in head script
@@ -655,6 +656,10 @@
           </button>
         </div>`
       ).join('');
+      characterWorkCheckboxes.clear();
+      el.querySelectorAll('.character-work-checkbox').forEach(input => {
+        characterWorkCheckboxes.set(input.dataset.work, input);
+      });
     }
 
     function esc(s){ return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c])); }
@@ -897,8 +902,7 @@
     function isMarkerVisibleByWork(d) {
       if (d.franchise === 'gundam') return Boolean(document.getElementById('chk-gundam')?.checked);
       if (d.franchise === 'pokefuta') return Boolean(document.getElementById('chk-pokemon')?.checked);
-      const workCheckbox = [...document.querySelectorAll('.character-work-checkbox')]
-        .find(input => input.dataset.work === d.work);
+      const workCheckbox = characterWorkCheckboxes.get(d.work);
       return Boolean(workCheckbox?.checked);
     }
 
@@ -1075,8 +1079,7 @@
       } else if (button.dataset.filterKind === 'pokefuta') {
         document.getElementById('chk-pokemon').checked = true;
       } else {
-        const selected = [...document.querySelectorAll('.character-work-checkbox')]
-          .find(input => input.dataset.work === button.dataset.work);
+        const selected = characterWorkCheckboxes.get(button.dataset.work);
         if (selected) selected.checked = true;
       }
       recomputeVisibility();
