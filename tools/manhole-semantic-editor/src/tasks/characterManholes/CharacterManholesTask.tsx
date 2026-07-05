@@ -14,6 +14,8 @@ type CharacterManhole = {
   lat: number
   lng: number
   url: string
+  markerLabel: string
+  markerColor: string
 }
 
 // 種別ごとの識別色 (登場順に割り当て)
@@ -62,11 +64,31 @@ export function CharacterManholesTask() {
 
   // 種別(作品)ごとの件数と色
   const works = useMemo(() => {
-    const counts = new Map<string, number>()
-    for (const record of records) counts.set(record.work, (counts.get(record.work) ?? 0) + 1)
-    return [...counts.entries()]
-      .sort((a, b) => b[1] - a[1])
-      .map(([work, count], index) => ({ work, count, color: WORK_COLORS[index % WORK_COLORS.length] }))
+    const stats = new Map<string, { count: number; markerLabel: string; markerColor: string }>()
+    for (const record of records) {
+      const current = stats.get(record.work)
+      if (current) {
+        current.count += 1
+      } else {
+        stats.set(record.work, {
+          count: 1,
+          markerLabel: record.markerLabel.trim(),
+          markerColor: record.markerColor.trim(),
+        })
+      }
+    }
+    return [...stats.entries()]
+      .sort((a, b) => b[1].count - a[1].count)
+      .map(([work, stat], index) => {
+        return {
+          work,
+          count: stat.count,
+          color: /^#[0-9a-f]{6}$/i.test(stat.markerColor)
+            ? stat.markerColor
+            : WORK_COLORS[index % WORK_COLORS.length],
+          label: stat.markerLabel || 'キ',
+        }
+      })
   }, [records])
 
   const colorByWork = useMemo(() => {
@@ -163,7 +185,9 @@ export function CharacterManholesTask() {
             className={`btn${selectedWork === entry.work ? ' btn-primary' : ''}`}
             onClick={() => { setSelectedWork(entry.work); setSelectedId(null) }}
           >
-            <span style={{ display: 'inline-block', width: 10, height: 10, borderRadius: '50%', background: entry.color, marginRight: 6 }} />
+            <span style={{ display: 'inline-flex', width: 18, height: 18, borderRadius: '50%', background: entry.color, color: '#fff', marginRight: 6, alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 700 }}>
+              {entry.label.slice(0, 1)}
+            </span>
             {entry.work} <b>{entry.count}</b>
           </button>
         ))}

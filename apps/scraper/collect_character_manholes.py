@@ -19,7 +19,8 @@
 
 出力スキーマ (pokefuta.ndjson に倣う):
   { id, work, title, character, landmark, prefecture, city, address,
-    lat, lng, source_url, map_mid, status, first_seen, last_updated }
+    lat, lng, source_url, map_mid, marker_label, marker_color,
+    status, first_seen, last_updated }
 
 使い方:
   python collect_character_manholes.py --out character_manholes.ndjson
@@ -44,6 +45,15 @@ GSI_SLEEP = 0.5
 KML_URL = "https://www.google.com/maps/d/kml?mid={mid}&forcekml=1"
 GSI_REVERSE = "https://mreversegeocoder.gsi.go.jp/reverse-geocoder/LonLatToAddress?lat={lat}&lon={lon}"
 GSI_MUNI = "https://maps.gsi.go.jp/js/muni.js"
+
+MARKER_STYLES: Dict[str, Dict[str, str]] = {
+    "ゾンビランドサガ": {"marker_label": "ゾ", "marker_color": "#10b981"},
+    "ロマンシング サガ": {"marker_label": "ロ", "marker_color": "#f59e0b"},
+    "弱虫ペダル": {"marker_label": "弱", "marker_color": "#ec4899"},
+    "ちびまる子ちゃん": {"marker_label": "ま", "marker_color": "#8b5cf6"},
+    "東海オンエア": {"marker_label": "東", "marker_color": "#14b8a6"},
+    "アイドルマスター シンデレラガールズ": {"marker_label": "ア", "marker_color": "#f97316"},
+}
 
 # --- 作品ごとのソース設定 -------------------------------------------------
 # name_mode:
@@ -99,6 +109,11 @@ WORKS: List[Dict[str, Any]] = [
             {"character": "ちびまる子ちゃん", "landmark": "三保生涯学習交流館", "city": "静岡市清水区", "lat": 34.99849, "lng": 138.52039},
             {"character": "ちびまる子ちゃん", "landmark": "新清水駅", "city": "静岡市清水区", "lat": 35.01709, "lng": 138.48788},
         ],
+    },
+    {
+        # 自治体・公式観光マップのGoogle Mapsリンクから手動確認した愛知県データ。
+        "source_type": "ndjson",
+        "path": "dataset/aichi_character_manholes.ndjson",
     },
 ]
 
@@ -322,7 +337,37 @@ def collect_static(spec: Dict[str, Any], muni: Dict[str, Dict[str, str]], no_geo
     return records
 
 
+def collect_ndjson(spec: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """リポジトリ内の手動確認済みNDJSONを読み込む。"""
+    repo_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    source_path = os.path.join(repo_root, spec["path"])
+    records: List[Dict[str, Any]] = []
+    with open(source_path, encoding="utf-8") as source:
+        for line_number, line in enumerate(source, start=1):
+            if not line.strip():
+                continue
+            try:
+                record = json.loads(line)
+            except json.JSONDecodeError as e:
+                raise ValueError(f"{source_path}:{line_number}: invalid JSON: {e}") from e
+            records.append(record)
+    print(f"  {spec['path']}: {len(records)} records (ndjson)", file=sys.stderr)
+    return records
+
+
+def apply_marker_style(record: Dict[str, Any]) -> Dict[str, Any]:
+    """作品ごとのマーカー表示情報をレコードへ付与する。"""
+    style = MARKER_STYLES.get(record.get("work", ""))
+    if style:
+        for key, value in style.items():
+            if not record.get(key):
+                record[key] = value
+    return record
+
+
 def collect_work(spec: Dict[str, Any], muni: Dict[str, Dict[str, str]], no_geocode: bool) -> List[Dict[str, Any]]:
+    if spec.get("source_type") == "ndjson":
+        return collect_ndjson(spec)
     if spec.get("source_type") == "static":
         return collect_static(spec, muni, no_geocode)
     kml = fetch_text(KML_URL.format(mid=spec["mid"]))
@@ -393,6 +438,8 @@ def main() -> None:
     all_records: List[Dict[str, Any]] = []
     for spec in WORKS:
         all_records.extend(collect_work(spec, muni, args.no_geocode))
+    for record in all_records:
+        apply_marker_style(record)
 
     atomic_write_ndjson(args.out, all_records)
     print(f"Wrote {len(all_records)} records to {args.out}", file=sys.stderr)
