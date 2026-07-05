@@ -76,30 +76,28 @@
 }
 
 @media (max-width: 720px) {
-  :root { --site-header-height: 71px; }
+  :root { --site-header-height: 53px; }
 
   .site-header__inner {
-    min-height: 0;
-    padding: 8px 10px 7px;
-    display: block;
+    min-height: 52px;
+    padding: 8px 10px;
+    gap: 8px;
   }
 
   .site-header__brand {
-    justify-content: center;
-    margin-bottom: 7px;
+    flex: 0 0 auto;
   }
 
   .site-header__brand-name { font-size: 16px; }
 
   .site-header__nav {
-    display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    gap: 3px;
-    margin: 0;
+    gap: 4px;
+    min-width: 0;
+    margin-left: auto;
   }
 
   .site-header__link {
-    padding: 6px 1px;
+    padding: 6px 5px;
     overflow: hidden;
     border-radius: 7px;
     background: #eeeaf7;
