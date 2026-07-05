@@ -144,7 +144,7 @@ def build_sitemap(manhole_ids: list[str], pokemon_slugs: list[str] | None = None
         url_entry(f"{BASE_URL}summary/", "weekly", "0.9"),
         url_entry(f"{BASE_URL}pokemon/", "weekly", "0.9"),
         url_entry(f"{BASE_URL}nearby.html", "weekly", "0.6"),
-        url_entry(f"{BASE_URL}gmanhole_map.html", "weekly", "0.6"),
+        url_entry(f"{BASE_URL}gmanhole_map.html", "weekly", "0.7"),
     ]
 
     for lang in I18N_LANGS:
