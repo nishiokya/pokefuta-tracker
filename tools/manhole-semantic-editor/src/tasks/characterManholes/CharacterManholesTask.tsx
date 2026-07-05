@@ -32,6 +32,11 @@ function escapeHtml(value: string) {
   return value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 }
 
+// http/https 以外(javascript: 等)はリンク化しない。
+function safeUrl(raw: string) {
+  return /^https?:\/\//i.test(raw.trim()) ? raw.trim() : ''
+}
+
 export function CharacterManholesTask() {
   const [records, setRecords] = useState<CharacterManhole[]>([])
   const [loadError, setLoadError] = useState<string | null>(null)
@@ -191,6 +196,15 @@ export function CharacterManholesTask() {
             <tr
               key={record.id}
               onClick={() => setSelectedId(record.id)}
+              onKeyDown={event => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault()
+                  setSelectedId(record.id)
+                }
+              }}
+              role="button"
+              tabIndex={0}
+              aria-pressed={selectedId === record.id}
               style={{ cursor: 'pointer', background: selectedId === record.id ? '#eff6ff' : undefined }}
             >
               <td>
@@ -202,10 +216,10 @@ export function CharacterManholesTask() {
               <td>{record.city}</td>
               <td>
                 <small style={{ color: '#6b7280' }}>{record.address}</small>
-                {record.url && (
+                {safeUrl(record.url) && (
                   <>
                     {' '}
-                    <a href={record.url} target="_blank" rel="noreferrer" onClick={event => event.stopPropagation()}>出典</a>
+                    <a href={safeUrl(record.url)} target="_blank" rel="noreferrer" onClick={event => event.stopPropagation()}>出典</a>
                   </>
                 )}
               </td>

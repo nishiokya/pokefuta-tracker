@@ -24,6 +24,12 @@ function jsonRes(res: ServerResponse, data: unknown, status = 200): void {
   res.end(JSON.stringify(data))
 }
 
+// クライアントが <a href> に使うため、http/https 以外(javascript: 等)は空にして混入を防ぐ。
+function safeHttpUrl(raw: unknown): string {
+  const value = typeof raw === 'string' ? raw.trim() : ''
+  return /^https?:\/\//i.test(value) ? value : ''
+}
+
 function runGmanholeGeocoder(): Promise<void> {
   return new Promise((resolve, reject) => {
     execFile(
@@ -191,7 +197,7 @@ async function handleEditorRequest(
         address: record.address ?? '',
         lat: record.lat,
         lng: record.lng,
-        url: record.source_url ?? '',
+        url: safeHttpUrl(record.source_url),
       }))
 
     // ガンダムは独自パイプライン(docs/gmanhole.ndjson)が真実の源。複製せず動的にマージし、
@@ -225,7 +231,7 @@ async function handleEditorRequest(
           address: record.address ?? '',
           lat: record.lat,
           lng: record.lng,
-          url: record.detail_url ?? '',
+          url: safeHttpUrl(record.detail_url),
         })
       }
     }

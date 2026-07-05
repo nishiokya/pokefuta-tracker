@@ -569,13 +569,20 @@
       </div>`;
     }
 
+    // http/https 以外(javascript: 等)はリンク化しない
+    function safeHttpUrl(raw){
+      const v = String(raw||'').trim();
+      return /^https?:\/\//i.test(v) ? v : '';
+    }
+
     function buildCharacterPopup(d){
+      const url = safeHttpUrl(d.source_url);
       return `<div class='popup-box'>
         <b>作品:</b> ${esc(d.work)}<br/><b>キャラ:</b> <span class='popup-title'>${esc(d.character)}</span><br/>
         <b>設置場所:</b> ${esc(d.landmark||'')}<br/>
         <b>都道府県:</b> ${esc(d.prefecture||'')} / ${esc(d.city||'')}<br/>
         <b>住所:</b> ${esc(d.address||'')}
-        ${d.source_url?`<br/><a href='${esc(d.source_url)}' target='_blank' rel='noopener'>📝 出典</a>`:''}
+        ${url?`<br/><a href='${esc(url)}' target='_blank' rel='noopener'>📝 出典</a>`:''}
       </div>`;
     }
 

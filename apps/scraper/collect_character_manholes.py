@@ -15,7 +15,7 @@
   4. name から character / landmark を分解
   5. 国土地理院 逆ジオコーダで prefecture/city/address を補完
      https://mreversegeocoder.gsi.go.jp/reverse-geocoder/LonLatToAddress
-     муниCd -> 市区町村名 は https://maps.gsi.go.jp/js/muni.js で解決
+     muniCd -> 市区町村名 は https://maps.gsi.go.jp/js/muni.js で解決
 
 出力スキーマ (pokefuta.ndjson に倣う):
   { id, work, title, character, landmark, prefecture, city, address,
