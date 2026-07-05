@@ -95,23 +95,17 @@
   <!-- ===== APP BAR ===== -->
   <header class="top-app-bar">
     <div class="top-app-bar-inner">
-      <div class="top-brand">
+      <a class="top-brand" href="%%BASE_PATH%%index.html" onclick="trackEvent('click_nav',{nav:'top'})">
         <span class="sec-num nav-num"></span>
         <span class="brand-name">ポケふた</span>
         <span class="brand-sub">DATABASE</span>
-      </div>
+      </a>
       <div class="top-nav-right">
         <nav class="top-nav" aria-label="%%NAV_ARIA%%">
-          <a class="top-nav-link" href="%%BASE_PATH%%index.html" onclick="trackEvent('click_nav',{nav:'top'})">%%NAV_TOP%%</a>
           <a class="top-nav-link" href="%%BASE_PATH%%map.html" onclick="trackEvent('click_nav',{nav:'map'})">%%NAV_MAP%%</a>
-          <a class="top-nav-link" href="%%BASE_PATH%%summary/" onclick="trackEvent('click_nav',{nav:'summary'})">%%NAV_SUMMARY%%</a>
           <a class="top-nav-link" href="%%BASE_PATH%%pokemon/" onclick="trackEvent('click_nav',{nav:'pokemon'})">%%NAV_POKEMON%%</a>
-          <a class="top-nav-link" href="%%BASE_PATH%%nearby.html" onclick="trackEvent('click_nav',{nav:'nearby'})">%%NAV_NEARBY%%</a>
           <a class="top-nav-link" href="%%BASE_PATH%%gmanhole_map.html" onclick="trackEvent('click_nav',{nav:'character'})">%%NAV_CHARACTER%%</a>
         </nav>
-        <a href="%%BASE_PATH%%map.html" class="top-count-badge" id="top-count-badge" onclick="trackEvent('click_appbar_count')">
-          %%APPBAR_PREFIX%%<b id="appbar-count">—</b>%%APPBAR_SUFFIX%%
-        </a>
       </div>
     </div>
   </header>

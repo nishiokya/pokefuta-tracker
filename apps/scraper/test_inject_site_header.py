@@ -37,7 +37,9 @@ class InjectSiteHeaderTest(unittest.TestCase):
         result = inject(html, asset_base="../../../", page_base="../../")
         self.assertIn('href="../../../assets/site-header.css"', result)
         self.assertIn('href="../../map.html">Map</a>', result)
-        self.assertIn('href="../../../nearby.html">Nearby</a>', result)
+        self.assertIn('href="../../pokemon/">Pokémon</a>', result)
+        self.assertIn('href="../../../gmanhole_map.html">Character Manholes</a>', result)
+        self.assertEqual(result.count('class="site-header__link"'), 3)
 
 
 if __name__ == "__main__":
