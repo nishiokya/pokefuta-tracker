@@ -39,6 +39,7 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
   <link rel="stylesheet" href="./assets/theme.css" />
   <link rel="stylesheet" href="./assets/map.css" />
+  <link rel="stylesheet" href="./assets/pokefuta-map.css?v=20260705-gmanhole-sheet" />
   <link rel="stylesheet" href="./assets/top-page.css?v=20260623d" />
   <style>
     /* Franchise specific marker styling (DivIcon) */
@@ -46,58 +47,45 @@
     .fr-pokemon { background:linear-gradient(135deg,#ffcc00,#ff6b00); }
     .fr-gundam { background:linear-gradient(135deg,#0044aa,#cc0000); }
     .fr-both { background:linear-gradient(135deg,#6a00cc,#ff0066); }
-    #controls { max-width:360px; }
     .legend { margin-top:6px; display:flex; gap:8px; flex-wrap:wrap; }
     .legend-item { display:flex; align-items:center; gap:4px; font-size:0.75rem; }
     .legend-swatch { width:18px; height:18px; border-radius:50%; box-shadow:0 0 0 1px #fff,0 1px 3px rgba(0,0,0,.3); }
     .legend-pokemon { background:linear-gradient(135deg,#ffcc00,#ff6b00); }
     .legend-gundam { background:linear-gradient(135deg,#0044aa,#cc0000); }
     .legend-both { background:linear-gradient(135deg,#6a00cc,#ff0066); }
-    .character-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(90px,1fr)); gap:4px; margin-top:4px; max-height:220px; overflow:auto; }
-    .character-item { background:var(--top-purple-pale); border:1px solid var(--top-border); padding:4px 6px; border-radius:6px; cursor:pointer; font-size:0.7rem; display:flex; flex-direction:column; gap:2px; }
-    .character-item.selected { background:var(--top-purple); color:#fff; }
-    .character-count { font-size:0.65rem; opacity:0.7; }
     .franchise-filter-group { display:flex; gap:8px; flex-wrap:wrap; margin:4px 0 8px; }
     .franchise-filter-group label { font-size:0.8rem; cursor:pointer; display:flex; align-items:center; gap:4px; }
-    .dataset-summary { font-size:0.65rem; color:var(--top-text-faint); margin-top:4px; }
-    .popup-box { font-size:0.8rem; line-height:1.2; }
-    .popup-box .popup-title { font-weight:600; }
     .stat-inline { font-size:0.7rem; color:#444; margin:2px 0; }
     .franchise-filter-group input { margin:0; }
     .gmanhole-display-row { display:flex; align-items:center; gap:8px; margin-bottom:2px; padding:2px 0; flex-wrap:wrap; }
     .gmanhole-display-row .franchise-filter-group { margin:0; gap:10px; }
     .gmanhole-display-row .legend { margin:0 0 0 auto; }
-    /* Shared app bar on top of the full-height map (top-page.css classes) */
-    .top-app-bar { z-index:1400; }
-    body { padding:0; }
-    #controls { top:60px; }
+    /* Shared app bar fixed above the full-viewport map stage (top-page.css classes) */
+    .top-app-bar { position:fixed; top:0; left:0; right:0; z-index:1400; }
+    /* Keep Leaflet zoom control clear of the fixed app bar */
+    .pokefuta-map-page .leaflet-top.leaflet-left { top:64px; }
     /* top-page.css strips link styling globally; restore it for content links */
-    .popup-box a, .data-links a { color:var(--top-purple); text-decoration:underline; }
-    .page-seo { max-width:var(--top-max-w); margin:28px auto 0; padding:0 var(--top-pad); color:var(--top-text); }
+    .data-links a { color:var(--top-purple); text-decoration:underline; }
+    .page-seo { margin:20px 0 0; padding:14px 0 0; border-top:1px solid var(--top-border-light); color:var(--top-text); }
     .page-seo h1 { font-size:17px; font-weight:700; line-height:1.45; margin:0 0 10px; }
     .page-seo p { font-size:13.5px; line-height:1.8; color:var(--top-text-muted); margin:0 0 12px; }
     .page-seo h2 { font-size:14px; font-weight:700; margin:18px 0 8px; }
     .page-seo ul { margin:0; padding:0; list-style:none; display:grid; gap:6px; }
     .page-seo li { background:var(--top-card-bg); border:1px solid var(--top-border); border-radius:var(--top-radius-card); padding:10px 14px; font-size:13px; }
     .page-seo a { color:var(--top-purple); text-decoration:underline; }
-    @media (min-width:960px) {
-      #panel-nav { display:none; }
-      .page-seo ul { grid-template-columns:repeat(2,1fr); }
+    /* Desktop floating panel: keep clear of the fixed app bar; no hero card on this page */
+    @media (min-width: 760px) {
+      .pokefuta-map-page #controls { top:72px; max-height:calc(100dvh - 104px); }
+      .pokefuta-map-page .controls-content { max-height:calc(100dvh - 104px); }
+      .pokefuta-map-page .leaflet-top.leaflet-left { top:72px; }
     }
     .prefecture-row-button { display:block; width:100%; border:0; background:transparent; color:inherit; font:inherit; font-weight:700; text-align:left; padding:0; cursor:pointer; }
     .prefecture-row-button:hover, .prefecture-row-button:focus-visible { text-decoration:underline; }
     #prefecture-table-body tr:hover { background:transparent; cursor:default; }
     #prefecture-table-body tr.selected:hover { background:var(--top-purple); }
 
-    /* ===== Top-page design skin: theme.css/map.css のブルータリスト調を index.html 調に上書き ===== */
-    body { font-family:'Noto Sans JP', system-ui, -apple-system, sans-serif; background:var(--top-bg); color:var(--top-text); }
-    #controls { background:var(--top-card-bg); border:1px solid var(--top-border); border-radius:var(--top-radius-card-lg); box-shadow:0 8px 24px rgba(43,43,48,.12); }
-    .controls-header { background:var(--top-card-bg); color:var(--top-text); border-bottom:1px solid var(--top-border-light); padding:10px 14px 8px; }
-    .controls-header h3 { color:var(--top-purple-dark); font-weight:700; letter-spacing:0; }
-    .controls-toggle-btn { background:var(--top-purple-pale); color:var(--top-purple); border:1px solid var(--top-border); border-radius:var(--top-radius-pill); }
-    .controls-toggle-btn:hover { background:var(--top-purple); color:#fff; }
-    #panel-nav .nav-link { background:var(--top-purple-pale); color:var(--top-purple); border:1px solid transparent; border-radius:var(--top-radius-pill); box-shadow:none; font-weight:700; letter-spacing:0; padding:6px 12px; }
-    #panel-nav .nav-link:hover { background:var(--top-purple); color:#fff; }
+    /* ===== Top-page design skin: プレフィクスチャテーブル等を index.html 調に上書き ===== */
+    body { font-family:'Noto Sans JP', system-ui, -apple-system, sans-serif; color:var(--top-text); }
     .prefecture-table { background:transparent; border:1px solid var(--top-border); }
     .prefecture-table thead tr, .prefecture-table th { background:var(--top-purple-pale); color:var(--top-purple-dark); font-weight:700; letter-spacing:0; text-transform:none; }
     .prefecture-table th, .prefecture-table td { border-bottom:1px solid var(--top-border-light); }
@@ -164,7 +152,7 @@
     );
   </script>
 </head>
-<body>
+<body class="pokefuta-map-page">
   <!-- ===== APP BAR (index.html と共通のヘッダー) ===== -->
   <header class="top-app-bar">
     <div class="top-app-bar-inner">
@@ -183,27 +171,49 @@
       </div>
     </div>
   </header>
-  <div id="controls" role="complementary" aria-labelledby="page-title">
+  <main class="map-stage" aria-label="キャラクターマンホールマップ">
+    <div id="map"></div>
+  </main>
+  <div id="controls" class="bottom-sheet" role="complementary" aria-labelledby="page-title">
+    <span id="page-title" class="sr-only">キャラマンホールマップ パネル</span>
     <div class="controls-header">
-      <div style="display: flex; align-items: center; justify-content: space-between;">
-        <h3 id="page-title">キャラマンホールマップ</h3>
-        <button type="button" id="controls-toggle" class="controls-toggle-btn" aria-label="フロート表示切り替え" title="フロートを表示/非表示" aria-expanded="true" aria-controls="controls-content"></button>
-      </div>
+      <button type="button" id="controls-toggle" class="controls-toggle-btn" aria-label="全体パネルを開く" title="全体パネルを開く/閉じる" aria-expanded="false" aria-controls="controls-content">
+        <span class="sheet-grip" aria-hidden="true"></span>
+      </button>
     </div>
-    <div id="controls-content" class="controls-content" role="region" aria-label="Filters and statistics">
-      <div class="gmanhole-display-row">
-        <div class="franchise-filter-group" role="group" aria-label="Franchise filters">
-          <label><input type="checkbox" id="chk-gundam" checked aria-label="ガンダム表示" /> ガンダム</label>
-          <label><input type="checkbox" id="chk-character" checked aria-label="キャラマンホール表示" /> キャラ</label>
-          <label><input type="checkbox" id="chk-pokemon" aria-label="ポケモン表示" /> ポケモン</label>
-        </div>
-        <div class="legend" aria-label="Legend">
-          <div class="legend-item"><span class="legend-swatch legend-gundam"></span>ガンダム</div>
-          <span id="char-legend" style="display:contents"></span>
-          <div class="legend-item"><span class="legend-swatch legend-both"></span>座標共有/重複</div>
-          <div class="legend-item"><span class="legend-swatch legend-pokemon"></span>ポケふた</div>
+    <div id="controls-content" class="controls-content" role="region" aria-label="全体パネルの内容">
+      <div class="sheet-utility-section">
+        <p class="sheet-section-label">表示する作品</p>
+        <div class="gmanhole-display-row">
+          <div class="franchise-filter-group" role="group" aria-label="Franchise filters">
+            <label><input type="checkbox" id="chk-gundam" checked aria-label="ガンダム表示" /> ガンダム</label>
+            <label><input type="checkbox" id="chk-character" checked aria-label="キャラマンホール表示" /> キャラ</label>
+            <label><input type="checkbox" id="chk-pokemon" aria-label="ポケモン表示" /> ポケモン</label>
+          </div>
+          <div class="legend" aria-label="Legend">
+            <div class="legend-item"><span class="legend-swatch legend-gundam"></span>ガンダム</div>
+            <span id="char-legend" style="display:contents"></span>
+            <div class="legend-item"><span class="legend-swatch legend-both"></span>座標共有/重複</div>
+            <div class="legend-item"><span class="legend-swatch legend-pokemon"></span>ポケふた</div>
+          </div>
         </div>
       </div>
+      <div class="sheet-utility-section">
+        <p class="sheet-section-label">便利機能</p>
+        <div class="sheet-utility-btns">
+          <button type="button" id="locate-button" class="sheet-utility-btn">
+            <img src="./assets/icon-current-location.svg" alt="" aria-hidden="true">
+            <span id="locate-button-label">現在地から近いマンホールを探す</span>
+          </button>
+        </div>
+        <p class="sheet-locate-desc">現在地を使って、近くのキャラクターマンホールを距離順に表示します。位置情報は検索のためだけに使用します。</p>
+      </div>
+      <section id="nearby-results" class="nearby-results" aria-live="polite" hidden>
+        <div class="section-title-row">
+          <h4>近くのマンホール</h4>
+        </div>
+        <div id="nearby-list" class="nearby-list"></div>
+      </section>
       <div id="prefecture-tab" class="tab-content active">
         <div id="selected-prefecture-badge" class="selected-prefecture-badge" style="display:none; margin:2px 0; font-size:0.85rem; background:#eef; padding:4px 8px; border-radius:6px;">
           <span class="badge-label" style="font-weight:600;">選択中:</span> <span class="badge-value"></span>
@@ -234,15 +244,7 @@
         <div id="character-count">キャラ: <span>0</span></div>
         <div id="pokemon-count">ポケふた: <span>0</span></div>
       </div>
-      <nav id="panel-nav" aria-label="サイト内ナビゲーション" style="display:flex; gap:6px; flex-wrap:wrap;">
-        <a class="nav-link" style="margin-top:6px;" href="./" onclick="trackEvent('click_nav',{nav:'home',from:'gmanhole_map'})">ホーム</a>
-        <a class="nav-link" style="margin-top:6px;" href="./map.html" onclick="trackEvent('click_nav',{nav:'map',from:'gmanhole_map'})">全国マップ</a>
-        <a class="nav-link" style="margin-top:6px;" href="./nearby.html" onclick="trackEvent('click_nav',{nav:'nearby',from:'gmanhole_map'})">近くを探す</a>
-      </nav>
-    </div>
-  </div>
-  <div id="map"></div>
-  <section class="page-seo">
+      <section class="page-seo">
     <h1>キャラクターマンホールマップ — ガンダム・ゾンビランドサガから ちびまる子ちゃんまで</h1>
     <p>
       全国に設置されているキャラクターデザインのマンホール蓋を1枚の地図にまとめました。
@@ -264,8 +266,8 @@
       ポケふただけをじっくり探すなら<a href="./map.html">全国ポケふたマップ</a>、
       現在地から近い1枚を探すなら<a href="./nearby.html">近くのマンホール検索</a>もどうぞ。
     </p>
-  </section>
-  <footer class="data-links" role="contentinfo" style="margin:16px auto 24px; max-width:var(--top-max-w); text-align:center; font-size:0.85rem; color:var(--top-text-muted);">
+      </section>
+      <footer class="data-links" role="contentinfo" style="margin:16px 0 8px; text-align:center; font-size:0.85rem; color:var(--top-text-muted);">
     <p style="margin:0 0 4px;">
       <a href="https://x.com/pokemonmanhole" target="_blank" rel="noopener noreferrer" style="color:#888; font-size:0.82rem; text-decoration:none;">𝕏 @pokemonmanhole — 公式更新情報</a>
     </p>
@@ -280,7 +282,9 @@
       /
       <a href="./pokefuta.ndjson" target="_blank" rel="noopener">ポケふたNDJSON</a>
     </p>
-  </footer>
+      </footer>
+    </div>
+  </div>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script>
     function hasTouchMapPointer() {
@@ -295,15 +299,26 @@
     const map = L.map('map', { closePopupOnClick: !isTouchMapPointer }).setView([36.0, 138.0], 6);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
     const POPUP_SIDE_PADDING = 16;
-    const POPUP_TOP_PADDING = 24;
-    const POPUP_BOTTOM_CONTROLS_PADDING = 220;
+    const POPUP_TOP_PADDING = 176;
+    const POPUP_BOTTOM_SHEET_PADDING = 250;
     const franchisePopupOptions = {
       closeOnClick: !isTouchMapPointer,
       autoPan: true,
-      // Keep popups clear of viewport edges and the bottom controls panel on mobile.
+      // Keep popups clear of viewport edges and the bottom sheet on mobile.
       autoPanPaddingTopLeft: L.point(POPUP_SIDE_PADDING, POPUP_TOP_PADDING),
-      autoPanPaddingBottomRight: L.point(POPUP_SIDE_PADDING, POPUP_BOTTOM_CONTROLS_PADDING)
+      autoPanPaddingBottomRight: L.point(POPUP_SIDE_PADDING, POPUP_BOTTOM_SHEET_PADDING)
     };
+
+    const OVERALL_PANEL_MEDIA_QUERY = '(max-width: 759px)';
+    function getOverallPanelMediaQuery() {
+      return typeof window.matchMedia === 'function'
+        ? window.matchMedia(OVERALL_PANEL_MEDIA_QUERY)
+        : null;
+    }
+    function isOverallPanelToggleable() {
+      const mediaQuery = getOverallPanelMediaQuery();
+      return mediaQuery ? mediaQuery.matches : true;
+    }
 
     function franchiseIcon(franchise, overlap=false) {
       let cls = 'fr-marker ';
@@ -344,6 +359,8 @@
     let characterData = []; // character_manholes (ZLS/ロマサガ/弱虫ペダル/ちびまる子 など)
     let allMarkers = [];
     let selectedPrefecture = '';
+    let showNearbyResults = false;
+    let userLocationMarker = null;
     // Note: prefectureCodeMap and codeToPrefectureMap are defined globally in head script
 
     // 都道府県の中心座標マッピング（緯度, 経度）
@@ -651,46 +668,128 @@
       return null;
     }
 
-    function getValidDetailUrl(rawUrl) {
-      return rawUrl ? (validateDetailUrl(rawUrl) || '#') : '#';
-    }
-    function buildGundamPopup(d, overlap){
-      const chars = Array.isArray(d.characters)&&d.characters.length ? d.characters.join(', ') : '—';
-      const series = d.series || '—';
-      const imgs = Array.isArray(d.image_urls)&&d.image_urls.length ? `<div style='margin-top:4px;'>画像:${d.images_count}</div>`:'<div style="margin-top:4px;">画像なし</div>';
-      return `<div class='popup-box'>
-        <b>ID:</b> ${esc(d.id)}<br/><b>タイトル:</b> <span class='popup-title'>${esc(d.title)}</span><br/>
-        <b>都道府県:</b> ${esc(d.prefecture||'')} / ${esc(d.city||'')}<br/>
-        <b>キャラクター:</b> ${esc(chars)}<br/><b>シリーズ:</b> ${esc(series)}${imgs}
-        <br/><a href='${getValidDetailUrl(d.detail_url)}' target='_blank' rel='noopener'>📝 詳細</a>${overlap?'<br/><span class="stat-inline">※ 座標重複</span>':''}
-      </div>`;
-    }
-
-    function buildPokemonPopup(d, overlap){
-      const pokes = Array.isArray(d.pokemons)&&d.pokemons.length ? d.pokemons.join(', ') : '—';
-      return `<div class='popup-box'>
-        <b>ID:</b> ${esc(d.id)}<br/><b>タイトル:</b> <span class='popup-title'>${esc(d.title)}</span><br/>
-        <b>都道府県:</b> ${esc(d.prefecture||'')} / ${esc(d.city||'')}<br/>
-        <b>ポケモン:</b> ${esc(pokes)}
-        <br/><a href='${getValidDetailUrl(d.detail_url)}' target='_blank' rel='noopener'>📝 詳細</a>${overlap?'<br/><span class="stat-inline">※ 座標重複</span>':''}
-      </div>`;
-    }
-
     // http/https 以外(javascript: 等)はリンク化しない
     function safeHttpUrl(raw){
       const v = String(raw||'').trim();
       return /^https?:\/\//i.test(v) ? v : '';
     }
 
+    function escapeJs(str) {
+      return String(str || '')
+        .replace(/\\/g, '\\\\')
+        .replace(/'/g, "\\'")
+        .replace(/"/g, '\\"')
+        .replace(/\n/g, '\\n')
+        .replace(/\r/g, '\\r')
+        .replace(/\t/g, '\\t');
+    }
+
+    function popupEventParams(d){
+      return `event_category:'popup_navigation',manhole_id:'${escapeJs(d.id)}',prefecture:'${escapeJs(d.prefecture)}'`;
+    }
+
+    function buildMapsAction(d, eventParams){
+      if (!(Number.isFinite(Number(d.lat)) && Number.isFinite(Number(d.lng)))) return '';
+      const mapsUrl = `https://www.google.com/maps?q=${encodeURIComponent(`${d.lat},${d.lng}`)}`;
+      return `<a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" class="travel-popup-action travel-popup-action--maps"
+        onclick="if(window.trackEvent){window.trackEvent('popup_click_google_maps',{${eventParams}});}">Google Mapsで行く</a>`;
+    }
+
+    function buildDetailAction(url, label, eventParams){
+      if (!url) return '';
+      return `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer" class="travel-popup-action travel-popup-action--detail"
+        onclick="if(window.trackEvent){window.trackEvent('popup_click_detail',{${eventParams}});}">${esc(label)}</a>`;
+    }
+
+    function buildTravelPopup({ d, title, building, badgeHtml, chipsHtml, chipsLabel, photoUrl, photoLink, detailUrl, detailLabel, overlap }){
+      const code = prefectureCodeMap[d.prefecture] || '--';
+      const eventParams = popupEventParams(d);
+      const photoBlock = photoUrl ? `
+        <div class="popup-photo travel-popup-photo" aria-label="マンホール写真">
+          ${photoLink ? `<a href="${esc(photoLink)}" target="_blank" rel="noopener noreferrer" class="travel-popup-photo-link">` : ''}
+            <img src="${esc(photoUrl)}" alt="${esc(title)}の写真" loading="lazy" decoding="async"
+              onerror="this.closest('.travel-popup-photo').remove()">
+          ${photoLink ? '</a>' : ''}
+        </div>` : '';
+      return `
+        <div class="popup-box${photoUrl ? ' popup-box--photo' : ''} travel-popup-card">
+          ${photoBlock}
+          <div class="travel-popup-body">
+            <div class="travel-popup-place">
+              <span class="travel-popup-code">${esc(code)}</span>
+              <span>${esc(d.prefecture || '不明')}</span>
+              ${d.city ? `<b>${esc(d.city)}</b>` : ''}
+            </div>
+            <h3 class="travel-popup-title">${esc(title)}</h3>
+            ${building ? `<p class="travel-popup-building">📍 ${esc(building)}</p>` : ''}
+            ${badgeHtml}
+            ${chipsHtml ? `<div class="travel-popup-pokemon-list" aria-label="${esc(chipsLabel || '')}">${chipsHtml}</div>` : ''}
+            ${overlap ? '<p class="stat-inline">※ ポケふたと座標共有</p>' : ''}
+            <div class="popup-actions travel-popup-actions">
+              ${buildMapsAction(d, eventParams)}
+              ${buildDetailAction(detailUrl, detailLabel, eventParams)}
+            </div>
+          </div>
+        </div>`;
+    }
+
+    function buildGundamPopup(d, overlap){
+      const chars = Array.isArray(d.characters) ? d.characters.filter(Boolean) : [];
+      const detailUrl = safeHttpUrl(d.detail_url);
+      // image_urls はスクレイプ元からの相対パスなので detail_url 基準で絶対化する
+      let photoUrl = '';
+      const rawImg = Array.isArray(d.image_urls) && d.image_urls.length ? d.image_urls[0] : '';
+      if (rawImg && detailUrl) {
+        try { photoUrl = safeHttpUrl(new URL(rawImg, detailUrl).href); } catch {}
+      }
+      return buildTravelPopup({
+        d,
+        title: d.title || 'ガンダムマンホール',
+        building: d.address || '',
+        badgeHtml: d.series ? `<div class="travel-popup-badges"><span class="travel-popup-badge">${esc(d.series)}</span></div>` : '',
+        chipsHtml: chars.map(c => `<span class="travel-popup-pokemon">${esc(c)}</span>`).join(''),
+        chipsLabel: '登場キャラクター',
+        photoUrl,
+        photoLink: detailUrl,
+        detailUrl,
+        detailLabel: '詳細を見る',
+        overlap
+      });
+    }
+
+    function buildPokemonPopup(d, overlap){
+      const pokes = Array.isArray(d.pokemons) ? d.pokemons.filter(Boolean) : [];
+      const detailUrl = d.detail_url ? validateDetailUrl(d.detail_url) : null;
+      return buildTravelPopup({
+        d,
+        title: d.title || 'ポケふた',
+        building: d.building || '',
+        badgeHtml: '',
+        chipsHtml: pokes.map(p => `<span class="travel-popup-pokemon">${esc(p)}</span>`).join(''),
+        chipsLabel: '登場ポケモン',
+        photoUrl: '',
+        photoLink: '',
+        detailUrl: detailUrl || '',
+        detailLabel: '詳細を見る',
+        overlap
+      });
+    }
+
     function buildCharacterPopup(d){
-      const url = safeHttpUrl(d.source_url);
-      return `<div class='popup-box'>
-        <b>作品:</b> ${esc(d.work)}<br/><b>キャラ:</b> <span class='popup-title'>${esc(d.character)}</span><br/>
-        <b>設置場所:</b> ${esc(d.landmark||'')}<br/>
-        <b>都道府県:</b> ${esc(d.prefecture||'')} / ${esc(d.city||'')}<br/>
-        <b>住所:</b> ${esc(d.address||'')}
-        ${url?`<br/><a href='${esc(url)}' target='_blank' rel='noopener'>📝 出典</a>`:''}
-      </div>`;
+      const sourceUrl = safeHttpUrl(d.source_url);
+      return buildTravelPopup({
+        d,
+        title: d.character || d.title || 'キャラクターマンホール',
+        building: d.landmark || d.address || '',
+        badgeHtml: d.work ? `<div class="travel-popup-badges"><span class="travel-popup-badge">${esc(d.work)}</span></div>` : '',
+        chipsHtml: '',
+        chipsLabel: '',
+        photoUrl: '',
+        photoLink: '',
+        detailUrl: sourceUrl,
+        detailLabel: '出典を見る',
+        overlap: false
+      });
     }
 
     function recomputeVisibility(){
@@ -745,20 +844,196 @@
       const toggleBtn = document.getElementById('controls-toggle');
       const controlsContent = document.getElementById('controls-content');
       if (!toggleBtn || !controlsContent) return;
-      const controlsHidden = localStorage.getItem('gmanholeControlsHidden') === 'true';
-
-      function applyState(hidden) {
-        controlsContent.classList.toggle('hidden', hidden);
-        toggleBtn.classList.toggle('collapsed', hidden);
-        toggleBtn.setAttribute('aria-label', hidden ? 'フロート表示' : 'フロート非表示');
-        toggleBtn.setAttribute('aria-expanded', hidden ? 'false' : 'true');
+      const panelMediaQuery = getOverallPanelMediaQuery();
+      const canTogglePanel = () => panelMediaQuery ? panelMediaQuery.matches : true;
+      if (canTogglePanel()) {
+        collapseBottomSheet(true);
+      } else {
+        expandBottomSheet();
       }
-
-      applyState(controlsHidden);
       toggleBtn.addEventListener('click', () => {
-        const nextHidden = !controlsContent.classList.contains('hidden');
-        applyState(nextHidden);
-        localStorage.setItem('gmanholeControlsHidden', String(nextHidden));
+        if (!canTogglePanel()) return;
+        const expanded = document.body.classList.contains('sheet-expanded');
+        expanded ? collapseBottomSheet() : expandBottomSheet();
+      });
+      let startY = 0;
+      toggleBtn.addEventListener('touchstart', e => { startY = e.touches[0].clientY; }, { passive: true });
+      toggleBtn.addEventListener('touchend', e => {
+        if (!canTogglePanel()) return;
+        const dy = e.changedTouches[0].clientY - startY;
+        if (dy < -20) expandBottomSheet();
+        if (dy > 20) collapseBottomSheet();
+      }, { passive: true });
+      const handlePanelQueryChange = event => {
+        event.matches ? collapseBottomSheet(true) : expandBottomSheet();
+      };
+      if (panelMediaQuery?.addEventListener) {
+        panelMediaQuery.addEventListener('change', handlePanelQueryChange);
+      } else if (panelMediaQuery?.addListener) {
+        panelMediaQuery.addListener(handlePanelQueryChange);
+      }
+    }
+
+    function expandBottomSheet() {
+      document.body.classList.add('sheet-expanded');
+      const toggleBtn = document.getElementById('controls-toggle');
+      toggleBtn?.setAttribute('aria-expanded', 'true');
+      toggleBtn?.setAttribute('aria-label', '全体パネルを閉じる');
+      toggleBtn?.setAttribute('title', '全体パネルを閉じる');
+      setTimeout(() => map.invalidateSize(), 160);
+    }
+
+    function collapseBottomSheet(force = false) {
+      if (!force && !isOverallPanelToggleable()) return;
+      document.body.classList.remove('sheet-expanded');
+      const toggleBtn = document.getElementById('controls-toggle');
+      toggleBtn?.setAttribute('aria-expanded', 'false');
+      toggleBtn?.setAttribute('aria-label', '全体パネルを開く');
+      toggleBtn?.setAttribute('title', '全体パネルを開く');
+      setTimeout(() => map.invalidateSize(), 160);
+    }
+
+    function cleanupLegacyLocalStorage() {
+      try { localStorage.removeItem('gmanholeControlsHidden'); } catch {}
+    }
+
+    // ===== 現在地 / 近くのマンホール =====
+    function distanceKm(aLat, aLng, bLat, bLng) {
+      const toRad = deg => deg * Math.PI / 180;
+      const r = 6371;
+      const dLat = toRad(bLat - aLat);
+      const dLng = toRad(bLng - aLng);
+      const s = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(aLat)) * Math.cos(toRad(bLat)) * Math.sin(dLng / 2) ** 2;
+      return 2 * r * Math.asin(Math.sqrt(s));
+    }
+
+    function franchiseChecked(franchise) {
+      if (franchise === 'gundam') return Boolean(document.getElementById('chk-gundam')?.checked);
+      if (franchise === 'character') return Boolean(document.getElementById('chk-character')?.checked);
+      return Boolean(document.getElementById('chk-pokemon')?.checked);
+    }
+
+    function nearbyMetaText(d) {
+      if (d.franchise === 'gundam') return `ガンダム / ${d.title || ''}`;
+      if (d.franchise === 'character') return `${d.work || 'キャラ'} / ${d.character || d.title || ''}`;
+      return `ポケふた / ${d.title || 'ポケふた'}`;
+    }
+
+    function renderNearbyResults(lat, lng) {
+      const section = document.getElementById('nearby-results');
+      const list = document.getElementById('nearby-list');
+      if (!section || !list) return;
+      const nearest = allMarkers
+        .filter(m => franchiseChecked(m._data.franchise))
+        .map(m => ({ m, d: m._data, distance: distanceKm(lat, lng, Number(m._data.lat), Number(m._data.lng)) }))
+        .sort((a, b) => a.distance - b.distance)
+        .slice(0, 5);
+      if (!nearest.length) {
+        list.innerHTML = '';
+        section.hidden = true;
+        showNearbyResults = false;
+        return;
+      }
+      list.innerHTML = nearest.map(({ m, d, distance }) => {
+        const img = safeHttpUrl(Array.isArray(d.image_urls) && d.image_urls.length ? d.image_urls[0] : '');
+        const thumb = img
+          ? `<span class="prefecture-spot-thumb" aria-hidden="true"><img src="${esc(img)}" alt="" loading="lazy" decoding="async" onerror="this.closest('.prefecture-spot-thumb').classList.add('is-missing'); this.remove();"></span>`
+          : '<span class="prefecture-spot-thumb is-missing" aria-hidden="true"></span>';
+        return `
+          <button type="button" class="prefecture-spot-item" data-marker-index="${allMarkers.indexOf(m)}">
+            ${thumb}
+            <span class="prefecture-spot-copy">
+              <strong>${esc(d.city || d.prefecture || '')}</strong>
+              <small>${esc(nearbyMetaText(d))}</small>
+            </span>
+            <span class="prefecture-spot-distance">${distance.toFixed(1)}km</span>
+          </button>`;
+      }).join('');
+      section.hidden = false;
+      showNearbyResults = true;
+    }
+
+    function bindNearbyList() {
+      const list = document.getElementById('nearby-list');
+      list?.addEventListener('click', e => {
+        const btn = e.target.closest('.prefecture-spot-item');
+        if (!btn) return;
+        const marker = allMarkers[Number(btn.dataset.markerIndex)];
+        if (!marker) return;
+        if (!map.hasLayer(marker)) marker.addTo(map);
+        map.setView(marker.getLatLng(), Math.max(map.getZoom(), 14));
+        marker.openPopup();
+        collapseBottomSheet();
+      });
+    }
+
+    function initLocationSearch() {
+      const button = document.getElementById('locate-button');
+      const label = document.getElementById('locate-button-label');
+      if (!button) return;
+      const defaultLabel = label?.textContent || '近くのマンホール';
+      const setButtonState = (text, options = {}) => {
+        const { busy = false, resetAfter = 0 } = options;
+        button.disabled = busy;
+        button.setAttribute('aria-busy', String(busy));
+        if (label) label.textContent = text;
+        if (resetAfter) {
+          window.setTimeout(() => {
+            if (label) label.textContent = defaultLabel;
+            button.removeAttribute('aria-busy');
+          }, resetAfter);
+        }
+      };
+      button.addEventListener('click', () => {
+        if (!navigator.geolocation) {
+          setButtonState('現在地を使えません', { resetAfter: 1800 });
+          expandBottomSheet();
+          return;
+        }
+        setButtonState('確認中...', { busy: true });
+        if (window.trackEvent) {
+          window.trackEvent('click_locate_nearby', {
+            'event_category': 'user_engagement',
+            'event_label': 'locate_button_clicked'
+          });
+        }
+        navigator.geolocation.getCurrentPosition(position => {
+          const { latitude, longitude } = position.coords;
+          setButtonState(defaultLabel);
+          if (window.trackEvent) {
+            window.trackEvent('geolocation_success', {
+              'event_category': 'user_engagement',
+              'event_label': 'location_acquired'
+            });
+          }
+          if (userLocationMarker) map.removeLayer(userLocationMarker);
+          userLocationMarker = L.circleMarker([latitude, longitude], {
+            radius: 8,
+            color: '#ffffff',
+            weight: 3,
+            fillColor: '#2f80ed',
+            fillOpacity: 0.95
+          }).addTo(map);
+          renderNearbyResults(latitude, longitude);
+          const nearestMarkers = allMarkers
+            .filter(m => franchiseChecked(m._data.franchise))
+            .map(m => ({ m, distance: distanceKm(latitude, longitude, Number(m._data.lat), Number(m._data.lng)) }))
+            .sort((a, b) => a.distance - b.distance)
+            .slice(0, 5)
+            .map(item => item.m);
+          const group = L.featureGroup([userLocationMarker, ...nearestMarkers]);
+          map.fitBounds(group.getBounds(), { padding: [48, 48], maxZoom: 13 });
+          expandBottomSheet();
+        }, (error) => {
+          setButtonState('取得できませんでした', { resetAfter: 1800 });
+          if (window.trackEvent) {
+            window.trackEvent('geolocation_error', {
+              'event_category': 'user_engagement',
+              'event_label': `error_${error.code}`
+            });
+          }
+          expandBottomSheet();
+        }, { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 });
       });
     }
 
@@ -793,7 +1068,10 @@
       recomputeVisibility();
     });
 
+    cleanupLegacyLocalStorage();
     initControlsToggle();
+    initLocationSearch();
+    bindNearbyList();
     loadDatasets();
   </script>
 </body>
