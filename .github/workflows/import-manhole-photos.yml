@@ -12,6 +12,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write # main は PR 必須ルールのため PR 経由でコミットする
   actions: write # pages-deploy の明示起動に必要
 
 jobs:
@@ -58,7 +59,7 @@ jobs:
         run: |
           python apps/tools/import_latest_manhole_photos.py --presign-r2
 
-      - name: Commit and trigger Pages deploy
+      - name: Commit via PR and trigger Pages deploy
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -69,7 +70,14 @@ jobs:
             echo "No photo changes; skipping commit and deploy."
             exit 0
           fi
+          # main は「PR必須」ルールのため直接 push できない。PR を作って即マージする
+          BRANCH="auto/manhole-photos-$(date -u +%Y%m%d%H%M%S)"
+          git checkout -b "$BRANCH"
           git commit -m "chore: weekly manhole photos import (export + local images)"
-          git push
-          # GITHUB_TOKEN の push では pages-deploy が発火しないため明示的に起動する
+          git push origin "$BRANCH"
+          gh pr create --base main --head "$BRANCH" \
+            --title "chore: weekly manhole photos import" \
+            --body "import-manhole-photos.yml による自動更新（export + ギャラリー画像DL）"
+          gh pr merge "$BRANCH" --squash --delete-branch
+          # GITHUB_TOKEN の merge では pages-deploy が発火しないため明示的に起動する
           gh workflow run pages-deploy.yml --ref main
