@@ -1,4 +1,8 @@
-Sync the latest manhole photos. Run these two steps in order:
+Sync the latest manhole photos manually.
+
+NOTE: 通常は `.github/workflows/import-manhole-photos.yml` が週次（JST 日曜 07:00）で export〜画像DL〜commit まで自動実行する。このスキルは即時反映したいときや Action が失敗したときの手動フォールバック。
+
+Run these two steps in order:
 
 1. Copy `../pokefuta/public/data/latest-manhole-photos.json` to both `apps/web/latest-manhole-photos.json` and `docs/latest-manhole-photos.json`
 2. Run `python3 apps/tools/import_latest_manhole_photos.py --presign-r2` from the project root
