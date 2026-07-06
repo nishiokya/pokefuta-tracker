@@ -20,16 +20,17 @@ HEADER_TEMPLATE = """<header class="site-header">
       <a class="site-header__link" href="{page_base}map.html">{nav_map}</a>
       <a class="site-header__link" href="{page_base}pokemon/">{nav_pokemon}</a>
       <a class="site-header__link" href="{asset_base}gmanhole_map.html">{nav_character}</a>
+      <a class="site-header__link" href="{asset_base}login.html">{nav_login}</a>
     </nav>
   </div>
 </header>"""
 
 NAV_LABELS = {
-    "ja": ("メインナビゲーション", "マップ", "ポケモン", "キャラマンホール"),
-    "en": ("Main navigation", "Map", "Pokémon", "Character Manholes"),
-    "zh-TW": ("主導覽", "地圖", "神奇寶貝", "角色人孔蓋"),
-    "zh-CN": ("主导航", "地图", "宝可梦", "角色井盖"),
-    "ko": ("메인 내비게이션", "지도", "포켓몬", "캐릭터 맨홀"),
+    "ja": ("メインナビゲーション", "マップ", "ポケモン", "キャラマンホール", "ログイン"),
+    "en": ("Main navigation", "Map", "Pokémon", "Character Manholes", "Login"),
+    "zh-TW": ("主導覽", "地圖", "神奇寶貝", "角色人孔蓋", "登入"),
+    "zh-CN": ("主导航", "地图", "宝可梦", "角色井盖", "登录"),
+    "ko": ("메인 내비게이션", "지도", "포켓몬", "캐릭터 맨홀", "로그인"),
 }
 
 
@@ -55,7 +56,7 @@ def inject(html: str, asset_base: str = "./", page_base: str | None = None) -> s
     labels = NAV_LABELS[_language(html)]
     substitutions = dict(
         zip(
-            ("nav_aria", "nav_map", "nav_pokemon", "nav_character"),
+            ("nav_aria", "nav_map", "nav_pokemon", "nav_character", "nav_login"),
             labels,
         )
     )
