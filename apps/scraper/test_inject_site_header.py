@@ -28,7 +28,9 @@ class InjectSiteHeaderTest(unittest.TestCase):
         self.assertEqual(inject(shared), shared)
 
     def test_replaces_legacy_top_header(self):
-        legacy = """<html><head></head><body class="top-page">
+        legacy = """<html><head>
+<script src="./assets/session-badge.js" defer></script>
+</head><body class="top-page">
 <header class="top-app-bar">
   <div><span>ページ固有ヘッダー</span></div>
 </header>
@@ -42,6 +44,7 @@ class InjectSiteHeaderTest(unittest.TestCase):
         self.assertNotIn("top-app-bar", result)
         self.assertNotIn("ページ固有ヘッダー", result)
         self.assertEqual(result.count('class="site-header"'), 1)
+        self.assertEqual(result.count("session-badge.js"), 1)
 
     def test_skips_redirect_documents(self):
         redirect = '<!doctype html><meta http-equiv="refresh" content="0; url=/">'

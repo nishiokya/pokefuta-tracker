@@ -23,8 +23,10 @@ HEADER_TEMPLATE = """<header class="site-header">
       <a class="site-header__link" data-login-link data-login-page="{asset_base}login.html" href="https://pokefuta.com/login?from=data">{nav_login}</a>
     </nav>
   </div>
-</header>
-<script src="{asset_base}assets/session-badge.js" defer></script>"""
+</header>"""
+SESSION_BADGE_SCRIPT_TEMPLATE = (
+    '<script src="{asset_base}assets/session-badge.js" defer></script>'
+)
 
 NAV_LABELS = {
     "ja": ("メインナビゲーション", "マップ", "ポケモン", "キャラマンホール", "ログイン"),
@@ -68,6 +70,8 @@ def inject(html: str, asset_base: str = "./", page_base: str | None = None) -> s
     )
     stylesheet = STYLESHEET_TEMPLATE.format(asset_base=asset_base)
     header = HEADER_TEMPLATE.format(asset_base=asset_base, page_base=page_base, **substitutions)
+    if "session-badge.js" not in html:
+        header += "\n" + SESSION_BADGE_SCRIPT_TEMPLATE.format(asset_base=asset_base)
 
     if stylesheet not in html:
         html = html.replace("</head>", f"  {stylesheet}\n</head>", 1)
