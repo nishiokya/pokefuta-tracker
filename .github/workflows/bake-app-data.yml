@@ -1,0 +1,50 @@
+name: Bake App Data Snapshot
+
+# pokefuta.com アプリ用の静的スナップショット (docs/api/*.json) を
+# Supabase から日次で書き出し、Pages へ再デプロイする。
+# これによりアプリの /api/manholes・/api/site-stats が
+# リクエスト毎に Supabase を読む必要がなくなる（egress 削減）。
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '30 20 * * *' # 05:30 JST
+
+permissions:
+  contents: write
+  actions: write
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  bake:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install Python dependencies
+        run: pip3 install requests
+
+      - name: Export snapshot from Supabase
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: python3 apps/scraper/export_app_snapshot.py
+
+      - name: Commit and trigger Pages deploy
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/api
+          if git diff --cached --quiet; then
+            echo "No snapshot changes; skipping commit and deploy."
+            exit 0
+          fi
+          git commit -m "chore: daily app data snapshot (manholes / site-stats)"
+          git push
+          # GITHUB_TOKEN の push では pages-deploy が発火しないため明示的に起動する
+          gh workflow run pages-deploy.yml --ref main
