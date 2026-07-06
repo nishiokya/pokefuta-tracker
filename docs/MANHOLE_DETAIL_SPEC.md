@@ -54,13 +54,13 @@ data.pokefuta.com（tracker）と pokefuta.com のマンホール詳細ページ
     "url": "...",
     "...": "...",
     "gallery": [
-      { "photo_id": "...", "url": "...", "shot_at": "...", "created_at": "...", "user_display_name": "..." }
+      { "photo_id": "...", "url": "...", "storage_key": "...", "shot_at": "...", "created_at": "...", "display_name": "..." }
     ]
   }
 }
 ```
 
-- 対象は `is_public = true` の写真のみ。`user_display_name` は display_name 優先（サイト全体の表示名ルールに合わせる）。
+- 対象は `is_public = true` の写真のみ。撮影者名のキーは既存の代表写真と同じ `display_name`（app_user の display_name を引く）。
 
 ### 取り込み拡張（tracker repo: `apps/tools/import_latest_manhole_photos.py`）
 

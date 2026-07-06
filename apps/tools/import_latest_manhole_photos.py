@@ -329,6 +329,14 @@ def main() -> int:
                 slug = gallery_photo_slug(item.get("photo_id"))
                 if not slug:
                     continue
+                # Register as expected before resolving the URL so an existing
+                # local file survives cleanup even when this run can't reach it.
+                gallery_path = output_dir / f"{manhole_id}_{slug}.jpeg"
+                expected_gallery.add(gallery_path.name)
+                if gallery_path.exists():
+                    gallery_kept += 1
+                    continue
+
                 item_storage_key = get_storage_key(item)
                 if args.presign_r2 and item_storage_key:
                     item_url = presign_r2_get_object(item_storage_key, args.presign_expires)
@@ -339,12 +347,6 @@ def main() -> int:
                 item_url = validate_url(item_url) if item_url else None
                 if not item_url:
                     continue
-
-                gallery_path = output_dir / f"{manhole_id}_{slug}.jpeg"
-                expected_gallery.add(gallery_path.name)
-                if gallery_path.exists():
-                    gallery_kept += 1
-                    continue
                 try:
                     image = download_image(session, item_url, args.timeout)
                     cropped = crop_to_square(image, args.size)
@@ -353,7 +355,6 @@ def main() -> int:
                     print(f"imported gallery id={manhole_id} -> {gallery_path}")
                 except Exception as exc:
                     failed += 1
-                    expected_gallery.discard(gallery_path.name)
                     print(f"failed gallery id={manhole_id} url={redact_url(item_url)}: {exc}")
 
         if args.limit and attempted >= args.limit:
