@@ -492,7 +492,7 @@ def generate_html(
     has_photo_js = json.dumps(has_photo_bool)
 
     hero_photo_html = (
-        f"<a class='hero-photo-placeholder' href='https://pokefuta.com/visits'"
+        f"<a class='hero-photo-placeholder' href='https://pokefuta.com/upload?manhole_id={manhole_id}'"
         f" target='_blank' rel='noopener noreferrer'"
         f" onclick=\"trackEvent('click_photo_upload_placeholder', {_attr_json({'manhole_id': manhole_id, 'prefecture': prefecture, 'city': city, 'has_photo': False})})\">"
         f"<span class='placeholder-camera' aria-hidden='true'>📷</span>"
@@ -905,7 +905,7 @@ def generate_html(
     {pokemon_tags_html}
     {stats_html}
     <div class="hero-actions">
-      <a class="btn-photo-upload" href="https://pokefuta.com/visits" target="_blank" rel="noopener noreferrer" onclick="trackEvent('{_photo_event}', {_photo_cta_onclick})">{_icon('icon-link-photo', 'action-icon')}<span>{escape(_photo_label)}</span></a>
+      <a class="btn-photo-upload" href="https://pokefuta.com/upload?manhole_id={manhole_id}" target="_blank" rel="noopener noreferrer" onclick="trackEvent('{_photo_event}', {_photo_cta_onclick})">{_icon('icon-link-photo', 'action-icon')}<span>{escape(_photo_label)}</span></a>
     </div>
   </div>
 </div>
