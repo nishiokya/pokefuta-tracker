@@ -2,7 +2,8 @@
 :root { --site-header-height: 52px; }
 
 body.has-site-header {
-  padding-top: 0 !important;
+  padding-top: 0;
+  overflow-x: hidden;
   overflow-x: clip;
 }
 
