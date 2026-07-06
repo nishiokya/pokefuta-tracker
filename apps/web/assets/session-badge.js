@@ -71,11 +71,7 @@
   // display_name → email前半 → 'トレーナー'
   function displayName(user) {
     var meta = user.user_metadata || {};
-    var name =
-      meta.display_name ||
-      meta.name ||
-      meta.full_name ||
-      (user.email ? user.email.split('@')[0] : '');
+    var name = meta.display_name || (user.email ? user.email.split('@')[0] : '');
     if (!name) return 'トレーナー';
     return name.length > 10 ? name.slice(0, 9) + '…' : name;
   }

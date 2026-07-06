@@ -107,16 +107,8 @@
     };
 
     // pokefuta.com の getDisplayName と同じ優先順位（session-badge.js と同じ）
-    const displayName = (user) => {
-      const meta = user.user_metadata || {};
-      return (
-        meta.display_name ||
-        meta.name ||
-        meta.full_name ||
-        (user.email ? user.email.split('@')[0] : '') ||
-        'トレーナー'
-      );
-    };
+    const displayName = (user) =>
+      user.user_metadata?.display_name || user.email?.split('@')[0] || 'トレーナー';
 
     async function render() {
       const user = await getUser();
