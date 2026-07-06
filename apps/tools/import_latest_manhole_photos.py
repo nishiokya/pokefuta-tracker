@@ -216,6 +216,14 @@ def sanitize_id(raw_id: Any) -> str | None:
     return match.group(0) if match else None
 
 
+def gallery_photo_slug(photo_id: Any) -> str | None:
+    text = re.sub(r"[^0-9a-fA-F]", "", str(photo_id or ""))
+    return text[:8].lower() if len(text) >= 8 else None
+
+
+GALLERY_FILE_RE = re.compile(r"^(\d+)_([0-9a-f]{8})\.jpeg$")
+
+
 def validate_url(raw_url: str) -> str | None:
     parsed = urlparse(raw_url)
     if parsed.scheme not in {"http", "https"} or not parsed.netloc:
@@ -281,6 +289,9 @@ def main() -> int:
     attempted = 0
     skipped = 0
     failed = 0
+    gallery_imported = 0
+    gallery_kept = 0
+    expected_gallery: set[str] = set()
 
     for record in iter_records(payload):
         manhole_id = sanitize_id(pick_first(record, ID_KEYS))
@@ -309,10 +320,59 @@ def main() -> int:
             failed += 1
             print(f"failed id={manhole_id} url={redact_url(url)}: {exc}")
 
+        # Extra public shots beyond the hero (gallery entries share the hero pipeline)
+        gallery = record.get("gallery")
+        if isinstance(gallery, list):
+            for item in gallery:
+                if not isinstance(item, dict) or item.get("photo_id") == record.get("photo_id"):
+                    continue
+                slug = gallery_photo_slug(item.get("photo_id"))
+                if not slug:
+                    continue
+                # Register as expected before resolving the URL so an existing
+                # local file survives cleanup even when this run can't reach it.
+                gallery_path = output_dir / f"{manhole_id}_{slug}.jpeg"
+                expected_gallery.add(gallery_path.name)
+                if gallery_path.exists():
+                    gallery_kept += 1
+                    continue
+
+                item_storage_key = get_storage_key(item)
+                if args.presign_r2 and item_storage_key:
+                    item_url = presign_r2_get_object(item_storage_key, args.presign_expires)
+                elif args.public_base_url and item_storage_key:
+                    item_url = args.public_base_url.rstrip("/") + "/" + item_storage_key
+                else:
+                    item_url = item.get("url")
+                item_url = validate_url(item_url) if item_url else None
+                if not item_url:
+                    continue
+                try:
+                    image = download_image(session, item_url, args.timeout)
+                    cropped = crop_to_square(image, args.size)
+                    cropped.save(gallery_path, "JPEG", quality=args.quality, optimize=True, progressive=True)
+                    gallery_imported += 1
+                    print(f"imported gallery id={manhole_id} -> {gallery_path}")
+                except Exception as exc:
+                    failed += 1
+                    print(f"failed gallery id={manhole_id} url={redact_url(item_url)}: {exc}")
+
         if args.limit and attempted >= args.limit:
             break
 
-    print(f"summary imported={imported} skipped={skipped} failed={failed} output_dir={output_dir}")
+    removed = 0
+    if not args.limit:
+        for path in sorted(output_dir.iterdir()):
+            if GALLERY_FILE_RE.match(path.name) and path.name not in expected_gallery:
+                path.unlink()
+                removed += 1
+                print(f"removed stale gallery file {path.name}")
+
+    print(
+        f"summary imported={imported} skipped={skipped} failed={failed} "
+        f"gallery_imported={gallery_imported} gallery_kept={gallery_kept} gallery_removed={removed} "
+        f"output_dir={output_dir}"
+    )
     return 1 if failed else 0
 
 
