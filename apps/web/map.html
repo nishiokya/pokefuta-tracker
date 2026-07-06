@@ -1151,14 +1151,15 @@
           + '</div>'
         : '';
       const manholeId = encodeURIComponent(String(d.id || ''));
-      const photoPageUrl = `https://pokefuta.com/manhole/${manholeId}`;
+      // 詳細導線は data.pokefuta.com の詳細ページに一本化（写真ギャラリー・pokefuta.com への導線は詳細ページ側が持つ）
+      const manholeDetailUrl = `${window.SITE_BASE_URL}manholes/${manholeId}/`;
       const uploadUrl = 'https://pokefuta.com/upload';
       const safeIdJs = escapeJs(d.id);
       const safePrefectureJs = escapeJs(prefecture);
       const eventParams = `event_category:'popup_navigation',manhole_id:'${safeIdJs}',prefecture:'${safePrefectureJs}'`;
       const photoBlock = hasPhoto && imageUrl ? `
         <div class="popup-photo travel-popup-photo" aria-label="マンホール写真">
-          <a href="${photoPageUrl}" target="_blank" rel="noopener noreferrer" class="travel-popup-photo-link"
+          <a href="${manholeDetailUrl}" class="travel-popup-photo-link"
              onclick="if(window.trackEvent){window.trackEvent('popup_click_photo',{${eventParams}});}">
             <img src="${imageUrl}" alt="${escapeHtml(photoAlt)}" loading="lazy" decoding="async" onerror="handlePopupImageError(this)">
           </a>
@@ -1176,8 +1177,8 @@
           </div>
         </div>
       `;
-      const detailLink = d.id ? (function() {
-        const manholeDetailUrl = `${window.SITE_BASE_URL}manholes/${encodeURIComponent(d.id)}/`;
+      // 写真あり時は primaryAction が詳細ページ行きになるため、副リンクは写真なし時のみ
+      const detailLink = (!hasPhoto && d.id) ? (function() {
         const anchor = document.createElement('a');
         anchor.href = manholeDetailUrl;
         anchor.className = 'travel-popup-action travel-popup-action--detail';
@@ -1186,8 +1187,8 @@
         return anchor.outerHTML;
       })() : '';
       const primaryAction = hasPhoto
-        ? `<a href="${photoPageUrl}" target="_blank" rel="noopener noreferrer" class="travel-popup-action travel-popup-action--primary"
-              onclick="if(window.trackEvent){window.trackEvent('popup_click_photo',{${eventParams}});}">写真を見る</a>`
+        ? `<a href="${manholeDetailUrl}" class="travel-popup-action travel-popup-action--primary"
+              onclick="if(window.trackEvent){window.trackEvent('popup_click_detail',{${eventParams}});}">詳細を見る</a>`
         : `<a href="${uploadUrl}" target="_blank" rel="noopener noreferrer" class="travel-popup-action travel-popup-action--primary travel-popup-action--upload"
               onclick="if(window.trackEvent){window.trackEvent('popup_click_upload',{${eventParams}});}">最初の写真を投稿</a>`;
       const mapsUrl = Number.isFinite(Number(d.lat)) && Number.isFinite(Number(d.lng))
