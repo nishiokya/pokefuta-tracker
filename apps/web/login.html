@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <title>ログイン | ポケふたデータベース</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/pokefuta_icon_clear32.png">
+  <style>
+    :root {
+      --pf-red: #e3350d;
+      --pf-text: #1f2937;
+      --pf-muted: #6b7280;
+      --pf-border: #e5e7eb;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Hiragino Kaku Gothic ProN", "Noto Sans JP", system-ui, sans-serif;
+      color: var(--pf-text);
+      background: #f9fafb;
+    }
+    .login-main {
+      max-width: 420px;
+      margin: 0 auto;
+      padding: 24px 16px 64px;
+    }
+    .login-card {
+      background: #fff;
+      border: 1px solid var(--pf-border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-top: 16px;
+    }
+    h1 { font-size: 1.25rem; margin: 8px 0 4px; }
+    .login-lead { color: var(--pf-muted); font-size: 0.85rem; margin: 0 0 16px; }
+    label { display: block; font-size: 0.8rem; font-weight: 600; margin: 12px 0 4px; }
+    input[type="email"], input[type="password"] {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--pf-border);
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    button {
+      width: 100%;
+      margin-top: 16px;
+      padding: 12px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--pf-red);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    button.secondary { background: #fff; color: var(--pf-text); border: 1px solid var(--pf-border); }
+    button:disabled { opacity: 0.6; cursor: default; }
+    .login-error { color: #b91c1c; font-size: 0.85rem; margin: 12px 0 0; min-height: 1.2em; }
+    .login-status { font-size: 0.95rem; }
+    .login-status strong { word-break: break-all; }
+    .login-links { margin-top: 20px; font-size: 0.85rem; color: var(--pf-muted); line-height: 1.8; }
+    .login-links a { color: var(--pf-red); }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <main class="login-main">
+    <h1>ログイン</h1>
+    <p class="login-lead">pokefuta.com（訪問記録アプリ）と共通のアカウントです。ここでログインすると pokefuta.com でもログイン状態になります。</p>
+
+    <div class="login-card" id="card-loading">確認中…</div>
+
+    <div class="login-card hidden" id="card-signed-in">
+      <p class="login-status">✅ ログイン中：<strong id="user-email"></strong></p>
+      <button type="button" id="btn-mypage">訪問記録を見る（pokefuta.com）</button>
+      <button type="button" class="secondary" id="btn-logout">ログアウト</button>
+    </div>
+
+    <div class="login-card hidden" id="card-signed-out">
+      <form id="login-form">
+        <label for="email">メールアドレス</label>
+        <input type="email" id="email" autocomplete="email" required>
+        <label for="password">パスワード</label>
+        <input type="password" id="password" autocomplete="current-password" required>
+        <p class="login-error" id="login-error" role="alert" aria-live="polite"></p>
+        <button type="submit" id="btn-login">ログイン</button>
+      </form>
+      <div class="login-links">
+        新規登録・Google ログインは
+        <a href="https://pokefuta.com/login">pokefuta.com のログインページ</a>
+        から行えます（登録後はこのサイトでもログイン状態になります）。
+      </div>
+    </div>
+  </main>
+
+  <script type="module">
+    import { getUser, signIn, signOut } from './assets/pokefuta-auth.js';
+
+    const $ = (id) => document.getElementById(id);
+    const show = (id) => {
+      for (const card of ['card-loading', 'card-signed-in', 'card-signed-out']) {
+        $(card).classList.toggle('hidden', card !== id);
+      }
+    };
+
+    async function render() {
+      const user = await getUser();
+      if (user) {
+        $('user-email').textContent = user.email || user.id;
+        show('card-signed-in');
+      } else {
+        show('card-signed-out');
+      }
+    }
+
+    $('login-form').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      $('btn-login').disabled = true;
+      $('login-error').textContent = '';
+      const { error } = await signIn($('email').value.trim(), $('password').value);
+      $('btn-login').disabled = false;
+      if (error) {
+        $('login-error').textContent =
+          error.message === 'Invalid login credentials'
+            ? 'メールアドレスまたはパスワードが違います'
+            : 'ログインに失敗しました: ' + error.message;
+        return;
+      }
+      // ?redirect= があれば元のページへ戻る（このサイト内のみ許可）
+      const redirect = new URLSearchParams(location.search).get('redirect');
+      if (
+        redirect &&
+        (redirect.startsWith(location.origin + '/') ||
+          (redirect.startsWith('/') && !redirect.startsWith('//')))
+      ) {
+        location.href = redirect;
+        return;
+      }
+      render();
+    });
+
+    $('btn-logout').addEventListener('click', async () => {
+      await signOut();
+      render();
+    });
+
+    $('btn-mypage').addEventListener('click', () => {
+      location.href = 'https://pokefuta.com/visits';
+    });
+
+    render();
+  </script>
+</body>
+</html>

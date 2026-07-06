@@ -1,4 +1,6 @@
 /* Shared site header, injected into every built HTML page. */
+:root { --site-header-height: 52px; }
+
 .site-header {
   position: relative;
   z-index: 10000;
@@ -74,28 +76,28 @@
 }
 
 @media (max-width: 720px) {
+  :root { --site-header-height: 53px; }
+
   .site-header__inner {
-    min-height: 0;
-    padding: 8px 10px 7px;
-    display: block;
+    min-height: 52px;
+    padding: 8px 10px;
+    gap: 8px;
   }
 
   .site-header__brand {
-    justify-content: center;
-    margin-bottom: 7px;
+    flex: 0 0 auto;
   }
 
   .site-header__brand-name { font-size: 16px; }
 
   .site-header__nav {
-    display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    gap: 3px;
-    margin: 0;
+    gap: 4px;
+    min-width: 0;
+    margin-left: auto;
   }
 
   .site-header__link {
-    padding: 6px 1px;
+    padding: 6px 5px;
     overflow: hidden;
     border-radius: 7px;
     background: #eeeaf7;
@@ -110,14 +112,14 @@
 /* Full-screen maps must reserve room for the shared header. */
 body.has-site-header.pokefuta-map-page .map-stage,
 body.has-site-header > #map {
-  height: calc(100dvh - 52px);
-  min-height: calc(100dvh - 52px);
+  height: calc(100dvh - var(--site-header-height, 52px));
+  min-height: calc(100dvh - var(--site-header-height, 52px));
 }
 
 @media (max-width: 720px) {
   body.has-site-header.pokefuta-map-page .map-stage,
   body.has-site-header > #map {
-    height: calc(100dvh - 84px);
-    min-height: calc(100dvh - 84px);
+    height: calc(100dvh - var(--site-header-height));
+    min-height: calc(100dvh - var(--site-header-height));
   }
 }

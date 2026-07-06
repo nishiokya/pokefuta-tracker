@@ -86,29 +86,25 @@
   <link rel="stylesheet" href="./assets/top-page.css?v=20260623d" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
   <link rel="icon" href="./assets/pokefuta-marker.svg" type="image/svg+xml" />
+  <script src="./assets/session-badge.js" defer></script>
 </head>
 <body class="pokefuta-top-page">
 
   <!-- ===== APP BAR ===== -->
   <header class="top-app-bar">
     <div class="top-app-bar-inner">
-      <div class="top-brand">
+      <a class="top-brand" href="./" onclick="trackEvent('click_nav',{nav:'top'})">
         <span class="sec-num nav-num"></span>
         <span class="brand-name">ポケふた</span>
         <span class="brand-sub">DATABASE</span>
-      </div>
+      </a>
       <div class="top-nav-right">
         <nav class="top-nav" aria-label="メインナビ">
-          <a class="top-nav-link" href="./" onclick="trackEvent('click_nav',{nav:'top'})">トップ</a>
-          <a class="top-nav-link" href="map.html" onclick="trackEvent('click_nav',{nav:'map'})">地図</a>
-          <a class="top-nav-link" href="/summary/" onclick="trackEvent('click_nav',{nav:'summary'})">全国一覧</a>
-          <a class="top-nav-link" href="/pokemon/" onclick="trackEvent('click_nav',{nav:'pokemon'})">ポケモン</a>
-          <a class="top-nav-link" href="/nearby.html" onclick="trackEvent('click_nav',{nav:'nearby'})">現在地付近</a>
-          <a class="top-nav-link" href="gmanhole_map.html" onclick="trackEvent('click_nav',{nav:'character'})">キャラMH</a>
+          <a class="top-nav-link" href="map.html" onclick="trackEvent('click_nav',{nav:'map'})">マップ</a>
+          <a class="top-nav-link" href="pokemon/" onclick="trackEvent('click_nav',{nav:'pokemon'})">ポケモン</a>
+          <a class="top-nav-link" href="gmanhole_map.html" onclick="trackEvent('click_nav',{nav:'character'})">キャラマンホール</a>
+          <a class="top-nav-link" data-login-link data-login-page="./login.html" href="https://pokefuta.com/login?from=data" onclick="trackEvent('click_nav',{nav:'login'})">ログイン</a>
         </nav>
-        <a href="map.html" class="top-count-badge" id="top-count-badge" onclick="trackEvent('click_appbar_count')">
-          全国 <b id="appbar-count">—</b> 枚
-        </a>
       </div>
     </div>
   </header>

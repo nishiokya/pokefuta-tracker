@@ -89,29 +89,25 @@
   <link rel="stylesheet" href="%%BASE_PATH%%assets/top-page.css?v=20260623d" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
   <link rel="icon" href="%%BASE_PATH%%assets/pokefuta-marker.svg" type="image/svg+xml" />
+  <script src="%%BASE_PATH%%assets/session-badge.js" defer></script>
 </head>
 <body class="pokefuta-top-page">
 
   <!-- ===== APP BAR ===== -->
   <header class="top-app-bar">
     <div class="top-app-bar-inner">
-      <div class="top-brand">
+      <a class="top-brand" href="%%BASE_PATH%%index.html" onclick="trackEvent('click_nav',{nav:'top'})">
         <span class="sec-num nav-num"></span>
         <span class="brand-name">ポケふた</span>
         <span class="brand-sub">DATABASE</span>
-      </div>
+      </a>
       <div class="top-nav-right">
         <nav class="top-nav" aria-label="%%NAV_ARIA%%">
-          <a class="top-nav-link" href="%%BASE_PATH%%index.html" onclick="trackEvent('click_nav',{nav:'top'})">トップ</a>
           <a class="top-nav-link" href="%%BASE_PATH%%map.html" onclick="trackEvent('click_nav',{nav:'map'})">%%NAV_MAP%%</a>
-          <a class="top-nav-link" href="%%BASE_PATH%%summary/" onclick="trackEvent('click_nav',{nav:'summary'})">全国一覧</a>
           <a class="top-nav-link" href="%%BASE_PATH%%pokemon/" onclick="trackEvent('click_nav',{nav:'pokemon'})">%%NAV_POKEMON%%</a>
-          <a class="top-nav-link" href="%%BASE_PATH%%nearby.html" onclick="trackEvent('click_nav',{nav:'nearby'})">現在地付近</a>
-          <a class="top-nav-link" href="%%BASE_PATH%%gmanhole_map.html" onclick="trackEvent('click_nav',{nav:'character'})">キャラMH</a>
+          <a class="top-nav-link" href="%%BASE_PATH%%gmanhole_map.html" onclick="trackEvent('click_nav',{nav:'character'})">%%NAV_CHARACTER%%</a>
+          <a class="top-nav-link" data-login-link data-login-page="%%BASE_PATH%%login.html" href="https://pokefuta.com/login?from=data" onclick="trackEvent('click_nav',{nav:'login'})">%%NAV_LOGIN%%</a>
         </nav>
-        <a href="%%BASE_PATH%%map.html" class="top-count-badge" id="top-count-badge" onclick="trackEvent('click_appbar_count')">
-          %%APPBAR_PREFIX%%<b id="appbar-count">—</b>%%APPBAR_SUFFIX%%
-        </a>
       </div>
     </div>
   </header>
