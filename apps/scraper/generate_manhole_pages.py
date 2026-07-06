@@ -13,6 +13,7 @@ import datetime
 import json
 import logging
 import math
+import re
 import sys
 from pathlib import Path
 from typing import Any, Optional
@@ -542,6 +543,34 @@ def generate_html(
             f"{credit_html}"
             f"{comment_html}"
             f"</div>"
+        )
+
+    # "みんなの写真" gallery: extra local thumbnails beyond the hero photo
+    gallery_html = ""
+    gallery_items = (photo.get("gallery_local") or []) if photo else []
+    if gallery_items:
+        thumbs = ""
+        for g in gallery_items:
+            g_credit = str(g.get("display_name") or "")[:20]
+            credit_span = (
+                f"<span class='gallery-credit'>📷 {escape(g_credit)}</span>" if g_credit else ""
+            )
+            thumbs += (
+                f"<figure class='gallery-item'>"
+                f"<img src=\"{escape(g['url'])}\" alt=\"{escape(h1)}の写真\" loading=\"lazy\">"
+                f"{credit_span}"
+                f"</figure>"
+            )
+        _gallery_more_onclick = _attr_json({"manhole_id": manhole_id, "prefecture": prefecture, "city": city})
+        gallery_html = (
+            f"<section class='gallery-section section-card'>"
+            f"<h2>みんなの写真</h2>"
+            f"<div class='gallery-grid'>{thumbs}</div>"
+            f"<a class='gallery-more' href='https://pokefuta.com/manhole/{quote(manhole_id)}'"
+            f" target='_blank' rel='noopener noreferrer'"
+            f" onclick=\"trackEvent('click_gallery_more', {_gallery_more_onclick})\">"
+            f"すべての写真を見る →</a>"
+            f"</section>"
         )
 
     # Per-manhole generated OGP takes priority over photo URL
@@ -1657,6 +1686,40 @@ def generate_html(
       font-weight: 600;
       color: #1d9bf0;
     }}
+    .gallery-grid {{
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 8px;
+    }}
+    .gallery-item {{
+      margin: 0;
+      position: relative;
+    }}
+    .gallery-item img {{
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 10px;
+      display: block;
+    }}
+    .gallery-credit {{
+      position: absolute;
+      left: 6px;
+      bottom: 6px;
+      font-size: 10px;
+      color: #fff;
+      background: rgba(0, 0, 0, .45);
+      padding: 1px 6px;
+      border-radius: 8px;
+    }}
+    .gallery-more {{
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #1a73e8;
+      text-decoration: none;
+    }}
   </style>
 </head>
 <body>
@@ -1665,6 +1728,8 @@ def generate_html(
     {back_btn_html}
 
     {hero_card_html}
+
+    {gallery_html}
 
     {visit_cta_html}
 
@@ -1754,8 +1819,24 @@ def generate_all_pages(
         local_url = id_to_image_url.get(manhole_id)
         norm_id = normalize_id(manhole_id)
         user_photo = photos.get(norm_id) or {}
+
+        # Gallery thumbnails beyond the hero (local files downloaded by
+        # import_latest_manhole_photos.py as {id}_{photo_id[:8]}.jpeg)
+        gallery_local: list[dict] = []
+        rep_photo_id = user_photo.get("photo_id")
+        for item in user_photo.get("gallery") or []:
+            if not isinstance(item, dict) or item.get("photo_id") == rep_photo_id:
+                continue
+            slug = re.sub(r"[^0-9a-fA-F]", "", str(item.get("photo_id") or ""))[:8].lower()
+            if len(slug) == 8 and (image_dir / f"{manhole_id}_{slug}.jpeg").exists():
+                gallery_local.append({
+                    "url": f"{BASE_URL}manhole/image/{manhole_id}_{slug}.jpeg",
+                    "display_name": item.get("display_name"),
+                    "shot_at": item.get("shot_at"),
+                })
+
         photo: Optional[dict] = (
-            {**user_photo, "url": local_url, "original_url": local_url}
+            {**user_photo, "url": local_url, "original_url": local_url, "gallery_local": gallery_local}
             if local_url else None
         )
 
