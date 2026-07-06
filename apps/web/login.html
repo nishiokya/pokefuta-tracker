@@ -59,6 +59,7 @@
     .login-error { color: #b91c1c; font-size: 0.85rem; margin: 12px 0 0; min-height: 1.2em; }
     .login-status { font-size: 0.95rem; }
     .login-status strong { word-break: break-all; }
+    .login-sub { color: var(--pf-muted); font-size: 0.8rem; margin: 4px 0 0; word-break: break-all; }
     .login-links { margin-top: 20px; font-size: 0.85rem; color: var(--pf-muted); line-height: 1.8; }
     .login-links a { color: var(--pf-red); }
     .hidden { display: none; }
@@ -72,7 +73,8 @@
     <div class="login-card" id="card-loading">確認中…</div>
 
     <div class="login-card hidden" id="card-signed-in">
-      <p class="login-status">✅ ログイン中：<strong id="user-email"></strong></p>
+      <p class="login-status">✅ ログイン中：<strong id="user-name"></strong></p>
+      <p class="login-sub" id="user-email"></p>
       <button type="button" id="btn-mypage">訪問記録を見る（pokefuta.com）</button>
       <button type="button" class="secondary" id="btn-logout">ログアウト</button>
     </div>
@@ -104,9 +106,22 @@
       }
     };
 
+    // pokefuta.com の getDisplayName と同じ優先順位（session-badge.js と同じ）
+    const displayName = (user) => {
+      const meta = user.user_metadata || {};
+      return (
+        meta.display_name ||
+        meta.name ||
+        meta.full_name ||
+        (user.email ? user.email.split('@')[0] : '') ||
+        'トレーナー'
+      );
+    };
+
     async function render() {
       const user = await getUser();
       if (user) {
+        $('user-name').textContent = displayName(user);
         $('user-email').textContent = user.email || user.id;
         show('card-signed-in');
       } else {
