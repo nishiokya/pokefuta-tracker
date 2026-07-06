@@ -162,16 +162,14 @@
   <header class="top-app-bar">
     <div class="top-app-bar-inner">
       <a class="top-brand" href="./" onclick="trackEvent('click_nav',{nav:'home',from:'gmanhole_map'})">
-        <span class="brand-name">ポケふた</span>
-        <span class="brand-sub">DATABASE</span>
+        <span class="brand-name">ポケふた図鑑</span>
       </a>
       <div class="top-nav-right">
         <nav class="top-nav" aria-label="メインナビ">
           <a class="top-nav-link" href="map.html" onclick="trackEvent('click_nav',{nav:'map',from:'gmanhole_map'})">マップ</a>
           <a class="top-nav-link" href="pokemon/" onclick="trackEvent('click_nav',{nav:'pokemon',from:'gmanhole_map'})">ポケモン</a>
           <a class="top-nav-link top-nav-link--active" href="gmanhole_map.html" aria-current="page">キャラマンホール</a>
-          <a class="top-nav-link" href="https://pokefuta.com/visits" onclick="trackEvent('click_nav',{nav:'stamp',from:'gmanhole_map'})">スタンプ帳</a>
-          <a class="top-nav-link" data-login-link data-login-page="./login.html" href="https://pokefuta.com/login?from=data" onclick="trackEvent('click_nav',{nav:'login',from:'gmanhole_map'})">ログイン</a>
+          <a class="top-nav-link" data-login-link data-stamp-page="https://pokefuta.com/visits" data-stamp-label="スタンプ帳" href="https://pokefuta.com/login?from=data" onclick="trackEvent('click_nav',{nav:'login',from:'gmanhole_map'})">ログイン</a>
         </nav>
       </div>
     </div>

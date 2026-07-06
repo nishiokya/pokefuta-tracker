@@ -6,10 +6,10 @@
 // （「PV に比例して Supabase を読ませない」方針）。
 // あくまで表示用の判定で、本当の認証はアプリ側のサーバーが行う。
 //
-// 対象要素: <a data-login-link data-login-page="<login.htmlへの相対パス>">
+// 対象要素: <a data-login-link data-stamp-page="..." data-stamp-label="...">
 //  - 未ログイン: href に現在ページへの redirect パラメータを付与
 //    （pokefuta.com/login がログイン後にこのページへ戻す）
-//  - ログイン中: 表示名に差し替え、リンク先を login.html（アカウントカード）に変更
+//  - ログイン中: 「スタンプ帳」に差し替え、スタンプ帳へリンク
 (function () {
   'use strict';
 
@@ -67,15 +67,6 @@
     }
   }
 
-  // pokefuta.com の getDisplayName（Header.tsx / PCShell.tsx）と同じ優先順位:
-  // display_name → email前半 → 'トレーナー'
-  function displayName(user) {
-    var meta = user.user_metadata || {};
-    var name = meta.display_name || (user.email ? user.email.split('@')[0] : '');
-    if (!name) return 'トレーナー';
-    return name.length > 10 ? name.slice(0, 9) + '…' : name;
-  }
-
   function apply() {
     var links = document.querySelectorAll('[data-login-link]');
     if (!links.length) return;
@@ -83,10 +74,9 @@
     for (var i = 0; i < links.length; i++) {
       var link = links[i];
       if (user) {
-        link.textContent = '👤 ' + displayName(user);
-        if (user.email) link.title = user.email;
-        var loginPage = link.getAttribute('data-login-page');
-        if (loginPage) link.href = loginPage;
+        link.textContent = link.getAttribute('data-stamp-label') || 'スタンプ帳';
+        var stampPage = link.getAttribute('data-stamp-page');
+        if (stampPage) link.href = stampPage;
       } else {
         try {
           var url = new URL(link.href);

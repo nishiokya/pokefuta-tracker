@@ -13,15 +13,13 @@ STYLESHEET_TEMPLATE = '<link rel="stylesheet" href="{asset_base}assets/site-head
 HEADER_TEMPLATE = """<header class="site-header">
   <div class="site-header__inner">
     <a class="site-header__brand" href="{page_base}">
-      <span class="site-header__brand-name">ポケふた</span>
-      <span class="site-header__brand-sub">DATABASE</span>
+      <span class="site-header__brand-name">ポケふた図鑑</span>
     </a>
     <nav class="site-header__nav" aria-label="{nav_aria}">
       <a class="site-header__link" href="{page_base}map.html">{nav_map}</a>
       <a class="site-header__link" href="{page_base}pokemon/">{nav_pokemon}</a>
       <a class="site-header__link" href="{asset_base}gmanhole_map.html">{nav_character}</a>
-      <a class="site-header__link" href="https://pokefuta.com/visits">{nav_stamp}</a>
-      <a class="site-header__link" data-login-link data-login-page="{asset_base}login.html" href="https://pokefuta.com/login?from=data">{nav_login}</a>
+      <a class="site-header__link" data-login-link data-stamp-page="https://pokefuta.com/visits" data-stamp-label="{nav_stamp}" href="https://pokefuta.com/login?from=data">{nav_login}</a>
     </nav>
   </div>
 </header>"""

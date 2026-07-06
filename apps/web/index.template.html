@@ -98,16 +98,14 @@
     <div class="top-app-bar-inner">
       <a class="top-brand" href="%%BASE_PATH%%index.html" onclick="trackEvent('click_nav',{nav:'top'})">
         <span class="sec-num nav-num"></span>
-        <span class="brand-name">ポケふた</span>
-        <span class="brand-sub">DATABASE</span>
+        <span class="brand-name">ポケふた図鑑</span>
       </a>
       <div class="top-nav-right">
         <nav class="top-nav" aria-label="%%NAV_ARIA%%">
           <a class="top-nav-link" href="%%BASE_PATH%%map.html" onclick="trackEvent('click_nav',{nav:'map'})">%%NAV_MAP%%</a>
           <a class="top-nav-link" href="%%BASE_PATH%%pokemon/" onclick="trackEvent('click_nav',{nav:'pokemon'})">%%NAV_POKEMON%%</a>
           <a class="top-nav-link" href="%%BASE_PATH%%gmanhole_map.html" onclick="trackEvent('click_nav',{nav:'character'})">%%NAV_CHARACTER%%</a>
-          <a class="top-nav-link" href="https://pokefuta.com/visits" onclick="trackEvent('click_nav',{nav:'stamp'})">%%NAV_STAMP%%</a>
-          <a class="top-nav-link" data-login-link data-login-page="%%BASE_PATH%%login.html" href="https://pokefuta.com/login?from=data" onclick="trackEvent('click_nav',{nav:'login'})">%%NAV_LOGIN%%</a>
+          <a class="top-nav-link" data-login-link data-stamp-page="https://pokefuta.com/visits" data-stamp-label="%%NAV_STAMP%%" href="https://pokefuta.com/login?from=data" onclick="trackEvent('click_nav',{nav:'login'})">%%NAV_LOGIN%%</a>
         </nav>
       </div>
     </div>
