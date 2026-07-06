@@ -105,7 +105,7 @@
           <a class="top-nav-link" href="%%BASE_PATH%%map.html" onclick="trackEvent('click_nav',{nav:'map'})">%%NAV_MAP%%</a>
           <a class="top-nav-link" href="%%BASE_PATH%%pokemon/" onclick="trackEvent('click_nav',{nav:'pokemon'})">%%NAV_POKEMON%%</a>
           <a class="top-nav-link" href="%%BASE_PATH%%gmanhole_map.html" onclick="trackEvent('click_nav',{nav:'character'})">%%NAV_CHARACTER%%</a>
-          <a class="top-nav-link" data-login-link data-stamp-page="https://pokefuta.com/visits" data-stamp-label="%%NAV_STAMP%%" href="https://pokefuta.com/login?from=data" onclick="trackEvent('click_nav',{nav:'login'})">%%NAV_LOGIN%%</a>
+          <a class="top-nav-link" data-login-link data-nav-target="login" data-stamp-page="https://pokefuta.com/visits" data-stamp-label="%%NAV_STAMP%%" href="https://pokefuta.com/login?from=data" onclick="trackEvent('click_nav',{nav:this.dataset.navTarget})">%%NAV_LOGIN%%</a>
         </nav>
       </div>
     </div>

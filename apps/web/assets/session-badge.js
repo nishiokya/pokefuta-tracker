@@ -75,6 +75,7 @@
       var link = links[i];
       if (user) {
         link.textContent = link.getAttribute('data-stamp-label') || 'スタンプ帳';
+        link.setAttribute('data-nav-target', 'stamp');
         var stampPage = link.getAttribute('data-stamp-page');
         if (stampPage) link.href = stampPage;
       } else {

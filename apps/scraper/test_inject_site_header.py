@@ -43,6 +43,7 @@ class InjectSiteHeaderTest(unittest.TestCase):
         self.assertIn('class="site-header"', result)
         self.assertIn('data-stamp-page="https://pokefuta.com/visits"', result)
         self.assertIn('data-stamp-label="スタンプ帳"', result)
+        self.assertIn('data-nav-target="login"', result)
         self.assertEqual(result.count("https://pokefuta.com/visits"), 1)
         self.assertIn('<body class="has-site-header top-page">', result)
         self.assertNotIn("top-app-bar", result)

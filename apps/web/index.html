@@ -102,7 +102,7 @@
           <a class="top-nav-link" href="map.html" onclick="trackEvent('click_nav',{nav:'map'})">マップ</a>
           <a class="top-nav-link" href="pokemon/" onclick="trackEvent('click_nav',{nav:'pokemon'})">ポケモン</a>
           <a class="top-nav-link" href="gmanhole_map.html" onclick="trackEvent('click_nav',{nav:'character'})">キャラマンホール</a>
-          <a class="top-nav-link" data-login-link data-stamp-page="https://pokefuta.com/visits" data-stamp-label="スタンプ帳" href="https://pokefuta.com/login?from=data" onclick="trackEvent('click_nav',{nav:'login'})">ログイン</a>
+          <a class="top-nav-link" data-login-link data-nav-target="login" data-stamp-page="https://pokefuta.com/visits" data-stamp-label="スタンプ帳" href="https://pokefuta.com/login?from=data" onclick="trackEvent('click_nav',{nav:this.dataset.navTarget})">ログイン</a>
         </nav>
       </div>
     </div>
