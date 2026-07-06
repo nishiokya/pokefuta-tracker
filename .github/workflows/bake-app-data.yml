@@ -12,6 +12,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write # main は PR 必須ルールのため PR 経由でコミットする
   actions: write
 
 env:
@@ -33,7 +34,7 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: python3 apps/scraper/export_app_snapshot.py
 
-      - name: Commit and trigger Pages deploy
+      - name: Commit via PR and trigger Pages deploy
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -44,7 +45,14 @@ jobs:
             echo "No snapshot changes; skipping commit and deploy."
             exit 0
           fi
+          # main は「PR必須」ルールのため直接 push できない。PR を作って即マージする
+          BRANCH="auto/app-data-snapshot-$(date -u +%Y%m%d%H%M%S)"
+          git checkout -b "$BRANCH"
           git commit -m "chore: daily app data snapshot (manholes / site-stats)"
-          git push
-          # GITHUB_TOKEN の push では pages-deploy が発火しないため明示的に起動する
+          git push origin "$BRANCH"
+          gh pr create --base main --head "$BRANCH" \
+            --title "chore: daily app data snapshot" \
+            --body "bake-app-data.yml による自動更新（docs/api/*.json）"
+          gh pr merge "$BRANCH" --squash --delete-branch
+          # GITHUB_TOKEN の merge では pages-deploy が発火しないため明示的に起動する
           gh workflow run pages-deploy.yml --ref main
