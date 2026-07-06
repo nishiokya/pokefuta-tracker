@@ -32,6 +32,38 @@ OUT_DIR = ROOT / "docs" / "api"
 PAGE_SIZE = 1000
 TIMEOUT = 30
 
+# 公開してよいカラムの allowlist。将来 manhole テーブルに内部用カラムが
+# 増えても、ここに足さない限り公開 JSON には出ない。
+MANHOLE_COLUMNS = [
+    "id",
+    "title",
+    "prefecture",
+    "prefecture_id",
+    "prefecture_code",
+    "municipality",
+    "address",
+    "address_norm",
+    "building",
+    "location",
+    "pokemons",
+    "detail_url",
+    "prefecture_site_url",
+    "official_url",
+    "titles",
+    "hashtags",
+    "title_tags",
+    "region",
+    "is_active",
+    "last_verified_at",
+    "data_source",
+    "source_last_checked",
+    "created_at",
+]
+
+# 遅延初期化（import 時に env を要求しない — テスト可能にするため）
+SUPABASE_URL = ""
+HEADERS: dict[str, str] = {}
+
 
 def _env(name: str) -> str:
     value = os.environ.get(name, "").strip()
@@ -41,13 +73,14 @@ def _env(name: str) -> str:
     return value
 
 
-SUPABASE_URL = _env("SUPABASE_URL").rstrip("/")
-SERVICE_KEY = _env("SUPABASE_SERVICE_ROLE_KEY")
-
-HEADERS = {
-    "apikey": SERVICE_KEY,
-    "Authorization": f"Bearer {SERVICE_KEY}",
-}
+def init_config() -> None:
+    global SUPABASE_URL, HEADERS
+    SUPABASE_URL = _env("SUPABASE_URL").rstrip("/")
+    service_key = _env("SUPABASE_SERVICE_ROLE_KEY")
+    HEADERS = {
+        "apikey": service_key,
+        "Authorization": f"Bearer {service_key}",
+    }
 
 
 def fetch_all(table: str, params: dict) -> list[dict]:
@@ -112,12 +145,15 @@ def parse_wkb_point(wkb_hex: str) -> tuple[float, float] | None:
         if not (-90 <= lat <= 90 and -180 <= lng <= 180):
             return None
         return lat, lng
-    except (ValueError, struct.error):
+    except (ValueError, struct.error, IndexError):
         return None
 
 
 def build_manholes() -> dict:
-    manholes = fetch_all("manhole", {"select": "*", "order": "id.desc"})
+    manholes = fetch_all(
+        "manhole",
+        {"select": ",".join(MANHOLE_COLUMNS), "order": "id.desc"},
+    )
     photo_rows = fetch_all(
         "photo", {"select": "manhole_id", "manhole_id": "not.is.null"}
     )
@@ -147,8 +183,12 @@ def build_manholes() -> dict:
     return {
         "success": True,
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        # total は DB 行数（旧 /api/manholes の total と同義）。座標を解釈
+        # できない行は manholes リストから除外されるため、その差分は
+        # skipped_without_location で明示する。
         "total": len(manholes),
         "with_photos": len(with_photo_ids),
+        "skipped_without_location": skipped,
         "manholes": entries,
     }
 
@@ -239,12 +279,12 @@ def build_site_stats() -> dict:
 
 
 def write_manholes_json(payload: dict, path: Path) -> None:
-    """1マンホール1行で書き出し、git diff を読みやすくする。"""
-    manholes = payload.pop("manholes")
-    head = json.dumps(payload, ensure_ascii=False, sort_keys=True)
+    """1マンホール1行で書き出し、git diff を読みやすくする。payload は変更しない。"""
+    head_obj = {k: v for k, v in payload.items() if k != "manholes"}
+    head = json.dumps(head_obj, ensure_ascii=False, sort_keys=True)
     lines = ",\n".join(
         json.dumps(m, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        for m in manholes
+        for m in payload["manholes"]
     )
     path.write_text(
         head[:-1] + ',"manholes":[\n' + lines + "\n]}\n", encoding="utf-8"
@@ -252,13 +292,15 @@ def write_manholes_json(payload: dict, path: Path) -> None:
 
 
 def main() -> None:
+    init_config()
     OUT_DIR.mkdir(parents=True, exist_ok=True)
 
     manholes_payload = build_manholes()
-    total = manholes_payload["total"]
-    with_photos = manholes_payload["with_photos"]
     write_manholes_json(manholes_payload, OUT_DIR / "manholes.json")
-    print(f"docs/api/manholes.json: {total} manholes ({with_photos} with photos)")
+    print(
+        f"docs/api/manholes.json: {manholes_payload['total']} manholes "
+        f"({manholes_payload['with_photos']} with photos)"
+    )
 
     stats = build_site_stats()
     (OUT_DIR / "site-stats.json").write_text(
