@@ -20,10 +20,11 @@ HEADER_TEMPLATE = """<header class="site-header">
       <a class="site-header__link" href="{page_base}map.html">{nav_map}</a>
       <a class="site-header__link" href="{page_base}pokemon/">{nav_pokemon}</a>
       <a class="site-header__link" href="{asset_base}gmanhole_map.html">{nav_character}</a>
-      <a class="site-header__link" href="{asset_base}login.html">{nav_login}</a>
+      <a class="site-header__link" data-login-link data-login-page="{asset_base}login.html" href="https://pokefuta.com/login?from=data">{nav_login}</a>
     </nav>
   </div>
-</header>"""
+</header>
+<script src="{asset_base}assets/session-badge.js" defer></script>"""
 
 NAV_LABELS = {
     "ja": ("メインナビゲーション", "マップ", "ポケモン", "キャラマンホール", "ログイン"),

@@ -40,12 +40,16 @@ class InjectSiteHeaderTest(unittest.TestCase):
         self.assertIn('href="../../map.html">Map</a>', result)
         self.assertIn('href="../../pokemon/">Pokémon</a>', result)
         self.assertIn('href="../../../gmanhole_map.html">Character Manholes</a>', result)
-        self.assertIn('href="../../../login.html">Login</a>', result)
+        self.assertIn('data-login-page="../../../login.html"', result)
+        self.assertIn('href="https://pokefuta.com/login?from=data">Login</a>', result)
+        self.assertIn('src="../../../assets/session-badge.js"', result)
         self.assertEqual(result.count('class="site-header__link"'), 4)
 
     def test_injects_login_link_for_japanese_page(self):
         result = inject("<!doctype html><html><head></head><body><main></main></body></html>")
-        self.assertIn('href="./login.html">ログイン</a>', result)
+        self.assertIn('data-login-page="./login.html"', result)
+        self.assertIn('href="https://pokefuta.com/login?from=data">ログイン</a>', result)
+        self.assertIn('<script src="./assets/session-badge.js" defer></script>', result)
 
 
 if __name__ == "__main__":

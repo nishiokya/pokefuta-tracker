@@ -127,6 +127,16 @@
             : 'ログインに失敗しました: ' + error.message;
         return;
       }
+      // ?redirect= があれば元のページへ戻る（このサイト内のみ許可）
+      const redirect = new URLSearchParams(location.search).get('redirect');
+      if (
+        redirect &&
+        (redirect.startsWith(location.origin + '/') ||
+          (redirect.startsWith('/') && !redirect.startsWith('//')))
+      ) {
+        location.href = redirect;
+        return;
+      }
       render();
     });
 
