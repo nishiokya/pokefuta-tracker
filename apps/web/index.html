@@ -95,16 +95,14 @@
     <div class="top-app-bar-inner">
       <a class="top-brand" href="./" onclick="trackEvent('click_nav',{nav:'top'})">
         <span class="sec-num nav-num"></span>
-        <span class="brand-name">ポケふた</span>
-        <span class="brand-sub">DATABASE</span>
+        <span class="brand-name">ポケふた図鑑</span>
       </a>
       <div class="top-nav-right">
         <nav class="top-nav" aria-label="メインナビ">
           <a class="top-nav-link" href="map.html" onclick="trackEvent('click_nav',{nav:'map'})">マップ</a>
           <a class="top-nav-link" href="pokemon/" onclick="trackEvent('click_nav',{nav:'pokemon'})">ポケモン</a>
           <a class="top-nav-link" href="gmanhole_map.html" onclick="trackEvent('click_nav',{nav:'character'})">キャラマンホール</a>
-          <a class="top-nav-link" href="https://pokefuta.com/visits" onclick="trackEvent('click_nav',{nav:'stamp'})">スタンプ帳</a>
-          <a class="top-nav-link" data-login-link data-login-page="./login.html" href="https://pokefuta.com/login?from=data" onclick="trackEvent('click_nav',{nav:'login'})">ログイン</a>
+          <a class="top-nav-link" data-login-link data-nav-target="login" data-stamp-page="https://pokefuta.com/visits" data-stamp-label="スタンプ帳" href="https://pokefuta.com/login?from=data" onclick="trackEvent('click_nav',{nav:this.dataset.navTarget})">ログイン</a>
         </nav>
       </div>
     </div>
