@@ -67,10 +67,12 @@
     }
   }
 
+  // pokefuta.com の getDisplayName（Header.tsx / PCShell.tsx）と同じ優先順位:
+  // display_name → email前半 → 'トレーナー'
   function displayName(user) {
     var meta = user.user_metadata || {};
-    var name = meta.name || meta.full_name || (user.email ? user.email.split('@')[0] : '');
-    if (!name) return 'アカウント';
+    var name = meta.display_name || (user.email ? user.email.split('@')[0] : '');
+    if (!name) return 'トレーナー';
     return name.length > 10 ? name.slice(0, 9) + '…' : name;
   }
 
