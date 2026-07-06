@@ -23,11 +23,28 @@ class InjectSiteHeaderTest(unittest.TestCase):
         result = inject('<html><head></head><body class="map-page"></body></html>')
         self.assertIn('<body class="has-site-header map-page">', result)
 
-    def test_does_not_duplicate_shared_or_top_header(self):
+    def test_does_not_duplicate_shared_header(self):
         shared = '<html><head></head><body><header class="site-header"></header></body></html>'
-        top = '<html><head></head><body><header class="top-app-bar"></header></body></html>'
         self.assertEqual(inject(shared), shared)
-        self.assertEqual(inject(top), top)
+
+    def test_replaces_legacy_top_header(self):
+        legacy = """<html><head>
+<script src="./assets/session-badge.js" defer></script>
+</head><body class="top-page">
+<header class="top-app-bar">
+  <div><span>ページ固有ヘッダー</span></div>
+</header>
+<main>本文</main>
+</body></html>"""
+        result = inject(legacy)
+        self.assertIn('href="./assets/site-header.css"', result)
+        self.assertIn('class="site-header"', result)
+        self.assertIn('data-login-page="./login.html"', result)
+        self.assertIn('<body class="has-site-header top-page">', result)
+        self.assertNotIn("top-app-bar", result)
+        self.assertNotIn("ページ固有ヘッダー", result)
+        self.assertEqual(result.count('class="site-header"'), 1)
+        self.assertEqual(result.count("session-badge.js"), 1)
 
     def test_skips_redirect_documents(self):
         redirect = '<!doctype html><meta http-equiv="refresh" content="0; url=/">'

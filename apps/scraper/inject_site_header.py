@@ -23,8 +23,10 @@ HEADER_TEMPLATE = """<header class="site-header">
       <a class="site-header__link" data-login-link data-login-page="{asset_base}login.html" href="https://pokefuta.com/login?from=data">{nav_login}</a>
     </nav>
   </div>
-</header>
-<script src="{asset_base}assets/session-badge.js" defer></script>"""
+</header>"""
+SESSION_BADGE_SCRIPT_TEMPLATE = (
+    '<script src="{asset_base}assets/session-badge.js" defer></script>'
+)
 
 NAV_LABELS = {
     "ja": ("メインナビゲーション", "マップ", "ポケモン", "キャラマンホール", "ログイン"),
@@ -33,6 +35,11 @@ NAV_LABELS = {
     "zh-CN": ("主导航", "地图", "宝可梦", "角色井盖", "登录"),
     "ko": ("메인 내비게이션", "지도", "포켓몬", "캐릭터 맨홀", "로그인"),
 }
+
+LEGACY_HEADER_RE = re.compile(
+    r'<header\s+class="top-app-bar"[^>]*>.*?</header>',
+    flags=re.DOTALL,
+)
 
 
 def _prefix(target: Path, parent: Path) -> str:
@@ -50,7 +57,7 @@ def inject(html: str, asset_base: str = "./", page_base: str | None = None) -> s
     lower = html.lower()
     if "<body" not in lower or "http-equiv=\"refresh\"" in lower:
         return html
-    if "class=\"top-app-bar\"" in html or "class=\"site-header\"" in html:
+    if "class=\"site-header\"" in html:
         return html
 
     page_base = page_base or asset_base
@@ -63,6 +70,8 @@ def inject(html: str, asset_base: str = "./", page_base: str | None = None) -> s
     )
     stylesheet = STYLESHEET_TEMPLATE.format(asset_base=asset_base)
     header = HEADER_TEMPLATE.format(asset_base=asset_base, page_base=page_base, **substitutions)
+    if "session-badge.js" not in html:
+        header += "\n" + SESSION_BADGE_SCRIPT_TEMPLATE.format(asset_base=asset_base)
 
     if stylesheet not in html:
         html = html.replace("</head>", f"  {stylesheet}\n</head>", 1)
@@ -75,6 +84,9 @@ def inject(html: str, asset_base: str = "./", page_base: str | None = None) -> s
     else:
         new_body_tag = body_tag[:-1] + ' class="has-site-header">'
     html = html[:body_start] + new_body_tag + html[body_end + 1 :]
+
+    if LEGACY_HEADER_RE.search(html):
+        return LEGACY_HEADER_RE.sub(header, html, count=1)
 
     insert_at = body_start + len(new_body_tag)
     return html[:insert_at] + "\n" + header + html[insert_at:]
