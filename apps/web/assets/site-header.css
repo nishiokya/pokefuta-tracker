@@ -1,9 +1,17 @@
 /* Shared site header, injected into every built HTML page. */
 :root { --site-header-height: 52px; }
 
+body.has-site-header {
+  padding-top: 0;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
 .site-header {
   position: relative;
   z-index: 10000;
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
   flex: 0 0 auto;
   background: rgba(250, 246, 236, .96);
   border-bottom: 1px solid #ece5d2;
