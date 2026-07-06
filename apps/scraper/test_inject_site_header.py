@@ -40,7 +40,12 @@ class InjectSiteHeaderTest(unittest.TestCase):
         self.assertIn('href="../../map.html">Map</a>', result)
         self.assertIn('href="../../pokemon/">Pokémon</a>', result)
         self.assertIn('href="../../../gmanhole_map.html">Character Manholes</a>', result)
-        self.assertEqual(result.count('class="site-header__link"'), 3)
+        self.assertIn('href="../../../login.html">Login</a>', result)
+        self.assertEqual(result.count('class="site-header__link"'), 4)
+
+    def test_injects_login_link_for_japanese_page(self):
+        result = inject("<!doctype html><html><head></head><body><main></main></body></html>")
+        self.assertIn('href="./login.html">ログイン</a>', result)
 
 
 if __name__ == "__main__":

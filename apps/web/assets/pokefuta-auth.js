@@ -3,10 +3,19 @@
 // pokefuta.com アプリと同じ @supabase/ssr のブラウザクライアントを使い、
 // 同じクッキー (sb-<ref>-auth-token, Domain=.pokefuta.com) を読み書きする。
 // アプリ側の実装: pokefuta リポジトリ src/lib/supabase/cookies.ts
-// バージョンはアプリの package.json（@supabase/ssr 0.12）と合わせること。
+//
+// ライブラリは CDN ではなく同梱バンドル（assets/supabase-ssr.js、
+// アプリと同じ @supabase/ssr 0.12 から esbuild で生成）を使う。
+// 供給元障害・改ざんの影響を受けないため。更新時はアプリ側と揃えて再生成。
 //
 // ここで使う anon key は公開前提のキー（守りは Supabase 側の RLS）。
-import { createBrowserClient } from 'https://cdn.jsdelivr.net/npm/@supabase/ssr@0.12/+esm';
+//
+// 親ドメイン共有クッキーのリスクと緩和:
+// - サブドメインは data と apex の 2 つのみ（第三者にサブドメインを払い出さない）
+// - 書き込みはサーバーサイド API 経由に限定する方針（RLS のクライアント
+//   書き込みポリシーは撤去予定）で、トークン漏洩時の被害面を縮小
+// - アクセストークンは短命（1h）、sameSite=lax
+import { createBrowserClient } from './supabase-ssr.js';
 
 const SUPABASE_URL = 'https://kbwzwgsjqvflgfauzcpn.supabase.co';
 const SUPABASE_ANON_KEY =
