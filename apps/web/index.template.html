@@ -89,6 +89,7 @@
   <link rel="stylesheet" href="%%BASE_PATH%%assets/top-page.css?v=20260623d" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
   <link rel="icon" href="%%BASE_PATH%%assets/pokefuta-marker.svg" type="image/svg+xml" />
+  <script src="%%BASE_PATH%%assets/session-badge.js" defer></script>
 </head>
 <body class="pokefuta-top-page">
 
@@ -105,6 +106,7 @@
           <a class="top-nav-link" href="%%BASE_PATH%%map.html" onclick="trackEvent('click_nav',{nav:'map'})">%%NAV_MAP%%</a>
           <a class="top-nav-link" href="%%BASE_PATH%%pokemon/" onclick="trackEvent('click_nav',{nav:'pokemon'})">%%NAV_POKEMON%%</a>
           <a class="top-nav-link" href="%%BASE_PATH%%gmanhole_map.html" onclick="trackEvent('click_nav',{nav:'character'})">%%NAV_CHARACTER%%</a>
+          <a class="top-nav-link" data-login-link data-login-page="%%BASE_PATH%%login.html" href="https://pokefuta.com/login?from=data" onclick="trackEvent('click_nav',{nav:'login'})">%%NAV_LOGIN%%</a>
         </nav>
       </div>
     </div>
