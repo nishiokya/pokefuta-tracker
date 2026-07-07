@@ -83,7 +83,7 @@
   </script>
   <!-- End GA -->
   <link rel="stylesheet" href="./assets/theme.css" />
-  <link rel="stylesheet" href="./assets/top-page.css?v=20260623d" />
+  <link rel="stylesheet" href="./assets/top-page.css?v=20260707a" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
   <link rel="icon" href="./assets/pokefuta-marker.svg" type="image/svg+xml" />
   <script src="./assets/session-badge.js" defer></script>
@@ -149,7 +149,13 @@
           <b class="stat-num" id="stat-pokemon">—</b>
           <span class="stat-label">ポケモン</span>
         </div>
+        <div class="stat-divider" id="stat-photos-divider" hidden></div>
+        <div class="top-stat" id="stat-photos-tile" hidden>
+          <b class="stat-num" id="stat-photos">—</b>
+          <span class="stat-label">みんなの写真</span>
+        </div>
       </div>
+      <p class="top-stats-note" id="stats-community-note" hidden></p>
     </section>
 
     <!-- ===== MAP GATEWAY (under intro on mobile; full-bleed hero on desktop) ===== -->
@@ -181,7 +187,7 @@
           <span class="sec-num"></span>
           <h2 class="sec-title">今日、どのポケふたに会いに行く？</h2>
         </div>
-        <span class="hero-update-label">毎日更新</span>
+        <span class="hero-update-label" id="hero-update-label">毎日更新</span>
       </div>
 
       <!-- Featured card -->
@@ -345,39 +351,126 @@
       }
     ];
 
-    // ── Pick today's hero ─────────────────────────────────────────────────────
-    var dayIndex = Math.floor(Date.now() / 86400000) % HEROES.length;
-    var hero = HEROES[dayIndex];
-
-    var featuredEl = document.getElementById('hero-featured');
-    var mediaEl = document.getElementById('hero-featured-media');
-    if (mediaEl) mediaEl.style.background = hero.bgStyle;
-    if (featuredEl) featuredEl.href = hero.href;
-    var imgEl = document.getElementById('hero-featured-img');
-    if (imgEl) { imgEl.src = 'manhole/image/' + hero.id + '_latest.jpeg'; imgEl.alt = hero.imgAlt || ''; }
-    setText('hero-badge', hero.badge);
-    setText('hero-media-label', hero.mediaLabel);
-    setText('hero-featured-title', hero.title);
-    setText('hero-featured-place', hero.place);
-    setText('hero-footer-text', hero.footerText);
-    setText('hero-footer-cta', hero.footerCta);
-
-    hero.small.forEach(function(s, i) {
-      var cardEl = document.getElementById('hero-small-' + i);
-      var mediaSmEl = document.getElementById('hero-small-media-' + i);
-      if (cardEl) cardEl.href = s.href;
-      if (mediaSmEl) {
-        mediaSmEl.style.background = s.bg;
-        var badge = document.createElement('span');
-        badge.className = 'hero-small-badge';
-        badge.textContent = s.badge;
-        mediaSmEl.appendChild(badge);
+    // ── Apply a hero (curated fallback OR community photo from top-feed) ─────
+    function applyHero(hero) {
+      var featuredEl = document.getElementById('hero-featured');
+      var mediaEl = document.getElementById('hero-featured-media');
+      if (mediaEl) mediaEl.style.background = hero.bgStyle;
+      if (featuredEl) {
+        featuredEl.href = hero.href;
+        if (hero.community) {
+          featuredEl.onclick = function() { trackEvent('click_hero_photo', { manhole: String(hero.id), position: 'featured' }); };
+        }
       }
-      var imgSmEl = document.getElementById('hero-small-img-' + i);
-      if (imgSmEl) { imgSmEl.src = 'manhole/image/' + s.id + '_latest.jpeg'; imgSmEl.alt = s.imgAlt || ''; }
-      setText('hero-small-title-' + i, s.title);
-      setText('hero-small-place-' + i, s.place);
-    });
+      var imgEl = document.getElementById('hero-featured-img');
+      if (imgEl) { imgEl.src = 'manhole/image/' + hero.id + '_latest.jpeg'; imgEl.alt = hero.imgAlt || ''; }
+      setText('hero-badge', hero.badge);
+      setText('hero-media-label', hero.mediaLabel);
+      setText('hero-featured-title', hero.title);
+      setText('hero-featured-place', hero.place);
+      setText('hero-footer-text', hero.footerText);
+      setText('hero-footer-cta', hero.footerCta);
+
+      hero.small.forEach(function(s, i) {
+        var cardEl = document.getElementById('hero-small-' + i);
+        var mediaSmEl = document.getElementById('hero-small-media-' + i);
+        if (cardEl) {
+          cardEl.href = s.href;
+          if (hero.community) {
+            cardEl.onclick = function() { trackEvent('click_hero_photo', { manhole: String(s.id), position: i }); };
+          }
+        }
+        if (mediaSmEl) {
+          mediaSmEl.style.background = s.bg;
+          var oldBadge = mediaSmEl.querySelector('.hero-small-badge');
+          if (oldBadge) mediaSmEl.removeChild(oldBadge);
+          var badge = document.createElement('span');
+          badge.className = 'hero-small-badge';
+          badge.textContent = s.badge;
+          mediaSmEl.appendChild(badge);
+        }
+        var imgSmEl = document.getElementById('hero-small-img-' + i);
+        if (imgSmEl) { imgSmEl.src = 'manhole/image/' + s.id + '_latest.jpeg'; imgSmEl.alt = s.imgAlt || ''; }
+        setText('hero-small-title-' + i, s.title);
+        setText('hero-small-place-' + i, s.place);
+      });
+    }
+
+    // ── Pick today's hero (replaced by community photos when top-feed loads) ──
+    var dayIndex = Math.floor(Date.now() / 86400000) % HEROES.length;
+    applyHero(HEROES[dayIndex]);
+
+    // ── Community photos: latest fan shots baked into api/top-feed.json ──────
+    var TF_STRINGS = {
+      badge: '📸 みんなの一枚',
+      label: '毎週更新',
+      by: '{name} さんの投稿',
+      cta: '地図で見る →',
+      statNote: '📷 これまでに {count}/{total}ヶ所のポケふたに写真が届きました'
+    };
+
+    function communityHero(photos) {
+      function names(p) { return (p.pokemons || []).slice(0, 2).join('・'); }
+      function place(p) { return (p.title || '').replace('/', ' '); }
+      var f = photos[0];
+      var footerText = '📷 ' + (f.display_name ? TF_STRINGS.by.replace('{name}', f.display_name) + ' · ' : '') + (f.created_at || '');
+      return {
+        id: f.id, community: true,
+        imgAlt: (names(f) || place(f)) + 'のポケふた投稿写真',
+        bgStyle: 'linear-gradient(140deg,#7E9DB2,#5E7C8A)',
+        badge: TF_STRINGS.badge,
+        mediaLabel: place(f),
+        title: f.comment || names(f) || place(f),
+        place: f.comment && names(f) ? place(f) + ' ／ ' + names(f) : place(f),
+        footerText: footerText,
+        footerCta: TF_STRINGS.cta,
+        href: 'map.html?manhole=' + encodeURIComponent(f.id),
+        small: photos.slice(1, 3).map(function(p) {
+          return {
+            id: p.id,
+            imgAlt: (names(p) || place(p)) + 'のポケふた投稿写真',
+            bg: 'linear-gradient(140deg,#7E9DB2,#5E7C8A)',
+            badge: TF_STRINGS.badge,
+            title: names(p) || place(p),
+            place: place(p) + ' →',
+            href: 'map.html?manhole=' + encodeURIComponent(p.id)
+          };
+        })
+      };
+    }
+
+    function renderCommunityStats(stats) {
+      if (!stats) return;
+      if (typeof stats.posts === 'number' && stats.posts > 0) {
+        setNum('stat-photos', stats.posts);
+        var divider = document.getElementById('stat-photos-divider');
+        var tile = document.getElementById('stat-photos-tile');
+        if (divider) divider.hidden = false;
+        if (tile) tile.hidden = false;
+      }
+      if (stats.manholes_with_photos && stats.manholes) {
+        var note = document.getElementById('stats-community-note');
+        if (note) {
+          note.textContent = TF_STRINGS.statNote
+            .replace('{count}', stats.manholes_with_photos.toLocaleString())
+            .replace('{total}', stats.manholes.toLocaleString());
+          note.hidden = false;
+        }
+      }
+    }
+
+    fetch('api/top-feed.json')
+      .then(function(r) { if (!r.ok) throw new Error('top-feed ' + r.status); return r.json(); })
+      .then(function(feed) {
+        var photos = (feed && feed.photos) || [];
+        if (photos.length) {
+          applyHero(communityHero(photos));
+          setText('hero-update-label', TF_STRINGS.label);
+          if (window.trackEvent) trackEvent('view_hero_community', { count: photos.length });
+        }
+        renderCommunityStats(feed && feed.stats);
+      })
+      .catch(function() { /* curated hero remains */ });
 
     // ── Mini-map pin coords + shared renderer (called from fetch OR map init) ──
     var PREF_COORDS = {

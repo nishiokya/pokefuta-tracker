@@ -283,6 +283,13 @@ a { color: inherit; text-decoration: none; }
   align-self: stretch;
 }
 
+.top-stats-note {
+  margin-top: 7px;
+  font-size: 11px;
+  color: var(--top-text-faint);
+  text-align: center;
+}
+
 /* ── Section 2: Hero ── */
 .hero-update-label {
   font-size: 11px;
