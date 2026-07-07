@@ -1271,9 +1271,19 @@ body.pokefuta-map-page {
 }
 
 .pokefuta-map-page .travel-popup-action--upload {
+  flex-direction: column;
+  gap: 1px;
+  padding: 6px 10px;
   background: linear-gradient(135deg, #168074, #0f6d64);
   color: #fff;
   box-shadow: 0 8px 18px rgba(15, 109, 100, .2);
+}
+
+.pokefuta-map-page .travel-popup-action-sub {
+  display: block;
+  font-size: .62rem;
+  font-weight: 700;
+  opacity: .85;
 }
 
 .pokefuta-map-page .travel-popup-action--maps {
