@@ -1149,7 +1149,7 @@
       const primaryAction = hasPhoto
         ? `<a href="${manholeDetailUrl}" class="travel-popup-action travel-popup-action--primary"
               onclick="if(window.trackEvent){window.trackEvent('popup_click_detail',{${eventParams}});}">${UI_TEXT.detailPageCta}</a>`
-        : `<a href="${uploadUrl}" target="_blank" rel="noopener noreferrer" class="travel-popup-action travel-popup-action--primary travel-popup-action--upload"
+        : `<a href="${escapeHtml(uploadUrl)}" target="_blank" rel="noopener noreferrer" class="travel-popup-action travel-popup-action--primary travel-popup-action--upload"
               onclick="if(window.trackEvent){window.trackEvent('popup_click_upload',{${eventParams}});}">${I.firstPhotoUploadCta}<span class="travel-popup-action-sub">${I.firstPhotoUploadNote}</span></a>`;
       const mapsUrl = Number.isFinite(Number(d.lat)) && Number.isFinite(Number(d.lng))
         ? `https://www.google.com/maps?q=${encodeURIComponent(`${d.lat},${d.lng}`)}`
