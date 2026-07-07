@@ -492,7 +492,7 @@ def generate_html(
     has_photo_js = json.dumps(has_photo_bool)
 
     hero_photo_html = (
-        f"<a class='hero-photo-placeholder' href='https://pokefuta.com/upload?manhole_id={manhole_id}'"
+        f"<a class='hero-photo-placeholder' href='https://pokefuta.com/upload?manhole_id={manhole_id}&from=data'"
         f" target='_blank' rel='noopener noreferrer'"
         f" onclick=\"trackEvent('click_photo_upload_placeholder', {_attr_json({'manhole_id': manhole_id, 'prefecture': prefecture, 'city': city, 'has_photo': False})})\">"
         f"<span class='placeholder-camera' aria-hidden='true'>📷</span>"
@@ -905,7 +905,8 @@ def generate_html(
     {pokemon_tags_html}
     {stats_html}
     <div class="hero-actions">
-      <a class="btn-photo-upload" href="https://pokefuta.com/upload?manhole_id={manhole_id}" target="_blank" rel="noopener noreferrer" onclick="trackEvent('{_photo_event}', {_photo_cta_onclick})">{_icon('icon-link-photo', 'action-icon')}<span>{escape(_photo_label)}</span></a>
+      <a class="btn-photo-upload" href="https://pokefuta.com/upload?manhole_id={manhole_id}&from=data" target="_blank" rel="noopener noreferrer" onclick="trackEvent('{_photo_event}', {_photo_cta_onclick})">{_icon('icon-link-photo', 'action-icon')}<span>{escape(_photo_label)}</span></a>
+      <p class="photo-upload-note">投稿は pokefuta.com で受付（無料ログイン・GPS付き写真が必要）</p>
     </div>
   </div>
 </div>
@@ -1350,6 +1351,14 @@ def generate_html(
       background: #ffe4ea;
       box-shadow: 0 3px 10px rgba(192,57,75,0.14);
       transform: translateY(-1px);
+    }}
+
+    .photo-upload-note {{
+      margin: -2px 0 0;
+      font-size: 11.5px;
+      line-height: 1.5;
+      text-align: center;
+      color: #8a7f72;
     }}
 
     .action-icon {{

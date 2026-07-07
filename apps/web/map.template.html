@@ -1113,7 +1113,7 @@
       const manholeId = encodeURIComponent(String(d.id || ''));
       // 詳細導線は data.pokefuta.com の詳細ページに一本化（写真ギャラリー・pokefuta.com への導線は詳細ページ側が持つ）
       const manholeDetailUrl = `${window.SITE_BASE_URL}manholes/${manholeId}/`;
-      const uploadUrl = `https://pokefuta.com/upload?manhole_id=${manholeId}`;
+      const uploadUrl = `https://pokefuta.com/upload?manhole_id=${manholeId}&from=data`;
       const safeIdJs = escapeJs(d.id);
       const safePrefectureJs = escapeJs(prefecture);
       const eventParams = `event_category:'popup_navigation',manhole_id:'${safeIdJs}',prefecture:'${safePrefectureJs}'`;
@@ -1150,7 +1150,7 @@
         ? `<a href="${manholeDetailUrl}" class="travel-popup-action travel-popup-action--primary"
               onclick="if(window.trackEvent){window.trackEvent('popup_click_detail',{${eventParams}});}">${UI_TEXT.detailPageCta}</a>`
         : `<a href="${uploadUrl}" target="_blank" rel="noopener noreferrer" class="travel-popup-action travel-popup-action--primary travel-popup-action--upload"
-              onclick="if(window.trackEvent){window.trackEvent('popup_click_upload',{${eventParams}});}">${I.firstPhotoUploadCta}</a>`;
+              onclick="if(window.trackEvent){window.trackEvent('popup_click_upload',{${eventParams}});}">${I.firstPhotoUploadCta}<span class="travel-popup-action-sub">${I.firstPhotoUploadNote}</span></a>`;
       const mapsUrl = Number.isFinite(Number(d.lat)) && Number.isFinite(Number(d.lng))
         ? `https://www.google.com/maps?q=${encodeURIComponent(`${d.lat},${d.lng}`)}`
         : '';
