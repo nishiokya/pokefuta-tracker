@@ -13,9 +13,9 @@
     "raw_data": {
       "pref": "北海道",
       "count": 50,
-      "total": 476,
+      "total": 482,
       "rank": 1,
-      "percent": 10.5
+      "percent": 10.4
     }
   },
   {
@@ -32,9 +32,9 @@
     "raw_data": {
       "pref": "福島県",
       "count": 43,
-      "total": 476,
+      "total": 482,
       "rank": 2,
-      "percent": 9.0
+      "percent": 8.9
     }
   },
   {
@@ -51,9 +51,9 @@
     "raw_data": {
       "pref": "宮城県",
       "count": 37,
-      "total": 476,
+      "total": 482,
       "rank": 3,
-      "percent": 7.8
+      "percent": 7.7
     }
   },
   {
@@ -70,9 +70,9 @@
     "raw_data": {
       "pref": "岩手県",
       "count": 36,
-      "total": 476,
+      "total": 482,
       "rank": 4,
-      "percent": 7.6
+      "percent": 7.5
     }
   },
   {
@@ -89,9 +89,9 @@
     "raw_data": {
       "pref": "三重県",
       "count": 31,
-      "total": 476,
+      "total": 482,
       "rank": 5,
-      "percent": 6.5
+      "percent": 6.4
     }
   },
   {
@@ -108,9 +108,9 @@
     "raw_data": {
       "pref": "宮崎県",
       "count": 26,
-      "total": 476,
+      "total": 482,
       "rank": 6,
-      "percent": 5.5
+      "percent": 5.4
     }
   },
   {
@@ -127,9 +127,9 @@
     "raw_data": {
       "pref": "鳥取県",
       "count": 20,
-      "total": 476,
+      "total": 482,
       "rank": 7,
-      "percent": 4.2
+      "percent": 4.1
     }
   },
   {
@@ -146,9 +146,9 @@
     "raw_data": {
       "pref": "香川県",
       "count": 18,
-      "total": 476,
+      "total": 482,
       "rank": 8,
-      "percent": 3.8
+      "percent": 3.7
     }
   },
   {
@@ -165,9 +165,9 @@
     "raw_data": {
       "pref": "高知県",
       "count": 18,
-      "total": 476,
+      "total": 482,
       "rank": 9,
-      "percent": 3.8
+      "percent": 3.7
     }
   },
   {
@@ -184,9 +184,9 @@
     "raw_data": {
       "pref": "福井県",
       "count": 17,
-      "total": 476,
+      "total": 482,
       "rank": 10,
-      "percent": 3.6
+      "percent": 3.5
     }
   },
   {
@@ -393,7 +393,7 @@
     "raw_data": {
       "pref": "青森県",
       "count": 2,
-      "total": 476
+      "total": 482
     }
   },
   {
@@ -410,7 +410,7 @@
     "raw_data": {
       "pref": "栃木県",
       "count": 3,
-      "total": 476
+      "total": 482
     }
   },
   {
@@ -427,7 +427,7 @@
     "raw_data": {
       "pref": "埼玉県",
       "count": 3,
-      "total": 476
+      "total": 482
     }
   },
   {
@@ -444,7 +444,7 @@
     "raw_data": {
       "pref": "富山県",
       "count": 3,
-      "total": 476
+      "total": 482
     }
   },
   {
@@ -461,7 +461,7 @@
     "raw_data": {
       "pref": "兵庫県",
       "count": 3,
-      "total": 476
+      "total": 482
     }
   },
   {
@@ -478,7 +478,7 @@
     "raw_data": {
       "pref": "徳島県",
       "count": 3,
-      "total": 476
+      "total": 482
     }
   },
   {
@@ -495,7 +495,7 @@
     "raw_data": {
       "pref": "愛媛県",
       "count": 2,
-      "total": 476
+      "total": 482
     }
   },
   {
@@ -512,7 +512,7 @@
     "raw_data": {
       "pref": "佐賀県",
       "count": 3,
-      "total": 476
+      "total": 482
     }
   },
   {
@@ -930,7 +930,7 @@
   {
     "id": "trivia-total-count",
     "type": "travel_trivia",
-    "title": "全国のポケふたは476枚",
+    "title": "全国のポケふたは482枚",
     "url": "https://data.pokefuta.com/summary/",
     "hashtags": [
       "#ポケふた",
@@ -941,14 +941,14 @@
     "raw_data": {
       "fact_type": "total_count",
       "values": {
-        "total": 476
+        "total": 482
       }
     }
   },
   {
     "id": "trivia-empty-prefs",
     "type": "travel_trivia",
-    "title": "ポケふた未設置県：6県",
+    "title": "ポケふた未設置県：5県",
     "url": "https://data.pokefuta.com/summary/",
     "hashtags": [
       "#ポケふた",
@@ -959,11 +959,10 @@
     "raw_data": {
       "fact_type": "empty_prefs",
       "values": {
-        "empty_count": 6,
+        "empty_count": 5,
         "pref_names": [
           "群馬県",
           "山梨県",
-          "長野県",
           "広島県",
           "熊本県",
           "大分県"
@@ -987,14 +986,14 @@
       "values": {
         "region": "東北",
         "count": 128,
-        "total": 476
+        "total": 482
       }
     }
   },
   {
     "id": "trivia-pokemon-variety",
     "type": "travel_trivia",
-    "title": "ポケふたに登場するポケモンは541種類",
+    "title": "ポケふたに登場するポケモンは549種類",
     "url": "https://data.pokefuta.com/pokemon/",
     "hashtags": [
       "#ポケふた",
@@ -1005,7 +1004,7 @@
     "raw_data": {
       "fact_type": "pokemon_variety",
       "values": {
-        "species_count": 541
+        "species_count": 549
       }
     }
   },
@@ -1060,7 +1059,7 @@
             "count": 37
           }
         ],
-        "total": 476
+        "total": 482
       }
     }
   },

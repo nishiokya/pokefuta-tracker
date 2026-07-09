@@ -4584,11 +4584,179 @@
   },
   {
     "prefecture": "長野県",
-    "manhole_count": 0,
-    "municipality_count": 0,
-    "municipalities": [],
-    "municipality_distribution": [],
-    "pokemon_coverage": [],
+    "manhole_count": 6,
+    "municipality_count": 6,
+    "municipalities": [
+      "伊那",
+      "南牧",
+      "大",
+      "山ノ内",
+      "岡谷",
+      "木祖"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "伊那",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "南牧",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "大",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "山ノ内",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "岡谷",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "木祖",
+        "manhole_count": 1
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "アマージョ",
+        "label": "アマージョ",
+        "pokemon": [
+          "アマージョ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 16.7
+      },
+      {
+        "id": "エリキテル",
+        "label": "エリキテル",
+        "pokemon": [
+          "エリキテル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 16.7
+      },
+      {
+        "id": "エレザード",
+        "label": "エレザード",
+        "pokemon": [
+          "エレザード"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 16.7
+      },
+      {
+        "id": "オーロット",
+        "label": "オーロット",
+        "pokemon": [
+          "オーロット"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 16.7
+      },
+      {
+        "id": "ガラルダルマッカ",
+        "label": "ガラルダルマッカ",
+        "pokemon": [
+          "ガラルダルマッカ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 16.7
+      },
+      {
+        "id": "ココガラ",
+        "label": "ココガラ",
+        "pokemon": [
+          "ココガラ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 16.7
+      },
+      {
+        "id": "バサギリ",
+        "label": "バサギリ",
+        "pokemon": [
+          "バサギリ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 16.7
+      },
+      {
+        "id": "パチリス",
+        "label": "パチリス",
+        "pokemon": [
+          "パチリス"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 16.7
+      },
+      {
+        "id": "ヒヒダルマ",
+        "label": "ヒヒダルマ",
+        "pokemon": [
+          "ヒヒダルマ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 16.7
+      },
+      {
+        "id": "ヒヤップ",
+        "label": "ヒヤップ",
+        "pokemon": [
+          "ヒヤップ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 16.7
+      },
+      {
+        "id": "ビッパ",
+        "label": "ビッパ",
+        "pokemon": [
+          "ビッパ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 16.7
+      },
+      {
+        "id": "マンキー",
+        "label": "マンキー",
+        "pokemon": [
+          "マンキー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 16.7
+      },
+      {
+        "id": "ミニリュウ",
+        "label": "ミニリュウ",
+        "pokemon": [
+          "ミニリュウ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 16.7
+      },
+      {
+        "id": "モスノウ",
+        "label": "モスノウ",
+        "pokemon": [
+          "モスノウ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 16.7
+      },
+      {
+        "id": "ユキハミ",
+        "label": "ユキハミ",
+        "pokemon": [
+          "ユキハミ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 16.7
+      }
+    ],
     "trivia": []
   },
   {

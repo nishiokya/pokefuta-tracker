@@ -6196,5 +6196,77 @@ Status: active</description>
         <coordinates>129.910858,33.141048,0</coordinates>
       </Point>
     </Placemark>
+    <Placemark>
+      <name>長野県/岡谷市 (モスノウ, ユキハミ)</name>
+      <description>Prefecture: 長野県
+City: 岡谷
+Address: 長野県岡谷市幸町1
+Detail: https://local.pokemon.jp/manhole/desc/481/?is_modal=1
+Last Updated: 2026-07-09T12:29:48Z
+Status: active</description>
+      <Point>
+        <coordinates>138.0511,36.06648,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>長野県/伊那市 (アマージョ, バサギリ, ヒヒダルマ)</name>
+      <description>Prefecture: 長野県
+City: 伊那
+Address: 長野県伊那市西箕輪3416-1
+Detail: https://local.pokemon.jp/manhole/desc/482/?is_modal=1
+Last Updated: 2026-07-09T12:29:49Z
+Status: active</description>
+      <Point>
+        <coordinates>137.919057,35.882479,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>長野県/大町市 (ビッパ, ミニリュウ)</name>
+      <description>Prefecture: 長野県
+City: 大
+Address: 長野県大町市大町2532-7
+Detail: https://local.pokemon.jp/manhole/desc/483/?is_modal=1
+Last Updated: 2026-07-09T12:29:50Z
+Status: active</description>
+      <Point>
+        <coordinates>137.859702,36.506032,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>長野県/南牧村 (エリキテル, エレザード)</name>
+      <description>Prefecture: 長野県
+City: 南牧
+Address: 長野県南牧村大字野辺山306
+Detail: https://local.pokemon.jp/manhole/desc/484/?is_modal=1
+Last Updated: 2026-07-09T12:29:50Z
+Status: active</description>
+      <Point>
+        <coordinates>138.474215,35.955351,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>長野県/木祖村 (オーロット, ココガラ, パチリス)</name>
+      <description>Prefecture: 長野県
+City: 木祖
+Address: 長野県木祖村薮原1038-1
+Detail: https://local.pokemon.jp/manhole/desc/485/?is_modal=1
+Last Updated: 2026-07-09T12:29:51Z
+Status: active</description>
+      <Point>
+        <coordinates>137.784559,35.935271,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>長野県/山ノ内町 (ガラルダルマッカ, ヒヤップ, マンキー)</name>
+      <description>Prefecture: 長野県
+City: 山ノ内
+Address: 長野県山ノ内町大字平穏3227
+Detail: https://local.pokemon.jp/manhole/desc/486/?is_modal=1
+Last Updated: 2026-07-09T12:29:52Z
+Status: active</description>
+      <Point>
+        <coordinates>138.41505,36.74156,0</coordinates>
+      </Point>
+    </Placemark>
   </Document>
 </kml>
