@@ -2740,6 +2740,51 @@
         "museum",
         "tourism"
       ]
+    },
+    "481": {
+      "building": "岡谷市役所前（蚕糸公園）",
+      "tags": [
+        "park"
+      ]
+    },
+    "482": {
+      "building": "みはらしファーム 名人亭南側",
+      "tags": [
+        "park",
+        "tourism",
+        "food"
+      ]
+    },
+    "483": {
+      "building": "大町名店街",
+      "tags": [
+        "station_front",
+        "tourism",
+        "food"
+      ]
+    },
+    "484": {
+      "building": "野辺山駅",
+      "tags": [
+        "station_front",
+        "rail_access_good",
+        "tourism"
+      ]
+    },
+    "485": {
+      "building": "藪原駅前",
+      "tags": [
+        "station_front",
+        "rail_access_good"
+      ]
+    },
+    "486": {
+      "building": "湯田中駅前広場 楓の館前",
+      "tags": [
+        "station_front",
+        "rail_access_good",
+        "tourism"
+      ]
     }
   },
   "lakes": [

@@ -6201,6 +6201,8 @@ Status: active</description>
       <description>Prefecture: 長野県
 City: 岡谷
 Address: 長野県岡谷市幸町1
+Building: 岡谷市役所前（蚕糸公園）
+Tags: park
 Detail: https://local.pokemon.jp/manhole/desc/481/?is_modal=1
 Last Updated: 2026-07-09T12:29:48Z
 Status: active</description>
@@ -6213,6 +6215,8 @@ Status: active</description>
       <description>Prefecture: 長野県
 City: 伊那
 Address: 長野県伊那市西箕輪3416-1
+Building: みはらしファーム 名人亭南側
+Tags: park, tourism, food
 Detail: https://local.pokemon.jp/manhole/desc/482/?is_modal=1
 Last Updated: 2026-07-09T12:29:49Z
 Status: active</description>
@@ -6223,8 +6227,10 @@ Status: active</description>
     <Placemark>
       <name>長野県/大町市 (ビッパ, ミニリュウ)</name>
       <description>Prefecture: 長野県
-City: 大
+City: 大町
 Address: 長野県大町市大町2532-7
+Building: 大町名店街
+Tags: station_front, tourism, food
 Detail: https://local.pokemon.jp/manhole/desc/483/?is_modal=1
 Last Updated: 2026-07-09T12:29:50Z
 Status: active</description>
@@ -6237,6 +6243,8 @@ Status: active</description>
       <description>Prefecture: 長野県
 City: 南牧
 Address: 長野県南牧村大字野辺山306
+Building: 野辺山駅
+Tags: station_front, rail_access_good, tourism
 Detail: https://local.pokemon.jp/manhole/desc/484/?is_modal=1
 Last Updated: 2026-07-09T12:29:50Z
 Status: active</description>
@@ -6249,6 +6257,8 @@ Status: active</description>
       <description>Prefecture: 長野県
 City: 木祖
 Address: 長野県木祖村薮原1038-1
+Building: 藪原駅前
+Tags: station_front, rail_access_good
 Detail: https://local.pokemon.jp/manhole/desc/485/?is_modal=1
 Last Updated: 2026-07-09T12:29:51Z
 Status: active</description>
@@ -6261,6 +6271,8 @@ Status: active</description>
       <description>Prefecture: 長野県
 City: 山ノ内
 Address: 長野県山ノ内町大字平穏3227
+Building: 湯田中駅前広場 楓の館前
+Tags: station_front, rail_access_good, tourism
 Detail: https://local.pokemon.jp/manhole/desc/486/?is_modal=1
 Last Updated: 2026-07-09T12:29:52Z
 Status: active</description>
