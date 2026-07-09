@@ -65,6 +65,11 @@ PLACEHOLDER_STRINGS = {s.lower() for s in [
 ]}
 
 
+def strip_municipality_suffix(city: str) -> str:
+    """Strip one municipality suffix without eating city names like 大町市."""
+    return re.sub(r'[市区町村]$', '', city or '')
+
+
 def _has_content(value: Any, allow_placeholder: bool = False) -> bool:
     if value is None:
         return False
@@ -324,7 +329,7 @@ def parse_detail(detail_url: str, html: str, logger: logging.Logger, title_data:
             pf, ct = part.split("/", 1)
             if pf.endswith("県") or pf.endswith("府") or pf.endswith("道") or pf.endswith("都"):
                 prefecture = pf
-                city = ct.rstrip("市町村区") if ct else ""
+                city = strip_municipality_suffix(ct)
 
     # 住所の取得 - address_parser の共通ロジックを使用
     address = extract_address_from_html(html)
