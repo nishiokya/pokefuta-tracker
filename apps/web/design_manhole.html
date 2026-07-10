@@ -31,7 +31,7 @@
    {"@type":"HowTo","name":"デザインマンホールの投稿手順",
     "step":[
      {"@type":"HowToStep","position":1,"name":"写真を選ぶ","text":"スマホで撮ったマンホール写真を選びます。iPhoneのHEIC写真も自動で変換されます。"},
-     {"@type":"HowToStep","position":2,"name":"場所を確かめる","text":"写真に位置情報があれば自動で入力されます。なければ地図をタップして指定します。"},
+     {"@type":"HowToStep","position":2,"name":"場所を確かめる","text":"写真の位置情報（GPS）から設置場所が自動で入力されます。地図で位置の微調整もできます。"},
      {"@type":"HowToStep","position":3,"name":"投稿する","text":"タイトルやひとことを添えて投稿すると、みんなのデザインマンホールに掲載されます。"}]}]}
   </script>
   <link rel="stylesheet" href="./assets/top-page.css?v=20260707a" />
@@ -68,7 +68,7 @@
     /* マンホール蓋風フレーム（リングはCSS、中身は実際の投稿写真） */
     .lp-lid {
       position: relative;
-      width: 148px; height: 148px; margin: 0 auto 22px;
+      width: clamp(180px, 56vw, 290px); height: auto; aspect-ratio: 1; margin: 0 auto 22px;
       border-radius: 50%;
       background:
         radial-gradient(circle at 50% 42%, var(--top-purple-pale) 0 34%, transparent 34.5%),
@@ -228,9 +228,9 @@
       <p class="lp-eyebrow">DESIGN MANHOLE COLLECTION</p>
       <div class="lp-lid">
         <span aria-hidden="true">📸</span><!-- 写真が読めない環境向けのフォールバック -->
-        <img src="https://pokefuta.com/api/design-manholes/bf5be35e-38e6-4792-ab02-d0aa5fda7ce4/photo?size=small"
-             alt="投稿されたデザインマンホールの写真" loading="eager" decoding="async"
-             onerror="this.remove()">
+        <img src="./assets/design_manhole_hero.webp" width="800" height="800"
+             alt="投稿写真の例: 豊臣秀長の兜が描かれた大和郡山市のカラーマンホール"
+             loading="eager" decoding="async" onerror="this.remove()">
       </div>
       <h1>あなたの街のデザインマンホール、<br>みんなの地図に。</h1>
       <p class="lp-lead">
@@ -261,7 +261,7 @@
         <li class="lp-step">
           <span class="lp-step-num">2</span>
           <h3>場所を確かめる</h3>
-          <p>写真に位置情報があれば設置場所は自動入力。なければ地図をタップして指定できます。</p>
+          <p>写真の位置情報（GPS）から設置場所が自動で入力されます。地図で位置の微調整もできます。</p>
         </li>
         <li class="lp-step">
           <span class="lp-step-num">3</span>
@@ -317,7 +317,7 @@
         </details>
         <details>
           <summary>位置情報のない写真でも投稿できますか？</summary>
-          <p>できます。写真に位置情報（GPS）があれば自動で入力されますが、ない場合も投稿画面の地図をタップして設置場所を指定できます。</p>
+          <p>いいえ、投稿できません。設置場所を正確に記録するため、位置情報（GPS）付きの写真が必要です。スマホのカメラの位置情報記録をオンにして撮影した写真をご利用ください。</p>
         </details>
         <details>
           <summary>どんな写真形式に対応していますか？</summary>
@@ -363,11 +363,14 @@
         const items = (data.design_manholes || []).filter(d => d.photo_url).slice(0, 8);
         if (!items.length) return;
         const grid = document.getElementById('lp-gallery-grid');
-        grid.innerHTML = items.map(d => {
-          const url = new URL(d.photo_url, 'https://pokefuta.com').href;
-          const alt = (d.title || 'デザインマンホール').replace(/[<>"&]/g, '');
-          return `<img src="${url}" alt="${alt}" loading="lazy" decoding="async">`;
-        }).join('');
+        grid.replaceChildren(...items.map(d => {
+          const img = document.createElement('img');
+          img.src = new URL(d.photo_url, 'https://pokefuta.com').href;
+          img.alt = d.title || 'デザインマンホール';
+          img.loading = 'lazy';
+          img.decoding = 'async';
+          return img;
+        }));
         document.getElementById('lp-gallery').hidden = false;
       } catch (e) { /* CORS等で取得できない環境ではギャラリーを出さない */ }
     })();
