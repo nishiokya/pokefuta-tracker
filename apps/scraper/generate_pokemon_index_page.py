@@ -290,6 +290,7 @@ INDEX_ENHANCEMENT_STRINGS: dict[str, dict] = {
         "hero_stat_unit": "体",
         "summary_label": "サマリー",
         "hero_summary": "{total}体の登場ポケモンから探せます。最多は{name}で、全国{count}枚のポケふたに登場します。",
+        "hero_summary_empty": "登場ポケモンのデータを準備中です。",
         "fact_heading": "ポケモン別に見るポケふた雑学",
         "fact_rank_title": "いちばん多く登場するのは{name}",
         "fact_rank_body": "{name}は全国{count}枚のポケふたに登場し、登場数ランキング1位です。",
@@ -324,6 +325,7 @@ INDEX_ENHANCEMENT_STRINGS: dict[str, dict] = {
         "hero_stat_unit": "",
         "summary_label": "Summary",
         "hero_summary": "Browse {total} featured Pokémon. {name} appears most often, with {count} Pokefuta nationwide.",
+        "hero_summary_empty": "Featured Pokémon data is being prepared.",
         "fact_heading": "Pokefuta facts by Pokémon",
         "fact_rank_title": "{name} appears most often",
         "fact_rank_body": "{name} appears on {count} Pokefuta, the highest total in the current dataset.",
@@ -349,6 +351,7 @@ INDEX_ENHANCEMENT_STRINGS: dict[str, dict] = {
         "hero_stat_unit": "只",
         "summary_label": "摘要",
         "hero_summary": "可从{total}只登场宝可梦中查找。登场最多的是{name}，全国共有{count}个宝可梦井盖。",
+        "hero_summary_empty": "登场宝可梦数据正在准备中。",
         "fact_heading": "按宝可梦了解井盖小知识",
         "fact_rank_title": "登场最多的是{name}",
         "fact_rank_body": "{name}在全国{count}个宝可梦井盖中登场，位居当前排行榜第一。",
@@ -374,6 +377,7 @@ INDEX_ENHANCEMENT_STRINGS: dict[str, dict] = {
         "hero_stat_unit": "隻",
         "summary_label": "摘要",
         "hero_summary": "可從{total}隻登場寶可夢中查找。登場最多的是{name}，全國共有{count}個寶可夢人孔蓋。",
+        "hero_summary_empty": "登場寶可夢資料正在準備中。",
         "fact_heading": "按寶可夢了解人孔蓋小知識",
         "fact_rank_title": "登場最多的是{name}",
         "fact_rank_body": "{name}在全國{count}個寶可夢人孔蓋中登場，位居目前排行榜第一。",
@@ -399,6 +403,7 @@ INDEX_ENHANCEMENT_STRINGS: dict[str, dict] = {
         "hero_stat_unit": "마리",
         "summary_label": "요약",
         "hero_summary": "등장 포켓몬 {total}마리에서 찾을 수 있습니다. 가장 많이 등장하는 포켓몬은 {name}으로, 전국 {count}개의 포케후타에 등장합니다.",
+        "hero_summary_empty": "등장 포켓몬 데이터를 준비 중입니다.",
         "fact_heading": "포켓몬별 포케후타 상식",
         "fact_rank_title": "가장 많이 등장하는 포켓몬은 {name}",
         "fact_rank_body": "{name}은 전국 {count}개의 포케후타에 등장해 현재 순위 1위입니다.",
@@ -762,10 +767,13 @@ def generate_html(
         "count": 0,
         "href": map_href,
     }
-    hero_summary = enhancement["hero_summary"].format(
-        total=total_count,
-        name=top_card["name"],
-        count=top_card["count"],
+    hero_summary = (
+        enhancement["hero_summary"].format(
+            total=total_count,
+            name=top_card["name"],
+            count=top_card["count"],
+        )
+        if cards else enhancement["hero_summary_empty"]
     )
 
     def image_html(card: dict, class_name: str = "card-photo") -> str:

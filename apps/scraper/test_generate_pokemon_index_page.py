@@ -105,6 +105,21 @@ class LatestPhotoCardsTest(unittest.TestCase):
         self.assertIn("最多はラッキーで、全国2枚のポケふたに登場します。", html)
         self.assertIn(".hero-summary { display: none; }", html)
 
+    def test_ja_index_hero_summary_handles_empty_data(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            html = generate_html(
+                {},
+                "ja",
+                LANG_CONFIGS["ja"],
+                LP_INDEX_STRINGS["ja"],
+                lambda pref: pref,
+                {},
+                Path(tmpdir),
+            )
+
+        self.assertIn("登場ポケモンのデータを準備中です。", html)
+        self.assertNotIn("所在地不明で、全国0枚", html)
+
 
 if __name__ == "__main__":
     unittest.main()
