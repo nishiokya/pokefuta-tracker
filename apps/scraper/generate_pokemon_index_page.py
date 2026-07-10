@@ -288,6 +288,8 @@ INDEX_ENHANCEMENT_STRINGS: dict[str, dict] = {
         "kicker": "ポケモンマンホール データガイド",
         "hero_stat": "登場ポケモン",
         "hero_stat_unit": "体",
+        "summary_label": "サマリー",
+        "hero_summary": "{total}体の登場ポケモンから探せます。最多は{name}で、全国{count}枚のポケふたに登場します。",
         "fact_heading": "ポケモン別に見るポケふた雑学",
         "fact_rank_title": "いちばん多く登場するのは{name}",
         "fact_rank_body": "{name}は全国{count}枚のポケふたに登場し、登場数ランキング1位です。",
@@ -320,6 +322,8 @@ INDEX_ENHANCEMENT_STRINGS: dict[str, dict] = {
         "kicker": "Pokémon Manhole Data Guide",
         "hero_stat": "Featured Pokémon",
         "hero_stat_unit": "",
+        "summary_label": "Summary",
+        "hero_summary": "Browse {total} featured Pokémon. {name} appears most often, with {count} Pokefuta nationwide.",
         "fact_heading": "Pokefuta facts by Pokémon",
         "fact_rank_title": "{name} appears most often",
         "fact_rank_body": "{name} appears on {count} Pokefuta, the highest total in the current dataset.",
@@ -343,6 +347,8 @@ INDEX_ENHANCEMENT_STRINGS: dict[str, dict] = {
         "kicker": "宝可梦井盖数据指南",
         "hero_stat": "登场宝可梦",
         "hero_stat_unit": "只",
+        "summary_label": "摘要",
+        "hero_summary": "可从{total}只登场宝可梦中查找。登场最多的是{name}，全国共有{count}个宝可梦井盖。",
         "fact_heading": "按宝可梦了解井盖小知识",
         "fact_rank_title": "登场最多的是{name}",
         "fact_rank_body": "{name}在全国{count}个宝可梦井盖中登场，位居当前排行榜第一。",
@@ -366,6 +372,8 @@ INDEX_ENHANCEMENT_STRINGS: dict[str, dict] = {
         "kicker": "寶可夢人孔蓋資料指南",
         "hero_stat": "登場寶可夢",
         "hero_stat_unit": "隻",
+        "summary_label": "摘要",
+        "hero_summary": "可從{total}隻登場寶可夢中查找。登場最多的是{name}，全國共有{count}個寶可夢人孔蓋。",
         "fact_heading": "按寶可夢了解人孔蓋小知識",
         "fact_rank_title": "登場最多的是{name}",
         "fact_rank_body": "{name}在全國{count}個寶可夢人孔蓋中登場，位居目前排行榜第一。",
@@ -389,6 +397,8 @@ INDEX_ENHANCEMENT_STRINGS: dict[str, dict] = {
         "kicker": "포켓몬 맨홀 데이터 가이드",
         "hero_stat": "등장 포켓몬",
         "hero_stat_unit": "마리",
+        "summary_label": "요약",
+        "hero_summary": "등장 포켓몬 {total}마리에서 찾을 수 있습니다. 가장 많이 등장하는 포켓몬은 {name}으로, 전국 {count}개의 포케후타에 등장합니다.",
         "fact_heading": "포켓몬별 포케후타 상식",
         "fact_rank_title": "가장 많이 등장하는 포켓몬은 {name}",
         "fact_rank_body": "{name}은 전국 {count}개의 포케후타에 등장해 현재 순위 1위입니다.",
@@ -747,6 +757,24 @@ def generate_html(
     latest_photos = _build_latest_photo_cards(
         pokemon_index, photos_data, image_dir, lang_config, translate_pref, lang,
     )
+    top_card = cards[0] if cards else {
+        "name": strings["region_summary_unknown"],
+        "count": 0,
+        "href": map_href,
+    }
+    hero_summary_html = ""
+    if cards:
+        hero_summary = enhancement["hero_summary"].format(
+            total=total_count,
+            name=top_card["name"],
+            count=top_card["count"],
+        )
+        hero_summary_html = (
+            f'<div class="hero-summary" aria-label="{escape(enhancement["summary_label"])}">'
+            f'<span>{escape(enhancement["summary_label"])}</span>'
+            f'<p>{escape(hero_summary)}</p>'
+            f'</div>'
+        )
 
     def image_html(card: dict, class_name: str = "card-photo") -> str:
         image = card.get("latest_image")
@@ -923,12 +951,6 @@ def generate_html(
     popular_intro = escape(
         strings["popular_intro"].format(top3=top3_names, min_count=top3_min_count)
     )
-    top_card = cards[0] if cards else {
-        "name": strings["region_summary_unknown"],
-        "count": 0,
-        "href": map_href,
-    }
-
     fact_cards = [
         {
             "stat": strings["count_label"].format(count=top_card["count"]),
@@ -1188,6 +1210,28 @@ def generate_html(
       line-height: 1.75;
       margin-bottom: 0;
       max-width: 720px;
+    }}
+    .hero-summary {{
+      margin-top: 14px;
+      max-width: 560px;
+      padding: 12px 14px;
+      border: 1px solid rgba(87,64,143,.16);
+      border-radius: 14px;
+      background: rgba(255,255,255,.72);
+      color: #3a3128;
+    }}
+    .hero-summary span {{
+      display: block;
+      margin-bottom: 4px;
+      color: #57408f;
+      font-size: 12px;
+      font-weight: 900;
+    }}
+    .hero-summary p {{
+      margin: 0;
+      font-size: 14px;
+      font-weight: 750;
+      line-height: 1.6;
     }}
     .page-section {{
       margin-top: 22px;
@@ -1482,6 +1526,7 @@ def generate_html(
       .page-hero::after {{ width: 170px; height: 170px; right: -48px; bottom: -74px; }}
       .hero-badge {{ width: 104px; height: 104px; right: 56px; top: auto; bottom: 16px; }}
       .hero-badge strong {{ font-size: 27px; }}
+      .hero-summary {{ display: none; }}
       h1 {{ font-size: 24px; }}
       .hub-grid {{ grid-template-columns: 1fr; }}
       .fact-grid {{ grid-template-columns: 1fr; }}
@@ -1505,6 +1550,7 @@ def generate_html(
       <p class="hero-kicker">{escape(enhancement["kicker"])}</p>
       <h1>{h1}</h1>
       <p class="lead">{lead}</p>
+      {hero_summary_html}
     </div>
     <div class="hero-badge" aria-label="{escape(enhancement["hero_stat"])} {total_count}">
       <span>{escape(enhancement["hero_stat"])}</span>
