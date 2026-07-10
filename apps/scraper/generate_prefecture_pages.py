@@ -430,7 +430,7 @@ def build_page(
     }}
     .hero-kicker {{ margin: 0; color: #6b4aa2; font-size: .8rem; font-weight: 900; }}
     h1 {{ margin: 4px 0 8px; font-size: clamp(2rem, 7vw, 3.5rem); line-height: 1.15; }}
-    .hero p:last-of-type {{ max-width: 720px; margin: 0; color: #574b41; font-weight: 650; }}
+    .hero-main > p:last-of-type {{ max-width: 720px; margin: 0; color: #574b41; font-weight: 650; }}
     .hero-summary {{
       position: relative; z-index: 1; padding: 16px 18px; border-radius: 17px;
       background: rgba(255,255,255,.74); color: #3a3128;
