@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 from collections import Counter
+from datetime import datetime
 from pathlib import Path
 from urllib.parse import quote
 from xml.sax.saxutils import escape
@@ -163,6 +164,47 @@ def _trivia_html(prefecture: str, trivia_entry: dict | None, count: int) -> str:
     )
 
 
+def _record_date(record: dict) -> datetime | None:
+    for key in ("first_seen", "added_at", "last_updated"):
+        value = str(record.get(key, "")).strip()
+        if not value:
+            continue
+        try:
+            return datetime.fromisoformat(value.replace("Z", "+00:00"))
+        except ValueError:
+            continue
+    return None
+
+
+def _format_year_month(date: datetime) -> str:
+    return f"{date.year}年{date.month}月"
+
+
+def _hero_summary(
+    prefecture: str,
+    count: int,
+    records: list[dict],
+    trivia_entry: dict | None,
+) -> str:
+    if not count:
+        return f"{prefecture}は現在未設置。新しい設置情報を追跡中です。"
+
+    cities = {
+        str(record.get("city", "")).strip()
+        for record in records
+        if str(record.get("city", "")).strip()
+    }
+    municipalities = (trivia_entry or {}).get("municipality_count", 0) or len(cities)
+    first_dates = [date for record in records if (date := _record_date(record))]
+    first_month = _format_year_month(min(first_dates)) if first_dates else ""
+    if first_month:
+        return (
+            f"{prefecture}は{first_month}にポケふた初登場。"
+            f"現在は{municipalities}自治体で{count}枚を巡れます。"
+        )
+    return f"{prefecture}では{municipalities}自治体で{count}枚のポケふたを巡れます。"
+
+
 def _pokemon_card(name: str, count: int, pokemon_slugs: dict[str, str]) -> str:
     slug = pokemon_slugs.get(name) or pokemon_slugs.get(_normalize_katakana(name))
     content = (
@@ -302,6 +344,7 @@ def build_page(
     )
     rank_label = f"全国{rank}位" if rank else "現在未設置"
     hero_intro = _hero_intro(prefecture, count, trivia_entry)
+    hero_summary = _hero_summary(prefecture, count, records, trivia_entry)
     map_points = [
         {
             "id": str(record.get("id", "")),
@@ -374,6 +417,8 @@ def build_page(
     .breadcrumb a {{ text-decoration: none; }}
     .hero {{
       position: relative; overflow: hidden; margin-top: 14px; padding: 28px;
+      display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 22px;
+      align-items: center;
       border: 1px solid rgba(93,67,35,.15); border-radius: 24px;
       background: linear-gradient(135deg, #fffaf0, #f0e9fb);
       box-shadow: 0 14px 32px rgba(77,56,30,.08);
@@ -385,7 +430,17 @@ def build_page(
     }}
     .hero-kicker {{ margin: 0; color: #6b4aa2; font-size: .8rem; font-weight: 900; }}
     h1 {{ margin: 4px 0 8px; font-size: clamp(2rem, 7vw, 3.5rem); line-height: 1.15; }}
-    .hero p:last-of-type {{ max-width: 720px; margin: 0; color: #574b41; font-weight: 650; }}
+    .hero-main > p:last-of-type {{ max-width: 720px; margin: 0; color: #574b41; font-weight: 650; }}
+    .hero-summary {{
+      position: relative; z-index: 1; padding: 16px 18px; border-radius: 17px;
+      background: rgba(255,255,255,.74); color: #3a3128;
+      box-shadow: inset 0 0 0 1px rgba(93,67,35,.11);
+    }}
+    .hero-summary span {{
+      display: block; margin-bottom: 6px; color: #6b4aa2;
+      font-size: .76rem; font-weight: 900;
+    }}
+    .hero-summary p {{ margin: 0; font-size: .96rem; font-weight: 800; }}
     .stats {{ display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 18px; }}
     .stat {{ padding: 14px; border-radius: 15px; background: rgba(255,255,255,.72); }}
     .stat span {{ display: block; color: #75685c; font-size: .76rem; font-weight: 850; }}
@@ -461,7 +516,8 @@ def build_page(
     footer {{ margin-top: 24px; color: #75685c; font-size: .8rem; text-align: center; }}
     .leaflet-popup-content a {{ font-weight: 850; }}
     @media (max-width: 700px) {{
-      .hero {{ padding: 22px 18px; }}
+      .hero {{ display: block; padding: 22px 18px; }}
+      .hero-summary {{ display: none; }}
       .pokemon-grid, .pokemon-more-grid, .manhole-grid {{ grid-template-columns: 1fr; }}
       #prefecture-map {{ height: 360px; }}
       section {{ padding: 16px; }}
@@ -476,21 +532,27 @@ def build_page(
       <span>{escape(prefecture)}</span>
     </nav>
     <header class="hero">
-      <p class="hero-kicker">都道府県別 ポケふたガイド</p>
-      <h1>{escape(prefecture)}のポケふた</h1>
-      <p>{escape(hero_intro)}</p>
-      <div class="stats" aria-label="{escape(prefecture)}の集計">
-        <div class="stat"><span>設置枚数</span><strong>{count}枚</strong></div>
-        <div class="stat"><span>全国順位</span><strong>{escape(rank_label)}</strong></div>
+      <div class="hero-main">
+        <p class="hero-kicker">都道府県別 ポケふたガイド</p>
+        <h1>{escape(prefecture)}のポケふた</h1>
+        <p>{escape(hero_intro)}</p>
+        <div class="stats" aria-label="{escape(prefecture)}の集計">
+          <div class="stat"><span>設置枚数</span><strong>{count}枚</strong></div>
+          <div class="stat"><span>全国順位</span><strong>{escape(rank_label)}</strong></div>
+        </div>
+        <div class="hero-actions">
+          <a class="button" href="#manhole-list">マンホール一覧を見る</a>
+          <a class="button pokefuta" href="https://pokefuta.com/visits"
+            data-track="prefecture_visit_cta_click" data-destination="pokefuta_visits">訪問記録を残す</a>
+          <a class="button photo" href="https://pokefuta.com/"
+            data-track="prefecture_photo_cta_click" data-destination="pokefuta_photos">写真を見る</a>
+          <a class="button secondary" href="{escape(map_href)}"
+            data-track="prefecture_map_click" data-destination="map">全国マップで見る</a>
+        </div>
       </div>
-      <div class="hero-actions">
-        <a class="button" href="#manhole-list">マンホール一覧を見る</a>
-        <a class="button pokefuta" href="https://pokefuta.com/visits"
-          data-track="prefecture_visit_cta_click" data-destination="pokefuta_visits">訪問記録を残す</a>
-        <a class="button photo" href="https://pokefuta.com/"
-          data-track="prefecture_photo_cta_click" data-destination="pokefuta_photos">写真を見る</a>
-        <a class="button secondary" href="{escape(map_href)}"
-          data-track="prefecture_map_click" data-destination="map">全国マップで見る</a>
+      <div class="hero-summary" aria-label="{escape(prefecture)}のサマリー">
+        <span>サマリー</span>
+        <p>{escape(hero_summary)}</p>
       </div>
     </header>
 

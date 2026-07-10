@@ -102,6 +102,21 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
             html,
         )
 
+    def test_nagano_desktop_header_summary_mentions_first_month(self) -> None:
+        records = [r for r in self.records if r.get("prefecture") == "長野県"]
+        html = MODULE.build_page(
+            "長野県",
+            "nagano",
+            records,
+            MODULE.build_rankings(self.records)["長野県"],
+            self.pokemon_slugs,
+            self.trivia["長野県"],
+        )
+        self.assertIn('class="hero-summary"', html)
+        self.assertIn("長野県は2026年7月にポケふた初登場。", html)
+        self.assertIn("現在は6自治体で6枚を巡れます。", html)
+        self.assertIn(".hero-summary { display: none; }", html)
+
     def test_tied_counts_share_rank(self) -> None:
         records = [
             {"id": "1", "status": "active", "prefecture": "青森県"},
