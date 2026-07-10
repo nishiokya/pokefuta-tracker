@@ -6,6 +6,9 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 
 from generate_pokemon_index_page import _build_latest_photo_cards
+from generate_pokemon_index_page import generate_html
+from generate_pokemon_index_page import LP_INDEX_STRINGS
+from generate_pokemon_pages import LANG_CONFIGS
 
 
 class LatestPhotoCardsTest(unittest.TestCase):
@@ -52,6 +55,35 @@ class LatestPhotoCardsTest(unittest.TestCase):
         self.assertEqual(cards[0]["href"], "/manholes/42/")
         self.assertEqual(cards[0]["title"], "Slowpoke / Pikachu")
         self.assertEqual(cards[0]["location"], "Kagawa 高松市")
+
+    def test_pokemon_index_does_not_render_hero_summary_panel(self):
+        pokemon_index = {
+            "slowpoke": (
+                {"names": {"ja": "ヤドン", "en": "Slowpoke"}, "generation": 1},
+                [
+                    {
+                        "id": "42",
+                        "title": "香川県/高松市",
+                        "prefecture": "香川県",
+                        "city": "高松市",
+                        "pokemons": ["ヤドン"],
+                    }
+                ],
+            ),
+        }
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            html = generate_html(
+                pokemon_index,
+                "ja",
+                LANG_CONFIGS["ja"],
+                LP_INDEX_STRINGS["ja"],
+                lambda pref: pref,
+                {},
+                Path(tmpdir),
+            )
+
+        self.assertNotIn('class="hero-summary"', html)
 
 
 if __name__ == "__main__":
