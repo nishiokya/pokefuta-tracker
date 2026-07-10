@@ -101,6 +101,21 @@
     .stats { border-top:1px solid var(--top-border-light); color:var(--top-text-muted); }
     .selected-prefecture-badge { background:var(--top-purple-pale) !important; color:var(--top-purple-dark); }
     footer.data-links { color:var(--top-text-muted); }
+
+    /* ===== デザインマンホール投稿LPへの誘導カード ===== */
+    .design-manhole-promo-card {
+      display:flex; align-items:center; gap:12px;
+      background:var(--top-purple-pale); border:1px solid var(--top-border);
+      border-radius:var(--top-radius-card); padding:12px 14px;
+      text-decoration:none; color:var(--top-purple-dark);
+      transition:background 120ms ease;
+    }
+    .design-manhole-promo-card:hover { background:#E4DDF2; }
+    .design-manhole-promo-icon { font-size:22px; }
+    .design-manhole-promo-copy { flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
+    .design-manhole-promo-copy strong { font-size:13px; font-weight:800; line-height:1.4; }
+    .design-manhole-promo-copy small { font-size:11px; color:var(--top-text-muted); }
+    .design-manhole-promo-arrow { font-weight:800; color:var(--top-purple); }
   </style>
   <link rel="icon" href="./assets/pokefuta_icon_32.png" type="image/png" />
   <!-- Google Analytics -->
@@ -216,6 +231,17 @@
         </div>
         <p class="sheet-locate-desc">現在地を使って、近くのキャラクターマンホールを距離順に表示します。位置情報は検索のためだけに使用します。</p>
       </div>
+      <div class="sheet-utility-section">
+        <p class="sheet-section-label">デザインマンホールを見つけたら</p>
+        <a class="design-manhole-promo-card" href="design_manhole.html" onclick="trackEvent('click_design_manhole_lp',{from:'gmanhole_map_sheet'})">
+          <span class="design-manhole-promo-icon" aria-hidden="true">📸</span>
+          <span class="design-manhole-promo-copy">
+            <strong>この地図にない1枚も、投稿でマップに。</strong>
+            <small>ご当地デザインのマンホール写真をみんなのコレクションへ</small>
+          </span>
+          <span class="design-manhole-promo-arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
       <section id="nearby-results" class="nearby-results" aria-live="polite" hidden>
         <div class="section-title-row">
           <h4>近くのマンホール</h4>
@@ -273,6 +299,8 @@
     <p style="margin-top:12px;">
       ポケふただけをじっくり探すなら<a href="./map.html">全国ポケふたマップ</a>、
       現在地から近い1枚を探すなら<a href="./nearby.html">近くのマンホール検索</a>もどうぞ。
+      この地図に載っていないご当地デザインのマンホールを見つけたら、
+      <a href="./design_manhole.html">デザインマンホール投稿</a>からみんなの地図に追加できます。
     </p>
       </section>
       <footer class="data-links" role="contentinfo" style="margin:16px 0 8px; text-align:center; font-size:0.85rem; color:var(--top-text-muted);">
@@ -283,6 +311,8 @@
       <a href="./">ポケふたマップ</a>
       /
       <a href="./nearby.html">近くのマンホール</a>
+      /
+      <a href="./design_manhole.html">デザインマンホール投稿</a>
       /
       <a href="./gmanhole.ndjson" target="_blank" rel="noopener">ガンダムNDJSON</a>
       /

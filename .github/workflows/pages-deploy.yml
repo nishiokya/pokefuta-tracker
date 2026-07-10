@@ -86,6 +86,7 @@ jobs:
           cp apps/web/nearby_manholes.html dist/nearby.html
           cp apps/web/map.html dist/map.html
           cp apps/web/gmanhole_map.html dist/gmanhole_map.html
+          cp apps/web/design_manhole.html dist/design_manhole.html
           cp apps/web/login.html dist/login.html
           cp apps/web/sitemap.xml dist/sitemap.xml
           echo "[dist] Build multilingual pages (en / zh-TW / zh-CN / ko)"
