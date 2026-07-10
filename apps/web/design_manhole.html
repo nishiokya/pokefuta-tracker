@@ -65,17 +65,23 @@
     .lp-hero .lp-lead { margin: 0 auto 24px; max-width: 34em; font-size: 15px; color: var(--top-text-muted); }
     .lp-lead b { color: var(--top-text); }
 
-    /* CSSだけで描くマンホール蓋（ヒーロー装飾） */
+    /* マンホール蓋風フレーム（リングはCSS、中身は実際の投稿写真） */
     .lp-lid {
-      width: 132px; height: 132px; margin: 0 auto 22px;
+      position: relative;
+      width: 148px; height: 148px; margin: 0 auto 22px;
       border-radius: 50%;
       background:
         radial-gradient(circle at 50% 42%, var(--top-purple-pale) 0 34%, transparent 34.5%),
-        repeating-conic-gradient(var(--top-purple) 0 7deg, var(--top-purple-dark) 7deg 14deg);
+        repeating-conic-gradient(var(--top-purple) 0 7.5deg, var(--top-purple-dark) 7.5deg 15deg);
       border: 6px solid var(--top-purple-dark);
       box-shadow: 0 10px 30px rgba(79, 64, 128, 0.25), inset 0 0 0 8px var(--top-purple);
       display: flex; align-items: center; justify-content: center;
       font-size: 46px;
+    }
+    .lp-lid img {
+      position: absolute; inset: 8px;
+      width: calc(100% - 16px); height: calc(100% - 16px);
+      border-radius: 50%; object-fit: cover;
     }
     .lp-cta-row { display: flex; flex-direction: column; align-items: center; gap: 12px; }
     .lp-cta {
@@ -220,7 +226,12 @@
     <!-- ── Hero ── -->
     <section class="lp-hero">
       <p class="lp-eyebrow">DESIGN MANHOLE COLLECTION</p>
-      <div class="lp-lid" aria-hidden="true">📸</div>
+      <div class="lp-lid">
+        <span aria-hidden="true">📸</span><!-- 写真が読めない環境向けのフォールバック -->
+        <img src="https://pokefuta.com/api/design-manholes/bf5be35e-38e6-4792-ab02-d0aa5fda7ce4/photo?size=small"
+             alt="投稿されたデザインマンホールの写真" loading="eager" decoding="async"
+             onerror="this.remove()">
+      </div>
       <h1>あなたの街のデザインマンホール、<br>みんなの地図に。</h1>
       <p class="lp-lead">
         ご当地キャラ、市の花、街のシンボル——。
