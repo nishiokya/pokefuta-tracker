@@ -115,6 +115,10 @@ body.has-site-header {
     text-align: center;
     text-overflow: ellipsis;
   }
+
+  .site-header__link--desktop {
+    display: none;
+  }
 }
 
 /* Full-screen maps must reserve room for the shared header. */

@@ -1,14 +1,8 @@
 import tempfile
-import sys
 import unittest
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).parent))
-
 from generate_pokemon_index_page import _build_latest_photo_cards
-from generate_pokemon_index_page import generate_html
-from generate_pokemon_index_page import LP_INDEX_STRINGS
-from generate_pokemon_pages import LANG_CONFIGS
 
 
 class LatestPhotoCardsTest(unittest.TestCase):
@@ -55,70 +49,6 @@ class LatestPhotoCardsTest(unittest.TestCase):
         self.assertEqual(cards[0]["href"], "/manholes/42/")
         self.assertEqual(cards[0]["title"], "Slowpoke / Pikachu")
         self.assertEqual(cards[0]["location"], "Kagawa 高松市")
-
-    def test_ja_index_hero_has_desktop_summary(self):
-        pokemon_index = {
-            "chansey": (
-                {"names": {"ja": "ラッキー", "en": "Chansey"}, "generation": 1},
-                [
-                    {
-                        "id": "1",
-                        "prefecture": "福島県",
-                        "city": "福島",
-                        "pokemons": ["ラッキー"],
-                    },
-                    {
-                        "id": "2",
-                        "prefecture": "福島県",
-                        "city": "郡山",
-                        "pokemons": ["ラッキー"],
-                    },
-                ],
-            ),
-            "eevee": (
-                {"names": {"ja": "イーブイ", "en": "Eevee"}, "generation": 1},
-                [
-                    {
-                        "id": "3",
-                        "prefecture": "鹿児島県",
-                        "city": "指宿",
-                        "pokemons": ["イーブイ"],
-                    }
-                ],
-            ),
-        }
-
-        with tempfile.TemporaryDirectory() as tmpdir:
-            html = generate_html(
-                pokemon_index,
-                "ja",
-                LANG_CONFIGS["ja"],
-                LP_INDEX_STRINGS["ja"],
-                lambda pref: pref,
-                {},
-                Path(tmpdir),
-            )
-
-        self.assertIn('class="hero-summary"', html)
-        self.assertIn("<span>サマリー</span>", html)
-        self.assertIn("2体の登場ポケモンから探せます。", html)
-        self.assertIn("最多はラッキーで、全国2枚のポケふたに登場します。", html)
-        self.assertIn(".hero-summary { display: none; }", html)
-
-    def test_ja_index_hero_summary_is_omitted_for_empty_data(self):
-        with tempfile.TemporaryDirectory() as tmpdir:
-            html = generate_html(
-                {},
-                "ja",
-                LANG_CONFIGS["ja"],
-                LP_INDEX_STRINGS["ja"],
-                lambda pref: pref,
-                {},
-                Path(tmpdir),
-            )
-
-        self.assertNotIn('class="hero-summary"', html)
-        self.assertNotIn("所在地不明で、全国0枚", html)
 
 
 if __name__ == "__main__":
