@@ -19,6 +19,7 @@ class InjectSiteHeaderTest(unittest.TestCase):
         self.assertIn('class="site-header__brand-name">ポケふた図鑑</span>', result)
         self.assertNotIn("DATABASE", result)
         self.assertIn('href="./map.html">マップ</a>', result)
+        self.assertIn('href="./summary/">サマリー</a>', result)
         self.assertIn('<body class="has-site-header">', result)
 
     def test_preserves_existing_body_classes(self):
@@ -60,6 +61,7 @@ class InjectSiteHeaderTest(unittest.TestCase):
         result = inject(html, asset_base="../../../", page_base="../../")
         self.assertIn('href="../../../assets/site-header.css"', result)
         self.assertIn('href="../../map.html">Map</a>', result)
+        self.assertIn('href="../../summary/">Summary</a>', result)
         self.assertIn('href="../../pokemon/">Pokémon</a>', result)
         self.assertIn('href="../../../gmanhole_map.html">Character Manholes</a>', result)
         self.assertIn('data-stamp-page="https://pokefuta.com/visits"', result)
@@ -67,6 +69,7 @@ class InjectSiteHeaderTest(unittest.TestCase):
         self.assertIn('href="https://pokefuta.com/login?from=data">Login</a>', result)
         self.assertIn('src="../../../assets/session-badge.js"', result)
         self.assertEqual(result.count('class="site-header__link"'), 4)
+        self.assertEqual(result.count('class="site-header__link site-header__link--desktop"'), 1)
 
     def test_injects_login_link_for_japanese_page(self):
         result = inject("<!doctype html><html><head></head><body><main></main></body></html>")

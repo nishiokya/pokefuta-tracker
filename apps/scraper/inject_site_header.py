@@ -17,6 +17,7 @@ HEADER_TEMPLATE = """<header class="site-header">
     </a>
     <nav class="site-header__nav" aria-label="{nav_aria}">
       <a class="site-header__link" href="{page_base}map.html">{nav_map}</a>
+      <a class="site-header__link site-header__link--desktop" href="{page_base}summary/">{nav_summary}</a>
       <a class="site-header__link" href="{page_base}pokemon/">{nav_pokemon}</a>
       <a class="site-header__link" href="{asset_base}gmanhole_map.html">{nav_character}</a>
       <a class="site-header__link" data-login-link data-nav-target="login" data-stamp-page="https://pokefuta.com/visits" data-stamp-label="{nav_stamp}" href="https://pokefuta.com/login?from=data">{nav_login}</a>
@@ -28,11 +29,11 @@ SESSION_BADGE_SCRIPT_TEMPLATE = (
 )
 
 NAV_LABELS = {
-    "ja": ("メインナビゲーション", "マップ", "ポケモン", "キャラマンホール", "スタンプ帳", "ログイン"),
-    "en": ("Main navigation", "Map", "Pokémon", "Character Manholes", "Stamp Book", "Login"),
-    "zh-TW": ("主導覽", "地圖", "神奇寶貝", "角色人孔蓋", "集章冊", "登入"),
-    "zh-CN": ("主导航", "地图", "宝可梦", "角色井盖", "集章册", "登录"),
-    "ko": ("메인 내비게이션", "지도", "포켓몬", "캐릭터 맨홀", "스탬프북", "로그인"),
+    "ja": ("メインナビゲーション", "マップ", "サマリー", "ポケモン", "キャラマンホール", "スタンプ帳", "ログイン"),
+    "en": ("Main navigation", "Map", "Summary", "Pokémon", "Character Manholes", "Stamp Book", "Login"),
+    "zh-TW": ("主導覽", "地圖", "摘要", "神奇寶貝", "角色人孔蓋", "集章冊", "登入"),
+    "zh-CN": ("主导航", "地图", "摘要", "宝可梦", "角色井盖", "集章册", "登录"),
+    "ko": ("메인 내비게이션", "지도", "요약", "포켓몬", "캐릭터 맨홀", "스탬프북", "로그인"),
 }
 
 LEGACY_HEADER_RE = re.compile(
@@ -63,7 +64,7 @@ def inject(html: str, asset_base: str = "./", page_base: str | None = None) -> s
     labels = NAV_LABELS[_language(html)]
     substitutions = dict(
         zip(
-            ("nav_aria", "nav_map", "nav_pokemon", "nav_character", "nav_stamp", "nav_login"),
+            ("nav_aria", "nav_map", "nav_summary", "nav_pokemon", "nav_character", "nav_stamp", "nav_login"),
             labels,
         )
     )
