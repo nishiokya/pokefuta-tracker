@@ -1,6 +1,9 @@
 import tempfile
+import sys
 import unittest
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent))
 
 from generate_pokemon_index_page import _build_latest_photo_cards
 
