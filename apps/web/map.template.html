@@ -1982,7 +1982,12 @@
         let siteCell = `<span class="prefecture-site-link prefecture-site-link--empty">${I.noSite}</span>`;
         if (siteUrl) {
           const anchor = document.createElement('a');
-          anchor.href = getPrefecturePageUrl(prefecture) || siteUrl;
+          const prefecturePageUrl = getPrefecturePageUrl(prefecture);
+          anchor.href = prefecturePageUrl || siteUrl;
+          if (!prefecturePageUrl) {
+            anchor.target = '_blank';
+            anchor.rel = 'noopener noreferrer';
+          }
           anchor.className = 'prefecture-site-link';
           anchor.textContent = `${prefecture}${UI_TEXT.prefectureSite}`;
           siteCell = anchor.outerHTML;

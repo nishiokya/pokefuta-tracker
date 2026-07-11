@@ -767,7 +767,8 @@ def generate_html(
         )
     if prefecture_site_url:
         link_cards.append(
-            f"<a class='link-card link-card--pref-site' href=\"{escape(pref_url)}\">"
+            f"<a class='link-card link-card--pref-site' href=\"{escape(prefecture_site_url)}\""
+            f" target=\"_blank\" rel=\"noopener noreferrer\">"
             f"{_icon('icon-link-prefecture', 'link-card-icon')}<span>{escape(prefecture)}の公式</span></a>"
         )
     if prefecture:
