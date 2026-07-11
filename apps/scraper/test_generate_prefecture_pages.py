@@ -80,6 +80,50 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         ]
         self.assertEqual(12, first_pokemon_section.count('class="pokemon-card"'))
 
+    def test_active_event_renders_section_with_link(self) -> None:
+        events = MODULE.load_events(MODULE.DEFAULT_EVENTS)
+        self.assertIn("高知県", events)
+        kochi_event = events["高知県"][0]
+        html = MODULE.build_page(
+            "高知県",
+            "kochi",
+            [r for r in self.records if r.get("prefecture") == "高知県"],
+            MODULE.build_rankings(self.records)["高知県"],
+            self.pokemon_slugs,
+            self.trivia.get("高知県"),
+            events["高知県"],
+        )
+        self.assertIn("開催中のイベント・スタンプラリー", html)
+        self.assertIn(kochi_event["url"], html)
+        self.assertIn("prefecture_event_click", html)
+
+    def test_expired_event_is_hidden(self) -> None:
+        import datetime
+
+        past = datetime.date(2020, 1, 1)
+        html = MODULE._events_html(
+            [
+                {
+                    "title": "終了イベント",
+                    "url": "https://example.com/",
+                    "start": past,
+                    "end": past,
+                }
+            ]
+        )
+        self.assertEqual("", html)
+
+    def test_prefecture_without_events_has_no_event_section(self) -> None:
+        html = MODULE.build_page(
+            "福井県",
+            "fukui",
+            [r for r in self.records if r.get("prefecture") == "福井県"],
+            MODULE.build_rankings(self.records)["福井県"],
+            self.pokemon_slugs,
+            self.trivia["福井県"],
+        )
+        self.assertNotIn("開催中のイベント・スタンプラリー", html)
+
     def test_empty_prefecture_meta_description_is_complete(self) -> None:
         html = MODULE.build_page(
             "群馬県",

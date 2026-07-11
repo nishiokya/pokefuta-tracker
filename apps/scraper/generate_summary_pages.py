@@ -15,6 +15,7 @@ import hashlib
 import json
 import sys
 from collections import Counter
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from urllib.parse import quote, urlparse
 from xml.sax.saxutils import escape
@@ -34,6 +35,8 @@ POKEMON_METADATA_JSON = ROOT / "docs" / "pokemon_metadata.json"
 PHOTOS_JSON = ROOT / "docs" / "latest-manhole-photos.json"
 IMAGE_DIR = ROOT / "dataset" / "manhole" / "image"
 GUNDAM_SPOTS_JSON = ROOT / "dataset" / "gundam_manhole_spots.json"
+PREFECTURE_EVENTS_JSON = ROOT / "dataset" / "prefecture_events.json"
+JST = timezone(timedelta(hours=9))
 
 BASE_URL = "https://data.pokefuta.com"
 _OGP_PNG = ROOT / "apps" / "web" / "assets" / "ogp" / "pokefuta_summary_ogp.png"
@@ -102,6 +105,9 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "pref_fact_single_city": "1自治体に{count}枚が集まっています。",
         "pref_fact_generic": "{city_count}自治体で{species_count}種のポケモンに出会えます。",
         "h2_ranking": "ポケふたの多い都道府県ランキング",
+        "h2_events": "開催中のイベント・スタンプラリー",
+        "event_ongoing": "開催中",
+        "event_upcoming": "まもなく開催",
         "ranking_note": '各都道府県の地図は、<a class="summary-link" href="/">全国マップ</a>から地域を選んで確認できます。',
         "h2_regional": "地域の分布傾向",
         "h2_empty": "ポケふたがない県",
@@ -202,6 +208,9 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "pref_fact_single_city": "All {count} covers are concentrated in one municipality.",
         "pref_fact_generic": "{species_count} Pokémon across {city_count} municipalities.",
         "h2_ranking": "Top Prefectures by Pokéfuta Count",
+        "h2_events": "Ongoing Events & Stamp Rallies",
+        "event_ongoing": "Ongoing",
+        "event_upcoming": "Starting soon",
         "ranking_note": 'Browse each prefecture\'s Pokéfuta on the <a class="summary-link" href="/en/">Japan Map</a>.',
         "h2_regional": "Regional Distribution",
         "h2_empty": "Prefectures with No Pokéfuta",
@@ -289,6 +298,9 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "pref_fact_single_city": "{count}个井盖集中设置在1个市区町村。",
         "pref_fact_generic": "可在{city_count}个市区町村遇见{species_count}种宝可梦。",
         "h2_ranking": "宝可梦井盖最多的县排名",
+        "h2_events": "正在举办的活动・集章之旅",
+        "event_ongoing": "举办中",
+        "event_upcoming": "即将开始",
         "ranking_note": '各都道府县的地图可通过<a class="summary-link" href="/zh-CN/">全国地图</a>选择地区查看。',
         "h2_regional": "地区分布情况",
         "h2_empty": "没有宝可梦井盖的县",
@@ -376,6 +388,9 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "pref_fact_single_city": "{count}個人孔蓋集中設置在1個市區町村。",
         "pref_fact_generic": "可在{city_count}個市區町村遇見{species_count}種寶可夢。",
         "h2_ranking": "寶可夢人孔蓋最多的縣排行",
+        "h2_events": "舉辦中的活動・集章之旅",
+        "event_ongoing": "舉辦中",
+        "event_upcoming": "即將開始",
         "ranking_note": '各都道府縣的地圖可透過<a class="summary-link" href="/zh-TW/">全國地圖</a>選擇地區查看。',
         "h2_regional": "地區分布情況",
         "h2_empty": "沒有寶可夢人孔蓋的縣",
@@ -463,6 +478,9 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "pref_fact_single_city": "1개 시구정촌에 {count}개의 포케후타가 모여 있습니다.",
         "pref_fact_generic": "{city_count}개 시구정촌에서 {species_count}종의 포켓몬을 만날 수 있습니다.",
         "h2_ranking": "포케후타가 많은 현 랭킹",
+        "h2_events": "진행 중인 이벤트·스탬프 랠리",
+        "event_ongoing": "진행 중",
+        "event_upcoming": "곧 시작",
         "ranking_note": '각 도도부현의 지도는 <a class="summary-link" href="/ko/">전국 지도</a>에서 지역을 선택하여 확인할 수 있습니다.',
         "h2_regional": "지역별 분포 현황",
         "h2_empty": "포케후타가 없는 현",
@@ -730,6 +748,44 @@ _CSS = """\
       margin: 0 0 10px;
       font-size: 1.35rem;
       letter-spacing: 0;
+    }
+
+    .summary-event-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 10px;
+    }
+
+    .summary-event-list li {
+      padding: 12px 14px;
+      border: 1px solid rgba(93, 67, 35, .16);
+      border-left: 4px solid #176f68;
+      border-radius: 10px;
+      background: #fffdf7;
+    }
+
+    .summary-event-badge {
+      display: inline-block;
+      margin-right: 8px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #176f68;
+      color: #fff;
+      font-size: .72rem;
+      font-weight: 700;
+    }
+
+    .summary-event-badge.is-upcoming {
+      background: #a85b2e;
+    }
+
+    .summary-event-meta {
+      display: block;
+      margin-top: 4px;
+      color: #75685c;
+      font-size: .8rem;
     }
 
     .summary-table-wrap {
@@ -1662,6 +1718,54 @@ def _build_ai_summary(s: dict, stats: dict, tr) -> str:
         text += s["ai_empty"].format(empty_count=len(empty))
     text += s["ai_outro"]
     return f'<div class="ai-summary-box"><p>{escape(text)}</p></div>\n'
+
+
+def _load_prefecture_events(path: Path) -> list[dict]:
+    try:
+        entries = json.loads(path.read_text(encoding="utf-8")) if path.exists() else []
+    except (json.JSONDecodeError, OSError):
+        return []
+    today = datetime.now(JST).date().isoformat()
+    return [
+        entry
+        for entry in entries
+        if isinstance(entry, dict)
+        and entry.get("title")
+        and str(entry.get("url", "")).startswith("https://")
+        and str(entry.get("end_date", "")) >= today
+    ]
+
+
+def _build_events_section(s: dict, events: list[dict], tr) -> str:
+    if not events:
+        return ""
+    today = datetime.now(JST).date().isoformat()
+    items = []
+    for event in events:
+        ongoing = str(event.get("start_date", "")) <= today
+        status = s["event_ongoing"] if ongoing else s["event_upcoming"]
+        badge_class = "summary-event-badge" + ("" if ongoing else " is-upcoming")
+        pref = tr(str(event.get("prefecture", "")))
+        period = (
+            f'{str(event["start_date"]).replace("-", "/")}'
+            f' - {str(event["end_date"]).replace("-", "/")}'
+        )
+        items.append(
+            f'<li><span class="{badge_class}">{escape(status)}</span>'
+            f'<a class="summary-link" href="{escape(event["url"])}"'
+            f' target="_blank" rel="noopener noreferrer"'
+            f' data-summary-event="summary_event_click"'
+            f' data-prefecture="{_escape_attr(event.get("prefecture", ""))}">'
+            f'{escape(event["title"])}</a>'
+            f'<small class="summary-event-meta">{escape(pref)} / {escape(period)}</small></li>'
+        )
+    joined = "".join(items)
+    return (
+        f'\n    <section class="summary-section summary-events" aria-labelledby="events-heading">'
+        f'\n      <h2 id="events-heading">{escape(s["h2_events"])}</h2>'
+        f'\n      <ul class="summary-event-list">{joined}</ul>'
+        f'\n    </section>\n'
+    )
 
 
 def _build_discovery_section(s: dict, stats: dict, tr) -> str:
@@ -3504,7 +3608,7 @@ def _build_pokemon_ranking_section(s: dict, pokemon_stats: dict) -> str:
     )
 
 
-def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, records_by_id: dict, photos_data: dict, pokemon_metadata: dict, pref_trivia_data: list[dict] | None = None, gundam_spots: list[dict] | None = None) -> str:
+def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, records_by_id: dict, photos_data: dict, pokemon_metadata: dict, pref_trivia_data: list[dict] | None = None, gundam_spots: list[dict] | None = None, prefecture_events: list[dict] | None = None) -> str:
     pref_key = s["pref_key"]
 
     def tr(ja_name: str) -> str:
@@ -3520,6 +3624,7 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
     map_base = s["map_base_href"]
 
     ai_html = _build_ai_summary(s, stats, tr)
+    events_html = _build_events_section(s, prefecture_events or [], tr)
     discovery_html = _build_discovery_section(s, stats, tr)
     daily_fact_html, fact_list_html = _build_fact_sections(s, stats, tr)
     regional_html = _build_regional_section(s, stats)
@@ -3632,6 +3737,7 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
         <img src="/manhole/image/141_latest.jpeg" alt="" width="720" height="720">
       </figure>
     </header>
+    {events_html}
     {daily_fact_html}
     {search_hub_html}
     {latest_photos_html}
@@ -3722,10 +3828,13 @@ def main() -> None:
         gundam_spots = []
     print(f"[INFO] {len(gundam_spots)} Gundam crossover spots")
 
+    prefecture_events = _load_prefecture_events(PREFECTURE_EVENTS_JSON)
+    print(f"[INFO] {len(prefecture_events)} active prefecture events")
+
     for lang, s in SUMMARY_STRINGS.items():
         html = render_page(
             s, stats, pref_names, pokemon_stats, records_by_id, photos_data,
-            pokemon_metadata, pref_trivia_data, gundam_spots
+            pokemon_metadata, pref_trivia_data, gundam_spots, prefecture_events
         )
         out = DIST / s["out_path"]
         out.parent.mkdir(parents=True, exist_ok=True)

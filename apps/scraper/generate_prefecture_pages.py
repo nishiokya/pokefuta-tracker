@@ -6,7 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 from collections import Counter
-from datetime import datetime
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from urllib.parse import quote
 from xml.sax.saxutils import escape
@@ -26,6 +26,8 @@ ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_MANHOLES = ROOT / "docs" / "pokefuta.ndjson"
 DEFAULT_POKEMON = ROOT / "docs" / "pokemon_metadata.json"
 DEFAULT_TRIVIA = ROOT / "dataset" / "prefecture_trivia.json"
+DEFAULT_EVENTS = ROOT / "dataset" / "prefecture_events.json"
+JST = timezone(timedelta(hours=9))
 DEFAULT_OUTPUT = ROOT / "dist" / "prefectures"
 BASE_URL = "https://data.pokefuta.com"
 OG_IMAGE = f"{BASE_URL}/assets/ogp/pokefuta_summary_ogp.png"
@@ -106,6 +108,65 @@ def load_trivia(path: Path) -> dict[str, dict]:
         for entry in entries
         if isinstance(entry, dict) and entry.get("prefecture")
     }
+
+
+def load_events(path: Path) -> dict[str, list[dict]]:
+    if not path.exists():
+        return {}
+    try:
+        entries = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    events: dict[str, list[dict]] = {}
+    for entry in entries:
+        if not isinstance(entry, dict):
+            continue
+        prefecture = entry.get("prefecture")
+        url = str(entry.get("url", "")).strip()
+        if not prefecture or not entry.get("title") or not url.startswith("https://"):
+            continue
+        try:
+            entry = {
+                **entry,
+                "start": date.fromisoformat(entry["start_date"]),
+                "end": date.fromisoformat(entry["end_date"]),
+            }
+        except (KeyError, TypeError, ValueError):
+            continue
+        events.setdefault(prefecture, []).append(entry)
+    return events
+
+
+def _format_date(value: date) -> str:
+    return f"{value.year}年{value.month}月{value.day}日"
+
+
+def _events_html(events: list[dict] | None, today: date | None = None) -> str:
+    today = today or datetime.now(JST).date()
+    active = [e for e in events or [] if e["end"] >= today]
+    if not active:
+        return ""
+    items = []
+    for event in active:
+        status = "開催中" if event["start"] <= today else "まもなく開催"
+        description = str(event.get("description", "")).strip()
+        items.append(
+            '<div class="event-item">'
+            f'<span class="event-status">{escape(status)}</span>'
+            f'<strong><a href="{escape(event["url"])}" target="_blank" '
+            'rel="noopener noreferrer" data-track="prefecture_event_click" '
+            f'data-destination="event">{escape(event["title"])}</a></strong>'
+            + (f"<p>{escape(description)}</p>" if description else "")
+            + '<p class="event-period">期間: '
+            f'{_format_date(event["start"])}〜{_format_date(event["end"])}</p>'
+            "</div>"
+        )
+    return (
+        '<section class="event-card" aria-labelledby="event-heading">\n'
+        '      <h2 id="event-heading">開催中のイベント・スタンプラリー</h2>\n'
+        f'      {"".join(items)}\n'
+        "    </section>\n\n    "
+    )
 
 
 def build_rankings(records: list[dict]) -> dict[str, int | None]:
@@ -324,6 +385,7 @@ def build_page(
     rank: int | None,
     pokemon_slugs: dict[str, str],
     trivia_entry: dict | None,
+    events: list[dict] | None = None,
 ) -> str:
     count = len(records)
     canonical = f"{BASE_URL}/prefectures/{slug}/"
@@ -361,6 +423,7 @@ def build_page(
     pokemon_html = _pokemon_cards(records, pokemon_slugs)
     manhole_html = _manhole_cards(records)
     trivia_html = _trivia_html(prefecture, trivia_entry, count)
+    events_html = _events_html(events)
     related_html = _related_prefectures(prefecture)
     map_empty_class = " map-empty" if not map_points else ""
     json_ld = {
@@ -506,6 +569,20 @@ def build_page(
     }}
     .trivia-card p {{ margin: 0; font-size: 1.05rem; font-weight: 750; }}
     .trivia-source {{ margin-top: 8px; font-size: .78rem; }}
+    .event-card {{
+      border-left: 5px solid #176f68;
+      background: linear-gradient(135deg, #fffaf0, #edf8f2);
+    }}
+    .event-item + .event-item {{ margin-top: 14px; }}
+    .event-status {{
+      display: inline-flex; margin: 0 0 6px; padding: 3px 9px;
+      border-radius: 999px; background: #176f68; color: white;
+      font-size: .72rem; font-weight: 900;
+    }}
+    .event-item strong {{ display: block; }}
+    .event-item strong a {{ color: #14544f; }}
+    .event-item p {{ margin: 6px 0 0; font-size: .92rem; }}
+    .event-period {{ color: #75685c; font-size: .78rem; }}
     .empty-state {{ margin: 0; color: #75685c; }}
     .related-label {{ margin: 0 0 8px; color: #75685c; font-size: .8rem; font-weight: 850; }}
     .related-links {{ display: flex; flex-wrap: wrap; gap: 8px; }}
@@ -562,7 +639,7 @@ def build_page(
       {trivia_html}
     </section>
 
-    <section aria-labelledby="map-heading">
+    {events_html}<section aria-labelledby="map-heading">
       <h2 id="map-heading">{escape(prefecture)}の設置マップ</h2>
       <div id="prefecture-map" class="{map_empty_class.strip()}"></div>
       <p class="map-note">マーカーを選ぶと、各ポケふたの詳細ページへ移動できます。</p>
@@ -651,6 +728,7 @@ def generate_all(
     pokemon_slugs: dict[str, str],
     trivia: dict[str, dict],
     output_dir: Path,
+    events: dict[str, list[dict]] | None = None,
 ) -> int:
     records_by_pref = {pref: [] for pref in PREFECTURE_ORDER}
     for record in records:
@@ -668,6 +746,7 @@ def generate_all(
             rankings[prefecture],
             pokemon_slugs,
             trivia.get(prefecture),
+            (events or {}).get(prefecture),
         )
         (out_dir / "index.html").write_text(html, encoding="utf-8")
     return len(PREFECTURES)
@@ -678,6 +757,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--manholes", type=Path, default=DEFAULT_MANHOLES)
     parser.add_argument("--pokemon", type=Path, default=DEFAULT_POKEMON)
     parser.add_argument("--trivia", type=Path, default=DEFAULT_TRIVIA)
+    parser.add_argument("--events", type=Path, default=DEFAULT_EVENTS)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     return parser.parse_args()
 
@@ -687,7 +767,8 @@ def main() -> int:
     records = load_records(args.manholes)
     pokemon_slugs = load_pokemon_slugs(args.pokemon)
     trivia = load_trivia(args.trivia)
-    count = generate_all(records, pokemon_slugs, trivia, args.output)
+    events = load_events(args.events)
+    count = generate_all(records, pokemon_slugs, trivia, args.output, events)
     print(
         f"[generate_prefecture_pages] wrote {count} pages to "
         f"{args.output.relative_to(ROOT) if args.output.is_relative_to(ROOT) else args.output}"
