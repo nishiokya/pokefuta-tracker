@@ -487,23 +487,37 @@
       .then(function(events) {
         var today = new Date(Date.now() + 9 * 3600000).toISOString().slice(0, 10);
         var active = (events || []).filter(function(e) {
-          return e && e.title && e.end_date >= today && /^https:\/\//.test(e.url || '');
+          return e && typeof e.title === 'string'
+            && typeof e.start_date === 'string' && typeof e.end_date === 'string'
+            && e.end_date >= today
+            && typeof e.url === 'string' && /^https:\/\//.test(e.url);
         });
         if (!active.length) return;
         var list = document.getElementById('event-notice-list');
-        list.innerHTML = active.map(function(e) {
+        active.forEach(function(e) {
           var ongoing = e.start_date <= today;
-          return '<a class="event-notice-card" href="' + e.url + '" target="_blank" rel="noopener noreferrer">'
-            + '<span class="event-notice-badge' + (ongoing ? '' : ' is-upcoming') + '">'
-            + (ongoing ? EV_STRINGS.ongoing : EV_STRINGS.upcoming) + '</span>'
-            + '<span class="event-notice-copy"><b>' + e.title + '</b>'
-            + '<small>' + e.start_date.replace(/-/g, '/') + ' - ' + e.end_date.replace(/-/g, '/') + '</small></span>'
-            + '</a>';
-        }).join('');
-        Array.prototype.forEach.call(list.querySelectorAll('a'), function(a, i) {
-          a.addEventListener('click', function() {
-            if (window.trackEvent) trackEvent('click_event_notice', { prefecture: active[i].prefecture });
+          var card = document.createElement('a');
+          card.className = 'event-notice-card';
+          card.href = e.url;
+          card.target = '_blank';
+          card.rel = 'noopener noreferrer';
+          var badge = document.createElement('span');
+          badge.className = 'event-notice-badge' + (ongoing ? '' : ' is-upcoming');
+          badge.textContent = ongoing ? EV_STRINGS.ongoing : EV_STRINGS.upcoming;
+          var copy = document.createElement('span');
+          copy.className = 'event-notice-copy';
+          var title = document.createElement('b');
+          title.textContent = e.title;
+          var period = document.createElement('small');
+          period.textContent = e.start_date.replace(/-/g, '/') + ' - ' + e.end_date.replace(/-/g, '/');
+          copy.appendChild(title);
+          copy.appendChild(period);
+          card.appendChild(badge);
+          card.appendChild(copy);
+          card.addEventListener('click', function() {
+            if (window.trackEvent) trackEvent('click_event_notice', { prefecture: e.prefecture });
           });
+          list.appendChild(card);
         });
         document.getElementById('sec-events').hidden = false;
         if (window.trackEvent) trackEvent('view_event_notice', { count: active.length });

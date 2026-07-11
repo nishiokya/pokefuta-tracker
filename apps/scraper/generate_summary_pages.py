@@ -1731,8 +1731,11 @@ def _load_prefecture_events(path: Path) -> list[dict]:
         for entry in entries
         if isinstance(entry, dict)
         and entry.get("title")
-        and str(entry.get("url", "")).startswith("https://")
-        and str(entry.get("end_date", "")) >= today
+        and isinstance(entry.get("url"), str)
+        and entry["url"].startswith("https://")
+        and isinstance(entry.get("start_date"), str)
+        and isinstance(entry.get("end_date"), str)
+        and entry["end_date"] >= today
     ]
 
 
@@ -1742,17 +1745,17 @@ def _build_events_section(s: dict, events: list[dict], tr) -> str:
     today = datetime.now(JST).date().isoformat()
     items = []
     for event in events:
-        ongoing = str(event.get("start_date", "")) <= today
+        ongoing = event["start_date"] <= today
         status = s["event_ongoing"] if ongoing else s["event_upcoming"]
         badge_class = "summary-event-badge" + ("" if ongoing else " is-upcoming")
         pref = tr(str(event.get("prefecture", "")))
         period = (
-            f'{str(event["start_date"]).replace("-", "/")}'
-            f' - {str(event["end_date"]).replace("-", "/")}'
+            f'{event["start_date"].replace("-", "/")}'
+            f' - {event["end_date"].replace("-", "/")}'
         )
         items.append(
             f'<li><span class="{badge_class}">{escape(status)}</span>'
-            f'<a class="summary-link" href="{escape(event["url"])}"'
+            f'<a class="summary-link" href="{_escape_attr(event["url"])}"'
             f' target="_blank" rel="noopener noreferrer"'
             f' data-summary-event="summary_event_click"'
             f' data-prefecture="{_escape_attr(event.get("prefecture", ""))}">'

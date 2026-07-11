@@ -141,6 +141,10 @@ def _format_date(value: date) -> str:
     return f"{value.year}年{value.month}月{value.day}日"
 
 
+def _escape_attr(value: object) -> str:
+    return escape(str(value), {'"': "&quot;", "'": "&#x27;"})
+
+
 def _events_html(events: list[dict] | None, today: date | None = None) -> str:
     today = today or datetime.now(JST).date()
     active = [e for e in events or [] if e["end"] >= today]
@@ -153,7 +157,7 @@ def _events_html(events: list[dict] | None, today: date | None = None) -> str:
         items.append(
             '<div class="event-item">'
             f'<span class="event-status">{escape(status)}</span>'
-            f'<strong><a href="{escape(event["url"])}" target="_blank" '
+            f'<strong><a href="{_escape_attr(event["url"])}" target="_blank" '
             'rel="noopener noreferrer" data-track="prefecture_event_click" '
             f'data-destination="event">{escape(event["title"])}</a></strong>'
             + (f"<p>{escape(description)}</p>" if description else "")
