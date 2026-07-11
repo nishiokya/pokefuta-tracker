@@ -469,6 +469,7 @@ a { color: inherit; text-decoration: none; }
 
 /* ── Section 0: New releases (topmost; revealed by JS only when recent) ── */
 #sec-newrelease[hidden] { display: none; }
+#sec-events[hidden] { display: none; }
 
 .newrel-update-label {
   font-size: 11px;
@@ -918,13 +919,32 @@ a { color: inherit; text-decoration: none; }
   #sec-pref  { grid-area: pref; }
   #sec-hub   { grid-area: hub; }
   #sec-newrelease { grid-area: newrelease; }
+  #sec-events { grid-area: events; }
 
   /* When new releases exist, prepend a topmost row so the band leads the page.
-     Hidden (the common case) leaves the base 4-row layout untouched — no gap. */
+     Hidden (the common case) leaves the base 4-row layout untouched — no gap.
+     Event notices slot between the map band and the hero the same way. */
   .top-main:has(> #sec-newrelease:not([hidden])) {
     grid-template-areas:
       "newrelease"
       "maphero"
+      "hero"
+      "pref"
+      "hub";
+  }
+  .top-main:has(> #sec-events:not([hidden])) {
+    grid-template-areas:
+      "maphero"
+      "events"
+      "hero"
+      "pref"
+      "hub";
+  }
+  .top-main:has(> #sec-newrelease:not([hidden])):has(> #sec-events:not([hidden])) {
+    grid-template-areas:
+      "newrelease"
+      "maphero"
+      "events"
       "hero"
       "pref"
       "hub";
@@ -1063,6 +1083,48 @@ a { color: inherit; text-decoration: none; }
   #sec-hub .sec-eyebrow { grid-column: 1 / -1; }
   .hub-card { margin-bottom: 0; padding: 18px 20px; }
   .hub-card-header { font-size: 15px; }
+}
+
+/* ── Event notices: active stamp rallies (hidden when none) ── */
+.event-notice-list {
+  display: grid;
+  gap: 10px;
+}
+.event-notice-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--top-border);
+  border-left: 5px solid #176F68;
+  border-radius: var(--top-radius-card);
+  background: var(--top-card-bg);
+  color: var(--top-text);
+  text-decoration: none;
+}
+.event-notice-badge {
+  flex-shrink: 0;
+  padding: 3px 10px;
+  border-radius: var(--top-radius-pill);
+  background: #176F68;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+}
+.event-notice-badge.is-upcoming {
+  background: var(--top-eyebrow);
+}
+.event-notice-copy {
+  min-width: 0;
+}
+.event-notice-copy b {
+  display: block;
+  font-size: 14px;
+  line-height: 1.45;
+}
+.event-notice-copy small {
+  color: var(--top-text-muted);
+  font-size: 12px;
 }
 
 /* Wide desktop: a touch more breathing room. */

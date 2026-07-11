@@ -86,7 +86,7 @@
   </script>
   <!-- End GA -->
   <link rel="stylesheet" href="%%BASE_PATH%%assets/theme.css" />
-  <link rel="stylesheet" href="%%BASE_PATH%%assets/top-page.css?v=20260707a" />
+  <link rel="stylesheet" href="%%BASE_PATH%%assets/top-page.css?v=20260711a" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
   <link rel="icon" href="%%BASE_PATH%%assets/pokefuta-marker.svg" type="image/svg+xml" />
   <script src="%%BASE_PATH%%assets/session-badge.js" defer></script>
@@ -177,6 +177,15 @@
           <div class="map-gateway-cta">%%SEC3_MAP_CTA%%</div>
         </div>
       </a>
+    </section>
+
+    <!-- ===== EVENT NOTICES (shown only when a stamp rally is active) ===== -->
+    <section class="top-section" id="sec-events" hidden>
+      <div class="sec-eyebrow">
+        <span class="sec-num"></span>
+        <h2 class="sec-title">%%EVENTS_TITLE%%</h2>
+      </div>
+      <div class="event-notice-list" id="event-notice-list"></div>
     </section>
 
     <!-- ===== 2. TODAY'S HERO ===== -->
@@ -470,6 +479,50 @@
         renderCommunityStats(feed && feed.stats);
       })
       .catch(function() { /* curated hero remains */ });
+
+    // ── Event notices: active stamp rallies from api/prefecture_events.json ──
+    var EV_STRINGS = { ongoing: '%%EVENTS_ONGOING%%', upcoming: '%%EVENTS_UPCOMING%%' };
+    fetch(BASE_PATH + 'api/prefecture_events.json')
+      .then(function(r) { if (!r.ok) throw new Error('events ' + r.status); return r.json(); })
+      .then(function(events) {
+        var today = new Date(Date.now() + 9 * 3600000).toISOString().slice(0, 10);
+        var active = (events || []).filter(function(e) {
+          return e && typeof e.title === 'string'
+            && typeof e.start_date === 'string' && typeof e.end_date === 'string'
+            && e.end_date >= today
+            && typeof e.url === 'string' && /^https:\/\//.test(e.url);
+        });
+        if (!active.length) return;
+        var list = document.getElementById('event-notice-list');
+        active.forEach(function(e) {
+          var ongoing = e.start_date <= today;
+          var card = document.createElement('a');
+          card.className = 'event-notice-card';
+          card.href = e.url;
+          card.target = '_blank';
+          card.rel = 'noopener noreferrer';
+          var badge = document.createElement('span');
+          badge.className = 'event-notice-badge' + (ongoing ? '' : ' is-upcoming');
+          badge.textContent = ongoing ? EV_STRINGS.ongoing : EV_STRINGS.upcoming;
+          var copy = document.createElement('span');
+          copy.className = 'event-notice-copy';
+          var title = document.createElement('b');
+          title.textContent = e.title;
+          var period = document.createElement('small');
+          period.textContent = e.start_date.replace(/-/g, '/') + ' - ' + e.end_date.replace(/-/g, '/');
+          copy.appendChild(title);
+          copy.appendChild(period);
+          card.appendChild(badge);
+          card.appendChild(copy);
+          card.addEventListener('click', function() {
+            if (window.trackEvent) trackEvent('click_event_notice', { prefecture: e.prefecture });
+          });
+          list.appendChild(card);
+        });
+        document.getElementById('sec-events').hidden = false;
+        if (window.trackEvent) trackEvent('view_event_notice', { count: active.length });
+      })
+      .catch(function() { /* no event notices */ });
 
     // ── Mini-map pin coords + shared renderer (called from fetch OR map init) ──
     var PREF_COORDS = {
