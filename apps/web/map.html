@@ -751,7 +751,7 @@
       codeHeader: 'コード',
       prefectureHeader: '都道府県',
       countHeader: 'ポケふた数',
-      siteHeader: 'サイト',
+      siteHeader: '都道府県ページ',
       pokemonFilter: 'ポケモンで絞り込み',
       searchPokemon: 'ポケモンを検索...',
       showAll: '🔄 すべて表示',
@@ -766,7 +766,7 @@
       officialDetail: '📝 公式詳細',
       officialDetailCta: '公式詳細を見る',
       detailPageCta: '詳細ページを見る',
-      prefectureSite: 'サイト'
+      prefectureSite: '都道府県ページ'
     };
     const HERO_DISCOVERY_TEXT = {
       heading: '今日、どのポケふたに会いに行く？',
@@ -1990,7 +1990,7 @@
           const anchor = document.createElement('a');
           anchor.href = prefecturePageUrl;
           anchor.className = 'prefecture-site-link';
-          anchor.textContent = `${prefecture}${UI_TEXT.prefectureSite}`;
+          anchor.textContent = UI_TEXT.prefectureSite;
           siteCell = anchor.outerHTML;
         }
 

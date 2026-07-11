@@ -469,7 +469,7 @@
           <div id="prefecture-spots-list" class="prefecture-spots-list"></div>
         </section>
         <div id="prefecture-table-wrapper" class="prefecture-card-list" aria-describedby="pref-table-desc">
-          <p id="pref-table-desc" class="sr-only">都道府県ごとのポケふた数と都道府県ページへのリンク</p>
+          <p id="pref-table-desc" class="sr-only">%%PREF_TABLE_DESC%%</p>
           <div id="prefecture-table-body"></div>
         </div>
       </div>
@@ -1962,7 +1962,7 @@
           const anchor = document.createElement('a');
           anchor.href = prefecturePageUrl;
           anchor.className = 'prefecture-site-link';
-          anchor.textContent = `${prefecture}${UI_TEXT.prefectureSite}`;
+          anchor.textContent = UI_TEXT.prefectureSite;
           siteCell = anchor.outerHTML;
         }
 

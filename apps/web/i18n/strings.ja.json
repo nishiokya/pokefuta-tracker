@@ -122,7 +122,7 @@
       "codeHeader": "コード",
       "prefectureHeader": "都道府県",
       "countHeader": "ポケふた数",
-      "siteHeader": "サイト",
+      "siteHeader": "都道府県ページ",
       "pokemonFilter": "ポケモンで絞り込み",
       "searchPokemon": "ポケモンを検索...",
       "showAll": "🔄 すべて表示",
@@ -137,7 +137,7 @@
       "officialDetail": "📝 公式詳細",
       "officialDetailCta": "公式詳細を見る",
       "detailPageCta": "詳細を見る",
-      "prefectureSite": "サイト"
+      "prefectureSite": "都道府県ページ"
     }
   }
 }

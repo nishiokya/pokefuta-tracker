@@ -166,7 +166,7 @@
       "codeHeader": "代碼",
       "prefectureHeader": "都道府縣",
       "countHeader": "數量",
-      "siteHeader": "網站",
+      "siteHeader": "都道府縣頁面",
       "pokemonFilter": "依神奇寶貝篩選",
       "searchPokemon": "搜尋神奇寶貝…",
       "showAll": "🔄 顯示全部",
@@ -181,7 +181,7 @@
       "officialDetail": "📝 官方",
       "officialDetailCta": "查看官方詳細資訊",
       "detailPageCta": "查看詳情",
-      "prefectureSite": "　網站"
+      "prefectureSite": "都道府縣頁面"
     }
   },
   "APPBAR_PREFIX": "日本 ",

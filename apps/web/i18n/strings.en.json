@@ -166,7 +166,7 @@
       "codeHeader": "Code",
       "prefectureHeader": "Prefecture",
       "countHeader": "Count",
-      "siteHeader": "Site",
+      "siteHeader": "Prefecture page",
       "pokemonFilter": "Filter by Pokémon",
       "searchPokemon": "Search Pokémon…",
       "showAll": "🔄 Show all",
@@ -181,7 +181,7 @@
       "officialDetail": "📝 Official",
       "officialDetailCta": "View official site",
       "detailPageCta": "View details",
-      "prefectureSite": " Site"
+      "prefectureSite": "Prefecture page"
     }
   },
   "APPBAR_PREFIX": "Japan ",

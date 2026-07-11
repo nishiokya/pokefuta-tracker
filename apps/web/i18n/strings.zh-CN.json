@@ -166,7 +166,7 @@
       "codeHeader": "代码",
       "prefectureHeader": "都道府县",
       "countHeader": "数量",
-      "siteHeader": "网站",
+      "siteHeader": "都道府县页面",
       "pokemonFilter": "按宝可梦筛选",
       "searchPokemon": "搜索宝可梦…",
       "showAll": "🔄 显示全部",
@@ -181,7 +181,7 @@
       "officialDetail": "📝 官方",
       "officialDetailCta": "查看官方详细信息",
       "detailPageCta": "查看详情",
-      "prefectureSite": "　网站"
+      "prefectureSite": "都道府县页面"
     }
   },
   "APPBAR_PREFIX": "日本 ",
