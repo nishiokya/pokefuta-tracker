@@ -9,7 +9,7 @@ ROOT="$(git rev-parse --show-toplevel)" || { echo "[driver] ERROR: not in a git 
 PORT="${PORT:-8000}"
 SS_DIR="${SS_DIR:-${TMPDIR:-/tmp}/pokefuta-run}"
 CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-command -v "$CHROME" >/dev/null 2>&1 || CHROME="$(command -v google-chrome || command -v chromium || true)"
+[ -x "$CHROME" ] || CHROME="$(command -v google-chrome || command -v chromium || true)"
 
 kill_port() {
   local pid; pid=$(lsof -ti:"$PORT" 2>/dev/null)
@@ -30,6 +30,7 @@ cp apps/web/gmanhole_map.html dist/gmanhole_map.html
 cp apps/web/design_manhole.html dist/design_manhole.html
 cp apps/web/login.html dist/login.html 2>/dev/null || true
 cp apps/web/robots.txt dist/robots.txt
+cp apps/web/sitemap.xml dist/sitemap.xml 2>/dev/null || true
 cp -r apps/web/assets/. dist/assets/
 # docs/ の公開データも同期（古いdistだと api/*.json が欠けていることがある）
 mkdir -p dist/api
