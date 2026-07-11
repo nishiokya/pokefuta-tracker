@@ -89,6 +89,7 @@ jobs:
           cp apps/web/design_manhole.html dist/design_manhole.html
           cp apps/web/login.html dist/login.html
           cp apps/web/sitemap.xml dist/sitemap.xml
+          cp apps/web/robots.txt dist/robots.txt
           echo "[dist] Build multilingual pages (en / zh-TW / zh-CN / ko)"
           python3 tools/build_i18n.py
           echo '<!doctype html><meta http-equiv="refresh" content="0; url=./nearby.html">' > dist/nearby_manholes.html
