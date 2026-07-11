@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-07-11T11:53:09.982160Z",
+  "generated_at": "2026-07-11T22:34:36.928163Z",
   "source": "pokefuta photo table",
   "image": {
     "r2_public_base_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image"
   },
-  "count": 158,
+  "count": 167,
   "photos": {
     "1": {
       "manhole_id": 1,
@@ -20,6 +20,7 @@
       "shot_at": "2026-06-07T21:48:11+00:00",
       "comment": null,
       "display_name": "いろはす",
+      "public_user_id": "6096691c-eeda-4e73-8401-a11274868ede",
       "gallery": [
         {
           "photo_id": "6ed18cd0-8ec9-4a3f-8eca-8779f80a25ec",
@@ -28,7 +29,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-08T12:29:36.33282+00:00",
           "shot_at": "2026-06-07T21:48:11+00:00",
-          "display_name": "いろはす"
+          "display_name": "いろはす",
+          "public_user_id": "6096691c-eeda-4e73-8401-a11274868ede"
         }
       ]
     },
@@ -46,6 +48,7 @@
       "shot_at": "2026-06-07T23:44:44+00:00",
       "comment": null,
       "display_name": "いろはす",
+      "public_user_id": "6096691c-eeda-4e73-8401-a11274868ede",
       "gallery": [
         {
           "photo_id": "3743c530-b0f2-4861-918d-3e2aac82b07d",
@@ -54,7 +57,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-08T12:44:04.97427+00:00",
           "shot_at": "2026-06-07T23:44:44+00:00",
-          "display_name": "いろはす"
+          "display_name": "いろはす",
+          "public_user_id": "6096691c-eeda-4e73-8401-a11274868ede"
         }
       ]
     },
@@ -72,6 +76,7 @@
       "shot_at": "2026-06-07T08:33:09+00:00",
       "comment": null,
       "display_name": "いろはす",
+      "public_user_id": "6096691c-eeda-4e73-8401-a11274868ede",
       "gallery": [
         {
           "photo_id": "69fcb47b-489e-4b93-8ac6-d13ca6baad4f",
@@ -80,7 +85,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-08T12:27:08.11311+00:00",
           "shot_at": "2026-06-07T08:33:09+00:00",
-          "display_name": "いろはす"
+          "display_name": "いろはす",
+          "public_user_id": "6096691c-eeda-4e73-8401-a11274868ede"
         }
       ]
     },
@@ -98,6 +104,7 @@
       "shot_at": "2026-06-07T23:44:44+00:00",
       "comment": null,
       "display_name": "いろはす",
+      "public_user_id": "6096691c-eeda-4e73-8401-a11274868ede",
       "gallery": [
         {
           "photo_id": "f7170f8e-0d15-4827-9213-bc1d3c80c17b",
@@ -106,7 +113,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-08T12:30:24.811681+00:00",
           "shot_at": "2026-06-07T23:44:44+00:00",
-          "display_name": "いろはす"
+          "display_name": "いろはす",
+          "public_user_id": "6096691c-eeda-4e73-8401-a11274868ede"
         },
         {
           "photo_id": "1cd6aa89-fda3-47c6-b3ea-3f31605e24b3",
@@ -115,7 +123,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-08T12:44:36.204209+00:00",
           "shot_at": "2026-06-07T21:16:59+00:00",
-          "display_name": "いろはす"
+          "display_name": "いろはす",
+          "public_user_id": "6096691c-eeda-4e73-8401-a11274868ede"
         },
         {
           "photo_id": "e7ed3101-746b-406e-8b9f-1768519b2165",
@@ -124,7 +133,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-08T12:31:02.986472+00:00",
           "shot_at": "2026-06-07T21:16:59+00:00",
-          "display_name": "いろはす"
+          "display_name": "いろはす",
+          "public_user_id": "6096691c-eeda-4e73-8401-a11274868ede"
         },
         {
           "photo_id": "9cdd14ef-c498-48f8-ac28-5b084f4c2e2a",
@@ -133,7 +143,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-08T12:27:47.459913+00:00",
           "shot_at": "2026-06-07T21:16:59+00:00",
-          "display_name": "いろはす"
+          "display_name": "いろはす",
+          "public_user_id": "6096691c-eeda-4e73-8401-a11274868ede"
         }
       ]
     },
@@ -151,6 +162,7 @@
       "shot_at": "2026-06-07T21:59:31+00:00",
       "comment": null,
       "display_name": "いろはす",
+      "public_user_id": "6096691c-eeda-4e73-8401-a11274868ede",
       "gallery": [
         {
           "photo_id": "7e8527e4-0273-4369-9968-feea5163c0db",
@@ -159,7 +171,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-08T12:29:57.344876+00:00",
           "shot_at": "2026-06-07T21:59:31+00:00",
-          "display_name": "いろはす"
+          "display_name": "いろはす",
+          "public_user_id": "6096691c-eeda-4e73-8401-a11274868ede"
         }
       ]
     },
@@ -177,6 +190,7 @@
       "shot_at": "2026-06-07T21:37:18+00:00",
       "comment": null,
       "display_name": "いろはす",
+      "public_user_id": "6096691c-eeda-4e73-8401-a11274868ede",
       "gallery": [
         {
           "photo_id": "948753b5-5662-4893-85c0-57febf4aa5b5",
@@ -185,7 +199,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-08T12:29:21.85972+00:00",
           "shot_at": "2026-06-07T21:37:18+00:00",
-          "display_name": "いろはす"
+          "display_name": "いろはす",
+          "public_user_id": "6096691c-eeda-4e73-8401-a11274868ede"
         }
       ]
     },
@@ -203,6 +218,7 @@
       "shot_at": "2026-06-07T08:25:24+00:00",
       "comment": null,
       "display_name": "いろはす",
+      "public_user_id": "6096691c-eeda-4e73-8401-a11274868ede",
       "gallery": [
         {
           "photo_id": "be15815b-bde2-4e37-8a3c-de75174d3816",
@@ -211,7 +227,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-08T12:26:17.591118+00:00",
           "shot_at": "2026-06-07T08:25:24+00:00",
-          "display_name": "いろはす"
+          "display_name": "いろはす",
+          "public_user_id": "6096691c-eeda-4e73-8401-a11274868ede"
         }
       ]
     },
@@ -229,6 +246,7 @@
       "shot_at": "2026-06-07T21:23:45+00:00",
       "comment": null,
       "display_name": "いろはす",
+      "public_user_id": "6096691c-eeda-4e73-8401-a11274868ede",
       "gallery": [
         {
           "photo_id": "917148f1-9757-4881-b570-6b4cefb72ad3",
@@ -237,7 +255,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-08T12:28:39.276797+00:00",
           "shot_at": "2026-06-07T21:23:45+00:00",
-          "display_name": "いろはす"
+          "display_name": "いろはす",
+          "public_user_id": "6096691c-eeda-4e73-8401-a11274868ede"
         }
       ]
     },
@@ -255,6 +274,7 @@
       "shot_at": "2026-06-07T21:30:56+00:00",
       "comment": null,
       "display_name": "いろはす",
+      "public_user_id": "6096691c-eeda-4e73-8401-a11274868ede",
       "gallery": [
         {
           "photo_id": "7f5ad5d6-f456-4d39-808b-9f13a4e295f1",
@@ -263,7 +283,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-08T12:28:58.304891+00:00",
           "shot_at": "2026-06-07T21:30:56+00:00",
-          "display_name": "いろはす"
+          "display_name": "いろはす",
+          "public_user_id": "6096691c-eeda-4e73-8401-a11274868ede"
         }
       ]
     },
@@ -281,6 +302,7 @@
       "shot_at": "2025-05-23T19:31:26+00:00",
       "comment": "鍾乳洞とポケふた\r\n神秘的なんだにゃあ",
       "display_name": null,
+      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
       "gallery": [
         {
           "photo_id": "f54add69-d32a-4018-9ba3-9e7894cb5e29",
@@ -289,7 +311,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-07-10T21:23:52.615196+00:00",
           "shot_at": "2025-05-23T19:31:26+00:00",
-          "display_name": null
+          "display_name": null,
+          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
         }
       ]
     },
@@ -307,6 +330,7 @@
       "shot_at": "2026-01-04T08:13:06+00:00",
       "comment": null,
       "display_name": "ロイ",
+      "public_user_id": "65a274e2-a72e-40da-addc-30a33e9e281b",
       "gallery": [
         {
           "photo_id": "d8e50cb8-d298-4a80-910b-11c6e3b4e1a7",
@@ -315,7 +339,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-01-04T08:13:33.852757+00:00",
           "shot_at": "2026-01-04T08:13:06+00:00",
-          "display_name": "ロイ"
+          "display_name": "ロイ",
+          "public_user_id": "65a274e2-a72e-40da-addc-30a33e9e281b"
         },
         {
           "photo_id": "340493b8-7f84-4fc5-b647-9d61d9b08e04",
@@ -324,7 +349,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-23T14:23:11.404625+00:00",
           "shot_at": "2023-12-17T08:49:51+00:00",
-          "display_name": "しもきち"
+          "display_name": "しもきち",
+          "public_user_id": "bf58a815-ac84-455c-ae88-1903cb9f8228"
         },
         {
           "photo_id": "1797d569-3534-447f-a44f-642697292c6a",
@@ -333,7 +359,8 @@
           "content_type": "image/jpeg",
           "created_at": "2025-10-14T22:20:52.496135+00:00",
           "shot_at": "2023-07-11T01:15:56+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -351,6 +378,7 @@
       "shot_at": "2026-05-12T03:39:03+00:00",
       "comment": "公園とポケふた\r\nほっこりするにゃあ",
       "display_name": null,
+      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
       "gallery": [
         {
           "photo_id": "0ac20492-deab-45f7-b5d5-97f241be1c06",
@@ -359,7 +387,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-07-10T20:42:08.999249+00:00",
           "shot_at": "2026-05-12T03:39:03+00:00",
-          "display_name": null
+          "display_name": null,
+          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
         }
       ]
     },
@@ -377,6 +406,7 @@
       "shot_at": "2026-06-13T15:35:26+00:00",
       "comment": null,
       "display_name": "Sky134z",
+      "public_user_id": "ffd4cdb3-c954-4990-aee1-82afb428fa42",
       "gallery": [
         {
           "photo_id": "0bc53f77-f438-4647-ae1f-4be7b1e8f6b5",
@@ -385,7 +415,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-14T13:25:08.57604+00:00",
           "shot_at": "2026-06-13T15:35:26+00:00",
-          "display_name": "Sky134z"
+          "display_name": "Sky134z",
+          "public_user_id": "ffd4cdb3-c954-4990-aee1-82afb428fa42"
         }
       ]
     },
@@ -403,6 +434,7 @@
       "shot_at": "2026-03-17T05:01:29+00:00",
       "comment": "石狩市の浜益温泉に入口にありました",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "00728726-d95f-499b-af3c-d4a563799c80",
@@ -411,7 +443,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-17T05:10:56.417591+00:00",
           "shot_at": "2026-03-17T05:01:29+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -429,6 +462,7 @@
       "shot_at": "2026-03-18T02:14:12+00:00",
       "comment": "花の拠点はなふるにある道と川の駅花ロードえにわのスターバックス側にありました",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "e7974f8c-82df-407e-b46d-d6f9c417f484",
@@ -437,7 +471,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-18T02:25:53.934326+00:00",
           "shot_at": "2026-03-18T02:14:12+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -455,6 +490,7 @@
       "shot_at": "2026-03-22T04:56:24+00:00",
       "comment": "洞龍の湯とトイレのそばにありました。\r\n洞爺湖駐車場に止めて五分くらい歩きました",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "c4938e3e-dc90-4245-a64d-6831af0a06d3",
@@ -463,7 +499,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-22T12:08:33.709499+00:00",
           "shot_at": "2026-03-22T04:56:24+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -481,6 +518,7 @@
       "shot_at": "2026-03-20T07:54:50+00:00",
       "comment": "森駅の東側にある商工会議所の前にありました。",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "d3accbb3-be61-4711-8b33-a0d566d1a820",
@@ -489,7 +527,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-20T08:12:24.59411+00:00",
           "shot_at": "2026-03-20T07:54:50+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -507,6 +546,7 @@
       "shot_at": "2026-03-21T01:24:14+00:00",
       "comment": "道の駅 上ノ国もんじゅにあります。",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "4f7d049a-554c-43b0-8e03-56a0a0e4d601",
@@ -515,7 +555,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-21T07:59:32.379367+00:00",
           "shot_at": "2026-03-21T01:24:14+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -533,6 +574,7 @@
       "shot_at": "2026-03-15T07:17:14+00:00",
       "comment": "道の駅のひさしの下にありました。高速バスのバス停の手前です",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "fd464abf-8c0a-4456-b1da-72cdccf1902f",
@@ -541,7 +583,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-15T07:20:00.684241+00:00",
           "shot_at": "2026-03-15T07:17:14+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -559,6 +602,7 @@
       "shot_at": "2026-03-16T00:19:47+00:00",
       "comment": "比布駅前にあります。屋根がないので雪に隠れる時があるようで、除雪セットが置いてあります",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "777e73dd-81a3-497e-ab25-746c04cb96ba",
@@ -567,7 +611,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-16T00:21:57.008247+00:00",
           "shot_at": "2026-03-16T00:19:47+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -585,6 +630,7 @@
       "shot_at": "2026-03-14T23:04:06+00:00",
       "comment": "道の駅てしおにあります。場所が移動したとあります",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "c1f550d2-498e-4924-8f4f-37530bb4b507",
@@ -593,7 +639,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-14T23:05:27.965019+00:00",
           "shot_at": "2026-03-14T23:04:06+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -611,6 +658,7 @@
       "shot_at": "2026-03-14T07:35:36+00:00",
       "comment": "稚内駅とバスターミナルの間くらいにありました",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "1a7bbc60-e74b-48fa-b6cf-ac3023cfedbd",
@@ -619,7 +667,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-14T07:36:44.214046+00:00",
           "shot_at": "2026-03-14T07:35:36+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -637,6 +686,7 @@
       "shot_at": "2026-03-15T00:20:03+00:00",
       "comment": "豊富町のぷらっと★きたにありました。カバーで守られています",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "8813d5ae-d79a-40e5-b6a9-87603905fc28",
@@ -645,7 +695,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-15T00:21:55.528806+00:00",
           "shot_at": "2026-03-15T00:20:03+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -663,6 +714,7 @@
       "shot_at": "2026-03-27T22:30:02+00:00",
       "comment": "紋別市海洋公園　ホタテトイレの横にありました。モンゴルのゲルのようなテントも目印になりそう。",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "a82a20b6-e780-4760-ba40-abbfce83aa7e",
@@ -671,7 +723,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-28T01:03:36.291082+00:00",
           "shot_at": "2026-03-27T22:30:02+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -689,6 +742,7 @@
       "shot_at": "2026-03-27T21:41:44+00:00",
       "comment": "遠軽 森のオホーツクの駐車場に入るところにありました。",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "f0ad4543-4fc2-4a98-98d7-434e267c12f8",
@@ -697,7 +751,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-28T01:00:55.716005+00:00",
           "shot_at": "2026-03-27T21:41:44+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -715,6 +770,7 @@
       "shot_at": "2026-06-01T09:36:10+00:00",
       "comment": "a bit rusty… niche location",
       "display_name": "dichlorosulfane",
+      "public_user_id": "9c6936dc-2331-45e4-b96d-0a3ea6c2a775",
       "gallery": [
         {
           "photo_id": "ac803346-1b27-4d3e-85ac-289796501f36",
@@ -723,7 +779,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-02T07:30:12.199062+00:00",
           "shot_at": "2026-06-01T09:36:10+00:00",
-          "display_name": "dichlorosulfane"
+          "display_name": "dichlorosulfane",
+          "public_user_id": "9c6936dc-2331-45e4-b96d-0a3ea6c2a775"
         },
         {
           "photo_id": "7e8e6a8c-cdd5-4fbd-a2c5-0535afb76ffa",
@@ -732,7 +789,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-29T23:53:04.797242+00:00",
           "shot_at": "2026-03-29T02:34:55+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -750,6 +808,7 @@
       "shot_at": "2022-10-30T05:21:20+00:00",
       "comment": "投稿テスト",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "eb5c6849-75d2-4534-853b-9e6043d4aae4",
@@ -758,7 +817,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-01-12T01:43:48.757783+00:00",
           "shot_at": "2022-10-30T05:21:20+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -776,6 +836,7 @@
       "shot_at": "2022-10-30T07:03:44+00:00",
       "comment": null,
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "b7d3449e-6be5-4fc9-8fc7-600577cb82f3",
@@ -784,7 +845,8 @@
           "content_type": "image/jpeg",
           "created_at": "2025-10-14T22:19:48.785924+00:00",
           "shot_at": "2022-10-30T07:03:44+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -802,6 +864,7 @@
       "shot_at": "2024-04-25T04:37:24+00:00",
       "comment": null,
       "display_name": "しもきち",
+      "public_user_id": "bf58a815-ac84-455c-ae88-1903cb9f8228",
       "gallery": [
         {
           "photo_id": "7d1dd0a2-f458-46bd-8aaa-959ae6d5b545",
@@ -810,7 +873,36 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-23T14:24:32.901934+00:00",
           "shot_at": "2024-04-25T04:37:24+00:00",
-          "display_name": "しもきち"
+          "display_name": "しもきち",
+          "public_user_id": "bf58a815-ac84-455c-ae88-1903cb9f8228"
+        }
+      ]
+    },
+    "94": {
+      "manhole_id": 94,
+      "photo_id": "9d60a7c4-bd2b-4162-b31b-56d36f368cc3",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/aaa33560-d3d2-42eb-8bee-a83d2dcebfd3.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/aaa33560-d3d2-42eb-8bee-a83d2dcebfd3.jpg",
+      "storage_key": "photos/original/2026/07/aaa33560-d3d2-42eb-8bee-a83d2dcebfd3.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1803267,
+      "created_at": "2026-07-11T20:35:32.257153+00:00",
+      "shot_at": "2024-12-30T03:35:37+00:00",
+      "comment": "隠れた銘品と出逢えそうなふただにゃあ\r\n美味しいものもいっぱいあったにゃあ",
+      "display_name": null,
+      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
+      "gallery": [
+        {
+          "photo_id": "9d60a7c4-bd2b-4162-b31b-56d36f368cc3",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/aaa33560-d3d2-42eb-8bee-a83d2dcebfd3.jpg",
+          "storage_key": "photos/original/2026/07/aaa33560-d3d2-42eb-8bee-a83d2dcebfd3.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-11T20:35:32.257153+00:00",
+          "shot_at": "2024-12-30T03:35:37+00:00",
+          "display_name": null,
+          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
         }
       ]
     },
@@ -828,6 +920,7 @@
       "shot_at": "2025-03-09T05:37:08+00:00",
       "comment": null,
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "cedf4828-897d-49f6-92df-a3b669bb065f",
@@ -836,7 +929,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-21T12:43:19.590166+00:00",
           "shot_at": "2025-03-09T05:37:08+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -854,6 +948,7 @@
       "shot_at": "2025-03-09T04:17:31+00:00",
       "comment": "大津市は、公園南側",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "96b28917-f87a-4770-8b2c-7c7e3dd73dfa",
@@ -862,7 +957,8 @@
           "content_type": "image/jpeg",
           "created_at": "2025-10-19T23:50:44.230127+00:00",
           "shot_at": "2025-03-09T04:17:31+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -880,6 +976,7 @@
       "shot_at": "2026-06-12T05:58:28+00:00",
       "comment": "お城とポケふた\r\nベストマッチだにゃあ",
       "display_name": null,
+      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
       "gallery": [
         {
           "photo_id": "c3d1d884-4813-4283-ace6-3f0514f0b139",
@@ -888,7 +985,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-07-10T20:27:04.140936+00:00",
           "shot_at": "2026-06-12T05:58:28+00:00",
-          "display_name": null
+          "display_name": null,
+          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
         }
       ]
     },
@@ -906,6 +1004,7 @@
       "shot_at": "2026-06-12T02:46:02+00:00",
       "comment": null,
       "display_name": "Sky134z",
+      "public_user_id": "ffd4cdb3-c954-4990-aee1-82afb428fa42",
       "gallery": [
         {
           "photo_id": "ab2974a9-d2d1-4b72-86fe-553f54851dbd",
@@ -914,7 +1013,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-14T13:27:20.73437+00:00",
           "shot_at": "2026-06-12T02:46:02+00:00",
-          "display_name": "Sky134z"
+          "display_name": "Sky134z",
+          "public_user_id": "ffd4cdb3-c954-4990-aee1-82afb428fa42"
         },
         {
           "photo_id": "46ed9fed-64b2-4dd8-a1d2-3d1c0d8f70ea",
@@ -923,7 +1023,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-07-10T21:29:29.057689+00:00",
           "shot_at": "2025-05-15T01:54:20+00:00",
-          "display_name": null
+          "display_name": null,
+          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
         }
       ]
     },
@@ -941,6 +1042,7 @@
       "shot_at": "2026-06-12T02:23:57+00:00",
       "comment": null,
       "display_name": "Sky134z",
+      "public_user_id": "ffd4cdb3-c954-4990-aee1-82afb428fa42",
       "gallery": [
         {
           "photo_id": "249ed8d5-f36d-4bfa-b091-e73da208b95a",
@@ -949,7 +1051,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-14T13:28:32.693357+00:00",
           "shot_at": "2026-06-12T02:23:57+00:00",
-          "display_name": "Sky134z"
+          "display_name": "Sky134z",
+          "public_user_id": "ffd4cdb3-c954-4990-aee1-82afb428fa42"
         }
       ]
     },
@@ -967,6 +1070,7 @@
       "shot_at": "2025-05-15T01:12:44+00:00",
       "comment": "道の駅にあるポケふた\r\nすぐ横にご当地キャラのマンホールと\r\n仲良く並んでるにゃあ",
       "display_name": null,
+      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
       "gallery": [
         {
           "photo_id": "e2662b04-3b5e-411f-bbe1-b60d8bc0730e",
@@ -975,7 +1079,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-07-11T08:27:57.663787+00:00",
           "shot_at": "2025-05-15T01:12:44+00:00",
-          "display_name": null
+          "display_name": null,
+          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
         }
       ]
     },
@@ -993,6 +1098,7 @@
       "shot_at": "2026-06-12T01:43:14+00:00",
       "comment": null,
       "display_name": "Sky134z",
+      "public_user_id": "ffd4cdb3-c954-4990-aee1-82afb428fa42",
       "gallery": [
         {
           "photo_id": "b5c38bd6-a4b2-4fac-a890-be45ef8803f5",
@@ -1001,7 +1107,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-14T13:28:00.862032+00:00",
           "shot_at": "2026-06-12T01:43:14+00:00",
-          "display_name": "Sky134z"
+          "display_name": "Sky134z",
+          "public_user_id": "ffd4cdb3-c954-4990-aee1-82afb428fa42"
         }
       ]
     },
@@ -1019,6 +1126,7 @@
       "shot_at": "2026-03-19T23:56:56+00:00",
       "comment": "出光カルチャーパーク内にあります。",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "eccab4ce-6930-4866-beab-3a08bbdc6fba",
@@ -1027,7 +1135,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-20T04:06:08.094089+00:00",
           "shot_at": "2026-03-19T23:56:56+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -1045,6 +1154,7 @@
       "shot_at": "2026-03-17T01:10:59+00:00",
       "comment": "三笠市立博物館にあります。博物館内にアンモナイトの化石がいっぱいありました",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "866ab293-855c-4810-a0f3-cf6237f120b9",
@@ -1053,7 +1163,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-05-24T14:30:56.930694+00:00",
           "shot_at": "2026-03-17T01:10:59+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -1071,6 +1182,7 @@
       "shot_at": "2026-05-31T07:52:31+00:00",
       "comment": "aah the shadow got in the way 3:",
       "display_name": "dichlorosulfane",
+      "public_user_id": "9c6936dc-2331-45e4-b96d-0a3ea6c2a775",
       "gallery": [
         {
           "photo_id": "7509d52e-1a26-4142-84ed-f4a57084b98a",
@@ -1079,7 +1191,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-02T07:27:35.02828+00:00",
           "shot_at": "2026-05-31T07:52:31+00:00",
-          "display_name": "dichlorosulfane"
+          "display_name": "dichlorosulfane",
+          "public_user_id": "9c6936dc-2331-45e4-b96d-0a3ea6c2a775"
         },
         {
           "photo_id": "060a15a9-f063-4b9c-82c8-2bc547207c32",
@@ -1088,7 +1201,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-16T02:12:17.702272+00:00",
           "shot_at": "2026-03-16T02:09:56+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -1106,6 +1220,7 @@
       "shot_at": "2026-03-15T07:46:52+00:00",
       "comment": "剣淵町のマンホール。絵本の館のひさしの下にありました。\r\n隣に可愛いポストがあります",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "a70e05d9-48c5-43a3-b057-d637e430eac0",
@@ -1114,7 +1229,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-15T07:58:41.867091+00:00",
           "shot_at": "2026-03-15T07:46:52+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -1132,6 +1248,7 @@
       "shot_at": "2026-07-11T08:09:48+00:00",
       "comment": "ニャンコ",
       "display_name": null,
+      "public_user_id": "4560bdec-e1a5-41ef-b6a9-1fed80ef4df7",
       "gallery": [
         {
           "photo_id": "9b195dfc-bd6c-4bf2-b5c8-32459934d8cf",
@@ -1140,7 +1257,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-07-11T08:10:07.754377+00:00",
           "shot_at": "2026-07-11T08:09:48+00:00",
-          "display_name": null
+          "display_name": null,
+          "public_user_id": "4560bdec-e1a5-41ef-b6a9-1fed80ef4df7"
         },
         {
           "photo_id": "5a757401-9cdf-4829-ba96-cf88c78b2691",
@@ -1149,7 +1267,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-28T04:00:09.51211+00:00",
           "shot_at": "2026-06-28T02:33:52+00:00",
-          "display_name": "いろはす"
+          "display_name": "いろはす",
+          "public_user_id": "6096691c-eeda-4e73-8401-a11274868ede"
         },
         {
           "photo_id": "ae955a35-b36b-4bd1-a58d-6e41fefecd6e",
@@ -1158,7 +1277,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-23T14:10:12.090331+00:00",
           "shot_at": "2024-06-15T05:45:20+00:00",
-          "display_name": "しもきち"
+          "display_name": "しもきち",
+          "public_user_id": "bf58a815-ac84-455c-ae88-1903cb9f8228"
         }
       ]
     },
@@ -1176,6 +1296,7 @@
       "shot_at": "2026-07-11T06:39:35+00:00",
       "comment": "ニャンコ",
       "display_name": null,
+      "public_user_id": "4560bdec-e1a5-41ef-b6a9-1fed80ef4df7",
       "gallery": [
         {
           "photo_id": "c7ccf49f-3df3-4e00-9ba4-82e18683672a",
@@ -1184,7 +1305,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-07-11T06:39:52.624549+00:00",
           "shot_at": "2026-07-11T06:39:35+00:00",
-          "display_name": null
+          "display_name": null,
+          "public_user_id": "4560bdec-e1a5-41ef-b6a9-1fed80ef4df7"
         },
         {
           "photo_id": "94a4142a-3860-4c74-ad78-0580a7966e6b",
@@ -1193,7 +1315,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-28T04:00:21.199313+00:00",
           "shot_at": "2026-06-28T02:43:24+00:00",
-          "display_name": "いろはす"
+          "display_name": "いろはす",
+          "public_user_id": "6096691c-eeda-4e73-8401-a11274868ede"
         },
         {
           "photo_id": "cb19f244-5373-4d26-8dfe-e963183619de",
@@ -1202,7 +1325,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-23T14:09:39.617139+00:00",
           "shot_at": "2024-06-15T05:54:14+00:00",
-          "display_name": "しもきち"
+          "display_name": "しもきち",
+          "public_user_id": "bf58a815-ac84-455c-ae88-1903cb9f8228"
         }
       ]
     },
@@ -1220,6 +1344,7 @@
       "shot_at": "2026-07-11T06:14:17+00:00",
       "comment": "ニャンコ",
       "display_name": null,
+      "public_user_id": "4560bdec-e1a5-41ef-b6a9-1fed80ef4df7",
       "gallery": [
         {
           "photo_id": "403fee52-dc33-458b-915f-4018b9ef077a",
@@ -1228,7 +1353,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-07-11T06:14:42.942328+00:00",
           "shot_at": "2026-07-11T06:14:17+00:00",
-          "display_name": null
+          "display_name": null,
+          "public_user_id": "4560bdec-e1a5-41ef-b6a9-1fed80ef4df7"
         },
         {
           "photo_id": "08cbcd77-356e-4067-9647-40826ad0b555",
@@ -1237,7 +1363,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-28T04:00:32.025821+00:00",
           "shot_at": "2026-06-28T02:53:25+00:00",
-          "display_name": "いろはす"
+          "display_name": "いろはす",
+          "public_user_id": "6096691c-eeda-4e73-8401-a11274868ede"
         }
       ]
     },
@@ -1255,6 +1382,7 @@
       "shot_at": "2026-07-11T06:15:50+00:00",
       "comment": "ニャンコ",
       "display_name": null,
+      "public_user_id": "4560bdec-e1a5-41ef-b6a9-1fed80ef4df7",
       "gallery": [
         {
           "photo_id": "25c8231e-58b3-46a8-a177-de4819ed6cd3",
@@ -1263,7 +1391,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-07-11T06:16:10.814217+00:00",
           "shot_at": "2026-07-11T06:15:50+00:00",
-          "display_name": null
+          "display_name": null,
+          "public_user_id": "4560bdec-e1a5-41ef-b6a9-1fed80ef4df7"
         },
         {
           "photo_id": "28820415-3890-4e5e-ad0f-ed1b88409479",
@@ -1272,7 +1401,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-28T04:00:41.11988+00:00",
           "shot_at": "2026-06-28T02:55:09+00:00",
-          "display_name": "いろはす"
+          "display_name": "いろはす",
+          "public_user_id": "6096691c-eeda-4e73-8401-a11274868ede"
         },
         {
           "photo_id": "a7d719ba-32ce-4670-bc1f-0d3c432543df",
@@ -1281,7 +1411,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-05-05T01:42:34.1935+00:00",
           "shot_at": "2026-05-04T00:27:51+00:00",
-          "display_name": "boroborokin"
+          "display_name": "boroborokin",
+          "public_user_id": "866300e5-ffc1-44f2-bd6a-5d3902bb20a0"
         },
         {
           "photo_id": "97cfc981-48f1-412d-91c4-2f9c58b7dc05",
@@ -1290,7 +1421,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-23T14:09:56.556498+00:00",
           "shot_at": "2024-06-15T06:03:18+00:00",
-          "display_name": "しもきち"
+          "display_name": "しもきち",
+          "public_user_id": "bf58a815-ac84-455c-ae88-1903cb9f8228"
         }
       ]
     },
@@ -1308,6 +1440,7 @@
       "shot_at": "2026-07-11T05:00:05+00:00",
       "comment": "ニャンコ",
       "display_name": null,
+      "public_user_id": "4560bdec-e1a5-41ef-b6a9-1fed80ef4df7",
       "gallery": [
         {
           "photo_id": "bed7d941-aa8b-4f2d-a55f-820d20a7ea65",
@@ -1316,7 +1449,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-07-11T05:00:37.603496+00:00",
           "shot_at": "2026-07-11T05:00:05+00:00",
-          "display_name": null
+          "display_name": null,
+          "public_user_id": "4560bdec-e1a5-41ef-b6a9-1fed80ef4df7"
         },
         {
           "photo_id": "ef698b08-56ac-400e-8c55-203a4eeee057",
@@ -1325,7 +1459,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-07-11T04:55:42.916301+00:00",
           "shot_at": "2026-07-11T04:55:00+00:00",
-          "display_name": null
+          "display_name": null,
+          "public_user_id": "4560bdec-e1a5-41ef-b6a9-1fed80ef4df7"
         },
         {
           "photo_id": "f7ba9034-0567-4d48-a21f-04cdab77fa04",
@@ -1334,7 +1469,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-28T04:17:22.27754+00:00",
           "shot_at": "2026-06-28T03:01:08+00:00",
-          "display_name": "いろはす"
+          "display_name": "いろはす",
+          "public_user_id": "6096691c-eeda-4e73-8401-a11274868ede"
         }
       ]
     },
@@ -1352,6 +1488,7 @@
       "shot_at": "2024-02-04T22:18:11+00:00",
       "comment": null,
       "display_name": "しもきち",
+      "public_user_id": "bf58a815-ac84-455c-ae88-1903cb9f8228",
       "gallery": [
         {
           "photo_id": "b1a4dc4a-0b18-4c4f-96dd-2b2e11eebc50",
@@ -1360,7 +1497,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-23T14:24:09.578384+00:00",
           "shot_at": "2024-02-04T22:18:11+00:00",
-          "display_name": "しもきち"
+          "display_name": "しもきち",
+          "public_user_id": "bf58a815-ac84-455c-ae88-1903cb9f8228"
         }
       ]
     },
@@ -1378,6 +1516,7 @@
       "shot_at": "2024-02-04T09:26:06+00:00",
       "comment": null,
       "display_name": "しもきち",
+      "public_user_id": "bf58a815-ac84-455c-ae88-1903cb9f8228",
       "gallery": [
         {
           "photo_id": "6e32e2ca-9cec-40d3-9971-41d7211f3d9a",
@@ -1386,7 +1525,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-23T14:23:47.009944+00:00",
           "shot_at": "2024-02-04T09:26:06+00:00",
-          "display_name": "しもきち"
+          "display_name": "しもきち",
+          "public_user_id": "bf58a815-ac84-455c-ae88-1903cb9f8228"
         }
       ]
     },
@@ -1404,6 +1544,7 @@
       "shot_at": "2025-01-28T00:40:14+00:00",
       "comment": null,
       "display_name": "しもきち",
+      "public_user_id": "bf58a815-ac84-455c-ae88-1903cb9f8228",
       "gallery": [
         {
           "photo_id": "58f0442a-f256-447e-acee-7b46bf246e53",
@@ -1412,7 +1553,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-23T14:24:21.323536+00:00",
           "shot_at": "2025-01-28T00:40:14+00:00",
-          "display_name": "しもきち"
+          "display_name": "しもきち",
+          "public_user_id": "bf58a815-ac84-455c-ae88-1903cb9f8228"
         }
       ]
     },
@@ -1430,6 +1572,7 @@
       "shot_at": "2026-03-21T07:01:19+00:00",
       "comment": "函館公園の中にある函館博物館の入り口近くにありました。駐車場は動物園側にありました。",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "0bfa5150-a842-4325-830b-35d98c384a46",
@@ -1438,7 +1581,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-21T07:55:56.600547+00:00",
           "shot_at": "2026-03-21T07:01:19+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -1456,6 +1600,7 @@
       "shot_at": "2026-03-17T08:05:45+00:00",
       "comment": "小樽のサンモール一番街というモールの入口",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "3270a5cf-6ebe-494c-bd45-0fb15cf609b7",
@@ -1464,7 +1609,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-17T23:01:50.37032+00:00",
           "shot_at": "2026-03-17T08:05:45+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -1482,6 +1628,7 @@
       "shot_at": "2026-03-20T05:01:09+00:00",
       "comment": "登別市観光交流センター（愛称：ヌプㇽ）にあります。\r\n以前は登別ピーチパークにあったようです。",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "66931efd-cb8e-47ca-b0bb-b9f1bc944deb",
@@ -1490,7 +1637,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-05-24T14:35:01.187701+00:00",
           "shot_at": "2026-03-20T05:01:09+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -1508,6 +1656,7 @@
       "shot_at": "2026-03-28T03:14:36+00:00",
       "comment": "オーロラタウン93リクベツ&ふるさと銀河線りくべつ鉄道の前にありました。",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "5e3bc12a-0e4b-41d6-be81-535146f262e1",
@@ -1516,7 +1665,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-28T12:14:16.714542+00:00",
           "shot_at": "2026-03-28T03:14:36+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -1534,6 +1684,7 @@
       "shot_at": "2026-03-28T21:14:39+00:00",
       "comment": "中標津町総合体育館(330ﾟアリーナ)の道を渡った駐車場と歩道の間にあります",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "2931d092-8306-4e61-8708-fa03629ba098",
@@ -1542,7 +1693,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-28T23:27:51.077198+00:00",
           "shot_at": "2026-03-28T21:14:39+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -1560,6 +1712,7 @@
       "shot_at": "2026-06-21T03:49:12+00:00",
       "comment": null,
       "display_name": "いろはす",
+      "public_user_id": "6096691c-eeda-4e73-8401-a11274868ede",
       "gallery": [
         {
           "photo_id": "35444c66-f162-4dfa-82fe-5c41ee1eda7f",
@@ -1568,7 +1721,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-21T04:01:37.635399+00:00",
           "shot_at": "2026-06-21T03:49:12+00:00",
-          "display_name": "いろはす"
+          "display_name": "いろはす",
+          "public_user_id": "6096691c-eeda-4e73-8401-a11274868ede"
         }
       ]
     },
@@ -1586,6 +1740,7 @@
       "shot_at": "2026-06-20T13:22:06+00:00",
       "comment": null,
       "display_name": "いろはす",
+      "public_user_id": "6096691c-eeda-4e73-8401-a11274868ede",
       "gallery": [
         {
           "photo_id": "95d2c632-7af1-45e7-b8f3-5eaaa87b6a1c",
@@ -1594,7 +1749,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-20T14:42:32.740104+00:00",
           "shot_at": "2026-06-20T13:22:06+00:00",
-          "display_name": "いろはす"
+          "display_name": "いろはす",
+          "public_user_id": "6096691c-eeda-4e73-8401-a11274868ede"
         }
       ]
     },
@@ -1612,6 +1768,7 @@
       "shot_at": "2026-06-20T13:14:23+00:00",
       "comment": null,
       "display_name": "いろはす",
+      "public_user_id": "6096691c-eeda-4e73-8401-a11274868ede",
       "gallery": [
         {
           "photo_id": "53d3acee-92f3-4107-8fe7-96328387ff6f",
@@ -1620,7 +1777,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-20T14:42:18.609805+00:00",
           "shot_at": "2026-06-20T13:14:23+00:00",
-          "display_name": "いろはす"
+          "display_name": "いろはす",
+          "public_user_id": "6096691c-eeda-4e73-8401-a11274868ede"
         }
       ]
     },
@@ -1638,6 +1796,7 @@
       "shot_at": "2026-06-21T02:48:02+00:00",
       "comment": null,
       "display_name": "いろはす",
+      "public_user_id": "6096691c-eeda-4e73-8401-a11274868ede",
       "gallery": [
         {
           "photo_id": "0eb35d78-b2d2-407b-a8df-70a4bdd5a69a",
@@ -1646,7 +1805,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-21T04:01:26.603507+00:00",
           "shot_at": "2026-06-21T02:48:02+00:00",
-          "display_name": "いろはす"
+          "display_name": "いろはす",
+          "public_user_id": "6096691c-eeda-4e73-8401-a11274868ede"
         }
       ]
     },
@@ -1664,6 +1824,7 @@
       "shot_at": "2026-06-30T05:53:46+00:00",
       "comment": "ニャンコ",
       "display_name": null,
+      "public_user_id": "4560bdec-e1a5-41ef-b6a9-1fed80ef4df7",
       "gallery": [
         {
           "photo_id": "a7d91a34-cf24-4860-8390-810033025468",
@@ -1672,7 +1833,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-30T05:54:13.590065+00:00",
           "shot_at": "2026-06-30T05:53:46+00:00",
-          "display_name": null
+          "display_name": null,
+          "public_user_id": "4560bdec-e1a5-41ef-b6a9-1fed80ef4df7"
         },
         {
           "photo_id": "ee2daca6-611d-456a-b71c-50581ca5beb1",
@@ -1681,7 +1843,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-30T05:53:18.994048+00:00",
           "shot_at": "2026-06-30T05:52:46+00:00",
-          "display_name": null
+          "display_name": null,
+          "public_user_id": "4560bdec-e1a5-41ef-b6a9-1fed80ef4df7"
         }
       ]
     },
@@ -1699,6 +1862,7 @@
       "shot_at": "2026-06-30T07:30:54+00:00",
       "comment": null,
       "display_name": null,
+      "public_user_id": "4560bdec-e1a5-41ef-b6a9-1fed80ef4df7",
       "gallery": [
         {
           "photo_id": "ee640fc3-dfa3-485a-96ec-c91dafe3166e",
@@ -1707,7 +1871,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-30T07:32:07.151394+00:00",
           "shot_at": "2026-06-30T07:30:54+00:00",
-          "display_name": null
+          "display_name": null,
+          "public_user_id": "4560bdec-e1a5-41ef-b6a9-1fed80ef4df7"
         }
       ]
     },
@@ -1725,6 +1890,7 @@
       "shot_at": "2026-05-31T00:38:32+00:00",
       "comment": "whimsical aah",
       "display_name": "dichlorosulfane",
+      "public_user_id": "9c6936dc-2331-45e4-b96d-0a3ea6c2a775",
       "gallery": [
         {
           "photo_id": "eb69a0b6-f19c-4542-8fae-287e9227f578",
@@ -1733,7 +1899,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-02T07:25:41.649719+00:00",
           "shot_at": "2026-05-31T00:38:32+00:00",
-          "display_name": "dichlorosulfane"
+          "display_name": "dichlorosulfane",
+          "public_user_id": "9c6936dc-2331-45e4-b96d-0a3ea6c2a775"
         },
         {
           "photo_id": "f1e411d9-a2a3-4d77-802e-3d7da844a44e",
@@ -1742,7 +1909,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-16T06:59:41.035612+00:00",
           "shot_at": "2026-03-16T06:55:54+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         },
         {
           "photo_id": "ff02e494-6b6a-4865-aefd-e507a91e4ec0",
@@ -1751,7 +1919,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-07-10T20:53:47.753712+00:00",
           "shot_at": "2025-08-05T07:28:23+00:00",
-          "display_name": null
+          "display_name": null,
+          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
         }
       ]
     },
@@ -1769,6 +1938,7 @@
       "shot_at": "2026-06-02T06:50:31+00:00",
       "comment": "a bit rusty: close to the sea",
       "display_name": "dichlorosulfane",
+      "public_user_id": "9c6936dc-2331-45e4-b96d-0a3ea6c2a775",
       "gallery": [
         {
           "photo_id": "f72ceb3e-3c88-49d4-a655-3f190cfd6b2d",
@@ -1777,7 +1947,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-02T07:30:41.996332+00:00",
           "shot_at": "2026-06-02T06:50:31+00:00",
-          "display_name": "dichlorosulfane"
+          "display_name": "dichlorosulfane",
+          "public_user_id": "9c6936dc-2331-45e4-b96d-0a3ea6c2a775"
         },
         {
           "photo_id": "8cc73b3e-5b1b-4b45-a966-610e5c1a4585",
@@ -1786,7 +1957,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-27T11:14:44.730928+00:00",
           "shot_at": "2026-03-27T00:21:26+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -1804,6 +1976,7 @@
       "shot_at": "2026-03-18T00:08:06+00:00",
       "comment": "道の駅あかいかわのひさしの下にありました",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "78e6eacd-082e-4df0-b926-e28478e41ebe",
@@ -1812,7 +1985,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-18T00:13:26.932833+00:00",
           "shot_at": "2026-03-18T00:08:06+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -1830,6 +2004,7 @@
       "shot_at": "2026-03-16T01:06:07+00:00",
       "comment": "せんとぴゅあ東川にあります。除雪きれいにしています",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "e48003f1-cec0-497b-aedb-52eb16f00de6",
@@ -1838,7 +2013,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-16T01:13:16.208032+00:00",
           "shot_at": "2026-03-16T01:06:07+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -1856,6 +2032,7 @@
       "shot_at": "2026-06-03T02:31:23+00:00",
       "comment": null,
       "display_name": "dichlorosulfane",
+      "public_user_id": "9c6936dc-2331-45e4-b96d-0a3ea6c2a775",
       "gallery": [
         {
           "photo_id": "62b9eb76-0200-47c9-a54f-b628cf0d2da1",
@@ -1864,7 +2041,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-03T02:32:14.472542+00:00",
           "shot_at": "2026-06-03T02:31:23+00:00",
-          "display_name": "dichlorosulfane"
+          "display_name": "dichlorosulfane",
+          "public_user_id": "9c6936dc-2331-45e4-b96d-0a3ea6c2a775"
         },
         {
           "photo_id": "6cc8953a-c1ce-4f93-9e64-844e6752060e",
@@ -1873,7 +2051,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-26T03:06:02.260206+00:00",
           "shot_at": "2026-03-26T03:02:55+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -1891,6 +2070,7 @@
       "shot_at": "2024-02-04T21:54:34+00:00",
       "comment": null,
       "display_name": "しもきち",
+      "public_user_id": "bf58a815-ac84-455c-ae88-1903cb9f8228",
       "gallery": [
         {
           "photo_id": "3abe5687-c2dc-4e9b-afad-f1c8790ace50",
@@ -1899,7 +2079,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-23T14:24:01.808498+00:00",
           "shot_at": "2024-02-04T21:54:34+00:00",
-          "display_name": "しもきち"
+          "display_name": "しもきち",
+          "public_user_id": "bf58a815-ac84-455c-ae88-1903cb9f8228"
         }
       ]
     },
@@ -1917,6 +2098,7 @@
       "shot_at": "2026-01-11T06:06:35+00:00",
       "comment": null,
       "display_name": "hirochinn0519",
+      "public_user_id": "6d230ed1-6562-4c00-af5c-ec03c48b47a6",
       "gallery": [
         {
           "photo_id": "7101966e-5597-4f23-be19-84dcc2bf33d4",
@@ -1925,7 +2107,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-01-11T13:26:39.728729+00:00",
           "shot_at": "2026-01-11T06:06:35+00:00",
-          "display_name": "hirochinn0519"
+          "display_name": "hirochinn0519",
+          "public_user_id": "6d230ed1-6562-4c00-af5c-ec03c48b47a6"
         },
         {
           "photo_id": "60979352-62e4-4365-a4be-0a8b43bbffe6",
@@ -1934,7 +2117,8 @@
           "content_type": "image/jpeg",
           "created_at": "2025-11-23T05:29:44.943269+00:00",
           "shot_at": "2025-11-23T05:27:18+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -1952,6 +2136,7 @@
       "shot_at": "2026-01-03T14:42:15+00:00",
       "comment": null,
       "display_name": "hirochinn0519",
+      "public_user_id": "6d230ed1-6562-4c00-af5c-ec03c48b47a6",
       "gallery": [
         {
           "photo_id": "f995f0e0-8f5f-4fae-89c2-e4b8eca539ea",
@@ -1960,7 +2145,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-01-11T13:19:20.026503+00:00",
           "shot_at": "2026-01-03T14:42:15+00:00",
-          "display_name": "hirochinn0519"
+          "display_name": "hirochinn0519",
+          "public_user_id": "6d230ed1-6562-4c00-af5c-ec03c48b47a6"
         },
         {
           "photo_id": "29aed89e-205e-49ec-931b-357c85468ade",
@@ -1969,7 +2155,8 @@
           "content_type": "image/jpeg",
           "created_at": "2025-11-23T03:44:52.618916+00:00",
           "shot_at": "2025-11-23T02:22:40+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -1987,6 +2174,7 @@
       "shot_at": "2025-03-27T05:57:52+00:00",
       "comment": "伊勢駅にありました",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "99bcd345-90a9-4757-a1bc-ee19b0742666",
@@ -1995,7 +2183,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-05-10T14:26:40.896826+00:00",
           "shot_at": "2025-03-27T05:57:52+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -2013,6 +2202,7 @@
       "shot_at": "2025-03-27T04:14:12+00:00",
       "comment": null,
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "25e22990-cb4f-4ed3-882a-485af92e5076",
@@ -2021,7 +2211,8 @@
           "content_type": "image/jpeg",
           "created_at": "2025-10-14T14:22:53.895884+00:00",
           "shot_at": "2025-03-27T04:14:12+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -2039,6 +2230,7 @@
       "shot_at": "2026-05-02T05:01:41+00:00",
       "comment": null,
       "display_name": "boroborokin",
+      "public_user_id": "866300e5-ffc1-44f2-bd6a-5d3902bb20a0",
       "gallery": [
         {
           "photo_id": "171af138-f2c8-4226-849b-99e8e1d96e14",
@@ -2047,7 +2239,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-05-05T01:39:43.94819+00:00",
           "shot_at": "2026-05-02T05:01:41+00:00",
-          "display_name": "boroborokin"
+          "display_name": "boroborokin",
+          "public_user_id": "866300e5-ffc1-44f2-bd6a-5d3902bb20a0"
         }
       ]
     },
@@ -2065,6 +2258,7 @@
       "shot_at": "2025-12-13T05:22:10+00:00",
       "comment": "伊賀市駅前にありました。駅の公共駐車場が1時間無料で止まれます",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "ad2de838-4ecb-4f15-b340-8c3304882562",
@@ -2073,7 +2267,36 @@
           "content_type": "image/jpeg",
           "created_at": "2025-12-13T05:28:57.4688+00:00",
           "shot_at": "2025-12-13T05:22:10+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
+        }
+      ]
+    },
+    "254": {
+      "manhole_id": 254,
+      "photo_id": "035727c9-eed8-4830-9822-aa0f33fb8fc7",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/db6d7d8f-31ed-416a-a4aa-1b916bb499ba.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/db6d7d8f-31ed-416a-a4aa-1b916bb499ba.jpg",
+      "storage_key": "photos/original/2026/07/db6d7d8f-31ed-416a-a4aa-1b916bb499ba.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1893507,
+      "created_at": "2026-07-11T20:30:47.244564+00:00",
+      "shot_at": "2024-12-30T04:13:54+00:00",
+      "comment": "綺麗な公園と良く似合うふたにゃあ\r\n青空もキレイだにゃあ",
+      "display_name": null,
+      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
+      "gallery": [
+        {
+          "photo_id": "035727c9-eed8-4830-9822-aa0f33fb8fc7",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/db6d7d8f-31ed-416a-a4aa-1b916bb499ba.jpg",
+          "storage_key": "photos/original/2026/07/db6d7d8f-31ed-416a-a4aa-1b916bb499ba.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-11T20:30:47.244564+00:00",
+          "shot_at": "2024-12-30T04:13:54+00:00",
+          "display_name": null,
+          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
         }
       ]
     },
@@ -2091,6 +2314,7 @@
       "shot_at": "2024-08-12T01:12:57+00:00",
       "comment": null,
       "display_name": "しもきち",
+      "public_user_id": "bf58a815-ac84-455c-ae88-1903cb9f8228",
       "gallery": [
         {
           "photo_id": "f3fa460f-f94e-4f6b-8231-917e6ea3e6fb",
@@ -2099,7 +2323,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-20T15:18:47.281662+00:00",
           "shot_at": "2024-08-12T01:12:57+00:00",
-          "display_name": "しもきち"
+          "display_name": "しもきち",
+          "public_user_id": "bf58a815-ac84-455c-ae88-1903cb9f8228"
         }
       ]
     },
@@ -2117,6 +2342,7 @@
       "shot_at": "2024-08-12T01:44:26+00:00",
       "comment": null,
       "display_name": "しもきち",
+      "public_user_id": "bf58a815-ac84-455c-ae88-1903cb9f8228",
       "gallery": [
         {
           "photo_id": "e6e57856-a97b-408a-bf57-5a519b357fe9",
@@ -2125,7 +2351,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-20T15:18:28.691411+00:00",
           "shot_at": "2024-08-12T01:44:26+00:00",
-          "display_name": "しもきち"
+          "display_name": "しもきち",
+          "public_user_id": "bf58a815-ac84-455c-ae88-1903cb9f8228"
         }
       ]
     },
@@ -2143,6 +2370,7 @@
       "shot_at": "2024-08-12T01:20:03+00:00",
       "comment": null,
       "display_name": "しもきち",
+      "public_user_id": "bf58a815-ac84-455c-ae88-1903cb9f8228",
       "gallery": [
         {
           "photo_id": "fa4a9d0f-7200-4074-ba55-253befded588",
@@ -2151,7 +2379,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-20T15:18:10.192877+00:00",
           "shot_at": "2024-08-12T01:20:03+00:00",
-          "display_name": "しもきち"
+          "display_name": "しもきち",
+          "public_user_id": "bf58a815-ac84-455c-ae88-1903cb9f8228"
         }
       ]
     },
@@ -2169,6 +2398,7 @@
       "shot_at": "2025-03-28T06:21:13+00:00",
       "comment": "牧歌的な景色はポケふたに\r\nとっても合うにゃあ",
       "display_name": null,
+      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
       "gallery": [
         {
           "photo_id": "ea227261-7c64-46f8-a2b5-33e8653e63bf",
@@ -2177,7 +2407,64 @@
           "content_type": "image/jpeg",
           "created_at": "2026-07-11T08:12:14.539387+00:00",
           "shot_at": "2025-03-28T06:21:13+00:00",
-          "display_name": null
+          "display_name": null,
+          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
+        }
+      ]
+    },
+    "268": {
+      "manhole_id": 268,
+      "photo_id": "2627794e-79a3-4e86-a3b7-5d37e2f57a07",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/abbca17e-024e-478c-b00a-e42c613dc5fb.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/abbca17e-024e-478c-b00a-e42c613dc5fb.jpg",
+      "storage_key": "photos/original/2026/07/abbca17e-024e-478c-b00a-e42c613dc5fb.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1606933,
+      "created_at": "2026-07-11T20:23:52.13095+00:00",
+      "shot_at": "2025-03-28T00:57:42+00:00",
+      "comment": "産直の野菜で元気になるポケふただにゃあ\r\n空気も澄んでたにゃあ",
+      "display_name": null,
+      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
+      "gallery": [
+        {
+          "photo_id": "2627794e-79a3-4e86-a3b7-5d37e2f57a07",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/abbca17e-024e-478c-b00a-e42c613dc5fb.jpg",
+          "storage_key": "photos/original/2026/07/abbca17e-024e-478c-b00a-e42c613dc5fb.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-11T20:23:52.13095+00:00",
+          "shot_at": "2025-03-28T00:57:42+00:00",
+          "display_name": null,
+          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
+        }
+      ]
+    },
+    "269": {
+      "manhole_id": 269,
+      "photo_id": "f927acca-cc0e-43d6-9933-590b1182701f",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/db49d50b-cc48-450a-90c3-fd24683ee4d9.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/db49d50b-cc48-450a-90c3-fd24683ee4d9.jpg",
+      "storage_key": "photos/original/2026/07/db49d50b-cc48-450a-90c3-fd24683ee4d9.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1602244,
+      "created_at": "2026-07-11T13:28:23.702128+00:00",
+      "shot_at": "2025-03-28T04:04:10+00:00",
+      "comment": "道の駅のポケふた\r\n綺麗な川の流れを見張っているにゃあ",
+      "display_name": null,
+      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
+      "gallery": [
+        {
+          "photo_id": "f927acca-cc0e-43d6-9933-590b1182701f",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/db49d50b-cc48-450a-90c3-fd24683ee4d9.jpg",
+          "storage_key": "photos/original/2026/07/db49d50b-cc48-450a-90c3-fd24683ee4d9.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-11T13:28:23.702128+00:00",
+          "shot_at": "2025-03-28T04:04:10+00:00",
+          "display_name": null,
+          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
         }
       ]
     },
@@ -2195,6 +2482,7 @@
       "shot_at": "2023-08-13T01:41:56+00:00",
       "comment": "豊橋公園にありました。無料の駐車場は当時見つかりませんでした。",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "40b7bd35-7a87-42ce-9e16-2bff1ef27f30",
@@ -2203,7 +2491,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-05-10T14:06:43.241104+00:00",
           "shot_at": "2023-08-13T01:41:56+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -2221,6 +2510,7 @@
       "shot_at": "2026-05-24T00:43:10+00:00",
       "comment": "豊橋鉄道渥美線の新豊橋駅前にありました。豊橋駅の新幹線口公共駐車場が30分無料でした",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "f0406523-b2aa-4efe-9ba9-a072039e823b",
@@ -2229,7 +2519,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-05-24T00:46:17.867307+00:00",
           "shot_at": "2026-05-24T00:43:10+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         },
         {
           "photo_id": "d816643f-63df-48a8-a7a0-4142ae6c3a32",
@@ -2238,7 +2529,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-01-11T13:19:55.118975+00:00",
           "shot_at": "2025-12-21T07:57:30+00:00",
-          "display_name": "hirochinn0519"
+          "display_name": "hirochinn0519",
+          "public_user_id": "6d230ed1-6562-4c00-af5c-ec03c48b47a6"
         }
       ]
     },
@@ -2256,6 +2548,7 @@
       "shot_at": "2023-08-12T07:34:58+00:00",
       "comment": "道の駅とよはし　アグリパークにあります",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "3648f3a6-6faa-4d84-bccb-f828170776f8",
@@ -2264,7 +2557,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-05-10T14:11:15.243417+00:00",
           "shot_at": "2023-08-12T07:34:58+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -2282,6 +2576,7 @@
       "shot_at": "2023-08-12T08:49:11+00:00",
       "comment": "のんほいパークの正門の手前にありました。\r\n有料の駐車場に止めると近いです",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "11e6a703-132b-4f38-958f-df3fb092cdb0",
@@ -2290,7 +2585,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-05-10T14:09:45.356807+00:00",
           "shot_at": "2023-08-12T08:49:11+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -2308,6 +2604,7 @@
       "shot_at": "2026-03-17T03:36:59+00:00",
       "comment": "道の駅とうべつにあります。とてもきれいな道の駅でした",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "f1510d0a-22f4-496b-9a5e-5e9f3976f9a6",
@@ -2316,7 +2613,92 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-17T03:48:33.302984+00:00",
           "shot_at": "2026-03-17T03:36:59+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
+        }
+      ]
+    },
+    "281": {
+      "manhole_id": 281,
+      "photo_id": "f95826e7-e4f6-490c-8181-0367edbe75b1",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/fa1b3eed-0233-4a0b-8393-2aa40c8e9a1b.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/fa1b3eed-0233-4a0b-8393-2aa40c8e9a1b.jpg",
+      "storage_key": "photos/original/2026/07/fa1b3eed-0233-4a0b-8393-2aa40c8e9a1b.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1491839,
+      "created_at": "2026-07-11T21:40:30.541217+00:00",
+      "shot_at": "2026-07-11T21:37:56+00:00",
+      "comment": "ビジターセンターの左側脇にあります",
+      "display_name": null,
+      "public_user_id": "f964b8ea-c32d-4b97-8df9-27723a4c5179",
+      "gallery": [
+        {
+          "photo_id": "f95826e7-e4f6-490c-8181-0367edbe75b1",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/fa1b3eed-0233-4a0b-8393-2aa40c8e9a1b.jpg",
+          "storage_key": "photos/original/2026/07/fa1b3eed-0233-4a0b-8393-2aa40c8e9a1b.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-11T21:40:30.541217+00:00",
+          "shot_at": "2026-07-11T21:37:56+00:00",
+          "display_name": null,
+          "public_user_id": "f964b8ea-c32d-4b97-8df9-27723a4c5179"
+        }
+      ]
+    },
+    "282": {
+      "manhole_id": 282,
+      "photo_id": "403da222-1f2d-4574-b86d-9c890447f31e",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/d8107e19-4f35-4e08-9239-73f77c2338da.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/d8107e19-4f35-4e08-9239-73f77c2338da.jpg",
+      "storage_key": "photos/original/2026/07/d8107e19-4f35-4e08-9239-73f77c2338da.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1357309,
+      "created_at": "2026-07-11T21:18:34.18001+00:00",
+      "shot_at": "2026-07-11T21:12:22+00:00",
+      "comment": "朝早かったので蓋だけ",
+      "display_name": null,
+      "public_user_id": "f964b8ea-c32d-4b97-8df9-27723a4c5179",
+      "gallery": [
+        {
+          "photo_id": "403da222-1f2d-4574-b86d-9c890447f31e",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/d8107e19-4f35-4e08-9239-73f77c2338da.jpg",
+          "storage_key": "photos/original/2026/07/d8107e19-4f35-4e08-9239-73f77c2338da.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-11T21:18:34.18001+00:00",
+          "shot_at": "2026-07-11T21:12:22+00:00",
+          "display_name": null,
+          "public_user_id": "f964b8ea-c32d-4b97-8df9-27723a4c5179"
+        }
+      ]
+    },
+    "287": {
+      "manhole_id": 287,
+      "photo_id": "945dce88-c704-4bfa-9867-11d634988e5f",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/80002fef-5eee-4452-9b61-f91a4dbe4d8d.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/80002fef-5eee-4452-9b61-f91a4dbe4d8d.jpg",
+      "storage_key": "photos/original/2026/07/80002fef-5eee-4452-9b61-f91a4dbe4d8d.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1462729,
+      "created_at": "2026-07-11T20:43:30.741108+00:00",
+      "shot_at": "2024-12-30T01:03:19+00:00",
+      "comment": "お花と相性の良いポケふただにゃあ\r\n桜の見頃にも行けたらいいにゃあ",
+      "display_name": null,
+      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
+      "gallery": [
+        {
+          "photo_id": "945dce88-c704-4bfa-9867-11d634988e5f",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/80002fef-5eee-4452-9b61-f91a4dbe4d8d.jpg",
+          "storage_key": "photos/original/2026/07/80002fef-5eee-4452-9b61-f91a4dbe4d8d.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-11T20:43:30.741108+00:00",
+          "shot_at": "2024-12-30T01:03:19+00:00",
+          "display_name": null,
+          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
         }
       ]
     },
@@ -2334,6 +2716,7 @@
       "shot_at": "2026-01-11T11:20:13+00:00",
       "comment": "時計台の下で分かりづらい",
       "display_name": "hirochinn0519",
+      "public_user_id": "6d230ed1-6562-4c00-af5c-ec03c48b47a6",
       "gallery": [
         {
           "photo_id": "ae8ff0f4-2758-49fc-89b0-b58fc45cf7d8",
@@ -2342,7 +2725,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-01-11T13:16:36.452053+00:00",
           "shot_at": "2026-01-11T11:20:13+00:00",
-          "display_name": "hirochinn0519"
+          "display_name": "hirochinn0519",
+          "public_user_id": "6d230ed1-6562-4c00-af5c-ec03c48b47a6"
         },
         {
           "photo_id": "ebeda02c-cbf0-4250-844a-b24bdbcb42b9",
@@ -2351,7 +2735,8 @@
           "content_type": "image/jpeg",
           "created_at": "2025-12-13T06:41:42.687281+00:00",
           "shot_at": "2025-12-13T06:39:22+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -2369,6 +2754,7 @@
       "shot_at": "2025-12-29T02:54:06+00:00",
       "comment": "ふれあいパークという公園の高台の一番上にあります。朝日町のポケフタのアンケートのQRがありました。",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "cb126b61-10b3-465a-8d56-8c63ad84bc3b",
@@ -2377,7 +2763,8 @@
           "content_type": "image/jpeg",
           "created_at": "2025-12-29T03:00:09.879315+00:00",
           "shot_at": "2025-12-29T02:54:06+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -2395,6 +2782,7 @@
       "shot_at": "2026-05-01T23:38:31+00:00",
       "comment": null,
       "display_name": "boroborokin",
+      "public_user_id": "866300e5-ffc1-44f2-bd6a-5d3902bb20a0",
       "gallery": [
         {
           "photo_id": "20a68342-92d6-4592-99c2-e2c4ad1cb0e2",
@@ -2403,7 +2791,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-05-05T01:36:58.99642+00:00",
           "shot_at": "2026-05-01T23:38:31+00:00",
-          "display_name": "boroborokin"
+          "display_name": "boroborokin",
+          "public_user_id": "866300e5-ffc1-44f2-bd6a-5d3902bb20a0"
         }
       ]
     },
@@ -2421,6 +2810,7 @@
       "shot_at": "2025-03-27T07:12:32+00:00",
       "comment": null,
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "07788b27-c040-4b45-a4eb-e89b1129610d",
@@ -2429,7 +2819,8 @@
           "content_type": "image/jpeg",
           "created_at": "2025-10-14T14:59:34.199912+00:00",
           "shot_at": "2025-03-27T07:12:32+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -2447,6 +2838,7 @@
       "shot_at": "2026-05-02T06:59:04+00:00",
       "comment": null,
       "display_name": "boroborokin",
+      "public_user_id": "866300e5-ffc1-44f2-bd6a-5d3902bb20a0",
       "gallery": [
         {
           "photo_id": "09fe1a45-e20c-416b-9fcb-e474e0179bcf",
@@ -2455,7 +2847,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-05-05T01:40:26.830082+00:00",
           "shot_at": "2026-05-02T06:59:04+00:00",
-          "display_name": "boroborokin"
+          "display_name": "boroborokin",
+          "public_user_id": "866300e5-ffc1-44f2-bd6a-5d3902bb20a0"
         }
       ]
     },
@@ -2473,6 +2866,7 @@
       "shot_at": "2024-04-23T23:47:59+00:00",
       "comment": null,
       "display_name": "しもきち",
+      "public_user_id": "bf58a815-ac84-455c-ae88-1903cb9f8228",
       "gallery": [
         {
           "photo_id": "64956266-807e-4973-8033-3eb333bd20f1",
@@ -2481,7 +2875,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-23T14:22:14.19417+00:00",
           "shot_at": "2024-04-23T23:47:59+00:00",
-          "display_name": "しもきち"
+          "display_name": "しもきち",
+          "public_user_id": "bf58a815-ac84-455c-ae88-1903cb9f8228"
         }
       ]
     },
@@ -2499,6 +2894,7 @@
       "shot_at": "2023-06-06T01:09:34+00:00",
       "comment": "国立工芸館の前にありました。",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "f8952706-4ac8-4575-9744-098d3c1ff49a",
@@ -2507,7 +2903,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-05-10T14:21:18.038551+00:00",
           "shot_at": "2023-06-06T01:09:34+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -2525,6 +2922,7 @@
       "shot_at": "2026-03-20T05:50:23+00:00",
       "comment": "室蘭市のDENZAI 環境科学館にありました",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "e3ef35e8-661e-4227-a9a0-80d20a005e87",
@@ -2533,7 +2931,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-20T05:55:44.708332+00:00",
           "shot_at": "2026-03-20T05:50:23+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -2551,6 +2950,7 @@
       "shot_at": "2026-05-31T23:25:57+00:00",
       "comment": "cute!",
       "display_name": "dichlorosulfane",
+      "public_user_id": "9c6936dc-2331-45e4-b96d-0a3ea6c2a775",
       "gallery": [
         {
           "photo_id": "82c87f31-1fe5-4e1d-9f34-09fee1627c91",
@@ -2559,7 +2959,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-02T07:28:30.504037+00:00",
           "shot_at": "2026-05-31T23:25:57+00:00",
-          "display_name": "dichlorosulfane"
+          "display_name": "dichlorosulfane",
+          "public_user_id": "9c6936dc-2331-45e4-b96d-0a3ea6c2a775"
         },
         {
           "photo_id": "7bcc4a05-77c5-4cec-8d67-d96b45fbd0e2",
@@ -2568,7 +2969,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-25T04:37:23.558067+00:00",
           "shot_at": "2026-03-25T03:36:45+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -2586,6 +2988,7 @@
       "shot_at": "2026-03-16T23:56:11+00:00",
       "comment": "道の駅うたしないチロルのひさしの下にありました",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "d1e8358c-4bbd-4fb2-a1aa-32d653d5aa82",
@@ -2594,7 +2997,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-17T00:06:11.132947+00:00",
           "shot_at": "2026-03-16T23:56:11+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -2612,6 +3016,7 @@
       "shot_at": "2026-03-21T00:24:04+00:00",
       "comment": "道の駅こさないの入り口にありました",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "b13cb88f-ffd1-4d06-8b4d-c85389e67dc9",
@@ -2620,7 +3025,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-21T00:27:20.087472+00:00",
           "shot_at": "2026-03-21T00:24:04+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -2638,6 +3044,7 @@
       "shot_at": "2026-03-14T04:33:57+00:00",
       "comment": "道の駅さるふつ公園にありました。",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "fb0409b3-955f-4ec1-b453-a4550ef3536a",
@@ -2646,7 +3053,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-14T04:35:00.945498+00:00",
           "shot_at": "2026-03-14T04:33:57+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -2664,6 +3072,7 @@
       "shot_at": "2026-06-01T09:18:45+00:00",
       "comment": "also very nice",
       "display_name": "dichlorosulfane",
+      "public_user_id": "9c6936dc-2331-45e4-b96d-0a3ea6c2a775",
       "gallery": [
         {
           "photo_id": "25948fd4-7e6f-4279-a2b9-8bdcf679deb8",
@@ -2672,7 +3081,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-02T07:29:36.337134+00:00",
           "shot_at": "2026-06-01T09:18:45+00:00",
-          "display_name": "dichlorosulfane"
+          "display_name": "dichlorosulfane",
+          "public_user_id": "9c6936dc-2331-45e4-b96d-0a3ea6c2a775"
         },
         {
           "photo_id": "2e8a7372-1e9d-46c2-9625-049f280bc011",
@@ -2681,7 +3091,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-25T04:38:51.918406+00:00",
           "shot_at": "2026-03-25T01:55:35+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -2699,6 +3110,7 @@
       "shot_at": "2026-05-04T05:00:25+00:00",
       "comment": null,
       "display_name": "boroborokin",
+      "public_user_id": "866300e5-ffc1-44f2-bd6a-5d3902bb20a0",
       "gallery": [
         {
           "photo_id": "fbeee3b5-989a-4679-9ecc-4b1d375be0c0",
@@ -2707,7 +3119,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-05-05T01:42:51.013906+00:00",
           "shot_at": "2026-05-04T05:00:25+00:00",
-          "display_name": "boroborokin"
+          "display_name": "boroborokin",
+          "public_user_id": "866300e5-ffc1-44f2-bd6a-5d3902bb20a0"
         },
         {
           "photo_id": "3c02a762-09bb-4281-a688-a3b1682726ae",
@@ -2716,7 +3129,8 @@
           "content_type": "image/jpeg",
           "created_at": "2025-12-13T04:37:42.827142+00:00",
           "shot_at": "2025-12-13T04:36:10+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -2734,6 +3148,7 @@
       "shot_at": "2025-12-29T02:17:03+00:00",
       "comment": "木曽岬町役場にあります。役場の駐車場が無料です。",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "ecc3315d-0079-47b6-a0c5-cfbe69f52054",
@@ -2742,7 +3157,8 @@
           "content_type": "image/jpeg",
           "created_at": "2025-12-29T02:18:31.331016+00:00",
           "shot_at": "2025-12-29T02:17:03+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -2760,6 +3176,7 @@
       "shot_at": "2025-12-29T03:24:28+00:00",
       "comment": "東員町中部公園の管理棟の前にありました。公園の駐車場は無料です。",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "199c518b-8fb5-419e-90ac-51833d460953",
@@ -2768,7 +3185,8 @@
           "content_type": "image/jpeg",
           "created_at": "2025-12-29T03:36:17.668583+00:00",
           "shot_at": "2025-12-29T03:24:28+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -2786,6 +3204,7 @@
       "shot_at": "2026-01-04T07:38:28+00:00",
       "comment": null,
       "display_name": "ロイ",
+      "public_user_id": "65a274e2-a72e-40da-addc-30a33e9e281b",
       "gallery": [
         {
           "photo_id": "b0c25efc-d3a5-47b1-a3d8-043b57252231",
@@ -2794,7 +3213,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-01-04T07:38:50.339078+00:00",
           "shot_at": "2026-01-04T07:38:28+00:00",
-          "display_name": "ロイ"
+          "display_name": "ロイ",
+          "public_user_id": "65a274e2-a72e-40da-addc-30a33e9e281b"
         }
       ]
     },
@@ -2812,6 +3232,7 @@
       "shot_at": "2026-01-04T07:07:45+00:00",
       "comment": null,
       "display_name": "ロイ",
+      "public_user_id": "65a274e2-a72e-40da-addc-30a33e9e281b",
       "gallery": [
         {
           "photo_id": "8e5748f3-eb22-4de9-9320-eb47539de6b4",
@@ -2820,7 +3241,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-01-04T07:08:10.532438+00:00",
           "shot_at": "2026-01-04T07:07:45+00:00",
-          "display_name": "ロイ"
+          "display_name": "ロイ",
+          "public_user_id": "65a274e2-a72e-40da-addc-30a33e9e281b"
         }
       ]
     },
@@ -2838,6 +3260,7 @@
       "shot_at": "2026-01-04T07:52:40+00:00",
       "comment": null,
       "display_name": "ロイ",
+      "public_user_id": "65a274e2-a72e-40da-addc-30a33e9e281b",
       "gallery": [
         {
           "photo_id": "e2a8aa16-dd5c-4f4d-aca7-b43158e923bb",
@@ -2846,7 +3269,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-01-04T07:53:12.368611+00:00",
           "shot_at": "2026-01-04T07:52:40+00:00",
-          "display_name": "ロイ"
+          "display_name": "ロイ",
+          "public_user_id": "65a274e2-a72e-40da-addc-30a33e9e281b"
         },
         {
           "photo_id": "ab322481-0342-482a-a185-c6c906c64d01",
@@ -2855,7 +3279,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-23T14:23:22.056473+00:00",
           "shot_at": "2023-12-17T08:05:02+00:00",
-          "display_name": "しもきち"
+          "display_name": "しもきち",
+          "public_user_id": "bf58a815-ac84-455c-ae88-1903cb9f8228"
         }
       ]
     },
@@ -2873,6 +3298,7 @@
       "shot_at": "2026-01-04T08:07:31+00:00",
       "comment": null,
       "display_name": "ロイ",
+      "public_user_id": "65a274e2-a72e-40da-addc-30a33e9e281b",
       "gallery": [
         {
           "photo_id": "fcfdbe2d-516e-43b2-8812-4830e0ecc399",
@@ -2881,7 +3307,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-01-04T08:08:02.121296+00:00",
           "shot_at": "2026-01-04T08:07:31+00:00",
-          "display_name": "ロイ"
+          "display_name": "ロイ",
+          "public_user_id": "65a274e2-a72e-40da-addc-30a33e9e281b"
         },
         {
           "photo_id": "8e87303a-c521-4601-aec7-11abe295754d",
@@ -2890,7 +3317,36 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-23T14:22:42.265634+00:00",
           "shot_at": "2023-12-17T08:39:42+00:00",
-          "display_name": "しもきち"
+          "display_name": "しもきち",
+          "public_user_id": "bf58a815-ac84-455c-ae88-1903cb9f8228"
+        }
+      ]
+    },
+    "316": {
+      "manhole_id": 316,
+      "photo_id": "249d8ec9-4f74-433d-bd77-06d14153daeb",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/5634355a-90db-4451-a6b5-b18e1ea9561d.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/5634355a-90db-4451-a6b5-b18e1ea9561d.jpg",
+      "storage_key": "photos/original/2026/07/5634355a-90db-4451-a6b5-b18e1ea9561d.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1434845,
+      "created_at": "2026-07-11T12:47:12.803355+00:00",
+      "shot_at": "2026-07-05T01:45:17+00:00",
+      "comment": null,
+      "display_name": null,
+      "public_user_id": "6007030d-0f71-41e8-ab04-7a60d566a41a",
+      "gallery": [
+        {
+          "photo_id": "249d8ec9-4f74-433d-bd77-06d14153daeb",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/5634355a-90db-4451-a6b5-b18e1ea9561d.jpg",
+          "storage_key": "photos/original/2026/07/5634355a-90db-4451-a6b5-b18e1ea9561d.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-11T12:47:12.803355+00:00",
+          "shot_at": "2026-07-05T01:45:17+00:00",
+          "display_name": null,
+          "public_user_id": "6007030d-0f71-41e8-ab04-7a60d566a41a"
         }
       ]
     },
@@ -2908,6 +3364,7 @@
       "shot_at": "2026-05-31T03:44:39+00:00",
       "comment": "cool",
       "display_name": "dichlorosulfane",
+      "public_user_id": "9c6936dc-2331-45e4-b96d-0a3ea6c2a775",
       "gallery": [
         {
           "photo_id": "f8c28ec5-9f22-49bb-8026-47a175b2e1e4",
@@ -2916,7 +3373,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-02T07:27:01.583466+00:00",
           "shot_at": "2026-05-31T03:44:39+00:00",
-          "display_name": "dichlorosulfane"
+          "display_name": "dichlorosulfane",
+          "public_user_id": "9c6936dc-2331-45e4-b96d-0a3ea6c2a775"
         },
         {
           "photo_id": "91b06aa8-a106-4648-8f3b-8a7416c71ff6",
@@ -2925,7 +3383,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-16T01:44:33.835813+00:00",
           "shot_at": "2026-03-16T01:42:14+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -2943,6 +3402,7 @@
       "shot_at": "2026-01-11T04:43:33+00:00",
       "comment": "時計台の下で分かりづらい",
       "display_name": "hirochinn0519",
+      "public_user_id": "6d230ed1-6562-4c00-af5c-ec03c48b47a6",
       "gallery": [
         {
           "photo_id": "16d3d0a9-e64b-415b-a02a-de0f206e3f72",
@@ -2951,7 +3411,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-01-11T13:17:19.819164+00:00",
           "shot_at": "2026-01-11T04:43:33+00:00",
-          "display_name": "hirochinn0519"
+          "display_name": "hirochinn0519",
+          "public_user_id": "6d230ed1-6562-4c00-af5c-ec03c48b47a6"
         },
         {
           "photo_id": "efb1a087-5ee8-44cc-81cd-8e18194b7397",
@@ -2960,7 +3421,8 @@
           "content_type": "image/jpeg",
           "created_at": "2025-11-23T04:48:36.710933+00:00",
           "shot_at": "2025-11-23T04:47:14+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -2978,6 +3440,7 @@
       "shot_at": "2025-11-23T01:38:22+00:00",
       "comment": "近鉄川越富洲原駅の西口の広場にありました。",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "264715ff-ed08-4578-8125-ae9469bb6ba4",
@@ -2986,7 +3449,8 @@
           "content_type": "image/jpeg",
           "created_at": "2025-11-23T01:41:59.900893+00:00",
           "shot_at": "2025-11-23T01:38:22+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -3004,6 +3468,7 @@
       "shot_at": "2025-03-27T07:40:16+00:00",
       "comment": null,
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "09c55bc3-7507-4d71-b281-c2da4aef0859",
@@ -3012,7 +3477,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-05-10T14:31:18.472511+00:00",
           "shot_at": "2025-03-27T07:40:16+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -3030,6 +3496,7 @@
       "shot_at": "2025-03-27T06:42:08+00:00",
       "comment": null,
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "61b5c3d9-2ad5-46f0-a98c-f5af2e47ae5e",
@@ -3038,7 +3505,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-05-10T14:30:01.270535+00:00",
           "shot_at": "2025-03-27T06:42:08+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -3056,6 +3524,7 @@
       "shot_at": "2026-05-02T01:09:10+00:00",
       "comment": "道が狭すぎて行くのが大変><",
       "display_name": "boroborokin",
+      "public_user_id": "866300e5-ffc1-44f2-bd6a-5d3902bb20a0",
       "gallery": [
         {
           "photo_id": "5bc8b40d-0e43-4990-9c34-75fea19b5ab6",
@@ -3064,7 +3533,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-05-05T01:38:29.538536+00:00",
           "shot_at": "2026-05-02T01:09:10+00:00",
-          "display_name": "boroborokin"
+          "display_name": "boroborokin",
+          "public_user_id": "866300e5-ffc1-44f2-bd6a-5d3902bb20a0"
         }
       ]
     },
@@ -3082,6 +3552,7 @@
       "shot_at": "2024-09-07T03:36:01+00:00",
       "comment": null,
       "display_name": "しもきち",
+      "public_user_id": "bf58a815-ac84-455c-ae88-1903cb9f8228",
       "gallery": [
         {
           "photo_id": "4e281fe9-eb2a-4152-b4f0-555a4023d53b",
@@ -3090,7 +3561,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-23T14:10:54.263613+00:00",
           "shot_at": "2024-09-07T03:36:01+00:00",
-          "display_name": "しもきち"
+          "display_name": "しもきち",
+          "public_user_id": "bf58a815-ac84-455c-ae88-1903cb9f8228"
         }
       ]
     },
@@ -3108,6 +3580,7 @@
       "shot_at": "2024-09-07T09:40:57+00:00",
       "comment": null,
       "display_name": "しもきち",
+      "public_user_id": "bf58a815-ac84-455c-ae88-1903cb9f8228",
       "gallery": [
         {
           "photo_id": "c932fed9-6fd0-4d87-b641-92d4d8736082",
@@ -3116,7 +3589,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-23T14:12:50.594972+00:00",
           "shot_at": "2024-09-07T09:40:57+00:00",
-          "display_name": "しもきち"
+          "display_name": "しもきち",
+          "public_user_id": "bf58a815-ac84-455c-ae88-1903cb9f8228"
         }
       ]
     },
@@ -3134,6 +3608,7 @@
       "shot_at": "2024-09-07T04:06:13+00:00",
       "comment": null,
       "display_name": "しもきち",
+      "public_user_id": "bf58a815-ac84-455c-ae88-1903cb9f8228",
       "gallery": [
         {
           "photo_id": "31b4c10e-8ff7-4aab-adaa-ddc16d5fb391",
@@ -3142,7 +3617,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-23T14:11:08.939164+00:00",
           "shot_at": "2024-09-07T04:06:13+00:00",
-          "display_name": "しもきち"
+          "display_name": "しもきち",
+          "public_user_id": "bf58a815-ac84-455c-ae88-1903cb9f8228"
         }
       ]
     },
@@ -3160,6 +3636,7 @@
       "shot_at": "2024-09-08T00:44:12+00:00",
       "comment": null,
       "display_name": "しもきち",
+      "public_user_id": "bf58a815-ac84-455c-ae88-1903cb9f8228",
       "gallery": [
         {
           "photo_id": "f782e06b-b62a-46f8-a6c7-f5f6ccd707a4",
@@ -3168,7 +3645,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-23T14:27:07.772688+00:00",
           "shot_at": "2024-09-08T00:44:12+00:00",
-          "display_name": "しもきち"
+          "display_name": "しもきち",
+          "public_user_id": "bf58a815-ac84-455c-ae88-1903cb9f8228"
         }
       ]
     },
@@ -3186,6 +3664,7 @@
       "shot_at": "2024-09-08T05:47:43+00:00",
       "comment": null,
       "display_name": "しもきち",
+      "public_user_id": "bf58a815-ac84-455c-ae88-1903cb9f8228",
       "gallery": [
         {
           "photo_id": "0d5ab18e-f620-4292-95db-b30f54b4836a",
@@ -3194,7 +3673,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-23T14:10:30.682132+00:00",
           "shot_at": "2024-09-08T05:47:43+00:00",
-          "display_name": "しもきち"
+          "display_name": "しもきち",
+          "public_user_id": "bf58a815-ac84-455c-ae88-1903cb9f8228"
         }
       ]
     },
@@ -3212,6 +3692,7 @@
       "shot_at": "2026-05-03T02:09:19+00:00",
       "comment": null,
       "display_name": "boroborokin",
+      "public_user_id": "866300e5-ffc1-44f2-bd6a-5d3902bb20a0",
       "gallery": [
         {
           "photo_id": "6f45cddc-7222-46e1-ba78-187bbe7b2e7b",
@@ -3220,7 +3701,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-05-05T01:41:47.151838+00:00",
           "shot_at": "2026-05-03T02:09:19+00:00",
-          "display_name": "boroborokin"
+          "display_name": "boroborokin",
+          "public_user_id": "866300e5-ffc1-44f2-bd6a-5d3902bb20a0"
         }
       ]
     },
@@ -3238,6 +3720,7 @@
       "shot_at": "2026-05-03T05:19:31+00:00",
       "comment": null,
       "display_name": "boroborokin",
+      "public_user_id": "866300e5-ffc1-44f2-bd6a-5d3902bb20a0",
       "gallery": [
         {
           "photo_id": "8927c1a1-373d-42e0-87b6-cc1a143c857e",
@@ -3246,7 +3729,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-05-05T01:42:18.910167+00:00",
           "shot_at": "2026-05-03T05:19:31+00:00",
-          "display_name": "boroborokin"
+          "display_name": "boroborokin",
+          "public_user_id": "866300e5-ffc1-44f2-bd6a-5d3902bb20a0"
         }
       ]
     },
@@ -3264,6 +3748,7 @@
       "shot_at": "2026-05-03T00:16:16+00:00",
       "comment": null,
       "display_name": "boroborokin",
+      "public_user_id": "866300e5-ffc1-44f2-bd6a-5d3902bb20a0",
       "gallery": [
         {
           "photo_id": "2d90b168-5def-4089-95de-fc2b3f6eea2d",
@@ -3272,7 +3757,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-05-05T01:41:28.727945+00:00",
           "shot_at": "2026-05-03T00:16:16+00:00",
-          "display_name": "boroborokin"
+          "display_name": "boroborokin",
+          "public_user_id": "866300e5-ffc1-44f2-bd6a-5d3902bb20a0"
         }
       ]
     },
@@ -3290,6 +3776,7 @@
       "shot_at": "2026-05-02T08:27:55+00:00",
       "comment": null,
       "display_name": "boroborokin",
+      "public_user_id": "866300e5-ffc1-44f2-bd6a-5d3902bb20a0",
       "gallery": [
         {
           "photo_id": "848abd16-c62b-4f57-9aa8-12681d4b2943",
@@ -3298,7 +3785,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-05-05T01:41:01.354005+00:00",
           "shot_at": "2026-05-02T08:27:55+00:00",
-          "display_name": "boroborokin"
+          "display_name": "boroborokin",
+          "public_user_id": "866300e5-ffc1-44f2-bd6a-5d3902bb20a0"
         }
       ]
     },
@@ -3316,6 +3804,7 @@
       "shot_at": "2026-05-02T07:41:42+00:00",
       "comment": null,
       "display_name": "boroborokin",
+      "public_user_id": "866300e5-ffc1-44f2-bd6a-5d3902bb20a0",
       "gallery": [
         {
           "photo_id": "2b2e664d-2dcb-413b-b349-6ab2c5303587",
@@ -3324,7 +3813,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-05-05T01:40:44.07015+00:00",
           "shot_at": "2026-05-02T07:41:42+00:00",
-          "display_name": "boroborokin"
+          "display_name": "boroborokin",
+          "public_user_id": "866300e5-ffc1-44f2-bd6a-5d3902bb20a0"
         }
       ]
     },
@@ -3342,6 +3832,7 @@
       "shot_at": "2026-02-08T06:37:01+00:00",
       "comment": "駿府城公園の橋の手前にあります。",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "0391719b-d7d3-4ed1-875c-91286475ec5b",
@@ -3350,7 +3841,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-02-08T06:38:21.11511+00:00",
           "shot_at": "2026-02-08T06:37:01+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -3368,6 +3860,7 @@
       "shot_at": "2026-02-08T01:55:39+00:00",
       "comment": "新浜松駅のそばにあります",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "52a051f7-56c8-43b8-9f18-6c102f305679",
@@ -3376,7 +3869,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-02-08T02:00:04.51513+00:00",
           "shot_at": "2026-02-08T01:55:39+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         },
         {
           "photo_id": "3a1a7fc3-8271-40c1-9b1a-bfdd4ce2ecfa",
@@ -3385,7 +3879,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-01-11T13:21:37.359302+00:00",
           "shot_at": "2025-11-25T11:54:56+00:00",
-          "display_name": "hirochinn0519"
+          "display_name": "hirochinn0519",
+          "public_user_id": "6d230ed1-6562-4c00-af5c-ec03c48b47a6"
         }
       ]
     },
@@ -3403,6 +3898,7 @@
       "shot_at": "2024-09-27T01:45:55+00:00",
       "comment": null,
       "display_name": "しもきち",
+      "public_user_id": "bf58a815-ac84-455c-ae88-1903cb9f8228",
       "gallery": [
         {
           "photo_id": "f4ce4a75-cac3-4692-9eb0-a026e8b09c2d",
@@ -3411,7 +3907,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-23T14:24:51.895203+00:00",
           "shot_at": "2024-09-27T01:45:55+00:00",
-          "display_name": "しもきち"
+          "display_name": "しもきち",
+          "public_user_id": "bf58a815-ac84-455c-ae88-1903cb9f8228"
         },
         {
           "photo_id": "11d1f49b-9f92-4e2f-a694-e706e1bba132",
@@ -3420,7 +3917,8 @@
           "content_type": "image/jpeg",
           "created_at": "2025-10-20T01:06:07.008503+00:00",
           "shot_at": "2024-09-19T06:44:06+00:00",
-          "display_name": "Nishiokya"
+          "display_name": "Nishiokya",
+          "public_user_id": "f0e4c16d-e4cf-489b-871a-1b01ac88ea13"
         }
       ]
     },
@@ -3438,6 +3936,7 @@
       "shot_at": "2024-09-27T06:16:53+00:00",
       "comment": null,
       "display_name": "しもきち",
+      "public_user_id": "bf58a815-ac84-455c-ae88-1903cb9f8228",
       "gallery": [
         {
           "photo_id": "013eb213-abfa-4cc7-8426-4b8b1dc46fbc",
@@ -3446,7 +3945,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-23T14:24:45.593856+00:00",
           "shot_at": "2024-09-27T06:16:53+00:00",
-          "display_name": "しもきち"
+          "display_name": "しもきち",
+          "public_user_id": "bf58a815-ac84-455c-ae88-1903cb9f8228"
         },
         {
           "photo_id": "166eb640-3726-485d-9881-6f51540f3ebf",
@@ -3455,7 +3955,8 @@
           "content_type": "image/jpeg",
           "created_at": "2025-10-14T22:23:14.65804+00:00",
           "shot_at": "2024-09-19T07:43:44+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -3473,6 +3974,7 @@
       "shot_at": "2025-11-01T05:26:41+00:00",
       "comment": null,
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "59dd83ea-8bcf-427b-9eb9-90fd1e61d0ba",
@@ -3481,7 +3983,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-05-10T14:37:18.025776+00:00",
           "shot_at": "2025-11-01T05:26:41+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         },
         {
           "photo_id": "0b304e68-b84a-44ed-bb3d-f0dff324ff99",
@@ -3490,7 +3993,8 @@
           "content_type": "image/jpeg",
           "created_at": "2025-11-01T05:29:00.095262+00:00",
           "shot_at": "2025-11-01T05:26:41+00:00",
-          "display_name": "Nishiokya"
+          "display_name": "Nishiokya",
+          "public_user_id": "f0e4c16d-e4cf-489b-871a-1b01ac88ea13"
         }
       ]
     },
@@ -3508,6 +4012,7 @@
       "shot_at": "2026-06-20T08:09:05+00:00",
       "comment": "雨だと少し水没するようです",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "76c11556-b6d4-4a68-9c8e-b0c0defed1c8",
@@ -3516,7 +4021,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-20T08:59:25.632677+00:00",
           "shot_at": "2026-06-20T08:09:05+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -3534,6 +4040,7 @@
       "shot_at": "2026-02-09T02:20:49+00:00",
       "comment": "関駅のターミナルにありました。北側の公共駐車場が3時間まで無料で止められます",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "e2c952eb-de7a-45cc-b60f-6a47e898e882",
@@ -3542,7 +4049,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-02-09T02:24:08.065681+00:00",
           "shot_at": "2026-02-09T02:20:49+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -3560,6 +4068,7 @@
       "shot_at": "2025-10-26T04:13:21+00:00",
       "comment": null,
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "cf7edd1a-559d-46c6-8565-4b9aa363f0a5",
@@ -3568,7 +4077,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-05-10T14:36:35.65277+00:00",
           "shot_at": "2025-10-26T04:13:21+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         },
         {
           "photo_id": "8daafac4-089d-487c-a323-156eeef67c0b",
@@ -3577,7 +4087,8 @@
           "content_type": "image/jpeg",
           "created_at": "2025-10-26T04:32:33.758761+00:00",
           "shot_at": "2025-10-26T04:13:19+00:00",
-          "display_name": "Nishiokya"
+          "display_name": "Nishiokya",
+          "public_user_id": "f0e4c16d-e4cf-489b-871a-1b01ac88ea13"
         }
       ]
     },
@@ -3595,6 +4106,7 @@
       "shot_at": "2026-06-21T02:06:21+00:00",
       "comment": null,
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "4feed956-c716-4ae1-8541-79b79e2def4e",
@@ -3603,7 +4115,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-21T12:49:52.400004+00:00",
           "shot_at": "2026-06-21T02:06:21+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         },
         {
           "photo_id": "78234012-3801-45be-a126-234ae6b36bc3",
@@ -3612,7 +4125,36 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-14T06:13:55.684498+00:00",
           "shot_at": "2026-06-14T06:06:04+00:00",
-          "display_name": "Giulia"
+          "display_name": "Giulia",
+          "public_user_id": "42be2847-77c4-4797-aaae-f20b1c52f692"
+        }
+      ]
+    },
+    "371": {
+      "manhole_id": 371,
+      "photo_id": "2d4d06a6-ebaa-4dc8-b548-f4818c9184ad",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/6d833fef-4070-4ec4-a9ce-59df2325d766.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/6d833fef-4070-4ec4-a9ce-59df2325d766.jpg",
+      "storage_key": "photos/original/2026/07/6d833fef-4070-4ec4-a9ce-59df2325d766.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1427950,
+      "created_at": "2026-07-11T20:50:32.353203+00:00",
+      "shot_at": "2024-12-29T04:25:49+00:00",
+      "comment": "綺麗な水と綺麗なふたは良いモンだにゃあ\r\nおおきな湖の側で気持ち良さげだにゃあ",
+      "display_name": null,
+      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
+      "gallery": [
+        {
+          "photo_id": "2d4d06a6-ebaa-4dc8-b548-f4818c9184ad",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/6d833fef-4070-4ec4-a9ce-59df2325d766.jpg",
+          "storage_key": "photos/original/2026/07/6d833fef-4070-4ec4-a9ce-59df2325d766.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-11T20:50:32.353203+00:00",
+          "shot_at": "2024-12-29T04:25:49+00:00",
+          "display_name": null,
+          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
         }
       ]
     },
@@ -3630,6 +4172,7 @@
       "shot_at": "2026-06-14T04:20:46.497+00:00",
       "comment": "白河駅広場の近く！",
       "display_name": "ぴえろ",
+      "public_user_id": "8c00b009-7e67-4db3-84d9-7aa44a336cf9",
       "gallery": [
         {
           "photo_id": "8a1d8aca-09ad-4405-8f95-b89523c4bd85",
@@ -3638,7 +4181,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-14T04:20:48.017456+00:00",
           "shot_at": "2026-06-14T04:20:46.497+00:00",
-          "display_name": "ぴえろ"
+          "display_name": "ぴえろ",
+          "public_user_id": "8c00b009-7e67-4db3-84d9-7aa44a336cf9"
         }
       ]
     },
@@ -3656,6 +4200,7 @@
       "shot_at": "2025-12-29T01:53:08+00:00",
       "comment": "なばなの里のA駐車場にありました。",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "c436e1dc-eab5-4d2e-aad4-635c2eb54975",
@@ -3664,7 +4209,8 @@
           "content_type": "image/jpeg",
           "created_at": "2025-12-29T01:54:28.630451+00:00",
           "shot_at": "2025-12-29T01:53:08+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -3682,6 +4228,7 @@
       "shot_at": "2026-05-02T04:21:59+00:00",
       "comment": null,
       "display_name": "boroborokin",
+      "public_user_id": "866300e5-ffc1-44f2-bd6a-5d3902bb20a0",
       "gallery": [
         {
           "photo_id": "d54ae3db-9fd1-4eb6-b3ba-8feb964eadc1",
@@ -3690,7 +4237,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-05-05T01:39:23.837665+00:00",
           "shot_at": "2026-05-02T04:21:59+00:00",
-          "display_name": "boroborokin"
+          "display_name": "boroborokin",
+          "public_user_id": "866300e5-ffc1-44f2-bd6a-5d3902bb20a0"
         }
       ]
     },
@@ -3708,6 +4256,7 @@
       "shot_at": "2025-10-26T02:39:21+00:00",
       "comment": null,
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "7e906a40-826e-400b-925c-a1a68978aafd",
@@ -3716,7 +4265,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-05-10T14:35:58.391514+00:00",
           "shot_at": "2025-10-26T02:39:21+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         },
         {
           "photo_id": "f16c2e1e-bef3-4508-ac11-ec5cdc7dab74",
@@ -3725,7 +4275,8 @@
           "content_type": "image/jpeg",
           "created_at": "2025-10-26T03:28:33.427347+00:00",
           "shot_at": "2025-10-26T02:39:21+00:00",
-          "display_name": "Nishiokya"
+          "display_name": "Nishiokya",
+          "public_user_id": "f0e4c16d-e4cf-489b-871a-1b01ac88ea13"
         }
       ]
     },
@@ -3743,6 +4294,7 @@
       "shot_at": "2025-10-26T01:55:05+00:00",
       "comment": "菰野図書館の前の公園にありました。",
       "display_name": "Nishiokya",
+      "public_user_id": "f0e4c16d-e4cf-489b-871a-1b01ac88ea13",
       "gallery": [
         {
           "photo_id": "808f2eb4-c581-4a61-aa67-7a8b20f003dd",
@@ -3751,7 +4303,8 @@
           "content_type": "image/jpeg",
           "created_at": "2025-10-26T01:57:46.035353+00:00",
           "shot_at": "2025-10-26T01:55:05+00:00",
-          "display_name": "Nishiokya"
+          "display_name": "Nishiokya",
+          "public_user_id": "f0e4c16d-e4cf-489b-871a-1b01ac88ea13"
         },
         {
           "photo_id": "54bf9d8d-a414-4b6a-adfc-6c14aa5b0f75",
@@ -3760,7 +4313,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-05-10T14:34:42.925633+00:00",
           "shot_at": "2025-10-26T01:55:03+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -3778,6 +4332,7 @@
       "shot_at": "2026-05-02T00:26:13+00:00",
       "comment": null,
       "display_name": "boroborokin",
+      "public_user_id": "866300e5-ffc1-44f2-bd6a-5d3902bb20a0",
       "gallery": [
         {
           "photo_id": "c540f81c-27ec-422e-9c64-37fbb4d695f6",
@@ -3786,7 +4341,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-05-05T01:36:33.122692+00:00",
           "shot_at": "2026-05-02T00:26:13+00:00",
-          "display_name": "boroborokin"
+          "display_name": "boroborokin",
+          "public_user_id": "866300e5-ffc1-44f2-bd6a-5d3902bb20a0"
         }
       ]
     },
@@ -3804,6 +4360,7 @@
       "shot_at": "2026-05-02T02:29:55+00:00",
       "comment": null,
       "display_name": "boroborokin",
+      "public_user_id": "866300e5-ffc1-44f2-bd6a-5d3902bb20a0",
       "gallery": [
         {
           "photo_id": "e8330660-2df6-46a8-8097-3859b83f3dee",
@@ -3812,7 +4369,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-05-05T01:39:05.129686+00:00",
           "shot_at": "2026-05-02T02:29:55+00:00",
-          "display_name": "boroborokin"
+          "display_name": "boroborokin",
+          "public_user_id": "866300e5-ffc1-44f2-bd6a-5d3902bb20a0"
         }
       ]
     },
@@ -3830,6 +4388,7 @@
       "shot_at": "2026-05-02T06:12:13+00:00",
       "comment": null,
       "display_name": "boroborokin",
+      "public_user_id": "866300e5-ffc1-44f2-bd6a-5d3902bb20a0",
       "gallery": [
         {
           "photo_id": "8e647f8b-5a6a-4a7e-84d8-ebfcc3cc198d",
@@ -3838,7 +4397,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-05-05T01:40:05.465712+00:00",
           "shot_at": "2026-05-02T06:12:13+00:00",
-          "display_name": "boroborokin"
+          "display_name": "boroborokin",
+          "public_user_id": "866300e5-ffc1-44f2-bd6a-5d3902bb20a0"
         }
       ]
     },
@@ -3856,6 +4416,7 @@
       "shot_at": "2025-07-19T01:14:34+00:00",
       "comment": "ポケふたと公園ほっこりするにゃあ\r\n近くにもポケモンいっぱいいるにゃあ",
       "display_name": null,
+      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
       "gallery": [
         {
           "photo_id": "11c5c648-4315-4015-8b49-4b582943ae60",
@@ -3864,7 +4425,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-07-10T21:03:47.942731+00:00",
           "shot_at": "2025-07-19T01:14:34+00:00",
-          "display_name": null
+          "display_name": null,
+          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
         }
       ]
     },
@@ -3882,6 +4444,7 @@
       "shot_at": "2026-07-11T02:57:04+00:00",
       "comment": "道の駅のポケふた\r\n涼し気な風鈴の音色と踊る姿が\r\nピッタリだにゃあ",
       "display_name": null,
+      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
       "gallery": [
         {
           "photo_id": "3b7df7af-562e-435c-928f-975f3019238f",
@@ -3890,7 +4453,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-07-11T03:01:26.962567+00:00",
           "shot_at": "2026-07-11T02:57:04+00:00",
-          "display_name": null
+          "display_name": null,
+          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
         }
       ]
     },
@@ -3908,6 +4472,7 @@
       "shot_at": "2025-06-13T05:42:04+00:00",
       "comment": "駅とポケふた\r\n旅にピッタリだにゃあ",
       "display_name": null,
+      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
       "gallery": [
         {
           "photo_id": "bcfa56e4-05a4-41c5-87cc-09799b01988b",
@@ -3916,7 +4481,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-07-10T21:10:25.072831+00:00",
           "shot_at": "2025-06-13T05:42:04+00:00",
-          "display_name": null
+          "display_name": null,
+          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
         }
       ]
     },
@@ -3934,6 +4500,7 @@
       "shot_at": "2025-06-13T04:53:35+00:00",
       "comment": "広い公園とポケふた\r\nのびのびするにゃあ",
       "display_name": null,
+      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
       "gallery": [
         {
           "photo_id": "42772773-5e58-491d-a4d3-4406f651406c",
@@ -3942,7 +4509,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-07-10T21:15:36.463285+00:00",
           "shot_at": "2025-06-13T04:53:35+00:00",
-          "display_name": null
+          "display_name": null,
+          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
         }
       ]
     },
@@ -3960,6 +4528,7 @@
       "shot_at": "2025-06-11T22:47:35+00:00",
       "comment": "びっかぴかのポケふた\r\n大切にして欲しいにゃあ",
       "display_name": null,
+      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
       "gallery": [
         {
           "photo_id": "6086400c-85ba-4c5d-afa3-84a9a34f6b23",
@@ -3968,7 +4537,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-07-10T21:18:21.439003+00:00",
           "shot_at": "2025-06-11T22:47:35+00:00",
-          "display_name": null
+          "display_name": null,
+          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
         }
       ]
     },
@@ -3986,6 +4556,7 @@
       "shot_at": "2026-05-22T09:28:09+00:00",
       "comment": "お城とポケふた\r\nベストマッチだにゃあ\r\nバスで行ったんだにゃあ",
       "display_name": null,
+      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
       "gallery": [
         {
           "photo_id": "8dcfeec0-439f-4d18-ad0b-76ba07fead50",
@@ -3994,7 +4565,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-07-10T20:38:22.56307+00:00",
           "shot_at": "2026-05-22T09:28:09+00:00",
-          "display_name": null
+          "display_name": null,
+          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
         },
         {
           "photo_id": "9c19966f-81cf-4224-af90-dc3114d3b3b4",
@@ -4003,7 +4575,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-05-10T16:34:21.982399+00:00",
           "shot_at": "2026-05-04T06:55:42+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -4021,6 +4594,7 @@
       "shot_at": "2025-09-07T05:46:58+00:00",
       "comment": "瀬戸蔵のメインの入り口の手前にありました",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "732225ef-8634-4533-ae71-0df0f644cb4f",
@@ -4029,7 +4603,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-05-10T14:17:58.302614+00:00",
           "shot_at": "2025-09-07T05:46:58+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         },
         {
           "photo_id": "20e1256c-c793-438a-8c18-48d394ca4ae4",
@@ -4038,7 +4613,8 @@
           "content_type": "image/jpeg",
           "created_at": "2025-10-12T09:28:04.80947+00:00",
           "shot_at": "2025-09-07T05:46:58+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -4056,6 +4632,7 @@
       "shot_at": "2025-08-07T01:58:29+00:00",
       "comment": null,
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "78ce48ab-dae1-4bda-9dc7-fd75905e76fd",
@@ -4064,7 +4641,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-05-10T14:32:40.029181+00:00",
           "shot_at": "2025-08-07T01:58:29+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -4082,6 +4660,7 @@
       "shot_at": "2025-11-30T07:32:00+00:00",
       "comment": null,
       "display_name": "hirochinn0519",
+      "public_user_id": "6d230ed1-6562-4c00-af5c-ec03c48b47a6",
       "gallery": [
         {
           "photo_id": "b12c06b4-ef79-4374-a140-45c369183c81",
@@ -4090,7 +4669,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-01-11T13:20:22.838861+00:00",
           "shot_at": "2025-11-30T07:32:00+00:00",
-          "display_name": "hirochinn0519"
+          "display_name": "hirochinn0519",
+          "public_user_id": "6d230ed1-6562-4c00-af5c-ec03c48b47a6"
         },
         {
           "photo_id": "8f7622aa-173f-4c87-a1e9-4ce9cd6ae4e2",
@@ -4099,7 +4679,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-05-11T06:46:12.193178+00:00",
           "shot_at": "2025-08-16T00:56:40+00:00",
-          "display_name": "ああああああ"
+          "display_name": "ああああああ",
+          "public_user_id": "3b7b7b62-11c0-416f-a823-401e8aa27416"
         },
         {
           "photo_id": "31d9ed37-020f-45ed-8b3e-98633addf9f0",
@@ -4108,7 +4689,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-05-10T14:18:43.127066+00:00",
           "shot_at": "2025-08-16T00:56:40+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         },
         {
           "photo_id": "08c95188-23dc-4e80-b888-d532f9e12534",
@@ -4117,7 +4699,8 @@
           "content_type": "image/jpeg",
           "created_at": "2025-10-19T23:09:35.303043+00:00",
           "shot_at": "2025-08-16T00:56:40+00:00",
-          "display_name": "Nishiokya"
+          "display_name": "Nishiokya",
+          "public_user_id": "f0e4c16d-e4cf-489b-871a-1b01ac88ea13"
         }
       ]
     },
@@ -4135,6 +4718,7 @@
       "shot_at": "2026-03-19T06:41:20+00:00",
       "comment": null,
       "display_name": "hirochinn0519",
+      "public_user_id": "6d230ed1-6562-4c00-af5c-ec03c48b47a6",
       "gallery": [
         {
           "photo_id": "09be877e-879a-4a77-beab-06fba4209690",
@@ -4143,7 +4727,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-19T06:43:55.349273+00:00",
           "shot_at": "2026-03-19T06:41:20+00:00",
-          "display_name": "hirochinn0519"
+          "display_name": "hirochinn0519",
+          "public_user_id": "6d230ed1-6562-4c00-af5c-ec03c48b47a6"
         },
         {
           "photo_id": "600f33ec-8ae2-407f-af98-cb943059a832",
@@ -4152,7 +4737,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-05-10T14:16:28.153755+00:00",
           "shot_at": "2025-07-21T01:42:07+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -4170,6 +4756,7 @@
       "shot_at": "2026-05-23T03:21:18+00:00",
       "comment": "サーキット近くの公園に\r\nよく似合うポケふただにゃあ\r\nバスで行ったんだにゃあ",
       "display_name": null,
+      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
       "gallery": [
         {
           "photo_id": "f3e19ef8-d205-4045-8931-5d24babed22c",
@@ -4178,7 +4765,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-07-10T20:34:35.635787+00:00",
           "shot_at": "2026-05-23T03:21:18+00:00",
-          "display_name": null
+          "display_name": null,
+          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
         },
         {
           "photo_id": "e991d37b-4045-42c5-bfc9-b5acf7c2ba89",
@@ -4187,7 +4775,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-01-11T13:18:53.234725+00:00",
           "shot_at": "2026-01-11T04:11:52+00:00",
-          "display_name": "hirochinn0519"
+          "display_name": "hirochinn0519",
+          "public_user_id": "6d230ed1-6562-4c00-af5c-ec03c48b47a6"
         }
       ]
     },
@@ -4205,6 +4794,7 @@
       "shot_at": "2026-07-11T01:38:32+00:00",
       "comment": "高原のポケふた\r\n牛さん達とお似合いだにゃあ",
       "display_name": null,
+      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
       "gallery": [
         {
           "photo_id": "b2263458-444f-4725-ba28-a14395dab41f",
@@ -4213,7 +4803,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-07-11T01:42:00.15218+00:00",
           "shot_at": "2026-07-11T01:38:32+00:00",
-          "display_name": null
+          "display_name": null,
+          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
         }
       ]
     },
@@ -4231,6 +4822,7 @@
       "shot_at": "2026-06-15T02:56:41+00:00",
       "comment": null,
       "display_name": "ishihara165",
+      "public_user_id": "a463b53a-eaab-4e51-8386-0fd003c2a871",
       "gallery": [
         {
           "photo_id": "b6992532-6c29-490d-b868-85cf9d42ff87",
@@ -4239,7 +4831,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-06-18T10:34:17.264947+00:00",
           "shot_at": "2026-06-15T02:56:41+00:00",
-          "display_name": "ishihara165"
+          "display_name": "ishihara165",
+          "public_user_id": "a463b53a-eaab-4e51-8386-0fd003c2a871"
         }
       ]
     },
@@ -4257,6 +4850,7 @@
       "shot_at": "2026-03-22T07:53:57+00:00",
       "comment": "定山渓温泉博物館とありますが看板は定山渓観光案内所でした。",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "838e9d1f-91a1-4a5b-be96-035c54c39bae",
@@ -4265,7 +4859,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-22T12:10:55.592469+00:00",
           "shot_at": "2026-03-22T07:53:57+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -4283,6 +4878,7 @@
       "shot_at": "2026-03-17T00:27:10+00:00",
       "comment": "砂川市まちなか交流施設すないるの正面玄関にありました。駐車場は施設の裏にあります",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "7823486a-c14a-4ce1-af45-605751cc0a7b",
@@ -4291,7 +4887,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-17T00:28:35.999027+00:00",
           "shot_at": "2026-03-17T00:27:10+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -4309,6 +4906,7 @@
       "shot_at": "2026-03-18T03:21:50+00:00",
       "comment": "由仁町文化交流館ふれーるの入り口のひさしの下にあります",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "53eab76b-54e2-4cce-be86-dfb078653e71",
@@ -4317,7 +4915,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-18T03:23:43.579592+00:00",
           "shot_at": "2026-03-18T03:21:50+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -4335,6 +4934,7 @@
       "shot_at": "2026-03-21T01:58:59+00:00",
       "comment": "道の駅　あっさぶの中央棟にありました",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "836c8929-5a1c-4175-b0d5-e3f9cd08b30d",
@@ -4343,7 +4943,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-21T07:58:05.856498+00:00",
           "shot_at": "2026-03-21T01:58:59+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -4361,6 +4962,7 @@
       "shot_at": "2026-03-14T23:39:17+00:00",
       "comment": "トナカイ牧場の管理棟の前にありました",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "c058ef59-5755-40dc-9f16-839ec25aab9e",
@@ -4369,7 +4971,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-14T23:41:54.854221+00:00",
           "shot_at": "2026-03-14T23:39:17+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -4387,6 +4990,7 @@
       "shot_at": "2026-03-27T07:12:24+00:00",
       "comment": "津別自然運動の木材工芸館キノスの入り口にありました",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "1c518a2f-f646-4e0c-ae14-4ee1490b9b27",
@@ -4395,7 +4999,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-27T11:14:19.337867+00:00",
           "shot_at": "2026-03-27T07:12:24+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -4413,6 +5018,7 @@
       "shot_at": "2026-03-27T21:17:52+00:00",
       "comment": "道の駅 かみゆうべつ温泉 チューリップの湯 建物のひさしの下、駐車場の出口側にありました",
       "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
       "gallery": [
         {
           "photo_id": "8b357c25-bf61-4a2b-81eb-7c697afd9437",
@@ -4421,7 +5027,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-03-28T01:05:17.28191+00:00",
           "shot_at": "2026-03-27T21:17:52+00:00",
-          "display_name": "tako"
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
@@ -4439,6 +5046,7 @@
       "shot_at": "2025-11-22T01:12:30+00:00",
       "comment": "公園のポケふた\r\nほっこりするにゃあ",
       "display_name": null,
+      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
       "gallery": [
         {
           "photo_id": "e11a4620-397e-4745-a020-26f67c1ad01a",
@@ -4447,7 +5055,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-07-10T20:48:04.676173+00:00",
           "shot_at": "2025-11-22T01:12:30+00:00",
-          "display_name": null
+          "display_name": null,
+          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
         }
       ]
     },
@@ -4465,6 +5074,7 @@
       "shot_at": "2026-07-11T06:17:16+00:00",
       "comment": "まちの駅にあるポケふた\r\n星降る夜にピッタリだにゃあ",
       "display_name": null,
+      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
       "gallery": [
         {
           "photo_id": "89c78c40-6100-4b84-94fe-f174db01663e",
@@ -4473,7 +5083,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-07-11T06:21:52.398168+00:00",
           "shot_at": "2026-07-11T06:17:16+00:00",
-          "display_name": null
+          "display_name": null,
+          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
         }
       ]
     },
@@ -4491,6 +5102,7 @@
       "shot_at": "2026-07-11T04:20:17+00:00",
       "comment": "公園とポケふた\r\nひまわりの季節にピッタリだにゃあ",
       "display_name": null,
+      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
       "gallery": [
         {
           "photo_id": "41583910-5739-45da-9bf1-e10b36f5039a",
@@ -4499,7 +5111,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-07-11T04:23:32.099113+00:00",
           "shot_at": "2026-07-11T04:20:17+00:00",
-          "display_name": null
+          "display_name": null,
+          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
         }
       ]
     },
@@ -4517,6 +5130,7 @@
       "shot_at": "2026-07-11T05:53:40+00:00",
       "comment": "駅前のポケふた\r\n駅舎真ん前元気がでるにゃあ",
       "display_name": null,
+      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
       "gallery": [
         {
           "photo_id": "5bcd4148-298d-4719-854c-48da9515c24f",
@@ -4525,7 +5139,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-07-11T05:56:40.647083+00:00",
           "shot_at": "2026-07-11T05:53:40+00:00",
-          "display_name": null
+          "display_name": null,
+          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
         }
       ]
     },
@@ -4543,6 +5158,7 @@
       "shot_at": "2026-07-11T08:12:02+00:00",
       "comment": "流石スノーモンキーのメッカ‼︎",
       "display_name": null,
+      "public_user_id": "66cebdf1-340a-423f-baa5-ed5f650873ac",
       "gallery": [
         {
           "photo_id": "93b85eae-1d18-49e8-a99d-a0304dbb5cae",
@@ -4551,7 +5167,8 @@
           "content_type": "image/jpeg",
           "created_at": "2026-07-11T08:33:41.78601+00:00",
           "shot_at": "2026-07-11T08:12:02+00:00",
-          "display_name": null
+          "display_name": null,
+          "public_user_id": "66cebdf1-340a-423f-baa5-ed5f650873ac"
         }
       ]
     }
