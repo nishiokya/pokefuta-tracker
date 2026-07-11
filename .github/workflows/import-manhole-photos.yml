@@ -1,4 +1,4 @@
-name: Weekly Manhole Photos Import
+name: Daily Manhole Photos Import
 
 # pokefuta.com の公開写真を Supabase からエクスポートし、ローカル画像として取り込む。
 # 従来の手動フロー（pokefuta 側 /export-photos → 本リポジトリ /import-photos）の自動化版。
@@ -6,8 +6,8 @@ name: Weekly Manhole Photos Import
 
 on:
   schedule:
-    # Run weekly on Saturday 22:00 UTC (JST Sunday 07:00)
-    - cron: '0 22 * * 6'
+    # Run daily at 22:00 UTC (JST 07:00)
+    - cron: '0 22 * * *'
   workflow_dispatch: # Allow manual trigger
 
 permissions:
