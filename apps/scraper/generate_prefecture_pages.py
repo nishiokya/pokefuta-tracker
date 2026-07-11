@@ -29,6 +29,7 @@ DEFAULT_TRIVIA = ROOT / "dataset" / "prefecture_trivia.json"
 DEFAULT_OUTPUT = ROOT / "dist" / "prefectures"
 BASE_URL = "https://data.pokefuta.com"
 OG_IMAGE = f"{BASE_URL}/assets/ogp/pokefuta_summary_ogp.png"
+RELIABLE_FIRST_SEEN_START = datetime.fromisoformat("2025-11-01T00:00:00+00:00")
 
 REGIONS: list[tuple[str, list[str]]] = [
     ("北海道・東北", PREFECTURE_ORDER[0:7]),
@@ -180,6 +181,16 @@ def _format_year_month(date: datetime) -> str:
     return f"{date.year}年{date.month}月"
 
 
+def _first_reliable_month(records: list[dict]) -> str:
+    first_dates = [date for record in records if (date := _record_date(record))]
+    if not first_dates:
+        return ""
+    first_date = min(first_dates)
+    if first_date < RELIABLE_FIRST_SEEN_START:
+        return ""
+    return _format_year_month(first_date)
+
+
 def _hero_summary(
     prefecture: str,
     count: int,
@@ -195,8 +206,7 @@ def _hero_summary(
         if str(record.get("city", "")).strip()
     }
     municipalities = (trivia_entry or {}).get("municipality_count", 0) or len(cities)
-    first_dates = [date for record in records if (date := _record_date(record))]
-    first_month = _format_year_month(min(first_dates)) if first_dates else ""
+    first_month = _first_reliable_month(records)
     if first_month:
         return (
             f"{prefecture}は{first_month}にポケふた初登場。"
