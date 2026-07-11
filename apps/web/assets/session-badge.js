@@ -10,6 +10,9 @@
 //  - 未ログイン: href に現在ページへの redirect パラメータを付与
 //    （pokefuta.com/login がログイン後にこのページへ戻す）
 //  - ログイン中: 「スタンプ帳」に差し替え、スタンプ帳へリンク
+//
+// cookie は data.pokefuta.com 側の @supabase/ssr object 形式と、
+// pokefuta.com 側の @supabase/auth-helpers-nextjs array 形式の両方を読む。
 (function () {
   'use strict';
 
@@ -53,6 +56,32 @@
     return new TextDecoder('utf-8').decode(bytes);
   }
 
+  function decodeJwtPayload(token) {
+    if (!token || typeof token !== 'string') return null;
+    var parts = token.split('.');
+    if (parts.length < 2) return null;
+    try {
+      return JSON.parse(decodeBase64Url(parts[1]));
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function sessionUserId(session) {
+    if (!session) return null;
+    if (session.user && session.user.id) return session.user.id;
+
+    // @supabase/auth-helpers-nextjs stores:
+    // [access_token, refresh_token, provider_token, provider_refresh_token, factors]
+    if (Array.isArray(session)) {
+      var arrayPayload = decodeJwtPayload(session[0]);
+      return arrayPayload && arrayPayload.sub ? arrayPayload.sub : null;
+    }
+
+    var objectPayload = decodeJwtPayload(session.access_token);
+    return objectPayload && objectPayload.sub ? objectPayload.sub : null;
+  }
+
   function currentUser() {
     try {
       var raw = readSessionValue(readCookies());
@@ -61,7 +90,7 @@
       var session = JSON.parse(json);
       // アクセストークン期限切れでも refresh token があればアプリ側で
       // 更新されるので「ログイン中」として扱う
-      return session && session.user && session.user.id ? session.user : null;
+      return sessionUserId(session) ? session : null;
     } catch (_) {
       return null;
     }
