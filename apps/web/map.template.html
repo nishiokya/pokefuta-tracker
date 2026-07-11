@@ -792,7 +792,7 @@
 
     function getPrefecturePageUrl(prefecture) {
       const slug = window.PREFECTURE_SLUG_MAP[prefecture];
-      return slug ? `/prefectures/${encodeURIComponent(slug)}/` : '';
+      return slug ? `%%BASE_PATH%%prefectures/${encodeURIComponent(slug)}/` : '';
     }
 
     function getAbsoluteManholePageUrl(id) {

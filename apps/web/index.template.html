@@ -57,7 +57,7 @@
     window.SITE_BASE_URL = 'https://data.pokefuta.com/';
     window.getPrefecturePageUrl = function(prefecture) {
       var slug = window.PREFECTURE_SLUG_MAP[prefecture];
-      return slug ? '/prefectures/' + encodeURIComponent(slug) + '/' : '';
+      return slug ? '%%BASE_PATH%%prefectures/' + encodeURIComponent(slug) + '/' : '';
     };
 
     // Redirect deep-links (?pref= / ?manhole= / ?tag= / ?view=) to map.html
@@ -647,7 +647,7 @@
             var slug = slugMap[pref] || encodeURIComponent(pref);
             var isLast = i === PREF_ORDER.length - 1;
             var displayPref = (PREF_NAMES[pref] && PREF_NAMES[pref][PREF_LANG_KEY]) || pref;
-            return '<a class="pref-link-item' + (isLast ? ' pref-link-item--last' : '') + '" href="/prefectures/' + slug + '/" onclick="trackEvent(\'click_pref_link\',{prefecture:\'' + pref + '\'})">'
+            return '<a class="pref-link-item' + (isLast ? ' pref-link-item--last' : '') + '" href="' + window.getPrefecturePageUrl(pref) + '" onclick="trackEvent(\'click_pref_link\',{prefecture:\'' + pref + '\'})">'
               + '<span class="pref-link-name">' + displayPref + '</span>'
               + (cnt ? '<span class="pref-link-count">' + cnt + '枚 →</span>' : '<span class="pref-link-count">→</span>')
               + '</a>';
