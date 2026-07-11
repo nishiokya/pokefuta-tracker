@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-07-11T06:18:48.493552Z",
+  "generated_at": "2026-07-11T11:53:09.982160Z",
   "source": "pokefuta photo table",
   "image": {
     "r2_public_base_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image"
   },
-  "count": 154,
+  "count": 158,
   "photos": {
     "1": {
       "manhole_id": 1,
@@ -953,6 +953,32 @@
         }
       ]
     },
+    "134": {
+      "manhole_id": 134,
+      "photo_id": "e2662b04-3b5e-411f-bbe1-b60d8bc0730e",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/f182fc74-3fb0-4d00-9619-e0938c279f9b.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/f182fc74-3fb0-4d00-9619-e0938c279f9b.jpg",
+      "storage_key": "photos/original/2026/07/f182fc74-3fb0-4d00-9619-e0938c279f9b.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1647322,
+      "created_at": "2026-07-11T08:27:57.663787+00:00",
+      "shot_at": "2025-05-15T01:12:44+00:00",
+      "comment": "道の駅にあるポケふた\r\nすぐ横にご当地キャラのマンホールと\r\n仲良く並んでるにゃあ",
+      "display_name": null,
+      "gallery": [
+        {
+          "photo_id": "e2662b04-3b5e-411f-bbe1-b60d8bc0730e",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/f182fc74-3fb0-4d00-9619-e0938c279f9b.jpg",
+          "storage_key": "photos/original/2026/07/f182fc74-3fb0-4d00-9619-e0938c279f9b.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-11T08:27:57.663787+00:00",
+          "shot_at": "2025-05-15T01:12:44+00:00",
+          "display_name": null
+        }
+      ]
+    },
     "135": {
       "manhole_id": 135,
       "photo_id": "b5c38bd6-a4b2-4fac-a890-be45ef8803f5",
@@ -1094,19 +1120,28 @@
     },
     "148": {
       "manhole_id": 148,
-      "photo_id": "5a757401-9cdf-4829-ba96-cf88c78b2691",
-      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/df19e717-e31c-4403-b30b-8401011a851a.jpg",
-      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/df19e717-e31c-4403-b30b-8401011a851a.jpg",
-      "storage_key": "photos/original/2026/06/df19e717-e31c-4403-b30b-8401011a851a.jpg",
+      "photo_id": "9b195dfc-bd6c-4bf2-b5c8-32459934d8cf",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/c96f1fa0-2647-4ff4-b48f-73cc2f48607e.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/c96f1fa0-2647-4ff4-b48f-73cc2f48607e.jpg",
+      "storage_key": "photos/original/2026/07/c96f1fa0-2647-4ff4-b48f-73cc2f48607e.jpg",
       "content_type": "image/jpeg",
       "width": null,
       "height": null,
-      "file_size": 1458118,
-      "created_at": "2026-06-28T04:00:09.51211+00:00",
-      "shot_at": "2026-06-28T02:33:52+00:00",
-      "comment": null,
-      "display_name": "いろはす",
+      "file_size": 1693478,
+      "created_at": "2026-07-11T08:10:07.754377+00:00",
+      "shot_at": "2026-07-11T08:09:48+00:00",
+      "comment": "ニャンコ",
+      "display_name": null,
       "gallery": [
+        {
+          "photo_id": "9b195dfc-bd6c-4bf2-b5c8-32459934d8cf",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/c96f1fa0-2647-4ff4-b48f-73cc2f48607e.jpg",
+          "storage_key": "photos/original/2026/07/c96f1fa0-2647-4ff4-b48f-73cc2f48607e.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-11T08:10:07.754377+00:00",
+          "shot_at": "2026-07-11T08:09:48+00:00",
+          "display_name": null
+        },
         {
           "photo_id": "5a757401-9cdf-4829-ba96-cf88c78b2691",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/df19e717-e31c-4403-b30b-8401011a851a.jpg",
@@ -1129,19 +1164,28 @@
     },
     "149": {
       "manhole_id": 149,
-      "photo_id": "94a4142a-3860-4c74-ad78-0580a7966e6b",
-      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/3c5c91e7-86c9-4a42-96e0-d3e26f7df7cf.jpg",
-      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/3c5c91e7-86c9-4a42-96e0-d3e26f7df7cf.jpg",
-      "storage_key": "photos/original/2026/06/3c5c91e7-86c9-4a42-96e0-d3e26f7df7cf.jpg",
+      "photo_id": "c7ccf49f-3df3-4e00-9ba4-82e18683672a",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/a9003988-2e6c-43e5-80a6-c2259949bf96.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/a9003988-2e6c-43e5-80a6-c2259949bf96.jpg",
+      "storage_key": "photos/original/2026/07/a9003988-2e6c-43e5-80a6-c2259949bf96.jpg",
       "content_type": "image/jpeg",
       "width": null,
       "height": null,
-      "file_size": 1493229,
-      "created_at": "2026-06-28T04:00:21.199313+00:00",
-      "shot_at": "2026-06-28T02:43:24+00:00",
-      "comment": null,
-      "display_name": "いろはす",
+      "file_size": 1575059,
+      "created_at": "2026-07-11T06:39:52.624549+00:00",
+      "shot_at": "2026-07-11T06:39:35+00:00",
+      "comment": "ニャンコ",
+      "display_name": null,
       "gallery": [
+        {
+          "photo_id": "c7ccf49f-3df3-4e00-9ba4-82e18683672a",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/a9003988-2e6c-43e5-80a6-c2259949bf96.jpg",
+          "storage_key": "photos/original/2026/07/a9003988-2e6c-43e5-80a6-c2259949bf96.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-11T06:39:52.624549+00:00",
+          "shot_at": "2026-07-11T06:39:35+00:00",
+          "display_name": null
+        },
         {
           "photo_id": "94a4142a-3860-4c74-ad78-0580a7966e6b",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/3c5c91e7-86c9-4a42-96e0-d3e26f7df7cf.jpg",
@@ -2108,6 +2152,32 @@
           "created_at": "2026-03-20T15:18:10.192877+00:00",
           "shot_at": "2024-08-12T01:20:03+00:00",
           "display_name": "しもきち"
+        }
+      ]
+    },
+    "263": {
+      "manhole_id": 263,
+      "photo_id": "ea227261-7c64-46f8-a2b5-33e8653e63bf",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/1890f8d7-56ad-4558-bed1-848b883276a9.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/1890f8d7-56ad-4558-bed1-848b883276a9.jpg",
+      "storage_key": "photos/original/2026/07/1890f8d7-56ad-4558-bed1-848b883276a9.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1334663,
+      "created_at": "2026-07-11T08:12:14.539387+00:00",
+      "shot_at": "2025-03-28T06:21:13+00:00",
+      "comment": "牧歌的な景色はポケふたに\r\nとっても合うにゃあ",
+      "display_name": null,
+      "gallery": [
+        {
+          "photo_id": "ea227261-7c64-46f8-a2b5-33e8653e63bf",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/1890f8d7-56ad-4558-bed1-848b883276a9.jpg",
+          "storage_key": "photos/original/2026/07/1890f8d7-56ad-4558-bed1-848b883276a9.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-11T08:12:14.539387+00:00",
+          "shot_at": "2025-03-28T06:21:13+00:00",
+          "display_name": null
         }
       ]
     },
@@ -4381,6 +4451,32 @@
         }
       ]
     },
+    "463": {
+      "manhole_id": 463,
+      "photo_id": "89c78c40-6100-4b84-94fe-f174db01663e",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/6fc8b349-3e87-4d20-842f-2fc94d1e211e.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/6fc8b349-3e87-4d20-842f-2fc94d1e211e.jpg",
+      "storage_key": "photos/original/2026/07/6fc8b349-3e87-4d20-842f-2fc94d1e211e.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1688394,
+      "created_at": "2026-07-11T06:21:52.398168+00:00",
+      "shot_at": "2026-07-11T06:17:16+00:00",
+      "comment": "まちの駅にあるポケふた\r\n星降る夜にピッタリだにゃあ",
+      "display_name": null,
+      "gallery": [
+        {
+          "photo_id": "89c78c40-6100-4b84-94fe-f174db01663e",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/6fc8b349-3e87-4d20-842f-2fc94d1e211e.jpg",
+          "storage_key": "photos/original/2026/07/6fc8b349-3e87-4d20-842f-2fc94d1e211e.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-11T06:21:52.398168+00:00",
+          "shot_at": "2026-07-11T06:17:16+00:00",
+          "display_name": null
+        }
+      ]
+    },
     "465": {
       "manhole_id": 465,
       "photo_id": "41583910-5739-45da-9bf1-e10b36f5039a",
@@ -4432,6 +4528,32 @@
           "display_name": null
         }
       ]
+    },
+    "486": {
+      "manhole_id": 486,
+      "photo_id": "93b85eae-1d18-49e8-a99d-a0304dbb5cae",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/74d23774-0ceb-4b9b-95d3-a0364751ac6a.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/74d23774-0ceb-4b9b-95d3-a0364751ac6a.jpg",
+      "storage_key": "photos/original/2026/07/74d23774-0ceb-4b9b-95d3-a0364751ac6a.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1207894,
+      "created_at": "2026-07-11T08:33:41.78601+00:00",
+      "shot_at": "2026-07-11T08:12:02+00:00",
+      "comment": "流石スノーモンキーのメッカ‼︎",
+      "display_name": null,
+      "gallery": [
+        {
+          "photo_id": "93b85eae-1d18-49e8-a99d-a0304dbb5cae",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/74d23774-0ceb-4b9b-95d3-a0364751ac6a.jpg",
+          "storage_key": "photos/original/2026/07/74d23774-0ceb-4b9b-95d3-a0364751ac6a.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-11T08:33:41.78601+00:00",
+          "shot_at": "2026-07-11T08:12:02+00:00",
+          "display_name": null
+        }
+      ]
     }
   },
   "manhole_comments": {
@@ -4472,6 +4594,16 @@
         "content": "津市真ん中広場にありました。無料に駐車場は見つからず",
         "created_at": "2026-01-12T00:57:08.086475+00:00",
         "updated_at": "2026-01-12T00:57:08.086475+00:00",
+        "display_name": "tako"
+      }
+    ],
+    "486": [
+      {
+        "id": "dc1a7e7c-3347-4367-95f7-957d588ead94",
+        "manhole_id": 486,
+        "content": "今月できたマンホールですよね。すごいです。",
+        "created_at": "2026-07-11T10:34:57.389469+00:00",
+        "updated_at": "2026-07-11T10:34:57.389469+00:00",
         "display_name": "tako"
       }
     ]
