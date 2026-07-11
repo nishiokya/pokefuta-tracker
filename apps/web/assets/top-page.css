@@ -399,6 +399,19 @@ a { color: inherit; text-decoration: none; }
   color: var(--top-text-muted);
 }
 
+.hero-footer-name-link {
+  position: relative;
+  z-index: 3; /* above .hero-featured-overlay (z-index: 2), which can visually extend over the footer */
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.hero-footer-name-link:hover,
+.hero-footer-name-link:focus-visible {
+  text-decoration: underline;
+}
+
 .hero-footer-cta {
   font-size: 12.5px;
   font-weight: 700;
