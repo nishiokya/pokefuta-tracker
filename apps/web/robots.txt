@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /*.ndjson$
+Disallow: /pokemon_metadata.json
+Disallow: /latest-manhole-photos.json
+
+Sitemap: https://data.pokefuta.com/sitemap.xml

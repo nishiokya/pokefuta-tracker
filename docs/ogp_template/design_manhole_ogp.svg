@@ -1,0 +1,91 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<style>
+  .jp { font-family: "Hiragino Sans", "Noto Sans JP", "Yu Gothic", sans-serif; }
+  .en { font-family: "Helvetica Neue", "Inter", Arial, sans-serif; letter-spacing: .08em; }
+</style>
+<linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630"><stop stop-color="#020617"/><stop offset=".48" stop-color="#07111F"/><stop offset="1" stop-color="#111827"/></linearGradient>
+<radialGradient id="glow" cx="76%" cy="44%" r="54%"><stop stop-color="#22D3EE" stop-opacity=".40"/><stop offset=".42" stop-color="#7C3AED" stop-opacity=".22"/><stop offset="1" stop-color="#020617" stop-opacity="0"/></radialGradient>
+<linearGradient id="line" x1="680" y1="78" x2="1090" y2="520"><stop stop-color="#67E8F9"/><stop offset=".5" stop-color="#A78BFA"/><stop offset="1" stop-color="#F97316"/></linearGradient>
+<linearGradient id="petal" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#67E8F9"/><stop offset="1" stop-color="#A78BFA"/></linearGradient>
+<filter id="shadow"><feDropShadow dx="0" dy="24" stdDeviation="28" flood-opacity=".42"/></filter>
+<filter id="neon"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse"><path d="M48 0H0V48" fill="none" stroke="#94A3B8" stroke-opacity=".10"/></pattern>
+</defs>
+
+<rect width="1200" height="630" fill="url(#bg)"/>
+<rect width="1200" height="630" fill="url(#glow)"/>
+<rect width="1200" height="630" fill="url(#grid)"/>
+
+<!-- 左パネル -->
+<g filter="url(#shadow)"><rect x="48" y="52" width="596" height="526" rx="36" fill="#0F172A" fill-opacity=".78" stroke="#E2E8F0" stroke-opacity=".14"/><rect x="64" y="68" width="564" height="494" rx="28" fill="none" stroke="url(#line)" stroke-opacity=".38"/></g>
+
+<rect x="92" y="96" width="242" height="42" rx="21" fill="#0E7490" fill-opacity=".34" stroke="#67E8F9" stroke-opacity=".65"/>
+<text x="118" y="124" class="en" fill="#CFFAFE" font-size="16" font-weight="900">POST YOUR MANHOLE</text>
+
+<text x="92" y="216" class="jp" fill="#F8FAFC" font-size="52" font-weight="900">あなたの街の</text>
+<text x="92" y="288" class="jp" fill="#F8FAFC" font-size="52" font-weight="900">デザインマンホール、</text>
+<text x="92" y="360" class="jp" fill="#F8FAFC" font-size="52" font-weight="900">みんなの地図に。</text>
+
+<!-- 3ステップ -->
+<g class="jp" font-weight="800">
+  <rect x="92" y="400" width="158" height="46" rx="23" fill="#0F172A" stroke="#67E8F9" stroke-opacity=".6"/>
+  <circle cx="119" cy="423" r="13" fill="#0E7490"/><text x="119" y="429" text-anchor="middle" class="en" fill="#CFFAFE" font-size="16" font-weight="900">1</text>
+  <text x="140" y="430" fill="#E2E8F0" font-size="19">写真を選ぶ</text>
+  <text x="256" y="429" class="en" fill="#64748B" font-size="18">›</text>
+
+  <rect x="270" y="400" width="196" height="46" rx="23" fill="#0F172A" stroke="#A78BFA" stroke-opacity=".6"/>
+  <circle cx="297" cy="423" r="13" fill="#6D28D9"/><text x="297" y="429" text-anchor="middle" class="en" fill="#EDE9FE" font-size="16" font-weight="900">2</text>
+  <text x="318" y="430" fill="#E2E8F0" font-size="19">場所を確かめる</text>
+  <text x="472" y="429" class="en" fill="#64748B" font-size="18">›</text>
+
+  <rect x="486" y="400" width="140" height="46" rx="23" fill="#0F172A" stroke="#F97316" stroke-opacity=".6"/>
+  <circle cx="513" cy="423" r="13" fill="#C2410C"/><text x="513" y="429" text-anchor="middle" class="en" fill="#FFEDD5" font-size="16" font-weight="900">3</text>
+  <text x="534" y="430" fill="#E2E8F0" font-size="19">投稿する</text>
+</g>
+
+<path d="M92 484H628" stroke="url(#line)" stroke-width="3"/>
+
+<rect x="92" y="510" width="150" height="40" rx="20" fill="#C2410C" fill-opacity=".28" stroke="#FB923C" stroke-opacity=".7"/>
+<text x="116" y="537" class="jp" fill="#FFEDD5" font-size="20" font-weight="900">無料で投稿</text>
+<text x="266" y="537" class="jp" fill="#94A3B8" font-size="19" font-weight="700">ポケふたDATABASE</text>
+<text x="628" y="537" text-anchor="end" class="en" fill="#64748B" font-size="16" font-weight="700">data.pokefuta.com</text>
+
+<!-- 右：マンホールモチーフ -->
+<g transform="translate(672 40)">
+  <rect x="20" y="24" width="488" height="530" rx="40" fill="#020617" fill-opacity=".28" stroke="#FFFFFF" stroke-opacity=".10"/>
+  <g filter="url(#shadow)">
+    <circle cx="264" cy="300" r="196" fill="#0F172A" stroke="url(#line)" stroke-width="6"/>
+    <circle cx="264" cy="300" r="172" fill="none" stroke="#94A3B8" stroke-opacity=".35" stroke-width="2" stroke-dasharray="4 10"/>
+  </g>
+  <!-- ボルト -->
+  <g fill="#334155">
+    <circle cx="264" cy="118" r="7"/><circle cx="264" cy="482" r="7"/>
+    <circle cx="82" cy="300" r="7"/><circle cx="446" cy="300" r="7"/>
+    <circle cx="135" cy="171" r="7"/><circle cx="393" cy="171" r="7"/>
+    <circle cx="135" cy="429" r="7"/><circle cx="393" cy="429" r="7"/>
+  </g>
+  <!-- 花モチーフ（デザイン蓋） -->
+  <g transform="translate(264 300)" filter="url(#neon)">
+    <g fill="none" stroke="url(#petal)" stroke-width="9" stroke-linecap="round">
+      <path d="M0 -28C-30 -66 -22 -110 0 -128C22 -110 30 -66 0 -28Z" transform="rotate(0)"/>
+      <path d="M0 -28C-30 -66 -22 -110 0 -128C22 -110 30 -66 0 -28Z" transform="rotate(72)"/>
+      <path d="M0 -28C-30 -66 -22 -110 0 -128C22 -110 30 -66 0 -28Z" transform="rotate(144)"/>
+      <path d="M0 -28C-30 -66 -22 -110 0 -128C22 -110 30 -66 0 -28Z" transform="rotate(216)"/>
+      <path d="M0 -28C-30 -66 -22 -110 0 -128C22 -110 30 -66 0 -28Z" transform="rotate(288)"/>
+    </g>
+    <circle r="22" fill="none" stroke="#F97316" stroke-width="8"/>
+  </g>
+  <!-- 位置ピン -->
+  <g transform="translate(392 96)" filter="url(#neon)">
+    <path d="M0 62C-26 34 -34 16 -34 -2C-34 -22 -19 -36 0 -36C19 -36 34 -22 34 -2C34 16 26 34 0 62Z" fill="#F97316"/>
+    <circle cy="-3" r="12" fill="#FFF7ED"/>
+  </g>
+  <!-- カメラチップ -->
+  <g transform="translate(66 452) rotate(-8)">
+    <rect width="184" height="58" rx="16" fill="#020617" stroke="#67E8F9" stroke-opacity=".7" stroke-width="2"/>
+    <circle cx="34" cy="29" r="15" fill="none" stroke="#67E8F9" stroke-width="5"/>
+    <text x="62" y="37" class="jp" fill="#CFFAFE" font-size="20" font-weight="900">撮って投稿</text>
+  </g>
+</g>
+</svg>
