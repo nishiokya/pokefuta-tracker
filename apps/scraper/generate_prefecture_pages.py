@@ -8,7 +8,7 @@ import json
 from collections import Counter
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
-from urllib.parse import quote
+from urllib.parse import quote, urlparse
 from xml.sax.saxutils import escape
 
 try:
@@ -370,6 +370,24 @@ def _related_prefectures(prefecture: str) -> str:
     )
 
 
+def _prefecture_official_url(records: list[dict]) -> str:
+    for record in records:
+        candidate = str(record.get("prefecture_site_url", "") or "").strip()
+        if not candidate:
+            continue
+        try:
+            parsed = urlparse(candidate)
+        except ValueError:
+            continue
+        if parsed.scheme == "https" and parsed.netloc == "local.pokemon.jp":
+            return candidate
+    return ""
+
+
+def _escape_attr(value: str) -> str:
+    return escape(value, {'"': "&quot;"})
+
+
 def _hero_intro(
     prefecture: str,
     count: int,
@@ -421,6 +439,13 @@ def build_page(
     rank_label = f"全国{rank}位" if rank else "現在未設置"
     hero_intro = _hero_intro(prefecture, count, trivia_entry)
     hero_summary = _hero_summary(prefecture, count, records, trivia_entry)
+    official_url = _prefecture_official_url(records)
+    official_cta = (
+        f'<a class="button official" href="{_escape_attr(official_url)}" target="_blank" '
+        f'rel="noopener noreferrer" data-track="prefecture_official_click" '
+        f'data-destination="prefecture_official">{escape(prefecture)}公式を見る</a>'
+        if official_url else ""
+    )
     map_points = [
         {
             "id": str(record.get("id", "")),
@@ -531,6 +556,7 @@ def build_page(
     .button.secondary {{ background: #6b4aa2; }}
     .button.pokefuta {{ background: #b5483c; }}
     .button.photo {{ background: #2d846c; }}
+    .button.official {{ background: #8a5a20; }}
     section {{
       margin-top: 22px; padding: 20px; border: 1px solid rgba(93,67,35,.14);
       border-radius: 19px; background: #fffaf0;
@@ -637,6 +663,7 @@ def build_page(
             data-track="prefecture_visit_cta_click" data-destination="pokefuta_visits">訪問記録を残す</a>
           <a class="button photo" href="https://pokefuta.com/"
             data-track="prefecture_photo_cta_click" data-destination="pokefuta_photos">写真を見る</a>
+          {official_cta}
           <a class="button secondary" href="{escape(map_href)}"
             data-track="prefecture_map_click" data-destination="map">全国マップで見る</a>
         </div>

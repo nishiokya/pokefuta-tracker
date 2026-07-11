@@ -23,6 +23,13 @@ from xml.sax.saxutils import escape
 sys.path.insert(0, str(Path(__file__).parent))
 from generate_pokemon_pages import _FORM_PREFIX, _normalize_katakana  # noqa: E402
 
+try:
+    from apps.scraper.prefectures import PREFECTURE_SLUGS  # noqa: E402
+except ModuleNotFoundError as exc:
+    if exc.name != "apps":
+        raise
+    from prefectures import PREFECTURE_SLUGS  # noqa: E402
+
 # Constants
 BASE_URL = "https://data.pokefuta.com/"
 GA_MEASUREMENT_ID = "G-K18NR4GZG2"
@@ -426,7 +433,8 @@ def generate_html(
 
     canonical_url = f"{BASE_URL}manholes/{quote(manhole_id)}/"
     map_url = f"{BASE_URL}?manhole={quote(manhole_id)}"
-    pref_url = f"{BASE_URL}?pref={quote(prefecture)}"
+    pref_page_slug = PREFECTURE_SLUGS.get(prefecture, "")
+    pref_url = f"/prefectures/{quote(pref_page_slug)}/" if pref_page_slug else f"{BASE_URL}?pref={quote(prefecture)}"
 
     # _js_json() serializes values for safe embedding inside <script> blocks:
     # json.dumps handles quotes/backslashes; the </  → <\/ replacement prevents
@@ -759,8 +767,7 @@ def generate_html(
         )
     if prefecture_site_url:
         link_cards.append(
-            f"<a class='link-card link-card--pref-site' href=\"{escape(prefecture_site_url)}\""
-            f" target=\"_blank\" rel=\"noopener noreferrer\">"
+            f"<a class='link-card link-card--pref-site' href=\"{escape(pref_url)}\">"
             f"{_icon('icon-link-prefecture', 'link-card-icon')}<span>{escape(prefecture)}の公式</span></a>"
         )
     if prefecture:
