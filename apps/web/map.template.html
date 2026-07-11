@@ -804,6 +804,11 @@
       return safeId ? window.buildManholeCanonicalPath(safeId) : '';
     }
 
+    function getPrefecturePageUrl(prefecture) {
+      const slug = window.PREFECTURE_SLUG_MAP[prefecture];
+      return slug ? `/prefectures/${encodeURIComponent(slug)}/` : '';
+    }
+
     function getAbsoluteManholePageUrl(id) {
       const path = getManholePageUrl(id);
       return path ? new URL(path, window.location.origin).href : '';
@@ -1977,9 +1982,12 @@
         let siteCell = `<span class="prefecture-site-link prefecture-site-link--empty">${I.noSite}</span>`;
         if (siteUrl) {
           const anchor = document.createElement('a');
-          anchor.href = siteUrl;
-          anchor.target = '_blank';
-          anchor.rel = 'noopener noreferrer';
+          const prefecturePageUrl = getPrefecturePageUrl(prefecture);
+          anchor.href = prefecturePageUrl || siteUrl;
+          if (!prefecturePageUrl) {
+            anchor.target = '_blank';
+            anchor.rel = 'noopener noreferrer';
+          }
           anchor.className = 'prefecture-site-link';
           anchor.textContent = `${prefecture}${UI_TEXT.prefectureSite}`;
           siteCell = anchor.outerHTML;
@@ -2132,7 +2140,7 @@
         .sort((a, b) => window.PREFECTURE_CODE_MAP[a].localeCompare(window.PREFECTURE_CODE_MAP[b]));
       links.innerHTML = prefectures.map(prefecture => {
         const count = prefectureCounts[prefecture] || 0;
-        const href = window.buildCanonicalPath(prefecture);
+        const href = getPrefecturePageUrl(prefecture) || window.buildCanonicalPath(prefecture);
         return `<a href="${href}" data-prefecture="${escapeHtml(prefecture)}">${escapeHtml(prefecture)}<span>${count}${window.I18N.countSuffix}</span></a>`;
       }).join('');
     }
