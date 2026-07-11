@@ -735,9 +735,6 @@ def generate_html(
     jsonld_str = json.dumps(jsonld, ensure_ascii=False, indent=2)
 
     # Links grid: external + internal + photo upload (移設統合)
-    _pref_site_raw = manhole.get("prefecture_site_url", "") or ""
-    _pref_parsed = urlparse(_pref_site_raw)
-    prefecture_site_url = _pref_site_raw if _pref_parsed.scheme in ("http", "https") else ""
     link_cards: list[str] = []
     # Share first: X / LINE / Web Share
     _share_onclick = _attr_json({"manhole_id": manhole_id, "prefecture": prefecture, "city": city})
@@ -764,12 +761,6 @@ def generate_html(
             f" target=\"_blank\" rel=\"noopener noreferrer\""
             f" onclick=\"trackEvent('click_official_site', {onclick_params})\">"
             f"{_icon('icon-link-official', 'link-card-icon')}<span>公式サイト</span></a>"
-        )
-    if prefecture_site_url:
-        link_cards.append(
-            f"<a class='link-card link-card--pref-site' href=\"{escape(prefecture_site_url)}\""
-            f" target=\"_blank\" rel=\"noopener noreferrer\">"
-            f"{_icon('icon-link-prefecture', 'link-card-icon')}<span>{escape(prefecture)}の公式</span></a>"
         )
     if prefecture:
         link_cards.append(
@@ -1427,7 +1418,6 @@ def generate_html(
     .link-card span {{ display: block; }}
 
     .link-card--official   {{ background: #fff4f0; color: #c0392b; border-color: #f5c0b0; }}
-    .link-card--pref-site  {{ background: #f0fff4; color: #1a6b3c; border-color: #b0e8c8; }}
     .link-card--internal   {{ background: #f8f4ff; color: #5a3fa0; border-color: #d8c8f5; }}
     .link-card--share-x    {{ background: #f5f5f5; color: #444; border-color: #d8d8d8; }}
     .link-card--share-line {{ background: #f0faf5; color: #217a48; border-color: #b0e0c8; }}
