@@ -1,6 +1,6 @@
 Sync the latest manhole photos manually.
 
-NOTE: 通常は `.github/workflows/import-manhole-photos.yml` が週次（JST 日曜 07:00）で export〜画像DL〜commit まで自動実行する。このスキルは即時反映したいときや Action が失敗したときの手動フォールバック。
+NOTE: 通常は `.github/workflows/import-manhole-photos.yml` が日次（JST 07:00）で export〜画像DL〜commit まで自動実行する。このスキルは即時反映したいときや Action が失敗したときの手動フォールバック。
 
 Run these two steps in order:
 
