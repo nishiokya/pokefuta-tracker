@@ -714,16 +714,24 @@
       var fn = hero.footerName;
       el.textContent = '';
       el.appendChild(document.createTextNode(fn.prefix));
-      var nameLink = document.createElement('a');
-      nameLink.href = 'https://pokefuta.com/users/' + encodeURIComponent(fn.publicUserId) + '/visits';
+      var profileUrl = 'https://pokefuta.com/users/' + encodeURIComponent(fn.publicUserId) + '/visits';
+      var nameLink = document.createElement('span');
       nameLink.className = 'hero-footer-name-link';
-      nameLink.target = '_blank';
-      nameLink.rel = 'noopener';
+      nameLink.setAttribute('role', 'link');
+      nameLink.setAttribute('tabindex', '0');
+      nameLink.setAttribute('aria-label', fn.name + 'さんの公開スタンプ帳を開く');
       nameLink.textContent = fn.name;
       nameLink.addEventListener('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
-        window.open('https://pokefuta.com/users/' + encodeURIComponent(fn.publicUserId) + '/visits', '_blank', 'noopener');
+        window.open(profileUrl, '_blank', 'noopener,noreferrer');
+      });
+      nameLink.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          e.stopPropagation();
+          window.open(profileUrl, '_blank', 'noopener,noreferrer');
+        }
       });
       el.appendChild(nameLink);
       el.appendChild(document.createTextNode(fn.suffix));
