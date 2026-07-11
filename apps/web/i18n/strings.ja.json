@@ -14,7 +14,7 @@
   "EXPLORE_MENU_ARIA": "探索メニュー",
   "PREF_BUTTON_LABEL": "地図で探す",
   "RECENT_BUTTON_LABEL": "新着ポケふた",
-  "PREF_TABLE_DESC": "都道府県ごとのポケふた数と公式サイトリンク",
+  "PREF_TABLE_DESC": "都道府県ごとのポケふた数と都道府県ページへのリンク",
   "CONTROLS_TOGGLE_ARIA": "全体パネルを開く",
   "CONTROLS_TOGGLE_TITLE": "全体パネルを開く/閉じる",
   "LOCATE_LABEL": "近くのポケふたを探す",
@@ -84,7 +84,7 @@
     "genFormat": "第{n}世代",
     "samePokemonHeading": "同じポケモンのポケふた",
     "openSuffix": "を開く",
-    "noSite": "公式サイトなし",
+    "noSite": "都道府県ページなし",
     "countSuffix": "枚",
     "galleryAriaSuffix": "のマンホール写真",
     "openDetailSuffix": "の詳細を開く",
@@ -122,7 +122,7 @@
       "codeHeader": "コード",
       "prefectureHeader": "都道府県",
       "countHeader": "ポケふた数",
-      "siteHeader": "サイト",
+      "siteHeader": "都道府県ページ",
       "pokemonFilter": "ポケモンで絞り込み",
       "searchPokemon": "ポケモンを検索...",
       "showAll": "🔄 すべて表示",
@@ -137,7 +137,7 @@
       "officialDetail": "📝 公式詳細",
       "officialDetailCta": "公式詳細を見る",
       "detailPageCta": "詳細を見る",
-      "prefectureSite": "サイト"
+      "prefectureSite": "都道府県ページ"
     }
   }
 }

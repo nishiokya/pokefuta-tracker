@@ -469,7 +469,7 @@
           <div id="prefecture-spots-list" class="prefecture-spots-list"></div>
         </section>
         <div id="prefecture-table-wrapper" class="prefecture-card-list" aria-describedby="pref-table-desc">
-          <p id="pref-table-desc" class="sr-only">都道府県ごとのポケふた数と公式サイトリンク</p>
+          <p id="pref-table-desc" class="sr-only">%%PREF_TABLE_DESC%%</p>
           <div id="prefecture-table-body"></div>
         </div>
       </div>
@@ -759,20 +759,6 @@
 
     // 初期テキストは既に HTML に記述しているため updateUIText は不要
     function updateUIText() { /* no-op (多言語削除) */ }
-
-    // Validate prefecture site URL (whitelist check)
-    function validatePrefectureSiteUrl(rawUrl) {
-      try {
-        const url = new URL(rawUrl);
-        const allowedHost = 'local.pokemon.jp';
-        if (url.protocol === 'https:' && url.hostname === allowedHost) {
-          return url;
-        }
-      } catch {
-        return null;
-      }
-      return null;
-    }
 
     function escapeHtml(value) {
       return String(value ?? '').replace(/[&<>"']/g, ch => ({
@@ -1945,18 +1931,10 @@
         allPrefectures.push(['不明', prefectureCounts['不明']]);
       }
 
-      // Build map of prefecture to site URL (first one found, http(s) & allowlist)
-      const prefectureSiteUrls = {};
       const prefectureThumbnails = {};
       const prefectureRecentCounts = {};
       allData.forEach(d => {
         const pref = d.prefecture || '不明';
-        if (d.prefecture_site_url && !prefectureSiteUrls[pref]) {
-          const validatedUrl = validatePrefectureSiteUrl(d.prefecture_site_url);
-          if (validatedUrl) {
-            prefectureSiteUrls[pref] = validatedUrl.href;
-          }
-        }
         if (d.id && !prefectureThumbnails[pref]) {
           prefectureThumbnails[pref] = [];
         }
@@ -1975,21 +1953,16 @@
       allPrefectures.forEach(([prefecture, count]) => {
         const row = document.createElement('article');
         const code = window.PREFECTURE_CODE_MAP[prefecture] || '--';
-        const siteUrl = prefectureSiteUrls[prefecture];
+        const prefecturePageUrl = getPrefecturePageUrl(prefecture);
         const thumbnailItems = prefectureThumbnails[prefecture] || [];
         const recentCount = prefectureRecentCounts[prefecture] || 0;
         const I = window.I18N;
         let siteCell = `<span class="prefecture-site-link prefecture-site-link--empty">${I.noSite}</span>`;
-        if (siteUrl) {
+        if (prefecturePageUrl) {
           const anchor = document.createElement('a');
-          const prefecturePageUrl = getPrefecturePageUrl(prefecture);
-          anchor.href = prefecturePageUrl || siteUrl;
-          if (!prefecturePageUrl) {
-            anchor.target = '_blank';
-            anchor.rel = 'noopener noreferrer';
-          }
+          anchor.href = prefecturePageUrl;
           anchor.className = 'prefecture-site-link';
-          anchor.textContent = `${prefecture}${UI_TEXT.prefectureSite}`;
+          anchor.textContent = UI_TEXT.prefectureSite;
           siteCell = anchor.outerHTML;
         }
 

@@ -52,6 +52,10 @@
       '宮崎県': 'miyazaki',  '鹿児島県': 'kagoshima','沖縄県': 'okinawa'
     });
     window.SITE_BASE_URL = 'https://data.pokefuta.com/';
+    window.getPrefecturePageUrl = function(prefecture) {
+      var slug = window.PREFECTURE_SLUG_MAP[prefecture];
+      return slug ? '/prefectures/' + encodeURIComponent(slug) + '/' : '';
+    };
 
     // Redirect deep-links (?pref= / ?manhole= / ?tag= / ?view=) to map.html
     (function() {
@@ -491,7 +495,7 @@
           return e && typeof e.title === 'string'
             && typeof e.start_date === 'string' && typeof e.end_date === 'string'
             && e.end_date >= today
-            && typeof e.url === 'string' && /^https:\/\//.test(e.url);
+            && window.getPrefecturePageUrl(e.prefecture);
         });
         if (!active.length) return;
         var list = document.getElementById('event-notice-list');
@@ -499,9 +503,7 @@
           var ongoing = e.start_date <= today;
           var card = document.createElement('a');
           card.className = 'event-notice-card';
-          card.href = e.url;
-          card.target = '_blank';
-          card.rel = 'noopener noreferrer';
+          card.href = window.getPrefecturePageUrl(e.prefecture);
           var badge = document.createElement('span');
           badge.className = 'event-notice-badge' + (ongoing ? '' : ' is-upcoming');
           badge.textContent = ongoing ? EV_STRINGS.ongoing : EV_STRINGS.upcoming;
@@ -516,7 +518,7 @@
           card.appendChild(badge);
           card.appendChild(copy);
           card.addEventListener('click', function() {
-            if (window.trackEvent) trackEvent('click_event_notice', { prefecture: e.prefecture });
+            if (window.trackEvent) trackEvent('click_event_notice', { prefecture: e.prefecture, destination: 'prefecture_page' });
           });
           list.appendChild(card);
         });

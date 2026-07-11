@@ -14,7 +14,7 @@
   "EXPLORE_MENU_ARIA": "Explore menu",
   "PREF_BUTTON_LABEL": "Explore",
   "RECENT_BUTTON_LABEL": "Recent",
-  "PREF_TABLE_DESC": "Poké Lids count and official site links by prefecture",
+  "PREF_TABLE_DESC": "Poké Lids count and prefecture page links by prefecture",
   "CONTROLS_TOGGLE_ARIA": "Open main panel",
   "CONTROLS_TOGGLE_TITLE": "Open / close main panel",
   "LOCATE_LABEL": "Find nearby Poké Lids",
@@ -84,7 +84,7 @@
     "genFormat": "Gen {n}",
     "samePokemonHeading": "Poké Lids with the same Pokémon",
     "openSuffix": " — open",
-    "noSite": "No official site",
+    "noSite": "No prefecture page",
     "countSuffix": "",
     "galleryAriaSuffix": " Poké Lid photos",
     "openDetailSuffix": " — view details",
@@ -166,7 +166,7 @@
       "codeHeader": "Code",
       "prefectureHeader": "Prefecture",
       "countHeader": "Count",
-      "siteHeader": "Site",
+      "siteHeader": "Prefecture page",
       "pokemonFilter": "Filter by Pokémon",
       "searchPokemon": "Search Pokémon…",
       "showAll": "🔄 Show all",
@@ -181,7 +181,7 @@
       "officialDetail": "📝 Official",
       "officialDetailCta": "View official site",
       "detailPageCta": "View details",
-      "prefectureSite": " Site"
+      "prefectureSite": "Prefecture page"
     }
   },
   "APPBAR_PREFIX": "Japan ",

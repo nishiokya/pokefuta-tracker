@@ -14,7 +14,7 @@
   "EXPLORE_MENU_ARIA": "탐색 메뉴",
   "PREF_BUTTON_LABEL": "지도 탐색",
   "RECENT_BUTTON_LABEL": "최신",
-  "PREF_TABLE_DESC": "도도부현별 포케후타 수와 공식 사이트 링크",
+  "PREF_TABLE_DESC": "도도부현별 포케후타 수와 도도부현 페이지 링크",
   "CONTROLS_TOGGLE_ARIA": "메인 패널 열기",
   "CONTROLS_TOGGLE_TITLE": "메인 패널 열기／닫기",
   "LOCATE_LABEL": "근처 포케후타 찾기",
@@ -84,7 +84,7 @@
     "genFormat": "{n}세대",
     "samePokemonHeading": "같은 포켓몬의 포케후타",
     "openSuffix": " 열기",
-    "noSite": "공식 사이트 없음",
+    "noSite": "도도부현 페이지 없음",
     "countSuffix": "개",
     "galleryAriaSuffix": "의 맨홀 사진",
     "openDetailSuffix": " 상세보기",
@@ -166,7 +166,7 @@
       "codeHeader": "코드",
       "prefectureHeader": "도도부현",
       "countHeader": "개수",
-      "siteHeader": "사이트",
+      "siteHeader": "도도부현 페이지",
       "pokemonFilter": "포켓몬으로 필터",
       "searchPokemon": "포켓몬 검색…",
       "showAll": "🔄 전체 표시",
@@ -181,7 +181,7 @@
       "officialDetail": "📝 공식",
       "officialDetailCta": "공식 상세 보기",
       "detailPageCta": "상세 보기",
-      "prefectureSite": " 사이트"
+      "prefectureSite": "도도부현 페이지"
     }
   },
   "APPBAR_PREFIX": "일본 ",

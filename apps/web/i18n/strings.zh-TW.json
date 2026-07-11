@@ -14,7 +14,7 @@
   "EXPLORE_MENU_ARIA": "探索選單",
   "PREF_BUTTON_LABEL": "探索地圖",
   "RECENT_BUTTON_LABEL": "最新",
-  "PREF_TABLE_DESC": "各都道府縣的 Pokéfuta 數量與官方網站連結",
+  "PREF_TABLE_DESC": "各都道府縣的 Pokéfuta 數量與都道府縣頁面連結",
   "CONTROLS_TOGGLE_ARIA": "開啟主要面板",
   "CONTROLS_TOGGLE_TITLE": "開啟／關閉主要面板",
   "LOCATE_LABEL": "尋找附近的 Pokéfuta",
@@ -84,7 +84,7 @@
     "genFormat": "第{n}世代",
     "samePokemonHeading": "相同神奇寶貝的 Pokéfuta",
     "openSuffix": "　開啟",
-    "noSite": "無官方網站",
+    "noSite": "無都道府縣頁面",
     "countSuffix": "個",
     "galleryAriaSuffix": "的人孔蓋照片",
     "openDetailSuffix": "　查看詳細",
@@ -166,7 +166,7 @@
       "codeHeader": "代碼",
       "prefectureHeader": "都道府縣",
       "countHeader": "數量",
-      "siteHeader": "網站",
+      "siteHeader": "都道府縣頁面",
       "pokemonFilter": "依神奇寶貝篩選",
       "searchPokemon": "搜尋神奇寶貝…",
       "showAll": "🔄 顯示全部",
@@ -181,7 +181,7 @@
       "officialDetail": "📝 官方",
       "officialDetailCta": "查看官方詳細資訊",
       "detailPageCta": "查看詳情",
-      "prefectureSite": "　網站"
+      "prefectureSite": "都道府縣頁面"
     }
   },
   "APPBAR_PREFIX": "日本 ",
