@@ -125,6 +125,25 @@ class BuildTopFeedTests(unittest.TestCase):
         self.assertEqual(entry["display_name"], "テスト太郎")
         self.assertEqual(entry["created_at"], "2026-06-01")
         self.assertEqual(entry["prefecture"], "鹿児島県")
+        self.assertIsNone(entry["public_user_id"])
+
+    def test_entry_public_user_id_passed_through_when_present(self):
+        photos = {
+            "1": _photo(
+                "1",
+                "2026-06-01T12:34:56+00:00",
+                public_user_id="11111111-2222-3333-4444-555555555555",
+            )
+        }
+        records = {"1": _record("1")}
+        self._touch_image("1")
+        feed = top_feed.build_top_feed(
+            {"photos": photos}, records, {}, image_dir=self.image_dir
+        )
+        entry = feed["photos"][0]
+        self.assertEqual(
+            entry["public_user_id"], "11111111-2222-3333-4444-555555555555"
+        )
 
     def test_stats_subset_ignores_non_int_values(self):
         site_stats = {

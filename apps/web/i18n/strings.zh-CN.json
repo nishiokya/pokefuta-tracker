@@ -14,7 +14,7 @@
   "EXPLORE_MENU_ARIA": "探索菜单",
   "PREF_BUTTON_LABEL": "探索地图",
   "RECENT_BUTTON_LABEL": "最新",
-  "PREF_TABLE_DESC": "各都道府县的 Pokéfuta 数量与官方网站链接",
+  "PREF_TABLE_DESC": "各都道府县的 Pokéfuta 数量与都道府县页面链接",
   "CONTROLS_TOGGLE_ARIA": "打开主面板",
   "CONTROLS_TOGGLE_TITLE": "打开／关闭主面板",
   "LOCATE_LABEL": "查找附近的 Pokéfuta",
@@ -85,7 +85,7 @@
     "genFormat": "第{n}世代",
     "samePokemonHeading": "相同宝可梦的 Pokéfuta",
     "openSuffix": "　打开",
-    "noSite": "无官方网站",
+    "noSite": "无都道府县页面",
     "countSuffix": "个",
     "galleryAriaSuffix": "的井盖照片",
     "openDetailSuffix": "　查看详细",
@@ -167,7 +167,7 @@
       "codeHeader": "代码",
       "prefectureHeader": "都道府县",
       "countHeader": "数量",
-      "siteHeader": "网站",
+      "siteHeader": "都道府县页面",
       "pokemonFilter": "按宝可梦筛选",
       "searchPokemon": "搜索宝可梦…",
       "showAll": "🔄 显示全部",
@@ -182,7 +182,7 @@
       "officialDetail": "📝 官方",
       "officialDetailCta": "查看官方详细信息",
       "detailPageCta": "查看详情",
-      "prefectureSite": "　网站"
+      "prefectureSite": "都道府县页面"
     }
   },
   "APPBAR_PREFIX": "日本 ",

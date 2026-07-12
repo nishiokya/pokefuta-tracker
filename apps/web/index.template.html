@@ -55,6 +55,10 @@
       '宮崎県': 'miyazaki',  '鹿児島県': 'kagoshima','沖縄県': 'okinawa'
     });
     window.SITE_BASE_URL = 'https://data.pokefuta.com/';
+    window.getPrefecturePageUrl = function(prefecture) {
+      var slug = window.PREFECTURE_SLUG_MAP[prefecture];
+      return slug ? '%%BASE_PATH%%prefectures/' + encodeURIComponent(slug) + '/' : '';
+    };
 
     // Redirect deep-links (?pref= / ?manhole= / ?tag= / ?view=) to map.html
     (function() {
@@ -86,7 +90,7 @@
   </script>
   <!-- End GA -->
   <link rel="stylesheet" href="%%BASE_PATH%%assets/theme.css" />
-  <link rel="stylesheet" href="%%BASE_PATH%%assets/top-page.css?v=20260711a" />
+  <link rel="stylesheet" href="%%BASE_PATH%%assets/top-page.css?v=20260711b" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
   <link rel="icon" href="%%BASE_PATH%%assets/pokefuta-marker.svg" type="image/svg+xml" />
   <script src="%%BASE_PATH%%assets/session-badge.js" defer></script>
@@ -376,7 +380,7 @@
       setText('hero-media-label', hero.mediaLabel);
       setText('hero-featured-title', hero.title);
       setText('hero-featured-place', hero.place);
-      setText('hero-footer-text', hero.footerText);
+      setFooterText(hero);
       setText('hero-footer-cta', hero.footerCta);
 
       hero.small.forEach(function(s, i) {
@@ -417,11 +421,23 @@
       statNote: '%%STAT_PHOTOGRAPHED_NOTE%%'
     };
 
+    var PUBLIC_USER_ID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
     function communityHero(photos) {
       function names(p) { return (p.pokemons || []).slice(0, 2).join('・'); }
       function place(p) { return (p.title || '').replace('/', ' '); }
       var f = photos[0];
       var footerText = '📷 ' + (f.display_name ? TF_STRINGS.by.replace('{name}', f.display_name) + ' · ' : '') + (f.created_at || '');
+      var footerName = null;
+      if (f.display_name && f.public_user_id && PUBLIC_USER_ID_RE.test(f.public_user_id)) {
+        var byParts = TF_STRINGS.by.split('{name}');
+        footerName = {
+          prefix: '📷 ' + byParts[0],
+          name: f.display_name,
+          suffix: byParts[1] + ' · ' + (f.created_at || ''),
+          publicUserId: f.public_user_id
+        };
+      }
       return {
         id: f.id, community: true,
         imgAlt: (names(f) || place(f)) + 'のポケふた投稿写真',
@@ -431,6 +447,7 @@
         title: f.comment || names(f) || place(f),
         place: f.comment && names(f) ? place(f) + ' ／ ' + names(f) : place(f),
         footerText: footerText,
+        footerName: footerName,
         footerCta: TF_STRINGS.cta,
         href: BASE_PATH + 'map.html?manhole=' + encodeURIComponent(f.id),
         small: photos.slice(1, 3).map(function(p) {
@@ -490,7 +507,7 @@
           return e && typeof e.title === 'string'
             && typeof e.start_date === 'string' && typeof e.end_date === 'string'
             && e.end_date >= today
-            && typeof e.url === 'string' && /^https:\/\//.test(e.url);
+            && window.getPrefecturePageUrl(e.prefecture);
         });
         if (!active.length) return;
         var list = document.getElementById('event-notice-list');
@@ -498,9 +515,7 @@
           var ongoing = e.start_date <= today;
           var card = document.createElement('a');
           card.className = 'event-notice-card';
-          card.href = e.url;
-          card.target = '_blank';
-          card.rel = 'noopener noreferrer';
+          card.href = window.getPrefecturePageUrl(e.prefecture);
           var badge = document.createElement('span');
           badge.className = 'event-notice-badge' + (ongoing ? '' : ' is-upcoming');
           badge.textContent = ongoing ? EV_STRINGS.ongoing : EV_STRINGS.upcoming;
@@ -515,7 +530,7 @@
           card.appendChild(badge);
           card.appendChild(copy);
           card.addEventListener('click', function() {
-            if (window.trackEvent) trackEvent('click_event_notice', { prefecture: e.prefecture });
+            if (window.trackEvent) trackEvent('click_event_notice', { prefecture: e.prefecture, destination: 'prefecture_page' });
           });
           list.appendChild(card);
         });
@@ -645,7 +660,7 @@
             var slug = slugMap[pref] || encodeURIComponent(pref);
             var isLast = i === PREF_ORDER.length - 1;
             var displayPref = (PREF_NAMES[pref] && PREF_NAMES[pref][PREF_LANG_KEY]) || pref;
-            return '<a class="pref-link-item' + (isLast ? ' pref-link-item--last' : '') + '" href="/prefectures/' + slug + '/" onclick="trackEvent(\'click_pref_link\',{prefecture:\'' + pref + '\'})">'
+            return '<a class="pref-link-item' + (isLast ? ' pref-link-item--last' : '') + '" href="' + window.getPrefecturePageUrl(pref) + '" onclick="trackEvent(\'click_pref_link\',{prefecture:\'' + pref + '\'})">'
               + '<span class="pref-link-name">' + displayPref + '</span>'
               + (cnt ? '<span class="pref-link-count">' + cnt + '枚 →</span>' : '<span class="pref-link-count">→</span>')
               + '</a>';
@@ -690,6 +705,35 @@
     function setText(id, val) {
       var el = document.getElementById(id);
       if (el) el.textContent = val;
+    }
+    function setFooterText(hero) {
+      var el = document.getElementById('hero-footer-text');
+      if (!el) return;
+      if (!hero.footerName) { el.textContent = hero.footerText; return; }
+      var fn = hero.footerName;
+      el.textContent = '';
+      el.appendChild(document.createTextNode(fn.prefix));
+      var profileUrl = 'https://pokefuta.com/users/' + encodeURIComponent(fn.publicUserId) + '/visits';
+      var nameLink = document.createElement('span');
+      nameLink.className = 'hero-footer-name-link';
+      nameLink.setAttribute('role', 'link');
+      nameLink.setAttribute('tabindex', '0');
+      nameLink.setAttribute('aria-label', fn.name + 'さんの公開スタンプ帳を開く');
+      nameLink.textContent = fn.name;
+      nameLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        window.open(profileUrl, '_blank', 'noopener,noreferrer');
+      });
+      nameLink.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          e.stopPropagation();
+          window.open(profileUrl, '_blank', 'noopener,noreferrer');
+        }
+      });
+      el.appendChild(nameLink);
+      el.appendChild(document.createTextNode(fn.suffix));
     }
     function setNum(id, val) {
       var el = document.getElementById(id);

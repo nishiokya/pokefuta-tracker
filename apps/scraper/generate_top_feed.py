@@ -105,6 +105,7 @@ def build_top_feed(
             "city": record.get("city", ""),
             "pokemons": pokemons,
             "display_name": photo.get("display_name") or None,
+            "public_user_id": photo.get("public_user_id") or None,
             "comment": sanitize_comment(photo.get("comment")),
             "created_at": (photo.get("created_at") or "")[:10],
         })

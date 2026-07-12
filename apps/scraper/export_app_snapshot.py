@@ -260,7 +260,7 @@ def build_site_stats() -> dict:
         "manholes_with_photos": manholes_with_photos,
         "latest_photo_at": fetch_first("photo", "created_at", "created_at.desc"),
         "latest_user_at": fetch_first("app_user", "created_at", "created_at.desc"),
-        "latest_visit_at": fetch_first("visit", "shot_at", "shot_at.desc"),
+        "latest_visit_at": fetch_first("visit", "created_at", "created_at.desc"),
         "posts_last_7d": fetch_count("photo", {"created_at": f"gte.{ago_7d}"}),
         "posts_last_30d": fetch_count("photo", {"created_at": f"gte.{ago_30d}"}),
         "auth_users": auth_users,

@@ -185,6 +185,19 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         html = MODULE._manhole_cards(records)
         self.assertNotIn("manhole-preinstall-badge", html)
 
+    def test_prefecture_summary_omits_initial_crawl_month(self) -> None:
+        records = [r for r in self.records if r.get("prefecture") == "福井県"]
+        html = MODULE.build_page(
+            "福井県",
+            "fukui",
+            records,
+            MODULE.build_rankings(self.records)["福井県"],
+            self.pokemon_slugs,
+            self.trivia["福井県"],
+        )
+        self.assertIn("福井県では16自治体で17枚のポケふたを巡れます。", html)
+        self.assertNotIn("福井県は2025年10月にポケふた初登場。", html)
+
     def test_tied_counts_share_rank(self) -> None:
         records = [
             {"id": "1", "status": "active", "prefecture": "青森県"},
