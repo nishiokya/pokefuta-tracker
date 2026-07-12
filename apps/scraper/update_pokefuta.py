@@ -42,6 +42,7 @@ from address_parser import extract_address_from_html
 # Constants (unified with scrape_pokefuta.py)
 DEFAULT_BASE = "https://local.pokemon.jp/manhole/"
 HEADERS = {"User-Agent": "pokefuta-tracker-updater (+https://github.com/nishiokya/pokefuta-tracker)"}
+HEADERS_JA = {**HEADERS, "Accept-Language": "ja,ja-JP;q=0.9"}
 HEADERS_EN = {**HEADERS, "Accept-Language": "en-US,en;q=0.9"}
 HEADERS_ZH = {**HEADERS, "Accept-Language": "zh-CN,zh;q=0.9"}
 
@@ -473,7 +474,8 @@ def fetch_install_status(base: str, logger: logging.Logger) -> Dict[str, Dict]:
 
     idx: Dict[str, Dict] = {}
     try:
-        text = fetch(url, logger, HEADERS)
+        # installation_date の日本語表記("設置予定")で判定するため日本語レスポンスに固定する
+        text = fetch(url, logger, HEADERS_JA)
         if text is None:
             logger.warning("fetch_install_status: no response from %s", url)
             return {}
