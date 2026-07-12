@@ -491,15 +491,27 @@ def generate_html(
     has_photo_bool = bool(photo_url)
     has_photo_js = json.dumps(has_photo_bool)
 
-    hero_photo_html = (
-        f"<a class='hero-photo-placeholder' href='https://pokefuta.com/upload?manhole_id={manhole_id}&amp;from=data'"
-        f" target='_blank' rel='noopener noreferrer'"
-        f" onclick=\"trackEvent('click_photo_upload_placeholder', {_attr_json({'manhole_id': manhole_id, 'prefecture': prefecture, 'city': city, 'has_photo': False})})\">"
-        f"<span class='placeholder-camera' aria-hidden='true'>📷</span>"
-        f"<span class='placeholder-title'>まだ写真がありません</span>"
-        f"<span class='placeholder-sub'>最初の旅写真を投稿する</span>"
-        f"</a>"
-    )
+    is_preinstall = manhole.get("installed") is False
+    if is_preinstall:
+        _preinstall_note = manhole.get("installation_note") or ""
+        _preinstall_note_html = escape(_preinstall_note) if _preinstall_note else "設置予定"
+        hero_photo_html = (
+            f"<div class='hero-photo-placeholder hero-photo-preinstall'>"
+            f"<span class='placeholder-camera' aria-hidden='true'>🚧</span>"
+            f"<span class='placeholder-title'>設置前のポケふたです</span>"
+            f"<span class='placeholder-sub'>{_preinstall_note_html}</span>"
+            f"</div>"
+        )
+    else:
+        hero_photo_html = (
+            f"<a class='hero-photo-placeholder' href='https://pokefuta.com/upload?manhole_id={manhole_id}&amp;from=data'"
+            f" target='_blank' rel='noopener noreferrer'"
+            f" onclick=\"trackEvent('click_photo_upload_placeholder', {_attr_json({'manhole_id': manhole_id, 'prefecture': prefecture, 'city': city, 'has_photo': False})})\">"
+            f"<span class='placeholder-camera' aria-hidden='true'>📷</span>"
+            f"<span class='placeholder-title'>まだ写真がありません</span>"
+            f"<span class='placeholder-sub'>最初の旅写真を投稿する</span>"
+            f"</a>"
+        )
 
     if photo_url:
         og_image = photo_url
@@ -599,6 +611,8 @@ def generate_html(
     # HERO card: stats badges
     title_keys: set[str] = {t["key"] for t in titles}
     badges: list[str] = []
+    if is_preinstall:
+        badges.append("<span class='hero-badge hero-badge-pre'>🚧 設置前</span>")
     added_at = manhole.get("added_at", "") or ""
     try:
         added_year = datetime.date.fromisoformat(added_at[:10]).year
@@ -631,7 +645,13 @@ def generate_html(
     # HERO card: share JS data (Python-serialized to avoid injection)
     _title_hashtags = " ".join(t["hashtag"] for t in titles if t.get("hashtag"))
     _base_hashtags = f"{_title_hashtags} #ポケふた #ポケモンマンホール".strip()
-    if has_photo_bool and pokemons:
+    if is_preinstall and pokemons:
+        _x_text = (
+            f"設置前のポケふた（{pokemon_text}）。\n\n"
+            f"{prefecture}{city}に設置予定です。設置されたら会いに行こう！\n\n"
+            f"{_base_hashtags}"
+        )
+    elif has_photo_bool and pokemons:
         _x_text = (
             f"{prefecture}{city}のポケふたを発見！\n\n"
             f"登場ポケモン: {pokemon_text}\n"
@@ -874,10 +894,20 @@ def generate_html(
         f"← 全国マップへ戻る</a>"
     )
 
-    # Hero photo upload CTA
+    # Hero photo upload CTA — suppressed entirely for 設置前 (notice is already shown in hero_photo_html)
     _photo_event = "click_photo_upload" if has_photo_bool else "click_photo_upload_placeholder"
     _photo_label = "写真を投稿" if has_photo_bool else "最初の旅写真を投稿する"
     _photo_cta_onclick = _attr_json({"manhole_id": manhole_id, "prefecture": prefecture, "city": city, "has_photo": has_photo_bool})
+    hero_actions_html = (
+        ""
+        if is_preinstall
+        else (
+            f'<div class="hero-actions">'
+            f'<a class="btn-photo-upload" href="https://pokefuta.com/upload?manhole_id={manhole_id}&amp;from=data" target="_blank" rel="noopener noreferrer" onclick="trackEvent(\'{_photo_event}\', {_photo_cta_onclick})">{_icon("icon-link-photo", "action-icon")}<span>{escape(_photo_label)}</span></a>'
+            f'<p class="photo-upload-note">投稿は pokefuta.com で受付（無料ログイン・GPS付き写真が必要）</p>'
+            f'</div>'
+        )
+    )
 
     # Visit CTA (Google Maps full-width card)
     visit_cta_html = ""
@@ -904,10 +934,7 @@ def generate_html(
     <h1 class="hero-title">{escape(h1)}</h1>
     {pokemon_tags_html}
     {stats_html}
-    <div class="hero-actions">
-      <a class="btn-photo-upload" href="https://pokefuta.com/upload?manhole_id={manhole_id}&amp;from=data" target="_blank" rel="noopener noreferrer" onclick="trackEvent('{_photo_event}', {_photo_cta_onclick})">{_icon('icon-link-photo', 'action-icon')}<span>{escape(_photo_label)}</span></a>
-      <p class="photo-upload-note">投稿は pokefuta.com で受付（無料ログイン・GPS付き写真が必要）</p>
-    </div>
+    {hero_actions_html}
   </div>
 </div>
 """
@@ -1245,6 +1272,21 @@ def generate_html(
       text-underline-offset: 3px;
     }}
 
+    .hero-photo-preinstall {{
+      background: linear-gradient(135deg, #f0ede6 0%, #e6e1d5 100%);
+      border-color: #b8ab8e;
+      cursor: default;
+    }}
+
+    .hero-photo-preinstall .placeholder-title {{
+      color: #6b5d44;
+    }}
+
+    .hero-photo-preinstall .placeholder-sub {{
+      color: #8a7d63;
+      text-decoration: none;
+    }}
+
     .hero-body {{
       padding: 20px 20px 24px;
     }}
@@ -1572,6 +1614,12 @@ def generate_html(
       background: #fff0f0;
       border-color: #ff6b6b;
       color: #c0392b;
+    }}
+
+    .hero-badge-pre {{
+      background: #f1ede4;
+      border-color: #b8ab8e;
+      color: #6b5d44;
     }}
 
     .back-btn {{

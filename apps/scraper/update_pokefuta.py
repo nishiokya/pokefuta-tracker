@@ -459,6 +459,63 @@ def now_iso() -> str:
     return datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
 
 
+def fetch_install_status(base: str, logger: logging.Logger) -> Dict[str, Dict]:
+    """公式検索JSON API から設置状況を取得し manhole_no でインデックス化する。
+
+    取得や解析に失敗しても更新処理全体を止めないよう、例外時は空辞書を返す。
+    """
+    base_root = base.rstrip('/')
+    if not base_root.endswith('/manhole'):
+        base_root = re.sub(r'/manhole/.*$', '/manhole', base_root)
+        if not base_root.endswith('/manhole'):
+            base_root += '/manhole'
+    url = f"{base_root}/search/?mode=json"
+
+    idx: Dict[str, Dict] = {}
+    try:
+        text = fetch(url, logger, HEADERS)
+        if text is None:
+            logger.warning("fetch_install_status: no response from %s", url)
+            return {}
+        data = json.loads(text)
+        rows = data.get('list', []) if isinstance(data, dict) else []
+        for row in rows:
+            if not isinstance(row, dict):
+                continue
+            no = row.get('manhole_no')
+            if not no:
+                continue
+            idx[str(no)] = row
+    except Exception as e:
+        logger.warning("fetch_install_status: failed to load/parse %s: %s", url, e)
+        return {}
+    return idx
+
+
+def apply_install_status(record: Dict, install_idx: Dict[str, Dict]) -> bool:
+    """検索APIの設置状況をレコードにマージする。
+
+    installed が既存値から遷移した場合(初回付与を除く)のみ True を返す。
+    """
+    row = install_idx.get(str(record.get('id')))
+    if not row:
+        return False
+
+    note = (row.get('installation_date') or '').strip()
+    installed = "設置予定" not in note
+
+    had = 'installed' in record
+    old = record.get('installed')
+
+    record['installed'] = installed
+    if note:
+        record['installation_note'] = note
+    else:
+        record.pop('installation_note', None)
+
+    return had and old != installed
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--base', default=DEFAULT_BASE, help='Base top page URL')
@@ -477,6 +534,9 @@ def main():
     title_data, city_links = load_manhole_titles_json(dataset_dir)
     city_url_idx = build_city_url_index(city_links)
     logger.info("Loaded %d manholes, %d city_links from manhole_titles.json", len(title_data), len(city_links))
+
+    install_idx = fetch_install_status(args.base, logger)
+    logger.info("Loaded %d install-status rows from search API", len(install_idx))
 
     existing = load_existing(args.out)
     by_id: Dict[str, Dict] = {r['id']: r for r in existing if 'id' in r}
@@ -500,6 +560,9 @@ def main():
         r.setdefault('is_prefecture_site', False)
         if apply_title_metadata(r, title_data):
             changed.setdefault(r['id'], {})['title_metadata'] = True
+        if apply_install_status(r, install_idx):
+            r['last_updated'] = now_iso()
+            changed.setdefault(r['id'], {})['install_status'] = True
         # Always sync city_url from city_links (source of truth, no last_updated bump)
         pref = r.get('prefecture', '')
         city = r.get('city', '')
@@ -553,6 +616,7 @@ def main():
             for _f in ('parking', 'nearby_spots', 'source_urls', 'address_raw', 'address_norm'):
                 parsed.pop(_f, None)
             apply_title_metadata(parsed, title_data)
+            apply_install_status(parsed, install_idx)
             # Sync city_url from city_links for new records
             pref = parsed.get('prefecture', '')
             city = parsed.get('city', '')
