@@ -1094,8 +1094,13 @@
         displayName ? `<span class="travel-popup-photo-author">${escapeHtml(displayName)}</span>` : ''
       ].filter(Boolean).join('');
       const titles = Array.isArray(d.titles) ? d.titles : [];
-      const titleBadgesHtml = titles.length
+      const isPreinstall = d.installed === false;
+      const preinstallBadgeHtml = isPreinstall
+        ? '<span class="travel-popup-badge travel-popup-badge--pre">🚧 ' + escapeHtml(I.preinstall) + '</span>'
+        : '';
+      const titleBadgesHtml = (titles.length || isPreinstall)
         ? '<div class="travel-popup-badges">'
+          + preinstallBadgeHtml
           + titles.slice(0, 1).map(t => '<span class="travel-popup-badge">'
             + escapeHtml((t.emoji ? t.emoji + ' ' : '') + t.label)
             + '</span>').join('')
@@ -1120,6 +1125,13 @@
             <span>${I.photoMissing}</span>
           </div>
         </div>
+      ` : isPreinstall ? `
+        <div class="popup-photo travel-popup-photo popup-photo--preinstall" aria-label="${escapeHtml(I.preinstall)}">
+          <div class="popup-photo__missing popup-photo__preinstall">
+            <b>🚧 ${escapeHtml(I.preinstall)}</b>
+            <span>${d.installation_note ? escapeHtml(d.installation_note) : escapeHtml(I.preinstallScheduled)}</span>
+          </div>
+        </div>
       ` : `
         <div class="popup-photo travel-popup-photo popup-photo--missing" aria-label="${I.photoWanted}">
           <div class="popup-photo__missing">
@@ -1140,6 +1152,8 @@
       const primaryAction = hasPhoto
         ? `<a href="${manholeDetailUrl}" class="travel-popup-action travel-popup-action--primary"
               onclick="if(window.trackEvent){window.trackEvent('popup_click_detail',{${eventParams}});}">${UI_TEXT.detailPageCta}</a>`
+        : isPreinstall
+        ? ''
         : `<a href="${escapeHtml(uploadUrl)}" target="_blank" rel="noopener noreferrer" class="travel-popup-action travel-popup-action--primary travel-popup-action--upload"
               onclick="if(window.trackEvent){window.trackEvent('popup_click_upload',{${eventParams}});}">${I.firstPhotoUploadCta}<span class="travel-popup-action-sub">${I.firstPhotoUploadNote}</span></a>`;
       const mapsUrl = Number.isFinite(Number(d.lat)) && Number.isFinite(Number(d.lng))

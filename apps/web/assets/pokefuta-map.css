@@ -1322,6 +1322,12 @@ body.pokefuta-map-page {
   white-space: nowrap;
 }
 
+.pokefuta-map-page .travel-popup-badge--pre {
+  background: #f1ede4;
+  border: 1px solid #b8ab8e;
+  color: #6b5d44;
+}
+
 .pokefuta-map-page .travel-popup-tag-icons {
   display: flex;
   flex-wrap: wrap;
