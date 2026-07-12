@@ -341,12 +341,17 @@ def _manhole_cards(records: list[dict]) -> str:
             if image_path.exists()
             else '<span class="manhole-placeholder" aria-hidden="true">●</span>'
         )
+        preinstall_badge_html = (
+            '<span class="manhole-preinstall-badge">🚧 設置前</span>'
+            if record.get("installed") is False
+            else ""
+        )
         cards.append(
             f'<a class="manhole-card" href="/manholes/{quote(mid)}/" '
             f'data-track="prefecture_manhole_click" data-position="{position}" '
             f'data-destination="{escape(mid)}">'
             f'{image_html}<span class="manhole-copy"><strong>{escape(city)}</strong>'
-            f'<small>{escape(pokemons)}</small></span></a>'
+            f'<small>{escape(pokemons)}</small>{preinstall_badge_html}</span></a>'
         )
     return "".join(cards)
 
@@ -598,6 +603,11 @@ def build_page(
     .manhole-copy {{ min-width: 0; }}
     .manhole-copy strong, .manhole-copy small {{ display: block; }}
     .manhole-copy small {{ overflow: hidden; color: #75685c; text-overflow: ellipsis; white-space: nowrap; }}
+    .manhole-preinstall-badge {{
+      display: inline-block; margin-top: 4px; padding: 2px 8px;
+      border-radius: 999px; background: #f1ede4; color: #6b5d44;
+      font-size: .74rem; font-weight: 700; white-space: nowrap;
+    }}
     .trivia-card {{
       border-left: 5px solid #7e6ba9;
       background: linear-gradient(135deg, #fffaf0, #f4effd);

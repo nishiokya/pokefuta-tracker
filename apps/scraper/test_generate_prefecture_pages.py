@@ -174,6 +174,30 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         self.assertIn("福井県では16自治体で17枚のポケふたを巡れます。", html)
         self.assertNotIn("福井県は2025年10月にポケふた初登場。", html)
 
+    def test_manhole_card_shows_preinstall_badge(self) -> None:
+        records = [
+            {
+                "id": "9001",
+                "city": "岡谷",
+                "pokemons": ["ピカチュウ"],
+                "installed": False,
+                "installation_note": "2026年8月上旬までに設置予定。",
+            }
+        ]
+        html = MODULE._manhole_cards(records)
+        self.assertIn(
+            '<span class="manhole-preinstall-badge">🚧 設置前</span>', html
+        )
+
+    def test_manhole_card_normal_has_no_preinstall_badge(self) -> None:
+        # installed absent and installed True must both be treated as installed.
+        records = [
+            {"id": "9002", "city": "岡谷", "pokemons": ["ピカチュウ"]},
+            {"id": "9003", "city": "伊那", "pokemons": ["イーブイ"], "installed": True},
+        ]
+        html = MODULE._manhole_cards(records)
+        self.assertNotIn("manhole-preinstall-badge", html)
+
     def test_tied_counts_share_rank(self) -> None:
         records = [
             {"id": "1", "status": "active", "prefecture": "青森県"},

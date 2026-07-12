@@ -160,6 +160,18 @@
 .popup-photo--missing .popup-photo__missing {
   display: flex;
 }
+.popup-photo--preinstall .popup-photo__missing {
+  display: flex;
+}
+.popup-photo__preinstall {
+  background: #f1ede4;
+}
+.popup-photo__preinstall b {
+  color: #6b5d44;
+}
+.popup-photo__preinstall span {
+  color: #8a7d63;
+}
 .popup-meta {
   display: grid;
   gap: 3px;
