@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-07-11T22:34:36.928163Z",
+  "generated_at": "2026-07-12T10:49:44.111449Z",
   "source": "pokefuta photo table",
   "image": {
     "r2_public_base_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image"
   },
-  "count": 167,
+  "count": 188,
   "photos": {
     "1": {
       "manhole_id": 1,
@@ -311,6 +311,34 @@
           "content_type": "image/jpeg",
           "created_at": "2026-07-10T21:23:52.615196+00:00",
           "shot_at": "2025-05-23T19:31:26+00:00",
+          "display_name": null,
+          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
+        }
+      ]
+    },
+    "19": {
+      "manhole_id": 19,
+      "photo_id": "cfa249b1-738a-415d-ab2b-6f2eeccb0e77",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/0ed508f6-8074-4dbf-859a-ec30886a6345.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/0ed508f6-8074-4dbf-859a-ec30886a6345.jpg",
+      "storage_key": "photos/original/2026/07/0ed508f6-8074-4dbf-859a-ec30886a6345.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1091492,
+      "created_at": "2026-07-12T07:41:48.222667+00:00",
+      "shot_at": "2024-09-15T00:17:45+00:00",
+      "comment": "うのすまいのココドラはど真ん中にドーンにゃあ\r\nカゲ調整の為また逆に…気を付けるにゃ",
+      "display_name": null,
+      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
+      "gallery": [
+        {
+          "photo_id": "cfa249b1-738a-415d-ab2b-6f2eeccb0e77",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/0ed508f6-8074-4dbf-859a-ec30886a6345.jpg",
+          "storage_key": "photos/original/2026/07/0ed508f6-8074-4dbf-859a-ec30886a6345.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-12T07:41:48.222667+00:00",
+          "shot_at": "2024-09-15T00:17:45+00:00",
           "display_name": null,
           "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
         }
@@ -878,6 +906,34 @@
         }
       ]
     },
+    "88": {
+      "manhole_id": 88,
+      "photo_id": "02079cd9-889f-47c4-a06c-328de2f6509c",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/78a8b2d7-1865-47c6-83d1-b4e51ddd4757.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/78a8b2d7-1865-47c6-83d1-b4e51ddd4757.jpg",
+      "storage_key": "photos/original/2026/07/78a8b2d7-1865-47c6-83d1-b4e51ddd4757.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1606924,
+      "created_at": "2026-07-12T03:57:19.695633+00:00",
+      "shot_at": "2024-12-01T03:31:49+00:00",
+      "comment": "少々ご機嫌斜めっぽい所が可愛いにゃあ\r\nラッキーがまぁまぁ…って言ってる様に見えるにゃあ",
+      "display_name": null,
+      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
+      "gallery": [
+        {
+          "photo_id": "02079cd9-889f-47c4-a06c-328de2f6509c",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/78a8b2d7-1865-47c6-83d1-b4e51ddd4757.jpg",
+          "storage_key": "photos/original/2026/07/78a8b2d7-1865-47c6-83d1-b4e51ddd4757.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-12T03:57:19.695633+00:00",
+          "shot_at": "2024-12-01T03:31:49+00:00",
+          "display_name": null,
+          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
+        }
+      ]
+    },
     "94": {
       "manhole_id": 94,
       "photo_id": "9d60a7c4-bd2b-4162-b31b-56d36f368cc3",
@@ -901,6 +957,34 @@
           "content_type": "image/jpeg",
           "created_at": "2026-07-11T20:35:32.257153+00:00",
           "shot_at": "2024-12-30T03:35:37+00:00",
+          "display_name": null,
+          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
+        }
+      ]
+    },
+    "96": {
+      "manhole_id": 96,
+      "photo_id": "f94b282e-6626-40d4-913b-2be008c23ec4",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/79288303-3886-41ee-9aaa-0749e19a54ce.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/79288303-3886-41ee-9aaa-0749e19a54ce.jpg",
+      "storage_key": "photos/original/2026/07/79288303-3886-41ee-9aaa-0749e19a54ce.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 925430,
+      "created_at": "2026-07-12T04:07:44.409822+00:00",
+      "shot_at": "2024-12-01T01:45:02+00:00",
+      "comment": "近くの川も澄んでいて気持ち良さげなふたにゃあ\r\n設置場所を綺麗に保ちゴミ類は持ち帰ろうにゃあ",
+      "display_name": null,
+      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
+      "gallery": [
+        {
+          "photo_id": "f94b282e-6626-40d4-913b-2be008c23ec4",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/79288303-3886-41ee-9aaa-0749e19a54ce.jpg",
+          "storage_key": "photos/original/2026/07/79288303-3886-41ee-9aaa-0749e19a54ce.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-12T04:07:44.409822+00:00",
+          "shot_at": "2024-12-01T01:45:02+00:00",
           "display_name": null,
           "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
         }
@@ -1845,6 +1929,100 @@
           "shot_at": "2026-06-30T05:52:46+00:00",
           "display_name": null,
           "public_user_id": "4560bdec-e1a5-41ef-b6a9-1fed80ef4df7"
+        },
+        {
+          "photo_id": "5f53c1e6-2f92-457e-bcf0-0c2c09476495",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/6202fa96-2886-4cdd-a77c-35ce8a6be6e4.jpg",
+          "storage_key": "photos/original/2026/07/6202fa96-2886-4cdd-a77c-35ce8a6be6e4.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-12T07:09:45.773096+00:00",
+          "shot_at": "2024-10-22T23:20:27+00:00",
+          "display_name": null,
+          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
+        }
+      ]
+    },
+    "207": {
+      "manhole_id": 207,
+      "photo_id": "f052f2fe-8485-49f7-a17e-89d4f91fa2b6",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/ed42aa29-0b21-4b44-b7b7-d5ff86eb0532.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/ed42aa29-0b21-4b44-b7b7-d5ff86eb0532.jpg",
+      "storage_key": "photos/original/2026/07/ed42aa29-0b21-4b44-b7b7-d5ff86eb0532.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1773744,
+      "created_at": "2026-07-12T06:32:13.650076+00:00",
+      "shot_at": "2024-10-23T00:52:32+00:00",
+      "comment": "どうしてもカゲを消せなかった東大阪のポケふただにゃあ\r\nダメ出ししている様な表情のギアルも良い味にゃあ\r\nバスで行ったんだにゃあ",
+      "display_name": null,
+      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
+      "gallery": [
+        {
+          "photo_id": "f052f2fe-8485-49f7-a17e-89d4f91fa2b6",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/ed42aa29-0b21-4b44-b7b7-d5ff86eb0532.jpg",
+          "storage_key": "photos/original/2026/07/ed42aa29-0b21-4b44-b7b7-d5ff86eb0532.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-12T06:32:13.650076+00:00",
+          "shot_at": "2024-10-23T00:52:32+00:00",
+          "display_name": null,
+          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
+        }
+      ]
+    },
+    "208": {
+      "manhole_id": 208,
+      "photo_id": "9a8b2659-1ef8-448f-87f0-7b1ecc102d55",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/44723928-f8f1-452a-8504-24fd84b532fe.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/44723928-f8f1-452a-8504-24fd84b532fe.jpg",
+      "storage_key": "photos/original/2026/07/44723928-f8f1-452a-8504-24fd84b532fe.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1608997,
+      "created_at": "2026-07-12T04:29:13.53882+00:00",
+      "shot_at": "2024-10-23T01:51:20+00:00",
+      "comment": "東石切公園にある可愛いふただにゃあ\r\nバスで行ったんだにゃあ",
+      "display_name": null,
+      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
+      "gallery": [
+        {
+          "photo_id": "9a8b2659-1ef8-448f-87f0-7b1ecc102d55",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/44723928-f8f1-452a-8504-24fd84b532fe.jpg",
+          "storage_key": "photos/original/2026/07/44723928-f8f1-452a-8504-24fd84b532fe.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-12T04:29:13.53882+00:00",
+          "shot_at": "2024-10-23T01:51:20+00:00",
+          "display_name": null,
+          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
+        }
+      ]
+    },
+    "209": {
+      "manhole_id": 209,
+      "photo_id": "bd18b8ba-b75b-4fe9-aab3-e0ba0dcfffe3",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/a53712ee-2a20-45df-afd5-72c5c63cad43.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/a53712ee-2a20-45df-afd5-72c5c63cad43.jpg",
+      "storage_key": "photos/original/2026/07/a53712ee-2a20-45df-afd5-72c5c63cad43.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1752750,
+      "created_at": "2026-07-12T07:01:25.689219+00:00",
+      "shot_at": "2024-10-23T00:15:31+00:00",
+      "comment": "ラグビー場で威風堂々のライコウだにゃあ\r\nバスで行ったんだにゃあ",
+      "display_name": null,
+      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
+      "gallery": [
+        {
+          "photo_id": "bd18b8ba-b75b-4fe9-aab3-e0ba0dcfffe3",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/a53712ee-2a20-45df-afd5-72c5c63cad43.jpg",
+          "storage_key": "photos/original/2026/07/a53712ee-2a20-45df-afd5-72c5c63cad43.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-12T07:01:25.689219+00:00",
+          "shot_at": "2024-10-23T00:15:31+00:00",
+          "display_name": null,
+          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
         }
       ]
     },
@@ -1873,6 +2051,16 @@
           "shot_at": "2026-06-30T07:30:54+00:00",
           "display_name": null,
           "public_user_id": "4560bdec-e1a5-41ef-b6a9-1fed80ef4df7"
+        },
+        {
+          "photo_id": "fe9fa450-a481-4367-85dc-d10c94b1c18d",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/181b9e80-e5c3-4536-a43c-68afc90aaf72.jpg",
+          "storage_key": "photos/original/2026/07/181b9e80-e5c3-4536-a43c-68afc90aaf72.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-12T06:50:43.348525+00:00",
+          "shot_at": "2024-10-23T00:30:00+00:00",
+          "display_name": null,
+          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
         }
       ]
     },
@@ -2269,6 +2457,72 @@
           "shot_at": "2025-12-13T05:22:10+00:00",
           "display_name": "tako",
           "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
+        }
+      ]
+    },
+    "248": {
+      "manhole_id": 248,
+      "photo_id": "fe1536ea-5dde-4ba7-be27-98b5fc43fb13",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/18894333-8100-4402-b521-a17bdab932e3.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/18894333-8100-4402-b521-a17bdab932e3.jpg",
+      "storage_key": "photos/original/2026/07/18894333-8100-4402-b521-a17bdab932e3.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1387286,
+      "created_at": "2026-07-12T03:31:38.624948+00:00",
+      "shot_at": "2026-07-12T03:27:50+00:00",
+      "comment": "陸上競技場横の駐車場からすぐの遠景広場をこえたところにあります",
+      "display_name": null,
+      "public_user_id": "f964b8ea-c32d-4b97-8df9-27723a4c5179",
+      "gallery": [
+        {
+          "photo_id": "fe1536ea-5dde-4ba7-be27-98b5fc43fb13",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/18894333-8100-4402-b521-a17bdab932e3.jpg",
+          "storage_key": "photos/original/2026/07/18894333-8100-4402-b521-a17bdab932e3.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-12T03:31:38.624948+00:00",
+          "shot_at": "2026-07-12T03:27:50+00:00",
+          "display_name": null,
+          "public_user_id": "f964b8ea-c32d-4b97-8df9-27723a4c5179"
+        }
+      ]
+    },
+    "251": {
+      "manhole_id": 251,
+      "photo_id": "1212f383-f503-4255-9503-ee7c93de59ca",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/c6d1fc31-9a6a-4a10-b9f7-7588206ae98b.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/c6d1fc31-9a6a-4a10-b9f7-7588206ae98b.jpg",
+      "storage_key": "photos/original/2026/07/c6d1fc31-9a6a-4a10-b9f7-7588206ae98b.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1553253,
+      "created_at": "2026-07-11T23:29:16.967157+00:00",
+      "shot_at": "2026-07-11T23:26:50+00:00",
+      "comment": "公園の広場にあります",
+      "display_name": null,
+      "public_user_id": "f964b8ea-c32d-4b97-8df9-27723a4c5179",
+      "gallery": [
+        {
+          "photo_id": "1212f383-f503-4255-9503-ee7c93de59ca",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/c6d1fc31-9a6a-4a10-b9f7-7588206ae98b.jpg",
+          "storage_key": "photos/original/2026/07/c6d1fc31-9a6a-4a10-b9f7-7588206ae98b.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-11T23:29:16.967157+00:00",
+          "shot_at": "2026-07-11T23:26:50+00:00",
+          "display_name": null,
+          "public_user_id": "f964b8ea-c32d-4b97-8df9-27723a4c5179"
+        },
+        {
+          "photo_id": "7400040c-82a4-4067-9075-5d70ecdb7c26",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/b5ad1436-cbaa-4d87-ab97-2ad2030b0336.jpg",
+          "storage_key": "photos/original/2026/07/b5ad1436-cbaa-4d87-ab97-2ad2030b0336.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-11T23:29:34.904607+00:00",
+          "shot_at": "2026-07-11T23:26:45+00:00",
+          "display_name": null,
+          "public_user_id": "f964b8ea-c32d-4b97-8df9-27723a4c5179"
         }
       ]
     },
@@ -2671,6 +2925,90 @@
           "shot_at": "2026-07-11T21:12:22+00:00",
           "display_name": null,
           "public_user_id": "f964b8ea-c32d-4b97-8df9-27723a4c5179"
+        }
+      ]
+    },
+    "283": {
+      "manhole_id": 283,
+      "photo_id": "01ea3769-88d7-4c62-ba2e-ccf9420672f6",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/5c79ea75-0d33-4554-8762-9ed992de6d38.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/5c79ea75-0d33-4554-8762-9ed992de6d38.jpg",
+      "storage_key": "photos/original/2026/07/5c79ea75-0d33-4554-8762-9ed992de6d38.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1347605,
+      "created_at": "2026-07-12T02:59:37.521405+00:00",
+      "shot_at": "2026-07-12T02:37:58+00:00",
+      "comment": "庭園の池の中の島\r\nその東屋にあります",
+      "display_name": null,
+      "public_user_id": "f964b8ea-c32d-4b97-8df9-27723a4c5179",
+      "gallery": [
+        {
+          "photo_id": "01ea3769-88d7-4c62-ba2e-ccf9420672f6",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/5c79ea75-0d33-4554-8762-9ed992de6d38.jpg",
+          "storage_key": "photos/original/2026/07/5c79ea75-0d33-4554-8762-9ed992de6d38.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-12T02:59:37.521405+00:00",
+          "shot_at": "2026-07-12T02:37:58+00:00",
+          "display_name": null,
+          "public_user_id": "f964b8ea-c32d-4b97-8df9-27723a4c5179"
+        }
+      ]
+    },
+    "284": {
+      "manhole_id": 284,
+      "photo_id": "51b485ff-70a9-4e7c-a0ed-3cb4386b6e36",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/3fb95623-0808-43ed-9cfe-e3e47fc66637.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/3fb95623-0808-43ed-9cfe-e3e47fc66637.jpg",
+      "storage_key": "photos/original/2026/07/3fb95623-0808-43ed-9cfe-e3e47fc66637.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1764542,
+      "created_at": "2026-07-12T03:19:20.862016+00:00",
+      "shot_at": "2024-12-29T02:43:37+00:00",
+      "comment": "陽当たりが良すぎて逆さまに撮影にゃあ\r\n農産物も美味しくて笑顔のふただにゃあ",
+      "display_name": null,
+      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
+      "gallery": [
+        {
+          "photo_id": "51b485ff-70a9-4e7c-a0ed-3cb4386b6e36",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/3fb95623-0808-43ed-9cfe-e3e47fc66637.jpg",
+          "storage_key": "photos/original/2026/07/3fb95623-0808-43ed-9cfe-e3e47fc66637.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-12T03:19:20.862016+00:00",
+          "shot_at": "2024-12-29T02:43:37+00:00",
+          "display_name": null,
+          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
+        }
+      ]
+    },
+    "285": {
+      "manhole_id": 285,
+      "photo_id": "a887afdb-41d8-478b-8e09-d88411463a75",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/7292ac4c-56a0-4c0c-b20b-bca24be20a7b.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/7292ac4c-56a0-4c0c-b20b-bca24be20a7b.jpg",
+      "storage_key": "photos/original/2026/07/7292ac4c-56a0-4c0c-b20b-bca24be20a7b.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1817011,
+      "created_at": "2026-07-12T03:37:26.036356+00:00",
+      "shot_at": "2024-12-28T04:25:54+00:00",
+      "comment": "大きな池の公園で出逢えるふたにゃあ\r\n凛々しい勇姿のファイアローだにゃあ",
+      "display_name": null,
+      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
+      "gallery": [
+        {
+          "photo_id": "a887afdb-41d8-478b-8e09-d88411463a75",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/7292ac4c-56a0-4c0c-b20b-bca24be20a7b.jpg",
+          "storage_key": "photos/original/2026/07/7292ac4c-56a0-4c0c-b20b-bca24be20a7b.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-12T03:37:26.036356+00:00",
+          "shot_at": "2024-12-28T04:25:54+00:00",
+          "display_name": null,
+          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
         }
       ]
     },
@@ -3347,6 +3685,90 @@
           "shot_at": "2026-07-05T01:45:17+00:00",
           "display_name": null,
           "public_user_id": "6007030d-0f71-41e8-ab04-7a60d566a41a"
+        }
+      ]
+    },
+    "319": {
+      "manhole_id": 319,
+      "photo_id": "2eabaa51-039e-4423-8d8a-1e178f565d3d",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/b2ec7c76-6cdd-4b51-aabf-47fd9e995131.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/b2ec7c76-6cdd-4b51-aabf-47fd9e995131.jpg",
+      "storage_key": "photos/original/2026/07/b2ec7c76-6cdd-4b51-aabf-47fd9e995131.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1681128,
+      "created_at": "2026-07-12T07:26:22.054492+00:00",
+      "shot_at": "2024-10-12T03:38:47+00:00",
+      "comment": "ふるさと村にある可愛いポケふたにゃあ\r\nドーム劇場は立派で横手やきそばも美味かったにゃあ",
+      "display_name": null,
+      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
+      "gallery": [
+        {
+          "photo_id": "2eabaa51-039e-4423-8d8a-1e178f565d3d",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/b2ec7c76-6cdd-4b51-aabf-47fd9e995131.jpg",
+          "storage_key": "photos/original/2026/07/b2ec7c76-6cdd-4b51-aabf-47fd9e995131.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-12T07:26:22.054492+00:00",
+          "shot_at": "2024-10-12T03:38:47+00:00",
+          "display_name": null,
+          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
+        }
+      ]
+    },
+    "322": {
+      "manhole_id": 322,
+      "photo_id": "ad919729-32e2-4ca4-85b2-ac3a1f6b26fa",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/e64c71e1-5ac5-4669-a424-fe28112373f5.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/e64c71e1-5ac5-4669-a424-fe28112373f5.jpg",
+      "storage_key": "photos/original/2026/07/e64c71e1-5ac5-4669-a424-fe28112373f5.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1720697,
+      "created_at": "2026-07-12T07:19:46.040087+00:00",
+      "shot_at": "2024-10-12T06:10:58+00:00",
+      "comment": "神秘的な田沢湖はハクリューたちも棲みやすそうだにゃあ\r\n設置や維持に関わる全ての方々に本当に感謝だにゃあ",
+      "display_name": null,
+      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
+      "gallery": [
+        {
+          "photo_id": "ad919729-32e2-4ca4-85b2-ac3a1f6b26fa",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/e64c71e1-5ac5-4669-a424-fe28112373f5.jpg",
+          "storage_key": "photos/original/2026/07/e64c71e1-5ac5-4669-a424-fe28112373f5.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-12T07:19:46.040087+00:00",
+          "shot_at": "2024-10-12T06:10:58+00:00",
+          "display_name": null,
+          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
+        }
+      ]
+    },
+    "323": {
+      "manhole_id": 323,
+      "photo_id": "a61b31ae-14a6-4bf9-93df-96e0fdb86b6d",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/e2b2f118-8a60-44d7-bb34-659d98d5b8c8.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/e2b2f118-8a60-44d7-bb34-659d98d5b8c8.jpg",
+      "storage_key": "photos/original/2026/07/e2b2f118-8a60-44d7-bb34-659d98d5b8c8.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1729781,
+      "created_at": "2026-07-12T07:33:18.674743+00:00",
+      "shot_at": "2024-09-18T02:10:14+00:00",
+      "comment": "キリッとしているキリキザンと笑うゴローニャ\r\n表情の対比が面白いんだにゃあ",
+      "display_name": null,
+      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
+      "gallery": [
+        {
+          "photo_id": "a61b31ae-14a6-4bf9-93df-96e0fdb86b6d",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/e2b2f118-8a60-44d7-bb34-659d98d5b8c8.jpg",
+          "storage_key": "photos/original/2026/07/e2b2f118-8a60-44d7-bb34-659d98d5b8c8.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-12T07:33:18.674743+00:00",
+          "shot_at": "2024-09-18T02:10:14+00:00",
+          "display_name": null,
+          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
         }
       ]
     },
@@ -4130,6 +4552,62 @@
         }
       ]
     },
+    "369": {
+      "manhole_id": 369,
+      "photo_id": "787c01df-6adc-4d00-97ce-fa7f96ea1bfa",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/4047e94e-3292-422b-b6be-21ed726df5af.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/4047e94e-3292-422b-b6be-21ed726df5af.jpg",
+      "storage_key": "photos/original/2026/07/4047e94e-3292-422b-b6be-21ed726df5af.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1261823,
+      "created_at": "2026-07-11T22:59:41.128571+00:00",
+      "shot_at": "2026-07-11T22:55:40+00:00",
+      "comment": "公園のど真ん中にあります\r\n駐車場が無いので気をつけてください",
+      "display_name": null,
+      "public_user_id": "f964b8ea-c32d-4b97-8df9-27723a4c5179",
+      "gallery": [
+        {
+          "photo_id": "787c01df-6adc-4d00-97ce-fa7f96ea1bfa",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/4047e94e-3292-422b-b6be-21ed726df5af.jpg",
+          "storage_key": "photos/original/2026/07/4047e94e-3292-422b-b6be-21ed726df5af.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-11T22:59:41.128571+00:00",
+          "shot_at": "2026-07-11T22:55:40+00:00",
+          "display_name": null,
+          "public_user_id": "f964b8ea-c32d-4b97-8df9-27723a4c5179"
+        }
+      ]
+    },
+    "370": {
+      "manhole_id": 370,
+      "photo_id": "34ca1af6-158b-40ce-8562-674f578404b3",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/547ae59a-2384-4c53-be1a-d2d5d6a34a3f.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/547ae59a-2384-4c53-be1a-d2d5d6a34a3f.jpg",
+      "storage_key": "photos/original/2026/07/547ae59a-2384-4c53-be1a-d2d5d6a34a3f.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1384141,
+      "created_at": "2026-07-12T03:46:12.463263+00:00",
+      "shot_at": "2024-12-28T04:02:56+00:00",
+      "comment": "放射状のライン中央のふたが超カッコイイにゃあ\r\nミルタンクには岩手でも会えるんだにゃあ",
+      "display_name": null,
+      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
+      "gallery": [
+        {
+          "photo_id": "34ca1af6-158b-40ce-8562-674f578404b3",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/547ae59a-2384-4c53-be1a-d2d5d6a34a3f.jpg",
+          "storage_key": "photos/original/2026/07/547ae59a-2384-4c53-be1a-d2d5d6a34a3f.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-12T03:46:12.463263+00:00",
+          "shot_at": "2024-12-28T04:02:56+00:00",
+          "display_name": null,
+          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
+        }
+      ]
+    },
     "371": {
       "manhole_id": 371,
       "photo_id": "2d4d06a6-ebaa-4dc8-b548-f4818c9184ad",
@@ -4153,6 +4631,62 @@
           "content_type": "image/jpeg",
           "created_at": "2026-07-11T20:50:32.353203+00:00",
           "shot_at": "2024-12-29T04:25:49+00:00",
+          "display_name": null,
+          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
+        }
+      ]
+    },
+    "372": {
+      "manhole_id": 372,
+      "photo_id": "806f224e-fb6d-4f65-aee1-f469acabf011",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/bf547b2c-4213-45f3-986f-3b4ffb1d74d2.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/bf547b2c-4213-45f3-986f-3b4ffb1d74d2.jpg",
+      "storage_key": "photos/original/2026/07/bf547b2c-4213-45f3-986f-3b4ffb1d74d2.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1580345,
+      "created_at": "2026-07-11T22:43:37.605769+00:00",
+      "shot_at": "2026-07-11T22:39:20+00:00",
+      "comment": "裏手にあるので見つけにくいです",
+      "display_name": null,
+      "public_user_id": "f964b8ea-c32d-4b97-8df9-27723a4c5179",
+      "gallery": [
+        {
+          "photo_id": "806f224e-fb6d-4f65-aee1-f469acabf011",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/bf547b2c-4213-45f3-986f-3b4ffb1d74d2.jpg",
+          "storage_key": "photos/original/2026/07/bf547b2c-4213-45f3-986f-3b4ffb1d74d2.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-11T22:43:37.605769+00:00",
+          "shot_at": "2026-07-11T22:39:20+00:00",
+          "display_name": null,
+          "public_user_id": "f964b8ea-c32d-4b97-8df9-27723a4c5179"
+        }
+      ]
+    },
+    "374": {
+      "manhole_id": 374,
+      "photo_id": "aa42726d-7797-4bdf-9b69-4b8d010dcfcb",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/e9883caf-a9f3-4fe1-947d-e1cc37e62fca.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/e9883caf-a9f3-4fe1-947d-e1cc37e62fca.jpg",
+      "storage_key": "photos/original/2026/07/e9883caf-a9f3-4fe1-947d-e1cc37e62fca.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1560163,
+      "created_at": "2026-07-12T04:19:00.229207+00:00",
+      "shot_at": "2024-11-30T04:25:12+00:00",
+      "comment": "ヤンヤンマもラッキーも良い笑顔だにゃあ\r\n公園にトンボがいる時季にも行ってみたいにゃあ",
+      "display_name": null,
+      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
+      "gallery": [
+        {
+          "photo_id": "aa42726d-7797-4bdf-9b69-4b8d010dcfcb",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/e9883caf-a9f3-4fe1-947d-e1cc37e62fca.jpg",
+          "storage_key": "photos/original/2026/07/e9883caf-a9f3-4fe1-947d-e1cc37e62fca.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-12T04:19:00.229207+00:00",
+          "shot_at": "2024-11-30T04:25:12+00:00",
           "display_name": null,
           "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
         }
@@ -4183,6 +4717,16 @@
           "shot_at": "2026-06-14T04:20:46.497+00:00",
           "display_name": "ぴえろ",
           "public_user_id": "8c00b009-7e67-4db3-84d9-7aa44a336cf9"
+        },
+        {
+          "photo_id": "2cc5dc64-19b5-40fd-84d4-47b581d722e4",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/fbf07f40-82fe-4050-a36a-80d93907ea9d.jpg",
+          "storage_key": "photos/original/2026/07/fbf07f40-82fe-4050-a36a-80d93907ea9d.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-12T03:26:03.44034+00:00",
+          "shot_at": "2024-12-28T05:04:41+00:00",
+          "display_name": null,
+          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
         }
       ]
     },
@@ -5060,6 +5604,34 @@
         }
       ]
     },
+    "457": {
+      "manhole_id": 457,
+      "photo_id": "e742fe9d-f4c9-4b58-a024-778cc397bffd",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/ae7e4b10-7904-4c4d-bcae-6bed4f4c78e1.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/ae7e4b10-7904-4c4d-bcae-6bed4f4c78e1.jpg",
+      "storage_key": "photos/original/2026/07/ae7e4b10-7904-4c4d-bcae-6bed4f4c78e1.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1403103,
+      "created_at": "2026-07-12T01:39:27.070265+00:00",
+      "shot_at": "2026-07-12T01:25:27+00:00",
+      "comment": "道の駅の入り口にあってわかりやすい",
+      "display_name": null,
+      "public_user_id": "f964b8ea-c32d-4b97-8df9-27723a4c5179",
+      "gallery": [
+        {
+          "photo_id": "e742fe9d-f4c9-4b58-a024-778cc397bffd",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/ae7e4b10-7904-4c4d-bcae-6bed4f4c78e1.jpg",
+          "storage_key": "photos/original/2026/07/ae7e4b10-7904-4c4d-bcae-6bed4f4c78e1.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-12T01:39:27.070265+00:00",
+          "shot_at": "2026-07-12T01:25:27+00:00",
+          "display_name": null,
+          "public_user_id": "f964b8ea-c32d-4b97-8df9-27723a4c5179"
+        }
+      ]
+    },
     "463": {
       "manhole_id": 463,
       "photo_id": "89c78c40-6100-4b84-94fe-f174db01663e",
@@ -5141,6 +5713,62 @@
           "shot_at": "2026-07-11T05:53:40+00:00",
           "display_name": null,
           "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
+        }
+      ]
+    },
+    "481": {
+      "manhole_id": 481,
+      "photo_id": "019c768f-041c-468b-b5a9-da5474a2210b",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/2999969d-155c-46b3-9f15-ad8adf04e453.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/2999969d-155c-46b3-9f15-ad8adf04e453.jpg",
+      "storage_key": "photos/original/2026/07/2999969d-155c-46b3-9f15-ad8adf04e453.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1688162,
+      "created_at": "2026-07-12T03:34:58.576859+00:00",
+      "shot_at": "2026-07-12T02:16:20+00:00",
+      "comment": "まだなかった😂",
+      "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
+      "gallery": [
+        {
+          "photo_id": "019c768f-041c-468b-b5a9-da5474a2210b",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/2999969d-155c-46b3-9f15-ad8adf04e453.jpg",
+          "storage_key": "photos/original/2026/07/2999969d-155c-46b3-9f15-ad8adf04e453.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-12T03:34:58.576859+00:00",
+          "shot_at": "2026-07-12T02:16:20+00:00",
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
+        }
+      ]
+    },
+    "484": {
+      "manhole_id": 484,
+      "photo_id": "e30f5587-cef1-433e-99d8-dc4f962f8421",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/0573419b-ee8d-468a-acbd-a10f85828593.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/0573419b-ee8d-468a-acbd-a10f85828593.jpg",
+      "storage_key": "photos/original/2026/07/0573419b-ee8d-468a-acbd-a10f85828593.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1207358,
+      "created_at": "2026-07-12T04:55:40.349798+00:00",
+      "shot_at": "2026-07-12T04:53:32+00:00",
+      "comment": "野辺山駅の前にあります。駐車場あり",
+      "display_name": "tako",
+      "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33",
+      "gallery": [
+        {
+          "photo_id": "e30f5587-cef1-433e-99d8-dc4f962f8421",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/0573419b-ee8d-468a-acbd-a10f85828593.jpg",
+          "storage_key": "photos/original/2026/07/0573419b-ee8d-468a-acbd-a10f85828593.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-12T04:55:40.349798+00:00",
+          "shot_at": "2026-07-12T04:53:32+00:00",
+          "display_name": "tako",
+          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
