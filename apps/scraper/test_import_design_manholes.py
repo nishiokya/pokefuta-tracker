@@ -152,6 +152,10 @@ class ImportDesignManholesTests(unittest.TestCase):
         self.assertIn("id=\"chk-community\"", source)
         self.assertIn("buildCommunityPopup(d)", source)
         self.assertIn("communityByCanonicalRef", source)
+        self.assertIn(
+            "communityData.filter(d => d.status === 'active' && !d.canonical_ref).length",
+            source,
+        )
 
     def test_pages_deploy_copies_public_dataset(self):
         workflow = (ROOT / ".github/workflows/pages-deploy.yml").read_text(encoding="utf-8")

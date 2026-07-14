@@ -919,7 +919,7 @@
       if(gEl) gEl.textContent=String(gCountOverride ?? gundamData.length);
       if(pEl) pEl.textContent=String(pCountOverride ?? pokemonData.length);
       if(cEl) cEl.textContent=String(cCountOverride ?? characterData.length);
-      if(communityEl) communityEl.textContent=String(communityCountOverride ?? communityData.filter(d => !d.canonical_ref).length);
+      if(communityEl) communityEl.textContent=String(communityCountOverride ?? communityData.filter(d => d.status === 'active' && !d.canonical_ref).length);
     }
 
     function initControlsToggle() {
