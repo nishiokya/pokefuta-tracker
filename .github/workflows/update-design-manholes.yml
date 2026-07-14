@@ -1,0 +1,63 @@
+name: Daily Design Manhole Dataset Update
+
+on:
+  schedule:
+    - cron: '30 10 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+
+      - name: Import public design-manhole submissions
+        run: python3 apps/scraper/import_design_manholes.py
+
+      - name: Run importer tests
+        run: python3 -m unittest apps.scraper.test_import_design_manholes
+
+      - name: Detect dataset changes
+        id: diff
+        run: |
+          git add \
+            apps/scraper/design_manhole_submissions.ndjson \
+            dataset/design_manhole_geocode_cache.json \
+            docs/design_manholes.ndjson
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create pull request
+        if: steps.diff.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v8
+        with:
+          commit-message: "chore: update design manhole submissions"
+          title: "Daily design manhole dataset update"
+          body: |
+            Imports published pokefuta.com design-manhole submissions, reverse-geocodes new coordinates, and refreshes the public NDJSON snapshot.
+          branch: daily/update-design-manhole-dataset
+          labels: |-
+            data-update
+            automated
+          delete-branch: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: No changes summary
+        if: steps.diff.outputs.changed == 'false'
+        run: echo "No design-manhole dataset changes detected."
