@@ -81,6 +81,7 @@
 
 - **[docs/pokefuta.ndjson](docs/pokefuta.ndjson)**: ポケふたの公開データ（active レコードのみ、NDJSON形式）
 - **[docs/gmanhole.ndjson](docs/gmanhole.ndjson)**: ガンダムマンホールのデータ (NDJSON形式)
+- **[docs/design_manholes.ndjson](docs/design_manholes.ndjson)**: pokefuta.com「みんなの投稿」の公開デザインマンホールデータ（NDJSON形式）
 
 ### Pokemon Park KML の生成
 

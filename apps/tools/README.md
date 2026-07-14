@@ -15,6 +15,15 @@ GitHub Actions からは呼ばれない手動実行ツール群。
 | `import_michineki.py` | 道の駅JSONLDの生成・pokefutaへの roadside 自動登録（[詳細](#import_michinekipy)） |
 | `import_manholemap.py` | Manhole Map公開データの全件取得・JSON-LD生成 |
 
+`apps/scraper/import_design_manholes.py` は pokefuta.com の公開投稿APIから
+デザインマンホール投稿を取得し、`docs/design_manholes.ndjson` へ正規化する。
+投稿は地点ではなく写真単位なので、50m以内の既存マンホールは候補として記録し、
+`dataset/design_manhole_overrides.json` で明示した場合だけ既存地点へ関連付ける。
+
+```bash
+python3 apps/scraper/import_design_manholes.py
+```
+
 ## 依存パッケージ
 
 `import_latest_manhole_photos.py` と `enrich_photo_comments.py` は追加パッケージが必要。
