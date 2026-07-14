@@ -252,10 +252,12 @@ def build_public_records(
         canonical_ref = override.get("canonical_ref")
         if canonical_ref:
             review_status = "matched"
+        elif override.get("review_status"):
+            review_status = override["review_status"]
         elif nearby:
             review_status = "needs_review"
         else:
-            review_status = override.get("review_status", "pending")
+            review_status = "pending"
 
         record = {
             "id": f"pokefuta-design:{source_id}",

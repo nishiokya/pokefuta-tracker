@@ -107,6 +107,23 @@ class ImportDesignManholesTests(unittest.TestCase):
         self.assertEqual(records[0]["canonical_ref"], "gundam:5")
         self.assertEqual(records[0]["review_status"], "matched")
 
+    def test_manual_review_status_can_clear_nearby_candidate(self):
+        references = {
+            "pokefuta": [
+                {"id": "10", "title": "近くの別の蓋", "lat": 35.0001, "lng": 135.0001}
+            ]
+        }
+        records = importer.build_public_records(
+            [self.submission],
+            {},
+            {"submission-1": {"review_status": "reviewed_distinct"}},
+            references,
+            "2026-07-14T00:00:00Z",
+        )
+
+        self.assertEqual(records[0]["review_status"], "reviewed_distinct")
+        self.assertEqual(records[0]["nearby_refs"][0]["ref"], "pokefuta:10")
+
     def test_unchanged_record_preserves_last_updated(self):
         initial = importer.build_public_records(
             [self.submission], {}, {}, {}, "2026-07-14T00:00:00Z"
