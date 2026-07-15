@@ -327,6 +327,21 @@ def _attr_json(data: dict) -> str:
     return escape(json.dumps(data, ensure_ascii=False), {'"': '&quot;'})
 
 
+# apps/web/index.html の PUBLIC_USER_ID_RE と同じガード。
+# UUID 形式でない値は snapshot の異常データとみなしリンク化しない。
+PUBLIC_USER_ID_RE = re.compile(
+    r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", re.I
+)
+
+
+def poster_profile_url(public_user_id) -> str:
+    """有効な公開ユーザーIDなら pokefuta.com の公開スタンプ帳URLを、無効なら空文字を返す。"""
+    pid = str(public_user_id or "").strip()
+    if not PUBLIC_USER_ID_RE.match(pid):
+        return ""
+    return f"https://pokefuta.com/users/{quote(pid)}/visits"
+
+
 def _js_json(value) -> str:
     """Serialize value as JSON safe for embedding inside an inline <script> block.
 
@@ -543,7 +558,17 @@ def generate_html(
 
         credit_parts = []
         if display_name:
-            credit_parts.append(f"📷 {escape(display_name)}")
+            _profile_url = poster_profile_url(photo.get("public_user_id"))
+            if _profile_url:
+                _poster_onclick = _attr_json({"manhole_id": manhole_id, "source": "hero"})
+                credit_parts.append(
+                    f"<a class='poster-link' href='{_profile_url}'"
+                    f" target='_blank' rel='noopener noreferrer'"
+                    f" onclick=\"trackEvent('click_poster_profile', {_poster_onclick})\">"
+                    f"📷 {escape(display_name)}</a>"
+                )
+            else:
+                credit_parts.append(f"📷 {escape(display_name)}")
         if shot_date:
             credit_parts.append(shot_date)
         if credit_parts:
@@ -572,9 +597,20 @@ def generate_html(
         thumbs = ""
         for g in gallery_items:
             g_credit = str(g.get("display_name") or "")[:20]
-            credit_span = (
-                f"<span class='gallery-credit'>📷 {escape(g_credit)}</span>" if g_credit else ""
-            )
+            if g_credit:
+                _g_profile_url = poster_profile_url(g.get("public_user_id"))
+                if _g_profile_url:
+                    _g_poster_onclick = _attr_json({"manhole_id": manhole_id, "source": "gallery"})
+                    credit_span = (
+                        f"<a class='gallery-credit poster-link' href='{_g_profile_url}'"
+                        f" target='_blank' rel='noopener noreferrer'"
+                        f" onclick=\"trackEvent('click_poster_profile', {_g_poster_onclick})\">"
+                        f"📷 {escape(g_credit)}</a>"
+                    )
+                else:
+                    credit_span = f"<span class='gallery-credit'>📷 {escape(g_credit)}</span>"
+            else:
+                credit_span = ""
             thumbs += (
                 f"<figure class='gallery-item'>"
                 f"<img src=\"{escape(g['url'])}\" alt=\"{escape(h1)}の写真\" loading=\"lazy\">"
@@ -773,6 +809,14 @@ def generate_html(
     link_cards.append(
         f"<button type='button' class='link-card link-card--share' onclick='shareManhole()'>"
         f"{_icon('icon-link-share', 'link-card-icon')}<span>共有</span></button>"
+    )
+    # ポケふた写真館（pokefuta.com）の同ふたページ。ギャラリー未表示のふたでも写真館へ飛べるよう常設
+    _photo_studio_onclick = _attr_json({"manhole_id": manhole_id, "source": "links_photo_studio"})
+    link_cards.append(
+        f"<a class='link-card link-card--internal' href='https://pokefuta.com/manhole/{quote(manhole_id)}'"
+        f" target='_blank' rel='noopener noreferrer'"
+        f" onclick=\"trackEvent('click_photo_studio', {_photo_studio_onclick})\">"
+        f"{_icon('icon-link-photo', 'link-card-icon')}<span>ポケふた写真館</span></a>"
     )
     # Navigation: Official / Prefecture / Same Pref / National Map
     if has_official_url:
@@ -1593,6 +1637,12 @@ def generate_html(
       align-items: center;
     }}
 
+    a.poster-link {{
+      color: #fff;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }}
+
     .photo-comment {{
       position: absolute;
       bottom: 0;
@@ -1888,6 +1938,7 @@ def generate_all_pages(
                     "url": f"{BASE_URL}manhole/image/{manhole_id}_{slug}.jpeg",
                     "display_name": item.get("display_name"),
                     "shot_at": item.get("shot_at"),
+                    "public_user_id": item.get("public_user_id"),
                 })
 
         photo: Optional[dict] = (
