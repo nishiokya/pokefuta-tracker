@@ -813,7 +813,7 @@ def generate_html(
     # ポケふた写真館（pokefuta.com）の同ふたページ。ギャラリー未表示のふたでも写真館へ飛べるよう常設
     _photo_studio_onclick = _attr_json({"manhole_id": manhole_id, "source": "links_photo_studio"})
     link_cards.append(
-        f"<a class='link-card link-card--internal' href='https://pokefuta.com/manhole/{quote(manhole_id)}'"
+        f"<a class='link-card link-card--internal' href='https://pokefuta.com/manhole/{quote(manhole_id, safe='')}'"
         f" target='_blank' rel='noopener noreferrer'"
         f" onclick=\"trackEvent('click_photo_studio', {_photo_studio_onclick})\">"
         f"{_icon('icon-link-photo', 'link-card-icon')}<span>ポケふた写真館</span></a>"

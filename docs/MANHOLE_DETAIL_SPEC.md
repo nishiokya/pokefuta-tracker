@@ -52,6 +52,8 @@ data.pokefuta.com（tracker）と pokefuta.com のマンホール詳細ページ
     "manhole_id": 1,
     "photo_id": "...",        // 代表（最新）— 従来どおり
     "url": "...",
+    "display_name": "...",     // 代表写真の撮影者名
+    "public_user_id": "...",   // 代表写真の投稿者の公開UUID（gallery 各エントリにも同名キーあり）
     "...": "...",
     "gallery": [
       { "photo_id": "...", "url": "...", "storage_key": "...", "shot_at": "...", "created_at": "...", "display_name": "...", "public_user_id": "..." }
