@@ -52,15 +52,18 @@ data.pokefuta.com（tracker）と pokefuta.com のマンホール詳細ページ
     "manhole_id": 1,
     "photo_id": "...",        // 代表（最新）— 従来どおり
     "url": "...",
+    "display_name": "...",     // 代表写真の撮影者名
+    "public_user_id": "...",   // 代表写真の投稿者の公開UUID（gallery 各エントリにも同名キーあり）
     "...": "...",
     "gallery": [
-      { "photo_id": "...", "url": "...", "storage_key": "...", "shot_at": "...", "created_at": "...", "display_name": "..." }
+      { "photo_id": "...", "url": "...", "storage_key": "...", "shot_at": "...", "created_at": "...", "display_name": "...", "public_user_id": "..." }
     ]
   }
 }
 ```
 
 - 対象は `is_public = true` の写真のみ。撮影者名のキーは既存の代表写真と同じ `display_name`（app_user の display_name を引く）。
+- 代表・`gallery` の各エントリに `public_user_id`（app_user.id の公開UUID）を含める。投稿者の公開スタンプ帳 `pokefuta.com/users/{public_user_id}/visits` へのリンク生成に使う。
 
 ### 取り込み拡張（tracker repo: `apps/tools/import_latest_manhole_photos.py`）
 
@@ -73,6 +76,8 @@ data.pokefuta.com（tracker）と pokefuta.com のマンホール詳細ページ
 - `gallery` が2枚以上のときのみセクション3を描画。代表をヒーロー、残りをサムネイルグリッド。
 - 末尾に「すべての写真を見る → pokefuta.com/manhole/{id}」リンク。
 - `gallery` 未定義・1枚以下は現行と同じ見た目（後方互換）。
+- 撮影者クレジット（ヒーロー・ギャラリー共通）: `public_user_id` が有効なUUIDのとき `📷 表示名` を `pokefuta.com/users/{public_user_id}/visits` へのリンク（`.poster-link`）にする。無効・欠落時は従来どおりテキスト表示。
+- セクション10（リンク）に「ポケふた写真館」カードを常設し `pokefuta.com/manhole/{id}` へ飛ばす（ギャラリー非表示のふたにも写真館導線を確保）。
 
 ## 実装ステップ
 
