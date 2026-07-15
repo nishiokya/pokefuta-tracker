@@ -83,6 +83,10 @@ body.has-site-header {
   text-underline-offset: 4px;
 }
 
+.site-header__auth-link--mobile {
+  display: none;
+}
+
 @media (max-width: 720px) {
   :root { --site-header-height: 53px; }
 
@@ -118,6 +122,14 @@ body.has-site-header {
 
   .site-header__link--desktop {
     display: none;
+  }
+
+  .site-header__auth-link--desktop {
+    display: none;
+  }
+
+  .site-header__auth-link--mobile {
+    display: block;
   }
 }
 

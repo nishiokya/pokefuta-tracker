@@ -9,7 +9,8 @@
 // 対象要素: <a data-login-link data-stamp-page="..." data-stamp-label="...">
 //  - 未ログイン: href に現在ページへの redirect パラメータを付与
 //    （pokefuta.com/login がログイン後にこのページへ戻す）
-//  - ログイン中: 「スタンプ帳」に差し替え、スタンプ帳へリンク
+//  - ログイン中: PC は display name でプロフィールへ、SMP は
+//    「スタンプ帳」に差し替え、スタンプ帳へリンク
 //
 // cookie は data.pokefuta.com 側の @supabase/ssr object 形式と、
 // pokefuta.com 側の @supabase/auth-helpers-nextjs array 形式の両方を読む。
@@ -82,6 +83,22 @@
     return objectPayload && objectPayload.sub ? objectPayload.sub : null;
   }
 
+  function sessionUser(session) {
+    if (!session) return null;
+    if (session.user && session.user.id) return session.user;
+
+    var payload = decodeJwtPayload(Array.isArray(session) ? session[0] : session.access_token);
+    return payload && payload.sub ? payload : null;
+  }
+
+  function displayName(user) {
+    var metadata = user && user.user_metadata;
+    var name = metadata && (metadata.display_name || metadata.displayname);
+    if (name && typeof name === 'string' && name.trim()) return name.trim();
+    if (user && typeof user.email === 'string' && user.email) return user.email.split('@')[0];
+    return 'トレーナー';
+  }
+
   function currentUser() {
     try {
       var raw = readSessionValue(readCookies());
@@ -90,7 +107,7 @@
       var session = JSON.parse(json);
       // アクセストークン期限切れでも refresh token があればアプリ側で
       // 更新されるので「ログイン中」として扱う
-      return sessionUserId(session) ? session : null;
+      return sessionUserId(session) ? sessionUser(session) : null;
     } catch (_) {
       return null;
     }
@@ -103,10 +120,17 @@
     for (var i = 0; i < links.length; i++) {
       var link = links[i];
       if (user) {
-        link.textContent = link.getAttribute('data-stamp-label') || 'スタンプ帳';
-        link.setAttribute('data-nav-target', 'stamp');
-        var stampPage = link.getAttribute('data-stamp-page');
-        if (stampPage) link.href = stampPage;
+        var profilePage = link.getAttribute('data-profile-page');
+        if (profilePage) {
+          link.textContent = displayName(user);
+          link.setAttribute('data-nav-target', 'profile');
+          link.href = profilePage;
+        } else {
+          link.textContent = link.getAttribute('data-stamp-label') || 'スタンプ帳';
+          link.setAttribute('data-nav-target', 'stamp');
+          var stampPage = link.getAttribute('data-stamp-page');
+          if (stampPage) link.href = stampPage;
+        }
       } else {
         try {
           var url = new URL(link.href);
