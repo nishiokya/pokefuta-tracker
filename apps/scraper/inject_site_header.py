@@ -20,7 +20,8 @@ HEADER_TEMPLATE = """<header class="site-header">
       <a class="site-header__link site-header__link--desktop" href="{page_base}summary/">{nav_summary}</a>
       <a class="site-header__link" href="{page_base}pokemon/">{nav_pokemon}</a>
       <a class="site-header__link" href="{asset_base}gmanhole_map.html">{nav_character}</a>
-      <a class="site-header__link" data-login-link data-nav-target="login" data-stamp-page="https://pokefuta.com/visits" data-stamp-label="{nav_stamp}" href="https://pokefuta.com/login?from=data">{nav_login}</a>
+      <a class="site-header__link site-header__auth-link--desktop" data-login-link data-nav-target="login" data-profile-page="http://localhost:3000/profile" data-stamp-label="{nav_stamp}" href="https://pokefuta.com/login?from=data">{nav_login}</a>
+      <a class="site-header__link site-header__auth-link--mobile" data-login-link data-nav-target="login" data-stamp-page="https://pokefuta.com/visits" data-stamp-label="{nav_stamp}" href="https://pokefuta.com/login?from=data">{nav_login}</a>
     </nav>
   </div>
 </header>"""
