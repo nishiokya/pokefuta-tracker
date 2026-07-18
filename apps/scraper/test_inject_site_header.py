@@ -16,6 +16,7 @@ class InjectSiteHeaderTest(unittest.TestCase):
         result = inject("<!doctype html><html><head></head><body><main></main></body></html>")
         self.assertIn('href="./assets/site-header.css"', result)
         self.assertIn('class="site-header"', result)
+        self.assertIn('class="site-header__mark" aria-hidden="true"', result)
         self.assertIn('class="site-header__brand-name">ポケふた図鑑</span>', result)
         self.assertNotIn("DATABASE", result)
         self.assertIn('href="./map.html">マップ</a>', result)
