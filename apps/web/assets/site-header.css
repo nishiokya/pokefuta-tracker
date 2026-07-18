@@ -83,6 +83,25 @@ body.has-site-header {
   text-underline-offset: 4px;
 }
 
+/* ログイン系リンクは pokefuta アプリのヘッダーと同じ紫の枠線ボタンにする */
+.site-header__auth-link--desktop,
+.site-header__auth-link--mobile {
+  padding: 7px 16px;
+  border: 1px solid #7b63a8;
+  border-radius: 8px;
+  color: #7b63a8;
+  font-weight: 700;
+}
+
+.site-header__auth-link--desktop:hover,
+.site-header__auth-link--desktop:focus-visible,
+.site-header__auth-link--mobile:hover,
+.site-header__auth-link--mobile:focus-visible {
+  background: rgba(123, 99, 168, .1);
+  color: #7b63a8;
+  text-decoration: none;
+}
+
 .site-header__auth-link--mobile {
   display: none;
 }
@@ -130,6 +149,13 @@ body.has-site-header {
 
   .site-header__auth-link--mobile {
     display: block;
+    padding: 6px 12px;
+    border: 1px solid #7b63a8;
+    border-radius: 8px;
+    background: transparent;
+    color: #7b63a8;
+    font-size: 12px;
+    font-weight: 700;
   }
 }
 
