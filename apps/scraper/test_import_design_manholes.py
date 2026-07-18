@@ -95,6 +95,20 @@ class ImportDesignManholesTests(unittest.TestCase):
         self.assertEqual(records[0]["nearby_refs"][0]["ref"], "gundam:5")
         self.assertNotIn("submitter_name", records[0])
 
+    def test_source_url_links_to_individual_submission_page(self):
+        records = importer.build_public_records(
+            [self.submission],
+            {},
+            {},
+            {},
+            "2026-07-14T00:00:00Z",
+        )
+
+        self.assertEqual(
+            records[0]["source_url"],
+            "https://pokefuta.com/design-manholes/submission-1",
+        )
+
     def test_manual_override_links_canonical_record(self):
         records = importer.build_public_records(
             [self.submission],

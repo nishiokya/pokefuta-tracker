@@ -273,7 +273,7 @@ def build_public_records(
             "lat": submission["latitude"],
             "lng": submission["longitude"],
             "photo_url": submission["photo_url"],
-            "source_url": SITE_URL,
+            "source_url": f"{SITE_URL}/{urllib.parse.quote(str(source_id), safe='')}",
             "canonical_ref": canonical_ref,
             "nearby_refs": nearby,
             "review_status": review_status,
