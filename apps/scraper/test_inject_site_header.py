@@ -1,4 +1,5 @@
 import importlib.util
+import re
 import unittest
 from pathlib import Path
 
@@ -16,6 +17,9 @@ class InjectSiteHeaderTest(unittest.TestCase):
         result = inject("<!doctype html><html><head></head><body><main></main></body></html>")
         self.assertIn('href="./assets/site-header.css"', result)
         self.assertIn('class="site-header"', result)
+        mark = re.search(r'<span[^>]*class="site-header__mark"[^>]*>', result)
+        self.assertIsNotNone(mark)
+        self.assertIn('aria-hidden="true"', mark.group(0))
         self.assertIn('class="site-header__brand-name">ポケふた図鑑</span>', result)
         self.assertNotIn("DATABASE", result)
         self.assertIn('href="./map.html">マップ</a>', result)

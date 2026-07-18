@@ -13,6 +13,7 @@ STYLESHEET_TEMPLATE = '<link rel="stylesheet" href="{asset_base}assets/site-head
 HEADER_TEMPLATE = """<header class="site-header">
   <div class="site-header__inner">
     <a class="site-header__brand" href="{page_base}">
+      <span class="site-header__mark" aria-hidden="true"><span class="site-header__mark-core"></span></span>
       <span class="site-header__brand-name">ポケふた図鑑</span>
     </a>
     <nav class="site-header__nav" aria-label="{nav_aria}">

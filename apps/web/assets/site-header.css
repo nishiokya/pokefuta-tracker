@@ -1,5 +1,11 @@
-/* Shared site header, injected into every built HTML page. */
-:root { --site-header-height: 52px; }
+/* Shared site header, injected into every built HTML page.
+   pokefuta.com のヘッダーと同じ見た目に揃える:
+   - <1024px : pokefuta の Header.tsx（クリーム #FFF8EB / 紫ボーダー / sticky）
+   - >=1024px: pokefuta の PCTopNav（ベージュ #f4ecda / 茶ボーダー / 非sticky・ナビ左寄せ）
+   数値は pokefuta 側（html 14px 基準の Tailwind / inline style）の実測pxに合わせている。 */
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@700&display=swap');
+
+:root { --site-header-height: 56px; }
 
 body.has-site-header {
   padding-top: 0;
@@ -8,15 +14,18 @@ body.has-site-header {
 }
 
 .site-header {
-  position: relative;
+  position: sticky;
+  top: 0;
   z-index: 10000;
   width: 100vw;
   margin-inline: calc(50% - 50vw);
   flex: 0 0 auto;
-  background: rgba(255, 248, 235, .96);
+  background: rgba(255, 248, 235, .95);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
   border-bottom: 1px solid rgba(123, 99, 168, .2);
-  color: #2b2b30;
-  font-family: "Noto Sans JP", system-ui, -apple-system, sans-serif;
+  color: #2a2a2a;
+  font-family: "M PLUS Rounded 1c", "Noto Sans JP", system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -27,30 +36,74 @@ body.has-site-header {
   box-sizing: border-box;
 }
 
+/* min-height は border-bottom 1px を引いた値にして、
+   実際の描画高さを --site-header-height と一致させる */
 .site-header__inner {
-  width: min(1080px, 100%);
-  min-height: 52px;
+  width: min(1008px, 100%);
+  min-height: 55px;
   margin: 0 auto;
-  padding: 8px 16px;
+  padding: 10px 14px;
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 8px;
 }
 
 .site-header__brand {
   display: flex;
-  align-items: baseline;
-  gap: 6px;
+  align-items: center;
+  gap: 7px;
   flex: 0 0 auto;
-  color: #4f4080;
+  color: #2a2a2a;
+  font-weight: 700;
   text-decoration: none;
   white-space: nowrap;
 }
 
+/* pokefuta と同じ純CSSのモンスターボールマーク */
+.site-header__mark {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border: 2px solid #2a2a2a;
+  border-radius: 50%;
+  background: #fff;
+  overflow: hidden;
+}
+
+.site-header__mark::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 50% 0;
+  background: #e85046;
+}
+
+.site-header__mark::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #2a2a2a;
+  transform: translateY(-50%);
+}
+
+.site-header__mark-core {
+  position: relative;
+  z-index: 1;
+  width: 12px;
+  height: 12px;
+  border: 2px solid #2a2a2a;
+  border-radius: 50%;
+  background: #fff;
+}
+
 .site-header__brand-name {
-  font-size: 20px;
-  font-weight: 900;
-  letter-spacing: -.01em;
+  font-size: 16px;
 }
 
 /* 現状テンプレートは brand-name のみでこのサブは未出力。再有効化時に
@@ -65,15 +118,19 @@ body.has-site-header {
 .site-header__nav {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   margin-left: auto;
+  min-width: 0;
 }
 
 .site-header__link {
-  padding: 6px 10px;
+  display: inline-flex;
+  align-items: center;
+  height: 35px;
+  padding: 0 10px;
   border-radius: 999px;
   color: #2a2a2a;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 700;
   line-height: 1.2;
   text-decoration: none;
@@ -81,7 +138,6 @@ body.has-site-header {
   transition: background-color .15s ease;
 }
 
-/* pokefuta アプリのナビと同じく、hover は下線ではなく紫の淡いピル背景 */
 .site-header__link:hover,
 .site-header__link:focus-visible {
   background: rgba(123, 99, 168, .1);
@@ -89,13 +145,15 @@ body.has-site-header {
   text-decoration: none;
 }
 
-/* ログイン系リンクは pokefuta アプリのヘッダーと同じ紫の枠線ボタンにする */
+/* ログイン系リンクは pokefuta の Header と同じ紫の枠線ボタン */
 .site-header__auth-link--desktop,
 .site-header__auth-link--mobile {
-  padding: 7px 16px;
+  height: auto;
+  padding: 7px 12px;
   border: 1px solid #7b63a8;
   border-radius: 8px;
   color: #7b63a8;
+  font-size: 12px;
   font-weight: 700;
 }
 
@@ -113,34 +171,31 @@ body.has-site-header {
 }
 
 @media (max-width: 720px) {
-  :root { --site-header-height: 53px; }
-
   .site-header__inner {
-    min-height: 52px;
-    padding: 8px 10px;
-    gap: 8px;
+    padding: 10px 10px;
+    gap: 6px;
   }
 
   .site-header__brand {
     flex: 0 0 auto;
+    gap: 6px;
   }
 
-  .site-header__brand-name { font-size: 16px; }
+  .site-header__brand-name { font-size: 15px; }
 
   .site-header__nav {
-    gap: 4px;
+    gap: 3px;
     min-width: 0;
     margin-left: auto;
   }
 
   .site-header__link {
-    padding: 6px 5px;
+    display: block;
+    height: 32px;
+    padding: 0 6px;
     overflow: hidden;
-    border-radius: 7px;
-    background: #eeeaf7;
-    color: #4f4080;
-    font-size: 10px;
-    font-weight: 700;
+    font-size: 11px;
+    line-height: 32px;
     text-align: center;
     text-overflow: ellipsis;
   }
@@ -155,21 +210,99 @@ body.has-site-header {
 
   .site-header__auth-link--mobile {
     display: block;
-    padding: 6px 12px;
+    height: auto;
+    padding: 6px 10px;
     border: 1px solid #7b63a8;
     border-radius: 8px;
     background: transparent;
     color: #7b63a8;
-    font-size: 12px;
+    font-size: 11px;
+    line-height: 1.4;
     font-weight: 700;
+  }
+}
+
+/* PC は pokefuta の PCTopNav と同じベージュのバーに切り替える */
+@media (min-width: 1024px) {
+  :root { --site-header-height: 57px; }
+
+  .site-header {
+    position: relative;
+    background: #f4ecda;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    border-bottom-color: #e9dfc7;
+  }
+
+  .site-header__inner {
+    width: 100%;
+    min-height: 56px;
+    padding: 14px 32px;
+    gap: 14px;
+  }
+
+  .site-header__mark {
+    width: 28px;
+    height: 28px;
+  }
+
+  .site-header__mark-core {
+    width: 10px;
+    height: 10px;
+  }
+
+  .site-header__brand {
+    gap: 8px;
+    color: #38414f;
+  }
+
+  .site-header__brand-name { font-size: 18px; }
+
+  .site-header__nav {
+    flex: 1 1 auto;
+    justify-content: flex-start;
+    gap: 4px;
+    margin-left: 18px;
+  }
+
+  .site-header__link {
+    height: auto;
+    padding: 7px 13px;
+    border-radius: 9px;
+    color: #6f6657;
+    font-size: 13.5px;
+    font-weight: 600;
+  }
+
+  .site-header__link:hover,
+  .site-header__link:focus-visible {
+    background: #e9dfc7;
+    color: #2c2a26;
+  }
+
+  /* PC のログインは PCTopNav と同じ淡紫枠の丸ピルで右端に寄せる */
+  .site-header__auth-link--desktop {
+    margin-left: auto;
+    padding: 6px 14px;
+    border: 1px solid #d7d0ef;
+    border-radius: 999px;
+    color: #7b63a8;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .site-header__auth-link--desktop:hover,
+  .site-header__auth-link--desktop:focus-visible {
+    background: rgba(123, 99, 168, .1);
+    color: #7b63a8;
   }
 }
 
 /* Full-screen maps must reserve room for the shared header. */
 body.has-site-header.pokefuta-map-page .map-stage,
 body.has-site-header > #map {
-  height: calc(100dvh - var(--site-header-height, 52px));
-  min-height: calc(100dvh - var(--site-header-height, 52px));
+  height: calc(100dvh - var(--site-header-height, 56px));
+  min-height: calc(100dvh - var(--site-header-height, 56px));
 }
 
 @media (max-width: 720px) {
