@@ -20,7 +20,7 @@ function link(attributes) {
 }
 
 const desktop = link({
-  'data-profile-page': 'http://localhost:3000/profile',
+  'data-profile-page': 'https://pokefuta.com/profile',
   'data-stamp-label': 'スタンプ帳',
 });
 const mobile = link({
@@ -50,7 +50,7 @@ vm.runInNewContext(source, {
 });
 
 assert.equal(desktop.textContent, 'たこトレーナー');
-assert.equal(desktop.href, 'http://localhost:3000/profile');
+assert.equal(desktop.href, 'https://pokefuta.com/profile');
 assert.equal(desktop.attributes['data-nav-target'], 'profile');
 assert.equal(mobile.textContent, 'スタンプ帳');
 assert.equal(mobile.href, 'https://pokefuta.com/visits');
