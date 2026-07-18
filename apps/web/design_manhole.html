@@ -383,7 +383,10 @@
           img.alt = d.title || 'デザインマンホール';
           img.loading = 'lazy';
           img.decoding = 'async';
-          return img;
+          const link = document.createElement('a');
+          link.href = `https://pokefuta.com/design-manholes/${encodeURIComponent(d.id)}`;
+          link.appendChild(img);
+          return link;
         }));
         document.getElementById('lp-gallery').hidden = false;
       } catch (e) { /* CORS等で取得できない環境ではギャラリーを出さない */ }
