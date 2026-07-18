@@ -13,8 +13,8 @@ body.has-site-header {
   width: 100vw;
   margin-inline: calc(50% - 50vw);
   flex: 0 0 auto;
-  background: rgba(250, 246, 236, .96);
-  border-bottom: 1px solid #ece5d2;
+  background: rgba(255, 248, 235, .96);
+  border-bottom: 1px solid rgba(123, 99, 168, .2);
   color: #2b2b30;
   font-family: "Noto Sans JP", system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -53,8 +53,10 @@ body.has-site-header {
   letter-spacing: -.01em;
 }
 
+/* 現状テンプレートは brand-name のみでこのサブは未出力。再有効化時に
+   pokefuta のパープルと揃うよう色トークンだけ合わせておく。 */
 .site-header__brand-sub {
-  color: #9a8fc0;
+  color: rgba(123, 99, 168, .55);
   font-family: "IBM Plex Mono", "Courier New", monospace;
   font-size: 9px;
   letter-spacing: .18em;
@@ -63,24 +65,28 @@ body.has-site-header {
 .site-header__nav {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 8px;
   margin-left: auto;
 }
 
 .site-header__link {
-  color: #4b4b53;
+  padding: 6px 10px;
+  border-radius: 999px;
+  color: #2a2a2a;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1.2;
   text-decoration: none;
   white-space: nowrap;
+  transition: background-color .15s ease;
 }
 
+/* pokefuta アプリのナビと同じく、hover は下線ではなく紫の淡いピル背景 */
 .site-header__link:hover,
 .site-header__link:focus-visible {
-  color: #6c5ca6;
-  text-decoration: underline;
-  text-underline-offset: 4px;
+  background: rgba(123, 99, 168, .1);
+  color: #2a2a2a;
+  text-decoration: none;
 }
 
 /* ログイン系リンクは pokefuta アプリのヘッダーと同じ紫の枠線ボタンにする */
