@@ -36,9 +36,11 @@ body.has-site-header {
   box-sizing: border-box;
 }
 
+/* min-height は border-bottom 1px を引いた値にして、
+   実際の描画高さを --site-header-height と一致させる */
 .site-header__inner {
   width: min(1008px, 100%);
-  min-height: 56px;
+  min-height: 55px;
   margin: 0 auto;
   padding: 10px 14px;
   display: flex;
