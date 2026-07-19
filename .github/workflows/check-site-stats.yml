@@ -1,0 +1,27 @@
+name: Check Site Stats Freshness
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Run after the 05:30 JST snapshot bake and its Pages deployment.
+    - cron: '0 22 * * *' # 07:00 JST
+
+permissions:
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Run unit tests
+        run: python3 -m unittest apps.scraper.test_check_site_stats_freshness
+
+      - name: Compare production stats with upstream snapshot
+        run: python3 apps/scraper/check_site_stats_freshness.py
