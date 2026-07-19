@@ -36,7 +36,7 @@ data.pokefuta.com（tracker）と pokefuta.com のマンホール詳細ページ
 | セクション | tracker 側ソース | pokefuta.com 側ソース |
 |---|---|---|
 | ヒーロー・ギャラリー | `docs/latest-manhole-photos.json`（拡張版）＋ `dataset/manhole/image/` | `/api/manholes/[id]`（公開写真） |
-| タイトル・バッジ・タグ・設置場所 | `docs/pokefuta.ndjson` ＋ `manhole_titles.json` | `docs/api/manholes.json`（bake-app-data.yml 焼き込み） |
+| タイトル・バッジ・タグ・設置場所 | `docs/pokefuta.ndjson` ＋ `manhole_titles.json` | `docs/api/manholes.json`（import-manhole-photos.yml 焼き込み） |
 | 登場ポケモン | `docs/pokemon_metadata.json` ＋ `pokemon_types_bilingual.json` | 同スナップショット or 既存API |
 | 近隣・同ポケモン・県内 | `docs/pokefuta.ndjson`（生成時に計算） | 同スナップショットから計算 |
 

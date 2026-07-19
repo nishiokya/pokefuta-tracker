@@ -3,8 +3,10 @@ name: Check Site Stats Freshness
 on:
   workflow_dispatch:
   schedule:
-    # Run after the 05:30 JST snapshot bake and its Pages deployment.
-    - cron: '0 22 * * *' # 07:00 JST
+    # 05:30 JST の import-manhole-photos.yml（写真取込 + スナップショット生成）と
+    # その Pages デプロイが終わってから検証する。統合前より所要時間が伸びたため
+    # 07:00 → 08:00 に後ろ倒ししている（検証が生成を追い越すと毎日誤検知するため）。
+    - cron: '0 23 * * *' # 08:00 JST
 
 permissions:
   contents: read

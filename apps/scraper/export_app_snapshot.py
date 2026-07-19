@@ -9,7 +9,7 @@ Supabase を読む構成をやめ、GitHub Pages (data.pokefuta.com) 配信の
   docs/api/manholes.json   … manhole 全件 + 写真有無（匿名ユーザー向け形状）
   docs/api/site-stats.json … /api/site-stats と同形状のサイト統計
 
-実行元: .github/workflows/bake-app-data.yml（日次）
+実行元: .github/workflows/import-manhole-photos.yml（日次）
 
 環境変数:
   SUPABASE_URL              例 https://xxxx.supabase.co

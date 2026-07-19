@@ -1,13 +1,21 @@
-name: Daily Manhole Photos Import
+name: Daily Supabase Data Sync
 
-# pokefuta.com の公開写真を Supabase からエクスポートし、ローカル画像として取り込む。
-# 従来の手動フロー（pokefuta 側 /export-photos → 本リポジトリ /import-photos）の自動化版。
-# 詳細仕様: docs/MANHOLE_DETAIL_SPEC.md
+# Supabase から日次で以下をまとめて取得し、Pages へ再デプロイする。
+#   1. 公開写真のエクスポート + ローカル画像の取り込み（latest-manhole-photos.json / dataset/manhole/image）
+#   2. アプリ用スナップショット（docs/api/manholes.json / site-stats.json）
+#
+# 旧 bake-app-data.yml を統合したもの。同じ photo / visit テーブルを2ワークフローが
+# 別々に引いていたのを1ジョブに集約した。pages-deploy の generate_top_feed.py が
+# 両方の出力を読むため、同一コミットで揃うことで整合性も上がる。
+#
+# 家系A（自動マージ）: PR を作って即マージし本番へ反映する。人のレビューは挟まない。
+# 詳細仕様: docs/MANHOLE_DETAIL_SPEC.md / 規約: AGENTS.md「バッチワークフロー規約」
 
 on:
   schedule:
-    # Run daily at 22:00 UTC (JST 07:00)
-    - cron: '0 22 * * *'
+    # 20:30 UTC = 05:30 JST。08:00 JST の check-site-stats に間に合わせる必要がある
+    # （検証が本ジョブの生成を追い越すと毎日誤検知するため）。
+    - cron: '30 20 * * *'
   workflow_dispatch: # Allow manual trigger
 
 permissions:
@@ -15,19 +23,17 @@ permissions:
   pull-requests: write # main は PR 必須ルールのため PR 経由でコミットする
   actions: write # pages-deploy の明示起動に必要
 
+concurrency:
+  group: daily-supabase-sync
+  cancel-in-progress: false # 実行中のジョブは中断せず、後続を待たせる
+
 jobs:
-  import:
+  sync:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-
-      - name: Checkout pokefuta (export script)
-        uses: actions/checkout@v6
-        with:
-          repository: nishiokya/pokefuta
-          path: .pokefuta-src
-          sparse-checkout: tools
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -37,7 +43,10 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install requests Pillow
+          pip install -r requirements.txt
+
+      - name: Run tests
+        run: python3 -m unittest apps.scraper.test_export_latest_manhole_photos
 
       - name: Export latest manhole photos from Supabase
         env:
@@ -46,7 +55,7 @@ jobs:
           R2_PUBLIC_URL: ${{ secrets.R2_PUBLIC_URL }}
           R2_BUCKET: ${{ secrets.R2_BUCKET }}
         run: |
-          python .pokefuta-src/tools/export_latest_manhole_photos.py \
+          python apps/scraper/export_latest_manhole_photos.py \
             --output docs/latest-manhole-photos.json
           cp docs/latest-manhole-photos.json apps/web/latest-manhole-photos.json
 
@@ -59,25 +68,31 @@ jobs:
         run: |
           python apps/tools/import_latest_manhole_photos.py --presign-r2
 
+      - name: Export app data snapshot from Supabase
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: python3 apps/scraper/export_app_snapshot.py
+
       - name: Commit via PR and trigger Pages deploy
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/latest-manhole-photos.json apps/web/latest-manhole-photos.json dataset/manhole/image
+          git add docs/latest-manhole-photos.json apps/web/latest-manhole-photos.json dataset/manhole/image docs/api
           if git diff --cached --quiet; then
-            echo "No photo changes; skipping commit and deploy."
+            echo "No data changes; skipping commit and deploy."
             exit 0
           fi
-          # main は「PR必須」ルールのため直接 push できない。PR を作って即マージする
-          BRANCH="auto/manhole-photos-$(date -u +%Y%m%d%H%M%S)"
+          # main は「PR必須」ルールのため直接 push できない。PR を作って即マージする。
+          BRANCH="auto/supabase-sync-$(date -u +%Y%m%d%H%M%S)"
           git checkout -b "$BRANCH"
-          git commit -m "chore: weekly manhole photos import (export + local images)"
+          git commit -m "chore: daily supabase sync (photos + app data snapshot)"
           git push origin "$BRANCH"
           gh pr create --base main --head "$BRANCH" \
-            --title "chore: weekly manhole photos import" \
-            --body "import-manhole-photos.yml による自動更新（export + ギャラリー画像DL）"
+            --title "chore: daily supabase sync" \
+            --body "import-manhole-photos.yml による自動更新（写真export+画像DL / docs/api スナップショット）"
           gh pr merge "$BRANCH" --squash --delete-branch
           # GITHUB_TOKEN の merge では pages-deploy が発火しないため明示的に起動する
           gh workflow run pages-deploy.yml --ref main
