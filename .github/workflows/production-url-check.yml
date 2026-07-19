@@ -28,4 +28,5 @@ jobs:
             --exclude '*.test.js' \
             --exclude 'supabase-ssr.js' \
             apps/web \
-            apps/scraper
+            apps/scraper \
+            docs

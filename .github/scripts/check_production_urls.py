@@ -10,26 +10,31 @@ from pathlib import Path
 
 LOOPBACK_URL = re.compile(
     rb"(?:https?|wss?)://(?:localhost|127\.0\.0\.1|0\.0\.0\.0|\[::1\])"
-    # ホスト名の直後は「URLの区切り」でなければならない。行末（$）と ) ] } , ; を
-    # 含めないと、ポートもパスも無い `http://localhost` を取りこぼす。
+    # ホスト名の直後は「URLの区切り」でなければならない。行末（$）・終端記号・
+    # クエリ(?)・フラグメント(#) を含めないと、ポートもパスも無い
+    # `http://localhost` や `http://localhost?api=1` を取りこぼす。
     # 逆に localhost.example.com のような別ホストを誤検知しないよう、
     # 区切り文字以外が続く場合はマッチさせない。
     # 末尾の区切り記号は URL に含めない（`foo(http://localhost);` を
     # `http://localhost);` と報告しないため）。検出可否には影響しない。
-    rb"(?=[:/\s\"'<>)\]},;]|$)(?:[^\s\"'<>)\]},;]*)",
+    rb"(?=[:/?#\s\"'<>)\]},;]|$)(?:[^\s\"'<>)\]},;]*)",
     re.IGNORECASE,
 )
 # 本番成果物に焼き込まれ得るデータ・設定ファイルも対象にする。
 # ここに無い拡張子は素通りするため、artifact 検査の穴になる。
+# .ndjson / .txt は pages-deploy.yml が docs/*.ndjson と robots.txt を
+# dist にコピーして公開しているため必須。
 SOURCE_SUFFIXES = {
     ".css",
     ".html",
     ".js",
     ".json",
     ".mjs",
+    ".ndjson",
     ".py",
     ".svg",
     ".ts",
+    ".txt",
     ".webmanifest",
     ".xml",
 }

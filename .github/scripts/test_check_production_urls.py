@@ -73,6 +73,40 @@ class CheckProductionUrlsTest(unittest.TestCase):
                 ],
             )
 
+    def test_finds_hosts_followed_by_query_or_fragment(self):
+        host = "local" + "host"
+        loopback_host = "127.0." + "0.1"
+        with tempfile.TemporaryDirectory() as directory:
+            page = Path(directory) / "app.js"
+            page.write_text(f'var a="http://{host}?api=1";\nvar b="http://{loopback_host}#debug";\n')
+
+            self.assertEqual(
+                checker.find_loopback_urls([page]),
+                [
+                    (page, 1, f"http://{host}?api=1"),
+                    (page, 2, f"http://{loopback_host}#debug"),
+                ],
+            )
+
+    def test_scans_deployed_ndjson_and_text_files(self):
+        host = "local" + "host"
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            # pages-deploy.yml が docs/*.ndjson と robots.txt を dist へ公開する
+            dataset = root / "pokefuta.ndjson"
+            robots = root / "robots.txt"
+            dataset.write_text(f'{{"url": "http://{host}:3000/a"}}\n')
+            robots.write_text(f"Sitemap: http://{host}:8000/sitemap.xml\n")
+
+            # ディレクトリ走査の順序は OS 依存なので順不同で比較する
+            self.assertCountEqual(
+                checker.find_loopback_urls([root]),
+                [
+                    (dataset, 1, f"http://{host}:3000/a"),
+                    (robots, 1, f"http://{host}:8000/sitemap.xml"),
+                ],
+            )
+
     def test_finds_ipv6_loopback(self):
         with tempfile.TemporaryDirectory() as directory:
             page = Path(directory) / "app.js"
