@@ -14,14 +14,14 @@ CHARACTER_KEYS = ("near_character_manhole", "character_manhole_city")
 class CharacterManholeTravelCopyTest(unittest.TestCase):
     def test_all_languages_have_character_travel_labels(self):
         for lang, strings in summary.SUMMARY_STRINGS.items():
-            travel = strings.get("travel", {})
+            travel = strings.get("discovery_hubs", {}).get("travel", {})
             for key in CHARACTER_KEYS:
                 with self.subTest(lang=lang, key=key):
                     self.assertIn(key, travel)
                     self.assertTrue(travel[key].strip())
 
     def test_japanese_labels_match_vocabulary(self):
-        travel = summary.SUMMARY_STRINGS["ja"]["travel"]
+        travel = summary.SUMMARY_STRINGS["ja"]["discovery_hubs"]["travel"]
         self.assertEqual(
             travel["near_character_manhole"], "キャラクターマンホールまで約1km以内"
         )
