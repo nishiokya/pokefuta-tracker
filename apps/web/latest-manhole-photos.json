@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-07-19T14:36:52.986364Z",
+  "generated_at": "2026-07-19T21:13:17.915642Z",
   "source": "pokefuta photo table",
   "image": {
     "r2_public_base_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image"
   },
-  "count": 240,
+  "count": 242,
   "photos": {
     "1": {
       "manhole_id": 1,
@@ -6372,6 +6372,34 @@
         }
       ]
     },
+    "375": {
+      "manhole_id": 375,
+      "photo_id": "e7525c9a-c764-45af-b1be-163f80d03dff",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/aa256aea-cd64-4305-9a21-9f30cb3d1c49.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/aa256aea-cd64-4305-9a21-9f30cb3d1c49.jpg",
+      "storage_key": "photos/original/2026/07/aa256aea-cd64-4305-9a21-9f30cb3d1c49.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1485580,
+      "created_at": "2026-07-19T18:14:21.424495+00:00",
+      "shot_at": "2026-06-26T10:02:50+00:00",
+      "comment": null,
+      "display_name": "Ⓜ︎agenta",
+      "public_user_id": "af0fb869-ded3-49a9-85a9-c2c3919e7ab6",
+      "gallery": [
+        {
+          "photo_id": "e7525c9a-c764-45af-b1be-163f80d03dff",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/aa256aea-cd64-4305-9a21-9f30cb3d1c49.jpg",
+          "storage_key": "photos/original/2026/07/aa256aea-cd64-4305-9a21-9f30cb3d1c49.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-19T18:14:21.424495+00:00",
+          "shot_at": "2026-06-26T10:02:50+00:00",
+          "display_name": "Ⓜ︎agenta",
+          "public_user_id": "af0fb869-ded3-49a9-85a9-c2c3919e7ab6"
+        }
+      ]
+    },
     "376": {
       "manhole_id": 376,
       "photo_id": "8a1d8aca-09ad-4405-8f95-b89523c4bd85",
@@ -7537,6 +7565,34 @@
           "shot_at": "2026-07-12T01:25:27+00:00",
           "display_name": "Kogachi Tsunetoshi",
           "public_user_id": "f964b8ea-c32d-4b97-8df9-27723a4c5179"
+        }
+      ]
+    },
+    "461": {
+      "manhole_id": 461,
+      "photo_id": "e5d1f53b-7e60-46d0-b507-48fd345c60d5",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/193e1ebf-308e-42a4-8c10-4b02cf3a532e.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/193e1ebf-308e-42a4-8c10-4b02cf3a532e.jpg",
+      "storage_key": "photos/original/2026/07/193e1ebf-308e-42a4-8c10-4b02cf3a532e.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1449877,
+      "created_at": "2026-07-19T18:19:38.115785+00:00",
+      "shot_at": "2026-06-26T07:24:10+00:00",
+      "comment": null,
+      "display_name": "Ⓜ︎agenta",
+      "public_user_id": "af0fb869-ded3-49a9-85a9-c2c3919e7ab6",
+      "gallery": [
+        {
+          "photo_id": "e5d1f53b-7e60-46d0-b507-48fd345c60d5",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/193e1ebf-308e-42a4-8c10-4b02cf3a532e.jpg",
+          "storage_key": "photos/original/2026/07/193e1ebf-308e-42a4-8c10-4b02cf3a532e.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-19T18:19:38.115785+00:00",
+          "shot_at": "2026-06-26T07:24:10+00:00",
+          "display_name": "Ⓜ︎agenta",
+          "public_user_id": "af0fb869-ded3-49a9-85a9-c2c3919e7ab6"
         }
       ]
     },
