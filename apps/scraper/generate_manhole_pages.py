@@ -249,6 +249,29 @@ def load_manholes(path: Path) -> list[dict]:
     return manholes
 
 
+def _escape_attr_value(value: object) -> str:
+    """Escape text for embedding inside single- or double-quoted HTML attributes.
+
+    xml.sax.saxutils.escape はデフォルトでクォートを変換しないため、
+    NDJSON由来の値を属性に埋め込むときはこちらを使う。
+    """
+    return escape(str(value), {"'": "&#39;", '"': "&quot;"})
+
+
+def _safe_pokefuta_url(value: object) -> str:
+    """Allow only https URLs on pokefuta.com (写真館) — anything else becomes ''."""
+    url = str(value or "")
+    return url if url.startswith("https://pokefuta.com/") else ""
+
+
+def _spot_coords(row: dict) -> tuple[float, float] | None:
+    """Parse lat/lng leniently; None when missing or non-numeric."""
+    try:
+        return float(row["lat"]), float(row["lng"])
+    except (KeyError, TypeError, ValueError):
+        return None
+
+
 def _read_ndjson(path: Path) -> list[dict]:
     """Read an NDJSON file leniently (missing file / broken lines → skip)."""
     rows: list[dict] = []
@@ -289,18 +312,19 @@ def load_design_spots(
     for row in _read_ndjson(gundam_path):
         if row.get("status", "active") != "active":
             continue
-        lat, lng = row.get("lat"), row.get("lng")
-        if lat is None or lng is None:
+        gid = str(row.get("id", "")).strip()
+        coords = _spot_coords(row)
+        if not gid or coords is None:
             continue
         spots.append({
-            "ref": f"gundam:{str(row.get('id', '')).strip()}",
+            "ref": f"gundam:{gid}",
             "kind": "gundam",
             "title": str(row.get("title") or "").strip() or "ガンダムマンホール",
             "work": "ガンダムマンホール",
             "prefecture": row.get("prefecture", "") or "",
             "city": row.get("city", "") or "",
-            "lat": float(lat),
-            "lng": float(lng),
+            "lat": coords[0],
+            "lng": coords[1],
             "studio_url": "",
             "photo_url": "",
         })
@@ -310,18 +334,19 @@ def load_design_spots(
             continue
         if row.get("coordinate_method") not in CHARACTER_COORD_METHODS:
             continue
-        lat, lng = row.get("lat"), row.get("lng")
-        if lat is None or lng is None:
+        cid = str(row.get("id", "")).strip()
+        coords = _spot_coords(row)
+        if not cid or coords is None:
             continue
         spots.append({
-            "ref": f"character:{str(row.get('id', '')).strip()}",
+            "ref": f"character:{cid}",
             "kind": "character",
             "title": str(row.get("title") or "").strip() or "キャラクターマンホール",
             "work": str(row.get("work") or "").strip(),
             "prefecture": row.get("prefecture", "") or "",
             "city": row.get("city", "") or "",
-            "lat": float(lat),
-            "lng": float(lng),
+            "lat": coords[0],
+            "lng": coords[1],
             "studio_url": "",
             "photo_url": "",
         })
@@ -330,8 +355,8 @@ def load_design_spots(
     for row in _read_ndjson(submissions_path):
         if row.get("status") != "active":
             continue
-        lat, lng = row.get("lat"), row.get("lng")
-        if lat is None or lng is None:
+        coords = _spot_coords(row)
+        if coords is None:
             continue
         refs: list[str] = []
         if row.get("canonical_ref"):
@@ -345,23 +370,26 @@ def load_design_spots(
         if matched is not None:
             # マスタ蓋の写真館リンク・写真として合流（最初の投稿を採用）
             if not matched["studio_url"]:
-                matched["studio_url"] = str(row.get("source_url") or "")
-                matched["photo_url"] = str(row.get("photo_url") or "")
+                matched["studio_url"] = _safe_pokefuta_url(row.get("source_url"))
+                matched["photo_url"] = _safe_pokefuta_url(row.get("photo_url"))
             continue
         if any(r.startswith("pokefuta:") for r in refs):
             # ポケふた至近の投稿はポケふた自体の写真とみなし、デザイン蓋としては出さない
             continue
+        sid = str(row.get("id", "")).strip()
+        if not sid:
+            continue
         spots.append({
-            "ref": str(row.get("id", "")).strip(),
+            "ref": sid,
             "kind": "studio",
             "title": str(row.get("title") or "").strip() or "デザインマンホール",
             "work": str(row.get("work") or "").strip(),
             "prefecture": row.get("prefecture", "") or "",
             "city": row.get("city", "") or "",
-            "lat": float(lat),
-            "lng": float(lng),
-            "studio_url": str(row.get("source_url") or ""),
-            "photo_url": str(row.get("photo_url") or ""),
+            "lat": coords[0],
+            "lng": coords[1],
+            "studio_url": _safe_pokefuta_url(row.get("source_url")),
+            "photo_url": _safe_pokefuta_url(row.get("photo_url")),
         })
 
     logger.info(
@@ -989,8 +1017,10 @@ def generate_html(
         design_items = ""
         for spot, dist in nearby_design:
             dist_str = f"{dist * 1000:.0f} m" if dist < 1.0 else f"{dist:.1f} km"
-            has_studio = bool(spot.get("studio_url"))
-            href = spot.get("studio_url") or DESIGN_STUDIO_LIST_URL
+            # 写真館URL以外（不正スキーム等）は一覧へフォールバック
+            studio_url = _safe_pokefuta_url(spot.get("studio_url"))
+            has_studio = bool(studio_url)
+            href = studio_url or DESIGN_STUDIO_LIST_URL
             _d_params = _attr_json({
                 "from_manhole_id": manhole_id,
                 "design_ref": spot.get("ref", ""),
@@ -998,10 +1028,11 @@ def generate_html(
                 "has_studio_page": has_studio,
             })
             thumb_html = ""
-            if spot.get("photo_url"):
+            photo_url = _safe_pokefuta_url(spot.get("photo_url"))
+            if photo_url:
                 thumb_html = (
                     f'<div class="related-card-thumb">'
-                    f'<img src="{escape(spot["photo_url"])}" alt="" loading="lazy"'
+                    f'<img src="{_escape_attr_value(photo_url)}" alt="" loading="lazy"'
                     f' onerror="this.closest(\'.related-card-thumb\').remove()">'
                     f"</div>"
                 )
@@ -1017,7 +1048,7 @@ def generate_html(
                 f"<div class='related-card-body'>"
                 f'{_icon("icon-detail-location", "icon-sm")}'
                 f"<div class='design-text'>"
-                f"<a href='{escape(href)}' target='_blank' rel='noopener noreferrer'"
+                f"<a href='{_escape_attr_value(href)}' target='_blank' rel='noopener noreferrer'"
                 f" onclick=\"trackEvent('click_nearby_design_manhole', {_d_params})\">"
                 f"{escape(spot.get('title', ''))}</a>"
                 f"{work_html}"

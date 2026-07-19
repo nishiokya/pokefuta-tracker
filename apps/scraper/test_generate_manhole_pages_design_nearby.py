@@ -148,6 +148,39 @@ class LoadDesignSpotsTest(unittest.TestCase):
     def test_missing_files_return_empty(self):
         self.assertEqual(self._load(), [])
 
+    def test_rows_with_empty_id_or_bad_coords_are_skipped(self):
+        _write_ndjson(self.gundam, [
+            {"id": "", "title": "ID空", "lat": 45.0, "lng": 141.0, "status": "active"},
+            {"id": "9", "title": "座標が文字列", "lat": "北緯45度", "lng": 141.0,
+             "status": "active"},
+        ])
+        _write_ndjson(self.character, [
+            {"id": "  ", "title": "ID空白", "lat": 35.0, "lng": 137.0,
+             "coordinate_method": "official_google_map_link",
+             "installation_status": "installed", "status": "active"},
+        ])
+        _write_ndjson(self.submissions, [
+            {"id": "", "title": "ID空投稿", "lat": 35.0, "lng": 137.0,
+             "status": "active", "canonical_ref": None, "nearby_refs": [],
+             "source_url": "https://pokefuta.com/design-manholes/x", "photo_url": ""},
+        ])
+        self.assertEqual(self._load(), [])
+
+    def test_non_pokefuta_urls_are_dropped(self):
+        _write_ndjson(self.gundam, [])
+        _write_ndjson(self.character, [])
+        _write_ndjson(self.submissions, [
+            {"id": "pokefuta-design:evil", "title": "不正URL",
+             "lat": 35.0, "lng": 137.0, "status": "active",
+             "canonical_ref": None, "nearby_refs": [],
+             "source_url": "javascript:alert(1)",
+             "photo_url": "http://example.com/a.jpg"},
+        ])
+        spots = self._load()
+        self.assertEqual(len(spots), 1)
+        self.assertEqual(spots[0]["studio_url"], "")
+        self.assertEqual(spots[0]["photo_url"], "")
+
 
 class DesignSectionRenderTest(unittest.TestCase):
     def _html(self, manhole=None, nearby_design=None, **kwargs) -> str:
@@ -212,6 +245,24 @@ class DesignSectionRenderTest(unittest.TestCase):
 
         without_spots = self._html(manhole=_manhole(titles=titles), nearby_design=[])
         self.assertNotIn("href='#design-manholes'", without_spots)
+
+    def test_unsafe_studio_url_falls_back_to_list(self):
+        spot = _character_spot(
+            studio_url="javascript:alert(1)",
+            photo_url="javascript:alert(2)",
+        )
+        html = self._html(nearby_design=[(spot, 0.5)])
+        self.assertNotIn("javascript:", html)
+        self.assertIn(f"href='{pages.DESIGN_STUDIO_LIST_URL}'", html)
+        self.assertIn("写真募集中", html)
+
+    def test_attribute_values_escape_quotes(self):
+        spot = _character_spot(
+            studio_url="https://pokefuta.com/design-manholes/a'b\"c",
+        )
+        html = self._html(nearby_design=[(spot, 0.5)])
+        self.assertIn("a&#39;b&quot;c", html)
+        self.assertNotIn("design-manholes/a'b", html)
 
     def test_section_order_travel_info_above_pokemon_seo(self):
         nearby = [(_manhole(id="999", city="西尾市"), 20.6)]
