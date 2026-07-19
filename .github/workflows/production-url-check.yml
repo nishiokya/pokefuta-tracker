@@ -1,0 +1,32 @@
+name: Check Production URLs
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Run checker tests
+        run: python3 .github/scripts/test_check_production_urls.py
+
+      - name: Reject loopback URLs in production sources
+        run: |
+          python3 .github/scripts/check_production_urls.py \
+            --exclude '*.test.js' \
+            --exclude 'supabase-ssr.js' \
+            apps/web/*.html \
+            apps/web/assets \
+            apps/scraper/*.py
