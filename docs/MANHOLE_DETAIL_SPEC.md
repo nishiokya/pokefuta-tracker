@@ -44,7 +44,7 @@ data.pokefuta.com（tracker）と pokefuta.com のマンホール詳細ページ
 
 現行の `latest-manhole-photos.json` は 1マンホール=最新1枚。以下のとおり拡張する。
 
-### エクスポート拡張（pokefuta repo: `tools/export_latest_manhole_photos.py`）
+### エクスポート拡張（tracker repo: `apps/scraper/export_latest_manhole_photos.py`）
 
 - `photos[manhole_id]` の既存フィールド（代表＝最新1枚）は**そのまま維持**（後方互換）。
 - 各エントリに `gallery` 配列を追加：代表を含む公開写真を新しい順に**最大5枚**。
@@ -84,7 +84,7 @@ data.pokefuta.com（tracker）と pokefuta.com のマンホール詳細ページ
 
 ## 実装ステップ
 
-1. **pokefuta repo**: `tools/export_latest_manhole_photos.py` に `gallery` 追加（後方互換）
+1. **tracker repo**: `apps/scraper/export_latest_manhole_photos.py` に `gallery` 追加（後方互換。2026-07-19 に pokefuta repo から移管済み）
 2. **tracker repo**: `apps/tools/import_latest_manhole_photos.py` のギャラリーDL＋縮小＋掃除
 3. **tracker repo**: `generate_manhole_pages.py` にギャラリーセクション追加
 4. **pokefuta repo**: `ManholePage.tsx` の未ログイン時レイアウトを本仕様のセクション順に再構成（近隣・同ポケモン・県内セクションの新設を含む）
