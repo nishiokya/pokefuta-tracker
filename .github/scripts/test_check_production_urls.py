@@ -107,6 +107,23 @@ class CheckProductionUrlsTest(unittest.TestCase):
                 ],
             )
 
+    def test_finds_hosts_inside_template_literals(self):
+        host = "local" + "host"
+        with tempfile.TemporaryDirectory() as directory:
+            page = Path(directory) / "app.js"
+            page.write_text("const url = `http://" + host + "`;\n")
+
+            self.assertEqual(
+                checker.find_loopback_urls([page]), [(page, 1, f"http://{host}")]
+            )
+
+    def test_ignores_addresses_that_merely_start_with_a_loopback_ip(self):
+        with tempfile.TemporaryDirectory() as directory:
+            page = Path(directory) / "app.js"
+            page.write_text('const u = "http://127.0.' + '0.15:3000/x";\n')
+
+            self.assertEqual(checker.find_loopback_urls([page]), [])
+
     def test_finds_ipv6_loopback(self):
         with tempfile.TemporaryDirectory() as directory:
             page = Path(directory) / "app.js"
