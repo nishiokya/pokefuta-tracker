@@ -153,7 +153,7 @@ SUMMARY_STRINGS: dict[str, dict] = {
             "travel_h2": "旅のテーマから探す", "travel_note": "行き先の雰囲気から、次に会いに行くポケふたを探せます。",
             "rare_h2": "レアなポケふたを探す", "rare_note": "全国でここだけのポケモンや、日本の四端、秘境の一枚を集めました。",
             "details": "このテーマのポケふたを見る", "count": "{count}枚", "unique_count": "{count}種",
-            "travel": {"remote_island": "離島", "roadside": "道の駅", "station_front": "駅前", "world_heritage": "世界遺産", "near_gundam_manhole": "ガンダムマンホールまで約500m以内", "gundam_manhole_city": "ガンダムマンホールのあるまち"},
+            "travel": {"remote_island": "離島", "roadside": "道の駅", "station_front": "駅前", "world_heritage": "世界遺産", "near_gundam_manhole": "ガンダムマンホールまで約500m以内", "gundam_manhole_city": "ガンダムマンホールのあるまち", "near_character_manhole": "キャラクターマンホールまで約1km以内", "character_manhole_city": "キャラクターマンホールのあるまち"},
             "rare": {"unique": "全国1枚しかないポケモン", "extremes": "日本の四端", "lone": "秘境・ぽつんと一枚"},
         },
         "latest_photos": {
@@ -252,7 +252,7 @@ SUMMARY_STRINGS: dict[str, dict] = {
             "travel_h2": "Explore by travel theme", "travel_note": "Choose your next Pokéfuta destination by the kind of journey you want.",
             "rare_h2": "Find rare Pokéfuta", "rare_note": "Discover one-of-a-kind Pokémon, Japan's four extremes, and remote locations.",
             "details": "View Pokéfuta in this theme", "count": "{count} Pokéfuta", "unique_count": "{count} Pokémon",
-            "travel": {"remote_island": "Remote islands", "roadside": "Roadside stations", "station_front": "Train stations", "world_heritage": "World Heritage", "near_gundam_manhole": "Within about 500 m of a Gundam manhole", "gundam_manhole_city": "Municipalities with Gundam manholes"},
+            "travel": {"remote_island": "Remote islands", "roadside": "Roadside stations", "station_front": "Train stations", "world_heritage": "World Heritage", "near_gundam_manhole": "Within about 500 m of a Gundam manhole", "gundam_manhole_city": "Municipalities with Gundam manholes", "near_character_manhole": "Within about 1 km of a character manhole", "character_manhole_city": "Municipalities with character manholes"},
             "rare": {"unique": "Pokémon found on only one Pokéfuta", "extremes": "Japan's four extremes", "lone": "Remote and solitary"},
         },
         "pokemon_ranking": {
@@ -342,7 +342,7 @@ SUMMARY_STRINGS: dict[str, dict] = {
             "travel_h2": "按旅行主题探索", "travel_note": "从想去的风景出发，寻找下一个 Pokéfuta。",
             "rare_h2": "寻找稀有 Pokéfuta", "rare_note": "探索全国唯一、日本四端与秘境中的 Pokéfuta。",
             "details": "查看此主题的 Pokéfuta", "count": "{count} 枚", "unique_count": "{count} 种宝可梦",
-            "travel": {"remote_island": "离岛", "roadside": "道之驿", "station_front": "车站前", "world_heritage": "世界遗产", "near_gundam_manhole": "高达井盖约500米内", "gundam_manhole_city": "设有高达井盖的市町村"},
+            "travel": {"remote_island": "离岛", "roadside": "道之驿", "station_front": "车站前", "world_heritage": "世界遗产", "near_gundam_manhole": "高达井盖约500米内", "gundam_manhole_city": "设有高达井盖的市町村", "near_character_manhole": "角色井盖约1公里内", "character_manhole_city": "设有角色井盖的市町村"},
             "rare": {"unique": "全国仅一枚的宝可梦", "extremes": "日本四端", "lone": "秘境与孤立地点"},
         },
         "pokemon_ranking": {
@@ -432,7 +432,7 @@ SUMMARY_STRINGS: dict[str, dict] = {
             "travel_h2": "依旅行主題探索", "travel_note": "從想去的風景出發，尋找下一個 Pokéfuta。",
             "rare_h2": "尋找稀有 Pokéfuta", "rare_note": "探索全國唯一、日本四端與秘境中的 Pokéfuta。",
             "details": "查看此主題的 Pokéfuta", "count": "{count} 枚", "unique_count": "{count} 種寶可夢",
-            "travel": {"remote_island": "離島", "roadside": "道之驛", "station_front": "車站前", "world_heritage": "世界遺產", "near_gundam_manhole": "鋼彈人孔蓋約500公尺內", "gundam_manhole_city": "設有鋼彈人孔蓋的市町村"},
+            "travel": {"remote_island": "離島", "roadside": "道之驛", "station_front": "車站前", "world_heritage": "世界遺產", "near_gundam_manhole": "鋼彈人孔蓋約500公尺內", "gundam_manhole_city": "設有鋼彈人孔蓋的市町村", "near_character_manhole": "角色人孔蓋約1公里內", "character_manhole_city": "設有角色人孔蓋的市町村"},
             "rare": {"unique": "全國僅一枚的寶可夢", "extremes": "日本四端", "lone": "秘境與孤立地點"},
         },
         "pokemon_ranking": {
@@ -522,7 +522,7 @@ SUMMARY_STRINGS: dict[str, dict] = {
             "travel_h2": "여행 테마로 찾기", "travel_note": "가고 싶은 풍경에서 다음 포케후타 여행지를 찾아보세요.",
             "rare_h2": "희귀 포케후타 찾기", "rare_note": "일본 전국 유일, 사방 끝, 비경의 포케후타를 만나보세요.",
             "details": "이 테마의 포케후타 보기", "count": "{count}개", "unique_count": "포켓몬 {count}종",
-            "travel": {"remote_island": "외딴섬", "roadside": "미치노에키", "station_front": "역 앞", "world_heritage": "세계유산", "near_gundam_manhole": "건담 맨홀 약 500m 이내", "gundam_manhole_city": "건담 맨홀이 있는 지자체"},
+            "travel": {"remote_island": "외딴섬", "roadside": "미치노에키", "station_front": "역 앞", "world_heritage": "세계유산", "near_gundam_manhole": "건담 맨홀 약 500m 이내", "gundam_manhole_city": "건담 맨홀이 있는 지자체", "near_character_manhole": "캐릭터 맨홀 약 1km 이내", "character_manhole_city": "캐릭터 맨홀이 있는 지자체"},
             "rare": {"unique": "전국에 하나뿐인 포켓몬", "extremes": "일본 사방 끝", "lone": "비경과 외딴 장소"},
         },
         "pokemon_ranking": {
@@ -3426,6 +3426,8 @@ def _build_discovery_hub_sections(
         "world_heritage",
         "near_gundam_manhole",
         "gundam_manhole_city",
+        "near_character_manhole",
+        "character_manhole_city",
     ]
     if crossover_html:
         travel_keys.remove("near_gundam_manhole")
