@@ -45,7 +45,6 @@ class CheckProductionUrlsTest(unittest.TestCase):
                 [(production, 1, forbidden_url)],
             )
 
-
     def test_finds_hosts_without_port_or_path(self):
         host = "local" + "host"
         with tempfile.TemporaryDirectory() as directory:
@@ -117,12 +116,55 @@ class CheckProductionUrlsTest(unittest.TestCase):
                 checker.find_loopback_urls([page]), [(page, 1, f"http://{host}")]
             )
 
-    def test_ignores_addresses_that_merely_start_with_a_loopback_ip(self):
+    def test_finds_full_ipv4_loopback_range(self):
         with tempfile.TemporaryDirectory() as directory:
             page = Path(directory) / "app.js"
             page.write_text('const u = "http://127.0.' + '0.15:3000/x";\n')
 
-            self.assertEqual(checker.find_loopback_urls([page]), [])
+            self.assertEqual(
+                checker.find_loopback_urls([page]),
+                [(page, 1, "http://127.0.0.15:3000/x")],
+            )
+
+    def test_finds_userinfo_before_loopback_host(self):
+        host = "local" + "host"
+        with tempfile.TemporaryDirectory() as directory:
+            page = Path(directory) / "app.js"
+            page.write_text(f'const u = "http://ignored@{host}:3000/x";\n')
+
+            self.assertEqual(
+                checker.find_loopback_urls([page]),
+                [(page, 1, f"http://ignored@{host}:3000/x")],
+            )
+
+    def test_finds_browser_ipv4_spellings(self):
+        spellings = ["2130706433", "0x7f000001", "127.1", "%31%32%37.0.0.1"]
+        with tempfile.TemporaryDirectory() as directory:
+            page = Path(directory) / "app.js"
+            page.write_text(
+                "\n".join(
+                    f'const u = "http://{host}:3000/x";' for host in spellings
+                )
+            )
+
+            self.assertEqual(
+                checker.find_loopback_urls([page]),
+                [
+                    (page, index, f"http://{host}:3000/x")
+                    for index, host in enumerate(spellings, 1)
+                ],
+            )
+
+    def test_finds_ascii_whitespace_inside_special_url(self):
+        host = "local" + "host"
+        with tempfile.TemporaryDirectory() as directory:
+            page = Path(directory) / "app.html"
+            page.write_text(f'<a href="http:\t//{host}:3000/x">x</a>\n')
+
+            self.assertEqual(
+                checker.find_loopback_urls([page]),
+                [(page, 1, f"http://{host}:3000/x")],
+            )
 
     def test_finds_ipv6_loopback(self):
         with tempfile.TemporaryDirectory() as directory:

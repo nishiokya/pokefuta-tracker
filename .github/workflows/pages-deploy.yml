@@ -121,7 +121,6 @@ jobs:
       - name: Reject loopback URLs in Pages artifact
         run: |
           python3 .github/scripts/check_production_urls.py \
-            --exclude '*.test.js' \
             --exclude 'supabase-ssr.js' \
             dist
 
