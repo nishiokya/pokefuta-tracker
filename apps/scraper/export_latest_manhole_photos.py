@@ -9,7 +9,7 @@ Example:
   export NEXT_PUBLIC_SUPABASE_URL="https://xxxxx.supabase.co"
   export SUPABASE_SERVICE_ROLE_KEY="xxxxx"
   export R2_PUBLIC_BASE_URL="https://images.pokefuta.com"
-  python3 tools/export_latest_manhole_photos.py
+  python3 apps/scraper/export_latest_manhole_photos.py
 """
 
 from __future__ import annotations
