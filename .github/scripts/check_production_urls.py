@@ -9,11 +9,30 @@ import sys
 from pathlib import Path
 
 LOOPBACK_URL = re.compile(
-    rb"(?:https?|wss?)://(?:localhost|127\.0\.0\.1|0\.0\.0\.0)"
-    rb"(?=[:/\s\"'])(?:[^\s\"'<>]*)",
+    rb"(?:https?|wss?)://(?:localhost|127\.0\.0\.1|0\.0\.0\.0|\[::1\])"
+    # ホスト名の直後は「URLの区切り」でなければならない。行末（$）と ) ] } , ; を
+    # 含めないと、ポートもパスも無い `http://localhost` を取りこぼす。
+    # 逆に localhost.example.com のような別ホストを誤検知しないよう、
+    # 区切り文字以外が続く場合はマッチさせない。
+    # 末尾の区切り記号は URL に含めない（`foo(http://localhost);` を
+    # `http://localhost);` と報告しないため）。検出可否には影響しない。
+    rb"(?=[:/\s\"'<>)\]},;]|$)(?:[^\s\"'<>)\]},;]*)",
     re.IGNORECASE,
 )
-SOURCE_SUFFIXES = {".css", ".html", ".js", ".mjs", ".py", ".ts"}
+# 本番成果物に焼き込まれ得るデータ・設定ファイルも対象にする。
+# ここに無い拡張子は素通りするため、artifact 検査の穴になる。
+SOURCE_SUFFIXES = {
+    ".css",
+    ".html",
+    ".js",
+    ".json",
+    ".mjs",
+    ".py",
+    ".svg",
+    ".ts",
+    ".webmanifest",
+    ".xml",
+}
 
 
 def iter_files(paths: list[Path]):
@@ -37,8 +56,8 @@ def find_loopback_urls(
         if any(path.match(pattern) for pattern in exclude):
             continue
         for line_number, line in enumerate(path.read_bytes().splitlines(), start=1):
-            match = LOOPBACK_URL.search(line)
-            if match:
+            # ミニファイ済みの成果物は1行に複数URLが載るので finditer で全件拾う
+            for match in LOOPBACK_URL.finditer(line):
                 findings.append(
                     (path, line_number, match.group(0).decode("ascii", errors="replace"))
                 )

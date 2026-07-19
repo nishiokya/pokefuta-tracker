@@ -9,6 +9,9 @@ checker = importlib.util.module_from_spec(SPEC)
 assert SPEC.loader is not None
 SPEC.loader.exec_module(checker)
 
+# このファイル自身がスキャン対象に含まれても落ちないよう、テスト内の loopback URL は
+# 文字列連結で組み立てて原文には現れないようにしている（1つの文字列に戻さないこと）。
+
 
 class CheckProductionUrlsTest(unittest.TestCase):
     def test_finds_loopback_urls_with_line_numbers(self):
@@ -41,6 +44,61 @@ class CheckProductionUrlsTest(unittest.TestCase):
                 checker.find_loopback_urls([root], ["*.test.js"]),
                 [(production, 1, forbidden_url)],
             )
+
+
+    def test_finds_hosts_without_port_or_path(self):
+        host = "local" + "host"
+        with tempfile.TemporaryDirectory() as directory:
+            page = Path(directory) / "app.js"
+            # 行末終わり・) 終わりの両方を拾えること
+            page.write_text(f"var a = http://{host}\nfoo(http://{host});\n")
+
+            self.assertEqual(
+                checker.find_loopback_urls([page]),
+                [(page, 1, f"http://{host}"), (page, 2, f"http://{host}")],
+            )
+
+    def test_finds_every_url_on_a_minified_line(self):
+        host = "local" + "host"
+        loopback_host = "127.0." + "0.1"
+        with tempfile.TemporaryDirectory() as directory:
+            bundle = Path(directory) / "bundle.js"
+            bundle.write_text(f'var x="http://{host}:3000/a";var y="http://{loopback_host}:8000/b";')
+
+            self.assertEqual(
+                checker.find_loopback_urls([bundle]),
+                [
+                    (bundle, 1, f"http://{host}:3000/a"),
+                    (bundle, 1, f"http://{loopback_host}:8000/b"),
+                ],
+            )
+
+    def test_finds_ipv6_loopback(self):
+        with tempfile.TemporaryDirectory() as directory:
+            page = Path(directory) / "app.js"
+            page.write_text('const u = "http://[' + '::1]:3000/x";\n')
+
+            self.assertEqual(
+                checker.find_loopback_urls([page]), [(page, 1, "http://[::1]:3000/x")]
+            )
+
+    def test_scans_baked_data_files(self):
+        host = "local" + "host"
+        with tempfile.TemporaryDirectory() as directory:
+            feed = Path(directory) / "top-feed.json"
+            feed.write_text(f'{{"api": "http://{host}:3000/api"}}')
+
+            self.assertEqual(
+                checker.find_loopback_urls([feed]), [(feed, 1, f"http://{host}:3000/api")]
+            )
+
+    def test_ignores_hostnames_that_merely_start_with_localhost(self):
+        host = "local" + "host"
+        with tempfile.TemporaryDirectory() as directory:
+            page = Path(directory) / "app.js"
+            page.write_text(f'const ok = "https://{host}.example.com/";\n')
+
+            self.assertEqual(checker.find_loopback_urls([page]), [])
 
 
 if __name__ == "__main__":
