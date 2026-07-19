@@ -397,6 +397,10 @@ a { color: inherit; text-decoration: none; }
 .hero-footer-text {
   font-size: 12px;
   color: var(--top-text-muted);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .hero-footer-name-link {
@@ -416,6 +420,7 @@ a { color: inherit; text-decoration: none; }
   font-size: 12.5px;
   font-weight: 700;
   color: var(--top-purple);
+  flex-shrink: 0; /* 左の投稿者名が長くても CTA は潰さない（名前側を ellipsis する） */
 }
 
 /* Small hero cards */

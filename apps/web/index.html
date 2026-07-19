@@ -424,18 +424,28 @@
 
     var PUBLIC_USER_ID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
+    function formatFeedDate(value) {
+      if (!value) return '';
+      var date = new Date(value + 'T00:00:00+09:00');
+      if (isNaN(date.getTime())) return value;
+      return new Intl.DateTimeFormat(document.documentElement.lang || 'ja', {
+        month: 'short', day: 'numeric', timeZone: 'Asia/Tokyo'
+      }).format(date);
+    }
+
     function communityHero(photos) {
       function names(p) { return (p.pokemons || []).slice(0, 2).join('・'); }
       function place(p) { return (p.title || '').replace('/', ' '); }
       var f = photos[0];
-      var footerText = '📷 ' + (f.display_name ? TF_STRINGS.by.replace('{name}', f.display_name) + ' · ' : '') + (f.created_at || '');
+      var displayDate = formatFeedDate(f.created_at);
+      var footerText = '📷 ' + (f.display_name ? TF_STRINGS.by.replace('{name}', f.display_name) + ' · ' : '') + displayDate;
       var footerName = null;
       if (f.display_name && f.public_user_id && PUBLIC_USER_ID_RE.test(f.public_user_id)) {
         var byParts = TF_STRINGS.by.split('{name}');
         footerName = {
           prefix: '📷 ' + byParts[0],
           name: f.display_name,
-          suffix: byParts[1] + ' · ' + (f.created_at || ''),
+          suffix: byParts[1] + ' · ' + displayDate,
           publicUserId: f.public_user_id
         };
       }
