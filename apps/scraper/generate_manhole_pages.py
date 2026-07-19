@@ -45,6 +45,15 @@ SECONDARY_TAG_LABELS: dict[str, tuple[str, str]] = {
     'in_station':       ('🚉', '駅構内'),
 }
 
+# 近くのデザインマンホール（ガンダム・キャラ蓋・写真館投稿）
+DESIGN_STUDIO_LIST_URL = "https://pokefuta.com/design-manholes"
+DESIGN_NEARBY_RADIUS_KM = 20.0
+DESIGN_NEARBY_MAX = 5
+# 近接判定に使ってよい座標ソース（manhole_titles.json の運用ルールと同じ）
+CHARACTER_COORD_METHODS = {"official_google_map_link", "municipal_google_map_link"}
+# 🎨近接称号は本文のデザイン蓋セクションへアンカーで飛ばす
+DESIGN_ANCHOR_TITLE_KEYS = {"near_character_manhole", "near_gundam_manhole"}
+
 
 def build_ja_to_slug(raw_data: list) -> dict[str, str]:
     """Build ja_name → slug map with regional form and katakana normalization."""
@@ -240,6 +249,129 @@ def load_manholes(path: Path) -> list[dict]:
     return manholes
 
 
+def _read_ndjson(path: Path) -> list[dict]:
+    """Read an NDJSON file leniently (missing file / broken lines → skip)."""
+    rows: list[dict] = []
+    if not path.exists():
+        logger.warning(f"NDJSON file not found: {path}")
+        return rows
+    for line_num, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+        if not line.strip():
+            continue
+        try:
+            row = json.loads(line)
+        except json.JSONDecodeError as e:
+            logger.warning(f"Failed to parse {path.name} line {line_num}: {e}")
+            continue
+        if isinstance(row, dict):
+            rows.append(row)
+    return rows
+
+
+def load_design_spots(
+    gundam_path: Path,
+    character_path: Path,
+    submissions_path: Path,
+) -> list[dict]:
+    """Load design-manhole spots for the nearby section.
+
+    Sources:
+      - gundam_path: docs/gmanhole.ndjson (g-manhole.net master)
+      - character_path: dataset/aichi_character_manholes.ndjson
+      - submissions_path: docs/design_manholes.ndjson (写真館の公開投稿)
+
+    写真館投稿は canonical_ref / nearby_refs でマスタ蓋に合流させ、
+    合流先の studio_url（写真館詳細）と photo_url として使う。
+    どのマスタにも紐づかない投稿は独立スポットとして扱う。
+    """
+    spots: list[dict] = []
+
+    for row in _read_ndjson(gundam_path):
+        if row.get("status", "active") != "active":
+            continue
+        lat, lng = row.get("lat"), row.get("lng")
+        if lat is None or lng is None:
+            continue
+        spots.append({
+            "ref": f"gundam:{str(row.get('id', '')).strip()}",
+            "kind": "gundam",
+            "title": str(row.get("title") or "").strip() or "ガンダムマンホール",
+            "work": "ガンダムマンホール",
+            "prefecture": row.get("prefecture", "") or "",
+            "city": row.get("city", "") or "",
+            "lat": float(lat),
+            "lng": float(lng),
+            "studio_url": "",
+            "photo_url": "",
+        })
+
+    for row in _read_ndjson(character_path):
+        if row.get("status") != "active" or row.get("installation_status") != "installed":
+            continue
+        if row.get("coordinate_method") not in CHARACTER_COORD_METHODS:
+            continue
+        lat, lng = row.get("lat"), row.get("lng")
+        if lat is None or lng is None:
+            continue
+        spots.append({
+            "ref": f"character:{str(row.get('id', '')).strip()}",
+            "kind": "character",
+            "title": str(row.get("title") or "").strip() or "キャラクターマンホール",
+            "work": str(row.get("work") or "").strip(),
+            "prefecture": row.get("prefecture", "") or "",
+            "city": row.get("city", "") or "",
+            "lat": float(lat),
+            "lng": float(lng),
+            "studio_url": "",
+            "photo_url": "",
+        })
+
+    by_ref = {s["ref"]: s for s in spots}
+    for row in _read_ndjson(submissions_path):
+        if row.get("status") != "active":
+            continue
+        lat, lng = row.get("lat"), row.get("lng")
+        if lat is None or lng is None:
+            continue
+        refs: list[str] = []
+        if row.get("canonical_ref"):
+            refs.append(str(row["canonical_ref"]))
+        refs += [
+            str(r.get("ref", ""))
+            for r in (row.get("nearby_refs") or [])
+            if isinstance(r, dict) and r.get("ref")
+        ]
+        matched = next((by_ref[r] for r in refs if r in by_ref), None)
+        if matched is not None:
+            # マスタ蓋の写真館リンク・写真として合流（最初の投稿を採用）
+            if not matched["studio_url"]:
+                matched["studio_url"] = str(row.get("source_url") or "")
+                matched["photo_url"] = str(row.get("photo_url") or "")
+            continue
+        if any(r.startswith("pokefuta:") for r in refs):
+            # ポケふた至近の投稿はポケふた自体の写真とみなし、デザイン蓋としては出さない
+            continue
+        spots.append({
+            "ref": str(row.get("id", "")).strip(),
+            "kind": "studio",
+            "title": str(row.get("title") or "").strip() or "デザインマンホール",
+            "work": str(row.get("work") or "").strip(),
+            "prefecture": row.get("prefecture", "") or "",
+            "city": row.get("city", "") or "",
+            "lat": float(lat),
+            "lng": float(lng),
+            "studio_url": str(row.get("source_url") or ""),
+            "photo_url": str(row.get("photo_url") or ""),
+        })
+
+    logger.info(
+        "Loaded %d design spots (with studio link: %d)",
+        len(spots),
+        sum(1 for s in spots if s["studio_url"]),
+    )
+    return spots
+
+
 def load_photos(path: Path) -> dict[str, dict]:
     """Load manhole photos data."""
     if not path.exists():
@@ -398,6 +530,7 @@ def generate_html(
     nearby_count: int = 0,
     ogp_dir: Optional[Path] = None,
     ja_to_slug: dict[str, str] | None = None,
+    nearby_design: list[tuple[dict, float]] | None = None,
 ) -> str:
     """Generate complete HTML for a manhole detail page."""
     manhole_id = str(manhole.get("id", "")).strip()
@@ -667,7 +800,13 @@ def generate_html(
     # Title badges (all, from pokefuta.ndjson) — prepended before stats badges
     for t in titles:
         label = f"{escape(t['emoji'])} {escape(t['label'])}" if t.get("emoji") else escape(t["label"])
-        badges.append(f"<span class='hero-badge hero-badge-title'>{label}</span>")
+        if t.get("key") in DESIGN_ANCHOR_TITLE_KEYS and nearby_design:
+            # 🎨近接称号は本文の「近くのデザインマンホール」へ飛べるようにする
+            badges.append(
+                f"<a class='hero-badge hero-badge-title hero-badge-anchor' href='#design-manholes'>{label}</a>"
+            )
+        else:
+            badges.append(f"<span class='hero-badge hero-badge-title'>{label}</span>")
     # Secondary tag badges (tourism/park/museum/history/food/rail_access_good/river/in_station)
     for tag in (manhole.get("tags") or []):
         if tag in SECONDARY_TAG_LABELS:
@@ -843,6 +982,63 @@ def generate_html(
         f"<div class='link-grid'>{''.join(link_cards)}</div>"
         f"</section>"
     ) if link_cards else ""
+
+    # Nearby design manholes section (gundam / character / 写真館投稿)
+    design_html = ""
+    if nearby_design:
+        design_items = ""
+        for spot, dist in nearby_design:
+            dist_str = f"{dist * 1000:.0f} m" if dist < 1.0 else f"{dist:.1f} km"
+            has_studio = bool(spot.get("studio_url"))
+            href = spot.get("studio_url") or DESIGN_STUDIO_LIST_URL
+            _d_params = _attr_json({
+                "from_manhole_id": manhole_id,
+                "design_ref": spot.get("ref", ""),
+                "distance_km": round(dist, 1),
+                "has_studio_page": has_studio,
+            })
+            thumb_html = ""
+            if spot.get("photo_url"):
+                thumb_html = (
+                    f'<div class="related-card-thumb">'
+                    f'<img src="{escape(spot["photo_url"])}" alt="" loading="lazy"'
+                    f' onerror="this.closest(\'.related-card-thumb\').remove()">'
+                    f"</div>"
+                )
+            work = spot.get("work", "")
+            work_html = f"<span class='design-work'>{escape(work)}</span>" if work else ""
+            status_html = (
+                "<span class='design-status design-status--studio'>写真館で見る →</span>"
+                if has_studio
+                else "<span class='design-status'>📷 写真募集中</span>"
+            )
+            design_items += (
+                f"<li class='related-card'>{thumb_html}"
+                f"<div class='related-card-body'>"
+                f'{_icon("icon-detail-location", "icon-sm")}'
+                f"<div class='design-text'>"
+                f"<a href='{escape(href)}' target='_blank' rel='noopener noreferrer'"
+                f" onclick=\"trackEvent('click_nearby_design_manhole', {_d_params})\">"
+                f"{escape(spot.get('title', ''))}</a>"
+                f"{work_html}"
+                f"</div>"
+                f"</div>"
+                f"<span class='distance'>{escape(dist_str)}</span>"
+                f"{status_html}"
+                f"</li>"
+            )
+        _design_more_onclick = _attr_json({"manhole_id": manhole_id, "source": "design_section"})
+        design_html = (
+            f"<section id='design-manholes' class='design-section section-card'>"
+            f"<h2>🎨 近くのデザインマンホール</h2>"
+            f"<p class='design-note'>ポケふたと一緒に巡れる、ご当地のデザインマンホールです。</p>"
+            f"<ul class='related-list related-list--cards'>{design_items}</ul>"
+            f"<a class='gallery-more' href='{escape(DESIGN_STUDIO_LIST_URL)}'"
+            f" target='_blank' rel='noopener noreferrer'"
+            f" onclick=\"trackEvent('click_design_studio_list', {_design_more_onclick})\">"
+            f"写真館でデザインマンホールを見る →</a>"
+            f"</section>"
+        )
 
     # Nearby manholes section
     nearby_html = ""
@@ -1399,6 +1595,44 @@ def generate_html(
       letter-spacing: 0.01em;
     }}
 
+    a.hero-badge-anchor {{
+      text-decoration: none;
+    }}
+
+    a.hero-badge-anchor:hover, a.hero-badge-anchor:focus {{
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }}
+
+    .design-note {{
+      font-size: 13px;
+      color: #777;
+      margin-bottom: 10px;
+    }}
+
+    .design-text {{
+      flex: 1;
+      min-width: 0;
+    }}
+
+    .design-work {{
+      display: block;
+      font-size: 12px;
+      color: #888;
+      margin-top: 2px;
+    }}
+
+    .design-status {{
+      font-size: 12px;
+      color: #b08050;
+      white-space: nowrap;
+    }}
+
+    .design-status--studio {{
+      color: #1a73e8;
+      font-weight: 600;
+    }}
+
     .hero-badge-secondary {{
       background: #f0f9ff;
       border-color: #bae6fd;
@@ -1840,9 +2074,11 @@ def generate_html(
 
     {location_html}
 
-    {pokemon_info_html}
+    {design_html}
 
     {nearby_html}
+
+    {pokemon_info_html}
 
     {same_pokemon_html}
 
@@ -1870,6 +2106,7 @@ def generate_all_pages(
     output_dir: Path,
     image_dir: Path,
     ja_to_slug: dict[str, str] | None = None,
+    design_spots: list[dict] | None = None,
 ) -> tuple[int, int, int]:
     """Generate HTML pages for all manholes.
 
@@ -1999,11 +2236,22 @@ def generate_all_pages(
         same_pokemon_total = len(seen_ids)
         same_pokemon = same_pokemon[:10]
 
+        # Nearby design manholes (gundam / character / 写真館投稿)
+        nearby_design: list[tuple[dict, float]] = []
+        if lat is not None and lng is not None and design_spots:
+            for spot in design_spots:
+                d = haversine(float(lat), float(lng), spot["lat"], spot["lng"])
+                if d <= DESIGN_NEARBY_RADIUS_KM:
+                    nearby_design.append((spot, d))
+            nearby_design.sort(key=lambda x: x[1])
+            nearby_design = nearby_design[:DESIGN_NEARBY_MAX]
+
         html = generate_html(
             manhole, photo, pokemon_meta, nearby, same_pref, pref_total, same_pokemon,
             id_to_image_url,
             city_total=city_total, same_pokemon_total=same_pokemon_total, nearby_count=nearby_count,
             ogp_dir=ogp_dir, ja_to_slug=ja_to_slug,
+            nearby_design=nearby_design,
         )
 
         page_dir = output_dir / "manholes" / manhole_id
@@ -2040,6 +2288,21 @@ def main() -> int:
         help="Directory containing {id}_latest.jpeg local images"
     )
     parser.add_argument(
+        "--gundam",
+        default="docs/gmanhole.ndjson",
+        help="Path to gundam manholes NDJSON file"
+    )
+    parser.add_argument(
+        "--character-manholes",
+        default="dataset/aichi_character_manholes.ndjson",
+        help="Path to character manholes NDJSON file"
+    )
+    parser.add_argument(
+        "--design-submissions",
+        default="docs/design_manholes.ndjson",
+        help="Path to pokefuta.com design-manhole submissions NDJSON file"
+    )
+    parser.add_argument(
         "--output",
         default="dist",
         help="Output directory (will create manholes/ subdirectory)"
@@ -2072,12 +2335,18 @@ def main() -> int:
         _raw_pokemon = []
     ja_to_slug = build_ja_to_slug(_raw_pokemon)
 
+    design_spots = load_design_spots(
+        Path(args.gundam),
+        Path(args.character_manholes),
+        Path(args.design_submissions),
+    )
+
     output_dir = Path(args.output)
     output_dir.mkdir(parents=True, exist_ok=True)
 
     total, photos_applied, photos_missing = generate_all_pages(
         manholes, photos, pokemon_meta, output_dir, Path(args.image_dir),
-        ja_to_slug=ja_to_slug,
+        ja_to_slug=ja_to_slug, design_spots=design_spots,
     )
 
     print(f"[generate_manhole_pages] total manholes: {len(manholes)}")
