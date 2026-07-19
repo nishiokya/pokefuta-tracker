@@ -293,6 +293,14 @@ def compute_titles(manhole: dict, ctx: dict, *, nc50: int, nc100: int) -> list[d
         if t := _entry("gundam_manhole_city"):
             results.append(t)
 
+    # Character manhole crossover tags (アイマス・東海オンエア等のキャラクターマンホール)
+    if "near_character_manhole" in tags:
+        if t := _entry("near_character_manhole"):
+            results.append(t)
+    if "character_manhole_city" in tags:
+        if t := _entry("character_manhole_city"):
+            results.append(t)
+
     # world_heritage: 世界遺産タグ
     if "world_heritage" in tags:
         if t := _entry("world_heritage"):

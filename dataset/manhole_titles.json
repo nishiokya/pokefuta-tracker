@@ -120,6 +120,22 @@
       "priority": 31,
       "note": "同じ自治体内に設置中のガンダムマンホールが1基以上ある"
     },
+    "near_character_manhole": {
+      "enabled": true,
+      "emoji": "🎨",
+      "label": "キャラクターマンホールまで約1km以内",
+      "hashtag": "#キャラクターマンホール近接",
+      "priority": 43,
+      "note": "ポケふたと設置中キャラクターマンホール（dataset/aichi_character_manholes.ndjson 等）の直線距離が約1km以内。406はアイマス前川みく蓋（りんくう常滑駅北口広場）まで約765m"
+    },
+    "character_manhole_city": {
+      "enabled": true,
+      "emoji": "🎨",
+      "label": "{city}にはキャラクターマンホールもある",
+      "hashtag": "#キャラクターマンホールのあるまち",
+      "priority": 30,
+      "note": "同じ自治体内に設置中のキャラクターマンホールが1基以上ある"
+    },
     "seaside": {
       "enabled": true,
       "emoji": "🌊",
@@ -2381,7 +2397,9 @@
       "tags": [
         "beach",
         "tourism",
-        "seaside"
+        "seaside",
+        "near_character_manhole",
+        "character_manhole_city"
       ],
       "confidence": 1
     },
