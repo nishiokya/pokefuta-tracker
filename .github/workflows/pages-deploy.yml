@@ -23,6 +23,7 @@ on:
       - 'dataset/prefecture_trivia*.json' # generated trivia and editorial sources
       - 'dataset/prefecture_events.json' # prefecture campaign/stamp-rally links
       - 'dataset/gundam_manhole_spots.json' # curated Pokefuta/Gundam crossover experiences
+      - 'dataset/aichi_character_manholes.ndjson' # character manholes shown as nearby design spots
       - 'dataset/manhole/image/**' # local popup photos
       - 'tools/**'      # i18n build scripts
 
