@@ -102,9 +102,14 @@ class PhotoCountTests(unittest.TestCase):
     def test_no_gallery_counts_hero_only(self):
         self.assertEqual(top_feed.photo_count_for({}), 1)
         self.assertEqual(top_feed.photo_count_for({"gallery": None}), 1)
+        self.assertEqual(top_feed.photo_count_for({"gallery": []}), 1)
 
-    def test_gallery_entries_add_to_hero(self):
-        self.assertEqual(top_feed.photo_count_for({"gallery": [{}, {}]}), 3)
+    def test_gallery_length_is_the_count(self):
+        # gallery は代表写真自身を先頭に含むため len がそのまま枚数
+        self.assertEqual(top_feed.photo_count_for({"gallery": [{}, {}]}), 2)
+        self.assertEqual(
+            top_feed.photo_count_for({"gallery": [{}] * 5}), 5
+        )
 
 
 class BuildTopFeedTests(unittest.TestCase):
@@ -238,7 +243,7 @@ class BuildTopFeedTests(unittest.TestCase):
         self.assertEqual(
             rich["badge"], {"emoji": "⭐", "label": "ここだけ", "priority": 90}
         )
-        self.assertEqual(rich["photo_count"], 3)
+        self.assertEqual(rich["photo_count"], 2)
         # 値が無いエントリにはキー自体を足さない（null を焼き込まない）
         self.assertNotIn("badge", plain)
         self.assertNotIn("photo_count", plain)

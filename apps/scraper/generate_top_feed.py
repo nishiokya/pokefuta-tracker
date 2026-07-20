@@ -105,14 +105,17 @@ def hero_badge(record: dict) -> dict | None:
 
 
 def photo_count_for(photo: dict) -> int:
-    """その地点の既知の写真枚数（ヒーロー1枚 + gallery の追加分）。
+    """その地点の既知の写真枚数。
 
-    gallery は import 側で5件にキャップされているため、6 は「6枚以上」を意味する
-    （クライアント側は 6 のとき '📷6+' と表示する）。
+    gallery は代表写真（ヒーロー）自身を先頭に含む public 写真のリスト
+    （export_latest_manhole_photos.py の select_gallery_photos は全写真から選ぶ）で、
+    export 側で5件にキャップされている。5 は「5枚以上」を意味する
+    （クライアント側は 5 のとき '📷5+' と表示する）。
     """
     gallery = photo.get("gallery")
-    extra = len(gallery) if isinstance(gallery, list) else 0
-    return 1 + extra
+    if isinstance(gallery, list) and gallery:
+        return len(gallery)
+    return 1
 
 
 def build_top_feed(
