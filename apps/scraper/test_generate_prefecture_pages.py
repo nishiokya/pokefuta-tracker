@@ -252,10 +252,10 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         self.assertIn("最初の写真を投稿", html)
         self.assertIn("manhole_id=9002&amp;from=data", html)
         self.assertIn('data-photo-state="missing"', html)
-        self.assertIn("const markerClass = point.photo_url ? 'has-photo' : 'needs-photo';", html)
+        self.assertIn("const markerClass = point.is_preinstall", html)
         self.assertIn("html: '<div class=\"prefecture-marker ' + markerClass", html)
         self.assertIn("title: (point.city || '所在地不明') + 'のポケふた'", html)
-        self.assertIn("(point.photo_url ? '投稿写真あり' : '写真募集中')", html)
+        self.assertIn("? '設置予定'", html)
 
     def test_photo_section_zero_inventory_invites_first_contribution(self) -> None:
         records = [
@@ -289,7 +289,7 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
                     ),
                 )
 
-    def test_preinstall_records_are_not_photo_candidates_or_map_points(self) -> None:
+    def test_preinstall_records_are_map_points_without_photo_ctas(self) -> None:
         records = [
             {
                 "id": "installed",
@@ -315,7 +315,37 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         self.assertNotIn("manhole_id=preinstall", html)
         points_json = html.split("const points = ", 1)[1].split(";", 1)[0]
         points = __import__("json").loads(points_json)
-        self.assertEqual(["installed"], [point["id"] for point in points])
+        self.assertEqual(
+            ["installed", "preinstall"],
+            [point["id"] for point in points],
+        )
+        preinstall = next(point for point in points if point["id"] == "preinstall")
+        self.assertTrue(preinstall["is_preinstall"])
+        self.assertEqual("", preinstall["photo_url"])
+        self.assertIn('<i class="legend-dot preinstall"></i>設置予定', html)
+        self.assertIn("const uploadHtml = point.is_preinstall", html)
+        self.assertIn("point.is_preinstall ? ' preinstall-actions' : ''", html)
+        self.assertIn("設置後に写真を投稿できます", html)
+
+    def test_preinstall_only_prefecture_prioritizes_planned_map(self) -> None:
+        records = [
+            {
+                "id": "planned",
+                "city": "設置予定市",
+                "pokemons": ["ロコン"],
+                "lat": 36.0,
+                "lng": 140.0,
+                "installed": False,
+            }
+        ]
+        html = MODULE.build_page(
+            "長野県", "nagano", records, 1, self.pokemon_slugs, None,
+        )
+        hero = html[html.index('<header class="hero">'):html.index("</header>")]
+        self.assertIn('href="#prefecture-map"', hero)
+        self.assertIn("設置予定地を地図で見る", hero)
+        self.assertNotIn('href="#manhole-list"', hero)
+        self.assertIn("設置予定を確認して、次の行き先を探す", html)
 
     def test_attribute_values_are_escaped_and_click_surfaces_are_distinct(self) -> None:
         html = MODULE._manhole_cards(

@@ -685,11 +685,17 @@ def build_page(
             "lng": record.get("lng"),
             "city": record.get("city", ""),
             "pokemons": _clean_pokemons(record),
-            "photo_url": _photo_asset_url(
-                record, photos.get(str(record.get("id", "")), {})
-            ) if str(record.get("id", "")) in photos else "",
+            "is_preinstall": record.get("installed") is False,
+            "photo_url": (
+                _photo_asset_url(
+                    record, photos.get(str(record.get("id", "")), {})
+                )
+                if record.get("installed") is not False
+                and str(record.get("id", "")) in photos
+                else ""
+            ),
         }
-        for record in installed_records
+        for record in records
         if isinstance(record.get("lat"), (int, float))
         and isinstance(record.get("lng"), (int, float))
     ]
@@ -729,6 +735,27 @@ def build_page(
           data-track="prefecture_visit_cta_click" data-destination="pokefuta_visits">スタンプ帳で進捗を見る</a>
         <a class="button tertiary" href="{_escape_attr(nearby_url)}"
           data-track="prefecture_nearby_click" data-destination="pokefuta_nearby">近くの未訪問を探す</a>
+      </div>
+    </section>"""
+    elif count:
+        hero_actions_html = (
+            '<a class="button primary" href="#prefecture-map" '
+            'data-track="prefecture_map_click" '
+            'data-destination="prefecture_map">設置予定地を地図で見る</a>'
+            '<a class="button tertiary" href="/summary/" '
+            'data-track="prefecture_summary_click" '
+            'data-destination="summary">全国のポケふたを見る</a>'
+        )
+        hero_note = "設置後に写真投稿を受け付けます。予定地と設置時期は詳細ページで確認できます。"
+        journey_html = f"""
+    <section class="journey-loop" aria-labelledby="journey-heading">
+      <h2 id="journey-heading">設置予定を確認して、次の行き先を探す</h2>
+      <p>設置予定地は地図で確認できます。設置を待つ間は、全国一覧や現在地周辺からポケふた巡りを始められます。</p>
+      <div class="journey-actions">
+        <a class="button primary" href="#prefecture-map"
+          data-track="prefecture_map_click" data-destination="prefecture_map">設置予定地を見る</a>
+        <a class="button tertiary" href="{_escape_attr(nearby_url)}"
+          data-track="prefecture_nearby_click" data-destination="pokefuta_nearby">現在地の近くから探す</a>
       </div>
     </section>"""
     else:
@@ -871,6 +898,7 @@ def build_page(
     .legend-dot {{ width: 12px; height: 12px; border: 3px solid white; border-radius: 50%; box-shadow: 0 0 0 1px rgba(32,27,22,.2); }}
     .legend-dot.has-photo {{ background: #2d846c; }}
     .legend-dot.needs-photo {{ background: #d78548; }}
+    .legend-dot.preinstall {{ background: #8b8f94; }}
     .nearby-link, .inline-link {{
       display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px;
       border-radius: 999px; background: #e6f2ef; color: #176f68;
@@ -885,6 +913,7 @@ def build_page(
     }}
     .prefecture-marker.has-photo {{ background: #2d846c; }}
     .prefecture-marker.needs-photo {{ background: #d78548; }}
+    .prefecture-marker.preinstall {{ background: #8b8f94; }}
     .map-popup {{ min-width: 210px; }}
     .map-popup img {{
       display: block; width: 100%; height: 120px; margin: 8px 0; border-radius: 10px;
@@ -894,7 +923,12 @@ def build_page(
       margin: 8px 0; padding: 8px; border-radius: 9px; background: #fff0e5;
       color: #8d4a22; font-size: .78rem; font-weight: 850;
     }}
+    .map-popup-preinstall {{
+      margin: 8px 0; padding: 8px; border-radius: 9px; background: #f0ede7;
+      color: #625b53; font-size: .78rem; font-weight: 850;
+    }}
     .map-popup-actions {{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-top: 9px; }}
+    .map-popup-actions.preinstall-actions {{ grid-template-columns: repeat(2, 1fr); }}
     .map-popup-actions a {{
       display: grid; place-items: center; min-height: 38px; padding: 5px;
       border-radius: 8px; background: #ece7f7; color: #4f3a79;
@@ -1094,12 +1128,13 @@ def build_page(
     <section aria-labelledby="map-heading">
       <div class="section-heading-row">
         <h2 id="map-heading">{escape(prefecture)}の設置マップ</h2>
-        <p>ピンから詳細・行き方・写真投稿へ進めます。</p>
+        <p>ピンから詳細・行き方へ。設置済みのポケふたは写真投稿にも進めます。</p>
       </div>
       <div class="map-toolbar">
         <div class="map-legend" aria-label="地図の凡例">
           <span><i class="legend-dot has-photo"></i>投稿写真あり</span>
           <span><i class="legend-dot needs-photo"></i>写真募集中</span>
+          <span><i class="legend-dot preinstall"></i>設置予定</span>
         </div>
         <a class="nearby-link" href="{_escape_attr(nearby_url)}"
           data-track="prefecture_nearby_click" data-destination="pokefuta_nearby">現在地の近くから探す</a>
@@ -1216,19 +1251,32 @@ def build_page(
         bounds.push(latlng);
         const pokemon = point.pokemons.join('・') || 'ポケモン';
         const detailUrl = '/manholes/' + encodeURIComponent(point.id) + '/';
-        const markerClass = point.photo_url ? 'has-photo' : 'needs-photo';
-        const photoState = point.photo_url ? 'has_photo' : 'missing';
+        const markerClass = point.is_preinstall
+          ? 'preinstall'
+          : (point.photo_url ? 'has-photo' : 'needs-photo');
+        const photoState = point.is_preinstall
+          ? 'preinstall'
+          : (point.photo_url ? 'has_photo' : 'missing');
         const googleMapsUrl = 'https://www.google.com/maps?q=' + point.lat + ',' + point.lng;
         const uploadUrl = 'https://pokefuta.com/upload?manhole_id=' +
           encodeURIComponent(point.id) + '&' + campaignParams;
-        const photoHtml = point.photo_url
-          ? '<img src="' + escapeHtml(point.photo_url) + '" alt="' +
-            escapeHtml(point.city || '所在地不明') + 'のポケふた投稿写真" ' +
-            'loading="lazy" decoding="async" width="320" height="240">'
-          : '<div class="map-popup-photo-missing">このポケふたは写真募集中です</div>';
+        const photoHtml = point.is_preinstall
+          ? '<div class="map-popup-preinstall">設置予定のポケふたです。設置後に写真を投稿できます。</div>'
+          : (point.photo_url
+            ? '<img src="' + escapeHtml(point.photo_url) + '" alt="' +
+              escapeHtml(point.city || '所在地不明') + 'のポケふた投稿写真" ' +
+              'loading="lazy" decoding="async" width="320" height="240">'
+            : '<div class="map-popup-photo-missing">このポケふたは写真募集中です</div>');
+        const uploadHtml = point.is_preinstall
+          ? ''
+          : '<a class="upload" href="' + escapeHtml(uploadUrl) +
+            '" data-track="prefecture_photo_upload_start" data-destination="upload" ' +
+            'data-content-id="' + escapeHtml(point.id) +
+            '" data-surface="map_popup" data-photo-state="' + photoState + '">写真投稿</a>';
         const popupHtml = '<div class="map-popup"><strong>' +
           escapeHtml(point.city || '所在地不明') + '</strong><br>' +
-          escapeHtml(pokemon) + photoHtml + '<div class="map-popup-actions">' +
+          escapeHtml(pokemon) + photoHtml + '<div class="map-popup-actions' +
+          (point.is_preinstall ? ' preinstall-actions' : '') + '">' +
           '<a href="' + detailUrl + '" data-track="prefecture_manhole_click" ' +
           'data-destination="' + escapeHtml(point.id) + '" data-content-id="' + escapeHtml(point.id) +
           '" data-surface="map_popup">詳細</a>' +
@@ -1236,14 +1284,13 @@ def build_page(
           '" target="_blank" rel="noopener noreferrer" ' +
           'data-track="prefecture_google_maps_click" data-destination="google_maps" ' +
           'data-content-id="' + escapeHtml(point.id) + '" data-surface="map_popup">行き方</a>' +
-          '<a class="upload" href="' + escapeHtml(uploadUrl) +
-          '" data-track="prefecture_photo_upload_start" data-destination="upload" ' +
-          'data-content-id="' + escapeHtml(point.id) + '" data-surface="map_popup" data-photo-state="' +
-          photoState + '">写真投稿</a></div></div>';
+          uploadHtml + '</div></div>';
         const marker = L.marker(latlng, {{
           title: (point.city || '所在地不明') + 'のポケふた',
           alt: (point.city || '所在地不明') + 'のポケふた・' +
-            (point.photo_url ? '投稿写真あり' : '写真募集中'),
+            (point.is_preinstall
+              ? '設置予定'
+              : (point.photo_url ? '投稿写真あり' : '写真募集中')),
           icon: L.divIcon({{
             className: '',
             html: '<div class="prefecture-marker ' + markerClass + '"></div>',
