@@ -53,6 +53,10 @@ MARKER_STYLES: Dict[str, Dict[str, str]] = {
     "ちびまる子ちゃん": {"marker_label": "ま", "marker_color": "#8b5cf6"},
     "東海オンエア": {"marker_label": "東", "marker_color": "#14b8a6"},
     "アイドルマスター シンデレラガールズ": {"marker_label": "ア", "marker_color": "#f97316"},
+    # 20周年「ふたマス!!!!!!」はブランド横断。work はブランド別に持たせつつ表示は統一する。
+    "アイドルマスター": {"marker_label": "ア", "marker_color": "#f97316"},
+    "アイドルマスター ミリオンライブ！": {"marker_label": "ア", "marker_color": "#f97316"},
+    "アイドルマスター シャイニーカラーズ": {"marker_label": "ア", "marker_color": "#f97316"},
 }
 
 # --- 作品ごとのソース設定 -------------------------------------------------
@@ -114,6 +118,13 @@ WORKS: List[Dict[str, Any]] = [
         # 自治体・公式観光マップのGoogle Mapsリンクから手動確認した愛知県データ。
         "source_type": "ndjson",
         "path": "dataset/aichi_character_manholes.ndjson",
+    },
+    {
+        # 20周年「ふたマス!!!!!!」公式ページのGoogle Mapsリンクから座標を確定した手動データ。
+        # 公式ページはNext.js静的エクスポートで、設置情報はページチャンクJSにハードコードされている
+        # (__NEXT_DATA__ は空)。常滑は aichi_character_manholes.ndjson 側に既存のため含めない。
+        "source_type": "ndjson",
+        "path": "dataset/idolmaster_20th_manholes.ndjson",
     },
 ]
 

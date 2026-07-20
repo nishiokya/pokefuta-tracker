@@ -51,7 +51,7 @@ class CharacterManholeCollectorTests(unittest.TestCase):
             if line
         ]
 
-        self.assertEqual(len(records), 115)
+        self.assertEqual(len(records), 123)
         self.assertEqual(
             len([record for record in records if record["prefecture"] == "愛知県"]),
             15,
