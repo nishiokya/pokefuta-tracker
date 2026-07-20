@@ -17,12 +17,12 @@ HEADER_TEMPLATE = """<header class="site-header">
       <span class="site-header__brand-name">ポケふた図鑑</span>
     </a>
     <nav class="site-header__nav" aria-label="{nav_aria}">
-      <a class="site-header__link" href="{page_base}map.html">{nav_map}</a>
-      <a class="site-header__link site-header__link--desktop" href="{page_base}summary/">{nav_summary}</a>
       <a class="site-header__link" href="{page_base}pokemon/">{nav_pokemon}</a>
-      <a class="site-header__link" href="{asset_base}gmanhole_map.html">{nav_character}</a>
-      <a class="site-header__link site-header__auth-link--desktop" data-login-link data-nav-target="login" data-profile-page="https://pokefuta.com/profile" data-stamp-label="{nav_stamp}" href="https://pokefuta.com/login?from=data">{nav_login}</a>
-      <a class="site-header__link site-header__auth-link--mobile" data-login-link data-nav-target="login" data-stamp-page="https://pokefuta.com/visits" data-stamp-label="{nav_stamp}" href="https://pokefuta.com/login?from=data">{nav_login}</a>
+      <a class="site-header__link" href="{page_base}map.html"><span class="site-header__label--desktop">{nav_map}</span><span class="site-header__label--mobile">{nav_map_mobile}</span></a>
+      <a class="site-header__link" href="{page_base}summary/"><span class="site-header__label--desktop">{nav_summary}</span><span class="site-header__label--mobile">{nav_summary_mobile}</span></a>
+      <a class="site-header__link" href="{asset_base}gmanhole_map.html"><span class="site-header__label--desktop">{nav_character}</span><span class="site-header__label--mobile">{nav_character_mobile}</span></a>
+      <a class="site-header__link site-header__auth-link--desktop" data-login-link data-nav-target="login" data-stamp-page="https://pokefuta.com/" data-stamp-label="{nav_stamp}" href="https://pokefuta.com/login?from=data">{nav_login}</a>
+      <a class="site-header__link site-header__auth-link--mobile" data-login-link data-nav-target="login" data-stamp-page="https://pokefuta.com/" data-stamp-label="{nav_stamp_mobile}" href="https://pokefuta.com/login?from=data">{nav_login}</a>
     </nav>
   </div>
 </header>"""
@@ -36,6 +36,14 @@ NAV_LABELS = {
     "zh-TW": ("主導覽", "地圖", "摘要", "神奇寶貝", "角色人孔蓋", "集章冊", "登入"),
     "zh-CN": ("主导航", "地图", "摘要", "宝可梦", "角色井盖", "集章册", "登录"),
     "ko": ("메인 내비게이션", "지도", "요약", "포켓몬", "캐릭터 맨홀", "스탬프북", "로그인"),
+}
+
+NAV_MOBILE_LABELS = {
+    "ja": ("地図", "集計", "キャラ", "スタンプ帳"),
+    "en": ("Map", "Stats", "Characters", "Stamps"),
+    "zh-TW": ("地圖", "統計", "角色", "集章"),
+    "zh-CN": ("地图", "统计", "角色", "集章"),
+    "ko": ("지도", "통계", "캐릭터", "스탬프"),
 }
 
 LEGACY_HEADER_RE = re.compile(
@@ -63,11 +71,19 @@ def inject(html: str, asset_base: str = "./", page_base: str | None = None) -> s
         return html
 
     page_base = page_base or asset_base
-    labels = NAV_LABELS[_language(html)]
+    language = _language(html)
+    labels = NAV_LABELS[language]
+    mobile_labels = NAV_MOBILE_LABELS[language]
     substitutions = dict(
         zip(
             ("nav_aria", "nav_map", "nav_summary", "nav_pokemon", "nav_character", "nav_stamp", "nav_login"),
             labels,
+        )
+    )
+    substitutions.update(
+        zip(
+            ("nav_map_mobile", "nav_summary_mobile", "nav_character_mobile", "nav_stamp_mobile"),
+            mobile_labels,
         )
     )
     stylesheet = STYLESHEET_TEMPLATE.format(asset_base=asset_base)

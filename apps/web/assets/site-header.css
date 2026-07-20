@@ -145,6 +145,10 @@ body.has-site-header {
   text-decoration: none;
 }
 
+.site-header__label--mobile {
+  display: none;
+}
+
 /* ログイン系リンクは pokefuta の Header と同じ紫の枠線ボタン */
 .site-header__auth-link--desktop,
 .site-header__auth-link--mobile {
@@ -172,36 +176,47 @@ body.has-site-header {
 
 @media (max-width: 720px) {
   .site-header__inner {
-    padding: 10px 10px;
-    gap: 6px;
+    padding: 10px 8px;
+    gap: 4px;
   }
 
   .site-header__brand {
     flex: 0 0 auto;
-    gap: 6px;
+    gap: 0;
   }
 
-  .site-header__brand-name { font-size: 15px; }
+  .site-header__mark {
+    display: none;
+  }
+
+  .site-header__brand-name {
+    font-size: 14px;
+    letter-spacing: -.03em;
+  }
 
   .site-header__nav {
-    gap: 3px;
+    flex: 1 1 auto;
+    justify-content: flex-end;
+    gap: 1px;
     min-width: 0;
-    margin-left: auto;
+    margin-left: 0;
   }
 
   .site-header__link {
-    display: block;
+    display: inline-flex;
     height: 32px;
-    padding: 0 6px;
-    overflow: hidden;
+    padding: 0 4px;
     font-size: 11px;
     line-height: 32px;
     text-align: center;
-    text-overflow: ellipsis;
   }
 
-  .site-header__link--desktop {
+  .site-header__label--desktop {
     display: none;
+  }
+
+  .site-header__label--mobile {
+    display: inline;
   }
 
   .site-header__auth-link--desktop {
@@ -209,9 +224,9 @@ body.has-site-header {
   }
 
   .site-header__auth-link--mobile {
-    display: block;
+    display: inline-flex;
     height: auto;
-    padding: 6px 10px;
+    padding: 6px 8px;
     border: 1px solid #7b63a8;
     border-radius: 8px;
     background: transparent;
@@ -219,6 +234,32 @@ body.has-site-header {
     font-size: 11px;
     line-height: 1.4;
     font-weight: 700;
+  }
+}
+
+@media (max-width: 360px) {
+  .site-header__inner {
+    padding-inline: 6px;
+    gap: 2px;
+  }
+
+  .site-header__brand-name {
+    font-size: 13px;
+    letter-spacing: -.05em;
+  }
+
+  .site-header__nav {
+    gap: 0;
+  }
+
+  .site-header__link {
+    padding-inline: 3px;
+    font-size: 10px;
+  }
+
+  .site-header__auth-link--mobile {
+    padding-inline: 7px;
+    font-size: 10px;
   }
 }
 
