@@ -37,6 +37,7 @@ class LatestPhotoCardsTest(unittest.TestCase):
                     "url": "https://example.com/slowpoke.jpg",
                     "created_at": "2026-06-13T00:00:00Z",
                     "display_name": "とても長い名前の投稿者さんイーブイ推し団長",
+                    "public_user_id": "6096691c-eeda-4e73-8401-a11274868ede",
                 },
             },
         }
@@ -59,6 +60,29 @@ class LatestPhotoCardsTest(unittest.TestCase):
         # 日付はロケール表記（UTC 00:00 → JST 同日）、投稿者名は 20 文字で省略
         self.assertEqual(cards[0]["date"], "Jun 13")
         self.assertEqual(cards[0]["poster"], "とても長い名前の投稿者さんイーブイ推し…")
+        self.assertEqual(
+            cards[0]["poster_profile_url"],
+            "https://pokefuta.com/users/6096691c-eeda-4e73-8401-a11274868ede/visits",
+        )
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            html = generate_html(
+                pokemon_index,
+                "en",
+                LANG_CONFIGS["en"],
+                LP_INDEX_STRINGS["en"],
+                lambda pref: "Kagawa",
+                photos_data,
+                Path(tmpdir),
+            )
+        self.assertIn('<article class="photo-card">', html)
+        self.assertIn(
+            'href="https://pokefuta.com/users/'
+            '6096691c-eeda-4e73-8401-a11274868ede/visits"',
+            html,
+        )
+        self.assertIn('class="poster-link"', html)
+        self.assertNotIn("さんの公開スタンプ帳を開く", html)
 
     def test_pokemon_index_does_not_render_hero_summary_panel(self):
         pokemon_index = {

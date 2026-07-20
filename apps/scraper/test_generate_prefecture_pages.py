@@ -232,6 +232,7 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
                 "url": "https://images.pokefuta.com/photos/9001.jpg",
                 "created_at": "2026-07-20T00:00:00Z",
                 "display_name": "旅人",
+                "public_user_id": "6096691c-eeda-4e73-8401-a11274868ede",
             }
         }
         with tempfile.TemporaryDirectory() as directory:
@@ -248,6 +249,14 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         self.assertIn('aria-valuenow="50"', html)
         self.assertIn('loading="lazy" decoding="async" width="640" height="480"', html)
         self.assertIn("旅人さんの投稿", html)
+        self.assertIn(
+            'href="https://pokefuta.com/users/'
+            '6096691c-eeda-4e73-8401-a11274868ede/visits?from=data&amp;'
+            'utm_source=data.pokefuta.com&amp;utm_medium=referral&amp;'
+            'utm_campaign=prefecture_page&amp;utm_content=hokkaido"',
+            html,
+        )
+        self.assertIn('class="photo-card-poster"', html)
         self.assertIn("写真未掲載のポケふたは1地点", html)
         self.assertIn("最初の写真を投稿", html)
         self.assertIn("manhole_id=9002&amp;from=data", html)

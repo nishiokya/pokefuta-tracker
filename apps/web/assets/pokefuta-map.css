@@ -1123,6 +1123,14 @@ body.pokefuta-map-page {
 .pokefuta-map-page .travel-popup-photo-author {
   background: rgba(36, 31, 26, .82);
   color: #fffaf0;
+  text-decoration: none;
+}
+
+.pokefuta-map-page a.travel-popup-photo-author:hover,
+.pokefuta-map-page a.travel-popup-photo-author:focus-visible {
+  background: #176f68;
+  outline: 2px solid #fffaf0;
+  outline-offset: 2px;
 }
 
 .pokefuta-map-page .travel-popup-body {

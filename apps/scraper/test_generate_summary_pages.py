@@ -37,11 +37,17 @@ class LatestPhotosSectionTests(unittest.TestCase):
             "url": "https://example.com/220.jpeg",
             "created_at": "2026-07-15T15:30:00+00:00",  # JST では 7/16
             "display_name": "テスト太郎",
+            "public_user_id": "6096691c-eeda-4e73-8401-a11274868ede",
         })
         self.assertIn(
-            '<span class="photo-card-meta">北海道斜里町 · テスト太郎 · 7月16日</span>',
+            '<span class="photo-card-meta">北海道斜里町 · '
+            '<a class="poster-link" href="https://pokefuta.com/users/'
+            '6096691c-eeda-4e73-8401-a11274868ede/visits"',
             html,
         )
+        self.assertIn('>テスト太郎</a> · 7月16日</span>', html)
+        self.assertIn('<article class="photo-card">', html)
+        self.assertIn('<a class="photo-card-main" href="/manholes/220/">', html)
 
     def test_meta_without_poster_keeps_location_and_date(self):
         html = self._build({

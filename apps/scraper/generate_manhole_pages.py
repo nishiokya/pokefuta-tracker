@@ -26,6 +26,7 @@ from photo_caption import (  # noqa: E402
     CAPTION_ELLIPSIS_CSS,
     format_display_name,
     format_photo_date,
+    poster_profile_url,
 )
 
 try:
@@ -490,21 +491,6 @@ def _attr_json(data: dict) -> str:
     a proper object literal.
     """
     return escape(json.dumps(data, ensure_ascii=False), {'"': '&quot;'})
-
-
-# apps/web/index.html の PUBLIC_USER_ID_RE と同じガード。
-# UUID 形式でない値は snapshot の異常データとみなしリンク化しない。
-PUBLIC_USER_ID_RE = re.compile(
-    r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", re.I
-)
-
-
-def poster_profile_url(public_user_id) -> str:
-    """有効な公開ユーザーIDなら pokefuta.com の公開スタンプ帳URLを、無効なら空文字を返す。"""
-    pid = str(public_user_id or "").strip()
-    if not PUBLIC_USER_ID_RE.match(pid):
-        return ""
-    return f"https://pokefuta.com/users/{quote(pid)}/visits"
 
 
 def _js_json(value) -> str:

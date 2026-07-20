@@ -13,11 +13,17 @@
 
 from __future__ import annotations
 
+import re
 from datetime import date, datetime
+from urllib.parse import quote
 from zoneinfo import ZoneInfo
 
 JST = ZoneInfo("Asia/Tokyo")
 DISPLAY_NAME_MAX_LEN = 20
+PUBLIC_USER_ID_RE = re.compile(
+    r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+    re.I,
+)
 
 # Intl 依存の locale 揺れを避け、決定的に整形するための固定月名（en 用）
 _EN_MONTHS = (
@@ -89,6 +95,14 @@ def format_display_name(name: object, max_len: int = DISPLAY_NAME_MAX_LEN) -> st
     if len(collapsed) > max_len:
         return collapsed[: max_len - 1].rstrip() + "…"
     return collapsed
+
+
+def poster_profile_url(public_user_id: object) -> str:
+    """有効な公開ユーザーIDを公開スタンプ帳URLへ変換する。"""
+    pid = str(public_user_id or "").strip()
+    if not PUBLIC_USER_ID_RE.fullmatch(pid):
+        return ""
+    return f"https://pokefuta.com/users/{quote(pid)}/visits"
 
 
 def caption_meta(*parts: object, sep: str = " · ") -> str:

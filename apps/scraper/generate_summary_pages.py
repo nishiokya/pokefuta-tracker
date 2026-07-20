@@ -26,6 +26,7 @@ from photo_caption import (  # noqa: E402
     caption_meta,
     format_display_name,
     format_photo_date,
+    poster_profile_url,
 )
 
 try:
@@ -1006,8 +1007,15 @@ _CSS = """\
       display: flex;
       flex-direction: column;
       gap: 5px;
-      text-decoration: none;
       color: inherit;
+    }
+
+    .photo-card-main {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      color: inherit;
+      text-decoration: none;
     }
 
     .photo-card img {
@@ -1261,6 +1269,14 @@ _CSS = """\
     .summary-hero h1 span {
       display: inline;
       white-space: nowrap;
+    }
+
+    .photo-card-meta .poster-link {
+      color: #176f68;
+      font-weight: 800;
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 2px;
     }
 
     .summary-hero .summary-hero-subtitle {
@@ -3522,18 +3538,29 @@ def _build_latest_photos_section(
         # 「場所 · 投稿者 · 7月16日」に統一（トップページのヒーローと同じ見せ方）
         date = format_photo_date(photo.get("created_at"), "ja")
         poster = format_display_name(photo.get("display_name"))
+        profile_url = poster_profile_url(photo.get("public_user_id"))
+        poster_html = escape(poster)
+        if poster and profile_url:
+            poster_html = (
+                f'<a class="poster-link" href="{escape(profile_url)}" '
+                f'target="_blank" rel="noopener noreferrer" '
+                f'aria-label="{escape(poster)}さんの公開スタンプ帳を開く">'
+                f'{escape(poster)}</a>'
+            )
         # caption_meta にはエスケープ済みの部品のみ渡す（date も一貫させる）
-        meta = caption_meta(escape(location), escape(poster), escape(date))
+        meta = caption_meta(escape(location), poster_html, escape(date))
         manhole_href = f"/manholes/{mid}/"
         display_title = pokemons or title
         if not url:
             continue
         cards.append(
-            f'<a class="photo-card" href="{escape(manhole_href)}">'
+            f'<article class="photo-card">'
+            f'<a class="photo-card-main" href="{escape(manhole_href)}">'
             f'<img src="{escape(url)}" alt="{escape(display_title)}" loading="lazy" decoding="async">'
             f'<span class="photo-card-title">{escape(display_title)}</span>'
-            f'<span class="photo-card-meta">{meta}</span>'
             f'</a>'
+            f'<span class="photo-card-meta">{meta}</span>'
+            f'</article>'
         )
 
     if not cards:
