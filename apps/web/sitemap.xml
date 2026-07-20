@@ -21,6 +21,11 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://data.pokefuta.com/character_manholes.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://data.pokefuta.com/gmanhole_map.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>

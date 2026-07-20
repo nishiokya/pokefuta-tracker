@@ -12,6 +12,7 @@ on:
       - 'apps/scraper/generate_manhole_ogp.py' # OGP image generator
       - 'apps/scraper/generate_pokemon_pages.py' # Pokemon LP generator
       - 'apps/scraper/generate_pokemon_index_page.py' # Pokemon index page generator
+      - 'apps/scraper/generate_character_manhole_page.py' # character manhole LP generator
       - 'apps/scraper/generate_summary_pages.py' # summary page generator
       - 'apps/scraper/generate_summary_ogp.py' # summary page OGP generator
       - 'apps/scraper/generate_prefecture_pages.py' # prefecture page generator
@@ -79,12 +80,16 @@ jobs:
           python3 -m unittest \
             apps.scraper.test_generate_prefecture_pages.PrefecturePageDeployContractTest \
             apps.scraper.test_web_prefecture_links
+          echo "[dist] Test character manhole landing page generation"
+          python3 -m unittest apps.scraper.test_generate_character_manhole_page
           echo "[dist] Generate static manhole detail pages"
           python3 apps/scraper/generate_manhole_pages.py
           echo "[dist] Generate static Pokemon LP pages"
           python3 apps/scraper/generate_pokemon_pages.py
           echo "[dist] Generate Pokemon index page"
           python3 apps/scraper/generate_pokemon_index_page.py
+          echo "[dist] Generate character manhole landing page"
+          python3 apps/scraper/generate_character_manhole_page.py --output dist/character_manholes.html
           echo "[dist] Generate summary OGP image"
           python3 apps/scraper/generate_summary_ogp.py
           echo "[dist] Generate summary pages (ja/en/zh-CN/zh-TW/ko)"

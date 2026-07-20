@@ -13,9 +13,9 @@ description: Build, run, smoke-test, and screenshot the pokefuta-tracker static 
 .claude/skills/run-pokefuta-tracker/driver.sh
 ```
 
-やること: `apps/web/` → `dist/` 同期 → :8000 で配信（nohupでデタッチ、シェルが死んでも生存）→ 主要9ページの curl スモーク（200+コンテンツマーカー）→ ヘッドレスChromeで3枚スクリーンショット。**最後に `ALL OK` が出て、サーバーは起動したまま残る。**
+やること: `apps/web/` → `dist/` 同期 → :8000 で配信（nohupでデタッチ、シェルが死んでも生存）→ 主要10ページの curl スモーク（200+コンテンツマーカー）→ ヘッドレスChromeで4枚スクリーンショット。**最後に `ALL OK` が出て、サーバーは起動したまま残る。**
 
-- スクリーンショット出力先: `$TMPDIR/pokefuta-run/{index,design_manhole,prefecture}.png` — **必ず Read で目視確認する**（真っ白/エラーページならFAIL扱い）
+- スクリーンショット出力先: `$TMPDIR/pokefuta-run/{index,design_manhole,character_manholes,prefecture}.png` — **必ず Read で目視確認する**（真っ白/エラーページならFAIL扱い）
 - ポート/出力先の変更: `PORT=8001 SS_DIR=/path driver.sh`
 - 停止: `.claude/skills/run-pokefuta-tracker/driver.sh stop`
 - 前提: `dist/` が存在すること。無ければ下の Build を先に実行。
@@ -45,6 +45,7 @@ python3 apps/scraper/generate_prefecture_trivia.py --check
 python3 apps/scraper/generate_manhole_pages.py
 python3 apps/scraper/generate_pokemon_pages.py
 python3 apps/scraper/generate_pokemon_index_page.py
+python3 apps/scraper/generate_character_manhole_page.py --output dist/character_manholes.html
 python3 apps/scraper/generate_summary_ogp.py
 python3 apps/scraper/generate_summary_pages.py
 python3 apps/scraper/generate_prefecture_pages.py

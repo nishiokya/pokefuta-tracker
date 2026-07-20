@@ -10,7 +10,7 @@
 ### ページ一覧
 - **[マップビュー](https://data.pokefuta.com/)** - インタラクティブマップでポケふたを地図上で表示
 - **[近くのマンホール](https://data.pokefuta.com/nearby_manholes.html)** - 現在地から近いポケふたを検索
-- **[ガンダム & ポケふた統合マップ (試験)](https://nishiokya.github.io/pokefuta-tracker/gmanhole_map.html)** - ガンダムマンホール + ポケふたを同時可視化 (重複座標ハイライト)
+- **[キャラクターマンホール](https://data.pokefuta.com/character_manholes.html)** - ガンダム・ゾンビランドサガ等のキャラクターマンホールを紹介するランディングページ。ここから[地図（試験）](https://data.pokefuta.com/gmanhole_map.html)を開くと、ガンダムマンホール + ポケふたを同時可視化できます (重複座標ハイライト)
 
 ### 機能
 - 📍 日本全国のポケふたを地図上で表示

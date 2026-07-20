@@ -133,9 +133,11 @@ git diff apps/scraper/pokefuta.ndjson --name-only
 - ジオコーディング (国土地理院 API 既定 / `--geocode-provider` 切り替え)
 - timestamps: first_seen / added_at / last_updated / status
 
-公開マップ: **[ガンダム & ポケふた統合マップ](https://nishiokya.github.io/pokefuta-tracker/gmanhole_map.html)**
+キャラクターマンホールの入口は `character_manholes.html`（`apps/scraper/generate_character_manhole_page.py` がビルド時にドキュメント本文を焼き込んで生成するランディングページ）で、ヘッダーの「キャラマンホール」もここに着地する。全画面地図の `gmanhole_map.html` はその配下のサブページとして現URLのまま残しており、LPの作品カード・都道府県リストから `?work=` / `?pref=` 付きで遷移する。
 
-⚠️ **注**: `gmanhole_map.html` は本番環境（GitHub Pages）でのみ動作します。ローカル開発時に動作確認するには、`npm install -g serve` で `dist/` ディレクトリから起動してください。
+公開ページ: **[キャラクターマンホール](https://data.pokefuta.com/character_manholes.html)** / **[ガンダム & ポケふた統合マップ](https://data.pokefuta.com/gmanhole_map.html)**
+
+⚠️ **注**: `gmanhole_map.html` と `character_manholes.html` は本番環境（GitHub Pages）でのみ動作します。ローカル開発時に動作確認するには、`npm install -g serve` で `dist/` ディレクトリから起動してください。
 
 ### スクレイプ例
 ```bash
