@@ -433,6 +433,21 @@
       }).format(date);
     }
 
+    function heroBadge(p) {
+      // 称号バッジ（例「🌟 レアポケふた」）。label は日本語のみのため、
+      // 非 ja ページでは共通の TF_STRINGS.badge にフォールバックする（既知の i18n ギャップ）
+      if (p.badge && p.badge.label && (document.documentElement.lang || 'ja') === 'ja') {
+        return (p.badge.emoji ? p.badge.emoji + ' ' : '') + p.badge.label;
+      }
+      return TF_STRINGS.badge;
+    }
+
+    function heroMediaLabel(p, place) {
+      // photo_count は gallery 5件キャップのため 6 = 「6枚以上」（📷6+ と表示）
+      if (!(p.photo_count >= 2)) return place;
+      return place + ' · 📷' + p.photo_count + (p.photo_count >= 6 ? '+' : '');
+    }
+
     function communityHero(photos) {
       function names(p) { return (p.pokemons || []).slice(0, 2).join('・'); }
       function place(p) { return (p.title || '').replace('/', ' '); }
@@ -453,8 +468,8 @@
         id: f.id, community: true,
         imgAlt: (names(f) || place(f)) + 'のポケふた投稿写真',
         bgStyle: 'linear-gradient(140deg,#7E9DB2,#5E7C8A)',
-        badge: TF_STRINGS.badge,
-        mediaLabel: place(f),
+        badge: heroBadge(f),
+        mediaLabel: heroMediaLabel(f, place(f)),
         title: f.comment || names(f) || place(f),
         place: f.comment && names(f) ? place(f) + ' ／ ' + names(f) : place(f),
         footerText: footerText,
@@ -466,7 +481,7 @@
             id: p.id,
             imgAlt: (names(p) || place(p)) + 'のポケふた投稿写真',
             bg: 'linear-gradient(140deg,#7E9DB2,#5E7C8A)',
-            badge: TF_STRINGS.badge,
+            badge: heroBadge(p),
             title: names(p) || place(p),
             place: place(p) + ' →',
             href: 'map.html?manhole=' + encodeURIComponent(p.id)

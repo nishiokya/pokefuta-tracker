@@ -30,6 +30,10 @@ IMAGE_DIR = ROOT / "dataset" / "manhole" / "image"
 MAX_PHOTOS = 12
 COMMENT_MAX_LEN = 80
 
+# 称号バッジに採用する最低 priority。「ここだけ」(90) / 離島 (95) / 最北端等 (100) /
+# レア (70) / 市内唯一 (60) は拾い、観光・駅前などの汎用タグ (36 帯) は拾わない
+HERO_BADGE_MIN_PRIORITY = 60
+
 # pokefuta.ndjson の pokemons に混ざる非ポケモン表記（トップページ JS と同じ除外規則）
 _EXCLUDED_POKEMON_PATTERN = "ローカルActs"
 
@@ -73,6 +77,44 @@ def sanitize_comment(text: object) -> str | None:
     return collapsed
 
 
+def hero_badge(record: dict) -> dict | None:
+    """ndjson の titles[0]（priority 降順格納済み）から称号バッジを作る。
+
+    label には hashtag から '#' を落とした短縮形を使う（titles の label は
+    「ガラルダルマッカは全国でここだけ」のように長く、ヒーローのバッジ枠に
+    収まらないため）。希少称号（HERO_BADGE_MIN_PRIORITY 以上）のみ採用。
+    """
+    titles = record.get("titles") or []
+    if not titles or not isinstance(titles[0], dict):
+        return None
+    top = titles[0]
+    priority = top.get("priority")
+    hashtag = top.get("hashtag")
+    if not isinstance(priority, (int, float)) or priority < HERO_BADGE_MIN_PRIORITY:
+        return None
+    if not isinstance(hashtag, str):
+        return None
+    label = hashtag.lstrip("#").strip()
+    if not label:
+        return None
+    return {
+        "emoji": top.get("emoji") or "",
+        "label": label,
+        "priority": int(priority),
+    }
+
+
+def photo_count_for(photo: dict) -> int:
+    """その地点の既知の写真枚数（ヒーロー1枚 + gallery の追加分）。
+
+    gallery は import 側で5件にキャップされているため、6 は「6枚以上」を意味する
+    （クライアント側は 6 のとき '📷6+' と表示する）。
+    """
+    gallery = photo.get("gallery")
+    extra = len(gallery) if isinstance(gallery, list) else 0
+    return 1 + extra
+
+
 def build_top_feed(
     photos_data: dict,
     records_by_id: dict[str, dict],
@@ -104,7 +146,7 @@ def build_top_feed(
         # UTC のまま [:10] すると UTC 15:00 以降の投稿が1日前にずれるため
         # JST に変換してから日付化する（トップの formatFeedDate は JST 日付を前提）
         created_jst = to_jst_date(photo.get("created_at"))
-        entries.append({
+        entry = {
             "id": mid,
             "title": record.get("title", ""),
             "prefecture": record.get("prefecture", ""),
@@ -114,7 +156,15 @@ def build_top_feed(
             "public_user_id": photo.get("public_user_id") or None,
             "comment": sanitize_comment(photo.get("comment")),
             "created_at": created_jst.isoformat() if created_jst else "",
-        })
+        }
+        # ペイロード規律: 値があるときだけキーを足す（null は焼き込まない）
+        badge = hero_badge(record)
+        if badge:
+            entry["badge"] = badge
+        photo_count = photo_count_for(photo)
+        if photo_count >= 2:
+            entry["photo_count"] = photo_count
+        entries.append(entry)
         if len(entries) >= max_photos:
             break
 
