@@ -1030,10 +1030,7 @@ _CSS = """\
       color: #716154;
       /* 長い投稿者名でもカード幅を崩さない（トップページのヒーローと同じ手法） */
       display: block;
-      min-width: 0;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      /*CAPTION_ELLIPSIS*/
     }
 
     .discovery-hub-grid {
@@ -1656,6 +1653,9 @@ _CSS = """\
         grid-template-columns: 1fr;
       }
     }"""
+
+# 共通の ellipsis スタイルは photo_caption の定数を単一ソースにする
+_CSS = _CSS.replace("/*CAPTION_ELLIPSIS*/", CAPTION_ELLIPSIS_CSS)
 
 _HREFLANG = """\
   <link rel="alternate" hreflang="ja"      href="https://data.pokefuta.com/summary/">
@@ -3522,7 +3522,8 @@ def _build_latest_photos_section(
         # 「場所 · 投稿者 · 7月16日」に統一（トップページのヒーローと同じ見せ方）
         date = format_photo_date(photo.get("created_at"), "ja")
         poster = format_display_name(photo.get("display_name"))
-        meta = caption_meta(escape(location), escape(poster), date)
+        # caption_meta にはエスケープ済みの部品のみ渡す（date も一貫させる）
+        meta = caption_meta(escape(location), escape(poster), escape(date))
         manhole_href = f"/manholes/{mid}/"
         display_title = pokemons or title
         if not url:

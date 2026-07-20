@@ -39,7 +39,11 @@ def to_jst_date(iso_value: object) -> date | None:
     """
     if not isinstance(iso_value, str) or not iso_value.strip():
         return None
-    text = iso_value.strip().replace("Z", "+00:00")
+    text = iso_value.strip()
+    # 'Z' の置換は UTC サフィックスに限定する（それ以外の位置の 'Z' は不正入力
+    # なので fromisoformat の ValueError に委ねる）
+    if text.endswith(("Z", "z")):
+        text = text[:-1] + "+00:00"
     try:
         dt = datetime.fromisoformat(text)
     except ValueError:

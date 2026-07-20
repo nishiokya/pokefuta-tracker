@@ -764,7 +764,7 @@ def generate_html(
             if g_credit:
                 g_label = f"📷 {escape(g_credit)}"
                 if g_date:
-                    g_label += f" · {g_date}"
+                    g_label += f" · {escape(g_date)}"
                 _g_profile_url = poster_profile_url(g.get("public_user_id"))
                 if _g_profile_url:
                     _g_poster_onclick = _attr_json({"manhole_id": manhole_id, "source": "gallery"})
@@ -777,7 +777,7 @@ def generate_html(
                 else:
                     credit_span = f"<span class='gallery-credit'>{g_label}</span>"
             elif g_date:
-                credit_span = f"<span class='gallery-credit'>📷 {g_date}</span>"
+                credit_span = f"<span class='gallery-credit'>📷 {escape(g_date)}</span>"
             else:
                 credit_span = ""
             thumbs += (
