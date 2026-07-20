@@ -228,7 +228,7 @@ def _trivia_html(prefecture: str, trivia_entry: dict | None, count: int) -> str:
         source = ""
         if source_url.startswith("https://"):
             source = (
-                f'<a href="{escape(source_url)}" target="_blank" '
+                f'<a href="{_escape_attr(source_url)}" target="_blank" '
                 f'rel="noopener noreferrer">'
                 f'{escape(selected.get("source_label", "出典"))}</a>'
             )
@@ -308,7 +308,7 @@ def _pokemon_card(name: str, count: int, pokemon_slugs: dict[str, str]) -> str:
         return (
             f'<a class="pokemon-card" href="/pokemon/{quote(slug)}/" '
             f'data-track="prefecture_pokemon_click" '
-            f'data-destination="{escape(slug)}">{content}</a>'
+            f'data-destination="{_escape_attr(slug)}">{content}</a>'
         )
     return f'<article class="pokemon-card">{content}</article>'
 
@@ -339,17 +339,6 @@ def _pokemon_cards(records: list[dict], pokemon_slugs: dict[str, str]) -> str:
         f'<div class="pokemon-more-grid">{more}</div>'
         f'</details>'
     )
-
-
-def _safe_https_url(value: object) -> str:
-    candidate = str(value or "").strip()
-    if not candidate:
-        return ""
-    try:
-        parsed = urlparse(candidate)
-    except ValueError:
-        return ""
-    return candidate if parsed.scheme == "https" and parsed.netloc else ""
 
 
 def _campaign_params(slug: str) -> str:
@@ -387,7 +376,9 @@ def _photo_asset_url(record: dict, photo: dict) -> str:
     local_image = ROOT / "dataset" / "manhole" / "image" / f"{manhole_id}_latest.jpeg"
     if manhole_id and local_image.exists():
         return f"/manhole/image/{quote(manhole_id)}_latest.jpeg"
-    return _safe_https_url(photo.get("url"))
+    # The snapshot's original URL is an unsigned R2 S3 endpoint, not a public
+    # delivery URL. A missing local download must degrade to "no photo".
+    return ""
 
 
 def _photo_entries(
@@ -411,8 +402,11 @@ def _photo_section(
     records: list[dict],
     photos: dict[str, dict],
 ) -> str:
-    total = len(records)
-    entries = _photo_entries(records, photos)
+    installed_records = [
+        record for record in records if record.get("installed") is not False
+    ]
+    total = len(installed_records)
+    entries = _photo_entries(installed_records, photos)
     photo_ids = {str(record.get("id", "")) for record, _ in entries}
     with_photo = len(entries)
     missing = max(total - with_photo, 0)
@@ -446,15 +440,16 @@ def _photo_section(
             f'<article class="photo-card">'
             f'<a class="photo-card-image" href="/manholes/{quote(mid)}/" '
             f'data-track="prefecture_photo_click" data-position="{position}" '
-            f'data-destination="{escape(mid)}">'
+            f'data-destination="{_escape_attr(mid)}" data-surface="photo_gallery">'
             f'<img src="{_escape_attr(_photo_asset_url(record, photo))}" '
-            f'alt="{escape(prefecture)}{escape(city)}のポケふた投稿写真" '
+            f'alt="{_escape_attr(prefecture)}{_escape_attr(city)}のポケふた投稿写真" '
             f'loading="lazy" decoding="async" width="640" height="480">'
             f'<span><strong>{escape(city)}</strong><small>{escape(pokemons)}</small>'
             f'{poster_html}</span></a>'
             f'<a class="photo-card-upload" href="{_escape_attr(_upload_url(mid, slug))}" '
             f'data-track="prefecture_photo_upload_start" data-position="{position}" '
-            f'data-destination="upload" data-content-id="{escape(mid)}" '
+            f'data-destination="upload" data-content-id="{_escape_attr(mid)}" '
+            f'data-surface="photo_gallery" '
             f'data-photo-state="has_photo">このポケふたに写真を追加</a>'
             f'</article>'
         )
@@ -464,7 +459,7 @@ def _photo_section(
     )
 
     missing_records = [
-        record for record in records
+        record for record in installed_records
         if str(record.get("id", "")) not in photo_ids
     ][:3]
     contribution_cards = []
@@ -475,7 +470,8 @@ def _photo_section(
         contribution_cards.append(
             f'<a class="contribution-card" href="{_escape_attr(_upload_url(mid, slug))}" '
             f'data-track="prefecture_photo_upload_start" data-position="{position}" '
-            f'data-destination="upload" data-content-id="{escape(mid)}" '
+            f'data-destination="upload" data-content-id="{_escape_attr(mid)}" '
+            f'data-surface="photo_contribution" '
             f'data-photo-state="missing">'
             f'<span>写真募集中</span><strong>{escape(city)}</strong>'
             f'<small>{escape(pokemons)}</small><b>最初の写真を投稿 →</b></a>'
@@ -522,7 +518,7 @@ def _manhole_cards(
         image_path = ROOT / "dataset" / "manhole" / "image" / f"{mid}_latest.jpeg"
         image_html = (
             f'<img src="/manhole/image/{quote(mid)}_latest.jpeg" '
-            f'alt="{escape(city)}のポケふた" loading="lazy" width="128" height="128">'
+            f'alt="{_escape_attr(city)}のポケふた" loading="lazy" width="128" height="128">'
             if image_path.exists()
             else '<span class="manhole-placeholder" aria-hidden="true">●</span>'
         )
@@ -531,33 +527,54 @@ def _manhole_cards(
             if record.get("installed") is False
             else ""
         )
-        has_photo = mid in photos and bool(_photo_asset_url(record, photos[mid]))
-        photo_label = "投稿写真あり" if has_photo else "写真募集中"
-        photo_class = " photo-ready" if has_photo else " photo-needed"
+        is_preinstall = record.get("installed") is False
+        has_photo = (
+            not is_preinstall
+            and mid in photos
+            and bool(_photo_asset_url(record, photos[mid]))
+        )
+        photo_label = (
+            "設置後に投稿可能"
+            if is_preinstall
+            else ("投稿写真あり" if has_photo else "写真募集中")
+        )
+        photo_class = (
+            " photo-pending"
+            if is_preinstall
+            else (" photo-ready" if has_photo else " photo-needed")
+        )
         upload_label = "写真を追加" if has_photo else "写真を投稿"
         maps_url = _google_maps_url(record)
         maps_html = (
             f'<a href="{_escape_attr(maps_url)}" target="_blank" rel="noopener noreferrer" '
             f'data-track="prefecture_google_maps_click" data-position="{position}" '
-            f'data-destination="google_maps" data-content-id="{escape(mid)}">地図で開く</a>'
+            f'data-destination="google_maps" data-content-id="{_escape_attr(mid)}" '
+            f'data-surface="manhole_actions">地図で開く</a>'
             if maps_url else ""
         )
+        upload_html = (
+            f'<a class="upload" href="{_escape_attr(_upload_url(mid, slug))}" '
+            f'data-track="prefecture_photo_upload_start" data-position="{position}" '
+            f'data-destination="upload" data-content-id="{_escape_attr(mid)}" '
+            f'data-surface="manhole_actions" '
+            f'data-photo-state="{"has_photo" if has_photo else "missing"}">{upload_label}</a>'
+            if not is_preinstall else ""
+        )
+        actions_class = "manhole-actions preinstall-actions" if is_preinstall else "manhole-actions"
         cards.append(
-            f'<article class="manhole-card" data-manhole-id="{escape(mid)}">'
+            f'<article class="manhole-card" data-manhole-id="{_escape_attr(mid)}">'
             f'<a class="manhole-detail" href="/manholes/{quote(mid)}/" '
             f'data-track="prefecture_manhole_click" data-position="{position}" '
-            f'data-destination="manhole_detail" data-content-id="{escape(mid)}">'
+            f'data-destination="{_escape_attr(mid)}" data-content-id="{_escape_attr(mid)}" '
+            f'data-surface="manhole_card">'
             f'{image_html}<span class="manhole-copy"><strong>{escape(city)}</strong>'
             f'<small>{escape(pokemons)}</small>{preinstall_badge_html}'
             f'<b class="photo-status{photo_class}">{photo_label}</b></span></a>'
-            f'<div class="manhole-actions"><a href="/manholes/{quote(mid)}/" '
+            f'<div class="{actions_class}"><a href="/manholes/{quote(mid)}/" '
             f'data-track="prefecture_manhole_click" data-position="{position}" '
-            f'data-destination="manhole_detail" data-content-id="{escape(mid)}">詳細</a>'
-            f'{maps_html}<a class="upload" href="{_escape_attr(_upload_url(mid, slug))}" '
-            f'data-track="prefecture_photo_upload_start" data-position="{position}" '
-            f'data-destination="upload" data-content-id="{escape(mid)}" '
-            f'data-photo-state="{"has_photo" if has_photo else "missing"}">{upload_label}</a>'
-            f'</div></article>'
+            f'data-destination="{_escape_attr(mid)}" data-content-id="{_escape_attr(mid)}" '
+            f'data-surface="manhole_actions">詳細</a>'
+            f'{maps_html}{upload_html}</div></article>'
         )
     return "".join(cards)
 
@@ -597,10 +614,6 @@ def _prefecture_official_url(records: list[dict]) -> str:
     return ""
 
 
-def _escape_attr(value: str) -> str:
-    return escape(value, {'"': "&quot;"})
-
-
 def _hero_intro(
     prefecture: str,
     count: int,
@@ -635,6 +648,10 @@ def build_page(
 ) -> str:
     photos = photos or {}
     count = len(records)
+    installed_records = [
+        record for record in records if record.get("installed") is not False
+    ]
+    installed_count = len(installed_records)
     canonical = f"{BASE_URL}/prefectures/{slug}/"
     title = (
         f"{prefecture}のポケふた{count}枚｜設置場所マップ・ポケモン一覧"
@@ -672,7 +689,7 @@ def build_page(
                 record, photos.get(str(record.get("id", "")), {})
             ) if str(record.get("id", "")) in photos else "",
         }
-        for record in records
+        for record in installed_records
         if isinstance(record.get("lat"), (int, float))
         and isinstance(record.get("lng"), (int, float))
     ]
@@ -684,6 +701,57 @@ def build_page(
     related_html = _related_prefectures(prefecture)
     visits_url = _visits_url(slug)
     nearby_url = _nearby_url(slug)
+    if installed_count:
+        hero_actions_html = (
+            '<a class="button primary" href="#manhole-list" '
+            'data-track="prefecture_photo_candidate_click" '
+            'data-legacy-track="prefecture_photo_cta_click" '
+            'data-destination="manhole_list">投稿するポケふたを選ぶ</a>'
+            '<a class="button secondary" href="#prefecture-map" '
+            'data-track="prefecture_map_click" '
+            'data-destination="prefecture_map">地図で探す</a>'
+            f'<a class="button tertiary" href="{_escape_attr(visits_url)}" '
+            'data-track="prefecture_visit_cta_click" '
+            'data-destination="pokefuta_visits">訪問記録を開く</a>'
+        )
+        hero_note = "対象を選ぶまではログイン不要です。写真投稿時にログインへ進みます。"
+        journey_html = f"""
+    <section class="journey-loop" aria-labelledby="journey-heading">
+      <h2 id="journey-heading">記録して、次のポケふたへ</h2>
+      <div class="journey-steps" aria-label="継続して楽しむ流れ">
+        <div class="journey-step"><span>STEP 1</span>地図で見つける</div>
+        <div class="journey-step"><span>STEP 2</span>現地を訪れる</div>
+        <div class="journey-step"><span>STEP 3</span>写真で記録する</div>
+        <div class="journey-step"><span>STEP 4</span>未訪問を探す</div>
+      </div>
+      <div class="journey-actions">
+        <a class="button primary" href="{_escape_attr(visits_url)}"
+          data-track="prefecture_visit_cta_click" data-destination="pokefuta_visits">スタンプ帳で進捗を見る</a>
+        <a class="button tertiary" href="{_escape_attr(nearby_url)}"
+          data-track="prefecture_nearby_click" data-destination="pokefuta_nearby">近くの未訪問を探す</a>
+      </div>
+    </section>"""
+    else:
+        hero_actions_html = (
+            '<a class="button primary" href="/summary/" '
+            'data-track="prefecture_summary_click" '
+            'data-destination="summary">全国のポケふたを見る</a>'
+            f'<a class="button tertiary" href="{_escape_attr(nearby_url)}" '
+            'data-track="prefecture_nearby_click" '
+            'data-destination="pokefuta_nearby">現在地の近くから探す</a>'
+        )
+        hero_note = "新しい設置情報が入り次第、地図・写真・投稿先をこのページへ追加します。"
+        journey_html = f"""
+    <section class="journey-loop" aria-labelledby="journey-heading">
+      <h2 id="journey-heading">全国のポケふたから次の行き先を探す</h2>
+      <p>この都道府県の設置情報を待つ間も、全国一覧や現在地周辺からポケふた巡りを始められます。</p>
+      <div class="journey-actions">
+        <a class="button primary" href="/summary/"
+          data-track="prefecture_summary_click" data-destination="summary">全国のポケふた一覧</a>
+        <a class="button tertiary" href="{_escape_attr(nearby_url)}"
+          data-track="prefecture_nearby_click" data-destination="pokefuta_nearby">現在地の近くから探す</a>
+      </div>
+    </section>"""
     map_empty_class = " map-empty" if not map_points else ""
     json_ld = {
         "@context": "https://schema.org",
@@ -708,19 +776,19 @@ def build_page(
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{escape(title)}</title>
-  <meta name="description" content="{escape(description)}">
+  <meta name="description" content="{_escape_attr(description)}">
   <meta name="robots" content="index,follow">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ja_JP">
-  <meta property="og:title" content="{escape(title)}">
-  <meta property="og:description" content="{escape(description)}">
-  <meta property="og:url" content="{escape(canonical)}">
+  <meta property="og:title" content="{_escape_attr(title)}">
+  <meta property="og:description" content="{_escape_attr(description)}">
+  <meta property="og:url" content="{_escape_attr(canonical)}">
   <meta property="og:image" content="{OG_IMAGE}">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="{escape(title)}">
-  <meta name="twitter:description" content="{escape(description)}">
+  <meta name="twitter:title" content="{_escape_attr(title)}">
+  <meta name="twitter:description" content="{_escape_attr(description)}">
   <meta name="twitter:image" content="{OG_IMAGE}">
-  <link rel="canonical" href="{escape(canonical)}">
+  <link rel="canonical" href="{_escape_attr(canonical)}">
   <link rel="icon" href="/assets/pokefuta-marker.svg" type="image/svg+xml">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
@@ -918,7 +986,9 @@ def build_page(
     }}
     .photo-ready {{ background: #e4f2ee; color: #176f68; }}
     .photo-needed {{ background: #fff0e5; color: #9b4b20; }}
+    .photo-pending {{ background: #f0ede7; color: #6f6254; }}
     .manhole-actions {{ display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid #ece4d7; }}
+    .manhole-actions.preinstall-actions {{ grid-template-columns: repeat(2, 1fr); }}
     .manhole-actions a {{
       display: grid; place-items: center; min-height: 44px; padding: 5px;
       color: #57408f; font-size: .76rem; font-weight: 900; text-align: center;
@@ -1005,22 +1075,17 @@ def build_page(
         <p class="hero-kicker">都道府県別 ポケふたガイド</p>
         <h1>{escape(prefecture)}のポケふた</h1>
         <p>{escape(hero_intro)}</p>
-        <div class="stats" aria-label="{escape(prefecture)}の集計">
+        <div class="stats" aria-label="{_escape_attr(prefecture)}の集計">
           <div class="stat"><span>設置枚数</span><strong>{count}枚</strong></div>
           <div class="stat"><span>全国順位</span><strong>{escape(rank_label)}</strong></div>
         </div>
         <div class="hero-actions">
-          <a class="button primary" href="#manhole-list"
-            data-track="prefecture_photo_candidate_click" data-destination="manhole_list">投稿するポケふたを選ぶ</a>
-          <a class="button secondary" href="#prefecture-map"
-            data-track="prefecture_map_click" data-destination="prefecture_map">地図で探す</a>
-          <a class="button tertiary" href="{_escape_attr(visits_url)}"
-            data-track="prefecture_visit_cta_click" data-destination="pokefuta_visits">訪問記録を開く</a>
+          {hero_actions_html}
         </div>
-        <p class="hero-note">対象を選ぶまではログイン不要です。写真投稿時にログインへ進みます。</p>
+        <p class="hero-note">{escape(hero_note)}</p>
         <div class="hero-utility">{official_cta}</div>
       </div>
-      <div class="hero-summary" aria-label="{escape(prefecture)}のサマリー">
+      <div class="hero-summary" aria-label="{_escape_attr(prefecture)}のサマリー">
         <span>サマリー</span>
         <p>{escape(hero_summary)}</p>
       </div>
@@ -1065,21 +1130,7 @@ def build_page(
       <div class="manhole-grid">{manhole_html}</div>
     </section>
 
-    <section class="journey-loop" aria-labelledby="journey-heading">
-      <h2 id="journey-heading">記録して、次のポケふたへ</h2>
-      <div class="journey-steps" aria-label="継続して楽しむ流れ">
-        <div class="journey-step"><span>STEP 1</span>地図で見つける</div>
-        <div class="journey-step"><span>STEP 2</span>現地を訪れる</div>
-        <div class="journey-step"><span>STEP 3</span>写真で記録する</div>
-        <div class="journey-step"><span>STEP 4</span>未訪問を探す</div>
-      </div>
-      <div class="journey-actions">
-        <a class="button primary" href="{_escape_attr(visits_url)}"
-          data-track="prefecture_visit_cta_click" data-destination="pokefuta_visits">スタンプ帳で進捗を見る</a>
-        <a class="button tertiary" href="{_escape_attr(nearby_url)}"
-          data-track="prefecture_nearby_click" data-destination="pokefuta_nearby">近くの未訪問を探す</a>
-      </div>
-    </section>
+    {journey_html}
 
     <section aria-labelledby="pokemon-heading">
       <h2 id="pokemon-heading">{escape(prefecture)}で会えるポケモン</h2>
@@ -1118,8 +1169,15 @@ def build_page(
         position: Number(link.dataset.position || 0),
         destination: link.dataset.destination || '',
         content_id: link.dataset.contentId || '',
-        photo_state: link.dataset.photoState || ''
+        photo_state: link.dataset.photoState || '',
+        surface: link.dataset.surface || ''
       }});
+      if (link.dataset.legacyTrack) {{
+        trackPrefectureEvent(link.dataset.legacyTrack, {{
+          destination: link.dataset.destination || '',
+          surface: link.dataset.surface || 'hero'
+        }});
+      }}
     }});
     const sentScrollDepths = new Set();
     function reportScrollDepth() {{
@@ -1132,6 +1190,9 @@ def build_page(
           trackPrefectureEvent('prefecture_scroll_depth', {{ percent_scrolled: threshold }});
         }}
       }});
+      if (sentScrollDepths.size === 2) {{
+        window.removeEventListener('scroll', reportScrollDepth);
+      }}
     }}
     window.addEventListener('scroll', reportScrollDepth, {{ passive: true }});
   </script>
@@ -1169,15 +1230,15 @@ def build_page(
           escapeHtml(point.city || '所在地不明') + '</strong><br>' +
           escapeHtml(pokemon) + photoHtml + '<div class="map-popup-actions">' +
           '<a href="' + detailUrl + '" data-track="prefecture_manhole_click" ' +
-          'data-destination="manhole_detail" data-content-id="' + escapeHtml(point.id) +
-          '">詳細</a>' +
+          'data-destination="' + escapeHtml(point.id) + '" data-content-id="' + escapeHtml(point.id) +
+          '" data-surface="map_popup">詳細</a>' +
           '<a href="' + escapeHtml(googleMapsUrl) +
           '" target="_blank" rel="noopener noreferrer" ' +
           'data-track="prefecture_google_maps_click" data-destination="google_maps" ' +
-          'data-content-id="' + escapeHtml(point.id) + '">行き方</a>' +
+          'data-content-id="' + escapeHtml(point.id) + '" data-surface="map_popup">行き方</a>' +
           '<a class="upload" href="' + escapeHtml(uploadUrl) +
           '" data-track="prefecture_photo_upload_start" data-destination="upload" ' +
-          'data-content-id="' + escapeHtml(point.id) + '" data-photo-state="' +
+          'data-content-id="' + escapeHtml(point.id) + '" data-surface="map_popup" data-photo-state="' +
           photoState + '">写真投稿</a></div></div>';
         const marker = L.marker(latlng, {{
           title: (point.city || '所在地不明') + 'のポケふた',
