@@ -602,7 +602,7 @@ def generate_html(
         photo_items_html = "\n".join(_photo_card_html(post) for post in latest_posts)
         latest_section_html = f"""
     <section class="lp-section" aria-labelledby="lp-latest-heading">
-      <h2 id="lp-latest-heading"><span>LATEST POSTS</span>先に出してくれた人たち</h2>
+      <h2 id="lp-latest-heading"><span aria-hidden="true">LATEST POSTS</span>先に出してくれた人たち</h2>
       <p class="lp-section-lead">ポケふたを撮りに行った先で、ついでに撮られた蓋です。</p>
       <ul class="lp-photo-grid">
 {photo_items_html}
@@ -752,7 +752,7 @@ def generate_html(
     <!-- ── 地図で探す（index.html と同じ並び: #sec-intro の直後。
          map-gateway-card は index.html と同じ、操作不能な実地図プレビュー） ── -->
     <section class="lp-section" aria-labelledby="lp-map-heading">
-      <h2 id="lp-map-heading"><span>MAP</span>地図で探す</h2>
+      <h2 id="lp-map-heading"><span aria-hidden="true">MAP</span>地図で探す</h2>
       <a class="map-gateway-card" href="{MAP_HREF}"
          onclick="trackEvent('click_map_cta',{{cta:'map_section',from:'character_manholes_lp'}})">
         <div id="cm-mini-map" class="map-gateway-minimap" aria-hidden="true"></div>
@@ -768,7 +768,7 @@ def generate_html(
 
     <!-- ── キャラクターマンホールとは（検索語のためh2は変更しない） ── -->
     <section class="lp-section" aria-labelledby="lp-about-heading">
-      <h2 id="lp-about-heading"><span>WHAT IS IT</span>キャラクターマンホールとは</h2>
+      <h2 id="lp-about-heading"><span aria-hidden="true">WHAT IS IT</span>キャラクターマンホールとは</h2>
       <ul class="lp-explain-grid">
         <li class="lp-explain-card">
           <strong>その土地に行かないと踏めない蓋</strong>
@@ -784,7 +784,7 @@ def generate_html(
 
     <!-- ── いま集まっている作品 ── -->
     <section class="lp-section" aria-labelledby="lp-works-heading">
-      <h2 id="lp-works-heading"><span>WORKS</span>いま集まっている作品</h2>
+      <h2 id="lp-works-heading"><span aria-hidden="true">WORKS</span>いま集まっている作品</h2>
       <p class="lp-section-lead">巡礼先として成立する数がまとまっているのはこのあたり。作品名から地図に飛べます。</p>
       <ul class="lp-work-grid">
 {work_items_html}
@@ -793,7 +793,7 @@ def generate_html(
 
     <!-- ── 都道府県から探す ── -->
     <section class="lp-section" aria-labelledby="lp-pref-heading">
-      <h2 id="lp-pref-heading"><span>PREFECTURES</span>都道府県から探す</h2>
+      <h2 id="lp-pref-heading"><span aria-hidden="true">PREFECTURES</span>都道府県から探す</h2>
       <p class="lp-section-lead">次の遠征先が決まっているなら、ここから。ポケふたのついでに回れる蓋が見つかります。</p>
       <div class="lp-pref-list">
 {pref_items_html}
@@ -802,7 +802,7 @@ def generate_html(
 
     <!-- ── 投稿導線（このページの本命） ── -->
     <section class="lp-section" aria-labelledby="lp-post-heading">
-      <h2 id="lp-post-heading"><span>SUBMIT</span>その1枚、まだカメラロールにありますか？</h2>
+      <h2 id="lp-post-heading"><span aria-hidden="true">SUBMIT</span>その1枚、まだカメラロールにありますか？</h2>
       <a class="lp-promo-card" href="{DESIGN_MANHOLE_HREF}"
          onclick="trackEvent('click_design_manhole_lp',{{from:'character_manholes_lp'}})">
         <span class="lp-promo-icon" aria-hidden="true">📸</span>
@@ -820,7 +820,7 @@ def generate_html(
 
     <!-- ── FAQ ── -->
     <section class="lp-section" aria-labelledby="lp-faq-heading">
-      <h2 id="lp-faq-heading"><span>FAQ</span>よくある質問</h2>
+      <h2 id="lp-faq-heading"><span aria-hidden="true">FAQ</span>よくある質問</h2>
       <div class="lp-faq">
         {faq_html}
       </div>

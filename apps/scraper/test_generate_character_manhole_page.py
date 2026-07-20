@@ -607,7 +607,17 @@ class PilgrimCopyTest(unittest.TestCase):
         self.assertIn(f'name="description" content="ガンダムやゾンビランドサガなど、全国{self.total_count}枚', self.html)
 
     def test_about_section_heading_is_unchanged_for_seo(self):
-        self.assertIn('<h2 id="lp-about-heading"><span>WHAT IS IT</span>キャラクターマンホールとは</h2>', self.html)
+        # H1が「教えてくれませんか？」という依頼になったぶん、検索語はこの見出しで担保する。
+        # アイキャッチ（WHAT IS IT）の属性は SEO に影響しないため、見出しテキストで判定する。
+        match = re.search(r'<h2 id="lp-about-heading"[^>]*>(.*?)</h2>', self.html, re.S)
+        self.assertIsNotNone(match, "about heading not found")
+        self.assertIn("キャラクターマンホールとは", re.sub(r"<[^>]+>", "", match.group(1)))
+
+    def test_heading_eyebrows_are_hidden_from_screen_readers(self):
+        # <h2><span>WHAT IS IT</span>キャラクターマンホールとは</h2> のままだと
+        # スクリーンリーダーが装飾ラベルまで続けて読み上げてしまう
+        for match in re.finditer(r'<h2 id="lp-[a-z]+-heading"[^>]*>\s*<span([^>]*)>', self.html):
+            self.assertIn('aria-hidden="true"', match.group(1))
 
     def test_stats_note_bakes_in_next_submission_number_with_no_placeholder(self):
         expected_next = self.total_count + 1
