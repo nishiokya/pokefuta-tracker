@@ -860,6 +860,14 @@
       return meta || null;
     }
 
+    function getPosterProfileUrl(publicUserId) {
+      const id = String(publicUserId || '').trim();
+      const validId = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+      return validId.test(id)
+        ? `https://pokefuta.com/users/${encodeURIComponent(id)}/visits`
+        : '';
+    }
+
     function getPhotoTakenDate(id) {
       const meta = getLatestPhotoMeta(id);
       return formatPhotoDate(meta?.shot_at || meta?.created_at);
@@ -1129,9 +1137,13 @@
       const hasPhoto = Boolean(photoMeta?.url || photoMeta?.original_url || photoMeta?.storage_key);
       const photoDate = getPhotoTakenDate(d.id);
       const displayName = String(photoMeta?.display_name || '').trim();
+      const posterProfileUrl = getPosterProfileUrl(photoMeta?.public_user_id);
       const photoMetaItems = [
         photoDate ? `<span class="travel-popup-photo-date">撮影日 ${escapeHtml(photoDate)}</span>` : '',
-        displayName ? `<span class="travel-popup-photo-author">${escapeHtml(displayName)}</span>` : ''
+        displayName ? (posterProfileUrl
+          ? `<a class="travel-popup-photo-author" href="${escapeHtml(posterProfileUrl)}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(displayName)}さんの公開スタンプ帳を開く">${escapeHtml(displayName)}</a>`
+          : `<span class="travel-popup-photo-author">${escapeHtml(displayName)}</span>`)
+          : ''
       ].filter(Boolean).join('');
       const titles = Array.isArray(d.titles) ? d.titles : [];
       const isPreinstall = d.installed === false;

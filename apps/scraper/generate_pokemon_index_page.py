@@ -34,6 +34,7 @@ from photo_caption import (  # noqa: E402
     caption_meta,
     format_display_name,
     format_photo_date,
+    poster_profile_url,
 )
 
 logging.basicConfig(level=logging.INFO, format="%(message)s")
@@ -711,6 +712,7 @@ def _build_latest_photo_cards(
             # 「7月16日 / Jul 16」のロケール表記に統一（トップページと同じ見せ方）
             "date": format_photo_date(photo.get("created_at"), lang),
             "poster": format_display_name(photo.get("display_name")),
+            "poster_profile_url": poster_profile_url(photo.get("public_user_id")),
         })
         seen_ids.add(mid)
         if len(cards) >= limit:
@@ -968,17 +970,32 @@ def generate_html(
         for fact in fact_cards
     )
 
-    latest_photos_html = "".join(
-        f'<a class="photo-card" href="{escape(photo["href"])}">'
-        f'<img src="{escape(photo["image_url"])}" '
-        f'alt="{escape(photo["title"])} {escape(photo["location"])}" '
-        f'loading="lazy" decoding="async" width="480" height="360">'
-        f'<span class="photo-card-copy"><strong>{escape(photo["title"])}</strong>'
-        # 「場所 · 投稿者 · 7月16日」に統一（summary / トップページと同じ見せ方）
-        f'<small>{caption_meta(escape(photo["location"]), escape(photo["poster"]), escape(enhancement["photo_date"].format(date=photo["date"])) if photo["date"] else "")}'
-        f'</small></span></a>'
-        for photo in latest_photos
-    )
+    latest_photo_cards = []
+    for photo in latest_photos:
+        poster_html = escape(photo["poster"])
+        if photo["poster"] and photo["poster_profile_url"]:
+            poster_html = (
+                f'<a class="poster-link" href="{escape(photo["poster_profile_url"])}" '
+                f'target="_blank" rel="noopener noreferrer" '
+                f'aria-label="{escape(photo["poster"])}さんの公開スタンプ帳を開く">'
+                f'{escape(photo["poster"])}</a>'
+            )
+        meta = caption_meta(
+            escape(photo["location"]),
+            poster_html,
+            escape(enhancement["photo_date"].format(date=photo["date"]))
+            if photo["date"] else "",
+        )
+        latest_photo_cards.append(
+            f'<article class="photo-card">'
+            f'<a class="photo-card-main" href="{escape(photo["href"])}">'
+            f'<img src="{escape(photo["image_url"])}" '
+            f'alt="{escape(photo["title"])} {escape(photo["location"])}" '
+            f'loading="lazy" decoding="async" width="480" height="360">'
+            f'<span class="photo-card-copy"><strong>{escape(photo["title"])}</strong></span>'
+            f'</a><small class="photo-card-meta">{meta}</small></article>'
+        )
+    latest_photos_html = "".join(latest_photo_cards)
     latest_section_html = ""
     if latest_photos_html:
         latest_section_html = (
@@ -1241,13 +1258,14 @@ def generate_html(
       border-radius: 14px;
       background: #fffaf0;
       color: #332f2a;
-      text-decoration: none;
     }}
+    .photo-card-main {{ display: block; color: inherit; text-decoration: none; }}
     .photo-card img {{ display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }}
-    .photo-card-copy {{ display: flex; flex-direction: column; padding: 9px 10px 10px; }}
+    .photo-card-copy {{ display: flex; flex-direction: column; padding: 9px 10px 4px; }}
     .photo-card-copy strong {{ font-size: 14px; }}
     /* 長い投稿者名でもカード幅を崩さない（トップページのヒーローと同じ手法） */
-    .photo-card-copy small {{ color: #756c61; {CAPTION_ELLIPSIS_CSS} }}
+    .photo-card-meta {{ display: block; padding: 0 10px 10px; color: #756c61; {CAPTION_ELLIPSIS_CSS} }}
+    .photo-card-meta .poster-link {{ color: #176f68; font-weight: 800; text-decoration: underline; text-underline-offset: 2px; }}
     .faq-list {{ display: grid; gap: 8px; }}
     .faq-list details {{ border: 1px solid #ded3bd; border-radius: 12px; background: #fffaf0; padding: 12px 14px; }}
     .faq-list summary {{ cursor: pointer; font-weight: 800; color: #332f2a; }}

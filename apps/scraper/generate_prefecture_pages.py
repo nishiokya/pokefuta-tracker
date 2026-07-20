@@ -12,6 +12,13 @@ from urllib.parse import quote, urlparse
 from xml.sax.saxutils import escape
 
 try:
+    from apps.scraper.photo_caption import poster_profile_url
+except ModuleNotFoundError as exc:
+    if exc.name != "apps":
+        raise
+    from photo_caption import poster_profile_url
+
+try:
     from apps.scraper.prefectures import (
         PREFECTURES,
         PREFECTURE_ORDER,
@@ -435,7 +442,18 @@ def _photo_section(
         city = str(record.get("city", "") or "所在地不明")
         pokemons = "・".join(_clean_pokemons(record)) or "ポケモン"
         poster = str(photo.get("display_name", "") or "").strip()
-        poster_html = f"<small>{escape(poster)}さんの投稿</small>" if poster else ""
+        profile_url = poster_profile_url(photo.get("public_user_id"))
+        poster_html = ""
+        if poster:
+            if profile_url:
+                poster_html = (
+                    f'<small class="photo-card-poster"><a href="{_escape_attr(profile_url)}" '
+                    f'target="_blank" rel="noopener noreferrer" '
+                    f'aria-label="{_escape_attr(poster)}さんの公開スタンプ帳を開く">'
+                    f'{escape(poster)}さんの投稿</a></small>'
+                )
+            else:
+                poster_html = f'<small class="photo-card-poster">{escape(poster)}さんの投稿</small>'
         gallery_cards.append(
             f'<article class="photo-card">'
             f'<a class="photo-card-image" href="/manholes/{quote(mid)}/" '
@@ -445,7 +463,7 @@ def _photo_section(
             f'alt="{_escape_attr(prefecture)}{_escape_attr(city)}のポケふた投稿写真" '
             f'loading="lazy" decoding="async" width="640" height="480">'
             f'<span><strong>{escape(city)}</strong><small>{escape(pokemons)}</small>'
-            f'{poster_html}</span></a>'
+            f'</span></a>{poster_html}'
             f'<a class="photo-card-upload" href="{_escape_attr(_upload_url(mid, slug))}" '
             f'data-track="prefecture_photo_upload_start" data-position="{position}" '
             f'data-destination="upload" data-content-id="{_escape_attr(mid)}" '
@@ -957,6 +975,8 @@ def build_page(
     }}
     .photo-card-image > span {{ display: grid; padding: 9px 10px; }}
     .photo-card-image small {{ overflow: hidden; color: #75685c; font-size: .72rem; text-overflow: ellipsis; white-space: nowrap; }}
+    .photo-card-poster {{ display: block; padding: 0 10px 9px; overflow: hidden; color: #75685c; font-size: .72rem; text-overflow: ellipsis; white-space: nowrap; }}
+    .photo-card-poster a {{ color: #176f68; font-weight: 800; text-decoration: underline; text-underline-offset: 2px; }}
     .photo-card-upload {{
       display: grid; place-items: center; min-height: 44px; padding: 6px 9px;
       border-top: 1px solid #ece4d7; color: #176f68; font-size: .75rem;

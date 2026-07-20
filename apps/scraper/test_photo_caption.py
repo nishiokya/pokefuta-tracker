@@ -91,6 +91,21 @@ class FormatDisplayNameTests(unittest.TestCase):
         self.assertEqual(pc.format_display_name(123), "")
 
 
+class PosterProfileUrlTests(unittest.TestCase):
+    VALID_UUID = "6096691c-eeda-4e73-8401-a11274868ede"
+
+    def test_valid_uuid_maps_to_public_stamp_book(self):
+        self.assertEqual(
+            pc.poster_profile_url(self.VALID_UUID),
+            f"https://pokefuta.com/users/{self.VALID_UUID}/visits",
+        )
+
+    def test_invalid_values_are_not_linked(self):
+        for value in (None, "", "not-a-uuid", "../evil", 123):
+            with self.subTest(value=value):
+                self.assertEqual(pc.poster_profile_url(value), "")
+
+
 class CaptionMetaTests(unittest.TestCase):
     def test_joins_with_middle_dot(self):
         self.assertEqual(

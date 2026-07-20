@@ -102,7 +102,7 @@ class GalleryCreditLinkTests(unittest.TestCase):
         ]
         html = _generate(_photo(gallery_local=gallery_local))
         self.assertIn(f"<a class='gallery-credit poster-link' href='{PROFILE_URL}'", html)
-        self.assertIn("📷 たこ</a>", html)
+        self.assertIn("📷 たこ · 5月1日</a>", html)
         self.assertIn("&quot;source&quot;: &quot;gallery&quot;", html)
 
     def test_gallery_credit_plain_text_without_public_user_id(self):
@@ -114,7 +114,7 @@ class GalleryCreditLinkTests(unittest.TestCase):
             },
         ]
         html = _generate(_photo(gallery_local=gallery_local))
-        self.assertIn("<span class='gallery-credit'>📷 たこ</span>", html)
+        self.assertIn("<span class='gallery-credit'>📷 たこ · 5月1日</span>", html)
         self.assertNotIn("gallery-credit poster-link", html)
 
 
