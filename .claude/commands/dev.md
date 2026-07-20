@@ -21,6 +21,7 @@ cp "$ROOT/apps/web/gmanhole_map.html" "$ROOT/dist/gmanhole_map.html" && echo "[d
 cp "$ROOT/apps/web/sitemap.xml"      "$ROOT/dist/sitemap.xml"        && echo "[dev] synced sitemap.xml"       || echo "[dev] WARN: sitemap.xml sync failed"
 [ -d "$ROOT/apps/web/assets" ] && cp -r "$ROOT/apps/web/assets/." "$ROOT/dist/assets/" && echo "[dev] synced assets/" || echo "[dev] WARN: assets/ sync failed"
 cp "$ROOT/docs/character_manholes.ndjson" "$ROOT/dist/character_manholes.ndjson" && echo "[dev] synced character_manholes.ndjson" || echo "[dev] WARN: character_manholes.ndjson sync failed"
+python3 "$ROOT/apps/scraper/generate_character_manhole_page.py" --output "$ROOT/dist/character_manholes.html" && echo "[dev] regenerated character_manholes.html" || echo "[dev] WARN: character_manholes.html generation failed"
 
 # Serve dist/ on port 8000
 python3 -m http.server 8000 --directory "$ROOT/dist" &

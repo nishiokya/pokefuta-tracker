@@ -27,7 +27,8 @@
     "inLanguage":"ja","isPartOf":{"@type":"WebSite","name":"ポケふたDATABASE","url":"https://data.pokefuta.com/"}},
    {"@type":"BreadcrumbList","itemListElement":[
     {"@type":"ListItem","position":1,"name":"ホーム","item":"https://data.pokefuta.com/"},
-    {"@type":"ListItem","position":2,"name":"キャラクターマンホールマップ","item":"https://data.pokefuta.com/gmanhole_map.html"}]},
+    {"@type":"ListItem","position":2,"name":"キャラクターマンホール","item":"https://data.pokefuta.com/character_manholes.html"},
+    {"@type":"ListItem","position":3,"name":"地図","item":"https://data.pokefuta.com/gmanhole_map.html"}]},
    {"@type":"ItemList","name":"掲載しているキャラクターマンホールの作品","itemListElement":[
     {"@type":"ListItem","position":1,"name":"機動戦士ガンダム（ガンダムマンホール）"},
     {"@type":"ListItem","position":2,"name":"ゾンビランドサガ"},
@@ -104,6 +105,11 @@
     .selected-prefecture-badge { background:var(--top-purple-pale) !important; color:var(--top-purple-dark); }
     footer.data-links { color:var(--top-text-muted); }
 
+    /* ===== 上位ページ(LP)へ戻るパンくず ===== */
+    .map-breadcrumb { display:flex; align-items:center; gap:6px; margin:0 0 10px; font-size:.72rem; color:var(--top-text-muted); }
+    .map-breadcrumb a { color:var(--top-purple); font-weight:700; text-decoration:none; }
+    .map-breadcrumb a:hover, .map-breadcrumb a:focus-visible { text-decoration:underline; }
+
     /* ===== デザインマンホール投稿LPへの誘導カード ===== */
     .design-manhole-promo-card {
       display:flex; align-items:center; gap:12px;
@@ -133,6 +139,7 @@
     const PREF_TO_SLUG = {'北海道':'hokkaido','青森県':'aomori','岩手県':'iwate','宮城県':'miyagi','秋田県':'akita','山形県':'yamagata','福島県':'fukushima','茨城県':'ibaraki','栃木県':'tochigi','群馬県':'gunma','埼玉県':'saitama','千葉県':'chiba','東京都':'tokyo','神奈川県':'kanagawa','新潟県':'niigata','富山県':'toyama','石川県':'ishikawa','福井県':'fukui','山梨県':'yamanashi','長野県':'nagano','岐阜県':'gifu','静岡県':'shizuoka','愛知県':'aichi','三重県':'mie','滋賀県':'shiga','京都府':'kyoto','大阪府':'osaka','兵庫県':'hyogo','奈良県':'nara','和歌山県':'wakayama','鳥取県':'tottori','島根県':'shimane','岡山県':'okayama','広島県':'hiroshima','山口県':'yamaguchi','徳島県':'tokushima','香川県':'kagawa','愛媛県':'ehime','高知県':'kochi','福岡県':'fukuoka','佐賀県':'saga','長崎県':'nagasaki','熊本県':'kumamoto','大分県':'oita','宮崎県':'miyazaki','鹿児島県':'kagoshima','沖縄県':'okinawa'};
     const params = new URLSearchParams(window.location.search);
     const prefParam = params.get('pref');
+    const workParam = params.get('work');
     let pagePath = '/gmanhole_map';
     let gmanholeGA4Params = { site_type: 'map', page_type: 'map_gmanhole' };
     if (prefParam) {
@@ -140,6 +147,11 @@
       const normalizedPref = (prefParam.length === 2 && !isNaN(prefParam)) ? (CODE_TO_PREF[prefParam] || prefParam) : prefParam;
       pagePath = `/gmanhole_map_pref/${encodeURIComponent(normalizedPref)}`;
       gmanholeGA4Params.prefecture = PREF_TO_SLUG[normalizedPref] || normalizedPref;
+    }
+    if (workParam) {
+      // pref と work が両方指定されることは想定していないが、指定されたら work を優先する
+      pagePath = `/gmanhole_map_work/${encodeURIComponent(workParam)}`;
+      gmanholeGA4Params.work = workParam;
     }
 
     gtag('config', 'G-K18NR4GZG2', {
@@ -185,7 +197,7 @@
         <nav class="top-nav" aria-label="メインナビ">
           <a class="top-nav-link" href="map.html" onclick="trackEvent('click_nav',{nav:'map',from:'gmanhole_map'})">マップ</a>
           <a class="top-nav-link" href="pokemon/" onclick="trackEvent('click_nav',{nav:'pokemon',from:'gmanhole_map'})">ポケモン</a>
-          <a class="top-nav-link top-nav-link--active" href="gmanhole_map.html" aria-current="page">キャラマンホール</a>
+          <a class="top-nav-link" href="character_manholes.html" onclick="trackEvent('click_nav',{nav:'character',from:'gmanhole_map'})">キャラマンホール</a>
           <a class="top-nav-link" data-login-link data-nav-target="login" data-stamp-page="https://pokefuta.com/" data-stamp-label="スタンプ帳" href="https://pokefuta.com/login?from=data" onclick="trackEvent('click_nav',{nav:this.dataset.navTarget,from:'gmanhole_map'})">ログイン</a>
         </nav>
       </div>
@@ -202,6 +214,11 @@
       </button>
     </div>
     <div id="controls-content" class="controls-content" role="region" aria-label="全体パネルの内容">
+      <nav class="map-breadcrumb" aria-label="パンくずリスト">
+        <a href="character_manholes.html" onclick="trackEvent('click_nav',{nav:'character_manholes_lp',from:'gmanhole_map_breadcrumb'})">キャラクターマンホール</a>
+        <span aria-hidden="true">›</span>
+        <span aria-current="page">地図</span>
+      </nav>
       <div class="sheet-utility-section">
         <p class="sheet-section-label">表示する作品</p>
         <div class="gmanhole-display-row">
@@ -448,6 +465,33 @@
       return prefectureCodeMap[prefParam] ? prefParam : '';
     }
 
+    // character_manholes.html の作品カードから ?work=<作品名> (ガンダムは特別値 "gundam") で
+    // 遷移してきたとき、その作品だけを初期表示にする。?pref= と同じ要領の小改修。
+    function getInitialWorkFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('work') || '';
+    }
+
+    function applyInitialWorkFilter(workParam) {
+      if (!workParam) return;
+      const isGundam = workParam === 'gundam';
+      const workCheckbox = characterWorkCheckboxes.get(workParam);
+      if (!isGundam && !workCheckbox) {
+        // 未知の work パラメータはフィルタせず、全件表示のままにする
+        console.warn(`Unknown work param, showing all: ${workParam}`);
+        return;
+      }
+      document.querySelectorAll('#work-filter-list input[type="checkbox"]').forEach(input => {
+        input.checked = false;
+      });
+      if (isGundam) {
+        document.getElementById('chk-gundam').checked = true;
+      } else {
+        workCheckbox.checked = true;
+      }
+      recomputeVisibility();
+    }
+
     function normalizePrefecture(prefecture) {
       return prefecture || '不明';
     }
@@ -512,6 +556,7 @@
           setPrefectureSelection(initialPref);
           setTimeout(() => zoomToPrefecture(initialPref), 100);
         }
+        applyInitialWorkFilter(getInitialWorkFromURL());
       } catch(e){ console.error('Failed to load datasets', e); }
     }
 

@@ -14,12 +14,13 @@ pokefuta-tracker/
 │   │   ├── export_pokemon_park_kml.py # Pokemon Park KML生成
 │   │   ├── clean_and_notify.py     # データクリーニング（参考）
 │   │   ├── fill_address.py         # 住所フィールド自動補完
+│   │   ├── generate_character_manhole_page.py # character_manholes.html（キャラクターマンホールLP）生成
 │   │   ├── pokefuta.ndjson         # 【内部用・完全版】全レコード (active + deleted)
 │   │   └── test_pokefuta.json      # テストデータ
 │   └── web/                        # Web UI ソースコード
 │       ├── index.html              # メインマップ
 │       ├── nearby_manholes.html    # 近くのマンホール検索
-│       ├── gmanhole_map.html       # ガンダムマンホール統合マップ
+│       ├── gmanhole_map.html       # キャラクターマンホール統合マップ（地図）。ヘッダーの入口は生成される character_manholes.html（LP）で、地図はその配下のサブページ
 │       └── assets/                 # CSS・アイコン・リソース
 ├── dataset/                        # 手動管理メタデータ
 │   ├── manhole_titles.json         # マンホールメタデータ統合マスタ（称号・詳細情報・自治体URL）

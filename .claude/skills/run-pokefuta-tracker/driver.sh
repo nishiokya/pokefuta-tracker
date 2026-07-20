@@ -28,6 +28,7 @@ cp apps/web/nearby_manholes.html dist/nearby.html
 cp apps/web/map.html dist/map.html 2>/dev/null || true
 cp apps/web/gmanhole_map.html dist/gmanhole_map.html
 cp apps/web/design_manhole.html dist/design_manhole.html
+python3 apps/scraper/generate_character_manhole_page.py --output dist/character_manholes.html 2>/dev/null || true
 cp apps/web/login.html dist/login.html 2>/dev/null || true
 cp apps/web/robots.txt dist/robots.txt
 cp apps/web/sitemap.xml dist/sitemap.xml 2>/dev/null || true
@@ -55,6 +56,7 @@ check() { # path marker
 }
 check /                     "ポケふた"
 check /design_manhole.html  "FAQPage"
+check /character_manholes.html "収録している作品"
 check /gmanhole_map.html    "キャラマンホール"
 check /summary/             "ポケふた"
 check /robots.txt           "Sitemap:"
@@ -82,6 +84,7 @@ shot() { # path outfile
 }
 shot /                    index.png
 shot /design_manhole.html design_manhole.png
+shot /character_manholes.html character_manholes.png
 [ -n "$first_pref" ] && shot "/prefectures/$first_pref/" "prefecture.png"
 
 echo
