@@ -194,6 +194,28 @@ class GenerateHtmlTest(unittest.TestCase):
         self.assertIn("gmanhole_map.html?pref=", self.html)
         self.assertIn("gmanhole_map.html?work=", self.html)
 
+    def test_escapes_quotes_in_user_submitted_attributes(self):
+        """投稿タイトルは pokefuta.com のユーザー入力。属性を抜け出せてはいけない。"""
+        directory = Path(self.tmpdir.name)
+        evil = '\u30c6\u30b9\u30c8" onload="alert(1)'
+        design_path = _write_ndjson(
+            directory,
+            "design_manholes_xss.ndjson",
+            [
+                {
+                    "id": "d-x", "title": evil, "status": "active",
+                    "photo_url": "https://pokefuta.com/api/design-manholes/d-x/photo",
+                    "prefecture": "\u611b\u77e5\u770c", "city": "\u540d\u53e4\u5c4b\u5e02",
+                    "source_url": "https://pokefuta.com/design-manholes/d-x",
+                    "created_at": "2026-07-19T00:00:00+00:00",
+                }
+            ],
+        )
+        html = generate_html(self.character_records, self.gundam_records, design_path)
+        self.assertNotIn('onload="alert(1)"', html)
+        self.assertNotIn('" onload=', html)
+        self.assertIn("&quot;", html)
+
     def test_includes_design_manhole_submission_link(self):
         self.assertIn("design_manhole.html", self.html)
 

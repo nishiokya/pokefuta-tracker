@@ -22,7 +22,7 @@ import logging
 from collections import Counter, defaultdict
 from pathlib import Path
 from urllib.parse import quote
-from xml.sax.saxutils import escape
+from html import escape
 
 try:
     from apps.scraper.photo_caption import (
