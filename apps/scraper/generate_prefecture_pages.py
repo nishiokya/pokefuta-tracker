@@ -25,6 +25,7 @@ except ModuleNotFoundError as exc:
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_MANHOLES = ROOT / "docs" / "pokefuta.ndjson"
 DEFAULT_POKEMON = ROOT / "docs" / "pokemon_metadata.json"
+DEFAULT_PHOTOS = ROOT / "docs" / "latest-manhole-photos.json"
 DEFAULT_TRIVIA = ROOT / "dataset" / "prefecture_trivia.json"
 DEFAULT_EVENTS = ROOT / "dataset" / "prefecture_events.json"
 JST = timezone(timedelta(hours=9))
@@ -68,6 +69,23 @@ def load_records(path: Path) -> list[dict]:
         record for record in by_id.values()
         if record.get("status", "active") == "active"
     ]
+
+
+def load_photos(path: Path) -> dict[str, dict]:
+    if not path.exists():
+        return {}
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return {}
+    raw_photos = payload.get("photos", {}) if isinstance(payload, dict) else {}
+    if not isinstance(raw_photos, dict):
+        return {}
+    return {
+        str(manhole_id): photo
+        for manhole_id, photo in raw_photos.items()
+        if isinstance(photo, dict)
+    }
 
 
 def _normalize_katakana(text: str) -> str:
@@ -323,7 +341,174 @@ def _pokemon_cards(records: list[dict], pokemon_slugs: dict[str, str]) -> str:
     )
 
 
-def _manhole_cards(records: list[dict]) -> str:
+def _safe_https_url(value: object) -> str:
+    candidate = str(value or "").strip()
+    if not candidate:
+        return ""
+    try:
+        parsed = urlparse(candidate)
+    except ValueError:
+        return ""
+    return candidate if parsed.scheme == "https" and parsed.netloc else ""
+
+
+def _campaign_params(slug: str) -> str:
+    return (
+        "from=data&utm_source=data.pokefuta.com&utm_medium=referral"
+        f"&utm_campaign=prefecture_page&utm_content={quote(slug)}"
+    )
+
+
+def _upload_url(manhole_id: str, slug: str) -> str:
+    return (
+        "https://pokefuta.com/upload?"
+        f"manhole_id={quote(manhole_id)}&{_campaign_params(slug)}"
+    )
+
+
+def _visits_url(slug: str) -> str:
+    return f"https://pokefuta.com/visits?{_campaign_params(slug)}"
+
+
+def _nearby_url(slug: str) -> str:
+    return f"https://pokefuta.com/nearby?{_campaign_params(slug)}"
+
+
+def _google_maps_url(record: dict) -> str:
+    lat = record.get("lat")
+    lng = record.get("lng")
+    if not isinstance(lat, (int, float)) or not isinstance(lng, (int, float)):
+        return ""
+    return f"https://www.google.com/maps?q={lat},{lng}"
+
+
+def _photo_asset_url(record: dict, photo: dict) -> str:
+    manhole_id = str(record.get("id", "")).strip()
+    local_image = ROOT / "dataset" / "manhole" / "image" / f"{manhole_id}_latest.jpeg"
+    if manhole_id and local_image.exists():
+        return f"/manhole/image/{quote(manhole_id)}_latest.jpeg"
+    return _safe_https_url(photo.get("url"))
+
+
+def _photo_entries(
+    records: list[dict], photos: dict[str, dict]
+) -> list[tuple[dict, dict]]:
+    entries = []
+    for record in records:
+        photo = photos.get(str(record.get("id", "")))
+        if photo and _photo_asset_url(record, photo):
+            entries.append((record, photo))
+    return sorted(
+        entries,
+        key=lambda item: str(item[1].get("created_at", "")),
+        reverse=True,
+    )
+
+
+def _photo_section(
+    prefecture: str,
+    slug: str,
+    records: list[dict],
+    photos: dict[str, dict],
+) -> str:
+    total = len(records)
+    entries = _photo_entries(records, photos)
+    photo_ids = {str(record.get("id", "")) for record, _ in entries}
+    with_photo = len(entries)
+    missing = max(total - with_photo, 0)
+    coverage = round(with_photo / total * 100) if total else 0
+
+    if total == 0:
+        return (
+            '<div class="photo-empty-state">'
+            f'<strong>{escape(prefecture)}の設置情報を追跡中です</strong>'
+            '<p>設置を確認でき次第、地図・詳細・写真投稿先をこのページへ追加します。</p>'
+            '<a class="inline-link" href="/summary/" '
+            'data-track="prefecture_summary_click" data-destination="summary">'
+            '全国のポケふたを見る</a></div>'
+        )
+
+    if coverage >= 65:
+        lead = "現地写真から、次に訪れたいポケふたを選べます。"
+    elif with_photo:
+        lead = "現地写真が集まり始めています。旅の記録を次の人の目印にしてください。"
+    else:
+        lead = "設置場所は地図と一覧で確認できます。現地で撮った最初の1枚を募集中です。"
+
+    gallery_cards = []
+    for position, (record, photo) in enumerate(entries[:4], start=1):
+        mid = str(record.get("id", "")).strip()
+        city = str(record.get("city", "") or "所在地不明")
+        pokemons = "・".join(_clean_pokemons(record)) or "ポケモン"
+        poster = str(photo.get("display_name", "") or "").strip()
+        poster_html = f"<small>{escape(poster)}さんの投稿</small>" if poster else ""
+        gallery_cards.append(
+            f'<article class="photo-card">'
+            f'<a class="photo-card-image" href="/manholes/{quote(mid)}/" '
+            f'data-track="prefecture_photo_click" data-position="{position}" '
+            f'data-destination="{escape(mid)}">'
+            f'<img src="{_escape_attr(_photo_asset_url(record, photo))}" '
+            f'alt="{escape(prefecture)}{escape(city)}のポケふた投稿写真" '
+            f'loading="lazy" decoding="async" width="640" height="480">'
+            f'<span><strong>{escape(city)}</strong><small>{escape(pokemons)}</small>'
+            f'{poster_html}</span></a>'
+            f'<a class="photo-card-upload" href="{_escape_attr(_upload_url(mid, slug))}" '
+            f'data-track="prefecture_photo_upload_start" data-position="{position}" '
+            f'data-destination="upload" data-content-id="{escape(mid)}" '
+            f'data-photo-state="has_photo">このポケふたに写真を追加</a>'
+            f'</article>'
+        )
+    gallery_html = (
+        f'<div class="photo-showcase-grid">{"".join(gallery_cards)}</div>'
+        if gallery_cards else ""
+    )
+
+    missing_records = [
+        record for record in records
+        if str(record.get("id", "")) not in photo_ids
+    ][:3]
+    contribution_cards = []
+    for position, record in enumerate(missing_records, start=1):
+        mid = str(record.get("id", "")).strip()
+        city = str(record.get("city", "") or "所在地不明")
+        pokemons = "・".join(_clean_pokemons(record)) or "ポケモン"
+        contribution_cards.append(
+            f'<a class="contribution-card" href="{_escape_attr(_upload_url(mid, slug))}" '
+            f'data-track="prefecture_photo_upload_start" data-position="{position}" '
+            f'data-destination="upload" data-content-id="{escape(mid)}" '
+            f'data-photo-state="missing">'
+            f'<span>写真募集中</span><strong>{escape(city)}</strong>'
+            f'<small>{escape(pokemons)}</small><b>最初の写真を投稿 →</b></a>'
+        )
+    contribution_html = (
+        '<div class="contribution-panel">'
+        f'<div><strong>写真未掲載のポケふたは{missing}地点</strong>'
+        '<p>対象を選んだ後にログインします。投稿写真は詳細ページとこの県ページに掲載されます。</p></div>'
+        f'<div class="contribution-grid">{"".join(contribution_cards)}</div></div>'
+        if missing_records else (
+            '<div class="contribution-panel contribution-complete">'
+            '<div><strong>すべてのポケふたに現地写真があります</strong>'
+            '<p>季節や旅の思い出が伝わる写真も歓迎しています。</p></div>'
+            '<a class="inline-link" href="#manhole-list" '
+            'data-track="prefecture_photo_candidate_click" data-destination="manhole_list">'
+            '投稿するポケふたを選ぶ</a></div>'
+        )
+    )
+    return (
+        '<div class="photo-inventory">'
+        f'<div><strong>{with_photo}<span> / {total}地点</span></strong>'
+        f'<p>{escape(lead)}</p></div>'
+        '<div class="coverage-meter" role="meter" aria-label="現地写真の掲載率" '
+        f'aria-valuemin="0" aria-valuemax="100" aria-valuenow="{coverage}">'
+        f'<span style="width:{coverage}%"></span></div><b>{coverage}%</b></div>'
+        f'{gallery_html}{contribution_html}'
+    )
+
+
+def _manhole_cards(
+    records: list[dict], photos: dict[str, dict] | None = None, slug: str = ""
+) -> str:
+    photos = photos or {}
     if not records:
         return '<p class="empty-state">現在、この都道府県のポケふたは未設置です。</p>'
     cards = []
@@ -346,12 +531,33 @@ def _manhole_cards(records: list[dict]) -> str:
             if record.get("installed") is False
             else ""
         )
+        has_photo = mid in photos and bool(_photo_asset_url(record, photos[mid]))
+        photo_label = "投稿写真あり" if has_photo else "写真募集中"
+        photo_class = " photo-ready" if has_photo else " photo-needed"
+        upload_label = "写真を追加" if has_photo else "写真を投稿"
+        maps_url = _google_maps_url(record)
+        maps_html = (
+            f'<a href="{_escape_attr(maps_url)}" target="_blank" rel="noopener noreferrer" '
+            f'data-track="prefecture_google_maps_click" data-position="{position}" '
+            f'data-destination="google_maps" data-content-id="{escape(mid)}">地図で開く</a>'
+            if maps_url else ""
+        )
         cards.append(
-            f'<a class="manhole-card" href="/manholes/{quote(mid)}/" '
+            f'<article class="manhole-card" data-manhole-id="{escape(mid)}">'
+            f'<a class="manhole-detail" href="/manholes/{quote(mid)}/" '
             f'data-track="prefecture_manhole_click" data-position="{position}" '
-            f'data-destination="{escape(mid)}">'
+            f'data-destination="manhole_detail" data-content-id="{escape(mid)}">'
             f'{image_html}<span class="manhole-copy"><strong>{escape(city)}</strong>'
-            f'<small>{escape(pokemons)}</small>{preinstall_badge_html}</span></a>'
+            f'<small>{escape(pokemons)}</small>{preinstall_badge_html}'
+            f'<b class="photo-status{photo_class}">{photo_label}</b></span></a>'
+            f'<div class="manhole-actions"><a href="/manholes/{quote(mid)}/" '
+            f'data-track="prefecture_manhole_click" data-position="{position}" '
+            f'data-destination="manhole_detail" data-content-id="{escape(mid)}">詳細</a>'
+            f'{maps_html}<a class="upload" href="{_escape_attr(_upload_url(mid, slug))}" '
+            f'data-track="prefecture_photo_upload_start" data-position="{position}" '
+            f'data-destination="upload" data-content-id="{escape(mid)}" '
+            f'data-photo-state="{"has_photo" if has_photo else "missing"}">{upload_label}</a>'
+            f'</div></article>'
         )
     return "".join(cards)
 
@@ -365,7 +571,9 @@ def _related_prefectures(prefecture: str) -> str:
             region_prefs = prefectures
             break
     links = "".join(
-        f'<a href="/prefectures/{PREFECTURE_SLUGS[name]}/">{escape(name)}</a>'
+        f'<a href="/prefectures/{PREFECTURE_SLUGS[name]}/" '
+        f'data-track="prefecture_related_click" '
+        f'data-destination="{PREFECTURE_SLUGS[name]}">{escape(name)}</a>'
         for name in region_prefs
         if name != prefecture
     )
@@ -423,7 +631,9 @@ def build_page(
     pokemon_slugs: dict[str, str],
     trivia_entry: dict | None,
     events: list[dict] | None = None,
+    photos: dict[str, dict] | None = None,
 ) -> str:
+    photos = photos or {}
     count = len(records)
     canonical = f"{BASE_URL}/prefectures/{slug}/"
     title = (
@@ -446,7 +656,7 @@ def build_page(
     hero_summary = _hero_summary(prefecture, count, records, trivia_entry)
     official_url = _prefecture_official_url(records)
     official_cta = (
-        f'<a class="button official" href="{_escape_attr(official_url)}" target="_blank" '
+        f'<a class="inline-link official-link" href="{_escape_attr(official_url)}" target="_blank" '
         f'rel="noopener noreferrer" data-track="prefecture_official_click" '
         f'data-destination="prefecture_official">{escape(prefecture)}公式を見る</a>'
         if official_url else ""
@@ -458,17 +668,22 @@ def build_page(
             "lng": record.get("lng"),
             "city": record.get("city", ""),
             "pokemons": _clean_pokemons(record),
+            "photo_url": _photo_asset_url(
+                record, photos.get(str(record.get("id", "")), {})
+            ) if str(record.get("id", "")) in photos else "",
         }
         for record in records
         if isinstance(record.get("lat"), (int, float))
         and isinstance(record.get("lng"), (int, float))
     ]
-    map_href = f"/?pref={quote(prefecture)}"
     pokemon_html = _pokemon_cards(records, pokemon_slugs)
-    manhole_html = _manhole_cards(records)
+    manhole_html = _manhole_cards(records, photos, slug)
+    photo_html = _photo_section(prefecture, slug, records, photos)
     trivia_html = _trivia_html(prefecture, trivia_entry, count)
     events_html = _events_html(events)
     related_html = _related_prefectures(prefecture)
+    visits_url = _visits_url(slug)
+    nearby_url = _nearby_url(slug)
     map_empty_class = " map-empty" if not map_points else ""
     json_ld = {
         "@context": "https://schema.org",
@@ -558,19 +773,110 @@ def build_page(
       border-radius: 999px; background: #176f68; color: white; font-weight: 900;
       text-decoration: none;
     }}
+    .button.primary {{ background: #b5483c; }}
     .button.secondary {{ background: #6b4aa2; }}
-    .button.pokefuta {{ background: #b5483c; }}
-    .button.photo {{ background: #2d846c; }}
+    .button.tertiary {{
+      background: white; color: #176f68; box-shadow: inset 0 0 0 1px #9fc7c2;
+    }}
     .button.official {{ background: #8a5a20; }}
+    .hero-note {{ margin: 10px 0 0; color: #75685c; font-size: .78rem; font-weight: 750; }}
+    .hero-utility {{ margin-top: 10px; }}
+    .hero-utility:empty {{ display: none; }}
     section {{
       margin-top: 22px; padding: 20px; border: 1px solid rgba(93,67,35,.14);
       border-radius: 19px; background: #fffaf0;
       box-shadow: 0 8px 20px rgba(77,56,30,.05);
     }}
     h2 {{ margin: 0 0 12px; font-size: 1.35rem; line-height: 1.35; }}
+    .section-heading-row {{
+      display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;
+      margin-bottom: 12px;
+    }}
+    .section-heading-row h2, .section-heading-row p {{ margin: 0; }}
+    .section-heading-row p {{ max-width: 520px; color: #75685c; font-size: .86rem; }}
+    .map-toolbar {{
+      display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px;
+      align-items: center; margin-bottom: 10px;
+    }}
+    .map-legend {{ display: flex; flex-wrap: wrap; gap: 10px; color: #62564a; font-size: .78rem; font-weight: 800; }}
+    .map-legend span {{ display: inline-flex; align-items: center; gap: 5px; }}
+    .legend-dot {{ width: 12px; height: 12px; border: 3px solid white; border-radius: 50%; box-shadow: 0 0 0 1px rgba(32,27,22,.2); }}
+    .legend-dot.has-photo {{ background: #2d846c; }}
+    .legend-dot.needs-photo {{ background: #d78548; }}
+    .nearby-link, .inline-link {{
+      display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px;
+      border-radius: 999px; background: #e6f2ef; color: #176f68;
+      font-size: .84rem; font-weight: 900; text-decoration: none;
+    }}
     #prefecture-map {{ height: 430px; border-radius: 14px; background: #e9e3d6; }}
     #prefecture-map.map-empty {{ display: grid; place-items: center; color: #75685c; font-weight: 850; }}
     .map-note {{ margin: 10px 0 0; color: #75685c; font-size: .8rem; }}
+    .prefecture-marker {{
+      width: 28px; height: 28px; border: 4px solid white; border-radius: 50% 50% 50% 8px;
+      transform: rotate(-45deg); box-shadow: 0 3px 8px rgba(32,27,22,.35);
+    }}
+    .prefecture-marker.has-photo {{ background: #2d846c; }}
+    .prefecture-marker.needs-photo {{ background: #d78548; }}
+    .map-popup {{ min-width: 210px; }}
+    .map-popup img {{
+      display: block; width: 100%; height: 120px; margin: 8px 0; border-radius: 10px;
+      object-fit: cover;
+    }}
+    .map-popup-photo-missing {{
+      margin: 8px 0; padding: 8px; border-radius: 9px; background: #fff0e5;
+      color: #8d4a22; font-size: .78rem; font-weight: 850;
+    }}
+    .map-popup-actions {{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-top: 9px; }}
+    .map-popup-actions a {{
+      display: grid; place-items: center; min-height: 38px; padding: 5px;
+      border-radius: 8px; background: #ece7f7; color: #4f3a79;
+      font-size: .72rem; text-align: center; text-decoration: none;
+    }}
+    .map-popup-actions a.upload {{ background: #b5483c; color: white; }}
+    .photo-inventory {{
+      display: grid; grid-template-columns: minmax(0, 1fr) 180px auto; gap: 14px;
+      align-items: center; margin-bottom: 16px;
+    }}
+    .photo-inventory strong {{ color: #57408f; font-size: 1.8rem; line-height: 1; }}
+    .photo-inventory strong span {{ color: #75685c; font-size: .9rem; }}
+    .photo-inventory p {{ margin: 5px 0 0; color: #62564a; }}
+    .photo-inventory > b {{ color: #57408f; }}
+    .coverage-meter {{ height: 10px; overflow: hidden; border-radius: 999px; background: #e5ddd0; }}
+    .coverage-meter span {{ display: block; height: 100%; border-radius: inherit; background: #6b4aa2; }}
+    .photo-showcase-grid {{
+      display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px;
+      margin-bottom: 14px;
+    }}
+    .photo-card {{ overflow: hidden; border: 1px solid rgba(93,67,35,.13); border-radius: 14px; background: white; }}
+    .photo-card-image {{ display: block; color: inherit; text-decoration: none; }}
+    .photo-card-image img {{
+      display: block; width: 100%; aspect-ratio: 4 / 3; height: auto; object-fit: cover;
+      background: #e9e3d6;
+    }}
+    .photo-card-image > span {{ display: grid; padding: 9px 10px; }}
+    .photo-card-image small {{ overflow: hidden; color: #75685c; font-size: .72rem; text-overflow: ellipsis; white-space: nowrap; }}
+    .photo-card-upload {{
+      display: grid; place-items: center; min-height: 44px; padding: 6px 9px;
+      border-top: 1px solid #ece4d7; color: #176f68; font-size: .75rem;
+      font-weight: 900; text-align: center; text-decoration: none;
+    }}
+    .contribution-panel {{
+      display: grid; grid-template-columns: minmax(220px, .8fr) minmax(0, 1.2fr);
+      gap: 14px; align-items: center; padding: 14px; border-radius: 14px;
+      background: #fff0e5;
+    }}
+    .contribution-panel p {{ margin: 4px 0 0; color: #75685c; font-size: .82rem; }}
+    .contribution-grid {{ display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }}
+    .contribution-card {{
+      display: grid; min-width: 0; padding: 10px; border-radius: 11px; background: white;
+      color: inherit; text-decoration: none;
+    }}
+    .contribution-card span {{ color: #b5483c; font-size: .68rem; font-weight: 950; }}
+    .contribution-card small {{ overflow: hidden; color: #75685c; font-size: .72rem; text-overflow: ellipsis; white-space: nowrap; }}
+    .contribution-card b {{ margin-top: 6px; color: #176f68; font-size: .75rem; }}
+    .contribution-complete {{ grid-template-columns: 1fr auto; background: #edf8f2; }}
+    .photo-empty-state {{ padding: 18px; border-radius: 14px; background: #f3efe7; }}
+    .photo-empty-state p {{ margin: 4px 0 12px; color: #75685c; }}
     .pokemon-grid {{ display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }}
     .pokemon-card {{
       display: grid; gap: 2px; padding: 12px; border: 1px solid rgba(93,67,35,.13);
@@ -590,9 +896,12 @@ def build_page(
     }}
     .manhole-grid {{ display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }}
     .manhole-card {{
+      overflow: hidden; border: 1px solid rgba(93,67,35,.13);
+      border-radius: 14px; background: white;
+    }}
+    .manhole-detail {{
       display: grid; grid-template-columns: 72px minmax(0,1fr); align-items: center;
-      gap: 12px; min-height: 88px; padding: 8px; border: 1px solid rgba(93,67,35,.13);
-      border-radius: 14px; background: white; color: inherit; text-decoration: none;
+      gap: 12px; min-height: 88px; padding: 8px; color: inherit; text-decoration: none;
     }}
     .manhole-card img, .manhole-placeholder {{
       width: 72px; height: 72px; border-radius: 50%; object-fit: cover;
@@ -603,6 +912,28 @@ def build_page(
     .manhole-copy {{ min-width: 0; }}
     .manhole-copy strong, .manhole-copy small {{ display: block; }}
     .manhole-copy small {{ overflow: hidden; color: #75685c; text-overflow: ellipsis; white-space: nowrap; }}
+    .photo-status {{
+      display: inline-flex; width: fit-content; margin-top: 4px; padding: 2px 7px;
+      border-radius: 999px; font-size: .68rem;
+    }}
+    .photo-ready {{ background: #e4f2ee; color: #176f68; }}
+    .photo-needed {{ background: #fff0e5; color: #9b4b20; }}
+    .manhole-actions {{ display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid #ece4d7; }}
+    .manhole-actions a {{
+      display: grid; place-items: center; min-height: 44px; padding: 5px;
+      color: #57408f; font-size: .76rem; font-weight: 900; text-align: center;
+      text-decoration: none;
+    }}
+    .manhole-actions a + a {{ border-left: 1px solid #ece4d7; }}
+    .manhole-actions a.upload {{ background: #b5483c; color: white; }}
+    .journey-loop {{ background: linear-gradient(135deg, #f1f8f6, #f5effc); }}
+    .journey-steps {{
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+      margin: 14px 0;
+    }}
+    .journey-step {{ padding: 12px; border-radius: 12px; background: white; font-size: .82rem; font-weight: 850; }}
+    .journey-step span {{ display: block; color: #6b4aa2; font-size: .7rem; }}
+    .journey-actions {{ display: flex; flex-wrap: wrap; gap: 8px; }}
     .manhole-preinstall-badge {{
       display: inline-block; margin-top: 4px; padding: 2px 8px;
       border-radius: 999px; background: #f1ede4; color: #6b5d44;
@@ -645,6 +976,17 @@ def build_page(
     @media (max-width: 700px) {{
       .hero {{ display: block; padding: 22px 18px; }}
       .hero-summary {{ display: none; }}
+      .hero-actions {{ display: grid; grid-template-columns: 1fr 1fr; }}
+      .hero-actions .button {{ justify-content: center; padding: 0 12px; text-align: center; }}
+      .hero-actions .button.primary {{ grid-column: 1 / -1; }}
+      .section-heading-row {{ display: block; }}
+      .section-heading-row p {{ margin-top: 4px; }}
+      .photo-inventory {{ grid-template-columns: minmax(0, 1fr) auto; }}
+      .coverage-meter {{ grid-column: 1 / -1; grid-row: 2; }}
+      .photo-showcase-grid {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
+      .contribution-panel, .contribution-complete {{ grid-template-columns: 1fr; }}
+      .contribution-grid {{ grid-template-columns: 1fr; }}
+      .journey-steps {{ grid-template-columns: repeat(2, 1fr); }}
       .pokemon-grid, .pokemon-more-grid, .manhole-grid {{ grid-template-columns: 1fr; }}
       #prefecture-map {{ height: 360px; }}
       section {{ padding: 16px; }}
@@ -668,15 +1010,15 @@ def build_page(
           <div class="stat"><span>全国順位</span><strong>{escape(rank_label)}</strong></div>
         </div>
         <div class="hero-actions">
-          <a class="button" href="#manhole-list">マンホール一覧を見る</a>
-          <a class="button pokefuta" href="https://pokefuta.com/visits"
-            data-track="prefecture_visit_cta_click" data-destination="pokefuta_visits">訪問記録を残す</a>
-          <a class="button photo" href="https://pokefuta.com/"
-            data-track="prefecture_photo_cta_click" data-destination="pokefuta_photos">写真を見る</a>
-          {official_cta}
-          <a class="button secondary" href="{escape(map_href)}"
-            data-track="prefecture_map_click" data-destination="map">全国マップで見る</a>
+          <a class="button primary" href="#manhole-list"
+            data-track="prefecture_photo_candidate_click" data-destination="manhole_list">投稿するポケふたを選ぶ</a>
+          <a class="button secondary" href="#prefecture-map"
+            data-track="prefecture_map_click" data-destination="prefecture_map">地図で探す</a>
+          <a class="button tertiary" href="{_escape_attr(visits_url)}"
+            data-track="prefecture_visit_cta_click" data-destination="pokefuta_visits">訪問記録を開く</a>
         </div>
+        <p class="hero-note">対象を選ぶまではログイン不要です。写真投稿時にログインへ進みます。</p>
+        <div class="hero-utility">{official_cta}</div>
       </div>
       <div class="hero-summary" aria-label="{escape(prefecture)}のサマリー">
         <span>サマリー</span>
@@ -684,21 +1026,59 @@ def build_page(
       </div>
     </header>
 
-    <section class="trivia-card" aria-labelledby="trivia-heading">
+    <section aria-labelledby="map-heading">
+      <div class="section-heading-row">
+        <h2 id="map-heading">{escape(prefecture)}の設置マップ</h2>
+        <p>ピンから詳細・行き方・写真投稿へ進めます。</p>
+      </div>
+      <div class="map-toolbar">
+        <div class="map-legend" aria-label="地図の凡例">
+          <span><i class="legend-dot has-photo"></i>投稿写真あり</span>
+          <span><i class="legend-dot needs-photo"></i>写真募集中</span>
+        </div>
+        <a class="nearby-link" href="{_escape_attr(nearby_url)}"
+          data-track="prefecture_nearby_click" data-destination="pokefuta_nearby">現在地の近くから探す</a>
+      </div>
+      <div id="prefecture-map" class="{map_empty_class.strip()}"></div>
+      <p class="map-note">地図はドラッグとピンチ操作に対応。スクロール中の誤操作を防ぐため、マウスホイール拡大は無効です。</p>
+    </section>
+
+    <section id="prefecture-photos" aria-labelledby="photo-heading">
+      <div class="section-heading-row">
+        <h2 id="photo-heading">{escape(prefecture)}の現地写真</h2>
+        <p>写真は場所選びの参考に。クリックするとマンホール詳細を確認できます。</p>
+      </div>
+      {photo_html}
+    </section>
+
+    {events_html}<section class="trivia-card" aria-labelledby="trivia-heading">
       <span class="trivia-kicker">まず知りたい</span>
       <h2 id="trivia-heading">{escape(prefecture)}のポケふたトリビア</h2>
       {trivia_html}
     </section>
 
-    {events_html}<section aria-labelledby="map-heading">
-      <h2 id="map-heading">{escape(prefecture)}の設置マップ</h2>
-      <div id="prefecture-map" class="{map_empty_class.strip()}"></div>
-      <p class="map-note">マーカーを選ぶと、各ポケふたの詳細ページへ移動できます。</p>
+    <section id="manhole-list" aria-labelledby="manhole-heading">
+      <div class="section-heading-row">
+        <h2 id="manhole-heading">{escape(prefecture)}のマンホール一覧</h2>
+        <p>訪れたポケふたを選び、写真を記録できます。</p>
+      </div>
+      <div class="manhole-grid">{manhole_html}</div>
     </section>
 
-    <section id="manhole-list" aria-labelledby="manhole-heading">
-      <h2 id="manhole-heading">{escape(prefecture)}のマンホール一覧</h2>
-      <div class="manhole-grid">{manhole_html}</div>
+    <section class="journey-loop" aria-labelledby="journey-heading">
+      <h2 id="journey-heading">記録して、次のポケふたへ</h2>
+      <div class="journey-steps" aria-label="継続して楽しむ流れ">
+        <div class="journey-step"><span>STEP 1</span>地図で見つける</div>
+        <div class="journey-step"><span>STEP 2</span>現地を訪れる</div>
+        <div class="journey-step"><span>STEP 3</span>写真で記録する</div>
+        <div class="journey-step"><span>STEP 4</span>未訪問を探す</div>
+      </div>
+      <div class="journey-actions">
+        <a class="button primary" href="{_escape_attr(visits_url)}"
+          data-track="prefecture_visit_cta_click" data-destination="pokefuta_visits">スタンプ帳で進捗を見る</a>
+        <a class="button tertiary" href="{_escape_attr(nearby_url)}"
+          data-track="prefecture_nearby_click" data-destination="pokefuta_nearby">近くの未訪問を探す</a>
+      </div>
     </section>
 
     <section aria-labelledby="pokemon-heading">
@@ -723,21 +1103,43 @@ def build_page(
       page_type: 'prefecture',
       prefecture: {_json_for_script(slug)}
     }});
+    function trackPrefectureEvent(name, params) {{
+      if (typeof window.gtag !== 'function') return;
+      gtag('event', name, Object.assign({{
+        event_category: 'prefecture_growth',
+        prefecture: {_json_for_script(slug)},
+        prefecture_name: {_json_for_script(prefecture)}
+      }}, params || {{}}));
+    }}
     document.addEventListener('click', function(event) {{
       const link = event.target.closest('[data-track]');
       if (!link) return;
-      gtag('event', link.dataset.track, {{
-        prefecture: {_json_for_script(slug)},
-        prefecture_name: {_json_for_script(prefecture)},
+      trackPrefectureEvent(link.dataset.track, {{
         position: Number(link.dataset.position || 0),
-        destination: link.dataset.destination || ''
+        destination: link.dataset.destination || '',
+        content_id: link.dataset.contentId || '',
+        photo_state: link.dataset.photoState || ''
       }});
     }});
+    const sentScrollDepths = new Set();
+    function reportScrollDepth() {{
+      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+      if (scrollable <= 0) return;
+      const depth = Math.round(window.scrollY / scrollable * 100);
+      [50, 90].forEach(function(threshold) {{
+        if (depth >= threshold && !sentScrollDepths.has(threshold)) {{
+          sentScrollDepths.add(threshold);
+          trackPrefectureEvent('prefecture_scroll_depth', {{ percent_scrolled: threshold }});
+        }}
+      }});
+    }}
+    window.addEventListener('scroll', reportScrollDepth, {{ passive: true }});
   </script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script>
     const points = {_json_for_script(map_points)};
+    const campaignParams = {_json_for_script(_campaign_params(slug))};
     const mapElement = document.getElementById('prefecture-map');
     if (!points.length) {{
       mapElement.textContent = '現在、表示できる設置地点はありません。';
@@ -753,15 +1155,59 @@ def build_page(
         bounds.push(latlng);
         const pokemon = point.pokemons.join('・') || 'ポケモン';
         const detailUrl = '/manholes/' + encodeURIComponent(point.id) + '/';
-        L.marker(latlng).addTo(map).bindPopup(
-          '<strong>' + escapeHtml(point.city || '所在地不明') + '</strong><br>' +
-          escapeHtml(pokemon) + '<br><a href="' + detailUrl +
-          '" data-track="prefecture_manhole_click" data-destination="' +
-          escapeHtml(point.id) + '">詳細を見る</a>'
-        );
+        const markerClass = point.photo_url ? 'has-photo' : 'needs-photo';
+        const photoState = point.photo_url ? 'has_photo' : 'missing';
+        const googleMapsUrl = 'https://www.google.com/maps?q=' + point.lat + ',' + point.lng;
+        const uploadUrl = 'https://pokefuta.com/upload?manhole_id=' +
+          encodeURIComponent(point.id) + '&' + campaignParams;
+        const photoHtml = point.photo_url
+          ? '<img src="' + escapeHtml(point.photo_url) + '" alt="' +
+            escapeHtml(point.city || '所在地不明') + 'のポケふた投稿写真" ' +
+            'loading="lazy" decoding="async" width="320" height="240">'
+          : '<div class="map-popup-photo-missing">このポケふたは写真募集中です</div>';
+        const popupHtml = '<div class="map-popup"><strong>' +
+          escapeHtml(point.city || '所在地不明') + '</strong><br>' +
+          escapeHtml(pokemon) + photoHtml + '<div class="map-popup-actions">' +
+          '<a href="' + detailUrl + '" data-track="prefecture_manhole_click" ' +
+          'data-destination="manhole_detail" data-content-id="' + escapeHtml(point.id) +
+          '">詳細</a>' +
+          '<a href="' + escapeHtml(googleMapsUrl) +
+          '" target="_blank" rel="noopener noreferrer" ' +
+          'data-track="prefecture_google_maps_click" data-destination="google_maps" ' +
+          'data-content-id="' + escapeHtml(point.id) + '">行き方</a>' +
+          '<a class="upload" href="' + escapeHtml(uploadUrl) +
+          '" data-track="prefecture_photo_upload_start" data-destination="upload" ' +
+          'data-content-id="' + escapeHtml(point.id) + '" data-photo-state="' +
+          photoState + '">写真投稿</a></div></div>';
+        const marker = L.marker(latlng, {{
+          title: (point.city || '所在地不明') + 'のポケふた',
+          alt: (point.city || '所在地不明') + 'のポケふた・' +
+            (point.photo_url ? '投稿写真あり' : '写真募集中'),
+          icon: L.divIcon({{
+            className: '',
+            html: '<div class="prefecture-marker ' + markerClass + '"></div>',
+            iconSize: [28, 34],
+            iconAnchor: [14, 31],
+            popupAnchor: [0, -30]
+          }})
+        }}).addTo(map).bindPopup(popupHtml, {{ maxWidth: 300 }});
+        marker.on('click', function() {{
+          trackPrefectureEvent('prefecture_map_pin_click', {{
+            content_id: point.id,
+            photo_state: photoState
+          }});
+        }});
       }});
       if (bounds.length === 1) map.setView(bounds[0], 13);
       else map.fitBounds(bounds, {{ padding: [28, 28], maxZoom: 13 }});
+      let mapInteractionSent = false;
+      function reportMapInteraction(interaction) {{
+        if (mapInteractionSent) return;
+        mapInteractionSent = true;
+        trackPrefectureEvent('prefecture_map_interaction', {{ interaction: interaction }});
+      }}
+      mapElement.addEventListener('pointerdown', function() {{ reportMapInteraction('pointer'); }}, {{ once: true }});
+      mapElement.addEventListener('keydown', function() {{ reportMapInteraction('keyboard'); }}, {{ once: true }});
     }}
     function escapeHtml(value) {{
       return String(value).replace(/[&<>"']/g, function(char) {{
@@ -780,7 +1226,9 @@ def generate_all(
     trivia: dict[str, dict],
     output_dir: Path,
     events: dict[str, list[dict]] | None = None,
+    photos: dict[str, dict] | None = None,
 ) -> int:
+    photos = photos or {}
     records_by_pref = {pref: [] for pref in PREFECTURE_ORDER}
     for record in records:
         prefecture = record.get("prefecture", "")
@@ -798,6 +1246,7 @@ def generate_all(
             pokemon_slugs,
             trivia.get(prefecture),
             (events or {}).get(prefecture),
+            photos,
         )
         (out_dir / "index.html").write_text(html, encoding="utf-8")
     return len(PREFECTURES)
@@ -807,6 +1256,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--manholes", type=Path, default=DEFAULT_MANHOLES)
     parser.add_argument("--pokemon", type=Path, default=DEFAULT_POKEMON)
+    parser.add_argument("--photos", type=Path, default=DEFAULT_PHOTOS)
     parser.add_argument("--trivia", type=Path, default=DEFAULT_TRIVIA)
     parser.add_argument("--events", type=Path, default=DEFAULT_EVENTS)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
@@ -817,9 +1267,10 @@ def main() -> int:
     args = parse_args()
     records = load_records(args.manholes)
     pokemon_slugs = load_pokemon_slugs(args.pokemon)
+    photos = load_photos(args.photos)
     trivia = load_trivia(args.trivia)
     events = load_events(args.events)
-    count = generate_all(records, pokemon_slugs, trivia, args.output, events)
+    count = generate_all(records, pokemon_slugs, trivia, args.output, events, photos)
     print(
         f"[generate_prefecture_pages] wrote {count} pages to "
         f"{args.output.relative_to(ROOT) if args.output.is_relative_to(ROOT) else args.output}"

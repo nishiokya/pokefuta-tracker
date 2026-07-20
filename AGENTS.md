@@ -2,6 +2,7 @@ manhole_titles.jsonは手動で更新している
 dataset/prefecture_events.json は手動更新（都道府県ページに出す開催中スタンプラリー等のリンク。end_date 過ぎは日次再生成で自動非表示）
 pokefuta.ndjsonはapps/scraperで更新している
 latest-manhole-photos.json と docs/api/*.json は import-manhole-photos.yml が Supabase から日次一括生成（画像DL込み。pokefuta.com アプリの /api/manholes・/api/site-stats は docs/api を読む。手動で回すときだけ `/import-photos` スキル）
+都道府県ページは `docs/latest-manhole-photos.json` を生成時に読み、写真掲載率・投稿写真・写真募集状態を47都道府県共通テンプレートへ静的に埋め込む
 
 ## ディレクトリ構成
 

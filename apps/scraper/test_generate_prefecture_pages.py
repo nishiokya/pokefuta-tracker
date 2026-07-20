@@ -17,13 +17,15 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.records = MODULE.load_records(MODULE.DEFAULT_MANHOLES)
         cls.pokemon_slugs = MODULE.load_pokemon_slugs(MODULE.DEFAULT_POKEMON)
+        cls.photos = MODULE.load_photos(MODULE.DEFAULT_PHOTOS)
         cls.trivia = MODULE.load_trivia(MODULE.DEFAULT_TRIVIA)
 
     def test_generates_all_47_prefectures_including_empty(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory)
             count = MODULE.generate_all(
-                self.records, self.pokemon_slugs, self.trivia, output
+                self.records, self.pokemon_slugs, self.trivia, output,
+                photos=self.photos,
             )
             self.assertEqual(47, count)
             self.assertEqual(47, len(list(output.glob("*/index.html"))))
@@ -40,6 +42,7 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
             MODULE.build_rankings(self.records)["福井県"],
             self.pokemon_slugs,
             self.trivia["福井県"],
+            photos=self.photos,
         )
         self.assertIn("福井県のポケふた17枚", html)
         self.assertIn("福井県の設置マップ", html)
@@ -53,19 +56,20 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
             "旅行やポケふた巡りの計画にご活用ください。",
             html,
         )
-        self.assertLess(
-            html.index('id="trivia-heading"'),
-            html.index('id="map-heading"'),
-        )
+        self.assertLess(html.index('id="map-heading"'), html.index('id="trivia-heading"'))
         self.assertIn("まず知りたい", html)
         self.assertIn(
             "福井県には17枚のポケふたがあります。県内16自治体に広がっています。",
             html,
         )
-        self.assertIn("https://pokefuta.com/visits", html)
-        self.assertIn('href="https://pokefuta.com/"', html)
+        self.assertIn("https://pokefuta.com/visits?from=data", html)
+        self.assertIn("utm_campaign=prefecture_page", html)
         self.assertIn("prefecture_visit_cta_click", html)
-        self.assertIn("prefecture_photo_cta_click", html)
+        self.assertIn("prefecture_photo_candidate_click", html)
+        self.assertIn("prefecture_photo_upload_start", html)
+        self.assertIn("prefecture_map_pin_click", html)
+        self.assertIn("prefecture_google_maps_click", html)
+        self.assertIn("prefecture_scroll_depth", html)
         self.assertIn("'page_path': '/prefectures/' + \"fukui\" + '/'", html)
         self.assertIn("site_type: 'map'", html)
         self.assertLess(
@@ -137,10 +141,7 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
             "現在の設置枚数や全国のポケモンマンホール情報を確認できます。",
             html,
         )
-        self.assertLess(
-            html.index('id="trivia-heading"'),
-            html.index('id="map-heading"'),
-        )
+        self.assertLess(html.index('id="map-heading"'), html.index('id="trivia-heading"'))
         self.assertIn(
             "群馬県では、現在ポケふたの設置を確認できていません。",
             html,
@@ -197,6 +198,81 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         ]
         html = MODULE._manhole_cards(records)
         self.assertNotIn("manhole-preinstall-badge", html)
+
+    def test_photo_section_adapts_to_inventory_without_changing_template(self) -> None:
+        records = [
+            {
+                "id": "9001",
+                "prefecture": "北海道",
+                "city": "写真あり町",
+                "pokemons": ["ロコン"],
+                "lat": 43.0,
+                "lng": 141.0,
+            },
+            {
+                "id": "9002",
+                "prefecture": "北海道",
+                "city": "写真なし町",
+                "pokemons": ["ピカチュウ"],
+                "lat": 44.0,
+                "lng": 142.0,
+            },
+        ]
+        photos = {
+            "9001": {
+                "url": "https://images.pokefuta.com/photos/9001.jpg",
+                "created_at": "2026-07-20T00:00:00Z",
+                "display_name": "旅人",
+            }
+        }
+        html = MODULE.build_page(
+            "北海道", "hokkaido", records, 1, self.pokemon_slugs, None,
+            photos=photos,
+        )
+        self.assertIn("1<span> / 2地点</span>", html)
+        self.assertIn('aria-valuenow="50"', html)
+        self.assertIn('loading="lazy" decoding="async" width="640" height="480"', html)
+        self.assertIn("旅人さんの投稿", html)
+        self.assertIn("写真未掲載のポケふたは1地点", html)
+        self.assertIn("最初の写真を投稿", html)
+        self.assertIn("manhole_id=9002&amp;from=data", html)
+        self.assertIn('data-photo-state="missing"', html)
+        self.assertIn("const markerClass = point.photo_url ? 'has-photo' : 'needs-photo';", html)
+        self.assertIn("html: '<div class=\"prefecture-marker ' + markerClass", html)
+        self.assertIn("title: (point.city || '所在地不明') + 'のポケふた'", html)
+        self.assertIn("(point.photo_url ? '投稿写真あり' : '写真募集中')", html)
+
+    def test_photo_section_zero_inventory_invites_first_contribution(self) -> None:
+        records = [
+            {"id": "1", "city": "A市", "pokemons": ["イーブイ"]},
+            {"id": "2", "city": "B市", "pokemons": ["ロコン"]},
+        ]
+        html = MODULE._photo_section("宮崎県", "miyazaki", records, {})
+        self.assertIn('aria-valuenow="0"', html)
+        self.assertIn("最初の1枚を募集中", html)
+        self.assertEqual(2, html.count('class="contribution-card"'))
+        self.assertNotIn("photo-showcase-grid", html)
+
+    def test_untrusted_photo_url_is_not_rendered(self) -> None:
+        records = [{"id": "9901", "city": "A市", "pokemons": ["イーブイ"]}]
+        html = MODULE._photo_section(
+            "宮崎県", "miyazaki", records,
+            {"9901": {"url": "javascript:alert(1)", "created_at": "2026-07-20"}},
+        )
+        self.assertNotIn("javascript:", html)
+        self.assertIn("写真未掲載のポケふたは1地点", html)
+
+    def test_downloaded_photo_asset_is_preferred_over_r2_original(self) -> None:
+        record = next(
+            record for record in self.records
+            if str(record.get("id")) in self.photos
+            and (MODULE.ROOT / "dataset" / "manhole" / "image" /
+                 f"{record['id']}_latest.jpeg").exists()
+        )
+        manhole_id = str(record["id"])
+        asset_url = MODULE._photo_asset_url(record, self.photos[manhole_id])
+        self.assertEqual(f"/manhole/image/{manhole_id}_latest.jpeg", asset_url)
+        self.assertNotIn("r2.cloudflarestorage.com", asset_url)
 
     def test_tied_counts_share_rank(self) -> None:
         records = [
