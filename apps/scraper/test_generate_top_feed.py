@@ -54,6 +54,105 @@ class SanitizeCommentTests(unittest.TestCase):
         self.assertTrue(result.endswith("…"))
 
 
+class HeroBadgeTests(unittest.TestCase):
+    def _title(self, **extra):
+        title = {
+            "emoji": "🌟",
+            "hashtag": "#レアポケふた",
+            "key": "rare_pokemon",
+            "label": "レアポケふた（全国2枚）",
+            "priority": 70,
+        }
+        title.update(extra)
+        return title
+
+    def test_high_priority_title_becomes_badge_with_short_label(self):
+        record = _record("1", titles=[self._title()])
+        self.assertEqual(
+            top_feed.hero_badge(record),
+            {"emoji": "🌟", "label": "レアポケふた", "priority": 70},
+        )
+
+    def test_priority_below_threshold_is_rejected(self):
+        record = _record("1", titles=[self._title(priority=59)])
+        self.assertIsNone(top_feed.hero_badge(record))
+
+    def test_generic_tag_priority_is_rejected(self):
+        record = _record(
+            "1",
+            titles=[self._title(hashtag="#観光ポケふた", priority=36)],
+        )
+        self.assertIsNone(top_feed.hero_badge(record))
+
+    def test_missing_hashtag_is_rejected(self):
+        record = _record("1", titles=[self._title(hashtag=None)])
+        self.assertIsNone(top_feed.hero_badge(record))
+
+    def test_missing_titles_is_rejected(self):
+        self.assertIsNone(top_feed.hero_badge(_record("1")))
+        self.assertIsNone(top_feed.hero_badge(_record("1", titles=[])))
+
+    def test_missing_emoji_becomes_empty_string(self):
+        record = _record("1", titles=[self._title(emoji=None)])
+        badge = top_feed.hero_badge(record)
+        self.assertEqual(badge["emoji"], "")
+
+
+class PhotoCountTests(unittest.TestCase):
+    def test_no_gallery_counts_hero_only(self):
+        self.assertEqual(top_feed.photo_count_for({}), 1)
+        self.assertEqual(top_feed.photo_count_for({"gallery": None}), 1)
+        self.assertEqual(top_feed.photo_count_for({"gallery": []}), 1)
+
+    def test_gallery_length_is_the_count(self):
+        # gallery は代表写真自身を先頭に含むため len がそのまま枚数
+        self.assertEqual(top_feed.photo_count_for({"gallery": [{}, {}]}), 2)
+        self.assertEqual(
+            top_feed.photo_count_for({"gallery": [{}] * 5}), 5
+        )
+
+
+class PhotoCountCapTests(unittest.TestCase):
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self._tmp.cleanup)
+        self.image_dir = Path(self._tmp.name)
+        (self.image_dir / "1_latest.jpeg").write_bytes(b"")
+
+    def _feed(self, gallery_len: int, gallery_limit: int):
+        photos = {
+            "1": _photo(
+                "1",
+                "2026-06-01T00:00:00+00:00",
+                gallery=[{}] * gallery_len,
+            )
+        }
+        feed = top_feed.build_top_feed(
+            {"photos": photos},
+            {"1": _record("1")},
+            {},
+            image_dir=self.image_dir,
+            gallery_limit=gallery_limit,
+        )
+        return feed["photos"][0]
+
+    def test_at_cap_sets_flag(self):
+        entry = self._feed(gallery_len=5, gallery_limit=5)
+        self.assertEqual(entry["photo_count"], 5)
+        self.assertTrue(entry["photo_count_at_cap"])
+
+    def test_below_cap_omits_flag(self):
+        entry = self._feed(gallery_len=4, gallery_limit=5)
+        self.assertEqual(entry["photo_count"], 4)
+        self.assertNotIn("photo_count_at_cap", entry)
+
+    def test_larger_cap_keeps_mid_counts_uncapped(self):
+        # キャップが増えても 5 枚が「5+」にならない（クライアントは値を持たない）
+        entry = self._feed(gallery_len=5, gallery_limit=10)
+        self.assertEqual(entry["photo_count"], 5)
+        self.assertNotIn("photo_count_at_cap", entry)
+
+
 class BuildTopFeedTests(unittest.TestCase):
     def setUp(self):
         self._tmp = tempfile.TemporaryDirectory()
@@ -163,6 +262,33 @@ class BuildTopFeedTests(unittest.TestCase):
         self.assertEqual(
             entry["public_user_id"], "11111111-2222-3333-4444-555555555555"
         )
+
+    def test_badge_and_photo_count_added_only_when_meaningful(self):
+        photos = {
+            "1": _photo("1", "2026-06-02T00:00:00+00:00", gallery=[{}, {}]),
+            "2": _photo("2", "2026-06-01T00:00:00+00:00"),
+        }
+        records = {
+            "1": _record(
+                "1",
+                titles=[{"emoji": "⭐", "hashtag": "#ここだけ", "priority": 90}],
+            ),
+            "2": _record("2"),
+        }
+        self._touch_image("1")
+        self._touch_image("2")
+        feed = top_feed.build_top_feed(
+            {"photos": photos}, records, {}, image_dir=self.image_dir
+        )
+        rich, plain = feed["photos"]
+        self.assertEqual(
+            rich["badge"], {"emoji": "⭐", "label": "ここだけ", "priority": 90}
+        )
+        self.assertEqual(rich["photo_count"], 2)
+        self.assertNotIn("photo_count_at_cap", rich)
+        # 値が無いエントリにはキー自体を足さない（null を焼き込まない）
+        self.assertNotIn("badge", plain)
+        self.assertNotIn("photo_count", plain)
 
     def test_stats_subset_ignores_non_int_values(self):
         site_stats = {

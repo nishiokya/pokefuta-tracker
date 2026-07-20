@@ -19,6 +19,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
+from export_latest_manhole_photos import DEFAULT_GALLERY_LIMIT  # noqa: E402
 from photo_caption import to_jst_date  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -29,6 +30,10 @@ IMAGE_DIR = ROOT / "dataset" / "manhole" / "image"
 
 MAX_PHOTOS = 12
 COMMENT_MAX_LEN = 80
+
+# 称号バッジに採用する最低 priority。「ここだけ」(90) / 離島 (95) / 最北端等 (100) /
+# レア (70) / 市内唯一 (60) は拾い、観光・駅前などの汎用タグ (36 帯) は拾わない
+HERO_BADGE_MIN_PRIORITY = 60
 
 # pokefuta.ndjson の pokemons に混ざる非ポケモン表記（トップページ JS と同じ除外規則）
 _EXCLUDED_POKEMON_PATTERN = "ローカルActs"
@@ -73,12 +78,54 @@ def sanitize_comment(text: object) -> str | None:
     return collapsed
 
 
+def hero_badge(record: dict) -> dict | None:
+    """ndjson の titles[0]（priority 降順格納済み）から称号バッジを作る。
+
+    label には hashtag から '#' を落とした短縮形を使う（titles の label は
+    「ガラルダルマッカは全国でここだけ」のように長く、ヒーローのバッジ枠に
+    収まらないため）。希少称号（HERO_BADGE_MIN_PRIORITY 以上）のみ採用。
+    """
+    titles = record.get("titles") or []
+    if not titles or not isinstance(titles[0], dict):
+        return None
+    top = titles[0]
+    priority = top.get("priority")
+    hashtag = top.get("hashtag")
+    if not isinstance(priority, (int, float)) or priority < HERO_BADGE_MIN_PRIORITY:
+        return None
+    if not isinstance(hashtag, str):
+        return None
+    label = hashtag.lstrip("#").strip()
+    if not label:
+        return None
+    return {
+        "emoji": top.get("emoji") or "",
+        "label": label,
+        "priority": int(priority),
+    }
+
+
+def photo_count_for(photo: dict) -> int:
+    """その地点の既知の写真枚数。
+
+    gallery は代表写真（ヒーロー）自身を先頭に含む public 写真のリスト
+    （export_latest_manhole_photos.py の select_gallery_photos は全写真から選ぶ）。
+    export 側で gallery_limit 件にキャップされるため、この値は実際の枚数の
+    下限でしかない（上限到達かどうかは at_cap を参照）。
+    """
+    gallery = photo.get("gallery")
+    if isinstance(gallery, list) and gallery:
+        return len(gallery)
+    return 1
+
+
 def build_top_feed(
     photos_data: dict,
     records_by_id: dict[str, dict],
     site_stats: dict,
     image_dir: Path = IMAGE_DIR,
     max_photos: int = MAX_PHOTOS,
+    gallery_limit: int = DEFAULT_GALLERY_LIMIT,
 ) -> dict:
     photos = photos_data.get("photos", {}) or {}
     sorted_photos = sorted(
@@ -104,7 +151,7 @@ def build_top_feed(
         # UTC のまま [:10] すると UTC 15:00 以降の投稿が1日前にずれるため
         # JST に変換してから日付化する（トップの formatFeedDate は JST 日付を前提）
         created_jst = to_jst_date(photo.get("created_at"))
-        entries.append({
+        entry = {
             "id": mid,
             "title": record.get("title", ""),
             "prefecture": record.get("prefecture", ""),
@@ -114,7 +161,20 @@ def build_top_feed(
             "public_user_id": photo.get("public_user_id") or None,
             "comment": sanitize_comment(photo.get("comment")),
             "created_at": created_jst.isoformat() if created_jst else "",
-        })
+        }
+        # badge / photo_count は任意フィールド: 値があるときだけキーを足す
+        # （既存フィールドと違い null を焼き込まず、クライアントは in 判定で読む）
+        badge = hero_badge(record)
+        if badge:
+            entry["badge"] = badge
+        photo_count = photo_count_for(photo)
+        if photo_count >= 2:
+            entry["photo_count"] = photo_count
+            # gallery が export のキャップに達している = 実際はこれ以上ある可能性がある。
+            # キャップ値をクライアントに焼き込ませないためフラグで渡す（'📷5+' の判定用）
+            if photo_count >= gallery_limit:
+                entry["photo_count_at_cap"] = True
+        entries.append(entry)
         if len(entries) >= max_photos:
             break
 
