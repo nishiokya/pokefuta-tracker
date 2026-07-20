@@ -344,7 +344,11 @@ PAGE_STYLE = """
     .lp-wrap { max-width: 760px; margin: 0 auto; padding: 0 var(--top-pad); }
 
     /* ── ファーストView（#lp-intro）は index.html の #sec-intro と同じ top-page.css
-       クラス（.sec-eyebrow/.top-h1/.top-intro-text/.top-stats-row 等）をそのまま使う。
+       クラス（.sec-eyebrow/.top-h1/.top-intro-text/.top-stats-note 等）をそのまま使う。
+       ただし {N}枚/{W}作品/{P}都道府県 の3タイル統計は、このLPの趣旨
+       （「まだ全部ではない、あなたの1枚が要る」）と網羅性アピールが矛盾するため
+       意図的に使わない。統計は stats-note の1行のみ残す（3タイル用CSSクラスは
+       このファイルからは一切参照しない）。
        ID は #sec-intro を再利用しない: top-page.css は @media (min-width: 960px) 内で
        #sec-intro/#sec-map/#sec-hero/#sec-hub/#sec-pref/#sec-events/#sec-newrelease を
        index.html 専用の重なりレイアウト（#sec-intro と #sec-map を同じグリッドに重ねて
@@ -427,16 +431,17 @@ PAGE_STYLE = """
     /* ── 地図で探す（.map-gateway-card 等は top-page.css の index.html 用スタイルを流用） ── */
 
     /* top-page.css の @media (min-width: 960px) は、#sec-intro を「地図の左に重ねる
-       オーバーレイパネル」として扱うことを前提に、対になる .top-intro-text/
-       .top-stats-row の幅を狭め、.map-gateway-title/.map-gateway-sub を隠し、
-       .map-gateway-badge を右寄せ、.map-gateway-overlay を右下のCTAピルだけに
-       縮小している（index.html はオーバーレイパネル側に同じ説明文がある前提）。
+       オーバーレイパネル」として扱うことを前提に、対になる .top-intro-text の幅を
+       狭め、.map-gateway-title/.map-gateway-sub を隠し、.map-gateway-badge を右寄せ、
+       .map-gateway-overlay を右下のCTAピルだけに縮小している
+       （index.html はオーバーレイパネル側に同じ説明文がある前提）。
        このLPは #sec-intro を使わない（id="lp-intro"）ので対になるパネルが無く、
        そのままではデスクトップ幅で本文とCTA説明文が消えてしまう。
        top-page.css 自体は編集せず、詳細度で勝つセレクタでこのページの範囲内だけ
-       打ち消す（960px未満では元々の値と一致するため no-op）。 */
-    .character-manhole-lp .top-intro-text,
-    .character-manhole-lp .top-stats-row { max-width: none; }
+       打ち消す（960px未満では元々の値と一致するため no-op）。
+       （3タイル統計用のCSSクラスはヒーローから削除したのでこのLPではもう
+       使っていない。打ち消しも不要）。 */
+    .character-manhole-lp .top-intro-text { max-width: none; }
     .character-manhole-lp .map-gateway-title,
     .character-manhole-lp .map-gateway-sub { display: block; }
     .character-manhole-lp .map-gateway-overlay {
@@ -569,7 +574,8 @@ def generate_html(
 
     total_count = len(character_records) + len(gundam_records)
     work_count = len(work_summaries)
-    pref_count = len(pref_summaries)
+    # pref_count（都道府県数）はヒーローの3タイル統計を削除したため未使用。
+    # pref_summaries 自体は「都道府県から探す」セクションの一覧描画に引き続き使う。
     next_submission_number = total_count + 1  # 投稿導線の「あなたの1枚が{N+1}枚目」用
 
     title = f"キャラクターマンホールとは｜全国{total_count}枚・{work_count}作品のマンホールマップ"
@@ -740,23 +746,24 @@ def generate_html(
         「これ珍しいな」と一枚撮って、そのままカメラロールに残っていませんか。
         この地図は、そういう<b>寄り道の記録</b>を集めています。
       </p>
-      <div class="top-stats-row">
-        <div class="top-stat">
-          <b class="stat-num">{total_count}</b>
-          <span class="stat-label">枚</span>
-        </div>
-        <div class="stat-divider"></div>
-        <div class="top-stat">
-          <b class="stat-num">{work_count}</b>
-          <span class="stat-label">作品</span>
-        </div>
-        <div class="stat-divider"></div>
-        <div class="top-stat">
-          <b class="stat-num">{pref_count}</b>
-          <span class="stat-label">都道府県</span>
-        </div>
-      </div>
       <p class="top-stats-note">これで全部ではありません。あなたの1枚が {next_submission_number} 枚目になります。</p>
+    </section>
+
+    <!-- ── 地図で探す（index.html と同じ並び: #sec-intro の直後。
+         map-gateway-card は index.html と同じ、操作不能な実地図プレビュー） ── -->
+    <section class="lp-section" aria-labelledby="lp-map-heading">
+      <h2 id="lp-map-heading"><span>MAP</span>地図で探す</h2>
+      <a class="map-gateway-card" href="{MAP_HREF}"
+         onclick="trackEvent('click_map_cta',{{cta:'map_section',from:'character_manholes_lp'}})">
+        <div id="cm-mini-map" class="map-gateway-minimap" aria-hidden="true"></div>
+        <span class="map-gateway-badge">🗺 全国 <b>{total_count}</b>枚</span>
+        <span class="map-gateway-attr">© OpenStreetMap contributors</span>
+        <div class="map-gateway-overlay">
+          <div class="map-gateway-title">巡礼ルートの近くにある蓋を確かめる</div>
+          <div class="map-gateway-sub">作品・都道府県で絞り込み、現在地からも探せます</div>
+          <div class="map-gateway-cta">🗺 地図を全画面で開く</div>
+        </div>
+      </a>
     </section>
 
     <!-- ── キャラクターマンホールとは（検索語のためh2は変更しない） ── -->
@@ -764,11 +771,15 @@ def generate_html(
       <h2 id="lp-about-heading"><span>WHAT IS IT</span>キャラクターマンホールとは</h2>
       <ul class="lp-explain-grid">
         <li class="lp-explain-card">
-          <p>自治体がアニメ・漫画・ご当地キャラの絵柄を入れて設置している蓋です。作品の舞台になった街や、作者の出身地に置かれていることが多く、その土地に行かないと踏めません。<br><br>
-          ポケふたが全国共通の規格で作られているのに対して、キャラクターマンホールは<b>作品ごと・自治体ごとにばらばら</b>です。公式のまとまった一覧がほとんど無く、「歩いていて偶然見つけた」が今も主な発見手段になっています。<br><br>
-          だからこのページの「全国{total_count}枚」も、<b>まだ全部ではありません</b>。</p>
+          <strong>その土地に行かないと踏めない蓋</strong>
+          <p>自治体がアニメ・漫画・ご当地キャラの絵柄を入れて設置している蓋です。作品の舞台になった街や、作者の出身地に置かれていることが多く、その土地に行かないと踏めません。</p>
+        </li>
+        <li class="lp-explain-card">
+          <strong>ポケふたと違って、まとまった一覧が無い</strong>
+          <p>ポケふたが全国共通の規格で作られているのに対して、キャラクターマンホールは<b>作品ごと・自治体ごとにばらばら</b>です。公式のまとまった一覧がほとんど無く、「歩いていて偶然見つけた」が今も主な発見手段になっています。</p>
         </li>
       </ul>
+      <p class="lp-section-lead">だからこのページの「全国{total_count}枚」も、<b>まだ全部ではありません</b>。</p>
     </section>
 
     <!-- ── いま集まっている作品 ── -->
@@ -787,22 +798,6 @@ def generate_html(
       <div class="lp-pref-list">
 {pref_items_html}
       </div>
-    </section>
-
-    <!-- ── 地図で探す（index.html の map-gateway-card と同じ、操作不能な実地図プレビュー） ── -->
-    <section class="lp-section" aria-labelledby="lp-map-heading">
-      <h2 id="lp-map-heading"><span>MAP</span>地図で探す</h2>
-      <a class="map-gateway-card" href="{MAP_HREF}"
-         onclick="trackEvent('click_map_cta',{{cta:'map_section',from:'character_manholes_lp'}})">
-        <div id="cm-mini-map" class="map-gateway-minimap" aria-hidden="true"></div>
-        <span class="map-gateway-badge">🗺 全国 <b>{total_count}</b>枚</span>
-        <span class="map-gateway-attr">© OpenStreetMap contributors</span>
-        <div class="map-gateway-overlay">
-          <div class="map-gateway-title">巡礼ルートの近くにある蓋を確かめる</div>
-          <div class="map-gateway-sub">作品・都道府県で絞り込み、現在地からも探せます</div>
-          <div class="map-gateway-cta">🗺 地図を全画面で開く</div>
-        </div>
-      </a>
     </section>
 
     <!-- ── 投稿導線（このページの本命） ── -->

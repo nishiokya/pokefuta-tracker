@@ -516,12 +516,11 @@ class SharedCssIdSafetyTest(unittest.TestCase):
 
     def test_neutralizes_desktop_class_overrides_meant_for_the_overlay_panel_pair(self):
         # top-page.css の @media (min-width: 960px) は、class（IDではない）レベルで
-        # .top-intro-text/.top-stats-row の幅を狭め .map-gateway-title/.map-gateway-sub
-        # を隠す。これは #sec-intro のオーバーレイパネルと対になっている前提の設計で、
+        # .top-intro-text の幅を狭め .map-gateway-title/.map-gateway-sub を隠す。
+        # これは #sec-intro のオーバーレイパネルと対になっている前提の設計で、
         # このLPには対のパネルが無いため、そのままだとデスクトップ幅で説明文が消える。
         # .character-manhole-lp スコープで打ち消していることを確認する。
         self.assertIn(".character-manhole-lp .top-intro-text", self.html)
-        self.assertIn(".character-manhole-lp .top-stats-row", self.html)
         self.assertIn(".character-manhole-lp .map-gateway-title", self.html)
         self.assertIn(".character-manhole-lp .map-gateway-sub", self.html)
 
@@ -638,6 +637,59 @@ class PilgrimCopyTest(unittest.TestCase):
         # 助数詞は「枚」のみ。「基」「件」は使わない
         self.assertNotIn("基", self.html)
         self.assertNotIn(f"{self.total_count}件", self.html)
+
+    def test_explain_grid_has_two_cards_not_one(self):
+        # 退行防止: .lp-explain-grid は @media (min-width:560px) で
+        # grid-template-columns: 1fr 1fr の2カラム。カードが1枚しか無いと
+        # 右カラムが空になり「左半分だけ表示される」バグを引く。
+        card_count = self.html.count('<li class="lp-explain-card">')
+        self.assertGreaterEqual(card_count, 2, "explain-grid needs >=2 cards or the 2-col layout leaves an empty column")
+        self.assertIn("その土地に行かないと踏めない蓋", self.html)
+        self.assertIn("ポケふたと違って、まとまった一覧が無い", self.html)
+
+    def test_closing_sentence_lives_outside_the_explain_grid(self):
+        # 「まだ全部ではありません」は投稿導線への橋渡しなので、
+        # カードの中ではなく explain-grid の外（セクション末尾）に独立させる
+        about_start = self.html.index('id="lp-about-heading"')
+        grid_end = self.html.index("</ul>", about_start)
+        about_section_end = self.html.index("</section>", grid_end)
+        tail = self.html[grid_end:about_section_end]
+        self.assertIn(f"だからこのページの「全国{self.total_count}枚」も", tail)
+        self.assertIn('class="lp-section-lead"', tail)
+
+    def test_hero_has_no_three_tile_stats_row(self):
+        # {N}枚/{W}作品/{P}都道府県 の3タイル統計は、「まだ全部ではない」という
+        # メッセージと矛盾するため削除。残すのは stats-note の1行だけ。
+        self.assertNotIn("top-stats-row", self.html)
+        self.assertNotIn("top-stat\"", self.html)
+        self.assertNotIn('class="stat-num"', self.html)
+        self.assertNotIn('class="stat-label"', self.html)
+        self.assertNotIn('class="stat-divider"', self.html)
+        # map-gateway バッジと <title>/meta description の件数表記は削除対象外
+        self.assertIn(f"🗺 全国 <b>{self.total_count}</b>枚", self.html)
+        self.assertIn(f"全国{self.total_count}枚", self.html)
+
+    def test_map_gateway_comes_right_after_hero_before_about_section(self):
+        # index.html と同じ並び: #sec-intro（ヒーロー）の直後に map gateway
+        intro_end = self.html.index("</section>", self.html.index('id="lp-intro"'))
+        map_pos = self.html.index('id="lp-map-heading"')
+        about_pos = self.html.index('id="lp-about-heading"')
+        self.assertLess(intro_end, map_pos, "map gateway must come right after the hero section")
+        self.assertLess(map_pos, about_pos, "map gateway must come before the 'とは' section")
+
+    def test_full_section_order_matches_index_html(self):
+        expected_order = [
+            'id="lp-intro"',
+            'id="lp-map-heading"',
+            'id="lp-about-heading"',
+            'id="lp-works-heading"',
+            'id="lp-pref-heading"',
+            'id="lp-post-heading"',
+            'id="lp-latest-heading"',  # 「先に出してくれた人たち」（写真付き投稿がある前提のこのfixtureでは常に描画される）
+            'id="lp-faq-heading"',
+        ]
+        positions = [self.html.index(marker) for marker in expected_order]
+        self.assertEqual(positions, sorted(positions), f"section order drifted: {expected_order}")
 
 
 if __name__ == "__main__":
