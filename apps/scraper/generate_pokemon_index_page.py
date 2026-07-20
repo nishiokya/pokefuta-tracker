@@ -976,8 +976,7 @@ def generate_html(
         if photo["poster"] and photo["poster_profile_url"]:
             poster_html = (
                 f'<a class="poster-link" href="{escape(photo["poster_profile_url"])}" '
-                f'target="_blank" rel="noopener noreferrer" '
-                f'aria-label="{escape(photo["poster"])}さんの公開スタンプ帳を開く">'
+                f'target="_blank" rel="noopener noreferrer">'
                 f'{escape(photo["poster"])}</a>'
             )
         meta = caption_meta(

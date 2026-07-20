@@ -82,6 +82,7 @@ class LatestPhotoCardsTest(unittest.TestCase):
             html,
         )
         self.assertIn('class="poster-link"', html)
+        self.assertNotIn("さんの公開スタンプ帳を開く", html)
 
     def test_pokemon_index_does_not_render_hero_summary_panel(self):
         pokemon_index = {

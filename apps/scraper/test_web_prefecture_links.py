@@ -37,6 +37,10 @@ class WebPrefectureLinksTest(unittest.TestCase):
                     source,
                 )
                 self.assertIn('<a class="travel-popup-photo-author"', source)
+                self.assertNotIn(
+                    'aria-label="${escapeHtml(displayName)}さんの公開スタンプ帳を開く"',
+                    source,
+                )
 
 
 if __name__ == "__main__":

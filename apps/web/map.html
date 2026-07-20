@@ -1141,7 +1141,7 @@
       const photoMetaItems = [
         photoDate ? `<span class="travel-popup-photo-date">撮影日 ${escapeHtml(photoDate)}</span>` : '',
         displayName ? (posterProfileUrl
-          ? `<a class="travel-popup-photo-author" href="${escapeHtml(posterProfileUrl)}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(displayName)}さんの公開スタンプ帳を開く">${escapeHtml(displayName)}</a>`
+          ? `<a class="travel-popup-photo-author" href="${escapeHtml(posterProfileUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(displayName)}</a>`
           : `<span class="travel-popup-photo-author">${escapeHtml(displayName)}</span>`)
           : ''
       ].filter(Boolean).join('');
