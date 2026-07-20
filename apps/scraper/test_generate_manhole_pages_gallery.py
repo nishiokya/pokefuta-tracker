@@ -68,10 +68,24 @@ class GallerySectionTests(unittest.TestCase):
         self.assertIn("みんなの写真", html)
         self.assertIn("manhole/image/1_abcd1234.jpeg", html)
         self.assertIn("manhole/image/1_ef012345.jpeg", html)
-        self.assertIn("📷 たこ", html)
+        # クレジットは「📷 名前 · 5月1日」（撮影日のロケール短表記）に統一
+        self.assertIn("📷 たこ · 5月1日", html)
         self.assertIn("https://pokefuta.com/manhole/1", html)
         self.assertIn("すべての写真を見る", html)
         self.assertIn("click_gallery_more", html)
+
+    def test_hero_credit_uses_locale_date_and_truncated_name(self):
+        html = _generate(_photo([]))
+        # ヒーローのクレジットは年付きロケール表記（shot_at=2026-06-07 UTC → JST 同日）
+        self.assertIn("2026年6月7日", html)
+        self.assertIn("📷 いろはす", html)
+
+    def test_hero_credit_falls_back_to_created_at_without_shot_at(self):
+        photo = _photo([])
+        photo["shot_at"] = None
+        photo["created_at"] = "2026-06-08T15:30:00+00:00"  # JST では 6/9
+        html = _generate(photo)
+        self.assertIn("2026年6月9日", html)
 
     def test_no_gallery_section_without_items(self):
         html = _generate(_photo([]))

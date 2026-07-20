@@ -20,6 +20,14 @@ from pathlib import Path
 from urllib.parse import quote, urlparse
 from xml.sax.saxutils import escape
 
+sys.path.insert(0, str(Path(__file__).parent))
+from photo_caption import (  # noqa: E402
+    CAPTION_ELLIPSIS_CSS,
+    caption_meta,
+    format_display_name,
+    format_photo_date,
+)
+
 try:
     from apps.scraper.prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS
 except ModuleNotFoundError as exc:
@@ -1020,6 +1028,12 @@ _CSS = """\
     .photo-card-meta {
       font-size: .76rem;
       color: #716154;
+      /* 長い投稿者名でもカード幅を崩さない（トップページのヒーローと同じ手法） */
+      display: block;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .discovery-hub-grid {
@@ -3505,7 +3519,10 @@ def _build_latest_photos_section(
             if mid and local_image.exists()
             else photo.get("url") or ""
         )
-        date = (photo.get("created_at") or "")[:10]
+        # 「場所 · 投稿者 · 7月16日」に統一（トップページのヒーローと同じ見せ方）
+        date = format_photo_date(photo.get("created_at"), "ja")
+        poster = format_display_name(photo.get("display_name"))
+        meta = caption_meta(escape(location), escape(poster), date)
         manhole_href = f"/manholes/{mid}/"
         display_title = pokemons or title
         if not url:
@@ -3514,7 +3531,7 @@ def _build_latest_photos_section(
             f'<a class="photo-card" href="{escape(manhole_href)}">'
             f'<img src="{escape(url)}" alt="{escape(display_title)}" loading="lazy" decoding="async">'
             f'<span class="photo-card-title">{escape(display_title)}</span>'
-            f'<span class="photo-card-meta">{escape(location)} · {escape(date)}</span>'
+            f'<span class="photo-card-meta">{meta}</span>'
             f'</a>'
         )
 
