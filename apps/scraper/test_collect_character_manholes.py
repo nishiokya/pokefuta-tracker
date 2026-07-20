@@ -154,6 +154,24 @@ class CharacterManholeCollectorTests(unittest.TestCase):
 
         self.assertEqual(merged[0]["first_seen"], "2026-07-20T00:00:00Z")
 
+    def test_static_fallback_address_is_not_fabricated(self):
+        """逆ジオ無しの代替住所にランドマーク名を混ぜない。"""
+        records = collector.collect_static(
+            {
+                "work": "テスト作品",
+                "slug": "test",
+                "prefecture": "静岡県",
+                "source_url": "https://example.com/",
+                "places": [{"character": "まる子", "landmark": "静岡市歴史博物館",
+                            "city": "静岡市葵区", "lat": 34.97664, "lng": 138.38500}],
+            },
+            muni={},
+            no_geocode=True,
+        )
+
+        self.assertEqual(records[0]["address"], "静岡県静岡市葵区")
+        self.assertEqual(records[0]["landmark"], "静岡市歴史博物館")
+
     def test_public_map_reads_marker_style_from_records(self):
         source = (ROOT / "apps/web/gmanhole_map.html").read_text(encoding="utf-8")
 
