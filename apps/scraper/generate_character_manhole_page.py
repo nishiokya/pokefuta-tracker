@@ -850,13 +850,11 @@ def generate_html(
     if (!miniMapEl || typeof L === 'undefined') return;
     // このLPはビルド時確定なので、ピン座標はfetchせずJSONとして直接埋め込む
     var CM_MAP_PINS = {mini_map_pins_json};
-    // SP（スマホ）は2段階ズームイン（7）、デスクトップは全国が収まる5（index.html と同じ）
-    var _miniZoom = window.matchMedia('(min-width: 960px)').matches ? 5 : 7;
     var miniMap = L.map('cm-mini-map', {{
       zoomControl: false, scrollWheelZoom: false, dragging: false,
       touchZoom: false, doubleClickZoom: false, boxZoom: false,
       keyboard: false, attributionControl: false,
-    }}).setView([37.6, 137.5], _miniZoom);
+    }});
     L.tileLayer('https://{{s}}.tile.openstreetmap.org/{{z}}/{{x}}/{{y}}.png', {{
       maxZoom: 19,
     }}).addTo(miniMap);
@@ -865,11 +863,26 @@ def generate_html(
         radius: 4, color: '#fff', weight: 1, fillColor: '#6C5CA6', fillOpacity: 0.9,
       }}).addTo(miniMap);
     }});
+    // 収録データは九州（全体の約6割）に強く偏るため、index.html の全国均等な
+    // setView をそのまま使うと過半数のピンが画面外に出る。実データに合わせる。
+    // 下側は .map-gateway-overlay のグラデーションが覆うぶん厚くpaddingを取り、
+    // 最密の九州クラスタがオーバーレイの下に隠れないようにする。
+    function fitToPins() {{
+      if (CM_MAP_PINS.length) {{
+        miniMap.fitBounds(CM_MAP_PINS, {{
+          paddingTopLeft: [20, 20], paddingBottomRight: [20, 150], maxZoom: 8,
+        }});
+      }} else {{
+        miniMap.setView([37.6, 137.5], 5);
+      }}
+    }}
+    fitToPins();
     if (typeof IntersectionObserver !== 'undefined') {{
       new IntersectionObserver(function(entries, obs) {{
-        if (entries[0].isIntersecting) {{ miniMap.invalidateSize(); obs.disconnect(); }}
+        if (entries[0].isIntersecting) {{ miniMap.invalidateSize(); fitToPins(); obs.disconnect(); }}
       }}, {{ threshold: 0.1 }}).observe(miniMapEl);
     }}
+    window.addEventListener('resize', fitToPins);
   }})();
   </script>
 </body>

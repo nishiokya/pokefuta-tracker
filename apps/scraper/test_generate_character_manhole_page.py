@@ -557,6 +557,13 @@ class MapGatewayHtmlTest(unittest.TestCase):
         ):
             self.assertIn(option, self.html, f"missing disabled map option: {option}")
 
+    def test_map_frames_actual_pins_not_a_fixed_national_view(self):
+        """収録データは九州偏重。index.html の固定 setView だと過半数が画面外に出る。"""
+        self.assertIn("fitBounds", self.html)
+        # 下部は .map-gateway-overlay が覆うため、非対称paddingで最密クラスタを押し上げる
+        self.assertIn("paddingBottomRight", self.html)
+        self.assertNotIn("setView([37.6, 137.5], _miniZoom)", self.html)
+
     def test_pin_json_embeds_all_valid_coordinates(self):
         match = re.search(r"var CM_MAP_PINS = (\[.*?\]);", self.html)
         self.assertIsNotNone(match, "CM_MAP_PINS array not found in output")
