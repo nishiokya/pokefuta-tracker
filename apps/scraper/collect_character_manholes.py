@@ -321,7 +321,10 @@ def collect_static(spec: Dict[str, Any], muni: Dict[str, Dict[str, str]], no_geo
         lat = float(place["lat"])
         lng = float(place["lng"])
         city = place.get("city", "")
-        address = f"{spec.get('prefecture', '')}{city}{place.get('landmark', '')}"
+        # 逆ジオが使えないときの代替は都道府県+市区町村まで。ランドマーク名を
+        # 連結すると住所でないものが address に入る
+        # ('静岡県静岡市葵区静岡市歴史博物館')。目印は landmark 側に持たせる。
+        address = f"{spec.get('prefecture', '')}{city}"
         if not no_geocode:
             g = gsi_reverse(lat, lng, muni)
             if g["address"]:
