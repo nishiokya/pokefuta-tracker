@@ -418,6 +418,74 @@ def collect_work(spec: Dict[str, Any], muni: Dict[str, Dict[str, str]], no_geoco
     return records
 
 
+# 再生成のたびに書き換わってよいのはこの2つだけ。差分判定からは除外する。
+TIMESTAMP_FIELDS = ("first_seen", "last_updated")
+
+# 逆ジオコード由来のフィールド。--no-geocode やGSIの一時失敗で空になりうるため、
+# 空で返ってきたときは前回値を残す (空で上書きするとdocs側のaddressが消える)。
+GEOCODED_FIELDS = ("prefecture", "city", "address")
+
+
+def load_existing_records(path: str) -> Dict[str, Dict[str, Any]]:
+    """前回出力を id -> レコード で読む。初回生成時は空を返す。"""
+    if not os.path.exists(path):
+        return {}
+    existing: Dict[str, Dict[str, Any]] = {}
+    with open(path, encoding="utf-8") as f:
+        for line_number, line in enumerate(f, start=1):
+            if not line.strip():
+                continue
+            try:
+                record = json.loads(line)
+            except json.JSONDecodeError as e:
+                raise ValueError(f"{path}:{line_number}: invalid JSON: {e}") from e
+            existing[record["id"]] = record
+    return existing
+
+
+def merge_with_existing(
+    records: List[Dict[str, Any]],
+    existing: Dict[str, Dict[str, Any]],
+    no_geocode: bool = False,
+) -> List[Dict[str, Any]]:
+    """前回出力を踏まえてタイムスタンプと欠損フィールドを解決する。
+
+    これが無いと再生成のたびに全レコードが差分になり、本当に変わった行が
+    埋もれる。中身が変わっていない再実行は差分ゼロになるのが正しい。
+
+    no_geocode 実行では GEOCODED_FIELDS を一切信用せず前回値を優先する。
+    逆ジオを省くと空になるだけでなく、より悪い値が入るため:
+      - collect_static は住所をランドマーク連結で捏造する
+        ('静岡市 葵区追手町' -> '静岡市葵区静岡市歴史博物館')
+      - KML の city_hint は誤っていることがある (佐賀の '鹿島市' -> '鹿嶋市')
+    """
+    merged: List[Dict[str, Any]] = []
+    for rec in records:
+        prev = existing.get(rec["id"])
+        if prev is None:
+            merged.append(rec)
+            continue
+
+        for key in GEOCODED_FIELDS:
+            if no_geocode and prev.get(key):
+                rec[key] = prev[key]
+            elif not rec.get(key) and prev.get(key):
+                rec[key] = prev[key]
+
+        # 初回検出時刻は維持する
+        if prev.get("first_seen"):
+            rec["first_seen"] = prev["first_seen"]
+
+        unchanged = {k: v for k, v in rec.items() if k not in TIMESTAMP_FIELDS} == {
+            k: v for k, v in prev.items() if k not in TIMESTAMP_FIELDS
+        }
+        if unchanged and prev.get("last_updated"):
+            rec["last_updated"] = prev["last_updated"]
+
+        merged.append(rec)
+    return merged
+
+
 def atomic_write_ndjson(path: str, records: List[Dict[str, Any]]) -> None:
     d = os.path.dirname(os.path.abspath(path)) or "."
     os.makedirs(d, exist_ok=True)
@@ -451,6 +519,9 @@ def main() -> None:
         all_records.extend(collect_work(spec, muni, args.no_geocode))
     for record in all_records:
         apply_marker_style(record)
+    all_records = merge_with_existing(
+        all_records, load_existing_records(args.out), args.no_geocode
+    )
 
     atomic_write_ndjson(args.out, all_records)
     print(f"Wrote {len(all_records)} records to {args.out}", file=sys.stderr)
