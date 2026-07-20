@@ -160,7 +160,8 @@ def build_top_feed(
             "comment": sanitize_comment(photo.get("comment")),
             "created_at": created_jst.isoformat() if created_jst else "",
         }
-        # ペイロード規律: 値があるときだけキーを足す（null は焼き込まない）
+        # badge / photo_count は任意フィールド: 値があるときだけキーを足す
+        # （既存フィールドと違い null を焼き込まず、クライアントは in 判定で読む）
         badge = hero_badge(record)
         if badge:
             entry["badge"] = badge
