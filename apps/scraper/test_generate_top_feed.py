@@ -112,6 +112,47 @@ class PhotoCountTests(unittest.TestCase):
         )
 
 
+class PhotoCountCapTests(unittest.TestCase):
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self._tmp.cleanup)
+        self.image_dir = Path(self._tmp.name)
+        (self.image_dir / "1_latest.jpeg").write_bytes(b"")
+
+    def _feed(self, gallery_len: int, gallery_limit: int):
+        photos = {
+            "1": _photo(
+                "1",
+                "2026-06-01T00:00:00+00:00",
+                gallery=[{}] * gallery_len,
+            )
+        }
+        feed = top_feed.build_top_feed(
+            {"photos": photos},
+            {"1": _record("1")},
+            {},
+            image_dir=self.image_dir,
+            gallery_limit=gallery_limit,
+        )
+        return feed["photos"][0]
+
+    def test_at_cap_sets_flag(self):
+        entry = self._feed(gallery_len=5, gallery_limit=5)
+        self.assertEqual(entry["photo_count"], 5)
+        self.assertTrue(entry["photo_count_at_cap"])
+
+    def test_below_cap_omits_flag(self):
+        entry = self._feed(gallery_len=4, gallery_limit=5)
+        self.assertEqual(entry["photo_count"], 4)
+        self.assertNotIn("photo_count_at_cap", entry)
+
+    def test_larger_cap_keeps_mid_counts_uncapped(self):
+        # キャップが増えても 5 枚が「5+」にならない（クライアントは値を持たない）
+        entry = self._feed(gallery_len=5, gallery_limit=10)
+        self.assertEqual(entry["photo_count"], 5)
+        self.assertNotIn("photo_count_at_cap", entry)
+
+
 class BuildTopFeedTests(unittest.TestCase):
     def setUp(self):
         self._tmp = tempfile.TemporaryDirectory()
@@ -244,6 +285,7 @@ class BuildTopFeedTests(unittest.TestCase):
             rich["badge"], {"emoji": "⭐", "label": "ここだけ", "priority": 90}
         )
         self.assertEqual(rich["photo_count"], 2)
+        self.assertNotIn("photo_count_at_cap", rich)
         # 値が無いエントリにはキー自体を足さない（null を焼き込まない）
         self.assertNotIn("badge", plain)
         self.assertNotIn("photo_count", plain)

@@ -19,6 +19,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
+from export_latest_manhole_photos import DEFAULT_GALLERY_LIMIT  # noqa: E402
 from photo_caption import to_jst_date  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -108,9 +109,9 @@ def photo_count_for(photo: dict) -> int:
     """その地点の既知の写真枚数。
 
     gallery は代表写真（ヒーロー）自身を先頭に含む public 写真のリスト
-    （export_latest_manhole_photos.py の select_gallery_photos は全写真から選ぶ）で、
-    export 側で5件にキャップされている。5 は「5枚以上」を意味する
-    （クライアント側は 5 のとき '📷5+' と表示する）。
+    （export_latest_manhole_photos.py の select_gallery_photos は全写真から選ぶ）。
+    export 側で gallery_limit 件にキャップされるため、この値は実際の枚数の
+    下限でしかない（上限到達かどうかは at_cap を参照）。
     """
     gallery = photo.get("gallery")
     if isinstance(gallery, list) and gallery:
@@ -124,6 +125,7 @@ def build_top_feed(
     site_stats: dict,
     image_dir: Path = IMAGE_DIR,
     max_photos: int = MAX_PHOTOS,
+    gallery_limit: int = DEFAULT_GALLERY_LIMIT,
 ) -> dict:
     photos = photos_data.get("photos", {}) or {}
     sorted_photos = sorted(
@@ -168,6 +170,10 @@ def build_top_feed(
         photo_count = photo_count_for(photo)
         if photo_count >= 2:
             entry["photo_count"] = photo_count
+            # gallery が export のキャップに達している = 実際はこれ以上ある可能性がある。
+            # キャップ値をクライアントに焼き込ませないためフラグで渡す（'📷5+' の判定用）
+            if photo_count >= gallery_limit:
+                entry["photo_count_at_cap"] = True
         entries.append(entry)
         if len(entries) >= max_photos:
             break

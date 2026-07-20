@@ -442,9 +442,10 @@
     }
 
     function heroMediaLabel(p, place) {
-      // photo_count は gallery 5件キャップのため 5 = 「5枚以上」（📷5+ と表示）
+      // photo_count は export の gallery キャップで頭打ちになるため、
+      // 上限到達は生成側の photo_count_at_cap で判定する（キャップ値は焼き込まない）
       if (!(p.photo_count >= 2)) return place;
-      return place + ' · 📷' + p.photo_count + (p.photo_count >= 5 ? '+' : '');
+      return place + ' · 📷' + p.photo_count + (p.photo_count_at_cap ? '+' : '');
     }
 
     function communityHero(photos) {
