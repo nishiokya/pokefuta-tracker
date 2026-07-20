@@ -188,7 +188,7 @@ class GenerateHtmlTest(unittest.TestCase):
     def test_includes_work_names_and_counts(self):
         self.assertIn("ゾンビランドサガ", self.html)
         self.assertIn("弱虫ペダル", self.html)
-        self.assertIn("2基", self.html)
+        self.assertIn("2枚", self.html)
 
     def test_includes_pref_and_work_deep_links(self):
         self.assertIn("gmanhole_map.html?pref=", self.html)
@@ -203,7 +203,7 @@ class GenerateHtmlTest(unittest.TestCase):
 
     def test_does_not_hardcode_totals_and_reacts_to_data_changes(self):
         total_before = len(self.character_records) + len(self.gundam_records)
-        self.assertIn(f"{total_before}基", self.html)
+        self.assertIn(f"{total_before}枚", self.html)
 
         # データを1件減らして再生成すると出力の数字も変わることを確認する
         # （件数が生成時に直書きされていないことの回帰防止）
@@ -211,8 +211,8 @@ class GenerateHtmlTest(unittest.TestCase):
         html_after = generate_html(fewer_records, self.gundam_records, self.design_path)
         total_after = len(fewer_records) + len(self.gundam_records)
         self.assertNotEqual(total_before, total_after)
-        self.assertIn(f"{total_after}基", html_after)
-        self.assertNotIn(f'<strong>{total_before}</strong><span>基</span>', html_after)
+        self.assertIn(f"{total_after}枚", html_after)
+        self.assertNotIn(f'<strong>{total_before}</strong><span>枚</span>', html_after)
 
 
 if __name__ == "__main__":

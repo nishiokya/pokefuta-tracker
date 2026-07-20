@@ -384,7 +384,7 @@ def _work_card_html(summary: dict) -> str:
         f'<li><a class="lp-work-card" href="{map_href}">'
         f'<span class="lp-work-chip" style="background:{escape(summary["color"])}">{escape(str(summary["label"])[:1])}</span>'
         f'<strong>{escape(summary["work"])}</strong>'
-        f'<small>{summary["count"]}基'
+        f'<small>{summary["count"]}枚'
         + (f' ／ {escape(pref_text)}' if pref_text else '')
         + '</small></a></li>'
     )
@@ -394,7 +394,7 @@ def _pref_item_html(entry: dict) -> str:
     map_href = f"{MAP_HREF}?pref={quote(entry['prefecture'])}"
     return (
         f'<a class="lp-pref-item" href="{map_href}">'
-        f'{escape(entry["prefecture"])}<span>{entry["count"]}基</span></a>'
+        f'{escape(entry["prefecture"])}<span>{entry["count"]}枚</span></a>'
     )
 
 
@@ -436,9 +436,9 @@ def generate_html(
     work_count = len(work_summaries)
     pref_count = len(pref_summaries)
 
-    title = f"キャラクターマンホールとは｜全国{total_count}基・{work_count}作品のマンホールマップ"
+    title = f"キャラクターマンホールとは｜全国{total_count}枚・{work_count}作品のマンホールマップ"
     description = (
-        f"ガンダムやゾンビランドサガなど、全国{total_count}基・{work_count}作品のキャラクターマンホールを紹介。"
+        f"ガンダムやゾンビランドサガなど、全国{total_count}枚・{work_count}作品のキャラクターマンホールを紹介。"
         "作品別・都道府県別に探せる一覧から、設置場所を地図で確認できます。"
         "ポケふた以外の面白いマンホールを見つけたら写真投稿でみんなの地図に追加できます。"
     )
@@ -586,7 +586,7 @@ def generate_html(
         聖地巡礼とセットで巡れる、もうひとつのマンホール蒐集です。
       </p>
       <div class="lp-stats-row">
-        <div class="lp-stat"><strong>{total_count}</strong><span>基</span></div>
+        <div class="lp-stat"><strong>{total_count}</strong><span>枚</span></div>
         <div class="lp-stat"><strong>{work_count}</strong><span>作品</span></div>
         <div class="lp-stat"><strong>{pref_count}</strong><span>都道府県</span></div>
       </div>
@@ -640,7 +640,7 @@ def generate_html(
          onclick="trackEvent('click_map_cta',{{cta:'map_section',from:'character_manholes_lp'}})">
         <span class="lp-map-card-icon" aria-hidden="true">🗺</span>
         <span>
-          <strong>{total_count}基を地図に表示</strong>
+          <strong>{total_count}枚を地図に表示</strong>
           <p>現在地から近いマンホールを探したり、作品ごとに絞り込んで表示できます。</p>
         </span>
         <span class="lp-map-card-arrow" aria-hidden="true">→</span>
