@@ -36,6 +36,7 @@ class LatestPhotoCardsTest(unittest.TestCase):
                     "manhole_id": 42,
                     "url": "https://example.com/slowpoke.jpg",
                     "created_at": "2026-06-13T00:00:00Z",
+                    "display_name": "とても長い名前の投稿者さんイーブイ推し団長",
                 },
             },
         }
@@ -55,6 +56,9 @@ class LatestPhotoCardsTest(unittest.TestCase):
         self.assertEqual(cards[0]["href"], "/manholes/42/")
         self.assertEqual(cards[0]["title"], "Slowpoke / Pikachu")
         self.assertEqual(cards[0]["location"], "Kagawa 高松市")
+        # 日付はロケール表記（UTC 00:00 → JST 同日）、投稿者名は 20 文字で省略
+        self.assertEqual(cards[0]["date"], "Jun 13")
+        self.assertEqual(cards[0]["poster"], "とても長い名前の投稿者さんイーブイ推し…")
 
     def test_pokemon_index_does_not_render_hero_summary_panel(self):
         pokemon_index = {

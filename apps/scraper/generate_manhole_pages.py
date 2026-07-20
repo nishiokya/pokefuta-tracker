@@ -22,6 +22,11 @@ from xml.sax.saxutils import escape
 
 sys.path.insert(0, str(Path(__file__).parent))
 from generate_pokemon_pages import _FORM_PREFIX, _normalize_katakana  # noqa: E402
+from photo_caption import (  # noqa: E402
+    CAPTION_ELLIPSIS_CSS,
+    format_display_name,
+    format_photo_date,
+)
 
 try:
     from apps.scraper.prefectures import PREFECTURE_SLUGS  # noqa: E402
@@ -700,22 +705,18 @@ def generate_html(
     if photo_url:
         og_image = photo_url
 
-        raw_name = photo.get("display_name") or ""
-        display_name = str(raw_name)[:20] if raw_name else ""
+        display_name = format_display_name(photo.get("display_name"))
 
         raw_comment = photo.get("comment") or ""
         comment = " ".join(str(raw_comment).split())  # normalize whitespace
         if len(comment) > 100:
             comment = comment[:97] + "…"
 
-        shot_date = ""
-        shot_at_raw = photo.get("shot_at", "")
-        if isinstance(shot_at_raw, str) and shot_at_raw:
-            try:
-                dt = datetime.datetime.fromisoformat(shot_at_raw.replace("Z", "+00:00"))
-                shot_date = f"{dt.year}年{dt.month}月{dt.day}日"
-            except (ValueError, TypeError):
-                pass
+        # 撮影日（shot_at）優先、欠損時は投稿日（created_at）にフォールバック。
+        # 撮影日は古い場合があるため年付き表記を維持する。
+        shot_date = format_photo_date(
+            photo.get("shot_at") or photo.get("created_at"), "ja", with_year=True
+        )
 
         credit_parts = []
         if display_name:
@@ -757,8 +758,13 @@ def generate_html(
     if gallery_items:
         thumbs = ""
         for g in gallery_items:
-            g_credit = str(g.get("display_name") or "")[:20]
+            g_credit = format_display_name(g.get("display_name"))
+            # ギャラリーは overlay が小さいため年なしの短形式（撮影日→投稿日フォールバック）
+            g_date = format_photo_date(g.get("shot_at") or g.get("created_at"), "ja")
             if g_credit:
+                g_label = f"📷 {escape(g_credit)}"
+                if g_date:
+                    g_label += f" · {escape(g_date)}"
                 _g_profile_url = poster_profile_url(g.get("public_user_id"))
                 if _g_profile_url:
                     _g_poster_onclick = _attr_json({"manhole_id": manhole_id, "source": "gallery"})
@@ -766,10 +772,12 @@ def generate_html(
                         f"<a class='gallery-credit poster-link' href='{_g_profile_url}'"
                         f" target='_blank' rel='noopener noreferrer'"
                         f" onclick=\"trackEvent('click_poster_profile', {_g_poster_onclick})\">"
-                        f"📷 {escape(g_credit)}</a>"
+                        f"{g_label}</a>"
                     )
                 else:
-                    credit_span = f"<span class='gallery-credit'>📷 {escape(g_credit)}</span>"
+                    credit_span = f"<span class='gallery-credit'>{g_label}</span>"
+            elif g_date:
+                credit_span = f"<span class='gallery-credit'>📷 {escape(g_date)}</span>"
             else:
                 credit_span = ""
             thumbs += (
@@ -1892,6 +1900,7 @@ def generate_html(
       position: absolute;
       bottom: 8px;
       right: 8px;
+      max-width: calc(100% - 16px);
       background: rgba(0,0,0,0.55);
       color: #fff;
       font-size: 11px;
@@ -1900,6 +1909,16 @@ def generate_html(
       display: flex;
       gap: 6px;
       align-items: center;
+    }}
+
+    /* 長い投稿者名は名前側を ellipsis し、日付は潰さない
+       （top-page.css の .hero-footer-text / .hero-footer-cta と同じ手法） */
+    .photo-credit > span:first-child {{
+      {CAPTION_ELLIPSIS_CSS}
+    }}
+
+    .photo-credit > span + span {{
+      flex-shrink: 0;
     }}
 
     a.poster-link {{
@@ -2206,6 +2225,7 @@ def generate_all_pages(
                     "url": f"{BASE_URL}manhole/image/{manhole_id}_{slug}.jpeg",
                     "display_name": item.get("display_name"),
                     "shot_at": item.get("shot_at"),
+                    "created_at": item.get("created_at"),
                     "public_user_id": item.get("public_user_id"),
                 })
 

@@ -127,6 +127,25 @@ class BuildTopFeedTests(unittest.TestCase):
         self.assertEqual(entry["prefecture"], "鹿児島県")
         self.assertIsNone(entry["public_user_id"])
 
+    def test_created_at_converts_utc_evening_to_next_jst_day(self):
+        # UTC 15:30 = JST 翌日 00:30 → JST の日付で焼き込む（[:10] だと1日前にずれる）
+        photos = {"1": _photo("1", "2026-06-01T15:30:00+00:00")}
+        records = {"1": _record("1")}
+        self._touch_image("1")
+        feed = top_feed.build_top_feed(
+            {"photos": photos}, records, {}, image_dir=self.image_dir
+        )
+        self.assertEqual(feed["photos"][0]["created_at"], "2026-06-02")
+
+    def test_created_at_invalid_value_becomes_empty(self):
+        photos = {"1": _photo("1", "not-a-date")}
+        records = {"1": _record("1")}
+        self._touch_image("1")
+        feed = top_feed.build_top_feed(
+            {"photos": photos}, records, {}, image_dir=self.image_dir
+        )
+        self.assertEqual(feed["photos"][0]["created_at"], "")
+
     def test_entry_public_user_id_passed_through_when_present(self):
         photos = {
             "1": _photo(

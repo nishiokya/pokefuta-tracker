@@ -18,6 +18,9 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).parent))
+from photo_caption import to_jst_date  # noqa: E402
+
 ROOT = Path(__file__).resolve().parents[2]
 PHOTOS_JSON = ROOT / "docs" / "latest-manhole-photos.json"
 NDJSON = ROOT / "docs" / "pokefuta.ndjson"
@@ -98,6 +101,9 @@ def build_top_feed(
             p for p in record.get("pokemons", [])
             if p and _EXCLUDED_POKEMON_PATTERN not in p
         ]
+        # UTC のまま [:10] すると UTC 15:00 以降の投稿が1日前にずれるため
+        # JST に変換してから日付化する（トップの formatFeedDate は JST 日付を前提）
+        created_jst = to_jst_date(photo.get("created_at"))
         entries.append({
             "id": mid,
             "title": record.get("title", ""),
@@ -107,7 +113,7 @@ def build_top_feed(
             "display_name": photo.get("display_name") or None,
             "public_user_id": photo.get("public_user_id") or None,
             "comment": sanitize_comment(photo.get("comment")),
-            "created_at": (photo.get("created_at") or "")[:10],
+            "created_at": created_jst.isoformat() if created_jst else "",
         })
         if len(entries) >= max_photos:
             break

@@ -29,6 +29,12 @@ from generate_pokemon_pages import (
     load_prefectures,
     read_manholes,
 )
+from photo_caption import (  # noqa: E402
+    CAPTION_ELLIPSIS_CSS,
+    caption_meta,
+    format_display_name,
+    format_photo_date,
+)
 
 logging.basicConfig(level=logging.INFO, format="%(message)s")
 logger = logging.getLogger(__name__)
@@ -697,13 +703,14 @@ def _build_latest_photo_cards(
         name_joiner = lang_config.get("pref_joiner", "・")
         title = name_joiner.join(pokemon_names[:2]) or manhole.get("title", "")
         location = _location_text(manhole, translate_pref, lang)
-        created_at = str(photo.get("created_at", ""))
         cards.append({
             "href": f"/manholes/{quote(mid)}/",
             "image_url": image_url,
             "title": title,
             "location": location,
-            "date": created_at[:10],
+            # 「7月16日 / Jul 16」のロケール表記に統一（トップページと同じ見せ方）
+            "date": format_photo_date(photo.get("created_at"), lang),
+            "poster": format_display_name(photo.get("display_name")),
         })
         seen_ids.add(mid)
         if len(cards) >= limit:
@@ -967,8 +974,8 @@ def generate_html(
         f'alt="{escape(photo["title"])} {escape(photo["location"])}" '
         f'loading="lazy" decoding="async" width="480" height="360">'
         f'<span class="photo-card-copy"><strong>{escape(photo["title"])}</strong>'
-        f'<small>{escape(photo["location"])}'
-        f'{(" · " + escape(enhancement["photo_date"].format(date=photo["date"]))) if photo["date"] else ""}'
+        # 「場所 · 投稿者 · 7月16日」に統一（summary / トップページと同じ見せ方）
+        f'<small>{caption_meta(escape(photo["location"]), escape(photo["poster"]), escape(enhancement["photo_date"].format(date=photo["date"])) if photo["date"] else "")}'
         f'</small></span></a>'
         for photo in latest_photos
     )
@@ -1239,7 +1246,8 @@ def generate_html(
     .photo-card img {{ display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }}
     .photo-card-copy {{ display: flex; flex-direction: column; padding: 9px 10px 10px; }}
     .photo-card-copy strong {{ font-size: 14px; }}
-    .photo-card-copy small {{ color: #756c61; }}
+    /* 長い投稿者名でもカード幅を崩さない（トップページのヒーローと同じ手法） */
+    .photo-card-copy small {{ color: #756c61; {CAPTION_ELLIPSIS_CSS} }}
     .faq-list {{ display: grid; gap: 8px; }}
     .faq-list details {{ border: 1px solid #ded3bd; border-radius: 12px; background: #fffaf0; padding: 12px 14px; }}
     .faq-list summary {{ cursor: pointer; font-weight: 800; color: #332f2a; }}

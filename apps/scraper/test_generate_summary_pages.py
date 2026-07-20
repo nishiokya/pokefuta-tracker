@@ -10,6 +10,65 @@ assert SPEC and SPEC.loader
 SPEC.loader.exec_module(summary)
 
 
+class LatestPhotosSectionTests(unittest.TestCase):
+    """summary の「最新追加写真」カードのキャプション統一（場所 · 投稿者 · 7月16日）。"""
+
+    S = {
+        "pref_key": "ja",
+        "latest_photos": {"h2": "最新追加写真", "note": "テスト用の説明"},
+    }
+    RECORDS = {
+        "220": {
+            "prefecture": "北海道",
+            "city": "斜里町",
+            "title": "北海道/斜里町",
+            "pokemons": ["パルキア", "ロコン"],
+        }
+    }
+
+    def _build(self, photo: dict) -> str:
+        return summary._build_latest_photos_section(
+            self.S, self.RECORDS, {"photos": {"p1": photo}}
+        )
+
+    def test_meta_has_location_poster_and_locale_date(self):
+        html = self._build({
+            "manhole_id": "220",
+            "url": "https://example.com/220.jpeg",
+            "created_at": "2026-07-15T15:30:00+00:00",  # JST では 7/16
+            "display_name": "テスト太郎",
+        })
+        self.assertIn(
+            '<span class="photo-card-meta">北海道斜里町 · テスト太郎 · 7月16日</span>',
+            html,
+        )
+
+    def test_meta_without_poster_keeps_location_and_date(self):
+        html = self._build({
+            "manhole_id": "220",
+            "url": "https://example.com/220.jpeg",
+            "created_at": "2026-07-16T00:00:00+00:00",
+        })
+        self.assertIn(
+            '<span class="photo-card-meta">北海道斜里町 · 7月16日</span>', html
+        )
+
+    def test_long_poster_name_is_truncated(self):
+        html = self._build({
+            "manhole_id": "220",
+            "url": "https://example.com/220.jpeg",
+            "created_at": "2026-07-16T00:00:00+00:00",
+            "display_name": "とても長い名前の投稿者さんイーブイ推し団長",
+        })
+        self.assertIn("とても長い名前の投稿者さんイーブイ推し…", html)
+
+    def test_non_ja_page_renders_nothing(self):
+        html = summary._build_latest_photos_section(
+            {**self.S, "pref_key": "en"}, self.RECORDS, {"photos": {}}
+        )
+        self.assertEqual(html, "")
+
+
 class DiscoveryHubTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
