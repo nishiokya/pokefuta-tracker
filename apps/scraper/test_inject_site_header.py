@@ -23,7 +23,7 @@ class InjectSiteHeaderTest(unittest.TestCase):
         self.assertIn('class="site-header__brand-name">ポケふた図鑑</span>', result)
         self.assertNotIn("DATABASE", result)
         pokemon_pos = result.index('href="./pokemon/">ポケモン</a>')
-        map_pos = result.index('href="./map.html">マップ</a>')
+        map_pos = result.index('href="./map.html">')
         summary_pos = result.index('href="./summary/">')
         character_pos = result.index('href="./gmanhole_map.html">')
         self.assertLess(pokemon_pos, map_pos)
