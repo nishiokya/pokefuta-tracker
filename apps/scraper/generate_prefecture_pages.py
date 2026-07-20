@@ -443,6 +443,8 @@ def _photo_section(
         pokemons = "・".join(_clean_pokemons(record)) or "ポケモン"
         poster = str(photo.get("display_name", "") or "").strip()
         profile_url = poster_profile_url(photo.get("public_user_id"))
+        if profile_url:
+            profile_url = f"{profile_url}?{_campaign_params(slug)}"
         poster_html = ""
         if poster:
             if profile_url:
