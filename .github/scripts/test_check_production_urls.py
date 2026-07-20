@@ -166,6 +166,17 @@ class CheckProductionUrlsTest(unittest.TestCase):
                 [(page, 1, f"http://{host}:3000/x")],
             )
 
+    def test_finds_backslash_normalized_loopback_url(self):
+        host = "local" + "host"
+        with tempfile.TemporaryDirectory() as directory:
+            page = Path(directory) / "app.html"
+            page.write_text(f'<a href="http://{host}\\\\anything">x</a>\n')
+
+            self.assertEqual(
+                checker.find_loopback_urls([page]),
+                [(page, 1, f"http://{host}\\\\anything")],
+            )
+
     def test_finds_ipv6_loopback(self):
         with tempfile.TemporaryDirectory() as directory:
             page = Path(directory) / "app.js"
@@ -192,6 +203,25 @@ class CheckProductionUrlsTest(unittest.TestCase):
             page.write_text(f'const ok = "https://{host}.example.com/";\n')
 
             self.assertEqual(checker.find_loopback_urls([page]), [])
+
+    def test_directory_scan_is_filtered_and_deterministic(self):
+        host = "local" + "host"
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            later = root / "z.js"
+            earlier = root / "a.js"
+            binary = root / "photo.jpg"
+            later.write_text(f'const u = "http://{host}:3000/z";\n')
+            earlier.write_text(f'const u = "http://{host}:3000/a";\n')
+            binary.write_bytes(b"http://local" + b"host/image")
+
+            self.assertEqual(
+                checker.find_loopback_urls([root]),
+                [
+                    (earlier, 1, f"http://{host}:3000/a"),
+                    (later, 1, f"http://{host}:3000/z"),
+                ],
+            )
 
 
 if __name__ == "__main__":

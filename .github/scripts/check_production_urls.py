@@ -38,12 +38,17 @@ SOURCE_SUFFIXES = {
 def iter_files(paths: list[Path]):
     for path in paths:
         if path.is_file():
-            yield path
+            if path.suffix.lower() in SOURCE_SUFFIXES:
+                yield path
             continue
         if not path.exists():
             raise FileNotFoundError(path)
         for root, _, filenames in os.walk(path):
-            yield from (Path(root) / filename for filename in filenames)
+            yield from (
+                Path(root) / filename
+                for filename in filenames
+                if Path(filename).suffix.lower() in SOURCE_SUFFIXES
+            )
 
 
 def normalize_special_url_whitespace(data: bytes) -> tuple[bytes, list[int]]:
@@ -127,7 +132,8 @@ def find_forbidden_urls(data: bytes) -> list[tuple[int, str]]:
         for match in URL_CANDIDATE.finditer(content):
             url = match.group(0).decode("ascii", errors="replace")
             try:
-                host = urlsplit(url).hostname
+                # Browsers treat backslashes as path separators in special URLs.
+                host = urlsplit(url.replace("\\", "/")).hostname
             except ValueError:
                 continue
             finding = (line_numbers[match.start()], url)
@@ -143,13 +149,11 @@ def find_loopback_urls(
     findings = []
     exclude = exclude or []
     for path in iter_files(paths):
-        if path.suffix.lower() not in SOURCE_SUFFIXES:
-            continue
         if any(path.match(pattern) for pattern in exclude):
             continue
         for line_number, url in find_forbidden_urls(path.read_bytes()):
             findings.append((path, line_number, url))
-    return findings
+    return sorted(findings, key=lambda finding: (str(finding[0]), finding[1]))
 
 
 def main() -> int:
