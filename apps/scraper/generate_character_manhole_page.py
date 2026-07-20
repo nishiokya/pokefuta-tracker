@@ -19,14 +19,17 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import random
 from collections import Counter, defaultdict
+from datetime import date, datetime
 from pathlib import Path
-from urllib.parse import quote
+from urllib.parse import parse_qs, quote, urlparse
 from html import escape
 
 try:
     from apps.scraper.photo_caption import (
         CAPTION_ELLIPSIS_CSS,
+        JST,
         caption_meta,
         format_display_name,
         format_photo_date,
@@ -37,6 +40,7 @@ except ModuleNotFoundError as exc:
         raise
     from photo_caption import (
         CAPTION_ELLIPSIS_CSS,
+        JST,
         caption_meta,
         format_display_name,
         format_photo_date,
@@ -80,22 +84,33 @@ GUNDAM_MARKER_LABEL = "G"
 
 LATEST_POSTS_LIMIT = 4
 
+# ヒーローセクションの写真モザイク用。デザインマンホール投稿のうち
+# canonical_ref / nearby_refs がこのプレフィックスで始まる参照を持つものは
+# 「キャラクターマンホールと確認できる投稿」として優先枠に入れる。
+CHARACTER_LINKAGE_PREFIXES = ("gundam:", "character:")
+HERO_MOSAIC_LIMIT = 6
+
 FAQ_ITEMS: list[tuple[str, str]] = [
     (
-        "ポケふたとの違いは何ですか？",
-        "ポケふたはポケモン公式の全国シリーズで、市区町村と経済産業省の連携で設置されています。"
-        "一方でキャラクターマンホールは、ガンダムやゾンビランドサガなど作品ごと・自治体ごとに"
-        "独自に設置されているマンホールです。このマップでは両方をまとめて探せます。",
+        "ポケふた以外の蓋でも投稿していいんですか？",
+        "はい。むしろそれを集めています。ポケふたはこのサイトの図鑑側で網羅しているので、"
+        "写真館で待っているのは「ポケふた以外の、あなたが見つけた蓋」のほうです。",
     ),
     (
-        "地図に載っていないマンホールがあるのですが？",
-        "このマップに載っているのは確認できている設置情報のみです。載っていないキャラクターマンホールや"
-        "ご当地デザインのマンホールを見つけたら、ぜひ写真を投稿してみんなの地図に追加してください。",
+        "キャラクターものじゃないんですが",
+        "問題ありません。花や名所、マスコット、古い市町村名の蓋も歓迎です。"
+        "デザインが入っていれば対象になります。",
     ),
     (
-        "写真は載せられますか？",
-        "はい。無料アカウントでログインし、位置情報（GPS）付きの写真を投稿すると、"
-        "みんなのデザインマンホールの一覧と地図に掲載されます。",
+        "同じ蓋がもう載っていたら？",
+        "そのまま投稿してください。撮った日も角度も違えば別の記録になりますし、"
+        "近い座標のものは自動で紐づきます。",
+    ),
+    (
+        "位置情報のない写真は使えますか？",
+        # design_manhole.html の同種FAQ（GPS必須／撮影時にオンにする）と事実を揃えてある。
+        "いいえ、投稿できません。設置場所を正確に記録するため、位置情報（GPS）付きの写真が必要です。"
+        "スマホのカメラの位置情報記録をオンにして撮影したものをご利用ください。",
     ),
 ]
 
@@ -214,6 +229,107 @@ def build_latest_posts(path: Path, limit: int = LATEST_POSTS_LIMIT) -> list[dict
     return posts
 
 
+def _has_character_linkage(record: dict) -> bool:
+    """canonical_ref または nearby_refs に gundam:/character: 参照を持つか。"""
+    canonical_ref = str(record.get("canonical_ref") or "")
+    if canonical_ref.startswith(CHARACTER_LINKAGE_PREFIXES):
+        return True
+    nearby_refs = record.get("nearby_refs")
+    if isinstance(nearby_refs, list):
+        for entry in nearby_refs:
+            if not isinstance(entry, dict):
+                continue
+            ref = str(entry.get("ref") or "")
+            if ref.startswith(CHARACTER_LINKAGE_PREFIXES):
+                return True
+    return False
+
+
+def _is_small_photo_url(url: str) -> bool:
+    """?size=small のみ許可する。
+
+    size=medium/size=large は API 側で実装がなく、307 で ~2MB の原寸 JPEG に
+    リダイレクトされる（size 未指定も同様に原寸へ落ちる可能性がある）。
+    ヒーローモザイクは複数枚を初期表示に並べるため、size=small だと
+    確認できないものは安全側で除外する。
+    """
+    try:
+        query = parse_qs(urlparse(url).query)
+    except ValueError:
+        return False
+    return query.get("size") == ["small"]
+
+
+def build_hero_mosaic(
+    path: Path,
+    limit: int = HERO_MOSAIC_LIMIT,
+    *,
+    seed_date: date | None = None,
+) -> list[dict]:
+    """ヒーローセクション用の写真モザイクを、実際の投稿からランダムに選ぶ。
+
+    g-manhole.net の画像やキャラマンホールNDJSON自体には使ってよい写真が無いため
+    （他者サイトのホットリンクになる／画像フィールドが無い）、写真は
+    docs/design_manholes.ndjson のサイト運営者自身の投稿からのみ使う。
+
+    canonical_ref または nearby_refs でキャラクターマンホールと確認できる投稿
+    （gundam:/character: 参照）を優先枠に入れ、残りをその他のアクティブな
+    写真付き投稿で埋める。並びは JST の日付でシードした乱数で、優先度の
+    階層内だけシャッフルする（index.html の HEROES 日替わりローテーションと
+    同じ「毎日ビルドすれば毎日変わる」idiom）。
+    """
+    records = [
+        record for record in load_ndjson(path)
+        if record.get("status") == "active"
+        and _is_small_photo_url(str(record.get("photo_url") or ""))
+    ]
+    if not records:
+        return []
+
+    priority: list[dict] = []
+    others: list[dict] = []
+    for record in records:
+        (priority if _has_character_linkage(record) else others).append(record)
+
+    if seed_date is None:
+        seed_date = datetime.now(JST).date()
+    rng = random.Random(seed_date.isoformat())
+    rng.shuffle(priority)
+    rng.shuffle(others)
+
+    selected = (priority + others)[:limit]
+
+    posts: list[dict] = []
+    for record in selected:
+        location = "".join(
+            part for part in (record.get("prefecture", ""), record.get("city", "")) if part
+        )
+        posts.append({
+            "title": str(record.get("title") or "デザインマンホール").strip(),
+            "photo_url": str(record.get("photo_url", "")),
+            "location": location,
+        })
+    return posts
+
+
+def build_mini_map_pins(character_records: list[dict], gundam_records: list[dict]) -> list[list[float]]:
+    """地図ゲートウェイの非操作ミニ地図（index.html の #mini-map と同方式）に焼き込む
+    ピン座標。件数が169件程度と少ないため全件をそのままビルド時にJSONへ埋め込む
+    （index.html の #mini-map のように pokefuta.ndjson をクライアント側 fetch する
+    方式ではなく、このLPはビルド時確定なのでここも確定値にする）。
+    """
+    pins: list[list[float]] = []
+    for record in (*character_records, *gundam_records):
+        lat = record.get("lat")
+        lng = record.get("lng")
+        if not isinstance(lat, (int, float)) or not isinstance(lng, (int, float)):
+            continue
+        if isinstance(lat, bool) or isinstance(lng, bool):  # bool は int のサブクラスなので明示的に除外
+            continue
+        pins.append([round(float(lat), 5), round(float(lng), 5)])
+    return pins
+
+
 PAGE_STYLE = """
     /* ===== キャラクターマンホールLP（design_manhole.html を手本に top-page.css のトークンを使用） ===== */
     body.character-manhole-lp {
@@ -227,44 +343,37 @@ PAGE_STYLE = """
     }
     .lp-wrap { max-width: 760px; margin: 0 auto; padding: 0 var(--top-pad); }
 
-    /* ── Hero ── */
-    .lp-hero { padding: 40px 0 28px; text-align: center; }
-    .lp-eyebrow {
-      display: inline-block;
-      font-family: 'IBM Plex Mono', 'Courier New', monospace;
-      font-size: 11px; letter-spacing: 0.22em; font-weight: 600;
-      color: var(--top-eyebrow); margin: 0 0 14px;
-    }
-    .lp-hero h1 {
-      margin: 0 0 14px; font-size: clamp(24px, 6vw, 34px);
-      font-weight: 900; letter-spacing: -0.01em; line-height: 1.4;
-      color: var(--top-purple-dark);
-    }
-    .lp-hero .lp-lead { margin: 0 auto 22px; max-width: 36em; font-size: 15px; color: var(--top-text-muted); }
-    .lp-lead b { color: var(--top-text); }
+    /* ── ファーストView（#lp-intro）は index.html の #sec-intro と同じ top-page.css
+       クラス（.sec-eyebrow/.top-h1/.top-intro-text/.top-stats-row 等）をそのまま使う。
+       ID は #sec-intro を再利用しない: top-page.css は @media (min-width: 960px) 内で
+       #sec-intro/#sec-map/#sec-hero/#sec-hub/#sec-pref/#sec-events/#sec-newrelease を
+       index.html 専用の重なりレイアウト（#sec-intro と #sec-map を同じグリッドに重ねて
+       pointer-events:none で下の地図へクリックを透過させる設計）でID指定しており、
+       このLPで同じIDを使うと 52%幅の左寄せ・クリック不能というバグを引く
+       （実際に発生した回帰。top-page.css は共有ファイルなので編集しない）。
+       .lp-wrap 自身の左右 padding と .top-section 自身の padding が二重にならないよう、
+       この1セクションだけ打ち消しておく（他の .lp-section は元々 .lp-wrap の padding
+       のみに依存しているため対象外）。 */
+    #lp-intro { margin: 0 calc(-1 * var(--top-pad)); }
 
-    .lp-stats-row { display: flex; justify-content: center; gap: 10px; margin: 0 0 24px; flex-wrap: wrap; }
-    .lp-stat {
-      display: flex; flex-direction: column; align-items: center; gap: 2px;
-      min-width: 84px; padding: 10px 16px;
-      background: var(--top-card-bg); border: 1px solid var(--top-border);
-      border-radius: var(--top-radius-card);
+    /* ── ヒーロー写真モザイク（design_manholes.ndjson の投稿写真、size=small のみ）
+       元画像は 300×400 のポートレートだが、タイルは固定サイズの正方形クリップで揃える
+       （可変グリッドで伸び縮みさせない）。flex-wrap で並べるだけなので、幅に応じて
+       自然に1行あたりの枚数が変わり、モバイル/デスクトップ別のブレークポイントは不要。 */
+    .lp-hero-mosaic {
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 6px;
+      max-width: 640px; margin: 10px auto 6px; padding: 0; list-style: none;
     }
-    .lp-stat strong { font-size: 22px; font-weight: 900; color: var(--top-purple-dark); line-height: 1.1; }
-    .lp-stat span { font-size: 11px; color: var(--top-text-muted); }
-
-    .lp-cta-row { display: flex; flex-direction: column; align-items: center; gap: 12px; }
-    .lp-cta {
-      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-      background: var(--top-purple); color: #fff;
-      font-size: 16px; font-weight: 800; letter-spacing: 0.02em;
-      padding: 15px 34px; border-radius: var(--top-radius-pill);
-      box-shadow: 0 6px 18px rgba(108, 92, 166, 0.35);
-      transition: background 120ms ease, transform 120ms ease;
+    .lp-hero-mosaic-item {
+      flex: 0 0 auto; width: 96px; height: 96px;
+      overflow: hidden; border-radius: var(--top-radius-card);
+      background: var(--top-purple-pale); box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
-    .lp-cta:hover { background: var(--top-purple-dark); transform: translateY(-1px); }
-    .lp-cta small { font-size: 11px; font-weight: 600; opacity: 0.85; }
-    .lp-cta-sub { font-size: 13px; color: var(--top-purple); text-decoration: underline; }
+    .lp-hero-mosaic-item img {
+      display: block; width: 100%; height: 100%;
+      object-fit: cover; object-position: center;
+    }
+    .lp-hero-mosaic-caption { margin: 0 0 14px; font-size: 11px; color: var(--top-text-muted); }
 
     /* ── セクション共通 ── */
     .lp-section { padding: 28px 0; }
@@ -315,17 +424,27 @@ PAGE_STYLE = """
     .lp-pref-item:hover { border-color: var(--top-purple); }
     .lp-pref-item span { font-size: 12px; font-weight: 800; color: var(--top-purple); }
 
-    /* ── 地図で探す ── */
-    .lp-map-card {
-      display: flex; align-items: center; gap: 14px; text-decoration: none; color: inherit;
-      background: var(--top-purple-pale); border-radius: var(--top-radius-card-lg);
-      padding: 22px; transition: background 120ms ease;
+    /* ── 地図で探す（.map-gateway-card 等は top-page.css の index.html 用スタイルを流用） ── */
+
+    /* top-page.css の @media (min-width: 960px) は、#sec-intro を「地図の左に重ねる
+       オーバーレイパネル」として扱うことを前提に、対になる .top-intro-text/
+       .top-stats-row の幅を狭め、.map-gateway-title/.map-gateway-sub を隠し、
+       .map-gateway-badge を右寄せ、.map-gateway-overlay を右下のCTAピルだけに
+       縮小している（index.html はオーバーレイパネル側に同じ説明文がある前提）。
+       このLPは #sec-intro を使わない（id="lp-intro"）ので対になるパネルが無く、
+       そのままではデスクトップ幅で本文とCTA説明文が消えてしまう。
+       top-page.css 自体は編集せず、詳細度で勝つセレクタでこのページの範囲内だけ
+       打ち消す（960px未満では元々の値と一致するため no-op）。 */
+    .character-manhole-lp .top-intro-text,
+    .character-manhole-lp .top-stats-row { max-width: none; }
+    .character-manhole-lp .map-gateway-title,
+    .character-manhole-lp .map-gateway-sub { display: block; }
+    .character-manhole-lp .map-gateway-overlay {
+      inset: 0; width: auto; padding: 26px 13px 13px;
+      background: linear-gradient(to top, rgba(26,38,46,.9) 40%, rgba(26,38,46,0));
     }
-    .lp-map-card:hover { background: #E4DDF2; }
-    .lp-map-card-icon { font-size: 32px; line-height: 1; }
-    .lp-map-card strong { display: block; font-size: 16px; font-weight: 900; color: var(--top-purple-dark); margin-bottom: 4px; }
-    .lp-map-card p { margin: 0; font-size: 12.5px; color: var(--top-purple-dark); opacity: .85; }
-    .lp-map-card-arrow { margin-left: auto; font-weight: 800; color: var(--top-purple); font-size: 20px; }
+    .character-manhole-lp .map-gateway-cta { display: block; margin-top: 11px; padding: 13px; }
+    .character-manhole-lp .map-gateway-badge { left: 11px; right: auto; }
 
     /* ── デザインマンホール投稿導線 ── */
     .lp-promo-card {
@@ -398,6 +517,19 @@ def _pref_item_html(entry: dict) -> str:
     )
 
 
+def _hero_mosaic_item_html(post: dict) -> str:
+    alt_text = f"{post['title']} {post['location']}".strip()
+    # 元画像は 300×400 のポートレートだが、タイルは正方形クリップ（CSS側の
+    # aspect-ratio ではなく固定 width/height）で表示するため、属性も正方形の
+    # 値にしておく（CLS防止。実際のクロップは object-fit: cover が担う）。
+    return (
+        '<li class="lp-hero-mosaic-item">'
+        f'<img src="{escape(post["photo_url"])}" alt="{escape(alt_text)}" '
+        'width="300" height="300" decoding="async">'
+        '</li>'
+    )
+
+
 def _photo_card_html(post: dict) -> str:
     poster_html = escape(post["poster"])
     if post["poster"] and post["poster_profile_url"]:
@@ -431,10 +563,14 @@ def generate_html(
     work_summaries = build_work_summaries(character_records, gundam_records)
     pref_summaries = build_prefecture_summaries(character_records, gundam_records)
     latest_posts = build_latest_posts(design_manhole_path)
+    hero_mosaic_posts = build_hero_mosaic(design_manhole_path)
+    mini_map_pins = build_mini_map_pins(character_records, gundam_records)
+    mini_map_pins_json = json.dumps(mini_map_pins)
 
     total_count = len(character_records) + len(gundam_records)
     work_count = len(work_summaries)
     pref_count = len(pref_summaries)
+    next_submission_number = total_count + 1  # 投稿導線の「あなたの1枚が{N+1}枚目」用
 
     title = f"キャラクターマンホールとは｜全国{total_count}枚・{work_count}作品のマンホールマップ"
     description = (
@@ -446,12 +582,22 @@ def generate_html(
     work_items_html = "\n".join(_work_card_html(summary) for summary in work_summaries)
     pref_items_html = "\n".join(_pref_item_html(entry) for entry in pref_summaries)
 
+    if hero_mosaic_posts:
+        hero_mosaic_items_html = "\n".join(_hero_mosaic_item_html(post) for post in hero_mosaic_posts)
+        hero_mosaic_html = f"""
+      <ul class="lp-hero-mosaic">
+{hero_mosaic_items_html}
+      </ul>
+      <p class="lp-hero-mosaic-caption">写真はすべて、みんなが投稿した実物です</p>"""
+    else:
+        hero_mosaic_html = ""
+
     if latest_posts:
         photo_items_html = "\n".join(_photo_card_html(post) for post in latest_posts)
         latest_section_html = f"""
     <section class="lp-section" aria-labelledby="lp-latest-heading">
-      <h2 id="lp-latest-heading"><span>LATEST POSTS</span>みんなの投稿</h2>
-      <p class="lp-section-lead">投稿されたデザインマンホールの最新写真です。</p>
+      <h2 id="lp-latest-heading"><span>LATEST POSTS</span>先に出してくれた人たち</h2>
+      <p class="lp-section-lead">ポケふたを撮りに行った先で、ついでに撮られた蓋です。</p>
       <ul class="lp-photo-grid">
 {photo_items_html}
       </ul>
@@ -536,6 +682,8 @@ def generate_html(
   <link rel="canonical" href="{escape(CANONICAL_URL)}">
   <script type="application/ld+json">{json_ld}</script>
   <link rel="stylesheet" href="./assets/top-page.css?v=20260707a" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
   <script src="./assets/session-badge.js" defer></script>
   <style>{PAGE_STYLE}</style>
   <link rel="icon" href="./assets/pokefuta_icon_32.png" type="image/png" />
@@ -576,49 +724,57 @@ def generate_html(
   </header>
 
   <main class="lp-wrap">
-    <!-- ── Hero ── -->
-    <section class="lp-hero">
-      <p class="lp-eyebrow">CHARACTER MANHOLE COLLECTION</p>
-      <h1>キャラクターマンホールって<br>知っていますか？</h1>
-      <p class="lp-lead">
-        ガンダム、ゾンビランドサガ、ロマンシング サガ、弱虫ペダル——。
-        <b>アニメ・漫画・ご当地キャラの絵柄</b>をあしらったマンホール蓋が、全国の自治体に設置されています。
-        聖地巡礼とセットで巡れる、もうひとつのマンホール蒐集です。
+    <!-- ── H1 + INTRO + STATS（index.html の #sec-intro と同じ構造・同じCSSクラス。
+         ID は index.html の #sec-intro/#sec-map 重なりレイアウト用IDと衝突しないよう
+         lp-intro にしている。詳細は PAGE_STYLE 側のコメント参照） ── -->
+    <section class="top-section" id="lp-intro">
+      <div class="sec-eyebrow">
+        <span class="sec-num"></span>
+        <span class="sec-eyebrow-text">CHARACTER MANHOLE / キャラクターマンホール</span>
+      </div>
+      <h1 class="top-h1">ポケふた巡礼中に見つけた<br>レアなマンホール、教えてくれませんか？</h1>
+{hero_mosaic_html}
+      <p class="top-intro-text">
+        ポケふたを目指して歩いていると、その道の途中にも蓋はあります。
+        <b>ご当地キャラ、アニメの主人公、地元の祭り</b>——
+        「これ珍しいな」と一枚撮って、そのままカメラロールに残っていませんか。
+        この地図は、そういう<b>寄り道の記録</b>を集めています。
       </p>
-      <div class="lp-stats-row">
-        <div class="lp-stat"><strong>{total_count}</strong><span>枚</span></div>
-        <div class="lp-stat"><strong>{work_count}</strong><span>作品</span></div>
-        <div class="lp-stat"><strong>{pref_count}</strong><span>都道府県</span></div>
+      <div class="top-stats-row">
+        <div class="top-stat">
+          <b class="stat-num">{total_count}</b>
+          <span class="stat-label">枚</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="top-stat">
+          <b class="stat-num">{work_count}</b>
+          <span class="stat-label">作品</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="top-stat">
+          <b class="stat-num">{pref_count}</b>
+          <span class="stat-label">都道府県</span>
+        </div>
       </div>
-      <div class="lp-cta-row">
-        <a class="lp-cta" href="{MAP_HREF}"
-           onclick="trackEvent('click_map_cta',{{cta:'hero',from:'character_manholes_lp'}})">
-          🗺 地図で探す
-        </a>
-        <a class="lp-cta-sub" href="#lp-works-heading"
-           onclick="trackEvent('click_nav',{{nav:'works_anchor',from:'character_manholes_lp'}})">収録している作品を見る</a>
-      </div>
+      <p class="top-stats-note">これで全部ではありません。あなたの1枚が {next_submission_number} 枚目になります。</p>
     </section>
 
-    <!-- ── キャラクターマンホールとは ── -->
+    <!-- ── キャラクターマンホールとは（検索語のためh2は変更しない） ── -->
     <section class="lp-section" aria-labelledby="lp-about-heading">
       <h2 id="lp-about-heading"><span>WHAT IS IT</span>キャラクターマンホールとは</h2>
       <ul class="lp-explain-grid">
         <li class="lp-explain-card">
-          <strong>作品・自治体ごとに1枚1枚違う</strong>
-          <p>アニメや漫画とタイアップした自治体が、その土地ならではのデザインで設置するマンホール蓋です。設置場所は聖地巡礼スポットと重なることが多く、キャラクターに会いに行くような感覚で巡れます。</p>
-        </li>
-        <li class="lp-explain-card">
-          <strong>ポケふたとの違い</strong>
-          <p>ポケふた（ポケモンマンホール）はポケモン公式の全国シリーズです。キャラクターマンホールはガンダムやゾンビランドサガなど作品ごと・自治体ごとに独自展開されており、このマップでは両方を重ねて表示できます。</p>
+          <p>自治体がアニメ・漫画・ご当地キャラの絵柄を入れて設置している蓋です。作品の舞台になった街や、作者の出身地に置かれていることが多く、その土地に行かないと踏めません。<br><br>
+          ポケふたが全国共通の規格で作られているのに対して、キャラクターマンホールは<b>作品ごと・自治体ごとにばらばら</b>です。公式のまとまった一覧がほとんど無く、「歩いていて偶然見つけた」が今も主な発見手段になっています。<br><br>
+          だからこのページの「全国{total_count}枚」も、<b>まだ全部ではありません</b>。</p>
         </li>
       </ul>
     </section>
 
-    <!-- ── 収録している作品 ── -->
+    <!-- ── いま集まっている作品 ── -->
     <section class="lp-section" aria-labelledby="lp-works-heading">
-      <h2 id="lp-works-heading"><span>WORKS</span>収録している作品</h2>
-      <p class="lp-section-lead">作品をタップすると、その作品だけを表示した地図が開きます。</p>
+      <h2 id="lp-works-heading"><span>WORKS</span>いま集まっている作品</h2>
+      <p class="lp-section-lead">巡礼先として成立する数がまとまっているのはこのあたり。作品名から地図に飛べます。</p>
       <ul class="lp-work-grid">
 {work_items_html}
       </ul>
@@ -627,35 +783,39 @@ def generate_html(
     <!-- ── 都道府県から探す ── -->
     <section class="lp-section" aria-labelledby="lp-pref-heading">
       <h2 id="lp-pref-heading"><span>PREFECTURES</span>都道府県から探す</h2>
-      <p class="lp-section-lead">都道府県をタップすると、その地域にズームした地図が開きます。</p>
+      <p class="lp-section-lead">次の遠征先が決まっているなら、ここから。ポケふたのついでに回れる蓋が見つかります。</p>
       <div class="lp-pref-list">
 {pref_items_html}
       </div>
     </section>
 
-    <!-- ── 地図で探す ── -->
+    <!-- ── 地図で探す（index.html の map-gateway-card と同じ、操作不能な実地図プレビュー） ── -->
     <section class="lp-section" aria-labelledby="lp-map-heading">
       <h2 id="lp-map-heading"><span>MAP</span>地図で探す</h2>
-      <a class="lp-map-card" href="{MAP_HREF}"
+      <a class="map-gateway-card" href="{MAP_HREF}"
          onclick="trackEvent('click_map_cta',{{cta:'map_section',from:'character_manholes_lp'}})">
-        <span class="lp-map-card-icon" aria-hidden="true">🗺</span>
-        <span>
-          <strong>{total_count}枚を地図に表示</strong>
-          <p>現在地から近いマンホールを探したり、作品ごとに絞り込んで表示できます。</p>
-        </span>
-        <span class="lp-map-card-arrow" aria-hidden="true">→</span>
+        <div id="cm-mini-map" class="map-gateway-minimap" aria-hidden="true"></div>
+        <span class="map-gateway-badge">🗺 全国 <b>{total_count}</b>枚</span>
+        <span class="map-gateway-attr">© OpenStreetMap contributors</span>
+        <div class="map-gateway-overlay">
+          <div class="map-gateway-title">巡礼ルートの近くにある蓋を確かめる</div>
+          <div class="map-gateway-sub">作品・都道府県で絞り込み、現在地からも探せます</div>
+          <div class="map-gateway-cta">🗺 地図を全画面で開く</div>
+        </div>
       </a>
     </section>
 
-    <!-- ── デザインマンホール投稿導線 ── -->
+    <!-- ── 投稿導線（このページの本命） ── -->
     <section class="lp-section" aria-labelledby="lp-post-heading">
-      <h2 id="lp-post-heading"><span>SUBMIT</span>ほかにも面白いマンホールを見つけたら</h2>
+      <h2 id="lp-post-heading"><span>SUBMIT</span>その1枚、まだカメラロールにありますか？</h2>
       <a class="lp-promo-card" href="{DESIGN_MANHOLE_HREF}"
          onclick="trackEvent('click_design_manhole_lp',{{from:'character_manholes_lp'}})">
         <span class="lp-promo-icon" aria-hidden="true">📸</span>
         <span>
-          <strong>この地図にない1枚も、投稿でマップに。</strong>
-          <p>ポケふた以外の「オンリーワンな1枚」を写真で投稿すると、みんなのデザインマンホールマップに掲載されます。</p>
+          <strong>カメラロールの1枚を投稿する</strong>
+          <p>撮ったときは「珍しいな」で終わった写真でも、場所と一緒に載せると、次に同じ街を歩く人の寄り道先になります。
+          <b>キャラクターものでなくても構いません。</b>花、名所、市の鳥、消防、旧市町村名の蓋——「これは撮っておくか」と思った理由があるなら、それで十分です。
+          位置情報つきの写真なら、設置場所は自動で入ります。</p>
         </span>
         <span class="lp-promo-arrow" aria-hidden="true">→</span>
       </a>
@@ -685,6 +845,38 @@ def generate_html(
       </p>
     </footer>
   </main>
+
+  <!-- ── 地図ゲートウェイの非操作ミニ地図（index.html の #mini-map と同じ実装方針）── -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script>
+  (function() {{
+    var miniMapEl = document.getElementById('cm-mini-map');
+    if (!miniMapEl || typeof L === 'undefined') return;
+    // このLPはビルド時確定なので、ピン座標はfetchせずJSONとして直接埋め込む
+    var CM_MAP_PINS = {mini_map_pins_json};
+    // SP（スマホ）は2段階ズームイン（7）、デスクトップは全国が収まる5（index.html と同じ）
+    var _miniZoom = window.matchMedia('(min-width: 960px)').matches ? 5 : 7;
+    var miniMap = L.map('cm-mini-map', {{
+      zoomControl: false, scrollWheelZoom: false, dragging: false,
+      touchZoom: false, doubleClickZoom: false, boxZoom: false,
+      keyboard: false, attributionControl: false,
+    }}).setView([37.6, 137.5], _miniZoom);
+    L.tileLayer('https://{{s}}.tile.openstreetmap.org/{{z}}/{{x}}/{{y}}.png', {{
+      maxZoom: 19,
+    }}).addTo(miniMap);
+    CM_MAP_PINS.forEach(function(p) {{
+      L.circleMarker([p[0], p[1]], {{
+        radius: 4, color: '#fff', weight: 1, fillColor: '#6C5CA6', fillOpacity: 0.9,
+      }}).addTo(miniMap);
+    }});
+    if (typeof IntersectionObserver !== 'undefined') {{
+      new IntersectionObserver(function(entries, obs) {{
+        if (entries[0].isIntersecting) {{ miniMap.invalidateSize(); obs.disconnect(); }}
+      }}, {{ threshold: 0.1 }}).observe(miniMapEl);
+    }}
+  }})();
+  </script>
 </body>
 </html>
 """
