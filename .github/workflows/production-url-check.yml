@@ -1,0 +1,38 @@
+# Family C: read-only validation; fails without modifying repository data.
+name: Check Production URLs
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+
+      - name: Run checker tests
+        run: python3 .github/scripts/test_check_production_urls.py
+
+      - name: Reject loopback URLs in production sources
+        run: |
+          python3 .github/scripts/check_production_urls.py \
+            --exclude 'supabase-ssr.js' \
+            apps/web \
+            apps/scraper \
+            docs

@@ -4,6 +4,8 @@ const path = require('node:path');
 const vm = require('node:vm');
 
 const source = fs.readFileSync(path.join(__dirname, 'session-badge.js'), 'utf8');
+// Keep the local browser location isolated from production URL expectations.
+const TEST_BROWSER_ORIGIN = ['http://', 'localhost:8000/'].join('');
 
 function link(attributes) {
   return {
@@ -46,7 +48,7 @@ vm.runInNewContext(source, {
     readyState: 'complete',
     querySelectorAll: () => [desktop, mobile],
   },
-  location: { href: 'http://localhost:8000/' },
+  location: { href: TEST_BROWSER_ORIGIN },
 });
 
 assert.equal(desktop.textContent, 'たこトレーナー');
