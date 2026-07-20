@@ -71,8 +71,9 @@ def inject(html: str, asset_base: str = "./", page_base: str | None = None) -> s
         return html
 
     page_base = page_base or asset_base
-    labels = NAV_LABELS[_language(html)]
-    mobile_labels = NAV_MOBILE_LABELS[_language(html)]
+    language = _language(html)
+    labels = NAV_LABELS[language]
+    mobile_labels = NAV_MOBILE_LABELS[language]
     substitutions = dict(
         zip(
             ("nav_aria", "nav_map", "nav_summary", "nav_pokemon", "nav_character", "nav_stamp", "nav_login"),
