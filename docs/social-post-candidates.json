@@ -516,144 +516,6 @@
     }
   },
   {
-    "id": "photo-107-99c4a772",
-    "type": "latest_photo",
-    "title": "最新写真：鳥取県/八頭町",
-    "url": "https://data.pokefuta.com/manholes/107/",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "latest_photo",
-    "source": "photos",
-    "raw_data": {
-      "manhole_id": "107",
-      "title": "鳥取県/八頭町",
-      "pref": "鳥取県",
-      "city": "八頭",
-      "pokemon": "アローラサンド",
-      "pokemon_list": [
-        "アローラサンド",
-        "アローラサンドパン"
-      ],
-      "created_at": "2026-07-16T06:10:04.8426+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/f4579d9b-0afd-417f-ab3e-4bde6bc5aabf.jpg",
-      "display_name": "いろはす",
-      "photo_rank": "first_ever"
-    }
-  },
-  {
-    "id": "photo-79-8ff7a7ca",
-    "type": "latest_photo",
-    "title": "最新写真：鳥取県/若桜町",
-    "url": "https://data.pokefuta.com/manholes/79/",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "latest_photo",
-    "source": "photos",
-    "raw_data": {
-      "manhole_id": "79",
-      "title": "鳥取県/若桜町",
-      "pref": "鳥取県",
-      "city": "若桜",
-      "pokemon": "アローラサンド",
-      "pokemon_list": [
-        "アローラサンド",
-        "ユキカブリ"
-      ],
-      "created_at": "2026-07-16T06:10:16.53311+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/8893427d-41d9-4036-98ad-90be771bbbbb.jpg",
-      "display_name": "いろはす",
-      "photo_rank": "first_ever"
-    }
-  },
-  {
-    "id": "photo-106-ae948b2f",
-    "type": "latest_photo",
-    "title": "最新写真：鳥取県/智頭町",
-    "url": "https://data.pokefuta.com/manholes/106/",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "latest_photo",
-    "source": "photos",
-    "raw_data": {
-      "manhole_id": "106",
-      "title": "鳥取県/智頭町",
-      "pref": "鳥取県",
-      "city": "智頭",
-      "pokemon": "ウソッキー",
-      "pokemon_list": [
-        "ウソッキー",
-        "サンド",
-        "サンドパン"
-      ],
-      "created_at": "2026-07-16T06:10:27.744189+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/a7872d16-1ddc-4cd7-8638-5e214b580f52.jpg",
-      "display_name": "いろはす",
-      "photo_rank": "first_ever"
-    }
-  },
-  {
-    "id": "photo-456-30f79099",
-    "type": "latest_photo",
-    "title": "最新写真：福島県/下郷町",
-    "url": "https://data.pokefuta.com/manholes/456/",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "latest_photo",
-    "source": "photos",
-    "raw_data": {
-      "manhole_id": "456",
-      "title": "福島県/下郷町",
-      "pref": "福島県",
-      "city": "下郷",
-      "pokemon": "カモネギ",
-      "pokemon_list": [
-        "カモネギ",
-        "チリーン",
-        "ハリマロン",
-        "ラッキー"
-      ],
-      "created_at": "2026-07-16T17:50:10.006996+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/81d2c38a-057a-41ae-b07d-7a0acde9b18f.jpg",
-      "display_name": "Ⓜ︎agenta",
-      "photo_rank": "first_ever"
-    }
-  },
-  {
-    "id": "photo-279-ce6aea41",
-    "type": "latest_photo",
-    "title": "最新写真：福島県/二本松市",
-    "url": "https://data.pokefuta.com/manholes/279/",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "latest_photo",
-    "source": "photos",
-    "raw_data": {
-      "manhole_id": "279",
-      "title": "福島県/二本松市",
-      "pref": "福島県",
-      "city": "二本松",
-      "pokemon": "ペロッパフ",
-      "pokemon_list": [
-        "ペロッパフ",
-        "ラッキー"
-      ],
-      "created_at": "2026-07-16T17:53:27.211737+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/bd029fa4-0a52-4276-846b-a07ed38cd781.jpg",
-      "display_name": "Ⓜ︎agenta",
-      "photo_rank": "first_ever"
-    }
-  },
-  {
     "id": "photo-280-6a669a17",
     "type": "latest_photo",
     "title": "最新写真：福島県/伊達市",
@@ -841,6 +703,143 @@
       ],
       "created_at": "2026-07-16T18:23:10.375567+00:00",
       "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/43c9f49e-8a2a-4362-99c3-8b92b0b65318.jpg",
+      "display_name": "Ⓜ︎agenta",
+      "photo_rank": "first_ever"
+    }
+  },
+  {
+    "id": "photo-462-594269bc",
+    "type": "latest_photo",
+    "title": "最新写真：福島県/大熊町",
+    "url": "https://data.pokefuta.com/manholes/462/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "462",
+      "title": "福島県/大熊町",
+      "pref": "福島県",
+      "city": "大熊",
+      "pokemon": "キテルグマ",
+      "pokemon_list": [
+        "キテルグマ",
+        "ヌイコグマ",
+        "ヒメグマ",
+        "ラッキー"
+      ],
+      "created_at": "2026-07-16T18:29:08.639172+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/3977c452-620b-4b6b-92c5-bb0c82e8e033.jpg",
+      "display_name": "Ⓜ︎agenta",
+      "photo_rank": "first_ever"
+    }
+  },
+  {
+    "id": "photo-455-230a2913",
+    "type": "latest_photo",
+    "title": "最新写真：福島県/天栄村",
+    "url": "https://data.pokefuta.com/manholes/455/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "455",
+      "title": "福島県/天栄村",
+      "pref": "福島県",
+      "city": "天栄",
+      "pokemon": "イエッサン",
+      "pokemon_list": [
+        "イエッサン",
+        "ラッキー"
+      ],
+      "created_at": "2026-07-16T18:32:18.252098+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/001ece4b-2cd2-4f95-9519-77239236fbc9.jpg",
+      "display_name": "Ⓜ︎agenta",
+      "photo_rank": "first_ever"
+    }
+  },
+  {
+    "id": "photo-227-9eda46f9",
+    "type": "latest_photo",
+    "title": "最新写真：栃木県/宇都宮市",
+    "url": "https://data.pokefuta.com/manholes/227/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "227",
+      "title": "栃木県/宇都宮市",
+      "pref": "栃木県",
+      "city": "宇都宮",
+      "pokemon": "イワパレス",
+      "pokemon_list": [
+        "イワパレス",
+        "ラクライ"
+      ],
+      "created_at": "2026-07-16T18:36:24.722952+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/fe092296-84d3-4dd3-824d-99a1addb4def.jpg",
+      "display_name": "Ⓜ︎agenta",
+      "photo_rank": "first_ever"
+    }
+  },
+  {
+    "id": "photo-93-6f89823c",
+    "type": "latest_photo",
+    "title": "最新写真：福島県/いわき市",
+    "url": "https://data.pokefuta.com/manholes/93/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "93",
+      "title": "福島県/いわき市",
+      "pref": "福島県",
+      "city": "いわき",
+      "pokemon": "キレイハナ",
+      "pokemon_list": [
+        "キレイハナ",
+        "ラッキー"
+      ],
+      "created_at": "2026-07-16T18:44:15.873054+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/1d8b873e-074e-4ba7-acac-b3ed56beecf3.jpg",
+      "display_name": "Ⓜ︎agenta",
+      "photo_rank": "first_ever"
+    }
+  },
+  {
+    "id": "photo-247-31898322",
+    "type": "latest_photo",
+    "title": "最新写真：福島県/福島市",
+    "url": "https://data.pokefuta.com/manholes/247/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "247",
+      "title": "福島県/福島市",
+      "pref": "福島県",
+      "city": "福島",
+      "pokemon": "モルペコ",
+      "pokemon_list": [
+        "モルペコ",
+        "ラッキー"
+      ],
+      "created_at": "2026-07-16T18:49:46.424718+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/5b49a190-db05-4559-816a-84bc633a3735.jpg",
       "display_name": "Ⓜ︎agenta",
       "photo_rank": "first_ever"
     }
