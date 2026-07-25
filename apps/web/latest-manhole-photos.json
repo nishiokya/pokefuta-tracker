@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-07-24T21:34:28.748895Z",
+  "generated_at": "2026-07-25T09:49:06.389155Z",
   "source": "pokefuta photo table",
   "image": {
     "r2_public_base_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image"
   },
-  "count": 258,
+  "count": 259,
   "photos": {
     "1": {
       "manhole_id": 1,
@@ -1131,6 +1131,34 @@
           "shot_at": "2026-03-29T02:34:55+00:00",
           "display_name": "tako",
           "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
+        }
+      ]
+    },
+    "73": {
+      "manhole_id": 73,
+      "photo_id": "8c2d4716-3a88-4a5e-a217-67261b6c5e5d",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/e9ff7e63-42c9-4e9a-9dc9-8170edbc8dec.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/e9ff7e63-42c9-4e9a-9dc9-8170edbc8dec.jpg",
+      "storage_key": "photos/original/2026/07/e9ff7e63-42c9-4e9a-9dc9-8170edbc8dec.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1419346,
+      "created_at": "2026-07-25T01:03:11.716179+00:00",
+      "shot_at": "2026-07-25T01:02:45+00:00",
+      "comment": "松山千春の曲が延々流れる",
+      "display_name": null,
+      "public_user_id": "e1aaaccb-f8ed-4bbb-801b-11c8b1ac8bc0",
+      "gallery": [
+        {
+          "photo_id": "8c2d4716-3a88-4a5e-a217-67261b6c5e5d",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/e9ff7e63-42c9-4e9a-9dc9-8170edbc8dec.jpg",
+          "storage_key": "photos/original/2026/07/e9ff7e63-42c9-4e9a-9dc9-8170edbc8dec.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-25T01:03:11.716179+00:00",
+          "shot_at": "2026-07-25T01:02:45+00:00",
+          "display_name": null,
+          "public_user_id": "e1aaaccb-f8ed-4bbb-801b-11c8b1ac8bc0"
         }
       ]
     },
