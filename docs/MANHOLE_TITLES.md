@@ -183,6 +183,21 @@ docs/pokefuta.ndjson (titles フィールド) ─→ ①詳細ページ ②OGP �
 | マンホールのカテゴリタグ追加（例 `seaside`） | `manholes."<id>".tags` に追加 |
 | 自治体公式ページ追加・更新 | `city_links` に1要素追加 |
 
+- `manholes."<id>"`で使用できるフィールド:
+
+  | フィールド | 型 | 説明 |
+  |---|---|---|
+  | `building` | string | 訪問者が場所を特定できる設置施設・公園・広場等の固有名 |
+  | `address_raw` / `address_norm` | string | 取得時住所と正規化済み住所 |
+  | `prefecture` / `city` | string | HTML取得値を補正する自治体名 |
+  | `place_detail` | string | 施設内の入口、広場、方角などの詳細位置 |
+  | `verified_at` | `YYYY-MM-DD` | メタデータを公式情報等で確認した日 |
+  | `tags` | string[] | `schemas/manhole-tags.schema.json`で許可されたタグ |
+  | `confidence` | integer | 0（未解決）から3（公式情報と位置が一致） |
+  | `official_url` | HTTPS URL | 採用判断の主要な公式根拠 |
+
+- `schemas/manhole-titles.schema.json`が正本のフィールド、型、タグ語彙を定義する。
+- `python apps/tools/validate_manhole_titles.py`でローカル検証でき、対象PRではCIも同じ検証を行う。
 - 編集フローは `SCHEMA.md` 「`manhole_titles.json` 由来のフィールド」節を参照。ファイル更新でワークフローが差分検知し PR 化。
 - リポジトリに YAML が無いため JSON で統一（`docs/latest-manhole-photos.json` 等の慣習に合わせる）。
 

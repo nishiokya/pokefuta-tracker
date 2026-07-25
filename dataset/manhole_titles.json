@@ -910,6 +910,7 @@
       "place_detail": "入口",
       "verified_at": "2026-07-25",
       "tags": [
+        "near_station",
         "facility",
         "station_front"
       ],
@@ -966,6 +967,7 @@
       "tags": [
         "park",
         "lakeside",
+        "world_heritage",
         "near_gundam_manhole",
         "gundam_manhole_city"
       ],
@@ -1190,6 +1192,8 @@
       "building": "てんぶす広場",
       "verified_at": "2026-07-25",
       "tags": [
+        "world_heritage",
+        "remote_island",
         "town"
       ],
       "confidence": 3,
@@ -1993,6 +1997,7 @@
       "building": "道の駅おが オガーレ",
       "verified_at": "2026-07-25",
       "tags": [
+        "seaside",
         "roadside"
       ],
       "confidence": 3,
@@ -2694,6 +2699,7 @@
       "building": "ねむの木公園",
       "verified_at": "2026-07-25",
       "tags": [
+        "near_station",
         "park",
         "station_front"
       ],

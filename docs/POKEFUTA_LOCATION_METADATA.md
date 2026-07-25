@@ -54,7 +54,8 @@
 
 許可する語彙の機械可読な正本は
 `schemas/manhole-tags.schema.json`とする。調査レコードの検証仕様は
-`schemas/pokefuta-location-research.schema.json`とする。
+`schemas/pokefuta-location-research.schema.json`、採用済み正本の検証仕様は
+`schemas/manhole-titles.schema.json`とする。
 
 ## タグ分類
 

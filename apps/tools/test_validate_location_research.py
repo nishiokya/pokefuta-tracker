@@ -93,7 +93,15 @@ class ValidateLocationResearchTest(unittest.TestCase):
         record = valid_record()
         record["decision"] = "accept"
         issues = self.validate_lines([json.dumps(record, ensure_ascii=False)])
-        self.assertTrue(any("3 was expected" in issue.message for issue in issues))
+        self.assertTrue(
+            any(issue.message.startswith("confidence:") for issue in issues)
+        )
+
+    def test_requires_at_least_one_evidence_item(self):
+        record = valid_record()
+        record["evidence"] = []
+        issues = self.validate_lines([json.dumps(record, ensure_ascii=False)])
+        self.assertTrue(any(issue.message.startswith("evidence:") for issue in issues))
 
     def test_unresolved_requires_an_issue(self):
         record = valid_record()
