@@ -56,6 +56,56 @@ def _schema_message(error) -> str:
     return f"{prefix}{error.message}"
 
 
+CANDIDATE_SCALAR_FIELDS = ("building", "place_detail", "landmark")
+
+
+def _confidence_messages(record: dict) -> list[str]:
+    """Cross-field checks that JSON Schema cannot express.
+
+    Enforces the documented rule that the top-level ``confidence`` equals the
+    minimum confidence of every adopted field, and that each candidate field
+    carries a matching ``field_confidence`` entry. Without this, an ``accept``
+    record can pass with ``confidence: 3`` while a field is only ``0``–``2``.
+    """
+    candidate = record.get("candidate")
+    field_confidence = record.get("field_confidence")
+    confidence = record.get("confidence")
+    if not isinstance(candidate, dict) or not isinstance(field_confidence, dict):
+        return []
+
+    messages: list[str] = []
+    leaves: list[int] = []
+
+    for field in CANDIDATE_SCALAR_FIELDS:
+        if field not in candidate:
+            continue
+        value = field_confidence.get(field)
+        if isinstance(value, int):
+            leaves.append(value)
+        else:
+            messages.append(
+                f"field_confidence: candidate '{field}' has no confidence entry"
+            )
+
+    if "tags" in candidate:
+        candidate_tags = set(candidate.get("tags") or [])
+        tag_confidence = field_confidence.get("tags")
+        tag_confidence = tag_confidence if isinstance(tag_confidence, dict) else {}
+        for tag in sorted(candidate_tags - set(tag_confidence)):
+            messages.append(
+                f"field_confidence.tags: tag '{tag}' has no confidence entry"
+            )
+        leaves.extend(v for v in tag_confidence.values() if isinstance(v, int))
+
+    if isinstance(confidence, int) and leaves and confidence != min(leaves):
+        messages.append(
+            f"confidence: {confidence} must equal the minimum field confidence "
+            f"{min(leaves)}"
+        )
+
+    return messages
+
+
 def validate_file(
     path: Path,
     validator: Draft202012Validator,
@@ -82,6 +132,10 @@ def validate_file(
                 key=lambda item: list(item.absolute_path),
             ):
                 issues.append(ValidationIssue(line_number, _schema_message(error)))
+
+            if isinstance(record, dict):
+                for message in _confidence_messages(record):
+                    issues.append(ValidationIssue(line_number, message))
 
             record_id = record.get("id") if isinstance(record, dict) else None
             if not isinstance(record_id, str):

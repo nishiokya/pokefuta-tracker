@@ -110,6 +110,34 @@ class ValidateLocationResearchTest(unittest.TestCase):
         issues = self.validate_lines([json.dumps(record, ensure_ascii=False)])
         self.assertTrue(any(issue.message.startswith("issues:") for issue in issues))
 
+    def test_confidence_must_equal_minimum_field_confidence(self):
+        record = valid_record()
+        record["decision"] = "accept"
+        record["confidence"] = 3
+        record["field_confidence"] = {"building": 3, "tags": {"park": 2, "tourism": 2}}
+        issues = self.validate_lines([json.dumps(record, ensure_ascii=False)])
+        self.assertTrue(
+            any("minimum field confidence" in issue.message for issue in issues)
+        )
+
+    def test_candidate_field_requires_confidence_entry(self):
+        record = valid_record()
+        record["candidate"]["place_detail"] = "正面入口"
+        issues = self.validate_lines([json.dumps(record, ensure_ascii=False)])
+        self.assertTrue(
+            any("candidate 'place_detail'" in issue.message for issue in issues)
+        )
+
+    def test_candidate_tag_requires_confidence_entry(self):
+        record = valid_record()
+        record["candidate"]["tags"] = ["park", "tourism"]
+        record["field_confidence"]["tags"] = {"park": 3}
+        record["confidence"] = 3
+        issues = self.validate_lines([json.dumps(record, ensure_ascii=False)])
+        self.assertTrue(
+            any("tag 'tourism'" in issue.message for issue in issues)
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
