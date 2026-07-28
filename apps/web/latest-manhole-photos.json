@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-07-27T21:35:51.623900Z",
+  "generated_at": "2026-07-28T21:36:32.027087Z",
   "source": "pokefuta photo table",
   "image": {
     "r2_public_base_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image"
   },
-  "count": 268,
+  "count": 270,
   "photos": {
     "1": {
       "manhole_id": 1,
@@ -5776,6 +5776,34 @@
         }
       ]
     },
+    "318": {
+      "manhole_id": 318,
+      "photo_id": "4b491ed5-d0ca-46b2-9852-6a012c4f0efc",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/d8a45fc3-c988-4b99-aba6-a6a6a72e9932.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/d8a45fc3-c988-4b99-aba6-a6a6a72e9932.jpg",
+      "storage_key": "photos/original/2026/07/d8a45fc3-c988-4b99-aba6-a6a6a72e9932.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1544979,
+      "created_at": "2026-07-28T13:11:03.918124+00:00",
+      "shot_at": "2026-07-28T02:56:49+00:00",
+      "comment": null,
+      "display_name": "Ⓜ︎agenta",
+      "public_user_id": "af0fb869-ded3-49a9-85a9-c2c3919e7ab6",
+      "gallery": [
+        {
+          "photo_id": "4b491ed5-d0ca-46b2-9852-6a012c4f0efc",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/d8a45fc3-c988-4b99-aba6-a6a6a72e9932.jpg",
+          "storage_key": "photos/original/2026/07/d8a45fc3-c988-4b99-aba6-a6a6a72e9932.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-28T13:11:03.918124+00:00",
+          "shot_at": "2026-07-28T02:56:49+00:00",
+          "display_name": "Ⓜ︎agenta",
+          "public_user_id": "af0fb869-ded3-49a9-85a9-c2c3919e7ab6"
+        }
+      ]
+    },
     "319": {
       "manhole_id": 319,
       "photo_id": "2eabaa51-039e-4423-8d8a-1e178f565d3d",
@@ -5801,6 +5829,34 @@
           "shot_at": "2024-10-12T03:38:47+00:00",
           "display_name": "xxobokihurah2007",
           "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
+        }
+      ]
+    },
+    "320": {
+      "manhole_id": 320,
+      "photo_id": "861eb12c-56b8-4a44-bf66-a67036e1472a",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/4e9f9b34-9106-4970-8c29-3e8fa6120645.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/4e9f9b34-9106-4970-8c29-3e8fa6120645.jpg",
+      "storage_key": "photos/original/2026/07/4e9f9b34-9106-4970-8c29-3e8fa6120645.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1418168,
+      "created_at": "2026-07-28T13:11:35.779548+00:00",
+      "shot_at": "2026-07-28T03:43:36+00:00",
+      "comment": null,
+      "display_name": "Ⓜ︎agenta",
+      "public_user_id": "af0fb869-ded3-49a9-85a9-c2c3919e7ab6",
+      "gallery": [
+        {
+          "photo_id": "861eb12c-56b8-4a44-bf66-a67036e1472a",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/4e9f9b34-9106-4970-8c29-3e8fa6120645.jpg",
+          "storage_key": "photos/original/2026/07/4e9f9b34-9106-4970-8c29-3e8fa6120645.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-28T13:11:35.779548+00:00",
+          "shot_at": "2026-07-28T03:43:36+00:00",
+          "display_name": "Ⓜ︎agenta",
+          "public_user_id": "af0fb869-ded3-49a9-85a9-c2c3919e7ab6"
         }
       ]
     },
