@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-08-04T21:46:14.858850Z",
+  "generated_at": "2026-08-05T21:42:30.991229Z",
   "source": "pokefuta photo table",
   "image": {
     "r2_public_base_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image"
   },
-  "count": 295,
+  "count": 306,
   "photos": {
     "1": {
       "manhole_id": 1,
@@ -285,6 +285,62 @@
           "shot_at": "2026-06-07T21:30:56+00:00",
           "display_name": "いろはす",
           "public_user_id": "6096691c-eeda-4e73-8401-a11274868ede"
+        }
+      ]
+    },
+    "10": {
+      "manhole_id": 10,
+      "photo_id": "4fd616e0-f31f-42f6-9366-9d8baaf83fb2",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/0038e4ac-f0eb-4b7b-aef2-fa9fe448b2f9.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/0038e4ac-f0eb-4b7b-aef2-fa9fe448b2f9.jpg",
+      "storage_key": "photos/original/2026/08/0038e4ac-f0eb-4b7b-aef2-fa9fe448b2f9.jpg",
+      "content_type": "image/heic",
+      "width": null,
+      "height": null,
+      "file_size": 2297608,
+      "created_at": "2026-08-05T12:32:23.769794+00:00",
+      "shot_at": "2026-07-18T07:06:46+00:00",
+      "comment": null,
+      "display_name": "くろっぽい猫",
+      "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452",
+      "gallery": [
+        {
+          "photo_id": "4fd616e0-f31f-42f6-9366-9d8baaf83fb2",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/0038e4ac-f0eb-4b7b-aef2-fa9fe448b2f9.jpg",
+          "storage_key": "photos/original/2026/08/0038e4ac-f0eb-4b7b-aef2-fa9fe448b2f9.jpg",
+          "content_type": "image/heic",
+          "created_at": "2026-08-05T12:32:23.769794+00:00",
+          "shot_at": "2026-07-18T07:06:46+00:00",
+          "display_name": "くろっぽい猫",
+          "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452"
+        }
+      ]
+    },
+    "11": {
+      "manhole_id": 11,
+      "photo_id": "f97bd970-12c0-4102-bbee-adeb636c31de",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/2d5e2586-7e66-433c-bc60-661cb01564e5.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/2d5e2586-7e66-433c-bc60-661cb01564e5.jpg",
+      "storage_key": "photos/original/2026/08/2d5e2586-7e66-433c-bc60-661cb01564e5.jpg",
+      "content_type": "image/heic",
+      "width": null,
+      "height": null,
+      "file_size": 2419091,
+      "created_at": "2026-08-05T12:35:03.390331+00:00",
+      "shot_at": "2026-07-18T05:07:02+00:00",
+      "comment": null,
+      "display_name": "くろっぽい猫",
+      "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452",
+      "gallery": [
+        {
+          "photo_id": "f97bd970-12c0-4102-bbee-adeb636c31de",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/2d5e2586-7e66-433c-bc60-661cb01564e5.jpg",
+          "storage_key": "photos/original/2026/08/2d5e2586-7e66-433c-bc60-661cb01564e5.jpg",
+          "content_type": "image/heic",
+          "created_at": "2026-08-05T12:35:03.390331+00:00",
+          "shot_at": "2026-07-18T05:07:02+00:00",
+          "display_name": "くろっぽい猫",
+          "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452"
         }
       ]
     },
@@ -1954,6 +2010,34 @@
         }
       ]
     },
+    "121": {
+      "manhole_id": 121,
+      "photo_id": "7f1ac1cc-408a-46a5-bb8d-53d895afa006",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/13a833df-e08e-4cd0-8764-1e8775c0bb06.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/13a833df-e08e-4cd0-8764-1e8775c0bb06.jpg",
+      "storage_key": "photos/original/2026/08/13a833df-e08e-4cd0-8764-1e8775c0bb06.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1651249,
+      "created_at": "2026-08-05T15:46:25.177836+00:00",
+      "shot_at": "2026-07-07T09:26:47+00:00",
+      "comment": null,
+      "display_name": "Ⓜ︎agenta",
+      "public_user_id": "af0fb869-ded3-49a9-85a9-c2c3919e7ab6",
+      "gallery": [
+        {
+          "photo_id": "7f1ac1cc-408a-46a5-bb8d-53d895afa006",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/13a833df-e08e-4cd0-8764-1e8775c0bb06.jpg",
+          "storage_key": "photos/original/2026/08/13a833df-e08e-4cd0-8764-1e8775c0bb06.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-08-05T15:46:25.177836+00:00",
+          "shot_at": "2026-07-07T09:26:47+00:00",
+          "display_name": "Ⓜ︎agenta",
+          "public_user_id": "af0fb869-ded3-49a9-85a9-c2c3919e7ab6"
+        }
+      ]
+    },
     "125": {
       "manhole_id": 125,
       "photo_id": "ab2974a9-d2d1-4b72-86fe-553f54851dbd",
@@ -2155,6 +2239,34 @@
           "content_type": "image/jpeg",
           "created_at": "2026-07-27T02:48:59.559698+00:00",
           "shot_at": "2026-07-20T10:37:40+00:00",
+          "display_name": "Ⓜ︎agenta",
+          "public_user_id": "af0fb869-ded3-49a9-85a9-c2c3919e7ab6"
+        }
+      ]
+    },
+    "132": {
+      "manhole_id": 132,
+      "photo_id": "b9e3a264-0605-43f8-ba0a-aae21c09657b",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/fb38b622-d3f6-4f08-bce7-8204413df848.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/fb38b622-d3f6-4f08-bce7-8204413df848.jpg",
+      "storage_key": "photos/original/2026/08/fb38b622-d3f6-4f08-bce7-8204413df848.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 929791,
+      "created_at": "2026-08-05T15:42:57.586214+00:00",
+      "shot_at": "2026-07-07T10:36:23+00:00",
+      "comment": null,
+      "display_name": "Ⓜ︎agenta",
+      "public_user_id": "af0fb869-ded3-49a9-85a9-c2c3919e7ab6",
+      "gallery": [
+        {
+          "photo_id": "b9e3a264-0605-43f8-ba0a-aae21c09657b",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/fb38b622-d3f6-4f08-bce7-8204413df848.jpg",
+          "storage_key": "photos/original/2026/08/fb38b622-d3f6-4f08-bce7-8204413df848.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-08-05T15:42:57.586214+00:00",
+          "shot_at": "2026-07-07T10:36:23+00:00",
           "display_name": "Ⓜ︎agenta",
           "public_user_id": "af0fb869-ded3-49a9-85a9-c2c3919e7ab6"
         }
@@ -4839,25 +4951,129 @@
           "shot_at": "2026-08-03T02:59:52+00:00",
           "display_name": "ビタCウォーター。",
           "public_user_id": "2dc3b0ab-b436-45e4-acde-290dae05e595"
+        },
+        {
+          "photo_id": "4c061745-13c3-449e-8e4b-2be1ed358430",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/3c2a2b51-2f90-4546-9d17-27def52cce33.jpg",
+          "storage_key": "photos/original/2026/08/3c2a2b51-2f90-4546-9d17-27def52cce33.jpg",
+          "content_type": "image/heic",
+          "created_at": "2026-08-05T12:46:47.496178+00:00",
+          "shot_at": "2026-07-25T07:36:05+00:00",
+          "display_name": "くろっぽい猫",
+          "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452"
+        }
+      ]
+    },
+    "260": {
+      "manhole_id": 260,
+      "photo_id": "521482cd-89aa-4ac4-afbd-00c319612623",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/90b3571e-2f55-4b35-9a31-2a793a73db0c.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/90b3571e-2f55-4b35-9a31-2a793a73db0c.jpg",
+      "storage_key": "photos/original/2026/08/90b3571e-2f55-4b35-9a31-2a793a73db0c.jpg",
+      "content_type": "image/heic",
+      "width": null,
+      "height": null,
+      "file_size": 2307198,
+      "created_at": "2026-08-05T12:52:48.191202+00:00",
+      "shot_at": "2026-07-25T04:52:28+00:00",
+      "comment": null,
+      "display_name": "くろっぽい猫",
+      "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452",
+      "gallery": [
+        {
+          "photo_id": "521482cd-89aa-4ac4-afbd-00c319612623",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/90b3571e-2f55-4b35-9a31-2a793a73db0c.jpg",
+          "storage_key": "photos/original/2026/08/90b3571e-2f55-4b35-9a31-2a793a73db0c.jpg",
+          "content_type": "image/heic",
+          "created_at": "2026-08-05T12:52:48.191202+00:00",
+          "shot_at": "2026-07-25T04:52:28+00:00",
+          "display_name": "くろっぽい猫",
+          "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452"
+        }
+      ]
+    },
+    "261": {
+      "manhole_id": 261,
+      "photo_id": "06417c20-1253-4618-bfb1-fdd236c54dcd",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/49e4af17-165e-4438-ab6e-21601e9fc533.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/49e4af17-165e-4438-ab6e-21601e9fc533.jpg",
+      "storage_key": "photos/original/2026/08/49e4af17-165e-4438-ab6e-21601e9fc533.jpg",
+      "content_type": "image/heic",
+      "width": null,
+      "height": null,
+      "file_size": 2120916,
+      "created_at": "2026-08-05T12:39:32.661598+00:00",
+      "shot_at": "2026-07-18T01:34:19+00:00",
+      "comment": null,
+      "display_name": "くろっぽい猫",
+      "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452",
+      "gallery": [
+        {
+          "photo_id": "06417c20-1253-4618-bfb1-fdd236c54dcd",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/49e4af17-165e-4438-ab6e-21601e9fc533.jpg",
+          "storage_key": "photos/original/2026/08/49e4af17-165e-4438-ab6e-21601e9fc533.jpg",
+          "content_type": "image/heic",
+          "created_at": "2026-08-05T12:39:32.661598+00:00",
+          "shot_at": "2026-07-18T01:34:19+00:00",
+          "display_name": "くろっぽい猫",
+          "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452"
+        }
+      ]
+    },
+    "262": {
+      "manhole_id": 262,
+      "photo_id": "06fd9fa9-1f23-4454-bead-a9d669f2b6cc",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/c4f94798-3623-49ec-bbde-013a085c63ee.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/c4f94798-3623-49ec-bbde-013a085c63ee.jpg",
+      "storage_key": "photos/original/2026/08/c4f94798-3623-49ec-bbde-013a085c63ee.jpg",
+      "content_type": "image/heic",
+      "width": null,
+      "height": null,
+      "file_size": 2362495,
+      "created_at": "2026-08-05T12:45:05.277868+00:00",
+      "shot_at": "2026-07-13T07:35:03+00:00",
+      "comment": null,
+      "display_name": "くろっぽい猫",
+      "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452",
+      "gallery": [
+        {
+          "photo_id": "06fd9fa9-1f23-4454-bead-a9d669f2b6cc",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/c4f94798-3623-49ec-bbde-013a085c63ee.jpg",
+          "storage_key": "photos/original/2026/08/c4f94798-3623-49ec-bbde-013a085c63ee.jpg",
+          "content_type": "image/heic",
+          "created_at": "2026-08-05T12:45:05.277868+00:00",
+          "shot_at": "2026-07-13T07:35:03+00:00",
+          "display_name": "くろっぽい猫",
+          "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452"
         }
       ]
     },
     "263": {
       "manhole_id": 263,
-      "photo_id": "ea227261-7c64-46f8-a2b5-33e8653e63bf",
-      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/1890f8d7-56ad-4558-bed1-848b883276a9.jpg",
-      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/1890f8d7-56ad-4558-bed1-848b883276a9.jpg",
-      "storage_key": "photos/original/2026/07/1890f8d7-56ad-4558-bed1-848b883276a9.jpg",
-      "content_type": "image/jpeg",
+      "photo_id": "2db7e78b-86b9-4a87-8520-d7bf675d73ed",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/e800b9c8-c047-4951-abf7-e63fa1015238.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/e800b9c8-c047-4951-abf7-e63fa1015238.jpg",
+      "storage_key": "photos/original/2026/08/e800b9c8-c047-4951-abf7-e63fa1015238.jpg",
+      "content_type": "image/heic",
       "width": null,
       "height": null,
-      "file_size": 1334663,
-      "created_at": "2026-07-11T08:12:14.539387+00:00",
-      "shot_at": "2025-03-28T06:21:13+00:00",
-      "comment": "牧歌的な景色はポケふたに\r\nとっても合うにゃあ",
-      "display_name": "xxobokihurah2007",
-      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
+      "file_size": 2270967,
+      "created_at": "2026-08-05T12:41:50.993007+00:00",
+      "shot_at": "2026-07-24T08:02:55+00:00",
+      "comment": null,
+      "display_name": "くろっぽい猫",
+      "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452",
       "gallery": [
+        {
+          "photo_id": "2db7e78b-86b9-4a87-8520-d7bf675d73ed",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/e800b9c8-c047-4951-abf7-e63fa1015238.jpg",
+          "storage_key": "photos/original/2026/08/e800b9c8-c047-4951-abf7-e63fa1015238.jpg",
+          "content_type": "image/heic",
+          "created_at": "2026-08-05T12:41:50.993007+00:00",
+          "shot_at": "2026-07-24T08:02:55+00:00",
+          "display_name": "くろっぽい猫",
+          "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452"
+        },
         {
           "photo_id": "ea227261-7c64-46f8-a2b5-33e8653e63bf",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/1890f8d7-56ad-4558-bed1-848b883276a9.jpg",
@@ -4867,6 +5083,34 @@
           "shot_at": "2025-03-28T06:21:13+00:00",
           "display_name": "xxobokihurah2007",
           "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
+        }
+      ]
+    },
+    "265": {
+      "manhole_id": 265,
+      "photo_id": "42875406-2542-4af2-8afe-b0200fb836ec",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/0d827c21-bc12-44b3-bfce-f775938720c8.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/0d827c21-bc12-44b3-bfce-f775938720c8.jpg",
+      "storage_key": "photos/original/2026/08/0d827c21-bc12-44b3-bfce-f775938720c8.jpg",
+      "content_type": "image/heic",
+      "width": null,
+      "height": null,
+      "file_size": 2360865,
+      "created_at": "2026-08-05T12:45:47.310921+00:00",
+      "shot_at": "2026-07-25T08:45:27+00:00",
+      "comment": null,
+      "display_name": "くろっぽい猫",
+      "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452",
+      "gallery": [
+        {
+          "photo_id": "42875406-2542-4af2-8afe-b0200fb836ec",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/0d827c21-bc12-44b3-bfce-f775938720c8.jpg",
+          "storage_key": "photos/original/2026/08/0d827c21-bc12-44b3-bfce-f775938720c8.jpg",
+          "content_type": "image/heic",
+          "created_at": "2026-08-05T12:45:47.310921+00:00",
+          "shot_at": "2026-07-25T08:45:27+00:00",
+          "display_name": "くろっぽい猫",
+          "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452"
         }
       ]
     },
@@ -4895,25 +5139,73 @@
           "shot_at": "2026-08-04T07:32:42+00:00",
           "display_name": "ビタCウォーター。",
           "public_user_id": "2dc3b0ab-b436-45e4-acde-290dae05e595"
+        },
+        {
+          "photo_id": "7e092c05-a7ac-4ee8-8ccc-54ceb1124dc0",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/d36ec793-d35e-43aa-b06c-5a8d830025ae.jpg",
+          "storage_key": "photos/original/2026/08/d36ec793-d35e-43aa-b06c-5a8d830025ae.jpg",
+          "content_type": "image/heic",
+          "created_at": "2026-08-05T12:55:36.882218+00:00",
+          "shot_at": "2026-07-25T02:37:05+00:00",
+          "display_name": "くろっぽい猫",
+          "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452"
+        }
+      ]
+    },
+    "267": {
+      "manhole_id": 267,
+      "photo_id": "46be09cc-739f-46bb-90ed-1a45adc02018",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/64bc48dc-7f5a-47e4-85fe-f576063d2a18.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/64bc48dc-7f5a-47e4-85fe-f576063d2a18.jpg",
+      "storage_key": "photos/original/2026/08/64bc48dc-7f5a-47e4-85fe-f576063d2a18.jpg",
+      "content_type": "image/heic",
+      "width": null,
+      "height": null,
+      "file_size": 2206105,
+      "created_at": "2026-08-05T12:54:42.899887+00:00",
+      "shot_at": "2026-07-25T04:03:05+00:00",
+      "comment": null,
+      "display_name": "くろっぽい猫",
+      "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452",
+      "gallery": [
+        {
+          "photo_id": "46be09cc-739f-46bb-90ed-1a45adc02018",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/64bc48dc-7f5a-47e4-85fe-f576063d2a18.jpg",
+          "storage_key": "photos/original/2026/08/64bc48dc-7f5a-47e4-85fe-f576063d2a18.jpg",
+          "content_type": "image/heic",
+          "created_at": "2026-08-05T12:54:42.899887+00:00",
+          "shot_at": "2026-07-25T04:03:05+00:00",
+          "display_name": "くろっぽい猫",
+          "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452"
         }
       ]
     },
     "268": {
       "manhole_id": 268,
-      "photo_id": "2627794e-79a3-4e86-a3b7-5d37e2f57a07",
-      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/abbca17e-024e-478c-b00a-e42c613dc5fb.jpg",
-      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/abbca17e-024e-478c-b00a-e42c613dc5fb.jpg",
-      "storage_key": "photos/original/2026/07/abbca17e-024e-478c-b00a-e42c613dc5fb.jpg",
-      "content_type": "image/jpeg",
+      "photo_id": "ac86b218-03ec-4ffa-b3f3-03919c28e5a9",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/17609a13-a717-4142-8d81-895502a45e8d.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/17609a13-a717-4142-8d81-895502a45e8d.jpg",
+      "storage_key": "photos/original/2026/08/17609a13-a717-4142-8d81-895502a45e8d.jpg",
+      "content_type": "image/heic",
       "width": null,
       "height": null,
-      "file_size": 1606933,
-      "created_at": "2026-07-11T20:23:52.13095+00:00",
-      "shot_at": "2025-03-28T00:57:42+00:00",
-      "comment": "産直の野菜で元気になるポケふただにゃあ\r\n空気も澄んでたにゃあ",
-      "display_name": "xxobokihurah2007",
-      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
+      "file_size": 2328122,
+      "created_at": "2026-08-05T13:00:24.899944+00:00",
+      "shot_at": "2026-07-18T02:10:32+00:00",
+      "comment": null,
+      "display_name": "くろっぽい猫",
+      "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452",
       "gallery": [
+        {
+          "photo_id": "ac86b218-03ec-4ffa-b3f3-03919c28e5a9",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/17609a13-a717-4142-8d81-895502a45e8d.jpg",
+          "storage_key": "photos/original/2026/08/17609a13-a717-4142-8d81-895502a45e8d.jpg",
+          "content_type": "image/heic",
+          "created_at": "2026-08-05T13:00:24.899944+00:00",
+          "shot_at": "2026-07-18T02:10:32+00:00",
+          "display_name": "くろっぽい猫",
+          "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452"
+        },
         {
           "photo_id": "2627794e-79a3-4e86-a3b7-5d37e2f57a07",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/abbca17e-024e-478c-b00a-e42c613dc5fb.jpg",
@@ -4928,20 +5220,30 @@
     },
     "269": {
       "manhole_id": 269,
-      "photo_id": "f927acca-cc0e-43d6-9933-590b1182701f",
-      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/db49d50b-cc48-450a-90c3-fd24683ee4d9.jpg",
-      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/db49d50b-cc48-450a-90c3-fd24683ee4d9.jpg",
-      "storage_key": "photos/original/2026/07/db49d50b-cc48-450a-90c3-fd24683ee4d9.jpg",
-      "content_type": "image/jpeg",
+      "photo_id": "f735eea1-add1-4881-8563-30372bd4bb5b",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/2fdcceb8-1325-4b5d-8e99-24ba7a415261.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/2fdcceb8-1325-4b5d-8e99-24ba7a415261.jpg",
+      "storage_key": "photos/original/2026/08/2fdcceb8-1325-4b5d-8e99-24ba7a415261.jpg",
+      "content_type": "image/heic",
       "width": null,
       "height": null,
-      "file_size": 1602244,
-      "created_at": "2026-07-11T13:28:23.702128+00:00",
-      "shot_at": "2025-03-28T04:04:10+00:00",
-      "comment": "道の駅のポケふた\r\n綺麗な川の流れを見張っているにゃあ",
-      "display_name": "xxobokihurah2007",
-      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
+      "file_size": 2627870,
+      "created_at": "2026-08-05T12:59:06.69916+00:00",
+      "shot_at": "2026-07-18T02:40:08+00:00",
+      "comment": null,
+      "display_name": "くろっぽい猫",
+      "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452",
       "gallery": [
+        {
+          "photo_id": "f735eea1-add1-4881-8563-30372bd4bb5b",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/2fdcceb8-1325-4b5d-8e99-24ba7a415261.jpg",
+          "storage_key": "photos/original/2026/08/2fdcceb8-1325-4b5d-8e99-24ba7a415261.jpg",
+          "content_type": "image/heic",
+          "created_at": "2026-08-05T12:59:06.69916+00:00",
+          "shot_at": "2026-07-18T02:40:08+00:00",
+          "display_name": "くろっぽい猫",
+          "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452"
+        },
         {
           "photo_id": "f927acca-cc0e-43d6-9933-590b1182701f",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/db49d50b-cc48-450a-90c3-fd24683ee4d9.jpg",
@@ -4951,6 +5253,34 @@
           "shot_at": "2025-03-28T04:04:10+00:00",
           "display_name": "xxobokihurah2007",
           "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
+        }
+      ]
+    },
+    "270": {
+      "manhole_id": 270,
+      "photo_id": "e42ecf83-a6e3-4203-a07a-87397c7fa80f",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/92809228-f177-41e2-9347-05721e74f1d7.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/92809228-f177-41e2-9347-05721e74f1d7.jpg",
+      "storage_key": "photos/original/2026/08/92809228-f177-41e2-9347-05721e74f1d7.jpg",
+      "content_type": "image/heic",
+      "width": null,
+      "height": null,
+      "file_size": 2551618,
+      "created_at": "2026-08-05T12:40:35.018665+00:00",
+      "shot_at": "2026-07-18T01:04:53+00:00",
+      "comment": null,
+      "display_name": "くろっぽい猫",
+      "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452",
+      "gallery": [
+        {
+          "photo_id": "e42ecf83-a6e3-4203-a07a-87397c7fa80f",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/92809228-f177-41e2-9347-05721e74f1d7.jpg",
+          "storage_key": "photos/original/2026/08/92809228-f177-41e2-9347-05721e74f1d7.jpg",
+          "content_type": "image/heic",
+          "created_at": "2026-08-05T12:40:35.018665+00:00",
+          "shot_at": "2026-07-18T01:04:53+00:00",
+          "display_name": "くろっぽい猫",
+          "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452"
         }
       ]
     },
@@ -5637,6 +5967,34 @@
           "shot_at": "2026-05-02T06:59:04+00:00",
           "display_name": "boroborokin",
           "public_user_id": "866300e5-ffc1-44f2-bd6a-5d3902bb20a0"
+        }
+      ]
+    },
+    "299": {
+      "manhole_id": 299,
+      "photo_id": "f114b48e-d448-41de-a1bd-93693e56cc56",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/10eb0987-92be-4862-a1a7-44d4f8543f3a.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/10eb0987-92be-4862-a1a7-44d4f8543f3a.jpg",
+      "storage_key": "photos/original/2026/08/10eb0987-92be-4862-a1a7-44d4f8543f3a.jpg",
+      "content_type": "image/heic",
+      "width": null,
+      "height": null,
+      "file_size": 2427486,
+      "created_at": "2026-08-05T12:50:41.763506+00:00",
+      "shot_at": "2026-07-18T06:03:58+00:00",
+      "comment": null,
+      "display_name": "くろっぽい猫",
+      "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452",
+      "gallery": [
+        {
+          "photo_id": "f114b48e-d448-41de-a1bd-93693e56cc56",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/10eb0987-92be-4862-a1a7-44d4f8543f3a.jpg",
+          "storage_key": "photos/original/2026/08/10eb0987-92be-4862-a1a7-44d4f8543f3a.jpg",
+          "content_type": "image/heic",
+          "created_at": "2026-08-05T12:50:41.763506+00:00",
+          "shot_at": "2026-07-18T06:03:58+00:00",
+          "display_name": "くろっぽい猫",
+          "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452"
         }
       ]
     },
@@ -6342,20 +6700,30 @@
     },
     "323": {
       "manhole_id": 323,
-      "photo_id": "a61b31ae-14a6-4bf9-93df-96e0fdb86b6d",
-      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/e2b2f118-8a60-44d7-bb34-659d98d5b8c8.jpg",
-      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/e2b2f118-8a60-44d7-bb34-659d98d5b8c8.jpg",
-      "storage_key": "photos/original/2026/07/e2b2f118-8a60-44d7-bb34-659d98d5b8c8.jpg",
-      "content_type": "image/jpeg",
+      "photo_id": "7dd98108-fdf3-4231-8c01-55a757353a9b",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/ba4506e9-8c14-42ac-9bb8-3852b9275a34.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/ba4506e9-8c14-42ac-9bb8-3852b9275a34.jpg",
+      "storage_key": "photos/original/2026/08/ba4506e9-8c14-42ac-9bb8-3852b9275a34.jpg",
+      "content_type": "image/heic",
       "width": null,
       "height": null,
-      "file_size": 1729781,
-      "created_at": "2026-07-12T07:33:18.674743+00:00",
-      "shot_at": "2024-09-18T02:10:14+00:00",
-      "comment": "キリッとしているキリキザンと笑うゴローニャ\r\n表情の対比が面白いんだにゃあ",
-      "display_name": "xxobokihurah2007",
-      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
+      "file_size": 2267657,
+      "created_at": "2026-08-05T12:48:14.827266+00:00",
+      "shot_at": "2026-07-25T07:01:21+00:00",
+      "comment": null,
+      "display_name": "くろっぽい猫",
+      "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452",
       "gallery": [
+        {
+          "photo_id": "7dd98108-fdf3-4231-8c01-55a757353a9b",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/ba4506e9-8c14-42ac-9bb8-3852b9275a34.jpg",
+          "storage_key": "photos/original/2026/08/ba4506e9-8c14-42ac-9bb8-3852b9275a34.jpg",
+          "content_type": "image/heic",
+          "created_at": "2026-08-05T12:48:14.827266+00:00",
+          "shot_at": "2026-07-25T07:01:21+00:00",
+          "display_name": "くろっぽい猫",
+          "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452"
+        },
         {
           "photo_id": "a61b31ae-14a6-4bf9-93df-96e0fdb86b6d",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/e2b2f118-8a60-44d7-bb34-659d98d5b8c8.jpg",
@@ -7842,20 +8210,30 @@
     },
     "397": {
       "manhole_id": 397,
-      "photo_id": "11c5c648-4315-4015-8b49-4b582943ae60",
-      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/44f2f817-ae2b-48d0-a8f5-954503bb17f9.jpg",
-      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/44f2f817-ae2b-48d0-a8f5-954503bb17f9.jpg",
-      "storage_key": "photos/original/2026/07/44f2f817-ae2b-48d0-a8f5-954503bb17f9.jpg",
-      "content_type": "image/jpeg",
+      "photo_id": "e0782a44-5de6-40b1-b5a3-8eba428ca2f7",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/a397c3e9-acca-47f4-8d0a-27a8c8f50d44.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/a397c3e9-acca-47f4-8d0a-27a8c8f50d44.jpg",
+      "storage_key": "photos/original/2026/08/a397c3e9-acca-47f4-8d0a-27a8c8f50d44.jpg",
+      "content_type": "image/heic",
       "width": null,
       "height": null,
-      "file_size": 1552637,
-      "created_at": "2026-07-10T21:03:47.942731+00:00",
-      "shot_at": "2025-07-19T01:14:34+00:00",
-      "comment": "ポケふたと公園ほっこりするにゃあ\r\n近くにもポケモンいっぱいいるにゃあ",
-      "display_name": "xxobokihurah2007",
-      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
+      "file_size": 2274476,
+      "created_at": "2026-08-05T12:49:40.921726+00:00",
+      "shot_at": "2026-07-25T06:46:38+00:00",
+      "comment": null,
+      "display_name": "くろっぽい猫",
+      "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452",
       "gallery": [
+        {
+          "photo_id": "e0782a44-5de6-40b1-b5a3-8eba428ca2f7",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/a397c3e9-acca-47f4-8d0a-27a8c8f50d44.jpg",
+          "storage_key": "photos/original/2026/08/a397c3e9-acca-47f4-8d0a-27a8c8f50d44.jpg",
+          "content_type": "image/heic",
+          "created_at": "2026-08-05T12:49:40.921726+00:00",
+          "shot_at": "2026-07-25T06:46:38+00:00",
+          "display_name": "くろっぽい猫",
+          "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452"
+        },
         {
           "photo_id": "11c5c648-4315-4015-8b49-4b582943ae60",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/44f2f817-ae2b-48d0-a8f5-954503bb17f9.jpg",
@@ -9176,20 +9554,30 @@
     },
     "463": {
       "manhole_id": 463,
-      "photo_id": "89c78c40-6100-4b84-94fe-f174db01663e",
-      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/6fc8b349-3e87-4d20-842f-2fc94d1e211e.jpg",
-      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/6fc8b349-3e87-4d20-842f-2fc94d1e211e.jpg",
-      "storage_key": "photos/original/2026/07/6fc8b349-3e87-4d20-842f-2fc94d1e211e.jpg",
-      "content_type": "image/jpeg",
+      "photo_id": "a05f6c95-36fe-4830-84cb-8c09f9942ce2",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/8da01431-8e17-47b5-9b06-32db8000700f.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/8da01431-8e17-47b5-9b06-32db8000700f.jpg",
+      "storage_key": "photos/original/2026/08/8da01431-8e17-47b5-9b06-32db8000700f.jpg",
+      "content_type": "image/heic",
       "width": null,
       "height": null,
-      "file_size": 1688394,
-      "created_at": "2026-07-11T06:21:52.398168+00:00",
-      "shot_at": "2026-07-11T06:17:16+00:00",
-      "comment": "まちの駅にあるポケふた\r\n星降る夜にピッタリだにゃあ",
-      "display_name": "xxobokihurah2007",
-      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
+      "file_size": 2279203,
+      "created_at": "2026-08-05T12:59:45.977484+00:00",
+      "shot_at": "2026-07-25T05:55:21+00:00",
+      "comment": null,
+      "display_name": "くろっぽい猫",
+      "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452",
       "gallery": [
+        {
+          "photo_id": "a05f6c95-36fe-4830-84cb-8c09f9942ce2",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/8da01431-8e17-47b5-9b06-32db8000700f.jpg",
+          "storage_key": "photos/original/2026/08/8da01431-8e17-47b5-9b06-32db8000700f.jpg",
+          "content_type": "image/heic",
+          "created_at": "2026-08-05T12:59:45.977484+00:00",
+          "shot_at": "2026-07-25T05:55:21+00:00",
+          "display_name": "くろっぽい猫",
+          "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452"
+        },
         {
           "photo_id": "89c78c40-6100-4b84-94fe-f174db01663e",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/6fc8b349-3e87-4d20-842f-2fc94d1e211e.jpg",
@@ -9232,20 +9620,30 @@
     },
     "465": {
       "manhole_id": 465,
-      "photo_id": "41583910-5739-45da-9bf1-e10b36f5039a",
-      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/fede8a80-ad13-43cd-873e-4dab9f9d863c.jpg",
-      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/fede8a80-ad13-43cd-873e-4dab9f9d863c.jpg",
-      "storage_key": "photos/original/2026/07/fede8a80-ad13-43cd-873e-4dab9f9d863c.jpg",
-      "content_type": "image/jpeg",
+      "photo_id": "e6bbdbb9-8ad2-40db-9269-764c608f404b",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/577a9ea5-8d93-4ba6-a462-a0e5655778a2.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/577a9ea5-8d93-4ba6-a462-a0e5655778a2.jpg",
+      "storage_key": "photos/original/2026/08/577a9ea5-8d93-4ba6-a462-a0e5655778a2.jpg",
+      "content_type": "image/heic",
       "width": null,
       "height": null,
-      "file_size": 1812064,
-      "created_at": "2026-07-11T04:23:32.099113+00:00",
-      "shot_at": "2026-07-11T04:20:17+00:00",
-      "comment": "公園とポケふた\r\nひまわりの季節にピッタリだにゃあ",
-      "display_name": "xxobokihurah2007",
-      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
+      "file_size": 2398676,
+      "created_at": "2026-08-05T12:42:53.517775+00:00",
+      "shot_at": "2026-07-25T09:11:16+00:00",
+      "comment": null,
+      "display_name": "くろっぽい猫",
+      "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452",
       "gallery": [
+        {
+          "photo_id": "e6bbdbb9-8ad2-40db-9269-764c608f404b",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/577a9ea5-8d93-4ba6-a462-a0e5655778a2.jpg",
+          "storage_key": "photos/original/2026/08/577a9ea5-8d93-4ba6-a462-a0e5655778a2.jpg",
+          "content_type": "image/heic",
+          "created_at": "2026-08-05T12:42:53.517775+00:00",
+          "shot_at": "2026-07-25T09:11:16+00:00",
+          "display_name": "くろっぽい猫",
+          "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452"
+        },
         {
           "photo_id": "41583910-5739-45da-9bf1-e10b36f5039a",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/fede8a80-ad13-43cd-873e-4dab9f9d863c.jpg",
@@ -9260,20 +9658,30 @@
     },
     "466": {
       "manhole_id": 466,
-      "photo_id": "d1eb6991-2c4e-41ba-a339-47c1be5988b6",
-      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/2fff857a-871c-43fb-9b48-bb4de8695009.jpg",
-      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/2fff857a-871c-43fb-9b48-bb4de8695009.jpg",
-      "storage_key": "photos/original/2026/08/2fff857a-871c-43fb-9b48-bb4de8695009.jpg",
+      "photo_id": "f0762ff1-72d2-42ff-a928-a0f6783a051c",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/42a448aa-9bc5-4b52-beff-72ae59ca6998.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/42a448aa-9bc5-4b52-beff-72ae59ca6998.jpg",
+      "storage_key": "photos/original/2026/08/42a448aa-9bc5-4b52-beff-72ae59ca6998.jpg",
       "content_type": "image/jpeg",
       "width": null,
       "height": null,
-      "file_size": 1760117,
-      "created_at": "2026-08-04T02:00:15.521747+00:00",
-      "shot_at": "2026-08-04T01:56:28+00:00",
+      "file_size": 1876116,
+      "created_at": "2026-08-05T12:53:43.138667+00:00",
+      "shot_at": "2026-08-05T07:36:20+00:00",
       "comment": null,
-      "display_name": "ビタCウォーター。",
-      "public_user_id": "2dc3b0ab-b436-45e4-acde-290dae05e595",
+      "display_name": "くろっぽい猫",
+      "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452",
       "gallery": [
+        {
+          "photo_id": "f0762ff1-72d2-42ff-a928-a0f6783a051c",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/42a448aa-9bc5-4b52-beff-72ae59ca6998.jpg",
+          "storage_key": "photos/original/2026/08/42a448aa-9bc5-4b52-beff-72ae59ca6998.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-08-05T12:53:43.138667+00:00",
+          "shot_at": "2026-08-05T07:36:20+00:00",
+          "display_name": "くろっぽい猫",
+          "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452"
+        },
         {
           "photo_id": "d1eb6991-2c4e-41ba-a339-47c1be5988b6",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/2fff857a-871c-43fb-9b48-bb4de8695009.jpg",
