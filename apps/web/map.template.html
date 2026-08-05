@@ -305,12 +305,8 @@
   <link rel="stylesheet" href="%%BASE_PATH%%assets/pokefuta-map.css?v=20260614-hero-toggle" />
   <link rel="icon" href="%%BASE_PATH%%assets/pokefuta-marker.svg" type="image/svg+xml" />
   <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-K18NR4GZG2"></script>
+  <script src="%%BASE_PATH%%assets/analytics.js?v=20260805a"></script>
   <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
     // Dynamic page_path based on URL parameters
     const params = new URLSearchParams(window.location.search);
     const manholeParam = params.get('manhole');
@@ -335,8 +331,7 @@
       };
     }
 
-    gtag('config', 'G-K18NR4GZG2', {
-      anonymize_ip: true,
+    window.PokefutaAnalytics.init({
       page_path: pagePath,
       ...mapGA4Params,
     });
@@ -344,10 +339,6 @@
     // Current page_type for dynamic event params (updated on SPA navigation)
     window.currentGA4PageType = mapGA4Params.page_type || 'map_top';
 
-    // Event tracking helper function
-    window.trackEvent = function(action, params = {}) {
-      gtag('event', action, params);
-    };
   </script>
   <!-- End GA -->
 </head>
@@ -719,6 +710,11 @@
         window.applyPrefecturePageMeta(prefecture);
         // Send page_view for SPA navigation (skip initial page load)
         window.currentGA4PageType = 'map_prefecture';
+        window.PokefutaAnalytics.setContext({
+          page_path: `/prefectures/${window.PREFECTURE_SLUG_MAP[prefecture] || encodeURIComponent(prefecture)}/`,
+          page_type: 'map_prefecture',
+          prefecture: window.PREFECTURE_SLUG_MAP[prefecture] || prefecture,
+        });
         if (window.gtag && !isInitialPageLoad) {
           gtag('event', 'page_view', {
             page_path: `/prefectures/${window.PREFECTURE_SLUG_MAP[prefecture] || encodeURIComponent(prefecture)}/`,
@@ -732,6 +728,7 @@
         window.history.replaceState({}, '', window.buildCanonicalPath(''));
         window.applyPrefecturePageMeta('');
         window.currentGA4PageType = 'map_top';
+        window.PokefutaAnalytics.setContext({ page_path: '/map', page_type: 'map_top', prefecture: '' });
         // Send page_view for SPA navigation back to top (skip initial page load)
         if (window.gtag && !isInitialPageLoad) {
           gtag('event', 'page_view', {
@@ -1579,6 +1576,11 @@
       window.history.replaceState({ manhole: data.id }, '', window.buildManholeCanonicalPath(data.id));
       // Send page_view for manhole detail (always: covers both initial ?manhole= load and SPA navigation)
       window.currentGA4PageType = 'map_manhole';
+      window.PokefutaAnalytics.setContext({
+        page_path: `/manholes/${encodeURIComponent(data.id)}/`,
+        page_type: 'map_manhole',
+        prefecture: window.PREFECTURE_SLUG_MAP[data.prefecture] || data.prefecture || '',
+      });
       if (window.gtag) {
         gtag('event', 'page_view', {
           'page_path': `/manholes/${encodeURIComponent(data.id)}/`,
@@ -2110,7 +2112,7 @@
                 feature: tag,
                 feature_label: TAG_META[tag]?.label || tag,
                 result_count: parseInt(btn.dataset.count, 10),
-                source: 'top_feature_section'
+                surface: 'top_feature_section'
               });
             }
           });

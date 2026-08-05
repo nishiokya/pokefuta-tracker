@@ -24,7 +24,6 @@ logging.basicConfig(level=logging.INFO, format="%(message)s")
 logger = logging.getLogger(__name__)
 
 BASE_URL = "https://data.pokefuta.com/"
-GA_MEASUREMENT_ID = "G-K18NR4GZG2"
 DEFAULT_OGP_IMAGE = f"{BASE_URL}assets/ogp/pokefuta_map_ogp.png"
 
 # Short contextual descriptions explaining regional connections.
@@ -816,12 +815,9 @@ def generate_html(
   </script>
 
   <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id={GA_MEASUREMENT_ID}"></script>
+  <script src="/assets/analytics.js?v=20260805a"></script>
   <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){{dataLayer.push(arguments);}}
-    gtag('js', new Date());
-    gtag('config', '{GA_MEASUREMENT_ID}', {{
+    window.PokefutaAnalytics.init({{
       'page_path': '/{url_prefix}pokemon/' + {slug_js} + '/',
       site_type: 'map',
       page_type: 'pokemon_lp',
@@ -831,9 +827,6 @@ def generate_html(
       manhole_count: {count},
       lang: '{lang}'
     }});
-    function trackEvent(action, params) {{
-      gtag('event', action, params);
-    }}
   </script>
 
   <style>

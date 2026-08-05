@@ -38,7 +38,6 @@ except ModuleNotFoundError as exc:
 
 # Constants
 BASE_URL = "https://data.pokefuta.com/"
-GA_MEASUREMENT_ID = "G-K18NR4GZG2"
 
 SECONDARY_TAG_LABELS: dict[str, tuple[str, str]] = {
     'tourism':          ('🗺', '観光スポット'),
@@ -620,8 +619,8 @@ def generate_html(
     # Source-differentiated params for Google Maps — same event name but
     # distinguishable in GA4 by where the tap came from.
     _base = {"manhole_id": manhole_id, "prefecture": prefecture, "city": city}
-    gmaps_onclick_hero  = _attr_json({**_base, "source": "hero"})
-    gmaps_onclick_links = _attr_json({**_base, "source": "links"})
+    gmaps_onclick_hero  = _attr_json({**_base, "surface": "hero"})
+    gmaps_onclick_links = _attr_json({**_base, "surface": "links"})
 
     # Build Pokemon info with metadata
     pokemon_info_html = ""
@@ -708,7 +707,7 @@ def generate_html(
         if display_name:
             _profile_url = poster_profile_url(photo.get("public_user_id"))
             if _profile_url:
-                _poster_onclick = _attr_json({"manhole_id": manhole_id, "source": "hero"})
+                _poster_onclick = _attr_json({"manhole_id": manhole_id, "surface": "hero"})
                 credit_parts.append(
                     f"<a class='poster-link' href='{_profile_url}'"
                     f" target='_blank' rel='noopener noreferrer'"
@@ -753,7 +752,7 @@ def generate_html(
                     g_label += f" · {escape(g_date)}"
                 _g_profile_url = poster_profile_url(g.get("public_user_id"))
                 if _g_profile_url:
-                    _g_poster_onclick = _attr_json({"manhole_id": manhole_id, "source": "gallery"})
+                    _g_poster_onclick = _attr_json({"manhole_id": manhole_id, "surface": "gallery"})
                     credit_span = (
                         f"<a class='gallery-credit poster-link' href='{_g_profile_url}'"
                         f" target='_blank' rel='noopener noreferrer'"
@@ -972,7 +971,7 @@ def generate_html(
         f"{_icon('icon-link-share', 'link-card-icon')}<span>共有</span></button>"
     )
     # ポケふた写真館（pokefuta.com）の同ふたページ。ギャラリー未表示のふたでも写真館へ飛べるよう常設
-    _photo_studio_onclick = _attr_json({"manhole_id": manhole_id, "source": "links_photo_studio"})
+    _photo_studio_onclick = _attr_json({"manhole_id": manhole_id, "surface": "links_photo_studio"})
     link_cards.append(
         f"<a class='link-card link-card--internal' href='https://pokefuta.com/manhole/{quote(manhole_id, safe='')}'"
         f" target='_blank' rel='noopener noreferrer'"
@@ -992,7 +991,7 @@ def generate_html(
             f"<a class='link-card link-card--internal' href=\"{escape(pref_url)}\">"
             f"{_icon('icon-detail-same-pref', 'link-card-icon')}<span>同じ都道府県</span></a>"
         )
-    _map_onclick = _attr_json({"manhole_id": manhole_id, "source": "links_map"})
+    _map_onclick = _attr_json({"manhole_id": manhole_id, "surface": "links_map"})
     link_cards.append(
         f"<a class='link-card link-card--internal' href=\"{escape(BASE_URL)}\""
         f" onclick=\"trackEvent('click_map_internal', {_map_onclick})\">"
@@ -1052,7 +1051,7 @@ def generate_html(
                 f"{status_html}"
                 f"</li>"
             )
-        _design_more_onclick = _attr_json({"manhole_id": manhole_id, "source": "design_section"})
+        _design_more_onclick = _attr_json({"manhole_id": manhole_id, "surface": "design_section"})
         design_html = (
             f"<section id='design-manholes' class='design-section section-card'>"
             f"<h2>🎨 近くのデザインマンホール</h2>"
@@ -1151,7 +1150,7 @@ def generate_html(
     )
 
     # Back button HTML
-    _back_onclick = _attr_json({"manhole_id": manhole_id, "source": "back_btn"})
+    _back_onclick = _attr_json({"manhole_id": manhole_id, "surface": "back_btn"})
     back_btn_html = (
         f"<a href=\"{escape(map_url)}\" class=\"back-btn\""
         f" onclick=\"trackEvent('click_map_internal', {_back_onclick})\">"
@@ -1232,12 +1231,9 @@ def generate_html(
   </script>
 
   <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id={GA_MEASUREMENT_ID}"></script>
+  <script src="/assets/analytics.js?v=20260805a"></script>
   <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){{dataLayer.push(arguments);}}
-    gtag('js', new Date());
-    gtag('config', '{GA_MEASUREMENT_ID}', {{
+    window.PokefutaAnalytics.init({{
       'page_path': '/manholes/' + {manhole_id_js} + '/',
       site_type: 'map',
       page_type: 'map_manhole',
@@ -1250,10 +1246,6 @@ def generate_html(
       pokemon_count: {len(pokemons)},
       has_photo: {has_photo_js}
     }});
-
-    function trackEvent(action, params) {{
-      gtag('event', action, params);
-    }}
 
     function shareManhole() {{
       var _sp = {{

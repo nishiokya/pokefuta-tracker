@@ -2936,13 +2936,9 @@ def _build_fact_sections(s: dict, stats: dict, tr) -> tuple[str, str]:
 
 def _build_tracking_script(s: dict) -> str:
     return """\
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-K18NR4GZG2"></script>
+  <script src="/assets/analytics.js?v=20260805a"></script>
   <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-K18NR4GZG2', {
-      'anonymize_ip': true,
+    window.PokefutaAnalytics.init({
       'page_path': window.location.pathname,
       site_type: 'map',
       page_type: 'summary',

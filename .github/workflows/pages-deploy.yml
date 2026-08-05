@@ -78,6 +78,7 @@ jobs:
           python3 apps/scraper/generate_prefecture_trivia.py --check
           echo "[dist] Test prefecture landing page generation"
           python3 -m unittest \
+            apps.scraper.test_analytics_contract \
             apps.scraper.test_generate_prefecture_pages.PrefecturePageDeployContractTest \
             apps.scraper.test_web_prefecture_links
           echo "[dist] Test character manhole landing page generation"
