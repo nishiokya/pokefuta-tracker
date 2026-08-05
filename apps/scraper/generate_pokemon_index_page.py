@@ -21,7 +21,6 @@ sys.path.insert(0, str(Path(__file__).parent))
 from generate_pokemon_pages import (
     BASE_URL,
     DEFAULT_OGP_IMAGE,
-    GA_MEASUREMENT_ID,
     LANG_CONFIGS,
     _get_display_name,
     build_pokemon_index,
@@ -1107,12 +1106,9 @@ def generate_html(
   </script>
 
   <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id={GA_MEASUREMENT_ID}"></script>
+  <script src="/assets/analytics.js"></script>
   <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){{dataLayer.push(arguments);}}
-    gtag('js', new Date());
-    gtag('config', '{GA_MEASUREMENT_ID}', {{'page_path': '/{url_prefix}pokemon/', site_type: 'map', page_type: 'pokemon_index'}});
+    window.PokefutaAnalytics.init({{'page_path': '/{url_prefix}pokemon/', site_type: 'map', page_type: 'pokemon_index'}});
     gtag('event', 'view_pokemon_index', {{'pokemon_count': {total_count}, 'lang': '{lang}'}});
   </script>
 

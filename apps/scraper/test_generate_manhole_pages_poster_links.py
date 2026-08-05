@@ -75,7 +75,7 @@ class HeroCreditLinkTests(unittest.TestCase):
         self.assertIn(f"<a class='poster-link' href='{PROFILE_URL}'", html)
         self.assertIn("📷 いろはす</a>", html)
         self.assertIn("click_poster_profile", html)
-        self.assertIn("&quot;source&quot;: &quot;hero&quot;", html)
+        self.assertIn("&quot;surface&quot;: &quot;hero&quot;", html)
 
     def test_hero_credit_plain_text_without_public_user_id(self):
         html = _generate(_photo(public_user_id=None))
@@ -103,7 +103,7 @@ class GalleryCreditLinkTests(unittest.TestCase):
         html = _generate(_photo(gallery_local=gallery_local))
         self.assertIn(f"<a class='gallery-credit poster-link' href='{PROFILE_URL}'", html)
         self.assertIn("📷 たこ · 5月1日</a>", html)
-        self.assertIn("&quot;source&quot;: &quot;gallery&quot;", html)
+        self.assertIn("&quot;surface&quot;: &quot;gallery&quot;", html)
 
     def test_gallery_credit_plain_text_without_public_user_id(self):
         gallery_local = [

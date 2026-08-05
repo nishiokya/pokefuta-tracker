@@ -694,13 +694,9 @@ def generate_html(
   <style>{PAGE_STYLE}</style>
   <link rel="icon" href="./assets/pokefuta_icon_32.png" type="image/png" />
   <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-K18NR4GZG2"></script>
+  <script src="/assets/analytics.js"></script>
   <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){{dataLayer.push(arguments);}}
-    gtag('js', new Date());
-    gtag('config', 'G-K18NR4GZG2', {{
-      'anonymize_ip': true,
+    window.PokefutaAnalytics.init({{
       'page_path': '/character_manholes',
       site_type: 'map',
       page_type: 'lp_character_manholes',

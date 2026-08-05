@@ -1200,12 +1200,9 @@ def build_page(
     </section>
     <footer><a href="/summary/">全国のポケふた一覧へ戻る</a></footer>
   </main>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-K18NR4GZG2"></script>
+  <script src="/assets/analytics.js"></script>
   <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() {{ dataLayer.push(arguments); }}
-    gtag('js', new Date());
-    gtag('config', 'G-K18NR4GZG2', {{
+    window.PokefutaAnalytics.init({{
       'page_path': '/prefectures/' + {_json_for_script(slug)} + '/',
       site_type: 'map',
       page_type: 'prefecture',

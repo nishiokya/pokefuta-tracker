@@ -4,6 +4,8 @@ pokefuta.ndjsonはapps/scraperで更新している
 latest-manhole-photos.json と docs/api/*.json は import-manhole-photos.yml が Supabase から日次一括生成（画像DL込み。pokefuta.com アプリの /api/manholes・/api/site-stats は docs/api を読む。手動で回すときだけ `/import-photos` スキル）
 都道府県ページは `docs/latest-manhole-photos.json` を生成時に読み、写真掲載率・投稿写真・写真募集状態を47都道府県共通テンプレートへ静的に埋め込む
 都道府県ページから pokefuta.com への導線は `from=data` と `utm_source=data.pokefuta.com&utm_medium=referral&utm_campaign=prefecture_page&utm_content=<prefecture slug>` を付ける。GA4の `content_id`・`photo_state`・`surface` はカスタムディメンションとして登録して分析する
+GA4 は `apps/web/assets/analytics.js` から初期化し、`data.pokefuta.com` だけで送信する。各HTMLや生成スクリプトに gtag ローダーを直書きしない
+イベント発生箇所は `surface` で表し、GA4の流入元予約語 `source` をカスタムイベント引数に使わない
 
 ## ディレクトリ構成
 
