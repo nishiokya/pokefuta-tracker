@@ -2936,7 +2936,7 @@ def _build_fact_sections(s: dict, stats: dict, tr) -> tuple[str, str]:
 
 def _build_tracking_script(s: dict) -> str:
     return """\
-  <script src="/assets/analytics.js"></script>
+  <script src="/assets/analytics.js?v=20260805a"></script>
   <script>
     window.PokefutaAnalytics.init({
       'page_path': window.location.pathname,

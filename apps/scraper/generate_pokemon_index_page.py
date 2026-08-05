@@ -1106,7 +1106,7 @@ def generate_html(
   </script>
 
   <!-- Google Analytics -->
-  <script src="/assets/analytics.js"></script>
+  <script src="/assets/analytics.js?v=20260805a"></script>
   <script>
     window.PokefutaAnalytics.init({{'page_path': '/{url_prefix}pokemon/', site_type: 'map', page_type: 'pokemon_index'}});
     gtag('event', 'view_pokemon_index', {{'pokemon_count': {total_count}, 'lang': '{lang}'}});

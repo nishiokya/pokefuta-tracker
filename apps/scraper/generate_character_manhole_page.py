@@ -694,16 +694,13 @@ def generate_html(
   <style>{PAGE_STYLE}</style>
   <link rel="icon" href="./assets/pokefuta_icon_32.png" type="image/png" />
   <!-- Google Analytics -->
-  <script src="/assets/analytics.js"></script>
+  <script src="/assets/analytics.js?v=20260805a"></script>
   <script>
     window.PokefutaAnalytics.init({{
       'page_path': '/character_manholes',
       site_type: 'map',
       page_type: 'lp_character_manholes',
     }});
-    window.trackEvent = function(action, params = {{}}) {{
-      gtag('event', action, params);
-    }};
   </script>
   <!-- End GA -->
 </head>

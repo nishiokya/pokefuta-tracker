@@ -37,9 +37,13 @@
       initialized = true;
     }
 
-    window.gtag('set', context);
-    window.gtag('config', MEASUREMENT_ID, Object.assign({ anonymize_ip: true }, config));
+    window.gtag('config', MEASUREMENT_ID, config);
     return true;
+  }
+
+  function setContext(params) {
+    context = Object.assign({}, context, params || {});
+    delete context.send_page_view;
   }
 
   function trackEvent(name, params) {
@@ -50,6 +54,7 @@
   window.PokefutaAnalytics = {
     enabled: enabled,
     init: init,
+    setContext: setContext,
     trackEvent: trackEvent
   };
   window.trackEvent = trackEvent;

@@ -1,3 +1,4 @@
+import re
 import unittest
 from pathlib import Path
 
@@ -14,21 +15,13 @@ class AnalyticsContractTest(unittest.TestCase):
         self.assertIn("domains: ['data.pokefuta.com', 'pokefuta.com']", analytics)
 
     def test_ga_sources_use_shared_loader(self):
-        sources = [
-            ROOT / "web/index.template.html",
-            ROOT / "web/map.template.html",
-            ROOT / "web/index.html",
-            ROOT / "web/map.html",
-            ROOT / "web/gmanhole_map.html",
-            ROOT / "web/design_manhole.html",
-            ROOT / "web/nearby_manholes.html",
-            ROOT / "scraper/generate_character_manhole_page.py",
-            ROOT / "scraper/generate_summary_pages.py",
-            ROOT / "scraper/generate_prefecture_pages.py",
-            ROOT / "scraper/generate_pokemon_index_page.py",
-            ROOT / "scraper/generate_pokemon_pages.py",
-            ROOT / "scraper/generate_manhole_pages.py",
-        ]
+        candidates = list((ROOT / "web").glob("*.html"))
+        candidates += list((ROOT / "scraper").glob("generate_*.py"))
+        sources = []
+        for source in candidates:
+            text = source.read_text(encoding="utf-8")
+            if "gtag(" in text or "PokefutaAnalytics.init" in text:
+                sources.append(source)
 
         for source in sources:
             with self.subTest(source=source.name):
@@ -38,11 +31,23 @@ class AnalyticsContractTest(unittest.TestCase):
                 self.assertNotIn("googletagmanager.com/gtag", text)
 
     def test_event_location_uses_surface_not_reserved_source(self):
-        generator = (ROOT / "scraper/generate_manhole_pages.py").read_text(encoding="utf-8")
-        map_template = (ROOT / "web/map.template.html").read_text(encoding="utf-8")
+        candidates = list((ROOT / "web").glob("*.html"))
+        candidates += list((ROOT / "scraper").glob("generate_*.py"))
+        reserved_source = re.compile(
+            r"(?:trackEvent|_attr_json)\s*\([^)]{0,800}?[\"']source[\"']\s*:",
+            re.DOTALL,
+        )
 
-        self.assertNotRegex(generator, r'\{[^\n]*["\']source["\']\s*:')
-        self.assertIn("surface: 'top_feature_section'", map_template)
+        for source in candidates:
+            with self.subTest(source=source.name):
+                text = source.read_text(encoding="utf-8")
+                self.assertIsNone(reserved_source.search(text))
+
+    def test_internal_app_links_do_not_use_utm(self):
+        generator = (ROOT / "scraper/generate_prefecture_pages.py").read_text(encoding="utf-8")
+
+        self.assertIn('return "from=data"', generator)
+        self.assertNotIn("utm_source=data.pokefuta.com", generator)
 
 
 if __name__ == "__main__":

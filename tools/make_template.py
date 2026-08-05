@@ -237,6 +237,12 @@ t = t.replace(OLD_JSONLD_KEYWORDS, NEW_JSONLD_KEYWORDS, 1)
 # ──────────────────────────────────────────
 
 # CSS links in <head>
+t = re.sub(
+    r'  <script src="\./assets/analytics\.js([^\"]*)"></script>',
+    r'  <script src="%%BASE_PATH%%assets/analytics.js\1"></script>',
+    t,
+    count=1
+)
 t = t.replace(
     '  <link rel="stylesheet" href="./assets/theme.css" />',
     '  <link rel="stylesheet" href="%%BASE_PATH%%assets/theme.css" />', 1

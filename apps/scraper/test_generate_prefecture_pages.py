@@ -64,7 +64,7 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
             html,
         )
         self.assertIn("https://pokefuta.com/visits?from=data", html)
-        self.assertIn("utm_campaign=prefecture_page", html)
+        self.assertNotIn("utm_", html)
         self.assertIn("prefecture_visit_cta_click", html)
         self.assertIn("prefecture_photo_candidate_click", html)
         self.assertIn("prefecture_photo_upload_start", html)
@@ -251,9 +251,7 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         self.assertIn("旅人さんの投稿", html)
         self.assertIn(
             'href="https://pokefuta.com/users/'
-            '6096691c-eeda-4e73-8401-a11274868ede/visits?from=data&amp;'
-            'utm_source=data.pokefuta.com&amp;utm_medium=referral&amp;'
-            'utm_campaign=prefecture_page&amp;utm_content=hokkaido"',
+            '6096691c-eeda-4e73-8401-a11274868ede/visits?from=data"',
             html,
         )
         self.assertIn('class="photo-card-poster"', html)

@@ -815,7 +815,7 @@ def generate_html(
   </script>
 
   <!-- Google Analytics -->
-  <script src="/assets/analytics.js"></script>
+  <script src="/assets/analytics.js?v=20260805a"></script>
   <script>
     window.PokefutaAnalytics.init({{
       'page_path': '/{url_prefix}pokemon/' + {slug_js} + '/',
@@ -827,9 +827,6 @@ def generate_html(
       manhole_count: {count},
       lang: '{lang}'
     }});
-    function trackEvent(action, params) {{
-      gtag('event', action, params);
-    }}
   </script>
 
   <style>

@@ -1231,7 +1231,7 @@ def generate_html(
   </script>
 
   <!-- Google Analytics -->
-  <script src="/assets/analytics.js"></script>
+  <script src="/assets/analytics.js?v=20260805a"></script>
   <script>
     window.PokefutaAnalytics.init({{
       'page_path': '/manholes/' + {manhole_id_js} + '/',
@@ -1246,10 +1246,6 @@ def generate_html(
       pokemon_count: {len(pokemons)},
       has_photo: {has_photo_js}
     }});
-
-    function trackEvent(action, params) {{
-      gtag('event', action, params);
-    }}
 
     function shareManhole() {{
       var _sp = {{

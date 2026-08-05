@@ -349,10 +349,7 @@ def _pokemon_cards(records: list[dict], pokemon_slugs: dict[str, str]) -> str:
 
 
 def _campaign_params(slug: str) -> str:
-    return (
-        "from=data&utm_source=data.pokefuta.com&utm_medium=referral"
-        f"&utm_campaign=prefecture_page&utm_content={quote(slug)}"
-    )
+    return "from=data"
 
 
 def _upload_url(manhole_id: str, slug: str) -> str:
@@ -1200,7 +1197,7 @@ def build_page(
     </section>
     <footer><a href="/summary/">全国のポケふた一覧へ戻る</a></footer>
   </main>
-  <script src="/assets/analytics.js"></script>
+  <script src="/assets/analytics.js?v=20260805a"></script>
   <script>
     window.PokefutaAnalytics.init({{
       'page_path': '/prefectures/' + {_json_for_script(slug)} + '/',
