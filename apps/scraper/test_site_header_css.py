@@ -96,6 +96,19 @@ class SiteHeaderTokenTest(unittest.TestCase):
         for block in re.findall(r"\.site-header__mark\s*\{(.*?)\}", self.css, re.DOTALL):
             self.assertNotIn("display: none", block)
 
+    def test_chrome_outranks_map_overlays(self):
+        """全画面地図のオーバーレイ（.map-hero-card 800 / #controls 1000）より
+        共通クロムを前面に出すこと。共通の z-index 50 のままだとサイトスイッチャーの
+        メニューがヒーローカードの下に潜って押せなくなる。"""
+        for selector in (".site-header", ".site-tabs"):
+            rule = re.search(
+                rf"body\.has-site-header\.pokefuta-map-page {re.escape(selector)}\s*\{{(.*?)\}}",
+                self.css, re.DOTALL)
+            self.assertIsNotNone(rule, f"{selector} の地図ページ用 z-index が無い")
+            z = re.search(r"z-index:\s*(\d+)", rule.group(1))
+            self.assertIsNotNone(z)
+            self.assertGreater(int(z.group(1)), 1000, f"{selector} が地図オーバーレイに負ける")
+
     def test_full_screen_map_reserves_room_for_both_bars(self):
         block = re.search(r"\.map-stage[^{]*\{(.*?)\}", self.css, re.DOTALL)
         self.assertIsNotNone(block)

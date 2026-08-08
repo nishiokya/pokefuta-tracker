@@ -516,6 +516,11 @@ body.has-site-header.pokefuta-map-page .site-footer { display: none; }
    - シートは下タブのぶんだけ底上げし、最大高もその分減らす */
 body.has-site-header.pokefuta-map-page .site-tabs { z-index: 1100; }
 
+/* ヘッダーも同様。全画面地図には z-index 800〜1000 のオーバーレイ
+   （.map-hero-card / #controls）があり、共通の z-index 50 のままだと
+   サイトスイッチャーのメニューがヒーローカードの下に潜って押せなくなる。 */
+body.has-site-header.pokefuta-map-page .site-header { z-index: 1100; }
+
 body.has-site-header.pokefuta-map-page #controls {
   bottom: calc(var(--chrome-bottomnav-height) + env(safe-area-inset-bottom));
   max-height: calc(78vh - var(--chrome-bottomnav-height));
