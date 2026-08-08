@@ -1,4 +1,5 @@
 import importlib.util
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -96,6 +97,7 @@ class ImportDesignManholesTests(unittest.TestCase):
         self.assertEqual(records[0]["nearby_refs"][0]["ref"], "gundam:5")
         self.assertNotIn("submitter_name", records[0])
         self.assertEqual(importer.select_public_records(records), [])
+        self.assertEqual(importer.select_review_records(records), records)
 
     def test_official_pokefuta_candidate_is_not_published(self):
         submission = {
@@ -119,9 +121,25 @@ class ImportDesignManholesTests(unittest.TestCase):
         )
 
         self.assertEqual(records[0]["nearby_refs"][0]["ref"], "pokefuta:157")
+        self.assertLessEqual(records[0]["nearby_refs"][0]["distance_m"], 1)
         self.assertEqual(records[0]["review_status"], "needs_review")
         self.assertEqual(records[0]["status"], "pending")
-        self.assertEqual(importer.select_public_records(records), [])
+        with tempfile.TemporaryDirectory() as directory:
+            public_path = Path(directory) / "public.ndjson"
+            review_path = Path(directory) / "review.ndjson"
+            importer.write_ndjson(public_path, importer.select_public_records(records))
+            importer.write_ndjson(review_path, importer.select_review_records(records))
+
+            self.assertEqual(importer.load_ndjson(public_path), [])
+            review_queue = importer.load_ndjson(review_path)
+            self.assertEqual(len(review_queue), 1)
+            self.assertEqual(review_queue[0]["source_id"], "submission-1")
+            self.assertEqual(review_queue[0]["nearby_refs"][0]["ref"], "pokefuta:157")
+            self.assertLessEqual(review_queue[0]["nearby_refs"][0]["distance_m"], 1)
+            self.assertEqual(
+                review_queue[0]["source_url"],
+                "https://pokefuta.com/design-manholes/submission-1",
+            )
 
     def test_source_url_links_to_individual_submission_page(self):
         records = importer.build_public_records(
@@ -170,6 +188,41 @@ class ImportDesignManholesTests(unittest.TestCase):
         self.assertEqual(records[0]["nearby_refs"][0]["ref"], "pokefuta:10")
         self.assertEqual(importer.select_public_records(records), records)
 
+    def test_public_selection_is_fail_closed(self):
+        base_record = {
+            "source_id": "submission-1",
+            "status": "active",
+            "review_status": "pending",
+        }
+        publishable = [
+            {**base_record, "source_id": "pending", "review_status": "pending"},
+            {**base_record, "source_id": "matched", "review_status": "matched"},
+            {
+                **base_record,
+                "source_id": "reviewed-distinct",
+                "review_status": "reviewed_distinct",
+            },
+        ]
+        quarantined = [
+            {**base_record, "source_id": "hidden", "status": "hidden"},
+            {**base_record, "source_id": "status-pending", "status": "pending"},
+            {
+                **base_record,
+                "source_id": "unknown-review",
+                "review_status": "future_state",
+            },
+            {
+                **base_record,
+                "source_id": "needs-review",
+                "review_status": "needs_review",
+            },
+        ]
+
+        records = publishable + quarantined
+
+        self.assertEqual(importer.select_public_records(records), publishable)
+        self.assertEqual(importer.select_review_records(records), quarantined)
+
     def test_unchanged_record_preserves_last_updated(self):
         initial = importer.build_public_records(
             [self.submission], {}, {}, {}, "2026-07-14T00:00:00Z"
@@ -217,6 +270,7 @@ class ImportDesignManholesTests(unittest.TestCase):
         self.assertIn("# Family B:", workflow)
         self.assertIn("concurrency:", workflow)
         self.assertIn("timeout-minutes:", workflow)
+        self.assertIn("dataset/design_manhole_review_queue.ndjson", workflow)
 
 
 if __name__ == "__main__":
