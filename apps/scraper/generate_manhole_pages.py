@@ -50,13 +50,13 @@ SECONDARY_TAG_LABELS: dict[str, tuple[str, str]] = {
     'in_station':       ('🚉', '駅構内'),
 }
 
-# 近くのデザインマンホール（ガンダム・キャラ蓋・写真館投稿）
+# 近くのデザインマンホール（ガンダム・キャラクターマンホール・写真館投稿）
 DESIGN_STUDIO_LIST_URL = "https://pokefuta.com/design-manholes"
 DESIGN_NEARBY_RADIUS_KM = 20.0
 DESIGN_NEARBY_MAX = 5
 # 近接判定に使ってよい座標ソース（manhole_titles.json の運用ルールと同じ）
 CHARACTER_COORD_METHODS = {"official_google_map_link", "municipal_google_map_link"}
-# 🎨近接称号は本文のデザイン蓋セクションへアンカーで飛ばす
+# 🎨近接称号は本文のデザインマンホールセクションへアンカーで飛ばす
 DESIGN_ANCHOR_TITLE_KEYS = {"near_character_manhole", "near_gundam_manhole"}
 
 
@@ -379,7 +379,7 @@ def load_design_spots(
                 matched["photo_url"] = _safe_pokefuta_url(row.get("photo_url"))
             continue
         if any(r.startswith("pokefuta:") for r in refs):
-            # ポケふた至近の投稿はポケふた自体の写真とみなし、デザイン蓋としては出さない
+            # ポケふた至近の投稿はポケふた自体の写真とみなし、デザインマンホールとしては出さない
             continue
         sid = str(row.get("id", "")).strip()
         if not sid:

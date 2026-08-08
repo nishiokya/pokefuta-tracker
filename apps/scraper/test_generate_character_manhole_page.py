@@ -134,7 +134,7 @@ HERO_MOSAIC_RECORDS = [
         "prefecture": "愛知県", "city": "名古屋市",
     },
     {
-        # pokefuta: 参照はキャラマンホールではないのでその他枠
+        # pokefuta: 参照はキャラクターマンホールではないのでその他枠
         "id": "hm-plain-2", "title": "豊橋駅前", "status": "active",
         "photo_url": "https://pokefuta.com/api/design-manholes/hm-plain-2/photo?size=small",
         "canonical_ref": None,
@@ -218,9 +218,9 @@ class WorkSummaryTest(unittest.TestCase):
     def test_prefecture_summaries_combine_character_and_gundam(self):
         summaries = build_prefecture_summaries(self.character_records, self.gundam_records)
         by_pref = {entry["prefecture"]: entry["count"] for entry in summaries}
-        # 佐賀県: キャラ蓋2件 + ガンダム(active)1件 = 3
+        # 佐賀県: キャラクターマンホール2件 + ガンダム(active)1件 = 3
         self.assertEqual(3, by_pref["佐賀県"])
-        # 長崎県: キャラ蓋2件（active）
+        # 長崎県: キャラクターマンホール2件（active）
         self.assertEqual(2, by_pref["長崎県"])
         # 北海道: ガンダムのみ1件
         self.assertEqual(1, by_pref["北海道"])
@@ -466,7 +466,7 @@ class MiniMapPinsTest(unittest.TestCase):
         self.gundam_records = load_active_manholes(gundam_path)
 
     def test_skips_records_without_valid_latlng(self):
-        # active: zls-1, zls-2, yp-1(lat/lng無し), yp-2 のキャラ蓋4件 + gundam 1,2 の2件 = 6件
+        # active: zls-1, zls-2, yp-1(lat/lng無し), yp-2 のキャラクターマンホール4件 + gundam 1,2 の2件 = 6件
         # うち yp-1 は lat/lng 無しなので座標配列には5件だけ入る
         pins = build_mini_map_pins(self.character_records, self.gundam_records)
         self.assertEqual(5, len(pins))
