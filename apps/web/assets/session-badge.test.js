@@ -111,10 +111,14 @@ function run(document) {
 
   assert.equal(dom.guest.hidden, false, '未ログインはログイン/新規登録を出す');
   assert.equal(dom.authed.hidden, true, '未ログインは認証ピルを隠す');
-  for (const link of [dom.loginLink, dom.stampTab]) {
-    const url = new URL(link.href);
-    assert.equal(url.searchParams.get('redirect'), TEST_BROWSER_ORIGIN);
-  }
+  // 認証ボタンは現在ページへ戻す
+  assert.equal(new URL(dom.loginLink.href).searchParams.get('redirect'), TEST_BROWSER_ORIGIN);
+  // ナビ項目は「本来行きたかった場所」へ。現在ページを積むと
+  // ログイン後に図鑑へ戻され、スタンプ帳へ行くのにもう一度タップが要る
+  assert.equal(
+    new URL(dom.stampTab.href).searchParams.get('redirect'),
+    'https://pokefuta.com/visits?from=data'
+  );
 }
 
 console.log('session-badge: すべてのケースが通過');

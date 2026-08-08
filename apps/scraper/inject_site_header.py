@@ -29,7 +29,9 @@ SESSION_BADGE_SCRIPT_TEMPLATE = '<script src="{asset_base}assets/session-badge.j
 # 同一GA4プロパティ内の内部UTMは使わず、着地側の source_app=tracker /
 # p_data_referral と突き合わせて分析するため、これが唯一の流入元マーカーになる。
 POKEFUTA_APP_URL = "https://pokefuta.com/?from=data"
-POKEFUTA_LOGIN_URL = "https://pokefuta.com/login?from=data"
+POKEFUTA_LOGIN_URL = "https://pokefuta.com/login?from=data&mode=login"
+# ラベルが「新規登録」なのにログインタブが開かないよう、初期タブを明示する
+POKEFUTA_SIGNUP_URL = "https://pokefuta.com/login?from=data&mode=signup"
 POKEFUTA_STAMP_URL = "https://pokefuta.com/visits?from=data"
 POKEFUTA_PROFILE_URL = "https://pokefuta.com/profile?from=data"
 POKEFUTA_ABOUT_URL = "https://pokefuta.com/about?from=data"
@@ -164,6 +166,10 @@ HEADER_TEMPLATE = """<header class="site-header">
       <div class="site-switch__menu">
         <a class="site-switch__item" href="{app_url}"><b>{site_album}</b><small>{site_album_sub}</small></a>
         <a class="site-switch__item is-current" aria-current="page" href="{page_base}"><b>{site_dex}</b><small>{site_dex_sub}</small></a>
+        <hr class="site-switch__sep">
+        <a class="site-switch__sub" href="{asset_base}character_manholes.html">{nav_character}</a>
+        <a class="site-switch__sub" href="{about_url}">{about}</a>
+        <a class="site-switch__sub" href="{x_url}" target="_blank" rel="noopener noreferrer">X @pokemonmanhole</a>
       </div>
     </details>
 
@@ -179,7 +185,7 @@ HEADER_TEMPLATE = """<header class="site-header">
 
     <div class="site-auth" data-auth-guest>
       <a class="site-auth__login" data-login-link href="{login_url}">{login}</a>
-      <a class="site-auth__signup" data-login-link href="{login_url}">{signup}</a>
+      <a class="site-auth__signup" data-login-link href="{signup_url}">{signup}</a>
     </div>
     <a class="site-auth__user" data-auth-user hidden href="{profile_url}" title="{profile}" aria-label="{profile}">
       <span class="site-auth__avatar" aria-hidden="true">👤</span><span class="site-auth__name" data-auth-name></span>
@@ -196,8 +202,10 @@ BOTTOM_TABS_TEMPLATE = """<nav class="site-tabs" aria-label="{tabs_aria}">
 </nav>"""
 
 
-# SP ヘッダーから外した導線の受け皿。キャラ蓋はここに残す
-# （LP 新設直後で流入を落としたくないため、SP でも到達できる場所を確保する）
+# SP ヘッダーから外した導線の受け皿。
+# 全画面地図ページ（map.html / gmanhole_map.html）は本文がビューポート固定で
+# フッターに到達できないため、同じ3つをスイッチャーのメニューにも常設している。
+# どちらか片方だけ消さないこと。
 FOOTER_TEMPLATE = """<footer class="site-footer">
   <a class="site-footer__link" href="{asset_base}character_manholes.html">{nav_character}</a>
   <a class="site-footer__link" href="{about_url}">{about}</a>
@@ -257,6 +265,7 @@ def inject(
         page_base=page_base,
         app_url=POKEFUTA_APP_URL,
         login_url=POKEFUTA_LOGIN_URL,
+        signup_url=POKEFUTA_SIGNUP_URL,
         stamp_url=POKEFUTA_STAMP_URL,
         profile_url=POKEFUTA_PROFILE_URL,
         about_url=POKEFUTA_ABOUT_URL,

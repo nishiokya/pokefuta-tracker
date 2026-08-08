@@ -173,6 +173,28 @@ body.has-site-header {
 .site-switch__item:focus-visible { background: var(--chrome-accent-soft); }
 .site-switch__item.is-current { background: var(--chrome-pc-nav-active-bg); }
 
+/* 全画面地図はフッターに到達できないので、フッターと同じ導線をここにも置く */
+.site-switch__sep {
+  margin: 6px 4px;
+  border: 0;
+  border-top: 1px solid var(--chrome-accent-border);
+}
+
+.site-switch__sub {
+  display: flex;
+  align-items: center;
+  min-height: var(--chrome-tap-min);
+  padding: 0 10px;
+  border-radius: 8px;
+  color: var(--chrome-pc-nav);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.site-switch__sub:hover,
+.site-switch__sub:focus-visible { background: var(--chrome-accent-soft); text-decoration: none; }
+
 /* 純CSSのモンスターボール。SP でも消さないこと
    （消すとサイト帯のブランドが SP だけ無くなる） */
 .site-header__mark {
@@ -521,7 +543,19 @@ body.has-site-header.pokefuta-map-page .site-tabs { z-index: 1100; }
    サイトスイッチャーのメニューがヒーローカードの下に潜って押せなくなる。 */
 body.has-site-header.pokefuta-map-page .site-header { z-index: 1100; }
 
-body.has-site-header.pokefuta-map-page #controls {
-  bottom: calc(var(--chrome-bottomnav-height) + env(safe-area-inset-bottom));
-  max-height: calc(78vh - var(--chrome-bottomnav-height));
+/* ⚠️ 760px 未満に限定すること。
+   pokefuta-map.css は @media (min-width: 760px) でシートを画面右上の
+   フローティングパネル（bottom:auto / top:32px / max-height:calc(100dvh - 64px)）に
+   切り替える。無条件に打ち消すとPCでシートが画面下に固定され、最大高も 78vh に縮む。
+   ここは「シートが下端に張り付いている幅」だけを対象にする。 */
+@media (max-width: 759.98px) {
+  body.has-site-header.pokefuta-map-page #controls {
+    bottom: calc(var(--chrome-bottomnav-height) + env(safe-area-inset-bottom));
+    max-height: calc(78vh - var(--chrome-bottomnav-height));
+  }
+
+  /* 展開時は 88vh が正。上のルールのほうが詳細度が高いので個別に引き直す */
+  body.has-site-header.pokefuta-map-page.sheet-expanded #controls {
+    max-height: calc(88vh - var(--chrome-bottomnav-height));
+  }
 }

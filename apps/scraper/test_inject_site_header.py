@@ -30,6 +30,9 @@ class InjectSiteHeaderTest(unittest.TestCase):
 
     def test_pc_nav_order(self):
         result = inject(BARE)
+        # スイッチャーのメニューにも同じ href が出るので、ナビの中だけを見る
+        nav = re.search(r'<nav class="site-header__nav".*?</nav>', result, re.DOTALL).group(0)
+        result = nav
         positions = [
             result.index('href="./map.html">地図</a>'),
             result.index('href="./pokemon/">ポケモン</a>'),
@@ -65,17 +68,36 @@ class InjectSiteHeaderTest(unittest.TestCase):
         # 内部UTMは使わない
         self.assertNotIn("utm_", result)
 
-    def test_logged_in_stamp_tab_targets_the_stamp_book(self):
-        """ログイン中にスタンプ帳タブがログイン画面へ飛ばないこと。"""
+    def test_stamp_tab_targets_the_stamp_book(self):
+        """スタンプ帳タブの行き先。
+
+        ログイン中は直接スタンプ帳へ。未ログインでも session-badge.js が
+        redirect にスタンプ帳を積むので、ログイン後にそのまま辿り着く
+        （現在の図鑑ページを積むと、もう一度タップさせることになる）。
+        """
         result = inject(BARE)
         self.assertIn('data-stamp-page="https://pokefuta.com/visits?from=data"', result)
+
+    def test_signup_opens_the_signup_tab(self):
+        """ラベルが「新規登録」なのにログインタブが開く、を防ぐ。"""
+        result = inject(BARE)
+        self.assertIn('href="https://pokefuta.com/login?from=data&mode=signup">新規登録</a>', result)
+        self.assertIn('href="https://pokefuta.com/login?from=data&mode=login">ログイン</a>', result)
+
+    def test_map_only_links_are_reachable_from_the_switcher(self):
+        """全画面地図ページはフッターに到達できないので、同じ導線をメニューにも常設する。"""
+        result = inject(BARE)
+        menu = result[result.index('site-switch__menu'):result.index("</details>")]
+        self.assertIn("キャラ蓋", menu)
+        self.assertIn("https://pokefuta.com/about?from=data", menu)
+        self.assertIn("https://x.com/pokemonmanhole", menu)
 
     def test_bottom_tabs_match_photo_site_roles(self):
         """左2つが探す系、右端がサイトをまたぐ導線、という並びを写真館と揃える。"""
         result = inject(BARE)
         tabs = re.findall(r'<a class="site-tab[^"]*"[^>]*>.*?<span>([^<]+)</span>', result, re.DOTALL)
         self.assertEqual(tabs, ["地図", "ポケモン", "集計", "スタンプ帳"])
-        self.assertIn('data-login-link href="https://pokefuta.com/login?from=data"', result)
+        self.assertIn('data-login-link data-stamp-page="https://pokefuta.com/visits?from=data"', result)
 
     def test_marks_active_tab_from_page_path(self):
         """図鑑にはアクティブ表現が一切無かったので、現在地を出せることを固定する。"""

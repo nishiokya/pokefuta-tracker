@@ -88,8 +88,15 @@ class SiteHeaderTokenTest(unittest.TestCase):
 
     def test_single_pc_breakpoint(self):
         """ブレークポイントは 1024px の1本だけ。720px の段は写真館と食い違うので廃止した。"""
-        widths = set(re.findall(r"@media\s*\(\s*(?:min|max)-width:\s*(\d+px)\s*\)", self.css))
-        self.assertEqual(widths, {"1024px", "360px"}, f"想定外のブレークポイント: {sorted(widths)}")
+        # コメント内にも他ファイルの @media を引用しているので、先に落とす
+        css = re.sub(r"/\*.*?\*/", "", self.css, flags=re.DOTALL)
+        widths = set(re.findall(r"@media\s*\(\s*(?:min|max)-width:\s*([\d.]+px)\s*\)", css))
+        # 759.98px はクロムのレイアウト用ではなく、pokefuta-map.css が
+        # @media (min-width: 760px) でボトムシートをフローティングパネルへ
+        # 切り替える境界に合わせたもの。ここを跨いで打ち消すとPCの地図が壊れる
+        self.assertEqual(
+            widths, {"1024px", "360px", "759.98px"}, f"想定外のブレークポイント: {sorted(widths)}"
+        )
 
     def test_mark_is_not_hidden_on_mobile(self):
         """SP でモンスターボールを消すとサイト帯のブランドが SP だけ無くなる。"""

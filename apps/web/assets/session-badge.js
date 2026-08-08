@@ -137,10 +137,13 @@
         var stampPage = link.getAttribute('data-stamp-page');
         if (stampPage) link.href = stampPage;
       } else {
-        // 未ログインはログイン後に戻ってこられるよう redirect を積む
+        // 未ログインはログイン後の行き先を redirect に積む。
+        // ナビ項目（data-stamp-page 付き）は「本来行きたかった場所」を積む。
+        // 現在ページを積むとログイン後に図鑑へ戻され、スタンプ帳へ行くのに
+        // もう一度タップさせることになる。
         try {
           var url = new URL(link.href);
-          url.searchParams.set('redirect', location.href);
+          url.searchParams.set('redirect', link.getAttribute('data-stamp-page') || location.href);
           link.href = url.toString();
         } catch (_) {
           /* href が不正でも既定のリンク先のまま動く */
