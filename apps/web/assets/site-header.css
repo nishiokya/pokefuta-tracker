@@ -1,74 +1,189 @@
-/* Shared site header, injected into every built HTML page.
-   pokefuta.com のヘッダーと同じ見た目に揃える:
-   - <1024px : pokefuta の Header.tsx（クリーム #FFF8EB / 紫ボーダー / sticky）
-   - >=1024px: pokefuta の PCTopNav（ベージュ #f4ecda / 茶ボーダー / 非sticky・ナビ左寄せ）
-   数値は pokefuta 側（html 14px 基準の Tailwind / inline style）の実測pxに合わせている。 */
-@import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@700&display=swap');
+/* 全ページに注入されるサイト共通クロム（ヘッダー・下タブ・フッター）。
+   マークアップは apps/scraper/inject_site_header.py が持つ。
 
-:root { --site-header-height: 56px; }
+   ⚠️ 色・寸法の正は写真館側の
+      nishiokya/pokefuta の src/app/site-chrome-tokens.css
+   ここはその値をコピーしている。生の hex / px を足すのではなく、
+   まず向こうのトークンを直してからここへ写すこと。
+   （以前は「写真館の実測pxを書き写す」運用で、向こうを変えるたびに
+     こちらが取り残されていた）
+
+   レイアウト:
+     <1024px  クリームの sticky ヘッダー（ロゴ・サイト名・認証の3要素）＋ 画面下タブ
+     >=1024px ベージュのバー1本（スイッチャー・ナビ・Info/X・認証）
+
+   ブレークポイントは 1024px の1本だけ。以前あった 720px の段は、
+   640〜720px で写真館と挙動が食い違う原因だったので廃止した。 */
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@600;700;800&display=swap');
+
+:root {
+  /* ── ここから site-chrome-tokens.css のコピー ── */
+  --chrome-height: 56px;
+  --chrome-tap-min: 44px;
+
+  --chrome-sp-bg: rgba(255, 248, 235, .95);
+  --chrome-sp-border: rgba(123, 99, 168, .2);
+
+  --chrome-pc-bg: #f4ecda;
+  --chrome-pc-border: #e9dfc7;
+  --chrome-pc-nav: #6f6657;
+  --chrome-pc-nav-active: #2c2a26;
+  --chrome-pc-nav-active-bg: #e9dfc7;
+
+  --chrome-ink: #2a2a2a;
+  --chrome-ink-pc: #38414f;
+
+  --chrome-accent: #7b63a8;
+  --chrome-accent-soft: rgba(123, 99, 168, .1);
+  --chrome-accent-border: #d7d0ef;
+
+  --chrome-ball-red: #e85046;
+
+  --chrome-radius-nav: 9px;
+  --chrome-radius-pill: 999px;
+
+  --chrome-z-header: 50;
+  --chrome-z-bottomnav: 40;
+  /* ── コピーここまで ── */
+
+  /* 図鑑側だけが持つ値（下タブは写真館では Tailwind 側にある） */
+  --chrome-bottomnav-height: 62px;
+
+  /* 全画面地図が参照する旧名。既存ページの互換のため残す */
+  --site-header-height: var(--chrome-height);
+}
 
 body.has-site-header {
-  padding-top: 0;
   overflow-x: hidden;
   overflow-x: clip;
+  /* 下タブぶんの余白。地図ページは別途 height を計算するので影響しない */
+  padding-bottom: calc(var(--chrome-bottomnav-height) + env(safe-area-inset-bottom));
 }
+
+/* 下タブは border-top 1px ぶん高さがずれると全画面地図の計算が合わなくなるので、
+   コンテナ自身も border-box にする */
+.site-header,
+.site-header *,
+.site-header *::before,
+.site-header *::after,
+.site-tabs,
+.site-tabs *,
+.site-footer,
+.site-footer * {
+  box-sizing: border-box;
+}
+
+/* ─────────────────────────────────────────
+   ヘッダー
+   ───────────────────────────────────────── */
 
 .site-header {
   position: sticky;
   top: 0;
-  z-index: 10000;
+  z-index: var(--chrome-z-header);
   width: 100vw;
   margin-inline: calc(50% - 50vw);
   flex: 0 0 auto;
-  background: rgba(255, 248, 235, .95);
+  background: var(--chrome-sp-bg);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
-  border-bottom: 1px solid rgba(123, 99, 168, .2);
-  color: #2a2a2a;
+  border-bottom: 1px solid var(--chrome-sp-border);
+  color: var(--chrome-ink);
   font-family: "M PLUS Rounded 1c", "Noto Sans JP", system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
-.site-header,
-.site-header *,
-.site-header *::before,
-.site-header *::after {
-  box-sizing: border-box;
-}
-
-/* min-height は border-bottom 1px を引いた値にして、
-   実際の描画高さを --site-header-height と一致させる */
+/* border-bottom 1px を引いて、描画高さを --chrome-height に一致させる */
 .site-header__inner {
   width: min(1008px, 100%);
-  min-height: 55px;
+  min-height: calc(var(--chrome-height) - 1px);
   margin: 0 auto;
-  padding: 10px 14px;
+  padding: 4px 12px;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.site-header__brand {
+/* ─── サイトスイッチャー（写真館 ⇄ 図鑑） ───
+   同じモンスターボールなのに別サイト、という状態を解消するための導線。
+   <details> なので JS 無しで開閉できる（外側クリックで閉じるのは
+   session-badge.js が面倒を見る）。 */
+
+.site-switch {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.site-switch__trigger {
   display: flex;
   align-items: center;
   gap: 7px;
-  flex: 0 0 auto;
-  color: #2a2a2a;
+  min-height: var(--chrome-tap-min);
+  padding: 0 8px 0 4px;
+  border-radius: var(--chrome-radius-nav);
+  color: var(--chrome-ink);
   font-weight: 700;
-  text-decoration: none;
   white-space: nowrap;
+  cursor: pointer;
+  list-style: none;
 }
 
-/* pokefuta と同じ純CSSのモンスターボールマーク */
+.site-switch__trigger::-webkit-details-marker { display: none; }
+
+.site-switch__trigger:hover,
+.site-switch__trigger:focus-visible {
+  background: var(--chrome-accent-soft);
+}
+
+.site-switch__caret {
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid currentColor;
+  opacity: .55;
+}
+
+.site-switch[open] .site-switch__caret { transform: rotate(180deg); }
+
+.site-switch__menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 220px;
+  padding: 6px;
+  border: 1px solid var(--chrome-accent-border);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 12px 30px rgba(60, 45, 25, .18);
+}
+
+.site-switch__item {
+  display: block;
+  padding: 9px 10px;
+  border-radius: 8px;
+  color: var(--chrome-ink);
+  text-decoration: none;
+}
+
+.site-switch__item b { display: block; font-size: 14px; font-weight: 700; }
+.site-switch__item small { display: block; font-size: 11px; color: var(--chrome-pc-nav); }
+
+.site-switch__item:hover,
+.site-switch__item:focus-visible { background: var(--chrome-accent-soft); }
+.site-switch__item.is-current { background: var(--chrome-pc-nav-active-bg); }
+
+/* 純CSSのモンスターボール。SP でも消さないこと
+   （消すとサイト帯のブランドが SP だけ無くなる） */
 .site-header__mark {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   flex-shrink: 0;
-  border: 2px solid #2a2a2a;
+  border: 2px solid var(--chrome-ink);
   border-radius: 50%;
   background: #fff;
   overflow: hidden;
@@ -78,7 +193,7 @@ body.has-site-header {
   content: "";
   position: absolute;
   inset: 0 0 50% 0;
-  background: #e85046;
+  background: var(--chrome-ball-red);
 }
 
 .site-header__mark::after {
@@ -88,7 +203,7 @@ body.has-site-header {
   left: 0;
   right: 0;
   height: 2px;
-  background: #2a2a2a;
+  background: var(--chrome-ink);
   transform: translateY(-50%);
 }
 
@@ -97,41 +212,29 @@ body.has-site-header {
   z-index: 1;
   width: 12px;
   height: 12px;
-  border: 2px solid #2a2a2a;
+  border: 2px solid var(--chrome-ink);
   border-radius: 50%;
   background: #fff;
 }
 
-.site-header__brand-name {
-  font-size: 16px;
-}
+.site-header__brand-name { font-size: 15px; }
+.site-header__brand-sep { margin: 0 4px; opacity: .45; font-weight: 600; }
 
-/* 現状テンプレートは brand-name のみでこのサブは未出力。再有効化時に
-   pokefuta のパープルと揃うよう色トークンだけ合わせておく。 */
-.site-header__brand-sub {
-  color: rgba(123, 99, 168, .55);
-  font-family: "IBM Plex Mono", "Courier New", monospace;
-  font-size: 9px;
-  letter-spacing: .18em;
-}
+/* ─── ナビ・アイコン（PC のみ） ─── */
 
-.site-header__nav {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-left: auto;
-  min-width: 0;
+.site-header__nav,
+.site-header__icon {
+  display: none;
 }
 
 .site-header__link {
   display: inline-flex;
   align-items: center;
-  height: 35px;
-  padding: 0 10px;
-  border-radius: 999px;
-  color: #2a2a2a;
-  font-size: 12px;
-  font-weight: 700;
+  padding: 7px 13px;
+  border-radius: var(--chrome-radius-nav);
+  color: var(--chrome-pc-nav);
+  font-size: 13.5px;
+  font-weight: 600;
   line-height: 1.2;
   text-decoration: none;
   white-space: nowrap;
@@ -139,217 +242,281 @@ body.has-site-header {
 }
 
 .site-header__link:hover,
-.site-header__link:focus-visible {
-  background: rgba(123, 99, 168, .1);
-  color: #2a2a2a;
+.site-header__link:focus-visible,
+.site-header__link.is-active {
+  background: var(--chrome-pc-nav-active-bg);
+  color: var(--chrome-pc-nav-active);
   text-decoration: none;
 }
 
-.site-header__label--mobile {
-  display: none;
+/* ─── 認証 ───
+   未ログイン: 枠線[ログイン] + 塗り[新規登録]
+   ログイン中: アバター＋表示名のピル → pokefuta.com/profile
+   以前は「ログインボタンのラベルがスタンプ帳に化ける」実装だったが、
+   認証状態の表示とナビ項目は別物なので分離した。 */
+
+.site-auth {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  flex: 0 0 auto;
 }
 
-/* ログイン系リンクは pokefuta の Header と同じ紫の枠線ボタン */
-.site-header__auth-link--desktop,
-.site-header__auth-link--mobile {
-  height: auto;
-  padding: 7px 12px;
-  border: 1px solid #7b63a8;
-  border-radius: 8px;
-  color: #7b63a8;
+.site-auth[hidden],
+.site-auth__user[hidden] { display: none; }
+
+.site-auth__login,
+.site-auth__signup {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--chrome-tap-min);
+  padding: 0 13px;
+  border-radius: var(--chrome-radius-pill);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.site-auth__login {
+  border: 1px solid var(--chrome-accent-border);
+  color: var(--chrome-accent);
+}
+
+.site-auth__signup {
+  background: var(--chrome-accent);
+  color: #fff;
+  box-shadow: 0 2px 0 #5f55b8;
+}
+
+.site-auth__login:hover,
+.site-auth__login:focus-visible {
+  background: var(--chrome-accent-soft);
+  color: var(--chrome-accent);
+  text-decoration: none;
+}
+
+.site-auth__user {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 9rem;
+  min-height: var(--chrome-tap-min);
+  margin-left: auto;
+  padding: 0 12px 0 4px;
+  border-radius: var(--chrome-radius-pill);
+  color: var(--chrome-ink);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  flex: 0 0 auto;
+}
+
+.site-auth__user:hover,
+.site-auth__user:focus-visible { background: var(--chrome-accent-soft); }
+
+.site-auth__avatar {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #dfe7f3;
+  font-size: 13px;
+}
+
+.site-auth__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ─────────────────────────────────────────
+   下タブ（SP のみ）
+   写真館の BottomNav と位置・高さ・アイコン言語を揃えている
+   ───────────────────────────────────────── */
+
+.site-tabs {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: var(--chrome-z-bottomnav);
+  display: flex;
+  align-items: stretch;
+  justify-content: space-around;
+  height: calc(var(--chrome-bottomnav-height) + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
+  background: rgba(255, 248, 235, .96);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  border-top: 1px solid rgba(123, 99, 168, .18);
+  font-family: "M PLUS Rounded 1c", "Noto Sans JP", system-ui, sans-serif;
+}
+
+.site-tab {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-width: 0;
+  min-height: var(--chrome-tap-min);
+  padding: 6px 2px;
+  color: #6b6b6b;
+  font-size: 11px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.site-tab span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.site-tab__icon { width: 22px; height: 22px; }
+
+.site-tab:hover,
+.site-tab:focus-visible { color: var(--chrome-accent); text-decoration: none; }
+
+.site-tab.is-active {
+  color: var(--chrome-accent);
+  background: var(--chrome-accent-soft);
+  border-radius: var(--chrome-radius-nav);
+}
+
+/* ─────────────────────────────────────────
+   フッター（SP のみ）
+   SP ヘッダーから外した Info・X・キャラ蓋 の受け皿
+   ───────────────────────────────────────── */
+
+.site-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px 14px;
+  padding: 16px 12px 20px;
+  border-top: 1px solid var(--chrome-sp-border);
+  font-family: "M PLUS Rounded 1c", "Noto Sans JP", system-ui, sans-serif;
+}
+
+.site-footer__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: var(--chrome-tap-min);
+  padding: 0 6px;
+  color: var(--chrome-pc-nav);
   font-size: 12px;
   font-weight: 700;
-}
-
-.site-header__auth-link--desktop:hover,
-.site-header__auth-link--desktop:focus-visible,
-.site-header__auth-link--mobile:hover,
-.site-header__auth-link--mobile:focus-visible {
-  background: rgba(123, 99, 168, .1);
-  color: #7b63a8;
   text-decoration: none;
 }
 
-.site-header__auth-link--mobile {
-  display: none;
-}
+.site-footer__link:hover,
+.site-footer__link:focus-visible { color: var(--chrome-accent); }
 
-@media (max-width: 720px) {
-  .site-header__inner {
-    padding: 10px 8px;
-    gap: 4px;
-  }
+/* ─────────────────────────────────────────
+   PC（>=1024px）: ベージュのバー1本にする
+   ───────────────────────────────────────── */
 
-  .site-header__brand {
-    flex: 0 0 auto;
-    gap: 0;
-  }
-
-  .site-header__mark {
-    display: none;
-  }
-
-  .site-header__brand-name {
-    font-size: 14px;
-    letter-spacing: -.03em;
-  }
-
-  .site-header__nav {
-    flex: 1 1 auto;
-    justify-content: flex-end;
-    gap: 1px;
-    min-width: 0;
-    margin-left: 0;
-  }
-
-  .site-header__link {
-    display: inline-flex;
-    height: 32px;
-    padding: 0 4px;
-    font-size: 11px;
-    line-height: 32px;
-    text-align: center;
-  }
-
-  .site-header__label--desktop {
-    display: none;
-  }
-
-  .site-header__label--mobile {
-    display: inline;
-  }
-
-  .site-header__auth-link--desktop {
-    display: none;
-  }
-
-  .site-header__auth-link--mobile {
-    display: inline-flex;
-    height: auto;
-    padding: 6px 8px;
-    border: 1px solid #7b63a8;
-    border-radius: 8px;
-    background: transparent;
-    color: #7b63a8;
-    font-size: 11px;
-    line-height: 1.4;
-    font-weight: 700;
-  }
-}
-
-@media (max-width: 360px) {
-  .site-header__inner {
-    padding-inline: 6px;
-    gap: 2px;
-  }
-
-  .site-header__brand-name {
-    font-size: 13px;
-    letter-spacing: -.05em;
-  }
-
-  .site-header__nav {
-    gap: 0;
-  }
-
-  .site-header__link {
-    padding-inline: 3px;
-    font-size: 10px;
-  }
-
-  .site-header__auth-link--mobile {
-    padding-inline: 7px;
-    font-size: 10px;
-  }
-}
-
-/* PC は pokefuta の PCTopNav と同じベージュのバーに切り替える */
 @media (min-width: 1024px) {
-  :root { --site-header-height: 57px; }
+  :root { --chrome-bottomnav-height: 0px; }
+
+  body.has-site-header { padding-bottom: 0; }
 
   .site-header {
     position: relative;
-    background: #f4ecda;
+    background: var(--chrome-pc-bg);
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
-    border-bottom-color: #e9dfc7;
+    border-bottom-color: var(--chrome-pc-border);
   }
 
   .site-header__inner {
     width: 100%;
-    min-height: 56px;
-    padding: 14px 32px;
+    padding: 4px 32px;
     gap: 14px;
   }
 
-  .site-header__mark {
-    width: 28px;
-    height: 28px;
-  }
-
-  .site-header__mark-core {
-    width: 10px;
-    height: 10px;
-  }
-
-  .site-header__brand {
-    gap: 8px;
-    color: #38414f;
-  }
-
+  .site-switch__trigger { color: var(--chrome-ink-pc); }
   .site-header__brand-name { font-size: 18px; }
 
   .site-header__nav {
-    flex: 1 1 auto;
-    justify-content: flex-start;
+    display: flex;
+    align-items: center;
     gap: 4px;
-    margin-left: 18px;
+    margin-left: 4px;
+    min-width: 0;
   }
 
-  .site-header__link {
-    height: auto;
-    padding: 7px 13px;
-    border-radius: 9px;
-    color: #6f6657;
-    font-size: 13.5px;
-    font-weight: 600;
+  .site-header__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    border-radius: var(--chrome-radius-pill);
+    color: var(--chrome-pc-nav);
+    text-decoration: none;
   }
 
-  .site-header__link:hover,
-  .site-header__link:focus-visible {
-    background: #e9dfc7;
-    color: #2c2a26;
-  }
+  /* Info は nav とアイコン群のあいだで右に寄せる */
+  .site-header__icon:first-of-type { margin-left: auto; }
 
-  /* PC のログインは PCTopNav と同じ淡紫枠の丸ピルで右端に寄せる */
-  .site-header__auth-link--desktop {
-    margin-left: auto;
-    padding: 6px 14px;
-    border: 1px solid #d7d0ef;
-    border-radius: 999px;
-    color: #7b63a8;
-    font-size: 13px;
-    font-weight: 600;
-  }
+  .site-header__icon svg { width: 18px; height: 18px; }
+  .site-header__icon--x { font-size: 15px; font-weight: 900; }
 
-  .site-header__auth-link--desktop:hover,
-  .site-header__auth-link--desktop:focus-visible {
-    background: rgba(123, 99, 168, .1);
-    color: #7b63a8;
-  }
+  .site-header__icon:hover,
+  .site-header__icon:focus-visible { background: var(--chrome-pc-nav-active-bg); }
+
+  /* アイコンが margin-left:auto を持つので、認証側は詰めるだけでよい */
+  .site-auth,
+  .site-auth__user { margin-left: 0; }
+
+  .site-auth__user { color: var(--chrome-pc-nav); }
+
+  .site-tabs,
+  .site-footer { display: none; }
 }
 
-/* Full-screen maps must reserve room for the shared header. */
+/* 極小幅では文字を詰める。要素数が3つなので 360px でも破綻しない */
+@media (max-width: 360px) {
+  .site-header__inner { padding-inline: 8px; gap: 4px; }
+  .site-header__brand-name { font-size: 14px; }
+  .site-auth__login,
+  .site-auth__signup { padding-inline: 10px; font-size: 12px; }
+}
+
+/* ─────────────────────────────────────────
+   全画面地図はヘッダーと下タブのぶんを引く
+   ───────────────────────────────────────── */
+
 body.has-site-header.pokefuta-map-page .map-stage,
 body.has-site-header > #map {
-  height: calc(100dvh - var(--site-header-height, 56px));
-  min-height: calc(100dvh - var(--site-header-height, 56px));
+  height: calc(100dvh - var(--chrome-height) - var(--chrome-bottomnav-height) - env(safe-area-inset-bottom));
+  min-height: calc(100dvh - var(--chrome-height) - var(--chrome-bottomnav-height) - env(safe-area-inset-bottom));
 }
 
-@media (max-width: 720px) {
-  body.has-site-header.pokefuta-map-page .map-stage,
-  body.has-site-header > #map {
-    height: calc(100dvh - var(--site-header-height));
-    min-height: calc(100dvh - var(--site-header-height));
-  }
+/* 地図ページは本文がビューポート固定（overflow:hidden）なので、
+   下タブぶんの padding は不要。フッターも表示領域に出ないので隠す */
+body.has-site-header.pokefuta-map-page { padding-bottom: 0; }
+body.has-site-header.pokefuta-map-page .site-footer { display: none; }
+
+/* 地図ページのボトムシート `#controls` は position:fixed / z-index:1000 / bottom:0 で、
+   そのままだと下タブを覆い隠す。ページ側の CSS（pokefuta-map.css）は触らず、
+   共通クロム側にスコープして打ち消す。
+   - 下タブは必ずシートより上に出す（サイト共通の導線なので最前面）
+   - シートは下タブのぶんだけ底上げし、最大高もその分減らす */
+body.has-site-header.pokefuta-map-page .site-tabs { z-index: 1100; }
+
+body.has-site-header.pokefuta-map-page #controls {
+  bottom: calc(var(--chrome-bottomnav-height) + env(safe-area-inset-bottom));
+  max-height: calc(78vh - var(--chrome-bottomnav-height));
 }
