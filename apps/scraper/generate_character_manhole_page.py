@@ -72,7 +72,7 @@ DESIGN_MANHOLE_HREF = "./design_manhole.html"      # 同上（ローカル配信
 OG_IMAGE = f"{BASE_URL}assets/ogp/pokefuta_map_ogp.png"
 
 # 明示的に撤去・未設置と分かっているものだけ除外する。installation_status が
-# None（=未記録）のレコードは許容する（プラン参照: キャラ蓋115件中100件はNone）。
+# None（=未記録）のレコードは許容する（プラン参照: キャラクターマンホール115件中100件はNone）。
 REMOVED_INSTALLATION_STATUSES = {"removed", "not_installed", "uninstalled", "scheduled_removal"}
 
 # ガンダムマンホールは character_manholes.ndjson の "work" を持たない独立データセット
@@ -147,7 +147,7 @@ def load_active_manholes(path: Path) -> list[dict]:
 
 
 def build_work_summaries(character_records: list[dict], gundam_records: list[dict]) -> list[dict]:
-    """作品別の件数降順サマリ（キャラ蓋の work ごと + ガンダムを1エントリとして合成）。"""
+    """作品別の件数降順サマリ（キャラクターマンホールの work ごと + ガンダムを1エントリとして合成）。"""
     groups: dict[str, list[dict]] = defaultdict(list)
     for record in character_records:
         work = str(record.get("work") or "").strip()
@@ -190,7 +190,7 @@ def build_work_summaries(character_records: list[dict], gundam_records: list[dic
 
 
 def build_prefecture_summaries(character_records: list[dict], gundam_records: list[dict]) -> list[dict]:
-    """都道府県別の件数降順サマリ（キャラ蓋＋ガンダム蓋の合算）。"""
+    """都道府県別の件数降順サマリ（キャラクターマンホール＋ガンダム蓋の合算）。"""
     counts: Counter[str] = Counter()
     for record in (*character_records, *gundam_records):
         prefecture = record.get("prefecture")
@@ -268,7 +268,7 @@ def build_hero_mosaic(
 ) -> list[dict]:
     """ヒーローセクション用の写真モザイクを、実際の投稿からランダムに選ぶ。
 
-    g-manhole.net の画像やキャラマンホールNDJSON自体には使ってよい写真が無いため
+    g-manhole.net の画像やキャラクターマンホールNDJSON自体には使ってよい写真が無いため
     （他者サイトのホットリンクになる／画像フィールドが無い）、写真は
     docs/design_manholes.ndjson のサイト運営者自身の投稿からのみ使う。
 
@@ -715,7 +715,7 @@ def generate_html(
         <nav class="top-nav" aria-label="メインナビ">
           <a class="top-nav-link" href="map.html" onclick="trackEvent('click_nav',{{nav:'map',from:'character_manholes_lp'}})">マップ</a>
           <a class="top-nav-link" href="pokemon/" onclick="trackEvent('click_nav',{{nav:'pokemon',from:'character_manholes_lp'}})">ポケモン</a>
-          <a class="top-nav-link top-nav-link--active" href="character_manholes.html" aria-current="page">キャラマンホール</a>
+          <a class="top-nav-link top-nav-link--active" href="character_manholes.html" aria-current="page">キャラふた</a>
           <a class="top-nav-link" data-login-link data-nav-target="login" data-stamp-page="https://pokefuta.com/" data-stamp-label="スタンプ帳" href="https://pokefuta.com/login?from=data" onclick="trackEvent('click_nav',{{nav:this.dataset.navTarget,from:'character_manholes_lp'}})">ログイン</a>
         </nav>
       </div>

@@ -37,9 +37,25 @@ class InjectSiteHeaderTest(unittest.TestCase):
             result.index('href="./map.html">地図</a>'),
             result.index('href="./pokemon/">ポケモン</a>'),
             result.index('href="./summary/">集計</a>'),
-            result.index('href="./character_manholes.html">キャラ蓋</a>'),
+            result.index('href="./character_manholes.html">キャラふた</a>'),
         ]
         self.assertEqual(positions, sorted(positions))
+
+    def test_abolished_character_manhole_term_never_appears(self):
+        """
+        キャラクターマンホールの呼び方は2層に決めてある（docs/DEVELOPMENT.md「用語」）:
+        ナビ等のラベルは「キャラふた」、タイトル・見出し・本文は「キャラクターマンホール」。
+
+        中間形の「キャラマンホール」は廃止した。以前はナビだけで
+        キャラ蓋 / キャラマンホール / キャラクターマンホール / キャラMH の
+        4通りが混在していたので、増殖を止めるためここで止める。
+        """
+        result = inject(BARE)
+        self.assertIn("キャラふた", result)
+        # 「キャラクターマンホール」を誤検知しないよう、直後が「クター」でないものだけを見る
+        self.assertIsNone(re.search(r"キャラ(?!クター)マンホール", result))
+        self.assertNotIn("キャラ蓋", result)
+        self.assertNotIn("キャラMH", result)
 
     # ── サイトスイッチャー ────────────────────────────────
 
@@ -91,7 +107,7 @@ class InjectSiteHeaderTest(unittest.TestCase):
         """全画面地図ページはフッターに到達できないので、同じ導線をメニューにも常設する。"""
         result = inject(BARE)
         menu = result[result.index('site-switch__menu'):result.index("</details>")]
-        self.assertIn("キャラ蓋", menu)
+        self.assertIn("キャラふた", menu)
         self.assertIn("https://pokefuta.com/about?from=data", menu)
         self.assertIn("https://x.com/pokemonmanhole", menu)
 

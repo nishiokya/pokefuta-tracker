@@ -188,7 +188,7 @@
         <nav class="top-nav" aria-label="メインナビ">
           <a class="top-nav-link" href="map.html" onclick="trackEvent('click_nav',{nav:'map',from:'gmanhole_map'})">マップ</a>
           <a class="top-nav-link" href="pokemon/" onclick="trackEvent('click_nav',{nav:'pokemon',from:'gmanhole_map'})">ポケモン</a>
-          <a class="top-nav-link" href="character_manholes.html" onclick="trackEvent('click_nav',{nav:'character',from:'gmanhole_map'})">キャラマンホール</a>
+          <a class="top-nav-link" href="character_manholes.html" onclick="trackEvent('click_nav',{nav:'character',from:'gmanhole_map'})">キャラふた</a>
           <a class="top-nav-link" data-login-link data-nav-target="login" data-stamp-page="https://pokefuta.com/" data-stamp-label="スタンプ帳" href="https://pokefuta.com/login?from=data" onclick="trackEvent('click_nav',{nav:this.dataset.navTarget,from:'gmanhole_map'})">ログイン</a>
         </nav>
       </div>
@@ -198,7 +198,7 @@
     <div id="map"></div>
   </main>
   <div id="controls" class="bottom-sheet" role="complementary" aria-labelledby="page-title">
-    <span id="page-title" class="sr-only">キャラマンホールマップ パネル</span>
+    <span id="page-title" class="sr-only">キャラクターマンホールマップ パネル</span>
     <div class="controls-header">
       <button type="button" id="controls-toggle" class="controls-toggle-btn" aria-label="全体パネルを開く" title="全体パネルを開く/閉じる" aria-expanded="false" aria-controls="controls-content">
         <span class="sheet-grip" aria-hidden="true"></span>
@@ -523,7 +523,7 @@
         gundamData = await parseNdjson(gRes);
         pokemonData = await parseNdjson(pRes);
         if (dRes.ok) communityData = await parseNdjson(dRes);
-        // キャラマンホール(任意レイヤー)。取得失敗してもマップは動作させる。
+        // キャラクターマンホール(任意レイヤー)。取得失敗してもマップは動作させる。
         try {
           const cRes = await fetch('./character_manholes.ndjson');
           if (cRes.ok) characterData = await parseNdjson(cRes);
