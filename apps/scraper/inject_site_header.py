@@ -165,7 +165,7 @@ HEADER_TEMPLATE = """<header class="site-header">
       </summary>
       <div class="site-switch__menu">
         <a class="site-switch__item" href="{app_url}"><b>{site_album}</b><small>{site_album_sub}</small></a>
-        <a class="site-switch__item is-current" aria-current="page" href="{page_base}"><b>{site_dex}</b><small>{site_dex_sub}</small></a>
+        <a class="site-switch__item is-current" aria-current="true" href="{page_base}"><b>{site_dex}</b><small>{site_dex_sub}</small></a>
         <hr class="site-switch__sep">
         <a class="site-switch__sub" href="{asset_base}character_manholes.html">{nav_character}</a>
         <a class="site-switch__sub" href="{about_url}">{about}</a>

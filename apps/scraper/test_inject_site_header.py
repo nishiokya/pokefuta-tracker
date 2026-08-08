@@ -50,7 +50,10 @@ class InjectSiteHeaderTest(unittest.TestCase):
         self.assertIn(">図鑑</span>", result)
         # 写真館へ渡る導線が図鑑側にも必ずあること（従来は片方向だった）
         self.assertIn('href="https://pokefuta.com/?from=data"><b>写真館</b>', result)
-        self.assertIn('aria-current="page"', result)
+        # 図鑑ホームへのリンクは「いま図鑑にいる」というサイト単位の現在地。
+        # 図鑑内のどのページでも付くので page は使わない
+        self.assertIn('aria-current="true"', result)
+        self.assertNotIn('aria-current="page"', result)
 
     # ── 下タブ ───────────────────────────────────────────
 
