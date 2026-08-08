@@ -1,4 +1,4 @@
-// ヘッダーのログインリンクをログイン状態に応じて書き換える。
+// ヘッダーの認証表示をログイン状態に応じて切り替える。
 //
 // pokefuta.com と共有する Supabase セッションクッキー
 // (sb-<ref>-auth-token, Domain=.pokefuta.com) を document.cookie から
@@ -6,10 +6,16 @@
 // （「PV に比例して Supabase を読ませない」方針）。
 // あくまで表示用の判定で、本当の認証はアプリ側のサーバーが行う。
 //
-// 対象要素: <a data-login-link data-stamp-page="..." data-stamp-label="...">
-//  - 未ログイン: href に現在ページへの redirect パラメータを付与
+// 対象要素:
+//  - <div data-auth-guest>   未ログイン時に出す（ログイン / 新規登録）
+//  - <a data-auth-user>      ログイン時に出す（アバター＋表示名 → /profile）
+//    <span data-auth-name>   ここに表示名を入れる
+//  - <a data-login-link>     未ログイン時に href へ redirect パラメータを付ける
 //    （pokefuta.com/login がログイン後にこのページへ戻す）
-//  - ログイン中: 「スタンプ帳」に差し替え、pokefuta.com へリンク
+//
+// 以前は「ログインボタンのラベルをスタンプ帳に差し替える」実装だったが、
+// 認証状態の表示とナビ項目は別物なので分離した（2026-08-08 の統一方針）。
+// スタンプ帳は下タブの項目として常設し、認証ピルは認証だけを表す。
 //
 // cookie は data.pokefuta.com 側の @supabase/ssr object 形式と、
 // pokefuta.com 側の @supabase/auth-helpers-nextjs array 形式の両方を読む。
@@ -104,32 +110,80 @@
     }
   }
 
+  function displayName(user) {
+    if (!user) return '';
+    var meta = user.user_metadata || {};
+    if (meta.display_name) return meta.display_name;
+    if (user.email) return String(user.email).split('@')[0];
+    return 'トレーナー';
+  }
+
+  function setHidden(node, hidden) {
+    if (!node) return;
+    if (hidden) node.setAttribute('hidden', '');
+    else node.removeAttribute('hidden');
+  }
+
   function apply() {
-    var links = document.querySelectorAll('[data-login-link]');
-    if (!links.length) return;
     var user = currentUser();
+    var links = document.querySelectorAll('[data-login-link]');
+
     for (var i = 0; i < links.length; i++) {
       var link = links[i];
       if (user) {
-        link.textContent = link.getAttribute('data-stamp-label') || 'スタンプ帳';
-        link.setAttribute('data-nav-target', 'stamp');
+        // ログイン中はログイン画面へ送らない。
+        // data-stamp-page を持つナビ項目（下タブのスタンプ帳）は本来の遷移先へ差し替える。
+        // ラベルは書き換えない（認証状態の表示とナビ項目は別物）。
         var stampPage = link.getAttribute('data-stamp-page');
         if (stampPage) link.href = stampPage;
       } else {
+        // 未ログインはログイン後の行き先を redirect に積む。
+        // ナビ項目（data-stamp-page 付き）は「本来行きたかった場所」を積む。
+        // 現在ページを積むとログイン後に図鑑へ戻され、スタンプ帳へ行くのに
+        // もう一度タップさせることになる。
         try {
           var url = new URL(link.href);
-          url.searchParams.set('redirect', location.href);
+          url.searchParams.set('redirect', link.getAttribute('data-stamp-page') || location.href);
           link.href = url.toString();
         } catch (_) {
           /* href が不正でも既定のリンク先のまま動く */
         }
       }
     }
+
+    // 既定は未ログイン表示。ログインしている場合だけ差し替える
+    var guest = document.querySelector('[data-auth-guest]');
+    var authed = document.querySelector('[data-auth-user]');
+    var nameSlot = document.querySelector('[data-auth-name]');
+    if (nameSlot) nameSlot.textContent = displayName(user);
+    setHidden(guest, Boolean(user));
+    setHidden(authed, !user);
+  }
+
+  // <details> のサイトスイッチャーは外側クリックでは閉じないので面倒を見る。
+  // ここが全ページに載る唯一のスクリプトなので同居させている。
+  function closeSwitchOnOutsideClick() {
+    document.addEventListener('click', function (event) {
+      var open = document.querySelectorAll('details.site-switch[open]');
+      for (var i = 0; i < open.length; i++) {
+        if (!open[i].contains(event.target)) open[i].removeAttribute('open');
+      }
+    });
+    document.addEventListener('keydown', function (event) {
+      if (event.key !== 'Escape') return;
+      var open = document.querySelectorAll('details.site-switch[open]');
+      for (var i = 0; i < open.length; i++) open[i].removeAttribute('open');
+    });
+  }
+
+  function init() {
+    apply();
+    closeSwitchOnOutsideClick();
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', apply);
+    document.addEventListener('DOMContentLoaded', init);
   } else {
-    apply();
+    init();
   }
 })();
