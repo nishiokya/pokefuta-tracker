@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://data.pokefuta.com/schemas/manhole-titles.schema.json",
+  "title": "ポケふた手動メタデータ正本",
+  "description": "dataset/manhole_titles.jsonの構造と手動メタデータ語彙を検証する。",
+  "type": "object",
+  "required": [
+    "version",
+    "vocabulary",
+    "islands",
+    "lakes",
+    "city_links",
+    "manholes"
+  ],
+  "properties": {
+    "_doc": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "const": 2
+    },
+    "vocabulary": {
+      "type": "object"
+    },
+    "islands": {
+      "type": "array"
+    },
+    "lakes": {
+      "type": "array"
+    },
+    "city_links": {
+      "type": "array"
+    },
+    "manholes": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[0-9]+$"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/manhole"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "manhole": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": false,
+      "properties": {
+        "building": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "address_raw": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "address_norm": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "prefecture": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "city": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "place_detail": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "verified_at": {
+          "type": "string",
+          "format": "date"
+        },
+        "tags": {
+          "$ref": "manhole-tags.schema.json#/$defs/tagArray"
+        },
+        "confidence": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        },
+        "official_url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://"
+        }
+      }
+    }
+  }
+}

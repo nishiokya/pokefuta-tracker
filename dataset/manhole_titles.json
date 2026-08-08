@@ -906,9 +906,16 @@
       ]
     },
     "88": {
+      "building": "新地町文化交流センター",
+      "place_detail": "入口",
+      "verified_at": "2026-07-25",
       "tags": [
-        "near_station"
-      ]
+        "near_station",
+        "facility",
+        "station_front"
+      ],
+      "confidence": 3,
+      "official_url": "https://www.shinchi-town.jp/soshiki/3/kanko2020-pokemonmanhole.html"
     },
     "89": {
       "tags": [
@@ -954,12 +961,18 @@
       ]
     },
     "104": {
+      "building": "大津湖岸なぎさ公園",
+      "place_detail": "おまつり広場",
+      "verified_at": "2026-07-25",
       "tags": [
+        "park",
         "lakeside",
         "world_heritage",
         "near_gundam_manhole",
         "gundam_manhole_city"
-      ]
+      ],
+      "confidence": 3,
+      "official_url": "https://www.city.otsu.lg.jp/soshiki/080/2808/g/a/36166.html"
     },
     "105": {
       "tags": [
@@ -988,6 +1001,15 @@
       "tags": [
         "seaside"
       ]
+    },
+    "112": {
+      "building": "ワンパーク（中央東部1号街区公園）",
+      "verified_at": "2026-07-25",
+      "tags": [
+        "park"
+      ],
+      "confidence": 3,
+      "official_url": "https://www.city.miyakonojo.miyazaki.jp/site/kanko/26998.html"
     },
     "113": {
       "building": "道の駅北浦",
@@ -1167,10 +1189,15 @@
       ]
     },
     "174": {
+      "building": "てんぶす広場",
+      "verified_at": "2026-07-25",
       "tags": [
         "world_heritage",
-        "remote_island"
-      ]
+        "remote_island",
+        "town"
+      ],
+      "confidence": 3,
+      "official_url": "https://www.city.naha.okinawa.jp/kankou/kankou/KKAN00120250115170134609.files/pokemonnririsu.pdf"
     },
     "175": {
       "tags": [
@@ -1967,10 +1994,14 @@
       ]
     },
     "320": {
+      "building": "道の駅おが オガーレ",
+      "verified_at": "2026-07-25",
       "tags": [
         "seaside",
         "roadside"
-      ]
+      ],
+      "confidence": 3,
+      "official_url": "https://www.city.oga.akita.jp/soshik/kankoka/oshirase/5876.html"
     },
     "321": {
       "tags": [
@@ -2665,9 +2696,15 @@
       ]
     },
     "465": {
+      "building": "ねむの木公園",
+      "verified_at": "2026-07-25",
       "tags": [
-        "near_station"
-      ]
+        "near_station",
+        "park",
+        "station_front"
+      ],
+      "confidence": 3,
+      "official_url": "https://www.town.yahaba.iwate.jp/yahabatown/kouhou/2026/05/202605_5.pdf"
     },
     "468": {
       "building": "和倉温泉湯っ足りパーク",

@@ -1,0 +1,299 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://data.pokefuta.com/schemas/manhole-tags.schema.json",
+  "title": "ポケふたタグ語彙レジストリ",
+  "description": "ポケふたの手動メタデータと調査結果で使用できるタグの正規語彙。",
+  "$defs": {
+    "tag": {
+      "type": "string",
+      "oneOf": [
+        {
+          "const": "park",
+          "title": "公園",
+          "description": "公園または公園施設内に設置されている。",
+          "x-category": "place_type",
+          "x-public": true
+        },
+        {
+          "const": "museum",
+          "title": "博物館・美術館",
+          "description": "博物館、美術館、資料館または類似する展示施設に設置されている。",
+          "x-category": "place_type",
+          "x-public": true
+        },
+        {
+          "const": "roadside",
+          "title": "道の駅",
+          "description": "国土交通省に登録された道の駅に設置されている。",
+          "x-category": "place_type",
+          "x-public": true
+        },
+        {
+          "const": "station",
+          "title": "駅関連施設",
+          "description": "駅または駅関連施設に設置されている。詳細な位置関係はaccess分類のタグで表す。",
+          "x-category": "place_type",
+          "x-public": false
+        },
+        {
+          "const": "library",
+          "title": "図書館",
+          "description": "図書館または図書施設に設置されている。",
+          "x-category": "place_type",
+          "x-public": false
+        },
+        {
+          "const": "market",
+          "title": "市場",
+          "description": "市場または物販を主目的とする公共的施設に設置されている。",
+          "x-category": "place_type",
+          "x-public": false
+        },
+        {
+          "const": "sports",
+          "title": "スポーツ施設",
+          "description": "運動場、競技場、体育館などのスポーツ施設に設置されている。",
+          "x-category": "place_type",
+          "x-public": false
+        },
+        {
+          "const": "camp",
+          "title": "キャンプ場",
+          "description": "キャンプ場または野外宿泊施設に設置されている。",
+          "x-category": "place_type",
+          "x-public": false
+        },
+        {
+          "const": "shrine",
+          "title": "神社・寺院",
+          "description": "神社、寺院またはその境内に設置されている。",
+          "x-category": "place_type",
+          "x-public": false
+        },
+        {
+          "const": "viewpoint",
+          "title": "展望地",
+          "description": "公式に案内される展望台または展望地点に設置されている。",
+          "x-category": "place_type",
+          "x-public": false
+        },
+        {
+          "const": "facility",
+          "title": "公共・交流施設",
+          "description": "他のplace_typeに分類しにくい公共施設または交流施設に設置されている。",
+          "x-category": "place_type",
+          "x-public": false
+        },
+        {
+          "const": "town",
+          "title": "市街地",
+          "description": "特定施設ではなく、市街地の広場や公共空間に設置されている。",
+          "x-category": "place_type",
+          "x-public": false
+        },
+        {
+          "const": "seaside",
+          "title": "海沿い",
+          "description": "通常の見学位置から海を確認できる。",
+          "x-category": "geography",
+          "x-public": true
+        },
+        {
+          "const": "beach",
+          "title": "ビーチ",
+          "description": "海水浴場または砂浜を主目的とする場所に設置されている。",
+          "x-category": "geography",
+          "x-public": true
+        },
+        {
+          "const": "lakeside",
+          "title": "湖畔",
+          "description": "湖沼の岸辺または湖畔施設に設置されている。",
+          "x-category": "geography",
+          "x-public": true
+        },
+        {
+          "const": "river",
+          "title": "川辺",
+          "description": "河岸、河川公園など河川との関係が明確な場所に設置されている。",
+          "x-category": "geography",
+          "x-public": true
+        },
+        {
+          "const": "remote_island",
+          "title": "離島",
+          "description": "本土から海を隔てた島に設置されている。",
+          "x-category": "geography",
+          "x-public": true
+        },
+        {
+          "const": "nature",
+          "title": "自然体験",
+          "description": "自然環境そのものを主要な訪問目的とする場所に設置されている。",
+          "x-category": "geography",
+          "x-public": false
+        },
+        {
+          "const": "geosite",
+          "title": "ジオサイト",
+          "description": "公式なジオサイトまたは地質名所に設置されている。",
+          "x-category": "geography",
+          "x-public": false
+        },
+        {
+          "const": "in_station",
+          "title": "駅構内",
+          "description": "駅舎、改札内または駅施設の内部に設置されている。",
+          "x-category": "access",
+          "x-public": true
+        },
+        {
+          "const": "station_front",
+          "title": "駅前",
+          "description": "駅前広場または駅出入口に直接面した場所に設置されている。",
+          "x-category": "access",
+          "x-public": true
+        },
+        {
+          "const": "near_station",
+          "title": "駅近",
+          "description": "駅構内・駅前ではないが、定義された徒歩圏内に設置されている。",
+          "x-category": "access",
+          "x-public": true,
+          "x-status": "threshold_pending"
+        },
+        {
+          "const": "far_station",
+          "title": "駅から遠い",
+          "description": "最寄り駅から遠く、鉄道以外が実質的な主要アクセスとなる。",
+          "x-category": "access",
+          "x-public": true,
+          "x-status": "threshold_pending"
+        },
+        {
+          "const": "rail_access_good",
+          "title": "鉄道アクセス良好",
+          "description": "鉄道で訪問しやすいと判断された表示用タグ。",
+          "x-category": "access",
+          "x-public": true
+        },
+        {
+          "const": "tourism",
+          "title": "観光地",
+          "description": "自治体や観光団体が観光対象として案内する場所に設置されている。",
+          "x-category": "experience",
+          "x-public": true
+        },
+        {
+          "const": "food",
+          "title": "食・グルメ",
+          "description": "飲食、食文化または特産品を主要な体験とする場所に設置されている。",
+          "x-category": "experience",
+          "x-public": true
+        },
+        {
+          "const": "family",
+          "title": "家族向け",
+          "description": "家族で利用しやすい設備や体験が公式に案内されている。",
+          "x-category": "experience",
+          "x-public": false
+        },
+        {
+          "const": "history",
+          "title": "歴史・史跡",
+          "description": "史跡、歴史的建造物または歴史展示を主要な体験とする場所に設置されている。",
+          "x-category": "experience",
+          "x-public": true
+        },
+        {
+          "const": "culture",
+          "title": "文化施設",
+          "description": "地域文化、芸術または交流を主要な目的とする施設に設置されている。",
+          "x-category": "experience",
+          "x-public": false
+        },
+        {
+          "const": "onsen",
+          "title": "温泉",
+          "description": "温泉施設または温泉地に設置されている。",
+          "x-category": "experience",
+          "x-public": false
+        },
+        {
+          "const": "resort",
+          "title": "リゾート",
+          "description": "滞在型観光施設またはリゾート施設に設置されている。",
+          "x-category": "experience",
+          "x-public": false
+        },
+        {
+          "const": "illumination",
+          "title": "イルミネーション",
+          "description": "イルミネーションを主要な観光体験として公式に案内する場所に設置されている。",
+          "x-category": "experience",
+          "x-public": false
+        },
+        {
+          "const": "world_heritage",
+          "title": "世界遺産",
+          "description": "世界遺産の構成資産または公式に案内される関連区域に設置されている。",
+          "x-category": "experience",
+          "x-public": true
+        },
+        {
+          "const": "near_gundam_manhole",
+          "title": "ガンダムマンホール近接",
+          "description": "設置中のガンダムマンホールから定義された距離内にある。",
+          "x-category": "relation",
+          "x-public": true,
+          "x-assignment": "computed"
+        },
+        {
+          "const": "gundam_manhole_city",
+          "title": "ガンダムマンホール設置自治体",
+          "description": "同じ自治体に設置中のガンダムマンホールがある。",
+          "x-category": "relation",
+          "x-public": true,
+          "x-assignment": "computed"
+        },
+        {
+          "const": "near_character_manhole",
+          "title": "キャラクターマンホール近接",
+          "description": "設置中のキャラクターマンホールから定義された距離内にある。",
+          "x-category": "relation",
+          "x-public": true,
+          "x-assignment": "computed"
+        },
+        {
+          "const": "character_manhole_city",
+          "title": "キャラクターマンホール設置自治体",
+          "description": "同じ自治体に設置中のキャラクターマンホールがある。",
+          "x-category": "relation",
+          "x-public": true,
+          "x-assignment": "computed"
+        },
+        {
+          "const": "city_level_address",
+          "title": "市区町村単位住所",
+          "description": "住所が市区町村単位までしか確認できていないことを示す内部品質タグ。",
+          "x-category": "data_quality",
+          "x-public": false
+        },
+        {
+          "const": "pokemon_lid",
+          "title": "ポケふた由来",
+          "description": "旧データ移行時の由来を示す内部タグ。",
+          "x-category": "data_quality",
+          "x-public": false
+        }
+      ]
+    },
+    "tagArray": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/tag"
+      },
+      "uniqueItems": true
+    }
+  }
+}
