@@ -25,10 +25,14 @@ from pathlib import Path
 STYLESHEET_TEMPLATE = '<link rel="stylesheet" href="{asset_base}assets/site-header.css">'
 SESSION_BADGE_SCRIPT_TEMPLATE = '<script src="{asset_base}assets/session-badge.js" defer></script>'
 
-POKEFUTA_APP_URL = "https://pokefuta.com/"
+# pokefuta.com への導線には必ず `from=data` を付ける（AGENTS.md）。
+# 同一GA4プロパティ内の内部UTMは使わず、着地側の source_app=tracker /
+# p_data_referral と突き合わせて分析するため、これが唯一の流入元マーカーになる。
+POKEFUTA_APP_URL = "https://pokefuta.com/?from=data"
 POKEFUTA_LOGIN_URL = "https://pokefuta.com/login?from=data"
-POKEFUTA_PROFILE_URL = "https://pokefuta.com/profile"
-POKEFUTA_ABOUT_URL = "https://pokefuta.com/about"
+POKEFUTA_STAMP_URL = "https://pokefuta.com/visits?from=data"
+POKEFUTA_PROFILE_URL = "https://pokefuta.com/profile?from=data"
+POKEFUTA_ABOUT_URL = "https://pokefuta.com/about?from=data"
 X_ACCOUNT_URL = "https://x.com/pokemonmanhole"
 
 # lucide-react 0.294 系（写真館が使っているもの）と同じ字形を inline SVG で持つ。
@@ -188,7 +192,7 @@ BOTTOM_TABS_TEMPLATE = """<nav class="site-tabs" aria-label="{tabs_aria}">
   <a class="site-tab{active_map}" href="{page_base}map.html">{icon_map}<span>{nav_map}</span></a>
   <a class="site-tab{active_pokemon}" href="{page_base}pokemon/">{icon_pokemon}<span>{nav_pokemon}</span></a>
   <a class="site-tab{active_summary}" href="{page_base}summary/">{icon_summary}<span>{nav_summary}</span></a>
-  <a class="site-tab" data-login-link href="{login_url}">{icon_stamp}<span>{tab_stamp}</span></a>
+  <a class="site-tab" data-login-link data-stamp-page="{stamp_url}" href="{login_url}">{icon_stamp}<span>{tab_stamp}</span></a>
 </nav>"""
 
 
@@ -253,6 +257,7 @@ def inject(
         page_base=page_base,
         app_url=POKEFUTA_APP_URL,
         login_url=POKEFUTA_LOGIN_URL,
+        stamp_url=POKEFUTA_STAMP_URL,
         profile_url=POKEFUTA_PROFILE_URL,
         about_url=POKEFUTA_ABOUT_URL,
         x_url=X_ACCOUNT_URL,

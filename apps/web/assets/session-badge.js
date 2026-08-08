@@ -126,15 +126,22 @@
 
   function apply() {
     var user = currentUser();
+    var links = document.querySelectorAll('[data-login-link]');
 
-    // 未ログイン時だけ、戻り先を login の redirect パラメータに積む
-    if (!user) {
-      var links = document.querySelectorAll('[data-login-link]');
-      for (var i = 0; i < links.length; i++) {
+    for (var i = 0; i < links.length; i++) {
+      var link = links[i];
+      if (user) {
+        // ログイン中はログイン画面へ送らない。
+        // data-stamp-page を持つナビ項目（下タブのスタンプ帳）は本来の遷移先へ差し替える。
+        // ラベルは書き換えない（認証状態の表示とナビ項目は別物）。
+        var stampPage = link.getAttribute('data-stamp-page');
+        if (stampPage) link.href = stampPage;
+      } else {
+        // 未ログインはログイン後に戻ってこられるよう redirect を積む
         try {
-          var url = new URL(links[i].href);
+          var url = new URL(link.href);
           url.searchParams.set('redirect', location.href);
-          links[i].href = url.toString();
+          link.href = url.toString();
         } catch (_) {
           /* href が不正でも既定のリンク先のまま動く */
         }

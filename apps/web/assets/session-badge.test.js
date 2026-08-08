@@ -35,7 +35,10 @@ function chrome() {
   const authed = element({ hidden: '' });
   const name = element({});
   const loginLink = element({ 'data-login-link': '' });
-  const stampTab = element({ 'data-login-link': '' });
+  const stampTab = element({
+    'data-login-link': '',
+    'data-stamp-page': 'https://pokefuta.com/visits?from=data',
+  });
 
   const document = {
     cookie: '',
@@ -85,7 +88,10 @@ function run(document) {
   assert.equal(dom.guest.hidden, true, 'ログイン中はログイン/新規登録を隠す');
   // ログイン中はナビ項目のラベルを書き換えない（認証とナビを分離した）
   assert.equal(dom.stampTab.textContent, '');
-  assert.equal(dom.stampTab.href, LOGIN_URL);
+  // ただし遷移先はスタンプ帳へ。ログイン済みなのにログイン画面へ送らない
+  assert.equal(dom.stampTab.href, 'https://pokefuta.com/visits?from=data');
+  // data-stamp-page を持たないリンクはそのまま
+  assert.equal(dom.loginLink.href, LOGIN_URL);
 }
 
 // ── display_name が無ければメールのローカル部を使う ────────

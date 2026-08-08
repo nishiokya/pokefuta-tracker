@@ -46,10 +46,29 @@ class InjectSiteHeaderTest(unittest.TestCase):
         self.assertIn('class="site-header__brand-name">ポケふた', result)
         self.assertIn(">図鑑</span>", result)
         # 写真館へ渡る導線が図鑑側にも必ずあること（従来は片方向だった）
-        self.assertIn('href="https://pokefuta.com/"><b>写真館</b>', result)
+        self.assertIn('href="https://pokefuta.com/?from=data"><b>写真館</b>', result)
         self.assertIn('aria-current="page"', result)
 
     # ── 下タブ ───────────────────────────────────────────
+
+    def test_all_app_links_carry_the_referral_marker(self):
+        """pokefuta.com への導線は必ず from=data を付ける（AGENTS.md）。
+
+        都道府県ページからの流入もこのクロム経由になるため、1つでも欠けると
+        着地側の source_app=tracker / p_data_referral と突き合わせられなくなる。
+        """
+        result = inject(BARE)
+        links = re.findall(r'href="(https://pokefuta\.com[^"]*)"', result)
+        self.assertTrue(links)
+        for link in links:
+            self.assertIn("from=data", link, f"from=data が無い: {link}")
+        # 内部UTMは使わない
+        self.assertNotIn("utm_", result)
+
+    def test_logged_in_stamp_tab_targets_the_stamp_book(self):
+        """ログイン中にスタンプ帳タブがログイン画面へ飛ばないこと。"""
+        result = inject(BARE)
+        self.assertIn('data-stamp-page="https://pokefuta.com/visits?from=data"', result)
 
     def test_bottom_tabs_match_photo_site_roles(self):
         """左2つが探す系、右端がサイトをまたぐ導線、という並びを写真館と揃える。"""
@@ -80,15 +99,18 @@ class InjectSiteHeaderTest(unittest.TestCase):
         self.assertIn("data-auth-name", result)
         self.assertIn(">ログイン</a>", result)
         self.assertIn(">新規登録</a>", result)
-        self.assertIn('href="https://pokefuta.com/profile"', result)
-        # 旧実装の「ログインボタンがスタンプ帳に化ける」属性は残さない
+        self.assertIn('href="https://pokefuta.com/profile?from=data"', result)
+        # 旧実装の「ログインボタンのラベルがスタンプ帳に化ける」は復活させない。
+        # data-stamp-page（遷移先の差し替え）はナビ項目に必要なので残るが、
+        # data-stamp-label（ラベルの差し替え）が戻ってきたらこのテストで落とす。
         self.assertNotIn("data-stamp-label", result)
-        self.assertNotIn("data-stamp-page", result)
+        # 認証ピル自体はラベル差し替えの対象にしない
+        self.assertNotIn("data-stamp-page", result[result.index('class="site-auth"'):result.index("</header>")])
         self.assertIn('<script src="./assets/session-badge.js" defer></script>', result)
 
     def test_info_and_x_links(self):
         result = inject(BARE)
-        self.assertIn('href="https://pokefuta.com/about"', result)
+        self.assertIn('href="https://pokefuta.com/about?from=data"', result)
         self.assertIn('href="https://x.com/pokemonmanhole"', result)
 
     # ── 既存の振る舞い ───────────────────────────────────
