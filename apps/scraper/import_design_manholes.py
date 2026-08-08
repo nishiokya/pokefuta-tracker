@@ -258,6 +258,7 @@ def build_public_records(
             review_status = "needs_review"
         else:
             review_status = "pending"
+        default_status = "pending" if review_status == "needs_review" else "active"
 
         record = {
             "id": f"pokefuta-design:{source_id}",
@@ -279,7 +280,7 @@ def build_public_records(
             "review_status": review_status,
             "created_at": submission["created_at"],
             "last_updated": imported_at,
-            "status": override.get("status", "active"),
+            "status": override.get("status", default_status),
         }
         previous = previous_by_id.get(source_id)
         if previous:
@@ -291,6 +292,11 @@ def build_public_records(
                 record["last_updated"] = previous.get("last_updated", imported_at)
         records.append(record)
     return sorted(records, key=lambda record: (record["created_at"], record["source_id"]))
+
+
+def select_public_records(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Exclude nearby submissions until a human resolves their canonical match."""
+    return [record for record in records if record.get("review_status") != "needs_review"]
 
 
 def validate_snapshot_size(
@@ -352,7 +358,7 @@ def main() -> None:
     }
     imported_at = utc_now()
     previous_public = load_ndjson(args.output)
-    public_records = build_public_records(
+    normalized_records = build_public_records(
         submissions,
         cache,
         overrides,
@@ -360,6 +366,7 @@ def main() -> None:
         imported_at,
         previous_records=previous_public,
     )
+    public_records = select_public_records(normalized_records)
 
     write_ndjson(args.raw_output, submissions)
     write_json(args.geocode_cache, cache)
@@ -367,7 +374,8 @@ def main() -> None:
     print(
         f"Imported {len(submissions)} design-manhole submissions; "
         f"matched={sum(bool(row['canonical_ref']) for row in public_records)} "
-        f"needs_review={sum(row['review_status'] == 'needs_review' for row in public_records)}"
+        f"needs_review={sum(row['review_status'] == 'needs_review' for row in normalized_records)} "
+        f"published={len(public_records)}"
     )
 
 
