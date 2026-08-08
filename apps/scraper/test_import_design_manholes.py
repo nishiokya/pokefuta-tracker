@@ -1,4 +1,5 @@
 import importlib.util
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -92,8 +93,53 @@ class ImportDesignManholesTests(unittest.TestCase):
 
         self.assertIsNone(records[0]["canonical_ref"])
         self.assertEqual(records[0]["review_status"], "needs_review")
+        self.assertEqual(records[0]["status"], "pending")
         self.assertEqual(records[0]["nearby_refs"][0]["ref"], "gundam:5")
         self.assertNotIn("submitter_name", records[0])
+        self.assertEqual(importer.select_public_records(records), [])
+        self.assertEqual(importer.select_review_records(records), records)
+
+    def test_official_pokefuta_candidate_is_not_published(self):
+        submission = {
+            **self.submission,
+            "latitude": 40.5379444444444,
+            "longitude": 141.558027777778,
+        }
+        references = {
+            "pokefuta": [
+                {
+                    "id": "157",
+                    "title": "青森県/八戸市",
+                    "lat": 40.537937,
+                    "lng": 141.558034,
+                }
+            ]
+        }
+
+        records = importer.build_public_records(
+            [submission], {}, {}, references, "2026-08-08T00:00:00Z"
+        )
+
+        self.assertEqual(records[0]["nearby_refs"][0]["ref"], "pokefuta:157")
+        self.assertLessEqual(records[0]["nearby_refs"][0]["distance_m"], 1)
+        self.assertEqual(records[0]["review_status"], "needs_review")
+        self.assertEqual(records[0]["status"], "pending")
+        with tempfile.TemporaryDirectory() as directory:
+            public_path = Path(directory) / "public.ndjson"
+            review_path = Path(directory) / "review.ndjson"
+            importer.write_ndjson(public_path, importer.select_public_records(records))
+            importer.write_ndjson(review_path, importer.select_review_records(records))
+
+            self.assertEqual(importer.load_ndjson(public_path), [])
+            review_queue = importer.load_ndjson(review_path)
+            self.assertEqual(len(review_queue), 1)
+            self.assertEqual(review_queue[0]["source_id"], "submission-1")
+            self.assertEqual(review_queue[0]["nearby_refs"][0]["ref"], "pokefuta:157")
+            self.assertLessEqual(review_queue[0]["nearby_refs"][0]["distance_m"], 1)
+            self.assertEqual(
+                review_queue[0]["source_url"],
+                "https://pokefuta.com/design-manholes/submission-1",
+            )
 
     def test_source_url_links_to_individual_submission_page(self):
         records = importer.build_public_records(
@@ -120,6 +166,8 @@ class ImportDesignManholesTests(unittest.TestCase):
 
         self.assertEqual(records[0]["canonical_ref"], "gundam:5")
         self.assertEqual(records[0]["review_status"], "matched")
+        self.assertEqual(records[0]["status"], "active")
+        self.assertEqual(importer.select_public_records(records), records)
 
     def test_manual_review_status_can_clear_nearby_candidate(self):
         references = {
@@ -136,7 +184,44 @@ class ImportDesignManholesTests(unittest.TestCase):
         )
 
         self.assertEqual(records[0]["review_status"], "reviewed_distinct")
+        self.assertEqual(records[0]["status"], "active")
         self.assertEqual(records[0]["nearby_refs"][0]["ref"], "pokefuta:10")
+        self.assertEqual(importer.select_public_records(records), records)
+
+    def test_public_selection_is_fail_closed(self):
+        base_record = {
+            "source_id": "submission-1",
+            "status": "active",
+            "review_status": "pending",
+        }
+        publishable = [
+            {**base_record, "source_id": "pending", "review_status": "pending"},
+            {**base_record, "source_id": "matched", "review_status": "matched"},
+            {
+                **base_record,
+                "source_id": "reviewed-distinct",
+                "review_status": "reviewed_distinct",
+            },
+        ]
+        quarantined = [
+            {**base_record, "source_id": "hidden", "status": "hidden"},
+            {**base_record, "source_id": "status-pending", "status": "pending"},
+            {
+                **base_record,
+                "source_id": "unknown-review",
+                "review_status": "future_state",
+            },
+            {
+                **base_record,
+                "source_id": "needs-review",
+                "review_status": "needs_review",
+            },
+        ]
+
+        records = publishable + quarantined
+
+        self.assertEqual(importer.select_public_records(records), publishable)
+        self.assertEqual(importer.select_review_records(records), quarantined)
 
     def test_unchanged_record_preserves_last_updated(self):
         initial = importer.build_public_records(
@@ -175,6 +260,17 @@ class ImportDesignManholesTests(unittest.TestCase):
         workflow = (ROOT / ".github/workflows/pages-deploy.yml").read_text(encoding="utf-8")
 
         self.assertIn("cp docs/design_manholes.ndjson dist/design_manholes.ndjson", workflow)
+
+    def test_update_workflow_runs_create_pr_even_when_diff_disappears(self):
+        workflow = (ROOT / ".github/workflows/update-design-manholes.yml").read_text(
+            encoding="utf-8"
+        )
+
+        self.assertNotIn("if: steps.diff.outputs.changed == 'true'", workflow)
+        self.assertIn("# Family B:", workflow)
+        self.assertIn("concurrency:", workflow)
+        self.assertIn("timeout-minutes:", workflow)
+        self.assertIn("dataset/design_manhole_review_queue.ndjson", workflow)
 
 
 if __name__ == "__main__":

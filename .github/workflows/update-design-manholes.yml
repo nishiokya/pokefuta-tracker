@@ -1,3 +1,4 @@
+# Family B: create or update a PR and wait for human review before publishing.
 name: Daily Design Manhole Dataset Update
 
 on:
@@ -9,12 +10,17 @@ permissions:
   contents: write
   pull-requests: write
 
+concurrency:
+  group: daily-design-manhole-dataset-update
+  cancel-in-progress: false
+
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   update:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -36,6 +42,7 @@ jobs:
           git add \
             apps/scraper/design_manhole_submissions.ndjson \
             dataset/design_manhole_geocode_cache.json \
+            dataset/design_manhole_review_queue.ndjson \
             docs/design_manholes.ndjson
           if git diff --cached --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
@@ -44,13 +51,12 @@ jobs:
           fi
 
       - name: Create pull request
-        if: steps.diff.outputs.changed == 'true'
         uses: peter-evans/create-pull-request@v8
         with:
           commit-message: "chore: update design manhole submissions"
           title: "Daily design manhole dataset update"
           body: |
-            Imports published pokefuta.com design-manhole submissions, reverse-geocodes new coordinates, and refreshes the public NDJSON snapshot.
+            Imports published pokefuta.com design-manhole submissions, reverse-geocodes new coordinates, refreshes the public NDJSON snapshot, and preserves non-public candidates in a review queue.
           branch: daily/update-design-manhole-dataset
           labels: |-
             data-update

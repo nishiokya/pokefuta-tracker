@@ -31,6 +31,7 @@ GSI_MUNI_URL = "https://maps.gsi.go.jp/js/muni.js"
 USER_AGENT = "pokefuta-tracker design-manhole importer (+https://github.com/nishiokya/pokefuta-tracker)"
 DEFAULT_LIMIT = 200
 NEARBY_THRESHOLD_METERS = 50.0
+PUBLIC_REVIEW_STATUSES = frozenset({"pending", "matched", "reviewed_distinct"})
 
 
 def utc_now() -> str:
@@ -258,6 +259,7 @@ def build_public_records(
             review_status = "needs_review"
         else:
             review_status = "pending"
+        default_status = "pending" if review_status == "needs_review" else "active"
 
         record = {
             "id": f"pokefuta-design:{source_id}",
@@ -279,7 +281,7 @@ def build_public_records(
             "review_status": review_status,
             "created_at": submission["created_at"],
             "last_updated": imported_at,
-            "status": override.get("status", "active"),
+            "status": override.get("status", default_status),
         }
         previous = previous_by_id.get(source_id)
         if previous:
@@ -291,6 +293,22 @@ def build_public_records(
                 record["last_updated"] = previous.get("last_updated", imported_at)
         records.append(record)
     return sorted(records, key=lambda record: (record["created_at"], record["source_id"]))
+
+
+def select_public_records(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Publish only records in explicitly allowed states."""
+    return [
+        record
+        for record in records
+        if record.get("status") == "active"
+        and record.get("review_status") in PUBLIC_REVIEW_STATUSES
+    ]
+
+
+def select_review_records(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Keep every non-public record available for human review."""
+    public_ids = {record.get("source_id") for record in select_public_records(records)}
+    return [record for record in records if record.get("source_id") not in public_ids]
 
 
 def validate_snapshot_size(
@@ -323,6 +341,11 @@ def main() -> None:
         "--output", type=Path, default=root / "docs/design_manholes.ndjson"
     )
     parser.add_argument(
+        "--review-output",
+        type=Path,
+        default=root / "dataset/design_manhole_review_queue.ndjson",
+    )
+    parser.add_argument(
         "--geocode-cache",
         type=Path,
         default=root / "dataset/design_manhole_geocode_cache.json",
@@ -351,23 +374,28 @@ def main() -> None:
         "pokefuta": load_ndjson(root / "docs/pokefuta.ndjson"),
     }
     imported_at = utc_now()
-    previous_public = load_ndjson(args.output)
-    public_records = build_public_records(
+    previous_records = load_ndjson(args.output) + load_ndjson(args.review_output)
+    normalized_records = build_public_records(
         submissions,
         cache,
         overrides,
         references,
         imported_at,
-        previous_records=previous_public,
+        previous_records=previous_records,
     )
+    public_records = select_public_records(normalized_records)
+    review_records = select_review_records(normalized_records)
 
     write_ndjson(args.raw_output, submissions)
     write_json(args.geocode_cache, cache)
     write_ndjson(args.output, public_records)
+    write_ndjson(args.review_output, review_records)
     print(
         f"Imported {len(submissions)} design-manhole submissions; "
         f"matched={sum(bool(row['canonical_ref']) for row in public_records)} "
-        f"needs_review={sum(row['review_status'] == 'needs_review' for row in public_records)}"
+        f"needs_review={sum(row['review_status'] == 'needs_review' for row in normalized_records)} "
+        f"published={len(public_records)} "
+        f"review_queue={len(review_records)}"
     )
 
 
