@@ -133,6 +133,13 @@ class InjectSiteHeaderTest(unittest.TestCase):
         self.assertNotIn("data-stamp-page", result[result.index('class="site-auth"'):result.index("</header>")])
         self.assertIn('<script src="./assets/session-badge.js" defer></script>', result)
 
+    def test_footer_is_not_a_second_contentinfo(self):
+        """既存ページは <footer role="contentinfo"> を持つ。注入分を <footer> にすると
+        ラベルの無い contentinfo が2つになるので、中身に合わせて nav にする。"""
+        result = inject(BARE)
+        self.assertIn('<nav class="site-footer" aria-label="サイト内リンク">', result)
+        self.assertNotIn('<footer class="site-footer"', result)
+
     def test_info_and_x_links(self):
         result = inject(BARE)
         self.assertIn('href="https://pokefuta.com/about?from=data"', result)

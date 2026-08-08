@@ -60,6 +60,7 @@ LABELS = {
     "ja": {
         "nav_aria": "メインナビゲーション",
         "tabs_aria": "サイト内タブ",
+        "footer_aria": "サイト内リンク",
         "switch_aria": "サイトを切り替える",
         "brand": "ポケふた",
         "site_dex": "図鑑",
@@ -79,6 +80,7 @@ LABELS = {
     "en": {
         "nav_aria": "Main navigation",
         "tabs_aria": "Site tabs",
+        "footer_aria": "Site links",
         "switch_aria": "Switch site",
         "brand": "Pokéfuta",
         "site_dex": "Directory",
@@ -98,6 +100,7 @@ LABELS = {
     "zh-TW": {
         "nav_aria": "主導覽",
         "tabs_aria": "網站分頁",
+        "footer_aria": "站內連結",
         "switch_aria": "切換網站",
         "brand": "寶可夢人孔蓋",
         "site_dex": "圖鑑",
@@ -117,6 +120,7 @@ LABELS = {
     "zh-CN": {
         "nav_aria": "主导航",
         "tabs_aria": "网站标签",
+        "footer_aria": "站内链接",
         "switch_aria": "切换网站",
         "brand": "宝可梦井盖",
         "site_dex": "图鉴",
@@ -136,6 +140,7 @@ LABELS = {
     "ko": {
         "nav_aria": "메인 내비게이션",
         "tabs_aria": "사이트 탭",
+        "footer_aria": "사이트 링크",
         "switch_aria": "사이트 전환",
         "brand": "포켓뚜껑",
         "site_dex": "도감",
@@ -206,11 +211,13 @@ BOTTOM_TABS_TEMPLATE = """<nav class="site-tabs" aria-label="{tabs_aria}">
 # 全画面地図ページ（map.html / gmanhole_map.html）は本文がビューポート固定で
 # フッターに到達できないため、同じ3つをスイッチャーのメニューにも常設している。
 # どちらか片方だけ消さないこと。
-FOOTER_TEMPLATE = """<footer class="site-footer">
+# ⚠️ <footer> にしないこと。既存ページが <footer role="contentinfo"> を持っており、
+# ラベルの無い contentinfo が2つになる。中身はリンク一覧なので nav が正しい。
+FOOTER_TEMPLATE = """<nav class="site-footer" aria-label="{footer_aria}">
   <a class="site-footer__link" href="{asset_base}character_manholes.html">{nav_character}</a>
   <a class="site-footer__link" href="{about_url}">{about}</a>
   <a class="site-footer__link" href="{x_url}" target="_blank" rel="noopener noreferrer"><b>X</b> @pokemonmanhole</a>
-</footer>"""
+</nav>"""
 
 
 LEGACY_HEADER_RE = re.compile(r'<header\s+class="top-app-bar"[^>]*>.*?</header>', flags=re.DOTALL)
