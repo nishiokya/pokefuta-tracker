@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-08-09T21:00:35.633155Z",
+  "generated_at": "2026-08-10T21:09:58.927060Z",
   "source": "pokefuta photo table",
   "image": {
     "r2_public_base_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image"
   },
-  "count": 346,
+  "count": 347,
   "photos": {
     "1": {
       "manhole_id": 1,
@@ -2500,6 +2500,34 @@
         }
       ]
     },
+    "124": {
+      "manhole_id": 124,
+      "photo_id": "919e7314-1f59-43b8-894f-e14091d3ae69",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/d8dad423-9596-4491-a570-29f824ab22db.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/d8dad423-9596-4491-a570-29f824ab22db.jpg",
+      "storage_key": "photos/original/2026/08/d8dad423-9596-4491-a570-29f824ab22db.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1107039,
+      "created_at": "2026-08-10T08:30:55.383691+00:00",
+      "shot_at": "2026-08-10T08:30:35+00:00",
+      "comment": null,
+      "display_name": "kazuya",
+      "public_user_id": "a49d6865-c82c-4f49-bfd5-18dccbef85b1",
+      "gallery": [
+        {
+          "photo_id": "919e7314-1f59-43b8-894f-e14091d3ae69",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/d8dad423-9596-4491-a570-29f824ab22db.jpg",
+          "storage_key": "photos/original/2026/08/d8dad423-9596-4491-a570-29f824ab22db.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-08-10T08:30:55.383691+00:00",
+          "shot_at": "2026-08-10T08:30:35+00:00",
+          "display_name": "kazuya",
+          "public_user_id": "a49d6865-c82c-4f49-bfd5-18dccbef85b1"
+        }
+      ]
+    },
     "125": {
       "manhole_id": 125,
       "photo_id": "ab2974a9-d2d1-4b72-86fe-553f54851dbd",
@@ -4307,14 +4335,14 @@
           "public_user_id": "df3220e0-d105-4d60-9898-f5a2fda6dc1f"
         },
         {
-          "photo_id": "f052f2fe-8485-49f7-a17e-89d4f91fa2b6",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/ed42aa29-0b21-4b44-b7b7-d5ff86eb0532.jpg",
-          "storage_key": "photos/original/2026/07/ed42aa29-0b21-4b44-b7b7-d5ff86eb0532.jpg",
+          "photo_id": "0779ac7e-9672-4545-aa92-076595d5c3d3",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/81c72870-8899-46a3-8bc1-9fdfb205b989.jpg",
+          "storage_key": "photos/original/2026/08/81c72870-8899-46a3-8bc1-9fdfb205b989.jpg",
           "content_type": "image/jpeg",
-          "created_at": "2026-07-12T06:32:13.650076+00:00",
-          "shot_at": "2024-10-23T00:52:32+00:00",
-          "display_name": "xxobokihurah2007",
-          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
+          "created_at": "2026-08-10T03:09:14.079915+00:00",
+          "shot_at": "2026-01-07T05:10:00+00:00",
+          "display_name": null,
+          "public_user_id": "31a59f32-4256-4d07-9077-a8974a2933b7"
         }
       ]
     },
@@ -4443,14 +4471,14 @@
           "public_user_id": "df3220e0-d105-4d60-9898-f5a2fda6dc1f"
         },
         {
-          "photo_id": "bd18b8ba-b75b-4fe9-aab3-e0ba0dcfffe3",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/a53712ee-2a20-45df-afd5-72c5c63cad43.jpg",
-          "storage_key": "photos/original/2026/07/a53712ee-2a20-45df-afd5-72c5c63cad43.jpg",
+          "photo_id": "c7fc70e3-37ba-4ca7-96a5-4ba640edd39e",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/261168d4-71e4-48a6-9b40-c5c897e6790b.jpg",
+          "storage_key": "photos/original/2026/08/261168d4-71e4-48a6-9b40-c5c897e6790b.jpg",
           "content_type": "image/jpeg",
-          "created_at": "2026-07-12T07:01:25.689219+00:00",
-          "shot_at": "2024-10-23T00:15:31+00:00",
-          "display_name": "xxobokihurah2007",
-          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
+          "created_at": "2026-08-10T03:09:50.380233+00:00",
+          "shot_at": "2026-01-07T05:39:18+00:00",
+          "display_name": null,
+          "public_user_id": "31a59f32-4256-4d07-9077-a8974a2933b7"
         }
       ]
     },
