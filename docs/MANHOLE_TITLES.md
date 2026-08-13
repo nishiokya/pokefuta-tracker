@@ -182,6 +182,12 @@ docs/pokefuta.ndjson (titles フィールド) ─→ ①詳細ページ ②OGP �
 | 称号の文言/優先度変更・一時停止 | `vocabulary` の該当キー（`enabled:false` で停止） |
 | マンホールのカテゴリタグ追加（例 `seaside`） | `manholes."<id>".tags` に追加 |
 | 自治体公式ページ追加・更新 | `city_links` に1要素追加 |
+| 上流（local.pokemon.jp）の住所誤記を訂正 | `manholes."<id>".address_norm` に正しい住所、`address_raw` に上流の原文 |
+
+`address_norm`（無ければ `address_raw`）はクローラーが抽出した住所を上書きする。
+パーサでは直せない**上流側の入力ミス**だけをここで訂正すること（現在3件: id 146 / 147 / 190
+はいずれも `小千谷市小千谷市` のように市区町村名が2重に入力されている）。
+抽出ロジックの不具合は `apps/scraper/address_parser.py` 側で直す。
 
 - 編集フローは `SCHEMA.md` 「`manhole_titles.json` 由来のフィールド」節を参照。ファイル更新でワークフローが差分検知し PR 化。
 - リポジトリに YAML が無いため JSON で統一（`docs/latest-manhole-photos.json` 等の慣習に合わせる）。
