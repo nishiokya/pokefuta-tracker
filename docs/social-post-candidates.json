@@ -516,10 +516,10 @@
     }
   },
   {
-    "id": "photo-43-62ae429f",
+    "id": "photo-36-8cd19645",
     "type": "latest_photo",
-    "title": "最新写真：香川県/まんのう町",
-    "url": "https://data.pokefuta.com/manholes/43/",
+    "title": "最新写真：香川県/土庄町",
+    "url": "https://data.pokefuta.com/manholes/36/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -527,25 +527,52 @@
     "imageType": "latest_photo",
     "source": "photos",
     "raw_data": {
-      "manhole_id": "43",
-      "title": "香川県/まんのう町",
+      "manhole_id": "36",
+      "title": "香川県/土庄町",
       "pref": "香川県",
-      "city": "まんのう",
+      "city": "土庄",
+      "pokemon": "メタモン",
+      "pokemon_list": [
+        "メタモン",
+        "ヤドン"
+      ],
+      "created_at": "2026-08-13T09:07:46.474121+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/cc733af8-077e-401f-9319-23bc6160752d.jpg",
+      "display_name": "げん＆ひろ",
+      "photo_rank": "first_ever"
+    }
+  },
+  {
+    "id": "photo-37-e4703ffe",
+    "type": "latest_photo",
+    "title": "最新写真：香川県/小豆島町",
+    "url": "https://data.pokefuta.com/manholes/37/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "37",
+      "title": "香川県/小豆島町",
+      "pref": "香川県",
+      "city": "小豆島",
       "pokemon": "ヤドン",
       "pokemon_list": [
         "ヤドン"
       ],
-      "created_at": "2026-08-12T11:56:46.933849+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/a660600e-75d2-4eb7-afd0-721a896508f0.jpg",
-      "display_name": "きんぴらごぼう",
+      "created_at": "2026-08-13T09:08:04.08845+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/6b995cb6-40d2-404f-bd9c-bda7a8133c0b.jpg",
+      "display_name": "げん＆ひろ",
       "photo_rank": "first_ever"
     }
   },
   {
-    "id": "photo-41-fc4144f9",
+    "id": "photo-77-0ce2a351",
     "type": "latest_photo",
-    "title": "最新写真：香川県/琴平町",
-    "url": "https://data.pokefuta.com/manholes/41/",
+    "title": "最新写真：鳥取県/境港市",
+    "url": "https://data.pokefuta.com/manholes/77/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -553,25 +580,27 @@
     "imageType": "latest_photo",
     "source": "photos",
     "raw_data": {
-      "manhole_id": "41",
-      "title": "香川県/琴平町",
-      "pref": "香川県",
-      "city": "琴平",
-      "pokemon": "ヤドン",
+      "manhole_id": "77",
+      "title": "鳥取県/境港市",
+      "pref": "鳥取県",
+      "city": "境港",
+      "pokemon": "アローラサンド",
       "pokemon_list": [
-        "ヤドン"
+        "アローラサンド",
+        "クラブ",
+        "サンド"
       ],
-      "created_at": "2026-08-12T11:56:54.146196+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/d81f639d-7a9f-4690-87f4-87b83421bc8a.jpg",
-      "display_name": "きんぴらごぼう",
+      "created_at": "2026-08-13T09:08:23.785562+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/d506a8bc-cd8b-4629-9cba-c180956902fb.jpg",
+      "display_name": "げん＆ひろ",
       "photo_rank": "first_ever"
     }
   },
   {
-    "id": "photo-31-9b20b53e",
+    "id": "photo-75-72f179bc",
     "type": "latest_photo",
-    "title": "最新写真：香川県/善通寺市",
-    "url": "https://data.pokefuta.com/manholes/31/",
+    "title": "最新写真：鳥取県/米子市",
+    "url": "https://data.pokefuta.com/manholes/75/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -579,26 +608,27 @@
     "imageType": "latest_photo",
     "source": "photos",
     "raw_data": {
-      "manhole_id": "31",
-      "title": "香川県/善通寺市",
-      "pref": "香川県",
-      "city": "善通寺",
-      "pokemon": "ヤドラン",
+      "manhole_id": "75",
+      "title": "鳥取県/米子市",
+      "pref": "鳥取県",
+      "city": "米子",
+      "pokemon": "カモネギ",
       "pokemon_list": [
-        "ヤドラン",
-        "ヤドン"
+        "カモネギ",
+        "サンド",
+        "スワンナ"
       ],
-      "created_at": "2026-08-12T11:57:01.484623+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/8240fdcc-5590-41cb-b609-ba3834894ff7.jpg",
-      "display_name": "きんぴらごぼう",
+      "created_at": "2026-08-13T09:08:46.90755+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/14d9e738-7269-4900-bca2-7b3a4eff5b52.jpg",
+      "display_name": "げん＆ひろ",
       "photo_rank": "first_ever"
     }
   },
   {
-    "id": "photo-32-6dbbdd86",
+    "id": "photo-83-889c35be",
     "type": "latest_photo",
-    "title": "最新写真：香川県/観音寺市",
-    "url": "https://data.pokefuta.com/manholes/32/",
+    "title": "最新写真：鳥取県/大山町",
+    "url": "https://data.pokefuta.com/manholes/83/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -606,26 +636,26 @@
     "imageType": "latest_photo",
     "source": "photos",
     "raw_data": {
-      "manhole_id": "32",
-      "title": "香川県/観音寺市",
-      "pref": "香川県",
-      "city": "観音寺",
-      "pokemon": "ヤドキング",
+      "manhole_id": "83",
+      "title": "鳥取県/大山町",
+      "pref": "鳥取県",
+      "city": "大山",
+      "pokemon": "アローラサンド",
       "pokemon_list": [
-        "ヤドキング",
-        "ヤドン"
+        "アローラサンド",
+        "ヒトモシ"
       ],
-      "created_at": "2026-08-12T11:57:08.111241+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/f7d1f147-3fb8-417f-a789-2ef97fdddbfe.jpg",
-      "display_name": "きんぴらごぼう",
+      "created_at": "2026-08-13T09:09:30.228401+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/f870ab38-6f51-4afa-a0a4-51bcca0ecd38.jpg",
+      "display_name": "げん＆ひろ",
       "photo_rank": "first_ever"
     }
   },
   {
-    "id": "photo-42-764ff107",
+    "id": "photo-82-7b56b7b4",
     "type": "latest_photo",
-    "title": "最新写真：香川県/多度津町",
-    "url": "https://data.pokefuta.com/manholes/42/",
+    "title": "最新写真：鳥取県/琴浦町",
+    "url": "https://data.pokefuta.com/manholes/82/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -633,25 +663,26 @@
     "imageType": "latest_photo",
     "source": "photos",
     "raw_data": {
-      "manhole_id": "42",
-      "title": "香川県/多度津町",
-      "pref": "香川県",
-      "city": "多度津",
-      "pokemon": "ヤドン",
+      "manhole_id": "82",
+      "title": "鳥取県/琴浦町",
+      "pref": "鳥取県",
+      "city": "琴浦",
+      "pokemon": "アローラサンド",
       "pokemon_list": [
-        "ヤドン"
+        "アローラサンド",
+        "サンド"
       ],
-      "created_at": "2026-08-12T11:57:14.985262+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/b2e0876f-71b8-46ab-8493-773014a956c9.jpg",
-      "display_name": "きんぴらごぼう",
+      "created_at": "2026-08-13T09:09:49.187293+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/a2a52eba-9f49-4c8d-ab44-3599db1e45ca.jpg",
+      "display_name": "げん＆ひろ",
       "photo_rank": "first_ever"
     }
   },
   {
-    "id": "photo-29-9721055c",
+    "id": "photo-76-69ca7934",
     "type": "latest_photo",
-    "title": "最新写真：香川県/丸亀市",
-    "url": "https://data.pokefuta.com/manholes/29/",
+    "title": "最新写真：鳥取県/倉吉市",
+    "url": "https://data.pokefuta.com/manholes/76/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -659,25 +690,26 @@
     "imageType": "latest_photo",
     "source": "photos",
     "raw_data": {
-      "manhole_id": "29",
-      "title": "香川県/丸亀市",
-      "pref": "香川県",
-      "city": "丸亀",
-      "pokemon": "ヤドン",
+      "manhole_id": "76",
+      "title": "鳥取県/倉吉市",
+      "pref": "鳥取県",
+      "city": "倉吉",
+      "pokemon": "アローラサンド",
       "pokemon_list": [
-        "ヤドン"
+        "アローラサンド",
+        "サンド"
       ],
-      "created_at": "2026-08-12T11:57:22.820979+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/684c7dd9-3f73-4d81-bcc8-e4eb758f2453.jpg",
-      "display_name": "きんぴらごぼう",
+      "created_at": "2026-08-13T09:10:25.247866+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/a4a3779e-00e9-4ccb-a401-f67e337ee990.jpg",
+      "display_name": "げん＆ひろ",
       "photo_rank": "first_ever"
     }
   },
   {
-    "id": "photo-97-469e65d8",
+    "id": "photo-240-03670138",
     "type": "latest_photo",
-    "title": "最新写真：香川県/宇多津町",
-    "url": "https://data.pokefuta.com/manholes/97/",
+    "title": "最新写真：三重県/津市",
+    "url": "https://data.pokefuta.com/manholes/240/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -685,26 +717,25 @@
     "imageType": "latest_photo",
     "source": "photos",
     "raw_data": {
-      "manhole_id": "97",
-      "title": "香川県/宇多津町",
-      "pref": "香川県",
-      "city": "宇多津",
-      "pokemon": "ガラルヤドン",
+      "manhole_id": "240",
+      "title": "三重県/津市",
+      "pref": "三重県",
+      "city": "津市",
+      "pokemon": "ミジュマル",
       "pokemon_list": [
-        "ガラルヤドン",
-        "ヌオー"
+        "ミジュマル"
       ],
-      "created_at": "2026-08-12T11:57:29.873056+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/9d745376-1a24-4b26-9dd6-3b097b101325.jpg",
-      "display_name": "きんぴらごぼう",
+      "created_at": "2026-08-13T09:57:05.084586+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/928771b5-0e7e-4d19-a841-0494c75f3a9d.jpg",
+      "display_name": null,
       "photo_rank": "first_ever"
     }
   },
   {
-    "id": "photo-259-a57a82d3",
+    "id": "photo-330-db99151b",
     "type": "latest_photo",
-    "title": "最新写真：岩手県/遠野市",
-    "url": "https://data.pokefuta.com/manholes/259/",
+    "title": "最新写真：三重県/鈴鹿市",
+    "url": "https://data.pokefuta.com/manholes/330/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -712,27 +743,26 @@
     "imageType": "latest_photo",
     "source": "photos",
     "raw_data": {
-      "manhole_id": "259",
-      "title": "岩手県/遠野市",
-      "pref": "岩手県",
-      "city": "遠野",
-      "pokemon": "イシツブテ",
+      "manhole_id": "330",
+      "title": "三重県/鈴鹿市",
+      "pref": "三重県",
+      "city": "鈴鹿市",
+      "pokemon": "ミジュマル",
       "pokemon_list": [
-        "イシツブテ",
-        "ハスブレロ",
-        "ルンパッパ"
+        "ミジュマル",
+        "モトトカゲ"
       ],
-      "created_at": "2026-08-12T12:43:28.969939+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/95b27ad0-2dad-4497-85fc-3d6923e231ca.jpg",
-      "display_name": "くろっぽい猫",
+      "created_at": "2026-08-13T10:37:31.067067+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/483b6293-10f2-471d-9730-2ccecd42b4be.jpg",
+      "display_name": null,
       "photo_rank": "first_ever"
     }
   },
   {
-    "id": "photo-14-dbe62717",
+    "id": "photo-241-50ddb763",
     "type": "latest_photo",
-    "title": "最新写真：岩手県/岩泉町",
-    "url": "https://data.pokefuta.com/manholes/14/",
+    "title": "最新写真：三重県/四日市市",
+    "url": "https://data.pokefuta.com/manholes/241/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -740,25 +770,26 @@
     "imageType": "latest_photo",
     "source": "photos",
     "raw_data": {
-      "manhole_id": "14",
-      "title": "岩手県/岩泉町",
-      "pref": "岩手県",
-      "city": "岩泉",
-      "pokemon": "チゴラス",
+      "manhole_id": "241",
+      "title": "三重県/四日市市",
+      "pref": "三重県",
+      "city": "四日市市",
+      "pokemon": "ダイケンキ",
       "pokemon_list": [
-        "チゴラス"
+        "ダイケンキ",
+        "ミジュマル"
       ],
-      "created_at": "2026-08-12T12:44:36.639851+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/b9cf9677-50bf-4885-a900-55cc82cd38e1.jpg",
-      "display_name": "くろっぽい猫",
+      "created_at": "2026-08-13T11:35:28.159376+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/5fe58ed4-2454-4d44-b8fa-1fd591710174.jpg",
+      "display_name": null,
       "photo_rank": "first_ever"
     }
   },
   {
-    "id": "photo-21-d888700d",
+    "id": "photo-331-02a29430",
     "type": "latest_photo",
-    "title": "最新写真：岩手県/陸前高田市",
-    "url": "https://data.pokefuta.com/manholes/21/",
+    "title": "最新写真：三重県/川越町",
+    "url": "https://data.pokefuta.com/manholes/331/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -766,25 +797,27 @@
     "imageType": "latest_photo",
     "source": "photos",
     "raw_data": {
-      "manhole_id": "21",
-      "title": "岩手県/陸前高田市",
-      "pref": "岩手県",
-      "city": "陸前高田",
-      "pokemon": "イワンコ",
+      "manhole_id": "331",
+      "title": "三重県/川越町",
+      "pref": "三重県",
+      "city": "三重郡川越町",
+      "pokemon": "アメタマ",
       "pokemon_list": [
-        "イワンコ"
+        "アメタマ",
+        "スバメ",
+        "ミジュマル"
       ],
-      "created_at": "2026-08-12T12:45:11.850121+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/47b57a6b-11e1-4e74-8736-1c14cec1711b.jpg",
-      "display_name": "くろっぽい猫",
+      "created_at": "2026-08-13T12:14:12.913529+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/3b613b85-382a-4950-a01a-4671b4aead44.jpg",
+      "display_name": null,
       "photo_rank": "first_ever"
     }
   },
   {
-    "id": "photo-260-cefb60fb",
+    "id": "photo-293-9b6c6a5e",
     "type": "latest_photo",
-    "title": "最新写真：岩手県/一関市",
-    "url": "https://data.pokefuta.com/manholes/260/",
+    "title": "最新写真：三重県/朝日町",
+    "url": "https://data.pokefuta.com/manholes/293/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -792,45 +825,18 @@
     "imageType": "latest_photo",
     "source": "photos",
     "raw_data": {
-      "manhole_id": "260",
-      "title": "岩手県/一関市",
-      "pref": "岩手県",
-      "city": "一関",
-      "pokemon": "イシツブテ",
+      "manhole_id": "293",
+      "title": "三重県/朝日町",
+      "pref": "三重県",
+      "city": "三重郡朝日町",
+      "pokemon": "エルフーン",
       "pokemon_list": [
-        "イシツブテ",
-        "ダンゴロ",
-        "ドサイドン"
+        "エルフーン",
+        "ミジュマル"
       ],
-      "created_at": "2026-08-12T12:45:12.581581+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/dd5bd421-5ae2-4d47-a509-e2b4771e72e5.jpg",
-      "display_name": "べが",
-      "photo_rank": "first_ever"
-    }
-  },
-  {
-    "id": "photo-12-522b83f9",
-    "type": "latest_photo",
-    "title": "最新写真：岩手県/野田村",
-    "url": "https://data.pokefuta.com/manholes/12/",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "latest_photo",
-    "source": "photos",
-    "raw_data": {
-      "manhole_id": "12",
-      "title": "岩手県/野田村",
-      "pref": "岩手県",
-      "city": "野田",
-      "pokemon": "イワーク",
-      "pokemon_list": [
-        "イワーク"
-      ],
-      "created_at": "2026-08-12T12:46:13.907782+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/fdd5f460-bf22-4741-a6e9-fe2f1af1f63f.jpg",
-      "display_name": "くろっぽい猫",
+      "created_at": "2026-08-13T12:29:05.001562+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/c4316d87-9e34-49e1-9820-1953050ded32.jpg",
+      "display_name": null,
       "photo_rank": "first_ever"
     }
   },
@@ -871,7 +877,7 @@
   {
     "id": "pref39-nophoto",
     "type": "no_photo",
-    "title": "高知県：写真なしポケふた11枚",
+    "title": "高知県：写真なしポケふた8枚",
     "url": "https://data.pokefuta.com/summary/",
     "hashtags": [
       "#ポケふた",
@@ -881,14 +887,14 @@
     "source": "summary",
     "raw_data": {
       "pref": "高知県",
-      "no_photo_count": 11,
+      "no_photo_count": 8,
       "total_count": 18
     }
   },
   {
-    "id": "pref31-nophoto",
+    "id": "pref01-nophoto",
     "type": "no_photo",
-    "title": "鳥取県：写真なしポケふた10枚",
+    "title": "北海道：写真なしポケふた6枚",
     "url": "https://data.pokefuta.com/summary/",
     "hashtags": [
       "#ポケふた",
@@ -897,15 +903,15 @@
     "imageType": "summary_no_photo",
     "source": "summary",
     "raw_data": {
-      "pref": "鳥取県",
-      "no_photo_count": 10,
-      "total_count": 20
+      "pref": "北海道",
+      "no_photo_count": 6,
+      "total_count": 50
     }
   },
   {
     "id": "pref37-nophoto",
     "type": "no_photo",
-    "title": "香川県：写真なしポケふた7枚",
+    "title": "香川県：写真なしポケふた5枚",
     "url": "https://data.pokefuta.com/summary/",
     "hashtags": [
       "#ポケふた",
@@ -915,7 +921,7 @@
     "source": "summary",
     "raw_data": {
       "pref": "香川県",
-      "no_photo_count": 7,
+      "no_photo_count": 5,
       "total_count": 18
     }
   },
