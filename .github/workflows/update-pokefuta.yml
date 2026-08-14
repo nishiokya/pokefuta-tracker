@@ -44,7 +44,7 @@ jobs:
       #   （内部lib）address_parser.py -> test_address_parser.py
       #   generate_prefecture_trivia.py -> test_generate_prefecture_trivia.py
       #   generate_social_posts.py    -> test_generate_social_posts*.py
-      #   export_kml.py               -> テスト未整備（TODO）
+      #   export_kml.py               -> test_export_kml.py
       - name: Run scraper tests
         run: |
           python -m unittest discover -s apps/scraper -v \
@@ -55,6 +55,8 @@ jobs:
             -p 'test_generate_prefecture_trivia.py'
           python -m unittest discover -s apps/scraper -v \
             -p 'test_generate_social_posts*.py'
+          python -m unittest discover -s apps/scraper -v \
+            -p 'test_export_kml.py'
 
       - name: Run incremental updater
         id: updater
