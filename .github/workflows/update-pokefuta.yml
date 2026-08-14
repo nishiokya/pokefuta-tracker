@@ -38,10 +38,23 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      # このジョブが呼ぶスクリプトに対応するテストをすべてここで走らせる。
+      # スクリプトを1本足したら、対応する test_*.py もこのリストに足すこと。
+      #   update_pokefuta.py          -> test_update_pokefuta.py
+      #   （内部lib）address_parser.py -> test_address_parser.py
+      #   generate_prefecture_trivia.py -> test_generate_prefecture_trivia.py
+      #   generate_social_posts.py    -> test_generate_social_posts*.py
+      #   export_kml.py               -> テスト未整備（TODO）
       - name: Run scraper tests
         run: |
-          python -m unittest discover -s apps/scraper -p 'test_address_parser.py' -v
-          python -m unittest discover -s apps/scraper -p 'test_update_pokefuta.py' -v
+          python -m unittest discover -s apps/scraper -v \
+            -p 'test_address_parser.py'
+          python -m unittest discover -s apps/scraper -v \
+            -p 'test_update_pokefuta.py'
+          python -m unittest discover -s apps/scraper -v \
+            -p 'test_generate_prefecture_trivia.py'
+          python -m unittest discover -s apps/scraper -v \
+            -p 'test_generate_social_posts*.py'
 
       - name: Run incremental updater
         id: updater
