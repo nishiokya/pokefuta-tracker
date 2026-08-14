@@ -1071,6 +1071,18 @@
         "museum"
       ]
     },
+    "146": {
+      "address_raw": "新潟県小千谷市小千谷市城内1-8-22",
+      "address_norm": "新潟県小千谷市城内1-8-22",
+      "verified_at": "2026-08-14",
+      "confidence": 3
+    },
+    "147": {
+      "address_raw": "新潟県小千谷市小千谷市大字桜町4915",
+      "address_norm": "新潟県小千谷市大字桜町4915",
+      "verified_at": "2026-08-14",
+      "confidence": 3
+    },
     "148": {
       "tags": [
         "world_heritage"
@@ -1224,11 +1236,15 @@
     },
     "190": {
       "building": "登別市観光交流センター「ヌプル」前",
+      "address_raw": "北海道登別市登別市登別港町１丁目4-9",
+      "address_norm": "北海道登別市登別港町１丁目4-9",
       "tags": [
         "tourism",
         "station_front",
         "food"
-      ]
+      ],
+      "verified_at": "2026-08-14",
+      "confidence": 3
     },
     "191": {
       "building": "道の駅ステラほんべつ前",

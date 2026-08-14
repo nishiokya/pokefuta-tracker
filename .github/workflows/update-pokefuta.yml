@@ -1,3 +1,4 @@
+# 家系B: レビュー待ち。PR を作って放置し、人が中身を見てからマージする。
 name: Daily Pokefuta Dataset Update
 
 on:
@@ -5,6 +6,10 @@ on:
     # Run daily at 10:00 UTC (JST 19:00)
     - cron: '0 10 * * *'
   workflow_dispatch: # Allow manual trigger
+
+concurrency:
+  group: update-pokefuta
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -17,6 +22,8 @@ env:
 jobs:
   update:
     runs-on: ubuntu-latest
+    # 500件を --sleep 間隔で舐めるので実測 20 分前後。詰まったら落とす。
+    timeout-minutes: 45
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -30,7 +37,11 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install beautifulsoup4 requests
+
+      - name: Run scraper tests
+        run: |
+          python -m unittest discover -s apps/scraper -p 'test_address_parser.py' -v
+          python -m unittest discover -s apps/scraper -p 'test_update_pokefuta.py' -v
 
       - name: Run incremental updater
         id: updater
