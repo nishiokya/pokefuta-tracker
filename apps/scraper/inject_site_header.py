@@ -29,6 +29,8 @@ SESSION_BADGE_SCRIPT_TEMPLATE = '<script src="{asset_base}assets/session-badge.j
 # 同一GA4プロパティ内の内部UTMは使わず、着地側の source_app=tracker /
 # p_data_referral と突き合わせて分析するため、これが唯一の流入元マーカーになる。
 POKEFUTA_APP_URL = "https://pokefuta.com/?from=data"
+POKEFUTA_ABOUT_URL = "https://pokefuta.com/about?from=data"
+POKEFUTA_CONTACT_URL = "https://pokefuta.com/about?from=data#contact"
 POKEFUTA_LOGIN_URL = "https://pokefuta.com/login?from=data&mode=login"
 # ラベルが「新規登録」なのにログインタブが開かないよう、初期タブを明示する
 POKEFUTA_SIGNUP_URL = "https://pokefuta.com/login?from=data&mode=signup"
@@ -287,9 +289,9 @@ def inject(
         signup_url=POKEFUTA_SIGNUP_URL,
         stamp_url=POKEFUTA_STAMP_URL,
         profile_url=POKEFUTA_PROFILE_URL,
-        about_url=f"{asset_base}about.html",
+        about_url=POKEFUTA_ABOUT_URL,
         privacy_url=f"{asset_base}privacy.html",
-        contact_url=f"{asset_base}about.html#contact",
+        contact_url=POKEFUTA_CONTACT_URL,
         x_url=X_ACCOUNT_URL,
         icon_info=_icon("info"),
         icon_map=_icon("map"),

@@ -108,7 +108,7 @@ class InjectSiteHeaderTest(unittest.TestCase):
         result = inject(BARE)
         menu = result[result.index('site-switch__menu'):result.index("</details>")]
         self.assertIn("キャラふた", menu)
-        self.assertIn("./about.html", menu)
+        self.assertIn("https://pokefuta.com/about?from=data", menu)
         self.assertIn("./privacy.html", menu)
         self.assertIn("https://x.com/pokemonmanhole", menu)
 
@@ -159,9 +159,9 @@ class InjectSiteHeaderTest(unittest.TestCase):
 
     def test_info_and_x_links(self):
         result = inject(BARE)
-        self.assertIn('href="./about.html"', result)
+        self.assertIn('href="https://pokefuta.com/about?from=data"', result)
         self.assertIn('href="./privacy.html"', result)
-        self.assertIn('href="./about.html#contact"', result)
+        self.assertIn('href="https://pokefuta.com/about?from=data#contact"', result)
         self.assertIn('href="https://x.com/pokemonmanhole"', result)
 
     # ── 既存の振る舞い ───────────────────────────────────

@@ -22,6 +22,12 @@ AdSense はPVと検索流入の多い `data.pokefuta.com` を最初の導入先�
 - Googleアカウントへのログイン、氏名・住所・支払い情報の入力、規約同意、審査リクエストの
   最終操作はユーザー本人が行う。そこまで進んだら作業を止め、必要な操作を具体的に案内する。
 
+## 共通About
+
+- `pokefuta.com/about` を `pokefuta.com` と `data.pokefuta.com` 共通のAbout・お問い合わせページの正本とする。
+- 両ドメインを「姉妹サイト」と表現せず、同じサービス内の「ポケふた写真館」と「ポケふた図鑑」として扱う。
+- 運営者名は `nishiokya` と表記する。
+
 ## ディレクトリ構成
 
 - `apps/scraper/` — GitHub Actions から自動実行されるスクリプト群（update-pokefuta.yml / pages-deploy.yml / import-manhole-photos.yml）
