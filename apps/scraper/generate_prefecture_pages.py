@@ -1162,6 +1162,8 @@ def build_page(
       <p class="map-note">地図はドラッグとピンチ操作に対応。スクロール中の誤操作を防ぐため、マウスホイール拡大は無効です。</p>
     </section>
 
+    <!-- adsense:prefecture -->
+
     <section id="prefecture-photos" aria-labelledby="photo-heading">
       <div class="section-heading-row">
         <h2 id="photo-heading">{escape(prefecture)}の現地写真</h2>

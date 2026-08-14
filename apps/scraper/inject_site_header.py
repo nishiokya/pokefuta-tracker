@@ -34,7 +34,6 @@ POKEFUTA_LOGIN_URL = "https://pokefuta.com/login?from=data&mode=login"
 POKEFUTA_SIGNUP_URL = "https://pokefuta.com/login?from=data&mode=signup"
 POKEFUTA_STAMP_URL = "https://pokefuta.com/visits?from=data"
 POKEFUTA_PROFILE_URL = "https://pokefuta.com/profile?from=data"
-POKEFUTA_ABOUT_URL = "https://pokefuta.com/about?from=data"
 X_ACCOUNT_URL = "https://x.com/pokemonmanhole"
 
 # lucide-react 0.294 系（写真館が使っているもの）と同じ字形を inline SVG で持つ。
@@ -76,6 +75,8 @@ LABELS = {
         "signup": "新規登録",
         "profile": "プロフィール",
         "about": "このサイトについて",
+        "privacy": "プライバシー",
+        "contact": "お問い合わせ",
     },
     "en": {
         "nav_aria": "Main navigation",
@@ -96,6 +97,8 @@ LABELS = {
         "signup": "Sign up",
         "profile": "Profile",
         "about": "About this site",
+        "privacy": "Privacy",
+        "contact": "Contact",
     },
     "zh-TW": {
         "nav_aria": "主導覽",
@@ -116,6 +119,8 @@ LABELS = {
         "signup": "註冊",
         "profile": "個人檔案",
         "about": "關於本站",
+        "privacy": "隱私權",
+        "contact": "聯絡我們",
     },
     "zh-CN": {
         "nav_aria": "主导航",
@@ -136,6 +141,8 @@ LABELS = {
         "signup": "注册",
         "profile": "个人资料",
         "about": "关于本站",
+        "privacy": "隐私",
+        "contact": "联系我们",
     },
     "ko": {
         "nav_aria": "메인 내비게이션",
@@ -156,6 +163,8 @@ LABELS = {
         "signup": "가입",
         "profile": "프로필",
         "about": "사이트 소개",
+        "privacy": "개인정보처리방침",
+        "contact": "문의",
     },
 }
 
@@ -174,6 +183,7 @@ HEADER_TEMPLATE = """<header class="site-header">
         <hr class="site-switch__sep">
         <a class="site-switch__sub" href="{asset_base}character_manholes.html">{nav_character}</a>
         <a class="site-switch__sub" href="{about_url}">{about}</a>
+        <a class="site-switch__sub" href="{privacy_url}">{privacy}</a>
         <a class="site-switch__sub" href="{x_url}" target="_blank" rel="noopener noreferrer">X @pokemonmanhole</a>
       </div>
     </details>
@@ -216,6 +226,8 @@ BOTTOM_TABS_TEMPLATE = """<nav class="site-tabs" aria-label="{tabs_aria}">
 FOOTER_TEMPLATE = """<nav class="site-footer" aria-label="{footer_aria}">
   <a class="site-footer__link" href="{asset_base}character_manholes.html">{nav_character}</a>
   <a class="site-footer__link" href="{about_url}">{about}</a>
+  <a class="site-footer__link" href="{privacy_url}">{privacy}</a>
+  <a class="site-footer__link" href="{contact_url}">{contact}</a>
   <a class="site-footer__link" href="{x_url}" target="_blank" rel="noopener noreferrer"><b>X</b> @pokemonmanhole</a>
 </nav>"""
 
@@ -275,7 +287,9 @@ def inject(
         signup_url=POKEFUTA_SIGNUP_URL,
         stamp_url=POKEFUTA_STAMP_URL,
         profile_url=POKEFUTA_PROFILE_URL,
-        about_url=POKEFUTA_ABOUT_URL,
+        about_url=f"{asset_base}about.html",
+        privacy_url=f"{asset_base}privacy.html",
+        contact_url=f"{asset_base}about.html#contact",
         x_url=X_ACCOUNT_URL,
         icon_info=_icon("info"),
         icon_map=_icon("map"),

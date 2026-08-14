@@ -71,6 +71,7 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         self.assertIn("prefecture_map_pin_click", html)
         self.assertIn("prefecture_google_maps_click", html)
         self.assertIn("prefecture_scroll_depth", html)
+        self.assertIn("<!-- adsense:prefecture -->", html)
         self.assertIn("'page_path': '/prefectures/' + \"fukui\" + '/'", html)
         self.assertIn("site_type: 'map'", html)
         self.assertLess(

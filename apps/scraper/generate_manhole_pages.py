@@ -2100,6 +2100,8 @@ def generate_html(
 
     {visit_cta_html}
 
+    <!-- adsense:manhole -->
+
     {location_html}
 
     {design_html}

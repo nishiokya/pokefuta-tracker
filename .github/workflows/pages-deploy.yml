@@ -17,6 +17,7 @@ on:
       - 'apps/scraper/generate_summary_ogp.py' # summary page OGP generator
       - 'apps/scraper/generate_prefecture_pages.py' # prefecture page generator
       - 'apps/scraper/inject_site_header.py' # shared header injector
+      - 'apps/scraper/inject_adsense.py' # AdSense verification, explicit ad slots, ads.txt
       - 'apps/scraper/generate_prefecture_trivia.py' # prefecture trivia generator
       - 'apps/scraper/generate_top_feed.py' # top page community feed generator
       - 'apps/scraper/prefectures.py' # shared prefecture names and URL slugs
@@ -71,6 +72,10 @@ jobs:
             --force
 
       - name: Prepare dist directory (site + data)
+        env:
+          ADSENSE_PUBLISHER_ID: ${{ secrets.ADSENSE_PUBLISHER_ID }}
+          ADSENSE_PREFECTURE_SLOT: ${{ secrets.ADSENSE_PREFECTURE_SLOT }}
+          ADSENSE_MANHOLE_SLOT: ${{ secrets.ADSENSE_MANHOLE_SLOT }}
         run: |
           set -e
           mkdir -p dist/assets
@@ -79,6 +84,7 @@ jobs:
           echo "[dist] Test prefecture landing page generation"
           python3 -m unittest \
             apps.scraper.test_analytics_contract \
+            apps.scraper.test_inject_adsense \
             apps.scraper.test_generate_prefecture_pages.PrefecturePageDeployContractTest \
             apps.scraper.test_web_prefecture_links
           echo "[dist] Test character manhole landing page generation"
@@ -106,6 +112,8 @@ jobs:
           cp apps/web/gmanhole_map.html dist/gmanhole_map.html
           cp apps/web/design_manhole.html dist/design_manhole.html
           cp apps/web/login.html dist/login.html
+          cp apps/web/about.html dist/about.html
+          cp apps/web/privacy.html dist/privacy.html
           cp apps/web/sitemap.xml dist/sitemap.xml
           cp apps/web/robots.txt dist/robots.txt
           echo "[dist] Build multilingual pages (en / zh-TW / zh-CN / ko)"
@@ -113,6 +121,8 @@ jobs:
           echo '<!doctype html><meta http-equiv="refresh" content="0; url=./nearby.html">' > dist/nearby_manholes.html
           echo "[dist] Inject shared site header into every HTML page"
           python3 apps/scraper/inject_site_header.py dist
+          echo "[dist] Inject AdSense verification and in-content slots when configured"
+          python3 apps/scraper/inject_adsense.py dist
           echo "[dist] Copy assets (CSS + images)"
           cp -r apps/web/assets/* dist/assets/ || true
           echo "[dist] Copy local manhole photos"
