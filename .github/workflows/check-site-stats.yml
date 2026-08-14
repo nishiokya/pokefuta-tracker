@@ -8,6 +8,12 @@ on:
     # 07:00 → 08:00 に後ろ倒ししている（検証が生成を追い越すと毎日誤検知するため）。
     - cron: '0 23 * * *' # 08:00 JST
 
+# 手動実行と定時実行がぶつかると、runner を二重に食ったうえに同じ鮮度／
+# スナップショットの失敗が二重に飛ぶ。読み取り専用なので待たせれば足りる。
+concurrency:
+  group: check-site-stats
+  cancel-in-progress: false
+
 permissions:
   contents: read
 
