@@ -7,6 +7,21 @@ latest-manhole-photos.json と docs/api/*.json は import-manhole-photos.yml が
 GA4 は `apps/web/assets/analytics.js` から初期化し、`data.pokefuta.com` だけで送信する。各HTMLや生成スクリプトに gtag ローダーや独自の `trackEvent` を直書きしない
 イベント発生箇所は `surface` で表し、GA4の流入元予約語 `source` をカスタムイベント引数に使わない
 
+## AdSense
+
+AdSense はPVと検索流入の多い `data.pokefuta.com` を最初の導入先とする。
+導入目的は収益最大化ではなく広告配信・計測の学習。
+広告によってサイト本来の検索・閲覧体験や `pokefuta.com` への導線を損なわないことを優先する。
+
+- 全画面広告、ビネット広告、画面固定アンカー広告は使わない。
+- 広告は当初、都道府県ページと詳細ページの本文中に各1枠程度とし、トップページには原則置かない。
+- AdSenseサイト確認コードと `ads.txt` を `data.pokefuta.com` で正しく配信し、デプロイ後に実サイトで確認する。
+- 審査前にプライバシーポリシー、問い合わせ先、運営者情報を確認し、不足があれば整備する。
+- 広告枠はレイアウトシフトを起こさないよう表示領域を予約し、Core Web Vitalsへの影響を確認する。
+- GA4の既存イベント、`pokefuta.com` へのクロスドメイン計測、同意・プライバシー方針を壊さない。
+- Googleアカウントへのログイン、氏名・住所・支払い情報の入力、規約同意、審査リクエストの
+  最終操作はユーザー本人が行う。そこまで進んだら作業を止め、必要な操作を具体的に案内する。
+
 ## ディレクトリ構成
 
 - `apps/scraper/` — GitHub Actions から自動実行されるスクリプト群（update-pokefuta.yml / pages-deploy.yml / import-manhole-photos.yml）
