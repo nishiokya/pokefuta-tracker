@@ -8,6 +8,12 @@ on:
     # 07:00 → 08:00 に後ろ倒ししている（検証が生成を追い越すと毎日誤検知するため）。
     - cron: '0 23 * * *' # 08:00 JST
 
+# 手動実行と定時実行がぶつかると、runner を二重に食ったうえに同じ鮮度／
+# スナップショットの失敗が二重に飛ぶ。読み取り専用なので待たせれば足りる。
+concurrency:
+  group: check-site-stats
+  cancel-in-progress: false
+
 permissions:
   contents: read
 
@@ -22,8 +28,27 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
+      # ランナー既定の python に依存しない（規約）。監査対象は標準ライブラリ
+      # のみで動くため pip install は不要。
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+
       - name: Run unit tests
         run: python3 -m unittest apps.scraper.test_check_site_stats_freshness
 
+      # 本来の監視目的。スナップショット監査より先に置く。
       - name: Compare production stats with upstream snapshot
         run: python3 apps/scraper/check_site_stats_freshness.py
+
+      # 本番データのスナップショット監査。データが正当に変わると落ちるのが仕様
+      # なので、生成側の update-pokefuta.yml（家系B）ではなく読み取り専用の
+      # ここで回す。落ちたら「壊れた」ではなく「期待値を更新せよ」の合図。
+      #
+      # 最後に置いたうえで if: always() を付けているのは、この監査の失敗で
+      # 上の鮮度チェックが飛ばないようにするため。前段が落ちても両方の signal を
+      # 必ず出す。ジョブ自体は監査失敗でちゃんと赤くなる。
+      - name: Audit production dataset snapshots
+        if: always()
+        run: python3 -m unittest discover -s apps/scraper -v -p 'test_dataset_snapshots.py'

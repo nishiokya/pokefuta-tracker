@@ -27,17 +27,9 @@ class GundamCrossoverCandidateTests(unittest.TestCase):
         )
         self.assertIn("見落とし注意", values["onsite_tip"])
 
-    def test_generated_candidates_include_teshio_story(self):
-        candidates_path = social.ROOT / "docs" / "social-post-candidates.json"
-        candidates = json.loads(candidates_path.read_text(encoding="utf-8"))
-        candidate = next(
-            item for item in candidates
-            if item.get("id") == "gundam-crossover-teshio-roadside-pair"
-        )
-        self.assertEqual(
-            candidate["raw_data"]["values"]["summary"],
-            social.load_gundam_spots(social.GUNDAM_SPOTS_JSON)[0]["story"],
-        )
+    # 生成済み docs/social-post-candidates.json を読む検証は
+    # test_dataset_snapshots.py へ移した。このジョブ自身が再生成する
+    # ファイルを読むため、生成ロジックのゲートには使えない。
 
 
 if __name__ == "__main__":
