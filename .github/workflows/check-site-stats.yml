@@ -25,5 +25,11 @@ jobs:
       - name: Run unit tests
         run: python3 -m unittest apps.scraper.test_check_site_stats_freshness
 
+      # 本番データのスナップショット監査。データが正当に変わると落ちるのが仕様
+      # なので、生成側の update-pokefuta.yml（家系B）ではなく読み取り専用の
+      # ここで回す。落ちたら「壊れた」ではなく「期待値を更新せよ」の合図。
+      - name: Audit production dataset snapshots
+        run: python3 -m unittest discover -s apps/scraper -v -p 'test_dataset_snapshots.py'
+
       - name: Compare production stats with upstream snapshot
         run: python3 apps/scraper/check_site_stats_freshness.py
