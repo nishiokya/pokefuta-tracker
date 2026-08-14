@@ -38,17 +38,26 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # このジョブが呼ぶスクリプトに対応するテストをすべてここで走らせる。
-      # スクリプトを1本足したら、対応する test_*.py もこのリストに足すこと。
-      #   update_pokefuta.py          -> test_update_pokefuta.py
-      #   （内部lib）address_parser.py -> test_address_parser.py
-      #   generate_prefecture_trivia.py -> test_generate_prefecture_trivia.py
-      #   generate_social_posts.py    -> test_generate_social_posts*.py
-      #   export_kml.py               -> test_export_kml.py
+      # このジョブが（間接依存も含めて）呼ぶ自作モジュールすべてのテストを走らせる。
+      # 対応表は ast で import を辿って洗い出したもの。スクリプトを1本足したら、
+      # その依存も含めて対応する test_*.py をこのリストに足すこと。
+      #   実行スクリプト:
+      #     update_pokefuta.py            -> test_update_pokefuta.py
+      #     generate_prefecture_trivia.py -> test_generate_prefecture_trivia.py
+      #     generate_social_posts.py      -> test_generate_social_posts*.py
+      #     export_kml.py                 -> test_export_kml.py
+      #   内部ライブラリ:
+      #     address_parser.py             -> test_address_parser.py
+      #     manhole_titles.py             -> test_manhole_titles*.py
+      #     prefectures.py                -> test_prefectures.py
       - name: Run scraper tests
         run: |
           python -m unittest discover -s apps/scraper -v \
             -p 'test_address_parser.py'
+          python -m unittest discover -s apps/scraper -v \
+            -p 'test_manhole_titles*.py'
+          python -m unittest discover -s apps/scraper -v \
+            -p 'test_prefectures.py'
           python -m unittest discover -s apps/scraper -v \
             -p 'test_update_pokefuta.py'
           python -m unittest discover -s apps/scraper -v \
