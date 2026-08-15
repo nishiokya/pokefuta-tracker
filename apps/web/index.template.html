@@ -64,7 +64,7 @@
     (function() {
       var p = new URLSearchParams(location.search);
       if (p.has('pref') || p.has('manhole') || p.has('tag') || p.has('view')) {
-        location.replace('%%BASE_PATH%%map.html' + location.search);
+        location.replace('%%LANG_PATH%%map.html' + location.search);
       }
     })();
   </script>
@@ -89,14 +89,14 @@
   <!-- ===== APP BAR ===== -->
   <header class="top-app-bar">
     <div class="top-app-bar-inner">
-      <a class="top-brand" href="%%BASE_PATH%%index.html" onclick="trackEvent('click_nav',{nav:'top'})">
+      <a class="top-brand" href="%%LANG_PATH%%index.html" onclick="trackEvent('click_nav',{nav:'top'})">
         <span class="sec-num nav-num"></span>
         <span class="brand-name">ポケふた図鑑</span>
       </a>
       <div class="top-nav-right">
         <nav class="top-nav" aria-label="%%NAV_ARIA%%">
-          <a class="top-nav-link" href="%%BASE_PATH%%map.html" onclick="trackEvent('click_nav',{nav:'map'})">%%NAV_MAP%%</a>
-          <a class="top-nav-link" href="%%BASE_PATH%%pokemon/" onclick="trackEvent('click_nav',{nav:'pokemon'})">%%NAV_POKEMON%%</a>
+          <a class="top-nav-link" href="%%LANG_PATH%%map.html" onclick="trackEvent('click_nav',{nav:'map'})">%%NAV_MAP%%</a>
+          <a class="top-nav-link" href="%%LANG_PATH%%pokemon/" onclick="trackEvent('click_nav',{nav:'pokemon'})">%%NAV_POKEMON%%</a>
           <a class="top-nav-link" href="%%BASE_PATH%%character_manholes.html" onclick="trackEvent('click_nav',{nav:'character'})">%%NAV_CHARACTER%%</a>
           <a class="top-nav-link" data-login-link data-nav-target="login" data-stamp-page="https://pokefuta.com/" data-stamp-label="%%NAV_STAMP%%" href="https://pokefuta.com/login?from=data" onclick="trackEvent('click_nav',{nav:this.dataset.navTarget})">%%NAV_LOGIN%%</a>
         </nav>
@@ -160,7 +160,7 @@
         <span class="sec-file-label">/ map.html</span>
       </div>
 
-      <a class="map-gateway-card" href="%%BASE_PATH%%map.html" onclick="trackEvent('click_map_gateway')">
+      <a class="map-gateway-card" href="%%LANG_PATH%%map.html" onclick="trackEvent('click_map_gateway')">
         <div id="mini-map" class="map-gateway-minimap" aria-hidden="true"></div>
         <span class="map-gateway-badge">🗺 %%APPBAR_PREFIX%%<b id="map-badge-count">—</b>%%APPBAR_SUFFIX%%</span>
         <span class="map-gateway-attr">© OpenStreetMap contributors</span>
@@ -191,7 +191,7 @@
         <span class="hero-update-label" id="hero-update-label">%%SEC2_DAILY%%</span>
       </div>
 
-      <a class="hero-featured-card" id="hero-featured" href="%%BASE_PATH%%map.html" onclick="trackEvent('click_hero_featured')">
+      <a class="hero-featured-card" id="hero-featured" href="%%LANG_PATH%%map.html" onclick="trackEvent('click_hero_featured')">
         <div class="hero-featured-media" id="hero-featured-media">
           <img class="hero-featured-img" id="hero-featured-img" src="" alt="" loading="eager">
         </div>
@@ -210,7 +210,7 @@
       </a>
 
       <div class="hero-small-grid">
-        <a class="hero-small-card" id="hero-small-0" href="%%BASE_PATH%%map.html" onclick="trackEvent('click_hero_small', {position: 0})">
+        <a class="hero-small-card" id="hero-small-0" href="%%LANG_PATH%%map.html" onclick="trackEvent('click_hero_small', {position: 0})">
           <div class="hero-small-media" id="hero-small-media-0">
             <img class="hero-small-img" id="hero-small-img-0" src="" alt="" loading="lazy">
           </div>
@@ -219,7 +219,7 @@
             <div class="hero-small-place" id="hero-small-place-0"></div>
           </div>
         </a>
-        <a class="hero-small-card" id="hero-small-1" href="%%BASE_PATH%%map.html" onclick="trackEvent('click_hero_small', {position: 1})">
+        <a class="hero-small-card" id="hero-small-1" href="%%LANG_PATH%%map.html" onclick="trackEvent('click_hero_small', {position: 1})">
           <div class="hero-small-media" id="hero-small-media-1">
             <img class="hero-small-img" id="hero-small-img-1" src="" alt="" loading="lazy">
           </div>
@@ -258,16 +258,16 @@
       <div class="hub-card">
         <div class="hub-card-header">
           <span>%%SEC5_THEME_LABEL%%</span>
-          <a class="hub-card-more" href="%%BASE_PATH%%map.html?view=theme" onclick="trackEvent('click_hub_tag_all')">%%SEC5_THEME_MORE%%</a>
+          <a class="hub-card-more" href="%%LANG_PATH%%map.html?view=theme" onclick="trackEvent('click_hub_tag_all')">%%SEC5_THEME_MORE%%</a>
         </div>
         <div class="hub-chips">
-          <a class="hub-chip" href="%%BASE_PATH%%map.html?tag=roadside" onclick="trackEvent('click_hub_tag',{tag:'roadside'})">%%TAG_ROADSIDE%%</a>
-          <a class="hub-chip" href="%%BASE_PATH%%map.html?tag=remote_island" onclick="trackEvent('click_hub_tag',{tag:'remote_island'})">%%TAG_ISLAND%%</a>
-          <a class="hub-chip" href="%%BASE_PATH%%map.html?tag=world_heritage" onclick="trackEvent('click_hub_tag',{tag:'world_heritage'})">%%TAG_WORLD_HERITAGE%%</a>
-          <a class="hub-chip" href="%%BASE_PATH%%map.html?tag=near_gundam_manhole" onclick="trackEvent('click_hub_tag',{tag:'near_gundam_manhole'})">%%TAG_GUNDAM%%</a>
-          <a class="hub-chip" href="%%BASE_PATH%%map.html?tag=seaside" onclick="trackEvent('click_hub_tag',{tag:'seaside'})">%%TAG_SEASIDE%%</a>
-          <a class="hub-chip" href="%%BASE_PATH%%map.html?tag=tourism" onclick="trackEvent('click_hub_tag',{tag:'tourism'})">%%TAG_TOURISM%%</a>
-          <a class="hub-chip" href="%%BASE_PATH%%map.html?tag=history" onclick="trackEvent('click_hub_tag',{tag:'history'})">%%TAG_HISTORY%%</a>
+          <a class="hub-chip" href="%%LANG_PATH%%map.html?tag=roadside" onclick="trackEvent('click_hub_tag',{tag:'roadside'})">%%TAG_ROADSIDE%%</a>
+          <a class="hub-chip" href="%%LANG_PATH%%map.html?tag=remote_island" onclick="trackEvent('click_hub_tag',{tag:'remote_island'})">%%TAG_ISLAND%%</a>
+          <a class="hub-chip" href="%%LANG_PATH%%map.html?tag=world_heritage" onclick="trackEvent('click_hub_tag',{tag:'world_heritage'})">%%TAG_WORLD_HERITAGE%%</a>
+          <a class="hub-chip" href="%%LANG_PATH%%map.html?tag=near_gundam_manhole" onclick="trackEvent('click_hub_tag',{tag:'near_gundam_manhole'})">%%TAG_GUNDAM%%</a>
+          <a class="hub-chip" href="%%LANG_PATH%%map.html?tag=seaside" onclick="trackEvent('click_hub_tag',{tag:'seaside'})">%%TAG_SEASIDE%%</a>
+          <a class="hub-chip" href="%%LANG_PATH%%map.html?tag=tourism" onclick="trackEvent('click_hub_tag',{tag:'tourism'})">%%TAG_TOURISM%%</a>
+          <a class="hub-chip" href="%%LANG_PATH%%map.html?tag=history" onclick="trackEvent('click_hub_tag',{tag:'history'})">%%TAG_HISTORY%%</a>
         </div>
       </div>
 
@@ -278,11 +278,11 @@
           <a class="hub-card-more" href="%%POKEMON_LP_HREF%%" onclick="trackEvent('click_hub_pokemon_all')">%%SEC5_POKEMON_MORE%%</a>
         </div>
         <div class="hub-chips">
-          <a class="hub-chip" href="%%BASE_PATH%%pokemon/pikachu/" onclick="trackEvent('click_hub_pokemon',{pokemon:'ピカチュウ'})">%%POKEMON_PIKACHU%% <span class="chip-count" id="chip-pikachu">—</span></a>
-          <a class="hub-chip" href="%%BASE_PATH%%pokemon/eevee/" onclick="trackEvent('click_hub_pokemon',{pokemon:'イーブイ'})">%%POKEMON_EEVEE%% <span class="chip-count" id="chip-eevee">—</span></a>
-          <a class="hub-chip" href="%%BASE_PATH%%pokemon/lapras/" onclick="trackEvent('click_hub_pokemon',{pokemon:'ラプラス'})">%%POKEMON_LAPRAS%% <span class="chip-count" id="chip-lapras">—</span></a>
-          <a class="hub-chip" href="%%BASE_PATH%%pokemon/snorlax/" onclick="trackEvent('click_hub_pokemon',{pokemon:'カビゴン'})">%%POKEMON_SNORLAX%% <span class="chip-count" id="chip-snorlax">—</span></a>
-          <a class="hub-chip" href="%%BASE_PATH%%pokemon/slowpoke/" onclick="trackEvent('click_hub_pokemon',{pokemon:'ヤドン'})">%%POKEMON_SLOWPOKE%% <span class="chip-count" id="chip-slowpoke">—</span></a>
+          <a class="hub-chip" href="%%LANG_PATH%%pokemon/pikachu/" onclick="trackEvent('click_hub_pokemon',{pokemon:'ピカチュウ'})">%%POKEMON_PIKACHU%% <span class="chip-count" id="chip-pikachu">—</span></a>
+          <a class="hub-chip" href="%%LANG_PATH%%pokemon/eevee/" onclick="trackEvent('click_hub_pokemon',{pokemon:'イーブイ'})">%%POKEMON_EEVEE%% <span class="chip-count" id="chip-eevee">—</span></a>
+          <a class="hub-chip" href="%%LANG_PATH%%pokemon/lapras/" onclick="trackEvent('click_hub_pokemon',{pokemon:'ラプラス'})">%%POKEMON_LAPRAS%% <span class="chip-count" id="chip-lapras">—</span></a>
+          <a class="hub-chip" href="%%LANG_PATH%%pokemon/snorlax/" onclick="trackEvent('click_hub_pokemon',{pokemon:'カビゴン'})">%%POKEMON_SNORLAX%% <span class="chip-count" id="chip-snorlax">—</span></a>
+          <a class="hub-chip" href="%%LANG_PATH%%pokemon/slowpoke/" onclick="trackEvent('click_hub_pokemon',{pokemon:'ヤドン'})">%%POKEMON_SLOWPOKE%% <span class="chip-count" id="chip-slowpoke">—</span></a>
         </div>
       </div>
 
@@ -294,7 +294,12 @@
   (function() {
     'use strict';
 
+    // BASE_PATH: サイトルート直下にしか無いもの（assets / manhole/image / api / ndjson）用。
+    //            言語ディレクトリからは '../' になる。
+    // LANG_PATH: 言語ごとに存在するページ（map.html / pokemon/）用。常に './'。
+    //            ここを取り違えると /en/ のリンクが日本語版へ飛ぶ。
     var BASE_PATH = '%%BASE_PATH%%';
+    var LANG_PATH = '%%LANG_PATH%%';
 
     // ── Curated hero cards (rotated daily) ──────────────────────────────────
     var HEROES = [
@@ -305,10 +310,10 @@
         title: 'ぽつんと離れた秘境のポケふた',
         place: '北海道 斜里町 ／ パルキア・ロコン',
         footerText: '北海道のポケふたをもっと見る', footerCta: '地図で見る →',
-        href: BASE_PATH + 'map.html?manhole=220',
+        href: LANG_PATH + 'map.html?manhole=220',
         small: [
-          { id: 148, imgAlt: '奈良県斑鳩町のポケふた', badge: '🌲 世界遺産', bg: 'linear-gradient(140deg,#C8A870,#A07840)', title: 'ドータクン・バオッキー', place: '奈良県 斑鳩町 →', href: BASE_PATH + 'map.html?manhole=148' },
-          { id: 174, imgAlt: '沖縄県那覇市のポケふた', badge: '🏝 離島', bg: 'linear-gradient(140deg,#5AB4E0,#2E8BB0)', title: 'ウインディ', place: '沖縄県 那覇市 →', href: BASE_PATH + 'map.html?manhole=174' }
+          { id: 148, imgAlt: '奈良県斑鳩町のポケふた', badge: '🌲 世界遺産', bg: 'linear-gradient(140deg,#C8A870,#A07840)', title: 'ドータクン・バオッキー', place: '奈良県 斑鳩町 →', href: LANG_PATH + 'map.html?manhole=148' },
+          { id: 174, imgAlt: '沖縄県那覇市のポケふた', badge: '🏝 離島', bg: 'linear-gradient(140deg,#5AB4E0,#2E8BB0)', title: 'ウインディ', place: '沖縄県 那覇市 →', href: LANG_PATH + 'map.html?manhole=174' }
         ]
       },
       {
@@ -318,10 +323,10 @@
         title: 'エメラルドグリーンの海辺のポケふた',
         place: '沖縄県 宜野湾市 ／ サニーゴ・ラブカス',
         footerText: '沖縄のポケふたをもっと見る', footerCta: '地図で見る →',
-        href: BASE_PATH + 'map.html?manhole=175',
+        href: LANG_PATH + 'map.html?manhole=175',
         small: [
-          { id: 176, imgAlt: '沖縄県沖縄市のポケふた', badge: '🏝 離島', bg: 'linear-gradient(140deg,#4AA880,#2A7860)', title: 'バチンキー・ラランテス', place: '沖縄県 沖縄市 →', href: BASE_PATH + 'map.html?manhole=176' },
-          { id: 344, imgAlt: '和歌山県白浜町のポケふた', badge: '🌊 海沿い', bg: 'linear-gradient(140deg,#B0D4E8,#78A8C8)', title: 'ナミイルカ・ヤンチャム', place: '和歌山県 白浜町 →', href: BASE_PATH + 'map.html?manhole=344' }
+          { id: 176, imgAlt: '沖縄県沖縄市のポケふた', badge: '🏝 離島', bg: 'linear-gradient(140deg,#4AA880,#2A7860)', title: 'バチンキー・ラランテス', place: '沖縄県 沖縄市 →', href: LANG_PATH + 'map.html?manhole=176' },
+          { id: 344, imgAlt: '和歌山県白浜町のポケふた', badge: '🌊 海沿い', bg: 'linear-gradient(140deg,#B0D4E8,#78A8C8)', title: 'ナミイルカ・ヤンチャム', place: '和歌山県 白浜町 →', href: LANG_PATH + 'map.html?manhole=344' }
         ]
       },
       {
@@ -331,10 +336,10 @@
         title: '南国の温泉地に集まるイーブイ進化形',
         place: '鹿児島県 指宿市 ／ シャワーズ',
         footerText: '指宿のポケふたをもっと見る', footerCta: '地図で見る →',
-        href: BASE_PATH + 'map.html?pref=%E9%B9%BF%E5%85%90%E5%B3%B6%E7%9C%8C',
+        href: LANG_PATH + 'map.html?pref=%E9%B9%BF%E5%85%90%E5%B3%B6%E7%9C%8C',
         small: [
-          { id: 1, imgAlt: '鹿児島県指宿市のイーブイのポケふた', badge: '⭐ 人気', bg: 'linear-gradient(140deg,#E8D0A0,#C8A870)', title: 'イーブイ', place: '鹿児島県 指宿市 →', href: BASE_PATH + 'map.html?manhole=1' },
-          { id: 7, imgAlt: '鹿児島県指宿市のリーフィアのポケふた', badge: '🌿 公園', bg: 'linear-gradient(140deg,#BcD3C4,#8FB7A0)', title: 'リーフィア', place: '鹿児島県 指宿市 →', href: BASE_PATH + 'map.html?manhole=7' }
+          { id: 1, imgAlt: '鹿児島県指宿市のイーブイのポケふた', badge: '⭐ 人気', bg: 'linear-gradient(140deg,#E8D0A0,#C8A870)', title: 'イーブイ', place: '鹿児島県 指宿市 →', href: LANG_PATH + 'map.html?manhole=1' },
+          { id: 7, imgAlt: '鹿児島県指宿市のリーフィアのポケふた', badge: '🌿 公園', bg: 'linear-gradient(140deg,#BcD3C4,#8FB7A0)', title: 'リーフィア', place: '鹿児島県 指宿市 →', href: LANG_PATH + 'map.html?manhole=7' }
         ]
       },
       {
@@ -344,10 +349,10 @@
         title: '法隆寺のそばに佇む古代ポケふた',
         place: '奈良県 斑鳩町 ／ ドータクン・バオッキー',
         footerText: '奈良のポケふたをもっと見る', footerCta: '地図で見る →',
-        href: BASE_PATH + 'map.html?manhole=148',
+        href: LANG_PATH + 'map.html?manhole=148',
         small: [
-          { id: 149, imgAlt: '奈良県斑鳩町のガーディ・マダツボミのポケふた', badge: '🌲 世界遺産', bg: 'linear-gradient(140deg,#C89870,#A06840)', title: 'ガーディ・マダツボミ', place: '奈良県 斑鳩町 →', href: BASE_PATH + 'map.html?manhole=149' },
-          { id: 301, imgAlt: '石川県金沢市のミロカロスのポケふた', badge: '🏛 美術館', bg: 'linear-gradient(140deg,#D0B8E0,#A890C0)', title: 'ミロカロス', place: '石川県 金沢市 →', href: BASE_PATH + 'map.html?manhole=301' }
+          { id: 149, imgAlt: '奈良県斑鳩町のガーディ・マダツボミのポケふた', badge: '🌲 世界遺産', bg: 'linear-gradient(140deg,#C89870,#A06840)', title: 'ガーディ・マダツボミ', place: '奈良県 斑鳩町 →', href: LANG_PATH + 'map.html?manhole=149' },
+          { id: 301, imgAlt: '石川県金沢市のミロカロスのポケふた', badge: '🏛 美術館', bg: 'linear-gradient(140deg,#D0B8E0,#A890C0)', title: 'ミロカロス', place: '石川県 金沢市 →', href: LANG_PATH + 'map.html?manhole=301' }
         ]
       },
       {
@@ -357,10 +362,10 @@
         title: '日本のいちばん北で待つポケふた',
         place: '北海道 稚内市 ／ アローラキュウコン・アローラロコン',
         footerText: '北海道のポケふたをもっと見る', footerCta: '地図で見る →',
-        href: BASE_PATH + 'map.html?manhole=67',
+        href: LANG_PATH + 'map.html?manhole=67',
         small: [
-          { id: 156, imgAlt: '東京都小笠原村のミュウのポケふた', badge: '🏝 離島', bg: 'linear-gradient(140deg,#5AB4E0,#2E8BB0)', title: 'ミュウ', place: '東京都 小笠原村 →', href: BASE_PATH + 'map.html?manhole=156' },
-          { id: 411, imgAlt: '茨城県つくば市のレックウザのポケふた', badge: '🌟 全国2枚', bg: 'linear-gradient(140deg,#7EA0C0,#4E7090)', title: 'レックウザ', place: '茨城県 つくば市 →', href: BASE_PATH + 'map.html?manhole=411' }
+          { id: 156, imgAlt: '東京都小笠原村のミュウのポケふた', badge: '🏝 離島', bg: 'linear-gradient(140deg,#5AB4E0,#2E8BB0)', title: 'ミュウ', place: '東京都 小笠原村 →', href: LANG_PATH + 'map.html?manhole=156' },
+          { id: 411, imgAlt: '茨城県つくば市のレックウザのポケふた', badge: '🌟 全国2枚', bg: 'linear-gradient(140deg,#7EA0C0,#4E7090)', title: 'レックウザ', place: '茨城県 つくば市 →', href: LANG_PATH + 'map.html?manhole=411' }
         ]
       },
       {
@@ -370,10 +375,10 @@
         title: '船でしか行けない島のポケふた',
         place: '東京都 小笠原村 ／ リザードン',
         footerText: '東京のポケふたをもっと見る', footerCta: '地図で見る →',
-        href: BASE_PATH + 'map.html?manhole=154',
+        href: LANG_PATH + 'map.html?manhole=154',
         small: [
-          { id: 159, imgAlt: '京都府京都市のホウオウのポケふた', badge: '⭐ ここだけ', bg: 'linear-gradient(140deg,#E8C070,#C09040)', title: 'ホウオウ', place: '京都府 京都市 →', href: BASE_PATH + 'map.html?manhole=159' },
-          { id: 54, imgAlt: '宮城県仙台市のジラーチ・ラプラスのポケふた', badge: '⭐ ここだけ', bg: 'linear-gradient(140deg,#B0C8E0,#7898C0)', title: 'ジラーチ・ラプラス', place: '宮城県 仙台市 →', href: BASE_PATH + 'map.html?manhole=54' }
+          { id: 159, imgAlt: '京都府京都市のホウオウのポケふた', badge: '⭐ ここだけ', bg: 'linear-gradient(140deg,#E8C070,#C09040)', title: 'ホウオウ', place: '京都府 京都市 →', href: LANG_PATH + 'map.html?manhole=159' },
+          { id: 54, imgAlt: '宮城県仙台市のジラーチ・ラプラスのポケふた', badge: '⭐ ここだけ', bg: 'linear-gradient(140deg,#B0C8E0,#7898C0)', title: 'ジラーチ・ラプラス', place: '宮城県 仙台市 →', href: LANG_PATH + 'map.html?manhole=54' }
         ]
       },
       {
@@ -383,10 +388,10 @@
         title: '熊野の森にひそむ幻のポケふた',
         place: '和歌山県 那智勝浦町 ／ セレビィ',
         footerText: '和歌山のポケふたをもっと見る', footerCta: '地図で見る →',
-        href: BASE_PATH + 'map.html?manhole=346',
+        href: LANG_PATH + 'map.html?manhole=346',
         small: [
-          { id: 343, imgAlt: '和歌山県高野町のウーラオスのポケふた', badge: '⭐ ここだけ', bg: 'linear-gradient(140deg,#A8C0A0,#6E8C68)', title: 'ウーラオス', place: '和歌山県 高野町 →', href: BASE_PATH + 'map.html?manhole=343' },
-          { id: 9, imgAlt: '鹿児島県指宿市のニンフィアのポケふた', badge: '🌟 全国2枚', bg: 'linear-gradient(140deg,#F0C0D0,#C890A8)', title: 'ニンフィア', place: '鹿児島県 指宿市 →', href: BASE_PATH + 'map.html?manhole=9' }
+          { id: 343, imgAlt: '和歌山県高野町のウーラオスのポケふた', badge: '⭐ ここだけ', bg: 'linear-gradient(140deg,#A8C0A0,#6E8C68)', title: 'ウーラオス', place: '和歌山県 高野町 →', href: LANG_PATH + 'map.html?manhole=343' },
+          { id: 9, imgAlt: '鹿児島県指宿市のニンフィアのポケふた', badge: '🌟 全国2枚', bg: 'linear-gradient(140deg,#F0C0D0,#C890A8)', title: 'ニンフィア', place: '鹿児島県 指宿市 →', href: LANG_PATH + 'map.html?manhole=9' }
         ]
       }
     ];
@@ -503,7 +508,7 @@
         footerText: footerText,
         footerName: footerName,
         footerCta: TF_STRINGS.cta,
-        href: BASE_PATH + 'map.html?manhole=' + encodeURIComponent(f.id),
+        href: LANG_PATH + 'map.html?manhole=' + encodeURIComponent(f.id),
         small: photos.slice(1, 3).map(function(p) {
           return {
             id: p.id,
@@ -512,7 +517,7 @@
             badge: heroBadge(p),
             title: names(p) || place(p),
             place: place(p) + ' →',
-            href: BASE_PATH + 'map.html?manhole=' + encodeURIComponent(p.id)
+            href: LANG_PATH + 'map.html?manhole=' + encodeURIComponent(p.id)
           };
         })
       };
@@ -806,7 +811,7 @@
       scroller.innerHTML = list.map(function(m) {
         var place = (m.title || '').replace('/', ' ');
         var names = m.pokemons.join('・');
-        var href = BASE_PATH + 'map.html?manhole=' + encodeURIComponent(m.id);
+        var href = LANG_PATH + 'map.html?manhole=' + encodeURIComponent(m.id);
         var img = BASE_PATH + 'manhole/image/' + encodeURIComponent(m.id) + '_latest.jpeg';
         return '<a class="newrel-card" href="' + href + '" onclick="trackEvent(\'click_newrelease\',{manhole:\'' + escapeHtml(m.id) + '\'})">'
           + '<div class="newrel-media">'

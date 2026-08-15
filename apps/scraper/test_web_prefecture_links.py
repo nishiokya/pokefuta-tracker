@@ -14,6 +14,41 @@ class WebPrefectureLinksTest(unittest.TestCase):
                 self.assertIn('" href="\' + window.getPrefecturePageUrl(pref) + \'"', source)
                 self.assertNotIn('href="/prefectures/', source)
 
+    def test_language_pages_are_linked_with_lang_path(self) -> None:
+        """言語ごとに存在するページを BASE_PATH で参照しないこと。
+
+        BASE_PATH は言語ディレクトリでは '../' になるため、map.html や pokemon/ を
+        これで参照すると /en/ のリンクが日本語版へ飛ぶ（実際に起きていた）。
+        言語別に存在するページは LANG_PATH（常に './'）で参照する。
+        """
+        source = (ROOT / "apps/web/index.template.html").read_text(encoding="utf-8")
+        for page in ("map.html", "index.html", "pokemon/"):
+            with self.subTest(page=page):
+                self.assertNotIn(f"%%BASE_PATH%%{page}", source)
+                self.assertIn(f"%%LANG_PATH%%{page}", source)
+        # JS 側も同様。BASE_PATH + 'map.html' は日本語版へ飛ぶ
+        self.assertNotIn("BASE_PATH + 'map.html", source)
+        self.assertIn("LANG_PATH + 'map.html", source)
+        self.assertIn("var LANG_PATH = '%%LANG_PATH%%';", source)
+
+    def test_root_only_resources_keep_base_path(self) -> None:
+        """ルート直下にしか無いものは BASE_PATH のままであること。"""
+        source = (ROOT / "apps/web/index.template.html").read_text(encoding="utf-8")
+        for resource in ("assets/theme.css", "prefectures/", "character_manholes.html"):
+            with self.subTest(resource=resource):
+                self.assertIn(f"%%BASE_PATH%%{resource}", source)
+        for resource in ("pokefuta.ndjson", "manhole/image/", "api/top-feed.json"):
+            with self.subTest(resource=resource):
+                self.assertIn(f"BASE_PATH + '{resource}", source)
+
+    def test_every_language_defines_both_paths(self) -> None:
+        import json
+        for path in sorted((ROOT / "apps/web/i18n").glob("strings.*.json")):
+            with self.subTest(lang=path.name):
+                data = json.loads(path.read_text(encoding="utf-8"))
+                self.assertIn("BASE_PATH", data)
+                self.assertEqual(data.get("LANG_PATH"), "./")
+
     def test_map_copy_has_prefecture_page_helper(self) -> None:
         source = (ROOT / "apps/web/map.html").read_text(encoding="utf-8")
         self.assertIn("function getPrefecturePageUrl(prefecture)", source)
