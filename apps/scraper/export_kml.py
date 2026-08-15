@@ -63,7 +63,10 @@ def _load_records(path: Path) -> List[Dict[str, Any]]:
 
 
 def _format_name(record: Dict[str, Any]) -> str:
-    title = (record.get("title") or "").strip()
+    # place_label は title が自治体単位で重複するレコードにだけ入る場所名
+    # （例: 指宿市 砂むし会館砂楽）。KML はポケモン名を別枠で見せられないので、
+    # 下でどちらにせよポケモン名を添える
+    title = (record.get("place_label") or record.get("title") or "").strip()
     fallback = f"Pokéfuta #{record.get('id', '?')}"
     pokemons = record.get("pokemons") or []
     if isinstance(pokemons, list) and pokemons:

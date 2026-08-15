@@ -28,6 +28,33 @@
     // i18n: build-time injected per language
     window.I18N = %%I18N_OBJECT%%;
 
+    // title は local.pokemon.jp の見出しそのままで「鹿児島県/指宿市」のように
+    // 自治体単位でしか区別できない。同一自治体に複数枚あるレコードには
+    // place_label（例: 指宿市 砂むし会館砂楽）が入っているので、画面に名前として
+    // 出すときは必ずこの関数を通すこと。
+    //
+    // place_label が他のレコードと重複して場所では区別できないものには
+    // place_ambiguous が立つ。そこだけポケモン名を添えて区別する。日本語名を
+    // データへ焼き込まず、表示時に getHeroPokemonDisplayName で言語変換するため、
+    // 英語版では「町田市 (Bulbasaur)」のように出る。
+    // 複数の <script> ブロックから参照するため window に生やしている。
+    window.getManholeDisplayName = function getManholeDisplayName(d) {
+      const fallback = window.I18N?.manholeTitle || 'ポケふた';
+      if (!d) return fallback;
+      const base = d.place_label || d.title || fallback;
+      if (!d.place_ambiguous || !Array.isArray(d.pokemons) || !d.pokemons.length) {
+        return base;
+      }
+      const lang = window.I18N?.lang || 'ja';
+      const localize = window.getHeroPokemonDisplayName || (name => name);
+      const names = d.pokemons
+        .filter(name => name && !name.includes('ローカルActs'))
+        .map(localize)
+        .join(window.I18N?.pokemonJoiner || '・');
+      if (!names) return base;
+      return lang === 'ja' ? `${base}（${names}）` : `${base} (${names})`;
+    };
+
     window.PREFECTURE_CODE_MAP = Object.freeze({
       '北海道': '01', '青森県': '02', '岩手県': '03', '宮城県': '04', '秋田県': '05',
       '山形県': '06', '福島県': '07', '茨城県': '08', '栃木県': '09', '群馬県': '10',
@@ -211,7 +238,7 @@
 
       const I = window.I18N;
       const placeText = [manhole.prefecture, manhole.city].filter(Boolean).join('');
-      const titleBase = manhole.title || `${I.manholeTitle} ${manhole.id}`;
+      const titleBase = getManholeDisplayName(manhole) || `${I.manholeTitle} ${manhole.id}`;
       const baseDescription = placeText
         ? I.jsonLdDescTemplate.replace('{place}', placeText)
         : I.jsonLdDescNoPlace;
@@ -637,6 +664,8 @@
     var prefectureCounts = {};
     var cityCounts = {};
     var selectedPrefecture = '';
+    // ポケモンメタデータ到着後に JSON-LD を貼り直すため、今表示中のレコードを覚えておく
+    var currentManholeData = null;
     var pokemonCounts = {};
     var currentTab = 'prefecture';
     var filterRecent = false; // recent 30 days filter
@@ -861,6 +890,11 @@
       return (manhole.titles || []).some(title => title.key === key);
     }
 
+    // getManholeDisplayName（先頭の <script> ブロック）から window 経由で参照する。
+    // classic script のトップレベル関数宣言は暗黙に window へ載るが、将来
+    // type="module" 化やブロックスコープへの移動で黙って日本語フォールバックに
+    // なるため、明示的に生やしておく
+    window.getHeroPokemonDisplayName = getHeroPokemonDisplayName;
     function getHeroPokemonDisplayName(nameJa) {
       const names = getPokemonMetadata(nameJa)?.names;
       const lang = window.I18N?.lang || 'ja';
@@ -878,7 +912,7 @@
         : [];
       return pokemons.length
         ? pokemons.map(getHeroPokemonDisplayName).join(window.I18N?.pokemonJoiner || '・')
-        : (manhole.title || window.I18N?.manholeTitle || 'ポケふた');
+        : getManholeDisplayName(manhole);
     }
 
     function getHeroThemeCandidates(themeKey) {
@@ -1089,7 +1123,10 @@
           }).join('')
         : `<span class="travel-popup-pokemon">${I.noPokemon}</span>`;
       const imageUrl = getLocalManholeImageUrl(d.id);
-      const photoAlt = `${d.title || I.manholeTitle}${I.photoAltSuffix}`;
+      // place_label が付いているレコードは見出しに既に building を含む
+      // （例: 指宿市 砂むし会館砂楽）ので 📍 行は出さない
+      const showBuildingLine = Boolean(d.building) && !d.place_label;
+      const photoAlt = `${getManholeDisplayName(d)}${I.photoAltSuffix}`;
       const photoMeta = getLatestPhotoMeta(d.id);
       const hasPhoto = Boolean(photoMeta?.url || photoMeta?.original_url || photoMeta?.storage_key);
       const photoDate = getPhotoTakenDate(d.id);
@@ -1182,8 +1219,8 @@
               <span>${escapeHtml(prefecture)}</span>
               ${d.city ? `<b>${escapeHtml(d.city)}</b>` : ''}
             </div>
-            <h3 class="travel-popup-title">${escapeHtml(d.title || I.manholeTitle)}</h3>
-            ${d.building ? `<p class="travel-popup-building">📍 ${escapeHtml(d.building)}</p>` : ''}
+            <h3 class="travel-popup-title">${escapeHtml(getManholeDisplayName(d))}</h3>
+            ${showBuildingLine ? `<p class="travel-popup-building">📍 ${escapeHtml(d.building)}</p>` : ''}
             ${titleBadgesHtml}
             <div class="travel-popup-pokemon-list" aria-label="${I.pokemonListAria}">${pokemonsHtml}</div>
             <div class="popup-actions travel-popup-actions${hasPhoto ? ' travel-popup-actions--has-photo' : ''}">
@@ -1302,7 +1339,7 @@
       if (displayMatches.length === 0) return '';
 
       const items = displayMatches.map(d => {
-        const safeTitleJs = escapeJs(d.title || d.id);
+        const safeTitleJs = escapeJs(getManholeDisplayName(d) || d.id);
         const safeIdJs = escapeJs(d.id);
 
         // Extract Pokemon names for this manhole
@@ -1315,7 +1352,7 @@
           <button type="button" class="same-pokemon-item"
                   data-manhole-id="${escapeHtml(d.id)}"
                   onclick="openManholePopup('${safeIdJs}'); collapseBottomSheet();"
-                  title="${escapeHtml(d.title || I.manholeTitle)}${I.openSuffix}">
+                  title="${escapeHtml(getManholeDisplayName(d))}${I.openSuffix}">
             ${escapeHtml(d.prefecture || '不明')} ${escapeHtml(d.city || '')}${escapeHtml(pokemonDisplay)}
           </button>
         `;
@@ -1456,6 +1493,16 @@
             marker.setPopupContent(buildPokefutaPopup(marker.pokefutaData));
           });
           renderHeroDiscovery();
+          // place_ambiguous のレコードは表示名にポケモン名を含む。メタデータ到着前に
+          // 描画すると多言語ページでも日本語名のまま残るので、名前を出す面はすべて
+          // 作り直す。500KB の pokemon_metadata.json を待つと地図の初期描画が遅れるため、
+          // await ではなく到着後の再描画で揃える（いずれも再実行して安全）。
+          populatePrefectureTable();
+          renderRecentAdded();
+          // ?manhole=98 の直リンクは既に JSON-LD を生成済み、?pref=東京都 は
+          // 既にスポット一覧を描画済みなので、そちらも貼り直す
+          if (currentManholeData) window.applyManholePageMeta(currentManholeData);
+          if (selectedPrefecture) renderPrefectureSpots(selectedPrefecture);
         });
         
         // 都道府県ごとのマンホール数と bounding box マップを構築（グローバル変数を使用）
@@ -1572,6 +1619,7 @@
       if (prefectureOverviewLayer && map.hasLayer(prefectureOverviewLayer)) map.removeLayer(prefectureOverviewLayer);
       if (markerLayer && !map.hasLayer(markerLayer)) markerLayer.addTo(map);
       const data = marker.pokefutaData;
+      currentManholeData = data;
       window.applyManholePageMeta(data);
       window.history.replaceState({ manhole: data.id }, '', window.buildManholeCanonicalPath(data.id));
       // Send page_view for manhole detail (always: covers both initial ?manhole= load and SPA navigation)
@@ -1969,7 +2017,7 @@
         if (d.id && prefectureThumbnails[pref] && prefectureThumbnails[pref].length < 8) {
           prefectureThumbnails[pref].push({
             id: d.id,
-            title: d.title || 'ポケふた',
+            title: getManholeDisplayName(d),
             imageUrl: getLocalManholeImageUrl(d.id)
           });
         }
@@ -2154,7 +2202,7 @@
         .sort((a, b) => b._addedDate - a._addedDate);
       renderSpotResults(list, recentItems, {
         emptyMessage: window.I18N.recentEmpty,
-        meta: d => [d.prefecture || window.I18N.unknownPref, d.title || window.I18N.manholeTitle].join(' / '),
+        meta: d => [d.prefecture || window.I18N.unknownPref, getManholeDisplayName(d)].join(' / '),
         badge: () => `<img src="%%BASE_PATH%%assets/icon-fire.svg" alt="" aria-hidden="true">NEW`,
         limit: 24
       });
@@ -2186,7 +2234,7 @@
         return;
       }
       list.innerHTML = visibleSpots.map(d => {
-        const metaText = meta ? meta(d) : (d.title || window.I18N.manholeTitle);
+        const metaText = meta ? meta(d) : (getManholeDisplayName(d));
         const badgeText = badge ? badge(d) : '';
         return `
           <button type="button" class="prefecture-spot-item" data-manhole-id="${escapeHtml(d.id)}">
@@ -2250,7 +2298,7 @@
         return;
       }
       renderSpotResults(list, nearest, {
-        meta: d => [d.prefecture || window.I18N.unknownPref, d.title || window.I18N.manholeTitle].join(' / '),
+        meta: d => [d.prefecture || window.I18N.unknownPref, getManholeDisplayName(d)].join(' / '),
         badge: d => `${d.distance.toFixed(1)}km`,
         badgeClass: 'prefecture-spot-distance'
       });

@@ -154,6 +154,27 @@ def _compute_and_attach_titles(all_records: List[Dict], dataset_dir: str,
     logger.info("Titles attached for %d active records", attached)
 
 
+def _compute_and_attach_place_labels(all_records: List[Dict],
+                                      logger: logging.Logger) -> None:
+    """title が重複するレコードに place_label を付与する。
+
+    title は upstream 見出しそのままで自治体単位でしか区別できないため、
+    地図ポップアップなどで同じ文字列が並ぶ。表示側は place_label || title で読む。
+    place_label でも区別できないレコードには place_ambiguous が立つので、
+    表示側が言語別に変換したポケモン名を添えて区別する。
+    """
+    try:
+        from display_names import attach_place_labels
+    except ImportError as exc:
+        logger.warning("display_names module not found; skipping: %s", exc)
+        return
+
+    attached = attach_place_labels(all_records)
+    ambiguous = sum(1 for r in all_records if r.get("place_ambiguous"))
+    logger.info("Place labels attached for %d duplicated-title records (%d ambiguous)",
+                attached, ambiguous)
+
+
 def load_manhole_titles_json(dataset_dir: str) -> Tuple[Dict[str, Dict[str, Any]], List[Dict]]:
     """Load dataset/manhole_titles.json.
 
@@ -669,6 +690,8 @@ def main():
 
     # Compute titles for all records and store in pokefuta.ndjson
     _compute_and_attach_titles(all_records, dataset_dir, logger)
+    # building は apply_title_metadata 済みなので、その後に place_label を組み立てる
+    _compute_and_attach_place_labels(all_records, logger)
 
     atomic_write_ndjson(args.out, all_records)
     logger.info("Wrote %d records to %s", len(all_records), args.out)

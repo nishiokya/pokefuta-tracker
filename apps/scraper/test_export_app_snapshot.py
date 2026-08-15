@@ -93,5 +93,100 @@ class WriteManholesJsonTest(unittest.TestCase):
             self.assertEqual(2, sum(1 for l in lines if l.lstrip().startswith('{"id"')))
 
 
+
+class ApplyPlaceLabelsTest(unittest.TestCase):
+    """アプリ用スナップショットの name が自治体内で重複しないこと。"""
+
+    @staticmethod
+    def entry(**kwargs) -> dict:
+        base = {
+            "id": 1, "title": "鹿児島県/指宿市", "prefecture": "鹿児島県",
+            "municipality": "指宿", "city": "指宿", "address": "", "building": "",
+            "pokemons": [], "is_active": True,
+        }
+        base.update(kwargs)
+        return base
+
+    def test_duplicated_title_gets_distinct_names(self) -> None:
+        # 実マスタに載っている id を使うと overlay_manual_metadata に上書きされるため、
+        # 表示名のテストはマスタに無い id を使う
+        entries = [
+            self.entry(id=9001, address="鹿児島県指宿市湊1丁目1-1", building="指宿中央交番"),
+            self.entry(id=9002, address="鹿児島県指宿市湯の浜5丁目25-18", building="砂むし会館砂楽"),
+        ]
+        MODULE.apply_place_labels(entries)
+        self.assertEqual(entries[0]["name"], "指宿市 指宿中央交番")
+        self.assertEqual(entries[1]["name"], "指宿市 砂むし会館砂楽")
+
+    def test_unique_title_keeps_original(self) -> None:
+        entries = [self.entry(id=9003, title="北海道/斜里町", municipality="斜里", city="斜里")]
+        MODULE.apply_place_labels(entries)
+        self.assertEqual(entries[0]["name"], "北海道/斜里町")
+
+    def test_same_address_falls_back_to_pokemon(self) -> None:
+        entries = [
+            self.entry(id=9004, title="東京都/町田市", municipality="町田", city="町田",
+                       address="東京都町田市原町田5-16", pokemons=["フシギダネ"]),
+            self.entry(id=9005, title="東京都/町田市", municipality="町田", city="町田",
+                       address="東京都町田市原町田5-16", pokemons=["ヒトカゲ"]),
+        ]
+        MODULE.apply_place_labels(entries)
+        # 共通の住所は情報を持たないので落ちる
+        self.assertEqual(entries[0]["name"], "町田市（フシギダネ）")
+        self.assertEqual(entries[1]["name"], "町田市（ヒトカゲ）")
+
+    def test_inactive_entry_is_skipped(self) -> None:
+        entries = [
+            self.entry(id=9006, is_active=False),
+            self.entry(id=9010, address="鹿児島県指宿市湯の浜5丁目25-18", building="砂むし会館砂楽"),
+        ]
+        MODULE.apply_place_labels(entries)
+        self.assertNotIn("place_label", entries[0])
+        self.assertEqual(entries[0]["name"], "鹿児島県/指宿市")
+
+    def test_null_or_missing_is_active_is_not_treated_as_active(self) -> None:
+        # DB の NULL / 欠損が重複判定に混ざると、本来一意な active に
+        # place_label が付いてしまう
+        entries = [
+            self.entry(id=9007, is_active=None, address="鹿児島県指宿市湊1丁目1-1"),
+            self.entry(id=9008, address="鹿児島県指宿市東方9300-1"),
+            self.entry(id=9009, address="鹿児島県指宿市湯の浜5丁目25-18"),
+        ]
+        del entries[1]["is_active"]
+        MODULE.apply_place_labels(entries)
+        for e in entries[:2]:
+            self.assertNotIn("place_label", e)
+            self.assertEqual(e["name"], "鹿児島県/指宿市")
+        # active は1件だけなので重複せず place_label も付かない
+        self.assertNotIn("place_label", entries[2])
+
+    def test_manual_master_overrides_supabase_typo(self) -> None:
+        # Supabase には手動マスタの訂正が届かないので、name を組み立てる前に重ねる
+        import json as _json
+        import tempfile as _tempfile
+        from pathlib import Path as _Path
+        master = {"manholes": {"3": {"building": "ふれあいプラザなのはな館",
+                                     "place_detail": "敷地内"}}}
+        with _tempfile.TemporaryDirectory() as d:
+            mp = _Path(d) / "manhole_titles.json"
+            mp.write_text(_json.dumps(master, ensure_ascii=False), encoding="utf-8")
+            entries = [self.entry(id=3, building="ふれあいプラザなのはな館敷",
+                                  address="鹿児島県指宿市東方9300-1")]
+            self.assertEqual(MODULE.overlay_manual_metadata(entries, mp), 1)
+        self.assertEqual(entries[0]["building"], "ふれあいプラザなのはな館")
+
+    def test_overlay_survives_missing_master(self) -> None:
+        from pathlib import Path as _Path
+        entries = [self.entry(id=3, building="そのまま")]
+        self.assertEqual(
+            MODULE.overlay_manual_metadata(entries, _Path("/nonexistent/x.json")), 0)
+        self.assertEqual(entries[0]["building"], "そのまま")
+
+    def test_never_empty_name(self) -> None:
+        entries = [self.entry(id=9011, title="")]
+        MODULE.apply_place_labels(entries)
+        self.assertEqual(entries[0]["name"], "ポケふた")
+
+
 if __name__ == "__main__":
     unittest.main()
