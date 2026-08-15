@@ -30,10 +30,10 @@
     // place_label（例: 指宿市 砂むし会館砂楽）が入っているので、画面に名前として
     // 出すときは必ずこの関数を通すこと。
     //
-    // place_label でも区別できない16件（町田市6・小笠原村4など同一住所に複数枚）は
+    // place_label が他のレコードと重複して場所では区別できないものには
     // place_ambiguous が立つ。そこだけポケモン名を添えて区別する。日本語名を
     // データへ焼き込まず、表示時に getHeroPokemonDisplayName で言語変換するため、
-    // 英語版では (Bulbasaur) のように出る。
+    // 英語版では「町田市 (Bulbasaur)」のように出る。
     // 複数の <script> ブロックから参照するため window に生やしている。
     window.getManholeDisplayName = function getManholeDisplayName(d) {
       const fallback = 'ポケふた';
@@ -651,6 +651,8 @@
     var prefectureCounts = {};
     var cityCounts = {};
     var selectedPrefecture = '';
+    // ポケモンメタデータ到着後に JSON-LD を貼り直すため、今表示中のレコードを覚えておく
+    var currentManholeData = null;
     var pokemonCounts = {};
     var currentTab = 'prefecture';
     var filterRecent = false; // recent 30 days filter
@@ -1527,11 +1529,15 @@
           });
           renderHeroDiscovery();
           // place_ambiguous のレコードは表示名にポケモン名を含む。メタデータ到着前に
-          // 描画すると多言語ページでも日本語名のまま残るので、名前を出す一覧も作り直す。
-          // 500KB の pokemon_metadata.json を待つと地図の初期描画が遅れるため、
-          // await ではなく到着後の再描画で揃える（どちらの関数も再実行して安全）。
+          // 描画すると多言語ページでも日本語名のまま残るので、名前を出す面はすべて
+          // 作り直す。500KB の pokemon_metadata.json を待つと地図の初期描画が遅れるため、
+          // await ではなく到着後の再描画で揃える（いずれも再実行して安全）。
           populatePrefectureTable();
           renderRecentAdded();
+          // ?manhole=98 の直リンクは既に JSON-LD を生成済み、?pref=東京都 は
+          // 既にスポット一覧を描画済みなので、そちらも貼り直す
+          if (currentManholeData) window.applyManholePageMeta(currentManholeData);
+          if (selectedPrefecture) renderPrefectureSpots(selectedPrefecture);
         });
         
         // 都道府県ごとのマンホール数と bounding box マップを構築（グローバル変数を使用）
@@ -1648,6 +1654,7 @@
       if (prefectureOverviewLayer && map.hasLayer(prefectureOverviewLayer)) map.removeLayer(prefectureOverviewLayer);
       if (markerLayer && !map.hasLayer(markerLayer)) markerLayer.addTo(map);
       const data = marker.pokefutaData;
+      currentManholeData = data;
       window.applyManholePageMeta(data);
       window.history.replaceState({ manhole: data.id }, '', window.buildManholeCanonicalPath(data.id));
       // Send page_view for manhole detail (always: covers both initial ?manhole= load and SPA navigation)

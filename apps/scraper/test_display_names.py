@@ -99,7 +99,89 @@ class BuildPlaceLabelTest(unittest.TestCase):
         self.assertNotIn("ブースター", build_place_label(r))
 
 
+class AddressCandidatesTest(unittest.TestCase):
+    def test_stages_are_readable(self):
+        from display_names import address_candidates
+        self.assertEqual(
+            address_candidates("小倉北区室町一丁目1 リバーウォーク北九州"),
+            ["小倉北区", "小倉北区室町", "小倉北区室町一丁目",
+             "小倉北区室町一丁目1", "小倉北区室町一丁目1 リバーウォーク北九州"])
+
+    def test_does_not_cut_inside_ward_or_chome(self):
+        from display_names import address_candidates
+        stages = address_candidates("門司区旧門司二丁目5 ノーフォーク広場")
+        self.assertNotIn("門司", stages)          # 区名の途中で切らない
+        self.assertNotIn("門司区旧門司二", stages)  # 丁目の途中で切らない
+
+    def test_kanji_numeral_in_place_name_is_kept(self):
+        from display_names import address_candidates
+        # 「十二町」は丁目ではないので地名として残す
+        self.assertEqual(address_candidates("十二町2290"), ["十二町", "十二町2290"])
+
+
 class AttachPlaceLabelsTest(unittest.TestCase):
+    def test_shortens_to_shortest_unique_stage(self):
+        # 北九州の5枚は区＋町名まで切っても区別できる
+        rows = [
+            rec(id="198", city="北九州", title="福岡県/北九州市",
+                address="福岡県北九州市小倉北区室町一丁目1 リバーウォーク北九州"),
+            rec(id="201", city="北九州", title="福岡県/北九州市",
+                address="福岡県北九州市門司区港町5 門司港レトロ地区"),
+            rec(id="202", city="北九州", title="福岡県/北九州市",
+                address="福岡県北九州市門司区旧門司二丁目5 ノーフォーク広場"),
+        ]
+        attach_place_labels(rows)
+        self.assertEqual([r["place_label"] for r in rows],
+                         ["北九州市 小倉北区室町", "北九州市 門司区港町", "北九州市 門司区旧門司"])
+
+    def test_does_not_pick_stage_where_one_is_prefix_of_another(self):
+        # 「松原南」と「松原南2」だと切れているのか2丁目なのか読めない
+        rows = [
+            rec(id="1", city="東大阪", title="大阪府/東大阪市", address="大阪府東大阪市松原南1-1"),
+            rec(id="2", city="東大阪", title="大阪府/東大阪市", address="大阪府東大阪市松原南2-6"),
+        ]
+        attach_place_labels(rows)
+        self.assertEqual([r["place_label"] for r in rows],
+                         ["東大阪市 松原南1", "東大阪市 松原南2"])
+
+    def test_landmark_is_not_replaced_by_address(self):
+        # 住所側が深い段階を必要としても、衝突していない施設名は捨てない
+        rows = [
+            rec(id="222", city="香取", title="千葉県/香取市", address="千葉県香取市佐原イ109-14"),
+            rec(id="223", city="香取", title="千葉県/香取市", address="千葉県香取市佐原イ1722-1"),
+            rec(id="225", city="香取", title="千葉県/香取市",
+                address="千葉県香取市佐原イ4053", building="道の駅水の郷さわら"),
+        ]
+        attach_place_labels(rows)
+        self.assertEqual(rows[2]["place_label"], "香取市 道の駅水の郷さわら")
+        self.assertEqual(rows[0]["place_label"], "香取市 佐原イ109")
+
+    def test_colliding_landmark_falls_back_to_address(self):
+        rows = [
+            rec(id="209", city="東大阪", title="大阪府/東大阪市",
+                address="大阪府東大阪市松原南1-1", building="花園中央公園"),
+            rec(id="210", city="東大阪", title="大阪府/東大阪市",
+                address="大阪府東大阪市松原南2-6", building="花園中央公園"),
+            rec(id="208", city="東大阪", title="大阪府/東大阪市",
+                address="大阪府東大阪市東石切町2", building="東石切公園"),
+        ]
+        attach_place_labels(rows)
+        self.assertEqual([r["place_label"] for r in rows],
+                         ["東大阪市 松原南1", "東大阪市 松原南2", "東大阪市 東石切公園"])
+
+    def test_ambiguous_drops_shared_address(self):
+        # 全員に共通の住所は何も伝えないので落とし、ポケモン名で区別する
+        rows = [
+            rec(id="98", city="町田", title="東京都/町田市",
+                address="東京都町田市原町田5-16", pokemons=["フシギダネ"]),
+            rec(id="99", city="町田", title="東京都/町田市",
+                address="東京都町田市原町田5-16", pokemons=["ヒトカゲ"]),
+        ]
+        attach_place_labels(rows)
+        self.assertEqual([r["place_label"] for r in rows], ["町田市", "町田市"])
+        self.assertEqual(compose_display_name(rows[0]), "町田市（フシギダネ）")
+
+
     def test_unique_title_gets_no_label(self):
         rows = [rec(id="1", title="北海道/斜里町", city="斜里", address="北海道斜里町")]
         self.assertEqual(attach_place_labels(rows), 0)
@@ -111,8 +193,8 @@ class AttachPlaceLabelsTest(unittest.TestCase):
             rec(id="149", city="斑鳩", title="奈良県/斑鳩町", address="奈良県斑鳩町興留5丁目5"),
         ]
         self.assertEqual(attach_place_labels(rows), 2)
-        self.assertEqual(rows[0]["place_label"], "斑鳩町 興留7丁目3")
-        self.assertEqual(rows[1]["place_label"], "斑鳩町 興留5丁目5")
+        self.assertEqual(rows[0]["place_label"], "斑鳩町 興留7")
+        self.assertEqual(rows[1]["place_label"], "斑鳩町 興留5")
         self.assertNotIn("place_ambiguous", rows[0])
 
     def test_same_landmark_retries_with_address(self):
@@ -124,8 +206,8 @@ class AttachPlaceLabelsTest(unittest.TestCase):
                 address="大阪府東大阪市松原南2-6", building="花園中央公園"),
         ]
         attach_place_labels(rows)
-        self.assertEqual(rows[0]["place_label"], "東大阪市 松原南1-1")
-        self.assertEqual(rows[1]["place_label"], "東大阪市 松原南2-6")
+        self.assertEqual(rows[0]["place_label"], "東大阪市 松原南1")
+        self.assertEqual(rows[1]["place_label"], "東大阪市 松原南2")
         self.assertNotIn("place_ambiguous", rows[0])
 
     def test_retry_does_not_degrade_when_address_missing(self):
@@ -147,7 +229,7 @@ class AttachPlaceLabelsTest(unittest.TestCase):
                 address="東京都町田市原町田5-16", pokemons=["ヒトカゲ"]),
         ]
         attach_place_labels(rows)
-        self.assertEqual(rows[0]["place_label"], "町田市 原町田5-16")
+        self.assertEqual(rows[0]["place_label"], "町田市")
         self.assertTrue(rows[0]["place_ambiguous"])
         self.assertTrue(rows[1]["place_ambiguous"])
 

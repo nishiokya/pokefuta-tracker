@@ -19,10 +19,12 @@
 
     building あり : 指宿市 砂むし会館砂楽
     building なし : 斑鳩町 興留7丁目3
+    区別できない  : 町田市（表示時にポケモン名が付く）
 
-ただし同一住所に複数枚ある16件（町田市6・小笠原村4・鳥羽市2・下関市2・台東区上野2）は
-場所では原理的に区別できない。この分だけ `place_ambiguous` を立て、
-**表示側が言語ごとに変換したポケモン名を添えて** 区別する。
+`place_label` が群内で重複してしまい場所では区別できないレコードには
+`place_ambiguous` を立て、**表示側が言語ごとに変換したポケモン名を添えて**区別する
+（住所が同一、住所が欠損しているなど原因は問わない）。ポケモン名だけで区別が付く
+場合は共通の住所を落として自治体名だけにするので、表示は「町田市（フシギダネ）」となる。
 place_label 自体は日本語文字列を増やさない。
 """
 from __future__ import annotations
@@ -85,6 +87,43 @@ def town_label(record: Dict[str, Any], city_label: str) -> str:
     return rest
 
 
+# 住所を短く切る位置。番地・丁目・区・空白の手前で区切ると地名として読める形が残る。
+# (正規表現, 前で切るか, 後ろで切るか) の順。区名や丁目の途中で切ると
+# 「小倉北」「門司区旧門司二」のような読めない断片になるので、切る側を限定する。
+# 漢数字は「十二町」のような地名を壊さないよう、丁目に付くものだけ区切りに使う。
+_CUT_RULES = (
+    (r"[区郡]", False, True),                    # 小倉北区 / 員弁郡（後ろだけ）
+    (r"丁目", False, True),
+    (r"[0-9０-９]+", True, True),                # 番地の数字列は前後どちらでも
+    (r"[一二三四五六七八九十]+(?=丁目)", True, False),  # 一丁目 の手前だけ
+    (r"\s", True, False),                       # 住所欄に続く施設名の手前
+)
+
+
+def address_candidates(tail: str) -> List[str]:
+    """住所の末尾部分を、短い順に段階的に切った候補を返す。
+
+    「小倉北区室町一丁目1 リバーウォーク北九州」なら
+    ['小倉北区', '小倉北区室町', '小倉北区室町一丁目', '小倉北区室町一丁目1', 全体]。
+    群の中で一意になる最短の段階を選ぶために使う。
+    """
+    if not tail:
+        return []
+    cuts = {len(tail)}
+    for pattern, cut_before, cut_after in _CUT_RULES:
+        for m in re.finditer(pattern, tail):
+            if cut_before:
+                cuts.add(m.start())
+            if cut_after:
+                cuts.add(m.end())
+    out: List[str] = []
+    for cut in sorted(cuts):
+        candidate = tail[:cut].strip(" -－・")
+        if candidate and candidate not in out:
+            out.append(candidate)
+    return out or [tail]
+
+
 def landmark_label(record: Dict[str, Any], city_label: str) -> str:
     """設置場所の施設名を表示用に整える。
 
@@ -132,11 +171,37 @@ def _is_active(record: Dict[str, Any]) -> bool:
     return record.get("status") == "active"
 
 
+def _all_distinguishable(labels: Iterable[str]) -> bool:
+    """全て異なり、かつどれも他の接頭辞になっていないこと。
+
+    「松原南」と「松原南2」のように片方が他方の頭だと、切り詰めた方が
+    途中で切れたように見えて区別が付かないため、その段階は採用しない。
+    """
+    values = list(labels)
+    if len(set(values)) != len(values):
+        return False
+    return not any(a != b and b.startswith(a) for a in values for b in values)
+
+
+def _address_stages(record: Dict[str, Any]) -> List[str]:
+    """住所由来の place 候補を短い順に返す。"""
+    return address_candidates(town_label(record, municipality_label(record)))
+
+
+def _compose(record: Dict[str, Any], place: str) -> str:
+    city_label = municipality_label(record)
+    return f"{city_label} {place}".strip() if place else city_label
+
+
 def attach_place_labels(records: Iterable[Dict[str, Any]],
                         *, active_predicate: Optional[Callable[[Dict[str, Any]], bool]] = None) -> int:
     """title が重複している active レコードに place_label を付与する。
 
-    place_label まで同じになってしまうレコードには `place_ambiguous: True` を立てる
+    住所は「群の中で一意になる最短の段階」まで切り詰める。北九州市の5枚なら
+    「小倉北区室町一丁目1 リバーウォーク北九州」ではなく「小倉北区室町」で足りる。
+    段階は群で揃えるので、同じ自治体の中で切り方がばらつかない。
+
+    それでも重複するレコードには `place_ambiguous: True` を立てる
     （表示側がポケモン名を添えて区別する）。一意な title を持つレコードからは
     両フィールドを取り除く。付与した件数を返す。
 
@@ -162,24 +227,67 @@ def attach_place_labels(records: Iterable[Dict[str, Any]],
                 record.pop("place_ambiguous", None)
             continue
 
-        labels = {id(r): build_place_label(r) for r in group}
+        stages = {id(r): _address_stages(r) for r in group}
+        landmarks = {id(r): landmark_label(r, municipality_label(r)) for r in group}
+        depth = max((len(v) for v in stages.values()), default=1) or 1
 
-        # 同じ施設名になったものは住所で再算出する。東大阪市の2枚は
-        # どちらも building が「花園中央公園」だが住所（松原南1-1 / 2-6）で分かれる。
-        counts = _counts(labels.values())
-        for record in group:
-            if counts[labels[id(record)]] > 1:
-                # 住所が取れないときは build_place_label が自治体名だけを返す。
-                # 「指宿市 施設名」から「指宿市」へ後退させないため、住所由来の
-                # place 部分が取れたときだけ差し替える
-                if town_label(record, municipality_label(record)):
-                    labels[id(record)] = build_place_label(record, prefer_address=True)
+        # 施設名を持つレコードはそれを使う。施設名が衝突したものだけ住所へ落とす
+        # （東大阪の2枚はどちらも「花園中央公園」）。逆に、住所側の段階を深める
+        # ために施設名を捨てることはしない（香取市の「道の駅水の郷さわら」が
+        # 「佐原イ4053」に置き換わってしまうため）。
+        use_landmark = {id(r) for r in group if landmarks[id(r)]}
+        while True:
+            labels = None
+            for level in range(depth):
+                trial = {}
+                for record in group:
+                    key = id(record)
+                    if key in use_landmark:
+                        trial[key] = _compose(record, landmarks[key])
+                    else:
+                        options = stages[key] or [""]
+                        trial[key] = _compose(record, options[min(level, len(options) - 1)])
+                if _all_distinguishable(trial.values()):
+                    labels = trial
+                    break
+            if labels is not None:
+                break
+            deepest = {}
+            for record in group:
+                key = id(record)
+                if key in use_landmark:
+                    deepest[key] = _compose(record, landmarks[key])
+                else:
+                    deepest[key] = _compose(record, (stages[key] or [""])[-1])
+            # 落とし先の住所が無いなら施設名を捨てても情報が減るだけなので残す
+            clashing = {
+                id(r) for r in group
+                if id(r) in use_landmark
+                and stages[id(r)]
+                and sum(1 for v in deepest.values() if v == deepest[id(r)]) > 1
+            }
+            if not clashing:
+                labels = deepest
+                break
+            use_landmark -= clashing
 
         counts = _counts(labels.values())
+        ambiguous = [r for r in group if counts[labels[id(r)]] > 1]
+
+        # 曖昧なレコードは表示時にポケモン名が添えられる。ポケモン名だけで
+        # 区別が付くなら、全員に共通の住所（町田市6枚の「原町田5-16」）は
+        # 何も伝えないので落として自治体名だけにする
+        if ambiguous:
+            shortened = {id(r): municipality_label(r) for r in ambiguous}
+            composed = [shortened[id(r)] + pokemon_suffix(r) for r in ambiguous]
+            fixed = [labels[id(r)] for r in group if r not in ambiguous]
+            if len(set(composed)) == len(composed) and not (set(composed) & set(fixed)):
+                for record in ambiguous:
+                    labels[id(record)] = shortened[id(record)]
+
         for record in group:
-            label = labels[id(record)]
-            record["place_label"] = label
-            if counts[label] > 1:
+            record["place_label"] = labels[id(record)]
+            if record in ambiguous:
                 record["place_ambiguous"] = True
             else:
                 record.pop("place_ambiguous", None)
