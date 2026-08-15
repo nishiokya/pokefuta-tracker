@@ -93,5 +93,75 @@ class WriteManholesJsonTest(unittest.TestCase):
             self.assertEqual(2, sum(1 for l in lines if l.lstrip().startswith('{"id"')))
 
 
+
+class ApplyPlaceLabelsTest(unittest.TestCase):
+    """アプリ用スナップショットの name が自治体内で重複しないこと。"""
+
+    @staticmethod
+    def entry(**kwargs) -> dict:
+        base = {
+            "id": 1, "title": "鹿児島県/指宿市", "prefecture": "鹿児島県",
+            "municipality": "指宿", "city": "指宿", "address": "", "building": "",
+            "pokemons": [], "is_active": True,
+        }
+        base.update(kwargs)
+        return base
+
+    def test_duplicated_title_gets_distinct_names(self) -> None:
+        entries = [
+            self.entry(id=1, address="鹿児島県指宿市湊1丁目1-1", building="指宿中央交番"),
+            self.entry(id=4, address="鹿児島県指宿市湯の浜5丁目25-18", building="砂むし会館砂楽"),
+        ]
+        MODULE.apply_place_labels(entries)
+        self.assertEqual(entries[0]["name"], "指宿市 指宿中央交番")
+        self.assertEqual(entries[1]["name"], "指宿市 砂むし会館砂楽")
+
+    def test_unique_title_keeps_original(self) -> None:
+        entries = [self.entry(id=9, title="北海道/斜里町", municipality="斜里", city="斜里")]
+        MODULE.apply_place_labels(entries)
+        self.assertEqual(entries[0]["name"], "北海道/斜里町")
+
+    def test_same_address_falls_back_to_pokemon(self) -> None:
+        entries = [
+            self.entry(id=98, title="東京都/町田市", municipality="町田", city="町田",
+                       address="東京都町田市原町田5-16", pokemons=["フシギダネ"]),
+            self.entry(id=99, title="東京都/町田市", municipality="町田", city="町田",
+                       address="東京都町田市原町田5-16", pokemons=["ヒトカゲ"]),
+        ]
+        MODULE.apply_place_labels(entries)
+        self.assertEqual(entries[0]["name"], "町田市 原町田5-16（フシギダネ）")
+        self.assertEqual(entries[1]["name"], "町田市 原町田5-16（ヒトカゲ）")
+
+    def test_inactive_entry_is_skipped(self) -> None:
+        entries = [
+            self.entry(id=1, is_active=False),
+            self.entry(id=4, address="鹿児島県指宿市湯の浜5丁目25-18", building="砂むし会館砂楽"),
+        ]
+        MODULE.apply_place_labels(entries)
+        self.assertNotIn("place_label", entries[0])
+        self.assertEqual(entries[0]["name"], "鹿児島県/指宿市")
+
+    def test_null_or_missing_is_active_is_not_treated_as_active(self) -> None:
+        # DB の NULL / 欠損が重複判定に混ざると、本来一意な active に
+        # place_label が付いてしまう
+        entries = [
+            self.entry(id=1, is_active=None, address="鹿児島県指宿市湊1丁目1-1"),
+            self.entry(id=2, address="鹿児島県指宿市東方9300-1"),
+            self.entry(id=4, address="鹿児島県指宿市湯の浜5丁目25-18"),
+        ]
+        del entries[1]["is_active"]
+        MODULE.apply_place_labels(entries)
+        for e in entries[:2]:
+            self.assertNotIn("place_label", e)
+            self.assertEqual(e["name"], "鹿児島県/指宿市")
+        # active は1件だけなので重複せず place_label も付かない
+        self.assertNotIn("place_label", entries[2])
+
+    def test_never_empty_name(self) -> None:
+        entries = [self.entry(id=1, title="")]
+        MODULE.apply_place_labels(entries)
+        self.assertEqual(entries[0]["name"], "ポケふた")
+
+
 if __name__ == "__main__":
     unittest.main()

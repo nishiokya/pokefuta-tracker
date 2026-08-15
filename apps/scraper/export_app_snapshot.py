@@ -27,6 +27,9 @@ from pathlib import Path
 
 import requests
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from display_names import attach_place_labels, compose_display_name  # noqa: E402
+
 ROOT = Path(__file__).resolve().parent.parent.parent
 OUT_DIR = ROOT / "docs" / "api"
 PAGE_SIZE = 1000
@@ -149,6 +152,33 @@ def parse_wkb_point(wkb_hex: str) -> tuple[float, float] | None:
         return None
 
 
+def apply_place_labels(entries: list[dict]) -> int:
+    """entry["name"] を同一自治体内で区別できる表示名にする。
+
+    Supabase の `title` は local.pokemon.jp の見出しそのままで
+    「鹿児島県/指宿市」のように自治体単位でしか区別できず、そのまま name に
+    入れるとアプリの一覧で指宿市9枚が全部同じ名前になる。
+    pokefuta.ndjson 側と同じ display_names の規則で場所名を組み立てる
+    （必要な address / building / municipality / pokemons は取得済み）。
+
+    Supabase 側は status ではなく is_active を持つので判定を差し替える。
+    place_label / place_ambiguous も JSON に載せるため、クライアント側で
+    独自に組み立てたい場合はそちらを読めばよい。
+    """
+    # is_active は真値のときだけ active とみなす。`is not False` にすると
+    # DB の NULL や移行データの欠損まで active 扱いになり、本来一意なレコードに
+    # place_label が付いたり place_ambiguous が立ったりする
+    attached = attach_place_labels(
+        entries,
+        active_predicate=lambda e: e.get("is_active") is True,
+    )
+    for entry in entries:
+        # KML と同じく、アプリの一覧はポケモン名を別枠で見せられるとは限らないので
+        # 場所で区別できないものにだけポケモン名を添える
+        entry["name"] = compose_display_name(entry) or "ポケふた"
+    return attached
+
+
 def build_manholes() -> dict:
     manholes = fetch_all(
         "manhole",
@@ -168,7 +198,6 @@ def build_manholes() -> dict:
             continue
         lat, lng = coords
         entry = dict(row)
-        entry["name"] = row.get("title") or "ポケふた"
         entry["city"] = row.get("municipality") or ""
         entry["latitude"] = lat
         entry["longitude"] = lng
@@ -176,6 +205,8 @@ def build_manholes() -> dict:
         entry["last_visit"] = None
         entry["photo_count"] = 1 if row["id"] in with_photo_ids else 0
         entries.append(entry)
+
+    apply_place_labels(entries)
 
     if skipped:
         print(f"WARN: skipped {skipped} manholes without parsable location")

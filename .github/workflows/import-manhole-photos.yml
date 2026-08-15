@@ -45,8 +45,18 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      # このジョブが呼ぶスクリプトに対応するテスト。スクリプトを足したら
+      # その依存も含めて対応する test_*.py をここに足すこと。
+      #   export_latest_manhole_photos.py -> test_export_latest_manhole_photos.py
+      #   export_app_snapshot.py          -> test_export_app_snapshot.py
+      #   display_names.py (内部ライブラリ) -> test_display_names.py
       - name: Run tests
-        run: python3 -m unittest apps.scraper.test_export_latest_manhole_photos
+        run: |
+          python3 -m unittest apps.scraper.test_export_latest_manhole_photos
+          python3 -m unittest discover -s apps/scraper -v \
+            -p 'test_export_app_snapshot.py'
+          python3 -m unittest discover -s apps/scraper -v \
+            -p 'test_display_names.py'
 
       - name: Export latest manhole photos from Supabase
         env:

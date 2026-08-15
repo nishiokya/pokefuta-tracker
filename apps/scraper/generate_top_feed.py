@@ -153,7 +153,9 @@ def build_top_feed(
         created_jst = to_jst_date(photo.get("created_at"))
         entry = {
             "id": mid,
-            "title": record.get("title", ""),
+            # entry["display_name"] は写真の投稿者名で別物なので、マンホールの
+            # 表示名は title に載せる（重複 title のときだけ place_label が入る）
+            "title": record.get("place_label") or record.get("title", ""),
             "prefecture": record.get("prefecture", ""),
             "city": record.get("city", ""),
             "pokemons": pokemons,

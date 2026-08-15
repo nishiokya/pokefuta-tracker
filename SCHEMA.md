@@ -14,6 +14,8 @@
 |-----------|----|------|------|----|------|
 | id | string | ✔ | マンホール固有の数値文字列 ID | "123" | URL 中 `/desc/{id}/` から抽出 |
 | title | string | ✔ | 日本語タイトル / 見出し (ページ h1/h2) | "鹿児島県/指宿市" | 空文字の場合あり |
+| place_label | string | ❌ | 画面表示用の場所名（自治体名込み・ポケモン名なし） | "指宿市 砂むし会館砂楽" | `title` が同一自治体内で重複するレコードにのみ付与。`display_names.py` が自動算出（`building` があれば施設名、無ければ住所の町名・番地）。表示側は `place_label || title` で読む |
+| place_ambiguous | bool | ❌ | `place_label` でも区別できない印 | true | 同一住所に複数枚ある16件のみ。表示側はここだけポケモン名を添えて区別する |
 | title_en | string | ❌ | 英語版ページからのタイトル | "Poké Lids" | 取得失敗時は空 |
 | title_zh | string | ❌ | 中国語版ページからのタイトル | "寶可夢人孔蓋" | 取得失敗時は空 |
 | prefecture | string | ❌ | 都道府県 | "鹿児島県" | HTML 推測 + `manhole_titles.json` 補正 |
@@ -38,6 +40,49 @@
 | added_at | string (ISO8601) | ✔ | Web UI 最近追加フィルタ用エイリアス | "2025-10-18T00:00:00Z" | = first_seen (変更不可) |
 | last_updated | string (ISO8601) | ✔ | 内容が変化した/状態変化した最新の更新日時 | "2025-12-27T06:15:42Z" | 差分や status 変化時のみ更新 (ノイズ削減) |
 | status | string | ✔ | レコード状態 | "active" | "active" または "deleted" |
+
+### `place_label` の算出
+
+`title` は local.pokemon.jp の見出しそのままで「鹿児島県/指宿市」のように**自治体単位**でしか
+区別できず、指宿市9枚・町田市6枚のように地図上へ同じ文字列が並んでしまう。
+そこで `display_names.attach_place_labels()` が **`title` が重複するレコードにだけ**
+`place_label` を付与する（一意なレコードには付けない）。`title` は upstream 原文のまま
+残すので、スクレイパの差分検知（`CORE_COMPARE_FIELDS`）には影響しない。
+
+| 優先順 | 材料 | 例 |
+|------|------|-----|
+| 1 | `building`（手動マスタ由来の施設名） | 指宿市 砂むし会館砂楽 |
+| 2 | 住所の自治体より後ろ（丁目・番地・政令市の区まで残す） | 斑鳩町 興留7丁目3 |
+| 3 | 1が衝突したら2で再算出 | 東大阪市 松原南1-1 / 松原南2-6（どちらも building は花園中央公園） |
+
+`city` は接尾辞が落ちているため、`address` から「指宿市」を探して復元する。
+住所の丁目・番地を切り落とすと斑鳩町の3枚（興留7丁目3 / 5丁目5 / 2丁目1）や
+倉敷市・小千谷市が区別できなくなるので、ここは残すこと。
+
+#### ポケモン名を焼き込まない理由
+
+`place_label` に**ポケモン名は入れない**。理由は3つ:
+
+1. 地図ポップアップはポケモン名チップを見出しの直下に既に並べており重複する
+2. サイトは ja/en/ko/zh の多言語ビルドがある。日本語名を焼き込むと英語版でも日本語が出る
+3. `pokemons` は公式ページのアンカーテキストからのヒューリスティック抽出で不安定
+
+ただし同一住所に複数枚あって場所では原理的に区別できないレコードがある
+（現在16件: 町田市6・小笠原村4・鳥羽市2・下関市2・台東区上野2）。この分だけ
+`place_ambiguous: true` を立て、**表示側が言語ごとに変換したポケモン名を添えて**区別する。
+件数は住所の精度が上がると減るので、テストでもドキュメントでも固定値に依存しないこと。
+
+#### 表示側の読み方
+
+| 反映先 | 実装 | 挙動 |
+|------|------|------|
+| 地図（ポップアップ・一覧・JSON-LD） | `getManholeDisplayName()`（`apps/web/map.html`） | `place_label \|\| title`。`place_ambiguous` のときだけ `getHeroPokemonDisplayName()` で言語変換したポケモン名を添える |
+| KML | `export_kml.py` の `_format_name()` | ポケモン名を別枠で見せられないので常に添える |
+| トップフィード | `generate_top_feed.py` | `place_label \|\| title`（`pokemons` は別フィールドで持つ） |
+| マンホール詳細ページ | `generate_manhole_pages.py` | 変更なし（h1 は元から `{県}{市}のポケふた（{ポケモン}）`） |
+| アプリ用スナップショット | `export_app_snapshot.py` の `apply_place_labels()` | Supabase 由来。`name` に `compose_display_name()` の結果を入れ、`place_label` / `place_ambiguous` も併せて出力する |
+
+Python 側から1本の文字列が欲しいときは `display_names.compose_display_name()` を使う。
 
 ### `dataset/manhole_titles.json` 由来のフィールド
 - `building` / `place_detail` / `landmark` / `access` / `tags`
