@@ -133,18 +133,21 @@ a { color: inherit; text-decoration: none; }
   .top-nav {
     display: flex;
     gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
   }
+  .top-nav::-webkit-scrollbar { display: none; }
 
   .top-nav-link {
-    padding: 6px 5px;
-    overflow: hidden;
+    flex-shrink: 0;
+    padding: 6px 8px;
     border-radius: 7px;
     background: var(--top-purple-pale);
     color: var(--top-purple-dark);
     font-size: 10px;
     font-weight: 700;
     text-align: center;
-    text-overflow: ellipsis;
     white-space: nowrap;
   }
 }
