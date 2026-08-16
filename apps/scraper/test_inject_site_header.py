@@ -132,6 +132,14 @@ class InjectSiteHeaderTest(unittest.TestCase):
         result = inject(BARE, page_path="manholes/482/index.html")
         self.assertNotIn("is-active", result)
 
+    def test_marks_active_pref_tab_on_prefecture_pages(self):
+        """都道府県詳細ページ（/prefectures/<slug>/）は #sec-pref に戻るリンクなので、
+        そこにいる間は「都道府県」タブをアクティブにする。"""
+        result = inject(BARE, page_path="prefectures/mie/index.html")
+        self.assertIn('<a class="site-header__link is-active" href="./#sec-pref">', result)
+        self.assertIn('<a class="site-tab is-active" href="./#sec-pref">', result)
+        self.assertEqual(result.count("is-active"), 2)
+
     # ── 認証 ─────────────────────────────────────────────
 
     def test_auth_is_separate_from_navigation(self):
