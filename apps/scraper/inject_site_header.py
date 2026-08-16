@@ -44,6 +44,7 @@ ICONS = {
     "map": '<polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/>',
     "pokemon": '<rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/>',
     "summary": '<path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>',
+    "pref": '<line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/>',
     # スタンプ帳は写真館の下タブと同じ CircleDot。両サイトで同じ意味に固定する
     "stamp": '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="1"/>',
     "info": '<circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>',
@@ -69,6 +70,7 @@ LABELS = {
         "site_album": "写真館",
         "site_album_sub": "撮る・記録する",
         "nav_map": "地図",
+        "nav_pref": "都道府県",
         "nav_pokemon": "ポケモン",
         "nav_summary": "集計",
         "nav_character": "キャラふた",
@@ -91,6 +93,7 @@ LABELS = {
         "site_album": "Album",
         "site_album_sub": "Shoot & record",
         "nav_map": "Map",
+        "nav_pref": "Prefectures",
         "nav_pokemon": "Pokémon",
         "nav_summary": "Stats",
         "nav_character": "Characters",
@@ -113,6 +116,7 @@ LABELS = {
         "site_album": "相館",
         "site_album_sub": "拍攝與記錄",
         "nav_map": "地圖",
+        "nav_pref": "都道府縣",
         "nav_pokemon": "神奇寶貝",
         "nav_summary": "統計",
         "nav_character": "角色蓋",
@@ -135,6 +139,7 @@ LABELS = {
         "site_album": "相馆",
         "site_album_sub": "拍摄与记录",
         "nav_map": "地图",
+        "nav_pref": "都道府县",
         "nav_pokemon": "宝可梦",
         "nav_summary": "统计",
         "nav_character": "角色盖",
@@ -157,6 +162,7 @@ LABELS = {
         "site_album": "사진관",
         "site_album_sub": "찍고 기록하기",
         "nav_map": "지도",
+        "nav_pref": "도도부현",
         "nav_pokemon": "포켓몬",
         "nav_summary": "통계",
         "nav_character": "캐릭터 맨홀",
@@ -192,6 +198,7 @@ HEADER_TEMPLATE = """<header class="site-header">
 
     <nav class="site-header__nav" aria-label="{nav_aria}">
       <a class="site-header__link{active_map}" href="{page_base}map.html">{nav_map}</a>
+      <a class="site-header__link{active_pref}" href="{page_base}#sec-pref">{nav_pref}</a>
       <a class="site-header__link{active_pokemon}" href="{page_base}pokemon/">{nav_pokemon}</a>
       <a class="site-header__link{active_summary}" href="{page_base}summary/">{nav_summary}</a>
       <a class="site-header__link{active_character}" href="{asset_base}character_manholes.html">{nav_character}</a>
@@ -213,6 +220,7 @@ HEADER_TEMPLATE = """<header class="site-header">
 
 BOTTOM_TABS_TEMPLATE = """<nav class="site-tabs" aria-label="{tabs_aria}">
   <a class="site-tab{active_map}" href="{page_base}map.html">{icon_map}<span>{nav_map}</span></a>
+  <a class="site-tab{active_pref}" href="{page_base}#sec-pref">{icon_pref}<span>{nav_pref}</span></a>
   <a class="site-tab{active_pokemon}" href="{page_base}pokemon/">{icon_pokemon}<span>{nav_pokemon}</span></a>
   <a class="site-tab{active_summary}" href="{page_base}summary/">{icon_summary}<span>{nav_summary}</span></a>
   <a class="site-tab" data-login-link data-stamp-page="{stamp_url}" href="{login_url}">{icon_stamp}<span>{tab_stamp}</span></a>
@@ -254,6 +262,8 @@ def _active_tab(page_path: str | None) -> str | None:
     normalized = page_path.lstrip("./")
     if normalized.startswith("map.html"):
         return "map"
+    if normalized.startswith("prefectures/") or normalized == "prefectures":
+        return "pref"
     if normalized.startswith("pokemon/") or normalized == "pokemon":
         return "pokemon"
     if normalized.startswith("summary/") or normalized == "summary":
@@ -295,10 +305,12 @@ def inject(
         x_url=X_ACCOUNT_URL,
         icon_info=_icon("info"),
         icon_map=_icon("map"),
+        icon_pref=_icon("pref"),
         icon_pokemon=_icon("pokemon"),
         icon_summary=_icon("summary"),
         icon_stamp=_icon("stamp"),
         active_map=" is-active" if active == "map" else "",
+        active_pref=" is-active" if active == "pref" else "",
         active_pokemon=" is-active" if active == "pokemon" else "",
         active_summary=" is-active" if active == "summary" else "",
         active_character=" is-active" if active == "character" else "",
