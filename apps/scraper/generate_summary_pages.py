@@ -3110,7 +3110,11 @@ def _build_search_hub_section(s: dict) -> str:
         return ""
     map_base = s["map_base_href"]
     cards = [
-        (hub["card_pref_title"], hub["card_pref_desc"], "#prefecture-count-heading"),
+        # "都道府県から探す" の目的地は、同じページ内の集計グリッドへの
+        # アンカーではなく、実際の都道府県詳細ページへの入口である
+        # /prefectures/（ja専用・絶対パス。個別詳細ページと同じ
+        # _prefecture_href() の規約に合わせる）にする。
+        (hub["card_pref_title"], hub["card_pref_desc"], "/prefectures/"),
         (hub["card_pokemon_title"], hub["card_pokemon_desc"], f"{map_base}pokemon/"),
         (hub["card_map_title"], hub["card_map_desc"], s["nav_home_href"]),
     ]

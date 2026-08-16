@@ -301,6 +301,15 @@ class DiscoveryHubTests(unittest.TestCase):
         self.assertIn('href="/prefectures/', html)
         self.assertIn(">詳しく見る</a>", html)
 
+    def test_search_hub_prefecture_card_links_to_the_prefectures_index_not_an_anchor(self):
+        """「都道府県から探す」カードの目的地は詳細ページの入口（/prefectures/）で
+        あるべきで、同じページ内の集計グリッドへのアンカーに戻してはいけない。"""
+        for language, strings in summary.SUMMARY_STRINGS.items():
+            with self.subTest(language=language):
+                html = summary._build_search_hub_section(strings)
+                self.assertIn('<a class="search-hub-card" href="/prefectures/">', html)
+                self.assertNotIn('href="#prefecture-count-heading"', html)
+
 
 if __name__ == "__main__":
     unittest.main()
