@@ -35,6 +35,7 @@ class InjectSiteHeaderTest(unittest.TestCase):
         result = nav
         positions = [
             result.index('href="./map.html">地図</a>'),
+            result.index('href="./#sec-pref">都道府県</a>'),
             result.index('href="./pokemon/">ポケモン</a>'),
             result.index('href="./summary/">集計</a>'),
             result.index('href="./character_manholes.html">キャラふた</a>'),
@@ -113,10 +114,10 @@ class InjectSiteHeaderTest(unittest.TestCase):
         self.assertIn("https://x.com/pokemonmanhole", menu)
 
     def test_bottom_tabs_match_photo_site_roles(self):
-        """左2つが探す系、右端がサイトをまたぐ導線、という並びを写真館と揃える。"""
+        """左側が探す系（都道府県も含む）、右端がサイトをまたぐ導線、という並びを写真館と揃える。"""
         result = inject(BARE)
         tabs = re.findall(r'<a class="site-tab[^"]*"[^>]*>.*?<span>([^<]+)</span>', result, re.DOTALL)
-        self.assertEqual(tabs, ["地図", "ポケモン", "集計", "スタンプ帳"])
+        self.assertEqual(tabs, ["地図", "都道府県", "ポケモン", "集計", "スタンプ帳"])
         self.assertIn('data-login-link data-stamp-page="https://pokefuta.com/visits?from=data"', result)
 
     def test_marks_active_tab_from_page_path(self):
@@ -207,6 +208,7 @@ class InjectSiteHeaderTest(unittest.TestCase):
         result = inject(html, asset_base="../../../", page_base="../../")
         self.assertIn('href="../../../assets/site-header.css"', result)
         self.assertIn('href="../../map.html">Map</a>', result)
+        self.assertIn('href="../../#sec-pref">Prefectures</a>', result)
         self.assertIn('href="../../summary/">Stats</a>', result)
         self.assertIn('href="../../pokemon/">Pokémon</a>', result)
         self.assertIn('href="../../../character_manholes.html">Characters</a>', result)
@@ -214,7 +216,7 @@ class InjectSiteHeaderTest(unittest.TestCase):
         self.assertIn(">Login</a>", result)
         self.assertIn(">Sign up</a>", result)
         self.assertIn("<b>Album</b>", result)
-        self.assertEqual(result.count('class="site-header__link'), 4)
+        self.assertEqual(result.count('class="site-header__link'), 5)
 
     def test_every_language_has_the_same_label_keys(self):
         """翻訳漏れがあると .format() が KeyError で落ちるので先に検知する。"""
