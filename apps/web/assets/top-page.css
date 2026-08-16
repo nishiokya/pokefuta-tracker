@@ -290,6 +290,45 @@ a { color: inherit; text-decoration: none; }
   text-align: center;
 }
 
+.top-stat--link {
+  cursor: pointer;
+}
+
+.top-stat--link .stat-label::after {
+  content: ' \203A';
+  color: var(--top-purple-light);
+}
+
+@media (hover: hover) {
+  .top-stat--link:hover .stat-num {
+    color: var(--top-purple);
+  }
+}
+
+.top-quicklink-list {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--top-purple);
+}
+
+.top-quicklink-list:hover {
+  text-decoration: underline;
+}
+
+/* Sticky header offset so anchor-jumps (stat tile, quicklink) don't land
+   with the heading hidden behind the app bar. */
+#sec-pref {
+  scroll-margin-top: 72px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
 /* ── Section 2: Hero ── */
 .hero-update-label {
   font-size: 11px;
@@ -1041,6 +1080,13 @@ a { color: inherit; text-decoration: none; }
   .top-intro-text { max-width: 400px; font-size: 13.5px; }
   .top-stats-row { max-width: 380px; }
   .stat-num { font-size: 22px; }
+  /* #sec-intro is pointer-events:none (an overlay above the map link); these
+     two are real links inside it and must opt back in or clicks fall through
+     to the map card underneath instead of jumping to the prefecture list. */
+  .top-stat--link,
+  .top-quicklink-list {
+    pointer-events: auto;
+  }
 
   /* ── 3. Today's hero: featured (1.55fr) + two stacked horizontal cards ── */
   #sec-hero {
