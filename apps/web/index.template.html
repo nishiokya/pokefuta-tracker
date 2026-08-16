@@ -96,7 +96,7 @@
       <div class="top-nav-right">
         <nav class="top-nav" aria-label="%%NAV_ARIA%%">
           <a class="top-nav-link" href="%%LANG_PATH%%map.html" onclick="trackEvent('click_nav',{nav:'map'})">%%NAV_MAP%%</a>
-          <a class="top-nav-link" href="#sec-pref" onclick="trackEvent('click_nav',{nav:'prefecture'})">%%NAV_PREF%%</a>
+          <a class="top-nav-link" href="%%BASE_PATH%%prefectures/" onclick="trackEvent('click_nav',{nav:'prefecture'})">%%NAV_PREF%%</a>
           <a class="top-nav-link" href="%%LANG_PATH%%pokemon/" onclick="trackEvent('click_nav',{nav:'pokemon'})">%%NAV_POKEMON%%</a>
           <a class="top-nav-link" href="%%BASE_PATH%%character_manholes.html" onclick="trackEvent('click_nav',{nav:'character'})">%%NAV_CHARACTER%%</a>
           <a class="top-nav-link" data-login-link data-nav-target="login" data-stamp-page="https://pokefuta.com/" data-stamp-label="%%NAV_STAMP%%" href="https://pokefuta.com/login?from=data" onclick="trackEvent('click_nav',{nav:this.dataset.navTarget})">%%NAV_LOGIN%%</a>
@@ -133,7 +133,7 @@
           <span class="stat-label">%%STAT_POKEFUTA%%</span>
         </div>
         <div class="stat-divider"></div>
-        <a class="top-stat top-stat--link" href="#sec-pref" onclick="trackEvent('click_stat_pref_jump')">
+        <a class="top-stat top-stat--link" href="%%BASE_PATH%%prefectures/" onclick="trackEvent('click_stat_pref_jump')">
           <b class="stat-num" id="stat-pref">47</b>
           <span class="stat-label">%%STAT_PREF%%</span>
         </a>
@@ -148,7 +148,7 @@
           <span class="stat-label">%%STAT_COMMUNITY_PHOTOS%%</span>
         </div>
       </div>
-      <a class="top-quicklink-list" href="#sec-pref" onclick="trackEvent('click_intro_list_cta')">📋 %%SEC4_TITLE%%</a>
+      <a class="top-quicklink-list" href="%%BASE_PATH%%prefectures/" onclick="trackEvent('click_intro_list_cta')">📋 %%SEC4_TITLE%%</a>
       <p class="top-stats-note" id="stats-community-note" hidden></p>
     </section>
 

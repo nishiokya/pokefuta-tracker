@@ -35,7 +35,7 @@ class InjectSiteHeaderTest(unittest.TestCase):
         result = nav
         positions = [
             result.index('href="./map.html">地図</a>'),
-            result.index('href="./#sec-pref">都道府県</a>'),
+            result.index('href="./prefectures/">都道府県</a>'),
             result.index('href="./pokemon/">ポケモン</a>'),
             result.index('href="./summary/">集計</a>'),
             result.index('href="./character_manholes.html">キャラふた</a>'),
@@ -133,12 +133,16 @@ class InjectSiteHeaderTest(unittest.TestCase):
         self.assertNotIn("is-active", result)
 
     def test_marks_active_pref_tab_on_prefecture_pages(self):
-        """都道府県詳細ページ（/prefectures/<slug>/）は #sec-pref に戻るリンクなので、
-        そこにいる間は「都道府県」タブをアクティブにする。"""
+        """都道府県詳細ページ（/prefectures/<slug>/）にいる間は「都道府県」タブをアクティブにする。"""
         result = inject(BARE, page_path="prefectures/mie/index.html")
-        self.assertIn('<a class="site-header__link is-active" href="./#sec-pref">', result)
-        self.assertIn('<a class="site-tab is-active" href="./#sec-pref">', result)
+        self.assertIn('<a class="site-header__link is-active" href="./prefectures/">', result)
+        self.assertIn('<a class="site-tab is-active" href="./prefectures/">', result)
         self.assertEqual(result.count("is-active"), 2)
+
+    def test_marks_active_pref_tab_on_the_prefectures_index_page_itself(self):
+        result = inject(BARE, page_path="prefectures/index.html")
+        self.assertIn('<a class="site-header__link is-active" href="./prefectures/">', result)
+        self.assertIn('<a class="site-tab is-active" href="./prefectures/">', result)
 
     # ── 認証 ─────────────────────────────────────────────
 
@@ -216,7 +220,7 @@ class InjectSiteHeaderTest(unittest.TestCase):
         result = inject(html, asset_base="../../../", page_base="../../")
         self.assertIn('href="../../../assets/site-header.css"', result)
         self.assertIn('href="../../map.html">Map</a>', result)
-        self.assertIn('href="../../#sec-pref">Prefectures</a>', result)
+        self.assertIn('href="../../prefectures/">Prefectures</a>', result)
         self.assertIn('href="../../summary/">Stats</a>', result)
         self.assertIn('href="../../pokemon/">Pokémon</a>', result)
         self.assertIn('href="../../../character_manholes.html">Characters</a>', result)

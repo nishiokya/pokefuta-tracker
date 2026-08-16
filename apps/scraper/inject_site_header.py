@@ -198,7 +198,7 @@ HEADER_TEMPLATE = """<header class="site-header">
 
     <nav class="site-header__nav" aria-label="{nav_aria}">
       <a class="site-header__link{active_map}" href="{page_base}map.html">{nav_map}</a>
-      <a class="site-header__link{active_pref}" href="{page_base}#sec-pref">{nav_pref}</a>
+      <a class="site-header__link{active_pref}" href="{page_base}prefectures/">{nav_pref}</a>
       <a class="site-header__link{active_pokemon}" href="{page_base}pokemon/">{nav_pokemon}</a>
       <a class="site-header__link{active_summary}" href="{page_base}summary/">{nav_summary}</a>
       <a class="site-header__link{active_character}" href="{asset_base}character_manholes.html">{nav_character}</a>
@@ -220,7 +220,7 @@ HEADER_TEMPLATE = """<header class="site-header">
 
 BOTTOM_TABS_TEMPLATE = """<nav class="site-tabs" aria-label="{tabs_aria}">
   <a class="site-tab{active_map}" href="{page_base}map.html">{icon_map}<span>{nav_map}</span></a>
-  <a class="site-tab{active_pref}" href="{page_base}#sec-pref">{icon_pref}<span>{nav_pref}</span></a>
+  <a class="site-tab{active_pref}" href="{page_base}prefectures/">{icon_pref}<span>{nav_pref}</span></a>
   <a class="site-tab{active_pokemon}" href="{page_base}pokemon/">{icon_pokemon}<span>{nav_pokemon}</span></a>
   <a class="site-tab{active_summary}" href="{page_base}summary/">{icon_summary}<span>{nav_summary}</span></a>
   <a class="site-tab" data-login-link data-stamp-page="{stamp_url}" href="{login_url}">{icon_stamp}<span>{tab_stamp}</span></a>
