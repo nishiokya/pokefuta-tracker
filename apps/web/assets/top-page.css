@@ -19,6 +19,7 @@
   --top-radius-pill: 999px;
   --top-max-w: 480px;
   --top-pad: 16px;
+  --top-header-height: 43px;
 }
 
 /* ── Base ── */
@@ -315,14 +316,21 @@ a { color: inherit; text-decoration: none; }
   color: var(--top-purple);
 }
 
-.top-quicklink-list:hover {
+@media (hover: hover) {
+  .top-quicklink-list:hover {
+    text-decoration: underline;
+  }
+}
+
+.top-quicklink-list:focus-visible {
   text-decoration: underline;
 }
 
 /* Sticky header offset so anchor-jumps (stat tile, quicklink) don't land
-   with the heading hidden behind the app bar. */
+   with the heading hidden behind the app bar. --top-header-height tracks
+   .top-app-bar's actual height per breakpoint (see below); +20px is buffer. */
 #sec-pref {
-  scroll-margin-top: 72px;
+  scroll-margin-top: calc(var(--top-header-height) + 20px);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -929,6 +937,7 @@ a { color: inherit; text-decoration: none; }
 @media (min-width: 960px) {
   :root {
     --top-max-w: 1080px;
+    --top-header-height: 52px;
   }
 
   .top-app-bar-inner {
