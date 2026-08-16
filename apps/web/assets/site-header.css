@@ -58,6 +58,11 @@ body.has-site-header {
   overflow-x: clip;
   /* 下タブぶんの余白。地図ページは別途 height を計算するので影響しない */
   padding-bottom: calc(var(--chrome-bottomnav-height) + env(safe-area-inset-bottom));
+  /* ⚠️ ヘッダーは全幅（width:100vw + margin-inline）なので横の padding は相殺できるが、
+     縦は相殺できない。body に padding-top を持つページ（ポケモン一覧・ポケモン詳細・
+     マンホール詳細・PCの地図）では、ヘッダーがそのぶん下へ押し出されて上に
+     ページ背景の帯が出ていた。本文の間隔は各ページが本文側の要素へ付けること。 */
+  padding-top: 0;
 }
 
 /* 下タブは border-top 1px ぶん高さがずれると全画面地図の計算が合わなくなるので、
@@ -520,15 +525,18 @@ body.has-site-header {
    全画面地図はヘッダーと下タブのぶんを引く
    ───────────────────────────────────────── */
 
+/* --map-frame-gap は pokefuta-map.css が 760px 以上でだけ定義する枠の余白。
+   上は map-stage の margin-top、下は body の padding-bottom として使うので、
+   高さからは 2 つぶん引く（未定義＝全画面表示のときは 0px）。 */
 body.has-site-header.pokefuta-map-page .map-stage,
 body.has-site-header > #map {
-  height: calc(100dvh - var(--chrome-height) - var(--chrome-bottomnav-height) - env(safe-area-inset-bottom));
-  min-height: calc(100dvh - var(--chrome-height) - var(--chrome-bottomnav-height) - env(safe-area-inset-bottom));
+  height: calc(100dvh - var(--chrome-height) - var(--chrome-bottomnav-height) - env(safe-area-inset-bottom) - var(--map-frame-gap, 0px) * 2);
+  min-height: calc(100dvh - var(--chrome-height) - var(--chrome-bottomnav-height) - env(safe-area-inset-bottom) - var(--map-frame-gap, 0px) * 2);
 }
 
 /* 地図ページは本文がビューポート固定（overflow:hidden）なので、
    下タブぶんの padding は不要。フッターも表示領域に出ないので隠す */
-body.has-site-header.pokefuta-map-page { padding-bottom: 0; }
+body.has-site-header.pokefuta-map-page { padding-bottom: var(--map-frame-gap, 0px); }
 body.has-site-header.pokefuta-map-page .site-footer { display: none; }
 
 /* 地図ページのボトムシート `#controls` は position:fixed / z-index:1000 / bottom:0 で、
