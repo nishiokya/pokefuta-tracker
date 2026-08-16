@@ -261,9 +261,13 @@ def _record_date(record: dict) -> datetime | None:
         if not value:
             continue
         try:
-            return datetime.fromisoformat(value.replace("Z", "+00:00"))
+            parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
         except ValueError:
             continue
+        # 呼び出し側は RELIABLE_FIRST_SEEN_START や JST 基準の cutoff など
+        # tz-aware な値と比較するので、タイムゾーン無しの文字列が紛れ込んでも
+        # 比較で例外にならないよう UTC を補う。
+        return parsed if parsed.tzinfo else parsed.replace(tzinfo=timezone.utc)
     return None
 
 
@@ -652,8 +656,12 @@ def build_index_page(
         count = len(records)
         code = f"{PREFECTURE_ORDER.index(name) + 1:02d}"
         slug = PREFECTURE_SLUGS[name]
+        # installed:false（設置予定・未設置）は "実際にそこにある1枚" の証拠として
+        # 数えない。_manhole_cards / map_points と同じ規約（このファイル内で
+        # 繰り返し使われている `installed is not False` フィルタ）に合わせる。
+        installed_records = [r for r in records if r.get("installed") is not False]
         recent_count = sum(
-            1 for record in records
+            1 for record in installed_records
             if (added := _record_date(record)) and added >= recent_cutoff
         )
         count_badge_class = "count-badge" if count else "count-badge-zero"
@@ -663,7 +671,7 @@ def build_index_page(
             '<img src="/assets/icon-fire.svg" alt="" aria-hidden="true">NEW</span>'
             if recent_count else ""
         )
-        thumbnails = _photo_entries(records, photos)[:8]
+        thumbnails = _photo_entries(installed_records, photos)[:8]
         gallery_html = "".join(
             f'<a class="prefecture-card-thumb" href="/manholes/{quote(str(record.get("id", "")))}/" '
             f'aria-label="{_escape_attr(record.get("city", "") or name)}のポケふたの詳細を開く">'

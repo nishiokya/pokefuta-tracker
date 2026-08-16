@@ -474,6 +474,22 @@ class PrefecturePageDeployContractTest(unittest.TestCase):
             self.assertIn('href="/prefectures/hokkaido/"', index_html)
 
 
+class RecordDateTest(unittest.TestCase):
+    def test_timezone_suffixed_value_round_trips(self) -> None:
+        result = MODULE._record_date({"first_seen": "2026-01-01T00:00:00Z"})
+        self.assertIsNotNone(result.tzinfo)
+
+    def test_naive_value_is_coerced_to_utc_instead_of_crashing_comparisons(self) -> None:
+        """first_seen/added_at/last_updated が (誤って) タイムゾーン無しで
+        入ってきても、tz-aware な cutoff との比較で
+        TypeError: can't compare offset-naive and offset-aware datetimes
+        にならないこと。"""
+        result = MODULE._record_date({"first_seen": "2026-01-01T00:00:00"})
+        self.assertIsNotNone(result.tzinfo)
+        cutoff = datetime.now(MODULE.JST) - MODULE.timedelta(days=30)
+        self.assertFalse(result >= cutoff)  # does not raise
+
+
 class BuildIndexPageTest(unittest.TestCase):
     def setUp(self) -> None:
         self.records_by_pref = {name: [] for name in MODULE.PREFECTURE_ORDER}
@@ -524,6 +540,33 @@ class BuildIndexPageTest(unittest.TestCase):
     def test_gallery_falls_back_to_placeholder_without_photos(self) -> None:
         html = MODULE.build_index_page(self.records_by_pref)
         self.assertIn('<span class="prefecture-card-thumb is-missing"></span>', html)
+
+    def test_preinstall_record_never_shows_as_a_real_thumbnail(self) -> None:
+        """installed:false（未設置）のレコードに写真データが残っていても、
+        設置済みのポケふたと見分けがつかない形で出してはいけない。
+        record id 461（福島県/小野）は installed:false のまま写真が
+        ダウンロード済みという実データの不整合があり、これを再現する。"""
+        records_by_pref = {name: [] for name in MODULE.PREFECTURE_ORDER}
+        records_by_pref["三重県"] = [
+            {"id": "1", "city": "津市", "installed": False}
+        ]
+        photos = {"1": {"created_at": "2026-01-01T00:00:00Z"}}
+        with mock.patch.object(MODULE, "_photo_asset_url", return_value="/manhole/image/1_latest.jpeg"):
+            html = MODULE.build_index_page(records_by_pref, photos)
+        self.assertNotIn('href="/manholes/1/"', html)
+        self.assertIn('<span class="prefecture-card-thumb is-missing"></span>', html)
+
+    def test_preinstall_only_recent_record_does_not_trigger_the_new_badge(self) -> None:
+        records_by_pref = {name: [] for name in MODULE.PREFECTURE_ORDER}
+        records_by_pref["三重県"] = [
+            {
+                "id": "1",
+                "installed": False,
+                "first_seen": datetime.now(MODULE.JST).isoformat(),
+            }
+        ]
+        html = MODULE.build_index_page(records_by_pref)
+        self.assertNotIn('<span class="prefecture-new-badge">', html)
 
     def test_canonical_and_seo_meta(self) -> None:
         html = MODULE.build_index_page(self.records_by_pref)
