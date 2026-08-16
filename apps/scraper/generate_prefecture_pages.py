@@ -621,9 +621,47 @@ def _related_prefectures(prefecture: str) -> str:
     )
 
 
+def _index_card_trivia_html(name: str, trivia_entry: dict | None) -> str:
+    """都道府県トリビア（/summary/ の _build_prefecture_info_section と同じ
+    データ源・同じ内容）。トリビアが無い都道府県は静かに何も足さない —
+    summary 側の記録件数ベースの代替文言まで複製すると2箇所の言い回しが
+    ズレていく元になるので、ここでは「データがある分だけ載せる」に留める。
+    """
+    trivia_list = (trivia_entry or {}).get("trivia", [])
+    if not trivia_list:
+        return ""
+    coverage = (trivia_entry or {}).get("pokemon_coverage", [])
+    full_coverage = [e for e in coverage if e.get("coverage_percent") == 100]
+    top_coverage = max(
+        full_coverage,
+        key=lambda entry: (len(entry.get("pokemon", [])), entry.get("cover_count", 0)),
+        default=None,
+    )
+    pokemon_html = (
+        f'<p class="prefecture-card-trivia-pokemon">'
+        f'<span class="prefecture-card-trivia-label">都道府県トリビア</span>'
+        f'{escape(top_coverage["label"])}</p>'
+        if top_coverage else ""
+    )
+    facts_html = "".join(
+        f"<li>{escape(entry['text'])}</li>"
+        for entry in trivia_list[:3]
+        if entry.get("text")
+    )
+    if not facts_html:
+        return ""
+    return (
+        '<div class="prefecture-card-trivia">'
+        f"{pokemon_html}"
+        f'<ul class="prefecture-card-trivia-facts">{facts_html}</ul>'
+        "</div>"
+    )
+
+
 def build_index_page(
     records_by_pref: dict[str, list[dict]],
     photos: dict[str, dict] | None = None,
+    trivia: dict[str, dict] | None = None,
 ) -> str:
     """Generate /prefectures/index.html — the real destination for every
     "都道府県から探す" link site-wide (top page quicklink/stat tile, shared
@@ -640,8 +678,13 @@ def build_index_page(
     the in-app map (a separate #sec-pref-style link handles navigation);
     here, on a static page with no map state to filter, the whole card
     just links straight to the prefecture's detail page.
+
+    Also carries the same 都道府県トリビア content /summary/'s prefecture
+    cards show (dataset/prefecture_trivia.json via load_trivia()) — same
+    source, same text, deliberately not re-derived or reworded.
     """
     photos = photos or {}
+    trivia = trivia or {}
     total = sum(len(records) for records in records_by_pref.values())
     canonical = f"{BASE_URL}/prefectures/"
     title = "都道府県から探す｜全国のポケふた一覧"
@@ -678,6 +721,7 @@ def build_index_page(
             f'<img src="{_photo_asset_url(record, photo)}" alt="" loading="lazy" decoding="async"></a>'
             for record, photo in thumbnails
         ) or '<span class="prefecture-card-thumb is-missing"></span>'
+        trivia_html = _index_card_trivia_html(name, trivia.get(name))
         return f"""<article class="{card_class}" data-track="prefectures_index_click" data-destination="{slug}">
       <a class="prefecture-card-main" href="/prefectures/{slug}/">
         <span class="prefecture-code">{code}</span>
@@ -685,6 +729,7 @@ def build_index_page(
         <span class="prefecture-card-meta">{new_badge_html}</span>
         <span class="{count_badge_class}">{count}枚</span>
       </a>
+      {trivia_html}
       <div class="prefecture-card-gallery" aria-label="{_escape_attr(name)}のマンホール写真">{gallery_html}</div>
     </article>"""
 
@@ -767,6 +812,18 @@ def build_index_page(
       background: rgba(243,109,54,.1); color: #d65526; font-size: .68rem; font-weight: 950;
     }}
     .prefecture-new-badge img {{ width: 14px; height: 14px; }}
+    /* /summary/ の .prefecture-info-* と同じ都道府県トリビア（出典は
+       dataset/prefecture_trivia.json、内容は完全に同じ）。クラス名だけ
+       このページのカード体系（.prefecture-card-*）に合わせている。 */
+    .prefecture-card-trivia {{ padding: 0 12px 10px; }}
+    .prefecture-card-trivia-pokemon {{ margin: 0 0 4px; color: #574b41; font-size: .78rem; font-weight: 800; }}
+    .prefecture-card-trivia-label {{
+      display: inline-flex; width: fit-content; margin-right: 5px; padding: 1px 6px;
+      border-radius: 999px; background: #eee7fb; color: #57408f; font-size: .62rem;
+      font-weight: 900; vertical-align: 1px;
+    }}
+    .prefecture-card-trivia-facts {{ margin: 0; padding-left: 1.1rem; color: #716154; font-size: .72rem; line-height: 1.4; }}
+    .prefecture-card-trivia-facts li + li {{ margin-top: .3rem; }}
     .prefecture-card-gallery {{ display: flex; flex-wrap: wrap; gap: 8px; padding: 4px 12px 12px; }}
     .prefecture-card-thumb {{
       display: grid; flex: 0 0 auto; width: 54px; height: 54px; place-items: center;
@@ -1577,7 +1634,7 @@ def generate_all(
         (out_dir / "index.html").write_text(html, encoding="utf-8")
     output_dir.mkdir(parents=True, exist_ok=True)
     (output_dir / "index.html").write_text(
-        build_index_page(records_by_pref, photos), encoding="utf-8"
+        build_index_page(records_by_pref, photos, trivia), encoding="utf-8"
     )
     return len(PREFECTURES)
 
