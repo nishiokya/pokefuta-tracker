@@ -617,11 +617,27 @@ def _related_prefectures(prefecture: str) -> str:
     )
 
 
-def build_index_page(records_by_pref: dict[str, list[dict]]) -> str:
+def build_index_page(
+    records_by_pref: dict[str, list[dict]],
+    photos: dict[str, dict] | None = None,
+) -> str:
     """Generate /prefectures/index.html — the real destination for every
     "都道府県から探す" link site-wide (top page quicklink/stat tile, shared
     header nav, SP tab bar). Those all used to point at the top page's
-    #sec-pref anchor because this page didn't exist yet."""
+    #sec-pref anchor because this page didn't exist yet.
+
+    Cards intentionally mirror map.html's own prefecture picker panel
+    (.prefecture-card / .prefecture-card-main / .prefecture-card-gallery,
+    styled in pokefuta-map.css under .pokefuta-map-page) — same code badge,
+    NEW badge, count badge, and photo-thumbnail gallery — so the two
+    "browse by prefecture" surfaces feel like one experience instead of a
+    plain text list living next to a rich in-app one. The card's main
+    action differs from map.html's version on purpose: there it filters
+    the in-app map (a separate #sec-pref-style link handles navigation);
+    here, on a static page with no map state to filter, the whole card
+    just links straight to the prefecture's detail page.
+    """
+    photos = photos or {}
     total = sum(len(records) for records in records_by_pref.values())
     canonical = f"{BASE_URL}/prefectures/"
     title = "都道府県から探す｜全国のポケふた一覧"
@@ -629,20 +645,48 @@ def build_index_page(records_by_pref: dict[str, list[dict]]) -> str:
         f"全国47都道府県、計{total}枚のポケふた（ポケモンマンホール）を都道府県別に探せます。"
         "地方ごとにまとめた一覧から、行き先の設置数と詳細ページを確認できます。"
     )
+    recent_cutoff = datetime.now(JST) - timedelta(days=30)
+
+    def prefecture_card(name: str) -> str:
+        records = records_by_pref.get(name, [])
+        count = len(records)
+        code = f"{PREFECTURE_ORDER.index(name) + 1:02d}"
+        slug = PREFECTURE_SLUGS[name]
+        recent_count = sum(
+            1 for record in records
+            if (added := _record_date(record)) and added >= recent_cutoff
+        )
+        count_badge_class = "count-badge" if count else "count-badge-zero"
+        card_class = "prefecture-card" if count else "prefecture-card no-pokefuta"
+        new_badge_html = (
+            '<span class="prefecture-new-badge">'
+            '<img src="/assets/icon-fire.svg" alt="" aria-hidden="true">NEW</span>'
+            if recent_count else ""
+        )
+        thumbnails = _photo_entries(records, photos)[:8]
+        gallery_html = "".join(
+            f'<a class="prefecture-card-thumb" href="/manholes/{quote(str(record.get("id", "")))}/" '
+            f'aria-label="{_escape_attr(record.get("city", "") or name)}のポケふたの詳細を開く">'
+            f'<img src="{_photo_asset_url(record, photo)}" alt="" loading="lazy" decoding="async"></a>'
+            for record, photo in thumbnails
+        ) or '<span class="prefecture-card-thumb is-missing"></span>'
+        return f"""<article class="{card_class}" data-track="prefectures_index_click" data-destination="{slug}">
+      <a class="prefecture-card-main" href="/prefectures/{slug}/">
+        <span class="prefecture-code">{code}</span>
+        <span class="prefecture-card-name">{escape(name)}</span>
+        <span class="prefecture-card-meta">{new_badge_html}</span>
+        <span class="{count_badge_class}">{count}枚</span>
+      </a>
+      <div class="prefecture-card-gallery" aria-label="{_escape_attr(name)}のマンホール写真">{gallery_html}</div>
+    </article>"""
 
     def region_section(region_name: str, prefectures: list[str]) -> str:
-        cards = "".join(
-            f'<a class="pref-card" href="/prefectures/{PREFECTURE_SLUGS[name]}/" '
-            f'data-track="prefectures_index_click" data-destination="{PREFECTURE_SLUGS[name]}">'
-            f'<span class="pref-card-name">{escape(name)}</span>'
-            f'<span class="pref-card-count">{len(records_by_pref.get(name, []))}枚</span>'
-            "</a>"
-            for name in prefectures
-        )
+        cards = "".join(prefecture_card(name) for name in prefectures)
+        anchor_id = f"region-{PREFECTURE_SLUGS[prefectures[0]]}"
         return (
-            f'<section aria-labelledby="region-{PREFECTURE_SLUGS[prefectures[0]]}">'
-            f'<h2 id="region-{PREFECTURE_SLUGS[prefectures[0]]}" class="region-heading">{escape(region_name)}</h2>'
-            f'<div class="pref-grid">{cards}</div>'
+            f'<section aria-labelledby="{anchor_id}">'
+            f'<h2 id="{anchor_id}" class="region-heading">{escape(region_name)}</h2>'
+            f'<div class="prefecture-card-list">{cards}</div>'
             "</section>"
         )
 
@@ -687,17 +731,63 @@ def build_index_page(records_by_pref: dict[str, list[dict]]) -> str:
       margin: 28px 0 12px; font-size: 1.05rem; font-weight: 850;
       color: #14544f;
     }}
-    .pref-grid {{
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 10px;
+    /* 以下、map.html の都道府県パネル（pokefuta-map.css の
+       .pokefuta-map-page .prefecture-card* / .count-badge*）と
+       見た目を揃えるためのカードスタイル。あちらはSPAの絞り込みUIで
+       このページには地図の状態が無いため、カード全体を詳細ページへの
+       リンクにしている点だけ差分。 */
+    .prefecture-card-list {{ display: grid; gap: 10px; }}
+    .prefecture-card {{
+      min-height: 72px; border: 1px solid rgba(116,82,38,.17); border-radius: 12px;
+      background: rgba(255,250,239,.94); box-shadow: 0 7px 18px rgba(80,54,20,.08);
+      overflow: hidden;
     }}
-    .pref-card {{
-      display: flex; align-items: center; justify-content: space-between; gap: 8px;
-      padding: 12px 14px; border-radius: 14px; background: #fff;
-      border: 1px solid rgba(93,67,35,.15); text-decoration: none;
-      font-weight: 850; color: #201b16;
+    .prefecture-card.no-pokefuta {{ opacity: .52; }}
+    .prefecture-card-main {{
+      display: grid; grid-template-columns: 42px minmax(0,1fr) minmax(96px,auto) auto;
+      align-items: center; gap: 10px; width: 100%; min-height: 56px;
+      padding: 12px 12px 8px; text-decoration: none; color: inherit;
     }}
-    .pref-card-count {{ color: #75685c; font-size: .82rem; font-weight: 700; }}
+    .prefecture-card-meta {{
+      display: inline-flex; align-items: center; justify-content: flex-end;
+      min-width: 0; gap: 7px; color: #75685c; font-size: .72rem; font-weight: 850;
+      white-space: nowrap;
+    }}
+    .prefecture-new-badge {{
+      display: inline-flex; align-items: center; gap: 3px; min-height: 24px; padding: 0 8px;
+      border: 1px solid rgba(243,109,54,.34); border-radius: 999px;
+      background: rgba(243,109,54,.1); color: #d65526; font-size: .68rem; font-weight: 950;
+    }}
+    .prefecture-new-badge img {{ width: 14px; height: 14px; }}
+    .prefecture-card-gallery {{ display: flex; flex-wrap: wrap; gap: 8px; padding: 4px 12px 12px; }}
+    .prefecture-card-thumb {{
+      display: grid; flex: 0 0 auto; width: 54px; height: 54px; place-items: center;
+      overflow: hidden; border: 2px solid rgba(255,255,255,.95); border-radius: 50%;
+      background: url("/assets/icon-pin.svg") center / 24px 24px no-repeat,
+        linear-gradient(135deg, rgba(126,107,169,.14), rgba(255,250,239,.92));
+      box-shadow: 0 4px 10px rgba(67,38,111,.16);
+    }}
+    .prefecture-card-thumb:hover, .prefecture-card-thumb:focus-visible {{
+      border-color: #7654aa; box-shadow: 0 6px 14px rgba(67,38,111,.24), 0 0 0 3px rgba(118,84,170,.18);
+      outline: 0;
+    }}
+    .prefecture-card-thumb img {{ width: 100%; height: 100%; display: block; object-fit: cover; }}
+    .prefecture-card-thumb.is-missing {{
+      background: url("/assets/icon-pin.svg") center / 24px 24px no-repeat,
+        linear-gradient(135deg, rgba(126,107,169,.14), rgba(255,250,239,.92));
+    }}
+    .prefecture-code {{
+      display: inline-grid; min-width: 34px; min-height: 30px; place-items: center;
+      border-radius: 8px; background: linear-gradient(135deg, #7e6ba9, #6d55a3); color: #fff;
+      box-shadow: inset 0 -2px 0 rgba(0,0,0,.12); font-size: .78rem; font-weight: 900;
+    }}
+    .prefecture-card-name {{ min-width: 0; color: #191613; font-size: 1rem; font-weight: 900; }}
+    .count-badge, .count-badge-zero {{
+      display: inline-flex; align-items: center; justify-content: center; min-width: 56px;
+      min-height: 30px; padding: 0 10px; border-radius: 999px; font-size: .88rem; font-weight: 900;
+    }}
+    .count-badge {{ background: rgba(126,107,169,.14); color: #654aa0; }}
+    .count-badge-zero {{ background: rgba(54,44,35,.08); color: #74695d; }}
     footer {{ margin-top: 24px; color: #75685c; font-size: .8rem; text-align: center; }}
   </style>
 </head>
@@ -1479,7 +1569,7 @@ def generate_all(
         (out_dir / "index.html").write_text(html, encoding="utf-8")
     output_dir.mkdir(parents=True, exist_ok=True)
     (output_dir / "index.html").write_text(
-        build_index_page(records_by_pref), encoding="utf-8"
+        build_index_page(records_by_pref, photos), encoding="utf-8"
     )
     return len(PREFECTURES)
 
