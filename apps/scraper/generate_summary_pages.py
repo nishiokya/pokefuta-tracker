@@ -30,11 +30,19 @@ from photo_caption import (  # noqa: E402
 )
 
 try:
-    from apps.scraper.prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS
+    from apps.scraper.prefectures import (
+        PREFECTURE_ORDER,
+        PREFECTURE_SLUGS,
+        select_full_coverage_pokemon,
+    )
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
-    from prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS
+    from prefectures import (
+        PREFECTURE_ORDER,
+        PREFECTURE_SLUGS,
+        select_full_coverage_pokemon,
+    )
 
 ROOT = Path(__file__).parent.parent.parent
 NDJSON = ROOT / "docs" / "pokefuta.ndjson"
@@ -3109,8 +3117,16 @@ def _build_search_hub_section(s: dict) -> str:
     if not hub:
         return ""
     map_base = s["map_base_href"]
+    # "都道府県から探す" の目的地は、同じページ内の集計グリッドへのアンカー
+    # ではなく、実際の都道府県詳細ページへの入口である /prefectures/
+    # （ja専用・絶対パス。個別詳細ページと同じ _prefecture_href() の規約に
+    # 合わせる）にしたい。ただし /prefectures/ に他言語版は無いので、
+    # ja以外はこれまで通り同じページ内の #prefecture-count-heading
+    # （その言語でローカライズされた集計セクション）に留める —
+    # そうしないと非ja話者がいきなり全文日本語のページへ飛ばされる。
+    pref_href = "/prefectures/" if s.get("pref_key") == "ja" else "#prefecture-count-heading"
     cards = [
-        (hub["card_pref_title"], hub["card_pref_desc"], "#prefecture-count-heading"),
+        (hub["card_pref_title"], hub["card_pref_desc"], pref_href),
         (hub["card_pokemon_title"], hub["card_pokemon_desc"], f"{map_base}pokemon/"),
         (hub["card_map_title"], hub["card_map_desc"], s["nav_home_href"]),
     ]
@@ -3167,18 +3183,8 @@ def _build_prefecture_info_section(
         pref_trivia = trivia_by_pref.get(pref) if is_ja else None
 
         if pref_trivia:
-            coverage = pref_trivia.get("pokemon_coverage", [])
-            full_coverage = [
-                entry for entry in coverage
-                if entry.get("coverage_percent") == 100
-            ]
-            top_coverage = max(
-                full_coverage,
-                key=lambda entry: (
-                    len(entry.get("pokemon", [])),
-                    entry.get("cover_count", 0),
-                ),
-                default=None,
+            top_coverage = select_full_coverage_pokemon(
+                pref_trivia.get("pokemon_coverage", [])
             )
             if top_coverage:
                 pokemon_label = top_coverage.get("label", pokemon_label)

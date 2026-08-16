@@ -574,6 +574,56 @@ class BuildIndexPageTest(unittest.TestCase):
         self.assertIn('<meta name="robots" content="index,follow">', html)
         self.assertIn("<title>都道府県から探す｜全国のポケふた一覧</title>", html)
 
+    def test_carries_the_same_prefecture_trivia_summary_shows(self) -> None:
+        """/summary/ の都道府県トリビアと同じデータ・同じ文言を出すこと。
+        dataset/prefecture_trivia.json の北海道エントリそのものを使う
+        （coverage_percent 100% の vulpix-family = 「ロコン系」がラベルになる）。"""
+        trivia = {
+            "北海道": {
+                "trivia": [
+                    {
+                        "id": "hokkaido-support-vulpix",
+                        "text": "北海道の推しポケモンは、雪景色にもなじむアローラロコンとロコンです",
+                    },
+                    {
+                        "id": "北海道-vulpix-family-100",
+                        "text": "県内50枚すべてにロコン系が登場します",
+                    },
+                ],
+                "pokemon_coverage": [
+                    {"label": "ロコン系", "pokemon": ["ロコン", "アローラロコン"], "cover_count": 50, "coverage_percent": 100.0},
+                    {"label": "アローラロコン", "pokemon": ["アローラロコン"], "cover_count": 37, "coverage_percent": 74.0},
+                ],
+            }
+        }
+        html = MODULE.build_index_page(self.records_by_pref, trivia=trivia)
+        self.assertIn(
+            '<span class="prefecture-card-trivia-label">都道府県トリビア</span>ロコン系',
+            html,
+        )
+        self.assertIn(
+            "<li>北海道の推しポケモンは、雪景色にもなじむアローラロコンとロコンです</li>",
+            html,
+        )
+        self.assertIn("<li>県内50枚すべてにロコン系が登場します</li>", html)
+
+    def test_omits_the_trivia_block_when_no_trivia_data_exists(self) -> None:
+        html = MODULE.build_index_page(self.records_by_pref, trivia={})
+        self.assertNotIn('<div class="prefecture-card-trivia">', html)
+
+    def test_omits_the_pokemon_label_when_no_100_percent_coverage_entry_exists(self) -> None:
+        trivia = {
+            "三重県": {
+                "trivia": [{"id": "x", "text": "テストトリビア文"}],
+                "pokemon_coverage": [
+                    {"label": "何か", "pokemon": ["何か"], "cover_count": 1, "coverage_percent": 50.0}
+                ],
+            }
+        }
+        html = MODULE.build_index_page(self.records_by_pref, trivia=trivia)
+        self.assertIn("<li>テストトリビア文</li>", html)
+        self.assertNotIn('<span class="prefecture-card-trivia-label">', html)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -103,5 +103,44 @@ class PrefectureMasterTest(unittest.TestCase):
         self.assertEqual(43, sum(1 for n in names if n.endswith("県")))
 
 
+class SelectFullCoveragePokemonTest(unittest.TestCase):
+    """dataset/prefecture_trivia.json の pokemon_coverage から、
+    generate_summary_pages.py と generate_prefecture_pages.py が
+    どちらも同じ「100%カバーしているポケモン」を選ぶための共有ロジック。"""
+
+    def test_picks_the_only_100_percent_entry(self) -> None:
+        coverage = [
+            {"label": "ロコン系", "pokemon": ["ロコン", "アローラロコン"], "cover_count": 50, "coverage_percent": 100.0},
+            {"label": "アローラロコン", "pokemon": ["アローラロコン"], "cover_count": 37, "coverage_percent": 74.0},
+        ]
+        result = MODULE.select_full_coverage_pokemon(coverage)
+        self.assertEqual("ロコン系", result["label"])
+
+    def test_prefers_the_larger_group_when_multiple_entries_reach_100_percent(self) -> None:
+        coverage = [
+            {"label": "A単体", "pokemon": ["A"], "cover_count": 10, "coverage_percent": 100.0},
+            {"label": "AB系", "pokemon": ["A", "B"], "cover_count": 10, "coverage_percent": 100.0},
+        ]
+        result = MODULE.select_full_coverage_pokemon(coverage)
+        self.assertEqual("AB系", result["label"])
+
+    def test_returns_none_without_a_100_percent_entry(self) -> None:
+        coverage = [{"label": "何か", "pokemon": ["何か"], "cover_count": 1, "coverage_percent": 50.0}]
+        self.assertIsNone(MODULE.select_full_coverage_pokemon(coverage))
+
+    def test_returns_none_for_empty_coverage(self) -> None:
+        self.assertIsNone(MODULE.select_full_coverage_pokemon([]))
+
+    def test_ignores_a_100_percent_entry_without_a_label_instead_of_crashing(self) -> None:
+        """label の無いエントリを選んでしまうと呼び出し側が KeyError で落ちる
+        （実際に見つかったコードレビュー指摘）。選定の時点で除外する。"""
+        coverage = [
+            {"pokemon": ["謎"], "cover_count": 5, "coverage_percent": 100.0},
+            {"label": "使えるラベル", "pokemon": ["使える"], "cover_count": 1, "coverage_percent": 100.0},
+        ]
+        result = MODULE.select_full_coverage_pokemon(coverage)
+        self.assertEqual("使えるラベル", result["label"])
+
+
 if __name__ == "__main__":
     unittest.main()
