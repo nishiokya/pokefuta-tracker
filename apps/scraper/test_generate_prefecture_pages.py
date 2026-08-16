@@ -449,6 +449,60 @@ class PrefecturePageDeployContractTest(unittest.TestCase):
             self.assertEqual(47, count)
             self.assertEqual(47, len(list(Path(directory).glob("*/index.html"))))
 
+    def test_generate_all_also_writes_the_prefectures_index_page(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory)
+            MODULE.generate_all(
+                [
+                    {
+                        "id": "contract-1",
+                        "status": "active",
+                        "prefecture": "北海道",
+                        "city": "札幌市",
+                        "pokemons": ["ピカチュウ"],
+                        "lat": 43.0,
+                        "lng": 141.0,
+                    }
+                ],
+                {"ピカチュウ": "pikachu"},
+                {},
+                output,
+            )
+            index_html = (output / "index.html").read_text(encoding="utf-8")
+            self.assertIn('<link rel="canonical" href="https://data.pokefuta.com/prefectures/">', index_html)
+            self.assertIn('href="/prefectures/hokkaido/"', index_html)
+
+
+class BuildIndexPageTest(unittest.TestCase):
+    def setUp(self) -> None:
+        self.records_by_pref = {name: [] for name in MODULE.PREFECTURE_ORDER}
+        self.records_by_pref["三重県"] = [{"id": "1"}, {"id": "2"}]
+
+    def test_links_to_every_prefecture_grouped_by_region(self) -> None:
+        html = MODULE.build_index_page(self.records_by_pref)
+        for name, slug in MODULE.PREFECTURES:
+            with self.subTest(prefecture=name):
+                self.assertIn(f'href="/prefectures/{slug}/"', html)
+        for region_name, _prefectures in MODULE.REGIONS:
+            with self.subTest(region=region_name):
+                self.assertIn(f">{region_name}<", html)
+
+    def test_shows_the_installed_count_per_prefecture(self) -> None:
+        html = MODULE.build_index_page(self.records_by_pref)
+        self.assertIn(
+            '<a class="pref-card" href="/prefectures/mie/" '
+            'data-track="prefectures_index_click" data-destination="mie">'
+            '<span class="pref-card-name">三重県</span>'
+            '<span class="pref-card-count">2枚</span></a>',
+            html,
+        )
+
+    def test_canonical_and_seo_meta(self) -> None:
+        html = MODULE.build_index_page(self.records_by_pref)
+        self.assertIn('<link rel="canonical" href="https://data.pokefuta.com/prefectures/">', html)
+        self.assertIn('<meta name="robots" content="index,follow">', html)
+        self.assertIn("<title>都道府県から探す｜全国のポケふた一覧</title>", html)
+
 
 if __name__ == "__main__":
     unittest.main()

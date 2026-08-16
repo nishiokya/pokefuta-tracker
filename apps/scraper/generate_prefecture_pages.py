@@ -617,6 +617,108 @@ def _related_prefectures(prefecture: str) -> str:
     )
 
 
+def build_index_page(records_by_pref: dict[str, list[dict]]) -> str:
+    """Generate /prefectures/index.html — the real destination for every
+    "都道府県から探す" link site-wide (top page quicklink/stat tile, shared
+    header nav, SP tab bar). Those all used to point at the top page's
+    #sec-pref anchor because this page didn't exist yet."""
+    total = sum(len(records) for records in records_by_pref.values())
+    canonical = f"{BASE_URL}/prefectures/"
+    title = "都道府県から探す｜全国のポケふた一覧"
+    description = (
+        f"全国47都道府県、計{total}枚のポケふた（ポケモンマンホール）を都道府県別に探せます。"
+        "地方ごとにまとめた一覧から、行き先の設置数と詳細ページを確認できます。"
+    )
+
+    def region_section(region_name: str, prefectures: list[str]) -> str:
+        cards = "".join(
+            f'<a class="pref-card" href="/prefectures/{PREFECTURE_SLUGS[name]}/" '
+            f'data-track="prefectures_index_click" data-destination="{PREFECTURE_SLUGS[name]}">'
+            f'<span class="pref-card-name">{escape(name)}</span>'
+            f'<span class="pref-card-count">{len(records_by_pref.get(name, []))}枚</span>'
+            "</a>"
+            for name in prefectures
+        )
+        return (
+            f'<section aria-labelledby="region-{PREFECTURE_SLUGS[prefectures[0]]}">'
+            f'<h2 id="region-{PREFECTURE_SLUGS[prefectures[0]]}" class="region-heading">{escape(region_name)}</h2>'
+            f'<div class="pref-grid">{cards}</div>'
+            "</section>"
+        )
+
+    regions_html = "".join(region_section(name, prefs) for name, prefs in REGIONS)
+
+    return f"""<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{escape(title)}</title>
+  <meta name="description" content="{_escape_attr(description)}">
+  <meta name="robots" content="index,follow">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:title" content="{_escape_attr(title)}">
+  <meta property="og:description" content="{_escape_attr(description)}">
+  <meta property="og:url" content="{_escape_attr(canonical)}">
+  <meta property="og:image" content="{OG_IMAGE}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{_escape_attr(title)}">
+  <meta name="twitter:description" content="{_escape_attr(description)}">
+  <meta name="twitter:image" content="{OG_IMAGE}">
+  <link rel="canonical" href="{_escape_attr(canonical)}">
+  <link rel="icon" href="/assets/pokefuta-marker.svg" type="image/svg+xml">
+  <style>
+    :root {{ color-scheme: light; }}
+    * {{ box-sizing: border-box; }}
+    body {{
+      margin: 0; background: #f7f0df; color: #201b16;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.65;
+    }}
+    a {{ color: #176f68; }}
+    .page {{ max-width: 1040px; margin: 0 auto; padding: 20px 16px 56px; }}
+    .breadcrumb {{ display: flex; gap: 8px; font-size: .82rem; font-weight: 800; }}
+    .breadcrumb a {{ text-decoration: none; }}
+    .index-hero {{ margin: 14px 0 28px; }}
+    .index-hero h1 {{ margin: 0 0 10px; font-size: 1.6rem; }}
+    .index-hero p {{ margin: 0; color: #75685c; }}
+    .region-heading {{
+      margin: 28px 0 12px; font-size: 1.05rem; font-weight: 850;
+      color: #14544f;
+    }}
+    .pref-grid {{
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 10px;
+    }}
+    .pref-card {{
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+      padding: 12px 14px; border-radius: 14px; background: #fff;
+      border: 1px solid rgba(93,67,35,.15); text-decoration: none;
+      font-weight: 850; color: #201b16;
+    }}
+    .pref-card-count {{ color: #75685c; font-size: .82rem; font-weight: 700; }}
+    footer {{ margin-top: 24px; color: #75685c; font-size: .8rem; text-align: center; }}
+  </style>
+</head>
+<body>
+  <main class="page">
+    <nav class="breadcrumb" aria-label="パンくず">
+      <a href="/">全国マップ</a><span>›</span>
+      <span>都道府県から探す</span>
+    </nav>
+    <header class="index-hero">
+      <h1>都道府県から探す</h1>
+      <p>全国47都道府県、計{total}枚のポケふたを地方別にまとめました。行き先を選んで詳細ページへ。</p>
+    </header>
+    {regions_html}
+    <footer><a href="/summary/">全国のポケふた一覧へ戻る</a></footer>
+  </main>
+</body>
+</html>
+"""
+
+
 def _prefecture_official_url(records: list[dict]) -> str:
     for record in records:
         candidate = str(record.get("prefecture_site_url", "") or "").strip()
@@ -1375,6 +1477,10 @@ def generate_all(
             photos,
         )
         (out_dir / "index.html").write_text(html, encoding="utf-8")
+    output_dir.mkdir(parents=True, exist_ok=True)
+    (output_dir / "index.html").write_text(
+        build_index_page(records_by_pref), encoding="utf-8"
+    )
     return len(PREFECTURES)
 
 
