@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-08-15T20:45:48.937650Z",
+  "generated_at": "2026-08-16T20:44:41.620799Z",
   "source": "pokefuta photo table",
   "image": {
     "r2_public_base_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image"
   },
-  "count": 396,
+  "count": 398,
   "photos": {
     "1": {
       "manhole_id": 1,
@@ -4003,6 +4003,16 @@
           "shot_at": "2025-05-15T01:12:44+00:00",
           "display_name": "xxobokihurah2007",
           "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
+        },
+        {
+          "photo_id": "cb93bcad-7392-4cc8-b899-4f737154cda6",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/d3100a13-aafb-4996-bab6-4efe1813f136.jpg",
+          "storage_key": "photos/original/2026/07/d3100a13-aafb-4996-bab6-4efe1813f136.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-19T02:18:32.02591+00:00",
+          "shot_at": "2024-11-11T03:03:05+00:00",
+          "display_name": "ビタCウォーター。",
+          "public_user_id": "2dc3b0ab-b436-45e4-acde-290dae05e595"
         }
       ]
     },
@@ -4051,6 +4061,62 @@
           "shot_at": "2026-06-12T01:43:14+00:00",
           "display_name": "Sky134z",
           "public_user_id": "ffd4cdb3-c954-4990-aee1-82afb428fa42"
+        }
+      ]
+    },
+    "136": {
+      "manhole_id": 136,
+      "photo_id": "6720c6b7-660a-41cc-a2d8-04bd817abc5e",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/d766ad5b-43b2-4dee-a63f-e1eccb13bc45.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/d766ad5b-43b2-4dee-a63f-e1eccb13bc45.jpg",
+      "storage_key": "photos/original/2026/08/d766ad5b-43b2-4dee-a63f-e1eccb13bc45.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1376659,
+      "created_at": "2026-08-16T08:25:31.378042+00:00",
+      "shot_at": "2026-08-16T08:18:27+00:00",
+      "comment": null,
+      "display_name": "べが",
+      "public_user_id": "0b98f613-711b-4db0-9619-3fa18e12de46",
+      "gallery": [
+        {
+          "photo_id": "6720c6b7-660a-41cc-a2d8-04bd817abc5e",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/d766ad5b-43b2-4dee-a63f-e1eccb13bc45.jpg",
+          "storage_key": "photos/original/2026/08/d766ad5b-43b2-4dee-a63f-e1eccb13bc45.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-08-16T08:25:31.378042+00:00",
+          "shot_at": "2026-08-16T08:18:27+00:00",
+          "display_name": "べが",
+          "public_user_id": "0b98f613-711b-4db0-9619-3fa18e12de46"
+        }
+      ]
+    },
+    "137": {
+      "manhole_id": 137,
+      "photo_id": "734f73e6-26cc-4f33-81ed-cb2dd262d27d",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/91e2864a-4590-4c0b-92b9-5c4783dfd6ed.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/91e2864a-4590-4c0b-92b9-5c4783dfd6ed.jpg",
+      "storage_key": "photos/original/2026/08/91e2864a-4590-4c0b-92b9-5c4783dfd6ed.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1715450,
+      "created_at": "2026-08-16T08:56:35.141238+00:00",
+      "shot_at": "2026-08-16T08:53:14+00:00",
+      "comment": null,
+      "display_name": "べが",
+      "public_user_id": "0b98f613-711b-4db0-9619-3fa18e12de46",
+      "gallery": [
+        {
+          "photo_id": "734f73e6-26cc-4f33-81ed-cb2dd262d27d",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/91e2864a-4590-4c0b-92b9-5c4783dfd6ed.jpg",
+          "storage_key": "photos/original/2026/08/91e2864a-4590-4c0b-92b9-5c4783dfd6ed.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-08-16T08:56:35.141238+00:00",
+          "shot_at": "2026-08-16T08:53:14+00:00",
+          "display_name": "べが",
+          "public_user_id": "0b98f613-711b-4db0-9619-3fa18e12de46"
         }
       ]
     },
@@ -6294,20 +6360,30 @@
     },
     "213": {
       "manhole_id": 213,
-      "photo_id": "2197450c-8cd8-44df-b381-b46b9faf136b",
-      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/cb13ba20-4012-40c9-875a-5527fc51f180.jpg",
-      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/cb13ba20-4012-40c9-875a-5527fc51f180.jpg",
-      "storage_key": "photos/original/2026/07/cb13ba20-4012-40c9-875a-5527fc51f180.jpg",
+      "photo_id": "dfd4be30-a981-498f-9ab2-1e78a3252ffe",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/76dd5694-30f3-4b4b-a788-adaf669e2e4f.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/76dd5694-30f3-4b4b-a788-adaf669e2e4f.jpg",
+      "storage_key": "photos/original/2026/08/76dd5694-30f3-4b4b-a788-adaf669e2e4f.jpg",
       "content_type": "image/jpeg",
       "width": null,
       "height": null,
-      "file_size": 1582400,
-      "created_at": "2026-07-15T11:36:42.221808+00:00",
-      "shot_at": "2026-05-16T03:31:33+00:00",
+      "file_size": 1054853,
+      "created_at": "2026-08-16T06:29:41.161035+00:00",
+      "shot_at": "2026-08-16T06:29:39.84+00:00",
       "comment": null,
-      "display_name": "おいしいごはん",
-      "public_user_id": "92cd9a42-4e0c-4196-9218-bfc9e22ff796",
+      "display_name": "k2o",
+      "public_user_id": "be7d8262-1ac9-4b8f-bac4-0efebb6689f0",
       "gallery": [
+        {
+          "photo_id": "dfd4be30-a981-498f-9ab2-1e78a3252ffe",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/76dd5694-30f3-4b4b-a788-adaf669e2e4f.jpg",
+          "storage_key": "photos/original/2026/08/76dd5694-30f3-4b4b-a788-adaf669e2e4f.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-08-16T06:29:41.161035+00:00",
+          "shot_at": "2026-08-16T06:29:39.84+00:00",
+          "display_name": "k2o",
+          "public_user_id": "be7d8262-1ac9-4b8f-bac4-0efebb6689f0"
+        },
         {
           "photo_id": "2197450c-8cd8-44df-b381-b46b9faf136b",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/cb13ba20-4012-40c9-875a-5527fc51f180.jpg",
@@ -7948,20 +8024,30 @@
     },
     "262": {
       "manhole_id": 262,
-      "photo_id": "18a7db35-34eb-4c61-9eb2-9b86cf99a4d1",
-      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/fb7e5e33-8e30-4ae2-b53a-665ed735f53f.jpg",
-      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/fb7e5e33-8e30-4ae2-b53a-665ed735f53f.jpg",
-      "storage_key": "photos/original/2026/08/fb7e5e33-8e30-4ae2-b53a-665ed735f53f.jpg",
+      "photo_id": "3cfd9a1e-3a54-4c8c-947d-7566061d163d",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/e8fe33a2-56e8-4aa8-ada9-8060d47ab9f6.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/e8fe33a2-56e8-4aa8-ada9-8060d47ab9f6.jpg",
+      "storage_key": "photos/original/2026/08/e8fe33a2-56e8-4aa8-ada9-8060d47ab9f6.jpg",
       "content_type": "image/jpeg",
       "width": null,
       "height": null,
-      "file_size": 1015371,
-      "created_at": "2026-08-12T09:29:18.619394+00:00",
-      "shot_at": "2026-08-12T09:28:56+00:00",
+      "file_size": 1569419,
+      "created_at": "2026-08-16T05:21:11.150075+00:00",
+      "shot_at": "2026-08-16T03:44:34+00:00",
       "comment": null,
-      "display_name": null,
-      "public_user_id": "e1aaaccb-f8ed-4bbb-801b-11c8b1ac8bc0",
+      "display_name": "ビタCウォーター。",
+      "public_user_id": "2dc3b0ab-b436-45e4-acde-290dae05e595",
       "gallery": [
+        {
+          "photo_id": "3cfd9a1e-3a54-4c8c-947d-7566061d163d",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/e8fe33a2-56e8-4aa8-ada9-8060d47ab9f6.jpg",
+          "storage_key": "photos/original/2026/08/e8fe33a2-56e8-4aa8-ada9-8060d47ab9f6.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-08-16T05:21:11.150075+00:00",
+          "shot_at": "2026-08-16T03:44:34+00:00",
+          "display_name": "ビタCウォーター。",
+          "public_user_id": "2dc3b0ab-b436-45e4-acde-290dae05e595"
+        },
         {
           "photo_id": "18a7db35-34eb-4c61-9eb2-9b86cf99a4d1",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/fb7e5e33-8e30-4ae2-b53a-665ed735f53f.jpg",
@@ -8041,6 +8127,16 @@
           "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452"
         },
         {
+          "photo_id": "c4fa3c7c-6993-48a5-9321-d2fcd5613291",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/fae3cab5-87ce-4d60-ba59-1f37fc02af6d.jpg",
+          "storage_key": "photos/original/2026/07/fae3cab5-87ce-4d60-ba59-1f37fc02af6d.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-19T02:21:12.120827+00:00",
+          "shot_at": "2026-06-08T06:41:53+00:00",
+          "display_name": "ビタCウォーター。",
+          "public_user_id": "2dc3b0ab-b436-45e4-acde-290dae05e595"
+        },
+        {
           "photo_id": "dd7cb17f-8d26-4e0c-b405-4f67aae31949",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/992a850f-dd0e-4ca1-8a8e-5814ab59ee34.jpg",
           "storage_key": "photos/original/2026/08/992a850f-dd0e-4ca1-8a8e-5814ab59ee34.jpg",
@@ -8064,20 +8160,30 @@
     },
     "264": {
       "manhole_id": 264,
-      "photo_id": "670f1bd6-3ec5-4ad5-b232-85108d3a6fea",
-      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/7707cb21-5707-4a6e-b045-daf77708a21b.jpg",
-      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/7707cb21-5707-4a6e-b045-daf77708a21b.jpg",
-      "storage_key": "photos/original/2026/08/7707cb21-5707-4a6e-b045-daf77708a21b.jpg",
+      "photo_id": "8454489d-6ecd-43ff-bb57-9dcc6d501803",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/bb23ab2d-ed64-46e1-b071-65eb6d0a890e.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/bb23ab2d-ed64-46e1-b071-65eb6d0a890e.jpg",
+      "storage_key": "photos/original/2026/08/bb23ab2d-ed64-46e1-b071-65eb6d0a890e.jpg",
       "content_type": "image/jpeg",
       "width": null,
       "height": null,
-      "file_size": 1695089,
-      "created_at": "2026-08-14T23:28:58.226184+00:00",
-      "shot_at": "2026-08-14T08:28:36+00:00",
+      "file_size": 1718752,
+      "created_at": "2026-08-16T05:20:06.606272+00:00",
+      "shot_at": "2026-08-16T04:23:38+00:00",
       "comment": null,
-      "display_name": "くろっぽい猫",
-      "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452",
+      "display_name": "ビタCウォーター。",
+      "public_user_id": "2dc3b0ab-b436-45e4-acde-290dae05e595",
       "gallery": [
+        {
+          "photo_id": "8454489d-6ecd-43ff-bb57-9dcc6d501803",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/bb23ab2d-ed64-46e1-b071-65eb6d0a890e.jpg",
+          "storage_key": "photos/original/2026/08/bb23ab2d-ed64-46e1-b071-65eb6d0a890e.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-08-16T05:20:06.606272+00:00",
+          "shot_at": "2026-08-16T04:23:38+00:00",
+          "display_name": "ビタCウォーター。",
+          "public_user_id": "2dc3b0ab-b436-45e4-acde-290dae05e595"
+        },
         {
           "photo_id": "670f1bd6-3ec5-4ad5-b232-85108d3a6fea",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/7707cb21-5707-4a6e-b045-daf77708a21b.jpg",
@@ -8115,16 +8221,6 @@
           "content_type": "image/jpeg",
           "created_at": "2026-08-12T00:37:49.166214+00:00",
           "shot_at": "2025-05-24T01:31:31+00:00",
-          "display_name": "minmin_m",
-          "public_user_id": "6c107390-da8a-4caa-aaf2-10f8f7c6cbf4"
-        },
-        {
-          "photo_id": "a5879fb5-2c65-4e0d-ac49-797ecadf6032",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/1633e0c0-f3fd-43f0-b048-0a13b93a1c6f.jpg",
-          "storage_key": "photos/original/2026/08/1633e0c0-f3fd-43f0-b048-0a13b93a1c6f.jpg",
-          "content_type": "image/jpeg",
-          "created_at": "2026-08-11T12:35:36.854532+00:00",
-          "shot_at": "2023-11-18T04:49:25+00:00",
           "display_name": "minmin_m",
           "public_user_id": "6c107390-da8a-4caa-aaf2-10f8f7c6cbf4"
         }
@@ -10183,25 +10279,45 @@
           "shot_at": "2024-11-13T00:24:17+00:00",
           "display_name": "minmin_m",
           "public_user_id": "6c107390-da8a-4caa-aaf2-10f8f7c6cbf4"
+        },
+        {
+          "photo_id": "9039778d-117d-49a9-8c96-2e547e9ef38b",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/4e77422d-b087-4cf9-9b77-9e5a66104a83.jpg",
+          "storage_key": "photos/original/2026/07/4e77422d-b087-4cf9-9b77-9e5a66104a83.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-19T02:17:40.656393+00:00",
+          "shot_at": "2024-04-12T05:40:58+00:00",
+          "display_name": "ビタCウォーター。",
+          "public_user_id": "2dc3b0ab-b436-45e4-acde-290dae05e595"
         }
       ]
     },
     "319": {
       "manhole_id": 319,
-      "photo_id": "1d9161f2-877b-4e3f-a0a8-27d9f07a3160",
-      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/3aa87758-8998-4130-ba27-08de7c5cb530.jpg",
-      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/3aa87758-8998-4130-ba27-08de7c5cb530.jpg",
-      "storage_key": "photos/original/2026/08/3aa87758-8998-4130-ba27-08de7c5cb530.jpg",
+      "photo_id": "47c3e4de-1881-4407-bd15-83ed1c0b68e7",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/2245de22-8881-4d9d-aade-5395080fedca.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/2245de22-8881-4d9d-aade-5395080fedca.jpg",
+      "storage_key": "photos/original/2026/07/2245de22-8881-4d9d-aade-5395080fedca.jpg",
       "content_type": "image/jpeg",
       "width": null,
       "height": null,
-      "file_size": 1432556,
-      "created_at": "2026-08-11T12:48:11.019463+00:00",
-      "shot_at": "2024-11-13T02:47:41+00:00",
+      "file_size": 1684745,
+      "created_at": "2026-07-19T02:20:45.153749+00:00",
+      "shot_at": "2026-04-04T05:24:59+00:00",
       "comment": null,
-      "display_name": "minmin_m",
-      "public_user_id": "6c107390-da8a-4caa-aaf2-10f8f7c6cbf4",
+      "display_name": "ビタCウォーター。",
+      "public_user_id": "2dc3b0ab-b436-45e4-acde-290dae05e595",
       "gallery": [
+        {
+          "photo_id": "47c3e4de-1881-4407-bd15-83ed1c0b68e7",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/2245de22-8881-4d9d-aade-5395080fedca.jpg",
+          "storage_key": "photos/original/2026/07/2245de22-8881-4d9d-aade-5395080fedca.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-19T02:20:45.153749+00:00",
+          "shot_at": "2026-04-04T05:24:59+00:00",
+          "display_name": "ビタCウォーター。",
+          "public_user_id": "2dc3b0ab-b436-45e4-acde-290dae05e595"
+        },
         {
           "photo_id": "1d9161f2-877b-4e3f-a0a8-27d9f07a3160",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/3aa87758-8998-4130-ba27-08de7c5cb530.jpg",
@@ -10249,6 +10365,16 @@
           "shot_at": "2026-07-28T03:43:36+00:00",
           "display_name": "Ⓜ︎agenta",
           "public_user_id": "af0fb869-ded3-49a9-85a9-c2c3919e7ab6"
+        },
+        {
+          "photo_id": "f292bfda-18a7-4cc6-8be0-6692d89615e8",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/8fd7555f-c489-40fa-bb44-12219453b654.jpg",
+          "storage_key": "photos/original/2026/07/8fd7555f-c489-40fa-bb44-12219453b654.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-19T02:20:21.690563+00:00",
+          "shot_at": "2026-04-10T04:14:01+00:00",
+          "display_name": "ビタCウォーター。",
+          "public_user_id": "2dc3b0ab-b436-45e4-acde-290dae05e595"
         },
         {
           "photo_id": "c64fbe4a-3d8e-42e2-b153-53ffb926dff6",
@@ -10327,6 +10453,16 @@
           "public_user_id": "d0530387-de23-40ec-8e8f-b7a50a648e05"
         },
         {
+          "photo_id": "b2854b0b-7e2d-40a0-bdbf-b9801dd47a6b",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/7a3a4421-ddee-4f05-830d-614d305c25a7.jpg",
+          "storage_key": "photos/original/2026/07/7a3a4421-ddee-4f05-830d-614d305c25a7.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-19T02:19:54.594353+00:00",
+          "shot_at": "2026-04-04T01:48:20+00:00",
+          "display_name": "ビタCウォーター。",
+          "public_user_id": "2dc3b0ab-b436-45e4-acde-290dae05e595"
+        },
+        {
           "photo_id": "2b7f51b6-5e40-479f-80c7-a8eeb8892654",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/6b57ff48-38f3-41eb-9c6a-3326fd6b6a06.jpg",
           "storage_key": "photos/original/2026/08/6b57ff48-38f3-41eb-9c6a-3326fd6b6a06.jpg",
@@ -10383,6 +10519,16 @@
           "shot_at": "2026-07-25T07:01:21+00:00",
           "display_name": "くろっぽい猫",
           "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452"
+        },
+        {
+          "photo_id": "6b23d3e7-c197-4426-928f-ca3241ac5f53",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/3885b56d-3668-40d0-83aa-362961134642.jpg",
+          "storage_key": "photos/original/2026/07/3885b56d-3668-40d0-83aa-362961134642.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-19T02:19:05.837104+00:00",
+          "shot_at": "2026-03-11T00:50:03+00:00",
+          "display_name": "ビタCウォーター。",
+          "public_user_id": "2dc3b0ab-b436-45e4-acde-290dae05e595"
         },
         {
           "photo_id": "da0fd5d9-58db-44f3-9e03-f4f868e6f0b4",
@@ -12663,6 +12809,16 @@
           "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452"
         },
         {
+          "photo_id": "d2e92783-5b63-4a04-9e92-0e32b4473d90",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/df6c2a2b-3c17-4149-acaf-8fcc56f91347.jpg",
+          "storage_key": "photos/original/2026/07/df6c2a2b-3c17-4149-acaf-8fcc56f91347.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-19T02:19:33.503427+00:00",
+          "shot_at": "2026-03-11T01:33:25+00:00",
+          "display_name": "ビタCウォーター。",
+          "public_user_id": "2dc3b0ab-b436-45e4-acde-290dae05e595"
+        },
+        {
           "photo_id": "11c5c648-4315-4015-8b49-4b582943ae60",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/44f2f817-ae2b-48d0-a8f5-954503bb17f9.jpg",
           "storage_key": "photos/original/2026/07/44f2f817-ae2b-48d0-a8f5-954503bb17f9.jpg",
@@ -12671,35 +12827,35 @@
           "shot_at": "2025-07-19T01:14:34+00:00",
           "display_name": "xxobokihurah2007",
           "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
-        },
-        {
-          "photo_id": "34268f71-a185-4552-9bc6-59654616d29b",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/06789248-13c8-4758-93e2-edeffbbc0ca9.jpg",
-          "storage_key": "photos/original/2026/08/06789248-13c8-4758-93e2-edeffbbc0ca9.jpg",
-          "content_type": "image/jpeg",
-          "created_at": "2026-08-12T00:41:04.608967+00:00",
-          "shot_at": "2025-05-24T06:01:05+00:00",
-          "display_name": "minmin_m",
-          "public_user_id": "6c107390-da8a-4caa-aaf2-10f8f7c6cbf4"
         }
       ]
     },
     "398": {
       "manhole_id": 398,
-      "photo_id": "e6f9ccdf-bccd-491b-bb25-da5ee14b611d",
-      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/b477fd46-aebd-4dcf-985a-a91f4eb2ed7e.jpg",
-      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/b477fd46-aebd-4dcf-985a-a91f4eb2ed7e.jpg",
-      "storage_key": "photos/original/2026/08/b477fd46-aebd-4dcf-985a-a91f4eb2ed7e.jpg",
+      "photo_id": "c85d056b-6ff7-48ac-8f95-0ecb34943912",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/bd54c95a-2a50-49fe-9514-bcc5e6b5d2fc.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/bd54c95a-2a50-49fe-9514-bcc5e6b5d2fc.jpg",
+      "storage_key": "photos/original/2026/08/bd54c95a-2a50-49fe-9514-bcc5e6b5d2fc.jpg",
       "content_type": "image/jpeg",
       "width": null,
       "height": null,
-      "file_size": 1714335,
-      "created_at": "2026-08-14T23:28:22.263819+00:00",
-      "shot_at": "2026-08-14T07:02:30+00:00",
+      "file_size": 2039690,
+      "created_at": "2026-08-16T07:03:03.981324+00:00",
+      "shot_at": "2026-08-16T06:40:46+00:00",
       "comment": null,
-      "display_name": "くろっぽい猫",
-      "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452",
+      "display_name": "ビタCウォーター。",
+      "public_user_id": "2dc3b0ab-b436-45e4-acde-290dae05e595",
       "gallery": [
+        {
+          "photo_id": "c85d056b-6ff7-48ac-8f95-0ecb34943912",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/bd54c95a-2a50-49fe-9514-bcc5e6b5d2fc.jpg",
+          "storage_key": "photos/original/2026/08/bd54c95a-2a50-49fe-9514-bcc5e6b5d2fc.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-08-16T07:03:03.981324+00:00",
+          "shot_at": "2026-08-16T06:40:46+00:00",
+          "display_name": "ビタCウォーター。",
+          "public_user_id": "2dc3b0ab-b436-45e4-acde-290dae05e595"
+        },
         {
           "photo_id": "e6f9ccdf-bccd-491b-bb25-da5ee14b611d",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/b477fd46-aebd-4dcf-985a-a91f4eb2ed7e.jpg",
@@ -12739,16 +12895,6 @@
           "shot_at": "2026-07-18T06:29:12+00:00",
           "display_name": null,
           "public_user_id": "d0530387-de23-40ec-8e8f-b7a50a648e05"
-        },
-        {
-          "photo_id": "3b7df7af-562e-435c-928f-975f3019238f",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/226a0677-2b47-4566-8136-9d80d8aca93d.jpg",
-          "storage_key": "photos/original/2026/07/226a0677-2b47-4566-8136-9d80d8aca93d.jpg",
-          "content_type": "image/jpeg",
-          "created_at": "2026-07-11T03:01:26.962567+00:00",
-          "shot_at": "2026-07-11T02:57:04+00:00",
-          "display_name": "xxobokihurah2007",
-          "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632"
         }
       ]
     },
@@ -13730,20 +13876,30 @@
     },
     "426": {
       "manhole_id": 426,
-      "photo_id": "243a5223-593e-474a-98ea-54fb3152a1e2",
-      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/e8103e39-6872-4e7a-99ff-bf3c5ea96106.jpg",
-      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/e8103e39-6872-4e7a-99ff-bf3c5ea96106.jpg",
-      "storage_key": "photos/original/2026/08/e8103e39-6872-4e7a-99ff-bf3c5ea96106.jpg",
+      "photo_id": "efb78847-152c-4f04-a0ff-b75b4f0c6d16",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/b283d55a-cd40-4715-8c05-eb62fdbb9faf.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/b283d55a-cd40-4715-8c05-eb62fdbb9faf.jpg",
+      "storage_key": "photos/original/2026/08/b283d55a-cd40-4715-8c05-eb62fdbb9faf.jpg",
       "content_type": "image/jpeg",
       "width": null,
       "height": null,
-      "file_size": 1907331,
-      "created_at": "2026-08-14T23:29:33.26298+00:00",
-      "shot_at": "2026-08-14T07:57:17+00:00",
+      "file_size": 1891001,
+      "created_at": "2026-08-16T05:18:37.423251+00:00",
+      "shot_at": "2026-08-16T05:06:30+00:00",
       "comment": null,
-      "display_name": "くろっぽい猫",
-      "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452",
+      "display_name": "ビタCウォーター。",
+      "public_user_id": "2dc3b0ab-b436-45e4-acde-290dae05e595",
       "gallery": [
+        {
+          "photo_id": "efb78847-152c-4f04-a0ff-b75b4f0c6d16",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/b283d55a-cd40-4715-8c05-eb62fdbb9faf.jpg",
+          "storage_key": "photos/original/2026/08/b283d55a-cd40-4715-8c05-eb62fdbb9faf.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-08-16T05:18:37.423251+00:00",
+          "shot_at": "2026-08-16T05:06:30+00:00",
+          "display_name": "ビタCウォーター。",
+          "public_user_id": "2dc3b0ab-b436-45e4-acde-290dae05e595"
+        },
         {
           "photo_id": "243a5223-593e-474a-98ea-54fb3152a1e2",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/e8103e39-6872-4e7a-99ff-bf3c5ea96106.jpg",
@@ -14601,6 +14757,16 @@
           "public_user_id": "0b98f613-711b-4db0-9619-3fa18e12de46"
         },
         {
+          "photo_id": "158b0b02-7da0-4574-aa31-7c2639d1fc7f",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/74870766-192a-4fe7-b7b9-8bd44b434a3f.jpg",
+          "storage_key": "photos/original/2026/08/74870766-192a-4fe7-b7b9-8bd44b434a3f.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-08-04T02:33:59.920462+00:00",
+          "shot_at": "2026-08-04T02:27:40+00:00",
+          "display_name": "ビタCウォーター。",
+          "public_user_id": "2dc3b0ab-b436-45e4-acde-290dae05e595"
+        },
+        {
           "photo_id": "a05f6c95-36fe-4830-84cb-8c09f9942ce2",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/8da01431-8e17-47b5-9b06-32db8000700f.jpg",
           "storage_key": "photos/original/2026/08/8da01431-8e17-47b5-9b06-32db8000700f.jpg",
@@ -14821,6 +14987,16 @@
           "shot_at": "2026-08-08T01:51:28+00:00",
           "display_name": "くろっぽい猫",
           "public_user_id": "cfad0bb9-f742-4f33-b30a-309b34246452"
+        },
+        {
+          "photo_id": "94235c20-f240-4a47-b633-aed5e2c199d0",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/d2893d69-e4e0-428e-8217-f7e37d22fd4f.jpg",
+          "storage_key": "photos/original/2026/07/d2893d69-e4e0-428e-8217-f7e37d22fd4f.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-07-19T02:21:35.114865+00:00",
+          "shot_at": "2026-06-08T06:14:59+00:00",
+          "display_name": "ビタCウォーター。",
+          "public_user_id": "2dc3b0ab-b436-45e4-acde-290dae05e595"
         }
       ]
     },
