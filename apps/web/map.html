@@ -98,8 +98,12 @@
         ? `ポケふた,${prefecture},ポケモンマンホール,マンホール,設置場所,地図,旅行,観光`
         : 'ポケふた,ポケモンマンホール,マンホール,ポケモン,聖地巡礼,地図';
       const mapPageUrl = window.location.origin + window.location.pathname;
-      const canonicalUrl = prefecture
-        ? `${mapPageUrl}?pref=${encodeURIComponent(prefecture)}`
+      // 都道府県が分かっている場合は、そのために作られた /prefectures/[slug]/ を
+      // canonical にする（このURL自体をGoogleに索引させない）。tag/view付きの
+      // 絞り込みビューもここに集約し、重複コンテンツとして分散させない。
+      const prefSlug = prefecture ? window.PREFECTURE_SLUG_MAP[prefecture] : null;
+      const canonicalUrl = prefSlug
+        ? `${window.location.origin}/prefectures/${prefSlug}/`
         : mapPageUrl;
       return { title, description, keywords, canonicalUrl };
     };
@@ -296,7 +300,9 @@
       const params = new URLSearchParams(window.location.search);
       const manholeParam = params.get('manhole');
       const prefParam = params.get('pref');
-      
+      const tagParam = params.get('tag');
+      const viewParam = params.get('view');
+
       // 優先度: manhole > pref > default
       if (manholeParam) {
         // manhole パラメータがある場合、データ取得待機
@@ -306,6 +312,18 @@
       } else if (prefParam) {
         const prefecture = window.resolvePrefectureParam(prefParam);
         if (prefecture) {
+          // ?pref=X 単体（tag/view との組み合わせなし）の着地は、そのために作られた
+          // /prefectures/[slug]/（同等のLeaflet地図＋一覧・トリビア付き、軽量）へ転送する。
+          // このmap.htmlは重いフル地図で、GA4で「○○県 地図」「一覧」検索からの直帰率が
+          // 20〜30%台と高いのに対し、/prefectures/mie/ は22.9%と低い。原因はcanonicalが
+          // 自己参照（map.html?pref=X）になっており、Googleがこちらを索引していたこと。
+          // アプリ内の県切替はhistory.replaceStateでURLだけ書き換える設計なので
+          // （フルナビゲーションを経ない）、ここには影響しない。
+          const slug = window.PREFECTURE_SLUG_MAP[prefecture];
+          if (slug && !tagParam && !viewParam) {
+            window.location.replace('prefectures/' + slug + '/');
+            return;
+          }
           window.applyPrefecturePageMeta(prefecture);
           if (prefParam !== prefecture || window.location.pathname.endsWith('/index.html')) {
             window.history.replaceState({ pref: prefecture }, '', window.buildCanonicalPath(prefecture));
