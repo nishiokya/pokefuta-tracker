@@ -1125,13 +1125,16 @@ def generate_html(
       background:
         radial-gradient(circle at 1px 1px, rgba(87, 64, 143, .08) 1px, transparent 1.2px) 0 0 / 18px 18px,
         #f7f0df;
-      padding: 16px;
+      /* ⚠️ padding-top を入れないこと。inject_site_header.py が入れる全幅ヘッダーが
+         そのぶん下へ押し出され、ヘッダーの上にページ背景の帯が出る。
+         本文の上余白は .container の margin-top で取る */
+      padding: 0 16px 16px;
       overflow-wrap: anywhere;
     }}
     .container {{
       width: 100%;
       max-width: 1080px;
-      margin: 0 auto;
+      margin: 16px auto 0;
       padding: 0 0 28px;
     }}
     .page-hero {{
@@ -1496,8 +1499,8 @@ def generate_html(
     }}
     footer a {{ color: #6F55A3; text-decoration: none; }}
     @media (max-width: 620px) {{
-      body {{ padding: 10px; }}
-      .container {{ width: auto; max-width: calc(100vw - 20px); }}
+      body {{ padding: 0 10px 10px; }}
+      .container {{ width: auto; max-width: calc(100vw - 20px); margin-top: 10px; }}
       .page-hero, .page-section {{ padding: 16px; border-radius: 16px; }}
       .page-hero {{ min-height: 260px; padding-bottom: 110px; }}
       .page-hero::after {{ width: 170px; height: 170px; right: -48px; bottom: -74px; }}

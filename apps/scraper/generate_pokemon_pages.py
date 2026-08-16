@@ -836,11 +836,14 @@ def generate_html(
       line-height: 1.6;
       color: #333;
       background: #fff8ec;
-      padding: 16px;
+      /* ⚠️ padding-top を入れないこと。inject_site_header.py が入れる全幅ヘッダーが
+         そのぶん下へ押し出され、ヘッダーの上にページ背景の帯が出る。
+         本文の上余白は .container の margin-top で取る */
+      padding: 0 16px 16px;
     }}
     .container {{
       max-width: 800px;
-      margin: 0 auto;
+      margin: 16px auto 0;
       background: white;
       border-radius: 12px;
       padding: 20px;

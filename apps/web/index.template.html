@@ -192,15 +192,17 @@
       </div>
 
       <a class="hero-featured-card" id="hero-featured" href="%%LANG_PATH%%map.html" onclick="trackEvent('click_hero_featured')">
+        <!-- ⚠️ overlay は media の中に置くこと。card 直下に置くと inset:0 が
+             カード全体（フッター込み）に効き、タイトル・地名がフッターの文字に重なる -->
         <div class="hero-featured-media" id="hero-featured-media">
           <img class="hero-featured-img" id="hero-featured-img" src="" alt="" loading="eager">
-        </div>
-        <div class="hero-featured-overlay">
-          <span class="hero-badge" id="hero-badge">⭐ 今日のレア</span>
-          <span class="hero-media-label" id="hero-media-label"></span>
-          <div class="hero-featured-copy">
-            <div class="hero-featured-title" id="hero-featured-title">—</div>
-            <div class="hero-featured-place" id="hero-featured-place"></div>
+          <div class="hero-featured-overlay">
+            <span class="hero-badge" id="hero-badge">⭐ 今日のレア</span>
+            <span class="hero-media-label" id="hero-media-label"></span>
+            <div class="hero-featured-copy">
+              <div class="hero-featured-title" id="hero-featured-title">—</div>
+              <div class="hero-featured-place" id="hero-featured-place"></div>
+            </div>
           </div>
         </div>
         <div class="hero-featured-footer">
