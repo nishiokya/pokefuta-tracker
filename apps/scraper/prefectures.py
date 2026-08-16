@@ -23,3 +23,27 @@ PREFECTURES: list[tuple[str, str]] = [
 
 PREFECTURE_ORDER = [name for name, _ in PREFECTURES]
 PREFECTURE_SLUGS = dict(PREFECTURES)
+
+
+def select_full_coverage_pokemon(pokemon_coverage: list[dict]) -> dict | None:
+    """Pick the pokemon_coverage entry (from dataset/prefecture_trivia.json)
+    that appears on every manhole in a prefecture (coverage_percent == 100),
+    preferring the entry covering the most Pokemon (a family/group label)
+    and, as a tie-break, the entry with the highest cover_count. Entries
+    without a usable "label" are excluded rather than picked and crashed on
+    later.
+
+    Shared by generate_summary_pages.py's per-prefecture trivia card and
+    generate_prefecture_pages.py's /prefectures/ index cards so the two
+    pages never disagree on which Pokemon a prefecture's "100% coverage"
+    trivia badge names.
+    """
+    full_coverage = [
+        entry for entry in pokemon_coverage
+        if entry.get("coverage_percent") == 100 and entry.get("label")
+    ]
+    return max(
+        full_coverage,
+        key=lambda entry: (len(entry.get("pokemon", [])), entry.get("cover_count", 0)),
+        default=None,
+    )

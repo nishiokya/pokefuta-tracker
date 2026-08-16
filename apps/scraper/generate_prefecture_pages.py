@@ -23,11 +23,17 @@ try:
         PREFECTURES,
         PREFECTURE_ORDER,
         PREFECTURE_SLUGS,
+        select_full_coverage_pokemon,
     )
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
-    from prefectures import PREFECTURES, PREFECTURE_ORDER, PREFECTURE_SLUGS
+    from prefectures import (
+        PREFECTURES,
+        PREFECTURE_ORDER,
+        PREFECTURE_SLUGS,
+        select_full_coverage_pokemon,
+    )
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_MANHOLES = ROOT / "docs" / "pokefuta.ndjson"
@@ -621,21 +627,19 @@ def _related_prefectures(prefecture: str) -> str:
     )
 
 
-def _index_card_trivia_html(name: str, trivia_entry: dict | None) -> str:
+def _index_card_trivia_html(trivia_entry: dict | None) -> str:
     """都道府県トリビア（/summary/ の _build_prefecture_info_section と同じ
-    データ源・同じ内容）。トリビアが無い都道府県は静かに何も足さない —
-    summary 側の記録件数ベースの代替文言まで複製すると2箇所の言い回しが
-    ズレていく元になるので、ここでは「データがある分だけ載せる」に留める。
+    データ源・同じ内容、同じ pokemon_coverage 選定ロジックを
+    select_full_coverage_pokemon() として共有）。トリビアが無い都道府県は
+    静かに何も足さない — summary 側の記録件数ベースの代替文言まで複製すると
+    2箇所の言い回しがズレていく元になるので、ここでは「データがある分だけ
+    載せる」に留める。
     """
     trivia_list = (trivia_entry or {}).get("trivia", [])
     if not trivia_list:
         return ""
-    coverage = (trivia_entry or {}).get("pokemon_coverage", [])
-    full_coverage = [e for e in coverage if e.get("coverage_percent") == 100]
-    top_coverage = max(
-        full_coverage,
-        key=lambda entry: (len(entry.get("pokemon", [])), entry.get("cover_count", 0)),
-        default=None,
+    top_coverage = select_full_coverage_pokemon(
+        (trivia_entry or {}).get("pokemon_coverage", [])
     )
     pokemon_html = (
         f'<p class="prefecture-card-trivia-pokemon">'
@@ -721,7 +725,7 @@ def build_index_page(
             f'<img src="{_photo_asset_url(record, photo)}" alt="" loading="lazy" decoding="async"></a>'
             for record, photo in thumbnails
         ) or '<span class="prefecture-card-thumb is-missing"></span>'
-        trivia_html = _index_card_trivia_html(name, trivia.get(name))
+        trivia_html = _index_card_trivia_html(trivia.get(name))
         return f"""<article class="{card_class}" data-track="prefectures_index_click" data-destination="{slug}">
       <a class="prefecture-card-main" href="/prefectures/{slug}/">
         <span class="prefecture-code">{code}</span>
