@@ -19,6 +19,7 @@
   --top-radius-pill: 999px;
   --top-max-w: 480px;
   --top-pad: 16px;
+  --top-header-height: 43px;
 }
 
 /* ── Base ── */
@@ -132,18 +133,21 @@ a { color: inherit; text-decoration: none; }
   .top-nav {
     display: flex;
     gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
   }
+  .top-nav::-webkit-scrollbar { display: none; }
 
   .top-nav-link {
-    padding: 6px 5px;
-    overflow: hidden;
+    flex-shrink: 0;
+    padding: 6px 8px;
     border-radius: 7px;
     background: var(--top-purple-pale);
     color: var(--top-purple-dark);
     font-size: 10px;
     font-weight: 700;
     text-align: center;
-    text-overflow: ellipsis;
     white-space: nowrap;
   }
 }
@@ -288,6 +292,52 @@ a { color: inherit; text-decoration: none; }
   font-size: 11px;
   color: var(--top-text-faint);
   text-align: center;
+}
+
+.top-stat--link {
+  cursor: pointer;
+}
+
+.top-stat--link .stat-label::after {
+  content: ' \203A';
+  color: var(--top-purple-light);
+}
+
+@media (hover: hover) {
+  .top-stat--link:hover .stat-num {
+    color: var(--top-purple);
+  }
+}
+
+.top-quicklink-list {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--top-purple);
+}
+
+@media (hover: hover) {
+  .top-quicklink-list:hover {
+    text-decoration: underline;
+  }
+}
+
+.top-quicklink-list:focus-visible {
+  text-decoration: underline;
+}
+
+/* Sticky header offset so anchor-jumps (stat tile, quicklink) don't land
+   with the heading hidden behind the app bar. --top-header-height tracks
+   .top-app-bar's actual height per breakpoint (see below); +20px is buffer. */
+#sec-pref {
+  scroll-margin-top: calc(var(--top-header-height) + 20px);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
 }
 
 /* ── Section 2: Hero ── */
@@ -893,6 +943,7 @@ a { color: inherit; text-decoration: none; }
 @media (min-width: 960px) {
   :root {
     --top-max-w: 1080px;
+    --top-header-height: 52px;
   }
 
   .top-app-bar-inner {
@@ -1044,6 +1095,13 @@ a { color: inherit; text-decoration: none; }
   .top-intro-text { max-width: 400px; font-size: 13.5px; }
   .top-stats-row { max-width: 380px; }
   .stat-num { font-size: 22px; }
+  /* #sec-intro is pointer-events:none (an overlay above the map link); these
+     two are real links inside it and must opt back in or clicks fall through
+     to the map card underneath instead of jumping to the prefecture list. */
+  .top-stat--link,
+  .top-quicklink-list {
+    pointer-events: auto;
+  }
 
   /* ── 3. Today's hero: featured (1.55fr) + two stacked horizontal cards ── */
   #sec-hero {

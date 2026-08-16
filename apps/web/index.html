@@ -93,6 +93,7 @@
       <div class="top-nav-right">
         <nav class="top-nav" aria-label="メインナビ">
           <a class="top-nav-link" href="map.html" onclick="trackEvent('click_nav',{nav:'map'})">マップ</a>
+          <a class="top-nav-link" href="#sec-pref" onclick="trackEvent('click_nav',{nav:'prefecture'})">都道府県</a>
           <a class="top-nav-link" href="pokemon/" onclick="trackEvent('click_nav',{nav:'pokemon'})">ポケモン</a>
           <a class="top-nav-link" href="character_manholes.html" onclick="trackEvent('click_nav',{nav:'character'})">キャラふた</a>
           <a class="top-nav-link" data-login-link data-nav-target="login" data-stamp-page="https://pokefuta.com/" data-stamp-label="スタンプ帳" href="https://pokefuta.com/login?from=data" onclick="trackEvent('click_nav',{nav:this.dataset.navTarget})">ログイン</a>
@@ -133,10 +134,10 @@
           <span class="stat-label">ポケふた</span>
         </div>
         <div class="stat-divider"></div>
-        <div class="top-stat">
+        <a class="top-stat top-stat--link" href="#sec-pref" onclick="trackEvent('click_stat_pref_jump')">
           <b class="stat-num" id="stat-pref">47</b>
           <span class="stat-label">都道府県</span>
-        </div>
+        </a>
         <div class="stat-divider"></div>
         <div class="top-stat">
           <b class="stat-num" id="stat-pokemon">—</b>
@@ -148,6 +149,7 @@
           <span class="stat-label">みんなの写真</span>
         </div>
       </div>
+      <a class="top-quicklink-list" href="#sec-pref" onclick="trackEvent('click_intro_list_cta')">📋 都道府県から探す</a>
       <p class="top-stats-note" id="stats-community-note" hidden></p>
     </section>
 
