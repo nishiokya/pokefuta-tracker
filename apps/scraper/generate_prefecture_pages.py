@@ -19,6 +19,13 @@ except ModuleNotFoundError as exc:
     from photo_caption import poster_profile_url
 
 try:
+    from apps.scraper.display_names import municipality_label, pokemon_suffix
+except ModuleNotFoundError as exc:
+    if exc.name != "apps":
+        raise
+    from display_names import municipality_label, pokemon_suffix
+
+try:
     from apps.scraper.prefectures import (
         PREFECTURES,
         PREFECTURE_ORDER,
@@ -748,18 +755,49 @@ def build_index_page(
             '<img src="/assets/icon-fire.svg" alt="" aria-hidden="true">NEW</span>'
             if recent_count else ""
         )
-        # 実機フィードバック: 8枚に絞らず実在する写真は全部出す。市町村名を
-        # キャプションとして添えるため、地図パネルの円形サムネイル一列より
-        # 見出し付きの小さな写真グリッドにしている。
-        thumbnails = _photo_entries(installed_records, photos)
-        gallery_html = "".join(
+        # 実機フィードバック: 8枚に絞らず実在する写真は全部出す。キャプション
+        # は単なる市町村名だと同一自治体内で重複する（指宿市9枚など）ので、
+        # display_names.attach_place_labels() が既に付けた place_label
+        # （map.html の getManholeDisplayName と同じ正規化結果、
+        # docs/pokefuta.ndjson に書き込み済み）を使う。ここでは
+        # compose_display_name() をそのまま呼ばない — それは place_label が
+        # 無いとき生の title（例:「宮城県/加美町」）にフォールバックする設計で、
+        # このカードは既に都道府県ごとにまとまっているのでプレフィックスが
+        # 重複してしまう。place_label が無ければ city まで。曖昧なものだけ
+        # pokemon_suffix() でポケモン名を添えて区別する。
+        def _caption(record: dict) -> str:
+            # record["city"] は接尾辞（市区町村）が既に落ちているので、
+            # place_label が無いときは municipality_label() で住所から
+            # 「指宿」→「指宿市」のように復元する。
+            base = record.get("place_label") or municipality_label(record) or name
+            if record.get("place_ambiguous"):
+                base += pokemon_suffix(record)
+            return base
+
+        photographed = _photo_entries(installed_records, photos)
+        photographed_ids = {str(record.get("id", "")) for record, _ in photographed}
+        unphotographed = sorted(
+            (r for r in installed_records if str(r.get("id", "")) not in photographed_ids),
+            key=lambda r: (r.get("city", ""), str(r.get("id", ""))),
+        )
+        gallery_items = [
             f'<a class="prefecture-card-photo" href="/manholes/{quote(str(record.get("id", "")))}/" '
-            f'aria-label="{_escape_attr(record.get("city", "") or name)}のポケふたの詳細を開く">'
+            f'aria-label="{_escape_attr(_caption(record))}のポケふたの詳細を開く">'
             f'<img src="{_photo_asset_url(record, photo)}" alt="" loading="lazy" decoding="async">'
             f'<span class="prefecture-card-photo-city" aria-hidden="true">'
-            f'{escape(record.get("city", "") or name)}</span></a>'
-            for record, photo in thumbnails
-        ) or '<p class="prefecture-card-photo-empty">まだ投稿写真がありません</p>'
+            f'{escape(_caption(record))}</span></a>'
+            for record, photo in photographed
+        ]
+        gallery_items += [
+            f'<a class="prefecture-card-photo prefecture-card-photo-needed" '
+            f'href="/manholes/{quote(str(record.get("id", "")))}/" '
+            f'aria-label="{_escape_attr(_caption(record))}のポケふた（写真募集中）の詳細を開く">'
+            '<span class="prefecture-card-photo-placeholder" aria-hidden="true">写真募集中</span>'
+            f'<span class="prefecture-card-photo-city" aria-hidden="true">'
+            f'{escape(_caption(record))}</span></a>'
+            for record in unphotographed
+        ]
+        gallery_html = "".join(gallery_items) or '<p class="prefecture-card-photo-empty">まだ投稿写真がありません</p>'
         trivia_html = _index_card_trivia_html(trivia.get(name))
         campaign_html = _index_card_campaign_html(events.get(name))
         detail_link_html = (
@@ -893,6 +931,12 @@ def build_index_page(
     .prefecture-card-photo-city {{
       max-width: 100%; font-size: .66rem; font-weight: 800; text-align: center;
       overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }}
+    .prefecture-card-photo-placeholder {{
+      display: flex; align-items: center; justify-content: center; width: 100%;
+      aspect-ratio: 1; border-radius: 10px; border: 2px dashed rgba(126,107,169,.3);
+      background: rgba(126,107,169,.06); color: #8a7fa8; font-size: .62rem;
+      font-weight: 800; text-align: center; padding: 4px;
     }}
     .prefecture-card-photo-empty {{ margin: 0; padding: 0 12px 12px; color: #75685c; font-size: .78rem; }}
     .prefecture-card-campaign {{

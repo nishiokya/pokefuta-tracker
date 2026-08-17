@@ -561,6 +561,82 @@ class BuildIndexPageTest(unittest.TestCase):
             '<p class="prefecture-card-photo-empty">まだ投稿写真がありません</p>', html
         )
 
+    def test_unphotographed_records_are_appended_after_photographed_ones(self) -> None:
+        records_by_pref = {name: [] for name in MODULE.PREFECTURE_ORDER}
+        records_by_pref["三重県"] = [
+            {"id": "1", "city": "津市"},
+            {"id": "2", "city": "四日市市"},
+        ]
+        photos = {"1": {"created_at": "2026-01-01T00:00:00Z"}}
+        with mock.patch.object(MODULE, "_photo_asset_url", return_value="/x.jpeg"):
+            html = MODULE.build_index_page(records_by_pref, photos)
+        photographed_pos = html.index('href="/manholes/1/"')
+        placeholder_pos = html.index('href="/manholes/2/"')
+        self.assertLess(photographed_pos, placeholder_pos)
+        self.assertIn(
+            '<a class="prefecture-card-photo prefecture-card-photo-needed" '
+            'href="/manholes/2/" aria-label="四日市市のポケふた（写真募集中）の詳細を開く">'
+            '<span class="prefecture-card-photo-placeholder" aria-hidden="true">写真募集中</span>',
+            html,
+        )
+
+    def test_caption_uses_the_normalized_place_label_not_the_bare_city(self) -> None:
+        """同一自治体に複数枚あるレコードは市町村名だけだと区別できない
+        （例: 指宿市9枚）。display_names.attach_place_labels() が付ける
+        place_label をキャプションに使う。"""
+        records_by_pref = {name: [] for name in MODULE.PREFECTURE_ORDER}
+        records_by_pref["三重県"] = [
+            {"id": "1", "city": "津市", "place_label": "津市 偕楽公園"},
+        ]
+        photos = {"1": {"created_at": "2026-01-01T00:00:00Z"}}
+        with mock.patch.object(MODULE, "_photo_asset_url", return_value="/x.jpeg"):
+            html = MODULE.build_index_page(records_by_pref, photos)
+        self.assertIn(
+            '<span class="prefecture-card-photo-city" aria-hidden="true">津市 偕楽公園</span>',
+            html,
+        )
+        self.assertNotIn('>津市</span>', html)
+
+    def test_caption_falls_back_to_the_bare_city_not_the_prefixed_title(self) -> None:
+        """place_label が付いていないレコード（重複していない一意なもの）は
+        city まで。compose_display_name() のように生の title（例:
+        「宮城県/加美町」）へは落とさない — このカードは既に都道府県ごとに
+        まとまっているので、都道府県名を繰り返すと冗長になる。"""
+        records_by_pref = {name: [] for name in MODULE.PREFECTURE_ORDER}
+        records_by_pref["三重県"] = [
+            {"id": "1", "city": "四日市市", "title": "三重県/四日市市"},
+        ]
+        photos = {"1": {"created_at": "2026-01-01T00:00:00Z"}}
+        with mock.patch.object(MODULE, "_photo_asset_url", return_value="/x.jpeg"):
+            html = MODULE.build_index_page(records_by_pref, photos)
+        self.assertIn(
+            '<span class="prefecture-card-photo-city" aria-hidden="true">四日市市</span>',
+            html,
+        )
+        self.assertNotIn("三重県/四日市市", html)
+
+    def test_caption_adds_pokemon_name_when_place_label_is_still_ambiguous(self) -> None:
+        """place_ambiguous のレコードは place_label だけでは区別が付かない
+        ので、ポケモン名を添える（display_names.pokemon_suffix() と同じ規約）。"""
+        records_by_pref = {name: [] for name in MODULE.PREFECTURE_ORDER}
+        records_by_pref["三重県"] = [
+            {
+                "id": "1",
+                "city": "四日市市",
+                "place_label": "四日市市",
+                "place_ambiguous": True,
+                "pokemons": ["フシギダネ"],
+            },
+        ]
+        photos = {"1": {"created_at": "2026-01-01T00:00:00Z"}}
+        with mock.patch.object(MODULE, "_photo_asset_url", return_value="/x.jpeg"):
+            html = MODULE.build_index_page(records_by_pref, photos)
+        self.assertIn(
+            '<span class="prefecture-card-photo-city" aria-hidden="true">'
+            '四日市市（フシギダネ）</span>',
+            html,
+        )
+
     def test_preinstall_record_never_shows_as_a_real_thumbnail(self) -> None:
         """installed:false（未設置）のレコードに写真データが残っていても、
         設置済みのポケふたと見分けがつかない形で出してはいけない。
