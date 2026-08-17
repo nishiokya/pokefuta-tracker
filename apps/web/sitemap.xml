@@ -11,6 +11,11 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://data.pokefuta.com/prefectures/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://data.pokefuta.com/pokemon/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
@@ -29,6 +34,16 @@
     <loc>https://data.pokefuta.com/gmanhole_map.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://data.pokefuta.com/design_manhole.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://data.pokefuta.com/privacy.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
   </url>
   <url>
     <loc>https://data.pokefuta.com/en/</loc>
@@ -2666,6 +2681,36 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://data.pokefuta.com/manholes/481/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://data.pokefuta.com/manholes/482/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://data.pokefuta.com/manholes/483/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://data.pokefuta.com/manholes/484/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://data.pokefuta.com/manholes/485/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://data.pokefuta.com/manholes/486/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://data.pokefuta.com/pokemon/abomasnow/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.1</priority>
@@ -2852,6 +2897,11 @@
   </url>
   <url>
     <loc>https://data.pokefuta.com/pokemon/bibarel/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.1</priority>
+  </url>
+  <url>
+    <loc>https://data.pokefuta.com/pokemon/bidoof/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.1</priority>
   </url>
@@ -3196,6 +3246,11 @@
     <priority>0.1</priority>
   </url>
   <url>
+    <loc>https://data.pokefuta.com/pokemon/darumaka-galar/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.1</priority>
+  </url>
+  <url>
     <loc>https://data.pokefuta.com/pokemon/decidueye/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.1</priority>
@@ -3521,6 +3576,11 @@
     <priority>0.1</priority>
   </url>
   <url>
+    <loc>https://data.pokefuta.com/pokemon/frosmoth/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.1</priority>
+  </url>
+  <url>
     <loc>https://data.pokefuta.com/pokemon/gallade/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.1</priority>
@@ -3681,6 +3741,16 @@
     <priority>0.1</priority>
   </url>
   <url>
+    <loc>https://data.pokefuta.com/pokemon/heliolisk/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.1</priority>
+  </url>
+  <url>
+    <loc>https://data.pokefuta.com/pokemon/helioptile/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.1</priority>
+  </url>
+  <url>
     <loc>https://data.pokefuta.com/pokemon/heracross/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.1</priority>
@@ -3817,6 +3887,11 @@
   </url>
   <url>
     <loc>https://data.pokefuta.com/pokemon/klang/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.1</priority>
+  </url>
+  <url>
+    <loc>https://data.pokefuta.com/pokemon/kleavor/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.1</priority>
   </url>
@@ -4037,6 +4112,11 @@
   </url>
   <url>
     <loc>https://data.pokefuta.com/pokemon/makuhita/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.1</priority>
+  </url>
+  <url>
+    <loc>https://data.pokefuta.com/pokemon/mankey/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.1</priority>
   </url>
@@ -5136,6 +5216,11 @@
     <priority>0.1</priority>
   </url>
   <url>
+    <loc>https://data.pokefuta.com/pokemon/trevenant/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.1</priority>
+  </url>
+  <url>
     <loc>https://data.pokefuta.com/pokemon/tropius/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.1</priority>
@@ -5566,6 +5651,11 @@
     <priority>0.1</priority>
   </url>
   <url>
+    <loc>https://data.pokefuta.com/en/pokemon/bidoof/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.1</priority>
+  </url>
+  <url>
     <loc>https://data.pokefuta.com/en/pokemon/bisharp/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.1</priority>
@@ -5906,6 +5996,11 @@
     <priority>0.1</priority>
   </url>
   <url>
+    <loc>https://data.pokefuta.com/en/pokemon/darumaka-galar/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.1</priority>
+  </url>
+  <url>
     <loc>https://data.pokefuta.com/en/pokemon/decidueye/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.1</priority>
@@ -6231,6 +6326,11 @@
     <priority>0.1</priority>
   </url>
   <url>
+    <loc>https://data.pokefuta.com/en/pokemon/frosmoth/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.1</priority>
+  </url>
+  <url>
     <loc>https://data.pokefuta.com/en/pokemon/gallade/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.1</priority>
@@ -6391,6 +6491,16 @@
     <priority>0.1</priority>
   </url>
   <url>
+    <loc>https://data.pokefuta.com/en/pokemon/heliolisk/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.1</priority>
+  </url>
+  <url>
+    <loc>https://data.pokefuta.com/en/pokemon/helioptile/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.1</priority>
+  </url>
+  <url>
     <loc>https://data.pokefuta.com/en/pokemon/heracross/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.1</priority>
@@ -6527,6 +6637,11 @@
   </url>
   <url>
     <loc>https://data.pokefuta.com/en/pokemon/klang/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.1</priority>
+  </url>
+  <url>
+    <loc>https://data.pokefuta.com/en/pokemon/kleavor/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.1</priority>
   </url>
@@ -6747,6 +6862,11 @@
   </url>
   <url>
     <loc>https://data.pokefuta.com/en/pokemon/makuhita/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.1</priority>
+  </url>
+  <url>
+    <loc>https://data.pokefuta.com/en/pokemon/mankey/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.1</priority>
   </url>
@@ -7846,6 +7966,11 @@
     <priority>0.1</priority>
   </url>
   <url>
+    <loc>https://data.pokefuta.com/en/pokemon/trevenant/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.1</priority>
+  </url>
+  <url>
     <loc>https://data.pokefuta.com/en/pokemon/tropius/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.1</priority>
@@ -8276,6 +8401,11 @@
     <priority>0.1</priority>
   </url>
   <url>
+    <loc>https://data.pokefuta.com/zh-TW/pokemon/bidoof/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.1</priority>
+  </url>
+  <url>
     <loc>https://data.pokefuta.com/zh-TW/pokemon/bisharp/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.1</priority>
@@ -8616,6 +8746,11 @@
     <priority>0.1</priority>
   </url>
   <url>
+    <loc>https://data.pokefuta.com/zh-TW/pokemon/darumaka-galar/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.1</priority>
+  </url>
+  <url>
     <loc>https://data.pokefuta.com/zh-TW/pokemon/decidueye/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.1</priority>
@@ -8941,6 +9076,11 @@
     <priority>0.1</priority>
   </url>
   <url>
+    <loc>https://data.pokefuta.com/zh-TW/pokemon/frosmoth/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.1</priority>
+  </url>
+  <url>
     <loc>https://data.pokefuta.com/zh-TW/pokemon/gallade/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.1</priority>
@@ -9101,6 +9241,16 @@
     <priority>0.1</priority>
   </url>
   <url>
+    <loc>https://data.pokefuta.com/zh-TW/pokemon/heliolisk/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.1</priority>
+  </url>
+  <url>
+    <loc>https://data.pokefuta.com/zh-TW/pokemon/helioptile/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.1</priority>
+  </url>
+  <url>
     <loc>https://data.pokefuta.com/zh-TW/pokemon/heracross/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.1</priority>
@@ -9237,6 +9387,11 @@
   </url>
   <url>
     <loc>https://data.pokefuta.com/zh-TW/pokemon/klang/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.1</priority>
+  </url>
+  <url>
+    <loc>https://data.pokefuta.com/zh-TW/pokemon/kleavor/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.1</priority>
   </url>
@@ -9457,6 +9612,11 @@
   </url>
   <url>
     <loc>https://data.pokefuta.com/zh-TW/pokemon/makuhita/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.1</priority>
+  </url>
+  <url>
+    <loc>https://data.pokefuta.com/zh-TW/pokemon/mankey/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.1</priority>
   </url>
@@ -10556,6 +10716,11 @@
     <priority>0.1</priority>
   </url>
   <url>
+    <loc>https://data.pokefuta.com/zh-TW/pokemon/trevenant/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.1</priority>
+  </url>
+  <url>
     <loc>https://data.pokefuta.com/zh-TW/pokemon/tropius/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.1</priority>
@@ -10986,6 +11151,11 @@
     <priority>0.1</priority>
   </url>
   <url>
+    <loc>https://data.pokefuta.com/zh-CN/pokemon/bidoof/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.1</priority>
+  </url>
+  <url>
     <loc>https://data.pokefuta.com/zh-CN/pokemon/bisharp/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.1</priority>
@@ -11326,6 +11496,11 @@
     <priority>0.1</priority>
   </url>
   <url>
+    <loc>https://data.pokefuta.com/zh-CN/pokemon/darumaka-galar/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.1</priority>
+  </url>
+  <url>
     <loc>https://data.pokefuta.com/zh-CN/pokemon/decidueye/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.1</priority>
@@ -11651,6 +11826,11 @@
     <priority>0.1</priority>
   </url>
   <url>
+    <loc>https://data.pokefuta.com/zh-CN/pokemon/frosmoth/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.1</priority>
+  </url>
+  <url>
     <loc>https://data.pokefuta.com/zh-CN/pokemon/gallade/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.1</priority>
@@ -11811,6 +11991,16 @@
     <priority>0.1</priority>
   </url>
   <url>
+    <loc>https://data.pokefuta.com/zh-CN/pokemon/heliolisk/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.1</priority>
+  </url>
+  <url>
+    <loc>https://data.pokefuta.com/zh-CN/pokemon/helioptile/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.1</priority>
+  </url>
+  <url>
     <loc>https://data.pokefuta.com/zh-CN/pokemon/heracross/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.1</priority>
@@ -11947,6 +12137,11 @@
   </url>
   <url>
     <loc>https://data.pokefuta.com/zh-CN/pokemon/klang/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.1</priority>
+  </url>
+  <url>
+    <loc>https://data.pokefuta.com/zh-CN/pokemon/kleavor/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.1</priority>
   </url>
@@ -12167,6 +12362,11 @@
   </url>
   <url>
     <loc>https://data.pokefuta.com/zh-CN/pokemon/makuhita/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.1</priority>
+  </url>
+  <url>
+    <loc>https://data.pokefuta.com/zh-CN/pokemon/mankey/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.1</priority>
   </url>
@@ -13266,6 +13466,11 @@
     <priority>0.1</priority>
   </url>
   <url>
+    <loc>https://data.pokefuta.com/zh-CN/pokemon/trevenant/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.1</priority>
+  </url>
+  <url>
     <loc>https://data.pokefuta.com/zh-CN/pokemon/tropius/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.1</priority>
@@ -13696,6 +13901,11 @@
     <priority>0.1</priority>
   </url>
   <url>
+    <loc>https://data.pokefuta.com/ko/pokemon/bidoof/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.1</priority>
+  </url>
+  <url>
     <loc>https://data.pokefuta.com/ko/pokemon/bisharp/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.1</priority>
@@ -14036,6 +14246,11 @@
     <priority>0.1</priority>
   </url>
   <url>
+    <loc>https://data.pokefuta.com/ko/pokemon/darumaka-galar/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.1</priority>
+  </url>
+  <url>
     <loc>https://data.pokefuta.com/ko/pokemon/decidueye/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.1</priority>
@@ -14361,6 +14576,11 @@
     <priority>0.1</priority>
   </url>
   <url>
+    <loc>https://data.pokefuta.com/ko/pokemon/frosmoth/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.1</priority>
+  </url>
+  <url>
     <loc>https://data.pokefuta.com/ko/pokemon/gallade/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.1</priority>
@@ -14521,6 +14741,16 @@
     <priority>0.1</priority>
   </url>
   <url>
+    <loc>https://data.pokefuta.com/ko/pokemon/heliolisk/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.1</priority>
+  </url>
+  <url>
+    <loc>https://data.pokefuta.com/ko/pokemon/helioptile/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.1</priority>
+  </url>
+  <url>
     <loc>https://data.pokefuta.com/ko/pokemon/heracross/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.1</priority>
@@ -14657,6 +14887,11 @@
   </url>
   <url>
     <loc>https://data.pokefuta.com/ko/pokemon/klang/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.1</priority>
+  </url>
+  <url>
+    <loc>https://data.pokefuta.com/ko/pokemon/kleavor/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.1</priority>
   </url>
@@ -14877,6 +15112,11 @@
   </url>
   <url>
     <loc>https://data.pokefuta.com/ko/pokemon/makuhita/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.1</priority>
+  </url>
+  <url>
+    <loc>https://data.pokefuta.com/ko/pokemon/mankey/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.1</priority>
   </url>
@@ -15972,6 +16212,11 @@
   </url>
   <url>
     <loc>https://data.pokefuta.com/ko/pokemon/treecko/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.1</priority>
+  </url>
+  <url>
+    <loc>https://data.pokefuta.com/ko/pokemon/trevenant/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.1</priority>
   </url>
