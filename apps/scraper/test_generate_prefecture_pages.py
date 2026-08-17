@@ -492,7 +492,12 @@ class RecordDateTest(unittest.TestCase):
 
 class BuildIndexPageTest(unittest.TestCase):
     def setUp(self) -> None:
-        self.records_by_pref = {name: [] for name in MODULE.PREFECTURE_ORDER}
+        # 空の都道府県はこの一覧から非表示になるので（本物のデータで
+        # あれば0件の都道府県だけの回帰テストは別途用意する）、既定の
+        # フィクスチャは全都道府県に最低1件ずつ持たせておく。
+        self.records_by_pref = {
+            name: [{"id": f"dummy-{name}"}] for name in MODULE.PREFECTURE_ORDER
+        }
         self.records_by_pref["三重県"] = [{"id": "1"}, {"id": "2"}]
 
     def test_links_to_every_prefecture_grouped_by_region(self) -> None:
@@ -515,10 +520,25 @@ class BuildIndexPageTest(unittest.TestCase):
         )
         self.assertIn('<span class="count-badge">2枚</span>', html)
 
-    def test_zero_count_prefecture_gets_the_muted_badge_and_dimmed_card(self) -> None:
-        html = MODULE.build_index_page(self.records_by_pref)
-        self.assertIn('<article class="prefecture-card no-pokefuta"', html)
-        self.assertIn('<span class="count-badge-zero">0枚</span>', html)
+    def test_prefectures_without_any_manhole_are_hidden_entirely(self) -> None:
+        """マンホールが1枚も無い都道府県は一覧に出さない（詳細ページ自体は
+        今後の設置に備えて引き続き生成されるが、この一覧からは非表示）。"""
+        records_by_pref = dict(self.records_by_pref)
+        records_by_pref["群馬県"] = []
+        html = MODULE.build_index_page(records_by_pref)
+        self.assertNotIn('data-destination="gunma"', html)
+        self.assertIn('data-destination="mie"', html)
+
+    def test_a_region_made_entirely_of_empty_prefectures_renders_nothing(self) -> None:
+        records_by_pref = {name: [] for name in MODULE.PREFECTURE_ORDER}
+        records_by_pref["三重県"] = [{"id": "1"}]
+        html = MODULE.build_index_page(records_by_pref)
+        # 三重県の属する「中部」以外の地方見出しは一つも出ない
+        for region_name, prefectures in MODULE.REGIONS:
+            if "三重県" in prefectures:
+                self.assertIn(f">{region_name}<", html)
+            else:
+                self.assertNotIn(f">{region_name}<", html)
 
     def test_shows_a_new_badge_only_for_recently_added_records(self) -> None:
         records_by_pref = {name: [] for name in MODULE.PREFECTURE_ORDER}
@@ -555,8 +575,14 @@ class BuildIndexPageTest(unittest.TestCase):
             html = MODULE.build_index_page(records_by_pref, photos)
         self.assertEqual(12, html.count('class="prefecture-card-photo"'))
 
-    def test_gallery_falls_back_to_placeholder_without_photos(self) -> None:
-        html = MODULE.build_index_page(self.records_by_pref)
+    def test_gallery_falls_back_to_placeholder_when_nothing_is_installed_yet(self) -> None:
+        """記録はあっても全て installed:false（設置予定）だけの都道府県は、
+        カード自体は出す（0枚ではない＝非表示にはならない）が、ギャラリーは
+        「まだ投稿写真がありません」になる。"""
+        records_by_pref = dict(self.records_by_pref)
+        records_by_pref["三重県"] = [{"id": "1", "installed": False}]
+        html = MODULE.build_index_page(records_by_pref)
+        self.assertIn('data-destination="mie"', html)
         self.assertIn(
             '<p class="prefecture-card-photo-empty">まだ投稿写真がありません</p>', html
         )
