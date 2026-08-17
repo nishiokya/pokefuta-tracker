@@ -727,10 +727,14 @@ def build_index_page(
     trivia = trivia or {}
     events = events or {}
     total = sum(len(records) for records in records_by_pref.values())
+    # マンホールが1枚も無い都道府県はこのページに出さない（region_section()
+    # 側の実際のフィルタと二重管理にならないよう、ここでは案内文の数字だけ
+    # 同じ条件で数える）。
+    listed_count = sum(1 for records in records_by_pref.values() if records)
     canonical = f"{BASE_URL}/prefectures/"
     title = "都道府県から探す｜全国のポケふた一覧"
     description = (
-        f"全国47都道府県、計{total}枚のポケふた（ポケモンマンホール）を都道府県別に探せます。"
+        f"ポケふたの情報がある{listed_count}都道府県、計{total}枚（ポケモンマンホール）を都道府県別に探せます。"
         "地方ごとにまとめた一覧から、行き先の設置数と詳細ページを確認できます。"
     )
     recent_cutoff = datetime.now(JST) - timedelta(days=30)
@@ -748,8 +752,8 @@ def build_index_page(
             1 for record in installed_records
             if (added := _record_date(record)) and added >= recent_cutoff
         )
-        count_badge_class = "count-badge" if count else "count-badge-zero"
-        card_class = "prefecture-card" if count else "prefecture-card no-pokefuta"
+        # region_section() が count==0 の都道府県を呼び出し元で除外しているので
+        # ここに来る時点で count は常に1以上。
         new_badge_html = (
             '<span class="prefecture-new-badge">'
             '<img src="/assets/icon-fire.svg" alt="" aria-hidden="true">NEW</span>'
@@ -805,12 +809,12 @@ def build_index_page(
             f'data-track="prefectures_index_detail_click" data-destination="{slug}">'
             f'{escape(name)}の詳細を見る →</a>'
         )
-        return f"""<article class="{card_class}" data-track="prefectures_index_click" data-destination="{slug}">
+        return f"""<article class="prefecture-card" data-track="prefectures_index_click" data-destination="{slug}">
       <a class="prefecture-card-main" href="/prefectures/{slug}/">
         <span class="prefecture-code">{code}</span>
         <span class="prefecture-card-name">{escape(name)}</span>
         <span class="prefecture-card-meta">{new_badge_html}</span>
-        <span class="{count_badge_class}">{count}枚</span>
+        <span class="count-badge">{count}枚</span>
       </a>
       {campaign_html}
       {trivia_html}
@@ -819,8 +823,16 @@ def build_index_page(
     </article>"""
 
     def region_section(region_name: str, prefectures: list[str]) -> str:
-        cards = "".join(prefecture_card(name) for name in prefectures)
-        anchor_id = f"region-{PREFECTURE_SLUGS[prefectures[0]]}"
+        # マンホールが1枚もない都道府県はこの一覧では非表示にする（詳細
+        # ページ自体は今後の設置に備えて引き続き生成する）。ここでの
+        # 条件は「レコードが1件でもある」で、installed:false（設置予定）
+        # だけの都道府県も対象に含む — "installed" という名前は誤解を招く
+        # ので listed とする。
+        listed = [name for name in prefectures if records_by_pref.get(name)]
+        if not listed:
+            return ""
+        cards = "".join(prefecture_card(name) for name in listed)
+        anchor_id = f"region-{PREFECTURE_SLUGS[listed[0]]}"
         return (
             f'<section aria-labelledby="{anchor_id}">'
             f'<h2 id="{anchor_id}" class="region-heading">{escape(region_name)}</h2>'
@@ -880,7 +892,6 @@ def build_index_page(
       background: rgba(255,250,239,.94); box-shadow: 0 7px 18px rgba(80,54,20,.08);
       overflow: hidden;
     }}
-    .prefecture-card.no-pokefuta {{ opacity: .52; }}
     .prefecture-card-main {{
       display: grid; grid-template-columns: 42px minmax(0,1fr) minmax(96px,auto) auto;
       align-items: center; gap: 10px; width: 100%; min-height: 56px;
@@ -955,12 +966,11 @@ def build_index_page(
       box-shadow: inset 0 -2px 0 rgba(0,0,0,.12); font-size: .78rem; font-weight: 900;
     }}
     .prefecture-card-name {{ min-width: 0; color: #191613; font-size: 1rem; font-weight: 900; }}
-    .count-badge, .count-badge-zero {{
+    .count-badge {{
       display: inline-flex; align-items: center; justify-content: center; min-width: 56px;
       min-height: 30px; padding: 0 10px; border-radius: 999px; font-size: .88rem; font-weight: 900;
+      background: rgba(126,107,169,.14); color: #654aa0;
     }}
-    .count-badge {{ background: rgba(126,107,169,.14); color: #654aa0; }}
-    .count-badge-zero {{ background: rgba(54,44,35,.08); color: #74695d; }}
     footer {{ margin-top: 24px; color: #75685c; font-size: .8rem; text-align: center; }}
   </style>
 </head>
@@ -972,7 +982,7 @@ def build_index_page(
     </nav>
     <header class="index-hero">
       <h1>都道府県から探す</h1>
-      <p>全国47都道府県、計{total}枚のポケふたを地方別にまとめました。行き先を選んで詳細ページへ。</p>
+      <p>ポケふたの情報がある{listed_count}都道府県、計{total}枚を地方別にまとめました。行き先を選んで詳細ページへ。</p>
     </header>
     {regions_html}
     <footer><a href="/summary/">全国のポケふた一覧へ戻る</a></footer>
