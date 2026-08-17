@@ -842,6 +842,20 @@ def build_index_page(
 
     regions_html = "".join(region_section(name, prefs) for name, prefs in REGIONS)
 
+    # 実機フィードバック: SPだと写真が多い都道府県のカードがかなり長く、
+    # 目的の地方まで延々スクロールすることになる。ページ上部に地方への
+    # ジャンプリンクを置く（region_section() と同じ「都道府県が1つも
+    # 残らない地方は出さない」条件に揃える）。
+    region_nav_items = "".join(
+        f'<a href="#region-{PREFECTURE_SLUGS[listed[0]]}">{escape(region_name)}</a>'
+        for region_name, prefectures in REGIONS
+        if (listed := [name for name in prefectures if records_by_pref.get(name)])
+    )
+    region_nav_html = (
+        f'<nav class="region-jump-nav" aria-label="地方から探す">{region_nav_items}</nav>'
+        if region_nav_items else ""
+    )
+
     return f"""<!doctype html>
 <html lang="ja">
 <head>
@@ -877,6 +891,17 @@ def build_index_page(
     .index-hero {{ margin: 14px 0 28px; }}
     .index-hero h1 {{ margin: 0 0 10px; font-size: 1.6rem; }}
     .index-hero p {{ margin: 0; color: #75685c; }}
+    .region-jump-nav {{
+      display: flex; gap: 6px; overflow-x: auto; padding: 10px 0 4px;
+      -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    }}
+    .region-jump-nav::-webkit-scrollbar {{ display: none; }}
+    .region-jump-nav a {{
+      flex: 0 0 auto; padding: 6px 12px; border-radius: 999px;
+      background: #fff; border: 1px solid rgba(93,67,35,.15);
+      color: #57408f; font-size: .78rem; font-weight: 850; text-decoration: none;
+      white-space: nowrap;
+    }}
     .region-heading {{
       margin: 28px 0 12px; font-size: 1.05rem; font-weight: 850;
       color: #14544f;
@@ -984,9 +1009,34 @@ def build_index_page(
       <h1>都道府県から探す</h1>
       <p>ポケふたの情報がある{listed_count}都道府県、計{total}枚を地方別にまとめました。行き先を選んで詳細ページへ。</p>
     </header>
+    {region_nav_html}
+
+    <!-- adsense:prefecture -->
+
     {regions_html}
     <footer><a href="/summary/">全国のポケふた一覧へ戻る</a></footer>
   </main>
+  <script src="/assets/analytics.js?v=20260805a"></script>
+  <script>
+    window.PokefutaAnalytics.init({{
+      page_path: '/prefectures/',
+      site_type: 'map',
+      page_type: 'prefecture_index'
+    }});
+    function trackPrefecturesIndexEvent(name, params) {{
+      if (typeof window.gtag !== 'function') return;
+      gtag('event', name, Object.assign({{
+        event_category: 'prefecture_growth'
+      }}, params || {{}}));
+    }}
+    document.addEventListener('click', function(event) {{
+      const link = event.target.closest('[data-track]');
+      if (!link) return;
+      trackPrefecturesIndexEvent(link.dataset.track, {{
+        destination: link.dataset.destination || ''
+      }});
+    }});
+  </script>
 </body>
 </html>
 """

@@ -109,6 +109,8 @@ jobs:
           python3 apps/scraper/generate_summary_pages.py
           echo "[dist] Generate prefecture landing pages (47 prefectures)"
           python3 apps/scraper/generate_prefecture_pages.py
+          echo "[dist] Test sitemap generation"
+          python3 -m unittest apps.scraper.test_generate_sitemap
           echo "[dist] Generate sitemap with manhole + pokemon URLs"
           python3 apps/scraper/generate_sitemap.py
           echo "[dist] Copy HTML sources"

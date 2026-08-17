@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import re
 import tempfile
 import unittest
 from datetime import date, datetime
@@ -540,6 +541,23 @@ class BuildIndexPageTest(unittest.TestCase):
             else:
                 self.assertNotIn(f">{region_name}<", html)
 
+    def test_region_jump_nav_links_to_every_visible_region_only(self) -> None:
+        """実機フィードバック: SPだと縦に長いので、上部に地方への
+        ジャンプリンクを置く。都道府県が1つも残らない地方は出さない
+        （region_section() が空セクションを出さないのと同じ条件）。"""
+        html = MODULE.build_index_page(self.records_by_pref)
+        nav = re.search(r'<nav class="region-jump-nav"[^>]*>.*?</nav>', html, re.DOTALL)
+        self.assertIsNotNone(nav)
+        self.assertIn('<a href="#region-mie">近畿</a>', nav.group(0))
+
+    def test_region_jump_nav_omits_a_region_left_entirely_empty(self) -> None:
+        records_by_pref = {name: [] for name in MODULE.PREFECTURE_ORDER}
+        records_by_pref["三重県"] = [{"id": "1"}]
+        html = MODULE.build_index_page(records_by_pref)
+        nav = re.search(r'<nav class="region-jump-nav"[^>]*>(.*?)</nav>', html, re.DOTALL)
+        self.assertIsNotNone(nav)
+        self.assertEqual('<a href="#region-mie">近畿</a>', nav.group(1))
+
     def test_shows_a_new_badge_only_for_recently_added_records(self) -> None:
         records_by_pref = {name: [] for name in MODULE.PREFECTURE_ORDER}
         records_by_pref["三重県"] = [
@@ -697,6 +715,27 @@ class BuildIndexPageTest(unittest.TestCase):
         self.assertIn('<link rel="canonical" href="https://data.pokefuta.com/prefectures/">', html)
         self.assertIn('<meta name="robots" content="index,follow">', html)
         self.assertIn("<title>都道府県から探す｜全国のポケふた一覧</title>", html)
+
+    def test_ga4_is_wired_up_via_the_shared_loader(self) -> None:
+        """このページには実装当初 analytics.js の読み込みが漏れていて、
+        カード/詳細リンク/キャンペーンバッジの data-track がどれも
+        計測されない状態だった。build_page()（都道府県詳細ページ）と
+        同じ規約で配線されていることを固定する。"""
+        html = MODULE.build_index_page(self.records_by_pref)
+        self.assertRegex(html, r'<script src="/assets/analytics\.js\?v=[^"]+"></script>')
+        self.assertIn("window.PokefutaAnalytics.init({", html)
+        self.assertIn("page_path: '/prefectures/'", html)
+        self.assertIn("page_type: 'prefecture_index'", html)
+        self.assertIn("document.addEventListener('click'", html)
+        self.assertIn("link.dataset.track", html)
+        self.assertNotIn("googletagmanager.com/gtag", html)
+
+    def test_adsense_marker_is_present_for_the_prefecture_ad_slot(self) -> None:
+        """都道府県詳細ページ（build_page()）と同じ "prefecture" 広告枠を
+        一覧ページにも配置する。マーカーが無いと inject_adsense.py は
+        検証用metaタグだけ入れて広告ユニットを一切出さない。"""
+        html = MODULE.build_index_page(self.records_by_pref)
+        self.assertIn("<!-- adsense:prefecture -->", html)
 
     def test_every_card_has_an_explicit_detail_link(self) -> None:
         """実機フィードバック: カード全体クリックだけでなく、
