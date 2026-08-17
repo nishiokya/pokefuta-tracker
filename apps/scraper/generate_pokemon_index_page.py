@@ -787,7 +787,7 @@ def generate_html(
             f'<span>{escape(strings["pref_count_label"].format(count=card["pref_count"]))}</span>'
         )
 
-    def card_html(card: dict, class_name: str = "poke-card", track_name: str = "") -> str:
+    def card_html(card: dict, class_name: str, track_name: str = "") -> str:
         en_html = (
             f'<span class="poke-en">{escape(card["name_en"])}</span>'
             if card["name_en"] and lang != "en" else ""
@@ -812,7 +812,7 @@ def generate_html(
 
     def compact_links(section_cards: list[dict], limit: int | None = 8, track_name: str = "") -> str:
         links = []
-        for card in (section_cards[:limit] if limit is not None else section_cards):
+        for card in section_cards[:limit]:
             track_attrs = (
                 f' data-track="{escape(track_name)}" data-destination="{escape(card["slug"])}"'
                 if track_name else ""
@@ -1337,7 +1337,7 @@ def generate_html(
     .taxonomy-grid {{
       grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
     }}
-    .poke-card a, .featured-card a, .regional-item a, .ranking-item a {{
+    .featured-card a, .regional-item a, .ranking-item a {{
       display: flex;
       flex-direction: column;
       overflow: hidden;
@@ -1349,7 +1349,7 @@ def generate_html(
       transition: border-color 0.15s, box-shadow 0.15s;
       height: 100%;
     }}
-    .poke-card a:hover, .featured-card a:hover, .regional-item a:hover, .ranking-item a:hover, .hub-card:hover {{
+    .featured-card a:hover, .regional-item a:hover, .ranking-item a:hover, .hub-card:hover {{
       border-color: #6F55A3;
       box-shadow: 0 2px 8px rgba(111,85,163,0.12);
     }}

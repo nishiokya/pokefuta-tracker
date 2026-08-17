@@ -87,6 +87,7 @@ jobs:
             apps.scraper.test_inject_adsense \
             apps.scraper.test_generate_prefecture_pages.PrefecturePageDeployContractTest \
             apps.scraper.test_generate_prefecture_pages.BuildIndexPageTest \
+            apps.scraper.test_generate_prefecture_pages.RecordDateTest \
             apps.scraper.test_prefectures \
             apps.scraper.test_web_prefecture_links \
             apps.scraper.test_inject_site_header \

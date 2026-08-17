@@ -853,6 +853,26 @@ class BuildIndexPageTest(unittest.TestCase):
         self.assertIn("<li>テストトリビア文</li>", html)
         self.assertNotIn('<span class="prefecture-card-trivia-label">', html)
 
+    def test_shows_the_pokemon_badge_even_when_trivia_facts_list_is_empty(self) -> None:
+        """/code-review 指摘: trivia が空の都道府県でも100%カバレッジの
+        バッジは summary 側と同じく出す（summary の _build_prefecture_info_section
+        は facts の有無とバッジを独立に判定しており、以前はここだけ
+        trivia_list が空だとバッジごと握りつぶしていた）。"""
+        trivia = {
+            "三重県": {
+                "trivia": [],
+                "pokemon_coverage": [
+                    {"label": "ロコン系", "pokemon": ["ロコン", "アローラロコン"], "cover_count": 50, "coverage_percent": 100.0},
+                ],
+            }
+        }
+        html = MODULE.build_index_page(self.records_by_pref, trivia=trivia)
+        self.assertIn(
+            '<span class="prefecture-card-trivia-label">都道府県トリビア</span>ロコン系',
+            html,
+        )
+        self.assertNotIn('<ul class="prefecture-card-trivia-facts">', html)
+
 
 if __name__ == "__main__":
     unittest.main()
