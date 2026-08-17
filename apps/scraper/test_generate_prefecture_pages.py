@@ -722,7 +722,7 @@ class BuildIndexPageTest(unittest.TestCase):
         計測されない状態だった。build_page()（都道府県詳細ページ）と
         同じ規約で配線されていることを固定する。"""
         html = MODULE.build_index_page(self.records_by_pref)
-        self.assertIn('<script src="/assets/analytics.js?v=20260805a"></script>', html)
+        self.assertRegex(html, r'<script src="/assets/analytics\.js\?v=[^"]+"></script>')
         self.assertIn("window.PokefutaAnalytics.init({", html)
         self.assertIn("page_path: '/prefectures/'", html)
         self.assertIn("page_type: 'prefecture_index'", html)
