@@ -3,7 +3,7 @@ from __future__ import annotations
 import importlib.util
 import tempfile
 import unittest
-from datetime import datetime
+from datetime import date, datetime
 from pathlib import Path
 from unittest import mock
 
@@ -534,12 +534,32 @@ class BuildIndexPageTest(unittest.TestCase):
         photos = {"1": {"created_at": "2026-01-01T00:00:00Z"}}
         with mock.patch.object(MODULE, "_photo_asset_url", return_value="/manhole/image/1_latest.jpeg"):
             html = MODULE.build_index_page(records_by_pref, photos)
-        self.assertIn('<a class="prefecture-card-thumb" href="/manholes/1/"', html)
+        self.assertIn(
+            '<a class="prefecture-card-photo" href="/manholes/1/" '
+            'aria-label="津市のポケふたの詳細を開く">',
+            html,
+        )
         self.assertIn('src="/manhole/image/1_latest.jpeg"', html)
+        self.assertIn(
+            '<span class="prefecture-card-photo-city" aria-hidden="true">津市</span>', html
+        )
+
+    def test_gallery_shows_more_than_eight_photos(self) -> None:
+        """実機フィードバック: 8枚に絞らず、実在する写真は全部出す。"""
+        records_by_pref = {name: [] for name in MODULE.PREFECTURE_ORDER}
+        records_by_pref["三重県"] = [
+            {"id": str(i), "city": f"市{i}"} for i in range(12)
+        ]
+        photos = {str(i): {"created_at": "2026-01-01T00:00:00Z"} for i in range(12)}
+        with mock.patch.object(MODULE, "_photo_asset_url", return_value="/x.jpeg"):
+            html = MODULE.build_index_page(records_by_pref, photos)
+        self.assertEqual(12, html.count('class="prefecture-card-photo"'))
 
     def test_gallery_falls_back_to_placeholder_without_photos(self) -> None:
         html = MODULE.build_index_page(self.records_by_pref)
-        self.assertIn('<span class="prefecture-card-thumb is-missing"></span>', html)
+        self.assertIn(
+            '<p class="prefecture-card-photo-empty">まだ投稿写真がありません</p>', html
+        )
 
     def test_preinstall_record_never_shows_as_a_real_thumbnail(self) -> None:
         """installed:false（未設置）のレコードに写真データが残っていても、
@@ -554,7 +574,9 @@ class BuildIndexPageTest(unittest.TestCase):
         with mock.patch.object(MODULE, "_photo_asset_url", return_value="/manhole/image/1_latest.jpeg"):
             html = MODULE.build_index_page(records_by_pref, photos)
         self.assertNotIn('href="/manholes/1/"', html)
-        self.assertIn('<span class="prefecture-card-thumb is-missing"></span>', html)
+        self.assertIn(
+            '<p class="prefecture-card-photo-empty">まだ投稿写真がありません</p>', html
+        )
 
     def test_preinstall_only_recent_record_does_not_trigger_the_new_badge(self) -> None:
         records_by_pref = {name: [] for name in MODULE.PREFECTURE_ORDER}
@@ -573,6 +595,72 @@ class BuildIndexPageTest(unittest.TestCase):
         self.assertIn('<link rel="canonical" href="https://data.pokefuta.com/prefectures/">', html)
         self.assertIn('<meta name="robots" content="index,follow">', html)
         self.assertIn("<title>都道府県から探す｜全国のポケふた一覧</title>", html)
+
+    def test_every_card_has_an_explicit_detail_link(self) -> None:
+        """実機フィードバック: カード全体クリックだけでなく、
+        「◯◯県の詳細を見る」という明示的なリンクが欲しい。"""
+        html = MODULE.build_index_page(self.records_by_pref)
+        self.assertIn(
+            '<a class="prefecture-card-detail-link" href="/prefectures/mie/" '
+            'data-track="prefectures_index_detail_click" data-destination="mie">'
+            '三重県の詳細を見る →</a>',
+            html,
+        )
+
+    def test_shows_an_active_campaign_badge(self) -> None:
+        events = {
+            "三重県": [
+                {
+                    "title": "テストスタンプラリー",
+                    "url": "https://example.com/campaign",
+                    "start": date(2026, 1, 1),
+                    "end": date(2099, 1, 1),
+                }
+            ]
+        }
+        html = MODULE.build_index_page(self.records_by_pref, events=events)
+        self.assertIn(
+            '<a class="prefecture-card-campaign" href="https://example.com/campaign" '
+            'target="_blank" rel="noopener noreferrer" '
+            'data-track="prefectures_index_campaign_click">'
+            '🎫 開催中: テストスタンプラリー</a>',
+            html,
+        )
+
+    def test_shows_upcoming_not_active_for_a_not_yet_started_campaign(self) -> None:
+        """end>=today だけで判定すると、開始前のイベントも「開催中」に
+        なってしまう（_events_html() と同じ start ベースの出し分けが必要）。"""
+        events = {
+            "三重県": [
+                {
+                    "title": "まだ始まっていないイベント",
+                    "url": "https://example.com/upcoming",
+                    "start": date(2099, 1, 1),
+                    "end": date(2099, 6, 1),
+                }
+            ]
+        }
+        html = MODULE.build_index_page(self.records_by_pref, events=events)
+        self.assertIn("🎫 まもなく開催: まだ始まっていないイベント", html)
+        self.assertNotIn("🎫 開催中: まだ始まっていないイベント", html)
+
+    def test_omits_the_campaign_badge_once_the_event_has_ended(self) -> None:
+        events = {
+            "三重県": [
+                {
+                    "title": "終わったイベント",
+                    "url": "https://example.com/ended",
+                    "start": date(2020, 1, 1),
+                    "end": date(2020, 2, 1),
+                }
+            ]
+        }
+        html = MODULE.build_index_page(self.records_by_pref, events=events)
+        self.assertNotIn("終わったイベント", html)
+
+    def test_omits_the_campaign_badge_without_event_data(self) -> None:
+        html = MODULE.build_index_page(self.records_by_pref)
+        self.assertNotIn('<a class="prefecture-card-campaign"', html)
 
     def test_carries_the_same_prefecture_trivia_summary_shows(self) -> None:
         """/summary/ の都道府県トリビアと同じデータ・同じ文言を出すこと。

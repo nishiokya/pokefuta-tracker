@@ -662,33 +662,63 @@ def _index_card_trivia_html(trivia_entry: dict | None) -> str:
     )
 
 
+def _index_card_campaign_html(
+    events_list: list[dict] | None, today: date | None = None
+) -> str:
+    """開催中スタンプラリー等の告知を、詳細ページの _events_html() と同じ
+    データ源（dataset/prefecture_events.json）から1行の告知バッジとして
+    出す。詳細（期間・説明文）は引き続き詳細ページ側だけの役割。"""
+    today = today or datetime.now(JST).date()
+    active = [e for e in events_list or [] if e["end"] >= today]
+    if not active:
+        return ""
+    event = active[0]
+    # _events_html() と同じ判定: end>=today だけでは開始前のイベントも
+    # 含んでしまうので、start で「開催中」/「まもなく開催」を出し分ける。
+    status = "開催中" if event["start"] <= today else "まもなく開催"
+    return (
+        f'<a class="prefecture-card-campaign" href="{_escape_attr(event["url"])}" '
+        'target="_blank" rel="noopener noreferrer" '
+        'data-track="prefectures_index_campaign_click">'
+        f'🎫 {status}: {escape(event["title"])}</a>'
+    )
+
+
 def build_index_page(
     records_by_pref: dict[str, list[dict]],
     photos: dict[str, dict] | None = None,
     trivia: dict[str, dict] | None = None,
+    events: dict[str, list[dict]] | None = None,
 ) -> str:
     """Generate /prefectures/index.html — the real destination for every
     "都道府県から探す" link site-wide (top page quicklink/stat tile, shared
     header nav, SP tab bar). Those all used to point at the top page's
     #sec-pref anchor because this page didn't exist yet.
 
-    Cards intentionally mirror map.html's own prefecture picker panel
-    (.prefecture-card / .prefecture-card-main / .prefecture-card-gallery,
-    styled in pokefuta-map.css under .pokefuta-map-page) — same code badge,
-    NEW badge, count badge, and photo-thumbnail gallery — so the two
-    "browse by prefecture" surfaces feel like one experience instead of a
-    plain text list living next to a rich in-app one. The card's main
-    action differs from map.html's version on purpose: there it filters
-    the in-app map (a separate #sec-pref-style link handles navigation);
-    here, on a static page with no map state to filter, the whole card
-    just links straight to the prefecture's detail page.
+    Cards started as a close mirror of map.html's own prefecture picker
+    panel (code badge, NEW badge, count badge), and real-device feedback
+    then asked for more than that panel shows: every real photo (not
+    capped at 8 like map.html's row), a visible city/municipality name per
+    photo, an explicit "detail page" link (the whole card was already a
+    link, but that wasn't obvious enough on a phone), and any active
+    campaign/event for the prefecture. The gallery is now a small photo
+    grid with captions rather than map.html's circular icon row, since a
+    caption doesn't read well on a 54px circle. The card's main action
+    still differs from map.html's version on purpose: there it filters
+    the in-app map; here, on a static page with no map state to filter,
+    the whole card (plus the explicit link at the bottom) links straight
+    to the prefecture's detail page.
 
     Also carries the same 都道府県トリビア content /summary/'s prefecture
     cards show (dataset/prefecture_trivia.json via load_trivia()) — same
-    source, same text, deliberately not re-derived or reworded.
+    source, same text, deliberately not re-derived or reworded — and the
+    same active-campaign data prefecture detail pages show
+    (dataset/prefecture_events.json via load_events()), as a compact
+    one-line badge instead of the detail page's full description+dates.
     """
     photos = photos or {}
     trivia = trivia or {}
+    events = events or {}
     total = sum(len(records) for records in records_by_pref.values())
     canonical = f"{BASE_URL}/prefectures/"
     title = "都道府県から探す｜全国のポケふた一覧"
@@ -718,14 +748,25 @@ def build_index_page(
             '<img src="/assets/icon-fire.svg" alt="" aria-hidden="true">NEW</span>'
             if recent_count else ""
         )
-        thumbnails = _photo_entries(installed_records, photos)[:8]
+        # 実機フィードバック: 8枚に絞らず実在する写真は全部出す。市町村名を
+        # キャプションとして添えるため、地図パネルの円形サムネイル一列より
+        # 見出し付きの小さな写真グリッドにしている。
+        thumbnails = _photo_entries(installed_records, photos)
         gallery_html = "".join(
-            f'<a class="prefecture-card-thumb" href="/manholes/{quote(str(record.get("id", "")))}/" '
+            f'<a class="prefecture-card-photo" href="/manholes/{quote(str(record.get("id", "")))}/" '
             f'aria-label="{_escape_attr(record.get("city", "") or name)}のポケふたの詳細を開く">'
-            f'<img src="{_photo_asset_url(record, photo)}" alt="" loading="lazy" decoding="async"></a>'
+            f'<img src="{_photo_asset_url(record, photo)}" alt="" loading="lazy" decoding="async">'
+            f'<span class="prefecture-card-photo-city" aria-hidden="true">'
+            f'{escape(record.get("city", "") or name)}</span></a>'
             for record, photo in thumbnails
-        ) or '<span class="prefecture-card-thumb is-missing"></span>'
+        ) or '<p class="prefecture-card-photo-empty">まだ投稿写真がありません</p>'
         trivia_html = _index_card_trivia_html(trivia.get(name))
+        campaign_html = _index_card_campaign_html(events.get(name))
+        detail_link_html = (
+            f'<a class="prefecture-card-detail-link" href="/prefectures/{slug}/" '
+            f'data-track="prefectures_index_detail_click" data-destination="{slug}">'
+            f'{escape(name)}の詳細を見る →</a>'
+        )
         return f"""<article class="{card_class}" data-track="prefectures_index_click" data-destination="{slug}">
       <a class="prefecture-card-main" href="/prefectures/{slug}/">
         <span class="prefecture-code">{code}</span>
@@ -733,8 +774,10 @@ def build_index_page(
         <span class="prefecture-card-meta">{new_badge_html}</span>
         <span class="{count_badge_class}">{count}枚</span>
       </a>
+      {campaign_html}
       {trivia_html}
       <div class="prefecture-card-gallery" aria-label="{_escape_attr(name)}のマンホール写真">{gallery_html}</div>
+      {detail_link_html}
     </article>"""
 
     def region_section(region_name: str, prefectures: list[str]) -> str:
@@ -828,22 +871,39 @@ def build_index_page(
     }}
     .prefecture-card-trivia-facts {{ margin: 0; padding-left: 1.1rem; color: #716154; font-size: .72rem; line-height: 1.4; }}
     .prefecture-card-trivia-facts li + li {{ margin-top: .3rem; }}
-    .prefecture-card-gallery {{ display: flex; flex-wrap: wrap; gap: 8px; padding: 4px 12px 12px; }}
-    .prefecture-card-thumb {{
-      display: grid; flex: 0 0 auto; width: 54px; height: 54px; place-items: center;
-      overflow: hidden; border: 2px solid rgba(255,255,255,.95); border-radius: 50%;
-      background: url("/assets/icon-pin.svg") center / 24px 24px no-repeat,
-        linear-gradient(135deg, rgba(126,107,169,.14), rgba(255,250,239,.92));
-      box-shadow: 0 4px 10px rgba(67,38,111,.16);
+    /* 実機フィードバックで「写真は全部・市町村名も出したい」と分かった
+       ので、地図パネル風の丸アイコン列（.prefecture-card-thumb）から
+       キャプション付きの小さな写真グリッドに変更した。 */
+    .prefecture-card-gallery {{
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+      gap: 8px; padding: 4px 12px 12px;
     }}
-    .prefecture-card-thumb:hover, .prefecture-card-thumb:focus-visible {{
-      border-color: #7654aa; box-shadow: 0 6px 14px rgba(67,38,111,.24), 0 0 0 3px rgba(118,84,170,.18);
+    .prefecture-card-photo {{
+      display: flex; flex-direction: column; align-items: center; gap: 3px;
+      text-decoration: none; color: #574b41; min-width: 0;
+    }}
+    .prefecture-card-photo img {{
+      width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 10px;
+      border: 2px solid rgba(255,255,255,.95); box-shadow: 0 4px 10px rgba(67,38,111,.16);
+    }}
+    .prefecture-card-photo:hover img, .prefecture-card-photo:focus-visible img {{
+      box-shadow: 0 6px 14px rgba(67,38,111,.24), 0 0 0 3px rgba(118,84,170,.18);
       outline: 0;
     }}
-    .prefecture-card-thumb img {{ width: 100%; height: 100%; display: block; object-fit: cover; }}
-    .prefecture-card-thumb.is-missing {{
-      background: url("/assets/icon-pin.svg") center / 24px 24px no-repeat,
-        linear-gradient(135deg, rgba(126,107,169,.14), rgba(255,250,239,.92));
+    .prefecture-card-photo-city {{
+      max-width: 100%; font-size: .66rem; font-weight: 800; text-align: center;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }}
+    .prefecture-card-photo-empty {{ margin: 0; padding: 0 12px 12px; color: #75685c; font-size: .78rem; }}
+    .prefecture-card-campaign {{
+      display: block; margin: 0 12px 8px; padding: 6px 10px; border-radius: 10px;
+      background: rgba(243,109,54,.1); color: #b8481f; font-size: .74rem; font-weight: 850;
+      text-decoration: none;
+    }}
+    .prefecture-card-detail-link {{
+      display: block; margin: 4px 12px 12px; padding: 8px 10px; border-radius: 10px;
+      background: rgba(126,107,169,.1); color: #57408f; font-size: .8rem; font-weight: 900;
+      text-align: center; text-decoration: none;
     }}
     .prefecture-code {{
       display: inline-grid; min-width: 34px; min-height: 30px; place-items: center;
@@ -1638,7 +1698,7 @@ def generate_all(
         (out_dir / "index.html").write_text(html, encoding="utf-8")
     output_dir.mkdir(parents=True, exist_ok=True)
     (output_dir / "index.html").write_text(
-        build_index_page(records_by_pref, photos, trivia), encoding="utf-8"
+        build_index_page(records_by_pref, photos, trivia, events), encoding="utf-8"
     )
     return len(PREFECTURES)
 
