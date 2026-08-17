@@ -673,11 +673,14 @@ def _index_card_campaign_html(
     if not active:
         return ""
     event = active[0]
+    # _events_html() と同じ判定: end>=today だけでは開始前のイベントも
+    # 含んでしまうので、start で「開催中」/「まもなく開催」を出し分ける。
+    status = "開催中" if event["start"] <= today else "まもなく開催"
     return (
         f'<a class="prefecture-card-campaign" href="{_escape_attr(event["url"])}" '
         'target="_blank" rel="noopener noreferrer" '
         'data-track="prefectures_index_campaign_click">'
-        f'🎫 開催中: {escape(event["title"])}</a>'
+        f'🎫 {status}: {escape(event["title"])}</a>'
     )
 
 
@@ -750,9 +753,10 @@ def build_index_page(
         # 見出し付きの小さな写真グリッドにしている。
         thumbnails = _photo_entries(installed_records, photos)
         gallery_html = "".join(
-            f'<a class="prefecture-card-photo" href="/manholes/{quote(str(record.get("id", "")))}/">'
+            f'<a class="prefecture-card-photo" href="/manholes/{quote(str(record.get("id", "")))}/" '
+            f'aria-label="{_escape_attr(record.get("city", "") or name)}のポケふたの詳細を開く">'
             f'<img src="{_photo_asset_url(record, photo)}" alt="" loading="lazy" decoding="async">'
-            f'<span class="prefecture-card-photo-city">'
+            f'<span class="prefecture-card-photo-city" aria-hidden="true">'
             f'{escape(record.get("city", "") or name)}</span></a>'
             for record, photo in thumbnails
         ) or '<p class="prefecture-card-photo-empty">まだ投稿写真がありません</p>'

@@ -534,9 +534,15 @@ class BuildIndexPageTest(unittest.TestCase):
         photos = {"1": {"created_at": "2026-01-01T00:00:00Z"}}
         with mock.patch.object(MODULE, "_photo_asset_url", return_value="/manhole/image/1_latest.jpeg"):
             html = MODULE.build_index_page(records_by_pref, photos)
-        self.assertIn('<a class="prefecture-card-photo" href="/manholes/1/"', html)
+        self.assertIn(
+            '<a class="prefecture-card-photo" href="/manholes/1/" '
+            'aria-label="津市のポケふたの詳細を開く">',
+            html,
+        )
         self.assertIn('src="/manhole/image/1_latest.jpeg"', html)
-        self.assertIn('<span class="prefecture-card-photo-city">津市</span>', html)
+        self.assertIn(
+            '<span class="prefecture-card-photo-city" aria-hidden="true">津市</span>', html
+        )
 
     def test_gallery_shows_more_than_eight_photos(self) -> None:
         """実機フィードバック: 8枚に絞らず、実在する写真は全部出す。"""
@@ -620,6 +626,23 @@ class BuildIndexPageTest(unittest.TestCase):
             '🎫 開催中: テストスタンプラリー</a>',
             html,
         )
+
+    def test_shows_upcoming_not_active_for_a_not_yet_started_campaign(self) -> None:
+        """end>=today だけで判定すると、開始前のイベントも「開催中」に
+        なってしまう（_events_html() と同じ start ベースの出し分けが必要）。"""
+        events = {
+            "三重県": [
+                {
+                    "title": "まだ始まっていないイベント",
+                    "url": "https://example.com/upcoming",
+                    "start": date(2099, 1, 1),
+                    "end": date(2099, 6, 1),
+                }
+            ]
+        }
+        html = MODULE.build_index_page(self.records_by_pref, events=events)
+        self.assertIn("🎫 まもなく開催: まだ始まっていないイベント", html)
+        self.assertNotIn("🎫 開催中: まだ始まっていないイベント", html)
 
     def test_omits_the_campaign_badge_once_the_event_has_ended(self) -> None:
         events = {
