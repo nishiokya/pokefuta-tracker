@@ -734,7 +734,7 @@ def build_index_page(
     canonical = f"{BASE_URL}/prefectures/"
     title = "都道府県から探す｜全国のポケふた一覧"
     description = (
-        f"ポケふた設置済みの{listed_count}都道府県、計{total}枚（ポケモンマンホール）を都道府県別に探せます。"
+        f"ポケふたの情報がある{listed_count}都道府県、計{total}枚（ポケモンマンホール）を都道府県別に探せます。"
         "地方ごとにまとめた一覧から、行き先の設置数と詳細ページを確認できます。"
     )
     recent_cutoff = datetime.now(JST) - timedelta(days=30)
@@ -824,12 +824,15 @@ def build_index_page(
 
     def region_section(region_name: str, prefectures: list[str]) -> str:
         # マンホールが1枚もない都道府県はこの一覧では非表示にする（詳細
-        # ページ自体は今後の設置に備えて引き続き生成する）。
-        installed = [name for name in prefectures if records_by_pref.get(name)]
-        if not installed:
+        # ページ自体は今後の設置に備えて引き続き生成する）。ここでの
+        # 条件は「レコードが1件でもある」で、installed:false（設置予定）
+        # だけの都道府県も対象に含む — "installed" という名前は誤解を招く
+        # ので listed とする。
+        listed = [name for name in prefectures if records_by_pref.get(name)]
+        if not listed:
             return ""
-        cards = "".join(prefecture_card(name) for name in installed)
-        anchor_id = f"region-{PREFECTURE_SLUGS[installed[0]]}"
+        cards = "".join(prefecture_card(name) for name in listed)
+        anchor_id = f"region-{PREFECTURE_SLUGS[listed[0]]}"
         return (
             f'<section aria-labelledby="{anchor_id}">'
             f'<h2 id="{anchor_id}" class="region-heading">{escape(region_name)}</h2>'
@@ -979,7 +982,7 @@ def build_index_page(
     </nav>
     <header class="index-hero">
       <h1>都道府県から探す</h1>
-      <p>ポケふた設置済みの{listed_count}都道府県、計{total}枚を地方別にまとめました。行き先を選んで詳細ページへ。</p>
+      <p>ポケふたの情報がある{listed_count}都道府県、計{total}枚を地方別にまとめました。行き先を選んで詳細ページへ。</p>
     </header>
     {regions_html}
     <footer><a href="/summary/">全国のポケふた一覧へ戻る</a></footer>
