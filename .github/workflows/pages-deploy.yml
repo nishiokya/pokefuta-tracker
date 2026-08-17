@@ -99,6 +99,8 @@ jobs:
           python3 apps/scraper/generate_manhole_pages.py
           echo "[dist] Generate static Pokemon LP pages"
           python3 apps/scraper/generate_pokemon_pages.py
+          echo "[dist] Test Pokemon index page generation"
+          python3 -m unittest apps.scraper.test_generate_pokemon_index_page
           echo "[dist] Generate Pokemon index page"
           python3 apps/scraper/generate_pokemon_index_page.py
           echo "[dist] Generate character manhole landing page"
