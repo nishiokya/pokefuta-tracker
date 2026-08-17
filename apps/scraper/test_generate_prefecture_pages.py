@@ -730,6 +730,13 @@ class BuildIndexPageTest(unittest.TestCase):
         self.assertIn("link.dataset.track", html)
         self.assertNotIn("googletagmanager.com/gtag", html)
 
+    def test_adsense_marker_is_present_for_the_prefecture_ad_slot(self) -> None:
+        """都道府県詳細ページ（build_page()）と同じ "prefecture" 広告枠を
+        一覧ページにも配置する。マーカーが無いと inject_adsense.py は
+        検証用metaタグだけ入れて広告ユニットを一切出さない。"""
+        html = MODULE.build_index_page(self.records_by_pref)
+        self.assertIn("<!-- adsense:prefecture -->", html)
+
     def test_every_card_has_an_explicit_detail_link(self) -> None:
         """実機フィードバック: カード全体クリックだけでなく、
         「◯◯県の詳細を見る」という明示的なリンクが欲しい。"""

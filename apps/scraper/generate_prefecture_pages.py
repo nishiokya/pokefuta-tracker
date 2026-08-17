@@ -1010,6 +1010,9 @@ def build_index_page(
       <p>ポケふたの情報がある{listed_count}都道府県、計{total}枚を地方別にまとめました。行き先を選んで詳細ページへ。</p>
     </header>
     {region_nav_html}
+
+    <!-- adsense:prefecture -->
+
     {regions_html}
     <footer><a href="/summary/">全国のポケふた一覧へ戻る</a></footer>
   </main>
