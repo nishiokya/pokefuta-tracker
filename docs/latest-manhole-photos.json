@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-17T20:51:11.027966Z",
+  "generated_at": "2026-08-18T20:46:54.405513Z",
   "source": "pokefuta photo table",
   "image": {
     "r2_public_base_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image"
@@ -1650,20 +1650,30 @@
     },
     "54": {
       "manhole_id": 54,
-      "photo_id": "0bc53f77-f438-4647-ae1f-4be7b1e8f6b5",
-      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/3e7c4903-938e-4de6-a0b6-d2ad03bfde37.jpg",
-      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/3e7c4903-938e-4de6-a0b6-d2ad03bfde37.jpg",
-      "storage_key": "photos/original/2026/06/3e7c4903-938e-4de6-a0b6-d2ad03bfde37.jpg",
+      "photo_id": "f6d2b449-a81c-49ca-bbf3-838189786424",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/3a6e5c26-05fb-4aec-a8e7-854761033468.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/3a6e5c26-05fb-4aec-a8e7-854761033468.jpg",
+      "storage_key": "photos/original/2026/08/3a6e5c26-05fb-4aec-a8e7-854761033468.jpg",
       "content_type": "image/jpeg",
       "width": null,
       "height": null,
-      "file_size": 1006655,
-      "created_at": "2026-06-14T13:25:08.57604+00:00",
-      "shot_at": "2026-06-13T15:35:26+00:00",
+      "file_size": 1621159,
+      "created_at": "2026-08-18T04:11:18.158304+00:00",
+      "shot_at": "2026-08-18T03:50:42+00:00",
       "comment": null,
-      "display_name": "Sky134z",
-      "public_user_id": "ffd4cdb3-c954-4990-aee1-82afb428fa42",
+      "display_name": "べが",
+      "public_user_id": "0b98f613-711b-4db0-9619-3fa18e12de46",
       "gallery": [
+        {
+          "photo_id": "f6d2b449-a81c-49ca-bbf3-838189786424",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/3a6e5c26-05fb-4aec-a8e7-854761033468.jpg",
+          "storage_key": "photos/original/2026/08/3a6e5c26-05fb-4aec-a8e7-854761033468.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-08-18T04:11:18.158304+00:00",
+          "shot_at": "2026-08-18T03:50:42+00:00",
+          "display_name": "べが",
+          "public_user_id": "0b98f613-711b-4db0-9619-3fa18e12de46"
+        },
         {
           "photo_id": "0bc53f77-f438-4647-ae1f-4be7b1e8f6b5",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/06/3e7c4903-938e-4de6-a0b6-d2ad03bfde37.jpg",
