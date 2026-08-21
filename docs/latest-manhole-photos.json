@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-20T20:54:13.239703Z",
+  "generated_at": "2026-08-21T20:46:43.681582Z",
   "source": "pokefuta photo table",
   "image": {
     "r2_public_base_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image"
@@ -4438,20 +4438,30 @@
     },
     "134": {
       "manhole_id": 134,
-      "photo_id": "e2662b04-3b5e-411f-bbe1-b60d8bc0730e",
-      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/f182fc74-3fb0-4d00-9619-e0938c279f9b.jpg",
-      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/f182fc74-3fb0-4d00-9619-e0938c279f9b.jpg",
-      "storage_key": "photos/original/2026/07/f182fc74-3fb0-4d00-9619-e0938c279f9b.jpg",
+      "photo_id": "d991f890-d9e7-4024-9a05-a7f42ce6ad86",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/e45b226e-e5b4-4561-8bb5-ec8dc2847a38.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/e45b226e-e5b4-4561-8bb5-ec8dc2847a38.jpg",
+      "storage_key": "photos/original/2026/08/e45b226e-e5b4-4561-8bb5-ec8dc2847a38.jpg",
       "content_type": "image/jpeg",
       "width": null,
       "height": null,
-      "file_size": 1647322,
-      "created_at": "2026-07-11T08:27:57.663787+00:00",
-      "shot_at": "2025-05-15T01:12:44+00:00",
-      "comment": "道の駅にあるポケふた\r\nすぐ横にご当地キャラのマンホールと\r\n仲良く並んでるにゃあ",
-      "display_name": "xxobokihurah2007",
-      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
+      "file_size": 1596387,
+      "created_at": "2026-08-21T02:11:16.845057+00:00",
+      "shot_at": "2026-08-21T01:17:35+00:00",
+      "comment": null,
+      "display_name": "べが",
+      "public_user_id": "0b98f613-711b-4db0-9619-3fa18e12de46",
       "gallery": [
+        {
+          "photo_id": "d991f890-d9e7-4024-9a05-a7f42ce6ad86",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/e45b226e-e5b4-4561-8bb5-ec8dc2847a38.jpg",
+          "storage_key": "photos/original/2026/08/e45b226e-e5b4-4561-8bb5-ec8dc2847a38.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-08-21T02:11:16.845057+00:00",
+          "shot_at": "2026-08-21T01:17:35+00:00",
+          "display_name": "べが",
+          "public_user_id": "0b98f613-711b-4db0-9619-3fa18e12de46"
+        },
         {
           "photo_id": "e2662b04-3b5e-411f-bbe1-b60d8bc0730e",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/f182fc74-3fb0-4d00-9619-e0938c279f9b.jpg",
@@ -5449,6 +5459,16 @@
           "public_user_id": "2fa9bc3c-bd9d-4470-82be-7ba9ab493930"
         },
         {
+          "photo_id": "368e4adc-0445-4853-8f4d-8f65daf8a5d0",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/c22234ca-b52f-41d6-b17d-f41dc8717833.jpg",
+          "storage_key": "photos/original/2026/08/c22234ca-b52f-41d6-b17d-f41dc8717833.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-08-20T23:21:21.967738+00:00",
+          "shot_at": "2026-07-26T03:51:52+00:00",
+          "display_name": "conan",
+          "public_user_id": "a3f8a866-4236-444e-ae90-dca0faeb80b9"
+        },
+        {
           "photo_id": "09ce8f0f-1c4c-436a-8a65-57e73674c83f",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/25c0e164-8b3c-40d3-bd6e-aad2f20e08d8.jpg",
           "storage_key": "photos/original/2026/08/25c0e164-8b3c-40d3-bd6e-aad2f20e08d8.jpg",
@@ -5477,16 +5497,6 @@
           "shot_at": "2026-05-30T03:53:37+00:00",
           "display_name": "おいしいごはん",
           "public_user_id": "92cd9a42-4e0c-4196-9218-bfc9e22ff796"
-        },
-        {
-          "photo_id": "d2bd84d7-8622-4ddd-85dc-433d72de099f",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/77959567-8a26-422f-b1c7-ad4b838a9272.jpg",
-          "storage_key": "photos/original/2026/08/77959567-8a26-422f-b1c7-ad4b838a9272.jpg",
-          "content_type": "image/jpeg",
-          "created_at": "2026-08-17T12:39:13.511164+00:00",
-          "shot_at": "2026-03-21T06:04:21+00:00",
-          "display_name": "杉山翔太",
-          "public_user_id": "e0ce0fba-cd3d-4adb-bc39-2d348372b8af"
         }
       ]
     },
@@ -6721,6 +6731,16 @@
           "public_user_id": "5efab7a4-3a69-47aa-8a2f-d5ab7d7d6d93"
         },
         {
+          "photo_id": "e41c5cd8-57c9-4df1-ba5b-34ce4d75cc23",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/94cf54e5-5ba2-441c-b3b8-4d80001dd376.jpg",
+          "storage_key": "photos/original/2026/08/94cf54e5-5ba2-441c-b3b8-4d80001dd376.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-08-20T23:02:18.698531+00:00",
+          "shot_at": "2026-08-20T10:08:57+00:00",
+          "display_name": "conan",
+          "public_user_id": "a3f8a866-4236-444e-ae90-dca0faeb80b9"
+        },
+        {
           "photo_id": "6a347e32-4df9-489f-9b1e-47835efc52b8",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/68d45116-6af8-453c-ae1a-e19e67758ec9.jpg",
           "storage_key": "photos/original/2026/08/68d45116-6af8-453c-ae1a-e19e67758ec9.jpg",
@@ -6749,16 +6769,6 @@
           "shot_at": "2026-05-31T04:45:32+00:00",
           "display_name": "おいしいごはん",
           "public_user_id": "92cd9a42-4e0c-4196-9218-bfc9e22ff796"
-        },
-        {
-          "photo_id": "ae68a6b0-4e5b-4794-93f5-aeff68c9260a",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/526f579f-3692-49a0-8b04-e8523af6c134.jpg",
-          "storage_key": "photos/original/2026/08/526f579f-3692-49a0-8b04-e8523af6c134.jpg",
-          "content_type": "image/jpeg",
-          "created_at": "2026-08-03T03:33:39.113263+00:00",
-          "shot_at": "2026-02-21T07:12:18+00:00",
-          "display_name": "aoking",
-          "public_user_id": "df3220e0-d105-4d60-9898-f5a2fda6dc1f"
         }
       ]
     },
@@ -6789,6 +6799,16 @@
           "public_user_id": "5efab7a4-3a69-47aa-8a2f-d5ab7d7d6d93"
         },
         {
+          "photo_id": "659ab568-887b-4985-ae51-e0926ead63c7",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/8bede214-9710-4fe3-abe7-51a62f3e94ca.jpg",
+          "storage_key": "photos/original/2026/08/8bede214-9710-4fe3-abe7-51a62f3e94ca.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-08-20T23:02:50.424511+00:00",
+          "shot_at": "2026-08-20T10:17:39+00:00",
+          "display_name": "conan",
+          "public_user_id": "a3f8a866-4236-444e-ae90-dca0faeb80b9"
+        },
+        {
           "photo_id": "86c2af35-4f34-4d13-b33f-046ff330898b",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/062908e4-c0f8-4482-8da5-4d3a08941425.jpg",
           "storage_key": "photos/original/2026/08/062908e4-c0f8-4482-8da5-4d3a08941425.jpg",
@@ -6817,16 +6837,6 @@
           "shot_at": "2026-06-30T07:30:54+00:00",
           "display_name": "とんとんにゃんこ",
           "public_user_id": "4560bdec-e1a5-41ef-b6a9-1fed80ef4df7"
-        },
-        {
-          "photo_id": "08c32878-c6c7-474f-bc1b-73dabfcdeb3b",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/b3a56706-b80c-4f6f-b37f-6c82cdb3c733.jpg",
-          "storage_key": "photos/original/2026/07/b3a56706-b80c-4f6f-b37f-6c82cdb3c733.jpg",
-          "content_type": "image/jpeg",
-          "created_at": "2026-07-15T11:54:08.301437+00:00",
-          "shot_at": "2026-05-31T04:34:36+00:00",
-          "display_name": "おいしいごはん",
-          "public_user_id": "92cd9a42-4e0c-4196-9218-bfc9e22ff796"
         }
       ]
     },
@@ -8023,6 +8033,16 @@
           "shot_at": "2026-08-13T04:01:51+00:00",
           "display_name": "まるたろう",
           "public_user_id": "5efab7a4-3a69-47aa-8a2f-d5ab7d7d6d93"
+        },
+        {
+          "photo_id": "c735d267-a9c6-480d-a3ed-1e9cc0cbbceb",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/9d9591e7-e0eb-4b94-a840-075c86033613.jpg",
+          "storage_key": "photos/original/2026/08/9d9591e7-e0eb-4b94-a840-075c86033613.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-08-20T23:04:06.398968+00:00",
+          "shot_at": "2026-08-13T04:01:33+00:00",
+          "display_name": "conan",
+          "public_user_id": "a3f8a866-4236-444e-ae90-dca0faeb80b9"
         },
         {
           "photo_id": "e7cb0816-158f-45c0-bf8b-8e08146ff7eb",
@@ -11909,6 +11929,16 @@
           "public_user_id": "5efab7a4-3a69-47aa-8a2f-d5ab7d7d6d93"
         },
         {
+          "photo_id": "fc6ba318-d1e1-4e51-8363-6fed54721348",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/97e4fb78-d522-4430-a2f5-07912a2fecfb.jpg",
+          "storage_key": "photos/original/2026/08/97e4fb78-d522-4430-a2f5-07912a2fecfb.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-08-20T23:21:07.67664+00:00",
+          "shot_at": "2026-05-06T09:08:38+00:00",
+          "display_name": "conan",
+          "public_user_id": "a3f8a866-4236-444e-ae90-dca0faeb80b9"
+        },
+        {
           "photo_id": "4e281fe9-eb2a-4152-b4f0-555a4023d53b",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/03/6fbe40a7-b89b-4167-a18f-4da87c2c7c29.jpg",
           "storage_key": "photos/original/2026/03/6fbe40a7-b89b-4167-a18f-4da87c2c7c29.jpg",
@@ -13389,6 +13419,16 @@
           "public_user_id": "2bd6f4bb-dc05-4f0c-9541-2613cec61dd4"
         },
         {
+          "photo_id": "ad34af43-f84f-4815-8592-9cd10bb1bb69",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/895693dd-667c-4630-819e-3de958b1ad2d.jpg",
+          "storage_key": "photos/original/2026/08/895693dd-667c-4630-819e-3de958b1ad2d.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-08-20T23:01:45.85926+00:00",
+          "shot_at": "2026-07-02T02:18:03+00:00",
+          "display_name": "conan",
+          "public_user_id": "a3f8a866-4236-444e-ae90-dca0faeb80b9"
+        },
+        {
           "photo_id": "b388897c-d9c9-4a82-820b-74bd8b664881",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/1f463d5f-e4db-4c5a-a4c6-c69d6ef93574.jpg",
           "storage_key": "photos/original/2026/08/1f463d5f-e4db-4c5a-a4c6-c69d6ef93574.jpg",
@@ -14630,20 +14670,30 @@
     },
     "414": {
       "manhole_id": 414,
-      "photo_id": "00ed56f5-4c3c-4654-b75b-8aaed4b547ce",
-      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/f3b69b3a-f020-441b-a94c-afa5ff37ca90.jpg",
-      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/f3b69b3a-f020-441b-a94c-afa5ff37ca90.jpg",
-      "storage_key": "photos/original/2026/08/f3b69b3a-f020-441b-a94c-afa5ff37ca90.jpg",
+      "photo_id": "109a3aff-687c-400d-b3c1-f0a3471660ad",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/1f310f86-59f1-4f30-911f-2556776dad2d.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/1f310f86-59f1-4f30-911f-2556776dad2d.jpg",
+      "storage_key": "photos/original/2026/08/1f310f86-59f1-4f30-911f-2556776dad2d.jpg",
       "content_type": "image/jpeg",
       "width": null,
       "height": null,
-      "file_size": 1506131,
-      "created_at": "2026-08-15T02:15:04.995214+00:00",
-      "shot_at": "2026-08-13T03:36:24+00:00",
+      "file_size": 1419511,
+      "created_at": "2026-08-20T23:03:44.439807+00:00",
+      "shot_at": "2026-08-13T03:36:38+00:00",
       "comment": null,
-      "display_name": "まるたろう",
-      "public_user_id": "5efab7a4-3a69-47aa-8a2f-d5ab7d7d6d93",
+      "display_name": "conan",
+      "public_user_id": "a3f8a866-4236-444e-ae90-dca0faeb80b9",
       "gallery": [
+        {
+          "photo_id": "109a3aff-687c-400d-b3c1-f0a3471660ad",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/1f310f86-59f1-4f30-911f-2556776dad2d.jpg",
+          "storage_key": "photos/original/2026/08/1f310f86-59f1-4f30-911f-2556776dad2d.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-08-20T23:03:44.439807+00:00",
+          "shot_at": "2026-08-13T03:36:38+00:00",
+          "display_name": "conan",
+          "public_user_id": "a3f8a866-4236-444e-ae90-dca0faeb80b9"
+        },
         {
           "photo_id": "00ed56f5-4c3c-4654-b75b-8aaed4b547ce",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/f3b69b3a-f020-441b-a94c-afa5ff37ca90.jpg",
