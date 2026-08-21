@@ -114,5 +114,85 @@ class LatestPhotoCardsTest(unittest.TestCase):
         self.assertNotIn('class="hero-summary"', html)
 
 
+class SectionOrderAndCollapseTest(unittest.TestCase):
+    """実機フィードバック: 今はSEO都合の並びなので、人気順(featured/ranking)を
+    上に、離脱の原因になる全ポケモン一覧(549体)の巨大な写真カード羅列は
+    折りたたみ式のテキストリンクに変えて下の方へ、という改修を固定する。"""
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        pokemon_index = {
+            "pikachu": (
+                {"names": {"ja": "ピカチュウ", "en": "Pikachu"}, "generation": 1},
+                [
+                    {
+                        "id": "1",
+                        "title": "京都府/宇治市",
+                        "prefecture": "京都府",
+                        "city": "宇治市",
+                        "pokemons": ["ピカチュウ"],
+                    }
+                ],
+            ),
+            "eevee": (
+                {"names": {"ja": "イーブイ", "en": "Eevee"}, "generation": 1},
+                [
+                    {
+                        "id": "2",
+                        "title": "鹿児島県/指宿市",
+                        "prefecture": "鹿児島県",
+                        "city": "指宿市",
+                        "pokemons": ["イーブイ"],
+                    }
+                ]
+                * 3,
+            ),
+        }
+        with tempfile.TemporaryDirectory() as tmpdir:
+            cls.html = generate_html(
+                pokemon_index,
+                "ja",
+                LANG_CONFIGS["ja"],
+                LP_INDEX_STRINGS["ja"],
+                lambda pref: pref,
+                {},
+                Path(tmpdir),
+            )
+
+    def test_featured_and_ranking_come_before_the_seo_taxonomy_sections(self) -> None:
+        html = self.html
+        self.assertLess(
+            html.index('id="featured-pokemon"'), html.index('id="pokemon-facts"')
+        )
+        self.assertLess(
+            html.index('id="pokemon-ranking"'), html.index('id="pokemon-facts"')
+        )
+        self.assertLess(
+            html.index('id="pokemon-facts"'), html.index('id="pokemon-types"')
+        )
+        self.assertLess(
+            html.index('id="pokemon-types"'), html.index('id="pokemon-list"')
+        )
+
+    def test_full_pokemon_list_is_collapsed_compact_links_not_photo_cards(self) -> None:
+        html = self.html
+        list_section = html[html.index('id="pokemon-list"'):html.index('id="pokemon-faq"')]
+        self.assertIn('<details class="content-collapse">', list_section)
+        self.assertIn('<summary>すべて表示</summary>', list_section)
+        self.assertNotIn('class="poke-card"', list_section)
+        self.assertNotIn('<img', list_section)
+
+    def test_card_links_carry_ga4_click_tracking(self) -> None:
+        html = self.html
+        self.assertIn(
+            'data-track="pokemon_index_featured_click" data-destination="pikachu"', html
+        )
+        self.assertIn(
+            'data-track="pokemon_index_ranking_click" data-destination="eevee"', html
+        )
+        self.assertIn('data-track="pokemon_index_all_click"', html)
+        self.assertIn("trackPokemonIndexEvent", html)
+
+
 if __name__ == "__main__":
     unittest.main()

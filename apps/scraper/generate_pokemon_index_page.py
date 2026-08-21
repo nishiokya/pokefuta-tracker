@@ -306,6 +306,7 @@ INDEX_ENHANCEMENT_STRINGS: dict[str, dict] = {
         "latest_lead": "写真館に届いた最新の投稿です。写真をタップすると、設置場所や登場ポケモンを確認できます。",
         "latest_cta": "写真付きのポケふたをもっと見る",
         "photo_date": "{date}",
+        "list_toggle": "すべて表示",
         "faq_heading": "ポケモン別ポケふたのよくある質問",
         "faq": [
             (
@@ -338,6 +339,7 @@ INDEX_ENHANCEMENT_STRINGS: dict[str, dict] = {
         "latest_lead": "Recent community photos. Open a photo to see its location and featured Pokémon.",
         "latest_cta": "See more Pokefuta with photos",
         "photo_date": "{date}",
+        "list_toggle": "Show all",
         "faq_heading": "Pokefuta by Pokémon FAQ",
         "faq": [
             ("How can I find Pokefuta for my favorite Pokémon?", "Use the full list, type groups, or generation groups on this page. Each Pokémon page lists its locations."),
@@ -361,6 +363,7 @@ INDEX_ENHANCEMENT_STRINGS: dict[str, dict] = {
         "latest_lead": "来自照片馆的最新投稿。点击照片可查看设置地点和登场宝可梦。",
         "latest_cta": "查看更多带照片的宝可梦井盖",
         "photo_date": "{date}",
+        "list_toggle": "显示全部",
         "faq_heading": "按宝可梦查找井盖的常见问题",
         "faq": [
             ("如何查找喜欢的宝可梦井盖？", "可从本页的全部宝可梦、属性或世代分类中选择。各宝可梦页面会列出设置地点。"),
@@ -384,6 +387,7 @@ INDEX_ENHANCEMENT_STRINGS: dict[str, dict] = {
         "latest_lead": "來自照片館的最新投稿。點擊照片可查看設置地點和登場寶可夢。",
         "latest_cta": "查看更多附照片的寶可夢人孔蓋",
         "photo_date": "{date}",
+        "list_toggle": "顯示全部",
         "faq_heading": "按寶可夢查找人孔蓋的常見問題",
         "faq": [
             ("如何查找喜歡的寶可夢人孔蓋？", "可從本頁的全部寶可夢、屬性或世代分類中選擇。各寶可夢頁面會列出設置地點。"),
@@ -407,6 +411,7 @@ INDEX_ENHANCEMENT_STRINGS: dict[str, dict] = {
         "latest_lead": "사진관에 올라온 최신 게시물입니다. 사진을 누르면 설치 장소와 등장 포켓몬을 확인할 수 있습니다.",
         "latest_cta": "사진이 있는 포케후타 더 보기",
         "photo_date": "{date}",
+        "list_toggle": "전체 보기",
         "faq_heading": "포켓몬별 포케후타 자주 묻는 질문",
         "faq": [
             ("좋아하는 포켓몬의 포케후타는 어떻게 찾나요?", "전체 목록, 타입별, 세대별 분류에서 선택할 수 있습니다. 각 포켓몬 페이지에서 설치 장소를 확인할 수 있습니다."),
@@ -782,14 +787,18 @@ def generate_html(
             f'<span>{escape(strings["pref_count_label"].format(count=card["pref_count"]))}</span>'
         )
 
-    def card_html(card: dict, class_name: str = "poke-card") -> str:
+    def card_html(card: dict, class_name: str, track_name: str = "") -> str:
         en_html = (
             f'<span class="poke-en">{escape(card["name_en"])}</span>'
             if card["name_en"] and lang != "en" else ""
         )
+        track_attrs = (
+            f' data-track="{escape(track_name)}" data-destination="{escape(card["slug"])}"'
+            if track_name else ""
+        )
         return (
             f'<article class="{class_name}">'
-            f'<a href="{escape(card["href"])}">'
+            f'<a href="{escape(card["href"])}"{track_attrs}>'
             f'{image_html(card)}'
             f'<span class="poke-card-body">'
             f'<span class="poke-name">{escape(card["name"])}</span>'
@@ -801,11 +810,15 @@ def generate_html(
             f'</a></article>'
         )
 
-    def compact_links(section_cards: list[dict], limit: int = 8) -> str:
+    def compact_links(section_cards: list[dict], limit: int | None = 8, track_name: str = "") -> str:
         links = []
         for card in section_cards[:limit]:
+            track_attrs = (
+                f' data-track="{escape(track_name)}" data-destination="{escape(card["slug"])}"'
+                if track_name else ""
+            )
             links.append(
-                f'<a href="{escape(card["href"])}">'
+                f'<a href="{escape(card["href"])}"{track_attrs}>'
                 f'{escape(card["name"])}'
                 f'<span>{escape(strings["count_label"].format(count=card["count"]))}</span>'
                 f'</a>'
@@ -827,7 +840,8 @@ def generate_html(
         )
         regional_items.append(
             f"<li class='regional-item'>"
-            f"<a href='{escape(card['href'])}'>"
+            f"<a href='{escape(card['href'])}' "
+            f"data-track='pokemon_index_regional_click' data-destination='{escape(card['slug'])}'>"
             f"{image_html(card, 'regional-photo')}"
             f"<span class='poke-name'>{escape(card['name'])}</span>"
             f"{en_span}"
@@ -849,7 +863,8 @@ def generate_html(
         )
         ranking_items.append(
             f'<li class="ranking-item">'
-            f'<a href="{escape(card["href"])}">'
+            f'<a href="{escape(card["href"])}" '
+            f'data-track="pokemon_index_ranking_click" data-destination="{escape(card["slug"])}">'
             f'<span class="ranking-rank">{escape(strings["rank_label"].format(rank=rank))}</span>'
             f'{ranking_image}'
             f'<span class="ranking-main">'
@@ -861,7 +876,10 @@ def generate_html(
     ranking_html = "\n".join(ranking_items)
 
     featured_cards = [cards_by_slug[slug] for slug in FEATURED_POKEMON_SLUGS if slug in cards_by_slug]
-    featured_html = "".join(card_html(card, "featured-card") for card in featured_cards)
+    featured_html = "".join(
+        card_html(card, "featured-card", track_name="pokemon_index_featured_click")
+        for card in featured_cards
+    )
 
     type_groups: dict[str, list[dict]] = defaultdict(list)
     type_label_by_key: dict[str, str] = {}
@@ -879,7 +897,7 @@ def generate_html(
             f'<section class="taxonomy-card" id="type-{quote(key, safe="")}">'
             f'<h3>{escape(type_label_by_key.get(key, key))}</h3>'
             f'<p>{escape(strings["pokemon_count_label"].format(count=len(group)))}</p>'
-            f'<div class="taxonomy-links">{compact_links(group)}</div>'
+            f'<div class="taxonomy-links">{compact_links(group, track_name="pokemon_index_type_click")}</div>'
             f'</section>'
         )
     type_html = "\n".join(type_sections)
@@ -912,12 +930,12 @@ def generate_html(
             f'<section class="taxonomy-card" id="generation-{key}">'
             f'<h3>{escape(generation_labels[key])}</h3>'
             f'<p>{escape(strings["pokemon_count_label"].format(count=len(group)))}</p>'
-            f'<div class="taxonomy-links">{compact_links(group)}</div>'
+            f'<div class="taxonomy-links">{compact_links(group, track_name="pokemon_index_generation_click")}</div>'
             f'</section>'
         )
     generation_html = "\n".join(generation_sections)
 
-    items_html = "".join(f"<li>{card_html(card)}</li>" for card in cards)
+    items_html = compact_links(cards, limit=None, track_name="pokemon_index_all_click")
 
     # Popular intro text
     name_joiner = lang_config.get("pref_joiner", "・")
@@ -964,7 +982,8 @@ def generate_html(
         f'<span class="fact-stat">{escape(fact["stat"])}</span>'
         f'<h3>{escape(fact["title"])}</h3>'
         f'<p>{escape(fact["body"])}</p>'
-        f'<a href="{escape(fact["href"])}">{escape(enhancement["fact_link"])} →</a>'
+        f'<a href="{escape(fact["href"])}" data-track="pokemon_index_fact_click" '
+        f'data-destination="{escape(fact["href"])}">{escape(enhancement["fact_link"])} →</a>'
         f'</article>'
         for fact in fact_cards
     )
@@ -986,7 +1005,8 @@ def generate_html(
         )
         latest_photo_cards.append(
             f'<article class="photo-card">'
-            f'<a class="photo-card-main" href="{escape(photo["href"])}">'
+            f'<a class="photo-card-main" href="{escape(photo["href"])}" '
+            f'data-track="pokemon_index_photo_click" data-destination="{escape(photo["href"])}">'
             f'<img src="{escape(photo["image_url"])}" '
             f'alt="{escape(photo["title"])} {escape(photo["location"])}" '
             f'loading="lazy" decoding="async" width="480" height="360">'
@@ -1110,6 +1130,19 @@ def generate_html(
   <script>
     window.PokefutaAnalytics.init({{'page_path': '/{url_prefix}pokemon/', site_type: 'map', page_type: 'pokemon_index'}});
     gtag('event', 'view_pokemon_index', {{'pokemon_count': {total_count}, 'lang': '{lang}'}});
+    function trackPokemonIndexEvent(name, params) {{
+      if (typeof window.gtag !== 'function') return;
+      gtag('event', name, Object.assign({{
+        event_category: 'pokemon_engagement'
+      }}, params || {{}}));
+    }}
+    document.addEventListener('click', function(event) {{
+      const link = event.target.closest('[data-track]');
+      if (!link) return;
+      trackPokemonIndexEvent(link.dataset.track, {{
+        destination: link.dataset.destination || ''
+      }});
+    }});
   </script>
 
   <style>
@@ -1268,10 +1301,14 @@ def generate_html(
     .faq-list details {{ border: 1px solid #ded3bd; border-radius: 12px; background: #fffaf0; padding: 12px 14px; }}
     .faq-list summary {{ cursor: pointer; font-weight: 800; color: #332f2a; }}
     .faq-list p {{ margin-top: 8px; color: #665f57; font-size: 14px; }}
+    .content-collapse {{ border: 1px solid #ded3bd; border-radius: 12px; background: #fffaf0; padding: 12px 14px; }}
+    .content-collapse summary {{ cursor: pointer; font-weight: 800; color: #332f2a; }}
+    .content-collapse[open] summary {{ margin-bottom: 10px; }}
+    .content-collapse .taxonomy-links {{ margin-top: 2px; }}
     .page-section .hub-grid, .page-section .ranking-list,
     .page-section .featured-grid, .page-section .taxonomy-grid,
-    .page-section .poke-list, .page-section .regional-list {{ margin-bottom: 0; }}
-    .hub-grid, .poke-list, .regional-list, .featured-grid, .taxonomy-grid {{
+    .page-section .regional-list {{ margin-bottom: 0; }}
+    .hub-grid, .regional-list, .featured-grid, .taxonomy-grid {{
       list-style: none;
       display: grid;
       gap: 10px;
@@ -1294,16 +1331,13 @@ def generate_html(
     .regional-list {{
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     }}
-    .poke-list {{
-      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-    }}
     .featured-grid {{
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     }}
     .taxonomy-grid {{
       grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
     }}
-    .poke-card a, .featured-card a, .regional-item a, .ranking-item a {{
+    .featured-card a, .regional-item a, .ranking-item a {{
       display: flex;
       flex-direction: column;
       overflow: hidden;
@@ -1315,7 +1349,7 @@ def generate_html(
       transition: border-color 0.15s, box-shadow 0.15s;
       height: 100%;
     }}
-    .poke-card a:hover, .featured-card a:hover, .regional-item a:hover, .ranking-item a:hover, .hub-card:hover {{
+    .featured-card a:hover, .regional-item a:hover, .ranking-item a:hover, .hub-card:hover {{
       border-color: #6F55A3;
       box-shadow: 0 2px 8px rgba(111,85,163,0.12);
     }}
@@ -1540,26 +1574,12 @@ def generate_html(
   <section class="page-section" aria-labelledby="hub-heading">
     <h2 id="hub-heading">{escape(strings["hub_heading"])}</h2>
     <div class="hub-grid">
-      <a class="hub-card" href="#pokemon-list">{escape(strings["hub_name"])}</a>
-      <a class="hub-card" href="#pokemon-ranking">{escape(strings["hub_ranking"])}</a>
-      <a class="hub-card" href="#pokemon-types">{escape(strings["hub_taxonomy"])}</a>
-      <a class="hub-card" href="{escape(map_href)}">{escape(strings["hub_map"])}</a>
+      <a class="hub-card" href="#pokemon-list" data-track="pokemon_index_hub_click" data-destination="list">{escape(strings["hub_name"])}</a>
+      <a class="hub-card" href="#pokemon-ranking" data-track="pokemon_index_hub_click" data-destination="ranking">{escape(strings["hub_ranking"])}</a>
+      <a class="hub-card" href="#pokemon-types" data-track="pokemon_index_hub_click" data-destination="types">{escape(strings["hub_taxonomy"])}</a>
+      <a class="hub-card" href="{escape(map_href)}" data-track="pokemon_index_hub_click" data-destination="map">{escape(strings["hub_map"])}</a>
     </div>
     <p class="map-nav-hint"><a href="{escape(summary_href)}">{escape(strings["summary_link"])}</a></p>
-  </section>
-
-  <section class="page-section" aria-labelledby="pokemon-facts">
-    <h2 id="pokemon-facts">{escape(enhancement["fact_heading"])}</h2>
-    <div class="fact-grid">{facts_html}</div>
-  </section>
-
-  {latest_section_html}
-
-  <section class="page-section" aria-labelledby="pokemon-ranking">
-    <h2 id="pokemon-ranking">{escape(strings["ranking_heading"])}</h2>
-    <ol class="ranking-list">
-{ranking_html}
-    </ol>
   </section>
 
   <section class="page-section" aria-labelledby="featured-pokemon">
@@ -1569,10 +1589,24 @@ def generate_html(
     </div>
   </section>
 
+  <section class="page-section" aria-labelledby="pokemon-ranking">
+    <h2 id="pokemon-ranking">{escape(strings["ranking_heading"])}</h2>
+    <ol class="ranking-list">
+{ranking_html}
+    </ol>
+  </section>
+
+  {latest_section_html}
+
   <section class="page-section" aria-labelledby="regional-pokemon">
   <h2 id="regional-pokemon">{regional_heading}</h2>
   <ul class="regional-list">
 {regional_items_html}  </ul>
+  </section>
+
+  <section class="page-section" aria-labelledby="pokemon-facts">
+    <h2 id="pokemon-facts">{escape(enhancement["fact_heading"])}</h2>
+    <div class="fact-grid">{facts_html}</div>
   </section>
 
   <section class="page-section" aria-labelledby="pokemon-types">
@@ -1592,8 +1626,10 @@ def generate_html(
   <section class="page-section" aria-labelledby="pokemon-list">
   <h2 id="pokemon-list">{all_heading}</h2>
   <p class="popular-intro">{popular_intro}</p>
-  <ul class="poke-list">
-{items_html}  </ul>
+  <details class="content-collapse">
+    <summary>{escape(enhancement["list_toggle"])}</summary>
+    <div class="taxonomy-links">{items_html}</div>
+  </details>
   </section>
 
   <section class="page-section" aria-labelledby="pokemon-faq">

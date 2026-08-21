@@ -184,14 +184,22 @@ def _escape_attr(value: object) -> str:
     return escape(str(value), {'"': "&quot;", "'": "&#x27;"})
 
 
+def _active_events(events: list[dict] | None, today: date) -> list[dict]:
+    return [e for e in events or [] if e["end"] >= today]
+
+
+def _event_status(event: dict, today: date) -> str:
+    return "開催中" if event["start"] <= today else "まもなく開催"
+
+
 def _events_html(events: list[dict] | None, today: date | None = None) -> str:
     today = today or datetime.now(JST).date()
-    active = [e for e in events or [] if e["end"] >= today]
+    active = _active_events(events, today)
     if not active:
         return ""
     items = []
     for event in active:
-        status = "開催中" if event["start"] <= today else "まもなく開催"
+        status = _event_status(event, today)
         description = str(event.get("description", "")).strip()
         items.append(
             '<div class="event-item">'
@@ -417,6 +425,21 @@ def _photo_entries(
     )
 
 
+def _split_photographed(
+    records: list[dict], photos: dict[str, dict]
+) -> tuple[list[tuple[dict, dict]], list[dict]]:
+    """(photo_entries, unphotographed_records) — the same "id は撮影済み
+    集合に無い" 差分判定を、詳細ページの写真セクションと /prefectures/
+    一覧のギャラリーの両方で使う。"""
+    entries = _photo_entries(records, photos)
+    photo_ids = {str(record.get("id", "")) for record, _ in entries}
+    unphotographed = [
+        record for record in records
+        if str(record.get("id", "")) not in photo_ids
+    ]
+    return entries, unphotographed
+
+
 def _photo_section(
     prefecture: str,
     slug: str,
@@ -427,8 +450,7 @@ def _photo_section(
         record for record in records if record.get("installed") is not False
     ]
     total = len(installed_records)
-    entries = _photo_entries(installed_records, photos)
-    photo_ids = {str(record.get("id", "")) for record, _ in entries}
+    entries, unphotographed_records = _split_photographed(installed_records, photos)
     with_photo = len(entries)
     missing = max(total - with_photo, 0)
     coverage = round(with_photo / total * 100) if total else 0
@@ -492,10 +514,7 @@ def _photo_section(
         if gallery_cards else ""
     )
 
-    missing_records = [
-        record for record in installed_records
-        if str(record.get("id", "")) not in photo_ids
-    ][:3]
+    missing_records = unphotographed_records[:3]
     contribution_cards = []
     for position, record in enumerate(missing_records, start=1):
         mid = str(record.get("id", "")).strip()
@@ -641,30 +660,38 @@ def _index_card_trivia_html(trivia_entry: dict | None) -> str:
     静かに何も足さない — summary 側の記録件数ベースの代替文言まで複製すると
     2箇所の言い回しがズレていく元になるので、ここでは「データがある分だけ
     載せる」に留める。
+
+    ポケモンバッジ（pokemon_html）は trivia の有無と無関係に判定する。
+    summary 側の _build_prefecture_info_section も同様に、facts が無くても
+    バッジだけは出す作りなので、ここで trivia_list が空だからと一緒に
+    握りつぶすと2ページの内容がズレる。
     """
-    trivia_list = (trivia_entry or {}).get("trivia", [])
-    if not trivia_list:
-        return ""
     top_coverage = select_full_coverage_pokemon(
         (trivia_entry or {}).get("pokemon_coverage", [])
     )
+    top_coverage_label = (top_coverage or {}).get("label")
     pokemon_html = (
         f'<p class="prefecture-card-trivia-pokemon">'
         f'<span class="prefecture-card-trivia-label">都道府県トリビア</span>'
-        f'{escape(top_coverage["label"])}</p>'
-        if top_coverage else ""
+        f'{escape(top_coverage_label)}</p>'
+        if top_coverage_label else ""
     )
+    trivia_list = (trivia_entry or {}).get("trivia", [])
     facts_html = "".join(
         f"<li>{escape(entry['text'])}</li>"
         for entry in trivia_list[:3]
         if entry.get("text")
     )
-    if not facts_html:
+    if not pokemon_html and not facts_html:
         return ""
+    facts_block = (
+        f'<ul class="prefecture-card-trivia-facts">{facts_html}</ul>'
+        if facts_html else ""
+    )
     return (
         '<div class="prefecture-card-trivia">'
         f"{pokemon_html}"
-        f'<ul class="prefecture-card-trivia-facts">{facts_html}</ul>'
+        f"{facts_block}"
         "</div>"
     )
 
@@ -673,16 +700,15 @@ def _index_card_campaign_html(
     events_list: list[dict] | None, today: date | None = None
 ) -> str:
     """開催中スタンプラリー等の告知を、詳細ページの _events_html() と同じ
-    データ源（dataset/prefecture_events.json）から1行の告知バッジとして
-    出す。詳細（期間・説明文）は引き続き詳細ページ側だけの役割。"""
+    データ源（dataset/prefecture_events.json）・同じ判定ロジック
+    （_active_events()/_event_status()）から1行の告知バッジとして出す。
+    詳細（期間・説明文）は引き続き詳細ページ側だけの役割。"""
     today = today or datetime.now(JST).date()
-    active = [e for e in events_list or [] if e["end"] >= today]
+    active = _active_events(events_list, today)
     if not active:
         return ""
     event = active[0]
-    # _events_html() と同じ判定: end>=today だけでは開始前のイベントも
-    # 含んでしまうので、start で「開催中」/「まもなく開催」を出し分ける。
-    status = "開催中" if event["start"] <= today else "まもなく開催"
+    status = _event_status(event, today)
     return (
         f'<a class="prefecture-card-campaign" href="{_escape_attr(event["url"])}" '
         'target="_blank" rel="noopener noreferrer" '
@@ -778,16 +804,15 @@ def build_index_page(
                 base += pokemon_suffix(record)
             return base
 
-        photographed = _photo_entries(installed_records, photos)
-        photographed_ids = {str(record.get("id", "")) for record, _ in photographed}
+        photographed, unphotographed_records = _split_photographed(installed_records, photos)
         unphotographed = sorted(
-            (r for r in installed_records if str(r.get("id", "")) not in photographed_ids),
+            unphotographed_records,
             key=lambda r: (r.get("city", ""), str(r.get("id", ""))),
         )
         gallery_items = [
             f'<a class="prefecture-card-photo" href="/manholes/{quote(str(record.get("id", "")))}/" '
             f'aria-label="{_escape_attr(_caption(record))}のポケふたの詳細を開く">'
-            f'<img src="{_photo_asset_url(record, photo)}" alt="" loading="lazy" decoding="async">'
+            f'<img src="{_escape_attr(_photo_asset_url(record, photo))}" alt="" loading="lazy" decoding="async">'
             f'<span class="prefecture-card-photo-city" aria-hidden="true">'
             f'{escape(_caption(record))}</span></a>'
             for record, photo in photographed

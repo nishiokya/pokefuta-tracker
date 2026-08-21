@@ -131,15 +131,19 @@ class SelectFullCoveragePokemonTest(unittest.TestCase):
     def test_returns_none_for_empty_coverage(self) -> None:
         self.assertIsNone(MODULE.select_full_coverage_pokemon([]))
 
-    def test_ignores_a_100_percent_entry_without_a_label_instead_of_crashing(self) -> None:
-        """label の無いエントリを選んでしまうと呼び出し側が KeyError で落ちる
-        （実際に見つかったコードレビュー指摘）。選定の時点で除外する。"""
+    def test_a_100_percent_entry_without_a_label_can_still_win_the_tie_break(self) -> None:
+        """/code-review 指摘: 以前はここで label 無しエントリを除外していたが、
+        それだと generate_summary_pages.py の元のロジック（label 無しの
+        エントリでも最大なら選び、呼び出し側が pokemon_label へ
+        フォールバックする）と選定結果がズレてしまう。選定は
+        coverage_percent だけで行い、label の有無は呼び出し側が
+        `.get("label")` で守る契約にする（[...]で直接アクセスしない）。"""
         coverage = [
-            {"pokemon": ["謎"], "cover_count": 5, "coverage_percent": 100.0},
+            {"pokemon": ["謎", "謎2"], "cover_count": 5, "coverage_percent": 100.0},
             {"label": "使えるラベル", "pokemon": ["使える"], "cover_count": 1, "coverage_percent": 100.0},
         ]
         result = MODULE.select_full_coverage_pokemon(coverage)
-        self.assertEqual("使えるラベル", result["label"])
+        self.assertIsNone(result.get("label"))
 
 
 if __name__ == "__main__":
