@@ -516,10 +516,10 @@
     }
   },
   {
-    "id": "photo-347-18f84b52",
+    "id": "photo-85-667ba3aa",
     "type": "latest_photo",
-    "title": "最新写真：静岡県/静岡市",
-    "url": "https://data.pokefuta.com/manholes/347/",
+    "title": "最新写真：鳥取県/伯耆町",
+    "url": "https://data.pokefuta.com/manholes/85/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -527,26 +527,27 @@
     "imageType": "latest_photo",
     "source": "photos",
     "raw_data": {
-      "manhole_id": "347",
-      "title": "静岡県/静岡市",
-      "pref": "静岡県",
-      "city": "静岡",
-      "pokemon": "フシギソウ",
+      "manhole_id": "85",
+      "title": "鳥取県/伯耆町",
+      "pref": "鳥取県",
+      "city": "伯耆",
+      "pokemon": "アローラサンド",
       "pokemon_list": [
-        "フシギソウ",
-        "ムクホーク"
+        "アローラサンド",
+        "オニゴーリ",
+        "サンド"
       ],
-      "created_at": "2026-08-15T17:55:15.182637+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/d73d0b52-e8bd-41bb-b76e-b7b021806327.jpg",
-      "display_name": "じょん",
+      "created_at": "2026-08-19T07:41:19.693548+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/c3f17a6e-08e4-4654-b782-d67f56e0682d.jpg",
+      "display_name": "いろはす",
       "photo_rank": "first_ever"
     }
   },
   {
-    "id": "photo-348-bb368569",
+    "id": "photo-109-33804e84",
     "type": "latest_photo",
-    "title": "最新写真：静岡県/浜松市",
-    "url": "https://data.pokefuta.com/manholes/348/",
+    "title": "最新写真：鳥取県/日吉津村",
+    "url": "https://data.pokefuta.com/manholes/109/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -554,136 +555,26 @@
     "imageType": "latest_photo",
     "source": "photos",
     "raw_data": {
-      "manhole_id": "348",
-      "title": "静岡県/浜松市",
-      "pref": "静岡県",
-      "city": "浜松",
-      "pokemon": "シビルドン",
+      "manhole_id": "109",
+      "title": "鳥取県/日吉津村",
+      "pref": "鳥取県",
+      "city": "日吉津",
+      "pokemon": "サンド",
       "pokemon_list": [
-        "シビルドン",
-        "メロエッタ"
-      ],
-      "created_at": "2026-08-15T17:55:24.695021+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/be82d61e-17f5-4170-acc9-1ad58601fe2f.jpg",
-      "display_name": "じょん",
-      "photo_rank": "first_ever"
-    }
-  },
-  {
-    "id": "photo-185-c3c3ad6d",
-    "type": "latest_photo",
-    "title": "最新写真：宮崎県/日之影町",
-    "url": "https://data.pokefuta.com/manholes/185/",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "latest_photo",
-    "source": "photos",
-    "raw_data": {
-      "manhole_id": "185",
-      "title": "宮崎県/日之影町",
-      "pref": "宮崎県",
-      "city": "日之影",
-      "pokemon": "ナッシー",
-      "pokemon_list": [
-        "ナッシー",
-        "レジスチル"
-      ],
-      "created_at": "2026-08-15T17:55:41.658129+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/9505afad-8726-4766-ad29-84b50c6f84b1.jpg",
-      "display_name": "じょん",
-      "photo_rank": "first_ever"
-    }
-  },
-  {
-    "id": "photo-184-bbd7397b",
-    "type": "latest_photo",
-    "title": "最新写真：宮崎県/高千穂町",
-    "url": "https://data.pokefuta.com/manholes/184/",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "latest_photo",
-    "source": "photos",
-    "raw_data": {
-      "manhole_id": "184",
-      "title": "宮崎県/高千穂町",
-      "pref": "宮崎県",
-      "city": "高千穂",
-      "pokemon": "ナッシー",
-      "pokemon_list": [
-        "ナッシー",
-        "レジギガス"
-      ],
-      "created_at": "2026-08-15T17:55:52.353683+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/f4b9f6f2-d45f-42d0-aa34-29310691e60a.jpg",
-      "display_name": "じょん",
-      "photo_rank": "first_ever"
-    }
-  },
-  {
-    "id": "photo-426-efb78847",
-    "type": "latest_photo",
-    "title": "最新写真：岩手県/葛巻町",
-    "url": "https://data.pokefuta.com/manholes/426/",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "latest_photo",
-    "source": "photos",
-    "raw_data": {
-      "manhole_id": "426",
-      "title": "岩手県/葛巻町",
-      "pref": "岩手県",
-      "city": "葛巻",
-      "pokemon": "アローライシツブテ",
-      "pokemon_list": [
-        "アローライシツブテ",
-        "マホミル",
-        "ミルタンク"
-      ],
-      "created_at": "2026-08-16T05:18:37.423251+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/b283d55a-cd40-4715-8c05-eb62fdbb9faf.jpg",
-      "display_name": "ビタCウォーター。",
-      "photo_rank": "first_ever"
-    }
-  },
-  {
-    "id": "photo-264-8454489d",
-    "type": "latest_photo",
-    "title": "最新写真：岩手県/岩手町",
-    "url": "https://data.pokefuta.com/manholes/264/",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "latest_photo",
-    "source": "photos",
-    "raw_data": {
-      "manhole_id": "264",
-      "title": "岩手県/岩手町",
-      "pref": "岩手県",
-      "city": "岩手",
-      "pokemon": "アローライシツブテ",
-      "pokemon_list": [
-        "アローライシツブテ",
-        "イシツブテ",
+        "サンド",
         "メタモン"
       ],
-      "created_at": "2026-08-16T05:20:06.606272+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/bb23ab2d-ed64-46e1-b071-65eb6d0a890e.jpg",
-      "display_name": "ビタCウォーター。",
+      "created_at": "2026-08-19T07:41:38.239498+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/b09c4e5b-7f38-45e0-9a5d-0313bd08a90f.jpg",
+      "display_name": "いろはす",
       "photo_rank": "first_ever"
     }
   },
   {
-    "id": "photo-262-3cfd9a1e",
+    "id": "photo-75-c64db62e",
     "type": "latest_photo",
-    "title": "最新写真：岩手県/八幡平市",
-    "url": "https://data.pokefuta.com/manholes/262/",
+    "title": "最新写真：鳥取県/米子市",
+    "url": "https://data.pokefuta.com/manholes/75/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -691,26 +582,194 @@
     "imageType": "latest_photo",
     "source": "photos",
     "raw_data": {
-      "manhole_id": "262",
-      "title": "岩手県/八幡平市",
+      "manhole_id": "75",
+      "title": "鳥取県/米子市",
+      "pref": "鳥取県",
+      "city": "米子",
+      "pokemon": "カモネギ",
+      "pokemon_list": [
+        "カモネギ",
+        "サンド",
+        "スワンナ"
+      ],
+      "created_at": "2026-08-19T08:31:47.982828+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/d5bab7b9-38f2-498f-870d-37758b10b925.jpg",
+      "display_name": "いろはす",
+      "photo_rank": "first_ever"
+    }
+  },
+  {
+    "id": "photo-77-51dd1176",
+    "type": "latest_photo",
+    "title": "最新写真：鳥取県/境港市",
+    "url": "https://data.pokefuta.com/manholes/77/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "77",
+      "title": "鳥取県/境港市",
+      "pref": "鳥取県",
+      "city": "境港",
+      "pokemon": "アローラサンド",
+      "pokemon_list": [
+        "アローラサンド",
+        "クラブ",
+        "サンド"
+      ],
+      "created_at": "2026-08-19T08:56:32.816525+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/78ac63d1-e68d-4f01-9e2d-85c58cbb0edd.jpg",
+      "display_name": "いろはす",
+      "photo_rank": "first_ever"
+    }
+  },
+  {
+    "id": "photo-86-223e95b2",
+    "type": "latest_photo",
+    "title": "最新写真：鳥取県/日南町",
+    "url": "https://data.pokefuta.com/manholes/86/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "86",
+      "title": "鳥取県/日南町",
+      "pref": "鳥取県",
+      "city": "日南",
+      "pokemon": "イルミーゼ",
+      "pokemon_list": [
+        "イルミーゼ",
+        "サンド",
+        "バルビート"
+      ],
+      "created_at": "2026-08-20T01:14:17.027083+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/edbccefa-9f0d-4ed2-9d7f-9e37ea83d273.jpg",
+      "display_name": "いろはす",
+      "photo_rank": "first_ever"
+    }
+  },
+  {
+    "id": "photo-87-0b78b562",
+    "type": "latest_photo",
+    "title": "最新写真：鳥取県/日野町",
+    "url": "https://data.pokefuta.com/manholes/87/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "87",
+      "title": "鳥取県/日野町",
+      "pref": "鳥取県",
+      "city": "日野",
+      "pokemon": "アローラサンド",
+      "pokemon_list": [
+        "アローラサンド",
+        "サンド",
+        "チルット"
+      ],
+      "created_at": "2026-08-20T01:14:28.805397+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/4a2d112f-0f6c-48c5-a262-13aecf02529f.jpg",
+      "display_name": "いろはす",
+      "photo_rank": "first_ever"
+    }
+  },
+  {
+    "id": "photo-110-ff7c3a9a",
+    "type": "latest_photo",
+    "title": "最新写真：鳥取県/江府町",
+    "url": "https://data.pokefuta.com/manholes/110/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "110",
+      "title": "鳥取県/江府町",
+      "pref": "鳥取県",
+      "city": "江府",
+      "pokemon": "アローラサンド",
+      "pokemon_list": [
+        "アローラサンド",
+        "サンド"
+      ],
+      "created_at": "2026-08-20T01:15:25.29116+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/c11fe464-9543-44f8-91a9-f5d2a8f6f191.jpg",
+      "display_name": "いろはす",
+      "photo_rank": "first_ever"
+    }
+  },
+  {
+    "id": "photo-84-dec861c3",
+    "type": "latest_photo",
+    "title": "最新写真：鳥取県/南部町",
+    "url": "https://data.pokefuta.com/manholes/84/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "84",
+      "title": "鳥取県/南部町",
+      "pref": "鳥取県",
+      "city": "南部",
+      "pokemon": "アローラサンド",
+      "pokemon_list": [
+        "アローラサンド",
+        "サンド",
+        "ナックラー"
+      ],
+      "created_at": "2026-08-20T01:26:58.749916+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/2cf1e24a-9302-4d0a-a9c0-31681a6ad839.jpg",
+      "display_name": "いろはす",
+      "photo_rank": "first_ever"
+    }
+  },
+  {
+    "id": "photo-464-93f11005",
+    "type": "latest_photo",
+    "title": "最新写真：岩手県/雫石町",
+    "url": "https://data.pokefuta.com/manholes/464/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "464",
+      "title": "岩手県/雫石町",
       "pref": "岩手県",
-      "city": "八幡平",
-      "pokemon": "アマルス",
+      "city": "雫石",
+      "pokemon": "イシツブテ",
       "pokemon_list": [
-        "アマルス",
-        "イシツブテ"
+        "イシツブテ",
+        "イワンコ",
+        "ウールー"
       ],
-      "created_at": "2026-08-16T05:21:11.150075+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/e8fe33a2-56e8-4aa8-ada9-8060d47ab9f6.jpg",
+      "created_at": "2026-08-20T05:44:15.140077+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/7fa71f78-2be9-4daf-805d-6209eb9ad16d.jpg",
       "display_name": "ビタCウォーター。",
       "photo_rank": "first_ever"
     }
   },
   {
-    "id": "photo-136-6720c6b7",
+    "id": "photo-219-216568af",
     "type": "latest_photo",
-    "title": "最新写真：宮城県/色麻町",
-    "url": "https://data.pokefuta.com/manholes/136/",
+    "title": "最新写真：北海道/東川町",
+    "url": "https://data.pokefuta.com/manholes/219/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -718,26 +777,26 @@
     "imageType": "latest_photo",
     "source": "photos",
     "raw_data": {
-      "manhole_id": "136",
-      "title": "宮城県/色麻町",
-      "pref": "宮城県",
-      "city": "色麻",
-      "pokemon": "ハスブレロ",
+      "manhole_id": "219",
+      "title": "北海道/東川町",
+      "pref": "北海道",
+      "city": "東川",
+      "pokemon": "アローラロコン",
       "pokemon_list": [
-        "ハスブレロ",
-        "ラプラス"
+        "アローラロコン",
+        "ディアルガ"
       ],
-      "created_at": "2026-08-16T08:25:31.378042+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/d766ad5b-43b2-4dee-a63f-e1eccb13bc45.jpg",
-      "display_name": "べが",
+      "created_at": "2026-08-20T11:06:31.352202+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/f32efdfe-c701-4060-83d6-c72adc9284ca.jpg",
+      "display_name": "myace",
       "photo_rank": "first_ever"
     }
   },
   {
-    "id": "photo-137-734f73e6",
+    "id": "photo-214-7fc879b3",
     "type": "latest_photo",
-    "title": "最新写真：宮城県/加美町",
-    "url": "https://data.pokefuta.com/manholes/137/",
+    "title": "最新写真：北海道/旭川市",
+    "url": "https://data.pokefuta.com/manholes/214/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -745,26 +804,27 @@
     "imageType": "latest_photo",
     "source": "photos",
     "raw_data": {
-      "manhole_id": "137",
-      "title": "宮城県/加美町",
-      "pref": "宮城県",
-      "city": "加美",
-      "pokemon": "ラプラス",
+      "manhole_id": "214",
+      "title": "北海道/旭川市",
+      "pref": "北海道",
+      "city": "旭川",
+      "pokemon": "アローラロコン",
       "pokemon_list": [
-        "ラプラス",
-        "ロゼリア"
+        "アローラロコン",
+        "クマシュン",
+        "コオリッポ"
       ],
-      "created_at": "2026-08-16T08:56:35.141238+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/91e2864a-4590-4c0b-92b9-5c4783dfd6ed.jpg",
-      "display_name": "べが",
+      "created_at": "2026-08-20T11:06:53.59215+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/f99ec007-99da-447b-94d6-93df5bf225e1.jpg",
+      "display_name": "myace",
       "photo_rank": "first_ever"
     }
   },
   {
-    "id": "photo-203-4c70c25a",
+    "id": "photo-324-9c6afd75",
     "type": "latest_photo",
-    "title": "最新写真：兵庫県/淡路市",
-    "url": "https://data.pokefuta.com/manholes/203/",
+    "title": "最新写真：北海道/美瑛町",
+    "url": "https://data.pokefuta.com/manholes/324/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -772,70 +832,19 @@
     "imageType": "latest_photo",
     "source": "photos",
     "raw_data": {
-      "manhole_id": "203",
-      "title": "兵庫県/淡路市",
-      "pref": "兵庫県",
-      "city": "淡路",
-      "pokemon": "ルギア",
+      "manhole_id": "324",
+      "title": "北海道/美瑛町",
+      "pref": "北海道",
+      "city": "美瑛",
+      "pokemon": "アローラロコン",
       "pokemon_list": [
-        "ルギア"
+        "アローラロコン",
+        "ヒスイウォーグル"
       ],
-      "created_at": "2026-08-15T17:56:14.631173+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/fd461fba-658a-46c0-96d9-93d9431787c1.jpg",
-      "display_name": "じょん",
-      "photo_rank": "recent"
-    }
-  },
-  {
-    "id": "photo-4-573e37e2",
-    "type": "latest_photo",
-    "title": "最新写真：鹿児島県/指宿市",
-    "url": "https://data.pokefuta.com/manholes/4/",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "latest_photo",
-    "source": "photos",
-    "raw_data": {
-      "manhole_id": "4",
-      "title": "鹿児島県/指宿市",
-      "pref": "鹿児島県",
-      "city": "指宿",
-      "pokemon": "ブースター",
-      "pokemon_list": [
-        "ブースター"
-      ],
-      "created_at": "2026-08-15T17:58:33.056734+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/3ee5976d-53f0-4128-b80d-cacefdb44bec.jpg",
-      "display_name": "じょん",
-      "photo_rank": "recent"
-    }
-  },
-  {
-    "id": "photo-213-dfd4be30",
-    "type": "latest_photo",
-    "title": "最新写真：埼玉県/所沢市",
-    "url": "https://data.pokefuta.com/manholes/213/",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "latest_photo",
-    "source": "photos",
-    "raw_data": {
-      "manhole_id": "213",
-      "title": "埼玉県/所沢市",
-      "pref": "埼玉県",
-      "city": "所沢",
-      "pokemon": "カイリュー",
-      "pokemon_list": [
-        "カイリュー"
-      ],
-      "created_at": "2026-08-16T06:29:41.161035+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/76dd5694-30f3-4b4b-a788-adaf669e2e4f.jpg",
-      "display_name": "k2o",
-      "photo_rank": "recent"
+      "created_at": "2026-08-20T11:08:17.185343+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/36bca0d9-005d-47dd-bed4-64abdac9d4a3.jpg",
+      "display_name": "myace",
+      "photo_rank": "first_ever"
     }
   },
   {
@@ -873,23 +882,6 @@
     }
   },
   {
-    "id": "pref39-nophoto",
-    "type": "no_photo",
-    "title": "高知県：写真なしポケふた8枚",
-    "url": "https://data.pokefuta.com/summary/",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "summary_no_photo",
-    "source": "summary",
-    "raw_data": {
-      "pref": "高知県",
-      "no_photo_count": 8,
-      "total_count": 18
-    }
-  },
-  {
     "id": "pref01-nophoto",
     "type": "no_photo",
     "title": "北海道：写真なしポケふた6枚",
@@ -921,6 +913,23 @@
       "pref": "香川県",
       "no_photo_count": 5,
       "total_count": 18
+    }
+  },
+  {
+    "id": "pref40-nophoto",
+    "type": "no_photo",
+    "title": "福岡県：写真なしポケふた5枚",
+    "url": "https://data.pokefuta.com/summary/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_no_photo",
+    "source": "summary",
+    "raw_data": {
+      "pref": "福岡県",
+      "no_photo_count": 5,
+      "total_count": 8
     }
   },
   {
