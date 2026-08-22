@@ -516,61 +516,6 @@
     }
   },
   {
-    "id": "photo-85-667ba3aa",
-    "type": "latest_photo",
-    "title": "最新写真：鳥取県/伯耆町",
-    "url": "https://data.pokefuta.com/manholes/85/",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "latest_photo",
-    "source": "photos",
-    "raw_data": {
-      "manhole_id": "85",
-      "title": "鳥取県/伯耆町",
-      "pref": "鳥取県",
-      "city": "伯耆",
-      "pokemon": "アローラサンド",
-      "pokemon_list": [
-        "アローラサンド",
-        "オニゴーリ",
-        "サンド"
-      ],
-      "created_at": "2026-08-19T07:41:19.693548+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/c3f17a6e-08e4-4654-b782-d67f56e0682d.jpg",
-      "display_name": "いろはす",
-      "photo_rank": "first_ever"
-    }
-  },
-  {
-    "id": "photo-109-33804e84",
-    "type": "latest_photo",
-    "title": "最新写真：鳥取県/日吉津村",
-    "url": "https://data.pokefuta.com/manholes/109/",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "latest_photo",
-    "source": "photos",
-    "raw_data": {
-      "manhole_id": "109",
-      "title": "鳥取県/日吉津村",
-      "pref": "鳥取県",
-      "city": "日吉津",
-      "pokemon": "サンド",
-      "pokemon_list": [
-        "サンド",
-        "メタモン"
-      ],
-      "created_at": "2026-08-19T07:41:38.239498+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/b09c4e5b-7f38-45e0-9a5d-0313bd08a90f.jpg",
-      "display_name": "いろはす",
-      "photo_rank": "first_ever"
-    }
-  },
-  {
     "id": "photo-75-c64db62e",
     "type": "latest_photo",
     "title": "最新写真：鳥取県/米子市",
@@ -843,6 +788,61 @@
       ],
       "created_at": "2026-08-20T11:08:17.185343+00:00",
       "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/36bca0d9-005d-47dd-bed4-64abdac9d4a3.jpg",
+      "display_name": "myace",
+      "photo_rank": "first_ever"
+    }
+  },
+  {
+    "id": "photo-142-38f3985d",
+    "type": "latest_photo",
+    "title": "最新写真：北海道/上富良野町",
+    "url": "https://data.pokefuta.com/manholes/142/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "142",
+      "title": "北海道/上富良野町",
+      "pref": "北海道",
+      "city": "上富良野",
+      "pokemon": "アローラロコン",
+      "pokemon_list": [
+        "アローラロコン",
+        "エネコロロ"
+      ],
+      "created_at": "2026-08-20T11:08:41.941034+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/452b08dc-8375-493d-92c9-cfc2b17a473c.jpg",
+      "display_name": "myace",
+      "photo_rank": "first_ever"
+    }
+  },
+  {
+    "id": "photo-439-7ff63796",
+    "type": "latest_photo",
+    "title": "最新写真：北海道/砂川市",
+    "url": "https://data.pokefuta.com/manholes/439/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "439",
+      "title": "北海道/砂川市",
+      "pref": "北海道",
+      "city": "砂川",
+      "pokemon": "アローラロコン",
+      "pokemon_list": [
+        "アローラロコン",
+        "ペロリーム",
+        "ロコン"
+      ],
+      "created_at": "2026-08-20T11:11:03.113502+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/d4098849-13c2-4b1c-a084-90eb74e63783.jpg",
       "display_name": "myace",
       "photo_rank": "first_ever"
     }
