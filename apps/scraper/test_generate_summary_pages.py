@@ -197,7 +197,16 @@ class DiscoveryHubTests(unittest.TestCase):
         self.assertNotIn("ガンダムマンホール公式を見る", html)
 
     def test_hero_uses_popup_and_summary_hubs(self):
-        source = (summary.ROOT / "apps/web/index.html").read_text(encoding="utf-8")
+        # ヒーローとポップアップも 96653ca で map 側に移った。手編集の
+        # map.html と、多言語のもとになる map.template.html の両方を見て、
+        # 片方だけ直して食い違う事故を防ぐ。
+        for filename in ("map.html", "map.template.html"):
+            with self.subTest(filename=filename):
+                self._assert_hero_wiring(
+                    (summary.ROOT / "apps/web" / filename).read_text(encoding="utf-8")
+                )
+
+    def _assert_hero_wiring(self, source: str) -> None:
         self.assertIn("click_hero_new_photo", source)
         self.assertIn("openManholePopup(recommendation.manhole.id)", source)
         self.assertIn("'travel-discovery'", source)
@@ -214,7 +223,9 @@ class DiscoveryHubTests(unittest.TestCase):
         self.assertNotIn("pokemon: reason", source)
 
     def test_map_theme_directory_features_nearby_gundam_manholes(self):
-        for filename in ("index.html", "index.template.html"):
+        # テーマ絞り込みは 96653ca でトップから map.html に分離された。
+        # index.html を見続けていたので、ここはずっと落ちていた。
+        for filename in ("map.html", "map.template.html"):
             with self.subTest(filename=filename):
                 source = (summary.ROOT / "apps/web" / filename).read_text(
                     encoding="utf-8"
@@ -244,13 +255,14 @@ class DiscoveryHubTests(unittest.TestCase):
                 )
 
     def test_generated_template_keeps_popup_copy_localized(self):
-        template = (summary.ROOT / "apps/web/index.template.html").read_text(
+        # ポップアップも同じく map 側にある。多言語版のもとになるのは
+        # map.template.html（map.html は日本語の手編集版）。
+        template = (summary.ROOT / "apps/web/map.template.html").read_text(
             encoding="utf-8"
         )
         self.assertIn("const UI_TEXT = window.I18N.UI;", template)
         self.assertIn("${I.photoWanted}", template)
         self.assertIn("${I.photoMissing}", template)
-        self.assertIn("${I.photoViewCta}", template)
         self.assertIn("${I.firstPhotoUploadCta}", template)
         self.assertIn("${I.googleMapsCta}", template)
         self.assertIn("anchor.textContent = UI_TEXT.detailPageCta;", template)
