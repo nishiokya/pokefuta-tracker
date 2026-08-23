@@ -731,7 +731,10 @@ def generate_html(
 
         hero_photo_html = (
             f"<div class='hero-photo'>"
-            f"<img src=\"{escape(photo_url)}\" alt=\"{escape(h1)}の写真\" loading=\"lazy\">"
+            # ヒーロー写真は LCP 要素なので lazy にしない。
+            # ギャラリーと関連カードのサムネは lazy のままでよい。
+            f"<img src=\"{escape(photo_url)}\" alt=\"{escape(h1)}の写真\""
+            f" loading=\"eager\" fetchpriority=\"high\">"
             f"{credit_html}"
             f"{comment_html}"
             f"</div>"
