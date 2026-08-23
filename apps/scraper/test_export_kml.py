@@ -6,6 +6,7 @@ import importlib.util
 import sys
 import tempfile
 import unittest
+import unittest.mock
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
@@ -89,7 +90,7 @@ class FormatNameTest(unittest.TestCase):
         )
 
     def test_falls_back_to_id_when_title_missing(self) -> None:
-        self.assertEqual("Pokéfuta #7 (イーブイ)", MODULE._format_name(record(id="7", title="")))
+        self.assertEqual("Poké Lid #7 (イーブイ)", MODULE._format_name(record(id="7", title="")))
 
     def test_title_only_when_no_pokemons(self) -> None:
         self.assertEqual("鹿児島県/指宿市", MODULE._format_name(record(pokemons=[])))
@@ -140,6 +141,13 @@ class BuildKmlTest(unittest.TestCase):
         recs = [record(id="10", title="十"), record(id="2", title="二"), record(id="1", title="一")]
         names = [text_of(p, "name") for p in placemarks(self._build(recs))]
         self.assertEqual(["一 (イーブイ)", "二 (イーブイ)", "十 (イーブイ)"], names)
+
+    def test_document_name_defaults_to_the_official_english_term(self) -> None:
+        # KML のラベルは全部英語なので、Document 名も公式表記の Poké Lids に
+        # 揃える。ここが割れると Google Earth 側の見出しだけ旧称に戻る。
+        with unittest.mock.patch.object(sys, "argv", ["export_kml.py"]):
+            args = MODULE._parse_args()
+        self.assertEqual("Poké Lids", args.document_name)
 
     def test_document_name_reflects_status_filter(self) -> None:
         active = self._build([record()]).getroot().find(".//kml:name", NS)
