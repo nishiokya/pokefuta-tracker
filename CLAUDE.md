@@ -7,7 +7,7 @@ latest-manhole-photos.json と docs/api/*.json は import-manhole-photos.yml が
 
 - `apps/scraper/` — GitHub Actions から自動実行されるスクリプト群（update-pokefuta.yml / pages-deploy.yml / import-manhole-photos.yml）
   - `address_parser.py` / `manhole_titles.py` は上記スクリプトの内部ライブラリ
-- `apps/tools/` — 手動実行ツール・初期化アーカイブ（例外: import_latest_manhole_photos.py は import-manhole-photos.yml からも呼ばれる）
+- `apps/tools/` — 手動実行ツール・初期化アーカイブ（例外: import_latest_manhole_photos.py は import-manhole-photos.yml から、check_mobile_viewport.py は mobile-viewport-check.yml からも呼ばれる）
 - `apps/web/` — フロントエンド
 
 ## バッチワークフロー規約
@@ -28,11 +28,11 @@ latest-manhole-photos.json と docs/api/*.json は import-manhole-photos.yml が
 
 - **`timeout-minutes` を必ず書く。** 既定値は6時間で、ハングすると runner をその間占有する
 - **Python は `actions/setup-python@v6` + `python-version: '3.11'` で固定する。** ランナー既定の python に依存しない
-- **依存は `requirements.txt` に集約する。** ワークフロー内で `pip install <パッケージ名>` を直接書かない（バージョン非固定で上流の破壊的変更をそのまま踏むため）
+- **依存は `requirements.txt` に集約する。** ワークフロー内で `pip install <パッケージ名>` を直接書かない（バージョン非固定で上流の破壊的変更をそのまま踏むため）。例外は家系Cの検証専用依存で、`requirements-check.txt` に分けている（playwright を本体に入れると、ブラウザ検査と無関係な日次ジョブ3本が毎回落とすことになる。**バージョンを固定するという規約の意図は分けたファイル側でも守る**）
 - **定期実行するワークフローには `concurrency` を付ける。** 手動実行と定時実行の衝突を防ぐ
 - **外部リポジトリを `actions/checkout` するときは `ref:` をタグかコミットSHAに固定する。** 以前 `nishiokya/pokefuta` を HEAD で引いてスクリプトを実行しており、相手側の変更で日次ジョブが黙って壊れる状態だった（現在は tracker 側へ移管して解消済み）
 - **同じ Supabase テーブルを複数のワークフローから引かない。** 取得は1ジョブに集約する。かつては写真取込とスナップショット生成が同じ `photo` / `visit` を別々に引いていた
-- **cron を変更するときは前後のワークフローとの順序を確認する。** `import-manhole-photos.yml`（05:30 JST）→ Pages デプロイ → `check-site-stats.yml`（08:00 JST）は**この順序に依存**しており、崩すと検証が生成を追い越して毎日誤検知する
+- **cron を変更するときは前後のワークフローとの順序を確認する。** `import-manhole-photos.yml`（05:30 JST）→ Pages デプロイ → `check-site-stats.yml`（08:00 JST）→ `mobile-viewport-check.yml`（08:30 JST）は**この順序に依存**しており、崩すと検証が生成を追い越して毎日誤検知する
 
 ### テストについて
 

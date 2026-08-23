@@ -126,7 +126,7 @@
 
     /* ── 3ステップ ── */
     .lp-steps { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
-    @media (min-width: 640px) { .lp-steps { grid-template-columns: repeat(3, 1fr); } }
+    @media (min-width: 640px) { .lp-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
     .lp-step {
       background: var(--top-card-bg); border: 1px solid var(--top-border);
       border-radius: var(--top-radius-card); padding: 18px 16px;
@@ -162,8 +162,8 @@
     .lp-notice a { color: var(--top-purple); font-weight: 700; text-decoration: underline; }
 
     /* ── みんなの投稿（CORS越しに取得できたときだけ表示） ── */
-    .lp-gallery-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-    @media (max-width: 480px) { .lp-gallery-grid { grid-template-columns: repeat(2, 1fr); } }
+    .lp-gallery-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+    @media (max-width: 480px) { .lp-gallery-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     .lp-gallery-grid img {
       width: 100%; aspect-ratio: 1; object-fit: cover;
       border-radius: 10px; border: 1px solid var(--top-border);

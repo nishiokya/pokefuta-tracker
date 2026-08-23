@@ -1014,6 +1014,10 @@ _CSS = """\
     .photo-card {
       display: flex;
       flex-direction: column;
+      /* グリッドアイテムの自動最小サイズ（min-width: auto）は min-content なので、
+         .photo-card-meta の white-space: nowrap がそのままカード幅の下限になる。
+         minmax(0, 1fr) のトラックを突き破って横スクロールが出るのを防ぐ。 */
+      min-width: 0;
       gap: 5px;
       color: inherit;
     }
@@ -1175,11 +1179,6 @@ _CSS = """\
       font-weight: 850;
     }
 
-    #travel-discovery,
-    #rare-discovery {
-      scroll-margin-top: 16px;
-    }
-
     .pokemon-ranking-cols {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -1218,10 +1217,12 @@ _CSS = """\
       padding: 20px 18px 64px;
     }
 
+    /* ⚠️ height を固定に戻さないこと。中身は絶対配置の飾り（バッジ・写真）と
+       流し込みの見出しが同居しており、言語やユーザーのフォントサイズが変わると
+       すぐ重なる。実際 en の 390px で数字バッジが h1 に重なっていた。 */
     .summary-hero {
       position: relative;
       min-height: 130px;
-      height: 130px;
       margin-bottom: 22px;
       padding: 12px clamp(18px, 3vw, 34px);
       overflow: hidden;
@@ -1232,12 +1233,13 @@ _CSS = """\
       isolation: isolate;
     }
 
+    /* ヒーローの外（.summary-page 直下）に置く。固定高の箱の中にあったころは
+       飾りと重なったり、ヘッダーとの間隔が詰まりすぎたりしていた。 */
     .summary-hero-breadcrumb {
-      position: relative;
-      z-index: 6;
       display: inline-flex;
       align-items: center;
       gap: 5px;
+      margin-bottom: 8px;
       color: #27201c !important;
       font-size: .72rem;
     }
@@ -1343,7 +1345,9 @@ _CSS = """\
       display: grid;
       width: 102px;
       aspect-ratio: 1;
-      place-content: center;
+      align-content: center;
+      justify-items: center;
+      padding-inline: 9px;
       border: 3px solid rgba(255, 255, 255, .72);
       border-radius: 50%;
       background: #57408f;
@@ -1355,6 +1359,7 @@ _CSS = """\
     .summary-hero-badge span,
     .summary-hero-badge small {
       display: block;
+      max-width: 100%;
       font-size: .52rem;
       font-weight: 850;
       line-height: 1.25;
@@ -1541,10 +1546,15 @@ _CSS = """\
         padding: 8px 8px 32px;
       }
 
+      /* SP は「見出し｜数字バッジ」の1行フレックス。絶対配置をやめて
+         流し込みにすることで、どの言語・どの文字サイズでも重ならない。
+         飾りの写真はここでは出さない（実写真はすぐ下の最新追加写真が担う）。 */
       .summary-hero {
-        min-height: 153px;
-        height: 153px;
-        padding: 10px 14px;
+        min-height: 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 14px;
         border-width: 4px;
         border-radius: 18px;
         background: linear-gradient(115deg, rgba(255,250,233,.99) 0 48%, rgba(180,225,232,.96) 78%);
@@ -1552,12 +1562,15 @@ _CSS = """\
       }
 
       .summary-hero-copy {
-        padding-top: 3px;
+        flex: 1 1 auto;
+        min-width: 0;
+        max-width: none;
+        padding-top: 0;
       }
 
       .summary-hero h1 {
-        max-width: 58%;
-        font-size: clamp(1.55rem, 7vw, 1.85rem);
+        max-width: none;
+        font-size: clamp(1.35rem, 6.4vw, 1.85rem);
       }
 
       .summary-hero h1 span {
@@ -1569,17 +1582,13 @@ _CSS = """\
       }
 
       .summary-hero-badge {
-        top: 17px;
-        right: 86px;
-        bottom: auto;
-        left: auto;
-        width: 86px;
+        position: static;
+        flex: 0 0 auto;
+        width: clamp(74px, 24vw, 86px);
       }
 
       .summary-hero-photo.photo-main {
-        right: -20px;
-        bottom: -22px;
-        width: 118px;
+        display: none;
       }
 
       .summary-stats {
@@ -1596,7 +1605,7 @@ _CSS = """\
       }
 
       .discovery-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       .fact-card-grid {
@@ -1666,11 +1675,11 @@ _CSS = """\
       }
 
       .pokemon-popular-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       .photos-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       .pokemon-ranking-cols {
@@ -3764,10 +3773,10 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
 </head>
 <body>
   <main class="summary-page">
+    <nav aria-label="{escape(s['breadcrumb_aria'])}">
+      <a class="summary-hero-breadcrumb" href="{escape(s['nav_home_href'])}">{escape(s['nav_home_text'])}</a>
+    </nav>
     <header class="summary-hero">
-      <nav aria-label="{escape(s['breadcrumb_aria'])}">
-        <a class="summary-hero-breadcrumb" href="{escape(s['nav_home_href'])}">{escape(s['nav_home_text'])}</a>
-      </nav>
       <div class="summary-hero-copy">
         <p class="summary-hero-kicker">{escape(s['hero_kicker'])}</p>
         <h1>{hero_title}</h1>

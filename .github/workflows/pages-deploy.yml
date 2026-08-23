@@ -92,6 +92,7 @@ jobs:
             apps.scraper.test_web_prefecture_links \
             apps.scraper.test_inject_site_header \
             apps.scraper.test_site_header_css \
+            apps.scraper.test_css_grid_tracks \
             apps.scraper.test_generate_summary_pages.DiscoveryHubTests.test_japanese_search_hub_prefecture_card_links_to_the_prefectures_index \
             apps.scraper.test_generate_summary_pages.DiscoveryHubTests.test_non_japanese_search_hub_prefecture_card_stays_on_the_localized_anchor
           echo "[dist] Test character manhole landing page generation"

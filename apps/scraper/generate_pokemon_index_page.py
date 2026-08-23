@@ -1257,7 +1257,7 @@ def generate_html(
     .section-link a {{ color: #57408f; font-weight: 800; text-decoration: none; }}
     .fact-grid {{
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 12px;
     }}
     .fact-card {{
@@ -1280,7 +1280,7 @@ def generate_html(
     .fact-card a {{ display: inline-block; margin-top: 10px; color: #57408f; font-weight: 800; text-decoration: none; }}
     .photos-grid {{
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 10px;
     }}
     .photo-card {{
@@ -1543,7 +1543,7 @@ def generate_html(
       h1 {{ font-size: 24px; }}
       .hub-grid {{ grid-template-columns: 1fr; }}
       .fact-grid {{ grid-template-columns: 1fr; }}
-      .photos-grid {{ grid-template-columns: repeat(2, 1fr); }}
+      .photos-grid {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
       .ranking-item a {{
         grid-template-columns: 50px 84px minmax(0, 1fr);
       }}

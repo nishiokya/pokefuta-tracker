@@ -467,8 +467,8 @@ PAGE_STYLE = """
     .lp-promo-sub a { color: var(--top-purple); text-decoration: underline; }
 
     /* ── みんなの投稿 ── */
-    .lp-photo-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 0; padding: 0; list-style: none; }
-    @media (min-width: 560px) { .lp-photo-grid { grid-template-columns: repeat(4, 1fr); } }
+    .lp-photo-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 0; padding: 0; list-style: none; }
+    @media (min-width: 560px) { .lp-photo-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
     .lp-photo-card { overflow: hidden; border: 1px solid var(--top-border); border-radius: var(--top-radius-card); background: var(--top-card-bg); color: inherit; }
     .lp-photo-card-main { display: block; color: inherit; text-decoration: none; }
     .lp-photo-card img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; background: var(--top-purple-pale); }

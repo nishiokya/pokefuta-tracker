@@ -1,6 +1,8 @@
 # apps/tools
 
 GitHub Actions からは呼ばれない手動実行ツール群。
+例外は `import_latest_manhole_photos.py`（`import-manhole-photos.yml`）と
+`check_mobile_viewport.py`（`mobile-viewport-check.yml`）の2本。
 
 ## スクリプト一覧
 
@@ -14,6 +16,7 @@ GitHub Actions からは呼ばれない手動実行ツール群。
 | `check_quality.py` | `pokefuta.ndjson` の address フィールド完全性チェック |
 | `import_michineki.py` | 道の駅JSONLDの生成・pokefutaへの roadside 自動登録（[詳細](#import_michinekipy)） |
 | `import_manholemap.py` | Manhole Map公開データの全件取得・JSON-LD生成 |
+| `check_mobile_viewport.py` | スマホ幅（320〜430px）で横にはみ出していないかをヘッドレスブラウザで検証（`mobile-viewport-check.yml` からも実行） |
 
 `apps/scraper/import_design_manholes.py` は pokefuta.com の公開投稿APIから
 デザインマンホール投稿を取得し、`docs/design_manholes.ndjson` へ正規化する。
@@ -27,6 +30,9 @@ python3 apps/scraper/import_design_manholes.py
 ## 依存パッケージ
 
 `import_latest_manhole_photos.py` と `enrich_photo_comments.py` は追加パッケージが必要。
+`check_mobile_viewport.py` の依存は `requirements-check.txt` にある
+（本体の requirements.txt に入れると日次ワークフローまで playwright を落とすため）。
+ブラウザ本体は別途 `python3 -m playwright install chromium` が要る。
 
 ```bash
 pip install -r requirements.txt

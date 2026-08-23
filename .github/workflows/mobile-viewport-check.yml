@@ -1,0 +1,55 @@
+# Family C: read-only validation; fails without modifying repository data.
+#
+# スマホ幅で横にはみ出していないかを本番で検証する。
+#
+# 図鑑のスマホ表示崩れは、ほぼ必ず「横に数pxはみ出す → ブラウザがページ全体を
+# 縮小表示する → sticky ヘッダーと fixed 下タブが視覚ビューポートからズレて
+# 本文に重なる」という連鎖で起きる。CSS の静的検査（test_site_header_css /
+# test_css_grid_tracks）だけでは実際のはみ出しは測れないので、実ブラウザで
+# 幅を振って確かめる。
+name: Check Mobile Viewport
+
+on:
+  workflow_dispatch:
+  schedule:
+    # pages-deploy.yml のデプロイが終わってから検証する。
+    # 05:30 JST 写真取込 → Pages デプロイ → 08:00 JST check-site-stats の
+    # あとに置く（検証がデプロイを追い越すと毎日誤検知するため）。
+    - cron: '30 23 * * *' # 08:30 JST
+
+# 手動実行と定時実行がぶつかると runner を二重に食う。読み取り専用なので待たせれば足りる。
+concurrency:
+  group: mobile-viewport-check
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+
+      # 検証専用の依存。本体の requirements.txt に入れると、ブラウザ検査と
+      # 無関係な日次ワークフローまで playwright を落とすことになる。
+      - name: Install Python dependencies
+        run: pip3 install -r requirements-check.txt
+
+      # ブラウザ本体は wheel に入っていないので別途落とす（pip install の
+      # 直書きではなく、playwright 自身のインストーラを使う）
+      - name: Install Chromium for Playwright
+        run: python3 -m playwright install --with-deps chromium
+
+      - name: Check mobile viewport on production
+        run: python3 apps/tools/check_mobile_viewport.py

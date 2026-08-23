@@ -1,0 +1,10 @@
+# 読み取り専用の検証ワークフロー（家系C）だけが使う依存。
+#
+# 本体の requirements.txt へ入れると、pages-deploy / import-manhole-photos /
+# update-pokefuta の3本が毎回 playwright を落とすことになる。検証と無関係な
+# ジョブの実行時間と依存変更リスクを増やさないためにファイルを分けている。
+# バージョンを固定するという規約の意図はここでも守る。
+#
+# ブラウザ本体は wheel に含まれないので、ワークフロー側で
+# `python3 -m playwright install --with-deps chromium` を別途走らせる。
+playwright>=1.48.0
