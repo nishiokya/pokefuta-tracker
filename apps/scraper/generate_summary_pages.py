@@ -3615,7 +3615,7 @@ def _build_no_photos_section(
     top_prefs = sorted(by_pref.items(), key=lambda x: -x[1])[:8]
     pref_items = "\n".join(
         f'<li class="summary-list-item">'
-        f'<a class="summary-link" href="{escape(f"/?pref={quote(pref)}")}">{escape(pref)}</a>'
+        f'<a class="summary-link" href="{escape(_prefecture_href(pref))}">{escape(pref)}</a>'
         f'<small>{count}枚</small>'
         f'</li>'
         for pref, count in top_prefs
