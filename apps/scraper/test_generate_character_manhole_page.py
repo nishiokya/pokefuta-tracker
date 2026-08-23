@@ -419,7 +419,7 @@ class HeroMosaicHtmlTest(unittest.TestCase):
         # flex-wrap + 固定 width/height の正方形タイルで並べる
         self.assertIn(".lp-hero-mosaic-item {", html)
         self.assertIn("width: 96px; height: 96px;", html)
-        self.assertNotIn("grid-template-columns: repeat(3, 1fr)", html)
+        self.assertNotIn("grid-template-columns: repeat(3, minmax(0, 1fr))", html)
         # object-fit: cover で中央クリップ（マンホールが切れないよう object-position も明示）
         self.assertIn("object-fit: cover;", html)
         self.assertIn("object-position: center;", html)

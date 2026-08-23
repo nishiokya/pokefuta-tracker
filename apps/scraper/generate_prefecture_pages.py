@@ -1394,8 +1394,8 @@ def build_page(
       margin: 8px 0; padding: 8px; border-radius: 9px; background: #f0ede7;
       color: #625b53; font-size: .78rem; font-weight: 850;
     }}
-    .map-popup-actions {{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-top: 9px; }}
-    .map-popup-actions.preinstall-actions {{ grid-template-columns: repeat(2, 1fr); }}
+    .map-popup-actions {{ display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; margin-top: 9px; }}
+    .map-popup-actions.preinstall-actions {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
     .map-popup-actions a {{
       display: grid; place-items: center; min-height: 38px; padding: 5px;
       border-radius: 8px; background: #ece7f7; color: #4f3a79;
@@ -1490,8 +1490,8 @@ def build_page(
     .photo-ready {{ background: #e4f2ee; color: #176f68; }}
     .photo-needed {{ background: #fff0e5; color: #9b4b20; }}
     .photo-pending {{ background: #f0ede7; color: #6f6254; }}
-    .manhole-actions {{ display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid #ece4d7; }}
-    .manhole-actions.preinstall-actions {{ grid-template-columns: repeat(2, 1fr); }}
+    .manhole-actions {{ display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid #ece4d7; }}
+    .manhole-actions.preinstall-actions {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
     .manhole-actions a {{
       display: grid; place-items: center; min-height: 44px; padding: 5px;
       color: #57408f; font-size: .76rem; font-weight: 900; text-align: center;
@@ -1501,7 +1501,7 @@ def build_page(
     .manhole-actions a.upload {{ background: #b5483c; color: white; }}
     .journey-loop {{ background: linear-gradient(135deg, #f1f8f6, #f5effc); }}
     .journey-steps {{
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+      display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px;
       margin: 14px 0;
     }}
     .journey-step {{ padding: 12px; border-radius: 12px; background: white; font-size: .82rem; font-weight: 850; }}
@@ -1559,7 +1559,7 @@ def build_page(
       .photo-showcase-grid {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
       .contribution-panel, .contribution-complete {{ grid-template-columns: 1fr; }}
       .contribution-grid {{ grid-template-columns: 1fr; }}
-      .journey-steps {{ grid-template-columns: repeat(2, 1fr); }}
+      .journey-steps {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
       .pokemon-grid, .pokemon-more-grid, .manhole-grid {{ grid-template-columns: 1fr; }}
       #prefecture-map {{ height: 360px; }}
       section {{ padding: 16px; }}

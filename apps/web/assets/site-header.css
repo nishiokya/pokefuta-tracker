@@ -49,6 +49,10 @@
   /* 図鑑側だけが持つ値（下タブは写真館では Tailwind 側にある） */
   --chrome-bottomnav-height: 62px;
 
+  /* ページ内リンクの着地点をヘッダーのぶんだけ下げる量。
+     ヘッダーが sticky でない PC では 0 に落とす（下タブと同じ扱い） */
+  --chrome-sticky-offset: var(--chrome-height);
+
   /* 全画面地図が参照する旧名。既存ページの互換のため残す */
   --site-header-height: var(--chrome-height);
 }
@@ -63,6 +67,15 @@ body.has-site-header {
      マンホール詳細・PCの地図）では、ヘッダーがそのぶん下へ押し出されて上に
      ページ背景の帯が出ていた。本文の間隔は各ページが本文側の要素へ付けること。 */
   padding-top: 0;
+}
+
+/* ページ内リンクの着地点が sticky ヘッダーの下に潜らないようにする。
+   都道府県ページの投稿CTA（#manhole-list / #prefecture-map）やポケモン一覧の
+   各セクションは、これが無いと見出しがヘッダーの真下に潜って完全に隠れていた。
+   各ページのジェネレータへ個別に書くと必ず取り残しが出るので、
+   共通クロム側で id を持つ要素すべてにまとめて引く。 */
+body.has-site-header [id] {
+  scroll-margin-top: calc(var(--chrome-sticky-offset) + 8px);
 }
 
 /* 下タブは border-top 1px ぶん高さがずれると全画面地図の計算が合わなくなるので、
@@ -103,10 +116,12 @@ body.has-site-header {
   width: min(1008px, 100%);
   min-height: calc(var(--chrome-height) - 1px);
   margin: 0 auto;
-  padding: 4px 12px;
+  /* 幅で段を切らずに連続的に詰める。段（@media）で詰めていたころは
+     361〜396px の帯だけ詰まらず、英語のヘッダーがはみ出していた */
+  padding: 4px clamp(6px, 2.4vw, 12px);
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: clamp(4px, 2vw, 8px);
 }
 
 /* ─── サイトスイッチャー（写真館 ⇄ 図鑑） ───
@@ -114,17 +129,25 @@ body.has-site-header {
    <details> なので JS 無しで開閉できる（外側クリックで閉じるのは
    session-badge.js が面倒を見る）。 */
 
+/* ⚠️ ここを flex: 0 0 auto に戻さないこと。
+   スイッチャー・認証の両方が縮まないと、ブランド名や認証ラベルが長い
+   ロケール（en の "Pokéfuta｜Directory" + "Login"/"Sign up" で 397px 必要）で
+   ヘッダーが横にはみ出す。はみ出すとモバイルはページ全体を縮小表示し、
+   sticky ヘッダーと fixed 下タブが視覚ビューポートからズレて本文に重なる。
+   認証ボタンは導線なので潰さず、ブランド名だけを最後の逃げ道として詰める。 */
 .site-switch {
   position: relative;
-  flex: 0 0 auto;
+  flex: 0 1 auto;
+  min-width: 0;
 }
 
 .site-switch__trigger {
   display: flex;
   align-items: center;
-  gap: 7px;
+  min-width: 0;
+  gap: clamp(5px, 1.8vw, 7px);
   min-height: var(--chrome-tap-min);
-  padding: 0 8px 0 4px;
+  padding: 0 clamp(6px, 2vw, 8px) 0 4px;
   border-radius: var(--chrome-radius-nav);
   color: var(--chrome-ink);
   font-weight: 700;
@@ -207,8 +230,8 @@ body.has-site-header {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
+  width: clamp(26px, 8vw, 30px);
+  height: clamp(26px, 8vw, 30px);
   flex-shrink: 0;
   border: 2px solid var(--chrome-ink);
   border-radius: 50%;
@@ -244,8 +267,14 @@ body.has-site-header {
   background: #fff;
 }
 
-.site-header__brand-name { font-size: 15px; }
-.site-header__brand-sep { margin: 0 4px; opacity: .45; font-weight: 600; }
+.site-header__brand-name {
+  min-width: 0;
+  overflow: hidden;
+  font-size: clamp(12.5px, 3.4vw, 15px);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.site-header__brand-sep { margin: 0 clamp(2px, 1vw, 4px); opacity: .45; font-weight: 600; }
 
 /* ─── ナビ・アイコン（PC のみ） ─── */
 
@@ -298,9 +327,9 @@ body.has-site-header {
   display: inline-flex;
   align-items: center;
   min-height: var(--chrome-tap-min);
-  padding: 0 13px;
+  padding: 0 clamp(9px, 2.6vw, 13px);
   border-radius: var(--chrome-radius-pill);
-  font-size: 13px;
+  font-size: clamp(12px, 3.2vw, 13px);
   font-weight: 700;
   text-decoration: none;
   white-space: nowrap;
@@ -453,7 +482,10 @@ body.has-site-header {
    ───────────────────────────────────────── */
 
 @media (min-width: 1024px) {
-  :root { --chrome-bottomnav-height: 0px; }
+  :root {
+    --chrome-bottomnav-height: 0px;
+    --chrome-sticky-offset: 0px;
+  }
 
   body.has-site-header { padding-bottom: 0; }
 
@@ -511,14 +543,6 @@ body.has-site-header {
 
   .site-tabs,
   .site-footer { display: none; }
-}
-
-/* 極小幅では文字を詰める。要素数が3つなので 360px でも破綻しない */
-@media (max-width: 360px) {
-  .site-header__inner { padding-inline: 8px; gap: 4px; }
-  .site-header__brand-name { font-size: 14px; }
-  .site-auth__login,
-  .site-auth__signup { padding-inline: 10px; font-size: 12px; }
 }
 
 /* ─────────────────────────────────────────

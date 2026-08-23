@@ -7,7 +7,7 @@ latest-manhole-photos.json と docs/api/*.json は import-manhole-photos.yml が
 
 - `apps/scraper/` — GitHub Actions から自動実行されるスクリプト群（update-pokefuta.yml / pages-deploy.yml / import-manhole-photos.yml）
   - `address_parser.py` / `manhole_titles.py` は上記スクリプトの内部ライブラリ
-- `apps/tools/` — 手動実行ツール・初期化アーカイブ（例外: import_latest_manhole_photos.py は import-manhole-photos.yml からも呼ばれる）
+- `apps/tools/` — 手動実行ツール・初期化アーカイブ（例外: import_latest_manhole_photos.py は import-manhole-photos.yml から、check_mobile_viewport.py は mobile-viewport-check.yml からも呼ばれる）
 - `apps/web/` — フロントエンド
 
 ## バッチワークフロー規約
@@ -32,7 +32,7 @@ latest-manhole-photos.json と docs/api/*.json は import-manhole-photos.yml が
 - **定期実行するワークフローには `concurrency` を付ける。** 手動実行と定時実行の衝突を防ぐ
 - **外部リポジトリを `actions/checkout` するときは `ref:` をタグかコミットSHAに固定する。** 以前 `nishiokya/pokefuta` を HEAD で引いてスクリプトを実行しており、相手側の変更で日次ジョブが黙って壊れる状態だった（現在は tracker 側へ移管して解消済み）
 - **同じ Supabase テーブルを複数のワークフローから引かない。** 取得は1ジョブに集約する。かつては写真取込とスナップショット生成が同じ `photo` / `visit` を別々に引いていた
-- **cron を変更するときは前後のワークフローとの順序を確認する。** `import-manhole-photos.yml`（05:30 JST）→ Pages デプロイ → `check-site-stats.yml`（08:00 JST）は**この順序に依存**しており、崩すと検証が生成を追い越して毎日誤検知する
+- **cron を変更するときは前後のワークフローとの順序を確認する。** `import-manhole-photos.yml`（05:30 JST）→ Pages デプロイ → `check-site-stats.yml`（08:00 JST）→ `mobile-viewport-check.yml`（08:30 JST）は**この順序に依存**しており、崩すと検証が生成を追い越して毎日誤検知する
 
 ### テストについて
 

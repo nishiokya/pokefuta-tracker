@@ -87,7 +87,13 @@ class SiteHeaderTokenTest(unittest.TestCase):
             self.assertIn("var(--chrome-tap-min)", block.group(1), f"{selector} に最小タップ領域が無い")
 
     def test_single_pc_breakpoint(self):
-        """ブレークポイントは 1024px の1本だけ。720px の段は写真館と食い違うので廃止した。"""
+        """ブレークポイントは 1024px の1本だけ。720px の段は写真館と食い違うので廃止した。
+
+        360px の段も廃止した。「極小幅では文字を詰める」ルールを段で持っていたため、
+        361〜396px の帯だけ詰まらず、英語のヘッダー（Pokéfuta｜Directory +
+        Login/Sign up で 397px 必要）が iPhone のほぼ全機種ではみ出していた。
+        いまは clamp() で連続的に詰めるので段はいらない。段を足して直そうとしないこと。
+        """
         # コメント内にも他ファイルの @media を引用しているので、先に落とす
         css = re.sub(r"/\*.*?\*/", "", self.css, flags=re.DOTALL)
         widths = set(re.findall(r"@media\s*\(\s*(?:min|max)-width:\s*([\d.]+px)\s*\)", css))
@@ -95,8 +101,33 @@ class SiteHeaderTokenTest(unittest.TestCase):
         # @media (min-width: 760px) でボトムシートをフローティングパネルへ
         # 切り替える境界に合わせたもの。ここを跨いで打ち消すとPCの地図が壊れる
         self.assertEqual(
-            widths, {"1024px", "360px", "759.98px"}, f"想定外のブレークポイント: {sorted(widths)}"
+            widths, {"1024px", "759.98px"}, f"想定外のブレークポイント: {sorted(widths)}"
         )
+
+    def test_header_can_shrink(self):
+        """ヘッダーの中身が縮まないと、長いロケールで横にはみ出す。
+
+        はみ出すとモバイルブラウザはページ全体を縮小表示し、sticky ヘッダーと
+        fixed 下タブが視覚ビューポートからズレて本文に重なる。実測での回帰検知は
+        test_mobile_viewport.py（ヘッドレス）が担当し、ここは書き戻しを止めるための
+        静的な歯止め。
+        """
+        switch = re.search(r"\n\.site-switch\s*\{(.*?)\}", self.css, re.DOTALL)
+        self.assertIsNotNone(switch, ".site-switch が見つからない")
+        self.assertNotIn("flex: 0 0 auto", switch.group(1),
+                         ".site-switch を縮まなくするとヘッダーがはみ出す")
+        self.assertIn("min-width: 0", switch.group(1))
+
+        brand = re.search(r"\.site-header__brand-name\s*\{(.*?)\}", self.css, re.DOTALL)
+        self.assertIsNotNone(brand, ".site-header__brand-name が見つからない")
+        self.assertIn("text-overflow: ellipsis", brand.group(1),
+                      "ブランド名は最後の逃げ道として省略できること")
+
+    def test_anchor_targets_clear_the_sticky_header(self):
+        """ページ内リンクの着地点がヘッダーの下に潜らないこと。"""
+        rule = re.search(r"body\.has-site-header \[id\]\s*\{(.*?)\}", self.css, re.DOTALL)
+        self.assertIsNotNone(rule, "アンカー着地点の scroll-margin-top が無い")
+        self.assertIn("var(--chrome-sticky-offset)", rule.group(1))
 
     def test_mark_is_not_hidden_on_mobile(self):
         """SP でモンスターボールを消すとサイト帯のブランドが SP だけ無くなる。"""
