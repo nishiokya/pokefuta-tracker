@@ -110,11 +110,18 @@ def check(base_url: str, paths, widths, timeout_ms: int = 45000) -> list[str]:
                     url = base_url.rstrip("/") + path
                     page = context.new_page()
                     try:
-                        page.goto(url, wait_until="domcontentloaded", timeout=timeout_ms)
+                        response = page.goto(url, wait_until="domcontentloaded", timeout=timeout_ms)
                         page.wait_for_timeout(2500)
                         result = page.evaluate(PROBE)
                     finally:
                         page.close()
+
+                    # 404 のエラーページは幅が収まりがちなので、そのままだと
+                    # 「URL を消したのに検証は通り続ける」状態になる
+                    if response is None or not response.ok:
+                        status = "レスポンスなし" if response is None else f"HTTP {response.status}"
+                        failures.append(f"[{width}px] {path}: ページを取得できない（{status}）")
+                        continue
 
                     problems = []
                     if result["scrollWidth"] > result["clientWidth"] + 1:
@@ -157,11 +164,11 @@ def main() -> int:
 
     failures = check(args.base_url, paths, widths)
     if failures:
-        print("\n=== スマホ幅ではみ出しがある ===", file=sys.stderr)
+        print("\n=== スマホ幅の検証に失敗した ===", file=sys.stderr)
         for line in failures:
             print("  " + line, file=sys.stderr)
         print(
-            "\nはみ出すとページ全体が縮小表示され、ヘッダーと下タブが本文に重なる。"
+            "\n横にはみ出すとページ全体が縮小表示され、ヘッダーと下タブが本文に重なる。"
             "\nグリッドは repeat(N, minmax(0, 1fr))、ヘッダーの要素は縮められるように直すこと。",
             file=sys.stderr,
         )

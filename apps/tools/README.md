@@ -30,8 +30,9 @@ python3 apps/scraper/import_design_manholes.py
 ## 依存パッケージ
 
 `import_latest_manhole_photos.py` と `enrich_photo_comments.py` は追加パッケージが必要。
-`check_mobile_viewport.py` は playwright に加えてブラウザ本体も要る
-（`python3 -m playwright install chromium`）。
+`check_mobile_viewport.py` の依存は `requirements-check.txt` にある
+（本体の requirements.txt に入れると日次ワークフローまで playwright を落とすため）。
+ブラウザ本体は別途 `python3 -m playwright install chromium` が要る。
 
 ```bash
 pip install -r requirements.txt

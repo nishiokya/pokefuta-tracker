@@ -41,8 +41,10 @@ jobs:
         with:
           python-version: '3.11'
 
+      # 検証専用の依存。本体の requirements.txt に入れると、ブラウザ検査と
+      # 無関係な日次ワークフローまで playwright を落とすことになる。
       - name: Install Python dependencies
-        run: pip3 install -r requirements.txt
+        run: pip3 install -r requirements-check.txt
 
       # ブラウザ本体は wheel に入っていないので別途落とす（pip install の
       # 直書きではなく、playwright 自身のインストーラを使う）
