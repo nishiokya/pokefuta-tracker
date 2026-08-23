@@ -18,6 +18,9 @@ from urllib.parse import quote
 from xml.sax.saxutils import escape
 
 sys.path.insert(0, str(Path(__file__).parent))
+from site_terms import format_count  # noqa: E402
+
+sys.path.insert(0, str(Path(__file__).parent))
 from generate_pokemon_pages import (
     BASE_URL,
     DEFAULT_OGP_IMAGE,
@@ -784,7 +787,7 @@ def generate_html(
 
     def count_html(card: dict) -> str:
         return (
-            f'<span>{escape(strings["count_label"].format(count=card["count"]))}</span>'
+            f'<span>{escape(format_count(strings, "count_label", card["count"]))}</span>'
             f'<span>{escape(strings["pref_count_label"].format(count=card["pref_count"]))}</span>'
         )
 
@@ -821,7 +824,7 @@ def generate_html(
             links.append(
                 f'<a href="{escape(card["href"])}"{track_attrs}>'
                 f'{escape(card["name"])}'
-                f'<span>{escape(strings["count_label"].format(count=card["count"]))}</span>'
+                f'<span>{escape(format_count(strings, "count_label", card["count"]))}</span>'
                 f'</a>'
             )
         return "".join(links)
@@ -958,7 +961,7 @@ def generate_html(
 
     fact_cards = [
         {
-            "stat": strings["count_label"].format(count=top_card["count"]),
+            "stat": format_count(strings, "count_label", top_card["count"]),
             "title": enhancement["fact_rank_title"].format(name=top_card["name"]),
             "body": enhancement["fact_rank_body"].format(
                 name=top_card["name"], count=top_card["count"]
