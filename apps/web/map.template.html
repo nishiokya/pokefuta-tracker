@@ -160,13 +160,15 @@
         }
       }
 
-      // title: {ポケモン名}のポケふた | {都道府県}{市区町村} | Pokefuta Map
+      // title: {ポケモン名}のポケふた | {都道府県}{市区町村} | {サイト名}
+      // サイト名は言語ごとに違う（英語は公式表記の Poké Lids Map）。
+      const siteName = I.siteName || 'Pokefuta Map';
       const locationPart = prefecture && city
         ? `${prefecture}${city}`
         : prefecture || '';
       const title = locationPart
-        ? `${pokemonText}${I.manholeTitleInfix}${locationPart} | Pokefuta Map`
-        : `${pokemonText}${I.manholeTitleInfix}Pokefuta Map`;
+        ? `${pokemonText}${I.manholeTitleInfix}${locationPart} | ${siteName}`
+        : `${pokemonText}${I.manholeTitleInfix}${siteName}`;
 
       const placeText = prefecture && city ? `${prefecture}${city}` : (prefecture || '');
       const pokemonWithEn = pokemonTextEn ? `${pokemonText}（${pokemonTextEn}）` : pokemonText;

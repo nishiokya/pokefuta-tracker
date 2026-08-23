@@ -55,6 +55,7 @@
     "baseKeyword": "ポケふた",
     "defaultPokemonText": "ポケモン",
     "manholeTitleInfix": "のポケふた | ",
+    "siteName": "Pokefuta Map",
     "manholeDescTemplate": "{place}にある{pokemon}のポケふた。場所・写真・訪問記録を地図で確認できます。",
     "manholeDescNoPlaceTemplate": "{pokemon}のポケふた。場所・写真・訪問記録を地図で確認できます。",
     "manholeKeywordsEnd": ["ポケモンマンホール", "Pokemon Manhole", "マンホール", "聖地巡礼", "地図"],

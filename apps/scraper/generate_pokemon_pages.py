@@ -13,12 +13,16 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import sys
 from collections import defaultdict
 from collections.abc import Callable
 from itertools import groupby
 from pathlib import Path
 from urllib.parse import quote
 from xml.sax.saxutils import escape
+
+sys.path.insert(0, str(Path(__file__).parent))
+from site_terms import format_count  # noqa: E402
 
 logging.basicConfig(level=logging.INFO, format="%(message)s")
 logger = logging.getLogger(__name__)
@@ -164,27 +168,30 @@ LP_STRINGS: dict[str, dict[str, str]] = {
         "summary_travel_few": "設置地域を訪れながら探してみてください。",
     },
     "en": {
-        "title_suffix": " Pokéfuta | Pokémon Manhole Map of Japan",
-        "desc_template": "Find all Pokéfuta (Pokémon manholes) featuring {name} across Japan. Explore locations on the map from your destination or current position.",
-        "og_title_suffix": " Pokéfuta",
+        "title_suffix": " Poké Lids | Pokémon Manhole Map of Japan",
+        "desc_template": "Find all Poké Lids (Pokéfuta) featuring {name} across Japan. Explore locations on the map from your destination or current position.",
+        "og_title_suffix": " Poké Lids",
         "generation": "Generation {gen}",
         "unknown_location": "Location unknown",
-        "pref_section_heading": "{name} Pokéfuta in {pref}",
+        "pref_section_heading": "{name} Poké Lids in {pref}",
         "pref_map_link": "View {pref} on map →",
         "related_heading": "Related Pokémon",
         "same_type_heading": "Same Type",
         "same_generation_heading": "Same Generation",
-        "summary_link": "Pokefuta Summary Hub",
-        "count_text": "There are <strong>{count}</strong> {name} Pokéfuta nationwide.",
-        "cta": "Explore all Pokéfuta on the map →",
+        "summary_link": "Poké Lid Summary Hub",
+        "count_text": "There are <strong>{count}</strong> {name} Poké Lids across Japan.",
+        "count_text_one": "There is <strong>{count}</strong> {name} Poké Lid in Japan.",
+        "cta": "Explore all Poké Lids on the map →",
         "breadcrumb_aria": "Breadcrumb",
         "breadcrumb_home": "Japan Map",
         "breadcrumb_pokemon": "Pokémon List",
         "footer": "Pokémon Manhole Map of Japan",
-        "summary_0pref": "There are currently {count} {name} Pokéfuta confirmed.",
-        "summary_1pref": "{count} {name} Pokéfuta installed in {pref}.",
-        "summary_few_pref": "{name} Pokéfuta found in {n} prefectures — {prefs} — totaling {count} locations.",
-        "summary_many_pref": "{name} Pokéfuta spread across {n} prefectures nationwide, {count} total. Including {top_prefs} and more.",
+        "summary_0pref": "There are currently {count} {name} Poké Lids confirmed.",
+        "summary_0pref_one": "There is currently {count} {name} Poké Lid confirmed.",
+        "summary_1pref": "{count} {name} Poké Lids installed in {pref}.",
+        "summary_1pref_one": "{count} {name} Poké Lid installed in {pref}.",
+        "summary_few_pref": "{name} Poké Lids found in {n} prefectures — {prefs} — totaling {count} locations.",
+        "summary_many_pref": "{name} Poké Lids spread across {n} prefectures nationwide, {count} total. Including {top_prefs} and more.",
         "summary_travel_many": "Consider visiting multiple prefectures to find them all.",
         "summary_travel_few": "Visit the installation area to find it.",
     },
@@ -299,9 +306,9 @@ def generate_ai_summary(
     n = len(prefs)
 
     if n == 0:
-        dist = strings["summary_0pref"].format(count=count, name=name)
+        dist = format_count(strings, "summary_0pref", count, name=name)
     elif n == 1:
-        dist = strings["summary_1pref"].format(count=count, name=name, pref=prefs[0])
+        dist = format_count(strings, "summary_1pref", count, name=name, pref=prefs[0])
     elif n <= 3:
         dist = strings["summary_few_pref"].format(
             n=n, count=count, name=name, prefs=pref_joiner.join(prefs)
@@ -777,7 +784,7 @@ def generate_html(
             f"</div>"
         )
 
-    count_text_html = strings["count_text"].format(count=count, name=escape(display_name))
+    count_text_html = format_count(strings, "count_text", count, name=escape(display_name))
     cta_text = strings["cta"]
     footer_text = strings["footer"]
     breadcrumb_aria = strings["breadcrumb_aria"]
