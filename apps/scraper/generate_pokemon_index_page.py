@@ -92,38 +92,39 @@ LP_INDEX_STRINGS: dict[str, dict] = {
         "jsonld_name": "ポケふたに登場するポケモン一覧",
     },
     "en": {
-        "title": "Pokefuta by Pokémon | Find Pokémon Manhole Covers by Featured Pokémon",
+        "title": "Poké Lids by Pokémon | Find Pokémon Manhole Covers by Featured Pokémon",
         "description": (
-            "Browse Japan's Pokefuta Pokémon manhole covers by featured Pokémon. "
-            "Find locations for Pikachu, Eevee, Snorlax, and other Pokémon appearing on Pokefuta."
+            "Browse Japan's Poké Lids (Pokéfuta), the Pokémon manhole covers, by featured Pokémon. "
+            "Find locations for Pikachu, Eevee, Snorlax, and other Pokémon appearing on Poké Lids."
         ),
-        "og_title": "Pokefuta by Pokémon",
-        "h1": "Pokefuta by Pokémon",
+        "og_title": "Poké Lids by Pokémon",
+        "h1": "Poké Lids by Pokémon",
         "lead": (
-            "Explore Japan's Pokefuta Pokémon manhole covers by the Pokémon featured on them. "
-            "See where your favorite Pokémon appear and find Pokefuta to visit on your trip."
+            "Explore Japan's Poké Lids, the Pokémon manhole covers, by the Pokémon featured on them. "
+            "See where your favorite Pokémon appear and find Poké Lids to visit on your trip."
         ),
-        "hub_heading": "Find Pokefuta by Pokémon",
+        "hub_heading": "Find Poké Lids by Pokémon",
         "hub_name": "Search by Pokémon",
         "hub_ranking": "View appearance rankings",
         "hub_taxonomy": "Browse by type and generation",
         "hub_map": "View locations on the map",
-        "summary_link": "Back to the Pokefuta summary hub",
+        "summary_link": "Back to the Poké Lid summary hub",
         "ranking_heading": "Appearance Ranking",
         "featured_heading": "Popular Pokémon",
         "type_heading": "Browse by Type",
         "generation_heading": "Browse by Generation",
         "regional_heading": "Regional Pokémon",
         "all_heading": "All Pokémon ({total})",
-        "map_nav_hint": "Browse Pokéfuta by prefecture on the <a href='{map_href}'>Japan Map</a>.",
-        "cta": "Explore all Pokéfuta on the map →",
+        "map_nav_hint": "Browse Poké Lids by prefecture on the <a href='{map_href}'>Japan Map</a>.",
+        "cta": "Explore all Poké Lids on the map →",
         "breadcrumb_aria": "Breadcrumb",
         "breadcrumb_home": "Japan Map",
         "footer": "Pokémon Manhole Map of Japan",
         "region_summary_unknown": "Location unknown",
         "region_summary_fmt": "{count} / {region}",
         "region_summary_pref_count": "{n} prefectures",
-        "count_label": "{count} Pokefuta",
+        "count_label": "{count} Poké Lids",
+        "count_label_one": "{count} Poké Lid",
         "pref_count_label": "{count} prefectures",
         "pokemon_count_label": "{count} Pokémon",
         "rank_label": "#{rank}",
@@ -131,14 +132,14 @@ LP_INDEX_STRINGS: dict[str, dict] = {
         "generation_label": "Gen {gen}",
         "generation_later_label": "Gen 5+",
         "unknown_generation": "Generation unknown",
-        "latest_image_alt": "{name} Pokefuta in {location}",
+        "latest_image_alt": "{name} Poké Lid in {location}",
         "popular_intro": (
-            "Pokémon that appear on more Pokéfuta are easier to find across Japan. "
-            "{top3} and others appear on {min_count}+ Pokéfuta, "
-            "making them great starting points for first-time Pokéfuta hunters. "
+            "Pokémon that appear on more Poké Lids are easier to find across Japan. "
+            "{top3} and others appear on {min_count}+ Poké Lids, "
+            "making them great starting points for first-time Poké Lid hunters. "
             "Tap any Pokémon to check locations and plan your route."
         ),
-        "jsonld_name": "Pokémon on Pokéfuta — Full List",
+        "jsonld_name": "Pokémon on Poké Lids — Full List",
     },
     "zh-CN": {
         "title": "按宝可梦查找宝可梦井盖一览 | 日本宝可梦井盖地图",
@@ -327,24 +328,24 @@ INDEX_ENHANCEMENT_STRINGS: dict[str, dict] = {
         "kicker": "Pokémon Manhole Data Guide",
         "hero_stat": "Featured Pokémon",
         "hero_stat_unit": "",
-        "fact_heading": "Pokefuta facts by Pokémon",
+        "fact_heading": "Poké Lid facts by Pokémon",
         "fact_rank_title": "{name} appears most often",
-        "fact_rank_body": "{name} appears on {count} Pokefuta, the highest total in the current dataset.",
-        "fact_first_title": "The first Pokefuta featured Eevee",
-        "fact_first_body": "Japan's first Pokefuta was installed in Ibusuki, Kagoshima on December 20, 2018.",
+        "fact_rank_body": "{name} appears on {count} Poké Lids, the highest total in the current dataset.",
+        "fact_first_title": "The first Poké Lid featured Eevee",
+        "fact_first_body": "Japan's first Poké Lid was installed in Ibusuki, Kagoshima on December 20, 2018.",
         "fact_regional_title": "Find Pokémon connected to regions",
-        "fact_regional_body": "Browse Pokefuta featuring regional ambassadors such as Chansey, Lapras, and Vulpix.",
+        "fact_regional_body": "Browse Poké Lids featuring regional ambassadors such as Chansey, Lapras, and Vulpix.",
         "fact_link": "Explore",
-        "latest_heading": "Latest Pokefuta photos",
+        "latest_heading": "Latest Poké Lid photos",
         "latest_lead": "Recent community photos. Open a photo to see its location and featured Pokémon.",
-        "latest_cta": "See more Pokefuta with photos",
+        "latest_cta": "See more Poké Lids with photos",
         "photo_date": "{date}",
         "list_toggle": "Show all",
-        "faq_heading": "Pokefuta by Pokémon FAQ",
+        "faq_heading": "Poké Lids by Pokémon FAQ",
         "faq": [
-            ("How can I find Pokefuta for my favorite Pokémon?", "Use the full list, type groups, or generation groups on this page. Each Pokémon page lists its locations."),
-            ("Which Pokémon appears on the most Pokefuta?", "{name} currently leads with {count} appearances. The ranking updates with the dataset."),
-            ("Can I see real Pokefuta photos?", "Yes. Recent photos and Pokémon cards link to detail pages with community-submitted images when available."),
+            ("How can I find Poké Lids for my favorite Pokémon?", "Use the full list, type groups, or generation groups on this page. Each Pokémon page lists its locations."),
+            ("Which Pokémon appears on the most Poké Lids?", "{name} currently leads with {count} appearances. The ranking updates with the dataset."),
+            ("Can I see real Poké Lid photos?", "Yes. Recent photos and Pokémon cards link to detail pages with community-submitted images when available."),
         ],
     },
     "zh-CN": {
