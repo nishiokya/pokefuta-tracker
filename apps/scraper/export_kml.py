@@ -3,9 +3,13 @@
 
 import argparse
 import json
+import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 import xml.etree.ElementTree as ET
+
+sys.path.insert(0, str(Path(__file__).parent))
+from site_terms import term  # noqa: E402
 
 KML_NS = "http://www.opengis.net/kml/2.2"
 ET.register_namespace("", KML_NS)
@@ -30,7 +34,7 @@ def _parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--document-name",
-        default="Pokéfuta Manholes",
+        default=term("en"),
         help="<Document><name> value for the KML output",
     )
     return parser.parse_args()
@@ -67,7 +71,7 @@ def _format_name(record: Dict[str, Any]) -> str:
     # （例: 指宿市 砂むし会館砂楽）。KML はポケモン名を別枠で見せられないので、
     # 下でどちらにせよポケモン名を添える
     title = (record.get("place_label") or record.get("title") or "").strip()
-    fallback = f"Pokéfuta #{record.get('id', '?')}"
+    fallback = f"{term('en', 1)} #{record.get('id', '?')}"
     pokemons = record.get("pokemons") or []
     if isinstance(pokemons, list) and pokemons:
         pokemon_summary = ", ".join(str(p) for p in pokemons if p)
