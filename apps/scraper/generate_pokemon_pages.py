@@ -183,7 +183,7 @@ LP_STRINGS: dict[str, dict[str, str]] = {
         "unknown_location": "Location unknown",
         "pref_section_heading": "{name} Poké Lids in {pref}",
         "pref_map_link": "View {pref} on map →",
-        "pref_page_link": "More Poke Lids in {pref} →",
+        "pref_page_link": "More Poké Lids in {pref} →",
         "related_heading": "Related Pokémon",
         "same_type_heading": "Same Type",
         "same_generation_heading": "Same Generation",
