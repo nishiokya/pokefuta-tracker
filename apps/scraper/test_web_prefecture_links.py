@@ -61,6 +61,27 @@ class WebPrefectureLinksTest(unittest.TestCase):
         self.assertIn("%%BASE_PATH%%prefectures/${encodeURIComponent(slug)}/", source)
         self.assertIn("anchor.textContent = UI_TEXT.prefectureSite;", source)
 
+    def test_map_canonical_stays_on_the_map_page(self) -> None:
+        """地図の canonical はトップではなく map.html 自身を基準にすること。
+
+        map.html だけ `${window.SITE_BASE_URL}?manhole=` を使っており、
+        ?manhole= を開いた瞬間に canonical と og:url がトップへ書き換わって
+        いた（静的 canonical を map.html に向けた意味が消える）。
+        手編集の map.html と、多言語のもとになる map.template.html の
+        両方を見て、片方だけ直して食い違う事故を防ぐ。
+        """
+        for filename in ("map.html", "map.template.html"):
+            with self.subTest(filename=filename):
+                source = (ROOT / "apps/web" / filename).read_text(encoding="utf-8")
+                self.assertIn(
+                    "`${window.location.origin}${window.location.pathname}"
+                    "?manhole=${encodeURIComponent(manhole.id)}`",
+                    source,
+                )
+                self.assertNotIn(
+                    "`${window.SITE_BASE_URL}?manhole=", source
+                )
+
     def test_map_photo_authors_link_to_public_stamp_books(self) -> None:
         for filename in ("map.html", "map.template.html"):
             with self.subTest(filename=filename):

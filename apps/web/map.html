@@ -190,7 +190,9 @@
       keywordParts.push('ポケモンマンホール', 'Pokemon Manhole', 'マンホール', '聖地巡礼', '地図');
       const keywords = keywordParts.join(',');
 
-      const canonicalUrl = `${window.SITE_BASE_URL}?manhole=${encodeURIComponent(manhole.id)}`;
+      // トップではなく自分自身（map.html）を基準にする。
+      // すぐ上の applyDefaultMeta と map.template.html も同じ規則。
+      const canonicalUrl = `${window.location.origin}${window.location.pathname}?manhole=${encodeURIComponent(manhole.id)}`;
 
       document.title = title;
       document.querySelector('link[rel="canonical"]')?.setAttribute('href', canonicalUrl);
