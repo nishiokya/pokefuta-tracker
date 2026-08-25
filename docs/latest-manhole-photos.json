@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-08-24T20:56:51.358571Z",
+  "generated_at": "2026-08-25T20:56:08.525365Z",
   "source": "pokefuta photo table",
   "image": {
     "r2_public_base_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image"
   },
-  "count": 414,
+  "count": 415,
   "photos": {
     "1": {
       "manhole_id": 1,
@@ -14229,6 +14229,34 @@
           "shot_at": "2026-07-04T07:17:45+00:00",
           "display_name": "きんぴらごぼう",
           "public_user_id": "03bfeb8d-3b63-464b-9eee-98006413e1ef"
+        }
+      ]
+    },
+    "379": {
+      "manhole_id": 379,
+      "photo_id": "f6294181-ce72-4eee-8b41-05830d57e958",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/5bfacddf-1d17-414c-905e-32f8730e02c0.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/5bfacddf-1d17-414c-905e-32f8730e02c0.jpg",
+      "storage_key": "photos/original/2026/08/5bfacddf-1d17-414c-905e-32f8730e02c0.jpg",
+      "content_type": "image/jpeg",
+      "width": null,
+      "height": null,
+      "file_size": 1090671,
+      "created_at": "2026-08-25T06:41:34.299731+00:00",
+      "shot_at": "2026-08-25T06:41:32.023+00:00",
+      "comment": null,
+      "display_name": "koko",
+      "public_user_id": "ee331041-68e0-4895-8aa5-3e98da86a154",
+      "gallery": [
+        {
+          "photo_id": "f6294181-ce72-4eee-8b41-05830d57e958",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/5bfacddf-1d17-414c-905e-32f8730e02c0.jpg",
+          "storage_key": "photos/original/2026/08/5bfacddf-1d17-414c-905e-32f8730e02c0.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-08-25T06:41:34.299731+00:00",
+          "shot_at": "2026-08-25T06:41:32.023+00:00",
+          "display_name": "koko",
+          "public_user_id": "ee331041-68e0-4895-8aa5-3e98da86a154"
         }
       ]
     },
