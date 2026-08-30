@@ -17,13 +17,16 @@ URL_CANDIDATE = re.compile(
 
 # 本番成果物に焼き込まれ得るデータ・設定ファイルも対象にする。
 # ここに無い拡張子は素通りするため、artifact 検査の穴になる。
-# .ndjson / .txt は pages-deploy.yml が docs/*.ndjson と robots.txt を
-# dist にコピーして公開しているため必須。
+# .ndjson / .txt / .kml は pages-deploy.yml が docs/*.ndjson・robots.txt・
+# docs/pokefuta.kml を dist にコピーして公開しているため必須。
+# KML は export_kml.py が detail_url をそのまま埋めるので、
+# ここに無いと localhost 混入を素通りさせる。
 SOURCE_SUFFIXES = {
     ".css",
     ".html",
     ".js",
     ".json",
+    ".kml",
     ".mjs",
     ".ndjson",
     ".py",

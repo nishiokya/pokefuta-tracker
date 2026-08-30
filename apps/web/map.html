@@ -11,19 +11,19 @@
   <meta property="og:locale" content="ja_JP">
   <meta property="og:title" content="ポケふたマップ｜全国のポケモンマンホール一覧・地図">
   <meta property="og:description" content="全国のポケふた・ポケモンマンホールを地図で探せるマップサービスです。都道府県別の一覧、設置場所、近くのポケふた探しに対応しています。">
-  <meta property="og:url" content="https://data.pokefuta.com/">
+  <meta property="og:url" content="https://data.pokefuta.com/map.html">
   <meta property="og:image" content="https://data.pokefuta.com/assets/ogp/pokefuta_map_ogp.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="ポケふたマップ｜全国のポケモンマンホール一覧・地図">
   <meta name="twitter:description" content="全国のポケふた・ポケモンマンホールを地図で探せるマップサービスです。都道府県別の一覧、設置場所、近くのポケふた探しに対応しています。">
   <meta name="twitter:image" content="https://data.pokefuta.com/assets/ogp/pokefuta_map_ogp.png">
-  <link rel="canonical" href="https://data.pokefuta.com/">
-  <link rel="alternate" hreflang="ja"      href="https://data.pokefuta.com/">
-  <link rel="alternate" hreflang="en"      href="https://data.pokefuta.com/en/">
-  <link rel="alternate" hreflang="zh-TW"   href="https://data.pokefuta.com/zh-TW/">
-  <link rel="alternate" hreflang="zh-Hans" href="https://data.pokefuta.com/zh-CN/">
-  <link rel="alternate" hreflang="ko"      href="https://data.pokefuta.com/ko/">
-  <link rel="alternate" hreflang="x-default" href="https://data.pokefuta.com/">
+  <link rel="canonical" href="https://data.pokefuta.com/map.html">
+  <link rel="alternate" hreflang="ja"      href="https://data.pokefuta.com/map.html">
+  <link rel="alternate" hreflang="en"      href="https://data.pokefuta.com/en/map.html">
+  <link rel="alternate" hreflang="zh-TW"   href="https://data.pokefuta.com/zh-TW/map.html">
+  <link rel="alternate" hreflang="zh-Hans" href="https://data.pokefuta.com/zh-CN/map.html">
+  <link rel="alternate" hreflang="ko"      href="https://data.pokefuta.com/ko/map.html">
+  <link rel="alternate" hreflang="x-default" href="https://data.pokefuta.com/map.html">
   <script>
     // title は local.pokemon.jp の見出しそのままで「鹿児島県/指宿市」のように
     // 自治体単位でしか区別できない。同一自治体に複数枚あるレコードには
@@ -190,7 +190,9 @@
       keywordParts.push('ポケモンマンホール', 'Pokemon Manhole', 'マンホール', '聖地巡礼', '地図');
       const keywords = keywordParts.join(',');
 
-      const canonicalUrl = `${window.SITE_BASE_URL}?manhole=${encodeURIComponent(manhole.id)}`;
+      // トップではなく自分自身（map.html）を基準にする。
+      // すぐ上の applyDefaultMeta と map.template.html も同じ規則。
+      const canonicalUrl = `${window.location.origin}${window.location.pathname}?manhole=${encodeURIComponent(manhole.id)}`;
 
       document.title = title;
       document.querySelector('link[rel="canonical"]')?.setAttribute('href', canonicalUrl);

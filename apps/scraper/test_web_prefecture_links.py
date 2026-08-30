@@ -61,6 +61,57 @@ class WebPrefectureLinksTest(unittest.TestCase):
         self.assertIn("%%BASE_PATH%%prefectures/${encodeURIComponent(slug)}/", source)
         self.assertIn("anchor.textContent = UI_TEXT.prefectureSite;", source)
 
+    def test_map_page_has_its_own_title_and_description(self) -> None:
+        """地図ページはトップと別のメタを持つこと。
+
+        map.template.html は index.template.html と同じ %%PAGE_TITLE%% /
+        %%META_DESCRIPTION%% を使っており、他4言語では /xx/ と
+        /xx/map.html の title・description が完全に同一だった。
+        canonical を map.html 自身に向けた以上、同一メタの indexable な
+        URL が2つできてしまう。
+        """
+        import json
+
+        source = (ROOT / "apps/web/map.template.html").read_text(encoding="utf-8")
+        self.assertIn("<title>%%MAP_PAGE_TITLE%%</title>", source)
+        self.assertNotIn("%%PAGE_TITLE%%", source)
+        self.assertNotIn("%%META_DESCRIPTION%%", source)
+
+        # ja は build_i18n.LANGS に無く（map.html を手で保守している）、
+        # strings.ja.json は他にも多数のキーを持たない。対象は実際に
+        # ビルドされる4言語だけ。
+        for lang in ("en", "zh-TW", "zh-CN", "ko"):
+            path = ROOT / "apps/web/i18n" / f"strings.{lang}.json"
+            with self.subTest(lang=lang):
+                data = json.loads(path.read_text(encoding="utf-8"))
+                for key in ("MAP_PAGE_TITLE", "MAP_META_DESCRIPTION"):
+                    self.assertIn(key, data)
+                self.assertNotEqual(data["MAP_PAGE_TITLE"], data["PAGE_TITLE"])
+                self.assertNotEqual(
+                    data["MAP_META_DESCRIPTION"], data["META_DESCRIPTION"]
+                )
+
+    def test_map_canonical_stays_on_the_map_page(self) -> None:
+        """地図の canonical はトップではなく map.html 自身を基準にすること。
+
+        map.html だけ `${window.SITE_BASE_URL}?manhole=` を使っており、
+        ?manhole= を開いた瞬間に canonical と og:url がトップへ書き換わって
+        いた（静的 canonical を map.html に向けた意味が消える）。
+        手編集の map.html と、多言語のもとになる map.template.html の
+        両方を見て、片方だけ直して食い違う事故を防ぐ。
+        """
+        for filename in ("map.html", "map.template.html"):
+            with self.subTest(filename=filename):
+                source = (ROOT / "apps/web" / filename).read_text(encoding="utf-8")
+                self.assertIn(
+                    "`${window.location.origin}${window.location.pathname}"
+                    "?manhole=${encodeURIComponent(manhole.id)}`",
+                    source,
+                )
+                self.assertNotIn(
+                    "`${window.SITE_BASE_URL}?manhole=", source
+                )
+
     def test_map_photo_authors_link_to_public_stamp_books(self) -> None:
         for filename in ("map.html", "map.template.html"):
             with self.subTest(filename=filename):

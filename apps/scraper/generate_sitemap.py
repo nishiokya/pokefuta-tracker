@@ -141,6 +141,8 @@ def url_entry(loc: str, changefreq: str, priority: str) -> str:
 def build_sitemap(manhole_ids: list[str], pokemon_slugs: list[str] | None = None) -> str:
     entries = [
         url_entry(BASE_URL, "daily", "1.0"),
+        # map.html は自分自身を canonical にしているので、sitemap にも載せる
+        url_entry(f"{BASE_URL}map.html", "daily", "0.9"),
         url_entry(f"{BASE_URL}summary/", "weekly", "0.9"),
         url_entry(f"{BASE_URL}prefectures/", "weekly", "0.9"),
         url_entry(f"{BASE_URL}pokemon/", "weekly", "0.9"),
@@ -153,6 +155,7 @@ def build_sitemap(manhole_ids: list[str], pokemon_slugs: list[str] | None = None
 
     for lang in I18N_LANGS:
         entries.append(url_entry(f"{BASE_URL}{lang}/", "weekly", "0.9"))
+        entries.append(url_entry(f"{BASE_URL}{lang}/map.html", "weekly", "0.8"))
 
     for prefecture in PREFECTURES:
         entries.append(

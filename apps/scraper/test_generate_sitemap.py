@@ -46,6 +46,20 @@ class BuildSitemapTest(unittest.TestCase):
                     f"<loc>https://data.pokefuta.com/{path}</loc>", self.xml
                 )
 
+    def test_includes_the_map_page_in_every_language(self) -> None:
+        """map.html は自分自身を canonical にしているので sitemap に載っていること。
+
+        canonical をトップから map.html 自身へ直したとき（PR #452）、
+        sitemap には gmanhole_map.html しか無く、本体の地図ページが
+        どの言語でも1件も載っていなかった。
+        """
+        self.assertIn("<loc>https://data.pokefuta.com/map.html</loc>", self.xml)
+        for lang in MODULE.I18N_LANGS:
+            with self.subTest(lang=lang):
+                self.assertIn(
+                    f"<loc>https://data.pokefuta.com/{lang}/map.html</loc>", self.xml
+                )
+
     def test_includes_manhole_and_pokemon_detail_urls(self) -> None:
         self.assertIn(
             "<loc>https://data.pokefuta.com/manholes/1/</loc>", self.xml
