@@ -332,6 +332,26 @@ class DiscoveryHubTests(unittest.TestCase):
                 self.assertIn('href="#prefecture-count-heading"', html)
                 self.assertNotIn('href="/prefectures/"', html)
 
+    def test_no_photos_section_is_japanese_only(self):
+        """写真なし節の県リンクは ja 専用ページ（/prefectures/）を指すが、
+        節そのものが ja でしか描画されないので他言語に漏れない。
+
+        レビューで「他言語の summary から ja 専用ページへ飛ぶ」と
+        指摘されたが、pref_key の early return が20行上にあるため
+        実際には描画されない。読み違えが再発しないよう固定する。"""
+        records = {
+            "1": {"id": "1", "status": "active", "prefecture": "鹿児島県"},
+            "2": {"id": "2", "status": "active", "prefecture": "宮城県"},
+        }
+        photos = {"photos": {}}
+        for language, strings in summary.SUMMARY_STRINGS.items():
+            with self.subTest(language=language):
+                html = summary._build_no_photos_section(strings, records, photos)
+                if language == "ja":
+                    self.assertIn("/prefectures/kagoshima/", html)
+                else:
+                    self.assertEqual("", html)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -87,6 +87,29 @@ class GallerySectionTests(unittest.TestCase):
         html = _generate(photo)
         self.assertIn("2026年6月9日", html)
 
+    def test_hero_photo_is_eager_but_gallery_thumbs_stay_lazy(self):
+        """ヒーロー写真は LCP 要素なので lazy にしない。
+
+        キャラマンホールLPでは同じ方針が
+        test_generate_character_manhole_page.py で既に固定されているのに、
+        詳細ページのヒーローだけがそこから漏れていた。
+        """
+        gallery_local = [
+            {
+                "url": f"{pages.BASE_URL}manhole/image/1_abcd1234.jpeg",
+                "display_name": "たこ",
+                "shot_at": "2026-05-01T00:00:00+00:00",
+            },
+        ]
+        html = _generate(_photo(gallery_local))
+
+        hero = html[html.index("<div class='hero-photo'>"):html.index("みんなの写真")]
+        self.assertIn('loading="eager"', hero)
+        self.assertIn('fetchpriority="high"', hero)
+        self.assertNotIn('loading="lazy"', hero)
+        # サムネ側は lazy のまま（ヒーローだけを eager にした）
+        self.assertIn('loading="lazy"', html[html.index("みんなの写真"):])
+
     def test_no_gallery_section_without_items(self):
         html = _generate(_photo([]))
         self.assertNotIn("みんなの写真", html)

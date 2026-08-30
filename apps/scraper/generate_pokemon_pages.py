@@ -24,6 +24,13 @@ from xml.sax.saxutils import escape
 sys.path.insert(0, str(Path(__file__).parent))
 from site_terms import format_count  # noqa: E402
 
+try:
+    from apps.scraper.prefectures import PREFECTURE_SLUGS  # noqa: E402
+except ModuleNotFoundError as exc:
+    if exc.name != "apps":
+        raise
+    from prefectures import PREFECTURE_SLUGS  # noqa: E402
+
 logging.basicConfig(level=logging.INFO, format="%(message)s")
 logger = logging.getLogger(__name__)
 
@@ -150,6 +157,7 @@ LP_STRINGS: dict[str, dict[str, str]] = {
         "unknown_location": "所在地不明",
         "pref_section_heading": "{pref}の{name}のポケふた",
         "pref_map_link": "{pref}の地図で見る →",
+        "pref_page_link": "{pref}のポケふたをもっと見る →",
         "related_heading": "関連するポケモン",
         "same_type_heading": "同じタイプのポケモン",
         "same_generation_heading": "同じ世代のポケモン",
@@ -175,6 +183,7 @@ LP_STRINGS: dict[str, dict[str, str]] = {
         "unknown_location": "Location unknown",
         "pref_section_heading": "{name} Poké Lids in {pref}",
         "pref_map_link": "View {pref} on map →",
+        "pref_page_link": "More Poké Lids in {pref} →",
         "related_heading": "Related Pokémon",
         "same_type_heading": "Same Type",
         "same_generation_heading": "Same Generation",
@@ -203,6 +212,7 @@ LP_STRINGS: dict[str, dict[str, str]] = {
         "unknown_location": "位置不明",
         "pref_section_heading": "{pref}的{name}宝可梦井盖",
         "pref_map_link": "在地图上查看{pref} →",
+        "pref_page_link": "查看更多{pref}的宝可梦井盖 →",
         "related_heading": "相关宝可梦",
         "same_type_heading": "相同属性的宝可梦",
         "same_generation_heading": "相同世代的宝可梦",
@@ -228,6 +238,7 @@ LP_STRINGS: dict[str, dict[str, str]] = {
         "unknown_location": "位置不明",
         "pref_section_heading": "{pref}的{name}寶可夢人孔蓋",
         "pref_map_link": "在地圖上查看{pref} →",
+        "pref_page_link": "查看更多{pref}的寶可夢人孔蓋 →",
         "related_heading": "相關寶可夢",
         "same_type_heading": "相同屬性的寶可夢",
         "same_generation_heading": "相同世代的寶可夢",
@@ -253,6 +264,7 @@ LP_STRINGS: dict[str, dict[str, str]] = {
         "unknown_location": "위치 불명",
         "pref_section_heading": "{pref}의 {name} 포케후타",
         "pref_map_link": "{pref} 지도로 보기 →",
+        "pref_page_link": "{pref}의 포켓몬 맨홀 더 보기 →",
         "related_heading": "관련 포켓몬",
         "same_type_heading": "같은 타입 포켓몬",
         "same_generation_heading": "같은 세대 포켓몬",
@@ -731,10 +743,18 @@ def generate_html(
 
         pref_map_link = ""
         if prefecture_ja:
-            pref_encoded = quote(prefecture_ja)
-            link_text = strings["pref_map_link"].format(pref=prefecture_display)
+            # 県ごとの導線は、その県のために作られた /prefectures/[slug]/ を優先する
+            # （詳細ページの pref_url・summary の _prefecture_href() と同じ規約）。
+            # 県ページは ja のみ生成されるため、他言語は多言語対応済みの地図へ送る。
+            pref_slug = PREFECTURE_SLUGS.get(prefecture_ja, "") if not url_prefix else ""
+            if pref_slug:
+                pref_href = f"/prefectures/{quote(pref_slug)}/"
+                link_text = strings["pref_page_link"].format(pref=prefecture_display)
+            else:
+                pref_href = f"{map_href}?pref={quote(prefecture_ja)}"
+                link_text = strings["pref_map_link"].format(pref=prefecture_display)
             pref_map_link = (
-                f"<a class='pref-map-link' href='{escape(map_href)}?pref={pref_encoded}'>"
+                f"<a class='pref-map-link' href='{escape(pref_href)}'>"
                 f"{escape(link_text)}</a>"
             )
         sections_html += (
