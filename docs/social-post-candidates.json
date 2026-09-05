@@ -516,89 +516,6 @@
     }
   },
   {
-    "id": "photo-284-db762de3",
-    "type": "latest_photo",
-    "title": "最新写真：福島県/西郷村",
-    "url": "https://data.pokefuta.com/manholes/284/",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "latest_photo",
-    "source": "photos",
-    "raw_data": {
-      "manhole_id": "284",
-      "title": "福島県/西郷村",
-      "pref": "福島県",
-      "city": "西郷",
-      "pokemon": "ウパー",
-      "pokemon_list": [
-        "ウパー",
-        "ラッキー"
-      ],
-      "created_at": "2026-09-01T14:51:06.753323+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/09/80289f3d-a77e-4fce-9a92-180ae83f6608.jpg",
-      "display_name": "石S",
-      "photo_rank": "first_ever"
-    }
-  },
-  {
-    "id": "photo-456-7e45ec46",
-    "type": "latest_photo",
-    "title": "最新写真：福島県/下郷町",
-    "url": "https://data.pokefuta.com/manholes/456/",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "latest_photo",
-    "source": "photos",
-    "raw_data": {
-      "manhole_id": "456",
-      "title": "福島県/下郷町",
-      "pref": "福島県",
-      "city": "下郷",
-      "pokemon": "カモネギ",
-      "pokemon_list": [
-        "カモネギ",
-        "チリーン",
-        "ハリマロン",
-        "ラッキー"
-      ],
-      "created_at": "2026-09-01T14:51:23.63585+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/09/d10e2867-491e-4aaa-827b-024bb89b53d9.jpg",
-      "display_name": "石S",
-      "photo_rank": "first_ever"
-    }
-  },
-  {
-    "id": "photo-250-4057aca2",
-    "type": "latest_photo",
-    "title": "最新写真：福島県/南会津町",
-    "url": "https://data.pokefuta.com/manholes/250/",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "latest_photo",
-    "source": "photos",
-    "raw_data": {
-      "manhole_id": "250",
-      "title": "福島県/南会津町",
-      "pref": "福島県",
-      "city": "南会津",
-      "pokemon": "ドッコラー",
-      "pokemon_list": [
-        "ドッコラー",
-        "ラッキー"
-      ],
-      "created_at": "2026-09-01T14:51:39.208422+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/09/f2218dfe-0d6e-4199-9808-7797f86ec680.jpg",
-      "display_name": "石S",
-      "photo_rank": "first_ever"
-    }
-  },
-  {
     "id": "photo-283-5f582f41",
     "type": "latest_photo",
     "title": "最新写真：福島県/会津美里町",
@@ -841,6 +758,88 @@
       ],
       "created_at": "2026-09-03T01:22:45.932163+00:00",
       "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/09/bc69072f-356e-4520-ae3c-45e9f39c8c06.jpg",
+      "display_name": "はっちゃん",
+      "photo_rank": "first_ever"
+    }
+  },
+  {
+    "id": "photo-341-b9b74ed9",
+    "type": "latest_photo",
+    "title": "最新写真：福井県/美浜町",
+    "url": "https://data.pokefuta.com/manholes/341/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "341",
+      "title": "福井県/美浜町",
+      "pref": "福井県",
+      "city": "美浜",
+      "pokemon": "ウミディグダ",
+      "pokemon_list": [
+        "ウミディグダ",
+        "カイリュー",
+        "ヒドイデ"
+      ],
+      "created_at": "2026-09-03T01:23:04.743429+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/09/eb5ff361-1022-469b-9cd0-3eebaf32a591.jpg",
+      "display_name": "はっちゃん",
+      "photo_rank": "first_ever"
+    }
+  },
+  {
+    "id": "photo-293-fe257cfc",
+    "type": "latest_photo",
+    "title": "最新写真：三重県/朝日町",
+    "url": "https://data.pokefuta.com/manholes/293/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "293",
+      "title": "三重県/朝日町",
+      "pref": "三重県",
+      "city": "三重郡朝日町",
+      "pokemon": "エルフーン",
+      "pokemon_list": [
+        "エルフーン",
+        "ミジュマル"
+      ],
+      "created_at": "2026-09-03T01:23:32.858681+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/09/85fc4aff-01ba-44eb-ac4a-ede82e8f9d80.jpg",
+      "display_name": "はっちゃん",
+      "photo_rank": "first_ever"
+    }
+  },
+  {
+    "id": "photo-309-7449e269",
+    "type": "latest_photo",
+    "title": "最新写真：三重県/木曽岬町",
+    "url": "https://data.pokefuta.com/manholes/309/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "309",
+      "title": "三重県/木曽岬町",
+      "pref": "三重県",
+      "city": "桑名郡木曽岬町",
+      "pokemon": "ゴーリキー",
+      "pokemon_list": [
+        "ゴーリキー",
+        "ミジュマル"
+      ],
+      "created_at": "2026-09-03T01:23:59.585054+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/09/11d719a5-6824-41ee-b247-6bb5587ef078.jpg",
       "display_name": "はっちゃん",
       "photo_rank": "first_ever"
     }
