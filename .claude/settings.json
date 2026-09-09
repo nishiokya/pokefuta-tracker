@@ -12,5 +12,11 @@
         ]
       }
     ]
+  },
+  "permissions": {
+    "allow": [
+      "Bash(python3 -m unittest *)",
+      "mcp__claude-in-chrome__tabs_context_mcp"
+    ]
   }
 }
