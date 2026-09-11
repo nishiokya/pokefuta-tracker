@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-10T22:41:34.236462Z",
+  "generated_at": "2026-09-11T22:41:33.912080Z",
   "source": "pokefuta photo table",
   "image": {
     "r2_public_base_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image"
@@ -12944,20 +12944,30 @@
     },
     "301": {
       "manhole_id": 301,
-      "photo_id": "9cafd0ab-433d-456c-b189-ec2ac8fafb56",
-      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/3cbe2677-8d54-42b6-beeb-acd4fcc520bc.jpg",
-      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/3cbe2677-8d54-42b6-beeb-acd4fcc520bc.jpg",
-      "storage_key": "photos/original/2026/08/3cbe2677-8d54-42b6-beeb-acd4fcc520bc.jpg",
+      "photo_id": "5ec1d695-bfc8-4050-b336-68a34fc6a490",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/09/400e3873-084f-4bea-ac17-e4793aee0fbb.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/09/400e3873-084f-4bea-ac17-e4793aee0fbb.jpg",
+      "storage_key": "photos/original/2026/09/400e3873-084f-4bea-ac17-e4793aee0fbb.jpg",
       "content_type": "image/jpeg",
       "width": null,
       "height": null,
-      "file_size": 1595703,
-      "created_at": "2026-08-06T15:03:04.989758+00:00",
-      "shot_at": "2026-08-01T02:37:09+00:00",
-      "comment": "30",
-      "display_name": "aoking",
-      "public_user_id": "df3220e0-d105-4d60-9898-f5a2fda6dc1f",
+      "file_size": 1252195,
+      "created_at": "2026-09-11T10:52:27.365776+00:00",
+      "shot_at": "2026-09-11T09:19:43+00:00",
+      "comment": null,
+      "display_name": "べが",
+      "public_user_id": "0b98f613-711b-4db0-9619-3fa18e12de46",
       "gallery": [
+        {
+          "photo_id": "5ec1d695-bfc8-4050-b336-68a34fc6a490",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/09/400e3873-084f-4bea-ac17-e4793aee0fbb.jpg",
+          "storage_key": "photos/original/2026/09/400e3873-084f-4bea-ac17-e4793aee0fbb.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-09-11T10:52:27.365776+00:00",
+          "shot_at": "2026-09-11T09:19:43+00:00",
+          "display_name": "べが",
+          "public_user_id": "0b98f613-711b-4db0-9619-3fa18e12de46"
+        },
         {
           "photo_id": "9cafd0ab-433d-456c-b189-ec2ac8fafb56",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/3cbe2677-8d54-42b6-beeb-acd4fcc520bc.jpg",
@@ -12997,16 +13007,6 @@
           "shot_at": "2024-11-22T06:51:58+00:00",
           "display_name": "杉山翔太",
           "public_user_id": "e0ce0fba-cd3d-4adb-bc39-2d348372b8af"
-        },
-        {
-          "photo_id": "f8952706-4ac8-4575-9744-098d3c1ff49a",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/05/fc3938bd-90ca-44b9-b4da-58cb53fe9124.jpg",
-          "storage_key": "photos/original/2026/05/fc3938bd-90ca-44b9-b4da-58cb53fe9124.jpg",
-          "content_type": "image/jpeg",
-          "created_at": "2026-05-10T14:21:18.038551+00:00",
-          "shot_at": "2023-06-06T01:09:34+00:00",
-          "display_name": "tako",
-          "public_user_id": "08c2bb09-8aa0-44f7-8287-7b332a589f33"
         }
       ]
     },
