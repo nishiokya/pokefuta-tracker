@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-15T23:00:04.863927Z",
+  "generated_at": "2026-09-16T23:05:30.747677Z",
   "source": "pokefuta photo table",
   "image": {
     "r2_public_base_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image"
@@ -4732,20 +4732,40 @@
     },
     "106": {
       "manhole_id": 106,
-      "photo_id": "68a86612-99b7-4c26-8b5f-281daf57b701",
-      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/59fb9200-bd74-4a62-9536-7e85fc03758e.jpg",
-      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/59fb9200-bd74-4a62-9536-7e85fc03758e.jpg",
-      "storage_key": "photos/original/2026/08/59fb9200-bd74-4a62-9536-7e85fc03758e.jpg",
+      "photo_id": "9b06414b-27b9-405a-b0b4-6c464a3e9c24",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/09/fcd04349-b1a0-4b70-b4ef-4a789315dea6.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/09/fcd04349-b1a0-4b70-b4ef-4a789315dea6.jpg",
+      "storage_key": "photos/original/2026/09/fcd04349-b1a0-4b70-b4ef-4a789315dea6.jpg",
       "content_type": "image/jpeg",
       "width": null,
       "height": null,
-      "file_size": 55404,
-      "created_at": "2026-08-28T03:14:58.286824+00:00",
-      "shot_at": "2026-08-28T03:14:57.536+00:00",
+      "file_size": 1492388,
+      "created_at": "2026-09-16T07:59:48.421827+00:00",
+      "shot_at": "2026-09-16T07:59:37+00:00",
       "comment": null,
-      "display_name": "koko",
-      "public_user_id": "ee331041-68e0-4895-8aa5-3e98da86a154",
+      "display_name": "reiomi2694",
+      "public_user_id": "7dda0633-d108-4e42-971e-6deac927ec9e",
       "gallery": [
+        {
+          "photo_id": "9b06414b-27b9-405a-b0b4-6c464a3e9c24",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/09/fcd04349-b1a0-4b70-b4ef-4a789315dea6.jpg",
+          "storage_key": "photos/original/2026/09/fcd04349-b1a0-4b70-b4ef-4a789315dea6.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-09-16T07:59:48.421827+00:00",
+          "shot_at": "2026-09-16T07:59:37+00:00",
+          "display_name": "reiomi2694",
+          "public_user_id": "7dda0633-d108-4e42-971e-6deac927ec9e"
+        },
+        {
+          "photo_id": "765d99d7-899c-419b-af0f-a5197c90bbaf",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/09/99f2e490-b614-45ef-bbde-2740010fb1dd.jpg",
+          "storage_key": "photos/original/2026/09/99f2e490-b614-45ef-bbde-2740010fb1dd.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-09-16T07:59:14.120642+00:00",
+          "shot_at": "2026-09-16T07:58:57+00:00",
+          "display_name": "ゆっち",
+          "public_user_id": "86a928f1-305a-4180-b72d-6c44e9680f3b"
+        },
         {
           "photo_id": "68a86612-99b7-4c26-8b5f-281daf57b701",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/59fb9200-bd74-4a62-9536-7e85fc03758e.jpg",
@@ -4775,16 +4795,6 @@
           "shot_at": "2026-07-16T06:08:19+00:00",
           "display_name": "いろはす",
           "public_user_id": "6096691c-eeda-4e73-8401-a11274868ede"
-        },
-        {
-          "photo_id": "b87f2f49-f5f0-4ef3-bf88-1bb189a82655",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/180bf5d9-cead-43e3-bec4-1d5de98e8e7b.jpg",
-          "storage_key": "photos/original/2026/08/180bf5d9-cead-43e3-bec4-1d5de98e8e7b.jpg",
-          "content_type": "image/jpeg",
-          "created_at": "2026-08-20T16:01:29.267918+00:00",
-          "shot_at": "2026-04-01T02:33:37+00:00",
-          "display_name": "かいあ",
-          "public_user_id": "fd9877e4-097c-4e6d-a36a-e82f727968d4"
         }
       ]
     },
@@ -7638,20 +7648,30 @@
     },
     "189": {
       "manhole_id": 189,
-      "photo_id": "dcc69548-c4fd-4c3f-89ce-168aeeb9c701",
-      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/5e876a2a-be8a-4919-a522-65773b1e0d1c.jpg",
-      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/5e876a2a-be8a-4919-a522-65773b1e0d1c.jpg",
-      "storage_key": "photos/original/2026/08/5e876a2a-be8a-4919-a522-65773b1e0d1c.jpg",
+      "photo_id": "e7058cbd-3228-415f-92bf-bfa25fbf15f8",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/09/cbf83d82-75a8-4432-925d-7cfebf5db730.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/09/cbf83d82-75a8-4432-925d-7cfebf5db730.jpg",
+      "storage_key": "photos/original/2026/09/cbf83d82-75a8-4432-925d-7cfebf5db730.jpg",
       "content_type": "image/jpeg",
       "width": null,
       "height": null,
-      "file_size": 1488249,
-      "created_at": "2026-08-28T03:01:54.643623+00:00",
-      "shot_at": "2026-08-28T03:01:54.98+00:00",
-      "comment": null,
-      "display_name": "k2o",
-      "public_user_id": "be7d8262-1ac9-4b8f-bac4-0efebb6689f0",
+      "file_size": 1401785,
+      "created_at": "2026-09-16T03:56:17.874259+00:00",
+      "shot_at": "2026-09-16T03:56:13.814+00:00",
+      "comment": "噴水広場",
+      "display_name": "ぽけぷた",
+      "public_user_id": "0e64df41-11a1-4391-b059-e78e70c79f50",
       "gallery": [
+        {
+          "photo_id": "e7058cbd-3228-415f-92bf-bfa25fbf15f8",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/09/cbf83d82-75a8-4432-925d-7cfebf5db730.jpg",
+          "storage_key": "photos/original/2026/09/cbf83d82-75a8-4432-925d-7cfebf5db730.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-09-16T03:56:17.874259+00:00",
+          "shot_at": "2026-09-16T03:56:13.814+00:00",
+          "display_name": "ぽけぷた",
+          "public_user_id": "0e64df41-11a1-4391-b059-e78e70c79f50"
+        },
         {
           "photo_id": "dcc69548-c4fd-4c3f-89ce-168aeeb9c701",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/5e876a2a-be8a-4919-a522-65773b1e0d1c.jpg",
@@ -9857,6 +9877,16 @@
           "public_user_id": "0aab40bd-6bf2-4fbb-b271-326c2a2c35f1"
         },
         {
+          "photo_id": "3c89227b-e673-448f-b6d3-06411f972d2d",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/09/006bf1c4-9028-4ffc-9b5c-8f8587abe402.jpg",
+          "storage_key": "photos/original/2026/09/006bf1c4-9028-4ffc-9b5c-8f8587abe402.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-09-16T13:34:53.7473+00:00",
+          "shot_at": "2026-03-25T06:28:36+00:00",
+          "display_name": "yamatake",
+          "public_user_id": "12fd4594-7c06-4718-83a7-1f2514422ebc"
+        },
+        {
           "photo_id": "98f97d7b-da03-4846-8346-0d8401795845",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/254ed3b8-d103-4170-a3b3-2d419dc55de4.jpg",
           "storage_key": "photos/original/2026/08/254ed3b8-d103-4170-a3b3-2d419dc55de4.jpg",
@@ -9908,20 +9938,30 @@
     },
     "234": {
       "manhole_id": 234,
-      "photo_id": "6d2b65d9-60d3-431d-a74a-c997411fe1a0",
-      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/eaa80e30-253e-473b-92ec-c741028590cd.jpg",
-      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/eaa80e30-253e-473b-92ec-c741028590cd.jpg",
-      "storage_key": "photos/original/2026/07/eaa80e30-253e-473b-92ec-c741028590cd.jpg",
+      "photo_id": "8edd89a1-7b4d-42b3-8ea5-bc5cac60df8e",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/09/6950a6d8-6617-442f-be5f-3024411712bf.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/09/6950a6d8-6617-442f-be5f-3024411712bf.jpg",
+      "storage_key": "photos/original/2026/09/6950a6d8-6617-442f-be5f-3024411712bf.jpg",
       "content_type": "image/jpeg",
       "width": null,
       "height": null,
-      "file_size": 1227532,
-      "created_at": "2026-07-24T07:02:31.721202+00:00",
-      "shot_at": "2025-12-27T06:06:24+00:00",
-      "comment": null,
-      "display_name": "ムツゴロウ",
-      "public_user_id": "0aab40bd-6bf2-4fbb-b271-326c2a2c35f1",
+      "file_size": 1248395,
+      "created_at": "2026-09-16T13:38:46.774545+00:00",
+      "shot_at": "2026-03-27T05:36:35+00:00",
+      "comment": "せいふぁーうーたき付近",
+      "display_name": "yamatake",
+      "public_user_id": "12fd4594-7c06-4718-83a7-1f2514422ebc",
       "gallery": [
+        {
+          "photo_id": "8edd89a1-7b4d-42b3-8ea5-bc5cac60df8e",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/09/6950a6d8-6617-442f-be5f-3024411712bf.jpg",
+          "storage_key": "photos/original/2026/09/6950a6d8-6617-442f-be5f-3024411712bf.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-09-16T13:38:46.774545+00:00",
+          "shot_at": "2026-03-27T05:36:35+00:00",
+          "display_name": "yamatake",
+          "public_user_id": "12fd4594-7c06-4718-83a7-1f2514422ebc"
+        },
         {
           "photo_id": "6d2b65d9-60d3-431d-a74a-c997411fe1a0",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/eaa80e30-253e-473b-92ec-c741028590cd.jpg",
@@ -13231,6 +13271,16 @@
           "public_user_id": "f7b5f578-721c-42fd-a71c-33375d0a90fd"
         },
         {
+          "photo_id": "d96af5e7-0855-4a33-8c4c-e72feb6ff18f",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/09/3e60f110-8f27-4c1f-8bd6-303c2661e7cb.jpg",
+          "storage_key": "photos/original/2026/09/3e60f110-8f27-4c1f-8bd6-303c2661e7cb.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-09-16T13:48:44.298225+00:00",
+          "shot_at": "2026-02-10T13:39:01+00:00",
+          "display_name": "yamatake",
+          "public_user_id": "12fd4594-7c06-4718-83a7-1f2514422ebc"
+        },
+        {
           "photo_id": "62549240-207f-40b9-975a-923d1aebb9f8",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/5655a013-01f4-41fd-a2c3-538a40f269d2.jpg",
           "storage_key": "photos/original/2026/08/5655a013-01f4-41fd-a2c3-538a40f269d2.jpg",
@@ -13239,16 +13289,6 @@
           "shot_at": "2025-10-08T01:13:32+00:00",
           "display_name": "まぁ",
           "public_user_id": "d07facdb-b091-4228-a312-fcea700a74ad"
-        },
-        {
-          "photo_id": "bad10e88-567b-42ed-aaa3-2b298d957fdd",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/4274d265-3ea2-417c-8967-66ac3548472c.jpg",
-          "storage_key": "photos/original/2026/08/4274d265-3ea2-417c-8967-66ac3548472c.jpg",
-          "content_type": "image/jpeg",
-          "created_at": "2026-08-17T12:47:22.147371+00:00",
-          "shot_at": "2024-11-22T06:51:58+00:00",
-          "display_name": "杉山翔太",
-          "public_user_id": "e0ce0fba-cd3d-4adb-bc39-2d348372b8af"
         }
       ]
     },
@@ -16233,6 +16273,16 @@
           "shot_at": "2026-06-14T06:06:04+00:00",
           "display_name": "Giulia",
           "public_user_id": "42be2847-77c4-4797-aaae-f20b1c52f692"
+        },
+        {
+          "photo_id": "729f78f0-4f16-47be-a712-9e0f4a8a0ed6",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/09/be45569b-dee4-4ab4-9524-24e83a01e8c8.jpg",
+          "storage_key": "photos/original/2026/09/be45569b-dee4-4ab4-9524-24e83a01e8c8.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-09-16T13:49:41.396824+00:00",
+          "shot_at": "2026-02-09T10:16:56+00:00",
+          "display_name": "yamatake",
+          "public_user_id": "12fd4594-7c06-4718-83a7-1f2514422ebc"
         }
       ]
     },
