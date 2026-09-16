@@ -37,6 +37,9 @@ cp -r apps/web/assets/. dist/assets/
 mkdir -p dist/api
 cp docs/api/*.json dist/api/ 2>/dev/null || true
 cp docs/pokefuta.ndjson docs/gmanhole.ndjson docs/character_manholes.ndjson docs/latest-manhole-photos.json docs/pokemon_metadata.json dist/ 2>/dev/null || true
+cp docs/design_manholes.ndjson dist/ 2>/dev/null || true
+# トップの「開催中スタンプラリー」バナーが読む。docs/api/*.json には入っていない
+cp dataset/prefecture_events.json dist/api/prefecture_events.json 2>/dev/null || true
 echo "[driver] synced apps/web + docs data -> dist"
 
 # ── サーバー起動（nohup で完全にデタッチ: 呼び出し元シェルが死んでも生き残る）──
@@ -56,9 +59,13 @@ check() { # path marker
 }
 check /                     "ポケふた"
 check /design_manhole.html  "FAQPage"
-check /character_manholes.html "収録している作品"
-check /gmanhole_map.html    "キャラマンホール"
+check /character_manholes.html "キャラクターマンホール"
+# 「キャラマンホール」表記は #399 の2層ルール（キャラふた / キャラクターマンホール）で消えた
+check /gmanhole_map.html    "キャラクターマンホールマップ"
 check /summary/             "ポケふた"
+check /pokemon/             "人気・代表ポケモン"
+check /prefectures/         "都道府県"
+check /api/prefecture_events.json '"prefecture"'
 check /robots.txt           "Sitemap:"
 check /api/site-stats.json  '"manholes"'
 check /pokefuta.ndjson      '"id"'
@@ -85,7 +92,15 @@ shot() { # path outfile
 shot /                    index.png
 shot /design_manhole.html design_manhole.png
 shot /character_manholes.html character_manholes.png
+shot /pokemon/            pokemon.png
 [ -n "$first_pref" ] && shot "/prefectures/$first_pref/" "prefecture.png"
+
+# ── デプロイと同じゲート: 成果物に localhost / 127.0.0.1 が混ざっていないか ──
+if python3 .github/scripts/check_production_urls.py --exclude 'supabase-ssr.js' dist >/tmp/pokefuta-urlcheck.txt 2>&1; then
+  echo "[gate] ok   production URL check"
+else
+  echo "[gate] FAIL production URL check — /tmp/pokefuta-urlcheck.txt 参照"; FAIL=1
+fi
 
 echo
 if [ "$FAIL" = 0 ]; then echo "[driver] ALL OK — server still running on :$PORT ('driver.sh stop' で停止)"; else echo "[driver] FAILURES above — server on :$PORT"; exit 1; fi
