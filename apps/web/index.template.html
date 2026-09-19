@@ -751,6 +751,14 @@
           showAllBtn.addEventListener('click', function() {
             prefExpanded = true;
             applyPrefCollapse();
+            // 折りたたまれた都道府県リストを開いた回数。トップで何人が
+            // 「47件すべて」を必要としているかが、一覧の初期表示件数の根拠になる。
+            if (window.trackEvent) {
+              window.trackEvent('click_pref_show_all', {
+                count: prefItems.length,
+                surface: 'top_prefecture_list'
+              });
+            }
           });
         }
         if (prefDesktopMQ) {
