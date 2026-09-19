@@ -2158,11 +2158,14 @@
             recomputeVisibility();
             syncExploreSections();
             if (!isActive && window.trackEvent) {
+              // パラメータ名はトップの click_hub_tag と揃える（どちらも tag）。
+              // 揃っていないと「トップでタグを押した人が地図でも絞り込んだか」を
+              // 1つのディメンションで追えず、登録枠も二重に食う。
               window.trackEvent('feature_filter_click', {
-                feature: tag,
-                feature_label: TAG_META[tag]?.label || tag,
+                tag: tag,
+                tag_label: TAG_META[tag]?.label || tag,
                 result_count: parseInt(btn.dataset.count, 10),
-                surface: 'top_feature_section'
+                surface: 'map_tag_directory'
               });
             }
           });

@@ -53,5 +53,47 @@ class AnalyticsContractTest(unittest.TestCase):
         self.assertNotIn("utm_campaign", generator)
 
 
+    def test_theme_tag_clicks_use_the_same_parameter_name_everywhere(self):
+        """トップのタグチップと地図のタグ絞り込みで、パラメータ名を揃える。
+
+        揃っていないと「トップでタグを押した人が地図でも絞り込んだか」を
+        1つのディメンションで追えず、GA4 のカスタムディメンション枠も
+        同じ概念に2つ食われる。
+        """
+        top = (ROOT / "web/index.html").read_text(encoding="utf-8")
+        self.assertIn("click_hub_tag", top)
+        self.assertIn("tag:", top)
+
+        for name in ("map.html", "map.template.html"):
+            with self.subTest(source=name):
+                text = (ROOT / "web" / name).read_text(encoding="utf-8")
+                self.assertIn("feature_filter_click", text)
+                self.assertIn("tag: tag,", text)
+                # 旧名が残っていると、登録すべき名前が分からなくなる
+                self.assertNotIn("feature: tag,", text)
+                self.assertNotIn("feature_label:", text)
+
+    def test_top_page_and_its_template_track_the_same_events(self):
+        """index.html（日本語の手編集版）と index.template.html（多言語の元）で
+        計測イベントが揃っていること。片方だけ直すと言語によって欠測する。
+        """
+        def event_names(name):
+            text = (ROOT / "web" / name).read_text(encoding="utf-8")
+            return set(re.findall(r"trackEvent\(\s*'([a-z_]+)'", text))
+
+        self.assertEqual(event_names("index.html"), event_names("index.template.html"))
+
+    def test_top_prefecture_list_expansion_is_tracked(self):
+        """「すべて見る（47都道府県）」の展開を計測する。
+
+        トップで何人が47件すべてを必要としているかが、
+        一覧の初期表示件数（デスクトップ12件・SP3件）を見直す根拠になる。
+        """
+        for name in ("index.html", "index.template.html"):
+            with self.subTest(source=name):
+                text = (ROOT / "web" / name).read_text(encoding="utf-8")
+                self.assertIn("click_pref_show_all", text)
+
+
 if __name__ == "__main__":
     unittest.main()
