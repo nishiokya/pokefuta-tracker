@@ -161,7 +161,6 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
             "現在の設置枚数や全国のポケモンマンホール情報を確認できます。",
             html,
         )
-        self.assertLess(html.index('id="map-heading"'), html.index('id="trivia-heading"'))
         self.assertIn(
             "群馬県では、現在ポケふたの設置を確認できていません。",
             html,
@@ -172,6 +171,85 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         self.assertNotIn('href="#prefecture-map"', hero)
         self.assertIn("全国のポケふたから次の行き先を探す", html)
         self.assertNotIn("STEP 1", html)
+
+    def test_prefecture_without_any_pokefuta_omits_the_empty_sections(self) -> None:
+        """ポケふたが1枚も無い県で、空セクションを並べない。
+
+        以前は8セクション中7つが「未設置」の言い換えで、実測の engagementRate は
+        0.28〜0.41（/prefectures 全体は 0.753）、滞在13〜45秒だった。
+        中身の無い見出しを出さず、実際に行ける先だけを見せる。
+        """
+        html = MODULE.build_page(
+            "群馬県", "gunma", [], None, self.pokemon_slugs, self.trivia["群馬県"],
+        )
+        for heading_id in (
+            'id="map-heading"',        # ピンが0本の地図
+            'id="photo-heading"',      # 写真0枚
+            'id="manhole-heading"',    # 一覧0件
+            'id="pokemon-heading"',    # ポケモン0種
+            'id="trivia-heading"',     # 中身は未設置文のみ
+        ):
+            self.assertNotIn(heading_id, html)
+
+        # 代わりに、行ける先が本文の先頭に来る
+        self.assertIn('id="related-heading"', html)
+        self.assertLess(html.index('id="related-heading"'), html.index('id="journey-heading"'))
+
+        # 地図の div を出さないので、JS が null 参照で落ちないこと
+        self.assertNotIn('id="prefecture-map"', html)
+        self.assertIn("if (!mapElement) {", html)
+
+        # inject_adsense.py が要求するマーカーは空の県にも必要
+        self.assertIn("<!-- adsense:prefecture -->", html)
+
+    def test_related_links_skip_prefectures_without_any_pokefuta(self) -> None:
+        """行き止まりから行き止まりへ送らない。
+
+        大分県の「近くの都道府県」には熊本県が並んでいたが、どちらも0枚で
+        実測の engagementRate は 0.283 / 0.298。0枚の県はリンクから外す。
+        """
+        html = MODULE.build_page(
+            "大分県", "oita", [], None, self.pokemon_slugs, self.trivia["大分県"],
+            empty_prefectures={"熊本県", "大分県"},
+        )
+        self.assertNotIn('href="/prefectures/kumamoto/"', html)
+        self.assertIn('href="/prefectures/fukuoka/"', html)
+
+    def test_related_links_list_every_neighbour_when_not_told_otherwise(self) -> None:
+        """除外集合を渡さない呼び出しは従来どおり地方の全県を並べる。"""
+        html = MODULE.build_page(
+            "大分県", "oita", [], None, self.pokemon_slugs, self.trivia["大分県"],
+        )
+        self.assertIn('href="/prefectures/kumamoto/"', html)
+
+    def test_related_section_disappears_when_every_neighbour_is_empty(self) -> None:
+        """近隣が全部0枚なら、見出しだけ残さずセクションごと消す。"""
+        html = MODULE.build_page(
+            "大分県", "oita", [], None, self.pokemon_slugs, self.trivia["大分県"],
+            empty_prefectures={
+                "福岡県", "佐賀県", "長崎県", "熊本県", "宮崎県", "鹿児島県", "沖縄県", "大分県",
+            },
+        )
+        self.assertNotIn('id="related-heading"', html)
+        # 行き先が全滅しても、全国/現在地の導線は残る
+        self.assertIn('id="journey-heading"', html)
+
+    def test_prefecture_with_only_planned_pokefuta_keeps_the_map(self) -> None:
+        """設置予定レコードがある県では地図に意味があるので、空扱いにしない。"""
+        planned = [
+            {
+                "id": "9100", "prefecture": "群馬県", "city": "高崎市",
+                "lat": 36.3, "lng": 139.0, "pokemons": ["ピカチュウ"],
+                "installed": False,
+            }
+        ]
+        html = MODULE.build_page(
+            "群馬県", "gunma", planned, None, self.pokemon_slugs, self.trivia["群馬県"],
+        )
+        self.assertIn('id="map-heading"', html)
+        self.assertIn('id="prefecture-map"', html)
+        self.assertIn("設置予定地を地図で見る", html)
+        self.assertNotIn("投稿するポケふたを選ぶ", html)
 
     def test_nagano_desktop_header_summary_mentions_first_month(self) -> None:
         records = [r for r in self.records if r.get("prefecture") == "長野県"]
