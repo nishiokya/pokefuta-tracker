@@ -46,8 +46,11 @@ class AnalyticsContractTest(unittest.TestCase):
     def test_internal_app_links_do_not_use_utm(self):
         generator = (ROOT / "scraper/generate_prefecture_pages.py").read_text(encoding="utf-8")
 
-        self.assertIn('return "from=data"', generator)
+        # 内部導線を外部キャンペーンとして扱わず、独自パラメータで識別する。
+        self.assertIn("from=data", generator)
         self.assertNotIn("utm_source=data.pokefuta.com", generator)
+        self.assertNotIn("utm_medium", generator)
+        self.assertNotIn("utm_campaign", generator)
 
 
 if __name__ == "__main__":
