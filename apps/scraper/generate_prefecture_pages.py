@@ -632,7 +632,17 @@ def _manhole_cards(
     return "".join(cards)
 
 
-def _related_prefectures(prefecture: str) -> str:
+def _related_prefectures(
+    prefecture: str, empty_prefectures: set[str] | None = None
+) -> str:
+    """同じ地方の都道府県への導線。
+
+    `empty_prefectures` を渡すと、ポケふたが1枚も無い県をリンクから外す。
+    大分→熊本のように、行き止まりから行き止まりへ送るのを防ぐため
+    （どちらも0枚で、実測の engagementRate は 0.28 と 0.30）。
+    渡さないときは従来どおり地方の全県を並べる。
+    """
+    empty_prefectures = empty_prefectures or set()
     region_name = ""
     region_prefs: list[str] = []
     for name, prefectures in REGIONS:
@@ -645,8 +655,10 @@ def _related_prefectures(prefecture: str) -> str:
         f'data-track="prefecture_related_click" '
         f'data-destination="{PREFECTURE_SLUGS[name]}">{escape(name)}</a>'
         for name in region_prefs
-        if name != prefecture
+        if name != prefecture and name not in empty_prefectures
     )
+    if not links:
+        return ""
     return (
         f'<p class="related-label">{escape(region_name)}のポケふた</p>'
         f'<div class="related-links">{links}</div>'
@@ -1112,6 +1124,7 @@ def build_page(
     trivia_entry: dict | None,
     events: list[dict] | None = None,
     photos: dict[str, dict] | None = None,
+    empty_prefectures: set[str] | None = None,
 ) -> str:
     photos = photos or {}
     count = len(records)
@@ -1171,7 +1184,7 @@ def build_page(
     photo_html = _photo_section(prefecture, slug, records, photos)
     trivia_html = _trivia_html(prefecture, trivia_entry, count)
     events_html = _events_html(events)
-    related_html = _related_prefectures(prefecture)
+    related_html = _related_prefectures(prefecture, empty_prefectures)
     visits_url = _visits_url(slug)
     nearby_url = _nearby_url(slug)
     if installed_count:
@@ -1247,6 +1260,79 @@ def build_page(
       </div>
     </section>"""
     map_empty_class = " map-empty" if not map_points else ""
+
+    # ポケふたが1枚も無い県のページは、8セクション中7つが「未設置」の言い換えに
+    # なっていた（地図は空、写真は空、一覧は空、ポケモンは空、トリビアも未設置文）。
+    # 実測ではこの5県（群馬・山梨・広島・熊本・大分）が engagementRate ワースト5で、
+    # 0.28〜0.41（/prefectures 全体は 0.753）、滞在 13〜45秒。
+    # 検索から来た人を空セクションで埋めず、実際に行ける場所（近隣県・全国・現在地）
+    # だけを上に出す。設置予定レコードがある県は地図が意味を持つので対象外。
+    related_section_html = (
+        f"""    <section aria-labelledby="related-heading">
+      <h2 id="related-heading">近くの都道府県から探す</h2>
+      {related_html}
+    </section>"""
+        if related_html
+        else ""
+    )
+
+    if records:
+        main_sections_html = f"""    <section aria-labelledby="map-heading">
+      <div class="section-heading-row">
+        <h2 id="map-heading">{escape(prefecture)}の設置マップ</h2>
+        <p>ピンから詳細・行き方へ。設置済みのポケふたは写真投稿にも進めます。</p>
+      </div>
+      <div class="map-toolbar">
+        <div class="map-legend" aria-label="地図の凡例">
+          <span><i class="legend-dot has-photo"></i>投稿写真あり</span>
+          <span><i class="legend-dot needs-photo"></i>写真募集中</span>
+          <span><i class="legend-dot preinstall"></i>設置予定</span>
+        </div>
+        <a class="nearby-link" href="{_escape_attr(nearby_url)}"
+          data-track="prefecture_nearby_click" data-destination="pokefuta_nearby">現在地の近くから探す</a>
+      </div>
+      <div id="prefecture-map" class="{map_empty_class.strip()}"></div>
+      <p class="map-note">地図はドラッグとピンチ操作に対応。スクロール中の誤操作を防ぐため、マウスホイール拡大は無効です。</p>
+    </section>
+
+    <!-- adsense:prefecture -->
+
+    <section id="prefecture-photos" aria-labelledby="photo-heading">
+      <div class="section-heading-row">
+        <h2 id="photo-heading">{escape(prefecture)}の現地写真</h2>
+        <p>写真は場所選びの参考に。クリックするとマンホール詳細を確認できます。</p>
+      </div>
+      {photo_html}
+    </section>
+
+    {events_html}<section class="trivia-card" aria-labelledby="trivia-heading">
+      <span class="trivia-kicker">まず知りたい</span>
+      <h2 id="trivia-heading">{escape(prefecture)}のポケふたトリビア</h2>
+      {trivia_html}
+    </section>
+
+    <section id="manhole-list" aria-labelledby="manhole-heading">
+      <div class="section-heading-row">
+        <h2 id="manhole-heading">{escape(prefecture)}のマンホール一覧</h2>
+        <p>訪れたポケふたを選び、写真を記録できます。</p>
+      </div>
+      <div class="manhole-grid">{manhole_html}</div>
+    </section>
+
+    {journey_html}
+
+    <section aria-labelledby="pokemon-heading">
+      <h2 id="pokemon-heading">{escape(prefecture)}で会えるポケモン</h2>
+      <div class="pokemon-grid">{pokemon_html}</div>
+    </section>
+
+{related_section_html}"""
+    else:
+        main_sections_html = f"""    <!-- adsense:prefecture -->
+
+{events_html}{related_section_html}
+
+    {journey_html}"""
     json_ld = {
         "@context": "https://schema.org",
         "@type": "CollectionPage",
@@ -1594,59 +1680,7 @@ def build_page(
       </div>
     </header>
 
-    <section aria-labelledby="map-heading">
-      <div class="section-heading-row">
-        <h2 id="map-heading">{escape(prefecture)}の設置マップ</h2>
-        <p>ピンから詳細・行き方へ。設置済みのポケふたは写真投稿にも進めます。</p>
-      </div>
-      <div class="map-toolbar">
-        <div class="map-legend" aria-label="地図の凡例">
-          <span><i class="legend-dot has-photo"></i>投稿写真あり</span>
-          <span><i class="legend-dot needs-photo"></i>写真募集中</span>
-          <span><i class="legend-dot preinstall"></i>設置予定</span>
-        </div>
-        <a class="nearby-link" href="{_escape_attr(nearby_url)}"
-          data-track="prefecture_nearby_click" data-destination="pokefuta_nearby">現在地の近くから探す</a>
-      </div>
-      <div id="prefecture-map" class="{map_empty_class.strip()}"></div>
-      <p class="map-note">地図はドラッグとピンチ操作に対応。スクロール中の誤操作を防ぐため、マウスホイール拡大は無効です。</p>
-    </section>
-
-    <!-- adsense:prefecture -->
-
-    <section id="prefecture-photos" aria-labelledby="photo-heading">
-      <div class="section-heading-row">
-        <h2 id="photo-heading">{escape(prefecture)}の現地写真</h2>
-        <p>写真は場所選びの参考に。クリックするとマンホール詳細を確認できます。</p>
-      </div>
-      {photo_html}
-    </section>
-
-    {events_html}<section class="trivia-card" aria-labelledby="trivia-heading">
-      <span class="trivia-kicker">まず知りたい</span>
-      <h2 id="trivia-heading">{escape(prefecture)}のポケふたトリビア</h2>
-      {trivia_html}
-    </section>
-
-    <section id="manhole-list" aria-labelledby="manhole-heading">
-      <div class="section-heading-row">
-        <h2 id="manhole-heading">{escape(prefecture)}のマンホール一覧</h2>
-        <p>訪れたポケふたを選び、写真を記録できます。</p>
-      </div>
-      <div class="manhole-grid">{manhole_html}</div>
-    </section>
-
-    {journey_html}
-
-    <section aria-labelledby="pokemon-heading">
-      <h2 id="pokemon-heading">{escape(prefecture)}で会えるポケモン</h2>
-      <div class="pokemon-grid">{pokemon_html}</div>
-    </section>
-
-    <section aria-labelledby="related-heading">
-      <h2 id="related-heading">近くの都道府県から探す</h2>
-      {related_html}
-    </section>
+{main_sections_html}
     <footer><a href="/summary/">全国のポケふた一覧へ戻る</a></footer>
   </main>
   <script src="/assets/analytics.js?v=20260805a"></script>
@@ -1705,7 +1739,9 @@ def build_page(
     const points = {_json_for_script(map_points)};
     const campaignParams = {_json_for_script(_campaign_params(slug))};
     const mapElement = document.getElementById('prefecture-map');
-    if (!points.length) {{
+    if (!mapElement) {{
+      /* ポケふたが無い県では地図セクション自体を出していない */
+    }} else if (!points.length) {{
       mapElement.textContent = '現在、表示できる設置地点はありません。';
     }} else {{
       const map = L.map(mapElement, {{ scrollWheelZoom: false }});
@@ -1811,6 +1847,9 @@ def generate_all(
         if prefecture in records_by_pref:
             records_by_pref[prefecture].append(record)
     rankings = build_rankings(records)
+    empty_prefectures = {
+        pref for pref, items in records_by_pref.items() if not items
+    }
     for prefecture, slug in PREFECTURES:
         out_dir = output_dir / slug
         out_dir.mkdir(parents=True, exist_ok=True)
@@ -1823,6 +1862,7 @@ def generate_all(
             trivia.get(prefecture),
             (events or {}).get(prefecture),
             photos,
+            empty_prefectures,
         )
         (out_dir / "index.html").write_text(html, encoding="utf-8")
     output_dir.mkdir(parents=True, exist_ok=True)
