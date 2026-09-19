@@ -374,7 +374,18 @@ def _pokemon_cards(records: list[dict], pokemon_slugs: dict[str, str]) -> str:
 
 
 def _campaign_params(slug: str) -> str:
-    return "from=data"
+    """写真館（pokefuta.com）へのリンクに付ける流入元パラメータ。
+
+    `from=data` だけだと写真館側で「図鑑から来た」ことしか分からず、
+    どの都道府県ページが投稿・訪問登録に繋がったかを GA4 で追えない。
+    `pref` を足して県単位で評価できるようにする。
+
+    utm_* は使わない。GA4 がセッションの流入元を上書きしてしまい、
+    同一プロパティ内のクロスドメイン計測が別セッション扱いになるため。
+    """
+    if not slug:
+        return "from=data"
+    return f"from=data&pref={quote(slug)}"
 
 
 def _upload_url(manhole_id: str, slug: str) -> str:
