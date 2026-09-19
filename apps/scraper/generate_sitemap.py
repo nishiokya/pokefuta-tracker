@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import logging
 from pathlib import Path
 from urllib.parse import quote
 from xml.sax.saxutils import escape
@@ -15,6 +16,18 @@ except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
     from prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS
+
+try:
+    from apps.scraper.generate_tag_pages import available_tag_slugs, load_records
+except ModuleNotFoundError as exc:
+    if exc.name != "apps":
+        raise
+    from generate_tag_pages import available_tag_slugs, load_records
+
+# logger は以前 import されないまま warning 呼び出しだけがあり、
+# pokemon_metadata.json が無いときに NameError で落ちる状態だった。
+logging.basicConfig(level=logging.INFO, format="%(message)s")
+logger = logging.getLogger(__name__)
 
 BASE_URL = "https://data.pokefuta.com/"
 I18N_LANGS = ["en", "zh-TW", "zh-CN", "ko"]
@@ -138,7 +151,18 @@ def url_entry(loc: str, changefreq: str, priority: str) -> str:
     )
 
 
-def build_sitemap(manhole_ids: list[str], pokemon_slugs: list[str] | None = None) -> str:
+def read_tag_slugs(ndjson_path: Path) -> list[str]:
+    """Return theme tag slugs that have at least one active manhole."""
+    if not ndjson_path.exists():
+        return []
+    return available_tag_slugs(load_records(ndjson_path))
+
+
+def build_sitemap(
+    manhole_ids: list[str],
+    pokemon_slugs: list[str] | None = None,
+    tag_slugs: list[str] | None = None,
+) -> str:
     entries = [
         url_entry(BASE_URL, "daily", "1.0"),
         # map.html は自分自身を canonical にしているので、sitemap にも載せる
@@ -165,6 +189,11 @@ def build_sitemap(manhole_ids: list[str], pokemon_slugs: list[str] | None = None
                 "0.8",
             )
         )
+
+    # Theme (tag) landing pages. 県ページ(0.8)より下、ポケモンLP(0.1)より上。
+    # 数が少なく内容が厚いので、量産している面と同列には置かない。
+    for tag_slug in tag_slugs or []:
+        entries.append(url_entry(f"{BASE_URL}tags/{quote(tag_slug)}/", "weekly", "0.7"))
 
     # Static manhole detail pages (primary SEO target)
     for manhole_id in manhole_ids:
@@ -210,15 +239,17 @@ def main() -> int:
         return 1
 
     pokemon_slugs = read_pokemon_slugs(Path(args.data), Path(args.pokemon))
+    tag_slugs = read_tag_slugs(Path(args.data))
 
     output_path = Path(args.output)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(
-        build_sitemap(manhole_ids, pokemon_slugs), encoding="utf-8"
+        build_sitemap(manhole_ids, pokemon_slugs, tag_slugs), encoding="utf-8"
     )
     print(
         f"[generate_sitemap] wrote {output_path} with "
-        f"{len(manhole_ids)} manhole URLs + {len(pokemon_slugs)} pokemon URLs"
+        f"{len(manhole_ids)} manhole URLs + {len(pokemon_slugs)} pokemon URLs "
+        f"+ {len(tag_slugs)} tag URLs"
     )
     return 0
 
