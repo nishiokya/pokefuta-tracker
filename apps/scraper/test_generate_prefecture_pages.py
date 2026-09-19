@@ -224,7 +224,7 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
             {
                 "id": "9100", "prefecture": "群馬県", "city": "高崎市",
                 "lat": 36.3, "lng": 139.0, "pokemons": ["ピカチュウ"],
-                "is_preinstall": True,
+                "installed": False,
             }
         ]
         html = MODULE.build_page(
@@ -232,6 +232,8 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         )
         self.assertIn('id="map-heading"', html)
         self.assertIn('id="prefecture-map"', html)
+        self.assertIn("設置予定地を地図で見る", html)
+        self.assertNotIn("投稿するポケふたを選ぶ", html)
 
     def test_nagano_desktop_header_summary_mentions_first_month(self) -> None:
         records = [r for r in self.records if r.get("prefecture") == "長野県"]
