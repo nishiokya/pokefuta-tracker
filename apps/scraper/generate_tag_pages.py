@@ -5,9 +5,10 @@
 検索の着地面になれない。ここで作るのは「検索から直接着地できる静的ページ」で、
 探索の出口は従来どおり地図に渡す（各ページの主CTAが /map.html?tag=<slug>）。
 
-対象タグは TAG_PAGES に列挙した3本だけ。`/pokemon` は166ページ作って
-505 sessions/4週（1ページ3.0）だったので、テーマも「全タグを機械的に量産」はしない。
-増やすのは Search Console で検索需要を確認できたテーマだけにすること。
+どのタグがページを持つかは `dataset/tag_meta.json` の `page: true`（現在3本）。
+`/pokemon` は166ページ作って 505 sessions/4週（1ページ3.0）だったので、
+テーマも「全タグを機械的に量産」はしない。増やすのは Search Console で
+検索需要を確認できたテーマだけにすること。
 
 判定は `tags`（地図のフィルタと同じソース）。`titles` にも同名のキーがあるが
 付与ルールが別で件数が一致しない（remote_island は tags 30 / titles 28）。
@@ -28,10 +29,12 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 try:
     from apps.scraper.prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS
+    from apps.scraper.tag_meta import TagMeta, count_tags, load_tag_meta
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
     from prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS
+    from tag_meta import TagMeta, count_tags, load_tag_meta
 
 BASE_URL = "https://data.pokefuta.com"
 OG_IMAGE = f"{BASE_URL}/assets/ogp/pokefuta_summary_ogp.png"
@@ -39,13 +42,13 @@ OG_IMAGE = f"{BASE_URL}/assets/ogp/pokefuta_summary_ogp.png"
 DEFAULT_MANHOLES = ROOT / "docs" / "pokefuta.ndjson"
 DEFAULT_PHOTOS = ROOT / "docs" / "latest-manhole-photos.json"
 DEFAULT_OUTPUT = ROOT / "dist" / "tags"
+DEFAULT_ASSET_OUTPUT = ROOT / "dist" / "assets" / "tag-meta.js"
 
 # 本文は「データから言えること」だけを書く。設置理由や自治体の意図など、
 # 出典を示せない断定はここに書かないこと（都道府県ページの trivia と同じ方針）。
-TAG_PAGES: dict[str, dict[str, str]] = {
+# 絵文字とラベルは持たない（dataset/tag_meta.json が正）。ここはページ固有の文章だけ。
+TAG_PAGE_COPY: dict[str, dict[str, str]] = {
     "roadside": {
-        "emoji": "🛤",
-        "label": "道の駅",
         "h1": "道の駅のポケふた",
         "lead": (
             "道の駅の敷地内、または道の駅からおよそ50m以内に設置されているポケふたです。"
@@ -57,8 +60,6 @@ TAG_PAGES: dict[str, dict[str, str]] = {
         ),
     },
     "remote_island": {
-        "emoji": "🏝",
-        "label": "離島",
         "h1": "離島のポケふた",
         "lead": (
             "離島に設置されているポケふたです。フェリーや航空便でしか行けない島が多く、"
@@ -70,8 +71,6 @@ TAG_PAGES: dict[str, dict[str, str]] = {
         ),
     },
     "world_heritage": {
-        "emoji": "🌐",
-        "label": "世界遺産",
         "h1": "世界遺産のポケふた",
         "lead": (
             "世界遺産の構成資産やその周辺に設置されているポケふたです。"
@@ -293,11 +292,11 @@ def _manhole_cards(records: list[dict], photos: dict[str, dict], tag: str) -> st
     return "".join(cards)
 
 
-def _related_tags(tag: str, available: list[str]) -> str:
+def _related_tags(tag: str, available: list[str], meta: TagMeta) -> str:
     links = [
-        f'<a href="/tags/{quote(other)}/" data-track="tag_related_click" '
+        f'<a href="{_escape_attr(meta.href(other))}" data-track="tag_related_click" '
         f'data-destination="{_escape_attr(other)}" data-surface="tag_related">'
-        f'{TAG_PAGES[other]["emoji"]} {escape(TAG_PAGES[other]["label"])}</a>'
+        f'{escape(meta.chip_label(other))}</a>'
         for other in available if other != tag
     ]
     links.append(
@@ -313,8 +312,18 @@ def build_page(
     records: list[dict],
     photos: dict[str, dict],
     available_tags: list[str],
+    tag_meta: TagMeta | None = None,
 ) -> str:
-    meta = TAG_PAGES[tag]
+    tag_meta = tag_meta or load_tag_meta()
+    copy = TAG_PAGE_COPY[tag]
+    # 見出しの文章はページ固有、絵文字とラベルは全面共通（dataset/tag_meta.json）。
+    meta = {
+        "emoji": tag_meta.emoji(tag),
+        "label": tag_meta.label(tag),
+        "h1": copy["h1"],
+        "lead": copy["lead"],
+        "description": copy["description"],
+    }
     count = len(records)
     prefecture_count = len({record.get("prefecture", "") for record in records})
     canonical_url = f"{BASE_URL}/tags/{quote(tag)}/"
@@ -514,7 +523,7 @@ def build_page(
 
     <section aria-labelledby="related-heading">
       <h2 id="related-heading">ほかのテーマから探す</h2>
-      {_related_tags(tag, available_tags)}
+      {_related_tags(tag, available_tags, tag_meta)}
     </section>
 
     <footer><a href="/summary/">全国のポケふた一覧へ戻る</a></footer>
@@ -569,25 +578,49 @@ def build_page(
 """
 
 
-def available_tag_slugs(records: list[dict]) -> list[str]:
-    """レコードが1枚以上あるテーマだけを返す。
+def available_tag_slugs(records: list[dict], meta: TagMeta | None = None) -> list[str]:
+    """ページを持つ（`page: true`）タグのうち、レコードが1枚以上あるものを返す。
 
     データが消えたテーマの空ページを出さないためのガード。sitemap 側も
     同じ関数を使うので、生成物と sitemap が食い違わない。
     """
-    return [tag for tag in TAG_PAGES if records_for_tag(records, tag)]
+    meta = meta or load_tag_meta()
+    return [
+        tag for tag in meta.page_slugs()
+        if tag in TAG_PAGE_COPY and records_for_tag(records, tag)
+    ]
+
+
+def write_client_asset(path: Path, meta: TagMeta | None = None) -> Path:
+    """地図が読む `assets/tag-meta.js` を書き出す。
+
+    地図は map.html / map.template.html の2本に同じ定数が手書きで入っていて、
+    トップや /tags/ とも食い違っていた。JS からも同じ JSON を読ませるための橋渡し。
+    """
+    meta = meta or load_tag_meta()
+    payload = json.dumps(meta.as_client_payload(), ensure_ascii=False, indent=2)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        "// 自動生成: dataset/tag_meta.json が正。直接編集しないこと。\n"
+        "// 生成は apps/scraper/generate_tag_pages.py。\n"
+        f"window.POKEFUTA_TAG_META = {payload};\n",
+        encoding="utf-8",
+    )
+    return path
 
 
 def generate_all(
     records: list[dict],
     photos: dict[str, dict],
     output_dir: Path,
+    meta: TagMeta | None = None,
 ) -> int:
-    available = available_tag_slugs(records)
+    meta = meta or load_tag_meta()
+    available = available_tag_slugs(records, meta)
     for tag in available:
         out_dir = output_dir / tag
         out_dir.mkdir(parents=True, exist_ok=True)
-        html = build_page(tag, records_for_tag(records, tag), photos, available)
+        html = build_page(tag, records_for_tag(records, tag), photos, available, meta)
         (out_dir / "index.html").write_text(html, encoding="utf-8")
     return len(available)
 
@@ -597,19 +630,29 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--manholes", type=Path, default=DEFAULT_MANHOLES)
     parser.add_argument("--photos", type=Path, default=DEFAULT_PHOTOS)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument("--tag-meta", type=Path, default=None)
+    parser.add_argument("--asset-output", type=Path, default=DEFAULT_ASSET_OUTPUT)
     return parser.parse_args()
 
 
 def main() -> int:
     args = parse_args()
+    meta = load_tag_meta(args.tag_meta)
     records = load_records(args.manholes)
     photos = load_photos(args.photos)
-    count = generate_all(records, photos, args.output)
-    skipped = [tag for tag in TAG_PAGES if tag not in available_tag_slugs(records)]
+    count = generate_all(records, photos, args.output, meta)
+    available = available_tag_slugs(records, meta)
+    skipped = [tag for tag in meta.page_slugs() if tag not in available]
+    asset = write_client_asset(args.asset_output, meta)
+    counts = count_tags(records)
     print(
         f"[generate_tag_pages] wrote {count} tag pages to "
         f"{args.output.relative_to(ROOT) if args.output.is_relative_to(ROOT) else args.output}"
         + (f" (skipped empty: {', '.join(skipped)})" if skipped else "")
+    )
+    print(
+        f"[generate_tag_pages] wrote {asset} "
+        f"({len(meta.visible_slugs(counts))} themes at or above min_count {meta.min_count})"
     )
     return 0
 

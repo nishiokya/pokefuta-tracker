@@ -112,24 +112,26 @@ class DiscoveryHubTests(unittest.TestCase):
             count = sum(summary._has_title(record, key) for record in self.records)
             self.assertIn(f">{count}枚</strong>", html)
 
-    def test_gundam_hubs_use_title_data(self):
+    def test_gundam_hubs_use_tag_data(self):
+        """旅のテーマカードの枚数は `tags` を数える。
+
+        以前は `titles` を見ていて、同じテーマでも地図・トップ・/tags/ と
+        件数が食い違っていた（離島 28 と 30）。ソースを揃えた。
+        """
         records = {
             "66": {
                 "id": "66",
                 "prefecture": "北海道",
                 "city": "天塩町",
                 "pokemons": ["ロコン"],
-                "titles": [
-                    {"key": "near_gundam_manhole"},
-                    {"key": "gundam_manhole_city"},
-                ],
+                "tags": ["near_gundam_manhole", "gundam_manhole_city"],
             },
             "67": {
                 "id": "67",
                 "prefecture": "北海道",
                 "city": "稚内市",
                 "pokemons": ["アローラロコン"],
-                "titles": [{"key": "gundam_manhole_city"}],
+                "tags": ["gundam_manhole_city"],
             },
         }
         html = summary._build_discovery_hub_sections(
@@ -224,29 +226,25 @@ class DiscoveryHubTests(unittest.TestCase):
 
     def test_map_theme_directory_features_nearby_gundam_manholes(self):
         # テーマ絞り込みは 96653ca でトップから map.html に分離された。
-        # index.html を見続けていたので、ここはずっと落ちていた。
+        # 定義は dataset/tag_meta.json に集約したので、顔ぶれとラベルはそちらで見る
+        # （地図・トップ・/tags/・/summary/ が別々の手書きリストを持っていた名残）。
+        meta = json.loads(
+            (summary.ROOT / "dataset/tag_meta.json").read_text(encoding="utf-8")
+        )
+        by_slug = {tag["slug"]: tag for tag in meta["tags"]}
+        gundam = by_slug["near_gundam_manhole"]
+        self.assertEqual("ガンダムマンホール", gundam["label"])
+        self.assertEqual(
+            "ガンダムマンホールまで約500m以内のポケふた", gundam["description"]
+        )
+        self.assertEqual(
+            {"roadside", "remote_island", "world_heritage", "near_gundam_manhole", "seaside"},
+            {tag["slug"] for tag in meta["tags"] if tag.get("featured")},
+        )
         for filename in ("map.html", "map.template.html"):
             with self.subTest(filename=filename):
                 source = (summary.ROOT / "apps/web" / filename).read_text(
                     encoding="utf-8"
-                )
-                self.assertIn(
-                    "label: 'ガンダムマンホール',",
-                    source,
-                )
-                self.assertIn(
-                    "description: 'ガンダムマンホールまで約500m以内のポケふた',",
-                    source,
-                )
-                self.assertIn(
-                    "const FEATURED_TAGS = ['roadside', 'remote_island', "
-                    "'world_heritage', 'near_gundam_manhole', 'seaside'];",
-                    source,
-                )
-                self.assertNotIn(
-                    "const FEATURED_TAGS = ['roadside', 'remote_island', "
-                    "'station_front'",
-                    source,
                 )
                 self.assertIn(
                     'aria-label="${description} ${count}枚" '

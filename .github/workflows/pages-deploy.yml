@@ -20,6 +20,9 @@ on:
       - 'apps/scraper/generate_summary_ogp.py' # summary page OGP generator
       - 'apps/scraper/generate_prefecture_pages.py' # prefecture page generator
       - 'apps/scraper/generate_tag_pages.py' # theme (tag) landing page generator
+      - 'apps/scraper/generate_top_tag_chips.py' # top page theme chips generator
+      - 'apps/scraper/tag_meta.py' # shared theme tag metadata loader
+      - 'dataset/tag_meta.json' # single source for theme tags (top / map / tags / summary)
       - 'apps/scraper/inject_site_header.py' # shared header injector
       - 'apps/scraper/inject_adsense.py' # AdSense verification, explicit ad slots, ads.txt
       - 'apps/scraper/generate_prefecture_trivia.py' # prefecture trivia generator
@@ -114,9 +117,12 @@ jobs:
           python3 apps/scraper/generate_summary_pages.py
           echo "[dist] Generate prefecture landing pages (47 prefectures)"
           python3 apps/scraper/generate_prefecture_pages.py
-          echo "[dist] Test theme (tag) landing page generation"
-          python3 -m unittest apps.scraper.test_generate_tag_pages
-          echo "[dist] Generate theme (tag) landing pages"
+          echo "[dist] Test theme (tag) metadata and landing page generation"
+          python3 -m unittest \
+            apps.scraper.test_tag_meta \
+            apps.scraper.test_generate_tag_pages \
+            apps.scraper.test_generate_top_tag_chips
+          echo "[dist] Generate theme (tag) landing pages + assets/tag-meta.js"
           python3 apps/scraper/generate_tag_pages.py
           echo "[dist] Test sitemap generation"
           python3 -m unittest apps.scraper.test_generate_sitemap
@@ -124,6 +130,8 @@ jobs:
           python3 apps/scraper/generate_sitemap.py
           echo "[dist] Copy HTML sources"
           cp apps/web/index.html dist/index.html
+          echo "[dist] Rebuild top page theme chips from dataset/tag_meta.json"
+          python3 apps/scraper/generate_top_tag_chips.py dist/index.html
           cp apps/web/nearby_manholes.html dist/nearby.html
           cp apps/web/map.html dist/map.html
           cp apps/web/gmanhole_map.html dist/gmanhole_map.html

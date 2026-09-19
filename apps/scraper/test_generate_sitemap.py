@@ -90,8 +90,8 @@ class TagPageUrlTest(unittest.TestCase):
         if not dataset.exists():
             self.skipTest(f"dataset not available: {dataset}")
         self.assertEqual(
-            ["roadside", "remote_island", "world_heritage"],
-            MODULE.read_tag_slugs(dataset),
+            ["remote_island", "roadside", "world_heritage"],
+            sorted(MODULE.read_tag_slugs(dataset)),
         )
 
 

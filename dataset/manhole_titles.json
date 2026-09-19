@@ -145,28 +145,28 @@
     },
     "station_front": {
       "enabled": true,
-      "emoji": "🚉",
+      "emoji": "🚃",
       "label": "駅前のポケふた",
       "hashtag": "#駅前ポケふた",
       "priority": 36
     },
     "near_station": {
       "enabled": true,
-      "emoji": "🚃",
+      "emoji": "🚶",
       "label": "駅近ポケふた",
       "hashtag": "#駅近ポケふた",
       "priority": 34
     },
     "lakeside": {
       "enabled": true,
-      "emoji": "🏞",
+      "emoji": "🌅",
       "label": "湖畔のポケふた（{lake}）",
       "hashtag": "#湖畔ポケふた",
       "priority": 38
     },
     "roadside": {
       "enabled": true,
-      "emoji": "🛣",
+      "emoji": "🛤",
       "label": "道の駅のポケふた",
       "hashtag": "#道の駅ポケふた",
       "priority": 38
@@ -180,7 +180,7 @@
     },
     "world_heritage": {
       "enabled": true,
-      "emoji": "🏯",
+      "emoji": "🌐",
       "label": "世界遺産エリアのポケふた",
       "hashtag": "#世界遺産ポケふた",
       "priority": 85

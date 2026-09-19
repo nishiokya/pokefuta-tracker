@@ -31,23 +31,24 @@ from photo_caption import (  # noqa: E402
 
 try:
     from apps.scraper.prefectures import PREFECTURE_SLUGS  # noqa: E402
+    from apps.scraper.tag_meta import load_tag_meta  # noqa: E402
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
     from prefectures import PREFECTURE_SLUGS  # noqa: E402
+    from tag_meta import load_tag_meta  # noqa: E402
 
 # Constants
 BASE_URL = "https://data.pokefuta.com/"
 
+# 補助タグの絵文字とラベルは dataset/tag_meta.json（`icon_only`）が正。
+# 以前はここに手書きの辞書があり、同じタグを地図と詳細ページで
+# 別の絵文字・別の呼び名にしていた（史跡・観光・博物館など）。
+_TAG_META = load_tag_meta()
 SECONDARY_TAG_LABELS: dict[str, tuple[str, str]] = {
-    'tourism':          ('🗺', '観光スポット'),
-    'park':             ('🌳', '公園'),
-    'museum':           ('🏛', '博物館・展示施設'),
-    'history':          ('🏯', '歴史スポット'),
-    'food':             ('🍜', 'グルメ'),
-    'rail_access_good': ('🚆', '電車でアクセス◎'),
-    'river':            ('🏞', '川・渓谷'),
-    'in_station':       ('🚉', '駅構内'),
+    tag["slug"]: (tag.get("emoji", ""), tag.get("label", tag["slug"]))
+    for tag in _TAG_META.tags
+    if tag.get("icon_only")
 }
 
 # 近くのデザインマンホール（ガンダム・キャラクターマンホール・写真館投稿）
