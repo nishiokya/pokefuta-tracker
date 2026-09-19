@@ -46,8 +46,7 @@ class AnalyticsContractTest(unittest.TestCase):
     def test_internal_app_links_do_not_use_utm(self):
         generator = (ROOT / "scraper/generate_prefecture_pages.py").read_text(encoding="utf-8")
 
-        # utm_* を付けると GA4 がセッションの流入元を上書きし、
-        # 同一プロパティ内の図鑑→写真館の遷移が別セッション扱いになる。
+        # 内部導線を外部キャンペーンとして扱わず、独自パラメータで識別する。
         self.assertIn("from=data", generator)
         self.assertNotIn("utm_source=data.pokefuta.com", generator)
         self.assertNotIn("utm_medium", generator)
