@@ -8,6 +8,7 @@
 
 from __future__ import annotations
 
+import re
 import unittest
 from pathlib import Path
 
@@ -76,17 +77,37 @@ class ApplyTest(unittest.TestCase):
         self.assertEqual(html, module.apply_chips(html, "<a>new</a>"))
 
 
-class CommittedIndexTest(unittest.TestCase):
-    def test_index_html_is_not_stale(self) -> None:
-        """apps/web/index.html のチップが生成結果と一致していること。
+def _without_counts(html: str) -> str:
+    """件数だけを伏せる。
 
+    枚数は日次のデータ更新で動き、ビルド時に dist へ入れ直される。
+    コミット済みの index.html に対して件数まで一致を求めると、
+    データ更新のたびに Pages のデプロイが落ちる。
+    """
+    return re.sub(r'<span class="chip-count">\d+枚</span>', "<span class=\"chip-count\"></span>", html)
+
+
+class CommittedIndexTest(unittest.TestCase):
+    def test_index_html_has_the_same_chips_as_the_generator(self) -> None:
+        """apps/web/index.html のチップの顔ぶれ・順序・行き先が生成結果と一致すること。
+
+        件数は見ない（上の `_without_counts` の理由）。
         ずれたら `python3 apps/scraper/generate_top_tag_chips.py` で直す。
         """
         dataset = ROOT / "docs" / "pokefuta.ndjson"
         if not dataset.exists():
             self.skipTest(f"dataset not available: {dataset}")
         html = INDEX.read_text(encoding="utf-8")
-        self.assertEqual(html, module.apply_chips(html, module.build_chips(dataset)))
+        regenerated = module.apply_chips(html, module.build_chips(dataset))
+        self.assertEqual(_without_counts(html), _without_counts(regenerated))
+
+    def test_counts_are_allowed_to_go_stale_in_the_source(self) -> None:
+        """件数だけがずれてもテストは落ちないこと（日次データ更新でデプロイを止めない）。"""
+        html = INDEX.read_text(encoding="utf-8")
+        stale = html.replace('<span class="chip-count">99枚</span>',
+                             '<span class="chip-count">98枚</span>')
+        self.assertNotEqual(html, stale, "件数を持つチップが見つからない")
+        self.assertEqual(_without_counts(html), _without_counts(stale))
 
     def test_markers_are_present(self) -> None:
         html = INDEX.read_text(encoding="utf-8")
