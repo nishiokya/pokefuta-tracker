@@ -15,20 +15,26 @@ from urllib.parse import quote, urlencode, urlparse
 
 try:
     from apps.scraper.character_manhole_works import WORK_PAGES, WorkPage, available_pages
-    from apps.scraper.generate_character_manhole_page import BASE_URL, ROOT, _is_active, load_ndjson
+    from apps.scraper.generate_character_manhole_page import (
+        BASE_URL, GUNDAM_WORK_NAME, GUNDAM_WORK_QUERY, MAP_URL, ROOT, _is_active, load_ndjson,
+    )
     from apps.scraper.photo_caption import JST
     from apps.scraper.prefectures import PREFECTURE_ORDER
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
     from character_manhole_works import WORK_PAGES, WorkPage, available_pages
-    from generate_character_manhole_page import BASE_URL, ROOT, _is_active, load_ndjson
+    from generate_character_manhole_page import (
+        BASE_URL, GUNDAM_WORK_NAME, GUNDAM_WORK_QUERY, MAP_URL, ROOT, _is_active, load_ndjson,
+    )
     from photo_caption import JST
     from prefectures import PREFECTURE_ORDER
 
 ASSET_BASE = "../../"
 INDEX_ASSET_BASE = "../"
 DEFAULT_EVENTS = ROOT / "dataset/character_manhole_events.json"
+DEFAULT_GUNDAM = ROOT / "docs/gmanhole.ndjson"
+CARD_CHARACTER_LIMIT = 4
 OG_IMAGE = BASE_URL + "assets/ogp/pokefuta_map_ogp.png"
 IDOLMASTER_EVENT_TYPE = "idolmaster_20th_checkin"
 EVENT_REQUIRED_KEYS = {"type", "url", "project_url", "verified_at", "ends_at", "spots"}
@@ -238,7 +244,7 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
         {"@type": "BreadcrumbList", "itemListElement": [
             {"@type": "ListItem", "position": 1, "name": "ポケふた図鑑", "item": BASE_URL},
             {"@type": "ListItem", "position": 2, "name": "キャラクターマンホール全国一覧", "item": BASE_URL + "character_manholes.html"},
-            {"@type": "ListItem", "position": 3, "name": "作品別一覧", "item": BASE_URL + "characters/"},
+            {"@type": "ListItem", "position": 3, "name": "作品から探す", "item": BASE_URL + "characters/"},
             {"@type": "ListItem", "position": 4, "name": page.name, "item": canonical},
         ]},
         {"@type": "ItemList", "@id": canonical + "#list", "numberOfItems": count, "itemListElement": [
@@ -261,13 +267,13 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
   <meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="{OG_IMAGE}">
   <link rel="icon" href="{ASSET_BASE}assets/pokefuta_icon_32.png">
   <link rel="stylesheet" href="{ASSET_BASE}assets/top-page.css?v=20260707a">
-  <link rel="stylesheet" href="{ASSET_BASE}assets/character-work.css?v=20260920b">
+  <link rel="stylesheet" href="{ASSET_BASE}assets/character-work.css?v=20260920c">
   <script type="application/ld+json">{json_script(schema)}</script>
   <script src="{ASSET_BASE}assets/analytics.js?v=20260805a"></script>
   <script>window.PokefutaAnalytics.init({json_script(analytics)});</script>
 </head><body class="character-work-page">
   <main class="cw-wrap">
-    <nav class="cw-breadcrumb" aria-label="パンくず"><a href="{ASSET_BASE}">ポケふた図鑑</a><span>/</span><a href="{ASSET_BASE}character_manholes.html">キャラクターマンホール</a><span>/</span><a href="../">作品別一覧</a><span>/</span><span>{escape(page.name)}</span></nav>
+    <nav class="cw-breadcrumb" aria-label="パンくず"><a href="{ASSET_BASE}">ポケふた図鑑</a><span>/</span><a href="{ASSET_BASE}character_manholes.html">キャラクターマンホール</a><span>/</span><a href="../">作品から探す</a><span>/</span><span>{escape(page.name)}</span></nav>
     <section class="cw-hero" aria-labelledby="work-heading">
       <div class="cw-hero-copy"><p class="cw-eyebrow">MANHOLE TRIP GUIDE / {escape(page.name)}</p>{badge}
         <h1 id="work-heading">{hero_heading}</h1><p class="cw-hero-lead">{hero_note}</p>
@@ -290,51 +296,124 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
       <div class="cw-faq">{faq_html}</div></section>
     <section class="cw-section cw-post"><p class="cw-eyebrow">YOUR TRAVEL NOTES</p><h2>出会ったふたを、写真で残そう。</h2>
       <p>位置情報つきの写真を、ポケふた写真館に投稿できます。</p><a class="cw-button cw-button-secondary" href="{ASSET_BASE}design_manhole.html">写真投稿の方法を見る →</a></section>
-    <nav class="cw-section cw-related" aria-label="ほかの作品"><h2>ほかの作品も探す</h2>{related_html}<a href="../">作品別一覧へ →</a><a href="{ASSET_BASE}character_manholes.html">全国一覧へ →</a></nav>
+    <nav class="cw-section cw-related" aria-label="ほかの作品"><h2>ほかの作品も探す</h2>{related_html}<a href="../">作品別ガイド一覧へ →</a><a href="{ASSET_BASE}character_manholes.html">全国一覧へ →</a></nav>
   </main>
 </body></html>"""
 
 
-def generate_index_html(records: list[dict]) -> str:
+def _sort_prefectures(prefectures: set[str]) -> list[str]:
+    return sorted(prefectures, key=lambda pref: PREFECTURE_ORDER.index(pref)
+                  if pref in PREFECTURE_ORDER else len(PREFECTURE_ORDER))
+
+
+def index_entries(active: list[dict], gundam_records: list[dict]) -> list[dict]:
+    """作品カードの素材。専用ページのない作品（ガンダム）は地図リンクで同じ並びに載せる。
+
+    全国一覧(character_manholes.html)と同じ母集団・同じ件数降順にして、
+    2ページ間で「何作品・何枚」が食い違わないようにする。
+    """
+    entries = []
+    for page in available_pages(active):
+        selected = [record for record in active if record.get("work") in page.works]
+        entries.append({
+            "name": page.name, "records": selected,
+            "href": f"./{page.slug}/", "url": BASE_URL + page.path,
+            "cta": "設置場所の一覧を見る →",
+        })
+    if gundam_records:
+        entries.append({
+            "name": GUNDAM_WORK_NAME, "records": gundam_records,
+            "href": f"{INDEX_ASSET_BASE}gmanhole_map.html?work={quote(GUNDAM_WORK_QUERY)}",
+            "url": f"{MAP_URL}?work={quote(GUNDAM_WORK_QUERY)}",
+            "cta": "地図で設置場所を見る →",
+        })
+    return sorted(entries, key=lambda entry: (-len(entry["records"]), entry["name"]))
+
+
+def _card_summary(entry: dict, prefectures: list[str]) -> str:
+    """カードの説明文。作品ページのリード文を複製せず、データから書く。"""
+    names: list[str] = []
+    for record in entry["records"]:
+        name = str(record.get("character") or "").strip()
+        if name and name not in names:
+            names.append(name)
+    cities = {str(record.get("city")) for record in entry["records"] if record.get("city")}
+    where = prefectures[0] if len(prefectures) == 1 else f"{len(prefectures)}都道府県"
+    if len(cities) > 1:
+        where += f"の{len(cities)}市区町村"
+    if not names:
+        return f"{where}に設置されています。"
+    # キャラ名自体に「・」を含むものがある（例: まる子・友蔵）ので区切りは読点にする
+    shown = "、".join(names[:CARD_CHARACTER_LIMIT])
+    if len(names) > CARD_CHARACTER_LIMIT:
+        shown += f" ほか{len(names) - CARD_CHARACTER_LIMIT}種"
+    return f"{shown}の絵柄が、{where}に設置されています。"
+
+
+def _cross_table_html(entries: list[dict]) -> str:
+    """都道府県 × 作品の早見表。全国一覧は都道府県別、作品ページは作品別なので、この交差はここにしかない。"""
+    grid: dict[str, list[tuple[str, int, str]]] = defaultdict(list)
+    for entry in entries:
+        counts = Counter(str(record.get("prefecture") or "") for record in entry["records"])
+        for prefecture, count in counts.items():
+            if prefecture:
+                grid[prefecture].append((entry["name"], count, entry["href"]))
+    rows = []
+    for prefecture in _sort_prefectures(set(grid)):
+        cells = "".join(
+            f'<a href="{escape(href)}">{escape(name)} <span>{count}</span></a>'
+            for name, count, href in sorted(grid[prefecture], key=lambda item: (-item[1], item[0]))
+        )
+        total = sum(count for _, count, _ in grid[prefecture])
+        rows.append(f'<tr><th scope="row">{escape(prefecture)}<span>{total}枚</span></th>'
+                    f'<td><div class="cw-cross-links">{cells}</div></td></tr>')
+    return f"""<table class="cw-cross">
+        <thead><tr><th scope="col">都道府県</th><th scope="col">掲載のある作品（枚数）</th></tr></thead>
+        <tbody>{"".join(rows)}</tbody>
+      </table>"""
+
+
+def generate_index_html(records: list[dict], gundam_records: list[dict] | None = None) -> str:
     """Build the /characters/ hub from the same active records as work pages."""
     active = [record for record in records if _is_active(record)]
-    pages = available_pages(active)
-    if not pages:
+    gundam_active = [record for record in (gundam_records or []) if _is_active(record)]
+    entries = index_entries(active, gundam_active)
+    if not available_pages(active):
         raise ValueError("No character work pages available")
-    covered = [record for record in active if any(record.get("work") in page.works for page in pages)]
     canonical = BASE_URL + "characters/"
-    title = "アニメ・キャラクターマンホール作品別一覧｜設置場所・地図"
-    total = len(covered)
-    prefectures = {record.get("prefecture") for record in covered if record.get("prefecture")}
-    description = (f"アニメ・キャラクターマンホール{total}枚を{len(pages)}作品別に紹介。"
-                   "アイマス、ゾンビランドサガ、ロマサガなどの設置場所・住所・地図を確認できます。")
+    title = "キャラクターマンホールを作品から探す｜作品別ガイド"
+    total = sum(len(entry["records"]) for entry in entries)
+    prefectures = {str(record.get("prefecture")) for entry in entries
+                   for record in entry["records"] if record.get("prefecture")}
+    lead_names = "・".join(entry["name"].split("（")[0] for entry in entries[:3])
+    description = (f"{lead_names}など{len(entries)}作品、キャラクターマンホール{total}枚。"
+                   "作品ごとのガイドと都道府県別の早見表から、設置場所を探せます。")
     cards = []
     item_list = []
-    for position, page in enumerate(pages, 1):
-        selected = [record for record in active if record.get("work") in page.works]
-        page_prefs = sorted(
-            {str(record.get("prefecture")) for record in selected if record.get("prefecture")},
-            key=lambda pref: PREFECTURE_ORDER.index(pref) if pref in PREFECTURE_ORDER else 999,
+    for position, entry in enumerate(entries, 1):
+        entry_prefs = _sort_prefectures(
+            {str(record.get("prefecture")) for record in entry["records"] if record.get("prefecture")}
         )
-        pref_text = "・".join(page_prefs)
+        pref_label = entry_prefs[0] if len(entry_prefs) == 1 else f"{len(entry_prefs)}都道府県"
         cards.append(f"""<article class="cw-work-card">
-          <p class="cw-eyebrow">WORK {position:02d}</p><h2><a href="./{page.slug}/">{escape(page.name)}</a></h2>
-          <p>{escape(page.intro)}</p><p class="cw-work-meta"><strong>{len(selected)}枚</strong><span>{len(page_prefs)}都道府県</span></p>
-          <p class="cw-note">{escape(pref_text)}</p><a class="cw-card-link" href="./{page.slug}/">設置場所の一覧を見る →</a>
+          <p class="cw-eyebrow">WORK {position:02d}</p><h3><a href="{escape(entry['href'])}">{escape(entry['name'])}</a></h3>
+          <p>{escape(_card_summary(entry, entry_prefs))}</p><p class="cw-work-meta"><strong>{len(entry['records'])}枚</strong><span>{escape(pref_label)}</span></p>
+          <p class="cw-note">{escape("・".join(entry_prefs))}</p><a class="cw-card-link" href="{escape(entry['href'])}">{escape(entry['cta'])}</a>
         </article>""")
         item_list.append({
-            "@type": "ListItem", "position": position, "name": page.name,
-            "url": BASE_URL + page.path,
+            "@type": "ListItem", "position": position, "name": entry["name"],
+            "url": entry["url"],
         })
+    cross_table_html = _cross_table_html(entries)
     schema = {"@context": "https://schema.org", "@graph": [
         {"@type": "CollectionPage", "@id": canonical, "url": canonical, "name": title,
          "description": description, "inLanguage": "ja", "mainEntity": {"@id": canonical + "#list"}},
         {"@type": "BreadcrumbList", "itemListElement": [
             {"@type": "ListItem", "position": 1, "name": "ポケふた図鑑", "item": BASE_URL},
             {"@type": "ListItem", "position": 2, "name": "キャラクターマンホール全国一覧", "item": BASE_URL + "character_manholes.html"},
-            {"@type": "ListItem", "position": 3, "name": "作品別一覧", "item": canonical},
+            {"@type": "ListItem", "position": 3, "name": "作品から探す", "item": canonical},
         ]},
-        {"@type": "ItemList", "@id": canonical + "#list", "numberOfItems": len(pages),
+        {"@type": "ItemList", "@id": canonical + "#list", "numberOfItems": len(entries),
          "itemListElement": item_list},
     ]}
     analytics = {"page_path": "/characters/", "site_type": "map", "page_type": "index_character_works"}
@@ -350,32 +429,37 @@ def generate_index_html(records: list[dict]) -> str:
   <meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="{OG_IMAGE}">
   <link rel="icon" href="{INDEX_ASSET_BASE}assets/pokefuta_icon_32.png">
   <link rel="stylesheet" href="{INDEX_ASSET_BASE}assets/top-page.css?v=20260707a">
-  <link rel="stylesheet" href="{INDEX_ASSET_BASE}assets/character-work.css?v=20260920b">
+  <link rel="stylesheet" href="{INDEX_ASSET_BASE}assets/character-work.css?v=20260920c">
   <script type="application/ld+json">{json_script(schema)}</script>
   <script src="{INDEX_ASSET_BASE}assets/analytics.js?v=20260805a"></script>
   <script>window.PokefutaAnalytics.init({json_script(analytics)});</script>
 </head><body class="character-work-page character-index-page">
   <main class="cw-wrap">
-    <nav class="cw-breadcrumb" aria-label="パンくず"><a href="{INDEX_ASSET_BASE}">ポケふた図鑑</a><span>/</span><a href="{INDEX_ASSET_BASE}character_manholes.html">キャラクターマンホール</a><span>/</span><span>作品別一覧</span></nav>
+    <nav class="cw-breadcrumb" aria-label="パンくず"><a href="{INDEX_ASSET_BASE}">ポケふた図鑑</a><span>/</span><a href="{INDEX_ASSET_BASE}character_manholes.html">キャラクターマンホール</a><span>/</span><span>作品から探す</span></nav>
     <section class="cw-hero" aria-labelledby="characters-heading">
       <div class="cw-hero-copy"><p class="cw-eyebrow">CHARACTER MANHOLE COLLECTION</p>
         <h1 id="characters-heading">好きな作品から、<br>マンホールを探そう。</h1>
-        <p class="cw-hero-lead">アニメ・漫画・キャラクターのマンホールを作品別に。</p>
-        <p>設置場所、住所、地図、自治体や公式サイトの出典を、作品ごとのページで確認できます。</p>
-        <div class="cw-actions"><a class="cw-button" href="#works">作品を選ぶ ↓</a><a class="cw-text-link" href="{INDEX_ASSET_BASE}character_manholes.html">全国一覧を見る →</a></div>
+        <p class="cw-hero-lead">行き先が決まっていないときは、推しの作品から。</p>
+        <p>作品ごとのガイドで、設置場所・住所・地図・出典を確認できます。訪ねたい地域が決まっている場合は、下の都道府県別の早見表から作品を選べます。</p>
+        <div class="cw-actions"><a class="cw-button" href="#works">作品を選ぶ ↓</a><a class="cw-text-link" href="#by-prefecture">都道府県から選ぶ →</a></div>
       </div>
       <aside class="cw-passport cw-index-stats" aria-label="掲載データ"><p class="cw-eyebrow">COLLECTION INDEX</p>
         <p class="cw-index-total"><strong>{total}</strong><span>MANHOLES</span></p>
-        <dl><div><dt>作品</dt><dd>{len(pages)}</dd></div><div><dt>都道府県</dt><dd>{len(prefectures)}</dd></div></dl>
+        <dl><div><dt>作品</dt><dd>{len(entries)}</dd></div><div><dt>都道府県</dt><dd>{len(prefectures)}</dd></div></dl>
         <span class="cw-passport-foot">POKEFUTA / CHARACTER WORKS</span></aside>
     </section>
     <section class="cw-section" id="works" aria-labelledby="works-heading">
-      <p class="cw-eyebrow">CHOOSE A WORK</p><h2 id="works-heading">アニメ・キャラクターマンホールの作品別一覧</h2>
-      <p>掲載枚数と地域を見比べて、訪ねたい作品を選べます。</p><div class="cw-work-grid">{"".join(cards)}</div>
+      <p class="cw-eyebrow">CHOOSE A WORK</p><h2 id="works-heading">作品から選ぶ</h2>
+      <p>掲載枚数と地域を見比べて、訪ねたい作品を選べます。ガイドのある作品は設置場所の一覧へ、それ以外は絞り込み済みの地図へ進みます。</p><div class="cw-work-grid">{"".join(cards)}</div>
+    </section>
+    <section class="cw-section" id="by-prefecture" aria-labelledby="cross-heading">
+      <p class="cw-eyebrow">WHERE TO FIND</p><h2 id="cross-heading">都道府県別の作品早見表</h2>
+      <p>訪ねる地域が決まっているときに、その県で何の作品が何枚見られるかを確認できます。作品名から各ガイドへ進めます。</p>
+      {cross_table_html}
     </section>
     <section class="cw-section cw-index-guide" aria-labelledby="guide-heading">
       <p class="cw-eyebrow">EXPLORE MORE</p><h2 id="guide-heading">地域や地図から探す</h2>
-      <p>作品を決めずに探す場合は全国一覧へ。現在地や都道府県から絞り込む場合は地図が便利です。</p>
+      <p>市町村・住所まで含めて通しで読む場合は全国一覧へ。現在地から絞り込む場合は地図が便利です。</p>
       <div class="cw-actions"><a class="cw-button cw-button-secondary" href="{INDEX_ASSET_BASE}character_manholes.html">全国一覧を見る →</a><a class="cw-button cw-button-secondary" href="{INDEX_ASSET_BASE}gmanhole_map.html">全国地図を開く →</a></div>
     </section>
     <section class="cw-section" aria-labelledby="notes-heading"><h2 id="notes-heading">訪問前に確認したいこと</h2>
@@ -385,14 +469,15 @@ def generate_index_html(records: list[dict]) -> str:
 </body></html>"""
 
 
-def write_pages(records: list[dict], events: dict, output: Path) -> list[Path]:
+def write_pages(records: list[dict], events: dict, output: Path,
+                gundam_records: list[dict] | None = None) -> list[Path]:
     active = [r for r in records if _is_active(r)]
     pages = available_pages(active)
     written = []
     index_path = output / "characters/index.html"
     if pages:
         index_path.parent.mkdir(parents=True, exist_ok=True)
-        index_path.write_text(generate_index_html(active), encoding="utf-8")
+        index_path.write_text(generate_index_html(active, gundam_records), encoding="utf-8")
         written.append(index_path)
     elif index_path.exists():
         index_path.unlink()
@@ -412,12 +497,14 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data", type=Path, default=ROOT / "docs/character_manholes.ndjson")
     parser.add_argument("--events", type=Path, default=DEFAULT_EVENTS)
+    parser.add_argument("--gundam", type=Path, default=DEFAULT_GUNDAM)
     parser.add_argument("--output", type=Path, default=ROOT / "dist")
     args = parser.parse_args()
     records = load_ndjson(args.data)
     if not any(_is_active(r) for r in records):
         parser.error("No active character records; refusing to generate empty guides")
-    written = write_pages(records, load_events(args.events), args.output)
+    written = write_pages(records, load_events(args.events), args.output,
+                          gundam_records=load_ndjson(args.gundam))
     print(f"[generate_character_work_pages] wrote {len(written)} character pages")
     return 0
 

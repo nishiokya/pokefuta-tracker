@@ -189,7 +189,7 @@ def build_sitemap(
     ]
 
     if character_work_pages:
-        entries.append(url_entry(f"{BASE_URL}characters/", "weekly", "0.9"))
+        entries.append(url_entry(f"{BASE_URL}characters/", "weekly", "0.7"))
     for page in character_work_pages or []:
         entries.append(url_entry(f"{BASE_URL}{page.path}", "weekly", "0.8"))
 

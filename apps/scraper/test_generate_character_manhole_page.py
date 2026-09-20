@@ -679,7 +679,7 @@ class SearchIntentCopyTest(unittest.TestCase):
 
     def test_links_to_character_work_index(self):
         self.assertIn('href="./characters/"', self.html)
-        self.assertIn("作品別の専用ページをまとめて見る", self.html)
+        self.assertIn("作品から設置場所を探す（作品別ガイド）", self.html)
 
     def test_submit_section_uses_pilgrim_cta_copy(self):
         self.assertIn("その1枚、まだカメラロールにありますか？", self.html)
