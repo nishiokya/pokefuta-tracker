@@ -74,9 +74,17 @@ def inject_html(
     )
     # Google公式の「画面幅ごとに正確な広告サイズを指定する」例に合わせる。
     # 外部CSSで広告本体の寸法を指定する方法は公式サポート外なので head に直書きする。
+    #
+    # 狭い画面はレクタングル。AdSense実測（2026-08-21〜09-19）で
+    # 320x100 が全表示回数の40%（9,177回）を占めながらインプレッション収益 ¥15 と
+    # 最下位で、728x90 の ¥48・970x90 の ¥130 に大きく負けていた。
+    # アクセスの71%がモバイルなので、一番人の多い面が一番弱い枠に固定されていた。
+    # 高さを可変にする（data-ad-format="auto"）とレイアウトシフトを予約できず
+    # AGENTS.md の規約に反するため、ブレークポイント別の固定サイズのまま差し替える。
+    # 高さを変えたら apps/web/assets/adsense.css の min-height も合わせること。
     sizing = """<style>
-    .pokefuta_adslot_1 { display: block; width: 320px; height: 100px; }
-    @media (min-width: 500px) { .pokefuta_adslot_1 { width: 468px; height: 60px; } }
+    .pokefuta_adslot_1 { display: block; width: 300px; height: 250px; }
+    @media (min-width: 500px) { .pokefuta_adslot_1 { width: 336px; height: 280px; } }
     @media (min-width: 800px) { .pokefuta_adslot_1 { width: 728px; height: 90px; } }
   </style>"""
     if stylesheet not in html:

@@ -1,9 +1,13 @@
-.ad-slot { position: relative; display: grid; min-height: 126px; margin: 22px 0; padding: 20px 0 6px; place-items: center; overflow: hidden; border: 1px solid rgba(112, 82, 52, .12); border-radius: 10px; background: rgba(255, 255, 255, .42); }
+/* 広告枠の表示領域を予約してレイアウトシフトを防ぐ（AGENTS.md）。
+   min-height = 広告本体の高さ + 26px（padding 20px + 6px）。
+   本体の寸法は apps/scraper/inject_adsense.py の sizing が head に直書きするので、
+   高さを変えるときは両方を必ず合わせる。 */
+.ad-slot { position: relative; display: grid; min-height: 276px; margin: 22px 0; padding: 20px 0 6px; place-items: center; overflow: hidden; border: 1px solid rgba(112, 82, 52, .12); border-radius: 10px; background: rgba(255, 255, 255, .42); }
 .ad-slot__label { position: absolute; top: 5px; left: 50%; z-index: 1; color: #82786e; font-size: 10px; letter-spacing: .12em; transform: translateX(-50%); }
 .ad-slot .adsbygoogle { max-width: 100%; }
 
 @media (min-width: 500px) {
-  .ad-slot { min-height: 86px; }
+  .ad-slot { min-height: 306px; }
 }
 
 @media (min-width: 800px) {
