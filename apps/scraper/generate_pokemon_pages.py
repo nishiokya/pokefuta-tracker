@@ -850,6 +850,7 @@ def generate_html(
       page_type: 'pokemon_lp',
     }});
     gtag('event', 'view_pokemon_lp', {{
+      surface: 'pokemon_lp',
       pokemon_slug: {slug_js},
       manhole_count: {count},
       lang: '{lang}'
@@ -1103,7 +1104,7 @@ def generate_html(
   {related_html}
 
   <a href="{escape(map_url)}" class="cta-map"
-     onclick="trackEvent('click_map_cta', {{pokemon_slug: {slug_js}}})">
+     onclick="trackEvent('click_map_cta', {{surface: 'pokemon_lp', pokemon_slug: {slug_js}}})">
     {escape(cta_text)}
   </a>
 

@@ -43,6 +43,84 @@ class AnalyticsContractTest(unittest.TestCase):
                 text = source.read_text(encoding="utf-8")
                 self.assertIsNone(reserved_source.search(text))
 
+    def test_custom_events_carry_a_surface(self):
+        """カスタムイベントは必ず `surface`（発生箇所）を載せること。
+
+        GA4 で登録済みのカスタムディメンションは4つしかなく、`surface` はその1つ。
+        ここが欠けると「どの面のクリックか」が永久に分からない
+        （実測: 直近28日で `surface=(not set)` が 227,767 件）。
+
+        ソースを見る。生成後HTMLではなくソースで見るのは、生成器を通さずに
+        HTML を直接書く面（トップ・地図・nearby など）も同じ規約に乗せるため。
+        """
+        standard = {
+            # GA4 の自動収集イベント。こちらからパラメータを付けない
+            "page_view", "session_start", "first_visit", "user_engagement",
+            "scroll", "click", "search", "view_search_results", "js",
+        }
+        call = re.compile(
+            r"(?:trackEvent|gtag)\(\s*(?:['\"]event['\"]\s*,\s*)?['\"]([a-z_0-9]+)['\"]"
+        )
+        # 第2引数が変数1つだけの呼び出し（JS の `_sp`、生成器の f-string の
+        # `{_share_onclick}`）は、その変数の定義側で surface を持たせている。
+        # 定義側は test_generated_event_params_carry_a_surface が見る。
+        var_arg = re.compile(
+            r"""^\(\s*['\"][a-z_0-9]+['\"]\s*,\s*\{?[A-Za-z_$][\w$]*\}?\s*\)$"""
+        )
+
+        sources = list((ROOT / "web").glob("*.html"))
+        sources += list((ROOT / "scraper").glob("generate_*.py"))
+        offenders = []
+        for source in sources:
+            text = source.read_text(encoding="utf-8")
+            for match in call.finditer(text):
+                name = match.group(1)
+                if name in standard:
+                    continue
+                start = text.index("(", match.start())
+                depth = 0
+                for end in range(start, len(text)):
+                    if text[end] == "(":
+                        depth += 1
+                    elif text[end] == ")":
+                        depth -= 1
+                        if depth == 0:
+                            break
+                args = text[start:end + 1]
+                if "surface" in args or var_arg.match(args.strip()):
+                    continue
+                line = text[:match.start()].count("\n") + 1
+                offenders.append(f"{source.name}:{line} {name}")
+        self.assertEqual([], offenders, "surface の無いイベント送信: " + ", ".join(offenders))
+
+    def test_generated_event_params_carry_a_surface(self):
+        """生成器が onclick に埋める `_attr_json({...})` も surface を持つこと。
+
+        呼び出し側は `{_share_onclick}` のように変数を挟むので、
+        上のテストからは中身が見えない。定義側をここで押さえる。
+        """
+        source = (ROOT / "scraper/generate_manhole_pages.py").read_text(encoding="utf-8")
+        offenders = []
+        for match in re.finditer(r"_attr_json\(", source):
+            line_start = source.rfind("\n", 0, match.start()) + 1
+            prefix = source[line_start:match.start()]
+            if prefix.lstrip().startswith(("def ", "#")) or "#" in prefix:
+                continue  # ヘルパの定義そのもの・コメント中の言及
+            start = match.end() - 1
+            depth = 0
+            for end in range(start, len(source)):
+                if source[end] == "(":
+                    depth += 1
+                elif source[end] == ")":
+                    depth -= 1
+                    if depth == 0:
+                        break
+            args = source[start:end + 1]
+            if "surface" not in args:
+                line = source[:match.start()].count("\n") + 1
+                offenders.append(f"generate_manhole_pages.py:{line}")
+        self.assertEqual([], offenders, "surface の無い onclick パラメータ: " + ", ".join(offenders))
+
     def test_internal_app_links_do_not_use_utm(self):
         generator = (ROOT / "scraper/generate_prefecture_pages.py").read_text(encoding="utf-8")
 

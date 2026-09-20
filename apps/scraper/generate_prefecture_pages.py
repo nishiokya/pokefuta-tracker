@@ -550,7 +550,8 @@ def _photo_section(
             '<div><strong>すべてのポケふたに現地写真があります</strong>'
             '<p>季節や旅の思い出が伝わる写真も歓迎しています。</p></div>'
             '<a class="inline-link" href="#manhole-list" '
-            'data-track="prefecture_photo_candidate_click" data-destination="manhole_list">'
+            'data-track="prefecture_photo_candidate_click" data-destination="manhole_list" '
+            'data-surface="photo_contribution">'
             '投稿するポケふたを選ぶ</a></div>'
         )
     )
@@ -1074,7 +1075,8 @@ def build_index_page(
     function trackPrefecturesIndexEvent(name, params) {{
       if (typeof window.gtag !== 'function') return;
       gtag('event', name, Object.assign({{
-        event_category: 'prefecture_growth'
+        event_category: 'prefecture_growth',
+        surface: 'prefectures_index'
       }}, params || {{}}));
     }}
     document.addEventListener('click', function(event) {{
@@ -1203,6 +1205,7 @@ def build_page(
             '<a class="button primary" href="#manhole-list" '
             'data-track="prefecture_photo_candidate_click" '
             'data-legacy-track="prefecture_photo_cta_click" '
+            'data-surface="hero" '
             'data-destination="manhole_list">投稿するポケふたを選ぶ</a>'
             '<a class="button secondary" href="#prefecture-map" '
             'data-track="prefecture_map_click" '
@@ -1706,6 +1709,7 @@ def build_page(
       if (typeof window.gtag !== 'function') return;
       gtag('event', name, Object.assign({{
         event_category: 'prefecture_growth',
+        surface: 'prefecture_page',
         prefecture: {_json_for_script(slug)},
         prefecture_name: {_json_for_script(prefecture)}
       }}, params || {{}}));
@@ -1718,7 +1722,7 @@ def build_page(
         destination: link.dataset.destination || '',
         content_id: link.dataset.contentId || '',
         photo_state: link.dataset.photoState || '',
-        surface: link.dataset.surface || ''
+        surface: link.dataset.surface || 'prefecture_page'
       }});
       if (link.dataset.legacyTrack) {{
         trackPrefectureEvent(link.dataset.legacyTrack, {{
@@ -1816,6 +1820,7 @@ def build_page(
         }}).addTo(map).bindPopup(popupHtml, {{ maxWidth: 300 }});
         marker.on('click', function() {{
           trackPrefectureEvent('prefecture_map_pin_click', {{
+            surface: 'prefecture_map',
             content_id: point.id,
             photo_state: photoState
           }});
@@ -1827,7 +1832,7 @@ def build_page(
       function reportMapInteraction(interaction) {{
         if (mapInteractionSent) return;
         mapInteractionSent = true;
-        trackPrefectureEvent('prefecture_map_interaction', {{ interaction: interaction }});
+        trackPrefectureEvent('prefecture_map_interaction', {{ surface: 'prefecture_map', interaction: interaction }});
       }}
       mapElement.addEventListener('pointerdown', function() {{ reportMapInteraction('pointer'); }}, {{ once: true }});
       mapElement.addEventListener('keydown', function() {{ reportMapInteraction('keyboard'); }}, {{ once: true }});

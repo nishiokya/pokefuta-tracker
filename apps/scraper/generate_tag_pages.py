@@ -541,6 +541,7 @@ def build_page(
     function trackTagEvent(name, params) {{
       window.PokefutaAnalytics.trackEvent(name, Object.assign({{
         event_category: 'tag_growth',
+        surface: 'tag_page',
         tag: {_json_for_script(tag)},
         tag_label: {_json_for_script(meta["label"])}
       }}, params || {{}}));
@@ -553,7 +554,7 @@ def build_page(
         destination: link.dataset.destination || '',
         content_id: link.dataset.contentId || '',
         photo_state: link.dataset.photoState || '',
-        surface: link.dataset.surface || ''
+        surface: link.dataset.surface || 'tag_page'
       }});
     }});
     const sentScrollDepths = new Set();

@@ -48,7 +48,7 @@ def render_chips(meta: TagMeta, counts: dict[str, int]) -> str:
         count = counts.get(slug, 0)
         lines.append(
             f'{INDENT}<a class="hub-chip" href="{href}" '
-            f"onclick=\"trackEvent('click_hub_tag',{{tag:'{slug}',destination:'{destination}'}})\">"
+            f"onclick=\"trackEvent('click_hub_tag',{{surface:'top_hub_tag',tag:'{slug}',destination:'{destination}'}})\">"
             f'{escape(meta.chip_label(slug))} '
             f'<span class="chip-count">{count}枚</span></a>'
         )

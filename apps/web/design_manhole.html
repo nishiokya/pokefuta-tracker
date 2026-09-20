@@ -215,15 +215,15 @@
   <!-- ===== APP BAR（ビルド時に inject_site_header.py が共通ヘッダーへ差し替える） ===== -->
   <header class="top-app-bar">
     <div class="top-app-bar-inner">
-      <a class="top-brand" href="./" onclick="trackEvent('click_nav',{nav:'home',from:'design_manhole_lp'})">
+      <a class="top-brand" href="./" onclick="trackEvent('click_nav',{surface:'site_nav',nav:'home',from:'design_manhole_lp'})">
         <span class="brand-name">ポケふた図鑑</span>
       </a>
       <div class="top-nav-right">
         <nav class="top-nav" aria-label="メインナビ">
-          <a class="top-nav-link" href="map.html" onclick="trackEvent('click_nav',{nav:'map',from:'design_manhole_lp'})">マップ</a>
-          <a class="top-nav-link" href="pokemon/" onclick="trackEvent('click_nav',{nav:'pokemon',from:'design_manhole_lp'})">ポケモン</a>
-          <a class="top-nav-link" href="character_manholes.html" onclick="trackEvent('click_nav',{nav:'gmanhole',from:'design_manhole_lp'})">キャラふた</a>
-          <a class="top-nav-link" data-login-link data-nav-target="login" data-stamp-page="https://pokefuta.com/" data-stamp-label="スタンプ帳" href="https://pokefuta.com/login?from=data" onclick="trackEvent('click_nav',{nav:this.dataset.navTarget,from:'design_manhole_lp'})">ログイン</a>
+          <a class="top-nav-link" href="map.html" onclick="trackEvent('click_nav',{surface:'site_nav',nav:'map',from:'design_manhole_lp'})">マップ</a>
+          <a class="top-nav-link" href="pokemon/" onclick="trackEvent('click_nav',{surface:'site_nav',nav:'pokemon',from:'design_manhole_lp'})">ポケモン</a>
+          <a class="top-nav-link" href="character_manholes.html" onclick="trackEvent('click_nav',{surface:'site_nav',nav:'gmanhole',from:'design_manhole_lp'})">キャラふた</a>
+          <a class="top-nav-link" data-login-link data-nav-target="login" data-stamp-page="https://pokefuta.com/" data-stamp-label="スタンプ帳" href="https://pokefuta.com/login?from=data" onclick="trackEvent('click_nav',{surface:'site_nav',nav:this.dataset.navTarget,from:'design_manhole_lp'})">ログイン</a>
         </nav>
       </div>
     </div>
@@ -247,11 +247,11 @@
       </p>
       <div class="lp-cta-row">
         <a class="lp-cta" href="https://pokefuta.com/design-manholes/new"
-           onclick="trackEvent('click_design_manhole_cta',{cta:'hero',from:'design_manhole_lp'})">
+           onclick="trackEvent('click_design_manhole_cta',{surface:'design_manhole_cta',cta:'hero',from:'design_manhole_lp'})">
           写真を投稿する<small>（無料）</small>
         </a>
         <a class="lp-cta-sub" href="https://pokefuta.com/design-manholes"
-           onclick="trackEvent('click_design_manhole_cta',{cta:'hero_gallery',from:'design_manhole_lp'})">みんなの投稿を見る</a>
+           onclick="trackEvent('click_design_manhole_cta',{surface:'design_manhole_cta',cta:'hero_gallery',from:'design_manhole_lp'})">みんなの投稿を見る</a>
         <p class="lp-cta-note">投稿には無料アカウントが必要です。未ログインの場合はログイン後、そのまま投稿画面に戻ります。</p>
       </div>
     </section>
@@ -311,7 +311,7 @@
       <h2 id="lp-gallery-heading"><span>GALLERY</span>みんなの投稿</h2>
       <div id="lp-gallery-grid" class="lp-gallery-grid"></div>
       <a class="lp-gallery-more" href="https://pokefuta.com/design-manholes"
-         onclick="trackEvent('click_design_manhole_cta',{cta:'gallery_more',from:'design_manhole_lp'})">すべての投稿を見る</a>
+         onclick="trackEvent('click_design_manhole_cta',{surface:'design_manhole_cta',cta:'gallery_more',from:'design_manhole_lp'})">すべての投稿を見る</a>
     </section>
 
     <!-- ── FAQ ── -->
@@ -341,7 +341,7 @@
     <section class="lp-final">
       <p>次の散歩で足元を見てみませんか？<br>最初の1枚、お待ちしています。</p>
       <a class="lp-cta" href="https://pokefuta.com/design-manholes/new"
-         onclick="trackEvent('click_design_manhole_cta',{cta:'final',from:'design_manhole_lp'})">
+         onclick="trackEvent('click_design_manhole_cta',{surface:'design_manhole_cta',cta:'final',from:'design_manhole_lp'})">
         写真を投稿する<small>（無料）</small>
       </a>
     </section>

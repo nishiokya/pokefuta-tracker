@@ -86,17 +86,17 @@
   <!-- ===== APP BAR ===== -->
   <header class="top-app-bar">
     <div class="top-app-bar-inner">
-      <a class="top-brand" href="./" onclick="trackEvent('click_nav',{nav:'top'})">
+      <a class="top-brand" href="./" onclick="trackEvent('click_nav',{surface:'site_nav',nav:'top'})">
         <span class="sec-num nav-num"></span>
         <span class="brand-name">ポケふた図鑑</span>
       </a>
       <div class="top-nav-right">
         <nav class="top-nav" aria-label="メインナビ">
-          <a class="top-nav-link" href="map.html" onclick="trackEvent('click_nav',{nav:'map'})">マップ</a>
-          <a class="top-nav-link" href="prefectures/" onclick="trackEvent('click_nav',{nav:'prefecture'})">都道府県</a>
-          <a class="top-nav-link" href="pokemon/" onclick="trackEvent('click_nav',{nav:'pokemon'})">ポケモン</a>
-          <a class="top-nav-link" href="character_manholes.html" onclick="trackEvent('click_nav',{nav:'character'})">キャラふた</a>
-          <a class="top-nav-link" data-login-link data-nav-target="login" data-stamp-page="https://pokefuta.com/" data-stamp-label="スタンプ帳" href="https://pokefuta.com/login?from=data" onclick="trackEvent('click_nav',{nav:this.dataset.navTarget})">ログイン</a>
+          <a class="top-nav-link" href="map.html" onclick="trackEvent('click_nav',{surface:'site_nav',nav:'map'})">マップ</a>
+          <a class="top-nav-link" href="prefectures/" onclick="trackEvent('click_nav',{surface:'site_nav',nav:'prefecture'})">都道府県</a>
+          <a class="top-nav-link" href="pokemon/" onclick="trackEvent('click_nav',{surface:'site_nav',nav:'pokemon'})">ポケモン</a>
+          <a class="top-nav-link" href="character_manholes.html" onclick="trackEvent('click_nav',{surface:'site_nav',nav:'character'})">キャラふた</a>
+          <a class="top-nav-link" data-login-link data-nav-target="login" data-stamp-page="https://pokefuta.com/" data-stamp-label="スタンプ帳" href="https://pokefuta.com/login?from=data" onclick="trackEvent('click_nav',{surface:'site_nav',nav:this.dataset.navTarget})">ログイン</a>
         </nav>
       </div>
     </div>
@@ -134,7 +134,7 @@
           <span class="stat-label">ポケふた</span>
         </div>
         <div class="stat-divider"></div>
-        <a class="top-stat top-stat--link" href="prefectures/" onclick="trackEvent('click_stat_pref_jump')">
+        <a class="top-stat top-stat--link" href="prefectures/" onclick="trackEvent('click_stat_pref_jump',{surface:'top_stats'})">
           <b class="stat-num" id="stat-pref">47</b>
           <span class="stat-label">都道府県</span>
         </a>
@@ -149,7 +149,7 @@
           <span class="stat-label">みんなの写真</span>
         </div>
       </div>
-      <a class="top-quicklink-list" href="prefectures/" onclick="trackEvent('click_intro_list_cta')">📋 都道府県から探す</a>
+      <a class="top-quicklink-list" href="prefectures/" onclick="trackEvent('click_intro_list_cta',{surface:'top_intro'})">📋 都道府県から探す</a>
       <p class="top-stats-note" id="stats-community-note" hidden></p>
     </section>
 
@@ -163,7 +163,7 @@
         <span class="sec-file-label">/ map.html</span>
       </div>
 
-      <a class="map-gateway-card" href="map.html" onclick="trackEvent('click_map_gateway')">
+      <a class="map-gateway-card" href="map.html" onclick="trackEvent('click_map_gateway',{surface:'top_map_gateway'})">
         <div id="mini-map" class="map-gateway-minimap" aria-hidden="true"></div>
         <span class="map-gateway-badge">🗺 全国 <b id="map-badge-count">—</b>枚</span>
         <span class="map-gateway-attr">© OpenStreetMap contributors</span>
@@ -195,7 +195,7 @@
       </div>
 
       <!-- Featured card -->
-      <a class="hero-featured-card" id="hero-featured" href="map.html" onclick="trackEvent('click_hero_featured')">
+      <a class="hero-featured-card" id="hero-featured" href="map.html" onclick="trackEvent('click_hero_featured',{surface:'top_hero'})">
         <!-- ⚠️ overlay は media の中に置くこと。card 直下に置くと inset:0 が
              カード全体（フッター込み）に効き、タイトル・地名がフッターの文字に重なる -->
         <div class="hero-featured-media" id="hero-featured-media">
@@ -217,7 +217,7 @@
 
       <!-- Two small cards -->
       <div class="hero-small-grid">
-        <a class="hero-small-card" id="hero-small-0" href="map.html" onclick="trackEvent('click_hero_small', {position: 0})">
+        <a class="hero-small-card" id="hero-small-0" href="map.html" onclick="trackEvent('click_hero_small', {surface:'top_hero',position: 0})">
           <div class="hero-small-media" id="hero-small-media-0">
             <img class="hero-small-img" id="hero-small-img-0" src="" alt="" loading="lazy">
           </div>
@@ -226,7 +226,7 @@
             <div class="hero-small-place" id="hero-small-place-0"></div>
           </div>
         </a>
-        <a class="hero-small-card" id="hero-small-1" href="map.html" onclick="trackEvent('click_hero_small', {position: 1})">
+        <a class="hero-small-card" id="hero-small-1" href="map.html" onclick="trackEvent('click_hero_small', {surface:'top_hero',position: 1})">
           <div class="hero-small-media" id="hero-small-media-1">
             <img class="hero-small-img" id="hero-small-img-1" src="" alt="" loading="lazy">
           </div>
@@ -265,17 +265,17 @@
       <div class="hub-card">
         <div class="hub-card-header">
           <span>テーマから探す</span>
-          <a class="hub-card-more" href="map.html?view=theme" onclick="trackEvent('click_hub_tag_all')">地図で探す →</a>
+          <a class="hub-card-more" href="map.html?view=theme" onclick="trackEvent('click_hub_tag_all',{surface:'top_hub_tag'})">地図で探す →</a>
         </div>
         <div class="hub-chips">
           <!-- tag-chips:start -->
-          <a class="hub-chip" href="/tags/roadside/" onclick="trackEvent('click_hub_tag',{tag:'roadside',destination:'tag_page'})">🛤 道の駅 <span class="chip-count">99枚</span></a>
-          <a class="hub-chip" href="/tags/world_heritage/" onclick="trackEvent('click_hub_tag',{tag:'world_heritage',destination:'tag_page'})">🌐 世界遺産 <span class="chip-count">28枚</span></a>
-          <a class="hub-chip" href="/tags/remote_island/" onclick="trackEvent('click_hub_tag',{tag:'remote_island',destination:'tag_page'})">🏝 離島 <span class="chip-count">30枚</span></a>
-          <a class="hub-chip" href="/map.html?tag=near_gundam_manhole" onclick="trackEvent('click_hub_tag',{tag:'near_gundam_manhole',destination:'map_tag_filter'})">🤖 ガンダムマンホール <span class="chip-count">7枚</span></a>
-          <a class="hub-chip" href="/map.html?tag=seaside" onclick="trackEvent('click_hub_tag',{tag:'seaside',destination:'map_tag_filter'})">🌊 海沿い <span class="chip-count">119枚</span></a>
-          <a class="hub-chip" href="/map.html?tag=tourism" onclick="trackEvent('click_hub_tag',{tag:'tourism',destination:'map_tag_filter'})">🗺 観光地 <span class="chip-count">92枚</span></a>
-          <a class="hub-chip" href="/map.html?tag=park" onclick="trackEvent('click_hub_tag',{tag:'park',destination:'map_tag_filter'})">🌳 公園 <span class="chip-count">46枚</span></a>
+          <a class="hub-chip" href="/tags/roadside/" onclick="trackEvent('click_hub_tag',{surface:'top_hub_tag',tag:'roadside',destination:'tag_page'})">🛤 道の駅 <span class="chip-count">99枚</span></a>
+          <a class="hub-chip" href="/tags/world_heritage/" onclick="trackEvent('click_hub_tag',{surface:'top_hub_tag',tag:'world_heritage',destination:'tag_page'})">🌐 世界遺産 <span class="chip-count">28枚</span></a>
+          <a class="hub-chip" href="/tags/remote_island/" onclick="trackEvent('click_hub_tag',{surface:'top_hub_tag',tag:'remote_island',destination:'tag_page'})">🏝 離島 <span class="chip-count">30枚</span></a>
+          <a class="hub-chip" href="/map.html?tag=near_gundam_manhole" onclick="trackEvent('click_hub_tag',{surface:'top_hub_tag',tag:'near_gundam_manhole',destination:'map_tag_filter'})">🤖 ガンダムマンホール <span class="chip-count">7枚</span></a>
+          <a class="hub-chip" href="/map.html?tag=seaside" onclick="trackEvent('click_hub_tag',{surface:'top_hub_tag',tag:'seaside',destination:'map_tag_filter'})">🌊 海沿い <span class="chip-count">119枚</span></a>
+          <a class="hub-chip" href="/map.html?tag=tourism" onclick="trackEvent('click_hub_tag',{surface:'top_hub_tag',tag:'tourism',destination:'map_tag_filter'})">🗺 観光地 <span class="chip-count">92枚</span></a>
+          <a class="hub-chip" href="/map.html?tag=park" onclick="trackEvent('click_hub_tag',{surface:'top_hub_tag',tag:'park',destination:'map_tag_filter'})">🌳 公園 <span class="chip-count">46枚</span></a>
           <!-- tag-chips:end -->
         </div>
       </div>
@@ -284,14 +284,14 @@
       <div class="hub-card">
         <div class="hub-card-header">
           <span>人気のポケモンから探す</span>
-          <a class="hub-card-more" href="/pokemon/" onclick="trackEvent('click_hub_pokemon_all')">すべて →</a>
+          <a class="hub-card-more" href="/pokemon/" onclick="trackEvent('click_hub_pokemon_all',{surface:'top_hub_pokemon'})">すべて →</a>
         </div>
         <div class="hub-chips">
-          <a class="hub-chip" href="/pokemon/pikachu/" onclick="trackEvent('click_hub_pokemon',{pokemon:'ピカチュウ'})">ピカチュウ <span class="chip-count" id="chip-pikachu">—</span></a>
-          <a class="hub-chip" href="/pokemon/eevee/" onclick="trackEvent('click_hub_pokemon',{pokemon:'イーブイ'})">イーブイ <span class="chip-count" id="chip-eevee">—</span></a>
-          <a class="hub-chip" href="/pokemon/lapras/" onclick="trackEvent('click_hub_pokemon',{pokemon:'ラプラス'})">ラプラス <span class="chip-count" id="chip-lapras">—</span></a>
-          <a class="hub-chip" href="/pokemon/snorlax/" onclick="trackEvent('click_hub_pokemon',{pokemon:'カビゴン'})">カビゴン <span class="chip-count" id="chip-snorlax">—</span></a>
-          <a class="hub-chip" href="/pokemon/slowpoke/" onclick="trackEvent('click_hub_pokemon',{pokemon:'ヤドン'})">ヤドン <span class="chip-count" id="chip-slowpoke">—</span></a>
+          <a class="hub-chip" href="/pokemon/pikachu/" onclick="trackEvent('click_hub_pokemon',{surface:'top_hub_pokemon',pokemon:'ピカチュウ'})">ピカチュウ <span class="chip-count" id="chip-pikachu">—</span></a>
+          <a class="hub-chip" href="/pokemon/eevee/" onclick="trackEvent('click_hub_pokemon',{surface:'top_hub_pokemon',pokemon:'イーブイ'})">イーブイ <span class="chip-count" id="chip-eevee">—</span></a>
+          <a class="hub-chip" href="/pokemon/lapras/" onclick="trackEvent('click_hub_pokemon',{surface:'top_hub_pokemon',pokemon:'ラプラス'})">ラプラス <span class="chip-count" id="chip-lapras">—</span></a>
+          <a class="hub-chip" href="/pokemon/snorlax/" onclick="trackEvent('click_hub_pokemon',{surface:'top_hub_pokemon',pokemon:'カビゴン'})">カビゴン <span class="chip-count" id="chip-snorlax">—</span></a>
+          <a class="hub-chip" href="/pokemon/slowpoke/" onclick="trackEvent('click_hub_pokemon',{surface:'top_hub_pokemon',pokemon:'ヤドン'})">ヤドン <span class="chip-count" id="chip-slowpoke">—</span></a>
         </div>
       </div>
 
@@ -406,7 +406,7 @@
       if (featuredEl) {
         featuredEl.href = hero.href;
         if (hero.community) {
-          featuredEl.onclick = function() { trackEvent('click_hero_photo', { manhole: String(hero.id), position: 'featured' }); };
+          featuredEl.onclick = function() { trackEvent('click_hero_photo', {surface:'top_hero_photo', manhole: String(hero.id), position: 'featured' }); };
         }
       }
       var imgEl = document.getElementById('hero-featured-img');
@@ -424,7 +424,7 @@
         if (cardEl) {
           cardEl.href = s.href;
           if (hero.community) {
-            cardEl.onclick = function() { trackEvent('click_hero_photo', { manhole: String(s.id), position: i }); };
+            cardEl.onclick = function() { trackEvent('click_hero_photo', {surface:'top_hero_photo', manhole: String(s.id), position: i }); };
           }
         }
         if (mediaSmEl) {
@@ -552,7 +552,7 @@
         if (photos.length) {
           applyHero(communityHero(photos));
           setText('hero-update-label', TF_STRINGS.label);
-          if (window.trackEvent) trackEvent('view_hero_community', { count: photos.length });
+          if (window.trackEvent) trackEvent('view_hero_community', {surface:'top_hero_community', count: photos.length });
         }
         renderCommunityStats(feed && feed.stats);
       })
@@ -591,12 +591,12 @@
           card.appendChild(badge);
           card.appendChild(copy);
           card.addEventListener('click', function() {
-            if (window.trackEvent) trackEvent('click_event_notice', { prefecture: e.prefecture, destination: 'prefecture_page' });
+            if (window.trackEvent) trackEvent('click_event_notice', {surface:'top_event_notice', prefecture: e.prefecture, destination: 'prefecture_page' });
           });
           list.appendChild(card);
         });
         document.getElementById('sec-events').hidden = false;
-        if (window.trackEvent) trackEvent('view_event_notice', { count: active.length });
+        if (window.trackEvent) trackEvent('view_event_notice', {surface:'top_event_notice', count: active.length });
       })
       .catch(function() { /* no event notices */ });
 
@@ -719,7 +719,7 @@
             var cnt = prefCountMap[pref] || 0;
             var slug = slugMap[pref] || encodeURIComponent(pref);
             var isLast = i === PREF_ORDER.length - 1;
-            return '<a class="pref-link-item' + (isLast ? ' pref-link-item--last' : '') + '" href="' + window.getPrefecturePageUrl(pref) + '" onclick="trackEvent(\'click_pref_link\',{prefecture:\'' + pref + '\'})">'
+            return '<a class="pref-link-item' + (isLast ? ' pref-link-item--last' : '') + '" href="' + window.getPrefecturePageUrl(pref) + '" onclick="trackEvent(\'click_pref_link\',{surface:\'top_prefecture_list\',prefecture:\'' + pref + '\'})">'
               + '<span class="pref-link-name">' + pref + '</span>'
               + (cnt ? '<span class="pref-link-count">' + cnt + '枚 →</span>' : '<span class="pref-link-count">→</span>')
               + '</a>';
@@ -835,7 +835,7 @@
           + '</a>';
       }).join('');
       section.hidden = false;
-      if (window.trackEvent) trackEvent('view_newrelease', { count: list.length });
+      if (window.trackEvent) trackEvent('view_newrelease', {surface:'top_newrelease', count: list.length });
     }
   })();
   </script>

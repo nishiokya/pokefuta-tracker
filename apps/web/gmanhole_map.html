@@ -181,15 +181,15 @@
   <!-- ===== APP BAR (index.html と共通のヘッダー) ===== -->
   <header class="top-app-bar">
     <div class="top-app-bar-inner">
-      <a class="top-brand" href="./" onclick="trackEvent('click_nav',{nav:'home',from:'gmanhole_map'})">
+      <a class="top-brand" href="./" onclick="trackEvent('click_nav',{surface:'site_nav',nav:'home',from:'gmanhole_map'})">
         <span class="brand-name">ポケふた図鑑</span>
       </a>
       <div class="top-nav-right">
         <nav class="top-nav" aria-label="メインナビ">
-          <a class="top-nav-link" href="map.html" onclick="trackEvent('click_nav',{nav:'map',from:'gmanhole_map'})">マップ</a>
-          <a class="top-nav-link" href="pokemon/" onclick="trackEvent('click_nav',{nav:'pokemon',from:'gmanhole_map'})">ポケモン</a>
-          <a class="top-nav-link" href="character_manholes.html" onclick="trackEvent('click_nav',{nav:'character',from:'gmanhole_map'})">キャラふた</a>
-          <a class="top-nav-link" data-login-link data-nav-target="login" data-stamp-page="https://pokefuta.com/" data-stamp-label="スタンプ帳" href="https://pokefuta.com/login?from=data" onclick="trackEvent('click_nav',{nav:this.dataset.navTarget,from:'gmanhole_map'})">ログイン</a>
+          <a class="top-nav-link" href="map.html" onclick="trackEvent('click_nav',{surface:'site_nav',nav:'map',from:'gmanhole_map'})">マップ</a>
+          <a class="top-nav-link" href="pokemon/" onclick="trackEvent('click_nav',{surface:'site_nav',nav:'pokemon',from:'gmanhole_map'})">ポケモン</a>
+          <a class="top-nav-link" href="character_manholes.html" onclick="trackEvent('click_nav',{surface:'site_nav',nav:'character',from:'gmanhole_map'})">キャラふた</a>
+          <a class="top-nav-link" data-login-link data-nav-target="login" data-stamp-page="https://pokefuta.com/" data-stamp-label="スタンプ帳" href="https://pokefuta.com/login?from=data" onclick="trackEvent('click_nav',{surface:'site_nav',nav:this.dataset.navTarget,from:'gmanhole_map'})">ログイン</a>
         </nav>
       </div>
     </div>
@@ -206,7 +206,7 @@
     </div>
     <div id="controls-content" class="controls-content" role="region" aria-label="全体パネルの内容">
       <nav class="map-breadcrumb" aria-label="パンくずリスト">
-        <a href="character_manholes.html" onclick="trackEvent('click_nav',{nav:'character_manholes_lp',from:'gmanhole_map_breadcrumb'})">キャラクターマンホール</a>
+        <a href="character_manholes.html" onclick="trackEvent('click_nav',{surface:'site_nav',nav:'character_manholes_lp',from:'gmanhole_map_breadcrumb'})">キャラクターマンホール</a>
         <span aria-hidden="true">›</span>
         <span aria-current="page">地図</span>
       </nav>
@@ -249,7 +249,7 @@
       </div>
       <div class="sheet-utility-section">
         <p class="sheet-section-label">デザインマンホールを見つけたら</p>
-        <a class="design-manhole-promo-card" href="design_manhole.html" onclick="trackEvent('click_design_manhole_lp',{from:'gmanhole_map_sheet'})">
+        <a class="design-manhole-promo-card" href="design_manhole.html" onclick="trackEvent('click_design_manhole_lp',{surface:'gmanhole_map_cta',from:'gmanhole_map_sheet'})">
           <span class="design-manhole-promo-icon" aria-hidden="true">📸</span>
           <span class="design-manhole-promo-copy">
             <strong>この地図にない1枚も、投稿でマップに。</strong>
@@ -602,7 +602,7 @@
 
           // Track prefecture selection
           if (window.trackEvent && willSelect) {
-            window.trackEvent('click_prefecture', {
+            window.trackEvent('click_prefecture', {surface:'gmanhole_map_prefecture_filter',
               'event_category': 'navigation',
               'event_label': pref,
               'value': total
@@ -797,13 +797,13 @@
       if (!(Number.isFinite(Number(d.lat)) && Number.isFinite(Number(d.lng)))) return '';
       const mapsUrl = `https://www.google.com/maps?q=${encodeURIComponent(`${d.lat},${d.lng}`)}`;
       return `<a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" class="travel-popup-action travel-popup-action--maps"
-        onclick="if(window.trackEvent){window.trackEvent('popup_click_google_maps',{${eventParams}});}">Google Mapsで行く</a>`;
+        onclick="if(window.trackEvent){window.trackEvent('popup_click_google_maps',{surface:'gmanhole_map_popup',${eventParams}});}">Google Mapsで行く</a>`;
     }
 
     function buildDetailAction(url, label, eventParams){
       if (!url) return '';
       return `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer" class="travel-popup-action travel-popup-action--detail"
-        onclick="if(window.trackEvent){window.trackEvent('popup_click_detail',{${eventParams}});}">${esc(label)}</a>`;
+        onclick="if(window.trackEvent){window.trackEvent('popup_click_detail',{surface:'gmanhole_map_popup',${eventParams}});}">${esc(label)}</a>`;
     }
 
     function buildTravelPopup({ d, title, building, badgeHtml, chipsHtml, chipsLabel, photoUrl, photoLink, detailUrl, detailLabel }){
@@ -1117,7 +1117,7 @@
         }
         setButtonState('確認中...', { busy: true });
         if (window.trackEvent) {
-          window.trackEvent('click_locate_nearby', {
+          window.trackEvent('click_locate_nearby', {surface:'gmanhole_map_toolbar',
             'event_category': 'user_engagement',
             'event_label': 'locate_button_clicked'
           });
@@ -1126,7 +1126,7 @@
           const { latitude, longitude } = position.coords;
           setButtonState(defaultLabel);
           if (window.trackEvent) {
-            window.trackEvent('geolocation_success', {
+            window.trackEvent('geolocation_success', {surface:'gmanhole_map_geolocation',
               'event_category': 'user_engagement',
               'event_label': 'location_acquired'
             });
@@ -1153,7 +1153,7 @@
         }, (error) => {
           setButtonState('取得できませんでした', { resetAfter: 1800 });
           if (window.trackEvent) {
-            window.trackEvent('geolocation_error', {
+            window.trackEvent('geolocation_error', {surface:'gmanhole_map_geolocation',
               'event_category': 'user_engagement',
               'event_label': `error_${error.code}`
             });
@@ -1167,7 +1167,7 @@
     document.getElementById('chk-pokemon').addEventListener('change', (e) => {
       // Track Pokemon filter toggle
       if (window.trackEvent) {
-        window.trackEvent('toggle_pokemon_filter', {
+        window.trackEvent('toggle_pokemon_filter', {surface:'gmanhole_map_filter',
           'event_category': 'user_engagement',
           'event_label': e.target.checked ? 'enabled' : 'disabled'
         });
@@ -1177,7 +1177,7 @@
     document.getElementById('chk-gundam').addEventListener('change', (e) => {
       // Track Gundam filter toggle
       if (window.trackEvent) {
-        window.trackEvent('toggle_gundam_filter', {
+        window.trackEvent('toggle_gundam_filter', {surface:'gmanhole_map_filter',
           'event_category': 'user_engagement',
           'event_label': e.target.checked ? 'enabled' : 'disabled'
         });
@@ -1188,7 +1188,7 @@
     document.getElementById('work-filter-list').addEventListener('change', (e) => {
       if (!e.target.matches('.character-work-checkbox')) return;
       if (window.trackEvent) {
-        window.trackEvent('toggle_character_work_filter', {
+        window.trackEvent('toggle_character_work_filter', {surface:'gmanhole_map_filter',
           'event_category': 'user_engagement',
           'event_label': e.target.dataset.work,
           'enabled': e.target.checked

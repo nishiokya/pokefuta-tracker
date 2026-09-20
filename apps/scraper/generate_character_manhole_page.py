@@ -708,15 +708,15 @@ def generate_html(
   <!-- ===== APP BAR（ビルド時に inject_site_header.py が共通ヘッダーへ差し替える） ===== -->
   <header class="top-app-bar">
     <div class="top-app-bar-inner">
-      <a class="top-brand" href="./" onclick="trackEvent('click_nav',{{nav:'home',from:'character_manholes_lp'}})">
+      <a class="top-brand" href="./" onclick="trackEvent('click_nav',{{surface:'site_nav',nav:'home',from:'character_manholes_lp'}})">
         <span class="brand-name">ポケふた図鑑</span>
       </a>
       <div class="top-nav-right">
         <nav class="top-nav" aria-label="メインナビ">
-          <a class="top-nav-link" href="map.html" onclick="trackEvent('click_nav',{{nav:'map',from:'character_manholes_lp'}})">マップ</a>
-          <a class="top-nav-link" href="pokemon/" onclick="trackEvent('click_nav',{{nav:'pokemon',from:'character_manholes_lp'}})">ポケモン</a>
+          <a class="top-nav-link" href="map.html" onclick="trackEvent('click_nav',{{surface:'site_nav',nav:'map',from:'character_manholes_lp'}})">マップ</a>
+          <a class="top-nav-link" href="pokemon/" onclick="trackEvent('click_nav',{{surface:'site_nav',nav:'pokemon',from:'character_manholes_lp'}})">ポケモン</a>
           <a class="top-nav-link top-nav-link--active" href="character_manholes.html" aria-current="page">キャラふた</a>
-          <a class="top-nav-link" data-login-link data-nav-target="login" data-stamp-page="https://pokefuta.com/" data-stamp-label="スタンプ帳" href="https://pokefuta.com/login?from=data" onclick="trackEvent('click_nav',{{nav:this.dataset.navTarget,from:'character_manholes_lp'}})">ログイン</a>
+          <a class="top-nav-link" data-login-link data-nav-target="login" data-stamp-page="https://pokefuta.com/" data-stamp-label="スタンプ帳" href="https://pokefuta.com/login?from=data" onclick="trackEvent('click_nav',{{surface:'site_nav',nav:this.dataset.navTarget,from:'character_manholes_lp'}})">ログイン</a>
         </nav>
       </div>
     </div>
@@ -747,7 +747,7 @@ def generate_html(
     <section class="lp-section" aria-labelledby="lp-map-heading">
       <h2 id="lp-map-heading"><span aria-hidden="true">MAP</span>地図で探す</h2>
       <a class="map-gateway-card" href="{MAP_HREF}"
-         onclick="trackEvent('click_map_cta',{{cta:'map_section',from:'character_manholes_lp'}})">
+         onclick="trackEvent('click_map_cta',{{surface:'character_map_section',cta:'map_section',from:'character_manholes_lp'}})">
         <div id="cm-mini-map" class="map-gateway-minimap" aria-hidden="true"></div>
         <span class="map-gateway-badge">🗺 全国 <b>{total_count}</b>枚</span>
         <span class="map-gateway-attr">© OpenStreetMap contributors</span>
@@ -797,7 +797,7 @@ def generate_html(
     <section class="lp-section" aria-labelledby="lp-post-heading">
       <h2 id="lp-post-heading"><span aria-hidden="true">SUBMIT</span>その1枚、まだカメラロールにありますか？</h2>
       <a class="lp-promo-card" href="{DESIGN_MANHOLE_HREF}"
-         onclick="trackEvent('click_design_manhole_lp',{{from:'character_manholes_lp'}})">
+         onclick="trackEvent('click_design_manhole_lp',{{surface:'character_cta',from:'character_manholes_lp'}})">
         <span class="lp-promo-icon" aria-hidden="true">📸</span>
         <span>
           <strong>カメラロールの1枚を投稿する</strong>

@@ -233,7 +233,7 @@
 
     <div class="distance-filter" id="distanceFilter" style="display: none;">
       <label for="distanceSelect">表示範囲:</label>
-      <select id="distanceSelect" onchange="filterManholes(); if(window.trackEvent){window.trackEvent('change_distance_filter',{event_category:'user_engagement',event_label:this.value+'km'});}">
+      <select id="distanceSelect" onchange="filterManholes(); if(window.trackEvent){window.trackEvent('change_distance_filter',{surface:'nearby_filter',event_category:'user_engagement',event_label:this.value+'km'});}">
         <option value="1">1km以内</option>
         <option value="3">3km以内</option>
         <option value="5">5km以内</option>
@@ -312,7 +312,7 @@
 
       // Track location button click only if user initiated
       if (isUserClick && window.trackEvent) {
-        window.trackEvent('click_get_location', {
+        window.trackEvent('click_get_location', {surface:'nearby_geolocation',
           'event_category': 'user_engagement',
           'event_label': 'nearby_page'
         });
@@ -334,7 +334,7 @@
 
           // Track geolocation success
           if (window.trackEvent) {
-            window.trackEvent('geolocation_success_nearby', {
+            window.trackEvent('geolocation_success_nearby', {surface:'nearby_geolocation',
               'event_category': 'user_engagement',
               'event_label': 'location_acquired'
             });
@@ -358,7 +358,7 @@
 
           // Track geolocation error
           if (window.trackEvent) {
-            window.trackEvent('geolocation_error_nearby', {
+            window.trackEvent('geolocation_error_nearby', {surface:'nearby_geolocation',
               'event_category': 'user_engagement',
               'event_label': `error_${error.code}`
             });
@@ -482,8 +482,8 @@
           </div>
           <div class="manhole-actions">
             <div class="manhole-distance">${formatDistance(manhole.distance)}</div>
-            <a href="${pokefutaUrl}" target="_blank" class="pokefuta-link" onclick="if(window.trackEvent){window.trackEvent('click_official_link_nearby',{event_category:'outbound',event_label:'${safeTitleAttr}',manhole_id:'${safeIdAttr}'});}">⚡ 公式情報</a>
-            <a href="${mapsUrl}" target="_blank" class="maps-link" onclick="if(window.trackEvent){window.trackEvent('click_google_map',{event_category:'outbound',event_label:'${safeTitleAttr}',manhole_id:'${safeIdAttr}'});}">📍 Google Map</a>
+            <a href="${pokefutaUrl}" target="_blank" class="pokefuta-link" onclick="if(window.trackEvent){window.trackEvent('click_official_link_nearby',{surface:'nearby_manhole_card',event_category:'outbound',event_label:'${safeTitleAttr}',manhole_id:'${safeIdAttr}'});}">⚡ 公式情報</a>
+            <a href="${mapsUrl}" target="_blank" class="maps-link" onclick="if(window.trackEvent){window.trackEvent('click_google_map',{surface:'nearby_manhole_card',event_category:'outbound',event_label:'${safeTitleAttr}',manhole_id:'${safeIdAttr}'});}">📍 Google Map</a>
           </div>
         </div>
         `;

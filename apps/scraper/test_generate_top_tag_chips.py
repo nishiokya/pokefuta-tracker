@@ -52,7 +52,7 @@ class RenderTest(unittest.TestCase):
         self.assertIn('<span class="chip-count">99枚</span>', self.html)
 
     def test_keeps_the_existing_tracking_event(self) -> None:
-        self.assertIn("trackEvent('click_hub_tag',{tag:'roadside'", self.html)
+        self.assertIn("trackEvent('click_hub_tag',{surface:'top_hub_tag',tag:'roadside'", self.html)
 
     def test_obeys_the_limit(self) -> None:
         self.assertEqual(2, self.html.count("hub-chip"))
