@@ -58,7 +58,8 @@ class BuildSitemapTest(unittest.TestCase):
                 self.assertIn(
                     f"<loc>https://data.pokefuta.com/{page.path}</loc>", self.xml
                 )
-        self.assertIn("<loc>https://data.pokefuta.com/characters/</loc>", self.xml)
+        # /characters/ 自体は noindex のUIハブなので sitemap には出さない
+        self.assertNotIn("<loc>https://data.pokefuta.com/characters/</loc>", self.xml)
 
     def test_omits_character_work_page_without_active_records(self) -> None:
         xml = MODULE.build_sitemap(["1"], [], character_work_pages=[])

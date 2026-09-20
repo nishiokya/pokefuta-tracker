@@ -353,7 +353,8 @@ class GenerateHtmlTest(unittest.TestCase):
              "prefecture": "熊本県", "city": "熊本市", "status": "active"},
         ]
         html = generate_html(records, self.gundam_records, self.design_path)
-        self.assertEqual(1, html.count('href="./characters/idolmaster/"'))
+        # 作品カードは1枚に束ねる。早見表には県ごとに出るので、カードだけ数える
+        self.assertEqual(1, html.count('class="lp-work-card" href="./characters/idolmaster/"'))
         self.assertIn("アイドルマスター</strong><small>2枚", html)
 
     def test_excludes_photo_less_posts_from_latest_section(self):
@@ -676,6 +677,32 @@ class SearchIntentCopyTest(unittest.TestCase):
         self.assertIn(f"掲載データ：{self.total_count}枚・3作品・3都道府県", self.html)
         self.assertIn("全国すべてを網羅するものではありません", self.html)
         self.assertNotIn("あなたの1枚が", self.html)
+
+    def test_prefecture_cross_table_covers_every_prefecture(self):
+        """都道府県×作品の早見表。作品軸(カード)にも住所軸(設置場所一覧)にも無い切り口を
+        全国一覧が持つことで、/characters/ を検索の入口にしなくて済む。"""
+        rows = re.findall(
+            r'<tr><th scope="row">([^<]+)<span>(\d+)枚</span></th>'
+            r'<td><div class="lp-cross-links">(.*?)</div></td></tr>',
+            self.html, re.S,
+        )
+        self.assertTrue(rows)
+        with_prefecture = [r for r in self.character_records + self.gundam_records
+                           if r.get("prefecture")]
+        self.assertEqual(len({r["prefecture"] for r in with_prefecture}), len(rows))
+        self.assertEqual(len(with_prefecture), sum(int(total) for _, total, _ in rows))
+        for prefecture, total, cells in rows:
+            with self.subTest(prefecture=prefecture):
+                per_work = [int(n) for n in re.findall(r"<span>(\d+)</span></a>", cells)]
+                self.assertEqual(int(total), sum(per_work))
+
+    def test_work_cards_show_character_names(self):
+        names = {str(r.get("character")) for r in self.character_records if r.get("character")}
+        self.assertTrue(names, "フィクスチャに character を持つレコードが必要")
+        self.assertIn('<small class="lp-work-chars">', self.html)
+        for name in names:
+            with self.subTest(character=name):
+                self.assertIn(name, self.html)
 
     def test_links_to_character_work_index(self):
         self.assertIn('href="./characters/"', self.html)

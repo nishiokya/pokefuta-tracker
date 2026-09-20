@@ -421,7 +421,7 @@ def generate_index_html(records: list[dict], gundam_records: list[dict] | None =
 <html lang="ja"><head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{escape(title)}</title><meta name="description" content="{escape(description)}">
-  <link rel="canonical" href="{canonical}"><meta name="robots" content="index,follow">
+  <link rel="canonical" href="{canonical}"><meta name="robots" content="noindex,follow">
   <meta property="og:type" content="website"><meta property="og:locale" content="ja_JP">
   <meta property="og:title" content="{escape(title)}"><meta property="og:description" content="{escape(description)}">
   <meta property="og:url" content="{canonical}"><meta property="og:site_name" content="ポケふた図鑑">
