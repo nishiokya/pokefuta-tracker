@@ -166,6 +166,17 @@ class GenerateAllPagesTest(unittest.TestCase):
         self.assertIn(f"<dt>作品</dt><dd>{len(WORK_PAGES) + 1}</dd>", html)
         self.assertIn(f"<dt>都道府県</dt><dd>{len(prefectures)}</dd>", html)
 
+    def test_index_is_not_indexable(self) -> None:
+        """全国一覧が同じ検索意図の上位互換なので、このハブは検索結果に出さない。
+        follow は残す: 作品ページへのクロール経路になっている。"""
+        root = Path(__file__).resolve().parents[2]
+        html = generate_index_html(load_ndjson(root / "docs/character_manholes.ndjson"))
+        self.assertIn('<meta name="robots" content="noindex,follow">', html)
+
+    def test_work_guides_stay_indexable(self) -> None:
+        html = generate_html(IDOLMASTER, RECORDS, EVENT, now=datetime(2026, 9, 20, tzinfo=JST))
+        self.assertIn('<meta name="robots" content="index,follow">', html)
+
     def test_index_links_works_without_a_guide_page_to_the_filtered_map(self) -> None:
         root = Path(__file__).resolve().parents[2]
         html = generate_index_html(

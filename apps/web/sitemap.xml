@@ -51,11 +51,6 @@
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://data.pokefuta.com/characters/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://data.pokefuta.com/characters/idolmaster/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>

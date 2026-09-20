@@ -91,6 +91,7 @@ LATEST_POSTS_LIMIT = 4
 # 「キャラクターマンホールと確認できる投稿」として優先枠に入れる。
 CHARACTER_LINKAGE_PREFIXES = ("gundam:", "character:")
 HERO_MOSAIC_LIMIT = 6
+WORK_CARD_CHARACTER_LIMIT = 3
 
 FAQ_ITEMS: list[tuple[str, str]] = [
     (
@@ -190,7 +191,13 @@ def build_work_summaries(character_records: list[dict], gundam_records: list[dic
         )
         color = next((record.get("marker_color") for record in records if record.get("marker_color")), "")
         label = next((record.get("marker_label") for record in records if record.get("marker_label")), work[:1])
+        characters: list[str] = []
+        for record in records:
+            name = str(record.get("character") or "").strip()
+            if name and name not in characters:
+                characters.append(name)
         summaries.append({
+            "characters": characters,
             "work": work,
             "count": len(records),
             "prefectures": prefectures,
@@ -213,6 +220,7 @@ def build_work_summaries(character_records: list[dict], gundam_records: list[dic
             "label": GUNDAM_MARKER_LABEL,
             "query": GUNDAM_WORK_QUERY,
             "path": "",
+            "characters": [],
         })
 
     return sorted(summaries, key=lambda summary: (-summary["count"], summary["work"]))
@@ -455,6 +463,25 @@ PAGE_STYLE = """
     .lp-pref-item:hover { border-color: var(--top-purple); }
     .lp-pref-item span { font-size: 12px; font-weight: 800; color: var(--top-purple); }
 
+    .lp-work-card .lp-work-chars { margin-top: 3px; font-size: 11px; color: var(--top-text-faint); }
+
+    /* ── 都道府県 × 作品の早見表 ── */
+    .lp-cross-heading { margin: 26px 0 6px; font-size: 15px; font-weight: 800; text-align: center; }
+    .lp-cross { width: 100%; margin: 12px 0 4px; border-collapse: collapse; font-size: 13px; }
+    .lp-cross thead th { padding: 8px 10px; border-bottom: 1px solid var(--top-border); font-size: 11px; color: var(--top-text-muted); text-align: left; }
+    .lp-cross tbody th { width: 8.5em; padding: 12px 10px; border-top: 1px solid var(--top-border-light); font-weight: 800; text-align: left; vertical-align: top; }
+    .lp-cross tbody th span { display: block; margin-top: 2px; font-size: 11px; font-weight: 400; color: var(--top-text-muted); }
+    .lp-cross td { padding: 12px 10px; border-top: 1px solid var(--top-border-light); }
+    .lp-cross-links { display: flex; flex-wrap: wrap; gap: 8px 10px; }
+    .lp-cross-links a { background: var(--top-purple-pale); color: var(--top-purple-dark); padding: 5px 12px; border-radius: 999px; text-decoration: none; overflow-wrap: anywhere; }
+    .lp-cross-links span { margin-left: 6px; font-size: 11px; color: var(--top-text-muted); }
+    @media (max-width: 640px) {
+      .lp-cross thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+      .lp-cross tbody th, .lp-cross td { display: block; width: auto; }
+      .lp-cross tbody th { padding: 14px 0 0; }
+      .lp-cross td { padding: 8px 0 14px; border-top: 0; }
+    }
+
     .lp-jump-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 18px; }
     .lp-jump-links a, .lp-locations a { color: var(--top-purple); text-underline-offset: 3px; }
     .lp-locations { margin-top: 16px; border: 1px solid var(--top-border); border-radius: var(--top-radius-card); padding: 12px 16px; }
@@ -538,15 +565,21 @@ def _work_card_html(summary: dict) -> str:
     pref_text = "・".join(summary["prefectures"][:3])
     if len(summary["prefectures"]) > 3:
         pref_text += " ほか"
-    map_href = f"{MAP_HREF}?work={quote(summary['query'])}"
-    href = f"./{summary['path']}" if summary.get("path") else map_href
+    href = _work_href(summary.get("path", ""), summary["query"])
+    # キャラ名自体に「・」を含むものがある（例: まる子・友蔵）ので区切りは読点にする
+    characters = summary.get("characters") or []
+    character_text = "、".join(characters[:WORK_CARD_CHARACTER_LIMIT])
+    if len(characters) > WORK_CARD_CHARACTER_LIMIT:
+        character_text += f" ほか{len(characters) - WORK_CARD_CHARACTER_LIMIT}種"
     return (
         f'<li><a class="lp-work-card" href="{href}">'
         f'<span class="lp-work-chip" style="background:{escape(summary["color"])}">{escape(str(summary["label"])[:1])}</span>'
         f'<strong>{escape(summary["work"])}</strong>'
         f'<small>{summary["count"]}枚'
         + (f' ／ {escape(pref_text)}' if pref_text else '')
-        + '</small></a></li>'
+        + '</small>'
+        + (f'<small class="lp-work-chars">{escape(character_text)}</small>' if character_text else '')
+        + '</a></li>'
     )
 
 
@@ -555,6 +588,64 @@ def _pref_item_html(entry: dict) -> str:
     return (
         f'<a class="lp-pref-item" href="{map_href}">'
         f'{escape(entry["prefecture"])}<span>{entry["count"]}枚</span></a>'
+    )
+
+
+def _work_href(summary_path: str, query: str) -> str:
+    return f"./{summary_path}" if summary_path else f"{MAP_HREF}?work={quote(query)}"
+
+
+def _cross_table_html(character_records: list[dict], gundam_records: list[dict]) -> str:
+    """都道府県 × 作品の早見表。
+
+    「この県に行くと何の作品が何枚あるか」は、作品カード（作品軸）にも
+    設置場所一覧（住所軸）にも無い切り口。作品の束ね方とリンク先は
+    作品カードと揃える（アイマス各シリーズは1作品、専用ページが無い作品は地図へ）。
+    """
+    works: dict[str, dict] = {}
+    for record in character_records:
+        work = str(record.get("work") or "").strip()
+        prefecture = str(record.get("prefecture") or "").strip()
+        if not work or not prefecture:
+            continue
+        page = page_for_work(work)
+        entry = works.setdefault(page.slug if page else work, {
+            "name": page.name if page else work,
+            "href": _work_href(page.path if page else "", work),
+            "counts": Counter(),
+        })
+        entry["counts"][prefecture] += 1
+    for record in gundam_records:
+        prefecture = str(record.get("prefecture") or "").strip()
+        if not prefecture:
+            continue
+        entry = works.setdefault(GUNDAM_WORK_QUERY, {
+            "name": GUNDAM_WORK_NAME,
+            "href": _work_href("", GUNDAM_WORK_QUERY),
+            "counts": Counter(),
+        })
+        entry["counts"][prefecture] += 1
+
+    grid: dict[str, list[tuple[str, int, str]]] = defaultdict(list)
+    for entry in works.values():
+        for prefecture, count in entry["counts"].items():
+            grid[prefecture].append((entry["name"], count, entry["href"]))
+    order = {name: index for index, name in enumerate(PREFECTURE_ORDER)}
+    rows = []
+    for prefecture in sorted(grid, key=lambda name: (order.get(name, 999), name)):
+        cells = "".join(
+            f'<a href="{escape(href)}">{escape(name)} <span>{count}</span></a>'
+            for name, count, href in sorted(grid[prefecture], key=lambda item: (-item[1], item[0]))
+        )
+        total = sum(count for _, count, _ in grid[prefecture])
+        rows.append(
+            f'<tr><th scope="row">{escape(prefecture)}<span>{total}枚</span></th>'
+            f'<td><div class="lp-cross-links">{cells}</div></td></tr>'
+        )
+    return (
+        '<table class="lp-cross">'
+        '<thead><tr><th scope="col">都道府県</th><th scope="col">掲載のある作品（枚数）</th></tr></thead>'
+        f'<tbody>{"".join(rows)}</tbody></table>'
     )
 
 
@@ -664,6 +755,7 @@ def generate_html(
     work_items_html = "\n".join(_work_card_html(summary) for summary in work_summaries)
     pref_items_html = "\n".join(_pref_item_html(entry) for entry in pref_summaries)
     location_directory_html = _location_directory_html(character_records, gundam_records)
+    cross_table_html = _cross_table_html(character_records, gundam_records)
 
     if hero_mosaic_posts:
         hero_mosaic_items_html = "\n".join(_hero_mosaic_item_html(post) for post in hero_mosaic_posts)
@@ -874,6 +966,9 @@ def generate_html(
       <div class="lp-pref-list">
 {pref_items_html}
       </div>
+      <h3 class="lp-cross-heading">都道府県別の作品早見表</h3>
+      <p class="lp-section-lead">行き先が決まっているときに、その県で何の作品が何枚見られるかを確認できます。作品名から作品別ガイドへ進めます。</p>
+{cross_table_html}
 {location_directory_html}
     </section>
 
