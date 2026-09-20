@@ -16,6 +16,8 @@ on:
       - 'apps/scraper/generate_pokemon_pages.py' # Pokemon LP generator
       - 'apps/scraper/generate_pokemon_index_page.py' # Pokemon index page generator
       - 'apps/scraper/generate_character_manhole_page.py' # character manhole LP generator
+      - 'apps/scraper/generate_character_work_pages.py' # per-work character manhole guides
+      - 'apps/scraper/character_manhole_works.py' # shared work page definitions
       - 'apps/scraper/generate_summary_pages.py' # summary page generator
       - 'apps/scraper/generate_summary_ogp.py' # summary page OGP generator
       - 'apps/scraper/generate_prefecture_pages.py' # prefecture page generator
@@ -33,6 +35,8 @@ on:
       - 'dataset/prefecture_events.json' # prefecture campaign/stamp-rally links
       - 'dataset/gundam_manhole_spots.json' # curated Pokefuta/Gundam crossover experiences
       - 'dataset/aichi_character_manholes.ndjson' # character manholes shown as nearby design spots
+      - 'dataset/idolmaster_20th_manholes.ndjson' # curated Idolmaster manholes
+      - 'dataset/character_manhole_events.json' # time-bounded character manhole events
       - 'dataset/manhole/image/**' # local popup photos
       - 'tools/**'      # i18n build scripts
 
@@ -100,7 +104,9 @@ jobs:
             apps.scraper.test_css_grid_tracks \
             apps.scraper.test_generate_summary_pages
           echo "[dist] Test character manhole landing page generation"
-          python3 -m unittest apps.scraper.test_generate_character_manhole_page
+          python3 -m unittest \
+            apps.scraper.test_generate_character_manhole_page \
+            apps.scraper.test_generate_character_work_pages
           echo "[dist] Generate static manhole detail pages"
           python3 apps/scraper/generate_manhole_pages.py
           echo "[dist] Generate static Pokemon LP pages"
@@ -111,6 +117,8 @@ jobs:
           python3 apps/scraper/generate_pokemon_index_page.py
           echo "[dist] Generate character manhole landing page"
           python3 apps/scraper/generate_character_manhole_page.py --output dist/character_manholes.html
+          echo "[dist] Generate character work guides"
+          python3 apps/scraper/generate_character_work_pages.py --output dist
           echo "[dist] Generate summary OGP image"
           python3 apps/scraper/generate_summary_ogp.py
           echo "[dist] Generate summary pages (ja/en/zh-CN/zh-TW/ko)"

@@ -274,6 +274,34 @@ class GenerateHtmlTest(unittest.TestCase):
         self.assertIn("gmanhole_map.html?pref=", self.html)
         self.assertIn("gmanhole_map.html?work=", self.html)
 
+    def test_location_directory_contains_all_active_records_without_javascript(self):
+        lists = re.findall(r'<ul class="lp-location-list">(.*?)</ul>', self.html, re.S)
+        self.assertEqual(3, len(lists))
+        directory = "".join(lists)
+        self.assertEqual(len(self.character_records) + len(self.gundam_records), directory.count("<li>"))
+        self.assertIn("唐人プラザビル", directory)
+        self.assertIn("豊富町", directory)
+        self.assertIn("小野田坂道", directory)  # 座標なしでも一覧には載る
+        self.assertNotIn("撤去済み", directory)
+
+    def test_location_sources_are_safe_and_escaped(self):
+        records = [dict(self.character_records[0], title='<script>alert(1)</script>',
+                        source_url='https://example.com/?a=1&b=2'),
+                   dict(self.character_records[1], source_url='javascript:alert(2)')]
+        html = generate_html(records, self.gundam_records, self.design_path)
+        self.assertIn('&lt;script&gt;alert(1)&lt;/script&gt;', html)
+        self.assertIn('href="https://example.com/?a=1&amp;b=2"', html)
+        self.assertNotIn('href="javascript:', html)
+        self.assertNotIn('<script>alert(1)</script>', html)
+
+    def test_gundam_official_source_and_missing_location_fallback(self):
+        records = [dict(self.gundam_records[0], official_url='https://example.com/official',
+                        detail_url='https://example.com/detail')]
+        html = generate_html([], records, self.design_path)
+        self.assertIn('href="https://example.com/official"', html)
+        self.assertNotIn('href="https://example.com/detail"', html)
+        self.assertIn('詳細な住所は未記録', html)
+
     def test_escapes_quotes_in_user_submitted_attributes(self):
         """投稿タイトルは pokefuta.com のユーザー入力。属性を抜け出せてはいけない。"""
         directory = Path(self.tmpdir.name)
@@ -298,6 +326,21 @@ class GenerateHtmlTest(unittest.TestCase):
 
     def test_includes_design_manhole_submission_link(self):
         self.assertIn("design_manhole.html", self.html)
+
+    def test_work_cards_link_to_dedicated_guides_when_available(self):
+        self.assertIn('href="./characters/zombieland-saga/"', self.html)
+        self.assertIn('href="./characters/yowamushi-pedal/"', self.html)
+
+    def test_idolmaster_brands_are_grouped_into_one_guide(self):
+        records = self.character_records + [
+            {"id": "imas-1", "work": "アイドルマスター SideM", "character": "渡辺みのり",
+             "prefecture": "茨城県", "city": "筑西市", "status": "active"},
+            {"id": "imas-2", "work": "学園アイドルマスター", "character": "姫崎莉波",
+             "prefecture": "熊本県", "city": "熊本市", "status": "active"},
+        ]
+        html = generate_html(records, self.gundam_records, self.design_path)
+        self.assertEqual(1, html.count('href="./characters/idolmaster/"'))
+        self.assertIn("アイドルマスター</strong><small>2枚", html)
 
     def test_excludes_photo_less_posts_from_latest_section(self):
         self.assertNotIn("写真なし", self.html)
@@ -577,10 +620,8 @@ class MapGatewayHtmlTest(unittest.TestCase):
         self.assertIn('integrity="sha256-', self.html)
 
 
-class PilgrimCopyTest(unittest.TestCase):
-    """LPが「知らない人への説明」から「巡礼者への投稿依頼」に書き換わった後のコピー確認。
-    SEO用の <title>/meta description/h2 は変更しない、という制約の確認も含む。
-    """
+class SearchIntentCopyTest(unittest.TestCase):
+    """全国一覧・設置場所を探す人への情報と投稿導線を両立する。"""
 
     def setUp(self):
         self.tmpdir = tempfile.TemporaryDirectory()
@@ -594,17 +635,15 @@ class PilgrimCopyTest(unittest.TestCase):
         self.total_count = len(self.character_records) + len(self.gundam_records)
         self.html = generate_html(self.character_records, self.gundam_records, design_path)
 
-    def test_h1_is_the_pilgrim_request_copy(self):
-        self.assertIn("ポケふた巡礼中に見つけた", self.html)
-        self.assertIn("レアなマンホール、教えてくれませんか？", self.html)
-        # 旧コピー（説明口調のH1）は残っていない
-        self.assertNotIn("キャラクターマンホールって<br>知っていますか？", self.html)
+    def test_h1_answers_national_directory_intent(self):
+        heading = re.search(r"<h1[^>]*>(.*?)</h1>", self.html).group(1)
+        self.assertIn("アニメ・キャラクターマンホール", heading)
+        self.assertIn("全国一覧・設置場所", heading)
 
     def test_title_and_meta_description_keep_seo_wording(self):
-        # H1 を問いかけに変えても、検索語は <title>/meta description 側で保持する
-        expected_title = f"キャラクターマンホールとは｜全国{self.total_count}枚"
+        expected_title = f"アニメ・キャラクターマンホール全国一覧｜{self.total_count}枚"
         self.assertIn(f"<title>{expected_title}", self.html)
-        self.assertIn(f'name="description" content="ガンダムやゾンビランドサガなど、全国{self.total_count}枚', self.html)
+        self.assertIn('name="description" content="全国3都道府県・3作品、6枚', self.html)
 
     def test_about_section_heading_is_unchanged_for_seo(self):
         # H1が「教えてくれませんか？」という依頼になったぶん、検索語はこの見出しで担保する。
@@ -619,12 +658,10 @@ class PilgrimCopyTest(unittest.TestCase):
         for match in re.finditer(r'<h2 id="lp-[a-z]+-heading"[^>]*>\s*<span([^>]*)>', self.html):
             self.assertIn('aria-hidden="true"', match.group(1))
 
-    def test_stats_note_bakes_in_next_submission_number_with_no_placeholder(self):
-        expected_next = self.total_count + 1
-        self.assertIn(f"あなたの1枚が {expected_next} 枚目になります", self.html)
-        # プレースホルダの取り残し（テンプレ文字列そのまま）が無いこと
-        self.assertNotIn("{N+1}", self.html)
-        self.assertNotIn("{next_submission_number}", self.html)
+    def test_stats_describe_coverage_without_claiming_completeness(self):
+        self.assertIn(f"掲載データ：{self.total_count}枚・3作品・3都道府県", self.html)
+        self.assertIn("全国すべてを網羅するものではありません", self.html)
+        self.assertNotIn("あなたの1枚が", self.html)
 
     def test_submit_section_uses_pilgrim_cta_copy(self):
         self.assertIn("その1枚、まだカメラロールにありますか？", self.html)
@@ -662,7 +699,7 @@ class PilgrimCopyTest(unittest.TestCase):
         card_count = self.html.count('<li class="lp-explain-card">')
         self.assertGreaterEqual(card_count, 2, "explain-grid needs >=2 cards or the 2-col layout leaves an empty column")
         self.assertIn("その土地に行かないと踏めない蓋", self.html)
-        self.assertIn("ポケふたと違って、まとまった一覧が無い", self.html)
+        self.assertIn("作品や自治体の枠を越えて探せる一覧", self.html)
 
     def test_closing_sentence_lives_outside_the_explain_grid(self):
         # 「まだ全部ではありません」は投稿導線への橋渡しなので、

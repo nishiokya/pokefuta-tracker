@@ -46,6 +46,13 @@ class BuildSitemapTest(unittest.TestCase):
                     f"<loc>https://data.pokefuta.com/{path}</loc>", self.xml
                 )
 
+    def test_includes_every_character_work_page(self) -> None:
+        for page in MODULE.WORK_PAGES:
+            with self.subTest(page=page.slug):
+                self.assertIn(
+                    f"<loc>https://data.pokefuta.com/{page.path}</loc>", self.xml
+                )
+
     def test_includes_the_map_page_in_every_language(self) -> None:
         """map.html は自分自身を canonical にしているので sitemap に載っていること。
 

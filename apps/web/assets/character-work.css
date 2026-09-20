@@ -1,0 +1,80 @@
+.character-work-page { margin:0; color:var(--top-text,#292638); background:var(--top-bg,#faf7ef); font-family:'Noto Sans JP',system-ui,sans-serif; line-height:1.8; }
+.cw-wrap { max-width:1080px; margin:auto; padding:24px 28px 60px; }
+.cw-wrap * { box-sizing:border-box; }
+.cw-wrap a { color:var(--top-purple,#6c5ca6); text-underline-offset:4px; }
+.cw-wrap :is(h1,h2,h3,h4,p) { margin-top:0; }
+.cw-wrap :is(section,article) { scroll-margin-top:90px; }
+.cw-breadcrumb { display:flex; flex-wrap:wrap; gap:7px; font-size:12px; color:#6e6876; margin-bottom:26px; }
+.cw-eyebrow { font-size:10px; font-weight:700; letter-spacing:.17em; color:#786798; margin-bottom:16px; }
+.cw-hero { display:grid; grid-template-columns:minmax(0,1.5fr) minmax(0,1fr); gap:48px; align-items:center; padding:35px 0 58px; }
+.cw-hero h1 { font-size:clamp(29px,3.5vw,44px); line-height:1.5; letter-spacing:-.045em; margin:20px 0; font-weight:900; }
+.cw-hero-copy>p:not([class]) { font-size:14px; max-width:38em; color:#666170; }
+.cw-hero-lead { font-size:17px; font-weight:700; }
+.cw-event-badge { display:inline-block; border:1px solid #cabbda; background:#eee7f5; border-radius:50px; padding:5px 14px; font-size:12px; font-weight:700; text-decoration:none; }
+.cw-actions { display:flex; flex-wrap:wrap; align-items:center; gap:16px; margin:24px 0 16px; }
+.cw-wrap a.cw-button { display:inline-flex; align-items:center; justify-content:center; min-height:48px; padding:12px 20px; border-radius:9px; background:#66508c; color:white; text-decoration:none; font-size:14px; font-weight:700; }
+.cw-wrap a.cw-button:hover { background:#4f3c71; }
+.cw-wrap a.cw-button-secondary { background:#ebe4f2; color:#594474; }
+.cw-text-link { font-size:13px; font-weight:700; }
+.cw-note { font-size:12px; color:#6e6876; }
+.cw-passport { position:relative; background:#eee8f3; border:1px solid #e2d6e9; border-radius:160px 160px 18px 18px; padding:38px 32px 22px; text-align:center; box-shadow:10px 12px 0 #eee8da; }
+.cw-passport>.cw-eyebrow { font-size:9px; }
+.cw-stamp { display:grid; place-items:center; width:142px; height:142px; border:2px dashed #9880b1; border-radius:50%; margin:22px auto; transform:rotate(-10deg); }
+.cw-stamp span { display:grid; place-items:center; width:124px; height:124px; border:1px solid #b5a1c5; border-radius:50%; font-size:17px; font-weight:900; line-height:1.35; letter-spacing:.1em; color:#806295; }
+.cw-passport-title { font-size:23px; font-weight:800; line-height:1.6; }
+.cw-passport ol { list-style:none; padding:0; text-align:left; font-size:13px; }
+.cw-passport li { padding:10px 0; border-top:1px solid #d5c8df; }
+.cw-passport li span { font-size:10px; color:#826995; margin-right:14px; }
+.cw-passport-foot { font-size:8px; letter-spacing:.18em; color:#826995; }
+.cw-section { padding:42px 0; border-top:1px solid var(--top-border,#e5dfea); }
+.cw-section h2,.cw-event h2 { font-size:clamp(21px,2.5vw,27px); line-height:1.5; letter-spacing:-.03em; }
+.cw-section>p { font-size:14px; color:#666170; }
+.cw-event { background:#f0ebdf; border-radius:16px; padding:32px; margin:0 0 42px; }
+.cw-event>div>p:not([class]) { font-size:14px; }
+.cw-deadline { font-size:14px; font-weight:700; }
+.cw-steps { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:24px; padding-left:24px; margin:24px 0; }
+.cw-steps li { padding-left:3px; color:#66508c; }
+.cw-steps strong,.cw-steps span { display:block; }
+.cw-steps strong { font-size:14px; }
+.cw-steps span { font-size:12px; color:#666170; margin-top:6px; }
+.cw-index { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin:24px 0; }
+.cw-index a { display:block; padding:15px; background:#fffdf8; border:1px solid #e5dfea; border-radius:9px; text-decoration:none; overflow-wrap:anywhere; }
+.cw-index strong { display:block; font-size:14px; }
+.cw-index span { font-size:11px; color:#6e6876; }
+.cw-city { margin-top:32px; }
+.cw-city h3 { font-size:18px; padding-bottom:10px; border-bottom:1px solid #ded5e5; }
+.cw-city h3 small { font-size:12px; color:#7c6c8a; margin-left:8px; }
+.cw-spots { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+.cw-spot { padding:24px; background:#fffdf8; border:1px solid #e5dfea; border-radius:12px; overflow-wrap:anywhere; }
+.cw-spot h4 { font-size:20px; margin-bottom:12px; }
+.cw-spot p { font-size:13px; margin-bottom:8px; }
+.cw-spot .cw-series { font-size:10px; color:#877093; }
+.cw-location { font-weight:700; }
+.cw-spot-links { display:flex; flex-wrap:wrap; gap:10px 16px; margin-top:18px; font-size:12px; }
+.cw-brand-links { display:flex; flex-wrap:wrap; gap:12px; }
+.cw-brand-links a { background:#eee7f5; padding:12px 16px; border-radius:8px; text-decoration:none; font-size:13px; }
+.cw-brand-links span { margin-left:8px; font-size:11px; }
+.cw-faq details { border-bottom:1px solid #e5dfea; padding:16px 0; }
+.cw-faq summary { cursor:pointer; font-weight:700; font-size:14px; }
+.cw-faq p { font-size:13px; margin:12px 0 0; }
+.cw-post { text-align:center; }
+.cw-related a { display:inline-block; margin:0 20px 12px 0; font-size:13px; }
+.cw-wrap a:focus-visible,.cw-faq summary:focus-visible { outline:3px solid #ad87cf; outline-offset:4px; }
+@media(max-width:700px) {
+  .cw-wrap { padding:18px 20px 40px; }
+  .cw-hero { grid-template-columns:minmax(0,1fr); gap:24px; padding:18px 0 38px; }
+  .cw-hero h1 { font-size:32px; }
+  .cw-hero-lead { font-size:15px; }
+  .cw-passport { border-radius:16px; padding:20px; text-align:left; box-shadow:5px 6px 0 #eee8da; }
+  .cw-passport .cw-stamp { float:right; width:96px; height:96px; margin:5px 0 12px 12px; }
+  .cw-stamp span { width:80px; height:80px; font-size:12px; }
+  .cw-passport-title { font-size:19px; }
+  .cw-passport ol { clear:both; margin-bottom:8px; }
+  .cw-passport li { display:inline-block; margin-right:12px; border:0; padding:3px 0; font-size:11px; }
+  .cw-passport li span { margin-right:4px; }
+  .cw-event { padding:24px 20px; }
+  .cw-steps { grid-template-columns:minmax(0,1fr); gap:18px; }
+  .cw-index { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .cw-spots { grid-template-columns:minmax(0,1fr); }
+  .cw-spot { padding:20px; }
+}

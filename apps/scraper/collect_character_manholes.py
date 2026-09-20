@@ -57,6 +57,8 @@ MARKER_STYLES: Dict[str, Dict[str, str]] = {
     "アイドルマスター": {"marker_label": "ア", "marker_color": "#f97316"},
     "アイドルマスター ミリオンライブ！": {"marker_label": "ア", "marker_color": "#f97316"},
     "アイドルマスター シャイニーカラーズ": {"marker_label": "ア", "marker_color": "#f97316"},
+    "アイドルマスター SideM": {"marker_label": "ア", "marker_color": "#f97316"},
+    "学園アイドルマスター": {"marker_label": "ア", "marker_color": "#f97316"},
 }
 
 # --- 作品ごとのソース設定 -------------------------------------------------

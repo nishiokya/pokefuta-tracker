@@ -11,10 +11,12 @@ from urllib.parse import quote
 from xml.sax.saxutils import escape
 
 try:
+    from apps.scraper.character_manhole_works import WORK_PAGES
     from apps.scraper.prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
+    from character_manhole_works import WORK_PAGES
     from prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS
 
 try:
@@ -176,6 +178,9 @@ def build_sitemap(
         url_entry(f"{BASE_URL}design_manhole.html", "weekly", "0.6"),
         url_entry(f"{BASE_URL}privacy.html", "monthly", "0.3"),
     ]
+
+    for page in WORK_PAGES:
+        entries.append(url_entry(f"{BASE_URL}{page.path}", "weekly", "0.8"))
 
     for lang in I18N_LANGS:
         entries.append(url_entry(f"{BASE_URL}{lang}/", "weekly", "0.9"))
