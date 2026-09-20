@@ -7,6 +7,7 @@ import tempfile
 import unittest
 from datetime import date
 from pathlib import Path
+from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).parent))
 
@@ -20,6 +21,7 @@ from generate_character_manhole_page import (  # noqa: E402
     generate_html,
     load_active_manholes,
 )
+from character_manhole_works import WorkPage  # noqa: E402
 
 
 def _write_ndjson(directory: Path, name: str, records: list[dict]) -> Path:
@@ -214,6 +216,18 @@ class WorkSummaryTest(unittest.TestCase):
         gundam = next(s for s in summaries if "ガンダム" in s["work"])
         self.assertEqual("gundam", gundam["query"])
         self.assertEqual(2, gundam["count"])
+
+    def test_work_page_path_does_not_depend_on_display_name(self):
+        renamed = WorkPage(
+            "zombieland-saga", "ゾンビランドサガシリーズ", "ゾンビランドサガ",
+            ("ゾンビランドサガ",), "intro", "guide", "question", "answer",
+        )
+        records = [record for record in self.character_records if record["work"] == "ゾンビランドサガ"]
+        with patch("generate_character_manhole_page.page_for_work", return_value=renamed):
+            summary = build_work_summaries(records, [])[0]
+        self.assertEqual("ゾンビランドサガシリーズ", summary["work"])
+        self.assertEqual("characters/zombieland-saga/", summary["path"])
+        self.assertEqual("ゾンビランドサガ", summary["query"])
 
     def test_prefecture_summaries_combine_character_and_gundam(self):
         summaries = build_prefecture_summaries(self.character_records, self.gundam_records)
@@ -708,7 +722,8 @@ class SearchIntentCopyTest(unittest.TestCase):
         grid_end = self.html.index("</ul>", about_start)
         about_section_end = self.html.index("</section>", grid_end)
         tail = self.html[grid_end:about_section_end]
-        self.assertIn(f"だからこのページの「全国{self.total_count}枚」も", tail)
+        self.assertIn(f"「全国{self.total_count}枚」は", tail)
+        self.assertIn("手作業で出典を確認しながら追加", tail)
         self.assertIn('class="lp-section-lead"', tail)
 
     def test_hero_has_no_three_tile_stats_row(self):

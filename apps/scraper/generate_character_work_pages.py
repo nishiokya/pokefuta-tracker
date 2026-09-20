@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import sys
 from collections import Counter, defaultdict
 from datetime import datetime
 from html import escape
@@ -27,6 +28,9 @@ except ModuleNotFoundError as exc:
 
 ASSET_BASE = "../../"
 DEFAULT_EVENTS = ROOT / "dataset/character_manhole_events.json"
+OG_IMAGE = BASE_URL + "assets/ogp/pokefuta_map_ogp.png"
+IDOLMASTER_EVENT_TYPE = "idolmaster_20th_checkin"
+EVENT_REQUIRED_KEYS = {"type", "url", "project_url", "verified_at", "ends_at", "spots"}
 
 
 def safe_url(value: object) -> str:
@@ -59,20 +63,78 @@ def has_coordinates(record: dict) -> bool:
                for v in (lat, lng)) and -90 <= lat <= 90 and -180 <= lng <= 180
 
 
-def event_html(event: dict, now: datetime) -> tuple[str, str]:
-    """期限後は参加を促す表現を外す。確認日はビルド日時で水増ししない。"""
-    end = datetime.fromisoformat(event["ends_at"])
-    expired = now >= end
+def validate_event(slug: str, raw: object) -> dict | None:
+    """ふたマス用イベント設定を検証し、壊れた任意情報は警告して無視する。"""
+    if not isinstance(raw, dict):
+        print(f"WARN: event {slug}: expected an object, skipping", file=sys.stderr)
+        return None
+    missing = EVENT_REQUIRED_KEYS - raw.keys()
+    if missing:
+        print(f"WARN: event {slug}: missing {sorted(missing)}, skipping", file=sys.stderr)
+        return None
+    if slug != "idolmaster" or raw.get("type") != IDOLMASTER_EVENT_TYPE:
+        print(f"WARN: event {slug}: unsupported event type, skipping", file=sys.stderr)
+        return None
+    if not safe_url(raw.get("url")) or not safe_url(raw.get("project_url")):
+        print(f"WARN: event {slug}: invalid official URL, skipping", file=sys.stderr)
+        return None
+    if not isinstance(raw.get("spots"), dict):
+        print(f"WARN: event {slug}: spots must be an object, skipping", file=sys.stderr)
+        return None
+    try:
+        end = datetime.fromisoformat(str(raw["ends_at"]))
+    except (TypeError, ValueError):
+        print(f"WARN: event {slug}: invalid ends_at, skipping", file=sys.stderr)
+        return None
+    if end.tzinfo is None:
+        print(f"WARN: event {slug}: ends_at must include a timezone, skipping", file=sys.stderr)
+        return None
+    return {**raw, "_ends_at": end}
+
+
+def load_events(path: Path) -> dict[str, dict]:
+    """イベントJSONを読み、無効な任意設定でサイト全体の生成を止めない。"""
+    try:
+        raw_events = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        print(f"WARN: could not load character events: {exc}", file=sys.stderr)
+        return {}
+    if not isinstance(raw_events, dict):
+        print("WARN: character events root must be an object, skipping", file=sys.stderr)
+        return {}
+    return {
+        slug: event
+        for slug, raw in raw_events.items()
+        if (event := validate_event(str(slug), raw)) is not None
+    }
+
+
+def event_html(event: dict, now: datetime) -> tuple[str, str, bool]:
+    """ふたマスの案内を生成し、期限後は参加手順とチェックイン導線を外す。"""
+    end = event["_ends_at"]
+    active = now < end
     deadline = f"{end.year}年{end.month}月{end.day}日 {end.hour}:{end.minute:02d}（日本時間）"
-    label = "掲載期間は終了しました" if expired else "公式チェックイン企画"
-    heading = "チェックイン企画の掲載期間は終了しました" if expired else "ふたを訪ねて、公式チェックイン。"
+    label = "公式チェックイン企画" if active else "掲載期間は終了しました"
     url = escape(safe_url(event["url"]))
     project_url = escape(safe_url(event.get("project_url")))
-    action = "公式の最新案内を確認する" if expired else "公式でチェックイン方法を確認する"
     badge = f'<a class="cw-event-badge" href="#check-in">{label} →</a>'
+    source_links = f"""出典：<a href="{url}" target="_blank" rel="noopener noreferrer">アイドルマスター ポータル・スポットチェックイン</a>。
+      <a href="{project_url}" target="_blank" rel="noopener noreferrer">ふたマス!!!!!!公式プロジェクト</a>。"""
+    if not active:
+        html = f"""<section class="cw-event" id="check-in" aria-labelledby="check-in-heading">
+      <div><p class="cw-eyebrow">OFFICIAL SPOT CHECK-IN</p>
+      <h2 id="check-in-heading">チェックイン企画の掲載期間は終了しました</h2>
+      <p>公式掲載の期間は終了しています。新しい企画や現在の受付状況は、公式サイトの最新情報をご確認ください。</p>
+      <p class="cw-deadline">公式掲載の終了日時：<time datetime="{escape(event['ends_at'])}">{deadline}</time></p>
+      <p class="cw-note">確認日：{escape(str(event['verified_at']))}</p></div>
+      <div class="cw-actions"><a class="cw-button" href="{project_url}" target="_blank" rel="noopener noreferrer">公式プロジェクトの最新情報を見る ↗</a></div>
+      <p class="cw-note">{source_links}</p>
+    </section>"""
+        return badge, html, active
+
     html = f"""<section class="cw-event" id="check-in" aria-labelledby="check-in-heading">
       <div><p class="cw-eyebrow">OFFICIAL SPOT CHECK-IN</p>
-      <h2 id="check-in-heading">{heading}</h2>
+      <h2 id="check-in-heading">ふたを訪ねて、公式チェックイン。</h2>
       <p>ふたマスの対象スポットを訪ねると、公式ポータルのチェックイン企画に参加できます。
       公式マイデスクに表示できる称号の獲得が案内されています。チェックインはアイドルマスター ポータルで行います。</p>
       <p class="cw-deadline">公式掲載の終了予定：<time datetime="{escape(event['ends_at'])}">{deadline}</time></p>
@@ -82,18 +144,13 @@ def event_html(event: dict, now: datetime) -> tuple[str, str]:
         <li><strong>対象のマンホールへ</strong><span>スマートフォンとブラウザで位置情報の利用を許可。安全な場所に立ち止まって操作します。</span></li>
         <li><strong>公式ページでチェックイン</strong><span>対象スポットの案内に従って参加。同じスポットは1回限り有効です。</span></li>
       </ol>
-      <a class="cw-button" href="{url}" target="_blank" rel="noopener noreferrer">{action} ↗</a>
-      <p class="cw-note">出典：<a href="{url}" target="_blank" rel="noopener noreferrer">アイドルマスター ポータル・スポットチェックイン</a>。
-      <a href="{project_url}" target="_blank" rel="noopener noreferrer">ふたマス!!!!!!公式プロジェクト</a>。
-      本ページはポケふた図鑑による訪問ガイドです。写真投稿だけでは公式チェックインは完了しません。</p>
+      <a class="cw-button" href="{url}" target="_blank" rel="noopener noreferrer">公式でチェックイン方法を確認する ↗</a>
+      <p class="cw-note">{source_links} 本ページはポケふた図鑑による訪問ガイドです。写真投稿だけでは公式チェックインは完了しません。</p>
     </section>"""
-    if expired:
-        html = html.replace("ふたマスの対象スポットを訪ねると、公式ポータルのチェックイン企画に参加できます。",
-                            "以下は掲載期間中の参加方法です。受付状況や新しい企画は公式サイトをご確認ください。")
-    return badge, html
+    return badge, html, active
 
 
-def spot_html(record: dict, event: dict | None) -> str:
+def spot_html(record: dict, event: dict | None, event_active: bool) -> str:
     name = str(record.get("character") or record.get("title") or "マンホール")
     location = str(record.get("landmark") or record.get("title") or "設置場所")
     source = safe_url(record.get("official_url") or record.get("source_url"))
@@ -109,8 +166,8 @@ def spot_html(record: dict, event: dict | None) -> str:
     links = f'<a href="{escape(maps)}" target="_blank" rel="noopener noreferrer">{map_label} ↗</a>'
     if source:
         links += f'<a href="{escape(source)}" target="_blank" rel="noopener noreferrer">出典・設置案内 ↗</a>'
-    if event and str(record["id"]) in event["spots"]:
-        checkin = safe_url(event["url"] + "/" + event["spots"][str(record["id"])] )
+    if event_active and event and str(record["id"]) in event["spots"]:
+        checkin = safe_url(event["url"].rstrip("/") + "/" + str(event["spots"][str(record["id"])]).lstrip("/"))
         links += f'<a href="{escape(checkin)}" target="_blank" rel="noopener noreferrer">公式スポット案内（ログインが必要）↗</a>'
     return f"""<article class="cw-spot" id="{spot_id(record)}">
       <p class="cw-series">{escape(str(record.get('work') or ''))}</p>
@@ -132,13 +189,13 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
         title = "アイマス・ふたマスのマンホール一覧｜設置場所とチェックイン方法"
     description = f"{page.name}のマンホール{count}枚を掲載。{page.intro}"
     canonical = BASE_URL + page.path
-    event = events.get(page.slug)
-    badge, event_section = event_html(event, now) if event else ("", "")
-    hero_heading = "アイマスのマンホール、<br>会いに行こう。" if event else f"{escape(page.name)}の<br>マンホールを探そう。"
-    hero_note = "担当アイドルのふたを訪ねて、公式チェックインへ。" if event else "好きな作品を、次の旅の目的地に。"
-    passport = ("場所を選ぶ", "会いに行く", "公式でチェックイン") if event else ("場所を選ぶ", "地図で確かめる", "現地で見つける")
+    event = validate_event(page.slug, events.get(page.slug)) if events.get(page.slug) else None
+    badge, event_section, event_active = event_html(event, now) if event else ("", "", False)
+    hero_heading = "アイマスのマンホール、<br>会いに行こう。" if event_active else f"{escape(page.name)}の<br>マンホールを探そう。"
+    hero_note = "担当アイドルのふたを訪ねて、公式チェックインへ。" if event_active else "好きな作品を、次の旅の目的地に。"
+    passport = ("場所を選ぶ", "会いに行く", "公式でチェックイン") if event_active else ("場所を選ぶ", "地図で確かめる", "現地で見つける")
     passport_html = "".join(f'<li><span>0{i}</span>{escape(text)}</li>' for i, text in enumerate(passport, 1))
-    hero_cta = "" if not event else '<a class="cw-text-link" href="#check-in">チェックインの参加方法 →</a>'
+    hero_cta = '<a class="cw-text-link" href="#check-in">チェックインの参加方法 →</a>' if event_active else ""
     brand_counts = Counter(r["work"] for r in selected)
     brands_html = "".join(
         f'<a href="{escape(map_href(work))}">{escape(work)} <span>{brand_counts[work]}枚 ↗</span></a>'
@@ -156,7 +213,7 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
         groups[(str(record.get("prefecture") or "都道府県未記録"), str(record.get("city") or ""))].append(record)
     locations_html = "".join(
         f'<section class="cw-city"><h3>{escape(pref)} {escape(city)} <small>{len(rows)}枚</small></h3>'
-        f'<div class="cw-spots">{"".join(spot_html(r, event) for r in rows)}</div></section>'
+        f'<div class="cw-spots">{"".join(spot_html(r, event, event_active) for r in rows)}</div></section>'
         for (pref, city), rows in groups.items()
     )
     related_html = "".join(f'<a href="../{other.slug}/">{escape(other.name)} →</a>' for other in related if other.slug != page.slug)
@@ -164,7 +221,7 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
         (page.question, page.answer),
         ("掲載されているマンホールがすべてですか？", "掲載データに収録した設置場所の一覧です。全国すべての設置状況を網羅するものではありません。移設・撤去や施設の開放時間は、訪問前に出典の案内をご確認ください。"),
     ]
-    if event:
+    if event_active:
         faq.append(("このサイトでチェックインできますか？", "チェックインは公式のアイドルマスター ポータルで行います。バンダイナムコIDでのログインと位置情報の許可が必要です。写真館への投稿とは別のサービスです。"))
     faq_html = "".join(f'<details><summary>{escape(q)}</summary><p>{escape(a)}</p></details>' for q, a in faq)
     schema = {"@context": "https://schema.org", "@graph": [
@@ -190,7 +247,8 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
   <meta property="og:type" content="website"><meta property="og:locale" content="ja_JP">
   <meta property="og:title" content="{escape(title)}"><meta property="og:description" content="{escape(description)}">
   <meta property="og:url" content="{canonical}"><meta property="og:site_name" content="ポケふた図鑑">
-  <meta name="twitter:card" content="summary">
+  <meta property="og:image" content="{OG_IMAGE}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="{OG_IMAGE}">
   <link rel="icon" href="{ASSET_BASE}assets/pokefuta_icon_32.png">
   <link rel="stylesheet" href="{ASSET_BASE}assets/top-page.css?v=20260707a">
   <link rel="stylesheet" href="{ASSET_BASE}assets/character-work.css?v=20260920a">
@@ -252,7 +310,7 @@ def main() -> int:
     records = load_ndjson(args.data)
     if not any(_is_active(r) for r in records):
         parser.error("No active character records; refusing to generate empty guides")
-    written = write_pages(records, json.loads(args.events.read_text(encoding="utf-8")), args.output)
+    written = write_pages(records, load_events(args.events), args.output)
     print(f"[generate_character_work_pages] wrote {len(written)} work guides")
     return 0
 

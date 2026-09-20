@@ -165,16 +165,25 @@ def load_active_manholes(path: Path) -> list[dict]:
 
 def build_work_summaries(character_records: list[dict], gundam_records: list[dict]) -> list[dict]:
     """作品別の件数降順サマリ（キャラクターマンホールの work ごと + ガンダムを1エントリとして合成）。"""
-    groups: dict[str, list[dict]] = defaultdict(list)
+    groups: dict[str, dict] = {}
     for record in character_records:
         work = str(record.get("work") or "").strip()
         if not work:
             continue
         page = page_for_work(work)
-        groups[page.name if page else work].append(record)
+        key = page.slug if page else work
+        group = groups.setdefault(key, {
+            "name": page.name if page else work,
+            "page": page,
+            "records": [],
+        })
+        group["records"].append(record)
 
     summaries: list[dict] = []
-    for work, records in groups.items():
+    for group in groups.values():
+        work = group["name"]
+        page = group["page"]
+        records = group["records"]
         prefectures = sorted(
             {record.get("prefecture") for record in records if record.get("prefecture")},
             key=lambda pref: PREFECTURE_ORDER.index(pref) if pref in PREFECTURE_ORDER else 999,
@@ -187,7 +196,8 @@ def build_work_summaries(character_records: list[dict], gundam_records: list[dic
             "prefectures": prefectures,
             "color": color or "#6C5CA6",
             "label": label,
-            "query": page_for_work(work).map_query if page_for_work(work) else work,
+            "query": page.map_query if page else work,
+            "path": page.path if page else "",
         })
 
     if gundam_records:
@@ -202,6 +212,7 @@ def build_work_summaries(character_records: list[dict], gundam_records: list[dic
             "color": GUNDAM_MARKER_COLOR,
             "label": GUNDAM_MARKER_LABEL,
             "query": GUNDAM_WORK_QUERY,
+            "path": "",
         })
 
     return sorted(summaries, key=lambda summary: (-summary["count"], summary["work"]))
@@ -363,8 +374,8 @@ PAGE_STYLE = """
 
     /* ── ファーストView（#lp-intro）は index.html の #sec-intro と同じ top-page.css
        クラス（.sec-eyebrow/.top-h1/.top-intro-text/.top-stats-note 等）をそのまま使う。
-       掲載範囲を示す統計は stats-note の1行にまとめる（3タイル用CSSクラスは
-       このファイルからは一切参照しない）。
+       全国一覧として掲載範囲を一目で確認できるよう、件数・作品数・都道府県数は
+       stats-note の1行にまとめる（3タイル用CSSクラスは参照しない）。
        ID は #sec-intro を再利用しない: top-page.css は @media (min-width: 960px) 内で
        #sec-intro/#sec-map/#sec-hero/#sec-hub/#sec-pref/#sec-events/#sec-newrelease を
        index.html 専用の重なりレイアウト（#sec-intro と #sec-map を同じグリッドに重ねて
@@ -528,8 +539,7 @@ def _work_card_html(summary: dict) -> str:
     if len(summary["prefectures"]) > 3:
         pref_text += " ほか"
     map_href = f"{MAP_HREF}?work={quote(summary['query'])}"
-    page = page_for_work(summary["work"])
-    href = f"./{page.path}" if page else map_href
+    href = f"./{summary['path']}" if summary.get("path") else map_href
     return (
         f'<li><a class="lp-work-card" href="{href}">'
         f'<span class="lp-work-chip" style="background:{escape(summary["color"])}">{escape(str(summary["label"])[:1])}</span>'
@@ -720,8 +730,8 @@ def generate_html(
                 "@type": "ListItem",
                 "position": index,
                 "name": summary["work"],
-                "url": (f"{BASE_URL}{page_for_work(summary['work']).path}"
-                        if page_for_work(summary['work']) else f"{MAP_URL}?work={quote(summary['query'])}"),
+                "url": (f"{BASE_URL}{summary['path']}" if summary.get("path")
+                        else f"{MAP_URL}?work={quote(summary['query'])}"),
             }
             for index, summary in enumerate(work_summaries, start=1)
         ],
@@ -844,7 +854,7 @@ def generate_html(
           <p>このページでは、作品ごと・自治体ごとに案内されている設置場所をまとめています。花・名所・市の鳥などの絵柄も含む<b>デザインマンホール</b>のうち、キャラクターを題材にした蓋を紹介しています。</p>
         </li>
       </ul>
-      <p class="lp-section-lead">だからこのページの「全国{total_count}枚」も、<b>まだ全部ではありません</b>。</p>
+      <p class="lp-section-lead">掲載データは手作業で出典を確認しながら追加しているため、「全国{total_count}枚」は<b>まだすべてを網羅した数ではありません</b>。</p>
     </section>
 
     <!-- ── いま集まっている作品 ── -->

@@ -1,10 +1,12 @@
 {
   "idolmaster": {
+    "type": "idolmaster_20th_checkin",
     "name": "ふたマス!!!!!! スポットチェックイン",
     "url": "https://idolmaster-official.jp/mydesk/spot/20th_voyage_manhole",
     "project_url": "https://idolmaster-official.jp/20th_anniversary/manhole",
     "verified_at": "2026-09-20",
     "ends_at": "2027-07-25T09:59:00+09:00",
+    "spots_source_note": "公式20周年マンホールページの配信チャンク内 checkin フィールドと照合（2026-09-20）",
     "spots": {
       "imas-20th-takatsuki-yayoi": "manhole_01",
       "imas-20th-matsue-kotoha": "manhole_02",

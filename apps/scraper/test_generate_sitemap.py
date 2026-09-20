@@ -23,7 +23,11 @@ SPEC.loader.exec_module(MODULE)
 
 class BuildSitemapTest(unittest.TestCase):
     def setUp(self) -> None:
-        self.xml = MODULE.build_sitemap(["1", "2"], ["pikachu"])
+        self.xml = MODULE.build_sitemap(
+            ["1", "2"], ["pikachu"], character_work_pages=list(MODULE.read_character_work_pages(
+                Path(__file__).resolve().parents[2] / "docs" / "character_manholes.ndjson"
+            ))
+        )
 
     def test_includes_the_prefecture_index_page(self) -> None:
         self.assertIn(
@@ -47,11 +51,20 @@ class BuildSitemapTest(unittest.TestCase):
                 )
 
     def test_includes_every_character_work_page(self) -> None:
-        for page in MODULE.WORK_PAGES:
+        for page in MODULE.read_character_work_pages(
+            Path(__file__).resolve().parents[2] / "docs" / "character_manholes.ndjson"
+        ):
             with self.subTest(page=page.slug):
                 self.assertIn(
                     f"<loc>https://data.pokefuta.com/{page.path}</loc>", self.xml
                 )
+
+    def test_omits_character_work_page_without_active_records(self) -> None:
+        page = MODULE.read_character_work_pages(
+            Path(__file__).resolve().parents[2] / "docs" / "character_manholes.ndjson"
+        )[0]
+        xml = MODULE.build_sitemap(["1"], [], character_work_pages=[])
+        self.assertNotIn(f"<loc>https://data.pokefuta.com/{page.path}</loc>", xml)
 
     def test_includes_the_map_page_in_every_language(self) -> None:
         """map.html は自分自身を canonical にしているので sitemap に載っていること。
