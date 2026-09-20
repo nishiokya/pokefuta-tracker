@@ -545,15 +545,12 @@ def _photo_section(
         f'<div><strong>写真未掲載のポケふたは{missing}地点</strong>'
         '<p>対象を選んだ後にログインします。投稿写真は詳細ページとこの県ページに掲載されます。</p></div>'
         f'<div class="contribution-grid">{"".join(contribution_cards)}</div></div>'
-        if missing_records else (
-            '<div class="contribution-panel contribution-complete">'
-            '<div><strong>すべてのポケふたに現地写真があります</strong>'
-            '<p>季節や旅の思い出が伝わる写真も歓迎しています。</p></div>'
-            '<a class="inline-link" href="#manhole-list" '
-            'data-track="prefecture_photo_candidate_click" data-destination="manhole_list" '
-            'data-surface="photo_contribution">'
-            '投稿するポケふたを選ぶ</a></div>'
-        )
+        if missing_records
+        # 全点に写真が付いた県で出していた「すべてのポケふたに現地写真が
+        # あります」の帯は出さない。すぐ上の掲載率バーが 100% を出していて
+        # 情報が重複するうえ、帯の CTA はヒーローの「投稿するポケふたを選ぶ」
+        # と同じ #manhole-list 行きで、導線としても増えていなかった。
+        else ""
     )
     return (
         '<div class="photo-inventory">'
@@ -583,9 +580,11 @@ def _manhole_cards(
         image_path = ROOT / "dataset" / "manhole" / "image" / f"{mid}_latest.jpeg"
         image_html = (
             f'<img src="/manhole/image/{quote(mid)}_latest.jpeg" '
-            f'alt="{_escape_attr(city)}のポケふた" loading="lazy" width="128" height="128">'
+            f'alt="{_escape_attr(city)}のポケふた" loading="lazy" decoding="async" '
+            f'width="720" height="720">'
             if image_path.exists()
-            else '<span class="manhole-placeholder" aria-hidden="true">●</span>'
+            # 写真館（マイ旅・探す）の写真無しタイルと同じストライプ。
+            else '<span class="manhole-placeholder" aria-hidden="true"></span>'
         )
         preinstall_badge_html = (
             '<span class="manhole-preinstall-badge">🚧 設置前</span>'
@@ -610,6 +609,9 @@ def _manhole_cards(
         )
         upload_label = "写真を追加" if has_photo else "写真を投稿"
         maps_url = _google_maps_url(record)
+        # 蓋の写真そのものが詳細への導線になったので、カード内に「詳細」
+        # ボタンは置かない（写真館が /nearby のタイルから「経路を見る」を外し、
+        # タイル全体を詳細リンクにしたのと同じ整理）。
         maps_html = (
             f'<a href="{_escape_attr(maps_url)}" target="_blank" rel="noopener noreferrer" '
             f'data-track="prefecture_google_maps_click" data-position="{position}" '
@@ -626,20 +628,22 @@ def _manhole_cards(
             if not is_preinstall else ""
         )
         actions_class = "manhole-actions preinstall-actions" if is_preinstall else "manhole-actions"
+        actions_html = (
+            f'<div class="{actions_class}">{maps_html}{upload_html}</div>'
+            if maps_html or upload_html else ""
+        )
         cards.append(
             f'<article class="manhole-card" data-manhole-id="{_escape_attr(mid)}">'
             f'<a class="manhole-detail" href="/manholes/{quote(mid)}/" '
             f'data-track="prefecture_manhole_click" data-position="{position}" '
             f'data-destination="{_escape_attr(mid)}" data-content-id="{_escape_attr(mid)}" '
             f'data-surface="manhole_card">'
-            f'{image_html}<span class="manhole-copy"><strong>{escape(city)}</strong>'
-            f'<small>{escape(pokemons)}</small>{preinstall_badge_html}'
-            f'<b class="photo-status{photo_class}">{photo_label}</b></span></a>'
-            f'<div class="{actions_class}"><a href="/manholes/{quote(mid)}/" '
-            f'data-track="prefecture_manhole_click" data-position="{position}" '
-            f'data-destination="{_escape_attr(mid)}" data-content-id="{_escape_attr(mid)}" '
-            f'data-surface="manhole_actions">詳細</a>'
-            f'{maps_html}{upload_html}</div></article>'
+            f'{image_html}<span class="manhole-shade" aria-hidden="true"></span>'
+            f'<span class="manhole-badges">{preinstall_badge_html}'
+            f'<b class="photo-status{photo_class}">{photo_label}</b></span>'
+            f'<span class="manhole-copy"><strong>{escape(city)}</strong>'
+            f'<small>{escape(pokemons)}</small></span></a>'
+            f'{actions_html}</article>'
         )
     return "".join(cards)
 
@@ -1545,7 +1549,6 @@ def build_page(
     .contribution-card span {{ color: #b5483c; font-size: .68rem; font-weight: 950; }}
     .contribution-card small {{ overflow: hidden; color: #75685c; font-size: .72rem; text-overflow: ellipsis; white-space: nowrap; }}
     .contribution-card b {{ margin-top: 6px; color: #176f68; font-size: .75rem; }}
-    .contribution-complete {{ grid-template-columns: 1fr auto; background: #edf8f2; }}
     .photo-empty-state {{ padding: 18px; border-radius: 14px; background: #f3efe7; }}
     .photo-empty-state p {{ margin: 4px 0 12px; color: #75685c; }}
     .pokemon-grid {{ display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }}
@@ -1565,40 +1568,60 @@ def build_page(
       display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 8px; margin-top: 12px;
     }}
-    .manhole-grid {{ display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }}
+    .manhole-grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }}
     .manhole-card {{
-      overflow: hidden; border: 1px solid rgba(93,67,35,.13);
-      border-radius: 14px; background: white;
+      overflow: hidden; border: 1px solid #e9dfc7;
+      border-radius: 14px; background: #fffdf7;
+      box-shadow: 0 1px 2px rgba(72,55,20,.05), 0 3px 8px rgba(72,55,20,.05);
     }}
     .manhole-detail {{
-      display: grid; grid-template-columns: 72px minmax(0,1fr); align-items: center;
-      gap: 12px; min-height: 88px; padding: 8px; color: inherit; text-decoration: none;
+      position: relative; display: block; color: inherit; text-decoration: none;
     }}
     .manhole-card img, .manhole-placeholder {{
-      width: 72px; height: 72px; border-radius: 50%; object-fit: cover;
+      display: block; width: 100%; aspect-ratio: 1 / 1; height: auto; object-fit: cover;
+      background: #e9e3d6;
     }}
     .manhole-placeholder {{
-      display: grid; place-items: center; background: #eee7fb; color: #7654aa; font-size: 2rem;
+      background: repeating-linear-gradient(45deg, #cdbf9f 0 10px, #c2b390 10px 20px);
     }}
-    .manhole-copy {{ min-width: 0; }}
+    .manhole-shade {{
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(30,22,10,.62) 0%, rgba(30,22,10,0) 46%);
+    }}
+    .manhole-badges {{
+      position: absolute; top: 8px; right: 8px; display: grid; gap: 4px; justify-items: end;
+    }}
+    .manhole-copy {{
+      position: absolute; right: 12px; bottom: 10px; left: 12px;
+      min-width: 0; color: white; text-shadow: 0 1px 3px rgba(0,0,0,.45);
+    }}
     .manhole-copy strong, .manhole-copy small {{ display: block; }}
-    .manhole-copy small {{ overflow: hidden; color: #75685c; text-overflow: ellipsis; white-space: nowrap; }}
+    .manhole-copy small {{
+      overflow: hidden; font-size: .75rem; opacity: .92;
+      text-overflow: ellipsis; white-space: nowrap;
+    }}
     .photo-status {{
-      display: inline-flex; width: fit-content; margin-top: 4px; padding: 2px 7px;
-      border-radius: 999px; font-size: .68rem;
+      display: inline-flex; width: fit-content; padding: 2px 7px;
+      border-radius: 999px; font-size: .68rem; font-weight: 800;
+      box-shadow: 0 1px 3px rgba(30,22,10,.25);
     }}
     .photo-ready {{ background: #e4f2ee; color: #176f68; }}
     .photo-needed {{ background: #fff0e5; color: #9b4b20; }}
     .photo-pending {{ background: #f0ede7; color: #6f6254; }}
-    .manhole-actions {{ display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid #ece4d7; }}
-    .manhole-actions.preinstall-actions {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
+    .manhole-actions {{
+      display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr);
+      border-top: 1px solid #ece4d7;
+    }}
     .manhole-actions a {{
       display: grid; place-items: center; min-height: 44px; padding: 5px;
       color: #57408f; font-size: .76rem; font-weight: 900; text-align: center;
       text-decoration: none;
     }}
     .manhole-actions a + a {{ border-left: 1px solid #ece4d7; }}
-    .manhole-actions a.upload {{ background: #b5483c; color: white; }}
+    /* 写真館のタイルは色面のボタンを持たないので、ここも塗り潰しをやめて
+       写真館の淡いタグ色（#fdeae2 / #bf5640）に寄せる。赤ベタのボタンが
+       全カードに並ぶと、写真より先にボタンの列が目に入っていた。 */
+    .manhole-actions a.upload {{ background: #fdeae2; color: #bf5640; }}
     .journey-loop {{ background: linear-gradient(135deg, #f1f8f6, #f5effc); }}
     .journey-steps {{
       display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px;
@@ -1608,9 +1631,10 @@ def build_page(
     .journey-step span {{ display: block; color: #6b4aa2; font-size: .7rem; }}
     .journey-actions {{ display: flex; flex-wrap: wrap; gap: 8px; }}
     .manhole-preinstall-badge {{
-      display: inline-block; margin-top: 4px; padding: 2px 8px;
+      display: inline-block; padding: 2px 8px;
       border-radius: 999px; background: #f1ede4; color: #6b5d44;
       font-size: .74rem; font-weight: 700; white-space: nowrap;
+      box-shadow: 0 1px 3px rgba(30,22,10,.25);
     }}
     .trivia-card {{
       border-left: 5px solid #7e6ba9;
@@ -1657,12 +1681,19 @@ def build_page(
       .photo-inventory {{ grid-template-columns: minmax(0, 1fr) auto; }}
       .coverage-meter {{ grid-column: 1 / -1; grid-row: 2; }}
       .photo-showcase-grid {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
-      .contribution-panel, .contribution-complete {{ grid-template-columns: 1fr; }}
+      .contribution-panel {{ grid-template-columns: 1fr; }}
       .contribution-grid {{ grid-template-columns: 1fr; }}
       .journey-steps {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
-      .pokemon-grid, .pokemon-more-grid, .manhole-grid {{ grid-template-columns: 1fr; }}
+      .pokemon-grid, .pokemon-more-grid {{ grid-template-columns: 1fr; }}
+      .manhole-grid {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
       #prefecture-map {{ height: 360px; }}
       section {{ padding: 16px; }}
+    }}
+    /* iPhone SE(第1世代) 級の幅では2列タイル内に操作を横並びで置けず、
+       「地図で開 / く」と折り返していたので、ここだけ縦に積む。 */
+    @media (max-width: 360px) {{
+      .manhole-actions {{ grid-auto-flow: row; }}
+      .manhole-actions a + a {{ border-top: 1px solid #ece4d7; border-left: 0; }}
     }}
   </style>
 </head>
