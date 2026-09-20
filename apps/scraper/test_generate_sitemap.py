@@ -69,5 +69,31 @@ class BuildSitemapTest(unittest.TestCase):
         )
 
 
+class TagPageUrlTest(unittest.TestCase):
+    """テーマページは生成された分だけ載せる。
+
+    生成側（generate_tag_pages.available_tag_slugs）と同じ判定を使うので、
+    レコードが無くて生成されなかったテーマの URL が sitemap に残ることはない。
+    """
+
+    def test_lists_only_the_tags_passed_in(self) -> None:
+        xml = MODULE.build_sitemap(["1"], [], ["roadside", "world_heritage"])
+        self.assertIn("<loc>https://data.pokefuta.com/tags/roadside/</loc>", xml)
+        self.assertIn("<loc>https://data.pokefuta.com/tags/world_heritage/</loc>", xml)
+        self.assertNotIn("/tags/remote_island/", xml)
+
+    def test_omits_the_section_entirely_without_tags(self) -> None:
+        self.assertNotIn("/tags/", MODULE.build_sitemap(["1"], []))
+
+    def test_reads_tags_from_the_real_dataset(self) -> None:
+        dataset = Path(__file__).resolve().parents[2] / "docs" / "pokefuta.ndjson"
+        if not dataset.exists():
+            self.skipTest(f"dataset not available: {dataset}")
+        self.assertEqual(
+            ["roadside", "remote_island", "world_heritage"],
+            MODULE.read_tag_slugs(dataset),
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
