@@ -58,13 +58,12 @@ class BuildSitemapTest(unittest.TestCase):
                 self.assertIn(
                     f"<loc>https://data.pokefuta.com/{page.path}</loc>", self.xml
                 )
+        self.assertIn("<loc>https://data.pokefuta.com/characters/</loc>", self.xml)
 
     def test_omits_character_work_page_without_active_records(self) -> None:
-        page = MODULE.read_character_work_pages(
-            Path(__file__).resolve().parents[2] / "docs" / "character_manholes.ndjson"
-        )[0]
         xml = MODULE.build_sitemap(["1"], [], character_work_pages=[])
-        self.assertNotIn(f"<loc>https://data.pokefuta.com/{page.path}</loc>", xml)
+        self.assertNotIn("<loc>https://data.pokefuta.com/characters/</loc>", xml)
+        self.assertNotIn("<loc>https://data.pokefuta.com/characters/idolmaster/</loc>", xml)
 
     def test_includes_the_map_page_in_every_language(self) -> None:
         """map.html は自分自身を canonical にしているので sitemap に載っていること。

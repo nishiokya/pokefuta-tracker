@@ -6,9 +6,11 @@ import tempfile
 import unittest
 from datetime import datetime
 from pathlib import Path
+from unittest.mock import patch
 
 from apps.scraper.character_manhole_works import WORK_PAGES, page_for_work
-from apps.scraper.generate_character_work_pages import generate_html, load_events, write_pages
+from apps.scraper.generate_character_work_pages import generate_html, generate_index_html, load_events, write_pages
+from apps.scraper.generate_character_manhole_page import _is_active, load_ndjson
 from apps.scraper.photo_caption import JST
 
 
@@ -121,8 +123,45 @@ class GenerateAllPagesTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             output = Path(tmp)
             written = write_pages(RECORDS, EVENT, output)
-            self.assertEqual([output / "characters/idolmaster/index.html"], written)
-            self.assertTrue(written[0].exists())
+            self.assertEqual([
+                output / "characters/index.html",
+                output / "characters/idolmaster/index.html",
+            ], written)
+            self.assertTrue(all(path.exists() for path in written))
+
+    def test_character_index_lists_generated_work_pages(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output = Path(tmp)
+            write_pages(RECORDS, EVENT, output)
+            html = (output / "characters/index.html").read_text(encoding="utf-8")
+            self.assertIn("アニメ・キャラクターマンホール作品別一覧", html)
+            self.assertIn('./idolmaster/', html)
+            self.assertNotIn('./zombieland-saga/', html)
+            self.assertIn('href="../character_manholes.html"', html)
+            self.assertIn('href="../gmanhole_map.html"', html)
+            self.assertIn('"page_type": "index_character_works"', html)
+            self.assertIn('property="og:image"', html)
+
+    def test_real_character_index_lists_all_six_work_pages(self) -> None:
+        dataset = Path(__file__).resolve().parents[2] / "docs/character_manholes.ndjson"
+        records = load_ndjson(dataset)
+        html = generate_index_html(records)
+        for page in WORK_PAGES:
+            with self.subTest(page=page.slug):
+                self.assertIn(f'./{page.slug}/', html)
+        covered_works = {work for page in WORK_PAGES for work in page.works}
+        expected = sum(_is_active(record) and record.get("work") in covered_works for record in records)
+        self.assertIn(f'<strong>{expected}</strong><span>MANHOLES</span>', html)
+
+    def test_loaded_event_is_not_validated_twice(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "events.json"
+            path.write_text(json.dumps(EVENT), encoding="utf-8")
+            loaded = load_events(path)
+            with patch("apps.scraper.generate_character_work_pages.validate_event") as validate:
+                html = generate_html(IDOLMASTER, RECORDS, loaded, now=datetime(2026, 9, 20, tzinfo=JST))
+            validate.assert_not_called()
+            self.assertIn("公式チェックイン企画", html)
 
     def test_map_supports_grouped_idolmaster_filter(self) -> None:
         map_html = (Path(__file__).parents[1] / "web/gmanhole_map.html").read_text(encoding="utf-8")

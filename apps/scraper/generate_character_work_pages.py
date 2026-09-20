@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build useful, static work guides at /characters/<slug>/ from curated datasets."""
+"""Build the /characters/ index and static /characters/<slug>/ work guides."""
 
 from __future__ import annotations
 
@@ -27,6 +27,7 @@ except ModuleNotFoundError as exc:
     from prefectures import PREFECTURE_ORDER
 
 ASSET_BASE = "../../"
+INDEX_ASSET_BASE = "../"
 DEFAULT_EVENTS = ROOT / "dataset/character_manhole_events.json"
 OG_IMAGE = BASE_URL + "assets/ogp/pokefuta_map_ogp.png"
 IDOLMASTER_EVENT_TYPE = "idolmaster_20th_checkin"
@@ -109,6 +110,14 @@ def load_events(path: Path) -> dict[str, dict]:
     }
 
 
+def event_for_page(slug: str, events: dict) -> dict | None:
+    """Return a loaded event as-is, while still accepting raw mappings in callers/tests."""
+    raw = events.get(slug)
+    if isinstance(raw, dict) and isinstance(raw.get("_ends_at"), datetime):
+        return raw
+    return validate_event(slug, raw) if raw is not None else None
+
+
 def event_html(event: dict, now: datetime) -> tuple[str, str, bool]:
     """ふたマスの案内を生成し、期限後は参加手順とチェックイン導線を外す。"""
     end = event["_ends_at"]
@@ -138,7 +147,7 @@ def event_html(event: dict, now: datetime) -> tuple[str, str, bool]:
       <p>ふたマスの対象スポットを訪ねると、公式ポータルのチェックイン企画に参加できます。
       公式マイデスクに表示できる称号の獲得が案内されています。チェックインはアイドルマスター ポータルで行います。</p>
       <p class="cw-deadline">公式掲載の終了予定：<time datetime="{escape(event['ends_at'])}">{deadline}</time></p>
-      <p class="cw-note">確認日：{escape(event['verified_at'])}。開始日時はスポットごとに異なり、期間は変更される場合があります。最新条件は公式で確認してください。</p></div>
+      <p class="cw-note">確認日：{escape(str(event['verified_at']))}。開始日時はスポットごとに異なり、期間は変更される場合があります。最新条件は公式で確認してください。</p></div>
       <ol class="cw-steps">
         <li><strong>バンダイナムコIDを用意</strong><span>特典を受け取るアカウントで、公式ポータルにログインします。</span></li>
         <li><strong>対象のマンホールへ</strong><span>スマートフォンとブラウザで位置情報の利用を許可。安全な場所に立ち止まって操作します。</span></li>
@@ -189,7 +198,7 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
         title = "アイマス・ふたマスのマンホール一覧｜設置場所とチェックイン方法"
     description = f"{page.name}のマンホール{count}枚を掲載。{page.intro}"
     canonical = BASE_URL + page.path
-    event = validate_event(page.slug, events.get(page.slug)) if events.get(page.slug) else None
+    event = event_for_page(page.slug, events)
     badge, event_section, event_active = event_html(event, now) if event else ("", "", False)
     hero_heading = "アイマスのマンホール、<br>会いに行こう。" if event_active else f"{escape(page.name)}の<br>マンホールを探そう。"
     hero_note = "担当アイドルのふたを訪ねて、公式チェックインへ。" if event_active else "好きな作品を、次の旅の目的地に。"
@@ -229,7 +238,8 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
         {"@type": "BreadcrumbList", "itemListElement": [
             {"@type": "ListItem", "position": 1, "name": "ポケふた図鑑", "item": BASE_URL},
             {"@type": "ListItem", "position": 2, "name": "キャラクターマンホール全国一覧", "item": BASE_URL + "character_manholes.html"},
-            {"@type": "ListItem", "position": 3, "name": page.name, "item": canonical},
+            {"@type": "ListItem", "position": 3, "name": "作品別一覧", "item": BASE_URL + "characters/"},
+            {"@type": "ListItem", "position": 4, "name": page.name, "item": canonical},
         ]},
         {"@type": "ItemList", "@id": canonical + "#list", "numberOfItems": count, "itemListElement": [
             {"@type": "ListItem", "position": i, "name": str(r.get("title") or r.get("character") or "マンホール"), "url": canonical + "#" + spot_id(r)}
@@ -251,13 +261,13 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
   <meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="{OG_IMAGE}">
   <link rel="icon" href="{ASSET_BASE}assets/pokefuta_icon_32.png">
   <link rel="stylesheet" href="{ASSET_BASE}assets/top-page.css?v=20260707a">
-  <link rel="stylesheet" href="{ASSET_BASE}assets/character-work.css?v=20260920a">
+  <link rel="stylesheet" href="{ASSET_BASE}assets/character-work.css?v=20260920b">
   <script type="application/ld+json">{json_script(schema)}</script>
   <script src="{ASSET_BASE}assets/analytics.js?v=20260805a"></script>
   <script>window.PokefutaAnalytics.init({json_script(analytics)});</script>
 </head><body class="character-work-page">
   <main class="cw-wrap">
-    <nav class="cw-breadcrumb" aria-label="パンくず"><a href="{ASSET_BASE}">ポケふた図鑑</a><span>/</span><a href="{ASSET_BASE}character_manholes.html">キャラクターマンホール</a><span>/</span><span>{escape(page.name)}</span></nav>
+    <nav class="cw-breadcrumb" aria-label="パンくず"><a href="{ASSET_BASE}">ポケふた図鑑</a><span>/</span><a href="{ASSET_BASE}character_manholes.html">キャラクターマンホール</a><span>/</span><a href="../">作品別一覧</a><span>/</span><span>{escape(page.name)}</span></nav>
     <section class="cw-hero" aria-labelledby="work-heading">
       <div class="cw-hero-copy"><p class="cw-eyebrow">MANHOLE TRIP GUIDE / {escape(page.name)}</p>{badge}
         <h1 id="work-heading">{hero_heading}</h1><p class="cw-hero-lead">{hero_note}</p>
@@ -280,7 +290,97 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
       <div class="cw-faq">{faq_html}</div></section>
     <section class="cw-section cw-post"><p class="cw-eyebrow">YOUR TRAVEL NOTES</p><h2>出会ったふたを、写真で残そう。</h2>
       <p>位置情報つきの写真を、ポケふた写真館に投稿できます。</p><a class="cw-button cw-button-secondary" href="{ASSET_BASE}design_manhole.html">写真投稿の方法を見る →</a></section>
-    <nav class="cw-section cw-related" aria-label="ほかの作品"><h2>ほかの作品も探す</h2>{related_html}<a href="{ASSET_BASE}character_manholes.html">キャラクターマンホール全国一覧へ →</a></nav>
+    <nav class="cw-section cw-related" aria-label="ほかの作品"><h2>ほかの作品も探す</h2>{related_html}<a href="../">作品別一覧へ →</a><a href="{ASSET_BASE}character_manholes.html">全国一覧へ →</a></nav>
+  </main>
+</body></html>"""
+
+
+def generate_index_html(records: list[dict]) -> str:
+    """Build the /characters/ hub from the same active records as work pages."""
+    active = [record for record in records if _is_active(record)]
+    pages = available_pages(active)
+    if not pages:
+        raise ValueError("No character work pages available")
+    covered = [record for record in active if any(record.get("work") in page.works for page in pages)]
+    canonical = BASE_URL + "characters/"
+    title = "アニメ・キャラクターマンホール作品別一覧｜設置場所・地図"
+    total = len(covered)
+    prefectures = {record.get("prefecture") for record in covered if record.get("prefecture")}
+    description = (f"アニメ・キャラクターマンホール{total}枚を{len(pages)}作品別に紹介。"
+                   "アイマス、ゾンビランドサガ、ロマサガなどの設置場所・住所・地図を確認できます。")
+    cards = []
+    item_list = []
+    for position, page in enumerate(pages, 1):
+        selected = [record for record in active if record.get("work") in page.works]
+        page_prefs = sorted(
+            {str(record.get("prefecture")) for record in selected if record.get("prefecture")},
+            key=lambda pref: PREFECTURE_ORDER.index(pref) if pref in PREFECTURE_ORDER else 999,
+        )
+        pref_text = "・".join(page_prefs)
+        cards.append(f"""<article class="cw-work-card">
+          <p class="cw-eyebrow">WORK {position:02d}</p><h2><a href="./{page.slug}/">{escape(page.name)}</a></h2>
+          <p>{escape(page.intro)}</p><p class="cw-work-meta"><strong>{len(selected)}枚</strong><span>{len(page_prefs)}都道府県</span></p>
+          <p class="cw-note">{escape(pref_text)}</p><a class="cw-card-link" href="./{page.slug}/">設置場所の一覧を見る →</a>
+        </article>""")
+        item_list.append({
+            "@type": "ListItem", "position": position, "name": page.name,
+            "url": BASE_URL + page.path,
+        })
+    schema = {"@context": "https://schema.org", "@graph": [
+        {"@type": "CollectionPage", "@id": canonical, "url": canonical, "name": title,
+         "description": description, "inLanguage": "ja", "mainEntity": {"@id": canonical + "#list"}},
+        {"@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "ポケふた図鑑", "item": BASE_URL},
+            {"@type": "ListItem", "position": 2, "name": "キャラクターマンホール全国一覧", "item": BASE_URL + "character_manholes.html"},
+            {"@type": "ListItem", "position": 3, "name": "作品別一覧", "item": canonical},
+        ]},
+        {"@type": "ItemList", "@id": canonical + "#list", "numberOfItems": len(pages),
+         "itemListElement": item_list},
+    ]}
+    analytics = {"page_path": "/characters/", "site_type": "map", "page_type": "index_character_works"}
+    return f"""<!doctype html>
+<html lang="ja"><head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{escape(title)}</title><meta name="description" content="{escape(description)}">
+  <link rel="canonical" href="{canonical}"><meta name="robots" content="index,follow">
+  <meta property="og:type" content="website"><meta property="og:locale" content="ja_JP">
+  <meta property="og:title" content="{escape(title)}"><meta property="og:description" content="{escape(description)}">
+  <meta property="og:url" content="{canonical}"><meta property="og:site_name" content="ポケふた図鑑">
+  <meta property="og:image" content="{OG_IMAGE}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="{OG_IMAGE}">
+  <link rel="icon" href="{INDEX_ASSET_BASE}assets/pokefuta_icon_32.png">
+  <link rel="stylesheet" href="{INDEX_ASSET_BASE}assets/top-page.css?v=20260707a">
+  <link rel="stylesheet" href="{INDEX_ASSET_BASE}assets/character-work.css?v=20260920b">
+  <script type="application/ld+json">{json_script(schema)}</script>
+  <script src="{INDEX_ASSET_BASE}assets/analytics.js?v=20260805a"></script>
+  <script>window.PokefutaAnalytics.init({json_script(analytics)});</script>
+</head><body class="character-work-page character-index-page">
+  <main class="cw-wrap">
+    <nav class="cw-breadcrumb" aria-label="パンくず"><a href="{INDEX_ASSET_BASE}">ポケふた図鑑</a><span>/</span><a href="{INDEX_ASSET_BASE}character_manholes.html">キャラクターマンホール</a><span>/</span><span>作品別一覧</span></nav>
+    <section class="cw-hero" aria-labelledby="characters-heading">
+      <div class="cw-hero-copy"><p class="cw-eyebrow">CHARACTER MANHOLE COLLECTION</p>
+        <h1 id="characters-heading">好きな作品から、<br>マンホールを探そう。</h1>
+        <p class="cw-hero-lead">アニメ・漫画・キャラクターのマンホールを作品別に。</p>
+        <p>設置場所、住所、地図、自治体や公式サイトの出典を、作品ごとのページで確認できます。</p>
+        <div class="cw-actions"><a class="cw-button" href="#works">作品を選ぶ ↓</a><a class="cw-text-link" href="{INDEX_ASSET_BASE}character_manholes.html">全国一覧を見る →</a></div>
+      </div>
+      <aside class="cw-passport cw-index-stats" aria-label="掲載データ"><p class="cw-eyebrow">COLLECTION INDEX</p>
+        <p class="cw-index-total"><strong>{total}</strong><span>MANHOLES</span></p>
+        <dl><div><dt>作品</dt><dd>{len(pages)}</dd></div><div><dt>都道府県</dt><dd>{len(prefectures)}</dd></div></dl>
+        <span class="cw-passport-foot">POKEFUTA / CHARACTER WORKS</span></aside>
+    </section>
+    <section class="cw-section" id="works" aria-labelledby="works-heading">
+      <p class="cw-eyebrow">CHOOSE A WORK</p><h2 id="works-heading">アニメ・キャラクターマンホールの作品別一覧</h2>
+      <p>掲載枚数と地域を見比べて、訪ねたい作品を選べます。</p><div class="cw-work-grid">{"".join(cards)}</div>
+    </section>
+    <section class="cw-section cw-index-guide" aria-labelledby="guide-heading">
+      <p class="cw-eyebrow">EXPLORE MORE</p><h2 id="guide-heading">地域や地図から探す</h2>
+      <p>作品を決めずに探す場合は全国一覧へ。現在地や都道府県から絞り込む場合は地図が便利です。</p>
+      <div class="cw-actions"><a class="cw-button cw-button-secondary" href="{INDEX_ASSET_BASE}character_manholes.html">全国一覧を見る →</a><a class="cw-button cw-button-secondary" href="{INDEX_ASSET_BASE}gmanhole_map.html">全国地図を開く →</a></div>
+    </section>
+    <section class="cw-section" aria-labelledby="notes-heading"><h2 id="notes-heading">訪問前に確認したいこと</h2>
+      <p>掲載データは全国すべてを網羅するものではありません。移設・撤去、施設の開放時間、マンホールカードの配布状況は、訪問前に各ページの出典をご確認ください。</p>
+    </section>
   </main>
 </body></html>"""
 
@@ -289,6 +389,13 @@ def write_pages(records: list[dict], events: dict, output: Path) -> list[Path]:
     active = [r for r in records if _is_active(r)]
     pages = available_pages(active)
     written = []
+    index_path = output / "characters/index.html"
+    if pages:
+        index_path.parent.mkdir(parents=True, exist_ok=True)
+        index_path.write_text(generate_index_html(active), encoding="utf-8")
+        written.append(index_path)
+    elif index_path.exists():
+        index_path.unlink()
     for page in WORK_PAGES:
         path = output / page.path / "index.html"
         if page not in pages:
@@ -311,7 +418,7 @@ def main() -> int:
     if not any(_is_active(r) for r in records):
         parser.error("No active character records; refusing to generate empty guides")
     written = write_pages(records, load_events(args.events), args.output)
-    print(f"[generate_character_work_pages] wrote {len(written)} work guides")
+    print(f"[generate_character_work_pages] wrote {len(written)} character pages")
     return 0
 
 
