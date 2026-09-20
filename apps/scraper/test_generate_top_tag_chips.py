@@ -102,12 +102,15 @@ class CommittedIndexTest(unittest.TestCase):
         self.assertEqual(_without_counts(html), _without_counts(regenerated))
 
     def test_counts_are_allowed_to_go_stale_in_the_source(self) -> None:
-        """件数だけがずれてもテストは落ちないこと（日次データ更新でデプロイを止めない）。"""
-        html = INDEX.read_text(encoding="utf-8")
-        stale = html.replace('<span class="chip-count">99枚</span>',
-                             '<span class="chip-count">98枚</span>')
-        self.assertNotEqual(html, stale, "件数を持つチップが見つからない")
-        self.assertEqual(_without_counts(html), _without_counts(stale))
+        """件数だけがずれてもテストは落ちないこと（日次データ更新でデプロイを止めない）。
+
+        実データの枚数に依存させない。枚数が変わった日にこのテストが
+        落ちると、それ自体がデプロイを止める原因になる。
+        """
+        fresh = '<a class="hub-chip" href="/tags/roadside/">道の駅 <span class="chip-count">99枚</span></a>'
+        stale = fresh.replace("99枚", "98枚")
+        self.assertNotEqual(fresh, stale)
+        self.assertEqual(_without_counts(fresh), _without_counts(stale))
 
     def test_markers_are_present(self) -> None:
         html = INDEX.read_text(encoding="utf-8")

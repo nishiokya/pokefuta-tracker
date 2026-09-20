@@ -51,6 +51,8 @@ jobs:
       #     manhole_titles.py             -> test_manhole_titles*.py
       #     display_names.py              -> test_display_names.py
       #     prefectures.py                -> test_prefectures.py
+      #     tag_meta.py                   -> test_tag_meta.py
+      #     generate_top_tag_chips.py     -> test_generate_top_tag_chips.py
       - name: Run scraper tests
         run: |
           python -m unittest discover -s apps/scraper -v \
@@ -69,6 +71,10 @@ jobs:
             -p 'test_generate_social_posts*.py'
           python -m unittest discover -s apps/scraper -v \
             -p 'test_export_kml.py'
+          python -m unittest discover -s apps/scraper -v \
+            -p 'test_tag_meta.py'
+          python -m unittest discover -s apps/scraper -v \
+            -p 'test_generate_top_tag_chips.py'
 
       - name: Run incremental updater
         id: updater
