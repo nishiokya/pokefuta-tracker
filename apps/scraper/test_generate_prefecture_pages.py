@@ -372,6 +372,61 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         self.assertEqual(2, html.count('class="contribution-card"'))
         self.assertNotIn("photo-showcase-grid", html)
 
+    def test_photo_section_says_nothing_extra_when_every_pokefuta_has_a_photo(
+        self,
+    ) -> None:
+        """掲載率100%の県で「すべてのポケふたに現地写真があります」の帯を出さない。
+
+        掲載率バーが 100% を出しているところへ同じことを文章で重ねており、
+        帯の CTA もヒーローの「投稿するポケふたを選ぶ」と同じ #manhole-list
+        行きだった。"""
+        records = [{"id": "9001", "city": "A市", "pokemons": ["イーブイ"]}]
+        photos = {
+            "9001": {
+                "url": "https://images.pokefuta.com/photos/9001.jpg",
+                "created_at": "2026-07-20T00:00:00Z",
+            }
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            image = root / "dataset" / "manhole" / "image" / "9001_latest.jpeg"
+            image.parent.mkdir(parents=True)
+            image.write_bytes(b"test image")
+            with mock.patch.object(MODULE, "ROOT", root):
+                html = MODULE._photo_section("宮崎県", "miyazaki", records, photos)
+        self.assertIn('aria-valuenow="100"', html)
+        self.assertNotIn("すべてのポケふたに現地写真があります", html)
+        self.assertNotIn("contribution-panel", html)
+
+    def test_manhole_card_is_a_photo_first_tile(self) -> None:
+        """一覧カードは写真館のタイルと同じ「写真が主役・タイル全体が詳細リンク」。
+
+        丸い72pxサムネ＋「詳細／地図で開く／写真を追加」の3ボタンだった頃の
+        名残（カード内の「詳細」ボタン）が戻ってこないように固定する。"""
+        records = [
+            {
+                "id": "9001",
+                "city": "A市",
+                "pokemons": ["イーブイ"],
+                "lat": 31.9,
+                "lng": 131.4,
+            }
+        ]
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            image = root / "dataset" / "manhole" / "image" / "9001_latest.jpeg"
+            image.parent.mkdir(parents=True)
+            image.write_bytes(b"test image")
+            with mock.patch.object(MODULE, "ROOT", root):
+                html = MODULE._manhole_cards(records, {}, "miyazaki")
+        self.assertIn('width="720" height="720"', html)
+        self.assertIn('class="manhole-shade"', html)
+        self.assertIn('data-surface="manhole_card"', html)
+        self.assertNotIn(">詳細</a>", html)
+        # 使われている導線（地図8千件／投稿5百件規模）はタイルに残す。
+        self.assertIn("地図で開く", html)
+        self.assertIn("写真を投稿", html)
+
     def test_untrusted_photo_url_is_not_rendered(self) -> None:
         records = [{"id": "9901", "city": "A市", "pokemons": ["イーブイ"]}]
         html = MODULE._photo_section(
