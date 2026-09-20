@@ -861,6 +861,7 @@ def generate_html(
     <section class="lp-section" aria-labelledby="lp-works-heading">
       <h2 id="lp-works-heading"><span aria-hidden="true">WORKS</span>アニメ・キャラクターマンホールの作品別一覧</h2>
       <p class="lp-section-lead">掲載中の{work_count}作品・シリーズの枚数と都道府県を紹介。作品名から設置場所の詳しい一覧や地図へ進めます。アイマスは各シリーズをまとめて紹介しています。</p>
+      <div class="lp-jump-links"><a href="./characters/">作品から設置場所を探す（作品別ガイド）→</a></div>
       <ul class="lp-work-grid">
 {work_items_html}
       </ul>
