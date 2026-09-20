@@ -51,6 +51,8 @@ jobs:
       #     manhole_titles.py             -> test_manhole_titles*.py
       #     display_names.py              -> test_display_names.py
       #     prefectures.py                -> test_prefectures.py
+      #     tag_meta.py                   -> test_tag_meta.py
+      #     generate_top_tag_chips.py     -> test_generate_top_tag_chips.py
       - name: Run scraper tests
         run: |
           python -m unittest discover -s apps/scraper -v \
@@ -69,6 +71,10 @@ jobs:
             -p 'test_generate_social_posts*.py'
           python -m unittest discover -s apps/scraper -v \
             -p 'test_export_kml.py'
+          python -m unittest discover -s apps/scraper -v \
+            -p 'test_tag_meta.py'
+          python -m unittest discover -s apps/scraper -v \
+            -p 'test_generate_top_tag_chips.py'
 
       - name: Run incremental updater
         id: updater
@@ -110,6 +116,11 @@ jobs:
           python apps/scraper/generate_prefecture_trivia.py
           python apps/scraper/generate_social_posts.py
 
+      # トップのテーマチップは枚数を表示しているので、データ更新に追随させる。
+      # 表示自体はデプロイ時に dist/index.html を作り直すので、ここが漏れても壊れない。
+      - name: Refresh top page theme chips
+        run: python apps/scraper/generate_top_tag_chips.py
+
       - name: Detect dataset changes
         id: diff
         run: |
@@ -117,7 +128,8 @@ jobs:
             docs/pokefuta.ndjson \
             docs/pokefuta.kml \
             docs/social-post-candidates.json \
-            dataset/prefecture_trivia.json || true
+            dataset/prefecture_trivia.json \
+            apps/web/index.html || true
           if git diff --cached --quiet; then
             echo "changed=false" >> $GITHUB_OUTPUT
           else

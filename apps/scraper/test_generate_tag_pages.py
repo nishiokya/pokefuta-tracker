@@ -179,7 +179,18 @@ class RealDatasetTest(unittest.TestCase):
         if not dataset.exists():
             self.skipTest(f"dataset not available: {dataset}")
         records = module.load_records(dataset)
-        self.assertEqual(sorted(module.TAG_PAGES), sorted(module.available_tag_slugs(records)))
+        meta = module.load_tag_meta()
+        self.assertEqual(
+            sorted(meta.page_slugs()),
+            sorted(module.available_tag_slugs(records, meta)),
+        )
+
+    def test_page_copy_exists_for_every_page_tag(self) -> None:
+        """tag_meta で page:true にしたのに本文を書き忘れる、を防ぐ。"""
+        meta = module.load_tag_meta()
+        for slug in meta.page_slugs():
+            with self.subTest(slug=slug):
+                self.assertIn(slug, module.TAG_PAGE_COPY)
 
 
 if __name__ == "__main__":

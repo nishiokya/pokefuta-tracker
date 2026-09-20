@@ -1,0 +1,64 @@
+{
+  "_comment": [
+    "テーマタグの単一ソース。トップの「目的から探す」・地図のテーマ絞り込み・",
+    "/tags/ のテーマページ・/summary/ の「旅のテーマから探す」は、すべてこれを読む。",
+    "以前は4面がそれぞれ手書きのリストを持っていて、載せるタグ・ラベル・絵文字が食い違っていた。",
+    "",
+    "min_count    : この枚数未満のタグはどの面にも出さない",
+    "top_chip_limit: トップに並べるチップの最大数（featured を先に、残りは枚数降順）",
+    "priority     : 地図のテーマ一覧の並び順。ここに無いタグは枚数降順で後ろに並ぶ",
+    "featured     : 地図の主枠に出す。トップのチップにも必ず出る",
+    "icon_only    : 地図のポップアップでバッジにせずアイコンだけ出す（補助的なタグ）",
+    "page         : /tags/<slug>/ の静的ページを持つ。持つタグへの導線はそのページに向ける",
+    "",
+    "枚数は docs/pokefuta.ndjson の tags を数える（titles ではない）。",
+    "タグを増やすときは、実データに5枚以上あるかを先に確認すること。"
+  ],
+  "min_count": 5,
+  "top_chip_limit": 7,
+  "priority": [
+    "roadside",
+    "world_heritage",
+    "remote_island",
+    "near_gundam_manhole",
+    "seaside",
+    "tourism",
+    "station_front",
+    "food",
+    "museum",
+    "history",
+    "rail_access_good"
+  ],
+  "tags": [
+    { "slug": "seaside", "emoji": "🌊", "label": "海沿い", "featured": true },
+    { "slug": "beach", "emoji": "🏖", "label": "ビーチ" },
+    { "slug": "lakeside", "emoji": "🌅", "label": "湖畔" },
+    { "slug": "river", "emoji": "🏞", "label": "川辺", "icon_only": true },
+    { "slug": "remote_island", "emoji": "🏝", "label": "離島", "featured": true, "page": true },
+    { "slug": "roadside", "emoji": "🛤", "label": "道の駅", "featured": true, "page": true },
+    { "slug": "in_station", "emoji": "🚉", "label": "駅構内", "icon_only": true },
+    { "slug": "station_front", "emoji": "🚃", "label": "駅前" },
+    { "slug": "near_station", "emoji": "🚶", "label": "駅近" },
+    { "slug": "rail_access_good", "emoji": "🚆", "label": "電車アクセス良好", "icon_only": true },
+    { "slug": "far_station", "emoji": "🚗", "label": "駅から遠い" },
+    { "slug": "tourism", "emoji": "🗺", "label": "観光地", "icon_only": true },
+    { "slug": "park", "emoji": "🌳", "label": "公園", "icon_only": true },
+    { "slug": "museum", "emoji": "🏛", "label": "博物館・美術館", "icon_only": true },
+    { "slug": "history", "emoji": "⛩", "label": "史跡・名所", "icon_only": true },
+    { "slug": "food", "emoji": "🍜", "label": "グルメ・食の名所", "icon_only": true },
+    { "slug": "world_heritage", "emoji": "🌐", "label": "世界遺産", "featured": true, "page": true },
+    {
+      "slug": "near_gundam_manhole",
+      "emoji": "🤖",
+      "label": "ガンダムマンホール",
+      "description": "ガンダムマンホールまで約500m以内のポケふた",
+      "featured": true
+    },
+    {
+      "slug": "gundam_manhole_city",
+      "emoji": "🤖",
+      "label": "ガンダムマンホールのあるまち",
+      "description": "ガンダムマンホールが設置されている市町村のポケふた"
+    }
+  ]
+}

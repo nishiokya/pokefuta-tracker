@@ -22,6 +22,13 @@ from xml.sax.saxutils import escape
 
 sys.path.insert(0, str(Path(__file__).parent))
 from site_terms import format_count  # noqa: E402
+from tag_meta import load_tag_meta  # noqa: E402
+
+# テーマページを持つタグ（dataset/tag_meta.json が正）。
+# 旅のテーマカードから一覧ページへ送るために使う。
+TAG_META_PAGE_HREFS = {
+    slug: f"/tags/{slug}/" for slug in load_tag_meta().page_slugs()
+}
 from photo_caption import (  # noqa: E402
     CAPTION_ELLIPSIS_CSS,
     caption_meta,
@@ -1096,6 +1103,14 @@ _CSS = """\
       font-size: 1.45rem;
       font-weight: 950;
       line-height: 1.1;
+    }
+
+    .discovery-hub-more {
+      justify-self: start;
+      color: #57408f;
+      font-size: .84rem;
+      font-weight: 900;
+      text-decoration: none;
     }
 
     .discovery-hub-links {
@@ -3367,6 +3382,16 @@ def _build_popular_pokemon_section(s: dict, pokemon_stats: dict) -> str:
     )
 
 
+def _tag_page_href(key: str, s: dict) -> str:
+    """テーマページ（/tags/<slug>/）があればその URL。無ければ空文字。
+
+    テーマページは日本語のみなので、他言語のサマリーからはリンクしない。
+    """
+    if s.get("pref_key") != "ja":
+        return ""
+    return TAG_META_PAGE_HREFS.get(key, "")
+
+
 def _has_title(record: dict, key: str) -> bool:
     keys = {title.get("key") for title in record.get("titles", [])}
     return bool(keys & {"lone", "lone_100"}) if key == "lone" else key in keys
@@ -3405,7 +3430,13 @@ def _build_discovery_hub_sections(
         place = " ".join(filter(None, [record.get("prefecture"), record.get("city")]))
         return f"{display} · {place}" if place else display
 
-    def card(title: str, count_text: str, candidates: list[dict], content_id: str) -> str:
+    def card(
+        title: str,
+        count_text: str,
+        candidates: list[dict],
+        content_id: str,
+        hub_href: str = "",
+    ) -> str:
         candidates = sorted(
             candidates,
             key=lambda record: str(record.get("id", "")).zfill(8),
@@ -3425,11 +3456,20 @@ def _build_discovery_hub_sections(
             f'data-destination-hub="manhole_detail">{escape(record_label(record))}</a></li>'
             for record in (pictured or candidates)[:3]
         )
+        # テーマページがあるものだけ、カードの見出しから一覧へ送る。
+        # 無いテーマは従来どおり文言だけ（行き先が無いのにリンクに見せない）。
+        details_html = (
+            f'<a class="discovery-hub-more" href="{escape(hub_href)}" '
+            f'data-summary-event="summary_discovery_hub_click" '
+            f'data-content-type="discovery_hub" data-content-id="{escape(content_id)}" '
+            f'data-destination-hub="tag_page">{escape(copy["details"])} →</a>'
+            if hub_href else f'<span>{escape(copy["details"])}</span>'
+        )
         return (
             f'<article class="discovery-hub-card">{image_html}'
             f'<div class="discovery-hub-copy"><h3>{escape(title)}</h3>'
             f'<strong class="discovery-hub-count">{escape(count_text)}</strong>'
-            f'<span>{escape(copy["details"])}</span>'
+            f'{details_html}'
             f'<ul class="discovery-hub-links">{links}</ul></div></article>'
         )
 
@@ -3475,12 +3515,15 @@ def _build_discovery_hub_sections(
     if crossover_html:
         travel_keys.remove("near_gundam_manhole")
     for key in travel_keys:
-        candidates = [record for record in records if _has_title(record, key)]
+        # 枚数は tags を数える。以前は titles を見ていたため、同じテーマでも
+        # 地図・トップ・/tags/ と件数が食い違っていた（離島 28 と 30）。
+        candidates = [record for record in records if key in (record.get("tags") or [])]
         travel_cards.append(card(
             copy["travel"][key],
             format_count(copy, "count", len(candidates)),
             candidates,
             key,
+            _tag_page_href(key, s),
         ))
 
     pokemon_records: dict[str, list[dict]] = {}

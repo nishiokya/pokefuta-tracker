@@ -334,6 +334,7 @@
   <link rel="stylesheet" href="%%BASE_PATH%%assets/pokefuta-map.css?v=20260614-hero-toggle" />
   <link rel="icon" href="%%BASE_PATH%%assets/pokefuta-marker.svg" type="image/svg+xml" />
   <!-- Google Analytics -->
+  <script src="%%BASE_PATH%%assets/tag-meta.js"></script>
   <script src="%%BASE_PATH%%assets/analytics.js?v=20260805a"></script>
   <script>
     // Dynamic page_path based on URL parameters
@@ -682,34 +683,24 @@
     var isInitialPageLoad = true;  // Track if this is initial page load to prevent duplicate page_views
     var activeTagFilter = null;  // タグフィルタ（null = 全件）
     var showTagDirectory = false;
-    const TAG_DIRECTORY_MIN_COUNT = 5;  // この件数未満のタグはチップに表示しない
-    const TAG_PRIORITY = ['roadside', 'world_heritage', 'remote_island', 'near_gundam_manhole', 'seaside', 'tourism', 'station_front', 'food', 'museum', 'history', 'rail_access_good'];
-    const FEATURED_TAGS = ['roadside', 'remote_island', 'world_heritage', 'near_gundam_manhole', 'seaside'];
+    // ==== テーマタグの定義 ====
+    // 実体は dataset/tag_meta.json。ビルド時に assets/tag-meta.js が
+    // window.POKEFUTA_TAG_META を定義する（トップのチップ・/tags/ のテーマページも同じ定義）。
+    // 以前はここに手書きの定数があり、トップや /summary/ と顔ぶれもラベルも食い違っていた。
+    const TAG_DIRECTORY = window.POKEFUTA_TAG_META || { min_count: 5, priority: [], tags: [] };
+    const TAG_ENTRIES = Array.isArray(TAG_DIRECTORY.tags) ? TAG_DIRECTORY.tags : [];
+    const TAG_DIRECTORY_MIN_COUNT = TAG_DIRECTORY.min_count;  // この件数未満のタグはチップに表示しない
+    const TAG_PRIORITY = TAG_DIRECTORY.priority || [];
+    // 主枠の並びは priority に従う（tag_meta.json の記載順ではない）
+    const FEATURED_TAGS = TAG_ENTRIES.filter(t => t.featured).map(t => t.slug)
+      .sort((a, b) => {
+        const ia = TAG_PRIORITY.indexOf(a), ib = TAG_PRIORITY.indexOf(b);
+        return (ia < 0 ? Infinity : ia) - (ib < 0 ? Infinity : ib);
+      });
 
-    const TAG_META = {
-      seaside:          { emoji: '🌊', label: '海沿い' },
-      beach:            { emoji: '🏖', label: 'ビーチ' },
-      lakeside:         { emoji: '🌅', label: '湖畔' },
-      river:            { emoji: '🏞', label: '川辺' },
-      remote_island:    { emoji: '🏝', label: '離島' },
-      roadside:         { emoji: '🛤', label: '道の駅' },
-      in_station:       { emoji: '🚉', label: '駅構内' },
-      station_front:    { emoji: '🚃', label: '駅前' },
-      near_station:     { emoji: '🚶', label: '駅近' },
-      rail_access_good: { emoji: '🚆', label: '電車アクセス良好' },
-      far_station:      { emoji: '🚗', label: '駅から遠い' },
-      tourism:          { emoji: '🗺', label: '観光地' },
-      park:             { emoji: '🌳', label: '公園' },
-      museum:           { emoji: '🏛', label: '博物館・美術館' },
-      history:          { emoji: '⛩', label: '史跡・名所' },
-      food:             { emoji: '🍜', label: 'グルメ・食の名所' },
-      world_heritage:   { emoji: '🌐', label: '世界遺産' },
-      near_gundam_manhole: {
-        emoji: '🤖',
-        label: 'ガンダムマンホール',
-        description: 'ガンダムマンホールまで約500m以内のポケふた',
-      },
-    };
+    const TAG_META = Object.freeze(Object.fromEntries(
+      TAG_ENTRIES.map(t => [t.slug, { emoji: t.emoji, label: t.label, description: t.description }])
+    ));
 
     function getOverallPanelMediaQuery() {
       return typeof window.matchMedia === 'function'
@@ -773,7 +764,7 @@
 
     // ==== セカンダリタグ（バッジ変換なし・popup はアイコンのみ表示） ====
     // TAG_META から自動生成（単一ソース管理）
-    const SECONDARY_TAG_KEYS = ['tourism','park','museum','history','food','rail_access_good','river','in_station'];
+    const SECONDARY_TAG_KEYS = TAG_ENTRIES.filter(t => t.icon_only).map(t => t.slug);
     const SECONDARY_TAG_EMOJI = Object.freeze(Object.fromEntries(
       SECONDARY_TAG_KEYS.map(k => [k, TAG_META[k]?.emoji]).filter(([,v]) => v)
     ));
