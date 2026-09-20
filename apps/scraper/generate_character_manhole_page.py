@@ -48,10 +48,12 @@ except ModuleNotFoundError as exc:
     )
 
 try:
+    from apps.scraper.character_manhole_works import page_for_work
     from apps.scraper.prefectures import PREFECTURE_ORDER
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
+    from character_manhole_works import page_for_work
     from prefectures import PREFECTURE_ORDER
 
 logging.basicConfig(level=logging.INFO, format="%(message)s")
@@ -91,6 +93,21 @@ CHARACTER_LINKAGE_PREFIXES = ("gundam:", "character:")
 HERO_MOSAIC_LIMIT = 6
 
 FAQ_ITEMS: list[tuple[str, str]] = [
+    (
+        "アニメ・キャラクターマンホールの設置場所はどこで探せますか？",
+        "このページの作品別一覧と都道府県別の設置場所一覧から探せます。"
+        "地図では作品や都道府県で絞り込めます。訪問前には各設置場所の出典で最新の案内を確認してください。",
+    ),
+    (
+        "全国すべてのキャラクターマンホールが載っていますか？",
+        "いいえ。掲載データに収録しているマンホールの一覧で、全国すべてを網羅しているわけではありません。"
+        "アニメ・漫画のほかゲームなどのキャラクターも含みます。ポケモンのマンホール「ポケふた」は別の図鑑・地図で紹介しています。",
+    ),
+    (
+        "マンホールカードの配布場所も同じですか？",
+        "この一覧はマンホール本体の設置場所を紹介しています。カードの有無・配布場所・在庫を示すものではありません。"
+        "マンホールカードを集める場合は、訪問前に自治体や配布施設の案内を別途確認してください。",
+    ),
     (
         "ポケふた以外の蓋でも投稿していいんですか？",
         "はい。むしろそれを集めています。ポケふたはこのサイトの図鑑側で網羅しているので、"
@@ -148,15 +165,25 @@ def load_active_manholes(path: Path) -> list[dict]:
 
 def build_work_summaries(character_records: list[dict], gundam_records: list[dict]) -> list[dict]:
     """作品別の件数降順サマリ（キャラクターマンホールの work ごと + ガンダムを1エントリとして合成）。"""
-    groups: dict[str, list[dict]] = defaultdict(list)
+    groups: dict[str, dict] = {}
     for record in character_records:
         work = str(record.get("work") or "").strip()
         if not work:
             continue
-        groups[work].append(record)
+        page = page_for_work(work)
+        key = page.slug if page else work
+        group = groups.setdefault(key, {
+            "name": page.name if page else work,
+            "page": page,
+            "records": [],
+        })
+        group["records"].append(record)
 
     summaries: list[dict] = []
-    for work, records in groups.items():
+    for group in groups.values():
+        work = group["name"]
+        page = group["page"]
+        records = group["records"]
         prefectures = sorted(
             {record.get("prefecture") for record in records if record.get("prefecture")},
             key=lambda pref: PREFECTURE_ORDER.index(pref) if pref in PREFECTURE_ORDER else 999,
@@ -169,7 +196,8 @@ def build_work_summaries(character_records: list[dict], gundam_records: list[dic
             "prefectures": prefectures,
             "color": color or "#6C5CA6",
             "label": label,
-            "query": work,
+            "query": page.map_query if page else work,
+            "path": page.path if page else "",
         })
 
     if gundam_records:
@@ -184,6 +212,7 @@ def build_work_summaries(character_records: list[dict], gundam_records: list[dic
             "color": GUNDAM_MARKER_COLOR,
             "label": GUNDAM_MARKER_LABEL,
             "query": GUNDAM_WORK_QUERY,
+            "path": "",
         })
 
     return sorted(summaries, key=lambda summary: (-summary["count"], summary["work"]))
@@ -345,10 +374,8 @@ PAGE_STYLE = """
 
     /* ── ファーストView（#lp-intro）は index.html の #sec-intro と同じ top-page.css
        クラス（.sec-eyebrow/.top-h1/.top-intro-text/.top-stats-note 等）をそのまま使う。
-       ただし {N}枚/{W}作品/{P}都道府県 の3タイル統計は、このLPの趣旨
-       （「まだ全部ではない、あなたの1枚が要る」）と網羅性アピールが矛盾するため
-       意図的に使わない。統計は stats-note の1行のみ残す（3タイル用CSSクラスは
-       このファイルからは一切参照しない）。
+       全国一覧として掲載範囲を一目で確認できるよう、件数・作品数・都道府県数は
+       stats-note の1行にまとめる（3タイル用CSSクラスは参照しない）。
        ID は #sec-intro を再利用しない: top-page.css は @media (min-width: 960px) 内で
        #sec-intro/#sec-map/#sec-hero/#sec-hub/#sec-pref/#sec-events/#sec-newrelease を
        index.html 専用の重なりレイアウト（#sec-intro と #sec-map を同じグリッドに重ねて
@@ -428,6 +455,14 @@ PAGE_STYLE = """
     .lp-pref-item:hover { border-color: var(--top-purple); }
     .lp-pref-item span { font-size: 12px; font-weight: 800; color: var(--top-purple); }
 
+    .lp-jump-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 18px; }
+    .lp-jump-links a, .lp-locations a { color: var(--top-purple); text-underline-offset: 3px; }
+    .lp-locations { margin-top: 16px; border: 1px solid var(--top-border); border-radius: var(--top-radius-card); padding: 12px 16px; }
+    .lp-locations summary { cursor: pointer; font-weight: 700; }
+    .lp-location-list { list-style: none; padding: 0; margin: 12px 0 0; }
+    .lp-location-list li { padding: 12px 0; border-top: 1px solid var(--top-border-light); overflow-wrap: anywhere; }
+    .lp-location-list p { margin: 4px 0; font-size: 13px; }
+
     /* ── 地図で探す（.map-gateway-card 等は top-page.css の index.html 用スタイルを流用） ── */
 
     /* top-page.css の @media (min-width: 960px) は、#sec-intro を「地図の左に重ねる
@@ -504,8 +539,9 @@ def _work_card_html(summary: dict) -> str:
     if len(summary["prefectures"]) > 3:
         pref_text += " ほか"
     map_href = f"{MAP_HREF}?work={quote(summary['query'])}"
+    href = f"./{summary['path']}" if summary.get("path") else map_href
     return (
-        f'<li><a class="lp-work-card" href="{map_href}">'
+        f'<li><a class="lp-work-card" href="{href}">'
         f'<span class="lp-work-chip" style="background:{escape(summary["color"])}">{escape(str(summary["label"])[:1])}</span>'
         f'<strong>{escape(summary["work"])}</strong>'
         f'<small>{summary["count"]}枚'
@@ -520,6 +556,48 @@ def _pref_item_html(entry: dict) -> str:
         f'<a class="lp-pref-item" href="{map_href}">'
         f'{escape(entry["prefecture"])}<span>{entry["count"]}枚</span></a>'
     )
+
+
+def _location_directory_html(character_records: list[dict], gundam_records: list[dict]) -> str:
+    """設置場所と出典を静的HTMLに出す。地図のJSを実行しなくても読める一覧。"""
+    groups: dict[str, list[tuple[str, dict]]] = defaultdict(list)
+    for records, fallback_work in ((character_records, "作品不明"), (gundam_records, GUNDAM_WORK_NAME)):
+        for record in records:
+            groups[str(record.get("prefecture") or "都道府県未記録")].append(
+                (str(record.get("work") or fallback_work), record)
+            )
+    order = {name: index for index, name in enumerate(PREFECTURE_ORDER)}
+    sections = []
+    for prefecture in sorted(groups, key=lambda name: (order.get(name, 999), name)):
+        rows = []
+        for work, record in sorted(groups[prefecture], key=lambda item: (
+            str(item[1].get("city") or ""), item[0], str(item[1].get("id") or "")
+        )):
+            city = str(record.get("city") or "")
+            name = str(record.get("title") or record.get("landmark") or record.get("character") or work)
+            address = str(record.get("address") or record.get("landmark") or "詳細な住所は未記録")
+            source = str(record.get("official_url") or record.get("source_url") or record.get("detail_url") or "")
+            try:
+                parsed = urlparse(source)
+                safe_source = parsed.scheme in {"http", "https"} and bool(parsed.netloc)
+            except ValueError:
+                safe_source = False
+            source_html = (
+                f' · <a href="{escape(source)}" target="_blank" rel="noopener noreferrer">出典・設置案内</a>'
+                if safe_source else ""
+            )
+            rows.append(
+                f'<li><strong>{escape(name)}</strong>'
+                f'<p>{escape(work)} ／ {escape(prefecture)}{escape(city)}</p>'
+                f'<p>{escape(address)}{source_html}</p></li>'
+            )
+        sections.append(
+            '<details class="lp-locations">'
+            f'<summary class="lp-location-summary">{escape(prefecture)}の設置場所一覧（{len(rows)}枚）</summary>'
+            f'<p><a href="{MAP_HREF}?pref={quote(prefecture)}">{escape(prefecture)}の地図を見る</a></p>'
+            f'<ul class="lp-location-list">{"".join(rows)}</ul></details>'
+        )
+    return "\n".join(sections)
 
 
 def _hero_mosaic_item_html(post: dict) -> str:
@@ -574,19 +652,18 @@ def generate_html(
 
     total_count = len(character_records) + len(gundam_records)
     work_count = len(work_summaries)
-    # pref_count（都道府県数）はヒーローの3タイル統計を削除したため未使用。
-    # pref_summaries 自体は「都道府県から探す」セクションの一覧描画に引き続き使う。
-    next_submission_number = total_count + 1  # 投稿導線の「あなたの1枚が{N+1}枚目」用
+    pref_count = len(pref_summaries)
 
-    title = f"キャラクターマンホールとは｜全国{total_count}枚・{work_count}作品のマンホールマップ"
+    title = f"アニメ・キャラクターマンホール全国一覧｜{total_count}枚の設置場所・地図"
     description = (
-        f"ガンダムやゾンビランドサガなど、全国{total_count}枚・{work_count}作品のキャラクターマンホールを紹介。"
-        "作品別・都道府県別に探せる一覧から、設置場所を地図で確認できます。"
-        "ポケふた以外の面白いマンホールを見つけたら写真投稿でみんなの地図に追加できます。"
+        f"全国{pref_count}都道府県・{work_count}作品、{total_count}枚のアニメ・キャラクターマンホールを一覧で紹介。"
+        "ガンダムやゾンビランドサガなどを作品別・都道府県別に探し、市町村・設置場所・出典と地図を確認できます。"
+        "ポケふた以外のデザインマンホールの写真投稿も受付中。"
     )
 
     work_items_html = "\n".join(_work_card_html(summary) for summary in work_summaries)
     pref_items_html = "\n".join(_pref_item_html(entry) for entry in pref_summaries)
+    location_directory_html = _location_directory_html(character_records, gundam_records)
 
     if hero_mosaic_posts:
         hero_mosaic_items_html = "\n".join(_hero_mosaic_item_html(post) for post in hero_mosaic_posts)
@@ -618,7 +695,7 @@ def generate_html(
     )
 
     json_ld_webpage = {
-        "@type": "WebPage",
+        "@type": "CollectionPage",
         "@id": CANONICAL_URL,
         "url": CANONICAL_URL,
         "name": title,
@@ -653,7 +730,8 @@ def generate_html(
                 "@type": "ListItem",
                 "position": index,
                 "name": summary["work"],
-                "url": f"{MAP_URL}?work={quote(summary['query'])}",
+                "url": (f"{BASE_URL}{summary['path']}" if summary.get("path")
+                        else f"{MAP_URL}?work={quote(summary['query'])}"),
             }
             for index, summary in enumerate(work_summaries, start=1)
         ],
@@ -731,15 +809,19 @@ def generate_html(
         <span class="sec-num"></span>
         <span class="sec-eyebrow-text">CHARACTER MANHOLE / キャラクターマンホール</span>
       </div>
-      <h1 class="top-h1">ポケふた巡礼中に見つけた<br>レアなマンホール、教えてくれませんか？</h1>
+      <h1 class="top-h1">アニメ・キャラクターマンホール<br>全国一覧・設置場所マップ</h1>
 {hero_mosaic_html}
       <p class="top-intro-text">
-        ポケふたを目指して歩いていると、その道の途中にも蓋はあります。
-        <b>ご当地キャラ、アニメの主人公、地元の祭り</b>——
-        「これ珍しいな」と一枚撮って、そのままカメラロールに残っていませんか。
-        この地図は、そういう<b>寄り道の記録</b>を集めています。
+        アニメ・漫画・ゲームなどのキャラクターが描かれた、ご当地マンホールを探せます。
+        <b>作品別・都道府県別の一覧</b>から、設置されている市町村・場所・地図を確認してください。
+        ポケモンのマンホールは<a href="./">ポケふた図鑑</a>で紹介しています。
       </p>
-      <p class="top-stats-note">これで全部ではありません。あなたの1枚が {next_submission_number} 枚目になります。</p>
+      <p class="top-stats-note">掲載データ：{total_count}枚・{work_count}作品・{pref_count}都道府県。全国すべてを網羅するものではありません。</p>
+      <nav class="lp-jump-links" aria-label="このページの目次">
+        <a href="#lp-works-heading">作品別一覧</a>
+        <a href="#lp-pref-heading">都道府県別・設置場所一覧</a>
+        <a href="#lp-map-heading">全国地図</a>
+      </nav>
     </section>
 
     <!-- ── 地図で探す（index.html と同じ並び: #sec-intro の直後。
@@ -752,7 +834,7 @@ def generate_html(
         <span class="map-gateway-badge">🗺 全国 <b>{total_count}</b>枚</span>
         <span class="map-gateway-attr">© OpenStreetMap contributors</span>
         <div class="map-gateway-overlay">
-          <div class="map-gateway-title">巡礼ルートの近くにある蓋を確かめる</div>
+          <div class="map-gateway-title">アニメ・キャラクターマンホールの設置場所を探す</div>
           <div class="map-gateway-sub">作品・都道府県で絞り込み、現在地からも探せます</div>
           <div class="map-gateway-cta">🗺 地図を全画面で開く</div>
         </div>
@@ -768,17 +850,17 @@ def generate_html(
           <p>自治体がアニメ・漫画・ご当地キャラの絵柄を入れて設置している蓋です。作品の舞台になった街や、作者の出身地に置かれていることが多く、その土地に行かないと踏めません。</p>
         </li>
         <li class="lp-explain-card">
-          <strong>ポケふたと違って、まとまった一覧が無い</strong>
-          <p>ポケふたが全国共通の規格で作られているのに対して、キャラクターマンホールは<b>作品ごと・自治体ごとにばらばら</b>です。公式のまとまった一覧がほとんど無く、「歩いていて偶然見つけた」が今も主な発見手段になっています。</p>
+          <strong>作品や自治体の枠を越えて探せる一覧</strong>
+          <p>このページでは、作品ごと・自治体ごとに案内されている設置場所をまとめています。花・名所・市の鳥などの絵柄も含む<b>デザインマンホール</b>のうち、キャラクターを題材にした蓋を紹介しています。</p>
         </li>
       </ul>
-      <p class="lp-section-lead">だからこのページの「全国{total_count}枚」も、<b>まだ全部ではありません</b>。</p>
+      <p class="lp-section-lead">掲載データは手作業で出典を確認しながら追加しているため、「全国{total_count}枚」は<b>まだすべてを網羅した数ではありません</b>。</p>
     </section>
 
     <!-- ── いま集まっている作品 ── -->
     <section class="lp-section" aria-labelledby="lp-works-heading">
-      <h2 id="lp-works-heading"><span aria-hidden="true">WORKS</span>いま集まっている作品</h2>
-      <p class="lp-section-lead">巡礼先として成立する数がまとまっているのはこのあたり。作品名から地図に飛べます。</p>
+      <h2 id="lp-works-heading"><span aria-hidden="true">WORKS</span>アニメ・キャラクターマンホールの作品別一覧</h2>
+      <p class="lp-section-lead">掲載中の{work_count}作品・シリーズの枚数と都道府県を紹介。作品名から設置場所の詳しい一覧や地図へ進めます。アイマスは各シリーズをまとめて紹介しています。</p>
       <ul class="lp-work-grid">
 {work_items_html}
       </ul>
@@ -786,14 +868,15 @@ def generate_html(
 
     <!-- ── 都道府県から探す ── -->
     <section class="lp-section" aria-labelledby="lp-pref-heading">
-      <h2 id="lp-pref-heading"><span aria-hidden="true">PREFECTURES</span>都道府県から探す</h2>
-      <p class="lp-section-lead">次の遠征先が決まっているなら、ここから。ポケふたのついでに回れる蓋が見つかります。</p>
+      <h2 id="lp-pref-heading"><span aria-hidden="true">PREFECTURES</span>都道府県別の設置場所一覧</h2>
+      <p class="lp-section-lead">都道府県のボタンから地図へ進めます。その下の一覧を開くと、市町村・設置場所・出典を確認できます。掲載がない地域も未収録のマンホールがある場合があります。移設・撤去や施設の開放時間は訪問前に出典の案内をご確認ください。</p>
       <div class="lp-pref-list">
 {pref_items_html}
       </div>
+{location_directory_html}
     </section>
 
-    <!-- ── 投稿導線（このページの本命） ── -->
+    <!-- ── 一覧を見た人への写真投稿導線 ── -->
     <section class="lp-section" aria-labelledby="lp-post-heading">
       <h2 id="lp-post-heading"><span aria-hidden="true">SUBMIT</span>その1枚、まだカメラロールにありますか？</h2>
       <a class="lp-promo-card" href="{DESIGN_MANHOLE_HREF}"

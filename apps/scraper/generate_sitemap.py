@@ -11,10 +11,14 @@ from urllib.parse import quote
 from xml.sax.saxutils import escape
 
 try:
+    from apps.scraper.character_manhole_works import WorkPage, available_pages
+    from apps.scraper.generate_character_manhole_page import _is_active, load_ndjson
     from apps.scraper.prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
+    from character_manhole_works import WorkPage, available_pages
+    from generate_character_manhole_page import _is_active, load_ndjson
     from prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS
 
 try:
@@ -158,10 +162,17 @@ def read_tag_slugs(ndjson_path: Path) -> list[str]:
     return available_tag_slugs(load_records(ndjson_path))
 
 
+def read_character_work_pages(ndjson_path: Path) -> list[WorkPage]:
+    """Return only work guides that the page generator can actually publish."""
+    active = [record for record in load_ndjson(ndjson_path) if _is_active(record)]
+    return available_pages(active)
+
+
 def build_sitemap(
     manhole_ids: list[str],
     pokemon_slugs: list[str] | None = None,
     tag_slugs: list[str] | None = None,
+    character_work_pages: list[WorkPage] | None = None,
 ) -> str:
     entries = [
         url_entry(BASE_URL, "daily", "1.0"),
@@ -176,6 +187,9 @@ def build_sitemap(
         url_entry(f"{BASE_URL}design_manhole.html", "weekly", "0.6"),
         url_entry(f"{BASE_URL}privacy.html", "monthly", "0.3"),
     ]
+
+    for page in character_work_pages or []:
+        entries.append(url_entry(f"{BASE_URL}{page.path}", "weekly", "0.8"))
 
     for lang in I18N_LANGS:
         entries.append(url_entry(f"{BASE_URL}{lang}/", "weekly", "0.9"))
@@ -230,6 +244,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data", default="docs/pokefuta.ndjson")
     parser.add_argument("--pokemon", default="docs/pokemon_metadata.json")
+    parser.add_argument("--characters", default="docs/character_manholes.ndjson")
     parser.add_argument("--output", default="apps/web/sitemap.xml")
     args = parser.parse_args()
 
@@ -240,16 +255,17 @@ def main() -> int:
 
     pokemon_slugs = read_pokemon_slugs(Path(args.data), Path(args.pokemon))
     tag_slugs = read_tag_slugs(Path(args.data))
+    character_work_pages = read_character_work_pages(Path(args.characters))
 
     output_path = Path(args.output)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(
-        build_sitemap(manhole_ids, pokemon_slugs, tag_slugs), encoding="utf-8"
+        build_sitemap(manhole_ids, pokemon_slugs, tag_slugs, character_work_pages), encoding="utf-8"
     )
     print(
         f"[generate_sitemap] wrote {output_path} with "
         f"{len(manhole_ids)} manhole URLs + {len(pokemon_slugs)} pokemon URLs "
-        f"+ {len(tag_slugs)} tag URLs"
+        f"+ {len(tag_slugs)} tag URLs + {len(character_work_pages)} character work URLs"
     )
     return 0
 

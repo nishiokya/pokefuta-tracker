@@ -268,7 +268,7 @@ def _active_tab(page_path: str | None) -> str | None:
         return "pokemon"
     if normalized.startswith("summary/") or normalized == "summary":
         return "summary"
-    if normalized.startswith("character_manholes.html"):
+    if normalized.startswith(("character_manholes.html", "characters/")):
         return "character"
     return None
 

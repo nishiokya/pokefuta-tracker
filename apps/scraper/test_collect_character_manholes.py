@@ -30,6 +30,13 @@ class CharacterManholeCollectorTests(unittest.TestCase):
         self.assertEqual(record["marker_label"], "東")
         self.assertEqual(record["marker_color"], "#14b8a6")
 
+    def test_new_idolmaster_brands_have_marker_styles(self):
+        for work in ("アイドルマスター SideM", "学園アイドルマスター"):
+            with self.subTest(work=work):
+                record = collector.apply_marker_style({"work": work})
+                self.assertEqual(record["marker_label"], "ア")
+                self.assertEqual(record["marker_color"], "#f97316")
+
     def test_manual_marker_style_is_preserved(self):
         record = collector.apply_marker_style(
             {
@@ -51,7 +58,7 @@ class CharacterManholeCollectorTests(unittest.TestCase):
             if line
         ]
 
-        self.assertEqual(len(records), 123)
+        self.assertEqual(len(records), 124)
         self.assertEqual(
             len([record for record in records if record["prefecture"] == "愛知県"]),
             15,

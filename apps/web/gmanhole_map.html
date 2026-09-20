@@ -466,8 +466,11 @@
     function applyInitialWorkFilter(workParam) {
       if (!workParam) return;
       const isGundam = workParam === 'gundam';
+      const idolmasterCheckboxes = workParam === 'idolmaster'
+        ? [...characterWorkCheckboxes.entries()].filter(([work]) => work.includes('アイドルマスター')).map(([, checkbox]) => checkbox)
+        : [];
       const workCheckbox = characterWorkCheckboxes.get(workParam);
-      if (!isGundam && !workCheckbox) {
+      if (!isGundam && !workCheckbox && !idolmasterCheckboxes.length) {
         // 未知の work パラメータはフィルタせず、全件表示のままにする
         console.warn(`Unknown work param, showing all: ${workParam}`);
         return;
@@ -477,6 +480,8 @@
       });
       if (isGundam) {
         document.getElementById('chk-gundam').checked = true;
+      } else if (idolmasterCheckboxes.length) {
+        idolmasterCheckboxes.forEach(checkbox => { checkbox.checked = true; });
       } else {
         workCheckbox.checked = true;
       }
