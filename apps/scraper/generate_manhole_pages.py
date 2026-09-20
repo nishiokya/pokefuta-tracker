@@ -614,7 +614,7 @@ def generate_html(
     # _attr_json() serializes dicts as JSON with " escaped to &quot; so they
     # are safe inside HTML double-quoted onclick attributes.
     onclick_params = _attr_json(
-        {"manhole_id": manhole_id, "prefecture": prefecture, "city": city}
+        {"surface": "manhole_links", "manhole_id": manhole_id, "prefecture": prefecture, "city": city}
     )
 
     # Source-differentiated params for Google Maps — same event name but
@@ -681,7 +681,7 @@ def generate_html(
         hero_photo_html = (
             f"<a class='hero-photo-placeholder' href='https://pokefuta.com/upload?manhole_id={manhole_id}&amp;from=data'"
             f" target='_blank' rel='noopener noreferrer'"
-            f" onclick=\"trackEvent('click_photo_upload_placeholder', {_attr_json({'manhole_id': manhole_id, 'prefecture': prefecture, 'city': city, 'has_photo': False})})\">"
+            f" onclick=\"trackEvent('click_photo_upload_placeholder', {_attr_json({'surface': 'manhole_gallery', 'manhole_id': manhole_id, 'prefecture': prefecture, 'city': city, 'has_photo': False})})\">"
             f"<span class='placeholder-camera' aria-hidden='true'>📷</span>"
             f"<span class='placeholder-title'>まだ写真がありません</span>"
             f"<span class='placeholder-sub'>最初の旅写真を投稿する</span>"
@@ -775,7 +775,9 @@ def generate_html(
                 f"{credit_span}"
                 f"</figure>"
             )
-        _gallery_more_onclick = _attr_json({"manhole_id": manhole_id, "prefecture": prefecture, "city": city})
+        _gallery_more_onclick = _attr_json(
+            {"surface": "manhole_gallery", "manhole_id": manhole_id, "prefecture": prefecture, "city": city}
+        )
         gallery_html = (
             f"<section class='gallery-section section-card'>"
             f"<h2>みんなの写真</h2>"
@@ -957,7 +959,9 @@ def generate_html(
     # Links grid: external + internal + photo upload (移設統合)
     link_cards: list[str] = []
     # Share first: X / LINE / Web Share
-    _share_onclick = _attr_json({"manhole_id": manhole_id, "prefecture": prefecture, "city": city})
+    _share_onclick = _attr_json(
+        {"surface": "manhole_share", "manhole_id": manhole_id, "prefecture": prefecture, "city": city}
+    )
     link_cards.append(
         f"<a class='link-card link-card--share-x' href=\"{escape(share_x_url)}\""
         f" target=\"_blank\" rel=\"noopener noreferrer\""
@@ -1019,6 +1023,7 @@ def generate_html(
             has_studio = bool(studio_url)
             href = studio_url or DESIGN_STUDIO_LIST_URL
             _d_params = _attr_json({
+                "surface": "manhole_design_nearby",
                 "from_manhole_id": manhole_id,
                 "design_ref": spot.get("ref", ""),
                 "distance_km": round(dist, 1),
@@ -1079,6 +1084,7 @@ def generate_html(
         for other, dist in nearby:
             dist_str = f"{dist:.1f} km"
             _nearby_params = _attr_json({
+                "surface": "manhole_related_nearby",
                 "from_manhole_id": manhole_id,
                 "to_manhole_id": str(other.get("id", "")).strip(),
                 "distance_km": round(dist, 1),
@@ -1104,6 +1110,7 @@ def generate_html(
             _other_pokemons = filter_pokemons(other.get("pokemons", []))
             _shared = [p for p in _other_pokemons if p in _current_poke_set]
             _sp_params = _attr_json({
+                "surface": "manhole_related_pokemon",
                 "from_manhole_id": manhole_id,
                 "to_manhole_id": str(other.get("id", "")).strip(),
                 "pokemon_names": ",".join(_shared) if _shared else "",
@@ -1126,6 +1133,7 @@ def generate_html(
         )
         for other in same_pref:
             _pref_params = _attr_json({
+                "surface": "manhole_related_prefecture",
                 "from_manhole_id": manhole_id,
                 "to_manhole_id": str(other.get("id", "")).strip(),
                 "prefecture": prefecture,
@@ -1140,7 +1148,9 @@ def generate_html(
     current_year = datetime.date.today().year
 
     # X (Twitter) follow section
-    _follow_onclick = _attr_json({"manhole_id": manhole_id, "prefecture": prefecture})
+    _follow_onclick = _attr_json(
+        {"surface": "manhole_follow", "manhole_id": manhole_id, "prefecture": prefecture}
+    )
     follow_x_html = (
         f"<section class='follow-section'>"
         f"<a href='https://x.com/pokemonmanhole'"
@@ -1164,7 +1174,15 @@ def generate_html(
     # Hero photo upload CTA — suppressed entirely for 設置前 (notice is already shown in hero_photo_html)
     _photo_event = "click_photo_upload" if has_photo_bool else "click_photo_upload_placeholder"
     _photo_label = "写真を投稿" if has_photo_bool else "最初の旅写真を投稿する"
-    _photo_cta_onclick = _attr_json({"manhole_id": manhole_id, "prefecture": prefecture, "city": city, "has_photo": has_photo_bool})
+    _photo_cta_onclick = _attr_json(
+        {
+            "surface": "manhole_hero",
+            "manhole_id": manhole_id,
+            "prefecture": prefecture,
+            "city": city,
+            "has_photo": has_photo_bool,
+        }
+    )
     hero_actions_html = (
         ""
         if is_preinstall
@@ -1244,6 +1262,7 @@ def generate_html(
       prefecture: '{pref_slug}',
     }});
     gtag('event', 'view_manhole_detail', {{
+      surface: 'manhole_detail',
       manhole_id: {manhole_id_js},
       prefecture: {prefecture_js},
       city: {city_js},
@@ -1253,6 +1272,7 @@ def generate_html(
 
     function shareManhole() {{
       var _sp = {{
+        surface: 'manhole_share',
         manhole_id: {manhole_id_js},
         prefecture: {prefecture_js},
         city: {city_js}

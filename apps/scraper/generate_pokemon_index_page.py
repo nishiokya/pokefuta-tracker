@@ -1133,11 +1133,12 @@ def generate_html(
   <script src="/assets/analytics.js?v=20260805a"></script>
   <script>
     window.PokefutaAnalytics.init({{'page_path': '/{url_prefix}pokemon/', site_type: 'map', page_type: 'pokemon_index'}});
-    gtag('event', 'view_pokemon_index', {{'pokemon_count': {total_count}, 'lang': '{lang}'}});
+    gtag('event', 'view_pokemon_index', {{'surface': 'pokemon_index', 'pokemon_count': {total_count}, 'lang': '{lang}'}});
     function trackPokemonIndexEvent(name, params) {{
       if (typeof window.gtag !== 'function') return;
       gtag('event', name, Object.assign({{
-        event_category: 'pokemon_engagement'
+        event_category: 'pokemon_engagement',
+        surface: 'pokemon_index'
       }}, params || {{}}));
     }}
     document.addEventListener('click', function(event) {{

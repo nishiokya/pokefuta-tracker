@@ -635,6 +635,7 @@
         setHeroCardCollapsed(nextCollapsed, true);
         if (window.trackEvent) {
           window.trackEvent(nextCollapsed ? 'collapse_hero_card' : 'expand_hero_card', {
+            surface: 'map_hero',
             event_category: 'map_ui',
             event_label: 'hero_card'
           });
@@ -1062,6 +1063,7 @@
     function trackHeroRecommendation(action, recommendation, position) {
       if (!window.trackEvent || !recommendation) return;
       window.trackEvent(action, {
+        surface: 'map_hero_discovery',
         event_category: 'hero_discovery',
         event_label: recommendation.category,
         recommendation_type: recommendation.category,
@@ -1212,7 +1214,7 @@
       const photoBlock = hasPhoto && imageUrl ? `
         <div class="popup-photo travel-popup-photo" aria-label="マンホール写真">
           <a href="${manholeDetailUrl}" class="travel-popup-photo-link"
-             onclick="if(window.trackEvent){window.trackEvent('popup_click_photo',{${eventParams}});}">
+             onclick="if(window.trackEvent){window.trackEvent('popup_click_photo',{surface:'map_popup',${eventParams}});}">
             <img src="${imageUrl}" alt="${escapeHtml(photoAlt)}" loading="lazy" decoding="async" onerror="handlePopupImageError(this)">
           </a>
           ${photoMetaItems ? `<div class="travel-popup-photo-meta">${photoMetaItems}</div>` : ''}
@@ -1242,22 +1244,22 @@
         anchor.href = manholeDetailUrl;
         anchor.className = 'travel-popup-action travel-popup-action--detail';
         anchor.textContent = '詳細を見る';
-        anchor.setAttribute('onclick', `if(window.trackEvent){window.trackEvent('popup_click_detail',{${eventParams}});}`);
+        anchor.setAttribute('onclick', `if(window.trackEvent){window.trackEvent('popup_click_detail',{surface:'map_popup',${eventParams}});}`);
         return anchor.outerHTML;
       })() : '';
       const primaryAction = hasPhoto
         ? `<a href="${manholeDetailUrl}" class="travel-popup-action travel-popup-action--primary"
-              onclick="if(window.trackEvent){window.trackEvent('popup_click_detail',{${eventParams}});}">詳細を見る</a>`
+              onclick="if(window.trackEvent){window.trackEvent('popup_click_detail',{surface:'map_popup',${eventParams}});}">詳細を見る</a>`
         : isPreinstall
         ? ''
         : `<a href="${escapeHtml(uploadUrl)}" target="_blank" rel="noopener noreferrer" class="travel-popup-action travel-popup-action--primary travel-popup-action--upload"
-              onclick="if(window.trackEvent){window.trackEvent('popup_click_upload',{${eventParams}});}">最初の写真を投稿<span class="travel-popup-action-sub">pokefuta.comで受付・無料ログイン</span></a>`;
+              onclick="if(window.trackEvent){window.trackEvent('popup_click_upload',{surface:'map_popup',${eventParams}});}">最初の写真を投稿<span class="travel-popup-action-sub">pokefuta.comで受付・無料ログイン</span></a>`;
       const mapsUrl = Number.isFinite(Number(d.lat)) && Number.isFinite(Number(d.lng))
         ? `https://www.google.com/maps?q=${encodeURIComponent(`${d.lat},${d.lng}`)}`
         : '';
       const mapsAction = mapsUrl
         ? `<a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" class="travel-popup-action travel-popup-action--maps"
-              onclick="if(window.trackEvent){window.trackEvent('popup_click_google_maps',{${eventParams}});}">Google Mapsで行く</a>`
+              onclick="if(window.trackEvent){window.trackEvent('popup_click_google_maps',{surface:'map_popup',${eventParams}});}">Google Mapsで行く</a>`
         : '';
 
       return `
@@ -1521,6 +1523,7 @@
             // Track manhole marker click
             if (window.trackEvent) {
               window.trackEvent('click_manhole_marker', {
+                surface: 'map_marker',
                 'event_category': 'navigation',
                 'event_label': d.prefecture || '不明',
                 'manhole_id': d.id,
@@ -1783,7 +1786,7 @@
         }
         // Track event
         if (window.trackEvent) {
-          window.trackEvent('click_recent_toggle', {
+          window.trackEvent('click_recent_toggle', {surface:'map_toolbar',
             'event_category': 'user_engagement',
             'event_label': filterRecent ? 'enabled' : 'disabled'
           });
@@ -1883,7 +1886,7 @@
         expandBottomSheet();
         syncExploreSections();
         if (window.trackEvent) {
-          window.trackEvent('click_feature_directory', {
+          window.trackEvent('click_feature_directory', {surface:'map_theme_directory',
             'event_category': 'user_engagement',
             'event_label': showTagDirectory ? 'opened' : 'closed'
           });
@@ -2114,7 +2117,7 @@
           const selectPrefecture = () => {
             // Track prefecture selection
             if (window.trackEvent) {
-              window.trackEvent('click_prefecture', {
+              window.trackEvent('click_prefecture', {surface:'map_prefecture_filter',
                 'event_category': 'navigation',
                 'event_label': prefecture,
                 'value': count
@@ -2220,7 +2223,7 @@
           toggleBtn.textContent = willExpand ? '閉じる' : 'もっと見る';
           toggleBtn.setAttribute('aria-expanded', String(willExpand));
           if (window.trackEvent) {
-            window.trackEvent('feature_more_toggle', { expanded: willExpand });
+            window.trackEvent('feature_more_toggle', {surface:'map_theme_directory', expanded: willExpand });
           }
         });
       }
@@ -2384,7 +2387,7 @@
 
         // Track locate button click
         if (window.trackEvent) {
-          window.trackEvent('click_locate_nearby', {
+          window.trackEvent('click_locate_nearby', {surface:'map_toolbar',
             'event_category': 'user_engagement',
             'event_label': 'locate_button_clicked'
           });
@@ -2396,7 +2399,7 @@
 
           // Track geolocation success
           if (window.trackEvent) {
-            window.trackEvent('geolocation_success', {
+            window.trackEvent('geolocation_success', {surface:'map_geolocation',
               'event_category': 'user_engagement',
               'event_label': 'location_acquired'
             });
@@ -2424,7 +2427,7 @@
 
           // Track geolocation error
           if (window.trackEvent) {
-            window.trackEvent('geolocation_error', {
+            window.trackEvent('geolocation_error', {surface:'map_geolocation',
               'event_category': 'user_engagement',
               'event_label': `error_${error.code}`
             });

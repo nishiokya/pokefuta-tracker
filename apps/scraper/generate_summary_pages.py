@@ -2985,6 +2985,7 @@ def _build_tracking_script(s: dict) -> str:
       const card = event.target.closest('.daily-fact-card[data-fact-id], .summary-fact-card[data-fact-id]');
       if (card && !target) {
         window.gtag('event', 'summary_fact_card_click', {
+          surface: 'summary_fact_card',
           fact_id: card.dataset.factId || '',
           fact_title: card.dataset.factTitle || '',
           image_type: card.dataset.imageType || '',
@@ -2994,6 +2995,7 @@ def _build_tracking_script(s: dict) -> str:
 
       if (!target) return;
       window.gtag('event', target.dataset.summaryEvent, {
+        surface: target.dataset.surface || 'summary_page',
         fact_id: target.dataset.factId || '',
         fact_title: target.dataset.factTitle || '',
         image_type: target.dataset.imageType || '',
