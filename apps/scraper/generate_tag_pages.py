@@ -527,9 +527,10 @@ def build_page(
       page_type: 'tag',
       tag: {_json_for_script(tag)}
     }});
+    // 送信は共有ローダー経由（本番ホスト判定と共通コンテキストの付与をそこに集約している）。
+    // 生成スクリプトに gtag を直書きしないこと（AGENTS.md）。
     function trackTagEvent(name, params) {{
-      if (typeof window.gtag !== 'function') return;
-      gtag('event', name, Object.assign({{
+      window.PokefutaAnalytics.trackEvent(name, Object.assign({{
         event_category: 'tag_growth',
         tag: {_json_for_script(tag)},
         tag_label: {_json_for_script(meta["label"])}

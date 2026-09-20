@@ -142,6 +142,9 @@ class BuildPageTest(unittest.TestCase):
         self.assertNotIn("googletagmanager.com/gtag", self.html)
         self.assertIn("page_type: 'tag'", self.html)
         self.assertIn('tag: "roadside"', self.html)
+        # 送信は共有ローダー経由。生成HTMLに gtag を直書きしない（AGENTS.md）
+        self.assertIn("window.PokefutaAnalytics.trackEvent", self.html)
+        self.assertNotIn("gtag('event'", self.html)
 
     def test_preinstall_manholes_hide_the_upload_action(self) -> None:
         rows = [record("7", "青森県", "弘前", ["roadside"], installed=False)]
