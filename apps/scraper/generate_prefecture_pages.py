@@ -71,6 +71,36 @@ FORM_PREFIX = {
     "paldea": "パルデア",
 }
 
+PREFECTURE_SEO: dict[str, dict[str, str]] = {
+    "北海道": {
+        "search_name": "北海道",
+        "title": "北海道のポケふた最新{count}枚｜設置場所一覧・マップ",
+        "h1": "北海道のポケふた最新{count}枚",
+        "description": (
+            "北海道にあるポケふた最新{count}枚を、市町村別の設置場所一覧と地図で紹介します。"
+            "登場ポケモン、現地写真、各マンホールへの行き方も確認できます。"
+        ),
+    },
+    "京都府": {
+        "search_name": "京都",
+        "title": "京都のポケふた{count}枚はどこ？京都市・宇治市の場所一覧・地図",
+        "h1": "京都（京都府）のポケふた{count}枚",
+        "description": (
+            "京都府にあるポケふた{count}枚はどこ？京都市・宇治市の設置場所を、"
+            "市別の一覧と地図、現地写真、登場ポケモンとあわせて紹介します。"
+        ),
+    },
+    "大阪府": {
+        "search_name": "大阪",
+        "title": "大阪のポケふた{count}枚はどこ？東大阪市の場所一覧・地図",
+        "h1": "大阪（大阪府）のポケふた{count}枚",
+        "description": (
+            "大阪府にあるポケふた{count}枚はどこ？東大阪市の設置場所を、"
+            "一覧と地図、現地写真、登場ポケモンとあわせて紹介します。"
+        ),
+    },
+}
+
 
 def load_records(path: Path) -> list[dict]:
     by_id: dict[str, dict] = {}
@@ -1110,6 +1140,70 @@ def _prefecture_official_url(records: list[dict]) -> str:
     return ""
 
 
+def _municipality_counts(records: list[dict]) -> list[tuple[str, int]]:
+    counts: Counter[str] = Counter()
+    for record in records:
+        label = municipality_label(record) or str(record.get("city", "")).strip()
+        if label:
+            counts[label] += 1
+    return sorted(counts.items(), key=lambda item: (-item[1], item[0]))
+
+
+def _prefecture_seo(
+    prefecture: str,
+    count: int,
+) -> tuple[str, str, str]:
+    config = PREFECTURE_SEO.get(prefecture)
+    if config and count:
+        values = {key: value.format(count=count) for key, value in config.items()}
+        return values["title"], values["description"], values["h1"]
+
+    title = (
+        f"{prefecture}のポケふた{count}枚｜設置場所マップ・ポケモン一覧"
+        if count
+        else f"{prefecture}のポケふた｜設置状況・ポケモンマンホール情報"
+    )
+    description = (
+        f"{prefecture}にあるポケふた{count}枚の設置場所、登場ポケモン、"
+        f"マンホール一覧、全国順位を紹介します。"
+        "旅行やポケふた巡りの計画にご活用ください。"
+        if count
+        else (
+            f"{prefecture}のポケふた設置状況を紹介します。"
+            "現在の設置枚数や全国のポケモンマンホール情報を確認できます。"
+        )
+    )
+    return title, description, f"{prefecture}のポケふた"
+
+
+def _municipality_guide(prefecture: str, records: list[dict]) -> str:
+    config = PREFECTURE_SEO.get(prefecture)
+    municipalities = _municipality_counts(records)
+    if not config or not municipalities:
+        return ""
+
+    search_name = config["search_name"]
+    items = "".join(
+        f'<li><strong>{escape(name)}</strong><span>{count}枚</span></li>'
+        for name, count in municipalities
+    )
+    if len(municipalities) == 1:
+        lead = f"{search_name}のポケふたは{municipalities[0][0]}に設置されています。"
+    else:
+        names = "・".join(name for name, _ in municipalities[:3])
+        lead = f"{search_name}のポケふたは{names}など、{len(municipalities)}自治体にあります。"
+    return (
+        '<section class="municipality-guide" aria-labelledby="municipality-heading">'
+        f'<h2 id="municipality-heading">{escape(search_name)}のポケふたはどこ？市町村別の設置枚数</h2>'
+        f'<p>{escape(lead)}各地点の住所と行き方は、下の一覧と地図から確認できます。</p>'
+        f'<ul>{items}</ul>'
+        '<div class="municipality-actions">'
+        '<a class="inline-link" href="#manhole-list">場所一覧を見る</a>'
+        '<a class="inline-link" href="#prefecture-map">地図を見る</a>'
+        '</div></section>'
+    )
+
+
 def _hero_intro(
     prefecture: str,
     count: int,
@@ -1150,21 +1244,7 @@ def build_page(
     ]
     installed_count = len(installed_records)
     canonical = f"{BASE_URL}/prefectures/{slug}/"
-    title = (
-        f"{prefecture}のポケふた{count}枚｜設置場所マップ・ポケモン一覧"
-        if count
-        else f"{prefecture}のポケふた｜設置状況・ポケモンマンホール情報"
-    )
-    description = (
-        f"{prefecture}にあるポケふた{count}枚の設置場所、登場ポケモン、"
-        f"マンホール一覧、全国順位を紹介します。"
-        "旅行やポケふた巡りの計画にご活用ください。"
-        if count
-        else (
-            f"{prefecture}のポケふた設置状況を紹介します。"
-            "現在の設置枚数や全国のポケモンマンホール情報を確認できます。"
-        )
-    )
+    title, description, h1 = _prefecture_seo(prefecture, count)
     rank_label = f"全国{rank}位" if rank else "現在未設置"
     hero_intro = _hero_intro(prefecture, count, trivia_entry)
     hero_summary = _hero_summary(prefecture, count, records, trivia_entry)
@@ -1202,6 +1282,7 @@ def build_page(
     trivia_html = _trivia_html(prefecture, trivia_entry, count)
     events_html = _events_html(events)
     related_html = _related_prefectures(prefecture, empty_prefectures)
+    municipality_guide_html = _municipality_guide(prefecture, records)
     visits_url = _visits_url(slug)
     nearby_url = _nearby_url(slug)
     if installed_count:
@@ -1295,7 +1376,9 @@ def build_page(
     )
 
     if records:
-        main_sections_html = f"""    <section aria-labelledby="map-heading">
+        main_sections_html = f"""    {municipality_guide_html}
+
+    <section aria-labelledby="map-heading">
       <div class="section-heading-row">
         <h2 id="map-heading">{escape(prefecture)}の設置マップ</h2>
         <p>ピンから詳細・行き方へ。設置済みのポケふたは写真投稿にも進めます。</p>
@@ -1416,6 +1499,22 @@ def build_page(
       right: -70px; top: -90px; border: 42px solid rgba(126,107,169,.1);
       border-radius: 50%;
     }}
+    .municipality-guide {{
+      margin-top: 18px; padding: 22px; border: 1px solid rgba(93,67,35,.15);
+      border-radius: 18px; background: #fffaf0;
+    }}
+    .municipality-guide h2 {{ margin: 0 0 6px; font-size: 1.25rem; }}
+    .municipality-guide p {{ margin: 0; color: #62564a; }}
+    .municipality-guide ul {{
+      display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 0; padding: 0;
+      list-style: none;
+    }}
+    .municipality-guide li {{
+      display: inline-flex; align-items: center; gap: 7px; padding: 7px 10px;
+      border-radius: 999px; background: #f0e9fb;
+    }}
+    .municipality-guide li span {{ color: #62564a; font-size: .82rem; font-weight: 800; }}
+    .municipality-actions {{ display: flex; flex-wrap: wrap; gap: 14px; margin-top: 14px; }}
     .hero-kicker {{ margin: 0; color: #6b4aa2; font-size: .8rem; font-weight: 900; }}
     h1 {{ margin: 4px 0 8px; font-size: clamp(2rem, 7vw, 3.5rem); line-height: 1.15; }}
     .hero-main > p:last-of-type {{ max-width: 720px; margin: 0; color: #574b41; font-weight: 650; }}
@@ -1707,7 +1806,7 @@ def build_page(
     <header class="hero">
       <div class="hero-main">
         <p class="hero-kicker">都道府県別 ポケふたガイド</p>
-        <h1>{escape(prefecture)}のポケふた</h1>
+        <h1>{escape(h1)}</h1>
         <p>{escape(hero_intro)}</p>
         <div class="stats" aria-label="{_escape_attr(prefecture)}の集計">
           <div class="stat"><span>設置枚数</span><strong>{count}枚</strong></div>

@@ -104,6 +104,52 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         ]
         self.assertEqual(12, first_pokemon_section.count('class="pokemon-card"'))
 
+    def test_priority_prefectures_have_search_specific_metadata_and_place_guide(self) -> None:
+        cases = {
+            "北海道": {
+                "slug": "hokkaido",
+                "title": "北海道のポケふた最新50枚｜設置場所一覧・マップ",
+                "h1": "北海道のポケふた最新50枚",
+                "place": "札幌市",
+            },
+            "京都府": {
+                "slug": "kyoto",
+                "title": "京都のポケふた8枚はどこ？京都市・宇治市の場所一覧・地図",
+                "h1": "京都（京都府）のポケふた8枚",
+                "place": "宇治市",
+            },
+            "大阪府": {
+                "slug": "osaka",
+                "title": "大阪のポケふた5枚はどこ？東大阪市の場所一覧・地図",
+                "h1": "大阪（大阪府）のポケふた5枚",
+                "place": "東大阪市",
+            },
+        }
+        rankings = MODULE.build_rankings(self.records)
+        for prefecture, expected in cases.items():
+            with self.subTest(prefecture=prefecture):
+                records = [
+                    record for record in self.records
+                    if record.get("prefecture") == prefecture
+                ]
+                html = MODULE.build_page(
+                    prefecture,
+                    expected["slug"],
+                    records,
+                    rankings[prefecture],
+                    self.pokemon_slugs,
+                    self.trivia[prefecture],
+                    photos=self.photos,
+                )
+                self.assertIn(f'<title>{expected["title"]}</title>', html)
+                self.assertIn(f'<h1>{expected["h1"]}</h1>', html)
+                self.assertIn("市町村別の設置枚数", html)
+                self.assertIn(f'<strong>{expected["place"]}</strong>', html)
+                self.assertLess(
+                    html.index('id="municipality-heading"'),
+                    html.index('id="map-heading"'),
+                )
+
     def test_active_event_renders_section_with_link(self) -> None:
         events = MODULE.load_events(MODULE.DEFAULT_EVENTS)
         self.assertIn("高知県", events)
@@ -565,7 +611,7 @@ class PrefecturePageDeployContractTest(unittest.TestCase):
         )
         for expected in (
             '<link rel="canonical" href="https://data.pokefuta.com/prefectures/hokkaido/">',
-            '<h1>北海道のポケふた</h1>',
+            '<h1>北海道のポケふた最新1枚</h1>',
             'id="prefecture-map"',
             'id="prefecture-photos"',
             'id="manhole-list"',
