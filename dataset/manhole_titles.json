@@ -171,6 +171,14 @@
       "hashtag": "#道の駅ポケふた",
       "priority": 38
     },
+    "service_area": {
+      "enabled": true,
+      "emoji": "🅿",
+      "label": "高速道路SA・PAのポケふた",
+      "hashtag": "#SAポケふた",
+      "priority": 37,
+      "note": "高速道路のSA/PA・ハイウェイオアシスに設置されたポケふた。道の駅を併設する例（富士川楽座＝東名富士川SA）もあるので roadside と併用しうる"
+    },
     "far_station": {
       "enabled": true,
       "emoji": "🚗",
@@ -635,6 +643,11 @@
         "seaside"
       ]
     },
+    "11": {
+      "tags": [
+        "roadside"
+      ]
+    },
     "12": {
       "tags": [
         "seaside"
@@ -834,8 +847,7 @@
       "tags": [
         "seaside",
         "park",
-        "tourism",
-        "roadside"
+        "tourism"
       ]
     },
     "70": {
@@ -1675,41 +1687,38 @@
       "confidence": 2
     },
     "273": {
-      "building": "豊橋総合動植物公園中央門",
-      "address_raw": "愛知県豊橋市",
-      "address_norm": "愛知県豊橋市",
+      "building": "道の駅とよはし",
+      "address_raw": "愛知県豊橋市東七根町一の沢113-2",
+      "address_norm": "愛知県豊橋市東七根町一の沢113-2",
       "prefecture": "愛知県",
       "city": "豊橋市",
-      "verified_at": "2025-12-27",
+      "verified_at": "2026-09-22",
       "tags": [
         "pokemon_lid",
-        "city_level_address",
         "food",
         "park",
         "museum",
         "rail_access_good",
         "roadside"
       ],
-      "confidence": 2
+      "confidence": 4
     },
     "274": {
-      "building": "道の駅とよはし",
-      "address_raw": "愛知県豊橋市",
-      "address_norm": "愛知県豊橋市",
+      "building": "豊橋総合動植物公園中央門",
+      "address_raw": "愛知県豊橋市大岩町大穴1-238",
+      "address_norm": "愛知県豊橋市大岩町大穴1-238",
       "prefecture": "愛知県",
       "city": "豊橋市",
-      "verified_at": "2025-12-27",
+      "verified_at": "2026-09-22",
       "tags": [
         "pokemon_lid",
-        "city_level_address",
         "park",
         "tourism",
         "museum",
-        "roadside",
         "food",
         "far_station"
       ],
-      "confidence": 2
+      "confidence": 4
     },
     "278": {
       "building": "北欧の風道の駅とうべつ",
@@ -2125,6 +2134,11 @@
         "seaside"
       ]
     },
+    "341": {
+      "tags": [
+        "roadside"
+      ]
+    },
     "345": {
       "tags": [
         "seaside"
@@ -2142,7 +2156,8 @@
     },
     "350": {
       "tags": [
-        "roadside"
+        "roadside",
+        "service_area"
       ]
     },
     "354": {
@@ -2228,6 +2243,11 @@
       ]
     },
     "372": {
+      "tags": [
+        "roadside"
+      ]
+    },
+    "373": {
       "tags": [
         "roadside"
       ]
@@ -2325,7 +2345,6 @@
       "city": "度会郡大紀町",
       "verified_at": "2025-12-27",
       "tags": [
-        "roadside",
         "tourism"
       ],
       "confidence": 3
@@ -2368,6 +2387,16 @@
     "395": {
       "tags": [
         "seaside"
+      ]
+    },
+    "398": {
+      "tags": [
+        "roadside"
+      ]
+    },
+    "402": {
+      "tags": [
+        "roadside"
       ]
     },
     "403": {
@@ -2429,12 +2458,12 @@
       "place_detail": "「オアシス館刈谷 INFOBOX」正面玄関前",
       "verified_at": "2025-12-27",
       "tags": [
-        "roadside",
         "family",
         "tourism",
         "park",
         "food",
-        "lakeside"
+        "lakeside",
+        "service_area"
       ],
       "confidence": 3
     },
@@ -2487,7 +2516,13 @@
     },
     "418": {
       "tags": [
+        "roadside",
         "seaside"
+      ]
+    },
+    "419": {
+      "tags": [
+        "roadside"
       ]
     },
     "422": {
@@ -2569,7 +2604,8 @@
     },
     "437": {
       "tags": [
-        "seaside"
+        "seaside",
+        "roadside"
       ]
     },
     "438": {
@@ -2735,6 +2771,7 @@
     "475": {
       "building": "のと里山空港",
       "tags": [
+        "roadside",
         "tourism"
       ]
     },

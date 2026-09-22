@@ -1,0 +1,66 @@
+{
+  "_doc": "linkdata.org の道の駅データ（国土数値情報の写し）の誤り・欠落を補う手当て。apps/tools/import_michineki.py が download 直後に適用する。upstream が直ったら該当エントリを消す。座標の出所は必ず source に書く。",
+  "fix": {
+    "道の駅若狭美浜はまびより": {
+      "lat": 35.604304,
+      "lng": 135.936349,
+      "source": "OpenStreetMap（node「道の駅 若狭美浜はまびより」）",
+      "note": "linkdata の座標 36.289889,136.251778 は約81km北東を指していた。住所（美浜町松原第35号15番地1）はポケふた #341 と一致する"
+    },
+    "道の駅北条公園": {
+      "name": "道の駅ほうじょう",
+      "source": "ja.wikipedia「道の駅ほうじょう」",
+      "note": "2023年に「北条公園」から「ほうじょう」へ改称。国交省の公式一覧も「ほうじょう」表記"
+    }
+  },
+  "add": [
+    {
+      "id": "x-noto-satoyama-airport",
+      "name": "道の駅のと里山空港",
+      "prefecture": "石川県",
+      "city": "輪島市",
+      "address": "石川県輪島市三井町洲衛10-11-1",
+      "lat": 37.295403,
+      "lng": 136.957442,
+      "url": "",
+      "source": "OpenStreetMap（node「道の駅　のと里山空港」）",
+      "note": "公式登録済み（重点「道の駅」にも選定）だが linkdata に無い。空港ターミナルと一体で、ポケふた #475 が敷地内にある"
+    },
+    {
+      "id": "x-morioka-shibutami",
+      "name": "道の駅もりおか渋民",
+      "prefecture": "岩手県",
+      "city": "盛岡市",
+      "address": "岩手県盛岡市渋民",
+      "lat": 39.8463294,
+      "lng": 141.1733084,
+      "url": "",
+      "source": "OpenStreetMap（way「道の駅もりおか渋民」highway=services）",
+      "note": "公式登録済みだが linkdata に無い。ポケふた #398 が敷地内にある"
+    },
+    {
+      "id": "x-toyocho",
+      "name": "道の駅東洋町",
+      "prefecture": "高知県",
+      "city": "安芸郡東洋町",
+      "address": "高知県安芸郡東洋町白浜",
+      "lat": 33.54319,
+      "lng": 134.29514,
+      "url": "",
+      "source": "ja.wikipedia「道の駅東洋町」",
+      "note": "公式登録済みだが linkdata に無い。同じ敷地の「海の駅東洋町」として OSM に載っている。ポケふた #437 が敷地内にある"
+    },
+    {
+      "id": "x-higashimatsushima",
+      "name": "道の駅東松島",
+      "prefecture": "宮城県",
+      "city": "東松島市",
+      "address": "宮城県東松島市上二間堀",
+      "lat": 38.424308,
+      "lng": 141.18305,
+      "url": "",
+      "source": "OpenStreetMap（way「道の駅「東松島」」）",
+      "note": "公式登録済みだが linkdata に無い。近くのポケふた #48（野蒜ケ丘）とは5.5km離れており、タグには影響しない"
+    }
+  ]
+}
