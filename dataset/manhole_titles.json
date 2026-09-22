@@ -1687,40 +1687,38 @@
       "confidence": 2
     },
     "273": {
-      "building": "豊橋総合動植物公園中央門",
-      "address_raw": "愛知県豊橋市",
-      "address_norm": "愛知県豊橋市",
+      "building": "道の駅とよはし",
+      "address_raw": "愛知県豊橋市東七根町一の沢113-2",
+      "address_norm": "愛知県豊橋市東七根町一の沢113-2",
       "prefecture": "愛知県",
       "city": "豊橋市",
-      "verified_at": "2025-12-27",
+      "verified_at": "2026-09-22",
       "tags": [
         "pokemon_lid",
-        "city_level_address",
         "food",
         "park",
         "museum",
-        "rail_access_good"
+        "rail_access_good",
+        "roadside"
       ],
-      "confidence": 2
+      "confidence": 4
     },
     "274": {
-      "building": "道の駅とよはし",
-      "address_raw": "愛知県豊橋市",
-      "address_norm": "愛知県豊橋市",
+      "building": "豊橋総合動植物公園中央門",
+      "address_raw": "愛知県豊橋市大岩町大穴1-238",
+      "address_norm": "愛知県豊橋市大岩町大穴1-238",
       "prefecture": "愛知県",
       "city": "豊橋市",
-      "verified_at": "2025-12-27",
+      "verified_at": "2026-09-22",
       "tags": [
         "pokemon_lid",
-        "city_level_address",
         "park",
         "tourism",
         "museum",
-        "roadside",
         "food",
         "far_station"
       ],
-      "confidence": 2
+      "confidence": 4
     },
     "278": {
       "building": "北欧の風道の駅とうべつ",
