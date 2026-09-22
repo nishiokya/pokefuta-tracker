@@ -120,11 +120,26 @@ class InjectSiteHeaderTest(unittest.TestCase):
         self.assertEqual(tabs, ["地図", "都道府県", "ポケモン", "集計", "スタンプ帳"])
         self.assertIn('data-login-link data-stamp-page="https://pokefuta.com/visits?from=data"', result)
 
+    def test_bottom_tabs_expose_stable_analytics_metadata(self):
+        result = inject(BARE)
+        self.assertIn('class="site-tabs" aria-label="サイト内タブ" data-nav-variant="baseline_v1"', result)
+        items = re.findall(r'data-nav-item="([^"]+)" data-nav-position="([^"]+)"', result)
+        self.assertEqual(
+            items,
+            [("map", "1"), ("prefectures", "2"), ("pokemon", "3"), ("summary", "4"), ("stamp", "5")],
+        )
+        self.assertIn('<script src="./assets/site-header-analytics.js" defer></script>', result)
+
+    def test_does_not_duplicate_site_header_analytics_script(self):
+        html = '<html><head><script src="./assets/site-header-analytics.js" defer></script></head><body></body></html>'
+        result = inject(html)
+        self.assertEqual(result.count("site-header-analytics.js"), 1)
+
     def test_marks_active_tab_from_page_path(self):
         """図鑑にはアクティブ表現が一切無かったので、現在地を出せることを固定する。"""
         result = inject(BARE, page_path="summary/index.html")
         self.assertIn('<a class="site-header__link is-active" href="./summary/">', result)
-        self.assertIn('<a class="site-tab is-active" href="./summary/">', result)
+        self.assertIn('<a class="site-tab is-active" href="./summary/" data-nav-item="summary"', result)
         # 他のタブまで active にしない
         self.assertEqual(result.count("is-active"), 2)
 
@@ -136,13 +151,13 @@ class InjectSiteHeaderTest(unittest.TestCase):
         """都道府県詳細ページ（/prefectures/<slug>/）にいる間は「都道府県」タブをアクティブにする。"""
         result = inject(BARE, page_path="prefectures/mie/index.html")
         self.assertIn('<a class="site-header__link is-active" href="./prefectures/">', result)
-        self.assertIn('<a class="site-tab is-active" href="./prefectures/">', result)
+        self.assertIn('<a class="site-tab is-active" href="./prefectures/" data-nav-item="prefectures"', result)
         self.assertEqual(result.count("is-active"), 2)
 
     def test_marks_active_pref_tab_on_the_prefectures_index_page_itself(self):
         result = inject(BARE, page_path="prefectures/index.html")
         self.assertIn('<a class="site-header__link is-active" href="./prefectures/">', result)
-        self.assertIn('<a class="site-tab is-active" href="./prefectures/">', result)
+        self.assertIn('<a class="site-tab is-active" href="./prefectures/" data-nav-item="prefectures"', result)
 
     # ── 認証 ─────────────────────────────────────────────
 

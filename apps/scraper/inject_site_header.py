@@ -24,6 +24,7 @@ from pathlib import Path
 
 STYLESHEET_TEMPLATE = '<link rel="stylesheet" href="{asset_base}assets/site-header.css">'
 SESSION_BADGE_SCRIPT_TEMPLATE = '<script src="{asset_base}assets/session-badge.js" defer></script>'
+SITE_HEADER_ANALYTICS_SCRIPT_TEMPLATE = '<script src="{asset_base}assets/site-header-analytics.js" defer></script>'
 
 # pokefuta.com への導線には必ず `from=data` を付ける（AGENTS.md）。
 # 同一GA4プロパティ内の内部UTMは使わず、着地側の source_app=tracker /
@@ -218,12 +219,12 @@ HEADER_TEMPLATE = """<header class="site-header">
 </header>"""
 
 
-BOTTOM_TABS_TEMPLATE = """<nav class="site-tabs" aria-label="{tabs_aria}">
-  <a class="site-tab{active_map}" href="{page_base}map.html">{icon_map}<span>{nav_map}</span></a>
-  <a class="site-tab{active_pref}" href="{page_base}prefectures/">{icon_pref}<span>{nav_pref}</span></a>
-  <a class="site-tab{active_pokemon}" href="{page_base}pokemon/">{icon_pokemon}<span>{nav_pokemon}</span></a>
-  <a class="site-tab{active_summary}" href="{page_base}summary/">{icon_summary}<span>{nav_summary}</span></a>
-  <a class="site-tab" data-login-link data-stamp-page="{stamp_url}" href="{login_url}">{icon_stamp}<span>{tab_stamp}</span></a>
+BOTTOM_TABS_TEMPLATE = """<nav class="site-tabs" aria-label="{tabs_aria}" data-nav-variant="baseline_v1">
+  <a class="site-tab{active_map}" href="{page_base}map.html" data-nav-item="map" data-nav-position="1">{icon_map}<span>{nav_map}</span></a>
+  <a class="site-tab{active_pref}" href="{page_base}prefectures/" data-nav-item="prefectures" data-nav-position="2">{icon_pref}<span>{nav_pref}</span></a>
+  <a class="site-tab{active_pokemon}" href="{page_base}pokemon/" data-nav-item="pokemon" data-nav-position="3">{icon_pokemon}<span>{nav_pokemon}</span></a>
+  <a class="site-tab{active_summary}" href="{page_base}summary/" data-nav-item="summary" data-nav-position="4">{icon_summary}<span>{nav_summary}</span></a>
+  <a class="site-tab" data-login-link data-stamp-page="{stamp_url}" href="{login_url}" data-nav-item="stamp" data-nav-position="5">{icon_stamp}<span>{tab_stamp}</span></a>
 </nav>"""
 
 
@@ -324,9 +325,11 @@ def inject(
     if stylesheet not in html:
         html = html.replace("</head>", f"  {stylesheet}\n</head>", 1)
 
-    script = ""
+    scripts = []
     if "session-badge.js" not in html:
-        script = "\n" + SESSION_BADGE_SCRIPT_TEMPLATE.format(asset_base=asset_base)
+        scripts.append(SESSION_BADGE_SCRIPT_TEMPLATE.format(asset_base=asset_base))
+    if "site-header-analytics.js" not in html:
+        scripts.append(SITE_HEADER_ANALYTICS_SCRIPT_TEMPLATE.format(asset_base=asset_base))
 
     body_start = html.lower().find("<body")
     body_end = html.find(">", body_start)
@@ -339,7 +342,8 @@ def inject(
 
     # フッターと下タブは </body> の直前へ。下タブは position:fixed なので
     # DOM 上の位置は見た目に影響しないが、読み上げ順は本文のあとにする
-    trailing = f"\n{footer}\n{tabs}{script}\n"
+    script_html = "\n".join(scripts)
+    trailing = f"\n{footer}\n{tabs}\n{script_html}\n"
     body_close = html.lower().rfind("</body>")
     if body_close == -1:
         html = html + trailing

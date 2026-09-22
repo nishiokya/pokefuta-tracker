@@ -14,6 +14,17 @@ class AnalyticsContractTest(unittest.TestCase):
         self.assertIn("window.location.hostname.toLowerCase()", analytics)
         self.assertIn("domains: ['data.pokefuta.com', 'pokefuta.com']", analytics)
 
+    def test_mobile_bottom_navigation_uses_shared_analytics(self):
+        analytics = (ROOT / "web/assets/site-header-analytics.js").read_text(encoding="utf-8")
+
+        self.assertIn("window.trackEvent(name, params)", analytics)
+        self.assertIn("track('view_navigation'", analytics)
+        self.assertIn("track('click_nav'", analytics)
+        self.assertIn("surface: SURFACE", analytics)
+        self.assertIn("nav_variant: variant", analytics)
+        self.assertNotIn("gtag(", analytics)
+        self.assertNotIn("source:", analytics)
+
     def test_ga_sources_use_shared_loader(self):
         candidates = list((ROOT / "web").glob("*.html"))
         candidates += list((ROOT / "scraper").glob("generate_*.py"))
