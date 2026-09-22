@@ -22,6 +22,8 @@ class AnalyticsContractTest(unittest.TestCase):
         self.assertIn("track('click_nav'", analytics)
         self.assertIn("surface: SURFACE", analytics)
         self.assertIn("nav_variant: variant", analytics)
+        self.assertIn("(max-width: 1023.98px)", analytics)
+        self.assertNotIn("nav: tab.dataset.navItem", analytics)
         self.assertNotIn("gtag(", analytics)
         self.assertNotIn("source:", analytics)
 

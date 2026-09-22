@@ -342,8 +342,9 @@ def inject(
 
     # フッターと下タブは </body> の直前へ。下タブは position:fixed なので
     # DOM 上の位置は見た目に影響しないが、読み上げ順は本文のあとにする
-    script_html = "\n".join(scripts)
-    trailing = f"\n{footer}\n{tabs}\n{script_html}\n"
+    joined_scripts = "\n".join(scripts)
+    script_html = f"\n{joined_scripts}" if joined_scripts else ""
+    trailing = f"\n{footer}\n{tabs}{script_html}\n"
     body_close = html.lower().rfind("</body>")
     if body_close == -1:
         html = html + trailing

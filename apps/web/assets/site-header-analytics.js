@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  var MOBILE_QUERY = '(max-width: 1023px)';
+  var MOBILE_QUERY = '(max-width: 1023.98px)';
   var SURFACE = 'mobile_bottom_nav';
 
   function track(name, params) {
@@ -29,7 +29,6 @@
 
       track('click_nav', {
         surface: SURFACE,
-        nav: tab.dataset.navItem,
         nav_item: tab.dataset.navItem,
         nav_position: tab.dataset.navPosition,
         nav_variant: variant

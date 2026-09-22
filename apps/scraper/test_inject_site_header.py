@@ -135,6 +135,14 @@ class InjectSiteHeaderTest(unittest.TestCase):
         result = inject(html)
         self.assertEqual(result.count("site-header-analytics.js"), 1)
 
+    def test_does_not_add_a_blank_script_line_when_scripts_already_exist(self):
+        html = (
+            '<html><head><script src="./assets/site-header-analytics.js" defer></script>'
+            '<script src="./assets/session-badge.js" defer></script></head><body></body></html>'
+        )
+        result = inject(html)
+        self.assertNotIn('</nav>\n\n\n</body>', result)
+
     def test_marks_active_tab_from_page_path(self):
         """図鑑にはアクティブ表現が一切無かったので、現在地を出せることを固定する。"""
         result = inject(BARE, page_path="summary/index.html")
