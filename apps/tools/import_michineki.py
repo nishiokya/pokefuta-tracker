@@ -15,6 +15,7 @@ from pathlib import Path
 DATA_URL = "https://linkdata.org/download/rdf1s2861i/link/roadside_station.txt"
 REPO_ROOT = Path(__file__).parent.parent.parent
 MICHINEKI_JSON = REPO_ROOT / "dataset" / "michineki.json"
+CORRECTIONS_JSON = REPO_ROOT / "dataset" / "michineki_corrections.json"
 TITLES_JSON = REPO_ROOT / "dataset" / "manhole_titles.json"
 POKEFUTA_NDJSON = REPO_ROOT / "apps" / "scraper" / "pokefuta.ndjson"
 
@@ -63,7 +64,7 @@ def download_and_parse():
         # parts[0] = subject URI, parts[1:] = property values
         data = dict(zip(props, parts[1:]))
 
-        if data.get("iclt:状態") == "廃止":
+        if data.get("iclt:状態") in ("廃止", "建設中", "開業予定"):
             continue
 
         try:
@@ -88,6 +89,47 @@ def download_and_parse():
         })
 
     print(f"Parsed {len(stations)} active stations")
+    return apply_corrections(stations)
+
+
+def apply_corrections(stations):
+    """linkdata 側の誤り・欠落を dataset/michineki_corrections.json で手当てする。
+
+    linkdata は国土数値情報の写しで、座標が別施設を指していたり（道の駅とよはし）、
+    公式登録済みの駅がまるごと無かったり（道の駅もりおか渋民）する。upstream が
+    直るまではここで補正しないと、近接判定がそのまま誤ったタグになる。
+    """
+    if not CORRECTIONS_JSON.exists():
+        return stations
+
+    corrections = json.loads(CORRECTIONS_JSON.read_text(encoding="utf-8"))
+
+    fixes = corrections.get("fix") or {}
+    original_names = {s["name"] for s in stations}
+    fixed = 0
+    for s in stations:
+        fix = fixes.get(s["name"])
+        if not fix:
+            continue
+        for key in ("name", "lat", "lng", "address", "city", "prefecture"):
+            if key in fix:
+                s[key] = fix[key]
+        fixed += 1
+    # 改名を含む fix を当てたあとの名前で引くと自分自身を見失うので、当てる前の名前で照合する
+    missing_fixes = sorted(set(fixes) - original_names)
+    if missing_fixes:
+        print(f"  WARNING: fix 対象が linkdata に無い: {', '.join(missing_fixes)}")
+
+    known = {s["name"] for s in stations}
+    added = 0
+    for extra in corrections.get("add") or []:
+        if extra["name"] in known:
+            print(f"  NOTE: {extra['name']} は linkdata 側に載ったので add から外せる")
+            continue
+        stations.append({k: v for k, v in extra.items() if k != "note"})
+        added += 1
+
+    print(f"Corrections: {fixed} fixed, {added} added → {len(stations)} stations")
     return stations
 
 
