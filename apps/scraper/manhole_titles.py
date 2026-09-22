@@ -285,6 +285,11 @@ def compute_titles(manhole: dict, ctx: dict, *, nc50: int, nc100: int) -> list[d
         if t := _entry("roadside"):
             results.append(t)
 
+    # service_area: 高速道路SA/PAタグ（道の駅併設の例があるので roadside と排他にしない）
+    if "service_area" in tags:
+        if t := _entry("service_area"):
+            results.append(t)
+
     # Gundam manhole crossover tags
     if "near_gundam_manhole" in tags:
         if t := _entry("near_gundam_manhole"):
