@@ -38,6 +38,13 @@ from photo_caption import (  # noqa: E402
 )
 
 try:
+    from apps.scraper.prefecture_completion import build_completion
+except ModuleNotFoundError as exc:
+    if exc.name != "apps":
+        raise
+    from prefecture_completion import build_completion
+
+try:
     from apps.scraper.prefectures import (
         PREFECTURE_ORDER,
         PREFECTURE_SLUGS,
@@ -187,7 +194,8 @@ SUMMARY_STRINGS: dict[str, dict] = {
         },
         "no_photos": {
             "h2": "まだ写真が投稿されていないポケふた",
-            "total": "{count}枚のポケふたに写真がまだありません",
+            "total": "{prefectures}都道府県の{count}枚に写真がまだありません",
+            "complete": "ポケふたがある{listed}都道府県のうち{complete}都道府県は、設置済みのポケふた全てに現地写真がそろっています。",
             "cta": "あなたが最初の投稿者になれます。",
         },
         "pokemon_ranking": {
@@ -3644,33 +3652,45 @@ def _build_no_photos_section(
     if not np_s:
         return ""
     photo_ids = set(str(k) for k in photos_data.get("photos", {}).keys())
-    no_photo = [
-        r for r in records_by_id.values()
-        if r.get("status") == "active" and str(r.get("id", "")) not in photo_ids
-    ]
-    if not no_photo:
+    records_by_pref: dict[str, list[dict]] = {}
+    for r in records_by_id.values():
+        if r.get("status") != "active":
+            continue
+        records_by_pref.setdefault(r.get("prefecture", "その他"), []).append(r)
+    # /prefectures/ の一覧カードと同じ集計（prefecture_completion）を使う。
+    # ここが独自に数えていたときは installed:false（設置予定で現地にまだ
+    # 無い1枚）まで「写真が足りない」に数えていて、県ページ側の残り枚数と
+    # 一致していなかった。
+    completion = build_completion(records_by_pref, photo_ids, order=PREFECTURE_ORDER)
+    if not completion.incomplete:
         return ""
 
-    by_pref: dict[str, int] = {}
-    for r in no_photo:
-        pref = r.get("prefecture", "その他")
-        by_pref[pref] = by_pref.get(pref, 0) + 1
-
-    total = len(no_photo)
-    top_prefs = sorted(by_pref.items(), key=lambda x: -x[1])[:8]
+    # 残り枚数の多い順ではなく少ない順。先頭に来るのが「次に終わる県」で、
+    # 読んだ人が現実的に動かせるのはそこだから。
     pref_items = "\n".join(
         f'<li class="summary-list-item">'
-        f'<a class="summary-link" href="{escape(_prefecture_href(pref))}">{escape(pref)}</a>'
-        f'<small>{count}枚</small>'
+        f'<a class="summary-link" href="{escape(_prefecture_href(entry.prefecture))}">'
+        f'{escape(entry.prefecture)}</a>'
+        f'<small>あと{entry.missing}枚</small>'
         f'</li>'
-        for pref, count in top_prefs
+        for entry in completion.incomplete[:8]
     )
     h2 = escape(np_s["h2"])
-    total_text = escape(np_s["total"].format(count=total))
+    total_text = escape(
+        np_s["total"].format(
+            prefectures=completion.incomplete_count, count=completion.missing_total
+        )
+    )
+    complete_text = escape(
+        np_s["complete"].format(
+            listed=completion.listed_count, complete=completion.complete_count
+        )
+    )
     cta = escape(np_s["cta"])
     return (
         f'\n    <section class="summary-section" aria-labelledby="no-photos-heading">'
         f'\n      <h2 id="no-photos-heading">{h2}</h2>'
+        f'\n      <p class="section-note">{complete_text}</p>'
         f'\n      <p class="section-note">{total_text}。{cta}</p>'
         f'\n      <ul class="summary-list" style="margin-top:12px;">{pref_items}</ul>'
         f'\n    </section>\n'
