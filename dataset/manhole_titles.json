@@ -656,6 +656,7 @@
       ]
     },
     "12": {
+      "building": "野田玉川駅前",
       "tags": [
         "seaside",
         "station_front"
@@ -674,6 +675,7 @@
       ]
     },
     "15": {
+      "building": "島越駅前",
       "tags": [
         "seaside",
         "station_front"
@@ -687,24 +689,28 @@
       ]
     },
     "17": {
+      "building": "陸中山田駅前",
       "tags": [
         "seaside",
         "station_front"
       ]
     },
     "18": {
+      "building": "大槌駅前",
       "tags": [
         "seaside",
         "station_front"
       ]
     },
     "19": {
+      "building": "鵜住居駅前",
       "tags": [
         "seaside",
         "station_front"
       ]
     },
     "20": {
+      "building": "盛駅前",
       "tags": [
         "station_front"
       ]
@@ -720,6 +726,7 @@
       ]
     },
     "23": {
+      "building": "桜木町駅前",
       "tags": [
         "station_front"
       ]
@@ -730,26 +737,31 @@
       ]
     },
     "29": {
+      "building": "丸亀駅前",
       "tags": [
         "station_front"
       ]
     },
     "30": {
+      "building": "坂出駅前",
       "tags": [
         "station_front"
       ]
     },
     "32": {
+      "building": "観音寺駅前",
       "tags": [
         "station_front"
       ]
     },
     "33": {
+      "building": "志度駅前",
       "tags": [
         "station_front"
       ]
     },
     "34": {
+      "building": "三本松駅前",
       "tags": [
         "station_front"
       ]
@@ -797,6 +809,7 @@
       ]
     },
     "42": {
+      "building": "多度津駅前",
       "tags": [
         "station_front"
       ]
@@ -826,6 +839,7 @@
       ]
     },
     "48": {
+      "building": "野蒜駅前",
       "tags": [
         "station_front"
       ]
@@ -837,6 +851,7 @@
       ]
     },
     "50": {
+      "building": "本塩釜駅前",
       "tags": [
         "seaside",
         "station_front"
@@ -853,6 +868,7 @@
       ]
     },
     "54": {
+      "building": "青葉通一番町駅前",
       "tags": [
         "station_front"
       ]
@@ -868,6 +884,7 @@
       ]
     },
     "58": {
+      "building": "坂元駅前",
       "tags": [
         "station_front"
       ]
@@ -895,7 +912,7 @@
       ]
     },
     "62": {
-      "building": "森駅前（森商工会議所玄関前）",
+      "building": "森駅前",
       "verified_at": "2020-11-02",
       "tags": [
         "seaside",
@@ -973,13 +990,13 @@
       ]
     },
     "71": {
-      "building": "JR北海道 石北本線 女満別駅の駅前広場の前",
+      "building": "女満別駅前",
       "tags": [
         "station_front"
       ]
     },
     "72": {
-      "building": "新得駅前広場",
+      "building": "新得駅前",
       "tags": [
         "station_front"
       ]
@@ -998,6 +1015,7 @@
       ]
     },
     "76": {
+      "building": "倉吉駅前",
       "tags": [
         "station_front"
       ]
@@ -1040,11 +1058,13 @@
       ]
     },
     "87": {
+      "building": "根雨駅前",
       "tags": [
         "station_front"
       ]
     },
     "88": {
+      "building": "新地駅前",
       "tags": [
         "station_front"
       ]
@@ -1113,6 +1133,7 @@
       ]
     },
     "106": {
+      "building": "智頭駅前",
       "tags": [
         "station_front"
       ]
@@ -1136,6 +1157,7 @@
       ]
     },
     "111": {
+      "building": "子供の国駅前",
       "tags": [
         "seaside",
         "station_front"
@@ -1149,6 +1171,7 @@
       ]
     },
     "116": {
+      "building": "日向市駅前",
       "tags": [
         "station_front"
       ]
@@ -1205,6 +1228,7 @@
       ]
     },
     "130": {
+      "building": "船岡駅前",
       "tags": [
         "station_front"
       ]
@@ -1236,6 +1260,7 @@
       ]
     },
     "138": {
+      "building": "涌谷駅前",
       "tags": [
         "station_front"
       ]
@@ -1277,6 +1302,7 @@
       ]
     },
     "145": {
+      "building": "小千谷駅前",
       "tags": [
         "station_front"
       ]
@@ -1294,6 +1320,7 @@
       "confidence": 3
     },
     "148": {
+      "building": "法隆寺駅前",
       "tags": [
         "world_heritage",
         "station_front"
@@ -1378,12 +1405,14 @@
       ]
     },
     "163": {
+      "building": "梅小路京都西駅前",
       "tags": [
         "world_heritage",
         "station_front"
       ]
     },
     "164": {
+      "building": "三股駅前",
       "tags": [
         "station_front"
       ]
@@ -1628,6 +1657,7 @@
       ]
     },
     "212": {
+      "building": "所沢駅前",
       "tags": [
         "station_front"
       ]
@@ -1707,6 +1737,7 @@
       ]
     },
     "222": {
+      "building": "佐原駅前",
       "tags": [
         "gundam_manhole_city",
         "station_front"
@@ -1967,6 +1998,7 @@
       ]
     },
     "266": {
+      "building": "ほっとゆだ駅前",
       "tags": [
         "station_front"
       ]
@@ -2059,6 +2091,7 @@
       ]
     },
     "277": {
+      "building": "丸の内駅前",
       "tags": [
         "station_front"
       ]
@@ -2347,6 +2380,7 @@
       ]
     },
     "316": {
+      "building": "太宰府駅前",
       "tags": [
         "station_front"
       ]
@@ -2393,6 +2427,7 @@
       ]
     },
     "325": {
+      "building": "大街道駅前",
       "tags": [
         "near_gundam_manhole",
         "gundam_manhole_city",
@@ -2425,7 +2460,7 @@
       "confidence": 3
     },
     "331": {
-      "building": "川越富洲原駅 西口",
+      "building": "川越富洲原駅前",
       "address_raw": "三重郡川越町豊田275（川越富洲原駅西口）",
       "address_norm": "三重県三重郡川越町豊田275",
       "prefecture": "三重県",
@@ -2500,11 +2535,13 @@
       "confidence": 3
     },
     "336": {
+      "building": "勝山駅前",
       "tags": [
         "station_front"
       ]
     },
     "337": {
+      "building": "芦原温泉駅前",
       "tags": [
         "station_front"
       ]
@@ -2535,6 +2572,7 @@
       ]
     },
     "344": {
+      "building": "白浜駅前",
       "tags": [
         "station_front"
       ]
@@ -2552,6 +2590,7 @@
       ]
     },
     "348": {
+      "building": "新浜松駅前",
       "tags": [
         "station_front"
       ]
@@ -2569,6 +2608,7 @@
       ]
     },
     "353": {
+      "building": "宇治駅前",
       "tags": [
         "station_front"
       ]
@@ -2586,6 +2626,7 @@
       ]
     },
     "356": {
+      "building": "新大村駅前",
       "tags": [
         "station_front"
       ]
@@ -2675,6 +2716,7 @@
       ]
     },
     "370": {
+      "building": "鏡石駅前",
       "tags": [
         "station_front"
       ]
@@ -2692,6 +2734,7 @@
       ]
     },
     "376": {
+      "building": "白河駅前",
       "tags": [
         "station_front"
       ]
@@ -2716,6 +2759,7 @@
       ]
     },
     "380": {
+      "building": "安来駅前",
       "tags": [
         "seaside",
         "lakeside",
@@ -2836,12 +2880,14 @@
       ]
     },
     "391": {
+      "building": "奈半利駅前",
       "tags": [
         "seaside",
         "station_front"
       ]
     },
     "393": {
+      "building": "日下駅前",
       "tags": [
         "station_front"
       ]
@@ -2864,6 +2910,7 @@
       ]
     },
     "399": {
+      "building": "山形駅前",
       "tags": [
         "station_front"
       ]
@@ -3004,6 +3051,7 @@
       "confidence": 3
     },
     "417": {
+      "building": "福井駅前",
       "tags": [
         "station_front"
       ]
@@ -3063,6 +3111,7 @@
       ]
     },
     "427": {
+      "building": "島原駅前",
       "tags": [
         "seaside",
         "station_front"
@@ -3093,11 +3142,13 @@
       ]
     },
     "433": {
+      "building": "安芸駅前",
       "tags": [
         "station_front"
       ]
     },
     "434": {
+      "building": "須崎駅前",
       "tags": [
         "seaside",
         "station_front"
@@ -3210,6 +3261,7 @@
       "city": "稲城市"
     },
     "449": {
+      "building": "高知駅前",
       "tags": [
         "station_front"
       ]
@@ -3244,7 +3296,7 @@
       ]
     },
     "460": {
-      "building": "JR磐城浅川駅前広場",
+      "building": "磐城浅川駅前",
       "tags": [
         "station_front"
       ]
@@ -3255,6 +3307,7 @@
       ]
     },
     "462": {
+      "building": "大野駅前",
       "tags": [
         "station_front"
       ]
@@ -3271,6 +3324,7 @@
       ]
     },
     "466": {
+      "building": "金ヶ崎駅前",
       "tags": [
         "station_front"
       ]
@@ -3397,7 +3451,7 @@
       ]
     },
     "484": {
-      "building": "野辺山駅",
+      "building": "野辺山駅前",
       "tags": [
         "station_front",
         "rail_access_good",
@@ -3411,7 +3465,7 @@
       ]
     },
     "486": {
-      "building": "湯田中駅前広場 楓の館前",
+      "building": "湯田中駅前",
       "tags": [
         "station_front",
         "rail_access_good",
