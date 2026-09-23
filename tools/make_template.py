@@ -590,7 +590,7 @@ t = t.replace(
       },
       travelThemes: {
         remote_island: '離島にあるポケふた',
-        roadside: '道の駅にあるポケふた',
+        roadside: '道の駅・SAにあるポケふた',
         station_front: '駅前にあるポケふた',
         world_heritage: '世界遺産の近くにあるポケふた'
       },

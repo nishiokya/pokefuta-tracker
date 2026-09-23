@@ -131,7 +131,7 @@
       },
       "travelThemes": {
         "remote_island": "離島上的 Pokéfuta",
-        "roadside": "道之驛的 Pokéfuta",
+        "roadside": "道之驛・服務區的 Pokéfuta",
         "station_front": "車站前的 Pokéfuta",
         "world_heritage": "世界遺產附近的 Pokéfuta"
       },
@@ -228,7 +228,7 @@
   "SEC5_TITLE": "依主題搜尋",
   "SEC5_THEME_LABEL": "依主題搜尋",
   "SEC5_THEME_MORE": "在地圖上探索 →",
-  "TAG_ROADSIDE": "🛤 道路驛站",
+  "TAG_ROADSIDE": "🛤 道路驛站・服務區",
   "TAG_ISLAND": "🏝 離島",
   "TAG_WORLD_HERITAGE": "🌐 世界遺產",
   "TAG_GUNDAM": "🤖 鋼彈人孔步行圈",

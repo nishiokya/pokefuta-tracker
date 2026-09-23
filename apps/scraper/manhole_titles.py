@@ -280,12 +280,13 @@ def compute_titles(manhole: dict, ctx: dict, *, nc50: int, nc100: int) -> list[d
         if t := _entry("river"):
             results.append(t)
 
-    # roadside: 道の駅タグ
-    if "roadside" in tags:
+    # roadside: 道の駅・SAテーマのタグ。SA/PAにも付けてテーマを1つにまとめているので、
+    # 称号は service_area があればそちらを出し、「道の駅の」と名乗らせない
+    if "roadside" in tags and "service_area" not in tags:
         if t := _entry("roadside"):
             results.append(t)
 
-    # service_area: 高速道路SA/PAタグ（道の駅併設の例があるので roadside と排他にしない）
+    # service_area: 高速道路SA/PAタグ
     if "service_area" in tags:
         if t := _entry("service_area"):
             results.append(t)

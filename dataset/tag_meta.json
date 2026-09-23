@@ -42,7 +42,7 @@
     { "slug": "lakeside", "emoji": "🌅", "label": "湖畔" },
     { "slug": "river", "emoji": "🏞", "label": "川辺", "icon_only": true },
     { "slug": "remote_island", "emoji": "🏝", "label": "離島", "featured": true, "page": true },
-    { "slug": "roadside", "emoji": "🛤", "label": "道の駅", "featured": true, "page": true },
+    { "slug": "roadside", "emoji": "🛤", "label": "道の駅・SA", "featured": true, "page": true },
     { "slug": "in_station", "emoji": "🚉", "label": "駅構内", "description": "改札内・駅舎内にあるポケふた", "icon_only": true },
     { "slug": "station_front", "emoji": "🚃", "label": "駅前（150m以内）", "description": "最寄り駅の中心から150m以内のポケふた" },
     { "slug": "near_station", "emoji": "🚶", "label": "駅近（150〜500m）", "description": "最寄り駅の中心から150mを超え500m以内のポケふた" },
