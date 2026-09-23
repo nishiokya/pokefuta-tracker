@@ -67,7 +67,7 @@ Status: active</description>
 City: 指宿
 Address: 鹿児島県指宿市湊2丁目5-33
 Building: セントラルパーク指宿
-Tags: park, tourism
+Tags: park, tourism, near_station
 Detail: https://local.pokemon.jp/manhole/desc/5/?is_modal=1
 Last Updated: 2026-05-11T11:00:12Z
 Status: active</description>
@@ -145,11 +145,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>久慈市 中町 (プテラ)</name>
+      <name>久慈市 道の駅くじ (プテラ)</name>
       <description>Prefecture: 岩手県
 City: 久慈
 Address: 岩手県久慈市中町2-5-6
-Tags: roadside
+Building: 道の駅くじ
+Tags: roadside, near_station
 Detail: https://local.pokemon.jp/manhole/desc/11/?is_modal=1
 Last Updated: 2026-05-24T10:30:06Z
 Status: active</description>
@@ -158,11 +159,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>岩手県/野田村 (イワーク)</name>
+      <name>野田村 野田玉川駅前 (イワーク)</name>
       <description>Prefecture: 岩手県
 City: 野田
 Address: 岩手県野田村大字野田第5地割
-Tags: seaside
+Building: 野田玉川駅前
+Tags: seaside, station_front
 Detail: https://local.pokemon.jp/manhole/desc/12/?is_modal=1
 Last Updated: 2026-08-14T10:46:13Z
 Status: active</description>
@@ -171,12 +173,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>岩手県/普代村 (タテトプス)</name>
+      <name>普代村 道の駅青の国ふだい (タテトプス)</name>
       <description>Prefecture: 岩手県
 City: 普代
 Address: 岩手県普代村9-5-3
 Building: 道の駅青の国ふだい
-Tags: roadside
+Tags: roadside, station_front
 Detail: https://local.pokemon.jp/manhole/desc/13/?is_modal=1
 Last Updated: 2026-05-24T10:30:07Z
 Status: active</description>
@@ -189,6 +191,7 @@ Status: active</description>
       <description>Prefecture: 岩手県
 City: 岩泉
 Address: 岩手県岩泉町岩泉字神成1-1
+Tags: far_station
 Detail: https://local.pokemon.jp/manhole/desc/14/?is_modal=1
 Last Updated: 2026-08-14T10:46:15Z
 Status: active</description>
@@ -197,11 +200,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>岩手県/田野畑村 (ノズパス)</name>
+      <name>田野畑村 島越駅前 (ノズパス)</name>
       <description>Prefecture: 岩手県
 City: 田野畑
 Address: 岩手県田野畑村松前沢1-38
-Tags: seaside, near_station
+Building: 島越駅前
+Tags: seaside, station_front
 Detail: https://local.pokemon.jp/manhole/desc/15/?is_modal=1
 Last Updated: 2026-05-24T10:30:09Z
 Status: active</description>
@@ -210,11 +214,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>岩手県/宮古市 (イシツブテ)</name>
+      <name>宮古市 道の駅みやこ (イシツブテ)</name>
       <description>Prefecture: 岩手県
 City: 宮古
 Address: 岩手県宮古市臨港通1-20
-Tags: seaside, station_front, roadside
+Building: 道の駅みやこ
+Tags: seaside, roadside
 Detail: https://local.pokemon.jp/manhole/desc/16/?is_modal=1
 Last Updated: 2026-05-24T10:30:10Z
 Status: active</description>
@@ -223,11 +228,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>岩手県/山田町 (オムナイト)</name>
+      <name>山田町 陸中山田駅前 (オムナイト)</name>
       <description>Prefecture: 岩手県
 City: 山田
 Address: 岩手県山田町川向町51-15
-Tags: seaside, near_station
+Building: 陸中山田駅前
+Tags: seaside, station_front
 Detail: https://local.pokemon.jp/manhole/desc/17/?is_modal=1
 Last Updated: 2026-05-24T10:30:11Z
 Status: active</description>
@@ -236,11 +242,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>岩手県/大槌町 (ツボツボ)</name>
+      <name>大槌町 大槌駅前 (ツボツボ)</name>
       <description>Prefecture: 岩手県
 City: 大槌
 Address: 岩手県大槌町本町1-1
-Tags: seaside, near_station
+Building: 大槌駅前
+Tags: seaside, station_front
 Detail: https://local.pokemon.jp/manhole/desc/18/?is_modal=1
 Last Updated: 2026-05-24T10:30:11Z
 Status: active</description>
@@ -249,10 +256,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>岩手県/釜石市 (ココドラ)</name>
+      <name>釜石市 鵜住居駅前 (ココドラ)</name>
       <description>Prefecture: 岩手県
 City: 釜石
 Address: 岩手県釜石市鵜住居町第16地割72-1
+Building: 鵜住居駅前
 Tags: seaside, station_front
 Detail: https://local.pokemon.jp/manhole/desc/19/?is_modal=1
 Last Updated: 2026-08-14T10:46:18Z
@@ -262,10 +270,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>岩手県/大船渡市 (サイホーン)</name>
+      <name>大船渡市 盛駅前 (サイホーン)</name>
       <description>Prefecture: 岩手県
 City: 大船渡
 Address: 岩手県大船渡市盛町字町13-1
+Building: 盛駅前
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/20/?is_modal=1
 Last Updated: 2026-05-24T10:30:13Z
 Status: active</description>
@@ -278,6 +288,7 @@ Status: active</description>
       <description>Prefecture: 岩手県
 City: 陸前高田
 Address: 岩手県陸前高田市高田町字馬場前89-1
+Tags: far_station
 Detail: https://local.pokemon.jp/manhole/desc/21/?is_modal=1
 Last Updated: 2026-05-24T10:30:14Z
 Status: active</description>
@@ -290,6 +301,7 @@ Status: active</description>
       <description>Prefecture: 岩手県
 City: 住田
 Address: 岩手県住田町上有住字土倉298-81
+Tags: near_station
 Detail: https://local.pokemon.jp/manhole/desc/22/?is_modal=1
 Last Updated: 2026-08-14T10:46:20Z
 Status: active</description>
@@ -298,10 +310,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>横浜市 中区桜木町1 (ピカチュウ)</name>
+      <name>横浜市 桜木町駅前 (ピカチュウ)</name>
       <description>Prefecture: 神奈川県
 City: 横浜
 Address: 神奈川県横浜市中区桜木町1-1
+Building: 桜木町駅前
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/23/?is_modal=1
 Last Updated: 2026-05-19T13:36:02Z
 Status: active</description>
@@ -314,6 +328,7 @@ Status: active</description>
       <description>Prefecture: 香川県
 City: 高松
 Address: 香川県高松市南新町8-30地先
+Tags: near_station
 Detail: https://local.pokemon.jp/manhole/desc/28/?is_modal=1
 Last Updated: 2026-08-14T10:46:24Z
 Status: active</description>
@@ -322,10 +337,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>香川県/丸亀市 (ヤドン)</name>
+      <name>丸亀市 丸亀駅前 (ヤドン)</name>
       <description>Prefecture: 香川県
 City: 丸亀
 Address: 香川県丸亀市浜町109-4
+Building: 丸亀駅前
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/29/?is_modal=1
 Last Updated: 2026-05-24T10:30:21Z
 Status: active</description>
@@ -334,10 +351,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>香川県/坂出市 (ヤドン)</name>
+      <name>坂出市 坂出駅前 (ヤドン)</name>
       <description>Prefecture: 香川県
 City: 坂出
 Address: 香川県坂出市駒止町1丁目4
+Building: 坂出駅前
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/30/?is_modal=1
 Last Updated: 2026-05-24T10:30:22Z
 Status: active</description>
@@ -358,10 +377,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>香川県/観音寺市 (ヤドキング, ヤドン)</name>
+      <name>観音寺市 観音寺駅前 (ヤドキング, ヤドン)</name>
       <description>Prefecture: 香川県
 City: 観音寺
 Address: 香川県観音寺市観音寺町甲1234-4
+Building: 観音寺駅前
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/32/?is_modal=1
 Last Updated: 2026-05-24T10:30:23Z
 Status: active</description>
@@ -370,10 +391,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>香川県/さぬき市 (ピッピ, ヤドン)</name>
+      <name>さぬき市 志度駅前 (ピッピ, ヤドン)</name>
       <description>Prefecture: 香川県
 City: さぬき
 Address: 香川県さぬき市志度670-10
+Building: 志度駅前
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/33/?is_modal=1
 Last Updated: 2026-05-24T10:30:24Z
 Status: active</description>
@@ -382,10 +405,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>香川県/東かがわ市 (ヤドン)</name>
+      <name>東かがわ市 三本松駅前 (ヤドン)</name>
       <description>Prefecture: 香川県
 City: 東かがわ
 Address: 香川県東かがわ市三本松1172-1
+Building: 三本松駅前
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/34/?is_modal=1
 Last Updated: 2026-05-24T10:30:25Z
 Status: active</description>
@@ -420,7 +445,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>香川県/小豆島町 (ヤドン)</name>
+      <name>小豆島町 道の駅小豆島ふるさと村 (ヤドン)</name>
       <description>Prefecture: 香川県
 City: 小豆島
 Address: 香川県小豆島町室生2084-1
@@ -438,6 +463,7 @@ Status: active</description>
       <description>Prefecture: 香川県
 City: 三木
 Address: 香川県三木町大字氷上310
+Tags: near_station
 Detail: https://local.pokemon.jp/manhole/desc/38/?is_modal=1
 Last Updated: 2026-05-24T10:30:28Z
 Status: active</description>
@@ -459,10 +485,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>綾川町 滝宮 (ヤドン)</name>
+      <name>綾川町 道の駅滝宮 (ヤドン)</name>
       <description>Prefecture: 香川県
 City: 綾川
 Address: 香川県綾川町滝宮1589-2
+Building: 道の駅滝宮
 Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/40/?is_modal=1
 Last Updated: 2026-05-24T10:30:30Z
@@ -476,6 +503,7 @@ Status: active</description>
       <description>Prefecture: 香川県
 City: 琴平
 Address: 香川県琴平町723-2
+Tags: near_station
 Detail: https://local.pokemon.jp/manhole/desc/41/?is_modal=1
 Last Updated: 2026-05-24T10:30:30Z
 Status: active</description>
@@ -484,10 +512,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>香川県/多度津町 (ヤドン)</name>
+      <name>多度津町 多度津駅前 (ヤドン)</name>
       <description>Prefecture: 香川県
 City: 多度津
 Address: 香川県多度津町栄町3-3
+Building: 多度津駅前
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/42/?is_modal=1
 Last Updated: 2026-05-24T10:30:31Z
 Status: active</description>
@@ -525,7 +555,7 @@ Status: active</description>
       <description>Prefecture: 宮城県
 City: 南三陸
 Address: 宮城県南三陸町歌津字伊里前96-1
-Tags: seaside
+Tags: seaside, far_station
 Detail: https://local.pokemon.jp/manhole/desc/45/?is_modal=1
 Last Updated: 2026-08-14T10:46:34Z
 Status: active</description>
@@ -534,11 +564,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>宮城県/女川町 (キャモメ, ラプラス)</name>
+      <name>女川町 道の駅おながわ (キャモメ, ラプラス)</name>
       <description>Prefecture: 宮城県
 City: 女川
 Address: 宮城県女川町女川2-65
-Tags: seaside, roadside
+Building: 道の駅おながわ
+Tags: seaside, roadside, near_station
 Detail: https://local.pokemon.jp/manhole/desc/46/?is_modal=1
 Last Updated: 2026-05-24T10:30:34Z
 Status: active</description>
@@ -551,6 +582,7 @@ Status: active</description>
       <description>Prefecture: 宮城県
 City: 石巻
 Address: 宮城県石巻市穀町14番1号
+Tags: near_station
 Detail: https://local.pokemon.jp/manhole/desc/47/?is_modal=1
 Last Updated: 2026-08-14T10:46:36Z
 Status: active</description>
@@ -559,10 +591,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>宮城県/東松島市 (ラティオス, ラプラス)</name>
+      <name>東松島市 野蒜駅前 (ラティオス, ラプラス)</name>
       <description>Prefecture: 宮城県
 City: 東松島
 Address: 宮城県東松島市野蒜ケ丘一丁目15-1
+Building: 野蒜駅前
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/48/?is_modal=1
 Last Updated: 2026-05-24T10:30:36Z
 Status: active</description>
@@ -575,7 +609,7 @@ Status: active</description>
       <description>Prefecture: 宮城県
 City: 松島
 Address: 宮城県松島町松島字浪打浜地内
-Tags: seaside
+Tags: seaside, near_station
 Detail: https://local.pokemon.jp/manhole/desc/49/?is_modal=1
 Last Updated: 2026-08-14T10:46:37Z
 Status: active</description>
@@ -584,11 +618,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>宮城県/塩竈市 (プラスル, ラプラス)</name>
+      <name>塩竈市 本塩釜駅前 (プラスル, ラプラス)</name>
       <description>Prefecture: 宮城県
 City: 塩竈
 Address: 宮城県塩竈市海岸通200-15
-Tags: seaside
+Building: 本塩釜駅前
+Tags: seaside, station_front
 Detail: https://local.pokemon.jp/manhole/desc/50/?is_modal=1
 Last Updated: 2026-05-24T10:30:38Z
 Status: active</description>
@@ -626,6 +661,7 @@ Status: active</description>
       <description>Prefecture: 宮城県
 City: 多賀城
 Address: 宮城県多賀城市中央2丁目7番地
+Tags: near_station
 Detail: https://local.pokemon.jp/manhole/desc/53/?is_modal=1
 Last Updated: 2026-08-14T10:46:39Z
 Status: active</description>
@@ -634,10 +670,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>仙台市 青葉区 (ジラーチ, ラプラス)</name>
+      <name>仙台市 青葉通一番町駅前 (ジラーチ, ラプラス)</name>
       <description>Prefecture: 宮城県
 City: 仙台
 Address: 宮城県仙台市青葉区一番町二丁目6-5
+Building: 青葉通一番町駅前
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/54/?is_modal=1
 Last Updated: 2026-05-24T10:30:42Z
 Status: active</description>
@@ -684,10 +722,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>宮城県/山元町 (ラッキー, ラプラス)</name>
+      <name>山元町 坂元駅前 (ラッキー, ラプラス)</name>
       <description>Prefecture: 宮城県
 City: 山元
 Address: 宮城県山元町坂元字町東31-10
+Building: 坂元駅前
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/58/?is_modal=1
 Last Updated: 2026-05-24T10:30:44Z
 Status: active</description>
@@ -696,12 +736,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/石狩市 (ナエトル, ロコン)</name>
+      <name>石狩市 浜益温泉玄関前 (ナエトル, ロコン)</name>
       <description>Prefecture: 北海道
 City: 石狩
 Address: 北海道石狩市浜益区実田254-4
 Building: 浜益温泉玄関前
-Tags: tourism, river
+Tags: tourism, river, far_station
 Detail: https://local.pokemon.jp/manhole/desc/59/?is_modal=1
 Last Updated: 2026-05-24T10:30:45Z
 Status: active</description>
@@ -710,11 +750,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/恵庭市 (ロコン)</name>
+      <name>恵庭市 道と川の駅花ロードえにわ (ロコン)</name>
       <description>Prefecture: 北海道
 City: 恵庭
 Address: 北海道恵庭市南島松817-18
-Building: 道と川の駅 花ロードえにわ
+Building: 道と川の駅花ロードえにわ
 Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/60/?is_modal=1
 Last Updated: 2026-05-24T10:30:47Z
@@ -724,7 +764,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/洞爺湖町 (ウリムー, ロコン)</name>
+      <name>洞爺湖町 洞爺湖畔洞龍の湯付近 (ウリムー, ロコン)</name>
       <description>Prefecture: 北海道
 City: 洞爺湖
 Address: 北海道洞爺湖町洞爺湖温泉224
@@ -738,11 +778,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/森町 (アローラロコン, マーイーカ)</name>
+      <name>森町 森駅前 (アローラロコン, マーイーカ)</name>
       <description>Prefecture: 北海道
 City: 森
 Address: 北海道森町本町6-22
-Building: 森駅前（森商工会議所玄関前）
+Building: 森駅前
 Tags: seaside, station_front
 Detail: https://local.pokemon.jp/manhole/desc/62/?is_modal=1
 Last Updated: 2026-05-24T10:30:48Z
@@ -752,12 +792,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/上ノ国町 (ヒコザル, ロコン)</name>
+      <name>上ノ国町 道の駅上ノ国もんじゅ (ヒコザル, ロコン)</name>
       <description>Prefecture: 北海道
 City: 上ノ国
 Address: 北海道上ノ国町字原歌3番地
-Building: 道の駅 上ノ国もんじゅ
-Tags: seaside, roadside
+Building: 道の駅上ノ国もんじゅ
+Tags: seaside, roadside, far_station
 Detail: https://local.pokemon.jp/manhole/desc/63/?is_modal=1
 Last Updated: 2026-08-14T10:46:46Z
 Status: active</description>
@@ -766,11 +806,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/士別市 (メリープ, ロコン)</name>
+      <name>士別市 道の駅羊のまち 侍・しべつ (メリープ, ロコン)</name>
       <description>Prefecture: 北海道
 City: 士別
 Address: 北海道士別市大通東5丁目
-Building: 道の駅 羊のまち 侍・しべつ
+Building: 道の駅羊のまち 侍・しべつ
 Tags: roadside, food
 Detail: https://local.pokemon.jp/manhole/desc/64/?is_modal=1
 Last Updated: 2026-05-24T10:30:49Z
@@ -780,7 +820,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/比布町 (アローラロコン, ポッチャマ)</name>
+      <name>比布町 JR比布駅前広場 (アローラロコン, ポッチャマ)</name>
       <description>Prefecture: 北海道
 City: 比布
 Address: 北海道比布町西町2丁目6番1号
@@ -794,12 +834,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/天塩町 (アローラロコン, ロコン)</name>
+      <name>天塩町 道の駅てしお (アローラロコン, ロコン)</name>
       <description>Prefecture: 北海道
 City: 天塩
 Address: 北海道天塩町新開通4丁目7227番地2
-Building: 道の駅 てしお 正面入り口横
-Tags: roadside, near_gundam_manhole, gundam_manhole_city
+Building: 道の駅てしお
+Tags: roadside, near_gundam_manhole, gundam_manhole_city, far_station
 Detail: https://local.pokemon.jp/manhole/desc/66/?is_modal=1
 Last Updated: 2026-08-14T10:46:48Z
 Status: active</description>
@@ -808,7 +848,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/稚内市 (アローラキュウコン, アローラロコン)</name>
+      <name>稚内市 キタカラ敷地内 (アローラキュウコン, アローラロコン)</name>
       <description>Prefecture: 北海道
 City: 稚内
 Address: 北海道稚内市中央3-5
@@ -822,12 +862,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/豊富町 (アローラロコン, ミルタンク)</name>
+      <name>豊富町 定住支援センター「ふらっと★きた」敷地内 (アローラロコン, ミルタンク)</name>
       <description>Prefecture: 北海道
 City: 豊富
 Address: 北海道豊富町東1条6丁目
 Building: 定住支援センター「ふらっと★きた」敷地内
-Tags: far_station, near_gundam_manhole, gundam_manhole_city
+Tags: near_gundam_manhole, gundam_manhole_city
 Detail: https://local.pokemon.jp/manhole/desc/68/?is_modal=1
 Last Updated: 2026-05-24T10:30:52Z
 Status: active</description>
@@ -836,12 +876,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/紋別市 (アローラロコン, タマザラシ)</name>
+      <name>紋別市 海洋公園 (アローラロコン, タマザラシ)</name>
       <description>Prefecture: 北海道
 City: 紋別
 Address: 北海道紋別市海洋公園
 Building: 紋別市海洋公園
-Tags: seaside, park, tourism, roadside
+Tags: seaside, park, tourism, far_station
 Detail: https://local.pokemon.jp/manhole/desc/69/?is_modal=1
 Last Updated: 2026-05-24T10:30:53Z
 Status: active</description>
@@ -850,7 +890,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/遠軽町 (アローラロコン, ユキメノコ)</name>
+      <name>遠軽町 道の駅遠軽 森のオホーツク (アローラロコン, ユキメノコ)</name>
       <description>Prefecture: 北海道
 City: 遠軽
 Address: 北海道遠軽町野上150番地
@@ -864,11 +904,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/大空町 (ムクホーク, ロコン)</name>
+      <name>大空町 女満別駅前 (ムクホーク, ロコン)</name>
       <description>Prefecture: 北海道
 City: 大空
 Address: 北海道大空町女満別本通1丁目
-Building: JR北海道 石北本線 女満別駅の駅前広場の前
+Building: 女満別駅前
 Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/71/?is_modal=1
 Last Updated: 2026-05-24T10:30:55Z
@@ -878,12 +918,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/新得町 (アローラロコン, ヒメグマ)</name>
+      <name>新得町 新得駅前 (アローラロコン, ヒメグマ)</name>
       <description>Prefecture: 北海道
 City: 新得
 Address: 北海道新得町本通北1丁目
-Building: 新得駅前広場
-Tags: near_station
+Building: 新得駅前
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/72/?is_modal=1
 Last Updated: 2026-05-24T10:30:55Z
 Status: active</description>
@@ -892,12 +932,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/足寄町 (アグノム, アローラロコン, エムリット, ユクシー)</name>
+      <name>足寄町 道の駅あしょろ銀河ホール21 (アグノム, アローラロコン, エムリット, ユクシー)</name>
       <description>Prefecture: 北海道
 City: 足寄
 Address: 北海道足寄町北1条1丁目1
 Building: 道の駅あしょろ銀河ホール21
-Tags: roadside
+Tags: roadside, far_station
 Detail: https://local.pokemon.jp/manhole/desc/73/?is_modal=1
 Last Updated: 2026-05-24T10:30:56Z
 Status: active</description>
@@ -931,10 +971,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>鳥取県/倉吉市 (アローラサンド, サンド)</name>
+      <name>倉吉市 倉吉駅前 (アローラサンド, サンド)</name>
       <description>Prefecture: 鳥取県
 City: 倉吉
 Address: 鳥取県倉吉市上井195
+Building: 倉吉駅前
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/76/?is_modal=1
 Last Updated: 2026-05-24T10:30:59Z
 Status: active</description>
@@ -969,12 +1011,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>鳥取県/若桜町 (アローラサンド, ユキカブリ)</name>
+      <name>若桜町 道の駅若桜 (アローラサンド, ユキカブリ)</name>
       <description>Prefecture: 鳥取県
 City: 若桜
 Address: 鳥取県若桜町若桜983-2
 Building: 道の駅若桜
-Tags: roadside
+Tags: roadside, near_station
 Detail: https://local.pokemon.jp/manhole/desc/79/?is_modal=1
 Last Updated: 2026-05-24T10:31:01Z
 Status: active</description>
@@ -1007,10 +1049,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>鳥取県/琴浦町 (アローラサンド, サンド)</name>
+      <name>琴浦町 道の駅ポート赤碕 (アローラサンド, サンド)</name>
       <description>Prefecture: 鳥取県
 City: 琴浦
 Address: 鳥取県琴浦町別所270-4
+Building: 道の駅ポート赤碕
 Tags: seaside, roadside
 Detail: https://local.pokemon.jp/manhole/desc/82/?is_modal=1
 Last Updated: 2026-05-24T10:31:03Z
@@ -1020,7 +1063,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>鳥取県/大山町 (アローラサンド, ヒトモシ)</name>
+      <name>大山町 道の駅大山恵みの里 (アローラサンド, ヒトモシ)</name>
       <description>Prefecture: 鳥取県
 City: 大山
 Address: 鳥取県大山町名和951-6
@@ -1058,7 +1101,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>鳥取県/日南町 (イルミーゼ, サンド, バルビート)</name>
+      <name>日南町 道の駅にちなん日野川の郷 (イルミーゼ, サンド, バルビート)</name>
       <description>Prefecture: 鳥取県
 City: 日南
 Address: 鳥取県日南町生山354番地2
@@ -1072,10 +1115,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>鳥取県/日野町 (アローラサンド, サンド, チルット)</name>
+      <name>日野町 根雨駅前 (アローラサンド, サンド, チルット)</name>
       <description>Prefecture: 鳥取県
 City: 日野
 Address: 鳥取県日野町根雨170番地1
+Building: 根雨駅前
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/87/?is_modal=1
 Last Updated: 2026-08-14T10:47:02Z
 Status: active</description>
@@ -1084,11 +1129,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>福島県/新地町 (オドシシ, ラッキー)</name>
+      <name>新地町 新地駅前 (オドシシ, ラッキー)</name>
       <description>Prefecture: 福島県
 City: 新地
 Address: 福島県新地町駅前1丁目3番地
-Tags: near_station
+Building: 新地駅前
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/88/?is_modal=1
 Last Updated: 2026-08-14T10:47:02Z
 Status: active</description>
@@ -1110,7 +1156,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>福島県/南相馬市 (ギャロップ, ラッキー)</name>
+      <name>南相馬市 道の駅南相馬 (ギャロップ, ラッキー)</name>
       <description>Prefecture: 福島県
 City: 南相馬
 Address: 福島県南相馬市原町区高見町2-30-1
@@ -1124,7 +1170,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>福島県/浪江町 (ラッキー)</name>
+      <name>浪江町 道の駅なみえ (ラッキー)</name>
       <description>Prefecture: 福島県
 City: 浪江
 Address: 福島県浪江町大字幾世橋字知命寺60（道の駅なみえ敷地内）
@@ -1138,7 +1184,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>福島県/楢葉町 (ラッキー, ラビフット)</name>
+      <name>楢葉町 道の駅ならは (ラッキー, ラビフット)</name>
       <description>Prefecture: 福島県
 City: 楢葉
 Address: 福島県楢葉町大字山田岡字大堤入22-1
@@ -1152,7 +1198,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>福島県/いわき市 (キレイハナ, ラッキー)</name>
+      <name>いわき市 道の駅よつくら港 (キレイハナ, ラッキー)</name>
       <description>Prefecture: 福島県
 City: いわき
 Address: 福島県いわき市四倉町字5-218-1
@@ -1166,7 +1212,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>福島県/川俣町 (カラサリス, マユルド, ラッキー)</name>
+      <name>川俣町 道の駅川俣 (カラサリス, マユルド, ラッキー)</name>
       <description>Prefecture: 福島県
 City: 川俣
 Address: 福島県川俣町大字鶴沢字東13-1
@@ -1196,6 +1242,7 @@ Status: active</description>
       <description>Prefecture: 福島県
 City: 川内
 Address: 福島県川内村大字下川内字宮ノ下25-1
+Tags: far_station
 Detail: https://local.pokemon.jp/manhole/desc/96/?is_modal=1
 Last Updated: 2026-05-24T10:31:15Z
 Status: active</description>
@@ -1204,7 +1251,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>香川県/宇多津町 (ガラルヤドン, ヌオー)</name>
+      <name>宇多津町 道の駅恋人の聖地 うたづ臨海公園 (ガラルヤドン, ヌオー)</name>
       <description>Prefecture: 香川県
 City: 宇多津
 Address: 香川県宇多津町浜一番丁4番地
@@ -1294,7 +1341,7 @@ Status: active</description>
       <description>Prefecture: 滋賀県
 City: 大津
 Address: 滋賀県大津市島の関14
-Tags: lakeside, world_heritage, near_gundam_manhole, gundam_manhole_city
+Tags: lakeside, world_heritage, near_gundam_manhole, gundam_manhole_city, near_station
 Detail: https://local.pokemon.jp/manhole/desc/104/?is_modal=1
 Last Updated: 2026-05-11T11:01:13Z
 Status: active</description>
@@ -1316,10 +1363,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>鳥取県/智頭町 (ウソッキー, サンド, サンドパン)</name>
+      <name>智頭町 智頭駅前 (ウソッキー, サンド, サンドパン)</name>
       <description>Prefecture: 鳥取県
 City: 智頭
 Address: 鳥取県智頭町大字智頭2067-1
+Building: 智頭駅前
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/106/?is_modal=1
 Last Updated: 2026-08-14T10:47:14Z
 Status: active</description>
@@ -1328,12 +1377,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>鳥取県/八頭町 (アローラサンド, アローラサンドパン)</name>
+      <name>八頭町 道の駅はっとう (アローラサンド, アローラサンドパン)</name>
       <description>Prefecture: 鳥取県
 City: 八頭
 Address: 鳥取県八頭町徳丸625
 Building: 道の駅はっとう
-Tags: roadside
+Tags: roadside, near_station
 Detail: https://local.pokemon.jp/manhole/desc/107/?is_modal=1
 Last Updated: 2026-05-24T10:31:24Z
 Status: active</description>
@@ -1367,7 +1416,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>鳥取県/江府町 (アローラサンド, サンド)</name>
+      <name>江府町 道の駅奥大山 (アローラサンド, サンド)</name>
       <description>Prefecture: 鳥取県
 City: 江府
 Address: 鳥取県江府町佐川908-3
@@ -1381,11 +1430,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>宮崎県/宮崎市 (ナッシー, ポワルン)</name>
+      <name>宮崎市 子供の国駅前 (ナッシー, ポワルン)</name>
       <description>Prefecture: 宮崎県
 City: 宮崎
 Address: 宮崎県宮崎市大字加江田7275-1
-Tags: seaside
+Building: 子供の国駅前
+Tags: seaside, station_front
 Detail: https://local.pokemon.jp/manhole/desc/111/?is_modal=1
 Last Updated: 2026-08-14T10:47:17Z
 Status: active</description>
@@ -1406,7 +1456,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>宮崎県/延岡市 (アローラナッシー, ナッシー)</name>
+      <name>延岡市 道の駅北浦 (アローラナッシー, ナッシー)</name>
       <description>Prefecture: 宮崎県
 City: 延岡
 Address: 宮崎県延岡市北浦町古江3337-1
@@ -1444,10 +1494,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>宮崎県/日向市 (オドリドリ, ナッシー)</name>
+      <name>日向市 駅前 (オドリドリ, ナッシー)</name>
       <description>Prefecture: 宮崎県
 City: 日向
 Address: 宮崎県日向市上町10736番15
+Building: 日向市駅前
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/116/?is_modal=1
 Last Updated: 2026-08-14T10:47:20Z
 Status: active</description>
@@ -1460,7 +1512,7 @@ Status: active</description>
       <description>Prefecture: 宮崎県
 City: 串間
 Address: 宮崎県串間市大字大納42-3
-Tags: seaside
+Tags: seaside, far_station
 Detail: https://local.pokemon.jp/manhole/desc/117/?is_modal=1
 Last Updated: 2026-08-14T10:47:21Z
 Status: active</description>
@@ -1481,7 +1533,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>宮崎県/えびの市 (コータス, ナッシー)</name>
+      <name>えびの市 道の駅えびの (コータス, ナッシー)</name>
       <description>Prefecture: 宮崎県
 City: えびの
 Address: 宮崎県えびの市大字永山1006番地1
@@ -1507,7 +1559,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>宮城県/角田市 (ラティアス, ラプラス)</name>
+      <name>角田市 道の駅かくだ (ラティアス, ラプラス)</name>
       <description>Prefecture: 宮城県
 City: 角田
 Address: 宮城県角田市枝野字北島81-1
@@ -1533,7 +1585,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>宮城県/栗原市 (コアルヒー, ラプラス)</name>
+      <name>栗原市 道の駅路田里はなやま (コアルヒー, ラプラス)</name>
       <description>Prefecture: 宮城県
 City: 栗原
 Address: 宮城県栗原市花山字本沢北ノ前112-1
@@ -1547,12 +1599,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>宮城県/大崎市 (オニスズメ, ダグトリオ, ラプラス)</name>
+      <name>大崎市 古川駅前 (オニスズメ, ダグトリオ, ラプラス)</name>
       <description>Prefecture: 宮城県
 City: 大崎
 Address: 宮城県大崎市古川駅前大通１丁目５ 古川駅前
 Building: 古川駅前
-Tags: near_station
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/124/?is_modal=1
 Last Updated: 2026-08-14T10:47:25Z
 Status: active</description>
@@ -1577,6 +1629,7 @@ Status: active</description>
       <description>Prefecture: 宮城県
 City: 蔵王
 Address: 宮城県蔵王町遠刈田温泉仲町34
+Tags: far_station
 Detail: https://local.pokemon.jp/manhole/desc/126/?is_modal=1
 Last Updated: 2026-05-24T10:31:39Z
 Status: active</description>
@@ -1589,6 +1642,7 @@ Status: active</description>
       <description>Prefecture: 宮城県
 City: 七ヶ宿
 Address: 宮城県七ヶ宿町上野8‐1
+Tags: far_station
 Detail: https://local.pokemon.jp/manhole/desc/127/?is_modal=1
 Last Updated: 2026-05-24T10:31:40Z
 Status: active</description>
@@ -1601,6 +1655,7 @@ Status: active</description>
       <description>Prefecture: 宮城県
 City: 大河原
 Address: 宮城県大河原町大谷字町向116-26地先
+Tags: near_station
 Detail: https://local.pokemon.jp/manhole/desc/128/?is_modal=1
 Last Updated: 2026-08-14T10:47:28Z
 Status: active</description>
@@ -1609,10 +1664,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>宮城県/村田町 (ベロベルト, ラプラス)</name>
+      <name>村田町 道の駅村田 (ベロベルト, ラプラス)</name>
       <description>Prefecture: 宮城県
 City: 村田
 Address: 宮城県村田町大字村田字北塩内41
+Building: 道の駅村田
 Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/129/?is_modal=1
 Last Updated: 2026-08-14T10:47:29Z
@@ -1622,10 +1678,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>宮城県/柴田町 (フラベベ, ラプラス)</name>
+      <name>柴田町 船岡駅前 (フラベベ, ラプラス)</name>
       <description>Prefecture: 宮城県
 City: 柴田
 Address: 宮城県柴田町船岡中央1丁目1-1
+Building: 船岡駅前
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/130/?is_modal=1
 Last Updated: 2026-05-24T10:31:42Z
 Status: active</description>
@@ -1638,6 +1696,7 @@ Status: active</description>
       <description>Prefecture: 宮城県
 City: 川崎
 Address: 宮城県川崎町前川字裏丁175-1
+Tags: far_station
 Detail: https://local.pokemon.jp/manhole/desc/131/?is_modal=1
 Last Updated: 2026-08-14T10:47:30Z
 Status: active</description>
@@ -1662,6 +1721,7 @@ Status: active</description>
       <description>Prefecture: 宮城県
 City: 大和
 Address: 宮城県大和町吉岡まほろば一丁目1-1前
+Tags: far_station
 Detail: https://local.pokemon.jp/manhole/desc/133/?is_modal=1
 Last Updated: 2026-08-14T10:47:31Z
 Status: active</description>
@@ -1670,7 +1730,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>宮城県/大郷町 (チュリネ, ラプラス)</name>
+      <name>大郷町 道の駅おおさと (チュリネ, ラプラス)</name>
       <description>Prefecture: 宮城県
 City: 大郷
 Address: 宮城県大郷町中村字北浦51-6
@@ -1688,6 +1748,7 @@ Status: active</description>
       <description>Prefecture: 宮城県
 City: 大衡
 Address: 宮城県大衡村大衡字鐙沢12-2
+Tags: far_station
 Detail: https://local.pokemon.jp/manhole/desc/135/?is_modal=1
 Last Updated: 2026-08-14T10:47:32Z
 Status: active</description>
@@ -1696,10 +1757,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>宮城県/色麻町 (ハスブレロ, ラプラス)</name>
+      <name>色麻町 愛宕山公園 (ハスブレロ, ラプラス)</name>
       <description>Prefecture: 宮城県
 City: 色麻
 Address: 宮城県色麻町四竃字東原1-12
+Building: 愛宕山公園
 Detail: https://local.pokemon.jp/manhole/desc/136/?is_modal=1
 Last Updated: 2026-08-14T10:47:33Z
 Status: active</description>
@@ -1712,6 +1774,7 @@ Status: active</description>
       <description>Prefecture: 宮城県
 City: 加美
 Address: 宮城県加美町味ヶ袋薬莱原1-76
+Tags: far_station
 Detail: https://local.pokemon.jp/manhole/desc/137/?is_modal=1
 Last Updated: 2026-05-24T10:31:48Z
 Status: active</description>
@@ -1720,10 +1783,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>宮城県/涌谷町 (バンバドロ, ラプラス)</name>
+      <name>涌谷町 涌谷駅前 (バンバドロ, ラプラス)</name>
       <description>Prefecture: 宮城県
 City: 涌谷
 Address: 宮城県涌谷町字新町裏110
+Building: 涌谷駅前
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/138/?is_modal=1
 Last Updated: 2026-05-24T10:31:49Z
 Status: active</description>
@@ -1744,7 +1809,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/苫小牧市 (キュウコン, ロコン)</name>
+      <name>苫小牧市 出光カルチャーパーク (キュウコン, ロコン)</name>
       <description>Prefecture: 北海道
 City: 苫小牧
 Address: 北海道苫小牧市末広町3丁目1
@@ -1758,12 +1823,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/三笠市 (オムナイト, ズガイドス, ロコン)</name>
+      <name>三笠市 立博物館正面玄関 (オムナイト, ズガイドス, ロコン)</name>
       <description>Prefecture: 北海道
 City: 三笠
 Address: 北海道三笠市幾春別錦町1-212-1
 Building: 三笠市立博物館正面玄関
-Tags: museum, history, tourism, park
+Tags: museum, history, tourism, park, far_station
 Detail: https://local.pokemon.jp/manhole/desc/141/?is_modal=1
 Last Updated: 2026-05-24T10:31:51Z
 Status: active</description>
@@ -1772,7 +1837,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/上富良野町 (アローラロコン, エネコロロ)</name>
+      <name>上富良野町 日の出公園 (アローラロコン, エネコロロ)</name>
       <description>Prefecture: 北海道
 City: 上富良野
 Address: 北海道上富良野町東1線北27号
@@ -1786,7 +1851,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/剣淵町 (アローラロコン, ヒトツキ)</name>
+      <name>剣淵町 絵本の館 (アローラロコン, ヒトツキ)</name>
       <description>Prefecture: 北海道
 City: 剣淵
 Address: 北海道剣淵町緑町15-3
@@ -1812,10 +1877,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>小千谷市 東栄1 (コイキング)</name>
+      <name>小千谷市 小千谷駅前 (コイキング)</name>
       <description>Prefecture: 新潟県
 City: 小千谷
 Address: 新潟県小千谷市東栄1-1付近
+Building: 小千谷駅前
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/145/?is_modal=1
 Last Updated: 2026-08-14T10:47:39Z
 Status: active</description>
@@ -1848,11 +1915,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>斑鳩町 興留7 (ドータクン, バオッキー)</name>
+      <name>斑鳩町 法隆寺駅前 (ドータクン, バオッキー)</name>
       <description>Prefecture: 奈良県
 City: 斑鳩
 Address: 奈良県斑鳩町興留7丁目3番地内
-Tags: world_heritage
+Building: 法隆寺駅前
+Tags: world_heritage, station_front
 Detail: https://local.pokemon.jp/manhole/desc/148/?is_modal=1
 Last Updated: 2026-08-14T10:47:41Z
 Status: active</description>
@@ -1865,7 +1933,7 @@ Status: active</description>
       <description>Prefecture: 奈良県
 City: 斑鳩
 Address: 奈良県斑鳩町興留5丁目5番28号
-Tags: world_heritage
+Tags: world_heritage, near_station
 Detail: https://local.pokemon.jp/manhole/desc/149/?is_modal=1
 Last Updated: 2026-08-14T10:47:41Z
 Status: active</description>
@@ -1978,7 +2046,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>青森県/階上町 (ナマコブシ, バチンウニ, ユキハミ)</name>
+      <name>階上町 道の駅はしかみ (ナマコブシ, バチンウニ, ユキハミ)</name>
       <description>Prefecture: 青森県
 City: 階上
 Address: 青森県階上町大字道仏字耳ケ吠3-3
@@ -1996,7 +2064,7 @@ Status: active</description>
       <description>Prefecture: 京都府
 City: 京都
 Address: 京都府京都市右京区嵯峨中ノ島町
-Tags: world_heritage
+Tags: world_heritage, near_station
 Detail: https://local.pokemon.jp/manhole/desc/159/?is_modal=1
 Last Updated: 2026-05-11T11:01:47Z
 Status: active</description>
@@ -2022,7 +2090,7 @@ Status: active</description>
       <description>Prefecture: 京都府
 City: 京都
 Address: 京都府京都市右京区西京極新明町
-Tags: world_heritage
+Tags: world_heritage, near_station
 Detail: https://local.pokemon.jp/manhole/desc/161/?is_modal=1
 Last Updated: 2026-05-11T11:01:48Z
 Status: active</description>
@@ -2044,11 +2112,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>京都市 下京区観喜寺町 (マリルリ, ワニノコ)</name>
+      <name>京都市 梅小路京都西駅前 (マリルリ, ワニノコ)</name>
       <description>Prefecture: 京都府
 City: 京都
 Address: 京都府京都市下京区観喜寺町
-Tags: world_heritage
+Building: 梅小路京都西駅前
+Tags: world_heritage, station_front
 Detail: https://local.pokemon.jp/manhole/desc/163/?is_modal=1
 Last Updated: 2026-05-11T11:01:49Z
 Status: active</description>
@@ -2057,10 +2126,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>宮崎県/三股町 (コロモリ, ナッシー)</name>
+      <name>三股町 三股駅前 (コロモリ, ナッシー)</name>
       <description>Prefecture: 宮崎県
 City: 三股
 Address: 宮崎県三股町大字樺山4421-22
+Building: 三股駅前
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/164/?is_modal=1
 Last Updated: 2026-08-14T10:47:51Z
 Status: active</description>
@@ -2082,10 +2153,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>宮崎県/新富町 (アローラナッシー, マクノシタ)</name>
+      <name>新富町 三納代広場 (アローラナッシー, マクノシタ)</name>
       <description>Prefecture: 宮崎県
 City: 新富
 Address: 宮崎県新富町大字三納代1839（三納代広場）
+Building: 三納代広場
 Detail: https://local.pokemon.jp/manhole/desc/166/?is_modal=1
 Last Updated: 2026-08-14T10:47:52Z
 Status: active</description>
@@ -2118,10 +2190,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>宮崎県/都農町 (アローラナッシー, ブイゼル)</name>
+      <name>都農町 道の駅つの (アローラナッシー, ブイゼル)</name>
       <description>Prefecture: 宮崎県
 City: 都農
 Address: 宮崎県都農町大字川北5129
+Building: 道の駅つの
 Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/169/?is_modal=1
 Last Updated: 2026-05-24T10:32:12Z
@@ -2147,6 +2220,7 @@ Status: active</description>
       <description>Prefecture: 宮崎県
 City: 美郷
 Address: 宮崎県美郷町西郷田代5812-1
+Tags: far_station
 Detail: https://local.pokemon.jp/manhole/desc/171/?is_modal=1
 Last Updated: 2026-05-24T10:32:14Z
 Status: active</description>
@@ -2159,6 +2233,7 @@ Status: active</description>
       <description>Prefecture: 東京都
 City: 台東区上野
 Address: 東京都台東区上野公園7-20
+Tags: near_station
 Detail: https://local.pokemon.jp/manhole/desc/172/?is_modal=1
 Last Updated: 2026-08-14T10:47:56Z
 Status: active</description>
@@ -2171,6 +2246,7 @@ Status: active</description>
       <description>Prefecture: 東京都
 City: 台東区上野
 Address: 東京都台東区上野公園13-9
+Tags: near_station
 Detail: https://local.pokemon.jp/manhole/desc/173/?is_modal=1
 Last Updated: 2026-08-14T10:47:56Z
 Status: active</description>
@@ -2183,7 +2259,7 @@ Status: active</description>
       <description>Prefecture: 沖縄県
 City: 那覇
 Address: 沖縄県那覇市牧志3丁目2
-Tags: world_heritage, remote_island
+Tags: world_heritage, remote_island, near_station
 Detail: https://local.pokemon.jp/manhole/desc/174/?is_modal=1
 Last Updated: 2026-05-24T10:32:16Z
 Status: active</description>
@@ -2247,6 +2323,7 @@ Status: active</description>
       <description>Prefecture: 宮崎県
 City: 国富
 Address: 宮崎県国富町大字本庄4043-5
+Tags: far_station
 Detail: https://local.pokemon.jp/manhole/desc/179/?is_modal=1
 Last Updated: 2026-08-14T10:48:00Z
 Status: active</description>
@@ -2259,6 +2336,7 @@ Status: active</description>
       <description>Prefecture: 宮崎県
 City: 綾
 Address: 宮崎県綾町大字南俣515番地
+Tags: far_station
 Detail: https://local.pokemon.jp/manhole/desc/180/?is_modal=1
 Last Updated: 2026-08-14T10:48:01Z
 Status: active</description>
@@ -2271,6 +2349,7 @@ Status: active</description>
       <description>Prefecture: 宮崎県
 City: 西米良
 Address: 宮崎県西米良村大字村所260-6
+Tags: far_station
 Detail: https://local.pokemon.jp/manhole/desc/181/?is_modal=1
 Last Updated: 2026-08-14T10:48:01Z
 Status: active</description>
@@ -2283,6 +2362,7 @@ Status: active</description>
       <description>Prefecture: 宮崎県
 City: 諸塚
 Address: 宮崎県諸塚村大字家代2640-18
+Tags: far_station
 Detail: https://local.pokemon.jp/manhole/desc/182/?is_modal=1
 Last Updated: 2026-08-14T10:48:02Z
 Status: active</description>
@@ -2295,6 +2375,7 @@ Status: active</description>
       <description>Prefecture: 宮崎県
 City: 椎葉
 Address: 宮崎県椎葉村大字下福良1829番地57
+Tags: far_station
 Detail: https://local.pokemon.jp/manhole/desc/183/?is_modal=1
 Last Updated: 2026-08-14T10:48:03Z
 Status: active</description>
@@ -2307,6 +2388,7 @@ Status: active</description>
       <description>Prefecture: 宮崎県
 City: 高千穂
 Address: 宮崎県高千穂町大字三田井1099-1
+Tags: far_station
 Detail: https://local.pokemon.jp/manhole/desc/184/?is_modal=1
 Last Updated: 2026-08-14T10:48:03Z
 Status: active</description>
@@ -2315,12 +2397,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>宮崎県/日之影町 (ナッシー, レジスチル)</name>
+      <name>日之影町 道の駅青雲橋 (ナッシー, レジスチル)</name>
       <description>Prefecture: 宮崎県
 City: 日之影
 Address: 宮崎県日之影町大字七折8705-12
 Building: 道の駅青雲橋
-Tags: roadside
+Tags: roadside, far_station
 Detail: https://local.pokemon.jp/manhole/desc/185/?is_modal=1
 Last Updated: 2026-08-14T10:48:04Z
 Status: active</description>
@@ -2333,6 +2415,7 @@ Status: active</description>
       <description>Prefecture: 宮崎県
 City: 五ヶ瀬
 Address: 宮崎県五ヶ瀬町三ヶ所9400 Gパーク五ヶ瀬町総合公園内
+Tags: far_station
 Detail: https://local.pokemon.jp/manhole/desc/186/?is_modal=1
 Last Updated: 2026-05-24T10:32:25Z
 Status: active</description>
@@ -2341,12 +2424,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/函館市 (アローラロコン, トゲキッス)</name>
+      <name>函館市 函館公園内旧函館博物館二号前 (アローラロコン, トゲキッス)</name>
       <description>Prefecture: 北海道
 City: 函館
 Address: 北海道函館市青柳町17
 Building: 函館公園内旧函館博物館二号前
-Tags: seaside, park, rail_access_good, tourism
+Tags: seaside, park, rail_access_good, tourism, near_station
 Detail: https://local.pokemon.jp/manhole/desc/187/?is_modal=1
 Last Updated: 2026-05-24T10:32:26Z
 Status: active</description>
@@ -2355,12 +2438,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/小樽市 (アローラロコン)</name>
+      <name>小樽市 サンモール一番街 (アローラロコン)</name>
       <description>Prefecture: 北海道
 City: 小樽
 Address: 北海道小樽市稲穂1丁目3番8号
 Building: サンモール一番街
-Tags: tourism, food, rail_access_good
+Tags: tourism, food, rail_access_good, near_station
 Detail: https://local.pokemon.jp/manhole/desc/188/?is_modal=1
 Last Updated: 2026-08-14T10:48:06Z
 Status: active</description>
@@ -2369,7 +2452,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/根室市 (アローラロコン, バリコオル)</name>
+      <name>根室市 明治公園内の噴水広場の一角 (アローラロコン, バリコオル)</name>
       <description>Prefecture: 北海道
 City: 根室
 Address: 北海道根室市牧の内146番地243 明治公園内
@@ -2383,7 +2466,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/登別市 (キテルグマ, ロコン)</name>
+      <name>登別市 観光交流センター「ヌプル」前 (キテルグマ, ロコン)</name>
       <description>Prefecture: 北海道
 City: 登別
 Address: 北海道登別市登別港町１丁目4-9
@@ -2397,12 +2480,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/本別町 (メタモン, ロコン)</name>
+      <name>本別町 道の駅ステラ★ほんべつ (メタモン, ロコン)</name>
       <description>Prefecture: 北海道
 City: 本別
 Address: 北海道本別町北3丁目1-2
-Building: 道の駅ステラほんべつ前
-Tags: roadside, tourism, food
+Building: 道の駅ステラ★ほんべつ
+Tags: roadside, tourism, food, far_station
 Detail: https://local.pokemon.jp/manhole/desc/191/?is_modal=1
 Last Updated: 2026-05-24T10:32:29Z
 Status: active</description>
@@ -2411,12 +2494,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/陸別町 (アローラロコン, カチコール)</name>
+      <name>陸別町 道の駅オーロラタウン93りくべつ (アローラロコン, カチコール)</name>
       <description>Prefecture: 北海道
 City: 陸別
 Address: 北海道陸別町字陸別原野基線69-1
-Building: 道の駅オーロラタウン93りくべつ前
-Tags: tourism, park, food, roadside
+Building: 道の駅オーロラタウン93りくべつ
+Tags: tourism, park, food, roadside, far_station
 Detail: https://local.pokemon.jp/manhole/desc/192/?is_modal=1
 Last Updated: 2026-08-14T10:48:09Z
 Status: active</description>
@@ -2425,12 +2508,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/中標津町 (ロコン, ワカシャモ)</name>
+      <name>中標津町 総合体育館330°アリーナ (ロコン, ワカシャモ)</name>
       <description>Prefecture: 北海道
 City: 中標津
 Address: 北海道中標津町丸山2丁目1番地18
 Building: 中標津町総合体育館330°アリーナ
-Tags: tourism
+Tags: tourism, far_station
 Detail: https://local.pokemon.jp/manhole/desc/193/?is_modal=1
 Last Updated: 2026-08-14T10:48:09Z
 Status: active</description>
@@ -2492,7 +2575,7 @@ Status: active</description>
       <description>Prefecture: 福岡県
 City: 北九州
 Address: 福岡県北九州市小倉北区室町一丁目1 リバーウォーク北九州
-Tags: world_heritage
+Tags: world_heritage, near_station
 Detail: https://local.pokemon.jp/manhole/desc/198/?is_modal=1
 Last Updated: 2026-08-14T10:48:12Z
 Status: active</description>
@@ -2505,7 +2588,7 @@ Status: active</description>
       <description>Prefecture: 福岡県
 City: 北九州
 Address: 福岡県北九州市小倉北区浅野三丁目5 あさの汐風公園
-Tags: seaside, world_heritage
+Tags: seaside, world_heritage, near_station
 Detail: https://local.pokemon.jp/manhole/desc/199/?is_modal=1
 Last Updated: 2026-08-14T10:48:13Z
 Status: active</description>
@@ -2518,6 +2601,7 @@ Status: active</description>
       <description>Prefecture: 福岡県
 City: 北九州
 Address: 福岡県北九州市八幡東区東田４丁目１１
+Tags: near_station
 Detail: https://local.pokemon.jp/manhole/desc/200/?is_modal=1
 Last Updated: 2026-05-11T11:02:12Z
 Status: active</description>
@@ -2530,7 +2614,7 @@ Status: active</description>
       <description>Prefecture: 福岡県
 City: 北九州
 Address: 福岡県北九州市門司区港町5 門司港レトロ地区
-Tags: seaside, world_heritage
+Tags: seaside, world_heritage, near_station
 Detail: https://local.pokemon.jp/manhole/desc/201/?is_modal=1
 Last Updated: 2026-08-14T10:48:14Z
 Status: active</description>
@@ -2543,7 +2627,7 @@ Status: active</description>
       <description>Prefecture: 福岡県
 City: 北九州
 Address: 福岡県北九州市門司区旧門司二丁目5 ノーフォーク広場
-Tags: seaside, world_heritage
+Tags: seaside, world_heritage, near_station
 Detail: https://local.pokemon.jp/manhole/desc/202/?is_modal=1
 Last Updated: 2026-08-14T10:48:15Z
 Status: active</description>
@@ -2552,10 +2636,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>淡路市 岩屋 (ルギア)</name>
+      <name>淡路市 道の駅あわじ (ルギア)</name>
       <description>Prefecture: 兵庫県
 City: 淡路
 Address: 兵庫県淡路市岩屋1873-1
+Building: 道の駅あわじ
 Tags: seaside, roadside
 Detail: https://local.pokemon.jp/manhole/desc/203/?is_modal=1
 Last Updated: 2026-05-11T11:02:13Z
@@ -2569,7 +2654,7 @@ Status: active</description>
       <description>Prefecture: 兵庫県
 City: 淡路
 Address: 兵庫県淡路市小倉177
-Tags: seaside
+Tags: seaside, far_station
 Detail: https://local.pokemon.jp/manhole/desc/204/?is_modal=1
 Last Updated: 2026-05-11T11:02:14Z
 Status: active</description>
@@ -2582,6 +2667,7 @@ Status: active</description>
       <description>Prefecture: 兵庫県
 City: 淡路
 Address: 兵庫県淡路市尾崎3025-1
+Tags: far_station
 Detail: https://local.pokemon.jp/manhole/desc/205/?is_modal=1
 Last Updated: 2026-05-11T11:02:15Z
 Status: active</description>
@@ -2594,6 +2680,7 @@ Status: active</description>
       <description>Prefecture: 大阪府
 City: 東大阪
 Address: 大阪府東大阪市荒本北1丁目1番1号
+Tags: near_station
 Detail: https://local.pokemon.jp/manhole/desc/206/?is_modal=1
 Last Updated: 2026-08-14T10:48:17Z
 Status: active</description>
@@ -2633,7 +2720,7 @@ Status: active</description>
 City: 東大阪
 Address: 大阪府東大阪市松原南1-1
 Building: 花園中央公園
-Tags: museum, park, near_station
+Tags: museum, park
 Detail: https://local.pokemon.jp/manhole/desc/209/?is_modal=1
 Last Updated: 2026-05-11T11:02:17Z
 Status: active</description>
@@ -2647,7 +2734,7 @@ Status: active</description>
 City: 東大阪
 Address: 大阪府東大阪市松原南2-6
 Building: 花園中央公園
-Tags: park, near_station
+Tags: park
 Detail: https://local.pokemon.jp/manhole/desc/210/?is_modal=1
 Last Updated: 2026-05-11T11:02:18Z
 Status: active</description>
@@ -2668,10 +2755,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>所沢市 日吉町 (エアームド, ハクリュー)</name>
+      <name>所沢市 所沢駅前 (エアームド, ハクリュー)</name>
       <description>Prefecture: 埼玉県
 City: 所沢
 Address: 埼玉県所沢市日吉町1
+Building: 所沢駅前
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/212/?is_modal=1
 Last Updated: 2026-05-11T11:02:19Z
 Status: active</description>
@@ -2692,7 +2781,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/旭川市 (アローラロコン, クマシュン, コオリッポ)</name>
+      <name>旭川市 道の駅あさひかわ (アローラロコン, クマシュン, コオリッポ)</name>
       <description>Prefecture: 北海道
 City: 旭川
 Address: 北海道旭川市神楽4条6丁目1-12
@@ -2706,12 +2795,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/釧路市 (アローラロコン, ジュナイパー)</name>
+      <name>釧路市 道の駅阿寒丹頂の里 (アローラロコン, ジュナイパー)</name>
       <description>Prefecture: 北海道
 City: 釧路
 Address: 北海道釧路市阿寒町上阿寒23線36番地1
-Building: 道の駅阿寒丹頂の里クレインズテラス
-Tags: roadside, tourism, food
+Building: 道の駅阿寒丹頂の里
+Tags: roadside, tourism, food, far_station
 Detail: https://local.pokemon.jp/manhole/desc/215/?is_modal=1
 Last Updated: 2026-08-14T10:48:23Z
 Status: active</description>
@@ -2720,7 +2809,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/帯広市 (アローラロコン, ドロバンコ, ロコン)</name>
+      <name>帯広市 帯広駅北口広場 (アローラロコン, ドロバンコ, ロコン)</name>
       <description>Prefecture: 北海道
 City: 帯広
 Address: 北海道帯広市西2条南12丁目6
@@ -2734,12 +2823,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/網走市 (アローラロコン, マニューラ)</name>
+      <name>網走市 道の駅流氷街道網走 (アローラロコン, マニューラ)</name>
       <description>Prefecture: 北海道
 City: 網走
 Address: 北海道網走市南3条東4丁目5-1
 Building: 道の駅流氷街道網走
-Tags: seaside, roadside, tourism, food, near_station
+Tags: seaside, roadside, tourism, food
 Detail: https://local.pokemon.jp/manhole/desc/217/?is_modal=1
 Last Updated: 2026-05-24T10:32:49Z
 Status: active</description>
@@ -2748,12 +2837,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/赤井川村 (アローラロコン, バニプッチ, ミブリム)</name>
+      <name>赤井川村 道の駅あかいがわ (アローラロコン, バニプッチ, ミブリム)</name>
       <description>Prefecture: 北海道
 City: 赤井川
 Address: 北海道赤井川村字都190番地16
 Building: 道の駅あかいがわ
-Tags: roadside, food, river
+Tags: roadside, food, river, far_station
 Detail: https://local.pokemon.jp/manhole/desc/218/?is_modal=1
 Last Updated: 2026-08-14T10:48:25Z
 Status: active</description>
@@ -2762,7 +2851,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/東川町 (アローラロコン, ディアルガ)</name>
+      <name>東川町 複合交流施設せんとぴゅあ2 (アローラロコン, ディアルガ)</name>
       <description>Prefecture: 北海道
 City: 東川
 Address: 北海道東川町北町1丁目1番2号
@@ -2776,12 +2865,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/斜里町 (パルキア, ロコン)</name>
+      <name>斜里町 道の駅うとろ・シリエトク (パルキア, ロコン)</name>
       <description>Prefecture: 北海道
 City: 斜里
 Address: 北海道斜里町ウトロ西186番地8
 Building: 道の駅うとろ・シリエトク
-Tags: world_heritage, roadside, seaside, history, tourism, park, food
+Tags: world_heritage, roadside, seaside, history, tourism, park, food, far_station
 Detail: https://local.pokemon.jp/manhole/desc/220/?is_modal=1
 Last Updated: 2026-05-24T10:32:52Z
 Status: active</description>
@@ -2790,12 +2879,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/えりも町 (アローラロコン, ルガルガン)</name>
+      <name>えりも町 灯台公園 (アローラロコン, ルガルガン)</name>
       <description>Prefecture: 北海道
 City: えりも
 Address: 北海道えりも町本町53-1
 Building: えりも町灯台公園
-Tags: seaside, park, tourism
+Tags: seaside, park, tourism, far_station
 Detail: https://local.pokemon.jp/manhole/desc/221/?is_modal=1
 Last Updated: 2026-05-24T10:32:52Z
 Status: active</description>
@@ -2804,11 +2893,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>香取市 佐原イ109 (ガラルカモネギ)</name>
+      <name>香取市 佐原駅前 (ガラルカモネギ)</name>
       <description>Prefecture: 千葉県
 City: 香取
 Address: 千葉県香取市佐原イ109-14
-Tags: gundam_manhole_city
+Building: 佐原駅前
+Tags: gundam_manhole_city, station_front
 Detail: https://local.pokemon.jp/manhole/desc/222/?is_modal=1
 Last Updated: 2026-05-11T11:02:25Z
 Status: active</description>
@@ -2817,7 +2907,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>香取市 佐原イ1722 (ココガラ, タイレーツ)</name>
+      <name>香取市 佐原イ (ココガラ, タイレーツ)</name>
       <description>Prefecture: 千葉県
 City: 香取
 Address: 千葉県香取市佐原イ1722-1
@@ -2830,7 +2920,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>香取市 佐原ハ4549 (フラージェス, ヤヤコマ)</name>
+      <name>香取市 佐原ハ (フラージェス, ヤヤコマ)</name>
       <description>Prefecture: 千葉県
 City: 香取
 Address: 千葉県香取市佐原ハ4549-1
@@ -2857,10 +2947,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>宇都宮市 元今泉 (エレブー, ホシガリス)</name>
+      <name>宇都宮市 宇都宮駅東公園 (エレブー, ホシガリス)</name>
       <description>Prefecture: 栃木県
 City: 宇都宮
 Address: 栃木県宇都宮市元今泉5丁目10-1
+Building: 宇都宮駅東公園
+Tags: near_station
 Detail: https://local.pokemon.jp/manhole/desc/226/?is_modal=1
 Last Updated: 2026-05-11T11:02:28Z
 Status: active</description>
@@ -2869,10 +2961,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>宇都宮市 新里町丙 (イワパレス, ラクライ)</name>
+      <name>宇都宮市 道の駅うつのみや ろまんちっく村 (イワパレス, ラクライ)</name>
       <description>Prefecture: 栃木県
 City: 宇都宮
 Address: 栃木県宇都宮市新里町丙254番地
+Building: 道の駅うつのみや ろまんちっく村
 Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/227/?is_modal=1
 Last Updated: 2026-08-14T10:48:30Z
@@ -2882,10 +2975,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>宇都宮市 大曽 (ボルトロス)</name>
+      <name>宇都宮市 八幡山公園 (ボルトロス)</name>
       <description>Prefecture: 栃木県
 City: 宇都宮
 Address: 栃木県宇都宮市大曽2丁目地内
+Building: 八幡山公園
 Detail: https://local.pokemon.jp/manhole/desc/228/?is_modal=1
 Last Updated: 2026-08-14T10:48:31Z
 Status: active</description>
@@ -2920,7 +3014,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>沖縄県/糸満市 (カメール, スナバァ)</name>
+      <name>糸満市 道の駅いとまん (カメール, スナバァ)</name>
       <description>Prefecture: 沖縄県
 City: 糸満
 Address: 沖縄県糸満市西崎町4丁目19-1
@@ -2947,10 +3041,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>沖縄県/豊見城市 (キバゴ, ジャラコ)</name>
+      <name>豊見城市 道の駅豊崎 (キバゴ, ジャラコ)</name>
       <description>Prefecture: 沖縄県
 City: 豊見城
 Address: 沖縄県豊見城市字豊崎1-1162
+Building: 道の駅豊崎
 Tags: seaside, world_heritage, remote_island, roadside
 Detail: https://local.pokemon.jp/manhole/desc/233/?is_modal=1
 Last Updated: 2026-08-14T10:48:34Z
@@ -3023,10 +3118,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>甲賀市 甲賀町大久保 (ゲコガシラ, ゲッコウガ)</name>
+      <name>甲賀市 鹿深夢の森 (ゲコガシラ, ゲッコウガ)</name>
       <description>Prefecture: 滋賀県
 City: 甲賀
 Address: 滋賀県甲賀市甲賀町大久保507番地2
+Building: 鹿深夢の森
 Detail: https://local.pokemon.jp/manhole/desc/239/?is_modal=1
 Last Updated: 2026-08-14T10:48:38Z
 Status: active</description>
@@ -3035,7 +3131,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>三重県/津市 (ミジュマル)</name>
+      <name>津市 まん中広場 (ミジュマル)</name>
       <description>Prefecture: 三重県
 City: 津市
 Address: 三重県津市大門7-15
@@ -3050,7 +3146,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>三重県/四日市市 (ダイケンキ, ミジュマル)</name>
+      <name>四日市市 中央緑地公園 (ダイケンキ, ミジュマル)</name>
       <description>Prefecture: 三重県
 City: 四日市市
 Address: 三重県四日市市日永東1-3-21
@@ -3065,13 +3161,13 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>三重県/伊勢市 (ミジュマル, リーシャン)</name>
+      <name>伊勢市 外宮前広場 (ミジュマル, リーシャン)</name>
       <description>Prefecture: 三重県
 City: 伊勢市
 Address: 三重県伊勢市吹上1-1-4
 Place Detail: （外宮前広場）
 Building: 外宮前広場
-Tags: shrine, tourism
+Tags: shrine, tourism, near_station
 Detail: https://local.pokemon.jp/manhole/desc/242/?is_modal=1
 Last Updated: 2026-05-24T10:33:08Z
 Status: active</description>
@@ -3095,7 +3191,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>三重県/熊野市 (ヌイコグマ, ミジュマル)</name>
+      <name>熊野市 鬼ヶ城センター (ヌイコグマ, ミジュマル)</name>
       <description>Prefecture: 三重県
 City: 熊野市
 Address: 三重県熊野市木本町1835-7
@@ -3109,7 +3205,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>三重県/志摩市 (パールル, ミジュマル)</name>
+      <name>志摩市 八幡さん公園 (パールル, ミジュマル)</name>
       <description>Prefecture: 三重県
 City: 志摩市
 Address: 三重県志摩市大王町波切276
@@ -3124,7 +3220,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>三重県/伊賀市 (アギルダー, ミジュマル)</name>
+      <name>伊賀市 上野市駅前 (アギルダー, ミジュマル)</name>
       <description>Prefecture: 三重県
 City: 伊賀市
 Address: 三重県伊賀市上野丸之内61-2
@@ -3139,10 +3235,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>福島県/福島市 (モルペコ, ラッキー)</name>
+      <name>福島市 道の駅ふくしま (モルペコ, ラッキー)</name>
       <description>Prefecture: 福島県
 City: 福島
 Address: 福島県福島市大笹生字月崎1-1
+Building: 道の駅ふくしま
 Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/247/?is_modal=1
 Last Updated: 2026-08-14T10:48:43Z
@@ -3152,7 +3249,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>福島県/会津若松市 (エルレイド, ラッキー)</name>
+      <name>会津若松市 会津総合運動公園 (エルレイド, ラッキー)</name>
       <description>Prefecture: 福島県
 City: 会津若松
 Address: 福島県会津若松市門田町大字堤沢村上164 会津総合運動公園内
@@ -3181,6 +3278,7 @@ Status: active</description>
       <description>Prefecture: 福島県
 City: 南会津
 Address: 福島県南会津町田島字宮本東33番地１
+Tags: near_station
 Detail: https://local.pokemon.jp/manhole/desc/250/?is_modal=1
 Last Updated: 2026-08-14T10:48:45Z
 Status: active</description>
@@ -3189,10 +3287,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>福島県/柳津町 (ピンプク, ラッキー)</name>
+      <name>柳津町 道の駅会津柳津 (ピンプク, ラッキー)</name>
       <description>Prefecture: 福島県
 City: 柳津
 Address: 福島県柳津町大字柳津字下平乙161番地1
+Building: 道の駅会津柳津
 Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/251/?is_modal=1
 Last Updated: 2026-08-14T10:48:45Z
@@ -3202,11 +3301,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>福島県/昭和村 (クルミル, ラッキー)</name>
+      <name>昭和村 道の駅からむし織の里しょうわ (クルミル, ラッキー)</name>
       <description>Prefecture: 福島県
 City: 昭和
 Address: 福島県昭和村大字佐倉字上ノ原1番地
-Tags: roadside
+Building: 道の駅からむし織の里しょうわ
+Tags: roadside, far_station
 Detail: https://local.pokemon.jp/manhole/desc/252/?is_modal=1
 Last Updated: 2026-08-14T10:48:46Z
 Status: active</description>
@@ -3215,7 +3315,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>福島県/双葉町 (ヒマナッツ, ラッキー)</name>
+      <name>双葉町 産業交流センター (ヒマナッツ, ラッキー)</name>
       <description>Prefecture: 福島県
 City: 双葉
 Address: 福島県双葉町大字中野字高田1番地1
@@ -3228,11 +3328,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>福島県/飯舘村 (フラエッテ, ラッキー)</name>
+      <name>飯舘村 いいたて村の道の駅までい館 (フラエッテ, ラッキー)</name>
       <description>Prefecture: 福島県
 City: 飯舘
 Address: 福島県飯舘村深谷字深谷前11-1
-Tags: roadside
+Building: いいたて村の道の駅までい館
+Tags: roadside, far_station
 Detail: https://local.pokemon.jp/manhole/desc/254/?is_modal=1
 Last Updated: 2026-08-14T10:48:47Z
 Status: active</description>
@@ -3281,6 +3382,7 @@ Status: active</description>
       <description>Prefecture: 岩手県
 City: 花巻
 Address: 岩手県花巻市大通り1丁目2−21
+Tags: near_station
 Detail: https://local.pokemon.jp/manhole/desc/258/?is_modal=1
 Last Updated: 2026-05-24T10:33:20Z
 Status: active</description>
@@ -3293,6 +3395,7 @@ Status: active</description>
       <description>Prefecture: 岩手県
 City: 遠野
 Address: 岩手県遠野市中央通り4−6
+Tags: near_station
 Detail: https://local.pokemon.jp/manhole/desc/259/?is_modal=1
 Last Updated: 2026-05-24T10:33:21Z
 Status: active</description>
@@ -3305,6 +3408,7 @@ Status: active</description>
       <description>Prefecture: 岩手県
 City: 一関
 Address: 岩手県一関市東山町長坂字町467-１
+Tags: near_station
 Detail: https://local.pokemon.jp/manhole/desc/260/?is_modal=1
 Last Updated: 2026-05-24T10:33:21Z
 Status: active</description>
@@ -3325,7 +3429,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>岩手県/八幡平市 (アマルス, イシツブテ)</name>
+      <name>八幡平市 道の駅にしね (アマルス, イシツブテ)</name>
       <description>Prefecture: 岩手県
 City: 八幡平
 Address: 岩手県八幡平市大更第2地割154−36
@@ -3351,7 +3455,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>岩手県/岩手町 (アローライシツブテ, イシツブテ, メタモン)</name>
+      <name>岩手町 道の駅石神の丘 (アローライシツブテ, イシツブテ, メタモン)</name>
       <description>Prefecture: 岩手県
 City: 岩手
 Address: 岩手県岩手町五日市第10地割121−20
@@ -3365,7 +3469,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>岩手県/紫波町 (アママイコ, イシツブテ)</name>
+      <name>紫波町 紫波中央駅前 (アママイコ, イシツブテ)</name>
       <description>Prefecture: 岩手県
 City: 紫波
 Address: 岩手県紫波町紫波中央駅前1丁目
@@ -3379,10 +3483,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>岩手県/西和賀町 (イシツブテ, ミノムッチ, メブキジカ)</name>
+      <name>西和賀町 ほっとゆだ駅前 (イシツブテ, ミノムッチ, メブキジカ)</name>
       <description>Prefecture: 岩手県
 City: 西和賀
 Address: 岩手県西和賀町川尻40地割
+Building: ほっとゆだ駅前
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/266/?is_modal=1
 Last Updated: 2026-08-14T10:48:55Z
 Status: active</description>
@@ -3416,12 +3522,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>岩手県/九戸村 (イシツブテ, フクスロー, ホーホー)</name>
+      <name>九戸村 道の駅おりつめ (イシツブテ, フクスロー, ホーホー)</name>
       <description>Prefecture: 岩手県
 City: 九戸
 Address: 岩手県九戸村山屋第2地割28−1
 Building: 道の駅おりつめ
-Tags: roadside
+Tags: roadside, far_station
 Detail: https://local.pokemon.jp/manhole/desc/269/?is_modal=1
 Last Updated: 2026-05-24T10:33:29Z
 Status: active</description>
@@ -3447,7 +3553,7 @@ Status: active</description>
 City: 豊橋市
 Address: 愛知県豊橋市
 Building: 豊橋公園内
-Tags: pokemon_lid, city_level_address, park, museum, history, rail_access_good
+Tags: pokemon_lid, city_level_address, park, museum, history, rail_access_good, near_station
 Detail: https://local.pokemon.jp/manhole/desc/271/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
@@ -3471,12 +3577,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>豊橋市 豊橋総合動植物公園中央門 (スターミー, デンヂムシ)</name>
+      <name>豊橋市 道の駅とよはし (スターミー, デンヂムシ)</name>
       <description>Prefecture: 愛知県
 City: 豊橋市
-Address: 愛知県豊橋市
-Building: 豊橋総合動植物公園中央門
-Tags: pokemon_lid, city_level_address, food, park, museum, rail_access_good, roadside
+Address: 愛知県豊橋市東七根町一の沢113-2
+Building: 道の駅とよはし
+Tags: pokemon_lid, food, park, museum, rail_access_good, roadside
 Detail: https://local.pokemon.jp/manhole/desc/273/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
@@ -3485,12 +3591,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>豊橋市 道の駅とよはし (カブト, クワガノン)</name>
+      <name>豊橋市 豊橋総合動植物公園中央門 (カブト, クワガノン)</name>
       <description>Prefecture: 愛知県
 City: 豊橋市
-Address: 愛知県豊橋市
-Building: 道の駅とよはし
-Tags: pokemon_lid, city_level_address, park, tourism, museum, roadside, food, far_station
+Address: 愛知県豊橋市大岩町大穴1-238
+Building: 豊橋総合動植物公園中央門
+Tags: pokemon_lid, park, tourism, museum, food
 Detail: https://local.pokemon.jp/manhole/desc/274/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
@@ -3503,6 +3609,7 @@ Status: active</description>
       <description>Prefecture: 富山県
 City: 富山
 Address: 富山県富山市呉羽町2247-3
+Tags: near_station
 Detail: https://local.pokemon.jp/manhole/desc/275/?is_modal=1
 Last Updated: 2026-05-19T13:38:55Z
 Status: active</description>
@@ -3523,10 +3630,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>富山市 丸の内 (キュワワー, レディバ)</name>
+      <name>富山市 丸の内駅前 (キュワワー, レディバ)</name>
       <description>Prefecture: 富山県
 City: 富山
 Address: 富山県富山市丸の内三丁目1-1
+Building: 丸の内駅前
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/277/?is_modal=1
 Last Updated: 2026-05-11T11:02:58Z
 Status: active</description>
@@ -3535,11 +3644,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/当別町 (アローラロコン, ポットデス, ヤバチャ)</name>
+      <name>当別町 北欧の風 道の駅とうべつ (アローラロコン, ポットデス, ヤバチャ)</name>
       <description>Prefecture: 北海道
 City: 当別
 Address: 北海道当別町当別太７７４−１１
-Building: 北欧の風道の駅とうべつ
+Building: 北欧の風 道の駅とうべつ
 Tags: rail_access_good, tourism, roadside, food
 Detail: https://local.pokemon.jp/manhole/desc/278/?is_modal=1
 Last Updated: 2026-05-24T10:33:36Z
@@ -3565,6 +3674,7 @@ Status: active</description>
       <description>Prefecture: 福島県
 City: 伊達
 Address: 福島県伊達市霊山町石田字中沢19-1
+Tags: far_station
 Detail: https://local.pokemon.jp/manhole/desc/280/?is_modal=1
 Last Updated: 2026-05-24T10:33:37Z
 Status: active</description>
@@ -3577,6 +3687,7 @@ Status: active</description>
       <description>Prefecture: 福島県
 City: 北塩原
 Address: 福島県北塩原村大字桧原字剣ヶ峯1093-1055
+Tags: far_station
 Detail: https://local.pokemon.jp/manhole/desc/281/?is_modal=1
 Last Updated: 2026-05-24T10:33:38Z
 Status: active</description>
@@ -3585,7 +3696,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>福島県/猪苗代町 (スワンナ, ハヤシガメ, ラッキー)</name>
+      <name>猪苗代町 道の駅猪苗代 (スワンナ, ハヤシガメ, ラッキー)</name>
       <description>Prefecture: 福島県
 City: 猪苗代
 Address: 福島県猪苗代町大字堅田字五百苅1番地
@@ -3623,10 +3734,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>福島県/矢吹町 (ファイアロー, ラッキー)</name>
+      <name>矢吹町 大池公園 (ファイアロー, ラッキー)</name>
       <description>Prefecture: 福島県
 City: 矢吹
 Address: 福島県矢吹町大池145
+Building: 大池公園
 Detail: https://local.pokemon.jp/manhole/desc/285/?is_modal=1
 Last Updated: 2026-05-24T10:33:40Z
 Status: active</description>
@@ -3635,7 +3747,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>福島県/古殿町 (ハピナス, ラッキー)</name>
+      <name>古殿町 道の駅ふるどの (ハピナス, ラッキー)</name>
       <description>Prefecture: 福島県
 City: 古殿
 Address: 福島県古殿町大字田口字平舘25番地
@@ -3713,7 +3825,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>三重県/亀山市 (ドダイトス, ミジュマル, リオル)</name>
+      <name>亀山市 亀山公園 時計台付近 (ドダイトス, ミジュマル, リオル)</name>
       <description>Prefecture: 三重県
 City: 亀山市
 Address: 三重県亀山市若山町7-10
@@ -3728,7 +3840,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>三重県/朝日町 (エルフーン, ミジュマル)</name>
+      <name>三重郡朝日町 ふれあいパーク (エルフーン, ミジュマル)</name>
       <description>Prefecture: 三重県
 City: 三重郡朝日町
 Address: 三重県三重郡朝日町柿2278
@@ -3743,7 +3855,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>三重県/明和町 (アマカジ, フラージェス, ミジュマル)</name>
+      <name>多気郡明和町 いつきのみや地域交流センター (アマカジ, フラージェス, ミジュマル)</name>
       <description>Prefecture: 三重県
 City: 多気郡明和町
 Address: 三重県多気郡明和町斎宮2604-49
@@ -3757,7 +3869,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>三重県/大台町 (ビリジオン, ミジュマル, ヤナップ)</name>
+      <name>多気郡大台町 奥伊勢フォレストピア (ビリジオン, ミジュマル, ヤナップ)</name>
       <description>Prefecture: 三重県
 City: 多気郡大台町
 Address: 三重県多気郡大台町薗993
@@ -3771,7 +3883,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>三重県/度会町 (ネンドール, マリル, ミジュマル)</name>
+      <name>度会郡度会町 宮リバー度会パーク (ネンドール, マリル, ミジュマル)</name>
       <description>Prefecture: 三重県
 City: 度会郡度会町
 Address: 三重県度会郡度会町大野木1260
@@ -3786,11 +3898,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>三重県/紀宝町 (プロトーガ, ミジュマル)</name>
+      <name>南牟婁郡紀宝町 道の駅紀宝町ウミガメ公園 (プロトーガ, ミジュマル)</name>
       <description>Prefecture: 三重県
 City: 南牟婁郡紀宝町
 Address: 三重県南牟婁郡紀宝町井田568-7
-Building: 道の駅 紀宝町ウミガメ公園
+Building: 道の駅紀宝町ウミガメ公園
 Tags: roadside, family, tourism, seaside
 Detail: https://local.pokemon.jp/manhole/desc/297/?is_modal=1
 Last Updated: 2026-05-24T10:33:50Z
@@ -3804,6 +3916,7 @@ Status: active</description>
       <description>Prefecture: 香川県
 City: 綾川
 Address: 香川県綾川町萱原253-7
+Tags: near_station
 Detail: https://local.pokemon.jp/manhole/desc/298/?is_modal=1
 Last Updated: 2026-05-24T10:33:50Z
 Status: active</description>
@@ -3851,12 +3964,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/室蘭市 (アローラロコン, イルミーゼ, ロコン)</name>
+      <name>室蘭市 えみらん（DENZAI環境科学館・図書館） (アローラロコン, イルミーゼ, ロコン)</name>
       <description>Prefecture: 北海道
 City: 室蘭
 Address: 北海道室蘭市本町2-2
 Building: えみらん（DENZAI環境科学館・図書館）
-Tags: seaside, rail_access_good, museum
+Tags: seaside, rail_access_good, museum, near_station
 Detail: https://local.pokemon.jp/manhole/desc/302/?is_modal=1
 Last Updated: 2026-05-24T10:33:53Z
 Status: active</description>
@@ -3865,7 +3978,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/北見市 (アローラロコン, ロコン)</name>
+      <name>北見市 道の駅おんねゆ温泉 (アローラロコン, ロコン)</name>
       <description>Prefecture: 北海道
 City: 北見
 Address: 北海道北見市留辺蘂町松山1-4
@@ -3879,7 +3992,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/歌志内市 (アローラロコン, バチュル, ロコン)</name>
+      <name>歌志内市 道の駅うたしないチロルの湯 (アローラロコン, バチュル, ロコン)</name>
       <description>Prefecture: 北海道
 City: 歌志内
 Address: 北海道歌志内市字中村72番地2
@@ -3893,11 +4006,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/木古内町 (アローラロコン, ヒメンカ, ロコン)</name>
+      <name>木古内町 道の駅みそぎの郷 きこない (アローラロコン, ヒメンカ, ロコン)</name>
       <description>Prefecture: 北海道
 City: 木古内
 Address: 北海道木古内町字本町338−14
-Building: 道の駅みそぎの郷きこない
+Building: 道の駅みそぎの郷 きこない
 Tags: station_front, roadside, tourism, food
 Detail: https://local.pokemon.jp/manhole/desc/305/?is_modal=1
 Last Updated: 2026-05-24T10:33:56Z
@@ -3907,12 +4020,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/猿払村 (アローラロコン, エイパム, ロコン)</name>
+      <name>猿払村 道の駅さるふつ公園 (アローラロコン, エイパム, ロコン)</name>
       <description>Prefecture: 北海道
 City: 猿払
 Address: 北海道猿払村浜鬼志別214-7
 Building: 道の駅さるふつ公園
-Tags: seaside, roadside, park
+Tags: seaside, roadside, park, far_station
 Detail: https://local.pokemon.jp/manhole/desc/306/?is_modal=1
 Last Updated: 2026-05-24T10:33:57Z
 Status: active</description>
@@ -3921,7 +4034,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/美幌町 (アローラロコン, ハネッコ, ロコン)</name>
+      <name>美幌町 美幌駅前 (アローラロコン, ハネッコ, ロコン)</name>
       <description>Prefecture: 北海道
 City: 美幌
 Address: 北海道美幌町字新町3丁目97
@@ -3935,13 +4048,13 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>三重県/名張市 (フタチマル, ミジュマル)</name>
+      <name>名張市 朝日公園 (フタチマル, ミジュマル)</name>
       <description>Prefecture: 三重県
 City: 名張市
 Address: 三重県名張市平尾3225-10
 Place Detail: （朝日公園）
 Building: 朝日公園
-Tags: park, tourism, near_station
+Tags: park, tourism
 Detail: https://local.pokemon.jp/manhole/desc/308/?is_modal=1
 Last Updated: 2026-05-24T10:33:58Z
 Status: active</description>
@@ -3950,7 +4063,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>三重県/木曽岬町 (ゴーリキー, ミジュマル)</name>
+      <name>桑名郡木曽岬町 木曽岬町立図書館 (ゴーリキー, ミジュマル)</name>
       <description>Prefecture: 三重県
 City: 桑名郡木曽岬町
 Address: 三重県桑名郡木曽岬町大字西対海地251
@@ -3964,12 +4077,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>三重県/東員町 (マネネ, ミジュマル)</name>
+      <name>員弁郡東員町 東員町中部公園 (マネネ, ミジュマル)</name>
       <description>Prefecture: 三重県
 City: 員弁郡東員町
 Address: 三重県員弁郡東員町北大社1634
 Building: 東員町中部公園
-Tags: park, family, tourism, near_station
+Tags: park, family, tourism
 Detail: https://local.pokemon.jp/manhole/desc/310/?is_modal=1
 Last Updated: 2026-05-24T10:34:00Z
 Status: active</description>
@@ -3982,7 +4095,7 @@ Status: active</description>
       <description>Prefecture: 神奈川県
 City: 横浜
 Address: 神奈川県横浜市中区新港一丁目
-Tags: seaside
+Tags: seaside, near_station
 Detail: https://local.pokemon.jp/manhole/desc/311/?is_modal=1
 Last Updated: 2026-08-14T10:49:24Z
 Status: active</description>
@@ -3995,7 +4108,7 @@ Status: active</description>
       <description>Prefecture: 神奈川県
 City: 横浜
 Address: 神奈川県横浜市中区山下町14-1
-Tags: seaside
+Tags: seaside, near_station
 Detail: https://local.pokemon.jp/manhole/desc/312/?is_modal=1
 Last Updated: 2026-05-19T13:39:20Z
 Status: active</description>
@@ -4021,7 +4134,7 @@ Status: active</description>
       <description>Prefecture: 神奈川県
 City: 横浜
 Address: 神奈川県横浜市西区みなとみらい2-1-1
-Tags: seaside
+Tags: seaside, near_station
 Detail: https://local.pokemon.jp/manhole/desc/314/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
@@ -4042,10 +4155,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>太宰府市 宰府 (フーディン, ヤドキング, ヤレユータン)</name>
+      <name>太宰府市 太宰府駅前 (フーディン, ヤドキング, ヤレユータン)</name>
       <description>Prefecture: 福岡県
 City: 太宰府
 Address: 福岡県太宰府市宰府２丁目５
+Building: 太宰府駅前
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/316/?is_modal=1
 Last Updated: 2026-05-11T11:03:22Z
 Status: active</description>
@@ -4058,6 +4173,7 @@ Status: active</description>
       <description>Prefecture: 福岡県
 City: 太宰府
 Address: 福岡県太宰府市朱雀３丁目１３
+Tags: near_station
 Detail: https://local.pokemon.jp/manhole/desc/317/?is_modal=1
 Last Updated: 2026-05-11T11:03:23Z
 Status: active</description>
@@ -4066,7 +4182,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>秋田県/秋田市 (イワンコ, ガーディ, バウッツェル)</name>
+      <name>秋田市 セリオン (イワンコ, ガーディ, バウッツェル)</name>
       <description>Prefecture: 秋田県
 City: 秋田
 Address: 秋田県秋田市土崎港西１丁目9-1
@@ -4092,11 +4208,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>秋田県/男鹿市 (オニゴーリ, グランブル, ヘルガー)</name>
+      <name>男鹿市 道の駅おが (オニゴーリ, グランブル, ヘルガー)</name>
       <description>Prefecture: 秋田県
 City: 男鹿
 Address: 秋田県男鹿市船川港船川字新浜町1-19
-Tags: seaside, roadside
+Building: 道の駅おが
+Tags: seaside, roadside, near_station
 Detail: https://local.pokemon.jp/manhole/desc/320/?is_modal=1
 Last Updated: 2026-05-19T13:39:26Z
 Status: active</description>
@@ -4105,10 +4222,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>秋田県/鹿角市 (カラカラ, ガラルデスマス)</name>
+      <name>鹿角市 道の駅かづの (カラカラ, ガラルデスマス)</name>
       <description>Prefecture: 秋田県
 City: 鹿角
 Address: 秋田県鹿角市花輪字新田町11-4
+Building: 道の駅かづの
 Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/321/?is_modal=1
 Last Updated: 2026-05-19T13:39:26Z
@@ -4135,6 +4253,7 @@ Status: active</description>
 City: 北上
 Address: 岩手県北上市川岸一丁目１（さくらＰＯＲＴ・スクエア内）
 Building: さくらPORT・スクエア
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/323/?is_modal=1
 Last Updated: 2026-08-14T10:49:31Z
 Status: active</description>
@@ -4143,12 +4262,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/美瑛町 (アローラロコン, ヒスイウォーグル)</name>
+      <name>美瑛町 ホテル ラヴニール (アローラロコン, ヒスイウォーグル)</name>
       <description>Prefecture: 北海道
 City: 美瑛
 Address: 北海道美瑛町本町1丁目9番21号
 Building: ホテル ラヴニール
-Tags: food, history, roadside, station_front
+Tags: food, history, roadside, near_station
 Detail: https://local.pokemon.jp/manhole/desc/324/?is_modal=1
 Last Updated: 2026-08-14T10:49:32Z
 Status: active</description>
@@ -4157,11 +4276,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>松山市 大街道 (アマカジ, アマージョ)</name>
+      <name>松山市 大街道駅前 (アマカジ, アマージョ)</name>
       <description>Prefecture: 愛媛県
 City: 松山
 Address: 愛媛県松山市大街道2丁目 大街道アーケード
-Tags: near_gundam_manhole, gundam_manhole_city
+Building: 大街道駅前
+Tags: near_gundam_manhole, gundam_manhole_city, station_front
 Detail: https://local.pokemon.jp/manhole/desc/325/?is_modal=1
 Last Updated: 2026-08-14T10:49:32Z
 Status: active</description>
@@ -4225,7 +4345,7 @@ Status: active</description>
 City: 鈴鹿市
 Address: 三重県鈴鹿市寺家3-10-1
 Building: 鈴鹿市伝統産業会館
-Tags: museum, tourism, seaside
+Tags: museum, tourism, seaside, near_station
 Detail: https://local.pokemon.jp/manhole/desc/330/?is_modal=1
 Last Updated: 2026-05-24T10:34:17Z
 Status: active</description>
@@ -4234,12 +4354,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>三重県/川越町 (アメタマ, スバメ, ミジュマル)</name>
+      <name>三重郡川越町 川越富洲原駅前 (アメタマ, スバメ, ミジュマル)</name>
       <description>Prefecture: 三重県
 City: 三重郡川越町
 Address: 三重県三重郡川越町豊田275
 Place Detail: 西口
-Building: 川越富洲原駅 西口
+Building: 川越富洲原駅前
 Tags: station, town, station_front
 Detail: https://local.pokemon.jp/manhole/desc/331/?is_modal=1
 Last Updated: 2026-05-24T10:34:18Z
@@ -4249,7 +4369,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>三重県/多気町 (グルトン, ゴマゾウ, ミジュマル)</name>
+      <name>多気郡多気町 ごかつら池 ふるさと村 (グルトン, ゴマゾウ, ミジュマル)</name>
       <description>Prefecture: 三重県
 City: 多気郡多気町
 Address: 三重県多気郡多気町五桂992
@@ -4264,7 +4384,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>三重県/松阪市 (ニャース, ミジュマル)</name>
+      <name>松阪市 鈴の森公園 (ニャース, ミジュマル)</name>
       <description>Prefecture: 三重県
 City: 松阪市
 Address: 三重県松阪市外五曲町1
@@ -4279,7 +4399,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>三重県/玉城町 (バネブー, ミジュマル)</name>
+      <name>度会郡玉城町 アスピア玉城 ふれあいの館 (バネブー, ミジュマル)</name>
       <description>Prefecture: 三重県
 City: 度会郡玉城町
 Address: 三重県度会郡玉城町原4266
@@ -4294,13 +4414,13 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>三重県/南伊勢町 (ミジュマル, メタモン)</name>
+      <name>度会郡南伊勢町 見江島展望台 (ミジュマル, メタモン)</name>
       <description>Prefecture: 三重県
 City: 度会郡南伊勢町
 Address: 三重県度会郡南伊勢町五ヶ所浦3917
 Place Detail: （見江島展望台）
 Building: 見江島展望台
-Tags: viewpoint, tourism, seaside
+Tags: viewpoint, tourism, seaside, far_station
 Detail: https://local.pokemon.jp/manhole/desc/335/?is_modal=1
 Last Updated: 2026-05-24T10:34:22Z
 Status: active</description>
@@ -4309,10 +4429,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>福井県/勝山市 (アーケン, カイリュー, ガチゴラス)</name>
+      <name>勝山市 勝山駅前 (アーケン, カイリュー, ガチゴラス)</name>
       <description>Prefecture: 福井県
 City: 勝山
 Address: 福井県勝山市遅羽町比島34-2-7
+Building: 勝山駅前
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/336/?is_modal=1
 Last Updated: 2026-05-24T10:34:23Z
 Status: active</description>
@@ -4321,10 +4443,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>福井県/あわら市 (カイリュー, ジグザグマ, トゲチック)</name>
+      <name>あわら市 芦原温泉駅前 (カイリュー, ジグザグマ, トゲチック)</name>
       <description>Prefecture: 福井県
 City: あわら
 Address: 福井県あわら市春宮1-13
+Building: 芦原温泉駅前
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/337/?is_modal=1
 Last Updated: 2026-05-24T10:34:23Z
 Status: active</description>
@@ -4333,11 +4457,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>福井県/越前市 (エレズン, カイリュー, ヒトツキ)</name>
+      <name>越前市 道の駅越前たけふ (エレズン, カイリュー, ヒトツキ)</name>
       <description>Prefecture: 福井県
 City: 越前
 Address: 福井県越前市大屋町38-5-1
-Tags: roadside
+Building: 道の駅越前たけふ
+Tags: roadside, station_front
 Detail: https://local.pokemon.jp/manhole/desc/338/?is_modal=1
 Last Updated: 2026-05-24T10:34:24Z
 Status: active</description>
@@ -4346,10 +4471,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>福井県/永平寺町 (カイリュー, ダクマ)</name>
+      <name>永平寺町 道の駅禅の里 (カイリュー, ダクマ)</name>
       <description>Prefecture: 福井県
 City: 永平寺
 Address: 福井県永平寺町清水2-21-1
+Building: 道の駅禅の里
 Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/339/?is_modal=1
 Last Updated: 2026-05-24T10:34:25Z
@@ -4372,10 +4498,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>福井県/美浜町 (ウミディグダ, カイリュー, ヒドイデ)</name>
+      <name>美浜町 道の駅若狭美浜はまびより (ウミディグダ, カイリュー, ヒドイデ)</name>
       <description>Prefecture: 福井県
 City: 美浜
 Address: 福井県美浜町松原35-15-1
+Building: 道の駅若狭美浜はまびより
+Tags: roadside, station_front
 Detail: https://local.pokemon.jp/manhole/desc/341/?is_modal=1
 Last Updated: 2026-05-24T10:34:26Z
 Status: active</description>
@@ -4408,10 +4536,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>和歌山県/白浜町 (ナミイルカ, ヤンチャム)</name>
+      <name>白浜町 白浜駅前 (ナミイルカ, ヤンチャム)</name>
       <description>Prefecture: 和歌山県
 City: 白浜
 Address: 和歌山県白浜町堅田1474
+Building: 白浜駅前
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/344/?is_modal=1
 Last Updated: 2026-05-11T11:03:39Z
 Status: active</description>
@@ -4424,7 +4554,7 @@ Status: active</description>
       <description>Prefecture: 和歌山県
 City: 串本
 Address: 和歌山県串本町西向359番地
-Tags: seaside
+Tags: seaside, near_station
 Detail: https://local.pokemon.jp/manhole/desc/345/?is_modal=1
 Last Updated: 2026-08-14T10:49:45Z
 Status: active</description>
@@ -4449,7 +4579,7 @@ Status: active</description>
       <description>Prefecture: 静岡県
 City: 静岡
 Address: 静岡県静岡市葵区駿府城公園１－１
-Tags: gundam_manhole_city
+Tags: gundam_manhole_city, near_station
 Detail: https://local.pokemon.jp/manhole/desc/347/?is_modal=1
 Last Updated: 2026-08-14T10:49:46Z
 Status: active</description>
@@ -4458,10 +4588,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>静岡県/浜松市 (シビルドン, メロエッタ)</name>
+      <name>浜松市 新浜松駅前 (シビルドン, メロエッタ)</name>
       <description>Prefecture: 静岡県
 City: 浜松
 Address: 静岡県浜松市中央区砂山町320-2 （浜松UP-ON付近）
+Building: 新浜松駅前
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/348/?is_modal=1
 Last Updated: 2026-08-14T10:49:47Z
 Status: active</description>
@@ -4483,11 +4615,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>静岡県/富士市 (ファイヤー)</name>
+      <name>富士市 道の駅富士川楽座 (ファイヤー)</name>
       <description>Prefecture: 静岡県
 City: 富士
 Address: 静岡県富士市岩淵富士山 築山
-Tags: roadside
+Building: 道の駅富士川楽座
+Tags: roadside, service_area
 Detail: https://local.pokemon.jp/manhole/desc/350/?is_modal=1
 Last Updated: 2026-08-14T10:49:48Z
 Status: active</description>
@@ -4520,10 +4653,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>宇治市 菟道丸山 (チャデス, ヤバソチャ)</name>
+      <name>宇治市 宇治駅前 (チャデス, ヤバソチャ)</name>
       <description>Prefecture: 京都府
 City: 宇治
 Address: 京都府宇治市菟道丸山203-1
+Building: 宇治駅前
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/353/?is_modal=1
 Last Updated: 2026-05-11T11:03:44Z
 Status: active</description>
@@ -4536,7 +4671,7 @@ Status: active</description>
       <description>Prefecture: 長崎県
 City: 長崎
 Address: 長崎県長崎市尾上町5-6
-Tags: seaside
+Tags: seaside, near_station
 Detail: https://local.pokemon.jp/manhole/desc/354/?is_modal=1
 Last Updated: 2026-05-24T10:34:36Z
 Status: active</description>
@@ -4549,7 +4684,7 @@ Status: active</description>
       <description>Prefecture: 長崎県
 City: 佐世保
 Address: 長崎県佐世保市新港町3
-Tags: seaside
+Tags: seaside, near_station
 Detail: https://local.pokemon.jp/manhole/desc/355/?is_modal=1
 Last Updated: 2026-05-24T10:34:37Z
 Status: active</description>
@@ -4558,10 +4693,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>長崎県/大村市 (チェリム, デンリュウ)</name>
+      <name>大村市 新大村駅前 (チェリム, デンリュウ)</name>
       <description>Prefecture: 長崎県
 City: 大村
 Address: 長崎県大村市植松3丁目135-5
+Building: 新大村駅前
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/356/?is_modal=1
 Last Updated: 2026-07-10T12:21:42Z
 Status: active</description>
@@ -4574,7 +4711,7 @@ Status: active</description>
       <description>Prefecture: 長崎県
 City: 雲仙
 Address: 長崎県雲仙市小浜町雲仙320-18
-Tags: world_heritage
+Tags: world_heritage, far_station
 Detail: https://local.pokemon.jp/manhole/desc/357/?is_modal=1
 Last Updated: 2026-05-24T10:34:38Z
 Status: active</description>
@@ -4596,12 +4733,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>岐阜県/各務原市 (ドジョッチ, ナマズン)</name>
+      <name>各務原市 オアシスパーク南側入り口 (ドジョッチ, ナマズン)</name>
       <description>Prefecture: 岐阜県
 City: 各務原
 Address: 岐阜県各務原市川島笠田町1569-1
 Building: オアシスパーク南側入り口
-Tags: tourism, park, river, food
+Tags: tourism, park, river, food, roadside, service_area
 Detail: https://local.pokemon.jp/manhole/desc/359/?is_modal=1
 Last Updated: 2026-05-19T13:39:52Z
 Status: active</description>
@@ -4610,7 +4747,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>岐阜県/下呂市 (オタマロ, ガマガル, ガマゲロゲ)</name>
+      <name>下呂市 観光交流センター「湯めぐり館」 (オタマロ, ガマガル, ガマゲロゲ)</name>
       <description>Prefecture: 岐阜県
 City: 下呂
 Address: 岐阜県下呂市森1075-1
@@ -4624,12 +4761,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>岐阜県/関市 (ウッウ)</name>
+      <name>関市 関シティターミナル前 (ウッウ)</name>
       <description>Prefecture: 岐阜県
 City: 関
 Address: 岐阜県関市東桜町8-1
 Building: 関シティターミナル前
-Tags: tourism, museum, near_station, history
+Tags: tourism, museum, history, station_front
 Detail: https://local.pokemon.jp/manhole/desc/361/?is_modal=1
 Last Updated: 2026-05-19T13:39:53Z
 Status: active</description>
@@ -4638,7 +4775,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>岐阜県/関ケ原町 (コマタナ, ドドゲザン)</name>
+      <name>関ケ原町 関ケ原駅北ポケットパーク (コマタナ, ドドゲザン)</name>
       <description>Prefecture: 岐阜県
 City: 関ケ原
 Address: 岐阜県関ケ原町大字関ケ原894-95
@@ -4652,13 +4789,13 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>岐阜県/高山市 (バオップ, ヒヤップ, ヤナップ)</name>
+      <name>高山市 飛騨高山にぎわい交流館「大政」 (バオップ, ヒヤップ, ヤナップ)</name>
       <description>Prefecture: 岐阜県
 City: 高山
 Address: 岐阜県高山市本町４－１
 Place Detail: 南側歩道上
 Building: 飛騨高山にぎわい交流館「大政」
-Tags: tourism, near_station, history, food
+Tags: tourism, history, food
 Detail: https://local.pokemon.jp/manhole/desc/363/?is_modal=1
 Last Updated: 2026-08-14T10:49:56Z
 Status: active</description>
@@ -4667,10 +4804,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>福井県/大野市 (カイリュー)</name>
+      <name>大野市 大手門広場 (カイリュー)</name>
       <description>Prefecture: 福井県
 City: 大野
 Address: 福井県大野市城町1-5（大手門広場内）
+Building: 大手門広場
 Detail: https://local.pokemon.jp/manhole/desc/364/?is_modal=1
 Last Updated: 2026-08-14T10:49:57Z
 Status: active</description>
@@ -4692,7 +4830,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>福井県/南越前町 (カイリュー, バタフリー)</name>
+      <name>南越前町 道の駅南えちぜん山海里 (カイリュー, バタフリー)</name>
       <description>Prefecture: 福井県
 City: 南越前
 Address: 福井県南越前町牧谷39-2-2
@@ -4723,6 +4861,7 @@ Status: active</description>
       <description>Prefecture: 福井県
 City: 池田
 Address: 福井県池田町池田9-6-1
+Tags: far_station
 Detail: https://local.pokemon.jp/manhole/desc/368/?is_modal=1
 Last Updated: 2026-05-24T10:34:47Z
 Status: active</description>
@@ -4735,6 +4874,7 @@ Status: active</description>
       <description>Prefecture: 福島県
 City: 会津坂下
 Address: 福島県会津坂下町字西南町裏甲3998番地2
+Tags: near_station
 Detail: https://local.pokemon.jp/manhole/desc/369/?is_modal=1
 Last Updated: 2026-08-14T10:50:00Z
 Status: active</description>
@@ -4743,10 +4883,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>福島県/鏡石町 (ミルタンク, メリープ, ラッキー)</name>
+      <name>鏡石町 鏡石駅前 (ミルタンク, メリープ, ラッキー)</name>
       <description>Prefecture: 福島県
 City: 鏡石
 Address: 福島県鏡石町中央245番地
+Building: 鏡石駅前
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/370/?is_modal=1
 Last Updated: 2026-08-14T10:50:01Z
 Status: active</description>
@@ -4767,10 +4909,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>福島県/湯川村 (アブリー, ラッキー, ラルトス)</name>
+      <name>湯川村 道の駅あいづ 湯川・会津坂下 (アブリー, ラッキー, ラルトス)</name>
       <description>Prefecture: 福島県
 City: 湯川
 Address: 福島県湯川村大字佐野目字五丁ノ目78-1
+Building: 道の駅あいづ 湯川・会津坂下
 Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/372/?is_modal=1
 Last Updated: 2026-05-24T10:34:50Z
@@ -4780,10 +4923,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>福島県/国見町 (クルマユ, タブンネ, ピンプク, ラッキー)</name>
+      <name>国見町 道の駅国見 あつかしの郷 (クルマユ, タブンネ, ピンプク, ラッキー)</name>
       <description>Prefecture: 福島県
 City: 国見
 Address: 福島県国見町大字藤田字日渡二18-1
+Building: 道の駅国見 あつかしの郷
 Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/373/?is_modal=1
 Last Updated: 2026-08-14T10:50:03Z
@@ -4817,10 +4961,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>福島県/白河市 (ダルマッカ, ラッキー)</name>
+      <name>白河市 白河駅前 (ダルマッカ, ラッキー)</name>
       <description>Prefecture: 福島県
 City: 白河
 Address: 福島県白河市郭内
+Building: 白河駅前
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/376/?is_modal=1
 Last Updated: 2026-08-14T10:50:05Z
 Status: active</description>
@@ -4829,7 +4975,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>島根県/浜田市 (オムスター, マッギョ)</name>
+      <name>浜田市 道の駅ゆうひパーク浜田 (オムスター, マッギョ)</name>
       <description>Prefecture: 島根県
 City: 浜田
 Address: 島根県浜田市原井町1203-1
@@ -4856,7 +5002,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>島根県/大田市 (エルレイド, サザンドラ)</name>
+      <name>大田市 道の駅ごいせ仁摩 (エルレイド, サザンドラ)</name>
       <description>Prefecture: 島根県
 City: 大田
 Address: 島根県大田市仁摩町大国42-1
@@ -4870,11 +5016,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>島根県/安来市 (ドジョッチ, バリヤード)</name>
+      <name>安来市 安来駅前 (ドジョッチ, バリヤード)</name>
       <description>Prefecture: 島根県
 City: 安来
 Address: 島根県安来市安来町2093-3
-Tags: seaside, lakeside
+Building: 安来駅前
+Tags: seaside, lakeside, station_front
 Detail: https://local.pokemon.jp/manhole/desc/380/?is_modal=1
 Last Updated: 2026-05-19T13:40:06Z
 Status: active</description>
@@ -4896,10 +5043,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>宇治市 小倉町神楽田 (ピカチュウ)</name>
+      <name>宇治市 ニンテンドーミュージアム (ピカチュウ)</name>
       <description>Prefecture: 京都府
 City: 宇治
 Address: 京都府ニンテンドーミュージアム施設内（宇治市小倉町神楽田56番地）
+Building: ニンテンドーミュージアム
+Tags: near_station
 Detail: https://local.pokemon.jp/manhole/desc/382/?is_modal=1
 Last Updated: 2026-08-14T10:50:09Z
 Status: active</description>
@@ -4908,7 +5057,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>三重県/桑名市 (ジャランゴ, ドゴーム, ミジュマル)</name>
+      <name>桑名市 なばなの里 (ジャランゴ, ドゴーム, ミジュマル)</name>
       <description>Prefecture: 三重県
 City: 桑名市
 Address: 三重県桑名市長島町駒江漆畑270
@@ -4922,7 +5071,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>三重県/尾鷲市 (ニャイキング, ミジュマル)</name>
+      <name>尾鷲市 夢古道おわせ (ニャイキング, ミジュマル)</name>
       <description>Prefecture: 三重県
 City: 尾鷲市
 Address: 三重県尾鷲市向井12-4
@@ -4936,7 +5085,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>三重県/いなべ市 (プラスル, マイナン, ミジュマル)</name>
+      <name>いなべ市 にぎわいの森 (プラスル, マイナン, ミジュマル)</name>
       <description>Prefecture: 三重県
 City: いなべ市
 Address: 三重県いなべ市北勢町阿下喜31
@@ -4950,7 +5099,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>三重県/菰野町 (ゴーゴート, ミジュマル, メェークル)</name>
+      <name>三重郡菰野町 菰野町福祉公園 (ゴーゴート, ミジュマル, メェークル)</name>
       <description>Prefecture: 三重県
 City: 三重郡菰野町
 Address: 三重県三重郡菰野町潤田1250
@@ -4965,12 +5114,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>三重県/大紀町 (ダブラン, ミジュマル, ミルタンク, ランクルス)</name>
+      <name>度会郡大紀町 山海の郷 紀勢 (ダブラン, ミジュマル, ミルタンク, ランクルス)</name>
       <description>Prefecture: 三重県
 City: 度会郡大紀町
 Address: 三重県度会郡大紀町崎2154-1
 Building: 山海の郷 紀勢
-Tags: roadside, tourism
+Tags: tourism, near_station
 Detail: https://local.pokemon.jp/manhole/desc/387/?is_modal=1
 Last Updated: 2026-05-24T10:35:01Z
 Status: active</description>
@@ -4979,12 +5128,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>三重県/紀北町 (ママンボウ, ミジュマル)</name>
+      <name>北牟婁郡紀北町 道の駅紀伊長島マンボウ (ママンボウ, ミジュマル)</name>
       <description>Prefecture: 三重県
 City: 北牟婁郡紀北町
 Address: 三重県北牟婁郡紀北町東長島2410-73
 Place Detail: （道の駅 紀伊長島マンボウ）
-Building: 道の駅 紀伊長島マンボウ
+Building: 道の駅紀伊長島マンボウ
 Tags: roadside, food, tourism
 Detail: https://local.pokemon.jp/manhole/desc/388/?is_modal=1
 Last Updated: 2026-05-24T10:35:02Z
@@ -4994,11 +5143,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>三重県/御浜町 (パチリス, ミジュマル)</name>
+      <name>南牟婁郡御浜町 道の駅パーク七里御浜 (パチリス, ミジュマル)</name>
       <description>Prefecture: 三重県
 City: 南牟婁郡御浜町
 Address: 三重県南牟婁郡御浜町阿田和4926-5
-Building: 道の駅 パーク七里御浜
+Building: 道の駅パーク七里御浜
 Tags: roadside, seaside, tourism, station_front
 Detail: https://local.pokemon.jp/manhole/desc/389/?is_modal=1
 Last Updated: 2026-05-24T10:35:03Z
@@ -5012,6 +5161,7 @@ Status: active</description>
       <description>Prefecture: 高知県
 City: 香美
 Address: 高知県香美市物部町大栃872番地2
+Tags: far_station
 Detail: https://local.pokemon.jp/manhole/desc/390/?is_modal=1
 Last Updated: 2026-08-14T10:50:14Z
 Status: active</description>
@@ -5020,11 +5170,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>高知県/奈半利町 (サニーゴ, ヌオー, ノクタス)</name>
+      <name>奈半利町 奈半利駅前 (サニーゴ, ヌオー, ノクタス)</name>
       <description>Prefecture: 高知県
 City: 奈半利
 Address: 高知県奈半利町乙4779-3
-Tags: seaside
+Building: 奈半利駅前
+Tags: seaside, station_front
 Detail: https://local.pokemon.jp/manhole/desc/391/?is_modal=1
 Last Updated: 2026-05-24T10:35:04Z
 Status: active</description>
@@ -5045,10 +5196,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>高知県/日高村 (シズクモ, ヌオー, ヤンヤンマ)</name>
+      <name>日高村 日下駅前 (シズクモ, ヌオー, ヤンヤンマ)</name>
       <description>Prefecture: 高知県
 City: 日高
 Address: 高知県日高村本郷284-2
+Building: 日下駅前
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/393/?is_modal=1
 Last Updated: 2026-05-24T10:35:06Z
 Status: active</description>
@@ -5061,6 +5214,7 @@ Status: active</description>
       <description>Prefecture: 高知県
 City: 津野
 Address: 高知県津野町芳生野乙4921-22
+Tags: far_station
 Detail: https://local.pokemon.jp/manhole/desc/394/?is_modal=1
 Last Updated: 2026-05-24T10:35:07Z
 Status: active</description>
@@ -5073,7 +5227,7 @@ Status: active</description>
       <description>Prefecture: 高知県
 City: 大月
 Address: 高知県大月町柏島600番地
-Tags: seaside
+Tags: seaside, far_station
 Detail: https://local.pokemon.jp/manhole/desc/395/?is_modal=1
 Last Updated: 2026-08-14T10:50:17Z
 Status: active</description>
@@ -5094,10 +5248,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北上市 立花 (イシツブテ, オーガポン, カミッチュ)</name>
+      <name>北上市 展勝地公園 (イシツブテ, オーガポン, カミッチュ)</name>
       <description>Prefecture: 岩手県
 City: 北上
 Address: 岩手県北上市立花13地割（展勝地公園）
+Building: 展勝地公園
 Detail: https://local.pokemon.jp/manhole/desc/397/?is_modal=1
 Last Updated: 2026-08-14T10:50:19Z
 Status: active</description>
@@ -5106,10 +5261,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>盛岡市 渋民 (アローライシツブテ, イシツブテ, ウソッキー)</name>
+      <name>盛岡市 道の駅もりおか渋民 (アローライシツブテ, イシツブテ, ウソッキー)</name>
       <description>Prefecture: 岩手県
 City: 盛岡
 Address: 岩手県盛岡市渋民80番地42
+Building: 道の駅もりおか渋民
+Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/398/?is_modal=1
 Last Updated: 2026-08-14T10:50:20Z
 Status: active</description>
@@ -5118,10 +5275,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>山形県/山形市 (ドレディア, ポポッコ, ラフレシア)</name>
+      <name>山形市 山形駅前 (ドレディア, ポポッコ, ラフレシア)</name>
       <description>Prefecture: 山形県
 City: 山形
 Address: 山形県山形市双葉町1-2-38
+Building: 山形駅前
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/399/?is_modal=1
 Last Updated: 2026-05-11T11:04:12Z
 Status: active</description>
@@ -5130,10 +5289,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>山形県/寒河江市 (チェリム, チェリンボ)</name>
+      <name>寒河江市 最上川ふるさと総合公園 (チェリム, チェリンボ)</name>
       <description>Prefecture: 山形県
 City: 寒河江
 Address: 山形県寒河江市山西甲1269
+Building: 最上川ふるさと総合公園
 Detail: https://local.pokemon.jp/manhole/desc/400/?is_modal=1
 Last Updated: 2026-05-11T11:04:12Z
 Status: active</description>
@@ -5146,6 +5306,7 @@ Status: active</description>
       <description>Prefecture: 山形県
 City: 大蔵
 Address: 山形県大蔵村南山４５１－２
+Tags: far_station
 Detail: https://local.pokemon.jp/manhole/desc/401/?is_modal=1
 Last Updated: 2026-08-14T10:50:21Z
 Status: active</description>
@@ -5154,10 +5315,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>山形県/小国町 (アルクジラ, クマシュン, ツンベアー)</name>
+      <name>小国町 道の駅白い森おぐに (アルクジラ, クマシュン, ツンベアー)</name>
       <description>Prefecture: 山形県
 City: 小国
 Address: 山形県小国町小国小坂町616
+Building: 道の駅白い森おぐに
 Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/402/?is_modal=1
 Last Updated: 2026-05-11T11:04:14Z
@@ -5180,13 +5342,13 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>愛知県/名古屋市 (コイキング, ネッコアラ)</name>
+      <name>名古屋市中区 金シャチ横丁 宗春ゾーン（東門エリア） (コイキング, ネッコアラ)</name>
       <description>Prefecture: 愛知県
 City: 名古屋市中区
 Address: 愛知県名古屋市中区二の丸1番2・3号
 Place Detail: 宗春ゾーン（東門エリア）
 Building: 金シャチ横丁　宗春ゾーン（東門エリア）
-Tags: food, tourism, history, park, station_front
+Tags: food, tourism, history, park, near_station
 Detail: https://local.pokemon.jp/manhole/desc/404/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
@@ -5195,7 +5357,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>愛知県/瀬戸市 (ニャヒート, ブーバー)</name>
+      <name>瀬戸市 瀬戸蔵 正面玄関北側 (ニャヒート, ブーバー)</name>
       <description>Prefecture: 愛知県
 City: 瀬戸市
 Address: 愛知県瀬戸市蔵所町1-1
@@ -5210,7 +5372,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>愛知県/常滑市 (アローラニャース, ピジョット)</name>
+      <name>常滑市 りんくうビーチ (アローラニャース, ピジョット)</name>
       <description>Prefecture: 愛知県
 City: 常滑
 Address: 愛知県常滑市りんくう町２丁目 りんくうビーチ
@@ -5225,13 +5387,13 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>愛知県/刈谷市 (キバゴ, ジュカイン, タツベイ)</name>
+      <name>刈谷市 刈谷ハイウェイオアシス内にある「オアシス館刈谷 INFOBOX」正面玄関前 (キバゴ, ジュカイン, タツベイ)</name>
       <description>Prefecture: 愛知県
 City: 刈谷市
 Address: 愛知県刈谷市東境町吉野25-1
 Place Detail: 「オアシス館刈谷 INFOBOX」正面玄関前
 Building: 刈谷ハイウェイオアシス内にある「オアシス館刈谷 INFOBOX」正面玄関前
-Tags: roadside, family, tourism, park, food, lakeside
+Tags: family, tourism, park, food, lakeside, roadside, service_area
 Detail: https://local.pokemon.jp/manhole/desc/407/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
@@ -5240,7 +5402,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>愛知県/西尾市 (ゴクリン, マホイップ)</name>
+      <name>西尾市 歴史公園 (ゴクリン, マホイップ)</name>
       <description>Prefecture: 愛知県
 City: 西尾市
 Address: 愛知県西尾市錦城町231番地1
@@ -5267,10 +5429,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>茨城県/筑西市 (グレッグル, ハラバリー)</name>
+      <name>筑西市 道の駅グランテラス筑西 (グレッグル, ハラバリー)</name>
       <description>Prefecture: 茨城県
 City: 筑西
 Address: 茨城県筑西市川澄１８５０
+Building: 道の駅グランテラス筑西
 Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/410/?is_modal=1
 Last Updated: 2026-05-11T11:04:19Z
@@ -5284,6 +5447,7 @@ Status: active</description>
       <description>Prefecture: 茨城県
 City: つくば
 Address: 茨城県つくば市吾妻2-7-5
+Tags: near_station
 Detail: https://local.pokemon.jp/manhole/desc/411/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
@@ -5292,7 +5456,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>茨城県/常陸太田市 (ボーマンダ, ルチャブル)</name>
+      <name>常陸太田市 道の駅ひたちおおた (ボーマンダ, ルチャブル)</name>
       <description>Prefecture: 茨城県
 City: 常陸太田
 Address: 茨城県常陸太田市下河合町1016-1
@@ -5306,11 +5470,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>茨城県/水戸市 (ジャローダ, ナットレイ, ハーデリア)</name>
+      <name>水戸市 偕楽園公園 (ジャローダ, ナットレイ, ハーデリア)</name>
       <description>Prefecture: 茨城県
 City: 水戸
 Address: 茨城県水戸市見川1-1251
-Tags: gundam_manhole_city
+Building: 偕楽園公園
+Tags: gundam_manhole_city, near_station
 Detail: https://local.pokemon.jp/manhole/desc/413/?is_modal=1
 Last Updated: 2026-05-11T11:04:21Z
 Status: active</description>
@@ -5325,7 +5490,7 @@ City: 鳥羽市
 Address: 三重県鳥羽市鳥羽1-2383-42
 Place Detail: （ドルフィン公園）
 Building: ドルフィン公園
-Tags: seaside, tourism
+Tags: seaside, tourism, near_station
 Detail: https://local.pokemon.jp/manhole/desc/414/?is_modal=1
 Last Updated: 2026-05-24T10:35:23Z
 Status: active</description>
@@ -5358,10 +5523,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>福井県/福井市 (カイリュー, ジャラランガ)</name>
+      <name>福井市 福井駅前 (カイリュー, ジャラランガ)</name>
       <description>Prefecture: 福井県
 City: 福井
 Address: 福井県福井市手寄1丁目1 （JR福井駅東口）
+Building: 福井駅前
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/417/?is_modal=1
 Last Updated: 2026-08-14T10:50:32Z
 Status: active</description>
@@ -5370,11 +5537,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>福井県/おおい町 (カイリュー, ケーシィ, ニャオニクス)</name>
+      <name>おおい町 道の駅うみんぴあ大飯 (カイリュー, ケーシィ, ニャオニクス)</name>
       <description>Prefecture: 福井県
 City: おおい
 Address: 福井県おおい町成海1-1-1
-Tags: seaside
+Building: 道の駅うみんぴあ大飯
+Tags: roadside, seaside
 Detail: https://local.pokemon.jp/manhole/desc/418/?is_modal=1
 Last Updated: 2026-05-24T10:35:27Z
 Status: active</description>
@@ -5383,11 +5551,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>福井県/鯖江市 (カイリュー, サッチムシ, モルペコ)</name>
+      <name>鯖江市 道の駅西山公園 (カイリュー, サッチムシ, モルペコ)</name>
       <description>Prefecture: 福井県
 City: 鯖江
 Address: 福井県鯖江市桜町3丁目8-1
-Tags: roadside
+Building: 道の駅西山公園
+Tags: roadside, near_station
 Detail: https://local.pokemon.jp/manhole/desc/419/?is_modal=1
 Last Updated: 2026-05-24T10:35:27Z
 Status: active</description>
@@ -5400,6 +5569,7 @@ Status: active</description>
       <description>Prefecture: 福井県
 City: 若狭
 Address: 福井県若狭町市場18-18
+Tags: near_station
 Detail: https://local.pokemon.jp/manhole/desc/420/?is_modal=1
 Last Updated: 2026-05-24T10:35:28Z
 Status: active</description>
@@ -5412,6 +5582,7 @@ Status: active</description>
       <description>Prefecture: 福井県
 City: 越前
 Address: 福井県越前町小曽原120-60
+Tags: far_station
 Detail: https://local.pokemon.jp/manhole/desc/421/?is_modal=1
 Last Updated: 2026-05-24T10:35:29Z
 Status: active</description>
@@ -5472,7 +5643,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>岩手県/葛巻町 (アローライシツブテ, マホミル, ミルタンク)</name>
+      <name>葛巻町 道の駅くずまき高原 (アローライシツブテ, マホミル, ミルタンク)</name>
       <description>Prefecture: 岩手県
 City: 葛巻
 Address: 岩手県葛巻町葛巻39-159-3
@@ -5486,11 +5657,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>長崎県/島原市 (タマザラシ, デンリュウ, ヒラヒナ)</name>
+      <name>島原市 島原駅前 (タマザラシ, デンリュウ, ヒラヒナ)</name>
       <description>Prefecture: 長崎県
 City: 島原
 Address: 長崎県島原市片町577-1
-Tags: seaside
+Building: 島原駅前
+Tags: seaside, station_front
 Detail: https://local.pokemon.jp/manhole/desc/427/?is_modal=1
 Last Updated: 2026-05-24T10:35:34Z
 Status: active</description>
@@ -5525,7 +5697,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>長崎県/東彼杵町 (ジュペッタ, デンリュウ, ワタッコ)</name>
+      <name>東彼杵町 道の駅彼杵の荘 (ジュペッタ, デンリュウ, ワタッコ)</name>
       <description>Prefecture: 長崎県
 City: 東彼杵
 Address: 長崎県東彼杵町彼杵宿郷４７２
@@ -5555,7 +5727,7 @@ Status: active</description>
       <description>Prefecture: 高知県
 City: 室戸
 Address: 高知県室戸市室戸岬町533-2
-Tags: seaside
+Tags: seaside, far_station
 Detail: https://local.pokemon.jp/manhole/desc/432/?is_modal=1
 Last Updated: 2026-05-24T10:35:37Z
 Status: active</description>
@@ -5564,10 +5736,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>高知県/安芸市 (ヌオー, ホーホー)</name>
+      <name>安芸市 安芸駅前 (ヌオー, ホーホー)</name>
       <description>Prefecture: 高知県
 City: 安芸
 Address: 高知県安芸市矢ノ丸4丁目2-30
+Building: 安芸駅前
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/433/?is_modal=1
 Last Updated: 2026-05-24T10:35:38Z
 Status: active</description>
@@ -5576,11 +5750,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>高知県/須崎市 (ヌオー, フローゼル, ブイゼル)</name>
+      <name>須崎市 須崎駅前 (ヌオー, フローゼル, ブイゼル)</name>
       <description>Prefecture: 高知県
 City: 須崎
 Address: 高知県須崎市原町1丁目9-11
-Tags: seaside
+Building: 須崎駅前
+Tags: seaside, station_front
 Detail: https://local.pokemon.jp/manhole/desc/434/?is_modal=1
 Last Updated: 2026-05-24T10:35:39Z
 Status: active</description>
@@ -5589,7 +5764,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>高知県/宿毛市 (ウパー, ヌオー)</name>
+      <name>宿毛市 道の駅すくも (ウパー, ヌオー)</name>
       <description>Prefecture: 高知県
 City: 宿毛
 Address: 高知県宿毛市小筑紫町田ノ浦１２４４−１０
@@ -5603,12 +5778,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>高知県/香南市 (シビシラス, ヌオー)</name>
+      <name>香南市 道の駅やす (シビシラス, ヌオー)</name>
       <description>Prefecture: 高知県
 City: 香南
 Address: 高知県香南市夜須町坪井
 Building: 道の駅やす
-Tags: roadside, seaside
+Tags: roadside, seaside, station_front
 Detail: https://local.pokemon.jp/manhole/desc/436/?is_modal=1
 Last Updated: 2026-05-24T10:35:40Z
 Status: active</description>
@@ -5617,11 +5792,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>高知県/東洋町 (ヌオー, マンタイン)</name>
+      <name>東洋町 道の駅東洋町 (ヌオー, マンタイン)</name>
       <description>Prefecture: 高知県
 City: 東洋
 Address: 高知県東洋町白浜８８−１
-Tags: seaside
+Building: 道の駅東洋町
+Tags: seaside, roadside
 Detail: https://local.pokemon.jp/manhole/desc/437/?is_modal=1
 Last Updated: 2026-05-24T10:35:41Z
 Status: active</description>
@@ -5630,12 +5806,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/札幌市 (ケッキング, ロコン)</name>
+      <name>札幌市 定山渓観光案内所 (ケッキング, ロコン)</name>
       <description>Prefecture: 北海道
 City: 札幌
 Address: 北海道札幌市南区定山渓温泉東３丁目212
 Building: 定山渓観光案内所
-Tags: tourism, food, river
+Tags: tourism, food, river, far_station
 Detail: https://local.pokemon.jp/manhole/desc/438/?is_modal=1
 Last Updated: 2026-05-24T10:35:42Z
 Status: active</description>
@@ -5644,7 +5820,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/砂川市 (アローラロコン, ペロリーム, ロコン)</name>
+      <name>砂川市 まちなか交流施設すないる (アローラロコン, ペロリーム, ロコン)</name>
       <description>Prefecture: 北海道
 City: 砂川
 Address: 北海道砂川市西１条北２丁目１番２０号
@@ -5658,12 +5834,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/由仁町 (アローラロコン, ヤクデ, ロコン)</name>
+      <name>由仁町 文化交流館ふれーる (アローラロコン, ヤクデ, ロコン)</name>
       <description>Prefecture: 北海道
 City: 由仁
 Address: 北海道由仁町東栄87-1
 Building: 文化交流館ふれーる
-Tags: tourism, museum, near_station
+Tags: tourism, museum, station_front
 Detail: https://local.pokemon.jp/manhole/desc/440/?is_modal=1
 Last Updated: 2026-05-24T10:35:43Z
 Status: active</description>
@@ -5672,12 +5848,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/厚沢部町 (アローラロコン, ミノマダム, ロコン)</name>
+      <name>厚沢部町 道の駅あっさぶ (アローラロコン, ミノマダム, ロコン)</name>
       <description>Prefecture: 北海道
 City: 厚沢部
 Address: 北海道厚沢部町緑町72-1
 Building: 道の駅あっさぶ
-Tags: roadside, tourism, food
+Tags: roadside, tourism, food, far_station
 Detail: https://local.pokemon.jp/manhole/desc/441/?is_modal=1
 Last Updated: 2026-05-24T10:35:44Z
 Status: active</description>
@@ -5686,7 +5862,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/幌延町 (アローラロコン, フラベベ, ロコン)</name>
+      <name>幌延町 ほろのべトナカイ観光牧場 (アローラロコン, フラベベ, ロコン)</name>
       <description>Prefecture: 北海道
 City: 幌延
 Address: 北海道幌延町北進３９８－１
@@ -5700,12 +5876,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/津別町 (アローラロコン, メブキジカ, ロコン)</name>
+      <name>津別町 つべつ木材工芸館 キノス (アローラロコン, メブキジカ, ロコン)</name>
       <description>Prefecture: 北海道
 City: 津別
 Address: 北海道津別町共和127番地1
 Building: つべつ木材工芸館 キノス
-Tags: tourism, park
+Tags: tourism, park, far_station
 Detail: https://local.pokemon.jp/manhole/desc/443/?is_modal=1
 Last Updated: 2026-08-14T10:50:48Z
 Status: active</description>
@@ -5714,12 +5890,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/湧別町 (アブリー, アローラロコン, ロコン)</name>
+      <name>湧別町 道の駅かみゆうべつ温泉チューリップの湯 (アブリー, アローラロコン, ロコン)</name>
       <description>Prefecture: 北海道
 City: 湧別
 Address: 北海道湧別町中湧別中町3020番地の1
 Building: 道の駅かみゆうべつ温泉チューリップの湯
-Tags: roadside, tourism, park, food
+Tags: roadside, tourism, park, food, far_station
 Detail: https://local.pokemon.jp/manhole/desc/444/?is_modal=1
 Last Updated: 2026-08-14T10:50:49Z
 Status: active</description>
@@ -5728,12 +5904,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北海道/別海町 (アローラロコン, トドグラー)</name>
+      <name>別海町 道の駅おだいとう (アローラロコン, トドグラー)</name>
       <description>Prefecture: 北海道
 City: 別海
 Address: 北海道別海町尾岱沼5-27
 Building: 道の駅おだいとう
-Tags: seaside, roadside, tourism, food
+Tags: seaside, roadside, tourism, food, far_station
 Detail: https://local.pokemon.jp/manhole/desc/445/?is_modal=1
 Last Updated: 2026-05-24T10:35:47Z
 Status: active</description>
@@ -5755,9 +5931,9 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>宮城県/加瀬沼公園 (スワンナ, タマンタ, ラプラス)</name>
+      <name>利府町 加瀬沼公園 (スワンナ, タマンタ, ラプラス)</name>
       <description>Prefecture: 宮城県
-City: 加瀬沼公園
+City: 利府町
 Address: 宮城県加瀬沼公園内（宮城県宮城郡利府町加瀬新堤下）
 Building: 加瀬沼公園
 Detail: https://local.pokemon.jp/manhole/desc/447/?is_modal=1
@@ -5768,7 +5944,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>ポケパーク カントー (イーブイ, ピカチュウ)</name>
+      <name>稲城市 ポケパーク カントー (イーブイ, ピカチュウ)</name>
       <description>Prefecture: 東京都
 City: 稲城市
 Address: 東京都稲城市矢野口4015-1 ポケパーク カントー敷地内
@@ -5781,10 +5957,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>高知県/高知市 (トサキント, ヌオー)</name>
+      <name>高知市 高知駅前 (トサキント, ヌオー)</name>
       <description>Prefecture: 高知県
 City: 高知
 Address: 高知県高知市北本町2-10-17
+Building: 高知駅前
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/449/?is_modal=1
 Last Updated: 2026-05-24T10:35:50Z
 Status: active</description>
@@ -5797,7 +5975,7 @@ Status: active</description>
       <description>Prefecture: 高知県
 City: 土佐清水
 Address: 高知県土佐清水市三崎4032
-Tags: seaside
+Tags: seaside, far_station
 Detail: https://local.pokemon.jp/manhole/desc/450/?is_modal=1
 Last Updated: 2026-05-24T10:35:51Z
 Status: active</description>
@@ -5834,6 +6012,7 @@ Status: active</description>
       <description>Prefecture: 高知県
 City: 仁淀川
 Address: 高知県仁淀川町名野川456
+Tags: far_station
 Detail: https://local.pokemon.jp/manhole/desc/453/?is_modal=1
 Last Updated: 2026-05-24T10:35:53Z
 Status: active</description>
@@ -5854,10 +6033,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>福島県/天栄村 (イエッサン, ラッキー)</name>
+      <name>天栄村 道の駅季の里天栄 (イエッサン, ラッキー)</name>
       <description>Prefecture: 福島県
 City: 天栄
 Address: 福島県天栄村大字大里字天房41-2
+Building: 道の駅季の里天栄
 Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/455/?is_modal=1
 Last Updated: 2026-08-14T10:50:56Z
@@ -5867,7 +6047,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>福島県/下郷町 (カモネギ, チリーン, ハリマロン, ラッキー)</name>
+      <name>下郷町 道の駅しもごう (カモネギ, チリーン, ハリマロン, ラッキー)</name>
       <description>Prefecture: 福島県
 City: 下郷
 Address: 福島県下郷町大字南倉沢字木賊844番地188
@@ -5881,7 +6061,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>福島県/西会津町 (ピクシー, マシェード, ラッキー)</name>
+      <name>西会津町 道の駅にしあいづ (ピクシー, マシェード, ラッキー)</name>
       <description>Prefecture: 福島県
 City: 西会津
 Address: 福島県西会津町野沢字下條乙1969-26
@@ -5919,11 +6099,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>福島県/浅川町 (バオップ, ピンプク, ラッキー)</name>
+      <name>浅川町 磐城浅川駅前 (バオップ, ピンプク, ラッキー)</name>
       <description>Prefecture: 福島県
 City: 浅川
 Address: 福島県浅川町本町西裏（JR磐城浅川駅前広場）
-Building: JR磐城浅川駅前広場
+Building: 磐城浅川駅前
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/460/?is_modal=1
 Last Updated: 2026-08-14T10:51:00Z
 Status: active</description>
@@ -5936,6 +6117,7 @@ Status: active</description>
       <description>Prefecture: 福島県
 City: 小野
 Address: 福島県小野町大字小野新町字中通2
+Tags: near_station
 Detail: https://local.pokemon.jp/manhole/desc/461/?is_modal=1
 Last Updated: 2026-05-24T10:36:00Z
 Status: active</description>
@@ -5944,10 +6126,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>福島県/大熊町 (キテルグマ, ヌイコグマ, ヒメグマ, ラッキー)</name>
+      <name>大熊町 大野駅前 (キテルグマ, ヌイコグマ, ヒメグマ, ラッキー)</name>
       <description>Prefecture: 福島県
 City: 大熊
 Address: 福島県大熊町下野上大野116-5
+Building: 大野駅前
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/462/?is_modal=1
 Last Updated: 2026-05-24T10:36:01Z
 Status: active</description>
@@ -5968,10 +6152,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>岩手県/雫石町 (イシツブテ, イワンコ, ウールー)</name>
+      <name>雫石町 道の駅雫石あねっこ (イシツブテ, イワンコ, ウールー)</name>
       <description>Prefecture: 岩手県
 City: 雫石
 Address: 岩手県雫石町橋場坂本118-10
+Building: 道の駅雫石あねっこ
 Tags: roadside
 Detail: https://local.pokemon.jp/manhole/desc/464/?is_modal=1
 Last Updated: 2026-05-24T10:36:02Z
@@ -5994,10 +6179,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>岩手県/金ヶ崎町 (アローライシツブテ, ブロロン, メルタン)</name>
+      <name>金ヶ崎町 金ヶ崎駅前 (アローライシツブテ, ブロロン, メルタン)</name>
       <description>Prefecture: 岩手県
 City: 金ヶ崎
 Address: 岩手県金ケ崎町西根伊勢分25番地7
+Building: 金ヶ崎駅前
+Tags: station_front
 Detail: https://local.pokemon.jp/manhole/desc/466/?is_modal=1
 Last Updated: 2026-08-14T10:51:04Z
 Status: active</description>
@@ -6018,7 +6205,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>石川県/七尾市 (ギャラドス, ニョロトノ, ニョロモ)</name>
+      <name>七尾市 和倉温泉湯っ足りパーク (ギャラドス, ニョロトノ, ニョロモ)</name>
       <description>Prefecture: 石川県
 City: 七尾
 Address: 石川県七尾市和倉町ひばり1丁目1番地
@@ -6037,7 +6224,7 @@ Status: active</description>
 City: 輪島
 Address: 石川県輪島市河井町20-1-131
 Building: 輪島市文化会館
-Tags: roadside, tourism, food
+Tags: roadside, tourism, food, far_station
 Detail: https://local.pokemon.jp/manhole/desc/469/?is_modal=1
 Last Updated: 2026-07-24T11:34:26Z
 Status: active</description>
@@ -6046,12 +6233,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>石川県/珠洲市 (ニンフィア, ラブカス)</name>
+      <name>珠洲市 見附公園 (ニンフィア, ラブカス)</name>
       <description>Prefecture: 石川県
 City: 珠洲
 Address: 石川県珠洲市宝立町鵜島二47-1
 Building: 見附公園
-Tags: seaside, park
+Tags: seaside, park, far_station
 Detail: https://local.pokemon.jp/manhole/desc/470/?is_modal=1
 Last Updated: 2026-05-19T13:41:07Z
 Status: active</description>
@@ -6060,12 +6247,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>石川県/志賀町 (カイデン, サクラビス)</name>
+      <name>志賀町 道の駅とぎ海街道 (カイデン, サクラビス)</name>
       <description>Prefecture: 石川県
 City: 志賀
 Address: 石川県志賀町富来領家町
 Building: 道の駅とぎ海街道
-Tags: seaside, roadside, tourism
+Tags: seaside, roadside, tourism, far_station
 Detail: https://local.pokemon.jp/manhole/desc/471/?is_modal=1
 Last Updated: 2026-05-11T11:04:56Z
 Status: active</description>
@@ -6074,7 +6261,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>石川県/穴水町 (カビゴン, プラスル, マイナン)</name>
+      <name>穴水町 穴水駅 (カビゴン, プラスル, マイナン)</name>
       <description>Prefecture: 石川県
 City: 穴水
 Address: 石川県穴水町字大町ト33
@@ -6092,6 +6279,7 @@ Status: active</description>
       <description>Prefecture: 石川県
 City: 能登
 Address: 石川県能登町字上町ロ部1-1
+Tags: far_station
 Detail: https://local.pokemon.jp/manhole/desc/473/?is_modal=1
 Last Updated: 2026-08-14T10:51:08Z
 Status: active</description>
@@ -6114,12 +6302,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>輪島市 のと里山空港 (タツベイ, ボーマンダ)</name>
+      <name>輪島市 道の駅のと里山空港 (タツベイ, ボーマンダ)</name>
       <description>Prefecture: 石川県
 City: 輪島
 Address: 石川県輪島市・のと里山空港敷地内（輪島市三井町洲衛10-11-1）
-Building: のと里山空港
-Tags: tourism
+Building: 道の駅のと里山空港
+Tags: roadside, tourism
 Detail: https://local.pokemon.jp/manhole/desc/475/?is_modal=1
 Last Updated: 2026-08-14T10:51:10Z
 Status: active</description>
@@ -6128,7 +6316,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>長崎県/諫早市 (デンリュウ, メタグロス)</name>
+      <name>諫早市 諫早駅前 (デンリュウ, メタグロス)</name>
       <description>Prefecture: 長崎県
 City: 諫早
 Address: 長崎県諫早市永昌東町2
@@ -6142,7 +6330,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>長崎県/対馬市 (キノガッサ, デンリュウ, レパルダス)</name>
+      <name>対馬市 対馬観光物産協会 (キノガッサ, デンリュウ, レパルダス)</name>
       <description>Prefecture: 長崎県
 City: 対馬
 Address: 長崎県対馬市厳原町今屋敷672-1
@@ -6156,7 +6344,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>長崎県/五島市 (デンリュウ, メリープ, モココ)</name>
+      <name>五島市 鐙瀬ビジターセンター (デンリュウ, メリープ, モココ)</name>
       <description>Prefecture: 長崎県
 City: 五島
 Address: 長崎県五島市野々切町1333-3
@@ -6170,12 +6358,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>長崎県/西海市 (タイカイデン, デンリュウ, トリトドン)</name>
+      <name>西海市 大島大橋公園 (タイカイデン, デンリュウ, トリトドン)</name>
       <description>Prefecture: 長崎県
 City: 西海
 Address: 長崎県西海市大島町1374-4
 Building: 大島大橋公園
-Tags: seaside, park, tourism
+Tags: seaside, park, tourism, far_station
 Detail: https://local.pokemon.jp/manhole/desc/479/?is_modal=1
 Last Updated: 2026-08-07T10:40:11Z
 Status: active</description>
@@ -6184,7 +6372,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>長崎県/波佐見町 (カイロス, デンリュウ, ハッサム)</name>
+      <name>波佐見町 波佐見やきもの公園 (カイロス, デンリュウ, ハッサム)</name>
       <description>Prefecture: 長崎県
 City: 波佐見
 Address: 長崎県波佐見町井石郷2255-2
@@ -6198,7 +6386,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>長野県/岡谷市 (モスノウ, ユキハミ)</name>
+      <name>岡谷市 役所前（蚕糸公園） (モスノウ, ユキハミ)</name>
       <description>Prefecture: 長野県
 City: 岡谷
 Address: 長野県岡谷市幸町1
@@ -6212,7 +6400,7 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>長野県/伊那市 (アマージョ, バサギリ, ヒヒダルマ)</name>
+      <name>伊那市 みはらしファーム 名人亭南側 (アマージョ, バサギリ, ヒヒダルマ)</name>
       <description>Prefecture: 長野県
 City: 伊那
 Address: 長野県伊那市西箕輪3416-1（みはらしファーム内 名人亭南側）
@@ -6226,12 +6414,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>長野県/大町市 (ビッパ, ミニリュウ)</name>
+      <name>大町市 大町名店街 (ビッパ, ミニリュウ)</name>
       <description>Prefecture: 長野県
 City: 大町
 Address: 長野県大町市大町2532-7（名店街）
 Building: 大町名店街
-Tags: station_front, tourism, food
+Tags: tourism, food
 Detail: https://local.pokemon.jp/manhole/desc/483/?is_modal=1
 Last Updated: 2026-08-14T10:51:15Z
 Status: active</description>
@@ -6240,11 +6428,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>長野県/南牧村 (エリキテル, エレザード)</name>
+      <name>南牧村 野辺山駅前 (エリキテル, エレザード)</name>
       <description>Prefecture: 長野県
 City: 南牧
 Address: 長野県南牧村大字野辺山306付近
-Building: 野辺山駅
+Building: 野辺山駅前
 Tags: station_front, rail_access_good, tourism
 Detail: https://local.pokemon.jp/manhole/desc/484/?is_modal=1
 Last Updated: 2026-08-14T10:51:16Z
@@ -6254,12 +6442,12 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>長野県/木祖村 (オーロット, ココガラ, パチリス)</name>
+      <name>木祖村 藪原駅前 (オーロット, ココガラ, パチリス)</name>
       <description>Prefecture: 長野県
 City: 木祖
 Address: 長野県木祖村薮原1038-1
 Building: 藪原駅前
-Tags: station_front, rail_access_good
+Tags: rail_access_good
 Detail: https://local.pokemon.jp/manhole/desc/485/?is_modal=1
 Last Updated: 2026-08-07T10:40:11Z
 Status: active</description>
@@ -6268,11 +6456,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>長野県/山ノ内町 (ガラルダルマッカ, ヒヤップ, マンキー)</name>
+      <name>山ノ内町 湯田中駅前 (ガラルダルマッカ, ヒヤップ, マンキー)</name>
       <description>Prefecture: 長野県
 City: 山ノ内
 Address: 長野県山ノ内町大字平穏3227番地1
-Building: 湯田中駅前広場 楓の館前
+Building: 湯田中駅前
 Tags: station_front, rail_access_good, tourism
 Detail: https://local.pokemon.jp/manhole/desc/486/?is_modal=1
 Last Updated: 2026-08-14T10:51:17Z
