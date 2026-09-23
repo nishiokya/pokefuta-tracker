@@ -649,6 +649,7 @@
       ]
     },
     "11": {
+      "building": "道の駅くじ",
       "tags": [
         "roadside",
         "near_station"
@@ -679,6 +680,7 @@
       ]
     },
     "16": {
+      "building": "道の駅みやこ",
       "tags": [
         "seaside",
         "roadside"
@@ -784,6 +786,7 @@
       ]
     },
     "40": {
+      "building": "道の駅滝宮",
       "tags": [
         "roadside"
       ]
@@ -810,6 +813,7 @@
       ]
     },
     "46": {
+      "building": "道の駅おながわ",
       "tags": [
         "seaside",
         "roadside",
@@ -877,7 +881,7 @@
       ]
     },
     "60": {
-      "building": "道と川の駅 花ロードえにわ",
+      "building": "道と川の駅花ロードえにわ",
       "tags": [
         "roadside"
       ]
@@ -899,7 +903,7 @@
       ]
     },
     "63": {
-      "building": "道の駅 上ノ国もんじゅ",
+      "building": "道の駅上ノ国もんじゅ",
       "tags": [
         "seaside",
         "roadside",
@@ -907,7 +911,7 @@
       ]
     },
     "64": {
-      "building": "道の駅 羊のまち 侍・しべつ",
+      "building": "道の駅羊のまち 侍・しべつ",
       "tags": [
         "roadside",
         "food"
@@ -920,7 +924,7 @@
       ]
     },
     "66": {
-      "building": "道の駅 てしお 正面入り口横",
+      "building": "道の駅てしお",
       "verified_at": "2019-11-29",
       "tags": [
         "roadside",
@@ -1017,6 +1021,7 @@
       ]
     },
     "82": {
+      "building": "道の駅ポート赤碕",
       "tags": [
         "seaside",
         "roadside"
@@ -1194,6 +1199,7 @@
       ]
     },
     "129": {
+      "building": "道の駅村田",
       "tags": [
         "roadside"
       ]
@@ -1388,6 +1394,7 @@
       ]
     },
     "169": {
+      "building": "道の駅つの",
       "tags": [
         "roadside"
       ]
@@ -1515,7 +1522,7 @@
       "confidence": 3
     },
     "191": {
-      "building": "道の駅ステラほんべつ前",
+      "building": "道の駅ステラ★ほんべつ",
       "tags": [
         "roadside",
         "tourism",
@@ -1524,7 +1531,7 @@
       ]
     },
     "192": {
-      "building": "道の駅オーロラタウン93りくべつ前",
+      "building": "道の駅オーロラタウン93りくべつ",
       "tags": [
         "tourism",
         "park",
@@ -1578,6 +1585,7 @@
       ]
     },
     "203": {
+      "building": "道の駅あわじ",
       "tags": [
         "seaside",
         "roadside"
@@ -1634,7 +1642,7 @@
       ]
     },
     "215": {
-      "building": "道の駅阿寒丹頂の里クレインズテラス",
+      "building": "道の駅阿寒丹頂の里",
       "tags": [
         "roadside",
         "tourism",
@@ -1727,6 +1735,7 @@
       ]
     },
     "227": {
+      "building": "道の駅うつのみや ろまんちっく村",
       "tags": [
         "roadside"
       ]
@@ -1758,6 +1767,7 @@
       ]
     },
     "233": {
+      "building": "道の駅豊崎",
       "tags": [
         "seaside",
         "world_heritage",
@@ -1887,6 +1897,7 @@
       "confidence": 3
     },
     "247": {
+      "building": "道の駅ふくしま",
       "tags": [
         "roadside"
       ]
@@ -1900,11 +1911,13 @@
       ]
     },
     "251": {
+      "building": "道の駅会津柳津",
       "tags": [
         "roadside"
       ]
     },
     "252": {
+      "building": "道の駅からむし織の里しょうわ",
       "tags": [
         "roadside",
         "far_station"
@@ -1914,6 +1927,7 @@
       "building": "双葉町産業交流センター"
     },
     "254": {
+      "building": "いいたて村の道の駅までい館",
       "tags": [
         "roadside",
         "far_station"
@@ -2050,7 +2064,7 @@
       ]
     },
     "278": {
-      "building": "北欧の風道の駅とうべつ",
+      "building": "北欧の風 道の駅とうべつ",
       "verified_at": "2022-11-07",
       "tags": [
         "rail_access_good",
@@ -2181,7 +2195,7 @@
       "confidence": 3
     },
     "297": {
-      "building": "道の駅 紀宝町ウミガメ公園",
+      "building": "道の駅紀宝町ウミガメ公園",
       "address_raw": "南牟婁郡紀宝町井田568-7",
       "address_norm": "三重県南牟婁郡紀宝町井田568-7",
       "prefecture": "三重県",
@@ -2242,7 +2256,7 @@
       ]
     },
     "305": {
-      "building": "道の駅みそぎの郷きこない",
+      "building": "道の駅みそぎの郷 きこない",
       "tags": [
         "station_front",
         "roadside",
@@ -2350,6 +2364,7 @@
       ]
     },
     "320": {
+      "building": "道の駅おが",
       "tags": [
         "seaside",
         "roadside",
@@ -2357,6 +2372,7 @@
       ]
     },
     "321": {
+      "building": "道の駅かづの",
       "tags": [
         "roadside"
       ]
@@ -2494,12 +2510,14 @@
       ]
     },
     "338": {
+      "building": "道の駅越前たけふ",
       "tags": [
         "roadside",
         "station_front"
       ]
     },
     "339": {
+      "building": "道の駅禅の里",
       "tags": [
         "roadside"
       ]
@@ -2510,6 +2528,7 @@
       ]
     },
     "341": {
+      "building": "道の駅若狭美浜はまびより",
       "tags": [
         "roadside",
         "station_front"
@@ -2543,6 +2562,7 @@
       ]
     },
     "350": {
+      "building": "道の駅富士川楽座",
       "tags": [
         "roadside",
         "service_area"
@@ -2660,11 +2680,13 @@
       ]
     },
     "372": {
+      "building": "道の駅あいづ 湯川・会津坂下",
       "tags": [
         "roadside"
       ]
     },
     "373": {
+      "building": "道の駅国見 あつかしの郷",
       "tags": [
         "roadside"
       ]
@@ -2779,7 +2801,7 @@
       "confidence": 3
     },
     "388": {
-      "building": "道の駅 紀伊長島マンボウ",
+      "building": "道の駅紀伊長島マンボウ",
       "address_raw": "北牟婁郡紀北町東長島2410-73（道の駅 紀伊長島マンボウ）",
       "address_norm": "三重県北牟婁郡紀北町東長島2410-73",
       "prefecture": "三重県",
@@ -2794,7 +2816,7 @@
       "confidence": 3
     },
     "389": {
-      "building": "道の駅 パーク七里御浜",
+      "building": "道の駅パーク七里御浜",
       "address_raw": "南牟婁郡御浜町阿田和4926-5",
       "address_norm": "三重県南牟婁郡御浜町阿田和4926-5",
       "prefecture": "三重県",
@@ -2836,6 +2858,7 @@
       ]
     },
     "398": {
+      "building": "道の駅もりおか渋民",
       "tags": [
         "roadside"
       ]
@@ -2851,6 +2874,7 @@
       ]
     },
     "402": {
+      "building": "道の駅白い森おぐに",
       "tags": [
         "roadside"
       ]
@@ -2942,6 +2966,7 @@
       "confidence": 3
     },
     "410": {
+      "building": "道の駅グランテラス筑西",
       "tags": [
         "roadside"
       ]
@@ -2984,12 +3009,14 @@
       ]
     },
     "418": {
+      "building": "道の駅うみんぴあ大飯",
       "tags": [
         "roadside",
         "seaside"
       ]
     },
     "419": {
+      "building": "道の駅西山公園",
       "tags": [
         "roadside",
         "near_station"
@@ -3092,6 +3119,7 @@
       ]
     },
     "437": {
+      "building": "道の駅東洋町",
       "tags": [
         "seaside",
         "roadside"
@@ -3198,6 +3226,7 @@
       ]
     },
     "455": {
+      "building": "道の駅季の里天栄",
       "tags": [
         "roadside"
       ]
@@ -3231,6 +3260,7 @@
       ]
     },
     "464": {
+      "building": "道の駅雫石あねっこ",
       "tags": [
         "roadside"
       ]
@@ -3300,7 +3330,7 @@
       ]
     },
     "475": {
-      "building": "のと里山空港",
+      "building": "道の駅のと里山空港",
       "tags": [
         "roadside",
         "tourism"
