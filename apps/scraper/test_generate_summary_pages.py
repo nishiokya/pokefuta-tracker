@@ -233,12 +233,15 @@ class DiscoveryHubTests(unittest.TestCase):
         )
         by_slug = {tag["slug"]: tag for tag in meta["tags"]}
         gundam = by_slug["near_gundam_manhole"]
-        self.assertEqual("ガンダムマンホール", gundam["label"])
+        self.assertEqual("ガンダムマンホール徒歩圏", gundam["label"])
         self.assertEqual(
             "ガンダムマンホールまで約500m以内のポケふた", gundam["description"]
         )
         self.assertEqual(
-            {"roadside", "remote_island", "world_heritage", "near_gundam_manhole", "seaside"},
+            {
+                "roadside", "remote_island", "world_heritage",
+                "near_gundam_manhole", "seaside", "tourism", "park",
+            },
             {tag["slug"] for tag in meta["tags"] if tag.get("featured")},
         )
         for filename in ("map.html", "map.template.html"):

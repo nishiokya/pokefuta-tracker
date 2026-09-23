@@ -41,15 +41,22 @@ class SelectionRuleTest(unittest.TestCase):
                 {"slug": "park", "emoji": "🌳", "label": "公園", "icon_only": True},
                 {"slug": "history", "emoji": "⛩", "label": "史跡・名所", "icon_only": True},
                 {"slug": "beach", "emoji": "🏖", "label": "ビーチ"},
+                {"slug": "internal", "emoji": "🔒", "label": "内部用", "public": False},
             ],
         })
         self.counts = {
             "seaside": 119, "roadside": 99, "tourism": 92,
             "park": 46, "history": 11, "beach": 1,
+            "internal": 100,
         }
 
     def test_hides_tags_below_min_count(self) -> None:
         self.assertNotIn("beach", self.meta.visible_slugs(self.counts))
+
+    def test_hides_non_public_tags_from_theme_directories(self) -> None:
+        self.assertNotIn("internal", self.meta.visible_slugs(self.counts))
+        self.assertNotIn("internal", self.meta.top_chip_slugs(self.counts))
+        self.assertIn("internal", self.meta.by_slug)
 
     def test_orders_by_priority_then_by_count(self) -> None:
         self.assertEqual(
@@ -95,6 +102,25 @@ class RealDataTest(unittest.TestCase):
                 self.assertTrue(tag.get("emoji"))
                 self.assertTrue(tag.get("label"))
 
+    def test_redundant_travel_tags_are_not_public(self) -> None:
+        self.assertNotIn("rail_access_good", self.meta.public_slugs())
+        self.assertNotIn("gundam_manhole_city", self.meta.public_slugs())
+
+    def test_public_labels_explain_the_theme_boundary(self) -> None:
+        self.assertEqual("ガンダムマンホール徒歩圏", self.meta.label("near_gundam_manhole"))
+        self.assertEqual("海が見える", self.meta.label("seaside"))
+        self.assertEqual("駅前（150m以内）", self.meta.label("station_front"))
+        self.assertEqual("駅近（150〜500m）", self.meta.label("near_station"))
+
+    def test_top_and_map_share_the_seven_featured_themes(self) -> None:
+        self.assertEqual(
+            [
+                "seaside", "remote_island", "roadside", "tourism", "park",
+                "world_heritage", "near_gundam_manhole",
+            ],
+            self.meta.featured_slugs(),
+        )
+
     def test_priority_only_names_known_tags(self) -> None:
         for slug in self.meta.priority:
             with self.subTest(slug=slug):
@@ -120,6 +146,17 @@ class NoHardcodedListsTest(unittest.TestCase):
                     re.search(r"FEATURED_TAGS = \[\s*'", source),
                     "FEATURED_TAGS を手書きの配列に戻さない",
                 )
+
+    def test_top_and_multilingual_template_use_the_featured_theme_set(self) -> None:
+        expected = set(module.load_tag_meta().featured_slugs())
+        for name in ("index.html", "index.template.html"):
+            with self.subTest(name=name):
+                source = (WEB / name).read_text(encoding="utf-8")
+                actual = set(re.findall(
+                    r"click_hub_tag',[^}]*tag:'([^']+)'",
+                    source,
+                ))
+                self.assertEqual(expected, actual)
 
     def test_manhole_detail_labels_come_from_tag_meta(self) -> None:
         source = (ROOT / "apps/scraper/generate_manhole_pages.py").read_text(encoding="utf-8")

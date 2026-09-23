@@ -694,7 +694,9 @@
     // window.POKEFUTA_TAG_META を定義する（トップのチップ・/tags/ のテーマページも同じ定義）。
     // 以前はここに手書きの定数があり、トップや /summary/ と顔ぶれもラベルも食い違っていた。
     const TAG_DIRECTORY = window.POKEFUTA_TAG_META || { min_count: 5, priority: [], tags: [] };
-    const TAG_ENTRIES = Array.isArray(TAG_DIRECTORY.tags) ? TAG_DIRECTORY.tags : [];
+    const TAG_ENTRIES = Array.isArray(TAG_DIRECTORY.tags)
+      ? TAG_DIRECTORY.tags.filter(t => t.public !== false)
+      : [];
     const TAG_DIRECTORY_MIN_COUNT = TAG_DIRECTORY.min_count;  // この件数未満のタグはチップに表示しない
     const TAG_PRIORITY = TAG_DIRECTORY.priority || [];
     // 主枠の並びは priority に従う（tag_meta.json の記載順ではない）
