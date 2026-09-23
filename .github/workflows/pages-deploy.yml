@@ -30,6 +30,7 @@ on:
       - 'apps/scraper/generate_prefecture_trivia.py' # prefecture trivia generator
       - 'apps/scraper/generate_top_feed.py' # top page community feed generator
       - 'apps/scraper/prefectures.py' # shared prefecture names and URL slugs
+      - 'apps/scraper/display_names.py' # canonical manhole names used by every page generator
       - 'apps/scraper/prefecture_completion.py' # shared photo-completion rollup (prefectures + summary)
       - 'docs/**'     # dataset changes copied into dist/
       - 'dataset/prefecture_trivia*.json' # generated trivia and editorial sources
@@ -110,7 +111,7 @@ jobs:
             apps.scraper.test_generate_character_manhole_page \
             apps.scraper.test_generate_character_work_pages
           echo "[dist] Test manhole detail page headings"
-          python3 -m unittest apps.scraper.test_generate_manhole_pages_h1 apps.scraper.test_display_name_consumers
+          python3 -m unittest apps.scraper.test_generate_manhole_pages_h1 apps.scraper.test_display_name_consumers apps.scraper.test_generate_top_feed
           echo "[dist] Generate static manhole detail pages"
           python3 apps/scraper/generate_manhole_pages.py
           echo "[dist] Generate static Pokemon LP pages"

@@ -176,6 +176,17 @@ class AttachPlaceLabelsTest(unittest.TestCase):
                           "東大阪市 花園中央公園（松原南2）",
                           "東大阪市 東石切公園"])
 
+    def test_landmark_clashing_with_address_label_gets_address(self):
+        # 施設名「本町1」と、施設名の無い蓋の住所から作った「本町1」がぶつかる。
+        # 施設名の側に住所を括弧で足して区別し、どちらも曖昧（ポケモン名頼み）にしない
+        rows = [
+            rec(id="1", city="例", title="北海道/例町", address="北海道例町別町1", building="本町1"),
+            rec(id="2", city="例", title="北海道/例町", address="北海道例町本町1"),
+        ]
+        attach_place_labels(rows)
+        self.assertEqual([r["place_label"] for r in rows], ["例町 本町1（別町1）", "例町 本町1"])
+        self.assertFalse(any(r.get("place_ambiguous") for r in rows))
+
     def test_ambiguous_drops_shared_address(self):
         # 全員に共通の住所は何も伝えないので落とし、ポケモン名で区別する
         rows = [

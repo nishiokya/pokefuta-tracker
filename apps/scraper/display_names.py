@@ -284,45 +284,40 @@ def attach_place_labels(records: Iterable[Dict[str, Any]],
             id(record): _compose(record, landmarks[id(record)])
             for record in group if landmarks[id(record)]
         }
-        landmark_counts = _counts(landmark_bases.values())
-        colliding_landmarks = {
-            key for key, label in landmark_bases.items() if landmark_counts[label] > 1
-        }
 
-        labels = None
-        for level in range(depth):
-            trial = {}
+        def _clashes(a: str, b: str) -> bool:
+            # _all_distinguishable() と同じ基準（同一か、片方が他方の頭）
+            return a == b or a.startswith(b) or b.startswith(a)
+
+        def _labels_at(level: int) -> Dict[int, str]:
+            # まず施設名か住所（この段階）でそのまま作り、ほかの蓋の名前と衝突する
+            # 施設名にだけ住所を括弧で足す。衝突相手は施設名に限らない
+            # （施設名「本町1」と、住所から作った「本町1」がぶつかることもある）。
+            plain = {}
+            address_parts = {}
             for record in group:
                 key = id(record)
                 options = stages[key] or [""]
-                address_part = options[min(level, len(options) - 1)]
-                if key in landmark_bases:
-                    base = landmark_bases[key]
-                    trial[key] = (
-                        f"{base}（{address_part}）"
-                        if key in colliding_landmarks and address_part
-                        else base
-                    )
-                else:
-                    trial[key] = _compose(record, address_part)
+                address_parts[key] = options[min(level, len(options) - 1)]
+                plain[key] = landmark_bases.get(key) or _compose(record, address_parts[key])
+            out = {}
+            for key, label in plain.items():
+                clashing = key in landmark_bases and address_parts[key] and any(
+                    other_key != key and _clashes(label, other)
+                    for other_key, other in plain.items()
+                )
+                out[key] = f"{label}（{address_parts[key]}）" if clashing else label
+            return out
+
+        labels = None
+        for level in range(depth):
+            trial = _labels_at(level)
             if _all_distinguishable(trial.values()):
                 labels = trial
                 break
 
         if labels is None:
-            labels = {}
-            for record in group:
-                key = id(record)
-                address_part = (stages[key] or [""])[-1]
-                if key in landmark_bases:
-                    base = landmark_bases[key]
-                    labels[key] = (
-                        f"{base}（{address_part}）"
-                        if key in colliding_landmarks and address_part
-                        else base
-                    )
-                else:
-                    labels[key] = _compose(record, address_part)
+            labels = _labels_at(depth - 1)
 
         counts = _counts(labels.values())
         ambiguous = [r for r in group if counts[labels[id(r)]] > 1]
