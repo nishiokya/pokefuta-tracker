@@ -21,6 +21,7 @@ from urllib.parse import quote, urlparse
 from xml.sax.saxutils import escape
 
 sys.path.insert(0, str(Path(__file__).parent))
+from display_names import landmark_label, municipality_label  # noqa: E402
 from generate_pokemon_pages import _FORM_PREFIX, _normalize_katakana  # noqa: E402
 from photo_caption import (  # noqa: E402
     CAPTION_ELLIPSIS_CSS,
@@ -594,7 +595,10 @@ def generate_html(
         _tw_title = f"{city_label}のポケふた｜{pokemon_label}"
         _tw_desc = f"{prefecture}{city}のポケふたを地図で確認できます。"
 
-    h1 = f"{prefecture}{city}のポケふた"
+    # 地図の見出し（place_label）と同じく施設名を入れる。<title> と og: は
+    # 検索向けに「県市のポケふた」の形を保つので、ここだけ変える
+    place = landmark_label(manhole, municipality_label(manhole))
+    h1 = f"{prefecture}{city} {place}のポケふた" if place else f"{prefecture}{city}のポケふた"
     if pokemons:
         h1 += f"（{pokemon_text}）"
 

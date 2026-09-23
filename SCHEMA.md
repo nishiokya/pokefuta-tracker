@@ -45,9 +45,11 @@
 
 `title` は local.pokemon.jp の見出しそのままで「鹿児島県/指宿市」のように**自治体単位**でしか
 区別できず、指宿市9枚・町田市6枚のように地図上へ同じ文字列が並んでしまう。
-そこで `display_names.attach_place_labels()` が **`title` が重複するレコードにだけ**
-`place_label` を付与する（一意なレコードには付けない）。`title` は upstream 原文のまま
-残すので、スクレイパの差分検知（`CORE_COMPARE_FIELDS`）には影響しない。
+そこで `display_names.attach_place_labels()` が **active な全レコードに** `place_label` を付与する。
+住所で区別するのは `title` が重複するときだけで、1枚しかない自治体は「自治体 施設名」、
+施設名が無ければ自治体名だけになる（以前は重複時だけ付けていたため、地図の見出しが
+「豊橋市 道の駅とよはし」と「愛知県/名古屋市中区」のように枚数次第で別の形になっていた）。
+`title` は upstream 原文のまま残すので、スクレイパの差分検知（`CORE_COMPARE_FIELDS`）には影響しない。
 
 | 優先順 | 材料 | 例 |
 |------|------|-----|
@@ -100,7 +102,7 @@ short→long で作り、**群全体が区別できる最短の段階**を選ぶ
 | 地図（ポップアップ・一覧・JSON-LD） | `getManholeDisplayName()`（`apps/web/map.html`） | `place_label \|\| title`。`place_ambiguous` のときだけ `getHeroPokemonDisplayName()` で言語変換したポケモン名を添える |
 | KML | `export_kml.py` の `_format_name()` | ポケモン名を別枠で見せられないので常に添える |
 | トップフィード | `generate_top_feed.py` | `place_label \|\| title`（`pokemons` は別フィールドで持つ） |
-| マンホール詳細ページ | `generate_manhole_pages.py` | 変更なし（h1 は元から `{県}{市}のポケふた（{ポケモン}）`） |
+| マンホール詳細ページ | `generate_manhole_pages.py` | h1 は `{県}{市} {施設名}のポケふた（{ポケモン}）`（施設名は `landmark_label()` で地図と同じ規則で整える。無ければ `{県}{市}のポケふた（{ポケモン}）`）。`<title>` と og: は検索向けに施設名を入れない |
 | アプリ用スナップショット | `export_app_snapshot.py` の `apply_place_labels()` | Supabase 由来。`name` に `compose_display_name()` の結果を入れ、`place_label` / `place_ambiguous` も併せて出力する |
 
 Python 側から1本の文字列が欲しいときは `display_names.compose_display_name()` を使う。

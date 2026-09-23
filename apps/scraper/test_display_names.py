@@ -182,10 +182,20 @@ class AttachPlaceLabelsTest(unittest.TestCase):
         self.assertEqual(compose_display_name(rows[0]), "町田市（フシギダネ）")
 
 
-    def test_unique_title_gets_no_label(self):
-        rows = [rec(id="1", title="北海道/斜里町", city="斜里", address="北海道斜里町")]
-        self.assertEqual(attach_place_labels(rows), 0)
-        self.assertNotIn("place_label", rows[0])
+    def test_unique_title_gets_municipality_only(self):
+        # 区別が要らなくても見出しの形を揃えるため付ける。住所は区別用なので使わない
+        rows = [rec(id="1", title="北海道/斜里町", city="斜里", address="北海道斜里町ウトロ西")]
+        self.assertEqual(attach_place_labels(rows), 1)
+        self.assertEqual(rows[0]["place_label"], "斜里町")
+        self.assertNotIn("place_ambiguous", rows[0])
+
+    def test_unique_title_gets_landmark(self):
+        # 名古屋市中区は1枚だけだが、見出しは複数枚の自治体と同じ「自治体 施設名」
+        rows = [rec(id="404", title="愛知県/名古屋市中区", prefecture="愛知県",
+                    city="名古屋市中区", address="愛知県名古屋市中区二の丸1番2・3号",
+                    building="金シャチ横丁 宗春ゾーン（東門エリア）")]
+        self.assertEqual(attach_place_labels(rows), 1)
+        self.assertEqual(rows[0]["place_label"], "名古屋市中区 金シャチ横丁 宗春ゾーン（東門エリア）")
 
     def test_duplicated_title_gets_label(self):
         rows = [
@@ -238,15 +248,16 @@ class AttachPlaceLabelsTest(unittest.TestCase):
             rec(id="1", status="deleted", title="東京都/町田市", place_label="古い名前"),
             rec(id="2", city="町田", title="東京都/町田市", address="東京都町田市原町田5-16"),
         ]
-        self.assertEqual(attach_place_labels(rows), 0)
+        # 削除済みは群に入らないので、残った1枚は一意扱いで自治体名だけになる
+        self.assertEqual(attach_place_labels(rows), 1)
         self.assertNotIn("place_label", rows[0])
-        self.assertNotIn("place_label", rows[1])
+        self.assertEqual(rows[1]["place_label"], "町田市")
 
-    def test_stale_fields_are_removed(self):
-        rows = [rec(id="1", title="北海道/斜里町",
+    def test_stale_fields_are_replaced(self):
+        rows = [rec(id="1", title="北海道/斜里町", city="斜里", address="北海道斜里町",
                     place_label="古い名前", place_ambiguous=True)]
         attach_place_labels(rows)
-        self.assertNotIn("place_label", rows[0])
+        self.assertEqual(rows[0]["place_label"], "斜里町")
         self.assertNotIn("place_ambiguous", rows[0])
 
 
