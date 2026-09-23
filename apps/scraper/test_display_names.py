@@ -182,22 +182,24 @@ class AttachPlaceLabelsTest(unittest.TestCase):
         self.assertEqual(compose_display_name(rows[0]), "町田市（フシギダネ）")
 
 
-    def test_unique_title_gets_municipality_only(self):
-        # 区別が要らなくても見出しの形を揃えるため付ける。住所は区別用なので使わない
+    def test_unique_title_without_building_keeps_title(self):
+        # 施設名が無ければ title（北海道/斜里町）のまま県まで見せる。住所は区別用なので足さない
         rows = [rec(id="1", title="北海道/斜里町", city="斜里", address="北海道斜里町ウトロ西")]
-        self.assertEqual(attach_place_labels(rows), 1)
-        self.assertEqual(rows[0]["place_label"], "斜里町")
+        self.assertEqual(attach_place_labels(rows), 0)
+        self.assertNotIn("place_label", rows[0])
         self.assertNotIn("place_ambiguous", rows[0])
 
     def test_unique_title_without_address_recovers_from_title(self):
         # 住所が無いと city は接尾辞が落ちた「斜里」のまま。title から「斜里町」を補う
-        rows = [rec(id="1", title="北海道/斜里町", prefecture="北海道", city="斜里", address="")]
+        rows = [rec(id="1", title="北海道/斜里町", prefecture="北海道", city="斜里", address="",
+                    building="道の駅うとろ・シリエトク")]
         attach_place_labels(rows)
-        self.assertEqual(rows[0]["place_label"], "斜里町")
+        self.assertEqual(rows[0]["place_label"], "斜里町 道の駅うとろ・シリエトク")
 
     def test_unique_title_without_municipality_gets_no_label(self):
-        # 自治体名を復元できないなら「北海道」だけの見出しにせず title に任せる
-        rows = [rec(id="1", title="北海道", prefecture="北海道", city="", address="")]
+        # 自治体名を復元できないなら「北海道 施設名」のような見出しにせず title に任せる
+        rows = [rec(id="1", title="北海道", prefecture="北海道", city="", address="",
+                    building="道の駅うとろ・シリエトク")]
         self.assertEqual(attach_place_labels(rows), 0)
         self.assertNotIn("place_label", rows[0])
 
@@ -260,16 +262,16 @@ class AttachPlaceLabelsTest(unittest.TestCase):
             rec(id="1", status="deleted", title="東京都/町田市", place_label="古い名前"),
             rec(id="2", city="町田", title="東京都/町田市", address="東京都町田市原町田5-16"),
         ]
-        # 削除済みは群に入らないので、残った1枚は一意扱いで自治体名だけになる
-        self.assertEqual(attach_place_labels(rows), 1)
+        # 削除済みは群に入らないので、残った1枚は一意扱い。施設名が無いので付かない
+        self.assertEqual(attach_place_labels(rows), 0)
         self.assertNotIn("place_label", rows[0])
-        self.assertEqual(rows[1]["place_label"], "町田市")
+        self.assertNotIn("place_label", rows[1])
 
-    def test_stale_fields_are_replaced(self):
+    def test_stale_fields_are_removed(self):
         rows = [rec(id="1", title="北海道/斜里町", city="斜里", address="北海道斜里町",
                     place_label="古い名前", place_ambiguous=True)]
         attach_place_labels(rows)
-        self.assertEqual(rows[0]["place_label"], "斜里町")
+        self.assertNotIn("place_label", rows[0])
         self.assertNotIn("place_ambiguous", rows[0])
 
 

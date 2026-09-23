@@ -156,7 +156,7 @@ def _compute_and_attach_titles(all_records: List[Dict], dataset_dir: str,
 
 def _compute_and_attach_place_labels(all_records: List[Dict],
                                       logger: logging.Logger) -> None:
-    """active な全レコードに place_label を付与する。
+    """title が重複するか施設名を持つレコードに place_label を付与する。
 
     title は upstream 見出しそのままで自治体単位でしか区別できないため、
     地図ポップアップなどで同じ文字列が並ぶ。表示側は place_label || title で読む。

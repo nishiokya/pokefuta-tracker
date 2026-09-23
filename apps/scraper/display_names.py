@@ -4,9 +4,10 @@
 「鹿児島県/指宿市」のように**自治体単位**でしか区別できず、
 指宿市9枚・町田市6枚のように同じ文字列が地図上に並んでしまう。
 
-そこで active な全レコードに `place_label`（場所の名前）を付与する。区別に住所を使うのは
-title が重複しているときだけで、1枚しかない自治体は「自治体 施設名」か自治体名だけになる
-（枚数によって見出しの形が変わらないようにするため）。
+そこで title が重複するレコードと、施設名（building）を持つレコードに `place_label`
+（場所の名前）を付与する。区別に住所を使うのは title が重複しているときだけで、
+1枚しかない自治体は「自治体 施設名」になる（施設名の見出しを枚数で変えないため）。
+施設名の無い一意なレコードには付けず、title（「岩手県/宮古市」）のまま県まで見せる。
 `title` は upstream 原文のまま残す（差分検知の基準に使うため）ので、
 表示側は `place_label || title` で読むこと。
 
@@ -217,7 +218,7 @@ def _compose(record: Dict[str, Any], place: str) -> str:
 
 def attach_place_labels(records: Iterable[Dict[str, Any]],
                         *, active_predicate: Optional[Callable[[Dict[str, Any]], bool]] = None) -> int:
-    """active な全レコードに place_label を付与する。
+    """title が重複するか施設名を持つ active レコードに place_label を付与する。
 
     住所は「群の中で一意になる最短の段階」まで切り詰める。北九州市の5枚なら
     「小倉北区室町一丁目1 リバーウォーク北九州」ではなく「小倉北区室町」で足りる。
@@ -225,7 +226,7 @@ def attach_place_labels(records: Iterable[Dict[str, Any]],
 
     それでも重複するレコードには `place_ambiguous: True` を立てる
     （表示側がポケモン名を添えて区別する）。一意な title を持つレコードは
-    「自治体 施設名」（施設名が無ければ自治体名）にする。付与した件数を返す。
+    施設名があれば「自治体 施設名」にし、無ければ付けない。付与した件数を返す。
 
     active_predicate は「生きているレコード」の判定を差し替えるためのもの。
     Supabase 由来のアプリ用スナップショットは status ではなく is_active を持つ。
@@ -244,19 +245,19 @@ def attach_place_labels(records: Iterable[Dict[str, Any]],
     attached = 0
     for group in groups.values():
         if len(group) < 2:
-            # 区別の必要が無くても見出しは「自治体 施設名」で揃える。ここで外すと
-            # 表示側が title（「愛知県/名古屋市中区」）に落ち、同じ地図の中で
-            # 見出しの形が枚数次第で変わってしまう。住所は区別のためだけに使うので、
-            # 施設名が無ければ自治体名だけにする。
+            # 区別の必要が無くても、施設名があれば見出しは「自治体 施設名」で揃える。
+            # 付けないと表示側が title（「愛知県/名古屋市中区」）に落ち、施設名が
+            # 見出しから消える。住所は区別のためだけに使うので一意なものには足さない。
             for record in group:
                 record.pop("place_ambiguous", None)
                 city_label = _complete_municipality(record)
-                if not city_label:
-                    # 「斜里」「北海道」だけの見出しは title より情報が少ないので付けない
+                place = landmark_label(record, city_label) if city_label else ""
+                if not place:
+                    # 施設名が無いなら title（「岩手県/宮古市」）のままの方が県まで読める。
+                    # 自治体名を復元できないときも「斜里」「北海道」だけの見出しにしない
                     record.pop("place_label", None)
                     continue
-                place = landmark_label(record, city_label)
-                record["place_label"] = f"{city_label} {place}" if place else city_label
+                record["place_label"] = f"{city_label} {place}"
                 attached += 1
             continue
 

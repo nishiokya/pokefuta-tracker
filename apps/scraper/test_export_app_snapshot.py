@@ -118,12 +118,12 @@ class ApplyPlaceLabelsTest(unittest.TestCase):
         self.assertEqual(entries[0]["name"], "指宿市 指宿中央交番")
         self.assertEqual(entries[1]["name"], "指宿市 砂むし会館砂楽")
 
-    def test_unique_title_uses_municipality(self) -> None:
-        # 1枚だけの自治体も地図と同じ「自治体 施設名」の形にする（「北海道/斜里町」は出さない）
+    def test_unique_title_without_building_keeps_original(self) -> None:
+        # 施設名が無い1枚だけの自治体は title のまま県まで見せる
         entries = [self.entry(id=9003, title="北海道/斜里町", prefecture="北海道",
                               municipality="斜里", city="斜里", address="北海道斜里町ウトロ西")]
         MODULE.apply_place_labels(entries)
-        self.assertEqual(entries[0]["name"], "斜里町")
+        self.assertEqual(entries[0]["name"], "北海道/斜里町")
 
     def test_unique_title_uses_landmark(self) -> None:
         entries = [self.entry(id=9012, title="北海道/斜里町", prefecture="北海道",
@@ -166,9 +166,8 @@ class ApplyPlaceLabelsTest(unittest.TestCase):
         for e in entries[:2]:
             self.assertNotIn("place_label", e)
             self.assertEqual(e["name"], "鹿児島県/指宿市")
-        # active は1件だけなので重複扱いにはならず、自治体名だけになる
-        self.assertEqual(entries[2]["place_label"], "指宿市")
-        self.assertNotIn("place_ambiguous", entries[2])
+        # active は1件だけで施設名も無いので place_label は付かない
+        self.assertNotIn("place_label", entries[2])
 
     def test_manual_master_overrides_supabase_typo(self) -> None:
         # Supabase には手動マスタの訂正が届かないので、name を組み立てる前に重ねる
@@ -193,7 +192,7 @@ class ApplyPlaceLabelsTest(unittest.TestCase):
         self.assertEqual(entries[0]["building"], "そのまま")
 
     def test_never_empty_name(self) -> None:
-        entries = [self.entry(id=9011, title="", prefecture="", municipality="", city="")]
+        entries = [self.entry(id=9011, title="")]
         MODULE.apply_place_labels(entries)
         self.assertEqual(entries[0]["name"], "ポケふた")
 
