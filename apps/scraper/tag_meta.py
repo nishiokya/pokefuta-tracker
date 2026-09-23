@@ -46,7 +46,14 @@ class TagMeta:
         return [tag["slug"] for tag in self.tags if tag.get("page")]
 
     def featured_slugs(self) -> list[str]:
-        return [tag["slug"] for tag in self.tags if tag.get("featured")]
+        return [
+            tag["slug"] for tag in self.tags
+            if tag.get("featured") and tag.get("public", True)
+        ]
+
+    def public_slugs(self) -> list[str]:
+        """トップと地図のテーマ一覧に公開するタグ。"""
+        return [tag["slug"] for tag in self.tags if tag.get("public", True)]
 
     def _sort_key(self, slug: str, counts: dict[str, int]):
         """地図のテーマ一覧と同じ並び: priority 順 → 残りは枚数降順。"""
@@ -57,7 +64,11 @@ class TagMeta:
     def visible_slugs(self, counts: dict[str, int]) -> list[str]:
         """min_count を満たすタグを、地図と同じ順序で返す。"""
         return sorted(
-            (tag["slug"] for tag in self.tags if counts.get(tag["slug"], 0) >= self.min_count),
+            (
+                tag["slug"] for tag in self.tags
+                if tag.get("public", True)
+                and counts.get(tag["slug"], 0) >= self.min_count
+            ),
             key=lambda slug: self._sort_key(slug, counts),
         )
 
