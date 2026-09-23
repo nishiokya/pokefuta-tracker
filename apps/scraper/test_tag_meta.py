@@ -147,6 +147,17 @@ class NoHardcodedListsTest(unittest.TestCase):
                     "FEATURED_TAGS を手書きの配列に戻さない",
                 )
 
+    def test_top_and_multilingual_template_use_the_featured_theme_set(self) -> None:
+        expected = set(module.load_tag_meta().featured_slugs())
+        for name in ("index.html", "index.template.html"):
+            with self.subTest(name=name):
+                source = (WEB / name).read_text(encoding="utf-8")
+                actual = set(re.findall(
+                    r"click_hub_tag',[^}]*tag:'([^']+)'",
+                    source,
+                ))
+                self.assertEqual(expected, actual)
+
     def test_manhole_detail_labels_come_from_tag_meta(self) -> None:
         source = (ROOT / "apps/scraper/generate_manhole_pages.py").read_text(encoding="utf-8")
         self.assertIn("load_tag_meta", source)
