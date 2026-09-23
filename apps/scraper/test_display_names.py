@@ -156,7 +156,7 @@ class AttachPlaceLabelsTest(unittest.TestCase):
         self.assertEqual(rows[2]["place_label"], "香取市 道の駅水の郷さわら")
         self.assertEqual(rows[0]["place_label"], "香取市 佐原イ109")
 
-    def test_colliding_landmark_falls_back_to_address(self):
+    def test_colliding_landmark_keeps_landmark_and_adds_address(self):
         rows = [
             rec(id="209", city="東大阪", title="大阪府/東大阪市",
                 address="大阪府東大阪市松原南1-1", building="花園中央公園"),
@@ -167,7 +167,9 @@ class AttachPlaceLabelsTest(unittest.TestCase):
         ]
         attach_place_labels(rows)
         self.assertEqual([r["place_label"] for r in rows],
-                         ["東大阪市 松原南1", "東大阪市 松原南2", "東大阪市 東石切公園"])
+                         ["東大阪市 花園中央公園（松原南1）",
+                          "東大阪市 花園中央公園（松原南2）",
+                          "東大阪市 東石切公園"])
 
     def test_ambiguous_drops_shared_address(self):
         # 全員に共通の住所は何も伝えないので落とし、ポケモン名で区別する
@@ -221,8 +223,8 @@ class AttachPlaceLabelsTest(unittest.TestCase):
         self.assertEqual(rows[1]["place_label"], "斑鳩町 興留5")
         self.assertNotIn("place_ambiguous", rows[0])
 
-    def test_same_landmark_retries_with_address(self):
-        # 東大阪の2枚はどちらも building が「花園中央公園」だが住所で分かれる
+    def test_same_landmark_adds_address_without_dropping_landmark(self):
+        # 東大阪の2枚は同じ「花園中央公園」なので、施設名を残したまま住所で分ける
         rows = [
             rec(id="209", city="東大阪", title="大阪府/東大阪市",
                 address="大阪府東大阪市松原南1-1", building="花園中央公園"),
@@ -230,8 +232,8 @@ class AttachPlaceLabelsTest(unittest.TestCase):
                 address="大阪府東大阪市松原南2-6", building="花園中央公園"),
         ]
         attach_place_labels(rows)
-        self.assertEqual(rows[0]["place_label"], "東大阪市 松原南1")
-        self.assertEqual(rows[1]["place_label"], "東大阪市 松原南2")
+        self.assertEqual(rows[0]["place_label"], "東大阪市 花園中央公園（松原南1）")
+        self.assertEqual(rows[1]["place_label"], "東大阪市 花園中央公園（松原南2）")
         self.assertNotIn("place_ambiguous", rows[0])
 
     def test_retry_does_not_degrade_when_address_missing(self):

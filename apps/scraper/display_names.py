@@ -20,9 +20,10 @@
 
 命名規則:
 
-    building あり : 指宿市 砂むし会館砂楽
-    building なし : 斑鳩町 興留7丁目3
-    区別できない  : 町田市（表示時にポケモン名が付く）
+    building あり       : 指宿市 砂むし会館砂楽
+    同じ building が複数: 東大阪市 花園中央公園（松原南1）
+    building なし       : 斑鳩町 興留7丁目3
+    区別できない        : 町田市（表示時にポケモン名が付く）
 
 `place_label` が群内で重複してしまい場所では区別できないレコードには
 `place_ambiguous` を立て、**表示側が言語ごとに変換したポケモン名を添えて**区別する
@@ -265,45 +266,53 @@ def attach_place_labels(records: Iterable[Dict[str, Any]],
         landmarks = {id(r): landmark_label(r, municipality_label(r)) for r in group}
         depth = max((len(v) for v in stages.values()), default=1) or 1
 
-        # 施設名を持つレコードはそれを使う。施設名が衝突したものだけ住所へ落とす
-        # （東大阪の2枚はどちらも「花園中央公園」）。逆に、住所側の段階を深める
-        # ために施設名を捨てることはしない（香取市の「道の駅水の郷さわら」が
-        # 「佐原イ4053」に置き換わってしまうため）。
-        use_landmark = {id(r) for r in group if landmarks[id(r)]}
-        while True:
-            labels = None
-            for level in range(depth):
-                trial = {}
-                for record in group:
-                    key = id(record)
-                    if key in use_landmark:
-                        trial[key] = _compose(record, landmarks[key])
-                    else:
-                        options = stages[key] or [""]
-                        trial[key] = _compose(record, options[min(level, len(options) - 1)])
-                if _all_distinguishable(trial.values()):
-                    labels = trial
-                    break
-            if labels is not None:
-                break
-            deepest = {}
+        # 施設名は正本の手動メタデータなので、同じ施設名が複数あっても捨てない。
+        # 衝突する施設だけ住所の最短識別子を括弧で足す。東大阪の2枚なら
+        # 「花園中央公園」を「松原南1/2」で置換せず、
+        # 「花園中央公園（松原南1/2）」とする。
+        landmark_bases = {
+            id(record): _compose(record, landmarks[id(record)])
+            for record in group if landmarks[id(record)]
+        }
+        landmark_counts = _counts(landmark_bases.values())
+        colliding_landmarks = {
+            key for key, label in landmark_bases.items() if landmark_counts[label] > 1
+        }
+
+        labels = None
+        for level in range(depth):
+            trial = {}
             for record in group:
                 key = id(record)
-                if key in use_landmark:
-                    deepest[key] = _compose(record, landmarks[key])
+                options = stages[key] or [""]
+                address_part = options[min(level, len(options) - 1)]
+                if key in landmark_bases:
+                    base = landmark_bases[key]
+                    trial[key] = (
+                        f"{base}（{address_part}）"
+                        if key in colliding_landmarks and address_part
+                        else base
+                    )
                 else:
-                    deepest[key] = _compose(record, (stages[key] or [""])[-1])
-            # 落とし先の住所が無いなら施設名を捨てても情報が減るだけなので残す
-            clashing = {
-                id(r) for r in group
-                if id(r) in use_landmark
-                and stages[id(r)]
-                and sum(1 for v in deepest.values() if v == deepest[id(r)]) > 1
-            }
-            if not clashing:
-                labels = deepest
+                    trial[key] = _compose(record, address_part)
+            if _all_distinguishable(trial.values()):
+                labels = trial
                 break
-            use_landmark -= clashing
+
+        if labels is None:
+            labels = {}
+            for record in group:
+                key = id(record)
+                address_part = (stages[key] or [""])[-1]
+                if key in landmark_bases:
+                    base = landmark_bases[key]
+                    labels[key] = (
+                        f"{base}（{address_part}）"
+                        if key in colliding_landmarks and address_part
+                        else base
+                    )
+                else:
+                    labels[key] = _compose(record, address_part)
 
         counts = _counts(labels.values())
         ambiguous = [r for r in group if counts[labels[id(r)]] > 1]
