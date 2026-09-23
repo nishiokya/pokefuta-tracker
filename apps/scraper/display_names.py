@@ -4,7 +4,10 @@
 「鹿児島県/指宿市」のように**自治体単位**でしか区別できず、
 指宿市9枚・町田市6枚のように同じ文字列が地図上に並んでしまう。
 
-そこで重複しているレコードにだけ `place_label`（場所の名前）を付与する。
+そこで title が重複するレコードと、施設名（building）を持つレコードに `place_label`
+（場所の名前）を付与する。区別に住所を使うのは title が重複しているときだけで、
+1枚しかない自治体は「自治体 施設名」になる（施設名の見出しを枚数で変えないため）。
+施設名の無い一意なレコードには付けず、title（「岩手県/宮古市」）のまま県まで見せる。
 `title` は upstream 原文のまま残す（差分検知の基準に使うため）ので、
 表示側は `place_label || title` で読むこと。
 
@@ -188,6 +191,26 @@ def _address_stages(record: Dict[str, Any]) -> List[str]:
     return address_candidates(town_label(record, municipality_label(record)))
 
 
+def _complete_municipality(record: Dict[str, Any]) -> str:
+    """接尾辞まで揃った自治体名を返す。復元できなければ空文字。
+
+    municipality_label() は住所が無いと接尾辞の落ちた city（「斜里」）を、
+    city も無いと都道府県名を返す。一意なレコードの見出しをそれで作ると
+    title（「北海道/斜里町」）より情報が減るので、title の後半から補い、
+    それでも揃わなければ付けない。
+    """
+    label = municipality_label(record)
+    prefecture = str(record.get("prefecture") or "").strip()
+    if label and label != prefecture and re.search(_MUNICIPALITY_SUFFIX + "$", label):
+        return label
+    title = str(record.get("title") or "").strip()
+    if "/" in title:
+        tail = title.split("/", 1)[1].strip()
+        if tail and re.search(_MUNICIPALITY_SUFFIX + "$", tail):
+            return tail
+    return ""
+
+
 def _compose(record: Dict[str, Any], place: str) -> str:
     city_label = municipality_label(record)
     return f"{city_label} {place}".strip() if place else city_label
@@ -195,15 +218,15 @@ def _compose(record: Dict[str, Any], place: str) -> str:
 
 def attach_place_labels(records: Iterable[Dict[str, Any]],
                         *, active_predicate: Optional[Callable[[Dict[str, Any]], bool]] = None) -> int:
-    """title が重複している active レコードに place_label を付与する。
+    """title が重複するか施設名を持つ active レコードに place_label を付与する。
 
     住所は「群の中で一意になる最短の段階」まで切り詰める。北九州市の5枚なら
     「小倉北区室町一丁目1 リバーウォーク北九州」ではなく「小倉北区室町」で足りる。
     段階は群で揃えるので、同じ自治体の中で切り方がばらつかない。
 
     それでも重複するレコードには `place_ambiguous: True` を立てる
-    （表示側がポケモン名を添えて区別する）。一意な title を持つレコードからは
-    両フィールドを取り除く。付与した件数を返す。
+    （表示側がポケモン名を添えて区別する）。一意な title を持つレコードは
+    施設名があれば「自治体 施設名」にし、無ければ付けない。付与した件数を返す。
 
     active_predicate は「生きているレコード」の判定を差し替えるためのもの。
     Supabase 由来のアプリ用スナップショットは status ではなく is_active を持つ。
@@ -222,9 +245,20 @@ def attach_place_labels(records: Iterable[Dict[str, Any]],
     attached = 0
     for group in groups.values():
         if len(group) < 2:
+            # 区別の必要が無くても、施設名があれば見出しは「自治体 施設名」で揃える。
+            # 付けないと表示側が title（「愛知県/名古屋市中区」）に落ち、施設名が
+            # 見出しから消える。住所は区別のためだけに使うので一意なものには足さない。
             for record in group:
-                record.pop("place_label", None)
                 record.pop("place_ambiguous", None)
+                city_label = _complete_municipality(record)
+                place = landmark_label(record, city_label) if city_label else ""
+                if not place:
+                    # 施設名が無いなら title（「岩手県/宮古市」）のままの方が県まで読める。
+                    # 自治体名を復元できないときも「斜里」「北海道」だけの見出しにしない
+                    record.pop("place_label", None)
+                    continue
+                record["place_label"] = f"{city_label} {place}"
+                attached += 1
             continue
 
         stages = {id(r): _address_stages(r) for r in group}

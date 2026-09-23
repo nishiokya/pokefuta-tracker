@@ -156,7 +156,7 @@ def _compute_and_attach_titles(all_records: List[Dict], dataset_dir: str,
 
 def _compute_and_attach_place_labels(all_records: List[Dict],
                                       logger: logging.Logger) -> None:
-    """title が重複するレコードに place_label を付与する。
+    """title が重複するか施設名を持つレコードに place_label を付与する。
 
     title は upstream 見出しそのままで自治体単位でしか区別できないため、
     地図ポップアップなどで同じ文字列が並ぶ。表示側は place_label || title で読む。
@@ -171,7 +171,7 @@ def _compute_and_attach_place_labels(all_records: List[Dict],
 
     attached = attach_place_labels(all_records)
     ambiguous = sum(1 for r in all_records if r.get("place_ambiguous"))
-    logger.info("Place labels attached for %d duplicated-title records (%d ambiguous)",
+    logger.info("Place labels attached for %d records (%d ambiguous)",
                 attached, ambiguous)
 
 

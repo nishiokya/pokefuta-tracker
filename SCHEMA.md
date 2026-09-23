@@ -14,7 +14,7 @@
 |-----------|----|------|------|----|------|
 | id | string | ✔ | マンホール固有の数値文字列 ID | "123" | URL 中 `/desc/{id}/` から抽出 |
 | title | string | ✔ | 日本語タイトル / 見出し (ページ h1/h2) | "鹿児島県/指宿市" | 空文字の場合あり |
-| place_label | string | ❌ | 画面表示用の場所名（自治体名込み・ポケモン名なし） | "指宿市 砂むし会館砂楽" | `title` が同一自治体内で重複するレコードにのみ付与。`display_names.py` が自動算出（`building` があれば施設名、無ければ住所の町名・番地）。表示側は `place_label || title` で読む |
+| place_label | string | ❌ | 画面表示用の場所名（自治体名込み・ポケモン名なし） | "指宿市 砂むし会館砂楽" | `title` が同一自治体内で重複するレコードと、`building` を持つレコードに付与。`display_names.py` が自動算出（`building` があれば施設名、重複していて無ければ住所の町名・番地）。施設名の無い一意なレコードと、自治体名を復元できないレコードには付けない。表示側は `place_label || title` で読む |
 | place_ambiguous | bool | ❌ | `place_label` が他と重複し場所では区別できない印 | true | 表示側はここだけポケモン名を添えて区別する。件数はデータ次第で変動する |
 | title_en | string | ❌ | 英語版ページからのタイトル | "Poké Lids" | 取得失敗時は空 |
 | title_zh | string | ❌ | 中国語版ページからのタイトル | "寶可夢人孔蓋" | 取得失敗時は空 |
@@ -45,9 +45,12 @@
 
 `title` は local.pokemon.jp の見出しそのままで「鹿児島県/指宿市」のように**自治体単位**でしか
 区別できず、指宿市9枚・町田市6枚のように地図上へ同じ文字列が並んでしまう。
-そこで `display_names.attach_place_labels()` が **`title` が重複するレコードにだけ**
-`place_label` を付与する（一意なレコードには付けない）。`title` は upstream 原文のまま
-残すので、スクレイパの差分検知（`CORE_COMPARE_FIELDS`）には影響しない。
+そこで `display_names.attach_place_labels()` が **`title` が重複するレコードと、`building` を持つレコード**に
+`place_label` を付与する。住所で区別するのは `title` が重複するときだけで、1枚しかない自治体は
+「自治体 施設名」になる（以前は重複時だけ付けていたため、施設名のある見出しが
+「豊橋市 道の駅とよはし」と「愛知県/名古屋市中区」のように枚数次第で別の形になっていた）。
+施設名の無い一意なレコードには付けず、`title`（「岩手県/宮古市」）のまま県まで見せる。
+`title` は upstream 原文のまま残すので、スクレイパの差分検知（`CORE_COMPARE_FIELDS`）には影響しない。
 
 | 優先順 | 材料 | 例 |
 |------|------|-----|
@@ -100,7 +103,7 @@ short→long で作り、**群全体が区別できる最短の段階**を選ぶ
 | 地図（ポップアップ・一覧・JSON-LD） | `getManholeDisplayName()`（`apps/web/map.html`） | `place_label \|\| title`。`place_ambiguous` のときだけ `getHeroPokemonDisplayName()` で言語変換したポケモン名を添える |
 | KML | `export_kml.py` の `_format_name()` | ポケモン名を別枠で見せられないので常に添える |
 | トップフィード | `generate_top_feed.py` | `place_label \|\| title`（`pokemons` は別フィールドで持つ） |
-| マンホール詳細ページ | `generate_manhole_pages.py` | 変更なし（h1 は元から `{県}{市}のポケふた（{ポケモン}）`） |
+| マンホール詳細ページ | `generate_manhole_pages.py` | h1 は `{県}{市} {施設名}のポケふた（{ポケモン}）`（施設名は `landmark_label()` で地図と同じ規則で整える。無ければ `{県}{市}のポケふた（{ポケモン}）`）。`<title>` と og: は検索向けに施設名を入れない |
 | アプリ用スナップショット | `export_app_snapshot.py` の `apply_place_labels()` | Supabase 由来。`name` に `compose_display_name()` の結果を入れ、`place_label` / `place_ambiguous` も併せて出力する |
 
 Python 側から1本の文字列が欲しいときは `display_names.compose_display_name()` を使う。

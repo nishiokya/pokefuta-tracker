@@ -29,9 +29,9 @@
     window.I18N = %%I18N_OBJECT%%;
 
     // title は local.pokemon.jp の見出しそのままで「鹿児島県/指宿市」のように
-    // 自治体単位でしか区別できない。同一自治体に複数枚あるレコードには
-    // place_label（例: 指宿市 砂むし会館砂楽）が入っているので、画面に名前として
-    // 出すときは必ずこの関数を通すこと。
+    // 自治体単位でしか区別できない。同一自治体に複数枚あるか施設名を持つレコードには
+    // place_label（例: 指宿市 砂むし会館砂楽）が入っているので、
+    // 画面に名前として出すときは必ずこの関数を通すこと。
     //
     // place_label が他のレコードと重複して場所では区別できないものには
     // place_ambiguous が立つ。そこだけポケモン名を添えて区別する。日本語名を
@@ -1120,8 +1120,8 @@
           }).join('')
         : `<span class="travel-popup-pokemon">${I.noPokemon}</span>`;
       const imageUrl = getLocalManholeImageUrl(d.id);
-      // place_label が付いているレコードは見出しに既に building を含む
-      // （例: 指宿市 砂むし会館砂楽）ので 📍 行は出さない
+      // place_label は見出しに既に building を含む（例: 指宿市 砂むし会館砂楽）ので
+      // 📍 行は出さない。place_label の無い古いデータを読んだときだけ出る
       const showBuildingLine = Boolean(d.building) && !d.place_label;
       const photoAlt = `${getManholeDisplayName(d)}${I.photoAltSuffix}`;
       const photoMeta = getLatestPhotoMeta(d.id);
