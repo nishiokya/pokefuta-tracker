@@ -579,7 +579,7 @@
   ],
   "manholes": {
     "1": {
-      "building": "指宿警察署　指宿中央交番",
+      "building": "指宿警察署 指宿中央交番",
       "tags": [
         "station_front",
         "tourism",
@@ -637,7 +637,7 @@
       "building": "時遊館COCCOはしむれ"
     },
     "9": {
-      "building": "指宿市 指宿図書館",
+      "building": "指宿図書館",
       "tags": [
         "park",
         "near_station"
@@ -869,7 +869,7 @@
       ]
     },
     "59": {
-      "building": "浜益温泉玄関前",
+      "building": "浜益温泉 玄関前",
       "tags": [
         "tourism",
         "river",
@@ -883,7 +883,7 @@
       ]
     },
     "61": {
-      "building": "洞爺湖畔洞龍の湯付近",
+      "building": "洞爺湖畔 洞龍の湯付近",
       "tags": [
         "lakeside",
         "park",
@@ -930,7 +930,7 @@
       ]
     },
     "67": {
-      "building": "キタカラ敷地内",
+      "building": "キタカラ",
       "verified_at": "2019-12-11",
       "tags": [
         "history",
@@ -943,7 +943,7 @@
       ]
     },
     "68": {
-      "building": "定住支援センター「ふらっと★きた」敷地内",
+      "building": "定住支援センター「ふらっと★きた」",
       "verified_at": "2019-12-10",
       "tags": [
         "near_gundam_manhole",
@@ -1243,7 +1243,7 @@
       ]
     },
     "141": {
-      "building": "三笠市立博物館正面玄関",
+      "building": "三笠市立博物館 正面玄関",
       "verified_at": "2020-11-02",
       "tags": [
         "museum",
@@ -1474,7 +1474,7 @@
       ]
     },
     "187": {
-      "building": "函館公園内旧函館博物館二号前",
+      "building": "函館公園 旧函館博物館二号前",
       "verified_at": "2021-07-15",
       "tags": [
         "seaside",
@@ -1494,7 +1494,7 @@
       ]
     },
     "189": {
-      "building": "明治公園内の噴水広場の一角",
+      "building": "明治公園 噴水広場",
       "verified_at": "2021-07-07",
       "tags": [
         "history",
@@ -1972,7 +1972,7 @@
       ]
     },
     "271": {
-      "building": "豊橋公園内",
+      "building": "豊橋公園",
       "address_raw": "愛知県豊橋市",
       "address_norm": "愛知県豊橋市",
       "prefecture": "愛知県",
@@ -2583,7 +2583,7 @@
       ]
     },
     "359": {
-      "building": "オアシスパーク南側入り口",
+      "building": "オアシスパーク 南側入り口",
       "tags": [
         "tourism",
         "park",
@@ -2861,7 +2861,7 @@
       ]
     },
     "404": {
-      "building": "金シャチ横丁　宗春ゾーン（東門エリア）",
+      "building": "金シャチ横丁 宗春ゾーン（東門エリア）",
       "address_raw": "名古屋市中区二の丸1番2・3号",
       "address_norm": "愛知県名古屋市中区二の丸1番2・3号",
       "prefecture": "愛知県",
@@ -2906,7 +2906,7 @@
       "confidence": 1
     },
     "407": {
-      "building": "刈谷ハイウェイオアシス内にある「オアシス館刈谷 INFOBOX」正面玄関前",
+      "building": "刈谷ハイウェイオアシス「オアシス館刈谷 INFOBOX」 正面玄関前",
       "address_raw": "愛知県刈谷市東境町吉野25-1",
       "address_norm": "愛知県刈谷市東境町吉野25-1",
       "prefecture": "愛知県",
