@@ -69,6 +69,71 @@ class PrefectureCompletionTest(unittest.TestCase):
         self.assertEqual(rollup.listed_count, 1)
         self.assertIsNone(rollup.by_prefecture("群馬県"))
 
+    def test_unexpected_empty_prefecture_is_an_error(self) -> None:
+        """許容リストに無い県が空なら、取得漏れとして止める。
+
+        黙って母数から外すと、スクレイパが1県まるごと取りこぼしたときに
+        コンプリート率が上がったように見えてしまう。
+        """
+        with self.assertRaises(MODULE.CompletionDataError) as caught:
+            MODULE.verify_known_empty(
+                {"香川県": [record("1")], "徳島県": []},
+                ["香川県", "徳島県"],
+                known_empty=frozenset(),
+            )
+        self.assertIn("徳島県", str(caught.exception))
+
+    def test_known_empty_prefecture_that_gained_pokefuta_is_an_error(self) -> None:
+        """未設置のはずの県に1枚出てきたら、リストの更新漏れとして止める。"""
+        with self.assertRaises(MODULE.CompletionDataError) as caught:
+            MODULE.verify_known_empty({"群馬県": [record("1")]}, ["群馬県"])
+        self.assertIn("群馬県", str(caught.exception))
+
+    def test_prefecture_with_only_planned_installations_is_not_an_error(self) -> None:
+        """設置予定だけの県は母数から外すが、取得漏れではないので止めない。
+
+        新しい県の1枚目が告知された直後がこの状態になる。
+        """
+        records_by_pref = {
+            "香川県": [record("1")],
+            "徳島県": [record("2", installed=False)],
+        }
+        MODULE.verify_known_empty(
+            records_by_pref, ["香川県", "徳島県"], known_empty=frozenset()
+        )
+        rollup = MODULE.build_completion(
+            records_by_pref, {"1"}, order=["香川県", "徳島県"]
+        )
+        self.assertEqual(rollup.listed_count, 1)
+        self.assertIsNone(rollup.by_prefecture("徳島県"))
+
+    def test_known_empty_list_matches_the_real_dataset(self) -> None:
+        """PREFECTURES_WITHOUT_POKEFUTA が実データとずれていないこと。
+
+        ずれたまま公開すると「42県」という母数の根拠が無くなる。
+        """
+        import json
+
+        root = Path(__file__).resolve().parents[2]
+        sys.path.insert(0, str(root / "apps" / "scraper"))
+        from prefectures import PREFECTURE_ORDER  # noqa: PLC0415
+
+        records_by_pref: dict[str, list[dict]] = {}
+        for line in (root / "docs" / "pokefuta.ndjson").read_text(
+            encoding="utf-8"
+        ).splitlines():
+            if not line.strip():
+                continue
+            entry = json.loads(line)
+            if entry.get("status", "active") != "active":
+                continue
+            records_by_pref.setdefault(entry.get("prefecture", ""), []).append(entry)
+        empty = {p for p in PREFECTURE_ORDER if not records_by_pref.get(p)}
+        self.assertEqual(empty, set(MODULE.PREFECTURES_WITHOUT_POKEFUTA))
+        self.assertEqual(
+            len(PREFECTURE_ORDER) - len(MODULE.PREFECTURES_WITHOUT_POKEFUTA), 42
+        )
+
     def test_incomplete_is_ordered_by_fewest_missing_first(self) -> None:
         """先頭が「次に達成できる県」になるように並べる。"""
         rollup = MODULE.build_completion(

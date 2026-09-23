@@ -26,11 +26,11 @@ except ModuleNotFoundError as exc:
     from display_names import municipality_label, pokemon_suffix
 
 try:
-    from apps.scraper.prefecture_completion import build_completion
+    from apps.scraper.prefecture_completion import build_completion, verify_known_empty
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
-    from prefecture_completion import build_completion
+    from prefecture_completion import build_completion, verify_known_empty
 
 try:
     from apps.scraper.prefectures import (
@@ -2029,6 +2029,16 @@ def parse_args() -> argparse.Namespace:
 def main() -> int:
     args = parse_args()
     records = load_records(args.manholes)
+    # 公開する母数（42県）の前提を、ページを作る前に確かめる。ある県が
+    # まるごと取りこぼされると、黙って母数から外れてコンプリート率が
+    # 上がったように見えるので、気づけるようにここで止める。generate_all()
+    # ではなく main() に置くのは、合成データで generate_all() を呼ぶ
+    # デプロイ契約テストを巻き込まないため。
+    records_by_pref: dict[str, list[dict]] = {}
+    for record in records:
+        if record.get("status", "active") == "active":
+            records_by_pref.setdefault(record.get("prefecture", ""), []).append(record)
+    verify_known_empty(records_by_pref, PREFECTURE_ORDER)
     pokemon_slugs = load_pokemon_slugs(args.pokemon)
     photos = load_photos(args.photos)
     trivia = load_trivia(args.trivia)

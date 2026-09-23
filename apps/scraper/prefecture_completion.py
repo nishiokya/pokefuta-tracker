@@ -15,6 +15,28 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+# ポケふたが1枚も無い都道府県。公開コピーの母数（42県）はこの5県を引いた数で、
+# 根拠をコードの外に置くと「取りこぼしで空になった県」と区別できなくなる。
+#
+# 検証 (2026-09-23): local.pokemon.jp の /manhole/desc/{id}/ を 1〜488 まで当たり、
+# 中身がある最大IDは 486、欠番は 24〜27 のみ（いずれも公式側も空）で、487 以降は
+# 存在しない。つまり手元のデータセット（ID 1-486・482件）に ID の取りこぼしは無く、
+# この5県は取得漏れではなく本当に未設置。
+#
+# 新しく設置された県が出たらここから消す。verify_known_empty() が食い違いを
+# 例外にするので、消し忘れるとページ生成が止まって気づける。
+PREFECTURES_WITHOUT_POKEFUTA = frozenset({
+    "群馬県",
+    "山梨県",
+    "広島県",
+    "熊本県",
+    "大分県",
+})
+
+
+class CompletionDataError(RuntimeError):
+    """集計の前提が崩れている（取りこぼしが疑われる）ときに送出する。"""
+
 
 @dataclass(frozen=True)
 class PrefectureCompletion:
@@ -105,6 +127,11 @@ def build_completion(
     `photo_ids` は str のIDで渡す。呼び出し側の写真データの形
     （latest-manhole-photos.json の photos dict / 別のスナップショット）に
     このモジュールを依存させないため。
+
+    ポケふたが1枚も無い県は母数から外す。その前提が崩れていないかは
+    verify_known_empty() で別に確かめる。ここに混ぜないのは、47都道府県を
+    揃えないフィクスチャでページ生成をテストするとき、全県が「取りこぼし」に
+    見えてしまうため。
     """
     names = list(order) if order else list(records_by_pref)
     entries: list[PrefectureCompletion] = []
@@ -122,3 +149,38 @@ def build_completion(
             )
         )
     return CompletionRollup(prefectures=tuple(entries))
+
+
+def verify_known_empty(
+    records_by_pref: dict[str, list[dict]],
+    order: list[str] | tuple[str, ...],
+    known_empty: frozenset[str] | set[str] | None = None,
+) -> None:
+    """空の県が PREFECTURES_WITHOUT_POKEFUTA と一致するか確かめる。
+
+    build_completion() はレコードが無い県を黙って母数から外すので、
+    スクレイパが1県まるごと取りこぼすと「コンプリート率が上がった」ように
+    見えてしまう。公開ページを作る前にここを通して、食い違ったら
+    CompletionDataError でビルドを止める。
+
+    設置予定（installed: false）だけの県は母数からは外れるが取りこぼしでは
+    ないので通す。新しい県の1枚目が告知された直後がこの状態。
+    """
+    allowed = (
+        PREFECTURES_WITHOUT_POKEFUTA if known_empty is None else frozenset(known_empty)
+    )
+    problems: list[str] = []
+    for name in order:
+        records = records_by_pref.get(name, [])
+        if not records:
+            if name not in allowed:
+                problems.append(f"{name}（1枚も取れていない）")
+        elif name in allowed:
+            problems.append(f"{name}（未設置県のはずが{len(records)}枚ある）")
+    if problems:
+        raise CompletionDataError(
+            "ポケふた数が PREFECTURES_WITHOUT_POKEFUTA と食い違う都道府県: "
+            + "、".join(problems)
+            + "。スクレイパの取得漏れでなければ prefecture_completion.py の"
+            "リストを更新すること。"
+        )

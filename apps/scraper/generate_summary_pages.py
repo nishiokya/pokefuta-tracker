@@ -38,11 +38,11 @@ from photo_caption import (  # noqa: E402
 )
 
 try:
-    from apps.scraper.prefecture_completion import build_completion
+    from apps.scraper.prefecture_completion import build_completion, verify_known_empty
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
-    from prefecture_completion import build_completion
+    from prefecture_completion import build_completion, verify_known_empty
 
 try:
     from apps.scraper.prefectures import (
@@ -3932,6 +3932,13 @@ def main() -> None:
         for record in load_records(NDJSON)
         if record.get("status", "active") == "active"
     ]
+    # 「まだ写真が投稿されていないポケふた」の母数（42県）の前提を、
+    # ページを作る前に確かめる。詳しくは prefecture_completion.py を参照。
+    records_by_prefecture: dict[str, list[dict]] = {}
+    for record in records:
+        records_by_prefecture.setdefault(record.get("prefecture", ""), []).append(record)
+    verify_known_empty(records_by_prefecture, PREFECTURE_ORDER)
+
     stats = build_stats(records)
     print(f"[INFO] {stats['total']} manholes across {len(stats['installed'])} prefectures")
 
