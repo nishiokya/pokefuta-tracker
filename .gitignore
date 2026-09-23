@@ -19,6 +19,7 @@ pokefuta.ndjson
 
 # 道の駅JSONLDはimport_michineki.pyで都度再生成する
 dataset/michineki.json
+dataset/stations.json
 
 # Manhole Map JSON-LDはimport_manholemap.pyで都度再生成する
 dataset/manholemap.json
