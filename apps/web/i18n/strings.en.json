@@ -131,7 +131,7 @@
       },
       "travelThemes": {
         "remote_island": "Poké Lids on remote islands",
-        "roadside": "Poké Lids at roadside stations",
+        "roadside": "Poké Lids at roadside stations & highway rest areas",
         "station_front": "Poké Lids by train stations",
         "world_heritage": "Poké Lids near World Heritage sites"
       },
@@ -228,7 +228,7 @@
   "SEC5_TITLE": "Search by Theme",
   "SEC5_THEME_LABEL": "Browse by Theme",
   "SEC5_THEME_MORE": "Explore on Map →",
-  "TAG_ROADSIDE": "🛤 Roadside Stations",
+  "TAG_ROADSIDE": "🛤 Roadside Stations & SAs",
   "TAG_ISLAND": "🏝 Remote Islands",
   "TAG_WORLD_HERITAGE": "🌐 World Heritage",
   "TAG_GUNDAM": "🤖 Near a Gundam manhole",

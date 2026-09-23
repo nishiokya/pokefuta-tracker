@@ -179,7 +179,7 @@
       "label": "高速道路SA・PAのポケふた",
       "hashtag": "#SAポケふた",
       "priority": 37,
-      "note": "高速道路のSA/PA・ハイウェイオアシスに設置されたポケふた。道の駅を併設する例（富士川楽座＝東名富士川SA）もあるので roadside と併用しうる"
+      "note": "高速道路のSA/PA・ハイウェイオアシスに設置されたポケふた。テーマは道の駅と1つにまとめている（tag_meta の roadside＝「道の駅・SA」）ので、service_area を付けたら roadside も必ず付ける。称号は service_area が優先され、道の駅の称号は出さない"
     },
     "far_station": {
       "enabled": true,
@@ -2588,7 +2588,9 @@
         "tourism",
         "park",
         "river",
-        "food"
+        "food",
+        "roadside",
+        "service_area"
       ]
     },
     "360": {
@@ -2917,6 +2919,7 @@
         "park",
         "food",
         "lakeside",
+        "roadside",
         "service_area"
       ],
       "confidence": 3

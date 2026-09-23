@@ -114,7 +114,7 @@
       "categories": {
         "travel": {"label": "旅に出る"}, "rare": {"label": "レアを探す"}, "fresh": {"label": "新しい一枚"}
       },
-      "travelThemes": {"remote_island": "離島にあるポケふた", "roadside": "道の駅にあるポケふた", "station_front": "駅前にあるポケふた", "world_heritage": "世界遺産の近くにあるポケふた"},
+      "travelThemes": {"remote_island": "離島にあるポケふた", "roadside": "道の駅・SAにあるポケふた", "station_front": "駅前にあるポケふた", "world_heritage": "世界遺産の近くにあるポケふた"},
       "rareThemes": {"unique_pokemon": "全国でここだけ", "north_end": "日本最北端のポケふた", "south_end": "日本最南端のポケふた", "east_end": "日本最東端のポケふた", "west_end": "日本最西端のポケふた", "lone": "ぽつんと離れた秘境のポケふた"}
     },
     "UI": {

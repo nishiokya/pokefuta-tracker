@@ -109,7 +109,8 @@ class DiscoveryHubTests(unittest.TestCase):
             "near_gundam_manhole",
             "gundam_manhole_city",
         ):
-            count = sum(summary._has_title(record, key) for record in self.records)
+            # 枚数は titles ではなく tags を数える（SA・PAは roadside タグだが称号は service_area）
+            count = sum(key in (record.get("tags") or []) for record in self.records)
             self.assertIn(f">{count}枚</strong>", html)
 
     def test_gundam_hubs_use_tag_data(self):
