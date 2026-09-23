@@ -22,6 +22,7 @@ from urllib.parse import quote
 from xml.sax.saxutils import escape
 
 sys.path.insert(0, str(Path(__file__).parent))
+from display_names import compose_display_name  # noqa: E402
 from site_terms import format_count  # noqa: E402
 
 try:
@@ -716,7 +717,9 @@ def generate_html(
             pref_ja = m.get("prefecture", "")
             city = m.get("city", "")
             pref_display = translate_pref(pref_ja) if pref_ja else ""
-            if pref_display and city:
+            if lang == "ja":
+                location = compose_display_name(m) or pref_display or city or unknown_location
+            elif pref_display and city:
                 location = pref_display + city if lang == "ja" else f"{pref_display} {city}"
             else:
                 location = pref_display or city or m.get("title", unknown_location)

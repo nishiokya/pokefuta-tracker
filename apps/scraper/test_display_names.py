@@ -78,6 +78,11 @@ class LandmarkLabelTest(unittest.TestCase):
         r = rec(building="指宿市 指宿図書館")
         self.assertEqual(landmark_label(r, "指宿市"), "指宿図書館")
 
+    def test_keeps_city_name_that_is_part_of_facility_name(self):
+        # 区切りが無いなら自治体名も施設名の一部（#481 は「役所前」にしない）
+        r = rec(building="岡谷市役所前（蚕糸公園）")
+        self.assertEqual(landmark_label(r, "岡谷市"), "岡谷市役所前（蚕糸公園）")
+
 
 class BuildPlaceLabelTest(unittest.TestCase):
     def test_prefers_landmark(self):

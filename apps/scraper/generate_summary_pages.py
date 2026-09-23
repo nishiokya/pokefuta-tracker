@@ -21,6 +21,7 @@ from urllib.parse import quote, urlparse
 from xml.sax.saxutils import escape
 
 sys.path.insert(0, str(Path(__file__).parent))
+from display_names import compose_display_name  # noqa: E402
 from site_terms import format_count  # noqa: E402
 from tag_meta import load_tag_meta  # noqa: E402
 
@@ -3437,7 +3438,11 @@ def _build_discovery_hub_sections(
             record.get("title", ""),
         )
         display = _localized_pokemon_name(pokemon, s, pokemon_metadata)
-        place = " ".join(filter(None, [record.get("prefecture"), record.get("city")]))
+        place = (
+            compose_display_name(record)
+            if s.get("pref_key") == "ja"
+            else " ".join(filter(None, [record.get("prefecture"), record.get("city")]))
+        )
         return f"{display} · {place}" if place else display
 
     def card(
@@ -3590,11 +3595,9 @@ def _build_latest_photos_section(
     for photo in sorted_photos:
         mid = str(photo.get("manhole_id", ""))
         record = records_by_id.get(mid, {})
-        pref = record.get("prefecture", "")
-        city = record.get("city", "")
         title = record.get("title", "")
         pokemons = "・".join(record.get("pokemons", [])[:2])
-        location = f"{pref}{city}" if pref and city else title
+        location = compose_display_name(record) or title
         local_image = IMAGE_DIR / f"{mid}_latest.jpeg"
         url = (
             f"{BASE_URL}/manhole/image/{quote(mid, safe='')}_latest.jpeg"

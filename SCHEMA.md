@@ -58,6 +58,10 @@
 | 2 | 住所の自治体より後ろ | 斑鳩町 興留7 |
 | 3 | 1が衝突したら2を括弧で足す | 東大阪市 花園中央公園（松原南1） / 花園中央公園（松原南2） |
 
+施設名の先頭の自治体名は、「指宿市 指宿図書館」のように**区切りがあるときだけ**落とす。
+「岡谷市役所前（蚕糸公園）」「鈴鹿市伝統産業会館」のように自治体名まで含めて施設名のものは残し、
+自治体名を重ねずにそのまま名前にする（「岡谷市 役所前…」「鈴鹿市 鈴鹿市…」にしない）。
+
 `city` は接尾辞が落ちているため、`address` から「指宿市」を探して復元する。
 
 #### 住所は群の中で一意になる最短の段階まで切る
@@ -103,8 +107,9 @@ short→long で作り、**群全体が区別できる最短の段階**を選ぶ
 |------|------|------|
 | 地図（ポップアップ・一覧・JSON-LD） | `getManholeDisplayName()`（`apps/web/map.html`） | `place_label \|\| title`。`place_ambiguous` のときだけ `getHeroPokemonDisplayName()` で言語変換したポケモン名を添える |
 | KML | `export_kml.py` の `_format_name()` | ポケモン名を別枠で見せられないので常に添える |
-| トップフィード | `generate_top_feed.py` | `place_label \|\| title`（`pokemons` は別フィールドで持つ） |
-| マンホール詳細ページ | `generate_manhole_pages.py` | h1 は `{県}{市} {施設名}のポケふた（{ポケモン}）`（施設名は `landmark_label()` で地図と同じ規則で整える。無ければ `{県}{市}のポケふた（{ポケモン}）`）。`<title>` と og: は検索向けに施設名を入れない |
+| トップフィード | `generate_top_feed.py` | `compose_display_name()` の結果を `title` に入れる |
+| 都道府県・詳細・ポケモン別・まとめページ | 各ページ生成スクリプト | 利用者向けの見出し・カード名・代替テキストは `compose_display_name()` を使う。SEO用の県・自治体表現は別枠として扱う |
+| OGP画像 | `generate_manhole_ogp.py` | 大見出しに `compose_display_name()` を使う |
 | アプリ用スナップショット | `export_app_snapshot.py` の `apply_place_labels()` | Supabase 由来。`name` に `compose_display_name()` の結果を入れ、`place_label` / `place_ambiguous` も併せて出力する |
 
 Python 側から1本の文字列が欲しいときは `display_names.compose_display_name()` を使う。

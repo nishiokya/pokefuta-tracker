@@ -32,6 +32,7 @@ from pathlib import Path
 from typing import Optional
 
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
+from display_names import compose_display_name, landmark_label, municipality_label
 
 # --- Canvas ---
 CANVAS_W, CANVAS_H = 1200, 630
@@ -148,6 +149,16 @@ def _bbox(draw, text, font):
         return draw.textbbox((0, 0), text, font=font)
     except Exception:
         return (0, 0, len(text) * 12, 16)
+
+
+def _ellipsize(draw, text, font, max_w) -> str:
+    """幅に収まらなければ末尾を削って「…」を付ける。"""
+    if _w(draw, text, font) <= max_w:
+        return text
+    cut = text
+    while cut and _w(draw, cut + "…", font) > max_w:
+        cut = cut[:-1]
+    return cut.rstrip() + "…"
 
 
 def _wrap(draw, text, font, max_w, max_lines) -> list[str]:
@@ -396,9 +407,15 @@ def compose_manhole(
     comment, author = _resolve_comment(manhole, photo_meta, manhole_comments)
 
     # 見出し：都道府県（小）＋ 自治体/サイト名（大・紫）＋ NEW ピル
-    title = manhole.get("title", "")
-    main = city or pref or title or "ポケふた"
-    sub = pref if (city and pref) else ""
+    # 大見出しは正本のマンホール名（地図の見出しと同じ）
+    main = compose_display_name(manhole) or city or pref or "ポケふた"
+    # 施設名が大見出しに入っていれば設置場所の行は出さない。building は全角スペース等を
+    # 含む生値なので、見出しと同じ landmark_label() で整えてから比べる
+    landmark = landmark_label(manhole, municipality_label(manhole))
+    if loc and ((landmark and landmark in main) or loc in main):
+        loc = ""
+    # 「愛知県/豊橋市」のように大見出しが県名から始まるなら、小見出しの県名は重複なので出さない
+    sub = pref if (pref and not main.startswith(pref)) else ""
 
     added = manhole.get("added_at") or manhole.get("first_seen") or ""
     try:
@@ -420,6 +437,16 @@ def compose_manhole(
     cf = fonts["city"]
     if _w(draw, main, cf) > TEXT_MAX_W:
         cf = fonts["city_sm"]
+    # 施設名入りの名前は小さい字でも写真に食い込むことがあるので、幅で切って「…」を付ける。
+    # 切ったときは施設名が読めなくなるので、下の設置場所の行に施設名を全文で出す
+    # 施設名が同じ蓋は「花園中央公園（松原南1）」まで出さないと区別できないので、
+    # 自治体名より後ろを丸ごと出す
+    shortened = _ellipsize(draw, main, cf, TEXT_MAX_W)
+    if shortened != main:
+        city_label = municipality_label(manhole)
+        rest = main[len(city_label):].strip() if city_label and main.startswith(city_label) else ""
+        loc = rest or landmark or loc
+    main = shortened
     draw.text((LEFT_X, y), main, font=cf, fill=CITY_COLOR)
     cb = _bbox(draw, main, cf)
     y += (cb[3] - cb[1]) + 18

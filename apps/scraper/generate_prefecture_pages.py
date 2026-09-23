@@ -19,11 +19,11 @@ except ModuleNotFoundError as exc:
     from photo_caption import poster_profile_url
 
 try:
-    from apps.scraper.display_names import municipality_label, pokemon_suffix
+    from apps.scraper.display_names import compose_display_name, municipality_label, pokemon_suffix
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
-    from display_names import municipality_label, pokemon_suffix
+    from display_names import compose_display_name, municipality_label, pokemon_suffix
 
 try:
     from apps.scraper.prefecture_completion import build_completion, verify_known_empty
@@ -612,12 +612,12 @@ def _manhole_cards(
         start=1,
     ):
         mid = str(record.get("id", "")).strip()
-        city = record.get("city", "") or "所在地不明"
+        display_name = compose_display_name(record) or municipality_label(record) or "所在地不明"
         pokemons = "・".join(_clean_pokemons(record)) or "ポケモン"
         image_path = ROOT / "dataset" / "manhole" / "image" / f"{mid}_latest.jpeg"
         image_html = (
             f'<img src="/manhole/image/{quote(mid)}_latest.jpeg" '
-            f'alt="{_escape_attr(city)}のポケふた" loading="lazy" decoding="async" '
+            f'alt="{_escape_attr(display_name)}のポケふた" loading="lazy" decoding="async" '
             f'width="720" height="720">'
             if image_path.exists()
             # 写真館（マイ旅・探す）の写真無しタイルと同じストライプ。
@@ -678,7 +678,7 @@ def _manhole_cards(
             f'{image_html}<span class="manhole-shade" aria-hidden="true"></span>'
             f'<span class="manhole-badges">{preinstall_badge_html}'
             f'<b class="photo-status{photo_class}">{photo_label}</b></span>'
-            f'<span class="manhole-copy"><strong>{escape(city)}</strong>'
+            f'<span class="manhole-copy"><strong>{escape(display_name)}</strong>'
             f'<small>{escape(pokemons)}</small></span></a>'
             f'{actions_html}</article>'
         )
@@ -886,10 +886,7 @@ def build_index_page(
             # record["city"] は接尾辞（市区町村）が既に落ちているので、
             # place_label が無いときは municipality_label() で住所から
             # 「指宿」→「指宿市」のように復元する。
-            base = record.get("place_label") or municipality_label(record) or name
-            if record.get("place_ambiguous"):
-                base += pokemon_suffix(record)
-            return base
+            return compose_display_name(record) or municipality_label(record) or name
 
         photographed, unphotographed_records = _split_photographed(installed_records, photos)
         unphotographed = sorted(

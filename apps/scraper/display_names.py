@@ -139,7 +139,9 @@ def landmark_label(record: Dict[str, Any], city_label: str) -> str:
     building = re.sub(r"\s+", " ", building).strip()
     if not building:
         return ""
-    if city_label and building.startswith(city_label):
+    # 「指宿市 指宿図書館」のように区切りのある自治体名だけ落とす。
+    # 「岡谷市役所前」「鈴鹿市伝統産業会館」は自治体名まで含めて施設名なので残す
+    if city_label and re.match(re.escape(city_label) + r"\s", building):
         building = building[len(city_label):].strip()
     return building
 
@@ -154,7 +156,7 @@ def build_place_label(record: Dict[str, Any], *, prefer_address: bool = False) -
     place = "" if prefer_address else landmark_label(record, city_label)
     if not place:
         place = town_label(record, city_label)
-    return f"{city_label} {place}".strip() if place else city_label
+    return _join(city_label, place)
 
 
 def _group_key(record: Dict[str, Any]) -> str:
@@ -212,9 +214,17 @@ def _complete_municipality(record: Dict[str, Any]) -> str:
     return ""
 
 
+def _join(city_label: str, place: str) -> str:
+    """「自治体 場所」を作る。場所が自治体名で始まる（「岡谷市役所前」）なら重ねない。"""
+    if not place:
+        return city_label
+    if city_label and place.startswith(city_label):
+        return place
+    return f"{city_label} {place}".strip()
+
+
 def _compose(record: Dict[str, Any], place: str) -> str:
-    city_label = municipality_label(record)
-    return f"{city_label} {place}".strip() if place else city_label
+    return _join(municipality_label(record), place)
 
 
 def attach_place_labels(records: Iterable[Dict[str, Any]],
@@ -258,7 +268,7 @@ def attach_place_labels(records: Iterable[Dict[str, Any]],
                     # 自治体名を復元できないときも「斜里」「北海道」だけの見出しにしない
                     record.pop("place_label", None)
                     continue
-                record["place_label"] = f"{city_label} {place}"
+                record["place_label"] = _join(city_label, place)
                 attached += 1
             continue
 
