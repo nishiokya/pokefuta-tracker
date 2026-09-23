@@ -557,7 +557,8 @@ def generate_html(
     prefecture = manhole.get("prefecture", "")
     city = manhole.get("city", "")
     address = manhole.get("address", "")
-    building = manhole.get("building", "")
+    # 地図の見出し（place_label）と同じ規則で整えた施設名。h1 と「施設・場所」欄で使う
+    building = landmark_label(manhole, municipality_label(manhole))
     access = manhole.get("access", "")
     pokemons = filter_pokemons(manhole.get("pokemons", []))
     detail_url = manhole.get("detail_url", "")
@@ -595,10 +596,8 @@ def generate_html(
         _tw_title = f"{city_label}のポケふた｜{pokemon_label}"
         _tw_desc = f"{prefecture}{city}のポケふたを地図で確認できます。"
 
-    # 地図の見出し（place_label）と同じく施設名を入れる。<title> と og: は
-    # 検索向けに「県市のポケふた」の形を保つので、ここだけ変える
-    place = landmark_label(manhole, municipality_label(manhole))
-    h1 = f"{prefecture}{city} {place}のポケふた" if place else f"{prefecture}{city}のポケふた"
+    # <title> と og: は検索向けに「県市のポケふた」の形を保つので、施設名は h1 だけに入れる
+    h1 = f"{prefecture}{city} {building}のポケふた" if building else f"{prefecture}{city}のポケふた"
     if pokemons:
         h1 += f"（{pokemon_text}）"
 

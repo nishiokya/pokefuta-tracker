@@ -63,6 +63,16 @@ class DetailH1Tests(unittest.TestCase):
         html = _generate(_manhole(building="豊橋市　道の駅とよはし"))
         self.assertIn("愛知県豊橋 道の駅とよはしのポケふた", _h1(html))
 
+    def test_location_row_is_normalized_like_h1(self):
+        # 「施設・場所」欄も見出しと同じ書き方にする（全角スペース・先頭の自治体名を整える）
+        html = _generate(_manhole(id="404", prefecture="愛知県", city="名古屋市中区",
+                                  address="愛知県名古屋市中区二の丸1番2・3号",
+                                  building="金シャチ横丁　宗春ゾーン（東門エリア）"))
+        self.assertIn("<dd>金シャチ横丁 宗春ゾーン（東門エリア）</dd>", html)
+        html = _generate(_manhole(id="9", prefecture="鹿児島県", city="指宿",
+                                  address="鹿児島県指宿市十町1003", building="指宿市 指宿図書館"))
+        self.assertIn("<dd>指宿図書館</dd>", html)
+
 
 if __name__ == "__main__":
     unittest.main()
