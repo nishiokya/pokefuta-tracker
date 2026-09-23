@@ -190,6 +190,26 @@ def _address_stages(record: Dict[str, Any]) -> List[str]:
     return address_candidates(town_label(record, municipality_label(record)))
 
 
+def _complete_municipality(record: Dict[str, Any]) -> str:
+    """接尾辞まで揃った自治体名を返す。復元できなければ空文字。
+
+    municipality_label() は住所が無いと接尾辞の落ちた city（「斜里」）を、
+    city も無いと都道府県名を返す。一意なレコードの見出しをそれで作ると
+    title（「北海道/斜里町」）より情報が減るので、title の後半から補い、
+    それでも揃わなければ付けない。
+    """
+    label = municipality_label(record)
+    prefecture = str(record.get("prefecture") or "").strip()
+    if label and label != prefecture and re.search(_MUNICIPALITY_SUFFIX + "$", label):
+        return label
+    title = str(record.get("title") or "").strip()
+    if "/" in title:
+        tail = title.split("/", 1)[1].strip()
+        if tail and re.search(_MUNICIPALITY_SUFFIX + "$", tail):
+            return tail
+    return ""
+
+
 def _compose(record: Dict[str, Any], place: str) -> str:
     city_label = municipality_label(record)
     return f"{city_label} {place}".strip() if place else city_label
@@ -229,9 +249,14 @@ def attach_place_labels(records: Iterable[Dict[str, Any]],
             # 見出しの形が枚数次第で変わってしまう。住所は区別のためだけに使うので、
             # 施設名が無ければ自治体名だけにする。
             for record in group:
-                city_label = municipality_label(record)
-                record["place_label"] = _compose(record, landmark_label(record, city_label))
                 record.pop("place_ambiguous", None)
+                city_label = _complete_municipality(record)
+                if not city_label:
+                    # 「斜里」「北海道」だけの見出しは title より情報が少ないので付けない
+                    record.pop("place_label", None)
+                    continue
+                place = landmark_label(record, city_label)
+                record["place_label"] = f"{city_label} {place}" if place else city_label
                 attached += 1
             continue
 

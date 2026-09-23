@@ -189,6 +189,18 @@ class AttachPlaceLabelsTest(unittest.TestCase):
         self.assertEqual(rows[0]["place_label"], "斜里町")
         self.assertNotIn("place_ambiguous", rows[0])
 
+    def test_unique_title_without_address_recovers_from_title(self):
+        # 住所が無いと city は接尾辞が落ちた「斜里」のまま。title から「斜里町」を補う
+        rows = [rec(id="1", title="北海道/斜里町", prefecture="北海道", city="斜里", address="")]
+        attach_place_labels(rows)
+        self.assertEqual(rows[0]["place_label"], "斜里町")
+
+    def test_unique_title_without_municipality_gets_no_label(self):
+        # 自治体名を復元できないなら「北海道」だけの見出しにせず title に任せる
+        rows = [rec(id="1", title="北海道", prefecture="北海道", city="", address="")]
+        self.assertEqual(attach_place_labels(rows), 0)
+        self.assertNotIn("place_label", rows[0])
+
     def test_unique_title_gets_landmark(self):
         # 名古屋市中区は1枚だけだが、見出しは複数枚の自治体と同じ「自治体 施設名」
         rows = [rec(id="404", title="愛知県/名古屋市中区", prefecture="愛知県",
