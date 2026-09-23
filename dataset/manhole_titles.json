@@ -148,14 +148,16 @@
       "emoji": "🚃",
       "label": "駅前のポケふた",
       "hashtag": "#駅前ポケふた",
-      "priority": 36
+      "priority": 36,
+      "note": "最寄り駅の中心から150m以内。apps/tools/import_stations.py が国土数値情報の鉄道データ(N02)で自動判定する"
     },
     "near_station": {
       "enabled": true,
       "emoji": "🚶",
       "label": "駅近ポケふた",
       "hashtag": "#駅近ポケふた",
-      "priority": 34
+      "priority": 34,
+      "note": "最寄り駅の中心から150m超500m以内。判定は import_stations.py"
     },
     "lakeside": {
       "enabled": true,
@@ -184,7 +186,8 @@
       "emoji": "🚗",
       "label": "駅から遠いポケふた",
       "hashtag": "#ポツンとポケふた",
-      "priority": 33
+      "priority": 33,
+      "note": "最寄り駅の中心から10km以上。判定は import_stations.py。離島(remote_island)は駅が無いのが当たり前なので対象外"
     },
     "world_heritage": {
       "enabled": true,
@@ -212,7 +215,8 @@
       "emoji": "🚉",
       "label": "駅構内のポケふた",
       "hashtag": "#駅構内ポケふた",
-      "priority": 37
+      "priority": 37,
+      "note": "駅構内（改札内・駅舎内）。距離では判定できないので手動運用。import_stations.py はこのタグが付いたレコードに触らない"
     },
     "rail_access_good": {
       "enabled": true,
@@ -610,7 +614,8 @@
       "building": "セントラルパーク指宿",
       "tags": [
         "park",
-        "tourism"
+        "tourism",
+        "near_station"
       ]
     },
     "6": {
@@ -645,48 +650,105 @@
     },
     "11": {
       "tags": [
-        "roadside"
+        "roadside",
+        "near_station"
       ]
     },
     "12": {
       "tags": [
-        "seaside"
+        "seaside",
+        "station_front"
       ]
     },
     "13": {
       "building": "道の駅青の国ふだい",
       "tags": [
-        "roadside"
+        "roadside",
+        "station_front"
+      ]
+    },
+    "14": {
+      "tags": [
+        "far_station"
       ]
     },
     "15": {
       "tags": [
         "seaside",
-        "near_station"
+        "station_front"
       ]
     },
     "16": {
       "tags": [
         "seaside",
-        "station_front",
         "roadside"
       ]
     },
     "17": {
       "tags": [
         "seaside",
-        "near_station"
+        "station_front"
       ]
     },
     "18": {
       "tags": [
         "seaside",
-        "near_station"
+        "station_front"
       ]
     },
     "19": {
       "tags": [
         "seaside",
+        "station_front"
+      ]
+    },
+    "20": {
+      "tags": [
+        "station_front"
+      ]
+    },
+    "21": {
+      "tags": [
+        "far_station"
+      ]
+    },
+    "22": {
+      "tags": [
+        "near_station"
+      ]
+    },
+    "23": {
+      "tags": [
+        "station_front"
+      ]
+    },
+    "28": {
+      "tags": [
+        "near_station"
+      ]
+    },
+    "29": {
+      "tags": [
+        "station_front"
+      ]
+    },
+    "30": {
+      "tags": [
+        "station_front"
+      ]
+    },
+    "32": {
+      "tags": [
+        "station_front"
+      ]
+    },
+    "33": {
+      "tags": [
+        "station_front"
+      ]
+    },
+    "34": {
+      "tags": [
         "station_front"
       ]
     },
@@ -710,6 +772,11 @@
         "seaside"
       ]
     },
+    "38": {
+      "tags": [
+        "near_station"
+      ]
+    },
     "39": {
       "tags": [
         "seaside",
@@ -721,6 +788,16 @@
         "roadside"
       ]
     },
+    "41": {
+      "tags": [
+        "near_station"
+      ]
+    },
+    "42": {
+      "tags": [
+        "station_front"
+      ]
+    },
     "44": {
       "tags": [
         "seaside"
@@ -728,28 +805,52 @@
     },
     "45": {
       "tags": [
-        "seaside"
+        "seaside",
+        "far_station"
       ]
     },
     "46": {
       "tags": [
         "seaside",
-        "roadside"
+        "roadside",
+        "near_station"
+      ]
+    },
+    "47": {
+      "tags": [
+        "near_station"
+      ]
+    },
+    "48": {
+      "tags": [
+        "station_front"
       ]
     },
     "49": {
       "tags": [
-        "seaside"
+        "seaside",
+        "near_station"
       ]
     },
     "50": {
       "tags": [
-        "seaside"
+        "seaside",
+        "station_front"
       ]
     },
     "52": {
       "tags": [
         "seaside"
+      ]
+    },
+    "53": {
+      "tags": [
+        "near_station"
+      ]
+    },
+    "54": {
+      "tags": [
+        "station_front"
       ]
     },
     "55": {
@@ -762,11 +863,17 @@
         "seaside"
       ]
     },
+    "58": {
+      "tags": [
+        "station_front"
+      ]
+    },
     "59": {
       "building": "浜益温泉玄関前",
       "tags": [
         "tourism",
-        "river"
+        "river",
+        "far_station"
       ]
     },
     "60": {
@@ -795,7 +902,8 @@
       "building": "道の駅 上ノ国もんじゅ",
       "tags": [
         "seaside",
-        "roadside"
+        "roadside",
+        "far_station"
       ]
     },
     "64": {
@@ -817,7 +925,8 @@
       "tags": [
         "roadside",
         "near_gundam_manhole",
-        "gundam_manhole_city"
+        "gundam_manhole_city",
+        "far_station"
       ]
     },
     "67": {
@@ -837,7 +946,6 @@
       "building": "定住支援センター「ふらっと★きた」敷地内",
       "verified_at": "2019-12-10",
       "tags": [
-        "far_station",
         "near_gundam_manhole",
         "gundam_manhole_city"
       ]
@@ -847,7 +955,8 @@
       "tags": [
         "seaside",
         "park",
-        "tourism"
+        "tourism",
+        "far_station"
       ]
     },
     "70": {
@@ -868,19 +977,25 @@
     "72": {
       "building": "新得駅前広場",
       "tags": [
-        "near_station"
+        "station_front"
       ]
     },
     "73": {
       "building": "道の駅あしょろ銀河ホール21",
       "tags": [
-        "roadside"
+        "roadside",
+        "far_station"
       ]
     },
     "75": {
       "tags": [
         "seaside",
         "lakeside"
+      ]
+    },
+    "76": {
+      "tags": [
+        "station_front"
       ]
     },
     "77": {
@@ -897,7 +1012,8 @@
     "79": {
       "building": "道の駅若桜",
       "tags": [
-        "roadside"
+        "roadside",
+        "near_station"
       ]
     },
     "82": {
@@ -918,9 +1034,14 @@
         "roadside"
       ]
     },
+    "87": {
+      "tags": [
+        "station_front"
+      ]
+    },
     "88": {
       "tags": [
-        "near_station"
+        "station_front"
       ]
     },
     "89": {
@@ -959,6 +1080,11 @@
         "roadside"
       ]
     },
+    "96": {
+      "tags": [
+        "far_station"
+      ]
+    },
     "97": {
       "building": "道の駅恋人の聖地 うたづ臨海公園",
       "tags": [
@@ -971,7 +1097,8 @@
         "lakeside",
         "world_heritage",
         "near_gundam_manhole",
-        "gundam_manhole_city"
+        "gundam_manhole_city",
+        "near_station"
       ]
     },
     "105": {
@@ -980,10 +1107,16 @@
         "gundam_manhole_city"
       ]
     },
+    "106": {
+      "tags": [
+        "station_front"
+      ]
+    },
     "107": {
       "building": "道の駅はっとう",
       "tags": [
-        "roadside"
+        "roadside",
+        "near_station"
       ]
     },
     "108": {
@@ -999,7 +1132,8 @@
     },
     "111": {
       "tags": [
-        "seaside"
+        "seaside",
+        "station_front"
       ]
     },
     "113": {
@@ -1009,9 +1143,15 @@
         "seaside"
       ]
     },
+    "116": {
+      "tags": [
+        "station_front"
+      ]
+    },
     "117": {
       "tags": [
-        "seaside"
+        "seaside",
+        "far_station"
       ]
     },
     "119": {
@@ -1035,6 +1175,21 @@
     "124": {
       "building": "古川駅前",
       "tags": [
+        "station_front"
+      ]
+    },
+    "126": {
+      "tags": [
+        "far_station"
+      ]
+    },
+    "127": {
+      "tags": [
+        "far_station"
+      ]
+    },
+    "128": {
+      "tags": [
         "near_station"
       ]
     },
@@ -1043,10 +1198,40 @@
         "roadside"
       ]
     },
+    "130": {
+      "tags": [
+        "station_front"
+      ]
+    },
+    "131": {
+      "tags": [
+        "far_station"
+      ]
+    },
+    "133": {
+      "tags": [
+        "far_station"
+      ]
+    },
     "134": {
       "building": "道の駅おおさと",
       "tags": [
         "roadside"
+      ]
+    },
+    "135": {
+      "tags": [
+        "far_station"
+      ]
+    },
+    "137": {
+      "tags": [
+        "far_station"
+      ]
+    },
+    "138": {
+      "tags": [
+        "station_front"
       ]
     },
     "140": {
@@ -1064,7 +1249,8 @@
         "museum",
         "history",
         "tourism",
-        "park"
+        "park",
+        "far_station"
       ]
     },
     "142": {
@@ -1084,6 +1270,11 @@
         "museum"
       ]
     },
+    "145": {
+      "tags": [
+        "station_front"
+      ]
+    },
     "146": {
       "address_raw": "新潟県小千谷市小千谷市城内1-8-22",
       "address_norm": "新潟県小千谷市城内1-8-22",
@@ -1098,12 +1289,14 @@
     },
     "148": {
       "tags": [
-        "world_heritage"
+        "world_heritage",
+        "station_front"
       ]
     },
     "149": {
       "tags": [
-        "world_heritage"
+        "world_heritage",
+        "near_station"
       ]
     },
     "150": {
@@ -1158,7 +1351,8 @@
     },
     "159": {
       "tags": [
-        "world_heritage"
+        "world_heritage",
+        "near_station"
       ]
     },
     "160": {
@@ -1168,7 +1362,8 @@
     },
     "161": {
       "tags": [
-        "world_heritage"
+        "world_heritage",
+        "near_station"
       ]
     },
     "162": {
@@ -1178,7 +1373,13 @@
     },
     "163": {
       "tags": [
-        "world_heritage"
+        "world_heritage",
+        "station_front"
+      ]
+    },
+    "164": {
+      "tags": [
+        "station_front"
       ]
     },
     "165": {
@@ -1191,10 +1392,26 @@
         "roadside"
       ]
     },
+    "171": {
+      "tags": [
+        "far_station"
+      ]
+    },
+    "172": {
+      "tags": [
+        "near_station"
+      ]
+    },
+    "173": {
+      "tags": [
+        "near_station"
+      ]
+    },
     "174": {
       "tags": [
         "world_heritage",
-        "remote_island"
+        "remote_island",
+        "near_station"
       ]
     },
     "175": {
@@ -1214,10 +1431,46 @@
         "remote_island"
       ]
     },
+    "179": {
+      "tags": [
+        "far_station"
+      ]
+    },
+    "180": {
+      "tags": [
+        "far_station"
+      ]
+    },
+    "181": {
+      "tags": [
+        "far_station"
+      ]
+    },
+    "182": {
+      "tags": [
+        "far_station"
+      ]
+    },
+    "183": {
+      "tags": [
+        "far_station"
+      ]
+    },
+    "184": {
+      "tags": [
+        "far_station"
+      ]
+    },
     "185": {
       "building": "道の駅青雲橋",
       "tags": [
-        "roadside"
+        "roadside",
+        "far_station"
+      ]
+    },
+    "186": {
+      "tags": [
+        "far_station"
       ]
     },
     "187": {
@@ -1227,7 +1480,8 @@
         "seaside",
         "park",
         "rail_access_good",
-        "tourism"
+        "tourism",
+        "near_station"
       ]
     },
     "188": {
@@ -1235,7 +1489,8 @@
       "tags": [
         "tourism",
         "food",
-        "rail_access_good"
+        "rail_access_good",
+        "near_station"
       ]
     },
     "189": {
@@ -1251,12 +1506,12 @@
       "building": "登別市観光交流センター「ヌプル」前",
       "address_raw": "北海道登別市登別市登別港町１丁目4-9",
       "address_norm": "北海道登別市登別港町１丁目4-9",
+      "verified_at": "2026-08-14",
       "tags": [
         "tourism",
         "station_front",
         "food"
       ],
-      "verified_at": "2026-08-14",
       "confidence": 3
     },
     "191": {
@@ -1264,7 +1519,8 @@
       "tags": [
         "roadside",
         "tourism",
-        "food"
+        "food",
+        "far_station"
       ]
     },
     "192": {
@@ -1273,13 +1529,15 @@
         "tourism",
         "park",
         "food",
-        "roadside"
+        "roadside",
+        "far_station"
       ]
     },
     "193": {
       "building": "中標津町総合体育館330°アリーナ",
       "tags": [
-        "tourism"
+        "tourism",
+        "far_station"
       ]
     },
     "194": {
@@ -1289,25 +1547,34 @@
     },
     "198": {
       "tags": [
-        "world_heritage"
+        "world_heritage",
+        "near_station"
       ]
     },
     "199": {
       "tags": [
         "seaside",
-        "world_heritage"
+        "world_heritage",
+        "near_station"
+      ]
+    },
+    "200": {
+      "tags": [
+        "near_station"
       ]
     },
     "201": {
       "tags": [
         "seaside",
-        "world_heritage"
+        "world_heritage",
+        "near_station"
       ]
     },
     "202": {
       "tags": [
         "seaside",
-        "world_heritage"
+        "world_heritage",
+        "near_station"
       ]
     },
     "203": {
@@ -1318,7 +1585,18 @@
     },
     "204": {
       "tags": [
-        "seaside"
+        "seaside",
+        "far_station"
+      ]
+    },
+    "205": {
+      "tags": [
+        "far_station"
+      ]
+    },
+    "206": {
+      "tags": [
+        "near_station"
       ]
     },
     "208": {
@@ -1332,15 +1610,18 @@
       "building": "花園中央公園",
       "tags": [
         "museum",
-        "park",
-        "near_station"
+        "park"
       ]
     },
     "210": {
       "building": "花園中央公園",
       "tags": [
-        "park",
-        "near_station"
+        "park"
+      ]
+    },
+    "212": {
+      "tags": [
+        "station_front"
       ]
     },
     "214": {
@@ -1357,7 +1638,8 @@
       "tags": [
         "roadside",
         "tourism",
-        "food"
+        "food",
+        "far_station"
       ]
     },
     "216": {
@@ -1374,8 +1656,7 @@
         "seaside",
         "roadside",
         "tourism",
-        "food",
-        "near_station"
+        "food"
       ]
     },
     "218": {
@@ -1384,7 +1665,8 @@
       "tags": [
         "roadside",
         "food",
-        "river"
+        "river",
+        "far_station"
       ]
     },
     "219": {
@@ -1403,7 +1685,8 @@
         "history",
         "tourism",
         "park",
-        "food"
+        "food",
+        "far_station"
       ]
     },
     "221": {
@@ -1411,12 +1694,14 @@
       "tags": [
         "seaside",
         "park",
-        "tourism"
+        "tourism",
+        "far_station"
       ]
     },
     "222": {
       "tags": [
-        "gundam_manhole_city"
+        "gundam_manhole_city",
+        "station_front"
       ]
     },
     "223": {
@@ -1434,6 +1719,11 @@
       "tags": [
         "roadside",
         "gundam_manhole_city"
+      ]
+    },
+    "226": {
+      "tags": [
+        "near_station"
       ]
     },
     "227": {
@@ -1532,7 +1822,8 @@
       "verified_at": "2025-12-27",
       "tags": [
         "shrine",
-        "tourism"
+        "tourism",
+        "near_station"
       ],
       "confidence": 3
     },
@@ -1603,6 +1894,11 @@
     "248": {
       "building": "会津総合運動公園"
     },
+    "250": {
+      "tags": [
+        "near_station"
+      ]
+    },
     "251": {
       "tags": [
         "roadside"
@@ -1610,7 +1906,8 @@
     },
     "252": {
       "tags": [
-        "roadside"
+        "roadside",
+        "far_station"
       ]
     },
     "253": {
@@ -1618,7 +1915,23 @@
     },
     "254": {
       "tags": [
-        "roadside"
+        "roadside",
+        "far_station"
+      ]
+    },
+    "258": {
+      "tags": [
+        "near_station"
+      ]
+    },
+    "259": {
+      "tags": [
+        "near_station"
+      ]
+    },
+    "260": {
+      "tags": [
+        "near_station"
       ]
     },
     "262": {
@@ -1639,6 +1952,11 @@
         "station_front"
       ]
     },
+    "266": {
+      "tags": [
+        "station_front"
+      ]
+    },
     "267": {
       "tags": [
         "world_heritage",
@@ -1649,7 +1967,8 @@
     "269": {
       "building": "道の駅おりつめ",
       "tags": [
-        "roadside"
+        "roadside",
+        "far_station"
       ]
     },
     "271": {
@@ -1665,7 +1984,8 @@
         "park",
         "museum",
         "history",
-        "rail_access_good"
+        "rail_access_good",
+        "near_station"
       ],
       "confidence": 2
     },
@@ -1715,10 +2035,19 @@
         "park",
         "tourism",
         "museum",
-        "food",
-        "far_station"
+        "food"
       ],
       "confidence": 4
+    },
+    "275": {
+      "tags": [
+        "near_station"
+      ]
+    },
+    "277": {
+      "tags": [
+        "station_front"
+      ]
     },
     "278": {
       "building": "北欧の風道の駅とうべつ",
@@ -1728,6 +2057,16 @@
         "tourism",
         "roadside",
         "food"
+      ]
+    },
+    "280": {
+      "tags": [
+        "far_station"
+      ]
+    },
+    "281": {
+      "tags": [
+        "far_station"
       ]
     },
     "282": {
@@ -1856,6 +2195,11 @@
       ],
       "confidence": 3
     },
+    "298": {
+      "tags": [
+        "near_station"
+      ]
+    },
     "299": {
       "building": "道の駅いわて北三陸",
       "tags": [
@@ -1875,7 +2219,8 @@
       "tags": [
         "seaside",
         "rail_access_good",
-        "museum"
+        "museum",
+        "near_station"
       ]
     },
     "303": {
@@ -1910,7 +2255,8 @@
       "tags": [
         "seaside",
         "roadside",
-        "park"
+        "park",
+        "far_station"
       ]
     },
     "307": {
@@ -1932,8 +2278,7 @@
       "verified_at": "2025-12-27",
       "tags": [
         "park",
-        "tourism",
-        "near_station"
+        "tourism"
       ],
       "confidence": 3
     },
@@ -1960,19 +2305,20 @@
       "tags": [
         "park",
         "family",
-        "tourism",
-        "near_station"
+        "tourism"
       ],
       "confidence": 3
     },
     "311": {
       "tags": [
-        "seaside"
+        "seaside",
+        "near_station"
       ]
     },
     "312": {
       "tags": [
-        "seaside"
+        "seaside",
+        "near_station"
       ]
     },
     "313": {
@@ -1982,7 +2328,18 @@
     },
     "314": {
       "tags": [
-        "seaside"
+        "seaside",
+        "near_station"
+      ]
+    },
+    "316": {
+      "tags": [
+        "station_front"
+      ]
+    },
+    "317": {
+      "tags": [
+        "near_station"
       ]
     },
     "318": {
@@ -1995,7 +2352,8 @@
     "320": {
       "tags": [
         "seaside",
-        "roadside"
+        "roadside",
+        "near_station"
       ]
     },
     "321": {
@@ -2004,7 +2362,10 @@
       ]
     },
     "323": {
-      "building": "さくらPORT・スクエア"
+      "building": "さくらPORT・スクエア",
+      "tags": [
+        "station_front"
+      ]
     },
     "324": {
       "building": "ホテル ラヴニール",
@@ -2012,13 +2373,14 @@
         "food",
         "history",
         "roadside",
-        "station_front"
+        "near_station"
       ]
     },
     "325": {
       "tags": [
         "near_gundam_manhole",
-        "gundam_manhole_city"
+        "gundam_manhole_city",
+        "station_front"
       ]
     },
     "326": {
@@ -2041,7 +2403,8 @@
       "tags": [
         "museum",
         "tourism",
-        "seaside"
+        "seaside",
+        "near_station"
       ],
       "confidence": 3
     },
@@ -2115,13 +2478,25 @@
       "tags": [
         "viewpoint",
         "tourism",
-        "seaside"
+        "seaside",
+        "far_station"
       ],
       "confidence": 3
     },
+    "336": {
+      "tags": [
+        "station_front"
+      ]
+    },
+    "337": {
+      "tags": [
+        "station_front"
+      ]
+    },
     "338": {
       "tags": [
-        "roadside"
+        "roadside",
+        "station_front"
       ]
     },
     "339": {
@@ -2136,17 +2511,30 @@
     },
     "341": {
       "tags": [
-        "roadside"
+        "roadside",
+        "station_front"
+      ]
+    },
+    "344": {
+      "tags": [
+        "station_front"
       ]
     },
     "345": {
       "tags": [
-        "seaside"
+        "seaside",
+        "near_station"
       ]
     },
     "347": {
       "tags": [
-        "gundam_manhole_city"
+        "gundam_manhole_city",
+        "near_station"
+      ]
+    },
+    "348": {
+      "tags": [
+        "station_front"
       ]
     },
     "349": {
@@ -2160,19 +2548,32 @@
         "service_area"
       ]
     },
+    "353": {
+      "tags": [
+        "station_front"
+      ]
+    },
     "354": {
       "tags": [
-        "seaside"
+        "seaside",
+        "near_station"
       ]
     },
     "355": {
       "tags": [
-        "seaside"
+        "seaside",
+        "near_station"
+      ]
+    },
+    "356": {
+      "tags": [
+        "station_front"
       ]
     },
     "357": {
       "tags": [
-        "world_heritage"
+        "world_heritage",
+        "far_station"
       ]
     },
     "358": {
@@ -2202,8 +2603,8 @@
       "tags": [
         "tourism",
         "museum",
-        "near_station",
-        "history"
+        "history",
+        "station_front"
       ]
     },
     "362": {
@@ -2221,7 +2622,6 @@
       "place_detail": "南側歩道上",
       "tags": [
         "tourism",
-        "near_station",
         "history",
         "food"
       ]
@@ -2242,6 +2642,21 @@
         "seaside"
       ]
     },
+    "368": {
+      "tags": [
+        "far_station"
+      ]
+    },
+    "369": {
+      "tags": [
+        "near_station"
+      ]
+    },
+    "370": {
+      "tags": [
+        "station_front"
+      ]
+    },
     "372": {
       "tags": [
         "roadside"
@@ -2250,6 +2665,11 @@
     "373": {
       "tags": [
         "roadside"
+      ]
+    },
+    "376": {
+      "tags": [
+        "station_front"
       ]
     },
     "377": {
@@ -2274,13 +2694,19 @@
     "380": {
       "tags": [
         "seaside",
-        "lakeside"
+        "lakeside",
+        "station_front"
       ]
     },
     "381": {
       "tags": [
         "seaside",
         "remote_island"
+      ]
+    },
+    "382": {
+      "tags": [
+        "near_station"
       ]
     },
     "383": {
@@ -2345,7 +2771,8 @@
       "city": "度会郡大紀町",
       "verified_at": "2025-12-27",
       "tags": [
-        "tourism"
+        "tourism",
+        "near_station"
       ],
       "confidence": 3
     },
@@ -2379,19 +2806,46 @@
       ],
       "confidence": 3
     },
+    "390": {
+      "tags": [
+        "far_station"
+      ]
+    },
     "391": {
       "tags": [
-        "seaside"
+        "seaside",
+        "station_front"
+      ]
+    },
+    "393": {
+      "tags": [
+        "station_front"
+      ]
+    },
+    "394": {
+      "tags": [
+        "far_station"
       ]
     },
     "395": {
       "tags": [
-        "seaside"
+        "seaside",
+        "far_station"
       ]
     },
     "398": {
       "tags": [
         "roadside"
+      ]
+    },
+    "399": {
+      "tags": [
+        "station_front"
+      ]
+    },
+    "401": {
+      "tags": [
+        "far_station"
       ]
     },
     "402": {
@@ -2417,7 +2871,7 @@
         "tourism",
         "history",
         "park",
-        "station_front"
+        "near_station"
       ],
       "confidence": 3
     },
@@ -2489,6 +2943,11 @@
         "roadside"
       ]
     },
+    "411": {
+      "tags": [
+        "near_station"
+      ]
+    },
     "412": {
       "building": "道の駅ひたちおおた",
       "tags": [
@@ -2497,7 +2956,8 @@
     },
     "413": {
       "tags": [
-        "gundam_manhole_city"
+        "gundam_manhole_city",
+        "near_station"
       ]
     },
     "414": {
@@ -2510,9 +2970,15 @@
       "verified_at": "2025-12-27",
       "tags": [
         "seaside",
-        "tourism"
+        "tourism",
+        "near_station"
       ],
       "confidence": 3
+    },
+    "417": {
+      "tags": [
+        "station_front"
+      ]
     },
     "418": {
       "tags": [
@@ -2522,7 +2988,18 @@
     },
     "419": {
       "tags": [
-        "roadside"
+        "roadside",
+        "near_station"
+      ]
+    },
+    "420": {
+      "tags": [
+        "near_station"
+      ]
+    },
+    "421": {
+      "tags": [
+        "far_station"
       ]
     },
     "422": {
@@ -2557,7 +3034,8 @@
     },
     "427": {
       "tags": [
-        "seaside"
+        "seaside",
+        "station_front"
       ]
     },
     "428": {
@@ -2580,12 +3058,19 @@
     },
     "432": {
       "tags": [
-        "seaside"
+        "seaside",
+        "far_station"
+      ]
+    },
+    "433": {
+      "tags": [
+        "station_front"
       ]
     },
     "434": {
       "tags": [
-        "seaside"
+        "seaside",
+        "station_front"
       ]
     },
     "435": {
@@ -2599,7 +3084,8 @@
       "building": "道の駅やす",
       "tags": [
         "roadside",
-        "seaside"
+        "seaside",
+        "station_front"
       ]
     },
     "437": {
@@ -2613,7 +3099,8 @@
       "tags": [
         "tourism",
         "food",
-        "river"
+        "river",
+        "far_station"
       ]
     },
     "439": {
@@ -2629,7 +3116,7 @@
       "tags": [
         "tourism",
         "museum",
-        "near_station"
+        "station_front"
       ]
     },
     "441": {
@@ -2637,7 +3124,8 @@
       "tags": [
         "roadside",
         "tourism",
-        "food"
+        "food",
+        "far_station"
       ]
     },
     "442": {
@@ -2651,7 +3139,8 @@
       "building": "つべつ木材工芸館 キノス",
       "tags": [
         "tourism",
-        "park"
+        "park",
+        "far_station"
       ]
     },
     "444": {
@@ -2660,7 +3149,8 @@
         "roadside",
         "tourism",
         "park",
-        "food"
+        "food",
+        "far_station"
       ]
     },
     "445": {
@@ -2669,7 +3159,8 @@
         "seaside",
         "roadside",
         "tourism",
-        "food"
+        "food",
+        "far_station"
       ]
     },
     "446": {
@@ -2687,9 +3178,20 @@
       "prefecture": "東京都",
       "city": "稲城市"
     },
+    "449": {
+      "tags": [
+        "station_front"
+      ]
+    },
     "450": {
       "tags": [
-        "seaside"
+        "seaside",
+        "far_station"
+      ]
+    },
+    "453": {
+      "tags": [
+        "far_station"
       ]
     },
     "455": {
@@ -2710,7 +3212,20 @@
       ]
     },
     "460": {
-      "building": "JR磐城浅川駅前広場"
+      "building": "JR磐城浅川駅前広場",
+      "tags": [
+        "station_front"
+      ]
+    },
+    "461": {
+      "tags": [
+        "near_station"
+      ]
+    },
+    "462": {
+      "tags": [
+        "station_front"
+      ]
     },
     "464": {
       "tags": [
@@ -2720,6 +3235,11 @@
     "465": {
       "tags": [
         "near_station"
+      ]
+    },
+    "466": {
+      "tags": [
+        "station_front"
       ]
     },
     "468": {
@@ -2735,14 +3255,16 @@
       "tags": [
         "roadside",
         "tourism",
-        "food"
+        "food",
+        "far_station"
       ]
     },
     "470": {
       "building": "見附公園",
       "tags": [
         "seaside",
-        "park"
+        "park",
+        "far_station"
       ]
     },
     "471": {
@@ -2750,7 +3272,8 @@
       "tags": [
         "seaside",
         "roadside",
-        "tourism"
+        "tourism",
+        "far_station"
       ]
     },
     "472": {
@@ -2760,6 +3283,11 @@
         "station_front",
         "tourism",
         "food"
+      ]
+    },
+    "473": {
+      "tags": [
+        "far_station"
       ]
     },
     "474": {
@@ -2802,7 +3330,8 @@
       "tags": [
         "seaside",
         "park",
-        "tourism"
+        "tourism",
+        "far_station"
       ]
     },
     "480": {
@@ -2830,7 +3359,6 @@
     "483": {
       "building": "大町名店街",
       "tags": [
-        "station_front",
         "tourism",
         "food"
       ]
@@ -2846,7 +3374,6 @@
     "485": {
       "building": "藪原駅前",
       "tags": [
-        "station_front",
         "rail_access_good"
       ]
     },
