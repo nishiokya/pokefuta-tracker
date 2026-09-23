@@ -226,6 +226,22 @@ class BuildTopFeedTests(unittest.TestCase):
         self.assertEqual(entry["prefecture"], "鹿児島県")
         self.assertIsNone(entry["public_user_id"])
 
+    def test_title_uses_canonical_name_with_ambiguous_pokemon_suffix(self):
+        photos = {"1": _photo("1", "2026-06-01T00:00:00+00:00")}
+        records = {
+            "1": _record(
+                "1",
+                place_label="町田市",
+                place_ambiguous=True,
+                pokemons=["フシギダネ"],
+            )
+        }
+        self._touch_image("1")
+        feed = top_feed.build_top_feed(
+            {"photos": photos}, records, {}, image_dir=self.image_dir
+        )
+        self.assertEqual(feed["photos"][0]["title"], "町田市（フシギダネ）")
+
     def test_created_at_converts_utc_evening_to_next_jst_day(self):
         # UTC 15:30 = JST 翌日 00:30 → JST の日付で焼き込む（[:10] だと1日前にずれる）
         photos = {"1": _photo("1", "2026-06-01T15:30:00+00:00")}

@@ -20,6 +20,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 from export_latest_manhole_photos import DEFAULT_GALLERY_LIMIT  # noqa: E402
+from display_names import compose_display_name  # noqa: E402
 from photo_caption import to_jst_date  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -155,7 +156,7 @@ def build_top_feed(
             "id": mid,
             # entry["display_name"] は写真の投稿者名で別物なので、マンホールの
             # 表示名は title に載せる（重複 title のときだけ place_label が入る）
-            "title": record.get("place_label") or record.get("title", ""),
+            "title": compose_display_name(record),
             "prefecture": record.get("prefecture", ""),
             "city": record.get("city", ""),
             "pokemons": pokemons,

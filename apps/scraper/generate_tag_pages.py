@@ -26,6 +26,7 @@ from xml.sax.saxutils import escape
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(Path(__file__).parent))
+from display_names import compose_display_name  # noqa: E402
 
 try:
     from apps.scraper.prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS
@@ -227,8 +228,7 @@ def _manhole_cards(records: list[dict], photos: dict[str, dict], tag: str) -> st
         mid = str(record.get("id", "")).strip()
         prefecture = record.get("prefecture", "")
         pref_slug = PREFECTURE_SLUGS.get(prefecture, "")
-        city = record.get("city", "") or "所在地不明"
-        place = f"{prefecture} {city}" if prefecture else city
+        place = compose_display_name(record) or "所在地不明"
         pokemons = "・".join(_clean_pokemons(record)) or "ポケモン"
         image_path = ROOT / "dataset" / "manhole" / "image" / f"{mid}_latest.jpeg"
         image_html = (

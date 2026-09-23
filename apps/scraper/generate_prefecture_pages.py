@@ -19,11 +19,11 @@ except ModuleNotFoundError as exc:
     from photo_caption import poster_profile_url
 
 try:
-    from apps.scraper.display_names import municipality_label, pokemon_suffix
+    from apps.scraper.display_names import compose_display_name, municipality_label
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
-    from display_names import municipality_label, pokemon_suffix
+    from display_names import compose_display_name, municipality_label
 
 try:
     from apps.scraper.prefecture_completion import build_completion, verify_known_empty
@@ -612,12 +612,12 @@ def _manhole_cards(
         start=1,
     ):
         mid = str(record.get("id", "")).strip()
-        city = record.get("city", "") or "所在地不明"
+        display_name = compose_display_name(record) or municipality_label(record) or "所在地不明"
         pokemons = "・".join(_clean_pokemons(record)) or "ポケモン"
         image_path = ROOT / "dataset" / "manhole" / "image" / f"{mid}_latest.jpeg"
         image_html = (
             f'<img src="/manhole/image/{quote(mid)}_latest.jpeg" '
-            f'alt="{_escape_attr(city)}のポケふた" loading="lazy" decoding="async" '
+            f'alt="{_escape_attr(display_name)}のポケふた" loading="lazy" decoding="async" '
             f'width="720" height="720">'
             if image_path.exists()
             # 写真館（マイ旅・探す）の写真無しタイルと同じストライプ。
@@ -678,7 +678,7 @@ def _manhole_cards(
             f'{image_html}<span class="manhole-shade" aria-hidden="true"></span>'
             f'<span class="manhole-badges">{preinstall_badge_html}'
             f'<b class="photo-status{photo_class}">{photo_label}</b></span>'
-            f'<span class="manhole-copy"><strong>{escape(city)}</strong>'
+            f'<span class="manhole-copy"><strong>{escape(display_name)}</strong>'
             f'<small>{escape(pokemons)}</small></span></a>'
             f'{actions_html}</article>'
         )
@@ -872,24 +872,14 @@ def build_index_page(
             completion_badge_html = (
                 f'<span class="prefecture-remaining-badge">あと{entry.missing}枚</span>'
             )
-        # 実機フィードバック: 8枚に絞らず実在する写真は全部出す。キャプション
-        # は単なる市町村名だと同一自治体内で重複する（指宿市9枚など）ので、
-        # display_names.attach_place_labels() が既に付けた place_label
-        # （map.html の getManholeDisplayName と同じ正規化結果、
-        # docs/pokefuta.ndjson に書き込み済み）を使う。ここでは
-        # compose_display_name() をそのまま呼ばない — それは place_label が
-        # 無いとき生の title（例:「宮城県/加美町」）にフォールバックする設計で、
-        # このカードは既に都道府県ごとにまとまっているのでプレフィックスが
-        # 重複してしまう。place_label が無ければ city まで。曖昧なものだけ
-        # pokemon_suffix() でポケモン名を添えて区別する。
+        # 実機フィードバック: 8枚に絞らず実在する写真は全部出す。キャプションは
+        # 正本のマンホール名 compose_display_name()（地図の見出しと同じ。
+        # 同一自治体で重複するものは place_label で区別済み、曖昧なものはポケモン名付き）。
+        # 施設名の無い一意な蓋は title の「宮城県/加美町」になり、都道府県ごとの
+        # カードでも県名が付くが、名前はどの画面でも同じにする方針なので削らない。
         def _caption(record: dict) -> str:
-            # record["city"] は接尾辞（市区町村）が既に落ちているので、
-            # place_label が無いときは municipality_label() で住所から
-            # 「指宿」→「指宿市」のように復元する。
-            base = record.get("place_label") or municipality_label(record) or name
-            if record.get("place_ambiguous"):
-                base += pokemon_suffix(record)
-            return base
+            # title も無いレコードだけ、住所から復元した自治体名（「指宿」→「指宿市」）に落とす
+            return compose_display_name(record) or municipality_label(record) or name
 
         photographed, unphotographed_records = _split_photographed(installed_records, photos)
         unphotographed = sorted(

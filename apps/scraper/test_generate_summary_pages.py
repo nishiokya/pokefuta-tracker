@@ -40,7 +40,7 @@ class LatestPhotosSectionTests(unittest.TestCase):
             "public_user_id": "6096691c-eeda-4e73-8401-a11274868ede",
         })
         self.assertIn(
-            '<span class="photo-card-meta">北海道斜里町 · '
+            '<span class="photo-card-meta">北海道/斜里町 · '
             '<a class="poster-link" href="https://pokefuta.com/users/'
             '6096691c-eeda-4e73-8401-a11274868ede/visits"',
             html,
@@ -56,7 +56,7 @@ class LatestPhotosSectionTests(unittest.TestCase):
             "created_at": "2026-07-16T00:00:00+00:00",
         })
         self.assertIn(
-            '<span class="photo-card-meta">北海道斜里町 · 7月16日</span>', html
+            '<span class="photo-card-meta">北海道/斜里町 · 7月16日</span>', html
         )
 
     def test_long_poster_name_is_truncated(self):

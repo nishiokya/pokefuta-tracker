@@ -836,11 +836,8 @@ class BuildIndexPageTest(unittest.TestCase):
         )
         self.assertNotIn('>津市</span>', html)
 
-    def test_caption_falls_back_to_the_bare_city_not_the_prefixed_title(self) -> None:
-        """place_label が付いていないレコード（重複していない一意なもの）は
-        city まで。compose_display_name() のように生の title（例:
-        「宮城県/加美町」）へは落とさない — このカードは既に都道府県ごとに
-        まとまっているので、都道府県名を繰り返すと冗長になる。"""
+    def test_caption_uses_the_canonical_title_when_place_label_is_absent(self) -> None:
+        """place_label が無いレコードも地図と同じ title を使う。"""
         records_by_pref = {name: [] for name in MODULE.PREFECTURE_ORDER}
         records_by_pref["三重県"] = [
             {"id": "1", "city": "四日市市", "title": "三重県/四日市市"},
@@ -849,10 +846,9 @@ class BuildIndexPageTest(unittest.TestCase):
         with mock.patch.object(MODULE, "_photo_asset_url", return_value="/x.jpeg"):
             html = MODULE.build_index_page(records_by_pref, photos)
         self.assertIn(
-            '<span class="prefecture-card-photo-city" aria-hidden="true">四日市市</span>',
+            '<span class="prefecture-card-photo-city" aria-hidden="true">三重県/四日市市</span>',
             html,
         )
-        self.assertNotIn("三重県/四日市市", html)
 
     def test_caption_adds_pokemon_name_when_place_label_is_still_ambiguous(self) -> None:
         """place_ambiguous のレコードは place_label だけでは区別が付かない

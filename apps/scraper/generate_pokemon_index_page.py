@@ -18,6 +18,7 @@ from urllib.parse import quote
 from xml.sax.saxutils import escape
 
 sys.path.insert(0, str(Path(__file__).parent))
+from display_names import compose_display_name  # noqa: E402
 from site_terms import format_count  # noqa: E402
 
 sys.path.insert(0, str(Path(__file__).parent))
@@ -530,6 +531,8 @@ def _summary_href(url_prefix: str) -> str:
 
 
 def _location_text(manhole: dict, translate_pref: Callable[[str], str], lang: str) -> str:
+    if lang == "ja":
+        return compose_display_name(manhole)
     pref = manhole.get("prefecture", "")
     city = manhole.get("city", "")
     pref_display = translate_pref(pref) if pref else ""

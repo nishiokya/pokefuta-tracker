@@ -21,7 +21,7 @@ from urllib.parse import quote, urlparse
 from xml.sax.saxutils import escape
 
 sys.path.insert(0, str(Path(__file__).parent))
-from display_names import landmark_label, municipality_label  # noqa: E402
+from display_names import compose_display_name, landmark_label, municipality_label  # noqa: E402
 from generate_pokemon_pages import _FORM_PREFIX, _normalize_katakana  # noqa: E402
 from photo_caption import (  # noqa: E402
     CAPTION_ELLIPSIS_CSS,
@@ -476,10 +476,8 @@ def format_pokemon_label(pokemons: list[str]) -> str:
 
 def manhole_label(manhole: dict) -> str:
     """Build a plain-text display label for a manhole (for use in link text)."""
-    pref = manhole.get("prefecture", "")
-    city = manhole.get("city", "")
     pokes = "・".join(filter_pokemons(manhole.get("pokemons", []))) or "ポケモン"
-    location = f"{pref}{city}" if (pref or city) else manhole.get("title", "")
+    location = compose_display_name(manhole) or "所在地不明"
     return f"{location}のポケふた（{pokes}）"
 
 
@@ -597,7 +595,7 @@ def generate_html(
         _tw_desc = f"{prefecture}{city}のポケふたを地図で確認できます。"
 
     # <title> と og: は検索向けに「県市のポケふた」の形を保つので、施設名は h1 だけに入れる
-    h1 = f"{prefecture}{city} {building}のポケふた" if building else f"{prefecture}{city}のポケふた"
+    h1 = f"{compose_display_name(manhole) or city_label}のポケふた"
     if pokemons:
         h1 += f"（{pokemon_text}）"
 

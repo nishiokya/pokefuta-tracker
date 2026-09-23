@@ -46,12 +46,16 @@ def _h1(html: str) -> str:
 class DetailH1Tests(unittest.TestCase):
     def test_h1_includes_building(self):
         # 地図の見出し（豊橋市 道の駅とよはし）と同じく施設名を出す
-        html = _generate(_manhole(building="道の駅とよはし"))
-        self.assertEqual(_h1(html), "愛知県豊橋 道の駅とよはしのポケふた（スターミー・デンヂムシ）")
+        html = _generate(_manhole(
+            building="道の駅とよはし",
+            place_label="豊橋市 道の駅とよはし",
+        ))
+        self.assertEqual(_h1(html), "豊橋市 道の駅とよはしのポケふた（スターミー・デンヂムシ）")
 
-    def test_h1_without_building_is_unchanged(self):
-        html = _generate(_manhole())
-        self.assertEqual(_h1(html), "愛知県豊橋のポケふた（スターミー・デンヂムシ）")
+    def test_h1_without_building_uses_title(self):
+        # 施設名が無い一意な蓋は place_label が無く、正本の名前は title（地図の見出しと同じ）
+        html = _generate(_manhole(title="愛知県/豊橋市"))
+        self.assertEqual(_h1(html), "愛知県/豊橋市のポケふた（スターミー・デンヂムシ）")
 
     def test_title_tag_keeps_search_form(self):
         # <title> は検索向けの「県市のポケふた」の形を保つ
@@ -60,8 +64,11 @@ class DetailH1Tests(unittest.TestCase):
 
     def test_building_is_normalized_like_map(self):
         # 全角スペースや先頭の自治体名は地図の place_label と同じ規則で整える
-        html = _generate(_manhole(building="豊橋市　道の駅とよはし"))
-        self.assertIn("愛知県豊橋 道の駅とよはしのポケふた", _h1(html))
+        html = _generate(_manhole(
+            building="豊橋市　道の駅とよはし",
+            place_label="豊橋市 道の駅とよはし",
+        ))
+        self.assertIn("豊橋市 道の駅とよはしのポケふた", _h1(html))
 
     def test_location_row_is_normalized_like_h1(self):
         # 「施設・場所」欄も見出しと同じ書き方にする（全角スペース・先頭の自治体名を整える）

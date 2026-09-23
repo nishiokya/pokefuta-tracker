@@ -20,9 +20,10 @@
 
 命名規則:
 
-    building あり : 指宿市 砂むし会館砂楽
-    building なし : 斑鳩町 興留7丁目3
-    区別できない  : 町田市（表示時にポケモン名が付く）
+    building あり       : 指宿市 砂むし会館砂楽
+    同じ building が複数: 東大阪市 花園中央公園（松原南1）
+    building なし       : 斑鳩町 興留7丁目3
+    区別できない        : 町田市（表示時にポケモン名が付く）
 
 `place_label` が群内で重複してしまい場所では区別できないレコードには
 `place_ambiguous` を立て、**表示側が言語ごとに変換したポケモン名を添えて**区別する
@@ -138,7 +139,9 @@ def landmark_label(record: Dict[str, Any], city_label: str) -> str:
     building = re.sub(r"\s+", " ", building).strip()
     if not building:
         return ""
-    if city_label and building.startswith(city_label):
+    # 「指宿市 指宿図書館」のように区切りのある自治体名だけ落とす。
+    # 「岡谷市役所前」「鈴鹿市伝統産業会館」は自治体名まで含めて施設名なので残す
+    if city_label and re.match(re.escape(city_label) + r"\s", building):
         building = building[len(city_label):].strip()
     return building
 
@@ -153,7 +156,7 @@ def build_place_label(record: Dict[str, Any], *, prefer_address: bool = False) -
     place = "" if prefer_address else landmark_label(record, city_label)
     if not place:
         place = town_label(record, city_label)
-    return f"{city_label} {place}".strip() if place else city_label
+    return _join(city_label, place)
 
 
 def _group_key(record: Dict[str, Any]) -> str:
@@ -211,9 +214,17 @@ def _complete_municipality(record: Dict[str, Any]) -> str:
     return ""
 
 
+def _join(city_label: str, place: str) -> str:
+    """「自治体 場所」を作る。場所が自治体名で始まる（「岡谷市役所前」）なら重ねない。"""
+    if not place:
+        return city_label
+    if city_label and place.startswith(city_label):
+        return place
+    return f"{city_label} {place}".strip()
+
+
 def _compose(record: Dict[str, Any], place: str) -> str:
-    city_label = municipality_label(record)
-    return f"{city_label} {place}".strip() if place else city_label
+    return _join(municipality_label(record), place)
 
 
 def attach_place_labels(records: Iterable[Dict[str, Any]],
@@ -257,7 +268,7 @@ def attach_place_labels(records: Iterable[Dict[str, Any]],
                     # 自治体名を復元できないときも「斜里」「北海道」だけの見出しにしない
                     record.pop("place_label", None)
                     continue
-                record["place_label"] = f"{city_label} {place}"
+                record["place_label"] = _join(city_label, place)
                 attached += 1
             continue
 
@@ -265,45 +276,48 @@ def attach_place_labels(records: Iterable[Dict[str, Any]],
         landmarks = {id(r): landmark_label(r, municipality_label(r)) for r in group}
         depth = max((len(v) for v in stages.values()), default=1) or 1
 
-        # 施設名を持つレコードはそれを使う。施設名が衝突したものだけ住所へ落とす
-        # （東大阪の2枚はどちらも「花園中央公園」）。逆に、住所側の段階を深める
-        # ために施設名を捨てることはしない（香取市の「道の駅水の郷さわら」が
-        # 「佐原イ4053」に置き換わってしまうため）。
-        use_landmark = {id(r) for r in group if landmarks[id(r)]}
-        while True:
-            labels = None
-            for level in range(depth):
-                trial = {}
-                for record in group:
-                    key = id(record)
-                    if key in use_landmark:
-                        trial[key] = _compose(record, landmarks[key])
-                    else:
-                        options = stages[key] or [""]
-                        trial[key] = _compose(record, options[min(level, len(options) - 1)])
-                if _all_distinguishable(trial.values()):
-                    labels = trial
-                    break
-            if labels is not None:
-                break
-            deepest = {}
+        # 施設名は正本の手動メタデータなので、同じ施設名が複数あっても捨てない。
+        # 衝突する施設だけ住所の最短識別子を括弧で足す。東大阪の2枚なら
+        # 「花園中央公園」を「松原南1/2」で置換せず、
+        # 「花園中央公園（松原南1/2）」とする。
+        landmark_bases = {
+            id(record): _compose(record, landmarks[id(record)])
+            for record in group if landmarks[id(record)]
+        }
+
+        def _clashes(a: str, b: str) -> bool:
+            # _all_distinguishable() と同じ基準（同一か、片方が他方の頭）
+            return a == b or a.startswith(b) or b.startswith(a)
+
+        def _labels_at(level: int) -> Dict[int, str]:
+            # まず施設名か住所（この段階）でそのまま作り、ほかの蓋の名前と衝突する
+            # 施設名にだけ住所を括弧で足す。衝突相手は施設名に限らない
+            # （施設名「本町1」と、住所から作った「本町1」がぶつかることもある）。
+            plain = {}
+            address_parts = {}
             for record in group:
                 key = id(record)
-                if key in use_landmark:
-                    deepest[key] = _compose(record, landmarks[key])
-                else:
-                    deepest[key] = _compose(record, (stages[key] or [""])[-1])
-            # 落とし先の住所が無いなら施設名を捨てても情報が減るだけなので残す
-            clashing = {
-                id(r) for r in group
-                if id(r) in use_landmark
-                and stages[id(r)]
-                and sum(1 for v in deepest.values() if v == deepest[id(r)]) > 1
-            }
-            if not clashing:
-                labels = deepest
+                options = stages[key] or [""]
+                address_parts[key] = options[min(level, len(options) - 1)]
+                plain[key] = landmark_bases.get(key) or _compose(record, address_parts[key])
+            out = {}
+            for key, label in plain.items():
+                clashing = key in landmark_bases and address_parts[key] and any(
+                    other_key != key and _clashes(label, other)
+                    for other_key, other in plain.items()
+                )
+                out[key] = f"{label}（{address_parts[key]}）" if clashing else label
+            return out
+
+        labels = None
+        for level in range(depth):
+            trial = _labels_at(level)
+            if _all_distinguishable(trial.values()):
+                labels = trial
                 break
-            use_landmark -= clashing
+
+        if labels is None:
+            labels = _labels_at(depth - 1)
 
         counts = _counts(labels.values())
         ambiguous = [r for r in group if counts[labels[id(r)]] > 1]
