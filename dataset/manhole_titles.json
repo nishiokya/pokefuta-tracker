@@ -1254,6 +1254,9 @@
         "far_station"
       ]
     },
+    "136": {
+      "building": "愛宕山公園"
+    },
     "137": {
       "tags": [
         "far_station"
@@ -1421,6 +1424,9 @@
       "tags": [
         "seaside"
       ]
+    },
+    "166": {
+      "building": "三納代広場"
     },
     "169": {
       "building": "道の駅つの",
@@ -1761,6 +1767,7 @@
       ]
     },
     "226": {
+      "building": "宇都宮駅東公園",
       "tags": [
         "near_station"
       ]
@@ -1770,6 +1777,9 @@
       "tags": [
         "roadside"
       ]
+    },
+    "228": {
+      "building": "八幡山公園"
     },
     "229": {
       "tags": [
@@ -1823,6 +1833,9 @@
         "seaside",
         "remote_island"
       ]
+    },
+    "239": {
+      "building": "鹿深夢の森"
     },
     "240": {
       "building": "津市まん中広場",
@@ -2122,6 +2135,9 @@
         "lakeside",
         "roadside"
       ]
+    },
+    "285": {
+      "building": "大池公園"
     },
     "286": {
       "building": "道の駅ふるどの",
@@ -2689,6 +2705,9 @@
         "food"
       ]
     },
+    "364": {
+      "building": "大手門広場"
+    },
     "365": {
       "tags": [
         "seaside"
@@ -2773,6 +2792,7 @@
       ]
     },
     "382": {
+      "building": "ニンテンドーミュージアム",
       "tags": [
         "near_station"
       ]
@@ -2903,6 +2923,9 @@
         "far_station"
       ]
     },
+    "397": {
+      "building": "展勝地公園"
+    },
     "398": {
       "building": "道の駅もりおか渋民",
       "tags": [
@@ -2914,6 +2937,9 @@
       "tags": [
         "station_front"
       ]
+    },
+    "400": {
+      "building": "最上川ふるさと総合公園"
     },
     "401": {
       "tags": [
@@ -3030,6 +3056,7 @@
       ]
     },
     "413": {
+      "building": "偕楽園公園",
       "tags": [
         "gundam_manhole_city",
         "near_station"
