@@ -754,12 +754,12 @@ def generate_html(
           <li><strong class="cm-num">{work_count}</strong>作品</li>
           <li><strong class="cm-num">{pref_count}</strong>都道府県</li>
         </ul>
+        <p class="cm-hero-note">掲載データ：{total_count}枚・{work_count}作品・{pref_count}都道府県。全国すべてを網羅するものではありません。</p>
         <nav class="cm-jump" aria-label="このページの目次">
           <a class="cm-btn" href="#works">作品から探す</a>
           <a class="cm-btn cm-btn--ghost" href="#prefectures">都道府県から探す</a>
           <a class="cm-btn cm-btn--ghost" href="#lp-map-heading">地図で探す</a>
         </nav>
-        <p class="cm-hero-note">掲載データ：{total_count}枚・{work_count}作品・{pref_count}都道府県。全国すべてを網羅するものではありません。</p>
       </div>{hero_aside_html}
     </section>
 
