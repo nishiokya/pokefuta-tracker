@@ -160,9 +160,12 @@ docs/pokefuta.ndjson (titles フィールド) ─→ ①詳細ページ ②OGP �
     "remote_island": { "enabled": true, "emoji": "🏝", "label": "離島のポケふた（{island}）", "hashtag": "#離島ポケふた", "priority": 95 }
     /* 全14称号。{prefecture}/{city}/{count}/{island} は実行時に置換 */
   },
-  "islands": [           // 離島称号の判定元。ids 優先、無ければ prefecture+city 一致
+  "islands": [           // 離島称号の判定元。運用上はすべて ids で書く（コードは ids が空なら prefecture+city 一致も見る）
     { "island": "石垣島", "prefecture": "沖縄県", "city": "石垣", "ids": ["235"] },
-    { "island": "佐渡島", "prefecture": "新潟県", "city": "佐渡", "ids": [] }
+    { "island": "宮古島", "prefecture": "沖縄県", "city": "宮古島", "ids": ["236"] }
+  ],
+  "heritages": [         // 世界遺産称号の判定元。構成資産がある市町村のポケふた id を遺産ごとに並べる
+    { "heritage": "石見銀山", "ids": ["379"], "note": "大田市仁摩町" }
   ],
   "city_links": [        // 旧 city_link.tsv: 自治体/県の公式ポケふた案内ページ
     { "prefecture": "北海道", "city": "稚内市", "url": "https://www.city.wakkanai.hokkaido.jp/..." }
@@ -184,6 +187,7 @@ docs/pokefuta.ndjson (titles フィールド) ─→ ①詳細ページ ②OGP �
 | やりたいこと | 編集箇所 |
 |--------------|----------|
 | 離島称号を1件追加 | `islands` に1要素追加し、同じ id の `tags` に `remote_island` を足す |
+| マスタの変更をすぐ公開データに出す | `python apps/scraper/update_pokefuta.py --no-fetch --out apps/scraper/pokefuta.ndjson` で称号・タグだけ再計算し、`update-pokefuta.yml` の後続手順（`docs/pokefuta.ndjson` への active 抽出・KML・トップのテーマチップ）を同じ PR で回す。`docs/**` の変更でマージ時に Pages デプロイが走る。やらなければ翌日の `update-pokefuta.yml` の PR をマージした時点で反映 |
 | 世界遺産称号を1件追加 | `heritages` に1要素追加（または既存要素の `ids` に追加）し、同じ id の `tags` に `world_heritage` を足す |
 | 称号の文言/優先度変更・一時停止 | `vocabulary` の該当キー（`enabled:false` で停止） |
 | マンホールのカテゴリタグ追加（例 `seaside`） | `manholes."<id>".tags` に追加 |
