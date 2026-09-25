@@ -958,38 +958,6 @@ def build_index_page(
         if region_nav_items else ""
     )
 
-    # 残っている県を、残り枚数の少ない順（= 次に達成できる順）に出す。
-    # 「全国であと十数枚」ではなく「この県はあと3枚」まで具体化しないと、
-    # 読んだ人が自分に関係のある話だと判断できない。
-    remaining_items = "".join(
-        f'<li class="completion-remaining-item">'
-        f'<a href="/prefectures/{PREFECTURE_SLUGS[entry.prefecture]}/" '
-        f'data-track="prefectures_completion_click" '
-        f'data-destination="{PREFECTURE_SLUGS[entry.prefecture]}">'
-        f'<strong>{escape(entry.prefecture)}</strong>'
-        f'<span class="completion-remaining-count">あと{entry.missing}枚</span>'
-        f'<small>{entry.with_photo} / {entry.total}地点</small></a></li>'
-        for entry in completion.incomplete
-    )
-    if completion.incomplete_count:
-        completion_board_html = (
-            '<section class="completion-board" aria-labelledby="completion-heading">'
-            f'<h2 id="completion-heading">現地写真がそろっていないのは、残り{completion.incomplete_count}都道府県</h2>'
-            f'<p class="completion-lead">ポケふたがある{completion.listed_count}都道府県のうち'
-            f'{completion.complete_count}都道府県は、設置済みのポケふた全てに現地写真が集まりました。'
-            f'残っているのは次の{completion.incomplete_count}都道府県、合計{completion.missing_total}枚です。</p>'
-            f'<ol class="completion-remaining">{remaining_items}</ol>'
-            '</section>'
-        )
-    else:
-        completion_board_html = (
-            '<section class="completion-board" aria-labelledby="completion-heading">'
-            '<h2 id="completion-heading">全都道府県で現地写真がそろいました</h2>'
-            f'<p class="completion-lead">ポケふたがある{completion.listed_count}都道府県すべてで、'
-            '設置済みのポケふた全てに現地写真が集まっています。</p>'
-            '</section>'
-        )
-
     return f"""<!doctype html>
 <html lang="ja">
 <head>
@@ -1125,30 +1093,6 @@ def build_index_page(
       box-shadow: inset 0 -2px 0 rgba(0,0,0,.12); font-size: .78rem; font-weight: 900;
     }}
     .prefecture-card-name {{ min-width: 0; color: #191613; font-size: 1rem; font-weight: 900; }}
-    /* 県単位のコンプリート状況。残り枚数は数字が動きにくいので、
-       「残りN都道府県」を見出しに出して、県ごとの残り枚数を添える。 */
-    .completion-board {{
-      margin: 0 0 16px; padding: 14px 16px; border-radius: 16px;
-      background: linear-gradient(135deg, rgba(126,107,169,.12), rgba(243,109,54,.1));
-      border: 1px solid rgba(126,107,169,.22);
-    }}
-    .completion-board h2 {{ margin: 0 0 6px; font-size: 1.02rem; font-weight: 900; color: #3f3163; }}
-    .completion-lead {{ margin: 0; color: #574b41; font-size: .82rem; line-height: 1.6; }}
-    .completion-remaining {{
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 8px; margin: 12px 0 0; padding: 0; list-style: none;
-    }}
-    .completion-remaining-item a {{
-      display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 12px;
-      background: rgba(255,255,255,.92); text-decoration: none; color: #191613;
-      box-shadow: 0 2px 6px rgba(67,38,111,.1);
-    }}
-    .completion-remaining-item strong {{ font-size: .9rem; font-weight: 900; }}
-    .completion-remaining-count {{
-      margin-left: auto; padding: 2px 8px; border-radius: 999px; font-size: .74rem;
-      font-weight: 900; background: rgba(243,109,54,.16); color: #b8481f; white-space: nowrap;
-    }}
-    .completion-remaining-item small {{ color: #75685c; font-size: .68rem; white-space: nowrap; }}
     .prefecture-complete-badge {{
       display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 999px;
       font-size: .68rem; font-weight: 900; background: rgba(58,148,106,.14); color: #2f7a57;
@@ -1177,7 +1121,6 @@ def build_index_page(
       <h1>都道府県から探す</h1>
       <p>ポケふたの情報がある{listed_count}都道府県、計{total}枚を地方別にまとめました。行き先を選んで詳細ページへ。</p>
     </header>
-    {completion_board_html}
     {region_nav_html}
 
     <!-- adsense:prefecture -->
