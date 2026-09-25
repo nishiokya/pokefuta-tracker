@@ -61,6 +61,13 @@ class BuildSitemapTest(unittest.TestCase):
         # /characters/ 自体は noindex のUIハブなので sitemap には出さない
         self.assertNotIn("<loc>https://data.pokefuta.com/characters/</loc>", self.xml)
 
+    def test_includes_the_gundam_guide_from_its_own_dataset(self) -> None:
+        docs = Path(__file__).resolve().parents[2] / "docs"
+        pages = MODULE.read_character_work_pages(docs / "character_manholes.ndjson", docs / "gmanhole.ndjson")
+        self.assertIn("gundam", [page.slug for page in pages])
+        # ガンダムのデータを渡さなければ、ガンダムのガイドは出ない（空ページをsitemapに載せない）
+        self.assertNotIn("gundam", [page.slug for page in MODULE.read_character_work_pages(docs / "character_manholes.ndjson")])
+
     def test_omits_character_work_page_without_active_records(self) -> None:
         xml = MODULE.build_sitemap(["1"], [], character_work_pages=[])
         self.assertNotIn("<loc>https://data.pokefuta.com/characters/</loc>", xml)

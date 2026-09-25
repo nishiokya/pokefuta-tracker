@@ -47,12 +47,16 @@ except ModuleNotFoundError as exc:
     )
 
 try:
-    from apps.scraper.character_manhole_works import page_for_work
+    from apps.scraper.character_manhole_works import (
+        GUNDAM_MARKER_COLOR, GUNDAM_MARKER_LABEL, GUNDAM_WORK, GUNDAM_WORK_NAME, GUNDAM_WORK_QUERY, page_for_work,
+    )
     from apps.scraper.prefectures import PREFECTURE_ORDER
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
-    from character_manhole_works import page_for_work
+    from character_manhole_works import (
+        GUNDAM_MARKER_COLOR, GUNDAM_MARKER_LABEL, GUNDAM_WORK, GUNDAM_WORK_NAME, GUNDAM_WORK_QUERY, page_for_work,
+    )
     from prefectures import PREFECTURE_ORDER
 
 logging.basicConfig(level=logging.INFO, format="%(message)s")
@@ -76,12 +80,9 @@ OG_IMAGE = f"{BASE_URL}assets/ogp/pokefuta_map_ogp.png"
 # None（=未記録）のレコードは許容する（プラン参照: キャラクターマンホール115件中100件はNone）。
 REMOVED_INSTALLATION_STATUSES = {"removed", "not_installed", "uninstalled", "scheduled_removal"}
 
-# ガンダムマンホールは character_manholes.ndjson の "work" を持たない独立データセット
-# なので、作品カードには合成エントリとして差し込む。
-GUNDAM_WORK_NAME = "機動戦士ガンダム（ガンダムマンホール）"
-GUNDAM_WORK_QUERY = "gundam"  # gmanhole_map.html の ?work= に渡す値（chk-gundam を選択する特別値）
-GUNDAM_MARKER_COLOR = "#0044aa"
-GUNDAM_MARKER_LABEL = "G"
+# ガンダムマンホールは "work" を持たない独立データセットなので、作品カードには
+# 合成エントリとして差し込む（定義は character_manhole_works.py に集約）。
+GUNDAM_PAGE = page_for_work(GUNDAM_WORK)
 
 LATEST_POSTS_LIMIT = 4
 
@@ -218,7 +219,7 @@ def build_work_summaries(character_records: list[dict], gundam_records: list[dic
             "color": GUNDAM_MARKER_COLOR,
             "label": GUNDAM_MARKER_LABEL,
             "query": GUNDAM_WORK_QUERY,
-            "path": "",
+            "path": GUNDAM_PAGE.path if GUNDAM_PAGE else "",
             "characters": [],
         })
 
@@ -432,7 +433,8 @@ def _work_meta_for(record: dict, is_gundam: bool) -> dict:
     """1枚のレコードが属する作品の表示情報（作品カードと同じ束ね方・同じ色・同じリンク先）。"""
     if is_gundam:
         return {"key": GUNDAM_WORK_QUERY, "name": GUNDAM_WORK_NAME, "color": GUNDAM_MARKER_COLOR,
-                "label": GUNDAM_MARKER_LABEL, "href": _work_href("", GUNDAM_WORK_QUERY)}
+                "label": GUNDAM_MARKER_LABEL,
+                "href": _work_href(GUNDAM_PAGE.path if GUNDAM_PAGE else "", GUNDAM_WORK_QUERY)}
     work = str(record.get("work") or "").strip() or "作品不明"
     page = page_for_work(work)
     name = page.name if page else work

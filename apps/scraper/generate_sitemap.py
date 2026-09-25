@@ -11,13 +11,13 @@ from urllib.parse import quote
 from xml.sax.saxutils import escape
 
 try:
-    from apps.scraper.character_manhole_works import WorkPage, available_pages
+    from apps.scraper.character_manhole_works import WorkPage, available_pages, gundam_work_records
     from apps.scraper.generate_character_manhole_page import _is_active, load_ndjson
     from apps.scraper.prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
-    from character_manhole_works import WorkPage, available_pages
+    from character_manhole_works import WorkPage, available_pages, gundam_work_records
     from generate_character_manhole_page import _is_active, load_ndjson
     from prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS
 
@@ -162,9 +162,12 @@ def read_tag_slugs(ndjson_path: Path) -> list[str]:
     return available_tag_slugs(load_records(ndjson_path))
 
 
-def read_character_work_pages(ndjson_path: Path) -> list[WorkPage]:
+def read_character_work_pages(ndjson_path: Path, gundam_path: Path | None = None) -> list[WorkPage]:
     """Return only work guides that the page generator can actually publish."""
-    active = [record for record in load_ndjson(ndjson_path) if _is_active(record)]
+    records = load_ndjson(ndjson_path)
+    if gundam_path is not None:
+        records += gundam_work_records(load_ndjson(gundam_path))
+    active = [record for record in records if _is_active(record)]
     return available_pages(active)
 
 
@@ -246,6 +249,7 @@ def main() -> int:
     parser.add_argument("--data", default="docs/pokefuta.ndjson")
     parser.add_argument("--pokemon", default="docs/pokemon_metadata.json")
     parser.add_argument("--characters", default="docs/character_manholes.ndjson")
+    parser.add_argument("--gundam", default="docs/gmanhole.ndjson")
     parser.add_argument("--output", default="apps/web/sitemap.xml")
     args = parser.parse_args()
 
@@ -256,7 +260,7 @@ def main() -> int:
 
     pokemon_slugs = read_pokemon_slugs(Path(args.data), Path(args.pokemon))
     tag_slugs = read_tag_slugs(Path(args.data))
-    character_work_pages = read_character_work_pages(Path(args.characters))
+    character_work_pages = read_character_work_pages(Path(args.characters), Path(args.gundam))
 
     output_path = Path(args.output)
     output_path.parent.mkdir(parents=True, exist_ok=True)

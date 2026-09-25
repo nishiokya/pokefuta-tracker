@@ -8,7 +8,7 @@ from datetime import datetime
 from pathlib import Path
 from unittest.mock import patch
 
-from apps.scraper.character_manhole_works import WORK_PAGES, page_for_work
+from apps.scraper.character_manhole_works import WORK_PAGES, gundam_work_records, page_for_work
 from apps.scraper.generate_character_work_pages import generate_html, generate_index_html, load_events, write_pages
 from apps.scraper.generate_character_manhole_page import _is_active, load_ndjson
 from apps.scraper.photo_caption import JST
@@ -45,6 +45,53 @@ RECORDS = [
         "installation_status": "removed",
     },
 ]
+
+
+GUNDAM = next(page for page in WORK_PAGES if page.slug == "gundam")
+GUNDAM_RECORDS = [
+    {"id": "1", "title": "豊富町観光情報センター", "prefecture": "北海道", "city": "豊富町",
+     "address": "北海道天塩郡豊富町字豊富駅前通", "image_urls": ["../img/about/img1/img_manhole1.png"],
+     "franchise": "gundam", "characters": [], "lat": 45.10487, "lng": 141.772842,
+     "detail_url": "https://www.g-manhole.net/about/detail.php?id=1", "status": "active"},
+    {"id": "2", "title": "壊れた行", "prefecture": "", "status": "invalid",
+     "detail_url": "https://www.g-manhole.net/about/detail.php?id=2"},
+]
+
+
+class GundamGuideTest(unittest.TestCase):
+    """ガンダムは別データセット（gmanhole.ndjson）から作品ガイドを作る。"""
+
+    def setUp(self) -> None:
+        self.html = generate_html(GUNDAM, gundam_work_records(GUNDAM_RECORDS), {})
+
+    def test_title_targets_the_gundam_manhole_query(self) -> None:
+        self.assertIn("<title>ガンダムマンホール一覧｜設置場所・地図</title>", self.html)
+
+    def test_lists_only_active_spots_with_the_official_source(self) -> None:
+        self.assertEqual(1, self.html.count('class="cw-spot"'))
+        self.assertIn('href="https://www.g-manhole.net/about/detail.php?id=1"', self.html)
+        self.assertNotIn("壊れた行", self.html)
+
+    def test_does_not_hotlink_images_from_the_source_site(self) -> None:
+        self.assertNotIn("img_manhole1.png", self.html)
+
+    def test_place_name_is_not_repeated_as_the_location_line(self) -> None:
+        self.assertEqual(1, self.html.count("豊富町観光情報センター</h4>"))
+        self.assertNotIn('<p class="cw-location">豊富町観光情報センター</p>', self.html)
+
+    def test_skips_the_character_index_when_there_are_no_characters(self) -> None:
+        self.assertNotIn('class="cw-index"', self.html)
+        idolmaster = generate_html(IDOLMASTER, RECORDS, EVENT, now=datetime(2026, 9, 20, tzinfo=JST))
+        self.assertIn('class="cw-index"', idolmaster)
+
+    def test_maps_use_the_gundam_filter(self) -> None:
+        self.assertIn('gmanhole_map.html?work=gundam', self.html)
+        self.assertNotIn('?work=%E6%A9%9F%E5%8B%95', self.html)  # 作品名そのままでは地図が絞り込めない
+
+    def test_hero_uses_the_gundam_lid_and_generic_cta(self) -> None:
+        self.assertIn('style="--c:#0044aa" aria-hidden="true">G</span>', self.html)
+        self.assertIn(">設置場所を探す ↓</a>", self.html)
+        self.assertNotIn("アイドル・設置場所", self.html)
 
 
 class WorkDefinitionsTest(unittest.TestCase):
