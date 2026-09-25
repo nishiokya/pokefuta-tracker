@@ -14,7 +14,7 @@ from pathlib import Path
 from urllib.parse import quote, urlencode, urlparse
 
 try:
-    from apps.scraper.character_manhole_works import WORK_PAGES, WorkPage, available_pages
+    from apps.scraper.character_manhole_works import WORK_PAGES, WorkPage, available_pages, gundam_work_records
     from apps.scraper.generate_character_manhole_page import (
         BASE_URL, ROOT, _is_active, load_ndjson,
     )
@@ -23,7 +23,7 @@ try:
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
-    from character_manhole_works import WORK_PAGES, WorkPage, available_pages
+    from character_manhole_works import WORK_PAGES, WorkPage, available_pages, gundam_work_records
     from generate_character_manhole_page import (
         BASE_URL, ROOT, _is_active, load_ndjson,
     )
@@ -33,6 +33,7 @@ except ModuleNotFoundError as exc:
 ASSET_BASE = "../../"
 INDEX_ASSET_BASE = "../"
 DEFAULT_EVENTS = ROOT / "dataset/character_manhole_events.json"
+DEFAULT_GUNDAM = ROOT / "docs/gmanhole.ndjson"
 OG_IMAGE = BASE_URL + "assets/ogp/pokefuta_map_ogp.png"
 IDOLMASTER_EVENT_TYPE = "idolmaster_20th_checkin"
 EVENT_REQUIRED_KEYS = {"type", "url", "project_url", "verified_at", "ends_at", "spots"}
@@ -176,6 +177,8 @@ def spot_html(record: dict, event: dict | None, event_active: bool) -> str:
         maps = "https://www.google.com/maps/search/?" + urlencode({"api": "1", "query": address + " " + location})
         map_label = "施設の住所を地図で確認"
         coordinate_note = '<p class="cw-note">正確な座標は確認中です。全国地図のピンにはまだ表示されません。</p>'
+    # ガンダムは設置場所名がそのまま見出しになるので、同じ文字列を2行続けない
+    location_html = "" if location == name else f'<p class="cw-location">{escape(location)}</p>'
     links = f'<a href="{escape(maps)}" target="_blank" rel="noopener noreferrer">{map_label} ↗</a>'
     if source:
         links += f'<a href="{escape(source)}" target="_blank" rel="noopener noreferrer">出典・設置案内 ↗</a>'
@@ -184,7 +187,7 @@ def spot_html(record: dict, event: dict | None, event_active: bool) -> str:
         links += f'<a href="{escape(checkin)}" target="_blank" rel="noopener noreferrer">公式スポット案内（ログインが必要）↗</a>'
     return f"""<article class="cw-spot" id="{spot_id(record)}">
       <p class="cw-series">{escape(str(record.get('work') or ''))}</p>
-      <h4>{escape(name)}</h4><p class="cw-location">{escape(location)}</p>
+      <h4>{escape(name)}</h4>{location_html}
       <p>{escape(address)}</p>{coordinate_note}<div class="cw-spot-links">{links}</div>
     </article>"""
 
@@ -212,7 +215,7 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
     lid_label = next((str(r["marker_label"]) for r in selected if r.get("marker_label")), page.name[:1])
     brand_counts = Counter(r["work"] for r in selected)
     brands_html = "".join(
-        f'<a href="{escape(map_href(work))}">{escape(work)} <span>{brand_counts[work]}枚 ↗</span></a>'
+        f'<a href="{escape(map_href(work if len(page.works) > 1 else page.map_query))}">{escape(work)} <span>{brand_counts[work]}枚 ↗</span></a>'
         for work in page.works if brand_counts[work]
     )
     pref_order = {pref: i for i, pref in enumerate(PREFECTURE_ORDER)}
@@ -222,6 +225,8 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
         f'<span>{escape(str(r.get("prefecture") or ""))} {escape(str(r.get("city") or ""))}</span></a>'
         for r in selected
     )
+    # キャラから選ぶための目次なので、キャラ名の無い作品（ガンダム）では下の一覧の重複になる
+    index_block = f'<div class="cw-index">{index_html}</div>' if any(r.get("character") for r in selected) else ""
     groups = defaultdict(list)
     for record in selected:
         groups[(str(record.get("prefecture") or "都道府県未記録"), str(record.get("city") or ""))].append(record)
@@ -275,7 +280,7 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
     <section class="cm-hero" aria-labelledby="work-heading">
       <div class="cw-hero-copy"><p class="cm-eyebrow">CHARACTER MANHOLE GUIDE / {escape(page.name)}</p>{badge}
         <h1 id="work-heading">{hero_heading}</h1><p class="cm-hero-lead">{hero_note}</p>
-        <p>{escape(page.intro)}</p><div class="cm-jump"><a class="cm-btn" href="#locations">アイドル・設置場所を探す ↓</a>{hero_cta}</div>
+        <p>{escape(page.intro)}</p><div class="cm-jump"><a class="cm-btn" href="#locations">{"アイドル・設置場所" if page.slug == "idolmaster" else "設置場所"}を探す ↓</a>{hero_cta}</div>
         <p class="cm-hero-note">掲載 {count}枚 / {pref_count}都道府県　{map_note}</p>
       </div>
       <aside class="cw-emblem" aria-label="掲載数"><span class="cm-lid cm-lid--lg" style="--c:{escape(lid_color)}" aria-hidden="true">{escape(lid_label[:1])}</span>
@@ -285,7 +290,7 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
     <section class="cm-section" id="locations" aria-labelledby="locations-heading">
       <div class="cm-section-head"><h2 id="locations-heading"><span aria-hidden="true">FIND YOUR FAVORITE</span>{escape(page.name)}のマンホール一覧</h2>
         <a class="cm-btn cm-btn--soft" href="{escape(map_href(page.map_query))}">作品の全国地図を見る →</a></div>
-      <p class="cm-lead">{escape(page.guide)}</p><div class="cw-index">{index_html}</div>
+      <p class="cm-lead">{escape(page.guide)}</p>{index_block}
       {locations_html}
     </section>
     <section class="cm-section" aria-labelledby="series-heading"><div class="cm-section-head"><h2 id="series-heading">シリーズ別に地図で探す</h2></div><div class="cw-brand-links">{brands_html}</div></section>
@@ -351,9 +356,10 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data", type=Path, default=ROOT / "docs/character_manholes.ndjson")
     parser.add_argument("--events", type=Path, default=DEFAULT_EVENTS)
+    parser.add_argument("--gundam", type=Path, default=DEFAULT_GUNDAM)
     parser.add_argument("--output", type=Path, default=ROOT / "dist")
     args = parser.parse_args()
-    records = load_ndjson(args.data)
+    records = load_ndjson(args.data) + gundam_work_records(load_ndjson(args.gundam))
     if not any(_is_active(r) for r in records):
         parser.error("No active character records; refusing to generate empty guides")
     written = write_pages(records, load_events(args.events), args.output)

@@ -284,9 +284,11 @@ class GenerateHtmlTest(unittest.TestCase):
         self.assertIn("弱虫ペダル", self.html)
         self.assertIn('<b class="cm-num">2</b>枚', self.html)
 
-    def test_includes_pref_and_work_deep_links(self):
+    def test_includes_pref_deep_links_and_every_work_goes_to_its_guide(self):
         self.assertIn("gmanhole_map.html?pref=", self.html)
-        self.assertIn("gmanhole_map.html?work=", self.html)
+        # ガンダムにも作品ガイドができたので、作品カードから地図へ直行するものは無い
+        self.assertIn('class="lp-work-card" href="./characters/gundam/"', self.html)
+        self.assertNotIn('class="lp-work-card" href="./gmanhole_map.html?work=', self.html)
 
     def test_location_directory_contains_all_active_records_without_javascript(self):
         lists = re.findall(r'<ul class="lp-location-list">(.*?)</ul>', self.html, re.S)

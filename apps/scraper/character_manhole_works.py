@@ -4,6 +4,14 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+# ガンダムマンホールは character_manholes.ndjson とは別の独立データセット（docs/gmanhole.ndjson）で、
+# "work" を持たない。全国一覧・作品ガイド・sitemap で同じ作品として扱うための定義。
+GUNDAM_WORK = "機動戦士ガンダム"
+GUNDAM_WORK_NAME = "機動戦士ガンダム（ガンダムマンホール）"
+GUNDAM_WORK_QUERY = "gundam"  # gmanhole_map.html の ?work= に渡す値（chk-gundam を選択する特別値）
+GUNDAM_MARKER_COLOR = "#0044aa"
+GUNDAM_MARKER_LABEL = "G"
+
 
 @dataclass(frozen=True)
 class WorkPage:
@@ -22,10 +30,20 @@ class WorkPage:
 
     @property
     def map_query(self) -> str:
-        return "idolmaster" if self.slug == "idolmaster" else self.works[0]
+        return {"idolmaster": "idolmaster", "gundam": GUNDAM_WORK_QUERY}.get(self.slug, self.works[0])
 
 
 WORK_PAGES = (
+    WorkPage(
+        "gundam", "機動戦士ガンダム", "ガンダム", (GUNDAM_WORK,),
+        "機動戦士ガンダムのマンホール（ガンダムマンホール）を、都道府県・市町村・設置場所から探せます。"
+        "道の駅や駅前、観光施設など、全国の設置場所と住所・出典をまとめました。",
+        "北海道から九州まで広く分布しています。都道府県ごとの一覧で行き先を決めてから、"
+        "地図で近くの設置場所をまとめて確認すると、回る順番を考えやすくなります。",
+        "ガンダムマンホールはどこにありますか？",
+        "このページでは、掲載データにある全国の設置場所を都道府県・市町村別に紹介しています。"
+        "最新の設置状況や撤去・移設の情報は、各設置場所の出典（ガンダムマンホール公式サイト）をご確認ください。",
+    ),
     WorkPage(
         "idolmaster", "アイドルマスター", "アイマス（ふたマス）",
         ("アイドルマスター", "アイドルマスター シンデレラガールズ",
@@ -85,3 +103,23 @@ def available_pages(records: list[dict]) -> list[WorkPage]:
     """呼び出し側で撤去・未設置を除いたデータを渡す。空のLPは生成しない。"""
     works = {record.get("work") for record in records}
     return [page for page in WORK_PAGES if works.intersection(page.works)]
+
+
+def gundam_work_records(records: list[dict]) -> list[dict]:
+    """gmanhole.ndjson のレコードを、作品ガイドが読める形（work / 出典 / 色）に揃えたコピーを返す。
+
+    ガンダムのデータにはキャラクター名が無く、title が設置場所の名前なので、
+    landmark にも同じ値を入れる。画像URLは他サイトの相対パスなので持ち込まない。
+    """
+    return [
+        {
+            **record,
+            "work": GUNDAM_WORK,
+            "character": "",
+            "landmark": record.get("title") or "",
+            "official_url": record.get("detail_url") or "",
+            "marker_color": GUNDAM_MARKER_COLOR,
+            "marker_label": GUNDAM_MARKER_LABEL,
+        }
+        for record in records
+    ]
