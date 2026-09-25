@@ -192,9 +192,11 @@
     "world_heritage": {
       "enabled": true,
       "emoji": "🌐",
-      "label": "世界遺産エリアのポケふた",
+      "label": "世界遺産エリアのポケふた（{heritage}）",
       "hashtag": "#世界遺産ポケふた",
-      "priority": 85
+      "hashtag_extra": "#{heritage}",
+      "priority": 85,
+      "note": "判定は heritages[].ids。構成資産がある市町村のポケふただけを登録する。hashtag_extra は heritages[].heritage を埋め込んだ遺産名ハッシュタグ"
     },
     "beach": {
       "enabled": true,
@@ -307,12 +309,6 @@
       ]
     },
     {
-      "island": "沖縄",
-      "prefecture": "沖縄県",
-      "city": null,
-      "note": "city=null はprefecture全体一致。石垣島エントリはids優先で上書き"
-    },
-    {
       "island": "粟島",
       "prefecture": "香川県",
       "city": "三豊",
@@ -343,6 +339,55 @@
       "ids": [
         "37"
       ]
+    },
+    {
+      "island": "宮古島",
+      "prefecture": "沖縄県",
+      "city": "宮古島",
+      "ids": [
+        "236"
+      ]
+    },
+    {
+      "island": "渡嘉敷島",
+      "prefecture": "沖縄県",
+      "city": "渡嘉敷",
+      "ids": [
+        "423"
+      ]
+    },
+    {
+      "island": "座間味島",
+      "prefecture": "沖縄県",
+      "city": "座間味",
+      "ids": [
+        "424"
+      ]
+    },
+    {
+      "island": "久米島",
+      "prefecture": "沖縄県",
+      "city": "久米島",
+      "ids": [
+        "425"
+      ]
+    },
+    {
+      "island": "対馬",
+      "prefecture": "長崎県",
+      "city": "対馬",
+      "ids": [
+        "477"
+      ]
+    },
+    {
+      "island": "五島列島",
+      "prefecture": "長崎県",
+      "city": "五島",
+      "ids": [
+        "478"
+      ],
+      "note": "鐙瀬ビジターセンターは福江島。ハッシュタグの通りの良さで id358 と同じ五島列島にそろえる"
     }
   ],
   "city_links": [
@@ -1452,25 +1497,12 @@
     "174": {
       "tags": [
         "world_heritage",
-        "remote_island",
         "near_station"
       ]
     },
     "175": {
       "tags": [
-        "seaside",
-        "world_heritage",
-        "remote_island"
-      ]
-    },
-    "176": {
-      "tags": [
-        "remote_island"
-      ]
-    },
-    "177": {
-      "tags": [
-        "remote_island"
+        "seaside"
       ]
     },
     "179": {
@@ -1783,43 +1815,31 @@
     },
     "229": {
       "tags": [
-        "seaside",
-        "world_heritage",
-        "remote_island"
-      ]
-    },
-    "230": {
-      "tags": [
-        "remote_island"
+        "seaside"
       ]
     },
     "231": {
       "building": "道の駅いとまん",
       "tags": [
-        "remote_island",
         "roadside",
         "seaside"
       ]
     },
     "232": {
       "tags": [
-        "seaside",
-        "remote_island"
+        "seaside"
       ]
     },
     "233": {
       "building": "道の駅豊崎",
       "tags": [
         "seaside",
-        "world_heritage",
-        "remote_island",
         "roadside"
       ]
     },
     "234": {
       "tags": [
-        "seaside",
-        "remote_island"
+        "seaside"
       ]
     },
     "235": {
@@ -2147,26 +2167,22 @@
     },
     "288": {
       "tags": [
-        "seaside",
-        "world_heritage"
+        "seaside"
       ]
     },
     "289": {
       "tags": [
-        "seaside",
-        "world_heritage"
+        "seaside"
       ]
     },
     "290": {
       "tags": [
-        "seaside",
-        "world_heritage"
+        "seaside"
       ]
     },
     "291": {
       "tags": [
-        "seaside",
-        "world_heritage"
+        "seaside"
       ]
     },
     "292": {
@@ -2649,7 +2665,6 @@
     },
     "357": {
       "tags": [
-        "world_heritage",
         "far_station"
       ]
     },
@@ -3109,8 +3124,7 @@
     },
     "422": {
       "tags": [
-        "seaside",
-        "remote_island"
+        "seaside"
       ]
     },
     "423": {
@@ -3274,8 +3288,7 @@
     },
     "446": {
       "tags": [
-        "world_heritage",
-        "remote_island"
+        "world_heritage"
       ]
     },
     "447": {
@@ -3545,6 +3558,68 @@
       "ids": [
         "407"
       ]
+    }
+  ],
+  "heritages": [
+    {
+      "heritage": "古都京都の文化財",
+      "ids": [
+        "104",
+        "159",
+        "160",
+        "161",
+        "162",
+        "163"
+      ],
+      "note": "104 は大津市（延暦寺が構成資産）"
+    },
+    {
+      "heritage": "法隆寺",
+      "ids": [
+        "148",
+        "149",
+        "150",
+        "151",
+        "152"
+      ],
+      "note": "正式名は法隆寺地域の仏教建造物"
+    },
+    {
+      "heritage": "琉球王国のグスク",
+      "ids": [
+        "174",
+        "446"
+      ],
+      "note": "那覇市（首里城跡・玉陵・識名園など）。正式名は琉球王国のグスク及び関連遺産群"
+    },
+    {
+      "heritage": "官営八幡製鐵所",
+      "ids": [
+        "198",
+        "199",
+        "201",
+        "202"
+      ],
+      "note": "北九州市。明治日本の産業革命遺産の構成資産"
+    },
+    {
+      "heritage": "知床",
+      "ids": [
+        "220"
+      ]
+    },
+    {
+      "heritage": "平泉",
+      "ids": [
+        "267"
+      ]
+    },
+    {
+      "heritage": "石見銀山",
+      "ids": [
+        "379"
+      ],
+      "note": "大田市仁摩町"
     }
   ]
 }

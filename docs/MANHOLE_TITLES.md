@@ -53,6 +53,11 @@
 | `gundam_manhole_city` | 🤖 ○○にはガンダムマンホールもある | `#ガンダムマンホールのあるまち` | ガンダムマンホールがある自治体のポケふた id を手動登録 | 31 |
 | `near_character_manhole` | 🎨 キャラクターマンホールまで約1km以内 | `#キャラクターマンホール近接` | キャラクターマンホール（`dataset/aichi_character_manholes.ndjson` 等）との直線距離が約1km以内と確認した id を手動登録 | 43 |
 | `character_manhole_city` | 🎨 ○○にはキャラクターマンホールもある | `#キャラクターマンホールのあるまち` | 設置中キャラクターマンホールがある自治体のポケふた id を手動登録 | 30 |
+| `world_heritage` | 🌐 世界遺産エリアのポケふた（{heritage}） | `#世界遺産ポケふた` + 実行時に `#{heritage}`（遺産名）を追加生成 | マスタの `heritages` に当該 id が登録 | 85 |
+
+> `remote_island` の「離島」は本土・北海道・本州・四国・九州・**沖縄本島以外**の島。沖縄本島のポケふたは付けない。
+> `islands` はすべて `ids` で書く（`prefecture+city` 一致は使わない）。`manholes."<id>".tags` の `remote_island`（タグページ用）と同じ集合であることを `test_manhole_titles_heritage_island.py` が検査する。
+> `world_heritage` は**構成資産がある市町村**のポケふただけに付ける（「世界遺産へ行く途中」は含めない）。遺産名は通称で短く（例: 法隆寺地域の仏教建造物 → 法隆寺）。`heritages` と `tags` の `world_heritage` も同じテストで一致を検査する。
 
 > `seaside` は地図で目視確認したIDを `manholes."<id>".tags` に手動登録する運用。現在 **116件** 登録済み。海岸線自動判定は将来拡張。
 > `lakeside` は `lakes` ブロックで湖ごとに ids を管理。現在 **4湖7件** 登録済み。`seaside` との重複付与あり（例: 中海は汽水湖のため両タグを持つ）。
@@ -178,7 +183,8 @@ docs/pokefuta.ndjson (titles フィールド) ─→ ①詳細ページ ②OGP �
 
 | やりたいこと | 編集箇所 |
 |--------------|----------|
-| 離島称号を1件追加 | `islands` に1要素追加 |
+| 離島称号を1件追加 | `islands` に1要素追加し、同じ id の `tags` に `remote_island` を足す |
+| 世界遺産称号を1件追加 | `heritages` に1要素追加（または既存要素の `ids` に追加）し、同じ id の `tags` に `world_heritage` を足す |
 | 称号の文言/優先度変更・一時停止 | `vocabulary` の該当キー（`enabled:false` で停止） |
 | マンホールのカテゴリタグ追加（例 `seaside`） | `manholes."<id>".tags` に追加 |
 | 自治体公式ページ追加・更新 | `city_links` に1要素追加 |
