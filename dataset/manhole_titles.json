@@ -751,7 +751,8 @@
       "building": "鵜住居駅前",
       "tags": [
         "seaside",
-        "station_front"
+        "station_front",
+        "world_heritage"
       ]
     },
     "20": {
@@ -1174,7 +1175,8 @@
     "105": {
       "tags": [
         "lakeside",
-        "gundam_manhole_city"
+        "gundam_manhole_city",
+        "world_heritage"
       ]
     },
     "106": {
@@ -1398,30 +1400,35 @@
     "153": {
       "tags": [
         "seaside",
-        "remote_island"
+        "remote_island",
+        "world_heritage"
       ]
     },
     "154": {
       "tags": [
         "seaside",
-        "remote_island"
+        "remote_island",
+        "world_heritage"
       ]
     },
     "155": {
       "tags": [
         "seaside",
-        "remote_island"
+        "remote_island",
+        "world_heritage"
       ]
     },
     "156": {
       "tags": [
         "seaside",
-        "remote_island"
+        "remote_island",
+        "world_heritage"
       ]
     },
     "157": {
       "tags": [
-        "seaside"
+        "seaside",
+        "world_heritage"
       ]
     },
     "158": {
@@ -1486,12 +1493,14 @@
     },
     "172": {
       "tags": [
-        "near_station"
+        "near_station",
+        "world_heritage"
       ]
     },
     "173": {
       "tags": [
-        "near_station"
+        "near_station",
+        "world_heritage"
       ]
     },
     "174": {
@@ -1555,7 +1564,8 @@
         "park",
         "rail_access_good",
         "tourism",
-        "near_station"
+        "near_station",
+        "world_heritage"
       ]
     },
     "188": {
@@ -1634,7 +1644,8 @@
     },
     "200": {
       "tags": [
-        "near_station"
+        "near_station",
+        "world_heritage"
       ]
     },
     "201": {
@@ -1839,7 +1850,8 @@
     },
     "234": {
       "tags": [
-        "seaside"
+        "seaside",
+        "world_heritage"
       ]
     },
     "235": {
@@ -1926,7 +1938,8 @@
       "tags": [
         "geosite",
         "tourism",
-        "seaside"
+        "seaside",
+        "world_heritage"
       ],
       "confidence": 3
     },
@@ -2270,7 +2283,8 @@
         "roadside",
         "family",
         "tourism",
-        "seaside"
+        "seaside",
+        "world_heritage"
       ],
       "confidence": 3
     },
@@ -2440,7 +2454,8 @@
     "321": {
       "building": "道の駅かづの",
       "tags": [
-        "roadside"
+        "roadside",
+        "world_heritage"
       ]
     },
     "323": {
@@ -2606,19 +2621,22 @@
     "344": {
       "building": "白浜駅前",
       "tags": [
-        "station_front"
+        "station_front",
+        "world_heritage"
       ]
     },
     "345": {
       "tags": [
         "seaside",
-        "near_station"
+        "near_station",
+        "world_heritage"
       ]
     },
     "347": {
       "tags": [
         "gundam_manhole_city",
-        "near_station"
+        "near_station",
+        "world_heritage"
       ]
     },
     "348": {
@@ -2642,19 +2660,22 @@
     "353": {
       "building": "宇治駅前",
       "tags": [
-        "station_front"
+        "station_front",
+        "world_heritage"
       ]
     },
     "354": {
       "tags": [
         "seaside",
-        "near_station"
+        "near_station",
+        "world_heritage"
       ]
     },
     "355": {
       "tags": [
         "seaside",
-        "near_station"
+        "near_station",
+        "world_heritage"
       ]
     },
     "356": {
@@ -2671,7 +2692,8 @@
     "358": {
       "tags": [
         "seaside",
-        "remote_island"
+        "remote_island",
+        "world_heritage"
       ]
     },
     "359": {
@@ -2809,7 +2831,8 @@
     "382": {
       "building": "ニンテンドーミュージアム",
       "tags": [
-        "near_station"
+        "near_station",
+        "world_heritage"
       ]
     },
     "383": {
@@ -2834,7 +2857,8 @@
       "verified_at": "2025-12-27",
       "tags": [
         "onsen",
-        "tourism"
+        "tourism",
+        "world_heritage"
       ],
       "confidence": 3
     },
@@ -2875,7 +2899,8 @@
       "verified_at": "2025-12-27",
       "tags": [
         "tourism",
-        "near_station"
+        "near_station",
+        "world_heritage"
       ],
       "confidence": 3
     },
@@ -2890,7 +2915,8 @@
       "tags": [
         "roadside",
         "food",
-        "tourism"
+        "tourism",
+        "world_heritage"
       ],
       "confidence": 3
     },
@@ -2905,7 +2931,8 @@
         "roadside",
         "seaside",
         "tourism",
-        "station_front"
+        "station_front",
+        "world_heritage"
       ],
       "confidence": 3
     },
@@ -3450,7 +3477,8 @@
       "tags": [
         "tourism",
         "museum",
-        "remote_island"
+        "remote_island",
+        "world_heritage"
       ]
     },
     "479": {
@@ -3512,6 +3540,46 @@
         "rail_access_good",
         "tourism"
       ]
+    },
+    "177": {
+      "tags": [
+        "world_heritage"
+      ]
+    },
+    "255": {
+      "tags": [
+        "world_heritage"
+      ]
+    },
+    "256": {
+      "tags": [
+        "world_heritage"
+      ]
+    },
+    "257": {
+      "tags": [
+        "world_heritage"
+      ]
+    },
+    "270": {
+      "tags": [
+        "world_heritage"
+      ]
+    },
+    "343": {
+      "tags": [
+        "world_heritage"
+      ]
+    },
+    "346": {
+      "tags": [
+        "world_heritage"
+      ]
+    },
+    "352": {
+      "tags": [
+        "world_heritage"
+      ]
     }
   },
   "lakes": [
@@ -3565,13 +3633,17 @@
       "heritage": "古都京都の文化財",
       "ids": [
         "104",
+        "105",
         "159",
         "160",
         "161",
         "162",
-        "163"
+        "163",
+        "352",
+        "353",
+        "382"
       ],
-      "note": "104 は大津市（延暦寺が構成資産）"
+      "note": "京都市・宇治市（平等院・宇治上神社）・大津市（延暦寺）"
     },
     {
       "heritage": "法隆寺",
@@ -3588,19 +3660,86 @@
       "heritage": "琉球王国のグスク",
       "ids": [
         "174",
-        "446"
+        "446",
+        "177",
+        "234"
       ],
-      "note": "那覇市（首里城跡・玉陵・識名園など）。正式名は琉球王国のグスク及び関連遺産群"
+      "note": "那覇市（首里城跡など）・うるま市（勝連城跡）・南城市（斎場御嶽）。正式名は琉球王国のグスク及び関連遺産群"
     },
     {
-      "heritage": "官営八幡製鐵所",
+      "heritage": "明治日本の産業革命遺産",
       "ids": [
         "198",
         "199",
+        "200",
         "201",
-        "202"
+        "202",
+        "255",
+        "256",
+        "257",
+        "19",
+        "354"
       ],
-      "note": "北九州市。明治日本の産業革命遺産の構成資産"
+      "note": "北九州市（官営八幡製鐵所）・佐賀市（三重津海軍所跡）・釜石市（橋野鉄鉱山）・長崎市（端島炭坑など。潜伏キリシタンの大浦天主堂もあるが1つに絞った）"
+    },
+    {
+      "heritage": "潜伏キリシタン関連遺産",
+      "ids": [
+        "355",
+        "358",
+        "478"
+      ],
+      "note": "佐世保市（黒島）・新上五島町（頭ヶ島）・五島市（久賀島・奈留島）。正式名は長崎と天草地方の潜伏キリシタン関連遺産"
+    },
+    {
+      "heritage": "紀伊山地の霊場と参詣道",
+      "ids": [
+        "343",
+        "344",
+        "345",
+        "346",
+        "244",
+        "297",
+        "384",
+        "387",
+        "388",
+        "389"
+      ],
+      "note": "構成資産がある市町村: 高野町・白浜町・串本町・那智勝浦町・熊野市・紀宝町・尾鷲市・大紀町・紀北町・御浜町"
+    },
+    {
+      "heritage": "縄文遺跡群",
+      "ids": [
+        "187",
+        "157",
+        "321",
+        "270"
+      ],
+      "note": "函館市（垣ノ島・大船）・八戸市（是川）・鹿角市（大湯環状列石）・一戸町（御所野）。森町の鷲ノ木遺跡は関連資産なので含めない。正式名は北海道・北東北の縄文遺跡群"
+    },
+    {
+      "heritage": "富士山",
+      "ids": [
+        "347"
+      ],
+      "note": "静岡市（三保松原）。富士市は富士山域に含まれるか未確認のため入れていない"
+    },
+    {
+      "heritage": "国立西洋美術館",
+      "ids": [
+        "172",
+        "173"
+      ],
+      "note": "正式名はル・コルビュジエの建築作品"
+    },
+    {
+      "heritage": "小笠原諸島",
+      "ids": [
+        "153",
+        "154",
+        "155",
+        "156"
+      ]
     },
     {
       "heritage": "知床",
