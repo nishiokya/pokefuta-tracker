@@ -696,6 +696,20 @@ class BuildIndexPageTest(unittest.TestCase):
         }
         self.records_by_pref["三重県"] = [{"id": "1"}, {"id": "2"}]
 
+    def test_completion_board_is_gone_but_card_badges_and_meta_remain(self) -> None:
+        # 上部の「現地写真がそろっていないのは、残りN都道府県」ボードは #531 で
+        # 削除した。県カードのバッジと meta description の集計は残す。
+        photos = {"dummy-北海道": {}, "1": {}}
+        html = MODULE.build_index_page(self.records_by_pref, photos=photos)
+        self.assertNotIn("completion-board", html)
+        self.assertNotIn("prefectures_completion_click", html)
+        self.assertNotIn("現地写真がそろっていないのは", html)
+        self.assertIn('<span class="prefecture-complete-badge">写真コンプリート</span>', html)
+        self.assertIn('<span class="prefecture-remaining-badge">あと1枚</span>', html)
+        self.assertRegex(
+            html, r'<meta name="description" content="[^"]*現地写真がそろっているのは1都道府県。'
+        )
+
     def test_links_to_every_prefecture_grouped_by_region(self) -> None:
         html = MODULE.build_index_page(self.records_by_pref)
         for name, slug in MODULE.PREFECTURES:
