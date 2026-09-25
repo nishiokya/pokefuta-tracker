@@ -282,7 +282,7 @@ class GenerateHtmlTest(unittest.TestCase):
     def test_includes_work_names_and_counts(self):
         self.assertIn("ゾンビランドサガ", self.html)
         self.assertIn("弱虫ペダル", self.html)
-        self.assertIn("2枚", self.html)
+        self.assertIn('<b class="cm-num">2</b>枚', self.html)
 
     def test_includes_pref_and_work_deep_links(self):
         self.assertIn("gmanhole_map.html?pref=", self.html)
@@ -292,7 +292,7 @@ class GenerateHtmlTest(unittest.TestCase):
         lists = re.findall(r'<ul class="lp-location-list">(.*?)</ul>', self.html, re.S)
         self.assertEqual(3, len(lists))
         directory = "".join(lists)
-        self.assertEqual(len(self.character_records) + len(self.gundam_records), directory.count("<li>"))
+        self.assertEqual(len(self.character_records) + len(self.gundam_records), directory.count("<li "))
         self.assertIn("唐人プラザビル", directory)
         self.assertIn("豊富町", directory)
         self.assertIn("小野田坂道", directory)  # 座標なしでも一覧には載る
@@ -355,7 +355,7 @@ class GenerateHtmlTest(unittest.TestCase):
         html = generate_html(records, self.gundam_records, self.design_path)
         # 作品カードは1枚に束ねる。早見表には県ごとに出るので、カードだけ数える
         self.assertEqual(1, html.count('class="lp-work-card" href="./characters/idolmaster/"'))
-        self.assertIn("アイドルマスター</strong><small>2枚", html)
+        self.assertIn('アイドルマスター</strong><span class="lp-work-count"><b class="cm-num">2</b>枚', html)
 
     def test_excludes_photo_less_posts_from_latest_section(self):
         self.assertNotIn("写真なし", self.html)
@@ -470,17 +470,15 @@ class HeroMosaicHtmlTest(unittest.TestCase):
         self.assertIn('width="300"', mosaic_section)
         self.assertIn('height="300"', mosaic_section)
 
-    def test_tiles_are_fixed_size_square_crop_not_a_stretchy_grid(self):
-        design_path = _write_ndjson(self.directory, "design_manholes.ndjson", HERO_MOSAIC_RECORDS)
-        html = generate_html(self.character_records, self.gundam_records, design_path)
-        # 固定サイズタイル: グリッドを 1fr で伸び縮みさせるのではなく、
-        # flex-wrap + 固定 width/height の正方形タイルで並べる
-        self.assertIn(".lp-hero-mosaic-item {", html)
-        self.assertIn("width: 96px; height: 96px;", html)
-        self.assertNotIn("grid-template-columns: repeat(3, minmax(0, 1fr))", html)
-        # object-fit: cover で中央クリップ（マンホールが切れないよう object-position も明示）
-        self.assertIn("object-fit: cover;", html)
-        self.assertIn("object-position: center;", html)
+    def test_tiles_are_round_center_cropped_photos(self):
+        # スタイルは共有CSSに移した。写真は丸抜き・中央クリップ（蓋が切れないよう position も明示）
+        css = (Path(__file__).resolve().parents[2] / "apps/web/assets/character-work.css").read_text(encoding="utf-8")
+        rule = re.search(r"\.lp-hero-mosaic-item \{(.*?)\}", css, re.S).group(1)
+        self.assertIn("aspect-ratio: 1", rule)
+        self.assertIn("border-radius: 50%", rule)
+        img_rule = re.search(r"\.lp-hero-mosaic-item img \{(.*?)\}", css, re.S).group(1)
+        self.assertIn("object-fit: cover", img_rule)
+        self.assertIn("object-position: center", img_rule)
 
     def test_escapes_hero_mosaic_attributes(self):
         evil_title = 'テスト" onerror="alert(1)'
@@ -504,13 +502,13 @@ class HeroMosaicHtmlTest(unittest.TestCase):
         missing_path = self.directory / "does_not_exist.ndjson"
         html = generate_html(self.character_records, self.gundam_records, missing_path)
         self.assertNotIn('<li class="lp-hero-mosaic-item">', html)
-        self.assertIn('<h1 class="top-h1">', html)  # ページ自体は正常にレンダリングされる
+        self.assertIn('<h1 id="lp-h1">', html)  # ページ自体は正常にレンダリングされる
 
     def test_empty_design_manholes_file_falls_back_without_mosaic(self):
         empty_path = _write_ndjson(self.directory, "design_manholes_empty.ndjson", [])
         html = generate_html(self.character_records, self.gundam_records, empty_path)
         self.assertNotIn('<li class="lp-hero-mosaic-item">', html)
-        self.assertIn('<h1 class="top-h1">', html)
+        self.assertIn('<h1 id="lp-h1">', html)
 
 
 class MiniMapPinsTest(unittest.TestCase):
@@ -574,13 +572,13 @@ class SharedCssIdSafetyTest(unittest.TestCase):
 
     def test_neutralizes_desktop_class_overrides_meant_for_the_overlay_panel_pair(self):
         # top-page.css の @media (min-width: 960px) は、class（IDではない）レベルで
-        # .top-intro-text の幅を狭め .map-gateway-title/.map-gateway-sub を隠す。
-        # これは #sec-intro のオーバーレイパネルと対になっている前提の設計で、
-        # このLPには対のパネルが無いため、そのままだとデスクトップ幅で説明文が消える。
-        # .character-manhole-lp スコープで打ち消していることを確認する。
-        self.assertIn(".character-manhole-lp .top-intro-text", self.html)
-        self.assertIn(".character-manhole-lp .map-gateway-title", self.html)
-        self.assertIn(".character-manhole-lp .map-gateway-sub", self.html)
+        # .map-gateway-title/.map-gateway-sub を隠す。これは #sec-intro のオーバーレイパネルと
+        # 対になっている前提の設計で、このLPには対のパネルが無いため、そのままだと
+        # デスクトップ幅でCTA説明文が消える。共有CSS側で打ち消していることを確認する。
+        self.assertIn("character-work.css", self.html)
+        css = (Path(__file__).resolve().parents[2] / "apps/web/assets/character-work.css").read_text(encoding="utf-8")
+        self.assertIn(".character-manhole-lp .map-gateway-title", css)
+        self.assertIn(".character-manhole-lp .map-gateway-sub", css)
 
 
 class MapGatewayHtmlTest(unittest.TestCase):
@@ -678,12 +676,12 @@ class SearchIntentCopyTest(unittest.TestCase):
         self.assertIn("全国すべてを網羅するものではありません", self.html)
         self.assertNotIn("あなたの1枚が", self.html)
 
-    def test_prefecture_cross_table_covers_every_prefecture(self):
-        """都道府県×作品の早見表。作品軸(カード)にも住所軸(設置場所一覧)にも無い切り口を
-        全国一覧が持つことで、/characters/ を検索の入口にしなくて済む。"""
+    def test_prefecture_rows_cover_every_prefecture_and_add_up(self):
+        """県ごとの行（旧: 県ボタン・早見表・設置場所一覧の3段）。枚数と作品内訳が食い違わないこと。"""
         rows = re.findall(
-            r'<tr><th scope="row">([^<]+)<span>(\d+)枚</span></th>'
-            r'<td><div class="lp-cross-links">(.*?)</div></td></tr>',
+            r'<details class="lp-pref" data-pref="([^"]+)">.*?'
+            r'<span class="lp-pref-count"><span class="cm-num">(\d+)</span>枚</span></summary>'
+            r'<div class="lp-pref-body"><div class="lp-cross-links">(.*?)</div>',
             self.html, re.S,
         )
         self.assertTrue(rows)
@@ -704,9 +702,10 @@ class SearchIntentCopyTest(unittest.TestCase):
             with self.subTest(character=name):
                 self.assertIn(name, self.html)
 
-    def test_links_to_character_work_index(self):
-        self.assertIn('href="./characters/"', self.html)
-        self.assertIn("作品から設置場所を探す（作品別ガイド）", self.html)
+    def test_does_not_link_to_the_retired_character_hub(self):
+        # /characters/ は全国一覧に統合して転送ページになった。自ページから踏ませない
+        self.assertNotIn('href="./characters/"', self.html)
+        self.assertIn('id="works"', self.html)
 
     def test_submit_section_uses_pilgrim_cta_copy(self):
         self.assertIn("その1枚、まだカメラロールにありますか？", self.html)
@@ -715,7 +714,8 @@ class SearchIntentCopyTest(unittest.TestCase):
 
     def test_faq_matches_json_ld_faqpage(self):
         # 本文の <summary> と JSON-LD の FAQPage.mainEntity[].name が食い違っていないこと
-        summary_questions = re.findall(r"<summary>(.*?)</summary>", self.html)
+        faq_block = self.html[self.html.index('class="cm-faq"'):]
+        summary_questions = re.findall(r"<summary>(.*?)</summary>", faq_block)
         self.assertEqual([q for q, _ in FAQ_ITEMS], summary_questions)
 
         ld_match = re.search(r'<script type="application/ld\+json">(.*?)</script>', self.html, re.S)
@@ -755,11 +755,16 @@ class SearchIntentCopyTest(unittest.TestCase):
         tail = self.html[grid_end:about_section_end]
         self.assertIn(f"「全国{self.total_count}枚」は", tail)
         self.assertIn("手作業で出典を確認しながら追加", tail)
-        self.assertIn('class="lp-section-lead"', tail)
+        self.assertIn('class="cm-lead"', tail)
 
     def test_hero_has_no_three_tile_stats_row(self):
-        # {N}枚/{W}作品/{P}都道府県 の3タイル統計は、「まだ全部ではない」という
-        # メッセージと矛盾するため削除。残すのは stats-note の1行だけ。
+        # top-page.css の3タイル統計は使わない。ヒーローの大きな数字（.cm-stats）は
+        # 直下の「全国すべてを網羅するものではありません」と必ずセットで出す。
+        # 数字とただし書きの間にボタン等を挟まない（数字だけ読んで離脱されないように隣接させる）
+        self.assertRegex(
+            self.html,
+            r'(?s)<ul class="cm-stats"[^>]*>(?:(?!</ul>).)*</ul>\s*<p class="cm-hero-note">[^<]*全国すべてを網羅するものではありません',
+        )
         self.assertNotIn("top-stats-row", self.html)
         self.assertNotIn("top-stat\"", self.html)
         self.assertNotIn('class="stat-num"', self.html)
@@ -769,21 +774,15 @@ class SearchIntentCopyTest(unittest.TestCase):
         self.assertIn(f"🗺 全国 <b>{self.total_count}</b>枚", self.html)
         self.assertIn(f"全国{self.total_count}枚", self.html)
 
-    def test_map_gateway_comes_right_after_hero_before_about_section(self):
-        # index.html と同じ並び: #sec-intro（ヒーロー）の直後に map gateway
-        intro_end = self.html.index("</section>", self.html.index('id="lp-intro"'))
-        map_pos = self.html.index('id="lp-map-heading"')
-        about_pos = self.html.index('id="lp-about-heading"')
-        self.assertLess(intro_end, map_pos, "map gateway must come right after the hero section")
-        self.assertLess(map_pos, about_pos, "map gateway must come before the 'とは' section")
-
-    def test_full_section_order_matches_index_html(self):
+    def test_full_section_order(self):
+        # 一覧ページなので「作品 → 都道府県」の一覧を先に、地図はその後ろ（ヒーローからも飛べる）
+        self.assertIn('href="#lp-map-heading"', self.html)
         expected_order = [
             'id="lp-intro"',
-            'id="lp-map-heading"',
-            'id="lp-about-heading"',
             'id="lp-works-heading"',
             'id="lp-pref-heading"',
+            'id="lp-map-heading"',
+            'id="lp-about-heading"',
             'id="lp-post-heading"',
             'id="lp-latest-heading"',  # 「先に出してくれた人たち」（写真付き投稿がある前提のこのfixtureでは常に描画される）
             'id="lp-faq-heading"',
