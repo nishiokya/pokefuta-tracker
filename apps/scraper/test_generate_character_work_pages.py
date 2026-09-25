@@ -4,7 +4,6 @@ import json
 import re
 import tempfile
 import unittest
-from collections import Counter
 from datetime import datetime
 from pathlib import Path
 from unittest.mock import patch
@@ -130,45 +129,17 @@ class GenerateAllPagesTest(unittest.TestCase):
             ], written)
             self.assertTrue(all(path.exists() for path in written))
 
-    def test_character_index_lists_generated_work_pages(self) -> None:
+    def test_character_index_redirects_to_the_national_list(self) -> None:
+        """/characters/ は全国一覧に統合した。旧URLは作品セクションへ転送するだけ。"""
         with tempfile.TemporaryDirectory() as tmp:
             output = Path(tmp)
             write_pages(RECORDS, EVENT, output)
             html = (output / "characters/index.html").read_text(encoding="utf-8")
-            self.assertIn("キャラクターマンホールを作品から探す", html)
-            self.assertIn('./idolmaster/', html)
-            self.assertNotIn('./zombieland-saga/', html)
-            self.assertIn('href="../character_manholes.html"', html)
-            self.assertIn('href="../gmanhole_map.html"', html)
-            self.assertIn('"page_type": "index_character_works"', html)
-            self.assertIn('property="og:image"', html)
-
-    def test_real_character_index_lists_all_six_work_pages(self) -> None:
-        dataset = Path(__file__).resolve().parents[2] / "docs/character_manholes.ndjson"
-        records = load_ndjson(dataset)
-        html = generate_index_html(records)
-        for page in WORK_PAGES:
-            with self.subTest(page=page.slug):
-                self.assertIn(f'./{page.slug}/', html)
-        covered_works = {work for page in WORK_PAGES for work in page.works}
-        expected = sum(_is_active(record) and record.get("work") in covered_works for record in records)
-        self.assertIn(f'<strong>{expected}</strong><span>MANHOLES</span>', html)
-
-    def test_index_totals_match_the_national_landing_page(self) -> None:
-        """全国一覧と同じ母集団を数える。ガンダムのように専用ページが無い作品も落とさない。"""
-        root = Path(__file__).resolve().parents[2]
-        records = load_ndjson(root / "docs/character_manholes.ndjson")
-        gundam = load_ndjson(root / "docs/gmanhole.ndjson")
-        html = generate_index_html(records, gundam)
-        active = [r for r in records + gundam if _is_active(r)]
-        prefectures = {r.get("prefecture") for r in active if r.get("prefecture")}
-        self.assertIn(f'<strong>{len(active)}</strong><span>MANHOLES</span>', html)
-        self.assertIn(f"<dt>作品</dt><dd>{len(WORK_PAGES) + 1}</dd>", html)
-        self.assertIn(f"<dt>都道府県</dt><dd>{len(prefectures)}</dd>", html)
+            self.assertIn('<meta http-equiv="refresh" content="0; url=../character_manholes.html#works">', html)
+            self.assertIn('<link rel="canonical" href="https://data.pokefuta.com/character_manholes.html">', html)
+            self.assertIn('href="../character_manholes.html#works"', html)
 
     def test_index_is_not_indexable(self) -> None:
-        """全国一覧が同じ検索意図の上位互換なので、このハブは検索結果に出さない。
-        follow は残す: 作品ページへのクロール経路になっている。"""
         root = Path(__file__).resolve().parents[2]
         html = generate_index_html(load_ndjson(root / "docs/character_manholes.ndjson"))
         self.assertIn('<meta name="robots" content="noindex,follow">', html)
@@ -177,48 +148,19 @@ class GenerateAllPagesTest(unittest.TestCase):
         html = generate_html(IDOLMASTER, RECORDS, EVENT, now=datetime(2026, 9, 20, tzinfo=JST))
         self.assertIn('<meta name="robots" content="index,follow">', html)
 
-    def test_index_links_works_without_a_guide_page_to_the_filtered_map(self) -> None:
-        root = Path(__file__).resolve().parents[2]
-        html = generate_index_html(
-            load_ndjson(root / "docs/character_manholes.ndjson"),
-            load_ndjson(root / "docs/gmanhole.ndjson"),
-        )
-        self.assertIn('href="../gmanhole_map.html?work=gundam"', html)
-        self.assertIn("地図で設置場所を見る →", html)
+    def test_work_guides_link_back_to_the_national_list_not_the_hub(self) -> None:
+        html = generate_html(IDOLMASTER, RECORDS, EVENT, now=datetime(2026, 9, 20, tzinfo=JST))
+        self.assertNotIn('href="../"', html)
+        self.assertIn('href="../../character_manholes.html#works"', html)
+        schema = json.loads(re.search(r'<script type="application/ld\+json">(.*?)</script>', html, re.S).group(1))
+        crumbs = next(n for n in schema["@graph"] if n["@type"] == "BreadcrumbList")["itemListElement"]
+        self.assertEqual(["ポケふた図鑑", "キャラクターマンホール全国一覧", "アイドルマスター"], [c["name"] for c in crumbs])
 
-    def test_prefecture_cross_table_rows_add_up(self) -> None:
-        root = Path(__file__).resolve().parents[2]
-        records = load_ndjson(root / "docs/character_manholes.ndjson")
-        gundam = load_ndjson(root / "docs/gmanhole.ndjson")
-        html = generate_index_html(records, gundam)
-        rows = re.findall(
-            r'<tr><th scope="row">([^<]+)<span>(\d+)枚</span></th>'
-            r'<td><div class="cw-cross-links">(.*?)</div></td></tr>',
-            html, re.S,
-        )
-        active = [r for r in records + gundam if _is_active(r)]
-        expected = Counter(str(r.get("prefecture")) for r in active if r.get("prefecture"))
-        self.assertEqual(len(expected), len(rows))
-        for prefecture, total, cells in rows:
-            with self.subTest(prefecture=prefecture):
-                self.assertEqual(expected[prefecture], int(total))
-                per_work = [int(n) for n in re.findall(r"<span>(\d+)</span></a>", cells)]
-                self.assertEqual(int(total), sum(per_work))
-
-    def test_index_does_not_copy_the_work_page_lead_text(self) -> None:
-        """作品ページのリード文をそのまま並べると、薄い中間ページになるので出さない。"""
-        root = Path(__file__).resolve().parents[2]
-        html = generate_index_html(load_ndjson(root / "docs/character_manholes.ndjson"))
-        for page in WORK_PAGES:
-            with self.subTest(page=page.slug):
-                self.assertNotIn(page.intro, html)
-
-    def test_work_cards_use_a_subheading_level(self) -> None:
-        root = Path(__file__).resolve().parents[2]
-        html = generate_index_html(load_ndjson(root / "docs/character_manholes.ndjson"))
-        for page in WORK_PAGES:
-            with self.subTest(page=page.slug):
-                self.assertIn(f'<h3><a href="./{page.slug}/">{page.name}</a></h3>', html)
+    def test_work_guide_hero_uses_the_work_marker_color(self) -> None:
+        """全国一覧の作品カードと同じ色・同じ字の蓋をヒーローに出す。"""
+        records = [dict(r, marker_color="#f97316", marker_label="ア") for r in RECORDS]
+        html = generate_html(IDOLMASTER, records, EVENT, now=datetime(2026, 9, 20, tzinfo=JST))
+        self.assertIn('<span class="cm-lid cm-lid--lg" style="--c:#f97316" aria-hidden="true">ア</span>', html)
 
     def test_loaded_event_is_not_validated_twice(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

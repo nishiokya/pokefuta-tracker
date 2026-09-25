@@ -19,6 +19,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import math
 import random
 from collections import Counter, defaultdict
 from datetime import date, datetime
@@ -28,7 +29,6 @@ from html import escape
 
 try:
     from apps.scraper.photo_caption import (
-        CAPTION_ELLIPSIS_CSS,
         JST,
         caption_meta,
         format_display_name,
@@ -39,7 +39,6 @@ except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
     from photo_caption import (
-        CAPTION_ELLIPSIS_CSS,
         JST,
         caption_meta,
         format_display_name,
@@ -367,227 +366,61 @@ def build_mini_map_pins(character_records: list[dict], gundam_records: list[dict
     return pins
 
 
-PAGE_STYLE = """
-    /* ===== キャラクターマンホールLP（design_manhole.html を手本に top-page.css のトークンを使用） ===== */
-    body.character-manhole-lp {
-      margin: 0;
-      padding: 0;
-      background: var(--top-bg);
-      font-family: 'Noto Sans JP', system-ui, -apple-system, sans-serif;
-      color: var(--top-text);
-      -webkit-font-smoothing: antialiased;
-      line-height: 1.7;
-    }
-    .lp-wrap { max-width: 760px; margin: 0 auto; padding: 0 var(--top-pad); }
+STYLESHEET_HREF = "./assets/character-work.css?v=20260925a"
 
-    /* ── ファーストView（#lp-intro）は index.html の #sec-intro と同じ top-page.css
-       クラス（.sec-eyebrow/.top-h1/.top-intro-text/.top-stats-note 等）をそのまま使う。
-       全国一覧として掲載範囲を一目で確認できるよう、件数・作品数・都道府県数は
-       stats-note の1行にまとめる（3タイル用CSSクラスは参照しない）。
-       ID は #sec-intro を再利用しない: top-page.css は @media (min-width: 960px) 内で
-       #sec-intro/#sec-map/#sec-hero/#sec-hub/#sec-pref/#sec-events/#sec-newrelease を
-       index.html 専用の重なりレイアウト（#sec-intro と #sec-map を同じグリッドに重ねて
-       pointer-events:none で下の地図へクリックを透過させる設計）でID指定しており、
-       このLPで同じIDを使うと 52%幅の左寄せ・クリック不能というバグを引く
-       （実際に発生した回帰。top-page.css は共有ファイルなので編集しない）。
-       .lp-wrap 自身の左右 padding と .top-section 自身の padding が二重にならないよう、
-       この1セクションだけ打ち消しておく（他の .lp-section は元々 .lp-wrap の padding
-       のみに依存しているため対象外）。 */
-    #lp-intro { margin: 0 calc(-1 * var(--top-pad)); }
+# 都道府県一覧を地方ごとに束ねる。PREFECTURE_ORDER（北→南）の区切り位置で持つ。
+REGIONS: list[tuple[str, str, str]] = [
+    ("北海道・東北", "北海道", "福島県"),
+    ("関東", "茨城県", "神奈川県"),
+    ("中部", "新潟県", "愛知県"),
+    ("近畿", "三重県", "和歌山県"),
+    ("中国・四国", "鳥取県", "高知県"),
+    ("九州・沖縄", "福岡県", "沖縄県"),
+]
 
-    /* ── ヒーロー写真モザイク（design_manholes.ndjson の投稿写真、size=small のみ）
-       元画像は 300×400 のポートレートだが、タイルは固定サイズの正方形クリップで揃える
-       （可変グリッドで伸び縮みさせない）。flex-wrap で並べるだけなので、幅に応じて
-       自然に1行あたりの枚数が変わり、モバイル/デスクトップ別のブレークポイントは不要。 */
-    .lp-hero-mosaic {
-      display: flex; flex-wrap: wrap; justify-content: center; gap: 6px;
-      max-width: 640px; margin: 10px auto 6px; padding: 0; list-style: none;
-    }
-    .lp-hero-mosaic-item {
-      flex: 0 0 auto; width: 96px; height: 96px;
-      overflow: hidden; border-radius: var(--top-radius-card);
-      background: var(--top-purple-pale); box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
-    .lp-hero-mosaic-item img {
-      display: block; width: 100%; height: 100%;
-      object-fit: cover; object-position: center;
-    }
-    .lp-hero-mosaic-caption { margin: 0 0 14px; font-size: 11px; color: var(--top-text-muted); }
 
-    /* ── セクション共通 ── */
-    .lp-section { padding: 28px 0; }
-    .lp-section + .lp-section { border-top: 1px solid var(--top-border-light); }
-    .lp-section h2 {
-      margin: 0 0 14px; font-size: 19px; font-weight: 900; text-align: center;
-      color: var(--top-purple-dark);
-    }
-    .lp-section h2 span {
-      display: block; margin-bottom: 6px;
-      font-family: 'IBM Plex Mono', 'Courier New', monospace;
-      font-size: 10px; letter-spacing: 0.2em; font-weight: 500; color: var(--top-purple-light);
-    }
-    .lp-section-lead { margin: 0 auto 18px; max-width: 40em; font-size: 13.5px; color: var(--top-text-muted); text-align: center; }
+def _region_of(prefecture: str) -> str:
+    if prefecture not in PREFECTURE_ORDER:
+        return "その他"
+    index = PREFECTURE_ORDER.index(prefecture)
+    for name, first, last in REGIONS:
+        if PREFECTURE_ORDER.index(first) <= index <= PREFECTURE_ORDER.index(last):
+            return name
+    return "その他"
 
-    /* ── キャラクターマンホールとは ── */
-    .lp-explain-grid { display: grid; gap: 10px; margin: 0 0 14px; padding: 0; list-style: none; }
-    @media (min-width: 560px) { .lp-explain-grid { grid-template-columns: 1fr 1fr; } }
-    .lp-explain-card {
-      background: var(--top-card-bg); border: 1px solid var(--top-border);
-      border-radius: var(--top-radius-card); padding: 16px;
-    }
-    .lp-explain-card strong { display: block; margin-bottom: 6px; font-size: 14px; }
-    .lp-explain-card p { margin: 0; font-size: 13px; color: var(--top-text-muted); }
 
-    /* ── 作品カード ── */
-    .lp-work-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin: 0; padding: 0; list-style: none; }
-    .lp-work-card {
-      display: block; padding: 14px 16px;
-      background: var(--top-card-bg); border: 1px solid var(--top-border);
-      border-radius: var(--top-radius-card); text-decoration: none; color: inherit;
-      transition: border-color 120ms ease, box-shadow 120ms ease;
-    }
-    .lp-work-card:hover { border-color: var(--top-purple); box-shadow: 0 4px 14px rgba(108,92,166,.15); }
-    .lp-work-chip { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; color: #fff; font-size: 11px; font-weight: 800; margin-bottom: 8px; }
-    .lp-work-card strong { display: block; font-size: 14px; font-weight: 800; margin-bottom: 4px; }
-    .lp-work-card small { display: block; font-size: 12px; color: var(--top-text-muted); }
+def _short_work_name(name: str) -> str:
+    """早見表のチップ用。「機動戦士ガンダム（ガンダムマンホール）」の括弧書きを落とす。"""
+    return name.split("（")[0]
 
-    /* ── 都道府県から探す ── */
-    .lp-pref-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; margin: 0; padding: 0; list-style: none; }
-    .lp-pref-item {
-      display: flex; align-items: center; justify-content: space-between; gap: 8px;
-      padding: 10px 14px;
-      background: var(--top-card-bg); border: 1px solid var(--top-border);
-      border-radius: var(--top-radius-card); text-decoration: none; color: var(--top-text);
-      font-size: 13px; font-weight: 700;
-    }
-    .lp-pref-item:hover { border-color: var(--top-purple); }
-    .lp-pref-item span { font-size: 12px; font-weight: 800; color: var(--top-purple); }
 
-    .lp-work-card .lp-work-chars { margin-top: 3px; font-size: 11px; color: var(--top-text-faint); }
-
-    /* ── 都道府県 × 作品の早見表 ── */
-    .lp-cross-heading { margin: 26px 0 6px; font-size: 15px; font-weight: 800; text-align: center; }
-    .lp-cross { width: 100%; margin: 12px 0 4px; border-collapse: collapse; font-size: 13px; }
-    .lp-cross thead th { padding: 8px 10px; border-bottom: 1px solid var(--top-border); font-size: 11px; color: var(--top-text-muted); text-align: left; }
-    .lp-cross tbody th { width: 8.5em; padding: 12px 10px; border-top: 1px solid var(--top-border-light); font-weight: 800; text-align: left; vertical-align: top; }
-    .lp-cross tbody th span { display: block; margin-top: 2px; font-size: 11px; font-weight: 400; color: var(--top-text-muted); }
-    .lp-cross td { padding: 12px 10px; border-top: 1px solid var(--top-border-light); }
-    .lp-cross-links { display: flex; flex-wrap: wrap; gap: 8px 10px; }
-    .lp-cross-links a { background: var(--top-purple-pale); color: var(--top-purple-dark); padding: 5px 12px; border-radius: 999px; text-decoration: none; overflow-wrap: anywhere; }
-    .lp-cross-links span { margin-left: 6px; font-size: 11px; color: var(--top-text-muted); }
-    @media (max-width: 640px) {
-      .lp-cross thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-      .lp-cross tbody th, .lp-cross td { display: block; width: auto; }
-      .lp-cross tbody th { padding: 14px 0 0; }
-      .lp-cross td { padding: 8px 0 14px; border-top: 0; }
-    }
-
-    .lp-jump-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 18px; }
-    .lp-jump-links a, .lp-locations a { color: var(--top-purple); text-underline-offset: 3px; }
-    .lp-locations { margin-top: 16px; border: 1px solid var(--top-border); border-radius: var(--top-radius-card); padding: 12px 16px; }
-    .lp-locations summary { cursor: pointer; font-weight: 700; }
-    .lp-location-list { list-style: none; padding: 0; margin: 12px 0 0; }
-    .lp-location-list li { padding: 12px 0; border-top: 1px solid var(--top-border-light); overflow-wrap: anywhere; }
-    .lp-location-list p { margin: 4px 0; font-size: 13px; }
-
-    /* ── 地図で探す（.map-gateway-card 等は top-page.css の index.html 用スタイルを流用） ── */
-
-    /* top-page.css の @media (min-width: 960px) は、#sec-intro を「地図の左に重ねる
-       オーバーレイパネル」として扱うことを前提に、対になる .top-intro-text の幅を
-       狭め、.map-gateway-title/.map-gateway-sub を隠し、.map-gateway-badge を右寄せ、
-       .map-gateway-overlay を右下のCTAピルだけに縮小している
-       （index.html はオーバーレイパネル側に同じ説明文がある前提）。
-       このLPは #sec-intro を使わない（id="lp-intro"）ので対になるパネルが無く、
-       そのままではデスクトップ幅で本文とCTA説明文が消えてしまう。
-       top-page.css 自体は編集せず、詳細度で勝つセレクタでこのページの範囲内だけ
-       打ち消す（960px未満では元々の値と一致するため no-op）。
-       （3タイル統計用のCSSクラスはヒーローから削除したのでこのLPではもう
-       使っていない。打ち消しも不要）。 */
-    .character-manhole-lp .top-intro-text { max-width: none; }
-    .character-manhole-lp .map-gateway-title,
-    .character-manhole-lp .map-gateway-sub { display: block; }
-    .character-manhole-lp .map-gateway-overlay {
-      inset: 0; width: auto; padding: 26px 13px 13px;
-      background: linear-gradient(to top, rgba(26,38,46,.9) 40%, rgba(26,38,46,0));
-    }
-    .character-manhole-lp .map-gateway-cta { display: block; margin-top: 11px; padding: 13px; }
-    .character-manhole-lp .map-gateway-badge { left: 11px; right: auto; }
-
-    /* ── デザインマンホール投稿導線 ── */
-    .lp-promo-card {
-      display: flex; align-items: center; gap: 14px; text-decoration: none; color: inherit;
-      background: var(--top-card-bg); border: 1px solid var(--top-border);
-      border-radius: var(--top-radius-card-lg); padding: 20px;
-      transition: border-color 120ms ease, box-shadow 120ms ease;
-    }
-    .lp-promo-card:hover { border-color: var(--top-purple); box-shadow: 0 6px 18px rgba(108,92,166,.15); }
-    .lp-promo-icon { font-size: 30px; line-height: 1; }
-    .lp-promo-card strong { display: block; font-size: 15px; font-weight: 800; margin-bottom: 4px; }
-    .lp-promo-card p { margin: 0; font-size: 12.5px; color: var(--top-text-muted); }
-    .lp-promo-arrow { margin-left: auto; font-weight: 800; color: var(--top-purple); font-size: 20px; }
-    .lp-promo-sub { margin: 12px 0 0; text-align: center; font-size: 13px; }
-    .lp-promo-sub a { color: var(--top-purple); text-decoration: underline; }
-
-    /* ── みんなの投稿 ── */
-    .lp-photo-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 0; padding: 0; list-style: none; }
-    @media (min-width: 560px) { .lp-photo-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
-    .lp-photo-card { overflow: hidden; border: 1px solid var(--top-border); border-radius: var(--top-radius-card); background: var(--top-card-bg); color: inherit; }
-    .lp-photo-card-main { display: block; color: inherit; text-decoration: none; }
-    .lp-photo-card img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; background: var(--top-purple-pale); }
-    .lp-photo-card-copy { display: block; padding: 8px 10px 2px; font-size: 12.5px; font-weight: 700; }
-    .lp-photo-card-meta { display: block; padding: 0 10px 10px; font-size: 11px; color: var(--top-text-muted); __CAPTION_ELLIPSIS_CSS__ }
-    .lp-photo-card-meta .poster-link { color: var(--top-purple); font-weight: 700; text-decoration: underline; text-underline-offset: 2px; }
-
-    /* ── FAQ ── */
-    .lp-faq { display: grid; gap: 10px; }
-    .lp-faq details {
-      background: var(--top-card-bg); border: 1px solid var(--top-border);
-      border-radius: var(--top-radius-card); padding: 0 16px;
-    }
-    .lp-faq summary {
-      cursor: pointer; list-style: none; position: relative;
-      padding: 14px 26px 14px 0; font-size: 14px; font-weight: 700;
-    }
-    .lp-faq summary::-webkit-details-marker { display: none; }
-    .lp-faq summary::after {
-      content: '+'; position: absolute; right: 2px; top: 50%; transform: translateY(-50%);
-      color: var(--top-purple); font-weight: 800; font-size: 18px;
-    }
-    .lp-faq details[open] summary::after { content: '−'; }
-    .lp-faq details p { margin: 0 0 14px; font-size: 13px; color: var(--top-text-muted); }
-
-    footer.data-links { margin: 8px 0 28px; text-align: center; font-size: 0.85rem; color: var(--top-text-muted); }
-    footer.data-links a { color: var(--top-purple); text-decoration: underline; }
-""".replace("__CAPTION_ELLIPSIS_CSS__", CAPTION_ELLIPSIS_CSS)
+def _lid_html(color: str, label: str, extra_class: str = "") -> str:
+    classes = "cm-lid" + (f" {extra_class}" if extra_class else "")
+    return (
+        f'<span class="{classes}" style="--c:{escape(color)}" aria-hidden="true">'
+        f'{escape(str(label)[:1])}</span>'
+    )
 
 
 def _work_card_html(summary: dict) -> str:
     pref_text = "・".join(summary["prefectures"][:3])
     if len(summary["prefectures"]) > 3:
-        pref_text += " ほか"
+        pref_text += f" ほか{len(summary['prefectures']) - 3}"
     href = _work_href(summary.get("path", ""), summary["query"])
     # キャラ名自体に「・」を含むものがある（例: まる子・友蔵）ので区切りは読点にする
     characters = summary.get("characters") or []
     character_text = "、".join(characters[:WORK_CARD_CHARACTER_LIMIT])
     if len(characters) > WORK_CARD_CHARACTER_LIMIT:
         character_text += f" ほか{len(characters) - WORK_CARD_CHARACTER_LIMIT}種"
+    go_text = "設置場所ガイドへ →" if summary.get("path") else "地図で見る →"
     return (
-        f'<li><a class="lp-work-card" href="{href}">'
-        f'<span class="lp-work-chip" style="background:{escape(summary["color"])}">{escape(str(summary["label"])[:1])}</span>'
-        f'<strong>{escape(summary["work"])}</strong>'
-        f'<small>{summary["count"]}枚'
-        + (f' ／ {escape(pref_text)}' if pref_text else '')
-        + '</small>'
+        f'<li><a class="lp-work-card" href="{href}" style="--c:{escape(summary["color"])}">'
+        + _lid_html(summary["color"], summary["label"])
+        + f'<strong>{escape(summary["work"])}</strong>'
+        f'<span class="lp-work-count"><b class="cm-num">{summary["count"]}</b>枚</span>'
+        + (f'<small>{escape(pref_text)}</small>' if pref_text else '')
         + (f'<small class="lp-work-chars">{escape(character_text)}</small>' if character_text else '')
-        + '</a></li>'
-    )
-
-
-def _pref_item_html(entry: dict) -> str:
-    map_href = f"{MAP_HREF}?pref={quote(entry['prefecture'])}"
-    return (
-        f'<a class="lp-pref-item" href="{map_href}">'
-        f'{escape(entry["prefecture"])}<span>{entry["count"]}枚</span></a>'
+        + f'<span class="lp-work-go">{go_text}</span></a></li>'
     )
 
 
@@ -595,107 +428,121 @@ def _work_href(summary_path: str, query: str) -> str:
     return f"./{summary_path}" if summary_path else f"{MAP_HREF}?work={quote(query)}"
 
 
-def _cross_table_html(character_records: list[dict], gundam_records: list[dict]) -> str:
-    """都道府県 × 作品の早見表。
+def _work_meta_for(record: dict, is_gundam: bool) -> dict:
+    """1枚のレコードが属する作品の表示情報（作品カードと同じ束ね方・同じ色・同じリンク先）。"""
+    if is_gundam:
+        return {"key": GUNDAM_WORK_QUERY, "name": GUNDAM_WORK_NAME, "color": GUNDAM_MARKER_COLOR,
+                "label": GUNDAM_MARKER_LABEL, "href": _work_href("", GUNDAM_WORK_QUERY)}
+    work = str(record.get("work") or "").strip() or "作品不明"
+    page = page_for_work(work)
+    name = page.name if page else work
+    return {
+        "key": page.slug if page else work,
+        "name": name,
+        "color": str(record.get("marker_color") or "#6C5CA6"),
+        "label": str(record.get("marker_label") or name[:1]),
+        "href": _work_href(page.path if page else "", work),
+    }
 
-    「この県に行くと何の作品が何枚あるか」は、作品カード（作品軸）にも
-    設置場所一覧（住所軸）にも無い切り口。作品の束ね方とリンク先は
-    作品カードと揃える（アイマス各シリーズは1作品、専用ページが無い作品は地図へ）。
-    """
-    works: dict[str, dict] = {}
-    for record in character_records:
-        work = str(record.get("work") or "").strip()
-        prefecture = str(record.get("prefecture") or "").strip()
-        if not work or not prefecture:
-            continue
-        page = page_for_work(work)
-        entry = works.setdefault(page.slug if page else work, {
-            "name": page.name if page else work,
-            "href": _work_href(page.path if page else "", work),
-            "counts": Counter(),
-        })
-        entry["counts"][prefecture] += 1
-    for record in gundam_records:
-        prefecture = str(record.get("prefecture") or "").strip()
-        if not prefecture:
-            continue
-        entry = works.setdefault(GUNDAM_WORK_QUERY, {
-            "name": GUNDAM_WORK_NAME,
-            "href": _work_href("", GUNDAM_WORK_QUERY),
-            "counts": Counter(),
-        })
-        entry["counts"][prefecture] += 1
 
-    grid: dict[str, list[tuple[str, int, str]]] = defaultdict(list)
-    for entry in works.values():
-        for prefecture, count in entry["counts"].items():
-            grid[prefecture].append((entry["name"], count, entry["href"]))
-    order = {name: index for index, name in enumerate(PREFECTURE_ORDER)}
-    rows = []
-    for prefecture in sorted(grid, key=lambda name: (order.get(name, 999), name)):
-        cells = "".join(
-            f'<a href="{escape(href)}">{escape(name)} <span>{count}</span></a>'
-            for name, count, href in sorted(grid[prefecture], key=lambda item: (-item[1], item[0]))
-        )
-        total = sum(count for _, count, _ in grid[prefecture])
-        rows.append(
-            f'<tr><th scope="row">{escape(prefecture)}<span>{total}枚</span></th>'
-            f'<td><div class="lp-cross-links">{cells}</div></td></tr>'
-        )
+def _location_item_html(record: dict, meta: dict, prefecture: str) -> str:
+    city = str(record.get("city") or "")
+    work = str(record.get("work") or meta["name"])
+    name = str(record.get("title") or record.get("landmark") or record.get("character") or work)
+    address = str(record.get("address") or record.get("landmark") or "詳細な住所は未記録")
+    source = str(record.get("official_url") or record.get("source_url") or record.get("detail_url") or "")
+    try:
+        parsed = urlparse(source)
+        safe_source = parsed.scheme in {"http", "https"} and bool(parsed.netloc)
+    except ValueError:
+        safe_source = False
+    source_html = (
+        f' · <a href="{escape(source)}" target="_blank" rel="noopener noreferrer">出典・設置案内</a>'
+        if safe_source else ""
+    )
     return (
-        '<table class="lp-cross">'
-        '<thead><tr><th scope="col">都道府県</th><th scope="col">掲載のある作品（枚数）</th></tr></thead>'
-        f'<tbody>{"".join(rows)}</tbody></table>'
+        f'<li style="--c:{escape(meta["color"])}"><strong>{escape(name)}</strong>'
+        f'<p>{escape(work)} ／ {escape(prefecture)}{escape(city)}</p>'
+        f'<p>{escape(address)}{source_html}</p></li>'
     )
 
 
-def _location_directory_html(character_records: list[dict], gundam_records: list[dict]) -> str:
-    """設置場所と出典を静的HTMLに出す。地図のJSを実行しなくても読める一覧。"""
-    groups: dict[str, list[tuple[str, dict]]] = defaultdict(list)
-    for records, fallback_work in ((character_records, "作品不明"), (gundam_records, GUNDAM_WORK_NAME)):
+def _prefecture_directory_html(character_records: list[dict], gundam_records: list[dict]) -> str:
+    """地方 → 都道府県 → 設置場所を1本の一覧にする。
+
+    旧ページは「県ボタン」「都道府県×作品の早見表」「県ごとの設置場所一覧」を
+    縦に3回並べていて、同じ県名を3回読ませていた。1県1行にまとめ、閉じた状態で
+    作品の内訳（色の帯）と枚数、開くと作品別ガイドへのリンクと全設置場所が出る。
+    設置場所は <details> の中でも静的HTMLなので、JSなしでもクロール・閲覧できる。
+    """
+    by_pref: dict[str, list[tuple[dict, dict]]] = defaultdict(list)
+    for records, is_gundam in ((character_records, False), (gundam_records, True)):
         for record in records:
-            groups[str(record.get("prefecture") or "都道府県未記録")].append(
-                (str(record.get("work") or fallback_work), record)
-            )
+            prefecture = str(record.get("prefecture") or "").strip() or "都道府県未記録"
+            by_pref[prefecture].append((record, _work_meta_for(record, is_gundam)))
+
     order = {name: index for index, name in enumerate(PREFECTURE_ORDER)}
-    sections = []
-    for prefecture in sorted(groups, key=lambda name: (order.get(name, 999), name)):
+    regions: dict[str, list[str]] = defaultdict(list)
+    for prefecture in sorted(by_pref, key=lambda name: (order.get(name, 999), name)):
+        regions[_region_of(prefecture)].append(prefecture)
+
+    # 帯の長さは最多県との比。枚数差が大きい（最多66枚・最少1枚）ので平方根で縮め、1枚の県も見えるようにする
+    max_total = max((len(items) for items in by_pref.values()), default=1)
+    region_names = [name for name, _, _ in REGIONS] + ["その他"]
+    blocks = []
+    for region in region_names:
+        prefectures = regions.get(region)
+        if not prefectures:
+            continue
         rows = []
-        for work, record in sorted(groups[prefecture], key=lambda item: (
-            str(item[1].get("city") or ""), item[0], str(item[1].get("id") or "")
-        )):
-            city = str(record.get("city") or "")
-            name = str(record.get("title") or record.get("landmark") or record.get("character") or work)
-            address = str(record.get("address") or record.get("landmark") or "詳細な住所は未記録")
-            source = str(record.get("official_url") or record.get("source_url") or record.get("detail_url") or "")
-            try:
-                parsed = urlparse(source)
-                safe_source = parsed.scheme in {"http", "https"} and bool(parsed.netloc)
-            except ValueError:
-                safe_source = False
-            source_html = (
-                f' · <a href="{escape(source)}" target="_blank" rel="noopener noreferrer">出典・設置案内</a>'
-                if safe_source else ""
+        for prefecture in prefectures:
+            items = by_pref[prefecture]
+            works: dict[str, dict] = {}
+            for _, meta in items:
+                entry = works.setdefault(meta["key"], {**meta, "count": 0})
+                entry["count"] += 1
+            ordered = sorted(works.values(), key=lambda w: (-w["count"], w["name"]))
+            total = len(items)
+            bar = "".join(
+                f'<i style="--c:{escape(w["color"])};width:{w["count"] / total * 100:.2f}%"></i>'
+                for w in ordered
+            )
+            chips = "".join(
+                f'<a href="{escape(w["href"])}" style="--c:{escape(w["color"])}">'
+                + _lid_html(w["color"], w["label"])
+                + f'{escape(_short_work_name(w["name"]))} <span>{w["count"]}</span></a>'
+                for w in ordered
+            )
+            locations = "".join(
+                _location_item_html(record, meta, prefecture)
+                for record, meta in sorted(items, key=lambda item: (
+                    str(item[0].get("city") or ""), item[1]["name"], str(item[0].get("id") or "")
+                ))
+            )
+            map_link = (
+                f'<a class="lp-pref-map" href="{MAP_HREF}?pref={quote(prefecture)}">{escape(prefecture)}の地図を見る →</a>'
+                if prefecture in order else ""
             )
             rows.append(
-                f'<li><strong>{escape(name)}</strong>'
-                f'<p>{escape(work)} ／ {escape(prefecture)}{escape(city)}</p>'
-                f'<p>{escape(address)}{source_html}</p></li>'
+                f'<details class="lp-pref" data-pref="{escape(prefecture)}">'
+                f'<summary><span class="lp-pref-name">{escape(prefecture)}</span>'
+                f'<span class="lp-pref-track" aria-hidden="true"><span class="lp-pref-bar" style="width:{math.sqrt(total / max_total) * 100:.1f}%">{bar}</span></span>'
+                f'<span class="lp-pref-count"><span class="cm-num">{total}</span>枚</span></summary>'
+                f'<div class="lp-pref-body"><div class="lp-cross-links">{chips}</div>{map_link}'
+                f'<ul class="lp-location-list">{locations}</ul></div></details>'
             )
-        sections.append(
-            '<details class="lp-locations">'
-            f'<summary class="lp-location-summary">{escape(prefecture)}の設置場所一覧（{len(rows)}枚）</summary>'
-            f'<p><a href="{MAP_HREF}?pref={quote(prefecture)}">{escape(prefecture)}の地図を見る</a></p>'
-            f'<ul class="lp-location-list">{"".join(rows)}</ul></details>'
+        region_total = sum(len(by_pref[p]) for p in prefectures)
+        blocks.append(
+            f'<div class="lp-region"><h3>{escape(region)}<small>{len(prefectures)}都道府県・{region_total}枚</small></h3>'
+            + "".join(rows) + '</div>'
         )
-    return "\n".join(sections)
+    return '<div class="lp-regions">' + "".join(blocks) + '</div>'
 
 
 def _hero_mosaic_item_html(post: dict) -> str:
     alt_text = f"{post['title']} {post['location']}".strip()
-    # 元画像は 300×400 のポートレートだが、タイルは正方形クリップ（CSS側の
-    # aspect-ratio ではなく固定 width/height）で表示するため、属性も正方形の
-    # 値にしておく（CLS防止。実際のクロップは object-fit: cover が担う）。
+    # 元画像は 300×400 のポートレートだが、丸抜き（object-fit: cover）で表示するため
+    # 属性は正方形の値にしておく（CLS防止）。ヒーローなので lazy にはしない。
     return (
         '<li class="lp-hero-mosaic-item">'
         f'<img src="{escape(post["photo_url"])}" alt="{escape(alt_text)}" '
@@ -753,30 +600,32 @@ def generate_html(
     )
 
     work_items_html = "\n".join(_work_card_html(summary) for summary in work_summaries)
-    pref_items_html = "\n".join(_pref_item_html(entry) for entry in pref_summaries)
-    location_directory_html = _location_directory_html(character_records, gundam_records)
-    cross_table_html = _cross_table_html(character_records, gundam_records)
+    prefecture_directory_html = _prefecture_directory_html(character_records, gundam_records)
 
     if hero_mosaic_posts:
         hero_mosaic_items_html = "\n".join(_hero_mosaic_item_html(post) for post in hero_mosaic_posts)
-        hero_mosaic_html = f"""
-      <ul class="lp-hero-mosaic">
+        hero_aside_html = f"""
+      <div class="lp-hero-photos">
+        <ul class="lp-hero-mosaic">
 {hero_mosaic_items_html}
-      </ul>
-      <p class="lp-hero-mosaic-caption">写真はすべて、みんなが投稿した実物です</p>"""
+        </ul>
+        <p class="lp-hero-mosaic-caption">写真はすべて、みんなが投稿した実物です</p>
+      </div>"""
     else:
-        hero_mosaic_html = ""
+        hero_aside_html = ""
 
     if latest_posts:
         photo_items_html = "\n".join(_photo_card_html(post) for post in latest_posts)
         latest_section_html = f"""
-    <section class="lp-section" aria-labelledby="lp-latest-heading">
-      <h2 id="lp-latest-heading"><span aria-hidden="true">LATEST POSTS</span>先に出してくれた人たち</h2>
-      <p class="lp-section-lead">ポケふたを撮りに行った先で、ついでに撮られた蓋です。</p>
+    <section class="cm-section" aria-labelledby="lp-latest-heading">
+      <div class="cm-section-head">
+        <h2 id="lp-latest-heading"><span aria-hidden="true">LATEST POSTS</span>先に出してくれた人たち</h2>
+        <a href="https://pokefuta.com/design-manholes" target="_blank" rel="noopener noreferrer">すべての投稿を見る →</a>
+      </div>
+      <p class="cm-lead">ポケふたを撮りに行った先で、ついでに撮られた蓋です。</p>
       <ul class="lp-photo-grid">
 {photo_items_html}
       </ul>
-      <p class="lp-promo-sub"><a href="https://pokefuta.com/design-manholes" target="_blank" rel="noopener noreferrer">すべての投稿を見る →</a></p>
     </section>"""
     else:
         latest_section_html = ""
@@ -858,10 +707,10 @@ def generate_html(
   <link rel="canonical" href="{escape(CANONICAL_URL)}">
   <script type="application/ld+json">{json_ld}</script>
   <link rel="stylesheet" href="./assets/top-page.css?v=20260707a" />
+  <link rel="stylesheet" href="{STYLESHEET_HREF}" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
   <script src="./assets/session-badge.js" defer></script>
-  <style>{PAGE_STYLE}</style>
   <link rel="icon" href="./assets/pokefuta_icon_32.png" type="image/png" />
   <!-- Google Analytics -->
   <script src="/assets/analytics.js?v=20260805a"></script>
@@ -874,7 +723,7 @@ def generate_html(
   </script>
   <!-- End GA -->
 </head>
-<body class="character-manhole-lp">
+<body class="character-manhole-lp cm-page">
   <!-- ===== APP BAR（ビルド時に inject_site_header.py が共通ヘッダーへ差し替える） ===== -->
   <header class="top-app-bar">
     <div class="top-app-bar-inner">
@@ -892,34 +741,50 @@ def generate_html(
     </div>
   </header>
 
-  <main class="lp-wrap">
-    <!-- ── H1 + INTRO + STATS（index.html の #sec-intro と同じ構造・同じCSSクラス。
-         ID は index.html の #sec-intro/#sec-map 重なりレイアウト用IDと衝突しないよう
-         lp-intro にしている。詳細は PAGE_STYLE 側のコメント参照） ── -->
-    <section class="top-section" id="lp-intro">
-      <div class="sec-eyebrow">
-        <span class="sec-num"></span>
-        <span class="sec-eyebrow-text">CHARACTER MANHOLE / キャラクターマンホール</span>
-      </div>
-      <h1 class="top-h1">アニメ・キャラクターマンホール<br>全国一覧・設置場所マップ</h1>
-{hero_mosaic_html}
-      <p class="top-intro-text">
-        アニメ・漫画・ゲームなどのキャラクターが描かれた、ご当地マンホールを探せます。
-        <b>作品別・都道府県別の一覧</b>から、設置されている市町村・場所・地図を確認してください。
-        ポケモンのマンホールは<a href="./">ポケふた図鑑</a>で紹介しています。
-      </p>
-      <p class="top-stats-note">掲載データ：{total_count}枚・{work_count}作品・{pref_count}都道府県。全国すべてを網羅するものではありません。</p>
-      <nav class="lp-jump-links" aria-label="このページの目次">
-        <a href="#lp-works-heading">作品別一覧</a>
-        <a href="#lp-pref-heading">都道府県別・設置場所一覧</a>
-        <a href="#lp-map-heading">全国地図</a>
-      </nav>
+  <main class="cm-wrap">
+    <section class="cm-hero" id="lp-intro" aria-labelledby="lp-h1">
+      <div>
+        <p class="cm-eyebrow">CHARACTER MANHOLE / キャラふた図鑑</p>
+        <h1 id="lp-h1">アニメ・キャラクターマンホール<br>全国一覧・設置場所マップ</h1>
+        <p class="cm-hero-lead">アニメ・漫画・ゲームのキャラクターが描かれた、ご当地マンホールの図鑑です。
+          <b>作品から</b>でも<b>行き先の都道府県から</b>でも、設置場所・住所・出典・地図までたどれます。
+          ポケモンのマンホールは<a href="./">ポケふた図鑑</a>へ。</p>
+        <ul class="cm-stats" aria-label="掲載数">
+          <li><strong class="cm-num">{total_count}</strong>枚</li>
+          <li><strong class="cm-num">{work_count}</strong>作品</li>
+          <li><strong class="cm-num">{pref_count}</strong>都道府県</li>
+        </ul>
+        <nav class="cm-jump" aria-label="このページの目次">
+          <a class="cm-btn" href="#works">作品から探す</a>
+          <a class="cm-btn cm-btn--ghost" href="#prefectures">都道府県から探す</a>
+          <a class="cm-btn cm-btn--ghost" href="#lp-map-heading">地図で探す</a>
+        </nav>
+        <p class="cm-hero-note">掲載データ：{total_count}枚・{work_count}作品・{pref_count}都道府県。全国すべてを網羅するものではありません。</p>
+      </div>{hero_aside_html}
     </section>
 
-    <!-- ── 地図で探す（index.html と同じ並び: #sec-intro の直後。
-         map-gateway-card は index.html と同じ、操作不能な実地図プレビュー） ── -->
-    <section class="lp-section" aria-labelledby="lp-map-heading">
-      <h2 id="lp-map-heading"><span aria-hidden="true">MAP</span>地図で探す</h2>
+    <section class="cm-section" id="works" aria-labelledby="lp-works-heading">
+      <div class="cm-section-head">
+        <h2 id="lp-works-heading"><span aria-hidden="true">BY WORK</span>アニメ・キャラクターマンホールの作品別一覧</h2>
+      </div>
+      <p class="cm-lead">掲載中の{work_count}作品・シリーズを枚数の多い順に。作品を選ぶと、キャラクター・設置場所・住所・出典をまとめたガイドへ進みます。アイマスは各シリーズをまとめて1作品として数えています。</p>
+      <ul class="lp-work-grid">
+{work_items_html}
+      </ul>
+    </section>
+
+    <section class="cm-section" id="prefectures" aria-labelledby="lp-pref-heading">
+      <div class="cm-section-head">
+        <h2 id="lp-pref-heading"><span aria-hidden="true">BY PREFECTURE</span>都道府県別の設置場所一覧</h2>
+      </div>
+      <p class="cm-lead">行き先の県を開くと、見られる作品とすべての設置場所・出典が出ます。色の帯はその県の作品の内訳です。掲載のない地域にも未収録のマンホールがある場合があります。移設・撤去や施設の開放時間は、訪問前に出典の案内をご確認ください。</p>
+{prefecture_directory_html}
+    </section>
+
+    <section class="cm-section" aria-labelledby="lp-map-heading">
+      <div class="cm-section-head">
+        <h2 id="lp-map-heading"><span aria-hidden="true">MAP</span>地図で探す</h2>
+      </div>
       <a class="map-gateway-card" href="{MAP_HREF}"
          onclick="trackEvent('click_map_cta',{{surface:'character_map_section',cta:'map_section',from:'character_manholes_lp'}})">
         <div id="cm-mini-map" class="map-gateway-minimap" aria-hidden="true"></div>
@@ -933,9 +798,11 @@ def generate_html(
       </a>
     </section>
 
-    <!-- ── キャラクターマンホールとは（検索語のためh2は変更しない） ── -->
-    <section class="lp-section" aria-labelledby="lp-about-heading">
-      <h2 id="lp-about-heading"><span aria-hidden="true">WHAT IS IT</span>キャラクターマンホールとは</h2>
+    <!-- キャラクターマンホールとは（検索語のためh2は変更しない） -->
+    <section class="cm-section" aria-labelledby="lp-about-heading">
+      <div class="cm-section-head">
+        <h2 id="lp-about-heading"><span aria-hidden="true">WHAT IS IT</span>キャラクターマンホールとは</h2>
+      </div>
       <ul class="lp-explain-grid">
         <li class="lp-explain-card">
           <strong>その土地に行かないと踏めない蓋</strong>
@@ -946,70 +813,36 @@ def generate_html(
           <p>このページでは、作品ごと・自治体ごとに案内されている設置場所をまとめています。花・名所・市の鳥などの絵柄も含む<b>デザインマンホール</b>のうち、キャラクターを題材にした蓋を紹介しています。</p>
         </li>
       </ul>
-      <p class="lp-section-lead">掲載データは手作業で出典を確認しながら追加しているため、「全国{total_count}枚」は<b>まだすべてを網羅した数ではありません</b>。</p>
+      <p class="cm-lead">掲載データは手作業で出典を確認しながら追加しているため、「全国{total_count}枚」は<b>まだすべてを網羅した数ではありません</b>。</p>
     </section>
 
-    <!-- ── いま集まっている作品 ── -->
-    <section class="lp-section" aria-labelledby="lp-works-heading">
-      <h2 id="lp-works-heading"><span aria-hidden="true">WORKS</span>アニメ・キャラクターマンホールの作品別一覧</h2>
-      <p class="lp-section-lead">掲載中の{work_count}作品・シリーズの枚数と都道府県を紹介。作品名から設置場所の詳しい一覧や地図へ進めます。アイマスは各シリーズをまとめて紹介しています。</p>
-      <div class="lp-jump-links"><a href="./characters/">作品から設置場所を探す（作品別ガイド）→</a></div>
-      <ul class="lp-work-grid">
-{work_items_html}
-      </ul>
-    </section>
-
-    <!-- ── 都道府県から探す ── -->
-    <section class="lp-section" aria-labelledby="lp-pref-heading">
-      <h2 id="lp-pref-heading"><span aria-hidden="true">PREFECTURES</span>都道府県別の設置場所一覧</h2>
-      <p class="lp-section-lead">都道府県のボタンから地図へ進めます。その下の一覧を開くと、市町村・設置場所・出典を確認できます。掲載がない地域も未収録のマンホールがある場合があります。移設・撤去や施設の開放時間は訪問前に出典の案内をご確認ください。</p>
-      <div class="lp-pref-list">
-{pref_items_html}
+    <section class="cm-section" aria-labelledby="lp-post-heading">
+      <div class="lp-promo">
+        <div>
+          <h2 id="lp-post-heading"><span aria-hidden="true">SUBMIT</span>その1枚、まだカメラロールにありますか？</h2>
+          <p>撮ったときは「珍しいな」で終わった写真でも、場所と一緒に載せると、次に同じ街を歩く人の寄り道先になります。</p>
+          <p><b>キャラクターものでなくても構いません。</b>花、名所、市の鳥、消防、旧市町村名の蓋——「これは撮っておくか」と思った理由があるなら、それで十分です。位置情報つきの写真なら、設置場所は自動で入ります。</p>
+        </div>
+        <div class="lp-promo-actions">
+          <a class="cm-btn cm-btn--dark" href="{DESIGN_MANHOLE_HREF}"
+             onclick="trackEvent('click_design_manhole_lp',{{surface:'character_cta',from:'character_manholes_lp'}})">📸 カメラロールの1枚を投稿する</a>
+          <a class="cm-btn cm-btn--soft" href="https://pokefuta.com/design-manholes" target="_blank" rel="noopener noreferrer">みんなの投稿を見る →</a>
+        </div>
       </div>
-      <h3 class="lp-cross-heading">都道府県別の作品早見表</h3>
-      <p class="lp-section-lead">行き先が決まっているときに、その県で何の作品が何枚見られるかを確認できます。作品名から作品別ガイドへ進めます。</p>
-{cross_table_html}
-{location_directory_html}
-    </section>
-
-    <!-- ── 一覧を見た人への写真投稿導線 ── -->
-    <section class="lp-section" aria-labelledby="lp-post-heading">
-      <h2 id="lp-post-heading"><span aria-hidden="true">SUBMIT</span>その1枚、まだカメラロールにありますか？</h2>
-      <a class="lp-promo-card" href="{DESIGN_MANHOLE_HREF}"
-         onclick="trackEvent('click_design_manhole_lp',{{surface:'character_cta',from:'character_manholes_lp'}})">
-        <span class="lp-promo-icon" aria-hidden="true">📸</span>
-        <span>
-          <strong>カメラロールの1枚を投稿する</strong>
-          <p>撮ったときは「珍しいな」で終わった写真でも、場所と一緒に載せると、次に同じ街を歩く人の寄り道先になります。
-          <b>キャラクターものでなくても構いません。</b>花、名所、市の鳥、消防、旧市町村名の蓋——「これは撮っておくか」と思った理由があるなら、それで十分です。
-          位置情報つきの写真なら、設置場所は自動で入ります。</p>
-        </span>
-        <span class="lp-promo-arrow" aria-hidden="true">→</span>
-      </a>
-      <p class="lp-promo-sub"><a href="https://pokefuta.com/design-manholes" target="_blank" rel="noopener noreferrer">みんなの投稿を見る →</a></p>
     </section>
 {latest_section_html}
 
-    <!-- ── FAQ ── -->
-    <section class="lp-section" aria-labelledby="lp-faq-heading">
-      <h2 id="lp-faq-heading"><span aria-hidden="true">FAQ</span>よくある質問</h2>
-      <div class="lp-faq">
+    <section class="cm-section" aria-labelledby="lp-faq-heading">
+      <div class="cm-section-head">
+        <h2 id="lp-faq-heading"><span aria-hidden="true">FAQ</span>よくある質問</h2>
+      </div>
+      <div class="cm-faq">
         {faq_html}
       </div>
     </section>
 
-    <footer class="data-links" role="contentinfo">
-      <p style="margin:0;">
-        <a href="./">ポケふたマップ</a>
-        /
-        <a href="{MAP_HREF}">キャラクターマンホールマップ</a>
-        /
-        <a href="{DESIGN_MANHOLE_HREF}">デザインマンホール投稿</a>
-        /
-        <a href="./character_manholes.ndjson" target="_blank" rel="noopener">キャラNDJSON</a>
-        /
-        <a href="./gmanhole.ndjson" target="_blank" rel="noopener">ガンダムNDJSON</a>
-      </p>
+    <footer class="cm-footer" role="contentinfo">
+      <a href="./">ポケふたマップ</a>/<a href="{MAP_HREF}">キャラクターマンホールマップ</a>/<a href="{DESIGN_MANHOLE_HREF}">デザインマンホール投稿</a>/<a href="./character_manholes.ndjson" target="_blank" rel="noopener">キャラNDJSON</a>/<a href="./gmanhole.ndjson" target="_blank" rel="noopener">ガンダムNDJSON</a>
     </footer>
   </main>
 
