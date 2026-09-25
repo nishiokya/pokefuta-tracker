@@ -762,9 +762,11 @@ class SearchIntentCopyTest(unittest.TestCase):
     def test_hero_has_no_three_tile_stats_row(self):
         # top-page.css の3タイル統計は使わない。ヒーローの大きな数字（.cm-stats）は
         # 直下の「全国すべてを網羅するものではありません」と必ずセットで出す。
-        self.assertIn('class="cm-stats"', self.html)
-        stats_pos = self.html.index('class="cm-stats"')
-        self.assertLess(stats_pos, self.html.index("全国すべてを網羅するものではありません"))
+        # 数字とただし書きの間にボタン等を挟まない（数字だけ読んで離脱されないように隣接させる）
+        self.assertRegex(
+            self.html,
+            r'(?s)<ul class="cm-stats"[^>]*>(?:(?!</ul>).)*</ul>\s*<p class="cm-hero-note">[^<]*全国すべてを網羅するものではありません',
+        )
         self.assertNotIn("top-stats-row", self.html)
         self.assertNotIn("top-stat\"", self.html)
         self.assertNotIn('class="stat-num"', self.html)
