@@ -50,11 +50,12 @@ def build_title_context(manholes: list[dict], master: dict) -> dict:
     Returns a context dict with keys:
       pref_count, city_count, pokemon_count, top_pref, top_pref_count,
       north_id, south_id, east_id, west_id, newest_date, pioneer_threshold,
-      coords, islands, lakes, vocabulary.
+      coords, islands, lakes, heritages, vocabulary.
     """
     vocabulary: dict = master.get("vocabulary", {})
     islands: list = master.get("islands", [])
     lakes: list = master.get("lakes", [])
+    heritages: list = master.get("heritages", [])
 
     pref_count: dict[str, int] = {}
     city_count: dict[str, int] = {}
@@ -121,6 +122,7 @@ def build_title_context(manholes: list[dict], master: dict) -> dict:
         "coords": coords,
         "islands": islands,
         "lakes": lakes,
+        "heritages": heritages,
         "vocabulary": vocabulary,
     }
 
@@ -141,7 +143,7 @@ def compute_titles(manhole: dict, ctx: dict, *, nc50: int, nc100: int) -> list[d
 
     Each title dict: {"key": str, "label": str, "emoji": str, "hashtag": str, "priority": int}
     Tier 1 titles are derived from ctx (built from all active manholes).
-    Tier 2 titles use ctx["islands"] / ctx["lakes"] / manhole["tags"] from pokefuta.ndjson.
+    Tier 2 titles use ctx["islands"] / ctx["lakes"] / ctx["heritages"] / manhole["tags"] from pokefuta.ndjson.
     nc100: active manholes within 100 km; nc50: within 50 km (pre-computed by caller).
     """
     vocab: dict = ctx["vocabulary"]
@@ -307,10 +309,12 @@ def compute_titles(manhole: dict, ctx: dict, *, nc50: int, nc100: int) -> list[d
         if t := _entry("character_manhole_city"):
             results.append(t)
 
-    # world_heritage: 世界遺産タグ
-    if "world_heritage" in tags:
-        if t := _entry("world_heritage"):
-            results.append(t)
+    # world_heritage: 世界遺産。遺産名は heritages[].ids で引く（構成資産がある市町村だけ登録）
+    for heritage_entry in ctx.get("heritages", []):
+        if mid in [str(i) for i in (heritage_entry.get("ids") or [])]:
+            if t := _entry("world_heritage", heritage=heritage_entry.get("heritage", "")):
+                results.append(t)
+            break
 
     # tourism / park / museum / history / food: 観光系タグ
     if "tourism" in tags:

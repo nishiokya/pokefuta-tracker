@@ -254,6 +254,10 @@ def apply_title_metadata(record: Dict, title_data: Dict[str, Dict[str, Any]]) ->
         return False
     entry = title_data.get(rid)
     if not entry:
+        # tags はマスタが唯一の供給元。マスタから外れた id に古いタグを残さない
+        if 'tags' in record:
+            record.pop('tags')
+            return True
         return False
 
     updated = False
@@ -289,7 +293,12 @@ def apply_title_metadata(record: Dict, title_data: Dict[str, Dict[str, Any]]) ->
     best_address = entry.get('address_norm') or entry.get('address_raw')
     _set_value('address', best_address)
 
-    _set_list('tags', entry.get('tags'))
+    # tags はマスタが唯一の供給元なので、空・未指定なら消す（_set_list は空だと何もしない）
+    if entry.get('tags'):
+        _set_list('tags', entry.get('tags'))
+    elif 'tags' in record:
+        record.pop('tags')
+        updated = True
 
     _set_value('verified_at', entry.get('verified_at'), allow_placeholder=True)
     _set_value('confidence', entry.get('confidence'))
@@ -548,6 +557,9 @@ def main():
     parser.add_argument('--log-level', default='INFO', help='Log level')
     parser.add_argument('--sleep', type=float, default=DEFAULT_SLEEP, help='Sleep seconds between requests')
     parser.add_argument('--no-ml', dest='no_ml', action='store_true', help='Skip English/Chinese enrichment for speed')
+    parser.add_argument('--no-fetch', dest='no_fetch', action='store_true',
+                        help='Skip all network access; only re-apply manhole_titles.json and recompute titles '
+                             '(manhole_titles.json を変えた PR で公開データを作り直すとき用)')
     args = parser.parse_args()
 
     logger = setup_logger(args.log_level)
@@ -558,7 +570,7 @@ def main():
     city_url_idx = build_city_url_index(city_links)
     logger.info("Loaded %d manholes, %d city_links from manhole_titles.json", len(title_data), len(city_links))
 
-    install_idx = fetch_install_status(args.base, logger)
+    install_idx = {} if args.no_fetch else fetch_install_status(args.base, logger)
     logger.info("Loaded %d install-status rows from search API", len(install_idx))
 
     existing = load_existing(args.out)
@@ -606,7 +618,7 @@ def main():
     logger.info("Starting scan up to %d (current max existing id=%d)", args.scan_max, last_existing_id)
 
     try:
-        for i in range(1, args.scan_max + 1):
+        for i in range(1, 0 if args.no_fetch else args.scan_max + 1):
             detail_url = f"{args.base.rstrip('/')}/desc/{i}/?is_modal=1"
             html = fetch(detail_url, logger, HEADERS)
             if html is None:

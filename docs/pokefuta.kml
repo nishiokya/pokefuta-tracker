@@ -261,7 +261,7 @@ Status: active</description>
 City: 釜石
 Address: 岩手県釜石市鵜住居町第16地割72-1
 Building: 鵜住居駅前
-Tags: seaside, station_front
+Tags: seaside, station_front, world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/19/?is_modal=1
 Last Updated: 2026-08-14T10:46:18Z
 Status: active</description>
@@ -1354,7 +1354,7 @@ Status: active</description>
       <description>Prefecture: 滋賀県
 City: 大津
 Address: 滋賀県大津市由美浜
-Tags: lakeside, gundam_manhole_city
+Tags: lakeside, gundam_manhole_city, world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/105/?is_modal=1
 Last Updated: 2026-08-14T10:47:13Z
 Status: active</description>
@@ -1985,7 +1985,7 @@ Status: active</description>
       <description>Prefecture: 東京都
 City: 小笠原
 Address: 東京都小笠原村父島字東町
-Tags: seaside, remote_island
+Tags: seaside, remote_island, world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/153/?is_modal=1
 Last Updated: 2026-05-11T11:01:43Z
 Status: active</description>
@@ -1998,7 +1998,7 @@ Status: active</description>
       <description>Prefecture: 東京都
 City: 小笠原
 Address: 東京都小笠原村父島字東町
-Tags: seaside, remote_island
+Tags: seaside, remote_island, world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/154/?is_modal=1
 Last Updated: 2026-05-11T11:01:44Z
 Status: active</description>
@@ -2011,7 +2011,7 @@ Status: active</description>
       <description>Prefecture: 東京都
 City: 小笠原
 Address: 東京都小笠原村父島字東町
-Tags: seaside, remote_island
+Tags: seaside, remote_island, world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/155/?is_modal=1
 Last Updated: 2026-05-11T11:01:44Z
 Status: active</description>
@@ -2024,7 +2024,7 @@ Status: active</description>
       <description>Prefecture: 東京都
 City: 小笠原
 Address: 東京都小笠原村父島字東町
-Tags: seaside, remote_island
+Tags: seaside, remote_island, world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/156/?is_modal=1
 Last Updated: 2026-05-11T11:01:45Z
 Status: active</description>
@@ -2037,7 +2037,7 @@ Status: active</description>
       <description>Prefecture: 青森県
 City: 八戸
 Address: 青森県八戸市大字鮫町鮫付近
-Tags: seaside
+Tags: seaside, world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/157/?is_modal=1
 Last Updated: 2026-05-11T11:01:46Z
 Status: active</description>
@@ -2233,7 +2233,7 @@ Status: active</description>
       <description>Prefecture: 東京都
 City: 台東区上野
 Address: 東京都台東区上野公園7-20
-Tags: near_station
+Tags: near_station, world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/172/?is_modal=1
 Last Updated: 2026-08-14T10:47:56Z
 Status: active</description>
@@ -2246,7 +2246,7 @@ Status: active</description>
       <description>Prefecture: 東京都
 City: 台東区上野
 Address: 東京都台東区上野公園13-9
-Tags: near_station
+Tags: near_station, world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/173/?is_modal=1
 Last Updated: 2026-08-14T10:47:56Z
 Status: active</description>
@@ -2259,7 +2259,7 @@ Status: active</description>
       <description>Prefecture: 沖縄県
 City: 那覇
 Address: 沖縄県那覇市牧志3丁目2
-Tags: world_heritage, remote_island, near_station
+Tags: world_heritage, near_station
 Detail: https://local.pokemon.jp/manhole/desc/174/?is_modal=1
 Last Updated: 2026-05-24T10:32:16Z
 Status: active</description>
@@ -2272,7 +2272,7 @@ Status: active</description>
       <description>Prefecture: 沖縄県
 City: 宜野湾
 Address: 沖縄県宜野湾市真志喜4-2-1
-Tags: seaside, world_heritage, remote_island
+Tags: seaside
 Detail: https://local.pokemon.jp/manhole/desc/175/?is_modal=1
 Last Updated: 2026-05-24T10:32:17Z
 Status: active</description>
@@ -2285,7 +2285,6 @@ Status: active</description>
       <description>Prefecture: 沖縄県
 City: 沖縄
 Address: 沖縄県沖縄市胡屋5-7-1
-Tags: remote_island
 Detail: https://local.pokemon.jp/manhole/desc/176/?is_modal=1
 Last Updated: 2026-05-24T10:32:18Z
 Status: active</description>
@@ -2298,7 +2297,7 @@ Status: active</description>
       <description>Prefecture: 沖縄県
 City: うるま
 Address: 沖縄県うるま市石川2316
-Tags: remote_island
+Tags: world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/177/?is_modal=1
 Last Updated: 2026-05-24T10:32:19Z
 Status: active</description>
@@ -2429,7 +2428,7 @@ Status: active</description>
 City: 函館
 Address: 北海道函館市青柳町17
 Building: 函館公園内旧函館博物館二号前
-Tags: seaside, park, rail_access_good, tourism, near_station
+Tags: seaside, park, rail_access_good, tourism, near_station, world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/187/?is_modal=1
 Last Updated: 2026-05-24T10:32:26Z
 Status: active</description>
@@ -2601,7 +2600,7 @@ Status: active</description>
       <description>Prefecture: 福岡県
 City: 北九州
 Address: 福岡県北九州市八幡東区東田４丁目１１
-Tags: near_station
+Tags: near_station, world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/200/?is_modal=1
 Last Updated: 2026-05-11T11:02:12Z
 Status: active</description>
@@ -2992,7 +2991,7 @@ Status: active</description>
       <description>Prefecture: 沖縄県
 City: 浦添
 Address: 沖縄県浦添市勢理客4-14-1
-Tags: seaside, world_heritage, remote_island
+Tags: seaside
 Detail: https://local.pokemon.jp/manhole/desc/229/?is_modal=1
 Last Updated: 2026-05-24T10:32:58Z
 Status: active</description>
@@ -3005,7 +3004,6 @@ Status: active</description>
       <description>Prefecture: 沖縄県
 City: 名護
 Address: 沖縄県名護市城二丁目321番3
-Tags: remote_island
 Detail: https://local.pokemon.jp/manhole/desc/230/?is_modal=1
 Last Updated: 2026-08-14T10:48:32Z
 Status: active</description>
@@ -3019,7 +3017,7 @@ Status: active</description>
 City: 糸満
 Address: 沖縄県糸満市西崎町4丁目19-1
 Building: 道の駅いとまん
-Tags: remote_island, roadside, seaside
+Tags: roadside, seaside
 Detail: https://local.pokemon.jp/manhole/desc/231/?is_modal=1
 Last Updated: 2026-05-24T10:33:00Z
 Status: active</description>
@@ -3032,7 +3030,7 @@ Status: active</description>
       <description>Prefecture: 沖縄県
 City: 本部
 Address: 沖縄県本部町字石川 海洋博公園地内
-Tags: seaside, remote_island
+Tags: seaside
 Detail: https://local.pokemon.jp/manhole/desc/232/?is_modal=1
 Last Updated: 2026-08-14T10:48:33Z
 Status: active</description>
@@ -3046,7 +3044,7 @@ Status: active</description>
 City: 豊見城
 Address: 沖縄県豊見城市字豊崎1-1162
 Building: 道の駅豊崎
-Tags: seaside, world_heritage, remote_island, roadside
+Tags: seaside, roadside
 Detail: https://local.pokemon.jp/manhole/desc/233/?is_modal=1
 Last Updated: 2026-08-14T10:48:34Z
 Status: active</description>
@@ -3059,7 +3057,7 @@ Status: active</description>
       <description>Prefecture: 沖縄県
 City: 南城
 Address: 沖縄県南城市知念久手堅541
-Tags: seaside, remote_island
+Tags: seaside, world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/234/?is_modal=1
 Last Updated: 2026-05-24T10:33:02Z
 Status: active</description>
@@ -3196,7 +3194,7 @@ Status: active</description>
 City: 熊野市
 Address: 三重県熊野市木本町1835-7
 Building: 鬼ヶ城センター
-Tags: geosite, tourism, seaside
+Tags: geosite, tourism, seaside, world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/244/?is_modal=1
 Last Updated: 2026-05-24T10:33:10Z
 Status: active</description>
@@ -3346,6 +3344,7 @@ Status: active</description>
       <description>Prefecture: 佐賀県
 City: 佐賀
 Address: 佐賀県佐賀市松原1丁目1-1
+Tags: world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/255/?is_modal=1
 Last Updated: 2026-05-11T11:02:45Z
 Status: active</description>
@@ -3358,6 +3357,7 @@ Status: active</description>
       <description>Prefecture: 佐賀県
 City: 佐賀
 Address: 佐賀県佐賀市水ヶ江2丁目11-11
+Tags: world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/256/?is_modal=1
 Last Updated: 2026-05-11T11:02:46Z
 Status: active</description>
@@ -3370,6 +3370,7 @@ Status: active</description>
       <description>Prefecture: 佐賀県
 City: 佐賀
 Address: 佐賀県佐賀市城内1丁目1-59
+Tags: world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/257/?is_modal=1
 Last Updated: 2026-05-11T11:02:46Z
 Status: active</description>
@@ -3540,6 +3541,7 @@ Status: active</description>
       <description>Prefecture: 岩手県
 City: 一戸
 Address: 岩手県一戸町一戸砂森
+Tags: world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/270/?is_modal=1
 Last Updated: 2026-08-14T10:48:57Z
 Status: active</description>
@@ -3777,7 +3779,7 @@ Status: active</description>
       <description>Prefecture: 山口県
 City: 下関
 Address: 山口県下関市阿弥陀寺町6
-Tags: seaside, world_heritage
+Tags: seaside
 Detail: https://local.pokemon.jp/manhole/desc/288/?is_modal=1
 Last Updated: 2026-05-11T11:03:05Z
 Status: active</description>
@@ -3790,7 +3792,7 @@ Status: active</description>
       <description>Prefecture: 山口県
 City: 下関
 Address: 山口県下関市あるかぽーと6
-Tags: seaside, world_heritage
+Tags: seaside
 Detail: https://local.pokemon.jp/manhole/desc/289/?is_modal=1
 Last Updated: 2026-05-11T11:03:06Z
 Status: active</description>
@@ -3803,7 +3805,7 @@ Status: active</description>
       <description>Prefecture: 山口県
 City: 下関
 Address: 山口県下関市大字彦島字船島648
-Tags: seaside, world_heritage
+Tags: seaside
 Detail: https://local.pokemon.jp/manhole/desc/290/?is_modal=1
 Last Updated: 2026-05-11T11:03:06Z
 Status: active</description>
@@ -3816,7 +3818,7 @@ Status: active</description>
       <description>Prefecture: 山口県
 City: 下関
 Address: 山口県下関市大字彦島字船島648
-Tags: seaside, world_heritage
+Tags: seaside
 Detail: https://local.pokemon.jp/manhole/desc/291/?is_modal=1
 Last Updated: 2026-05-11T11:03:07Z
 Status: active</description>
@@ -3903,7 +3905,7 @@ Status: active</description>
 City: 南牟婁郡紀宝町
 Address: 三重県南牟婁郡紀宝町井田568-7
 Building: 道の駅紀宝町ウミガメ公園
-Tags: roadside, family, tourism, seaside
+Tags: roadside, family, tourism, seaside, world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/297/?is_modal=1
 Last Updated: 2026-05-24T10:33:50Z
 Status: active</description>
@@ -4227,7 +4229,7 @@ Status: active</description>
 City: 鹿角
 Address: 秋田県鹿角市花輪字新田町11-4
 Building: 道の駅かづの
-Tags: roadside
+Tags: roadside, world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/321/?is_modal=1
 Last Updated: 2026-05-19T13:39:26Z
 Status: active</description>
@@ -4528,6 +4530,7 @@ Status: active</description>
       <description>Prefecture: 和歌山県
 City: 高野
 Address: 和歌山県高野町高野山357
+Tags: world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/343/?is_modal=1
 Last Updated: 2026-05-11T11:03:39Z
 Status: active</description>
@@ -4541,7 +4544,7 @@ Status: active</description>
 City: 白浜
 Address: 和歌山県白浜町堅田1474
 Building: 白浜駅前
-Tags: station_front
+Tags: station_front, world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/344/?is_modal=1
 Last Updated: 2026-05-11T11:03:39Z
 Status: active</description>
@@ -4554,7 +4557,7 @@ Status: active</description>
       <description>Prefecture: 和歌山県
 City: 串本
 Address: 和歌山県串本町西向359番地
-Tags: seaside, near_station
+Tags: seaside, near_station, world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/345/?is_modal=1
 Last Updated: 2026-08-14T10:49:45Z
 Status: active</description>
@@ -4567,6 +4570,7 @@ Status: active</description>
       <description>Prefecture: 和歌山県
 City: 那智勝浦
 Address: 和歌山県那智勝浦町大字市野々3034-2
+Tags: world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/346/?is_modal=1
 Last Updated: 2026-05-11T11:03:40Z
 Status: active</description>
@@ -4579,7 +4583,7 @@ Status: active</description>
       <description>Prefecture: 静岡県
 City: 静岡
 Address: 静岡県静岡市葵区駿府城公園１－１
-Tags: gundam_manhole_city, near_station
+Tags: gundam_manhole_city, near_station, world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/347/?is_modal=1
 Last Updated: 2026-08-14T10:49:46Z
 Status: active</description>
@@ -4620,7 +4624,7 @@ Status: active</description>
 City: 富士
 Address: 静岡県富士市岩淵富士山 築山
 Building: 道の駅富士川楽座
-Tags: roadside, service_area
+Tags: roadside, service_area, world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/350/?is_modal=1
 Last Updated: 2026-08-14T10:49:48Z
 Status: active</description>
@@ -4645,6 +4649,7 @@ Status: active</description>
       <description>Prefecture: 京都府
 City: 宇治
 Address: 京都府宇治市宇治又振
+Tags: world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/352/?is_modal=1
 Last Updated: 2026-08-14T10:49:49Z
 Status: active</description>
@@ -4658,7 +4663,7 @@ Status: active</description>
 City: 宇治
 Address: 京都府宇治市菟道丸山203-1
 Building: 宇治駅前
-Tags: station_front
+Tags: station_front, world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/353/?is_modal=1
 Last Updated: 2026-05-11T11:03:44Z
 Status: active</description>
@@ -4671,7 +4676,7 @@ Status: active</description>
       <description>Prefecture: 長崎県
 City: 長崎
 Address: 長崎県長崎市尾上町5-6
-Tags: seaside, near_station
+Tags: seaside, near_station, world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/354/?is_modal=1
 Last Updated: 2026-05-24T10:34:36Z
 Status: active</description>
@@ -4684,7 +4689,7 @@ Status: active</description>
       <description>Prefecture: 長崎県
 City: 佐世保
 Address: 長崎県佐世保市新港町3
-Tags: seaside, near_station
+Tags: seaside, near_station, world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/355/?is_modal=1
 Last Updated: 2026-05-24T10:34:37Z
 Status: active</description>
@@ -4711,7 +4716,7 @@ Status: active</description>
       <description>Prefecture: 長崎県
 City: 雲仙
 Address: 長崎県雲仙市小浜町雲仙320-18
-Tags: world_heritage, far_station
+Tags: far_station
 Detail: https://local.pokemon.jp/manhole/desc/357/?is_modal=1
 Last Updated: 2026-05-24T10:34:38Z
 Status: active</description>
@@ -4724,7 +4729,7 @@ Status: active</description>
       <description>Prefecture: 長崎県
 City: 新上五島
 Address: 長崎県新上五島町有川郷578-36
-Tags: seaside, remote_island
+Tags: seaside, remote_island, world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/358/?is_modal=1
 Last Updated: 2026-05-24T10:34:39Z
 Status: active</description>
@@ -5048,7 +5053,7 @@ Status: active</description>
 City: 宇治
 Address: 京都府ニンテンドーミュージアム施設内（宇治市小倉町神楽田56番地）
 Building: ニンテンドーミュージアム
-Tags: near_station
+Tags: near_station, world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/382/?is_modal=1
 Last Updated: 2026-08-14T10:50:09Z
 Status: active</description>
@@ -5076,7 +5081,7 @@ Status: active</description>
 City: 尾鷲市
 Address: 三重県尾鷲市向井12-4
 Building: 夢古道おわせ
-Tags: onsen, tourism
+Tags: onsen, tourism, world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/384/?is_modal=1
 Last Updated: 2026-05-24T10:34:59Z
 Status: active</description>
@@ -5119,7 +5124,7 @@ Status: active</description>
 City: 度会郡大紀町
 Address: 三重県度会郡大紀町崎2154-1
 Building: 山海の郷 紀勢
-Tags: tourism, near_station
+Tags: tourism, near_station, world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/387/?is_modal=1
 Last Updated: 2026-05-24T10:35:01Z
 Status: active</description>
@@ -5134,7 +5139,7 @@ City: 北牟婁郡紀北町
 Address: 三重県北牟婁郡紀北町東長島2410-73
 Place Detail: （道の駅 紀伊長島マンボウ）
 Building: 道の駅紀伊長島マンボウ
-Tags: roadside, food, tourism
+Tags: roadside, food, tourism, world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/388/?is_modal=1
 Last Updated: 2026-05-24T10:35:02Z
 Status: active</description>
@@ -5148,7 +5153,7 @@ Status: active</description>
 City: 南牟婁郡御浜町
 Address: 三重県南牟婁郡御浜町阿田和4926-5
 Building: 道の駅パーク七里御浜
-Tags: roadside, seaside, tourism, station_front
+Tags: roadside, seaside, tourism, station_front, world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/389/?is_modal=1
 Last Updated: 2026-05-24T10:35:03Z
 Status: active</description>
@@ -5595,7 +5600,7 @@ Status: active</description>
       <description>Prefecture: 沖縄県
 City: 北谷
 Address: 沖縄県北谷町美浜20番
-Tags: seaside, remote_island
+Tags: seaside
 Detail: https://local.pokemon.jp/manhole/desc/422/?is_modal=1
 Last Updated: 2026-08-14T10:50:35Z
 Status: active</description>
@@ -5922,7 +5927,7 @@ Status: active</description>
       <description>Prefecture: 沖縄県
 City: 那覇
 Address: 沖縄県那覇市首里池端町18
-Tags: world_heritage, remote_island
+Tags: world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/446/?is_modal=1
 Last Updated: 2026-05-24T10:35:48Z
 Status: active</description>
@@ -6349,7 +6354,7 @@ Status: active</description>
 City: 五島
 Address: 長崎県五島市野々切町1333-3
 Building: 鐙瀬ビジターセンター
-Tags: tourism, museum, remote_island
+Tags: tourism, museum, remote_island, world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/478/?is_modal=1
 Last Updated: 2026-08-07T10:40:11Z
 Status: active</description>
