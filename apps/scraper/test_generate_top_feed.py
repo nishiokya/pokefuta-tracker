@@ -73,6 +73,16 @@ class HeroBadgeTests(unittest.TestCase):
             {"emoji": "🌟", "label": "レアポケふた", "priority": 70},
         )
 
+    def test_badge_uses_only_first_hashtag(self):
+        record = _record(
+            "1",
+            titles=[self._title(hashtag="#世界遺産ポケふた #琉球王国のグスク", emoji="🌐", priority=85)],
+        )
+        self.assertEqual(
+            top_feed.hero_badge(record),
+            {"emoji": "🌐", "label": "世界遺産ポケふた", "priority": 85},
+        )
+
     def test_priority_below_threshold_is_rejected(self):
         record = _record("1", titles=[self._title(priority=59)])
         self.assertIsNone(top_feed.hero_badge(record))

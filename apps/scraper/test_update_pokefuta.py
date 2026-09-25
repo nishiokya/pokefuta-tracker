@@ -26,6 +26,29 @@ class UpdatePokefutaParseDetailTest(unittest.TestCase):
         self.assertEqual("岡谷", MODULE.strip_municipality_suffix("岡谷市"))
 
 
+class UpdatePokefutaApplyTitleMetadataTagsTest(unittest.TestCase):
+    """tags はマスタが唯一の供給元。マスタから消したタグが ndjson に残らないこと。"""
+
+    def test_tags_replaced_by_master(self) -> None:
+        record = {"id": "175", "tags": ["seaside", "world_heritage", "remote_island"]}
+        self.assertTrue(MODULE.apply_title_metadata(record, {"175": {"tags": ["seaside"]}}))
+        self.assertEqual(record["tags"], ["seaside"])
+
+    def test_tags_dropped_when_master_entry_has_no_tags(self) -> None:
+        record = {"id": "176", "tags": ["remote_island"], "building": "x"}
+        self.assertTrue(MODULE.apply_title_metadata(record, {"176": {"building": "x"}}))
+        self.assertNotIn("tags", record)
+
+    def test_tags_dropped_when_id_removed_from_master(self) -> None:
+        record = {"id": "230", "tags": ["remote_island"]}
+        self.assertTrue(MODULE.apply_title_metadata(record, {"1": {"tags": ["seaside"]}}))
+        self.assertNotIn("tags", record)
+
+    def test_record_without_tags_is_untouched(self) -> None:
+        record = {"id": "230"}
+        self.assertFalse(MODULE.apply_title_metadata(record, {"1": {"tags": ["seaside"]}}))
+
+
 class UpdatePokefutaApplyInstallStatusTest(unittest.TestCase):
     def test_scheduled_not_yet_installed(self) -> None:
         record = {"id": "481"}

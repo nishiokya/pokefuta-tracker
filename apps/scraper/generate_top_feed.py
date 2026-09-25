@@ -96,7 +96,9 @@ def hero_badge(record: dict) -> dict | None:
         return None
     if not isinstance(hashtag, str):
         return None
-    label = hashtag.lstrip("#").strip()
+    # 離島・世界遺産の hashtag は「#離島ポケふた #石垣島」のように島名/遺産名が続くので先頭だけ使う
+    first = hashtag.split()[0] if hashtag.split() else ""
+    label = first.lstrip("#").strip()
     if not label:
         return None
     return {
