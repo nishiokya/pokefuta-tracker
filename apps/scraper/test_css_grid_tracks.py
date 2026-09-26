@@ -35,6 +35,7 @@ SCANNED = (
     "apps/scraper/generate_character_manhole_page.py",
     "apps/web/assets/character-work.css",
     "apps/web/assets/top-page.css",
+    "apps/web/assets/top-home.css",
     "apps/web/assets/site-header.css",
     "apps/web/assets/pokefuta-map.css",
     "apps/web/index.html",

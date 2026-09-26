@@ -164,26 +164,50 @@ class AnalyticsContractTest(unittest.TestCase):
                 self.assertNotIn("feature: tag,", text)
                 self.assertNotIn("feature_label:", text)
 
+    # 日本語トップ（index.html）は写真と4つの探し方を中心にした構成へ作り直したが、
+    # 多言語版（index.template.html）は旧構成のまま。差はここに列挙したものだけに留める。
+    # 多言語版を新構成へ移したら、両方の集合を空にして完全一致へ戻すこと。
+    JA_TOP_ONLY_EVENTS = {
+        "click_search_way",      # ヒーロー直下の3導線と「探し方」4カード（way=map/prefecture/pokemon/theme）
+        "click_top_photo",       # 新着・注目の写真
+        "click_photo_post_cta",  # 写真館への投稿導線
+        "click_event_show_all",  # イベントの「すべて見る」
+        "click_pref_link",       # 静的な都道府県リンク（多言語版は JS 文字列内にあり正規表現に掛からない）
+    }
+    TEMPLATE_ONLY_EVENTS = {
+        "click_hero_featured", "click_hero_small", "view_hero_community",  # 旧ヒーロー（大1＋小2）
+        "click_map_gateway",     # 旧ミニ地図（日本語版は地図タイルの初期読み込みをやめた）
+        "click_intro_list_cta", "click_stat_pref_jump",
+        "click_pref_show_all",   # 旧・折りたたみ式の47都道府県リスト
+        "view_newrelease",       # 日本語版の新作は生成時に静的に出すので表示イベントは送らない
+    }
+
     def test_top_page_and_its_template_track_the_same_events(self):
-        """index.html（日本語の手編集版）と index.template.html（多言語の元）で
-        計測イベントが揃っていること。片方だけ直すと言語によって欠測する。
+        """index.html（日本語）と index.template.html（多言語の元）の計測イベントの差が、
+        上に列挙した既知の差だけであること。片方だけ直して黙って欠測するのを防ぐ。
         """
         def event_names(name):
             text = (ROOT / "web" / name).read_text(encoding="utf-8")
             return set(re.findall(r"trackEvent\(\s*'([a-z_]+)'", text))
 
-        self.assertEqual(event_names("index.html"), event_names("index.template.html"))
+        ja = event_names("index.html")
+        template = event_names("index.template.html")
+        self.assertEqual(ja - template, self.JA_TOP_ONLY_EVENTS)
+        self.assertEqual(template - ja, self.TEMPLATE_ONLY_EVENTS)
 
     def test_top_prefecture_list_expansion_is_tracked(self):
-        """「すべて見る（47都道府県）」の展開を計測する。
+        """多言語版の「すべて見る（47都道府県）」の展開を計測する。
 
-        トップで何人が47件すべてを必要としているかが、
-        一覧の初期表示件数（デスクトップ12件・SP3件）を見直す根拠になる。
+        日本語版は設置のある都道府県をすべて静的に並べるので折りたたみが無い。
         """
-        for name in ("index.html", "index.template.html"):
-            with self.subTest(source=name):
-                text = (ROOT / "web" / name).read_text(encoding="utf-8")
-                self.assertIn("click_pref_show_all", text)
+        text = (ROOT / "web" / "index.template.html").read_text(encoding="utf-8")
+        self.assertIn("click_pref_show_all", text)
+
+    def test_ja_top_uses_surface_not_source(self):
+        """AGENTS.md: イベント発生箇所は surface で表し、source を引数に使わない。"""
+        text = (ROOT / "web" / "index.html").read_text(encoding="utf-8")
+        self.assertNotRegex(text, r"trackEvent\([^)]*\bsource:")
+        self.assertIn("surface:'top_search_ways'", text)
 
 
 if __name__ == "__main__":
