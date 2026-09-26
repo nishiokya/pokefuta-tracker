@@ -10,6 +10,7 @@ import json
 import re
 import tempfile
 import unittest
+import unittest.mock
 from datetime import date
 from pathlib import Path
 
@@ -268,6 +269,43 @@ class GeneratedHtmlTest(unittest.TestCase):
         once = module.apply_blocks(SHELL, data)
         self.assertEqual(once, module.apply_blocks(once, data))
         self.assertIn('<a class="hub-chip" href="/tags/roadside/">keep</a>', once)
+
+    def test_uninstalled_manholes_are_not_counted(self) -> None:
+        """installed: false（設置前）は都道府県ページと同じく件数に入れない。"""
+        records = _records()
+        records[0]["installed"] = False
+        data = Fixture(self.tmp, records=records).data()
+        self.assertEqual(19, data.total)
+        self.assertNotIn("1", {p.manhole_id for p in data.photos})
+        self.assertIn("全国10都道府県・19枚", module.description(data))
+
+    def test_place_does_not_repeat_the_prefecture(self) -> None:
+        """表示名が「宮崎県/五ヶ瀬町」形式でも「宮崎県 宮崎県/五ヶ瀬町」にしない。"""
+        record = {"id": "9", "prefecture": "宮崎県", "city": "五ヶ瀬", "place_label": "宮崎県/五ヶ瀬町"}
+        with unittest.mock.patch.object(module, "compose_display_name", return_value="宮崎県/五ヶ瀬町"):
+            self.assertEqual("五ヶ瀬町", module.place_label(record))
+        with unittest.mock.patch.object(module, "compose_display_name", return_value="指宿市 指宿駅前"):
+            self.assertEqual("指宿市", module.place_label(record))
+
+    def test_photo_datetime_matches_the_jst_date_shown(self) -> None:
+        """UTC 15時以降の投稿は JST で翌日。表示と datetime 属性を揃える。"""
+        fixture = Fixture(self.tmp)
+        photos = json.loads(fixture.photos.read_text(encoding="utf-8"))
+        for item in photos["photos"].values():
+            item["created_at"] = "2026-09-25T16:00:00+00:00"
+        fixture.photos.write_text(json.dumps(photos), encoding="utf-8")
+        gallery = _block(fixture.html(), "photos")
+        self.assertIn('<time datetime="2026-09-26">9月26日</time>', gallery)
+        self.assertNotIn('datetime="2026-09-25"', gallery)
+
+    def test_pokemon_cards_use_different_photos(self) -> None:
+        records = _records()
+        for record in records:
+            record["pokemons"] = ["ピカチュウ", "ラプラス"]
+        block = _block(Fixture(self.tmp, records=records).html(), "pokemon")
+        srcs = re.findall(r'src="([^"]+)"', block)
+        self.assertEqual(2, len(srcs))
+        self.assertEqual(2, len(set(srcs)))
 
     def test_tracking_uses_surface(self) -> None:
         html = Fixture(self.tmp).html()

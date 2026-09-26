@@ -189,6 +189,20 @@ def pokemons_of(record: dict) -> list[str]:
     return [p for p in record.get("pokemons") or [] if p and EXCLUDED_POKEMON_PATTERN not in p]
 
 
+def is_installed(record: dict) -> bool:
+    """設置前（installed: false）は数えない。都道府県ページ・写真掲載率と同じ規則。"""
+    return record.get("installed") is not False
+
+
+def place_label(record: dict) -> str:
+    """「指宿市」のような自治体名。表示名が「宮崎県/五ヶ瀬町」形式のときは県名を落とす。"""
+    name = compose_display_name(record)
+    prefecture = str(record.get("prefecture", ""))
+    if prefecture and name.startswith(f"{prefecture}/"):
+        name = name[len(prefecture) + 1:]
+    return name.split(" ")[0] or str(record.get("city", ""))
+
+
 def _load_json(path: Path | None) -> object:
     if not path or not path.exists():
         return None
@@ -210,7 +224,7 @@ def build_photos(photos_json: object, records: list[dict], image_dir: Path) -> l
         record = by_id.get(mid)
         if not record or not (image_dir / f"{mid}_latest.jpeg").exists():
             continue
-        place = compose_display_name(record).split(" ")[0] or str(record.get("city", ""))
+        place = place_label(record)
         photos.append(Photo(
             manhole_id=mid,
             created_at=str(item.get("created_at") or ""),
@@ -252,7 +266,7 @@ def load_data(
     pokemon_metadata: Path | None = DEFAULT_POKEMON_METADATA,
 ) -> TopData:
     today = today or datetime.now(JST).date()
-    records = load_records(manholes)
+    records = [r for r in load_records(manholes) if is_installed(r)]
     stats_json = _load_json(stats)
     return TopData(
         records=records,
@@ -321,6 +335,12 @@ def _track(event: str, **params: object) -> str:
         for key, value in params.items()
     )
     return f"trackEvent('{event}',{{{body}}})"
+
+
+def _jst_iso(value: str) -> str:
+    """表示（format_photo_date は JST）と datetime 属性の日付を揃える。"""
+    day = to_jst_date(value)
+    return day.isoformat() if day else ""
 
 
 def _img(photo: Photo, *, eager: bool = False, priority: bool = False) -> str:
@@ -546,7 +566,7 @@ def render_newrelease(data: TopData) -> str:
     for i, (_, record) in enumerate(fresh):
         mid = str(record.get("id"))
         names = "・".join(pokemons_of(record)) or "ポケふた"
-        place = f"{record.get('prefecture', '')} {compose_display_name(record).split(' ')[0]}"
+        place = f"{record.get('prefecture', '')} {place_label(record)}"
         cards.append(
             f'<li><a class="home-newrel__card" href="manholes/{quote(mid, safe="")}/" '
             f'onclick="{_track("click_newrelease", surface="top_newrelease", manhole=mid, position=i)}">'
@@ -580,7 +600,7 @@ def render_photos(data: TopData) -> str:
         f"{_img(p)}"
         f'<span class="home-gallery__cap"><b>{escape(p.title)}</b>'
         f'<span>{escape(p.prefecture)} {escape(p.place)}</span>'
-        f'<time datetime="{escape(p.created_at[:10])}">{escape(format_photo_date(p.created_at))}</time></span>'
+        f'<time datetime="{escape(_jst_iso(p.created_at))}">{escape(format_photo_date(p.created_at))}</time></span>'
         "</a></li>"
         for i, p in enumerate(photos)
     )
@@ -685,9 +705,14 @@ def render_pref(data: TopData) -> str:
 def render_pokemon(data: TopData) -> str:
     counts = data.pokemon_counts
     cards = []
+    used: set[str] = set()
     for entry in data.popular_pokemon:
         ids = set(entry.manhole_ids)
-        photo = next((p for p in data.photos if p.manhole_id in ids), None)  # 新しい順
+        # 新しい順。同じマンホールに複数のポケモンがいても、カードごとに別の写真を使う
+        candidates = [p for p in data.photos if p.manhole_id in ids]
+        photo = next((p for p in candidates if p.manhole_id not in used), candidates[0] if candidates else None)
+        if photo:
+            used.add(photo.manhole_id)
         media = (
             f'<img src="{escape(photo.src)}" alt="{escape(entry.name)}のポケふた（{escape(photo.prefecture)}{escape(photo.place)}）" '
             f'width="{PHOTO_SIZE}" height="{PHOTO_SIZE}" loading="lazy" decoding="async">'
