@@ -84,14 +84,16 @@
 .cm-wrap .cm-btn--soft { background: #ece6f5; color: var(--cm-accent-dark); }
 .cm-wrap .cm-btn--soft:hover { background: #e0d7ef; }
 
-/* 全国一覧のヒーロー: 左に見出しと件数、右に4つの探し方（写真は置かない） */
-/* 全国一覧のヒーロー: 左に見出し・件数・探し方、右に投稿写真のモザイク */
-/* 並びは「見出し → 写真 → 探し方」。広い画面では写真を右列に2段またがせる */
+/* 全国一覧のヒーロー: 左に見出し・件数・探し方、右に投稿写真のモザイク。
+   並びは「見出し → 写真 → 探し方」。広い画面では写真を右列に2段またがせる */
 .cm-hero--lp {
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); grid-template-areas: "copy photos" "hub photos";
   align-items: start; row-gap: 22px; padding: 40px 44px;
 }
 .cm-hero--lp > div { grid-area: copy; }
+/* 写真が1枚も無いとき（データ欠損など）は右列を空けず1カラムにする */
+.cm-hero--lp.cm-hero--no-photos { grid-template-columns: minmax(0, 1fr); grid-template-areas: "copy" "hub"; }
+.cm-hero--no-photos .lp-hub { max-width: 640px; }
 .lp-hub { grid-area: hub; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 .lp-hero-photos { grid-area: photos; margin: 0; }
 .lp-hero-mosaic { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 0; padding: 0; list-style: none; }

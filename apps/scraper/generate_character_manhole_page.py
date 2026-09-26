@@ -677,6 +677,12 @@ def generate_html(
 
     photos = build_photos(design_manhole_path, character_records, gundam_records)
     hero_photos, gallery_photos = select_photos(photos, seed_date=seed_date)
+    gallery_lead = (
+        "ポケふた写真館に届いた、実物のマンホールの写真です。キャラクターマンホールと確認できた写真には"
+        f"作品名と設置場所を、確認できていないものには「{UNLINKED_PHOTO_LABEL}」と表示しています。"
+        if gallery_photos else
+        "ポケふた写真館に届いた実物のマンホール写真を、ここで紹介します。旅先で撮った1枚をお待ちしています。"
+    )
     work_photos: dict[str, dict] = {}
     for photo in photos:
         if photo["linked"]:
@@ -803,7 +809,7 @@ def generate_html(
   <main class="cm-wrap">
     <nav class="cw-breadcrumb" aria-label="パンくず"><a href="./">ポケふた図鑑</a><span>/</span><span aria-current="page">キャラクターマンホール全国一覧</span></nav>
 
-    <section class="cm-hero cm-hero--lp" id="lp-intro" aria-labelledby="lp-h1">
+    <section class="cm-hero cm-hero--lp{"" if hero_photos else " cm-hero--no-photos"}" id="lp-intro" aria-labelledby="lp-h1">
       <div>
         <p class="cm-eyebrow">CHARACTER MANHOLE DIRECTORY</p>
         <h1 id="lp-h1">アニメ・キャラクターマンホール<br>全国一覧・設置場所</h1>
@@ -877,7 +883,7 @@ def generate_html(
         <h2 id="lp-photos-heading">投稿されたマンホール写真</h2>
         <a href="{DESIGN_MANHOLES_LIST_URL}" target="_blank" rel="noopener noreferrer">すべての投稿を見る →</a>
       </div>
-      <p class="cm-lead">ポケふた写真館に届いた、実物のマンホールの写真です。キャラクターマンホールと確認できた写真には作品名と設置場所を、確認できていないものには「{UNLINKED_PHOTO_LABEL}」と表示しています。</p>
+      <p class="cm-lead">{gallery_lead}</p>
 {_gallery_html(gallery_photos) if gallery_photos else ""}
       <div class="lp-promo lp-promo--photos">
         <div>

@@ -622,9 +622,19 @@ class PhotoTest(unittest.TestCase):
         self.assertLess(self.html.index('class="cm-hero-note"'), self.html.index('<ul class="lp-hero-mosaic">'))
 
     def test_page_renders_without_the_photo_dataset(self):
-        html = generate_html(self.character_records, self.gundam_records, Path(self.tmpdir.name) / "missing.ndjson")
-        self.assertIn('<h1 id="lp-h1">', html)
-        self.assertNotIn("<img", html)
+        empty = _write_ndjson(Path(self.tmpdir.name), "empty.ndjson", [])
+        for path in (Path(self.tmpdir.name) / "missing.ndjson", empty, None):
+            with self.subTest(path=path):
+                html = generate_html(self.character_records, self.gundam_records, path)
+                self.assertIn('<h1 id="lp-h1">', html)
+                self.assertNotIn("<img", html)
+                # 写真の列を空けたままにしない（1カラムに切り替える）
+                self.assertIn('class="cm-hero cm-hero--lp cm-hero--no-photos"', html)
+                self.assertNotIn('class="lp-hero-photos"', html)
+                self.assertNotIn("実物のマンホールの写真です", html)  # 写真が無いのに「写真です」と言わない
+
+    def test_hero_keeps_the_two_column_layout_when_photos_exist(self):
+        self.assertIn('class="cm-hero cm-hero--lp" id="lp-intro"', self.html)
 
 
 class MobileLayoutCssTest(unittest.TestCase):
@@ -635,6 +645,9 @@ class MobileLayoutCssTest(unittest.TestCase):
         css = (Path(__file__).resolve().parents[2] / "apps/web/assets/character-work.css").read_text(encoding="utf-8")
         cls.mobile = css[css.index("@media (max-width: 700px)"):]
         cls.css = css
+
+    def test_hero_switches_to_one_column_without_photos(self):
+        self.assertRegex(self.css, r'\.cm-hero--lp\.cm-hero--no-photos \{[^}]*grid-template-columns: minmax\(0, 1fr\);[^}]*grid-template-areas: "copy" "hub";')
 
     def test_photo_frames_are_reserved_and_cropped(self):
         self.assertRegex(self.css, r"\.lp-hero-mosaic-item \{[^}]*aspect-ratio: 1")
