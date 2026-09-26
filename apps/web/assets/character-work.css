@@ -85,8 +85,30 @@
 .cm-wrap .cm-btn--soft:hover { background: #e0d7ef; }
 
 /* 全国一覧のヒーロー: 左に見出しと件数、右に4つの探し方（写真は置かない） */
-.cm-hero--lp { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); padding: 40px 44px; }
-.lp-hub { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+/* 全国一覧のヒーロー: 左に見出し・件数・探し方、右に投稿写真のモザイク */
+/* 並びは「見出し → 写真 → 探し方」。広い画面では写真を右列に2段またがせる */
+.cm-hero--lp {
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); grid-template-areas: "copy photos" "hub photos";
+  align-items: start; row-gap: 22px; padding: 40px 44px;
+}
+.cm-hero--lp > div { grid-area: copy; }
+.lp-hub { grid-area: hub; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.lp-hero-photos { grid-area: photos; margin: 0; }
+.lp-hero-mosaic { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 0; padding: 0; list-style: none; }
+.lp-hero-mosaic-item { position: relative; aspect-ratio: 1; border-radius: 14px; overflow: hidden; background: var(--cm-ink-soft); }
+/* 8枚を3列×3段に収める: 先頭だけ縦2段（元写真が縦長なので切り抜きが少ない） */
+.lp-hero-mosaic-item:first-child { grid-row: span 2; aspect-ratio: auto; }
+.lp-hero-mosaic-item a { display: block; width: 100%; height: 100%; }
+.lp-hero-mosaic img, .lp-gallery img, .lp-work-thumb img {
+  display: block; width: 100%; height: 100%; object-fit: cover; object-position: center;
+}
+.lp-hero-mosaic-item.is-linked { box-shadow: 0 0 0 3px #d4a15e; }
+.lp-photo-badge {
+  position: absolute; left: 6px; bottom: 6px; max-width: calc(100% - 12px); padding: 2px 8px; border-radius: 999px;
+  background: #d4a15e; color: var(--cm-ink); font-size: 11px; font-weight: 800; line-height: 1.6;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.lp-hero-mosaic-caption { margin: 10px 0 0; font-size: 11.5px; line-height: 1.6; color: #b6acd0; }
 .cm-wrap .lp-hub-item {
   display: grid; align-content: start; gap: 4px; min-height: 84px; padding: 14px 16px; border-radius: 16px;
   background: rgba(255, 255, 255, .07); border: 1px solid rgba(255, 255, 255, .16); color: #fff; text-decoration: none;
@@ -129,7 +151,9 @@
 }
 .cm-wrap a.lp-work-card { color: inherit; }
 .lp-work-card:hover { transform: translateY(-3px); border-color: var(--c, var(--cm-accent)); box-shadow: 0 12px 28px rgba(31, 27, 44, .12); }
-.lp-work-card .cm-lid { grid-row: span 2; }
+.lp-work-card .cm-lid, .lp-work-thumb { grid-row: span 2; }
+.lp-work-thumb { display: block; width: 76px; aspect-ratio: 1; border-radius: 50%; overflow: hidden; box-shadow: 0 0 0 3px var(--c, var(--cm-accent)); }
+.lp-work-grid > li:first-child .lp-work-thumb { width: 112px; }
 .lp-work-card strong { display: block; font-size: 17px; font-weight: 900; line-height: 1.4; color: var(--cm-ink); }
 .lp-work-count { font-size: 13px; color: var(--cm-muted); }
 .lp-work-count b { margin-right: 2px; font-size: 30px; font-weight: 900; line-height: 1; letter-spacing: -.03em; color: var(--c, var(--cm-ink)); }
@@ -186,8 +210,18 @@
 .lp-promo p { margin: 0 0 8px; font-size: 13.5px; color: #4d4a55; max-width: 40em; }
 .lp-promo-actions { display: grid; gap: 10px; justify-items: stretch; }
 .lp-promo-actions a { justify-content: center; }
-.lp-post-cta { margin: 8px 0 24px; font-size: 13px; color: var(--cm-muted); text-align: center; }
-.lp-post-cta a { font-weight: 700; }
+.lp-promo h3 { margin-bottom: 8px; font-size: 18px; font-weight: 900; color: var(--cm-ink); }
+.lp-promo--photos { margin-top: 20px; padding: 24px 28px; }
+
+/* 投稿写真ギャラリー: 正方形の枠を予約し、キャプションは文字で残す */
+.lp-gallery { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin: 0; padding: 0; list-style: none; }
+.lp-gallery figure { margin: 0; }
+.lp-gallery a { display: block; aspect-ratio: 1; border-radius: 14px; overflow: hidden; background: #efe8d8; }
+.lp-gallery .is-linked a { box-shadow: 0 0 0 3px #d4a15e; }
+.lp-gallery figcaption { display: grid; gap: 1px; padding: 8px 2px 0; font-size: 12px; overflow-wrap: anywhere; }
+.lp-gallery-kind { font-size: 11px; font-weight: 800; color: #7d4320; }
+.lp-gallery figcaption strong { font-size: 13.5px; line-height: 1.45; color: var(--cm-ink); }
+.lp-gallery-where { color: var(--cm-muted); }
 
 /* ── FAQ（両ページ共通） ── */
 .cm-faq { display: grid; gap: 0; border-top: 2px solid var(--cm-ink); }
@@ -244,7 +278,8 @@
 /* ── モバイル ── */
 @media (max-width: 860px) {
   .lp-work-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .cm-hero--lp { grid-template-columns: minmax(0, 1fr); }
+  .cm-hero--lp { grid-template-columns: minmax(0, 1fr); grid-template-areas: "copy" "photos" "hub"; }
+  .lp-gallery { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .lp-intro { grid-template-columns: minmax(0, 1fr); gap: 14px; }
   .lp-regions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .lp-place-grid { grid-template-columns: minmax(0, 1fr); }
@@ -261,11 +296,18 @@
   .cm-stats strong { font-size: 30px; }
   .lp-work-grid > li:first-child .lp-work-card { padding: 14px 16px; }
   .lp-work-grid > li:first-child .cm-lid, .lp-work-card .cm-lid { --lid-size: 46px; }
+  .lp-work-thumb, .lp-work-grid > li:first-child .lp-work-thumb { width: 46px; }
   .lp-work-grid > li:first-child strong, .lp-work-card strong { font-size: 15.5px; }
   .lp-work-grid > li:first-child .lp-work-count b, .lp-work-count b { font-size: 24px; }
   .lp-work-card { gap: 2px 14px; padding: 14px 16px; }
   .lp-work-go { display: none; }  /* カード全体がリンクなので、狭い画面では行を省く */
   .cm-hero--lp { padding: 26px 18px 18px; }
+  .lp-hero-mosaic { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+  .lp-hero-mosaic-item { border-radius: 10px; }
+  .lp-hero-mosaic-item:first-child { grid-row: auto; aspect-ratio: 1; }  /* 4列×2段にそろえる */
+  .lp-photo-badge { left: 4px; bottom: 4px; padding: 1px 6px; font-size: 10px; }
+  .lp-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .lp-promo--photos { padding: 20px 18px; }
   .lp-hub { gap: 8px; }
   .cm-wrap .lp-hub-item { min-height: 0; padding: 12px 14px; }
   .lp-regions { gap: 18px 16px; }

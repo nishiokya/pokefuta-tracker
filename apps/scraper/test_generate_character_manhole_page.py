@@ -6,6 +6,7 @@ import sys
 import tempfile
 import unittest
 from collections import Counter
+from datetime import date
 from html import escape
 from pathlib import Path
 from unittest.mock import patch
@@ -18,8 +19,14 @@ from generate_character_manhole_page import (  # noqa: E402
     build_prefecture_summaries,
     build_work_summaries,
     generate_html,
+    GALLERY_PHOTO_LIMIT,
+    HERO_PHOTO_LIMIT,
+    UNLINKED_PHOTO_LABEL,
+    build_photos,
     load_active_manholes,
+    select_photos,
 )
+from character_manhole_works import CHARACTER_CSS_VERSION  # noqa: E402
 from character_manhole_works import WorkPage  # noqa: E402
 
 RESERVED_INDEX_PAGE_IDS = (
@@ -84,6 +91,49 @@ GUNDAM_RECORDS = [
     {"id": "1", "prefecture": "北海道", "city": "豊富町", "status": "active", "franchise": "gundam", "lat": 45.10487, "lng": 141.772842},
     {"id": "2", "prefecture": "佐賀県", "city": "佐賀市", "status": "active", "franchise": "gundam", "lat": 33.25, "lng": 130.3},
     {"id": "3", "prefecture": "佐賀県", "city": "唐津市", "status": "invalid", "franchise": "gundam", "lat": 33.45, "lng": 129.97},
+]
+
+
+# design_manholes.ndjson の形（?size=small つきの photo_url、canonical_ref / nearby_refs）
+PHOTO_RECORDS = [
+    {   # canonical_ref がガンダム（掲載中）→ キャラクターマンホールの写真
+        "id": "p-gundam", "title": "豊富駅ガンダムマンホール", "status": "active",
+        "photo_url": "https://pokefuta.com/api/design-manholes/p-gundam/photo?size=small",
+        "canonical_ref": "gundam:1", "nearby_refs": [{"distance_m": 30, "ref": "gundam:1"}],
+        "prefecture": "北海道", "city": "豊富町", "source_url": "https://pokefuta.com/design-manholes/p-gundam",
+        "created_at": "2026-09-01T00:00:00+00:00",
+    },
+    {   # nearby_refs 側にキャラクターマンホール参照 → キャラクターマンホールの写真
+        "id": "p-zls", "title": "佐賀の蓋", "status": "active",
+        "photo_url": "https://pokefuta.com/api/design-manholes/p-zls/photo?size=small",
+        "canonical_ref": None, "nearby_refs": [{"distance_m": 5, "ref": "character:zls-1"}],
+        "prefecture": "佐賀県", "city": "佐賀市", "source_url": "https://pokefuta.com/design-manholes/p-zls",
+        "created_at": "2026-09-02T00:00:00+00:00",
+    },
+    *[
+        {"id": f"p-plain-{i}", "title": f"投稿{i}", "status": "active",
+         "photo_url": f"https://pokefuta.com/api/design-manholes/p-plain-{i}/photo?size=small",
+         "canonical_ref": None, "nearby_refs": [{"distance_m": 46, "ref": "pokefuta:272"}],
+         "prefecture": "愛知県", "city": "名古屋市\u3000北区",
+         "source_url": f"https://pokefuta.com/design-manholes/p-plain-{i}",
+         "created_at": f"2026-08-{i + 1:02d}T00:00:00+00:00"}
+        for i in range(24)
+    ],
+    {   # 参照先が掲載データに無い（撤去済みなど）→ キャラクターマンホールとは言わない
+        "id": "p-dangling", "title": "参照切れ", "status": "active",
+        "photo_url": "https://pokefuta.com/api/design-manholes/p-dangling/photo?size=small",
+        "canonical_ref": "gundam:999", "prefecture": "北海道", "city": "稚内市",
+        "created_at": "2026-07-01T00:00:00+00:00",
+    },
+    {"id": "p-inactive", "title": "非アクティブ", "status": "removed", "canonical_ref": "gundam:1",
+     "photo_url": "https://pokefuta.com/api/design-manholes/p-inactive/photo?size=small"},
+    # size=medium/large/未指定は 2MB 原寸へのリダイレクトになるので、キャラ紐付けがあっても使わない
+    {"id": "p-medium", "title": "サイズ違反medium", "status": "active", "canonical_ref": "gundam:1",
+     "photo_url": "https://pokefuta.com/api/design-manholes/p-medium/photo?size=medium"},
+    {"id": "p-large", "title": "サイズ違反large", "status": "active",
+     "photo_url": "https://pokefuta.com/api/design-manholes/p-large/photo?size=large"},
+    {"id": "p-nosize", "title": "サイズ指定なし", "status": "active",
+     "photo_url": "https://pokefuta.com/api/design-manholes/p-nosize/photo"},
 ]
 
 
@@ -327,6 +377,7 @@ class SeoStructureTest(_PageTestCase):
             "アニメ・キャラクターマンホールを作品から探す",
             "都道府県から設置場所を探す",
             "全国の主な設置場所",
+            "投稿されたマンホール写真",
             "キャラクターマンホールとは",
             "よくある質問",
         ], h2s)
@@ -363,21 +414,17 @@ class SeoStructureTest(_PageTestCase):
             with self.subTest(word=word):
                 self.assertIn(word, body)
 
-    def test_no_decorative_photos_latest_posts_or_map_tiles(self):
-        self.assertNotIn("lp-hero-mosaic", self.html)
-        self.assertNotIn("先に出してくれた人たち", self.html)
-        self.assertNotIn("lp-photo", self.html)
-        self.assertNotIn("<img", self.html)            # 初期HTMLの画像は0枚
-        self.assertNotIn("leaflet", self.html.lower())  # 地図ライブラリもタイルも読み込まない
+    def test_no_map_library_or_tiles_on_first_view(self):
+        self.assertNotIn("leaflet", self.html.lower())
         self.assertNotIn("tile.openstreetmap.org", self.html)
         self.assertNotIn("map-gateway", self.html)
 
-    def test_submission_is_a_small_text_cta_at_the_bottom(self):
-        self.assertNotIn("その1枚、まだカメラロールにありますか？", self.html)
-        cta = re.search(r'<p class="lp-post-cta"[^>]*>(.*?)</p>', self.html, re.S)
-        self.assertIsNotNone(cta)
-        self.assertIn('href="./design_manhole.html"', cta.group(1))
-        self.assertLess(self.html.index('id="lp-faq-heading"'), cta.start())
+    def test_submission_cta_follows_the_photo_gallery(self):
+        photos_start = self.html.index('id="lp-photos-heading"')
+        section = self.html[photos_start:self.html.index("</section>", photos_start)]
+        self.assertIn("その1枚、まだカメラロールにありますか？", section)
+        self.assertIn('href="./design_manhole.html"', section)
+        self.assertIn('href="https://pokefuta.com/design-manholes?from=data"', section)
 
     def test_json_ld_collection_page_points_at_the_work_item_list(self):
         graph = _json_ld_graph(self.html)
@@ -412,6 +459,14 @@ class SeoStructureTest(_PageTestCase):
             build_prefecture_summaries(self.character_records, self.gundam_records),
         )
         self.assertEqual(expected, ld)
+
+    def test_faq_does_not_name_a_single_leader_when_prefectures_tie(self):
+        tied = [{"prefecture": "佐賀県", "count": 3}, {"prefecture": "長崎県", "count": 3},
+                {"prefecture": "北海道", "count": 1}]
+        answer = dict(build_faq_items([], tied))["キャラクターマンホールが多い都道府県はどこですか？"]
+        self.assertIn("最も多いのは佐賀県と長崎県（各3枚）", answer)
+        self.assertNotIn("最も多いのは佐賀県（", answer)
+        self.assertIn("北海道（1枚）が続きます", answer)
 
     def test_faq_counts_come_from_the_same_aggregation_as_the_body(self):
         questions = dict(build_faq_items(
@@ -450,7 +505,148 @@ class SeoStructureTest(_PageTestCase):
 
     def test_only_the_shared_character_stylesheet_carries_page_styles(self):
         self.assertNotIn("<style", self.html)
-        self.assertIn('href="./assets/character-work.css?v=', self.html)
+        # 作品ガイドと同じキャッシュバスター（片方だけ古いCSSが残らないように）
+        self.assertIn(f'href="./assets/character-work.css?v={CHARACTER_CSS_VERSION}"', self.html)
+
+    def test_search_covers_the_landmark_names_shown_in_the_body(self):
+        """本文はランドマーク名で出すので、絞り込み対象（一覧の li）にも同じ名前がある。"""
+        records = [dict(self.character_records[0], title="ゆめまるマンホール（中岡崎駅）",
+                        landmark="中岡崎駅ロータリー", address="愛知県岡崎市")]
+        html = _build(records, [])
+        item = re.search(r'<ul class="lp-location-list">(.*?)</ul>', html, re.S).group(1)
+        self.assertIn("中岡崎駅ロータリー", item)
+        self.assertIn("源さくら", item)
+
+
+class PhotoTest(unittest.TestCase):
+    """投稿写真: キャラクターマンホールの写真を優先し、それ以外は「投稿されたデザインマンホール」と明記する。"""
+
+    def setUp(self):
+        self.tmpdir = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmpdir.cleanup)
+        directory = Path(self.tmpdir.name)
+        self.character_records = load_active_manholes(_write_ndjson(directory, "c.ndjson", CHARACTER_RECORDS))
+        self.gundam_records = load_active_manholes(_write_ndjson(directory, "g.ndjson", GUNDAM_RECORDS))
+        self.photo_path = _write_ndjson(directory, "design_manholes.ndjson", PHOTO_RECORDS)
+        self.photos = build_photos(self.photo_path, self.character_records, self.gundam_records)
+        self.html = generate_html(self.character_records, self.gundam_records, self.photo_path,
+                                  seed_date=date(2026, 9, 26))
+
+    def test_uses_only_active_small_photos(self):
+        ids = {p["id"] for p in self.photos}
+        self.assertEqual(27, len(self.photos))
+        for excluded in ("p-inactive", "p-medium", "p-large", "p-nosize"):
+            self.assertNotIn(excluded, ids)
+        for url in re.findall(r'<img src="([^"]+)"', self.html):
+            with self.subTest(url=url):
+                self.assertTrue(url.endswith("?size=small"), url)
+
+    def test_linked_photos_carry_work_and_place_and_link_to_the_guide_spot(self):
+        by_id = {p["id"]: p for p in self.photos}
+        gundam = by_id["p-gundam"]
+        self.assertTrue(gundam["linked"])
+        self.assertEqual("機動戦士ガンダム", gundam["label"])
+        self.assertEqual("./characters/gundam/#spot-1", gundam["href"])
+        zls = by_id["p-zls"]
+        self.assertEqual("ゾンビランドサガ", zls["label"])
+        self.assertEqual("唐人プラザビル", zls["place"])
+        self.assertEqual("./characters/zombieland-saga/#spot-zls-1", zls["href"])
+
+    def test_unlinked_photos_are_labelled_as_submitted_design_manholes(self):
+        by_id = {p["id"]: p for p in self.photos}
+        for photo_id in ("p-plain-0", "p-dangling"):
+            photo = by_id[photo_id]
+            self.assertFalse(photo["linked"])
+            self.assertEqual(UNLINKED_PHOTO_LABEL, photo["label"])
+            self.assertIn(UNLINKED_PHOTO_LABEL, photo["alt"])
+        self.assertEqual("https://pokefuta.com/design-manholes/p-plain-0?from=data", by_id["p-plain-0"]["href"])
+        self.assertEqual("名古屋市北区", by_id["p-plain-0"]["city"])  # 全角スペースを詰める
+
+    def test_hero_and_gallery_split_without_duplicates(self):
+        hero, gallery = select_photos(self.photos, seed_date=date(2026, 9, 26))
+        self.assertEqual(HERO_PHOTO_LIMIT, len(hero))
+        self.assertEqual(GALLERY_PHOTO_LIMIT, len(gallery))
+        self.assertFalse({p["id"] for p in hero} & {p["id"] for p in gallery})
+        self.assertEqual({"p-gundam", "p-zls"}, {p["id"] for p in hero[:2]})  # キャラクターマンホールが先頭
+        # 同じ日なら同じ並び（日替わり）
+        again, _ = select_photos(self.photos, seed_date=date(2026, 9, 26))
+        self.assertEqual([p["id"] for p in hero], [p["id"] for p in again])
+
+    def test_every_image_has_alt_width_and_height(self):
+        imgs = re.findall(r"<img [^>]*>", self.html)
+        self.assertGreaterEqual(len(imgs), HERO_PHOTO_LIMIT + GALLERY_PHOTO_LIMIT)
+        for tag in imgs:
+            with self.subTest(tag=tag[:80]):
+                self.assertRegex(tag, r'alt="[^"]+"')
+                self.assertRegex(tag, r'width="\d+"')
+                self.assertRegex(tag, r'height="\d+"')
+                self.assertIn('decoding="async"', tag)
+
+    def test_only_images_outside_the_first_view_are_lazy(self):
+        hero = self.html[self.html.index('<ul class="lp-hero-mosaic">'):self.html.index("</figure>")]
+        rest = self.html[self.html.index("</figure>"):]
+        self.assertEqual(HERO_PHOTO_LIMIT, hero.count("<img "))
+        self.assertNotIn('loading="lazy"', hero)
+        self.assertEqual(1, hero.count('fetchpriority="high"'))
+        rest_imgs = re.findall(r"<img [^>]*>", rest)
+        self.assertTrue(rest_imgs)
+        for tag in rest_imgs:
+            self.assertIn('loading="lazy"', tag)
+
+    def test_captions_and_labels_do_not_pass_design_manholes_off_as_character_manholes(self):
+        caption = re.search(r'<figcaption class="lp-hero-mosaic-caption">(.*?)</figcaption>', self.html).group(1)
+        self.assertIn(f"ほかは{UNLINKED_PHOTO_LABEL}です", caption)
+        gallery = self.html[self.html.index('<ul class="lp-gallery">'):]
+        gallery = gallery[:gallery.index("</ul>")]
+        for item in re.findall(r'<li class="lp-gallery-item[^"]*">.*?</li>', gallery, re.S):
+            kind = re.search(r'<span class="lp-gallery-kind">([^<]+)</span>', item).group(1)
+            if "is-linked" in item:
+                self.assertNotEqual(UNLINKED_PHOTO_LABEL, kind)
+            else:
+                self.assertEqual(UNLINKED_PHOTO_LABEL, kind)
+
+    def test_work_card_gets_a_thumbnail_only_when_a_linked_photo_exists(self):
+        gundam = re.search(r'<a class="lp-work-card" href="./characters/gundam/".*?</a>', self.html, re.S).group(0)
+        self.assertIn('<span class="lp-work-thumb"><img ', gundam)
+        self.assertIn('<span>写真</span>', gundam)
+        yowapeda = re.search(r'<a class="lp-work-card" href="./characters/yowamushi-pedal/".*?</a>', self.html, re.S).group(0)
+        self.assertNotIn("<img", yowapeda)
+        self.assertIn('class="cm-lid"', yowapeda)
+
+    def test_photos_do_not_push_the_seo_body_out(self):
+        body = _visible_body(self.html)
+        for word in ("ゾンビランドサガ", "源さくら", "佐賀県", "佐賀市", "唐人プラザビル"):
+            self.assertIn(word, body)
+        # 写真の後ろに見出しを隠さない: H1 と件数はヒーローの写真より前
+        self.assertLess(self.html.index("<h1"), self.html.index('<ul class="lp-hero-mosaic">'))
+        self.assertLess(self.html.index('class="cm-hero-note"'), self.html.index('<ul class="lp-hero-mosaic">'))
+
+    def test_page_renders_without_the_photo_dataset(self):
+        html = generate_html(self.character_records, self.gundam_records, Path(self.tmpdir.name) / "missing.ndjson")
+        self.assertIn('<h1 id="lp-h1">', html)
+        self.assertNotIn("<img", html)
+
+
+class MobileLayoutCssTest(unittest.TestCase):
+    """375px で写真と本文が崩れないための CSS（実測はスクリーンショットで確認）。"""
+
+    @classmethod
+    def setUpClass(cls):
+        css = (Path(__file__).resolve().parents[2] / "apps/web/assets/character-work.css").read_text(encoding="utf-8")
+        cls.mobile = css[css.index("@media (max-width: 700px)"):]
+        cls.css = css
+
+    def test_photo_frames_are_reserved_and_cropped(self):
+        self.assertRegex(self.css, r"\.lp-hero-mosaic-item \{[^}]*aspect-ratio: 1")
+        self.assertRegex(self.css, r"\.lp-gallery a \{[^}]*aspect-ratio: 1")
+        self.assertIn("object-fit: cover", self.css)
+
+    def test_phone_layout_uses_two_column_gallery_and_four_column_mosaic(self):
+        self.assertIn(".lp-gallery { grid-template-columns: repeat(2, minmax(0, 1fr));", self.mobile)
+        self.assertIn(".lp-hero-mosaic { grid-template-columns: repeat(4, minmax(0, 1fr));", self.mobile)
+        # 並びは 見出し → 写真 → 探し方（写真の後ろに見出しを隠さない）
+        self.assertIn('grid-template-areas: "copy" "photos" "hub";', self.css)
+
 
 
 class RealDatasetTest(unittest.TestCase):
@@ -461,7 +657,7 @@ class RealDatasetTest(unittest.TestCase):
         docs = Path(__file__).resolve().parents[2] / "docs"
         cls.characters = load_active_manholes(docs / "character_manholes.ndjson")
         cls.gundam = load_active_manholes(docs / "gmanhole.ndjson")
-        cls.html = _build(cls.characters, cls.gundam)
+        cls.html = generate_html(cls.characters, cls.gundam, docs / "design_manholes.ndjson")
         cls.body = _visible_body(cls.html)
 
     def test_every_work_prefecture_and_top_city_is_visible(self):
@@ -481,6 +677,23 @@ class RealDatasetTest(unittest.TestCase):
         self.assertIn("<span>市町村</span>", block)
         self.assertIn("<span>主な設置場所</span>", block)
         self.assertIn('class="lp-place-pref lp-place-pref--mini" id="pref-aomori"', self.html)
+
+    def test_real_data_shows_many_manhole_photos_all_small(self):
+        imgs = re.findall(r'<img src="([^"]+)"', self.html)
+        self.assertGreaterEqual(len(imgs), 12)
+        self.assertTrue(all(url.endswith("?size=small") for url in imgs))
+        self.assertIn('<ul class="lp-hero-mosaic">', self.html)
+        self.assertIn('<ul class="lp-gallery">', self.html)
+
+    def test_featured_place_names_are_searchable(self):
+        """本文に出した「主な設置場所」の名前は、同じ県の絞り込み対象（li）にも入っている。"""
+        for block in re.findall(r'<section class="lp-place-pref" .*?</section>', self.html, re.S):
+            featured = re.search(r"<span>主な設置場所</span>(.*?)</p>", block).group(1)
+            items = "".join(re.findall(r'<ul class="lp-location-list">(.*?)</ul>', block, re.S))
+            for label in featured.split("、"):
+                place = label.split("（")[0]
+                with self.subTest(place=place):
+                    self.assertIn(place, items)
 
     def test_links_to_every_generated_work_guide(self):
         for summary in build_work_summaries(self.characters, self.gundam):

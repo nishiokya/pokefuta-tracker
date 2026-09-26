@@ -12,6 +12,10 @@ GUNDAM_WORK_QUERY = "gundam"  # gmanhole_map.html の ?work= に渡す値（chk-
 GUNDAM_MARKER_COLOR = "#0044aa"
 GUNDAM_MARKER_LABEL = "G"
 
+# 全国一覧と作品ガイドが共有する character-work.css のキャッシュバスター。
+# 片方だけ上げると、もう片方のページで古いCSSがキャッシュに残るので、ここ1か所で管理する。
+CHARACTER_CSS_VERSION = "20260926b"
+
 
 @dataclass(frozen=True)
 class WorkPage:

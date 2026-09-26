@@ -17,21 +17,32 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import random
 from collections import Counter, defaultdict
+from datetime import date, datetime
 from pathlib import Path
-from urllib.parse import quote, urlparse
+from urllib.parse import parse_qs, quote, urlparse
 from html import escape
 
 try:
+    from apps.scraper.photo_caption import JST, format_photo_date
+except ModuleNotFoundError as exc:
+    if exc.name != "apps":
+        raise
+    from photo_caption import JST, format_photo_date
+
+try:
     from apps.scraper.character_manhole_works import (
-        GUNDAM_MARKER_COLOR, GUNDAM_MARKER_LABEL, GUNDAM_WORK, GUNDAM_WORK_NAME, GUNDAM_WORK_QUERY, page_for_work,
+        CHARACTER_CSS_VERSION, GUNDAM_MARKER_COLOR, GUNDAM_MARKER_LABEL, GUNDAM_WORK, GUNDAM_WORK_NAME,
+        GUNDAM_WORK_QUERY, page_for_work,
     )
     from apps.scraper.prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
     from character_manhole_works import (
-        GUNDAM_MARKER_COLOR, GUNDAM_MARKER_LABEL, GUNDAM_WORK, GUNDAM_WORK_NAME, GUNDAM_WORK_QUERY, page_for_work,
+        CHARACTER_CSS_VERSION, GUNDAM_MARKER_COLOR, GUNDAM_MARKER_LABEL, GUNDAM_WORK, GUNDAM_WORK_NAME,
+        GUNDAM_WORK_QUERY, page_for_work,
     )
     from prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS
 
@@ -41,6 +52,7 @@ logger = logging.getLogger(__name__)
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_CHARACTER_MANHOLES = ROOT / "docs" / "character_manholes.ndjson"
 DEFAULT_GUNDAM = ROOT / "docs" / "gmanhole.ndjson"
+DEFAULT_DESIGN_MANHOLES = ROOT / "docs" / "design_manholes.ndjson"
 DEFAULT_OUTPUT = ROOT / "dist" / "character_manholes.html"
 
 BASE_URL = "https://data.pokefuta.com/"
@@ -49,7 +61,15 @@ MAP_URL = f"{BASE_URL}gmanhole_map.html"          # JSON-LD / OGP など絶対UR
 MAP_HREF = "./gmanhole_map.html"                  # ページ内ナビは他ページ同様に相対パス
 DESIGN_MANHOLE_HREF = "./design_manhole.html"      # 同上（ローカル配信でも同一オリジンに留まる）
 OG_IMAGE = f"{BASE_URL}assets/ogp/pokefuta_map_ogp.png"
-STYLESHEET_HREF = "./assets/character-work.css?v=20260926a"
+STYLESHEET_HREF = f"./assets/character-work.css?v={CHARACTER_CSS_VERSION}"
+DESIGN_MANHOLES_LIST_URL = "https://pokefuta.com/design-manholes?from=data"
+
+# 写真。docs/design_manholes.ndjson（ポケふた写真館の投稿）の size=small だけを使う。
+CHARACTER_LINKAGE_PREFIXES = ("gundam:", "character:")
+HERO_PHOTO_LIMIT = 8
+GALLERY_PHOTO_LIMIT = 12
+PHOTO_BOX = 300  # size=small は 300×400。枠は正方形で予約する
+UNLINKED_PHOTO_LABEL = "投稿されたデザインマンホール"
 
 # 明示的に撤去・未設置と分かっているものだけ除外する。installation_status が
 # None（=未記録）のレコードは許容する（プラン参照: キャラクターマンホール115件中100件はNone）。
@@ -244,6 +264,13 @@ def _lid_html(color: str, label: str, extra_class: str = "") -> str:
     )
 
 
+def _summary_key(summary: dict) -> str:
+    """作品サマリーを _work_meta_for と同じキー（作品ページの slug・ガンダム・作品名）に揃える。"""
+    if summary["query"] == GUNDAM_WORK_QUERY:
+        return GUNDAM_WORK_QUERY
+    return summary["path"].split("/")[1] if summary.get("path") else summary["query"]
+
+
 def _work_href(summary_path: str, query: str) -> str:
     return f"./{summary_path}" if summary_path else f"{MAP_HREF}?work={quote(query)}"
 
@@ -281,11 +308,160 @@ def _location_item_html(record: dict, meta: dict, prefecture: str) -> str:
         f' · <a href="{escape(source)}" target="_blank" rel="noopener noreferrer">出典・設置案内</a>'
         if safe_source else ""
     )
+    # 本文（主な設置場所・1行の一覧）はランドマーク名とキャラ名で出すので、
+    # 絞り込み（li のテキストを検索）で見つかるよう、ここにも必ず載せる
+    landmark = str(record.get("landmark") or "").strip()
+    character = str(record.get("character") or "").strip()
+    work_line = work + (f"・{character}" if character and character not in name and character != work else "")
+    landmark_html = (f'<p>設置場所：{escape(landmark)}</p>'
+                     if landmark and landmark not in name and landmark not in address else "")
     return (
         f'<li style="--c:{escape(meta["color"])}"><strong>{escape(name)}</strong>'
-        f'<p>{escape(work)} ／ {escape(prefecture)}{escape(city)}</p>'
+        f'<p>{escape(work_line)} ／ {escape(prefecture)}{escape(city)}</p>{landmark_html}'
         f'<p>{escape(address)}{source_html}</p></li>'
     )
+
+
+def _is_small_photo_url(url: str) -> bool:
+    """?size=small のみ許可する。
+
+    size=medium/size=large は API 側で実装がなく、307 で ~2MB の原寸 JPEG に
+    リダイレクトされる（size 未指定も同様に原寸へ落ちる可能性がある）。
+    写真は一覧に何枚も並べるので、size=small と確認できないものは安全側で除外する。
+    """
+    try:
+        query = parse_qs(urlparse(url).query)
+    except ValueError:
+        return False
+    return query.get("size") == ["small"]
+
+
+def _linked_ref(record: dict) -> str:
+    """canonical_ref → nearby_refs の順に、gundam:/character: の参照を1つ返す（無ければ空）。"""
+    refs = [str(record.get("canonical_ref") or "")]
+    for entry in record.get("nearby_refs") or []:
+        if isinstance(entry, dict):
+            refs.append(str(entry.get("ref") or ""))
+    return next((ref for ref in refs if ref.startswith(CHARACTER_LINKAGE_PREFIXES)), "")
+
+
+def _with_from_data(url: str) -> str:
+    """pokefuta.com への導線には from=data だけを付ける（AGENTS.md の計測ルール）。"""
+    parsed = urlparse(url)
+    if parsed.netloc != "pokefuta.com" or "from=" in parsed.query:
+        return url
+    return url + ("&" if parsed.query else "?") + "from=data"
+
+
+def build_photos(path: Path | None, character_records: list[dict], gundam_records: list[dict]) -> list[dict]:
+    """design_manholes.ndjson の写真を、キャラクターマンホールとの対応つきで返す。
+
+    写真はポケふた写真館への投稿（サイト運営者・利用者が撮った実物）だけを使い、他サイトの画像は使わない。
+    gundam:/character: 参照が掲載中のマンホールを指すものだけ「キャラクターマンホールの写真」として
+    作品名・設置場所を出す。それ以外は「投稿されたデザインマンホール」と明記し、誤認させない。
+    """
+    if path is None:
+        return []
+    targets = {f"character:{r.get('id')}": (r, False) for r in character_records}
+    targets.update({f"gundam:{r.get('id')}": (r, True) for r in gundam_records})
+    photos = []
+    for record in load_ndjson(path):
+        url = str(record.get("photo_url") or "")
+        if record.get("status") != "active" or not _is_small_photo_url(url):
+            continue
+        title = str(record.get("title") or "デザインマンホール").strip()
+        photo = {
+            "id": str(record.get("id") or url),
+            "photo_url": url,
+            "created_at": str(record.get("created_at") or ""),
+            "date": format_photo_date(record.get("created_at")),
+        }
+        target = targets.get(_linked_ref(record))
+        if target:
+            manhole, is_gundam = target
+            meta = _work_meta_for(manhole, is_gundam)
+            place = str(manhole.get("landmark") or manhole.get("title") or title).strip()
+            href = meta["href"]
+            if href.startswith("./characters/"):
+                href += "#spot-" + quote(str(manhole.get("id")), safe="")
+            label = _short_work_name(meta["name"])
+            prefecture = str(manhole.get("prefecture") or "")
+            city = str(manhole.get("city") or "")
+            # 写真の上に重ねるバッジは狭いので、ガンダムは短い呼び名にする
+            badge = "ガンダム" if meta["key"] == GUNDAM_WORK_QUERY else label
+            photo.update(linked=True, key=meta["key"], label=label, badge=badge, place=place, href=href,
+                         prefecture=prefecture, city=city,
+                         alt=f"{label}のマンホール {place}（{prefecture}{city}）")
+        else:
+            source = str(record.get("source_url") or "")
+            prefecture = str(record.get("prefecture") or "")
+            city = str(record.get("city") or "").replace("　", "")
+            photo.update(linked=False, key="", label=UNLINKED_PHOTO_LABEL, place=title,
+                         href=_with_from_data(source) if urlparse(source).scheme == "https" else DESIGN_MANHOLE_HREF,
+                         prefecture=prefecture, city=city,
+                         alt=f"{UNLINKED_PHOTO_LABEL}「{title}」（{prefecture}{city}）")
+        photos.append(photo)
+    return photos
+
+
+def select_photos(photos: list[dict], *, seed_date: date | None = None) -> tuple[list[dict], list[dict]]:
+    """ヒーロー（6〜8枚）とギャラリー（約12枚）に、重複なく振り分ける。
+
+    ヒーローはキャラクターマンホールの写真を先頭に、残りを JST の日付でシードした乱数で
+    日替わりに（毎日のビルドで顔ぶれが変わる）。ギャラリーはヒーローに出なかった写真の新しい順。
+    """
+    rng = random.Random((seed_date or datetime.now(JST).date()).isoformat())
+    linked = [p for p in photos if p["linked"]]
+    others = [p for p in photos if not p["linked"]]
+    rng.shuffle(linked)
+    rng.shuffle(others)
+    hero = (linked + others)[:HERO_PHOTO_LIMIT]
+    shown = {p["id"] for p in hero}
+    rest = sorted((p for p in photos if p["id"] not in shown), key=lambda p: p["created_at"], reverse=True)
+    rest.sort(key=lambda p: not p["linked"])  # 安定ソートで「キャラクターマンホール → 新しい順」
+    return hero, rest[:GALLERY_PHOTO_LIMIT]
+
+
+def _photo_img(photo: dict, *, lazy: bool, size: int = PHOTO_BOX, priority: bool = False) -> str:
+    # 元画像は 300×400 の縦長。枠は正方形で予約し（width/height + CSS の aspect-ratio）、
+    # object-fit: cover で中央を切り抜くので、読み込み前後でレイアウトが動かない。
+    attrs = 'loading="lazy" ' if lazy else ('fetchpriority="high" ' if priority else "")
+    return (f'<img src="{escape(photo["photo_url"])}" alt="{escape(photo["alt"])}" '
+            f'width="{size}" height="{size}" {attrs}decoding="async">')
+
+
+def _hero_mosaic_html(photos: list[dict]) -> str:
+    if not photos:
+        return ""
+    items = "".join(
+        f'<li class="lp-hero-mosaic-item{" is-linked" if p["linked"] else ""}">'
+        f'<a href="{escape(p["href"])}">{_photo_img(p, lazy=False, priority=i == 0)}'
+        + (f'<span class="lp-photo-badge">{escape(p["badge"])}</span>' if p["linked"] else "")
+        + '</a></li>'
+        for i, p in enumerate(photos)
+    )
+    linked = [p for p in photos if p["linked"]]
+    if linked:
+        names = "、".join(dict.fromkeys(f'{p["label"]}（{p["place"]}）' for p in linked))
+        note = f"うち{len(linked)}枚はキャラクターマンホール：{names}。ほかは{UNLINKED_PHOTO_LABEL}です。"
+    else:
+        note = f"キャラクターマンホールと確認できていない{UNLINKED_PHOTO_LABEL}を含みます。"
+    return (f'<figure class="lp-hero-photos"><ul class="lp-hero-mosaic">{items}</ul>'
+            f'<figcaption class="lp-hero-mosaic-caption">写真はポケふた写真館への投稿（{len(photos)}枚）。{escape(note)}</figcaption></figure>')
+
+
+def _gallery_html(photos: list[dict]) -> str:
+    items = "".join(
+        f'<li class="lp-gallery-item{" is-linked" if p["linked"] else ""}"><figure>'
+        f'<a href="{escape(p["href"])}">{_photo_img(p, lazy=True)}</a>'
+        f'<figcaption><span class="lp-gallery-kind">{escape(p["label"])}</span>'
+        f'<strong>{escape(p["place"])}</strong>'
+        f'<span class="lp-gallery-where">{escape(p["prefecture"] + p["city"])}'
+        + (f' · {escape(p["date"])}' if p["date"] else "")
+        + '</span></figcaption></figure></li>'
+        for p in photos
+    )
+    return f'<ul class="lp-gallery">{items}</ul>'
 
 
 def _join_counts(pairs: list[tuple[str, int]], limit: int) -> str:
@@ -299,12 +475,18 @@ def build_faq_items(work_summaries: list[dict], pref_summaries: list[dict]) -> l
     """画面とJSON-LDの両方に出すFAQ。件数はここで一度だけ組み立て、両方に同じ文字列を渡す。"""
     items = [FAQ_ITEMS[0]]
     if pref_summaries:
-        top = pref_summaries[:3]
-        answer = f"掲載データで最も多いのは{top[0]['prefecture']}（{top[0]['count']}枚）です。"
-        if len(top) > 1:
-            answer = answer[:-1] + "で、" + "、".join(
-                f"{entry['prefecture']}（{entry['count']}枚）" for entry in top[1:]
-            ) + "が続きます。"
+        # 同数の県が並ぶときは1県だけを「最多」と言い切らない
+        best = pref_summaries[0]["count"]
+        leaders = [e["prefecture"] for e in pref_summaries if e["count"] == best]
+        if len(leaders) == 1:
+            answer = f"掲載データで最も多いのは{leaders[0]}（{best}枚）"
+        else:
+            answer = f"掲載データで最も多いのは{'と'.join(leaders[:3])}{'など' if len(leaders) > 3 else ''}（各{best}枚）"
+        followers = [e for e in pref_summaries if e["count"] < best][:2]
+        if followers and len(leaders) < 3:
+            answer += "で、" + "、".join(f"{e['prefecture']}（{e['count']}枚）" for e in followers) + "が続きます。"
+        else:
+            answer += "です。"
         answer += "都道府県別の一覧から、それぞれの県で見られる作品と設置場所を確認できます。"
         items.append(("キャラクターマンホールが多い都道府県はどこですか？", answer))
     gundam = next((s for s in work_summaries if s["query"] == GUNDAM_WORK_QUERY), None)
@@ -318,7 +500,7 @@ def build_faq_items(work_summaries: list[dict], pref_summaries: list[dict]) -> l
     return items + FAQ_ITEMS[1:]
 
 
-def _work_card_html(summary: dict) -> str:
+def _work_card_html(summary: dict, photo: dict | None = None) -> str:
     href = _work_href(summary.get("path", ""), summary["query"])
     # キャラ名自体に「・」を含むものがある（例: まる子・友蔵）ので区切りは読点にする
     characters = summary.get("characters") or []
@@ -329,11 +511,13 @@ def _work_card_html(summary: dict) -> str:
     go_text = "設置場所ガイドへ →" if summary.get("path") else "地図で見る →"
     return (
         f'<li><a class="lp-work-card" href="{href}" style="--c:{escape(summary["color"])}">'
-        + _lid_html(summary["color"], summary["label"])
+        + (f'<span class="lp-work-thumb">{_photo_img(photo, lazy=True, size=96)}</span>' if photo
+           else _lid_html(summary["color"], summary["label"]))
         + f'<strong>{escape(summary["work"])}</strong>'
         f'<span class="lp-work-count"><b class="cm-num">{summary["count"]}</b>枚</span>'
         + (f'<small class="lp-work-chars"><span>主なキャラクター</span>{escape(character_text)}</small>' if character_text else '')
         + (f'<small class="lp-work-prefs"><span>主な都道府県</span>{escape(pref_text)}</small>' if pref_text else '')
+        + (f'<small class="lp-work-photo"><span>写真</span>{escape(photo["place"])}（{escape(photo["prefecture"] + photo["city"])}）</small>' if photo else '')
         + f'<span class="lp-work-go">{go_text}</span></a></li>'
     )
 
@@ -459,7 +643,13 @@ def _places_html(groups: list[dict]) -> str:
     return html
 
 
-def generate_html(character_records: list[dict], gundam_records: list[dict]) -> str:
+def generate_html(
+    character_records: list[dict],
+    gundam_records: list[dict],
+    design_manhole_path: Path | None = None,
+    *,
+    seed_date: date | None = None,
+) -> str:
     work_summaries = build_work_summaries(character_records, gundam_records)
     pref_summaries = build_prefecture_summaries(character_records, gundam_records)
     groups = build_prefecture_groups(character_records, gundam_records)
@@ -485,7 +675,15 @@ def generate_html(character_records: list[dict], gundam_records: list[dict]) -> 
         (s["characters"][0] for s in work_summaries if s.get("characters")), "キャラクター名"
     )
 
-    work_items_html = "\n".join(_work_card_html(summary) for summary in work_summaries)
+    photos = build_photos(design_manhole_path, character_records, gundam_records)
+    hero_photos, gallery_photos = select_photos(photos, seed_date=seed_date)
+    work_photos: dict[str, dict] = {}
+    for photo in photos:
+        if photo["linked"]:
+            work_photos.setdefault(photo["key"], photo)
+    work_items_html = "\n".join(
+        _work_card_html(summary, work_photos.get(_summary_key(summary))) for summary in work_summaries
+    )
     prefecture_list_html = _prefecture_list_html(groups)
     places_html = _places_html(groups)
     faq_html = "".join(
@@ -617,6 +815,7 @@ def generate_html(character_records: list[dict], gundam_records: list[dict]) -> 
         </ul>
         <p class="cm-hero-note">掲載データ：{total_count}枚・{work_count}作品・{pref_count}都道府県。全国すべてを網羅するものではありません。</p>
       </div>
+      {_hero_mosaic_html(hero_photos)}
       <nav class="lp-hub" aria-label="探し方">
         <a class="lp-hub-item" href="#works"><b>作品から探す</b><span>{work_count}作品</span></a>
         <a class="lp-hub-item" href="#prefectures"><b>都道府県から探す</b><span>{pref_count}都道府県</span></a>
@@ -673,6 +872,25 @@ def generate_html(character_records: list[dict], gundam_records: list[dict]) -> 
 {places_html}
     </section>
 
+    <section class="cm-section" id="photos" aria-labelledby="lp-photos-heading">
+      <div class="cm-section-head">
+        <h2 id="lp-photos-heading">投稿されたマンホール写真</h2>
+        <a href="{DESIGN_MANHOLES_LIST_URL}" target="_blank" rel="noopener noreferrer">すべての投稿を見る →</a>
+      </div>
+      <p class="cm-lead">ポケふた写真館に届いた、実物のマンホールの写真です。キャラクターマンホールと確認できた写真には作品名と設置場所を、確認できていないものには「{UNLINKED_PHOTO_LABEL}」と表示しています。</p>
+{_gallery_html(gallery_photos) if gallery_photos else ""}
+      <div class="lp-promo lp-promo--photos">
+        <div>
+          <h3>その1枚、まだカメラロールにありますか？</h3>
+          <p>旅先で撮ったマンホールの写真を、場所と一緒に残せます。キャラクターものでなくても構いません。位置情報（GPS）付きの写真なら、設置場所は自動で入ります。</p>
+        </div>
+        <div class="lp-promo-actions">
+          <a class="cm-btn cm-btn--dark" href="{DESIGN_MANHOLE_HREF}"
+             onclick="trackEvent('click_design_manhole_lp',{{surface:'character_cta',from:'character_manholes_lp'}})">写真を投稿する</a>
+        </div>
+      </div>
+    </section>
+
     <!-- キャラクターマンホールとは（検索語のためh2は変更しない） -->
     <section class="cm-section" aria-labelledby="lp-about-heading">
       <div class="cm-section-head">
@@ -699,10 +917,6 @@ def generate_html(character_records: list[dict], gundam_records: list[dict]) -> 
         {faq_html}
       </div>
     </section>
-
-    <p class="lp-post-cta" id="lp-post">ポケふた以外のマンホールの写真も集めています。
-      <a href="{DESIGN_MANHOLE_HREF}"
-         onclick="trackEvent('click_design_manhole_lp',{{surface:'character_cta',from:'character_manholes_lp'}})">デザインマンホールの写真を投稿する →</a></p>
 
     <footer class="cm-footer" role="contentinfo">
       <a href="./">ポケふたマップ</a>/<a href="{MAP_HREF}">キャラクターマンホールマップ</a>/<a href="{DESIGN_MANHOLE_HREF}">デザインマンホール投稿</a>/<a href="./character_manholes.ndjson" target="_blank" rel="noopener">キャラNDJSON</a>/<a href="./gmanhole.ndjson" target="_blank" rel="noopener">ガンダムNDJSON</a>
@@ -752,6 +966,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--character-manholes", default=str(DEFAULT_CHARACTER_MANHOLES))
     parser.add_argument("--gundam", default=str(DEFAULT_GUNDAM))
+    parser.add_argument("--design-manholes", default=str(DEFAULT_DESIGN_MANHOLES))
     parser.add_argument("--output", default=str(DEFAULT_OUTPUT))
     args = parser.parse_args()
 
@@ -761,7 +976,7 @@ def main() -> int:
         logger.error("No active character/gundam manholes loaded — refusing to write an empty page")
         return 1
 
-    html = generate_html(character_records, gundam_records)
+    html = generate_html(character_records, gundam_records, Path(args.design_manholes))
 
     output_path = Path(args.output)
     output_path.parent.mkdir(parents=True, exist_ok=True)

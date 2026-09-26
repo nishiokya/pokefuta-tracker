@@ -14,7 +14,9 @@ from pathlib import Path
 from urllib.parse import quote, urlencode, urlparse
 
 try:
-    from apps.scraper.character_manhole_works import WORK_PAGES, WorkPage, available_pages, gundam_work_records
+    from apps.scraper.character_manhole_works import (
+        CHARACTER_CSS_VERSION, WORK_PAGES, WorkPage, available_pages, gundam_work_records,
+    )
     from apps.scraper.generate_character_manhole_page import (
         BASE_URL, ROOT, _is_active, load_ndjson,
     )
@@ -23,7 +25,9 @@ try:
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
-    from character_manhole_works import WORK_PAGES, WorkPage, available_pages, gundam_work_records
+    from character_manhole_works import (
+        CHARACTER_CSS_VERSION, WORK_PAGES, WorkPage, available_pages, gundam_work_records,
+    )
     from generate_character_manhole_page import (
         BASE_URL, ROOT, _is_active, load_ndjson,
     )
@@ -270,7 +274,7 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
   <meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="{OG_IMAGE}">
   <link rel="icon" href="{ASSET_BASE}assets/pokefuta_icon_32.png">
   <link rel="stylesheet" href="{ASSET_BASE}assets/top-page.css?v=20260707a">
-  <link rel="stylesheet" href="{ASSET_BASE}assets/character-work.css?v=20260925a">
+  <link rel="stylesheet" href="{ASSET_BASE}assets/character-work.css?v={CHARACTER_CSS_VERSION}">
   <script type="application/ld+json">{json_script(schema)}</script>
   <script src="{ASSET_BASE}assets/analytics.js?v=20260805a"></script>
   <script>window.PokefutaAnalytics.init({json_script(analytics)});</script>

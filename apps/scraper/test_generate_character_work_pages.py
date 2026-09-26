@@ -8,7 +8,7 @@ from datetime import datetime
 from pathlib import Path
 from unittest.mock import patch
 
-from apps.scraper.character_manhole_works import WORK_PAGES, gundam_work_records, page_for_work
+from apps.scraper.character_manhole_works import CHARACTER_CSS_VERSION, WORK_PAGES, gundam_work_records, page_for_work
 from apps.scraper.generate_character_work_pages import generate_html, generate_index_html, load_events, write_pages
 from apps.scraper.generate_character_manhole_page import _is_active, load_ndjson
 from apps.scraper.photo_caption import JST
@@ -202,6 +202,11 @@ class GenerateAllPagesTest(unittest.TestCase):
         schema = json.loads(re.search(r'<script type="application/ld\+json">(.*?)</script>', html, re.S).group(1))
         crumbs = next(n for n in schema["@graph"] if n["@type"] == "BreadcrumbList")["itemListElement"]
         self.assertEqual(["ポケふた図鑑", "キャラクターマンホール全国一覧", "アイドルマスター"], [c["name"] for c in crumbs])
+
+    def test_work_guides_load_the_same_stylesheet_version_as_the_national_list(self) -> None:
+        """character-work.css は全国一覧と共有。バージョンがずれると作品ガイドに古いCSSが残る。"""
+        html = generate_html(IDOLMASTER, RECORDS, EVENT, now=datetime(2026, 9, 20, tzinfo=JST))
+        self.assertIn(f'assets/character-work.css?v={CHARACTER_CSS_VERSION}"', html)
 
     def test_work_guide_hero_uses_the_work_marker_color(self) -> None:
         """全国一覧の作品カードと同じ色・同じ字の蓋をヒーローに出す。"""
