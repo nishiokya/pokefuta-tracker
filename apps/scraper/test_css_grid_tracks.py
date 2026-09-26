@@ -33,6 +33,7 @@ SCANNED = (
     "apps/scraper/generate_pokemon_pages.py",
     "apps/scraper/generate_pokemon_index_page.py",
     "apps/scraper/generate_character_manhole_page.py",
+    "apps/web/assets/character-work.css",
     "apps/web/assets/top-page.css",
     "apps/web/assets/site-header.css",
     "apps/web/assets/pokefuta-map.css",

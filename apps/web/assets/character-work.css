@@ -84,18 +84,32 @@
 .cm-wrap .cm-btn--soft { background: #ece6f5; color: var(--cm-accent-dark); }
 .cm-wrap .cm-btn--soft:hover { background: #e0d7ef; }
 
-/* 実物写真を丸く抜いて「蓋の標本」として並べる */
-.lp-hero-mosaic {
-  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px;
-  width: 100%; max-width: 360px; margin: 0 0 0 auto; padding: 0; list-style: none;
+/* 全国一覧のヒーロー: 左に見出しと件数、右に4つの探し方（写真は置かない） */
+.cm-hero--lp { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); padding: 40px 44px; }
+.lp-hub { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.cm-wrap .lp-hub-item {
+  display: grid; align-content: start; gap: 4px; min-height: 84px; padding: 14px 16px; border-radius: 16px;
+  background: rgba(255, 255, 255, .07); border: 1px solid rgba(255, 255, 255, .16); color: #fff; text-decoration: none;
 }
-.lp-hero-mosaic-item {
-  aspect-ratio: 1; border-radius: 50%; overflow: hidden; background: var(--cm-ink-soft);
-  box-shadow: 0 0 0 4px #3b3452, 0 0 0 5px rgba(255, 255, 255, .18), 0 10px 22px rgba(0, 0, 0, .35);
+.cm-wrap a.lp-hub-item:hover { background: rgba(255, 255, 255, .13); }
+.lp-hub-item b { font-size: 14.5px; font-weight: 800; }
+.lp-hub-item > span { font-size: 12.5px; color: #cfc5e3; }
+.lp-hub-search { grid-column: 1 / -1; min-height: 0; }
+.lp-hub-search input {
+  width: 100%; min-height: 44px; margin-top: 4px; padding: 8px 14px; border: 0; border-radius: 10px;
+  background: #fff; color: var(--cm-ink); font: inherit; font-size: 15px;
 }
-.lp-hero-mosaic-item:nth-child(3n+2) { transform: translateY(26px); }
-.lp-hero-mosaic-item img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
-.lp-hero-mosaic-caption { margin: 38px 0 0; font-size: 11px; text-align: right; color: #8f86a8; }
+.lp-hub-search input:focus-visible { outline: 3px solid #d4a15e; outline-offset: 2px; }
+.lp-hub-status { min-height: 1.2em; font-size: 12.5px; color: #f6efdc; }
+.cm-hero .lp-hub-status a { color: #f3c98b; }
+.cm-wrap .lp-hub-map { grid-column: 1 / -1; min-height: 0; background: #f6efdc; border-color: #f6efdc; color: var(--cm-ink); }
+.cm-wrap a.lp-hub-map:hover { background: #fff; }
+.lp-hub-map > span { color: var(--cm-accent-dark); font-weight: 700; }
+
+/* 冒頭の説明（3段） */
+.lp-intro { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px 32px; margin: 0 0 8px; padding: 4px 0 28px; }
+.lp-intro strong { display: block; margin-bottom: 6px; font-size: 14px; font-weight: 900; color: var(--cm-ink); }
+.lp-intro p { margin: 0; font-size: 13.5px; color: #4d4a55; }
 
 /* ── セクション ── */
 .cm-section { padding: 44px 0; }
@@ -120,7 +134,7 @@
 .lp-work-count { font-size: 13px; color: var(--cm-muted); }
 .lp-work-count b { margin-right: 2px; font-size: 30px; font-weight: 900; line-height: 1; letter-spacing: -.03em; color: var(--c, var(--cm-ink)); }
 .lp-work-card small { grid-column: 1 / -1; display: block; font-size: 12px; color: var(--cm-muted); }
-.lp-work-card small.lp-work-chars { color: #8a8a93; }
+.lp-work-card small > span { display: inline-block; margin-right: 8px; font-size: 11px; font-weight: 800; color: #7d4320; }
 .lp-work-go { grid-column: 1 / -1; margin-top: 6px; font-size: 13px; font-weight: 800; color: var(--cm-accent); }
 .lp-work-grid > li:first-child { grid-column: span 2; }
 .lp-work-grid > li:first-child .lp-work-card { padding: 28px; }
@@ -128,51 +142,35 @@
 .lp-work-grid > li:first-child strong { font-size: 22px; }
 .lp-work-grid > li:first-child .lp-work-count b { font-size: 44px; }
 
-/* ── 都道府県（地域 → 県 → 設置場所。旧: 県ボタン・早見表・設置場所一覧の3段を1本に統合） ── */
-.lp-regions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 32px; align-items: start; }
-.lp-region h3 { display: flex; align-items: baseline; justify-content: space-between; margin: 0 0 6px; padding-bottom: 8px; border-bottom: 2px solid var(--cm-ink); font-size: 15px; font-weight: 900; color: var(--cm-ink); }
-.lp-region h3 small { font-size: 12px; font-weight: 700; color: var(--cm-muted); }
-.lp-pref { border-bottom: 1px solid var(--cm-line); }
-.lp-pref summary {
-  display: grid; grid-template-columns: 5.6em minmax(0, 1fr) auto 18px; align-items: center; gap: 12px;
-  padding: 12px 2px; cursor: pointer; list-style: none;
-}
-.lp-pref summary::-webkit-details-marker { display: none; }
-.lp-pref summary::after { content: "+"; font-weight: 900; color: var(--cm-accent); text-align: center; }
-.lp-pref[open] summary::after { content: "−"; }
-.lp-pref-name { font-size: 14px; font-weight: 800; }
-.lp-pref-track { display: block; height: 10px; border-radius: 999px; background: #efe8d8; }
-.lp-pref-bar { display: flex; height: 100%; border-radius: 999px; overflow: hidden; }
-.lp-pref-bar i { display: block; height: 100%; background: var(--c); }
-.lp-pref-count { font-size: 13px; font-weight: 800; color: var(--cm-ink); white-space: nowrap; }
-.lp-pref-body { padding: 4px 0 16px; }
-.lp-cross-links { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; }
-.cm-wrap .lp-cross-links a {
-  display: inline-flex; align-items: center; gap: 7px; padding: 4px 12px 4px 4px; border-radius: 999px;
-  background: #fff; border: 1px solid var(--cm-line); color: var(--cm-text); font-size: 12.5px; font-weight: 700; text-decoration: none;
-}
-.cm-wrap .lp-cross-links a:hover { border-color: var(--c); }
-.lp-cross-links .cm-lid { --lid-size: 22px; font-size: 10px; }
-.lp-cross-links span { color: var(--cm-muted); font-weight: 800; }
-.lp-pref-map { font-size: 12.5px; font-weight: 700; }
+/* ── 都道府県（地方 → 県名・枚数・主な作品の文字の一覧） ── */
+.lp-regions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px 32px; align-items: start; }
+.lp-region h3 { margin: 0 0 4px; padding-bottom: 6px; border-bottom: 2px solid var(--cm-ink); font-size: 14px; font-weight: 900; color: var(--cm-ink); }
+.lp-pref-list { margin: 0; padding: 0; list-style: none; }
+.lp-pref-list li { display: grid; grid-template-columns: auto auto minmax(0, 1fr); align-items: baseline; gap: 2px 10px; padding: 8px 0; border-bottom: 1px solid var(--cm-line); }
+.lp-pref-list a { font-size: 14px; font-weight: 800; }
+.lp-pref-list b { font-size: 13px; color: var(--cm-ink); white-space: nowrap; }
+.lp-pref-works { font-size: 12px; color: var(--cm-muted); overflow-wrap: anywhere; }
+
+/* ── 全国の主な設置場所（市町村と代表の設置場所は本文、全件は details） ── */
+.lp-place-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 32px; align-items: start; }
+.lp-place-pref { padding: 14px 0; border-top: 1px solid var(--cm-line); }
+.lp-place-pref h3 { display: flex; align-items: baseline; gap: 10px; margin: 0 0 6px; font-size: 16px; font-weight: 900; color: var(--cm-ink); }
+.lp-place-pref h3 small { font-size: 12px; font-weight: 700; color: var(--cm-muted); }
+.lp-place-line { margin: 0 0 4px; font-size: 13px; overflow-wrap: anywhere; }
+.lp-place-line span { display: inline-block; min-width: 6.5em; margin-right: 6px; font-size: 11px; font-weight: 800; color: #7d4320; }
+.lp-places summary { margin-top: 6px; cursor: pointer; font-size: 13px; font-weight: 800; color: var(--cm-accent); }
+.lp-place-map { margin: 8px 0 0; font-size: 12.5px; font-weight: 700; }
+.lp-place-group { margin: 18px 0 6px; font-size: 12px; font-weight: 800; letter-spacing: .08em; color: var(--cm-muted); }
+.lp-place-grid--mini { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 24px; }
+.lp-place-pref--mini { padding: 10px 0; }
+.lp-place-pref--mini h3 { margin-bottom: 2px; font-size: 14px; }
+.lp-place-pref--mini .lp-place-line { margin: 0; font-size: 12.5px; color: #4d4a55; }
+.lp-place-pref--mini .lp-places summary { margin-top: 2px; font-size: 12px; }
 .lp-location-list { margin: 10px 0 0; padding: 0; list-style: none; }
 .lp-location-list li { position: relative; padding: 10px 0 10px 16px; border-top: 1px dashed var(--cm-line); overflow-wrap: anywhere; }
 .lp-location-list li::before { content: ""; position: absolute; left: 0; top: 17px; width: 8px; height: 8px; border-radius: 50%; background: var(--c, var(--cm-accent)); }
 .lp-location-list strong { font-size: 13.5px; }
 .lp-location-list p { margin: 2px 0 0; font-size: 12px; color: var(--cm-muted); }
-
-/* ── 地図ゲートウェイ（.map-gateway-* は top-page.css の index.html 用スタイルを流用）
-   top-page.css は 960px 以上で index.html の「地図に重ねるパネル」前提に
-   タイトル・サブ・CTA を畳むので、このページの範囲だけ打ち消す。共有ファイルは編集しない。 */
-.character-manhole-lp .map-gateway-card { border-radius: 24px; }
-.character-manhole-lp .map-gateway-title,
-.character-manhole-lp .map-gateway-sub { display: block; }
-.character-manhole-lp .map-gateway-overlay {
-  inset: 0; width: auto; padding: 26px 20px 20px;
-  background: linear-gradient(to top, rgba(31, 27, 44, .92) 38%, rgba(31, 27, 44, 0));
-}
-.character-manhole-lp .map-gateway-cta { display: block; margin-top: 12px; padding: 13px; }
-.character-manhole-lp .map-gateway-badge { left: 14px; right: auto; }
 
 /* ── とは ── */
 .lp-explain-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; margin: 0 0 18px; padding: 0; list-style: none; }
@@ -188,13 +186,8 @@
 .lp-promo p { margin: 0 0 8px; font-size: 13.5px; color: #4d4a55; max-width: 40em; }
 .lp-promo-actions { display: grid; gap: 10px; justify-items: stretch; }
 .lp-promo-actions a { justify-content: center; }
-.lp-photo-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin: 0; padding: 0; list-style: none; }
-.lp-photo-card { overflow: hidden; border-radius: 16px; background: var(--cm-card); border: 1px solid var(--cm-line); }
-.cm-wrap .lp-photo-card-main { display: block; color: inherit; text-decoration: none; }
-.lp-photo-card img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; background: #efe8d8; }
-.lp-photo-card-copy { display: block; padding: 10px 12px 2px; font-size: 13px; font-weight: 800; }
-.lp-photo-card-meta { display: block; padding: 0 12px 12px; font-size: 11px; color: var(--cm-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.lp-photo-card-meta .poster-link { font-weight: 700; }
+.lp-post-cta { margin: 8px 0 24px; font-size: 13px; color: var(--cm-muted); text-align: center; }
+.lp-post-cta a { font-weight: 700; }
 
 /* ── FAQ（両ページ共通） ── */
 .cm-faq { display: grid; gap: 0; border-top: 2px solid var(--cm-ink); }
@@ -251,26 +244,36 @@
 /* ── モバイル ── */
 @media (max-width: 860px) {
   .lp-work-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .lp-regions { grid-template-columns: minmax(0, 1fr); }
-  .lp-photo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cm-hero--lp { grid-template-columns: minmax(0, 1fr); }
+  .lp-intro { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .lp-regions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lp-place-grid { grid-template-columns: minmax(0, 1fr); }
+  .lp-place-grid--mini { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 16px; }
 }
 @media (max-width: 700px) {
   .cm-wrap { padding: 12px 16px 48px; }
   .cm-hero { grid-template-columns: minmax(0, 1fr); gap: 24px; margin-bottom: 28px; padding: 30px 22px 26px; border-radius: 22px; }
   .cm-hero::before { width: 360px; height: 360px; right: -160px; bottom: -160px; }
-  .lp-hero-mosaic { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; max-width: none; margin: 0; }
-  .lp-hero-mosaic-item { box-shadow: 0 0 0 2px #3b3452, 0 4px 10px rgba(0, 0, 0, .3); }
-  .lp-hero-mosaic-item:nth-child(3n+2) { transform: none; }
-  .lp-hero-mosaic-item:nth-child(even) { transform: translateY(10px); }
-  .lp-hero-mosaic-caption { margin-top: 24px; text-align: left; }
-  .cm-section { padding: 34px 0; }
+  .cm-section { padding: 28px 0; }
   .lp-work-grid { grid-template-columns: minmax(0, 1fr); gap: 12px; }
   .lp-work-grid > li:first-child { grid-column: auto; }
-  .lp-work-grid > li:first-child .lp-work-card { padding: 22px; }
-  .lp-work-grid > li:first-child .cm-lid { --lid-size: 88px; }
-  .lp-work-card { padding: 18px; }
-  .lp-work-card .cm-lid { --lid-size: 64px; }
-  .lp-pref summary { grid-template-columns: 4.8em minmax(0, 1fr) auto 14px; gap: 10px; }
+  .cm-stats { gap: 6px 20px; }
+  .cm-stats strong { font-size: 30px; }
+  .lp-work-grid > li:first-child .lp-work-card { padding: 14px 16px; }
+  .lp-work-grid > li:first-child .cm-lid, .lp-work-card .cm-lid { --lid-size: 46px; }
+  .lp-work-grid > li:first-child strong, .lp-work-card strong { font-size: 15.5px; }
+  .lp-work-grid > li:first-child .lp-work-count b, .lp-work-count b { font-size: 24px; }
+  .lp-work-card { gap: 2px 14px; padding: 14px 16px; }
+  .lp-work-go { display: none; }  /* カード全体がリンクなので、狭い画面では行を省く */
+  .cm-hero--lp { padding: 26px 18px 18px; }
+  .lp-hub { gap: 8px; }
+  .cm-wrap .lp-hub-item { min-height: 0; padding: 12px 14px; }
+  .lp-regions { gap: 18px 16px; }
+  .lp-pref-list li { grid-template-columns: auto minmax(0, 1fr); padding: 6px 0; gap: 0 8px; }
+  .lp-pref-works { grid-column: 1 / -1; font-size: 11.5px; line-height: 1.5; }
+  .lp-place-pref { padding: 12px 0; }
+  .lp-place-line span { min-width: 0; }
+  .lp-place-pref--mini .lp-place-line { font-size: 12px; line-height: 1.6; overflow-wrap: anywhere; }
   .lp-explain-grid { grid-template-columns: minmax(0, 1fr); gap: 18px; }
   .lp-promo { grid-template-columns: minmax(0, 1fr); padding: 26px 22px; }
   .cw-emblem { grid-template-columns: auto minmax(0, 1fr); justify-items: start; text-align: left; }
