@@ -541,6 +541,37 @@ class PhotoTest(unittest.TestCase):
             with self.subTest(url=url):
                 self.assertTrue(url.endswith("?size=small"), url)
 
+    def test_rejects_photo_urls_outside_the_pokefuta_photo_api(self):
+        """?size=small が付いていても、写真館の縮小画像APIでなければ埋め込まない。"""
+        bad_urls = [
+            "https://evil.example/api/design-manholes/x/photo?size=small",          # 外部ドメイン
+            "https://pokefuta.com.evil.example/api/design-manholes/x/photo?size=small",  # 似せたドメイン
+            "https://cdn.pokefuta.com/api/design-manholes/x/photo?size=small",      # サブドメイン
+            "http://pokefuta.com/api/design-manholes/x/photo?size=small",           # http
+            "https://pokefuta.com/api/other/x/photo?size=small",                    # 別パス
+            "https://pokefuta.com/api/design-manholes/x/photo/../../evil?size=small",
+            "https://pokefuta.com/api/design-manholes/x/photo?size=small&u=https://evil.example",
+            "//evil.example/api/design-manholes/x/photo?size=small",
+        ]
+        records = [{"id": f"bad-{i}", "title": "外部", "status": "active", "photo_url": url,
+                    "canonical_ref": "gundam:1"} for i, url in enumerate(bad_urls)]
+        path = _write_ndjson(Path(self.tmpdir.name), "bad.ndjson", records)
+        self.assertEqual([], build_photos(path, self.character_records, self.gundam_records))
+        html = generate_html(self.character_records, self.gundam_records, path)
+        self.assertNotIn("evil", html)
+        self.assertNotIn("<img", html)
+
+    def test_photo_links_only_go_to_pokefuta_design_manhole_pages(self):
+        records = [dict(PHOTO_RECORDS[2], id="ext-link", source_url="https://evil.example/design-manholes/x")]
+        path = _write_ndjson(Path(self.tmpdir.name), "ext.ndjson", records)
+        photo = build_photos(path, self.character_records, self.gundam_records)[0]
+        self.assertEqual("./design_manhole.html", photo["href"])
+
+    def test_all_embedded_images_come_from_the_pokefuta_photo_api(self):
+        for url in re.findall(r'<img src="([^"]+)"', self.html):
+            with self.subTest(url=url):
+                self.assertRegex(url, r"^https://pokefuta\.com/api/design-manholes/[A-Za-z0-9-]+/photo\?size=small$")
+
     def test_linked_photos_carry_work_and_place_and_link_to_the_guide_spot(self):
         by_id = {p["id"]: p for p in self.photos}
         gundam = by_id["p-gundam"]

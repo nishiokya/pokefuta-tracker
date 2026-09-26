@@ -2,14 +2,18 @@
 """Generate /character_manholes.html — the national directory of character manholes.
 
 `gmanhole_map.html` is a full-screen Leaflet map with no crawlable body text. This
-page is the text-first counterpart: it bakes the work / prefecture / city / place
-breakdown (from docs/character_manholes.ndjson + docs/gmanhole.ndjson) into static
-HTML so that searches such as "<作品名> マンホール", "<都道府県> キャラクターマンホール"
-or "<キャラクター名> マンホール" land on readable place names, not on photos or a map.
+page bakes the work / prefecture / city / place breakdown (from
+docs/character_manholes.ndjson + docs/gmanhole.ndjson) into static HTML so that
+searches such as "<作品名> マンホール", "<都道府県> キャラクターマンホール" or
+"<キャラクター名> マンホール" land on readable place names.
 
-No decorative photos and no map tiles are loaded on first view: the map is one
-link away. Counts are always aggregated from the datasets at generation time —
-never hardcoded in the HTML — and the same values feed the body text and JSON-LD.
+Real manhole photos posted to ポケふた写真館 (docs/design_manholes.ndjson) are shown
+alongside that text: a hero mosaic (loaded on first view) and a lazy-loaded gallery.
+Only pokefuta.com `?size=small` photo URLs are embedded, and a photo is captioned as a
+character manhole only when it references a listed one. No map library or tiles are
+loaded; the map is one link away. Counts are always aggregated from the datasets at
+generation time — never hardcoded in the HTML — and the same values feed the body
+text and JSON-LD.
 """
 
 from __future__ import annotations
@@ -18,6 +22,7 @@ import argparse
 import json
 import logging
 import random
+import re
 from collections import Counter, defaultdict
 from datetime import date, datetime
 from pathlib import Path
@@ -70,6 +75,9 @@ HERO_PHOTO_LIMIT = 8
 GALLERY_PHOTO_LIMIT = 12
 PHOTO_BOX = 300  # size=small は 300×400。枠は正方形で予約する
 UNLINKED_PHOTO_LABEL = "投稿されたデザインマンホール"
+PHOTO_HOST = "pokefuta.com"
+PHOTO_PATH_RE = re.compile(r"/api/design-manholes/[A-Za-z0-9-]+/photo")
+DESIGN_PAGE_PATH_RE = re.compile(r"/design-manholes/[A-Za-z0-9-]+")
 
 # 明示的に撤去・未設置と分かっているものだけ除外する。installation_status が
 # None（=未記録）のレコードは許容する（プラン参照: キャラクターマンホール115件中100件はNone）。
@@ -323,17 +331,34 @@ def _location_item_html(record: dict, meta: dict, prefecture: str) -> str:
 
 
 def _is_small_photo_url(url: str) -> bool:
-    """?size=small のみ許可する。
+    """ポケふた写真館の縮小画像 `https://pokefuta.com/api/design-manholes/<id>/photo?size=small` だけ許可する。
 
-    size=medium/size=large は API 側で実装がなく、307 で ~2MB の原寸 JPEG に
-    リダイレクトされる（size 未指定も同様に原寸へ落ちる可能性がある）。
-    写真は一覧に何枚も並べるので、size=small と確認できないものは安全側で除外する。
+    - ホストとパスまで確かめる。?size=small だけで判定すると、投稿データ経由で
+      外部ドメインの画像（トラッキングピクセル等）を埋め込めてしまう
+    - size=medium/size=large は API 側で実装がなく、307 で ~2MB の原寸 JPEG に
+      リダイレクトされる（size 未指定も同様に原寸へ落ちる可能性がある）
     """
     try:
-        query = parse_qs(urlparse(url).query)
+        parsed = urlparse(url)
+        query = parse_qs(parsed.query)
     except ValueError:
         return False
-    return query.get("size") == ["small"]
+    return (
+        parsed.scheme == "https"
+        and parsed.netloc == PHOTO_HOST
+        and PHOTO_PATH_RE.fullmatch(parsed.path) is not None
+        and query == {"size": ["small"]}
+    )
+
+
+def _is_design_manhole_page(url: str) -> bool:
+    """写真のリンク先に使ってよい、写真館の詳細ページ `https://pokefuta.com/design-manholes/<id>` か。"""
+    try:
+        parsed = urlparse(url)
+    except ValueError:
+        return False
+    return (parsed.scheme == "https" and parsed.netloc == PHOTO_HOST
+            and DESIGN_PAGE_PATH_RE.fullmatch(parsed.path) is not None and not parsed.query)
 
 
 def _linked_ref(record: dict) -> str:
@@ -397,7 +422,7 @@ def build_photos(path: Path | None, character_records: list[dict], gundam_record
             prefecture = str(record.get("prefecture") or "")
             city = str(record.get("city") or "").replace("　", "")
             photo.update(linked=False, key="", label=UNLINKED_PHOTO_LABEL, place=title,
-                         href=_with_from_data(source) if urlparse(source).scheme == "https" else DESIGN_MANHOLE_HREF,
+                         href=_with_from_data(source) if _is_design_manhole_page(source) else DESIGN_MANHOLE_HREF,
                          prefecture=prefecture, city=city,
                          alt=f"{UNLINKED_PHOTO_LABEL}「{title}」（{prefecture}{city}）")
         photos.append(photo)
