@@ -127,7 +127,7 @@ class GeneratedHtmlTest(unittest.TestCase):
         self.assertNotIn("47都道府県", head)
         self.assertIn('property="og:description"', head)
         self.assertIn('name="twitter:description"', head)
-        self.assertIn("全国20枚の<wbr>ポケふたを探す</h1>", html)
+        self.assertIn("全国20枚のポケふたを、<wbr>地図と一覧から探す</h1>", html)
 
     def test_json_ld_describes_site_page_prefecture_list_and_breadcrumb(self) -> None:
         graph = {node["@type"]: node for node in _json_ld(Fixture(self.tmp).html())["@graph"]}
@@ -156,8 +156,48 @@ class GeneratedHtmlTest(unittest.TestCase):
         self.assertIn('fetchpriority="high"', imgs[0])
         prefs = re.findall(r'<span class="home-mosaic__cap"><b>[^<]*</b>(\S+) ', hero)
         self.assertEqual(len(prefs), len(set(prefs)))
-        for label in ("現在地・地図から探す", "都道府県から探す", "ポケモンから探す"):
+        for label in ("地図で探す", "都道府県から探す", "ポケモンから探す"):
             self.assertIn(label, hero)
+        self.assertIn('href="map.html"', hero)
+
+    def test_hero_photos_are_not_fetched_at_desktop_width(self) -> None:
+        """デスクトップは大地図を出すので、モザイクの写真は <picture> の空画像に差し替わる。"""
+        hero = _block(Fixture(self.tmp).html(), "hero")
+        pictures = re.findall(r"<picture>(.*?)</picture>", hero)
+        self.assertEqual(module.HERO_PHOTO_LIMIT, len(pictures))
+        for picture in pictures:
+            self.assertIn('<source media="(min-width: 960px)" srcset="data:image/gif;base64,', picture)
+            self.assertRegex(picture, r'<img src="manhole/image/\d+_latest\.jpeg"')
+
+    def test_desktop_map_has_prefecture_count_pins(self) -> None:
+        records = _records()
+        records[0]["installed"] = False  # 北海道は1枚に減る
+        hero = _block(Fixture(self.tmp, records=records).html(), "hero")
+        self.assertIn('id="home-map-wrap"', hero)
+        self.assertIn('id="home-map"', hero)
+        payload = json.loads(re.search(r'<script type="application/json" id="home-map-data">(.*?)</script>', hero).group(1))
+        pins = {pin["prefecture"]: pin for pin in payload["pins"]}
+        self.assertEqual(10, len(pins))
+        self.assertEqual(1, pins["北海道"]["count"])
+        self.assertEqual(2, pins["東京都"]["count"])
+        self.assertEqual("東京", pins["東京都"]["label"])
+        self.assertEqual("北海道", pins["北海道"]["label"])
+        self.assertEqual((35.7, 139.7), (pins["東京都"]["lat"], pins["東京都"]["lng"]))
+        self.assertIn("地図で見る", pins["東京都"]["title"])
+        cta = re.search(r'<a class="home-map__cta" href="map.html" onclick="([^"]+)">([^<]+)</a>', hero)
+        self.assertIsNotNone(cta)
+        self.assertIn("click_map_gateway", cta.group(1))
+        self.assertIn("surface:'top_map_hero'", cta.group(1))
+        self.assertIn("地図を全画面で開く", cta.group(2))
+        self.assertIn("© OpenStreetMap contributors", hero)
+
+    def test_map_data_cannot_close_the_script_element(self) -> None:
+        payload = module.map_block(
+            Fixture(self.tmp).data(),
+            pins=[{"prefecture": "</script><b>", "label": "x", "title": "x", "count": 1, "lat": 0, "lng": 0}],
+            aria="a", cta="c", cta_href="map.html",
+        )
+        self.assertNotIn("</script><b>", payload)
 
     def test_hero_without_photos_falls_back_to_one_column(self) -> None:
         hero = _block(Fixture(self.tmp, photos=False).html(), "hero")
@@ -326,14 +366,28 @@ class CommittedIndexTest(unittest.TestCase):
                 self.assertIn(f"<!-- home:{name}:start -->", self.html)
                 self.assertIn(f"<!-- home:{name}:end -->", self.html)
 
-    def test_no_map_tiles_or_leaflet_on_first_load(self) -> None:
-        self.assertNotIn("leaflet", self.html.lower())
+    def test_leaflet_is_not_in_the_static_html(self) -> None:
+        """Leaflet 本体と地図タイルは HTML に直接書かない（top-home-map.js が幅を見て読み込む）。"""
+        self.assertNotRegex(self.html, r'<script[^>]+leaflet')
+        self.assertNotRegex(self.html, r'<link[^>]+leaflet')
         self.assertNotIn("tile.openstreetmap.org", self.html)
+        self.assertIn('<script src="./assets/top-home-map.js?v=', self.html)
+
+    def test_hero_text_and_links_are_static_at_every_width(self) -> None:
+        """H1・件数・主要リンクはデスクトップでも静的HTMLにある（地図の中には入れない）。"""
+        hero = _block(self.html, "hero")
+        self.assertRegex(hero, r'<h1 class="home-h1" id="home-h1">全国[\d,]+枚のポケふたを、<wbr>地図と一覧から探す</h1>')
+        self.assertEqual(4, hero.count('<div class="home-stat">'))
+        for href in ('href="map.html"', 'href="#home-pref"', 'href="pokemon/"'):
+            self.assertIn(href, hero)
+        for section in ("home-ways", "home-photos", "home-pref", "home-purpose", "home-events"):
+            self.assertIn(f'id="{section}"', self.html)
 
     def test_single_h1_and_description(self) -> None:
         self.assertEqual(1, self.html.count("<h1"))
         self.assertEqual(1, self.html.count('<meta name="description"'))
         self.assertIn("top-home.css?v=", self.html)
+
 
     def test_regenerating_with_repo_data_keeps_counts_consistent(self) -> None:
         dataset = ROOT / "docs" / "pokefuta.ndjson"
@@ -345,6 +399,43 @@ class CommittedIndexTest(unittest.TestCase):
         self.assertIn(f"全国{installed}都道府県・{data.total}枚", _block(html, "head"))
         self.assertEqual(installed, len(re.findall(r'class="home-pref__name"', html)))
         self.assertEqual(47 - installed, len(re.findall(r'<a href="prefectures/[a-z]+/">', _block(html, "pref"))))
+
+
+class MapScriptTest(unittest.TestCase):
+    """top-home-map.js：スマホ幅では Leaflet もタイルも読み込まない。"""
+
+    def setUp(self) -> None:
+        source = (ROOT / "apps/web/assets/top-home-map.js").read_text(encoding="utf-8")
+        # 先頭の説明コメントは検査対象から外す（「ndjson / top-feed を取りに行かない」と書いてあるため）
+        self.js = re.sub(r"/\*.*?\*/", "", source, count=1, flags=re.DOTALL)
+
+    def test_leaflet_loads_only_after_the_desktop_media_query_matches(self) -> None:
+        self.assertIn("window.matchMedia('(min-width: 960px)')", self.js)
+        on_change = self.js[self.js.index("function onChange()"):]
+        self.assertLess(on_change.index("if (!desktop.matches) return;"), on_change.index("loadLeaflet(init)"))
+        # タイルは init（= Leaflet 読み込み後）の中でだけ追加する
+        self.assertEqual(1, self.js.count("tile.openstreetmap.org"))
+        self.assertLess(self.js.index("function init()"), self.js.index("tile.openstreetmap.org"))
+
+    def test_no_double_init_or_duplicate_listeners(self) -> None:
+        self.assertIn("if (state === 'idle')", self.js)
+        self.assertEqual(1, self.js.count("addEventListener('change', onChange)"))
+        self.assertEqual(1, self.js.count("L.map("))
+
+    def test_uses_embedded_pins_not_runtime_datasets(self) -> None:
+        self.assertIn("home-map-data", self.js)
+        self.assertNotIn("pokefuta.ndjson", self.js)
+        self.assertNotIn("top-feed", self.js)
+        self.assertNotIn("fetch(", self.js)
+
+    def test_pins_lead_to_the_full_screen_map_and_are_tracked(self) -> None:
+        self.assertIn("'map.html?pref=' + encodeURIComponent(pin.prefecture)", self.js)
+        self.assertIn("trackEvent('click_map_pin', { surface: 'top_map_hero'", self.js)
+        self.assertNotRegex(self.js, r"\bsource:")
+
+    def test_leaflet_is_pinned_with_subresource_integrity(self) -> None:
+        self.assertIn("leaflet@1.9.4", self.js)
+        self.assertEqual(2, self.js.count("sha256-"))
 
 
 if __name__ == "__main__":

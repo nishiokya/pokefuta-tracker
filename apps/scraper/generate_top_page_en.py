@@ -238,7 +238,7 @@ def render_hero(data: ja.TopData, en: English) -> str:
         f'<div class="home-stat"><dt>{escape(label)}</dt><dd>{escape(num)}</dd></div>' for num, label in stats
     )
     quick = [
-        ("map", "map.html", "Map & nearby", "home-quick__link--primary"),
+        ("map", "map.html", "Search the map", "home-quick__link--primary home-quick__link--map"),
         ("prefecture", "#home-pref", "By prefecture", ""),
         ("pokemon", "pokemon/", "By Pokémon", ""),
     ]
@@ -258,7 +258,7 @@ def render_hero(data: ja.TopData, en: English) -> str:
         items = "".join(
             f'<li class="home-mosaic__item"><a href="{_photo_href(p)}" '
             f'onclick="{ja._track("click_hero_photo", surface="top_hero_photo", manhole=p.manhole_id, position=i)}">'
-            f"{_img(p, en, eager=True, priority=(i == 0))}"
+            f"{ja.mobile_only(_img(p, en, eager=True, priority=(i == 0)))}"
             f'<span class="home-mosaic__cap"><b>{escape(_names(p, en) or "Poké Lid")}</b>{escape(en.pref(p.prefecture))}</span>'
             "</a></li>"
             for i, p in enumerate(photos)
@@ -273,15 +273,27 @@ def render_hero(data: ja.TopData, en: English) -> str:
     else:
         mosaic = ""
         cls = "home-hero home-hero--no-photos"
+    map_html = ja.map_block(
+        data,
+        pins=ja.map_pins(
+            data,
+            label=en.pref,
+            title=lambda pref, count: f"{en.pref(pref)}: {count} Poké Lids — view on the map",
+        ),
+        aria="Map of Poké Lids by prefecture",
+        cta="🗺 Open the full-screen map",
+        cta_href="map.html",
+    )
     return (
         f'<section class="{cls}" id="home-hero" aria-labelledby="home-h1">'
         '<div class="home-hero__copy">'
         '<p class="home-eyebrow">POKÉMON MANHOLE DIRECTORY</p>'
-        f'<h1 class="home-h1" id="home-h1">Find all {data.total:,} Poké Lids in Japan</h1>'
+        f'<h1 class="home-h1" id="home-h1">Explore all {data.total:,} Poké Lids in Japan by map and list</h1>'
         f'<p class="home-lead">{lead}</p>'
         f'<nav class="home-quick" aria-label="Main ways to search">{quick_html}</nav>'
         f'<dl class="home-stats">{stats_html}</dl>'
         "</div>"
+        f"{map_html}"
         f"{mosaic}"
         "</section>"
     )

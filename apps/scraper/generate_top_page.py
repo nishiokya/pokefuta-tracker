@@ -7,7 +7,8 @@
 ここでは次のブロックを `<!-- home:NAME:start -->` 〜 `<!-- home:NAME:end -->` の間へ描画する。
 
 - head      … description / og / twitter の説明文と JSON-LD（WebSite・CollectionPage・ItemList・BreadcrumbList）
-- hero      … H1・導入文・件数・投稿写真モザイク（6枚）・3つの主導線
+- hero      … H1・導入文・件数・3つの主導線。デスクトップは都道府県ピンつきの大地図（ピンは JSON で埋め込み）、
+              スマホは投稿写真モザイク（6枚。<picture> でデスクトップでは写真を取得しない）
 - ways      … 地図・都道府県・ポケモン・テーマの4つの探し方
 - newrelease… 直近30日の新作（無ければセクションごと出さない）
 - photos    … 新着・注目の写真（地域が偏らないよう地方ごとに順番に選ぶ）
@@ -86,6 +87,22 @@ REGIONS: list[tuple[str, list[str]]] = [
     ("九州・沖縄", PREFECTURE_ORDER[39:47]),
 ]
 REGION_OF = {pref: name for name, prefs in REGIONS for pref in prefs}
+
+# ヒーロー地図の県ピンの位置（旧トップの PREF_COORDS と同じ）
+PREF_COORDS: dict[str, tuple[float, float]] = {
+    "北海道": (43.2, 142.8), "青森県": (40.8, 140.7), "岩手県": (39.7, 141.2), "宮城県": (38.4, 140.8),
+    "秋田県": (39.7, 140.1), "山形県": (38.5, 140.3), "福島県": (37.4, 140.5), "茨城県": (36.3, 140.3),
+    "栃木県": (36.5, 139.9), "群馬県": (36.4, 138.9), "埼玉県": (36.0, 139.4), "千葉県": (35.6, 140.1),
+    "東京都": (35.7, 139.7), "神奈川県": (35.5, 139.5), "新潟県": (37.6, 139.0), "富山県": (36.7, 137.2),
+    "石川県": (36.6, 136.6), "福井県": (36.1, 136.2), "山梨県": (35.7, 138.6), "長野県": (36.2, 138.0),
+    "岐阜県": (35.8, 137.0), "静岡県": (34.9, 138.4), "愛知県": (35.1, 137.0), "三重県": (34.7, 136.5),
+    "滋賀県": (35.1, 136.2), "京都府": (35.2, 135.8), "大阪府": (34.7, 135.5), "兵庫県": (34.9, 135.2),
+    "奈良県": (34.4, 135.8), "和歌山県": (33.9, 135.2), "鳥取県": (35.5, 134.3), "島根県": (35.1, 133.1),
+    "岡山県": (34.7, 133.9), "広島県": (34.5, 132.5), "山口県": (34.2, 131.5), "徳島県": (34.0, 134.5),
+    "香川県": (34.3, 134.0), "愛媛県": (33.9, 132.8), "高知県": (33.6, 133.5), "福岡県": (33.6, 130.4),
+    "佐賀県": (33.3, 130.2), "長崎県": (32.8, 129.9), "熊本県": (32.8, 130.7), "大分県": (33.2, 131.6),
+    "宮崎県": (31.9, 131.4), "鹿児島県": (31.6, 130.6), "沖縄県": (26.2, 127.7),
+}
 
 DEFAULT_POKEMON_METADATA = ROOT / "docs" / "pokemon_metadata.json"
 POPULAR_POKEMON_LIMIT = 5
@@ -437,6 +454,50 @@ def render_head(data: TopData, indent: str) -> str:
     return "\n".join(indent + line if line else line for line in lines)
 
 
+def map_pins(data: TopData, label=None, title=None) -> list[dict]:
+    """ヒーロー地図の都道府県ピン。件数は同じ生成時データから出す（ブラウザで ndjson を読まない）。"""
+    counts = data.pref_counts
+    label = label or (lambda pref: pref if pref == "北海道" else pref[:-1])
+    title = title or (lambda pref, count: f"{pref} {count}枚：地図で見る")
+    return [
+        {
+            "prefecture": pref,
+            "label": label(pref),
+            "title": title(pref, counts[pref]),
+            "count": counts[pref],
+            "lat": PREF_COORDS[pref][0],
+            "lng": PREF_COORDS[pref][1],
+        }
+        for pref in data.installed_prefectures
+        if pref in PREF_COORDS
+    ]
+
+
+def map_block(data: TopData, *, pins: list[dict], aria: str, cta: str, cta_href: str) -> str:
+    """デスクトップの大地図。Leaflet はページ側の JS が幅を判定してから読み込む（スマホでは通信しない）。"""
+    payload = json.dumps({"pins": pins}, ensure_ascii=False, separators=(",", ":")).replace("<", "\\u003c")
+    return (
+        '<div class="home-map" id="home-map-wrap">'
+        f'<div class="home-map__canvas" id="home-map" role="region" aria-label="{escape(aria)}"></div>'
+        f'<a class="home-map__cta" href="{cta_href}" '
+        f'onclick="{_track("click_map_gateway", surface="top_map_hero")}">{escape(cta)}</a>'
+        '<span class="home-map__attr">© OpenStreetMap contributors</span>'
+        f'<script type="application/json" id="home-map-data">{payload}</script>'
+        "</div>"
+    )
+
+
+# デスクトップではモザイクを出さないので、<picture> で写真そのものを取りに行かせない
+DESKTOP_BLANK_SOURCE = (
+    '<source media="(min-width: 960px)" '
+    'srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">'
+)
+
+
+def mobile_only(img: str) -> str:
+    return f"<picture>{DESKTOP_BLANK_SOURCE}{img}</picture>"
+
+
 def render_hero(data: TopData) -> str:
     photos = select_hero_photos(data.photos)
     top_pokemon = [e.name for e in data.popular_pokemon[:3]] or [n for n, _ in data.pokemon_counts.most_common(3)]
@@ -452,7 +513,7 @@ def render_hero(data: TopData) -> str:
         f'<div class="home-stat"><dt>{escape(label)}</dt><dd>{escape(num)}</dd></div>' for num, label in stats
     )
     quick = [
-        ("map", "map.html", "現在地・地図から探す", "home-quick__link--primary"),
+        ("map", "map.html", "地図で探す", "home-quick__link--primary home-quick__link--map"),
         ("prefecture", "#home-pref", "都道府県から探す", ""),
         ("pokemon", "pokemon/", "ポケモンから探す", ""),
     ]
@@ -469,11 +530,12 @@ def render_hero(data: TopData) -> str:
         + (f"<b>{escape(names)}</b>など{len(data.pokemon_counts):,}種類のポケモンから、" if names else "")
         + "旅先や近所の一枚を見つけられます。"
     )
+    mosaic = ""
     if photos:
         items = "".join(
             f'<li class="home-mosaic__item"><a href="{p.href}" '
             f'onclick="{_track("click_hero_photo", surface="top_hero_photo", manhole=p.manhole_id, position=i)}">'
-            f"{_img(p, eager=True, priority=(i == 0))}"
+            f"{mobile_only(_img(p, eager=True, priority=(i == 0)))}"
             f'<span class="home-mosaic__cap"><b>{escape(p.title)}</b>{escape(p.prefecture)} {escape(p.place)}</span>'
             "</a></li>"
             for i, p in enumerate(photos)
@@ -484,19 +546,24 @@ def render_hero(data: TopData) -> str:
             f'<figcaption class="home-mosaic__note">みんなが投稿した最新の写真（{data.today.month}月{data.today.day}日更新）</figcaption>'
             "</figure>"
         )
-        cls = "home-hero"
-    else:
-        mosaic = ""
-        cls = "home-hero home-hero--no-photos"
+    cls = "home-hero" if photos else "home-hero home-hero--no-photos"
+    map_html = map_block(
+        data,
+        pins=map_pins(data),
+        aria="都道府県別のポケふた設置数の地図",
+        cta="🗺 地図を全画面で開く",
+        cta_href="map.html",
+    )
     return (
         f'<section class="{cls}" id="home-hero" aria-labelledby="home-h1">'
         '<div class="home-hero__copy">'
         '<p class="home-eyebrow">ポケモンマンホール図鑑</p>'
-        f'<h1 class="home-h1" id="home-h1">全国{data.total:,}枚の<wbr>ポケふたを探す</h1>'
+        f'<h1 class="home-h1" id="home-h1">全国{data.total:,}枚のポケふたを、<wbr>地図と一覧から探す</h1>'
         f'<p class="home-lead">{lead}</p>'
         f'<nav class="home-quick" aria-label="主な探し方">{quick_html}</nav>'
         f'<dl class="home-stats">{stats_html}</dl>'
         "</div>"
+        f"{map_html}"
         f"{mosaic}"
         "</section>"
     )

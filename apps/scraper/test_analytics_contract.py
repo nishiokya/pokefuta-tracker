@@ -176,7 +176,6 @@ class AnalyticsContractTest(unittest.TestCase):
     }
     TEMPLATE_ONLY_EVENTS = {
         "click_hero_featured", "click_hero_small", "view_hero_community",  # 旧ヒーロー（大1＋小2）
-        "click_map_gateway",     # 旧ミニ地図（日本語版は地図タイルの初期読み込みをやめた）
         "click_intro_list_cta", "click_stat_pref_jump",
         "click_pref_show_all",   # 旧・折りたたみ式の47都道府県リスト
         "view_newrelease",       # 日本語版の新作は生成時に静的に出すので表示イベントは送らない

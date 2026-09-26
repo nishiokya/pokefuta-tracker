@@ -56,7 +56,7 @@ class EnglishTopTest(unittest.TestCase):
         head = _block(html, "head")
         self.assertIn("Find all 20 Poké Lids", head)
         self.assertIn("across 10 prefectures in Japan", head)
-        self.assertIn("Find all 20 Poké Lids in Japan</h1>", html)
+        self.assertIn("Explore all 20 Poké Lids in Japan by map and list</h1>", html)
 
     def test_json_ld_points_at_the_english_page(self) -> None:
         ld = json.loads(re.search(r'ld\+json">(.*?)</script>', self.html(), re.DOTALL).group(1))
@@ -101,6 +101,17 @@ class EnglishTopTest(unittest.TestCase):
         self.assertRegex(gallery, r'<time datetime="2026-09-\d\d">Sep \d+</time>')
         self.assertIn("Fan photo of the Poké Lid in", gallery)
 
+    def test_desktop_map_pins_are_labelled_in_english(self) -> None:
+        hero = _block(self.html(), "hero")
+        payload = json.loads(re.search(r'id="home-map-data">(.*?)</script>', hero).group(1))
+        pins = {pin["prefecture"]: pin for pin in payload["pins"]}
+        self.assertEqual(10, len(pins))
+        self.assertEqual("Tokyo", pins["東京都"]["label"])
+        self.assertEqual("Tokyo: 2 Poké Lids — view on the map", pins["東京都"]["title"])
+        self.assertIn('<a class="home-map__cta" href="map.html"', hero)
+        self.assertIn("Open the full-screen map", hero)
+        self.assertEqual(module.ja.HERO_PHOTO_LIMIT, hero.count("<picture>"))
+
     def test_themes_use_english_labels(self) -> None:
         block = _block(self.html(), "themes")
         self.assertIn("World Heritage", block)
@@ -127,6 +138,8 @@ class EnglishTopTest(unittest.TestCase):
         self.assertIn('<html lang="en">', html)
         self.assertIn('<link rel="canonical" href="https://data.pokefuta.com/en/">', html)
         self.assertIn("../assets/top-home.css", html)
+        self.assertIn('<script src="../assets/top-home-map.js?v=', html)
+        self.assertNotRegex(html, r'<script[^>]+leaflet')
 
 
 if __name__ == "__main__":
