@@ -4,19 +4,348 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ポケふたデータベース｜全国のポケモンマンホール一覧・地図</title>
-  <meta name="description" content="全国47都道府県のポケふた（ポケモンマンホール）を地図と一覧から探せます。都道府県別・ポケモン別・テーマ別に検索でき、旅行やポケふた巡りの計画に使えます。">
   <meta name="keywords" content="ポケふた,ポケモンマンホール,マンホール,ポケモン,聖地巡礼,地図,一覧,都道府県">
   <meta name="robots" content="index,follow">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ja_JP">
   <meta property="og:title" content="ポケふたデータベース｜全国のポケモンマンホール一覧・地図">
-  <meta property="og:description" content="全国47都道府県のポケふた（ポケモンマンホール）を地図と一覧から探せます。">
   <meta property="og:url" content="https://data.pokefuta.com/">
   <meta property="og:image" content="https://data.pokefuta.com/assets/ogp/pokefuta_map_ogp.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="ポケふたデータベース｜全国のポケモンマンホール一覧・地図">
-  <meta name="twitter:description" content="全国47都道府県のポケふた（ポケモンマンホール）を地図と一覧から探せます。">
   <meta name="twitter:image" content="https://data.pokefuta.com/assets/ogp/pokefuta_map_ogp.png">
+  <!-- 説明文・JSON-LD は generate_top_page.py が生成時データから作る -->
+  <!-- home:head:start -->
+  <meta name="description" content="全国42都道府県・481枚のポケふた（ポケモンマンホール）を、投稿写真・地図・都道府県・ポケモン・テーマから探せる図鑑です。設置場所や周辺のポケふたも確認できます。">
+  <meta property="og:description" content="全国42都道府県・481枚のポケふた（ポケモンマンホール）を写真と地図から探せます。">
+  <meta name="twitter:description" content="全国42都道府県・481枚のポケふた（ポケモンマンホール）を写真と地図から探せます。">
+  <script type="application/ld+json">
+  {
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "WebSite",
+   "@id": "https://data.pokefuta.com/#website",
+   "url": "https://data.pokefuta.com/",
+   "name": "ポケふた図鑑",
+   "alternateName": "ポケふたデータベース",
+   "inLanguage": "ja"
+  },
+  {
+   "@type": "CollectionPage",
+   "@id": "https://data.pokefuta.com/#webpage",
+   "url": "https://data.pokefuta.com/",
+   "name": "ポケふたデータベース｜全国のポケモンマンホール一覧・地図",
+   "description": "全国42都道府県・481枚のポケふた（ポケモンマンホール）を、投稿写真・地図・都道府県・ポケモン・テーマから探せる図鑑です。設置場所や周辺のポケふたも確認できます。",
+   "inLanguage": "ja",
+   "isPartOf": {
+    "@id": "https://data.pokefuta.com/#website"
+   },
+   "breadcrumb": {
+    "@id": "https://data.pokefuta.com/#breadcrumb"
+   },
+   "mainEntity": {
+    "@id": "https://data.pokefuta.com/#prefectures"
+   },
+   "hasPart": [
+    {
+     "@type": "WebPage",
+     "name": "ポケふたマップ",
+     "url": "https://data.pokefuta.com/map.html"
+    },
+    {
+     "@type": "CollectionPage",
+     "name": "都道府県別ポケふた一覧",
+     "url": "https://data.pokefuta.com/prefectures/"
+    },
+    {
+     "@type": "CollectionPage",
+     "name": "ポケモン別ポケふた一覧",
+     "url": "https://data.pokefuta.com/pokemon/"
+    },
+    {
+     "@type": "CollectionPage",
+     "name": "キャラクターマンホール",
+     "url": "https://data.pokefuta.com/character_manholes.html"
+    }
+   ]
+  },
+  {
+   "@type": "ItemList",
+   "@id": "https://data.pokefuta.com/#prefectures",
+   "name": "ポケふたが設置されている都道府県",
+   "numberOfItems": 42,
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "北海道のポケふた（50枚）",
+     "url": "https://data.pokefuta.com/prefectures/hokkaido/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "青森県のポケふた（2枚）",
+     "url": "https://data.pokefuta.com/prefectures/aomori/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 3,
+     "name": "岩手県のポケふた（36枚）",
+     "url": "https://data.pokefuta.com/prefectures/iwate/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 4,
+     "name": "宮城県のポケふた（37枚）",
+     "url": "https://data.pokefuta.com/prefectures/miyagi/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 5,
+     "name": "秋田県のポケふた（5枚）",
+     "url": "https://data.pokefuta.com/prefectures/akita/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 6,
+     "name": "山形県のポケふた（5枚）",
+     "url": "https://data.pokefuta.com/prefectures/yamagata/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 7,
+     "name": "福島県のポケふた（42枚）",
+     "url": "https://data.pokefuta.com/prefectures/fukushima/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 8,
+     "name": "茨城県のポケふた（5枚）",
+     "url": "https://data.pokefuta.com/prefectures/ibaraki/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 9,
+     "name": "栃木県のポケふた（3枚）",
+     "url": "https://data.pokefuta.com/prefectures/tochigi/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 10,
+     "name": "埼玉県のポケふた（3枚）",
+     "url": "https://data.pokefuta.com/prefectures/saitama/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 11,
+     "name": "千葉県のポケふた（4枚）",
+     "url": "https://data.pokefuta.com/prefectures/chiba/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 12,
+     "name": "東京都のポケふた（13枚）",
+     "url": "https://data.pokefuta.com/prefectures/tokyo/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 13,
+     "name": "神奈川県のポケふた（5枚）",
+     "url": "https://data.pokefuta.com/prefectures/kanagawa/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 14,
+     "name": "新潟県のポケふた（4枚）",
+     "url": "https://data.pokefuta.com/prefectures/niigata/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 15,
+     "name": "富山県のポケふた（3枚）",
+     "url": "https://data.pokefuta.com/prefectures/toyama/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 16,
+     "name": "石川県のポケふた（8枚）",
+     "url": "https://data.pokefuta.com/prefectures/ishikawa/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 17,
+     "name": "福井県のポケふた（17枚）",
+     "url": "https://data.pokefuta.com/prefectures/fukui/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 18,
+     "name": "長野県のポケふた（6枚）",
+     "url": "https://data.pokefuta.com/prefectures/nagano/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 19,
+     "name": "岐阜県のポケふた（5枚）",
+     "url": "https://data.pokefuta.com/prefectures/gifu/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 20,
+     "name": "静岡県のポケふた（5枚）",
+     "url": "https://data.pokefuta.com/prefectures/shizuoka/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 21,
+     "name": "愛知県のポケふた（9枚）",
+     "url": "https://data.pokefuta.com/prefectures/aichi/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 22,
+     "name": "三重県のポケふた（31枚）",
+     "url": "https://data.pokefuta.com/prefectures/mie/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 23,
+     "name": "滋賀県のポケふた（5枚）",
+     "url": "https://data.pokefuta.com/prefectures/shiga/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 24,
+     "name": "京都府のポケふた（8枚）",
+     "url": "https://data.pokefuta.com/prefectures/kyoto/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 25,
+     "name": "大阪府のポケふた（5枚）",
+     "url": "https://data.pokefuta.com/prefectures/osaka/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 26,
+     "name": "兵庫県のポケふた（3枚）",
+     "url": "https://data.pokefuta.com/prefectures/hyogo/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 27,
+     "name": "奈良県のポケふた（5枚）",
+     "url": "https://data.pokefuta.com/prefectures/nara/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 28,
+     "name": "和歌山県のポケふた（5枚）",
+     "url": "https://data.pokefuta.com/prefectures/wakayama/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 29,
+     "name": "鳥取県のポケふた（20枚）",
+     "url": "https://data.pokefuta.com/prefectures/tottori/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 30,
+     "name": "島根県のポケふた（5枚）",
+     "url": "https://data.pokefuta.com/prefectures/shimane/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 31,
+     "name": "岡山県のポケふた（4枚）",
+     "url": "https://data.pokefuta.com/prefectures/okayama/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 32,
+     "name": "山口県のポケふた（4枚）",
+     "url": "https://data.pokefuta.com/prefectures/yamaguchi/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 33,
+     "name": "徳島県のポケふた（3枚）",
+     "url": "https://data.pokefuta.com/prefectures/tokushima/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 34,
+     "name": "香川県のポケふた（18枚）",
+     "url": "https://data.pokefuta.com/prefectures/kagawa/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 35,
+     "name": "愛媛県のポケふた（2枚）",
+     "url": "https://data.pokefuta.com/prefectures/ehime/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 36,
+     "name": "高知県のポケふた（18枚）",
+     "url": "https://data.pokefuta.com/prefectures/kochi/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 37,
+     "name": "福岡県のポケふた（8枚）",
+     "url": "https://data.pokefuta.com/prefectures/fukuoka/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 38,
+     "name": "佐賀県のポケふた（3枚）",
+     "url": "https://data.pokefuta.com/prefectures/saga/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 39,
+     "name": "長崎県のポケふた（15枚）",
+     "url": "https://data.pokefuta.com/prefectures/nagasaki/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 40,
+     "name": "宮崎県のポケふた（26枚）",
+     "url": "https://data.pokefuta.com/prefectures/miyazaki/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 41,
+     "name": "鹿児島県のポケふた（9枚）",
+     "url": "https://data.pokefuta.com/prefectures/kagoshima/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 42,
+     "name": "沖縄県のポケふた（17枚）",
+     "url": "https://data.pokefuta.com/prefectures/okinawa/"
+    }
+   ]
+  },
+  {
+   "@type": "BreadcrumbList",
+   "@id": "https://data.pokefuta.com/#breadcrumb",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "ポケふた図鑑",
+     "item": "https://data.pokefuta.com/"
+    }
+   ]
+  }
+ ]
+}
+  </script>
+  <!-- home:head:end -->
   <link rel="canonical" href="https://data.pokefuta.com/">
   <link rel="alternate" hreflang="ja"      href="https://data.pokefuta.com/">
   <link rel="alternate" hreflang="en"      href="https://data.pokefuta.com/en/">
@@ -25,38 +354,6 @@
   <link rel="alternate" hreflang="ko"      href="https://data.pokefuta.com/ko/">
   <link rel="alternate" hreflang="x-default" href="https://data.pokefuta.com/">
   <script>
-    window.PREFECTURE_CODE_MAP = Object.freeze({
-      '北海道': '01', '青森県': '02', '岩手県': '03', '宮城県': '04', '秋田県': '05',
-      '山形県': '06', '福島県': '07', '茨城県': '08', '栃木県': '09', '群馬県': '10',
-      '埼玉県': '11', '千葉県': '12', '東京都': '13', '神奈川県': '14', '新潟県': '15',
-      '富山県': '16', '石川県': '17', '福井県': '18', '山梨県': '19', '長野県': '20',
-      '岐阜県': '21', '静岡県': '22', '愛知県': '23', '三重県': '24', '滋賀県': '25',
-      '京都府': '26', '大阪府': '27', '兵庫県': '28', '奈良県': '29', '和歌山県': '30',
-      '鳥取県': '31', '島根県': '32', '岡山県': '33', '広島県': '34', '山口県': '35',
-      '徳島県': '36', '香川県': '37', '愛媛県': '38', '高知県': '39', '福岡県': '40',
-      '佐賀県': '41', '長崎県': '42', '熊本県': '43', '大分県': '44', '宮崎県': '45',
-      '鹿児島県': '46', '沖縄県': '47'
-    });
-    window.PREFECTURE_SLUG_MAP = Object.freeze({
-      '北海道': 'hokkaido',  '青森県': 'aomori',    '岩手県': 'iwate',     '宮城県': 'miyagi',
-      '秋田県': 'akita',     '山形県': 'yamagata',  '福島県': 'fukushima', '茨城県': 'ibaraki',
-      '栃木県': 'tochigi',   '群馬県': 'gunma',     '埼玉県': 'saitama',   '千葉県': 'chiba',
-      '東京都': 'tokyo',     '神奈川県': 'kanagawa','新潟県': 'niigata',   '富山県': 'toyama',
-      '石川県': 'ishikawa',  '福井県': 'fukui',     '山梨県': 'yamanashi', '長野県': 'nagano',
-      '岐阜県': 'gifu',      '静岡県': 'shizuoka',  '愛知県': 'aichi',     '三重県': 'mie',
-      '滋賀県': 'shiga',     '京都府': 'kyoto',     '大阪府': 'osaka',     '兵庫県': 'hyogo',
-      '奈良県': 'nara',      '和歌山県': 'wakayama','鳥取県': 'tottori',   '島根県': 'shimane',
-      '岡山県': 'okayama',   '広島県': 'hiroshima', '山口県': 'yamaguchi', '徳島県': 'tokushima',
-      '香川県': 'kagawa',    '愛媛県': 'ehime',     '高知県': 'kochi',     '福岡県': 'fukuoka',
-      '佐賀県': 'saga',      '長崎県': 'nagasaki',  '熊本県': 'kumamoto',  '大分県': 'oita',
-      '宮崎県': 'miyazaki',  '鹿児島県': 'kagoshima','沖縄県': 'okinawa'
-    });
-    window.SITE_BASE_URL = 'https://data.pokefuta.com/';
-    window.getPrefecturePageUrl = function(prefecture) {
-      var slug = window.PREFECTURE_SLUG_MAP[prefecture];
-      return slug ? 'prefectures/' + encodeURIComponent(slug) + '/' : '';
-    };
-
     // Redirect deep-links (?pref= / ?manhole= / ?tag= / ?view=) to map.html
     (function() {
       var p = new URLSearchParams(location.search);
@@ -77,17 +374,16 @@
   <!-- End GA -->
   <link rel="stylesheet" href="./assets/theme.css" />
   <link rel="stylesheet" href="./assets/top-page.css?v=20260711b" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="stylesheet" href="./assets/top-home.css?v=20260926a" />
   <link rel="icon" href="./assets/pokefuta-marker.svg" type="image/svg+xml" />
   <script src="./assets/session-badge.js" defer></script>
 </head>
-<body class="pokefuta-top-page">
+<body class="pokefuta-top-page home-page">
 
-  <!-- ===== APP BAR ===== -->
+  <!-- ===== APP BAR（ビルド時に共通ヘッダーへ置き換わる） ===== -->
   <header class="top-app-bar">
     <div class="top-app-bar-inner">
       <a class="top-brand" href="./" onclick="trackEvent('click_nav',{surface:'site_nav',nav:'top'})">
-        <span class="sec-num nav-num"></span>
         <span class="brand-name">ポケふた図鑑</span>
       </a>
       <div class="top-nav-right">
@@ -102,172 +398,47 @@
     </div>
   </header>
 
-  <main class="top-main">
+  <main class="home-main">
 
-    <!-- ===== 0. NEW RELEASES (shown only when manholes were added in the last month) ===== -->
-    <section class="top-section" id="sec-newrelease" hidden>
-      <div class="sec-header">
-        <div class="sec-eyebrow">
-          <span class="sec-num"></span>
-          <h2 class="sec-title">新作ポケふた</h2>
+    <!-- 1. ヒーロー：H1・件数・投稿写真・3つの主導線 -->
+    <!-- home:hero:start -->
+    <section class="home-hero" id="home-hero" aria-labelledby="home-h1"><div class="home-hero__copy"><p class="home-eyebrow">ポケモンマンホール図鑑</p><h1 class="home-h1" id="home-h1">全国481枚の<wbr>ポケふたを探す</h1><p class="home-lead">ポケふた（ポケモンマンホール）は、全国42都道府県に481枚設置されています。北海道から沖縄まで、設置場所とポケモン、みんなが撮った写真をまとめた図鑑です。<b>ラッキー・ラプラス・アローラロコン</b>など547種類のポケモンから、旅先や近所の一枚を見つけられます。</p><nav class="home-quick" aria-label="主な探し方"><a class="home-quick__link home-quick__link--primary" href="map.html" onclick="trackEvent('click_search_way',{surface:'top_hero_quick',way:'map'})">現在地・地図から探す</a><a class="home-quick__link " href="#home-pref" onclick="trackEvent('click_search_way',{surface:'top_hero_quick',way:'prefecture'})">都道府県から探す</a><a class="home-quick__link " href="pokemon/" onclick="trackEvent('click_search_way',{surface:'top_hero_quick',way:'pokemon'})">ポケモンから探す</a></nav><dl class="home-stats"><div class="home-stat"><dt>枚のポケふた</dt><dd>481</dd></div><div class="home-stat"><dt>都道府県に設置</dt><dd>42</dd></div><div class="home-stat"><dt>種類のポケモン</dt><dd>547</dd></div><div class="home-stat"><dt>枚の投稿写真</dt><dd>2,529</dd></div></dl></div><figure class="home-mosaic"><ul class="home-mosaic__grid"><li class="home-mosaic__item"><a href="manholes/306/" onclick="trackEvent('click_hero_photo',{surface:'top_hero_photo',manhole:'306',position:0})"><img src="manhole/image/306_latest.jpeg" alt="北海道猿払村のポケふた（アローラロコン・エイパム）の投稿写真" width="720" height="720" loading="eager" decoding="async" fetchpriority="high"><span class="home-mosaic__cap"><b>アローラロコン・エイパム</b>北海道 猿払村</span></a></li><li class="home-mosaic__item"><a href="manholes/386/" onclick="trackEvent('click_hero_photo',{surface:'top_hero_photo',manhole:'386',position:1})"><img src="manhole/image/386_latest.jpeg" alt="三重県三重郡菰野町のポケふた（ゴーゴート・ミジュマル）の投稿写真" width="720" height="720" loading="eager" decoding="async"><span class="home-mosaic__cap"><b>ゴーゴート・ミジュマル</b>三重県 三重郡菰野町</span></a></li><li class="home-mosaic__item"><a href="manholes/113/" onclick="trackEvent('click_hero_photo',{surface:'top_hero_photo',manhole:'113',position:2})"><img src="manhole/image/113_latest.jpeg" alt="宮崎県延岡市のポケふた（アローラナッシー・ナッシー）の投稿写真" width="720" height="720" loading="eager" decoding="async"><span class="home-mosaic__cap"><b>アローラナッシー・ナッシー</b>宮崎県 延岡市</span></a></li><li class="home-mosaic__item"><a href="manholes/161/" onclick="trackEvent('click_hero_photo',{surface:'top_hero_photo',manhole:'161',position:3})"><img src="manhole/image/161_latest.jpeg" alt="京都府京都市のポケふた（ダーテング・チコリータ）の投稿写真" width="720" height="720" loading="eager" decoding="async"><span class="home-mosaic__cap"><b>ダーテング・チコリータ</b>京都府 京都市</span></a></li><li class="home-mosaic__item"><a href="manholes/209/" onclick="trackEvent('click_hero_photo',{surface:'top_hero_photo',manhole:'209',position:4})"><img src="manhole/image/209_latest.jpeg" alt="大阪府東大阪市のポケふた（ライコウ）の投稿写真" width="720" height="720" loading="eager" decoding="async"><span class="home-mosaic__cap"><b>ライコウ</b>大阪府 東大阪市</span></a></li><li class="home-mosaic__item"><a href="manholes/197/" onclick="trackEvent('click_hero_photo',{surface:'top_hero_photo',manhole:'197',position:5})"><img src="manhole/image/197_latest.jpeg" alt="岡山県倉敷市のポケふた（ケンホロウ）の投稿写真" width="720" height="720" loading="eager" decoding="async"><span class="home-mosaic__cap"><b>ケンホロウ</b>岡山県 倉敷市</span></a></li></ul><figcaption class="home-mosaic__note">みんなが投稿した最新の写真（9月26日更新）</figcaption></figure></section>
+    <!-- home:hero:end -->
+
+    <!-- 2. 探し方：地図・都道府県・ポケモン・テーマ -->
+    <!-- home:ways:start -->
+    <section class="home-section" id="home-ways" aria-labelledby="home-ways-title"><h2 class="home-h2" id="home-ways-title">探し方を選ぶ</h2><ul class="home-ways"><li class="home-way"><a class="home-way__main" href="map.html" onclick="trackEvent('click_search_way',{surface:'top_search_ways',way:'map'})"><img class="home-way__icon" src="assets/icon-map.svg" alt="" width="28" height="28"><span class="home-way__title">地図・現在地から探す</span><span class="home-way__text">日本地図で設置場所を確かめ、今いる場所の近くにあるポケふたを探せます。</span></a><ul class="home-way__links"><li><a href="nearby.html" onclick="trackEvent('click_search_way',{surface:'top_search_ways',way:'map'})">近くのポケふた</a></li><li><a href="map.html?view=theme" onclick="trackEvent('click_search_way',{surface:'top_search_ways',way:'map'})">テーマで絞り込む</a></li></ul></li><li class="home-way"><a class="home-way__main" href="prefectures/" onclick="trackEvent('click_search_way',{surface:'top_search_ways',way:'prefecture'})"><img class="home-way__icon" src="assets/icon-pin.svg" alt="" width="28" height="28"><span class="home-way__title">都道府県から探す</span><span class="home-way__text">設置のある42都道府県を、地域ごとの一覧で確認できます。</span></a><ul class="home-way__links"><li><a href="prefectures/hokkaido/" onclick="trackEvent('click_search_way',{surface:'top_search_ways',way:'prefecture'})">北海道 50枚</a></li><li><a href="prefectures/fukushima/" onclick="trackEvent('click_search_way',{surface:'top_search_ways',way:'prefecture'})">福島県 42枚</a></li><li><a href="prefectures/miyagi/" onclick="trackEvent('click_search_way',{surface:'top_search_ways',way:'prefecture'})">宮城県 37枚</a></li></ul></li><li class="home-way"><a class="home-way__main" href="pokemon/" onclick="trackEvent('click_search_way',{surface:'top_search_ways',way:'pokemon'})"><img class="home-way__icon" src="assets/pokefuta-marker.svg" alt="" width="28" height="28"><span class="home-way__title">ポケモンから探す</span><span class="home-way__text">547種類のポケモンから、好きなポケモンのポケふたを探せます。</span></a><ul class="home-way__links"><li><a href="pokemon/chansey/" onclick="trackEvent('click_search_way',{surface:'top_search_ways',way:'pokemon'})">ラッキー 43枚</a></li><li><a href="pokemon/lapras/" onclick="trackEvent('click_search_way',{surface:'top_search_ways',way:'pokemon'})">ラプラス 37枚</a></li><li><a href="pokemon/vulpix-alola/" onclick="trackEvent('click_search_way',{surface:'top_search_ways',way:'pokemon'})">アローラロコン 37枚</a></li></ul></li><li class="home-way"><a class="home-way__main" href="map.html?view=theme" onclick="trackEvent('click_search_way',{surface:'top_search_ways',way:'theme'})"><img class="home-way__icon" src="assets/icon-tag.svg" alt="" width="28" height="28"><span class="home-way__title">テーマから探す</span><span class="home-way__text">道の駅・世界遺産・離島など、旅の目的に合わせて探せます。</span></a><ul class="home-way__links"><li><a href="/tags/roadside/" onclick="trackEvent('click_search_way',{surface:'top_search_ways',way:'theme'})">道の駅・SA 102枚</a></li><li><a href="/tags/world_heritage/" onclick="trackEvent('click_search_way',{surface:'top_search_ways',way:'theme'})">世界遺産 57枚</a></li><li><a href="/tags/remote_island/" onclick="trackEvent('click_search_way',{surface:'top_search_ways',way:'theme'})">離島 18枚</a></li></ul></li></ul></section>
+    <!-- home:ways:end -->
+
+    <!-- 新作（直近30日に追加があるときだけ出る） -->
+    <!-- home:newrelease:start -->
+    <!-- home:newrelease:end -->
+
+    <!-- 3. 新着・注目の写真 -->
+    <!-- home:photos:start -->
+    <section class="home-section" id="home-photos" aria-labelledby="home-photos-title"><h2 class="home-h2" id="home-photos-title">新着・注目の写真</h2><p class="home-text">最近の投稿から、地域が偏らないように北から順に選んでいます。これまでに470か所のポケふたに写真が届いています。</p><ul class="home-gallery"><li class="home-gallery__item"><a href="manholes/67/" onclick="trackEvent('click_top_photo',{surface:'top_photo_gallery',manhole:'67',position:0})"><img src="manhole/image/67_latest.jpeg" alt="北海道稚内市のポケふた（アローラキュウコン・アローラロコン）の投稿写真" width="720" height="720" loading="lazy" decoding="async"><span class="home-gallery__cap"><b>アローラキュウコン・アローラロコン</b><span>北海道 稚内市</span><time datetime="2026-09-26">9月26日</time></span></a></li><li class="home-gallery__item"><a href="manholes/410/" onclick="trackEvent('click_top_photo',{surface:'top_photo_gallery',manhole:'410',position:1})"><img src="manhole/image/410_latest.jpeg" alt="茨城県筑西市のポケふた（グレッグル・ハラバリー）の投稿写真" width="720" height="720" loading="lazy" decoding="async"><span class="home-gallery__cap"><b>グレッグル・ハラバリー</b><span>茨城県 筑西市</span><time datetime="2026-09-23">9月23日</time></span></a></li><li class="home-gallery__item"><a href="manholes/362/" onclick="trackEvent('click_top_photo',{surface:'top_photo_gallery',manhole:'362',position:2})"><img src="manhole/image/362_latest.jpeg" alt="岐阜県関ケ原町のポケふた（コマタナ・ドドゲザン）の投稿写真" width="720" height="720" loading="lazy" decoding="async"><span class="home-gallery__cap"><b>コマタナ・ドドゲザン</b><span>岐阜県 関ケ原町</span><time datetime="2026-09-23">9月23日</time></span></a></li><li class="home-gallery__item"><a href="manholes/210/" onclick="trackEvent('click_top_photo',{surface:'top_photo_gallery',manhole:'210',position:3})"><img src="manhole/image/210_latest.jpeg" alt="大阪府東大阪市のポケふた（トゲデマル・ワンパチ）の投稿写真" width="720" height="720" loading="lazy" decoding="async"><span class="home-gallery__cap"><b>トゲデマル・ワンパチ</b><span>大阪府 東大阪市</span><time datetime="2026-09-24">9月24日</time></span></a></li><li class="home-gallery__item"><a href="manholes/195/" onclick="trackEvent('click_top_photo',{surface:'top_photo_gallery',manhole:'195',position:4})"><img src="manhole/image/195_latest.jpeg" alt="岡山県倉敷市のポケふた（アゲハント・ポチエナ）の投稿写真" width="720" height="720" loading="lazy" decoding="async"><span class="home-gallery__cap"><b>アゲハント・ポチエナ</b><span>岡山県 倉敷市</span><time datetime="2026-09-24">9月24日</time></span></a></li><li class="home-gallery__item"><a href="manholes/328/" onclick="trackEvent('click_top_photo',{surface:'top_photo_gallery',manhole:'328',position:5})"><img src="manhole/image/328_latest.jpeg" alt="徳島県鳴門市のポケふた（キングドラ・シードラ）の投稿写真" width="720" height="720" loading="lazy" decoding="async"><span class="home-gallery__cap"><b>キングドラ・シードラ</b><span>徳島県 鳴門市</span><time datetime="2026-09-21">9月21日</time></span></a></li><li class="home-gallery__item"><a href="manholes/186/" onclick="trackEvent('click_top_photo',{surface:'top_photo_gallery',manhole:'186',position:6})"><img src="manhole/image/186_latest.jpeg" alt="宮崎県五ヶ瀬町のポケふた（ナッシー・レジアイス）の投稿写真" width="720" height="720" loading="lazy" decoding="async"><span class="home-gallery__cap"><b>ナッシー・レジアイス</b><span>宮崎県 五ヶ瀬町</span><time datetime="2026-09-23">9月23日</time></span></a></li><li class="home-gallery__item"><a href="manholes/68/" onclick="trackEvent('click_top_photo',{surface:'top_photo_gallery',manhole:'68',position:7})"><img src="manhole/image/68_latest.jpeg" alt="北海道豊富町のポケふた（アローラロコン・ミルタンク）の投稿写真" width="720" height="720" loading="lazy" decoding="async"><span class="home-gallery__cap"><b>アローラロコン・ミルタンク</b><span>北海道 豊富町</span><time datetime="2026-09-26">9月26日</time></span></a></li></ul><a class="home-cta" href="https://pokefuta.com/upload?from=data" onclick="trackEvent('click_photo_post_cta',{surface:'top_photo_gallery'})">ポケふた写真館で写真を投稿する</a></section>
+    <!-- home:photos:end -->
+
+    <!-- 4. 開催中イベント（上位3件＋すべて見る） -->
+    <!-- home:events:start -->
+    <section class="home-section" id="home-events" aria-labelledby="home-events-title"><h2 class="home-h2" id="home-events-title">開催中のイベント・スタンプラリー</h2><ul class="home-events"><li class="home-event" data-end="2026-12-31"><a href="prefectures/kagawa/" onclick="trackEvent('click_event_notice',{surface:'top_event_notice',prefecture:'香川県',destination:'prefecture_page'})"><span class="home-event__badge">開催中</span><span class="home-event__copy"><b>ヤドンといっしょ！香川めぐり旅2026 スタンプラリー</b><small>香川県 · 2026/04/24 - 2026/12/31</small></span></a></li><li class="home-event" data-end="2027-02-28"><a href="prefectures/mie/" onclick="trackEvent('click_event_notice',{surface:'top_event_notice',prefecture:'三重県',destination:'prefecture_page'})"><span class="home-event__badge">開催中</span><span class="home-event__copy"><b>「三重県×ミジュマル」周遊型謎解きイベント『まるミエ！ミジュマル探検隊！』</b><small>三重県 · 2026/08/07 - 2027/02/28</small></span></a></li><li class="home-event" data-end="2027-02-28"><a href="prefectures/iwate/" onclick="trackEvent('click_event_notice',{surface:'top_event_notice',prefecture:'岩手県',destination:'prefecture_page'})"><span class="home-event__badge">開催中</span><span class="home-event__copy"><b>岩手県×イシツブテ ポケふたスタンプラリー2026</b><small>岩手県 · 2026/07/11 - 2027/02/28</small></span></a></li></ul><details class="home-events__more"><summary onclick="trackEvent('click_event_show_all',{surface:'top_event_notice',count:6})">すべて見る（全6件）</summary><ul class="home-events"><li class="home-event" data-end="2027-02-28"><a href="prefectures/nagasaki/" onclick="trackEvent('click_event_notice',{surface:'top_event_notice',prefecture:'長崎県',destination:'prefecture_page'})"><span class="home-event__badge">開催中</span><span class="home-event__copy"><b>＜長崎県×デンリュウ＞スタンプラリー「ながさき照らす旅3」</b><small>長崎県 · 2026/08/27 - 2027/02/28</small></span></a></li><li class="home-event" data-end="2027-03-14"><a href="prefectures/kochi/" onclick="trackEvent('click_event_notice',{surface:'top_event_notice',prefecture:'高知県',destination:'prefecture_page'})"><span class="home-event__badge">開催中</span><span class="home-event__copy"><b>「高知だいすきポケモン」ヌオーと巡る高知旅2026</b><small>高知県 · 2026/07/18 - 2027/03/14</small></span></a></li><li class="home-event" data-end="2027-02-28"><a href="prefectures/okinawa/" onclick="trackEvent('click_event_notice',{surface:'top_event_notice',prefecture:'沖縄県',destination:'prefecture_page'})"><span class="home-event__badge is-upcoming">まもなく開催</span><span class="home-event__copy"><b>【第二弾】ガーディ×本島周辺離島オリジナルステッカーキャンペーン</b><small>沖縄県 · 2026/10/01 - 2027/02/28</small></span></a></li></ul></details></section>
+    <!-- home:events:end -->
+
+    <!-- 5. 都道府県（設置県を地方別に、未設置県は注記） -->
+    <!-- home:pref:start -->
+    <section class="home-section" id="home-pref" aria-labelledby="home-pref-title"><h2 class="home-h2" id="home-pref-title">都道府県から探す</h2><p class="home-text">ポケふたは47都道府県のうち42都道府県に設置されています。地域ごとに北から並べ、県名の横に設置枚数を載せています。</p><div class="home-regions"><div class="home-region"><h3 class="home-region__title">北海道・東北 <small>177枚</small></h3><ul class="home-pref"><li><a href="prefectures/hokkaido/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'北海道'})"><span class="home-pref__name">北海道</span><span class="home-pref__count">50枚</span></a></li><li><a href="prefectures/aomori/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'青森県'})"><span class="home-pref__name">青森県</span><span class="home-pref__count">2枚</span></a></li><li><a href="prefectures/iwate/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'岩手県'})"><span class="home-pref__name">岩手県</span><span class="home-pref__count">36枚</span></a></li><li><a href="prefectures/miyagi/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'宮城県'})"><span class="home-pref__name">宮城県</span><span class="home-pref__count">37枚</span></a></li><li><a href="prefectures/akita/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'秋田県'})"><span class="home-pref__name">秋田県</span><span class="home-pref__count">5枚</span></a></li><li><a href="prefectures/yamagata/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'山形県'})"><span class="home-pref__name">山形県</span><span class="home-pref__count">5枚</span></a></li><li><a href="prefectures/fukushima/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'福島県'})"><span class="home-pref__name">福島県</span><span class="home-pref__count">42枚</span></a></li></ul></div><div class="home-region"><h3 class="home-region__title">関東 <small>33枚</small></h3><ul class="home-pref"><li><a href="prefectures/ibaraki/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'茨城県'})"><span class="home-pref__name">茨城県</span><span class="home-pref__count">5枚</span></a></li><li><a href="prefectures/tochigi/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'栃木県'})"><span class="home-pref__name">栃木県</span><span class="home-pref__count">3枚</span></a></li><li><a href="prefectures/saitama/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'埼玉県'})"><span class="home-pref__name">埼玉県</span><span class="home-pref__count">3枚</span></a></li><li><a href="prefectures/chiba/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'千葉県'})"><span class="home-pref__name">千葉県</span><span class="home-pref__count">4枚</span></a></li><li><a href="prefectures/tokyo/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'東京都'})"><span class="home-pref__name">東京都</span><span class="home-pref__count">13枚</span></a></li><li><a href="prefectures/kanagawa/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'神奈川県'})"><span class="home-pref__name">神奈川県</span><span class="home-pref__count">5枚</span></a></li></ul></div><div class="home-region"><h3 class="home-region__title">中部 <small>57枚</small></h3><ul class="home-pref"><li><a href="prefectures/niigata/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'新潟県'})"><span class="home-pref__name">新潟県</span><span class="home-pref__count">4枚</span></a></li><li><a href="prefectures/toyama/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'富山県'})"><span class="home-pref__name">富山県</span><span class="home-pref__count">3枚</span></a></li><li><a href="prefectures/ishikawa/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'石川県'})"><span class="home-pref__name">石川県</span><span class="home-pref__count">8枚</span></a></li><li><a href="prefectures/fukui/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'福井県'})"><span class="home-pref__name">福井県</span><span class="home-pref__count">17枚</span></a></li><li><a href="prefectures/nagano/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'長野県'})"><span class="home-pref__name">長野県</span><span class="home-pref__count">6枚</span></a></li><li><a href="prefectures/gifu/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'岐阜県'})"><span class="home-pref__name">岐阜県</span><span class="home-pref__count">5枚</span></a></li><li><a href="prefectures/shizuoka/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'静岡県'})"><span class="home-pref__name">静岡県</span><span class="home-pref__count">5枚</span></a></li><li><a href="prefectures/aichi/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'愛知県'})"><span class="home-pref__name">愛知県</span><span class="home-pref__count">9枚</span></a></li></ul></div><div class="home-region"><h3 class="home-region__title">近畿 <small>62枚</small></h3><ul class="home-pref"><li><a href="prefectures/mie/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'三重県'})"><span class="home-pref__name">三重県</span><span class="home-pref__count">31枚</span></a></li><li><a href="prefectures/shiga/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'滋賀県'})"><span class="home-pref__name">滋賀県</span><span class="home-pref__count">5枚</span></a></li><li><a href="prefectures/kyoto/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'京都府'})"><span class="home-pref__name">京都府</span><span class="home-pref__count">8枚</span></a></li><li><a href="prefectures/osaka/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'大阪府'})"><span class="home-pref__name">大阪府</span><span class="home-pref__count">5枚</span></a></li><li><a href="prefectures/hyogo/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'兵庫県'})"><span class="home-pref__name">兵庫県</span><span class="home-pref__count">3枚</span></a></li><li><a href="prefectures/nara/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'奈良県'})"><span class="home-pref__name">奈良県</span><span class="home-pref__count">5枚</span></a></li><li><a href="prefectures/wakayama/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'和歌山県'})"><span class="home-pref__name">和歌山県</span><span class="home-pref__count">5枚</span></a></li></ul></div><div class="home-region"><h3 class="home-region__title">中国 <small>33枚</small></h3><ul class="home-pref"><li><a href="prefectures/tottori/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'鳥取県'})"><span class="home-pref__name">鳥取県</span><span class="home-pref__count">20枚</span></a></li><li><a href="prefectures/shimane/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'島根県'})"><span class="home-pref__name">島根県</span><span class="home-pref__count">5枚</span></a></li><li><a href="prefectures/okayama/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'岡山県'})"><span class="home-pref__name">岡山県</span><span class="home-pref__count">4枚</span></a></li><li><a href="prefectures/yamaguchi/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'山口県'})"><span class="home-pref__name">山口県</span><span class="home-pref__count">4枚</span></a></li></ul></div><div class="home-region"><h3 class="home-region__title">四国 <small>41枚</small></h3><ul class="home-pref"><li><a href="prefectures/tokushima/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'徳島県'})"><span class="home-pref__name">徳島県</span><span class="home-pref__count">3枚</span></a></li><li><a href="prefectures/kagawa/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'香川県'})"><span class="home-pref__name">香川県</span><span class="home-pref__count">18枚</span></a></li><li><a href="prefectures/ehime/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'愛媛県'})"><span class="home-pref__name">愛媛県</span><span class="home-pref__count">2枚</span></a></li><li><a href="prefectures/kochi/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'高知県'})"><span class="home-pref__name">高知県</span><span class="home-pref__count">18枚</span></a></li></ul></div><div class="home-region"><h3 class="home-region__title">九州・沖縄 <small>78枚</small></h3><ul class="home-pref"><li><a href="prefectures/fukuoka/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'福岡県'})"><span class="home-pref__name">福岡県</span><span class="home-pref__count">8枚</span></a></li><li><a href="prefectures/saga/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'佐賀県'})"><span class="home-pref__name">佐賀県</span><span class="home-pref__count">3枚</span></a></li><li><a href="prefectures/nagasaki/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'長崎県'})"><span class="home-pref__name">長崎県</span><span class="home-pref__count">15枚</span></a></li><li><a href="prefectures/miyazaki/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'宮崎県'})"><span class="home-pref__name">宮崎県</span><span class="home-pref__count">26枚</span></a></li><li><a href="prefectures/kagoshima/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'鹿児島県'})"><span class="home-pref__name">鹿児島県</span><span class="home-pref__count">9枚</span></a></li><li><a href="prefectures/okinawa/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'沖縄県'})"><span class="home-pref__name">沖縄県</span><span class="home-pref__count">17枚</span></a></li></ul></div></div><p class="home-pref-note"><a href="prefectures/gunma/">群馬県</a>・<a href="prefectures/yamanashi/">山梨県</a>・<a href="prefectures/hiroshima/">広島県</a>・<a href="prefectures/kumamoto/">熊本県</a>・<a href="prefectures/oita/">大分県</a>の5県には、2026年9月時点でポケふたは設置されていません。各県のページでは近くの県のポケふたを案内しています。</p><a class="home-more" href="prefectures/" onclick="trackEvent('click_pref_link',{surface:'top_prefecture_list',prefecture:'all'})">47都道府県の一覧ページへ</a></section>
+    <!-- home:pref:end -->
+
+    <!-- 6. 目的から探す -->
+    <section class="home-section" id="home-purpose" aria-labelledby="home-purpose-title">
+      <h2 class="home-h2" id="home-purpose-title">目的から探す</h2>
+
+      <div class="home-purpose__block">
+        <div class="home-purpose__head">
+          <h3 class="home-h3">テーマから探す</h3>
+          <a class="home-purpose__more" href="map.html?view=theme" onclick="trackEvent('click_hub_tag_all',{surface:'top_hub_tag'})">地図で探す</a>
         </div>
-        <span class="newrel-update-label">この1ヶ月の新着</span>
-      </div>
-      <div class="newrel-scroller" id="newrel-scroller"></div>
-    </section>
-
-    <!-- ===== 1. H1 + INTRO + STATS ===== -->
-    <section class="top-section" id="sec-intro">
-      <div class="sec-eyebrow">
-        <span class="sec-num"></span>
-        <span class="sec-eyebrow-text">POKÉMON MANHOLE / ポケモンマンホール</span>
-      </div>
-      <h1 class="top-h1">全国のポケふたを、<br>地図と一覧から探す</h1>
-      <p class="top-intro-text">
-        全国47都道府県にある<b>ポケふた（ポケモンマンホール）</b>を収録。
-        お住まいの地域や旅先から、<b>ピカチュウ・イーブイ・ラプラス</b>など
-        好きなポケモンの一枚を見つけられます。
-      </p>
-      <div class="top-stats-row">
-        <div class="top-stat">
-          <b class="stat-num" id="stat-count">—</b>
-          <span class="stat-label">ポケふた</span>
-        </div>
-        <div class="stat-divider"></div>
-        <a class="top-stat top-stat--link" href="prefectures/" onclick="trackEvent('click_stat_pref_jump',{surface:'top_stats'})">
-          <b class="stat-num" id="stat-pref">47</b>
-          <span class="stat-label">都道府県</span>
-        </a>
-        <div class="stat-divider"></div>
-        <div class="top-stat">
-          <b class="stat-num" id="stat-pokemon">—</b>
-          <span class="stat-label">ポケモン</span>
-        </div>
-        <div class="stat-divider" id="stat-photos-divider" hidden></div>
-        <div class="top-stat" id="stat-photos-tile" hidden>
-          <b class="stat-num" id="stat-photos">—</b>
-          <span class="stat-label">みんなの写真</span>
-        </div>
-      </div>
-      <a class="top-quicklink-list" href="prefectures/" onclick="trackEvent('click_intro_list_cta',{surface:'top_intro'})">📋 都道府県から探す</a>
-      <p class="top-stats-note" id="stats-community-note" hidden></p>
-    </section>
-
-    <!-- ===== MAP GATEWAY (under intro on mobile; full-bleed hero on desktop) ===== -->
-    <section class="top-section" id="sec-map">
-      <div class="sec-header">
-        <div class="sec-eyebrow">
-          <span class="sec-num"></span>
-          <h2 class="sec-title">地図から探す</h2>
-        </div>
-        <span class="sec-file-label">/ map.html</span>
-      </div>
-
-      <a class="map-gateway-card" href="map.html" onclick="trackEvent('click_map_gateway',{surface:'top_map_gateway'})">
-        <div id="mini-map" class="map-gateway-minimap" aria-hidden="true"></div>
-        <span class="map-gateway-badge">🗺 全国 <b id="map-badge-count">—</b>枚</span>
-        <span class="map-gateway-attr">© OpenStreetMap contributors</span>
-        <div class="map-gateway-overlay">
-          <div class="map-gateway-title">日本地図で近くのポケふたを探す</div>
-          <div class="map-gateway-sub">都道府県別の件数ピンから全画面マップへ</div>
-          <div class="map-gateway-cta">🗺 地図を全画面で開く</div>
-        </div>
-      </a>
-    </section>
-
-    <!-- ===== EVENT NOTICES (shown only when a stamp rally is active) ===== -->
-    <section class="top-section" id="sec-events" hidden>
-      <div class="sec-eyebrow">
-        <span class="sec-num"></span>
-        <h2 class="sec-title">開催中のイベント・スタンプラリー</h2>
-      </div>
-      <div class="event-notice-list" id="event-notice-list"></div>
-    </section>
-
-    <!-- ===== 2. TODAY'S HERO ===== -->
-    <section class="top-section" id="sec-hero">
-      <div class="sec-header">
-        <div class="sec-eyebrow">
-          <span class="sec-num"></span>
-          <h2 class="sec-title">今日、どのポケふたに会いに行く？</h2>
-        </div>
-        <span class="hero-update-label" id="hero-update-label">毎日更新</span>
-      </div>
-
-      <!-- Featured card -->
-      <a class="hero-featured-card" id="hero-featured" href="map.html" onclick="trackEvent('click_hero_featured',{surface:'top_hero'})">
-        <!-- ⚠️ overlay は media の中に置くこと。card 直下に置くと inset:0 が
-             カード全体（フッター込み）に効き、タイトル・地名がフッターの文字に重なる -->
-        <div class="hero-featured-media" id="hero-featured-media">
-          <img class="hero-featured-img" id="hero-featured-img" src="" alt="" loading="eager">
-          <div class="hero-featured-overlay">
-            <span class="hero-badge" id="hero-badge">⭐ 今日のレア</span>
-            <span class="hero-media-label" id="hero-media-label"></span>
-            <div class="hero-featured-copy">
-              <div class="hero-featured-title" id="hero-featured-title">—</div>
-              <div class="hero-featured-place" id="hero-featured-place"></div>
-            </div>
-          </div>
-        </div>
-        <div class="hero-featured-footer">
-          <span class="hero-footer-text" id="hero-footer-text">全国の"秘境ポケふた"をもっと見る</span>
-          <span class="hero-footer-cta" id="hero-footer-cta">ランキング →</span>
-        </div>
-      </a>
-
-      <!-- Two small cards -->
-      <div class="hero-small-grid">
-        <a class="hero-small-card" id="hero-small-0" href="map.html" onclick="trackEvent('click_hero_small', {surface:'top_hero',position: 0})">
-          <div class="hero-small-media" id="hero-small-media-0">
-            <img class="hero-small-img" id="hero-small-img-0" src="" alt="" loading="lazy">
-          </div>
-          <div class="hero-small-body">
-            <div class="hero-small-title" id="hero-small-title-0">—</div>
-            <div class="hero-small-place" id="hero-small-place-0"></div>
-          </div>
-        </a>
-        <a class="hero-small-card" id="hero-small-1" href="map.html" onclick="trackEvent('click_hero_small', {surface:'top_hero',position: 1})">
-          <div class="hero-small-media" id="hero-small-media-1">
-            <img class="hero-small-img" id="hero-small-img-1" src="" alt="" loading="lazy">
-          </div>
-          <div class="hero-small-body">
-            <div class="hero-small-title" id="hero-small-title-1">—</div>
-            <div class="hero-small-place" id="hero-small-place-1"></div>
-          </div>
-        </a>
-      </div>
-    </section>
-
-    <!-- ===== 4. PREFECTURE LIST ===== -->
-    <section class="top-section" id="sec-pref">
-      <div class="sec-eyebrow">
-        <span class="sec-num"></span>
-        <h2 class="sec-title">都道府県から探す</h2>
-      </div>
-
-      <div class="top-pref-card">
-        <div class="pref-card-label">47都道府県</div>
-        <div id="top-pref-links" class="top-pref-links">
-          <div class="pref-link-loading">読み込み中…</div>
-        </div>
-        <button id="pref-show-all" class="pref-show-all-btn" hidden>すべて見る（47都道府県）</button>
-      </div>
-    </section>
-
-    <!-- ===== 5. PURPOSE HUB ===== -->
-    <section class="top-section" id="sec-hub">
-      <div class="sec-eyebrow">
-        <span class="sec-num"></span>
-        <h2 class="sec-title">目的から探す</h2>
-      </div>
-
-      <!-- Theme chips -->
-      <div class="hub-card">
-        <div class="hub-card-header">
-          <span>テーマから探す</span>
-          <a class="hub-card-more" href="map.html?view=theme" onclick="trackEvent('click_hub_tag_all',{surface:'top_hub_tag'})">地図で探す →</a>
-        </div>
-        <div class="hub-chips">
+        <div class="hub-chips home-chips">
           <!-- tag-chips:start -->
           <a class="hub-chip" href="/tags/roadside/" onclick="trackEvent('click_hub_tag',{surface:'top_hub_tag',tag:'roadside',destination:'tag_page'})">🛤 道の駅・SA <span class="chip-count">102枚</span></a>
           <a class="hub-chip" href="/tags/world_heritage/" onclick="trackEvent('click_hub_tag',{surface:'top_hub_tag',tag:'world_heritage',destination:'tag_page'})">🌐 世界遺産 <span class="chip-count">57枚</span></a>
@@ -280,21 +451,14 @@
         </div>
       </div>
 
-      <!-- Popular pokemon chips -->
-      <div class="hub-card">
-        <div class="hub-card-header">
-          <span>人気のポケモンから探す</span>
-          <a class="hub-card-more" href="/pokemon/" onclick="trackEvent('click_hub_pokemon_all',{surface:'top_hub_pokemon'})">すべて →</a>
+      <div class="home-purpose__block">
+        <div class="home-purpose__head">
+          <h3 class="home-h3">設置の多いポケモンから探す</h3>
         </div>
-        <div class="hub-chips">
-          <a class="hub-chip" href="/pokemon/pikachu/" onclick="trackEvent('click_hub_pokemon',{surface:'top_hub_pokemon',pokemon:'ピカチュウ'})">ピカチュウ <span class="chip-count" id="chip-pikachu">—</span></a>
-          <a class="hub-chip" href="/pokemon/eevee/" onclick="trackEvent('click_hub_pokemon',{surface:'top_hub_pokemon',pokemon:'イーブイ'})">イーブイ <span class="chip-count" id="chip-eevee">—</span></a>
-          <a class="hub-chip" href="/pokemon/lapras/" onclick="trackEvent('click_hub_pokemon',{surface:'top_hub_pokemon',pokemon:'ラプラス'})">ラプラス <span class="chip-count" id="chip-lapras">—</span></a>
-          <a class="hub-chip" href="/pokemon/snorlax/" onclick="trackEvent('click_hub_pokemon',{surface:'top_hub_pokemon',pokemon:'カビゴン'})">カビゴン <span class="chip-count" id="chip-snorlax">—</span></a>
-          <a class="hub-chip" href="/pokemon/slowpoke/" onclick="trackEvent('click_hub_pokemon',{surface:'top_hub_pokemon',pokemon:'ヤドン'})">ヤドン <span class="chip-count" id="chip-slowpoke">—</span></a>
-        </div>
+        <!-- home:pokemon:start -->
+        <ul class="home-pokes"><li class="home-poke"><a href="pokemon/chansey/" onclick="trackEvent('click_hub_pokemon',{surface:'top_hub_pokemon',pokemon:'ラッキー'})"><img src="manhole/image/280_latest.jpeg" alt="ラッキーのポケふた（福島県伊達市）" width="720" height="720" loading="lazy" decoding="async"><span class="home-poke__name">ラッキー</span><span class="home-poke__count">43枚</span></a></li><li class="home-poke"><a href="pokemon/lapras/" onclick="trackEvent('click_hub_pokemon',{surface:'top_hub_pokemon',pokemon:'ラプラス'})"><img src="manhole/image/54_latest.jpeg" alt="ラプラスのポケふた（宮城県仙台市）" width="720" height="720" loading="lazy" decoding="async"><span class="home-poke__name">ラプラス</span><span class="home-poke__count">37枚</span></a></li><li class="home-poke"><a href="pokemon/vulpix-alola/" onclick="trackEvent('click_hub_pokemon',{surface:'top_hub_pokemon',pokemon:'アローラロコン'})"><img src="manhole/image/306_latest.jpeg" alt="アローラロコンのポケふた（北海道猿払村）" width="720" height="720" loading="lazy" decoding="async"><span class="home-poke__name">アローラロコン</span><span class="home-poke__count">37枚</span></a></li><li class="home-poke"><a href="pokemon/oshawott/" onclick="trackEvent('click_hub_pokemon',{surface:'top_hub_pokemon',pokemon:'ミジュマル'})"><img src="manhole/image/386_latest.jpeg" alt="ミジュマルのポケふた（三重県三重郡菰野町）" width="720" height="720" loading="lazy" decoding="async"><span class="home-poke__name">ミジュマル</span><span class="home-poke__count">31枚</span></a></li><li class="home-poke"><a href="pokemon/vulpix/" onclick="trackEvent('click_hub_pokemon',{surface:'top_hub_pokemon',pokemon:'ロコン'})"><img src="manhole/image/66_latest.jpeg" alt="ロコンのポケふた（北海道天塩町）" width="720" height="720" loading="lazy" decoding="async"><span class="home-poke__name">ロコン</span><span class="home-poke__count">27枚</span></a></li><li class="home-poke home-poke--all"><a href="pokemon/" onclick="trackEvent('click_hub_pokemon_all',{surface:'top_hub_pokemon'})"><span class="home-poke__name">すべてのポケモン</span><span class="home-poke__count">547種類</span></a></li></ul>
+        <!-- home:pokemon:end -->
       </div>
-
     </section>
 
   </main>
@@ -302,565 +466,18 @@
   <script>
   (function() {
     'use strict';
-
-    // ── Curated hero cards (rotated daily) ──────────────────────────────────
-    var HEROES = [
-      {
-        id: 220, imgAlt: '北海道斜里町のポケふた（パルキア・ロコン）',
-        bgStyle: 'linear-gradient(140deg,#7E9DB2,#5E7C8A)',
-        badge: '🌊 世界遺産×秘境', mediaLabel: '北海道 斜里町',
-        title: 'ぽつんと離れた秘境のポケふた',
-        place: '北海道 斜里町 ／ パルキア・ロコン',
-        footerText: '写真・設置場所・周辺のポケふた', footerCta: '詳細を見る →',
-        href: 'manholes/220/',
-        small: [
-          { id: 148, imgAlt: '奈良県斑鳩町のポケふた', badge: '🌲 世界遺産', bg: 'linear-gradient(140deg,#C8A870,#A07840)', title: 'ドータクン・バオッキー', place: '奈良県 斑鳩町 →', href: 'manholes/148/' },
-          { id: 174, imgAlt: '沖縄県那覇市のポケふた', badge: '🏝 離島', bg: 'linear-gradient(140deg,#5AB4E0,#2E8BB0)', title: 'ウインディ', place: '沖縄県 那覇市 →', href: 'manholes/174/' }
-        ]
-      },
-      {
-        id: 175, imgAlt: '沖縄県宜野湾市のポケふた（サニーゴ・ラブカス）',
-        bgStyle: 'linear-gradient(140deg,#5AB4E0,#2E8BB0)',
-        badge: '🌊 海沿い×離島', mediaLabel: '沖縄県 宜野湾市',
-        title: 'エメラルドグリーンの海辺のポケふた',
-        place: '沖縄県 宜野湾市 ／ サニーゴ・ラブカス',
-        footerText: '写真・設置場所・周辺のポケふた', footerCta: '詳細を見る →',
-        href: 'manholes/175/',
-        small: [
-          { id: 176, imgAlt: '沖縄県沖縄市のポケふた', badge: '🏝 離島', bg: 'linear-gradient(140deg,#4AA880,#2A7860)', title: 'バチンキー・ラランテス', place: '沖縄県 沖縄市 →', href: 'manholes/176/' },
-          { id: 344, imgAlt: '和歌山県白浜町のポケふた', badge: '🌊 海沿い', bg: 'linear-gradient(140deg,#B0D4E8,#78A8C8)', title: 'ナミイルカ・ヤンチャム', place: '和歌山県 白浜町 →', href: 'manholes/344/' }
-        ]
-      },
-      {
-        id: 2, imgAlt: '鹿児島県指宿市のポケふた（シャワーズ）',
-        bgStyle: 'linear-gradient(140deg,#9DB6C7,#5E7C8A)',
-        badge: '♨️ 温泉地', mediaLabel: '鹿児島県 指宿市',
-        title: '南国の温泉地に集まるイーブイ進化形',
-        place: '鹿児島県 指宿市 ／ シャワーズ',
-        footerText: '指宿のポケふたをもっと見る', footerCta: '地図で見る →',
-        href: 'map.html?pref=%E9%B9%BF%E5%85%90%E5%B3%B6%E7%9C%8C&view=map',
-        small: [
-          { id: 1, imgAlt: '鹿児島県指宿市のイーブイのポケふた', badge: '⭐ 人気', bg: 'linear-gradient(140deg,#E8D0A0,#C8A870)', title: 'イーブイ', place: '鹿児島県 指宿市 →', href: 'manholes/1/' },
-          { id: 7, imgAlt: '鹿児島県指宿市のリーフィアのポケふた', badge: '🌿 公園', bg: 'linear-gradient(140deg,#BcD3C4,#8FB7A0)', title: 'リーフィア', place: '鹿児島県 指宿市 →', href: 'manholes/7/' }
-        ]
-      },
-      {
-        id: 148, imgAlt: '奈良県斑鳩町の世界遺産近くのポケふた（ドータクン・バオッキー）',
-        bgStyle: 'linear-gradient(140deg,#C8A870,#A07840)',
-        badge: '🌲 世界遺産', mediaLabel: '奈良県 斑鳩町',
-        title: '法隆寺のそばに佇む古代ポケふた',
-        place: '奈良県 斑鳩町 ／ ドータクン・バオッキー',
-        footerText: '写真・設置場所・周辺のポケふた', footerCta: '詳細を見る →',
-        href: 'manholes/148/',
-        small: [
-          { id: 149, imgAlt: '奈良県斑鳩町のガーディ・マダツボミのポケふた', badge: '🌲 世界遺産', bg: 'linear-gradient(140deg,#C89870,#A06840)', title: 'ガーディ・マダツボミ', place: '奈良県 斑鳩町 →', href: 'manholes/149/' },
-          { id: 301, imgAlt: '石川県金沢市のミロカロスのポケふた', badge: '🏛 美術館', bg: 'linear-gradient(140deg,#D0B8E0,#A890C0)', title: 'ミロカロス', place: '石川県 金沢市 →', href: 'manholes/301/' }
-        ]
-      },
-      {
-        id: 67, imgAlt: '北海道稚内市の日本最北のポケふた（アローラキュウコン・アローラロコン）',
-        bgStyle: 'linear-gradient(140deg,#9DB6C7,#6E8CA0)',
-        badge: '🧭 日本最北', mediaLabel: '北海道 稚内市',
-        title: '日本のいちばん北で待つポケふた',
-        place: '北海道 稚内市 ／ アローラキュウコン・アローラロコン',
-        footerText: '写真・設置場所・周辺のポケふた', footerCta: '詳細を見る →',
-        href: 'manholes/67/',
-        small: [
-          { id: 156, imgAlt: '東京都小笠原村のミュウのポケふた', badge: '🏝 離島', bg: 'linear-gradient(140deg,#5AB4E0,#2E8BB0)', title: 'ミュウ', place: '東京都 小笠原村 →', href: 'manholes/156/' },
-          { id: 411, imgAlt: '茨城県つくば市のレックウザのポケふた', badge: '🌟 全国2枚', bg: 'linear-gradient(140deg,#7EA0C0,#4E7090)', title: 'レックウザ', place: '茨城県 つくば市 →', href: 'manholes/411/' }
-        ]
-      },
-      {
-        id: 154, imgAlt: '東京都小笠原村のリザードンのポケふた',
-        bgStyle: 'linear-gradient(140deg,#5AB4E0,#2E8BB0)',
-        badge: '🏝 離島×世界遺産', mediaLabel: '東京都 小笠原村',
-        title: '船でしか行けない島のポケふた',
-        place: '東京都 小笠原村 ／ リザードン',
-        footerText: '写真・設置場所・周辺のポケふた', footerCta: '詳細を見る →',
-        href: 'manholes/154/',
-        small: [
-          { id: 159, imgAlt: '京都府京都市のホウオウのポケふた', badge: '⭐ ここだけ', bg: 'linear-gradient(140deg,#E8C070,#C09040)', title: 'ホウオウ', place: '京都府 京都市 →', href: 'manholes/159/' },
-          { id: 54, imgAlt: '宮城県仙台市のジラーチ・ラプラスのポケふた', badge: '⭐ ここだけ', bg: 'linear-gradient(140deg,#B0C8E0,#7898C0)', title: 'ジラーチ・ラプラス', place: '宮城県 仙台市 →', href: 'manholes/54/' }
-        ]
-      },
-      {
-        id: 346, imgAlt: '和歌山県那智勝浦町のセレビィのポケふた',
-        bgStyle: 'linear-gradient(140deg,#4AA880,#2A7860)',
-        badge: '⭐ 全国でここだけ', mediaLabel: '和歌山県 那智勝浦町',
-        title: '熊野の森にひそむ幻のポケふた',
-        place: '和歌山県 那智勝浦町 ／ セレビィ',
-        footerText: '写真・設置場所・周辺のポケふた', footerCta: '詳細を見る →',
-        href: 'manholes/346/',
-        small: [
-          { id: 343, imgAlt: '和歌山県高野町のウーラオスのポケふた', badge: '⭐ ここだけ', bg: 'linear-gradient(140deg,#A8C0A0,#6E8C68)', title: 'ウーラオス', place: '和歌山県 高野町 →', href: 'manholes/343/' },
-          { id: 9, imgAlt: '鹿児島県指宿市のニンフィアのポケふた', badge: '🌟 全国2枚', bg: 'linear-gradient(140deg,#F0C0D0,#C890A8)', title: 'ニンフィア', place: '鹿児島県 指宿市 →', href: 'manholes/9/' }
-        ]
-      }
-    ];
-
-    // ── Apply a hero (curated fallback OR community photo from top-feed) ─────
-    function applyHero(hero) {
-      var featuredEl = document.getElementById('hero-featured');
-      var mediaEl = document.getElementById('hero-featured-media');
-      if (mediaEl) mediaEl.style.background = hero.bgStyle;
-      if (featuredEl) {
-        featuredEl.href = hero.href;
-        if (hero.community) {
-          featuredEl.onclick = function() { trackEvent('click_hero_photo', {surface:'top_hero_photo', manhole: String(hero.id), position: 'featured' }); };
-        }
-      }
-      var imgEl = document.getElementById('hero-featured-img');
-      if (imgEl) { imgEl.src = 'manhole/image/' + hero.id + '_latest.jpeg'; imgEl.alt = hero.imgAlt || ''; }
-      setText('hero-badge', hero.badge);
-      setText('hero-media-label', hero.mediaLabel);
-      setText('hero-featured-title', hero.title);
-      setText('hero-featured-place', hero.place);
-      setFooterText(hero);
-      setText('hero-footer-cta', hero.footerCta);
-
-      hero.small.forEach(function(s, i) {
-        var cardEl = document.getElementById('hero-small-' + i);
-        var mediaSmEl = document.getElementById('hero-small-media-' + i);
-        if (cardEl) {
-          cardEl.href = s.href;
-          if (hero.community) {
-            cardEl.onclick = function() { trackEvent('click_hero_photo', {surface:'top_hero_photo', manhole: String(s.id), position: i }); };
-          }
-        }
-        if (mediaSmEl) {
-          mediaSmEl.style.background = s.bg;
-          var oldBadge = mediaSmEl.querySelector('.hero-small-badge');
-          if (oldBadge) mediaSmEl.removeChild(oldBadge);
-          var badge = document.createElement('span');
-          badge.className = 'hero-small-badge';
-          badge.textContent = s.badge;
-          mediaSmEl.appendChild(badge);
-        }
-        var imgSmEl = document.getElementById('hero-small-img-' + i);
-        if (imgSmEl) { imgSmEl.src = 'manhole/image/' + s.id + '_latest.jpeg'; imgSmEl.alt = s.imgAlt || ''; }
-        setText('hero-small-title-' + i, s.title);
-        setText('hero-small-place-' + i, s.place);
-      });
-    }
-
-    // ── Pick today's hero (replaced by community photos when top-feed loads) ──
-    var dayIndex = Math.floor(Date.now() / 86400000) % HEROES.length;
-    applyHero(HEROES[dayIndex]);
-
-    // ── Community photos: latest fan shots baked into api/top-feed.json ──────
-    var TF_STRINGS = {
-      badge: '📸 みんなの一枚',
-      label: '毎週更新',
-      by: '{name} さんの投稿',
-      cta: '詳細を見る →',
-      statNote: '📷 これまでに {count}/{total}ヶ所のポケふたに写真が届きました'
-    };
-
-    var PUBLIC_USER_ID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
-    function formatFeedDate(value) {
-      if (!value) return '';
-      var date = new Date(value + 'T00:00:00+09:00');
-      if (isNaN(date.getTime())) return value;
-      return new Intl.DateTimeFormat(document.documentElement.lang || 'ja', {
-        month: 'short', day: 'numeric', timeZone: 'Asia/Tokyo'
-      }).format(date);
-    }
-
-    function heroBadge(p) {
-      // 称号バッジ（例「🌟 レアポケふた」）。label は日本語のみのため、
-      // 非 ja ページでは共通の TF_STRINGS.badge にフォールバックする（既知の i18n ギャップ）
-      if (p.badge && p.badge.label && (document.documentElement.lang || 'ja') === 'ja') {
-        return (p.badge.emoji ? p.badge.emoji + ' ' : '') + p.badge.label;
-      }
-      return TF_STRINGS.badge;
-    }
-
-    function heroMediaLabel(p, place) {
-      // photo_count は export の gallery キャップで頭打ちになるため、
-      // 上限到達は生成側の photo_count_at_cap で判定する（キャップ値は焼き込まない）
-      if (!(p.photo_count >= 2)) return place;
-      return place + ' · 📷' + p.photo_count + (p.photo_count_at_cap ? '+' : '');
-    }
-
-    function communityHero(photos) {
-      function names(p) { return (p.pokemons || []).slice(0, 2).join('・'); }
-      function place(p) { return (p.title || '').replace('/', ' '); }
-      var f = photos[0];
-      var displayDate = formatFeedDate(f.created_at);
-      var footerText = '📷 ' + (f.display_name ? TF_STRINGS.by.replace('{name}', f.display_name) + ' · ' : '') + displayDate;
-      var footerName = null;
-      if (f.display_name && f.public_user_id && PUBLIC_USER_ID_RE.test(f.public_user_id)) {
-        var byParts = TF_STRINGS.by.split('{name}');
-        footerName = {
-          prefix: '📷 ' + byParts[0],
-          name: f.display_name,
-          suffix: byParts[1] + ' · ' + displayDate,
-          publicUserId: f.public_user_id
-        };
-      }
-      return {
-        id: f.id, community: true,
-        imgAlt: (names(f) || place(f)) + 'のポケふた投稿写真',
-        bgStyle: 'linear-gradient(140deg,#7E9DB2,#5E7C8A)',
-        badge: heroBadge(f),
-        mediaLabel: heroMediaLabel(f, place(f)),
-        title: f.comment || names(f) || place(f),
-        place: f.comment && names(f) ? place(f) + ' ／ ' + names(f) : place(f),
-        footerText: footerText,
-        footerName: footerName,
-        footerCta: TF_STRINGS.cta,
-        href: 'manholes/' + encodeURIComponent(f.id) + '/',
-        small: photos.slice(1, 3).map(function(p) {
-          return {
-            id: p.id,
-            imgAlt: (names(p) || place(p)) + 'のポケふた投稿写真',
-            bg: 'linear-gradient(140deg,#7E9DB2,#5E7C8A)',
-            badge: heroBadge(p),
-            title: names(p) || place(p),
-            place: place(p) + ' →',
-            href: 'manholes/' + encodeURIComponent(p.id) + '/'
-          };
-        })
-      };
-    }
-
-    function renderCommunityStats(stats) {
-      if (!stats) return;
-      if (typeof stats.posts === 'number' && stats.posts > 0) {
-        setNum('stat-photos', stats.posts);
-        var divider = document.getElementById('stat-photos-divider');
-        var tile = document.getElementById('stat-photos-tile');
-        if (divider) divider.hidden = false;
-        if (tile) tile.hidden = false;
-      }
-      if (stats.manholes_with_photos && stats.manholes) {
-        var note = document.getElementById('stats-community-note');
-        if (note) {
-          note.textContent = TF_STRINGS.statNote
-            .replace('{count}', stats.manholes_with_photos.toLocaleString())
-            .replace('{total}', stats.manholes.toLocaleString());
-          note.hidden = false;
-        }
-      }
-    }
-
-    fetch('api/top-feed.json')
-      .then(function(r) { if (!r.ok) throw new Error('top-feed ' + r.status); return r.json(); })
-      .then(function(feed) {
-        var photos = (feed && feed.photos) || [];
-        if (photos.length) {
-          applyHero(communityHero(photos));
-          setText('hero-update-label', TF_STRINGS.label);
-          if (window.trackEvent) trackEvent('view_hero_community', {surface:'top_hero_community', count: photos.length });
-        }
-        renderCommunityStats(feed && feed.stats);
-      })
-      .catch(function() { /* curated hero remains */ });
-
-    // ── Event notices: active stamp rallies from api/prefecture_events.json ──
-    var EV_STRINGS = { ongoing: '開催中', upcoming: 'まもなく開催' };
-    fetch('api/prefecture_events.json')
-      .then(function(r) { if (!r.ok) throw new Error('events ' + r.status); return r.json(); })
-      .then(function(events) {
-        var today = new Date(Date.now() + 9 * 3600000).toISOString().slice(0, 10);
-        var active = (events || []).filter(function(e) {
-          return e && typeof e.title === 'string'
-            && typeof e.start_date === 'string' && typeof e.end_date === 'string'
-            && e.end_date >= today
-            && window.getPrefecturePageUrl(e.prefecture);
-        });
-        if (!active.length) return;
-        var list = document.getElementById('event-notice-list');
-        active.forEach(function(e) {
-          var ongoing = e.start_date <= today;
-          var card = document.createElement('a');
-          card.className = 'event-notice-card';
-          card.href = window.getPrefecturePageUrl(e.prefecture);
-          var badge = document.createElement('span');
-          badge.className = 'event-notice-badge' + (ongoing ? '' : ' is-upcoming');
-          badge.textContent = ongoing ? EV_STRINGS.ongoing : EV_STRINGS.upcoming;
-          var copy = document.createElement('span');
-          copy.className = 'event-notice-copy';
-          var title = document.createElement('b');
-          title.textContent = e.title;
-          var period = document.createElement('small');
-          period.textContent = e.start_date.replace(/-/g, '/') + ' - ' + e.end_date.replace(/-/g, '/');
-          copy.appendChild(title);
-          copy.appendChild(period);
-          card.appendChild(badge);
-          card.appendChild(copy);
-          card.addEventListener('click', function() {
-            if (window.trackEvent) trackEvent('click_event_notice', {surface:'top_event_notice', prefecture: e.prefecture, destination: 'prefecture_page' });
-          });
-          list.appendChild(card);
-        });
-        document.getElementById('sec-events').hidden = false;
-        if (window.trackEvent) trackEvent('view_event_notice', {surface:'top_event_notice', count: active.length });
-      })
-      .catch(function() { /* no event notices */ });
-
-    // ── Mini-map pin coords + shared renderer (called from fetch OR map init) ──
-    var PREF_COORDS = {
-      '北海道':[43.2,142.8],'青森県':[40.8,140.7],'岩手県':[39.7,141.2],'宮城県':[38.4,140.8],
-      '秋田県':[39.7,140.1],'山形県':[38.5,140.3],'福島県':[37.4,140.5],'茨城県':[36.3,140.3],
-      '栃木県':[36.5,139.9],'群馬県':[36.4,138.9],'埼玉県':[36.0,139.4],'千葉県':[35.6,140.1],
-      '東京都':[35.7,139.7],'神奈川県':[35.5,139.5],'新潟県':[37.6,139.0],'富山県':[36.7,137.2],
-      '石川県':[36.6,136.6],'福井県':[36.1,136.2],'山梨県':[35.7,138.6],'長野県':[36.2,138.0],
-      '岐阜県':[35.8,137.0],'静岡県':[34.9,138.4],'愛知県':[35.1,137.0],'三重県':[34.7,136.5],
-      '滋賀県':[35.1,136.2],'京都府':[35.2,135.8],'大阪府':[34.7,135.5],'兵庫県':[34.9,135.2],
-      '奈良県':[34.4,135.8],'和歌山県':[33.9,135.2],'鳥取県':[35.5,134.3],'島根県':[35.1,133.1],
-      '岡山県':[34.7,133.9],'広島県':[34.5,132.5],'山口県':[34.2,131.5],'徳島県':[34.0,134.5],
-      '香川県':[34.3,134.0],'愛媛県':[33.9,132.8],'高知県':[33.6,133.5],'福岡県':[33.6,130.4],
-      '佐賀県':[33.3,130.2],'長崎県':[32.8,129.9],'熊本県':[32.8,130.7],'大分県':[33.2,131.6],
-      '宮崎県':[31.9,131.4],'鹿児島県':[31.6,130.6],'沖縄県':[26.2,127.7]
-    };
-
-    window._renderMiniPins = function() {
-      var map = window._miniMap;
-      var counts = window._prefCountMap;
-      if (!map || !counts || window._miniPinsRendered) return;
-      window._miniPinsRendered = true;
-      Object.keys(counts).forEach(function(pref) {
-        var c = PREF_COORDS[pref];
-        if (!c) return;
-        var cnt = counts[pref];
-        var shortName = pref === '北海道' ? pref : pref.replace(/[都府県]$/, '');
-        // map.html の都道府県オーバービューマーカーと同じデザイン
-        var icon = L.divIcon({
-          html: '<span class="prefecture-overview-name">' + shortName + '</span>'
-            + '<span class="prefecture-overview-count">' + cnt + '</span>',
-          className: 'prefecture-overview-marker', iconSize: null,
-        });
-        L.marker(c, { icon: icon }).addTo(map);
-      });
-    };
-
-    // ── Load pokefuta.ndjson → stats + prefecture links ──────────────────────
-    var POKEMON_COUNTS = {};
-    var prefCountMap = {};
-    var totalCount = 0;
-    var pokemonSet = new Set();
-
-    // New releases: manholes added to the dataset within the last month
-    var NEW_WINDOW_DAYS = 30;
-    var newReleaseCutoff = Date.now() - NEW_WINDOW_DAYS * 86400000;
-    var newReleases = [];
-
-    fetch('pokefuta.ndjson')
-      .then(function(r) { return r.text(); })
-      .then(function(text) {
-        text.split('\n').forEach(function(line) {
-          var trimmed = line.trim();
-          if (!trimmed) return;
-          try {
-            var m = JSON.parse(trimmed);
-            totalCount++;
-            if (m.prefecture) {
-              prefCountMap[m.prefecture] = (prefCountMap[m.prefecture] || 0) + 1;
-            }
-            if (Array.isArray(m.pokemons)) {
-              m.pokemons.forEach(function(p) {
-                if (p && !p.includes('ローカルActs')) {
-                  pokemonSet.add(p);
-                  POKEMON_COUNTS[p] = (POKEMON_COUNTS[p] || 0) + 1;
-                }
-              });
-            }
-            var addedMs = m.added_at ? Date.parse(m.added_at) : NaN;
-            if (!isNaN(addedMs) && addedMs >= newReleaseCutoff) {
-              newReleases.push({
-                id: m.id,
-                pokemons: (Array.isArray(m.pokemons) ? m.pokemons : []).filter(function(p) { return p && !p.includes('ローカルActs'); }),
-                title: m.title || '',
-                addedMs: addedMs
-              });
-            }
-          } catch (e) {}
-        });
-
-        // Update stat numbers
-        setNum('stat-count', totalCount);
-        setNum('stat-pref', Object.keys(prefCountMap).length);
-        setNum('stat-pokemon', pokemonSet.size);
-        setNum('appbar-count', totalCount);
-        setNum('map-badge-count', totalCount);
-
-        // New releases banner (topmost section; stays hidden when empty)
-        renderNewReleases(newReleases);
-
-        // Pokemon chip counts
-        var chipMap = {
-          'ピカチュウ': 'chip-pikachu',
-          'イーブイ': 'chip-eevee',
-          'ラプラス': 'chip-lapras',
-          'カビゴン': 'chip-snorlax',
-          'ヤドン': 'chip-slowpoke',
-        };
-        Object.keys(chipMap).forEach(function(name) {
-          var el = document.getElementById(chipMap[name]);
-          if (el && POKEMON_COUNTS[name]) el.textContent = POKEMON_COUNTS[name];
-        });
-
-        // All 47 prefectures in JIS code order → /prefectures/[slug]/
-        var PREF_ORDER = [
-          '北海道','青森県','岩手県','宮城県','秋田県','山形県','福島県',
-          '茨城県','栃木県','群馬県','埼玉県','千葉県','東京都','神奈川県',
-          '新潟県','富山県','石川県','福井県','山梨県','長野県','岐阜県',
-          '静岡県','愛知県','三重県','滋賀県','京都府','大阪府','兵庫県',
-          '奈良県','和歌山県','鳥取県','島根県','岡山県','広島県','山口県',
-          '徳島県','香川県','愛媛県','高知県','福岡県','佐賀県','長崎県',
-          '熊本県','大分県','宮崎県','鹿児島県','沖縄県'
-        ];
-        var linksEl = document.getElementById('top-pref-links');
-        if (linksEl) {
-          var slugMap = window.PREFECTURE_SLUG_MAP || {};
-          linksEl.innerHTML = PREF_ORDER.map(function(pref, i) {
-            var cnt = prefCountMap[pref] || 0;
-            var slug = slugMap[pref] || encodeURIComponent(pref);
-            var isLast = i === PREF_ORDER.length - 1;
-            return '<a class="pref-link-item' + (isLast ? ' pref-link-item--last' : '') + '" href="' + window.getPrefecturePageUrl(pref) + '" onclick="trackEvent(\'click_pref_link\',{surface:\'top_prefecture_list\',prefecture:\'' + pref + '\'})">'
-              + '<span class="pref-link-name">' + pref + '</span>'
-              + (cnt ? '<span class="pref-link-count">' + cnt + '枚 →</span>' : '<span class="pref-link-count">→</span>')
-              + '</a>';
-          }).join('');
-        }
-
-        // Show a partial list; expand on button click. Desktop's 4-column grid
-        // shows 12 (3 rows); the SP single column shows 3. Re-applied when the
-        // viewport crosses the 960px breakpoint, preserving the expanded state.
-        var prefItems = linksEl ? Array.prototype.slice.call(linksEl.querySelectorAll('.pref-link-item')) : [];
-        var showAllBtn = document.getElementById('pref-show-all');
-        var prefExpanded = false;
-        var prefDesktopMQ = window.matchMedia ? window.matchMedia('(min-width: 960px)') : null;
-
-        function applyPrefCollapse() {
-          var initial = (prefDesktopMQ && prefDesktopMQ.matches) ? 12 : 3;
-          var collapse = !prefExpanded && prefItems.length > initial;
-          prefItems.forEach(function(item, i) {
-            item.style.display = (collapse && i >= initial) ? 'none' : '';
-          });
-          if (showAllBtn) showAllBtn.hidden = !collapse;
-        }
-
-        if (showAllBtn) {
-          showAllBtn.addEventListener('click', function() {
-            prefExpanded = true;
-            applyPrefCollapse();
-            // 折りたたまれた都道府県リストを開いた回数。トップで何人が
-            // 「47件すべて」を必要としているかが、一覧の初期表示件数の根拠になる。
-            if (window.trackEvent) {
-              window.trackEvent('click_pref_show_all', {
-                count: prefItems.length,
-                surface: 'top_prefecture_list'
-              });
-            }
-          });
-        }
-        if (prefDesktopMQ) {
-          if (prefDesktopMQ.addEventListener) prefDesktopMQ.addEventListener('change', applyPrefCollapse);
-          else if (prefDesktopMQ.addListener) prefDesktopMQ.addListener(applyPrefCollapse); // Safari < 14
-        }
-        applyPrefCollapse();
-
-        // Mini-map pins — delegate to shared renderer (race-safe)
-        window._prefCountMap = prefCountMap;
-        window._renderMiniPins();
-      })
-      .catch(function() {
-        // Stats remain as defaults if fetch fails
-      });
-
-    function setText(id, val) {
-      var el = document.getElementById(id);
-      if (el) el.textContent = val;
-    }
-    function setFooterText(hero) {
-      var el = document.getElementById('hero-footer-text');
-      if (!el) return;
-      if (!hero.footerName) { el.textContent = hero.footerText; return; }
-      var fn = hero.footerName;
-      el.textContent = '';
-      el.appendChild(document.createTextNode(fn.prefix));
-      var profileUrl = 'https://pokefuta.com/users/' + encodeURIComponent(fn.publicUserId) + '/visits';
-      var nameLink = document.createElement('span');
-      nameLink.className = 'hero-footer-name-link';
-      nameLink.setAttribute('role', 'link');
-      nameLink.setAttribute('tabindex', '0');
-      nameLink.setAttribute('aria-label', fn.name + 'さんの公開スタンプ帳を開く');
-      nameLink.textContent = fn.name;
-      nameLink.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        window.open(profileUrl, '_blank', 'noopener,noreferrer');
-      });
-      nameLink.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          e.stopPropagation();
-          window.open(profileUrl, '_blank', 'noopener,noreferrer');
-        }
-      });
-      el.appendChild(nameLink);
-      el.appendChild(document.createTextNode(fn.suffix));
-    }
-    function setNum(id, val) {
-      var el = document.getElementById(id);
-      if (el) el.textContent = val.toLocaleString();
-    }
-    function escapeHtml(s) {
-      return String(s).replace(/[&<>"']/g, function(c) {
-        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
-      });
-    }
-    function renderNewReleases(list) {
-      var section = document.getElementById('sec-newrelease');
-      var scroller = document.getElementById('newrel-scroller');
-      if (!section || !scroller || !list || !list.length) return;
-      list.sort(function(a, b) { return b.addedMs - a.addedMs; });
-      scroller.innerHTML = list.map(function(m) {
-        var place = (m.title || '').replace('/', ' ');
-        var names = m.pokemons.join('・');
-        var href = 'manholes/' + encodeURIComponent(m.id) + '/';
-        var img = 'manhole/image/' + encodeURIComponent(m.id) + '_latest.jpeg';
-        return '<a class="newrel-card" href="' + href + '" onclick="trackEvent(\'click_newrelease\',{manhole:\'' + escapeHtml(m.id) + '\'})">'
-          + '<div class="newrel-media">'
-          +   '<img class="newrel-img" src="' + img + '" alt="' + escapeHtml(names || place) + '" loading="lazy" onerror="this.style.display=\'none\'">'
-          +   '<span class="newrel-badge">🆕 新作</span>'
-          + '</div>'
-          + '<div class="newrel-body">'
-          +   '<div class="newrel-title">' + escapeHtml(names || 'ポケふた') + '</div>'
-          +   '<div class="newrel-place">' + escapeHtml(place) + '</div>'
-          + '</div>'
-          + '</a>';
-      }).join('');
-      section.hidden = false;
-      if (window.trackEvent) trackEvent('view_newrelease', {surface:'top_newrelease', count: list.length });
-    }
-  })();
-  </script>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script>
-  (function() {
-    var miniMapEl = document.getElementById('mini-map');
-    if (!miniMapEl || typeof L === 'undefined') return;
-    // SP（スマホ）は2段階ズームイン（7）、デスクトップは全国が収まる5
-    var _miniZoom = window.matchMedia('(min-width: 960px)').matches ? 5 : 7;
-    var miniMap = L.map('mini-map', {
-      zoomControl: false, scrollWheelZoom: false, dragging: false,
-      touchZoom: false, doubleClickZoom: false, boxZoom: false,
-      keyboard: false, attributionControl: false,
-    }).setView([37.6, 137.5], _miniZoom);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-    }).addTo(miniMap);
-    window._miniMap = miniMap;
-    if (window._renderMiniPins) window._renderMiniPins();
-    if (typeof IntersectionObserver !== 'undefined') {
-      new IntersectionObserver(function(entries, obs) {
-        if (entries[0].isIntersecting) { miniMap.invalidateSize(); obs.disconnect(); }
-      }, { threshold: 0.1 }).observe(miniMapEl);
-    }
+    // 生成後に終わったイベントを隠す（デプロイが止まった日でも古い告知を出さない）
+    var today = new Date(Date.now() + 9 * 3600000).toISOString().slice(0, 10);
+    var section = document.getElementById('home-events');
+    if (!section) return;
+    var items = section.querySelectorAll('.home-event[data-end]');
+    var shown = 0;
+    Array.prototype.forEach.call(items, function(item) {
+      if (item.getAttribute('data-end') < today) item.hidden = true;
+      else shown++;
+    });
+    if (!shown) { section.hidden = true; return; }
+    if (window.trackEvent) trackEvent('view_event_notice', {surface:'top_event_notice', count: shown});
   })();
   </script>
 </body>

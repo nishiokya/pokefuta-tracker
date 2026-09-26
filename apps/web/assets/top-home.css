@@ -1,0 +1,603 @@
+/* ===== 図鑑トップ（index.html の日本語版）=====
+   写真と4つの探し方を中心にした構成。トークンと .hub-chip は top-page.css を使う。
+   多言語版（index.template.html）は旧構成のままなので、ここはトップ専用のクラスだけを持つ。
+   グリッドは常に minmax(0, 1fr)（test_css_grid_tracks.py）。 */
+
+.home-main {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 var(--top-pad) 64px;
+}
+
+.home-section {
+  margin-top: 36px;
+}
+
+.home-h2 {
+  margin: 0 0 12px;
+  font-size: 19px;
+  font-weight: 900;
+  line-height: 1.35;
+}
+
+.home-h2 small {
+  margin-left: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--top-text-faint);
+}
+
+.home-h3 {
+  margin: 0;
+  font-size: 14.5px;
+  font-weight: 800;
+}
+
+.home-text {
+  margin: -4px 0 14px;
+  font-size: 13px;
+  line-height: 1.75;
+  color: var(--top-text-muted);
+}
+
+.home-main a:focus-visible,
+.home-main summary:focus-visible {
+  outline: 3px solid var(--top-purple);
+  outline-offset: 2px;
+}
+
+/* ── 1. ヒーロー ── */
+.home-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px;
+  padding-top: 20px;
+}
+
+.home-eyebrow {
+  margin: 0 0 6px;
+  font-family: 'IBM Plex Mono', 'Courier New', monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--top-eyebrow);
+  font-weight: 600;
+}
+
+.home-h1 {
+  margin: 0 0 10px;
+  font-size: 27px;
+  font-weight: 900;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.home-lead {
+  margin: 0 0 16px;
+  font-size: 13.5px;
+  line-height: 1.8;
+  color: var(--top-text-muted);
+}
+
+.home-lead b { color: var(--top-text); }
+
+.home-quick {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.home-quick__link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 8px 10px;
+  border: 1.5px solid var(--top-purple);
+  border-radius: 12px;
+  background: var(--top-card-bg);
+  color: var(--top-purple-dark);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.home-quick__link--primary {
+  background: var(--top-purple);
+  color: #fff;
+}
+
+.home-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0;
+  background: var(--top-card-bg);
+  border: 1px solid var(--top-border);
+  border-radius: 13px;
+  overflow: hidden;
+}
+
+.home-stat {
+  display: flex;
+  flex-direction: column-reverse;
+  padding: 10px 4px;
+  text-align: center;
+  border-left: 1px solid var(--top-border-light);
+}
+
+.home-stat:first-child { border-left: 0; }
+
+.home-stat dd {
+  margin: 0;
+  font-family: 'IBM Plex Mono', 'Courier New', monospace;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--top-purple-dark);
+}
+
+.home-stat dt {
+  font-size: 10.5px;
+  color: var(--top-text-faint);
+}
+
+/* 写真モザイク：3列で先頭だけ2×2。6枚でちょうど埋まる */
+.home-mosaic { margin: 0; }
+
+.home-mosaic__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.home-mosaic__item:first-child {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+.home-mosaic__item a,
+.home-gallery__item a {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--top-border-light);
+}
+
+.home-mosaic__item img,
+.home-gallery__item img,
+.home-poke img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+
+.home-mosaic__cap {
+  position: absolute;
+  inset: auto 0 0;
+  padding: 18px 8px 6px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.62), transparent);
+  color: #fff;
+  font-size: 10.5px;
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.home-mosaic__cap b {
+  display: block;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.home-mosaic__item:first-child .home-mosaic__cap { padding: 32px 12px 10px; font-size: 12px; }
+.home-mosaic__item:first-child .home-mosaic__cap b { font-size: 16px; }
+
+.home-mosaic__note {
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--top-text-faint);
+  text-align: right;
+}
+
+/* 小さいタイルは地名を省き、ポケモン名だけ残す */
+@media (max-width: 599px) {
+  .home-mosaic__item:not(:first-child) .home-mosaic__cap { font-size: 0; padding: 14px 6px 5px; }
+  .home-mosaic__item:not(:first-child) .home-mosaic__cap b { font-size: 11px; }
+}
+
+.home-hero--no-photos { grid-template-columns: minmax(0, 1fr); }
+
+/* ── 2. 探し方 ── */
+.home-ways {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.home-way {
+  display: flex;
+  flex-direction: column;
+  background: var(--top-card-bg);
+  border: 1px solid var(--top-border);
+  border-radius: var(--top-radius-card);
+  overflow: hidden;
+}
+
+.home-way__main {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  padding: 14px 14px 10px;
+}
+
+.home-way__icon { width: 28px; height: 28px; }
+
+.home-way__title {
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--top-purple-dark);
+}
+
+.home-way__text {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--top-text-muted);
+}
+
+.home-way__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  margin: 0;
+  padding: 8px 14px 12px;
+  list-style: none;
+  border-top: 1px dashed var(--top-border);
+  font-size: 12px;
+}
+
+.home-way__links a {
+  color: var(--top-purple);
+  font-weight: 700;
+}
+
+/* ── 新作 ── */
+.home-newrel {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.home-newrel__card {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px;
+  background: var(--top-card-bg);
+  border: 1px solid var(--top-border);
+  border-radius: 12px;
+  font-size: 12px;
+  color: var(--top-text-muted);
+}
+
+.home-newrel__card b { font-size: 13.5px; color: var(--top-text); }
+
+/* ── 3. 写真 ── */
+.home-gallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0 0 16px;
+  padding: 0;
+  list-style: none;
+}
+
+.home-gallery__item a {
+  height: 100%;
+  background: var(--top-card-bg);
+  border: 1px solid var(--top-border);
+}
+
+.home-gallery__cap {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 8px 10px 10px;
+  font-size: 11.5px;
+  color: var(--top-text-muted);
+  line-height: 1.45;
+}
+
+.home-gallery__cap b {
+  font-size: 13px;
+  color: var(--top-text);
+}
+
+.home-gallery__cap time {
+  font-size: 11px;
+  color: var(--top-text-faint);
+}
+
+.home-cta,
+.home-more {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 10px 18px;
+  border-radius: var(--top-radius-pill);
+  font-size: 13.5px;
+  font-weight: 800;
+}
+
+.home-cta {
+  background: var(--top-purple);
+  color: #fff;
+}
+
+.home-cta::after,
+.home-more::after { content: " →"; margin-left: 4px; }
+
+.home-more {
+  margin-top: 14px;
+  border: 1.5px solid var(--top-purple);
+  color: var(--top-purple-dark);
+  background: var(--top-card-bg);
+}
+
+/* ── 4. イベント ── */
+#home-events[hidden],
+.home-event[hidden] { display: none; }
+
+.home-events {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.home-event a {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  background: var(--top-card-bg);
+  border: 1px solid var(--top-border);
+  border-radius: 12px;
+}
+
+.home-event__badge {
+  flex-shrink: 0;
+  padding: 3px 8px;
+  border-radius: var(--top-radius-pill);
+  background: #E4574B;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.home-event__badge.is-upcoming { background: var(--top-purple-light); }
+
+.home-event__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.home-event__copy b { font-size: 13.5px; line-height: 1.45; }
+
+.home-event__copy small {
+  font-size: 11.5px;
+  color: var(--top-text-faint);
+}
+
+.home-events__more { margin-top: 8px; }
+
+.home-events__more summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--top-purple);
+}
+
+.home-events__more[open] summary { margin-bottom: 4px; }
+
+/* ── 5. 都道府県 ── */
+.home-regions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+}
+
+.home-region {
+  padding: 12px 14px 10px;
+  background: var(--top-card-bg);
+  border: 1px solid var(--top-border);
+  border-radius: var(--top-radius-card);
+}
+
+.home-region__title {
+  margin: 0 0 6px;
+  font-size: 13.5px;
+  font-weight: 800;
+}
+
+.home-region__title small {
+  margin-left: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--top-text-faint);
+}
+
+.home-pref {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.home-pref a {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  min-height: 40px;
+  align-items: center;
+  border-bottom: 1px solid var(--top-border-light);
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+.home-pref__count {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--top-purple);
+}
+
+.home-pref-note {
+  margin: 12px 0 0;
+  font-size: 12px;
+  line-height: 1.75;
+  color: var(--top-text-muted);
+}
+
+.home-pref-note a {
+  color: var(--top-purple);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* ── 6. 目的から探す ── */
+.home-purpose__block + .home-purpose__block { margin-top: 18px; }
+
+.home-purpose__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.home-purpose__more {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--top-purple);
+}
+
+.home-purpose__more::after { content: " →"; }
+
+.home-chips .hub-chip {
+  min-height: 40px;
+  padding: 8px 13px;
+  font-size: 13px;
+}
+
+.home-pokes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.home-poke a {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  background: var(--top-card-bg);
+  border: 1px solid var(--top-border);
+  border-radius: 12px;
+}
+
+.home-poke__name {
+  padding: 7px 9px 0;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.home-poke__count {
+  padding: 0 9px 8px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11.5px;
+  color: var(--top-purple);
+}
+
+.home-poke__placeholder {
+  display: block;
+  aspect-ratio: 1;
+  background: var(--top-border-light);
+}
+
+.home-poke--all a {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: var(--top-purple-pale);
+  border-color: transparent;
+}
+
+@media (hover: hover) {
+  .home-way:hover,
+  .home-gallery__item a:hover,
+  .home-poke a:hover,
+  .home-event a:hover,
+  .home-region:hover { border-color: var(--top-purple-light); }
+  .home-mosaic__item a:hover img,
+  .home-gallery__item a:hover img { opacity: 0.9; }
+  .home-quick__link:hover { filter: brightness(1.05); }
+}
+
+/* ── タブレット ── */
+@media (min-width: 600px) {
+  .home-gallery { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .home-regions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .home-newrel { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .home-events { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* ── デスクトップ ── */
+@media (min-width: 960px) {
+  .home-main { padding-left: 24px; padding-right: 24px; }
+  .home-section { margin-top: 48px; }
+  .home-h2 { font-size: 22px; }
+
+  .home-hero {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    align-items: center;
+    gap: 36px;
+    padding-top: 32px;
+  }
+  .home-hero--no-photos { grid-template-columns: minmax(0, 1fr); }
+  .home-h1 { font-size: 36px; }
+  .home-lead { font-size: 14.5px; }
+
+  .home-ways { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+  .home-gallery { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+  .home-regions { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .home-events { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .home-pokes { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; }
+  .home-newrel { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
