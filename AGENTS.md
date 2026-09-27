@@ -1,4 +1,6 @@
 manhole_titles.jsonは手動で更新している
+dataset/manhole_featured_photos.json は図鑑の代表写真を手動選定する `{manhole_id: photo_id}`。未指定・無効・非公開なら最新公開写真へ自動フォールバックする
+dataset/design_manhole_overrides.json はユーザー投稿を既存図鑑へ紐付ける `canonical_ref` と、`category`・`work` などの手動分類に使う。野球マンホールは `category: sports` と球団名の `work` で育てる
 dataset/prefecture_events.json は手動更新（都道府県ページに出す開催中スタンプラリー等のリンク。end_date 過ぎは日次再生成で自動非表示）
 pokefuta.ndjsonはapps/scraperで更新している
 latest-manhole-photos.json と docs/api/*.json は import-manhole-photos.yml が Supabase から日次一括生成（画像DL込み。pokefuta.com アプリの /api/manholes・/api/site-stats は docs/api を読む。手動で回すときだけ `/import-photos` スキル）

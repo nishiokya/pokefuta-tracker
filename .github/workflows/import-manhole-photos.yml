@@ -66,7 +66,8 @@ jobs:
           R2_BUCKET: ${{ secrets.R2_BUCKET }}
         run: |
           python apps/scraper/export_latest_manhole_photos.py \
-            --output docs/latest-manhole-photos.json
+            --output docs/latest-manhole-photos.json \
+            --featured-photo-overrides dataset/manhole_featured_photos.json
           cp docs/latest-manhole-photos.json apps/web/latest-manhole-photos.json
 
       - name: Import photos (download, square-crop, cleanup)

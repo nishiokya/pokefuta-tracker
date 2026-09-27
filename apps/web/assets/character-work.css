@@ -265,6 +265,9 @@
 .cw-city h3 small { font-size: 12px; color: var(--cm-muted); }
 .cw-spots { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 .cw-spot { padding: 22px; border-radius: 18px; background: var(--cm-card); border: 1px solid var(--cm-line); overflow-wrap: anywhere; }
+.cw-spot-photo { margin: -22px -22px 18px; position: relative; aspect-ratio: 4 / 3; overflow: hidden; border-radius: 18px 18px 0 0; background: #eee8f0; }
+.cw-spot-photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.cw-spot-photo figcaption { position: absolute; right: 8px; bottom: 8px; padding: 4px 8px; border-radius: 999px; color: #fff; background: rgba(38, 29, 43, .76); font-size: 10px; }
 .cw-spot h4 { margin-bottom: 6px; font-size: 19px; font-weight: 900; }
 .cw-spot p { margin-bottom: 6px; font-size: 13px; }
 .cw-spot .cw-series { font-size: 11px; font-weight: 700; letter-spacing: .04em; color: #a85b2e; }
@@ -328,6 +331,7 @@
   .cw-index { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .cw-spots { grid-template-columns: minmax(0, 1fr); }
   .cw-spot { padding: 18px; }
+  .cw-spot-photo { margin: -18px -18px 16px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .lp-work-card { transition: none; }

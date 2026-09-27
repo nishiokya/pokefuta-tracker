@@ -4,8 +4,11 @@ Run: python3 tools/test_export_latest_manhole_photos.py
 """
 
 import importlib.util
+import json
+import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 MODULE_PATH = Path(__file__).with_name("export_latest_manhole_photos.py")
 SPEC = importlib.util.spec_from_file_location("export_latest_manhole_photos", MODULE_PATH)
@@ -80,6 +83,31 @@ class SelectGalleryPhotosTest(unittest.TestCase):
         self.assertEqual(result[0]["id"], newest["id"])
         self.assertEqual(result[0]["id"], "rep")
 
+    def test_featured_photo_is_first_even_when_older(self):
+        photos = [
+            _photo("new", shot_at="2026-03-01T00:00:00Z"),
+            _photo("featured", shot_at="2026-01-01T00:00:00Z"),
+            _photo("mid", shot_at="2026-02-01T00:00:00Z"),
+        ]
+        result = export.select_gallery_photos(
+            photos,
+            2,
+            featured_photo_id="featured",
+        )
+        self.assertEqual([p["id"] for p in result], ["featured", "new"])
+
+    def test_private_featured_photo_falls_back_to_latest_public(self):
+        photos = [
+            _photo("public", shot_at="2026-01-01T00:00:00Z"),
+            _photo("private", shot_at="2026-03-01T00:00:00Z", is_public=False),
+        ]
+        result = export.select_gallery_photos(
+            photos,
+            5,
+            featured_photo_id="private",
+        )
+        self.assertEqual([p["id"] for p in result], ["public"])
+
     def test_empty_input(self):
         self.assertEqual(export.select_gallery_photos([], 5), [])
 
@@ -88,6 +116,60 @@ class SelectGalleryPhotosTest(unittest.TestCase):
         photo["visit"] = [photo["visit"]]
         result = export.select_gallery_photos([photo], 5)
         self.assertEqual([p["id"] for p in result], ["listy"])
+
+
+class FeaturedPhotoOverridesTest(unittest.TestCase):
+    def test_loads_string_and_numeric_manhole_ids(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "featured.json"
+            path.write_text(json.dumps({"12": "photo-a", 34: "photo-b"}))
+            self.assertEqual(
+                export.load_featured_photo_overrides(str(path)),
+                {"12": "photo-a", "34": "photo-b"},
+            )
+
+    def test_missing_file_means_no_overrides(self):
+        self.assertEqual(
+            export.load_featured_photo_overrides("/missing/featured.json"),
+            {},
+        )
+
+    def test_rejects_invalid_manhole_id(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "featured.json"
+            path.write_text(json.dumps({"not-a-manhole": "photo-a"}))
+            with self.assertRaises(ValueError):
+                export.load_featured_photo_overrides(str(path))
+
+
+class BuildPayloadFeaturedPhotoTest(unittest.TestCase):
+    @mock.patch.object(export, "fetch_manhole_comments_by_display_name", return_value={})
+    @mock.patch.object(export, "fetch_user_info", return_value={})
+    @mock.patch.object(export, "get_effective_r2_public_base_url", return_value="https://images.example")
+    def test_curated_photo_becomes_representative_and_first_gallery_item(
+        self,
+        _base_url,
+        _users,
+        _comments,
+    ):
+        photos = [
+            _photo("new", shot_at="2026-03-01T00:00:00Z"),
+            _photo("featured", shot_at="2026-01-01T00:00:00Z"),
+        ]
+        with mock.patch.object(export, "iter_photos", return_value=iter(photos)):
+            payload = export.build_payload(
+                include_private=False,
+                batch_size=100,
+                timeout=10,
+                manhole_comment_display_name="tako",
+                gallery_limit=5,
+                featured_photo_overrides={"1": "featured"},
+            )
+
+        entry = payload["photos"]["1"]
+        self.assertEqual(entry["photo_id"], "featured")
+        self.assertEqual(entry["representative_source"], "curated")
+        self.assertEqual(entry["gallery"][0]["photo_id"], "featured")
 
 
 class ToGalleryEntryTest(unittest.TestCase):
