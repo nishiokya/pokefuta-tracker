@@ -38,6 +38,7 @@ ASSET_BASE = "../../"
 INDEX_ASSET_BASE = "../"
 DEFAULT_EVENTS = ROOT / "dataset/character_manhole_events.json"
 DEFAULT_GUNDAM = ROOT / "docs/gmanhole.ndjson"
+DEFAULT_DESIGN_MANHOLES = ROOT / "docs/design_manholes.ndjson"
 OG_IMAGE = BASE_URL + "assets/ogp/pokefuta_map_ogp.png"
 IDOLMASTER_EVENT_TYPE = "idolmaster_20th_checkin"
 EVENT_REQUIRED_KEYS = {"type", "url", "project_url", "verified_at", "ends_at", "spots"}
@@ -71,6 +72,34 @@ def has_coordinates(record: dict) -> bool:
     lat, lng = record.get("lat"), record.get("lng")
     return all(isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v)
                for v in (lat, lng)) and -90 <= lat <= 90 and -180 <= lng <= 180
+
+
+def attach_user_photos(records: list[dict], submissions: list[dict]) -> list[dict]:
+    """Attach the newest linked public submission to each character record."""
+    linked: dict[str, dict] = {}
+    for submission in submissions:
+        canonical_ref = str(submission.get("canonical_ref") or "")
+        if (
+            submission.get("status") != "active"
+            or not canonical_ref.startswith("character:")
+            or not safe_url(submission.get("photo_url"))
+        ):
+            continue
+        current = linked.get(canonical_ref)
+        if current is None or str(submission.get("created_at") or "") > str(
+            current.get("created_at") or ""
+        ):
+            linked[canonical_ref] = submission
+
+    enriched: list[dict] = []
+    for record in records:
+        item = dict(record)
+        submission = linked.get(f"character:{record.get('id')}")
+        if submission:
+            item["user_photo_url"] = submission["photo_url"]
+            item["user_photo_source_url"] = submission.get("source_url")
+        enriched.append(item)
+    return enriched
 
 
 def validate_event(slug: str, raw: object) -> dict | None:
@@ -189,7 +218,22 @@ def spot_html(record: dict, event: dict | None, event_active: bool) -> str:
     if event_active and event and str(record["id"]) in event["spots"]:
         checkin = safe_url(event["url"].rstrip("/") + "/" + str(event["spots"][str(record["id"])]).lstrip("/"))
         links += f'<a href="{escape(checkin)}" target="_blank" rel="noopener noreferrer">公式スポット案内（ログインが必要）↗</a>'
+    photo_url = safe_url(record.get("user_photo_url"))
+    photo_source_url = safe_url(record.get("user_photo_source_url"))
+    photo = ""
+    if photo_url:
+        image = (
+            f'<img src="{escape(photo_url)}" alt="{escape(name)}のユーザー投稿写真" '
+            'loading="lazy" decoding="async">'
+        )
+        if photo_source_url:
+            image = (
+                f'<a href="{escape(photo_source_url)}" target="_blank" '
+                f'rel="noopener noreferrer">{image}</a>'
+            )
+        photo = f'<figure class="cw-spot-photo">{image}<figcaption>みんなの投稿写真</figcaption></figure>'
     return f"""<article class="cw-spot" id="{spot_id(record)}">
+      {photo}
       <p class="cw-series">{escape(str(record.get('work') or ''))}</p>
       <h4>{escape(name)}</h4>{location_html}
       <p>{escape(address)}</p>{coordinate_note}<div class="cw-spot-links">{links}</div>
@@ -333,8 +377,13 @@ def generate_index_html(records: list[dict]) -> str:
 </body></html>"""
 
 
-def write_pages(records: list[dict], events: dict, output: Path) -> list[Path]:
-    active = [r for r in records if _is_active(r)]
+def write_pages(
+    records: list[dict],
+    events: dict,
+    output: Path,
+    design_submissions: list[dict] | None = None,
+) -> list[Path]:
+    active = [r for r in attach_user_photos(records, design_submissions or []) if _is_active(r)]
     pages = available_pages(active)
     written = []
     index_path = output / "characters/index.html"
@@ -361,12 +410,18 @@ def main() -> int:
     parser.add_argument("--data", type=Path, default=ROOT / "docs/character_manholes.ndjson")
     parser.add_argument("--events", type=Path, default=DEFAULT_EVENTS)
     parser.add_argument("--gundam", type=Path, default=DEFAULT_GUNDAM)
+    parser.add_argument("--design-manholes", type=Path, default=DEFAULT_DESIGN_MANHOLES)
     parser.add_argument("--output", type=Path, default=ROOT / "dist")
     args = parser.parse_args()
     records = load_ndjson(args.data) + gundam_work_records(load_ndjson(args.gundam))
     if not any(_is_active(r) for r in records):
         parser.error("No active character records; refusing to generate empty guides")
-    written = write_pages(records, load_events(args.events), args.output)
+    written = write_pages(
+        records,
+        load_events(args.events),
+        args.output,
+        design_submissions=load_ndjson(args.design_manholes),
+    )
     print(f"[generate_character_work_pages] wrote {len(written)} character pages")
     return 0
 

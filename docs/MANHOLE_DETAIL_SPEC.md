@@ -46,14 +46,15 @@ data.pokefuta.com（tracker）と pokefuta.com のマンホール詳細ページ
 
 ### エクスポート拡張（tracker repo: `apps/scraper/export_latest_manhole_photos.py`）
 
-- `photos[manhole_id]` の既存フィールド（代表＝最新1枚）は**そのまま維持**（後方互換）。
-- 各エントリに `gallery` 配列を追加：代表を含む公開写真を新しい順に**最大5枚**。
+- `photos[manhole_id]` の既存フィールドは**そのまま維持**（後方互換）。代表写真は `dataset/manhole_featured_photos.json` の手動指定を優先し、指定がない・削除済み・非公開の場合は最新の公開写真へフォールバックする。
+- 各エントリに `representative_source`（`curated` / `latest`）と `gallery` 配列を追加。ギャラリーは代表を先頭に置き、残りを新しい順で**最大5枚**。
 
 ```jsonc
 "photos": {
   "1": {
     "manhole_id": 1,
-    "photo_id": "...",        // 代表（最新）— 従来どおり
+    "photo_id": "...",        // 代表（手動選定、なければ最新）
+    "representative_source": "curated",
     "url": "...",
     "display_name": "...",     // 代表写真の撮影者名
     "public_user_id": "...",   // 代表写真の投稿者の公開UUID（gallery 各エントリにも同名キーあり）
@@ -66,6 +67,7 @@ data.pokefuta.com（tracker）と pokefuta.com のマンホール詳細ページ
 ```
 
 - 対象は `is_public = true` の写真のみ。撮影者名のキーは既存の代表写真と同じ `display_name`（app_user の display_name を引く）。
+- 手動指定写真が非公開・削除済み・別マンホールの写真なら採用せず、自動的に最新公開写真へ戻す。日次同期を失敗させない。
 - 代表・`gallery` の各エントリに `public_user_id`（app_user.id の公開UUID）を含める。投稿者の公開スタンプ帳 `pokefuta.com/users/{public_user_id}/visits` へのリンク生成に使う。
 
 ### 取り込み拡張（tracker repo: `apps/tools/import_latest_manhole_photos.py`）

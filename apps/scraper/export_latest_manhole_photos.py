@@ -30,6 +30,7 @@ DEFAULT_BATCH_SIZE = 1000
 DEFAULT_TIMEOUT = 30
 DEFAULT_MANHOLE_COMMENT_DISPLAY_NAME = "tako"
 DEFAULT_GALLERY_LIMIT = 5
+DEFAULT_FEATURED_PHOTO_OVERRIDES = "dataset/manhole_featured_photos.json"
 
 
 def require_env(name: str) -> str:
@@ -172,19 +173,53 @@ def to_gallery_entry(
 def select_gallery_photos(
     photos: list[dict[str, Any]],
     limit: int,
+    featured_photo_id: Optional[str] = None,
 ) -> list[dict[str, Any]]:
-    """Pick gallery photos: public only, newest first, at most `limit` entries.
+    """Pick public gallery photos, putting a curated representative first.
 
     The spec (pokefuta-tracker docs/MANHOLE_DETAIL_SPEC.md) requires the
     gallery to contain only is_public photos even when the export itself
-    runs with --include-private.
+    runs with --include-private. A missing/private featured photo safely
+    falls back to the newest public photo.
     """
     public_photos = [
         photo
         for photo in photos
         if normalize_visit(photo.get("visit")).get("is_public")
     ]
-    return sorted(public_photos, key=photo_sort_date, reverse=True)[:limit]
+    ordered = sorted(public_photos, key=photo_sort_date, reverse=True)
+    if featured_photo_id:
+        featured = next(
+            (photo for photo in ordered if str(photo.get("id")) == featured_photo_id),
+            None,
+        )
+        if featured is not None:
+            ordered = [featured, *(photo for photo in ordered if photo is not featured)]
+    return ordered[:limit]
+
+
+def load_featured_photo_overrides(path: Optional[str]) -> dict[str, str]:
+    """Load {manhole_id: photo_id}; an absent file means no overrides."""
+    if not path:
+        return {}
+    override_path = Path(path)
+    if not override_path.exists():
+        return {}
+    with override_path.open(encoding="utf-8") as source:
+        raw = json.load(source)
+    if not isinstance(raw, dict):
+        raise ValueError(f"Featured photo overrides must be a JSON object: {override_path}")
+
+    overrides: dict[str, str] = {}
+    for manhole_id, photo_id in raw.items():
+        manhole_key = str(manhole_id).strip()
+        photo_key = str(photo_id).strip()
+        if not manhole_key.isdigit() or not photo_key:
+            raise ValueError(
+                f"Invalid featured photo override {manhole_id!r}: {photo_id!r}"
+            )
+        overrides[manhole_key] = photo_key
+    return overrides
 
 
 def supabase_get(
@@ -349,6 +384,7 @@ def build_payload(
     timeout: int,
     manhole_comment_display_name: str,
     gallery_limit: int,
+    featured_photo_overrides: Optional[dict[str, str]] = None,
 ) -> dict[str, Any]:
     base_url = get_effective_r2_public_base_url()
     photos_by_manhole_id: dict[int, list[dict[str, Any]]] = {}
@@ -365,16 +401,28 @@ def build_payload(
     user_info_by_auth_uid = fetch_user_info(photo_user_ids, batch_size, timeout)
 
     photos: dict[str, dict[str, Any]] = {}
+    featured_photo_overrides = featured_photo_overrides or {}
     for manhole_id in sorted(photos_by_manhole_id):
         manhole_photos = sorted(
             photos_by_manhole_id[manhole_id],
             key=photo_sort_date,
             reverse=True,
         )
-        entry = to_photo_entry(manhole_photos[0], base_url, user_info_by_auth_uid)
+        featured_photo_id = featured_photo_overrides.get(str(manhole_id))
+        selected_photos = select_gallery_photos(
+            manhole_photos,
+            gallery_limit,
+            featured_photo_id=featured_photo_id,
+        )
+        representative = selected_photos[0] if selected_photos else manhole_photos[0]
+        entry = to_photo_entry(representative, base_url, user_info_by_auth_uid)
+        entry["representative_source"] = (
+            "curated" if featured_photo_id and str(representative.get("id")) == featured_photo_id
+            else "latest"
+        )
         entry["gallery"] = [
             to_gallery_entry(photo, base_url, user_info_by_auth_uid)
-            for photo in select_gallery_photos(manhole_photos, gallery_limit)
+            for photo in selected_photos
         ]
         photos[str(manhole_id)] = entry
     manhole_comments = fetch_manhole_comments_by_display_name(
@@ -439,17 +487,32 @@ def parse_args() -> argparse.Namespace:
         default=int(os.environ.get("PHOTO_EXPORT_GALLERY_LIMIT", DEFAULT_GALLERY_LIMIT)),
         help=f"Max public photos per manhole in the gallery array. Default: {DEFAULT_GALLERY_LIMIT}",
     )
+    parser.add_argument(
+        "--featured-photo-overrides",
+        default=os.environ.get(
+            "FEATURED_PHOTO_OVERRIDES",
+            DEFAULT_FEATURED_PHOTO_OVERRIDES,
+        ),
+        help=(
+            "JSON object mapping manhole IDs to representative photo IDs. "
+            f"Default: {DEFAULT_FEATURED_PHOTO_OVERRIDES}"
+        ),
+    )
     return parser.parse_args()
 
 
 def main() -> None:
     args = parse_args()
+    featured_photo_overrides = load_featured_photo_overrides(
+        args.featured_photo_overrides
+    )
     payload = build_payload(
         include_private=args.include_private,
         batch_size=args.batch_size,
         timeout=args.timeout,
         manhole_comment_display_name=args.manhole_comment_display_name,
         gallery_limit=args.gallery_limit,
+        featured_photo_overrides=featured_photo_overrides,
     )
 
     output_path = Path(args.output)

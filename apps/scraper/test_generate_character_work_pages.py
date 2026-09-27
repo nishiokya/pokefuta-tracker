@@ -9,7 +9,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from apps.scraper.character_manhole_works import CHARACTER_CSS_VERSION, WORK_PAGES, gundam_work_records, page_for_work
-from apps.scraper.generate_character_work_pages import generate_html, generate_index_html, load_events, write_pages
+from apps.scraper.generate_character_work_pages import attach_user_photos, generate_html, generate_index_html, load_events, write_pages
 from apps.scraper.generate_character_manhole_page import _is_active, load_ndjson
 from apps.scraper.photo_caption import JST
 
@@ -105,6 +105,30 @@ class IdolmasterPageTest(unittest.TestCase):
     def setUp(self) -> None:
         self.now = datetime(2026, 9, 20, 12, tzinfo=JST)
         self.html = generate_html(IDOLMASTER, RECORDS, EVENT, now=self.now)
+
+    def test_linked_user_photo_is_used_on_the_encyclopedia_card(self) -> None:
+        submissions = [{
+            "canonical_ref": "character:imas-a",
+            "status": "active",
+            "photo_url": "https://pokefuta.com/api/design-manholes/photo-a/photo?size=small",
+            "source_url": "https://pokefuta.com/design-manholes/photo-a",
+            "created_at": "2026-09-21T00:00:00Z",
+        }]
+        enriched = attach_user_photos(RECORDS, submissions)
+        html = generate_html(IDOLMASTER, enriched, EVENT, now=self.now)
+        self.assertIn("photo-a/photo?size=small", html)
+        self.assertIn("みんなの投稿写真", html)
+        self.assertIn("渡辺みのりのユーザー投稿写真", html)
+
+    def test_unlinked_submission_does_not_replace_a_photo(self) -> None:
+        submissions = [{
+            "canonical_ref": None,
+            "status": "active",
+            "photo_url": "https://example.com/unlinked.jpg",
+            "created_at": "2026-09-21T00:00:00Z",
+        }]
+        enriched = attach_user_photos(RECORDS, submissions)
+        self.assertFalse(any(record.get("user_photo_url") for record in enriched))
 
     def test_hero_leads_to_official_checkin(self) -> None:
         self.assertIn("アイマスのマンホール、<br>会いに行こう。", self.html)
