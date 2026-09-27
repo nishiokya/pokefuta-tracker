@@ -255,7 +255,7 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
     canonical = BASE_URL + page.path
     event = event_for_page(page.slug, events)
     badge, event_section, event_active = event_html(event, now) if event else ("", "", False)
-    hero_heading = "アイマスのマンホール、<br>会いに行こう。" if event_active else f"{escape(page.name)}の<br>マンホールを探そう。"
+    hero_heading = "ふたマス!!!!!!（アイマス）のマンホール、<br>会いに行こう。" if page.slug == "idolmaster" else f"{escape(page.name)}の<br>マンホールを探そう。"
     hero_note = "担当アイドルのふたを訪ねて、公式チェックインへ。" if event_active else "好きな作品を、次の旅の目的地に。"
     hero_cta = '<a class="cm-btn cm-btn--ghost" href="#check-in">チェックインの参加方法 →</a>' if event_active else ""
     # 全国一覧の作品カードと同じ色・同じ字の蓋を掲げ、2種類のページを同じ図鑑に見せる
@@ -288,6 +288,8 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
         (page.question, page.answer),
         ("掲載されているマンホールがすべてですか？", "掲載データに収録した設置場所の一覧です。全国すべての設置状況を網羅するものではありません。移設・撤去や施設の開放時間は、訪問前に出典の案内をご確認ください。"),
     ]
+    if page.slug == "idolmaster":
+        faq.append(("フタマスとふたマスは同じものですか？", "フタマスと検索されることもありますが、公式名称は『ふたマス!!!!!!』です。"))
     if event_active:
         faq.append(("このサイトでチェックインできますか？", "チェックインは公式のアイドルマスター ポータルで行います。バンダイナムコIDでのログインと位置情報の許可が必要です。写真館への投稿とは別のサービスです。"))
     faq_html = "".join(f'<details><summary>{escape(q)}</summary><p>{escape(a)}</p></details>' for q, a in faq)
