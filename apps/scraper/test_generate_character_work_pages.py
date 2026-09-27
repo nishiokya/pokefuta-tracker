@@ -163,6 +163,8 @@ class IdolmasterPageTest(unittest.TestCase):
             IDOLMASTER, RECORDS, EVENT,
             now=datetime(2027, 7, 25, 10, tzinfo=JST),
         )
+        self.assertIn("ふたマス!!!!!!（アイマス）のマンホール、<br>会いに行こう。", html)
+        self.assertIn("フタマスと検索されることもありますが、公式名称は『ふたマス!!!!!!』です。", html)
         self.assertIn("チェックイン企画の掲載期間は終了しました", html)
         self.assertIn("公式プロジェクトの最新情報を見る", html)
         self.assertNotIn("ふたマスの対象スポットを訪ねると、公式ポータルのチェックイン企画に参加できます。", html)
