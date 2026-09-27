@@ -7,12 +7,17 @@ ROOT = Path(__file__).resolve().parents[2]
 
 class WebPrefectureLinksTest(unittest.TestCase):
     def test_top_prefecture_links_use_helper_relative_paths(self) -> None:
-        for filename in ("index.html", "index.template.html"):
-            with self.subTest(filename=filename):
-                source = (ROOT / "apps/web" / filename).read_text(encoding="utf-8")
-                self.assertIn("window.getPrefecturePageUrl = function(prefecture)", source)
-                self.assertIn('" href="\' + window.getPrefecturePageUrl(pref) + \'"', source)
-                self.assertNotIn('href="/prefectures/', source)
+        source = (ROOT / "apps/web/index.template.html").read_text(encoding="utf-8")
+        self.assertIn("window.getPrefecturePageUrl = function(prefecture)", source)
+        self.assertIn('" href="\' + window.getPrefecturePageUrl(pref) + \'"', source)
+        self.assertNotIn('href="/prefectures/', source)
+
+    def test_ja_top_prefecture_links_are_static_relative_paths(self) -> None:
+        """日本語トップは都道府県リンクを生成時に静的HTMLへ入れる（クロールされるように）。"""
+        source = (ROOT / "apps/web/index.html").read_text(encoding="utf-8")
+        self.assertIn('href="prefectures/hokkaido/"', source)
+        self.assertIn('href="prefectures/"', source)
+        self.assertNotIn('href="/prefectures/', source)
 
     def test_language_pages_are_linked_with_lang_path(self) -> None:
         """言語ごとに存在するページを BASE_PATH で参照しないこと。
