@@ -131,7 +131,7 @@ class IdolmasterPageTest(unittest.TestCase):
         self.assertFalse(any(record.get("user_photo_url") for record in enriched))
 
     def test_hero_leads_to_official_checkin(self) -> None:
-        self.assertIn("アイマスのマンホール、<br>会いに行こう。", self.html)
+        self.assertIn("ふたマス!!!!!!（アイマス）のマンホール、<br>会いに行こう。", self.html)
         self.assertIn("担当アイドルのふたを訪ねて、公式チェックインへ。", self.html)
         self.assertIn("バンダイナムコID", self.html)
         self.assertIn("位置情報", self.html)
@@ -139,6 +139,7 @@ class IdolmasterPageTest(unittest.TestCase):
         self.assertIn("マイデスクに表示できる称号", self.html)
         self.assertIn("2027年7月25日 9:59", self.html)
         self.assertIn("ふたマス!!!!!!公式プロジェクト", self.html)
+        self.assertIn("フタマスと検索されることもありますが、公式名称は『ふたマス!!!!!!』です。", self.html)
 
     def test_lists_each_active_idol_once(self) -> None:
         schema = re.search(r'<script type="application/ld\+json">(.*?)</script>', self.html).group(1)
