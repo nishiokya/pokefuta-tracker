@@ -596,7 +596,8 @@ def generate_html(
 
     # <title> と og: は検索向けに「県市のポケふた」の形を保つので、施設名は h1 だけに入れる
     h1 = f"{compose_display_name(manhole) or city_label}のポケふた"
-    if pokemons:
+    # place_ambiguous な蓋は名前にポケモン名が入っているので、二重に付けない
+    if pokemons and not manhole.get("place_ambiguous"):
         h1 += f"（{pokemon_text}）"
 
     canonical_url = f"{BASE_URL}manholes/{quote(manhole_id)}/"

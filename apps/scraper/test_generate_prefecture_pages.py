@@ -404,8 +404,36 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         self.assertIn('data-photo-state="missing"', html)
         self.assertIn("const markerClass = point.is_preinstall", html)
         self.assertIn("html: '<div class=\"prefecture-marker ' + markerClass", html)
-        self.assertIn("title: (point.city || '所在地不明') + 'のポケふた'", html)
+        self.assertIn("title: point.name + 'のポケふた'", html)
         self.assertIn("? '設置予定'", html)
+
+    def test_photo_and_contribution_cards_use_the_display_name(self) -> None:
+        # 公式の city（「台東区上野」）だけだと同じ自治体の蓋が見分けられないので、
+        # 一覧と同じ正本の名前を出す
+        records = [
+            {"id": "9101", "prefecture": "東京都", "city": "台東区上野",
+             "title": "東京都/台東区上野", "place_label": "台東区上野 国立科学博物館",
+             "pokemons": ["ソーナノ"], "lat": 35.71, "lng": 139.77},
+            {"id": "9102", "prefecture": "東京都", "city": "台東区上野",
+             "title": "東京都/台東区上野", "place_label": "台東区上野 東京国立博物館",
+             "pokemons": ["ドーミラー"], "lat": 35.72, "lng": 139.77},
+        ]
+        photos = {"9101": {"url": "https://images.pokefuta.com/photos/9101.jpg",
+                           "created_at": "2026-07-20T00:00:00Z"}}
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            image = root / "dataset" / "manhole" / "image" / "9101_latest.jpeg"
+            image.parent.mkdir(parents=True)
+            image.write_bytes(b"test image")
+            with mock.patch.object(MODULE, "ROOT", root):
+                html = MODULE.build_page(
+                    "東京都", "tokyo", records, 1, self.pokemon_slugs, None,
+                    photos=photos,
+                )
+        self.assertIn("<strong>台東区上野 国立科学博物館</strong><small>ソーナノ</small>", html)
+        self.assertIn('alt="台東区上野 国立科学博物館のポケふた投稿写真"', html)
+        self.assertIn("<span>写真募集中</span><strong>台東区上野 東京国立博物館</strong>", html)
+        self.assertIn('"name": "台東区上野 東京国立博物館"', html)
 
     def test_photo_section_zero_inventory_invites_first_contribution(self) -> None:
         records = [
