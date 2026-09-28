@@ -80,6 +80,15 @@ class DetailH1Tests(unittest.TestCase):
                                   address="鹿児島県指宿市十町1003", building="指宿市 指宿図書館"))
         self.assertIn("<dd>指宿図書館</dd>", html)
 
+    def test_ambiguous_place_does_not_repeat_pokemon(self):
+        # 場所で区別できない蓋は名前にポケモン名が入るので、h1 で二重に付けない
+        html = _generate(_manhole(
+            title="愛知県/豊橋市",
+            place_label="豊橋市",
+            place_ambiguous=True,
+        ))
+        self.assertEqual(_h1(html), "豊橋市（スターミー・デンヂムシ）のポケふた")
+
 
 if __name__ == "__main__":
     unittest.main()

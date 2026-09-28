@@ -281,6 +281,12 @@ def _clean_pokemons(record: dict) -> list[str]:
     ]
 
 
+def _manhole_name(record: dict) -> str:
+    # 正本のマンホール名。city は公式の生の値（「町田」「台東区上野」）で、
+    # 同じ自治体の蓋を区別できないので名前には使わない。
+    return compose_display_name(record) or municipality_label(record) or "所在地不明"
+
+
 def _json_for_script(value: object) -> str:
     return json.dumps(value, ensure_ascii=False).replace("</", "<\\/")
 
@@ -523,7 +529,7 @@ def _photo_section(
     gallery_cards = []
     for position, (record, photo) in enumerate(entries[:4], start=1):
         mid = str(record.get("id", "")).strip()
-        city = str(record.get("city", "") or "所在地不明")
+        name = _manhole_name(record)
         pokemons = "・".join(_clean_pokemons(record)) or "ポケモン"
         poster = str(photo.get("display_name", "") or "").strip()
         profile_url = poster_profile_url(photo.get("public_user_id"))
@@ -546,9 +552,9 @@ def _photo_section(
             f'data-track="prefecture_photo_click" data-position="{position}" '
             f'data-destination="{_escape_attr(mid)}" data-surface="photo_gallery">'
             f'<img src="{_escape_attr(_photo_asset_url(record, photo))}" '
-            f'alt="{_escape_attr(prefecture)}{_escape_attr(city)}のポケふた投稿写真" '
+            f'alt="{_escape_attr(name)}のポケふた投稿写真" '
             f'loading="lazy" decoding="async" width="640" height="480">'
-            f'<span><strong>{escape(city)}</strong><small>{escape(pokemons)}</small>'
+            f'<span><strong>{escape(name)}</strong><small>{escape(pokemons)}</small>'
             f'</span></a>{poster_html}'
             f'<a class="photo-card-upload" href="{_escape_attr(_upload_url(mid, slug))}" '
             f'data-track="prefecture_photo_upload_start" data-position="{position}" '
@@ -566,7 +572,7 @@ def _photo_section(
     contribution_cards = []
     for position, record in enumerate(missing_records, start=1):
         mid = str(record.get("id", "")).strip()
-        city = str(record.get("city", "") or "所在地不明")
+        name = _manhole_name(record)
         pokemons = "・".join(_clean_pokemons(record)) or "ポケモン"
         contribution_cards.append(
             f'<a class="contribution-card" href="{_escape_attr(_upload_url(mid, slug))}" '
@@ -574,7 +580,7 @@ def _photo_section(
             f'data-destination="upload" data-content-id="{_escape_attr(mid)}" '
             f'data-surface="photo_contribution" '
             f'data-photo-state="missing">'
-            f'<span>写真募集中</span><strong>{escape(city)}</strong>'
+            f'<span>写真募集中</span><strong>{escape(name)}</strong>'
             f'<small>{escape(pokemons)}</small><b>最初の写真を投稿 →</b></a>'
         )
     contribution_html = (
@@ -612,7 +618,7 @@ def _manhole_cards(
         start=1,
     ):
         mid = str(record.get("id", "")).strip()
-        display_name = compose_display_name(record) or municipality_label(record) or "所在地不明"
+        display_name = _manhole_name(record)
         pokemons = "・".join(_clean_pokemons(record)) or "ポケモン"
         image_path = ROOT / "dataset" / "manhole" / "image" / f"{mid}_latest.jpeg"
         image_html = (
@@ -1289,7 +1295,7 @@ def build_page(
             "id": str(record.get("id", "")),
             "lat": record.get("lat"),
             "lng": record.get("lng"),
-            "city": record.get("city", ""),
+            "name": _manhole_name(record),
             "pokemons": _clean_pokemons(record),
             "is_preinstall": record.get("installed") is False,
             "photo_url": (
@@ -1942,7 +1948,7 @@ def build_page(
           ? '<div class="map-popup-preinstall">設置予定のポケふたです。設置後に写真を投稿できます。</div>'
           : (point.photo_url
             ? '<img src="' + escapeHtml(point.photo_url) + '" alt="' +
-              escapeHtml(point.city || '所在地不明') + 'のポケふた投稿写真" ' +
+              escapeHtml(point.name) + 'のポケふた投稿写真" ' +
               'loading="lazy" decoding="async" width="320" height="240">'
             : '<div class="map-popup-photo-missing">このポケふたは写真募集中です</div>');
         const uploadHtml = point.is_preinstall
@@ -1952,7 +1958,7 @@ def build_page(
             'data-content-id="' + escapeHtml(point.id) +
             '" data-surface="map_popup" data-photo-state="' + photoState + '">写真投稿</a>';
         const popupHtml = '<div class="map-popup"><strong>' +
-          escapeHtml(point.city || '所在地不明') + '</strong><br>' +
+          escapeHtml(point.name) + '</strong><br>' +
           escapeHtml(pokemon) + photoHtml + '<div class="map-popup-actions' +
           (point.is_preinstall ? ' preinstall-actions' : '') + '">' +
           '<a href="' + detailUrl + '" data-track="prefecture_manhole_click" ' +
@@ -1964,8 +1970,8 @@ def build_page(
           'data-content-id="' + escapeHtml(point.id) + '" data-surface="map_popup">行き方</a>' +
           uploadHtml + '</div></div>';
         const marker = L.marker(latlng, {{
-          title: (point.city || '所在地不明') + 'のポケふた',
-          alt: (point.city || '所在地不明') + 'のポケふた・' +
+          title: point.name + 'のポケふた',
+          alt: point.name + 'のポケふた・' +
             (point.is_preinstall
               ? '設置予定'
               : (point.photo_url ? '投稿写真あり' : '写真募集中')),
