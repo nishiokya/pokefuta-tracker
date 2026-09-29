@@ -472,6 +472,21 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         self.assertNotIn("すべてのポケふたに現地写真があります", html)
         self.assertNotIn("contribution-panel", html)
 
+    def test_photo_section_shows_every_photo_up_to_two_rows(self) -> None:
+        """滋賀県（5枚すべて写真あり）で現地写真が4枚しか出ていなかった。
+
+        8枚までは全部並べ、それを超える分は下の一覧に任せる。"""
+        records = [{"id": str(9100 + i), "city": "A市"} for i in range(10)]
+        photos = {
+            r["id"]: {"created_at": "2026-07-20T00:00:00Z"} for r in records
+        }
+        with mock.patch.object(MODULE, "_photo_asset_url", return_value="/x.jpeg"):
+            five = MODULE._photo_section("滋賀県", "shiga", records[:5], photos)
+            ten = MODULE._photo_section("滋賀県", "shiga", records, photos)
+        self.assertEqual(5, five.count('<article class="photo-card">'))
+        # 4列×2段。定数から期待値を取ると上限を変えても通ってしまうので数字で固定する
+        self.assertEqual(8, ten.count('<article class="photo-card">'))
+
     def test_manhole_card_is_a_photo_first_tile(self) -> None:
         """一覧カードは写真館のタイルと同じ「写真が主役・タイル全体が詳細リンク」。
 
