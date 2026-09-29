@@ -529,7 +529,7 @@ def build_page(
 
     <footer><a href="/summary/">全国のポケふた一覧へ戻る</a></footer>
   </main>
-  <script src="/assets/analytics.js?v=20260805a"></script>
+  <script src="/assets/analytics.js?v=20260929a"></script>
   <script>
     window.PokefutaAnalytics.init({{
       'page_path': '/tags/' + {_json_for_script(tag)} + '/',
@@ -539,25 +539,16 @@ def build_page(
     }});
     // 送信は共有ローダー経由（本番ホスト判定と共通コンテキストの付与をそこに集約している）。
     // 生成スクリプトに gtag を直書きしないこと（AGENTS.md）。
+    const tagEventDefaults = {{
+      event_category: 'tag_growth',
+      surface: 'tag_page',
+      tag: {_json_for_script(tag)},
+      tag_label: {_json_for_script(meta["label"])}
+    }};
     function trackTagEvent(name, params) {{
-      window.PokefutaAnalytics.trackEvent(name, Object.assign({{
-        event_category: 'tag_growth',
-        surface: 'tag_page',
-        tag: {_json_for_script(tag)},
-        tag_label: {_json_for_script(meta["label"])}
-      }}, params || {{}}));
+      window.PokefutaAnalytics.trackEvent(name, Object.assign({{}}, tagEventDefaults, params || {{}}));
     }}
-    document.addEventListener('click', function(event) {{
-      const link = event.target.closest('[data-track]');
-      if (!link) return;
-      trackTagEvent(link.dataset.track, {{
-        position: Number(link.dataset.position || 0),
-        destination: link.dataset.destination || '',
-        content_id: link.dataset.contentId || '',
-        photo_state: link.dataset.photoState || '',
-        surface: link.dataset.surface || 'tag_page'
-      }});
-    }});
+    window.PokefutaAnalytics.bindClickTracking(tagEventDefaults, {{ detail: true }});
     const sentScrollDepths = new Set();
     function reportScrollDepth() {{
       const scrollable = document.documentElement.scrollHeight - window.innerHeight;

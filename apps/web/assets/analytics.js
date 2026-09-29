@@ -51,11 +51,40 @@
     window.gtag('event', name, Object.assign({}, context, params || {}));
   }
 
+  // data-track 属性を持つ要素のクリックを送る。生成ページごとに同じ委譲を直書きしないため。
+  // defaults はページ共通の引数（event_category・surface など）。data-surface があればそちらを優先する。
+  // options.detail: 掲載位置・コンテンツID・写真状態（data-position / data-content-id / data-photo-state）も送る
+  function bindClickTracking(defaults, options) {
+    var base = defaults || {};
+    var detail = Boolean(options && options.detail);
+    document.addEventListener('click', function (event) {
+      var link = event.target.closest && event.target.closest('[data-track]');
+      if (!link) return;
+      var data = link.dataset;
+      var params = { destination: data.destination || '' };
+      if (detail) {
+        params.position = Number(data.position || 0);
+        params.content_id = data.contentId || '';
+        params.photo_state = data.photoState || '';
+      }
+      if (data.surface) params.surface = data.surface;
+      trackEvent(data.track, Object.assign({}, base, params));
+      // 改名したイベントを旧名でも送り、過去データと並べて見られるようにする
+      if (data.legacyTrack) {
+        trackEvent(data.legacyTrack, Object.assign({}, base, {
+          destination: params.destination,
+          surface: params.surface || base.surface
+        }));
+      }
+    });
+  }
+
   window.PokefutaAnalytics = {
     enabled: enabled,
     init: init,
     setContext: setContext,
-    trackEvent: trackEvent
+    trackEvent: trackEvent,
+    bindClickTracking: bindClickTracking
   };
   window.trackEvent = trackEvent;
 })();

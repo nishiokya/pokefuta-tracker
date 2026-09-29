@@ -1134,26 +1134,16 @@ def build_index_page(
     {regions_html}
     <footer><a href="/summary/">全国のポケふた一覧へ戻る</a></footer>
   </main>
-  <script src="/assets/analytics.js?v=20260805a"></script>
+  <script src="/assets/analytics.js?v=20260929a"></script>
   <script>
     window.PokefutaAnalytics.init({{
       page_path: '/prefectures/',
       site_type: 'map',
       page_type: 'prefecture_index'
     }});
-    function trackPrefecturesIndexEvent(name, params) {{
-      if (typeof window.gtag !== 'function') return;
-      gtag('event', name, Object.assign({{
-        event_category: 'prefecture_growth',
-        surface: 'prefectures_index'
-      }}, params || {{}}));
-    }}
-    document.addEventListener('click', function(event) {{
-      const link = event.target.closest('[data-track]');
-      if (!link) return;
-      trackPrefecturesIndexEvent(link.dataset.track, {{
-        destination: link.dataset.destination || ''
-      }});
+    window.PokefutaAnalytics.bindClickTracking({{
+      event_category: 'prefecture_growth',
+      surface: 'prefectures_index'
     }});
   </script>
 </body>
@@ -1862,7 +1852,7 @@ def build_page(
 {main_sections_html}
     <footer><a href="/summary/">全国のポケふた一覧へ戻る</a></footer>
   </main>
-  <script src="/assets/analytics.js?v=20260805a"></script>
+  <script src="/assets/analytics.js?v=20260929a"></script>
   <script>
     window.PokefutaAnalytics.init({{
       'page_path': '/prefectures/' + {_json_for_script(slug)} + '/',
@@ -1870,32 +1860,16 @@ def build_page(
       page_type: 'prefecture',
       prefecture: {_json_for_script(slug)}
     }});
+    const prefectureEventDefaults = {{
+      event_category: 'prefecture_growth',
+      surface: 'prefecture_page',
+      prefecture: {_json_for_script(slug)},
+      prefecture_name: {_json_for_script(prefecture)}
+    }};
     function trackPrefectureEvent(name, params) {{
-      if (typeof window.gtag !== 'function') return;
-      gtag('event', name, Object.assign({{
-        event_category: 'prefecture_growth',
-        surface: 'prefecture_page',
-        prefecture: {_json_for_script(slug)},
-        prefecture_name: {_json_for_script(prefecture)}
-      }}, params || {{}}));
+      window.PokefutaAnalytics.trackEvent(name, Object.assign({{}}, prefectureEventDefaults, params || {{}}));
     }}
-    document.addEventListener('click', function(event) {{
-      const link = event.target.closest('[data-track]');
-      if (!link) return;
-      trackPrefectureEvent(link.dataset.track, {{
-        position: Number(link.dataset.position || 0),
-        destination: link.dataset.destination || '',
-        content_id: link.dataset.contentId || '',
-        photo_state: link.dataset.photoState || '',
-        surface: link.dataset.surface || 'prefecture_page'
-      }});
-      if (link.dataset.legacyTrack) {{
-        trackPrefectureEvent(link.dataset.legacyTrack, {{
-          destination: link.dataset.destination || '',
-          surface: link.dataset.surface || 'hero'
-        }});
-      }}
-    }});
+    window.PokefutaAnalytics.bindClickTracking(prefectureEventDefaults, {{ detail: true }});
     const sentScrollDepths = new Set();
     function reportScrollDepth() {{
       const scrollable = document.documentElement.scrollHeight - window.innerHeight;

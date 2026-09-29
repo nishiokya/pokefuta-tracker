@@ -191,7 +191,7 @@ class SectionOrderAndCollapseTest(unittest.TestCase):
             'data-track="pokemon_index_ranking_click" data-destination="eevee"', html
         )
         self.assertIn('data-track="pokemon_index_all_click"', html)
-        self.assertIn("trackPokemonIndexEvent", html)
+        self.assertIn("window.PokefutaAnalytics.bindClickTracking({", html)
 
 
 if __name__ == "__main__":

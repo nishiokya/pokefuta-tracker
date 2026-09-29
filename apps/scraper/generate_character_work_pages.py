@@ -322,7 +322,7 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
   <link rel="stylesheet" href="{ASSET_BASE}assets/top-page.css?v=20260707a">
   <link rel="stylesheet" href="{ASSET_BASE}assets/character-work.css?v={CHARACTER_CSS_VERSION}">
   <script type="application/ld+json">{json_script(schema)}</script>
-  <script src="{ASSET_BASE}assets/analytics.js?v=20260805a"></script>
+  <script src="{ASSET_BASE}assets/analytics.js?v=20260929a"></script>
   <script>window.PokefutaAnalytics.init({json_script(analytics)});</script>
 </head><body class="character-work-page cm-page">
   <main class="cm-wrap">

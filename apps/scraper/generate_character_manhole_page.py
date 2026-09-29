@@ -803,7 +803,7 @@ def generate_html(
   <script src="./assets/session-badge.js" defer></script>
   <link rel="icon" href="./assets/pokefuta_icon_32.png" type="image/png" />
   <!-- Google Analytics -->
-  <script src="/assets/analytics.js?v=20260805a"></script>
+  <script src="/assets/analytics.js?v=20260929a"></script>
   <script>
     window.PokefutaAnalytics.init({{
       'page_path': '/character_manholes',
