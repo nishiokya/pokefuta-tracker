@@ -1054,6 +1054,9 @@
         "far_station"
       ]
     },
+    "74": {
+      "building": "鳥取砂丘"
+    },
     "75": {
       "tags": [
         "seaside",
@@ -1353,6 +1356,9 @@
         "museum"
       ]
     },
+    "144": {
+      "building": "市役所"
+    },
     "145": {
       "building": "小千谷駅前",
       "tags": [
@@ -1360,12 +1366,14 @@
       ]
     },
     "146": {
+      "building": "錦鯉の里",
       "address_raw": "新潟県小千谷市小千谷市城内1-8-22",
       "address_norm": "新潟県小千谷市城内1-8-22",
       "verified_at": "2026-08-14",
       "confidence": 3
     },
     "147": {
+      "building": "総合体育館",
       "address_raw": "新潟県小千谷市小千谷市大字桜町4915",
       "address_norm": "新潟県小千谷市大字桜町4915",
       "verified_at": "2026-08-14",
@@ -1379,22 +1387,26 @@
       ]
     },
     "149": {
+      "building": "東公民館",
       "tags": [
         "world_heritage",
         "near_station"
       ]
     },
     "150": {
+      "building": "ポケットパーク東側",
       "tags": [
         "world_heritage"
       ]
     },
     "151": {
+      "building": "ポケットパーク西側",
       "tags": [
         "world_heritage"
       ]
     },
     "152": {
+      "building": "法隆寺iセンター",
       "tags": [
         "world_heritage"
       ]
@@ -1440,23 +1452,27 @@
       ]
     },
     "159": {
+      "building": "嵐山公園 中之島地区",
       "tags": [
         "world_heritage",
         "near_station"
       ]
     },
     "160": {
+      "building": "円山公園",
       "tags": [
         "world_heritage"
       ]
     },
     "161": {
+      "building": "西京極総合運動公園",
       "tags": [
         "world_heritage",
         "near_station"
       ]
     },
     "162": {
+      "building": "岡崎公園",
       "tags": [
         "world_heritage"
       ]
@@ -1508,6 +1524,7 @@
       ]
     },
     "174": {
+      "building": "てんぶす那覇",
       "tags": [
         "world_heritage",
         "near_station"
@@ -1629,17 +1646,29 @@
       ]
     },
     "194": {
+      "building": "鷲羽山第二展望台",
       "tags": [
         "seaside"
       ]
     },
+    "195": {
+      "building": "自然史博物館"
+    },
+    "196": {
+      "building": "芸文館"
+    },
+    "197": {
+      "building": "阿智神社 西参道入口"
+    },
     "198": {
+      "building": "リバーウォーク北九州",
       "tags": [
         "world_heritage",
         "near_station"
       ]
     },
     "199": {
+      "building": "あさの汐風公園",
       "tags": [
         "seaside",
         "world_heritage",
@@ -1647,12 +1676,14 @@
       ]
     },
     "200": {
+      "building": "東田エリア",
       "tags": [
         "near_station",
         "world_heritage"
       ]
     },
     "201": {
+      "building": "門司港レトロ地区",
       "tags": [
         "seaside",
         "world_heritage",
@@ -1660,6 +1691,7 @@
       ]
     },
     "202": {
+      "building": "ノーフォーク広場",
       "tags": [
         "seaside",
         "world_heritage",
@@ -1674,20 +1706,26 @@
       ]
     },
     "204": {
+      "building": "北淡震災記念公園",
       "tags": [
         "seaside",
         "far_station"
       ]
     },
     "205": {
+      "building": "パルシェ香りの館",
       "tags": [
         "far_station"
       ]
     },
     "206": {
+      "building": "市役所",
       "tags": [
         "near_station"
       ]
+    },
+    "207": {
+      "building": "旭町庁舎"
     },
     "208": {
       "building": "東石切公園",
@@ -1709,11 +1747,17 @@
         "park"
       ]
     },
+    "211": {
+      "building": "YOT-TOKO"
+    },
     "212": {
       "building": "所沢駅前",
       "tags": [
         "station_front"
       ]
+    },
+    "213": {
+      "building": "所沢航空記念公園"
     },
     "214": {
       "building": "道の駅あさひかわ",
@@ -2142,9 +2186,13 @@
       "confidence": 4
     },
     "275": {
+      "building": "舞台芸術パーク",
       "tags": [
         "near_station"
       ]
+    },
+    "276": {
+      "building": "富岩運河環水公園"
     },
     "277": {
       "building": "丸の内駅前",
@@ -2189,11 +2237,13 @@
       ]
     },
     "288": {
+      "building": "姉妹都市ひろば",
       "tags": [
         "seaside"
       ]
     },
     "289": {
+      "building": "海響館",
       "tags": [
         "seaside"
       ]
@@ -2299,6 +2349,7 @@
       "confidence": 3
     },
     "298": {
+      "building": "ヤドン公園",
       "tags": [
         "near_station"
       ]
@@ -2308,6 +2359,9 @@
       "tags": [
         "roadside"
       ]
+    },
+    "300": {
+      "building": "鳥取砂丘こどもの国"
     },
     "301": {
       "tags": [
@@ -2413,27 +2467,34 @@
       "confidence": 3
     },
     "311": {
+      "building": "赤レンガパーク",
       "tags": [
         "seaside",
         "near_station"
       ]
     },
     "312": {
+      "building": "横浜マリンタワー",
       "tags": [
         "seaside",
         "near_station"
       ]
     },
     "313": {
+      "building": "臨港パーク",
       "tags": [
         "seaside"
       ]
     },
     "314": {
+      "building": "日本丸メモリアルパーク",
       "tags": [
         "seaside",
         "near_station"
       ]
+    },
+    "315": {
+      "building": "大宰府政庁跡"
     },
     "316": {
       "building": "太宰府駅前",
@@ -2442,6 +2503,7 @@
       ]
     },
     "317": {
+      "building": "客館跡",
       "tags": [
         "near_station"
       ]
@@ -2492,14 +2554,22 @@
       ]
     },
     "326": {
+      "building": "松山総合公園 展望広場",
       "tags": [
         "gundam_manhole_city"
       ]
     },
     "327": {
+      "building": "網干休憩所",
       "tags": [
         "seaside"
       ]
+    },
+    "328": {
+      "building": "うずしおふれあい公園"
+    },
+    "329": {
+      "building": "鳴門・大塚スポーツパーク"
     },
     "330": {
       "building": "鈴鹿市伝統産業会館",
@@ -3408,6 +3478,9 @@
         "station_front"
       ]
     },
+    "467": {
+      "building": "イシツブテ公園"
+    },
     "468": {
       "building": "和倉温泉湯っ足りパーク",
       "tags": [
@@ -3558,16 +3631,19 @@
       ]
     },
     "255": {
+      "building": "くすかぜ広場",
       "tags": [
         "world_heritage"
       ]
     },
     "256": {
+      "building": "大隈重信記念館",
       "tags": [
         "world_heritage"
       ]
     },
     "257": {
+      "building": "佐賀県庁",
       "tags": [
         "world_heritage"
       ]
@@ -3588,6 +3664,7 @@
       ]
     },
     "352": {
+      "building": "朝霧橋東側",
       "tags": [
         "world_heritage"
       ]
