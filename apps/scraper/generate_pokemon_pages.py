@@ -845,7 +845,7 @@ def generate_html(
   </script>
 
   <!-- Google Analytics -->
-  <script src="/assets/analytics.js?v=20260805a"></script>
+  <script src="/assets/analytics.js?v=20260929a"></script>
   <script>
     window.PokefutaAnalytics.init({{
       'page_path': '/{url_prefix}pokemon/' + {slug_js} + '/',

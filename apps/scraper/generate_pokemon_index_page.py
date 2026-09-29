@@ -1133,23 +1133,13 @@ def generate_html(
   </script>
 
   <!-- Google Analytics -->
-  <script src="/assets/analytics.js?v=20260805a"></script>
+  <script src="/assets/analytics.js?v=20260929a"></script>
   <script>
     window.PokefutaAnalytics.init({{'page_path': '/{url_prefix}pokemon/', site_type: 'map', page_type: 'pokemon_index'}});
-    gtag('event', 'view_pokemon_index', {{'surface': 'pokemon_index', 'pokemon_count': {total_count}, 'lang': '{lang}'}});
-    function trackPokemonIndexEvent(name, params) {{
-      if (typeof window.gtag !== 'function') return;
-      gtag('event', name, Object.assign({{
-        event_category: 'pokemon_engagement',
-        surface: 'pokemon_index'
-      }}, params || {{}}));
-    }}
-    document.addEventListener('click', function(event) {{
-      const link = event.target.closest('[data-track]');
-      if (!link) return;
-      trackPokemonIndexEvent(link.dataset.track, {{
-        destination: link.dataset.destination || ''
-      }});
+    window.PokefutaAnalytics.trackEvent('view_pokemon_index', {{'surface': 'pokemon_index', 'pokemon_count': {total_count}, 'lang': '{lang}'}});
+    window.PokefutaAnalytics.bindClickTracking({{
+      event_category: 'pokemon_engagement',
+      surface: 'pokemon_index'
     }});
   </script>
 

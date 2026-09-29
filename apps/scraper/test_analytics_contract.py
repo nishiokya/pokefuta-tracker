@@ -14,6 +14,21 @@ class AnalyticsContractTest(unittest.TestCase):
         self.assertIn("window.location.hostname.toLowerCase()", analytics)
         self.assertIn("domains: ['data.pokefuta.com', 'pokefuta.com']", analytics)
 
+    def test_data_track_clicks_use_shared_binding(self):
+        """data-track のクリック委譲は analytics.js の bindClickTracking に集約する。
+
+        以前は生成スクリプトごとに同じ委譲を直書きしていて、4箇所に増えていた（#435）。
+        """
+        analytics = (ROOT / "web/assets/analytics.js").read_text(encoding="utf-8")
+        self.assertIn("bindClickTracking: bindClickTracking", analytics)
+
+        for source in (ROOT / "scraper").glob("generate_*.py"):
+            with self.subTest(source=source.name):
+                text = source.read_text(encoding="utf-8")
+                self.assertNotIn("closest('[data-track]')", text)
+                if "data-track=" in text:
+                    self.assertIn("PokefutaAnalytics.bindClickTracking(", text)
+
     def test_mobile_bottom_navigation_uses_shared_analytics(self):
         analytics = (ROOT / "web/assets/site-header-analytics.js").read_text(encoding="utf-8")
 

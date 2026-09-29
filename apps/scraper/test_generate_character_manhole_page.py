@@ -495,7 +495,7 @@ class SeoStructureTest(_PageTestCase):
         self.assertNotIn(f"{self.total_count}件見つかりました", self.html)
 
     def test_analytics_login_rule_and_reserved_ids_are_kept(self):
-        self.assertIn('<script src="/assets/analytics.js?v=20260805a"></script>', self.html)
+        self.assertIn('<script src="/assets/analytics.js?v=20260929a"></script>', self.html)
         self.assertIn("page_type: 'lp_character_manholes'", self.html)
         self.assertIn('href="https://pokefuta.com/login?from=data"', self.html)
         self.assertNotIn("utm_", self.html)

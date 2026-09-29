@@ -959,8 +959,7 @@ class BuildIndexPageTest(unittest.TestCase):
         self.assertIn("window.PokefutaAnalytics.init({", html)
         self.assertIn("page_path: '/prefectures/'", html)
         self.assertIn("page_type: 'prefecture_index'", html)
-        self.assertIn("document.addEventListener('click'", html)
-        self.assertIn("link.dataset.track", html)
+        self.assertIn("window.PokefutaAnalytics.bindClickTracking({", html)
         self.assertNotIn("googletagmanager.com/gtag", html)
 
     def test_adsense_marker_is_present_for_the_prefecture_ad_slot(self) -> None:
