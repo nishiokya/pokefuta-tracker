@@ -56,6 +56,9 @@ DEFAULT_PHOTOS = ROOT / "docs" / "latest-manhole-photos.json"
 DEFAULT_TRIVIA = ROOT / "dataset" / "prefecture_trivia.json"
 DEFAULT_EVENTS = ROOT / "dataset" / "prefecture_events.json"
 JST = timezone(timedelta(hours=9))
+# 現地写真の欄に並べる上限（4列×2段）。4枚だと写真が5〜8枚ある県で掲載率 100% なのに
+# 1枚も2枚も欠けて見えた。全件はすぐ下の一覧にあるので、それ以上は重ねて出さない。
+PHOTO_SHOWCASE_LIMIT = 8
 DEFAULT_OUTPUT = ROOT / "dist" / "prefectures"
 BASE_URL = "https://data.pokefuta.com"
 OG_IMAGE = f"{BASE_URL}/assets/ogp/pokefuta_summary_ogp.png"
@@ -527,7 +530,7 @@ def _photo_section(
         lead = "設置場所は地図と一覧で確認できます。現地で撮った最初の1枚を募集中です。"
 
     gallery_cards = []
-    for position, (record, photo) in enumerate(entries[:4], start=1):
+    for position, (record, photo) in enumerate(entries[:PHOTO_SHOWCASE_LIMIT], start=1):
         mid = str(record.get("id", "")).strip()
         name = _manhole_name(record)
         pokemons = "・".join(_clean_pokemons(record)) or "ポケモン"

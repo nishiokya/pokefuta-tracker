@@ -1164,6 +1164,7 @@
       ]
     },
     "104": {
+      "building": "大津湖岸なぎさ公園 おまつり広場",
       "tags": [
         "lakeside",
         "world_heritage",
@@ -1173,6 +1174,7 @@
       ]
     },
     "105": {
+      "building": "大津湖岸なぎさ公園 サンシャインビーチ",
       "tags": [
         "lakeside",
         "gundam_manhole_city",
@@ -1867,6 +1869,12 @@
         "seaside",
         "remote_island"
       ]
+    },
+    "237": {
+      "building": "甲賀流リアル忍者館"
+    },
+    "238": {
+      "building": "水口スポーツの森"
     },
     "239": {
       "building": "鹿深夢の森"
