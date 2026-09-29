@@ -40,6 +40,13 @@ def _photo(
 
 
 class SelectGalleryPhotosTest(unittest.TestCase):
+    def test_landscape_override_cannot_replace_a_lid(self):
+        scenery = {**_photo("scenery", shot_at="2026-09-29T00:00:00Z"), "is_landscape": True}
+        lid = _photo("lid")
+        result = export.select_gallery_photos([scenery, lid], 5, "scenery")
+        self.assertEqual([p["id"] for p in result], ["lid"])
+        self.assertEqual(export.select_gallery_photos([scenery], 5, "scenery"), [])
+
     def test_newest_first_by_shot_at(self):
         photos = [
             _photo("old", shot_at="2026-01-01T00:00:00Z"),
@@ -143,6 +150,28 @@ class FeaturedPhotoOverridesTest(unittest.TestCase):
 
 
 class BuildPayloadFeaturedPhotoTest(unittest.TestCase):
+    @mock.patch.object(export, "fetch_manhole_comments_by_display_name", return_value={})
+    @mock.patch.object(export, "fetch_user_info", return_value={})
+    @mock.patch.object(export, "get_effective_r2_public_base_url", return_value="https://images.example")
+    def test_landscape_only_location_does_not_count_as_photographed(self, *_mocks):
+        for include_private in [False, True]:
+            for gallery_limit in [0, 5]:
+                photos = [{**_photo("scenery"), "is_landscape": True}]
+                with mock.patch.object(export, "iter_photos", return_value=iter(photos)):
+                    payload = export.build_payload(
+                        include_private, 100, 10, "tako", gallery_limit, {"1": "scenery"}
+                    )
+                self.assertEqual(payload["count"], 0)
+                self.assertEqual(payload["photos"], {})
+
+    def test_query_filters_landscapes_before_pagination(self):
+        with mock.patch.object(export, "iter_supabase_rows", return_value=iter([])) as rows:
+            list(export.iter_photos(False, 100, 10))
+        query = rows.call_args.args[1]
+        self.assertEqual(query["is_landscape"], "eq.false")
+        self.assertEqual(query["visit.is_public"], "eq.true")
+        self.assertIn("is_landscape", query["select"])
+
     @mock.patch.object(export, "fetch_manhole_comments_by_display_name", return_value={})
     @mock.patch.object(export, "fetch_user_info", return_value={})
     @mock.patch.object(export, "get_effective_r2_public_base_url", return_value="https://images.example")

@@ -237,7 +237,12 @@ def build_manholes() -> dict:
         {"select": ",".join(MANHOLE_COLUMNS), "order": "id.desc"},
     )
     photo_rows = fetch_all(
-        "photo", {"select": "manhole_id", "manhole_id": "not.is.null"}
+        "photo", {
+            "select": "manhole_id,visit!inner(is_public)",
+            "manhole_id": "not.is.null",
+            "visit.is_public": "eq.true",
+            "is_landscape": "eq.false",
+        }
     )
     with_photo_ids = {row["manhole_id"] for row in photo_rows}
 
@@ -325,12 +330,16 @@ def build_site_stats() -> dict:
     ago_7d = (now - timedelta(days=7)).isoformat(timespec="seconds")
     ago_30d = (now - timedelta(days=30)).isoformat(timespec="seconds")
 
-    manholes_with_photos = count_of("total_manholes_with_photos")
-    if row is None or row.get("total_manholes_with_photos") is None:
-        photo_rows = fetch_all(
-            "photo", {"select": "manhole_id", "manhole_id": "not.is.null"}
-        )
-        manholes_with_photos = len({r["manhole_id"] for r in photo_rows})
+    # 古い get_site_stats は風景・非公開写真も充足に数えるため、同じ公開条件で算出。
+    photo_rows = fetch_all(
+        "photo", {
+            "select": "manhole_id,visit!inner(is_public)",
+            "manhole_id": "not.is.null",
+            "visit.is_public": "eq.true",
+            "is_landscape": "eq.false",
+        }
+    )
+    manholes_with_photos = len({r["manhole_id"] for r in photo_rows})
 
     auth_users, active_users_7d = fetch_auth_user_stats()
 

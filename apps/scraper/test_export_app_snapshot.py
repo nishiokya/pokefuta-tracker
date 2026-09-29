@@ -5,6 +5,7 @@ import json
 import struct
 import tempfile
 import unittest
+from unittest import mock
 from pathlib import Path
 
 MODULE_PATH = Path(__file__).with_name("export_app_snapshot.py")
@@ -91,6 +92,40 @@ class WriteManholesJsonTest(unittest.TestCase):
             # 1マンホール1行のフォーマットであること
             lines = out.read_text(encoding="utf-8").splitlines()
             self.assertEqual(2, sum(1 for l in lines if l.lstrip().startswith('{"id"')))
+
+
+class LandscapeCoverageTest(unittest.TestCase):
+    def test_snapshot_counts_only_public_lid_photos(self):
+        manholes = [{"id": i, "location": ewkb_point_hex(139, 35)} for i in [1, 2, 3]]
+
+        def fetch(table, params):
+            if table == "manhole":
+                return manholes
+            # The database filters a public landscape and a private lid out.
+            self.assertEqual(params["is_landscape"], "eq.false")
+            self.assertEqual(params["visit.is_public"], "eq.true")
+            self.assertIn("visit!inner", params["select"])
+            return [{"manhole_id": 1}, {"manhole_id": 1}]
+
+        with mock.patch.object(MODULE, "fetch_all", side_effect=fetch), \
+             mock.patch.object(MODULE, "apply_place_labels"):
+            result = MODULE.build_manholes()
+        self.assertEqual(result["with_photos"], 1)
+        self.assertEqual([m["photo_count"] for m in result["manholes"]], [1, 0, 0])
+
+    def test_site_stats_do_not_reuse_legacy_coverage_including_landscapes(self):
+        response = mock.Mock()
+        response.json.return_value = [{"total_manholes_with_photos": 99, "total_posts": 7}]
+        with mock.patch.object(MODULE.requests, "post", return_value=response), \
+             mock.patch.object(MODULE, "fetch_all", return_value=[{"manhole_id": 1}]) as rows, \
+             mock.patch.object(MODULE, "fetch_auth_user_stats", return_value=(0, 0)), \
+             mock.patch.object(MODULE, "fetch_first", return_value=None), \
+             mock.patch.object(MODULE, "fetch_count", return_value=0):
+            result = MODULE.build_site_stats()
+        self.assertEqual(result["manholes_with_photos"], 1)
+        self.assertEqual(result["posts"], 7)
+        self.assertEqual(rows.call_args.args[1]["is_landscape"], "eq.false")
+        self.assertEqual(rows.call_args.args[1]["visit.is_public"], "eq.true")
 
 
 

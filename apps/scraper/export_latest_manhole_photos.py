@@ -186,6 +186,7 @@ def select_gallery_photos(
         photo
         for photo in photos
         if normalize_visit(photo.get("visit")).get("is_public")
+        and photo.get("is_landscape") is not True
     ]
     ordered = sorted(public_photos, key=photo_sort_date, reverse=True)
     if featured_photo_id:
@@ -274,7 +275,8 @@ def iter_photos(include_private: bool, batch_size: int, timeout: int) -> Iterato
         else "visit!inner(shot_at,is_public,user_id,comment)"
     )
     query = {
-        "select": f"id,manhole_id,storage_key,content_type,width,height,file_size,created_at,{select_visit}",
+        "select": f"id,manhole_id,storage_key,content_type,width,height,file_size,created_at,is_landscape,{select_visit}",
+        "is_landscape": "eq.false",
         "manhole_id": "not.is.null",
         "storage_key": "not.is.null",
         "order": "created_at.desc,id.desc",
@@ -391,6 +393,10 @@ def build_payload(
     photo_user_ids: set[str] = set()
 
     for photo in iter_photos(include_private=include_private, batch_size=batch_size, timeout=timeout):
+        # 防御的にここでも除外。手動代表指定やフォールバックで風景を採用しない。
+        # 風景の閲覧は写真館の既存ギャラリーが担当する。
+        if photo.get("is_landscape") is True:
+            continue
         visit = normalize_visit(photo.get("visit"))
         user_id = visit.get("user_id")
         if isinstance(user_id, str):
