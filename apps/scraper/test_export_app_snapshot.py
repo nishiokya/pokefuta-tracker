@@ -104,6 +104,7 @@ class LandscapeCoverageTest(unittest.TestCase):
             # The database filters a public landscape and a private lid out.
             self.assertEqual(params["is_landscape"], "eq.false")
             self.assertEqual(params["visit.is_public"], "eq.true")
+            self.assertEqual(params["order"], "id.asc")
             self.assertIn("visit!inner", params["select"])
             return [{"manhole_id": 1}, {"manhole_id": 1}]
 
@@ -126,6 +127,7 @@ class LandscapeCoverageTest(unittest.TestCase):
         self.assertEqual(result["posts"], 7)
         self.assertEqual(rows.call_args.args[1]["is_landscape"], "eq.false")
         self.assertEqual(rows.call_args.args[1]["visit.is_public"], "eq.true")
+        self.assertEqual(rows.call_args.args[1]["order"], "id.asc")
 
 
 

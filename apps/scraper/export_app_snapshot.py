@@ -239,6 +239,7 @@ def build_manholes() -> dict:
     photo_rows = fetch_all(
         "photo", {
             "select": "manhole_id,visit!inner(is_public)",
+            "order": "id.asc",
             "manhole_id": "not.is.null",
             "visit.is_public": "eq.true",
             "is_landscape": "eq.false",
@@ -334,6 +335,7 @@ def build_site_stats() -> dict:
     photo_rows = fetch_all(
         "photo", {
             "select": "manhole_id,visit!inner(is_public)",
+            "order": "id.asc",
             "manhole_id": "not.is.null",
             "visit.is_public": "eq.true",
             "is_landscape": "eq.false",

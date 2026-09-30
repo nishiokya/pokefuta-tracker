@@ -7,6 +7,7 @@
 - `export_latest_manhole_photos.py` は `is_landscape=false` を取得条件に追加する。手動代表指定・最新写真へのフォールバック・ギャラリーでも風景を代表候補に戻さない。
 - 風景しかない地点は `latest-manhole-photos.json` の `photos` に含めず、蓋の写真は募集中のままにする。
 - `export_app_snapshot.py` の `photo_count` / `with_photos` / `manholes_with_photos` は、公開訪問に属する風景以外の写真で計算する。旧RPCの充足数をそのまま再利用しない。
+- 写真集計のRangeページングは `photo.id.asc` の一意な順序を明示し、ページ境界の重複・取りこぼしを防ぐ。
 - 投稿総数は風景も含む。個人の訪問記録・スタンプ判定は写真館側の判断であり、図鑑の写真充足とは別。
 - 初期は風景用の図鑑ギャラリーを追加せず、風景の閲覧は写真館の投稿一覧・詳細ページが担当する。
 
@@ -18,7 +19,7 @@
 
 新列のないDBに対してこのexportを実行すると失敗する。旧スキーマへ黙ってフォールバックすると風景が蓋に混ざるので、DB適用を先に行う。
 
-今回、日次同期の起動・生成済みJSON/画像の書き換え・デプロイは行わない。既存の変更中cloneには触れず、独立したworktreeで実装した。
+実装は既存の変更中cloneに触れず、独立したworktreeで行う。DB適用確認後にPRを反映し、通常の `import-manhole-photos.yml` で生成済みJSON/画像を更新してから公開確認する。
 
 ## テスト
 
@@ -28,4 +29,4 @@
 python3 -m unittest apps.scraper.test_export_latest_manhole_photos apps.scraper.test_export_app_snapshot apps.scraper.test_display_names
 ```
 
-82件成功（2026-09-30）。本番データへの接続・生成は未実施。
+82件成功（2026-09-30）。写真exportとsnapshotの本番生成は、PR merge後に通常workflowで実施する。
