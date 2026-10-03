@@ -534,6 +534,8 @@ def _work_card_html(summary: dict, photo: dict | None = None) -> str:
         character_text += f" ほか{len(characters) - WORK_CARD_CHARACTER_LIMIT}種"
     pref_text = _join_counts(summary["main_prefectures"], WORK_CARD_PREFECTURE_LIMIT)
     go_text = "設置場所ガイドへ →" if summary.get("path") else "地図で見る →"
+    if summary.get("path") == "characters/idolmaster/":
+        go_text = "ふたマス一覧・設置場所マップへ →"
     return (
         f'<li><a class="lp-work-card" href="{href}" style="--c:{escape(summary["color"])}">'
         + (f'<span class="lp-work-thumb">{_photo_img(photo, lazy=True, size=96)}</span>' if photo

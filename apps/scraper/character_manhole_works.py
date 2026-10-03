@@ -14,7 +14,7 @@ GUNDAM_MARKER_LABEL = "G"
 
 # 全国一覧と作品ガイドが共有する character-work.css のキャッシュバスター。
 # 片方だけ上げると、もう片方のページで古いCSSがキャッシュに残るので、ここ1か所で管理する。
-CHARACTER_CSS_VERSION = "20260926b"
+CHARACTER_CSS_VERSION = "20261004a"
 
 
 @dataclass(frozen=True)
