@@ -946,10 +946,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>鳥取市 福部町湯山 (アローラサンド, サンド, ミミロル)</name>
+      <name>鳥取市 鳥取砂丘（福部町湯山） (アローラサンド, サンド, ミミロル)</name>
       <description>Prefecture: 鳥取県
 City: 鳥取
 Address: 鳥取県鳥取市福部町湯山2083-17地先
+Building: 鳥取砂丘
 Detail: https://local.pokemon.jp/manhole/desc/74/?is_modal=1
 Last Updated: 2026-08-14T10:46:53Z
 Status: active</description>
@@ -1867,10 +1868,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>小千谷市 城内2 (コイキング)</name>
+      <name>小千谷市 市役所 (コイキング)</name>
       <description>Prefecture: 新潟県
 City: 小千谷
 Address: 新潟県小千谷市城内2-7-5
+Building: 市役所
 Detail: https://local.pokemon.jp/manhole/desc/144/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
@@ -1893,10 +1895,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>小千谷市 城内1 (コイキング, ヒンバス)</name>
+      <name>小千谷市 錦鯉の里 (コイキング, ヒンバス)</name>
       <description>Prefecture: 新潟県
 City: 小千谷
 Address: 新潟県小千谷市城内1-8-22
+Building: 錦鯉の里
 Detail: https://local.pokemon.jp/manhole/desc/146/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
@@ -1905,10 +1908,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>小千谷市 大字桜町4915 (コイキング, ピジョン)</name>
+      <name>小千谷市 総合体育館 (コイキング, ピジョン)</name>
       <description>Prefecture: 新潟県
 City: 小千谷
 Address: 新潟県小千谷市大字桜町4915
+Building: 総合体育館
 Detail: https://local.pokemon.jp/manhole/desc/147/?is_modal=1
 Last Updated: 2026-05-11T11:01:40Z
 Status: active</description>
@@ -1931,10 +1935,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>斑鳩町 興留5 (ガーディ, マダツボミ)</name>
+      <name>斑鳩町 東公民館 (ガーディ, マダツボミ)</name>
       <description>Prefecture: 奈良県
 City: 斑鳩
 Address: 奈良県斑鳩町興留5丁目5番28号
+Building: 東公民館
 Tags: world_heritage, near_station
 Detail: https://local.pokemon.jp/manhole/desc/149/?is_modal=1
 Last Updated: 2026-08-14T10:47:41Z
@@ -1944,10 +1949,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>斑鳩町 興留2 (チリーン, ブビィ)</name>
+      <name>斑鳩町 ポケットパーク東側 (チリーン, ブビィ)</name>
       <description>Prefecture: 奈良県
 City: 斑鳩
 Address: 奈良県斑鳩町興留2丁目1番地内
+Building: ポケットパーク東側
 Tags: world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/150/?is_modal=1
 Last Updated: 2026-08-14T10:47:42Z
@@ -1957,10 +1963,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>斑鳩町 法隆寺南1 (シキジカ, ヒノヤコマ)</name>
+      <name>斑鳩町 ポケットパーク西側 (シキジカ, ヒノヤコマ)</name>
       <description>Prefecture: 奈良県
 City: 斑鳩
 Address: 奈良県斑鳩町法隆寺南1丁目2番地内
+Building: ポケットパーク西側
 Tags: world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/151/?is_modal=1
 Last Updated: 2026-08-14T10:47:42Z
@@ -1970,10 +1977,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>斑鳩町 法隆寺1 (エンテイ)</name>
+      <name>斑鳩町 法隆寺iセンター (エンテイ)</name>
       <description>Prefecture: 奈良県
 City: 斑鳩
 Address: 奈良県斑鳩町法隆寺1丁目8番25号
+Building: 法隆寺iセンター
 Tags: world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/152/?is_modal=1
 Last Updated: 2026-08-14T10:47:43Z
@@ -2062,10 +2070,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>京都市 右京区嵯峨中ノ島町 (ホウオウ)</name>
+      <name>京都市 嵐山公園 中之島地区 (ホウオウ)</name>
       <description>Prefecture: 京都府
 City: 京都
 Address: 京都府京都市右京区嵯峨中ノ島町
+Building: 嵐山公園 中之島地区
 Tags: world_heritage, near_station
 Detail: https://local.pokemon.jp/manhole/desc/159/?is_modal=1
 Last Updated: 2026-05-11T11:01:47Z
@@ -2075,10 +2084,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>京都市 東山区円山町 (ピィ, ピチュー, ププリン)</name>
+      <name>京都市 円山公園 (ピィ, ピチュー, ププリン)</name>
       <description>Prefecture: 京都府
 City: 京都
 Address: 京都府京都市東山区円山町
+Building: 円山公園
 Tags: world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/160/?is_modal=1
 Last Updated: 2026-05-11T11:01:47Z
@@ -2088,10 +2098,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>京都市 右京区西京極新明町 (ダーテング, チコリータ)</name>
+      <name>京都市 西京極総合運動公園 (ダーテング, チコリータ)</name>
       <description>Prefecture: 京都府
 City: 京都
 Address: 京都府京都市右京区西京極新明町
+Building: 西京極総合運動公園
 Tags: world_heritage, near_station
 Detail: https://local.pokemon.jp/manhole/desc/161/?is_modal=1
 Last Updated: 2026-05-11T11:01:48Z
@@ -2101,10 +2112,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>京都市 左京区岡崎最勝寺町 (ヒノアラシ, ヒヒダルマ)</name>
+      <name>京都市 岡崎公園 (ヒノアラシ, ヒヒダルマ)</name>
       <description>Prefecture: 京都府
 City: 京都
 Address: 京都府京都市左京区岡崎最勝寺町
+Building: 岡崎公園
 Tags: world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/162/?is_modal=1
 Last Updated: 2026-05-11T11:01:48Z
@@ -2259,10 +2271,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>那覇市 牧志 (ウインディ)</name>
+      <name>那覇市 てんぶす那覇 (ウインディ)</name>
       <description>Prefecture: 沖縄県
 City: 那覇
 Address: 沖縄県那覇市牧志3丁目2
+Building: てんぶす那覇
 Tags: world_heritage, near_station
 Detail: https://local.pokemon.jp/manhole/desc/174/?is_modal=1
 Last Updated: 2026-05-24T10:32:16Z
@@ -2525,10 +2538,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>倉敷市 下津井田之浦1 (ルカリオ)</name>
+      <name>倉敷市 鷲羽山第二展望台 (ルカリオ)</name>
       <description>Prefecture: 岡山県
 City: 倉敷
 Address: 岡山県倉敷市下津井田之浦1-1
+Building: 鷲羽山第二展望台
 Tags: seaside
 Detail: https://local.pokemon.jp/manhole/desc/194/?is_modal=1
 Last Updated: 2026-05-11T11:02:08Z
@@ -2538,10 +2552,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>倉敷市 中央2 (アゲハント, ポチエナ)</name>
+      <name>倉敷市 自然史博物館 (アゲハント, ポチエナ)</name>
       <description>Prefecture: 岡山県
 City: 倉敷
 Address: 岡山県倉敷市中央2-6-1
+Building: 自然史博物館
 Detail: https://local.pokemon.jp/manhole/desc/195/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
@@ -2550,10 +2565,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>倉敷市 中央1 (サルノリ, ワタシラガ)</name>
+      <name>倉敷市 芸文館 (サルノリ, ワタシラガ)</name>
       <description>Prefecture: 岡山県
 City: 倉敷
 Address: 岡山県倉敷市中央1-18-1
+Building: 芸文館
 Detail: https://local.pokemon.jp/manhole/desc/196/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
 Status: active</description>
@@ -2562,10 +2578,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>倉敷市 阿知2 (ケンホロウ)</name>
+      <name>倉敷市 阿智神社 西参道入口 (ケンホロウ)</name>
       <description>Prefecture: 岡山県
 City: 倉敷
 Address: 岡山県倉敷市阿知2丁目17
+Building: 阿智神社 西参道入口
 Detail: https://local.pokemon.jp/manhole/desc/197/?is_modal=1
 Last Updated: 2026-05-11T11:02:10Z
 Status: active</description>
@@ -2574,10 +2591,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北九州市 小倉北区室町 (ボスゴドラ)</name>
+      <name>北九州市 リバーウォーク北九州 (ボスゴドラ)</name>
       <description>Prefecture: 福岡県
 City: 北九州
 Address: 福岡県北九州市小倉北区室町一丁目1 リバーウォーク北九州
+Building: リバーウォーク北九州
 Tags: world_heritage, near_station
 Detail: https://local.pokemon.jp/manhole/desc/198/?is_modal=1
 Last Updated: 2026-08-14T10:48:12Z
@@ -2587,10 +2605,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北九州市 小倉北区浅野 (アローラダグトリオ, トロッゴン)</name>
+      <name>北九州市 あさの汐風公園 (アローラダグトリオ, トロッゴン)</name>
       <description>Prefecture: 福岡県
 City: 北九州
 Address: 福岡県北九州市小倉北区浅野三丁目5 あさの汐風公園
+Building: あさの汐風公園
 Tags: seaside, world_heritage, near_station
 Detail: https://local.pokemon.jp/manhole/desc/199/?is_modal=1
 Last Updated: 2026-08-14T10:48:13Z
@@ -2600,10 +2619,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北九州市 八幡東区東田 (ジュラルドン, ヤミラミ)</name>
+      <name>北九州市 東田エリア (ジュラルドン, ヤミラミ)</name>
       <description>Prefecture: 福岡県
 City: 北九州
 Address: 福岡県北九州市八幡東区東田４丁目１１
+Building: 東田エリア
 Tags: near_station, world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/200/?is_modal=1
 Last Updated: 2026-05-11T11:02:12Z
@@ -2613,10 +2633,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北九州市 門司区港町 (サーナイト, ルナトーン)</name>
+      <name>北九州市 門司港レトロ地区 (サーナイト, ルナトーン)</name>
       <description>Prefecture: 福岡県
 City: 北九州
 Address: 福岡県北九州市門司区港町5 門司港レトロ地区
+Building: 門司港レトロ地区
 Tags: seaside, world_heritage, near_station
 Detail: https://local.pokemon.jp/manhole/desc/201/?is_modal=1
 Last Updated: 2026-08-14T10:48:14Z
@@ -2626,10 +2647,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>北九州市 門司区旧門司 (トロピウス)</name>
+      <name>北九州市 ノーフォーク広場 (トロピウス)</name>
       <description>Prefecture: 福岡県
 City: 北九州
 Address: 福岡県北九州市門司区旧門司二丁目5 ノーフォーク広場
+Building: ノーフォーク広場
 Tags: seaside, world_heritage, near_station
 Detail: https://local.pokemon.jp/manhole/desc/202/?is_modal=1
 Last Updated: 2026-08-14T10:48:15Z
@@ -2653,10 +2675,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>淡路市 小倉 (フレフワン, ベイリーフ)</name>
+      <name>淡路市 北淡震災記念公園 (フレフワン, ベイリーフ)</name>
       <description>Prefecture: 兵庫県
 City: 淡路
 Address: 兵庫県淡路市小倉177
+Building: 北淡震災記念公園
 Tags: seaside, far_station
 Detail: https://local.pokemon.jp/manhole/desc/204/?is_modal=1
 Last Updated: 2026-05-11T11:02:14Z
@@ -2666,10 +2689,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>淡路市 尾崎 (トリトドン, パルシェン)</name>
+      <name>淡路市 パルシェ香りの館 (トリトドン, パルシェン)</name>
       <description>Prefecture: 兵庫県
 City: 淡路
 Address: 兵庫県淡路市尾崎3025-1
+Building: パルシェ香りの館
 Tags: far_station
 Detail: https://local.pokemon.jp/manhole/desc/205/?is_modal=1
 Last Updated: 2026-05-11T11:02:15Z
@@ -2679,10 +2703,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>東大阪市 荒本北1 (コイル, レアコイル)</name>
+      <name>東大阪市 市役所 (コイル, レアコイル)</name>
       <description>Prefecture: 大阪府
 City: 東大阪
 Address: 大阪府東大阪市荒本北1丁目1番1号
+Building: 市役所
 Tags: near_station
 Detail: https://local.pokemon.jp/manhole/desc/206/?is_modal=1
 Last Updated: 2026-08-14T10:48:17Z
@@ -2692,10 +2717,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>東大阪市 旭町1 (ギアル, ギギアル)</name>
+      <name>東大阪市 旭町庁舎 (ギアル, ギギアル)</name>
       <description>Prefecture: 大阪府
 City: 東大阪
 Address: 大阪府東大阪市旭町1番1号
+Building: 旭町庁舎
 Detail: https://local.pokemon.jp/manhole/desc/207/?is_modal=1
 Last Updated: 2026-08-14T10:48:18Z
 Status: active</description>
@@ -2746,10 +2772,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>所沢市 松郷 (アーマーガア, ミニリュウ)</name>
+      <name>所沢市 YOT-TOKO (アーマーガア, ミニリュウ)</name>
       <description>Prefecture: 埼玉県
 City: 所沢
 Address: 埼玉県所沢市松郷143-3
+Building: YOT-TOKO
 Detail: https://local.pokemon.jp/manhole/desc/211/?is_modal=1
 Last Updated: 2026-05-11T11:02:18Z
 Status: active</description>
@@ -2772,10 +2799,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>所沢市 並木 (カイリュー)</name>
+      <name>所沢市 所沢航空記念公園 (カイリュー)</name>
       <description>Prefecture: 埼玉県
 City: 所沢
 Address: 埼玉県所沢市並木1-13
+Building: 所沢航空記念公園
 Detail: https://local.pokemon.jp/manhole/desc/213/?is_modal=1
 Last Updated: 2026-05-11T11:02:19Z
 Status: active</description>
@@ -2910,10 +2938,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>香取市 佐原イ (ココガラ, タイレーツ)</name>
+      <name>香取市 伊能忠敬記念館 (ココガラ, タイレーツ)</name>
       <description>Prefecture: 千葉県
 City: 香取
 Address: 千葉県香取市佐原イ1722-1
+Building: 伊能忠敬記念館
 Tags: gundam_manhole_city
 Detail: https://local.pokemon.jp/manhole/desc/223/?is_modal=1
 Last Updated: 2026-05-11T11:02:26Z
@@ -2923,10 +2952,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>香取市 佐原ハ (フラージェス, ヤヤコマ)</name>
+      <name>香取市 水郷佐原あやめパーク (フラージェス, ヤヤコマ)</name>
       <description>Prefecture: 千葉県
 City: 香取
 Address: 千葉県香取市佐原ハ4549-1
+Building: 水郷佐原あやめパーク
 Tags: gundam_manhole_city
 Detail: https://local.pokemon.jp/manhole/desc/224/?is_modal=1
 Last Updated: 2026-05-11T11:02:26Z
@@ -3346,10 +3376,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>佐賀市 松原 (ニャース)</name>
+      <name>佐賀市 くすかぜ広場 (ニャース)</name>
       <description>Prefecture: 佐賀県
 City: 佐賀
 Address: 佐賀県佐賀市松原1丁目1-1
+Building: くすかぜ広場
 Tags: world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/255/?is_modal=1
 Last Updated: 2026-05-11T11:02:45Z
@@ -3359,10 +3390,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>佐賀市 水ヶ江 (アローラニャース)</name>
+      <name>佐賀市 大隈重信記念館 (アローラニャース)</name>
       <description>Prefecture: 佐賀県
 City: 佐賀
 Address: 佐賀県佐賀市水ヶ江2丁目11-11
+Building: 大隈重信記念館
 Tags: world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/256/?is_modal=1
 Last Updated: 2026-05-11T11:02:46Z
@@ -3372,10 +3404,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>佐賀市 城内 (ガラルニャース)</name>
+      <name>佐賀市 佐賀県庁 (ガラルニャース)</name>
       <description>Prefecture: 佐賀県
 City: 佐賀
 Address: 佐賀県佐賀市城内1丁目1-59
+Building: 佐賀県庁
 Tags: world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/257/?is_modal=1
 Last Updated: 2026-05-11T11:02:46Z
@@ -3613,10 +3646,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>富山市 呉羽町 (アブソル)</name>
+      <name>富山市 舞台芸術パーク (アブソル)</name>
       <description>Prefecture: 富山県
 City: 富山
 Address: 富山県富山市呉羽町2247-3
+Building: 舞台芸術パーク
 Tags: near_station
 Detail: https://local.pokemon.jp/manhole/desc/275/?is_modal=1
 Last Updated: 2026-05-19T13:38:55Z
@@ -3626,10 +3660,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>富山市 湊入船町 (マーイーカ)</name>
+      <name>富山市 富岩運河環水公園 (マーイーカ)</name>
       <description>Prefecture: 富山県
 City: 富山
 Address: 富山県富山市湊入船町75-1
+Building: 富岩運河環水公園
 Detail: https://local.pokemon.jp/manhole/desc/276/?is_modal=1
 Last Updated: 2026-05-19T13:38:55Z
 Status: active</description>
@@ -3781,10 +3816,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>下関市 阿弥陀寺町6 (エンペルト, ホエルコ)</name>
+      <name>下関市 姉妹都市ひろば (エンペルト, ホエルコ)</name>
       <description>Prefecture: 山口県
 City: 下関
 Address: 山口県下関市阿弥陀寺町6
+Building: 姉妹都市ひろば
 Tags: seaside
 Detail: https://local.pokemon.jp/manhole/desc/288/?is_modal=1
 Last Updated: 2026-05-11T11:03:05Z
@@ -3794,10 +3830,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>下関市 あるかぽーと6 (チョンチー, ハリーセン)</name>
+      <name>下関市 海響館 (チョンチー, ハリーセン)</name>
       <description>Prefecture: 山口県
 City: 下関
 Address: 山口県下関市あるかぽーと6
+Building: 海響館
 Tags: seaside
 Detail: https://local.pokemon.jp/manhole/desc/289/?is_modal=1
 Last Updated: 2026-05-11T11:03:06Z
@@ -3920,10 +3957,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>綾川町 萱原 (ガラルヤドン, シェルダー, ヤドン)</name>
+      <name>綾川町 ヤドン公園 (ガラルヤドン, シェルダー, ヤドン)</name>
       <description>Prefecture: 香川県
 City: 綾川
 Address: 香川県綾川町萱原253-7
+Building: ヤドン公園
 Tags: near_station
 Detail: https://local.pokemon.jp/manhole/desc/298/?is_modal=1
 Last Updated: 2026-05-24T10:33:50Z
@@ -3947,10 +3985,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>鳥取市 浜坂 (アローラサンド, サンド, ホルビー)</name>
+      <name>鳥取市 鳥取砂丘こどもの国（浜坂） (アローラサンド, サンド, ホルビー)</name>
       <description>Prefecture: 鳥取県
 City: 鳥取
 Address: 鳥取県鳥取市浜坂1157-1
+Building: 鳥取砂丘こどもの国
 Detail: https://local.pokemon.jp/manhole/desc/300/?is_modal=1
 Last Updated: 2026-05-24T10:33:52Z
 Status: active</description>
@@ -4099,10 +4138,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>横浜市 中区新港一丁目 (ピカチュウ, ライチュウ)</name>
+      <name>横浜市 赤レンガパーク (ピカチュウ, ライチュウ)</name>
       <description>Prefecture: 神奈川県
 City: 横浜
 Address: 神奈川県横浜市中区新港一丁目
+Building: 赤レンガパーク
 Tags: seaside, near_station
 Detail: https://local.pokemon.jp/manhole/desc/311/?is_modal=1
 Last Updated: 2026-08-14T10:49:24Z
@@ -4112,10 +4152,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>横浜市 中区山下町14 (ピカチュウ, ペリッパー)</name>
+      <name>横浜市 横浜マリンタワー (ピカチュウ, ペリッパー)</name>
       <description>Prefecture: 神奈川県
 City: 横浜
 Address: 神奈川県横浜市中区山下町14-1
+Building: 横浜マリンタワー
 Tags: seaside, near_station
 Detail: https://local.pokemon.jp/manhole/desc/312/?is_modal=1
 Last Updated: 2026-05-19T13:39:20Z
@@ -4125,10 +4166,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>横浜市 西区みなとみらい一丁目 (ゴンべ, ビクティニ, ピカチュウ)</name>
+      <name>横浜市 臨港パーク (ゴンべ, ビクティニ, ピカチュウ)</name>
       <description>Prefecture: 神奈川県
 City: 横浜
 Address: 神奈川県横浜市西区みなとみらい一丁目
+Building: 臨港パーク
 Tags: seaside
 Detail: https://local.pokemon.jp/manhole/desc/313/?is_modal=1
 Last Updated: 2026-08-14T10:49:25Z
@@ -4138,10 +4180,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>横浜市 西区みなとみらい2 (コダック, ピカチュウ, ワンリキー)</name>
+      <name>横浜市 日本丸メモリアルパーク (コダック, ピカチュウ, ワンリキー)</name>
       <description>Prefecture: 神奈川県
 City: 横浜
 Address: 神奈川県横浜市西区みなとみらい2-1-1
+Building: 日本丸メモリアルパーク
 Tags: seaside, near_station
 Detail: https://local.pokemon.jp/manhole/desc/314/?is_modal=1
 Last Updated: 2025-10-27T02:17:05Z
@@ -4151,10 +4194,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>太宰府市 観世音寺 (キルリア, メブキジカ, ヤヤコマ)</name>
+      <name>太宰府市 大宰府政庁跡 (キルリア, メブキジカ, ヤヤコマ)</name>
       <description>Prefecture: 福岡県
 City: 太宰府
 Address: 福岡県太宰府市観世音寺4-6
+Building: 大宰府政庁跡
 Detail: https://local.pokemon.jp/manhole/desc/315/?is_modal=1
 Last Updated: 2026-05-11T11:03:21Z
 Status: active</description>
@@ -4177,10 +4221,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>太宰府市 朱雀 (ギルガルド)</name>
+      <name>太宰府市 客館跡 (ギルガルド)</name>
       <description>Prefecture: 福岡県
 City: 太宰府
 Address: 福岡県太宰府市朱雀３丁目１３
+Building: 客館跡
 Tags: near_station
 Detail: https://local.pokemon.jp/manhole/desc/317/?is_modal=1
 Last Updated: 2026-05-11T11:03:23Z
@@ -4298,10 +4343,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>松山市 朝日ヶ丘 (シュバルゴ, ネギガナイト)</name>
+      <name>松山市 松山総合公園 展望広場 (シュバルゴ, ネギガナイト)</name>
       <description>Prefecture: 愛媛県
 City: 松山
 Address: 愛媛県松山市朝日ヶ丘1丁目 松山総合公園展望広場
+Building: 松山総合公園 展望広場
 Tags: gundam_manhole_city
 Detail: https://local.pokemon.jp/manhole/desc/326/?is_modal=1
 Last Updated: 2026-08-14T10:49:33Z
@@ -4311,10 +4357,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>鳴門市 鳴門町土佐泊浦字大毛 (スイクン)</name>
+      <name>鳴門市 網干休憩所 (スイクン)</name>
       <description>Prefecture: 徳島県
 City: 鳴門
 Address: 徳島県鳴門市鳴門町土佐泊浦字大毛82-100
+Building: 網干休憩所
 Tags: seaside
 Detail: https://local.pokemon.jp/manhole/desc/327/?is_modal=1
 Last Updated: 2026-05-19T13:39:30Z
@@ -4324,10 +4371,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>鳴門市 撫養町斎田字北浜 (キングドラ, シードラ)</name>
+      <name>鳴門市 うずしおふれあい公園 (キングドラ, シードラ)</name>
       <description>Prefecture: 徳島県
 City: 鳴門
 Address: 徳島県鳴門市撫養町斎田字北浜157
+Building: うずしおふれあい公園
 Detail: https://local.pokemon.jp/manhole/desc/328/?is_modal=1
 Last Updated: 2026-05-11T11:03:29Z
 Status: active</description>
@@ -4336,10 +4384,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>鳴門市 撫養町立岩字四枚 (ディグダ, ニョロゾ, ニョロモ)</name>
+      <name>鳴門市 鳴門・大塚スポーツパーク (ディグダ, ニョロゾ, ニョロモ)</name>
       <description>Prefecture: 徳島県
 City: 鳴門
 Address: 徳島県鳴門市撫養町立岩字四枚61
+Building: 鳴門・大塚スポーツパーク
 Detail: https://local.pokemon.jp/manhole/desc/329/?is_modal=1
 Last Updated: 2026-05-11T11:03:30Z
 Status: active</description>
@@ -4651,10 +4700,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>宇治市 宇治又振 (パッチール, ヒバニー)</name>
+      <name>宇治市 朝霧橋東側 (パッチール, ヒバニー)</name>
       <description>Prefecture: 京都府
 City: 宇治
 Address: 京都府宇治市宇治又振
+Building: 朝霧橋東側
 Tags: world_heritage
 Detail: https://local.pokemon.jp/manhole/desc/352/?is_modal=1
 Last Updated: 2026-08-14T10:49:49Z
@@ -6204,10 +6254,11 @@ Status: active</description>
       </Point>
     </Placemark>
     <Placemark>
-      <name>盛岡市 本宮字蛇屋敷地内 (イシツブテ, イワンコ, ルガルガン)</name>
+      <name>盛岡市 イシツブテ公園 (イシツブテ, イワンコ, ルガルガン)</name>
       <description>Prefecture: 岩手県
 City: 盛岡
 Address: 岩手県盛岡市本宮字蛇屋敷地内
+Building: イシツブテ公園
 Detail: https://local.pokemon.jp/manhole/desc/467/?is_modal=1
 Last Updated: 2026-08-14T10:51:05Z
 Status: active</description>
