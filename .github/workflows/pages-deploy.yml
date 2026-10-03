@@ -40,6 +40,7 @@ on:
       - 'dataset/gundam_manhole_spots.json' # curated Pokefuta/Gundam crossover experiences
       - 'dataset/aichi_character_manholes.ndjson' # character manholes shown as nearby design spots
       - 'dataset/idolmaster_20th_manholes.ndjson' # curated Idolmaster manholes
+      - 'dataset/shinagawa_cinnamoroll_manholes.ndjson' # curated Shinagawa Cinnamoroll manholes
       - 'dataset/character_manhole_events.json' # time-bounded character manhole events
       - 'dataset/manhole/image/**' # local popup photos
       - 'tools/**'      # i18n build scripts

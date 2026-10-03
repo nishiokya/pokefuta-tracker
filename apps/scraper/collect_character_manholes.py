@@ -59,6 +59,7 @@ MARKER_STYLES: Dict[str, Dict[str, str]] = {
     "アイドルマスター シャイニーカラーズ": {"marker_label": "ア", "marker_color": "#f97316"},
     "アイドルマスター SideM": {"marker_label": "ア", "marker_color": "#f97316"},
     "学園アイドルマスター": {"marker_label": "ア", "marker_color": "#f97316"},
+    "シナモロール": {"marker_label": "シ", "marker_color": "#38bdf8"},
 }
 
 # --- 作品ごとのソース設定 -------------------------------------------------
@@ -127,6 +128,13 @@ WORKS: List[Dict[str, Any]] = [
         # (__NEXT_DATA__ は空)。常滑は aichi_character_manholes.ndjson 側に既存のため含めない。
         "source_type": "ndjson",
         "path": "dataset/idolmaster_20th_manholes.ndjson",
+    },
+    {
+        # 品川区のシナモロール デザインマンホール（全8箇所。しながわ観光協会の記事と
+        # 2026年5月版「品川まち歩きMAP」で確認）。公式の座標が無いため、設置住所の街区を
+        # 国土地理院の住所検索で座標化した手動データ。
+        "source_type": "ndjson",
+        "path": "dataset/shinagawa_cinnamoroll_manholes.ndjson",
     },
 ]
 
