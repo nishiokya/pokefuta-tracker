@@ -1173,6 +1173,13 @@ body.pokefuta-map-page {
   line-height: 1.35;
 }
 
+.pokefuta-map-page .travel-popup-approx {
+  margin: 6px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #92400e;
+}
+
 .pokefuta-map-page .travel-popup-building {
   margin: 2px 0 0;
   color: #6b7280;

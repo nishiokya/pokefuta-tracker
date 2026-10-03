@@ -190,6 +190,23 @@ class CharacterManholeCollectorTests(unittest.TestCase):
         self.assertIn("markerLabel(record)", source)
         self.assertNotIn("const WORK_COLORS", source)
 
+    def test_public_map_marks_address_block_points_as_approximate(self):
+        """住所の街区から座標化した点を、正確な道案内として見せない。"""
+        records = [
+            json.loads(line)
+            for line in (ROOT / "docs/character_manholes.ndjson").read_text(encoding="utf-8").splitlines()
+            if line
+        ]
+        approximate = [r for r in records if r.get("coordinate_method") == "gsi_address_block"]
+        self.assertTrue(approximate)
+        self.assertTrue(all(r.get("landmark") for r in approximate))
+        self.assertFalse(any("。。" in r.get("note", "") for r in records))
+
+        source = (ROOT / "apps/web/gmanhole_map.html").read_text(encoding="utf-8")
+        self.assertIn("d.coordinate_method === 'gsi_address_block'", source)
+        self.assertIn("Google Mapsで付近へ", source)
+        self.assertIn("travel-popup-approx", source)
+
 
 if __name__ == "__main__":
     unittest.main()

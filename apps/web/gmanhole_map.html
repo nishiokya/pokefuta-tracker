@@ -40,7 +40,7 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
   <link rel="stylesheet" href="./assets/theme.css" />
   <link rel="stylesheet" href="./assets/map.css" />
-  <link rel="stylesheet" href="./assets/pokefuta-map.css?v=20260705-gmanhole-sheet" />
+  <link rel="stylesheet" href="./assets/pokefuta-map.css?v=20261004-approx-pin" />
   <link rel="stylesheet" href="./assets/top-page.css?v=20260707a" />
   <script src="./assets/session-badge.js" defer></script>
   <style>
@@ -798,11 +798,17 @@
       return `event_category:'popup_navigation',manhole_id:'${escapeJs(d.id)}',prefecture:'${escapeJs(d.prefecture)}'`;
     }
 
-    function buildMapsAction(d, eventParams){
+    function buildMapsAction(d, eventParams, label = 'Google Mapsで行く'){
       if (!(Number.isFinite(Number(d.lat)) && Number.isFinite(Number(d.lng)))) return '';
       const mapsUrl = `https://www.google.com/maps?q=${encodeURIComponent(`${d.lat},${d.lng}`)}`;
       return `<a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" class="travel-popup-action travel-popup-action--maps"
-        onclick="if(window.trackEvent){window.trackEvent('popup_click_google_maps',{surface:'gmanhole_map_popup',${eventParams}});}">Google Mapsで行く</a>`;
+        onclick="if(window.trackEvent){window.trackEvent('popup_click_google_maps',{surface:'gmanhole_map_popup',${eventParams}});}">${esc(label)}</a>`;
+    }
+
+    // 公式の座標が無く、設置住所の街区を住所検索で座標化した点（coordinate_method: gsi_address_block）。
+    // ピンは街区の代表点で、蓋そのものから100m前後ずれることがある。正確な道案内に見せない。
+    function isApproximateLocation(d){
+      return d.coordinate_method === 'gsi_address_block';
     }
 
     function buildDetailAction(url, label, eventParams){
@@ -811,7 +817,7 @@
         onclick="if(window.trackEvent){window.trackEvent('popup_click_detail',{surface:'gmanhole_map_popup',${eventParams}});}">${esc(label)}</a>`;
     }
 
-    function buildTravelPopup({ d, title, building, badgeHtml, chipsHtml, chipsLabel, photoUrl, photoLink, detailUrl, detailLabel }){
+    function buildTravelPopup({ d, title, building, badgeHtml, chipsHtml, chipsLabel, photoUrl, photoLink, detailUrl, detailLabel, mapsLabel }){
       const code = prefectureCodeMap[d.prefecture] || '--';
       const eventParams = popupEventParams(d);
       const photoBlock = photoUrl ? `
@@ -835,7 +841,7 @@
             ${badgeHtml}
             ${chipsHtml ? `<div class="travel-popup-pokemon-list" aria-label="${esc(chipsLabel || '')}">${chipsHtml}</div>` : ''}
             <div class="popup-actions travel-popup-actions">
-              ${buildMapsAction(d, eventParams)}
+              ${buildMapsAction(d, eventParams, mapsLabel)}
               ${buildDetailAction(detailUrl, detailLabel, eventParams)}
             </div>
           </div>
@@ -892,11 +898,17 @@
 
     function buildCharacterPopup(d){
       const sourceUrl = safeHttpUrl(d.source_url);
+      const approximate = isApproximateLocation(d);
+      const approxNote = approximate
+        ? `<p class="travel-popup-approx">⚠ ピンは設置住所（${esc(d.address || '')}）からのおおよその位置です。${d.landmark ? `現地では「${esc(d.landmark)}」を目印に探してください。` : ''}</p>`
+        : '';
       return buildTravelPopup({
         d,
-        title: d.character || d.title || 'キャラクターマンホール',
+        // キャラ名が作品名と同じ（品川のシナモロール単独デザインなど）だと見出しが全部同じになるので、デザイン名を出す
+        title: (d.character && d.character !== d.work ? d.character : d.title) || d.character || 'キャラクターマンホール',
         building: d.landmark || d.address || '',
-        badgeHtml: d.work ? `<div class="travel-popup-badges"><span class="travel-popup-badge">${esc(d.work)}</span></div>` : '',
+        badgeHtml: (d.work ? `<div class="travel-popup-badges"><span class="travel-popup-badge">${esc(d.work)}</span></div>` : '') + approxNote,
+        mapsLabel: approximate ? 'Google Mapsで付近へ' : undefined,
         chipsHtml: '',
         chipsLabel: '',
         photoUrl: '',
