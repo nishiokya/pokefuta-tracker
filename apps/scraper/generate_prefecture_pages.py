@@ -1273,24 +1273,53 @@ def _hero_intro(
 def _visit_guide_html(records: list[dict], guide: dict | None) -> str:
     if not guide:
         return ""
-    by_id = {
+    active_by_id = {
         str(record.get("id", "")): record for record in records
-        if record.get("installed") is not False
-        and record.get("status", "active") == "active"
+        if record.get("status", "active") == "active"
     }
-    stop_ids = guide["manhole_ids"]
-    # A route that mentions a removed or pre-installation stop is misleading.
-    # Hide it until the manually maintained guide has been reviewed.
-    if not stop_ids or any(mid not in by_id for mid in stop_ids):
+    by_id = {
+        mid: record for mid, record in active_by_id.items()
+        if record.get("installed") is not False
+    }
+    route_groups = guide.get("routes") or [{
+        "heading": "",
+        "intro": "",
+        "manhole_ids": guide.get("manhole_ids", []),
+    }]
+    stop_ids = [mid for route in route_groups for mid in route.get("manhole_ids", [])]
+    allowed_ids = active_by_id if guide.get("allow_preinstallation") else by_id
+    # Hide stale or incomplete editorial routes. A guide may opt into known
+    # pre-installation stops so they appear automatically after installation.
+    if (
+        not stop_ids
+        or len(stop_ids) != len(set(stop_ids))
+        or any(mid not in allowed_ids for mid in stop_ids)
+        or (guide.get("require_all_installed") and not set(by_id).issubset(stop_ids))
+    ):
         return ""
-    stops = "".join(
-        f'<li><a href="#manhole-{_escape_attr(mid)}" '
-        'data-track="prefecture_photo_candidate_click" data-surface="visit_guide" '
-        f'data-destination="manhole_list" data-content-id="{_escape_attr(mid)}">'
-        f'{escape(_manhole_name(by_id[mid]))}</a>'
-        f'<span>{escape(str(by_id[mid].get("address") or ""))}</span></li>'
-        for mid in stop_ids
-    )
+
+    def stop_list(route_stop_ids: list[str]) -> str:
+        stops = "".join(
+            f'<li><a href="#manhole-{_escape_attr(mid)}" '
+            'data-track="prefecture_photo_candidate_click" data-surface="visit_guide" '
+            f'data-destination="manhole_list" data-content-id="{_escape_attr(mid)}">'
+            f'{escape(_manhole_name(by_id[mid]))}</a>'
+            f'<span>{escape(str(by_id[mid].get("address") or ""))}</span></li>'
+            for mid in route_stop_ids if mid in by_id
+        )
+        return f'<ul class="visit-guide-stops">{stops}</ul>'
+
+    if guide.get("routes"):
+        stops_html = '<div class="visit-guide-routes">' + "".join(
+            '<details class="visit-guide-route">'
+            f'<summary>{escape(route["heading"])}'
+            f'（{sum(mid in by_id for mid in route["manhole_ids"])}地点）</summary>'
+            f'<p>{escape(route["intro"])}</p>'
+            f'{stop_list(route["manhole_ids"])}</details>'
+            for route in route_groups
+        ) + "</div>"
+    else:
+        stops_html = stop_list(stop_ids)
     advice = "".join(
         f'<div><h3>{escape(section["heading"])}</h3><p>{escape(section["text"])}</p></div>'
         for section in guide["sections"]
@@ -1308,13 +1337,13 @@ def _visit_guide_html(records: list[dict], guide: dict | None) -> str:
         '<section class="visit-guide" aria-labelledby="visit-guide-heading">'
         f'<h2 id="visit-guide-heading">{escape(guide["heading"])}</h2>'
         f'<p>{escape(guide["intro"])}</p>'
-        f'<ul class="visit-guide-stops">{stops}</ul>'
+        f'{stops_html}'
         '<div class="municipality-actions">'
         '<a class="inline-link" href="#prefecture-map" data-track="prefecture_map_click" '
         'data-surface="visit_guide" data-destination="prefecture_map">設置場所を地図で見る</a>'
         '<a class="inline-link" href="#visit-advice">回り方を見る</a></div>'
         '<details id="visit-advice" class="visit-advice" open>'
-        '<summary>駅・車での回り方</summary>'
+        f'<summary>{escape(guide.get("advice_label", "駅・車での回り方"))}</summary>'
         f'{advice}</details>'
         f'<p class="visit-guide-sources">出典：{sources}'
         f'（確認日：<time datetime="{_escape_attr(guide["checked_on"])}">'
@@ -1622,6 +1651,10 @@ def build_page(
     .visit-guide-stops li {{ min-width: 0; padding: 12px; border-radius: 12px; background: #f0e9fb; }}
     .visit-guide-stops a {{ display: block; min-height: 44px; font-weight: 850; }}
     .visit-guide-stops span {{ display: block; color: #62564a; font-size: .82rem; overflow-wrap: anywhere; }}
+    .visit-guide-routes {{ display: grid; gap: 10px; margin: 16px 0; }}
+    .visit-guide-route {{ padding: 14px; border: 1px solid rgba(93,67,35,.15); border-radius: 14px; }}
+    .visit-guide-route summary {{ cursor: pointer; font-weight: 850; color: #14544f; }}
+    .visit-guide-route > p {{ margin: 10px 0 0; color: #62564a; }}
     .visit-advice {{ margin-top: 18px; }}
     .visit-advice summary {{ cursor: pointer; font-weight: 850; color: #14544f; }}
     .visit-advice h3 {{ margin: 14px 0 6px; font-size: 1rem; }}
