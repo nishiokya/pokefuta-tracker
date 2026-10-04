@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 from collections import Counter
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
@@ -138,6 +139,26 @@ PREFECTURE_SEO: dict[str, dict[str, str]] = {
         ),
     },
 }
+
+# Search Console（2026-09-02〜09-29）で表示1,500回以上・CTR約1%以下、または
+# 平均順位9位以下だった県。県別の文面を書く代わりに、設置市町村とポケモンを
+# データから入れたタイトル・説明と、市町村別の案内を出す。京都・大阪は
+# 9月22日に個別設定へ変えて測定中なので含めない。
+MUNICIPALITY_SEO_PREFECTURES = frozenset({
+    "青森県", "秋田県", "栃木県", "神奈川県", "新潟県", "富山県", "岐阜県",
+    "兵庫県", "山口県", "徳島県", "愛媛県", "福岡県", "鹿児島県",
+})
+
+# ポケふたが無い県から近いポケふたを測る起点（県庁所在地の県庁）。
+# 距離は直線で、移動距離ではない。
+EMPTY_PREFECTURE_ORIGINS: dict[str, tuple[str, float, float]] = {
+    "群馬県": ("群馬県庁", 36.3911, 139.0608),
+    "山梨県": ("山梨県庁", 35.6639, 138.5684),
+    "広島県": ("広島県庁", 34.3966, 132.4596),
+    "熊本県": ("熊本県庁", 32.7898, 130.7416),
+    "大分県": ("大分県庁", 33.2382, 131.6126),
+}
+NEAREST_POKEFUTA_LIMIT = 8
 
 
 def load_records(path: Path) -> list[dict]:
@@ -1211,14 +1232,101 @@ def _municipality_counts(records: list[dict]) -> list[tuple[str, int]]:
     return sorted(counts.items(), key=lambda item: (-item[1], item[0]))
 
 
+def _short_prefecture_name(prefecture: str) -> str:
+    if prefecture == "北海道":
+        return prefecture
+    return prefecture.removesuffix("県").removesuffix("府").removesuffix("都")
+
+
+def _seo_config(prefecture: str, records: list[dict]) -> dict[str, str] | None:
+    """個別設定、または対象県なら設置データから作るタイトル・説明。"""
+    config = PREFECTURE_SEO.get(prefecture)
+    if config or prefecture not in MUNICIPALITY_SEO_PREFECTURES:
+        return config
+    municipalities = [name for name, _ in _municipality_counts(records)]
+    if not municipalities:
+        return None
+    short = _short_prefecture_name(prefecture)
+    title_places = "・".join(municipalities[:3]) + ("など" if len(municipalities) > 3 else "")
+    pokemons = list(dict.fromkeys(
+        name for record in records for name in _clean_pokemons(record)
+    ))
+    pokemon_text = "・".join(pokemons[:3]) + ("など" if len(pokemons) > 3 else "")
+    # str.format に渡すので、データ由来の波括弧はエスケープする。
+    def literal(text: str) -> str:
+        return text.replace("{", "{{").replace("}", "}}")
+    return {
+        "search_name": short,
+        "title": f"{literal(short)}のポケふた{{count}}枚はどこ？{literal(title_places)}の場所一覧・地図",
+        "h1": f"{literal(short)}（{literal(prefecture)}）のポケふた{{count}}枚",
+        "description": (
+            f"{literal(prefecture)}のポケふた{{count}}枚を一覧と地図で紹介。"
+            f"{literal('・'.join(municipalities))}の設置場所と住所、"
+            f"{literal(pokemon_text)}の描かれたデザインを確認できます。"
+        ),
+    }
+
+
+def _distance_km(lat1: float, lng1: float, lat2: float, lng2: float) -> float:
+    dlat = math.radians(lat2 - lat1)
+    dlng = math.radians(lng2 - lng1)
+    a = (
+        math.sin(dlat / 2) ** 2
+        + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlng / 2) ** 2
+    )
+    return 6371.0 * 2 * math.asin(math.sqrt(a))
+
+
+def _nearest_pokefuta(
+    prefecture: str, all_records: list[dict] | None
+) -> list[tuple[float, dict]]:
+    """ポケふたが無い県の県庁から、直線距離が近い設置済みのポケふた。"""
+    origin = EMPTY_PREFECTURE_ORIGINS.get(prefecture)
+    if not origin or not all_records:
+        return []
+    _, lat, lng = origin
+    candidates = [
+        (_distance_km(lat, lng, record["lat"], record["lng"]), record)
+        for record in all_records
+        if record.get("installed") is not False
+        and record.get("prefecture") != prefecture
+        and isinstance(record.get("lat"), (int, float))
+        and isinstance(record.get("lng"), (int, float))
+    ]
+    candidates.sort(key=lambda item: (item[0], str(item[1].get("id", ""))))
+    return candidates[:NEAREST_POKEFUTA_LIMIT]
+
+
+def _nearest_prefectures(nearest: list[tuple[float, dict]]) -> list[str]:
+    return list(dict.fromkeys(str(record.get("prefecture", "")) for _, record in nearest))
+
+
 def _prefecture_seo(
     prefecture: str,
     count: int,
+    records: list[dict] | None = None,
+    nearest: list[tuple[float, dict]] | None = None,
 ) -> tuple[str, str, str]:
-    config = PREFECTURE_SEO.get(prefecture)
+    config = _seo_config(prefecture, records or [])
     if config and count:
         values = {key: value.format(count=count) for key, value in config.items()}
         return values["title"], values["description"], values["h1"]
+
+    if not count and nearest:
+        short = _short_prefecture_name(prefecture)
+        near = "・".join(
+            _short_prefecture_name(name) for name in _nearest_prefectures(nearest)[:3]
+        )
+        office = EMPTY_PREFECTURE_ORIGINS[prefecture][0]
+        return (
+            f"{short}のポケふたは？県内は未設置｜近くの{near}の場所一覧",
+            (
+                f"{prefecture}には現在ポケふたが設置されていません。"
+                f"{office}から直線距離が近い順に、{near}のポケふた"
+                f"{len(nearest)}枚の場所とポケモンを紹介します。"
+            ),
+            f"{prefecture}のポケふた",
+        )
 
     title = (
         f"{prefecture}のポケふた{count}枚｜設置場所マップ・ポケモン一覧"
@@ -1239,7 +1347,7 @@ def _prefecture_seo(
 
 
 def _municipality_guide(prefecture: str, records: list[dict]) -> str:
-    config = PREFECTURE_SEO.get(prefecture)
+    config = _seo_config(prefecture, records)
     municipalities = _municipality_counts(records)
     if not config or not municipalities:
         return ""
@@ -1263,6 +1371,35 @@ def _municipality_guide(prefecture: str, records: list[dict]) -> str:
         '<a class="inline-link" href="#manhole-list">場所一覧を見る</a>'
         '<a class="inline-link" href="#prefecture-map">地図を見る</a>'
         '</div></section>'
+    )
+
+
+def _nearest_pokefuta_html(prefecture: str, nearest: list[tuple[float, dict]]) -> str:
+    if not nearest:
+        return ""
+    office = EMPTY_PREFECTURE_ORIGINS[prefecture][0]
+    short = _short_prefecture_name(prefecture)
+    first_distance, first = nearest[0]
+    stops = "".join(
+        f'<li><a href="/manholes/{quote(str(record.get("id", "")))}/" '
+        'data-track="prefecture_manhole_click" data-surface="nearest_pokefuta" '
+        f'data-position="{position}" '
+        f'data-destination="{_escape_attr(record.get("id", ""))}" '
+        f'data-content-id="{_escape_attr(record.get("id", ""))}">'
+        f'{escape(_manhole_name(record))}</a>'
+        f'<span>{escape(str(record.get("address") or ""))}・直線約{distance:.0f}km</span>'
+        f'<span>{escape("・".join(_clean_pokemons(record)))}</span></li>'
+        for position, (distance, record) in enumerate(nearest, start=1)
+    )
+    return (
+        '<section class="visit-guide" aria-labelledby="nearest-heading">'
+        f'<h2 id="nearest-heading">{escape(short)}から近いポケふた{len(nearest)}枚</h2>'
+        f'<p>{escape(prefecture)}には現在ポケふたがありません。'
+        f'{escape(office)}からいちばん近いのは{escape(str(first.get("prefecture", "")))}の'
+        f'{escape(_manhole_name(first))}で、直線で約{first_distance:.0f}kmです。'
+        '距離は直線のため、移動距離や所要時間は地図アプリで確認してください。</p>'
+        f'<ul class="visit-guide-stops">{stops}</ul>'
+        '</section>'
     )
 
 
@@ -1385,6 +1522,7 @@ def build_page(
     photos: dict[str, dict] | None = None,
     empty_prefectures: set[str] | None = None,
     visit_guide: dict | None = None,
+    all_records: list[dict] | None = None,
 ) -> str:
     photos = photos or {}
     count = len(records)
@@ -1393,7 +1531,8 @@ def build_page(
     ]
     installed_count = len(installed_records)
     canonical = f"{BASE_URL}/prefectures/{slug}/"
-    title, description, h1 = _prefecture_seo(prefecture, count)
+    nearest = [] if count else _nearest_pokefuta(prefecture, all_records)
+    title, description, h1 = _prefecture_seo(prefecture, count, records, nearest)
     rank_label = f"全国{rank}位" if rank else "現在未設置"
     hero_intro = _hero_intro(prefecture, count, trivia_entry)
     hero_summary = _hero_summary(prefecture, count, records, trivia_entry)
@@ -1580,7 +1719,9 @@ def build_page(
 
 {related_section_html}"""
     else:
-        main_sections_html = f"""    <!-- adsense:prefecture -->
+        main_sections_html = f"""    {_nearest_pokefuta_html(prefecture, nearest)}
+
+    <!-- adsense:prefecture -->
 
 {events_html}{related_section_html}
 
@@ -2164,6 +2305,7 @@ def generate_all(
             photos,
             empty_prefectures,
             (visit_guides or {}).get(prefecture),
+            records,
         )
         (out_dir / "index.html").write_text(html, encoding="utf-8")
     output_dir.mkdir(parents=True, exist_ok=True)

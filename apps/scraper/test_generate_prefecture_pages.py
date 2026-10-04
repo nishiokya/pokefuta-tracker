@@ -15,6 +15,8 @@ MODULE = importlib.util.module_from_spec(SPEC)
 assert SPEC and SPEC.loader
 SPEC.loader.exec_module(MODULE)
 
+from apps.scraper.prefecture_completion import PREFECTURES_WITHOUT_POKEFUTA  # noqa: E402
+
 
 class GeneratePrefecturePagesTest(unittest.TestCase):
     @classmethod
@@ -385,6 +387,83 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
 
         # inject_adsense.py が要求するマーカーは空の県にも必要
         self.assertIn("<!-- adsense:prefecture -->", html)
+
+    def test_empty_prefecture_lists_nearest_installed_pokefuta(self) -> None:
+        """0枚の県の検索流入に、県外で近いポケふたを直線距離つきで返す。"""
+        # 未設置県が増減したら起点の県庁も揃える（設置された県は自動で通常ページへ戻る）
+        self.assertEqual(
+            set(MODULE.EMPTY_PREFECTURE_ORIGINS), set(PREFECTURES_WITHOUT_POKEFUTA)
+        )
+        for prefecture, slug in MODULE.PREFECTURES:
+            if prefecture not in MODULE.EMPTY_PREFECTURE_ORIGINS:
+                continue
+            with self.subTest(prefecture=prefecture):
+                nearest = MODULE._nearest_pokefuta(prefecture, self.records)
+                self.assertEqual(len(nearest), MODULE.NEAREST_POKEFUTA_LIMIT)
+                distances = [distance for distance, _ in nearest]
+                self.assertEqual(distances, sorted(distances))
+                for _, record in nearest:
+                    self.assertNotEqual(record["prefecture"], prefecture)
+                    self.assertIsNot(record.get("installed"), False)
+
+                html = MODULE.build_page(
+                    prefecture, slug, [], None, self.pokemon_slugs,
+                    self.trivia.get(prefecture), all_records=self.records,
+                )
+                title = re.search(r"<title>(.*?)</title>", html).group(1)
+                self.assertIn("県内は未設置", title)
+                near = MODULE._short_prefecture_name(nearest[0][1]["prefecture"])
+                self.assertIn(near, title)
+                self.assertIn('id="nearest-heading"', html)
+                self.assertEqual(
+                    html.count('data-surface="nearest_pokefuta"'),
+                    MODULE.NEAREST_POKEFUTA_LIMIT,
+                )
+                for _, record in nearest:
+                    self.assertIn(f'href="/manholes/{record["id"]}/"', html)
+                self.assertIn("直線", html)
+                self.assertLess(
+                    html.index('id="nearest-heading"'), html.index('id="journey-heading"')
+                )
+
+    def test_empty_prefecture_keeps_the_old_title_without_records(self) -> None:
+        """全件を渡さない呼び出しは従来どおり（距離を出せないので推測しない）。"""
+        html = MODULE.build_page(
+            "広島県", "hiroshima", [], None, self.pokemon_slugs, self.trivia.get("広島県"),
+        )
+        self.assertIn("<title>広島県のポケふた｜設置状況・ポケモンマンホール情報</title>", html)
+        self.assertNotIn('id="nearest-heading"', html)
+
+    def test_low_ctr_prefectures_get_municipality_titles_from_data(self) -> None:
+        by_pref: dict[str, list[dict]] = {}
+        for record in self.records:
+            by_pref.setdefault(record["prefecture"], []).append(record)
+        self.assertFalse(MODULE.MUNICIPALITY_SEO_PREFECTURES & set(MODULE.PREFECTURE_SEO))
+        for prefecture, slug in MODULE.PREFECTURES:
+            if prefecture not in MODULE.MUNICIPALITY_SEO_PREFECTURES:
+                continue
+            records = by_pref[prefecture]
+            with self.subTest(prefecture=prefecture):
+                html = MODULE.build_page(
+                    prefecture, slug, records, 1, self.pokemon_slugs,
+                    self.trivia.get(prefecture), photos=self.photos,
+                    all_records=self.records,
+                )
+                title = re.search(r"<title>(.*?)</title>", html).group(1)
+                short = MODULE._short_prefecture_name(prefecture)
+                self.assertTrue(title.startswith(f"{short}のポケふた{len(records)}枚はどこ？"))
+                first_city = MODULE._municipality_counts(records)[0][0]
+                self.assertIn(first_city, title)
+                self.assertIn('id="municipality-heading"', html)
+                self.assertNotIn('id="nearest-heading"', html)
+
+        # 対象外の県は従来のタイトルのまま
+        html = MODULE.build_page(
+            "三重県", "mie", by_pref["三重県"], 1, self.pokemon_slugs,
+            self.trivia.get("三重県"), all_records=self.records,
+        )
+        self.assertIn(f"<title>三重県のポケふた{len(by_pref['三重県'])}枚｜設置場所マップ・ポケモン一覧</title>", html)
+        self.assertNotIn('id="municipality-heading"', html)
 
     def test_related_links_skip_prefectures_without_any_pokefuta(self) -> None:
         """行き止まりから行き止まりへ送らない。
