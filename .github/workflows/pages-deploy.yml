@@ -24,6 +24,7 @@ on:
       - 'apps/scraper/generate_municipality_pages.py' # municipality page generator + ranking
       - 'apps/scraper/municipalities.py' # which municipalities get a page (shared with prefecture/detail/sitemap)
       - 'dataset/municipality_slugs.json' # romanized municipality URL slugs
+      - 'dataset/prefecture_municipality_totals.json' # municipality count per prefecture (coverage denominator)
       - 'apps/scraper/generate_tag_pages.py' # theme (tag) landing page generator
       - 'apps/scraper/generate_top_tag_chips.py' # top page theme chips generator
       - 'apps/scraper/generate_top_page.py' # top page counts, photos, prefecture list, JSON-LD
