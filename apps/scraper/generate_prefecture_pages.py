@@ -34,11 +34,21 @@ except ModuleNotFoundError as exc:
     from prefecture_completion import build_completion, verify_known_empty
 
 try:
-    from apps.scraper.municipalities import page_paths as municipality_page_paths
+    from apps.scraper.municipalities import (
+        PrefectureCoverage,
+        complete_prefectures,
+        page_paths as municipality_page_paths,
+        prefecture_coverage,
+    )
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
-    from municipalities import page_paths as municipality_page_paths
+    from municipalities import (
+        PrefectureCoverage,
+        complete_prefectures,
+        page_paths as municipality_page_paths,
+        prefecture_coverage,
+    )
 
 try:
     from apps.scraper.prefectures import (
@@ -418,6 +428,7 @@ def _hero_summary(
     count: int,
     records: list[dict],
     trivia_entry: dict | None,
+    coverage: "PrefectureCoverage | None" = None,
 ) -> str:
     if not count:
         return f"{prefecture}は現在未設置。新しい設置情報を追跡中です。"
@@ -427,7 +438,13 @@ def _hero_summary(
         for record in records
         if str(record.get("city", "")).strip()
     }
-    municipalities = (trivia_entry or {}).get("municipality_count", 0) or len(cities)
+    # トリビアの municipality_count は city の表記揺れ（「利府」と「利府町」）を別に数え、
+    # 生成時点で止まっているので、カバー率と同じ数え方があればそちらを使う
+    municipalities = (
+        (coverage.covered if coverage and coverage.covered else 0)
+        or (trivia_entry or {}).get("municipality_count", 0)
+        or len(cities)
+    )
     first_month = _first_reliable_month(records)
     if first_month:
         return (
@@ -1242,7 +1259,10 @@ def _municipality_counts(records: list[dict]) -> list[tuple[str, int]]:
 def _short_prefecture_name(prefecture: str) -> str:
     if prefecture == "北海道":
         return prefecture
-    return prefecture.removesuffix("県").removesuffix("府").removesuffix("都")
+    # 接尾辞は1つだけ落とす。続けて落とすと「京都府」→「京都」→「京」になる
+    if prefecture[-1:] in ("都", "府", "県"):
+        return prefecture[:-1]
+    return prefecture
 
 
 def _seo_config(prefecture: str, records: list[dict]) -> dict[str, str] | None:
@@ -1454,6 +1474,8 @@ def _hero_intro(
     prefecture: str,
     count: int,
     trivia_entry: dict | None,
+    coverage: PrefectureCoverage | None = None,
+    complete: list[str] | None = None,
 ) -> str:
     if not count:
         return (
@@ -1463,13 +1485,114 @@ def _hero_intro(
 
     municipality_count = (trivia_entry or {}).get("municipality_count", 0)
     intro = f"{prefecture}には{count}枚のポケふたがあります。"
-    if municipality_count:
+    if coverage and coverage.covered:
+        intro += _coverage_sentence(coverage, complete or [])
+    elif municipality_count:
         intro += f"県内{municipality_count}自治体に広がっています。"
     trivia = (trivia_entry or {}).get("trivia", [])
     if trivia and trivia[0].get("text"):
         fact = str(trivia[0]["text"]).rstrip("。")
         intro += f"{fact}。"
     return intro
+
+
+def _area_word(prefecture: str) -> str:
+    """「県内」「都内」「府内」「道内」。"""
+    return "道内" if prefecture == "北海道" else prefecture[-1] + "内"
+
+
+def _coverage_sentence(coverage: PrefectureCoverage, complete: list[str]) -> str:
+    """ヒーローの導入に入れる1文。県単位でしか言えない「何市町村にあるか」。"""
+    area = _area_word(coverage.prefecture)
+    if coverage.is_complete:
+        return (
+            f"{area}{coverage.total}市町村すべてにあり、"
+            f"全市町村にポケふたがある全国{len(complete)}県のひとつです。"
+        )
+    if coverage.covered == 1:
+        only = next(iter(coverage.counts))
+        return f"{area}{coverage.total}市町村のうち、ポケふたがあるのは{only}だけです。"
+    return f"{area}{coverage.total}市町村のうち{coverage.covered}市町村にあります。"
+
+
+def _coverage_html(
+    prefecture: str,
+    count: int,
+    coverage: PrefectureCoverage | None,
+    complete: list[str],
+    municipality_paths: dict[str, str] | None = None,
+) -> str:
+    """何市町村にポケふたがあるか。市区町村ページや自治体の公式サイトには無い、県単位の情報。"""
+    if not coverage or not coverage.covered or not count:
+        return ""
+    short = _short_prefecture_name(prefecture)
+    paths = municipality_paths or {}
+
+    def municipality_link(name: str, n: int) -> str:
+        path = paths.get(name)
+        label = f"{escape(name)}（{n}枚）"
+        if not path:
+            return label
+        return (
+            f'<a href="{_escape_attr(path)}" data-track="prefecture_municipality_click" '
+            f'data-surface="municipality_coverage" data-destination="{_escape_attr(path)}">{label}</a>'
+        )
+
+    multi = coverage.multi
+    multi_text = "・".join(municipality_link(name, n) for name, n in multi)
+    if coverage.is_complete:
+        heading = f"{short}は全{coverage.total}市町村にポケふたがある"
+        others = [
+            f'<a href="/prefectures/{quote(PREFECTURE_SLUGS[pref])}/" '
+            'data-track="prefecture_related_click" data-surface="municipality_coverage" '
+            f'data-destination="{_escape_attr(PREFECTURE_SLUGS[pref])}">{escape(pref)}</a>'
+            if pref != prefecture else f"<b>{escape(pref)}</b>"
+            for pref in complete
+        ]
+        body = (
+            f"<p>{escape(prefecture)}の{coverage.total}市町村すべてに、1枚以上のポケふたがあります。"
+            + (
+                f"2枚以上あるのは{multi_text}で、合わせて{count}枚です。"
+                if multi else f"1市町村に1枚ずつ、合わせて{count}枚です。"
+            )
+            + "</p>"
+            f"<p>全市町村にポケふたがあるのは、全国で{'・'.join(others)}の{len(complete)}県です。</p>"
+        )
+    elif coverage.covered == 1:
+        only, only_count = next(iter(coverage.counts.items()))
+        heading = f"{short}のポケふたはすべて{only}に"
+        body = (
+            f"<p>{escape(prefecture)}のポケふた{count}枚は、すべて{escape(only)}にあります。"
+            f"{_area_word(prefecture)}{coverage.total}市町村のうち、ポケふたがあるのは{escape(only)}だけです。"
+            "一覧と地図は、そのままこのページで確認できます。</p>"
+        )
+    else:
+        heading = f"{short}のポケふたがある市町村（{coverage.covered}/{coverage.total}）"
+        body = (
+            f"<p>{escape(prefecture)}の{coverage.total}市町村のうち{coverage.covered}市町村"
+            f"（{coverage.percent}%）にポケふたがあり、まだ無い市町村は{coverage.uncovered}です。"
+            f"ポケふたがある市町村の数は全国{coverage.covered_rank}位です。"
+            + (f"複数あるのは{multi_text}です。" if multi else "どの市町村も1枚ずつです。")
+            + "</p>"
+        )
+    # 1市町村だけの県（指宿だけの鹿児島など）は「1/43（2%）」のメーターが情報にならないので出さない
+    meter = (
+        f'<div class="coverage-meter" role="meter" aria-label="ポケふたがある市町村の割合" '
+        f'aria-valuemin="0" aria-valuemax="100" aria-valuenow="{coverage.percent}">'
+        f'<span style="width:{coverage.percent}%"></span></div>'
+        f'<p class="coverage-figure"><b>{coverage.covered}</b> / {coverage.total}市町村'
+        f'（{coverage.percent}%）</p>'
+        if coverage.covered > 1 else ""
+    )
+    return (
+        '<section class="municipality-guide" aria-labelledby="coverage-heading">'
+        f'<h2 id="coverage-heading">{escape(heading)}</h2>'
+        f'{meter}'
+        f'{body}'
+        '<p class="coverage-note">市町村数は総務省の公表値（東京都は特別区を含む）。'
+        '政令市は区に分けず1市として数えています。</p>'
+        '</section>'
+    )
 
 
 def _guide_stop_name(record: dict) -> str:
@@ -1635,6 +1758,13 @@ PAGE_CSS = """    :root { color-scheme: light; }
     .stat { padding: 14px; border-radius: 15px; background: rgba(255,255,255,.72); }
     .stat span { display: block; color: #75685c; font-size: .76rem; font-weight: 850; }
     .stat strong { display: block; color: #57408f; font-size: 1.55rem; line-height: 1.3; }
+    .stat small { display: block; color: #75685c; font-size: .72rem; font-weight: 800; }
+    .stats-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .coverage-figure { margin: 6px 0 0 !important; font-weight: 850; color: #57408f !important; }
+    .coverage-figure b { font-size: 1.4rem; }
+    .municipality-guide .coverage-meter { margin-top: 10px; }
+    .municipality-guide p + p { margin-top: 8px; }
+    .coverage-note { margin-top: 8px !important; font-size: .75rem; color: #75685c; }
     .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
     .button {
       display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px;
@@ -1873,6 +2003,8 @@ PAGE_CSS = """    :root { color-scheme: light; }
     footer { margin-top: 24px; color: #75685c; font-size: .8rem; text-align: center; }
     .leaflet-popup-content a { font-weight: 850; }
     @media (max-width: 700px) {
+      .stats-3 .stat { padding: 10px; }
+      .stats-3 .stat strong { font-size: 1.15rem; }
       .hero { display: block; padding: 22px 18px; }
       .hero-summary { display: none; }
       .hero-actions { display: grid; grid-template-columns: 1fr 1fr; }
@@ -2018,6 +2150,8 @@ def build_page(
     visit_guide: dict | None = None,
     all_records: list[dict] | None = None,
     municipality_paths: dict[str, str] | None = None,
+    coverage: PrefectureCoverage | None = None,
+    complete: list[str] | None = None,
 ) -> str:
     photos = photos or {}
     count = len(records)
@@ -2029,8 +2163,8 @@ def build_page(
     nearest = [] if count else _nearest_pokefuta(prefecture, all_records)
     title, description, h1 = _prefecture_seo(prefecture, count, records, nearest)
     rank_label = f"全国{rank}位" if rank else "現在未設置"
-    hero_intro = _hero_intro(prefecture, count, trivia_entry)
-    hero_summary = _hero_summary(prefecture, count, records, trivia_entry)
+    hero_intro = _hero_intro(prefecture, count, trivia_entry, coverage, complete)
+    hero_summary = _hero_summary(prefecture, count, records, trivia_entry, coverage)
     official_url = _prefecture_official_url(records)
     official_cta = (
         f'<a class="inline-link official-link" href="{_escape_attr(official_url)}" target="_blank" '
@@ -2069,9 +2203,15 @@ def build_page(
         _visit_guide_html(records, visit_guide)
         or _municipality_guide(prefecture, records, municipality_paths)
     )
+    coverage_html = _coverage_html(prefecture, count, coverage, complete or [], municipality_paths)
+    # 1市町村だけの県で「市町村別の設置枚数」が既に出ているなら、同じことを2回言わない
+    # （「県内43市町村のうち指宿市だけ」はヒーローの導入に入っている）
+    if coverage and coverage.covered == 1 and not coverage.is_complete and municipality_guide_html:
+        coverage_html = ""
     # 市区町村ページへのリンクが上の案内に入っていなければ、入口を別に置く
-    if municipality_paths and "/municipalities/" not in municipality_guide_html:
+    if municipality_paths and "/municipalities/" not in municipality_guide_html + coverage_html:
         municipality_guide_html += _municipality_pages_html(prefecture, records, municipality_paths)
+    municipality_guide_html += coverage_html
     visits_url = _visits_url(slug)
     nearby_url = _nearby_url(slug)
     if installed_count:
@@ -2148,6 +2288,12 @@ def build_page(
       </div>
     </section>"""
     map_empty_class = " map-empty" if not map_points else ""
+    coverage_stat_html = (
+        '<div class="stat"><span>設置市町村</span>'
+        f'<strong>{coverage.covered}/{coverage.total}</strong>'
+        f'<small>{"全市町村に設置" if coverage.is_complete else f"{coverage.percent}%"}</small></div>'
+        if coverage and coverage.covered and count else ""
+    )
 
     # ポケふたが1枚も無い県のページは、8セクション中7つが「未設置」の言い換えに
     # なっていた（地図は空、写真は空、一覧は空、ポケモンは空、トリビアも未設置文）。
@@ -2280,9 +2426,10 @@ def build_page(
         <p class="hero-kicker">都道府県別 ポケふたガイド</p>
         <h1>{escape(h1)}</h1>
         <p>{escape(hero_intro)}</p>
-        <div class="stats" aria-label="{_escape_attr(prefecture)}の集計">
+        <div class="{"stats stats-3" if coverage_stat_html else "stats"}" aria-label="{_escape_attr(prefecture)}の集計">
           <div class="stat"><span>設置枚数</span><strong>{count}枚</strong></div>
           <div class="stat"><span>全国順位</span><strong>{escape(rank_label)}</strong></div>
+          {coverage_stat_html}
         </div>
         <div class="hero-actions">
           {hero_actions_html}
@@ -2361,6 +2508,8 @@ def generate_all(
     empty_prefectures = {
         pref for pref, items in records_by_pref.items() if not items
     }
+    coverage = prefecture_coverage(records)
+    complete = complete_prefectures(coverage)
     paths_by_pref: dict[str, dict[str, str]] = {}
     for (prefecture, name), path in municipality_page_paths(records).items():
         paths_by_pref.setdefault(prefecture, {})[name] = path
@@ -2380,6 +2529,8 @@ def generate_all(
             (visit_guides or {}).get(prefecture),
             records,
             paths_by_pref.get(prefecture),
+            coverage[prefecture],
+            complete,
         )
         (out_dir / "index.html").write_text(html, encoding="utf-8")
     output_dir.mkdir(parents=True, exist_ok=True)
