@@ -236,6 +236,41 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         self.assertIn("中通りから回る（21地点）", installed_html)
         self.assertIn('href="#manhole-461"', installed_html)
 
+    def test_yamagata_and_nagasaki_guides_cover_every_stop_by_region(self) -> None:
+        guides = MODULE.load_visit_guides(MODULE.DEFAULT_GUIDES)
+        cases = (
+            ("山形県", "yamagata", "山形のポケふた5枚｜山形市・寒河江・鶴岡などの場所一覧・地図",
+             (("村山：山形駅前・寒河江", 2), ("最上：大蔵村", 1), ("置賜：小国町", 1),
+              ("庄内：鶴岡市", 1))),
+            ("長崎県", "nagasaki", "長崎のポケふた15枚｜デンリュウの設置場所一覧・地図",
+             (("長崎市周辺：長崎・時津・西海", 3), ("県央：大村・諫早・東彼杵・波佐見", 4),
+              ("島原半島：島原・雲仙", 2), ("県北：佐世保・佐々", 2),
+              ("離島：壱岐・対馬・五島・新上五島", 4))),
+        )
+        for prefecture, slug, title, routes in cases:
+            with self.subTest(prefecture=prefecture):
+                records = [r for r in self.records if r.get("prefecture") == prefecture]
+                html = MODULE.build_page(
+                    prefecture, slug, records,
+                    MODULE.build_rankings(self.records)[prefecture],
+                    self.pokemon_slugs, self.trivia[prefecture],
+                    photos=self.photos, visit_guide=guides[prefecture],
+                )
+                self.assertIn(f"<title>{title}</title>", html)
+                guide_html = html[
+                    html.index('<section class="visit-guide"'):html.index('id="map-heading"')
+                ]
+                for heading, count in routes:
+                    self.assertIn(f"{heading}（{count}地点）", guide_html)
+                for record in records:
+                    mid = str(record["id"])
+                    self.assertEqual(1, guide_html.count(f'href="#manhole-{mid}"'))
+                    self.assertEqual(1, html.count(f'id="manhole-{mid}"'))
+                self.assertNotIn(f">{prefecture}/", guide_html)
+                for source in guides[prefecture]["sources"]:
+                    self.assertIn(source["url"], guide_html)
+                self.assertNotIn("utm_", html)
+
     def test_complete_visit_guide_is_hidden_for_duplicate_or_omitted_stop(self) -> None:
         guide = MODULE.load_visit_guides(MODULE.DEFAULT_GUIDES)["福島県"]
         records = [r for r in self.records if r.get("prefecture") == "福島県"]
