@@ -167,6 +167,60 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         self.assertIn(kochi_event["url"], html)
         self.assertIn("prefecture_event_click", html)
 
+    def test_chiba_guide_is_generated_with_resolving_anchors_and_sources(self) -> None:
+        guides = MODULE.load_visit_guides(MODULE.DEFAULT_GUIDES)
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory)
+            MODULE.generate_all(
+                self.records, self.pokemon_slugs, self.trivia, output,
+                photos=self.photos, visit_guides=guides,
+            )
+            html = (output / "chiba" / "index.html").read_text(encoding="utf-8")
+            self.assertIn(
+                "<title>千葉のポケふた4枚はどこ？香取市・佐原の場所一覧と地図</title>", html
+            )
+            self.assertIn('<h1>千葉（千葉県）のポケふた4枚</h1>', html)
+            self.assertLess(html.index('id="visit-guide-heading"'), html.index('id="map-heading"'))
+            guide_html = html[html.index('<section class="visit-guide"'):html.index('id="map-heading"')]
+            for mid in ("222", "223", "224", "225"):
+                self.assertIn(f'href="#manhole-{mid}"', guide_html)
+                self.assertEqual(1, html.count(f'id="manhole-{mid}"'))
+                self.assertIn(f'href="/manholes/{mid}/"', html)
+            for place in ("佐原駅前", "伊能忠敬記念館", "水郷佐原あやめパーク", "道の駅水の郷さわら"):
+                self.assertIn(place, guide_html)
+            self.assertIn("徒歩15分", guide_html)
+            self.assertIn("4地点すべてを駅前の徒歩コースとして予定せず", guide_html)
+            for source in guides["千葉県"]["sources"]:
+                self.assertIn(source["url"], guide_html)
+            self.assertIn('data-surface="visit_guide"', guide_html)
+            self.assertNotIn("utm_", html)
+            self.assertIn('href="https://data.pokefuta.com/prefectures/chiba/"', html)
+            kyoto = (output / "kyoto" / "index.html").read_text(encoding="utf-8")
+            self.assertNotIn('id="visit-guide-heading"', kyoto)
+            self.assertIn('id="municipality-heading"', kyoto)
+
+    def test_visit_guide_is_hidden_if_any_stop_is_missing_or_not_installed(self) -> None:
+        guide = MODULE.load_visit_guides(MODULE.DEFAULT_GUIDES)["千葉県"]
+        records = [r for r in self.records if r.get("prefecture") == "千葉県"]
+        for changes in ({"installed": False}, {"status": "inactive"}):
+            with self.subTest(changes=changes):
+                changed = [{**r, **changes} if r["id"] == "224" else r for r in records]
+                self.assertEqual("", MODULE._visit_guide_html(changed, guide))
+        self.assertEqual("", MODULE._visit_guide_html([r for r in records if r["id"] != "224"], guide))
+        self.assertEqual("", MODULE._visit_guide_html([], guide))
+
+    def test_visit_guide_escapes_editorial_content_and_rejects_non_https_sources(self) -> None:
+        guide = {
+            "heading": '<script>alert("x")</script>', "intro": "A & B",
+            "manhole_ids": ["sample"], "sections": [], "checked_on": "2026-10-04",
+            "sources": [{"url": "javascript:alert(1)", "label": "unsafe"}],
+        }
+        html = MODULE._visit_guide_html([{"id": "sample", "address": "<unsafe>"}], guide)
+        self.assertNotIn("<script>", html)
+        self.assertNotIn("javascript:", html)
+        self.assertIn("A &amp; B", html)
+        self.assertIn("&lt;unsafe&gt;", html)
+
     def test_expired_event_is_hidden(self) -> None:
         import datetime
 
