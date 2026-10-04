@@ -21,6 +21,9 @@ on:
       - 'apps/scraper/generate_summary_pages.py' # summary page generator
       - 'apps/scraper/generate_summary_ogp.py' # summary page OGP generator
       - 'apps/scraper/generate_prefecture_pages.py' # prefecture page generator
+      - 'apps/scraper/generate_municipality_pages.py' # municipality page generator + ranking
+      - 'apps/scraper/municipalities.py' # which municipalities get a page (shared with prefecture/detail/sitemap)
+      - 'dataset/municipality_slugs.json' # romanized municipality URL slugs
       - 'apps/scraper/generate_tag_pages.py' # theme (tag) landing page generator
       - 'apps/scraper/generate_top_tag_chips.py' # top page theme chips generator
       - 'apps/scraper/generate_top_page.py' # top page counts, photos, prefecture list, JSON-LD
@@ -103,6 +106,7 @@ jobs:
             apps.scraper.test_analytics_contract \
             apps.scraper.test_inject_adsense \
             apps.scraper.test_generate_prefecture_pages \
+            apps.scraper.test_generate_municipality_pages \
             apps.scraper.test_prefectures \
             apps.scraper.test_web_prefecture_links \
             apps.scraper.test_inject_site_header \
@@ -134,6 +138,8 @@ jobs:
           python3 apps/scraper/generate_summary_pages.py
           echo "[dist] Generate prefecture landing pages (47 prefectures)"
           python3 apps/scraper/generate_prefecture_pages.py
+          echo "[dist] Generate municipality landing pages + ranking"
+          python3 apps/scraper/generate_municipality_pages.py
           echo "[dist] Test theme (tag) metadata and landing page generation"
           python3 -m unittest \
             apps.scraper.test_tag_meta \

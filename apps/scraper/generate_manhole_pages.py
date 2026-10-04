@@ -31,11 +31,13 @@ from photo_caption import (  # noqa: E402
 )
 
 try:
+    from apps.scraper.municipalities import page_paths as municipality_page_paths  # noqa: E402
     from apps.scraper.prefectures import PREFECTURE_SLUGS  # noqa: E402
     from apps.scraper.tag_meta import load_tag_meta  # noqa: E402
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
+    from municipalities import page_paths as municipality_page_paths  # noqa: E402
     from prefectures import PREFECTURE_SLUGS  # noqa: E402
     from tag_meta import load_tag_meta  # noqa: E402
 
@@ -549,8 +551,12 @@ def generate_html(
     ogp_dir: Optional[Path] = None,
     ja_to_slug: dict[str, str] | None = None,
     nearby_design: list[tuple[dict, float]] | None = None,
+    municipality_path: str | None = None,
 ) -> str:
-    """Generate complete HTML for a manhole detail page."""
+    """Generate complete HTML for a manhole detail page.
+
+    municipality_path: この蓋の市区町村ページ（/municipalities/...）。ページがある自治体だけ渡す。
+    """
     manhole_id = str(manhole.get("id", "")).strip()
     prefecture = manhole.get("prefecture", "")
     city = manhole.get("city", "")
@@ -846,7 +852,12 @@ def generate_html(
     suppress_nearby = "lone" in title_keys
     if pref_total > 0 and prefecture and not suppress_pref:
         badges.append(f"<span class='hero-badge'>{escape(prefecture)} {pref_total}枚</span>")
-    if city_total >= 2 and city:
+    if city_total >= 2 and city and municipality_path:
+        badges.append(
+            f"<a class='hero-badge hero-badge-anchor' href=\"{escape(municipality_path)}\">"
+            f"{escape(municipality_label(manhole))} {city_total}枚</a>"
+        )
+    elif city_total >= 2 and city:
         badges.append(f"<span class='hero-badge'>{escape(city)} {city_total}枚</span>")
     if same_pokemon_total > 0:
         badges.append(f"<span class='hero-badge'>同じポケモン {same_pokemon_total}枚</span>")
@@ -1000,6 +1011,12 @@ def generate_html(
         link_cards.append(
             f"<a class='link-card link-card--internal' href=\"{escape(pref_url)}\">"
             f"{_icon('icon-detail-same-pref', 'link-card-icon')}<span>同じ都道府県</span></a>"
+        )
+    if municipality_path:
+        link_cards.append(
+            f"<a class='link-card link-card--internal' href=\"{escape(municipality_path)}\">"
+            f"{_icon('icon-detail-same-pref', 'link-card-icon')}"
+            f"<span>{escape(municipality_label(manhole))}のポケふた</span></a>"
         )
     _map_onclick = _attr_json({"manhole_id": manhole_id, "surface": "links_map"})
     link_cards.append(
@@ -2192,6 +2209,9 @@ def generate_all_pages(
         if pref:
             pref_index.setdefault(pref, []).append(m)
 
+    # 市区町村ページがある自治体（県の一部を占める3枚以上）。判定は municipalities.py に一本化
+    municipality_paths = municipality_page_paths(manholes)
+
     city_index: dict[str, list[dict]] = {}
     for m in manholes:
         pref = m.get("prefecture", "")
@@ -2313,6 +2333,7 @@ def generate_all_pages(
             city_total=city_total, same_pokemon_total=same_pokemon_total, nearby_count=nearby_count,
             ogp_dir=ogp_dir, ja_to_slug=ja_to_slug,
             nearby_design=nearby_design,
+            municipality_path=municipality_paths.get((prefecture, municipality_label(manhole))),
         )
 
         page_dir = output_dir / "manholes" / manhole_id

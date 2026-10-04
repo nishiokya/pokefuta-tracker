@@ -23,10 +23,12 @@ except ModuleNotFoundError as exc:
 
 try:
     from apps.scraper.generate_tag_pages import available_tag_slugs, load_records
+    from apps.scraper.municipalities import page_paths as municipality_page_paths
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
     from generate_tag_pages import available_tag_slugs, load_records
+    from municipalities import page_paths as municipality_page_paths
 
 # logger は以前 import されないまま warning 呼び出しだけがあり、
 # pokemon_metadata.json が無いときに NameError で落ちる状態だった。
@@ -176,6 +178,7 @@ def build_sitemap(
     pokemon_slugs: list[str] | None = None,
     tag_slugs: list[str] | None = None,
     character_work_pages: list[WorkPage] | None = None,
+    municipality_paths: list[str] | None = None,
 ) -> str:
     entries = [
         url_entry(BASE_URL, "daily", "1.0"),
@@ -207,6 +210,12 @@ def build_sitemap(
                 "0.8",
             )
         )
+
+    # 市区町村ページ（/municipalities/）。県ページと同列。県の一部を占める自治体だけにある
+    if municipality_paths:
+        entries.append(url_entry(f"{BASE_URL}municipalities/", "weekly", "0.8"))
+        for path in municipality_paths:
+            entries.append(url_entry(f"{BASE_URL}{path.lstrip('/')}", "weekly", "0.8"))
 
     # Theme (tag) landing pages. 県ページ(0.8)より下、ポケモンLP(0.1)より上。
     # 数が少なく内容が厚いので、量産している面と同列には置かない。
@@ -261,16 +270,21 @@ def main() -> int:
     pokemon_slugs = read_pokemon_slugs(Path(args.data), Path(args.pokemon))
     tag_slugs = read_tag_slugs(Path(args.data))
     character_work_pages = read_character_work_pages(Path(args.characters), Path(args.gundam))
+    municipality_paths = sorted(municipality_page_paths(load_records(Path(args.data))).values())
 
     output_path = Path(args.output)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(
-        build_sitemap(manhole_ids, pokemon_slugs, tag_slugs, character_work_pages), encoding="utf-8"
+        build_sitemap(
+            manhole_ids, pokemon_slugs, tag_slugs, character_work_pages, municipality_paths
+        ),
+        encoding="utf-8",
     )
     print(
         f"[generate_sitemap] wrote {output_path} with "
         f"{len(manhole_ids)} manhole URLs + {len(pokemon_slugs)} pokemon URLs "
-        f"+ {len(tag_slugs)} tag URLs + {len(character_work_pages)} character work URLs"
+        f"+ {len(tag_slugs)} tag URLs + {len(character_work_pages)} character work URLs "
+        f"+ {len(municipality_paths)} municipality URLs"
     )
     return 0
 

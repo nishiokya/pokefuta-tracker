@@ -1,0 +1,25 @@
+{
+  "_comment": "市区町村ページ（/municipalities/<県slug>/<市区町村slug>/）の URL に使うローマ字。キーは「都道府県/市区町村名（municipality_label の値）」。ページを作る対象は apps/scraper/municipalities.py が設置データから決め、ここに無い自治体はページを作らずに警告する。ローマ字はヘボン式・長音記号なし（kōka → koka）",
+  "slugs": {
+    "東京都/町田市": "machida",
+    "東京都/小笠原村": "ogasawara",
+    "京都府/京都市": "kyoto",
+    "京都府/宇治市": "uji",
+    "福岡県/北九州市": "kitakyushu",
+    "福岡県/太宰府市": "dazaifu",
+    "愛知県/豊橋市": "toyohashi",
+    "滋賀県/甲賀市": "koka",
+    "滋賀県/大津市": "otsu",
+    "岩手県/盛岡市": "morioka",
+    "岩手県/北上市": "kitakami",
+    "岩手県/久慈市": "kuji",
+    "宮城県/仙台市": "sendai",
+    "宮城県/利府町": "rifu",
+    "三重県/鳥羽市": "toba",
+    "三重県/鈴鹿市": "suzuka",
+    "石川県/輪島市": "wajima",
+    "鳥取県/鳥取市": "tottori",
+    "香川県/綾川町": "ayagawa",
+    "沖縄県/那覇市": "naha"
+  }
+}

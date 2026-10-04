@@ -34,6 +34,13 @@ except ModuleNotFoundError as exc:
     from prefecture_completion import build_completion, verify_known_empty
 
 try:
+    from apps.scraper.municipalities import page_paths as municipality_page_paths
+except ModuleNotFoundError as exc:
+    if exc.name != "apps":
+        raise
+    from municipalities import page_paths as municipality_page_paths
+
+try:
     from apps.scraper.prefectures import (
         PREFECTURES,
         PREFECTURE_ORDER,
@@ -1183,7 +1190,7 @@ def build_index_page(
     </nav>
     <header class="index-hero">
       <h1>都道府県から探す</h1>
-      <p>ポケふたの情報がある{listed_count}都道府県、計{total}枚を地方別にまとめました。行き先を選んで詳細ページへ。</p>
+      <p>ポケふたの情報がある{listed_count}都道府県、計{total}枚を地方別にまとめました。行き先を選んで詳細ページへ。<a href="/municipalities/">市区町村別のランキング</a>もあります。</p>
     </header>
     {region_nav_html}
 
@@ -1353,7 +1360,19 @@ def _prefecture_seo(
     return title, description, f"{prefecture}のポケふた"
 
 
-def _municipality_guide(prefecture: str, records: list[dict]) -> str:
+def _municipality_link_item(name: str, count: int, path: str | None) -> str:
+    label = (
+        f'<a href="{_escape_attr(path)}" data-track="prefecture_municipality_click" '
+        f'data-surface="municipality_guide" data-destination="{_escape_attr(path)}">'
+        f'<strong>{escape(name)}</strong></a>'
+        if path else f'<strong>{escape(name)}</strong>'
+    )
+    return f'<li>{label}<span>{count}枚</span></li>'
+
+
+def _municipality_guide(
+    prefecture: str, records: list[dict], municipality_paths: dict[str, str] | None = None
+) -> str:
     config = _seo_config(prefecture, records)
     municipalities = _municipality_counts(records)
     if not config or not municipalities:
@@ -1361,7 +1380,7 @@ def _municipality_guide(prefecture: str, records: list[dict]) -> str:
 
     search_name = config["search_name"]
     items = "".join(
-        f'<li><strong>{escape(name)}</strong><span>{count}枚</span></li>'
+        _municipality_link_item(name, count, (municipality_paths or {}).get(name))
         for name, count in municipalities
     )
     if len(municipalities) == 1:
@@ -1378,6 +1397,27 @@ def _municipality_guide(prefecture: str, records: list[dict]) -> str:
         '<a class="inline-link" href="#manhole-list">場所一覧を見る</a>'
         '<a class="inline-link" href="#prefecture-map">地図を見る</a>'
         '</div></section>'
+    )
+
+
+def _municipality_pages_html(
+    prefecture: str, records: list[dict], municipality_paths: dict[str, str] | None
+) -> str:
+    """市区町村ページがある自治体への入口。ページは県の一部を占める自治体にだけある（municipalities.py）。"""
+    if not municipality_paths:
+        return ""
+    items = "".join(
+        _municipality_link_item(name, count, municipality_paths[name])
+        for name, count in _municipality_counts(records)
+        if name in municipality_paths
+    )
+    if not items:
+        return ""
+    return (
+        '<section class="municipality-guide" aria-labelledby="municipality-pages-heading">'
+        f'<h2 id="municipality-pages-heading">{escape(prefecture)}の市区町村から探す</h2>'
+        '<p>ポケふたが集まっている市区町村は、地図・一覧・巡る順番を1ページにまとめています。</p>'
+        f'<ul>{items}</ul></section>'
     )
 
 
@@ -1518,6 +1558,453 @@ def _visit_guide_html(records: list[dict], guide: dict | None) -> str:
     )
 
 
+# 都道府県ページと市区町村ページ（generate_municipality_pages.py）で共有する見た目。
+# build_page の f-string から外に出したので、波括弧は1つで書く。
+PAGE_CSS = """    :root { color-scheme: light; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: #f7f0df; color: #201b16;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.65;
+    }
+    a { color: #176f68; }
+    .page { max-width: 1040px; margin: 0 auto; padding: 20px 16px 56px; }
+    .breadcrumb { display: flex; gap: 8px; font-size: .82rem; font-weight: 800; }
+    .breadcrumb a { text-decoration: none; }
+    .hero {
+      position: relative; overflow: hidden; margin-top: 14px; padding: 28px;
+      display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 22px;
+      align-items: center;
+      border: 1px solid rgba(93,67,35,.15); border-radius: 24px;
+      background: linear-gradient(135deg, #fffaf0, #f0e9fb);
+      box-shadow: 0 14px 32px rgba(77,56,30,.08);
+    }
+    .hero::after {
+      content: ""; position: absolute; width: 230px; height: 230px;
+      right: -70px; top: -90px; border: 42px solid rgba(126,107,169,.1);
+      border-radius: 50%;
+    }
+    .municipality-guide {
+      margin-top: 18px; padding: 22px; border: 1px solid rgba(93,67,35,.15);
+      border-radius: 18px; background: #fffaf0;
+    }
+    .municipality-guide h2 { margin: 0 0 6px; font-size: 1.25rem; }
+    .municipality-guide p { margin: 0; color: #62564a; }
+    .municipality-guide ul {
+      display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 0; padding: 0;
+      list-style: none;
+    }
+    .municipality-guide li {
+      display: inline-flex; align-items: center; gap: 7px; padding: 7px 10px;
+      border-radius: 999px; background: #f0e9fb;
+    }
+    .municipality-guide li span { color: #62564a; font-size: .82rem; font-weight: 800; }
+    .municipality-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 14px; }
+    .visit-guide > p { color: #62564a; }
+    .visit-guide-stops {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+      gap: 10px; list-style: none; padding: 0; margin: 14px 0;
+    }
+    .visit-guide-stops li { min-width: 0; padding: 12px; border-radius: 12px; background: #f0e9fb; }
+    .visit-guide-stops a { display: block; min-height: 44px; font-weight: 850; }
+    .visit-guide-stops span { display: block; color: #62564a; font-size: .82rem; overflow-wrap: anywhere; }
+    .visit-guide-routes { display: grid; gap: 10px; margin: 16px 0; }
+    .visit-guide-route { padding: 14px; border: 1px solid rgba(93,67,35,.15); border-radius: 14px; }
+    .visit-guide-route summary { cursor: pointer; font-weight: 850; color: #14544f; }
+    .visit-guide-route > p { margin: 10px 0 0; color: #62564a; }
+    .visit-advice { margin-top: 18px; }
+    .visit-advice summary { cursor: pointer; font-weight: 850; color: #14544f; }
+    .visit-advice h3 { margin: 14px 0 6px; font-size: 1rem; }
+    .visit-advice p { margin: 0; }
+    .visit-guide-sources { font-size: .78rem; overflow-wrap: anywhere; }
+    .visit-advice, .manhole-card { scroll-margin-top: 100px; }
+    .hero-kicker { margin: 0; color: #6b4aa2; font-size: .8rem; font-weight: 900; }
+    h1 { margin: 4px 0 8px; font-size: clamp(2rem, 7vw, 3.5rem); line-height: 1.15; }
+    .hero-main > p:last-of-type { max-width: 720px; margin: 0; color: #574b41; font-weight: 650; }
+    .hero-summary {
+      position: relative; z-index: 1; padding: 16px 18px; border-radius: 17px;
+      background: rgba(255,255,255,.74); color: #3a3128;
+      box-shadow: inset 0 0 0 1px rgba(93,67,35,.11);
+    }
+    .hero-summary span {
+      display: block; margin-bottom: 6px; color: #6b4aa2;
+      font-size: .76rem; font-weight: 900;
+    }
+    .hero-summary p { margin: 0; font-size: .96rem; font-weight: 800; }
+    .stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 18px; }
+    .stat { padding: 14px; border-radius: 15px; background: rgba(255,255,255,.72); }
+    .stat span { display: block; color: #75685c; font-size: .76rem; font-weight: 850; }
+    .stat strong { display: block; color: #57408f; font-size: 1.55rem; line-height: 1.3; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+    .button {
+      display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px;
+      border-radius: 999px; background: #176f68; color: white; font-weight: 900;
+      text-decoration: none;
+    }
+    .button.primary { background: #b5483c; }
+    .button.secondary { background: #6b4aa2; }
+    .button.tertiary {
+      background: white; color: #176f68; box-shadow: inset 0 0 0 1px #9fc7c2;
+    }
+    .button.official { background: #8a5a20; }
+    .hero-note { margin: 10px 0 0; color: #75685c; font-size: .78rem; font-weight: 750; }
+    .hero-utility { margin-top: 10px; }
+    .hero-utility:empty { display: none; }
+    section {
+      margin-top: 22px; padding: 20px; border: 1px solid rgba(93,67,35,.14);
+      border-radius: 19px; background: #fffaf0;
+      box-shadow: 0 8px 20px rgba(77,56,30,.05);
+    }
+    h2 { margin: 0 0 12px; font-size: 1.35rem; line-height: 1.35; }
+    .section-heading-row {
+      display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;
+      margin-bottom: 12px;
+    }
+    .section-heading-row h2, .section-heading-row p { margin: 0; }
+    .section-heading-row p { max-width: 520px; color: #75685c; font-size: .86rem; }
+    .map-toolbar {
+      display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px;
+      align-items: center; margin-bottom: 10px;
+    }
+    .map-legend { display: flex; flex-wrap: wrap; gap: 10px; color: #62564a; font-size: .78rem; font-weight: 800; }
+    .map-legend span { display: inline-flex; align-items: center; gap: 5px; }
+    .legend-dot { width: 12px; height: 12px; border: 3px solid white; border-radius: 50%; box-shadow: 0 0 0 1px rgba(32,27,22,.2); }
+    .legend-dot.has-photo { background: #2d846c; }
+    .legend-dot.needs-photo { background: #d78548; }
+    .legend-dot.preinstall { background: #8b8f94; }
+    .nearby-link, .inline-link {
+      display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px;
+      border-radius: 999px; background: #e6f2ef; color: #176f68;
+      font-size: .84rem; font-weight: 900; text-decoration: none;
+    }
+    #prefecture-map { height: 430px; border-radius: 14px; background: #e9e3d6; }
+    #prefecture-map.map-empty { display: grid; place-items: center; color: #75685c; font-weight: 850; }
+    .map-note { margin: 10px 0 0; color: #75685c; font-size: .8rem; }
+    .prefecture-marker {
+      width: 28px; height: 28px; border: 4px solid white; border-radius: 50% 50% 50% 8px;
+      transform: rotate(-45deg); box-shadow: 0 3px 8px rgba(32,27,22,.35);
+    }
+    .prefecture-marker.has-photo { background: #2d846c; }
+    .prefecture-marker.needs-photo { background: #d78548; }
+    .prefecture-marker.preinstall { background: #8b8f94; }
+    .map-popup { min-width: 210px; }
+    .map-popup img {
+      display: block; width: 100%; height: 120px; margin: 8px 0; border-radius: 10px;
+      object-fit: cover;
+    }
+    .map-popup-photo-missing {
+      margin: 8px 0; padding: 8px; border-radius: 9px; background: #fff0e5;
+      color: #8d4a22; font-size: .78rem; font-weight: 850;
+    }
+    .map-popup-preinstall {
+      margin: 8px 0; padding: 8px; border-radius: 9px; background: #f0ede7;
+      color: #625b53; font-size: .78rem; font-weight: 850;
+    }
+    .map-popup-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; margin-top: 9px; }
+    .map-popup-actions.preinstall-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .map-popup-actions a {
+      display: grid; place-items: center; min-height: 38px; padding: 5px;
+      border-radius: 8px; background: #ece7f7; color: #4f3a79;
+      font-size: .72rem; text-align: center; text-decoration: none;
+    }
+    .map-popup-actions a.upload { background: #b5483c; color: white; }
+    .photo-inventory {
+      display: grid; grid-template-columns: minmax(0, 1fr) 180px auto; gap: 14px;
+      align-items: center; margin-bottom: 16px;
+    }
+    .photo-inventory strong { color: #57408f; font-size: 1.8rem; line-height: 1; }
+    .photo-inventory strong span { color: #75685c; font-size: .9rem; }
+    .photo-inventory p { margin: 5px 0 0; color: #62564a; }
+    .photo-inventory > b { color: #57408f; }
+    .coverage-meter { height: 10px; overflow: hidden; border-radius: 999px; background: #e5ddd0; }
+    .coverage-meter span { display: block; height: 100%; border-radius: inherit; background: #6b4aa2; }
+    .photo-showcase-grid {
+      display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px;
+      margin-bottom: 14px;
+    }
+    .photo-card { overflow: hidden; border: 1px solid rgba(93,67,35,.13); border-radius: 14px; background: white; }
+    .photo-card-image { display: block; color: inherit; text-decoration: none; }
+    .photo-card-image img {
+      display: block; width: 100%; aspect-ratio: 4 / 3; height: auto; object-fit: cover;
+      background: #e9e3d6;
+    }
+    .photo-card-image > span { display: grid; padding: 9px 10px; }
+    .photo-card-image small { overflow: hidden; color: #75685c; font-size: .72rem; text-overflow: ellipsis; white-space: nowrap; }
+    .photo-card-poster { display: block; padding: 0 10px 9px; overflow: hidden; color: #75685c; font-size: .72rem; text-overflow: ellipsis; white-space: nowrap; }
+    .photo-card-poster a { color: #176f68; font-weight: 800; text-decoration: underline; text-underline-offset: 2px; }
+    .photo-card-upload {
+      display: grid; place-items: center; min-height: 44px; padding: 6px 9px;
+      border-top: 1px solid #ece4d7; color: #176f68; font-size: .75rem;
+      font-weight: 900; text-align: center; text-decoration: none;
+    }
+    .contribution-panel {
+      display: grid; grid-template-columns: minmax(220px, .8fr) minmax(0, 1.2fr);
+      gap: 14px; align-items: center; padding: 14px; border-radius: 14px;
+      background: #fff0e5;
+    }
+    .contribution-panel p { margin: 4px 0 0; color: #75685c; font-size: .82rem; }
+    .contribution-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+    .contribution-card {
+      display: grid; min-width: 0; padding: 10px; border-radius: 11px; background: white;
+      color: inherit; text-decoration: none;
+    }
+    .contribution-card span { color: #b5483c; font-size: .68rem; font-weight: 950; }
+    .contribution-card small { overflow: hidden; color: #75685c; font-size: .72rem; text-overflow: ellipsis; white-space: nowrap; }
+    .contribution-card b { margin-top: 6px; color: #176f68; font-size: .75rem; }
+    .photo-empty-state { padding: 18px; border-radius: 14px; background: #f3efe7; }
+    .photo-empty-state p { margin: 4px 0 12px; color: #75685c; }
+    .pokemon-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+    .pokemon-card {
+      display: grid; gap: 2px; padding: 12px; border: 1px solid rgba(93,67,35,.13);
+      border-radius: 13px; background: white; color: inherit; text-decoration: none;
+    }
+    .pokemon-card strong { color: #3d2b72; }
+    .pokemon-card span { color: #75685c; font-size: .75rem; font-weight: 750; }
+    .pokemon-more { grid-column: 1 / -1; }
+    .pokemon-more summary {
+      width: fit-content; margin: 12px auto 0; padding: 8px 14px;
+      border-radius: 999px; background: #eee7fb; color: #57408f;
+      cursor: pointer; font-size: .82rem; font-weight: 900;
+    }
+    .pokemon-more-grid {
+      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px; margin-top: 12px;
+    }
+    .manhole-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
+    .manhole-card {
+      overflow: hidden; border: 1px solid #e9dfc7;
+      border-radius: 14px; background: #fffdf7;
+      box-shadow: 0 1px 2px rgba(72,55,20,.05), 0 3px 8px rgba(72,55,20,.05);
+    }
+    .manhole-detail {
+      position: relative; display: block; color: inherit; text-decoration: none;
+    }
+    .manhole-card img, .manhole-placeholder {
+      display: block; width: 100%; aspect-ratio: 1 / 1; height: auto; object-fit: cover;
+      background: #e9e3d6;
+    }
+    .manhole-placeholder {
+      background: repeating-linear-gradient(45deg, #cdbf9f 0 10px, #c2b390 10px 20px);
+    }
+    .manhole-shade {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(30,22,10,.62) 0%, rgba(30,22,10,0) 46%);
+    }
+    .manhole-badges {
+      position: absolute; top: 8px; right: 8px; display: grid; gap: 4px; justify-items: end;
+    }
+    .manhole-copy {
+      position: absolute; right: 12px; bottom: 10px; left: 12px;
+      min-width: 0; color: white; text-shadow: 0 1px 3px rgba(0,0,0,.45);
+    }
+    .manhole-copy strong, .manhole-copy small { display: block; }
+    .manhole-copy small {
+      overflow: hidden; font-size: .75rem; opacity: .92;
+      text-overflow: ellipsis; white-space: nowrap;
+    }
+    .photo-status {
+      display: inline-flex; width: fit-content; padding: 2px 7px;
+      border-radius: 999px; font-size: .68rem; font-weight: 800;
+      box-shadow: 0 1px 3px rgba(30,22,10,.25);
+    }
+    .photo-ready { background: #e4f2ee; color: #176f68; }
+    .photo-needed { background: #fff0e5; color: #9b4b20; }
+    .photo-pending { background: #f0ede7; color: #6f6254; }
+    .manhole-actions {
+      display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr);
+      border-top: 1px solid #ece4d7;
+    }
+    .manhole-actions a {
+      display: grid; place-items: center; min-height: 44px; padding: 5px;
+      color: #57408f; font-size: .76rem; font-weight: 900; text-align: center;
+      text-decoration: none;
+    }
+    .manhole-actions a + a { border-left: 1px solid #ece4d7; }
+    /* 写真館のタイルは色面のボタンを持たないので、ここも塗り潰しをやめて
+       写真館の淡いタグ色（#fdeae2 / #bf5640）に寄せる。赤ベタのボタンが
+       全カードに並ぶと、写真より先にボタンの列が目に入っていた。 */
+    .manhole-actions a.upload { background: #fdeae2; color: #bf5640; }
+    .journey-loop { background: linear-gradient(135deg, #f1f8f6, #f5effc); }
+    .journey-steps {
+      display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px;
+      margin: 14px 0;
+    }
+    .journey-step { padding: 12px; border-radius: 12px; background: white; font-size: .82rem; font-weight: 850; }
+    .journey-step span { display: block; color: #6b4aa2; font-size: .7rem; }
+    .journey-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .manhole-preinstall-badge {
+      display: inline-block; padding: 2px 8px;
+      border-radius: 999px; background: #f1ede4; color: #6b5d44;
+      font-size: .74rem; font-weight: 700; white-space: nowrap;
+      box-shadow: 0 1px 3px rgba(30,22,10,.25);
+    }
+    .trivia-card {
+      border-left: 5px solid #7e6ba9;
+      background: linear-gradient(135deg, #fffaf0, #f4effd);
+    }
+    .trivia-kicker {
+      display: inline-flex; margin: 0 0 6px; padding: 3px 9px;
+      border-radius: 999px; background: #6b4aa2; color: white;
+      font-size: .72rem; font-weight: 900;
+    }
+    .trivia-card p { margin: 0; font-size: 1.05rem; font-weight: 750; }
+    .trivia-source { margin-top: 8px; font-size: .78rem; }
+    .event-card {
+      border-left: 5px solid #176f68;
+      background: linear-gradient(135deg, #fffaf0, #edf8f2);
+    }
+    .event-item + .event-item { margin-top: 14px; }
+    .event-status {
+      display: inline-flex; margin: 0 0 6px; padding: 3px 9px;
+      border-radius: 999px; background: #176f68; color: white;
+      font-size: .72rem; font-weight: 900;
+    }
+    .event-item strong { display: block; }
+    .event-item strong a { color: #14544f; }
+    .event-item p { margin: 6px 0 0; font-size: .92rem; }
+    .event-period { color: #75685c; font-size: .78rem; }
+    .empty-state { margin: 0; color: #75685c; }
+    .related-label { margin: 0 0 8px; color: #75685c; font-size: .8rem; font-weight: 850; }
+    .related-links { display: flex; flex-wrap: wrap; gap: 8px; }
+    .related-links a {
+      padding: 6px 10px; border-radius: 999px; background: #eee7fb;
+      color: #57408f; font-size: .82rem; font-weight: 850; text-decoration: none;
+    }
+    footer { margin-top: 24px; color: #75685c; font-size: .8rem; text-align: center; }
+    .leaflet-popup-content a { font-weight: 850; }
+    @media (max-width: 700px) {
+      .hero { display: block; padding: 22px 18px; }
+      .hero-summary { display: none; }
+      .hero-actions { display: grid; grid-template-columns: 1fr 1fr; }
+      .hero-actions .button { justify-content: center; padding: 0 12px; text-align: center; }
+      .hero-actions .button.primary { grid-column: 1 / -1; }
+      .section-heading-row { display: block; }
+      .section-heading-row p { margin-top: 4px; }
+      .photo-inventory { grid-template-columns: minmax(0, 1fr) auto; }
+      .coverage-meter { grid-column: 1 / -1; grid-row: 2; }
+      .photo-showcase-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .contribution-panel { grid-template-columns: 1fr; }
+      .contribution-grid { grid-template-columns: 1fr; }
+      .journey-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .pokemon-grid, .pokemon-more-grid { grid-template-columns: 1fr; }
+      .manhole-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      #prefecture-map { height: 360px; }
+      section { padding: 16px; }
+    }
+    /* iPhone SE(第1世代) 級の幅では2列タイル内に操作を横並びで置けず、
+       「地図で開 / く」と折り返していたので、ここだけ縦に積む。 */
+    @media (max-width: 360px) {
+      .manhole-actions { grid-auto-flow: row; }
+      .manhole-actions a + a { border-top: 1px solid #ece4d7; border-left: 0; }
+    }
+"""
+
+
+def _map_script(
+    map_points: list[dict],
+    campaign_params: str,
+    event_prefix: str = "prefecture",
+    track_fn: str = "trackPrefectureEvent",
+) -> str:
+    """設置マップ（Leaflet）の初期化。地図要素の id は `prefecture-map` で共通。
+
+    市区町村ページも同じ地図を出すので、イベント名の接頭辞と送信関数の名前だけを差し替えられる。
+    """
+    return f"""  <script>
+    const points = {_json_for_script(map_points)};
+    const campaignParams = {_json_for_script(campaign_params)};
+    const mapElement = document.getElementById('prefecture-map');
+    if (!mapElement) {{
+      /* ポケふたが無い県では地図セクション自体を出していない */
+    }} else if (!points.length) {{
+      mapElement.textContent = '現在、表示できる設置地点はありません。';
+    }} else {{
+      const map = L.map(mapElement, {{ scrollWheelZoom: false }});
+      L.tileLayer('https://{{s}}.tile.openstreetmap.org/{{z}}/{{x}}/{{y}}.png', {{
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap contributors'
+      }}).addTo(map);
+      const bounds = [];
+      points.forEach(function(point) {{
+        const latlng = [point.lat, point.lng];
+        bounds.push(latlng);
+        const pokemon = point.pokemons.join('・') || 'ポケモン';
+        const detailUrl = '/manholes/' + encodeURIComponent(point.id) + '/';
+        const markerClass = point.is_preinstall
+          ? 'preinstall'
+          : (point.photo_url ? 'has-photo' : 'needs-photo');
+        const photoState = point.is_preinstall
+          ? 'preinstall'
+          : (point.photo_url ? 'has_photo' : 'missing');
+        const googleMapsUrl = 'https://www.google.com/maps?q=' + point.lat + ',' + point.lng;
+        const uploadUrl = 'https://pokefuta.com/upload?manhole_id=' +
+          encodeURIComponent(point.id) + '&' + campaignParams;
+        const photoHtml = point.is_preinstall
+          ? '<div class="map-popup-preinstall">設置予定のポケふたです。設置後に写真を投稿できます。</div>'
+          : (point.photo_url
+            ? '<img src="' + escapeHtml(point.photo_url) + '" alt="' +
+              escapeHtml(point.name) + 'のポケふた投稿写真" ' +
+              'loading="lazy" decoding="async" width="320" height="240">'
+            : '<div class="map-popup-photo-missing">このポケふたは写真募集中です</div>');
+        const uploadHtml = point.is_preinstall
+          ? ''
+          : '<a class="upload" href="' + escapeHtml(uploadUrl) +
+            '" data-track="{event_prefix}_photo_upload_start" data-destination="upload" ' +
+            'data-content-id="' + escapeHtml(point.id) +
+            '" data-surface="map_popup" data-photo-state="' + photoState + '">写真投稿</a>';
+        const popupHtml = '<div class="map-popup"><strong>' +
+          escapeHtml(point.name) + '</strong><br>' +
+          escapeHtml(pokemon) + photoHtml + '<div class="map-popup-actions' +
+          (point.is_preinstall ? ' preinstall-actions' : '') + '">' +
+          '<a href="' + detailUrl + '" data-track="{event_prefix}_manhole_click" ' +
+          'data-destination="' + escapeHtml(point.id) + '" data-content-id="' + escapeHtml(point.id) +
+          '" data-surface="map_popup">詳細</a>' +
+          '<a href="' + escapeHtml(googleMapsUrl) +
+          '" target="_blank" rel="noopener noreferrer" ' +
+          'data-track="{event_prefix}_google_maps_click" data-destination="google_maps" ' +
+          'data-content-id="' + escapeHtml(point.id) + '" data-surface="map_popup">行き方</a>' +
+          uploadHtml + '</div></div>';
+        const marker = L.marker(latlng, {{
+          title: point.name + 'のポケふた',
+          alt: point.name + 'のポケふた・' +
+            (point.is_preinstall
+              ? '設置予定'
+              : (point.photo_url ? '投稿写真あり' : '写真募集中')),
+          icon: L.divIcon({{
+            className: '',
+            html: '<div class="prefecture-marker ' + markerClass + '"></div>',
+            iconSize: [28, 34],
+            iconAnchor: [14, 31],
+            popupAnchor: [0, -30]
+          }})
+        }}).addTo(map).bindPopup(popupHtml, {{ maxWidth: 300 }});
+        marker.on('click', function() {{
+          {track_fn}('{event_prefix}_map_pin_click', {{
+            surface: '{event_prefix}_map',
+            content_id: point.id,
+            photo_state: photoState
+          }});
+        }});
+      }});
+      if (bounds.length === 1) map.setView(bounds[0], 13);
+      else map.fitBounds(bounds, {{ padding: [28, 28], maxZoom: 13 }});
+      let mapInteractionSent = false;
+      function reportMapInteraction(interaction) {{
+        if (mapInteractionSent) return;
+        mapInteractionSent = true;
+        {track_fn}('{event_prefix}_map_interaction', {{ surface: '{event_prefix}_map', interaction: interaction }});
+      }}
+      mapElement.addEventListener('pointerdown', function() {{ reportMapInteraction('pointer'); }}, {{ once: true }});
+      mapElement.addEventListener('keydown', function() {{ reportMapInteraction('keyboard'); }}, {{ once: true }});
+    }}
+    function escapeHtml(value) {{
+      return String(value).replace(/[&<>"']/g, function(char) {{
+        return {{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}}[char];
+      }});
+    }}
+  </script>"""
+
+
 def build_page(
     prefecture: str,
     slug: str,
@@ -1530,6 +2017,7 @@ def build_page(
     empty_prefectures: set[str] | None = None,
     visit_guide: dict | None = None,
     all_records: list[dict] | None = None,
+    municipality_paths: dict[str, str] | None = None,
 ) -> str:
     photos = photos or {}
     count = len(records)
@@ -1578,8 +2066,12 @@ def build_page(
     events_html = _events_html(events)
     related_html = _related_prefectures(prefecture, empty_prefectures)
     municipality_guide_html = (
-        _visit_guide_html(records, visit_guide) or _municipality_guide(prefecture, records)
+        _visit_guide_html(records, visit_guide)
+        or _municipality_guide(prefecture, records, municipality_paths)
     )
+    # 市区町村ページへのリンクが上の案内に入っていなければ、入口を別に置く
+    if municipality_paths and "/municipalities/" not in municipality_guide_html:
+        municipality_guide_html += _municipality_pages_html(prefecture, records, municipality_paths)
     visits_url = _visits_url(slug)
     nearby_url = _nearby_url(slug)
     if installed_count:
@@ -1774,344 +2266,7 @@ def build_page(
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
   <script type="application/ld+json">{_json_for_script(json_ld)}</script>
   <style>
-    :root {{ color-scheme: light; }}
-    * {{ box-sizing: border-box; }}
-    body {{
-      margin: 0; background: #f7f0df; color: #201b16;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      line-height: 1.65;
-    }}
-    a {{ color: #176f68; }}
-    .page {{ max-width: 1040px; margin: 0 auto; padding: 20px 16px 56px; }}
-    .breadcrumb {{ display: flex; gap: 8px; font-size: .82rem; font-weight: 800; }}
-    .breadcrumb a {{ text-decoration: none; }}
-    .hero {{
-      position: relative; overflow: hidden; margin-top: 14px; padding: 28px;
-      display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 22px;
-      align-items: center;
-      border: 1px solid rgba(93,67,35,.15); border-radius: 24px;
-      background: linear-gradient(135deg, #fffaf0, #f0e9fb);
-      box-shadow: 0 14px 32px rgba(77,56,30,.08);
-    }}
-    .hero::after {{
-      content: ""; position: absolute; width: 230px; height: 230px;
-      right: -70px; top: -90px; border: 42px solid rgba(126,107,169,.1);
-      border-radius: 50%;
-    }}
-    .municipality-guide {{
-      margin-top: 18px; padding: 22px; border: 1px solid rgba(93,67,35,.15);
-      border-radius: 18px; background: #fffaf0;
-    }}
-    .municipality-guide h2 {{ margin: 0 0 6px; font-size: 1.25rem; }}
-    .municipality-guide p {{ margin: 0; color: #62564a; }}
-    .municipality-guide ul {{
-      display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 0; padding: 0;
-      list-style: none;
-    }}
-    .municipality-guide li {{
-      display: inline-flex; align-items: center; gap: 7px; padding: 7px 10px;
-      border-radius: 999px; background: #f0e9fb;
-    }}
-    .municipality-guide li span {{ color: #62564a; font-size: .82rem; font-weight: 800; }}
-    .municipality-actions {{ display: flex; flex-wrap: wrap; gap: 14px; margin-top: 14px; }}
-    .visit-guide > p {{ color: #62564a; }}
-    .visit-guide-stops {{
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
-      gap: 10px; list-style: none; padding: 0; margin: 14px 0;
-    }}
-    .visit-guide-stops li {{ min-width: 0; padding: 12px; border-radius: 12px; background: #f0e9fb; }}
-    .visit-guide-stops a {{ display: block; min-height: 44px; font-weight: 850; }}
-    .visit-guide-stops span {{ display: block; color: #62564a; font-size: .82rem; overflow-wrap: anywhere; }}
-    .visit-guide-routes {{ display: grid; gap: 10px; margin: 16px 0; }}
-    .visit-guide-route {{ padding: 14px; border: 1px solid rgba(93,67,35,.15); border-radius: 14px; }}
-    .visit-guide-route summary {{ cursor: pointer; font-weight: 850; color: #14544f; }}
-    .visit-guide-route > p {{ margin: 10px 0 0; color: #62564a; }}
-    .visit-advice {{ margin-top: 18px; }}
-    .visit-advice summary {{ cursor: pointer; font-weight: 850; color: #14544f; }}
-    .visit-advice h3 {{ margin: 14px 0 6px; font-size: 1rem; }}
-    .visit-advice p {{ margin: 0; }}
-    .visit-guide-sources {{ font-size: .78rem; overflow-wrap: anywhere; }}
-    .visit-advice, .manhole-card {{ scroll-margin-top: 100px; }}
-    .hero-kicker {{ margin: 0; color: #6b4aa2; font-size: .8rem; font-weight: 900; }}
-    h1 {{ margin: 4px 0 8px; font-size: clamp(2rem, 7vw, 3.5rem); line-height: 1.15; }}
-    .hero-main > p:last-of-type {{ max-width: 720px; margin: 0; color: #574b41; font-weight: 650; }}
-    .hero-summary {{
-      position: relative; z-index: 1; padding: 16px 18px; border-radius: 17px;
-      background: rgba(255,255,255,.74); color: #3a3128;
-      box-shadow: inset 0 0 0 1px rgba(93,67,35,.11);
-    }}
-    .hero-summary span {{
-      display: block; margin-bottom: 6px; color: #6b4aa2;
-      font-size: .76rem; font-weight: 900;
-    }}
-    .hero-summary p {{ margin: 0; font-size: .96rem; font-weight: 800; }}
-    .stats {{ display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 18px; }}
-    .stat {{ padding: 14px; border-radius: 15px; background: rgba(255,255,255,.72); }}
-    .stat span {{ display: block; color: #75685c; font-size: .76rem; font-weight: 850; }}
-    .stat strong {{ display: block; color: #57408f; font-size: 1.55rem; line-height: 1.3; }}
-    .hero-actions {{ display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }}
-    .button {{
-      display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px;
-      border-radius: 999px; background: #176f68; color: white; font-weight: 900;
-      text-decoration: none;
-    }}
-    .button.primary {{ background: #b5483c; }}
-    .button.secondary {{ background: #6b4aa2; }}
-    .button.tertiary {{
-      background: white; color: #176f68; box-shadow: inset 0 0 0 1px #9fc7c2;
-    }}
-    .button.official {{ background: #8a5a20; }}
-    .hero-note {{ margin: 10px 0 0; color: #75685c; font-size: .78rem; font-weight: 750; }}
-    .hero-utility {{ margin-top: 10px; }}
-    .hero-utility:empty {{ display: none; }}
-    section {{
-      margin-top: 22px; padding: 20px; border: 1px solid rgba(93,67,35,.14);
-      border-radius: 19px; background: #fffaf0;
-      box-shadow: 0 8px 20px rgba(77,56,30,.05);
-    }}
-    h2 {{ margin: 0 0 12px; font-size: 1.35rem; line-height: 1.35; }}
-    .section-heading-row {{
-      display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;
-      margin-bottom: 12px;
-    }}
-    .section-heading-row h2, .section-heading-row p {{ margin: 0; }}
-    .section-heading-row p {{ max-width: 520px; color: #75685c; font-size: .86rem; }}
-    .map-toolbar {{
-      display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px;
-      align-items: center; margin-bottom: 10px;
-    }}
-    .map-legend {{ display: flex; flex-wrap: wrap; gap: 10px; color: #62564a; font-size: .78rem; font-weight: 800; }}
-    .map-legend span {{ display: inline-flex; align-items: center; gap: 5px; }}
-    .legend-dot {{ width: 12px; height: 12px; border: 3px solid white; border-radius: 50%; box-shadow: 0 0 0 1px rgba(32,27,22,.2); }}
-    .legend-dot.has-photo {{ background: #2d846c; }}
-    .legend-dot.needs-photo {{ background: #d78548; }}
-    .legend-dot.preinstall {{ background: #8b8f94; }}
-    .nearby-link, .inline-link {{
-      display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px;
-      border-radius: 999px; background: #e6f2ef; color: #176f68;
-      font-size: .84rem; font-weight: 900; text-decoration: none;
-    }}
-    #prefecture-map {{ height: 430px; border-radius: 14px; background: #e9e3d6; }}
-    #prefecture-map.map-empty {{ display: grid; place-items: center; color: #75685c; font-weight: 850; }}
-    .map-note {{ margin: 10px 0 0; color: #75685c; font-size: .8rem; }}
-    .prefecture-marker {{
-      width: 28px; height: 28px; border: 4px solid white; border-radius: 50% 50% 50% 8px;
-      transform: rotate(-45deg); box-shadow: 0 3px 8px rgba(32,27,22,.35);
-    }}
-    .prefecture-marker.has-photo {{ background: #2d846c; }}
-    .prefecture-marker.needs-photo {{ background: #d78548; }}
-    .prefecture-marker.preinstall {{ background: #8b8f94; }}
-    .map-popup {{ min-width: 210px; }}
-    .map-popup img {{
-      display: block; width: 100%; height: 120px; margin: 8px 0; border-radius: 10px;
-      object-fit: cover;
-    }}
-    .map-popup-photo-missing {{
-      margin: 8px 0; padding: 8px; border-radius: 9px; background: #fff0e5;
-      color: #8d4a22; font-size: .78rem; font-weight: 850;
-    }}
-    .map-popup-preinstall {{
-      margin: 8px 0; padding: 8px; border-radius: 9px; background: #f0ede7;
-      color: #625b53; font-size: .78rem; font-weight: 850;
-    }}
-    .map-popup-actions {{ display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; margin-top: 9px; }}
-    .map-popup-actions.preinstall-actions {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
-    .map-popup-actions a {{
-      display: grid; place-items: center; min-height: 38px; padding: 5px;
-      border-radius: 8px; background: #ece7f7; color: #4f3a79;
-      font-size: .72rem; text-align: center; text-decoration: none;
-    }}
-    .map-popup-actions a.upload {{ background: #b5483c; color: white; }}
-    .photo-inventory {{
-      display: grid; grid-template-columns: minmax(0, 1fr) 180px auto; gap: 14px;
-      align-items: center; margin-bottom: 16px;
-    }}
-    .photo-inventory strong {{ color: #57408f; font-size: 1.8rem; line-height: 1; }}
-    .photo-inventory strong span {{ color: #75685c; font-size: .9rem; }}
-    .photo-inventory p {{ margin: 5px 0 0; color: #62564a; }}
-    .photo-inventory > b {{ color: #57408f; }}
-    .coverage-meter {{ height: 10px; overflow: hidden; border-radius: 999px; background: #e5ddd0; }}
-    .coverage-meter span {{ display: block; height: 100%; border-radius: inherit; background: #6b4aa2; }}
-    .photo-showcase-grid {{
-      display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px;
-      margin-bottom: 14px;
-    }}
-    .photo-card {{ overflow: hidden; border: 1px solid rgba(93,67,35,.13); border-radius: 14px; background: white; }}
-    .photo-card-image {{ display: block; color: inherit; text-decoration: none; }}
-    .photo-card-image img {{
-      display: block; width: 100%; aspect-ratio: 4 / 3; height: auto; object-fit: cover;
-      background: #e9e3d6;
-    }}
-    .photo-card-image > span {{ display: grid; padding: 9px 10px; }}
-    .photo-card-image small {{ overflow: hidden; color: #75685c; font-size: .72rem; text-overflow: ellipsis; white-space: nowrap; }}
-    .photo-card-poster {{ display: block; padding: 0 10px 9px; overflow: hidden; color: #75685c; font-size: .72rem; text-overflow: ellipsis; white-space: nowrap; }}
-    .photo-card-poster a {{ color: #176f68; font-weight: 800; text-decoration: underline; text-underline-offset: 2px; }}
-    .photo-card-upload {{
-      display: grid; place-items: center; min-height: 44px; padding: 6px 9px;
-      border-top: 1px solid #ece4d7; color: #176f68; font-size: .75rem;
-      font-weight: 900; text-align: center; text-decoration: none;
-    }}
-    .contribution-panel {{
-      display: grid; grid-template-columns: minmax(220px, .8fr) minmax(0, 1.2fr);
-      gap: 14px; align-items: center; padding: 14px; border-radius: 14px;
-      background: #fff0e5;
-    }}
-    .contribution-panel p {{ margin: 4px 0 0; color: #75685c; font-size: .82rem; }}
-    .contribution-grid {{ display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }}
-    .contribution-card {{
-      display: grid; min-width: 0; padding: 10px; border-radius: 11px; background: white;
-      color: inherit; text-decoration: none;
-    }}
-    .contribution-card span {{ color: #b5483c; font-size: .68rem; font-weight: 950; }}
-    .contribution-card small {{ overflow: hidden; color: #75685c; font-size: .72rem; text-overflow: ellipsis; white-space: nowrap; }}
-    .contribution-card b {{ margin-top: 6px; color: #176f68; font-size: .75rem; }}
-    .photo-empty-state {{ padding: 18px; border-radius: 14px; background: #f3efe7; }}
-    .photo-empty-state p {{ margin: 4px 0 12px; color: #75685c; }}
-    .pokemon-grid {{ display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }}
-    .pokemon-card {{
-      display: grid; gap: 2px; padding: 12px; border: 1px solid rgba(93,67,35,.13);
-      border-radius: 13px; background: white; color: inherit; text-decoration: none;
-    }}
-    .pokemon-card strong {{ color: #3d2b72; }}
-    .pokemon-card span {{ color: #75685c; font-size: .75rem; font-weight: 750; }}
-    .pokemon-more {{ grid-column: 1 / -1; }}
-    .pokemon-more summary {{
-      width: fit-content; margin: 12px auto 0; padding: 8px 14px;
-      border-radius: 999px; background: #eee7fb; color: #57408f;
-      cursor: pointer; font-size: .82rem; font-weight: 900;
-    }}
-    .pokemon-more-grid {{
-      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 8px; margin-top: 12px;
-    }}
-    .manhole-grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }}
-    .manhole-card {{
-      overflow: hidden; border: 1px solid #e9dfc7;
-      border-radius: 14px; background: #fffdf7;
-      box-shadow: 0 1px 2px rgba(72,55,20,.05), 0 3px 8px rgba(72,55,20,.05);
-    }}
-    .manhole-detail {{
-      position: relative; display: block; color: inherit; text-decoration: none;
-    }}
-    .manhole-card img, .manhole-placeholder {{
-      display: block; width: 100%; aspect-ratio: 1 / 1; height: auto; object-fit: cover;
-      background: #e9e3d6;
-    }}
-    .manhole-placeholder {{
-      background: repeating-linear-gradient(45deg, #cdbf9f 0 10px, #c2b390 10px 20px);
-    }}
-    .manhole-shade {{
-      position: absolute; inset: 0;
-      background: linear-gradient(to top, rgba(30,22,10,.62) 0%, rgba(30,22,10,0) 46%);
-    }}
-    .manhole-badges {{
-      position: absolute; top: 8px; right: 8px; display: grid; gap: 4px; justify-items: end;
-    }}
-    .manhole-copy {{
-      position: absolute; right: 12px; bottom: 10px; left: 12px;
-      min-width: 0; color: white; text-shadow: 0 1px 3px rgba(0,0,0,.45);
-    }}
-    .manhole-copy strong, .manhole-copy small {{ display: block; }}
-    .manhole-copy small {{
-      overflow: hidden; font-size: .75rem; opacity: .92;
-      text-overflow: ellipsis; white-space: nowrap;
-    }}
-    .photo-status {{
-      display: inline-flex; width: fit-content; padding: 2px 7px;
-      border-radius: 999px; font-size: .68rem; font-weight: 800;
-      box-shadow: 0 1px 3px rgba(30,22,10,.25);
-    }}
-    .photo-ready {{ background: #e4f2ee; color: #176f68; }}
-    .photo-needed {{ background: #fff0e5; color: #9b4b20; }}
-    .photo-pending {{ background: #f0ede7; color: #6f6254; }}
-    .manhole-actions {{
-      display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr);
-      border-top: 1px solid #ece4d7;
-    }}
-    .manhole-actions a {{
-      display: grid; place-items: center; min-height: 44px; padding: 5px;
-      color: #57408f; font-size: .76rem; font-weight: 900; text-align: center;
-      text-decoration: none;
-    }}
-    .manhole-actions a + a {{ border-left: 1px solid #ece4d7; }}
-    /* 写真館のタイルは色面のボタンを持たないので、ここも塗り潰しをやめて
-       写真館の淡いタグ色（#fdeae2 / #bf5640）に寄せる。赤ベタのボタンが
-       全カードに並ぶと、写真より先にボタンの列が目に入っていた。 */
-    .manhole-actions a.upload {{ background: #fdeae2; color: #bf5640; }}
-    .journey-loop {{ background: linear-gradient(135deg, #f1f8f6, #f5effc); }}
-    .journey-steps {{
-      display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px;
-      margin: 14px 0;
-    }}
-    .journey-step {{ padding: 12px; border-radius: 12px; background: white; font-size: .82rem; font-weight: 850; }}
-    .journey-step span {{ display: block; color: #6b4aa2; font-size: .7rem; }}
-    .journey-actions {{ display: flex; flex-wrap: wrap; gap: 8px; }}
-    .manhole-preinstall-badge {{
-      display: inline-block; padding: 2px 8px;
-      border-radius: 999px; background: #f1ede4; color: #6b5d44;
-      font-size: .74rem; font-weight: 700; white-space: nowrap;
-      box-shadow: 0 1px 3px rgba(30,22,10,.25);
-    }}
-    .trivia-card {{
-      border-left: 5px solid #7e6ba9;
-      background: linear-gradient(135deg, #fffaf0, #f4effd);
-    }}
-    .trivia-kicker {{
-      display: inline-flex; margin: 0 0 6px; padding: 3px 9px;
-      border-radius: 999px; background: #6b4aa2; color: white;
-      font-size: .72rem; font-weight: 900;
-    }}
-    .trivia-card p {{ margin: 0; font-size: 1.05rem; font-weight: 750; }}
-    .trivia-source {{ margin-top: 8px; font-size: .78rem; }}
-    .event-card {{
-      border-left: 5px solid #176f68;
-      background: linear-gradient(135deg, #fffaf0, #edf8f2);
-    }}
-    .event-item + .event-item {{ margin-top: 14px; }}
-    .event-status {{
-      display: inline-flex; margin: 0 0 6px; padding: 3px 9px;
-      border-radius: 999px; background: #176f68; color: white;
-      font-size: .72rem; font-weight: 900;
-    }}
-    .event-item strong {{ display: block; }}
-    .event-item strong a {{ color: #14544f; }}
-    .event-item p {{ margin: 6px 0 0; font-size: .92rem; }}
-    .event-period {{ color: #75685c; font-size: .78rem; }}
-    .empty-state {{ margin: 0; color: #75685c; }}
-    .related-label {{ margin: 0 0 8px; color: #75685c; font-size: .8rem; font-weight: 850; }}
-    .related-links {{ display: flex; flex-wrap: wrap; gap: 8px; }}
-    .related-links a {{
-      padding: 6px 10px; border-radius: 999px; background: #eee7fb;
-      color: #57408f; font-size: .82rem; font-weight: 850; text-decoration: none;
-    }}
-    footer {{ margin-top: 24px; color: #75685c; font-size: .8rem; text-align: center; }}
-    .leaflet-popup-content a {{ font-weight: 850; }}
-    @media (max-width: 700px) {{
-      .hero {{ display: block; padding: 22px 18px; }}
-      .hero-summary {{ display: none; }}
-      .hero-actions {{ display: grid; grid-template-columns: 1fr 1fr; }}
-      .hero-actions .button {{ justify-content: center; padding: 0 12px; text-align: center; }}
-      .hero-actions .button.primary {{ grid-column: 1 / -1; }}
-      .section-heading-row {{ display: block; }}
-      .section-heading-row p {{ margin-top: 4px; }}
-      .photo-inventory {{ grid-template-columns: minmax(0, 1fr) auto; }}
-      .coverage-meter {{ grid-column: 1 / -1; grid-row: 2; }}
-      .photo-showcase-grid {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
-      .contribution-panel {{ grid-template-columns: 1fr; }}
-      .contribution-grid {{ grid-template-columns: 1fr; }}
-      .journey-steps {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
-      .pokemon-grid, .pokemon-more-grid {{ grid-template-columns: 1fr; }}
-      .manhole-grid {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
-      #prefecture-map {{ height: 360px; }}
-      section {{ padding: 16px; }}
-    }}
-    /* iPhone SE(第1世代) 級の幅では2列タイル内に操作を横並びで置けず、
-       「地図で開 / く」と折り返していたので、ここだけ縦に積む。 */
-    @media (max-width: 360px) {{
-      .manhole-actions {{ grid-auto-flow: row; }}
-      .manhole-actions a + a {{ border-top: 1px solid #ece4d7; border-left: 0; }}
-    }}
-  </style>
+{PAGE_CSS}  </style>
 </head>
 <body>
   <main class="page">
@@ -2181,99 +2336,7 @@ def build_page(
   </script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script>
-    const points = {_json_for_script(map_points)};
-    const campaignParams = {_json_for_script(_campaign_params(slug))};
-    const mapElement = document.getElementById('prefecture-map');
-    if (!mapElement) {{
-      /* ポケふたが無い県では地図セクション自体を出していない */
-    }} else if (!points.length) {{
-      mapElement.textContent = '現在、表示できる設置地点はありません。';
-    }} else {{
-      const map = L.map(mapElement, {{ scrollWheelZoom: false }});
-      L.tileLayer('https://{{s}}.tile.openstreetmap.org/{{z}}/{{x}}/{{y}}.png', {{
-        maxZoom: 19,
-        attribution: '&copy; OpenStreetMap contributors'
-      }}).addTo(map);
-      const bounds = [];
-      points.forEach(function(point) {{
-        const latlng = [point.lat, point.lng];
-        bounds.push(latlng);
-        const pokemon = point.pokemons.join('・') || 'ポケモン';
-        const detailUrl = '/manholes/' + encodeURIComponent(point.id) + '/';
-        const markerClass = point.is_preinstall
-          ? 'preinstall'
-          : (point.photo_url ? 'has-photo' : 'needs-photo');
-        const photoState = point.is_preinstall
-          ? 'preinstall'
-          : (point.photo_url ? 'has_photo' : 'missing');
-        const googleMapsUrl = 'https://www.google.com/maps?q=' + point.lat + ',' + point.lng;
-        const uploadUrl = 'https://pokefuta.com/upload?manhole_id=' +
-          encodeURIComponent(point.id) + '&' + campaignParams;
-        const photoHtml = point.is_preinstall
-          ? '<div class="map-popup-preinstall">設置予定のポケふたです。設置後に写真を投稿できます。</div>'
-          : (point.photo_url
-            ? '<img src="' + escapeHtml(point.photo_url) + '" alt="' +
-              escapeHtml(point.name) + 'のポケふた投稿写真" ' +
-              'loading="lazy" decoding="async" width="320" height="240">'
-            : '<div class="map-popup-photo-missing">このポケふたは写真募集中です</div>');
-        const uploadHtml = point.is_preinstall
-          ? ''
-          : '<a class="upload" href="' + escapeHtml(uploadUrl) +
-            '" data-track="prefecture_photo_upload_start" data-destination="upload" ' +
-            'data-content-id="' + escapeHtml(point.id) +
-            '" data-surface="map_popup" data-photo-state="' + photoState + '">写真投稿</a>';
-        const popupHtml = '<div class="map-popup"><strong>' +
-          escapeHtml(point.name) + '</strong><br>' +
-          escapeHtml(pokemon) + photoHtml + '<div class="map-popup-actions' +
-          (point.is_preinstall ? ' preinstall-actions' : '') + '">' +
-          '<a href="' + detailUrl + '" data-track="prefecture_manhole_click" ' +
-          'data-destination="' + escapeHtml(point.id) + '" data-content-id="' + escapeHtml(point.id) +
-          '" data-surface="map_popup">詳細</a>' +
-          '<a href="' + escapeHtml(googleMapsUrl) +
-          '" target="_blank" rel="noopener noreferrer" ' +
-          'data-track="prefecture_google_maps_click" data-destination="google_maps" ' +
-          'data-content-id="' + escapeHtml(point.id) + '" data-surface="map_popup">行き方</a>' +
-          uploadHtml + '</div></div>';
-        const marker = L.marker(latlng, {{
-          title: point.name + 'のポケふた',
-          alt: point.name + 'のポケふた・' +
-            (point.is_preinstall
-              ? '設置予定'
-              : (point.photo_url ? '投稿写真あり' : '写真募集中')),
-          icon: L.divIcon({{
-            className: '',
-            html: '<div class="prefecture-marker ' + markerClass + '"></div>',
-            iconSize: [28, 34],
-            iconAnchor: [14, 31],
-            popupAnchor: [0, -30]
-          }})
-        }}).addTo(map).bindPopup(popupHtml, {{ maxWidth: 300 }});
-        marker.on('click', function() {{
-          trackPrefectureEvent('prefecture_map_pin_click', {{
-            surface: 'prefecture_map',
-            content_id: point.id,
-            photo_state: photoState
-          }});
-        }});
-      }});
-      if (bounds.length === 1) map.setView(bounds[0], 13);
-      else map.fitBounds(bounds, {{ padding: [28, 28], maxZoom: 13 }});
-      let mapInteractionSent = false;
-      function reportMapInteraction(interaction) {{
-        if (mapInteractionSent) return;
-        mapInteractionSent = true;
-        trackPrefectureEvent('prefecture_map_interaction', {{ surface: 'prefecture_map', interaction: interaction }});
-      }}
-      mapElement.addEventListener('pointerdown', function() {{ reportMapInteraction('pointer'); }}, {{ once: true }});
-      mapElement.addEventListener('keydown', function() {{ reportMapInteraction('keyboard'); }}, {{ once: true }});
-    }}
-    function escapeHtml(value) {{
-      return String(value).replace(/[&<>"']/g, function(char) {{
-        return {{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}}[char];
-      }});
-    }}
-  </script>
+{_map_script(map_points, _campaign_params(slug))}
 </body>
 </html>
 """
@@ -2298,6 +2361,9 @@ def generate_all(
     empty_prefectures = {
         pref for pref, items in records_by_pref.items() if not items
     }
+    paths_by_pref: dict[str, dict[str, str]] = {}
+    for (prefecture, name), path in municipality_page_paths(records).items():
+        paths_by_pref.setdefault(prefecture, {})[name] = path
     for prefecture, slug in PREFECTURES:
         out_dir = output_dir / slug
         out_dir.mkdir(parents=True, exist_ok=True)
@@ -2313,6 +2379,7 @@ def generate_all(
             empty_prefectures,
             (visit_guides or {}).get(prefecture),
             records,
+            paths_by_pref.get(prefecture),
         )
         (out_dir / "index.html").write_text(html, encoding="utf-8")
     output_dir.mkdir(parents=True, exist_ok=True)
