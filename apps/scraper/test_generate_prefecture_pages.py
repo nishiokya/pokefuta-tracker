@@ -351,7 +351,7 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
             "群馬県では、現在ポケふたの設置を確認できていません。",
             html,
         )
-        hero = html[html.index('<header class="hero">'):html.index("</header>")]
+        hero = html[html.index('<header class="hero prefecture-hero">'):html.index("</header>")]
         self.assertIn('href="/summary/"', hero)
         self.assertNotIn('href="#manhole-list"', hero)
         self.assertNotIn('href="#prefecture-map"', hero)
@@ -543,6 +543,10 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
             self.trivia["長野県"],
         )
         self.assertIn('class="hero-summary"', html)
+        hero = html[html.index('<header class="hero prefecture-hero">'):html.index("</header>")]
+        self.assertLess(hero.index('class="hero-heading"'), hero.index('class="hero-main"'))
+        self.assertIn(".hero-heading { position: relative; z-index: 1; grid-column: 1 / -1; }", html)
+        self.assertIn(".prefecture-hero { gap: 14px 22px; align-items: start; }", html)
         self.assertIn("長野県は2026年7月にポケふた初登場。", html)
         self.assertIn("現在は6自治体で6枚を巡れます。", html)
         self.assertIn(".hero-summary { display: none; }", html)
@@ -824,7 +828,7 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         html = MODULE.build_page(
             "長野県", "nagano", records, 1, self.pokemon_slugs, None,
         )
-        hero = html[html.index('<header class="hero">'):html.index("</header>")]
+        hero = html[html.index('<header class="hero prefecture-hero">'):html.index("</header>")]
         self.assertIn('href="#prefecture-map"', hero)
         self.assertIn("設置予定地を地図で見る", hero)
         self.assertNotIn('href="#manhole-list"', hero)

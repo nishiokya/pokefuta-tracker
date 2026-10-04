@@ -1742,7 +1742,10 @@ PAGE_CSS = """    :root { color-scheme: light; }
     .visit-guide-sources { font-size: .78rem; overflow-wrap: anywhere; }
     .visit-advice, .manhole-card { scroll-margin-top: 100px; }
     .hero-kicker { margin: 0; color: #6b4aa2; font-size: .8rem; font-weight: 900; }
+    .prefecture-hero { gap: 14px 22px; align-items: start; }
+    .hero-heading { position: relative; z-index: 1; grid-column: 1 / -1; }
     h1 { margin: 4px 0 8px; font-size: clamp(2rem, 7vw, 3.5rem); line-height: 1.15; }
+    .prefecture-hero h1 { font-size: clamp(2rem, 5vw, 3.5rem); }
     .hero-main > p:last-of-type { max-width: 720px; margin: 0; color: #574b41; font-weight: 650; }
     .hero-summary {
       position: relative; z-index: 1; padding: 16px 18px; border-radius: 17px;
@@ -2006,6 +2009,7 @@ PAGE_CSS = """    :root { color-scheme: light; }
       .stats-3 .stat { padding: 10px; }
       .stats-3 .stat strong { font-size: 1.15rem; }
       .hero { display: block; padding: 22px 18px; }
+      .hero-heading { display: contents; }
       .hero-summary { display: none; }
       .hero-actions { display: grid; grid-template-columns: 1fr 1fr; }
       .hero-actions .button { justify-content: center; padding: 0 12px; text-align: center; }
@@ -2421,10 +2425,12 @@ def build_page(
       <a href="/summary/">全国一覧</a><span>›</span>
       <span>{escape(prefecture)}</span>
     </nav>
-    <header class="hero">
-      <div class="hero-main">
+    <header class="hero prefecture-hero">
+      <div class="hero-heading">
         <p class="hero-kicker">都道府県別 ポケふたガイド</p>
         <h1>{escape(h1)}</h1>
+      </div>
+      <div class="hero-main">
         <p>{escape(hero_intro)}</p>
         <div class="{"stats stats-3" if coverage_stat_html else "stats"}" aria-label="{_escape_attr(prefecture)}の集計">
           <div class="stat"><span>設置枚数</span><strong>{count}枚</strong></div>
