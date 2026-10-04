@@ -48,10 +48,12 @@ DEFAULT_OUTPUT = ROOT / "dist" / "municipalities"
 OG_IMAGE = pref.OG_IMAGE
 JST = pref.JST
 # 隣の地点までの直線距離がこれを超える区間があるときは、Google マップのルートを出さない。
-# 小笠原村（父島と母島は約50km、船で渡る）のように、道路のルートが意味を持たないため。
+# 島どうし（船で渡る区間）のように、道路のルートが意味を持たない場合があるため。
 ROUTE_LINK_MAX_LEG_KM = 15.0
-# Google マップの経路 URL は経由地が9か所まで（出発地・目的地を含めて11地点）。
-ROUTE_LINK_MAX_STOPS = 11
+# Google マップの経路 URL は、モバイルブラウザで開くと経由地が3か所まで（それ以外は9か所）。
+# どの端末でも全地点を通れるよう、1本のリンクは出発地＋経由地3＋目的地の5地点までにして、
+# それより多いときは前の区間の終点を次の区間の始点にして分ける。
+ROUTE_LINK_MAX_STOPS = 5
 
 _escape_attr = pref._escape_attr
 _json_for_script = pref._json_for_script
@@ -117,6 +119,17 @@ def shortest_route(records: list[dict]) -> list[dict]:
             rest.remove(nearest)
         candidates.append(order)
     return min(candidates, key=tie_break)
+
+
+def _route_segments(route: list[dict]) -> list[tuple[int, int]]:
+    """リンクごとの (最初の地点, 最後の地点) の番号（0始まり・両端を含む）。隣の区間と端を共有する。"""
+    if len(route) < 2:
+        return []
+    step = ROUTE_LINK_MAX_STOPS - 1
+    return [
+        (start, min(start + step, len(route) - 1))
+        for start in range(0, len(route) - 1, step)
+    ]
 
 
 def _google_route_url(route: list[dict]) -> str:
@@ -186,13 +199,19 @@ def _route_section(municipality: Municipality) -> str:
             f"{_stop_name(route[far_index], name)}と{_stop_name(route[far_index + 1], name)}の間は"
             f"直線で約{longest:.0f}km離れているので、1日で回れるとは限りません。"
         )
-    route_url = _google_route_url(route) if longest <= ROUTE_LINK_MAX_LEG_KM else ""
-    route_link = (
-        f'<a class="inline-link" href="{_escape_attr(route_url)}" target="_blank" '
-        'rel="noopener noreferrer" data-track="municipality_route_open" data-surface="route" '
-        'data-destination="google_maps_route">この順番でGoogleマップを開く</a>'
-        if route_url else ""
-    )
+    segments = _route_segments(route) if longest <= ROUTE_LINK_MAX_LEG_KM else []
+    route_link = ""
+    for position, (first, last) in enumerate(segments, start=1):
+        label = (
+            "この順番でGoogleマップを開く" if len(segments) == 1
+            else f"{first + 1}〜{last + 1}番目をGoogleマップで開く"
+        )
+        route_link += (
+            f'<a class="inline-link" href="{_escape_attr(_google_route_url(route[first:last + 1]))}" '
+            'target="_blank" rel="noopener noreferrer" data-track="municipality_route_open" '
+            f'data-surface="route" data-destination="google_maps_route" data-position="{position}">'
+            f'{label}</a>'
+        )
     return (
         '<section id="route" class="visit-guide" aria-labelledby="route-heading">'
         f'<h2 id="route-heading">{escape(name)}のポケふたを巡る順番</h2>'

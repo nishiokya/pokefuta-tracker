@@ -100,6 +100,23 @@ class RouteTest(unittest.TestCase):
         records = SYNTHETIC[:3] + [_record("9", "東京都", "町田", 35.545, 139.44, installed=False)]
         self.assertNotIn("9", [r["id"] for r in MODULE.shortest_route(records)])
 
+    def test_route_links_fit_the_mobile_waypoint_limit(self) -> None:
+        """モバイルブラウザの Google マップは経由地3か所まで。5地点ごとに分け、端を共有して全地点を通る。"""
+        self.assertEqual(MODULE._route_segments(list(range(5))), [(0, 4)])
+        self.assertEqual(MODULE._route_segments(list(range(6))), [(0, 4), (4, 5)])
+        self.assertEqual(MODULE._route_segments(list(range(9))), [(0, 4), (4, 8)])
+        self.assertEqual(MODULE._route_segments(list(range(10))), [(0, 4), (4, 8), (8, 9)])
+        records = [_record(str(i), "東京都", "町田", 35.54 + i * 0.001, 139.44) for i in range(6)]
+        records.append(_record("99", "東京都", "八王子", 35.66, 139.33))
+        machida = [m for m in MUNI.build_municipalities(records, SLUGS) if m.name == "町田市"][0]
+        section = MODULE._route_section(machida)
+        urls = re.findall(r'href="(https://www\.google\.com/maps/dir/[^"]+)"', section)
+        self.assertEqual(len(urls), 2)
+        for url in urls:
+            self.assertLessEqual(url.count("%7C") + 1 if "waypoints=" in url else 0, 3)
+        self.assertIn("1〜5番目をGoogleマップで開く", section)
+        self.assertIn("5〜6番目をGoogleマップで開く", section)
+
     def test_far_apart_stops_get_no_road_route_link(self) -> None:
         """小笠原（父島と母島）のように離れた区間があると、Google マップの道路ルートは出さない。"""
         near = MUNI.build_municipalities(SYNTHETIC, SLUGS)[0]
