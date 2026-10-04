@@ -320,13 +320,21 @@ class DatasetInvariantTest(unittest.TestCase):
         path = ROOT / "docs" / "pokefuta.ndjson"
         self.rows = [json.loads(l) for l in path.read_text(encoding="utf-8").splitlines() if l.strip()]
 
+    # 施設名そのものにポケモン名が入っている蓋（manhole_titles.json の building が実在の名前）。
+    # ここに無い蓋で place_label にポケモン名が出たら、組み立ての誤りとして落とす
+    POKEMON_IN_FACILITY_NAME = {
+        298: "ヤドン",   # 香川県綾川町「ヤドン公園」（#555 で施設名を登録）
+        467: "イシツブテ",   # 岩手県盛岡市「イシツブテ公園」
+    }
+
     def test_place_labelはポケモン名を含まない(self):
         pokemons = {p for r in self.rows for p in r.get("pokemons", [])}
         for r in self.rows:
             label = r.get("place_label")
             if not label:
                 continue
-            hit = [p for p in pokemons if p in label]
+            allowed = self.POKEMON_IN_FACILITY_NAME.get(int(r["id"]))
+            hit = [p for p in pokemons if p in label and p != allowed]
             self.assertEqual(hit, [], f"id={r['id']} の place_label にポケモン名: {label}")
 
     def test_曖昧なのは同じplace_labelを共有するものだけ(self):
