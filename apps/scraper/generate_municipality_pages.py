@@ -25,9 +25,12 @@ try:
         MIN_MANHOLES,
         RANKING_MIN_MANHOLES,
         Municipality,
+        PrefectureCoverage,
         build_municipalities,
+        complete_prefectures,
         load_slugs,
         missing_slugs,
+        prefecture_coverage,
     )
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
@@ -37,9 +40,12 @@ except ModuleNotFoundError as exc:
         MIN_MANHOLES,
         RANKING_MIN_MANHOLES,
         Municipality,
+        PrefectureCoverage,
         build_municipalities,
+        complete_prefectures,
         load_slugs,
         missing_slugs,
+        prefecture_coverage,
     )
 
 ROOT = pref.ROOT
@@ -302,16 +308,10 @@ EXTRA_CSS = """
     .route-stops li span { display: block; color: #62564a; font-size: .82rem; }
     .route-stops li .route-leg { color: #6b4aa2; font-weight: 800; }
     .route-note { margin: 10px 0 0; color: #75685c; font-size: .78rem; }
-    .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .stat small { display: block; color: #75685c; font-size: .72rem; font-weight: 800; }
     .ranking-table { width: 100%; border-collapse: collapse; font-size: .92rem; }
     .ranking-table th, .ranking-table td { padding: 8px 6px; border-bottom: 1px solid #ece4d7; text-align: left; }
     .ranking-table th { color: #75685c; font-size: .78rem; }
     .ranking-table td.num { text-align: right; font-weight: 850; white-space: nowrap; }
-    @media (max-width: 700px) {
-      .stat { padding: 10px; }
-      .stat strong { font-size: 1.15rem; }
-    }
     .ranking-table td small { display: block; color: #75685c; font-size: .75rem; }
 """
 
@@ -468,7 +468,7 @@ def build_page(
         <p class="hero-kicker">市区町村別 ポケふたガイド</p>
         <h1>{escape(h1)}</h1>
         <p>{escape(_hero_intro(m))}</p>
-        <div class="stats" aria-label="{_escape_attr(m.name)}の集計">
+        <div class="stats stats-3" aria-label="{_escape_attr(m.name)}の集計">
           <div class="stat"><span>設置枚数</span><strong>{m.count}枚</strong></div>
           <div class="stat"><span>市区町村別</span><strong>全国{m.national_rank}位</strong>{
             f'<small>{m.national_tied}自治体が同数</small>' if m.national_tied > 1 else ''}</div>
@@ -538,7 +538,69 @@ def build_page(
 """
 
 
-def build_ranking_page(municipalities: list[Municipality], total_manholes: int, today: str) -> str:
+# 「ポケふたがある市町村が多い都道府県」に並べる数
+COVERAGE_TABLE_LIMIT = 10
+
+
+def _coverage_sections(coverage: dict[str, PrefectureCoverage] | None) -> str:
+    """都道府県単位のカバー率。全市町村にある県と、設置市町村が多い県。"""
+    if not coverage:
+        return ""
+
+    def pref_link(pref_name: str, surface: str) -> str:
+        slug = pref.PREFECTURE_SLUGS[pref_name]
+        return (
+            f'<a href="/prefectures/{quote(slug)}/" data-track="municipality_prefecture_click" '
+            f'data-surface="{surface}" data-destination="{_escape_attr(slug)}">{escape(pref_name)}</a>'
+        )
+
+    complete = complete_prefectures(coverage)
+    complete_html = ""
+    if complete:
+        items = "".join(
+            f"<li>{pref_link(pref, 'coverage_complete')}"
+            f"<span>{coverage[pref].total}市町村・{sum(coverage[pref].counts.values())}枚</span></li>"
+            for pref in complete
+        )
+        complete_html = (
+            '<section class="municipality-guide" aria-labelledby="complete-heading">'
+            f'<h2 id="complete-heading">全市町村にポケふたがある{len(complete)}県</h2>'
+            "<p>県内のすべての市町村に1枚以上のポケふたがある都道府県です。"
+            "1つの県を回り切ると、その県の全市町村を訪れたことになります。</p>"
+            f"<ul>{items}</ul></section>"
+        )
+    ranked = sorted(
+        (c for c in coverage.values() if c.covered),
+        key=lambda c: (-c.covered, -c.percent, c.prefecture),
+    )[:COVERAGE_TABLE_LIMIT]
+    rows = "".join(
+        "<tr>"
+        f'<td class="num">{c.covered_rank}位</td>'
+        f"<td>{pref_link(c.prefecture, 'coverage_table')}"
+        f"{'<small>全市町村に設置</small>' if c.is_complete else ''}</td>"
+        f'<td class="num">{c.covered}/{c.total}</td>'
+        f'<td class="num">{c.percent}%</td>'
+        "</tr>"
+        for c in ranked
+    )
+    return (
+        complete_html
+        + '<section aria-labelledby="coverage-rank-heading">'
+        '<h2 id="coverage-rank-heading">ポケふたがある市町村が多い都道府県</h2>'
+        '<table class="ranking-table">'
+        "<thead><tr><th>順位</th><th>都道府県</th><th>設置市町村</th><th>割合</th></tr></thead>"
+        f"<tbody>{rows}</tbody></table>"
+        '<p class="route-note">市町村数は総務省の公表値（東京都は特別区を含む）。政令市は1市として数えています。</p>'
+        "</section>"
+    )
+
+
+def build_ranking_page(
+    municipalities: list[Municipality],
+    total_manholes: int,
+    today: str,
+    coverage: dict[str, PrefectureCoverage] | None = None,
+) -> str:
     listed = [m for m in municipalities if m.count >= RANKING_MIN_MANHOLES]
     singles = sum(1 for m in municipalities if m.count < RANKING_MIN_MANHOLES)
     canonical = f"{BASE_URL}/municipalities/"
@@ -619,6 +681,8 @@ def build_ranking_page(municipalities: list[Municipality], total_manholes: int, 
       </table>
     </section>
 
+    {_coverage_sections(coverage)}
+
     <section aria-labelledby="pref-heading">
       <h2 id="pref-heading">都道府県から探す</h2>
       <div class="municipality-actions">
@@ -655,7 +719,8 @@ def generate_all(
     active_total = sum(m.count for m in municipalities)
     today = today or datetime.now(JST).strftime("%Y年%-m月%-d日")
     (output_dir / "index.html").write_text(
-        build_ranking_page(municipalities, active_total, today), encoding="utf-8"
+        build_ranking_page(municipalities, active_total, today, prefecture_coverage(records)),
+        encoding="utf-8",
     )
     return pages
 

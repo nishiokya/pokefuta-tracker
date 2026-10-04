@@ -178,6 +178,89 @@ class PageTest(unittest.TestCase):
             self.assertFalse((out / "chiba").exists())
 
 
+class CoverageTest(unittest.TestCase):
+    TOTALS = {pref: 10 for pref in MUNI.PREFECTURE_ORDER}
+
+    def test_coverage_name_counts_wards_and_towns_as_their_municipality(self) -> None:
+        """政令市の区は市で、町名まで入った東京23区は区で数える（分母の市町村数と単位を揃える）。"""
+        self.assertEqual(
+            MUNI.coverage_name({"prefecture": "愛知県", "city": "名古屋市中区", "address": "愛知県名古屋市中区栄"}),
+            "名古屋市",
+        )
+        self.assertEqual(
+            MUNI.coverage_name({"prefecture": "東京都", "city": "台東区上野", "address": "東京都台東区上野公園"}),
+            "台東区",
+        )
+        self.assertEqual(MUNI.coverage_name(SYNTHETIC[0]), "町田市")
+
+    def test_prefecture_coverage(self) -> None:
+        totals = {**self.TOTALS, "千葉県": 1}
+        coverage = MUNI.prefecture_coverage(SYNTHETIC, totals)
+        tokyo, chiba = coverage["東京都"], coverage["千葉県"]
+        self.assertEqual((tokyo.covered, tokyo.total, tokyo.percent), (2, 10, 20))
+        self.assertEqual(tokyo.multi, [("町田市", 3)])
+        self.assertTrue(chiba.is_complete)
+        self.assertEqual(MUNI.complete_prefectures(coverage), ["千葉県"])
+        self.assertEqual(coverage["北海道"].covered, 0)
+
+    def test_totals_file(self) -> None:
+        totals = MUNI.load_municipality_totals()
+        self.assertEqual(sum(totals.values()), 1741)
+        self.assertEqual(totals["北海道"], 179)
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "totals.json"
+            path.write_text(json.dumps({"totals": {"北海道": 179}}, ensure_ascii=False), encoding="utf-8")
+            with self.assertRaises(ValueError):
+                MUNI.load_municipality_totals(path)
+
+    @unittest.skipIf(
+        os.environ.get("POKEFUTA_PAGES_DEPLOY") == "1",
+        "デプロイ中は止めない（設置データに依存する）",
+    )
+    def test_real_data_never_exceeds_the_municipality_total(self) -> None:
+        """設置市町村が市町村数を超えたら、名前の揺れ（同じ自治体を2通りに数えている）か、分母が古い。"""
+        records = PREF.load_records(PREF.DEFAULT_MANHOLES)
+        over = [
+            (c.prefecture, c.covered, c.total)
+            for c in MUNI.prefecture_coverage(records).values()
+            if c.covered > c.total
+        ]
+        self.assertEqual([], over)
+
+    def test_prefecture_page_says_complete_and_single_municipality(self) -> None:
+        coverage = MUNI.prefecture_coverage(SYNTHETIC, {**self.TOTALS, "千葉県": 1})
+        chiba = [r for r in SYNTHETIC if r["prefecture"] == "千葉県"]
+        html = PREF.build_page(
+            "千葉県", "chiba", chiba, 1, {}, None,
+            coverage=coverage["千葉県"], complete=["千葉県"],
+        )
+        self.assertIn("全1市町村にポケふたがある", html)
+        self.assertIn("全市町村にポケふたがある全国1県のひとつです", html)
+        self.assertIn('class="stats stats-3"', html)
+
+        coverage = MUNI.prefecture_coverage(SYNTHETIC, {**self.TOTALS, "千葉県": 43})
+        html = PREF.build_page(
+            "千葉県", "chiba", chiba, 1, {}, None, coverage=coverage["千葉県"], complete=[],
+        )
+        self.assertIn("ポケふたがあるのは香取市だけです", html)  # ヒーローの導入
+        # 千葉は「市町村別の設置枚数」が既にあるので、同じことを言う欄は出さない
+        self.assertNotIn('aria-labelledby="coverage-heading"', html)
+
+        # 市町村別の案内が無い県では欄を出す。1市町村だけならメーターは出さない
+        saga = [_record(str(i), "佐賀県", "佐賀", 33.25, 130.30) for i in range(3)]
+        coverage = MUNI.prefecture_coverage(saga, {**self.TOTALS, "佐賀県": 20})
+        html = PREF.build_page("佐賀県", "saga", saga, 1, {}, None, coverage=coverage["佐賀県"], complete=[])
+        self.assertIn("佐賀のポケふたはすべて佐賀市に", html)
+        self.assertNotIn('aria-label="ポケふたがある市町村の割合"', html)
+
+    def test_ranking_page_lists_complete_prefectures(self) -> None:
+        items = MUNI.build_municipalities(SYNTHETIC, SLUGS)
+        coverage = MUNI.prefecture_coverage(SYNTHETIC, {**self.TOTALS, "千葉県": 1})
+        html = MODULE.build_ranking_page(items, 7, "2026年10月4日", coverage)
+        self.assertIn("全市町村にポケふたがある1県", html)
+        self.assertIn("ポケふたがある市町村が多い都道府県", html)
+
+
 class InternalLinkTest(unittest.TestCase):
     def test_prefecture_page_links_to_its_municipality_pages(self) -> None:
         records = [r for r in SYNTHETIC if r["prefecture"] == "東京都"]
