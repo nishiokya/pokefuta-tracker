@@ -110,6 +110,24 @@ PREFECTURE_SEO: dict[str, dict[str, str]] = {
             "市別の一覧と地図、現地写真、登場ポケモンとあわせて紹介します。"
         ),
     },
+    "山形県": {
+        "search_name": "山形",
+        "title": "山形のポケふた{count}枚｜山形市・寒河江・鶴岡などの場所一覧・地図",
+        "h1": "山形（山形県）のポケふた{count}枚",
+        "description": (
+            "山形県のポケふた{count}枚を一覧と地図で紹介。山形駅前・寒河江・大蔵村・小国町・"
+            "鶴岡市の設置場所を村山・最上・置賜・庄内の地域別に、現地写真とあわせて確認できます。"
+        ),
+    },
+    "長崎県": {
+        "search_name": "長崎",
+        "title": "長崎のポケふた{count}枚｜デンリュウの設置場所一覧・地図",
+        "h1": "長崎（長崎県）のポケふた{count}枚",
+        "description": (
+            "長崎県のデンリュウのポケふた{count}枚を一覧と地図で紹介。本土の長崎市周辺・県央・"
+            "島原半島・県北と、壱岐・対馬・五島・新上五島の離島に分けて設置場所を確認できます。"
+        ),
+    },
     "大阪府": {
         "search_name": "大阪",
         "title": "大阪のポケふた{count}枚はどこ？東大阪市の場所一覧・地図",
@@ -1270,6 +1288,11 @@ def _hero_intro(
     return intro
 
 
+def _guide_stop_name(record: dict) -> str:
+    # 施設名のない蓋は「長崎県/長崎市」になる。県ページ内の案内では県名が重複するので省く。
+    return _manhole_name(record).removeprefix(f'{record.get("prefecture", "")}/')
+
+
 def _visit_guide_html(records: list[dict], guide: dict | None) -> str:
     if not guide:
         return ""
@@ -1303,7 +1326,7 @@ def _visit_guide_html(records: list[dict], guide: dict | None) -> str:
             f'<li><a href="#manhole-{_escape_attr(mid)}" '
             'data-track="prefecture_photo_candidate_click" data-surface="visit_guide" '
             f'data-destination="manhole_list" data-content-id="{_escape_attr(mid)}">'
-            f'{escape(_manhole_name(by_id[mid]))}</a>'
+            f'{escape(_guide_stop_name(by_id[mid]))}</a>'
             f'<span>{escape(str(by_id[mid].get("address") or ""))}</span></li>'
             for mid in route_stop_ids if mid in by_id
         )
