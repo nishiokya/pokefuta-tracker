@@ -55,6 +55,7 @@ DEFAULT_POKEMON = ROOT / "docs" / "pokemon_metadata.json"
 DEFAULT_PHOTOS = ROOT / "docs" / "latest-manhole-photos.json"
 DEFAULT_TRIVIA = ROOT / "dataset" / "prefecture_trivia.json"
 DEFAULT_EVENTS = ROOT / "dataset" / "prefecture_events.json"
+DEFAULT_GUIDES = ROOT / "dataset" / "prefecture_visit_guides.json"
 JST = timezone(timedelta(hours=9))
 # 現地写真の欄に並べる上限（4列×2段）。4枚だと写真が5〜8枚ある県で掲載率 100% なのに
 # 1枚も2枚も欠けて見えた。全件はすぐ下の一覧にあるので、それ以上は重ねて出さない。
@@ -82,6 +83,15 @@ FORM_PREFIX = {
 }
 
 PREFECTURE_SEO: dict[str, dict[str, str]] = {
+    "千葉県": {
+        "search_name": "千葉",
+        "title": "千葉のポケふた{count}枚はどこ？香取市・佐原の場所一覧と地図",
+        "h1": "千葉（千葉県）のポケふた{count}枚",
+        "description": (
+            "千葉県のポケふた{count}枚を一覧と地図で紹介。香取市・佐原の設置場所、"
+            "現地写真、佐原駅から徒歩で巡る際の起点や車での回り方を確認できます。"
+        ),
+    },
     "北海道": {
         "search_name": "北海道",
         "title": "北海道のポケふた最新{count}枚｜設置場所一覧・マップ",
@@ -146,6 +156,11 @@ def load_photos(path: Path) -> dict[str, dict]:
         for manhole_id, photo in raw_photos.items()
         if isinstance(photo, dict)
     }
+
+
+def load_visit_guides(path: Path) -> dict[str, dict]:
+    """Load curated travel advice; fail the build on malformed editorial data."""
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
 def _normalize_katakana(text: str) -> str:
@@ -679,7 +694,8 @@ def _manhole_cards(
             if maps_html or upload_html else ""
         )
         cards.append(
-            f'<article class="manhole-card" data-manhole-id="{_escape_attr(mid)}">'
+            f'<article class="manhole-card" data-manhole-id="{_escape_attr(mid)}" '
+            f'id="manhole-{_escape_attr(mid)}">'
             f'<a class="manhole-detail" href="/manholes/{quote(mid)}/" '
             f'data-track="prefecture_manhole_click" data-position="{position}" '
             f'data-destination="{_escape_attr(mid)}" data-content-id="{_escape_attr(mid)}" '
@@ -1254,6 +1270,58 @@ def _hero_intro(
     return intro
 
 
+def _visit_guide_html(records: list[dict], guide: dict | None) -> str:
+    if not guide:
+        return ""
+    by_id = {
+        str(record.get("id", "")): record for record in records
+        if record.get("installed") is not False
+        and record.get("status", "active") == "active"
+    }
+    stop_ids = guide["manhole_ids"]
+    # A route that mentions a removed or pre-installation stop is misleading.
+    # Hide it until the manually maintained guide has been reviewed.
+    if not stop_ids or any(mid not in by_id for mid in stop_ids):
+        return ""
+    stops = "".join(
+        f'<li><a href="#manhole-{_escape_attr(mid)}" '
+        'data-track="prefecture_photo_candidate_click" data-surface="visit_guide" '
+        f'data-destination="manhole_list" data-content-id="{_escape_attr(mid)}">'
+        f'{escape(_manhole_name(by_id[mid]))}</a>'
+        f'<span>{escape(str(by_id[mid].get("address") or ""))}</span></li>'
+        for mid in stop_ids
+    )
+    advice = "".join(
+        f'<div><h3>{escape(section["heading"])}</h3><p>{escape(section["text"])}</p></div>'
+        for section in guide["sections"]
+    )
+    sources = "・".join(
+        f'<a href="{_escape_attr(source["url"])}" target="_blank" '
+        'rel="noopener noreferrer" data-track="prefecture_official_click" '
+        'data-surface="visit_guide" data-destination="travel_source">'
+        f'{escape(source["label"])}</a>'
+        for source in guide["sources"]
+        if urlparse(source["url"]).scheme == "https"
+        and urlparse(source["url"]).netloc
+    )
+    return (
+        '<section class="visit-guide" aria-labelledby="visit-guide-heading">'
+        f'<h2 id="visit-guide-heading">{escape(guide["heading"])}</h2>'
+        f'<p>{escape(guide["intro"])}</p>'
+        f'<ul class="visit-guide-stops">{stops}</ul>'
+        '<div class="municipality-actions">'
+        '<a class="inline-link" href="#prefecture-map" data-track="prefecture_map_click" '
+        'data-surface="visit_guide" data-destination="prefecture_map">設置場所を地図で見る</a>'
+        '<a class="inline-link" href="#visit-advice">回り方を見る</a></div>'
+        '<details id="visit-advice" class="visit-advice" open>'
+        '<summary>駅・車での回り方</summary>'
+        f'{advice}</details>'
+        f'<p class="visit-guide-sources">出典：{sources}'
+        f'（確認日：<time datetime="{_escape_attr(guide["checked_on"])}">'
+        f'{escape(guide["checked_on"])}</time>）</p></section>'
+    )
+
+
 def build_page(
     prefecture: str,
     slug: str,
@@ -1264,6 +1332,7 @@ def build_page(
     events: list[dict] | None = None,
     photos: dict[str, dict] | None = None,
     empty_prefectures: set[str] | None = None,
+    visit_guide: dict | None = None,
 ) -> str:
     photos = photos or {}
     count = len(records)
@@ -1310,7 +1379,9 @@ def build_page(
     trivia_html = _trivia_html(prefecture, trivia_entry, count)
     events_html = _events_html(events)
     related_html = _related_prefectures(prefecture, empty_prefectures)
-    municipality_guide_html = _municipality_guide(prefecture, records)
+    municipality_guide_html = (
+        _visit_guide_html(records, visit_guide) or _municipality_guide(prefecture, records)
+    )
     visits_url = _visits_url(slug)
     nearby_url = _nearby_url(slug)
     if installed_count:
@@ -1543,6 +1614,20 @@ def build_page(
     }}
     .municipality-guide li span {{ color: #62564a; font-size: .82rem; font-weight: 800; }}
     .municipality-actions {{ display: flex; flex-wrap: wrap; gap: 14px; margin-top: 14px; }}
+    .visit-guide > p {{ color: #62564a; }}
+    .visit-guide-stops {{
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+      gap: 10px; list-style: none; padding: 0; margin: 14px 0;
+    }}
+    .visit-guide-stops li {{ min-width: 0; padding: 12px; border-radius: 12px; background: #f0e9fb; }}
+    .visit-guide-stops a {{ display: block; min-height: 44px; font-weight: 850; }}
+    .visit-guide-stops span {{ display: block; color: #62564a; font-size: .82rem; overflow-wrap: anywhere; }}
+    .visit-advice {{ margin-top: 18px; }}
+    .visit-advice summary {{ cursor: pointer; font-weight: 850; color: #14544f; }}
+    .visit-advice h3 {{ margin: 14px 0 6px; font-size: 1rem; }}
+    .visit-advice p {{ margin: 0; }}
+    .visit-guide-sources {{ font-size: .78rem; overflow-wrap: anywhere; }}
+    .visit-advice, .manhole-card {{ scroll-margin-top: 100px; }}
     .hero-kicker {{ margin: 0; color: #6b4aa2; font-size: .8rem; font-weight: 900; }}
     h1 {{ margin: 4px 0 8px; font-size: clamp(2rem, 7vw, 3.5rem); line-height: 1.15; }}
     .hero-main > p:last-of-type {{ max-width: 720px; margin: 0; color: #574b41; font-weight: 650; }}
@@ -1997,6 +2082,7 @@ def generate_all(
     output_dir: Path,
     events: dict[str, list[dict]] | None = None,
     photos: dict[str, dict] | None = None,
+    visit_guides: dict[str, dict] | None = None,
 ) -> int:
     photos = photos or {}
     records_by_pref = {pref: [] for pref in PREFECTURE_ORDER}
@@ -2021,6 +2107,7 @@ def generate_all(
             (events or {}).get(prefecture),
             photos,
             empty_prefectures,
+            (visit_guides or {}).get(prefecture),
         )
         (out_dir / "index.html").write_text(html, encoding="utf-8")
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -2037,6 +2124,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--photos", type=Path, default=DEFAULT_PHOTOS)
     parser.add_argument("--trivia", type=Path, default=DEFAULT_TRIVIA)
     parser.add_argument("--events", type=Path, default=DEFAULT_EVENTS)
+    parser.add_argument("--guides", type=Path, default=DEFAULT_GUIDES)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     return parser.parse_args()
 
@@ -2058,7 +2146,8 @@ def main() -> int:
     photos = load_photos(args.photos)
     trivia = load_trivia(args.trivia)
     events = load_events(args.events)
-    count = generate_all(records, pokemon_slugs, trivia, args.output, events, photos)
+    visit_guides = load_visit_guides(args.guides)
+    count = generate_all(records, pokemon_slugs, trivia, args.output, events, photos, visit_guides)
     print(
         f"[generate_prefecture_pages] wrote {count} pages to "
         f"{args.output.relative_to(ROOT) if args.output.is_relative_to(ROOT) else args.output}"

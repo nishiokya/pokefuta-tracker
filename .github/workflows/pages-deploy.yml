@@ -37,6 +37,7 @@ on:
       - 'docs/**'     # dataset changes copied into dist/
       - 'dataset/prefecture_trivia*.json' # generated trivia and editorial sources
       - 'dataset/prefecture_events.json' # prefecture campaign/stamp-rally links
+      - 'dataset/prefecture_visit_guides.json' # curated local travel guidance and sources
       - 'dataset/gundam_manhole_spots.json' # curated Pokefuta/Gundam crossover experiences
       - 'dataset/aichi_character_manholes.ndjson' # character manholes shown as nearby design spots
       - 'dataset/idolmaster_20th_manholes.ndjson' # curated Idolmaster manholes
