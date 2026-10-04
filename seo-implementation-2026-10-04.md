@@ -4,6 +4,8 @@
 
 HTTPS転送は本番反映済み。千葉ページは実装・ローカル検証済みで、PRレビュー・マージ後に公開する段階です。技術設定と内容改善は別の変更として記録します。
 
+実装PR：[#565 千葉の設置場所・回り方案内とHTTPS転送の変更記録](https://github.com/nishiokya/pokefuta-tracker/pull/565)（ドラフト）。
+
 ## 1. HTTPS転送：本番反映済み
 
 対象：`nishiokya/pokefuta-tracker` のGitHub Pages、`data.pokefuta.com`。
