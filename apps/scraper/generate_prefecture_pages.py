@@ -1251,7 +1251,11 @@ def _seo_config(prefecture: str, records: list[dict]) -> dict[str, str] | None:
     pokemons = list(dict.fromkeys(
         name for record in records for name in _clean_pokemons(record)
     ))
-    pokemon_text = "・".join(pokemons[:3]) + ("など" if len(pokemons) > 3 else "")
+    pokemon_text = (
+        "、" + "・".join(pokemons[:3]) + ("など" if len(pokemons) > 3 else "")
+        + "の描かれたデザイン"
+        if pokemons else ""
+    )
     # str.format に渡すので、データ由来の波括弧はエスケープする。
     def literal(text: str) -> str:
         return text.replace("{", "{{").replace("}", "}}")
@@ -1261,8 +1265,8 @@ def _seo_config(prefecture: str, records: list[dict]) -> dict[str, str] | None:
         "h1": f"{literal(short)}（{literal(prefecture)}）のポケふた{{count}}枚",
         "description": (
             f"{literal(prefecture)}のポケふた{{count}}枚を一覧と地図で紹介。"
-            f"{literal('・'.join(municipalities))}の設置場所と住所、"
-            f"{literal(pokemon_text)}の描かれたデザインを確認できます。"
+            f"{literal('・'.join(municipalities))}の設置場所と住所"
+            f"{literal(pokemon_text)}を確認できます。"
         ),
     }
 
@@ -1314,9 +1318,12 @@ def _prefecture_seo(
 
     if not count and nearest:
         short = _short_prefecture_name(prefecture)
-        near = "・".join(
-            _short_prefecture_name(name) for name in _nearest_prefectures(nearest)[:3]
-        )
+        near_prefectures = _nearest_prefectures(nearest)
+        near = "・".join(_short_prefecture_name(name) for name in near_prefectures[:3])
+        # 8枚が4県以上にまたがるとき（広島→島根・愛媛・香川・高知）、3県だけ挙げて
+        # 「その県のポケふた8枚」と読める書き方にしない。
+        if len(near_prefectures) > 3:
+            near += "など"
         office = EMPTY_PREFECTURE_ORIGINS[prefecture][0]
         return (
             f"{short}のポケふたは？県内は未設置｜近くの{near}の場所一覧",
@@ -1386,7 +1393,7 @@ def _nearest_pokefuta_html(prefecture: str, nearest: list[tuple[float, dict]]) -
         f'data-position="{position}" '
         f'data-destination="{_escape_attr(record.get("id", ""))}" '
         f'data-content-id="{_escape_attr(record.get("id", ""))}">'
-        f'{escape(_manhole_name(record))}</a>'
+        f'{escape(_guide_stop_name(record))}</a>'
         f'<span>{escape(str(record.get("address") or ""))}・直線約{distance:.0f}km</span>'
         f'<span>{escape("・".join(_clean_pokemons(record)))}</span></li>'
         for position, (distance, record) in enumerate(nearest, start=1)
@@ -1396,7 +1403,7 @@ def _nearest_pokefuta_html(prefecture: str, nearest: list[tuple[float, dict]]) -
         f'<h2 id="nearest-heading">{escape(short)}から近いポケふた{len(nearest)}枚</h2>'
         f'<p>{escape(prefecture)}には現在ポケふたがありません。'
         f'{escape(office)}からいちばん近いのは{escape(str(first.get("prefecture", "")))}の'
-        f'{escape(_manhole_name(first))}で、直線で約{first_distance:.0f}kmです。'
+        f'{escape(_guide_stop_name(first))}で、直線で約{first_distance:.0f}kmです。'
         '距離は直線のため、移動距離や所要時間は地図アプリで確認してください。</p>'
         f'<ul class="visit-guide-stops">{stops}</ul>'
         '</section>'

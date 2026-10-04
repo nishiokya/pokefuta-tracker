@@ -422,6 +422,16 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
                 for _, record in nearest:
                     self.assertIn(f'href="/manholes/{record["id"]}/"', html)
                 self.assertIn("直線", html)
+                section = re.search(
+                    r'<section class="visit-guide" aria-labelledby="nearest-heading">.*?</section>',
+                    html, re.S,
+                ).group(0)
+                # 施設名の無い蓋は「香川県/三豊市」になる。住所に県名があるので重ねない。
+                self.assertIsNone(re.search(r"[都道府県]/", section))
+                description = re.search(r'name="description" content="([^"]*)"', html).group(1)
+                if len(MODULE._nearest_prefectures(nearest)) > 3:
+                    self.assertIn("など", title)
+                    self.assertIn("など", description)
                 self.assertLess(
                     html.index('id="nearest-heading"'), html.index('id="journey-heading"')
                 )
@@ -456,6 +466,14 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
                 self.assertIn(first_city, title)
                 self.assertIn('id="municipality-heading"', html)
                 self.assertNotIn('id="nearest-heading"', html)
+
+        # ポケモン名が無いデータでも説明文が崩れない
+        title, description, _ = MODULE._prefecture_seo(
+            "富山県", 1, [{"prefecture": "富山県", "city": "富山市", "pokemons": []}]
+        )
+        self.assertNotIn("、を", description)
+        self.assertNotIn("描かれたデザイン", description)
+        self.assertTrue(description.endswith("富山市の設置場所と住所を確認できます。"))
 
         # 対象外の県は従来のタイトルのまま
         html = MODULE.build_page(
