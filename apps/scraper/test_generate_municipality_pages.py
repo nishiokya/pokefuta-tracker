@@ -203,6 +203,13 @@ class CoverageTest(unittest.TestCase):
         self.assertEqual(MUNI.complete_prefectures(coverage), ["千葉県"])
         self.assertEqual(coverage["北海道"].covered, 0)
 
+    def test_short_prefecture_name_keeps_kyoto(self) -> None:
+        self.assertEqual(PREF._short_prefecture_name("京都府"), "京都")
+        self.assertEqual(PREF._short_prefecture_name("東京都"), "東京")
+        self.assertEqual(PREF._short_prefecture_name("大阪府"), "大阪")
+        self.assertEqual(PREF._short_prefecture_name("宮城県"), "宮城")
+        self.assertEqual(PREF._short_prefecture_name("北海道"), "北海道")
+
     def test_totals_file(self) -> None:
         totals = MUNI.load_municipality_totals()
         self.assertEqual(sum(totals.values()), 1741)

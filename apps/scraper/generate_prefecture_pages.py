@@ -1259,7 +1259,10 @@ def _municipality_counts(records: list[dict]) -> list[tuple[str, int]]:
 def _short_prefecture_name(prefecture: str) -> str:
     if prefecture == "北海道":
         return prefecture
-    return prefecture.removesuffix("県").removesuffix("府").removesuffix("都")
+    # 接尾辞は1つだけ落とす。続けて落とすと「京都府」→「京都」→「京」になる
+    if prefecture[-1:] in ("都", "府", "県"):
+        return prefecture[:-1]
+    return prefecture
 
 
 def _seo_config(prefecture: str, records: list[dict]) -> dict[str, str] | None:
