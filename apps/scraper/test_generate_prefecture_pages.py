@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 import importlib.util
 import re
 import tempfile
@@ -198,6 +199,54 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
             kyoto = (output / "kyoto" / "index.html").read_text(encoding="utf-8")
             self.assertNotIn('id="visit-guide-heading"', kyoto)
             self.assertIn('id="municipality-heading"', kyoto)
+
+    def test_fukushima_guide_groups_all_installed_stops_by_region(self) -> None:
+        guides = MODULE.load_visit_guides(MODULE.DEFAULT_GUIDES)
+        records = [r for r in self.records if r.get("prefecture") == "福島県"]
+        html = MODULE.build_page(
+            "福島県", "fukushima", records,
+            MODULE.build_rankings(self.records)["福島県"],
+            self.pokemon_slugs, self.trivia["福島県"],
+            photos=self.photos, visit_guide=guides["福島県"],
+        )
+        guide_html = html[html.index('<section class="visit-guide"'):html.index('id="map-heading"')]
+        self.assertIn("福島のポケふたの回り方", guide_html)
+        for heading, count in (("会津から回る", 11), ("中通りから回る", 20), ("浜通りから回る", 11)):
+            self.assertIn(f"{heading}（{count}地点）", guide_html)
+        installed_ids = {
+            str(r["id"]) for r in records
+            if r.get("installed") is not False and r.get("status", "active") == "active"
+        }
+        self.assertEqual(42, len(installed_ids))
+        for mid in installed_ids:
+            self.assertEqual(1, guide_html.count(f'href="#manhole-{mid}"'))
+            self.assertEqual(1, html.count(f'id="manhole-{mid}"'))
+        self.assertNotIn('href="#manhole-461"', guide_html)
+        self.assertIn("全地点を1日で巡る前提にせず", guide_html)
+        for source in guides["福島県"]["sources"]:
+            self.assertIn(source["url"], guide_html)
+        self.assertIn('data-surface="visit_guide"', guide_html)
+        self.assertNotIn("utm_", html)
+
+        installed_records = [
+            {**r, "installed": True} if str(r["id"]) == "461" else r
+            for r in records
+        ]
+        installed_html = MODULE._visit_guide_html(installed_records, guides["福島県"])
+        self.assertIn("中通りから回る（21地点）", installed_html)
+        self.assertIn('href="#manhole-461"', installed_html)
+
+    def test_complete_visit_guide_is_hidden_for_duplicate_or_omitted_stop(self) -> None:
+        guide = MODULE.load_visit_guides(MODULE.DEFAULT_GUIDES)["福島県"]
+        records = [r for r in self.records if r.get("prefecture") == "福島県"]
+        for mutation in ("duplicate", "omitted"):
+            with self.subTest(mutation=mutation):
+                changed = copy.deepcopy(guide)
+                if mutation == "duplicate":
+                    changed["routes"][1]["manhole_ids"].append("248")
+                else:
+                    changed["routes"][1]["manhole_ids"].remove("460")
+                self.assertEqual("", MODULE._visit_guide_html(records, changed))
 
     def test_visit_guide_is_hidden_if_any_stop_is_missing_or_not_installed(self) -> None:
         guide = MODULE.load_visit_guides(MODULE.DEFAULT_GUIDES)["千葉県"]
