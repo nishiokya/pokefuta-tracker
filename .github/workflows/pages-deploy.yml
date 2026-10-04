@@ -96,6 +96,8 @@ jobs:
           ADSENSE_PUBLISHER_ID: ${{ secrets.ADSENSE_PUBLISHER_ID }}
           ADSENSE_PREFECTURE_SLOT: ${{ secrets.ADSENSE_PREFECTURE_SLOT }}
           ADSENSE_MANHOLE_SLOT: ${{ secrets.ADSENSE_MANHOLE_SLOT }}
+          # 設置データに依存するテスト（市区町村 slug の漏れ）をデプロイでは飛ばす。漏れは生成の WARNING で出る
+          POKEFUTA_PAGES_DEPLOY: '1'
         run: |
           set -e
           mkdir -p dist/assets

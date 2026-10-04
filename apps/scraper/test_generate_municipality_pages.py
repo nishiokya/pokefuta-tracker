@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import tempfile
 import unittest
@@ -59,11 +60,16 @@ class MunicipalitySelectionTest(unittest.TestCase):
         self.assertEqual(MUNI.missing_slugs(items), ["東京都/町田市"])
         self.assertFalse(any(m.path for m in items))
 
+    @unittest.skipIf(
+        os.environ.get("POKEFUTA_PAGES_DEPLOY") == "1",
+        "デプロイ中は止めない。漏れは generate_municipality_pages.py の WARNING で出る",
+    )
     def test_real_data_has_a_slug_for_every_page(self) -> None:
         """今の設置データで条件を満たす自治体は、全部 slug を持っていること。
 
         本番では slug が無い自治体は警告してページを作らない（デプロイは止めない）。
-        データ更新で新しく条件を満たした自治体はここで気づく。
+        データ更新で新しく条件を満たした自治体は、手元でこのテストを回すと気づける。
+        pages-deploy.yml では POKEFUTA_PAGES_DEPLOY=1 で飛ばす（日次更新でデプロイ全体を止めないため）。
         """
         records = PREF.load_records(PREF.DEFAULT_MANHOLES)
         self.assertEqual([], MUNI.missing_slugs(MUNI.build_municipalities(records, MUNI.load_slugs())))
