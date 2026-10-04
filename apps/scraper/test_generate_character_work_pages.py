@@ -130,8 +130,51 @@ class IdolmasterPageTest(unittest.TestCase):
         enriched = attach_user_photos(RECORDS, submissions)
         self.assertFalse(any(record.get("user_photo_url") for record in enriched))
 
+    def test_public_photo_is_used_for_hero_and_social_and_schema(self) -> None:
+        records = attach_user_photos(RECORDS, [{
+            "canonical_ref": "character:imas-a", "status": "active",
+            "photo_url": "https://example.com/public.jpg",
+        }, {
+            "canonical_ref": "character:imas-a", "status": "hidden",
+            "photo_url": "https://example.com/private.jpg", "created_at": "2099-01-01",
+        }])
+        html = generate_html(IDOLMASTER, records, EVENT, now=self.now)
+        hero = html.split('<figure class="cw-hero-photo">')[1].split('</figure>')[0]
+        self.assertIn('fetchpriority="high" loading="eager"', hero)
+        self.assertIn('href="#spot-imas-a"', hero)
+        self.assertIn('茨城県筑西市に設置された渡辺みのり', hero)
+        self.assertIn('property="og:image" content="https://example.com/public.jpg"', html)
+        self.assertNotIn('private.jpg', html)
+        self.assertNotIn('property="og:image:width"', html)
+        schema = json.loads(re.search(r'<script type="application/ld\+json">(.*?)</script>', html).group(1))
+        self.assertEqual('https://example.com/public.jpg', schema['@graph'][0]['primaryImageOfPage']['url'])
+
+    def test_map_excludes_unknown_invalid_and_removed_coordinates(self) -> None:
+        records = [dict(RECORDS[0]), dict(RECORDS[1], lat=None),
+                   dict(RECORDS[0], id="invalid", lat=91), dict(RECORDS[2], lat=35, lng=139)]
+        records[0]['character'] = '</script><script>alert(1)</script>'
+        html = generate_html(IDOLMASTER, records, {}, now=self.now)
+        payload = re.search(r'<script type="application/json" id="cw-map-data">(.*?)</script>', html).group(1)
+        points = json.loads(payload)
+        self.assertEqual(['spot-imas-a'], [point['anchor'] for point in points])
+        self.assertNotIn('</script>', payload)
+        self.assertIn('spot-imas-b', html)  # Unknown location remains in the static list.
+        self.assertIn('座標確認済みの1枚', html)
+        schema = json.loads(re.search(r'<script type="application/ld\+json">(.*?)</script>', html).group(1))
+        items = next(n for n in schema['@graph'] if n['@type'] == 'ItemList')['itemListElement']
+        self.assertEqual(1, sum('geo' in item['item'] for item in items))
+
+    def test_empty_map_and_other_guides_keep_static_fallback(self) -> None:
+        html = generate_html(IDOLMASTER, [dict(RECORDS[0], lat=None)], {}, now=self.now)
+        self.assertIn('id="cw-map-data">[]</script>', html)
+        self.assertIn('<noscript>', html)
+        self.assertIn('id="locations"', html)
+        other = generate_html(GUNDAM, gundam_work_records(GUNDAM_RECORDS), {})
+        self.assertNotIn('character-work-map.js', other)
+        self.assertNotIn('leaflet', other)
+
     def test_hero_leads_to_official_checkin(self) -> None:
-        self.assertIn("ふたマス!!!!!!（アイマス）のマンホール、<br>会いに行こう。", self.html)
+        self.assertIn("ふたマス一覧・設置場所マップ", self.html)
         self.assertIn("担当アイドルのふたを訪ねて、公式チェックインへ。", self.html)
         self.assertIn("バンダイナムコID", self.html)
         self.assertIn("位置情報", self.html)
@@ -163,7 +206,7 @@ class IdolmasterPageTest(unittest.TestCase):
             IDOLMASTER, RECORDS, EVENT,
             now=datetime(2027, 7, 25, 10, tzinfo=JST),
         )
-        self.assertIn("ふたマス!!!!!!（アイマス）のマンホール、<br>会いに行こう。", html)
+        self.assertIn("ふたマス一覧・設置場所マップ", html)
         self.assertIn("フタマスと検索されることもありますが、公式名称は『ふたマス!!!!!!』です。", html)
         self.assertIn("チェックイン企画の掲載期間は終了しました", html)
         self.assertIn("公式プロジェクトの最新情報を見る", html)
@@ -220,7 +263,7 @@ class GenerateAllPagesTest(unittest.TestCase):
 
     def test_work_guides_stay_indexable(self) -> None:
         html = generate_html(IDOLMASTER, RECORDS, EVENT, now=datetime(2026, 9, 20, tzinfo=JST))
-        self.assertIn('<meta name="robots" content="index,follow">', html)
+        self.assertIn('<meta name="robots" content="index,follow,max-image-preview:large">', html)
 
     def test_work_guides_link_back_to_the_national_list_not_the_hub(self) -> None:
         html = generate_html(IDOLMASTER, RECORDS, EVENT, now=datetime(2026, 9, 20, tzinfo=JST))

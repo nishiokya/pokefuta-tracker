@@ -250,12 +250,15 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
     pref_count = len({r.get("prefecture") for r in selected if r.get("prefecture")})
     title = f"{page.search_name}マンホール一覧｜設置場所・地図"
     if page.slug == "idolmaster":
-        title = "アイマス・ふたマスのマンホール一覧｜設置場所とチェックイン方法"
+        title = "ふたマス一覧・設置場所マップ｜アイマスのマンホール写真と地図"
     description = f"{page.name}のマンホール{count}枚を掲載。{page.intro}"
+    if page.slug == "idolmaster":
+        description = (f"アイマスのマンホール『ふたマス!!!!!!』{count}枚・{pref_count}都道府県の設置場所を一覧と地図で紹介。"
+                       "アイドル名・住所・現地写真から行き先を探せます。高槻やよい、前川みく、姫崎莉波などの設置案内と公式チェックイン方法も掲載。")
     canonical = BASE_URL + page.path
     event = event_for_page(page.slug, events)
     badge, event_section, event_active = event_html(event, now) if event else ("", "", False)
-    hero_heading = "ふたマス!!!!!!（アイマス）のマンホール、<br>会いに行こう。" if page.slug == "idolmaster" else f"{escape(page.name)}の<br>マンホールを探そう。"
+    hero_heading = "ふたマス一覧・設置場所マップ<br><small>アイマスのマンホールを探そう。</small>" if page.slug == "idolmaster" else f"{escape(page.name)}の<br>マンホールを探そう。"
     hero_note = "担当アイドルのふたを訪ねて、公式チェックインへ。" if event_active else "好きな作品を、次の旅の目的地に。"
     hero_cta = '<a class="cm-btn cm-btn--ghost" href="#check-in">チェックインの参加方法 →</a>' if event_active else ""
     # 全国一覧の作品カードと同じ色・同じ字の蓋を掲げ、2種類のページを同じ図鑑に見せる
@@ -268,6 +271,19 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
     )
     pref_order = {pref: i for i, pref in enumerate(PREFECTURE_ORDER)}
     selected.sort(key=lambda r: (pref_order.get(r.get("prefecture"), 999), str(r.get("city") or ""), str(r["id"])))
+    hero_photo = next((r for r in selected if safe_url(r.get("user_photo_url"))), None) if page.slug == "idolmaster" else None
+    social_image = safe_url(hero_photo.get("user_photo_url")) if hero_photo else OG_IMAGE
+    image_dimensions = '' if hero_photo else '<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">'
+    hero_visual = f'''<aside class="cw-emblem" aria-label="掲載数"><span class="cm-lid cm-lid--lg" style="--c:{escape(lid_color)}" aria-hidden="true">{escape(lid_label[:1])}</span>
+        <p class="cw-emblem-count"><strong class="cm-num">{count}</strong>枚 ・ {pref_count}都道府県</p></aside>'''
+    image_alt = ""
+    if hero_photo:
+        name = str(hero_photo.get("character") or hero_photo.get("title") or "マンホール")
+        place = str(hero_photo.get("prefecture") or "") + str(hero_photo.get("city") or "")
+        image_alt = f"{place}に設置された{name}のふたマス（アイマスのマンホール）の投稿写真"
+        hero_visual = f'''<figure class="cw-hero-photo"><a href="#{spot_id(hero_photo)}">
+          <img src="{escape(social_image)}" alt="{escape(image_alt)}" width="640" height="640" fetchpriority="high" loading="eager" decoding="async"></a>
+          <figcaption><strong>{escape(name)}のふたマス</strong><span>{escape(place)} · みんなの投稿写真</span><a href="#{spot_id(hero_photo)}">このマンホールの設置場所を見る →</a></figcaption></figure>'''
     index_html = "".join(
         f'<a href="#{spot_id(r)}"><strong>{escape(str(r.get("character") or r.get("title") or "マンホール"))}</strong>'
         f'<span>{escape(str(r.get("prefecture") or ""))} {escape(str(r.get("city") or ""))}</span></a>'
@@ -283,13 +299,18 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
         f'<div class="cw-spots">{"".join(spot_html(r, event, event_active) for r in rows)}</div></section>'
         for (pref, city), rows in groups.items()
     )
-    related_html = "".join(f'<a href="../{other.slug}/">{escape(other.name)}</a>' for other in related if other.slug != page.slug)
+    related_html = "".join(f'<a href="../{other.slug}/">{escape("ふたマス（アイマス）の設置場所" if other.slug == "idolmaster" else other.name)}</a>' for other in related if other.slug != page.slug)
     faq = [
         (page.question, page.answer),
         ("掲載されているマンホールがすべてですか？", "掲載データに収録した設置場所の一覧です。全国すべての設置状況を網羅するものではありません。移設・撤去や施設の開放時間は、訪問前に出典の案内をご確認ください。"),
     ]
     if page.slug == "idolmaster":
         faq.append(("フタマスとふたマスは同じものですか？", "フタマスと検索されることもありますが、公式名称は『ふたマス!!!!!!』です。"))
+        places = "、".join(pref + city for pref, city in groups)
+        faq.append(("ふたマス（アイマスのマンホール）はどこにありますか？",
+                    f"このページでは{places}の設置場所を掲載しています。アイドル名から一覧へ進むと、住所と設置案内を確認できます。ページ内の地図には座標を確認できた場所を表示しています。"))
+        faq.append(("ふたマスは何枚掲載されていますか？",
+                    f"現在、この図鑑には設置済みの{count}枚・{pref_count}都道府県を掲載しています。全国の総設置数ではなく、このページの収録数です。最新の設置状況は公式プロジェクトと各自治体の案内をご確認ください。"))
     if event_active:
         faq.append(("このサイトでチェックインできますか？", "チェックインは公式のアイドルマスター ポータルで行います。バンダイナムコIDでのログインと位置情報の許可が必要です。写真館への投稿とは別のサービスです。"))
     faq_html = "".join(f'<details><summary>{escape(q)}</summary><p>{escape(a)}</p></details>' for q, a in faq)
@@ -305,44 +326,73 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
             for i, r in enumerate(selected, 1)
         ]},
     ]}
+    if hero_photo:
+        schema["@graph"][0]["primaryImageOfPage"] = {"@type": "ImageObject", "url": social_image, "caption": image_alt}
+    if page.slug == "idolmaster":
+        for item, record in zip(schema["@graph"][2]["itemListElement"], selected):
+            place = {"@type": "Place", "name": str(record.get("character") or record.get("title")) + "のふたマス",
+                     "url": item["url"], "address": str(record.get("address") or "")}
+            if has_coordinates(record):
+                place["geo"] = {"@type": "GeoCoordinates", "latitude": record["lat"], "longitude": record["lng"]}
+            if safe_url(record.get("user_photo_url")):
+                place["image"] = safe_url(record["user_photo_url"])
+            item["item"] = place
     analytics = {"page_path": "/" + page.path, "site_type": "map", "page_type": "lp_character_work", "work": page.slug}
     map_count = sum(has_coordinates(r) for r in selected)
     map_note = f"地図のピンは座標確認済みの{map_count}枚。" if map_count != count else ""
+    map_section = map_assets = map_cta = ""
+    if page.slug == "idolmaster":
+        map_cta = '<a class="cm-btn cm-btn--ghost" href="#location-map">ふたマスの地図を見る ↓</a>'
+        points = [{"lat": r["lat"], "lng": r["lng"], "name": str(r.get("character") or r.get("title") or "マンホール"),
+                   "address": str(r.get("address") or ""), "anchor": spot_id(r)} for r in selected if has_coordinates(r)]
+        map_section = f'''<section class="cm-section" id="location-map" aria-labelledby="map-heading">
+          <div class="cm-section-head"><h2 id="map-heading">ふたマスの設置場所マップ</h2><a class="cm-btn cm-btn--soft" href="{escape(map_href(page.map_query))}">大きな地図で見る →</a></div>
+          <p class="cm-lead">アイマスのマンホール{map_count}枚を地図に表示。ピンを選ぶとアイドル名と住所が開き、設置場所の詳しい案内へ進めます。{map_note}</p>
+          <p id="cw-map-status" class="cw-note" role="status">地図を読み込み中です。表示されない場合は、下の設置場所一覧をご利用ください。</p>
+          <div id="cw-map" class="cw-map" role="region" aria-label="ふたマスの設置場所の地図"></div>
+          <noscript><p>地図の表示にはJavaScriptが必要です。<a href="#locations">ふたマスの設置場所一覧</a>から住所と地図リンクを確認できます。</p></noscript>
+          <script type="application/json" id="cw-map-data">{json_script(points)}</script>
+        </section>'''
+        map_assets = f'''<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+          <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+          <script defer src="{ASSET_BASE}assets/character-work-map.js?v=20261004a"></script>'''
     return f"""<!doctype html>
 <html lang="ja"><head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{escape(title)}</title><meta name="description" content="{escape(description)}">
-  <link rel="canonical" href="{canonical}"><meta name="robots" content="index,follow">
+  <link rel="canonical" href="{canonical}"><meta name="robots" content="index,follow,max-image-preview:large">
   <meta property="og:type" content="website"><meta property="og:locale" content="ja_JP">
   <meta property="og:title" content="{escape(title)}"><meta property="og:description" content="{escape(description)}">
   <meta property="og:url" content="{canonical}"><meta property="og:site_name" content="ポケふた図鑑">
-  <meta property="og:image" content="{OG_IMAGE}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
-  <meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="{OG_IMAGE}">
+  <meta property="og:image" content="{escape(social_image)}">{image_dimensions}
+  <meta property="og:image:alt" content="{escape(image_alt or title)}">
+  <meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="{escape(social_image)}">
   <link rel="icon" href="{ASSET_BASE}assets/pokefuta_icon_32.png">
   <link rel="stylesheet" href="{ASSET_BASE}assets/top-page.css?v=20260707a">
   <link rel="stylesheet" href="{ASSET_BASE}assets/character-work.css?v={CHARACTER_CSS_VERSION}">
+  {map_assets}
   <script type="application/ld+json">{json_script(schema)}</script>
   <script src="{ASSET_BASE}assets/analytics.js?v=20260929a"></script>
   <script>window.PokefutaAnalytics.init({json_script(analytics)});</script>
 </head><body class="character-work-page cm-page">
   <main class="cm-wrap">
     <nav class="cw-breadcrumb" aria-label="パンくず"><a href="{ASSET_BASE}">ポケふた図鑑</a><span>/</span><a href="{ASSET_BASE}character_manholes.html">キャラクターマンホール</a><span>/</span><span>{escape(page.name)}</span></nav>
-    <section class="cm-hero" aria-labelledby="work-heading">
+    <section class="cm-hero{' cw-hero--photo' if hero_photo else ''}" aria-labelledby="work-heading">
       <div class="cw-hero-copy"><p class="cm-eyebrow">CHARACTER MANHOLE GUIDE / {escape(page.name)}</p>{badge}
         <h1 id="work-heading">{hero_heading}</h1><p class="cm-hero-lead">{hero_note}</p>
-        <p>{escape(page.intro)}</p><div class="cm-jump"><a class="cm-btn" href="#locations">{"アイドル・設置場所" if page.slug == "idolmaster" else "設置場所"}を探す ↓</a>{hero_cta}</div>
+        <p>{escape(page.intro)}</p><div class="cm-jump"><a class="cm-btn" href="#locations">{"アイドル・設置場所" if page.slug == "idolmaster" else "設置場所"}を探す ↓</a>{map_cta}{hero_cta}</div>
         <p class="cm-hero-note">掲載 {count}枚 / {pref_count}都道府県　{map_note}</p>
       </div>
-      <aside class="cw-emblem" aria-label="掲載数"><span class="cm-lid cm-lid--lg" style="--c:{escape(lid_color)}" aria-hidden="true">{escape(lid_label[:1])}</span>
-        <p class="cw-emblem-count"><strong class="cm-num">{count}</strong>枚 ・ {pref_count}都道府県</p></aside>
+      {hero_visual}
     </section>
-    {event_section}
+    {map_section}
     <section class="cm-section" id="locations" aria-labelledby="locations-heading">
-      <div class="cm-section-head"><h2 id="locations-heading"><span aria-hidden="true">FIND YOUR FAVORITE</span>{escape(page.name)}のマンホール一覧</h2>
+      <div class="cm-section-head"><h2 id="locations-heading"><span aria-hidden="true">FIND YOUR FAVORITE</span>{'ふたマス（アイマス）一覧・アイドル別の設置場所' if page.slug == 'idolmaster' else escape(page.name) + 'のマンホール一覧'}</h2>
         <a class="cm-btn cm-btn--soft" href="{escape(map_href(page.map_query))}">作品の全国地図を見る →</a></div>
       <p class="cm-lead">{escape(page.guide)}</p>{index_block}
       {locations_html}
     </section>
+    {event_section}
     <section class="cm-section" aria-labelledby="series-heading"><div class="cm-section-head"><h2 id="series-heading">シリーズ別に地図で探す</h2></div><div class="cw-brand-links">{brands_html}</div></section>
     <section class="cm-section" aria-labelledby="visit-heading"><div class="cm-section-head"><h2 id="visit-heading">訪問前に確認したいこと</h2></div>
       <p class="cm-lead">施設の開放時間・移設・撤去などは出典の案内をご確認ください。地図の座標には誤差がある場合があります。
