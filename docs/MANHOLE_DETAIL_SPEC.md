@@ -46,14 +46,16 @@ data.pokefuta.com（tracker）と pokefuta.com のマンホール詳細ページ
 
 ### エクスポート拡張（tracker repo: `apps/scraper/export_latest_manhole_photos.py`）
 
-- `photos[manhole_id]` の既存フィールドは**そのまま維持**（後方互換）。代表写真は `dataset/manhole_featured_photos.json` の手動指定を優先し、指定がない・削除済み・非公開の場合は最新の公開写真へフォールバックする。
-- 各エントリに `representative_source`（`curated` / `latest`）と `gallery` 配列を追加。ギャラリーは代表を先頭に置き、残りを新しい順で**最大5枚**。
+- `photos[manhole_id]` の既存フィールドは**そのまま維持**（後方互換）。代表写真は `dataset/manhole_featured_photos.json` の手動指定を優先し、指定がない・削除済み・非公開の場合は**スコア順で先頭**の公開写真へフォールバックする（2026-10-04 から。それまでは最新）。
+- 各エントリに `representative_source`（`curated` / `score`）と `gallery` 配列を追加。ギャラリーは代表を先頭に置き、残りを**スコア順**で**最大5枚**。
+- **スコア順**（`photo_rank_key`）: 採点済みの候補 → 未採点 → 採点で候補外、の段。採点済みの候補の中では蓋が真ん中で正方形に収まる写真（`ai_tags.scene = centered_clean` かつ `ai_tags.lid_fits`）を先、次に `photo.quality_score` の高い順、最後に新しい順。スコアと AI タグは k11 の manhole-score が毎朝 05:15 に書く（このジョブは 05:30）
+- 代表・`gallery` の各エントリに `crop`（`ai_tags.crop`。正方形の位置 [x0, y0, x1, y1]、0〜1、無ければ null）。取り込みがこの位置で切る
 
 ```jsonc
 "photos": {
   "1": {
     "manhole_id": 1,
-    "photo_id": "...",        // 代表（手動選定、なければ最新）
+    "photo_id": "...",        // 代表（手動選定、なければスコア順の先頭）
     "representative_source": "curated",
     "url": "...",
     "display_name": "...",     // 代表写真の撮影者名
@@ -67,14 +69,14 @@ data.pokefuta.com（tracker）と pokefuta.com のマンホール詳細ページ
 ```
 
 - 対象は `is_public = true` の写真のみ。撮影者名のキーは既存の代表写真と同じ `display_name`（app_user の display_name を引く）。
-- 手動指定写真が非公開・削除済み・別マンホールの写真なら採用せず、自動的に最新公開写真へ戻す。日次同期を失敗させない。
+- 手動指定写真が非公開・削除済み・別マンホールの写真なら採用せず、自動的にスコア順の先頭の公開写真へ戻す。日次同期を失敗させない。
 - 代表・`gallery` の各エントリに `public_user_id`（app_user.id の公開UUID）を含める。投稿者の公開スタンプ帳 `pokefuta.com/users/{public_user_id}/visits` へのリンク生成に使う。
 
 ### 取り込み拡張（tracker repo: `apps/tools/import_latest_manhole_photos.py`）
 
 - 代表: 現行どおり `dataset/manhole/image/{id}_latest.jpeg`。
-- ギャラリー: `dataset/manhole/image/{id}_{photo_idの先頭8桁(hex)}.jpeg`。代表と重複する photo_id はスキップ。既存ファイルは再ダウンロードしない（冪等）。
-- **リポジトリ肥大対策**: ギャラリー画像も代表と同じスクエア720px・JPEG品質82に縮小して保存。エクスポートから外れた photo_id のファイルは自動削除（`--limit` 指定時は削除しない）。
+- ギャラリー: `dataset/manhole/image/{id}_{photo_idの先頭8桁(hex)}.jpeg`。代表と重複する photo_id はスキップ。既存ファイルは再ダウンロードしない（冪等）。切り抜きの決め方を変えたときは、手動実行で `refresh_gallery` を選ぶと既存のギャラリー画像も切り直す。
+- **リポジトリ肥大対策**: ギャラリー画像も代表と同じスクエア720px・JPEG品質82に縮小して保存。正方形はエントリの `crop` があればその位置（蓋の枠に寄せた位置）、無ければ真ん中。エクスポートから外れた photo_id のファイルは自動削除（`--limit` 指定時は削除しない）。
 
 ### ページ生成（tracker repo: `generate_manhole_pages.py`）
 
