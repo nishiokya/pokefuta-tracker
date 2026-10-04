@@ -39,6 +39,55 @@ def _photo(
     }
 
 
+def _scored(photo_id: str, score, shot_at=None, eligible=True, scene=None, lid_fits=None, crop=None) -> dict:
+    tags = {"model": "scene_attrs/1"}
+    if scene:
+        tags["scene"] = scene
+    if lid_fits is not None:
+        tags["lid_fits"] = lid_fits
+    if crop is not None:
+        tags["crop"] = crop
+    return {**_photo(photo_id, shot_at=shot_at), "quality_score": score,
+            "quality_eligible": eligible if score is not None else None, "ai_tags": tags}
+
+
+class PhotoRankTest(unittest.TestCase):
+    def test_score_order_beats_newer_photos(self):
+        photos = [
+            _scored("new-low", 0.5, shot_at="2026-09-01T00:00:00Z"),
+            _scored("old-high", 0.9, shot_at="2026-01-01T00:00:00Z"),
+        ]
+        self.assertEqual([p["id"] for p in export.select_gallery_photos(photos, 5)], ["old-high", "new-low"])
+
+    def test_centered_lid_that_fits_comes_first_among_scored(self):
+        photos = [
+            _scored("wide", 0.84, scene="wide_context", lid_fits=True),
+            _scored("closeup", 0.83, scene="centered_clean", lid_fits=False),
+            _scored("centered", 0.82, scene="centered_clean", lid_fits=True),
+        ]
+        self.assertEqual([p["id"] for p in export.select_gallery_photos(photos, 5)], ["centered", "wide", "closeup"])
+
+    def test_tiers_scored_then_unscored_then_ineligible(self):
+        photos = [
+            _scored("ineligible", 0.95, eligible=False, scene="centered_clean", lid_fits=True),
+            _scored("unscored", None, shot_at="2026-09-01T00:00:00Z"),
+            _scored("scored", 0.3),
+        ]
+        self.assertEqual([p["id"] for p in export.select_gallery_photos(photos, 5)], ["scored", "unscored", "ineligible"])
+
+    def test_unscored_photos_fall_back_to_newest_first(self):
+        photos = [_photo("old", shot_at="2026-01-01T00:00:00Z"), _photo("new", shot_at="2026-03-01T00:00:00Z")]
+        self.assertEqual([p["id"] for p in export.select_gallery_photos(photos, 5)], ["new", "old"])
+
+    def test_crop_is_exported_only_when_well_formed(self):
+        base = "https://images.example.com"
+        ok = _scored("ok", 0.5, crop=[0.05, 0, 0.8, 1])
+        self.assertEqual(export.to_gallery_entry(ok, base, {})["crop"], [0.05, 0.0, 0.8, 1.0])
+        self.assertEqual(export.to_photo_entry(ok, base, {})["crop"], [0.05, 0.0, 0.8, 1.0])
+        for bad in ([0, 0, 1], [0.5, 0, 0.5, 1], [0, 0, 1.2, 1], ["0", 0, 0.75, 1], {"x": 0}):
+            self.assertIsNone(export.to_gallery_entry(_scored("bad", 0.5, crop=bad), base, {})["crop"], bad)
+
+
 class SelectGalleryPhotosTest(unittest.TestCase):
     def test_landscape_override_cannot_replace_a_lid(self):
         scenery = {**_photo("scenery", shot_at="2026-09-29T00:00:00Z"), "is_landscape": True}
@@ -220,6 +269,7 @@ class ToGalleryEntryTest(unittest.TestCase):
                 "shot_at": "2026-01-02T03:04:05Z",
                 "display_name": "tako",
                 "public_user_id": "pub-uid-9",
+                "crop": None,
             },
         )
 

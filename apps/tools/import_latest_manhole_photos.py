@@ -238,12 +238,32 @@ def redact_url(raw_url: str) -> str:
     return urlunparse((parsed.scheme, parsed.netloc, parsed.path, "", "", ""))
 
 
-def crop_to_square(image: Image.Image, size: int) -> Image.Image:
+def crop_box(record: dict[str, Any]) -> list[float] | None:
+    """export が書いた crop（[x0, y0, x1, y1]、0〜1、EXIF の回転を戻した向き）。無い・形が違えば None。"""
+    crop = record.get("crop")
+    if not isinstance(crop, list) or len(crop) != 4:
+        return None
+    if not all(isinstance(v, (int, float)) and not isinstance(v, bool) and 0 <= v <= 1 for v in crop):
+        return None
+    if crop[2] <= crop[0] or crop[3] <= crop[1]:
+        return None
+    return [float(v) for v in crop]
+
+
+def crop_to_square(image: Image.Image, size: int, crop: list[float] | None = None) -> Image.Image:
+    """正方形に切って size に縮める。crop があればその位置（蓋の枠に寄せた正方形）、無ければ真ん中。
+
+    crop は短辺の正方形なので、使うのは左上の位置だけ。一辺は常に短辺にし、写真の外に出ないよう止める。
+    """
     image = ImageOps.exif_transpose(image).convert("RGB")
     width, height = image.size
     crop_size = min(width, height)
-    left = (width - crop_size) // 2
-    top = (height - crop_size) // 2
+    if crop:
+        left = min(max(round(crop[0] * width), 0), width - crop_size)
+        top = min(max(round(crop[1] * height), 0), height - crop_size)
+    else:
+        left = (width - crop_size) // 2
+        top = (height - crop_size) // 2
     cropped = image.crop((left, top, left + crop_size, top + crop_size))
     return cropped.resize((size, size), Image.Resampling.LANCZOS)
 
@@ -269,6 +289,11 @@ def main() -> int:
         "--public-base-url",
         default="",
         help="Override image URL with this public base plus each record's storage_key.",
+    )
+    parser.add_argument(
+        "--refresh-gallery",
+        action="store_true",
+        help="Re-download and re-crop gallery images that already exist (e.g. after the crop rule changed).",
     )
     args = parser.parse_args()
     load_env_file(args.env_file)
@@ -312,7 +337,7 @@ def main() -> int:
         output_path = output_dir / f"{manhole_id}_latest.jpeg"
         try:
             image = download_image(session, url, args.timeout)
-            cropped = crop_to_square(image, args.size)
+            cropped = crop_to_square(image, args.size, crop_box(record))
             cropped.save(output_path, "JPEG", quality=args.quality, optimize=True, progressive=True)
             imported += 1
             print(f"imported id={manhole_id} -> {output_path}")
@@ -333,7 +358,7 @@ def main() -> int:
                 # local file survives cleanup even when this run can't reach it.
                 gallery_path = output_dir / f"{manhole_id}_{slug}.jpeg"
                 expected_gallery.add(gallery_path.name)
-                if gallery_path.exists():
+                if gallery_path.exists() and not args.refresh_gallery:
                     gallery_kept += 1
                     continue
 
@@ -349,7 +374,7 @@ def main() -> int:
                     continue
                 try:
                     image = download_image(session, item_url, args.timeout)
-                    cropped = crop_to_square(image, args.size)
+                    cropped = crop_to_square(image, args.size, crop_box(item))
                     cropped.save(gallery_path, "JPEG", quality=args.quality, optimize=True, progressive=True)
                     gallery_imported += 1
                     print(f"imported gallery id={manhole_id} -> {gallery_path}")
