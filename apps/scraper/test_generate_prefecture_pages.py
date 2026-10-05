@@ -1061,7 +1061,9 @@ class BuildIndexPageTest(unittest.TestCase):
         records_by_pref = {name: [] for name in MODULE.PREFECTURE_ORDER}
         records_by_pref["三重県"] = [{"id": "1", "city": "津市"}]
         photos = {"1": {"created_at": "2026-01-01T00:00:00Z"}}
-        with mock.patch.object(MODULE, "_photo_asset_url", return_value="/manhole/image/1_latest.jpeg"):
+        # 実リポジトリの dataset/manhole/image に 1_lid.jpeg があっても結果が変わらないよう、タイル画像の選択も固定する
+        with mock.patch.object(MODULE, "_photo_asset_url", return_value="/manhole/image/1_latest.jpeg"), \
+                mock.patch.object(MODULE, "tile_image_url", return_value=""):
             html = MODULE.build_index_page(records_by_pref, photos)
         self.assertIn(
             '<a class="prefecture-card-photo" href="/manholes/1/" '
@@ -1072,6 +1074,17 @@ class BuildIndexPageTest(unittest.TestCase):
         self.assertIn(
             '<span class="prefecture-card-photo-city" aria-hidden="true">津市</span>', html
         )
+
+    def test_gallery_prefers_lid_tile_when_it_exists(self) -> None:
+        """小さいタイルは蓋でいっぱいの画像（{id}_lid.jpeg）を優先する（manhole_tile_image）。"""
+        records_by_pref = {name: [] for name in MODULE.PREFECTURE_ORDER}
+        records_by_pref["三重県"] = [{"id": "1", "city": "津市"}]
+        photos = {"1": {"created_at": "2026-01-01T00:00:00Z"}}
+        with mock.patch.object(MODULE, "_photo_asset_url", return_value="/manhole/image/1_latest.jpeg"), \
+                mock.patch.object(MODULE, "tile_image_url", return_value="/manhole/image/1_lid.jpeg"):
+            html = MODULE.build_index_page(records_by_pref, photos)
+        self.assertIn('src="/manhole/image/1_lid.jpeg"', html)
+        self.assertNotIn('1_latest.jpeg', html)
 
     def test_gallery_shows_more_than_eight_photos(self) -> None:
         """実機フィードバック: 8枚に絞らず、実在する写真は全部出す。"""
