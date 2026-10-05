@@ -46,5 +46,31 @@ class CropToSquareTest(unittest.TestCase):
             self.assertIsNone(imp.crop_box({"crop": bad}), bad)
 
 
+class LidTileTest(unittest.TestCase):
+    def test_fills_the_square_with_the_lid(self):
+        # 400x300 の真ん中に 100x100 の白い蓋。蓋の枠 × 1.04 で切るので、ほぼ白一色になる
+        image = Image.new("RGB", (400, 300), (0, 0, 0))
+        image.paste((255, 255, 255), (150, 100, 250, 200))
+        tile = imp.lid_tile(image, [150 / 400, 100 / 300, 250 / 400, 200 / 300], 40)
+        self.assertEqual(tile.size, (40, 40))
+        self.assertGreater(tile.getpixel((20, 20))[0], 240)
+        self.assertGreater(tile.getpixel((5, 5))[0], 200)       # 角も蓋（1.04 倍なので縁は少しだけ）
+
+    def test_pads_with_background_when_the_lid_is_at_the_edge(self):
+        image = Image.new("RGB", (400, 300), (0, 0, 0))
+        tile = imp.lid_tile(image, [0.0, 0.0, 0.5, 0.5], 40)   # 左上の端の蓋 → 外は地の色
+        self.assertEqual(tile.getpixel((0, 0)), imp.LID_TILE_BACKGROUND)
+
+    def test_does_not_zoom_tiny_lids_beyond_the_limit(self):
+        image = Image.new("RGB", (300, 300), (0, 0, 0))
+        image.paste((255, 255, 255), (148, 148, 152, 152))      # 4px の小さい蓋
+        tile = imp.lid_tile(image, [148 / 300, 148 / 300, 152 / 300, 152 / 300], 30)
+        self.assertEqual(tile.getpixel((2, 2)), (0, 0, 0))       # 最大 3 倍までなので周りも写る
+
+    def test_crop_box_reads_lid(self):
+        self.assertEqual(imp.crop_box({"lid": [0.2, 0.2, 0.8, 0.8]}, "lid"), [0.2, 0.2, 0.8, 0.8])
+        self.assertIsNone(imp.crop_box({"lid": [0.8, 0.2, 0.2, 0.8]}, "lid"))
+
+
 if __name__ == "__main__":
     unittest.main()

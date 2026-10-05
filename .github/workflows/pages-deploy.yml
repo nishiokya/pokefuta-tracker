@@ -109,6 +109,7 @@ jobs:
             apps.scraper.test_analytics_contract \
             apps.scraper.test_inject_adsense \
             apps.scraper.test_generate_prefecture_pages \
+            apps.scraper.test_manhole_tile_image \
             apps.scraper.test_generate_municipality_pages \
             apps.scraper.test_prefectures \
             apps.scraper.test_web_prefecture_links \

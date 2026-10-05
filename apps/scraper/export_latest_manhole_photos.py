@@ -119,6 +119,26 @@ def _quality_score(photo: dict[str, Any]) -> Optional[float]:
     return float(score) if isinstance(score, (int, float)) and not isinstance(score, bool) else None
 
 
+def _unit_box(value: Any) -> Optional[list[float]]:
+    if not isinstance(value, list) or len(value) != 4:
+        return None
+    if not all(isinstance(v, (int, float)) and not isinstance(v, bool) and 0 <= v <= 1 for v in value):
+        return None
+    x0, y0, x1, y1 = (float(v) for v in value)
+    if x1 <= x0 or y1 <= y0:
+        return None
+    return [x0, y0, x1, y1]
+
+
+def photo_lid(photo: dict[str, Any]) -> Optional[list[float]]:
+    """k11 の採点が見つけた蓋の枠（photo.ai_tags.lid）。[x0, y0, x1, y1]（0〜1、表示の向き）。
+
+    取り込み側が、蓋で正方形をいっぱいにした小さい画像（{id}_lid.jpeg）を作るのに使う
+    （pokefuta 20261005100000_photo_ai_tags_lid.sql）。無い・形が違うときは None。
+    """
+    return _unit_box(_ai_tags(photo).get("lid"))
+
+
 def photo_crop(photo: dict[str, Any]) -> Optional[list[float]]:
     """k11 の採点が決めた一覧の正方形の位置（photo.ai_tags.crop）。[x0, y0, x1, y1]（0〜1、表示の向き）。
 
@@ -196,6 +216,7 @@ def to_photo_entry(
         "public_user_id": public_user_id,
         "quality_score": _quality_score(photo),
         "crop": photo_crop(photo),
+        "lid": photo_lid(photo),
     }
 
 

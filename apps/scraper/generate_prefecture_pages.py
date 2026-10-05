@@ -13,6 +13,13 @@ from urllib.parse import quote, urlparse
 from xml.sax.saxutils import escape
 
 try:
+    from apps.scraper.manhole_tile_image import tile_image_url
+except ModuleNotFoundError as exc:
+    if exc.name != "apps":
+        raise
+    from manhole_tile_image import tile_image_url
+
+try:
     from apps.scraper.photo_caption import poster_profile_url
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
@@ -701,12 +708,13 @@ def _manhole_cards(
         mid = str(record.get("id", "")).strip()
         display_name = _manhole_name(record)
         pokemons = "・".join(_clean_pokemons(record)) or "ポケモン"
-        image_path = ROOT / "dataset" / "manhole" / "image" / f"{mid}_latest.jpeg"
+        # 小さいタイルは蓋でいっぱいの画像（{id}_lid.jpeg）。無ければ代表写真の正方形
+        tile_url = tile_image_url(mid, ROOT / "dataset" / "manhole" / "image")
         image_html = (
-            f'<img src="/manhole/image/{quote(mid)}_latest.jpeg" '
+            f'<img src="{_escape_attr(tile_url)}" '
             f'alt="{_escape_attr(display_name)}のポケふた" loading="lazy" decoding="async" '
             f'width="720" height="720">'
-            if image_path.exists()
+            if tile_url
             # 写真館（マイ旅・探す）の写真無しタイルと同じストライプ。
             else '<span class="manhole-placeholder" aria-hidden="true"></span>'
         )
@@ -977,7 +985,8 @@ def build_index_page(
         gallery_items = [
             f'<a class="prefecture-card-photo" href="/manholes/{quote(str(record.get("id", "")))}/" '
             f'aria-label="{_escape_attr(_caption(record))}のポケふたの詳細を開く">'
-            f'<img src="{_escape_attr(_photo_asset_url(record, photo))}" alt="" loading="lazy" decoding="async">'
+            # 小さいタイルは蓋でいっぱいの画像（{id}_lid.jpeg）。無ければ代表写真の正方形
+            f'<img src="{_escape_attr(tile_image_url(str(record.get("id", "")), ROOT / "dataset" / "manhole" / "image") or _photo_asset_url(record, photo))}" alt="" loading="lazy" decoding="async">'
             f'<span class="prefecture-card-photo-city" aria-hidden="true">'
             f'{escape(_caption(record))}</span></a>'
             for record, photo in photographed

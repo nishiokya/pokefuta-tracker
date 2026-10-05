@@ -27,6 +27,7 @@ from xml.sax.saxutils import escape
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(Path(__file__).parent))
 from display_names import compose_display_name  # noqa: E402
+from manhole_tile_image import tile_image_url  # noqa: E402
 
 try:
     from apps.scraper.prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS
@@ -230,11 +231,12 @@ def _manhole_cards(records: list[dict], photos: dict[str, dict], tag: str) -> st
         pref_slug = PREFECTURE_SLUGS.get(prefecture, "")
         place = compose_display_name(record) or "所在地不明"
         pokemons = "・".join(_clean_pokemons(record)) or "ポケモン"
-        image_path = ROOT / "dataset" / "manhole" / "image" / f"{mid}_latest.jpeg"
+        # 小さいタイルは蓋でいっぱいの画像（{id}_lid.jpeg）。無ければ代表写真の正方形
+        tile_url = tile_image_url(mid, ROOT / "dataset" / "manhole" / "image")
         image_html = (
-            f'<img src="/manhole/image/{quote(mid)}_latest.jpeg" '
+            f'<img src="{_escape_attr(tile_url)}" '
             f'alt="{_escape_attr(place)}のポケふた" loading="lazy" width="72" height="72">'
-            if image_path.exists()
+            if tile_url
             else '<span class="manhole-placeholder" aria-hidden="true">●</span>'
         )
         is_preinstall = record.get("installed") is False
