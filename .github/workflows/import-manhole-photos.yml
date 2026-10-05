@@ -93,6 +93,8 @@ jobs:
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          # 常連バッジの判定の線。公開しないので secret に置く（無ければ regulars.json は更新されない）
+          REGULAR_BADGE_RULE: ${{ secrets.REGULAR_BADGE_RULE }}
         run: python3 apps/scraper/export_app_snapshot.py
 
       - name: Commit via PR and trigger Pages deploy
