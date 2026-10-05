@@ -516,142 +516,6 @@
     }
   },
   {
-    "id": "photo-293-965eddb1",
-    "type": "latest_photo",
-    "title": "最新写真：三重県/朝日町",
-    "url": "https://data.pokefuta.com/manholes/293/",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "latest_photo",
-    "source": "photos",
-    "raw_data": {
-      "manhole_id": "293",
-      "title": "三重県/朝日町",
-      "pref": "三重県",
-      "city": "三重郡朝日町",
-      "pokemon": "エルフーン",
-      "pokemon_list": [
-        "エルフーン",
-        "ミジュマル"
-      ],
-      "created_at": "2026-10-03T07:03:15.77583+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/57fd61d4-0859-4a9e-ba1c-3b716db30447.jpg",
-      "display_name": "がく",
-      "photo_rank": "first_ever"
-    }
-  },
-  {
-    "id": "photo-431-4eaf48de",
-    "type": "latest_photo",
-    "title": "最新写真：長崎県/佐々町",
-    "url": "https://data.pokefuta.com/manholes/431/",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "latest_photo",
-    "source": "photos",
-    "raw_data": {
-      "manhole_id": "431",
-      "title": "長崎県/佐々町",
-      "pref": "長崎県",
-      "city": "佐々",
-      "pokemon": "シビシラス",
-      "pokemon_list": [
-        "シビシラス",
-        "シビビール",
-        "デンリュウ"
-      ],
-      "created_at": "2026-10-03T12:05:43.704373+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/52f32ae2-0b4c-4b27-b4c9-40cab27bdaa1.jpg",
-      "display_name": "J.Endre",
-      "photo_rank": "first_ever"
-    }
-  },
-  {
-    "id": "photo-350-b92b93ad",
-    "type": "latest_photo",
-    "title": "最新写真：静岡県/富士市",
-    "url": "https://data.pokefuta.com/manholes/350/",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "latest_photo",
-    "source": "photos",
-    "raw_data": {
-      "manhole_id": "350",
-      "title": "静岡県/富士市",
-      "pref": "静岡県",
-      "city": "富士",
-      "pokemon": "ファイヤー",
-      "pokemon_list": [
-        "ファイヤー"
-      ],
-      "created_at": "2026-10-03T15:23:37.629076+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/287fc0dc-1794-469d-8722-c428ca4f99e0.jpg",
-      "display_name": "HK",
-      "photo_rank": "first_ever"
-    }
-  },
-  {
-    "id": "photo-454-78a4bc07",
-    "type": "latest_photo",
-    "title": "最新写真：福島県/須賀川市",
-    "url": "https://data.pokefuta.com/manholes/454/",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "latest_photo",
-    "source": "photos",
-    "raw_data": {
-      "manhole_id": "454",
-      "title": "福島県/須賀川市",
-      "pref": "福島県",
-      "city": "須賀川",
-      "pokemon": "マフォクシー",
-      "pokemon_list": [
-        "マフォクシー",
-        "ラッキー"
-      ],
-      "created_at": "2026-10-03T23:29:25.895074+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/2e8ac092-d804-4636-8e7e-3a4f1b42096f.jpg",
-      "display_name": "temporary accounnt",
-      "photo_rank": "first_ever"
-    }
-  },
-  {
-    "id": "photo-461-1323f142",
-    "type": "latest_photo",
-    "title": "最新写真：福島県/小野町",
-    "url": "https://data.pokefuta.com/manholes/461/",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "latest_photo",
-    "source": "photos",
-    "raw_data": {
-      "manhole_id": "461",
-      "title": "福島県/小野町",
-      "pref": "福島県",
-      "city": "小野",
-      "pokemon": "ゴチミル",
-      "pokemon_list": [
-        "ゴチミル",
-        "ブリムオン",
-        "ラッキー"
-      ],
-      "created_at": "2026-10-03T23:30:37.934601+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/a808a173-9c41-4b9d-b600-de1dfb6fe939.jpg",
-      "display_name": "temporary accounnt",
-      "photo_rank": "first_ever"
-    }
-  },
-  {
     "id": "photo-371-777c8f7f",
     "type": "latest_photo",
     "title": "最新写真：福島県/棚倉町",
@@ -833,6 +697,143 @@
       ],
       "created_at": "2026-10-04T07:40:21.925719+00:00",
       "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/8faacb41-8030-491d-a841-556e044803bb.jpg",
+      "display_name": "ぴぃ",
+      "photo_rank": "first_ever"
+    }
+  },
+  {
+    "id": "photo-347-7dc6a70f",
+    "type": "latest_photo",
+    "title": "最新写真：静岡県/静岡市",
+    "url": "https://data.pokefuta.com/manholes/347/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "347",
+      "title": "静岡県/静岡市",
+      "pref": "静岡県",
+      "city": "静岡",
+      "pokemon": "フシギソウ",
+      "pokemon_list": [
+        "フシギソウ",
+        "ムクホーク"
+      ],
+      "created_at": "2026-10-04T11:38:48.533045+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/f6329ac7-b56a-4617-bbec-bf79e5f0b56d.jpg",
+      "display_name": "HK",
+      "photo_rank": "first_ever"
+    }
+  },
+  {
+    "id": "photo-246-37c9cb8c",
+    "type": "latest_photo",
+    "title": "最新写真：三重県/伊賀市",
+    "url": "https://data.pokefuta.com/manholes/246/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "246",
+      "title": "三重県/伊賀市",
+      "pref": "三重県",
+      "city": "伊賀市",
+      "pokemon": "アギルダー",
+      "pokemon_list": [
+        "アギルダー",
+        "ミジュマル"
+      ],
+      "created_at": "2026-10-04T15:52:01.916343+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/87e249cf-25cc-4063-a0dd-328855e666cd.jpg",
+      "display_name": "ぴぃ",
+      "photo_rank": "first_ever"
+    }
+  },
+  {
+    "id": "photo-333-a2aff699",
+    "type": "latest_photo",
+    "title": "最新写真：三重県/松阪市",
+    "url": "https://data.pokefuta.com/manholes/333/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "333",
+      "title": "三重県/松阪市",
+      "pref": "三重県",
+      "city": "松阪市",
+      "pokemon": "ニャース",
+      "pokemon_list": [
+        "ニャース",
+        "ミジュマル"
+      ],
+      "created_at": "2026-10-04T15:54:08.989619+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/e159fbaa-8aea-4019-857a-7b9e6d27ff19.jpg",
+      "display_name": "ぴぃ",
+      "photo_rank": "first_ever"
+    }
+  },
+  {
+    "id": "photo-332-7ed3d411",
+    "type": "latest_photo",
+    "title": "最新写真：三重県/多気町",
+    "url": "https://data.pokefuta.com/manholes/332/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "332",
+      "title": "三重県/多気町",
+      "pref": "三重県",
+      "city": "多気郡多気町",
+      "pokemon": "グルトン",
+      "pokemon_list": [
+        "グルトン",
+        "ゴマゾウ",
+        "ミジュマル"
+      ],
+      "created_at": "2026-10-04T15:55:04.4151+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/b6f672c1-1dbf-4161-854d-ac2b8252f792.jpg",
+      "display_name": "ぴぃ",
+      "photo_rank": "first_ever"
+    }
+  },
+  {
+    "id": "photo-296-dcb57f16",
+    "type": "latest_photo",
+    "title": "最新写真：三重県/度会町",
+    "url": "https://data.pokefuta.com/manholes/296/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "296",
+      "title": "三重県/度会町",
+      "pref": "三重県",
+      "city": "度会郡度会町",
+      "pokemon": "ネンドール",
+      "pokemon_list": [
+        "ネンドール",
+        "マリル",
+        "ミジュマル"
+      ],
+      "created_at": "2026-10-04T15:55:31.33195+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/9e2ab260-beae-4827-ba33-0365dbd817b4.jpg",
       "display_name": "ぴぃ",
       "photo_rank": "first_ever"
     }
