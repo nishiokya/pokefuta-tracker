@@ -37,6 +37,7 @@ on:
       - 'apps/scraper/generate_top_feed.py' # top page community feed generator
       - 'apps/scraper/prefectures.py' # shared prefecture names and URL slugs
       - 'apps/scraper/display_names.py' # canonical manhole names used by every page generator
+      - 'apps/scraper/manhole_tile_image.py' # _lid / _latest choice for small tiles (prefecture + tag pages)
       - 'apps/scraper/prefecture_completion.py' # shared photo-completion rollup (prefectures + summary)
       - 'docs/**'     # dataset changes copied into dist/
       - 'dataset/prefecture_trivia*.json' # generated trivia and editorial sources
