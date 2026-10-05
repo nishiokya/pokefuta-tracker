@@ -234,5 +234,72 @@ class ApplyPlaceLabelsTest(unittest.TestCase):
         self.assertEqual(entries[0]["name"], "ポケふた")
 
 
+class RegularTiersTest(unittest.TestCase):
+    # 本番の線は secret なので、テストは別の線（窓5週・👑3週・常連2週）で確かめる
+    RULE = MODULE.BadgeRule(5, 3, 2)
+    # 2026-10-07(水) 12:00 JST。今週の月曜は 10-05、窓の始まりは 4週前の 09-07
+    NOW = MODULE.datetime(2026, 10, 7, 3, 0, tzinfo=MODULE.timezone.utc)
+    IDS = {"auth-a": "pub-a", "auth-b": "pub-b", "auth-c": "pub-c"}
+
+    @staticmethod
+    def visit(user: str, jst: str) -> dict:
+        return {"user_id": user, "created_at": f"{jst}+09:00"}
+
+    def tiers(self, visits: list[dict]) -> dict:
+        return MODULE.compute_regular_tiers(visits, self.IDS, self.NOW, self.RULE)
+
+    def test_parse_rule(self) -> None:
+        self.assertEqual(MODULE.BadgeRule(5, 3, 2), MODULE.parse_badge_rule(" 5:3:2\n"))
+        for raw in (None, "", "5:3", "a:b:c", "5:2:3", "2:3:1", "5:3:0"):
+            self.assertIsNone(MODULE.parse_badge_rule(raw), raw)
+
+    def test_window_starts_on_monday_in_jst(self) -> None:
+        start = MODULE.regular_window_start(self.NOW, self.RULE)
+        self.assertEqual("2026-09-07T00:00:00+09:00", start.isoformat())
+
+    def test_counts_weeks_not_posts(self) -> None:
+        # 1日に50枚上げても1週。まとめて投稿した人には付かない
+        bulk = [self.visit("auth-a", "2026-09-20T10:00:00")] * 50
+        self.assertEqual({}, self.tiers(bulk))
+
+    def test_tiers(self) -> None:
+        visits = [
+            self.visit("auth-a", "2026-09-14T10:00:00"),
+            self.visit("auth-a", "2026-10-05T10:00:00"),
+            self.visit("auth-b", "2026-09-07T00:00:00"),
+            self.visit("auth-b", "2026-09-21T10:00:00"),
+            self.visit("auth-b", "2026-10-06T10:00:00"),
+        ]
+        self.assertEqual({"pub-a": "regular", "pub-b": "crown"}, self.tiers(visits))
+
+    def test_week_boundary_is_monday_in_jst(self) -> None:
+        # 日曜 23:30 JST と月曜 00:30 JST は別の週（UTC ではどちらも日曜）
+        visits = [
+            self.visit("auth-a", "2026-09-27T23:30:00"),
+            self.visit("auth-a", "2026-09-28T00:30:00"),
+        ]
+        self.assertEqual({"pub-a": "regular"}, self.tiers(visits))
+
+    def test_posts_before_window_do_not_count(self) -> None:
+        visits = [
+            self.visit("auth-a", "2026-09-06T23:59:00"),
+            self.visit("auth-a", "2026-09-21T10:00:00"),
+        ]
+        self.assertEqual({}, self.tiers(visits))
+
+    def test_unknown_user_and_operator_are_skipped(self) -> None:
+        operator = next(iter(MODULE.REGULAR_EXCLUDED_PUBLIC_IDS))
+        ids = {**self.IDS, "auth-op": operator}
+        weeks = ["2026-09-14", "2026-09-21", "2026-09-28"]
+        visits = [self.visit(u, f"{d}T10:00:00") for u in ("auth-op", "auth-x") for d in weeks]
+        self.assertEqual({}, MODULE.compute_regular_tiers(visits, ids, self.NOW, self.RULE))
+
+    def test_output_has_only_public_ids(self) -> None:
+        visits = [self.visit("auth-c", f"{d}T10:00:00") for d in ("2026-09-14", "2026-09-28")]
+        result = self.tiers(visits)
+        self.assertEqual(["pub-c"], list(result))
+        self.assertNotIn("auth-c", json.dumps(result))
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -8,12 +8,14 @@ Supabase を読む構成をやめ、GitHub Pages (data.pokefuta.com) 配信の
 生成物:
   docs/api/manholes.json   … manhole 全件 + 写真有無（匿名ユーザー向け形状）
   docs/api/site-stats.json … /api/site-stats と同形状のサイト統計
+  docs/api/regulars.json   … トップの投稿者に付ける 👑 / 常連 の判定（公開ID → 段階）
 
 実行元: .github/workflows/import-manhole-photos.yml（日次）
 
 環境変数:
   SUPABASE_URL              例 https://xxxx.supabase.co
   SUPABASE_SERVICE_ROLE_KEY service role キー
+  REGULAR_BADGE_RULE        常連バッジの判定の線（secret。無ければ regulars.json を更新しない）
 """
 
 from __future__ import annotations
@@ -24,6 +26,7 @@ import struct
 import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from typing import NamedTuple
 
 import requests
 
@@ -372,6 +375,96 @@ def build_site_stats() -> dict:
     }
 
 
+# --- 常連バッジ（docs/api/regulars.json） ---
+#
+# トップ「最新の投稿」の投稿者名に付ける 👑 / 常連 の判定。直近の何週に公開の投稿が
+# あったかで決める。**判定の線（何週中何週）は公開しない**ので、コードには持たず
+# secret `REGULAR_BADGE_RULE`（"<窓の週数>:<👑の週数>:<常連の週数>"）から読む。
+# 出力にも線は書かない。
+#
+# アプリが毎リクエスト集計すると Amplify の SSR 実行時間が増えるので、ここで日次に
+# 焼いて data.pokefuta.com から配る。
+JST = timezone(timedelta(hours=9))
+# 運営者のアカウント（app_user.id）。自分のサイトで自分にバッジを出さない
+REGULAR_EXCLUDED_PUBLIC_IDS = frozenset({
+    "08c2bb09-8aa0-44f7-8287-7b332a589f33",
+})
+
+
+class BadgeRule(NamedTuple):
+    window_weeks: int
+    crown_weeks: int
+    regular_weeks: int
+
+
+def parse_badge_rule(raw: str | None) -> BadgeRule | None:
+    """'5:3:2' のような値を読む。壊れていれば None（バッジを更新しない）。"""
+    try:
+        window, crown, regular = (int(x) for x in (raw or "").strip().split(":"))
+    except ValueError:
+        return None
+    if not (0 < regular <= crown <= window):
+        return None
+    return BadgeRule(window, crown, regular)
+
+
+def regular_window_start(now: datetime, rule: BadgeRule) -> datetime:
+    """集計窓の始まり（今週を含めて窓の週数ぶん遡った月曜 00:00 JST）。"""
+    today = now.astimezone(JST).date()
+    monday = today - timedelta(days=today.weekday())
+    start = monday - timedelta(weeks=rule.window_weeks - 1)
+    return datetime(start.year, start.month, start.day, tzinfo=JST)
+
+
+def compute_regular_tiers(
+    visits: list[dict], public_id_by_auth: dict[str, str], now: datetime, rule: BadgeRule
+) -> dict[str, str]:
+    """公開の投稿があった週を数え、公開ID → "crown" / "regular" を返す。
+
+    visits は公開・写真ありに絞り込み済みの {user_id, created_at}。
+    週は投稿日（created_at）の JST・月曜始まりで数える。撮影日ではなく「サイトに来た週」を見たいため。
+    """
+    start = regular_window_start(now, rule)
+    weeks: dict[str, set] = {}
+    for v in visits:
+        public_id = public_id_by_auth.get(v.get("user_id") or "")
+        if not public_id or public_id in REGULAR_EXCLUDED_PUBLIC_IDS:
+            continue
+        created = datetime.fromisoformat(str(v["created_at"]).replace("Z", "+00:00"))
+        if created < start or created > now:
+            continue
+        day = created.astimezone(JST).date()
+        weeks.setdefault(public_id, set()).add(day - timedelta(days=day.weekday()))
+    tiers: dict[str, str] = {}
+    for public_id, ws in weeks.items():
+        if len(ws) >= rule.crown_weeks:
+            tiers[public_id] = "crown"
+        elif len(ws) >= rule.regular_weeks:
+            tiers[public_id] = "regular"
+    return dict(sorted(tiers.items()))
+
+
+def build_regulars(rule: BadgeRule) -> dict:
+    now = datetime.now(timezone.utc)
+    start = regular_window_start(now, rule)
+    visits = fetch_all(
+        "visit", {
+            "select": "user_id,created_at,photo!inner(id)",
+            "is_public": "eq.true",
+            "created_at": f"gte.{start.isoformat(timespec='seconds')}",
+            "order": "id.asc",
+        }
+    )
+    # 公開 JSON に auth UID を出さないため、ここで公開ID（app_user.id）に置き換える
+    users = fetch_all("app_user", {"select": "id,auth_uid", "order": "id.asc"})
+    public_id_by_auth = {u["auth_uid"]: u["id"] for u in users if u.get("auth_uid")}
+    return {
+        "success": True,
+        "generated_at": now.isoformat(timespec="seconds"),
+        "users": compute_regular_tiers(visits, public_id_by_auth, now, rule),
+    }
+
+
 def write_manholes_json(payload: dict, path: Path) -> None:
     """1マンホール1行で書き出し、git diff を読みやすくする。payload は変更しない。"""
     head_obj = {k: v for k, v in payload.items() if k != "manholes"}
@@ -404,6 +497,27 @@ def main() -> None:
     print(
         "docs/api/site-stats.json: "
         f"users={stats['users']} posts={stats['posts']} manholes={stats['manholes']}"
+    )
+
+    # バッジは飾りなので、取れなくても蓋一覧・統計の更新を止めない（前日の regulars.json が残る）
+    rule = parse_badge_rule(os.environ.get("REGULAR_BADGE_RULE"))
+    if rule is None:
+        print("::warning::REGULAR_BADGE_RULE が無いか壊れているので docs/api/regulars.json を更新しません",
+              file=sys.stderr)
+        return
+    try:
+        regulars = build_regulars(rule)
+    except requests.RequestException as exc:
+        print(f"::warning::docs/api/regulars.json を更新できませんでした: {exc}", file=sys.stderr)
+        return
+    (OUT_DIR / "regulars.json").write_text(
+        json.dumps(regulars, ensure_ascii=False, sort_keys=True, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    tiers = list(regulars["users"].values())
+    print(
+        "docs/api/regulars.json: "
+        f"crown={tiers.count('crown')} regular={tiers.count('regular')}"
     )
 
 
