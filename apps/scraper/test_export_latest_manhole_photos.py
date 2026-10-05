@@ -79,6 +79,14 @@ class PhotoRankTest(unittest.TestCase):
         photos = [_photo("old", shot_at="2026-01-01T00:00:00Z"), _photo("new", shot_at="2026-03-01T00:00:00Z")]
         self.assertEqual([p["id"] for p in export.select_gallery_photos(photos, 5)], ["new", "old"])
 
+    def test_lid_is_exported_on_the_representative(self):
+        base = "https://images.example.com"
+        photo = _scored("ok", 0.5, crop=[0.05, 0, 0.8, 1])
+        photo["ai_tags"]["lid"] = [0.2, 0.25, 0.7, 0.75]
+        self.assertEqual(export.to_photo_entry(photo, base, {})["lid"], [0.2, 0.25, 0.7, 0.75])
+        photo["ai_tags"]["lid"] = [0.7, 0.25, 0.2, 0.75]
+        self.assertIsNone(export.to_photo_entry(photo, base, {})["lid"])
+
     def test_crop_is_exported_only_when_well_formed(self):
         base = "https://images.example.com"
         ok = _scored("ok", 0.5, crop=[0.05, 0, 0.8, 1])

@@ -238,9 +238,9 @@ def redact_url(raw_url: str) -> str:
     return urlunparse((parsed.scheme, parsed.netloc, parsed.path, "", "", ""))
 
 
-def crop_box(record: dict[str, Any]) -> list[float] | None:
-    """export が書いた crop（[x0, y0, x1, y1]、0〜1、EXIF の回転を戻した向き）。無い・形が違えば None。"""
-    crop = record.get("crop")
+def crop_box(record: dict[str, Any], key: str = "crop") -> list[float] | None:
+    """export が書いた crop / lid（[x0, y0, x1, y1]、0〜1、EXIF の回転を戻した向き）。無い・形が違えば None。"""
+    crop = record.get(key)
     if not isinstance(crop, list) or len(crop) != 4:
         return None
     if not all(isinstance(v, (int, float)) and not isinstance(v, bool) and 0 <= v <= 1 for v in crop):
@@ -266,6 +266,32 @@ def crop_to_square(image: Image.Image, size: int, crop: list[float] | None = Non
         top = (height - crop_size) // 2
     cropped = image.crop((left, top, left + crop_size, top + crop_size))
     return cropped.resize((size, size), Image.Resampling.LANCZOS)
+
+
+LID_TILE_SIZE = 360
+LID_TILE_MAX_ZOOM = 3.0
+LID_TILE_BACKGROUND = (246, 241, 230)
+
+
+def lid_tile(image: Image.Image, lid: list[float], size: int = LID_TILE_SIZE) -> Image.Image:
+    """蓋で正方形をいっぱいにした小さい画像（一覧のタイル用）。
+
+    蓋の枠の長いほうの辺 × 1.04 を一辺にし、蓋の中心を真ん中に置く。遠くの小さい蓋は
+    短辺の 1/LID_TILE_MAX_ZOOM までしか寄らない（それ以上はぼやける）。写真の外にはみ出した所は
+    地の色で埋める。写真館のマイ旅のスタンプ（pokefuta src/lib/photo-ai-tags.ts の photoLidZoom）と同じ決め方。
+    """
+    image = ImageOps.exif_transpose(image).convert("RGB")
+    width, height = image.size
+    cx = (lid[0] + lid[2]) / 2 * width
+    cy = (lid[1] + lid[3]) / 2 * height
+    side = max((lid[2] - lid[0]) * width, (lid[3] - lid[1]) * height) * 1.04
+    side = max(side, min(width, height) / LID_TILE_MAX_ZOOM)
+    left, top = round(cx - side / 2), round(cy - side / 2)
+    box = (left, top, left + round(side), top + round(side))
+    tile = Image.new("RGB", (box[2] - box[0], box[3] - box[1]), LID_TILE_BACKGROUND)
+    tile.paste(image.crop((max(box[0], 0), max(box[1], 0), min(box[2], width), min(box[3], height))),
+               (max(-box[0], 0), max(-box[1], 0)))
+    return tile.resize((size, size), Image.Resampling.LANCZOS)
 
 
 def download_image(session: requests.Session, url: str, timeout: int) -> Image.Image:
@@ -339,6 +365,14 @@ def main() -> int:
             image = download_image(session, url, args.timeout)
             cropped = crop_to_square(image, args.size, crop_box(record))
             cropped.save(output_path, "JPEG", quality=args.quality, optimize=True, progressive=True)
+            # 一覧の小さいタイル用に、蓋で正方形をいっぱいにした画像も作る。蓋の枠が無ければ古いものを消す
+            # （ページは {id}_lid.jpeg が無ければ {id}_latest.jpeg を使う）
+            lid_path = output_dir / f"{manhole_id}_lid.jpeg"
+            lid = crop_box(record, "lid")
+            if lid:
+                lid_tile(image, lid).save(lid_path, "JPEG", quality=args.quality, optimize=True, progressive=True)
+            elif lid_path.exists():
+                lid_path.unlink()
             imported += 1
             print(f"imported id={manhole_id} -> {output_path}")
         except Exception as exc:

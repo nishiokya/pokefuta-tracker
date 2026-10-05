@@ -75,6 +75,7 @@ data.pokefuta.com（tracker）と pokefuta.com のマンホール詳細ページ
 ### 取り込み拡張（tracker repo: `apps/tools/import_latest_manhole_photos.py`）
 
 - 代表: 現行どおり `dataset/manhole/image/{id}_latest.jpeg`。
+- 代表のタイル用: `dataset/manhole/image/{id}_lid.jpeg`（360px）。エントリの `lid`（`ai_tags.lid`、蓋の枠）に合わせて拡大し、正方形を蓋でいっぱいにする（蓋の長い辺 × 1.04、最大 3 倍、はみ出しは地の色）。蓋の枠が無ければ作らず、古いものは消す。都道府県ページ・タグページの小さいタイルはこれを使い、無ければ `_latest`（`apps/scraper/manhole_tile_image.py`）
 - ギャラリー: `dataset/manhole/image/{id}_{photo_idの先頭8桁(hex)}.jpeg`。代表と重複する photo_id はスキップ。既存ファイルは再ダウンロードしない（冪等）。切り抜きの決め方を変えたときは、手動実行で `refresh_gallery` を選ぶと既存のギャラリー画像も切り直す。
 - **リポジトリ肥大対策**: ギャラリー画像も代表と同じスクエア720px・JPEG品質82に縮小して保存。正方形はエントリの `crop` があればその位置（蓋の枠に寄せた位置）、無ければ真ん中。エクスポートから外れた photo_id のファイルは自動削除（`--limit` 指定時は削除しない）。
 
