@@ -185,7 +185,7 @@ def build_top_feed(
 
     stats = {
         key: site_stats[key]
-        for key in ("manholes", "manholes_with_photos", "posts")
+        for key in ("manholes", "manholes_with_photos", "public_posts")
         if isinstance(site_stats.get(key), int)
     }
 

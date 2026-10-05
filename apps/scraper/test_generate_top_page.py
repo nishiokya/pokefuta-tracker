@@ -80,7 +80,7 @@ class Fixture:
         self.photos = tmp / "photos.json"
         self.photos.write_text(json.dumps({"photos": photo_map}), encoding="utf-8")
         self.stats = tmp / "stats.json"
-        self.stats.write_text(json.dumps({"posts": 1234, "manholes_with_photos": 15}), encoding="utf-8")
+        self.stats.write_text(json.dumps({"posts": 1500, "public_posts": 1234, "manholes_with_photos": 15}), encoding="utf-8")
         self.events = tmp / "events.json"
         self.events.write_text(json.dumps(events or [], ensure_ascii=False), encoding="utf-8")
         self.metadata = tmp / "meta.json"
@@ -159,6 +159,11 @@ class GeneratedHtmlTest(unittest.TestCase):
         for label in ("地図で探す", "都道府県から探す", "ポケモンから探す"):
             self.assertIn(label, hero)
         self.assertIn('href="map.html"', hero)
+
+    def test_hero_photo_count_excludes_private_posts(self) -> None:
+        hero = _block(Fixture(self.tmp).html(), "hero")
+        self.assertIn("<dd>1,234</dd>", hero)
+        self.assertNotIn("1,500", hero)
 
     def test_hero_photos_are_not_fetched_at_desktop_width(self) -> None:
         """デスクトップは大地図を出すので、モザイクの写真は <picture> の空画像に差し替わる。"""

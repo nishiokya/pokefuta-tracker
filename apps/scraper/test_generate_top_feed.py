@@ -321,6 +321,7 @@ class BuildTopFeedTests(unittest.TestCase):
             "manholes": 476,
             "manholes_with_photos": 159,
             "posts": 213,
+            "public_posts": 160,
             "posts_last_7d": 3,
             "success": True,
             "generated_at": "2026-07-06T21:53:47+00:00",
@@ -328,7 +329,7 @@ class BuildTopFeedTests(unittest.TestCase):
         feed = top_feed.build_top_feed({}, {}, site_stats, image_dir=self.image_dir)
         self.assertEqual(
             feed["stats"],
-            {"manholes": 476, "manholes_with_photos": 159, "posts": 213},
+            {"manholes": 476, "manholes_with_photos": 159, "public_posts": 160},
         )
 
 

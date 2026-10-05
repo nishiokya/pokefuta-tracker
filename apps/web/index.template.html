@@ -529,8 +529,8 @@
 
     function renderCommunityStats(stats) {
       if (!stats) return;
-      if (typeof stats.posts === 'number' && stats.posts > 0) {
-        setNum('stat-photos', stats.posts);
+      if (typeof stats.public_posts === 'number' && stats.public_posts > 0) {
+        setNum('stat-photos', stats.public_posts);
         var divider = document.getElementById('stat-photos-divider');
         var tile = document.getElementById('stat-photos-tile');
         if (divider) divider.hidden = false;

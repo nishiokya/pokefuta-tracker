@@ -501,7 +501,7 @@ def mobile_only(img: str) -> str:
 def render_hero(data: TopData) -> str:
     photos = select_hero_photos(data.photos)
     top_pokemon = [e.name for e in data.popular_pokemon[:3]] or [n for n, _ in data.pokemon_counts.most_common(3)]
-    posts = data.stats.get("posts") if isinstance(data.stats.get("posts"), int) else None
+    posts = data.stats.get("public_posts") if isinstance(data.stats.get("public_posts"), int) else None
     stats = [
         (f"{data.total:,}", "枚のポケふた"),
         (str(len(data.installed_prefectures)), "都道府県に設置"),
