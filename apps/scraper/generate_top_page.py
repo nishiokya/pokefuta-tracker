@@ -763,6 +763,8 @@ def render_pref(data: TopData) -> str:
         f"設置されています。地域ごとに北から並べ、県名の横に設置枚数を載せています。</p>"
         f'<div class="home-regions">{"".join(regions)}</div>'
         f"{note}"
+        '<p class="home-pref-note">市区町村ごとの設置枚数は'
+        '<a href="municipalities/">ポケふたが多い市区町村ランキング</a>にまとめています。</p>'
         f'<a class="home-more" href="prefectures/" onclick="{_track("click_pref_link", surface="top_prefecture_list", prefecture="all")}">'
         "47都道府県の一覧ページへ</a>"
         "</section>"

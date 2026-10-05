@@ -292,6 +292,8 @@ class GeneratedHtmlTest(unittest.TestCase):
         self.assertIn("2026年9月時点", note)
         self.assertIn("北海道・東北", block)
         self.assertIn('href="prefectures/"', block)
+        # 市区町村ページは TOP からもたどれるようにする
+        self.assertIn('<a href="municipalities/">ポケふたが多い市区町村ランキング</a>', block)
 
     def test_new_releases_only_appear_when_recent(self) -> None:
         self.assertNotIn("home-newrelease", Fixture(self.tmp).html())
