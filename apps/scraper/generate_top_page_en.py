@@ -226,7 +226,7 @@ def render_head(data: ja.TopData, en: English, indent: str) -> str:
 def render_hero(data: ja.TopData, en: English) -> str:
     photos = ja.select_hero_photos(data.photos)
     popular = [en.pokemon_by_slug.get(e.slug, e.name) for e in data.popular_pokemon[:3]]
-    posts = data.stats.get("posts") if isinstance(data.stats.get("posts"), int) else None
+    posts = data.stats.get("public_posts") if isinstance(data.stats.get("public_posts"), int) else None
     stats = [
         (f"{data.total:,}", "Poké Lids"),
         (str(len(data.installed_prefectures)), "Prefectures"),
