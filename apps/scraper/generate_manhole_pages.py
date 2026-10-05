@@ -802,9 +802,26 @@ def generate_html(
     if _ogp_path is not None and _ogp_path.exists():
         og_image = f"{BASE_URL}assets/ogp/manholes/{manhole_id}.png"
 
-    # HERO card: region label
-    region_parts = [p for p in [prefecture, city] if p]
-    region_html = "".join(f"<span>{escape(r)}</span>" for r in region_parts)
+    # HERO card: region label（県・市区町村ページへのパンくずを兼ねる。JSON-LD の BreadcrumbList と同じ並び）
+    region_parts: list[str] = []
+    breadcrumb_items: list[dict] = [{"name": "全国マップ", "item": BASE_URL}]
+    if prefecture:
+        if pref_page_slug:
+            region_parts.append(f'<a href="{escape(pref_url)}">{escape(prefecture)}</a>')
+            breadcrumb_items.append({"name": prefecture, "item": f"{BASE_URL}prefectures/{quote(pref_page_slug)}/"})
+        else:
+            region_parts.append(f"<span>{escape(prefecture)}</span>")
+    if city:
+        if municipality_path:
+            region_parts.append(f'<a href="{escape(municipality_path)}">{escape(municipality_label(manhole))}</a>')
+            breadcrumb_items.append({
+                "name": municipality_label(manhole),
+                "item": f"{BASE_URL}{municipality_path.lstrip('/')}",
+            })
+        else:
+            region_parts.append(f"<span>{escape(city)}</span>")
+    breadcrumb_items.append({"name": h1})
+    region_html = "".join(region_parts)
     pref_en = PREFECTURE_EN.get(prefecture, "")
     region_en_html = f"<div class='hero-region-en'>{escape(pref_en)}</div>" if pref_en else ""
 
@@ -967,7 +984,14 @@ def generate_html(
         if photo_image_url:
             jsonld["image"] = photo_image_url
 
-    jsonld_str = json.dumps(jsonld, ensure_ascii=False, indent=2)
+    breadcrumb_jsonld = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {"@type": "ListItem", "position": i, **entry} for i, entry in enumerate(breadcrumb_items, 1)
+        ],
+    }
+    jsonld_str = json.dumps([jsonld, breadcrumb_jsonld], ensure_ascii=False, indent=2)
 
     # Links grid: external + internal + photo upload (移設統合)
     link_cards: list[str] = []
@@ -1233,7 +1257,7 @@ def generate_html(
 <div class="hero-card">
   {hero_photo_html}
   <div class="hero-body">
-    <div class="hero-region">{region_html}</div>
+    <nav class="hero-region" aria-label="パンくず">{region_html}</nav>
     {region_en_html}
     <h1 class="hero-title">{escape(h1)}</h1>
     {pokemon_tags_html}
@@ -1600,8 +1624,17 @@ def generate_html(
       letter-spacing: 0.02em;
     }}
 
-    .hero-region span + span::before {{
-      content: " › ";
+    .hero-region > * + *::before {{
+      content: "›";
+      display: inline-block; /* リンクの下線を区切り記号に付けない */
+      margin: 0 .35em;
+    }}
+
+    .hero-region a {{
+      color: inherit;
+      text-decoration: underline;
+      text-decoration-color: #ccc;
+      text-underline-offset: 2px;
     }}
 
     h1.hero-title {{
