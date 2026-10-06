@@ -848,7 +848,13 @@ def _link_municipalities(text: str, links: dict[str, str]) -> str:
         if city in linked:
             return label
         linked.add(city)
-        return f'<a href="{_escape_attr(links[city])}">{label}</a>'
+        # data-track が無いと外側の県カード（prefectures_index_click）として記録されるので、
+        # 県ページの市区町村リンクと同じイベント名で、出どころを surface で分ける
+        path = _escape_attr(links[city])
+        return (
+            f'<a href="{path}" data-track="prefecture_municipality_click" '
+            f'data-surface="prefectures_index_trivia" data-destination="{path}">{label}</a>'
+        )
 
     return pattern.sub(_sub, escape(text))
 

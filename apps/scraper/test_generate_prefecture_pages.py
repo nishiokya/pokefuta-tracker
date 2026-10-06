@@ -1391,8 +1391,10 @@ class TriviaMunicipalityLinkTest(unittest.TestCase):
     def test_city_names_link_to_municipality_pages(self) -> None:
         html = self._facts([{"type": "municipality_concentration",
                              "text": "最多は北九州の5枚で、次いで太宰府の3枚です"}])
-        self.assertIn('<li>最多は<a href="/municipalities/fukuoka/kitakyushu/">北九州</a>の5枚で、'
-                      '次いで<a href="/municipalities/fukuoka/dazaifu/">太宰府</a>の3枚です</li>', html)
+        self.assertIn('<li>最多は<a href="/municipalities/fukuoka/kitakyushu/" '
+                      'data-track="prefecture_municipality_click" data-surface="prefectures_index_trivia" '
+                      'data-destination="/municipalities/fukuoka/kitakyushu/">北九州</a>の5枚で、次いで', html)
+        self.assertIn('data-destination="/municipalities/fukuoka/dazaifu/">太宰府</a>の3枚です</li>', html)
 
     def test_city_without_page_stays_plain_text(self) -> None:
         html = self._facts([{"type": "municipality_concentration",
@@ -1408,7 +1410,7 @@ class TriviaMunicipalityLinkTest(unittest.TestCase):
     def test_text_is_still_escaped(self) -> None:
         html = self._facts([{"type": "single_municipality", "text": "県内<2>枚のポケふたはすべて太宰府にあります"}])
         self.assertIn("県内&lt;2&gt;枚", html)
-        self.assertIn('<a href="/municipalities/fukuoka/dazaifu/">太宰府</a>', html)
+        self.assertIn('data-destination="/municipalities/fukuoka/dazaifu/">太宰府</a>', html)
 
 
 if __name__ == "__main__":
