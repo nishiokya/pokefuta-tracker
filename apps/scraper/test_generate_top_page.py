@@ -63,7 +63,8 @@ def _records() -> list[dict]:
 
 class Fixture:
     def __init__(self, tmp: Path, *, photos: bool = True, events: list[dict] | None = None,
-                 records: list[dict] | None = None) -> None:
+                 records: list[dict] | None = None, representatives: dict | None = None,
+                 drop_photos: tuple[str, ...] = ()) -> None:
         self.records = records or _records()
         self.manholes = tmp / "pokefuta.ndjson"
         self.manholes.write_text("\n".join(json.dumps(r, ensure_ascii=False) for r in self.records), encoding="utf-8")
@@ -77,8 +78,15 @@ class Fixture:
                     "manhole_id": int(record["id"]),
                     "created_at": f"2026-09-{(n % 25) + 1:02d}T01:00:00+00:00",
                 }
+        for mid in drop_photos:  # 写真が非公開・削除になった（_latest.jpeg は残る）
+            photo_map.pop(mid, None)
         self.photos = tmp / "photos.json"
         self.photos.write_text(json.dumps({"photos": photo_map}), encoding="utf-8")
+        # 本物の dataset/pokemon_representatives.json に左右されないよう、指定が無ければ存在しないパスにする
+        self.representatives = tmp / "representatives.json"
+        if representatives is not None:
+            self.representatives.write_text(
+                json.dumps({"representatives": representatives}, ensure_ascii=False), encoding="utf-8")
         self.stats = tmp / "stats.json"
         self.stats.write_text(json.dumps({"posts": 1500, "public_posts": 1234, "manholes_with_photos": 15}), encoding="utf-8")
         self.events = tmp / "events.json"
@@ -92,7 +100,7 @@ class Fixture:
     def data(self, today: date = TODAY) -> module.TopData:
         return module.load_data(
             self.manholes, self.photos, self.stats, self.events, self.image_dir,
-            today=today, pokemon_metadata=self.metadata,
+            today=today, pokemon_metadata=self.metadata, representatives=self.representatives,
         )
 
     def html(self, today: date = TODAY) -> str:
@@ -310,6 +318,18 @@ class GeneratedHtmlTest(unittest.TestCase):
         self.assertIn(">10枚</span>", block)
         self.assertNotIn("ローカルActs", block)
         self.assertIn('href="pokemon/"', block)
+
+    def test_popular_pokemon_card_uses_the_representative_photo(self) -> None:
+        # ピカチュウ（1, 3, …, 19）の新しい写真は 19。人が選んだ代表 5 を優先する
+        self.assertIn('manhole/image/19_latest.jpeg', _block(Fixture(self.tmp).html(), "pokemon"))
+        block = _block(Fixture(self.tmp, representatives={"ピカチュウ": 5}).html(), "pokemon")
+        self.assertIn('manhole/image/5_latest.jpeg', block)
+        self.assertNotIn('manhole/image/19_latest.jpeg', block)
+
+    def test_representative_without_a_public_photo_falls_back_to_newest(self) -> None:
+        block = _block(Fixture(self.tmp, representatives={"ピカチュウ": 5}, drop_photos=("5",)).html(), "pokemon")
+        self.assertNotIn('manhole/image/5_latest.jpeg', block)
+        self.assertIn('manhole/image/19_latest.jpeg', block)
 
     def test_apply_is_idempotent_and_leaves_tag_chips_alone(self) -> None:
         data = Fixture(self.tmp).data()

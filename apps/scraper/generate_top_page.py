@@ -14,7 +14,8 @@
 - photos    … 新着・注目の写真（地域が偏らないよう地方ごとに順番に選ぶ）
 - events    … 開催中イベント（上位3件＋残りは折りたたみ）
 - pref      … 設置のある都道府県を地方別に、未設置の県は短い注記に分ける
-- pokemon   … 設置の多いポケモン（写真つきカード。/pokemon/ と同じ突き合わせ規則）
+- pokemon   … 設置の多いポケモン（写真つきカード。/pokemon/ と同じ突き合わせ規則。写真は
+              dataset/pokemon_representatives.json の代表を優先し、無ければ新しい投稿）
 
 写真はローカルミラー `dataset/manhole/image/{id}_latest.jpeg`（720×720）が
 存在する投稿だけを使い、外部画像は埋め込まない。件数はすべて同じ生成時データから出す。
@@ -42,6 +43,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 try:
     from apps.scraper.display_names import compose_display_name
+    from apps.scraper.generate_pokemon_index_page import load_representatives
     from apps.scraper.generate_pokemon_pages import build_pokemon_index, load_pokemon_metadata
     from apps.scraper.generate_tag_pages import load_records
     from apps.scraper.photo_caption import JST, format_photo_date, to_jst_date
@@ -51,6 +53,7 @@ except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
     from display_names import compose_display_name
+    from generate_pokemon_index_page import load_representatives
     from generate_pokemon_pages import build_pokemon_index, load_pokemon_metadata
     from generate_tag_pages import load_records
     from photo_caption import JST, format_photo_date, to_jst_date
@@ -105,6 +108,7 @@ PREF_COORDS: dict[str, tuple[float, float]] = {
 }
 
 DEFAULT_POKEMON_METADATA = ROOT / "docs" / "pokemon_metadata.json"
+DEFAULT_REPRESENTATIVES = ROOT / "dataset" / "pokemon_representatives.json"
 POPULAR_POKEMON_LIMIT = 5
 FORM_PREFIX = {"alola": "アローラ", "galar": "ガラル", "hisui": "ヒスイ", "paldea": "パルデア"}
 
@@ -149,21 +153,29 @@ class PokemonEntry:
     name: str
     slug: str
     manhole_ids: list[str]
+    representative_id: str = ""  # 人が選んだ代表のマンホール（無ければ空）
 
     @property
     def href(self) -> str:
         return f"pokemon/{quote(self.slug, safe='')}/"
 
 
-def build_popular_pokemon(records: list[dict], metadata_path: Path | None, limit: int = POPULAR_POKEMON_LIMIT) -> list[PokemonEntry]:
+def build_popular_pokemon(
+    records: list[dict],
+    metadata_path: Path | None,
+    limit: int = POPULAR_POKEMON_LIMIT,
+    representatives_path: Path | None = DEFAULT_REPRESENTATIVES,
+) -> list[PokemonEntry]:
     """設置枚数の多いポケモン。枚数と行き先は /pokemon/<slug>/ と同じ突き合わせ規則で出す。"""
     if not metadata_path or not metadata_path.exists():
         return []
-    index = build_pokemon_index(records, load_pokemon_metadata(metadata_path))
+    metadata = load_pokemon_metadata(metadata_path)
+    index = build_pokemon_index(records, metadata)
+    reps = load_representatives(representatives_path, metadata) if representatives_path else {}
     entries = []
     for slug, (meta, manholes) in index.items():
         name = FORM_PREFIX.get(meta.get("form") or "", "") + str((meta.get("names") or {}).get("ja", ""))
-        entries.append(PokemonEntry(name, slug, [str(m.get("id")) for m in manholes]))
+        entries.append(PokemonEntry(name, slug, [str(m.get("id")) for m in manholes], reps.get(slug, "")))
     entries.sort(key=lambda e: (-len(e.manhole_ids), e.slug))
     return entries[:limit]
 
@@ -281,6 +293,7 @@ def load_data(
     image_dir: Path = DEFAULT_IMAGE_DIR,
     today: date | None = None,
     pokemon_metadata: Path | None = DEFAULT_POKEMON_METADATA,
+    representatives: Path | None = DEFAULT_REPRESENTATIVES,
 ) -> TopData:
     today = today or datetime.now(JST).date()
     records = [r for r in load_records(manholes) if is_installed(r)]
@@ -293,7 +306,7 @@ def load_data(
         today=today,
         tag_meta=load_tag_meta(),
         tag_counts=count_tags(records),
-        popular_pokemon=build_popular_pokemon(records, pokemon_metadata),
+        popular_pokemon=build_popular_pokemon(records, pokemon_metadata, representatives_path=representatives),
     )
 
 
@@ -771,17 +784,28 @@ def render_pref(data: TopData) -> str:
     )
 
 
+def pick_pokemon_photo(entry: PokemonEntry, photos: list[Photo], used: set[str]) -> Photo | None:
+    """ポケモンのカードに出す1枚。人が選んだ代表があればそれ、無ければ新しい順。
+
+    photos は今公開されている投稿（latest-manhole-photos.json）のうち画像がある分だけなので、
+    代表の写真が非公開・削除になったら自動で新しい順に戻る。
+    同じマンホールに複数のポケモンがいても、カードごとに別の写真を使う（代表は人が選んだので優先）。
+    """
+    ids = set(entry.manhole_ids)
+    candidates = [p for p in photos if p.manhole_id in ids]
+    rep = next((p for p in candidates if p.manhole_id == entry.representative_id), None)
+    photo = rep or next((p for p in candidates if p.manhole_id not in used), candidates[0] if candidates else None)
+    if photo:
+        used.add(photo.manhole_id)
+    return photo
+
+
 def render_pokemon(data: TopData) -> str:
     counts = data.pokemon_counts
     cards = []
     used: set[str] = set()
     for entry in data.popular_pokemon:
-        ids = set(entry.manhole_ids)
-        # 新しい順。同じマンホールに複数のポケモンがいても、カードごとに別の写真を使う
-        candidates = [p for p in data.photos if p.manhole_id in ids]
-        photo = next((p for p in candidates if p.manhole_id not in used), candidates[0] if candidates else None)
-        if photo:
-            used.add(photo.manhole_id)
+        photo = pick_pokemon_photo(entry, data.photos, used)
         media = (
             f'<img src="{escape(photo.src)}" alt="{escape(entry.name)}のポケふた（{escape(photo.prefecture)}{escape(photo.place)}）" '
             f'width="{PHOTO_SIZE}" height="{PHOTO_SIZE}" loading="lazy" decoding="async">'

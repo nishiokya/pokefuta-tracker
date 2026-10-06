@@ -514,11 +514,7 @@ def render_pokemon(data: ja.TopData, en: English) -> str:
     used: set[str] = set()
     for entry in data.popular_pokemon:
         name = en.pokemon_by_slug.get(entry.slug, entry.name)
-        ids = set(entry.manhole_ids)
-        candidates = [p for p in data.photos if p.manhole_id in ids]
-        photo = next((p for p in candidates if p.manhole_id not in used), candidates[0] if candidates else None)
-        if photo:
-            used.add(photo.manhole_id)
+        photo = ja.pick_pokemon_photo(entry, data.photos, used)
         media = (
             f'<img src="{ROOT_PATH}{escape(photo.src)}" alt="{escape(name)} Poké Lid in {escape(en.pref(photo.prefecture))}" '
             f'width="{ja.PHOTO_SIZE}" height="{ja.PHOTO_SIZE}" loading="lazy" decoding="async">'
