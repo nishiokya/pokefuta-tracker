@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import re
 from collections import Counter
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
@@ -814,7 +815,54 @@ def _related_prefectures(
     )
 
 
-def _index_card_trivia_html(trivia_entry: dict | None) -> str:
+# 自治体名を書いているトリビア（「最多は北九州の5枚で、次いで太宰府の3枚です」など）
+_MUNICIPALITY_TRIVIA_TYPES = {"municipality_concentration", "single_municipality"}
+
+
+def _trivia_municipality_links(records: list[dict], paths: dict[str, str]) -> dict[str, str]:
+    """トリビア文中の自治体名（city の「北九州」）→ 市区町村ページのパス。ページがある自治体だけ。
+
+    トリビアは city（接尾辞なし）で書かれ、市区町村ページは municipality_label（「北九州市」）で
+    引くので、県内のレコードから対応を作る。
+    """
+    links: dict[str, str] = {}
+    for record in records:
+        city = str(record.get("city") or "").strip()
+        path = paths.get(municipality_label(record))
+        if city and path:
+            links.setdefault(city, path)
+    return links
+
+
+def _link_municipalities(text: str, links: dict[str, str]) -> str:
+    """エスケープ済みの文に、自治体名ごとに最初の1回だけ市区町村ページへのリンクを張る。"""
+    if not links:
+        return escape(text)
+    # 長い名前を先に試す（「東大阪」の中の「大阪」を拾わない）
+    pattern = re.compile("|".join(re.escape(escape(c)) for c in sorted(links, key=len, reverse=True)))
+    linked: set[str] = set()
+
+    def _sub(match: re.Match) -> str:
+        label = match.group(0)
+        city = next(c for c in links if escape(c) == label)
+        if city in linked:
+            return label
+        linked.add(city)
+        # data-track が無いと外側の県カード（prefectures_index_click）として記録されるので、
+        # 県ページの市区町村リンクと同じイベント名で、出どころを surface で分ける
+        path = _escape_attr(links[city])
+        return (
+            f'<a href="{path}" data-track="prefecture_municipality_click" '
+            f'data-surface="prefectures_index_trivia" data-destination="{path}">{label}</a>'
+        )
+
+    return pattern.sub(_sub, escape(text))
+
+
+def _index_card_trivia_html(
+    trivia_entry: dict | None,
+    municipality_links: dict[str, str] | None = None,
+) -> str:
     """都道府県トリビア（/summary/ の _build_prefecture_info_section と同じ
     データ源・同じ内容、同じ pokemon_coverage 選定ロジックを
     select_full_coverage_pokemon() として共有）。トリビアが無い都道府県は
@@ -839,7 +887,13 @@ def _index_card_trivia_html(trivia_entry: dict | None) -> str:
     )
     trivia_list = (trivia_entry or {}).get("trivia", [])
     facts_html = "".join(
-        f"<li>{escape(entry['text'])}</li>"
+        "<li>"
+        + (
+            _link_municipalities(entry["text"], municipality_links or {})
+            if entry.get("type") in _MUNICIPALITY_TRIVIA_TYPES
+            else escape(entry["text"])
+        )
+        + "</li>"
         for entry in trivia_list[:3]
         if entry.get("text")
     )
@@ -912,6 +966,12 @@ def build_index_page(
     """
     photos = photos or {}
     trivia = trivia or {}
+    # トリビアの自治体名から市区町村ページへリンクする（ページがある自治体だけ）
+    municipality_paths: dict[str, dict[str, str]] = {}
+    for (prefecture, muni_name), path in municipality_page_paths(
+        [r for items in records_by_pref.values() for r in items]
+    ).items():
+        municipality_paths.setdefault(prefecture, {})[muni_name] = path
     events = events or {}
     total = sum(len(records) for records in records_by_pref.values())
     # マンホールが1枚も無い都道府県はこのページに出さない（region_section()
@@ -1001,7 +1061,10 @@ def build_index_page(
             for record in unphotographed
         ]
         gallery_html = "".join(gallery_items) or '<p class="prefecture-card-photo-empty">まだ投稿写真がありません</p>'
-        trivia_html = _index_card_trivia_html(trivia.get(name))
+        trivia_html = _index_card_trivia_html(
+            trivia.get(name),
+            _trivia_municipality_links(records_by_pref.get(name, []), municipality_paths.get(name, {})),
+        )
         campaign_html = _index_card_campaign_html(events.get(name))
         detail_link_html = (
             f'<a class="prefecture-card-detail-link" href="/prefectures/{slug}/" '
@@ -1143,6 +1206,7 @@ def build_index_page(
       font-weight: 900; vertical-align: 1px;
     }}
     .prefecture-card-trivia-facts {{ margin: 0; padding-left: 1.1rem; color: #716154; font-size: .72rem; line-height: 1.4; }}
+    .prefecture-card-trivia-facts a {{ color: #57408f; font-weight: 700; text-decoration: underline; text-underline-offset: 2px; }}
     .prefecture-card-trivia-facts li + li {{ margin-top: .3rem; }}
     /* 実機フィードバックで「写真は全部・市町村名も出したい」と分かった
        ので、地図パネル風の丸アイコン列（.prefecture-card-thumb）から

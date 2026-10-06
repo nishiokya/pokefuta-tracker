@@ -1373,5 +1373,45 @@ class BuildIndexPageTest(unittest.TestCase):
         self.assertNotIn('<ul class="prefecture-card-trivia-facts">', html)
 
 
+
+class TriviaMunicipalityLinkTest(unittest.TestCase):
+    """一覧カードのトリビア文の自治体名から市区町村ページへリンクする。"""
+
+    RECORDS = [
+        {"prefecture": "福岡県", "city": "北九州", "address": "福岡県北九州市門司区西海岸1丁目"},
+        {"prefecture": "福岡県", "city": "太宰府", "address": "福岡県太宰府市宰府4丁目"},
+        {"prefecture": "福岡県", "city": "福岡", "address": "福岡県福岡市博多区"},
+    ]
+    PATHS = {"北九州市": "/municipalities/fukuoka/kitakyushu/", "太宰府市": "/municipalities/fukuoka/dazaifu/"}
+
+    def _facts(self, entries: list[dict]) -> str:
+        links = MODULE._trivia_municipality_links(self.RECORDS, self.PATHS)
+        return MODULE._index_card_trivia_html({"trivia": entries}, links)
+
+    def test_city_names_link_to_municipality_pages(self) -> None:
+        html = self._facts([{"type": "municipality_concentration",
+                             "text": "最多は北九州の5枚で、次いで太宰府の3枚です"}])
+        self.assertIn('<li>最多は<a href="/municipalities/fukuoka/kitakyushu/" '
+                      'data-track="prefecture_municipality_click" data-surface="prefectures_index_trivia" '
+                      'data-destination="/municipalities/fukuoka/kitakyushu/">北九州</a>の5枚で、次いで', html)
+        self.assertIn('data-destination="/municipalities/fukuoka/dazaifu/">太宰府</a>の3枚です</li>', html)
+
+    def test_city_without_page_stays_plain_text(self) -> None:
+        html = self._facts([{"type": "municipality_concentration",
+                             "text": "最多は北九州の5枚で、次いで福岡の2枚です"}])
+        self.assertIn("次いで福岡の2枚です", html)
+        self.assertEqual(1, html.count("<a "))
+
+    def test_other_trivia_types_are_not_linked(self) -> None:
+        # 自治体の話をしていない文に同じ文字列が出てもリンクしない
+        html = self._facts([{"type": "pokemon_coverage", "text": "北九州の港にちなんだポケモンが描かれています"}])
+        self.assertNotIn("<a ", html)
+
+    def test_text_is_still_escaped(self) -> None:
+        html = self._facts([{"type": "single_municipality", "text": "県内<2>枚のポケふたはすべて太宰府にあります"}])
+        self.assertIn("県内&lt;2&gt;枚", html)
+        self.assertIn('data-destination="/municipalities/fukuoka/dazaifu/">太宰府</a>', html)
+
+
 if __name__ == "__main__":
     unittest.main()
