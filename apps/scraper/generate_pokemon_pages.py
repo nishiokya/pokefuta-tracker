@@ -14,7 +14,8 @@ import argparse
 import json
 import logging
 import sys
-from collections import defaultdict
+import re
+from collections import Counter, defaultdict
 from collections.abc import Callable
 from itertools import groupby
 from pathlib import Path
@@ -22,7 +23,7 @@ from urllib.parse import quote
 from xml.sax.saxutils import escape
 
 sys.path.insert(0, str(Path(__file__).parent))
-from display_names import compose_display_name  # noqa: E402
+from display_names import compose_display_name, municipality_label  # noqa: E402
 from site_terms import format_count  # noqa: E402
 
 try:
@@ -470,6 +471,146 @@ def build_pokemon_index(
     return index
 
 
+def build_co_featured_map(
+    index: dict[str, tuple[dict, list[dict]]],
+    limit: int = 8,
+) -> dict[str, list[tuple[str, dict]]]:
+    """Return {slug: [(slug, meta), ...]} of Pokemon drawn on the same pokefuta.
+
+    蓋とポケモンの対応は build_pokemon_index の判定をそのまま使う（フォーム違いの扱いを二重に持たない）。
+    """
+    slugs_by_manhole: dict[str, list[str]] = defaultdict(list)
+    for slug, (_meta, manholes) in sorted(index.items()):
+        for manhole in manholes:
+            slugs_by_manhole[str(manhole.get("id", "")).strip()].append(slug)
+
+    result: dict[str, list[tuple[str, dict]]] = {}
+    for slug, (_meta, manholes) in index.items():
+        found: list[str] = []
+        for manhole in manholes:
+            for other in slugs_by_manhole[str(manhole.get("id", "")).strip()]:
+                if other != slug and other not in found:
+                    found.append(other)
+        result[slug] = [(s, index[s][0]) for s in found[:limit]]
+    return result
+
+
+def _pref_short(pref: str) -> str:
+    """タイトル用の短い県名（三重県→三重、北海道はそのまま）。県ページのタイトルと同じ書き方。"""
+    return pref if pref == "北海道" else re.sub(r"[都府県]$", "", pref)
+
+
+def _area_label(manhole: dict) -> str:
+    """「神奈川県横浜市」のような県＋自治体名。自治体が無い蓋は県名だけ。"""
+    pref = str(manhole.get("prefecture") or "").strip()
+    muni = municipality_label(manhole) if manhole.get("city") else ""
+    return pref + muni if muni and muni != pref else pref
+
+
+def _place_text(manhole: dict) -> str:
+    """文章中の設置場所。正本の表示名を使い、施設名の無い蓋（title が「県/市」）は県＋自治体名にする。"""
+    if manhole.get("place_label"):
+        return compose_display_name(manhole)
+    return _area_label(manhole)
+
+
+_PREF_ORDER = {pref: i for i, pref in enumerate(PREFECTURE_SLUGS)}
+
+
+def _ordered_prefectures(manholes: list[dict]) -> list[str]:
+    """枚数の多い順（同数は北から＝都道府県コード順）の都道府県。"""
+    counts = Counter(m.get("prefecture") for m in manholes if m.get("prefecture"))
+    return sorted(counts, key=lambda p: (-counts[p], _PREF_ORDER.get(p, 99), p))
+
+
+def _manholes_in_prefecture_order(manholes: list[dict]) -> list[dict]:
+    """タイトル・要約と同じ県の並びにそろえた蓋の列。"""
+    rank = {p: i for i, p in enumerate(_ordered_prefectures(manholes))}
+    return sorted(manholes, key=lambda m: rank.get(m.get("prefecture"), len(rank)))
+
+
+def _ordered_municipalities(manholes: list[dict]) -> list[str]:
+    counts = Counter(municipality_label(m) for m in manholes if m.get("city"))
+    return sorted(counts, key=lambda c: (-counts[c], c))
+
+
+def ja_page_title(name: str, manholes: list[dict]) -> str:
+    """検索結果で「どこに何枚あるか」が分かる日本語タイトル。"""
+    count = len(manholes)
+    prefs = _ordered_prefectures(manholes)
+    if count == 1:
+        area = _area_label(manholes[0])
+        return f"{name}のポケふたは{area}に1枚｜場所・写真・地図" if area else f"{name}のポケふた｜場所・写真・地図"
+    if len(prefs) == 1:
+        munis = _ordered_municipalities(manholes)
+        if not munis:
+            where = prefs[0]
+        elif len(munis) <= 2:
+            where = prefs[0] + "・".join(munis)
+        else:
+            where = f"{prefs[0]}{munis[0]}・{munis[1]}など"
+        return f"{name}のポケふた{count}枚｜{where}の場所一覧・地図"
+    if len(prefs) <= 3:
+        where = "・".join(_pref_short(p) for p in prefs)
+    else:
+        where = f"{_pref_short(prefs[0])}・{_pref_short(prefs[1])}など{len(prefs)}都道府県"
+    return f"{name}のポケふた{count}枚｜{where}の場所一覧・地図"
+
+
+def _co_featured_names(self_name_ja: str, manhole: dict) -> list[str]:
+    """蓋に描かれた自分以外のポケモン。
+
+    self_name_ja は蓋の pokemons と照合する名前（アローラキュウコンのようなすがた付き）。
+    「ゴンべ／ゴンベ」の表記ゆれは build_pokemon_index と同じくカタカナにそろえて比べる。
+    """
+    own = _normalize_katakana(self_name_ja)
+    return [p for p in filter_pokemons(manhole.get("pokemons", [])) if _normalize_katakana(p) != own]
+
+
+def ja_page_description(name: str, self_name_ja: str, manholes: list[dict]) -> str:
+    """設置場所と一緒に描かれたポケモンから組み立てる meta description。"""
+    count = len(manholes)
+    if count == 1:
+        m = manholes[0]
+        # 正本の表示名に県名を足す（「東大阪市 花園中央公園（松原南1）」の区別を落とさない）
+        where = f"{m.get('prefecture') or ''}{_place_text(m)}" if m.get("place_label") else _area_label(m)
+        text = f"{name}のポケふた（ポケモンマンホール）は{where}にあります。"
+        co = _co_featured_names(self_name_ja, m)
+        if co:
+            text += f"{'・'.join(co)}と一緒に描かれています。"
+        return text + "設置場所の地図と投稿写真を掲載しています。"
+    places = [_place_text(m) for m in _manholes_in_prefecture_order(manholes)]
+    shown = "、".join(places[:3]) + ("など" if count > 3 else "")
+    return (
+        f"{name}のポケふた（ポケモンマンホール）は全国に{count}枚。{shown}にあります。"
+        "設置場所の一覧・地図と投稿写真を掲載しています。"
+    )
+
+
+def ja_page_summary(name: str, self_name_ja: str, manholes: list[dict]) -> str:
+    """ページ冒頭の要約。決まり文句ではなく、どこにあり誰と描かれているかを書く。"""
+    count = len(manholes)
+    if count == 1:
+        m = manholes[0]
+        text = f"{name}のポケふたは全国に1枚、{_place_text(m)}にあります。"
+        co = _co_featured_names(self_name_ja, m)
+        if co:
+            text += f"この蓋には{'・'.join(co)}も描かれています。"
+        return text
+    prefs = _ordered_prefectures(manholes)
+    if len(prefs) == 1:
+        places = [_place_text(m) for m in manholes]
+        shown = "、".join(places[:4]) + ("など" if count > 4 else "")
+        return f"{name}のポケふたは{prefs[0]}に{count}枚あります。設置場所は{shown}です。"
+    pref_counts = Counter(m.get("prefecture") for m in manholes if m.get("prefecture"))
+    more = "など" if len(prefs) > 4 else ""
+    if max(pref_counts.values()) == 1:
+        shown = "・".join(prefs[:4]) + more  # 各1枚なら枚数は書かない
+    else:
+        shown = "、".join(f"{p}{pref_counts[p]}枚" for p in prefs[:4]) + more
+    return f"{name}のポケふたは全国{len(prefs)}都道府県に{count}枚あります（{shown}）。複数の地域を旅行しながら巡れます。"
+
+
 # Explicit override for evolution families where family_id alone doesn't capture
 # cross-form relationships (e.g. Vulpix ↔ Alolan Vulpix have different family_ids).
 RELATED_POKEMON_OVERRIDES: dict[str, list[str]] = {
@@ -608,8 +749,12 @@ def generate_html(
     strings: dict,
     translate_pref: Callable[[str], str],
     seo_desc: str = "",
+    co_featured: list[tuple[str, dict]] | None = None,
 ) -> str:
-    """Return complete HTML for a Pokemon LP page."""
+    """Return complete HTML for a Pokemon LP page.
+
+    co_featured: 同じ蓋に描かれたポケモン（日本語ページで「同じ世代」の代わりに出す）。
+    """
     display_name = _get_display_name(pokemon, lang_config)
     names = pokemon.get("names", {})
     types_data = pokemon.get("types", [])
@@ -634,8 +779,14 @@ def generate_html(
 
     count = len(manholes)
 
-    title = display_name + strings["title_suffix"]
-    description = strings["desc_template"].format(name=display_name)
+    # 蓋の pokemons と照合する名前（build_pokemon_index と同じ基準。すがた違いはすがた付きの名前）
+    self_name_ja = FORM_EXACT_MATCH.get(slug) or _get_display_name(pokemon, LANG_CONFIGS["ja"])
+    if lang == "ja" and manholes:
+        title = ja_page_title(display_name, manholes)
+        description = ja_page_description(display_name, self_name_ja, manholes)
+    else:
+        title = display_name + strings["title_suffix"]
+        description = strings["desc_template"].format(name=display_name)
     og_title = display_name + strings["og_title_suffix"]
 
     # Multilingual names line (other languages than the current one)
@@ -671,10 +822,18 @@ def generate_html(
     seo_desc_html = f"<p class='poke-seo-desc'>{escape(seo_desc)}</p>" if seo_desc else ""
 
     pref_joiner = lang_config.get("pref_joiner", "・")
-    ai_summary_text = generate_ai_summary(
-        display_name, manholes, strings, translate_pref, pref_joiner
-    )
+    if lang == "ja" and manholes:
+        ai_summary_text = ja_page_summary(display_name, self_name_ja, manholes)
+    else:
+        ai_summary_text = generate_ai_summary(
+            display_name, manholes, strings, translate_pref, pref_joiner
+        )
     ai_summary_html = f"<div class='ai-summary-box'><p>{escape(ai_summary_text)}</p></div>"
+
+    sorted_manholes = sorted(
+        manholes,
+        key=lambda m: (0 if m.get("prefecture") else 1, m.get("prefecture", ""), m.get("city", "")),
+    )
 
     # JSON-LD
     jsonld = {
@@ -685,6 +844,21 @@ def generate_html(
         "url": canonical_url,
         "inLanguage": lang_config["html_lang"],
     }
+    if lang == "ja" and sorted_manholes:
+        # 掲載している蓋の一覧（詳細ページは日本語のみなので ja だけに付ける）
+        jsonld["mainEntity"] = {
+            "@type": "ItemList",
+            "numberOfItems": len(sorted_manholes),
+            "itemListElement": [
+                {
+                    "@type": "ListItem",
+                    "position": i,
+                    "name": f"{_place_text(m)}のポケふた",
+                    "url": f"{BASE_URL}manholes/{quote(str(m.get('id', '')).strip())}/",
+                }
+                for i, m in enumerate(sorted_manholes, 1)
+            ],
+        }
     jsonld_str = json.dumps(jsonld, ensure_ascii=False, indent=2)
 
     breadcrumb_home = strings["breadcrumb_home"]
@@ -703,10 +877,6 @@ def generate_html(
 
     # Manhole sections grouped by prefecture
     unknown_location = strings["unknown_location"]
-    sorted_manholes = sorted(
-        manholes,
-        key=lambda m: (0 if m.get("prefecture") else 1, m.get("prefecture", ""), m.get("city", "")),
-    )
     sections_html = ""
     for prefecture_ja, group in groupby(sorted_manholes, key=lambda m: m.get("prefecture", "")):
         prefecture_display = translate_pref(prefecture_ja) if prefecture_ja else unknown_location
@@ -730,8 +900,9 @@ def generate_html(
             img_path = image_dir / f"{mid}_latest.jpeg"
             if img_path.exists():
                 img_url = escape(f"https://data.pokefuta.com/manhole/image/{mid}_latest.jpeg")
+                alt = f"{_place_text(m)}の{display_name}のポケふた" if lang == "ja" else display_name
                 img_html = (
-                    f"<img src='{img_url}' alt='{escape(display_name)}'"
+                    f"<img src='{img_url}' alt='{escape(alt, {chr(39): '&#x27;'})}'"
                     f" loading='lazy' decoding='async' width='320' height='180'>"
                 )
 
@@ -783,6 +954,14 @@ def generate_html(
             f"<ul class='related-list'>{related_links_html(related)}</ul>"
             f"</section>"
         )
+    if lang == "ja" and co_featured:
+        # 「同じ世代」はどのページも同じ顔ぶれになるので、実際に同じ蓋に描かれたポケモンを出す
+        related_blocks.append(
+            f"<section>"
+            f"<h2>{escape(display_name)}と一緒に描かれているポケモン</h2>"
+            f"<ul class='related-list'>{related_links_html(co_featured)}</ul>"
+            f"</section>"
+        )
     same_type = taxonomy_related.get("same_type", []) if taxonomy_related else []
     if same_type:
         related_blocks.append(
@@ -792,7 +971,7 @@ def generate_html(
             f"</section>"
         )
     same_generation = taxonomy_related.get("same_generation", []) if taxonomy_related else []
-    if same_generation:
+    if same_generation and not (lang == "ja" and co_featured):
         related_blocks.append(
             f"<section>"
             f"<h2>{escape(strings['same_generation_heading'])}</h2>"
@@ -1164,6 +1343,7 @@ def main() -> int:
 
     related_map = build_related_map(index, metadata)
     taxonomy_related_map = build_taxonomy_related_map(index)
+    co_featured_map = build_co_featured_map(index)
     image_dir = Path(args.images)
     output_root = Path(args.output_root)
 
@@ -1206,6 +1386,7 @@ def main() -> int:
                 strings=strings,
                 translate_pref=translate_pref,
                 seo_desc=POKEMON_SEO_DESCRIPTIONS.get(slug, "") if lang == "ja" else "",
+                co_featured=co_featured_map.get(slug, []),
             )
             (out_dir / "index.html").write_text(html, encoding="utf-8")
             generated += 1
