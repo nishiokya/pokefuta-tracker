@@ -197,7 +197,7 @@ class SectionOrderAndCollapseTest(unittest.TestCase):
 class RepresentativeImageTest(unittest.TestCase):
     """人が選んだ代表のマンホールが、カードの1枚に出ること。"""
 
-    def _cards(self, representatives, drop_photo=""):
+    def _cards(self, representatives, drop_photo="", lid=()):
         from generate_pokemon_index_page import _build_pokemon_cards
 
         manholes = [
@@ -214,6 +214,8 @@ class RepresentativeImageTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmpdir:
             for mid in ("42", "43"):
                 (Path(tmpdir) / f"{mid}_latest.jpeg").write_bytes(b"")
+            for mid in lid:
+                (Path(tmpdir) / f"{mid}_lid.jpeg").write_bytes(b"")
             cards = _build_pokemon_cards(
                 pokemon_index, "ja", LANG_CONFIGS["ja"], LP_INDEX_STRINGS["ja"],
                 lambda pref: pref, photos_data, Path(tmpdir), representatives,
@@ -247,6 +249,37 @@ class RepresentativeImageTest(unittest.TestCase):
             for broken in ('{"representatives": []}', '{"representatives": "x"}', "[]", "{"):
                 path.write_text(broken, encoding="utf-8")
                 self.assertEqual(load_representatives(path, metadata), {}, broken)
+
+    def test_card_uses_the_lid_crop_when_it_exists(self):
+        # カードは小さいタイルなので、蓋の枠に合わせた _lid を使う（蓋のまわりまで写った写真でも蓋が大きく見える）
+        image = self._cards({"slowpoke": "42"}, lid=("42",))
+        self.assertEqual(image["manhole_id"], "42")
+        self.assertTrue(image["url"].endswith("/manhole/image/42_lid.jpeg"), image["url"])
+        # _lid が無ければ _latest のまま
+        self.assertTrue(self._cards({"slowpoke": "42"}, lid=("43",))["url"].endswith("42_latest.jpeg"))
+
+
+class RankingLimitTest(unittest.TestCase):
+    def test_ranking_lists_thirty_pokemon(self):
+        from generate_pokemon_index_page import RANKING_LIMIT
+
+        self.assertEqual(30, RANKING_LIMIT)
+        pokemon_index = {}
+        for i in range(35):
+            slug = f"poke{i:02d}"
+            manholes = [{"id": str(i * 100 + j), "prefecture": "香川県", "city": "高松市", "pokemons": [slug]}
+                        for j in range(40 - i)]
+            pokemon_index[slug] = ({"slug": slug, "names": {"ja": slug, "en": slug}}, manholes)
+        with tempfile.TemporaryDirectory() as tmpdir:
+            html = generate_html(
+                pokemon_index, "ja", LANG_CONFIGS["ja"], LP_INDEX_STRINGS["ja"],
+                lambda pref: pref, {"photos": {}}, Path(tmpdir),
+            )
+        section = html[html.index('id="pokemon-ranking"'):]
+        section = section[:section.index("</ol>")]
+        self.assertEqual(30, section.count('class="ranking-item"'))
+        self.assertIn('data-destination="poke29"', section)
+        self.assertNotIn('data-destination="poke30"', section)
 
 
 if __name__ == "__main__":
