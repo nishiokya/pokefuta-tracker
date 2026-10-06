@@ -585,6 +585,9 @@ def load_representatives(path: Path, metadata: dict[str, dict]) -> dict[str, str
     try:
         reps = json.loads(path.read_text(encoding="utf-8")).get("representatives", {})
     except (json.JSONDecodeError, AttributeError):
+        reps = None
+    if not isinstance(reps, dict):
+        # 手で直したときに形が崩れても、Pages のビルドは止めずに代表なしで作る
         logger.warning(f"Invalid representatives file: {path}")
         return {}
     ja_to_slug = {ja: meta.get("slug", "") for ja, meta in metadata.items() if meta.get("slug")}
@@ -618,8 +621,9 @@ def _select_latest_image(
     photos = photos_data.get("photos", {}) if isinstance(photos_data, dict) else {}
     records_by_id = {str(m.get("id", "")).strip(): m for m in manholes}
 
-    # 人が選んだ代表があればそれを出す（そのポケモンのマンホールで、写真があるときだけ）
-    if representative_id in ids:
+    # 人が選んだ代表があればそれを出す（そのポケモンのマンホールで、今の写真一覧に公開写真があるときだけ）。
+    # _latest.jpeg は写真が非公開・削除になっても残ることがあるので、ファイルがあるだけでは代表にしない
+    if representative_id in ids and representative_id in photos:
         url = _photo_url(representative_id, photos.get(representative_id), available_images)
         if url:
             location = _location_text(records_by_id[representative_id], translate_pref, lang)

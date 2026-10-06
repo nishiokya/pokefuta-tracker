@@ -197,7 +197,7 @@ class SectionOrderAndCollapseTest(unittest.TestCase):
 class RepresentativeImageTest(unittest.TestCase):
     """人が選んだ代表のマンホールが、カードの1枚に出ること。"""
 
-    def _cards(self, representatives):
+    def _cards(self, representatives, drop_photo=""):
         from generate_pokemon_index_page import _build_pokemon_cards
 
         manholes = [
@@ -210,6 +210,7 @@ class RepresentativeImageTest(unittest.TestCase):
             "42": {"manhole_id": 42, "url": "https://example.com/42.jpg", "created_at": "2026-01-01T00:00:00Z"},
             "43": {"manhole_id": 43, "url": "https://example.com/43.jpg", "created_at": "2026-06-01T00:00:00Z"},
         }}
+        photos_data["photos"].pop(drop_photo, None)
         with tempfile.TemporaryDirectory() as tmpdir:
             for mid in ("42", "43"):
                 (Path(tmpdir) / f"{mid}_latest.jpeg").write_bytes(b"")
@@ -229,6 +230,10 @@ class RepresentativeImageTest(unittest.TestCase):
         # そのポケモンのいないマンホールが代表になっていたら使わない
         self.assertEqual(self._cards({"slowpoke": "99"})["manhole_id"], "43")
 
+    def test_representative_without_current_public_photo_is_not_used(self):
+        # 代表の写真が非公開・削除になって写真一覧から消えたら、_latest.jpeg が残っていても使わない
+        self.assertEqual(self._cards({"slowpoke": "42"}, drop_photo="42")["manhole_id"], "43")
+
     def test_load_representatives_maps_japanese_names_to_slugs(self):
         from generate_pokemon_index_page import load_representatives
 
@@ -238,6 +243,10 @@ class RepresentativeImageTest(unittest.TestCase):
             path.write_text('{"representatives": {"ヤドン": 42, "いないポケモン": 1}}', encoding="utf-8")
             self.assertEqual(load_representatives(path, metadata), {"slowpoke": "42"})
             self.assertEqual(load_representatives(Path(tmpdir) / "none.json", metadata), {})
+            # 形が崩れていても例外にせず、代表なしにする
+            for broken in ('{"representatives": []}', '{"representatives": "x"}', "[]", "{"):
+                path.write_text(broken, encoding="utf-8")
+                self.assertEqual(load_representatives(path, metadata), {}, broken)
 
 
 if __name__ == "__main__":
