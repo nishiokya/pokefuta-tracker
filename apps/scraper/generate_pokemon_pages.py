@@ -737,6 +737,30 @@ def _hreflang_links(slug: str) -> str:
     return "\n".join(lines)
 
 
+def pick_hero_manhole(
+    manholes: list[dict],
+    representative_id: str,
+    photos: dict,
+    image_dir: Path,
+) -> str:
+    """ページの上と og:image に出す1枚のマンホール ID。無ければ空文字。
+
+    人が選んだ代表（dataset/pokemon_representatives.json）を優先し、無ければ新しい公開写真。
+    写真が1枚しかないポケモンはその1枚になる。photos は latest-manhole-photos.json の photos で、
+    今公開されている写真だけが載る。_latest.jpeg は非公開・削除のあとも残ることがあるので、
+    ファイルがあるだけでは選ばない。
+    """
+    candidates = []
+    for m in manholes:
+        mid = str(m.get("id", "")).strip()
+        if mid and mid in photos and (image_dir / f"{mid}_latest.jpeg").exists():
+            candidates.append(mid)
+    if representative_id in candidates:
+        return representative_id
+    candidates.sort(key=lambda mid: (str(photos[mid].get("created_at", "")), mid), reverse=True)
+    return candidates[0] if candidates else ""
+
+
 def generate_html(
     slug: str,
     pokemon: dict,
@@ -750,6 +774,7 @@ def generate_html(
     translate_pref: Callable[[str], str],
     seo_desc: str = "",
     co_featured: list[tuple[str, dict]] | None = None,
+    hero_manhole_id: str = "",
 ) -> str:
     """Return complete HTML for a Pokemon LP page.
 
@@ -877,6 +902,36 @@ def generate_html(
 
     # Manhole sections grouped by prefecture
     unknown_location = strings["unknown_location"]
+
+    def location_of(m: dict) -> str:
+        pref_ja = m.get("prefecture", "")
+        city = m.get("city", "")
+        pref_display = translate_pref(pref_ja) if pref_ja else ""
+        if lang == "ja":
+            return compose_display_name(m) or pref_display or city or unknown_location
+        if pref_display and city:
+            return f"{pref_display} {city}"
+        return pref_display or city or m.get("title", unknown_location)
+
+    def image_alt(m: dict) -> str:
+        return f"{_place_text(m)}の{display_name}のポケふた" if lang == "ja" else display_name
+
+    # ページの上に出す1枚（代表）。一覧は下で全部出す
+    hero_html = ""
+    og_image = DEFAULT_OGP_IMAGE
+    hero = next((m for m in manholes if str(m.get("id", "")).strip() == hero_manhole_id), None)
+    if hero_manhole_id and hero is not None:
+        hero_url = f"{BASE_URL}manhole/image/{quote(hero_manhole_id)}_latest.jpeg"
+        og_image = hero_url
+        hero_href = f"/manholes/{quote(hero_manhole_id)}/"
+        hero_html = (
+            f"<figure class='poke-hero-photo'>"
+            f"<a href='{hero_href}'><img src='{escape(hero_url)}' alt='{escape(image_alt(hero), {chr(39): '&#x27;'})}'"
+            f" width='720' height='720' decoding='async' fetchpriority='high'></a>"
+            f"<figcaption><a href='{hero_href}'>{escape(location_of(hero))}</a></figcaption>"
+            f"</figure>"
+        )
+
     sections_html = ""
     for prefecture_ja, group in groupby(sorted_manholes, key=lambda m: m.get("prefecture", "")):
         prefecture_display = translate_pref(prefecture_ja) if prefecture_ja else unknown_location
@@ -884,15 +939,7 @@ def generate_html(
         cards_html = ""
         for m in group:
             mid = str(m.get("id", "")).strip()
-            pref_ja = m.get("prefecture", "")
-            city = m.get("city", "")
-            pref_display = translate_pref(pref_ja) if pref_ja else ""
-            if lang == "ja":
-                location = compose_display_name(m) or pref_display or city or unknown_location
-            elif pref_display and city:
-                location = pref_display + city if lang == "ja" else f"{pref_display} {city}"
-            else:
-                location = pref_display or city or m.get("title", unknown_location)
+            location = location_of(m)
             pokes = filter_pokemons(m.get("pokemons", []))
             sub = "・".join(pokes) if pokes else ""
 
@@ -900,7 +947,7 @@ def generate_html(
             img_path = image_dir / f"{mid}_latest.jpeg"
             if img_path.exists():
                 img_url = escape(f"https://data.pokefuta.com/manhole/image/{mid}_latest.jpeg")
-                alt = f"{_place_text(m)}の{display_name}のポケふた" if lang == "ja" else display_name
+                alt = image_alt(m)
                 img_html = (
                     f"<img src='{img_url}' alt='{escape(alt, {chr(39): '&#x27;'})}'"
                     f" loading='lazy' decoding='async' width='320' height='180'>"
@@ -1009,12 +1056,12 @@ def generate_html(
   <meta property="og:title" content="{escape(og_title)}">
   <meta property="og:description" content="{escape(description)}">
   <meta property="og:url" content="{escape(canonical_url)}">
-  <meta property="og:image" content="{escape(DEFAULT_OGP_IMAGE)}">
+  <meta property="og:image" content="{escape(og_image)}">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="{escape(og_title)}">
   <meta name="twitter:description" content="{escape(description)}">
-  <meta name="twitter:image" content="{escape(DEFAULT_OGP_IMAGE)}">
+  <meta name="twitter:image" content="{escape(og_image)}">
 
   <script type="application/ld+json">
 {jsonld_str}
@@ -1061,6 +1108,26 @@ def generate_html(
     }}
     .poke-hero {{
       margin-bottom: 24px;
+    }}
+    .poke-hero-photo {{
+      margin: 14px 0 0;
+      max-width: 360px;
+    }}
+    .poke-hero-photo img {{
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 1;
+      border-radius: 12px;
+      object-fit: cover;
+    }}
+    .poke-hero-photo figcaption {{
+      margin-top: 6px;
+      font-size: 13px;
+      color: #555;
+    }}
+    .poke-hero-photo figcaption a {{
+      color: inherit;
     }}
     .poke-seo-desc {{
       font-size: 14px;
@@ -1269,6 +1336,7 @@ def generate_html(
     {multilang_html}
     {type_html}
     {gen_html}
+    {hero_html}
     {seo_desc_html}
     {ai_summary_html}
     <div class="back-links">
@@ -1313,6 +1381,14 @@ def main() -> int:
         help="Directory containing {id}_latest.jpeg files",
     )
     parser.add_argument(
+        "--photos", default="docs/latest-manhole-photos.json",
+        help="今公開されている写真（ページの上の1枚は、ここに載っている写真から選ぶ）",
+    )
+    parser.add_argument(
+        "--representatives", default="dataset/pokemon_representatives.json",
+        help="ポケモンごとの代表のマンホール（ページの上の1枚と og:image に使う）",
+    )
+    parser.add_argument(
         "--output-root", default="dist",
         help="Root output directory (default: dist). Pokemon pages go to {output-root}/pokemon/ for ja and {output-root}/{lang}/pokemon/ for other languages.",
     )
@@ -1346,6 +1422,27 @@ def main() -> int:
     co_featured_map = build_co_featured_map(index)
     image_dir = Path(args.images)
     output_root = Path(args.output_root)
+    try:
+        photos = json.loads(Path(args.photos).read_text(encoding="utf-8")).get("photos", {})
+    except (OSError, json.JSONDecodeError, AttributeError):
+        logger.warning(f"Photos not loaded: {args.photos}")
+        photos = {}
+    if not isinstance(photos, dict):
+        photos = {}
+    # generate_pokemon_index_page はこのファイルを読み込むので、循環しないようここで読む
+    try:
+        from apps.scraper.generate_pokemon_index_page import load_representatives
+    except ModuleNotFoundError as exc:
+        if exc.name != "apps":
+            raise
+        from generate_pokemon_index_page import load_representatives
+    representatives = load_representatives(Path(args.representatives), metadata)
+    hero_ids = {
+        slug: pick_hero_manhole(poke_manholes, representatives.get(slug, ""), photos, image_dir)
+        for slug, (_, poke_manholes) in index.items()
+    }
+    logger.info(f"Hero photos: {sum(1 for v in hero_ids.values() if v)} / {len(hero_ids)} "
+                f"(representatives {len(representatives)})")
 
     langs_to_build = [la for la in args.langs if la in LANG_CONFIGS]
     if not langs_to_build:
@@ -1387,6 +1484,7 @@ def main() -> int:
                 translate_pref=translate_pref,
                 seo_desc=POKEMON_SEO_DESCRIPTIONS.get(slug, "") if lang == "ja" else "",
                 co_featured=co_featured_map.get(slug, []),
+                hero_manhole_id=hero_ids.get(slug, ""),
             )
             (out_dir / "index.html").write_text(html, encoding="utf-8")
             generated += 1
