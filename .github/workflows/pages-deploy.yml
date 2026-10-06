@@ -15,6 +15,7 @@ on:
       - 'apps/scraper/generate_manhole_ogp.py' # OGP image generator
       - 'apps/scraper/generate_pokemon_pages.py' # Pokemon LP generator
       - 'apps/scraper/generate_pokemon_index_page.py' # Pokemon index page generator
+      - 'dataset/pokemon_representatives.json' # hand-picked representative manhole per Pokemon (index cards)
       - 'apps/scraper/generate_character_manhole_page.py' # character manhole LP generator
       - 'apps/scraper/generate_character_work_pages.py' # per-work character manhole guides
       - 'apps/scraper/character_manhole_works.py' # shared work page definitions

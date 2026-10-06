@@ -194,5 +194,51 @@ class SectionOrderAndCollapseTest(unittest.TestCase):
         self.assertIn("window.PokefutaAnalytics.bindClickTracking({", html)
 
 
+class RepresentativeImageTest(unittest.TestCase):
+    """人が選んだ代表のマンホールが、カードの1枚に出ること。"""
+
+    def _cards(self, representatives):
+        from generate_pokemon_index_page import _build_pokemon_cards
+
+        manholes = [
+            {"id": "42", "prefecture": "香川県", "city": "高松市", "pokemons": ["ヤドン"]},
+            {"id": "43", "prefecture": "香川県", "city": "坂出市", "pokemons": ["ヤドン"]},
+        ]
+        pokemon_index = {"slowpoke": ({"names": {"ja": "ヤドン", "en": "Slowpoke"}}, manholes)}
+        # 43 のほうが新しい写真。代表が無ければこちらが出る
+        photos_data = {"photos": {
+            "42": {"manhole_id": 42, "url": "https://example.com/42.jpg", "created_at": "2026-01-01T00:00:00Z"},
+            "43": {"manhole_id": 43, "url": "https://example.com/43.jpg", "created_at": "2026-06-01T00:00:00Z"},
+        }}
+        with tempfile.TemporaryDirectory() as tmpdir:
+            for mid in ("42", "43"):
+                (Path(tmpdir) / f"{mid}_latest.jpeg").write_bytes(b"")
+            cards = _build_pokemon_cards(
+                pokemon_index, "ja", LANG_CONFIGS["ja"], LP_INDEX_STRINGS["ja"],
+                lambda pref: pref, photos_data, Path(tmpdir), representatives,
+            )
+        return cards[0]["latest_image"]
+
+    def test_representative_wins_over_newest_photo(self):
+        image = self._cards({"slowpoke": "42"})
+        self.assertEqual(image["manhole_id"], "42")
+        self.assertIn("42_latest.jpeg", image["url"])
+
+    def test_falls_back_to_newest_photo_without_valid_representative(self):
+        self.assertEqual(self._cards({})["manhole_id"], "43")
+        # そのポケモンのいないマンホールが代表になっていたら使わない
+        self.assertEqual(self._cards({"slowpoke": "99"})["manhole_id"], "43")
+
+    def test_load_representatives_maps_japanese_names_to_slugs(self):
+        from generate_pokemon_index_page import load_representatives
+
+        metadata = {"ヤドン": {"slug": "slowpoke"}, "ラッキー": {"slug": "chansey"}}
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = Path(tmpdir) / "reps.json"
+            path.write_text('{"representatives": {"ヤドン": 42, "いないポケモン": 1}}', encoding="utf-8")
+            self.assertEqual(load_representatives(path, metadata), {"slowpoke": "42"})
+            self.assertEqual(load_representatives(Path(tmpdir) / "none.json", metadata), {})
+
+
 if __name__ == "__main__":
     unittest.main()
