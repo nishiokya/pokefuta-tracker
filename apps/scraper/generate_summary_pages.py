@@ -579,7 +579,7 @@ _CSS = """\
     }
 
     .summary-page {
-      max-width: 1040px;
+      max-width: var(--page-max-wide, 1120px);
       margin: 0 auto;
       padding: 24px 16px 48px;
     }
@@ -1239,7 +1239,7 @@ _CSS = """\
     }
 
     .summary-page {
-      max-width: 1120px;
+      max-width: var(--page-max-wide, 1120px);
       padding: 20px 18px 64px;
     }
 

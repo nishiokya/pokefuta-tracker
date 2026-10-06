@@ -10,7 +10,7 @@
 
 * { box-sizing: border-box; }
 body.policy-page { margin: 0; background: var(--policy-bg); color: var(--policy-ink); font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height: 1.75; }
-.policy-main { width: min(840px, calc(100% - 32px)); margin: 0 auto; padding: 28px 0 64px; }
+.policy-main { width: min(var(--page-max-narrow, 720px), calc(100% - 32px)); margin: 0 auto; padding: 28px 0 64px; }
 .policy-breadcrumb { margin: 0 0 18px; font-size: .84rem; }
 .policy-breadcrumb a, .policy-main a { color: var(--policy-accent); }
 .policy-hero, .policy-section { border: 1px solid var(--policy-border); border-radius: 14px; background: var(--policy-surface); box-shadow: 0 10px 28px rgba(75, 55, 32, .06); }
@@ -29,6 +29,6 @@ body.policy-page { margin: 0; background: var(--policy-bg); color: var(--policy-
 .policy-contact-links a { display: inline-flex; min-height: 44px; align-items: center; padding: 8px 14px; border: 1px solid var(--policy-border); border-radius: 999px; background: white; font-weight: 750; text-decoration: none; }
 
 @media (max-width: 520px) {
-  .policy-main { width: min(100% - 24px, 840px); padding-top: 18px; }
+  .policy-main { width: min(100% - 24px, var(--page-max-narrow, 720px)); padding-top: 18px; }
   .policy-hero, .policy-section { border-radius: 10px; }
 }

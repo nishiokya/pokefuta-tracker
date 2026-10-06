@@ -1099,7 +1099,7 @@ def generate_html(
       padding: 0 16px 16px;
     }}
     .container {{
-      max-width: 800px;
+      max-width: var(--page-max-wide, 1120px);
       margin: 16px auto 0;
       background: white;
       border-radius: 12px;
@@ -1128,6 +1128,24 @@ def generate_html(
     }}
     .poke-hero-photo figcaption a {{
       color: inherit;
+    }}
+    /* PC は本文が --page-max-wide まで広がるので、代表写真を右の列に置き、
+       見出し・説明文は左の列で行長を抑える */
+    @media (min-width: 1024px) {{
+      .poke-hero {{
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 360px;
+        column-gap: 32px;
+        align-items: start;
+      }}
+      .poke-hero > * {{
+        grid-column: 1;
+      }}
+      .poke-hero > .poke-hero-photo {{
+        grid-column: 2;
+        grid-row: 1 / span 8;
+        margin: 0;
+      }}
     }}
     .poke-seo-desc {{
       font-size: 14px;

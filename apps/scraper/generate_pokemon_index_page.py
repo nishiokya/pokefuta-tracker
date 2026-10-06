@@ -1222,7 +1222,7 @@ def generate_html(
     }}
     .container {{
       width: 100%;
-      max-width: 1080px;
+      max-width: var(--page-max-wide, 1120px);
       margin: 16px auto 0;
       padding: 0 0 28px;
     }}

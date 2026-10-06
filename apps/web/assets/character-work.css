@@ -18,7 +18,7 @@
   line-height: 1.75; -webkit-font-smoothing: antialiased;
 }
 .cm-page *, .cm-page *::before, .cm-page *::after { box-sizing: border-box; }
-.cm-wrap { max-width: 1080px; margin: 0 auto; padding: 20px 24px 64px; }
+.cm-wrap { max-width: var(--page-max-wide, 1120px); margin: 0 auto; padding: 20px 24px 64px; }
 .cm-wrap :is(h1, h2, h3, h4, p) { margin-top: 0; }
 .cm-wrap :is(section, article, details) { scroll-margin-top: 90px; }
 .cm-wrap a { color: var(--cm-accent); text-underline-offset: 3px; }

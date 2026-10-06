@@ -717,7 +717,7 @@ t = t.replace(
 )
 
 # Popular Pokémon nav section
-OLD_NAV = '''  <nav aria-label="人気のポケモン" style="margin:16px auto 0; max-width:960px; padding:12px 16px; background:#fff8ec; border-radius:8px; border:1px solid #e8e0d0;">
+OLD_NAV = '''  <nav aria-label="人気のポケモン" style="box-sizing:border-box; margin:16px auto 0; max-width:var(--page-max-wide, 1120px); padding:12px 16px; background:#fff8ec; border-radius:8px; border:1px solid #e8e0d0;">
     <p style="font-size:0.85rem; font-weight:bold; color:#6F55A3; margin:0 0 4px;">人気のポケモン</p>
     <p style="margin:0 0 8px;"><a href="/pokemon/" style="font-size:0.85rem; color:#6F55A3; font-weight:bold;">→ ポケモン一覧を見る</a></p>
     <ul style="list-style:none; padding:0; margin:0; display:flex; flex-wrap:wrap; gap:6px;">
@@ -737,7 +737,7 @@ OLD_NAV = '''  <nav aria-label="人気のポケモン" style="margin:16px auto 0
       <li><a href="/pokemon/snorlax/" style="font-size:0.85rem; color:#6F55A3; text-decoration:none;">カビゴン</a></li>
     </ul>
   </nav>'''
-NEW_NAV = '''  <nav aria-label="%%POPULAR_NAV_ARIA%%" style="margin:16px auto 0; max-width:960px; padding:12px 16px; background:#fff8ec; border-radius:8px; border:1px solid #e8e0d0;">
+NEW_NAV = '''  <nav aria-label="%%POPULAR_NAV_ARIA%%" style="box-sizing:border-box; margin:16px auto 0; max-width:var(--page-max-wide, 1120px); padding:12px 16px; background:#fff8ec; border-radius:8px; border:1px solid #e8e0d0;">
     <p style="font-size:0.85rem; font-weight:bold; color:#6F55A3; margin:0 0 4px;">%%POPULAR_HEADING%%</p>
     <p style="margin:0 0 8px;"><a href="/pokemon/" style="font-size:0.85rem; color:#6F55A3; font-weight:bold;">%%POPULAR_LINK%%</a></p>
     <ul style="list-style:none; padding:0; margin:0; display:flex; flex-wrap:wrap; gap:6px;">

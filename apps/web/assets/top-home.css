@@ -4,7 +4,7 @@
    グリッドは常に minmax(0, 1fr)（test_css_grid_tracks.py）。 */
 
 .home-main {
-  max-width: 1120px;
+  max-width: var(--page-max-wide, 1120px);
   margin: 0 auto;
   padding: 0 var(--top-pad) 64px;
 }
