@@ -599,6 +599,9 @@ def load_representatives(path: Path, metadata: dict[str, dict]) -> dict[str, str
     return out
 
 
+RANKING_LIMIT = 30  # 登場数ランキングに出す数（PC では3列）
+
+
 def _photo_url(mid: str, photo: dict | None, available_images: frozenset[str]) -> str:
     if mid and mid in available_images:
         return f"{BASE_URL}manhole/image/{quote(mid, safe='')}_latest.jpeg"
@@ -688,6 +691,12 @@ def _build_pokemon_cards(
         p.stem.removesuffix("_latest")
         for p in image_dir.glob("*_latest.jpeg")
     ) if image_dir.exists() else frozenset()
+    # カードは小さいタイルなので、蓋の枠に合わせて拡大した _lid を使う（manhole_tile_image.py と同じ決まり）。
+    # _latest は蓋のまわりまで写った写真だと、16:9 に切ったとき蓋が小さく見える
+    lid_images = frozenset(
+        p.stem.removesuffix("_lid")
+        for p in image_dir.glob("*_lid.jpeg")
+    ) if image_dir.exists() else frozenset()
     cards = []
     for slug, (meta, manholes) in pokemon_index.items():
         display_name = _get_display_name(meta, lang_config)
@@ -711,6 +720,9 @@ def _build_pokemon_cards(
             manholes, photos_data, available_images, display_name,
             translate_pref, lang, strings, representatives.get(slug, ""),
         )
+        image = card["latest_image"]
+        if image and image["manhole_id"] in lid_images and image["url"].endswith("_latest.jpeg"):
+            image["url"] = f"{BASE_URL}manhole/image/{quote(image['manhole_id'], safe='')}_lid.jpeg"
         cards.append(card)
     return sorted(cards, key=lambda c: (-c["count"], c["name"]))
 
@@ -905,7 +917,7 @@ def generate_html(
     regional_items_html = "\n".join(regional_items) + "\n" if regional_items else ""
 
     ranking_items = []
-    for rank, card in enumerate(cards[:10], start=1):
+    for rank, card in enumerate(cards[:RANKING_LIMIT], start=1):
         en_html = (
             f'<span class="poke-en">{escape(card["name_en"])}</span>'
             if card["name_en"] and lang != "en" else ""
@@ -1126,7 +1138,7 @@ def generate_html(
                 "name": card["name"],
                 "url": f"{BASE_URL}{url_prefix}pokemon/{quote(card['slug'])}/",
             }
-            for rank, card in enumerate(cards[:10], start=1)
+            for rank, card in enumerate(cards[:RANKING_LIMIT], start=1)
         ],
     }, ensure_ascii=False, indent=2)
     jsonld_faq = json.dumps({
@@ -1489,6 +1501,13 @@ def generate_html(
     }}
     .ranking-photo {{
       border-radius: 6px;
+    }}
+    @media (min-width: 900px) {{
+      .ranking-list {{ grid-template-columns: repeat(3, minmax(0, 1fr)); }}
+      .ranking-item a {{
+        grid-template-columns: 40px 96px minmax(0, 1fr);
+        min-height: 72px;
+      }}
     }}
     .image-placeholder {{
       background: linear-gradient(135deg, #eef2e6, #f7f8f3);
