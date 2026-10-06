@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06T01:21:39.587388Z",
+  "generated_at": "2026-10-06T23:55:53.910377Z",
   "source": "pokefuta photo table",
   "image": {
     "r2_public_base_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image"
@@ -36213,19 +36213,19 @@
           ]
         },
         {
-          "photo_id": "8f7622aa-173f-4c87-a1e9-4ce9cd6ae4e2",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/05/ab1b7d39-3480-45f4-9fe5-58af38f822b0.jpg",
-          "storage_key": "photos/original/2026/05/ab1b7d39-3480-45f4-9fe5-58af38f822b0.jpg",
+          "photo_id": "81e740b5-b3cc-46fb-8f65-681fc838ce46",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/4fd9b197-846f-4864-9612-2553ffc67bdd.jpg",
+          "storage_key": "photos/original/2026/10/4fd9b197-846f-4864-9612-2553ffc67bdd.jpg",
           "content_type": "image/jpeg",
-          "created_at": "2026-05-11T06:46:12.193178+00:00",
-          "shot_at": "2025-08-16T00:56:40+00:00",
-          "display_name": "ああああああ",
-          "public_user_id": "3b7b7b62-11c0-416f-a823-401e8aa27416",
+          "created_at": "2026-10-06T11:03:41.304924+00:00",
+          "shot_at": "2026-06-27T04:43:25+00:00",
+          "display_name": "ぴぃ",
+          "public_user_id": "0a90efd0-9d93-4282-93ae-7b358af57f17",
           "crop": [
+            0.0276,
             0.0,
-            0.1385,
-            1.0,
-            0.8885
+            0.9723,
+            1.0
           ]
         }
       ]
