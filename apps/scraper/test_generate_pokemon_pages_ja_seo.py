@@ -81,11 +81,37 @@ class JaPageContentTests(unittest.TestCase):
         html = _html(PSYDUCK, [YOKOHAMA])
         self.assertEqual(
             _description(html),
-            "コダックのポケふた（ポケモンマンホール）は神奈川県横浜市の日本丸メモリアルパークにあります。"
+            "コダックのポケふた（ポケモンマンホール）は神奈川県横浜市 日本丸メモリアルパークにあります。"
             "ピカチュウ・ワンリキーと一緒に描かれています。設置場所の地図と投稿写真を掲載しています。",
         )
         self.assertIn("コダックのポケふたは全国に1枚、横浜市 日本丸メモリアルパークにあります。"
                       "この蓋にはピカチュウ・ワンリキーも描かれています。", html)
+
+    def test_regional_form_does_not_list_itself(self):
+        # すがた違いは蓋の上ではすがた付きの名前（アローラキュウコン）で載っている
+        lid = _manhole("67", "北海道", "", "", ["アローラキュウコン", "アローラロコン"],
+                       place_label="北海道 テスト公園")
+        ninetales = {"slug": "ninetales-alola", "names": {"ja": "キュウコン"}, "form": "alola"}
+        html = _html(ninetales, [lid])
+        self.assertIn("アローラロコンと一緒に描かれています。", _description(html))
+        self.assertIn("この蓋にはアローラロコンも描かれています。", html)
+        farfetchd = {"slug": "farfetchd-galar", "names": {"ja": "カモネギ"}, "form": "galar"}
+        html = _html(farfetchd, [_manhole("222", "福島県", "", "", ["ガラルカモネギ"])])
+        self.assertNotIn("一緒に描かれています", _description(html))
+
+    def test_spelling_variant_does_not_list_itself(self):
+        # 蓋のデータは「ゴンべ」（ひらがなのべ）、図鑑の名前は「ゴンベ」
+        lid = _manhole("313", "神奈川県", "横浜", "神奈川県横浜市中区", ["ゴンべ", "ビクティニ", "ピカチュウ"],
+                       place_label="横浜市 臨港パーク")
+        html = _html({"slug": "munchlax", "names": {"ja": "ゴンベ"}}, [lid])
+        self.assertIn("ビクティニ・ピカチュウと一緒に描かれています。", _description(html))
+
+    def test_single_lid_description_keeps_the_canonical_place(self):
+        # 同じ公園の2枚を区別する「（松原南1）」を落とさない
+        lid = _manhole("209", "大阪府", "東大阪", "大阪府東大阪市松原南1丁目", ["ワンパチ", "トゲデマル"],
+                       building="花園中央公園", place_label="東大阪市 花園中央公園（松原南1）")
+        html = _html({"slug": "yamper", "names": {"ja": "ワンパチ"}}, [lid])
+        self.assertIn("は大阪府東大阪市 花園中央公園（松原南1）にあります。", _description(html))
 
     def test_lid_without_landmark_is_written_without_slash(self):
         html = _html({"slug": "wooper", "names": {"ja": "ウパー"}}, [NISHIGO])

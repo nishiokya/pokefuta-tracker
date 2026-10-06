@@ -23,7 +23,7 @@ from urllib.parse import quote
 from xml.sax.saxutils import escape
 
 sys.path.insert(0, str(Path(__file__).parent))
-from display_names import compose_display_name, landmark_label, municipality_label  # noqa: E402
+from display_names import compose_display_name, municipality_label  # noqa: E402
 from site_terms import format_count  # noqa: E402
 
 try:
@@ -557,20 +557,25 @@ def ja_page_title(name: str, manholes: list[dict]) -> str:
     return f"{name}のポケふた{count}枚｜{where}の場所一覧・地図"
 
 
-def _co_featured_names(name_ja: str, manhole: dict) -> list[str]:
-    return [p for p in filter_pokemons(manhole.get("pokemons", [])) if p != name_ja]
+def _co_featured_names(self_name_ja: str, manhole: dict) -> list[str]:
+    """蓋に描かれた自分以外のポケモン。
+
+    self_name_ja は蓋の pokemons と照合する名前（アローラキュウコンのようなすがた付き）。
+    「ゴンべ／ゴンベ」の表記ゆれは build_pokemon_index と同じくカタカナにそろえて比べる。
+    """
+    own = _normalize_katakana(self_name_ja)
+    return [p for p in filter_pokemons(manhole.get("pokemons", [])) if _normalize_katakana(p) != own]
 
 
-def ja_page_description(name: str, name_ja: str, manholes: list[dict]) -> str:
+def ja_page_description(name: str, self_name_ja: str, manholes: list[dict]) -> str:
     """設置場所と一緒に描かれたポケモンから組み立てる meta description。"""
     count = len(manholes)
     if count == 1:
         m = manholes[0]
-        area = _area_label(m)
-        landmark = landmark_label(m, municipality_label(m)) if m.get("building") else ""
-        where = f"{area}の{landmark}" if landmark else area
+        # 正本の表示名に県名を足す（「東大阪市 花園中央公園（松原南1）」の区別を落とさない）
+        where = f"{m.get('prefecture') or ''}{_place_text(m)}" if m.get("place_label") else _area_label(m)
         text = f"{name}のポケふた（ポケモンマンホール）は{where}にあります。"
-        co = _co_featured_names(name_ja, m)
+        co = _co_featured_names(self_name_ja, m)
         if co:
             text += f"{'・'.join(co)}と一緒に描かれています。"
         return text + "設置場所の地図と投稿写真を掲載しています。"
@@ -582,13 +587,13 @@ def ja_page_description(name: str, name_ja: str, manholes: list[dict]) -> str:
     )
 
 
-def ja_page_summary(name: str, name_ja: str, manholes: list[dict]) -> str:
+def ja_page_summary(name: str, self_name_ja: str, manholes: list[dict]) -> str:
     """ページ冒頭の要約。決まり文句ではなく、どこにあり誰と描かれているかを書く。"""
     count = len(manholes)
     if count == 1:
         m = manholes[0]
         text = f"{name}のポケふたは全国に1枚、{_place_text(m)}にあります。"
-        co = _co_featured_names(name_ja, m)
+        co = _co_featured_names(self_name_ja, m)
         if co:
             text += f"この蓋には{'・'.join(co)}も描かれています。"
         return text
@@ -774,10 +779,11 @@ def generate_html(
 
     count = len(manholes)
 
-    name_ja = names.get("ja", "")
+    # 蓋の pokemons と照合する名前（build_pokemon_index と同じ基準。すがた違いはすがた付きの名前）
+    self_name_ja = FORM_EXACT_MATCH.get(slug) or _get_display_name(pokemon, LANG_CONFIGS["ja"])
     if lang == "ja" and manholes:
         title = ja_page_title(display_name, manholes)
-        description = ja_page_description(display_name, name_ja, manholes)
+        description = ja_page_description(display_name, self_name_ja, manholes)
     else:
         title = display_name + strings["title_suffix"]
         description = strings["desc_template"].format(name=display_name)
@@ -817,7 +823,7 @@ def generate_html(
 
     pref_joiner = lang_config.get("pref_joiner", "・")
     if lang == "ja" and manholes:
-        ai_summary_text = ja_page_summary(display_name, name_ja, manholes)
+        ai_summary_text = ja_page_summary(display_name, self_name_ja, manholes)
     else:
         ai_summary_text = generate_ai_summary(
             display_name, manholes, strings, translate_pref, pref_joiner
