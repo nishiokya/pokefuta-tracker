@@ -27,6 +27,7 @@ from generate_pokemon_pages import (
     DEFAULT_OGP_IMAGE,
     LANG_CONFIGS,
     _get_display_name,
+    _normalize_katakana,
     build_pokemon_index,
     load_pokemon_metadata,
     load_prefectures,
@@ -572,6 +573,32 @@ def _generation_label(generation: object, strings: dict) -> str:
     return strings["unknown_generation"]
 
 
+def load_representatives(path: Path, metadata: dict[str, dict]) -> dict[str, str]:
+    """dataset/pokemon_representatives.json を {slug: マンホールID} にする。
+
+    中身は {"representatives": {ポケモン名: マンホールID}}。写真が2枚以上あるポケモンについて、
+    人が manhole-ai の Tools/pokemon-rep で選んだ代表（カードのように1枚だけ出す所で使う）。
+    無いポケモン・ファイルが無いときは、今までどおり新しい写真で選ぶ。
+    """
+    if not path.exists():
+        return {}
+    try:
+        reps = json.loads(path.read_text(encoding="utf-8")).get("representatives", {})
+    except (json.JSONDecodeError, AttributeError):
+        reps = None
+    if not isinstance(reps, dict):
+        # 手で直したときに形が崩れても、Pages のビルドは止めずに代表なしで作る
+        logger.warning(f"Invalid representatives file: {path}")
+        return {}
+    ja_to_slug = {ja: meta.get("slug", "") for ja, meta in metadata.items() if meta.get("slug")}
+    out = {}
+    for ja_name, mid in reps.items():
+        slug = ja_to_slug.get(ja_name) or ja_to_slug.get(_normalize_katakana(ja_name))
+        if slug:
+            out[slug] = str(mid)
+    return out
+
+
 def _photo_url(mid: str, photo: dict | None, available_images: frozenset[str]) -> str:
     if mid and mid in available_images:
         return f"{BASE_URL}manhole/image/{quote(mid, safe='')}_latest.jpeg"
@@ -588,10 +615,26 @@ def _select_latest_image(
     translate_pref: Callable[[str], str],
     lang: str,
     strings: dict,
+    representative_id: str = "",
 ) -> dict | None:
     ids = {str(m.get("id", "")).strip() for m in manholes if m.get("id")}
     photos = photos_data.get("photos", {}) if isinstance(photos_data, dict) else {}
     records_by_id = {str(m.get("id", "")).strip(): m for m in manholes}
+
+    # 人が選んだ代表があればそれを出す（そのポケモンのマンホールで、今の写真一覧に公開写真があるときだけ）。
+    # _latest.jpeg は写真が非公開・削除になっても残ることがあるので、ファイルがあるだけでは代表にしない
+    if representative_id in ids and representative_id in photos:
+        url = _photo_url(representative_id, photos.get(representative_id), available_images)
+        if url:
+            location = _location_text(records_by_id[representative_id], translate_pref, lang)
+            return {
+                "url": url,
+                "manhole_id": representative_id,
+                "location": location,
+                "alt": strings["latest_image_alt"].format(
+                    name=display_name, location=location or strings["region_summary_unknown"]
+                ),
+            }
 
     photo_candidates = [
         p for p in photos.values()
@@ -637,7 +680,9 @@ def _build_pokemon_cards(
     translate_pref: Callable[[str], str],
     photos_data: dict,
     image_dir: Path,
+    representatives: dict[str, str] | None = None,
 ) -> list[dict]:
+    representatives = representatives or {}
     url_prefix = lang_config["url_prefix"]
     available_images = frozenset(
         p.stem.removesuffix("_latest")
@@ -664,7 +709,7 @@ def _build_pokemon_cards(
         }
         card["latest_image"] = _select_latest_image(
             manholes, photos_data, available_images, display_name,
-            translate_pref, lang, strings,
+            translate_pref, lang, strings, representatives.get(slug, ""),
         )
         cards.append(card)
     return sorted(cards, key=lambda c: (-c["count"], c["name"]))
@@ -749,6 +794,7 @@ def generate_html(
     translate_pref: Callable[[str], str],
     photos_data: dict,
     image_dir: Path,
+    representatives: dict[str, str] | None = None,
 ) -> str:
     total_count = len(pokemon_index)
     url_prefix = lang_config["url_prefix"]
@@ -760,7 +806,7 @@ def generate_html(
     hreflang_html = _hreflang_links_index()
     cards = _build_pokemon_cards(
         pokemon_index, lang, lang_config, strings, translate_pref,
-        photos_data, image_dir,
+        photos_data, image_dir, representatives,
     )
     cards_by_slug = {c["slug"]: c for c in cards}
     enhancement = INDEX_ENHANCEMENT_STRINGS[lang]
@@ -1655,6 +1701,10 @@ def main() -> int:
     parser.add_argument("--photos", default="docs/latest-manhole-photos.json")
     parser.add_argument("--images", default="dataset/manhole/image")
     parser.add_argument(
+        "--representatives", default="dataset/pokemon_representatives.json",
+        help="ポケモンごとの代表のマンホール（カードの写真に使う）",
+    )
+    parser.add_argument(
         "--output-root", default="dist",
         help="Root output directory (default: dist). Index goes to {output-root}/pokemon/ for ja.",
     )
@@ -1683,6 +1733,8 @@ def main() -> int:
     image_dir = Path(args.images)
     pokemon_index = build_pokemon_index(manholes, metadata)
     logger.info(f"Pokemon with active pokefuta: {len(pokemon_index)}")
+    representatives = load_representatives(Path(args.representatives), metadata)
+    logger.info(f"Representative manholes: {len(representatives)}")
 
     output_root = Path(args.output_root)
     langs_to_build = [la for la in args.langs if la in LANG_CONFIGS]
@@ -1711,7 +1763,7 @@ def main() -> int:
         output_dir.mkdir(parents=True, exist_ok=True)
         html = generate_html(
             pokemon_index, lang, lc, strings, translate_pref,
-            photos_data, image_dir,
+            photos_data, image_dir, representatives,
         )
         (output_dir / "index.html").write_text(html, encoding="utf-8")
         logger.info(f"[{lang}] Written: {output_dir}/index.html")
