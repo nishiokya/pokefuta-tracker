@@ -55,6 +55,22 @@
 
   /* 全画面地図が参照する旧名。既存ページの互換のため残す */
   --site-header-height: var(--chrome-height);
+
+  /* 本文コンテナの最大幅。PC でページを移ると本文の左端がガタガタ動いていた
+     （800〜1120px の6種類が各ジェネレータに直書きされていた）ので2段に絞った。
+       wide   … 一覧・地図まわり・詳細など、ほぼ全ページ（トップと同じ 1120px）
+       narrow … 規約・LP など「読むだけ」のページ
+     各ページは var(--page-max-wide, 1120px) のようにフォールバック付きで参照する。
+     新しいページで別の幅を直書きしないこと。 */
+  --page-max-wide: 1120px;
+  --page-max-narrow: 720px;
+}
+
+/* スクロールの有無でスクロールバー（Windows など）のぶん中央寄せの本文が
+   左右にずれないよう、常に溝を確保する。全画面地図はスクロールしないので
+   溝が空白の帯になるだけ。除外する */
+html:not(:has(body.pokefuta-map-page)) {
+  scrollbar-gutter: stable;
 }
 
 body.has-site-header {

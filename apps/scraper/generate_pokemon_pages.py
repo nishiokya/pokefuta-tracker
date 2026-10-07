@@ -931,6 +931,7 @@ def generate_html(
             f"<figcaption><a href='{hero_href}'>{escape(location_of(hero))}</a></figcaption>"
             f"</figure>"
         )
+    hero_class = "poke-hero has-photo" if hero_html else "poke-hero"
 
     sections_html = ""
     for prefecture_ja, group in groupby(sorted_manholes, key=lambda m: m.get("prefecture", "")):
@@ -1099,7 +1100,7 @@ def generate_html(
       padding: 0 16px 16px;
     }}
     .container {{
-      max-width: 800px;
+      max-width: var(--page-max-wide, 1120px);
       margin: 16px auto 0;
       background: white;
       border-radius: 12px;
@@ -1128,6 +1129,25 @@ def generate_html(
     }}
     .poke-hero-photo figcaption a {{
       color: inherit;
+    }}
+    /* PC は本文が --page-max-wide まで広がるので、代表写真を右の列に置き、
+       見出し・説明文は左の列で行長を抑える。代表写真が無いページ
+       （pick_hero_manhole() が None）は空の列を作らないよう1カラムのまま */
+    @media (min-width: 1024px) {{
+      .poke-hero.has-photo {{
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 360px;
+        column-gap: 32px;
+        align-items: start;
+      }}
+      .poke-hero.has-photo > * {{
+        grid-column: 1;
+      }}
+      .poke-hero.has-photo > .poke-hero-photo {{
+        grid-column: 2;
+        grid-row: 1 / span 8;
+        margin: 0;
+      }}
     }}
     .poke-seo-desc {{
       font-size: 14px;
@@ -1331,7 +1351,7 @@ def generate_html(
     </ol>
   </nav>
 
-  <div class="poke-hero">
+  <div class="{hero_class}">
     <h1>{escape(display_name)}{escape(strings['og_title_suffix'])}</h1>
     {multilang_html}
     {type_html}

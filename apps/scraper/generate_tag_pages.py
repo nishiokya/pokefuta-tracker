@@ -391,7 +391,7 @@ def build_page(
       line-height: 1.65;
     }}
     a {{ color: #176f68; }}
-    .page {{ max-width: 1040px; margin: 0 auto; padding: 20px 16px 56px; }}
+    .page {{ max-width: var(--page-max-wide, 1120px); margin: 0 auto; padding: 20px 16px 56px; }}
     .breadcrumb {{ display: flex; flex-wrap: wrap; gap: 8px; font-size: .82rem; font-weight: 800; }}
     .breadcrumb a {{ text-decoration: none; }}
     .hero {{

@@ -22,7 +22,11 @@ import re
 from pathlib import Path
 
 
-STYLESHEET_TEMPLATE = '<link rel="stylesheet" href="{asset_base}assets/site-header.css">'
+# site-header.css を変えたら上げる。再訪者のブラウザに古いクロム・本文幅が残らないように
+SITE_HEADER_CSS_VERSION = "20261006a"
+STYLESHEET_TEMPLATE = (
+    '<link rel="stylesheet" href="{asset_base}assets/site-header.css?v=' + SITE_HEADER_CSS_VERSION + '">'
+)
 SESSION_BADGE_SCRIPT_TEMPLATE = '<script src="{asset_base}assets/session-badge.js" defer></script>'
 SITE_HEADER_ANALYTICS_SCRIPT_TEMPLATE = '<script src="{asset_base}assets/site-header-analytics.js" defer></script>'
 

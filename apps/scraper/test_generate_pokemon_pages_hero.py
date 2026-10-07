@@ -78,6 +78,13 @@ class HeroHtmlTests(unittest.TestCase):
         self.assertNotIn("<figure class='poke-hero-photo'>", html)
         self.assertIn(f'og:image" content="{DEFAULT_OGP_IMAGE}"', html)
 
+    def test_pc_photo_column_only_when_hero_exists(self):
+        # 写真が無いのに PC の2カラムを組むと、空の360px列で見出しが狭くなる
+        self.assertIn('<div class="poke-hero has-photo">', _html("42"))
+        html = _html("")
+        self.assertIn('<div class="poke-hero">', html)
+        self.assertNotIn("has-photo\">", html)
+
     def test_other_languages_get_the_hero_too(self):
         self.assertIn("manhole/image/42_latest.jpeg' alt='Slowpoke'", _html("42", "en"))
 

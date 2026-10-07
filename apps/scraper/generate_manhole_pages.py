@@ -1363,7 +1363,7 @@ def generate_html(
     }}
 
     .container {{
-      max-width: 800px;
+      max-width: var(--page-max-wide, 1120px);
       margin: 16px auto 0;
       background: white;
       border-radius: 12px;
@@ -1615,6 +1615,20 @@ def generate_html(
 
     .hero-body {{
       padding: 20px 20px 24px;
+    }}
+
+    /* PC は本文が --page-max-wide まで広がるので、1カラムのままだと写真が
+       画面より大きくなる。写真と見出し・タグ・投稿ボタンを横に並べる */
+    @media (min-width: 1024px) {{
+      .hero-card {{
+        display: grid;
+        grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+        align-items: center;
+      }}
+
+      .hero-body {{
+        padding: 28px 32px;
+      }}
     }}
 
     .hero-region {{

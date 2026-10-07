@@ -17,7 +17,7 @@ BARE = "<!doctype html><html><head></head><body><main></main></body></html>"
 class InjectSiteHeaderTest(unittest.TestCase):
     def test_injects_stylesheet_header_tabs_and_body_class(self):
         result = inject(BARE)
-        self.assertIn('href="./assets/site-header.css"', result)
+        self.assertIn('href="./assets/site-header.css?v=', result)
         self.assertIn('class="site-header"', result)
         self.assertIn('class="site-tabs"', result)
         self.assertIn('class="site-footer"', result)
@@ -220,7 +220,7 @@ class InjectSiteHeaderTest(unittest.TestCase):
 <main>本文</main>
 </body></html>"""
         result = inject(legacy)
-        self.assertIn('href="./assets/site-header.css"', result)
+        self.assertIn('href="./assets/site-header.css?v=', result)
         self.assertIn('<body class="has-site-header top-page">', result)
         self.assertNotIn("top-app-bar", result)
         self.assertNotIn("ページ固有ヘッダー", result)
@@ -241,7 +241,7 @@ class InjectSiteHeaderTest(unittest.TestCase):
     def test_uses_relative_paths_for_nested_localized_page(self):
         html = '<html lang="en"><head></head><body></body></html>'
         result = inject(html, asset_base="../../../", page_base="../../")
-        self.assertIn('href="../../../assets/site-header.css"', result)
+        self.assertIn('href="../../../assets/site-header.css?v=', result)
         self.assertIn('href="../../map.html">Map</a>', result)
         self.assertIn('href="../../prefectures/">Prefectures</a>', result)
         self.assertIn('href="../../summary/">Stats</a>', result)
