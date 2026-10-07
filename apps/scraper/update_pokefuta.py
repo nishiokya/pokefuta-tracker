@@ -31,7 +31,7 @@ GitHub Actions 用想定引数:
   2: 異常終了 (例外)
 """
 import argparse, json, logging, os, re, signal, sys, time, tempfile
-from datetime import datetime
+from datetime import date, datetime, timedelta, timezone
 from typing import Any, Dict, List, Optional, Tuple
 
 from bs4 import BeautifulSoup
@@ -524,9 +524,37 @@ def fetch_install_status(base: str, logger: logging.Logger) -> Dict[str, Dict]:
     return idx
 
 
-def apply_install_status(record: Dict, install_idx: Dict[str, Dict]) -> bool:
+JST = timezone(timedelta(hours=9))
+_SCHEDULE_RE = re.compile(r'(\d{4})年(\d{1,2})月(?:(\d{1,2})日|(上旬|中旬|下旬))?')
+
+
+def scheduled_install_deadline(note: str) -> Optional[date]:
+    """「2026年4月11日設置予定」などから、設置予定の遅いほうの端の日付を返す。
+
+    上旬/中旬/下旬はその旬の最終日、日付なしは月末とみなす。読めなければ None。
+    """
+    m = _SCHEDULE_RE.search(note)
+    if not m:
+        return None
+    year, month = int(m.group(1)), int(m.group(2))
+    if not 1 <= month <= 12:
+        return None
+    month_end = (date(year + month // 12, month % 12 + 1, 1) - timedelta(days=1)).day
+    if m.group(3):
+        day = int(m.group(3))
+    else:
+        day = {'上旬': 10, '中旬': 20}.get(m.group(4) or '', month_end)
+    if not 1 <= day <= month_end:
+        return None
+    return date(year, month, day)
+
+
+def apply_install_status(record: Dict, install_idx: Dict[str, Dict],
+                         today: Optional[date] = None) -> bool:
     """検索APIの設置状況をレコードにマージする。
 
+    公式の「設置予定」は設置後も書き換えられないことがある（小野町は 4/11 予定のまま半年残った）。
+    予定日が過ぎていれば設置済みとして扱う。
     installed が既存値から遷移した場合(初回付与を除く)のみ True を返す。
     """
     row = install_idx.get(str(record.get('id')))
@@ -535,6 +563,10 @@ def apply_install_status(record: Dict, install_idx: Dict[str, Dict]) -> bool:
 
     note = (row.get('installation_date') or '').strip()
     installed = "設置予定" not in note
+    if not installed:
+        deadline = scheduled_install_deadline(note)
+        today = today or datetime.now(JST).date()
+        installed = deadline is not None and deadline < today
 
     had = 'installed' in record
     old = record.get('installed')
