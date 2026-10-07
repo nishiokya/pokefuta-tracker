@@ -541,6 +541,8 @@ def apply_install_status(record: Dict, install_idx: Dict[str, Dict],
 
     公式の「設置予定」は設置後も書き換えられないことがある（小野町 #461 は 4/11 予定のまま半年残った）。
     写真館に現地写真が投稿されていれば、表記に関係なく設置済みとする。
+    写真が後で消えたり非公開になったりしても蓋は無くならないので、写真で確かめた事実は
+    installed_evidence="photo" として残し、以後も設置済みのままにする。
     installed が既存値から遷移した場合(初回付与を除く)のみ True を返す。
     """
     row = install_idx.get(str(record.get('id')))
@@ -548,7 +550,14 @@ def apply_install_status(record: Dict, install_idx: Dict[str, Dict],
         return False
 
     note = (row.get('installation_date') or '').strip()
-    installed = "設置予定" not in note or str(record.get('id')) in photo_ids
+    scheduled = "設置予定" in note
+    photo_confirmed = str(record.get('id')) in photo_ids or record.get('installed_evidence') == 'photo'
+    installed = not scheduled or photo_confirmed
+    if scheduled and photo_confirmed:
+        record['installed_evidence'] = 'photo'
+    else:
+        # 公式が設置済み表記になれば写真の裏付けは要らない
+        record.pop('installed_evidence', None)
 
     had = 'installed' in record
     old = record.get('installed')
