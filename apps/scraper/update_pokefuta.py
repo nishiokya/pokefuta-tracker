@@ -31,7 +31,7 @@ GitHub Actions 用想定引数:
   2: 異常終了 (例外)
 """
 import argparse, json, logging, os, re, signal, sys, time, tempfile
-from datetime import date, datetime, timedelta, timezone
+from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple
 
 from bs4 import BeautifulSoup
@@ -524,37 +524,23 @@ def fetch_install_status(base: str, logger: logging.Logger) -> Dict[str, Dict]:
     return idx
 
 
-JST = timezone(timedelta(hours=9))
-_SCHEDULE_RE = re.compile(r'(\d{4})年(\d{1,2})月(?:(\d{1,2})日|(上旬|中旬|下旬))?')
-
-
-def scheduled_install_deadline(note: str) -> Optional[date]:
-    """「2026年4月11日設置予定」などから、設置予定の遅いほうの端の日付を返す。
-
-    上旬/中旬/下旬はその旬の最終日、日付なしは月末とみなす。読めなければ None。
-    """
-    m = _SCHEDULE_RE.search(note)
-    if not m:
-        return None
-    year, month = int(m.group(1)), int(m.group(2))
-    if not 1 <= month <= 12:
-        return None
-    month_end = (date(year + month // 12, month % 12 + 1, 1) - timedelta(days=1)).day
-    if m.group(3):
-        day = int(m.group(3))
-    else:
-        day = {'上旬': 10, '中旬': 20}.get(m.group(4) or '', month_end)
-    if not 1 <= day <= month_end:
-        return None
-    return date(year, month, day)
+def load_photo_ids(path: str, logger: logging.Logger) -> set:
+    """写真館のスナップショット(docs/api/manholes.json)から、写真が投稿された蓋の id を返す。"""
+    try:
+        with open(path, encoding='utf-8') as f:
+            rows = json.load(f).get('manholes', [])
+    except Exception as e:
+        logger.warning("load_photo_ids: failed to read %s: %s", path, e)
+        return set()
+    return {str(r['id']) for r in rows if r.get('id') is not None and (r.get('photo_count') or 0) > 0}
 
 
 def apply_install_status(record: Dict, install_idx: Dict[str, Dict],
-                         today: Optional[date] = None) -> bool:
+                         photo_ids: frozenset = frozenset()) -> bool:
     """検索APIの設置状況をレコードにマージする。
 
-    公式の「設置予定」は設置後も書き換えられないことがある（小野町は 4/11 予定のまま半年残った）。
-    予定日が過ぎていれば設置済みとして扱う。
+    公式の「設置予定」は設置後も書き換えられないことがある（小野町 #461 は 4/11 予定のまま半年残った）。
+    写真館に現地写真が投稿されていれば、表記に関係なく設置済みとする。
     installed が既存値から遷移した場合(初回付与を除く)のみ True を返す。
     """
     row = install_idx.get(str(record.get('id')))
@@ -562,11 +548,7 @@ def apply_install_status(record: Dict, install_idx: Dict[str, Dict],
         return False
 
     note = (row.get('installation_date') or '').strip()
-    installed = "設置予定" not in note
-    if not installed:
-        deadline = scheduled_install_deadline(note)
-        today = today or datetime.now(JST).date()
-        installed = deadline is not None and deadline < today
+    installed = "設置予定" not in note or str(record.get('id')) in photo_ids
 
     had = 'installed' in record
     old = record.get('installed')
@@ -592,6 +574,10 @@ def main():
     parser.add_argument('--no-fetch', dest='no_fetch', action='store_true',
                         help='Skip all network access; only re-apply manhole_titles.json and recompute titles '
                              '(manhole_titles.json を変えた PR で公開データを作り直すとき用)')
+    parser.add_argument('--photo-snapshot',
+                        default=os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+                                             'docs', 'api', 'manholes.json'),
+                        help='写真館スナップショット。写真のある蓋は「設置予定」表記でも設置済みとする')
     args = parser.parse_args()
 
     logger = setup_logger(args.log_level)
@@ -604,6 +590,8 @@ def main():
 
     install_idx = {} if args.no_fetch else fetch_install_status(args.base, logger)
     logger.info("Loaded %d install-status rows from search API", len(install_idx))
+    photo_ids = load_photo_ids(args.photo_snapshot, logger)
+    logger.info("Loaded %d manhole ids with photos from %s", len(photo_ids), args.photo_snapshot)
 
     existing = load_existing(args.out)
     by_id: Dict[str, Dict] = {r['id']: r for r in existing if 'id' in r}
@@ -627,7 +615,7 @@ def main():
         r.setdefault('is_prefecture_site', False)
         if apply_title_metadata(r, title_data):
             changed.setdefault(r['id'], {})['title_metadata'] = True
-        if apply_install_status(r, install_idx):
+        if apply_install_status(r, install_idx, photo_ids):
             r['last_updated'] = now_iso()
             changed.setdefault(r['id'], {})['install_status'] = True
         # Always sync city_url from city_links (source of truth, no last_updated bump)
@@ -683,7 +671,7 @@ def main():
             for _f in ('parking', 'nearby_spots', 'source_urls', 'address_raw', 'address_norm'):
                 parsed.pop(_f, None)
             apply_title_metadata(parsed, title_data)
-            apply_install_status(parsed, install_idx)
+            apply_install_status(parsed, install_idx, photo_ids)
             # Sync city_url from city_links for new records
             pref = parsed.get('prefecture', '')
             city = parsed.get('city', '')

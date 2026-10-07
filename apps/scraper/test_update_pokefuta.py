@@ -5,7 +5,6 @@ from __future__ import annotations
 import importlib.util
 import sys
 import unittest
-from datetime import date
 from pathlib import Path
 
 MODULE_PATH = Path(__file__).with_name("update_pokefuta.py")
@@ -50,43 +49,33 @@ class UpdatePokefutaApplyTitleMetadataTagsTest(unittest.TestCase):
         self.assertFalse(MODULE.apply_title_metadata(record, {"1": {"tags": ["seaside"]}}))
 
 
-BEFORE_AUGUST = date(2026, 7, 1)
-
-
 class UpdatePokefutaApplyInstallStatusTest(unittest.TestCase):
-    def test_past_scheduled_date_counts_as_installed(self) -> None:
+    def test_scheduled_but_photographed_counts_as_installed(self) -> None:
         record = {"id": "461", "installed": False}
         note = "2026年4月11日設置予定"
         idx = {"461": {"manhole_no": "461", "installation_date": note}}
-        result = MODULE.apply_install_status(record, idx, today=date(2026, 10, 7))
+        result = MODULE.apply_install_status(record, idx, frozenset({"461"}))
         self.assertTrue(result)
         self.assertTrue(record["installed"])
         self.assertEqual(record["installation_note"], note)
 
-    def test_scheduled_day_itself_is_still_preinstall(self) -> None:
+    def test_scheduled_without_photo_stays_preinstall(self) -> None:
         record = {"id": "461"}
         idx = {"461": {"manhole_no": "461", "installation_date": "2026年4月11日設置予定"}}
-        MODULE.apply_install_status(record, idx, today=date(2026, 4, 11))
+        MODULE.apply_install_status(record, idx, frozenset({"1"}))
         self.assertFalse(record["installed"])
 
-    def test_deadline_reads_jun_and_month_end(self) -> None:
-        f = MODULE.scheduled_install_deadline
-        self.assertEqual(date(2026, 8, 10), f("2026年8月上旬までに設置予定。"))
-        self.assertEqual(date(2026, 8, 20), f("2026年8月中旬設置予定"))
-        self.assertEqual(date(2026, 2, 28), f("2026年2月下旬設置予定"))
-        self.assertEqual(date(2026, 12, 31), f("2026年12月設置予定"))
-        self.assertIsNone(f("今冬設置予定"))
-
-    def test_unreadable_schedule_stays_preinstall(self) -> None:
-        record = {"id": "490"}
-        idx = {"490": {"manhole_no": "490", "installation_date": "今冬設置予定"}}
-        MODULE.apply_install_status(record, idx, today=date(2030, 1, 1))
-        self.assertFalse(record["installed"])
+    def test_load_photo_ids_reads_snapshot(self) -> None:
+        import json, logging, tempfile
+        with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as f:
+            json.dump({"manholes": [{"id": 461, "photo_count": 1}, {"id": 2, "photo_count": 0}]}, f)
+        self.assertEqual({"461"}, MODULE.load_photo_ids(f.name, logging.getLogger("t")))
+        self.assertEqual(set(), MODULE.load_photo_ids("/nonexistent.json", logging.getLogger("t")))
 
     def test_scheduled_not_yet_installed(self) -> None:
         record = {"id": "481"}
         idx = {"481": {"manhole_no": "481", "installation_date": "2026年8月上旬までに設置予定。"}}
-        result = MODULE.apply_install_status(record, idx, today=BEFORE_AUGUST)
+        result = MODULE.apply_install_status(record, idx)
         self.assertFalse(result)
         self.assertFalse(record["installed"])
         self.assertEqual(record["installation_note"], "2026年8月上旬までに設置予定。")
@@ -94,7 +83,7 @@ class UpdatePokefutaApplyInstallStatusTest(unittest.TestCase):
     def test_installed_empty_note(self) -> None:
         record = {"id": "484"}
         idx = {"484": {"manhole_no": "484", "installation_date": ""}}
-        result = MODULE.apply_install_status(record, idx, today=BEFORE_AUGUST)
+        result = MODULE.apply_install_status(record, idx)
         self.assertFalse(result)
         self.assertTrue(record["installed"])
         self.assertNotIn("installation_note", record)
@@ -103,7 +92,7 @@ class UpdatePokefutaApplyInstallStatusTest(unittest.TestCase):
         record = {"id": "124"}
         note = "移設済み（ポケストップは順次移設予定）"
         idx = {"124": {"manhole_no": "124", "installation_date": note}}
-        result = MODULE.apply_install_status(record, idx, today=BEFORE_AUGUST)
+        result = MODULE.apply_install_status(record, idx)
         self.assertFalse(result)
         self.assertTrue(record["installed"])
         self.assertEqual(record["installation_note"], note)
@@ -112,7 +101,7 @@ class UpdatePokefutaApplyInstallStatusTest(unittest.TestCase):
         record = {"id": "1"}
         note = "公園の開園時間外には、ポケふたをご覧いただくことができません。"
         idx = {"1": {"manhole_no": "1", "installation_date": note}}
-        result = MODULE.apply_install_status(record, idx, today=BEFORE_AUGUST)
+        result = MODULE.apply_install_status(record, idx)
         self.assertFalse(result)
         self.assertTrue(record["installed"])
         self.assertEqual(record["installation_note"], note)
@@ -120,20 +109,20 @@ class UpdatePokefutaApplyInstallStatusTest(unittest.TestCase):
     def test_transition_returns_true_when_already_had_field(self) -> None:
         record = {"id": "481", "installed": True}
         idx = {"481": {"manhole_no": "481", "installation_date": "2026年8月上旬までに設置予定。"}}
-        result = MODULE.apply_install_status(record, idx, today=BEFORE_AUGUST)
+        result = MODULE.apply_install_status(record, idx)
         self.assertTrue(result)
         self.assertFalse(record["installed"])
 
     def test_first_time_set_returns_false(self) -> None:
         record = {"id": "481"}
         idx = {"481": {"manhole_no": "481", "installation_date": "2026年8月上旬までに設置予定。"}}
-        result = MODULE.apply_install_status(record, idx, today=BEFORE_AUGUST)
+        result = MODULE.apply_install_status(record, idx)
         self.assertFalse(result)
 
     def test_id_not_in_index_returns_false_and_untouched(self) -> None:
         record = {"id": "999", "title": "unchanged"}
         idx = {"481": {"manhole_no": "481", "installation_date": ""}}
-        result = MODULE.apply_install_status(record, idx, today=BEFORE_AUGUST)
+        result = MODULE.apply_install_status(record, idx)
         self.assertFalse(result)
         self.assertEqual(record, {"id": "999", "title": "unchanged"})
 
