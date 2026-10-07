@@ -524,9 +524,25 @@ def fetch_install_status(base: str, logger: logging.Logger) -> Dict[str, Dict]:
     return idx
 
 
-def apply_install_status(record: Dict, install_idx: Dict[str, Dict]) -> bool:
+def load_photo_ids(path: str, logger: logging.Logger) -> set:
+    """写真館のスナップショット(docs/api/manholes.json)から、写真が投稿された蓋の id を返す。"""
+    try:
+        with open(path, encoding='utf-8') as f:
+            rows = json.load(f).get('manholes', [])
+    except Exception as e:
+        logger.warning("load_photo_ids: failed to read %s: %s", path, e)
+        return set()
+    return {str(r['id']) for r in rows if r.get('id') is not None and (r.get('photo_count') or 0) > 0}
+
+
+def apply_install_status(record: Dict, install_idx: Dict[str, Dict],
+                         photo_ids: frozenset = frozenset()) -> bool:
     """検索APIの設置状況をレコードにマージする。
 
+    公式の「設置予定」は設置後も書き換えられないことがある（小野町 #461 は 4/11 予定のまま半年残った）。
+    写真館に現地写真が投稿されていれば、表記に関係なく設置済みとする。
+    写真が後で消えたり非公開になったりしても蓋は無くならないので、写真で確かめた事実は
+    installed_evidence="photo" として残し、以後も設置済みのままにする。
     installed が既存値から遷移した場合(初回付与を除く)のみ True を返す。
     """
     row = install_idx.get(str(record.get('id')))
@@ -534,7 +550,14 @@ def apply_install_status(record: Dict, install_idx: Dict[str, Dict]) -> bool:
         return False
 
     note = (row.get('installation_date') or '').strip()
-    installed = "設置予定" not in note
+    scheduled = "設置予定" in note
+    photo_confirmed = str(record.get('id')) in photo_ids or record.get('installed_evidence') == 'photo'
+    installed = not scheduled or photo_confirmed
+    if scheduled and photo_confirmed:
+        record['installed_evidence'] = 'photo'
+    else:
+        # 公式が設置済み表記になれば写真の裏付けは要らない
+        record.pop('installed_evidence', None)
 
     had = 'installed' in record
     old = record.get('installed')
@@ -560,6 +583,10 @@ def main():
     parser.add_argument('--no-fetch', dest='no_fetch', action='store_true',
                         help='Skip all network access; only re-apply manhole_titles.json and recompute titles '
                              '(manhole_titles.json を変えた PR で公開データを作り直すとき用)')
+    parser.add_argument('--photo-snapshot',
+                        default=os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+                                             'docs', 'api', 'manholes.json'),
+                        help='写真館スナップショット。写真のある蓋は「設置予定」表記でも設置済みとする')
     args = parser.parse_args()
 
     logger = setup_logger(args.log_level)
@@ -572,6 +599,8 @@ def main():
 
     install_idx = {} if args.no_fetch else fetch_install_status(args.base, logger)
     logger.info("Loaded %d install-status rows from search API", len(install_idx))
+    photo_ids = load_photo_ids(args.photo_snapshot, logger)
+    logger.info("Loaded %d manhole ids with photos from %s", len(photo_ids), args.photo_snapshot)
 
     existing = load_existing(args.out)
     by_id: Dict[str, Dict] = {r['id']: r for r in existing if 'id' in r}
@@ -595,7 +624,7 @@ def main():
         r.setdefault('is_prefecture_site', False)
         if apply_title_metadata(r, title_data):
             changed.setdefault(r['id'], {})['title_metadata'] = True
-        if apply_install_status(r, install_idx):
+        if apply_install_status(r, install_idx, photo_ids):
             r['last_updated'] = now_iso()
             changed.setdefault(r['id'], {})['install_status'] = True
         # Always sync city_url from city_links (source of truth, no last_updated bump)
@@ -651,7 +680,7 @@ def main():
             for _f in ('parking', 'nearby_spots', 'source_urls', 'address_raw', 'address_norm'):
                 parsed.pop(_f, None)
             apply_title_metadata(parsed, title_data)
-            apply_install_status(parsed, install_idx)
+            apply_install_status(parsed, install_idx, photo_ids)
             # Sync city_url from city_links for new records
             pref = parsed.get('prefecture', '')
             city = parsed.get('city', '')

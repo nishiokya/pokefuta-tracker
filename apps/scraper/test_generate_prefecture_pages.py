@@ -213,17 +213,18 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         )
         guide_html = html[html.index('<section class="visit-guide"'):html.index('id="map-heading"')]
         self.assertIn("福島のポケふたの回り方", guide_html)
-        for heading, count in (("会津から回る", 11), ("中通りから回る", 20), ("浜通りから回る", 11)):
+        for heading, count in (("会津から回る", 11), ("中通りから回る", 21), ("浜通りから回る", 11)):
             self.assertIn(f"{heading}（{count}地点）", guide_html)
         installed_ids = {
             str(r["id"]) for r in records
             if r.get("installed") is not False and r.get("status", "active") == "active"
         }
-        self.assertEqual(42, len(installed_ids))
+        self.assertEqual(43, len(installed_ids))
         for mid in installed_ids:
             self.assertEqual(1, guide_html.count(f'href="#manhole-{mid}"'))
             self.assertEqual(1, html.count(f'id="manhole-{mid}"'))
-        self.assertNotIn('href="#manhole-461"', guide_html)
+        # 小野町 #461 は公式が「設置予定」のままだが、現地写真で設置を確かめている
+        self.assertIn("461", installed_ids)
         self.assertIn("全地点を1日で巡る前提にせず", guide_html)
         for source in guides["福島県"]["sources"]:
             self.assertIn(source["url"], guide_html)

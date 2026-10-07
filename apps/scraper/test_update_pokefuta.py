@@ -50,6 +50,44 @@ class UpdatePokefutaApplyTitleMetadataTagsTest(unittest.TestCase):
 
 
 class UpdatePokefutaApplyInstallStatusTest(unittest.TestCase):
+    def test_scheduled_but_photographed_counts_as_installed(self) -> None:
+        record = {"id": "461", "installed": False}
+        note = "2026年4月11日設置予定"
+        idx = {"461": {"manhole_no": "461", "installation_date": note}}
+        result = MODULE.apply_install_status(record, idx, frozenset({"461"}))
+        self.assertTrue(result)
+        self.assertTrue(record["installed"])
+        self.assertEqual(record["installation_note"], note)
+
+    def test_photo_confirmation_survives_photo_removal(self) -> None:
+        record = {"id": "461"}
+        idx = {"461": {"manhole_no": "461", "installation_date": "2026年4月11日設置予定"}}
+        MODULE.apply_install_status(record, idx, frozenset({"461"}))
+        self.assertEqual("photo", record["installed_evidence"])
+        result = MODULE.apply_install_status(record, idx, frozenset())
+        self.assertFalse(result)
+        self.assertTrue(record["installed"])
+
+    def test_official_installed_note_drops_photo_evidence(self) -> None:
+        record = {"id": "461", "installed": True, "installed_evidence": "photo"}
+        idx = {"461": {"manhole_no": "461", "installation_date": ""}}
+        MODULE.apply_install_status(record, idx, frozenset({"461"}))
+        self.assertTrue(record["installed"])
+        self.assertNotIn("installed_evidence", record)
+
+    def test_scheduled_without_photo_stays_preinstall(self) -> None:
+        record = {"id": "461"}
+        idx = {"461": {"manhole_no": "461", "installation_date": "2026年4月11日設置予定"}}
+        MODULE.apply_install_status(record, idx, frozenset({"1"}))
+        self.assertFalse(record["installed"])
+
+    def test_load_photo_ids_reads_snapshot(self) -> None:
+        import json, logging, tempfile
+        with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as f:
+            json.dump({"manholes": [{"id": 461, "photo_count": 1}, {"id": 2, "photo_count": 0}]}, f)
+        self.assertEqual({"461"}, MODULE.load_photo_ids(f.name, logging.getLogger("t")))
+        self.assertEqual(set(), MODULE.load_photo_ids("/nonexistent.json", logging.getLogger("t")))
+
     def test_scheduled_not_yet_installed(self) -> None:
         record = {"id": "481"}
         idx = {"481": {"manhole_no": "481", "installation_date": "2026年8月上旬までに設置予定。"}}
