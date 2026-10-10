@@ -1,0 +1,130 @@
+/*
+ * 404 ページ（図鑑 data.pokefuta.com と写真館 pokefuta.com で同じ見た目にする）。
+ * 写真館側の写しは nishiokya/pokefuta の src/app/not-found.css。片方を変えたらもう片方も揃える。
+ */
+.lost {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 28px 16px 48px;
+  color: #2A2A2A;
+}
+
+.lost__card {
+  overflow: hidden;
+  text-align: center;
+  background: #FFF8EB;
+  border: 1px solid rgba(140, 106, 74, 0.2);
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(95, 68, 42, 0.13);
+}
+
+.lost__head { padding: 28px 20px 0; }
+
+.lost__code {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #7B63A8;
+}
+
+.lost__title {
+  margin: 8px 0 0;
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.35;
+  color: #4F3828;
+}
+
+.lost__lead {
+  margin: 10px 0 0;
+  font-size: 14px;
+  line-height: 1.7;
+  color: rgba(79, 56, 40, 0.78);
+}
+
+.lost__pick {
+  display: block;
+  width: 220px;
+  margin: 20px auto 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.lost__lid {
+  display: block;
+  width: 220px;
+  height: 220px;
+  object-fit: cover;
+  background: #E9DEC9;
+  border: 6px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 8px 24px rgba(95, 68, 42, 0.22);
+}
+
+.lost__caption {
+  display: block;
+  margin-top: 12px;
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.5;
+  color: #4F3828;
+}
+
+.lost__caption b { color: #7B63A8; }
+
+.lost__place {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(79, 56, 40, 0.7);
+}
+
+.lost__go {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 13px;
+  font-weight: 800;
+  color: #7B63A8;
+}
+
+
+.lost__links {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+  padding: 16px 20px 22px;
+  margin: 0;
+  list-style: none;
+}
+
+.lost__link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60px;
+  padding: 10px 8px;
+  font-size: 15px;
+  font-weight: 800;
+  color: #5A4690;
+  text-decoration: none;
+  background: #fff;
+  border: 1.5px solid #7B63A8;
+  border-radius: 12px;
+}
+
+.lost__link small {
+  margin-top: 2px;
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(79, 56, 40, 0.68);
+}
+
+.lost__link:hover { background: #F3EEFA; }
+
+@media (min-width: 560px) {
+  .lost { padding-top: 48px; }
+  .lost__title { font-size: 28px; }
+  .lost__links { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}

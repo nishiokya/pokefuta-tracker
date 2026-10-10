@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- GitHub Pages はどの深さの URL にもこのファイルを返すので、相対リンクをサイトのルート基準にする -->
+  <base href="/">
+  <title>ページが見つかりません｜ポケふた図鑑</title>
+  <meta name="description" content="お探しのページは見つかりませんでした。全国のポケふた（ポケモンマンホール）は図鑑・写真館から探せます。">
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="./assets/pokefuta-marker.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./assets/theme.css">
+  <link rel="stylesheet" href="./assets/not-found.css?v=20261010a">
+  <!-- Google Analytics -->
+  <script src="./assets/analytics.js?v=20260929a"></script>
+  <script>
+    window.PokefutaAnalytics.init({
+      page_path: '/404',
+      site_type: 'map',
+      page_type: 'not_found',
+    });
+    window.PokefutaAnalytics.bindClickTracking({ surface: 'not_found' });
+  </script>
+  <!-- End GA -->
+</head>
+<body>
+  <main class="lost">
+    <section class="lost__card" aria-labelledby="lost-title">
+      <div class="lost__head">
+        <p class="lost__code">404 NOT FOUND</p>
+        <h1 class="lost__title" id="lost-title">ページが見つかりませんでした</h1>
+        <p class="lost__lead">URLが変わったか、ページが削除された可能性があります。</p>
+      </div>
+
+      <a class="lost__pick" href="./manholes/40/" data-track="click_not_found" data-destination="manhole">
+        <img class="lost__lid" src="./manhole/image/40_lid.jpeg" alt="ヤドンのポケふた" width="220" height="220">
+        <span class="lost__caption"><b>ヤドン</b>もぽかんとしています</span>
+        <span class="lost__place">香川県綾川町のポケふた</span>
+        <span class="lost__go">このポケふたを見る ›</span>
+      </a>
+
+      <ul class="lost__links">
+        <li><a class="lost__link" href="./" data-track="click_not_found" data-destination="dex">ポケふた図鑑<small>全国のポケふたを探す</small></a></li>
+        <li><a class="lost__link" href="https://pokefuta.com/?from=data" data-track="click_not_found" data-destination="album">ポケふた写真館<small>みんなの写真を見る</small></a></li>
+        <li><a class="lost__link" href="https://pokefuta.com/design-manholes?from=data" data-track="click_not_found" data-destination="design">デザインマンホール<small>ご当地のマンホールを見る</small></a></li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

@@ -174,6 +174,9 @@ jobs:
           cp apps/web/login.html dist/login.html
           cp apps/web/about.html dist/about.html
           cp apps/web/privacy.html dist/privacy.html
+          echo "[dist] 404 page (fixed Slowpoke lid)"
+          python3 -m unittest apps.scraper.test_404_page
+          cp apps/web/404.html dist/404.html
           cp apps/web/sitemap.xml dist/sitemap.xml
           cp apps/web/robots.txt dist/robots.txt
           echo "[dist] Build multilingual pages (en / zh-TW / zh-CN / ko)"
