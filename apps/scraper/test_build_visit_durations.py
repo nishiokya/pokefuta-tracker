@@ -16,25 +16,47 @@ def _visit(vid: str, user: str, mid: str, shot: str, is_public: str = "t") -> di
             "created_at": "2026-10-02 00:00:00+00", "is_public": is_public}
 
 
+def _trip(user: str, minutes: int, is_public: str = "t", first: str = "1") -> list[dict]:
+    second = "2" if first == "1" else "1"
+    return [
+        _visit(f"{user}a", user, first, "01:00:00", is_public),
+        _visit(f"{user}b", user, second, f"{1 + minutes // 60:02d}:{minutes % 60:02d}:00", is_public),
+    ]
+
+
 class BuildTest(unittest.TestCase):
-    def setUp(self) -> None:
-        self.manholes = [_manhole("1"), _manhole("2")]
-        self.visits = []
-        for n in range(5):
-            self.visits += [_visit(f"a{n}", f"u{n}", "1", "01:00:00"), _visit(f"b{n}", f"u{n}", "2", "02:00:00")]
-        self.photos = {v["id"] for v in self.visits}
+    manholes = [_manhole("1"), _manhole("2")]
 
-    def test_five_people_are_published(self) -> None:
-        entries = MODULE.build(self.manholes, self.visits, [], self.photos)
-        self.assertEqual(entries[0]["people"], 5)
-        self.assertEqual(entries[0]["p25_minutes"], 60)
+    def build(self, visits: list[dict], photos: set[str] | None = None) -> list[dict]:
+        return MODULE.build(self.manholes, visits, [], photos or {v["id"] for v in visits})
 
-    def test_private_or_photoless_visits_are_not_counted(self) -> None:
-        """非公開・写真なしの visit は公開ページの集計に入れない（Codex レビュー、#608）。"""
-        private = [dict(v, is_public="f") if v["user_id"] == "u0" else v for v in self.visits]
-        self.assertEqual(MODULE.build(self.manholes, private, [], self.photos), [])
-        no_photo = self.photos - {"a0"}
-        self.assertEqual(MODULE.build(self.manholes, self.visits, [], no_photo), [])
+    def test_needs_three_public_people(self) -> None:
+        two_public = _trip("u0", 60) + _trip("u1", 60) + _trip("p0", 60, "f") + _trip("p1", 60, "f")
+        self.assertEqual(self.build(two_public), [])
+        self.assertEqual(len(self.build(two_public + _trip("u2", 60))), 1)
+
+    def test_durations_include_private_records(self) -> None:
+        """出すかどうかは公開の人数で決め、時間の幅は非公開も含めて計算する。"""
+        visits = _trip("u0", 30) + _trip("u1", 30) + _trip("u2", 30)
+        visits += _trip("p0", 120, "f") + _trip("p1", 120, "f") + _trip("p2", 120, "f")
+        entry = self.build(visits)[0]
+        self.assertEqual((entry["p25_minutes"], entry["p75_minutes"]), (30, 120))
+
+    def test_no_head_count_in_the_output(self) -> None:
+        entry = self.build(_trip("u0", 60) + _trip("u1", 60) + _trip("u2", 60))[0]
+        self.assertNotIn("people", entry)
+        self.assertNotIn("common_order_people", entry)
+
+    def test_common_order_comes_from_public_records_only(self) -> None:
+        public = _trip("u0", 60) + _trip("u1", 60) + _trip("u2", 60, first="2")
+        private = sum((_trip(f"p{n}", 60, "f", first="2") for n in range(5)), [])
+        # 公開の3人は同じ道筋（往復は同じ）なので出る。非公開は道筋の数に入らない
+        self.assertEqual(self.build(public + private)[0]["common_order"], ["1", "2"])
+
+    def test_photoless_visits_are_not_counted(self) -> None:
+        visits = _trip("u0", 60) + _trip("u1", 60) + _trip("u2", 60)
+        photos = {v["id"] for v in visits} - {"u0a"}
+        self.assertEqual(self.build(visits, photos), [])
 
     def test_measured_on_comes_from_the_backup_not_today(self) -> None:
         path = Path("/home/x/backups/pokefuta/db/2026-09-30T0416+0900/data.sql")

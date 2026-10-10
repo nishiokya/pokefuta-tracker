@@ -123,7 +123,7 @@ def duration_text(records: list[dict], durations: dict) -> str:
         return ""
     count = len(entry["manhole_ids"])
     return (
-        f"実際に{count}地点を1日で回った{entry['people']}人の多くは、"
+        f"実際に{count}地点を1日で回った人の多くは、"
         f"{duration_range(entry['p25_minutes'], entry['p75_minutes'])}で回っています。"
         + _mode_hint(records)
     )

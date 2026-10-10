@@ -26,7 +26,7 @@ RECORDS = [
 ]
 DURATIONS = {
     "measured_on": "2026-10-11",
-    "entries": [{"manhole_ids": ["206", "207", "208", "209", "210"], "people": 11,
+    "entries": [{"manhole_ids": ["206", "207", "208", "209", "210"],
                  "p25_minutes": 84, "p75_minutes": 150}],
 }
 
@@ -53,7 +53,7 @@ class FormatTest(unittest.TestCase):
 class MatchTest(unittest.TestCase):
     def test_text_for_an_exact_match(self) -> None:
         text = MODULE.duration_text(RECORDS, DURATIONS)
-        self.assertIn("実際に5地点を1日で回った11人の多くは、約1時間20分〜2時間半で回っています。", text)
+        self.assertIn("実際に5地点を1日で回った人の多くは、約1時間20分〜2時間半で回っています。", text)
         self.assertIn("バスや自転車", text)
 
     def test_hidden_when_a_manhole_was_added_after_measuring(self) -> None:
@@ -69,13 +69,15 @@ class MatchTest(unittest.TestCase):
         near = [_record(str(i), 34.68 + i * 0.002, 135.60) for i in range(3)]
         # 隣どうしは約9kmでも、端から端は約18km（淡路のような数珠つなぎ）
         chain = [_record(str(i), 34.50 + i * 0.08, 135.00) for i in range(3)]
-        entry = {"entries": [{"manhole_ids": ["0", "1", "2"], "people": 5,
-                              "p25_minutes": 30, "p75_minutes": 60}]}
+        entry = {"entries": [{"manhole_ids": ["0", "1", "2"], "p25_minutes": 30, "p75_minutes": 60}]}
         self.assertIn("歩いて回れる", MODULE.duration_text(near, entry))
         text = MODULE.duration_text(chain, entry)
         self.assertIn("端から端まで直線約18km", text)
         self.assertIn("車があると", text)
         self.assertEqual(MODULE.travel_mode(RECORDS), "bus")
+
+    def test_no_head_count_is_shown(self) -> None:
+        self.assertNotRegex(MODULE.duration_text(RECORDS, DURATIONS), r"\d+人")
 
     def test_html_escapes_and_names_the_basis(self) -> None:
         html = MODULE.duration_html(RECORDS, DURATIONS)
@@ -98,8 +100,7 @@ class PageTest(unittest.TestCase):
         ] + [_record("99", 35.66, 139.33, prefecture="東京都", city="八王子")]
         machida = [m for m in MUNI.build_municipalities(records, {"東京都/町田市": "machida"})
                    if m.name == "町田市"][0]
-        durations = {"entries": [{"manhole_ids": ["0", "1", "2"], "people": 7,
-                                  "p25_minutes": 20, "p75_minutes": 29}]}
+        durations = {"entries": [{"manhole_ids": ["0", "1", "2"], "p25_minutes": 20, "p75_minutes": 29}]}
         self.assertIn("約20分〜30分", MUNI_PAGE._route_section(machida, durations))
         self.assertNotIn("visit-duration", MUNI_PAGE._route_section(machida))
 
