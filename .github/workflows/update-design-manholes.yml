@@ -36,6 +36,15 @@ jobs:
       - name: Run importer tests
         run: python3 -m unittest apps.scraper.test_import_design_manholes
 
+      # bot の PR では production-url-check.yml が承認待ちのまま走らないため、PR 前にここで検査する。
+      - name: Reject loopback URLs in production sources
+        run: |
+          python3 .github/scripts/check_production_urls.py \
+            --exclude 'supabase-ssr.js' \
+            apps/web \
+            apps/scraper \
+            docs
+
       - name: Detect dataset changes
         id: diff
         run: |
