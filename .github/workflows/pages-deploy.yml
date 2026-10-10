@@ -174,6 +174,10 @@ jobs:
           cp apps/web/login.html dist/login.html
           cp apps/web/about.html dist/about.html
           cp apps/web/privacy.html dist/privacy.html
+          echo "[dist] Build 404 page (random famous single-Pokémon lid) + candidates JSON for pokefuta.com"
+          python3 -m unittest apps.scraper.test_generate_404_page
+          cp apps/web/404.html dist/404.html
+          python3 apps/scraper/generate_404_page.py dist/404.html --json dist/api/lost-manholes.json
           cp apps/web/sitemap.xml dist/sitemap.xml
           cp apps/web/robots.txt dist/robots.txt
           echo "[dist] Build multilingual pages (en / zh-TW / zh-CN / ko)"

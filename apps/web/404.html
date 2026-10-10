@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- GitHub Pages はどの深さの URL にもこのファイルを返すので、相対リンクをサイトのルート基準にする -->
+  <base href="/">
+  <title>ページが見つかりません｜ポケふた図鑑</title>
+  <meta name="description" content="お探しのページは見つかりませんでした。全国のポケふた（ポケモンマンホール）は図鑑・写真館から探せます。">
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="./assets/pokefuta-marker.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./assets/theme.css">
+  <link rel="stylesheet" href="./assets/not-found.css?v=20261010a">
+  <!-- Google Analytics -->
+  <script src="./assets/analytics.js?v=20260929a"></script>
+  <script>
+    window.PokefutaAnalytics.init({
+      page_path: '/404',
+      site_type: 'map',
+      page_type: 'not_found',
+    });
+    window.PokefutaAnalytics.bindClickTracking({ surface: 'not_found' });
+  </script>
+  <!-- End GA -->
+</head>
+<body>
+  <main class="lost">
+    <section class="lost__card" aria-labelledby="lost-title">
+      <div class="lost__head">
+        <p class="lost__code">404 NOT FOUND</p>
+        <h1 class="lost__title" id="lost-title">ページが見つかりませんでした</h1>
+        <p class="lost__lead">URLが変わったか、ページが削除された可能性があります。<br>かわりに、こんなポケふたはいかが？</p>
+      </div>
+
+      <!-- JS が動かなくても1枚は出るように、初期表示はヤドン（id 28）にしておく -->
+      <a class="lost__pick" id="lost-pick" href="./manholes/28/" data-track="click_not_found" data-destination="manhole">
+        <img class="lost__lid" id="lost-lid" src="./manhole/image/28_lid.jpeg" alt="ヤドンのポケふた" width="220" height="220">
+        <span class="lost__caption"><b id="lost-pokemon">ヤドン</b>のポケふた</span>
+        <span class="lost__place" id="lost-place">香川県高松市</span>
+        <span class="lost__go">このポケふたを見る ›</span>
+      </a>
+      <!-- not-found:pick:start -->
+      <script type="application/json" id="lost-data">{"items":[{"id":"1","pokemon":"イーブイ","place":"鹿児島県指宿市"},{"id":"2","pokemon":"シャワーズ","place":"鹿児島県指宿市"},{"id":"3","pokemon":"サンダース","place":"鹿児島県指宿市"},{"id":"4","pokemon":"ブースター","place":"鹿児島県指宿市"},{"id":"5","pokemon":"エーフィ","place":"鹿児島県指宿市"},{"id":"6","pokemon":"ブラッキー","place":"鹿児島県指宿市"},{"id":"7","pokemon":"リーフィア","place":"鹿児島県指宿市"},{"id":"8","pokemon":"グレイシア","place":"鹿児島県指宿市"},{"id":"9","pokemon":"ニンフィア","place":"鹿児島県指宿市"},{"id":"11","pokemon":"プテラ","place":"岩手県久慈市"},{"id":"12","pokemon":"イワーク","place":"岩手県野田村"},{"id":"23","pokemon":"ピカチュウ","place":"神奈川県横浜市"},{"id":"28","pokemon":"ヤドン","place":"香川県高松市"},{"id":"29","pokemon":"ヤドン","place":"香川県丸亀市"},{"id":"30","pokemon":"ヤドン","place":"香川県坂出市"},{"id":"34","pokemon":"ヤドン","place":"香川県東かがわ市"},{"id":"37","pokemon":"ヤドン","place":"香川県小豆島町"},{"id":"38","pokemon":"ヤドン","place":"香川県三木町"},{"id":"40","pokemon":"ヤドン","place":"香川県綾川町"},{"id":"41","pokemon":"ヤドン","place":"香川県琴平町"},{"id":"42","pokemon":"ヤドン","place":"香川県多度津町"},{"id":"43","pokemon":"ヤドン","place":"香川県まんのう町"},{"id":"49","pokemon":"ラプラス","place":"宮城県松島町"},{"id":"55","pokemon":"ラプラス","place":"宮城県名取市"},{"id":"60","pokemon":"ロコン","place":"北海道恵庭市"},{"id":"91","pokemon":"ラッキー","place":"福島県浪江町"},{"id":"98","pokemon":"フシギダネ","place":"東京都町田市"},{"id":"99","pokemon":"ヒトカゲ","place":"東京都町田市"},{"id":"100","pokemon":"ゼニガメ","place":"東京都町田市"},{"id":"103","pokemon":"ニョロモ","place":"東京都町田市"},{"id":"104","pokemon":"ギャラドス","place":"滋賀県大津市"},{"id":"105","pokemon":"ギャラドス","place":"滋賀県大津市"},{"id":"131","pokemon":"ラプラス","place":"宮城県川崎町"},{"id":"153","pokemon":"フシギバナ","place":"東京都小笠原村"},{"id":"154","pokemon":"リザードン","place":"東京都小笠原村"},{"id":"155","pokemon":"カメックス","place":"東京都小笠原村"},{"id":"156","pokemon":"ミュウ","place":"東京都小笠原村"},{"id":"159","pokemon":"ホウオウ","place":"京都府京都市"},{"id":"174","pokemon":"ウインディ","place":"沖縄県那覇市"},{"id":"194","pokemon":"ルカリオ","place":"岡山県倉敷市"},{"id":"203","pokemon":"ルギア","place":"兵庫県淡路市"},{"id":"213","pokemon":"カイリュー","place":"埼玉県所沢市"},{"id":"236","pokemon":"カイオーガ","place":"沖縄県宮古島市"},{"id":"237","pokemon":"ゲッコウガ","place":"滋賀県甲賀市"},{"id":"238","pokemon":"ゲッコウガ","place":"滋賀県甲賀市"},{"id":"240","pokemon":"ミジュマル","place":"三重県津市"},{"id":"255","pokemon":"ニャース","place":"佐賀県佐賀市"},{"id":"301","pokemon":"ミロカロス","place":"石川県金沢市"},{"id":"346","pokemon":"セレビィ","place":"和歌山県那智勝浦町"},{"id":"361","pokemon":"ウッウ","place":"岐阜県関市"},{"id":"364","pokemon":"カイリュー","place":"福井県大野市"},{"id":"382","pokemon":"ピカチュウ","place":"京都府宇治市"},{"id":"411","pokemon":"レックウザ","place":"茨城県つくば市"},{"id":"414","pokemon":"ミジュマル","place":"三重県鳥羽市"},{"id":"415","pokemon":"ミジュマル","place":"三重県鈴鹿市"},{"id":"422","pokemon":"ガーディ","place":"沖縄県北谷町"},{"id":"446","pokemon":"ガーディ","place":"沖縄県那覇市"}]}</script>
+      <!-- not-found:pick:end -->
+      <button class="lost__more" id="lost-more" type="button" hidden>ほかのポケふたを見る</button>
+
+      <ul class="lost__links">
+        <li><a class="lost__link" href="./" data-track="click_not_found" data-destination="dex">ポケふた図鑑<small>全国のポケふたを探す</small></a></li>
+        <li><a class="lost__link" href="https://pokefuta.com/?from=data" data-track="click_not_found" data-destination="album">ポケふた写真館<small>みんなの写真を見る</small></a></li>
+        <li><a class="lost__link" href="https://pokefuta.com/design-manholes?from=data" data-track="click_not_found" data-destination="design">デザインマンホール<small>ご当地のマンホールを見る</small></a></li>
+      </ul>
+    </section>
+  </main>
+  <script>
+    // 有名なポケモンが1体だけ描かれたポケふたを、ポケモンごとに等しい確率で1枚選ぶ
+    // （ヤドンのように枚数の多いポケモンばかり出ないように、先にポケモンを選ぶ）
+    (function () {
+      var items;
+      try { items = JSON.parse(document.getElementById('lost-data').textContent).items || []; } catch (e) { items = []; }
+      if (!items.length) return;
+      var byPokemon = {};
+      items.forEach(function (it) { (byPokemon[it.pokemon] = byPokemon[it.pokemon] || []).push(it); });
+      var names = Object.keys(byPokemon);
+      var current = null;
+      function pick() {
+        var choices = names.length > 1 && current ? names.filter(function (n) { return n !== current.pokemon; }) : names;
+        var list = byPokemon[choices[Math.floor(Math.random() * choices.length)]];
+        current = list[Math.floor(Math.random() * list.length)];
+        document.getElementById('lost-pick').href = './manholes/' + encodeURIComponent(current.id) + '/';
+        var lid = document.getElementById('lost-lid');
+        lid.src = './manhole/image/' + encodeURIComponent(current.id) + '_lid.jpeg';
+        lid.alt = current.pokemon + 'のポケふた';
+        document.getElementById('lost-pokemon').textContent = current.pokemon;
+        document.getElementById('lost-place').textContent = current.place;
+      }
+      pick();
+      var more = document.getElementById('lost-more');
+      more.hidden = names.length < 2;
+      more.addEventListener('click', function () {
+        pick();
+        window.trackEvent('click_not_found_shuffle', { surface: 'not_found', pokemon: current.pokemon });
+      });
+    })();
+  </script>
+</body>
+</html>
