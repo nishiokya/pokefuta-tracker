@@ -587,11 +587,13 @@
   .home-section { margin-top: 48px; }
   .home-h2 { font-size: 22px; }
 
-  /* ヒーロー：旧トップと同じく大きな日本地図の上に説明パネルを重ねる */
+  /* ヒーロー：旧トップと同じく大きな日本地図の上に説明パネルを重ねる。
+     高さは画面に合わせ、下の「探し方を選ぶ」のカードが最初の画面に覗くようにする
+     （480px は説明パネルが収まる下限、600px で頭打ち） */
   .home-hero {
     position: relative;
     display: block;
-    min-height: 660px;
+    height: clamp(480px, calc(100vh - 260px), 600px);
     margin-top: 20px;
     padding: 0;
     border: 1px solid var(--top-border);

@@ -91,6 +91,14 @@
     }
   }
 
+  // 地図の高さは画面の高さで変わるので、窓の大きさが変わったら日本全体を収め直す
+  var resizeTimer = null;
+  window.addEventListener('resize', function () {
+    if (state !== 'ready' || !desktop.matches) return;
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function () { map.invalidateSize(); fit(); }, 200);
+  });
+
   if (desktop.addEventListener) desktop.addEventListener('change', onChange);
   else if (desktop.addListener) desktop.addListener(onChange); // Safari < 14
   onChange();
