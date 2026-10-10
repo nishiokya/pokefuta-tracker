@@ -39,6 +39,12 @@ class FormatTest(unittest.TestCase):
         self.assertEqual(MODULE.format_minutes(87), "1時間半")
         self.assertEqual(MODULE.format_minutes(118), "2時間")
 
+    def test_distance_labels(self) -> None:
+        self.assertEqual(MODULE._km_label(0.04), "約100m")
+        self.assertEqual(MODULE._km_label(0.52), "約500m")
+        self.assertEqual(MODULE._km_label(0.996), "約1.0km")
+        self.assertEqual(MODULE._km_label(18.2), "約18km")
+
     def test_same_rounded_ends_collapse(self) -> None:
         self.assertEqual(MODULE.duration_range(3, 5), "約5分")
         self.assertEqual(MODULE.duration_range(84, 150), "約1時間20分〜2時間半")
@@ -59,13 +65,17 @@ class MatchTest(unittest.TestCase):
         more = RECORDS + [_record("999", 34.67, 135.62, installed=False)]
         self.assertNotEqual(MODULE.duration_text(more, DURATIONS), "")
 
-    def test_mode_hint_follows_the_farthest_gap(self) -> None:
+    def test_mode_hint_follows_the_spread_from_end_to_end(self) -> None:
         near = [_record(str(i), 34.68 + i * 0.002, 135.60) for i in range(3)]
-        far = [_record(str(i), 34.68 + i * 0.1, 135.60) for i in range(3)]
+        # 隣どうしは約9kmでも、端から端は約18km（淡路のような数珠つなぎ）
+        chain = [_record(str(i), 34.50 + i * 0.08, 135.00) for i in range(3)]
         entry = {"entries": [{"manhole_ids": ["0", "1", "2"], "people": 5,
                               "p25_minutes": 30, "p75_minutes": 60}]}
         self.assertIn("歩いて回れる", MODULE.duration_text(near, entry))
-        self.assertIn("車があると", MODULE.duration_text(far, entry))
+        text = MODULE.duration_text(chain, entry)
+        self.assertIn("端から端まで直線約18km", text)
+        self.assertIn("車があると", text)
+        self.assertEqual(MODULE.travel_mode(RECORDS), "bus")
 
     def test_html_escapes_and_names_the_basis(self) -> None:
         html = MODULE.duration_html(RECORDS, DURATIONS)

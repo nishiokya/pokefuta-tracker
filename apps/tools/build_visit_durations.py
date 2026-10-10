@@ -16,6 +16,7 @@ from __future__ import annotations
 import argparse
 import collections
 import json
+import re
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -80,8 +81,13 @@ def manhole_groups(manholes: list[dict[str, str]], areas: list[dict] | None = No
 
 
 def build(
-    manholes: list[dict[str, str]], visits: list[dict[str, str]], areas: list[dict] | None = None
+    manholes: list[dict[str, str]],
+    visits: list[dict[str, str]],
+    areas: list[dict] | None = None,
+    photo_visit_ids: set[str] | None = None,
 ) -> list[dict]:
+    """photo_visit_ids は写真のある visit の id。公開されていて写真のある visit だけを数える
+    （サイトのほかの公開集計と同じ条件。export_app_snapshot.py の public_with_photo）。"""
     active = {r["id"] for r in manholes if r.get("is_active") == "t"}
     groups = manhole_groups(manholes, areas)
 
@@ -89,6 +95,8 @@ def build(
     days: dict[tuple[str, object], dict[str, datetime]] = collections.defaultdict(dict)
     for v in visits:
         if v["shot_at"] == "\\N" or v["manhole_id"] not in active:
+            continue
+        if v.get("is_public") != "t" or (photo_visit_ids is not None and v["id"] not in photo_visit_ids):
             continue
         shot = _time(v["shot_at"])
         if abs((shot - _time(v["created_at"])).total_seconds()) < FALLBACK_SECONDS:
@@ -128,16 +136,35 @@ def build(
     return sorted(out, key=lambda e: (-e["people"], e["label"]))
 
 
+def measured_on_from_path(dump: Path) -> str | None:
+    """バックアップの日時ディレクトリ（…/2026-10-11T0416+0900/data.sql）から日付を取る。実行日は使わない。"""
+    for part in reversed(dump.resolve().parts):
+        match = re.match(r"(\d{4}-\d{2}-\d{2})T", part)
+        if match:
+            return match.group(1)
+    return None
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--dump", type=Path, required=True)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--areas", type=Path, default=DEFAULT_AREAS)
+    parser.add_argument(
+        "--measured-on",
+        help="ページに出す集計日（YYYY-MM-DD）。省略時はバックアップのディレクトリ名（2026-10-11T0416+0900）から取る",
+    )
     args = parser.parse_args()
+    measured_on = args.measured_on or measured_on_from_path(args.dump)
+    if not measured_on:
+        raise SystemExit("集計日が分からない。--measured-on YYYY-MM-DD を渡す")
     areas = json.loads(args.areas.read_text(encoding="utf-8"))["areas"] if args.areas.exists() else []
-    entries = build(read_copy(args.dump, "manhole"), read_copy(args.dump, "visit"), areas)
+    photo_visit_ids = {p["visit_id"] for p in read_copy(args.dump, "photo")}
+    entries = build(
+        read_copy(args.dump, "manhole"), read_copy(args.dump, "visit"), areas, photo_visit_ids
+    )
     payload = {
-        "measured_on": datetime.now(JST).strftime("%Y-%m-%d"),
+        "measured_on": measured_on,
         "min_people": MIN_PEOPLE,
         "entries": entries,
     }

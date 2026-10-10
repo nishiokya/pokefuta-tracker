@@ -11,17 +11,17 @@
         "209",
         "210"
       ],
-      "people": 11,
-      "p25_minutes": 84,
-      "p75_minutes": 150,
+      "people": 8,
+      "p25_minutes": 89,
+      "p75_minutes": 116,
       "common_order": [
         "206",
-        "209",
         "210",
+        "209",
         "207",
         "208"
       ],
-      "common_order_people": 4
+      "common_order_people": 3
     },
     {
       "label": "東京都台東区上野",
@@ -29,107 +29,14 @@
         "172",
         "173"
       ],
-      "people": 11,
+      "people": 8,
       "p25_minutes": 3,
       "p75_minutes": 5,
       "common_order": [
         "172",
         "173"
       ],
-      "common_order_people": 11
-    },
-    {
-      "label": "兵庫県淡路",
-      "manhole_ids": [
-        "203",
-        "204",
-        "205"
-      ],
-      "people": 9,
-      "p25_minutes": 85,
-      "p75_minutes": 182,
-      "common_order": [
-        "203",
-        "204",
-        "205"
-      ],
       "common_order_people": 8
-    },
-    {
-      "label": "埼玉県所沢",
-      "manhole_ids": [
-        "211",
-        "212",
-        "213"
-      ],
-      "people": 9,
-      "p25_minutes": 57,
-      "p75_minutes": 87,
-      "common_order": [
-        "211",
-        "213",
-        "212"
-      ],
-      "common_order_people": 7
-    },
-    {
-      "label": "青森県",
-      "manhole_ids": [
-        "157",
-        "158"
-      ],
-      "people": 8,
-      "p25_minutes": 30,
-      "p75_minutes": 57,
-      "common_order": [
-        "157",
-        "158"
-      ],
-      "common_order_people": 8
-    },
-    {
-      "label": "奈良県斑鳩",
-      "manhole_ids": [
-        "148",
-        "149",
-        "150",
-        "151",
-        "152"
-      ],
-      "people": 7,
-      "p25_minutes": 29,
-      "p75_minutes": 55,
-      "common_order": [
-        "148",
-        "149",
-        "150",
-        "151",
-        "152"
-      ],
-      "common_order_people": 3
-    },
-    {
-      "label": "東京都町田",
-      "manhole_ids": [
-        "98",
-        "99",
-        "100",
-        "101",
-        "102",
-        "103"
-      ],
-      "people": 7,
-      "p25_minutes": 20,
-      "p75_minutes": 29,
-      "common_order": [
-        "100",
-        "102",
-        "101",
-        "103",
-        "99",
-        "98"
-      ],
-      "common_order_people": 3
     },
     {
       "label": "神奈川県横浜",
@@ -153,19 +60,27 @@
       "common_order_people": 3
     },
     {
-      "label": "岩手県北上",
+      "label": "東京都町田",
       "manhole_ids": [
-        "323",
-        "397"
+        "98",
+        "99",
+        "100",
+        "101",
+        "102",
+        "103"
       ],
       "people": 6,
-      "p25_minutes": 14,
-      "p75_minutes": 36,
+      "p25_minutes": 20,
+      "p75_minutes": 30,
       "common_order": [
-        "323",
-        "397"
+        "100",
+        "102",
+        "101",
+        "103",
+        "99",
+        "98"
       ],
-      "common_order_people": 6
+      "common_order_people": 3
     },
     {
       "label": "三重県鳥羽市",
@@ -183,36 +98,64 @@
       "common_order_people": 5
     },
     {
-      "label": "千葉県香取",
+      "label": "兵庫県淡路",
       "manhole_ids": [
-        "222",
-        "223",
-        "224",
-        "225"
+        "203",
+        "204",
+        "205"
       ],
       "people": 5,
-      "p25_minutes": 109,
-      "p75_minutes": 167,
+      "p25_minutes": 85,
+      "p75_minutes": 112,
       "common_order": [
-        "222",
-        "223",
-        "225",
-        "224"
+        "203",
+        "204",
+        "205"
+      ],
+      "common_order_people": 4
+    },
+    {
+      "label": "埼玉県所沢",
+      "manhole_ids": [
+        "211",
+        "212",
+        "213"
+      ],
+      "people": 5,
+      "p25_minutes": 57,
+      "p75_minutes": 87,
+      "common_order": [
+        "211",
+        "213",
+        "212"
       ],
       "common_order_people": 3
     },
     {
-      "label": "滋賀県大津",
+      "label": "奈良県斑鳩",
       "manhole_ids": [
-        "104",
-        "105"
+        "148",
+        "149",
+        "150",
+        "151",
+        "152"
       ],
       "people": 5,
-      "p25_minutes": 27,
-      "p75_minutes": 32,
+      "p25_minutes": 31,
+      "p75_minutes": 42
+    },
+    {
+      "label": "青森県",
+      "manhole_ids": [
+        "157",
+        "158"
+      ],
+      "people": 5,
+      "p25_minutes": 28,
+      "p75_minutes": 35,
       "common_order": [
-        "104",
-        "105"
+        "157",
+        "158"
       ],
       "common_order_people": 5
     }

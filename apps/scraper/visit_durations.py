@@ -14,9 +14,10 @@ from xml.sax.saxutils import escape
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DURATIONS = ROOT / "dataset" / "visit_durations.json"
-# 移動手段の目安。ほかの地点からいちばん離れた地点までの直線距離で決める
-WALK_MAX_KM = 1.5
-BUS_OR_BIKE_MAX_KM = 5.0
+# 移動手段の目安。地点の端から端まで（いちばん離れた2地点の間）の直線距離で決める
+WALK_MAX_KM = 2.5
+BUS_OR_BIKE_MAX_KM = 6.0
+MODE_LABELS = {"walk": "徒歩", "bus": "バス・自転車", "car": "車"}
 
 
 def load_durations(path: Path = DEFAULT_DURATIONS) -> dict:
@@ -55,6 +56,29 @@ def farthest_gap_km(records: list[dict]) -> float:
     )
 
 
+def spread_km(records: list[dict]) -> float:
+    """端から端まで: いちばん離れた2地点の間の直線距離。"""
+    points = _visitable(records)
+    return max(
+        (_distance_km(a, b) for i, a in enumerate(points) for b in points[i + 1:]),
+        default=0.0,
+    )
+
+
+def travel_mode(records: list[dict]) -> str:
+    km = spread_km(records)
+    if km < WALK_MAX_KM:
+        return "walk"
+    return "bus" if km <= BUS_OR_BIKE_MAX_KM else "car"
+
+
+def _km_label(km: float) -> str:
+    meters = max(100, round(km * 1000, -2))
+    if meters < 1000:
+        return f"約{meters:.0f}m"
+    return f"約{km:.1f}km" if km < 10 else f"約{km:.0f}km"
+
+
 def format_minutes(minutes: float) -> str:
     """1時間未満は5分単位、1時間以上は10分単位。30分は「半」。"""
     if minutes < 60:
@@ -83,12 +107,14 @@ def find_entry(records: list[dict], durations: dict) -> dict | None:
     return None
 
 
-def _mode_hint(gap_km: float) -> str:
-    if gap_km < WALK_MAX_KM:
-        return "どの地点も近くにまとまっていて、歩いて回れる距離です。"
-    if gap_km <= BUS_OR_BIKE_MAX_KM:
-        return f"いちばん離れた地点までは直線約{gap_km:.1f}kmあるので、バスや自転車を使うと楽です。"
-    return f"いちばん離れた地点までは直線約{gap_km:.0f}kmあるので、車があると回りやすい距離です。"
+def _mode_hint(records: list[dict]) -> str:
+    km = _km_label(spread_km(records))
+    mode = travel_mode(records)
+    if mode == "walk":
+        return f"端から端まで直線{km}で、歩いて回れる距離です。"
+    if mode == "bus":
+        return f"端から端まで直線{km}あるので、バスや自転車を使うと楽です。"
+    return f"端から端まで直線{km}あるので、車があると回りやすい距離です。"
 
 
 def duration_text(records: list[dict], durations: dict) -> str:
@@ -99,7 +125,7 @@ def duration_text(records: list[dict], durations: dict) -> str:
     return (
         f"実際に{count}地点を1日で回った{entry['people']}人の多くは、"
         f"{duration_range(entry['p25_minutes'], entry['p75_minutes'])}で回っています。"
-        + _mode_hint(farthest_gap_km(records))
+        + _mode_hint(records)
     )
 
 
