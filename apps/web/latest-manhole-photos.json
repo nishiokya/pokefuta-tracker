@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-09T00:31:12.607419Z",
+  "generated_at": "2026-10-10T00:09:20.539465Z",
   "source": "pokefuta photo table",
   "image": {
     "r2_public_base_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image"
@@ -29285,19 +29285,19 @@
           ]
         },
         {
-          "photo_id": "517d18e3-4409-41dd-a09b-2b776c98a6ae",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/09/d04b5cb9-67b3-4744-a74c-75d8bd8aba33.jpg",
-          "storage_key": "photos/original/2026/09/d04b5cb9-67b3-4744-a74c-75d8bd8aba33.jpg",
+          "photo_id": "5af918cd-3c56-494f-ac72-00605c6b129c",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/4cc9a6c5-4ee4-4e94-ae40-eb6bf6aa2a3f.jpg",
+          "storage_key": "photos/original/2026/10/4cc9a6c5-4ee4-4e94-ae40-eb6bf6aa2a3f.jpg",
           "content_type": "image/jpeg",
-          "created_at": "2026-09-20T07:15:40.970065+00:00",
-          "shot_at": "2026-09-20T07:14:55+00:00",
-          "display_name": "しろあす",
-          "public_user_id": "9d47fd8e-8218-4992-bf9a-920c56bb830e",
+          "created_at": "2026-10-09T08:07:02.840308+00:00",
+          "shot_at": "2026-10-09T05:48:03+00:00",
+          "display_name": "はっちゃん",
+          "public_user_id": "a72a4333-8914-4912-b42a-e5500c1a201e",
           "crop": [
             0.0,
-            0.0,
+            0.1569,
             1.0,
-            1.0
+            0.9068
           ]
         }
       ]
@@ -36792,34 +36792,50 @@
     },
     "415": {
       "manhole_id": 415,
-      "photo_id": "f3e19ef8-d205-4045-8931-5d24babed22c",
-      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/241476bd-2fc4-4672-a1e2-e90d8561074a.jpg",
-      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/241476bd-2fc4-4672-a1e2-e90d8561074a.jpg",
-      "storage_key": "photos/original/2026/07/241476bd-2fc4-4672-a1e2-e90d8561074a.jpg",
+      "photo_id": "c119f937-a282-4d0d-a35c-cc9c679f5dc0",
+      "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/feca733b-8472-4fc8-9357-7fa6dc7801d0.jpg",
+      "original_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/feca733b-8472-4fc8-9357-7fa6dc7801d0.jpg",
+      "storage_key": "photos/original/2026/10/feca733b-8472-4fc8-9357-7fa6dc7801d0.jpg",
       "content_type": "image/jpeg",
       "width": null,
       "height": null,
-      "file_size": 1732163,
-      "created_at": "2026-07-10T20:34:35.635787+00:00",
-      "shot_at": "2026-05-23T03:21:18+00:00",
-      "comment": "サーキット近くの公園に\r\nよく似合うポケふただにゃあ\r\nバスで行ったんだにゃあ",
-      "display_name": "xxobokihurah2007",
-      "public_user_id": "c2904ac8-824d-4dc9-9a01-e248263e4632",
-      "quality_score": 0.7628,
+      "file_size": 1777686,
+      "created_at": "2026-10-09T08:06:27.047872+00:00",
+      "shot_at": "2026-10-09T04:56:18+00:00",
+      "comment": null,
+      "display_name": "はっちゃん",
+      "public_user_id": "a72a4333-8914-4912-b42a-e5500c1a201e",
+      "quality_score": 0.8574,
       "crop": [
-        0.13,
         0.0,
-        0.88,
-        1.0
+        0.1282,
+        1.0,
+        0.8782
       ],
       "lid": [
-        0.1966,
-        0.085,
-        0.8135,
-        0.9127
+        0.0396,
+        0.1556,
+        0.9739,
+        0.8508
       ],
       "representative_source": "score",
       "gallery": [
+        {
+          "photo_id": "c119f937-a282-4d0d-a35c-cc9c679f5dc0",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/feca733b-8472-4fc8-9357-7fa6dc7801d0.jpg",
+          "storage_key": "photos/original/2026/10/feca733b-8472-4fc8-9357-7fa6dc7801d0.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-10-09T08:06:27.047872+00:00",
+          "shot_at": "2026-10-09T04:56:18+00:00",
+          "display_name": "はっちゃん",
+          "public_user_id": "a72a4333-8914-4912-b42a-e5500c1a201e",
+          "crop": [
+            0.0,
+            0.1282,
+            1.0,
+            0.8782
+          ]
+        },
         {
           "photo_id": "f3e19ef8-d205-4045-8931-5d24babed22c",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/241476bd-2fc4-4672-a1e2-e90d8561074a.jpg",
@@ -36882,22 +36898,6 @@
             0.0,
             1.0,
             1.0
-          ]
-        },
-        {
-          "photo_id": "97625f1b-2b05-4e6b-9268-a6100225605b",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/09/efdca7e7-e9e8-4cd6-919a-0453bb3bd352.jpg",
-          "storage_key": "photos/original/2026/09/efdca7e7-e9e8-4cd6-919a-0453bb3bd352.jpg",
-          "content_type": "image/jpeg",
-          "created_at": "2026-09-20T06:49:02.289539+00:00",
-          "shot_at": "2026-09-20T06:48:38+00:00",
-          "display_name": "ほぴ",
-          "public_user_id": "3bc3f0a4-9dc0-41c9-b92a-c199e2d6dc87",
-          "crop": [
-            0.0,
-            0.1045,
-            1.0,
-            0.8545
           ]
         }
       ]
