@@ -183,7 +183,7 @@ class AnalyticsContractTest(unittest.TestCase):
     # 多言語版（index.template.html）は旧構成のまま。差はここに列挙したものだけに留める。
     # 多言語版を新構成へ移したら、両方の集合を空にして完全一致へ戻すこと。
     JA_TOP_ONLY_EVENTS = {
-        "click_search_way",      # ヒーロー直下の3導線と「探し方」4カード（way=map/prefecture/pokemon/theme）
+        "click_search_way",      # ヒーローの導線と「探し方」4カード（way=map/prefecture/pokemon/nearby/theme。ヒーローは destination も）
         "click_top_photo",       # 新着・注目の写真
         "click_photo_post_cta",  # 写真館への投稿導線
         "click_event_show_all",  # イベントの「すべて見る」

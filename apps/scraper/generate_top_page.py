@@ -525,15 +525,20 @@ def render_hero(data: TopData) -> str:
     stats_html = "".join(
         f'<div class="home-stat"><dt>{escape(label)}</dt><dd>{escape(num)}</dd></div>' for num, label in stats
     )
+    # destination は GA4 に登録済みのディメンション（way は未登録で集計に出ない）。
+    # 同じページ内へ飛ぶ都道府県は home_pref_section として、ページ移動と区別する
     quick = [
-        ("map", "map.html", "地図で探す", "home-quick__link--primary home-quick__link--map"),
-        ("prefecture", "#home-pref", "都道府県から探す", ""),
-        ("pokemon", "pokemon/", "ポケモンから探す", ""),
+        ("map", "map", "map.html", "地図で探す", "home-quick__link--primary home-quick__link--map"),
+        ("prefecture", "home_pref_section", "#home-pref", "都道府県から探す", ""),
+        ("pokemon", "pokemon_index", "pokemon/", "ポケモンから探す", ""),
+        # PC だけ。上の2つと行き先が重ならない導線（2026-10 の試行）
+        ("nearby", "nearby", "nearby.html", "近くから探す", "home-quick__link--desktop"),
+        ("theme", "map_theme_directory", "map.html?view=theme", "テーマから探す", "home-quick__link--desktop"),
     ]
     quick_html = "".join(
         f'<a class="home-quick__link {cls}" href="{href}" '
-        f'onclick="{_track("click_search_way", surface="top_hero_quick", way=way)}">{escape(label)}</a>'
-        for way, href, label, cls in quick
+        f'onclick="{_track("click_search_way", surface="top_hero_quick", way=way, destination=dest)}">{escape(label)}</a>'
+        for way, dest, href, label, cls in quick
     )
     names = "・".join(top_pokemon)
     lead = (
