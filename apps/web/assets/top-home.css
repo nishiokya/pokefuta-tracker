@@ -103,6 +103,9 @@
   text-align: center;
 }
 
+/* PC のヒーローにだけ出す導線。スマホのヒーローは3つのまま */
+.home-quick__link--desktop { display: none; }
+
 .home-quick__link--primary {
   background: var(--top-purple);
   color: #fff;
@@ -615,6 +618,8 @@
   }
   .home-quick { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .home-quick__link--map { display: none; }
+  .home-quick__link--desktop { display: flex; }
+  .home-quick__link--wide { grid-column: 1 / -1; }
   .home-map__cta {
     position: absolute;
     right: 20px;

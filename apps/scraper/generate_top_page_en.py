@@ -238,14 +238,16 @@ def render_hero(data: ja.TopData, en: English) -> str:
         f'<div class="home-stat"><dt>{escape(label)}</dt><dd>{escape(num)}</dd></div>' for num, label in stats
     )
     quick = [
-        ("map", "map.html", "Search the map", "home-quick__link--primary home-quick__link--map"),
-        ("prefecture", "#home-pref", "By prefecture", ""),
-        ("pokemon", "pokemon/", "By Pokémon", ""),
+        ("map", "map", "map.html", "Search the map", "home-quick__link--primary home-quick__link--map"),
+        ("prefecture", "home_pref_section", "#home-pref", "By prefecture", ""),
+        ("pokemon", "pokemon_index", "pokemon/", "By Pokémon", ""),
+        # PC だけ。英語の「近く」ページは無いのでテーマだけを横いっぱいに出す
+        ("theme", "theme_map", "map.html?view=theme", "By theme", "home-quick__link--desktop home-quick__link--wide"),
     ]
     quick_html = "".join(
         f'<a class="home-quick__link {cls}" href="{href}" '
-        f'onclick="{ja._track("click_search_way", surface="top_hero_quick", way=way)}">{escape(label)}</a>'
-        for way, href, label, cls in quick
+        f'onclick="{ja._track("click_search_way", surface="top_hero_quick", way=way, destination=dest)}">{escape(label)}</a>'
+        for way, dest, href, label, cls in quick
     )
     lead = (
         "Poké Lids (<i>Pokéfuta</i>) are Pokémon-themed manhole covers. "
