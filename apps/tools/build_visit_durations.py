@@ -74,7 +74,7 @@ def manhole_groups(manholes: list[dict[str, str]], areas: list[dict] | None = No
     for (prefecture, municipality), ids in sorted(by_key.items(), key=lambda kv: kv[0][1] == ""):
         groups.setdefault(frozenset(ids), f"{prefecture}{municipality}")
     for area in areas or []:
-        groups.setdefault(frozenset(str(i) for i in area["manhole_ids"]), area.get("title", ""))
+        groups.setdefault(frozenset(str(i) for i in area["manhole_ids"]), area.get("name", ""))
     return {ids: label for ids, label in groups.items() if len(ids) >= 2}
 
 

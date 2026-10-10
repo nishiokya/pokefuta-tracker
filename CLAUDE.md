@@ -1,6 +1,8 @@
 manhole_titles.jsonは手動で更新している
 dataset/prefecture_events.json は手動更新（都道府県ページに出す開催中スタンプラリー等のリンク。end_date 過ぎは日次再生成で自動非表示）
 dataset/pokemon_representatives.json は手動更新（ポケモンごとの代表のマンホール。manhole-ai の Tools/pokemon-rep で選び、export_reps.py の出力を入れる。トップの「設置の多いポケモンから探す」、/pokemon/ のカード、ポケモンのページの上の1枚と og:image のように1枚だけ出す所で使い、ポケモンのページの一覧は全部出す）
+dataset/trip_areas.json は手動更新（/trip/ のエリア。マンホールIDの組を登録すると、日次の Pages デプロイでページができる。地点が欠けた・設置予定のエリアは出ない）
+dataset/visit_durations.json は手動更新（k11 の DB バックアップで `apps/tools/build_visit_durations.py` を実行して PR。集計値だけ・5人以上の組だけを載せる。県・市・trip のページの所要時間はこれを読む）
 pokefuta.ndjsonはapps/scraperで更新している
 latest-manhole-photos.json と docs/api/*.json は import-manhole-photos.yml が Supabase から日次一括生成（画像DL込み。pokefuta.com アプリの /api/manholes・/api/site-stats は docs/api を読む。手動で回すときだけ `/import-photos` スキル）
 

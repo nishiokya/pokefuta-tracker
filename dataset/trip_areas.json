@@ -1,0 +1,143 @@
+{
+  "_comment": "/trip/ のエリア。manhole_ids はページに出す地点の全部。所要時間は dataset/visit_durations.json に同じ組があるときだけ出る（apps/tools/build_visit_durations.py がこのファイルも読んで集計する）。",
+  "areas": [
+    {
+      "slug": "higashiosaka",
+      "prefecture": "大阪府",
+      "name": "東大阪",
+      "manhole_ids": [
+        "206",
+        "210",
+        "209",
+        "207",
+        "208"
+      ]
+    },
+    {
+      "slug": "tokorozawa",
+      "prefecture": "埼玉県",
+      "name": "所沢",
+      "manhole_ids": [
+        "211",
+        "213",
+        "212"
+      ]
+    },
+    {
+      "slug": "awaji",
+      "prefecture": "兵庫県",
+      "name": "淡路",
+      "manhole_ids": [
+        "205",
+        "204",
+        "203"
+      ]
+    },
+    {
+      "slug": "hachinohe-hashikami",
+      "prefecture": "青森県",
+      "name": "八戸・階上",
+      "manhole_ids": [
+        "157",
+        "158"
+      ]
+    },
+    {
+      "slug": "ikaruga",
+      "prefecture": "奈良県",
+      "name": "斑鳩",
+      "manhole_ids": [
+        "148",
+        "149",
+        "150",
+        "151",
+        "152"
+      ]
+    },
+    {
+      "slug": "yokohama",
+      "prefecture": "神奈川県",
+      "name": "横浜みなとみらい",
+      "manhole_ids": [
+        "313",
+        "314",
+        "23",
+        "311",
+        "312"
+      ]
+    },
+    {
+      "slug": "machida",
+      "prefecture": "東京都",
+      "name": "町田",
+      "manhole_ids": [
+        "98",
+        "99",
+        "100",
+        "101",
+        "102",
+        "103"
+      ]
+    },
+    {
+      "slug": "katori",
+      "prefecture": "千葉県",
+      "name": "香取・佐原",
+      "manhole_ids": [
+        "222",
+        "223",
+        "225",
+        "224"
+      ]
+    },
+    {
+      "slug": "ueno",
+      "prefecture": "東京都",
+      "name": "上野",
+      "manhole_ids": [
+        "172",
+        "173"
+      ]
+    },
+    {
+      "slug": "kitakami",
+      "prefecture": "岩手県",
+      "name": "北上",
+      "manhole_ids": [
+        "323",
+        "397"
+      ]
+    },
+    {
+      "slug": "toba",
+      "prefecture": "三重県",
+      "name": "鳥羽",
+      "manhole_ids": [
+        "243",
+        "414"
+      ]
+    },
+    {
+      "slug": "otsu",
+      "prefecture": "滋賀県",
+      "name": "大津",
+      "manhole_ids": [
+        "104",
+        "105"
+      ]
+    },
+    {
+      "slug": "noto",
+      "prefecture": "石川県",
+      "name": "能登半島",
+      "manhole_ids": [
+        "468",
+        "472",
+        "475",
+        "469",
+        "473",
+        "470"
+      ]
+    }
+  ]
+}
