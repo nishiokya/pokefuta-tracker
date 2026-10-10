@@ -242,7 +242,7 @@ def render_hero(data: ja.TopData, en: English) -> str:
         ("prefecture", "home_pref_section", "#home-pref", "By prefecture", ""),
         ("pokemon", "pokemon_index", "pokemon/", "By Pokémon", ""),
         # PC だけ。英語の「近く」ページは無いのでテーマだけを横いっぱいに出す
-        ("theme", "theme_map", "map.html?view=theme", "By theme", "home-quick__link--desktop home-quick__link--wide"),
+        ("theme", "map_theme_directory", "map.html?view=theme", "By theme", "home-quick__link--desktop home-quick__link--wide"),
     ]
     quick_html = "".join(
         f'<a class="home-quick__link {cls}" href="{href}" '

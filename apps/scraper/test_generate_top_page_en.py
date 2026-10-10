@@ -130,6 +130,20 @@ class EnglishTopTest(unittest.TestCase):
         en_html = INDEX_EN.read_text(encoding="utf-8")
         self.assertEqual(names(ja_html), names(en_html))
 
+    def test_hero_quick_links_match_the_japanese_destinations(self) -> None:
+        """英語の「近く」ページは無いので、PC の追加はテーマだけ（横いっぱい）。"""
+        hero = _block(self.html(), "hero")
+        nav = re.search(r'<nav class="home-quick".*?</nav>', hero, re.S).group(0)
+        links = re.findall(r'<a class="home-quick__link ([^"]*)" href="([^"]+)" onclick="([^"]+)"', nav)
+        got = {href: (cls.strip(), re.search(r"destination:'([^']+)'", js).group(1)) for cls, href, js in links}
+        self.assertEqual({
+            "map.html": ("home-quick__link--primary home-quick__link--map", "map"),
+            "#home-pref": ("", "home_pref_section"),
+            "pokemon/": ("", "pokemon_index"),
+            "map.html?view=theme": ("home-quick__link--desktop home-quick__link--wide", "map_theme_directory"),
+        }, got)
+        self.assertNotIn("nearby.html", nav)
+
     def test_committed_page_has_every_marker(self) -> None:
         html = INDEX_EN.read_text(encoding="utf-8")
         for name in ["head", *module.RENDERERS]:

@@ -533,7 +533,7 @@ def render_hero(data: TopData) -> str:
         ("pokemon", "pokemon_index", "pokemon/", "ポケモンから探す", ""),
         # PC だけ。上の2つと行き先が重ならない導線（2026-10 の試行）
         ("nearby", "nearby", "nearby.html", "近くから探す", "home-quick__link--desktop"),
-        ("theme", "theme_map", "map.html?view=theme", "テーマから探す", "home-quick__link--desktop"),
+        ("theme", "map_theme_directory", "map.html?view=theme", "テーマから探す", "home-quick__link--desktop"),
     ]
     quick_html = "".join(
         f'<a class="home-quick__link {cls}" href="{href}" '

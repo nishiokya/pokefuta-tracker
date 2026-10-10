@@ -380,6 +380,26 @@ class GeneratedHtmlTest(unittest.TestCase):
         self.assertIn("click_hero_photo", html)
         self.assertIn("click_search_way", html)
 
+    def test_hero_quick_links_carry_destination_and_desktop_only_extras(self) -> None:
+        """ヒーローの導線は GA4 登録済みの destination を持つ（way は未登録で集計に出ない）。
+
+        近く・テーマは PC だけに出す（スマホのヒーローは3つのまま）。destination の値は
+        2026-10 の評価（計測ノート）で使うので、変えると前後比較が分断される。
+        """
+        hero = _block(Fixture(self.tmp).html(), "hero")
+        nav = re.search(r'<nav class="home-quick".*?</nav>', hero, re.S).group(0)
+        links = re.findall(r'<a class="home-quick__link ([^"]*)" href="([^"]+)" onclick="([^"]+)"', nav)
+        got = {href: (cls.strip(), re.search(r"destination:'([^']+)'", js).group(1)) for cls, href, js in links}
+        self.assertEqual({
+            "map.html": ("home-quick__link--primary home-quick__link--map", "map"),
+            "#home-pref": ("", "home_pref_section"),
+            "pokemon/": ("", "pokemon_index"),
+            "nearby.html": ("home-quick__link--desktop", "nearby"),
+            "map.html?view=theme": ("home-quick__link--desktop", "map_theme_directory"),
+        }, got)
+        for _, _, js in links:
+            self.assertIn("surface:'top_hero_quick'", js)
+
 
 class CommittedIndexTest(unittest.TestCase):
     """コミット済みの apps/web/index.html（本番は dist 側で生成し直す）。"""
