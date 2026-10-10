@@ -4,8 +4,9 @@
 public.visit の user_id / manhole_id / shot_at と public.manhole だけを読む。
 
 出力 dataset/visit_durations.json には集計値だけを書く（個人の時刻・順番・ID は出さない）。
-都道府県ページ・市区町村ページは、ここに載った manhole_ids がその自治体の
-回れる地点と一致するときだけ所要時間を出す（apps/scraper/visit_durations.py）。
+集計する組は自治体ごと・都道府県ごと・dataset/trip_areas.json のエリアごと。
+各ページは、ここに載った manhole_ids がそのページの回れる地点と一致するときだけ
+所要時間を出す（apps/scraper/visit_durations.py）。
 
     python3 apps/tools/build_visit_durations.py --dump ~/backups/pokefuta/db/<日時>/data.sql
 """
@@ -20,9 +21,12 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_OUTPUT = ROOT / "dataset" / "visit_durations.json"
+DEFAULT_AREAS = ROOT / "dataset" / "trip_areas.json"
 JST = timezone(timedelta(hours=9))
 # この人数に満たない自治体は出さない（少人数だと個人の回り方そのものになる）
 MIN_PEOPLE = 5
+# よく回られる順を出すのに要る、同じ道筋（往復は同じとみなす）で回った人数
+MIN_ORDER_PEOPLE = 3
 # shot_at が投稿時刻とほぼ同じ visit は、EXIF が無く投稿時刻が入っただけとみなして使わない
 FALLBACK_SECONDS = 120
 
@@ -57,19 +61,34 @@ def quartile(values: list[float], p: float) -> float:
     return v[lo] + (v[hi] - v[lo]) * (i - lo)
 
 
-def build(manholes: list[dict[str, str]], visits: list[dict[str, str]]) -> list[dict]:
-    group_of = {
-        r["id"]: (r["prefecture"], r["municipality"])
-        for r in manholes if r.get("is_active") == "t"
-    }
-    groups: dict[tuple[str, str], set[str]] = collections.defaultdict(set)
-    for mid, key in group_of.items():
-        groups[key].add(mid)
+def manhole_groups(manholes: list[dict[str, str]], areas: list[dict] | None = None) -> dict[frozenset[str], str]:
+    """集計する地点の組 → 表示名。自治体ごと・都道府県ごと・手で登録したエリア（trip）ごと。
+
+    同じ組が2回出たら先の名前を使う（県の全部が1自治体にあるときは自治体名）。
+    """
+    by_key: dict[tuple[str, str], set[str]] = collections.defaultdict(set)
+    for r in manholes:
+        if r.get("is_active") == "t":
+            by_key[(r["prefecture"], r["municipality"])].add(r["id"])
+            by_key[(r["prefecture"], "")].add(r["id"])
+    groups: dict[frozenset[str], str] = {}
+    for (prefecture, municipality), ids in sorted(by_key.items(), key=lambda kv: kv[0][1] == ""):
+        groups.setdefault(frozenset(ids), f"{prefecture}{municipality}")
+    for area in areas or []:
+        groups.setdefault(frozenset(str(i) for i in area["manhole_ids"]), area.get("title", ""))
+    return {ids: label for ids, label in groups.items() if len(ids) >= 2}
+
+
+def build(
+    manholes: list[dict[str, str]], visits: list[dict[str, str]], areas: list[dict] | None = None
+) -> list[dict]:
+    active = {r["id"] for r in manholes if r.get("is_active") == "t"}
+    groups = manhole_groups(manholes, areas)
 
     # ユーザー × JST の日付ごとに、各マンホールを最初に撮った時刻
     days: dict[tuple[str, object], dict[str, datetime]] = collections.defaultdict(dict)
     for v in visits:
-        if v["shot_at"] == "\\N" or v["manhole_id"] not in group_of:
+        if v["shot_at"] == "\\N" or v["manhole_id"] not in active:
             continue
         shot = _time(v["shot_at"])
         if abs((shot - _time(v["created_at"])).total_seconds()) < FALLBACK_SECONDS:
@@ -78,35 +97,34 @@ def build(manholes: list[dict[str, str]], visits: list[dict[str, str]]) -> list[
         if v["manhole_id"] not in day or shot < day[v["manhole_id"]]:
             day[v["manhole_id"]] = shot
 
-    # 同じ自治体の蓋を続けて撮った区間のうち、その自治体の全部を含むものの所要時間。1人1回（最初の日）。
-    per_user: dict[tuple[str, str], dict[str, tuple[object, float]]] = collections.defaultdict(dict)
-    for (user, date), shots in days.items():
-        seq = sorted(shots.items(), key=lambda kv: kv[1])
-        run = [seq[0]]
-        for item in seq[1:] + [None]:
-            if item and group_of[item[0]] == group_of[run[-1][0]]:
-                run.append(item)
-                continue
-            key = group_of[run[0][0]]
-            if len(groups[key]) >= 2 and {m for m, _ in run} >= groups[key]:
-                minutes = (run[-1][1] - run[0][1]).total_seconds() / 60
-                if user not in per_user[key] or date < per_user[key][user][0]:
-                    per_user[key][user] = (date, minutes)
-            if item:
-                run = [item]
-
     out = []
-    for key, users in per_user.items():
-        if len(users) < MIN_PEOPLE:
+    for ids, label in groups.items():
+        # その組を同じ日に全部撮った人の、組の1枚目→最後の1枚の時間と順番。1人1回（最初の日）。
+        per_user: dict[str, tuple[object, float, tuple[str, ...]]] = {}
+        for (user, date), shots in days.items():
+            if not ids <= shots.keys():
+                continue
+            seq = sorted(ids, key=lambda m: shots[m])
+            minutes = (shots[seq[-1]] - shots[seq[0]]).total_seconds() / 60
+            if user not in per_user or date < per_user[user][0]:
+                per_user[user] = (date, minutes, tuple(seq))
+        if len(per_user) < MIN_PEOPLE:
             continue
-        minutes = [m for _, m in users.values()]
-        out.append({
-            "label": f"{key[0]}{key[1]}",
-            "manhole_ids": sorted(groups[key], key=int),
-            "people": len(users),
+        minutes = [m for _, m, _ in per_user.values()]
+        entry = {
+            "label": label,
+            "manhole_ids": sorted(ids, key=int),
+            "people": len(per_user),
             "p25_minutes": round(quartile(minutes, 0.25)),
             "p75_minutes": round(quartile(minutes, 0.75)),
-        })
+        }
+        # 往路と復路は同じ道筋として数える。MIN_ORDER_PEOPLE 人以上が同じ道筋のときだけ出す
+        orders = collections.Counter(min(o, o[::-1]) for _, _, o in per_user.values())
+        (order, n), = orders.most_common(1)
+        if n >= MIN_ORDER_PEOPLE:
+            entry["common_order"] = list(order)
+            entry["common_order_people"] = n
+        out.append(entry)
     return sorted(out, key=lambda e: (-e["people"], e["label"]))
 
 
@@ -114,15 +132,17 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--dump", type=Path, required=True)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument("--areas", type=Path, default=DEFAULT_AREAS)
     args = parser.parse_args()
-    entries = build(read_copy(args.dump, "manhole"), read_copy(args.dump, "visit"))
+    areas = json.loads(args.areas.read_text(encoding="utf-8"))["areas"] if args.areas.exists() else []
+    entries = build(read_copy(args.dump, "manhole"), read_copy(args.dump, "visit"), areas)
     payload = {
         "measured_on": datetime.now(JST).strftime("%Y-%m-%d"),
         "min_people": MIN_PEOPLE,
         "entries": entries,
     }
     args.output.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(f"[build_visit_durations] {len(entries)} 自治体 → {args.output}")
+    print(f"[build_visit_durations] {len(entries)} 組 → {args.output}")
     return 0
 
 

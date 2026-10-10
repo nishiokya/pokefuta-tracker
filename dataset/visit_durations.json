@@ -13,7 +13,15 @@
       ],
       "people": 11,
       "p25_minutes": 84,
-      "p75_minutes": 150
+      "p75_minutes": 150,
+      "common_order": [
+        "206",
+        "209",
+        "210",
+        "207",
+        "208"
+      ],
+      "common_order_people": 4
     },
     {
       "label": "東京都台東区上野",
@@ -23,7 +31,12 @@
       ],
       "people": 11,
       "p25_minutes": 3,
-      "p75_minutes": 5
+      "p75_minutes": 5,
+      "common_order": [
+        "172",
+        "173"
+      ],
+      "common_order_people": 11
     },
     {
       "label": "兵庫県淡路",
@@ -34,7 +47,13 @@
       ],
       "people": 9,
       "p25_minutes": 85,
-      "p75_minutes": 182
+      "p75_minutes": 182,
+      "common_order": [
+        "203",
+        "204",
+        "205"
+      ],
+      "common_order_people": 8
     },
     {
       "label": "埼玉県所沢",
@@ -45,7 +64,28 @@
       ],
       "people": 9,
       "p25_minutes": 57,
-      "p75_minutes": 87
+      "p75_minutes": 87,
+      "common_order": [
+        "211",
+        "213",
+        "212"
+      ],
+      "common_order_people": 7
+    },
+    {
+      "label": "青森県",
+      "manhole_ids": [
+        "157",
+        "158"
+      ],
+      "people": 8,
+      "p25_minutes": 30,
+      "p75_minutes": 57,
+      "common_order": [
+        "157",
+        "158"
+      ],
+      "common_order_people": 8
     },
     {
       "label": "奈良県斑鳩",
@@ -58,7 +98,15 @@
       ],
       "people": 7,
       "p25_minutes": 29,
-      "p75_minutes": 55
+      "p75_minutes": 55,
+      "common_order": [
+        "148",
+        "149",
+        "150",
+        "151",
+        "152"
+      ],
+      "common_order_people": 3
     },
     {
       "label": "東京都町田",
@@ -72,7 +120,16 @@
       ],
       "people": 7,
       "p25_minutes": 20,
-      "p75_minutes": 29
+      "p75_minutes": 29,
+      "common_order": [
+        "100",
+        "102",
+        "101",
+        "103",
+        "99",
+        "98"
+      ],
+      "common_order_people": 3
     },
     {
       "label": "神奈川県横浜",
@@ -85,7 +142,15 @@
       ],
       "people": 7,
       "p25_minutes": 96,
-      "p75_minutes": 123
+      "p75_minutes": 123,
+      "common_order": [
+        "23",
+        "314",
+        "313",
+        "311",
+        "312"
+      ],
+      "common_order_people": 3
     },
     {
       "label": "岩手県北上",
@@ -95,7 +160,12 @@
       ],
       "people": 6,
       "p25_minutes": 14,
-      "p75_minutes": 36
+      "p75_minutes": 36,
+      "common_order": [
+        "323",
+        "397"
+      ],
+      "common_order_people": 6
     },
     {
       "label": "三重県鳥羽市",
@@ -105,7 +175,12 @@
       ],
       "people": 5,
       "p25_minutes": 25,
-      "p75_minutes": 31
+      "p75_minutes": 31,
+      "common_order": [
+        "243",
+        "414"
+      ],
+      "common_order_people": 5
     },
     {
       "label": "千葉県香取",
@@ -117,7 +192,14 @@
       ],
       "people": 5,
       "p25_minutes": 109,
-      "p75_minutes": 167
+      "p75_minutes": 167,
+      "common_order": [
+        "222",
+        "223",
+        "225",
+        "224"
+      ],
+      "common_order_people": 3
     },
     {
       "label": "滋賀県大津",
@@ -127,7 +209,12 @@
       ],
       "people": 5,
       "p25_minutes": 27,
-      "p75_minutes": 32
+      "p75_minutes": 32,
+      "common_order": [
+        "104",
+        "105"
+      ],
+      "common_order_people": 5
     }
   ]
 }
