@@ -141,7 +141,7 @@ def _route_html(area: dict, route: list[dict], common: bool, entry: dict | None)
         for i, r in enumerate(route)
     )
     lead = (
-        f"実際に全部回った人のうち{entry['common_order_people']}人がこの道筋で回っています（逆回りも含む）。"
+        "実際に全部回った人によく使われている道筋です（逆回りも含む）。"
         if common and entry else "直線距離の合計がいちばん短くなる順に並べました。"
     )
     lead += f"直線で合計約{sum(legs):.1f}kmです。"
@@ -392,7 +392,6 @@ def build_index_page(
         mode = MODE_LABELS[travel_mode(records)]
         time = (
             f'<strong>{escape(duration_range(entry["p25_minutes"], entry["p75_minutes"]))}</strong>'
-            f'<small>{entry["people"]}人の実績</small>'
             if entry else '<strong>目安を集計中</strong>'
         )
         return (
@@ -405,7 +404,9 @@ def build_index_page(
 
     measured = [(a, rs) for a, rs in areas if find_entry(rs, durations)]
     pending = [(a, rs) for a, rs in areas if not find_entry(rs, durations)]
-    measured.sort(key=lambda t: -find_entry(t[1], durations)["people"])
+    # visit_durations.json は回った人が多い順に並んでいる（人数そのものは書かない）
+    rank = {",".join(e["manhole_ids"]): i for i, e in enumerate(durations.get("entries", []))}
+    measured.sort(key=lambda t: rank.get(",".join(find_entry(t[1], durations)["manhole_ids"]), len(rank)))
     pending_html = (
         '<section aria-labelledby="pending-heading"><h2 id="pending-heading">目安を集計中のエリア</h2>'
         '<p>回る順番は見られます。1日で全部回った人が増えると、所要時間の目安が出ます。</p>'

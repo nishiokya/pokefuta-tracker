@@ -40,9 +40,9 @@ AREAS = [
 ]
 DURATIONS = {
     "measured_on": "2026-10-11",
-    "entries": [{"manhole_ids": ["206", "207", "208", "209", "210"], "people": 11,
+    "entries": [{"manhole_ids": ["206", "207", "208", "209", "210"], 
                  "p25_minutes": 84, "p75_minutes": 150,
-                 "common_order": ["206", "210", "209", "207", "208"], "common_order_people": 4}],
+                 "common_order": ["206", "210", "209", "207", "208"]}],
 }
 
 
@@ -89,6 +89,7 @@ class GenerateTest(unittest.TestCase):
             self.assertIn("目安を集計中のエリア", index)
             self.assertIn("吹田市", index)
             self.assertIn("PokefutaAnalytics.bindClickTracking(", area)
+            self.assertNotRegex(area + index, r"\d+人")
 
 
 class LinkTest(unittest.TestCase):
