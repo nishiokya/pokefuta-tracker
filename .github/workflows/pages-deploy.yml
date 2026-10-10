@@ -176,6 +176,7 @@ jobs:
           cp apps/web/privacy.html dist/privacy.html
           echo "[dist] 404 page (fixed Slowpoke lid)"
           python3 -m unittest apps.scraper.test_404_page
+          node apps/web/assets/lid-spin.test.js
           cp apps/web/404.html dist/404.html
           cp apps/web/sitemap.xml dist/sitemap.xml
           cp apps/web/robots.txt dist/robots.txt

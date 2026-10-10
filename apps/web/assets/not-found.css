@@ -80,6 +80,27 @@
   color: rgba(79, 56, 40, 0.7);
 }
 
+/* 「指でくるっと回せます」と回すための指定はスマホ（指で操作する端末）だけ */
+.lost__hint { display: none; }
+
+@media (pointer: coarse) {
+  .lost__lid {
+    /* 1本指のスクロールだけ止める（ピンチでの拡大は残す） */
+    touch-action: pinch-zoom;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    will-change: transform;
+  }
+  .lost__hint {
+    display: block;
+    margin-top: 4px;
+    font-size: 12px;
+    font-weight: 700;
+    color: rgba(79, 56, 40, 0.6);
+  }
+}
+
 .lost__go {
   display: inline-block;
   margin-top: 6px;

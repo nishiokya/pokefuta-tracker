@@ -10,7 +10,7 @@
   <meta name="robots" content="noindex">
   <link rel="icon" href="./assets/pokefuta-marker.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./assets/theme.css">
-  <link rel="stylesheet" href="./assets/not-found.css?v=20261010a">
+  <link rel="stylesheet" href="./assets/not-found.css?v=20261011a">
   <!-- Google Analytics -->
   <script src="./assets/analytics.js?v=20260929a"></script>
   <script>
@@ -32,10 +32,11 @@
         <p class="lost__lead">URLが変わったか、ページが削除された可能性があります。</p>
       </div>
 
-      <a class="lost__pick" href="./manholes/40/" data-track="click_not_found" data-destination="manhole">
-        <img class="lost__lid" src="./manhole/image/40_lid.jpeg" alt="ヤドンのポケふた" width="220" height="220">
+      <a class="lost__pick" id="lost-pick" href="./manholes/40/" data-track="click_not_found" data-destination="manhole">
+        <img class="lost__lid" id="lost-lid" src="./manhole/image/40_lid.jpeg" alt="ヤドンのポケふた" width="220" height="220" draggable="false">
         <span class="lost__caption"><b>ヤドン</b>もぽかんとしています</span>
         <span class="lost__place">香川県綾川町のポケふた</span>
+        <span class="lost__hint">指でくるっと回せます</span>
         <span class="lost__go">このポケふたを見る ›</span>
       </a>
 
@@ -46,5 +47,12 @@
       </ul>
     </section>
   </main>
+  <!-- スマホだけ、蓋を指で回せる（離すと慣性で回って止まる）。PC とマウスでは何もしない -->
+  <script src="./assets/lid-spin.js?v=20261011a"></script>
+  <script>
+    window.PokefutaLidSpin.bind(document.getElementById('lost-lid'), document.getElementById('lost-pick'), function () {
+      window.trackEvent('spin_not_found_lid', { surface: 'not_found' });
+    });
+  </script>
 </body>
 </html>

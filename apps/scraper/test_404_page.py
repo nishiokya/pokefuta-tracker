@@ -47,6 +47,17 @@ class PageTest(unittest.TestCase):
             ("https://pokefuta.com/design-manholes?from=data", "design"),
         ], links)
 
+    def test_lid_spin_is_wired_to_the_lid_and_its_link(self) -> None:
+        """回す動きそのものは assets/lid-spin.test.js（node）が見る。ここは 404 との繋ぎだけ。"""
+        self.assertIn('<script src="./assets/lid-spin.js?v=', self.html)
+        self.assertIn("PokefutaLidSpin.bind(document.getElementById('lost-lid'), document.getElementById('lost-pick')", self.html)
+        self.assertIn('id="lost-lid"', self.html)
+        self.assertIn('id="lost-pick"', self.html)
+        self.assertIn('draggable="false"', self.html)
+        css = (ROOT / "apps" / "web" / "assets" / "not-found.css").read_text(encoding="utf-8")
+        # スクロールは止めるがピンチでの拡大は止めない
+        self.assertRegex(css, r"@media \(pointer: coarse\) \{\s*\.lost__lid \{[^}]*touch-action: pinch-zoom;")
+        self.assertNotIn("touch-action: none", css)
 
 if __name__ == "__main__":
     unittest.main()
