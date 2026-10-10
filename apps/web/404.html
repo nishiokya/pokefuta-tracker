@@ -47,70 +47,12 @@
       </ul>
     </section>
   </main>
+  <!-- スマホだけ、蓋を指で回せる（離すと慣性で回って止まる）。PC とマウスでは何もしない -->
+  <script src="./assets/lid-spin.js?v=20261011a"></script>
   <script>
-    // スマホだけ、蓋を指で回せる（離すと慣性で回って止まる）。PC とマウスでは何もしない。
-    // 写真館（nishiokya/pokefuta の src/lib/lid-spin.ts）にも同じ動きの写しがある。片方を変えたら揃える
-    (function () {
-      var lid = document.getElementById('lost-lid');
-      var link = document.getElementById('lost-pick');
-      if (!lid || !window.matchMedia || !matchMedia('(pointer: coarse)').matches) return;
-      var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-      var FRICTION = 0.998;   // 1ms あたりの減衰。小さいほど早く止まる
-      var MIN_SPEED = 0.02;   // 度/ms。これを下回ったら止める
-      var TAP_LIMIT = 8;      // これ以上回したら、蓋のリンクを開かない（タップと区別する）
-      var angle = 0, velocity = 0, lastAngle = 0, lastTime = 0, moved = 0;
-      var pointer = null, frame = 0, spun = false, swallowClick = false;
-
-      function pointerAngle(e) {
-        var r = lid.getBoundingClientRect();
-        return Math.atan2(e.clientY - (r.top + r.height / 2), e.clientX - (r.left + r.width / 2)) * 180 / Math.PI;
-      }
-      function draw() { lid.style.transform = 'rotate(' + angle + 'deg)'; }
-
-      lid.addEventListener('pointerdown', function (e) {
-        if (e.pointerType !== 'touch') return;
-        pointer = e.pointerId;
-        cancelAnimationFrame(frame);
-        velocity = 0; moved = 0; swallowClick = false;
-        lastAngle = pointerAngle(e); lastTime = e.timeStamp;
-        try { lid.setPointerCapture(e.pointerId); } catch (err) { /* 合成イベントなど */ }
-      });
-      lid.addEventListener('pointermove', function (e) {
-        if (e.pointerId !== pointer) return;
-        var a = pointerAngle(e), d = a - lastAngle;
-        if (d > 180) d -= 360; else if (d < -180) d += 360;
-        var dt = Math.max(1, e.timeStamp - lastTime);
-        angle += d; moved += Math.abs(d);
-        velocity = velocity * 0.6 + (d / dt) * 0.4;
-        lastAngle = a; lastTime = e.timeStamp;
-        draw();
-      });
-      function release(e) {
-        if (e.pointerId !== pointer) return;
-        pointer = null;
-        if (moved >= TAP_LIMIT) {
-          swallowClick = true;
-          if (!spun) { spun = true; window.trackEvent('spin_not_found_lid', { surface: 'not_found' }); }
-        }
-        // 指を止めてから離したときは、慣性で回さない
-        if (reduce || e.timeStamp - lastTime > 80) return;
-        var prev = performance.now();
-        frame = requestAnimationFrame(function step(now) {
-          var dt = now - prev; prev = now;
-          velocity *= Math.pow(FRICTION, dt);
-          if (Math.abs(velocity) < MIN_SPEED) return;
-          angle += velocity * dt;
-          draw();
-          frame = requestAnimationFrame(step);
-        });
-      }
-      lid.addEventListener('pointerup', release);
-      lid.addEventListener('pointercancel', release);
-      link.addEventListener('click', function (e) {
-        // 遷移もクリック計測（document の bindClickTracking）も止める
-        if (swallowClick) { e.preventDefault(); e.stopPropagation(); swallowClick = false; }
-      });
-    })();
+    window.PokefutaLidSpin.bind(document.getElementById('lost-lid'), document.getElementById('lost-pick'), function () {
+      window.trackEvent('spin_not_found_lid', { surface: 'not_found' });
+    });
   </script>
 </body>
 </html>

@@ -85,7 +85,8 @@
 
 @media (pointer: coarse) {
   .lost__lid {
-    touch-action: none;
+    /* 1本指のスクロールだけ止める（ピンチでの拡大は残す） */
+    touch-action: pinch-zoom;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     user-select: none;
