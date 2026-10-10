@@ -70,6 +70,28 @@ class AreaTest(unittest.TestCase):
         self.assertNotIn("大阪府 東大阪市", names)
 
 
+    def test_compact_place_with_measured_time_does_not_claim_no_data(self) -> None:
+        durations = {"entries": [{"manhole_ids": ["1", "2"], "p25_minutes": 20, "p75_minutes": 30}]}
+        (name, _, _, _, time), = [
+            c for c in MODULE.compact_places(RECORDS, {}, set(), durations) if "吹田" in c[0]
+        ]
+        self.assertEqual(time, "約20分〜30分")
+        index = MODULE.build_index_page([], durations, MODULE.compact_places(RECORDS, {}, set(), durations))
+        self.assertNotIn("まだ実績はありません", index)
+        self.assertIn("実際に回った人の目安約20分〜30分", index)
+
+    def test_description_promises_maps_only_when_the_link_exists(self) -> None:
+        """離れた区間（15km超）があると順路リンクを出さないので、説明文でも約束しない。"""
+        far = [_record("31", "能登", 37.0, 136.9, prefecture="石川県"),
+               _record("32", "能登", 37.4, 137.2, prefecture="石川県")]
+        area = {"slug": "noto", "prefecture": "石川県", "name": "能登", "manhole_ids": ["31", "32"]}
+        page = MODULE.build_area_page(area, far, {}, {}, [(area, far)], {})
+        self.assertNotIn("Googleマップで順路を開けます", page)
+        self.assertNotIn("google.com/maps/dir/", page)
+        near_page = MODULE.build_area_page(AREAS[0], RECORDS[:5], DURATIONS, {}, [], {})
+        self.assertIn("Googleマップで順路を開けます", near_page)
+
+
 class GenerateTest(unittest.TestCase):
     def test_pages_index_and_links(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

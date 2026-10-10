@@ -105,6 +105,13 @@ def page_paths(records: list[dict], areas: list[dict]) -> list[str]:
     return [TRIP_BASE] + paths if paths else []
 
 
+def has_route_link(route: list[dict]) -> bool:
+    """Google マップの順路リンクを出せるか（_route_html と説明文で同じ判定を使う）。"""
+    return len(route) >= 2 and max(
+        pref._distance_km(a["lat"], a["lng"], b["lat"], b["lng"]) for a, b in zip(route, route[1:])
+    ) <= muni_page.ROUTE_LINK_MAX_LEG_KM
+
+
 def area_route(records: list[dict], entry: dict | None) -> tuple[list[dict], bool]:
     """(順番, よく回られる順かどうか)。集計に順番が無ければ直線距離の合計が最短の順。"""
     order = (entry or {}).get("common_order")
@@ -146,7 +153,7 @@ def _route_html(area: dict, route: list[dict], common: bool, entry: dict | None)
     )
     lead += f"直線で合計約{sum(legs):.1f}kmです。"
     links = ""
-    if max(legs) <= muni_page.ROUTE_LINK_MAX_LEG_KM:
+    if has_route_link(route):
         segments = muni_page._route_segments(route)
         for position, (first, last) in enumerate(segments, start=1):
             label = (
@@ -237,7 +244,7 @@ def build_area_page(
     )
     description = (
         f"{area['prefecture']}・{area['name']}のポケふた{count}枚を1日で回る順番と目安。"
-        f"{time_phrase}Googleマップで順路を開けます。"
+        f"{time_phrase}{'Googleマップで順路を開けます。' if has_route_link(route) else '泊まりで回る計画に。'}"
     )
     map_points = [
         {
@@ -358,9 +365,12 @@ def _analytics_script(page_path: str, page_type: str, prefecture_slug: str = "")
 
 
 def compact_places(
-    records: list[dict], slugs: dict[str, str], taken: set[frozenset[str]]
-) -> list[tuple[str, str, int, float]]:
-    """登録していない市区町村のうち、地点が近くにまとまっているところ。(名前, リンク先, 枚数, 合計km)。"""
+    records: list[dict], slugs: dict[str, str], taken: set[frozenset[str]], durations: dict | None = None
+) -> list[tuple[str, str, int, float, str]]:
+    """登録していない市区町村のうち、地点が近くにまとまっているところ。
+
+    (名前, リンク先, 枚数, 合計km, 所要時間の目安)。目安は集計にあるときだけ（無ければ空）。
+    """
     out = []
     for m in build_municipalities(records, slugs):
         points = _visitable(m.records)
@@ -373,7 +383,9 @@ def compact_places(
             pref._distance_km(a["lat"], a["lng"], b["lat"], b["lng"]) for a, b in zip(route, route[1:])
         )
         link = m.path or f"/prefectures/{quote(m.prefecture_slug)}/"
-        out.append((f"{m.prefecture} {m.name}", link, len(points), total))
+        entry = find_entry(points, durations or {})
+        time = duration_range(entry["p25_minutes"], entry["p75_minutes"]) if entry else ""
+        out.append((f"{m.prefecture} {m.name}", link, len(points), total, time))
     return sorted(out, key=lambda t: (-t[2], t[3]))
 
 
@@ -415,12 +427,13 @@ def build_index_page(
     )
     compact_html = (
         '<section aria-labelledby="compact-heading"><h2 id="compact-heading">近くにまとまっている場所</h2>'
-        f'<p>まだ実績はありませんが、どの地点もほかの地点から直線{COMPACT_GAP_KM:.0f}km以内にあり、'
-        '1日で回りやすそうな市区町村です。</p><ul class="compact-list">'
+        '<p>ポケふた旅のページはまだありませんが、どの地点もほかの地点から直線'
+        f'{COMPACT_GAP_KM:.0f}km以内にあり、1日で回りやすそうな市区町村です。</p><ul class="compact-list">'
         + "".join(
             f'<li><a href="{_escape_attr(link)}" data-track="trip_compact_click" data-surface="compact" '
-            f'data-destination="place">{escape(name)}</a><span>{n}枚・直線で合計約{km:.1f}km</span></li>'
-            for name, link, n, km in compact
+            f'data-destination="place">{escape(name)}</a><span>{n}枚・直線で合計約{km:.1f}km'
+            f'{f"・実際に回った人の目安{escape(time)}" if time else ""}</span></li>'
+            for name, link, n, km, time in compact
         )
         + "</ul></section>"
         if compact else ""
@@ -514,7 +527,7 @@ def generate_all(
     taken = {frozenset(str(r["id"]) for r in rs) for _, rs in ready}
     output_dir.mkdir(parents=True, exist_ok=True)
     (output_dir / "index.html").write_text(
-        build_index_page(ready, durations, compact_places(records, slugs, taken)), encoding="utf-8"
+        build_index_page(ready, durations, compact_places(records, slugs, taken, durations)), encoding="utf-8"
     )
     return [a for a, _ in ready]
 
