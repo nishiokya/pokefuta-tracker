@@ -17,6 +17,7 @@ GitHub Actions からは呼ばれない手動実行ツール群。
 | `import_michineki.py` | 道の駅JSONLDの生成・pokefutaへの roadside 自動登録（[詳細](#import_michinekipy)） |
 | `import_manholemap.py` | Manhole Map公開データの全件取得・JSON-LD生成 |
 | `check_mobile_viewport.py` | スマホ幅（320〜430px）で横にはみ出していないかをヘッドレスブラウザで検証（`mobile-viewport-check.yml` からも実行） |
+| `build_visit_durations.py` | DB バックアップ（data.sql）から、自治体のポケふたを1日で全部回った人の所要時間を集計して `dataset/visit_durations.json` を作る（手動。5人以上の自治体だけ・集計値のみ）。都道府県ページ・市区町村ページの「1日で回るには」に出る |
 
 `apps/scraper/import_design_manholes.py` は pokefuta.com の公開投稿APIから
 デザインマンホール投稿を取得し、`docs/design_manholes.ndjson` へ正規化する。

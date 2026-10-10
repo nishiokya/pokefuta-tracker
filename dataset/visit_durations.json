@@ -1,0 +1,133 @@
+{
+  "measured_on": "2026-10-11",
+  "min_people": 5,
+  "entries": [
+    {
+      "label": "大阪府東大阪",
+      "manhole_ids": [
+        "206",
+        "207",
+        "208",
+        "209",
+        "210"
+      ],
+      "people": 11,
+      "p25_minutes": 84,
+      "p75_minutes": 150
+    },
+    {
+      "label": "東京都台東区上野",
+      "manhole_ids": [
+        "172",
+        "173"
+      ],
+      "people": 11,
+      "p25_minutes": 3,
+      "p75_minutes": 5
+    },
+    {
+      "label": "兵庫県淡路",
+      "manhole_ids": [
+        "203",
+        "204",
+        "205"
+      ],
+      "people": 9,
+      "p25_minutes": 85,
+      "p75_minutes": 182
+    },
+    {
+      "label": "埼玉県所沢",
+      "manhole_ids": [
+        "211",
+        "212",
+        "213"
+      ],
+      "people": 9,
+      "p25_minutes": 57,
+      "p75_minutes": 87
+    },
+    {
+      "label": "奈良県斑鳩",
+      "manhole_ids": [
+        "148",
+        "149",
+        "150",
+        "151",
+        "152"
+      ],
+      "people": 7,
+      "p25_minutes": 29,
+      "p75_minutes": 55
+    },
+    {
+      "label": "東京都町田",
+      "manhole_ids": [
+        "98",
+        "99",
+        "100",
+        "101",
+        "102",
+        "103"
+      ],
+      "people": 7,
+      "p25_minutes": 20,
+      "p75_minutes": 29
+    },
+    {
+      "label": "神奈川県横浜",
+      "manhole_ids": [
+        "23",
+        "311",
+        "312",
+        "313",
+        "314"
+      ],
+      "people": 7,
+      "p25_minutes": 96,
+      "p75_minutes": 123
+    },
+    {
+      "label": "岩手県北上",
+      "manhole_ids": [
+        "323",
+        "397"
+      ],
+      "people": 6,
+      "p25_minutes": 14,
+      "p75_minutes": 36
+    },
+    {
+      "label": "三重県鳥羽市",
+      "manhole_ids": [
+        "243",
+        "414"
+      ],
+      "people": 5,
+      "p25_minutes": 25,
+      "p75_minutes": 31
+    },
+    {
+      "label": "千葉県香取",
+      "manhole_ids": [
+        "222",
+        "223",
+        "224",
+        "225"
+      ],
+      "people": 5,
+      "p25_minutes": 109,
+      "p75_minutes": 167
+    },
+    {
+      "label": "滋賀県大津",
+      "manhole_ids": [
+        "104",
+        "105"
+      ],
+      "people": 5,
+      "p25_minutes": 27,
+      "p75_minutes": 32
+    }
+  ]
+}

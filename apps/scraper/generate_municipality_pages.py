@@ -48,6 +48,13 @@ except ModuleNotFoundError as exc:
         prefecture_coverage,
     )
 
+try:
+    from apps.scraper.visit_durations import DEFAULT_DURATIONS, duration_html, load_durations
+except ModuleNotFoundError as exc:
+    if exc.name != "apps":
+        raise
+    from visit_durations import DEFAULT_DURATIONS, duration_html, load_durations
+
 ROOT = pref.ROOT
 BASE_URL = pref.BASE_URL
 DEFAULT_OUTPUT = ROOT / "dist" / "municipalities"
@@ -168,7 +175,7 @@ def _leg_label(km: float) -> str:
     return f"次まで直線約{km:.1f}km"
 
 
-def _route_section(municipality: Municipality) -> str:
+def _route_section(municipality: Municipality, durations: dict | None = None) -> str:
     route = shortest_route(municipality.records)
     if len(route) < 2:
         return ""
@@ -223,6 +230,7 @@ def _route_section(municipality: Municipality) -> str:
         f'<h2 id="route-heading">{escape(name)}のポケふたを巡る順番</h2>'
         f'<p>{escape(lead)}</p>'
         f'<ol class="route-stops">{"".join(items)}</ol>'
+        f'{duration_html(municipality.records, durations or {})}'
         '<div class="municipality-actions">'
         f'{route_link}'
         '<a class="inline-link" href="#prefecture-map" data-track="municipality_map_click" '
@@ -377,6 +385,7 @@ def build_page(
     all_municipalities: list[Municipality],
     pokemon_slugs: dict[str, str],
     photos: dict[str, dict],
+    durations: dict | None = None,
 ) -> str:
     m = municipality
     pref_slug = m.prefecture_slug
@@ -408,7 +417,7 @@ def build_page(
     photo_html = _to_municipality_events(pref._photo_section(m.name, pref_slug, records, photos))
     manhole_html = _to_municipality_events(pref._manhole_cards(records, photos, pref_slug))
     pokemon_html = _to_municipality_events(pref._pokemon_cards(records, pokemon_slugs))
-    route_html = _route_section(m)
+    route_html = _route_section(m, durations)
     related_html = _related_html(m, all_municipalities)
     hero_summary = (
         f"{'・'.join(pokemons[:6])}{'など' if len(pokemons) > 6 else ''}、"
@@ -706,6 +715,7 @@ def generate_all(
     photos: dict[str, dict],
     output_dir: Path,
     today: str | None = None,
+    durations: dict | None = None,
 ) -> list[Municipality]:
     municipalities = build_municipalities(records, slugs)
     pages = [m for m in municipalities if m.path]
@@ -713,7 +723,7 @@ def generate_all(
         out_dir = output_dir / m.prefecture_slug / m.slug
         out_dir.mkdir(parents=True, exist_ok=True)
         (out_dir / "index.html").write_text(
-            build_page(m, municipalities, pokemon_slugs, photos), encoding="utf-8"
+            build_page(m, municipalities, pokemon_slugs, photos, durations), encoding="utf-8"
         )
     output_dir.mkdir(parents=True, exist_ok=True)
     active_total = sum(m.count for m in municipalities)
@@ -730,6 +740,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--manholes", type=Path, default=pref.DEFAULT_MANHOLES)
     parser.add_argument("--pokemon", type=Path, default=pref.DEFAULT_POKEMON)
     parser.add_argument("--photos", type=Path, default=pref.DEFAULT_PHOTOS)
+    parser.add_argument("--durations", type=Path, default=DEFAULT_DURATIONS)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     return parser.parse_args()
 
@@ -744,7 +755,8 @@ def main() -> int:
         # dataset/municipality_slugs.json に足せば次のデプロイで出る。
         print(f"[generate_municipality_pages] WARNING: slug が無いので作らない: {', '.join(missing)}")
     pages = generate_all(
-        records, slugs, pref.load_pokemon_slugs(args.pokemon), pref.load_photos(args.photos), args.output
+        records, slugs, pref.load_pokemon_slugs(args.pokemon), pref.load_photos(args.photos), args.output,
+        durations=load_durations(args.durations),
     )
     print(
         f"[generate_municipality_pages] wrote {len(pages)} pages (>= {MIN_MANHOLES}枚) + ranking to "
