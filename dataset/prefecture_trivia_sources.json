@@ -83,6 +83,15 @@
       "verified_at": "2026-06-13"
     },
     {
+      "id": "ishikawa-noto-with-you",
+      "prefecture": "石川県",
+      "type": "local_connection",
+      "text": "能登のポケふたは地震からの復興支援で贈られたもので、縁に「POKÉMON with YOU」とあります",
+      "source_url": "https://news.mynavi.jp/article/20260416-4346994/",
+      "source_label": "マイナビニュース",
+      "verified_at": "2026-10-10"
+    },
+    {
       "id": "fukui-support-dragonite",
       "prefecture": "福井県",
       "type": "support_pokemon",
