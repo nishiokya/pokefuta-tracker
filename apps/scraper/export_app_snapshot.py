@@ -8,7 +8,7 @@ Supabase を読む構成をやめ、GitHub Pages (data.pokefuta.com) 配信の
 生成物:
   docs/api/manholes.json   … manhole 全件 + 写真有無（匿名ユーザー向け形状）
   docs/api/site-stats.json … /api/site-stats と同形状のサイト統計
-  docs/api/regulars.json   … トップの投稿者に付ける 👑 / 常連 の判定（公開ID → 段階）
+  docs/api/regulars.json   … 投稿者に付ける 👑 / 常連 / 🌱 新人 の判定（公開ID → 段階）
 
 実行元: .github/workflows/import-manhole-photos.yml（日次）
 
@@ -444,24 +444,82 @@ def compute_regular_tiers(
     return dict(sorted(tiers.items()))
 
 
+# 🌱 新人（"rookie"）: 最初の公開の投稿から ROOKIE_DAYS 日のあいだ付ける。来たばかりの人に
+# 気づいてもらい、コメントのきっかけにするため。初投稿日は投稿一覧から誰でも分かるので、
+# 常連の線と違ってこの日数は秘密にしない。👑 / 常連 が付く人はそちらを優先する。
+ROOKIE_DAYS = 30
+
+
+def rookie_since(now: datetime) -> datetime:
+    return now - timedelta(days=ROOKIE_DAYS)
+
+
+def compute_rookies(
+    visits: list[dict], veteran_auth_ids: set[str], public_id_by_auth: dict[str, str], now: datetime
+) -> set[str]:
+    """ROOKIE_DAYS 日以内に初めて公開の投稿をした人の公開ID を返す。
+
+    visits は公開・写真ありの {user_id, created_at}（窓より古いものが混ざっていてよい）。
+    veteran_auth_ids は窓より前にも公開の投稿がある人（auth UID）。
+    """
+    since = rookie_since(now)
+    rookies: set[str] = set()
+    for v in visits:
+        auth = v.get("user_id") or ""
+        public_id = public_id_by_auth.get(auth)
+        if not public_id or public_id in REGULAR_EXCLUDED_PUBLIC_IDS or auth in veteran_auth_ids:
+            continue
+        created = datetime.fromisoformat(str(v["created_at"]).replace("Z", "+00:00"))
+        if since <= created <= now:
+            rookies.add(public_id)
+    return rookies
+
+
+def merge_badges(tiers: dict[str, str], rookies: set[str]) -> dict[str, str]:
+    """👑 / 常連 が付く人には 🌱 を重ねない。"""
+    merged = {public_id: "rookie" for public_id in rookies}
+    merged.update(tiers)
+    return dict(sorted(merged.items()))
+
+
 def build_regulars(rule: BadgeRule) -> dict:
     now = datetime.now(timezone.utc)
-    start = regular_window_start(now, rule)
+    since = min(regular_window_start(now, rule), rookie_since(now))
+    public_with_photo = {"select": "user_id,created_at,photo!inner(id)", "is_public": "eq.true"}
     visits = fetch_all(
         "visit", {
-            "select": "user_id,created_at,photo!inner(id)",
-            "is_public": "eq.true",
-            "created_at": f"gte.{start.isoformat(timespec='seconds')}",
+            **public_with_photo,
+            "created_at": f"gte.{since.isoformat(timespec='seconds')}",
             "order": "id.asc",
         }
     )
+    # 新人の候補（最近投稿した人）のうち、もっと前にも投稿がある人を除くための問い合わせ
+    recent_auth_ids = sorted({
+        v["user_id"] for v in visits
+        if v.get("user_id")
+        and datetime.fromisoformat(str(v["created_at"]).replace("Z", "+00:00")) >= rookie_since(now)
+    })
+    # in.(...) の URL が伸びすぎないよう、100人ずつに分けて聞く
+    veteran_auth_ids: set[str] = set()
+    for i in range(0, len(recent_auth_ids), 100):
+        older = fetch_all(
+            "visit", {
+                **public_with_photo,
+                "user_id": f"in.({','.join(recent_auth_ids[i:i + 100])})",
+                "created_at": f"lt.{rookie_since(now).isoformat(timespec='seconds')}",
+                "order": "id.asc",
+            }
+        )
+        veteran_auth_ids |= {v["user_id"] for v in older if v.get("user_id")}
     # 公開 JSON に auth UID を出さないため、ここで公開ID（app_user.id）に置き換える
     users = fetch_all("app_user", {"select": "id,auth_uid", "order": "id.asc"})
     public_id_by_auth = {u["auth_uid"]: u["id"] for u in users if u.get("auth_uid")}
+    tiers = compute_regular_tiers(visits, public_id_by_auth, now, rule)
+    rookies = compute_rookies(visits, veteran_auth_ids, public_id_by_auth, now)
     return {
         "success": True,
         "generated_at": now.isoformat(timespec="seconds"),
-        "users": compute_regular_tiers(visits, public_id_by_auth, now, rule),
+        "users": merge_badges(tiers, rookies),
     }
 
 
@@ -517,7 +575,7 @@ def main() -> None:
     tiers = list(regulars["users"].values())
     print(
         "docs/api/regulars.json: "
-        f"crown={tiers.count('crown')} regular={tiers.count('regular')}"
+        f"crown={tiers.count('crown')} regular={tiers.count('regular')} rookie={tiers.count('rookie')}"
     )
 
 
