@@ -499,17 +499,18 @@ def build_regulars(rule: BadgeRule) -> dict:
         if v.get("user_id")
         and datetime.fromisoformat(str(v["created_at"]).replace("Z", "+00:00")) >= rookie_since(now)
     })
+    # in.(...) の URL が伸びすぎないよう、100人ずつに分けて聞く
     veteran_auth_ids: set[str] = set()
-    if recent_auth_ids:
+    for i in range(0, len(recent_auth_ids), 100):
         older = fetch_all(
             "visit", {
                 **public_with_photo,
-                "user_id": f"in.({','.join(recent_auth_ids)})",
+                "user_id": f"in.({','.join(recent_auth_ids[i:i + 100])})",
                 "created_at": f"lt.{rookie_since(now).isoformat(timespec='seconds')}",
                 "order": "id.asc",
             }
         )
-        veteran_auth_ids = {v["user_id"] for v in older if v.get("user_id")}
+        veteran_auth_ids |= {v["user_id"] for v in older if v.get("user_id")}
     # 公開 JSON に auth UID を出さないため、ここで公開ID（app_user.id）に置き換える
     users = fetch_all("app_user", {"select": "id,auth_uid", "order": "id.asc"})
     public_id_by_auth = {u["auth_uid"]: u["id"] for u in users if u.get("auth_uid")}
