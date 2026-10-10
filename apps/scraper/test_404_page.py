@@ -47,6 +47,16 @@ class PageTest(unittest.TestCase):
             ("https://pokefuta.com/design-manholes?from=data", "design"),
         ], links)
 
+    def test_lid_spins_only_on_touch_devices(self) -> None:
+        """蓋を回すのはスマホだけ。PC（マウス）では何もしない。回したら蓋のリンクは開かない。"""
+        script = self.html[self.html.index("スマホだけ、蓋を指で回せる"):]
+        self.assertIn("matchMedia('(pointer: coarse)')", script)
+        self.assertIn("e.pointerType !== 'touch'", script)
+        self.assertIn("e.preventDefault()", script)
+        self.assertIn('draggable="false"', self.html)
+        css = (ROOT / "apps" / "web" / "assets" / "not-found.css").read_text(encoding="utf-8")
+        self.assertRegex(css, r"@media \(pointer: coarse\) \{\s*\.lost__lid \{\s*touch-action: none;")
+
 
 if __name__ == "__main__":
     unittest.main()

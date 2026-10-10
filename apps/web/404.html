@@ -10,7 +10,7 @@
   <meta name="robots" content="noindex">
   <link rel="icon" href="./assets/pokefuta-marker.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./assets/theme.css">
-  <link rel="stylesheet" href="./assets/not-found.css?v=20261010a">
+  <link rel="stylesheet" href="./assets/not-found.css?v=20261011a">
   <!-- Google Analytics -->
   <script src="./assets/analytics.js?v=20260929a"></script>
   <script>
@@ -32,10 +32,11 @@
         <p class="lost__lead">URLが変わったか、ページが削除された可能性があります。</p>
       </div>
 
-      <a class="lost__pick" href="./manholes/40/" data-track="click_not_found" data-destination="manhole">
-        <img class="lost__lid" src="./manhole/image/40_lid.jpeg" alt="ヤドンのポケふた" width="220" height="220">
+      <a class="lost__pick" id="lost-pick" href="./manholes/40/" data-track="click_not_found" data-destination="manhole">
+        <img class="lost__lid" id="lost-lid" src="./manhole/image/40_lid.jpeg" alt="ヤドンのポケふた" width="220" height="220" draggable="false">
         <span class="lost__caption"><b>ヤドン</b>もぽかんとしています</span>
         <span class="lost__place">香川県綾川町のポケふた</span>
+        <span class="lost__hint">指でくるっと回せます</span>
         <span class="lost__go">このポケふたを見る ›</span>
       </a>
 
@@ -46,5 +47,69 @@
       </ul>
     </section>
   </main>
+  <script>
+    // スマホだけ、蓋を指で回せる（離すと慣性で回って止まる）。PC とマウスでは何もしない。
+    // 写真館（nishiokya/pokefuta の src/lib/lid-spin.ts）にも同じ動きの写しがある。片方を変えたら揃える
+    (function () {
+      var lid = document.getElementById('lost-lid');
+      var link = document.getElementById('lost-pick');
+      if (!lid || !window.matchMedia || !matchMedia('(pointer: coarse)').matches) return;
+      var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var FRICTION = 0.998;   // 1ms あたりの減衰。小さいほど早く止まる
+      var MIN_SPEED = 0.02;   // 度/ms。これを下回ったら止める
+      var TAP_LIMIT = 8;      // これ以上回したら、蓋のリンクを開かない（タップと区別する）
+      var angle = 0, velocity = 0, lastAngle = 0, lastTime = 0, moved = 0;
+      var pointer = null, frame = 0, spun = false, swallowClick = false;
+
+      function pointerAngle(e) {
+        var r = lid.getBoundingClientRect();
+        return Math.atan2(e.clientY - (r.top + r.height / 2), e.clientX - (r.left + r.width / 2)) * 180 / Math.PI;
+      }
+      function draw() { lid.style.transform = 'rotate(' + angle + 'deg)'; }
+
+      lid.addEventListener('pointerdown', function (e) {
+        if (e.pointerType !== 'touch') return;
+        pointer = e.pointerId;
+        cancelAnimationFrame(frame);
+        velocity = 0; moved = 0; swallowClick = false;
+        lastAngle = pointerAngle(e); lastTime = e.timeStamp;
+        try { lid.setPointerCapture(e.pointerId); } catch (err) { /* 合成イベントなど */ }
+      });
+      lid.addEventListener('pointermove', function (e) {
+        if (e.pointerId !== pointer) return;
+        var a = pointerAngle(e), d = a - lastAngle;
+        if (d > 180) d -= 360; else if (d < -180) d += 360;
+        var dt = Math.max(1, e.timeStamp - lastTime);
+        angle += d; moved += Math.abs(d);
+        velocity = velocity * 0.6 + (d / dt) * 0.4;
+        lastAngle = a; lastTime = e.timeStamp;
+        draw();
+      });
+      function release(e) {
+        if (e.pointerId !== pointer) return;
+        pointer = null;
+        if (moved >= TAP_LIMIT) {
+          swallowClick = true;
+          if (!spun) { spun = true; window.trackEvent('spin_not_found_lid', { surface: 'not_found' }); }
+        }
+        // 指を止めてから離したときは、慣性で回さない
+        if (reduce || e.timeStamp - lastTime > 80) return;
+        var prev = performance.now();
+        frame = requestAnimationFrame(function step(now) {
+          var dt = now - prev; prev = now;
+          velocity *= Math.pow(FRICTION, dt);
+          if (Math.abs(velocity) < MIN_SPEED) return;
+          angle += velocity * dt;
+          draw();
+          frame = requestAnimationFrame(step);
+        });
+      }
+      lid.addEventListener('pointerup', release);
+      lid.addEventListener('pointercancel', release);
+      link.addEventListener('click', function (e) {
+        if (swallowClick) { e.preventDefault(); swallowClick = false; }
+      });
+    })();
+  </script>
 </body>
 </html>
