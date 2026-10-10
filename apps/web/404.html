@@ -107,7 +107,8 @@
       lid.addEventListener('pointerup', release);
       lid.addEventListener('pointercancel', release);
       link.addEventListener('click', function (e) {
-        if (swallowClick) { e.preventDefault(); swallowClick = false; }
+        // 遷移もクリック計測（document の bindClickTracking）も止める
+        if (swallowClick) { e.preventDefault(); e.stopPropagation(); swallowClick = false; }
       });
     })();
   </script>
