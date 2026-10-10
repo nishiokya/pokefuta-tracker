@@ -301,5 +301,43 @@ class RegularTiersTest(unittest.TestCase):
         self.assertNotIn("auth-c", json.dumps(result))
 
 
+class RookieTest(unittest.TestCase):
+    # 2026-10-07(水) 12:00 JST。新人の窓は 30日前の 09-07 12:00 JST から
+    NOW = MODULE.datetime(2026, 10, 7, 3, 0, tzinfo=MODULE.timezone.utc)
+    IDS = {"auth-a": "pub-a", "auth-b": "pub-b", "auth-c": "pub-c"}
+
+    @staticmethod
+    def visit(user: str, jst: str) -> dict:
+        return {"user_id": user, "created_at": f"{jst}+09:00"}
+
+    def rookies(self, visits: list[dict], veterans: set[str] | None = None) -> set:
+        return MODULE.compute_rookies(visits, veterans or set(), self.IDS, self.NOW)
+
+    def test_first_post_within_days_is_rookie(self) -> None:
+        visits = [self.visit("auth-a", "2026-10-01T10:00:00")]
+        self.assertEqual({"pub-a"}, self.rookies(visits))
+
+    def test_boundary(self) -> None:
+        visits = [
+            self.visit("auth-a", "2026-09-07T12:00:00"),
+            self.visit("auth-b", "2026-09-07T11:59:00"),
+        ]
+        self.assertEqual({"pub-a"}, self.rookies(visits))
+
+    def test_user_with_earlier_posts_is_not_rookie(self) -> None:
+        visits = [self.visit("auth-a", "2026-10-01T10:00:00")]
+        self.assertEqual(set(), self.rookies(visits, {"auth-a"}))
+
+    def test_unknown_user_and_operator_are_skipped(self) -> None:
+        operator = next(iter(MODULE.REGULAR_EXCLUDED_PUBLIC_IDS))
+        ids = {**self.IDS, "auth-op": operator}
+        visits = [self.visit(u, "2026-10-01T10:00:00") for u in ("auth-op", "auth-x")]
+        self.assertEqual(set(), MODULE.compute_rookies(visits, set(), ids, self.NOW))
+
+    def test_regular_tier_wins_over_rookie(self) -> None:
+        merged = MODULE.merge_badges({"pub-a": "regular"}, {"pub-a", "pub-b"})
+        self.assertEqual({"pub-a": "regular", "pub-b": "rookie"}, merged)
+
+
 if __name__ == "__main__":
     unittest.main()
