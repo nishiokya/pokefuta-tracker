@@ -100,6 +100,7 @@ jobs:
       # bot の PR では production-url-check.yml が承認待ちのまま走らないため、PR 前にここで検査する。
       - name: Reject loopback URLs in production sources
         run: |
+          python3 .github/scripts/test_check_production_urls.py
           python3 .github/scripts/check_production_urls.py \
             --exclude 'supabase-ssr.js' \
             apps/web \
