@@ -128,7 +128,8 @@ class EnglishTopTest(unittest.TestCase):
             return set(re.findall(r"trackEvent\(\s*'([a-z_]+)'", text))
         ja_html = (ROOT / "apps/web/index.html").read_text(encoding="utf-8")
         en_html = INDEX_EN.read_text(encoding="utf-8")
-        self.assertEqual(names(ja_html), names(en_html))
+        # 日本語版だけ「目的から探す」に市区町村の「もっとみる」があり、テーマの「地図で探す」を外した
+        self.assertEqual(names(ja_html) - {"click_hub_city_all"}, names(en_html) - {"click_hub_tag_all"})
 
     def test_hero_quick_links_match_the_japanese_destinations(self) -> None:
         """英語の「近く」ページは無いので、PC の追加はテーマだけ（横いっぱい）。"""

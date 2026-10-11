@@ -38,6 +38,8 @@ SHELL = """<html><head>
     <!-- home:pref:end -->
     <!-- home:pokemon:start -->
     <!-- home:pokemon:end -->
+    <!-- home:cities:start -->
+    <!-- home:cities:end -->
           <!-- tag-chips:start -->
           <a class="hub-chip" href="/tags/roadside/">keep</a>
           <!-- tag-chips:end -->
@@ -288,6 +290,40 @@ class GeneratedHtmlTest(unittest.TestCase):
         self.assertNotIn("<script>", block)
         self.assertIn("&lt;script&gt;", block)
 
+    def test_event_shows_the_pokemon_in_its_title(self) -> None:
+        events = [_event("東京都", "東京都×ラプラス スタンプラリー", "2026-08-01", "2026-12-31")]
+        fixture = Fixture(self.tmp, events=events)
+        block = _block(fixture.html(), "events")
+        self.assertIn('class="home-event has-img"', block)
+        self.assertIn('src="manhole/image/6_latest.jpeg"', block)
+        self.assertIn('alt="ラプラスのポケふた（東京都テスト）"', block)
+        # 蓋の切り出しがあれば小さい方を使う
+        (fixture.image_dir / "6_lid.jpeg").write_bytes(b"x")
+        block = _block(fixture.html(), "events")
+        self.assertIn('src="manhole/image/6_lid.jpeg"', block)
+        self.assertIn('width="360" height="360"', block)
+
+    def test_event_prefers_the_representative_only_inside_its_prefecture(self) -> None:
+        events = [_event("東京都", "ピカチュウと巡る東京", "2026-08-01", "2026-12-31")]
+        # 代表（北海道の1番）は県外なので、県内のピカチュウ（5番）を使う
+        block = _block(Fixture(self.tmp, events=events, representatives={"ピカチュウ": 1}).html(), "events")
+        self.assertIn('src="manhole/image/5_latest.jpeg"', block)
+
+    def test_event_without_a_known_pokemon_has_no_photo(self) -> None:
+        events = [_event("東京都", "東京スタンプラリー", "2026-08-01", "2026-12-31")]
+        block = _block(Fixture(self.tmp, events=events).html(), "events")
+        self.assertNotIn("<img", block)
+        self.assertNotIn("has-img", block)
+
+    def test_cities_list_the_largest_municipalities(self) -> None:
+        block = _block(Fixture(self.tmp).html(), "cities")
+        chips = re.findall(r'<a class="hub-chip" href="([^"]+)"', block)
+        self.assertEqual(10, len(chips))
+        # slug の無い自治体はランキングと同じく県のページへ
+        self.assertEqual("prefectures/hokkaido/", chips[0])
+        self.assertIn('テスト市<small class="home-city__pref">北海道</small><span class="chip-count">2枚</span>', block)
+        self.assertIn("surface:'top_hub_city'", block)
+
     def test_prefecture_list_separates_installed_and_empty_prefectures(self) -> None:
         block = _block(Fixture(self.tmp).html(), "pref")
         installed = re.findall(r'<span class="home-pref__name">([^<]+)</span>', block)
@@ -300,8 +336,8 @@ class GeneratedHtmlTest(unittest.TestCase):
         self.assertIn("2026年9月時点", note)
         self.assertIn("北海道・東北", block)
         self.assertIn('href="prefectures/"', block)
-        # 市区町村ページは TOP からもたどれるようにする
-        self.assertIn('<a href="municipalities/">ポケふたが多い市区町村ランキング</a>', block)
+        # 市区町村ランキングへの導線は「目的から探す」の市区町村チップへ移した
+        self.assertNotIn("municipalities/", block)
 
     def test_new_releases_only_appear_when_recent(self) -> None:
         self.assertNotIn("home-newrelease", Fixture(self.tmp).html())
