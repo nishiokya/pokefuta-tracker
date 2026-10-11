@@ -14,16 +14,34 @@ from xml.sax.saxutils import escape
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DURATIONS = ROOT / "dataset" / "visit_durations.json"
+DEFAULT_TRIP_AREAS = ROOT / "dataset" / "trip_areas.json"
+TRIP_BASE = "/trip/"
 # 移動手段の目安。地点の端から端まで（いちばん離れた2地点の間）の直線距離で決める
 WALK_MAX_KM = 2.5
 BUS_OR_BIKE_MAX_KM = 6.0
 MODE_LABELS = {"walk": "徒歩", "bus": "バス・自転車", "car": "車"}
 
 
-def load_durations(path: Path = DEFAULT_DURATIONS) -> dict:
+def load_trip_areas(path: Path = DEFAULT_TRIP_AREAS) -> list[dict]:
+    if not path.exists():
+        return []
+    return json.loads(path.read_text(encoding="utf-8")).get("areas", [])
+
+
+def trip_path(area: dict) -> str:
+    return f"{TRIP_BASE}{area['slug']}/"
+
+
+def load_durations(path: Path = DEFAULT_DURATIONS, areas_path: Path = DEFAULT_TRIP_AREAS) -> dict:
+    """集計（visit_durations.json）に、同じ地点の組の /trip/ ページの URL を添えて返す。"""
     if not path.exists():
         return {}
-    return json.loads(path.read_text(encoding="utf-8"))
+    durations = json.loads(path.read_text(encoding="utf-8"))
+    durations["trip_paths"] = {
+        ",".join(sorted(str(i) for i in area["manhole_ids"])): trip_path(area)
+        for area in load_trip_areas(areas_path)
+    }
+    return durations
 
 
 def _visitable(records: list[dict]) -> list[dict]:
@@ -129,14 +147,27 @@ def duration_text(records: list[dict], durations: dict) -> str:
     )
 
 
+def duration_note(durations: dict) -> str:
+    measured_on = str(durations.get("measured_on", ""))
+    return (
+        '<p class="visit-duration-note">所要時間は、pokefuta.com に投稿された写真の撮影時刻から、'
+        '1枚目から最後の1枚を撮るまでを数えた真ん中半分の人の幅です'
+        f'（{escape(measured_on)}時点）。1か所目までの移動は含みません。</p>'
+    )
+
+
 def duration_html(records: list[dict], durations: dict) -> str:
     text = duration_text(records, durations)
     if not text:
         return ""
-    measured_on = str(durations.get("measured_on", ""))
+    ids = ",".join(sorted(str(r.get("id", "")) for r in _visitable(records)))
+    path = durations.get("trip_paths", {}).get(ids, "")
+    link = (
+        f' <a class="inline-link" href="{escape(path)}" data-track="trip_link_click" '
+        'data-surface="visit_duration" data-destination="trip">回り方を詳しく見る</a>'
+        if path else ""
+    )
     return (
-        f'<p class="visit-duration">{escape(text)}</p>'
-        '<p class="visit-duration-note">所要時間は、pokefuta.com に投稿された写真の撮影時刻から、'
-        '1枚目から最後の1枚を撮るまでを数えた真ん中半分の人の幅です'
-        f'（{escape(measured_on)}時点）。1か所目までの移動は含みません。</p>'
+        f'<p class="visit-duration">{escape(text)}{link}</p>'
+        + duration_note(durations)
     )
