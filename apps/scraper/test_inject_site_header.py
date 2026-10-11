@@ -15,6 +15,16 @@ BARE = "<!doctype html><html><head></head><body><main></main></body></html>"
 
 
 class InjectSiteHeaderTest(unittest.TestCase):
+    def test_shared_icons_replace_legacy_icons_on_nested_pages(self):
+        html = BARE.replace('</head>', '<link rel="icon" href="/old-pin.svg"></head>')
+        result = inject(html, asset_base='../../')
+        self.assertNotIn('/old-pin.svg', result)
+        self.assertIn('src="../../assets/brand-icon.svg"', result)
+        self.assertIn('href="../../assets/favicon-48.png"', result)
+        self.assertIn('href="../../assets/favicon.ico"', result)
+        self.assertIn('href="../../assets/apple-touch-icon.png"', result)
+        self.assertEqual(result, inject(result, asset_base='../../'))
+
     def test_injects_stylesheet_header_tabs_and_body_class(self):
         result = inject(BARE)
         self.assertIn('href="./assets/site-header.css?v=', result)

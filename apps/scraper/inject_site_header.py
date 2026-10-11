@@ -23,7 +23,7 @@ from pathlib import Path
 
 
 # site-header.css を変えたら上げる。再訪者のブラウザに古いクロム・本文幅が残らないように
-SITE_HEADER_CSS_VERSION = "20261006a"
+SITE_HEADER_CSS_VERSION = "20261011a"
 STYLESHEET_TEMPLATE = (
     '<link rel="stylesheet" href="{asset_base}assets/site-header.css?v=' + SITE_HEADER_CSS_VERSION + '">'
 )
@@ -186,7 +186,7 @@ HEADER_TEMPLATE = """<header class="site-header">
   <div class="site-header__inner">
     <details class="site-switch">
       <summary class="site-switch__trigger" aria-label="{switch_aria}">
-        <span class="site-header__mark" aria-hidden="true"><span class="site-header__mark-core"></span></span>
+        <span class="site-header__mark" aria-hidden="true"><img src="{asset_base}assets/brand-icon.svg" width="30" height="30" alt=""></span>
         <span class="site-header__brand-name">{brand}<span class="site-header__brand-sep" aria-hidden="true">｜</span>{site_dex}</span>
         <span class="site-switch__caret" aria-hidden="true"></span>
       </summary>
@@ -326,6 +326,16 @@ def inject(
     footer = FOOTER_TEMPLATE.format(**fields)
 
     stylesheet = STYLESHEET_TEMPLATE.format(asset_base=asset_base)
+    # Every generated/localized page uses the same mark, including legacy generators.
+    html = re.sub(r'<link\b(?=[^>]*\brel=[\"\'](?:icon|shortcut icon|apple-touch-icon)[\"\'])[^>]*>\s*', '', html, flags=re.IGNORECASE)
+    icon_links = '\n'.join([
+        f'<link rel="icon" href="{asset_base}assets/favicon.ico" sizes="16x16 32x32 48x48">',
+        f'<link rel="icon" href="{asset_base}assets/brand-icon.svg" type="image/svg+xml">',
+        f'<link rel="icon" href="{asset_base}assets/favicon-48.png" type="image/png" sizes="48x48">',
+        f'<link rel="icon" href="{asset_base}assets/favicon-96.png" type="image/png" sizes="96x96">',
+        f'<link rel="apple-touch-icon" href="{asset_base}assets/apple-touch-icon.png" sizes="180x180">',
+    ])
+    html = re.sub(r'</head>', lambda _: icon_links + '\n</head>', html, count=1, flags=re.IGNORECASE)
     if stylesheet not in html:
         html = html.replace("</head>", f"  {stylesheet}\n</head>", 1)
 
