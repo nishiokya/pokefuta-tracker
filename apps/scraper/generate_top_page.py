@@ -14,7 +14,7 @@
 - photos    … 新着・注目の写真（地域が偏らないよう地方ごとに順番に選ぶ）
 - events    … 開催中イベント（上位3件＋残りは折りたたみ。イベント名のポケモンの写真を1枚添える）
 - pref      … 設置のある都道府県を地方別に、未設置の県は短い注記に分ける
-- cities    … 設置の多い市区町村（目的から探す。続きは /municipalities/ のランキング）
+- trips     … ポケふた旅（目的から探す。枚数・かかる時間の多いエリアをカードで。続きは /trip/）
 - pokemon   … 設置の多いポケモン（写真つきカード。/pokemon/ と同じ突き合わせ規則。写真は
               dataset/pokemon_representatives.json の代表を優先し、無ければ新しい投稿）
 
@@ -47,7 +47,10 @@ try:
     from apps.scraper.generate_pokemon_index_page import load_representatives
     from apps.scraper.generate_pokemon_pages import build_pokemon_index, load_pokemon_metadata
     from apps.scraper.generate_tag_pages import load_records
-    from apps.scraper.municipalities import RANKING_MIN_MANHOLES, Municipality, build_municipalities, load_slugs
+    from apps.scraper.generate_trip_pages import area_records, card_thumbs_html
+    from apps.scraper.visit_durations import (
+        MODE_LABELS, duration_range, find_entry, load_durations, load_trip_areas, travel_mode, trip_path,
+    )
     from apps.scraper.photo_caption import JST, format_photo_date, to_jst_date
     from apps.scraper.prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS
     from apps.scraper.tag_meta import count_tags, load_tag_meta
@@ -58,7 +61,10 @@ except ModuleNotFoundError as exc:
     from generate_pokemon_index_page import load_representatives
     from generate_pokemon_pages import build_pokemon_index, load_pokemon_metadata
     from generate_tag_pages import load_records
-    from municipalities import RANKING_MIN_MANHOLES, Municipality, build_municipalities, load_slugs
+    from generate_trip_pages import area_records, card_thumbs_html
+    from visit_durations import (
+        MODE_LABELS, duration_range, find_entry, load_durations, load_trip_areas, travel_mode, trip_path,
+    )
     from photo_caption import JST, format_photo_date, to_jst_date
     from prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS
     from tag_meta import count_tags, load_tag_meta
@@ -79,7 +85,7 @@ UPLOAD_URL = "https://pokefuta.com/upload?from=data"
 HERO_PHOTO_LIMIT = 6
 GALLERY_PHOTO_LIMIT = 8
 EVENT_VISIBLE_LIMIT = 3
-CITY_LIMIT = 10  # 「市区町村から探す」に出す自治体の数（スマホは CSS で先頭6件だけ）
+TRIP_LIMIT = 4  # 「目的から探す」に出すポケふた旅のエリア数
 NEW_RELEASE_DAYS = 30
 PHOTO_SIZE = 720  # ローカルミラーは 720×720
 LID_SIZE = 360  # 蓋の枠に合わせた切り出し {id}_lid.jpeg
@@ -114,7 +120,8 @@ PREF_COORDS: dict[str, tuple[float, float]] = {
 
 DEFAULT_POKEMON_METADATA = ROOT / "docs" / "pokemon_metadata.json"
 DEFAULT_REPRESENTATIVES = ROOT / "dataset" / "pokemon_representatives.json"
-DEFAULT_MUNICIPALITY_SLUGS = ROOT / "dataset" / "municipality_slugs.json"
+DEFAULT_TRIP_AREAS = ROOT / "dataset" / "trip_areas.json"
+DEFAULT_DURATIONS = ROOT / "dataset" / "visit_durations.json"
 POPULAR_POKEMON_LIMIT = 5
 FORM_PREFIX = {"alola": "アローラ", "galar": "ガラル", "hisui": "ヒスイ", "paldea": "パルデア"}
 
@@ -213,7 +220,7 @@ class TopData:
     tag_counts: dict = field(default_factory=dict)
     popular_pokemon: list[PokemonEntry] = field(default_factory=list)
     all_pokemon: list[PokemonEntry] = field(default_factory=list)
-    municipalities: list[Municipality] = field(default_factory=list)
+    trips: list[dict] = field(default_factory=list)
 
     @property
     def total(self) -> int:
@@ -310,6 +317,36 @@ def load_events(path: Path | None, today: date) -> list[dict]:
     return ongoing + upcoming
 
 
+def build_trips(
+    records: list[dict], areas_path: Path | None, durations_path: Path | None, image_dir: Path,
+    limit: int = TRIP_LIMIT,
+) -> list[dict]:
+    """かかる時間の目安があるエリアを、枚数が多い順・同数なら時間が長い順に。/trip/ の一覧と同じ数え方。"""
+    if not areas_path or not durations_path:
+        return []
+    durations = load_durations(durations_path, areas_path)
+    by_id = {str(r.get("id", "")): r for r in records}
+    trips = []
+    for area in load_trip_areas(areas_path):
+        rs = area_records(area, by_id)
+        entry = find_entry(rs, durations) if rs else None
+        if not entry:
+            continue
+        trips.append({
+            "slug": area["slug"],
+            "name": area["name"],
+            "prefecture": area["prefecture"],
+            "path": trip_path(area).lstrip("/"),
+            "count": len(rs),
+            "minutes": entry.get("median_minutes") or 0,
+            "time": duration_range(entry["p25_minutes"], entry["p75_minutes"]),
+            "mode": MODE_LABELS[travel_mode(rs)],
+            "thumbs": card_thumbs_html(rs, entry, image_dir),
+        })
+    trips.sort(key=lambda t: (-t["count"], -t["minutes"], t["slug"]))
+    return trips[:limit]
+
+
 def load_data(
     manholes: Path = DEFAULT_MANHOLES,
     photos: Path | None = DEFAULT_PHOTOS,
@@ -319,15 +356,14 @@ def load_data(
     today: date | None = None,
     pokemon_metadata: Path | None = DEFAULT_POKEMON_METADATA,
     representatives: Path | None = DEFAULT_REPRESENTATIVES,
-    municipality_slugs: Path | None = DEFAULT_MUNICIPALITY_SLUGS,
+    trip_areas: Path | None = DEFAULT_TRIP_AREAS,
+    durations: Path | None = DEFAULT_DURATIONS,
 ) -> TopData:
     today = today or datetime.now(JST).date()
     all_records = load_records(manholes)
     records = [r for r in all_records if is_installed(r)]
     stats_json = _load_json(stats)
     pokemon = build_pokemon_entries(records, pokemon_metadata, representatives_path=representatives)
-    # 枚数は市区町村ランキング（/municipalities/）と同じ数え方（設置予定も含む）にそろえる
-    slugs = load_slugs(municipality_slugs) if municipality_slugs and municipality_slugs.exists() else {}
     return TopData(
         records=records,
         photos=build_photos(_load_json(photos), records, image_dir),
@@ -338,7 +374,7 @@ def load_data(
         tag_counts=count_tags(records),
         popular_pokemon=pokemon[:POPULAR_POKEMON_LIMIT],
         all_pokemon=pokemon,
-        municipalities=build_municipalities(all_records, slugs),
+        trips=build_trips(all_records, trip_areas, durations, image_dir),
     )
 
 
@@ -758,7 +794,7 @@ def event_pokemon_photo(event: dict, data: TopData) -> tuple[str, Photo] | None:
     return None
 
 
-def _event_card(event: dict, data: TopData) -> str:
+def _event_card(event: dict, data: TopData, extra: bool = False) -> str:
     today = data.today
     pref = event["prefecture"]
     ongoing = event["start"] <= today
@@ -775,7 +811,7 @@ def _event_card(event: dict, data: TopData) -> str:
             f'width="{size}" height="{size}" loading="lazy" decoding="async">'
         )
     return (
-        f'<li class="home-event{" has-img" if media else ""}" data-end="{event["end"].isoformat()}">'
+        f'<li class="home-event{" has-img" if media else ""}{" is-extra" if extra else ""}" data-end="{event["end"].isoformat()}">'
         f'<a href="prefectures/{PREFECTURE_SLUGS[pref]}/" '
         f'onclick="{_track("click_event_notice", surface="top_event_notice", prefecture=pref, destination="prefecture_page")}">'
         f"{media}"
@@ -789,21 +825,23 @@ def _event_card(event: dict, data: TopData) -> str:
 def render_events(data: TopData) -> str:
     if not data.events:
         return ""
-    visible = data.events[:EVENT_VISIBLE_LIMIT]
-    rest = data.events[EVENT_VISIBLE_LIMIT:]
+    # PC は全件を並べる。スマホは先頭3件だけ出し、4件目以降は「すべて見る」で開く（CSS で出し分け）
+    cards = "".join(
+        _event_card(e, data, extra=i >= EVENT_VISIBLE_LIMIT) for i, e in enumerate(data.events)
+    )
     more = ""
-    if rest:
+    if len(data.events) > EVENT_VISIBLE_LIMIT:
         more = (
-            '<details class="home-events__more">'
-            f'<summary onclick="{_track("click_event_show_all", surface="top_event_notice", count=len(data.events))}">'
-            f"すべて見る（全{len(data.events)}件）</summary>"
-            f'<ul class="home-events">{"".join(_event_card(e, data) for e in rest)}</ul>'
-            "</details>"
+            '<button type="button" class="home-events__toggle" '
+            # 計測が読み込めなくても開くよう、先に開いてから送る
+            "onclick=\"this.parentNode.classList.add('is-open');"
+            f'if (window.trackEvent) {_track("click_event_show_all", surface="top_event_notice", count=len(data.events))}">'
+            f"すべて見る（全{len(data.events)}件）</button>"
         )
     return (
         '<section class="home-section" id="home-events" aria-labelledby="home-events-title">'
         '<h2 class="home-h2" id="home-events-title">開催中のイベント・スタンプラリー</h2>'
-        f'<ul class="home-events">{"".join(_event_card(e, data) for e in visible)}</ul>'
+        f'<ul class="home-events">{cards}</ul>'
         f"{more}"
         "</section>"
     )
@@ -875,9 +913,10 @@ def render_pokemon(data: TopData) -> str:
     used: set[str] = set()
     for entry in data.popular_pokemon:
         photo = pick_pokemon_photo(entry, data.photos, used)
+        src, size = photo.thumb_src if photo else ("", 0)
         media = (
-            f'<img src="{escape(photo.src)}" alt="{escape(entry.name)}のポケふた（{escape(photo.prefecture)}{escape(photo.place)}）" '
-            f'width="{PHOTO_SIZE}" height="{PHOTO_SIZE}" loading="lazy" decoding="async">'
+            f'<img src="{escape(src)}" alt="{escape(entry.name)}のポケふた（{escape(photo.prefecture)}{escape(photo.place)}）" '
+            f'width="{size}" height="{size}" loading="lazy" decoding="async">'
             if photo else '<span class="home-poke__placeholder" aria-hidden="true"></span>'
         )
         cards.append(
@@ -894,24 +933,21 @@ def render_pokemon(data: TopData) -> str:
     return f'<ul class="home-pokes">{"".join(cards)}</ul>'
 
 
-def render_cities(data: TopData) -> str:
-    """設置の多い市区町村。ページがある自治体はそのページ、無ければ県のページへ（ランキングと同じ行き先）。"""
-    listed = [m for m in data.municipalities if m.count >= RANKING_MIN_MANHOLES][:CITY_LIMIT]
-    if not listed:
+def render_trips(data: TopData) -> str:
+    """ポケふた旅のカード（/trip/ のヒーローと同じ中身：県・エリアと枚数・蓋の丸い画像・かかる時間）。"""
+    if not data.trips:
         return ""
-    chips = []
-    for m in listed:
-        if m.path:
-            href, destination = m.path.lstrip("/"), "municipality_page"
-        else:
-            href, destination = f"prefectures/{quote(m.prefecture_slug)}/", "prefecture_page"
-        chips.append(
-            f'<a class="hub-chip" href="{escape(href)}" '
-            f'onclick="{_track("click_hub_city", surface="top_hub_city", municipality=m.key, destination=destination)}">'
-            f'{escape(m.name)}<small class="home-city__pref">{escape(m.prefecture)}</small>'
-            f'<span class="chip-count">{m.count}枚</span></a>'
-        )
-    return f'<div class="hub-chips home-chips home-cities">{"".join(chips)}</div>'
+    cards = "".join(
+        f'<a class="home-trip" href="{escape(t["path"])}" '
+        f'onclick="{_track("click_hub_trip", surface="top_hub_trip", destination=t["slug"])}">'
+        f'<span class="home-trip__pref">{escape(t["prefecture"])}</span>'
+        f'<b class="home-trip__name">{escape(t["name"])} {t["count"]}枚</b>'
+        f'{t["thumbs"]}'
+        f'<strong class="home-trip__time">{escape(t["time"])}</strong>'
+        f'<small class="home-trip__mode">移動の目安：{escape(t["mode"])}</small></a>'
+        for t in data.trips
+    )
+    return f'<div class="home-trips">{cards}</div>'
 
 
 RENDERERS = {
@@ -922,7 +958,7 @@ RENDERERS = {
     "events": render_events,
     "pref": render_pref,
     "pokemon": render_pokemon,
-    "cities": render_cities,
+    "trips": render_trips,
 }
 
 

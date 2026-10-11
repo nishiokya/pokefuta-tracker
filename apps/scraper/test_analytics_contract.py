@@ -188,7 +188,7 @@ class AnalyticsContractTest(unittest.TestCase):
         "click_photo_post_cta",  # 写真館への投稿導線
         "click_event_show_all",  # イベントの「すべて見る」
         "click_pref_link",       # 静的な都道府県リンク（多言語版は JS 文字列内にあり正規表現に掛からない）
-        "click_hub_city_all",    # 目的から探すの市区町村「もっとみる」（市区町村チップ自体は生成時に入る）
+        "click_hub_trip_all",    # 目的から探すのポケふた旅「もっとみる」（旅のカード自体は生成時に入る）
     }
     TEMPLATE_ONLY_EVENTS = {
         "click_hero_featured", "click_hero_small", "view_hero_community",  # 旧ヒーロー（大1＋小2）

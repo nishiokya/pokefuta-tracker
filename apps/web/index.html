@@ -374,7 +374,7 @@
   <!-- End GA -->
   <link rel="stylesheet" href="./assets/theme.css" />
   <link rel="stylesheet" href="./assets/top-page.css?v=20260711b" />
-  <link rel="stylesheet" href="./assets/top-home.css?v=20261011a" />
+  <link rel="stylesheet" href="./assets/top-home.css?v=20261011b" />
   <link rel="icon" href="./assets/pokefuta-marker.svg" type="image/svg+xml" />
   <script src="./assets/session-badge.js" defer></script>
 </head>
@@ -436,19 +436,10 @@
       <div class="home-purpose__block">
         <div class="home-purpose__head">
           <h3 class="home-h3">1日で回るルートから探す</h3>
+          <a class="home-purpose__more" href="trip/" onclick="trackEvent('click_hub_trip_all',{surface:'top_hub_trip'})">もっとみる</a>
         </div>
-        <div class="hub-chips home-chips">
-          <a class="hub-chip" href="/trip/" onclick="trackEvent('click_hub_tag',{surface:'top_hub_trip',destination:'trip_index'})">🚶 ポケふた旅（回る順番とかかる時間）</a>
-        </div>
-      </div>
-
-      <div class="home-purpose__block">
-        <div class="home-purpose__head">
-          <h3 class="home-h3">ポケふたが多い市区町村から探す</h3>
-          <a class="home-purpose__more" href="municipalities/" onclick="trackEvent('click_hub_city_all',{surface:'top_hub_city'})">もっとみる</a>
-        </div>
-        <!-- home:cities:start -->
-        <!-- home:cities:end -->
+        <!-- home:trips:start -->
+        <!-- home:trips:end -->
       </div>
 
       <div class="home-purpose__block">
