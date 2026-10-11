@@ -38,8 +38,8 @@ SHELL = """<html><head>
     <!-- home:pref:end -->
     <!-- home:pokemon:start -->
     <!-- home:pokemon:end -->
-    <!-- home:cities:start -->
-    <!-- home:cities:end -->
+    <!-- home:trips:start -->
+    <!-- home:trips:end -->
           <!-- tag-chips:start -->
           <a class="hub-chip" href="/tags/roadside/">keep</a>
           <!-- tag-chips:end -->
@@ -270,14 +270,14 @@ class GeneratedHtmlTest(unittest.TestCase):
         block = _block(Fixture(self.tmp, events=events).html(), "events")
         self.assertNotIn("終わったイベント", block)
         self.assertNotIn(">E<", block)
-        visible, _, folded = block.partition("<details")
-        # 開催中を終了が近い順に、まもなく開催は後ろ
-        self.assertEqual(["B", "A", "D"], re.findall(r'home-event__copy"><b>([^<]+)</b>', visible))
-        self.assertEqual(["C"], re.findall(r'home-event__copy"><b>([^<]+)</b>', folded))
+        # 開催中を終了が近い順に、まもなく開催は後ろ。全件を1つの一覧に出し、4件目以降はスマホだけ畳む
+        self.assertEqual(["B", "A", "D", "C"], re.findall(r'home-event__copy"><b>([^<]+)</b>', block))
+        extra = re.findall(r'<li class="home-event[^"]*is-extra[^"]*"', block)
+        self.assertEqual(1, len(extra))
         self.assertIn("すべて見る（全4件）", block)
-        self.assertIn("is-upcoming", folded)
-        self.assertIn('data-end="2026-10-31"', visible)
-        self.assertIn('href="prefectures/tokyo/"', visible)
+        self.assertIn("is-upcoming", block)
+        self.assertIn('data-end="2026-10-31"', block)
+        self.assertIn('href="prefectures/tokyo/"', block)
 
     def test_no_events_means_no_section(self) -> None:
         html = Fixture(self.tmp).html()
@@ -315,14 +315,30 @@ class GeneratedHtmlTest(unittest.TestCase):
         self.assertNotIn("<img", block)
         self.assertNotIn("has-img", block)
 
-    def test_cities_list_the_largest_municipalities(self) -> None:
-        block = _block(Fixture(self.tmp).html(), "cities")
-        chips = re.findall(r'<a class="hub-chip" href="([^"]+)"', block)
-        self.assertEqual(10, len(chips))
-        # slug の無い自治体はランキングと同じく県のページへ
-        self.assertEqual("prefectures/hokkaido/", chips[0])
-        self.assertIn('テスト市<small class="home-city__pref">北海道</small><span class="chip-count">2枚</span>', block)
-        self.assertIn("surface:'top_hub_city'", block)
+    def test_trips_pick_the_largest_and_longest_areas(self) -> None:
+        trips = [
+            {"slug": "a", "name": "A", "prefecture": "東京都", "path": "trip/a/", "count": 3, "minutes": 30,
+             "time": "約30分", "mode": "徒歩", "thumbs": ""},
+        ]
+        data = Fixture(self.tmp).data()
+        data.trips = trips
+        block = module.render_trips(data)
+        self.assertIn('href="trip/a/"', block)
+        self.assertIn("A 3枚", block)
+        self.assertIn("約30分", block)
+        self.assertIn("surface:'top_hub_trip'", block)
+        data.trips = []
+        self.assertEqual("", module.render_trips(data))
+
+    def test_trips_from_the_real_dataset_are_sorted_by_count_then_time(self) -> None:
+        trips = module.build_trips(
+            module.load_records(module.DEFAULT_MANHOLES), module.DEFAULT_TRIP_AREAS,
+            module.DEFAULT_DURATIONS, module.DEFAULT_IMAGE_DIR,
+        )
+        self.assertLessEqual(len(trips), module.TRIP_LIMIT)
+        keys = [(-t["count"], -t["minutes"]) for t in trips]
+        self.assertEqual(sorted(keys), keys)
+        self.assertTrue(all(t["time"] and t["path"].startswith("trip/") for t in trips))
 
     def test_prefecture_list_separates_installed_and_empty_prefectures(self) -> None:
         block = _block(Fixture(self.tmp).html(), "pref")

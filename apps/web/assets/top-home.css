@@ -434,19 +434,26 @@
 
 .home-event.has-img .home-event__badge { justify-self: start; }
 
-.home-events__more { margin-top: 8px; }
-
-.home-events__more summary {
+.home-events__more {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
+  margin-top: 8px;
+  padding: 0;
+  border: 0;
+  background: none;
   cursor: pointer;
+  font: inherit;
   font-size: 13px;
   font-weight: 800;
   color: var(--top-purple);
 }
 
-.home-events__more[open] summary { margin-bottom: 4px; }
+/* スマホ・タブレットは先頭3件だけ。「すべて見る」で残りを開く（PC は全件で、ボタンも出さない） */
+@media (max-width: 959px) {
+  #home-events:not(.is-open) .home-event.is-extra { display: none; }
+}
+#home-events.is-open .home-events__more { display: none; }
 
 /* ── 5. 都道府県 ── */
 .home-regions {
@@ -540,16 +547,45 @@
   font-size: 13px;
 }
 
-.home-city__pref {
-  font-size: 11px;
-  font-weight: 400;
-  color: var(--top-text-faint);
+/* ポケふた旅のカード（/trip/ のヒーローと同じ中身） */
+.home-trips {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
 }
 
-/* スマホは上位6件だけ（続きは「もっとみる」のランキングへ） */
-@media (max-width: 599px) {
-  .home-cities .hub-chip:nth-child(n+7) { display: none; }
+.home-trip {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 12px 14px;
+  background: var(--top-card-bg);
+  border: 1px solid var(--top-border);
+  border-radius: 12px;
 }
+
+.home-trip__pref { font-size: 11.5px; font-weight: 800; color: var(--top-text-faint); }
+.home-trip__name { font-size: 14px; color: var(--top-text); }
+.home-trip__time { font-size: 13px; color: var(--top-purple); }
+.home-trip__mode { font-size: 11.5px; color: var(--top-text-muted); }
+
+.home-trip .stop-thumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 3px;
+  margin: 4px 0 2px;
+}
+
+.home-trip .stop-thumbs img {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--top-border-light);
+}
+
+.home-trip .stop-thumb-more { font-size: 12px; font-weight: 800; color: var(--top-text-muted); }
 
 .home-pokes {
   display: grid;
@@ -583,9 +619,11 @@
   color: var(--top-purple);
 }
 
+.home-poke img { aspect-ratio: 4 / 3; }
+
 .home-poke__placeholder {
   display: block;
-  aspect-ratio: 1;
+  aspect-ratio: 4 / 3;
   background: var(--top-border-light);
 }
 
@@ -681,7 +719,24 @@
   .home-lead { font-size: 14.5px; }
 
   .home-ways { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
-  .home-gallery { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+  /* 写真は横6列1行。説明は写真の下端に重ねる */
+  .home-gallery { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; }
+  .home-gallery__item:nth-child(n+7) { display: none; }
+  .home-gallery__item a { position: relative; border: 0; }
+  .home-gallery__cap {
+    position: absolute;
+    inset: auto 0 0;
+    padding: 28px 9px 8px;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.72));
+    color: rgba(255, 255, 255, 0.88);
+    font-size: 11px;
+  }
+  .home-gallery__cap b { color: #fff; font-size: 12.5px; }
+  .home-gallery__cap time { color: rgba(255, 255, 255, 0.75); }
+  .home-gallery__cap b,
+  .home-gallery__cap span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .home-trips { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .home-events__more { display: none; }
   .home-regions { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .home-events { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .home-pokes { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; }
