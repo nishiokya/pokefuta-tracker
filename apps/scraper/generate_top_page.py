@@ -86,7 +86,7 @@ PAGE_TITLE = "ポケふたデータベース｜全国のポケモンマンホー
 UPLOAD_URL = "https://pokefuta.com/upload?from=data"
 
 HERO_PHOTO_LIMIT = 6
-GALLERY_PHOTO_LIMIT = 8
+GALLERY_PHOTO_LIMIT = 9  # スマホ・タブレットは3列×3行、PC は先頭6枚（CSS）
 EVENT_VISIBLE_LIMIT = 3
 TRIP_LIMIT = 4  # 「目的から探す」に出すポケふた旅のエリア数
 TRIP_THUMB_LIMIT = 4  # カードに並べる蓋の画像の数。残りは「+n」（カードの大きさをそろえる）
