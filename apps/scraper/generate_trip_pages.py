@@ -361,7 +361,7 @@ def build_area_page(
         }
         for r in records
     ]
-    manhole_html = muni_page._to_municipality_events(pref._manhole_cards(route, photos, pref_slug))
+    manhole_html = muni_page._to_municipality_events(pref._manhole_cards(route, photos, pref_slug, keep_order=True))
     manhole_html = manhole_html.replace("municipality_", "trip_")
     keys = sorted({f"{r.get('prefecture')}/{r.get('city')}" for r in records})
     muni_links = "".join(
