@@ -153,6 +153,9 @@ class AreaTest(unittest.TestCase):
         self.assertIn('href="https://example.jp/"', html)
         self.assertNotIn("javascript:", html)
         self.assertEqual(MODULE._access_html(AREAS[1]), "")
+        car_only = MODULE._access_html({**AREAS[1], "access": {"car": "島内は車で回る"}})
+        self.assertIn("🚗 車</strong> 島内は車で回る", car_only)
+        self.assertNotIn("🚃", car_only)
 
 class GenerateTest(unittest.TestCase):
     def test_pages_index_and_links(self) -> None:
