@@ -168,6 +168,15 @@ class PageTest(unittest.TestCase):
         self.assertIn("県内のポケふたはすべて香取市にあります", html)
         self.assertNotIn("八王子市", html)  # 1枚は件数だけ
 
+    def test_ranking_hero_links_the_top_municipalities(self) -> None:
+        html = MODULE.build_ranking_page(self.items, 7, "2026年10月4日")
+        hero = html[html.index('<header class="hero">'):html.index("</header>")]
+        # 表の行と同じ行き先（香取は県の全数なので県ページ）
+        self.assertIn('href="/municipalities/tokyo/machida/"', hero)
+        self.assertIn('href="/prefectures/chiba/"', hero)
+        self.assertIn('data-surface="ranking_hero"', hero)
+        self.assertEqual(hero.count('class="hero-pick"'), 2)
+
     def test_ranking_rows_show_lid_thumbs_in_route_order(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             d = Path(tmp)

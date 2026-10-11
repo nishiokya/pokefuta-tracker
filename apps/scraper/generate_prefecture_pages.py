@@ -1159,19 +1159,40 @@ def build_index_page(
     .page {{ max-width: var(--page-max-wide, 1120px); margin: 0 auto; padding: 20px 16px 56px; }}
     .breadcrumb {{ display: flex; gap: 8px; font-size: .82rem; font-weight: 800; }}
     .breadcrumb a {{ text-decoration: none; }}
-    .index-hero {{ margin: 14px 0 28px; }}
-    .index-hero h1 {{ margin: 0 0 10px; font-size: 1.6rem; }}
-    .index-hero p {{ margin: 0; color: #75685c; }}
-    .region-jump-nav {{
-      display: flex; gap: 6px; overflow-x: auto; padding: 10px 0 4px;
-      -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    /* 県・市のページと同じヒーローカード。説明だけで終わらせず、地方へのジャンプと
+       市区町村ランキング・ポケふた旅への入口をカードの中に置く */
+    .index-hero {{
+      position: relative; overflow: hidden; margin: 14px 0 24px; padding: 24px 28px;
+      border: 1px solid rgba(93,67,35,.15); border-radius: 24px;
+      background: linear-gradient(135deg, #fffaf0, #f0e9fb);
+      box-shadow: 0 14px 32px rgba(77,56,30,.08);
     }}
-    .region-jump-nav::-webkit-scrollbar {{ display: none; }}
+    .index-hero::after {{
+      content: ""; position: absolute; width: 230px; height: 230px;
+      right: -70px; top: -90px; border: 42px solid rgba(126,107,169,.1);
+      border-radius: 50%;
+    }}
+    .index-hero > * {{ position: relative; z-index: 1; }}
+    .index-hero .hero-kicker {{ margin: 0; color: #6b4aa2; font-size: .8rem; font-weight: 900; }}
+    .index-hero h1 {{ margin: 4px 0 8px; font-size: clamp(1.8rem, 5vw, 2.6rem); line-height: 1.2; }}
+    .index-hero p {{ margin: 0; color: #574b41; font-weight: 650; }}
+    .region-jump-nav {{ display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }}
     .region-jump-nav a {{
-      flex: 0 0 auto; padding: 6px 12px; border-radius: 999px;
-      background: #fff; border: 1px solid rgba(93,67,35,.15);
-      color: #57408f; font-size: .78rem; font-weight: 850; text-decoration: none;
+      display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px;
+      border-radius: 999px; background: #fff; border: 1px solid rgba(93,67,35,.15);
+      color: #57408f; font-size: .9rem; font-weight: 850; text-decoration: none;
       white-space: nowrap;
+    }}
+    .index-hero-links {{ display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }}
+    .index-hero-links a {{
+      display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px;
+      border-radius: 999px; background: #176f68; color: #fff;
+      font-size: .88rem; font-weight: 900; text-decoration: none;
+    }}
+    .index-hero-links a + a {{ background: #6b4aa2; }}
+    @media (max-width: 700px) {{
+      .index-hero {{ padding: 20px 18px; }}
+      .region-jump-nav a {{ padding: 0 13px; font-size: .84rem; }}
     }}
     .region-heading {{
       margin: 28px 0 12px; font-size: 1.05rem; font-weight: 850;
@@ -1288,10 +1309,15 @@ def build_index_page(
       <span>都道府県から探す</span>
     </nav>
     <header class="index-hero">
+      <p class="hero-kicker">都道府県別 ポケふたガイド</p>
       <h1>都道府県から探す</h1>
-      <p>ポケふたの情報がある{listed_count}都道府県、計{total}枚を地方別にまとめました。行き先を選んで詳細ページへ。<a href="/municipalities/">市区町村別のランキング</a>もあります。</p>
+      <p>ポケふたの情報がある{listed_count}都道府県、計{total}枚を地方別にまとめました。地方を選ぶと、その地方の県へ移ります。</p>
+      {region_nav_html}
+      <div class="index-hero-links">
+        <a href="/municipalities/" data-track="prefectures_index_hero_click" data-destination="municipalities">市区町村ランキング</a>
+        <a href="/trip/" data-track="prefectures_index_hero_click" data-destination="trip">1日で回れるポケふた旅</a>
+      </div>
     </header>
-    {region_nav_html}
 
     <!-- adsense:prefecture -->
 

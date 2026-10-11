@@ -515,6 +515,22 @@ def build_index_page(
     # visit_durations.json は回った人が多い順に並んでいる（人数そのものは書かない）
     rank = {",".join(e["manhole_ids"]): i for i, e in enumerate(durations.get("entries", []))}
     measured.sort(key=lambda t: rank.get(",".join(find_entry(t[1], durations)["manhole_ids"]), len(rank)))
+    def pick(area: dict, records: list[dict]) -> str:
+        entry = find_entry(records, durations)
+        return (
+            f'<a class="hero-pick" href="{_escape_attr(trip_path(area))}" data-track="trip_card_click" '
+            f'data-surface="trip_hero" data-destination="{_escape_attr(area["slug"])}">'
+            f'<span>{escape(area["prefecture"])}</span>'
+            f'<b>{escape(area["name"])} {len(records)}枚</b>'
+            f'{card_thumbs_html(records, entry)}'
+            f'<strong>{escape(duration_range(entry["p25_minutes"], entry["p75_minutes"]))}</strong>'
+            f'<small>移動の目安：{MODE_LABELS[travel_mode(records)]}</small></a>'
+        )
+
+    # ヒーローには回った人が多い上位3エリアを、蓋の写真を大きめにしたカードで出す（下の一覧にも残す）
+    picks_html = (
+        f'<div class="hero-picks">{"".join(pick(a, rs) for a, rs in measured[:3])}</div>' if measured else ""
+    )
     pending_html = (
         '<section aria-labelledby="pending-heading"><h2 id="pending-heading">時間の目安がまだのエリア</h2>'
         '<p>回る順番と地図は見られます。ポケふた写真館への投稿が増えると、かかる時間の目安が出ます。</p>'
@@ -561,6 +577,7 @@ def build_index_page(
         <h1>1日で回れるポケふた</h1>
         <p>ポケふた写真館に投稿された写真の撮影時刻から、エリアごとにかかる時間の目安と回る順番をまとめました。旅行やおでかけの計画にどうぞ。</p>
       </div>
+      {picks_html}
     </header>
 
     <section aria-labelledby="measured-heading">

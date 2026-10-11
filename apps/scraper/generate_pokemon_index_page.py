@@ -1370,9 +1370,13 @@ def generate_html(
       gap: 10px;
     }}
     .hub-grid {{
-      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      max-width: 560px;
       margin: 16px 0 8px;
     }}
+    .page-hero .hub-card {{ background: rgba(255,255,255,.86); }}
+    .hero-summary-link {{ margin: 4px 0 0; font-size: 13px; }}
+    .hero-summary-link a {{ color: #6F55A3; text-decoration: none; font-weight: bold; }}
     .hub-card {{
       display: block;
       padding: 14px;
@@ -1595,16 +1599,23 @@ def generate_html(
       color: #aaa;
     }}
     footer a {{ color: #6F55A3; text-decoration: none; }}
+    /* 丸いバッジ（右上に絶対配置）は、画面が狭いとヒーローのボタン・見出し・説明文に重なる
+       （1000px 幅でも見出しにかかっていた）。重ならない幅になるまでは、下の余白を取らない横長の札にする */
+    @media (max-width: 1020px) {{
+      .page-hero {{ min-height: 0; }}
+      .page-hero::after {{ width: 120px; height: 120px; right: -48px; bottom: -64px; }}
+      .hero-badge {{
+        position: relative; right: auto; top: auto; width: auto; height: auto;
+        display: inline-flex; align-items: baseline; gap: 6px; margin-top: 10px;
+        padding: 6px 14px; border-radius: 999px; border-width: 3px;
+      }}
+      .hero-badge strong {{ font-size: 22px; }}
+    }}
     @media (max-width: 620px) {{
       body {{ padding: 0 10px 10px; }}
       .container {{ width: auto; max-width: calc(100vw - 20px); margin-top: 10px; }}
       .page-hero, .page-section {{ padding: 16px; border-radius: 16px; }}
-      .page-hero {{ min-height: 260px; padding-bottom: 110px; }}
-      .page-hero::after {{ width: 170px; height: 170px; right: -48px; bottom: -74px; }}
-      .hero-badge {{ width: 104px; height: 104px; right: 56px; top: auto; bottom: 16px; }}
-      .hero-badge strong {{ font-size: 27px; }}
       h1 {{ font-size: 24px; }}
-      .hub-grid {{ grid-template-columns: 1fr; }}
       .fact-grid {{ grid-template-columns: 1fr; }}
       .photos-grid {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
       .ranking-item a {{
@@ -1626,6 +1637,14 @@ def generate_html(
       <p class="hero-kicker">{escape(enhancement["kicker"])}</p>
       <h1>{h1}</h1>
       <p class="lead">{lead}</p>
+      <!-- 説明だけのヒーローにしないよう、探し方の入口をヒーローの中に置く -->
+      <nav class="hub-grid" aria-label="{escape(strings["hub_heading"])}">
+        <a class="hub-card" href="#pokemon-list" data-track="pokemon_index_hub_click" data-destination="list">{escape(strings["hub_name"])}</a>
+        <a class="hub-card" href="#pokemon-ranking" data-track="pokemon_index_hub_click" data-destination="ranking">{escape(strings["hub_ranking"])}</a>
+        <a class="hub-card" href="#pokemon-types" data-track="pokemon_index_hub_click" data-destination="types">{escape(strings["hub_taxonomy"])}</a>
+        <a class="hub-card" href="{escape(map_href)}" data-track="pokemon_index_hub_click" data-destination="map">{escape(strings["hub_map"])}</a>
+      </nav>
+      <p class="hero-summary-link"><a href="{escape(summary_href)}">{escape(strings["summary_link"])}</a></p>
     </div>
     <div class="hero-badge" aria-label="{escape(enhancement["hero_stat"])} {total_count}">
       <span>{escape(enhancement["hero_stat"])}</span>
@@ -1633,17 +1652,6 @@ def generate_html(
       <small>{escape(enhancement["hero_stat_unit"])}</small>
     </div>
   </header>
-
-  <section class="page-section" aria-labelledby="hub-heading">
-    <h2 id="hub-heading">{escape(strings["hub_heading"])}</h2>
-    <div class="hub-grid">
-      <a class="hub-card" href="#pokemon-list" data-track="pokemon_index_hub_click" data-destination="list">{escape(strings["hub_name"])}</a>
-      <a class="hub-card" href="#pokemon-ranking" data-track="pokemon_index_hub_click" data-destination="ranking">{escape(strings["hub_ranking"])}</a>
-      <a class="hub-card" href="#pokemon-types" data-track="pokemon_index_hub_click" data-destination="types">{escape(strings["hub_taxonomy"])}</a>
-      <a class="hub-card" href="{escape(map_href)}" data-track="pokemon_index_hub_click" data-destination="map">{escape(strings["hub_map"])}</a>
-    </div>
-    <p class="map-nav-hint"><a href="{escape(summary_href)}">{escape(strings["summary_link"])}</a></p>
-  </section>
 
   <section class="page-section" aria-labelledby="featured-pokemon">
     <h2 id="featured-pokemon">{escape(strings["featured_heading"])}</h2>

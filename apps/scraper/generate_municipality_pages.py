@@ -367,6 +367,31 @@ EXTRA_CSS = """
       /* スマホではチップを上位4つだけ（全部並べるとカードが画面1枚分になる）。残りはボタンから */
       .trip-hero .related-links a:nth-child(n+5) { display: none; }
     }
+    .hero-picks {
+      position: relative; z-index: 1; display: grid; gap: 10px;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
+    }
+    .hero-pick {
+      display: grid; align-content: start; gap: 2px; padding: 12px 14px; border-radius: 14px;
+      background: rgba(255,255,255,.82); box-shadow: inset 0 0 0 1px rgba(93,67,35,.12);
+      color: inherit; text-decoration: none;
+    }
+    .hero-pick > span:first-child { color: #75685c; font-size: .75rem; font-weight: 800; }
+    .hero-pick b { font-size: 1.05rem; }
+    .hero-pick strong { color: #6b4aa2; }
+    .hero-pick small { color: #62564a; font-size: .78rem; }
+    .hero-pick .stop-thumbs img { width: 40px; height: 40px; }
+    /* スマホで3枚を縦に積むとヒーローが画面1枚分になるので、横に並べてスクロールさせる。
+       次のカードの端が見えるよう1枚は幅の8割 */
+    @media (max-width: 700px) {
+      .hero-picks {
+        margin: 16px -18px 0; padding: 0 18px 4px; display: grid; grid-auto-flow: column;
+        grid-template-columns: none; grid-auto-columns: 80%; overflow-x: auto;
+        scroll-snap-type: x mandatory; scrollbar-width: none;
+      }
+      .hero-picks::-webkit-scrollbar { display: none; }
+      .hero-pick { scroll-snap-align: start; }
+    }
     .stop-thumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 3px; margin: 4px 0 2px; }
     .stop-thumbs img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; background: #ece4d7; }
     .stop-thumb-more { color: #75685c; font-size: .75rem; font-weight: 800; }
@@ -653,6 +678,21 @@ def _coverage_sections(coverage: dict[str, PrefectureCoverage] | None) -> str:
     )
 
 
+def _ranking_picks(listed: list[Municipality], image_dir: Path) -> str:
+    """ヒーローに出す上位3つの市区町村（蓋の写真つきカード）。行き先は表の行と同じ。"""
+    cards = []
+    for m in listed[:3]:
+        target = m.path or f"/prefectures/{quote(m.prefecture_slug)}/"
+        cards.append(
+            f'<a class="hero-pick" href="{_escape_attr(target)}" data-track="municipality_ranking_row_click" '
+            f'data-surface="ranking_hero" data-destination="{_escape_attr(m.slug or m.prefecture_slug)}">'
+            f'<span>{m.national_rank}位・{escape(m.prefecture)}</span>'
+            f'<b>{escape(m.name)} {m.count}枚</b>'
+            f'{stop_thumbs_html(shortest_route(m.records), m.count, image_dir)}</a>'
+        )
+    return f'<div class="hero-picks">{"".join(cards)}</div>' if cards else ""
+
+
 def _trip_announce(trips: list[tuple[str, str, int, str]] | None) -> str:
     """ルート案内（/trip/）のお知らせ。ランキングから回り方へ進めるようにする。"""
     if not trips:
@@ -764,6 +804,7 @@ def build_ranking_page(
         <h1>ポケふたが多い市区町村ランキング</h1>
         <p>{escape(lead)}</p>
       </div>
+      {_ranking_picks(listed, image_dir)}
     </header>
 
     {_trip_announce(trips)}
