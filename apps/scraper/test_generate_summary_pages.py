@@ -375,29 +375,39 @@ class DiscoveryHubTests(unittest.TestCase):
         self.assertNotIn("<details", three)
 
     def test_popular_pokemon_cards_use_the_representative_photo(self):
-        pokemon_stats = {"by_count": [{"ja_name": "ラッキー", "slug": "chansey", "count": 2}]}
-        records = {
-            "10": {"id": "10", "pokemons": ["ラッキー"]},
-            "20": {"id": "20", "pokemons": ["ラッキー"]},
-        }
+        """ポケモンのページと同じ決め方: 公開写真のある蓋だけを候補にし、代表がその中にあれば代表、
+        無ければ新しい公開写真。画像ファイルが残っていても、公開写真の一覧に無い蓋は出さない。"""
+        pokemon_stats = {"by_count": [{"ja_name": "ラッキー", "slug": "chansey", "count": 3}]}
+        records = {mid: {"id": mid, "pokemons": ["ラッキー"]} for mid in ("10", "20", "30")}
+        photos = {"photos": {
+            "10": {"manhole_id": "10", "created_at": "2026-10-01T00:00:00Z"},
+            "20": {"manhole_id": "20", "created_at": "2026-09-01T00:00:00Z"},
+            # 30 は写真が非公開・削除になった（画像ファイルだけ残っている）
+        }}
+        strings = summary.SUMMARY_STRINGS["ja"]
         with tempfile.TemporaryDirectory() as tmp:
             image_dir = Path(tmp)
-            for mid in ("10", "20"):
+            for mid in ("10", "20", "30"):
                 (image_dir / f"{mid}_lid.jpeg").write_bytes(b"x")
             original = summary.IMAGE_DIR
             summary.IMAGE_DIR = image_dir
             try:
-                chosen = summary._build_popular_pokemon_section(
-                    summary.SUMMARY_STRINGS["ja"], pokemon_stats, records, {}, {"ラッキー": "20"}
-                )
-                fallback = summary._build_popular_pokemon_section(
-                    summary.SUMMARY_STRINGS["ja"], pokemon_stats, records, {}, {}
-                )
+                def build(reps, photos_data=photos):
+                    return summary._build_popular_pokemon_section(
+                        strings, pokemon_stats, records, {}, reps, photos_data
+                    )
+                chosen = build({"ラッキー": "20"})
+                newest = build({})
+                withdrawn = build({"ラッキー": "30"})
+                no_public = build({"ラッキー": "30"}, {"photos": {}})
             finally:
                 summary.IMAGE_DIR = original
         self.assertIn('src="/manhole/image/20_lid.jpeg"', chosen)  # 人が選んだ代表
-        self.assertIn('src="/manhole/image/10_lid.jpeg"', fallback)  # 代表が無ければ若い番号の蓋
+        self.assertIn('src="/manhole/image/10_lid.jpeg"', newest)  # 代表が無ければ新しい公開写真
+        self.assertIn('src="/manhole/image/10_lid.jpeg"', withdrawn)  # 代表が非公開なら使わない
+        self.assertNotIn("<img", no_public)  # 公開写真が無ければ文字だけ
         self.assertIn('href="/pokemon/"', chosen)
+
 
     def test_no_photos_section_is_japanese_only(self):
         """写真なし節の県リンクは ja 専用ページ（/prefectures/）を指すが、
@@ -418,6 +428,27 @@ class DiscoveryHubTests(unittest.TestCase):
                     self.assertIn("/prefectures/kagoshima/", html)
                 else:
                     self.assertEqual("", html)
+
+
+
+class StylesheetTests(unittest.TestCase):
+    def test_every_selector_list_is_followed_by_its_declarations(self):
+        """まとめたセレクタの途中で、宣言ブロックが抜けていない。
+
+        使わない CSS を消したときに、まとめたセレクタの最後の1つを中身ごと消して、
+        残りが次の .summary-section のルールにくっついたことがある（見出しが紫でなくなった）。"""
+        lines = summary._CSS.split("\n")
+        for i, line in enumerate(lines[:-1]):
+            if line.rstrip().endswith(","):
+                with self.subTest(line=line.strip()):
+                    self.assertNotEqual(lines[i + 1].strip(), "")
+        self.assertEqual(summary._CSS.count("{"), summary._CSS.count("}"))
+
+    def test_section_headings_keep_the_brand_color(self):
+        self.assertRegex(
+            summary._CSS,
+            r"\.summary-section h2,\s*\.summary-fact-number,\s*\.discovery-card strong \{\s*color: #57408f;",
+        )
 
 
 if __name__ == "__main__":

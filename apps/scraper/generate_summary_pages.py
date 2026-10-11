@@ -1393,9 +1393,14 @@ _CSS = """\
     .summary-stat strong,
     .summary-section h2,
     .summary-fact-number,
-    .discovery-card strong,
+    .discovery-card strong {
+      color: #57408f;
+    }
 
-    .summary-action,
+    .summary-action {
+      border-radius: 999px;
+      background: #57408f;
+    }
 
     .summary-section {
       margin-top: 38px;
@@ -3388,8 +3393,8 @@ def _build_prefecture_jump_section(s: dict, stats: dict) -> str:
         # 0枚の県にもページ（「まだ無い」と案内するページ）があるので、薄くして残す
         chips = "".join(
             f'<a href="{escape(_prefecture_href(pref))}"'
-            f'{"" if counts.get(pref) else " class=\"is-empty\""} '
-            f'data-summary-event="summary_prefecture_click" data-surface="summary_prefecture_jump" '
+            + ("" if counts.get(pref) else ' class="is-empty"')
+            + f' data-summary-event="summary_prefecture_click" data-surface="summary_prefecture_jump" '
             f'data-prefecture="{escape(PREFECTURE_SLUGS.get(pref, pref))}">'
             f'{escape(pref)}<small>{counts.get(pref, 0)}{escape(s["count_unit"])}</small></a>'
             for pref in prefectures
@@ -3424,11 +3429,15 @@ def _build_popular_pokemon_section(
     records_by_id: dict | None = None,
     pokemon_metadata: dict | None = None,
     representatives: dict[str, str] | None = None,
+    photos_data: dict | None = None,
 ) -> str:
     """「ポケモンから探す」。設置の多いポケモンを、代表のマンホールの写真つきカードで並べる。
 
-    写真は人が選んだ代表（pokemon_representatives.json）を優先し、無ければそのポケモンが
-    描かれた蓋のうち画像のある最初の1枚。どれも無ければ文字だけのカードにする。
+    写真はポケモンのページと同じ決め方: そのポケモンの蓋で、今公開されている写真
+    （latest-manhole-photos.json）があるものだけを候補にし、人が選んだ代表
+    （pokemon_representatives.json）がその中にあれば代表、無ければ新しい公開写真。
+    _lid / _latest の画像は非公開・削除のあとも残ることがあるので、ファイルがあるだけでは選ばない。
+    候補が無ければ文字だけのカードにする。
     """
     if not pokemon_stats.get("by_count"):
         return ""
@@ -3441,13 +3450,17 @@ def _build_popular_pokemon_section(
     representatives = representatives or {}
     top = pokemon_stats["by_count"][:12]
 
+    public_photos = (photos_data or {}).get("photos", {})
+
     def image_url(name: str) -> str:
-        candidates = [representatives[name]] if name in representatives else []
-        candidates += sorted(
-            (mid for mid, record in records_by_id.items() if name in record.get("pokemons", [])),
-            key=lambda mid: mid.zfill(8),
-        )
-        return next((url for url in (tile_image_url(mid, IMAGE_DIR) for mid in candidates) if url), "")
+        candidates = [
+            mid for mid, record in records_by_id.items()
+            if name in record.get("pokemons", []) and mid in public_photos and tile_image_url(mid, IMAGE_DIR)
+        ]
+        if representatives.get(name) in candidates:
+            return tile_image_url(representatives[name], IMAGE_DIR)
+        candidates.sort(key=lambda mid: (str(public_photos[mid].get("created_at", "")), mid), reverse=True)
+        return tile_image_url(candidates[0], IMAGE_DIR) if candidates else ""
 
     cards = []
     for p in top:
@@ -3857,7 +3870,7 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
             s, stats, list(records_by_id.values()), tr
         )
     popular_pokemon_html = _build_popular_pokemon_section(
-        s, pokemon_stats, records_by_id, pokemon_metadata, pokemon_representatives
+        s, pokemon_stats, records_by_id, pokemon_metadata, pokemon_representatives, photos_data
     )
     latest_photos_html = _build_latest_photos_section(s, records_by_id, photos_data)
     discovery_hubs_html = _build_discovery_hub_sections(
