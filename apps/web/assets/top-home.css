@@ -413,6 +413,27 @@
   color: var(--top-text-faint);
 }
 
+/* イベント名のポケモンの写真つき：写真を左に、バッジと文面を右に縦に積む */
+.home-event.has-img a {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  grid-template-rows: auto 1fr;
+  column-gap: 12px;
+  row-gap: 4px;
+  align-items: start;
+}
+
+.home-event__img {
+  grid-row: 1 / span 2;
+  width: 64px;
+  height: 64px;
+  border-radius: 10px;
+  object-fit: cover;
+  background: var(--top-border);
+}
+
+.home-event.has-img .home-event__badge { justify-self: start; }
+
 .home-events__more { margin-top: 8px; }
 
 .home-events__more summary {
@@ -517,6 +538,17 @@
   min-height: 40px;
   padding: 8px 13px;
   font-size: 13px;
+}
+
+.home-city__pref {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--top-text-faint);
+}
+
+/* スマホは上位6件だけ（続きは「もっとみる」のランキングへ） */
+@media (max-width: 599px) {
+  .home-cities .hub-chip:nth-child(n+7) { display: none; }
 }
 
 .home-pokes {

@@ -374,7 +374,7 @@
   <!-- End GA -->
   <link rel="stylesheet" href="./assets/theme.css" />
   <link rel="stylesheet" href="./assets/top-page.css?v=20260711b" />
-  <link rel="stylesheet" href="./assets/top-home.css?v=20261010a" />
+  <link rel="stylesheet" href="./assets/top-home.css?v=20261011a" />
   <link rel="icon" href="./assets/pokefuta-marker.svg" type="image/svg+xml" />
   <script src="./assets/session-badge.js" defer></script>
 </head>
@@ -444,8 +444,16 @@
 
       <div class="home-purpose__block">
         <div class="home-purpose__head">
+          <h3 class="home-h3">ポケふたが多い市区町村から探す</h3>
+          <a class="home-purpose__more" href="municipalities/" onclick="trackEvent('click_hub_city_all',{surface:'top_hub_city'})">もっとみる</a>
+        </div>
+        <!-- home:cities:start -->
+        <!-- home:cities:end -->
+      </div>
+
+      <div class="home-purpose__block">
+        <div class="home-purpose__head">
           <h3 class="home-h3">テーマから探す</h3>
-          <a class="home-purpose__more" href="map.html?view=theme" onclick="trackEvent('click_hub_tag_all',{surface:'top_hub_tag'})">地図で探す</a>
         </div>
         <div class="hub-chips home-chips">
           <!-- tag-chips:start -->
