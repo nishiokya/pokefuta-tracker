@@ -64,9 +64,8 @@ except ModuleNotFoundError as exc:
 ROOT = pref.ROOT
 BASE_URL = pref.BASE_URL
 DEFAULT_OUTPUT = ROOT / "dist" / "trip"
-# 特集ページのカードに並べる蓋の小さい画像の数。これより多いエリアは「+n」にまとめる
-CARD_THUMB_LIMIT = 6
-IMAGE_DIR = ROOT / "dataset" / "manhole" / "image"
+CARD_THUMB_LIMIT = muni_page.THUMB_LIMIT
+IMAGE_DIR = muni_page.IMAGE_DIR
 # 「あわせて回る」に出す、ほかのエリアまでの距離（エリアの中心どうしの直線）
 NEARBY_TRIP_KM = 80.0
 # 特集ページの「まとまっている場所」: ほかの地点からいちばん離れた地点でもこの距離以内
@@ -83,20 +82,9 @@ def _head(title: str, description: str, canonical: str, json_ld: dict, with_map:
 
 
 def card_thumbs_html(records: list[dict], entry: dict | None, image_dir: Path = IMAGE_DIR) -> str:
-    """カードに並べる蓋の丸い小さい画像（回る順）。画像の無い蓋は飛ばし、多いときは「+n」。"""
+    """カードに並べる蓋の丸い小さい画像（回る順）。市区町村ランキングの行と同じ部品。"""
     route, _ = area_route(records, entry)
-    # カードは丸ごと1つのリンクなので、画像は飾り（alt=""）にしてリンク名を短く保つ（県ページのタイルと同じ）
-    urls = [u for u in (pref.tile_image_url(str(r["id"]), image_dir) for r in route) if u]
-    if not urls:
-        return ""
-    shown = urls[:CARD_THUMB_LIMIT]
-    rest = len(records) - len(shown)
-    imgs = "".join(
-        f'<img src="{_escape_attr(u)}" alt="" width="32" height="32" loading="lazy" decoding="async">'
-        for u in shown
-    )
-    more = f'<span class="trip-thumb-more">+{rest}</span>' if rest > 0 else ""
-    return f'<span class="trip-thumbs">{imgs}{more}</span>'
+    return muni_page.stop_thumbs_html(route, len(records), image_dir)
 
 
 def _visitable(records: list[dict]) -> list[dict]:
@@ -599,9 +587,6 @@ TRIP_CSS = """
     .trip-card .trip-name { font-weight: 850; }
     .trip-card strong { color: #6b4aa2; }
     .trip-card small { color: #62564a; font-size: .78rem; }
-    .trip-thumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 3px; margin: 4px 0 2px; }
-    .trip-thumbs img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; background: #ece4d7; }
-    .trip-thumb-more { color: #75685c; font-size: .75rem; font-weight: 800; }
     .compact-list { margin: 10px 0 0; padding-left: 1.2em; display: grid; gap: 6px; }
     .compact-list span { margin-left: 8px; color: #62564a; font-size: .82rem; }
     .related-links small { margin-left: 6px; color: #75685c; font-size: .75rem; }
