@@ -67,6 +67,9 @@ JST = pref.JST
 # 隣の地点までの直線距離がこれを超える区間があるときは、Google マップのルートを出さない。
 # 島どうし（船で渡る区間）のように、道路のルートが意味を持たない場合があるため。
 ROUTE_LINK_MAX_LEG_KM = 15.0
+# ランキングの行と /trip/ のカードに並べる蓋の小さい画像の数。これより多いときは「+n」にまとめる
+THUMB_LIMIT = 6
+IMAGE_DIR = ROOT / "dataset" / "manhole" / "image"
 # Google マップの経路 URL は、モバイルブラウザで開くと経由地が3か所まで（それ以外は9か所）。
 # どの端末でも全地点を通れるよう、1本のリンクは出発地＋経由地3＋目的地の5地点までにして、
 # それより多いときは前の区間の終点を次の区間の始点にして分ける。
@@ -245,6 +248,22 @@ def _route_section(municipality: Municipality, durations: dict | None = None) ->
     )
 
 
+def stop_thumbs_html(route: list[dict], total: int, image_dir: Path = IMAGE_DIR) -> str:
+    """蓋の丸い小さい画像を回る順に並べる。画像の無い蓋は飛ばし、多いときは「+n」。"""
+    # 行・カードのリンク名を短く保つため、画像は飾り（alt=""）にする（県ページのタイルと同じ）
+    urls = [u for u in (pref.tile_image_url(str(r["id"]), image_dir) for r in route) if u]
+    if not urls:
+        return ""
+    shown = urls[:THUMB_LIMIT]
+    rest = total - len(shown)
+    imgs = "".join(
+        f'<img src="{_escape_attr(u)}" alt="" width="32" height="32" loading="lazy" decoding="async">'
+        for u in shown
+    )
+    more = f'<span class="stop-thumb-more">+{rest}</span>' if rest > 0 else ""
+    return f'<span class="stop-thumbs">{imgs}{more}</span>'
+
+
 def _rank_label(municipality: Municipality) -> str:
     label = f"全国{municipality.national_rank}位"
     if municipality.national_tied > 1:
@@ -326,7 +345,12 @@ EXTRA_CSS = """
     .ranking-table td.num { text-align: right; font-weight: 850; white-space: nowrap; }
     .ranking-table td small { display: block; color: #75685c; font-size: .75rem; }
     .ranking-table td small.ranking-time { color: #6b4aa2; }
+    /* 市区町村の列に蓋の画像が並ぶと、狭い画面で都道府県名が1文字ずつ折り返すので止める */
+    .ranking-table td:nth-child(3) { white-space: nowrap; }
     .related-links small { margin-left: 6px; color: #6b4aa2; font-size: .75rem; }
+    .stop-thumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 3px; margin: 4px 0 2px; }
+    .stop-thumbs img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; background: #ece4d7; }
+    .stop-thumb-more { color: #75685c; font-size: .75rem; font-weight: 800; }
 """
 
 
@@ -639,6 +663,7 @@ def build_ranking_page(
     coverage: dict[str, PrefectureCoverage] | None = None,
     trips: list[tuple[str, str, int, str]] | None = None,
     durations: dict | None = None,
+    image_dir: Path = IMAGE_DIR,
 ) -> str:
     listed = [m for m in municipalities if m.count >= RANKING_MIN_MANHOLES]
     singles = sum(1 for m in municipalities if m.count < RANKING_MIN_MANHOLES)
@@ -677,7 +702,8 @@ def build_ranking_page(
             f'<td class="num">{m.national_rank}位</td>'
             f'<td><a href="{_escape_attr(target)}" data-track="municipality_ranking_row_click" '
             f'data-surface="ranking_table" data-destination="{_escape_attr(track_destination)}">'
-            f'{escape(m.name)}</a>{note_html}</td>'
+            f'{escape(m.name)}</a>{stop_thumbs_html(shortest_route(m.records), m.count, image_dir)}'
+            f'{note_html}</td>'
             f"<td>{escape(m.prefecture)}</td>"
             f'<td class="num">{m.count}枚</td>'
             "</tr>"

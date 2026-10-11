@@ -168,6 +168,23 @@ class PageTest(unittest.TestCase):
         self.assertIn("県内のポケふたはすべて香取市にあります", html)
         self.assertNotIn("八王子市", html)  # 1枚は件数だけ
 
+    def test_ranking_rows_show_lid_thumbs_in_route_order(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            d = Path(tmp)
+            for mid in ("1", "3", "2", "5", "6"):  # 香取の 7 は画像なし
+                (d / f"{mid}_lid.jpeg").write_bytes(b"x")
+            html = MODULE.build_ranking_page(self.items, 7, "2026年10月4日", image_dir=d)
+            rows = re.findall(r"<tr>.*?</tr>", html.split("<tbody>")[1])
+            machida = [r for r in rows if "町田市" in r][0]
+            katori = [r for r in rows if "香取市" in r][0]
+            # 町田は南北に並ぶので、巡る順番（1→3→2）のとおりに並ぶ
+            self.assertEqual(re.findall(r'src="/manhole/image/(\d+)_lid\.jpeg"', machida), ["1", "3", "2"])
+            self.assertNotIn("stop-thumb-more", machida)
+            self.assertIn(">+1</span>", katori)
+            self.assertNotRegex(html, r'<img src="/manhole[^>]*alt="[^"]+"')
+        self.assertNotIn('<span class="stop-thumbs">', MODULE.build_ranking_page(self.items, 7, "2026年10月4日",
+                                                                   image_dir=Path("/nonexistent")))
+
     def test_generate_all_writes_pages_and_ranking(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             out = Path(tmp)
