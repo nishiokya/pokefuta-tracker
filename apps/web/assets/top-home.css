@@ -434,7 +434,23 @@
 
 .home-event.has-img .home-event__badge { justify-self: start; }
 
-.home-events__more {
+/* 英語版トップ（generate_top_page_en.py）は今も details で畳む */
+.home-events__more { margin-top: 8px; }
+
+.home-events__more summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--top-purple);
+}
+
+.home-events__more[open] summary { margin-bottom: 4px; }
+
+/* 日本語版：スマホ・タブレットは先頭3件だけ。「すべて見る」で残りを開く（PC は全件で、ボタンも出さない） */
+.home-events__toggle {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
@@ -449,11 +465,10 @@
   color: var(--top-purple);
 }
 
-/* スマホ・タブレットは先頭3件だけ。「すべて見る」で残りを開く（PC は全件で、ボタンも出さない） */
 @media (max-width: 959px) {
   #home-events:not(.is-open) .home-event.is-extra { display: none; }
 }
-#home-events.is-open .home-events__more { display: none; }
+#home-events.is-open .home-events__toggle { display: none; }
 
 /* ── 5. 都道府県 ── */
 .home-regions {
@@ -736,7 +751,7 @@
   .home-gallery__cap b,
   .home-gallery__cap span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
   .home-trips { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .home-events__more { display: none; }
+  .home-events__toggle { display: none; }
   .home-regions { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .home-events { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .home-pokes { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; }
