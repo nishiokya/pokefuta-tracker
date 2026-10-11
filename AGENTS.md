@@ -1,4 +1,4 @@
-- ヘッダーとfaviconの共通マークは `apps/web/assets/brand-icon.svg`。写真館と同時に更新し、`docs/shared-brand-icon.md` を参照する。
+- ヘッダーのマークは `apps/web/assets/brand-mark.svg`、faviconは `apps/web/assets/brand-icon.svg`（別の絵）。写真館と同時に更新し、`docs/shared-brand-icon.md` を参照する。
 
 manhole_titles.jsonは手動で更新している
 dataset/manhole_featured_photos.json は図鑑の代表写真を手動選定する `{manhole_id: photo_id}`。未指定・無効・非公開なら最新公開写真へ自動フォールバックする
