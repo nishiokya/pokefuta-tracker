@@ -532,6 +532,27 @@
   color: var(--top-purple);
 }
 
+/* スマホは地方ごとのカードをやめて1枚にまとめ、県を3列・低めの行で詰める（縦に長くなりすぎるため） */
+@media (max-width: 599px) {
+  .home-regions {
+    gap: 10px;
+    padding: 12px 12px 6px;
+    background: var(--top-card-bg);
+    border: 1px solid var(--top-border);
+    border-radius: var(--top-radius-card);
+  }
+  .home-region {
+    padding: 0;
+    background: none;
+    border: 0;
+    border-radius: 0;
+  }
+  .home-region__title { margin-bottom: 2px; font-size: 12.5px; color: var(--top-text-muted); }
+  .home-pref { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 10px; }
+  .home-pref a { min-height: 34px; font-size: 13px; }
+  .home-pref__count { font-size: 11px; }
+}
+
 .home-pref-note {
   margin: 12px 0 0;
   font-size: 12px;
