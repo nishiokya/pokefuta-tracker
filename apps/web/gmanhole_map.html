@@ -87,21 +87,25 @@
       .pokefuta-map-page .controls-content { max-height:calc(100dvh - 104px); }
       .pokefuta-map-page .leaflet-top.leaflet-left { top:72px; }
     }
-    .prefecture-row-button { display:block; width:100%; border:0; background:transparent; color:inherit; font:inherit; font-weight:700; text-align:left; padding:0; cursor:pointer; }
-    .prefecture-row-button:hover, .prefecture-row-button:focus-visible { text-decoration:underline; }
-    #prefecture-table-body tr:hover { background:transparent; cursor:default; }
-    #prefecture-table-body tr.selected:hover { background:var(--top-purple); }
+    /* 都道府県の一覧（トップの「都道府県から探す」と同じ見た目）。チェック中の作品だけを数え、0件の県は出さない */
+    .pref-list-title { margin:10px 0 6px; font-size:.8rem; font-weight:800; color:var(--top-text); }
+    .pref-list-title small { margin-left:4px; font-size:.68rem; font-weight:500; color:var(--top-text-faint); }
+    .pref-list { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:0 12px; margin:0; padding:0; list-style:none; }
+    .pref-list button { display:flex; justify-content:space-between; align-items:center; gap:6px; width:100%; min-height:36px; padding:0 2px;
+      border:0; border-bottom:1px solid var(--top-border-light); background:none; color:var(--top-text); font:inherit; font-size:.82rem; font-weight:700; text-align:left; cursor:pointer; }
+    .pref-list button:hover, .pref-list button:focus-visible { color:var(--top-purple); }
+    .pref-list button[aria-pressed="true"] { color:var(--top-purple); background:var(--top-purple-pale); border-radius:6px; }
+    .pref-list__count { font-family:'IBM Plex Mono', monospace; font-size:.75rem; font-weight:500; color:var(--top-purple); }
+    .pref-list__empty { grid-column:1 / -1; padding:8px 0; font-size:.78rem; color:var(--top-text-muted); }
+    .map-summary { margin:10px 0 0; padding-top:8px; border-top:1px solid var(--top-border-light); font-size:.75rem; color:var(--top-text-muted); }
+    .map-summary b { color:var(--top-text); }
+    .selected-prefecture-badge { display:inline-flex; align-items:center; gap:4px; margin:6px 0 0; padding:4px 8px; border-radius:6px; font-size:.8rem; }
+    .selected-prefecture-badge[hidden] { display:none; }
+    .selected-prefecture-badge .badge-label { font-weight:700; }
+    .selected-prefecture-badge .badge-clear { margin-left:4px; padding:2px 6px; border:0; border-radius:999px; background:var(--top-border); cursor:pointer; }
 
     /* ===== Top-page design skin: プレフィクスチャテーブル等を index.html 調に上書き ===== */
     body { font-family:'Noto Sans JP', system-ui, -apple-system, sans-serif; color:var(--top-text); }
-    .prefecture-table { background:transparent; border:1px solid var(--top-border); }
-    .prefecture-table thead tr, .prefecture-table th { background:var(--top-purple-pale); color:var(--top-purple-dark); font-weight:700; letter-spacing:0; text-transform:none; }
-    .prefecture-table th, .prefecture-table td { border-bottom:1px solid var(--top-border-light); }
-    .prefecture-table tr.selected { background:var(--top-purple); color:#fff; }
-    .prefecture-code { background:var(--top-purple-pale); color:var(--top-purple-dark); border:none; border-radius:4px; font-weight:700; }
-    .count-badge { background:var(--top-purple); color:#fff; border:none; box-shadow:none; border-radius:var(--top-radius-pill); }
-    .count-badge-zero { background:var(--top-border-light); color:var(--top-text-faint); border:none; box-shadow:none; border-radius:var(--top-radius-pill); }
-    .stats { border-top:1px solid var(--top-border-light); color:var(--top-text-muted); }
     .selected-prefecture-badge { background:var(--top-purple-pale) !important; color:var(--top-purple-dark); }
     footer.data-links { color:var(--top-text-muted); }
 
@@ -265,37 +269,14 @@
         <div id="nearby-list" class="nearby-list"></div>
       </section>
       <div id="prefecture-tab" class="tab-content active">
-        <div id="selected-prefecture-badge" class="selected-prefecture-badge" style="display:none; margin:2px 0; font-size:0.85rem; background:#eef; padding:4px 8px; border-radius:6px;">
-          <span class="badge-label" style="font-weight:600;">選択中:</span> <span class="badge-value"></span>
-          <button type="button" class="badge-clear" style="margin-left:6px; background:var(--top-border); border:none; padding:2px 6px; border-radius:999px; cursor:pointer;" aria-label="選択解除" onclick="clearPrefectureSelection()">✖</button>
+        <div id="selected-prefecture-badge" class="selected-prefecture-badge" hidden>
+          <span class="badge-label">選択中:</span> <span class="badge-value"></span>
+          <button type="button" class="badge-clear" aria-label="選択解除" onclick="clearPrefectureSelection()">✖</button>
         </div>
-        <h4 id="heading-pref-count" style="margin:2px 0; font-size:.75rem;">都道府県別マンホール数</h4>
-        <div id="prefecture-table-wrapper" class="table-wrapper">
-          <table class="prefecture-table" id="prefecture-table" aria-describedby="pref-table-desc">
-            <caption id="pref-table-desc" class="sr-only">都道府県ごとのガンダム・キャラクター・みんなの投稿・ポケふたマンホールの件数</caption>
-            <thead>
-              <tr>
-                <th scope="col">コード</th>
-                <th scope="col">都道府県</th>
-                <th scope="col">合計</th>
-                <th scope="col">G</th>
-                <th scope="col">キ</th>
-                <th scope="col">投</th>
-                <th scope="col">P</th>
-              </tr>
-            </thead>
-            <tbody id="prefecture-table-body"></tbody>
-          </table>
-        </div>
+        <h4 id="heading-pref-count" class="pref-list-title">都道府県から探す <small>チェック中の作品の枚数・多い順</small></h4>
+        <ul id="prefecture-list" class="pref-list" aria-labelledby="heading-pref-count"></ul>
       </div>
-      <div class="stats" role="status" aria-live="polite">
-        <div id="total-count">総数: <span>0</span></div>
-        <div id="visible-count">表示: <span>0</span></div>
-        <div id="gundam-count">ガンダム: <span>0</span></div>
-        <div id="character-count">キャラ: <span>0</span></div>
-        <div id="community-count">投稿: <span>0</span></div>
-        <div id="pokemon-count">ポケふた: <span>0</span></div>
-      </div>
+      <p id="map-summary" class="map-summary" role="status" aria-live="polite">読み込み中…</p>
       <section class="page-seo">
     <h1>キャラクターマンホールマップ — ガンダム・ゾンビランドサガから ちびまる子ちゃんまで</h1>
     <p>
@@ -560,49 +541,31 @@
       }).filter(Boolean);
     }
 
+    // 都道府県の一覧。チェック中の作品のマンホールだけを数え、多い順（同数は県コード順）に並べる。
+    // 県を押すとその県で絞り込んでズームし、もう一度押すと解除する。
     function buildPrefectureCounts() {
-      const tbody = document.getElementById('prefecture-table-body');
-      if (!tbody) return;
-
+      const list = document.getElementById('prefecture-list');
+      if (!list) return;
       const counts = {};
-      const bump = (d, key) => {
+      allMarkers.forEach(m => {
+        const d = m._data;
+        if (!isMarkerVisibleByWork(d)) return;
         const pref = normalizePrefecture(d.prefecture);
-        if (!counts[pref]) counts[pref] = { gundam: 0, character: 0, community: 0, pokemon: 0 };
-        counts[pref][key]++;
-      };
-      gundamData.forEach(d => bump(d, 'gundam'));
-      characterData.forEach(d => bump(d, 'character'));
-      communityData.filter(d => d.status === 'active' && !d.canonical_ref).forEach(d => bump(d, 'community'));
-      pokemonData.forEach(d => bump(d, 'pokemon'));
-
-      const sortedPrefectures = Object.entries(counts)
-        .sort(([a], [b]) => {
-          const codeA = prefectureCodeMap[a] || '99'; // '不明' gets '99'
-          const codeB = prefectureCodeMap[b] || '99';
-          return codeA.localeCompare(codeB);
-        });
-
-      tbody.innerHTML = '';
-      sortedPrefectures.forEach(([pref, count]) => {
-        const total = count.gundam + count.character + count.community + count.pokemon;
-        const prefCode = prefectureCodeMap[pref] || '--';
-        const row = document.createElement('tr');
-        row.dataset.prefecture = pref;
-        row.innerHTML = `
-          <td><span class="prefecture-code">${prefCode}</span></td>
-          <td><button type="button" class="prefecture-row-button">${esc(pref)}</button></td>
-          <td><span class="count-badge">${total}</span></td>
-          <td>${count.gundam || 0}</td>
-          <td>${count.character || 0}</td>
-          <td>${count.community || 0}</td>
-          <td>${count.pokemon || 0}</td>
-        `;
-        const button = row.querySelector('.prefecture-row-button');
-        button.title = `${pref}で絞り込み+ズーム`;
-        button.addEventListener('click', () => {
+        counts[pref] = (counts[pref] || 0) + 1;
+      });
+      const sorted = Object.entries(counts).sort(([a, x], [b, y]) =>
+        (y - x) || (prefectureCodeMap[a] || '99').localeCompare(prefectureCodeMap[b] || '99'));
+      list.innerHTML = '';
+      if (!sorted.length) {
+        list.innerHTML = '<li class="pref-list__empty">作品にチェックを入れると、都道府県ごとの枚数が出ます。</li>';
+        return;
+      }
+      sorted.forEach(([pref, total]) => {
+        const item = document.createElement('li');
+        item.innerHTML = `<button type="button" data-prefecture="${esc(pref)}" aria-pressed="false" title="${esc(pref)}で絞り込んでズーム">`
+          + `<span>${esc(pref)}</span><span class="pref-list__count">${total}枚</span></button>`;
+        item.querySelector('button').addEventListener('click', () => {
           const willSelect = selectedPrefecture !== pref;
-
-          // Track prefecture selection
           if (window.trackEvent && willSelect) {
             window.trackEvent('click_prefecture', {surface:'gmanhole_map_prefecture_filter',
               'event_category': 'navigation',
@@ -610,7 +573,6 @@
               'value': total
             });
           }
-
           setPrefectureSelection(willSelect ? pref : '');
           if (willSelect) {
             zoomToPrefecture(pref);
@@ -618,27 +580,22 @@
             map.setView([36.0, 138.0], 6);
           }
         });
-        tbody.appendChild(row);
+        list.appendChild(item);
       });
+      updatePrefectureRows();
     }
 
     function showSelectedPrefectureBadge() {
       const badge = document.getElementById('selected-prefecture-badge');
       const value = badge?.querySelector('.badge-value');
       if (!badge || !value) return;
-      if (selectedPrefecture) {
-        value.textContent = selectedPrefecture;
-        badge.style.display = 'inline-block';
-      } else {
-        value.textContent = '';
-        badge.style.display = 'none';
-      }
+      value.textContent = selectedPrefecture || '';
+      badge.hidden = !selectedPrefecture;
     }
 
     function updatePrefectureRows() {
-      document.querySelectorAll('#prefecture-table-body tr').forEach(row => {
-        const match = row.dataset.prefecture === selectedPrefecture;
-        row.classList.toggle('selected', match);
+      document.querySelectorAll('#prefecture-list button').forEach(button => {
+        button.setAttribute('aria-pressed', String(button.dataset.prefecture === selectedPrefecture));
       });
     }
 
@@ -951,25 +908,20 @@
         }
       });
       updateStats(visible, gCount, pCount, cCount, communityCount);
+      buildPrefectureCounts();
       // 現在地検索済みなら、フィルタ変更に合わせて近くのリストも再計算する
       if (lastNearbyLocation) {
         renderNearbyResults(lastNearbyLocation.lat, lastNearbyLocation.lng);
       }
     }
 
-    function updateStats(visibleOverride, gCountOverride, pCountOverride, cCountOverride, communityCountOverride){
-      const totalEl=document.querySelector('#total-count span');
-      const visEl=document.querySelector('#visible-count span');
-      const gEl=document.querySelector('#gundam-count span');
-      const pEl=document.querySelector('#pokemon-count span');
-      const cEl=document.querySelector('#character-count span');
-      const communityEl=document.querySelector('#community-count span');
-      if(totalEl) totalEl.textContent=String(allMarkers.length);
-      if(visEl) visEl.textContent=String(visibleOverride ?? allMarkers.length);
-      if(gEl) gEl.textContent=String(gCountOverride ?? gundamData.length);
-      if(pEl) pEl.textContent=String(pCountOverride ?? pokemonData.length);
-      if(cEl) cEl.textContent=String(cCountOverride ?? characterData.length);
-      if(communityEl) communityEl.textContent=String(communityCountOverride ?? communityData.filter(d => d.status === 'active' && !d.canonical_ref).length);
+    function updateStats(visible, gCount, pCount, cCount, communityCount){
+      const el = document.getElementById('map-summary');
+      if (!el) return;
+      const parts = [['ガンダム', gCount], ['キャラ', cCount], ['みんなの投稿', communityCount], ['ポケふた', pCount]]
+        .filter(([, n]) => n).map(([label, n]) => `${label}${n}`);
+      el.innerHTML = `地図に <b>${visible ?? allMarkers.length}枚</b> を表示中（全${allMarkers.length}枚）`
+        + (parts.length ? `<br>${parts.join('・')}` : '');
     }
 
     function initControlsToggle() {

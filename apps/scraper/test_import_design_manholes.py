@@ -251,8 +251,10 @@ class ImportDesignManholesTests(unittest.TestCase):
         self.assertIn("id=\"chk-community\"", source)
         self.assertIn("buildCommunityPopup(d)", source)
         self.assertIn("communityByCanonicalRef", source)
+        # 既存の図鑑へ紐付いた投稿（canonical_ref あり）はピンを作らない。
+        # 件数・都道府県の一覧は地図上のピン（allMarkers）から数えるので、これで二重に数えない
         self.assertIn(
-            "communityData.filter(d => d.status === 'active' && !d.canonical_ref).length",
+            "communityData.filter(d => d.status === 'active' && !d.canonical_ref).forEach",
             source,
         )
 
