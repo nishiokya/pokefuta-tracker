@@ -24,7 +24,8 @@ mkdir -p "$SS_DIR" "$ROOT/dist/assets"
 # ── apps/web → dist 同期（pages-deploy.yml と同じマッピング）──
 cd "$ROOT"
 cp apps/web/index.html dist/index.html
-cp apps/web/nearby_manholes.html dist/nearby.html
+cp apps/web/nearby.html dist/nearby.html  # 廃止済み。map.html へのリダイレクト
+cp apps/web/nearby.html dist/nearby_manholes.html
 cp apps/web/map.html dist/map.html 2>/dev/null || true
 cp apps/web/gmanhole_map.html dist/gmanhole_map.html
 cp apps/web/design_manhole.html dist/design_manhole.html
