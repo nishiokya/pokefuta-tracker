@@ -1,6 +1,8 @@
 import importlib.util
 import json
+import re
 import unittest
+from datetime import date, timedelta
 from pathlib import Path
 
 MODULE_PATH = Path(__file__).with_name("generate_summary_pages.py")
@@ -327,6 +329,67 @@ class PageOrderTests(unittest.TestCase):
                 facts = html[html.index('id="fact-list-heading"'):]
                 facts = facts[:facts.index("</section>")]
                 self.assertNotIn("<details", facts)
+
+
+class TriviaFaqTests(unittest.TestCase):
+    """ja の「ポケふた雑学」はデータから組み立てたカテゴリつき FAQ。"""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.records = summary.load_records(summary.NDJSON)
+        cls.trivia = summary.summary_faq.load_trivia(summary.PREFECTURE_TRIVIA_JSON)
+        cls.items = summary.summary_faq.build_faq(cls.records, cls.trivia, {}, summary.TAG_META_PAGE_HREFS)
+
+    def test_trivia_answers_come_only_from_official_sources(self):
+        trivia = [{"prefecture": "香川県", "trivia": [
+            {"id": "kagawa-slowpoke-wordplay", "type": "wordplay", "text": "公式の文。", "source_type": "official",
+             "source_label": "ポケモンローカルActs", "source_url": "https://local.pokemon.jp/municipality/kagawa/"},
+            {"id": "niigata-ojiya-koi", "type": "local_connection", "text": "出典なし", "source_type": "dataset"},
+        ]}]
+        items = summary.summary_faq.build_faq([], trivia, {}, {})
+        self.assertEqual([i.id for i in items], ["kagawa-slowpoke-wordplay"])
+        self.assertEqual(items[0].answer_text, "公式の文。")  # 句点が二重にならない
+        self.assertIn("https://local.pokemon.jp/municipality/kagawa/", items[0].answer_html)
+        self.assertIn('href="/prefectures/kagawa/"', items[0].answer_html)
+
+    def test_categories_are_in_order_and_every_answer_has_text(self):
+        order = summary.summary_faq.CATEGORY_ORDER
+        positions = [order.index(i.category) for i in self.items]
+        self.assertEqual(positions, sorted(positions))
+        self.assertEqual(set(positions), set(range(len(order))))  # 4カテゴリとも出る
+        for item in self.items:
+            with self.subTest(item=item.id):
+                self.assertTrue(item.question.endswith("？"))
+                self.assertTrue(item.answer_text and item.lead)
+
+    def test_shared_end_manhole_is_listed_once(self):
+        ends = next(i for i in self.items if i.id == "ends")
+        self.assertIn("いちばん南・いちばん西", ends.answer_text)
+        self.assertNotIn("/", ends.answer_text.replace("いちばん南・いちばん西", ""))  # 「沖縄県/石垣市」を出さない
+
+    def test_todays_item_rotates_through_trivia_and_records_only(self):
+        start = date(2026, 10, 1)
+        picked = {
+            summary.summary_faq.todays_item(self.items, start + timedelta(days=n)).category for n in range(60)
+        }
+        self.assertEqual(picked, summary.summary_faq.HERO_CATEGORIES)
+        self.assertIsNone(summary.summary_faq.todays_item([], date(2026, 10, 1)))
+
+    def test_japanese_page_uses_the_faq_with_structured_data(self):
+        stats = summary.build_stats(self.records)
+        records_by_id = {str(r["id"]): r for r in self.records}
+        ja = summary.render_page(summary.SUMMARY_STRINGS["ja"], stats, {}, {}, records_by_id, {}, {}, faq_items=self.items)
+        self.assertEqual(ja.count('class="faq-item"'), len(self.items))
+        self.assertNotIn('class="summary-fact-card"', ja)
+        ld = json.loads(re.search(r'<script type="application/ld\+json">(.*?)</script>', ja).group(1))
+        self.assertEqual(ld["@type"], "FAQPage")
+        self.assertEqual(len(ld["mainEntity"]), len(self.items))
+        hero = ja[ja.index('<header class="summary-hero">'):ja.index("</header>")]
+        self.assertIn('data-summary-event="summary_faq_click"', hero)
+        en = summary.render_page(summary.SUMMARY_STRINGS["en"], stats, {}, {}, records_by_id, {}, {}, faq_items=self.items)
+        self.assertNotIn('class="faq-item"', en)  # 元データが日本語しか無い
+        self.assertNotIn("application/ld+json", en)
+        self.assertIn('class="summary-fact-card"', en)
 
 
 class StylesheetTests(unittest.TestCase):
