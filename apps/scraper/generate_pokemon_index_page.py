@@ -1724,7 +1724,7 @@ def generate_html(
     <a href="{escape(map_url)}" class="cta-map">{cta}</a>
   </section>
 
-  <footer>
+  <footer class="page-credit">
     <p><a href="{escape(BASE_URL)}">data.pokefuta.com</a> &mdash; {footer_text}</p>
   </footer>
 </div>

@@ -2315,7 +2315,7 @@ def generate_html(
 
     {follow_x_html}
 
-    <footer>
+    <footer class="page-credit">
       <p>&copy; 2025-{current_year} data.pokefuta.com | ポケふた情報はポケモン公式サイトを参照しています</p>
     </footer>
   </div>
