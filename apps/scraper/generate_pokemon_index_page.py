@@ -531,6 +531,17 @@ def _summary_href(url_prefix: str) -> str:
     return f"/{url_prefix}summary/" if url_prefix else "/summary/"
 
 
+def _latest_photos_href(url_prefix: str) -> str:
+    """「写真付きのポケふたをもっと見る」の行き先。トップの「新着・注目の写真」（#home-photos）。
+
+    /summary/ の最新追加写真は外したので、そこへは送らない。#home-photos があるのは
+    日本語と英語のトップだけなので、ほかの言語はトップ（地図）へ送る。
+    """
+    if url_prefix in ("", "en/"):
+        return f"{_map_href(url_prefix)}#home-photos"
+    return _map_href(url_prefix)
+
+
 def _location_text(manhole: dict, translate_pref: Callable[[str], str], lang: str) -> str:
     if lang == "ja":
         return compose_display_name(manhole)
@@ -1086,7 +1097,7 @@ def generate_html(
             f'<h2 id="latest-photos-heading">{escape(enhancement["latest_heading"])}</h2>'
             f'<p class="section-lead">{escape(enhancement["latest_lead"])}</p>'
             f'<div class="photos-grid">{latest_photos_html}</div>'
-            f'<p class="section-link"><a href="{escape(summary_href)}#latest-photos-heading">'
+            f'<p class="section-link"><a href="{escape(_latest_photos_href(url_prefix))}">'
             f'{escape(enhancement["latest_cta"])} →</a></p></section>'
         )
 
