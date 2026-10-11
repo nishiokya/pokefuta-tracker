@@ -334,6 +334,25 @@ class GeneratedHtmlTest(unittest.TestCase):
         data.trips = []
         self.assertEqual("", module.render_trips(data))
 
+    def test_ways_offer_trips_instead_of_themes(self) -> None:
+        data = Fixture(self.tmp).data()
+        data.trip_total = 10
+        data.trips = [{"slug": "a", "name": "町田", "prefecture": "東京都", "path": "trip/a/", "count": 6,
+                       "minutes": 25, "time": "約20分", "mode": "徒歩", "thumbs": ""}]
+        block = module.render_ways(data)
+        self.assertIn("1日で回るルートから探す", block)
+        self.assertIn("10のエリア", block)
+        self.assertIn('href="trip/a/"', block)
+        self.assertNotIn("テーマから探す", block)
+        data.trip_total = 0
+        self.assertIn("テーマから探す", module.render_ways(data))
+
+    def test_prefecture_list_link_sits_beside_the_heading(self) -> None:
+        block = _block(Fixture(self.tmp).html(), "pref")
+        self.assertIn('home-section__head', block)
+        self.assertIn("都道府県一覧 47都道府県", block)
+        self.assertNotIn("47都道府県の一覧ページへ", block)
+
     def test_trip_thumbs_stop_at_four_and_count_the_rest(self) -> None:
         fixture = Fixture(self.tmp)
         route = fixture.records[:6]

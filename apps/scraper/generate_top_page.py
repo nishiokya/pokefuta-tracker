@@ -687,8 +687,6 @@ def render_ways(data: TopData) -> str:
     pref_counts = data.pref_counts
     top_prefs = sorted(data.installed_prefectures, key=lambda p: (-pref_counts[p], PREFECTURE_ORDER.index(p)))[:3]
     poke_counts = data.pokemon_counts
-    meta = data.tag_meta
-    theme_slugs = [s for s in meta.top_chip_slugs(data.tag_counts) if meta.href(s).startswith("/tags/")][:3]
 
     def sub(links: list[tuple[str, str]], way: str) -> str:
         return "".join(
@@ -706,10 +704,21 @@ def render_ways(data: TopData) -> str:
         ("pokemon", "pokemon/", "assets/pokefuta-marker.svg", "ポケモンから",
          f"{len(poke_counts):,}種類のポケモンから、好きなポケモンのポケふたを探せます。",
          [(e.href, f"{escape(e.name)} {len(e.manhole_ids)}枚") for e in data.popular_pokemon[:3]]),
-        ("theme", "map.html?view=theme", "assets/icon-tag.svg", "テーマから",
-         "道の駅・世界遺産・離島など、旅の目的に合わせて探せます。",
-         [(meta.href(s), f"{escape(meta.label(s))} {data.tag_counts.get(s, 0)}枚") for s in theme_slugs]),
     ]
+    if data.trip_total:
+        cards.append(
+            ("trip", "trip/", "assets/icon-route.svg", "1日で回るルートから",
+             f"{data.trip_total}のエリアを、回る順番とかかる時間の目安つきで紹介しています。",
+             [(escape(t["path"]), f'{escape(t["name"])} {t["count"]}枚') for t in data.trips[:3]]),
+        )
+    else:  # ポケふた旅のデータが無いときはテーマで埋める
+        meta = data.tag_meta
+        theme_slugs = [s for s in meta.top_chip_slugs(data.tag_counts) if meta.href(s).startswith("/tags/")][:3]
+        cards.append(
+            ("theme", "map.html?view=theme", "assets/icon-tag.svg", "テーマから",
+             "道の駅・世界遺産・離島など、旅の目的に合わせて探せます。",
+             [(meta.href(s), f"{escape(meta.label(s))} {data.tag_counts.get(s, 0)}枚") for s in theme_slugs]),
+        )
     cards_html = "".join(
         '<li class="home-way">'
         f'<a class="home-way__main" href="{href}" onclick="{_track("click_search_way", surface="top_search_ways", way=way)}">'
@@ -908,13 +917,13 @@ def render_pref(data: TopData) -> str:
         )
     return (
         '<section class="home-section" id="home-pref" aria-labelledby="home-pref-title">'
-        '<h2 class="home-h2" id="home-pref-title">都道府県から探す</h2>'
+        '<div class="home-section__head"><h2 class="home-h2" id="home-pref-title">都道府県から探す</h2>'
+        f'<a class="home-purpose__more" href="prefectures/" onclick="{_track("click_pref_link", surface="top_prefecture_list", prefecture="all")}">'
+        "都道府県一覧 47都道府県</a></div>"
         f'<p class="home-text">ポケふたは47都道府県のうち{len(data.installed_prefectures)}都道府県に'
         f"設置されています。地域ごとに北から並べ、県名の横に設置枚数を載せています。</p>"
         f'<div class="home-regions">{"".join(regions)}</div>'
         f"{note}"
-        f'<a class="home-more" href="prefectures/" onclick="{_track("click_pref_link", surface="top_prefecture_list", prefecture="all")}">'
-        "47都道府県の一覧ページへ</a>"
         "</section>"
     )
 

@@ -20,6 +20,14 @@
   line-height: 1.35;
 }
 
+/* 見出しの右に一覧へのリンクを置く（都道府県から探す） */
+.home-section__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
 .home-h2 small {
   margin-left: 6px;
   font-size: 12px;
