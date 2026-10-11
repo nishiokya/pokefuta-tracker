@@ -833,8 +833,9 @@ def render_events(data: TopData) -> str:
     if len(data.events) > EVENT_VISIBLE_LIMIT:
         more = (
             '<button type="button" class="home-events__toggle" '
-            f'onclick="{_track("click_event_show_all", surface="top_event_notice", count=len(data.events))};'
-            "this.parentNode.classList.add('is-open')\">"
+            # 計測が読み込めなくても開くよう、先に開いてから送る
+            "onclick=\"this.parentNode.classList.add('is-open');"
+            f'if (window.trackEvent) {_track("click_event_show_all", surface="top_event_notice", count=len(data.events))}">'
             f"すべて見る（全{len(data.events)}件）</button>"
         )
     return (
