@@ -24,6 +24,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from display_names import compose_display_name  # noqa: E402
 from site_terms import format_count  # noqa: E402
 from tag_meta import load_tag_meta  # noqa: E402
+import summary_faq  # noqa: E402
 
 # テーマページを持つタグ（dataset/tag_meta.json が正）。
 # 旅のテーマカードから一覧ページへ送るために使う。
@@ -60,6 +61,7 @@ PHOTOS_JSON = ROOT / "docs" / "latest-manhole-photos.json"
 IMAGE_DIR = ROOT / "dataset" / "manhole" / "image"
 GUNDAM_SPOTS_JSON = ROOT / "dataset" / "gundam_manhole_spots.json"
 PREFECTURE_EVENTS_JSON = ROOT / "dataset" / "prefecture_events.json"
+PREFECTURE_TRIVIA_JSON = ROOT / "dataset" / "prefecture_trivia.json"
 # 最初から見せる件数。残りは「ほか n 件」で折りたたむ（中身はページに残るので検索にも載る）
 EVENTS_VISIBLE = 3
 POKEMON_RANKING_VISIBLE = 5
@@ -1325,6 +1327,82 @@ _CSS = """\
       margin: 8px 0 0;
       color: #574b41;
       font-size: .875rem;
+    }
+
+    /* ポケふた雑学（ja）: カテゴリつきの FAQ。質問を押すと答えが開く */
+    .faq-category + .faq-category {
+      margin-top: 18px;
+    }
+
+    .faq-category h3 {
+      margin: 0 0 8px;
+      color: #14544f;
+      font-size: 1rem;
+    }
+
+    .faq-item {
+      border-top: 1px solid rgba(93, 67, 35, .14);
+    }
+
+    .faq-item:last-child {
+      border-bottom: 1px solid rgba(93, 67, 35, .14);
+    }
+
+    .faq-item summary {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 48px;
+      padding: 10px 2px;
+      cursor: pointer;
+      font-weight: 850;
+      list-style: none;
+    }
+
+    .faq-item summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .faq-item summary::before {
+      flex: 0 0 auto;
+      content: "Q";
+      display: grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: #57408f;
+      color: #fff;
+      font-size: .8rem;
+    }
+
+    .faq-item summary::after {
+      margin-left: auto;
+      content: "＋";
+      color: #57408f;
+    }
+
+    .faq-item[open] summary::after {
+      content: "－";
+    }
+
+    .faq-answer {
+      padding: 0 2px 14px 34px;
+      color: #3a3128;
+    }
+
+    .faq-answer p,
+    .faq-answer ul {
+      margin: 0 0 6px;
+    }
+
+    .faq-answer ul {
+      padding-left: 1.1em;
+    }
+
+    .faq-links {
+      color: #75685c;
+      font-size: .84rem;
     }
 
     @media (max-width: 700px) {
@@ -3031,7 +3109,24 @@ def _build_pokemon_ranking_section(s: dict, pokemon_stats: dict) -> str:
     )
 
 
-def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, records_by_id: dict, photos_data: dict, pokemon_metadata: dict, gundam_spots: list[dict] | None = None, prefecture_events: list[dict] | None = None) -> str:
+def _hero_faq_html(s: dict, item: summary_faq.FaqItem) -> str:
+    """ja のヒーローに出す今日の雑学。質問と一文の答え、行き先のボタン1つ。"""
+    copy = _localized_fact_copy(s.get("html_lang", "ja"))
+    return (
+        f'<div class="summary-hero-fact" data-fact-id="{escape(item.id)}" '
+        f'data-fact-title="{escape(item.question)}" data-image-type="faq">'
+        f'<span class="daily-fact-label">{escape(copy["daily"])}</span>'
+        f'<p class="summary-hero-fact-main">{escape(item.question)}</p>'
+        f'<p class="summary-hero-fact-note">{escape(item.lead)}</p>'
+        '<div class="summary-actions">'
+        f'<a class="summary-action" href="{escape(item.link_href)}" '
+        f'data-summary-event="summary_faq_click" data-surface="summary_hero" '
+        f'data-content-type="faq" data-content-id="{escape(item.id)}">{escape(item.link_label)}</a>'
+        '</div></div>'
+    )
+
+
+def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, records_by_id: dict, photos_data: dict, pokemon_metadata: dict, gundam_spots: list[dict] | None = None, prefecture_events: list[dict] | None = None, faq_items: list[summary_faq.FaqItem] | None = None) -> str:
     pref_key = s["pref_key"]
 
     def tr(ja_name: str) -> str:
@@ -3050,6 +3145,17 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
     events_html = _build_events_section(s, prefecture_events or [], tr)
     discovery_html = _build_discovery_section(s, stats, tr)
     daily_fact_html, fact_list_html = _build_fact_sections(s, stats, tr)
+    faq_ld_html = ""
+    if pref_key == "ja" and faq_items:
+        # ja の雑学は、データから組み立てたカテゴリつき FAQ にする（数字の言い換えではなく「へえ」となる話）。
+        # 他言語は元データが日本語しか無いので、これまでの数字の雑学のまま
+        fact_list_html = summary_faq.render_faq_section(faq_items)
+        # 答えの文に "</" が入っても script を閉じないようにする（f 文字列の式の外で作る。3.11 は式の中の \ 不可）
+        faq_ld = json.dumps(summary_faq.faq_json_ld(faq_items), ensure_ascii=False).replace("</", "<\\/")
+        faq_ld_html = f'  <script type="application/ld+json">{faq_ld}</script>\n'
+        today_item = summary_faq.todays_item(faq_items, datetime.now(JST).date())
+        if today_item:
+            daily_fact_html = _hero_faq_html(s, today_item)
     regional_html = _build_regional_section(s, stats)
     tracking_script = _build_tracking_script(s)
     # ja は県・ポケモン・写真を探すのをヒーローのボタンから各ページへ任せ、ここは雑学と数字に絞る。
@@ -3149,7 +3255,7 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
   <link rel="canonical" href="{can}">
 {_HREFLANG}
   <link rel="icon" href="https://data.pokefuta.com/assets/pokefuta-marker.svg" type="image/svg+xml">
-  <style>
+{faq_ld_html}  <style>
 {_CSS}
   </style>
 </head>
@@ -3264,6 +3370,13 @@ def main() -> None:
     print(f"[INFO] {len(gundam_spots)} Gundam crossover spots")
 
     prefecture_events = _load_prefecture_events(PREFECTURE_EVENTS_JSON)
+    faq_items = summary_faq.build_faq(
+        records,
+        summary_faq.load_trivia(PREFECTURE_TRIVIA_JSON),
+        {name: meta["slug"] for name, meta in pokemon_metadata.items() if meta.get("slug")},
+        TAG_META_PAGE_HREFS,
+    )
+    print(f"[INFO] {len(faq_items)} FAQ items for the Japanese summary")
     print(f"[INFO] {len(prefecture_events)} active prefecture events")
 
     for lang, s in SUMMARY_STRINGS.items():
@@ -3272,6 +3385,7 @@ def main() -> None:
             pokemon_metadata,
             gundam_spots=gundam_spots,
             prefecture_events=prefecture_events,
+            faq_items=faq_items,
         )
         out = DIST / s["out_path"]
         out.parent.mkdir(parents=True, exist_ok=True)

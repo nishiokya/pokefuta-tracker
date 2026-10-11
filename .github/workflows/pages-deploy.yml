@@ -20,6 +20,7 @@ on:
       - 'apps/scraper/generate_character_work_pages.py' # per-work character manhole guides
       - 'apps/scraper/character_manhole_works.py' # shared work page definitions
       - 'apps/scraper/generate_summary_pages.py' # summary page generator
+      - 'apps/scraper/summary_faq.py' # summary trivia FAQ (ja)
       - 'apps/scraper/generate_summary_ogp.py' # summary page OGP generator
       - 'apps/scraper/generate_prefecture_pages.py' # prefecture page generator
       - 'apps/scraper/generate_municipality_pages.py' # municipality page generator + ranking
