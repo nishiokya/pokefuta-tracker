@@ -54,7 +54,7 @@ try:
         MODE_LABELS, duration_range, find_entry, load_durations, load_trip_areas, travel_mode, trip_path,
     )
     from apps.scraper.photo_caption import JST, format_photo_date, to_jst_date
-    from apps.scraper.prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS
+    from apps.scraper.prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS, REGIONS
     from apps.scraper.tag_meta import count_tags, load_tag_meta
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
@@ -69,7 +69,7 @@ except ModuleNotFoundError as exc:
         MODE_LABELS, duration_range, find_entry, load_durations, load_trip_areas, travel_mode, trip_path,
     )
     from photo_caption import JST, format_photo_date, to_jst_date
-    from prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS
+    from prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS, REGIONS
     from tag_meta import count_tags, load_tag_meta
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -95,15 +95,6 @@ PHOTO_SIZE = 720  # ローカルミラーは 720×720
 LID_SIZE = 360  # 蓋の枠に合わせた切り出し {id}_lid.jpeg
 EXCLUDED_POKEMON_PATTERN = "ローカルActs"
 
-REGIONS: list[tuple[str, list[str]]] = [
-    ("北海道・東北", PREFECTURE_ORDER[0:7]),
-    ("関東", PREFECTURE_ORDER[7:14]),
-    ("中部", PREFECTURE_ORDER[14:23]),
-    ("近畿", PREFECTURE_ORDER[23:30]),
-    ("中国", PREFECTURE_ORDER[30:35]),
-    ("四国", PREFECTURE_ORDER[35:39]),
-    ("九州・沖縄", PREFECTURE_ORDER[39:47]),
-]
 REGION_OF = {pref: name for name, prefs in REGIONS for pref in prefs}
 
 # ヒーロー地図の県ピンの位置（旧トップの PREF_COORDS と同じ）

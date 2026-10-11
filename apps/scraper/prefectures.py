@@ -24,6 +24,17 @@ PREFECTURES: list[tuple[str, str]] = [
 PREFECTURE_ORDER = [name for name, _ in PREFECTURES]
 PREFECTURE_SLUGS = dict(PREFECTURES)
 
+# 地方の区分。都道府県一覧・トップ・全国一覧（summary）で同じものを使う
+REGIONS: list[tuple[str, list[str]]] = [
+    ("北海道・東北", PREFECTURE_ORDER[0:7]),
+    ("関東", PREFECTURE_ORDER[7:14]),
+    ("中部", PREFECTURE_ORDER[14:23]),
+    ("近畿", PREFECTURE_ORDER[23:30]),
+    ("中国", PREFECTURE_ORDER[30:35]),
+    ("四国", PREFECTURE_ORDER[35:39]),
+    ("九州・沖縄", PREFECTURE_ORDER[39:47]),
+]
+
 
 def select_full_coverage_pokemon(pokemon_coverage: list[dict]) -> dict | None:
     """Pick the pokemon_coverage entry (from dataset/prefecture_trivia.json)

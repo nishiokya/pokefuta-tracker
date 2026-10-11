@@ -24,6 +24,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from display_names import compose_display_name  # noqa: E402
 from site_terms import format_count  # noqa: E402
 from tag_meta import load_tag_meta  # noqa: E402
+from manhole_tile_image import tile_image_url  # noqa: E402
 
 # テーマページを持つタグ（dataset/tag_meta.json が正）。
 # 旅のテーマカードから一覧ページへ送るために使う。
@@ -49,7 +50,7 @@ try:
     from apps.scraper.prefectures import (
         PREFECTURE_ORDER,
         PREFECTURE_SLUGS,
-        select_full_coverage_pokemon,
+        REGIONS,
     )
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
@@ -57,7 +58,7 @@ except ModuleNotFoundError as exc:
     from prefectures import (
         PREFECTURE_ORDER,
         PREFECTURE_SLUGS,
-        select_full_coverage_pokemon,
+        REGIONS,
     )
 
 ROOT = Path(__file__).parent.parent.parent
@@ -69,6 +70,11 @@ PHOTOS_JSON = ROOT / "docs" / "latest-manhole-photos.json"
 IMAGE_DIR = ROOT / "dataset" / "manhole" / "image"
 GUNDAM_SPOTS_JSON = ROOT / "dataset" / "gundam_manhole_spots.json"
 PREFECTURE_EVENTS_JSON = ROOT / "dataset" / "prefecture_events.json"
+POKEMON_REPRESENTATIVES_JSON = ROOT / "dataset" / "pokemon_representatives.json"
+# 最初から見せる件数。残りは「ほか n 件」で折りたたむ（中身はページに残るので検索にも載る）
+EVENTS_VISIBLE = 3
+FACTS_VISIBLE = 2
+POKEMON_RANKING_VISIBLE = 5
 JST = timezone(timedelta(hours=9))
 
 BASE_URL = "https://data.pokefuta.com"
@@ -146,9 +152,6 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "h2_empty": "ポケふたがない県",
         "empty_note": 'まだポケふたが設置されていない県もあります。今後新しい地域へ広がる可能性があり、"次はどこに設置されるか"を予想する楽しみもあります。',
         "no_empty": "現在、未設置県はありません。",
-        "h2_map": "全国マップで探す",
-        "map_desc": "設置場所や近くのポケふたは、地図上で確認できます。都道府県フィルターで絞り込んで巡るルートを考えてみましょう。",
-        "cta_text": "地図で全国のポケふたを探す →",
         "ai_intro": "全国には{total}枚のポケふたが設置されています。",
         "ai_top": "最も多いのは{top1pref}（{top1count}枚）で、{top3}などに多く分布しています。",
         "ai_empty": "まだ{empty_count}県では設置されていませんが、今後の広がりも期待されます。",
@@ -173,11 +176,12 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "search_hub": {
             "h2": "ポケふたを探す",
             "card_pref_title": "都道府県から探す",
-            "card_pref_desc": "47都道府県の設置数一覧",
             "card_pokemon_title": "ポケモンから探す",
-            "card_pokemon_desc": "ポケモン別の一覧ページ",
             "card_map_title": "地図で探す",
-            "card_map_desc": "インタラクティブマップで確認",
+            "card_theme_title": "旅のテーマから探す",
+            "events_more": "ほか{count}件のイベントを見る",
+            "pokemon_more": "ポケモン一覧を見る",
+            "show_more": "ほか{count}件を見る",
         },
         "popular_pokemon": {
             "h2": "人気ポケモンのポケふた",
@@ -251,9 +255,6 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "h2_empty": "Prefectures with No Poké Lids",
         "empty_note": 'Some prefectures don\'t have any Poké Lids yet. Future expansions are possible, and guessing "where will the next one appear?" is part of the fun.',
         "no_empty": "All prefectures currently have at least one Poké Lid.",
-        "h2_map": "Explore on the Map",
-        "map_desc": "Find Poké Lid locations and nearby manholes on the interactive map. Use the prefecture filter to plan your route.",
-        "cta_text": "Explore all Poké Lids on the map →",
         "ai_intro": "There are {total} Poké Lids installed across Japan.",
         "ai_top": "The most are in {top1pref} ({top1count}), followed by {top3} and others.",
         "ai_empty": "{empty_count} prefectures have no installations yet, but future expansion is expected.",
@@ -274,11 +275,12 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "search_hub": {
             "h2": "Find Poké Lids",
             "card_pref_title": "By Prefecture",
-            "card_pref_desc": "Count list for all 47 prefectures",
             "card_pokemon_title": "By Pokémon",
-            "card_pokemon_desc": "Browse by Pokémon species",
             "card_map_title": "On the Map",
-            "card_map_desc": "Interactive map view",
+            "card_theme_title": "By travel theme",
+            "events_more": "Show {count} more events",
+            "pokemon_more": "See all Pokémon",
+            "show_more": "Show {count} more",
         },
         "popular_pokemon": {
             "h2": "Popular Pokémon on Poké Lids",
@@ -341,9 +343,6 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "h2_empty": "没有宝可梦井盖的县",
         "empty_note": '目前仍有部分县未设置宝可梦井盖，未来可能会扩展到新地区，猜测"下一个会设置在哪里"也是一种乐趣。',
         "no_empty": "目前所有都道府县均已设置宝可梦井盖。",
-        "h2_map": "在地图上探索",
-        "map_desc": "可在地图上确认设置地点及附近的宝可梦井盖。使用都道府县筛选功能制定巡游路线吧。",
-        "cta_text": "在地图上查找全国宝可梦井盖 →",
         "ai_intro": "全国共设置了{total}个宝可梦井盖。",
         "ai_top": "最多的是{top1pref}（{top1count}个），{top3}等地分布较为集中。",
         "ai_empty": "目前仍有{empty_count}个县未设置，期待未来进一步扩展。",
@@ -364,11 +363,12 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "search_hub": {
             "h2": "寻找宝可梦井盖",
             "card_pref_title": "按都道府县搜索",
-            "card_pref_desc": "47个都道府县设置数量一览",
             "card_pokemon_title": "按宝可梦搜索",
-            "card_pokemon_desc": "按宝可梦种类浏览",
             "card_map_title": "在地图上搜索",
-            "card_map_desc": "互动地图查看",
+            "card_theme_title": "按旅行主题探索",
+            "events_more": "查看其余{count}个活动",
+            "pokemon_more": "查看全部宝可梦",
+            "show_more": "查看其余{count}项",
         },
         "popular_pokemon": {
             "h2": "热门宝可梦井盖",
@@ -431,9 +431,6 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "h2_empty": "沒有寶可夢人孔蓋的縣",
         "empty_note": "目前仍有部分縣未設置寶可夢人孔蓋，未來可能會擴展到新地區，猜測「下一個會設置在哪裡」也是一種樂趣。",
         "no_empty": "目前所有都道府縣均已設置寶可夢人孔蓋。",
-        "h2_map": "在地圖上探索",
-        "map_desc": "可在地圖上確認設置地點及附近的寶可夢人孔蓋。使用都道府縣篩選功能規劃巡遊路線吧。",
-        "cta_text": "在地圖上查找全國寶可夢人孔蓋 →",
         "ai_intro": "全國共設置了{total}個寶可夢人孔蓋。",
         "ai_top": "最多的是{top1pref}（{top1count}個），{top3}等地分布較為集中。",
         "ai_empty": "目前仍有{empty_count}個縣未設置，期待未來進一步擴展。",
@@ -454,11 +451,12 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "search_hub": {
             "h2": "尋找寶可夢人孔蓋",
             "card_pref_title": "按都道府縣搜尋",
-            "card_pref_desc": "47個都道府縣設置數量一覽",
             "card_pokemon_title": "按寶可夢搜尋",
-            "card_pokemon_desc": "按寶可夢種類瀏覽",
             "card_map_title": "在地圖上搜尋",
-            "card_map_desc": "互動地圖查看",
+            "card_theme_title": "依旅行主題探索",
+            "events_more": "查看其餘{count}個活動",
+            "pokemon_more": "查看全部寶可夢",
+            "show_more": "查看其餘{count}項",
         },
         "popular_pokemon": {
             "h2": "熱門寶可夢人孔蓋",
@@ -521,9 +519,6 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "h2_empty": "포케후타가 없는 현",
         "empty_note": '아직 포케후타가 설치되지 않은 현도 있습니다. 앞으로 새로운 지역으로 확장될 가능성이 있으며, "다음에는 어디에 설치될까?"를 예상하는 재미도 있습니다.',
         "no_empty": "현재 미설치 현은 없습니다.",
-        "h2_map": "전국 지도에서 찾기",
-        "map_desc": "설치 장소나 근처 포케후타는 지도에서 확인할 수 있습니다. 도도부현 필터로 좁혀서 순회 경로를 생각해보세요.",
-        "cta_text": "지도에서 전국 포케후타 찾기 →",
         "ai_intro": "전국에는 {total}개의 포케후타가 설치되어 있습니다.",
         "ai_top": "가장 많은 곳은 {top1pref}（{top1count}개）이며, {top3} 등에 많이 분포되어 있습니다.",
         "ai_empty": "아직 {empty_count}개 현에는 설치되어 있지 않지만, 앞으로의 확장도 기대됩니다.",
@@ -544,11 +539,12 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "search_hub": {
             "h2": "포케후타 찾기",
             "card_pref_title": "도도부현으로 찾기",
-            "card_pref_desc": "47개 도도부현 설치 수량 일람",
             "card_pokemon_title": "포켓몬으로 찾기",
-            "card_pokemon_desc": "포켓몬 종류별 일람",
             "card_map_title": "지도에서 찾기",
-            "card_map_desc": "인터랙티브 지도로 확인",
+            "card_theme_title": "여행 테마로 찾기",
+            "events_more": "이벤트 {count}개 더 보기",
+            "pokemon_more": "포켓몬 전체 보기",
+            "show_more": "{count}개 더 보기",
         },
         "popular_pokemon": {
             "h2": "인기 포켓몬 포케후타",
@@ -877,18 +873,6 @@ _CSS = """\
       font-weight: 750;
     }
 
-    .summary-cta {
-      display: inline-flex;
-      align-items: center;
-      min-height: 44px;
-      margin-top: 10px;
-      padding: 0 16px;
-      border-radius: 8px;
-      background: #176f68;
-      color: #fff;
-      font-weight: 900;
-      text-decoration: none;
-    }
 
     .ai-summary-box {
       margin: 0 0 20px;
@@ -954,41 +938,6 @@ _CSS = """\
       margin-left: 6px;
     }
 
-    .search-hub-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 8px;
-      margin: 6px 0 0;
-    }
-
-    .search-hub-card {
-      display: flex;
-      flex-direction: column;
-      gap: 1px;
-      padding: 9px 10px;
-      background: #fffaf0;
-      border: 1px solid rgba(23, 111, 104, .24);
-      border-radius: 8px;
-      text-decoration: none;
-      color: inherit;
-    }
-
-    .search-hub-card:hover {
-      background: #e5f4f2;
-    }
-
-    .search-hub-card strong {
-      color: #176f68;
-      font-size: .9rem;
-      font-weight: 900;
-    }
-
-    .search-hub-card span {
-      color: #574b41;
-      font-size: .72rem;
-      line-height: 1.35;
-    }
-
     .pokemon-popular-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1024,7 +973,7 @@ _CSS = """\
 
     .photos-grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 10px;
       margin: 12px 0 0;
     }
@@ -1431,7 +1380,6 @@ _CSS = """\
     .summary-empty,
     .discovery-card,
     .regional-trend-box,
-    .search-hub-card,
     .pokemon-card {
       border-radius: 16px;
       box-shadow: 0 8px 20px rgba(77, 56, 30, .06);
@@ -1440,13 +1388,11 @@ _CSS = """\
     .summary-stat strong,
     .summary-section h2,
     .summary-fact-number,
-    .discovery-card strong,
-    .search-hub-card strong {
+    .discovery-card strong {
       color: #57408f;
     }
 
-    .summary-action,
-    .summary-cta {
+    .summary-action {
       border-radius: 999px;
       background: #57408f;
     }
@@ -1514,18 +1460,6 @@ _CSS = """\
       line-height: 1.35;
     }
 
-    .prefecture-info-label {
-      display: inline-flex;
-      width: fit-content;
-      margin-right: 5px;
-      padding: 1px 6px;
-      border-radius: 999px;
-      background: #eee7fb;
-      color: #57408f;
-      font-size: .62rem;
-      font-weight: 900;
-      vertical-align: 1px;
-    }
 
     .prefecture-info-count {
       color: #57408f;
@@ -1541,30 +1475,139 @@ _CSS = """\
       font-size: .72rem;
       line-height: 1.4;
     }
-    .prefecture-info-facts {
-      grid-column: 1 / -1;
-      margin: 0;
-      padding-left: 1.1rem;
-      color: #716154;
-      font-size: .72rem;
-      line-height: 1.4;
-    }
-    .prefecture-info-facts li + li {
-      margin-top: .3rem;
-    }
 
-    .prefecture-info-actions {
-      grid-column: 1 / -1;
+    /* ヒーローの入口ボタン。右上のバッジ・写真（絶対配置）に重ならない幅に収める */
+    .summary-hero-links {
+      position: relative;
+      z-index: 5;
       display: flex;
-      gap: 10px;
-      margin-top: -1px;
-      font-size: .68rem;
-      font-weight: 850;
+      flex-wrap: wrap;
+      gap: 6px;
+      max-width: calc(100% - 310px);
+      margin-top: 12px;
     }
 
-    .prefecture-info-actions a {
-      color: #57408f;
+    .summary-hero-link {
+      display: inline-flex;
+      align-items: center;
+      min-height: 40px;
+      padding: 0 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .88);
+      box-shadow: inset 0 0 0 1px rgba(87, 64, 143, .2);
+      color: #3f2b6f !important;
+      font-size: .84rem;
+      font-weight: 900;
       text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .summary-hero-link:first-child {
+      background: #176f68;
+      box-shadow: none;
+      color: #fff !important;
+    }
+
+    .summary-more summary,
+    .summary-event-more summary {
+      margin-top: 10px;
+      color: #57408f;
+      cursor: pointer;
+      font-size: .88rem;
+      font-weight: 900;
+    }
+
+    .summary-more > ul,
+    .summary-more > ol,
+    .summary-event-more .summary-event-list {
+      margin-top: 10px;
+    }
+
+    .summary-more-link {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      margin-top: 10px;
+      color: #57408f;
+      font-size: .9rem;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    .prefecture-jump-row {
+      display: grid;
+      grid-template-columns: 110px minmax(0, 1fr);
+      gap: 8px 12px;
+      align-items: start;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(93, 67, 35, .1);
+    }
+
+    .prefecture-jump-row h3 {
+      margin: 6px 0 0;
+      color: #14544f;
+      font-size: .9rem;
+    }
+
+    .prefecture-jump-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .prefecture-jump-chips a {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 4px;
+      min-height: 36px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: #fffdf7;
+      box-shadow: inset 0 0 0 1px rgba(93, 67, 35, .16);
+      color: #201b16;
+      font-size: .88rem;
+      font-weight: 850;
+      text-decoration: none;
+    }
+
+    .prefecture-jump-chips a.is-empty {
+      background: transparent;
+      color: #75685c;
+      font-weight: 700;
+    }
+
+    .prefecture-jump-chips a.is-empty small {
+      color: #75685c;
+    }
+
+    .prefecture-jump-chips small {
+      color: #6b4aa2;
+      font-size: .76rem;
+    }
+
+    /* ポケモンのカードは代表のマンホールの写真つき（蓋でいっぱいの正方形） */
+    .pokemon-popular-grid {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+
+    .pokemon-card {
+      align-items: center;
+      text-align: center;
+    }
+
+    .pokemon-card img {
+      width: 100%;
+      max-width: 120px;
+      height: auto;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #ece4d7;
+    }
+
+    .discovery-subheading {
+      margin: 22px 0 4px;
+      font-size: 1.15rem;
     }
 
     @media (max-width: 700px) {
@@ -1638,27 +1681,6 @@ _CSS = """\
         grid-template-columns: 1fr;
       }
 
-      .search-hub-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 5px;
-      }
-
-      .search-hub-card {
-        min-width: 0;
-        padding: 7px 5px;
-        border-radius: 10px;
-        text-align: center;
-      }
-
-      .search-hub-card strong {
-        font-size: .72rem;
-        line-height: 1.25;
-      }
-
-      .search-hub-card span {
-        display: none;
-      }
-
       .prefecture-info-grid {
         grid-template-columns: 1fr;
         gap: 5px;
@@ -1686,23 +1708,6 @@ _CSS = """\
       .prefecture-info-fact {
         font-size: .66rem;
       }
-      .prefecture-info-facts {
-        font-size: .66rem;
-      }
-
-      .prefecture-info-label {
-        padding: 0 4px;
-        font-size: .56rem;
-      }
-
-      .prefecture-info-actions {
-        gap: 8px;
-        font-size: .62rem;
-      }
-
-      .pokemon-popular-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
 
       .photos-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1710,6 +1715,80 @@ _CSS = """\
 
       .pokemon-ranking-cols {
         grid-template-columns: 1fr;
+      }
+
+      /* 帯（見出し｜バッジ）の下の段に入口ボタンを並べる */
+      .summary-hero {
+        flex-wrap: wrap;
+      }
+
+      .summary-hero-links {
+        flex: 1 1 100%;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        max-width: none;
+        margin-top: 2px;
+      }
+
+      .summary-hero-link {
+        justify-content: center;
+        min-height: 44px;
+        padding: 0 6px;
+        font-size: .74rem;
+        line-height: 1.2;
+        text-align: center;
+        white-space: normal;
+      }
+
+      .prefecture-jump-row {
+        grid-template-columns: 1fr;
+        gap: 6px;
+      }
+
+      .prefecture-jump-row h3 {
+        margin: 0;
+        font-size: .8rem;
+      }
+
+      .prefecture-jump-row {
+        padding: 6px 0;
+      }
+
+      .prefecture-jump-chips {
+        gap: 4px;
+      }
+
+      .prefecture-jump-chips a {
+        min-height: 32px;
+        padding: 5px 9px;
+        font-size: .8rem;
+      }
+
+      .pokemon-popular-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .pokemon-card {
+        padding: 8px 6px;
+      }
+
+      /* テーマ・レアのカードは横に並べてスクロールさせる（縦に積むと約5,000px あった） */
+      .discovery-hub-grid {
+        grid-auto-flow: column;
+        grid-template-columns: none;
+        grid-auto-columns: 72%;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+        padding-bottom: 4px;
+      }
+
+      .discovery-hub-grid::-webkit-scrollbar {
+        display: none;
+      }
+
+      .discovery-hub-card {
+        scroll-snap-align: start;
       }
     }"""
 
@@ -1835,11 +1914,20 @@ def _build_events_section(s: dict, events: list[dict], tr) -> str:
             f'{escape(event["title"])}</a>'
             f'<small class="summary-event-meta">{escape(pref)} / {escape(period)}</small></li>'
         )
-    joined = "".join(items)
+    # いちばん押される区切りなので上に置くが、全部並べるとスマホで画面1枚分になる。
+    # 最初の数件だけ見せて、残りは折りたたむ（中身はページに残るので検索にも載る）
+    shown = "".join(items[:EVENTS_VISIBLE])
+    rest = items[EVENTS_VISIBLE:]
+    more_html = (
+        f'\n      <details class="summary-event-more">'
+        f'<summary>{escape(s["search_hub"]["events_more"].format(count=len(rest)))}</summary>'
+        f'<ul class="summary-event-list">{"".join(rest)}</ul></details>'
+        if rest else ""
+    )
     return (
         f'\n    <section class="summary-section summary-events" aria-labelledby="events-heading">'
         f'\n      <h2 id="events-heading">{escape(s["h2_events"])}</h2>'
-        f'\n      <ul class="summary-event-list">{joined}</ul>'
+        f'\n      <ul class="summary-event-list">{shown}</ul>{more_html}'
         f'\n    </section>\n'
     )
 
@@ -2948,7 +3036,7 @@ def _build_fact_sections(s: dict, stats: dict, tr) -> tuple[str, str]:
         )
         return f'<ul class="summary-fact-links">{items}</ul>'
 
-    card_items = "\n        ".join(
+    card_items = [
         f'<li>'
         f'<article class="summary-fact-card" data-fact-id="{escape(fact["id"])}" '
         f'data-fact-title="{escape(fact["title"])}" '
@@ -2966,11 +3054,19 @@ def _build_fact_sections(s: dict, stats: dict, tr) -> tuple[str, str]:
         f'</article>'
         f'</li>'
         for fact in facts[1:]
+    ]
+    shown = "\n        ".join(card_items[:FACTS_VISIBLE])
+    rest = card_items[FACTS_VISIBLE:]
+    more_html = (
+        f'\n      <details class="summary-more">'
+        f'<summary>{escape(s["search_hub"]["show_more"].format(count=len(rest)))}</summary>'
+        f'<ul class="fact-card-grid">{"".join(rest)}</ul></details>'
+        if rest else ""
     )
     list_html = (
         f'\n    <section class="summary-section" aria-labelledby="fact-list-heading">'
         f'\n      <h2 id="fact-list-heading">{escape(copy["section"])}</h2>'
-        f'\n      <ul class="fact-card-grid">\n        {card_items}\n      </ul>'
+        f'\n      <ul class="fact-card-grid">\n        {shown}\n      </ul>{more_html}'
         f'\n    </section>\n'
     )
 
@@ -3149,7 +3245,8 @@ def _pokemon_lp_url(map_base: str, slug: str) -> str:
     return escape(f"{map_base}pokemon/{quote(slug)}/")
 
 
-def _build_search_hub_section(s: dict) -> str:
+def _build_hero_links(s: dict) -> str:
+    """ヒーローの中に置く入口ボタン。説明だけのヒーローにせず、ここから次のページへ進めるようにする。"""
     hub = s.get("search_hub")
     if not hub:
         return ""
@@ -3161,31 +3258,37 @@ def _build_search_hub_section(s: dict) -> str:
     # ja以外はこれまで通り同じページ内の #prefecture-count-heading
     # （その言語でローカライズされた集計セクション）に留める —
     # そうしないと非ja話者がいきなり全文日本語のページへ飛ばされる。
-    pref_href = "/prefectures/" if s.get("pref_key") == "ja" else "#prefecture-count-heading"
-    cards = [
-        (hub["card_pref_title"], hub["card_pref_desc"], pref_href),
-        (hub["card_pokemon_title"], hub["card_pokemon_desc"], f"{map_base}pokemon/"),
-        (hub["card_map_title"], hub["card_map_desc"], s["nav_home_href"]),
+    is_ja = s.get("pref_key") == "ja"
+    pref_href = "/prefectures/" if is_ja else "#prefecture-count-heading"
+    links = [
+        (hub["card_map_title"], s["nav_home_href"], "map"),
+        (hub["card_pref_title"], pref_href, "prefectures"),
+        (hub["card_pokemon_title"], f"{map_base}pokemon/", "pokemon"),
     ]
-    cards_html = "\n".join(
-        f'<a class="search-hub-card" href="{escape(href)}">'
-        f'<strong>{escape(title)}</strong>'
-        f'<span>{escape(desc)}</span>'
-        f'</a>'
-        for title, desc, href in cards
+    if is_ja:
+        # 市区町村ランキングとポケふた旅は日本語のページしか無い
+        links += [
+            ("市区町村ランキング", "/municipalities/", "municipalities"),
+            ("1日で回れるポケふた旅", "/trip/", "trip"),
+        ]
+    links.append((hub["card_theme_title"], "#travel-discovery", "themes"))
+    items = "".join(
+        f'<a class="summary-hero-link" href="{escape(href)}" '
+        f'data-summary-event="summary_hero_link_click" data-surface="summary_hero" '
+        f'data-destination-hub="{destination}">'
+        f'{escape(title)}</a>'
+        for title, href, destination in links
     )
-    h2 = escape(hub["h2"])
-    return (
-        f'\n    <section class="summary-section" aria-labelledby="search-hub-heading">'
-        f'\n      <h2 id="search-hub-heading">{h2}</h2>'
-        f'\n      <div class="search-hub-grid">\n{cards_html}\n      </div>'
-        f'\n    </section>\n'
-    )
+    return f'<nav class="summary-hero-links" aria-label="{escape(hub["h2"])}">{items}</nav>'
 
 
-def _build_prefecture_info_section(
-    s: dict, stats: dict, records: list[dict], trivia_data: list[dict], tr
-) -> str:
+def _build_prefecture_info_section(s: dict, stats: dict, records: list[dict], tr) -> str:
+    """他言語版の県ごとのカード（地図へのリンクつき）。
+
+    ja 版は県ごとの中身（トリビアなど）を /prefectures/ と各県のページに任せて、
+    _build_prefecture_jump_section() の入口だけを出す。/prefectures/ に他言語版は無いので、
+    他言語ではこの区切りがヒーローの「都道府県から探す」（#prefecture-count-heading）の行き先になる。
+    """
     records_by_pref: dict[str, list[dict]] = {
         pref: [] for pref in PREFECTURE_ORDER
     }
@@ -3194,12 +3297,6 @@ def _build_prefecture_info_section(
         if pref in records_by_pref:
             records_by_pref[pref].append(record)
 
-    is_ja = s.get("pref_key") == "ja"
-    trivia_by_pref = {
-        entry["prefecture"]: entry
-        for entry in trivia_data
-        if entry.get("prefecture")
-    } if is_ja else {}
     count_unit = s["count_unit"]
     cards = []
     for item in stats["by_pref"]:
@@ -3217,135 +3314,37 @@ def _build_prefecture_info_section(
         )
         top_pokemon = pokemon_counts.most_common(1)
         pokemon_label = top_pokemon[0][0] if top_pokemon else s["no_pokemon_label"]
-        pref_trivia = trivia_by_pref.get(pref) if is_ja else None
+        display_count = item["count"]
 
-        if pref_trivia:
-            top_coverage = select_full_coverage_pokemon(
-                pref_trivia.get("pokemon_coverage", [])
-            )
-            if top_coverage:
-                pokemon_label = top_coverage.get("label", pokemon_label)
-            else:
-                trivia_types = {
-                    entry.get("type")
-                    for entry in pref_trivia.get("trivia", [])
-                }
-                if "municipality_concentration" in trivia_types:
-                    pokemon_label = "自治体分布"
-                elif "single_municipality" in trivia_types:
-                    pokemon_label = "1自治体に集中"
-                elif pref_records:
-                    pokemon_label = "県内データ"
-            display_count = item["count"]
-            selected_trivia = pref_trivia.get("trivia", [])[:3]
-            if not pref_records:
-                selected_trivia = [{
-                    "type": "empty",
-                    "text": s["empty_pref_fact"],
-                    "source_type": "dataset",
-                }]
-            facts = [entry.get("text", "") for entry in selected_trivia if entry.get("text")]
-            fact = facts[0] if facts else s["pref_fact_generic"].format(
-                city_count=city_count, species_count=len(pokemon_counts)
-            )
-        elif not pref_records:
-            display_count = item["count"]
+        if not pref_records:
             fact = s["empty_pref_fact"]
         elif top_pokemon and top_pokemon[0][1] >= max(2, len(pref_records) // 2):
-            display_count = item["count"]
             name, appearances = top_pokemon[0]
             fact = s["pref_fact_dominant"].format(
                 pokemon=name, appearances=appearances
             )
         elif city_count == 1 and len(pref_records) > 1:
-            display_count = item["count"]
             fact = s["pref_fact_single_city"].format(count=len(pref_records))
         else:
-            display_count = item["count"]
-            species_count = len(pokemon_counts)
             fact = s["pref_fact_generic"].format(
-                city_count=city_count, species_count=species_count
+                city_count=city_count, species_count=len(pokemon_counts)
             )
 
-        page_href = _prefecture_href(pref)
-        if pref_trivia:
-            open_tag = '<article class="prefecture-info-card local-trivia-card">'
-            close_tag = "</article>"
-            pokemon_html = (
-                f'<span class="prefecture-info-pokemon">'
-                f'<span class="prefecture-info-label">都道府県トリビア</span>'
-                f'{escape(pokemon_label)}</span>'
-            )
-            facts_html = "".join(
-                f"<li>{escape(entry['text'])}</li>"
-                for entry in selected_trivia
-                if entry.get("text")
-            )
-            fact_html = (
-                f'<ul class="prefecture-info-facts">{facts_html}</ul>'
-                if facts_html
-                else f'<p class="prefecture-info-fact">{escape(fact)}</p>'
-            )
-            official = next(
-                (
-                    entry
-                    for entry in selected_trivia
-                    if entry.get("source_type") == "official"
-                    and _safe_https_url(entry.get("source_url"), "")
-                ),
-                None,
-            )
-            official_html = ""
-            if official:
-                official_html = (
-                    f'<a href="{escape(official["source_url"])}" target="_blank" '
-                    f'rel="noopener noreferrer">'
-                    f'{escape(official.get("source_label", "公式サイト"))}</a>'
-                )
-            actions_html = (
-                f'<div class="prefecture-info-actions">'
-                f'<a href="{escape(page_href)}" data-summary-event="summary_prefecture_click" '
-                f'data-prefecture="{escape(PREFECTURE_SLUGS.get(pref, pref))}">'
-                f'詳しく見る</a>'
-                f'{official_html}'
-                f'<a href="{escape(_map_href(s["map_base_href"], pref))}">'
-                f'{escape(s["map_link_text"])}</a>'
-                f'</div>'
-            )
-        elif is_ja:
-            open_tag = (
-                f'<a class="prefecture-info-card" '
-                f'href="{escape(page_href)}" data-summary-event="summary_prefecture_click" '
-                f'data-prefecture="{escape(PREFECTURE_SLUGS.get(pref, pref))}">'
-            )
-            close_tag = "</a>"
-            pokemon_html = (
-                f'<span class="prefecture-info-pokemon">'
-                f'{escape(pokemon_label)}</span>'
-            )
-            actions_html = ""
-            fact_html = f'<p class="prefecture-info-fact">{escape(fact)}</p>'
-        elif pref_records:
+        if pref_records:
             open_tag = (
                 f'<a class="prefecture-info-card" '
                 f'href="{escape(_map_href(s["map_base_href"], pref))}">'
             )
             close_tag = "</a>"
-            pokemon_html = (
-                f'<span class="prefecture-info-pokemon">'
-                f'{escape(pokemon_label)}</span>'
-            )
-            actions_html = ""
-            fact_html = f'<p class="prefecture-info-fact">{escape(fact)}</p>'
         else:
             open_tag = '<article class="prefecture-info-card">'
             close_tag = "</article>"
-            pokemon_html = (
-                f'<span class="prefecture-info-pokemon">'
-                f'{escape(pokemon_label)}</span>'
-            )
-            actions_html = ""
-            fact_html = f'<p class="prefecture-info-fact">{escape(fact)}</p>'
+        pokemon_html = (
+            f'<span class="prefecture-info-pokemon">'
+            f'{escape(pokemon_label)}</span>'
+        )
+        actions_html = ""
+        fact_html = f'<p class="prefecture-info-fact">{escape(fact)}</p>'
         cards.append(
             open_tag
             +
@@ -3367,7 +3366,69 @@ def _build_prefecture_info_section(
     )
 
 
-def _build_popular_pokemon_section(s: dict, pokemon_stats: dict) -> str:
+def _build_prefecture_jump_section(s: dict, stats: dict) -> str:
+    """ja 版の「都道府県から探す」。地方ごとに「県名 n枚」を並べて各県のページへ送る。
+
+    県ごとの詳しい中身（トリビア・代表ポケモン）は /prefectures/ と各県のページが持つので、
+    ここは入口に徹する。/prefectures/ に他言語版は無いので ja だけ。
+    """
+    if s.get("pref_key") != "ja":
+        return ""
+    counts = {item["pref"]: item["count"] for item in stats["by_pref"]}
+    rows = []
+    for region, prefectures in REGIONS:
+        # 0枚の県にもページ（「まだ無い」と案内するページ）があるので、薄くして残す
+        chips = "".join(
+            f'<a href="{escape(_prefecture_href(pref))}"'
+            + ("" if counts.get(pref) else ' class="is-empty"')
+            + f' data-summary-event="summary_prefecture_click" data-surface="summary_prefecture_jump" '
+            f'data-prefecture="{escape(PREFECTURE_SLUGS.get(pref, pref))}">'
+            f'{escape(pref)}<small>{counts.get(pref, 0)}{escape(s["count_unit"])}</small></a>'
+            for pref in prefectures
+        )
+        if chips:
+            rows.append(f'<div class="prefecture-jump-row"><h3>{escape(region)}</h3>'
+                        f'<div class="prefecture-jump-chips">{chips}</div></div>')
+    if not rows:
+        return ""
+    return (
+        f'\n    <section class="summary-section" aria-labelledby="prefecture-jump-heading">'
+        f'\n      <h2 id="prefecture-jump-heading">{escape(s["search_hub"]["card_pref_title"])}</h2>'
+        f'\n      {"".join(rows)}'
+        f'\n      <a class="summary-more-link" href="/prefectures/" data-summary-event="summary_prefecture_click" '
+        f'data-surface="summary_prefecture_jump">都道府県の一覧を見る →</a>'
+        f'\n    </section>\n'
+    )
+
+
+def load_pokemon_representatives(path: Path) -> dict[str, str]:
+    """dataset/pokemon_representatives.json を {ポケモン名: マンホールID} にする（無ければ空）。"""
+    try:
+        reps = json.loads(path.read_text(encoding="utf-8")).get("representatives")
+    except (OSError, json.JSONDecodeError, AttributeError):
+        reps = None
+    if not isinstance(reps, dict):
+        # 手で直すファイルなので、形が崩れていても Pages のビルドは止めずに代表なしで作る
+        return {}
+    return {str(name): str(mid) for name, mid in reps.items()}
+
+
+def _build_popular_pokemon_section(
+    s: dict,
+    pokemon_stats: dict,
+    records_by_id: dict | None = None,
+    pokemon_metadata: dict | None = None,
+    representatives: dict[str, str] | None = None,
+    photos_data: dict | None = None,
+) -> str:
+    """「ポケモンから探す」。設置の多いポケモンを、代表のマンホールの写真つきカードで並べる。
+
+    写真はポケモンのページと同じ決め方: そのポケモンの蓋で、今公開されている写真
+    （latest-manhole-photos.json）があるものだけを候補にし、人が選んだ代表
+    （pokemon_representatives.json）がその中にあれば代表、無ければ新しい公開写真。
+    _lid / _latest の画像は非公開・削除のあとも残ることがあるので、ファイルがあるだけでは選ばない。
+    候補が無ければ文字だけのカードにする。
+    """
     if not pokemon_stats.get("by_count"):
         return ""
     poke_s = s.get("popular_pokemon")
@@ -3375,20 +3436,43 @@ def _build_popular_pokemon_section(s: dict, pokemon_stats: dict) -> str:
         return ""
     map_base = s["map_base_href"]
     count_unit = s["count_unit"]
+    records_by_id = records_by_id or {}
+    representatives = representatives or {}
     top = pokemon_stats["by_count"][:12]
 
-    cards_html = "\n".join(
-        f'<a class="pokemon-card" href="{_pokemon_lp_url(map_base, p["slug"])}">'
-        f'<strong>{escape(p["ja_name"])}</strong>'
-        f'<span>{p["count"]}{escape(count_unit)}</span>'
-        f'</a>'
-        for p in top
-    )
+    public_photos = (photos_data or {}).get("photos", {})
+
+    def image_url(name: str) -> str:
+        candidates = [
+            mid for mid, record in records_by_id.items()
+            if name in record.get("pokemons", []) and mid in public_photos and tile_image_url(mid, IMAGE_DIR)
+        ]
+        if representatives.get(name) in candidates:
+            return tile_image_url(representatives[name], IMAGE_DIR)
+        candidates.sort(key=lambda mid: (str(public_photos[mid].get("created_at", "")), mid), reverse=True)
+        return tile_image_url(candidates[0], IMAGE_DIR) if candidates else ""
+
+    cards = []
+    for p in top:
+        name = _localized_pokemon_name(p["ja_name"], s, pokemon_metadata or {})
+        url = image_url(p["ja_name"])
+        image_html = (
+            f'<img src="{escape(url)}" alt="" width="120" height="120" loading="lazy" decoding="async">'
+            if url else ""
+        )
+        cards.append(
+            f'<a class="pokemon-card" href="{_pokemon_lp_url(map_base, p["slug"])}">'
+            f'{image_html}<strong>{escape(name)}</strong>'
+            f'<span>{p["count"]}{escape(count_unit)}</span>'
+            f'</a>'
+        )
     h2 = escape(poke_s["h2"])
     return (
         f'\n    <section class="summary-section" aria-labelledby="popular-pokemon-heading">'
         f'\n      <h2 id="popular-pokemon-heading">{h2}</h2>'
-        f'\n      <div class="pokemon-popular-grid">\n{cards_html}\n      </div>'
+        f'\n      <div class="pokemon-popular-grid">\n{"".join(cards)}\n      </div>'
+        f'\n      <a class="summary-more-link" href="{escape(map_base)}pokemon/">'
+        f'{escape(s["search_hub"]["pokemon_more"])} →</a>'
         f'\n    </section>\n'
     )
 
@@ -3564,9 +3648,9 @@ def _build_discovery_hub_sections(
         f'\n      <p class="section-note">{escape(copy["travel_note"])}</p>'
         f'\n      {crossover_html}'
         f'\n      <div class="discovery-hub-grid">{"".join(travel_cards)}</div>'
-        f'\n    </section>'
-        f'\n    <section id="rare-discovery" class="summary-section" aria-labelledby="rare-discovery-heading">'
-        f'\n      <h2 id="rare-discovery-heading">{escape(copy["rare_h2"])}</h2>'
+        # 旅のテーマとレアは1つの区切りにまとめる（別々だとスマホで合わせて約5,000px あった）。
+        # 地図ページのヒーローが #rare-discovery へ飛ぶので、そのアンカーは小見出しに残す
+        f'\n      <h3 id="rare-discovery" class="discovery-subheading">{escape(copy["rare_h2"])}</h3>'
         f'\n      <p class="section-note">{escape(copy["rare_note"])}</p>'
         f'\n      <div class="discovery-hub-grid">{"".join(rare_cards)}</div>'
         f'\n    </section>\n'
@@ -3589,7 +3673,7 @@ def _build_latest_photos_section(
         photos.values(),
         key=lambda p: p.get("created_at", ""),
         reverse=True,
-    )[:6]
+    )[:8]  # PCは4列×2段、スマホは2列×4段
 
     cards = []
     for photo in sorted_photos:
@@ -3711,14 +3795,22 @@ def _build_pokemon_ranking_section(s: dict, pokemon_stats: dict) -> str:
     pref_unit = pk_s.get("pref_count_unit", "")
 
     def rank_items(entries: list[dict], value_key: str, unit: str) -> str:
-        return "\n".join(
+        rows = [
             f'<li>'
             f'<a class="summary-link" href="{_pokemon_lp_url(map_base, p["slug"])}">'
             f'{escape(p["ja_name"])}</a>'
             f'<small>{p[value_key]}{escape(unit)}</small>'
             f'</li>'
             for p in entries[:10]
+        ]
+        shown, rest = rows[:POKEMON_RANKING_VISIBLE], rows[POKEMON_RANKING_VISIBLE:]
+        more = (
+            f'<details class="summary-more"><summary>'
+            f'{escape(s["search_hub"]["show_more"].format(count=len(rest)))}</summary>'
+            f'<ol class="summary-list" start="{POKEMON_RANKING_VISIBLE + 1}">{"".join(rest)}</ol></details>'
+            if rest else ""
         )
+        return f'<ol class="summary-list">{"".join(shown)}</ol>{more}'
 
     count_items = rank_items(pokemon_stats["by_count"], "count", count_unit)
     city_items = rank_items(pokemon_stats["by_city_count"], "city_count", pref_unit)
@@ -3730,16 +3822,14 @@ def _build_pokemon_ranking_section(s: dict, pokemon_stats: dict) -> str:
         f'\n    <section class="summary-section" aria-labelledby="pokemon-ranking-heading">'
         f'\n      <h2 id="pokemon-ranking-heading">{h2}</h2>'
         f'\n      <div class="pokemon-ranking-cols">'
-        f'\n        <div><h3>{h3_count}</h3>'
-        f'<ol class="summary-list">{count_items}</ol></div>'
-        f'\n        <div><h3>{h3_pref}</h3>'
-        f'<ol class="summary-list">{city_items}</ol></div>'
+        f'\n        <div><h3>{h3_count}</h3>{count_items}</div>'
+        f'\n        <div><h3>{h3_pref}</h3>{city_items}</div>'
         f'\n      </div>'
         f'\n    </section>\n'
     )
 
 
-def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, records_by_id: dict, photos_data: dict, pokemon_metadata: dict, pref_trivia_data: list[dict] | None = None, gundam_spots: list[dict] | None = None, prefecture_events: list[dict] | None = None) -> str:
+def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, records_by_id: dict, photos_data: dict, pokemon_metadata: dict, gundam_spots: list[dict] | None = None, prefecture_events: list[dict] | None = None, pokemon_representatives: dict[str, str] | None = None) -> str:
     pref_key = s["pref_key"]
 
     def tr(ja_name: str) -> str:
@@ -3760,11 +3850,18 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
     daily_fact_html, fact_list_html = _build_fact_sections(s, stats, tr)
     regional_html = _build_regional_section(s, stats)
     tracking_script = _build_tracking_script(s)
-    search_hub_html = _build_search_hub_section(s)
-    prefecture_info_html = _build_prefecture_info_section(
-        s, stats, list(records_by_id.values()), pref_trivia_data or [], tr
+    hero_links_html = _build_hero_links(s)
+    # ja は県ごとの詳しい中身を /prefectures/ に任せて、ここは地方ごとの入口だけにする。
+    # 他言語には /prefectures/ が無いので、これまでの県カード（#prefecture-count-heading）を残す
+    if s.get("pref_key") == "ja":
+        prefecture_html = _build_prefecture_jump_section(s, stats)
+    else:
+        prefecture_html = _build_prefecture_info_section(
+            s, stats, list(records_by_id.values()), tr
+        )
+    popular_pokemon_html = _build_popular_pokemon_section(
+        s, pokemon_stats, records_by_id, pokemon_metadata, pokemon_representatives, photos_data
     )
-    popular_pokemon_html = _build_popular_pokemon_section(s, pokemon_stats)
     latest_photos_html = _build_latest_photos_section(s, records_by_id, photos_data)
     discovery_hubs_html = _build_discovery_hub_sections(
         s, records_by_id, pokemon_metadata, gundam_spots
@@ -3867,14 +3964,16 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
       <figure class="summary-hero-photo photo-main">
         <img src="/manhole/image/141_latest.jpeg" alt="" width="720" height="720">
       </figure>
+      {hero_links_html}
     </header>
     {events_html}
-    {daily_fact_html}
-    {search_hub_html}
     {latest_photos_html}
-    {discovery_hubs_html}
-    {fact_list_html}
+    {daily_fact_html}
+    {prefecture_html}
     {popular_pokemon_html}
+    {discovery_hubs_html}
+    {no_photos_html}
+    <!-- ここから下は数字と読み物（検索から来た人向けの本文）。探す入口は上にまとめた -->
     <section class="summary-stats" aria-label="{escape(s['stats_aria'])}">
       <div class="summary-stat">
         <span>{escape(s['stat_total'])}</span>
@@ -3891,7 +3990,6 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
     </section>
     {ai_html}
     {discovery_html}
-    {prefecture_info_html}
     <section class="summary-section" aria-labelledby="ranking-heading">
       <h2 id="ranking-heading">{escape(s['h2_ranking'])}</h2>
       <ol class="summary-list">
@@ -3901,7 +3999,6 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
     </section>
     {pokemon_ranking_html}
     {regional_html}
-    {no_photos_html}
     <section class="summary-section" aria-labelledby="empty-prefecture-heading">
       <h2 id="empty-prefecture-heading">{escape(s['h2_empty'])}</h2>
       <p class="empty-note">{escape(s['empty_note'])}</p>
@@ -3909,12 +4006,7 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
         {empty_items}
       </ul>
     </section>
-
-    <section class="summary-section" aria-labelledby="map-link-heading">
-      <h2 id="map-link-heading">{escape(s['h2_map'])}</h2>
-      <p>{escape(s['map_desc'])}</p>
-      <a class="summary-cta" href="{escape(s['nav_home_href'])}">{escape(s['cta_text'])}</a>
-    </section>
+    {fact_list_html}
   </main>
 {tracking_script}
 </body>
@@ -3951,13 +4043,6 @@ def main() -> None:
     records_by_id = {str(r.get("id", "")): r for r in records}
     print(f"[INFO] {len(pokemon_stats['by_count'])} pokemon with slugs, {len(photos_data.get('photos', {}))} photos")
 
-    pref_trivia_path = ROOT / "dataset" / "prefecture_trivia.json"
-    try:
-        pref_trivia_data: list[dict] = json.loads(pref_trivia_path.read_text(encoding="utf-8")) if pref_trivia_path.exists() else []
-    except (json.JSONDecodeError, OSError):
-        pref_trivia_data = []
-    print(f"[INFO] {len(pref_trivia_data)} prefecture trivia entries")
-
     try:
         gundam_spots = json.loads(
             GUNDAM_SPOTS_JSON.read_text(encoding="utf-8")
@@ -3967,12 +4052,16 @@ def main() -> None:
     print(f"[INFO] {len(gundam_spots)} Gundam crossover spots")
 
     prefecture_events = _load_prefecture_events(PREFECTURE_EVENTS_JSON)
+    pokemon_representatives = load_pokemon_representatives(POKEMON_REPRESENTATIVES_JSON)
     print(f"[INFO] {len(prefecture_events)} active prefecture events")
 
     for lang, s in SUMMARY_STRINGS.items():
         html = render_page(
             s, stats, pref_names, pokemon_stats, records_by_id, photos_data,
-            pokemon_metadata, pref_trivia_data, gundam_spots, prefecture_events
+            pokemon_metadata,
+            gundam_spots=gundam_spots,
+            prefecture_events=prefecture_events,
+            pokemon_representatives=pokemon_representatives,
         )
         out = DIST / s["out_path"]
         out.parent.mkdir(parents=True, exist_ok=True)

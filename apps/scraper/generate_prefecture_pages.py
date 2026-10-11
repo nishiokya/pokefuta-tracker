@@ -70,6 +70,7 @@ try:
         PREFECTURES,
         PREFECTURE_ORDER,
         PREFECTURE_SLUGS,
+        REGIONS,
         select_full_coverage_pokemon,
     )
 except ModuleNotFoundError as exc:
@@ -79,6 +80,7 @@ except ModuleNotFoundError as exc:
         PREFECTURES,
         PREFECTURE_ORDER,
         PREFECTURE_SLUGS,
+        REGIONS,
         select_full_coverage_pokemon,
     )
 
@@ -98,15 +100,6 @@ BASE_URL = "https://data.pokefuta.com"
 OG_IMAGE = f"{BASE_URL}/assets/ogp/pokefuta_summary_ogp.png"
 RELIABLE_FIRST_SEEN_START = datetime.fromisoformat("2025-11-01T00:00:00+00:00")
 
-REGIONS: list[tuple[str, list[str]]] = [
-    ("北海道・東北", PREFECTURE_ORDER[0:7]),
-    ("関東", PREFECTURE_ORDER[7:14]),
-    ("中部", PREFECTURE_ORDER[14:23]),
-    ("近畿", PREFECTURE_ORDER[23:30]),
-    ("中国", PREFECTURE_ORDER[30:35]),
-    ("四国", PREFECTURE_ORDER[35:39]),
-    ("九州・沖縄", PREFECTURE_ORDER[39:47]),
-]
 
 FORM_PREFIX = {
     "alola": "アローラ",

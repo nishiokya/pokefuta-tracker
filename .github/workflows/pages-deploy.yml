@@ -15,7 +15,7 @@ on:
       - 'apps/scraper/generate_manhole_ogp.py' # OGP image generator
       - 'apps/scraper/generate_pokemon_pages.py' # Pokemon LP generator
       - 'apps/scraper/generate_pokemon_index_page.py' # Pokemon index page generator
-      - 'dataset/pokemon_representatives.json' # hand-picked representative manhole per Pokemon (index cards)
+      - 'dataset/pokemon_representatives.json' # hand-picked representative manhole per Pokemon (index cards + summary)
       - 'apps/scraper/generate_character_manhole_page.py' # character manhole LP generator
       - 'apps/scraper/generate_character_work_pages.py' # per-work character manhole guides
       - 'apps/scraper/character_manhole_works.py' # shared work page definitions
@@ -40,9 +40,9 @@ on:
       - 'apps/scraper/inject_adsense.py' # AdSense verification, explicit ad slots, ads.txt
       - 'apps/scraper/generate_prefecture_trivia.py' # prefecture trivia generator
       - 'apps/scraper/generate_top_feed.py' # top page community feed generator
-      - 'apps/scraper/prefectures.py' # shared prefecture names and URL slugs
+      - 'apps/scraper/prefectures.py' # shared prefecture names, URL slugs and regions
       - 'apps/scraper/display_names.py' # canonical manhole names used by every page generator
-      - 'apps/scraper/manhole_tile_image.py' # _lid / _latest choice for small tiles (prefecture + tag pages)
+      - 'apps/scraper/manhole_tile_image.py' # _lid / _latest choice for small tiles (prefecture + tag + summary pages)
       - 'apps/scraper/prefecture_completion.py' # shared photo-completion rollup (prefectures + summary)
       - 'docs/**'     # dataset changes copied into dist/
       - 'dataset/prefecture_trivia*.json' # generated trivia and editorial sources
