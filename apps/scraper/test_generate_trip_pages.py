@@ -110,6 +110,7 @@ class AreaTest(unittest.TestCase):
                 re.findall(r'src="/manhole/image/(\d+)_lid\.jpeg"', html), ["206", "210", "209", "207"]
             )
             self.assertIn('loading="lazy"', html)
+            self.assertNotRegex(html, r'alt="[^"]+"')
             self.assertIn("+1", html)  # 画像の無い 208 は「+1」に入る
             self.assertEqual(MODULE.card_thumbs_html(records, None, Path(tmp) / "none"), "")
             many = [_record(str(100 + i), "吹田", 34.76 + i * 0.001, 135.52) for i in range(8)]

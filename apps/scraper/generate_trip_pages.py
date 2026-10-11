@@ -85,16 +85,15 @@ def _head(title: str, description: str, canonical: str, json_ld: dict, with_map:
 def card_thumbs_html(records: list[dict], entry: dict | None, image_dir: Path = IMAGE_DIR) -> str:
     """カードに並べる蓋の丸い小さい画像（回る順）。画像の無い蓋は飛ばし、多いときは「+n」。"""
     route, _ = area_route(records, entry)
-    urls = [(pref.tile_image_url(str(r["id"]), image_dir), pref._manhole_name(r)) for r in route]
-    urls = [(u, name) for u, name in urls if u]
+    # カードは丸ごと1つのリンクなので、画像は飾り（alt=""）にしてリンク名を短く保つ（県ページのタイルと同じ）
+    urls = [u for u in (pref.tile_image_url(str(r["id"]), image_dir) for r in route) if u]
     if not urls:
         return ""
     shown = urls[:CARD_THUMB_LIMIT]
     rest = len(records) - len(shown)
     imgs = "".join(
-        f'<img src="{_escape_attr(u)}" alt="{_escape_attr(name)}のポケふた" width="32" height="32" '
-        'loading="lazy" decoding="async">'
-        for u, name in shown
+        f'<img src="{_escape_attr(u)}" alt="" width="32" height="32" loading="lazy" decoding="async">'
+        for u in shown
     )
     more = f'<span class="trip-thumb-more">+{rest}</span>' if rest > 0 else ""
     return f'<span class="trip-thumbs">{imgs}{more}</span>'
