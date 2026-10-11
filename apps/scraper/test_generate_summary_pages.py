@@ -236,29 +236,43 @@ class DiscoveryHubTests(unittest.TestCase):
         self.assertIn('href="/prefectures/', html)
         self.assertIn(">詳しく見る</a>", html)
 
-    def test_japanese_hero_prefecture_link_goes_to_the_prefectures_index(self):
-        """ja版のヒーローの「都道府県から探す」の目的地は詳細ページの入口
-        （/prefectures/）であるべきで、同じページ内の集計グリッドへの
-        アンカーに戻してはいけない。市区町村ランキングとポケふた旅も ja だけ出す。"""
-        html = summary._build_hero_links(summary.SUMMARY_STRINGS["ja"])
-        self.assertIn('href="/prefectures/"', html)
-        self.assertIn('href="/municipalities/"', html)
-        self.assertIn('href="/trip/"', html)
-        self.assertIn('href="#travel-discovery"', html)
-        self.assertNotIn('href="#prefecture-count-heading"', html)
-        self.assertIn('data-surface="summary_hero"', html)
-
-    def test_non_japanese_hero_prefecture_link_stays_on_the_localized_anchor(self):
-        """/prefectures/・/municipalities/・/trip/ はja専用ページなので、他言語では飛ばさず、
-        その言語でローカライズされた同一ページ内の集計セクションのままにする。"""
+    def test_hero_features_todays_trivia_with_one_map_button(self):
+        """ヒーローはリンク集にせず、今日の雑学を主役にして押す所は地図の1つにする。
+        Xで共有は押されていなかったので、ヒーローにも雑学の一覧にも置かない。"""
+        records = summary.load_records(summary.NDJSON)
+        stats = summary.build_stats(records)
+        records_by_id = {str(r["id"]): r for r in records}
         for language, strings in summary.SUMMARY_STRINGS.items():
-            if language == "ja":
-                continue
             with self.subTest(language=language):
-                html = summary._build_hero_links(strings)
-                self.assertIn('href="#prefecture-count-heading"', html)
-                for ja_only in ('href="/prefectures/"', 'href="/municipalities/"', 'href="/trip/"'):
-                    self.assertNotIn(ja_only, html)
+                html = summary.render_page(strings, stats, {}, {}, records_by_id, {}, {})
+                hero = html[html.index('<header class="summary-hero">'):html.index("</header>")]
+                self.assertIn('class="summary-hero-fact"', hero)
+                self.assertEqual(hero.count('data-summary-event="summary_map_click"'), 1)
+                self.assertNotIn("summary-hero-link", hero)
+                self.assertNotIn("twitter.com/intent", html)
+                self.assertNotIn("summary_share_x_click", html)
+
+    def test_pages_missing_from_the_header_are_linked_in_japanese_only(self):
+        """市区町村ランキングとポケふた旅はヘッダーに無い ja 専用ページなので、ランキングの下から文字リンクで送る。
+        ポケふたがない県も ja では県のページ（0枚でもある）へリンクする。"""
+        records = summary.load_records(summary.NDJSON)
+        stats = summary.build_stats(records)
+        records_by_id = {str(r["id"]): r for r in records}
+        for language, strings in summary.SUMMARY_STRINGS.items():
+            with self.subTest(language=language):
+                html = summary.render_page(strings, stats, {}, {}, records_by_id, {}, {})
+                empty = html[html.index('id="empty-prefecture-heading"'):]
+                empty = empty[:empty.index("</section>")]
+                if language == "ja":
+                    self.assertIn('href="/municipalities/"', html)
+                    self.assertIn('href="/trip/"', html)
+                    for item in stats["empty"]:
+                        slug = summary.PREFECTURE_SLUGS[item["pref"]]
+                        self.assertIn(f'href="/prefectures/{slug}/"', empty)
+                else:
+                    self.assertNotIn('href="/municipalities/"', html)
+                    self.assertNotIn('href="/trip/"', html)
+                    self.assertNotIn('href="/prefectures/', empty)
 
     def test_rendered_page_keeps_anchors_used_by_hero_links_and_map(self):
         """ヒーローのリンクと地図ページ（map.html）が飛ぶ先のアンカーが、どの言語のページにもある。
@@ -294,8 +308,7 @@ class DiscoveryHubTests(unittest.TestCase):
 
 class PageOrderTests(unittest.TestCase):
     def test_trivia_comes_first(self):
-        """雑学を優先する: 今日の雑学と雑学の一覧をヒーローの直後に置き、一覧は折りたたまない。
-        今日の雑学の「地図で見る」は summary_map_click の出どころ（旧ページで3番目に押されていた）。"""
+        """雑学を優先する: 今日の雑学はヒーローの中、雑学の一覧はヒーローの直後に置き、一覧は折りたたまない。"""
         records = summary.load_records(summary.NDJSON)
         stats = summary.build_stats(records)
         records_by_id = {str(r["id"]): r for r in records}
@@ -307,7 +320,7 @@ class PageOrderTests(unittest.TestCase):
                     strings, stats, {}, {}, records_by_id, {}, {}, prefecture_events=events
                 )
                 order = [html.index(marker) for marker in (
-                    "</header>", 'class="daily-fact-card"', 'id="fact-list-heading"',
+                    'class="summary-hero-fact"', "</header>", 'id="fact-list-heading"',
                     'id="events-heading"', 'id="travel-discovery"', 'id="ranking-heading"',
                 )]
                 self.assertEqual(order, sorted(order))
