@@ -1,0 +1,230 @@
+{
+  "measured_on": "2026-10-11",
+  "min_public_people": 3,
+  "entries": [
+    {
+      "label": "大阪府東大阪",
+      "manhole_ids": [
+        "206",
+        "207",
+        "208",
+        "209",
+        "210"
+      ],
+      "p25_minutes": 84,
+      "p75_minutes": 150,
+      "common_order": [
+        "206",
+        "210",
+        "209",
+        "207",
+        "208"
+      ]
+    },
+    {
+      "label": "東京都台東区上野",
+      "manhole_ids": [
+        "172",
+        "173"
+      ],
+      "p25_minutes": 3,
+      "p75_minutes": 5,
+      "common_order": [
+        "172",
+        "173"
+      ]
+    },
+    {
+      "label": "兵庫県淡路",
+      "manhole_ids": [
+        "203",
+        "204",
+        "205"
+      ],
+      "p25_minutes": 85,
+      "p75_minutes": 182,
+      "common_order": [
+        "203",
+        "204",
+        "205"
+      ]
+    },
+    {
+      "label": "埼玉県所沢",
+      "manhole_ids": [
+        "211",
+        "212",
+        "213"
+      ],
+      "p25_minutes": 57,
+      "p75_minutes": 87,
+      "common_order": [
+        "211",
+        "213",
+        "212"
+      ]
+    },
+    {
+      "label": "青森県",
+      "manhole_ids": [
+        "157",
+        "158"
+      ],
+      "p25_minutes": 30,
+      "p75_minutes": 57,
+      "common_order": [
+        "157",
+        "158"
+      ]
+    },
+    {
+      "label": "奈良県斑鳩",
+      "manhole_ids": [
+        "148",
+        "149",
+        "150",
+        "151",
+        "152"
+      ],
+      "p25_minutes": 29,
+      "p75_minutes": 55
+    },
+    {
+      "label": "東京都町田",
+      "manhole_ids": [
+        "98",
+        "99",
+        "100",
+        "101",
+        "102",
+        "103"
+      ],
+      "p25_minutes": 20,
+      "p75_minutes": 29,
+      "common_order": [
+        "100",
+        "102",
+        "101",
+        "103",
+        "99",
+        "98"
+      ]
+    },
+    {
+      "label": "神奈川県横浜",
+      "manhole_ids": [
+        "23",
+        "311",
+        "312",
+        "313",
+        "314"
+      ],
+      "p25_minutes": 96,
+      "p75_minutes": 123,
+      "common_order": [
+        "23",
+        "314",
+        "313",
+        "311",
+        "312"
+      ]
+    },
+    {
+      "label": "岩手県北上",
+      "manhole_ids": [
+        "323",
+        "397"
+      ],
+      "p25_minutes": 14,
+      "p75_minutes": 36,
+      "common_order": [
+        "323",
+        "397"
+      ]
+    },
+    {
+      "label": "三重県鳥羽市",
+      "manhole_ids": [
+        "243",
+        "414"
+      ],
+      "p25_minutes": 25,
+      "p75_minutes": 31,
+      "common_order": [
+        "243",
+        "414"
+      ]
+    },
+    {
+      "label": "滋賀県大津",
+      "manhole_ids": [
+        "104",
+        "105"
+      ],
+      "p25_minutes": 27,
+      "p75_minutes": 32,
+      "common_order": [
+        "104",
+        "105"
+      ]
+    },
+    {
+      "label": "佐賀県佐賀",
+      "manhole_ids": [
+        "255",
+        "256",
+        "257"
+      ],
+      "p25_minutes": 24,
+      "p75_minutes": 27
+    },
+    {
+      "label": "富山県富山",
+      "manhole_ids": [
+        "275",
+        "276",
+        "277"
+      ],
+      "p25_minutes": 76,
+      "p75_minutes": 95
+    },
+    {
+      "label": "岩手県久慈",
+      "manhole_ids": [
+        "11",
+        "299"
+      ],
+      "p25_minutes": 35,
+      "p75_minutes": 44,
+      "common_order": [
+        "11",
+        "299"
+      ]
+    },
+    {
+      "label": "福岡県太宰府",
+      "manhole_ids": [
+        "315",
+        "316",
+        "317"
+      ],
+      "p25_minutes": 88,
+      "p75_minutes": 163
+    },
+    {
+      "label": "滋賀県甲賀",
+      "manhole_ids": [
+        "237",
+        "238",
+        "239"
+      ],
+      "p25_minutes": 72,
+      "p75_minutes": 134,
+      "common_order": [
+        "238",
+        "237",
+        "239"
+      ]
+    }
+  ]
+}

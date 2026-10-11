@@ -23,6 +23,8 @@ on:
       - 'apps/scraper/generate_summary_ogp.py' # summary page OGP generator
       - 'apps/scraper/generate_prefecture_pages.py' # prefecture page generator
       - 'apps/scraper/generate_municipality_pages.py' # municipality page generator + ranking
+      - 'apps/scraper/visit_durations.py' # measured visit-time text (prefecture + municipality pages)
+      - 'dataset/visit_durations.json' # measured visit times, built by apps/tools/build_visit_durations.py
       - 'apps/scraper/municipalities.py' # which municipalities get a page (shared with prefecture/detail/sitemap)
       - 'dataset/municipality_slugs.json' # romanized municipality URL slugs
       - 'dataset/prefecture_municipality_totals.json' # municipality count per prefecture (coverage denominator)
@@ -113,6 +115,8 @@ jobs:
             apps.scraper.test_generate_prefecture_pages \
             apps.scraper.test_manhole_tile_image \
             apps.scraper.test_generate_municipality_pages \
+            apps.scraper.test_visit_durations \
+            apps.scraper.test_build_visit_durations \
             apps.scraper.test_prefectures \
             apps.scraper.test_web_prefecture_links \
             apps.scraper.test_inject_site_header \

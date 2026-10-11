@@ -14,6 +14,13 @@ from urllib.parse import quote, urlparse
 from xml.sax.saxutils import escape
 
 try:
+    from apps.scraper.visit_durations import DEFAULT_DURATIONS, duration_html, load_durations
+except ModuleNotFoundError as exc:
+    if exc.name != "apps":
+        raise
+    from visit_durations import DEFAULT_DURATIONS, duration_html, load_durations
+
+try:
     from apps.scraper.manhole_tile_image import tile_image_url
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
@@ -1754,6 +1761,18 @@ def _visit_guide_html(records: list[dict], guide: dict | None) -> str:
     )
 
 
+def _visit_duration_html(prefecture: str, records: list[dict], durations: dict | None) -> str:
+    # 県の全部が1自治体にあり、全部を1日で回った人が十分いる県だけ（東大阪・所沢など）
+    body = duration_html(records, durations or {})
+    if not body:
+        return ""
+    return (
+        '<section class="visit-guide" aria-labelledby="visit-duration-heading">'
+        f'<h2 id="visit-duration-heading">{escape(prefecture)}のポケふたを1日で回るには</h2>'
+        f'{body}</section>'
+    )
+
+
 # 都道府県ページと市区町村ページ（generate_municipality_pages.py）で共有する見た目。
 # build_page の f-string から外に出したので、波括弧は1つで書く。
 PAGE_CSS = """    :root { color-scheme: light; }
@@ -1797,6 +1816,8 @@ PAGE_CSS = """    :root { color-scheme: light; }
     .municipality-guide li span { color: #62564a; font-size: .82rem; font-weight: 800; }
     .municipality-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 14px; }
     .visit-guide > p { color: #62564a; }
+    .visit-guide > p.visit-duration { color: #2f2925; font-weight: 600; }
+    .visit-guide > p.visit-duration-note { margin: 6px 0 0; color: #75685c; font-size: .78rem; }
     .visit-guide-stops {
       display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
       gap: 10px; list-style: none; padding: 0; margin: 14px 0;
@@ -2229,6 +2250,7 @@ def build_page(
     municipality_paths: dict[str, str] | None = None,
     coverage: PrefectureCoverage | None = None,
     complete: list[str] | None = None,
+    durations: dict | None = None,
 ) -> str:
     photos = photos or {}
     count = len(records)
@@ -2277,8 +2299,11 @@ def build_page(
     events_html = _events_html(events)
     related_html = _related_prefectures(prefecture, empty_prefectures)
     municipality_guide_html = (
-        _visit_guide_html(records, visit_guide)
-        or _municipality_guide(prefecture, records, municipality_paths)
+        _visit_duration_html(prefecture, records, durations)
+        + (
+            _visit_guide_html(records, visit_guide)
+            or _municipality_guide(prefecture, records, municipality_paths)
+        )
     )
     coverage_html = _coverage_html(prefecture, count, coverage, complete or [], municipality_paths)
     # 1市町村だけの県で「市町村別の設置枚数」が既に出ているなら、同じことを2回言わない
@@ -2576,6 +2601,7 @@ def generate_all(
     events: dict[str, list[dict]] | None = None,
     photos: dict[str, dict] | None = None,
     visit_guides: dict[str, dict] | None = None,
+    durations: dict | None = None,
 ) -> int:
     photos = photos or {}
     records_by_pref = {pref: [] for pref in PREFECTURE_ORDER}
@@ -2610,6 +2636,7 @@ def generate_all(
             paths_by_pref.get(prefecture),
             coverage[prefecture],
             complete,
+            durations,
         )
         (out_dir / "index.html").write_text(html, encoding="utf-8")
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -2627,6 +2654,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--trivia", type=Path, default=DEFAULT_TRIVIA)
     parser.add_argument("--events", type=Path, default=DEFAULT_EVENTS)
     parser.add_argument("--guides", type=Path, default=DEFAULT_GUIDES)
+    parser.add_argument("--durations", type=Path, default=DEFAULT_DURATIONS)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     return parser.parse_args()
 
@@ -2649,7 +2677,10 @@ def main() -> int:
     trivia = load_trivia(args.trivia)
     events = load_events(args.events)
     visit_guides = load_visit_guides(args.guides)
-    count = generate_all(records, pokemon_slugs, trivia, args.output, events, photos, visit_guides)
+    count = generate_all(
+        records, pokemon_slugs, trivia, args.output, events, photos, visit_guides,
+        load_durations(args.durations),
+    )
     print(
         f"[generate_prefecture_pages] wrote {count} pages to "
         f"{args.output.relative_to(ROOT) if args.output.is_relative_to(ROOT) else args.output}"
