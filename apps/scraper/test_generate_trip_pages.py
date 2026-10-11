@@ -78,7 +78,7 @@ class AreaTest(unittest.TestCase):
         self.assertEqual(time, "約20分〜30分")
         index = MODULE.build_index_page([], durations, MODULE.compact_places(RECORDS, {}, set(), durations))
         self.assertNotIn("まだ実績はありません", index)
-        self.assertIn("実際に回った人の目安約20分〜30分", index)
+        self.assertIn("かかる時間の目安は約20分〜30分", index)
 
     def test_description_promises_maps_only_when_the_link_exists(self) -> None:
         """離れた区間（15km超）があると順路リンクを出さないので、説明文でも約束しない。"""
@@ -91,6 +91,12 @@ class AreaTest(unittest.TestCase):
         near_page = MODULE.build_area_page(AREAS[0], RECORDS[:5], DURATIONS, {}, [], {})
         self.assertIn("Googleマップで順路を開けます", near_page)
 
+
+    def test_trip_summaries_put_measured_areas_first(self) -> None:
+        summaries = MODULE.trip_summaries(RECORDS, list(reversed(AREAS)), DURATIONS)
+        self.assertEqual([s[1] for s in summaries], ["/trip/higashiosaka/", "/trip/ikaruga/"])
+        self.assertEqual(summaries[0][3], "約1時間20分〜2時間半")
+        self.assertEqual(summaries[1][3], "")
 
 class GenerateTest(unittest.TestCase):
     def test_pages_index_and_links(self) -> None:
@@ -105,10 +111,10 @@ class GenerateTest(unittest.TestCase):
             self.assertIn('href="/trip/ikaruga/"', area)  # あわせて回るなら
             self.assertIn('"@type": "TouristTrip"', area)
             ikaruga = (out / "ikaruga" / "index.html").read_text(encoding="utf-8")
-            self.assertIn("所要時間は出していません", ikaruga)
+            self.assertIn("かかる時間の目安はまだ出せません", ikaruga)
             index = (out / "index.html").read_text(encoding="utf-8")
-            self.assertIn("実際に回った人の目安があるエリア", index)
-            self.assertIn("目安を集計中のエリア", index)
+            self.assertIn("かかる時間の目安があるエリア", index)
+            self.assertIn("時間の目安がまだのエリア", index)
             self.assertIn("吹田市", index)
             self.assertIn("PokefutaAnalytics.bindClickTracking(", area)
             self.assertNotRegex(area + index, r"\d+人")

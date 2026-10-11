@@ -28,6 +28,7 @@ try:
         duration_range,
         duration_text,
         MODE_LABELS,
+        mode_hint,
         farthest_gap_km,
         spread_km,
         travel_mode,
@@ -50,6 +51,7 @@ except ModuleNotFoundError as exc:
         duration_range,
         duration_text,
         MODE_LABELS,
+        mode_hint,
         farthest_gap_km,
         spread_km,
         travel_mode,
@@ -112,6 +114,25 @@ def has_route_link(route: list[dict]) -> bool:
     ) <= muni_page.ROUTE_LINK_MAX_LEG_KM
 
 
+def trip_summaries(records: list[dict], areas: list[dict], durations: dict) -> list[tuple[str, str, int, str]]:
+    """ほかのページから /trip/ を紹介するときの一覧。(名前, パス, 枚数, かかる時間の目安)。
+
+    目安のあるエリアを先に、visit_durations.json の並び（回った人が多い順）で。
+    """
+    by_id = {str(r.get("id", "")): r for r in records}
+    rank = {",".join(e["manhole_ids"]): i for i, e in enumerate(durations.get("entries", []))}
+    out = []
+    for area in areas:
+        rs = area_records(area, by_id)
+        if rs is None:
+            continue
+        entry = find_entry(rs, durations)
+        time = duration_range(entry["p25_minutes"], entry["p75_minutes"]) if entry else ""
+        order = rank.get(",".join(entry["manhole_ids"]), len(rank)) if entry else len(rank) + 1
+        out.append((order, (area["name"], trip_path(area), len(rs), time)))
+    return [item for _, item in sorted(out, key=lambda t: t[0])]
+
+
 def area_route(records: list[dict], entry: dict | None) -> tuple[list[dict], bool]:
     """(順番, よく回られる順かどうか)。集計に順番が無ければ直線距離の合計が最短の順。"""
     order = (entry or {}).get("common_order")
@@ -148,7 +169,7 @@ def _route_html(area: dict, route: list[dict], common: bool, entry: dict | None)
         for i, r in enumerate(route)
     )
     lead = (
-        "実際に全部回った人によく使われている道筋です（逆回りも含む）。"
+        "全部回った人によく選ばれている順番です（逆回りも同じ順番として数えています）。"
         if common and entry else "直線距離の合計がいちばん短くなる順に並べました。"
     )
     lead += f"直線で合計約{sum(legs):.1f}kmです。"
@@ -185,10 +206,9 @@ def _time_html(records: list[dict], durations: dict) -> str:
         body = f'<p class="visit-duration">{escape(text)}</p>' + duration_note(durations)
     else:
         body = (
-            '<p>1日で全部回った人の記録がまだ少ないので、所要時間は出していません。'
-            f'端から端まで直線約{spread_km(records):.0f}km、'
-            f'移動の目安は{MODE_LABELS[travel_mode(records)]}です。'
-            '写真を投稿してもらえると、ここに目安が出るようになります。</p>'
+            '<p>1日で全部回った人の記録がまだ少ないため、かかる時間の目安はまだ出せません。'
+            f'{escape(mode_hint(records))}'
+            'ポケふた写真館への投稿が増えると、ここに目安が出るようになります。</p>'
         )
     return (
         '<section class="visit-guide" aria-labelledby="time-heading">'
@@ -239,11 +259,11 @@ def build_area_page(
     canonical = f"{BASE_URL}{path}"
     title = f"{_title(area, count)}ルートと所要時間｜ポケふた旅"
     time_phrase = (
-        f"実際に回った人の多くは{duration_range(entry['p25_minutes'], entry['p75_minutes'])}。"
+        f"かかる時間の目安は{duration_range(entry['p25_minutes'], entry['p75_minutes'])}。"
         if entry else ""
     )
     description = (
-        f"{area['prefecture']}・{area['name']}のポケふた{count}枚を1日で回る順番と目安。"
+        f"{area['prefecture']}・{area['name']}のポケふた{count}枚を回る順番。"
         f"{time_phrase}{'Googleマップで順路を開けます。' if has_route_link(route) else '泊まりで回る計画に。'}"
     )
     map_points = [
@@ -369,7 +389,7 @@ def compact_places(
 ) -> list[tuple[str, str, int, float, str]]:
     """登録していない市区町村のうち、地点が近くにまとまっているところ。
 
-    (名前, リンク先, 枚数, 合計km, 所要時間の目安)。目安は集計にあるときだけ（無ければ空）。
+    (名前, リンク先, 枚数, 合計km, かかる時間の目安)。目安は集計にあるときだけ（無ければ空）。
     """
     out = []
     for m in build_municipalities(records, slugs):
@@ -392,9 +412,9 @@ def compact_places(
 def build_index_page(
     areas: list[tuple[dict, list[dict]]], durations: dict, compact: list[tuple[str, str, int, float]]
 ) -> str:
-    title = "ポケふた旅｜1日で回れるポケふたと所要時間の目安"
+    title = "ポケふた旅｜1日で回れるポケふたと、かかる時間の目安"
     description = (
-        "ポケふた（ポケモンマンホール）を1日で回れるエリアを、実際に回った人の所要時間と"
+        "ポケふた（ポケモンマンホール）を1日で回れるエリアを、かかる時間の目安と"
         "回る順番つきでまとめています。旅行やおでかけの計画に。"
     )
     canonical = f"{BASE_URL}{TRIP_BASE}"
@@ -404,7 +424,7 @@ def build_index_page(
         mode = MODE_LABELS[travel_mode(records)]
         time = (
             f'<strong>{escape(duration_range(entry["p25_minutes"], entry["p75_minutes"]))}</strong>'
-            if entry else '<strong>目安を集計中</strong>'
+            if entry else '<strong>時間の目安はまだ</strong>'
         )
         return (
             f'<a class="trip-card" href="{_escape_attr(trip_path(area))}" data-track="trip_card_click" '
@@ -420,19 +440,19 @@ def build_index_page(
     rank = {",".join(e["manhole_ids"]): i for i, e in enumerate(durations.get("entries", []))}
     measured.sort(key=lambda t: rank.get(",".join(find_entry(t[1], durations)["manhole_ids"]), len(rank)))
     pending_html = (
-        '<section aria-labelledby="pending-heading"><h2 id="pending-heading">目安を集計中のエリア</h2>'
-        '<p>回る順番は見られます。1日で全部回った人が増えると、所要時間の目安が出ます。</p>'
+        '<section aria-labelledby="pending-heading"><h2 id="pending-heading">時間の目安がまだのエリア</h2>'
+        '<p>回る順番と地図は見られます。ポケふた写真館への投稿が増えると、かかる時間の目安が出ます。</p>'
         f'<div class="trip-grid">{"".join(card(a, rs) for a, rs in pending)}</div></section>'
         if pending else ""
     )
     compact_html = (
         '<section aria-labelledby="compact-heading"><h2 id="compact-heading">近くにまとまっている場所</h2>'
-        '<p>ポケふた旅のページはまだありませんが、どの地点もほかの地点から直線'
-        f'{COMPACT_GAP_KM:.0f}km以内にあり、1日で回りやすそうな市区町村です。</p><ul class="compact-list">'
+        '<p>ポケふたが近くに集まっていて、1日で回りやすそうな市区町村です'
+        f'（どのポケふたも、いちばん近いポケふたから直線{COMPACT_GAP_KM:.0f}km以内）。</p><ul class="compact-list">'
         + "".join(
             f'<li><a href="{_escape_attr(link)}" data-track="trip_compact_click" data-surface="compact" '
             f'data-destination="place">{escape(name)}</a><span>{n}枚・直線で合計約{km:.1f}km'
-            f'{f"・実際に回った人の目安{escape(time)}" if time else ""}</span></li>'
+            f'{f"・かかる時間の目安は{escape(time)}" if time else ""}</span></li>'
             for name, link, n, km, time in compact
         )
         + "</ul></section>"
@@ -463,12 +483,12 @@ def build_index_page(
       <div class="hero-main">
         <p class="hero-kicker">ポケふた旅</p>
         <h1>1日で回れるポケふた</h1>
-        <p>実際に回った人の撮影時刻から、エリアごとの所要時間の目安と回る順番をまとめました。旅行やおでかけの計画に使ってください。</p>
+        <p>ポケふた写真館に投稿された写真の撮影時刻から、エリアごとにかかる時間の目安と回る順番をまとめました。旅行やおでかけの計画にどうぞ。</p>
       </div>
     </header>
 
     <section aria-labelledby="measured-heading">
-      <h2 id="measured-heading">実際に回った人の目安があるエリア</h2>
+      <h2 id="measured-heading">かかる時間の目安があるエリア</h2>
       <div class="trip-grid">{"".join(card(a, rs) for a, rs in measured)}</div>
       {duration_note(durations) if measured else ""}
     </section>

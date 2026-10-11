@@ -135,6 +135,7 @@ def build(
             "manhole_ids": sorted(ids, key=int),
             "p25_minutes": round(quartile(minutes, 0.25)),
             "p75_minutes": round(quartile(minutes, 0.75)),
+            "median_minutes": round(quartile(minutes, 0.5)),
         }
         # 往路と復路は同じ道筋として数える
         orders = collections.Counter(min(o, o[::-1]) for _, _, o in public.values())

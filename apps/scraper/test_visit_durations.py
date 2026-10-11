@@ -53,7 +53,7 @@ class FormatTest(unittest.TestCase):
 class MatchTest(unittest.TestCase):
     def test_text_for_an_exact_match(self) -> None:
         text = MODULE.duration_text(RECORDS, DURATIONS)
-        self.assertIn("実際に5地点を1日で回った人の多くは、約1時間20分〜2時間半で回っています。", text)
+        self.assertIn("5か所を1日で回った人は、たいてい1時間20分〜2時間半ほどかかっています。", text)
         self.assertIn("バスや自転車", text)
 
     def test_hidden_when_a_manhole_was_added_after_measuring(self) -> None:
@@ -70,9 +70,9 @@ class MatchTest(unittest.TestCase):
         # 隣どうしは約9kmでも、端から端は約18km（淡路のような数珠つなぎ）
         chain = [_record(str(i), 34.50 + i * 0.08, 135.00) for i in range(3)]
         entry = {"entries": [{"manhole_ids": ["0", "1", "2"], "p25_minutes": 30, "p75_minutes": 60}]}
-        self.assertIn("歩いて回れる", MODULE.duration_text(near, entry))
+        self.assertIn("歩いて回れます", MODULE.duration_text(near, entry))
         text = MODULE.duration_text(chain, entry)
-        self.assertIn("端から端まで直線約18km", text)
+        self.assertIn("いちばん遠い2か所は直線で約18km離れている", text)
         self.assertIn("車があると", text)
         self.assertEqual(MODULE.travel_mode(RECORDS), "bus")
 
@@ -83,7 +83,7 @@ class MatchTest(unittest.TestCase):
         html = MODULE.duration_html(RECORDS, DURATIONS)
         self.assertIn('class="visit-duration"', html)
         self.assertIn("撮影時刻", html)
-        self.assertIn("2026-10-11", html)
+        self.assertIn("2026年10月11日", html)
         self.assertEqual(MODULE.duration_html(RECORDS, {}), "")
 
 
@@ -101,9 +101,32 @@ class PageTest(unittest.TestCase):
         machida = [m for m in MUNI.build_municipalities(records, {"東京都/町田市": "machida"})
                    if m.name == "町田市"][0]
         durations = {"entries": [{"manhole_ids": ["0", "1", "2"], "p25_minutes": 20, "p75_minutes": 29}]}
-        self.assertIn("約20分〜30分", MUNI_PAGE._route_section(machida, durations))
+        self.assertIn("たいてい20分〜30分ほど", MUNI_PAGE._route_section(machida, durations))
         self.assertNotIn("visit-duration", MUNI_PAGE._route_section(machida))
 
+
+
+class RankingTest(unittest.TestCase):
+    def setUp(self) -> None:
+        records = [
+            _record(str(i), 34.61 + i * 0.001, 135.73, prefecture="奈良県", city="斑鳩") for i in range(3)
+        ] + [_record("9", 34.68, 135.60)]
+        self.items = MUNI.build_municipalities(records, {})
+        self.durations = {"entries": [{"manhole_ids": ["0", "1", "2"], "p25_minutes": 29,
+                                       "p75_minutes": 55, "median_minutes": 36}]}
+
+    def test_ranking_row_shows_the_typical_time(self) -> None:
+        html = MUNI_PAGE.build_ranking_page(self.items, 4, "2026年10月11日", durations=self.durations)
+        self.assertIn("全部のポケふたを見るのにかかった時間は、平均的な人で約35分です", html)
+        self.assertNotIn("平均的な人", MUNI_PAGE.build_ranking_page(self.items, 4, "2026年10月11日"))
+
+    def test_ranking_announces_the_trip_pages(self) -> None:
+        trips = [("斑鳩", "/trip/ikaruga/", 3, "約30分〜55分")]
+        html = MUNI_PAGE.build_ranking_page(self.items, 4, "2026年10月11日", trips=trips)
+        self.assertIn("ルート案内「ポケふた旅」をはじめました", html)
+        self.assertIn('href="/trip/ikaruga/"', html)
+        self.assertIn('href="/trip/"', html)
+        self.assertNotIn("ポケふた旅をはじめました", MUNI_PAGE.build_ranking_page(self.items, 4, "x"))
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,4 +1,4 @@
-"""「実際に回った人の所要時間」の文（都道府県ページ・市区町村ページで共有）。
+"""「1日で回るのにかかる時間」の文（都道府県ページ・市区町村ページ・/trip/ で共有）。
 
 dataset/visit_durations.json は apps/tools/build_visit_durations.py が DB バックアップから作る集計。
 載っている manhole_ids がページの回れる地点とぴったり一致するときだけ出す
@@ -110,9 +110,14 @@ def format_minutes(minutes: float) -> str:
     return f"{hours}時間{rest}分"
 
 
-def duration_range(low: float, high: float) -> str:
+def duration_span(low: float, high: float) -> str:
+    """「1時間20分〜2時間半」。両端が同じに丸まったら1つ（「25分」）。"""
     a, b = format_minutes(low), format_minutes(high)
-    return f"約{a}" if a == b else f"約{a}〜{b}"
+    return a if a == b else f"{a}〜{b}"
+
+
+def duration_range(low: float, high: float) -> str:
+    return f"約{duration_span(low, high)}"
 
 
 def find_entry(records: list[dict], durations: dict) -> dict | None:
@@ -125,14 +130,14 @@ def find_entry(records: list[dict], durations: dict) -> dict | None:
     return None
 
 
-def _mode_hint(records: list[dict]) -> str:
+def mode_hint(records: list[dict]) -> str:
     km = _km_label(spread_km(records))
     mode = travel_mode(records)
     if mode == "walk":
-        return f"端から端まで直線{km}で、歩いて回れる距離です。"
+        return f"いちばん遠い2か所でも直線で{km}なので、歩いて回れます。"
     if mode == "bus":
-        return f"端から端まで直線{km}あるので、バスや自転車を使うと楽です。"
-    return f"端から端まで直線{km}あるので、車があると回りやすい距離です。"
+        return f"いちばん遠い2か所は直線で{km}離れているので、バスや自転車があると楽です。"
+    return f"いちばん遠い2か所は直線で{km}離れているので、車があると回りやすいです。"
 
 
 def duration_text(records: list[dict], durations: dict) -> str:
@@ -141,18 +146,28 @@ def duration_text(records: list[dict], durations: dict) -> str:
         return ""
     count = len(entry["manhole_ids"])
     return (
-        f"実際に{count}地点を1日で回った人の多くは、"
-        f"{duration_range(entry['p25_minutes'], entry['p75_minutes'])}で回っています。"
-        + _mode_hint(records)
+        f"{count}か所を1日で回った人は、たいてい"
+        f"{duration_span(entry['p25_minutes'], entry['p75_minutes'])}ほどかかっています。"
+        + mode_hint(records)
     )
 
 
+def _date_label(value: str) -> str:
+    try:
+        y, m, d = (int(x) for x in value.split("-"))
+    except ValueError:
+        return value
+    return f"{y}年{m}月{d}日"
+
+
 def duration_note(durations: dict) -> str:
-    measured_on = str(durations.get("measured_on", ""))
+    # 「たいてい」の幅は、かかった時間の短い順に並べて25%〜75%（とても速い人・とてもゆっくりな人を除いた範囲）
+    measured_on = _date_label(str(durations.get("measured_on", "")))
     return (
-        '<p class="visit-duration-note">所要時間は、pokefuta.com に投稿された写真の撮影時刻から、'
-        '1枚目から最後の1枚を撮るまでを数えた真ん中半分の人の幅です'
-        f'（{escape(measured_on)}時点）。1か所目までの移動は含みません。</p>'
+        '<p class="visit-duration-note">ポケふた写真館に投稿された写真の撮影時刻から計算しました。'
+        '最初の1枚を撮ってから最後の1枚を撮るまでの時間で、1か所目に着くまでの移動は入りません。'
+        'とても速い人と、とてもゆっくりな人を除いた範囲です'
+        f'（{escape(measured_on)}時点）。</p>'
     )
 
 
