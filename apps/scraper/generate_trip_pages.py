@@ -64,6 +64,9 @@ except ModuleNotFoundError as exc:
 ROOT = pref.ROOT
 BASE_URL = pref.BASE_URL
 DEFAULT_OUTPUT = ROOT / "dist" / "trip"
+# 特集ページのカードに並べる蓋の小さい画像の数。これより多いエリアは「+n」にまとめる
+CARD_THUMB_LIMIT = 6
+IMAGE_DIR = ROOT / "dataset" / "manhole" / "image"
 # 「あわせて回る」に出す、ほかのエリアまでの距離（エリアの中心どうしの直線）
 NEARBY_TRIP_KM = 80.0
 # 特集ページの「まとまっている場所」: ほかの地点からいちばん離れた地点でもこの距離以内
@@ -77,6 +80,24 @@ def _head(title: str, description: str, canonical: str, json_ld: dict, with_map:
     # 市区町村ページと同じ head に、trip 用の見た目だけ足す
     head = muni_page._head(title, description, canonical, json_ld, with_map)
     return head.replace("  </style>", f"{TRIP_CSS}  </style>", 1)
+
+
+def card_thumbs_html(records: list[dict], entry: dict | None, image_dir: Path = IMAGE_DIR) -> str:
+    """カードに並べる蓋の丸い小さい画像（回る順）。画像の無い蓋は飛ばし、多いときは「+n」。"""
+    route, _ = area_route(records, entry)
+    urls = [(pref.tile_image_url(str(r["id"]), image_dir), pref._manhole_name(r)) for r in route]
+    urls = [(u, name) for u, name in urls if u]
+    if not urls:
+        return ""
+    shown = urls[:CARD_THUMB_LIMIT]
+    rest = len(records) - len(shown)
+    imgs = "".join(
+        f'<img src="{_escape_attr(u)}" alt="{_escape_attr(name)}のポケふた" width="32" height="32" '
+        'loading="lazy" decoding="async">'
+        for u, name in shown
+    )
+    more = f'<span class="trip-thumb-more">+{rest}</span>' if rest > 0 else ""
+    return f'<span class="trip-thumbs">{imgs}{more}</span>'
 
 
 def _visitable(records: list[dict]) -> list[dict]:
@@ -431,6 +452,7 @@ def build_index_page(
             f'data-surface="trip_index" data-destination="{_escape_attr(area["slug"])}">'
             f'<span class="trip-pref">{escape(area["prefecture"])}</span>'
             f'<span class="trip-name">{escape(area["name"])} {len(records)}枚</span>'
+            f'{card_thumbs_html(records, entry)}'
             f'{time}<small>移動の目安：{mode}</small></a>'
         )
 
@@ -505,12 +527,15 @@ def build_index_page(
 
 TRIP_CSS = """
     .trip-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); gap: 10px; }
-    .trip-card { display: grid; gap: 2px; padding: 12px 14px; border-radius: 14px; background: #fffaf0;
+    .trip-card { display: grid; align-content: start; gap: 2px; padding: 12px 14px; border-radius: 14px; background: #fffaf0;
       border: 1px solid #ece4d7; color: inherit; text-decoration: none; }
     .trip-card .trip-pref { color: #75685c; font-size: .75rem; }
     .trip-card .trip-name { font-weight: 850; }
     .trip-card strong { color: #6b4aa2; }
     .trip-card small { color: #62564a; font-size: .78rem; }
+    .trip-thumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 3px; margin: 4px 0 2px; }
+    .trip-thumbs img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; background: #ece4d7; }
+    .trip-thumb-more { color: #75685c; font-size: .75rem; font-weight: 800; }
     .compact-list { margin: 10px 0 0; padding-left: 1.2em; display: grid; gap: 6px; }
     .compact-list span { margin-left: 8px; color: #62564a; font-size: .82rem; }
     .related-links small { margin-left: 6px; color: #75685c; font-size: .75rem; }

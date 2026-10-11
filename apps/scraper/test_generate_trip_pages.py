@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 import tempfile
 import unittest
 from pathlib import Path
@@ -97,6 +98,26 @@ class AreaTest(unittest.TestCase):
         self.assertEqual([s[1] for s in summaries], ["/trip/higashiosaka/", "/trip/ikaruga/"])
         self.assertEqual(summaries[0][3], "約1時間20分〜2時間半")
         self.assertEqual(summaries[1][3], "")
+
+    def test_card_thumbs_follow_the_route_and_fold_extras(self) -> None:
+        records = [r for r in RECORDS if r["city"] == "東大阪"]
+        with tempfile.TemporaryDirectory() as tmp:
+            d = Path(tmp)
+            for mid in ("206", "210", "209", "207"):  # 208 は画像なし
+                (d / f"{mid}_lid.jpeg").write_bytes(b"x")
+            html = MODULE.card_thumbs_html(records, DURATIONS["entries"][0], d)
+            self.assertEqual(
+                re.findall(r'src="/manhole/image/(\d+)_lid\.jpeg"', html), ["206", "210", "209", "207"]
+            )
+            self.assertIn('loading="lazy"', html)
+            self.assertIn("+1", html)  # 画像の無い 208 は「+1」に入る
+            self.assertEqual(MODULE.card_thumbs_html(records, None, Path(tmp) / "none"), "")
+            many = [_record(str(100 + i), "吹田", 34.76 + i * 0.001, 135.52) for i in range(8)]
+            for r in many:
+                (d / f"{r['id']}_lid.jpeg").write_bytes(b"x")
+            html = MODULE.card_thumbs_html(many, None, d)
+            self.assertEqual(html.count("<img"), MODULE.CARD_THUMB_LIMIT)
+            self.assertIn("+2", html)
 
 class GenerateTest(unittest.TestCase):
     def test_pages_index_and_links(self) -> None:
