@@ -203,6 +203,18 @@ class InjectSiteHeaderTest(unittest.TestCase):
         self.assertIn('<nav class="site-footer" aria-label="サイト内リンク">', result)
         self.assertNotIn('<footer class="site-footer"', result)
 
+    def test_footer_note_says_unofficial_and_credits_the_official_site(self):
+        """フッターの注記で、非公式のファンサイトであることと情報の出典を全ページ共通に出す。"""
+        result = inject(BARE)
+        note = re.search(r'<p class="site-footer__note">(.*?)</p>', result).group(1)
+        self.assertIn("data.pokefuta.com", note)
+        self.assertIn("非公式のファンサイトです", note)
+        self.assertIn("ポケふた情報はポケモン公式サイトを参照しています", note)
+        en = inject(BARE.replace("<html>", '<html lang="en">'))
+        self.assertIn("Unofficial fan site · Poké Lid information is based on the official Pokémon website", en)
+        ko = inject(BARE.replace("<html>", '<html lang="ko">'))
+        self.assertIn("포켓몬 맨홀 정보는", ko)
+
     def test_info_and_x_links(self):
         result = inject(BARE)
         self.assertIn('href="https://pokefuta.com/about?from=data"', result)

@@ -87,6 +87,7 @@ LABELS = {
         "about": "このサイトについて",
         "privacy": "プライバシー",
         "contact": "お問い合わせ",
+        "unofficial": "非公式のファンサイトです",
         "credit": "ポケふた情報はポケモン公式サイトを参照しています",
     },
     "en": {
@@ -111,7 +112,8 @@ LABELS = {
         "about": "About this site",
         "privacy": "Privacy",
         "contact": "Contact",
-        "credit": "Poké Lid details are based on the official Pokémon website",
+        "unofficial": "Unofficial fan site",
+        "credit": "Poké Lid information is based on the official Pokémon website",
     },
     "zh-TW": {
         "nav_aria": "主導覽",
@@ -135,6 +137,7 @@ LABELS = {
         "about": "關於本站",
         "privacy": "隱私權",
         "contact": "聯絡我們",
+        "unofficial": "非官方粉絲網站",
         "credit": "寶可夢人孔蓋資訊參考寶可夢官方網站",
     },
     "zh-CN": {
@@ -159,6 +162,7 @@ LABELS = {
         "about": "关于本站",
         "privacy": "隐私",
         "contact": "联系我们",
+        "unofficial": "非官方粉丝网站",
         "credit": "宝可梦井盖信息参考宝可梦官方网站",
     },
     "ko": {
@@ -183,7 +187,8 @@ LABELS = {
         "about": "사이트 소개",
         "privacy": "개인정보처리방침",
         "contact": "문의",
-        "credit": "포케후타 정보는 포켓몬 공식 사이트를 참고했습니다",
+        "unofficial": "비공식 팬 사이트입니다",
+        "credit": "포켓몬 맨홀 정보는 포켓몬 공식 사이트를 참고했습니다",
     },
 }
 
@@ -250,7 +255,7 @@ FOOTER_TEMPLATE = """<nav class="site-footer" aria-label="{footer_aria}">
   <a class="site-footer__link" href="{privacy_url}">{privacy}</a>
   <a class="site-footer__link" href="{contact_url}">{contact}</a>
   <a class="site-footer__link" href="{x_url}" target="_blank" rel="noopener noreferrer"><b>X</b> @pokemonmanhole</a>
-  <p class="site-footer__note">&copy; 2025-{year} data.pokefuta.com · {credit}</p>
+  <p class="site-footer__note">&copy; 2025-{year} data.pokefuta.com · {unofficial} · {credit}</p>
 </nav>"""
 
 
