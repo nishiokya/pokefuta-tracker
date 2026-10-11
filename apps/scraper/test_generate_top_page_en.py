@@ -157,5 +157,46 @@ class EnglishTopTest(unittest.TestCase):
         self.assertNotRegex(html, r'<script[^>]+leaflet')
 
 
+
+class LocalizedTopTest(unittest.TestCase):
+    """zh-TW / zh-CN / ko のトップも英語版と同じ雛形・同じ構成で作る。"""
+
+    LANGS = {"zh-TW": "寶可夢人孔蓋", "zh-CN": "宝可梦井盖", "ko": "포켓몬 맨홀"}
+
+    def setUp(self) -> None:
+        self._tmp = tempfile.TemporaryDirectory()
+        self.tmp = Path(self._tmp.name)
+
+    def tearDown(self) -> None:
+        self._tmp.cleanup()
+
+    def test_every_language_is_fully_translated(self) -> None:
+        en_keys = set(module.TEXT["en"])
+        for lang in self.LANGS:
+            self.assertEqual(en_keys, set(module.TEXT[lang]), lang)
+            self.assertEqual(set(module.TEXT["en"]["regions"]), set(module.TEXT[lang]["regions"]), lang)
+
+    def test_shell_and_blocks_are_in_the_language(self) -> None:
+        shell = INDEX_EN.read_text(encoding="utf-8")
+        for lang, lid in self.LANGS.items():
+            loc = module.Locale(lang, pokemon_metadata=None)
+            page = module.localize_shell(shell, loc)
+            self.assertIn(f'<html lang="{lang}">', page)
+            self.assertIn(f'<link rel="canonical" href="https://data.pokefuta.com/{lang}/">', page)
+            self.assertNotIn("Poké Lids Directory", page)
+            self.assertNotIn(">Search by purpose<", page)
+            data = Fixture(self.tmp, events=[_event("東京都", "東京スタンプラリー", "2026-08-01", "2026-12-31")]).data()
+            html = module.apply_blocks(EN_SHELL, data, loc)
+            self.assertIn(lid, _block(html, "hero"))
+            self.assertIn('href="../prefectures/tokyo/"', _block(html, "pref"))
+            visible = _visible(html)
+            for english in ("Poké Lids are", "Choose how to search", "Latest fan photos", "Show all", "All Pokémon"):
+                self.assertNotIn(english, visible, f"{lang}: {english}")
+
+    def test_shell_change_is_noticed(self) -> None:
+        with self.assertRaises(ValueError):
+            module.localize_shell("<html lang=\"en\"></html>", module.Locale("ko", pokemon_metadata=None))
+
+
 if __name__ == "__main__":
     unittest.main()

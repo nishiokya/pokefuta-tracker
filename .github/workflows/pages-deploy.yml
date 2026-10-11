@@ -34,7 +34,8 @@ on:
       - 'apps/scraper/generate_tag_pages.py' # theme (tag) landing page generator
       - 'apps/scraper/generate_top_tag_chips.py' # top page theme chips generator
       - 'apps/scraper/generate_top_page.py' # top page counts, photos, prefecture list, JSON-LD
-      - 'apps/scraper/generate_top_page_en.py' # English top page (same layout as the Japanese top)
+      - 'apps/scraper/generate_top_page_en.py' # en / zh-TW / zh-CN / ko top pages (same layout as the Japanese top)
+      - 'apps/scraper/top_page_i18n_text.py' # wording of the multilingual top pages
       - 'apps/scraper/tag_meta.py' # shared theme tag metadata loader
       - 'dataset/tag_meta.json' # single source for theme tags (top / map / tags / summary)
       - 'apps/scraper/inject_site_header.py' # shared header injector
@@ -192,8 +193,12 @@ jobs:
           cp apps/web/robots.txt dist/robots.txt
           echo "[dist] Build multilingual pages (en / zh-TW / zh-CN / ko)"
           python3 tools/build_i18n.py
-          echo "[dist] Replace the English top with the photo-led layout (zh-TW / zh-CN / ko keep the template)"
+          echo "[dist] Replace the English top with the photo-led layout"
           python3 apps/scraper/generate_top_page_en.py dist/en/index.html
+          echo "[dist] zh-TW / zh-CN / ko tops use the same photo-led layout (index.en.html with localized text)"
+          for lang in zh-TW zh-CN ko; do
+            python3 apps/scraper/generate_top_page_en.py --lang "$lang" "dist/$lang/index.html"
+          done
           cp apps/web/nearby.html dist/nearby_manholes.html  # 旧 URL も map.html へ
           echo "[dist] Inject shared site header into every HTML page"
           python3 apps/scraper/inject_site_header.py dist

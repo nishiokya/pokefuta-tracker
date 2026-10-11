@@ -1,20 +1,20 @@
 #!/usr/bin/env python3
-"""英語版トップ（/en/index.html）を日本語トップと同じ構成で生成する。
+"""多言語版トップ（/en/・/zh-TW/・/zh-CN/・/ko/ の index.html）を日本語トップと同じ構成で生成する。
 
 データの読み込みと写真・イベントの選び方は generate_top_page.py と共有し、
-ここでは英語の文言と、/en/ から見たリンク先だけを持つ。
+ここでは各言語の文言（top_page_i18n_text.py）と、/<lang>/ から見たリンク先だけを持つ。
+雛形は英語版の apps/web/index.en.html を全言語で使い、固定の文言は localize_shell() で差し替える。
 
-- /en/ にあるページ（map.html・pokemon/）は `./` で、日本語にしか無いページ
+- /<lang>/ にあるページ（map.html・pokemon/・summary/）は `./` で、日本語にしか無いページ
   （都道府県・マンホール詳細・写真）は `../` で参照する。日本語ページへ飛ぶ導線には
-  「Japanese」と書き添える
-- テーマのラベルは strings.en.json の TAG_* を使う（dataset/tag_meta.json は日本語のみ）
+  「日本語」と書き添える
+- テーマのラベル・イベントの見出しは strings.<lang>.json を使う（dataset/tag_meta.json は日本語のみ）
 - イベント名は日本語しか無いので lang="ja" を付けてそのまま出す
 
-多言語版の残り（zh-TW / zh-CN / ko）は従来どおり index.template.html から作る。
-
 Usage:
-  python3 apps/scraper/generate_top_page_en.py                   # apps/web/index.en.html を更新
+  python3 apps/scraper/generate_top_page_en.py                              # apps/web/index.en.html を更新
   python3 apps/scraper/generate_top_page_en.py dist/en/index.html
+  python3 apps/scraper/generate_top_page_en.py --lang zh-TW dist/zh-TW/index.html
 """
 
 from __future__ import annotations
@@ -33,33 +33,24 @@ try:
     from apps.scraper import generate_top_page as ja
     from apps.scraper.photo_caption import JST, format_photo_date
     from apps.scraper.prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS
+    from apps.scraper.top_page_i18n_text import FORM_PREFIX, NAME_KEYS, TEXT, day_label, join_places, month_label
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
     import generate_top_page as ja
     from photo_caption import JST, format_photo_date
     from prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS
+    from top_page_i18n_text import FORM_PREFIX, NAME_KEYS, TEXT, day_label, join_places, month_label
 
 ROOT = ja.ROOT
 DEFAULT_TARGET = ROOT / "apps" / "web" / "index.en.html"
 PREFECTURE_NAMES = ROOT / "apps" / "web" / "i18n" / "prefectures.json"
-STRINGS_EN = ROOT / "apps" / "web" / "i18n" / "strings.en.json"
+I18N_DIR = ROOT / "apps" / "web" / "i18n"
+STRINGS_EN = I18N_DIR / "strings.en.json"
+LANGS = list(TEXT)
 
 BASE_URL = "https://data.pokefuta.com/"
-PAGE_URL = f"{BASE_URL}en/"
-SITE_NAME = "Pokéfuta Directory"
-PAGE_TITLE = "Poké Lids Directory — Every Pokémon Manhole in Japan"
-ROOT_PATH = "../"  # /en/ から日本語のみのページ・画像へ
-
-REGION_NAMES = {
-    "北海道・東北": "Hokkaido & Tohoku",
-    "関東": "Kanto",
-    "中部": "Chubu",
-    "近畿": "Kinki",
-    "中国": "Chugoku",
-    "四国": "Shikoku",
-    "九州・沖縄": "Kyushu & Okinawa",
-}
+ROOT_PATH = "../"  # /<lang>/ から日本語のみのページ・画像へ
 TAG_STRING_KEYS = {
     "roadside": "TAG_ROADSIDE",
     "remote_island": "TAG_ISLAND",
@@ -70,31 +61,36 @@ TAG_STRING_KEYS = {
     "park": "TAG_PARK",
     "history": "TAG_HISTORY",
 }
-FORM_PREFIX_EN = {"alola": "Alolan ", "galar": "Galarian ", "hisui": "Hisuian ", "paldea": "Paldean "}
-MONTHS = ["January", "February", "March", "April", "May", "June", "July",
-          "August", "September", "October", "November", "December"]
 
 
-class English:
-    """英語表記の辞書（都道府県名・ポケモン名・テーマ名）。"""
+class Locale:
+    """1言語ぶんの表記（文言・都道府県名・ポケモン名・テーマ名）。"""
 
-    def __init__(self, prefecture_names: Path = PREFECTURE_NAMES, strings: Path = STRINGS_EN,
+    def __init__(self, lang: str = "en", prefecture_names: Path = PREFECTURE_NAMES, strings: Path | None = None,
                  pokemon_metadata: Path | None = ja.DEFAULT_POKEMON_METADATA) -> None:
+        self.lang = lang
+        self.text = TEXT[lang]
+        self.page_url = f"{BASE_URL}{lang}/"
+        key = NAME_KEYS[lang]
         prefs = json.loads(prefecture_names.read_text(encoding="utf-8"))
-        self.prefectures = {name: str(v.get("en") or name) for name, v in prefs.items()}
+        self.prefectures = {name: str(v.get(key) or name) for name, v in prefs.items()}
+        strings = strings or I18N_DIR / f"strings.{lang}.json"
         self.strings = json.loads(strings.read_text(encoding="utf-8"))
         self.pokemon: dict[str, str] = {}
         self.pokemon_by_slug: dict[str, str] = {}
         if pokemon_metadata and pokemon_metadata.exists():
             for meta in json.loads(pokemon_metadata.read_text(encoding="utf-8")):
                 names = meta.get("names") or {}
-                if not names.get("ja") or not names.get("en"):
+                if not names.get("ja") or not names.get(key):
                     continue
                 form = meta.get("form") or ""
-                en = FORM_PREFIX_EN.get(form, "") + names["en"]
-                self.pokemon.setdefault(ja.FORM_PREFIX.get(form, "") + names["ja"], en)
+                local = FORM_PREFIX[lang].get(form, "") + names[key]
+                self.pokemon.setdefault(ja.FORM_PREFIX.get(form, "") + names["ja"], local)
                 if meta.get("slug"):
-                    self.pokemon_by_slug[meta["slug"]] = en
+                    self.pokemon_by_slug[meta["slug"]] = local
+
+    def t(self, key: str, **values: object) -> str:
+        return str(self.text[key]).format(**values)
 
     def pref(self, name: str) -> str:
         return self.prefectures.get(name, name)
@@ -106,17 +102,52 @@ class English:
         return self.strings.get(TAG_STRING_KEYS.get(slug, ""), slug)
 
 
+class English(Locale):
+    """英語版（既存の呼び出し・テストとの互換用）。"""
+
+    def __init__(self, prefecture_names: Path = PREFECTURE_NAMES, strings: Path = STRINGS_EN,
+                 pokemon_metadata: Path | None = ja.DEFAULT_POKEMON_METADATA) -> None:
+        super().__init__("en", prefecture_names, strings, pokemon_metadata)
+
+
+SHELL_REPLACEMENTS = [
+    # (英語版の雛形にある文字列, 文言キー or 関数)。見つからなければ止める（雛形を直したら気付けるように）
+    ('<html lang="en">', lambda loc: f'<html lang="{loc.t("html_lang")}">'),
+    ("Poké Lids Directory — Every Pokémon Manhole in Japan", lambda loc: escape(loc.t("page_title"))),
+    ('content="Poké Lids,Pokefuta,Pokémon manhole,Japan,travel,map,prefecture"', lambda loc: f'content="{escape(loc.t("keywords"))}"'),
+    ('content="en_US"', lambda loc: f'content="{loc.t("og_locale")}"'),
+    ('<meta property="og:url" content="https://data.pokefuta.com/en/">', lambda loc: f'<meta property="og:url" content="{loc.page_url}">'),
+    ('<link rel="canonical" href="https://data.pokefuta.com/en/">', lambda loc: f'<link rel="canonical" href="{loc.page_url}">'),
+    ('<span class="brand-name">Pokéfuta Directory</span>', lambda loc: f'<span class="brand-name">{escape(loc.t("site_name"))}</span>'),
+    (">Search by purpose</h2>", lambda loc: f'>{escape(loc.t("purpose_title"))}</h2>'),
+    ('<h3 class="home-h3">By theme</h3>', lambda loc: f'<h3 class="home-h3">{escape(loc.t("purpose_theme"))}</h3>'),
+    (">Explore on the map</a>", lambda loc: f'>{escape(loc.t("purpose_theme_more"))}</a>'),
+    ('<h3 class="home-h3">Most common Pokémon</h3>', lambda loc: f'<h3 class="home-h3">{escape(loc.t("purpose_pokemon"))}</h3>'),
+]
+
+
+def localize_shell(html: str, loc: Locale) -> str:
+    """英語版の雛形の固定部分（lang・title・canonical・見出しなど）をその言語に差し替える。"""
+    if loc.lang == "en":
+        return html
+    for old, new in SHELL_REPLACEMENTS:
+        if old not in html:
+            raise ValueError(f"index.en.html に {old!r} が無い（localize_shell を直す）")
+        html = html.replace(old, new(loc))
+    return html
+
+
 # ── 部品 ──────────────────────────────────────────────────────────────────
 
 
-def _names(photo: ja.Photo, en: English) -> str:
-    return ", ".join(en.pokemon_name(p) for p in photo.pokemons[:2])
+def _names(photo: ja.Photo, en: Locale) -> str:
+    return en.t("sep").join(en.pokemon_name(p) for p in photo.pokemons[:2])
 
 
-def _alt(photo: ja.Photo, en: English) -> str:
+def _alt(photo: ja.Photo, en: Locale) -> str:
     names = _names(photo, en)
     where = en.pref(photo.prefecture)
-    return f"Fan photo of the Poké Lid in {where} ({names})" if names else f"Fan photo of a Poké Lid in {where}"
+    return en.t("alt_photo", where=where, names=names) if names else en.t("alt_photo_noname", where=where)
 
 
 def _img(photo: ja.Photo, en: English, *, eager: bool = False, priority: bool = False) -> str:
@@ -136,22 +167,18 @@ def _pref_href(pref: str) -> str:
     return f"{ROOT_PATH}prefectures/{PREFECTURE_SLUGS[pref]}/"
 
 
-def description(data: ja.TopData) -> str:
-    return (
-        f"Find all {data.total:,} Poké Lids (Pokéfuta, Pokémon manhole covers) across "
-        f"{len(data.installed_prefectures)} prefectures in Japan — with fan photos, a map, "
-        "a prefecture list and a Pokémon index to plan your trip."
-    )
+def description(data: ja.TopData, en: Locale | None = None) -> str:
+    en = en or English(pokemon_metadata=None)
+    return en.t("description", total=f"{data.total:,}", prefs=len(data.installed_prefectures))
 
 
-def short_description(data: ja.TopData) -> str:
-    return (
-        f"{data.total:,} Poké Lids (Pokémon manhole covers) in {len(data.installed_prefectures)} "
-        "prefectures of Japan, with fan photos and a map."
-    )
+def short_description(data: ja.TopData, en: Locale | None = None) -> str:
+    en = en or English(pokemon_metadata=None)
+    return en.t("short_description", total=f"{data.total:,}", prefs=len(data.installed_prefectures))
 
 
-def json_ld(data: ja.TopData, en: English) -> dict:
+def json_ld(data: ja.TopData, en: Locale) -> dict:
+    page_url = en.page_url
     counts = data.pref_counts
     return {
         "@context": "https://schema.org",
@@ -161,34 +188,34 @@ def json_ld(data: ja.TopData, en: English) -> dict:
                 "@id": f"{BASE_URL}#website",
                 "url": BASE_URL,
                 "name": "ポケふた図鑑",
-                "alternateName": SITE_NAME,
+                "alternateName": en.t("site_name"),
             },
             {
                 "@type": "CollectionPage",
-                "@id": f"{PAGE_URL}#webpage",
-                "url": PAGE_URL,
-                "name": PAGE_TITLE,
-                "description": description(data),
-                "inLanguage": "en",
+                "@id": f"{page_url}#webpage",
+                "url": page_url,
+                "name": en.t("page_title"),
+                "description": description(data, en),
+                "inLanguage": en.t("html_lang"),
                 "isPartOf": {"@id": f"{BASE_URL}#website"},
-                "breadcrumb": {"@id": f"{PAGE_URL}#breadcrumb"},
-                "mainEntity": {"@id": f"{PAGE_URL}#prefectures"},
+                "breadcrumb": {"@id": f"{page_url}#breadcrumb"},
+                "mainEntity": {"@id": f"{page_url}#prefectures"},
                 "hasPart": [
-                    {"@type": "WebPage", "name": "Poké Lids map", "url": f"{PAGE_URL}map.html"},
-                    {"@type": "CollectionPage", "name": "Poké Lids by Pokémon", "url": f"{PAGE_URL}pokemon/"},
-                    {"@type": "CollectionPage", "name": "Poké Lids statistics", "url": f"{PAGE_URL}summary/"},
+                    {"@type": "WebPage", "name": en.t("ld_map"), "url": f"{page_url}map.html"},
+                    {"@type": "CollectionPage", "name": en.t("ld_pokemon"), "url": f"{page_url}pokemon/"},
+                    {"@type": "CollectionPage", "name": en.t("ld_stats"), "url": f"{page_url}summary/"},
                 ],
             },
             {
                 "@type": "ItemList",
-                "@id": f"{PAGE_URL}#prefectures",
-                "name": "Prefectures with Poké Lids",
+                "@id": f"{page_url}#prefectures",
+                "name": en.t("ld_prefs"),
                 "numberOfItems": len(data.installed_prefectures),
                 "itemListElement": [
                     {
                         "@type": "ListItem",
                         "position": i,
-                        "name": f"Poké Lids in {en.pref(pref)} ({counts[pref]})",
+                        "name": en.t("ld_pref_item", pref=en.pref(pref), count=counts[pref]),
                         "url": f"{BASE_URL}prefectures/{PREFECTURE_SLUGS[pref]}/",
                     }
                     for i, pref in enumerate(data.installed_prefectures, start=1)
@@ -196,9 +223,9 @@ def json_ld(data: ja.TopData, en: English) -> dict:
             },
             {
                 "@type": "BreadcrumbList",
-                "@id": f"{PAGE_URL}#breadcrumb",
+                "@id": f"{page_url}#breadcrumb",
                 "itemListElement": [
-                    {"@type": "ListItem", "position": 1, "name": SITE_NAME, "item": PAGE_URL},
+                    {"@type": "ListItem", "position": 1, "name": en.t("site_name"), "item": page_url},
                 ],
             },
         ],
@@ -208,9 +235,9 @@ def json_ld(data: ja.TopData, en: English) -> dict:
 # ── ブロック ──────────────────────────────────────────────────────────────
 
 
-def render_head(data: ja.TopData, en: English, indent: str) -> str:
-    desc = escape(description(data), quote=True)
-    short = escape(short_description(data), quote=True)
+def render_head(data: ja.TopData, en: Locale, indent: str) -> str:
+    desc = escape(description(data, en), quote=True)
+    short = escape(short_description(data, en), quote=True)
     ld = json.dumps(json_ld(data, en), ensure_ascii=False, indent=1).replace("<", "\\u003c")
     lines = [
         f'<meta name="description" content="{desc}">',
@@ -223,52 +250,49 @@ def render_head(data: ja.TopData, en: English, indent: str) -> str:
     return "\n".join(indent + line if line else line for line in lines)
 
 
-def render_hero(data: ja.TopData, en: English) -> str:
+def render_hero(data: ja.TopData, en: Locale) -> str:
     photos = ja.select_hero_photos(data.photos)
     popular = [en.pokemon_by_slug.get(e.slug, e.name) for e in data.popular_pokemon[:3]]
     posts = data.stats.get("public_posts") if isinstance(data.stats.get("public_posts"), int) else None
     stats = [
-        (f"{data.total:,}", "Poké Lids"),
-        (str(len(data.installed_prefectures)), "Prefectures"),
-        (f"{len(data.pokemon_counts):,}", "Pokémon"),
+        (f"{data.total:,}", en.t("stat_lids")),
+        (str(len(data.installed_prefectures)), en.t("stat_prefs")),
+        (f"{len(data.pokemon_counts):,}", en.t("stat_pokemon")),
     ]
     if posts:
-        stats.append((f"{posts:,}", "Fan photos"))
+        stats.append((f"{posts:,}", en.t("stat_photos")))
     stats_html = "".join(
         f'<div class="home-stat"><dt>{escape(label)}</dt><dd>{escape(num)}</dd></div>' for num, label in stats
     )
     quick = [
-        ("map", "map", "map.html", "Search the map", "home-quick__link--primary home-quick__link--map"),
-        ("prefecture", "home_pref_section", "#home-pref", "By prefecture", ""),
-        ("pokemon", "pokemon_index", "pokemon/", "By Pokémon", ""),
-        # PC だけ。英語の「近く」ページは無いのでテーマだけを横いっぱいに出す
-        ("theme", "map_theme_directory", "map.html?view=theme", "By theme", "home-quick__link--desktop home-quick__link--wide"),
+        ("map", "map", "map.html", en.t("quick_map"), "home-quick__link--primary home-quick__link--map"),
+        ("prefecture", "home_pref_section", "#home-pref", en.t("quick_pref"), ""),
+        ("pokemon", "pokemon_index", "pokemon/", en.t("quick_pokemon"), ""),
+        # PC だけ。テーマを横いっぱいに出す
+        ("theme", "map_theme_directory", "map.html?view=theme", en.t("quick_theme"), "home-quick__link--desktop home-quick__link--wide"),
     ]
     quick_html = "".join(
         f'<a class="home-quick__link {cls}" href="{href}" '
         f'onclick="{ja._track("click_search_way", surface="top_hero_quick", way=way, destination=dest)}">{escape(label)}</a>'
         for way, dest, href, label, cls in quick
     )
-    lead = (
-        "Poké Lids (<i>Pokéfuta</i>) are Pokémon-themed manhole covers. "
-        f"{data.total:,} of them are installed in {len(data.installed_prefectures)} of Japan's 47 prefectures, "
-        "from Hokkaido to Okinawa. This directory collects every location, the Pokémon on each lid "
-        "and photos taken by fans"
-        + (f" — <b>{escape(', '.join(popular))}</b> and {len(data.pokemon_counts):,} Pokémon in all." if popular else ".")
+    lead = en.t("lead", total=f"{data.total:,}", prefs=len(data.installed_prefectures)) + (
+        en.t("lead_popular", names=escape(en.t("sep").join(popular)), npoke=f"{len(data.pokemon_counts):,}")
+        if popular else en.t("lead_end")
     )
     if photos:
         items = "".join(
             f'<li class="home-mosaic__item"><a href="{_photo_href(p)}" '
             f'onclick="{ja._track("click_hero_photo", surface="top_hero_photo", manhole=p.manhole_id, position=i)}">'
             f"{ja.mobile_only(_img(p, en, eager=True, priority=(i == 0)))}"
-            f'<span class="home-mosaic__cap"><b>{escape(_names(p, en) or "Poké Lid")}</b>{escape(en.pref(p.prefecture))}</span>'
+            f'<span class="home-mosaic__cap"><b>{escape(_names(p, en) or en.t("lid"))}</b>{escape(en.pref(p.prefecture))}</span>'
             "</a></li>"
             for i, p in enumerate(photos)
         )
         mosaic = (
             '<figure class="home-mosaic">'
             f'<ul class="home-mosaic__grid">{items}</ul>'
-            f'<figcaption class="home-mosaic__note">Latest fan photos (updated {MONTHS[data.today.month - 1][:3]} {data.today.day})</figcaption>'
+            f'<figcaption class="home-mosaic__note">{escape(en.t("mosaic_note", date=day_label(en.lang, data.today.month, data.today.day)))}</figcaption>'
             "</figure>"
         )
         cls = "home-hero"
@@ -280,19 +304,19 @@ def render_hero(data: ja.TopData, en: English) -> str:
         pins=ja.map_pins(
             data,
             label=en.pref,
-            title=lambda pref, count: f"{en.pref(pref)}: {count} Poké Lids — view on the map",
+            title=lambda pref, count: en.t("map_pin_title", pref=en.pref(pref), count=count),
         ),
-        aria="Map of Poké Lids by prefecture",
-        cta="🗺 Open the full-screen map",
+        aria=en.t("map_aria"),
+        cta=en.t("map_cta"),
         cta_href="map.html",
     )
     return (
         f'<section class="{cls}" id="home-hero" aria-labelledby="home-h1">'
         '<div class="home-hero__copy">'
-        '<p class="home-eyebrow">POKÉMON MANHOLE DIRECTORY</p>'
-        f'<h1 class="home-h1" id="home-h1">Explore all {data.total:,} Poké Lids in Japan by map and list</h1>'
+        f'<p class="home-eyebrow">{escape(en.t("eyebrow"))}</p>'
+        f'<h1 class="home-h1" id="home-h1">{escape(en.t("h1", total=f"{data.total:,}"))}</h1>'
         f'<p class="home-lead">{lead}</p>'
-        f'<nav class="home-quick" aria-label="Main ways to search">{quick_html}</nav>'
+        f'<nav class="home-quick" aria-label="{escape(en.t("quick_aria"))}">{quick_html}</nav>'
         f'<dl class="home-stats">{stats_html}</dl>'
         "</div>"
         f"{map_html}"
@@ -301,7 +325,7 @@ def render_hero(data: ja.TopData, en: English) -> str:
     )
 
 
-def render_ways(data: ja.TopData, en: English) -> str:
+def render_ways(data: ja.TopData, en: Locale) -> str:
     counts = data.pref_counts
     top_prefs = sorted(data.installed_prefectures, key=lambda p: (-counts[p], PREFECTURE_ORDER.index(p)))[:3]
     theme_slugs = [s for s in data.tag_meta.top_chip_slugs(data.tag_counts) if s in TAG_STRING_KEYS][:3]
@@ -313,19 +337,16 @@ def render_ways(data: ja.TopData, en: English) -> str:
         )
 
     cards = [
-        ("map", "map.html", "icon-map.svg", "Map & your location",
-         "See every spot on a map of Japan and find the Poké Lids closest to you.",
-         [("map.html", "Open the map"), ("map.html?view=theme", "Filter by theme")]),
-        ("prefecture", "#home-pref", "icon-pin.svg", "By prefecture",
-         f"Browse the {len(data.installed_prefectures)} prefectures with Poké Lids, grouped by region. "
-         "Prefecture pages are in Japanese.",
+        ("map", "map.html", "icon-map.svg", en.t("way_map_title"), en.t("way_map_text"),
+         [("map.html", escape(en.t("way_map_open"))), ("map.html?view=theme", escape(en.t("way_map_theme")))]),
+        ("prefecture", "#home-pref", "icon-pin.svg", en.t("way_pref_title"),
+         en.t("way_pref_text", prefs=len(data.installed_prefectures)),
          [(_pref_href(p), f"{escape(en.pref(p))} {counts[p]}") for p in top_prefs]),
-        ("pokemon", "pokemon/", "pokefuta-marker.svg", "By Pokémon",
-         f"Look up your favourite among {len(data.pokemon_counts):,} Pokémon featured on the lids.",
+        ("pokemon", "pokemon/", "pokefuta-marker.svg", en.t("way_pokemon_title"),
+         en.t("way_pokemon_text", npoke=f"{len(data.pokemon_counts):,}"),
          [(e.href, f"{escape(en.pokemon_by_slug.get(e.slug, e.name))} {len(e.manhole_ids)}")
           for e in data.popular_pokemon[:3]]),
-        ("theme", "map.html?view=theme", "icon-tag.svg", "By theme",
-         "Roadside stations, World Heritage sites, remote islands and more.",
+        ("theme", "map.html?view=theme", "icon-tag.svg", en.t("way_theme_title"), en.t("way_theme_text"),
          [(f"map.html?tag={quote(s)}", escape(en.tag(s))) for s in theme_slugs]),
     ]
     cards_html = "".join(
@@ -341,13 +362,13 @@ def render_ways(data: ja.TopData, en: English) -> str:
     )
     return (
         '<section class="home-section" id="home-ways" aria-labelledby="home-ways-title">'
-        '<h2 class="home-h2" id="home-ways-title">Choose how to search</h2>'
+        f'<h2 class="home-h2" id="home-ways-title">{escape(en.t("ways_title"))}</h2>'
         f'<ul class="home-ways">{cards_html}</ul>'
         "</section>"
     )
 
 
-def render_newrelease(data: ja.TopData, en: English) -> str:
+def render_newrelease(data: ja.TopData, en: Locale) -> str:
     cutoff = datetime.combine(data.today - timedelta(days=ja.NEW_RELEASE_DAYS), datetime.min.time(), JST)
     fresh = []
     for record in data.records:
@@ -363,7 +384,7 @@ def render_newrelease(data: ja.TopData, en: English) -> str:
     cards = []
     for i, (_, record) in enumerate(fresh):
         mid = str(record.get("id"))
-        names = ", ".join(en.pokemon_name(p) for p in ja.pokemons_of(record)) or "Poké Lid"
+        names = en.t("sep").join(en.pokemon_name(p) for p in ja.pokemons_of(record)) or en.t("lid")
         cards.append(
             f'<li><a class="home-newrel__card" href="{ROOT_PATH}manholes/{quote(mid, safe="")}/" '
             f'onclick="{ja._track("click_newrelease", surface="top_newrelease", manhole=mid, position=i)}">'
@@ -371,51 +392,52 @@ def render_newrelease(data: ja.TopData, en: English) -> str:
         )
     return (
         '<section class="home-section" id="home-newrelease" aria-labelledby="home-newrelease-title">'
-        f'<h2 class="home-h2" id="home-newrelease-title">New Poké Lids <small>{len(fresh)} in the last {ja.NEW_RELEASE_DAYS} days</small></h2>'
+        f'<h2 class="home-h2" id="home-newrelease-title">{escape(en.t("new_title"))} '
+        f'<small>{escape(en.t("new_small", n=len(fresh), days=ja.NEW_RELEASE_DAYS))}</small></h2>'
         f'<ul class="home-newrel">{"".join(cards)}</ul>'
         "</section>"
     )
 
 
-def render_photos(data: ja.TopData, en: English) -> str:
+def render_photos(data: ja.TopData, en: Locale) -> str:
     photos = ja.select_gallery_photos(data.photos, ja.select_hero_photos(data.photos))
     upload = (
         f'<a class="home-cta" href="{ja.UPLOAD_URL}" '
-        f'onclick="{ja._track("click_photo_post_cta", surface="top_photo_gallery")}">Post your photo on Pokéfuta Album</a>'
+        f'onclick="{ja._track("click_photo_post_cta", surface="top_photo_gallery")}">{escape(en.t("photos_cta"))}</a>'
     )
     if not photos:
         return (
             '<section class="home-section" id="home-photos" aria-labelledby="home-photos-title">'
-            '<h2 class="home-h2" id="home-photos-title">Latest fan photos</h2>'
-            f'<p class="home-text">No photos yet. Be the first to post one.</p>{upload}'
+            f'<h2 class="home-h2" id="home-photos-title">{escape(en.t("photos_title"))}</h2>'
+            f'<p class="home-text">{escape(en.t("photos_empty"))}</p>{upload}'
             "</section>"
         )
     items = "".join(
         f'<li class="home-gallery__item"><a href="{_photo_href(p)}" '
         f'onclick="{ja._track("click_top_photo", surface="top_photo_gallery", manhole=p.manhole_id, position=i)}">'
         f"{_img(p, en)}"
-        f'<span class="home-gallery__cap"><b>{escape(_names(p, en) or "Poké Lid")}</b>'
+        f'<span class="home-gallery__cap"><b>{escape(_names(p, en) or en.t("lid"))}</b>'
         f'<span>{escape(en.pref(p.prefecture))}</span>'
-        f'<time datetime="{escape(ja._jst_iso(p.created_at))}">{escape(format_photo_date(p.created_at, "en"))}</time></span>'
+        f'<time datetime="{escape(ja._jst_iso(p.created_at))}">{escape(format_photo_date(p.created_at, en.lang))}</time></span>'
         "</a></li>"
         for i, p in enumerate(photos)
     )
     with_photos = data.stats.get("manholes_with_photos")
     coverage = (
-        f" Fans have photographed {with_photos:,} locations so far."
+        en.t("photos_coverage", n=f"{with_photos:,}")
         if isinstance(with_photos, int) and with_photos else ""
     )
     return (
         '<section class="home-section" id="home-photos" aria-labelledby="home-photos-title">'
-        '<h2 class="home-h2" id="home-photos-title">Latest fan photos</h2>'
-        f'<p class="home-text">Recent posts, picked region by region from north to south so no single area dominates.{coverage}</p>'
+        f'<h2 class="home-h2" id="home-photos-title">{escape(en.t("photos_title"))}</h2>'
+        f'<p class="home-text">{escape(en.t("photos_lead") + coverage)}</p>'
         f'<ul class="home-gallery">{items}</ul>'
         f"{upload}"
         "</section>"
     )
 
 
-def _event_card(event: dict, data: ja.TopData, en: English) -> str:
+def _event_card(event: dict, data: ja.TopData, en: Locale) -> str:
     pref = event["prefecture"]
     ongoing = event["start"] <= data.today
     status = en.strings.get("EVENTS_ONGOING", "Ongoing") if ongoing else en.strings.get("EVENTS_UPCOMING", "Starting soon")
@@ -431,7 +453,7 @@ def _event_card(event: dict, data: ja.TopData, en: English) -> str:
     )
 
 
-def render_events(data: ja.TopData, en: English) -> str:
+def render_events(data: ja.TopData, en: Locale) -> str:
     if not data.events:
         return ""
     visible = data.events[:ja.EVENT_VISIBLE_LIMIT]
@@ -441,25 +463,21 @@ def render_events(data: ja.TopData, en: English) -> str:
         more = (
             '<details class="home-events__more">'
             f'<summary onclick="{ja._track("click_event_show_all", surface="top_event_notice", count=len(data.events))}">'
-            f"Show all ({len(data.events)})</summary>"
+            f'{escape(en.t("events_show_all", n=len(data.events)))}</summary>'
             f'<ul class="home-events">{"".join(_event_card(e, data, en) for e in rest)}</ul>'
             "</details>"
         )
     return (
         '<section class="home-section" id="home-events" aria-labelledby="home-events-title">'
         f'<h2 class="home-h2" id="home-events-title">{escape(en.strings.get("EVENTS_TITLE", "Ongoing Events & Stamp Rallies"))}</h2>'
-        '<p class="home-text">Event names and details are in Japanese.</p>'
+        f'<p class="home-text">{escape(en.t("events_note"))}</p>'
         f'<ul class="home-events">{"".join(_event_card(e, data, en) for e in visible)}</ul>'
         f"{more}"
         "</section>"
     )
 
 
-def _join(names: list[str]) -> str:
-    return names[0] if len(names) == 1 else ", ".join(names[:-1]) + " and " + names[-1]
-
-
-def render_pref(data: ja.TopData, en: English) -> str:
+def render_pref(data: ja.TopData, en: Locale) -> str:
     counts = data.pref_counts
     regions = []
     for name, prefs in ja.REGIONS:
@@ -474,7 +492,7 @@ def render_pref(data: ja.TopData, en: English) -> str:
         )
         regions.append(
             '<div class="home-region">'
-            f'<h3 class="home-region__title">{escape(REGION_NAMES[name])} <small>{sum(counts[p] for p in installed)}</small></h3>'
+            f'<h3 class="home-region__title">{escape(en.text["regions"][name])} <small>{sum(counts[p] for p in installed)}</small></h3>'
             f'<ul class="home-pref">{links}</ul>'
             "</div>"
         )
@@ -482,26 +500,22 @@ def render_pref(data: ja.TopData, en: English) -> str:
     note = ""
     if empty:
         empty_links = [f'<a href="{_pref_href(p)}" hreflang="ja">{escape(en.pref(p))}</a>' for p in empty]
-        note = (
-            f'<p class="home-pref-note">As of {MONTHS[data.today.month - 1]} {data.today.year}, '
-            f"there are no Poké Lids in {_join(empty_links)}.</p>"
-        )
+        month = month_label(en.lang, data.today.year, data.today.month)
+        note = f'<p class="home-pref-note">{en.t("pref_none", month=month, places=join_places(en.lang, empty_links))}</p>'
     return (
         '<section class="home-section" id="home-pref" aria-labelledby="home-pref-title">'
         f'<h2 class="home-h2" id="home-pref-title">{escape(en.strings.get("SEC4_TITLE", "Search by Prefecture"))}</h2>'
-        f'<p class="home-text">Poké Lids are installed in {len(data.installed_prefectures)} of Japan\'s 47 prefectures. '
-        "They are listed by region from north to south, with the number of lids in each. "
-        "Prefecture pages are in Japanese.</p>"
+        f'<p class="home-text">{escape(en.t("pref_text", prefs=len(data.installed_prefectures)), quote=False)}</p>'
         f'<div class="home-regions">{"".join(regions)}</div>'
         f"{note}"
         f'<a class="home-more" href="{ROOT_PATH}prefectures/" hreflang="ja" '
         f'onclick="{ja._track("click_pref_link", surface="top_prefecture_list", prefecture="all")}">'
-        "All 47 prefectures (Japanese)</a>"
+        f'{escape(en.t("pref_more"))}</a>'
         "</section>"
     )
 
 
-def render_themes(data: ja.TopData, en: English) -> str:
+def render_themes(data: ja.TopData, en: Locale) -> str:
     slugs = [s for s in data.tag_meta.top_chip_slugs(data.tag_counts) if s in TAG_STRING_KEYS]
     return "".join(
         f'<a class="hub-chip" href="map.html?tag={quote(s)}" '
@@ -511,14 +525,14 @@ def render_themes(data: ja.TopData, en: English) -> str:
     )
 
 
-def render_pokemon(data: ja.TopData, en: English) -> str:
+def render_pokemon(data: ja.TopData, en: Locale) -> str:
     cards = []
     used: set[str] = set()
     for entry in data.popular_pokemon:
         name = en.pokemon_by_slug.get(entry.slug, entry.name)
         photo = ja.pick_pokemon_photo(entry, data.photos, used)
         media = (
-            f'<img src="{ROOT_PATH}{escape(photo.src)}" alt="{escape(name)} Poké Lid in {escape(en.pref(photo.prefecture))}" '
+            f'<img src="{ROOT_PATH}{escape(photo.src)}" alt="{escape(en.t("alt_poke", name=name, pref=en.pref(photo.prefecture)))}" '
             f'width="{ja.PHOTO_SIZE}" height="{ja.PHOTO_SIZE}" loading="lazy" decoding="async">'
             if photo else '<span class="home-poke__placeholder" aria-hidden="true"></span>'
         )
@@ -526,12 +540,12 @@ def render_pokemon(data: ja.TopData, en: English) -> str:
             f'<li class="home-poke"><a href="{entry.href}" '
             f'onclick="{ja._track("click_hub_pokemon", surface="top_hub_pokemon", pokemon=entry.name)}">'
             f'{media}<span class="home-poke__name">{escape(name)}</span>'
-            f'<span class="home-poke__count">{len(entry.manhole_ids)} lids</span></a></li>'
+            f'<span class="home-poke__count">{escape(en.t("poke_count", n=len(entry.manhole_ids)))}</span></a></li>'
         )
     cards.append(
         '<li class="home-poke home-poke--all"><a href="pokemon/" '
         f'onclick="{ja._track("click_hub_pokemon_all", surface="top_hub_pokemon")}">'
-        f'<span class="home-poke__name">All Pokémon</span><span class="home-poke__count">{len(data.pokemon_counts):,}</span></a></li>'
+        f'<span class="home-poke__name">{escape(en.t("poke_all"))}</span><span class="home-poke__count">{len(data.pokemon_counts):,}</span></a></li>'
     )
     return f'<ul class="home-pokes">{"".join(cards)}</ul>'
 
@@ -548,7 +562,7 @@ RENDERERS = {
 }
 
 
-def apply_blocks(html: str, data: ja.TopData, en: English) -> str:
+def apply_blocks(html: str, data: ja.TopData, en: Locale) -> str:
     def replace(match) -> str:
         name, indent = match.group("name"), match.group("indent")
         if name == "head":
@@ -568,18 +582,20 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("target", type=Path, nargs="?", default=DEFAULT_TARGET)
     parser.add_argument("--source", type=Path, default=DEFAULT_TARGET,
-                        help="英語版の雛形（省略時は apps/web/index.en.html）")
+                        help="雛形（省略時は apps/web/index.en.html。全言語で同じ雛形を使う）")
+    parser.add_argument("--lang", choices=LANGS, default="en")
     args = parser.parse_args(argv)
 
-    html = args.source.read_text(encoding="utf-8")
+    loc = Locale(args.lang)
+    html = localize_shell(args.source.read_text(encoding="utf-8"), loc)
     missing = [name for name in ["head", *RENDERERS] if f"<!-- home:{name}:start -->" not in html]
     if missing:
         print(f"[top-page-en] markers missing in {args.source}: {', '.join(missing)}", file=sys.stderr)
         return 1
     data = ja.load_data()
     args.target.parent.mkdir(parents=True, exist_ok=True)
-    args.target.write_text(apply_blocks(html, data, English()), encoding="utf-8")
-    print(f"[top-page-en] wrote {args.target}: {data.total} manholes, {len(data.installed_prefectures)} prefectures")
+    args.target.write_text(apply_blocks(html, data, loc), encoding="utf-8")
+    print(f"[top-page-{args.lang}] wrote {args.target}: {data.total} manholes, {len(data.installed_prefectures)} prefectures")
     return 0
 
 
