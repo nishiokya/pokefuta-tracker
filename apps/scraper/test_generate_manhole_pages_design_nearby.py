@@ -219,8 +219,9 @@ class DesignSectionRenderTest(unittest.TestCase):
         self.assertIn("近くのデザインマンホール", html)
         # 写真館投稿があるものは写真館詳細へ、写真つき
         self.assertIn("https://pokefuta.com/design-manholes/abc", html)
-        self.assertIn("写真館で見る →", html)
+        self.assertIn("class='design-tiles'", html)
         self.assertIn("/api/design-manholes/abc/photo", html)
+        self.assertIn('onerror="this.remove()"', html)  # 写真館の画像が読めないときに壊れた画像を出さない
         # 投稿がないものは一覧へフォールバック＋募集表示
         self.assertIn(f"href='{pages.DESIGN_STUDIO_LIST_URL}'", html)
         self.assertIn("写真募集中", html)
@@ -278,6 +279,20 @@ class DesignSectionRenderTest(unittest.TestCase):
         self.assertLess(i_design, i_nearby)
         self.assertLess(i_nearby, i_pokemon)
 
+
+    def test_nearer_pokefuta_section_goes_first(self):
+        """2つの欄は、いちばん近い蓋がある方を上に出す。"""
+        html = self._html(
+            nearby=[(_manhole(id="999", city="西尾市"), 0.4)],
+            nearby_design=[(_character_spot(), 3.6)],
+        )
+        self.assertLess(html.index("次に寄れるポケふた"), html.index("近くのデザインマンホール"))
+
+    def test_design_section_is_capped_at_four_tiles(self):
+        spots = [(_character_spot(ref=f"character:{i}", title=f"t{i}"), 1.0 + i) for i in range(6)]
+        html = self._html(nearby_design=spots[: pages.DESIGN_NEARBY_MAX])
+        self.assertEqual(pages.DESIGN_NEARBY_MAX, 4)
+        self.assertEqual(html.count("<li class='design-tile'>"), 4)
 
 class NearbyDesignComputationTest(unittest.TestCase):
     def test_generate_all_pages_attaches_nearby_spots(self):

@@ -57,7 +57,8 @@ SECONDARY_TAG_LABELS: dict[str, tuple[str, str]] = {
 # 近くのデザインマンホール（ガンダム・キャラクターマンホール・写真館投稿）
 DESIGN_STUDIO_LIST_URL = "https://pokefuta.com/design-manholes"
 DESIGN_NEARBY_RADIUS_KM = 20.0
-DESIGN_NEARBY_MAX = 5
+# 近くのデザインマンホールはメインではないので小さいタイルで4件（スマホ2列×2行、PC 4列×1行）
+DESIGN_NEARBY_MAX = 4
 # 近接判定に使ってよい座標ソース（manhole_titles.json の運用ルールと同じ）
 CHARACTER_COORD_METHODS = {"official_google_map_link", "municipal_google_map_link"}
 # 🎨近接称号は本文のデザインマンホールセクションへアンカーで飛ばす
@@ -1118,49 +1119,51 @@ def generate_html(
                 "distance_km": round(dist, 1),
                 "has_studio_page": has_studio,
             })
-            thumb_html = ""
             photo_url = _safe_pokefuta_url(spot.get("photo_url"))
-            if photo_url:
-                thumb_html = (
-                    f'<div class="related-card-thumb">'
-                    f'<img src="{_escape_attr_value(photo_url)}" alt="" loading="lazy"'
-                    f' onerror="this.closest(\'.related-card-thumb\').remove()">'
-                    f"</div>"
-                )
+            thumb_html = (
+                f"<span class='design-tile-thumb'>"
+                f'<img src="{_escape_attr_value(photo_url)}" alt="" loading="lazy" onerror="this.remove()">'
+                f"</span>"
+                if photo_url
+                else "<span class='design-tile-thumb design-tile-thumb--empty'>📷 写真募集中</span>"
+            )
             work = spot.get("work", "")
             work_html = f"<span class='design-work'>{escape(work)}</span>" if work else ""
-            status_html = (
-                "<span class='design-status design-status--studio'>写真館で見る →</span>"
-                if has_studio
-                else "<span class='design-status'>📷 写真募集中</span>"
-            )
             design_items += (
-                f"<li class='related-card'>{thumb_html}"
-                f"<div class='related-card-body'>"
-                f'{_icon("icon-detail-location", "icon-sm")}'
-                f"<div class='design-text'>"
+                f"<li class='design-tile'>"
                 f"<a href='{_escape_attr_value(href)}' target='_blank' rel='noopener noreferrer'"
                 f" onclick=\"trackEvent('click_nearby_design_manhole', {_d_params})\">"
-                f"{escape(spot.get('title', ''))}</a>"
+                f"{thumb_html}"
+                f"<span class='design-tile-title'>{escape(spot.get('title', ''))}</span>"
                 f"{work_html}"
-                f"</div>"
-                f"</div>"
                 f"<span class='distance'>{escape(dist_str)}</span>"
-                f"{status_html}"
-                f"</li>"
+                f"</a></li>"
             )
         _design_more_onclick = _attr_json({"manhole_id": manhole_id, "surface": "design_section"})
         design_html = (
             f"<section id='design-manholes' class='design-section section-card'>"
             f"<h2>🎨 近くのデザインマンホール</h2>"
             f"<p class='design-note'>ポケふたと一緒に巡れる、ご当地のデザインマンホールです。</p>"
-            f"<ul class='related-list related-list--cards'>{design_items}</ul>"
+            f"<ul class='design-tiles'>{design_items}</ul>"
             f"<a class='gallery-more' href='{escape(DESIGN_STUDIO_LIST_URL)}'"
             f" target='_blank' rel='noopener noreferrer'"
             f" onclick=\"trackEvent('click_design_studio_list', {_design_more_onclick})\">"
             f"写真館でデザインマンホールを見る →</a>"
             f"</section>"
         )
+
+    # 「近くのデザインマンホール」と「ポケふた（回る/次に寄れる）」は、いちばん近い蓋がある方を上に出す
+    def _nearest_pokefuta_km() -> float | None:
+        if trip:
+            lat, lng = manhole.get("lat"), manhole.get("lng")
+            if lat is None or lng is None:
+                return None
+            dists = [
+                haversine(float(lat), float(lng), float(r["lat"]), float(r["lng"]))
+                for r in trip["route"] if str(r.get("id", "")).strip() != manhole_id
+            ]
+            return min(dists) if dists else None
+        return nearby[0][1] if nearby else None
 
     # Nearby manholes section（/trip/ のエリアに入っている蓋は、そのエリアの回り方に差し替える）
     nearby_html = _trip_section_html(trip, manhole_id, id_to_image_url) if trip else ""
@@ -1185,6 +1188,15 @@ def generate_html(
                 onclick_params=_nearby_params,
             )
         nearby_html += "</ul></section>"
+
+    _pokefuta_km = _nearest_pokefuta_km()
+    _design_km = nearby_design[0][1] if nearby_design else None
+    if nearby_html and design_html and _pokefuta_km is not None and (
+        _design_km is None or _pokefuta_km < _design_km
+    ):
+        first_travel_html, second_travel_html = nearby_html, design_html
+    else:
+        first_travel_html, second_travel_html = design_html, nearby_html
 
     # Same pokemon manholes section
     same_pokemon_html = ""
@@ -1775,11 +1787,6 @@ def generate_html(
       margin-bottom: 10px;
     }}
 
-    .design-text {{
-      flex: 1;
-      min-width: 0;
-    }}
-
     .design-work {{
       display: block;
       font-size: 12px;
@@ -1787,15 +1794,56 @@ def generate_html(
       margin-top: 2px;
     }}
 
-    .design-status {{
-      font-size: 12px;
-      color: #b08050;
-      white-space: nowrap;
+    .design-tiles {{
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
     }}
 
-    .design-status--studio {{
-      color: #1a73e8;
+    @media (min-width: 900px) {{
+      .design-tiles {{ grid-template-columns: repeat(4, minmax(0, 1fr)); }}
+    }}
+
+    .design-tile a {{
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      height: 100%;
+      padding: 8px;
+      border: 1px solid #eee;
+      border-radius: 12px;
+      background: #fff;
+      color: inherit;
+      text-decoration: none;
+    }}
+
+    .design-tile-thumb {{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      aspect-ratio: 3 / 2;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #f3efe8;
+      margin-bottom: 4px;
+    }}
+
+    .design-tile-thumb img {{ width: 100%; height: 100%; object-fit: cover; }}
+
+    .design-tile-thumb--empty {{ font-size: 12px; color: #b08050; }}
+
+    .design-tile-title {{
+      font-size: 13px;
       font-weight: 600;
+      color: #1a6fd4;
+      line-height: 1.35;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }}
 
     .hero-badge-secondary {{
@@ -2253,9 +2301,9 @@ def generate_html(
 
     {location_html}
 
-    {design_html}
+    {first_travel_html}
 
-    {nearby_html}
+    {second_travel_html}
 
     {pokemon_info_html}
 
