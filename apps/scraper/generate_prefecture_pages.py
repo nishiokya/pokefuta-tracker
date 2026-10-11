@@ -1773,6 +1773,30 @@ def _visit_duration_html(prefecture: str, records: list[dict], durations: dict |
     )
 
 
+def _trip_links_html(
+    prefecture: str, trips: list[tuple[str, str, int, str]] | None, already: str = ""
+) -> str:
+    """この県にある「ポケふた旅」のエリアへのリンク（能登半島・上野など、県の一部だけのエリアもここから入れる）。
+
+    すぐ上の所要時間の文で同じエリアへのリンクを出しているときは重ねない。
+    """
+    links = "".join(
+        f'<a href="{_escape_attr(path)}" data-track="prefecture_trip_click" data-surface="trip_links" '
+        f'data-destination="trip">{escape(name)} {count}枚'
+        f'{f"<small>{escape(time)}</small>" if time else ""}</a>'
+        for name, path, count, time in trips or []
+        if f'href="{path}"' not in already
+    )
+    if not links:
+        return ""
+    return (
+        '<section class="visit-guide" aria-labelledby="trip-links-heading">'
+        f'<h2 id="trip-links-heading">{escape(prefecture)}のポケふた旅</h2>'
+        '<p>回る順番、かかる時間の目安、Googleマップで開ける順路をまとめたルート案内です。</p>'
+        f'<div class="related-links">{links}</div></section>'
+    )
+
+
 # 都道府県ページと市区町村ページ（generate_municipality_pages.py）で共有する見た目。
 # build_page の f-string から外に出したので、波括弧は1つで書く。
 PAGE_CSS = """    :root { color-scheme: light; }
@@ -1817,6 +1841,7 @@ PAGE_CSS = """    :root { color-scheme: light; }
     .municipality-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 14px; }
     .visit-guide > p { color: #62564a; }
     .visit-guide > p.visit-duration { color: #2f2925; font-weight: 600; }
+    .visit-guide .related-links small { margin-left: 6px; color: #6b4aa2; font-size: .75rem; }
     .visit-guide > p.visit-duration-note { margin: 6px 0 0; color: #75685c; font-size: .78rem; }
     .visit-guide-stops {
       display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
@@ -2251,6 +2276,7 @@ def build_page(
     coverage: PrefectureCoverage | None = None,
     complete: list[str] | None = None,
     durations: dict | None = None,
+    trips: list[tuple[str, str, int, str]] | None = None,
 ) -> str:
     photos = photos or {}
     count = len(records)
@@ -2298,8 +2324,10 @@ def build_page(
     trivia_html = _trivia_html(prefecture, trivia_entry, count)
     events_html = _events_html(events)
     related_html = _related_prefectures(prefecture, empty_prefectures)
+    duration_html = _visit_duration_html(prefecture, records, durations)
     municipality_guide_html = (
-        _visit_duration_html(prefecture, records, durations)
+        duration_html
+        + _trip_links_html(prefecture, trips, duration_html)
         + (
             _visit_guide_html(records, visit_guide)
             or _municipality_guide(prefecture, records, municipality_paths)
@@ -2602,6 +2630,7 @@ def generate_all(
     photos: dict[str, dict] | None = None,
     visit_guides: dict[str, dict] | None = None,
     durations: dict | None = None,
+    trips: dict[str, list[tuple[str, str, int, str]]] | None = None,
 ) -> int:
     photos = photos or {}
     records_by_pref = {pref: [] for pref in PREFECTURE_ORDER}
@@ -2637,6 +2666,7 @@ def generate_all(
             coverage[prefecture],
             complete,
             durations,
+            (trips or {}).get(prefecture),
         )
         (out_dir / "index.html").write_text(html, encoding="utf-8")
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -2659,6 +2689,25 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def _trips_by_prefecture(records: list[dict], durations: dict) -> dict[str, list[tuple[str, str, int, str]]]:
+    """県 → その県の /trip/ エリア（名前, パス, 枚数, かかる時間の目安）。"""
+    # generate_trip_pages はこのモジュールを import するので、ここで遅れて読む
+    try:
+        from apps.scraper.generate_trip_pages import trip_summaries
+        from apps.scraper.visit_durations import load_trip_areas, trip_path
+    except ModuleNotFoundError as exc:
+        if exc.name != "apps":
+            raise
+        from generate_trip_pages import trip_summaries
+        from visit_durations import load_trip_areas, trip_path
+    areas = load_trip_areas()
+    pref_of = {trip_path(a): a["prefecture"] for a in areas}
+    out: dict[str, list[tuple[str, str, int, str]]] = {}
+    for item in trip_summaries(records, areas, durations):
+        out.setdefault(pref_of[item[1]], []).append(item)
+    return out
+
+
 def main() -> int:
     args = parse_args()
     records = load_records(args.manholes)
@@ -2677,9 +2726,10 @@ def main() -> int:
     trivia = load_trivia(args.trivia)
     events = load_events(args.events)
     visit_guides = load_visit_guides(args.guides)
+    durations = load_durations(args.durations)
     count = generate_all(
         records, pokemon_slugs, trivia, args.output, events, photos, visit_guides,
-        load_durations(args.durations),
+        durations, _trips_by_prefecture(records, durations),
     )
     print(
         f"[generate_prefecture_pages] wrote {count} pages to "

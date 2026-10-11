@@ -7,6 +7,7 @@ import unittest
 from pathlib import Path
 
 from apps.scraper import generate_sitemap as SITEMAP
+from apps.scraper import generate_prefecture_pages as PREF
 from apps.scraper import generate_trip_pages as MODULE
 from apps.scraper import visit_durations as VD
 
@@ -120,6 +121,25 @@ class AreaTest(unittest.TestCase):
             self.assertEqual(html.count("<img"), MODULE.CARD_THUMB_LIMIT)
             self.assertIn("+2", html)
 
+    def test_trips_by_manhole_gives_each_stop_its_own_area_only(self) -> None:
+        trips = MODULE.trips_by_manhole(RECORDS, AREAS, DURATIONS)
+        osaka = trips["206"]
+        self.assertIs(trips["208"], osaka)
+        self.assertEqual([r["id"] for r in osaka["route"]], ["206", "210", "209", "207", "208"])
+        self.assertEqual(osaka["path"], "/trip/higashiosaka/")
+        self.assertIn("たいてい1時間20分〜2時間半ほど", osaka["text"])
+        self.assertNotIn("148", [r["id"] for r in osaka["route"]])  # 斑鳩は混ぜない
+        self.assertIn("目安はまだありません", trips["148"]["text"])
+        self.assertNotIn("1", trips)  # エリアに入っていない蓋
+
+    def test_prefecture_page_links_to_its_trips_without_repeating(self) -> None:
+        trips = [("能登半島", "/trip/noto/", 6, ""), ("上野", "/trip/ueno/", 2, "約5分")]
+        html = PREF._trip_links_html("石川県", trips)
+        self.assertIn("石川県のポケふた旅", html)
+        self.assertIn('href="/trip/noto/"', html)
+        self.assertEqual(PREF._trip_links_html("石川県", trips[:1], 'x href="/trip/noto/" y'), "")
+        self.assertEqual(PREF._trip_links_html("石川県", None), "")
+
 class GenerateTest(unittest.TestCase):
     def test_pages_index_and_links(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -160,6 +180,21 @@ class LinkTest(unittest.TestCase):
         xml = SITEMAP.build_sitemap(["206"], trip_paths=paths)
         self.assertIn("https://data.pokefuta.com/trip/higashiosaka/", xml)
 
+
+
+class ManholePageTest(unittest.TestCase):
+    def test_trip_section_replaces_next_stops(self) -> None:
+        import sys
+        sys.path.insert(0, str(Path(__file__).parent))
+        from apps.scraper import generate_manhole_pages as PAGES
+        trip = MODULE.trips_by_manhole(RECORDS, AREAS, DURATIONS)["207"]
+        html = PAGES._trip_section_html(trip, "207", {})
+        self.assertIn("東大阪のポケふた5枚を回る", html)
+        self.assertEqual(html.count("このポケふた"), 1)
+        self.assertIn("/manholes/207/", html)
+        self.assertIn("href='/trip/higashiosaka/'", html)
+        self.assertIn("よく回られる順番です。", html)
+        self.assertEqual(html.count("次まで"), 4)  # 最後の蓋には付かない
 
 if __name__ == "__main__":
     unittest.main()
