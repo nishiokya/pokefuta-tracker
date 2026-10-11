@@ -123,7 +123,8 @@ class RankingTest(unittest.TestCase):
     def test_ranking_announces_the_trip_pages(self) -> None:
         trips = [("斑鳩", "/trip/ikaruga/", 3, "約30分〜55分")]
         html = MUNI_PAGE.build_ranking_page(self.items, 4, "2026年10月11日", trips=trips)
-        self.assertIn("ルート案内「ポケふた旅」をはじめました", html)
+        self.assertIn("ポケふた旅をはじめました", html)
+        self.assertIn('class="trip-hero"', html)
         self.assertIn('href="/trip/ikaruga/"', html)
         self.assertIn('href="/trip/"', html)
         self.assertNotIn("ポケふた旅をはじめました", MUNI_PAGE.build_ranking_page(self.items, 4, "x"))

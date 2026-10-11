@@ -348,6 +348,25 @@ EXTRA_CSS = """
     /* 市区町村の列に蓋の画像が並ぶと、狭い画面で都道府県名が1文字ずつ折り返すので止める */
     .ranking-table td:nth-child(3) { white-space: nowrap; }
     .related-links small { margin-left: 6px; color: #6b4aa2; font-size: .75rem; }
+    .trip-hero {
+      position: relative; overflow: hidden; margin-top: 18px; padding: 24px 28px;
+      border: 1px solid rgba(20,84,79,.18); border-radius: 24px;
+      background: linear-gradient(135deg, #f1faf6, #fffaf0);
+      box-shadow: 0 14px 32px rgba(77,56,30,.08);
+    }
+    .trip-hero::after {
+      content: ""; position: absolute; width: 200px; height: 200px; right: -60px; top: -80px;
+      border: 36px solid rgba(20,84,79,.08); border-radius: 50%;
+    }
+    .trip-hero .hero-kicker { color: #14544f; }
+    .trip-hero h2 { margin: 4px 0 8px; font-size: clamp(1.4rem, 4.5vw, 2.1rem); line-height: 1.2; }
+    .trip-hero-lead { max-width: 720px; margin: 0 0 14px; color: #574b41; font-weight: 650; }
+    .trip-hero .related-links a { background: rgba(255,255,255,.8); }
+    @media (max-width: 700px) {
+      .trip-hero { padding: 20px 18px; }
+      /* スマホではチップを上位4つだけ（全部並べるとカードが画面1枚分になる）。残りはボタンから */
+      .trip-hero .related-links a:nth-child(n+5) { display: none; }
+    }
     .stop-thumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 3px; margin: 4px 0 2px; }
     .stop-thumbs img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; background: #ece4d7; }
     .stop-thumb-more { color: #75685c; font-size: .75rem; font-weight: 800; }
@@ -644,15 +663,18 @@ def _trip_announce(trips: list[tuple[str, str, int, str]] | None) -> str:
         f'{f"<small>{escape(time)}</small>" if time else ""}</a>'
         for name, path, count, time in trips
     )
+    # ヒーローカードと同じ作り（グラデーションの面・キッカー・大きい見出し・ボタン）にして、
+    # ランキング表の手前で「回り方はこちら」と目に入るようにする
     return (
-        '<section class="visit-guide" aria-labelledby="trip-announce-heading">'
-        '<h2 id="trip-announce-heading">ルート案内「ポケふた旅」をはじめました</h2>'
-        '<p>ポケふたが近くに集まっているエリアについて、回る順番、かかる時間の目安、'
-        'Googleマップで開ける順路をまとめました。旅行やおでかけの計画にどうぞ。</p>'
+        '<section class="trip-hero" aria-labelledby="trip-announce-heading">'
+        '<p class="hero-kicker">NEW ルート案内</p>'
+        '<h2 id="trip-announce-heading">ポケふた旅をはじめました</h2>'
+        '<p class="trip-hero-lead">ポケふたが近くに集まっているエリアを、回る順番・かかる時間の目安・'
+        'Googleマップで開ける順路つきでまとめました。旅行やおでかけの計画にどうぞ。</p>'
         f'<div class="related-links">{chips}</div>'
-        '<div class="municipality-actions"><a class="inline-link" href="/trip/" '
+        '<div class="hero-actions"><a class="button primary" href="/trip/" '
         'data-track="municipality_trip_click" data-surface="trip_announce" data-destination="trip_index">'
-        'ポケふた旅の一覧を見る</a></div></section>'
+        'ポケふた旅を見る</a></div></section>'
     )
 
 
@@ -741,7 +763,6 @@ def build_ranking_page(
         <p class="hero-kicker">市区町村別 ポケふたガイド</p>
         <h1>ポケふたが多い市区町村ランキング</h1>
         <p>{escape(lead)}</p>
-        <p class="hero-note">{escape(today)}時点の設置データから毎日作り直しています。</p>
       </div>
     </header>
 
