@@ -1,5 +1,5 @@
 {
-  "_comment": "/trip/ のエリア。manhole_ids はページに出す地点の全部。所要時間は dataset/visit_durations.json に同じ組があるときだけ出る（apps/tools/build_visit_durations.py がこのファイルも読んで集計する）。 同じ市町村の2枚だけのエリアは登録しない（回る順番がA→Bの1本だけで、詳細ページの「次に寄れるポケふた」を狭めるだけになるため。2026-10-11 に上野・北上・鳥羽・大津を外した）。",
+  "_comment": "/trip/ のエリア。manhole_ids はページに出す地点の全部。所要時間は dataset/visit_durations.json に同じ組があるときだけ出る（apps/tools/build_visit_durations.py がこのファイルも読んで集計する）。 同じ市町村の2枚だけのエリアは登録しない（回る順番がA→Bの1本だけで、詳細ページの「次に寄れるポケふた」を狭めるだけになるため。2026-10-11 に上野・北上・鳥羽・大津を外した）。 access（任意）: スタート地点と行き方を1行ずつ。train は電車の1行、parking は {name, kind: 公共|コインパーキング, fee: 無料|有料, note}。公式の案内で確かめた内容だけを書き、sources と checked_on を付ける。金額は書かない。",
   "areas": [
     {
       "slug": "higashiosaka",
@@ -11,7 +11,33 @@
         "209",
         "207",
         "208"
-      ]
+      ],
+      "access": {
+        "train": "荒本駅（近鉄けいはんな線）から徒歩5分の市役所スタート、東石切公園から石切駅・新石切駅で帰る",
+        "parking": [
+          {
+            "name": "花園中央公園駐車場",
+            "kind": "公共",
+            "fee": "有料",
+            "note": "30分まで無料"
+          }
+        ],
+        "sources": [
+          {
+            "label": "ピカッと東大阪（公式観光サイト）前編",
+            "url": "https://pikahiga.jp/column/localpokemon-aruki-1/"
+          },
+          {
+            "label": "後編",
+            "url": "https://pikahiga.jp/column/localpokemon-aruki-2/"
+          },
+          {
+            "label": "花園中央公園駐車場",
+            "url": "https://hanazono-centralparks-hos.com/hanazono-parking/"
+          }
+        ],
+        "checked_on": "2026-10-11"
+      }
     },
     {
       "slug": "tokorozawa",
