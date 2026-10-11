@@ -277,7 +277,39 @@
         "223",
         "225",
         "224"
-      ]
+      ],
+      "access": {
+        "train": "JR佐原駅前に1枚。伊能忠敬記念館と水の郷さわらはどちらも駅から徒歩15分、あやめパークは駅から離れる",
+        "parking": [
+          {
+            "name": "町並み観光駐車場",
+            "kind": "公共",
+            "fee": "有料",
+            "note": "普通車のみ"
+          },
+          {
+            "name": "道の駅・川の駅 水の郷さわら",
+            "kind": "公共",
+            "fee": "無料",
+            "note": "道の駅"
+          }
+        ],
+        "sources": [
+          {
+            "label": "香取市のポケふた案内",
+            "url": "https://www.city.katori.lg.jp/sightseeing/meisho/kanko/pokefuta.html"
+          },
+          {
+            "label": "伊能忠敬記念館のアクセス",
+            "url": "https://www.city.katori.lg.jp/sightseeing/museum/guide.html"
+          },
+          {
+            "label": "道の駅・川の駅 水の郷さわら",
+            "url": "https://www.city.katori.lg.jp/nogyo_sangyo/koryu/s_mizunosato.html"
+          }
+        ],
+        "checked_on": "2026-10-11"
+      }
     },
     {
       "slug": "noto",
