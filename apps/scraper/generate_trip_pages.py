@@ -251,6 +251,8 @@ def _access_html(area: dict) -> str:
     rows = []
     if access.get("train"):
         rows.append(("🚃 電車", escape(access["train"])))
+    if access.get("car"):
+        rows.append(("🚗 車", escape(access["car"])))
     parking = [
         f'{escape(p["name"])}（{"・".join(escape(x) for x in (p.get("kind"), p.get("fee"), p.get("note")) if x)}）'
         for p in access.get("parking") or []
