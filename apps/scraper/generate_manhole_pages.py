@@ -1122,7 +1122,7 @@ def generate_html(
             photo_url = _safe_pokefuta_url(spot.get("photo_url"))
             thumb_html = (
                 f"<span class='design-tile-thumb'>"
-                f'<img src="{_escape_attr_value(photo_url)}" alt="" loading="lazy">'
+                f'<img src="{_escape_attr_value(photo_url)}" alt="" loading="lazy" onerror="this.remove()">'
                 f"</span>"
                 if photo_url
                 else "<span class='design-tile-thumb design-tile-thumb--empty'>📷 写真募集中</span>"

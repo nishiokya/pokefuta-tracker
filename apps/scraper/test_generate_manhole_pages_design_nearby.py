@@ -221,6 +221,7 @@ class DesignSectionRenderTest(unittest.TestCase):
         self.assertIn("https://pokefuta.com/design-manholes/abc", html)
         self.assertIn("class='design-tiles'", html)
         self.assertIn("/api/design-manholes/abc/photo", html)
+        self.assertIn('onerror="this.remove()"', html)  # 写真館の画像が読めないときに壊れた画像を出さない
         # 投稿がないものは一覧へフォールバック＋募集表示
         self.assertIn(f"href='{pages.DESIGN_STUDIO_LIST_URL}'", html)
         self.assertIn("写真募集中", html)
