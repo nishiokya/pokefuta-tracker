@@ -1378,7 +1378,7 @@ def generate_html(
     {escape(cta_text)}
   </a>
 
-  <footer>
+  <footer class="page-credit">
     <p><a href="{escape(BASE_URL)}">data.pokefuta.com</a> &mdash; {escape(footer_text)}</p>
   </footer>
 </div>
