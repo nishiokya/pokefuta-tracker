@@ -144,7 +144,17 @@
         "23",
         "311",
         "312"
-      ]
+      ],
+      "access": {
+        "train": "JR桜木町駅前広場の1枚からスタート、日本丸メモリアルパーク（徒歩6分）から臨港パーク・赤レンガパークへ歩ける。マリンタワーへはあかいくつバスも便利",
+        "sources": [
+          {
+            "label": "横浜市観光情報サイト「横浜ポケモンスポット観光マップ」",
+            "url": "https://www.welcome.city.yokohama.jp/pokelids/"
+          }
+        ],
+        "checked_on": "2026-10-11"
+      }
     },
     {
       "slug": "machida",
@@ -157,7 +167,29 @@
         "101",
         "102",
         "103"
-      ]
+      ],
+      "access": {
+        "train": "町田駅（小田急線・JR横浜線）から徒歩13分の芹ヶ谷公園の中に6枚。開園は6〜18時（6〜8月は19時まで）",
+        "parking": [
+          {
+            "name": "芹ヶ谷公園の駐車場",
+            "kind": "公共",
+            "fee": "有料",
+            "note": "1時間まで無料・7時から"
+          }
+        ],
+        "sources": [
+          {
+            "label": "芹ヶ谷公園の基本情報（町田市）",
+            "url": "https://www.city.machida.tokyo.jp/bunka/park/shisetu/serigaya/park02.html"
+          },
+          {
+            "label": "「ポケふた」のあるまち。まちだ（町田市）",
+            "url": "https://www.city.machida.tokyo.jp/shisei/city_promotion/pokemonmanhole.html"
+          }
+        ],
+        "checked_on": "2026-10-11"
+      }
     },
     {
       "slug": "katori",
