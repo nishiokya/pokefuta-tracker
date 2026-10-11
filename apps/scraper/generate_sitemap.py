@@ -192,7 +192,6 @@ def build_sitemap(
         url_entry(f"{BASE_URL}summary/", "weekly", "0.9"),
         url_entry(f"{BASE_URL}prefectures/", "weekly", "0.9"),
         url_entry(f"{BASE_URL}pokemon/", "weekly", "0.9"),
-        url_entry(f"{BASE_URL}nearby.html", "weekly", "0.6"),
         url_entry(f"{BASE_URL}character_manholes.html", "weekly", "0.8"),
         url_entry(f"{BASE_URL}gmanhole_map.html", "weekly", "0.7"),
         url_entry(f"{BASE_URL}design_manhole.html", "weekly", "0.6"),

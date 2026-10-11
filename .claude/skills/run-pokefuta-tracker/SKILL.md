@@ -100,7 +100,7 @@ python3 apps/scraper/generate_summary_pages.py
 python3 apps/scraper/generate_prefecture_pages.py
 python3 apps/scraper/generate_sitemap.py
 cp apps/web/index.html dist/index.html
-cp apps/web/nearby_manholes.html dist/nearby.html
+cp apps/web/nearby.html dist/nearby.html  # 廃止済み。map.html へのリダイレクト
 cp apps/web/map.html dist/map.html
 cp apps/web/gmanhole_map.html dist/gmanhole_map.html
 cp apps/web/design_manhole.html dist/design_manhole.html
@@ -108,7 +108,7 @@ cp apps/web/login.html dist/login.html
 cp apps/web/sitemap.xml dist/sitemap.xml
 cp apps/web/robots.txt dist/robots.txt
 python3 tools/build_i18n.py
-echo '<!doctype html><meta http-equiv="refresh" content="0; url=./nearby.html">' > dist/nearby_manholes.html
+cp apps/web/nearby.html dist/nearby_manholes.html  # 旧 URL も map.html へ
 python3 apps/scraper/inject_site_header.py dist
 mkdir -p dist/assets dist/manhole/image dist/api
 cp -r apps/web/assets/* dist/assets/
