@@ -1599,11 +1599,9 @@ def generate_html(
       color: #aaa;
     }}
     footer a {{ color: #6F55A3; text-decoration: none; }}
-    @media (max-width: 620px) {{
-      body {{ padding: 0 10px 10px; }}
-      .container {{ width: auto; max-width: calc(100vw - 20px); margin-top: 10px; }}
-      .page-hero, .page-section {{ padding: 16px; border-radius: 16px; }}
-      /* ボタンをヒーローに入れたので、丸いバッジは下の余白を取らない横長の札にする */
+    /* 丸いバッジ（右上に絶対配置）は、画面が狭いとヒーローのボタン・見出し・説明文に重なる
+       （1000px 幅でも見出しにかかっていた）。重ならない幅になるまでは、下の余白を取らない横長の札にする */
+    @media (max-width: 1020px) {{
       .page-hero {{ min-height: 0; }}
       .page-hero::after {{ width: 120px; height: 120px; right: -48px; bottom: -64px; }}
       .hero-badge {{
@@ -1612,6 +1610,11 @@ def generate_html(
         padding: 6px 14px; border-radius: 999px; border-width: 3px;
       }}
       .hero-badge strong {{ font-size: 22px; }}
+    }}
+    @media (max-width: 620px) {{
+      body {{ padding: 0 10px 10px; }}
+      .container {{ width: auto; max-width: calc(100vw - 20px); margin-top: 10px; }}
+      .page-hero, .page-section {{ padding: 16px; border-radius: 16px; }}
       h1 {{ font-size: 24px; }}
       .fact-grid {{ grid-template-columns: 1fr; }}
       .photos-grid {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
