@@ -1,6 +1,5 @@
 import importlib.util
 import json
-import tempfile
 import unittest
 from pathlib import Path
 
@@ -9,71 +8,6 @@ SPEC = importlib.util.spec_from_file_location("generate_summary_pages", MODULE_P
 summary = importlib.util.module_from_spec(SPEC)
 assert SPEC and SPEC.loader
 SPEC.loader.exec_module(summary)
-
-
-class LatestPhotosSectionTests(unittest.TestCase):
-    """summary の「最新追加写真」カードのキャプション統一（場所 · 投稿者 · 7月16日）。"""
-
-    S = {
-        "pref_key": "ja",
-        "latest_photos": {"h2": "最新追加写真", "note": "テスト用の説明"},
-    }
-    RECORDS = {
-        "220": {
-            "prefecture": "北海道",
-            "city": "斜里町",
-            "title": "北海道/斜里町",
-            "pokemons": ["パルキア", "ロコン"],
-        }
-    }
-
-    def _build(self, photo: dict) -> str:
-        return summary._build_latest_photos_section(
-            self.S, self.RECORDS, {"photos": {"p1": photo}}
-        )
-
-    def test_meta_has_location_poster_and_locale_date(self):
-        html = self._build({
-            "manhole_id": "220",
-            "url": "https://example.com/220.jpeg",
-            "created_at": "2026-07-15T15:30:00+00:00",  # JST では 7/16
-            "display_name": "テスト太郎",
-            "public_user_id": "6096691c-eeda-4e73-8401-a11274868ede",
-        })
-        self.assertIn(
-            '<span class="photo-card-meta">北海道/斜里町 · '
-            '<a class="poster-link" href="https://pokefuta.com/users/'
-            '6096691c-eeda-4e73-8401-a11274868ede/visits"',
-            html,
-        )
-        self.assertIn('>テスト太郎</a> · 7月16日</span>', html)
-        self.assertIn('<article class="photo-card">', html)
-        self.assertIn('<a class="photo-card-main" href="/manholes/220/">', html)
-
-    def test_meta_without_poster_keeps_location_and_date(self):
-        html = self._build({
-            "manhole_id": "220",
-            "url": "https://example.com/220.jpeg",
-            "created_at": "2026-07-16T00:00:00+00:00",
-        })
-        self.assertIn(
-            '<span class="photo-card-meta">北海道/斜里町 · 7月16日</span>', html
-        )
-
-    def test_long_poster_name_is_truncated(self):
-        html = self._build({
-            "manhole_id": "220",
-            "url": "https://example.com/220.jpeg",
-            "created_at": "2026-07-16T00:00:00+00:00",
-            "display_name": "とても長い名前の投稿者さんイーブイ推し団長",
-        })
-        self.assertIn("とても長い名前の投稿者さんイーブイ推し…", html)
-
-    def test_non_ja_page_renders_nothing(self):
-        html = summary._build_latest_photos_section(
-            {**self.S, "pref_key": "en"}, self.RECORDS, {"photos": {}}
-        )
-        self.assertEqual(html, "")
 
 
 class DiscoveryHubTests(unittest.TestCase):
@@ -287,21 +221,6 @@ class DiscoveryHubTests(unittest.TestCase):
                     {"remote_island", "roadside", "station_front", "world_heritage"},
                 )
 
-    def test_japanese_prefecture_jump_links_to_static_pages(self):
-        records = summary.load_records(summary.NDJSON)
-        stats = summary.build_stats(records)
-        html = summary._build_prefecture_jump_section(summary.SUMMARY_STRINGS["ja"], stats)
-        self.assertIn('href="/prefectures/fukui/"', html)
-        self.assertIn('href="/prefectures/gunma/"', html)
-        self.assertIn('data-summary-event="summary_prefecture_click"', html)
-        self.assertIn("<h3>北海道・東北</h3>", html)
-        # 0枚の県にもページがあるので、薄いチップで残す（47県すべてにリンク）
-        self.assertEqual(html.count('data-surface="summary_prefecture_jump" data-prefecture='), 47)
-        self.assertEqual(html.count('class="is-empty"'), len(stats["empty"]))
-        for language, strings in summary.SUMMARY_STRINGS.items():
-            if language != "ja":
-                self.assertEqual(summary._build_prefecture_jump_section(strings, stats), "")
-
     def test_japanese_ranking_uses_landing_page_cta(self):
         records = summary.load_records(summary.NDJSON)
         stats = summary.build_stats(records)
@@ -343,7 +262,7 @@ class DiscoveryHubTests(unittest.TestCase):
 
     def test_rendered_page_keeps_anchors_used_by_hero_links_and_map(self):
         """ヒーローのリンクと地図ページ（map.html）が飛ぶ先のアンカーが、どの言語のページにもある。
-        ja は県の詳細を /prefectures/ に任せて、地方ごとの入口だけにする。"""
+        ja は県・ポケモン・写真を探すのをヒーローのボタンから各ページへ任せ、ここには出さない。"""
         records = summary.load_records(summary.NDJSON)
         stats = summary.build_stats(records)
         records_by_id = {str(r["id"]): r for r in records}
@@ -352,13 +271,12 @@ class DiscoveryHubTests(unittest.TestCase):
                 html = summary.render_page(strings, stats, {}, {}, records_by_id, {}, {})
                 self.assertIn('id="travel-discovery"', html)
                 self.assertIn('id="rare-discovery"', html)
+                for removed in ("latest-photos-heading", "popular-pokemon-heading", "no-photos-heading"):
+                    self.assertNotIn(f'id="{removed}"', html)
                 if language == "ja":
                     self.assertNotIn('id="prefecture-count-heading"', html)
-                    self.assertIn('id="prefecture-jump-heading"', html)
-                    self.assertIn('href="/prefectures/hokkaido/"', html)
                 else:
                     self.assertIn('id="prefecture-count-heading"', html)
-                    self.assertNotIn('id="prefecture-jump-heading"', html)
 
     def test_events_beyond_the_first_three_are_folded(self):
         events = [
@@ -374,84 +292,28 @@ class DiscoveryHubTests(unittest.TestCase):
         three = summary._build_events_section(summary.SUMMARY_STRINGS["ja"], events[:3], lambda v: v)
         self.assertNotIn("<details", three)
 
-    def test_popular_pokemon_cards_use_the_representative_photo(self):
-        """ポケモンのページと同じ決め方: 公開写真のある蓋だけを候補にし、代表がその中にあれば代表、
-        無ければ新しい公開写真。画像ファイルが残っていても、公開写真の一覧に無い蓋は出さない。"""
-        pokemon_stats = {"by_count": [{"ja_name": "ラッキー", "slug": "chansey", "count": 3}]}
-        records = {mid: {"id": mid, "pokemons": ["ラッキー"]} for mid in ("10", "20", "30")}
-        photos = {"photos": {
-            "10": {"manhole_id": "10", "created_at": "2026-10-01T00:00:00Z"},
-            "20": {"manhole_id": "20", "created_at": "2026-09-01T00:00:00Z"},
-            # 30 は写真が非公開・削除になった（画像ファイルだけ残っている）
-        }}
-        strings = summary.SUMMARY_STRINGS["ja"]
-        with tempfile.TemporaryDirectory() as tmp:
-            image_dir = Path(tmp)
-            for mid in ("10", "20", "30"):
-                (image_dir / f"{mid}_lid.jpeg").write_bytes(b"x")
-            original = summary.IMAGE_DIR
-            summary.IMAGE_DIR = image_dir
-            try:
-                def build(reps, photos_data=photos):
-                    return summary._build_popular_pokemon_section(
-                        strings, pokemon_stats, records, {}, reps, photos_data
-                    )
-                chosen = build({"ラッキー": "20"})
-                newest = build({})
-                withdrawn = build({"ラッキー": "30"})
-                no_public = build({"ラッキー": "30"}, {"photos": {}})
-            finally:
-                summary.IMAGE_DIR = original
-        self.assertIn('src="/manhole/image/20_lid.jpeg"', chosen)  # 人が選んだ代表
-        self.assertIn('src="/manhole/image/10_lid.jpeg"', newest)  # 代表が無ければ新しい公開写真
-        self.assertIn('src="/manhole/image/10_lid.jpeg"', withdrawn)  # 代表が非公開なら使わない
-        self.assertNotIn("<img", no_public)  # 公開写真が無ければ文字だけ
-        self.assertIn('href="/pokemon/"', chosen)
-
-
-    def test_no_photos_section_is_japanese_only(self):
-        """写真なし節の県リンクは ja 専用ページ（/prefectures/）を指すが、
-        節そのものが ja でしか描画されないので他言語に漏れない。
-
-        レビューで「他言語の summary から ja 専用ページへ飛ぶ」と
-        指摘されたが、pref_key の early return が20行上にあるため
-        実際には描画されない。読み違えが再発しないよう固定する。"""
-        records = {
-            "1": {"id": "1", "status": "active", "prefecture": "鹿児島県"},
-            "2": {"id": "2", "status": "active", "prefecture": "宮城県"},
-        }
-        photos = {"photos": {}}
-        for language, strings in summary.SUMMARY_STRINGS.items():
-            with self.subTest(language=language):
-                html = summary._build_no_photos_section(strings, records, photos)
-                if language == "ja":
-                    self.assertIn("/prefectures/kagoshima/", html)
-                else:
-                    self.assertEqual("", html)
-
-
-
 class PageOrderTests(unittest.TestCase):
-    def test_daily_fact_stays_near_the_top(self):
-        """「今日の雑学」の「地図で見る」は summary_map_click の出どころ（旧ページで3番目に押されていた）。
-        読まれない下の方へ回さず、最新写真の直後・都道府県の前に置く。"""
+    def test_trivia_comes_first(self):
+        """雑学を優先する: 今日の雑学と雑学の一覧をヒーローの直後に置き、一覧は折りたたまない。
+        今日の雑学の「地図で見る」は summary_map_click の出どころ（旧ページで3番目に押されていた）。"""
         records = summary.load_records(summary.NDJSON)
         stats = summary.build_stats(records)
         records_by_id = {str(r["id"]): r for r in records}
-        html = summary.render_page(summary.SUMMARY_STRINGS["ja"], stats, {}, {}, records_by_id, {}, {})
-        self.assertLess(html.index('class="daily-fact-card"'), html.index('id="prefecture-jump-heading"'))
-        self.assertLess(html.index('id="prefecture-jump-heading"'), html.index('id="fact-list-heading"'))
-
-    def test_broken_representatives_file_does_not_stop_the_build(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            path = Path(tmp) / "reps.json"
-            for content in ('[1, 2]', '{"representatives": [1]}', "{broken"):
-                with self.subTest(content=content):
-                    path.write_text(content, encoding="utf-8")
-                    self.assertEqual(summary.load_pokemon_representatives(path), {})
-            path.write_text('{"representatives": {"ラッキー": 91}}', encoding="utf-8")
-            self.assertEqual(summary.load_pokemon_representatives(path), {"ラッキー": "91"})
-            self.assertEqual(summary.load_pokemon_representatives(Path(tmp) / "missing.json"), {})
+        events = [{"title": "イベント", "url": "https://example.com/", "prefecture": "岩手県",
+                   "start_date": "2026-01-01", "end_date": "2099-12-31"}]
+        for language, strings in summary.SUMMARY_STRINGS.items():
+            with self.subTest(language=language):
+                html = summary.render_page(
+                    strings, stats, {}, {}, records_by_id, {}, {}, prefecture_events=events
+                )
+                order = [html.index(marker) for marker in (
+                    "</header>", 'class="daily-fact-card"', 'id="fact-list-heading"',
+                    'id="events-heading"', 'id="travel-discovery"', 'id="ranking-heading"',
+                )]
+                self.assertEqual(order, sorted(order))
+                facts = html[html.index('id="fact-list-heading"'):]
+                facts = facts[:facts.index("</section>")]
+                self.assertNotIn("<details", facts)
 
 
 class StylesheetTests(unittest.TestCase):

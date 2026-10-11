@@ -168,11 +168,7 @@ SUMMARY_STRINGS: dict[str, dict] = {
             "card_map_title": "地図で探す",
             "card_theme_title": "旅のテーマから探す",
             "events_more": "ほか{count}件のイベントを見る",
-            "pokemon_more": "ポケモン一覧を見る",
             "show_more": "ほか{count}件を見る",
-        },
-        "popular_pokemon": {
-            "h2": "人気ポケモンのポケふた",
         },
         "discovery_hubs": {
             "travel_h2": "旅のテーマから探す", "travel_note": "行き先の雰囲気から、次に会いに行くポケふたを探せます。",
@@ -180,16 +176,6 @@ SUMMARY_STRINGS: dict[str, dict] = {
             "details": "このテーマのポケふたを見る", "count": "{count}枚", "unique_count": "{count}種",
             "travel": {"remote_island": "離島", "roadside": "道の駅・SA", "station_front": "駅前", "world_heritage": "世界遺産", "near_gundam_manhole": "ガンダムマンホールまで約500m以内", "gundam_manhole_city": "ガンダムマンホールのあるまち", "near_character_manhole": "キャラクターマンホールまで約1km以内", "character_manhole_city": "キャラクターマンホールのあるまち"},
             "rare": {"unique": "全国1枚しかないポケモン", "extremes": "日本の四端", "lone": "秘境・ぽつんと一枚"},
-        },
-        "latest_photos": {
-            "h2": "最新追加写真",
-            "note": "ユーザーが投稿した最新のポケふた写真です。タップするとポケふた詳細ページへ移動します。",
-        },
-        "no_photos": {
-            "h2": "まだ写真が投稿されていないポケふた",
-            "total": "{prefectures}都道府県の{count}枚に写真がまだありません",
-            "complete": "ポケふたがある{listed}都道府県のうち{complete}都道府県は、設置済みのポケふた全てに現地写真がそろっています。",
-            "cta": "あなたが最初の投稿者になれます。",
         },
         "pokemon_ranking": {
             "h2": "ポケモンランキング",
@@ -267,11 +253,7 @@ SUMMARY_STRINGS: dict[str, dict] = {
             "card_map_title": "On the Map",
             "card_theme_title": "By travel theme",
             "events_more": "Show {count} more events",
-            "pokemon_more": "See all Pokémon",
             "show_more": "Show {count} more",
-        },
-        "popular_pokemon": {
-            "h2": "Popular Pokémon on Poké Lids",
         },
         "discovery_hubs": {
             "travel_h2": "Explore by travel theme", "travel_note": "Choose your next Poké Lid destination by the kind of journey you want.",
@@ -355,11 +337,7 @@ SUMMARY_STRINGS: dict[str, dict] = {
             "card_map_title": "在地图上搜索",
             "card_theme_title": "按旅行主题探索",
             "events_more": "查看其余{count}个活动",
-            "pokemon_more": "查看全部宝可梦",
             "show_more": "查看其余{count}项",
-        },
-        "popular_pokemon": {
-            "h2": "热门宝可梦井盖",
         },
         "discovery_hubs": {
             "travel_h2": "按旅行主题探索", "travel_note": "从想去的风景出发，寻找下一个 Pokéfuta。",
@@ -443,11 +421,7 @@ SUMMARY_STRINGS: dict[str, dict] = {
             "card_map_title": "在地圖上搜尋",
             "card_theme_title": "依旅行主題探索",
             "events_more": "查看其餘{count}個活動",
-            "pokemon_more": "查看全部寶可夢",
             "show_more": "查看其餘{count}項",
-        },
-        "popular_pokemon": {
-            "h2": "熱門寶可夢人孔蓋",
         },
         "discovery_hubs": {
             "travel_h2": "依旅行主題探索", "travel_note": "從想去的風景出發，尋找下一個 Pokéfuta。",
@@ -531,11 +505,7 @@ SUMMARY_STRINGS: dict[str, dict] = {
             "card_map_title": "지도에서 찾기",
             "card_theme_title": "여행 테마로 찾기",
             "events_more": "이벤트 {count}개 더 보기",
-            "pokemon_more": "포켓몬 전체 보기",
             "show_more": "{count}개 더 보기",
-        },
-        "popular_pokemon": {
-            "h2": "인기 포켓몬 포케후타",
         },
         "discovery_hubs": {
             "travel_h2": "여행 테마로 찾기", "travel_note": "가고 싶은 풍경에서 다음 포케후타 여행지를 찾아보세요.",
