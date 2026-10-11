@@ -10,4 +10,5 @@
 - ヘッダーマークとfaviconは `inject_site_header.py` で全生成ページ・全言語に反映する。旧favicon指定を置き換える。
 - 配信用の正本は `apps/web/assets/`。Pagesビルドで `dist/assets/` とルートのfaviconフォールバックへコピーする。
 - faviconは16/32/48pxのICO、48/96pxのPNG、SVG。ホーム画面用は180px。
+- Apple用180pxは全面不透明な `#FFF5DE` のキャンバスへ合成する。書き出し後に180×180pxと透明画素ゼロを確認する。
 - OGP・地図マーカーは変更しない。
