@@ -6,6 +6,16 @@ dataset/visit_durations.json は手動更新（k11 の DB バックアップで 
 pokefuta.ndjsonはapps/scraperで更新している
 latest-manhole-photos.json と docs/api/*.json は import-manhole-photos.yml が Supabase から日次一括生成（画像DL込み。pokefuta.com アプリの /api/manholes・/api/site-stats は docs/api を読む。手動で回すときだけ `/import-photos` スキル）
 
+## 公開リポジトリとして守ること
+
+このリポジトリと data.pokefuta.com は公開。2026-10-11 の点検では、全履歴・PR・Issue に秘密は出ていなかった。この状態を保つ。
+
+- **資格情報は GitHub Actions の secrets にだけ置く**（`SUPABASE_SERVICE_ROLE_KEY`・`R2_*`・`REGULAR_BADGE_RULE` など）。ワークフローでは `env:` で渡し、`echo`・`set -x`・`curl -v` でログに出さない。`pull_request_target` は使わない
+- **常連バッジの線（`REGULAR_BADGE_RULE`）の数字は、コード・PR・画面に書かない**
+- **PR・コミット・データに他ユーザーの名前・行動・auth UID を書かない。** 指すときは公開ID（`photo_id`・`public_user_id`・マンホールID）
+- **公開する JSON（`docs/api/*.json`・`docs/latest-manhole-photos.json`）に出してよい利用者の情報は `public_user_id` と表示名まで。** auth の user_id・メール・署名付きURL・写真の位置情報（EXIF）は出さない
+- Supabase の anon キー（`apps/web/assets/pokefuta-auth.js`）は公開前提の値。守りは写真館側の RLS とテーブル権限で効かせる
+
 ## ディレクトリ構成
 
 - `apps/scraper/` — GitHub Actions から自動実行されるスクリプト群（update-pokefuta.yml / pages-deploy.yml / import-manhole-photos.yml）
