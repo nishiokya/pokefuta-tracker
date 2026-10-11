@@ -7,7 +7,7 @@
 本はふたの手前に重ね、白い下半分の露出を減らす。
 
 - `apps/web/assets/brand-icon.svg` は図鑑の本マーク。写真館の `public/brand-icon.svg` はカメラマーク。ふたの形と配色は共通にする。
-- ヘッダー（30px）は `apps/web/assets/brand-mark.svg`、faviconは `brand-icon.svg`。`brand-mark.svg` は30pxの方眼で描き直したヘッダー専用版（48pxの意匠を縮めると線がにじみ、旧ボールより小さく見えたため）。写真館の `public/brand-mark.svg` とふたの部分は同じ。
+- ヘッダー（30px）は `apps/web/assets/brand-mark.svg`、faviconは `brand-icon.svg`。`brand-mark.svg` は `brand-icon.svg` と同じ絵で、30px表示用に輪郭線を太くし、viewBoxを内容に合わせて詰め、ふたの下半分を背景に溶けない `#F6E6C4` にしたもの（48pxの線のまま縮めると0.8px程度になってにじむため）。絵の形・配置は変えない。
 - ヘッダーマークとfaviconは `inject_site_header.py` で全生成ページ・全言語に反映する。旧favicon指定を置き換える。
 - 配信用の正本は `apps/web/assets/`。Pagesビルドで `dist/assets/` とルートのfaviconフォールバックへコピーする。
 - faviconは16/32/48pxのICO、48/96pxのPNG、SVG。ホーム画面用は180px。
