@@ -1827,6 +1827,29 @@
     }
   },
   {
+    "id": "pref-trivia-ishikawa-noto-with-you",
+    "type": "pref_trivia",
+    "title": "石川県のポケふたトリビア",
+    "url": "https://data.pokefuta.com/prefectures/ishikawa/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "summary_trivia",
+    "source": "pref_trivia",
+    "raw_data": {
+      "fact_type": "local_connection",
+      "values": {
+        "prefecture": "石川県",
+        "manhole_count": 8,
+        "summary": "能登のポケふたは地震からの復興支援で贈られたもので、縁に「POKÉMON with YOU」とあります",
+        "map_pref": "石川県",
+        "source_type": "official",
+        "source_url": "https://news.mynavi.jp/article/20260416-4346994/"
+      }
+    }
+  },
+  {
     "id": "pref-trivia-fukui-support-dragonite",
     "type": "pref_trivia",
     "title": "福井県のポケふたトリビア",
@@ -2486,7 +2509,7 @@
       "values": {
         "prefecture": "鹿児島県",
         "manhole_count": 9,
-        "summary": "「イーブイすき」と「いぶすき」の語呂合わせをきっかけに、指宿へイーブイのポケふたが設置されました",
+        "summary": "「イーブイすき」と「いぶすき」の語呂合わせをきっかけに、指宿にはイーブイと、シャワーズやブースターなど進化形のポケふたが設置されました",
         "map_pref": "鹿児島県",
         "source_type": "official",
         "source_url": "https://www.city.ibusuki.lg.jp/main/info/page014900.html"
