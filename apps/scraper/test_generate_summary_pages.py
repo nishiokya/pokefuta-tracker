@@ -1,5 +1,6 @@
 import importlib.util
 import json
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -286,19 +287,20 @@ class DiscoveryHubTests(unittest.TestCase):
                     {"remote_island", "roadside", "station_front", "world_heritage"},
                 )
 
-    def test_japanese_prefecture_cards_link_to_static_pages(self):
+    def test_japanese_prefecture_jump_links_to_static_pages(self):
         records = summary.load_records(summary.NDJSON)
         stats = summary.build_stats(records)
-        html = summary._build_prefecture_info_section(
-            summary.SUMMARY_STRINGS["ja"],
-            stats,
-            records,
-            [],
-            lambda value: value,
-        )
+        html = summary._build_prefecture_jump_section(summary.SUMMARY_STRINGS["ja"], stats)
         self.assertIn('href="/prefectures/fukui/"', html)
         self.assertIn('href="/prefectures/gunma/"', html)
         self.assertIn('data-summary-event="summary_prefecture_click"', html)
+        self.assertIn("<h3>北海道・東北</h3>", html)
+        # 0枚の県にもページがあるので、薄いチップで残す（47県すべてにリンク）
+        self.assertEqual(html.count('data-surface="summary_prefecture_jump" data-prefecture='), 47)
+        self.assertEqual(html.count('class="is-empty"'), len(stats["empty"]))
+        for language, strings in summary.SUMMARY_STRINGS.items():
+            if language != "ja":
+                self.assertEqual(summary._build_prefecture_jump_section(strings, stats), "")
 
     def test_japanese_ranking_uses_landing_page_cta(self):
         records = summary.load_records(summary.NDJSON)
@@ -315,24 +317,87 @@ class DiscoveryHubTests(unittest.TestCase):
         self.assertIn('href="/prefectures/', html)
         self.assertIn(">詳しく見る</a>", html)
 
-    def test_japanese_search_hub_prefecture_card_links_to_the_prefectures_index(self):
-        """ja版の「都道府県から探す」カードの目的地は詳細ページの入口
+    def test_japanese_hero_prefecture_link_goes_to_the_prefectures_index(self):
+        """ja版のヒーローの「都道府県から探す」の目的地は詳細ページの入口
         （/prefectures/）であるべきで、同じページ内の集計グリッドへの
-        アンカーに戻してはいけない。"""
-        html = summary._build_search_hub_section(summary.SUMMARY_STRINGS["ja"])
-        self.assertIn('<a class="search-hub-card" href="/prefectures/">', html)
+        アンカーに戻してはいけない。市区町村ランキングとポケふた旅も ja だけ出す。"""
+        html = summary._build_hero_links(summary.SUMMARY_STRINGS["ja"])
+        self.assertIn('href="/prefectures/"', html)
+        self.assertIn('href="/municipalities/"', html)
+        self.assertIn('href="/trip/"', html)
+        self.assertIn('href="#travel-discovery"', html)
         self.assertNotIn('href="#prefecture-count-heading"', html)
+        self.assertIn('data-surface="summary_hero"', html)
 
-    def test_non_japanese_search_hub_prefecture_card_stays_on_the_localized_anchor(self):
-        """/prefectures/ はja専用ページなので、他言語では飛ばさず、その言語で
-        ローカライズされた同一ページ内の集計セクションのままにする。"""
+    def test_non_japanese_hero_prefecture_link_stays_on_the_localized_anchor(self):
+        """/prefectures/・/municipalities/・/trip/ はja専用ページなので、他言語では飛ばさず、
+        その言語でローカライズされた同一ページ内の集計セクションのままにする。"""
         for language, strings in summary.SUMMARY_STRINGS.items():
             if language == "ja":
                 continue
             with self.subTest(language=language):
-                html = summary._build_search_hub_section(strings)
+                html = summary._build_hero_links(strings)
                 self.assertIn('href="#prefecture-count-heading"', html)
-                self.assertNotIn('href="/prefectures/"', html)
+                for ja_only in ('href="/prefectures/"', 'href="/municipalities/"', 'href="/trip/"'):
+                    self.assertNotIn(ja_only, html)
+
+    def test_rendered_page_keeps_anchors_used_by_hero_links_and_map(self):
+        """ヒーローのリンクと地図ページ（map.html）が飛ぶ先のアンカーが、どの言語のページにもある。
+        ja は県の詳細を /prefectures/ に任せて、地方ごとの入口だけにする。"""
+        records = summary.load_records(summary.NDJSON)
+        stats = summary.build_stats(records)
+        records_by_id = {str(r["id"]): r for r in records}
+        for language, strings in summary.SUMMARY_STRINGS.items():
+            with self.subTest(language=language):
+                html = summary.render_page(strings, stats, {}, {}, records_by_id, {}, {})
+                self.assertIn('id="travel-discovery"', html)
+                self.assertIn('id="rare-discovery"', html)
+                if language == "ja":
+                    self.assertNotIn('id="prefecture-count-heading"', html)
+                    self.assertIn('id="prefecture-jump-heading"', html)
+                    self.assertIn('href="/prefectures/hokkaido/"', html)
+                else:
+                    self.assertIn('id="prefecture-count-heading"', html)
+                    self.assertNotIn('id="prefecture-jump-heading"', html)
+
+    def test_events_beyond_the_first_three_are_folded(self):
+        events = [
+            {"title": f"イベント{i}", "url": f"https://example.com/{i}", "prefecture": "岩手県",
+             "start_date": "2026-01-01", "end_date": "2099-12-31"}
+            for i in range(5)
+        ]
+        html = summary._build_events_section(summary.SUMMARY_STRINGS["ja"], events, lambda v: v)
+        visible = html[:html.index("<details")]
+        self.assertEqual(visible.count("<li>"), summary.EVENTS_VISIBLE)
+        self.assertIn("ほか2件のイベントを見る", html)
+        self.assertEqual(html.count('data-summary-event="summary_event_click"'), 5)  # 折りたたんでも全部ページに残る
+        three = summary._build_events_section(summary.SUMMARY_STRINGS["ja"], events[:3], lambda v: v)
+        self.assertNotIn("<details", three)
+
+    def test_popular_pokemon_cards_use_the_representative_photo(self):
+        pokemon_stats = {"by_count": [{"ja_name": "ラッキー", "slug": "chansey", "count": 2}]}
+        records = {
+            "10": {"id": "10", "pokemons": ["ラッキー"]},
+            "20": {"id": "20", "pokemons": ["ラッキー"]},
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            image_dir = Path(tmp)
+            for mid in ("10", "20"):
+                (image_dir / f"{mid}_lid.jpeg").write_bytes(b"x")
+            original = summary.IMAGE_DIR
+            summary.IMAGE_DIR = image_dir
+            try:
+                chosen = summary._build_popular_pokemon_section(
+                    summary.SUMMARY_STRINGS["ja"], pokemon_stats, records, {}, {"ラッキー": "20"}
+                )
+                fallback = summary._build_popular_pokemon_section(
+                    summary.SUMMARY_STRINGS["ja"], pokemon_stats, records, {}, {}
+                )
+            finally:
+                summary.IMAGE_DIR = original
+        self.assertIn('src="/manhole/image/20_lid.jpeg"', chosen)  # 人が選んだ代表
+        self.assertIn('src="/manhole/image/10_lid.jpeg"', fallback)  # 代表が無ければ若い番号の蓋
+        self.assertIn('href="/pokemon/"', chosen)
 
     def test_no_photos_section_is_japanese_only(self):
         """写真なし節の県リンクは ja 専用ページ（/prefectures/）を指すが、
