@@ -156,17 +156,10 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "discovery_aria": "発見",
         "daily_fact_heading": "今日のポケふた雑学",
         "fact_section_heading": "ポケふた雑学",
-        "share_x_text": "Xで共有",
-        "view_map_text": "地図で見る",
         "regional_top2": "地方別では{r1name}（{r1count}枚）が最も多く、次いで{r2name}（{r2count}枚）となっています。",
         "regional_top1": "地方別では{r1name}（{r1count}枚）が最も多くなっています。",
         "regional_outro": "ポケふたは地方自治体・観光協会との連携で設置されることが多く、観光地や駅周辺に置かれているケースが目立ちます。地域を旅しながら複数のポケふたを巡るルートを作るのも人気の楽しみ方です。",
         "search_hub": {
-            "h2": "ポケふたを探す",
-            "card_pref_title": "都道府県から探す",
-            "card_pokemon_title": "ポケモンから探す",
-            "card_map_title": "地図で探す",
-            "card_theme_title": "旅のテーマから探す",
             "events_more": "ほか{count}件のイベントを見る",
             "show_more": "ほか{count}件を見る",
         },
@@ -247,11 +240,6 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "regional_top1": "By region, {r1name} has the most with {r1count} Poké Lids.",
         "regional_outro": "Poké Lids are often installed through partnerships with local governments and tourism associations, frequently found near tourist spots and train stations. Planning a multi-region route is a popular way to enjoy them.",
         "search_hub": {
-            "h2": "Find Poké Lids",
-            "card_pref_title": "By Prefecture",
-            "card_pokemon_title": "By Pokémon",
-            "card_map_title": "On the Map",
-            "card_theme_title": "By travel theme",
             "events_more": "Show {count} more events",
             "show_more": "Show {count} more",
         },
@@ -331,11 +319,6 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "regional_top1": "按地区统计，{r1name}（{r1count}个）最多。",
         "regional_outro": "宝可梦井盖多通过地方政府和观光协会合作设置，常见于旅游胜地和车站周边。边旅行边规划多地巡游路线也是广受欢迎的玩法。",
         "search_hub": {
-            "h2": "寻找宝可梦井盖",
-            "card_pref_title": "按都道府县搜索",
-            "card_pokemon_title": "按宝可梦搜索",
-            "card_map_title": "在地图上搜索",
-            "card_theme_title": "按旅行主题探索",
             "events_more": "查看其余{count}个活动",
             "show_more": "查看其余{count}项",
         },
@@ -415,11 +398,6 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "regional_top1": "按地區統計，{r1name}（{r1count}個）最多。",
         "regional_outro": "寶可夢人孔蓋多透過地方政府和觀光協會合作設置，常見於旅遊勝地和車站周邊。邊旅行邊規劃多地巡遊路線也是廣受歡迎的玩法。",
         "search_hub": {
-            "h2": "尋找寶可夢人孔蓋",
-            "card_pref_title": "按都道府縣搜尋",
-            "card_pokemon_title": "按寶可夢搜尋",
-            "card_map_title": "在地圖上搜尋",
-            "card_theme_title": "依旅行主題探索",
             "events_more": "查看其餘{count}個活動",
             "show_more": "查看其餘{count}項",
         },
@@ -499,11 +477,6 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "regional_top1": "지역별로는 {r1name}（{r1count}개）이 가장 많습니다.",
         "regional_outro": "포케후타는 지방자치단체・관광협회와의 협력으로 설치되는 경우가 많으며, 관광지나 역 주변에 위치한 경우가 눈에 띕니다. 지역을 여행하면서 여러 포케후타를 순회하는 경로를 만드는 것도 인기 있는 즐기는 방법입니다.",
         "search_hub": {
-            "h2": "포케후타 찾기",
-            "card_pref_title": "도도부현으로 찾기",
-            "card_pokemon_title": "포켓몬으로 찾기",
-            "card_map_title": "지도에서 찾기",
-            "card_theme_title": "여행 테마로 찾기",
             "events_more": "이벤트 {count}개 더 보기",
             "show_more": "{count}개 더 보기",
         },
@@ -592,17 +565,6 @@ _CSS = """\
       line-height: 1.1;
     }
 
-    .daily-fact-card {
-      display: grid;
-      gap: 14px;
-      margin: 0 0 22px;
-      padding: 18px;
-      border: 1px solid rgba(23, 111, 104, .24);
-      border-radius: 8px;
-      background: #fffdf7;
-      box-shadow: 0 14px 30px rgba(54, 40, 22, .08);
-    }
-
     .daily-fact-label {
       display: inline-flex;
       width: fit-content;
@@ -612,24 +574,6 @@ _CSS = """\
       color: #176f68;
       font-size: .8rem;
       font-weight: 900;
-    }
-
-    .daily-fact-card h2 {
-      margin: 0;
-    }
-
-    .daily-fact-card strong {
-      display: block;
-      max-width: 760px;
-      font-size: clamp(1.45rem, 6vw, 2.35rem);
-      line-height: 1.22;
-      letter-spacing: 0;
-    }
-
-    .daily-fact-card p {
-      margin: 0;
-      color: #574b41;
-      font-weight: 750;
     }
 
     .summary-actions {
@@ -1240,7 +1184,6 @@ _CSS = """\
     }
 
     .summary-stat,
-    .daily-fact-card,
     .summary-fact-card,
     .summary-table-wrap,
     .summary-list li,
@@ -1327,38 +1270,6 @@ _CSS = """\
       line-height: 1.4;
     }
 
-    /* ヒーローの入口ボタン。右上のバッジ・写真（絶対配置）に重ならない幅に収める */
-    .summary-hero-links {
-      position: relative;
-      z-index: 5;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      max-width: calc(100% - 310px);
-      margin-top: 12px;
-    }
-
-    .summary-hero-link {
-      display: inline-flex;
-      align-items: center;
-      min-height: 40px;
-      padding: 0 14px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, .88);
-      box-shadow: inset 0 0 0 1px rgba(87, 64, 143, .2);
-      color: #3f2b6f !important;
-      font-size: .84rem;
-      font-weight: 900;
-      text-decoration: none;
-      white-space: nowrap;
-    }
-
-    .summary-hero-link:first-child {
-      background: #176f68;
-      box-shadow: none;
-      color: #fff !important;
-    }
-
     .summary-more summary,
     .summary-event-more summary {
       margin-top: 10px;
@@ -1377,6 +1288,43 @@ _CSS = """\
     .discovery-subheading {
       margin: 22px 0 4px;
       font-size: 1.15rem;
+    }
+
+    /* ヒーローの主役は今日の雑学。右上のバッジ・写真（絶対配置）に重ならない幅に収める */
+    .summary-hero-fact {
+      position: relative;
+      z-index: 5;
+      display: grid;
+      gap: 8px;
+      max-width: calc(100% - 310px);
+      margin-top: 14px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, .86);
+      box-shadow: inset 0 0 0 1px rgba(23, 111, 104, .18);
+    }
+
+    .summary-hero .summary-hero-fact-main {
+      margin: 0;
+      color: #201b16;
+      font-size: clamp(1.15rem, 2.4vw, 1.5rem);
+      font-weight: 900;
+      line-height: 1.35;
+    }
+
+    .summary-hero .summary-hero-fact-note {
+      margin: 0;
+      font-size: .9rem;
+    }
+
+    .summary-hero .summary-action {
+      color: #fff;
+    }
+
+    .summary-related {
+      margin: 8px 0 0;
+      color: #574b41;
+      font-size: .875rem;
     }
 
     @media (max-width: 700px) {
@@ -1487,24 +1435,6 @@ _CSS = """\
         flex-wrap: wrap;
       }
 
-      .summary-hero-links {
-        flex: 1 1 100%;
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        max-width: none;
-        margin-top: 2px;
-      }
-
-      .summary-hero-link {
-        justify-content: center;
-        min-height: 44px;
-        padding: 0 6px;
-        font-size: .74rem;
-        line-height: 1.2;
-        text-align: center;
-        white-space: normal;
-      }
-
       /* テーマ・レアのカードは横に並べてスクロールさせる（縦に積むと約5,000px あった） */
       .discovery-hub-grid {
         grid-auto-flow: column;
@@ -1522,6 +1452,18 @@ _CSS = """\
 
       .discovery-hub-card {
         scroll-snap-align: start;
+      }
+
+      /* 帯（見出し｜バッジ）の下の段に今日の雑学を置く */
+      .summary-hero {
+        flex-wrap: wrap;
+      }
+
+      .summary-hero-fact {
+        flex: 1 1 100%;
+        max-width: none;
+        margin-top: 2px;
+        padding: 12px;
       }
     }"""
 
@@ -1711,14 +1653,6 @@ def _build_discovery_section(s: dict, stats: dict, tr) -> str:
     )
 
 
-def _twitter_intent_url(text: str, url: str) -> str:
-    return (
-        "https://twitter.com/intent/tweet"
-        f"?text={quote(text, safe='')}"
-        f"&url={quote(url, safe='')}"
-    )
-
-
 def _map_href(map_base: str, pref_ja: str | None = None) -> str:
     return f"{map_base}?pref={quote(pref_ja)}" if pref_ja else map_base
 
@@ -1774,13 +1708,9 @@ FACT_COPY: dict[str, dict] = {
     "ja": {
         "daily": "今日のポケふた雑学",
         "section": "ポケふた雑学",
-        "share": "この雑学をXで共有",
-        "hashtags": ["#ポケふた", "#ポケモンマンホール"],
         "empty_status": "まだ{empty_count}県には設置されていません。",
-        "empty_share_lead": "まだ設置されていない県は{empty_count}県あります。",
         "empty_image_subtitle": "未設置は{empty_count}県",
         "all_installed_status": "すべての都道府県に設置されています。",
-        "all_installed_share_lead": "すべての都道府県にポケふたがあります。",
         "all_installed_image_subtitle": "全都道府県に設置済み",
         "list_separator": "・",
         "top3_separator": "・",
@@ -1794,9 +1724,6 @@ FACT_COPY: dict[str, dict] = {
                 "stat": "{hokkaido}枚",
                 "main": "{hokkaido_name}には{hokkaido}枚のポケふたがあります。全国{total}枚の約{hokkaido_pct}%です。",
                 "note": "広い北海道では、ポケふた巡りも立派な旅になります。",
-                "share_title": "{hokkaido_name}だけでポケふたは{hokkaido}枚。",
-                "share_lead": "全国{total}枚の約{hokkaido_pct}%が北海道にあります。",
-                "share_body": "地域ごとの数を眺めると、旅の行き先候補も少し変わって見えます。",
                 "image_type": "summary_prefecture_rank",
                 "image_title": "{hokkaido_name}だけで{hokkaido}枚",
                 "image_main_value": "{hokkaido}枚",
@@ -1810,9 +1737,6 @@ FACT_COPY: dict[str, dict] = {
                 "stat": "{installed_count}都道府県",
                 "main": "ポケふた設置済みは{installed_count}都道府県。{empty_status}",
                 "note": "全国に広がりつつも、まだ空白地帯があります。",
-                "share_title": "ポケふた設置済みは{installed_count}都道府県。",
-                "share_lead": "{empty_share_lead}",
-                "share_body": "全国{total}枚の分布を一覧で見ると、まだ出会っていない地域が見つかります。",
                 "image_type": "summary_installed_prefectures",
                 "image_title": "ポケふた設置済み",
                 "image_main_value": "{installed_count}都道府県",
@@ -1825,9 +1749,6 @@ FACT_COPY: dict[str, dict] = {
                 "stat": "{tohoku}枚",
                 "main": "{tohoku_name}地方には{tohoku}枚のポケふたがあります。全国でも特に密度の高いエリアです。",
                 "note": "福島県、宮城県、岩手県など、巡りがいのある県が並びます。",
-                "share_title": "{tohoku_name}地方にはポケふたが{tohoku}枚。",
-                "share_lead": "福島県・宮城県・岩手県など、旅で巡りやすい密集エリアです。",
-                "share_body": "東北旅行の目的地選びにも使いやすい数字です。",
                 "image_type": "summary_regional_density",
                 "image_title": "{tohoku_name}は密集エリア",
                 "image_main_value": "{tohoku}枚",
@@ -1840,9 +1761,6 @@ FACT_COPY: dict[str, dict] = {
                 "stat": "TOP3",
                 "main": "ポケふたが多い県トップ3は、{top3}です。",
                 "note": "上位は北日本の存在感が大きめです。",
-                "share_title": "ポケふたが多い都道府県トップ3。",
-                "share_lead": "{top3}が上位です。",
-                "share_body": "数字で見ると、次の旅行先候補がかなり具体的になります。",
                 "image_type": "summary_top_prefectures",
                 "image_title": "多い県トップ3",
                 "image_main_value": "TOP3",
@@ -1856,9 +1774,6 @@ FACT_COPY: dict[str, dict] = {
                 "stat": "{fukushima}枚",
                 "main": "{fukushima_name}には{fukushima}枚のポケふたがあります。北海道に次ぐ全国2位です。",
                 "note": "県内を巡るだけでも、かなり濃いポケふた旅になります。",
-                "share_title": "{fukushima_name}のポケふたは{fukushima}枚。",
-                "share_lead": "北海道に次ぐ全国2位です。",
-                "share_body": "1県の中だけでも、しっかり巡る旅が成立する数です。",
                 "image_type": "summary_prefecture_rank",
                 "image_title": "{fukushima_name}は全国2位",
                 "image_main_value": "{fukushima}枚",
@@ -1872,9 +1787,6 @@ FACT_COPY: dict[str, dict] = {
                 "stat": "{mie}枚",
                 "main": "{mie_name}には{mie}枚のポケふたがあります。近畿・東海エリアでも存在感があります。",
                 "note": "関西・東海方面の旅程にも組み込みやすい地域です。",
-                "share_title": "{mie_name}にはポケふたが{mie}枚。",
-                "share_lead": "近畿・東海エリアでも存在感のある設置数です。",
-                "share_body": "移動ルートに組み込むと、旅の寄り道が少し楽しくなります。",
                 "image_type": "summary_prefecture_rank",
                 "image_title": "{mie_name}は{mie}枚",
                 "image_main_value": "{mie}枚",
@@ -1888,9 +1800,6 @@ FACT_COPY: dict[str, dict] = {
                 "stat": "{empty_count}県",
                 "main": "{empty_names}には、まだポケふたがありません。",
                 "note": "次にどこへ広がるのかを予想する楽しみもあります。",
-                "share_title": "まだポケふたがない県は{empty_count}県。",
-                "share_lead": "{empty_names}です。",
-                "share_body": "全国{total}枚の一覧を見ると、空白地帯にも地域の個性が見えてきます。",
                 "image_type": "summary_empty_prefectures",
                 "image_title": "まだポケふたがない県",
                 "image_main_value": "{empty_count}県",
@@ -1903,9 +1812,6 @@ FACT_COPY: dict[str, dict] = {
                 "stat": "2018年12月",
                 "main": "ポケふたの第1号は2018年12月20日、鹿児島県指宿市の指宿駅前に設置されたイーブイです。「いーぶいすき＝指宿（いぶすき）」の語呂合わせが縁で誕生しました。",
                 "note": "今も指宿駅前で実際に見ることができます。",
-                "share_title": "ポケふた第1号は2018年12月、指宿市のイーブイ。",
-                "share_lead": "「いーぶいすき＝指宿」の語呂合わせがきっかけで生まれました。",
-                "share_body": "今も指宿駅前で見ることができます。旅のついでに訪れてみてください。",
                 "image_type": "summary_trivia",
                 "image_title": "ポケふた第1号",
                 "image_main_value": "2018年",
@@ -1919,9 +1825,6 @@ FACT_COPY: dict[str, dict] = {
                 "stat": "9枚",
                 "main": "鹿児島県指宿市には、イーブイとその進化形8種類を合わせた9枚のポケふたがあります。市内を巡るだけでイーブイ系コンプリートができる唯一の場所です。",
                 "note": "2019年2月に進化形8種が追加設置されました。",
-                "share_title": "指宿市ではイーブイ進化系9枚が全部揃います。",
-                "share_lead": "イーブイ＋進化形8種類が1つの市内に集結しているのはここだけ。",
-                "share_body": "市内を歩いて全9枚を見つける旅は、ここでしかできません。",
                 "image_type": "summary_trivia",
                 "image_title": "イーブイ系9枚が指宿市に",
                 "image_main_value": "9枚",
@@ -1935,9 +1838,6 @@ FACT_COPY: dict[str, dict] = {
                 "stat": "3枚",
                 "main": "佐賀県佐賀市には、ニャース・アローラニャース・ガラルニャースの3枚があります。3枚すべてに気球がデザインされており、「気球のまち佐賀」との縁を感じさせます。",
                 "note": "佐賀はバルーンフェスタで知られる気球の街。ニャースのデザインと気球には、何か関係があるのかもしれません。",
-                "share_title": "佐賀のポケふた3枚、全部ニャース系。",
-                "share_lead": "通常・アローラ・ガラルの3地方変種が、佐賀市にそろっています。",
-                "share_body": "しかも3枚すべてに気球デザイン。「気球の街」佐賀らしい一枚です。",
                 "image_type": "summary_rare_area",
                 "image_title": "佐賀の3枚、全部ニャース",
                 "image_main_value": "3枚",
@@ -1956,13 +1856,9 @@ FACT_COPY: dict[str, dict] = {
     "en": {
         "daily": "Today's Poké Lid Trivia",
         "section": "Poké Lid Trivia",
-        "share": "Share on X",
-        "hashtags": ["#PokeLids", "#Pokefuta", "#PokemonManhole"],
         "empty_status": "{empty_count} prefectures still have none.",
-        "empty_share_lead": "{empty_count} prefectures still have no Poké Lids.",
         "empty_image_subtitle": "{empty_count} still without one",
         "all_installed_status": "Every prefecture now has Poké Lids.",
-        "all_installed_share_lead": "All prefectures now have Poké Lids.",
         "all_installed_image_subtitle": "all prefectures covered",
         "list_separator": ", ",
         "top3_separator": ", ",
@@ -1976,9 +1872,6 @@ FACT_COPY: dict[str, dict] = {
                 "stat": "{hokkaido}",
                 "main": "{hokkaido_name} has {hokkaido} Poké Lids, about {hokkaido_pct}% of the nationwide total of {total}.",
                 "note": "In wide-open Hokkaido, collecting Poké Lids can become a trip in itself.",
-                "share_title": "{hokkaido_name} alone has {hokkaido} Poké Lids.",
-                "share_lead": "That is about {hokkaido_pct}% of Japan's {total} total.",
-                "share_body": "The prefecture counts make travel ideas feel surprisingly concrete.",
                 "image_type": "summary_prefecture_rank",
                 "image_title": "{hokkaido_name} alone",
                 "image_main_value": "{hokkaido}",
@@ -1992,9 +1885,6 @@ FACT_COPY: dict[str, dict] = {
                 "stat": "{installed_count}",
                 "main": "Poké Lids are installed in {installed_count} prefectures. {empty_status}",
                 "note": "They have spread across Japan, while a few blank spots remain.",
-                "share_title": "Poké Lids are in {installed_count} prefectures.",
-                "share_lead": "{empty_share_lead}",
-                "share_body": "A nationwide list makes the next region to explore easier to spot.",
                 "image_type": "summary_installed_prefectures",
                 "image_title": "Prefectures with Poké Lids",
                 "image_main_value": "{installed_count}",
@@ -2007,9 +1897,6 @@ FACT_COPY: dict[str, dict] = {
                 "stat": "{tohoku}",
                 "main": "{tohoku_name} has {tohoku} Poké Lids, one of the densest regions nationwide.",
                 "note": "Fukushima, Miyagi, and Iwate make this area especially rewarding to explore.",
-                "share_title": "{tohoku_name} has {tohoku} Poké Lids.",
-                "share_lead": "Fukushima, Miyagi, and Iwate make it a strong travel area.",
-                "share_body": "It is a useful number when choosing where to go next.",
                 "image_type": "summary_regional_density",
                 "image_title": "{tohoku_name} density",
                 "image_main_value": "{tohoku}",
@@ -2022,9 +1909,6 @@ FACT_COPY: dict[str, dict] = {
                 "stat": "TOP 3",
                 "main": "The top 3 prefectures by Poké Lid count are {top3}.",
                 "note": "Northern Japan has a strong presence near the top.",
-                "share_title": "Top 3 prefectures by Poké Lid count.",
-                "share_lead": "{top3} lead the ranking.",
-                "share_body": "Numbers like these can turn a map into a travel shortlist.",
                 "image_type": "summary_top_prefectures",
                 "image_title": "Top 3 prefectures",
                 "image_main_value": "TOP 3",
@@ -2038,9 +1922,6 @@ FACT_COPY: dict[str, dict] = {
                 "stat": "{fukushima}",
                 "main": "{fukushima_name} has {fukushima} Poké Lids, second only to Hokkaido.",
                 "note": "A trip within the prefecture alone can be rich with discoveries.",
-                "share_title": "{fukushima_name} has {fukushima} Poké Lids.",
-                "share_lead": "That puts it second nationwide after Hokkaido.",
-                "share_body": "It is enough for a full local Poké Lid trip.",
                 "image_type": "summary_prefecture_rank",
                 "image_title": "{fukushima_name} ranks #2",
                 "image_main_value": "{fukushima}",
@@ -2054,9 +1935,6 @@ FACT_COPY: dict[str, dict] = {
                 "stat": "{mie}",
                 "main": "{mie_name} has {mie} Poké Lids, giving it a clear presence in the Kinki-Tokai area.",
                 "note": "It is easy to fold into a Kansai or Tokai travel plan.",
-                "share_title": "{mie_name} has {mie} Poké Lids.",
-                "share_lead": "It stands out in the Kinki-Tokai area.",
-                "share_body": "A small detour can become part of the discovery.",
                 "image_type": "summary_prefecture_rank",
                 "image_title": "{mie_name} has {mie}",
                 "image_main_value": "{mie}",
@@ -2070,9 +1948,6 @@ FACT_COPY: dict[str, dict] = {
                 "stat": "{empty_count}",
                 "main": "{empty_names} still have no Poké Lids.",
                 "note": "Guessing where the next one may appear is part of the fun.",
-                "share_title": "{empty_count} prefectures still have no Poké Lids.",
-                "share_lead": "They are {empty_names}.",
-                "share_body": "A nationwide list shows both the spread and the remaining blank spots.",
                 "image_type": "summary_empty_prefectures",
                 "image_title": "Still no Poké Lids",
                 "image_main_value": "{empty_count}",
@@ -2085,9 +1960,6 @@ FACT_COPY: dict[str, dict] = {
                 "stat": "Dec 2018",
                 "main": "The very first Poké Lid was installed on December 20, 2018 in Ibusuki City, Kagoshima — featuring Eevee in front of Ibusuki Station. The name matched: 'I love Eevee (ii-bui-suki)' sounds just like 'Ibusuki'.",
                 "note": "You can still see it today in front of Ibusuki Station.",
-                "share_title": "The first Poké Lid was Eevee in Ibusuki City, December 2018.",
-                "share_lead": "The name pun: 'ii-bui-suki' (I love Eevee) matches 'Ibusuki'.",
-                "share_body": "It is still there in front of Ibusuki Station, and worth the trip.",
                 "image_type": "summary_trivia",
                 "image_title": "The First Poké Lid",
                 "image_main_value": "2018",
@@ -2101,9 +1973,6 @@ FACT_COPY: dict[str, dict] = {
                 "stat": "9",
                 "main": "Ibusuki City has 9 Poké Lids covering Eevee and all 8 of its evolutions. It is the only city where you can find the whole Eevee family in one place.",
                 "note": "The 8 evolutions were added in February 2019.",
-                "share_title": "All 9 Eevee-family Poké Lids are in Ibusuki City.",
-                "share_lead": "Eevee plus 8 evolutions — the full set in one city.",
-                "share_body": "Walking the city to find all nine is a trip only Ibusuki can offer.",
                 "image_type": "summary_trivia",
                 "image_title": "9 Eevee-family in Ibusuki",
                 "image_main_value": "9",
@@ -2117,9 +1986,6 @@ FACT_COPY: dict[str, dict] = {
                 "stat": "3",
                 "main": "Saga City has 3 Poké Lids: Meowth, Alolan Meowth, and Galarian Meowth. All three feature balloon designs, fitting for a city famous for its hot air balloon festival.",
                 "note": "Saga is known for its Hot Air Balloon World Championship. The Meowth designs and balloons may share a deeper connection.",
-                "share_title": "All 3 Poké Lids in Saga City are Meowth variants.",
-                "share_lead": "Regular, Alolan, and Galarian Meowth are all in Saga City.",
-                "share_body": "All three feature balloon designs — fitting for Japan's balloon city.",
                 "image_type": "summary_rare_area",
                 "image_title": "All 3 are Meowth in Saga",
                 "image_main_value": "3",
@@ -2141,13 +2007,9 @@ FACT_COPY["zh-CN"] = {
     **FACT_COPY["en"],
     "daily": "今日宝可梦井盖小知识",
     "section": "宝可梦井盖小知识",
-    "share": "分享到 X",
-    "hashtags": ["#PokeLids", "#Pokefuta", "#PokemonManhole"],
     "empty_status": "仍有{empty_count}个县尚未设置。",
-    "empty_share_lead": "仍有{empty_count}个县没有宝可梦井盖。",
     "empty_image_subtitle": "未设置为{empty_count}县",
     "all_installed_status": "所有都道府县都已设置宝可梦井盖。",
-    "all_installed_share_lead": "所有都道府县现在都有宝可梦井盖。",
     "all_installed_image_subtitle": "所有都道府县均已设置",
     "list_separator": "、",
     "top3_separator": "、",
@@ -2160,10 +2022,8 @@ FACT_COPY["zh-TW"] = {
     "daily": "今日寶可夢人孔蓋小知識",
     "section": "寶可夢人孔蓋小知識",
     "empty_status": "仍有{empty_count}個縣尚未設置。",
-    "empty_share_lead": "仍有{empty_count}個縣沒有寶可夢人孔蓋。",
     "empty_image_subtitle": "未設置為{empty_count}縣",
     "all_installed_status": "所有都道府縣都已設置寶可夢人孔蓋。",
-    "all_installed_share_lead": "所有都道府縣現在都有寶可夢人孔蓋。",
     "all_installed_image_subtitle": "所有都道府縣均已設置",
     "map_all": "查看全國地圖",
     "map_rank": "查看排行榜",
@@ -2173,13 +2033,9 @@ FACT_COPY["ko"] = {
     **FACT_COPY["en"],
     "daily": "오늘의 포케후타 상식",
     "section": "포케후타 상식",
-    "share": "X에 공유",
-    "hashtags": ["#PokeLids", "#Pokefuta", "#PokemonManhole"],
     "empty_status": "아직 {empty_count}개 현에는 설치되어 있지 않습니다.",
-    "empty_share_lead": "아직 포케후타가 없는 현은 {empty_count}곳입니다.",
     "empty_image_subtitle": "미설치는 {empty_count}개 현",
     "all_installed_status": "모든 도도부현에 포케후타가 설치되어 있습니다.",
-    "all_installed_share_lead": "모든 도도부현에서 포케후타를 만날 수 있습니다.",
     "all_installed_image_subtitle": "모든 도도부현 설치 완료",
     "list_separator": "・",
     "top3_separator": "・",
@@ -2195,9 +2051,6 @@ FACT_COPY["zh-CN"]["facts"] = {
         "stat": "{hokkaido}个",
         "main": "{hokkaido_name}有{hokkaido}个宝可梦井盖，约占全国{total}个的{hokkaido_pct}%。",
         "note": "在辽阔的北海道，寻找宝可梦井盖本身就能成为一趟旅行。",
-        "share_title": "{hokkaido_name}一个地区就有{hokkaido}个宝可梦井盖。",
-        "share_lead": "约占全国{total}个的{hokkaido_pct}%。",
-        "share_body": "按都道府县看数量，旅行目的地也会变得更具体。",
         "image_type": "summary_prefecture_rank",
         "image_title": "{hokkaido_name}就有{hokkaido}个",
         "image_main_value": "{hokkaido}个",
@@ -2211,9 +2064,6 @@ FACT_COPY["zh-CN"]["facts"] = {
         "stat": "{installed_count}个都道府县",
         "main": "宝可梦井盖已设置于{installed_count}个都道府县。{empty_status}",
         "note": "虽然已经遍布日本各地，但仍然有空白区域。",
-        "share_title": "宝可梦井盖已设置于{installed_count}个都道府县。",
-        "share_lead": "{empty_share_lead}",
-        "share_body": "查看全国{total}个分布，就能发现还没遇见的地区。",
         "image_type": "summary_installed_prefectures",
         "image_title": "已设置宝可梦井盖",
         "image_main_value": "{installed_count}个都道府县",
@@ -2226,9 +2076,6 @@ FACT_COPY["zh-CN"]["facts"] = {
         "stat": "{tohoku}个",
         "main": "{tohoku_name}地区有{tohoku}个宝可梦井盖，是全国密度较高的区域之一。",
         "note": "福岛县、宫城县、岩手县等地都很值得巡游。",
-        "share_title": "{tohoku_name}地区有{tohoku}个宝可梦井盖。",
-        "share_lead": "福岛、宫城、岩手等地，是很适合旅行巡游的密集区域。",
-        "share_body": "规划东北旅行时，这个数字很有参考价值。",
         "image_type": "summary_regional_density",
         "image_title": "{tohoku_name}密集区域",
         "image_main_value": "{tohoku}个",
@@ -2241,9 +2088,6 @@ FACT_COPY["zh-CN"]["facts"] = {
         "stat": "TOP3",
         "main": "宝可梦井盖数量最多的前三名是：{top3}。",
         "note": "北日本地区在上位榜单中存在感很强。",
-        "share_title": "宝可梦井盖数量最多的都道府县TOP3。",
-        "share_lead": "{top3}位居前列。",
-        "share_body": "把地图换成数字来看，下一趟旅行的候选地会更清楚。",
         "image_type": "summary_top_prefectures",
         "image_title": "数量最多TOP3",
         "image_main_value": "TOP3",
@@ -2257,9 +2101,6 @@ FACT_COPY["zh-CN"]["facts"] = {
         "stat": "{fukushima}个",
         "main": "{fukushima_name}有{fukushima}个宝可梦井盖，仅次于北海道，位居全国第2。",
         "note": "只在县内巡游，也能是一趟内容很丰富的宝可梦井盖之旅。",
-        "share_title": "{fukushima_name}有{fukushima}个宝可梦井盖。",
-        "share_lead": "仅次于北海道，位居全国第2。",
-        "share_body": "这个数量足以支撑一趟县内巡游。",
         "image_type": "summary_prefecture_rank",
         "image_title": "{fukushima_name}全国第2",
         "image_main_value": "{fukushima}个",
@@ -2273,9 +2114,6 @@ FACT_COPY["zh-CN"]["facts"] = {
         "stat": "{mie}个",
         "main": "{mie_name}有{mie}个宝可梦井盖，在近畿・东海区域也很有存在感。",
         "note": "很适合加入关西或东海方向的旅行路线。",
-        "share_title": "{mie_name}有{mie}个宝可梦井盖。",
-        "share_lead": "在近畿・东海区域也很有存在感。",
-        "share_body": "把它作为顺路停靠点，旅行会多一点发现感。",
         "image_type": "summary_prefecture_rank",
         "image_title": "{mie_name}有{mie}个",
         "image_main_value": "{mie}个",
@@ -2289,9 +2127,6 @@ FACT_COPY["zh-CN"]["facts"] = {
         "stat": "{empty_count}县",
         "main": "{empty_names}仍然没有宝可梦井盖。",
         "note": "猜测下一处会设置在哪里，也是乐趣之一。",
-        "share_title": "仍没有宝可梦井盖的县有{empty_count}个。",
-        "share_lead": "分别是{empty_names}。",
-        "share_body": "全国{total}个一览能同时看到扩展范围和空白区域。",
         "image_type": "summary_empty_prefectures",
         "image_title": "仍没有宝可梦井盖的县",
         "image_main_value": "{empty_count}县",
@@ -2304,9 +2139,6 @@ FACT_COPY["zh-CN"]["facts"] = {
         "stat": "2018年12月",
         "main": "第1号宝可梦井盖于2018年12月20日设置在鹿儿岛县指宿市指宿站前，图案为伊布。名称谐音「喜欢伊布」与指宿（いぶすき）读音相符。",
         "note": "现在在指宿站前仍可以看到。",
-        "share_title": "第1号宝可梦井盖是2018年12月指宿市的伊布。",
-        "share_lead": "谐音梗：「喜欢伊布」（いーぶいすき）与指宿（いぶすき）读音一致。",
-        "share_body": "现在仍可在指宿站前看到，是一趟值得的旅行。",
         "image_type": "summary_trivia",
         "image_title": "第1号宝可梦井盖",
         "image_main_value": "2018年",
@@ -2320,9 +2152,6 @@ FACT_COPY["zh-CN"]["facts"] = {
         "stat": "9个",
         "main": "鹿儿岛县指宿市有伊布及其8种进化形态，共9个宝可梦井盖。这是唯一一个可以在一座城市内集齐全部伊布系的地方。",
         "note": "8种进化形态于2019年2月追加设置。",
-        "share_title": "指宿市可以找齐伊布系9个井盖。",
-        "share_lead": "伊布＋8种进化形态，全部集中在同一个城市。",
-        "share_body": "在市内步行寻找全部9个，是只有指宿才能体验的旅行。",
         "image_type": "summary_trivia",
         "image_title": "伊布系9个集中指宿市",
         "image_main_value": "9个",
@@ -2338,9 +2167,6 @@ FACT_COPY["zh-TW"]["facts"] = {
         "stat": "{hokkaido}個",
         "main": "{hokkaido_name}有{hokkaido}個寶可夢人孔蓋，約占全國{total}個的{hokkaido_pct}%。",
         "note": "在幅員遼闊的北海道，尋找寶可夢人孔蓋本身就是一趟旅行。",
-        "share_title": "{hokkaido_name}一地就有{hokkaido}個寶可夢人孔蓋。",
-        "share_lead": "約占全國{total}個的{hokkaido_pct}%。",
-        "share_body": "用都道府縣別數字來看，下一趟旅行的候選地會更具體。",
         "image_type": "summary_prefecture_rank",
         "image_title": "{hokkaido_name}就有{hokkaido}個",
         "image_main_value": "{hokkaido}個",
@@ -2354,9 +2180,6 @@ FACT_COPY["zh-TW"]["facts"] = {
         "stat": "{installed_count}個都道府縣",
         "main": "寶可夢人孔蓋已設置於{installed_count}個都道府縣。{empty_status}",
         "note": "雖然已經遍布日本各地，但仍有尚未設置的空白區域。",
-        "share_title": "寶可夢人孔蓋已設置於{installed_count}個都道府縣。",
-        "share_lead": "{empty_share_lead}",
-        "share_body": "查看全國{total}個分布，就能發現還沒造訪過的地區。",
         "image_type": "summary_installed_prefectures",
         "image_title": "已設置寶可夢人孔蓋",
         "image_main_value": "{installed_count}個都道府縣",
@@ -2369,9 +2192,6 @@ FACT_COPY["zh-TW"]["facts"] = {
         "stat": "{tohoku}個",
         "main": "{tohoku_name}地區有{tohoku}個寶可夢人孔蓋，是全國分布密度較高的區域之一。",
         "note": "福島縣、宮城縣、岩手縣等地都很值得安排巡訪。",
-        "share_title": "{tohoku_name}地區有{tohoku}個寶可夢人孔蓋。",
-        "share_lead": "福島、宮城、岩手等地，是很適合旅行巡訪的密集區域。",
-        "share_body": "規劃東北旅行時，這個數字很有參考價值。",
         "image_type": "summary_regional_density",
         "image_title": "{tohoku_name}密集區域",
         "image_main_value": "{tohoku}個",
@@ -2384,9 +2204,6 @@ FACT_COPY["zh-TW"]["facts"] = {
         "stat": "TOP3",
         "main": "寶可夢人孔蓋數量最多的前三名是：{top3}。",
         "note": "北日本地區在排行榜前段很有存在感。",
-        "share_title": "寶可夢人孔蓋數量最多的都道府縣TOP3。",
-        "share_lead": "{top3}位居前列。",
-        "share_body": "把地圖換成數字來看，下一趟旅行的候選地會更清楚。",
         "image_type": "summary_top_prefectures",
         "image_title": "數量最多TOP3",
         "image_main_value": "TOP3",
@@ -2400,9 +2217,6 @@ FACT_COPY["zh-TW"]["facts"] = {
         "stat": "{fukushima}個",
         "main": "{fukushima_name}有{fukushima}個寶可夢人孔蓋，僅次於北海道，位居全國第2。",
         "note": "只在縣內巡訪，也能是一趟內容很豐富的寶可夢人孔蓋之旅。",
-        "share_title": "{fukushima_name}有{fukushima}個寶可夢人孔蓋。",
-        "share_lead": "僅次於北海道，位居全國第2。",
-        "share_body": "這個數量足以規劃一趟縣內巡訪。",
         "image_type": "summary_prefecture_rank",
         "image_title": "{fukushima_name}全國第2",
         "image_main_value": "{fukushima}個",
@@ -2416,9 +2230,6 @@ FACT_COPY["zh-TW"]["facts"] = {
         "stat": "{mie}個",
         "main": "{mie_name}有{mie}個寶可夢人孔蓋，在近畿・東海區域也很有存在感。",
         "note": "很適合加入關西或東海方向的旅行路線。",
-        "share_title": "{mie_name}有{mie}個寶可夢人孔蓋。",
-        "share_lead": "在近畿・東海區域也很有存在感。",
-        "share_body": "把它作為順路停靠點，旅行會多一點發現感。",
         "image_type": "summary_prefecture_rank",
         "image_title": "{mie_name}有{mie}個",
         "image_main_value": "{mie}個",
@@ -2432,9 +2243,6 @@ FACT_COPY["zh-TW"]["facts"] = {
         "stat": "{empty_count}縣",
         "main": "{empty_names}仍然沒有寶可夢人孔蓋。",
         "note": "猜測下一處會設置在哪裡，也是樂趣之一。",
-        "share_title": "仍沒有寶可夢人孔蓋的縣有{empty_count}個。",
-        "share_lead": "分別是{empty_names}。",
-        "share_body": "全國{total}個一覽能同時看到擴展範圍和空白區域。",
         "image_type": "summary_empty_prefectures",
         "image_title": "仍沒有寶可夢人孔蓋的縣",
         "image_main_value": "{empty_count}縣",
@@ -2447,9 +2255,6 @@ FACT_COPY["zh-TW"]["facts"] = {
         "stat": "2018年12月",
         "main": "第1號寶可夢人孔蓋於2018年12月20日設置於鹿兒島縣指宿市指宿站前，圖案為伊布。名稱諧音「喜歡伊布」與指宿（いぶすき）讀音相符。",
         "note": "現在在指宿站前仍可以看到。",
-        "share_title": "第1號寶可夢人孔蓋是2018年12月指宿市的伊布。",
-        "share_lead": "諧音梗：「喜歡伊布」（いーぶいすき）與指宿（いぶすき）讀音一致。",
-        "share_body": "現在仍可在指宿站前看到，是一趟值得的旅行。",
         "image_type": "summary_trivia",
         "image_title": "第1號寶可夢人孔蓋",
         "image_main_value": "2018年",
@@ -2463,9 +2268,6 @@ FACT_COPY["zh-TW"]["facts"] = {
         "stat": "9個",
         "main": "鹿兒島縣指宿市有伊布及其8種進化形態，共9個寶可夢人孔蓋。這是唯一一個可以在一座城市內集齊全部伊布系的地方。",
         "note": "8種進化形態於2019年2月追加設置。",
-        "share_title": "指宿市可以找齊伊布系9個人孔蓋。",
-        "share_lead": "伊布＋8種進化形態，全部集中在同一個城市。",
-        "share_body": "在市內步行尋找全部9個，是只有指宿才能體驗的旅行。",
         "image_type": "summary_trivia",
         "image_title": "伊布系9個集中指宿市",
         "image_main_value": "9個",
@@ -2481,9 +2283,6 @@ FACT_COPY["ko"]["facts"] = {
         "stat": "{hokkaido}개",
         "main": "{hokkaido_name}에는 포케후타가 {hokkaido}개 있습니다. 전국 {total}개 중 약 {hokkaido_pct}%입니다.",
         "note": "넓은 홋카이도에서는 포케후타 순회 자체가 하나의 여행이 됩니다.",
-        "share_title": "{hokkaido_name}에만 포케후타가 {hokkaido}개.",
-        "share_lead": "전국 {total}개 중 약 {hokkaido_pct}%입니다.",
-        "share_body": "도도부현별 숫자를 보면 여행 후보지도 더 구체적으로 보입니다.",
         "image_type": "summary_prefecture_rank",
         "image_title": "{hokkaido_name}에만 {hokkaido}개",
         "image_main_value": "{hokkaido}개",
@@ -2497,9 +2296,6 @@ FACT_COPY["ko"]["facts"] = {
         "stat": "{installed_count}개 도도부현",
         "main": "포케후타 설치 완료 지역은 {installed_count}개 도도부현입니다. {empty_status}",
         "note": "전국으로 퍼지고 있지만 아직 빈 지역도 남아 있습니다.",
-        "share_title": "포케후타 설치 완료는 {installed_count}개 도도부현.",
-        "share_lead": "{empty_share_lead}",
-        "share_body": "전국 {total}개의 분포를 보면 아직 만나지 못한 지역도 보입니다.",
         "image_type": "summary_installed_prefectures",
         "image_title": "포케후타 설치 완료",
         "image_main_value": "{installed_count}개 도도부현",
@@ -2512,9 +2308,6 @@ FACT_COPY["ko"]["facts"] = {
         "stat": "{tohoku}개",
         "main": "{tohoku_name} 지방에는 포케후타가 {tohoku}개 있습니다. 전국에서도 특히 밀도가 높은 지역입니다.",
         "note": "후쿠시마, 미야기, 이와테 등 순회할 만한 현이 이어집니다.",
-        "share_title": "{tohoku_name} 지방에는 포케후타가 {tohoku}개.",
-        "share_lead": "후쿠시마・미야기・이와테 등 여행하며 돌기 좋은 밀집 지역입니다.",
-        "share_body": "도호쿠 여행지를 고를 때도 도움이 되는 숫자입니다.",
         "image_type": "summary_regional_density",
         "image_title": "{tohoku_name} 밀집 지역",
         "image_main_value": "{tohoku}개",
@@ -2527,9 +2320,6 @@ FACT_COPY["ko"]["facts"] = {
         "stat": "TOP3",
         "main": "포케후타가 많은 도도부현 TOP3는 {top3}입니다.",
         "note": "상위권에서는 북일본의 존재감이 큽니다.",
-        "share_title": "포케후타가 많은 도도부현 TOP3.",
-        "share_lead": "{top3}가 상위입니다.",
-        "share_body": "숫자로 보면 다음 여행 후보지가 더 선명해집니다.",
         "image_type": "summary_top_prefectures",
         "image_title": "많은 현 TOP3",
         "image_main_value": "TOP3",
@@ -2543,9 +2333,6 @@ FACT_COPY["ko"]["facts"] = {
         "stat": "{fukushima}개",
         "main": "{fukushima_name}에는 포케후타가 {fukushima}개 있습니다. 홋카이도에 이어 전국 2위입니다.",
         "note": "현 안에서만 돌아도 충분히 진한 포케후타 여행이 됩니다.",
-        "share_title": "{fukushima_name}에는 포케후타가 {fukushima}개.",
-        "share_lead": "홋카이도에 이어 전국 2위입니다.",
-        "share_body": "한 현 안에서도 충분한 순회 여행이 되는 수입니다.",
         "image_type": "summary_prefecture_rank",
         "image_title": "{fukushima_name} 전국 2위",
         "image_main_value": "{fukushima}개",
@@ -2559,9 +2346,6 @@ FACT_COPY["ko"]["facts"] = {
         "stat": "{mie}개",
         "main": "{mie_name}에는 포케후타가 {mie}개 있습니다. 긴키・도카이 지역에서도 존재감이 있습니다.",
         "note": "간사이・도카이 방면 여행 일정에도 넣기 좋은 지역입니다.",
-        "share_title": "{mie_name}에는 포케후타가 {mie}개.",
-        "share_lead": "긴키・도카이 지역에서도 존재감 있는 설치 수입니다.",
-        "share_body": "이동 경로에 더하면 작은 발견이 있는 여행이 됩니다.",
         "image_type": "summary_prefecture_rank",
         "image_title": "{mie_name}는 {mie}개",
         "image_main_value": "{mie}개",
@@ -2575,9 +2359,6 @@ FACT_COPY["ko"]["facts"] = {
         "stat": "{empty_count}개 현",
         "main": "{empty_names}에는 아직 포케후타가 없습니다.",
         "note": "다음에는 어디로 확장될지 예상하는 재미도 있습니다.",
-        "share_title": "아직 포케후타가 없는 현은 {empty_count}곳.",
-        "share_lead": "{empty_names}입니다.",
-        "share_body": "전국 {total}개의 일람을 보면 확산 지역과 빈 지역이 함께 보입니다.",
         "image_type": "summary_empty_prefectures",
         "image_title": "아직 포케후타가 없는 현",
         "image_main_value": "{empty_count}개 현",
@@ -2590,9 +2371,6 @@ FACT_COPY["ko"]["facts"] = {
         "stat": "2018년 12월",
         "main": "포케후타 1호는 2018년 12월 20일, 가고시마현 이부스키시 이부스키역 앞에 설치된 이브이입니다. 「이브이 좋아(いーぶいすき)」와 「이부스키(いぶすき)」의 발음이 일치하는 데서 탄생했습니다.",
         "note": "지금도 이부스키역 앞에서 볼 수 있습니다.",
-        "share_title": "포케후타 1호는 2018년 12월 이부스키시의 이브이.",
-        "share_lead": "이름 말장난: 「이브이 좋아」와 「이부스키」 발음이 일치합니다.",
-        "share_body": "지금도 이부스키역 앞에서 볼 수 있는, 여행할 가치가 있는 장소입니다.",
         "image_type": "summary_trivia",
         "image_title": "포케후타 1호",
         "image_main_value": "2018년",
@@ -2606,9 +2384,6 @@ FACT_COPY["ko"]["facts"] = {
         "stat": "9개",
         "main": "가고시마현 이부스키시에는 이브이와 진화형 8종을 합한 9개의 포케후타가 있습니다. 하나의 도시에서 이브이 계열 전부를 찾을 수 있는 유일한 곳입니다.",
         "note": "진화형 8종은 2019년 2월에 추가 설치되었습니다.",
-        "share_title": "이부스키시에서 이브이 계열 9개를 모두 찾을 수 있습니다.",
-        "share_lead": "이브이＋진화형 8종이 하나의 도시에 집결.",
-        "share_body": "시내를 걸으며 9개 전부를 찾는 여행은 이부스키에서만 가능합니다.",
         "image_type": "summary_trivia",
         "image_title": "이브이 계열 9개가 이부스키시에",
         "image_main_value": "9개",
@@ -2649,13 +2424,11 @@ def _build_facts(s: dict, stats: dict, tr) -> list[dict]:
     )
     if empty_count:
         empty_status = copy["empty_status"].format(empty_count=empty_count)
-        empty_share_lead = copy["empty_share_lead"].format(empty_count=empty_count)
         empty_image_subtitle = copy["empty_image_subtitle"].format(
             empty_count=empty_count
         )
     else:
         empty_status = copy["all_installed_status"]
-        empty_share_lead = copy["all_installed_share_lead"]
         empty_image_subtitle = copy["all_installed_image_subtitle"]
     region_names = s.get("region_names", {})
     ctx = {
@@ -2673,7 +2446,6 @@ def _build_facts(s: dict, stats: dict, tr) -> list[dict]:
         "empty_count": empty_count,
         "empty_names": empty_names,
         "empty_status": empty_status,
-        "empty_share_lead": empty_share_lead,
         "empty_image_subtitle": empty_image_subtitle,
         "top3": top3,
     }
@@ -2687,8 +2459,6 @@ def _build_facts(s: dict, stats: dict, tr) -> list[dict]:
         fact = {
             "id": fact_id,
             "type": template["type"],
-            "share_url": s["canonical"],
-            "hashtags": copy["hashtags"],
             "map_href": _map_href(s["map_base_href"], template.get("map_pref")),
             "map_label": (
                 copy[template.get("map_label_key", "map_all")]
@@ -2698,7 +2468,6 @@ def _build_facts(s: dict, stats: dict, tr) -> list[dict]:
         }
         for key in (
             "title", "stat", "main", "note",
-            "share_title", "share_lead", "share_body",
             "image_type", "image_title", "image_main_value",
             "image_subtitle", "image_footer",
         ):
@@ -2708,16 +2477,6 @@ def _build_facts(s: dict, stats: dict, tr) -> list[dict]:
     return facts
 
 
-def _fact_share_text(fact: dict) -> str:
-    lines = [
-        fact["share_title"],
-        fact["share_lead"],
-        fact["share_body"],
-        " ".join(fact["hashtags"]),
-    ]
-    return "\n".join(line for line in lines if line)
-
-
 def _build_fact_sections(s: dict, stats: dict, tr) -> tuple[str, str]:
     copy = _localized_fact_copy(s.get("html_lang", "en"))
     facts = _build_facts(s, stats, tr)
@@ -2725,35 +2484,29 @@ def _build_fact_sections(s: dict, stats: dict, tr) -> tuple[str, str]:
         return "", ""
     daily_fact = facts[0]
 
-    def action_links(fact: dict) -> str:
-        share_href = _twitter_intent_url(_fact_share_text(fact), fact["share_url"])
+    # Xで共有のボタンは押されていなかった（直近28日で2回）ので置かない。地図へのボタンだけ
+    def action_links(fact: dict, primary: bool = False) -> str:
         map_href = fact["map_href"]
         return (
             '<div class="summary-actions">'
-            f'<a class="summary-action" href="{escape(share_href)}" '
-            'target="_blank" rel="noopener noreferrer" '
-            f'{_track_attrs("summary_share_x_click", fact, fact["share_url"])}>'
-            f'{escape(copy["share"])}</a>'
-            f'<a class="summary-action secondary" href="{escape(map_href)}" '
+            f'<a class="summary-action{"" if primary else " secondary"}" href="{escape(map_href)}" '
             f'{_track_attrs("summary_map_click", fact, map_href)}>'
             f'{escape(fact["map_label"])}</a>'
             '</div>'
         )
 
+    # 今日の雑学はヒーローの主役にする（ページの役目＝雑学と数字が一目で分かり、押す所は地図の1つ）。
+    # 「地図で見る」は summary_map_click の出どころで、旧ページで3番目に押されていたボタン
     daily_html = (
-        f'\n    <section class="daily-fact-card" aria-labelledby="daily-fact-heading" '
+        f'<div class="summary-hero-fact" '
         f'data-fact-id="{escape(daily_fact["id"])}" '
         f'data-fact-title="{escape(daily_fact["title"])}" '
-        f'data-image-type="{escape(daily_fact["image_type"])}" '
-        f'data-image-title="{escape(daily_fact["image_title"])}" '
-        f'data-image-main-value="{escape(daily_fact["image_main_value"])}" '
-        f'data-image-subtitle="{escape(daily_fact["image_subtitle"])}" '
-        f'data-image-footer="{escape(daily_fact["image_footer"])}">'
-        f'\n      <span class="daily-fact-label">{escape(copy["daily"])}</span>'
-        f'\n      <h2 id="daily-fact-heading"><strong>{escape(daily_fact["main"])}</strong></h2>'
-        f'\n      <p>{escape(daily_fact["note"])}</p>'
-        f'\n      {action_links(daily_fact)}'
-        f'\n    </section>\n'
+        f'data-image-type="{escape(daily_fact["image_type"])}">'
+        f'<span class="daily-fact-label">{escape(copy["daily"])}</span>'
+        f'<p class="summary-hero-fact-main">{escape(daily_fact["main"])}</p>'
+        f'<p class="summary-hero-fact-note">{escape(daily_fact["note"])}</p>'
+        f'{action_links(daily_fact, primary=True)}'
+        f'</div>'
     )
 
     def _fact_links_html(fact: dict) -> str:
@@ -2811,7 +2564,7 @@ def _build_tracking_script(s: dict) -> str:
       if (!window.gtag) return;
 
       const target = event.target.closest('[data-summary-event]');
-      const card = event.target.closest('.daily-fact-card[data-fact-id], .summary-fact-card[data-fact-id]');
+      const card = event.target.closest('.summary-hero-fact[data-fact-id], .summary-fact-card[data-fact-id]');
       if (card && !target) {
         window.gtag('event', 'summary_fact_card_click', {
           surface: 'summary_fact_card',
@@ -2967,43 +2720,6 @@ def build_pokemon_stats(records: list[dict], pokemon_metadata: dict) -> dict:
 
 def _pokemon_lp_url(map_base: str, slug: str) -> str:
     return escape(f"{map_base}pokemon/{quote(slug)}/")
-
-
-def _build_hero_links(s: dict) -> str:
-    """ヒーローの中に置く入口ボタン。説明だけのヒーローにせず、ここから次のページへ進めるようにする。"""
-    hub = s.get("search_hub")
-    if not hub:
-        return ""
-    map_base = s["map_base_href"]
-    # "都道府県から探す" の目的地は、同じページ内の集計グリッドへのアンカー
-    # ではなく、実際の都道府県詳細ページへの入口である /prefectures/
-    # （ja専用・絶対パス。個別詳細ページと同じ _prefecture_href() の規約に
-    # 合わせる）にしたい。ただし /prefectures/ に他言語版は無いので、
-    # ja以外はこれまで通り同じページ内の #prefecture-count-heading
-    # （その言語でローカライズされた集計セクション）に留める —
-    # そうしないと非ja話者がいきなり全文日本語のページへ飛ばされる。
-    is_ja = s.get("pref_key") == "ja"
-    pref_href = "/prefectures/" if is_ja else "#prefecture-count-heading"
-    links = [
-        (hub["card_map_title"], s["nav_home_href"], "map"),
-        (hub["card_pref_title"], pref_href, "prefectures"),
-        (hub["card_pokemon_title"], f"{map_base}pokemon/", "pokemon"),
-    ]
-    if is_ja:
-        # 市区町村ランキングとポケふた旅は日本語のページしか無い
-        links += [
-            ("市区町村ランキング", "/municipalities/", "municipalities"),
-            ("1日で回れるポケふた旅", "/trip/", "trip"),
-        ]
-    links.append((hub["card_theme_title"], "#travel-discovery", "themes"))
-    items = "".join(
-        f'<a class="summary-hero-link" href="{escape(href)}" '
-        f'data-summary-event="summary_hero_link_click" data-surface="summary_hero" '
-        f'data-destination-hub="{destination}">'
-        f'{escape(title)}</a>'
-        for title, href, destination in links
-    )
-    return f'<nav class="summary-hero-links" aria-label="{escape(hub["h2"])}">{items}</nav>'
 
 
 def _build_prefecture_info_section(s: dict, stats: dict, records: list[dict], tr) -> str:
@@ -3336,7 +3052,6 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
     daily_fact_html, fact_list_html = _build_fact_sections(s, stats, tr)
     regional_html = _build_regional_section(s, stats)
     tracking_script = _build_tracking_script(s)
-    hero_links_html = _build_hero_links(s)
     # ja は県・ポケモン・写真を探すのをヒーローのボタンから各ページへ任せ、ここは雑学と数字に絞る。
     # 他言語には /prefectures/ が無いので、これまでの県カード（ヒーローの「都道府県から探す」の
     # 行き先 #prefecture-count-heading）を残す
@@ -3375,13 +3090,33 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
         for item in ranking
     )
 
-    if empty:
+    if empty and pref_key == "ja":
+        # 0枚の県にもページ（「まだ無い」と案内するページ）がある
+        empty_items = "\n        ".join(
+            f'<li><a class="summary-link" href="{escape(_prefecture_href(item["pref"]))}" '
+            f'data-summary-event="summary_prefecture_click" data-surface="summary_empty_prefectures" '
+            f'data-prefecture="{escape(PREFECTURE_SLUGS.get(item["pref"], item["pref"]))}">'
+            f'{escape(item["pref"])}</a></li>'
+            for item in empty
+        )
+    elif empty:
+        # 他言語には県のページが無いので、名前だけ
         empty_items = "\n        ".join(
             f"<li>{escape(tr(item['pref']))}</li>"
             for item in empty
         )
     else:
         empty_items = f'<li class="summary-empty">{escape(s["no_empty"])}</li>'
+
+    # 市区町村ランキングとポケふた旅はヘッダーに無く、日本語のページしか無い
+    related_html = (
+        '<p class="summary-related">市区町村ごとの数は'
+        '<a class="summary-link" href="/municipalities/" data-summary-event="summary_related_click" '
+        'data-destination-hub="municipalities">市区町村ランキング</a>、1日で回れるエリアと回る順番は'
+        '<a class="summary-link" href="/trip/" data-summary-event="summary_related_click" '
+        'data-destination-hub="trip">ポケふた旅</a>で見られます。</p>'
+        if pref_key == "ja" else ""
+    )
 
     pt = escape(s["page_title"])
     md = escape(_format_summary_text(s["meta_desc"], s, stats))
@@ -3444,14 +3179,13 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
       <figure class="summary-hero-photo photo-main">
         <img src="/manhole/image/141_latest.jpeg" alt="" width="720" height="720">
       </figure>
-      {hero_links_html}
+      {daily_fact_html}
     </header>
-    {daily_fact_html}
     {fact_list_html}
     {events_html}
     {discovery_hubs_html}
     {prefecture_html}
-    <!-- ここから下は数字（検索から来た人向けの本文）。探す入口はヒーローのボタンにまとめた -->
+    <!-- ここから下は数字（検索から来た人向けの本文）。県・ポケモンを探すのはヘッダーから各ページへ -->
     <section class="summary-stats" aria-label="{escape(s['stats_aria'])}">
       <div class="summary-stat">
         <span>{escape(s['stat_total'])}</span>
@@ -3474,6 +3208,7 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
         {ranking_items}
       </ol>
       <p style="margin-top:10px;font-size:.875rem;color:#574b41;">{s['ranking_note']}</p>
+      {related_html}
     </section>
     {pokemon_ranking_html}
     {regional_html}
