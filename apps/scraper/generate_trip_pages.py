@@ -246,14 +246,21 @@ def _route_html(area: dict, route: list[dict], common: bool, entry: dict | None)
 
 
 def _access_html(area: dict) -> str:
-    """スタート地点と行き方（trip_areas.json の access）。公式の案内で確かめた内容だけを手で書く。"""
+    """スタート地点と行き方（trip_areas.json の access）を1行ずつ。公式の案内で確かめた内容だけを手で書く。"""
     access = area.get("access") or {}
-    sections = access.get("sections") or []
-    if not sections:
+    rows = []
+    if access.get("train"):
+        rows.append(("🚃 電車", escape(access["train"])))
+    parking = [
+        f'{escape(p["name"])}（{"・".join(escape(x) for x in (p.get("kind"), p.get("fee"), p.get("note")) if x)}）'
+        for p in access.get("parking") or []
+        if p.get("name")
+    ]
+    if parking:
+        rows.append(("🅿 駐車場", "、".join(parking)))
+    if not rows:
         return ""
-    body = "".join(
-        f'<div><h3>{escape(s["heading"])}</h3><p>{escape(s["text"])}</p></div>' for s in sections
-    )
+    body = "".join(f"<li><strong>{label}</strong> {text}</li>" for label, text in rows)
     sources = "・".join(
         f'<a href="{_escape_attr(s["url"])}" target="_blank" rel="noopener noreferrer" '
         'data-track="trip_source_click" data-surface="access" data-destination="travel_source">'
@@ -265,7 +272,7 @@ def _access_html(area: dict) -> str:
     return (
         '<section id="access" class="visit-guide" aria-labelledby="access-heading">'
         '<h2 id="access-heading">スタート地点と行き方</h2>'
-        f'<div class="visit-advice">{body}</div>'
+        f'<ul class="access-list">{body}</ul>'
         + (
             f'<p class="visit-guide-sources">出典：{sources}'
             + (f'（確認日：<time datetime="{_escape_attr(checked)}">{escape(checked)}</time>）' if checked else "")
@@ -596,6 +603,8 @@ TRIP_CSS = """
     .compact-list { margin: 10px 0 0; padding-left: 1.2em; display: grid; gap: 6px; }
     .compact-list span { margin-left: 8px; color: #62564a; font-size: .82rem; }
     .related-links small { margin-left: 6px; color: #75685c; font-size: .75rem; }
+    .access-list { margin: 8px 0 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+    .access-list strong { margin-right: 6px; white-space: nowrap; }
 """
 
 
