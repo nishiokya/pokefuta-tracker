@@ -1,3 +1,5 @@
+- ヘッダーとfaviconの共通マークは `apps/web/assets/brand-icon.svg`。写真館と同時に更新し、`docs/shared-brand-icon.md` を参照する。
+
 manhole_titles.jsonは手動で更新している
 dataset/manhole_featured_photos.json は図鑑の代表写真を手動選定する `{manhole_id: photo_id}`。未指定・無効・非公開なら最新公開写真へ自動フォールバックする
 dataset/design_manhole_overrides.json はユーザー投稿を既存図鑑へ紐付ける `canonical_ref` と、`category`・`work` などの手動分類に使う。野球マンホールは `category: sports` と球団名の `work` で育てる
