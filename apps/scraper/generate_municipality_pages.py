@@ -49,11 +49,15 @@ except ModuleNotFoundError as exc:
     )
 
 try:
-    from apps.scraper.visit_durations import DEFAULT_DURATIONS, duration_html, load_durations
+    from apps.scraper.visit_durations import (
+        DEFAULT_DURATIONS, duration_html, find_entry, format_minutes, load_durations,
+    )
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
-    from visit_durations import DEFAULT_DURATIONS, duration_html, load_durations
+    from visit_durations import (
+        DEFAULT_DURATIONS, duration_html, find_entry, format_minutes, load_durations,
+    )
 
 ROOT = pref.ROOT
 BASE_URL = pref.BASE_URL
@@ -321,6 +325,8 @@ EXTRA_CSS = """
     .ranking-table th { color: #75685c; font-size: .78rem; }
     .ranking-table td.num { text-align: right; font-weight: 850; white-space: nowrap; }
     .ranking-table td small { display: block; color: #75685c; font-size: .75rem; }
+    .ranking-table td small.ranking-time { color: #6b4aa2; }
+    .related-links small { margin-left: 6px; color: #6b4aa2; font-size: .75rem; }
 """
 
 
@@ -604,11 +610,35 @@ def _coverage_sections(coverage: dict[str, PrefectureCoverage] | None) -> str:
     )
 
 
+def _trip_announce(trips: list[tuple[str, str, int, str]] | None) -> str:
+    """ルート案内（/trip/）のお知らせ。ランキングから回り方へ進めるようにする。"""
+    if not trips:
+        return ""
+    chips = "".join(
+        f'<a href="{_escape_attr(path)}" data-track="municipality_trip_click" data-surface="trip_announce" '
+        f'data-destination="trip">{escape(name)} {count}枚'
+        f'{f"<small>{escape(time)}</small>" if time else ""}</a>'
+        for name, path, count, time in trips
+    )
+    return (
+        '<section class="visit-guide" aria-labelledby="trip-announce-heading">'
+        '<h2 id="trip-announce-heading">ルート案内「ポケふた旅」をはじめました</h2>'
+        '<p>ポケふたが近くに集まっているエリアについて、回る順番、かかる時間の目安、'
+        'Googleマップで開ける順路をまとめました。旅行やおでかけの計画にどうぞ。</p>'
+        f'<div class="related-links">{chips}</div>'
+        '<div class="municipality-actions"><a class="inline-link" href="/trip/" '
+        'data-track="municipality_trip_click" data-surface="trip_announce" data-destination="trip_index">'
+        'ポケふた旅の一覧を見る</a></div></section>'
+    )
+
+
 def build_ranking_page(
     municipalities: list[Municipality],
     total_manholes: int,
     today: str,
     coverage: dict[str, PrefectureCoverage] | None = None,
+    trips: list[tuple[str, str, int, str]] | None = None,
+    durations: dict | None = None,
 ) -> str:
     listed = [m for m in municipalities if m.count >= RANKING_MIN_MANHOLES]
     singles = sum(1 for m in municipalities if m.count < RANKING_MIN_MANHOLES)
@@ -635,6 +665,13 @@ def build_ranking_page(
             )
             track_destination = m.prefecture_slug
         note_html = f"<small>{escape(note)}</small>" if note else ""
+        # 全部を1日で回った人の中央値（「平均的な人」）。外れ値に引っ張られる平均は使わない
+        entry = find_entry(m.records, durations or {})
+        if entry and entry.get("median_minutes") is not None:
+            note_html += (
+                f'<small class="ranking-time">全部のポケふたを見るのにかかった時間は、'
+                f'平均的な人で約{escape(format_minutes(entry["median_minutes"]))}です</small>'
+            )
         rows.append(
             "<tr>"
             f'<td class="num">{m.national_rank}位</td>'
@@ -682,6 +719,8 @@ def build_ranking_page(
       </div>
     </header>
 
+    {_trip_announce(trips)}
+
     <section aria-labelledby="ranking-heading">
       <h2 id="ranking-heading">{RANKING_MIN_MANHOLES}枚以上ある市区町村</h2>
       <table class="ranking-table">
@@ -716,6 +755,7 @@ def generate_all(
     output_dir: Path,
     today: str | None = None,
     durations: dict | None = None,
+    trips: list[tuple[str, str, int, str]] | None = None,
 ) -> list[Municipality]:
     municipalities = build_municipalities(records, slugs)
     pages = [m for m in municipalities if m.path]
@@ -729,7 +769,9 @@ def generate_all(
     active_total = sum(m.count for m in municipalities)
     today = today or datetime.now(JST).strftime("%Y年%-m月%-d日")
     (output_dir / "index.html").write_text(
-        build_ranking_page(municipalities, active_total, today, prefecture_coverage(records)),
+        build_ranking_page(
+            municipalities, active_total, today, prefecture_coverage(records), trips, durations
+        ),
         encoding="utf-8",
     )
     return pages
@@ -754,9 +796,20 @@ def main() -> int:
         # 新しく条件を満たした自治体。ページは作らないがデプロイは止めない（日次の自動更新で起きうる）。
         # dataset/municipality_slugs.json に足せば次のデプロイで出る。
         print(f"[generate_municipality_pages] WARNING: slug が無いので作らない: {', '.join(missing)}")
+    durations = load_durations(args.durations)
+    # generate_trip_pages はこのモジュールを import するので、ここで遅れて読む
+    try:
+        from apps.scraper.generate_trip_pages import trip_summaries
+        from apps.scraper.visit_durations import load_trip_areas
+    except ModuleNotFoundError as exc:
+        if exc.name != "apps":
+            raise
+        from generate_trip_pages import trip_summaries
+        from visit_durations import load_trip_areas
     pages = generate_all(
         records, slugs, pref.load_pokemon_slugs(args.pokemon), pref.load_photos(args.photos), args.output,
-        durations=load_durations(args.durations),
+        durations=durations,
+        trips=trip_summaries(records, load_trip_areas(), durations),
     )
     print(
         f"[generate_municipality_pages] wrote {len(pages)} pages (>= {MIN_MANHOLES}枚) + ranking to "

@@ -13,6 +13,7 @@
       ],
       "p25_minutes": 84,
       "p75_minutes": 150,
+      "median_minutes": 102,
       "common_order": [
         "206",
         "210",
@@ -29,6 +30,7 @@
       ],
       "p25_minutes": 3,
       "p75_minutes": 5,
+      "median_minutes": 4,
       "common_order": [
         "172",
         "173"
@@ -43,6 +45,7 @@
       ],
       "p25_minutes": 85,
       "p75_minutes": 182,
+      "median_minutes": 93,
       "common_order": [
         "203",
         "204",
@@ -58,6 +61,7 @@
       ],
       "p25_minutes": 57,
       "p75_minutes": 87,
+      "median_minutes": 71,
       "common_order": [
         "211",
         "213",
@@ -72,6 +76,7 @@
       ],
       "p25_minutes": 30,
       "p75_minutes": 57,
+      "median_minutes": 33,
       "common_order": [
         "157",
         "158"
@@ -87,7 +92,8 @@
         "152"
       ],
       "p25_minutes": 29,
-      "p75_minutes": 55
+      "p75_minutes": 55,
+      "median_minutes": 36
     },
     {
       "label": "東京都町田",
@@ -101,6 +107,7 @@
       ],
       "p25_minutes": 20,
       "p75_minutes": 29,
+      "median_minutes": 25,
       "common_order": [
         "100",
         "102",
@@ -121,6 +128,7 @@
       ],
       "p25_minutes": 96,
       "p75_minutes": 123,
+      "median_minutes": 111,
       "common_order": [
         "23",
         "314",
@@ -137,6 +145,7 @@
       ],
       "p25_minutes": 14,
       "p75_minutes": 36,
+      "median_minutes": 15,
       "common_order": [
         "323",
         "397"
@@ -150,6 +159,7 @@
       ],
       "p25_minutes": 25,
       "p75_minutes": 31,
+      "median_minutes": 25,
       "common_order": [
         "243",
         "414"
@@ -163,6 +173,7 @@
       ],
       "p25_minutes": 27,
       "p75_minutes": 32,
+      "median_minutes": 30,
       "common_order": [
         "104",
         "105"
@@ -176,7 +187,8 @@
         "257"
       ],
       "p25_minutes": 24,
-      "p75_minutes": 27
+      "p75_minutes": 27,
+      "median_minutes": 25
     },
     {
       "label": "富山県富山",
@@ -186,7 +198,8 @@
         "277"
       ],
       "p25_minutes": 76,
-      "p75_minutes": 95
+      "p75_minutes": 95,
+      "median_minutes": 82
     },
     {
       "label": "岩手県久慈",
@@ -196,6 +209,7 @@
       ],
       "p25_minutes": 35,
       "p75_minutes": 44,
+      "median_minutes": 39,
       "common_order": [
         "11",
         "299"
@@ -209,7 +223,8 @@
         "317"
       ],
       "p25_minutes": 88,
-      "p75_minutes": 163
+      "p75_minutes": 163,
+      "median_minutes": 121
     },
     {
       "label": "滋賀県甲賀",
@@ -220,6 +235,7 @@
       ],
       "p25_minutes": 72,
       "p75_minutes": 134,
+      "median_minutes": 107,
       "common_order": [
         "238",
         "237",

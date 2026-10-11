@@ -1232,7 +1232,7 @@ def generate_html(
         else (
             f'<div class="hero-actions">'
             f'<a class="btn-photo-upload" href="https://pokefuta.com/upload?manhole_id={manhole_id}&amp;from=data" target="_blank" rel="noopener noreferrer" onclick="trackEvent(\'{_photo_event}\', {_photo_cta_onclick})">{_icon("icon-link-photo", "action-icon")}<span>{escape(_photo_label)}</span></a>'
-            f'<p class="photo-upload-note">投稿は pokefuta.com で受付（無料ログイン・GPS付き写真が必要）</p>'
+            f'<p class="photo-upload-note">投稿はポケふた写真館で受付（無料ログイン・GPS付き写真が必要）</p>'
             f'</div>'
         )
     )
