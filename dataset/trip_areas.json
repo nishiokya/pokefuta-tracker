@@ -1,5 +1,5 @@
 {
-  "_comment": "/trip/ のエリア。manhole_ids はページに出す地点の全部。所要時間は dataset/visit_durations.json に同じ組があるときだけ出る（apps/tools/build_visit_durations.py がこのファイルも読んで集計する）。",
+  "_comment": "/trip/ のエリア。manhole_ids はページに出す地点の全部。所要時間は dataset/visit_durations.json に同じ組があるときだけ出る（apps/tools/build_visit_durations.py がこのファイルも読んで集計する）。 同じ市町村の2枚だけのエリアは登録しない（回る順番がA→Bの1本だけで、詳細ページの「次に寄れるポケふた」を狭めるだけになるため。2026-10-11 に上野・北上・鳥羽・大津を外した）。",
   "areas": [
     {
       "slug": "higashiosaka",
@@ -88,42 +88,6 @@
         "223",
         "225",
         "224"
-      ]
-    },
-    {
-      "slug": "ueno",
-      "prefecture": "東京都",
-      "name": "上野",
-      "manhole_ids": [
-        "172",
-        "173"
-      ]
-    },
-    {
-      "slug": "kitakami",
-      "prefecture": "岩手県",
-      "name": "北上",
-      "manhole_ids": [
-        "323",
-        "397"
-      ]
-    },
-    {
-      "slug": "toba",
-      "prefecture": "三重県",
-      "name": "鳥羽",
-      "manhole_ids": [
-        "243",
-        "414"
-      ]
-    },
-    {
-      "slug": "otsu",
-      "prefecture": "滋賀県",
-      "name": "大津",
-      "manhole_ids": [
-        "104",
-        "105"
       ]
     },
     {
