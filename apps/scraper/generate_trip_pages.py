@@ -245,6 +245,37 @@ def _route_html(area: dict, route: list[dict], common: bool, entry: dict | None)
     )
 
 
+def _access_html(area: dict) -> str:
+    """スタート地点と行き方（trip_areas.json の access）。公式の案内で確かめた内容だけを手で書く。"""
+    access = area.get("access") or {}
+    sections = access.get("sections") or []
+    if not sections:
+        return ""
+    body = "".join(
+        f'<div><h3>{escape(s["heading"])}</h3><p>{escape(s["text"])}</p></div>' for s in sections
+    )
+    sources = "・".join(
+        f'<a href="{_escape_attr(s["url"])}" target="_blank" rel="noopener noreferrer" '
+        'data-track="trip_source_click" data-surface="access" data-destination="travel_source">'
+        f'{escape(s["label"])}</a>'
+        for s in access.get("sources") or []
+        if s.get("url", "").startswith("https://")
+    )
+    checked = access.get("checked_on", "")
+    return (
+        '<section id="access" class="visit-guide" aria-labelledby="access-heading">'
+        '<h2 id="access-heading">スタート地点と行き方</h2>'
+        f'<div class="visit-advice">{body}</div>'
+        + (
+            f'<p class="visit-guide-sources">出典：{sources}'
+            + (f'（確認日：<time datetime="{_escape_attr(checked)}">{escape(checked)}</time>）' if checked else "")
+            + "</p>"
+            if sources else ""
+        )
+        + '</section>'
+    )
+
+
 def _time_html(records: list[dict], durations: dict) -> str:
     text = duration_text(records, durations)
     if text:
@@ -379,6 +410,8 @@ def build_area_page(
     {_time_html(records, durations)}
 
     {_route_html(area, route, common, entry)}
+
+    {_access_html(area)}
 
     <section aria-labelledby="map-heading">
       <h2 id="map-heading">{escape(area['name'])}のポケふたマップ</h2>

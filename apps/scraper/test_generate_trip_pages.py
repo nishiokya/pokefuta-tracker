@@ -140,6 +140,20 @@ class AreaTest(unittest.TestCase):
         self.assertEqual(PREF._trip_links_html("石川県", trips[:1], 'x href="/trip/noto/" y'), "")
         self.assertEqual(PREF._trip_links_html("石川県", None), "")
 
+    def test_access_section_shows_only_https_sources(self):
+        area = {**AREAS[0], "access": {
+            "sections": [{"heading": "電車で", "text": "荒本駅から歩いて約5分。"}],
+            "sources": [{"label": "公式", "url": "https://example.jp/"}, {"label": "x", "url": "javascript:alert(1)"}],
+            "checked_on": "2026-10-11",
+        }}
+        html = MODULE._access_html(area)
+        self.assertIn("スタート地点と行き方", html)
+        self.assertIn("荒本駅から歩いて約5分。", html)
+        self.assertIn('href="https://example.jp/"', html)
+        self.assertNotIn("javascript:", html)
+        self.assertIn("2026-10-11", html)
+        self.assertEqual(MODULE._access_html(AREAS[1]), "")
+
 class GenerateTest(unittest.TestCase):
     def test_pages_index_and_links(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
