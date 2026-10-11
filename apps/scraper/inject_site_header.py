@@ -186,7 +186,7 @@ HEADER_TEMPLATE = """<header class="site-header">
   <div class="site-header__inner">
     <details class="site-switch">
       <summary class="site-switch__trigger" aria-label="{switch_aria}">
-        <span class="site-header__mark" aria-hidden="true"><img src="{asset_base}assets/brand-icon.svg" width="30" height="30" alt=""></span>
+        <span class="site-header__mark" aria-hidden="true"><img src="{asset_base}assets/brand-mark.svg" width="30" height="30" alt=""></span>
         <span class="site-header__brand-name">{brand}<span class="site-header__brand-sep" aria-hidden="true">｜</span>{site_dex}</span>
         <span class="site-switch__caret" aria-hidden="true"></span>
       </summary>
