@@ -580,3 +580,11 @@ body.has-site-header.pokefuta-map-page .site-header { z-index: 1100; }
     max-height: calc(88vh - var(--chrome-bottomnav-height));
   }
 }
+
+/* 本文の見出しは日本語を文節で折り返し、行の長さを揃える（全ページ共通）。
+   「ポケふたが多い市区町村ランキ／ング」のように単語の途中で切れて1〜2文字だけ次の行に残るのを防ぐ。
+   auto-phrase は lang="ja" のページで Chrome 系が対応。未対応のブラウザでは balance だけが効く */
+main :is(h1, h2, h3) {
+  word-break: auto-phrase;
+  text-wrap: balance;
+}

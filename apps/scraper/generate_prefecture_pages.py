@@ -1814,12 +1814,15 @@ PAGE_CSS = """    :root { color-scheme: light; }
     .breadcrumb a { text-decoration: none; }
     .hero {
       position: relative; overflow: hidden; margin-top: 14px; padding: 28px;
-      display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 22px;
+      display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px;
       align-items: center;
       border: 1px solid rgba(93,67,35,.15); border-radius: 24px;
       background: linear-gradient(135deg, #fffaf0, #f0e9fb);
       box-shadow: 0 14px 32px rgba(77,56,30,.08);
     }
+    /* 右側の要約（.hero-summary）があるときだけ2列。無いページ（/trip/・ランキング）で
+       空の280px列が残って見出しが途中で折り返していた */
+    .hero:has(> .hero-summary) { grid-template-columns: minmax(0, 1fr) 280px; }
     .hero::after {
       content: ""; position: absolute; width: 230px; height: 230px;
       right: -70px; top: -90px; border: 42px solid rgba(126,107,169,.1);
@@ -1865,8 +1868,9 @@ PAGE_CSS = """    :root { color-scheme: light; }
     .hero-kicker { margin: 0; color: #6b4aa2; font-size: .8rem; font-weight: 900; }
     .prefecture-hero { gap: 14px 22px; align-items: start; }
     .hero-heading { position: relative; z-index: 1; grid-column: 1 / -1; }
-    h1 { margin: 4px 0 8px; font-size: clamp(2rem, 7vw, 3.5rem); line-height: 1.15; }
-    .prefecture-hero h1 { font-size: clamp(2rem, 5vw, 3.5rem); }
+    /* スマホ（320px）で「市区町村ランキング」のような長い文節（9文字）が1行に入る大きさを下限にする */
+    h1 { margin: 4px 0 8px; font-size: clamp(1.65rem, 7vw, 3.5rem); line-height: 1.15; }
+    .prefecture-hero h1 { font-size: clamp(1.65rem, 5vw, 3.5rem); }
     .hero-main > p:last-of-type { max-width: 720px; margin: 0; color: #574b41; font-weight: 650; }
     .hero-summary {
       position: relative; z-index: 1; padding: 16px 18px; border-radius: 17px;

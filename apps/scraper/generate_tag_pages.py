@@ -401,7 +401,7 @@ def build_page(
       box-shadow: 0 14px 32px rgba(77,56,30,.08);
     }}
     .hero-kicker {{ margin: 0; color: #6b4aa2; font-size: .8rem; font-weight: 900; }}
-    h1 {{ margin: 4px 0 8px; font-size: clamp(1.9rem, 6vw, 3.1rem); line-height: 1.15; }}
+    h1 {{ margin: 4px 0 8px; font-size: clamp(1.65rem, 6vw, 3.1rem); line-height: 1.15; }}
     .hero p.lead {{ max-width: 720px; margin: 0; color: #574b41; font-weight: 650; }}
     .stats {{ display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 18px; max-width: 420px; }}
     .stat {{ padding: 14px; border-radius: 15px; background: rgba(255,255,255,.72); }}

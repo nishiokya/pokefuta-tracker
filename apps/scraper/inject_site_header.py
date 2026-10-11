@@ -23,7 +23,7 @@ from pathlib import Path
 
 
 # site-header.css を変えたら上げる。再訪者のブラウザに古いクロム・本文幅が残らないように
-SITE_HEADER_CSS_VERSION = "20261011a"
+SITE_HEADER_CSS_VERSION = "20261011b"
 STYLESHEET_TEMPLATE = (
     '<link rel="stylesheet" href="{asset_base}assets/site-header.css?v=' + SITE_HEADER_CSS_VERSION + '">'
 )
