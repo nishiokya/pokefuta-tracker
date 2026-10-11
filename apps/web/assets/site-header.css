@@ -482,8 +482,8 @@ body.has-site-header [id] {
    ポケモン・マンホール詳細の独自のクレジット行（.page-credit）は共通フッターの注記と同じ内容なので隠す。
    PC は共通フッターを出さないので、どちらも今まで通り。 */
 @media not all and (min-width: 1024px) {
-  /* 全画面地図（main.map-stage）は高さを計算しているので触らない */
-  body.has-site-header:not(.pokefuta-map-page) main:not(.map-stage) { padding-bottom: 24px; }
+  /* 全画面地図のページは本文の高さを計算しているので触らない */
+  body.has-site-header:not(.pokefuta-map-page) main { padding-bottom: 24px; }
   body.has-site-header .page-credit { display: none; }
 
   .site-footer { gap: 0 10px; padding: 10px 12px 12px; }
