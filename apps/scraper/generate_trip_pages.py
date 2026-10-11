@@ -134,6 +134,31 @@ def has_route_link(route: list[dict]) -> bool:
     ) <= muni_page.ROUTE_LINK_MAX_LEG_KM
 
 
+def trips_by_manhole(records: list[dict], areas: list[dict], durations: dict) -> dict[str, dict]:
+    """マンホールID → その蓋が入っている /trip/ エリアの中身（詳細ページに出す。trip ページと同じ順番・時間）。
+
+    {"path", "name", "count", "route": [records], "legs": [km], "common": bool, "text": 時間と移動の文}
+    1つの蓋が複数のエリアに入っていたら、先に登録したエリアを使う。
+    """
+    by_id = {str(r.get("id", "")): r for r in records}
+    out: dict[str, dict] = {}
+    for area in areas:
+        rs = area_records(area, by_id)
+        if rs is None:
+            continue
+        entry = find_entry(rs, durations)
+        route, common = area_route(rs, entry)
+        legs = [pref._distance_km(a["lat"], a["lng"], b["lat"], b["lng"]) for a, b in zip(route, route[1:])]
+        text = duration_text(rs, durations) or (
+            "1日で全部回った人の記録がまだ少ないため、かかる時間の目安はまだありません。" + mode_hint(rs)
+        )
+        trip = {"path": trip_path(area), "name": area["name"], "count": len(rs),
+                "route": route, "legs": legs, "common": common, "text": text}
+        for r in rs:
+            out.setdefault(str(r["id"]), trip)
+    return out
+
+
 def trip_summaries(records: list[dict], areas: list[dict], durations: dict) -> list[tuple[str, str, int, str]]:
     """ほかのページから /trip/ を紹介するときの一覧。(名前, パス, 枚数, かかる時間の目安)。
 

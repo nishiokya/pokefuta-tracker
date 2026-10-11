@@ -506,6 +506,48 @@ def _js_json(value) -> str:
     return json.dumps(value, ensure_ascii=False).replace("</", "<\\/")
 
 
+def _trip_leg_label(km: float) -> str:
+    if km < 0.1:
+        return "次はすぐ近く"
+    if km < 1:
+        return f"次まで約{round(km * 1000, -1):.0f}m"
+    return f"次まで約{km:.1f}km"
+
+
+def _trip_section_html(trip: dict, manhole_id: str, id_to_image_url: dict[str, str]) -> str:
+    """この蓋が入っている「ポケふた旅」のエリアを、trip ページと同じ順番・時間で出す。"""
+    items = ""
+    for index, other in enumerate(trip["route"]):
+        oid = str(other.get("id", "")).strip()
+        leg = trip["legs"][index] if index < len(trip["legs"]) else None
+        badges = ""
+        if oid == manhole_id:
+            badges += "<span class='trip-here'>このポケふた</span>"
+        badges += f"<span class='distance'>{escape(_trip_leg_label(leg))}</span>" if leg is not None else ""
+        params = _attr_json({
+            "surface": "manhole_trip",
+            "from_manhole_id": manhole_id,
+            "to_manhole_id": oid,
+            "position": index + 1,
+        })
+        items += _render_related_card(
+            other, id_to_image_url, extra_html=badges, event_name="click_trip_stop", onclick_params=params,
+        )
+    order_note = "よく回られる順番です。" if trip.get("common") else "直線距離がいちばん短くなる順番です。"
+    more_params = _attr_json({"surface": "manhole_trip", "from_manhole_id": manhole_id})
+    return (
+        f"<section class='nearby-section trip-section section-card'>"
+        f"<h2>{_icon('icon-detail-nearby', 'icon-lg')} "
+        f"{escape(trip['name'])}のポケふた{trip['count']}枚を回る</h2>"
+        f"<p class='design-note'>{escape(trip['text'])}{order_note}</p>"
+        f"<ol class='related-list related-list--cards trip-stops'>{items}</ol>"
+        f"<a class='gallery-more' href='{_escape_attr_value(trip['path'])}'"
+        f" onclick=\"trackEvent('click_trip_from_manhole', {more_params})\">"
+        f"地図と回り方を見る（ポケふた旅） →</a>"
+        f"</section>"
+    )
+
+
 def _render_related_card(
     other: dict,
     id_to_image_url: dict[str, str],
@@ -552,8 +594,12 @@ def generate_html(
     ja_to_slug: dict[str, str] | None = None,
     nearby_design: list[tuple[dict, float]] | None = None,
     municipality_path: str | None = None,
+    trip: dict | None = None,
 ) -> str:
     """Generate complete HTML for a manhole detail page.
+
+    trip: この蓋が入っている /trip/ エリア（generate_trip_pages.trips_by_manhole）。あれば「次に寄れるポケふた」の
+    代わりに、そのエリアだけを trip ページと同じ順番・時間で出す（ほかのエリアの蓋は混ぜない）。
 
     municipality_path: この蓋の市区町村ページ（/municipalities/...）。ページがある自治体だけ渡す。
     """
@@ -1116,9 +1162,9 @@ def generate_html(
             f"</section>"
         )
 
-    # Nearby manholes section
-    nearby_html = ""
-    if nearby:
+    # Nearby manholes section（/trip/ のエリアに入っている蓋は、そのエリアの回り方に差し替える）
+    nearby_html = _trip_section_html(trip, manhole_id, id_to_image_url) if trip else ""
+    if nearby and not trip:
         nearby_html = (
             f"<section class='nearby-section section-card'>"
             f"<h2>{_icon('icon-detail-nearby', 'icon-lg')} 次に寄れるポケふた</h2>"
@@ -1540,6 +1586,15 @@ def generate_html(
       font-size: 13px;
       color: #666;
       white-space: nowrap;
+    }}
+
+    .trip-stops {{ padding-left: 0; }}
+    .trip-here {{
+      font-size: 12px;
+      font-weight: 700;
+      color: #6b4aa2;
+      white-space: nowrap;
+      margin-right: 6px;
     }}
 
     /* HERO card */
@@ -2231,8 +2286,11 @@ def generate_all_pages(
     image_dir: Path,
     ja_to_slug: dict[str, str] | None = None,
     design_spots: list[dict] | None = None,
+    trips: dict[str, dict] | None = None,
 ) -> tuple[int, int, int]:
     """Generate HTML pages for all manholes.
+
+    trips: マンホールID → /trip/ エリア（generate_trip_pages.trips_by_manhole）。
 
     Returns:
         (total_generated, photos_applied, photos_missing)
@@ -2381,6 +2439,7 @@ def generate_all_pages(
             ogp_dir=ogp_dir, ja_to_slug=ja_to_slug,
             nearby_design=nearby_design,
             municipality_path=municipality_paths.get((prefecture, municipality_label(manhole))),
+            trip=(trips or {}).get(manhole_id),
         )
 
         page_dir = output_dir / "manholes" / manhole_id
@@ -2392,6 +2451,19 @@ def generate_all_pages(
         total += 1
 
     return total, photos_applied, photos_missing
+
+
+def _load_trips(manholes: list[dict]) -> dict[str, dict]:
+    """/trip/ のエリア（dataset/trip_areas.json）と所要時間の集計から、蓋ごとのエリアを引く。"""
+    try:
+        from apps.scraper.generate_trip_pages import trips_by_manhole
+        from apps.scraper.visit_durations import load_durations, load_trip_areas
+    except ModuleNotFoundError as exc:
+        if exc.name != "apps":
+            raise
+        from generate_trip_pages import trips_by_manhole
+        from visit_durations import load_durations, load_trip_areas
+    return trips_by_manhole(manholes, load_trip_areas(), load_durations())
 
 
 def main() -> int:
@@ -2476,6 +2548,7 @@ def main() -> int:
     total, photos_applied, photos_missing = generate_all_pages(
         manholes, photos, pokemon_meta, output_dir, Path(args.image_dir),
         ja_to_slug=ja_to_slug, design_spots=design_spots,
+        trips=_load_trips(manholes),
     )
 
     print(f"[generate_manhole_pages] total manholes: {len(manholes)}")
