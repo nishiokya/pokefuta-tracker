@@ -164,6 +164,9 @@ class GenerateTest(unittest.TestCase):
             self.assertIn("東大阪のポケふた5枚を回る", area)
             self.assertIn("約1時間20分〜2時間半", area)
             self.assertIn("よく回られる順番", area)
+            cards = area[area.index('id="manhole-list"'):]
+            ids = re.findall(r'id="manhole-(\d+)"', cards)
+            self.assertEqual(ids[:5], ["206", "210", "209", "207", "208"])  # 「回るポケふた」も回る順
             self.assertIn('href="/trip/ikaruga/"', area)  # あわせて回るなら
             self.assertIn('"@type": "TouristTrip"', area)
             ikaruga = (out / "ikaruga" / "index.html").read_text(encoding="utf-8")

@@ -703,14 +703,16 @@ def _photo_section(
 
 
 def _manhole_cards(
-    records: list[dict], photos: dict[str, dict] | None = None, slug: str = ""
+    records: list[dict], photos: dict[str, dict] | None = None, slug: str = "", keep_order: bool = False
 ) -> str:
+    """keep_order: 渡した順に並べる（/trip/ の「回るポケふた」は回る順）。既定は市区町村・ID順。"""
     photos = photos or {}
     if not records:
         return '<p class="empty-state">現在、この都道府県のポケふたは未設置です。</p>'
     cards = []
     for position, record in enumerate(
-        sorted(records, key=lambda item: (item.get("city", ""), str(item.get("id", "")))),
+        records if keep_order
+        else sorted(records, key=lambda item: (item.get("city", ""), str(item.get("id", "")))),
         start=1,
     ):
         mid = str(record.get("id", "")).strip()
