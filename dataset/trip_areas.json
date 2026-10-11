@@ -47,7 +47,39 @@
         "211",
         "213",
         "212"
-      ]
+      ],
+      "access": {
+        "train": "東所沢駅（JR武蔵野線）から徒歩12分のYOT-TOKOスタート、航空公園駅（西武新宿線）すぐの航空記念公園を通り、所沢駅西口前でゴール",
+        "parking": [
+          {
+            "name": "所沢航空記念公園の駐車場",
+            "kind": "公共",
+            "fee": "有料",
+            "note": "2時間まで無料"
+          },
+          {
+            "name": "YOT-TOKOの駐車場",
+            "kind": "公共",
+            "fee": "有料",
+            "note": "30分まで無料"
+          }
+        ],
+        "sources": [
+          {
+            "label": "所沢市のポケふた案内",
+            "url": "https://www.city.tokorozawa.saitama.jp/kurashi/jogesuido/gesui/manholecard/pokefuta.html"
+          },
+          {
+            "label": "所沢航空記念公園のアクセス",
+            "url": "https://www.parks.or.jp/tokorozawa-kokuu/guide/001/001581.html"
+          },
+          {
+            "label": "YOT-TOKO",
+            "url": "https://yot-toko.jp/pages/about"
+          }
+        ],
+        "checked_on": "2026-10-11"
+      }
     },
     {
       "slug": "awaji",
@@ -78,7 +110,29 @@
         "150",
         "151",
         "152"
-      ]
+      ],
+      "access": {
+        "train": "JR法隆寺駅の北口広場からスタート、法隆寺へ向かう道沿いに並び、法隆寺iセンターでゴール",
+        "parking": [
+          {
+            "name": "法隆寺観光自動車駐車場",
+            "kind": "公共",
+            "fee": "有料",
+            "note": "1日1回料金・普通車は20台"
+          }
+        ],
+        "sources": [
+          {
+            "label": "斑鳩町のポケふた案内",
+            "url": "https://www.town.ikaruga.nara.jp/0000001973.html"
+          },
+          {
+            "label": "法隆寺観光自動車駐車場",
+            "url": "https://www.narapark.jp/horyujiparking/"
+          }
+        ],
+        "checked_on": "2026-10-11"
+      }
     },
     {
       "slug": "yokohama",
