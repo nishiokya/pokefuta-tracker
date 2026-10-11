@@ -181,7 +181,7 @@ jobs:
           cp apps/web/map.html dist/map.html
           cp apps/web/gmanhole_map.html dist/gmanhole_map.html
           cp apps/web/design_manhole.html dist/design_manhole.html
-          cp apps/web/login.html dist/login.html
+          cp apps/web/login.html dist/login.html  # 廃止済み。pokefuta.com/login へのリダイレクトだけ
           cp apps/web/about.html dist/about.html
           cp apps/web/privacy.html dist/privacy.html
           echo "[dist] 404 page (fixed Slowpoke lid)"

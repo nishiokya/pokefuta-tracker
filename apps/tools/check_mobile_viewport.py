@@ -45,7 +45,6 @@ DEFAULT_PATHS = (
     "/pokemon/pikachu/",
     "/character_manholes.html",
     "/design_manhole.html",
-    "/login.html",
     "/en/",
     "/en/summary/",
     "/en/pokemon/",
