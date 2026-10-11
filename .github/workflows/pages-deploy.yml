@@ -176,7 +176,7 @@ jobs:
           python3 apps/scraper/generate_top_page.py dist/index.html
           echo "[dist] Rebuild top page theme chips from dataset/tag_meta.json"
           python3 apps/scraper/generate_top_tag_chips.py dist/index.html
-          cp apps/web/nearby_manholes.html dist/nearby.html
+          cp apps/web/nearby.html dist/nearby.html  # 廃止済み。map.html へのリダイレクトだけ
           cp apps/web/map.html dist/map.html
           cp apps/web/gmanhole_map.html dist/gmanhole_map.html
           cp apps/web/design_manhole.html dist/design_manhole.html
@@ -193,7 +193,7 @@ jobs:
           python3 tools/build_i18n.py
           echo "[dist] Replace the English top with the photo-led layout (zh-TW / zh-CN / ko keep the template)"
           python3 apps/scraper/generate_top_page_en.py dist/en/index.html
-          echo '<!doctype html><meta http-equiv="refresh" content="0; url=./nearby.html">' > dist/nearby_manholes.html
+          cp apps/web/nearby.html dist/nearby_manholes.html  # 旧 URL も map.html へ
           echo "[dist] Inject shared site header into every HTML page"
           python3 apps/scraper/inject_site_header.py dist
           echo "[dist] Inject AdSense verification and in-content slots when configured"

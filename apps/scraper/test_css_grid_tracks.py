@@ -43,7 +43,6 @@ SCANNED = (
     "apps/web/map.html",
     "apps/web/map.template.html",
     "apps/web/design_manhole.html",
-    "apps/web/nearby_manholes.html",
 )
 
 BARE_FR_TRACK_RE = re.compile(r"repeat\(\s*\d+\s*,\s*1fr\s*\)")

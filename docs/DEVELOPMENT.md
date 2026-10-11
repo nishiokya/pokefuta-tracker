@@ -94,8 +94,8 @@ git diff apps/scraper/pokefuta.ndjson --name-only
 **main ブランチへの push 時に自動実行** (`apps/web/` または `docs/` 配下の変更時)。以下を行います:
 1. `dist/` ディレクトリを作成
 2. 公開用データ (`docs/pokefuta.ndjson`) を `dist/` へコピー
-3. ソース HTML (`apps/web/*.html`) を `dist/index.html`, `dist/nearby.html` としてコピー
-4. 旧 URL 互換用リダイレクト `dist/nearby_manholes.html` を生成
+3. ソース HTML (`apps/web/*.html`) を `dist/index.html` などとしてコピー（`dist/nearby.html` は廃止済みで map.html へのリダイレクト）
+4. 旧 URL 互換用リダイレクト `dist/nearby_manholes.html`（→ map.html）を置く
 5. アセット/アイコンを `dist/assets/` へ配置
 6. `upload-pages-artifact` → `deploy-pages` で GitHub Pages に反映
 
@@ -113,7 +113,7 @@ git diff apps/scraper/pokefuta.ndjson --name-only
 | `dist/*` | **Pages 公開物** - HTML + assets + data の統合 | Git 未追跡・pages-deploy.yml が生成 |
 
 ### フロントエンド編集ポリシー
-編集対象は **`apps/web/index.html`** / **`apps/web/nearby_manholes.html`** などソースのみ。公開ページは Artifact から生成されるため直接編集できません。
+編集対象は **`apps/web/index.html`** / **`apps/web/map.html`** などソースのみ。公開ページは Artifact から生成されるため直接編集できません。
 
 ### 用語（蓋の呼び分け）
 ナビに収まる短縮形と、検索される正式名を**2層で使い分ける**。片方に寄せるとナビ幅か SEO のどちらかが壊れるため。ブランドが「ポケふた」なので短縮形はひらがなで揃える。
@@ -193,7 +193,7 @@ TSVファイルには以下の情報が含まれます：
 apps/
 ├── web/                      # Webインターフェース (ソース HTML と静的資産)
 │   ├── index.html           # メインのマップページ (ソース)
-│   ├── nearby_manholes.html # 近くのマンホールページ (ソース)
+│   ├── nearby.html          # 廃止した近くのマンホールページの跡地（map.html へリダイレクト）
 │   └── assets/              # CSS 等
 ├── scraper/                 # データ収集ロジック
 │   ├── scrape_pokefuta.py   # 初期一括取得

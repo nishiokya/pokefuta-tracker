@@ -491,7 +491,6 @@ class GeneratedHtmlTest(unittest.TestCase):
             "map.html": ("home-quick__link--primary home-quick__link--map", "map"),
             "#home-pref": ("", "home_pref_section"),
             "pokemon/": ("", "pokemon_index"),
-            "nearby.html": ("home-quick__link--desktop", "nearby"),
             "map.html?view=theme": ("home-quick__link--desktop", "map_theme_directory"),
         }, got)
         for _, _, js in links:
