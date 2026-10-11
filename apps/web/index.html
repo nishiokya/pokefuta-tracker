@@ -374,7 +374,7 @@
   <!-- End GA -->
   <link rel="stylesheet" href="./assets/theme.css" />
   <link rel="stylesheet" href="./assets/top-page.css?v=20260711b" />
-  <link rel="stylesheet" href="./assets/top-home.css?v=20261011b" />
+  <link rel="stylesheet" href="./assets/top-home.css?v=20261011c" />
   <link rel="icon" href="./assets/pokefuta-marker.svg" type="image/svg+xml" />
   <script src="./assets/session-badge.js" defer></script>
 </head>
@@ -435,8 +435,18 @@
 
       <div class="home-purpose__block">
         <div class="home-purpose__head">
+          <h3 class="home-h3">設置の多いポケモンから探す</h3>
+        </div>
+        <!-- home:pokemon:start -->
+        <ul class="home-pokes"><li class="home-poke"><a href="pokemon/chansey/" onclick="trackEvent('click_hub_pokemon',{surface:'top_hub_pokemon',pokemon:'ラッキー'})"><img src="manhole/image/280_latest.jpeg" alt="ラッキーのポケふた（福島県伊達市）" width="720" height="720" loading="lazy" decoding="async"><span class="home-poke__name">ラッキー</span><span class="home-poke__count">43枚</span></a></li><li class="home-poke"><a href="pokemon/lapras/" onclick="trackEvent('click_hub_pokemon',{surface:'top_hub_pokemon',pokemon:'ラプラス'})"><img src="manhole/image/54_latest.jpeg" alt="ラプラスのポケふた（宮城県仙台市）" width="720" height="720" loading="lazy" decoding="async"><span class="home-poke__name">ラプラス</span><span class="home-poke__count">37枚</span></a></li><li class="home-poke"><a href="pokemon/vulpix-alola/" onclick="trackEvent('click_hub_pokemon',{surface:'top_hub_pokemon',pokemon:'アローラロコン'})"><img src="manhole/image/306_latest.jpeg" alt="アローラロコンのポケふた（北海道猿払村）" width="720" height="720" loading="lazy" decoding="async"><span class="home-poke__name">アローラロコン</span><span class="home-poke__count">37枚</span></a></li><li class="home-poke"><a href="pokemon/oshawott/" onclick="trackEvent('click_hub_pokemon',{surface:'top_hub_pokemon',pokemon:'ミジュマル'})"><img src="manhole/image/386_latest.jpeg" alt="ミジュマルのポケふた（三重県三重郡菰野町）" width="720" height="720" loading="lazy" decoding="async"><span class="home-poke__name">ミジュマル</span><span class="home-poke__count">31枚</span></a></li><li class="home-poke"><a href="pokemon/vulpix/" onclick="trackEvent('click_hub_pokemon',{surface:'top_hub_pokemon',pokemon:'ロコン'})"><img src="manhole/image/66_latest.jpeg" alt="ロコンのポケふた（北海道天塩町）" width="720" height="720" loading="lazy" decoding="async"><span class="home-poke__name">ロコン</span><span class="home-poke__count">27枚</span></a></li><li class="home-poke home-poke--all"><a href="pokemon/" onclick="trackEvent('click_hub_pokemon_all',{surface:'top_hub_pokemon'})"><span class="home-poke__name">すべてのポケモン</span><span class="home-poke__count">547種類</span></a></li></ul>
+        <!-- home:pokemon:end -->
+      </div>
+
+      <div class="home-purpose__block">
+        <div class="home-purpose__head">
           <h3 class="home-h3">1日で回るルートから探す</h3>
-          <a class="home-purpose__more" href="trip/" onclick="trackEvent('click_hub_trip_all',{surface:'top_hub_trip'})">もっとみる</a>
+          <!-- home:tripsmore:start -->
+          <!-- home:tripsmore:end -->
         </div>
         <!-- home:trips:start -->
         <!-- home:trips:end -->
@@ -445,6 +455,8 @@
       <div class="home-purpose__block">
         <div class="home-purpose__head">
           <h3 class="home-h3">テーマから探す</h3>
+          <!-- home:themesmore:start -->
+          <!-- home:themesmore:end -->
         </div>
         <div class="hub-chips home-chips">
           <!-- tag-chips:start -->
@@ -457,15 +469,6 @@
           <a class="hub-chip" href="/map.html?tag=park" onclick="trackEvent('click_hub_tag',{surface:'top_hub_tag',tag:'park',destination:'map_tag_filter'})">🌳 公園 <span class="chip-count">46枚</span></a>
           <!-- tag-chips:end -->
         </div>
-      </div>
-
-      <div class="home-purpose__block">
-        <div class="home-purpose__head">
-          <h3 class="home-h3">設置の多いポケモンから探す</h3>
-        </div>
-        <!-- home:pokemon:start -->
-        <ul class="home-pokes"><li class="home-poke"><a href="pokemon/chansey/" onclick="trackEvent('click_hub_pokemon',{surface:'top_hub_pokemon',pokemon:'ラッキー'})"><img src="manhole/image/280_latest.jpeg" alt="ラッキーのポケふた（福島県伊達市）" width="720" height="720" loading="lazy" decoding="async"><span class="home-poke__name">ラッキー</span><span class="home-poke__count">43枚</span></a></li><li class="home-poke"><a href="pokemon/lapras/" onclick="trackEvent('click_hub_pokemon',{surface:'top_hub_pokemon',pokemon:'ラプラス'})"><img src="manhole/image/54_latest.jpeg" alt="ラプラスのポケふた（宮城県仙台市）" width="720" height="720" loading="lazy" decoding="async"><span class="home-poke__name">ラプラス</span><span class="home-poke__count">37枚</span></a></li><li class="home-poke"><a href="pokemon/vulpix-alola/" onclick="trackEvent('click_hub_pokemon',{surface:'top_hub_pokemon',pokemon:'アローラロコン'})"><img src="manhole/image/306_latest.jpeg" alt="アローラロコンのポケふた（北海道猿払村）" width="720" height="720" loading="lazy" decoding="async"><span class="home-poke__name">アローラロコン</span><span class="home-poke__count">37枚</span></a></li><li class="home-poke"><a href="pokemon/oshawott/" onclick="trackEvent('click_hub_pokemon',{surface:'top_hub_pokemon',pokemon:'ミジュマル'})"><img src="manhole/image/386_latest.jpeg" alt="ミジュマルのポケふた（三重県三重郡菰野町）" width="720" height="720" loading="lazy" decoding="async"><span class="home-poke__name">ミジュマル</span><span class="home-poke__count">31枚</span></a></li><li class="home-poke"><a href="pokemon/vulpix/" onclick="trackEvent('click_hub_pokemon',{surface:'top_hub_pokemon',pokemon:'ロコン'})"><img src="manhole/image/66_latest.jpeg" alt="ロコンのポケふた（北海道天塩町）" width="720" height="720" loading="lazy" decoding="async"><span class="home-poke__name">ロコン</span><span class="home-poke__count">27枚</span></a></li><li class="home-poke home-poke--all"><a href="pokemon/" onclick="trackEvent('click_hub_pokemon_all',{surface:'top_hub_pokemon'})"><span class="home-poke__name">すべてのポケモン</span><span class="home-poke__count">547種類</span></a></li></ul>
-        <!-- home:pokemon:end -->
       </div>
     </section>
 

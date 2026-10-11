@@ -40,6 +40,10 @@ SHELL = """<html><head>
     <!-- home:pokemon:end -->
     <!-- home:trips:start -->
     <!-- home:trips:end -->
+    <!-- home:tripsmore:start -->
+    <!-- home:tripsmore:end -->
+    <!-- home:themesmore:start -->
+    <!-- home:themesmore:end -->
           <!-- tag-chips:start -->
           <a class="hub-chip" href="/tags/roadside/">keep</a>
           <!-- tag-chips:end -->
@@ -330,12 +334,34 @@ class GeneratedHtmlTest(unittest.TestCase):
         data.trips = []
         self.assertEqual("", module.render_trips(data))
 
+    def test_trip_thumbs_stop_at_four_and_count_the_rest(self) -> None:
+        fixture = Fixture(self.tmp)
+        route = fixture.records[:6]
+        html = module.trip_thumbs_html(route, fixture.image_dir)
+        self.assertEqual(4, html.count("<img"))
+        self.assertIn(">+2</span>", html)
+        self.assertNotIn("+", module.trip_thumbs_html(route[:4], fixture.image_dir))
+
+    def test_purpose_lists_link_with_their_counts(self) -> None:
+        data = Fixture(self.tmp).data()
+        data.trip_total = 9
+        self.assertIn("1日で回るルート一覧 9ルート", module.render_tripsmore(data))
+        self.assertIn('href="trip/"', module.render_tripsmore(data))
+        self.assertEqual("", module.render_themesmore(data))  # テーマのついた蓋が無い
+        data.tag_counts = {slug: 100 for slug in data.tag_meta.public_slugs()[:3]}
+        themes = module.render_themesmore(data)
+        self.assertIn('href="map.html?view=theme"', themes)
+        self.assertIn("テーマ一覧 3テーマ", themes)
+        data.trip_total = 0
+        self.assertEqual("", module.render_tripsmore(data))
+
     def test_trips_from_the_real_dataset_are_sorted_by_count_then_time(self) -> None:
-        trips = module.build_trips(
+        trips, total = module.build_trips(
             module.load_records(module.DEFAULT_MANHOLES), module.DEFAULT_TRIP_AREAS,
             module.DEFAULT_DURATIONS, module.DEFAULT_IMAGE_DIR,
         )
         self.assertLessEqual(len(trips), module.TRIP_LIMIT)
+        self.assertGreaterEqual(total, len(trips))
         keys = [(-t["count"], -t["minutes"]) for t in trips]
         self.assertEqual(sorted(keys), keys)
         self.assertTrue(all(t["time"] and t["path"].startswith("trip/") for t in trips))

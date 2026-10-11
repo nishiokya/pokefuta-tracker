@@ -188,14 +188,13 @@ class AnalyticsContractTest(unittest.TestCase):
         "click_photo_post_cta",  # 写真館への投稿導線
         "click_event_show_all",  # イベントの「すべて見る」
         "click_pref_link",       # 静的な都道府県リンク（多言語版は JS 文字列内にあり正規表現に掛からない）
-        "click_hub_trip_all",    # 目的から探すのポケふた旅「もっとみる」（旅のカード自体は生成時に入る）
     }
     TEMPLATE_ONLY_EVENTS = {
         "click_hero_featured", "click_hero_small", "view_hero_community",  # 旧ヒーロー（大1＋小2）
         "click_intro_list_cta", "click_stat_pref_jump",
         "click_pref_show_all",   # 旧・折りたたみ式の47都道府県リスト
         "view_newrelease",       # 日本語版の新作は生成時に静的に出すので表示イベントは送らない
-        "click_hub_tag_all",     # テーマの「地図で探す」。日本語版は外した（ヒーローに「テーマから探す」がある）
+        "click_hub_tag_all",     # テーマ一覧へのリンク。日本語版は件数入りで生成時に入る（静的HTMLには無い）
     }
 
     def test_top_page_and_its_template_track_the_same_events(self):

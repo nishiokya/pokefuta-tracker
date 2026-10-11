@@ -15,6 +15,7 @@
 - events    … 開催中イベント（上位3件＋残りは折りたたみ。イベント名のポケモンの写真を1枚添える）
 - pref      … 設置のある都道府県を地方別に、未設置の県は短い注記に分ける
 - trips     … ポケふた旅（目的から探す。枚数・かかる時間の多いエリアをカードで。続きは /trip/）
+- tripsmore / themesmore … 目的から探すの見出し横の一覧リンク（「1日で回るルート一覧 9ルート」など）
 - pokemon   … 設置の多いポケモン（写真つきカード。/pokemon/ と同じ突き合わせ規則。写真は
               dataset/pokemon_representatives.json の代表を優先し、無ければ新しい投稿）
 
@@ -47,7 +48,8 @@ try:
     from apps.scraper.generate_pokemon_index_page import load_representatives
     from apps.scraper.generate_pokemon_pages import build_pokemon_index, load_pokemon_metadata
     from apps.scraper.generate_tag_pages import load_records
-    from apps.scraper.generate_trip_pages import area_records, card_thumbs_html
+    from apps.scraper.generate_trip_pages import area_records, area_route
+    from apps.scraper.manhole_tile_image import tile_image_url
     from apps.scraper.visit_durations import (
         MODE_LABELS, duration_range, find_entry, load_durations, load_trip_areas, travel_mode, trip_path,
     )
@@ -61,7 +63,8 @@ except ModuleNotFoundError as exc:
     from generate_pokemon_index_page import load_representatives
     from generate_pokemon_pages import build_pokemon_index, load_pokemon_metadata
     from generate_tag_pages import load_records
-    from generate_trip_pages import area_records, card_thumbs_html
+    from generate_trip_pages import area_records, area_route
+    from manhole_tile_image import tile_image_url
     from visit_durations import (
         MODE_LABELS, duration_range, find_entry, load_durations, load_trip_areas, travel_mode, trip_path,
     )
@@ -86,6 +89,7 @@ HERO_PHOTO_LIMIT = 6
 GALLERY_PHOTO_LIMIT = 8
 EVENT_VISIBLE_LIMIT = 3
 TRIP_LIMIT = 4  # 「目的から探す」に出すポケふた旅のエリア数
+TRIP_THUMB_LIMIT = 4  # カードに並べる蓋の画像の数。残りは「+n」（カードの大きさをそろえる）
 NEW_RELEASE_DAYS = 30
 PHOTO_SIZE = 720  # ローカルミラーは 720×720
 LID_SIZE = 360  # 蓋の枠に合わせた切り出し {id}_lid.jpeg
@@ -221,6 +225,7 @@ class TopData:
     popular_pokemon: list[PokemonEntry] = field(default_factory=list)
     all_pokemon: list[PokemonEntry] = field(default_factory=list)
     trips: list[dict] = field(default_factory=list)
+    trip_total: int = 0  # /trip/ に載っているエリアの数
 
     @property
     def total(self) -> int:
@@ -317,19 +322,40 @@ def load_events(path: Path | None, today: date) -> list[dict]:
     return ongoing + upcoming
 
 
+def trip_thumbs_html(route: list[dict], image_dir: Path, limit: int = TRIP_THUMB_LIMIT) -> str:
+    """蓋の丸い小さい画像を回る順に limit 枚まで。残りは「+n」（画像の無い蓋も n に数える）。"""
+    urls = [u for u in (tile_image_url(str(r["id"]), image_dir) for r in route) if u]
+    if not urls:
+        return ""
+    shown = urls[:limit]
+    rest = len(route) - len(shown)
+    imgs = "".join(
+        f'<img src="{escape(u)}" alt="" width="34" height="34" loading="lazy" decoding="async">' for u in shown
+    )
+    more = f'<span class="stop-thumb-more">+{rest}</span>' if rest > 0 else ""
+    return f'<span class="stop-thumbs">{imgs}{more}</span>'
+
+
 def build_trips(
     records: list[dict], areas_path: Path | None, durations_path: Path | None, image_dir: Path,
     limit: int = TRIP_LIMIT,
-) -> list[dict]:
-    """かかる時間の目安があるエリアを、枚数が多い順・同数なら時間が長い順に。/trip/ の一覧と同じ数え方。"""
+) -> tuple[list[dict], int]:
+    """(カードに出すエリア, /trip/ のエリア数)。
+
+    カードは、かかる時間の目安があるエリアを枚数が多い順・同数なら時間が長い順に。/trip/ の一覧と同じ数え方。
+    """
     if not areas_path or not durations_path:
-        return []
+        return [], 0
     durations = load_durations(durations_path, areas_path)
     by_id = {str(r.get("id", "")): r for r in records}
     trips = []
+    total = 0
     for area in load_trip_areas(areas_path):
         rs = area_records(area, by_id)
-        entry = find_entry(rs, durations) if rs else None
+        if rs is None:
+            continue
+        total += 1
+        entry = find_entry(rs, durations)
         if not entry:
             continue
         trips.append({
@@ -341,10 +367,10 @@ def build_trips(
             "minutes": entry.get("median_minutes") or 0,
             "time": duration_range(entry["p25_minutes"], entry["p75_minutes"]),
             "mode": MODE_LABELS[travel_mode(rs)],
-            "thumbs": card_thumbs_html(rs, entry, image_dir),
+            "thumbs": trip_thumbs_html(area_route(rs, entry)[0], image_dir),
         })
     trips.sort(key=lambda t: (-t["count"], -t["minutes"], t["slug"]))
-    return trips[:limit]
+    return trips[:limit], total
 
 
 def load_data(
@@ -364,6 +390,7 @@ def load_data(
     records = [r for r in all_records if is_installed(r)]
     stats_json = _load_json(stats)
     pokemon = build_pokemon_entries(records, pokemon_metadata, representatives_path=representatives)
+    trips, trip_total = build_trips(all_records, trip_areas, durations, image_dir)
     return TopData(
         records=records,
         photos=build_photos(_load_json(photos), records, image_dir),
@@ -374,7 +401,8 @@ def load_data(
         tag_counts=count_tags(records),
         popular_pokemon=pokemon[:POPULAR_POKEMON_LIMIT],
         all_pokemon=pokemon,
-        trips=build_trips(all_records, trip_areas, durations, image_dir),
+        trips=trips,
+        trip_total=trip_total,
     )
 
 
@@ -950,6 +978,28 @@ def render_trips(data: TopData) -> str:
     return f'<div class="home-trips">{cards}</div>'
 
 
+def render_tripsmore(data: TopData) -> str:
+    if not data.trip_total:
+        return ""
+    return (
+        f'<a class="home-purpose__more" href="trip/" '
+        f'onclick="{_track("click_hub_trip_all", surface="top_hub_trip")}">'
+        f"1日で回るルート一覧 {data.trip_total}ルート</a>"
+    )
+
+
+def render_themesmore(data: TopData) -> str:
+    """地図のテーマ一覧（/tags/ の一覧ページは無い）。数は地図のテーマ一覧と同じ規則で数える。"""
+    total = len(data.tag_meta.visible_slugs(data.tag_counts)) if data.tag_meta else 0
+    if not total:
+        return ""
+    return (
+        f'<a class="home-purpose__more" href="map.html?view=theme" '
+        f'onclick="{_track("click_hub_tag_all", surface="top_hub_tag")}">'
+        f"テーマ一覧 {total}テーマ</a>"
+    )
+
+
 RENDERERS = {
     "hero": render_hero,
     "ways": render_ways,
@@ -959,6 +1009,8 @@ RENDERERS = {
     "pref": render_pref,
     "pokemon": render_pokemon,
     "trips": render_trips,
+    "tripsmore": render_tripsmore,
+    "themesmore": render_themesmore,
 }
 
 
