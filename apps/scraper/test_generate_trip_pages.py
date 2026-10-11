@@ -178,6 +178,11 @@ class GenerateTest(unittest.TestCase):
             self.assertIn("かかる時間の目安があるエリア", index)
             self.assertIn("時間の目安がまだのエリア", index)
             self.assertIn("吹田市", index)
+            # ヒーローには時間の目安があるエリアだけをカードで出す（まだのエリアは出さない）
+            hero = index[index.index('<header class="hero">'):index.index("</header>")]
+            self.assertIn('href="/trip/higashiosaka/"', hero)
+            self.assertIn('data-surface="trip_hero"', hero)
+            self.assertNotIn("/trip/ikaruga/", hero)
             self.assertIn("PokefutaAnalytics.bindClickTracking(", area)
             self.assertNotRegex(area + index, r"\d+人")
 
