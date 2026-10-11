@@ -938,11 +938,6 @@ _CSS = """\
       margin-left: 6px;
     }
 
-
-
-
-
-
     .pokemon-popular-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1481,8 +1476,6 @@ _CSS = """\
       line-height: 1.4;
     }
 
-
-
     /* ヒーローの入口ボタン。右上のバッジ・写真（絶対配置）に重ならない幅に収める */
     .summary-hero-links {
       position: relative;
@@ -1688,10 +1681,6 @@ _CSS = """\
         grid-template-columns: 1fr;
       }
 
-
-
-
-
       .prefecture-info-grid {
         grid-template-columns: 1fr;
         gap: 5px;
@@ -1719,8 +1708,6 @@ _CSS = """\
       .prefecture-info-fact {
         font-size: .66rem;
       }
-
-
 
       .photos-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -3417,10 +3404,13 @@ def _build_prefecture_jump_section(s: dict, stats: dict) -> str:
 def load_pokemon_representatives(path: Path) -> dict[str, str]:
     """dataset/pokemon_representatives.json を {ポケモン名: マンホールID} にする（無ければ空）。"""
     try:
-        data = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
+        reps = json.loads(path.read_text(encoding="utf-8")).get("representatives")
+    except (OSError, json.JSONDecodeError, AttributeError):
+        reps = None
+    if not isinstance(reps, dict):
+        # 手で直すファイルなので、形が崩れていても Pages のビルドは止めずに代表なしで作る
         return {}
-    return {str(name): str(mid) for name, mid in (data.get("representatives") or {}).items()}
+    return {str(name): str(mid) for name, mid in reps.items()}
 
 
 def _build_popular_pokemon_section(
@@ -3978,6 +3968,7 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
     </header>
     {events_html}
     {latest_photos_html}
+    {daily_fact_html}
     {prefecture_html}
     {popular_pokemon_html}
     {discovery_hubs_html}
@@ -4015,7 +4006,6 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
         {empty_items}
       </ul>
     </section>
-    {daily_fact_html}
     {fact_list_html}
   </main>
 {tracking_script}

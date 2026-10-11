@@ -431,6 +431,29 @@ class DiscoveryHubTests(unittest.TestCase):
 
 
 
+class PageOrderTests(unittest.TestCase):
+    def test_daily_fact_stays_near_the_top(self):
+        """「今日の雑学」の「地図で見る」は summary_map_click の出どころ（旧ページで3番目に押されていた）。
+        読まれない下の方へ回さず、最新写真の直後・都道府県の前に置く。"""
+        records = summary.load_records(summary.NDJSON)
+        stats = summary.build_stats(records)
+        records_by_id = {str(r["id"]): r for r in records}
+        html = summary.render_page(summary.SUMMARY_STRINGS["ja"], stats, {}, {}, records_by_id, {}, {})
+        self.assertLess(html.index('class="daily-fact-card"'), html.index('id="prefecture-jump-heading"'))
+        self.assertLess(html.index('id="prefecture-jump-heading"'), html.index('id="fact-list-heading"'))
+
+    def test_broken_representatives_file_does_not_stop_the_build(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "reps.json"
+            for content in ('[1, 2]', '{"representatives": [1]}', "{broken"):
+                with self.subTest(content=content):
+                    path.write_text(content, encoding="utf-8")
+                    self.assertEqual(summary.load_pokemon_representatives(path), {})
+            path.write_text('{"representatives": {"ラッキー": 91}}', encoding="utf-8")
+            self.assertEqual(summary.load_pokemon_representatives(path), {"ラッキー": "91"})
+            self.assertEqual(summary.load_pokemon_representatives(Path(tmp) / "missing.json"), {})
+
+
 class StylesheetTests(unittest.TestCase):
     def test_every_selector_list_is_followed_by_its_declarations(self):
         """まとめたセレクタの途中で、宣言ブロックが抜けていない。
