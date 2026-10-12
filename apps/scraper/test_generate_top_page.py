@@ -496,6 +496,20 @@ class GeneratedHtmlTest(unittest.TestCase):
         for _, _, js in links:
             self.assertIn("surface:'top_hero_quick'", js)
 
+    def test_hero_adds_trip_link_on_desktop_only_when_trips_exist(self) -> None:
+        data = Fixture(self.tmp).data()
+        data.trip_total = 10
+        nav = re.search(r'<nav class="home-quick".*?</nav>', module.render_hero(data), re.S).group(0)
+        self.assertIn('<a class="home-quick__link home-quick__link--desktop" href="trip/"', nav)
+        self.assertIn("destination:'trip_index'", nav)
+        self.assertIn("ルートから探す", nav)
+        data.trip_total = 0
+        self.assertNotIn('href="trip/"', module.render_hero(data))
+
+    def test_ways_prefecture_card_jumps_to_the_section_like_the_hero(self) -> None:
+        block = module.render_ways(Fixture(self.tmp).data())
+        self.assertIn('<a class="home-way__main" href="#home-pref"', block)
+
 
 class CommittedIndexTest(unittest.TestCase):
     """コミット済みの apps/web/index.html（本番は dist 側で生成し直す）。"""

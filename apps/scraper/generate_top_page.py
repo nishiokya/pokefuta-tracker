@@ -621,6 +621,8 @@ def render_hero(data: TopData) -> str:
         # PC だけ。上の2つと行き先が重ならない導線（近くから探す＝nearby.html は廃止して地図の現在地検索へ統合）
         ("theme", "map_theme_directory", "map.html?view=theme", "テーマから探す", "home-quick__link--desktop"),
     ]
+    if data.trip_total:  # PC は地図ボタンを隠すので、ルートを足して 2×2 を埋める
+        quick.append(("trip", "trip_index", "trip/", "ルートから探す", "home-quick__link--desktop"))
     quick_html = "".join(
         f'<a class="home-quick__link {cls}" href="{href}" '
         f'onclick="{_track("click_search_way", surface="top_hero_quick", way=way, destination=dest)}">{escape(label)}</a>'
@@ -688,7 +690,8 @@ def render_ways(data: TopData) -> str:
         ("map", "map.html", "assets/icon-map.svg", "地図・現在地から",
          "日本地図で設置場所を確かめ、今いる場所の近くにあるポケふたを探せます。",
          [("map.html?view=theme", "テーマで絞り込む")]),
-        ("prefecture", "prefectures/", "assets/icon-pin.svg", "都道府県から",
+        # ヒーローの「都道府県から探す」と同じく、ページ内の都道府県の欄へ飛ばす
+        ("prefecture", "#home-pref", "assets/icon-pin.svg", "都道府県から",
          f"設置のある{len(data.installed_prefectures)}都道府県を、地域ごとの一覧で確認できます。",
          [(f"prefectures/{PREFECTURE_SLUGS[p]}/", f"{escape(p)} {pref_counts[p]}枚") for p in top_prefs]),
         ("pokemon", "pokemon/", "assets/pokefuta-marker.svg", "ポケモンから",
