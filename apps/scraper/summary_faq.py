@@ -5,7 +5,7 @@
 
 - ご当地・語呂合わせ／応援ポケモン … dataset/prefecture_trivia.json（公式の出典つきのものだけ）
 - 記録・端っこ … docs/pokefuta.ndjson の titles（north_end など）と pokemons
-- 場所 … docs/pokefuta.ndjson の tags（テーマページがあるものはそこへ送る）
+- 場所 … docs/pokefuta.ndjson の tags（テーマページがあるものはそこへ送る）と、まだ1枚も無い県
 
 質問文だけはここに手で書く（トリビアの id ごと）。トリビアの文が直れば答えも変わり、
 id が消えればその質問も出なくなる。日本語のデータしか無いので ja 専用。
@@ -25,12 +25,12 @@ from display_names import compose_display_name
 
 try:
     from apps.scraper.municipalities import build_municipalities, load_slugs, municipality_label
-    from apps.scraper.prefectures import PREFECTURE_SLUGS
+    from apps.scraper.prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
     from municipalities import build_municipalities, load_slugs, municipality_label
-    from prefectures import PREFECTURE_SLUGS
+    from prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS
 
 EXCLUDED_POKEMON = "ローカルActs"
 
@@ -268,6 +268,28 @@ def _place_items(records: list[dict], tag_page_hrefs: dict[str, str]) -> list[Fa
     return items
 
 
+def _empty_prefecture_item(records: list[dict]) -> list[FaqItem]:
+    """まだポケふたが無い県。0枚の県にもページ（「まだ無い」と案内するページ）があるのでそこへ送る。"""
+    installed = {r.get("prefecture") for r in records}
+    empty = [p for p in PREFECTURE_ORDER if p not in installed]
+    if not records or not empty:
+        return []
+    rows = "".join(
+        f'<li><a class="summary-link" href="{escape(_prefecture_href(p))}" '
+        f'data-summary-event="summary_prefecture_click" data-surface="summary_empty_prefectures" '
+        f'data-prefecture="{escape(PREFECTURE_SLUGS.get(p, p))}">{escape(p)}</a></li>'
+        for p in empty
+    )
+    lead = f"{len(PREFECTURE_ORDER)}都道府県のうち、まだポケふたが無いのは{len(empty)}県です。"
+    note = "今後新しい地域へ広がる可能性があり、「次はどこに設置されるか」を予想する楽しみもあります。"
+    return [FaqItem(
+        id="empty-prefectures", category="場所", question="ポケふたがまだ無い県は？",
+        answer_html=f"<p>{escape(lead)}{escape(note)}</p><ul>{rows}</ul>",
+        answer_text=lead + " " + "・".join(empty) + "。",
+        lead=lead, link_href="/prefectures/", link_label="都道府県のポケふたを見る",
+    )]
+
+
 def build_faq(
     records: list[dict],
     trivia_data: list[dict],
@@ -280,6 +302,7 @@ def build_faq(
         + _support_item(official, trivia_data)
         + _record_items(records, pokemon_slugs)
         + _place_items(records, tag_page_hrefs)
+        + _empty_prefecture_item(records)
     )
     return sorted(items, key=lambda item: CATEGORY_ORDER.index(item.category))
 

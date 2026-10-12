@@ -3196,16 +3196,7 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
         for item in ranking
     )
 
-    if empty and pref_key == "ja":
-        # 0枚の県にもページ（「まだ無い」と案内するページ）がある
-        empty_items = "\n        ".join(
-            f'<li><a class="summary-link" href="{escape(_prefecture_href(item["pref"]))}" '
-            f'data-summary-event="summary_prefecture_click" data-surface="summary_empty_prefectures" '
-            f'data-prefecture="{escape(PREFECTURE_SLUGS.get(item["pref"], item["pref"]))}">'
-            f'{escape(item["pref"])}</a></li>'
-            for item in empty
-        )
-    elif empty:
+    if empty:
         # 他言語には県のページが無いので、名前だけ
         empty_items = "\n        ".join(
             f"<li>{escape(tr(item['pref']))}</li>"
@@ -3213,6 +3204,15 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
         )
     else:
         empty_items = f'<li class="summary-empty">{escape(s["no_empty"])}</li>'
+    # ja は「ポケふた雑学」の FAQ（場所）に入れたので、下の区切りは他言語だけ
+    empty_html = "" if pref_key == "ja" and faq_items else f"""
+    <section class="summary-section" aria-labelledby="empty-prefecture-heading">
+      <h2 id="empty-prefecture-heading">{escape(s['h2_empty'])}</h2>
+      <p class="empty-note">{escape(s['empty_note'])}</p>
+      <ul class="summary-list" style="margin-top:10px;">
+        {empty_items}
+      </ul>
+    </section>"""
 
     # 市区町村ランキングとポケふた旅はヘッダーに無く、日本語のページしか無い
     related_html = (
@@ -3317,14 +3317,7 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
       {related_html}
     </section>
     {pokemon_ranking_html}
-    {regional_html}
-    <section class="summary-section" aria-labelledby="empty-prefecture-heading">
-      <h2 id="empty-prefecture-heading">{escape(s['h2_empty'])}</h2>
-      <p class="empty-note">{escape(s['empty_note'])}</p>
-      <ul class="summary-list" style="margin-top:10px;">
-        {empty_items}
-      </ul>
-    </section>
+    {regional_html}{empty_html}
   </main>
 {tracking_script}
 </body>

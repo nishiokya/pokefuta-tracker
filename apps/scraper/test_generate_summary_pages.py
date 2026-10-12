@@ -256,22 +256,27 @@ class DiscoveryHubTests(unittest.TestCase):
 
     def test_pages_missing_from_the_header_are_linked_in_japanese_only(self):
         """市区町村ランキングとポケふた旅はヘッダーに無い ja 専用ページなので、ランキングの下から文字リンクで送る。
-        ポケふたがない県も ja では県のページ（0枚でもある）へリンクする。"""
+        ポケふたがない県は ja では雑学の FAQ に入れ、県のページ（0枚でもある）へリンクする。"""
         records = summary.load_records(summary.NDJSON)
         stats = summary.build_stats(records)
         records_by_id = {str(r["id"]): r for r in records}
+        faq_items = summary.summary_faq.build_faq(records, [], {}, {})
         for language, strings in summary.SUMMARY_STRINGS.items():
             with self.subTest(language=language):
-                html = summary.render_page(strings, stats, {}, {}, records_by_id, {}, {})
-                empty = html[html.index('id="empty-prefecture-heading"'):]
-                empty = empty[:empty.index("</section>")]
+                html = summary.render_page(strings, stats, {}, {}, records_by_id, {}, {}, faq_items=faq_items)
                 if language == "ja":
                     self.assertIn('href="/municipalities/"', html)
                     self.assertIn('href="/trip/"', html)
+                    self.assertNotIn('id="empty-prefecture-heading"', html)
+                    empty = html[html.index('id="faq-empty-prefectures"'):]
+                    empty = empty[:empty.index("</details>")]
                     for item in stats["empty"]:
                         slug = summary.PREFECTURE_SLUGS[item["pref"]]
                         self.assertIn(f'href="/prefectures/{slug}/"', empty)
+                    self.assertIn('data-surface="summary_empty_prefectures"', empty)
                 else:
+                    empty = html[html.index('id="empty-prefecture-heading"'):]
+                    empty = empty[:empty.index("</section>")]
                     self.assertNotIn('href="/municipalities/"', html)
                     self.assertNotIn('href="/trip/"', html)
                     self.assertNotIn('href="/prefectures/', empty)
@@ -361,6 +366,15 @@ class TriviaFaqTests(unittest.TestCase):
             with self.subTest(item=item.id):
                 self.assertTrue(item.question.endswith("？"))
                 self.assertTrue(item.answer_text and item.lead)
+
+    def test_empty_prefectures_are_a_place_question(self):
+        item = next(i for i in self.items if i.id == "empty-prefectures")
+        stats = summary.build_stats(self.records)
+        self.assertEqual(item.category, "場所")
+        self.assertIn(f"{len(stats['empty'])}県", item.lead)
+        self.assertEqual(item.answer_html.count("<li>"), len(stats["empty"]))
+        all_installed = [{"prefecture": p} for p in summary.PREFECTURE_ORDER]
+        self.assertEqual([], summary.summary_faq._empty_prefecture_item(all_installed))
 
     def test_shared_end_manhole_is_listed_once(self):
         ends = next(i for i in self.items if i.id == "ends")
