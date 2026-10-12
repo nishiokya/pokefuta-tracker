@@ -1700,6 +1700,8 @@ def load_records(path: Path) -> list[dict]:
 def build_stats(records: list[dict]) -> dict:
     counts: dict[str, int] = {pref: 0 for pref in PREFECTURE_ORDER}
     for record in records:
+        if record.get("installed") is False:  # 設置前は数えない（トップ・都道府県ページと同じ）
+            continue
         pref = record.get("prefecture", "")
         if pref in counts:
             counts[pref] += 1

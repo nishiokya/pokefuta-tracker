@@ -373,6 +373,16 @@ class TriviaFaqTests(unittest.TestCase):
         all_installed = [{"prefecture": p} for p in summary.PREFECTURE_ORDER]
         self.assertEqual([], summary.summary_faq._empty_prefecture_item(all_installed))
 
+    def test_preinstall_records_do_not_count_as_installed(self):
+        """設置予定（installed: false）だけの県は、FAQ でも数字でも未設置のまま。"""
+        records = [{"prefecture": p} for p in summary.PREFECTURE_ORDER if p != "群馬県"]
+        records.append({"prefecture": "群馬県", "installed": False})
+        item = summary.summary_faq._empty_prefecture_item(records)[0]
+        self.assertIn('href="/prefectures/gunma/"', item.answer_html)
+        stats = summary.build_stats(records)
+        self.assertEqual(["群馬県"], [e["pref"] for e in stats["empty"]])
+        self.assertEqual(len(summary.PREFECTURE_ORDER) - 1, stats["total"])
+
     def test_shared_end_manhole_is_listed_once(self):
         ends = next(i for i in self.items if i.id == "ends")
         self.assertIn("いちばん南・いちばん西", ends.answer_text)

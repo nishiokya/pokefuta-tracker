@@ -270,7 +270,8 @@ def _place_items(records: list[dict], tag_page_hrefs: dict[str, str]) -> list[Fa
 
 def _empty_prefecture_item(records: list[dict]) -> list[FaqItem]:
     """まだポケふたが無い県。0枚の県にもページ（「まだ無い」と案内するページ）があるのでそこへ送る。"""
-    installed = {r.get("prefecture") for r in records}
+    # 設置前（installed: false）は数えない。トップ・都道府県ページと同じ規則
+    installed = {r.get("prefecture") for r in records if r.get("installed") is not False}
     empty = [p for p in PREFECTURE_ORDER if p not in installed]
     if not records or not empty:
         return []
