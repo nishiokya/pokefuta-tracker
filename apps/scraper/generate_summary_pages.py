@@ -3440,6 +3440,17 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
 </html>"""
 
 
+def load_page_records(path: Path) -> list[dict]:
+    """ページに載せるレコード。全部の数字・ランキング・雑学がこの同じ集合から作られる。"""
+    return [
+        record
+        for record in load_records(path)
+        if record.get("status", "active") == "active"
+        # 設置前（installed: false）はどの数字にも入れない（トップ・都道府県ページと同じ規則）
+        and record.get("installed") is not False
+    ]
+
+
 def main() -> None:
     if not NDJSON.exists():
         print(f"[ERROR] Not found: {NDJSON}", file=sys.stderr)
@@ -3449,11 +3460,7 @@ def main() -> None:
     if PREFECTURES_JSON.exists():
         pref_names = json.loads(PREFECTURES_JSON.read_text(encoding="utf-8"))
 
-    records = [
-        record
-        for record in load_records(NDJSON)
-        if record.get("status", "active") == "active"
-    ]
+    records = load_page_records(NDJSON)
     # 「まだ写真が投稿されていないポケふた」の母数（42県）の前提を、
     # ページを作る前に確かめる。詳しくは prefecture_completion.py を参照。
     records_by_prefecture: dict[str, list[dict]] = {}

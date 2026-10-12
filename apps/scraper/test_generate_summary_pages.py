@@ -1,6 +1,7 @@
 import importlib.util
 import json
 import re
+import tempfile
 import unittest
 from datetime import date, timedelta
 from pathlib import Path
@@ -382,6 +383,17 @@ class TriviaFaqTests(unittest.TestCase):
         stats = summary.build_stats(records)
         self.assertEqual(["群馬県"], [e["pref"] for e in stats["empty"]])
         self.assertEqual(len(summary.PREFECTURE_ORDER) - 1, stats["total"])
+
+    def test_page_records_drop_preinstall_and_inactive(self):
+        """ランキング・テーマ・雑学も同じ集合から作るので、読み込む時点で設置前を外す。"""
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "m.ndjson"
+            path.write_text("\n".join(json.dumps(r, ensure_ascii=False) for r in [
+                {"id": "1", "prefecture": "北海道"},
+                {"id": "2", "prefecture": "群馬県", "installed": False},
+                {"id": "3", "prefecture": "東京都", "status": "removed"},
+            ]), encoding="utf-8")
+            self.assertEqual(["1"], [r["id"] for r in summary.load_page_records(path)])
 
     def test_shared_end_manhole_is_listed_once(self):
         ends = next(i for i in self.items if i.id == "ends")
