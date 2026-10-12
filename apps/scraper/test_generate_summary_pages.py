@@ -1,6 +1,7 @@
 import importlib.util
 import json
 import re
+import tempfile
 import unittest
 from datetime import date, timedelta
 from pathlib import Path
@@ -256,22 +257,27 @@ class DiscoveryHubTests(unittest.TestCase):
 
     def test_pages_missing_from_the_header_are_linked_in_japanese_only(self):
         """市区町村ランキングとポケふた旅はヘッダーに無い ja 専用ページなので、ランキングの下から文字リンクで送る。
-        ポケふたがない県も ja では県のページ（0枚でもある）へリンクする。"""
+        ポケふたがない県は ja では雑学の FAQ に入れ、県のページ（0枚でもある）へリンクする。"""
         records = summary.load_records(summary.NDJSON)
         stats = summary.build_stats(records)
         records_by_id = {str(r["id"]): r for r in records}
+        faq_items = summary.summary_faq.build_faq(records, [], {}, {})
         for language, strings in summary.SUMMARY_STRINGS.items():
             with self.subTest(language=language):
-                html = summary.render_page(strings, stats, {}, {}, records_by_id, {}, {})
-                empty = html[html.index('id="empty-prefecture-heading"'):]
-                empty = empty[:empty.index("</section>")]
+                html = summary.render_page(strings, stats, {}, {}, records_by_id, {}, {}, faq_items=faq_items)
                 if language == "ja":
                     self.assertIn('href="/municipalities/"', html)
                     self.assertIn('href="/trip/"', html)
+                    self.assertNotIn('id="empty-prefecture-heading"', html)
+                    empty = html[html.index('id="faq-empty-prefectures"'):]
+                    empty = empty[:empty.index("</details>")]
                     for item in stats["empty"]:
                         slug = summary.PREFECTURE_SLUGS[item["pref"]]
                         self.assertIn(f'href="/prefectures/{slug}/"', empty)
+                    self.assertIn('data-surface="summary_empty_prefectures"', empty)
                 else:
+                    empty = html[html.index('id="empty-prefecture-heading"'):]
+                    empty = empty[:empty.index("</section>")]
                     self.assertNotIn('href="/municipalities/"', html)
                     self.assertNotIn('href="/trip/"', html)
                     self.assertNotIn('href="/prefectures/', empty)
@@ -294,19 +300,16 @@ class DiscoveryHubTests(unittest.TestCase):
                 else:
                     self.assertIn('id="prefecture-count-heading"', html)
 
-    def test_events_beyond_the_first_three_are_folded(self):
+    def test_every_event_is_shown_without_folding(self):
+        """いちばん押される区切りなので、折りたたまずに全部見せる。"""
         events = [
             {"title": f"イベント{i}", "url": f"https://example.com/{i}", "prefecture": "岩手県",
              "start_date": "2026-01-01", "end_date": "2099-12-31"}
             for i in range(5)
         ]
         html = summary._build_events_section(summary.SUMMARY_STRINGS["ja"], events, lambda v: v)
-        visible = html[:html.index("<details")]
-        self.assertEqual(visible.count("<li>"), summary.EVENTS_VISIBLE)
-        self.assertIn("ほか2件のイベントを見る", html)
-        self.assertEqual(html.count('data-summary-event="summary_event_click"'), 5)  # 折りたたんでも全部ページに残る
-        three = summary._build_events_section(summary.SUMMARY_STRINGS["ja"], events[:3], lambda v: v)
-        self.assertNotIn("<details", three)
+        self.assertNotIn("<details", html)
+        self.assertEqual(html.count('data-summary-event="summary_event_click"'), 5)
 
 class PageOrderTests(unittest.TestCase):
     def test_trivia_comes_first(self):
@@ -361,6 +364,36 @@ class TriviaFaqTests(unittest.TestCase):
             with self.subTest(item=item.id):
                 self.assertTrue(item.question.endswith("？"))
                 self.assertTrue(item.answer_text and item.lead)
+
+    def test_empty_prefectures_are_a_place_question(self):
+        item = next(i for i in self.items if i.id == "empty-prefectures")
+        stats = summary.build_stats(self.records)
+        self.assertEqual(item.category, "場所")
+        self.assertIn(f"{len(stats['empty'])}県", item.lead)
+        self.assertEqual(item.answer_html.count("<li>"), len(stats["empty"]))
+        all_installed = [{"prefecture": p} for p in summary.PREFECTURE_ORDER]
+        self.assertEqual([], summary.summary_faq._empty_prefecture_item(all_installed))
+
+    def test_preinstall_records_do_not_count_as_installed(self):
+        """設置予定（installed: false）だけの県は、FAQ でも数字でも未設置のまま。"""
+        records = [{"prefecture": p} for p in summary.PREFECTURE_ORDER if p != "群馬県"]
+        records.append({"prefecture": "群馬県", "installed": False})
+        item = summary.summary_faq._empty_prefecture_item(records)[0]
+        self.assertIn('href="/prefectures/gunma/"', item.answer_html)
+        stats = summary.build_stats(records)
+        self.assertEqual(["群馬県"], [e["pref"] for e in stats["empty"]])
+        self.assertEqual(len(summary.PREFECTURE_ORDER) - 1, stats["total"])
+
+    def test_page_records_drop_preinstall_and_inactive(self):
+        """ランキング・テーマ・雑学も同じ集合から作るので、読み込む時点で設置前を外す。"""
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "m.ndjson"
+            path.write_text("\n".join(json.dumps(r, ensure_ascii=False) for r in [
+                {"id": "1", "prefecture": "北海道"},
+                {"id": "2", "prefecture": "群馬県", "installed": False},
+                {"id": "3", "prefecture": "東京都", "status": "removed"},
+            ]), encoding="utf-8")
+            self.assertEqual(["1"], [r["id"] for r in summary.load_page_records(path)])
 
     def test_shared_end_manhole_is_listed_once(self):
         ends = next(i for i in self.items if i.id == "ends")

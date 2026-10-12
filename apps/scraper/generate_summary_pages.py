@@ -63,7 +63,6 @@ GUNDAM_SPOTS_JSON = ROOT / "dataset" / "gundam_manhole_spots.json"
 PREFECTURE_EVENTS_JSON = ROOT / "dataset" / "prefecture_events.json"
 PREFECTURE_TRIVIA_JSON = ROOT / "dataset" / "prefecture_trivia.json"
 # 最初から見せる件数。残りは「ほか n 件」で折りたたむ（中身はページに残るので検索にも載る）
-EVENTS_VISIBLE = 3
 POKEMON_RANKING_VISIBLE = 5
 JST = timezone(timedelta(hours=9))
 
@@ -162,7 +161,6 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "regional_top1": "地方別では{r1name}（{r1count}枚）が最も多くなっています。",
         "regional_outro": "ポケふたは地方自治体・観光協会との連携で設置されることが多く、観光地や駅周辺に置かれているケースが目立ちます。地域を旅しながら複数のポケふたを巡るルートを作るのも人気の楽しみ方です。",
         "search_hub": {
-            "events_more": "ほか{count}件のイベントを見る",
             "show_more": "ほか{count}件を見る",
         },
         "discovery_hubs": {
@@ -242,7 +240,6 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "regional_top1": "By region, {r1name} has the most with {r1count} Poké Lids.",
         "regional_outro": "Poké Lids are often installed through partnerships with local governments and tourism associations, frequently found near tourist spots and train stations. Planning a multi-region route is a popular way to enjoy them.",
         "search_hub": {
-            "events_more": "Show {count} more events",
             "show_more": "Show {count} more",
         },
         "discovery_hubs": {
@@ -321,7 +318,6 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "regional_top1": "按地区统计，{r1name}（{r1count}个）最多。",
         "regional_outro": "宝可梦井盖多通过地方政府和观光协会合作设置，常见于旅游胜地和车站周边。边旅行边规划多地巡游路线也是广受欢迎的玩法。",
         "search_hub": {
-            "events_more": "查看其余{count}个活动",
             "show_more": "查看其余{count}项",
         },
         "discovery_hubs": {
@@ -400,7 +396,6 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "regional_top1": "按地區統計，{r1name}（{r1count}個）最多。",
         "regional_outro": "寶可夢人孔蓋多透過地方政府和觀光協會合作設置，常見於旅遊勝地和車站周邊。邊旅行邊規劃多地巡遊路線也是廣受歡迎的玩法。",
         "search_hub": {
-            "events_more": "查看其餘{count}個活動",
             "show_more": "查看其餘{count}項",
         },
         "discovery_hubs": {
@@ -479,7 +474,6 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "regional_top1": "지역별로는 {r1name}（{r1count}개）이 가장 많습니다.",
         "regional_outro": "포케후타는 지방자치단체・관광협회와의 협력으로 설치되는 경우가 많으며, 관광지나 역 주변에 위치한 경우가 눈에 띕니다. 지역을 여행하면서 여러 포케후타를 순회하는 경로를 만드는 것도 인기 있는 즐기는 방법입니다.",
         "search_hub": {
-            "events_more": "이벤트 {count}개 더 보기",
             "show_more": "{count}개 더 보기",
         },
         "discovery_hubs": {
@@ -1272,8 +1266,7 @@ _CSS = """\
       line-height: 1.4;
     }
 
-    .summary-more summary,
-    .summary-event-more summary {
+    .summary-more summary {
       margin-top: 10px;
       color: #57408f;
       cursor: pointer;
@@ -1282,8 +1275,7 @@ _CSS = """\
     }
 
     .summary-more > ul,
-    .summary-more > ol,
-    .summary-event-more .summary-event-list {
+    .summary-more > ol {
       margin-top: 10px;
     }
 
@@ -1402,6 +1394,137 @@ _CSS = """\
 
     .faq-links {
       color: #75685c;
+      font-size: .84rem;
+    }
+
+    /* 雑学の FAQ から下も FAQ と同じ見た目にそろえる: 箱・影・色つきの背景をやめ、
+       区切り線と紫の丸（FAQ の Q と同じ）で並べる */
+    .discovery-subheading,
+    .pokemon-ranking-cols h3 {
+      margin: 22px 0 8px;
+      color: #14544f;
+      font-size: 1rem;
+      font-weight: 850;
+    }
+
+    .summary-stat,
+    .discovery-card,
+    .ai-summary-box,
+    .regional-trend-box,
+    .gundam-crossover,
+    .discovery-hub-card {
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+      background: none;
+    }
+
+    .summary-stats,
+    .discovery-grid {
+      gap: 0 16px;
+    }
+
+    .summary-stat,
+    .discovery-card {
+      padding: 10px 2px;
+      border-top: 1px solid rgba(93, 67, 35, .14);
+      border-bottom: 1px solid rgba(93, 67, 35, .14);
+    }
+
+    .summary-stat strong {
+      font-size: 1.6rem;
+    }
+
+    @media (max-width: 700px) {
+      /* 縦に積むと上下の線が二重になる */
+      .summary-stat + .summary-stat {
+        border-top: 0;
+      }
+    }
+
+    .ai-summary-box,
+    .regional-trend-box {
+      padding: 0 2px;
+      color: #3a3128;
+      font-size: 1rem;
+    }
+
+    .gundam-crossover {
+      padding: 14px 2px;
+      border-top: 1px solid rgba(93, 67, 35, .14);
+      border-bottom: 1px solid rgba(93, 67, 35, .14);
+    }
+
+    .gundam-crossover-tip {
+      background: none;
+    }
+
+    .discovery-hub-card img {
+      border-radius: 12px;
+    }
+
+    .discovery-hub-copy {
+      padding: 0 2px 4px;
+    }
+
+    .discovery-hub-count {
+      color: #57408f;
+      font-size: 1.25rem;
+    }
+
+    .summary-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 0 24px;
+    }
+
+    /* display: flex の li は list-item の番号が進まないので、自前の番号を数える */
+    ol.summary-list {
+      counter-reset: rank;
+    }
+
+    ol.summary-list[start="6"] {
+      counter-reset: rank 5;
+    }
+
+    ol.summary-list li {
+      counter-increment: rank;
+    }
+
+    .summary-list li,
+    .summary-empty {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 48px;
+      padding: 8px 2px;
+      border: 0;
+      border-bottom: 1px solid rgba(93, 67, 35, .14);
+      border-radius: 0;
+      box-shadow: none;
+      background: none;
+      font-weight: 850;
+    }
+
+    ol.summary-list li::before {
+      flex: 0 0 auto;
+      content: counter(rank);
+      display: grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: #57408f;
+      color: #fff;
+      font-size: .8rem;
+    }
+
+    .summary-list small {
+      margin-left: auto;
+      color: #57408f;
+    }
+
+    .summary-list li a.summary-link {
       font-size: .84rem;
     }
 
@@ -1577,6 +1700,8 @@ def load_records(path: Path) -> list[dict]:
 def build_stats(records: list[dict]) -> dict:
     counts: dict[str, int] = {pref: 0 for pref in PREFECTURE_ORDER}
     for record in records:
+        if record.get("installed") is False:  # 設置前は数えない（トップ・都道府県ページと同じ）
+            continue
         pref = record.get("prefecture", "")
         if pref in counts:
             counts[pref] += 1
@@ -1666,20 +1791,11 @@ def _build_events_section(s: dict, events: list[dict], tr) -> str:
             f'{escape(event["title"])}</a>'
             f'<small class="summary-event-meta">{escape(pref)} / {escape(period)}</small></li>'
         )
-    # いちばん押される区切りなので上に置くが、全部並べるとスマホで画面1枚分になる。
-    # 最初の数件だけ見せて、残りは折りたたむ（中身はページに残るので検索にも載る）
-    shown = "".join(items[:EVENTS_VISIBLE])
-    rest = items[EVENTS_VISIBLE:]
-    more_html = (
-        f'\n      <details class="summary-event-more">'
-        f'<summary>{escape(s["search_hub"]["events_more"].format(count=len(rest)))}</summary>'
-        f'<ul class="summary-event-list">{"".join(rest)}</ul></details>'
-        if rest else ""
-    )
+    # いちばん押される区切りなので、折りたたまずに全部見せる
     return (
         f'\n    <section class="summary-section summary-events" aria-labelledby="events-heading">'
         f'\n      <h2 id="events-heading">{escape(s["h2_events"])}</h2>'
-        f'\n      <ul class="summary-event-list">{shown}</ul>{more_html}'
+        f'\n      <ul class="summary-event-list">{"".join(items)}</ul>'
         f'\n    </section>\n'
     )
 
@@ -3196,16 +3312,7 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
         for item in ranking
     )
 
-    if empty and pref_key == "ja":
-        # 0枚の県にもページ（「まだ無い」と案内するページ）がある
-        empty_items = "\n        ".join(
-            f'<li><a class="summary-link" href="{escape(_prefecture_href(item["pref"]))}" '
-            f'data-summary-event="summary_prefecture_click" data-surface="summary_empty_prefectures" '
-            f'data-prefecture="{escape(PREFECTURE_SLUGS.get(item["pref"], item["pref"]))}">'
-            f'{escape(item["pref"])}</a></li>'
-            for item in empty
-        )
-    elif empty:
+    if empty:
         # 他言語には県のページが無いので、名前だけ
         empty_items = "\n        ".join(
             f"<li>{escape(tr(item['pref']))}</li>"
@@ -3213,6 +3320,15 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
         )
     else:
         empty_items = f'<li class="summary-empty">{escape(s["no_empty"])}</li>'
+    # ja は「ポケふた雑学」の FAQ（場所）に入れたので、下の区切りは他言語だけ
+    empty_html = "" if pref_key == "ja" and faq_items else f"""
+    <section class="summary-section" aria-labelledby="empty-prefecture-heading">
+      <h2 id="empty-prefecture-heading">{escape(s['h2_empty'])}</h2>
+      <p class="empty-note">{escape(s['empty_note'])}</p>
+      <ul class="summary-list" style="margin-top:10px;">
+        {empty_items}
+      </ul>
+    </section>"""
 
     # 市区町村ランキングとポケふた旅はヘッダーに無く、日本語のページしか無い
     related_html = (
@@ -3317,18 +3433,22 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
       {related_html}
     </section>
     {pokemon_ranking_html}
-    {regional_html}
-    <section class="summary-section" aria-labelledby="empty-prefecture-heading">
-      <h2 id="empty-prefecture-heading">{escape(s['h2_empty'])}</h2>
-      <p class="empty-note">{escape(s['empty_note'])}</p>
-      <ul class="summary-list" style="margin-top:10px;">
-        {empty_items}
-      </ul>
-    </section>
+    {regional_html}{empty_html}
   </main>
 {tracking_script}
 </body>
 </html>"""
+
+
+def load_page_records(path: Path) -> list[dict]:
+    """ページに載せるレコード。全部の数字・ランキング・雑学がこの同じ集合から作られる。"""
+    return [
+        record
+        for record in load_records(path)
+        if record.get("status", "active") == "active"
+        # 設置前（installed: false）はどの数字にも入れない（トップ・都道府県ページと同じ規則）
+        and record.get("installed") is not False
+    ]
 
 
 def main() -> None:
@@ -3340,11 +3460,7 @@ def main() -> None:
     if PREFECTURES_JSON.exists():
         pref_names = json.loads(PREFECTURES_JSON.read_text(encoding="utf-8"))
 
-    records = [
-        record
-        for record in load_records(NDJSON)
-        if record.get("status", "active") == "active"
-    ]
+    records = load_page_records(NDJSON)
     # 「まだ写真が投稿されていないポケふた」の母数（42県）の前提を、
     # ページを作る前に確かめる。詳しくは prefecture_completion.py を参照。
     records_by_prefecture: dict[str, list[dict]] = {}
