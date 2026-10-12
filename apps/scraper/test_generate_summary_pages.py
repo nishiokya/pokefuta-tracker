@@ -299,19 +299,16 @@ class DiscoveryHubTests(unittest.TestCase):
                 else:
                     self.assertIn('id="prefecture-count-heading"', html)
 
-    def test_events_beyond_the_first_three_are_folded(self):
+    def test_every_event_is_shown_without_folding(self):
+        """いちばん押される区切りなので、折りたたまずに全部見せる。"""
         events = [
             {"title": f"イベント{i}", "url": f"https://example.com/{i}", "prefecture": "岩手県",
              "start_date": "2026-01-01", "end_date": "2099-12-31"}
             for i in range(5)
         ]
         html = summary._build_events_section(summary.SUMMARY_STRINGS["ja"], events, lambda v: v)
-        visible = html[:html.index("<details")]
-        self.assertEqual(visible.count("<li>"), summary.EVENTS_VISIBLE)
-        self.assertIn("ほか2件のイベントを見る", html)
-        self.assertEqual(html.count('data-summary-event="summary_event_click"'), 5)  # 折りたたんでも全部ページに残る
-        three = summary._build_events_section(summary.SUMMARY_STRINGS["ja"], events[:3], lambda v: v)
-        self.assertNotIn("<details", three)
+        self.assertNotIn("<details", html)
+        self.assertEqual(html.count('data-summary-event="summary_event_click"'), 5)
 
 class PageOrderTests(unittest.TestCase):
     def test_trivia_comes_first(self):
