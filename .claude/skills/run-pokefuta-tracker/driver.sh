@@ -61,7 +61,7 @@ check() { # path marker
 check /                     "ポケふた"
 check /design_manhole.html  "FAQPage"
 check /character_manholes.html "キャラクターマンホール"
-# 「キャラマンホール」表記は #399 の2層ルール（キャラふた / キャラクターマンホール）で消えた
+# 「キャラマンホール」表記は #399 の2層ルール（ナビはデザインふた・本文はキャラクターマンホール）で消えた
 check /gmanhole_map.html    "キャラクターマンホールマップ"
 check /summary/             "ポケふた"
 check /pokemon/             "人気・代表ポケモン"

@@ -153,7 +153,7 @@ pages-deploy.yml が実際に走らせるのはこのうち一部だけ。ワー
 - **ツール呼び出しのシェル内で `(cmd &)` で起動したサーバーは、そのシェルがタイムアウト/SIGTERMされるとプロセスグループごと死ぬ**。スクリーンショットが突然 `ERR_CONNECTION_REFUSED` になったらこれ。→ driver.sh は `nohup + disown` で起動する
 - **`apps/web/*.html` を dist へ同期すると `inject_site_header.py` の注入前ソースに戻る**。共通ヘッダーの見た目を確認したいときは同期後に `python3 apps/scraper/inject_site_header.py dist` を再実行（driver.sh の同期も注入を落とすので、ヘッダー確認時は注意）
 - **`dist/api/prefecture_events.json` は `docs/api/*.json` には入っていない**（ソースは `dataset/prefecture_events.json`）。コピーし忘れるとトップの「開催中スタンプラリー」バナーが黙って消える。同じく `docs/design_manholes.ndjson` を忘れるとデザインマンホールのギャラリーが空になる。どちらも driver.sh が同期する
-- **蓋の呼び方は2層ルール**（キャラふた / キャラクターマンホール、#399）。`キャラマンホール` という表記は消えたので、スモークのコンテンツマーカーに使わない（実際にこれで driver.sh のチェックが腐っていた）
+- **蓋の呼び方は2層ルール**（ナビはデザインふた・本文はキャラクターマンホール、#399）。`キャラマンホール` という表記は消えたので、スモークのコンテンツマーカーに使わない（実際にこれで driver.sh のチェックが腐っていた）
 - **「みんなの投稿」ギャラリー等はローカルでは出ない**。pokefuta.com のAPI（CORS/Supabase）に依存し、失敗時はセクションごと非表示になる仕様。ローカルで空でもバグではない。一方トップのヒーローと統計は `dist/api/top-feed.json` をローカル生成するので**出るのが正しい**
 - 地図タイル（OpenStreetMap）とLeafletはCDN読みなのでネット接続が必要。オフラインだと地図部分だけ空になる
 

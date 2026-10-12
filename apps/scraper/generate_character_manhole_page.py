@@ -826,7 +826,7 @@ def generate_html(
         <nav class="top-nav" aria-label="メインナビ">
           <a class="top-nav-link" href="map.html" onclick="trackEvent('click_nav',{{surface:'site_nav',nav:'map',from:'character_manholes_lp'}})">マップ</a>
           <a class="top-nav-link" href="pokemon/" onclick="trackEvent('click_nav',{{surface:'site_nav',nav:'pokemon',from:'character_manholes_lp'}})">ポケモン</a>
-          <a class="top-nav-link top-nav-link--active" href="character_manholes.html" aria-current="page">キャラふた</a>
+          <a class="top-nav-link top-nav-link--active" href="character_manholes.html" aria-current="page">デザインふた</a>
           <a class="top-nav-link" data-login-link data-nav-target="login" data-stamp-page="https://pokefuta.com/" data-stamp-label="スタンプ帳" href="https://pokefuta.com/login?from=data" onclick="trackEvent('click_nav',{{surface:'site_nav',nav:this.dataset.navTarget,from:'character_manholes_lp'}})">ログイン</a>
         </nav>
       </div>
