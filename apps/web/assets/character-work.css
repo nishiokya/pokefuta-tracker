@@ -272,6 +272,13 @@
 .cw-city { margin-top: 36px; }
 .cw-city h3 { display: flex; align-items: baseline; gap: 10px; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 2px solid var(--cm-ink); font-size: 18px; font-weight: 900; }
 .cw-city h3 small { font-size: 12px; color: var(--cm-muted); }
+/* ガンダムガイドの設置エリア（県→市町村の要約）。1基ずつの一覧は gmanhole_map.html 側 */
+.cw-areas { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 24px; margin: 0; padding: 0; list-style: none; }
+.cw-areas li { display: grid; gap: 2px; padding: 10px 0; border-bottom: 1px solid var(--cm-line); min-width: 0; }
+.cw-areas a { display: flex; align-items: baseline; gap: 8px; color: inherit; text-decoration: none; }
+.cw-areas a:hover strong, .cw-areas a:focus-visible strong { text-decoration: underline; }
+.cw-areas small { font-size: 12px; color: var(--cm-muted); }
+.cw-areas span { font-size: 13px; color: var(--cm-muted); overflow-wrap: anywhere; }
 .cw-spots { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 .cw-spot { padding: 22px; border-radius: 18px; background: var(--cm-card); border: 1px solid var(--cm-line); overflow-wrap: anywhere; }
 .cw-spot-photo { margin: -22px -22px 18px; position: relative; aspect-ratio: 4 / 3; overflow: hidden; border-radius: 18px 18px 0 0; background: #eee8f0; }
@@ -341,7 +348,7 @@
   .cw-event { padding: 24px 20px; }
   .cw-steps { grid-template-columns: minmax(0, 1fr); gap: 16px; }
   .cw-index { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .cw-spots { grid-template-columns: minmax(0, 1fr); }
+  .cw-spots, .cw-areas { grid-template-columns: minmax(0, 1fr); }
   .cw-spot { padding: 18px; }
   .cw-spot-photo { margin: -18px -18px 16px; }
 }
