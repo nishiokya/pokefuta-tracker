@@ -43,6 +43,8 @@ FEATURE_CSS = """
     .feature-notes p { margin: 6px 0 0; }
     .feature-status { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 999px;
       background: #a85b2e; color: #fff; font-size: .72rem; font-weight: 700; vertical-align: 1px; }
+    .feature-section p { margin: 0 0 10px; line-height: 1.8; }
+    .feature-section p:last-child { margin-bottom: 0; }
     .feature-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: 10px; }
     .feature-card { display: grid; align-content: start; gap: 4px; padding: 12px 14px; border-radius: 14px; background: #fffaf0;
       border: 1px solid #ece4d7; color: inherit; text-decoration: none; }
@@ -90,6 +92,22 @@ def _notes_html(feature: dict) -> str:
             f'<span class="feature-pokemon">{escape(pokemons)}</span>{note}</li>'
         )
     return f'<ol class="feature-notes">{"".join(items)}</ol>'
+
+
+def _sections_html(feature: dict) -> str:
+    """手書きの読み物（sections）。本文は空行で段落に分ける。"""
+    html = []
+    for i, section in enumerate(feature.get("sections", []), start=1):
+        paragraphs = "".join(
+            f"<p>{escape(p.strip())}</p>" for p in section["body"].split("\n\n") if p.strip()
+        )
+        html.append(
+            f'\n    <section class="feature-section" aria-labelledby="section-{i}-heading">'
+            f'\n      <h2 id="section-{i}-heading">{escape(section["heading"])}</h2>'
+            f'\n      {paragraphs}'
+            f'\n    </section>\n'
+        )
+    return "".join(html)
 
 
 def _analytics_script(page_path: str, page_type: str, feature_slug: str = "", prefecture_slug: str = "") -> str:
@@ -208,7 +226,7 @@ def build_feature_page(feature: dict, photos: dict[str, dict], others: list[dict
       <h2 id="notes-heading">見どころ</h2>
       {_notes_html(feature)}
     </section>
-
+{_sections_html(feature)}
     <section id="manhole-list" aria-labelledby="manhole-heading">
       <h2 id="manhole-heading">この特集のポケふた</h2>
       <div class="manhole-grid">{cards_html}</div>

@@ -310,6 +310,33 @@
 
 .home-newrel__card b { font-size: 13.5px; color: var(--top-text); }
 
+/* 新作の特集（/features/）への帯。新作カードの上に置く */
+.home-feature {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
+  margin: 0 0 10px;
+  padding: 12px 14px;
+  background: var(--top-card-bg);
+  border: 1px solid var(--top-border);
+  border-left: 4px solid var(--top-purple);
+  border-radius: 12px;
+  color: var(--top-text);
+}
+
+.home-feature b { font-size: 15px; }
+.home-feature b::after { content: " →"; color: var(--top-purple); }
+
+.home-feature__kicker {
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--top-purple);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+}
+
 /* ── 3. 写真 ── */
 /* 写真は正方形のタイルを並べ、説明（ポケモン・場所・日付）は写真の下端に重ねる。スマホ3列×3行、PC 6列×1行 */
 .home-gallery {
@@ -600,6 +627,9 @@
 }
 
 .home-purpose__more::after { content: " →"; }
+
+/* 新作欄は h2 を見出し行に入れるので、行のほうで下の余白を取る */
+.home-purpose__head .home-h2 { margin: 0; }
 
 .home-chips .hub-chip {
   min-height: 40px;

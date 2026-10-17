@@ -10,7 +10,8 @@
 - hero      … H1・導入文・件数・3つの主導線。デスクトップは都道府県ピンつきの大地図（ピンは JSON で埋め込み）、
               スマホは投稿写真モザイク（6枚。<picture> でデスクトップでは写真を取得しない）
 - ways      … 地図・都道府県・ポケモン・テーマの4つの探し方
-- newrelease… 直近30日の新作（無ければセクションごと出さない）
+- newrelease… 直近30日の新作と特集（/features/）への入口。highlight_until 中の特集は帯で目立たせ、
+              特集一覧へのリンクは特集が1本でもあれば常に出す（新作も特集も無ければセクションごと出さない）
 - photos    … 新着・注目の写真（地域が偏らないよう地方ごとに順番に選ぶ）
 - events    … 開催中イベント（上位3件＋残りは折りたたみ。イベント名のポケモンの写真を1枚添える）
 - pref      … 設置のある都道府県を地方別に、未設置の県は短い注記に分ける
@@ -45,6 +46,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 try:
     from apps.scraper.display_names import compose_display_name
+    from apps.scraper.features import DEFAULT_FEATURES_DIR, feature_path, highlighted, load_features
     from apps.scraper.generate_pokemon_index_page import load_representatives
     from apps.scraper.generate_pokemon_pages import build_pokemon_index, load_pokemon_metadata
     from apps.scraper.generate_tag_pages import load_records
@@ -60,6 +62,7 @@ except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
     from display_names import compose_display_name
+    from features import DEFAULT_FEATURES_DIR, feature_path, highlighted, load_features
     from generate_pokemon_index_page import load_representatives
     from generate_pokemon_pages import build_pokemon_index, load_pokemon_metadata
     from generate_tag_pages import load_records
@@ -217,6 +220,7 @@ class TopData:
     all_pokemon: list[PokemonEntry] = field(default_factory=list)
     trips: list[dict] = field(default_factory=list)
     trip_total: int = 0  # /trip/ に載っているエリアの数
+    features: list[dict] = field(default_factory=list)  # 公開中の特集（新しい順）
 
     @property
     def total(self) -> int:
@@ -375,6 +379,7 @@ def load_data(
     representatives: Path | None = DEFAULT_REPRESENTATIVES,
     trip_areas: Path | None = DEFAULT_TRIP_AREAS,
     durations: Path | None = DEFAULT_DURATIONS,
+    features_dir: Path = DEFAULT_FEATURES_DIR,
 ) -> TopData:
     today = today or datetime.now(JST).date()
     all_records = load_records(manholes)
@@ -382,6 +387,8 @@ def load_data(
     stats_json = _load_json(stats)
     pokemon = build_pokemon_entries(records, pokemon_metadata, representatives_path=representatives)
     trips, trip_total = build_trips(all_records, trip_areas, durations, image_dir)
+    # 新作の特集は設置前の蓋を載せるので、設置済みに絞る前のレコードで引く
+    features = load_features({str(r.get("id", "")): r for r in all_records}, features_dir, today=today)
     return TopData(
         records=records,
         photos=build_photos(_load_json(photos), records, image_dir),
@@ -394,6 +401,7 @@ def load_data(
         all_pokemon=pokemon,
         trips=trips,
         trip_total=trip_total,
+        features=features,
     )
 
 
@@ -742,7 +750,7 @@ def render_newrelease(data: TopData) -> str:
             continue
         if added_at >= cutoff:
             fresh.append((added_at, record))
-    if not fresh:
+    if not fresh and not data.features:
         return ""
     fresh.sort(key=lambda item: (item[0], str(item[1].get("id"))), reverse=True)
     cards = []
@@ -755,11 +763,30 @@ def render_newrelease(data: TopData) -> str:
             f'onclick="{_track("click_newrelease", surface="top_newrelease", manhole=mid, position=i)}">'
             f'<b>{escape(names)}</b><span>{escape(place)}</span></a></li>'
         )
+    banners = "".join(
+        f'<a class="home-feature" href="{escape(feature_path(f).lstrip("/"))}" '
+        f'onclick="{_track("click_feature", surface="top_newrelease", feature=f["slug"], position=i)}">'
+        f'<span class="home-feature__kicker">{escape(f.get("kicker") or "特集")}</span>'
+        f'<b>{escape(f["title"])}</b></a>'
+        for i, f in enumerate(highlighted(data.features, data.today))
+    )
+    more = (
+        f'<a class="home-purpose__more" href="features/" '
+        f'onclick="{_track("click_hub_feature_all", surface="top_newrelease")}">'
+        f"特集一覧 {len(data.features)}本</a>"
+        if data.features else ""
+    )
+    title = (
+        f'新作ポケふた <small>直近{NEW_RELEASE_DAYS}日で{len(fresh)}枚</small>' if fresh else "ポケふた特集"
+    )
+    # 新作はちょうど特集にしている時期なので、特集の帯をカードより先に出す
     return (
         '<section class="home-section" id="home-newrelease" aria-labelledby="home-newrelease-title">'
-        f'<h2 class="home-h2" id="home-newrelease-title">新作ポケふた <small>直近{NEW_RELEASE_DAYS}日で{len(fresh)}枚</small></h2>'
-        f'<ul class="home-newrel">{"".join(cards)}</ul>'
-        "</section>"
+        '<div class="home-purpose__head">'
+        f'<h2 class="home-h2" id="home-newrelease-title">{title}</h2>{more}</div>'
+        f'{banners}'
+        + (f'<ul class="home-newrel">{"".join(cards)}</ul>' if cards else "")
+        + "</section>"
     )
 
 

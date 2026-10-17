@@ -13,6 +13,7 @@ highlight_until までの間は /summary/ の上の方にも出す（新作の�
     kicker / lead / description  任意。見出しの上の札・導入文・meta description
     manholes         [{"id": "487", "note": "ひとこと"}] 並べた順に出す
     links            任意。[{"text": ..., "href": "/..." か "https://...", "external": true}]
+    sections         任意。[{"heading": "見出し", "body": "本文（空行で段落を分ける）"}] 見どころの下に出す
 """
 
 from __future__ import annotations
@@ -59,6 +60,12 @@ def _valid(entry: object, name: str) -> bool:
         )
         # 任意の項目も型が違えば飛ばす（そのまま描くとデプロイが TypeError で止まる）
         and all(isinstance(entry.get(key, ""), str) for key in _OPTIONAL_TEXT_KEYS)
+        and isinstance(entry.get("sections", []), list)
+        and all(
+            isinstance(sec, dict) and isinstance(sec.get("heading"), str) and sec["heading"]
+            and isinstance(sec.get("body"), str) and sec["body"]
+            for sec in entry.get("sections", [])
+        )
         and isinstance(entry.get("links", []), list)
         and all(
             isinstance(link, dict) and isinstance(link.get("text"), str)

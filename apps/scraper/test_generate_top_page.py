@@ -70,8 +70,14 @@ def _records() -> list[dict]:
 class Fixture:
     def __init__(self, tmp: Path, *, photos: bool = True, events: list[dict] | None = None,
                  records: list[dict] | None = None, representatives: dict | None = None,
-                 drop_photos: tuple[str, ...] = ()) -> None:
+                 drop_photos: tuple[str, ...] = (), features: list[dict] | None = None) -> None:
         self.records = records or _records()
+        # 本物の dataset/features/ に左右されないよう、特集は毎回このフォルダから読む
+        self.features_dir = tmp / "features"
+        self.features_dir.mkdir(exist_ok=True)
+        for feature in features or []:
+            (self.features_dir / f"{feature['slug']}.json").write_text(
+                json.dumps(feature, ensure_ascii=False), encoding="utf-8")
         self.manholes = tmp / "pokefuta.ndjson"
         self.manholes.write_text("\n".join(json.dumps(r, ensure_ascii=False) for r in self.records), encoding="utf-8")
         self.image_dir = tmp / "image"
@@ -107,6 +113,7 @@ class Fixture:
         return module.load_data(
             self.manholes, self.photos, self.stats, self.events, self.image_dir,
             today=today, pokemon_metadata=self.metadata, representatives=self.representatives,
+            features_dir=self.features_dir,
         )
 
     def html(self, today: date = TODAY) -> str:
@@ -407,6 +414,18 @@ class GeneratedHtmlTest(unittest.TestCase):
         block = _block(Fixture(self.tmp, records=records).html(), "newrelease")
         self.assertIn("新作ポケふた", block)
         self.assertIn('href="manholes/1/"', block)
+
+    def test_features_get_a_banner_while_highlighted_and_a_permanent_index_link(self) -> None:
+        feature = {"slug": "okinawa-test", "title": "沖縄にポケふたが増えます", "published": "2026-09-01",
+                   "highlight_until": "2026-10-31", "manholes": [{"id": "1"}]}
+        block = _block(Fixture(self.tmp, features=[feature]).html(), "newrelease")
+        self.assertIn("ポケふた特集", block)
+        self.assertIn('href="features/okinawa-test/"', block)
+        self.assertIn('href="features/"', block)
+        # 帯の期間が終わっても、特集一覧への導線は残す
+        later = _block(Fixture(self.tmp, features=[feature]).html(date(2026, 11, 1)), "newrelease")
+        self.assertNotIn('href="features/okinawa-test/"', later)
+        self.assertIn('href="features/"', later)
 
     def test_popular_pokemon_follow_the_pokemon_page_index(self) -> None:
         block = _block(Fixture(self.tmp).html(), "pokemon")

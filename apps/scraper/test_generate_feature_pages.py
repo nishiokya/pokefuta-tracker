@@ -70,6 +70,8 @@ class LoadFeaturesTests(unittest.TestCase):
             _feature("prefecture-list", prefecture=["沖縄県"]),
             _feature("lead-number", lead=1),
             _feature("note-list", manholes=[{"id": "488", "note": ["西海岸"]}]),
+            _feature("sections-str", sections="本文"),
+            _feature("section-empty", sections=[{"heading": "見出し", "body": ""}]),
         ]
         with tempfile.TemporaryDirectory() as tmp:
             d = _write(Path(tmp), *broken, _feature("ok"))
@@ -106,6 +108,14 @@ class FeaturePageTests(unittest.TestCase):
         self.assertIn('id="prefecture-map"', html)
         self.assertNotIn('data-track="prefecture_', html)
         self.assertIn("PokefutaAnalytics.bindClickTracking(", html)
+
+    def test_sections_are_split_into_paragraphs(self) -> None:
+        feature = {**self.feature, "sections": [{"heading": "行き方", "body": "飛行機で1時間。\n\n船は<15時間>。"}]}
+        html = MODULE.build_feature_page(feature, {}, [])
+        self.assertIn('<h2 id="section-1-heading">行き方</h2>', html)
+        self.assertIn("<p>飛行機で1時間。</p>", html)
+        self.assertIn("<p>船は&lt;15時間&gt;。</p>", html)
+        self.assertLess(html.index('id="notes-heading"'), html.index('id="section-1-heading"'))
 
     def test_generate_all_writes_index_and_pages(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
