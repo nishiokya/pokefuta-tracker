@@ -43,6 +43,15 @@ FEATURE_CSS = """
     .feature-notes p { margin: 6px 0 0; }
     .feature-status { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 999px;
       background: #a85b2e; color: #fff; font-size: .72rem; font-weight: 700; vertical-align: 1px; }
+    .feature-section p { margin: 0 0 10px; line-height: 1.8; }
+    .feature-section p:last-child { margin-bottom: 0; }
+    .feature-timeline { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+    .feature-timeline li { display: grid; grid-template-columns: minmax(0, 11em) minmax(0, 1fr); gap: 4px 12px; }
+    .feature-timeline time, .feature-timeline .feature-when { color: #a85b2e; font-weight: 850; }
+    @media (max-width: 560px) { .feature-timeline li { grid-template-columns: minmax(0, 1fr); } }
+    .feature-news { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+    .feature-news a { font-weight: 800; }
+    .feature-news small { display: block; margin-top: 2px; color: #75685c; font-size: .8rem; }
     .feature-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: 10px; }
     .feature-card { display: grid; align-content: start; gap: 4px; padding: 12px 14px; border-radius: 14px; background: #fffaf0;
       border: 1px solid #ece4d7; color: inherit; text-decoration: none; }
@@ -90,6 +99,63 @@ def _notes_html(feature: dict) -> str:
             f'<span class="feature-pokemon">{escape(pokemons)}</span>{note}</li>'
         )
     return f'<ol class="feature-notes">{"".join(items)}</ol>'
+
+
+def _timeline_html(feature: dict) -> str:
+    """お披露目・設置予定など（timeline）。見出しの直後に置く。"""
+    items = "".join(
+        "<li>"
+        + (f'<time datetime="{_escape_attr(item["date"])}">{escape(item["when"])}</time>'
+           if item.get("date") else f'<span class="feature-when">{escape(item["when"])}</span>')
+        + f'<span>{escape(item["text"])}</span></li>'
+        for item in feature.get("timeline", [])
+    )
+    if not items:
+        return ""
+    return (
+        '\n    <section aria-labelledby="timeline-heading">'
+        '\n      <h2 id="timeline-heading">お披露目と設置の予定</h2>'
+        f'\n      <ol class="feature-timeline">{items}</ol>'
+        '\n    </section>\n'
+    )
+
+
+def _news_html(feature: dict) -> str:
+    """公式発表・報道（news）。外部サイトなので別タブで開く。"""
+    items = "".join(
+        f'<li><a href="{_escape_attr(item["href"])}" target="_blank" rel="noopener noreferrer" '
+        f'data-track="feature_news_click" data-surface="news" data-destination="{_escape_attr(item["source"])}">'
+        f'{escape(item["title"])}</a>'
+        f'<small>{escape(item["source"])}'
+        + (f'・<time datetime="{_escape_attr(item["date"])}">{escape(_format_date(item["date"]))}</time>'
+           if item.get("date") else "")
+        + "</small></li>"
+        for item in feature.get("news", [])
+    )
+    if not items:
+        return ""
+    return (
+        '\n    <section aria-labelledby="news-heading">'
+        '\n      <h2 id="news-heading">公式発表・ニュース</h2>'
+        f'\n      <ul class="feature-news">{items}</ul>'
+        '\n    </section>\n'
+    )
+
+
+def _sections_html(feature: dict) -> str:
+    """手書きの読み物（sections）。本文は空行で段落に分ける。"""
+    html = []
+    for i, section in enumerate(feature.get("sections", []), start=1):
+        paragraphs = "".join(
+            f"<p>{escape(p.strip())}</p>" for p in section["body"].split("\n\n") if p.strip()
+        )
+        html.append(
+            f'\n    <section class="feature-section" aria-labelledby="section-{i}-heading">'
+            f'\n      <h2 id="section-{i}-heading">{escape(section["heading"])}</h2>'
+            f'\n      {paragraphs}'
+            f'\n    </section>\n'
+        )
+    return "".join(html)
 
 
 def _analytics_script(page_path: str, page_type: str, feature_slug: str = "", prefecture_slug: str = "") -> str:
@@ -193,7 +259,7 @@ def build_feature_page(feature: dict, photos: dict[str, dict], others: list[dict
     </nav>
     <header class="hero">
       <div class="hero-main">
-        <p class="hero-kicker">{escape(kicker)} <time datetime="{_escape_attr(feature['published'])}">{escape(_format_date(feature['published']))}</time></p>
+        <p class="hero-kicker">{escape(kicker)} <time datetime="{_escape_attr(feature['published'])}">{escape(_format_date(feature['published']))}公開</time></p>
         <h1>{escape(feature['title'])}</h1>
         {f'<p>{escape(lead)}</p>' if lead else ''}
         <div class="hero-actions">
@@ -203,17 +269,17 @@ def build_feature_page(feature: dict, photos: dict[str, dict], others: list[dict
         </div>
       </div>
     </header>
-
+{_timeline_html(feature)}
     <section aria-labelledby="notes-heading">
       <h2 id="notes-heading">見どころ</h2>
       {_notes_html(feature)}
     </section>
-
+{_sections_html(feature)}
     <section id="manhole-list" aria-labelledby="manhole-heading">
       <h2 id="manhole-heading">この特集のポケふた</h2>
       <div class="manhole-grid">{cards_html}</div>
     </section>
-{map_html}
+{map_html}{_news_html(feature)}
     <section aria-labelledby="related-heading">
       <h2 id="related-heading">あわせて見る</h2>
       <div class="municipality-actions">
