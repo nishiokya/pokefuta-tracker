@@ -14,6 +14,10 @@ highlight_until までの間は /summary/ の上の方にも出す（新作の�
     manholes         [{"id": "487", "note": "ひとこと"}] 並べた順に出す
     links            任意。[{"text": ..., "href": "/..." か "https://...", "external": true}]
     sections         任意。[{"heading": "見出し", "body": "本文（空行で段落を分ける）"}] 見どころの下に出す
+    timeline         任意。[{"when": "2026年10月16日", "date": "2026-10-16"（任意）, "text": "お披露目式"}]
+                     お披露目・設置予定などを見出しの直後に出す
+    news             任意。[{"title": 記事名, "source": 媒体名, "href": "https://...", "date": "2026-10-16"（任意）}]
+                     公式発表・報道。並べた順に出す（公式を先に）
 """
 
 from __future__ import annotations
@@ -42,6 +46,14 @@ def feature_path(feature: dict) -> str:
     return f"{FEATURES_BASE}{feature['slug']}/"
 
 
+def _nonempty_str(value: object) -> bool:
+    return isinstance(value, str) and bool(value.strip())
+
+
+def _optional_date(value: object) -> bool:
+    return value is None or (isinstance(value, str) and bool(_DATE_RE.match(value)))
+
+
 def _valid(entry: object, name: str) -> bool:
     if not isinstance(entry, dict):
         return False
@@ -65,6 +77,19 @@ def _valid(entry: object, name: str) -> bool:
             isinstance(sec, dict) and isinstance(sec.get("heading"), str) and sec["heading"]
             and isinstance(sec.get("body"), str) and sec["body"]
             for sec in entry.get("sections", [])
+        )
+        and isinstance(entry.get("timeline", []), list)
+        and all(
+            isinstance(item, dict) and _nonempty_str(item.get("when")) and _nonempty_str(item.get("text"))
+            and _optional_date(item.get("date"))
+            for item in entry.get("timeline", [])
+        )
+        and isinstance(entry.get("news", []), list)
+        and all(
+            isinstance(item, dict) and _nonempty_str(item.get("title")) and _nonempty_str(item.get("source"))
+            and _nonempty_str(item.get("href")) and item["href"].startswith("https://")
+            and _optional_date(item.get("date"))
+            for item in entry.get("news", [])
         )
         and isinstance(entry.get("links", []), list)
         and all(

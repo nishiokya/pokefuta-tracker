@@ -71,6 +71,10 @@ class LoadFeaturesTests(unittest.TestCase):
             _feature("lead-number", lead=1),
             _feature("note-list", manholes=[{"id": "488", "note": ["西海岸"]}]),
             _feature("sections-str", sections="本文"),
+            _feature("timeline-no-text", timeline=[{"when": "10月16日"}]),
+            _feature("timeline-bad-date", timeline=[{"when": "10月16日", "text": "式", "date": "10/16"}]),
+            _feature("news-http", news=[{"title": "記事", "source": "新聞", "href": "http://example.com/"}]),
+            _feature("news-no-source", news=[{"title": "記事", "href": "https://example.com/"}]),
             _feature("section-empty", sections=[{"heading": "見出し", "body": ""}]),
         ]
         with tempfile.TemporaryDirectory() as tmp:
@@ -116,6 +120,26 @@ class FeaturePageTests(unittest.TestCase):
         self.assertIn("<p>飛行機で1時間。</p>", html)
         self.assertIn("<p>船は&lt;15時間&gt;。</p>", html)
         self.assertLess(html.index('id="notes-heading"'), html.index('id="section-1-heading"'))
+
+    def test_timeline_follows_the_hero_and_news_open_in_a_new_tab(self) -> None:
+        feature = {
+            **self.feature,
+            "timeline": [{"when": "2026年10月16日", "date": "2026-10-16", "text": "お披露目式"},
+                         {"when": "10月下旬頃", "text": "設置予定"}],
+            "news": [{"title": "お披露目の記事", "source": "沖縄の新聞", "date": "2026-10-16",
+                      "href": "https://example.com/news"}],
+        }
+        html = MODULE.build_feature_page(feature, {}, [])
+        self.assertIn('<time datetime="2026-10-16">2026年10月16日</time><span>お披露目式</span>', html)
+        self.assertIn('<span class="feature-when">10月下旬頃</span>', html)
+        self.assertLess(html.index("</header>"), html.index('id="timeline-heading"'))
+        self.assertLess(html.index('id="timeline-heading"'), html.index('id="notes-heading"'))
+        self.assertIn('href="https://example.com/news" target="_blank" rel="noopener noreferrer"', html)
+        self.assertIn("沖縄の新聞・<time", html)
+        # 書いていない特集には欄ごと出さない
+        plain = MODULE.build_feature_page(self.feature, {}, [])
+        self.assertNotIn("timeline-heading", plain)
+        self.assertNotIn("news-heading", plain)
 
     def test_generate_all_writes_index_and_pages(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
