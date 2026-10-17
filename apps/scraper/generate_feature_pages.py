@@ -16,7 +16,7 @@ try:
     from apps.scraper import generate_municipality_pages as muni_page
     from apps.scraper import generate_prefecture_pages as pref
     from apps.scraper.features import (
-        DEFAULT_FEATURES_DIR, FEATURES_BASE, feature_path, load_features, safe_links,
+        DEFAULT_FEATURES_DIR, FEATURES_BASE, article_date, date_label, feature_path, load_features, safe_links,
     )
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
@@ -24,7 +24,7 @@ except ModuleNotFoundError as exc:
     import generate_municipality_pages as muni_page
     import generate_prefecture_pages as pref
     from features import (
-        DEFAULT_FEATURES_DIR, FEATURES_BASE, feature_path, load_features, safe_links,
+        DEFAULT_FEATURES_DIR, FEATURES_BASE, article_date, date_label, feature_path, load_features, safe_links,
     )
 
 ROOT = pref.ROOT
@@ -114,7 +114,7 @@ def _timeline_html(feature: dict) -> str:
         return ""
     return (
         '\n    <section aria-labelledby="timeline-heading">'
-        '\n      <h2 id="timeline-heading">お披露目と設置の予定</h2>'
+        '\n      <h2 id="timeline-heading">お披露目と設置</h2>'
         f'\n      <ol class="feature-timeline">{items}</ol>'
         '\n    </section>\n'
     )
@@ -218,7 +218,7 @@ def build_feature_page(feature: dict, photos: dict[str, dict], others: list[dict
         "@type": "Article",
         "headline": feature["title"],
         "description": description,
-        "datePublished": feature["published"],
+        **({"datePublished": article_date(feature)} if article_date(feature) else {}),
         "url": canonical,
         "mainEntity": {
             "@type": "ItemList",
@@ -259,7 +259,7 @@ def build_feature_page(feature: dict, photos: dict[str, dict], others: list[dict
     </nav>
     <header class="hero">
       <div class="hero-main">
-        <p class="hero-kicker">{escape(kicker)} <time datetime="{_escape_attr(feature['published'])}">{escape(_format_date(feature['published']))}公開</time></p>
+        <p class="hero-kicker">{escape(kicker)} <time datetime="{_escape_attr(feature['published'])}">{escape(_format_date(feature['published']))}{escape(date_label(feature))}</time></p>
         <h1>{escape(feature['title'])}</h1>
         {f'<p>{escape(lead)}</p>' if lead else ''}
         <div class="hero-actions">
@@ -306,7 +306,10 @@ def build_index_page(features: list[dict]) -> str:
 
     def card(feature: dict) -> str:
         records = feature["records"]
-        meta = " / ".join(filter(None, [_format_date(feature["published"]), feature.get("prefecture")]))
+        meta = " / ".join(filter(None, [
+            _format_date(feature["published"]) + ("" if date_label(feature) == "公開" else date_label(feature)),
+            feature.get("prefecture"),
+        ]))
         return (
             f'<a class="feature-card" href="{_escape_attr(feature_path(feature))}" data-track="feature_card_click" '
             f'data-surface="feature_index" data-destination="{_escape_attr(feature["slug"])}">'
@@ -324,7 +327,7 @@ def build_index_page(features: list[dict]) -> str:
         "url": canonical,
         "hasPart": [
             {"@type": "Article", "headline": f["title"], "url": f"{BASE_URL}{feature_path(f)}",
-             "datePublished": f["published"]}
+             **({"datePublished": article_date(f)} if article_date(f) else {})}
             for f in features
         ],
     }

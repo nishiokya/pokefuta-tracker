@@ -113,6 +113,18 @@ class FeaturePageTests(unittest.TestCase):
         self.assertNotIn('data-track="prefecture_', html)
         self.assertIn("PokefutaAnalytics.bindClickTracking(", html)
 
+    def test_date_label_marks_unveiling_dates_and_drops_date_published(self) -> None:
+        """過去の新作をあとから特集にしたときは、日付をお披露目の日として出し、記事の公開日とは言わない。"""
+        plain = MODULE.build_feature_page(self.feature, {}, [])
+        self.assertIn("2026年10月17日公開</time>", plain)
+        self.assertIn('"datePublished": "2026-10-17"', plain)
+        unveiled = MODULE.build_feature_page({**self.feature, "date_label": "お披露目"}, {}, [])
+        self.assertIn("2026年10月17日お披露目</time>", unveiled)
+        self.assertNotIn("datePublished", unveiled)
+        index = MODULE.build_index_page([{**self.feature, "date_label": "お披露目"}])
+        self.assertIn("2026年10月17日お披露目 / 沖縄県", index)
+        self.assertNotIn("datePublished", index)
+
     def test_sections_are_split_into_paragraphs(self) -> None:
         feature = {**self.feature, "sections": [{"heading": "行き方", "body": "飛行機で1時間。\n\n船は<15時間>。"}]}
         html = MODULE.build_feature_page(feature, {}, [])
