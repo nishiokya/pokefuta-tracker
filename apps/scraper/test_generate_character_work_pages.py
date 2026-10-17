@@ -149,6 +149,11 @@ class OtherWorkPageTest(unittest.TestCase):
         self.assertIn("｜愛知県の設置場所マップ</title>", generate_html(TOKAI, two_cities, {}))
         two_prefs = [TOKAI_RECORDS[0], dict(TOKAI_RECORDS[1], prefecture="静岡県", city="浜松市")]
         self.assertIn("<title>東海オンエアのマンホール一覧・地図｜設置場所マップ</title>", generate_html(TOKAI, two_prefs, {}))
+        same_name = [dict(TOKAI_RECORDS[0], prefecture="北海道", city="伊達市"),
+                     dict(TOKAI_RECORDS[1], prefecture="福島県", city="伊達市")]
+        self.assertIn("<title>東海オンエアのマンホール一覧・地図｜設置場所マップ</title>", generate_html(TOKAI, same_name, {}))
+        no_pref = [dict(TOKAI_RECORDS[0], prefecture=""), TOKAI_RECORDS[1]]
+        self.assertIn("<title>東海オンエアのマンホール一覧・地図｜設置場所マップ</title>", generate_html(TOKAI, no_pref, {}))
 
 
 class WorkDefinitionsTest(unittest.TestCase):

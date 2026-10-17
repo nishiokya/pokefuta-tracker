@@ -243,13 +243,11 @@ def spot_html(record: dict, event: dict | None, event_active: bool) -> str:
 
 def work_area(records: list[dict]) -> str:
     """設置場所が1つの市（区は市にまとめる）か1つの県に収まるなら、その名前。title に地名を入れる。"""
-    cities = {re.sub(r"^(.+?市).+区$", r"\1", str(r.get("city") or "")) for r in records}
     prefs = {str(r.get("prefecture") or "") for r in records}
-    if len(cities) == 1 and "" not in cities:
-        return cities.pop()
-    if len(prefs) == 1 and "" not in prefs:
-        return prefs.pop()
-    return ""
+    if len(prefs) != 1 or "" in prefs:
+        return ""  # 県がまたがる・不明なら、同名の市（北海道と福島の伊達市など）もあり得るので地名を出さない
+    cities = {re.sub(r"^(.+?市).+区$", r"\1", str(r.get("city") or "")) for r in records}
+    return cities.pop() if len(cities) == 1 and "" not in cities else prefs.pop()
 
 
 def gundam_areas_html(groups: dict[tuple[str, str], list[dict]]) -> str:
