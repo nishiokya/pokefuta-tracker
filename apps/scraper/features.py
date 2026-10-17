@@ -13,6 +13,7 @@ highlight_until までの間は /summary/ の上の方にも出す（新作の�
     kicker / lead / description  任意。見出しの上の札・導入文・meta description
     date_label       任意。published の日付に添える言葉（既定「公開」）。過去の新作をあとから特集にするときは
                      published をお披露目の日にして「お披露目」とする（このときは記事の公開日として扱わない）
+    date_text        任意。日まで分からないときの表示（例「2018年12月」）。published は並び順にだけ使う
     manholes         [{"id": "487", "note": "ひとこと"}] 並べた順に出す
     links            任意。[{"text": ..., "href": "/..." か "https://...", "external": true}]
     sections         任意。[{"heading": "見出し", "body": "本文（空行で段落を分ける）"}] 見どころの下に出す
@@ -33,7 +34,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_FEATURES_DIR = ROOT / "dataset" / "features"
 FEATURES_BASE = "/features/"
-_OPTIONAL_TEXT_KEYS = ("prefecture", "kicker", "lead", "description", "date_label")
+_OPTIONAL_TEXT_KEYS = ("prefecture", "kicker", "lead", "description", "date_label", "date_text")
 _SLUG_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 _DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 JST = timezone(timedelta(hours=9))
