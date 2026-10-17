@@ -11,6 +11,8 @@ highlight_until までの間は /summary/ の上の方にも出す（新作の�
     highlight_until  任意。この日まで /summary/ に出す
     prefecture       任意。県ページへの導線と地図の計測に使う
     kicker / lead / description  任意。見出しの上の札・導入文・meta description
+    date_label       任意。published の日付に添える言葉（既定「公開」）。過去の新作をあとから特集にするときは
+                     published をお披露目の日にして「お披露目」とする（このときは記事の公開日として扱わない）
     manholes         [{"id": "487", "note": "ひとこと"}] 並べた順に出す
     links            任意。[{"text": ..., "href": "/..." か "https://...", "external": true}]
     sections         任意。[{"heading": "見出し", "body": "本文（空行で段落を分ける）"}] 見どころの下に出す
@@ -31,7 +33,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_FEATURES_DIR = ROOT / "dataset" / "features"
 FEATURES_BASE = "/features/"
-_OPTIONAL_TEXT_KEYS = ("prefecture", "kicker", "lead", "description")
+_OPTIONAL_TEXT_KEYS = ("prefecture", "kicker", "lead", "description", "date_label")
 _SLUG_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 _DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 JST = timezone(timedelta(hours=9))
@@ -44,6 +46,15 @@ def _today_jst() -> date:
 
 def feature_path(feature: dict) -> str:
     return f"{FEATURES_BASE}{feature['slug']}/"
+
+
+def date_label(feature: dict) -> str:
+    return feature.get("date_label") or "公開"
+
+
+def article_date(feature: dict) -> str | None:
+    """構造化データの datePublished に使える日付。published が記事の公開日のときだけ返す。"""
+    return feature["published"] if not feature.get("date_label") else None
 
 
 def _nonempty_str(value: object) -> bool:
