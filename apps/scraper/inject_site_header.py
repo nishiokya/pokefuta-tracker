@@ -283,7 +283,8 @@ def _active_tab(page_path: str | None) -> str | None:
         return "pref"
     if normalized.startswith("pokemon/") or normalized == "pokemon":
         return "pokemon"
-    if normalized.startswith("summary/") or normalized == "summary":
+    # 特集はまとめ（サマリー）の下に置いている
+    if normalized.startswith(("summary/", "features/")) or normalized in ("summary", "features"):
         return "summary"
     if normalized.startswith(("character_manholes.html", "characters/")):
         return "character"

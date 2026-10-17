@@ -26,6 +26,7 @@ try:
     from apps.scraper.municipalities import page_paths as municipality_page_paths
     from apps.scraper.generate_trip_pages import page_paths as trip_page_paths
     from apps.scraper.visit_durations import load_trip_areas
+    from apps.scraper.features import FEATURES_BASE, feature_path, load_features
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
@@ -33,6 +34,7 @@ except ModuleNotFoundError as exc:
     from municipalities import page_paths as municipality_page_paths
     from generate_trip_pages import page_paths as trip_page_paths
     from visit_durations import load_trip_areas
+    from features import FEATURES_BASE, feature_path, load_features
 
 # logger は以前 import されないまま warning 呼び出しだけがあり、
 # pokemon_metadata.json が無いときに NameError で落ちる状態だった。
@@ -184,6 +186,7 @@ def build_sitemap(
     character_work_pages: list[WorkPage] | None = None,
     municipality_paths: list[str] | None = None,
     trip_paths: list[str] | None = None,
+    feature_paths: list[str] | None = None,
 ) -> str:
     entries = [
         url_entry(BASE_URL, "daily", "1.0"),
@@ -224,6 +227,12 @@ def build_sitemap(
     # ポケふた旅（/trip/）の特集ページとエリア別ページ
     for path in trip_paths or []:
         entries.append(url_entry(f"{BASE_URL}{path.lstrip('/')}", "weekly", "0.8"))
+
+    # 特集（/features/）の一覧と各特集。特集が1本も無いときは一覧も載せない
+    if feature_paths:
+        entries.append(url_entry(f"{BASE_URL}{FEATURES_BASE.lstrip('/')}", "weekly", "0.8"))
+        for path in feature_paths:
+            entries.append(url_entry(f"{BASE_URL}{path.lstrip('/')}", "weekly", "0.8"))
 
     # Theme (tag) landing pages. 県ページ(0.8)より下、ポケモンLP(0.1)より上。
     # 数が少なく内容が厚いので、量産している面と同列には置かない。
@@ -280,13 +289,15 @@ def main() -> int:
     character_work_pages = read_character_work_pages(Path(args.characters), Path(args.gundam))
     municipality_paths = sorted(municipality_page_paths(load_records(Path(args.data))).values())
     trip_paths = trip_page_paths(load_records(Path(args.data)), load_trip_areas())
+    records_by_id = {str(r.get("id", "")): r for r in load_records(Path(args.data))}
+    feature_paths = [feature_path(f) for f in load_features(records_by_id)]
 
     output_path = Path(args.output)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(
         build_sitemap(
             manhole_ids, pokemon_slugs, tag_slugs, character_work_pages, municipality_paths,
-            trip_paths,
+            trip_paths, feature_paths,
         ),
         encoding="utf-8",
     )
@@ -294,7 +305,8 @@ def main() -> int:
         f"[generate_sitemap] wrote {output_path} with "
         f"{len(manhole_ids)} manhole URLs + {len(pokemon_slugs)} pokemon URLs "
         f"+ {len(tag_slugs)} tag URLs + {len(character_work_pages)} character work URLs "
-        f"+ {len(municipality_paths)} municipality URLs + {len(trip_paths)} trip URLs"
+        f"+ {len(municipality_paths)} municipality URLs + {len(trip_paths)} trip URLs "
+        f"+ {len(feature_paths)} feature URLs"
     )
     return 0
 
