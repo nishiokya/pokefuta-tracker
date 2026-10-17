@@ -86,6 +86,17 @@ class GundamGuideTest(unittest.TestCase):
         types = [node["@type"] for node in schema["@graph"]]
         self.assertEqual(["WebPage", "BreadcrumbList"], types)
 
+    def test_records_without_a_prefecture_are_not_dropped_from_the_areas(self) -> None:
+        records = gundam_work_records([GUNDAM_RECORDS[0], {**GUNDAM_RECORDS[0], "id": "x", "prefecture": "", "city": ""}])
+        html = generate_html(GUNDAM, records, {})
+        self.assertIn("<h3>地方未確認 <small>1都道府県</small></h3>", html)
+        self.assertIn("<li><strong>都道府県未記録</strong> <small>1基</small><span>市町村未記録</span></li>", html)
+        self.assertNotIn("pref=%E9%83%BD%E9%81%93%E5%BA%9C%E7%9C%8C%E6%9C%AA%E8%A8%98%E9%8C%B2", html)
+
+    def test_faq_points_to_the_list_page_instead_of_calling_itself_a_list(self) -> None:
+        self.assertIn("1基ずつの名称・住所・出典は「ガンダムマンホール一覧・地図」に載せています。", self.html)
+        self.assertNotIn("掲載データに収録した設置場所の一覧です。", self.html)
+
     def test_equal_counts_per_city_are_explained_only_when_true(self) -> None:
         records = gundam_work_records([
             {**GUNDAM_RECORDS[0], "id": "a"}, {**GUNDAM_RECORDS[0], "id": "b"},
@@ -94,7 +105,7 @@ class GundamGuideTest(unittest.TestCase):
         self.assertIn("どの市町村にも2基ずつ", generate_html(GUNDAM, records, {}))
         records.append({**records[0], "id": "e", "city": "天塩町"})
         uneven = generate_html(GUNDAM, records, {})
-        self.assertNotIn("基ずつ", uneven)
+        self.assertNotIn("どの市町村にも", uneven)  # FAQ の「1基ずつの名称」とは別の、そろっているときの説明文
         self.assertIn("天塩町（1基）", uneven)  # 基数がそろわないときだけ市町村ごとに出す
 
     def test_does_not_hotlink_images_from_the_source_site(self) -> None:
