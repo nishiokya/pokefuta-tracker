@@ -120,10 +120,11 @@ git diff apps/scraper/pokefuta.ndjson --name-only
 
 | 概念 | ナビ・タブ・スイッチャー・フッターの**ラベル** | title / h1 / OGP / 構造化データ / 本文の**概念名** |
 |---|---|---|
-| ガンダム等のキャラクター蓋 | **キャラふた** | **キャラクターマンホール** |
+| ガンダム等のキャラクター蓋 | **デザインふた**（ナビ上はご当地デザイン蓋とまとめて呼ぶ） | **キャラクターマンホール** |
 | ポケふた以外のご当地デザイン蓋 | **デザインふた** | **デザインマンホール** |
 
 - **「キャラマンホール」「キャラ蓋」「キャラMH」は廃止。** 以前この3つ＋正式名の4通りがナビだけで混在していた。`test_inject_site_header.py` の `test_abolished_character_manhole_term_never_appears` が再発を止める
+- ナビのラベル「キャラふた」も廃止し「デザインふた」にした（2026-10）。リンク先は `character_manholes.html` のまま
 - 写真館側の投稿コレクション名 **「みんなのデザインマンホール」は固有名**として維持する（`pokefuta.com/design-manholes` の h1・OGP）
 - 個々の物理的な蓋を指す言い回し（「消火栓・防火水槽のデザイン蓋」「近くにある別のデザイン蓋」）は概念名ではないので対象外
 - 短縮形はひらがなの日本語ルール。en / ko / zh の `LABELS` は各言語の自然な語（`Characters` / `캐릭터 맨홀` / `角色蓋` 等）のままでよい
@@ -147,7 +148,7 @@ git diff apps/scraper/pokefuta.ndjson --name-only
 - ジオコーディング (国土地理院 API 既定 / `--geocode-provider` 切り替え)
 - timestamps: first_seen / added_at / last_updated / status
 
-キャラクターマンホールの入口は `character_manholes.html`（`apps/scraper/generate_character_manhole_page.py` がビルド時にドキュメント本文を焼き込んで生成するランディングページ）で、ヘッダーの「キャラふた」もここに着地する。全画面地図の `gmanhole_map.html` はその配下のサブページとして現URLのまま残しており、LPの作品カード・都道府県リストから `?work=` / `?pref=` 付きで遷移する。
+キャラクターマンホールの入口は `character_manholes.html`（`apps/scraper/generate_character_manhole_page.py` がビルド時にドキュメント本文を焼き込んで生成するランディングページ）で、ヘッダーの「デザインふた」もここに着地する。全画面地図の `gmanhole_map.html` はその配下のサブページとして現URLのまま残しており、LPの作品カード・都道府県リストから `?work=` / `?pref=` 付きで遷移する。
 
 公開ページ: **[キャラクターマンホール](https://data.pokefuta.com/character_manholes.html)** / **[ガンダム & ポケふた統合マップ](https://data.pokefuta.com/gmanhole_map.html)**
 
