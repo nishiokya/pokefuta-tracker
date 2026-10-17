@@ -175,6 +175,49 @@ class RealFeatureDataTests(unittest.TestCase):
         self.assertEqual(sorted(f["slug"] for f in loaded), sorted(p.stem for p in files))
 
 
+class FeatureGroupCheckTests(unittest.TestCase):
+    """特集に載せた蓋とグループ（県・市町村）が合っているかの簡易チェック。"""
+
+    def _feature(self, slug: str, records: list[dict], **extra) -> dict:
+        return {"slug": slug, "prefecture": "沖縄県", "title": "", "lead": "国頭村・大宜味村に置かれました。",
+                "records": records, **extra}
+
+    def test_real_features_have_no_group_problems(self) -> None:
+        records = {str(r["id"]): r for r in SUMMARY.load_records(SUMMARY.NDJSON)}
+        loaded = FEATURES.load_features(records, today=date(2099, 1, 1))
+        self.assertEqual(FEATURES.check_feature_groups(loaded), [])
+
+    def test_wrong_city_id_is_reported(self) -> None:
+        wrong = _record("999", "那覇")
+        problems = FEATURES.check_feature_groups([
+            self._feature("a", [_record("487", "国頭"), _record("488", "大宜味"), wrong])
+        ])
+        self.assertEqual(len(problems), 1)
+        self.assertIn("蓋 999（那覇）", problems[0])
+
+    def test_wrong_prefecture_and_duplicates_are_reported(self) -> None:
+        other = {**_record("100", "国頭"), "prefecture": "長野県"}
+        problems = FEATURES.check_feature_groups([
+            self._feature("a", [_record("487", "国頭"), _record("487", "国頭"), other]),
+            self._feature("b", [_record("488", "大宜味")], lead="大宜味村と国頭村"),
+            self._feature("c", [_record("488", "大宜味")], lead="大宜味村"),
+        ])
+        joined = "\n".join(problems)
+        self.assertIn("a: 蓋 487 が二重に入っている", joined)
+        self.assertIn("a: 蓋 100 は長野県（特集は沖縄県）", joined)
+        self.assertIn("c: 蓋 488 は b にも入っている", joined)
+
+    def test_kana_variants_and_county_names_match(self) -> None:
+        recs = [{**_record("466", "金ヶ崎"), "prefecture": "岩手県"},
+                {**_record("386", "三重郡菰野町"), "prefecture": "岩手県"}]
+        feature = self._feature("a", recs, prefecture="岩手県", lead="金ケ崎町と菰野町")
+        self.assertEqual(FEATURES.check_feature_groups([feature]), [])
+
+    def test_features_that_do_not_list_cities_are_skipped(self) -> None:
+        recs = [_record(str(i), f"町{i}") for i in range(10)]
+        self.assertEqual(FEATURES.check_feature_groups([self._feature("a", recs, lead="全35市町村")]), [])
+
+
 class SummaryAndSitemapTests(unittest.TestCase):
     def test_summary_shows_highlighted_feature_in_japanese_only(self) -> None:
         feature = {**_feature(), "records": [RECORDS["488"], RECORDS["487"]]}
