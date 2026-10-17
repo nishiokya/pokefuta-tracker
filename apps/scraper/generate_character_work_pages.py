@@ -251,6 +251,10 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
     title = f"{page.search_name}マンホール一覧｜設置場所・地図"
     if page.slug == "idolmaster":
         title = "ふたマス一覧・設置場所マップ｜アイマスのマンホール写真と地図"
+    if page.slug == "gundam":
+        # 「ガンダムマンホール 一覧・地図」の検索は gmanhole_map.html が受ける（そちらの方が表示・順位とも上）。
+        # 同じ語でこのページと取り合わないよう、こちらは巡り方のガイドとして名乗る
+        title = "ガンダムマンホールの巡り方ガイド｜都道府県別の設置エリアと出典"
     description = f"{page.name}のマンホール{count}枚を掲載。{page.intro}"
     if page.slug == "idolmaster":
         description = (f"アイマスのマンホール『ふたマス!!!!!!』{count}枚・{pref_count}都道府県の設置場所を一覧と地図で紹介。"
@@ -341,6 +345,8 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
     map_count = sum(has_coordinates(r) for r in selected)
     map_note = f"地図のピンは座標確認済みの{map_count}枚。" if map_count != count else ""
     map_section = map_assets = map_cta = ""
+    if page.slug == "gundam":
+        map_cta = f'<a class="cm-btn cm-btn--ghost" href="{ASSET_BASE}gmanhole_map.html">ガンダムマンホール一覧・地図 →</a>'
     if page.slug == "idolmaster":
         map_cta = '<a class="cm-btn cm-btn--ghost" href="#location-map">ふたマスの地図を見る ↓</a>'
         points = [{"lat": r["lat"], "lng": r["lng"], "name": str(r.get("character") or r.get("title") or "マンホール"),

@@ -19,6 +19,7 @@ on:
       - 'apps/scraper/generate_character_manhole_page.py' # character manhole LP generator
       - 'apps/scraper/generate_character_work_pages.py' # per-work character manhole guides
       - 'apps/scraper/character_manhole_works.py' # shared work page definitions
+      - 'apps/scraper/generate_gmanhole_map_page.py' # static Gundam list for gmanhole_map.html
       - 'apps/scraper/generate_summary_pages.py' # summary page generator
       - 'apps/scraper/summary_faq.py' # summary trivia FAQ (ja)
       - 'apps/scraper/generate_summary_ogp.py' # summary page OGP generator
@@ -136,7 +137,8 @@ jobs:
           echo "[dist] Test character manhole landing page generation"
           python3 -m unittest \
             apps.scraper.test_generate_character_manhole_page \
-            apps.scraper.test_generate_character_work_pages
+            apps.scraper.test_generate_character_work_pages \
+            apps.scraper.test_generate_gmanhole_map_page
           echo "[dist] Test manhole detail page headings"
           python3 -m unittest apps.scraper.test_generate_manhole_pages_h1 apps.scraper.test_generate_manhole_pages_breadcrumb apps.scraper.test_display_name_consumers apps.scraper.test_generate_top_feed
           echo "[dist] Generate static manhole detail pages"
@@ -186,7 +188,7 @@ jobs:
           python3 apps/scraper/generate_top_tag_chips.py dist/index.html
           cp apps/web/nearby.html dist/nearby.html  # 廃止済み。map.html へのリダイレクトだけ
           cp apps/web/map.html dist/map.html
-          cp apps/web/gmanhole_map.html dist/gmanhole_map.html
+          python3 apps/scraper/generate_gmanhole_map_page.py --output dist/gmanhole_map.html  # ガンダムの都道府県別一覧を差し込む
           cp apps/web/design_manhole.html dist/design_manhole.html
           cp apps/web/login.html dist/login.html  # 廃止済み。pokefuta.com/login へのリダイレクトだけ
           cp apps/web/about.html dist/about.html

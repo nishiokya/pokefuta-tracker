@@ -64,8 +64,10 @@ class GundamGuideTest(unittest.TestCase):
     def setUp(self) -> None:
         self.html = generate_html(GUNDAM, gundam_work_records(GUNDAM_RECORDS), {})
 
-    def test_title_targets_the_gundam_manhole_query(self) -> None:
-        self.assertIn("<title>ガンダムマンホール一覧｜設置場所・地図</title>", self.html)
+    def test_title_leaves_the_list_query_to_the_map(self) -> None:
+        self.assertIn("<title>ガンダムマンホールの巡り方ガイド｜都道府県別の設置エリアと出典</title>", self.html)
+        # 一覧・地図の検索語は gmanhole_map.html に寄せる。ヒーローからパラメータ無しのURLへ送る
+        self.assertIn('href="../../gmanhole_map.html">ガンダムマンホール一覧・地図 →</a>', self.html)
 
     def test_lists_only_active_spots_with_the_official_source(self) -> None:
         self.assertEqual(1, self.html.count('class="cw-spot"'))

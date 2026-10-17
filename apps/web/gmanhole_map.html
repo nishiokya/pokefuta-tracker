@@ -3,27 +3,27 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>キャラクターマンホールマップ | ガンダム・ゾンビランドサガ等 全国の設置場所</title>
-  <meta name="description" content="ガンダムマンホールをはじめ、ゾンビランドサガ・ロマンシング サガ・弱虫ペダル・ちびまる子ちゃんなど全国のキャラクターマンホール180枚以上の設置場所を地図で表示。ポケふた（ポケモンマンホール）も重ねて聖地巡礼ルートを計画できます。">
-  <meta name="keywords" content="キャラクターマンホール,ガンダムマンホール,ゾンビランドサガ マンホール,ロマンシング サガ マンホール,弱虫ペダル マンホール,ちびまる子ちゃん マンホール,ポケふた,マンホールマップ,聖地巡礼">
+  <title>ガンダムマンホール一覧・地図｜全国の設置場所マップ</title>
+  <meta name="description" content="ガンダムマンホール（機動戦士ガンダム）の全国の設置場所を、地図と都道府県別の一覧で紹介。住所・出典つき。ゾンビランドサガ・ロマンシング サガ・弱虫ペダル・ちびまる子ちゃんなどのキャラクターマンホールやポケふたも重ねて表示できます。">
+  <meta name="keywords" content="ガンダムマンホール,ガンダムマンホール 一覧,ガンダムマンホール 地図,キャラクターマンホール,ゾンビランドサガ マンホール,ロマンシング サガ マンホール,弱虫ペダル マンホール,ちびまる子ちゃん マンホール,ポケふた,マンホールマップ,聖地巡礼">
   <meta name="robots" content="index,follow">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ja_JP">
   <meta property="og:site_name" content="ポケふたDATABASE">
-  <meta property="og:title" content="キャラクターマンホールマップ | ガンダム・ゾンビランドサガ等 全国の設置場所">
-  <meta property="og:description" content="ガンダム・ゾンビランドサガ・弱虫ペダルなど全国のキャラクターマンホールとポケふたを1枚の地図で。作品別フィルタ・都道府県別集計つき。">
+  <meta property="og:title" content="ガンダムマンホール一覧・地図｜全国の設置場所マップ">
+  <meta property="og:description" content="ガンダムマンホールの全国の設置場所を地図と都道府県別の一覧で。ゾンビランドサガ・弱虫ペダルなどのキャラクターマンホールやポケふたも重ねて表示できます。">
   <meta property="og:url" content="https://data.pokefuta.com/gmanhole_map.html">
   <meta property="og:image" content="https://data.pokefuta.com/assets/ogp/pokefuta_summary_ogp.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="キャラクターマンホールマップ | ガンダム・ゾンビランドサガ等">
-  <meta name="twitter:description" content="全国のキャラクターマンホール180枚以上とポケふたを1枚の地図で表示。聖地巡礼の計画に。">
+  <meta name="twitter:title" content="ガンダムマンホール一覧・地図｜全国の設置場所マップ">
+  <meta name="twitter:description" content="ガンダムマンホールの全国の設置場所を地図と一覧で。キャラクターマンホールやポケふたも重ねて表示できます。">
   <meta name="twitter:image" content="https://data.pokefuta.com/assets/ogp/pokefuta_summary_ogp.png">
   <link rel="canonical" href="https://data.pokefuta.com/gmanhole_map.html">
   <script type="application/ld+json">
   {"@context":"https://schema.org","@graph":[
    {"@type":"WebPage","@id":"https://data.pokefuta.com/gmanhole_map.html","url":"https://data.pokefuta.com/gmanhole_map.html",
-    "name":"キャラクターマンホールマップ | ガンダム・ゾンビランドサガ等 全国の設置場所",
-    "description":"ガンダムマンホールやゾンビランドサガ・ロマンシング サガ・弱虫ペダル・ちびまる子ちゃんなど全国のキャラクターマンホールの設置場所を地図で表示。ポケふたも重ねて聖地巡礼を計画できます。",
+    "name":"ガンダムマンホール一覧・地図｜全国の設置場所マップ",
+    "description":"ガンダムマンホール（機動戦士ガンダム）の全国の設置場所を、地図と都道府県別の一覧で紹介。住所・出典つき。ゾンビランドサガ・ロマンシング サガ・弱虫ペダル・ちびまる子ちゃんなどのキャラクターマンホールやポケふたも重ねて表示できます。",
     "inLanguage":"ja","isPartOf":{"@type":"WebSite","name":"ポケふたDATABASE","url":"https://data.pokefuta.com/"}},
    {"@type":"BreadcrumbList","itemListElement":[
     {"@type":"ListItem","position":1,"name":"ホーム","item":"https://data.pokefuta.com/"},
@@ -81,6 +81,17 @@
     .page-seo ul { margin:0; padding:0; list-style:none; display:grid; gap:6px; }
     .page-seo li { background:var(--top-card-bg); border:1px solid var(--top-border); border-radius:var(--top-radius-card); padding:10px 14px; font-size:13px; }
     .page-seo a { color:var(--top-purple); text-decoration:underline; }
+    /* ガンダムマンホール一覧（generate_gmanhole_map_page.py が差し込む）。県ごとに開閉し、行は詰めて並べる */
+    .gundam-list { margin-top:18px; }
+    .gundam-pref { border-bottom:1px solid var(--top-border-light); }
+    .gundam-pref summary { min-height:40px; display:flex; align-items:center; gap:6px; font-size:13.5px; font-weight:700; cursor:pointer; }
+    .gundam-pref summary small { font-family:'IBM Plex Mono', monospace; font-size:.75rem; font-weight:500; color:var(--top-purple); }
+    .gundam-pref summary::-webkit-details-marker { display:none; }
+    .gundam-pref summary::after { content:'＋'; margin-left:auto; color:var(--top-purple); }
+    .gundam-pref[open] summary::after { content:'−'; }
+    .page-seo .gundam-pref ul { gap:0; margin:0 0 10px; }
+    .page-seo .gundam-pref li { display:flex; flex-wrap:wrap; align-items:baseline; gap:2px 8px; padding:8px 2px; border:0; border-top:1px solid var(--top-border-light); border-radius:0; background:none; }
+    .gundam-pref li span { flex:1 1 100%; color:var(--top-text-muted); font-size:12px; overflow-wrap:anywhere; }
     /* Desktop floating panel: keep clear of the fixed app bar; no hero card on this page */
     @media (min-width: 760px) {
       .pokefuta-map-page #controls { top:72px; max-height:calc(100dvh - 104px); }
@@ -278,23 +289,24 @@
       </div>
       <p id="map-summary" class="map-summary" role="status" aria-live="polite">読み込み中…</p>
       <section class="page-seo">
-    <h1>キャラクターマンホールマップ — ガンダム・ゾンビランドサガから ちびまる子ちゃんまで</h1>
+    <h1>ガンダムマンホール一覧・地図 — 全国の設置場所</h1>
     <p>
-      全国に設置されているキャラクターデザインのマンホール蓋を1枚の地図にまとめました。
-      バンダイナムコの<strong>ガンダムマンホール</strong>、佐賀県の<strong>ゾンビランドサガ</strong>、
-      <strong>ロマンシング サガ</strong>、<strong>弱虫ペダル</strong>、静岡市の<strong>ちびまる子ちゃん</strong>のマンホールに加え、
+      全国に設置されている<strong>ガンダムマンホール</strong>（<!-- GUNDAM_SUMMARY -->）の設置場所を、地図と下の都道府県別の一覧にまとめました。
+      ほかのキャラクターマンホール（佐賀県の<strong>ゾンビランドサガ</strong>、
+      <strong>ロマンシング サガ</strong>、<strong>弱虫ペダル</strong>、静岡市の<strong>ちびまる子ちゃん</strong>など）や
       <strong>ポケふた（ポケモンマンホール）</strong>も重ねて表示できます。
       作品ごとのフィルタや都道府県別の設置数から、聖地巡礼やマンホールカード集めのルート計画にご活用ください。
     </p>
     <h2>対象作品</h2>
     <ul>
-      <li>機動戦士ガンダム（ガンダムマンホール）— 約80基・22都道府県</li>
+      <li>機動戦士ガンダム（ガンダムマンホール）— <!-- GUNDAM_SUMMARY --></li>
       <li>ゾンビランドサガ — 32基（佐賀県）</li>
       <li>ロマンシング サガ — 32基（佐賀県）</li>
       <li>弱虫ペダル — 27基</li>
       <li>ちびまる子ちゃん — 9基（静岡市）</li>
       <li>ポケットモンスター（ポケふた）— チェックを入れると全国の設置分を重ねて表示</li>
     </ul>
+    <!-- GUNDAM_LIST -->
     <p style="margin-top:12px;">
       ポケふただけをじっくり探すなら<a href="./map.html">全国ポケふたマップ</a>（現在地から近い順にも探せます）もどうぞ。
       この地図に載っていないご当地デザインのマンホールを見つけたら、
