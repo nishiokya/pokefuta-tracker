@@ -95,6 +95,11 @@ JST = timezone(timedelta(hours=9))
 # 現地写真の欄に並べる上限（4列×2段）。4枚だと写真が5〜8枚ある県で掲載率 100% なのに
 # 1枚も2枚も欠けて見えた。全件はすぐ下の一覧にあるので、それ以上は重ねて出さない。
 PHOTO_SHOWCASE_LIMIT = 8
+# 写真館に投稿されたデザインマンホール（ポケふた以外のご当地蓋）。県ページから写真館の投稿へ送る
+DEFAULT_DESIGN_MANHOLES = ROOT / "docs" / "design_manholes.ndjson"
+DESIGN_SHOWCASE_LIMIT = 8
+DESIGN_STUDIO_LIST_URL = "https://pokefuta.com/design-manholes"
+DESIGN_STUDIO_HOST = "pokefuta.com"
 DEFAULT_OUTPUT = ROOT / "dist" / "prefectures"
 BASE_URL = "https://data.pokefuta.com"
 OG_IMAGE = f"{BASE_URL}/assets/ogp/pokefuta_summary_ogp.png"
@@ -203,6 +208,91 @@ def load_records(path: Path) -> list[dict]:
         record for record in by_id.values()
         if record.get("status", "active") == "active"
     ]
+
+
+def _studio_url(value: object) -> str:
+    """写真館（https://pokefuta.com/）の URL だけを通す。データ由来の URL をそのままリンクにしない。"""
+    url = str(value or "").strip()
+    try:
+        parsed = urlparse(url)
+    except ValueError:
+        return ""
+    return url if parsed.scheme == "https" and parsed.netloc == DESIGN_STUDIO_HOST else ""
+
+
+def _small_photo_url(value: object) -> str:
+    """写真は ?size=small だけを使う（medium/large/未指定は原寸の約2MBへリダイレクトされる）。"""
+    url = _studio_url(value)
+    if not url:
+        return ""
+    return url if url.endswith("?size=small") else url.split("?", 1)[0] + "?size=small"
+
+
+def load_design_posts(path: Path) -> dict[str, list[dict]]:
+    """県 → 写真館に公開投稿されたデザインマンホール（新しい順）。写真と投稿ページの両方があるものだけ。"""
+    by_pref: dict[str, list[dict]] = {}
+    if not path.exists():
+        return by_pref
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        try:
+            row = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        photo_url = _small_photo_url(row.get("photo_url"))
+        source_url = _studio_url(row.get("source_url"))
+        prefecture = str(row.get("prefecture") or "")
+        if row.get("status") != "active" or not photo_url or not source_url or not prefecture:
+            continue
+        by_pref.setdefault(prefecture, []).append({
+            "id": str(row.get("source_id") or row.get("id") or ""),
+            "title": str(row.get("title") or "").strip(),
+            "city": str(row.get("city") or "").replace("\u3000", "").strip(),
+            "photo_url": photo_url,
+            "source_url": source_url,
+            "created_at": str(row.get("created_at") or ""),
+        })
+    for posts in by_pref.values():
+        posts.sort(key=lambda post: post["created_at"], reverse=True)
+    return by_pref
+
+
+def _design_manhole_section(prefecture: str, posts: list[dict] | None) -> str:
+    """この県で見つかったデザインマンホール。写真館の投稿へのリンク（図鑑に個別ページは作らない）。"""
+    if not posts:
+        return ""
+    cards = []
+    for position, post in enumerate(posts[:DESIGN_SHOWCASE_LIMIT], start=1):
+        name = post["title"] or "デザインマンホール"
+        place = post["city"] or prefecture
+        cards.append(
+            f'<article class="photo-card">'
+            f'<a class="photo-card-image" href="{_escape_attr(post["source_url"])}" '
+            f'data-track="prefecture_design_manhole_click" data-position="{position}" '
+            f'data-destination="design_manhole" data-content-id="{_escape_attr(post["id"])}" '
+            f'data-surface="design_manholes">'
+            f'<img src="{_escape_attr(post["photo_url"])}" '
+            f'alt="{_escape_attr(place)}で見つかったデザインマンホール「{_escape_attr(name)}」の投稿写真" '
+            f'loading="lazy" decoding="async" width="640" height="480">'
+            f'<span><strong>{escape(name)}</strong><small>{escape(place)}</small></span></a>'
+            f'</article>'
+        )
+    more = (
+        f'{len(posts)}枚のうち新しい{DESIGN_SHOWCASE_LIMIT}枚を表示しています。'
+        if len(posts) > DESIGN_SHOWCASE_LIMIT else ""
+    )
+    return f"""
+    <section id="design-manholes" aria-labelledby="design-heading">
+      <div class="section-heading-row">
+        <h2 id="design-heading">{escape(prefecture)}で見つかったデザインマンホール</h2>
+        <p>ポケふた以外のご当地デザインマンホールも、写真館にみんなが投稿しています。{more}</p>
+      </div>
+      <div class="photo-showcase-grid">{"".join(cards)}</div>
+      <p><a class="inline-link" href="{DESIGN_STUDIO_LIST_URL}" data-track="prefecture_design_manhole_click"
+        data-destination="design_manholes_list" data-surface="design_manholes">みんなのデザインマンホールを写真館で見る</a></p>
+    </section>
+"""
 
 
 def load_photos(path: Path) -> dict[str, dict]:
@@ -2302,6 +2392,7 @@ def build_page(
     complete: list[str] | None = None,
     durations: dict | None = None,
     trips: list[tuple[str, str, int, str]] | None = None,
+    design_posts: list[dict] | None = None,
 ) -> str:
     photos = photos or {}
     count = len(records)
@@ -2349,6 +2440,7 @@ def build_page(
     trivia_html = _trivia_html(prefecture, trivia_entry, count)
     events_html = _events_html(events)
     related_html = _related_prefectures(prefecture, empty_prefectures)
+    design_html = _design_manhole_section(prefecture, design_posts)
     duration_html = _visit_duration_html(prefecture, records, durations)
     municipality_guide_html = (
         duration_html
@@ -2516,14 +2608,14 @@ def build_page(
       <h2 id="pokemon-heading">{escape(prefecture)}で会えるポケモン</h2>
       <div class="pokemon-grid">{pokemon_html}</div>
     </section>
-
+{design_html}
 {related_section_html}"""
     else:
         main_sections_html = f"""    {_nearest_pokefuta_html(prefecture, nearest)}
 
     <!-- adsense:prefecture -->
 
-{events_html}{related_section_html}
+{events_html}{design_html}{related_section_html}
 
     {journey_html}"""
     json_ld = {
@@ -2656,6 +2748,7 @@ def generate_all(
     visit_guides: dict[str, dict] | None = None,
     durations: dict | None = None,
     trips: dict[str, list[tuple[str, str, int, str]]] | None = None,
+    design_posts: dict[str, list[dict]] | None = None,
 ) -> int:
     photos = photos or {}
     records_by_pref = {pref: [] for pref in PREFECTURE_ORDER}
@@ -2692,6 +2785,7 @@ def generate_all(
             complete,
             durations,
             (trips or {}).get(prefecture),
+            (design_posts or {}).get(prefecture),
         )
         (out_dir / "index.html").write_text(html, encoding="utf-8")
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -2710,6 +2804,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--events", type=Path, default=DEFAULT_EVENTS)
     parser.add_argument("--guides", type=Path, default=DEFAULT_GUIDES)
     parser.add_argument("--durations", type=Path, default=DEFAULT_DURATIONS)
+    parser.add_argument("--design-manholes", type=Path, default=DEFAULT_DESIGN_MANHOLES)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     return parser.parse_args()
 
@@ -2755,6 +2850,7 @@ def main() -> int:
     count = generate_all(
         records, pokemon_slugs, trivia, args.output, events, photos, visit_guides,
         durations, _trips_by_prefecture(records, durations),
+        load_design_posts(args.design_manholes),
     )
     print(
         f"[generate_prefecture_pages] wrote {count} pages to "

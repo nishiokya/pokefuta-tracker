@@ -1414,5 +1414,73 @@ class TriviaMunicipalityLinkTest(unittest.TestCase):
         self.assertIn('data-destination="/municipalities/fukuoka/dazaifu/">太宰府</a>', html)
 
 
+class DesignManholeSectionTest(unittest.TestCase):
+    """県ページから写真館に投稿されたデザインマンホールへ送る節。"""
+
+    ROWS = [
+        {"id": "pokefuta-design:a", "source_id": "a", "status": "active", "prefecture": "愛知県", "city": "名古屋市　北区",
+         "title": "鯱<b>", "photo_url": "https://pokefuta.com/api/design-manholes/a/photo?size=small",
+         "source_url": "https://pokefuta.com/design-manholes/a", "created_at": "2026-07-10T00:00:00Z"},
+        {"id": "pokefuta-design:b", "source_id": "b", "status": "active", "prefecture": "愛知県", "city": "",
+         "title": "", "photo_url": "https://pokefuta.com/api/design-manholes/b/photo?size=large",
+         "source_url": "https://pokefuta.com/design-manholes/b", "created_at": "2026-09-01T00:00:00Z"},
+        {"id": "pokefuta-design:c", "source_id": "c", "status": "hidden", "prefecture": "愛知県",
+         "photo_url": "https://pokefuta.com/api/design-manholes/c/photo?size=small",
+         "source_url": "https://pokefuta.com/design-manholes/c", "created_at": "2026-09-02T00:00:00Z"},
+        {"id": "pokefuta-design:d", "source_id": "d", "status": "active", "prefecture": "愛知県",
+         "photo_url": "https://evil.example/photo.jpg",
+         "source_url": "https://pokefuta.com/design-manholes/d", "created_at": "2026-09-03T00:00:00Z"},
+        {"id": "pokefuta-design:e", "source_id": "e", "status": "active", "prefecture": "愛知県",
+         "photo_url": "https://pokefuta.com/api/design-manholes/e/photo?size=small",
+         "source_url": "javascript:alert(1)", "created_at": "2026-09-04T00:00:00Z"},
+    ]
+
+    def setUp(self) -> None:
+        import json
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "design.ndjson"
+            path.write_text("\n".join(json.dumps(r, ensure_ascii=False) for r in self.ROWS), encoding="utf-8")
+            self.posts = MODULE.load_design_posts(path)
+
+    def test_loads_only_active_posts_with_studio_urls_newest_first(self) -> None:
+        self.assertEqual(["b", "a"], [post["id"] for post in self.posts["愛知県"]])
+
+    def test_photos_are_forced_to_the_small_size(self) -> None:
+        self.assertTrue(all(post["photo_url"].endswith("?size=small") for post in self.posts["愛知県"]))
+
+    def test_section_links_each_post_to_the_studio_and_escapes_titles(self) -> None:
+        html = MODULE._design_manhole_section("愛知県", self.posts["愛知県"])
+        self.assertIn("愛知県で見つかったデザインマンホール</h2>", html)
+        self.assertIn('href="https://pokefuta.com/design-manholes/a"', html)
+        self.assertIn("<strong>鯱&lt;b&gt;</strong><small>名古屋市北区</small>", html)
+        # タイトルの無い投稿は「デザインマンホール」、市町村の無い投稿は県名で出す
+        self.assertIn("<strong>デザインマンホール</strong><small>愛知県</small>", html)
+        self.assertEqual(2, html.count('loading="lazy"'))
+        self.assertNotIn("evil.example", html)
+        self.assertNotIn("javascript:", html)
+
+    def test_section_is_omitted_without_posts_and_caps_the_count(self) -> None:
+        self.assertEqual("", MODULE._design_manhole_section("愛知県", []))
+        many = [dict(self.posts["愛知県"][0], id=str(i)) for i in range(MODULE.DESIGN_SHOWCASE_LIMIT + 3)]
+        html = MODULE._design_manhole_section("愛知県", many)
+        self.assertEqual(MODULE.DESIGN_SHOWCASE_LIMIT, html.count('class="photo-card"'))
+        self.assertIn(f"{MODULE.DESIGN_SHOWCASE_LIMIT + 3}枚のうち新しい{MODULE.DESIGN_SHOWCASE_LIMIT}枚", html)
+
+    def test_page_shows_the_section_with_and_without_pokefuta(self) -> None:
+        records = MODULE.load_records(MODULE.DEFAULT_MANHOLES)
+        slugs = MODULE.load_pokemon_slugs(MODULE.DEFAULT_POKEMON)
+        aichi = [r for r in records if r.get("prefecture") == "愛知県"]
+        html = MODULE.build_page("愛知県", "aichi", aichi, 1, slugs, None, all_records=records,
+                                 design_posts=self.posts["愛知県"])
+        self.assertIn('id="design-manholes"', html)
+        self.assertLess(html.index('id="pokemon-heading"'), html.index('id="design-heading"'))
+        # ポケふたが無い県でも、投稿があれば出す
+        empty = MODULE.build_page("広島県", "hiroshima", [], None, slugs, None, all_records=records,
+                                  design_posts=[dict(self.posts["愛知県"][0])])
+        self.assertIn("広島県で見つかったデザインマンホール</h2>", empty)
+        none = MODULE.build_page("愛知県", "aichi", aichi, 1, slugs, None, all_records=records)
+        self.assertNotIn('id="design-manholes"', none)
+
+
 if __name__ == "__main__":
     unittest.main()
