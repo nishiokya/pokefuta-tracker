@@ -86,6 +86,11 @@ def _format_date(value: str) -> str:
     return f"{int(year)}年{int(month)}月{int(day)}日"
 
 
+def _feature_date(feature: dict) -> str:
+    """特集の日付の表示。日まで分からない回は date_text（例「2018年12月」）を使う。"""
+    return feature.get("date_text") or _format_date(feature["published"])
+
+
 def _status_html(record: dict) -> str:
     if record.get("installed") is not False:
         return ""
@@ -267,7 +272,7 @@ def build_feature_page(feature: dict, photos: dict[str, dict], others: list[dict
     </nav>
     <header class="hero">
       <div class="hero-main">
-        <p class="hero-kicker">{escape(kicker)} <time datetime="{_escape_attr(feature['published'])}">{escape(_format_date(feature['published']))}{escape(date_label(feature))}</time></p>
+        <p class="hero-kicker">{escape(kicker)} <time datetime="{_escape_attr(feature['published'])}">{escape(_feature_date(feature))}{escape(date_label(feature))}</time></p>
         <h1>{escape(feature['title'])}</h1>
         {f'<p>{escape(lead)}</p>' if lead else ''}
         <div class="hero-actions">
@@ -315,7 +320,7 @@ def build_index_page(features: list[dict]) -> str:
     def card(feature: dict) -> str:
         records = feature["records"]
         meta = " / ".join(filter(None, [
-            _format_date(feature["published"]) + ("" if date_label(feature) == "公開" else date_label(feature)),
+            _feature_date(feature) + ("" if date_label(feature) == "公開" else date_label(feature)),
             feature.get("prefecture"),
         ]))
         return (
