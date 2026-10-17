@@ -34,7 +34,7 @@
       link.href = '#' + point.anchor;
       link.textContent = '写真・設置場所の案内を見る';
       popup.append(name, address, link);
-      return L.marker([point.lat, point.lng], { title: point.name, alt: point.name + 'のふたマス' })
+      return L.marker([point.lat, point.lng], { title: point.name, alt: point.alt || point.name })
         .bindPopup(popup).addTo(map);
     });
     map.fitBounds(L.featureGroup(markers).getBounds(), { padding: [30, 30], maxZoom: 14 });
