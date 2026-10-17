@@ -15,24 +15,24 @@ from urllib.parse import quote, urlencode, urlparse
 
 try:
     from apps.scraper.character_manhole_works import (
-        CHARACTER_CSS_VERSION, WORK_PAGES, WorkPage, available_pages, gundam_work_records,
+        CHARACTER_CSS_VERSION, GUNDAM_WORK_QUERY, WORK_PAGES, WorkPage, available_pages, gundam_work_records,
     )
     from apps.scraper.generate_character_manhole_page import (
         BASE_URL, ROOT, _is_active, load_ndjson,
     )
     from apps.scraper.photo_caption import JST
-    from apps.scraper.prefectures import PREFECTURE_ORDER
+    from apps.scraper.prefectures import PREFECTURE_ORDER, REGIONS
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
     from character_manhole_works import (
-        CHARACTER_CSS_VERSION, WORK_PAGES, WorkPage, available_pages, gundam_work_records,
+        CHARACTER_CSS_VERSION, GUNDAM_WORK_QUERY, WORK_PAGES, WorkPage, available_pages, gundam_work_records,
     )
     from generate_character_manhole_page import (
         BASE_URL, ROOT, _is_active, load_ndjson,
     )
     from photo_caption import JST
-    from prefectures import PREFECTURE_ORDER
+    from prefectures import PREFECTURE_ORDER, REGIONS
 
 ASSET_BASE = "../../"
 INDEX_ASSET_BASE = "../"
@@ -240,6 +240,38 @@ def spot_html(record: dict, event: dict | None, event_active: bool) -> str:
     </article>"""
 
 
+def gundam_areas_html(groups: dict[tuple[str, str], list[dict]]) -> str:
+    """ガンダムガイドの設置エリア。地方→都道府県→市町村（基数）だけを並べ、1基ずつの一覧はマップへ送る。"""
+    by_pref: dict[str, list[tuple[str, int]]] = defaultdict(list)
+    for (pref, city), rows in groups.items():
+        by_pref[pref].append((city, len(rows)))
+    counts = {n for cities in by_pref.values() for _, n in cities}
+    # 掲載データでは市町村ごとに同じ数ずつ置かれている。そのときは1文で説明し、市町村ごとの「（2基）」は繰り返さない。
+    # データが変わってそろわなくなったら、説明の文を出さず市町村ごとに基数を出す
+    same_count = len(counts) == 1
+
+    def city_label(city: str, n: int) -> str:
+        name = city or "市町村未記録"
+        return name if same_count else f"{name}（{n}基）"
+
+    sections = []
+    for region, prefs in REGIONS:
+        present = [p for p in prefs if p in by_pref]
+        if not present:
+            continue
+        items = "".join(
+            f'<li><a href="{escape(map_href(GUNDAM_WORK_QUERY, pref))}"><strong>{escape(pref)}</strong> '
+            f'<small>{sum(n for _, n in by_pref[pref])}基</small></a>'
+            f'<span>{escape("・".join(city_label(city, n) for city, n in by_pref[pref]))}</span></li>'
+            for pref in present
+        )
+        sections.append(f'<section class="cw-city"><h3>{escape(region)} <small>{len(present)}都道府県</small></h3>'
+                        f'<ul class="cw-areas">{items}</ul></section>')
+    pair_note = (f'<p class="cm-lead">掲載データでは、どの市町村にも{next(iter(counts))}基ずつ設置されています。'
+                 '同じ市町村の蓋をまとめて回る計画を立てやすい作品です。</p>') if same_count else ""
+    return pair_note + "".join(sections)
+
+
 def generate_html(page: WorkPage, records: list[dict], events: dict,
                   *, now: datetime | None = None, related: tuple[WorkPage, ...] = ()) -> str:
     selected = [r for r in records if _is_active(r) and r.get("work") in page.works]
@@ -251,14 +283,23 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
     title = f"{page.search_name}マンホール一覧｜設置場所・地図"
     if page.slug == "idolmaster":
         title = "ふたマス一覧・設置場所マップ｜アイマスのマンホール写真と地図"
+    if page.slug == "gundam":
+        # 「ガンダムマンホール 一覧・地図」の検索は gmanhole_map.html が受ける（そちらの方が表示・順位とも上）。
+        # 同じ語でこのページと取り合わないよう、こちらは巡り方のガイドとして名乗る
+        title = "ガンダムマンホールの巡り方ガイド｜地方・都道府県別の設置エリア"
     description = f"{page.name}のマンホール{count}枚を掲載。{page.intro}"
     if page.slug == "idolmaster":
         description = (f"アイマスのマンホール『ふたマス!!!!!!』{count}枚・{pref_count}都道府県の設置場所を一覧と地図で紹介。"
                        "アイドル名・住所・現地写真から行き先を探せます。高槻やよい、前川みく、姫崎莉波などの設置案内と公式チェックイン方法も掲載。")
+    if page.slug == "gundam":
+        description = (f"ガンダムマンホール{count}基・{pref_count}都道府県を、地方・都道府県・市町村の設置エリアから紹介する巡り方ガイド。"
+                       "設置場所の名前・住所・出典は全国の一覧・地図にまとめています。")
     canonical = BASE_URL + page.path
     event = event_for_page(page.slug, events)
     badge, event_section, event_active = event_html(event, now) if event else ("", "", False)
     hero_heading = "ふたマス一覧・設置場所マップ<br><small>アイマスのマンホールを探そう。</small>" if page.slug == "idolmaster" else f"{escape(page.name)}の<br>マンホールを探そう。"
+    if page.slug == "gundam":
+        hero_heading = "ガンダムマンホールを<br>巡る旅のガイド。"
     hero_note = "担当アイドルのふたを訪ねて、公式チェックインへ。" if event_active else "好きな作品を、次の旅の目的地に。"
     hero_cta = '<a class="cm-btn cm-btn--ghost" href="#check-in">チェックインの参加方法 →</a>' if event_active else ""
     # 全国一覧の作品カードと同じ色・同じ字の蓋を掲げ、2種類のページを同じ図鑑に見せる
@@ -299,6 +340,17 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
         f'<div class="cw-spots">{"".join(spot_html(r, event, event_active) for r in rows)}</div></section>'
         for (pref, city), rows in groups.items()
     )
+    locations_heading = ('ふたマス（アイマス）一覧・アイドル別の設置場所' if page.slug == 'idolmaster'
+                         else escape(page.name) + 'のマンホール一覧')
+    if page.slug == "gundam":
+        # 1基ずつの一覧は gmanhole_map.html が持つ。ここでは地方→県→市町村の要約だけにして、
+        # 「一覧・設置場所」の検索をマップと取り合わない
+        locations_heading = "地方・都道府県別の設置エリア"
+        locations_html = gundam_areas_html(groups)
+    jump_label = {"idolmaster": "アイドル・設置場所を探す", "gundam": "設置エリアを見る"}.get(page.slug, "設置場所を探す")
+    locations_cta = (f'<a class="cm-btn cm-btn--soft" href="{ASSET_BASE}gmanhole_map.html">全国の一覧・地図を見る →</a>'
+                     if page.slug == "gundam" else
+                     f'<a class="cm-btn cm-btn--soft" href="{escape(map_href(page.map_query))}">作品の全国地図を見る →</a>')
     related_html = "".join(f'<a href="../{other.slug}/">{escape("ふたマス（アイマス）の設置場所" if other.slug == "idolmaster" else other.name)}</a>' for other in related if other.slug != page.slug)
     faq = [
         (page.question, page.answer),
@@ -337,10 +389,24 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
             if safe_url(record.get("user_photo_url")):
                 place["image"] = safe_url(record["user_photo_url"])
             item["item"] = place
+    if page.slug == "gundam":
+        # 1基ずつの一覧を持たないので CollectionPage / ItemList にしない（一覧はマップ側）
+        schema = {"@context": "https://schema.org", "@graph": [
+            {"@type": "WebPage", "@id": canonical, "url": canonical, "name": title, "description": description, "inLanguage": "ja",
+             "about": {"@type": "Thing", "name": "ガンダムマンホール"},
+             "relatedLink": BASE_URL + "gmanhole_map.html"},
+            {"@type": "BreadcrumbList", "itemListElement": [
+                {"@type": "ListItem", "position": 1, "name": "ポケふた図鑑", "item": BASE_URL},
+                {"@type": "ListItem", "position": 2, "name": "キャラクターマンホール全国一覧", "item": BASE_URL + "character_manholes.html"},
+                {"@type": "ListItem", "position": 3, "name": page.name, "item": canonical},
+            ]},
+        ]}
     analytics = {"page_path": "/" + page.path, "site_type": "map", "page_type": "lp_character_work", "work": page.slug}
     map_count = sum(has_coordinates(r) for r in selected)
     map_note = f"地図のピンは座標確認済みの{map_count}枚。" if map_count != count else ""
     map_section = map_assets = map_cta = ""
+    if page.slug == "gundam":
+        map_cta = f'<a class="cm-btn cm-btn--ghost" href="{ASSET_BASE}gmanhole_map.html">ガンダムマンホール一覧・地図 →</a>'
     if page.slug == "idolmaster":
         map_cta = '<a class="cm-btn cm-btn--ghost" href="#location-map">ふたマスの地図を見る ↓</a>'
         points = [{"lat": r["lat"], "lng": r["lng"], "name": str(r.get("character") or r.get("title") or "マンホール"),
@@ -380,15 +446,15 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
     <section class="cm-hero{' cw-hero--photo' if hero_photo else ''}" aria-labelledby="work-heading">
       <div class="cw-hero-copy"><p class="cm-eyebrow">CHARACTER MANHOLE GUIDE / {escape(page.name)}</p>{badge}
         <h1 id="work-heading">{hero_heading}</h1><p class="cm-hero-lead">{hero_note}</p>
-        <p>{escape(page.intro)}</p><div class="cm-jump"><a class="cm-btn" href="#locations">{"アイドル・設置場所" if page.slug == "idolmaster" else "設置場所"}を探す ↓</a>{map_cta}{hero_cta}</div>
+        <p>{escape(page.intro)}</p><div class="cm-jump"><a class="cm-btn" href="#locations">{jump_label} ↓</a>{map_cta}{hero_cta}</div>
         <p class="cm-hero-note">掲載 {count}枚 / {pref_count}都道府県　{map_note}</p>
       </div>
       {hero_visual}
     </section>
     {map_section}
     <section class="cm-section" id="locations" aria-labelledby="locations-heading">
-      <div class="cm-section-head"><h2 id="locations-heading"><span aria-hidden="true">FIND YOUR FAVORITE</span>{'ふたマス（アイマス）一覧・アイドル別の設置場所' if page.slug == 'idolmaster' else escape(page.name) + 'のマンホール一覧'}</h2>
-        <a class="cm-btn cm-btn--soft" href="{escape(map_href(page.map_query))}">作品の全国地図を見る →</a></div>
+      <div class="cm-section-head"><h2 id="locations-heading"><span aria-hidden="true">FIND YOUR FAVORITE</span>{locations_heading}</h2>
+        {locations_cta}</div>
       <p class="cm-lead">{escape(page.guide)}</p>{index_block}
       {locations_html}
     </section>

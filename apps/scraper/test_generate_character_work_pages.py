@@ -64,20 +64,41 @@ class GundamGuideTest(unittest.TestCase):
     def setUp(self) -> None:
         self.html = generate_html(GUNDAM, gundam_work_records(GUNDAM_RECORDS), {})
 
-    def test_title_targets_the_gundam_manhole_query(self) -> None:
-        self.assertIn("<title>ガンダムマンホール一覧｜設置場所・地図</title>", self.html)
+    def test_title_leaves_the_list_query_to_the_map(self) -> None:
+        self.assertIn("<title>ガンダムマンホールの巡り方ガイド｜地方・都道府県別の設置エリア</title>", self.html)
+        # 一覧・地図の検索語は gmanhole_map.html に寄せる。ヒーローからパラメータ無しのURLへ送る
+        self.assertIn('href="../../gmanhole_map.html">ガンダムマンホール一覧・地図 →</a>', self.html)
 
-    def test_lists_only_active_spots_with_the_official_source(self) -> None:
-        self.assertEqual(1, self.html.count('class="cw-spot"'))
-        self.assertIn('href="https://www.g-manhole.net/about/detail.php?id=1"', self.html)
+    def test_summarises_areas_instead_of_listing_each_spot(self) -> None:
+        # 1基ずつの一覧（名称・住所・出典）は gmanhole_map.html だけが持つ
+        self.assertNotIn('class="cw-spot"', self.html)
+        self.assertNotIn("豊富町観光情報センター", self.html)
         self.assertNotIn("壊れた行", self.html)
+        self.assertIn("<h3>北海道・東北 <small>1都道府県</small></h3>", self.html)
+        self.assertIn("<strong>北海道</strong> <small>1基</small>", self.html)
+        self.assertIn("<span>豊富町</span>", self.html)
+        self.assertIn('gmanhole_map.html?work=gundam&amp;pref=%E5%8C%97%E6%B5%B7%E9%81%93', self.html)
+
+    def test_page_does_not_claim_to_be_a_list(self) -> None:
+        self.assertIn('<h1 id="work-heading">ガンダムマンホールを<br>巡る旅のガイド。</h1>', self.html)
+        self.assertNotIn("マンホール一覧</h2>", self.html)
+        schema = json.loads(re.search(r'<script type="application/ld\+json">(.*?)</script>', self.html).group(1))
+        types = [node["@type"] for node in schema["@graph"]]
+        self.assertEqual(["WebPage", "BreadcrumbList"], types)
+
+    def test_equal_counts_per_city_are_explained_only_when_true(self) -> None:
+        records = gundam_work_records([
+            {**GUNDAM_RECORDS[0], "id": "a"}, {**GUNDAM_RECORDS[0], "id": "b"},
+            {**GUNDAM_RECORDS[0], "id": "c", "city": "稚内市"}, {**GUNDAM_RECORDS[0], "id": "d", "city": "稚内市"},
+        ])
+        self.assertIn("どの市町村にも2基ずつ", generate_html(GUNDAM, records, {}))
+        records.append({**records[0], "id": "e", "city": "天塩町"})
+        uneven = generate_html(GUNDAM, records, {})
+        self.assertNotIn("基ずつ", uneven)
+        self.assertIn("天塩町（1基）", uneven)  # 基数がそろわないときだけ市町村ごとに出す
 
     def test_does_not_hotlink_images_from_the_source_site(self) -> None:
         self.assertNotIn("img_manhole1.png", self.html)
-
-    def test_place_name_is_not_repeated_as_the_location_line(self) -> None:
-        self.assertEqual(1, self.html.count("豊富町観光情報センター</h4>"))
-        self.assertNotIn('<p class="cw-location">豊富町観光情報センター</p>', self.html)
 
     def test_skips_the_character_index_when_there_are_no_characters(self) -> None:
         self.assertNotIn('class="cw-index"', self.html)
@@ -90,7 +111,7 @@ class GundamGuideTest(unittest.TestCase):
 
     def test_hero_uses_the_gundam_lid_and_generic_cta(self) -> None:
         self.assertIn('style="--c:#0044aa" aria-hidden="true">G</span>', self.html)
-        self.assertIn(">設置場所を探す ↓</a>", self.html)
+        self.assertIn(">設置エリアを見る ↓</a>", self.html)
         self.assertNotIn("アイドル・設置場所", self.html)
 
 
