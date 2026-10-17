@@ -8843,18 +8843,22 @@
   },
   {
     "prefecture": "沖縄県",
-    "manhole_count": 17,
-    "municipality_count": 16,
+    "manhole_count": 21,
+    "municipality_count": 20,
     "municipalities": [
       "うるま",
       "久米島",
+      "北大東",
       "北谷",
       "南城",
       "名護",
+      "国頭",
+      "大宜味",
       "宜野湾",
       "宮古島",
       "座間味",
       "本部",
+      "東",
       "沖縄",
       "浦添",
       "渡嘉敷",
@@ -8877,6 +8881,10 @@
         "manhole_count": 1
       },
       {
+        "municipality": "北大東",
+        "manhole_count": 1
+      },
+      {
         "municipality": "北谷",
         "manhole_count": 1
       },
@@ -8886,6 +8894,14 @@
       },
       {
         "municipality": "名護",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "国頭",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "大宜味",
         "manhole_count": 1
       },
       {
@@ -8902,6 +8918,10 @@
       },
       {
         "municipality": "本部",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "東",
         "manhole_count": 1
       },
       {
@@ -8936,8 +8956,8 @@
         "pokemon": [
           "ガーディ"
         ],
-        "cover_count": 5,
-        "coverage_percent": 29.4
+        "cover_count": 9,
+        "coverage_percent": 42.9
       },
       {
         "id": "ウインディ",
@@ -8946,7 +8966,7 @@
           "ウインディ"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.9
+        "coverage_percent": 4.8
       },
       {
         "id": "ウデッポウ",
@@ -8955,7 +8975,7 @@
           "ウデッポウ"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.9
+        "coverage_percent": 4.8
       },
       {
         "id": "エモンガ",
@@ -8964,7 +8984,7 @@
           "エモンガ"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.9
+        "coverage_percent": 4.8
       },
       {
         "id": "カイオーガ",
@@ -8973,7 +8993,7 @@
           "カイオーガ"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.9
+        "coverage_percent": 4.8
       },
       {
         "id": "カメール",
@@ -8982,7 +9002,7 @@
           "カメール"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.9
+        "coverage_percent": 4.8
       },
       {
         "id": "キバゴ",
@@ -8991,7 +9011,16 @@
           "キバゴ"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.9
+        "coverage_percent": 4.8
+      },
+      {
+        "id": "グレッグル",
+        "label": "グレッグル",
+        "pokemon": [
+          "グレッグル"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 4.8
       },
       {
         "id": "ケンタロス",
@@ -9000,7 +9029,7 @@
           "ケンタロス"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.9
+        "coverage_percent": 4.8
       },
       {
         "id": "サニーゴ",
@@ -9009,7 +9038,7 @@
           "サニーゴ"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.9
+        "coverage_percent": 4.8
       },
       {
         "id": "ザングース",
@@ -9018,7 +9047,7 @@
           "ザングース"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.9
+        "coverage_percent": 4.8
       },
       {
         "id": "ジャラコ",
@@ -9027,7 +9056,7 @@
           "ジャラコ"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.9
+        "coverage_percent": 4.8
       },
       {
         "id": "スナバァ",
@@ -9036,7 +9065,16 @@
           "スナバァ"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.9
+        "coverage_percent": 4.8
+      },
+      {
+        "id": "ソルガレオ",
+        "label": "ソルガレオ",
+        "pokemon": [
+          "ソルガレオ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 4.8
       },
       {
         "id": "ソルロック",
@@ -9045,7 +9083,7 @@
           "ソルロック"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.9
+        "coverage_percent": 4.8
       },
       {
         "id": "ツツケラ",
@@ -9054,7 +9092,7 @@
           "ツツケラ"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.9
+        "coverage_percent": 4.8
       },
       {
         "id": "テッポウオ",
@@ -9063,7 +9101,16 @@
           "テッポウオ"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.9
+        "coverage_percent": 4.8
+      },
+      {
+        "id": "ニョロトノ",
+        "label": "ニョロトノ",
+        "pokemon": [
+          "ニョロトノ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 4.8
       },
       {
         "id": "ハブネーク",
@@ -9072,7 +9119,7 @@
           "ハブネーク"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.9
+        "coverage_percent": 4.8
       },
       {
         "id": "バチンキー",
@@ -9081,7 +9128,7 @@
           "バチンキー"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.9
+        "coverage_percent": 4.8
       },
       {
         "id": "ホエルオー",
@@ -9090,7 +9137,7 @@
           "ホエルオー"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.9
+        "coverage_percent": 4.8
       },
       {
         "id": "ホエルコ",
@@ -9099,7 +9146,7 @@
           "ホエルコ"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.9
+        "coverage_percent": 4.8
       },
       {
         "id": "ポポッコ",
@@ -9108,7 +9155,7 @@
           "ポポッコ"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.9
+        "coverage_percent": 4.8
       },
       {
         "id": "マンタイン",
@@ -9117,7 +9164,7 @@
           "マンタイン"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.9
+        "coverage_percent": 4.8
       },
       {
         "id": "ヤトウモリ",
@@ -9126,7 +9173,16 @@
           "ヤトウモリ"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.9
+        "coverage_percent": 4.8
+      },
+      {
+        "id": "ヤヤコマ",
+        "label": "ヤヤコマ",
+        "pokemon": [
+          "ヤヤコマ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 4.8
       },
       {
         "id": "ラブカス",
@@ -9135,7 +9191,7 @@
           "ラブカス"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.9
+        "coverage_percent": 4.8
       },
       {
         "id": "ラランテス",
@@ -9144,7 +9200,16 @@
           "ラランテス"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.9
+        "coverage_percent": 4.8
+      },
+      {
+        "id": "ルナアーラ",
+        "label": "ルナアーラ",
+        "pokemon": [
+          "ルナアーラ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 4.8
       },
       {
         "id": "ルリリ",
@@ -9153,7 +9218,7 @@
           "ルリリ"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.9
+        "coverage_percent": 4.8
       }
     ],
     "trivia": [
@@ -9169,7 +9234,7 @@
       {
         "id": "沖縄県-top-pokemon",
         "type": "top_pokemon",
-        "text": "最も多く登場するのはガーディで、5枚に描かれています",
+        "text": "最も多く登場するのはガーディで、9枚に描かれています",
         "source_type": "dataset"
       }
     ]
