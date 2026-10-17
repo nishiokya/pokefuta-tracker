@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import re
 import sys
 from collections import Counter, defaultdict
 from datetime import datetime
@@ -240,6 +241,17 @@ def spot_html(record: dict, event: dict | None, event_active: bool) -> str:
     </article>"""
 
 
+def work_area(records: list[dict]) -> str:
+    """設置場所が1つの市（区は市にまとめる）か1つの県に収まるなら、その名前。title に地名を入れる。"""
+    cities = {re.sub(r"^(.+?市).+区$", r"\1", str(r.get("city") or "")) for r in records}
+    prefs = {str(r.get("prefecture") or "") for r in records}
+    if len(cities) == 1 and "" not in cities:
+        return cities.pop()
+    if len(prefs) == 1 and "" not in prefs:
+        return prefs.pop()
+    return ""
+
+
 def gundam_areas_html(groups: dict[tuple[str, str], list[dict]]) -> str:
     """ガンダムガイドの設置エリア。地方→都道府県→市町村（基数）だけを並べ、1基ずつの一覧はマップへ送る。"""
     by_pref: dict[str, list[tuple[str, int]]] = defaultdict(list)
@@ -280,7 +292,9 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
     now = now or datetime.now(JST)
     count = len(selected)
     pref_count = len({r.get("prefecture") for r in selected if r.get("prefecture")})
-    title = f"{page.search_name}マンホール一覧｜設置場所・地図"
+    area = work_area(selected)
+    title = (f"{page.search_name}のマンホール一覧・地図｜{area}の設置場所マップ" if area
+             else f"{page.search_name}のマンホール一覧・地図｜設置場所マップ")
     if page.slug == "idolmaster":
         title = "ふたマス一覧・設置場所マップ｜アイマスのマンホール写真と地図"
     if page.slug == "gundam":
@@ -407,21 +421,29 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
     map_section = map_assets = map_cta = ""
     if page.slug == "gundam":
         map_cta = f'<a class="cm-btn cm-btn--ghost" href="{ASSET_BASE}gmanhole_map.html">ガンダムマンホール一覧・地図 →</a>'
-    if page.slug == "idolmaster":
-        map_cta = '<a class="cm-btn cm-btn--ghost" href="#location-map">ふたマスの地図を見る ↓</a>'
+    # 「〜 マンホール 地図／マップ」で検索されるので、ページ内に設置場所の地図を置く。
+    # ガンダムは1基ずつの地図・一覧を gmanhole_map.html が持つので置かない
+    if page.slug != "gundam" and map_count:
+        idolmaster = page.slug == "idolmaster"
+        label = "ふたマス" if idolmaster else f"{page.name}のマンホール"
+        lead = (f"アイマスのマンホール{map_count}枚を地図に表示。ピンを選ぶとアイドル名と住所が開き、設置場所の詳しい案内へ進めます。"
+                if idolmaster else
+                f"{page.name}のマンホール{map_count}枚を地図に表示。ピンを選ぶと名前と住所が開き、下の設置場所の案内へ進めます。")
+        map_cta = f'<a class="cm-btn cm-btn--ghost" href="#location-map">{escape(label)}の地図を見る ↓</a>'
         points = [{"lat": r["lat"], "lng": r["lng"], "name": str(r.get("character") or r.get("title") or "マンホール"),
+                   "alt": str(r.get("character") or r.get("title") or "マンホール") + ("のふたマス" if idolmaster else f"（{page.name}のマンホール）"),
                    "address": str(r.get("address") or ""), "anchor": spot_id(r)} for r in selected if has_coordinates(r)]
         map_section = f'''<section class="cm-section" id="location-map" aria-labelledby="map-heading">
-          <div class="cm-section-head"><h2 id="map-heading">ふたマスの設置場所マップ</h2><a class="cm-btn cm-btn--soft" href="{escape(map_href(page.map_query))}">大きな地図で見る →</a></div>
-          <p class="cm-lead">アイマスのマンホール{map_count}枚を地図に表示。ピンを選ぶとアイドル名と住所が開き、設置場所の詳しい案内へ進めます。{map_note}</p>
+          <div class="cm-section-head"><h2 id="map-heading">{escape(label)}の設置場所マップ</h2><a class="cm-btn cm-btn--soft" href="{escape(map_href(page.map_query))}">大きな地図で見る →</a></div>
+          <p class="cm-lead">{escape(lead)}{map_note}</p>
           <p id="cw-map-status" class="cw-note" role="status">地図を読み込み中です。表示されない場合は、下の設置場所一覧をご利用ください。</p>
-          <div id="cw-map" class="cw-map" role="region" aria-label="ふたマスの設置場所の地図"></div>
-          <noscript><p>地図の表示にはJavaScriptが必要です。<a href="#locations">ふたマスの設置場所一覧</a>から住所と地図リンクを確認できます。</p></noscript>
+          <div id="cw-map" class="cw-map" role="region" aria-label="{escape(label)}の設置場所の地図"></div>
+          <noscript><p>地図の表示にはJavaScriptが必要です。<a href="#locations">{escape(label)}の設置場所一覧</a>から住所と地図リンクを確認できます。</p></noscript>
           <script type="application/json" id="cw-map-data">{json_script(points)}</script>
         </section>'''
         map_assets = f'''<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
           <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-          <script defer src="{ASSET_BASE}assets/character-work-map.js?v=20261004a"></script>'''
+          <script defer src="{ASSET_BASE}assets/character-work-map.js?v=20261017a"></script>'''
     return f"""<!doctype html>
 <html lang="ja"><head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">

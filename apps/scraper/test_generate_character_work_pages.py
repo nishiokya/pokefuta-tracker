@@ -115,6 +115,42 @@ class GundamGuideTest(unittest.TestCase):
         self.assertNotIn("アイドル・設置場所", self.html)
 
 
+TOKAI = next(page for page in WORK_PAGES if page.slug == "tokai-onair")
+TOKAI_RECORDS = [
+    {"id": f"toa-{i}", "work": "東海オンエア", "title": f"東海オンエア{i}", "character": f"メンバー{i}",
+     "landmark": "竜美ヶ丘公園", "prefecture": "愛知県", "city": "岡崎市", "address": "愛知県岡崎市",
+     "lat": 34.95 + i / 100, "lng": 137.17, "status": "active"}
+    for i in range(2)
+]
+
+
+class OtherWorkPageTest(unittest.TestCase):
+    """アイマス・ガンダム以外の作品ページ。「〜 マンホール 地図／マップ」の検索に地図と地名で応える。"""
+
+    def setUp(self) -> None:
+        self.html = generate_html(TOKAI, TOKAI_RECORDS, {})
+
+    def test_title_names_the_city_and_the_map(self) -> None:
+        self.assertIn("<title>東海オンエアのマンホール一覧・地図｜岡崎市の設置場所マップ</title>", self.html)
+
+    def test_embeds_the_location_map_with_work_specific_labels(self) -> None:
+        self.assertIn('<h2 id="map-heading">東海オンエアのマンホールの設置場所マップ</h2>', self.html)
+        self.assertIn('character-work-map.js?v=20261017a', self.html)
+        payload = re.search(r'id="cw-map-data">(.*?)</script>', self.html).group(1)
+        points = json.loads(payload)
+        self.assertEqual(2, len(points))
+        self.assertEqual("メンバー0（東海オンエアのマンホール）", points[0]["alt"])
+        self.assertNotIn("ふたマス", self.html)
+
+    def test_area_merges_wards_into_the_city_and_falls_back_to_the_prefecture(self) -> None:
+        wards = [dict(TOKAI_RECORDS[0], city="静岡市葵区"), dict(TOKAI_RECORDS[1], city="静岡市清水区")]
+        self.assertIn("｜静岡市の設置場所マップ</title>", generate_html(TOKAI, wards, {}))
+        two_cities = [TOKAI_RECORDS[0], dict(TOKAI_RECORDS[1], city="豊田市")]
+        self.assertIn("｜愛知県の設置場所マップ</title>", generate_html(TOKAI, two_cities, {}))
+        two_prefs = [TOKAI_RECORDS[0], dict(TOKAI_RECORDS[1], prefecture="静岡県", city="浜松市")]
+        self.assertIn("<title>東海オンエアのマンホール一覧・地図｜設置場所マップ</title>", generate_html(TOKAI, two_prefs, {}))
+
+
 class WorkDefinitionsTest(unittest.TestCase):
     def test_idolmaster_brands_share_one_landing_page(self) -> None:
         self.assertIs(IDOLMASTER, page_for_work("アイドルマスター SideM"))
@@ -186,9 +222,10 @@ class IdolmasterPageTest(unittest.TestCase):
         self.assertEqual(1, sum('geo' in item['item'] for item in items))
 
     def test_empty_map_and_other_guides_keep_static_fallback(self) -> None:
+        # 座標が1つも無いなら空の地図は出さず、設置場所一覧だけにする
         html = generate_html(IDOLMASTER, [dict(RECORDS[0], lat=None)], {}, now=self.now)
-        self.assertIn('id="cw-map-data">[]</script>', html)
-        self.assertIn('<noscript>', html)
+        self.assertNotIn('id="cw-map"', html)
+        self.assertNotIn('character-work-map.js', html)
         self.assertIn('id="locations"', html)
         other = generate_html(GUNDAM, gundam_work_records(GUNDAM_RECORDS), {})
         self.assertNotIn('character-work-map.js', other)
