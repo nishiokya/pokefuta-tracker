@@ -1693,9 +1693,12 @@ def generate_html(
 
   <section class="page-section" aria-labelledby="pokemon-types">
     <h2 id="pokemon-types">{escape(strings["type_heading"])}</h2>
-    <div class="taxonomy-grid">
+    <details class="content-collapse">
+      <summary>{escape(enhancement["list_toggle"])}</summary>
+      <div class="taxonomy-grid">
 {type_html}
-    </div>
+      </div>
+    </details>
   </section>
 
   <section class="page-section" aria-labelledby="pokemon-generations">

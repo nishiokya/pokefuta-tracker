@@ -174,6 +174,13 @@ class SectionOrderAndCollapseTest(unittest.TestCase):
             html.index('id="pokemon-types"'), html.index('id="pokemon-list"')
         )
 
+    def test_type_section_is_collapsed_but_heading_stays_visible(self) -> None:
+        html = self.html
+        type_section = html[html.index('id="pokemon-types"'):html.index('id="pokemon-generations"')]
+        details_at = type_section.index('<details class="content-collapse">')
+        self.assertLess(details_at, type_section.index('class="taxonomy-grid"'))
+        self.assertNotIn("<details open", type_section)
+
     def test_full_pokemon_list_is_collapsed_compact_links_not_photo_cards(self) -> None:
         html = self.html
         list_section = html[html.index('id="pokemon-list"'):html.index('id="pokemon-faq"')]
