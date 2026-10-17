@@ -3483,13 +3483,16 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
       </ul>
     </section>"""
 
-    # 市区町村ランキングとポケふた旅はヘッダーに無く、日本語のページしか無い
+    # 市区町村ランキング・ポケふた旅・特集はヘッダーに無く、日本語のページしか無い。
+    # 特集は highlight_until を過ぎると上の入口が消えるので、一覧への導線はここに常に置く
     related_html = (
         '<p class="summary-related">市区町村ごとの数は'
         '<a class="summary-link" href="/municipalities/" data-summary-event="summary_related_click" '
         'data-destination-hub="municipalities">市区町村ランキング</a>、1日で回れるエリアと回る順番は'
         '<a class="summary-link" href="/trip/" data-summary-event="summary_related_click" '
-        'data-destination-hub="trip">ポケふた旅</a>で見られます。</p>'
+        'data-destination-hub="trip">ポケふた旅</a>、新しいポケふたやテーマのまとめは'
+        '<a class="summary-link" href="/features/" data-summary-event="summary_related_click" '
+        'data-destination-hub="features">ポケふた特集</a>で見られます。</p>'
         if pref_key == "ja" else ""
     )
 

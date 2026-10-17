@@ -26,6 +26,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_FEATURES_DIR = ROOT / "dataset" / "features"
 FEATURES_BASE = "/features/"
+_OPTIONAL_TEXT_KEYS = ("prefecture", "kicker", "lead", "description")
 _SLUG_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 _DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 JST = timezone(timedelta(hours=9))
@@ -51,7 +52,19 @@ def _valid(entry: object, name: str) -> bool:
         and (entry.get("highlight_until") is None
              or (isinstance(entry["highlight_until"], str) and bool(_DATE_RE.match(entry["highlight_until"]))))
         and isinstance(entry.get("manholes"), list) and bool(entry["manholes"])
-        and all(isinstance(m, dict) and str(m.get("id", "")).strip() for m in entry["manholes"])
+        and all(
+            isinstance(m, dict) and isinstance(m.get("id"), (str, int)) and str(m["id"]).strip()
+            and isinstance(m.get("note", ""), str)
+            for m in entry["manholes"]
+        )
+        # 任意の項目も型が違えば飛ばす（そのまま描くとデプロイが TypeError で止まる）
+        and all(isinstance(entry.get(key, ""), str) for key in _OPTIONAL_TEXT_KEYS)
+        and isinstance(entry.get("links", []), list)
+        and all(
+            isinstance(link, dict) and isinstance(link.get("text"), str)
+            and isinstance(link.get("href"), str) and isinstance(link.get("external", False), bool)
+            for link in entry.get("links", [])
+        )
     )
 
 

@@ -61,6 +61,23 @@ class LoadFeaturesTests(unittest.TestCase):
             loaded = FEATURES.load_features(RECORDS, d, today=date(2026, 10, 17))
         self.assertEqual(loaded, [])
 
+    def test_skips_wrong_types_in_optional_fields(self) -> None:
+        """書き間違いでデプロイが止まらないよう、任意の項目も型が違えば特集ごと飛ばす。"""
+        broken = [
+            _feature("links-int", links=1),
+            _feature("links-item", links=["/prefectures/okinawa/"]),
+            _feature("link-href", links=[{"text": "県", "href": 1}]),
+            _feature("prefecture-list", prefecture=["沖縄県"]),
+            _feature("lead-number", lead=1),
+            _feature("note-list", manholes=[{"id": "488", "note": ["西海岸"]}]),
+        ]
+        with tempfile.TemporaryDirectory() as tmp:
+            d = _write(Path(tmp), *broken, _feature("ok"))
+            loaded = FEATURES.load_features(RECORDS, d, today=date(2026, 10, 17))
+            self.assertEqual([f["slug"] for f in loaded], ["ok"])
+            # 残った特集はページまで描ける
+            MODULE.generate_all(list(RECORDS.values()), {}, Path(tmp) / "dist", d)
+
     def test_highlight_ends_after_its_day(self) -> None:
         features = [_feature()]
         self.assertEqual(len(FEATURES.highlighted(features, date(2027, 1, 31))), 1)
@@ -119,6 +136,17 @@ class SummaryAndSitemapTests(unittest.TestCase):
         self.assertIn('href="/features/okinawa-test/"', ja)
         self.assertIn("2026年10月下旬頃に設置予定。", ja)
         self.assertEqual(SUMMARY._build_features_section(SUMMARY.SUMMARY_STRINGS["en"], [feature], {}), "")
+
+    def test_summary_always_links_to_the_feature_index(self) -> None:
+        """highlight_until を過ぎて入口が消えても、/features/ への導線は ja の /summary/ に残す。"""
+        records = SUMMARY.load_records(SUMMARY.NDJSON)
+        stats = SUMMARY.build_stats(records)
+        by_id = {str(r["id"]): r for r in records}
+        ja = SUMMARY.render_page(SUMMARY.SUMMARY_STRINGS["ja"], stats, {}, {}, by_id, {}, {})
+        self.assertIn('href="/features/"', ja)
+        self.assertNotIn('class="summary-section summary-feature"', ja)
+        en = SUMMARY.render_page(SUMMARY.SUMMARY_STRINGS["en"], stats, {}, {}, by_id, {}, {})
+        self.assertNotIn('href="/features/"', en)
 
     def test_sitemap_lists_features(self) -> None:
         xml = SITEMAP.build_sitemap(["1"], feature_paths=["/features/okinawa-test/"])
