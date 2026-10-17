@@ -28,6 +28,9 @@ on:
       - 'dataset/visit_durations.json' # measured visit times, built by apps/tools/build_visit_durations.py
       - 'apps/scraper/generate_trip_pages.py' # /trip/ feature page + per-area trip pages
       - 'dataset/trip_areas.json' # hand-registered trip areas (manhole id sets)
+      - 'apps/scraper/features.py' # /features/ data loader (shared with summary + sitemap)
+      - 'apps/scraper/generate_feature_pages.py' # /features/ index + per-feature pages
+      - 'dataset/features/**' # hand-written features, one JSON per feature
       - 'apps/scraper/municipalities.py' # which municipalities get a page (shared with prefecture/detail/sitemap)
       - 'dataset/municipality_slugs.json' # romanized municipality URL slugs
       - 'dataset/prefecture_municipality_totals.json' # municipality count per prefecture (coverage denominator)
@@ -122,6 +125,7 @@ jobs:
             apps.scraper.test_visit_durations \
             apps.scraper.test_build_visit_durations \
             apps.scraper.test_generate_trip_pages \
+            apps.scraper.test_generate_feature_pages \
             apps.scraper.test_prefectures \
             apps.scraper.test_web_prefecture_links \
             apps.scraper.test_inject_site_header \
@@ -159,6 +163,8 @@ jobs:
           python3 apps/scraper/generate_municipality_pages.py
           echo "[dist] Generate trip pages (/trip/)"
           python3 apps/scraper/generate_trip_pages.py
+          echo "[dist] Generate feature pages (/features/)"
+          python3 apps/scraper/generate_feature_pages.py
           echo "[dist] Test theme (tag) metadata and landing page generation"
           python3 -m unittest \
             apps.scraper.test_tag_meta \

@@ -25,6 +25,7 @@ from display_names import compose_display_name  # noqa: E402
 from site_terms import format_count  # noqa: E402
 from tag_meta import load_tag_meta  # noqa: E402
 import summary_faq  # noqa: E402
+import features as summary_features_data  # noqa: E402
 
 # テーマページを持つタグ（dataset/tag_meta.json が正）。
 # 旅のテーマカードから一覧ページへ送るために使う。
@@ -717,6 +718,91 @@ _CSS = """\
       font-size: .8rem;
     }
 
+    .summary-feature-kicker {
+      display: inline-block;
+      margin-bottom: 6px;
+      padding: 2px 10px;
+      border-radius: 999px;
+      background: #a85b2e;
+      color: #fff;
+      font-size: .75rem;
+      font-weight: 800;
+    }
+
+    .summary-feature-lead {
+      margin: 0 0 12px;
+    }
+
+    .summary-feature-grid {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+      gap: 10px;
+    }
+
+    .summary-feature-card {
+      padding: 12px 14px;
+      border: 1px solid rgba(93, 67, 35, .16);
+      border-left: 4px solid #a85b2e;
+      border-radius: 10px;
+      background: #fffdf7;
+    }
+
+    .summary-feature-place {
+      color: #14544f;
+      font-size: 1.05rem;
+      font-weight: 850;
+    }
+
+    .summary-feature-pokemon {
+      margin: 4px 0 6px;
+      font-weight: 750;
+    }
+
+    .summary-feature-pokemon a {
+      color: inherit;
+    }
+
+    .summary-feature-status {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #176f68;
+      color: #fff;
+      font-size: .72rem;
+      font-weight: 700;
+    }
+
+    .summary-feature-status.is-upcoming {
+      background: #a85b2e;
+    }
+
+    .summary-feature-note {
+      margin: 6px 0 0;
+      color: #574b41;
+      font-size: .875rem;
+    }
+
+    .summary-feature-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 16px;
+      margin: 12px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .summary-feature-links {
+      align-items: center;
+    }
+
+    .summary-feature-links a:not(.summary-action) {
+      color: #176f68;
+      font-weight: 850;
+    }
+
     .summary-table-wrap {
       overflow-x: auto;
       border: 1px solid rgba(93, 67, 35, .16);
@@ -837,7 +923,7 @@ _CSS = """\
 
     .discovery-hub-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
       gap: 12px;
       margin-top: 14px;
     }
@@ -1798,6 +1884,72 @@ def _build_events_section(s: dict, events: list[dict], tr) -> str:
         f'\n      <ul class="summary-event-list">{"".join(items)}</ul>'
         f'\n    </section>\n'
     )
+
+
+def _build_features_section(s: dict, features: list[dict], pokemon_metadata: dict) -> str:
+    """highlight_until 中の特集（dataset/features/）を、特集ページへの入口として出す。"""
+    # 文面を日本語で手書きしているので ja だけに出す
+    if s.get("pref_key") != "ja" or not features:
+        return ""
+    map_base = s["map_base_href"]
+    blocks = []
+    for feature in features:
+        feature_id = str(feature["slug"])
+        feature_href = summary_features_data.feature_path(feature)
+        cards = []
+        for item, record in zip(feature["manholes"], feature["records"]):
+            mid = str(record.get("id", ""))
+            pokemons = []
+            for name in record.get("pokemons", []):
+                slug = (pokemon_metadata.get(name) or {}).get("slug", "")
+                pokemons.append(
+                    f'<a href="{_pokemon_lp_url(map_base, slug)}">{escape(name)}</a>'
+                    if slug else escape(name)
+                )
+            place = compose_display_name(record) or record.get("title", mid)
+            if record.get("installed", True):
+                status_html = '<span class="summary-feature-status">設置済み</span>'
+            else:
+                note = str(record.get("installation_note") or "設置予定")
+                status_html = (
+                    '<span class="summary-feature-status is-upcoming">'
+                    f'{escape(note)}</span>'
+                )
+            detail_href = f'/manholes/{quote(mid, safe="")}/'
+            cards.append(
+                f'<li class="summary-feature-card">'
+                f'<a class="summary-feature-place" href="{detail_href}"'
+                f' data-summary-event="summary_feature_detail_click"'
+                f' data-content-type="feature_detail" data-content-id="{_escape_attr(feature_id)}"'
+                f' data-destination-hub="manhole_detail">{escape(place)}</a>'
+                f'<p class="summary-feature-pokemon">{"・".join(pokemons)}</p>'
+                f'{status_html}'
+                + (f'<p class="summary-feature-note">{escape(str(item["note"]))}</p>' if item.get("note") else "")
+                + '</li>'
+            )
+        links = (
+            f'<li><a class="summary-action" href="{_escape_attr(feature_href)}"'
+            f' data-summary-event="summary_feature_page_click"'
+            f' data-content-id="{_escape_attr(feature_id)}">特集を読む</a></li>'
+        ) + "".join(
+            f'<li><a href="{_escape_attr(link["href"])}"'
+            + (' target="_blank" rel="noopener noreferrer"' if link.get("external") else "")
+            + f' data-summary-event="summary_feature_link_click"'
+            f' data-content-id="{_escape_attr(feature_id)}">{escape(str(link["text"]))}</a></li>'
+            for link in summary_features_data.safe_links(feature)
+        )
+        heading_id = f"feature-{feature_id}-heading"
+        blocks.append(
+            f'\n    <section class="summary-section summary-feature" id="feature-{_escape_attr(feature_id)}"'
+            f' aria-labelledby="{_escape_attr(heading_id)}">'
+            + (f'\n      <span class="summary-feature-kicker">{escape(str(feature["kicker"]))}</span>' if feature.get("kicker") else "")
+            + f'\n      <h2 id="{_escape_attr(heading_id)}">{escape(str(feature["title"]))}</h2>'
+            + (f'\n      <p class="summary-feature-lead">{escape(str(feature["lead"]))}</p>' if feature.get("lead") else "")
+            + f'\n      <ul class="summary-feature-grid">{"".join(cards)}</ul>'
+            + f'\n      <ul class="summary-feature-links">{links}</ul>'
+            + '\n    </section>\n'
+        )
+    return "".join(blocks)
 
 
 def _build_discovery_section(s: dict, stats: dict, tr) -> str:
@@ -3242,7 +3394,7 @@ def _hero_faq_html(s: dict, item: summary_faq.FaqItem) -> str:
     )
 
 
-def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, records_by_id: dict, photos_data: dict, pokemon_metadata: dict, gundam_spots: list[dict] | None = None, prefecture_events: list[dict] | None = None, faq_items: list[summary_faq.FaqItem] | None = None) -> str:
+def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, records_by_id: dict, photos_data: dict, pokemon_metadata: dict, gundam_spots: list[dict] | None = None, prefecture_events: list[dict] | None = None, faq_items: list[summary_faq.FaqItem] | None = None, summary_features: list[dict] | None = None) -> str:
     pref_key = s["pref_key"]
 
     def tr(ja_name: str) -> str:
@@ -3259,6 +3411,7 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
 
     ai_html = _build_ai_summary(s, stats, tr)
     events_html = _build_events_section(s, prefecture_events or [], tr)
+    features_html = _build_features_section(s, summary_features or [], pokemon_metadata)
     discovery_html = _build_discovery_section(s, stats, tr)
     daily_fact_html, fact_list_html = _build_fact_sections(s, stats, tr)
     faq_ld_html = ""
@@ -3404,6 +3557,7 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
       {daily_fact_html}
     </header>
     {fact_list_html}
+    {features_html}
     {events_html}
     {discovery_hubs_html}
     {prefecture_html}
@@ -3494,6 +3648,14 @@ def main() -> None:
     )
     print(f"[INFO] {len(faq_items)} FAQ items for the Japanese summary")
     print(f"[INFO] {len(prefecture_events)} active prefecture events")
+    # 件数の母数（load_page_records）は設置前を外しているが、新作の特集は設置前の蓋こそ載せたい
+    summary_features = summary_features_data.highlighted(
+        summary_features_data.load_features({
+            str(r.get("id", "")): r for r in load_records(NDJSON)
+            if r.get("status", "active") == "active"
+        })
+    )
+    print(f"[INFO] {len(summary_features)} highlighted features")
 
     for lang, s in SUMMARY_STRINGS.items():
         html = render_page(
@@ -3502,6 +3664,7 @@ def main() -> None:
             gundam_spots=gundam_spots,
             prefecture_events=prefecture_events,
             faq_items=faq_items,
+            summary_features=summary_features,
         )
         out = DIST / s["out_path"]
         out.parent.mkdir(parents=True, exist_ok=True)
