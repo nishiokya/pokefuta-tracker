@@ -422,9 +422,14 @@ class GeneratedHtmlTest(unittest.TestCase):
         self.assertIn("ポケふた特集", block)
         self.assertIn('href="features/okinawa-test/"', block)
         self.assertIn('href="features/"', block)
+        hero = _block(Fixture(self.tmp, features=[feature]).html(), "hero")
+        self.assertEqual(hero.count('class="home-hero-feature"'), 1)
+        self.assertLess(hero.index('class="home-quick"'), hero.index('class="home-hero-feature"'))
+        self.assertIn("surface:'top_hero'", hero)
         # 帯の期間が終わっても、特集一覧への導線は残す
         later = _block(Fixture(self.tmp, features=[feature]).html(date(2026, 11, 1)), "newrelease")
         self.assertNotIn('href="features/okinawa-test/"', later)
+        self.assertNotIn("home-hero-feature", _block(Fixture(self.tmp, features=[feature]).html(date(2026, 11, 1)), "hero"))
         self.assertIn('href="features/"', later)
 
     def test_popular_pokemon_follow_the_pokemon_page_index(self) -> None:

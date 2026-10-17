@@ -636,6 +636,15 @@ def render_hero(data: TopData) -> str:
         f'onclick="{_track("click_search_way", surface="top_hero_quick", way=way, destination=dest)}">{escape(label)}</a>'
         for way, dest, href, label, cls in quick
     )
+    # 新作特集の告知（highlight_until 中の最新1本だけ）。スマホの最初の画面に入るよう、ボタンの直下に1行で
+    current = highlighted(data.features, data.today)[:1]
+    feature_html = "".join(
+        f'<a class="home-hero-feature" href="{escape(feature_path(f).lstrip("/"))}" '
+        f'onclick="{_track("click_feature", surface="top_hero", feature=f["slug"], position=0)}">'
+        f'<span class="home-feature__kicker">{escape(f.get("kicker") or "特集")}</span>'
+        f'<b>{escape(f["title"])}</b></a>'
+        for f in current
+    )
     names = "・".join(top_pokemon)
     lead = (
         f"ポケふた（ポケモンマンホール）は、全国{len(data.installed_prefectures)}都道府県に"
@@ -675,6 +684,7 @@ def render_hero(data: TopData) -> str:
         f'<h1 class="home-h1" id="home-h1">全国{data.total:,}枚のポケふたを、<wbr>地図と一覧から探す</h1>'
         f'<p class="home-lead">{lead}</p>'
         f'<nav class="home-quick" aria-label="主な探し方">{quick_html}</nav>'
+        f"{feature_html}"
         f'<dl class="home-stats">{stats_html}</dl>'
         "</div>"
         f"{map_html}"

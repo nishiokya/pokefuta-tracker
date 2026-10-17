@@ -310,6 +310,25 @@
 
 .home-newrel__card b { font-size: 13.5px; color: var(--top-text); }
 
+/* ヒーローの探し方ボタン直下の1行告知（特集の highlight_until 中だけ） */
+.home-hero-feature {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: var(--top-text);
+  min-width: 0;
+}
+
+.home-hero-feature b {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.home-hero-feature b::after { content: " →"; color: var(--top-purple); }
+
 /* 新作の特集（/features/）への帯。新作カードの上に置く */
 .home-feature {
   display: flex;
