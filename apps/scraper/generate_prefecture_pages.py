@@ -258,7 +258,14 @@ def load_design_posts(path: Path) -> dict[str, list[dict]]:
     return by_pref
 
 
-def _design_manhole_section(prefecture: str, posts: list[dict] | None) -> str:
+def _with_campaign(url: str, slug: str) -> str:
+    """写真館への URL に流入元（from=data&pref=<県>）を足す。既存のクエリ・フラグメントは残す。"""
+    base, hash_mark, fragment = url.partition("#")
+    joiner = "&" if "?" in base else "?"
+    return f"{base}{joiner}{_campaign_params(slug)}{hash_mark}{fragment}"
+
+
+def _design_manhole_section(prefecture: str, slug: str, posts: list[dict] | None) -> str:
     """この県で見つかったデザインマンホール。写真館の投稿へのリンク（図鑑に個別ページは作らない）。"""
     if not posts:
         return ""
@@ -268,7 +275,7 @@ def _design_manhole_section(prefecture: str, posts: list[dict] | None) -> str:
         place = post["city"] or prefecture
         cards.append(
             f'<article class="photo-card">'
-            f'<a class="photo-card-image" href="{_escape_attr(post["source_url"])}" '
+            f'<a class="photo-card-image" href="{_escape_attr(_with_campaign(post["source_url"], slug))}" '
             f'data-track="prefecture_design_manhole_click" data-position="{position}" '
             f'data-destination="design_manhole" data-content-id="{_escape_attr(post["id"])}" '
             f'data-surface="design_manholes">'
@@ -289,7 +296,7 @@ def _design_manhole_section(prefecture: str, posts: list[dict] | None) -> str:
         <p>ポケふた以外のご当地デザインマンホールも、写真館にみんなが投稿しています。{more}</p>
       </div>
       <div class="photo-showcase-grid">{"".join(cards)}</div>
-      <p><a class="inline-link" href="{DESIGN_STUDIO_LIST_URL}" data-track="prefecture_design_manhole_click"
+      <p><a class="inline-link" href="{_escape_attr(_with_campaign(DESIGN_STUDIO_LIST_URL, slug))}" data-track="prefecture_design_manhole_click"
         data-destination="design_manholes_list" data-surface="design_manholes">みんなのデザインマンホールを写真館で見る</a></p>
     </section>
 """
@@ -2440,7 +2447,7 @@ def build_page(
     trivia_html = _trivia_html(prefecture, trivia_entry, count)
     events_html = _events_html(events)
     related_html = _related_prefectures(prefecture, empty_prefectures)
-    design_html = _design_manhole_section(prefecture, design_posts)
+    design_html = _design_manhole_section(prefecture, slug, design_posts)
     duration_html = _visit_duration_html(prefecture, records, durations)
     municipality_guide_html = (
         duration_html

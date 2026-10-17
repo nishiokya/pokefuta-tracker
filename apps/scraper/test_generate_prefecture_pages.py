@@ -1449,9 +1449,11 @@ class DesignManholeSectionTest(unittest.TestCase):
         self.assertTrue(all(post["photo_url"].endswith("?size=small") for post in self.posts["愛知県"]))
 
     def test_section_links_each_post_to_the_studio_and_escapes_titles(self) -> None:
-        html = MODULE._design_manhole_section("愛知県", self.posts["愛知県"])
+        html = MODULE._design_manhole_section("愛知県", "aichi", self.posts["愛知県"])
         self.assertIn("愛知県で見つかったデザインマンホール</h2>", html)
-        self.assertIn('href="https://pokefuta.com/design-manholes/a"', html)
+        # 写真館への他のリンクと同じく、図鑑のどの県から来たかを渡す
+        self.assertIn('href="https://pokefuta.com/design-manholes/a?from=data&amp;pref=aichi"', html)
+        self.assertIn('href="https://pokefuta.com/design-manholes?from=data&amp;pref=aichi"', html)
         self.assertIn("<strong>鯱&lt;b&gt;</strong><small>名古屋市北区</small>", html)
         # タイトルの無い投稿は「デザインマンホール」、市町村の無い投稿は県名で出す
         self.assertIn("<strong>デザインマンホール</strong><small>愛知県</small>", html)
@@ -1459,10 +1461,14 @@ class DesignManholeSectionTest(unittest.TestCase):
         self.assertNotIn("evil.example", html)
         self.assertNotIn("javascript:", html)
 
+    def test_campaign_params_keep_existing_query_and_fragment(self) -> None:
+        self.assertEqual("https://pokefuta.com/x?a=1&from=data&pref=aichi#top",
+                         MODULE._with_campaign("https://pokefuta.com/x?a=1#top", "aichi"))
+
     def test_section_is_omitted_without_posts_and_caps_the_count(self) -> None:
-        self.assertEqual("", MODULE._design_manhole_section("愛知県", []))
+        self.assertEqual("", MODULE._design_manhole_section("愛知県", "aichi", []))
         many = [dict(self.posts["愛知県"][0], id=str(i)) for i in range(MODULE.DESIGN_SHOWCASE_LIMIT + 3)]
-        html = MODULE._design_manhole_section("愛知県", many)
+        html = MODULE._design_manhole_section("愛知県", "aichi", many)
         self.assertEqual(MODULE.DESIGN_SHOWCASE_LIMIT, html.count('class="photo-card"'))
         self.assertIn(f"{MODULE.DESIGN_SHOWCASE_LIMIT + 3}枚のうち新しい{MODULE.DESIGN_SHOWCASE_LIMIT}枚", html)
 
