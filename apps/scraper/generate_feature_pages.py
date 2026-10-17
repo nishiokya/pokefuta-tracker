@@ -52,7 +52,15 @@ FEATURE_CSS = """
     .feature-news { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
     .feature-news a { font-weight: 800; }
     .feature-news small { display: block; margin-top: 2px; color: #75685c; font-size: .8rem; }
-    .feature-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: 10px; }
+    /* 一覧は縦1列（新しい順に上から読む）。PC は左に日付・見出し・枚数、右に蓋の写真を並べた行にする */
+    .feature-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
+    @media (min-width: 700px) {
+      .feature-card { grid-template-columns: minmax(0, 1fr) auto; column-gap: 16px; align-items: center; padding: 14px 18px; }
+      .feature-card > :not(.stop-thumbs) { grid-column: 1; }
+      .feature-card .stop-thumbs { grid-column: 2; grid-row: 1 / span 3; }
+      .feature-card .stop-thumbs img { width: 40px; height: 40px; }
+      .feature-card .feature-title { font-size: 1.05rem; }
+    }
     .feature-card { display: grid; align-content: start; gap: 4px; padding: 12px 14px; border-radius: 14px; background: #fffaf0;
       border: 1px solid #ece4d7; color: inherit; text-decoration: none; }
     .feature-card .feature-meta { color: #75685c; font-size: .75rem; }
