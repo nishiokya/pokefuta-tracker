@@ -516,61 +516,6 @@
     }
   },
   {
-    "id": "photo-471-c41f8f80",
-    "type": "latest_photo",
-    "title": "最新写真：石川県/志賀町",
-    "url": "https://data.pokefuta.com/manholes/471/",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "latest_photo",
-    "source": "photos",
-    "raw_data": {
-      "manhole_id": "471",
-      "title": "石川県/志賀町",
-      "pref": "石川県",
-      "city": "志賀",
-      "pokemon": "カイデン",
-      "pokemon_list": [
-        "カイデン",
-        "サクラビス"
-      ],
-      "created_at": "2026-10-11T12:02:24.870717+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/bcef6cda-29c2-42b8-9b51-c356bfca9549.jpg",
-      "display_name": "いろはす",
-      "photo_rank": "first_ever"
-    }
-  },
-  {
-    "id": "photo-472-646d88b3",
-    "type": "latest_photo",
-    "title": "最新写真：石川県/穴水町",
-    "url": "https://data.pokefuta.com/manholes/472/",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "latest_photo",
-    "source": "photos",
-    "raw_data": {
-      "manhole_id": "472",
-      "title": "石川県/穴水町",
-      "pref": "石川県",
-      "city": "穴水",
-      "pokemon": "カビゴン",
-      "pokemon_list": [
-        "カビゴン",
-        "プラスル",
-        "マイナン"
-      ],
-      "created_at": "2026-10-11T12:02:47.958988+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/8140c298-a5fc-4f78-aa34-eef106469951.jpg",
-      "display_name": "いろはす",
-      "photo_rank": "first_ever"
-    }
-  },
-  {
     "id": "photo-351-e7bee5b0",
     "type": "latest_photo",
     "title": "最新写真：静岡県/伊豆市",
@@ -818,10 +763,10 @@
     }
   },
   {
-    "id": "photo-5-4ba8d159",
+    "id": "photo-469-4ade81f9",
     "type": "latest_photo",
-    "title": "最新写真：鹿児島県/指宿市",
-    "url": "https://data.pokefuta.com/manholes/5/",
+    "title": "最新写真：石川県/輪島市",
+    "url": "https://data.pokefuta.com/manholes/469/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -829,17 +774,72 @@
     "imageType": "latest_photo",
     "source": "photos",
     "raw_data": {
-      "manhole_id": "5",
-      "title": "鹿児島県/指宿市",
-      "pref": "鹿児島県",
-      "city": "指宿",
-      "pokemon": "エーフィ",
+      "manhole_id": "469",
+      "title": "石川県/輪島市",
+      "pref": "石川県",
+      "city": "輪島",
+      "pokemon": "ゲッコウガ",
       "pokemon_list": [
-        "エーフィ"
+        "ゲッコウガ",
+        "ダルマッカ"
       ],
-      "created_at": "2026-10-11T07:36:17.855426+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/a07d7c5c-fa91-4221-ad6f-0f3ff637975b.jpg",
-      "display_name": "Felix Wong",
+      "created_at": "2026-10-11T12:03:32.533612+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/1f89310d-c26f-43e4-bab6-273a84a3d4e4.jpg",
+      "display_name": "いろはす",
+      "photo_rank": "recent"
+    }
+  },
+  {
+    "id": "photo-195-4631f2de",
+    "type": "latest_photo",
+    "title": "最新写真：岡山県/倉敷市",
+    "url": "https://data.pokefuta.com/manholes/195/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "195",
+      "title": "岡山県/倉敷市",
+      "pref": "岡山県",
+      "city": "倉敷",
+      "pokemon": "アゲハント",
+      "pokemon_list": [
+        "アゲハント",
+        "ポチエナ"
+      ],
+      "created_at": "2026-10-11T23:00:19.741883+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/825e7e5e-2b05-4fd9-89f5-f918fd4f463f.jpg",
+      "display_name": "ぴぃ",
+      "photo_rank": "recent"
+    }
+  },
+  {
+    "id": "photo-277-c26d9f7d",
+    "type": "latest_photo",
+    "title": "最新写真：富山県/富山市",
+    "url": "https://data.pokefuta.com/manholes/277/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "277",
+      "title": "富山県/富山市",
+      "pref": "富山県",
+      "city": "富山",
+      "pokemon": "キュワワー",
+      "pokemon_list": [
+        "キュワワー",
+        "レディバ"
+      ],
+      "created_at": "2026-10-12T10:07:13.208326+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/b0b04ccc-fcf3-42fa-89c7-2aa4f0ac752a.jpg",
+      "display_name": "いろはす",
       "photo_rank": "recent"
     }
   },
