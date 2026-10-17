@@ -264,19 +264,22 @@ def gundam_areas_html(groups: dict[tuple[str, str], list[dict]]) -> str:
         name = city or "市町村未記録"
         return name if same_count else f"{name}（{n}基）"
 
-    sections = []
-    for region, prefs in REGIONS:
-        present = [p for p in prefs if p in by_pref]
-        if not present:
-            continue
-        items = "".join(
-            f'<li><a href="{escape(map_href(GUNDAM_WORK_QUERY, pref))}"><strong>{escape(pref)}</strong> '
-            f'<small>{sum(n for _, n in by_pref[pref])}基</small></a>'
-            f'<span>{escape("・".join(city_label(city, n) for city, n in by_pref[pref]))}</span></li>'
-            for pref in present
-        )
-        sections.append(f'<section class="cw-city"><h3>{escape(region)} <small>{len(present)}都道府県</small></h3>'
-                        f'<ul class="cw-areas">{items}</ul></section>')
+    def pref_item(pref: str) -> str:
+        heading = f'<strong>{escape(pref)}</strong> <small>{sum(n for _, n in by_pref[pref])}基</small>'
+        # 都道府県が分からない行は地図の県絞り込みに渡せないので、リンクにしない
+        if pref in PREFECTURE_ORDER:
+            heading = f'<a href="{escape(map_href(GUNDAM_WORK_QUERY, pref))}">{heading}</a>'
+        return f'<li>{heading}<span>{escape("・".join(city_label(city, n) for city, n in by_pref[pref]))}</span></li>'
+
+    # 地方に属さない県名（都道府県未記録など）も件数には入っているので、黙って落とさず最後にまとめる
+    known = {pref for _, prefs in REGIONS for pref in prefs}
+    areas = [(region, [p for p in prefs if p in by_pref]) for region, prefs in REGIONS]
+    areas.append(("地方未確認", [p for p in by_pref if p not in known]))
+    sections = [
+        f'<section class="cw-city"><h3>{escape(region)} <small>{len(present)}都道府県</small></h3>'
+        f'<ul class="cw-areas">{"".join(pref_item(pref) for pref in present)}</ul></section>'
+        for region, present in areas if present
+    ]
     pair_note = (f'<p class="cm-lead">掲載データでは、どの市町村にも{next(iter(counts))}基ずつ設置されています。'
                  '同じ市町村の蓋をまとめて回る計画を立てやすい作品です。</p>') if same_count else ""
     return pair_note + "".join(sections)
@@ -368,6 +371,12 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
         (page.question, page.answer),
         ("掲載されているマンホールがすべてですか？", "掲載データに収録した設置場所の一覧です。全国すべての設置状況を網羅するものではありません。移設・撤去や施設の開放時間は、訪問前に出典の案内をご確認ください。"),
     ]
+    if page.slug == "gundam":
+        # ガンダムのガイドは一覧ではなく設置エリアの要約なので、一覧の場所を案内する
+        faq[1] = ("掲載されているマンホールがすべてですか？",
+                  "このガイドは、掲載データに収録した設置場所を地方・都道府県・市町村ごとにまとめたものです。"
+                  "1基ずつの名称・住所・出典は「ガンダムマンホール一覧・地図」に載せています。"
+                  "全国すべての設置状況を網羅するものではありません。移設・撤去や施設の開放時間は、訪問前に出典の案内をご確認ください。")
     if page.slug == "idolmaster":
         faq.append(("フタマスとふたマスは同じものですか？", "フタマスと検索されることもありますが、公式名称は『ふたマス!!!!!!』です。"))
         places = "、".join(pref + city for pref, city in groups)
