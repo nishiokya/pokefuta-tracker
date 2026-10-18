@@ -153,6 +153,21 @@ class FeaturePageTests(unittest.TestCase):
         self.assertNotIn("timeline-heading", plain)
         self.assertNotIn("news-heading", plain)
 
+    def test_index_thumbs_keep_lids_without_photos_and_plus_only_counts_overflow(self) -> None:
+        """写真の無い蓋は灰色の丸で並べ、「+n」は6枚を超えた分だけにする（5枚で「+2」と出ないように）。"""
+        with tempfile.TemporaryDirectory() as tmp:
+            image_dir = Path(tmp)
+            (image_dir / "1_latest.jpeg").write_bytes(b"x")
+            five = [_record(str(i), "国頭") for i in range(1, 6)]
+            html = MODULE._thumbs_html(five, image_dir)
+            self.assertEqual(html.count("<img"), 1)
+            self.assertEqual(html.count("feature-thumb-empty"), 4)
+            self.assertNotIn("stop-thumb-more", html)
+            nine = [_record(str(i), "国頭") for i in range(1, 10)]
+            html = MODULE._thumbs_html(nine, image_dir)
+            self.assertEqual(html.count("<img") + html.count("feature-thumb-empty"), 6)
+            self.assertIn('title="ほか3枚">+3</span>', html)
+
     def test_generate_all_writes_index_and_pages(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             d = Path(tmp) / "src"

@@ -58,11 +58,13 @@ FEATURE_CSS = """
       .feature-card { grid-template-columns: minmax(0, 1fr) auto; column-gap: 16px; align-items: center; padding: 14px 18px; }
       .feature-card > :not(.stop-thumbs) { grid-column: 1; }
       .feature-card .stop-thumbs { grid-column: 2; grid-row: 1 / span 3; }
-      .feature-card .stop-thumbs img { width: 40px; height: 40px; }
+      .feature-card .stop-thumbs img, .feature-card .feature-thumb-empty { width: 40px; height: 40px; }
       .feature-card .feature-title { font-size: 1.05rem; }
     }
     .feature-card { display: grid; align-content: start; gap: 4px; padding: 12px 14px; border-radius: 14px; background: #fffaf0;
       border: 1px solid #ece4d7; color: inherit; text-decoration: none; }
+    .feature-thumb-empty { display: inline-block; width: 32px; height: 32px; border-radius: 50%;
+      background: repeating-linear-gradient(135deg, #ece4d7 0 6px, #f6f0e6 6px 12px); }
     .feature-card .feature-meta { color: #75685c; font-size: .75rem; }
     .feature-card .feature-title { font-weight: 850; }
     .feature-card small { color: #62564a; font-size: .82rem; }
@@ -89,6 +91,31 @@ def _format_date(value: str) -> str:
 def _feature_date(feature: dict) -> str:
     """特集の日付の表示。日まで分からない回は date_text（例「2018年12月」）を使う。"""
     return feature.get("date_text") or _format_date(feature["published"])
+
+
+THUMB_LIMIT = 6
+
+
+def _thumbs_html(records: list[dict], image_dir: Path = IMAGE_DIR) -> str:
+    """一覧の蓋の丸い画像。並べた順に最大6枚、写真の無い蓋は灰色の丸で置き、6枚を超えた分だけ「+n」。
+
+    以前は写真のある蓋だけを並べて残りを「+n」にしていたので、5枚の特集で「+2」と出て
+    （写真の無い2枚の意味だった）分かりにくかった。
+    """
+    if not records:
+        return ""
+    items = []
+    for record in records[:THUMB_LIMIT]:
+        url = pref.tile_image_url(str(record.get("id", "")), image_dir)
+        items.append(
+            f'<img src="{_escape_attr(url)}" alt="" width="40" height="40" loading="lazy" decoding="async">'
+            if url else '<span class="feature-thumb-empty" aria-hidden="true"></span>'
+        )
+    rest = len(records) - THUMB_LIMIT
+    more = (
+        f'<span class="stop-thumb-more" title="ほか{rest}枚">+{rest}</span>' if rest > 0 else ""
+    )
+    return f'<span class="stop-thumbs">{"".join(items)}{more}</span>'
 
 
 def _status_html(record: dict) -> str:
@@ -328,7 +355,7 @@ def build_index_page(features: list[dict]) -> str:
             f'data-surface="feature_index" data-destination="{_escape_attr(feature["slug"])}">'
             f'<span class="feature-meta">{escape(meta)}</span>'
             f'<span class="feature-title">{escape(feature["title"])}</span>'
-            f'{muni_page.stop_thumbs_html(records, len(records), IMAGE_DIR)}'
+            f'{_thumbs_html(records)}'
             f'<small>ポケふた{len(records)}枚</small></a>'
         )
 
