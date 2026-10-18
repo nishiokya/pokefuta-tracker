@@ -1,0 +1,1296 @@
+{
+ "_comment": "訳した県ページ（/en/prefectures/）の自治体名。県 → municipality_label() の表記 → 言語。下書きは OpenStreetMap（Nominatim）の英語名で、長音記号は付けない",
+ "北海道": {
+  "えりも町": {
+   "en": "Erimo"
+  },
+  "三笠市": {
+   "en": "Mikasa"
+  },
+  "上ノ国町": {
+   "en": "Kaminokuni"
+  },
+  "上富良野町": {
+   "en": "Kamifurano"
+  },
+  "中標津町": {
+   "en": "Nakashibetsu"
+  },
+  "函館市": {
+   "en": "Hakodate"
+  },
+  "別海町": {
+   "en": "Betsukai"
+  },
+  "剣淵町": {
+   "en": "Kenbuchi"
+  },
+  "北見市": {
+   "en": "Kitami"
+  },
+  "厚沢部町": {
+   "en": "Assabu"
+  },
+  "士別市": {
+   "en": "Shibetsu"
+  },
+  "大空町": {
+   "en": "Ozora"
+  },
+  "天塩町": {
+   "en": "Teshio"
+  },
+  "室蘭市": {
+   "en": "Muroran"
+  },
+  "小樽市": {
+   "en": "Otaru"
+  },
+  "帯広市": {
+   "en": "Obihiro"
+  },
+  "幌延町": {
+   "en": "Horonobe"
+  },
+  "当別町": {
+   "en": "Tobetsu"
+  },
+  "恵庭市": {
+   "en": "Eniwa"
+  },
+  "斜里町": {
+   "en": "Shari"
+  },
+  "新得町": {
+   "en": "Shintoku"
+  },
+  "旭川市": {
+   "en": "Asahikawa"
+  },
+  "木古内町": {
+   "en": "Kikonai"
+  },
+  "本別町": {
+   "en": "Honbetsu"
+  },
+  "札幌市": {
+   "en": "Sapporo"
+  },
+  "東川町": {
+   "en": "Higashikawa"
+  },
+  "根室市": {
+   "en": "Nemuro"
+  },
+  "森町": {
+   "en": "Mori"
+  },
+  "歌志内市": {
+   "en": "Utashinai"
+  },
+  "比布町": {
+   "en": "Pippu"
+  },
+  "洞爺湖町": {
+   "en": "Toyako"
+  },
+  "津別町": {
+   "en": "Tsubetsu"
+  },
+  "湧別町": {
+   "en": "Yubetsu"
+  },
+  "猿払村": {
+   "en": "Sarufutsu"
+  },
+  "由仁町": {
+   "en": "Yuni"
+  },
+  "登別市": {
+   "en": "Noboribetsu"
+  },
+  "石狩市": {
+   "en": "Ishikari"
+  },
+  "砂川市": {
+   "en": "Sunagawa"
+  },
+  "稚内市": {
+   "en": "Wakkanai"
+  },
+  "紋別市": {
+   "en": "Monbetsu"
+  },
+  "網走市": {
+   "en": "Abashiri"
+  },
+  "美幌町": {
+   "en": "Bihoro"
+  },
+  "美瑛町": {
+   "en": "Biei"
+  },
+  "苫小牧市": {
+   "en": "Tomakomai"
+  },
+  "豊富町": {
+   "en": "Toyotomi"
+  },
+  "赤井川村": {
+   "en": "Akaigawa"
+  },
+  "足寄町": {
+   "en": "Ashoro"
+  },
+  "遠軽町": {
+   "en": "Engaru"
+  },
+  "釧路市": {
+   "en": "Kushiro"
+  },
+  "陸別町": {
+   "en": "Rikubetsu"
+  }
+ },
+ "青森県": {
+  "八戸市": {
+   "en": "Hachinohe"
+  },
+  "階上町": {
+   "en": "Hashikami"
+  }
+ },
+ "岩手県": {
+  "一戸町": {
+   "en": "Ichinohe"
+  },
+  "一関市": {
+   "en": "Ichinoseki"
+  },
+  "久慈市": {
+   "en": "Kuji"
+  },
+  "九戸村": {
+   "en": "Kunohe"
+  },
+  "二戸市": {
+   "en": "Ninohe"
+  },
+  "住田町": {
+   "en": "Sumita"
+  },
+  "八幡平市": {
+   "en": "Hachimantai"
+  },
+  "北上市": {
+   "en": "Kitakami"
+  },
+  "大槌町": {
+   "en": "Otsuchi"
+  },
+  "大船渡市": {
+   "en": "Ofunato"
+  },
+  "奥州市": {
+   "en": "Oshu"
+  },
+  "宮古市": {
+   "en": "Miyako"
+  },
+  "山田町": {
+   "en": "Yamada"
+  },
+  "岩手町": {
+   "en": "Iwate"
+  },
+  "岩泉町": {
+   "en": "Iwaizumi"
+  },
+  "平泉町": {
+   "en": "Hiraizumi"
+  },
+  "普代村": {
+   "en": "Fudai"
+  },
+  "洋野町": {
+   "en": "Hirono"
+  },
+  "滝沢市": {
+   "en": "Takizawa"
+  },
+  "田野畑村": {
+   "en": "Tanohata"
+  },
+  "盛岡市": {
+   "en": "Morioka"
+  },
+  "矢巾町": {
+   "en": "Yahaba"
+  },
+  "紫波町": {
+   "en": "Shiwa"
+  },
+  "花巻市": {
+   "en": "Hanamaki"
+  },
+  "葛巻町": {
+   "en": "Kuzumaki"
+  },
+  "西和賀町": {
+   "en": "Nishiwaga"
+  },
+  "軽米町": {
+   "en": "Karumai"
+  },
+  "遠野市": {
+   "en": "Tono"
+  },
+  "野田村": {
+   "en": "Noda"
+  },
+  "金ヶ崎": {
+   "en": "Kanegasaki"
+  },
+  "釜石市": {
+   "en": "Kamaishi"
+  },
+  "陸前高田市": {
+   "en": "Rikuzen-Takata"
+  },
+  "雫石町": {
+   "en": "Shizukuishi"
+  }
+ },
+ "宮城県": {
+  "七ヶ宿町": {
+   "en": "Shichikashuku"
+  },
+  "七ヶ浜町": {
+   "en": "Shichigahama"
+  },
+  "丸森町": {
+   "en": "Marumori"
+  },
+  "亘理町": {
+   "en": "Watari"
+  },
+  "仙台市": {
+   "en": "Sendai"
+  },
+  "利府町": {
+   "en": "Rifu"
+  },
+  "加美町": {
+   "en": "Kami"
+  },
+  "南三陸町": {
+   "en": "Minami-Sanriku"
+  },
+  "名取市": {
+   "en": "Natori"
+  },
+  "塩竈市": {
+   "en": "Shiogama"
+  },
+  "多賀城市": {
+   "en": "Tagajo"
+  },
+  "大和町": {
+   "en": "Taiwa"
+  },
+  "大崎市": {
+   "en": "Osaki"
+  },
+  "大河原町": {
+   "en": "Ogawara"
+  },
+  "大衡村": {
+   "en": "Ohira"
+  },
+  "大郷町": {
+   "en": "Osato"
+  },
+  "女川町": {
+   "en": "Onagawa"
+  },
+  "富谷市": {
+   "en": "Tomiya"
+  },
+  "山元町": {
+   "en": "Yamamoto"
+  },
+  "岩沼市": {
+   "en": "Iwanuma"
+  },
+  "川崎町": {
+   "en": "Kawasaki"
+  },
+  "村田町": {
+   "en": "Murata"
+  },
+  "東松島市": {
+   "en": "Higashimatsushima"
+  },
+  "松島町": {
+   "en": "Matsushima"
+  },
+  "柴田町": {
+   "en": "Shibata"
+  },
+  "栗原市": {
+   "en": "Kurihara"
+  },
+  "気仙沼市": {
+   "en": "Kesennuma"
+  },
+  "涌谷町": {
+   "en": "Wakuya"
+  },
+  "登米市": {
+   "en": "Tome"
+  },
+  "白石市": {
+   "en": "Shiroishi"
+  },
+  "石巻市": {
+   "en": "Ishinomaki"
+  },
+  "美里町": {
+   "en": "Misato"
+  },
+  "色麻町": {
+   "en": "Shikama"
+  },
+  "蔵王町": {
+   "en": "Zao"
+  },
+  "角田市": {
+   "en": "Kakuda"
+  }
+ },
+ "秋田県": {
+  "仙北市": {
+   "en": "Senboku"
+  },
+  "横手市": {
+   "en": "Yokote"
+  },
+  "男鹿市": {
+   "en": "Oga"
+  },
+  "秋田市": {
+   "en": "Akita"
+  },
+  "鹿角市": {
+   "en": "Kazuno"
+  }
+ },
+ "山形県": {
+  "大蔵村": {
+   "en": "Okura"
+  },
+  "寒河江市": {
+   "en": "Sagae"
+  },
+  "小国町": {
+   "en": "Oguni"
+  },
+  "山形市": {
+   "en": "Yamagata"
+  },
+  "鶴岡市": {
+   "en": "Tsuruoka"
+  }
+ },
+ "福島県": {
+  "いわき市": {
+   "en": "Iwaki"
+  },
+  "三春町": {
+   "en": "Miharu"
+  },
+  "下郷町": {
+   "en": "Shimogo"
+  },
+  "二本松市": {
+   "en": "Nihonmatsu"
+  },
+  "伊達市": {
+   "en": "Date"
+  },
+  "会津坂下町": {
+   "en": "Aizubange"
+  },
+  "会津美里町": {
+   "en": "Aizumisato"
+  },
+  "会津若松市": {
+   "en": "Aizuwakamatsu"
+  },
+  "北塩原村": {
+   "en": "Kitashiobara"
+  },
+  "南会津町": {
+   "en": "Minamiaizu"
+  },
+  "南相馬市": {
+   "en": "Minamisoma"
+  },
+  "双葉町": {
+   "en": "Futaba"
+  },
+  "古殿町": {
+   "en": "Furudono"
+  },
+  "国見町": {
+   "en": "Kunimi"
+  },
+  "大熊町": {
+   "en": "Okuma"
+  },
+  "天栄村": {
+   "en": "Ten-ei"
+  },
+  "小野町": {
+   "en": "Ono"
+  },
+  "川俣町": {
+   "en": "Kawamata"
+  },
+  "川内村": {
+   "en": "Kawauchi"
+  },
+  "平田村": {
+   "en": "Hirata"
+  },
+  "広野町": {
+   "en": "Hirono"
+  },
+  "新地町": {
+   "en": "Shinchi"
+  },
+  "昭和村": {
+   "en": "Showa"
+  },
+  "柳津町": {
+   "en": "Yanaizu"
+  },
+  "棚倉町": {
+   "en": "Tanagura"
+  },
+  "楢葉町": {
+   "en": "Naraha"
+  },
+  "泉崎村": {
+   "en": "Izumizaki"
+  },
+  "浅川町": {
+   "en": "Asakawa"
+  },
+  "浪江町": {
+   "en": "Namie"
+  },
+  "湯川村": {
+   "en": "Yugawa"
+  },
+  "猪苗代町": {
+   "en": "Inawashiro"
+  },
+  "田村市": {
+   "en": "Tamura"
+  },
+  "白河市": {
+   "en": "Shirakawa"
+  },
+  "相馬市": {
+   "en": "Soma"
+  },
+  "矢吹町": {
+   "en": "Yabuki"
+  },
+  "福島市": {
+   "en": "Fukushima"
+  },
+  "西会津町": {
+   "en": "Nishiaizu"
+  },
+  "西郷村": {
+   "en": "Nishigo"
+  },
+  "郡山市": {
+   "en": "Koriyama"
+  },
+  "鏡石町": {
+   "en": "Kagamiishi"
+  },
+  "須賀川市": {
+   "en": "Sukagawa"
+  },
+  "飯舘村": {
+   "en": "Iitate"
+  },
+  "鮫川村": {
+   "en": "Samegawa"
+  }
+ },
+ "茨城県": {
+  "つくば市": {
+   "en": "Tsukuba"
+  },
+  "常陸太田市": {
+   "en": "Hitachiota"
+  },
+  "水戸市": {
+   "en": "Mito"
+  },
+  "神栖市": {
+   "en": "Kamisu"
+  },
+  "筑西市": {
+   "en": "Chikusei"
+  }
+ },
+ "栃木県": {
+  "宇都宮市": {
+   "en": "Utsunomiya"
+  }
+ },
+ "埼玉県": {
+  "所沢市": {
+   "en": "Tokorozawa"
+  }
+ },
+ "千葉県": {
+  "香取市": {
+   "en": "Katori"
+  }
+ },
+ "東京都": {
+  "台東区上野": {
+   "en": "Ueno, Taito"
+  },
+  "小笠原村": {
+   "en": "Ogasawara"
+  },
+  "町田市": {
+   "en": "Machida"
+  },
+  "稲城市": {
+   "en": "Inagi"
+  }
+ },
+ "神奈川県": {
+  "横浜市": {
+   "en": "Yokohama"
+  }
+ },
+ "新潟県": {
+  "小千谷市": {
+   "en": "Ojiya"
+  }
+ },
+ "富山県": {
+  "富山市": {
+   "en": "Toyama"
+  }
+ },
+ "石川県": {
+  "七尾市": {
+   "en": "Nanao"
+  },
+  "志賀町": {
+   "en": "Shika"
+  },
+  "珠洲市": {
+   "en": "Suzu"
+  },
+  "穴水町": {
+   "en": "Anamizu"
+  },
+  "能登町": {
+   "en": "Noto"
+  },
+  "輪島市": {
+   "en": "Wajima"
+  },
+  "金沢市": {
+   "en": "Kanazawa"
+  }
+ },
+ "福井県": {
+  "あわら市": {
+   "en": "Awara"
+  },
+  "おおい町": {
+   "en": "Ohi"
+  },
+  "勝山市": {
+   "en": "Katsuyama"
+  },
+  "南越前町": {
+   "en": "Minami-Echizen"
+  },
+  "坂井市": {
+   "en": "Sakai"
+  },
+  "大野市": {
+   "en": "Ono"
+  },
+  "小浜市": {
+   "en": "Obama"
+  },
+  "敦賀市": {
+   "en": "Tsuruga"
+  },
+  "永平寺町": {
+   "en": "Eiheiji"
+  },
+  "池田町": {
+   "en": "Ikeda"
+  },
+  "福井市": {
+   "en": "Fukui"
+  },
+  "美浜町": {
+   "en": "Mihama"
+  },
+  "若狭町": {
+   "en": "Wakasa"
+  },
+  "越前市": {
+   "en": "Echizen"
+  },
+  "越前町": {
+   "en": "Echizen"
+  },
+  "高浜町": {
+   "en": "Takahama"
+  },
+  "鯖江市": {
+   "en": "Sabae"
+  }
+ },
+ "長野県": {
+  "伊那市": {
+   "en": "Ina"
+  },
+  "南牧村": {
+   "en": "Minamimaki"
+  },
+  "大町市": {
+   "en": "Omachi"
+  },
+  "山ノ内町": {
+   "en": "Yamanouchi"
+  },
+  "岡谷市": {
+   "en": "Okaya"
+  },
+  "木祖村": {
+   "en": "Kiso"
+  }
+ },
+ "岐阜県": {
+  "下呂市": {
+   "en": "Gero"
+  },
+  "各務原市": {
+   "en": "Kakamigahara"
+  },
+  "関ケ原町": {
+   "en": "Sekigahara"
+  },
+  "関市": {
+   "en": "Seki"
+  },
+  "高山市": {
+   "en": "Takayama"
+  }
+ },
+ "静岡県": {
+  "伊豆市": {
+   "en": "Izu"
+  },
+  "富士市": {
+   "en": "Fuji"
+  },
+  "沼津市": {
+   "en": "Numazu"
+  },
+  "浜松市": {
+   "en": "Hamamatsu"
+  },
+  "静岡市": {
+   "en": "Shizuoka"
+  }
+ },
+ "愛知県": {
+  "刈谷市": {
+   "en": "Kariya"
+  },
+  "名古屋市中区": {
+   "en": "Naka, Nagoya"
+  },
+  "常滑市": {
+   "en": "Tokoname"
+  },
+  "瀬戸市": {
+   "en": "Seto"
+  },
+  "西尾市": {
+   "en": "Nishio"
+  },
+  "豊橋市": {
+   "en": "Toyohashi"
+  }
+ },
+ "三重県": {
+  "いなべ市": {
+   "en": "Inabe"
+  },
+  "三重郡川越町": {
+   "en": "Kawagoe"
+  },
+  "三重郡朝日町": {
+   "en": "Asahi"
+  },
+  "三重郡菰野町": {
+   "en": "Komono"
+  },
+  "亀山市": {
+   "en": "Kameyama"
+  },
+  "伊勢市": {
+   "en": "Ise"
+  },
+  "伊賀市": {
+   "en": "Iga"
+  },
+  "北牟婁郡紀北町": {
+   "en": "Kihoku"
+  },
+  "南牟婁郡御浜町": {
+   "en": "Mihama"
+  },
+  "南牟婁郡紀宝町": {
+   "en": "Kiho"
+  },
+  "名張市": {
+   "en": "Nabari"
+  },
+  "員弁郡東員町": {
+   "en": "Toin"
+  },
+  "四日市市": {
+   "en": "Yokkaichi"
+  },
+  "多気郡多気町": {
+   "en": "Taki"
+  },
+  "多気郡大台町": {
+   "en": "Odai"
+  },
+  "多気郡明和町": {
+   "en": "Meiwa"
+  },
+  "尾鷲市": {
+   "en": "Owase"
+  },
+  "度会郡南伊勢町": {
+   "en": "Minamiise"
+  },
+  "度会郡大紀町": {
+   "en": "Taiki"
+  },
+  "度会郡度会町": {
+   "en": "Watarai"
+  },
+  "度会郡玉城町": {
+   "en": "Tamaki"
+  },
+  "志摩市": {
+   "en": "Shima"
+  },
+  "松阪市": {
+   "en": "Matsusaka"
+  },
+  "桑名市": {
+   "en": "Kuwana"
+  },
+  "桑名郡木曽岬町": {
+   "en": "Kisosaki"
+  },
+  "津市": {
+   "en": "Tsu"
+  },
+  "熊野市": {
+   "en": "Kumano"
+  },
+  "鈴鹿市": {
+   "en": "Suzuka"
+  },
+  "鳥羽市": {
+   "en": "Toba"
+  }
+ },
+ "滋賀県": {
+  "大津市": {
+   "en": "Otsu"
+  },
+  "甲賀市": {
+   "en": "Koka"
+  }
+ },
+ "京都府": {
+  "京都市": {
+   "en": "Kyoto"
+  },
+  "宇治市": {
+   "en": "Uji"
+  }
+ },
+ "大阪府": {
+  "東大阪市": {
+   "en": "Higashiosaka"
+  }
+ },
+ "兵庫県": {
+  "淡路市": {
+   "en": "Awaji"
+  }
+ },
+ "奈良県": {
+  "斑鳩町": {
+   "en": "Ikaruga"
+  }
+ },
+ "和歌山県": {
+  "串本町": {
+   "en": "Kushimoto"
+  },
+  "和歌山市": {
+   "en": "Wakayama"
+  },
+  "白浜町": {
+   "en": "Shirahama"
+  },
+  "那智勝浦町": {
+   "en": "Nachikatsuura"
+  },
+  "高野町": {
+   "en": "Koya"
+  }
+ },
+ "鳥取県": {
+  "三朝町": {
+   "en": "Misasa"
+  },
+  "伯耆町": {
+   "en": "Hoki"
+  },
+  "倉吉市": {
+   "en": "Kurayoshi"
+  },
+  "八頭町": {
+   "en": "Yazu"
+  },
+  "北栄町": {
+   "en": "Hokuei"
+  },
+  "南部町": {
+   "en": "Nanbu"
+  },
+  "境港市": {
+   "en": "Sakaiminato"
+  },
+  "大山町": {
+   "en": "Daisen"
+  },
+  "岩美町": {
+   "en": "Iwami"
+  },
+  "日南町": {
+   "en": "Nichinan"
+  },
+  "日吉津村": {
+   "en": "Hiezu"
+  },
+  "日野町": {
+   "en": "Hino"
+  },
+  "智頭町": {
+   "en": "Chizu"
+  },
+  "江府町": {
+   "en": "Kofu"
+  },
+  "湯梨浜町": {
+   "en": "Yurihama"
+  },
+  "琴浦町": {
+   "en": "Kotoura"
+  },
+  "米子市": {
+   "en": "Yonago"
+  },
+  "若桜町": {
+   "en": "Wakasa"
+  },
+  "鳥取市": {
+   "en": "Tottori"
+  }
+ },
+ "島根県": {
+  "出雲市": {
+   "en": "Izumo"
+  },
+  "大田市": {
+   "en": "Oda"
+  },
+  "安来市": {
+   "en": "Yasugi"
+  },
+  "浜田市": {
+   "en": "Hamada"
+  },
+  "隠岐の島町": {
+   "en": "Okinoshima"
+  }
+ },
+ "岡山県": {
+  "倉敷市": {
+   "en": "Kurashiki"
+  }
+ },
+ "山口県": {
+  "下関市": {
+   "en": "Shimonoseki"
+  }
+ },
+ "徳島県": {
+  "鳴門市": {
+   "en": "Naruto"
+  }
+ },
+ "香川県": {
+  "さぬき市": {
+   "en": "Sanuki"
+  },
+  "まんのう町": {
+   "en": "Manno"
+  },
+  "三木町": {
+   "en": "Miki"
+  },
+  "三豊市": {
+   "en": "Mitoyo"
+  },
+  "丸亀市": {
+   "en": "Marugame"
+  },
+  "善通寺市": {
+   "en": "Zentsuji"
+  },
+  "土庄町": {
+   "en": "Tonosho"
+  },
+  "坂出市": {
+   "en": "Sakaide"
+  },
+  "多度津町": {
+   "en": "Tadotsu"
+  },
+  "宇多津町": {
+   "en": "Utazu"
+  },
+  "小豆島町": {
+   "en": "Shodoshima"
+  },
+  "東かがわ市": {
+   "en": "Higashi-Kagawa"
+  },
+  "琴平町": {
+   "en": "Kotohira"
+  },
+  "直島町": {
+   "en": "Naoshima"
+  },
+  "綾川町": {
+   "en": "Ayagawa"
+  },
+  "観音寺市": {
+   "en": "Kanonji"
+  },
+  "高松市": {
+   "en": "Takamatsu"
+  }
+ },
+ "愛媛県": {
+  "松山市": {
+   "en": "Matsuyama"
+  }
+ },
+ "高知県": {
+  "三原村": {
+   "en": "Mihara"
+  },
+  "仁淀川町": {
+   "en": "Niyodogawa"
+  },
+  "土佐清水市": {
+   "en": "Tosashimizu"
+  },
+  "大月町": {
+   "en": "Otsuki"
+  },
+  "大豊町": {
+   "en": "Otoyo"
+  },
+  "奈半利町": {
+   "en": "Nahari"
+  },
+  "安田町": {
+   "en": "Yasuda"
+  },
+  "安芸市": {
+   "en": "Aki"
+  },
+  "室戸市": {
+   "en": "Muroto"
+  },
+  "宿毛市": {
+   "en": "Sukumo"
+  },
+  "日高村": {
+   "en": "Hidaka"
+  },
+  "本山町": {
+   "en": "Motoyama"
+  },
+  "東洋町": {
+   "en": "Toyo"
+  },
+  "津野町": {
+   "en": "Tsuno"
+  },
+  "須崎市": {
+   "en": "Susaki"
+  },
+  "香南市": {
+   "en": "Konan"
+  },
+  "香美市": {
+   "en": "Kami"
+  },
+  "高知市": {
+   "en": "Kochi"
+  }
+ },
+ "福岡県": {
+  "北九州市": {
+   "en": "Kitakyushu"
+  },
+  "太宰府市": {
+   "en": "Dazaifu"
+  }
+ },
+ "佐賀県": {
+  "佐賀市": {
+   "en": "Saga"
+  }
+ },
+ "長崎県": {
+  "五島市": {
+   "en": "Goto"
+  },
+  "佐々町": {
+   "en": "Saza"
+  },
+  "佐世保市": {
+   "en": "Sasebo"
+  },
+  "壱岐市": {
+   "en": "Iki"
+  },
+  "大村市": {
+   "en": "Omura"
+  },
+  "対馬市": {
+   "en": "Tsushima"
+  },
+  "島原市": {
+   "en": "Shimabara"
+  },
+  "新上五島町": {
+   "en": "Shinkamigoto"
+  },
+  "時津町": {
+   "en": "Togitsu"
+  },
+  "東彼杵町": {
+   "en": "Higashi-Sonogi"
+  },
+  "波佐見町": {
+   "en": "Hasami"
+  },
+  "西海市": {
+   "en": "Saikai"
+  },
+  "諫早市": {
+   "en": "Isahaya"
+  },
+  "長崎市": {
+   "en": "Nagasaki"
+  },
+  "雲仙市": {
+   "en": "Unzen"
+  }
+ },
+ "宮崎県": {
+  "えびの市": {
+   "en": "Ebino"
+  },
+  "三股町": {
+   "en": "Mimata"
+  },
+  "串間市": {
+   "en": "Kushima"
+  },
+  "五ヶ瀬町": {
+   "en": "Gokase"
+  },
+  "国富町": {
+   "en": "Kunitomi"
+  },
+  "宮崎市": {
+   "en": "Miyazaki"
+  },
+  "小林市": {
+   "en": "Kobayashi"
+  },
+  "川南町": {
+   "en": "Kawaminami"
+  },
+  "延岡市": {
+   "en": "Nobeoka"
+  },
+  "新富町": {
+   "en": "Shintomi"
+  },
+  "日之影町": {
+   "en": "Hinokage"
+  },
+  "日南市": {
+   "en": "Nichinan"
+  },
+  "日向市": {
+   "en": "Hyuga"
+  },
+  "木城町": {
+   "en": "Kijo"
+  },
+  "椎葉村": {
+   "en": "Shiiba"
+  },
+  "綾町": {
+   "en": "Aya"
+  },
+  "美郷町": {
+   "en": "Misato"
+  },
+  "西米良村": {
+   "en": "Nishimera"
+  },
+  "西都市": {
+   "en": "Saito"
+  },
+  "諸塚村": {
+   "en": "Morotsuka"
+  },
+  "都城市": {
+   "en": "Miyakonojo"
+  },
+  "都農町": {
+   "en": "Tsuno"
+  },
+  "門川町": {
+   "en": "Kadogawa"
+  },
+  "高千穂町": {
+   "en": "Takachiho"
+  },
+  "高原町": {
+   "en": "Takaharu"
+  },
+  "高鍋町": {
+   "en": "Takanabe"
+  }
+ },
+ "鹿児島県": {
+  "指宿市": {
+   "en": "Ibusuki"
+  }
+ },
+ "沖縄県": {
+  "うるま市": {
+   "en": "Uruma"
+  },
+  "久米島町": {
+   "en": "Kumejima"
+  },
+  "北大東村": {
+   "en": "Kitadaito"
+  },
+  "北谷町": {
+   "en": "Chatan"
+  },
+  "南城市": {
+   "en": "Nanjo"
+  },
+  "名護市": {
+   "en": "Nago"
+  },
+  "国頭村": {
+   "en": "Kunigami"
+  },
+  "大宜味村": {
+   "en": "Ogimi"
+  },
+  "宜野湾市": {
+   "en": "Ginowan"
+  },
+  "宮古島市": {
+   "en": "Miyakojima"
+  },
+  "座間味村": {
+   "en": "Zamami"
+  },
+  "本部町": {
+   "en": "Motobu"
+  },
+  "東村": {
+   "en": "Higashi"
+  },
+  "沖縄市": {
+   "en": "Okinawa"
+  },
+  "浦添市": {
+   "en": "Urasoe"
+  },
+  "渡嘉敷村": {
+   "en": "Tokashiki"
+  },
+  "石垣市": {
+   "en": "Ishigaki"
+  },
+  "糸満市": {
+   "en": "Itoman"
+  },
+  "豊見城市": {
+   "en": "Tomigusuku"
+  },
+  "那覇市": {
+   "en": "Naha"
+  }
+ }
+}

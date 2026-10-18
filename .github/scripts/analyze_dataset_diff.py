@@ -2,6 +2,14 @@
 """Compare two pokefuta NDJSON files and report change categories."""
 import json
 import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "apps" / "scraper"))
+from display_names import municipality_label  # noqa: E402
+from prefectures import PREFECTURE_PAGE_LANGS  # noqa: E402
+
+MUNICIPALITY_NAMES = ROOT / "dataset" / "municipality_names.json"
 
 TIMESTAMP_FIELDS = {"last_updated", "first_seen", "added_at"}
 CONTENT_FIELDS = {
@@ -54,6 +62,18 @@ def analyze(base_path, head_path):
     }, base, head
 
 
+def missing_municipality_names(records):
+    """訳した県ページ（/en/prefectures/）で自治体名が日本語のまま出てしまう新規レコード。"""
+    names = json.loads(MUNICIPALITY_NAMES.read_text(encoding="utf-8")) if MUNICIPALITY_NAMES.exists() else {}
+    missing = []
+    for r in records:
+        label = municipality_label(r)
+        langs = [lang for lang in PREFECTURE_PAGE_LANGS if not (names.get(r.get("prefecture", ""), {}).get(label) or {}).get(lang)]
+        if label and langs:
+            missing.append((r, label, langs))
+    return missing
+
+
 def report(results, base, head):
     lines = ["## データセット差分レポート\n"]
 
@@ -77,6 +97,15 @@ def report(results, base, head):
         for rid, fields in results["content_changed"]:
             r = head[rid]
             lines.append(f"- id {rid}: {r.get('prefecture', '')}/{r.get('city', '')} — 変更フィールド: `{'`, `'.join(fields)}`")
+
+    # 新規だけでなく、自治体名が変わったレコード（コンテンツ変更に入る）も見る
+    changed_ids = [rid for rid, _ in results["content_changed"]]
+    missing = missing_municipality_names([head[rid] for rid in results["new"] + changed_ids])
+    if missing:
+        lines.append("\n### ⚠️ 訳した県ページで自治体名が日本語のまま出ます")
+        lines.append("`dataset/municipality_names.json` に足してください")
+        for r, label, langs in missing:
+            lines.append(f"- id {r.get('id', '')}: {r.get('prefecture', '')}/{label}（{', '.join(langs)}）")
 
     if results["timestamp_only"]:
         ids_str = ", ".join(results["timestamp_only"][:20])

@@ -69,6 +69,7 @@ try:
     from apps.scraper.prefectures import (
         PREFECTURES,
         PREFECTURE_ORDER,
+        PREFECTURE_PAGE_LANGS,
         PREFECTURE_SLUGS,
         REGIONS,
         select_full_coverage_pokemon,
@@ -79,6 +80,7 @@ except ModuleNotFoundError as exc:
     from prefectures import (
         PREFECTURES,
         PREFECTURE_ORDER,
+        PREFECTURE_PAGE_LANGS,
         PREFECTURE_SLUGS,
         REGIONS,
         select_full_coverage_pokemon,
@@ -464,6 +466,17 @@ def _manhole_name(record: dict) -> str:
     # 正本のマンホール名。city は公式の生の値（「町田」「台東区上野」）で、
     # 同じ自治体の蓋を区別できないので名前には使わない。
     return compose_display_name(record) or municipality_label(record) or "所在地不明"
+
+
+def hreflang_links(path: str) -> str:
+    """日本語版と訳した言語の県ページを相互に指す。x-default は日本語版。path は "prefectures/<slug>/" の形。"""
+    links = [f'<link rel="alternate" hreflang="ja" href="{BASE_URL}/{path}">']
+    links += [
+        f'<link rel="alternate" hreflang="{lang}" href="{BASE_URL}/{lang}/{path}">'
+        for lang in PREFECTURE_PAGE_LANGS
+    ]
+    links.append(f'<link rel="alternate" hreflang="x-default" href="{BASE_URL}/{path}">')
+    return "\n  ".join(links)
 
 
 def _json_for_script(value: object) -> str:
@@ -1236,6 +1249,7 @@ def build_index_page(
   <meta name="twitter:description" content="{_escape_attr(description)}">
   <meta name="twitter:image" content="{OG_IMAGE}">
   <link rel="canonical" href="{_escape_attr(canonical)}">
+  {hreflang_links("prefectures/")}
   <link rel="icon" href="/assets/pokefuta-marker.svg" type="image/svg+xml">
   <style>
     :root {{ color-scheme: light; }}
@@ -2661,6 +2675,7 @@ def build_page(
   <meta name="twitter:description" content="{_escape_attr(description)}">
   <meta name="twitter:image" content="{OG_IMAGE}">
   <link rel="canonical" href="{_escape_attr(canonical)}">
+  {hreflang_links(f"prefectures/{slug}/")}
   <link rel="icon" href="/assets/pokefuta-marker.svg" type="image/svg+xml">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">

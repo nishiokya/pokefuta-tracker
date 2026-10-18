@@ -13,13 +13,13 @@ from xml.sax.saxutils import escape
 try:
     from apps.scraper.character_manhole_works import WorkPage, available_pages, gundam_work_records
     from apps.scraper.generate_character_manhole_page import _is_active, load_ndjson
-    from apps.scraper.prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS
+    from apps.scraper.prefectures import PREFECTURE_ORDER, PREFECTURE_PAGE_LANGS, PREFECTURE_SLUGS
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
     from character_manhole_works import WorkPage, available_pages, gundam_work_records
     from generate_character_manhole_page import _is_active, load_ndjson
-    from prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS
+    from prefectures import PREFECTURE_ORDER, PREFECTURE_PAGE_LANGS, PREFECTURE_SLUGS
 
 try:
     from apps.scraper.generate_tag_pages import available_tag_slugs, load_records
@@ -217,6 +217,14 @@ def build_sitemap(
                 "0.8",
             )
         )
+
+    # 訳した県ページ（/<lang>/prefectures/）。日本語版と同じ扱い
+    for lang in PREFECTURE_PAGE_LANGS:
+        entries.append(url_entry(f"{BASE_URL}{lang}/prefectures/", "weekly", "0.8"))
+        for prefecture in PREFECTURES:
+            entries.append(
+                url_entry(f"{BASE_URL}{lang}/prefectures/{PREFECTURE_SLUGS[prefecture]}/", "weekly", "0.8")
+            )
 
     # 市区町村ページ（/municipalities/）。県ページと同列。県の一部を占める自治体だけにある
     if municipality_paths:
