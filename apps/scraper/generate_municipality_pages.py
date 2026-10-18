@@ -442,7 +442,7 @@ def _analytics_script(page_path: str, page_type: str, prefecture_slug: str, muni
     defaults = {"event_category": "municipality_growth", "surface": f"{page_type}_page"}
     if municipality_slug:
         defaults["municipality"] = municipality_slug
-    return f"""  <script src="/assets/analytics.js?v=20260929a"></script>
+    return f"""  <script src="/assets/analytics.js?v=20261018a"></script>
   <script>
     window.PokefutaAnalytics.init({_json_for_script(context)});
     const municipalityEventDefaults = {_json_for_script(defaults)};

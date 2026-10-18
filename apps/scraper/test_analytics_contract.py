@@ -14,6 +14,26 @@ class AnalyticsContractTest(unittest.TestCase):
         self.assertIn("window.location.hostname.toLowerCase()", analytics)
         self.assertIn("domains: ['data.pokefuta.com', 'pokefuta.com']", analytics)
 
+    def test_page_lang_is_set_once_from_the_url(self):
+        """言語版は page_path ではなく page_lang で分ける（/top・/map は言語をまたいで同じ）。
+
+        各ページが別々に言語を送ると取りこぼすので、analytics.js が URL から決める。
+        言語の一覧は多言語版を作る build_i18n.py と揃える。
+        """
+        analytics = (ROOT / "web/assets/analytics.js").read_text(encoding="utf-8")
+        build_i18n = (ROOT.parent / "tools/build_i18n.py").read_text(encoding="utf-8")
+
+        self.assertIn("var PAGE_LANGS = ['en', 'zh-TW', 'zh-CN', 'ko'];", analytics)
+        self.assertIn("LANGS = ['en', 'zh-TW', 'zh-CN', 'ko']", build_i18n)
+        self.assertIn("page_lang: pageLang }, params || {});", analytics)
+        self.assertIn("window.gtag('set', { page_lang: pageLang });", analytics)
+
+        sources = list((ROOT / "web").glob("*.html"))
+        sources += list((ROOT / "scraper").glob("generate_*.py"))
+        for source in sources:
+            with self.subTest(source=source.name):
+                self.assertNotIn("page_lang", source.read_text(encoding="utf-8"))
+
     def test_data_track_clicks_use_shared_binding(self):
         """data-track のクリック委譲は analytics.js の bindClickTracking に集約する。
 

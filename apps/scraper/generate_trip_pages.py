@@ -447,7 +447,7 @@ def _analytics_script(page_path: str, page_type: str, prefecture_slug: str = "")
     if prefecture_slug:
         context["prefecture"] = prefecture_slug
     defaults = {"event_category": "trip", "surface": f"{page_type}_page"}
-    return f"""  <script src="/assets/analytics.js?v=20260929a"></script>
+    return f"""  <script src="/assets/analytics.js?v=20261018a"></script>
   <script>
     window.PokefutaAnalytics.init({_json_for_script(context)});
     const tripEventDefaults = {_json_for_script(defaults)};

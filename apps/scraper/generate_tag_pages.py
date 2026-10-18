@@ -531,7 +531,7 @@ def build_page(
 
     <footer><a href="/summary/">全国のポケふた一覧へ戻る</a></footer>
   </main>
-  <script src="/assets/analytics.js?v=20260929a"></script>
+  <script src="/assets/analytics.js?v=20261018a"></script>
   <script>
     window.PokefutaAnalytics.init({{
       'page_path': '/tags/' + {_json_for_script(tag)} + '/',

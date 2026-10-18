@@ -5,7 +5,14 @@
   var PRODUCTION_HOSTS = ['data.pokefuta.com'];
   var enabled = PRODUCTION_HOSTS.indexOf(window.location.hostname.toLowerCase()) !== -1;
   var initialized = false;
-  var context = { site_type: 'map' };
+  // 表示している言語版。/en/・/zh-TW/・/zh-CN/・/ko/ の下ならその言語、ほかは日本語。
+  // page_path は言語をまたいで同じ（/top・/map …）なので、言語別に見るときはこれで分ける。
+  // GA4 の予約語 language（ブラウザの言語）とは別物。
+  // GA4 のカスタムディメンション登録が要る（docs/analytics-page-lang.md）。
+  var PAGE_LANGS = ['en', 'zh-TW', 'zh-CN', 'ko'];
+  var langMatch = window.location.pathname.match(/^\/([^/]+)\//);
+  var pageLang = langMatch && PAGE_LANGS.indexOf(langMatch[1]) !== -1 ? langMatch[1] : 'ja';
+  var context = { site_type: 'map', page_lang: pageLang };
 
   window.dataLayer = window.dataLayer || [];
   window.gtag = window.gtag || function () {
@@ -22,7 +29,7 @@
   }
 
   function init(params) {
-    var config = Object.assign({ site_type: 'map' }, params || {});
+    var config = Object.assign({ site_type: 'map', page_lang: pageLang }, params || {});
     context = Object.assign({}, config);
     delete context.send_page_view;
     if (!enabled) return false;
@@ -34,6 +41,8 @@
         domains: ['data.pokefuta.com', 'pokefuta.com'],
         accept_incoming: true
       });
+      // trackEvent を通らない gtag('event', ...) にも付ける
+      window.gtag('set', { page_lang: pageLang });
       initialized = true;
     }
 
@@ -81,6 +90,7 @@
 
   window.PokefutaAnalytics = {
     enabled: enabled,
+    pageLang: pageLang,
     init: init,
     setContext: setContext,
     trackEvent: trackEvent,

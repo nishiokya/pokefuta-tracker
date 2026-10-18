@@ -1414,7 +1414,7 @@ def build_index_page(
     {regions_html}
     <footer><a href="/summary/">全国のポケふた一覧へ戻る</a></footer>
   </main>
-  <script src="/assets/analytics.js?v=20260929a"></script>
+  <script src="/assets/analytics.js?v=20261018a"></script>
   <script>
     window.PokefutaAnalytics.init({{
       page_path: '/prefectures/',
@@ -2702,7 +2702,7 @@ def build_page(
 {main_sections_html}
     <footer><a href="/summary/">全国のポケふた一覧へ戻る</a></footer>
   </main>
-  <script src="/assets/analytics.js?v=20260929a"></script>
+  <script src="/assets/analytics.js?v=20261018a"></script>
   <script>
     window.PokefutaAnalytics.init({{
       'page_path': '/prefectures/' + {_json_for_script(slug)} + '/',
