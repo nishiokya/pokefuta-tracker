@@ -280,7 +280,7 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         cases = {
             "京都府": (("159", "160", "161", "162", "163", "352", "353", "382"),
                        ("市バス「嵐山公園」から徒歩約2分", "JR梅小路京都西駅から徒歩約1分", "朝霧橋の東側", "ニンテンドーミュージアムの施設内")),
-            "大阪府": (("206", "210", "209", "207", "208"),
+            "大阪府": (("206", "209", "210", "207", "208"),
                        ("西へまっすぐ徒歩6分", "スクラムロード花園", "サンロード瓢箪山商店街", "石切参道商店街")),
         }
         for prefecture, (ids, facts) in cases.items():
@@ -294,10 +294,13 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
                     self.assertIn(fact, html)
                 for source in guides[prefecture]["sources"]:
                     self.assertIn(source["url"], html)
-        # 大阪は市役所から東へ進む順（東花園→瓢箪山→石切は近鉄奈良線の並び）
-        osaka = MODULE._visit_guide_html(
-            [r for r in self.records if r.get("prefecture") == "大阪府"], guides["大阪府"])
-        order = [osaka.index(f'href="#manhole-{mid}"') for mid in ("206", "210", "209", "207", "208")]
+        # 大阪は「市役所から東へ進む順」と書いているので、地点の並びが経度の順になっていること
+        # （花園中央公園の2枚は、ライコウ #209 が西・トゲデマルとワンパチ #210 が東）
+        osaka_records = [r for r in self.records if r.get("prefecture") == "大阪府"]
+        osaka = MODULE._visit_guide_html(osaka_records, guides["大阪府"])
+        west_to_east = [str(r["id"]) for r in sorted(osaka_records, key=lambda r: float(r["lng"]))]
+        self.assertEqual(west_to_east, guides["大阪府"]["manhole_ids"])
+        order = [osaka.index(f'href="#manhole-{mid}"') for mid in west_to_east]
         self.assertEqual(order, sorted(order))
 
     def test_complete_visit_guide_is_hidden_for_duplicate_or_omitted_stop(self) -> None:
