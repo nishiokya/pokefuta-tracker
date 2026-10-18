@@ -58,7 +58,7 @@ TEXT: dict[str, dict[str, object]] = {
         "way_map_open": "Open the map",
         "way_map_theme": "Filter by theme",
         "way_pref_title": "By prefecture",
-        "way_pref_text": "Browse the {prefs} prefectures with Poké Lids, grouped by region. Prefecture pages are in Japanese.",
+        "way_pref_text": "Browse the {prefs} prefectures with Poké Lids, grouped by region.",
         "way_pokemon_title": "By Pokémon",
         "way_pokemon_text": "Look up your favourite among {npoke} Pokémon featured on the lids.",
         "way_theme_title": "By theme",
@@ -77,11 +77,10 @@ TEXT: dict[str, dict[str, object]] = {
         "events_show_all": "Show all ({n})",
         "pref_text": (
             "Poké Lids are installed in {prefs} of Japan's 47 prefectures. "
-            "They are listed by region from north to south, with the number of lids in each. "
-            "Prefecture pages are in Japanese."
+            "They are listed by region from north to south, with the number of lids in each."
         ),
         "pref_none": "As of {month}, there are no Poké Lids in {places}.",
-        "pref_more": "All 47 prefectures (Japanese)",
+        "pref_more": "All 47 prefectures",
         "poke_count": "{n} lids",
         "poke_all": "All Pokémon",
         "purpose_title": "Search by purpose",
