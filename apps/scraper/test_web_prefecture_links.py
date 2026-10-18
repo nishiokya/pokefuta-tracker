@@ -39,9 +39,12 @@ class WebPrefectureLinksTest(unittest.TestCase):
     def test_root_only_resources_keep_base_path(self) -> None:
         """ルート直下にしか無いものは BASE_PATH のままであること。"""
         source = (ROOT / "apps/web/index.template.html").read_text(encoding="utf-8")
-        for resource in ("assets/theme.css", "prefectures/", "character_manholes.html"):
+        for resource in ("assets/theme.css", "character_manholes.html"):
             with self.subTest(resource=resource):
                 self.assertIn(f"%%BASE_PATH%%{resource}", source)
+        # 県ページは訳した言語にもあるので、言語ごとに起点を変える PREF_PAGE_BASE で参照する
+        self.assertNotIn("%%BASE_PATH%%prefectures/", source)
+        self.assertIn("%%PREF_PAGE_BASE%%prefectures/", source)
         for resource in ("pokefuta.ndjson", "manhole/image/", "api/top-feed.json"):
             with self.subTest(resource=resource):
                 self.assertIn(f"BASE_PATH + '{resource}", source)
@@ -63,7 +66,7 @@ class WebPrefectureLinksTest(unittest.TestCase):
     def test_map_template_uses_localized_prefecture_paths(self) -> None:
         source = (ROOT / "apps/web/map.template.html").read_text(encoding="utf-8")
         self.assertIn("function getPrefecturePageUrl(prefecture)", source)
-        self.assertIn("%%BASE_PATH%%prefectures/${encodeURIComponent(slug)}/", source)
+        self.assertIn("%%PREF_PAGE_BASE%%prefectures/${encodeURIComponent(slug)}/", source)
         self.assertIn("anchor.textContent = UI_TEXT.prefectureSite;", source)
 
     def test_map_page_has_its_own_title_and_description(self) -> None:
@@ -132,6 +135,24 @@ class WebPrefectureLinksTest(unittest.TestCase):
                     'aria-label="${escapeHtml(displayName)}さんの公開スタンプ帳を開く"',
                     source,
                 )
+
+
+class TranslatedPrefecturePageLinksTest(unittest.TestCase):
+    def test_map_links_to_translated_prefecture_pages_only_where_they_exist(self) -> None:
+        """訳した県ページがある言語の地図は /<lang>/prefectures/ へ、無い言語は日本語版へ。"""
+        import importlib.util
+        import tempfile
+
+        spec = importlib.util.spec_from_file_location("build_i18n", ROOT / "tools/build_i18n.py")
+        build_i18n = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(build_i18n)
+        with tempfile.TemporaryDirectory() as tmp:
+            build_i18n.DIST = Path(tmp)
+            for lang, base in (("en", "./"), ("zh-TW", "../")):
+                build_i18n.build(lang)
+                html = (Path(tmp) / lang / "map.html").read_text(encoding="utf-8")
+                self.assertIn(f"`{base}prefectures/${{encodeURIComponent(slug)}}/`", html, lang)
+                self.assertNotIn("%%PREF_PAGE_BASE%%", html)
 
 
 if __name__ == "__main__":

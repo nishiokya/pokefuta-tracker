@@ -79,7 +79,9 @@ class EnglishTopTest(unittest.TestCase):
         self.assertTrue(srcs)
         self.assertTrue(all(src.startswith("../") for src in srcs))
         self.assertRegex(html, r'href="\.\./manholes/\d+/"')
-        self.assertIn('href="../prefectures/hokkaido/" hreflang="ja"', html)
+        # 英語は訳した県ページ（/en/prefectures/）へ。日本語版だけのイベントは日本語版へ
+        self.assertIn('href="prefectures/hokkaido/"', html)
+        self.assertNotIn('href="../prefectures/hokkaido/"', _block(html, "pref"))
         self.assertIn('href="pokemon/pikachu/"', html)
         self.assertIn('href="map.html?tag=', html)
         self.assertNotIn('href="/tags/', html)
@@ -91,7 +93,9 @@ class EnglishTopTest(unittest.TestCase):
         self.assertIn('<span class="home-pref__name">Hokkaido</span>', block)
         self.assertIn("As of September 2026, there are no Poké Lids in", block)
         self.assertIn(">Gunma</a>", block)
-        self.assertIn("(Japanese)", block)
+        self.assertNotIn("(Japanese)", block)
+        self.assertNotIn('hreflang="ja"', block)
+        self.assertIn('class="home-more" href="prefectures/"', block)
 
     def test_photos_are_lazy_outside_the_hero_and_dated_in_english(self) -> None:
         html = self.html()

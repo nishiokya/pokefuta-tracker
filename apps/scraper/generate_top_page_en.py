@@ -32,14 +32,14 @@ sys.path.insert(0, str(Path(__file__).parent))
 try:
     from apps.scraper import generate_top_page as ja
     from apps.scraper.photo_caption import JST, format_photo_date
-    from apps.scraper.prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS
+    from apps.scraper.prefectures import PREFECTURE_ORDER, PREFECTURE_PAGE_LANGS, PREFECTURE_SLUGS
     from apps.scraper.top_page_i18n_text import FORM_PREFIX, NAME_KEYS, TEXT, day_label, join_places, month_label
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
     import generate_top_page as ja
     from photo_caption import JST, format_photo_date
-    from prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS
+    from prefectures import PREFECTURE_ORDER, PREFECTURE_PAGE_LANGS, PREFECTURE_SLUGS
     from top_page_i18n_text import FORM_PREFIX, NAME_KEYS, TEXT, day_label, join_places, month_label
 
 ROOT = ja.ROOT
@@ -163,8 +163,20 @@ def _photo_href(photo: ja.Photo) -> str:
     return f"{ROOT_PATH}{photo.href}"
 
 
-def _pref_href(pref: str) -> str:
-    return f"{ROOT_PATH}prefectures/{PREFECTURE_SLUGS[pref]}/"
+def _has_pref_pages(loc: Locale) -> bool:
+    """この言語に訳した県ページ（/<lang>/prefectures/）があるか。無ければ日本語版へ送る。"""
+    return loc.lang in PREFECTURE_PAGE_LANGS
+
+
+def _pref_href(pref: str, loc: Locale | None = None) -> str:
+    """loc を渡すと、訳した県ページがある言語ではその言語の県ページを返す。省略時は日本語版。"""
+    base = "" if loc and _has_pref_pages(loc) else ROOT_PATH
+    return f"{base}prefectures/{PREFECTURE_SLUGS[pref]}/"
+
+
+def _pref_hreflang(loc: Locale) -> str:
+    """日本語版の県ページへ送るリンクに付ける属性。"""
+    return "" if _has_pref_pages(loc) else ' hreflang="ja"'
 
 
 def description(data: ja.TopData, en: Locale | None = None) -> str:
@@ -216,7 +228,7 @@ def json_ld(data: ja.TopData, en: Locale) -> dict:
                         "@type": "ListItem",
                         "position": i,
                         "name": en.t("ld_pref_item", pref=en.pref(pref), count=counts[pref]),
-                        "url": f"{BASE_URL}prefectures/{PREFECTURE_SLUGS[pref]}/",
+                        "url": f"{page_url if _has_pref_pages(en) else BASE_URL}prefectures/{PREFECTURE_SLUGS[pref]}/",
                     }
                     for i, pref in enumerate(data.installed_prefectures, start=1)
                 ],
@@ -341,7 +353,7 @@ def render_ways(data: ja.TopData, en: Locale) -> str:
          [("map.html", escape(en.t("way_map_open"))), ("map.html?view=theme", escape(en.t("way_map_theme")))]),
         ("prefecture", "#home-pref", "icon-pin.svg", en.t("way_pref_title"),
          en.t("way_pref_text", prefs=len(data.installed_prefectures)),
-         [(_pref_href(p), f"{escape(en.pref(p))} {counts[p]}") for p in top_prefs]),
+         [(_pref_href(p, en), f"{escape(en.pref(p))} {counts[p]}") for p in top_prefs]),
         ("pokemon", "pokemon/", "pokefuta-marker.svg", en.t("way_pokemon_title"),
          en.t("way_pokemon_text", npoke=f"{len(data.pokemon_counts):,}"),
          [(e.href, f"{escape(en.pokemon_by_slug.get(e.slug, e.name))} {len(e.manhole_ids)}")
@@ -444,7 +456,8 @@ def _event_card(event: dict, data: ja.TopData, en: Locale) -> str:
     period = f'{event["start"]:%Y/%m/%d} – {event["end"]:%Y/%m/%d}'
     return (
         f'<li class="home-event" data-end="{event["end"].isoformat()}">'
-        f'<a href="{_pref_href(pref)}" '
+        # イベントの情報は日本語版の県ページにしか無いので、訳した県ページがあっても日本語版へ送る
+        f'<a href="{_pref_href(pref)}" hreflang="ja" '
         f'onclick="{ja._track("click_event_notice", surface="top_event_notice", prefecture=pref, destination="prefecture_page")}">'
         f'<span class="home-event__badge{"" if ongoing else " is-upcoming"}">{escape(status)}</span>'
         f'<span class="home-event__copy"><b lang="ja">{escape(event["title"])}</b>'
@@ -485,7 +498,7 @@ def render_pref(data: ja.TopData, en: Locale) -> str:
         if not installed:
             continue
         links = "".join(
-            f'<li><a href="{_pref_href(p)}" hreflang="ja" '
+            f'<li><a href="{_pref_href(p, en)}"{_pref_hreflang(en)} '
             f'onclick="{ja._track("click_pref_link", surface="top_prefecture_list", prefecture=p)}">'
             f'<span class="home-pref__name">{escape(en.pref(p))}</span><span class="home-pref__count">{counts[p]}</span></a></li>'
             for p in installed
@@ -499,7 +512,7 @@ def render_pref(data: ja.TopData, en: Locale) -> str:
     empty = data.empty_prefectures
     note = ""
     if empty:
-        empty_links = [f'<a href="{_pref_href(p)}" hreflang="ja">{escape(en.pref(p))}</a>' for p in empty]
+        empty_links = [f'<a href="{_pref_href(p, en)}"{_pref_hreflang(en)}>{escape(en.pref(p))}</a>' for p in empty]
         month = month_label(en.lang, data.today.year, data.today.month)
         note = f'<p class="home-pref-note">{en.t("pref_none", month=month, places=join_places(en.lang, empty_links))}</p>'
     return (
@@ -508,7 +521,7 @@ def render_pref(data: ja.TopData, en: Locale) -> str:
         f'<p class="home-text">{escape(en.t("pref_text", prefs=len(data.installed_prefectures)), quote=False)}</p>'
         f'<div class="home-regions">{"".join(regions)}</div>'
         f"{note}"
-        f'<a class="home-more" href="{ROOT_PATH}prefectures/" hreflang="ja" '
+        f'<a class="home-more" href="{"" if _has_pref_pages(en) else ROOT_PATH}prefectures/"{_pref_hreflang(en)} '
         f'onclick="{ja._track("click_pref_link", surface="top_prefecture_list", prefecture="all")}">'
         f'{escape(en.t("pref_more"))}</a>'
         "</section>"
