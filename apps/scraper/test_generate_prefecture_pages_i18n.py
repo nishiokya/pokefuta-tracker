@@ -12,9 +12,13 @@ from apps.scraper.display_names import municipality_label
 from apps.scraper.generate_sitemap import build_sitemap
 from apps.scraper.prefectures import PREFECTURE_PAGE_LANGS
 
-# 英語ページに日本語が混ざってよいのは lang="ja" を付けた正式名・「日本語」ボタンと、
-# 投稿者が自分で付けた表示名（<bdi>）だけ
-JAPANESE = re.compile(r"[぀-ヿ一-鿿]")
+# 訳したページに日本語が混ざってよいのは lang="ja" を付けた正式名・「日本語」ボタンと、
+# 投稿者が自分で付けた表示名（<bdi>）だけ。英語は漢字も含めて、繁体字はかなと
+# 日本の新字体（県・郷・豊・猪…、繁體で字が変わるもの）で見る。中黒（・）は繁體中文でも使う
+JAPANESE = {
+    "en": re.compile(r"[぀-ヿ一-鿿]"),
+    "zh-TW": re.compile(r"[ぁ-ゖァ-ヺー郷豊猪県沢浜広関栄恵亀駅竜塩桜辺渋斎黒国会蔵気戸内帯当軽横静瀬対壱縄満湾覇糸来宝区弁巻双浅狭剣稲楽鉄霊険礼将鶏条発姫様歩渓滝伝営児単厳売変学実寿岳峡帰庁弥従徳拡挙数断旧検楼毎灯焼猟獣畳穂粋経絵継続総緑縁聴芸荘観訳証読譲賛転辞遥鉱銭録隠隣雑麦黄齢竪鴬桧槙]"),
+}
 
 
 def _visible_text_outside_ja(html: str) -> str:
@@ -34,15 +38,21 @@ class PrefecturePagesI18nTest(unittest.TestCase):
         cls.photos = ja.load_photos(ja.DEFAULT_PHOTOS)
         cls.names = module.load_municipality_names()
         cls.tmp = tempfile.TemporaryDirectory()
-        cls.out = Path(cls.tmp.name)
-        cls.count = module.generate_all("en", cls.records, cls.pokemon_slugs, cls.photos, cls.names, cls.out)
+        cls.outs = {
+            lang: Path(cls.tmp.name) / lang for lang in PREFECTURE_PAGE_LANGS
+        }
+        cls.counts = {
+            lang: module.generate_all(lang, cls.records, cls.pokemon_slugs, cls.photos, cls.names, out)
+            for lang, out in cls.outs.items()
+        }
+        cls.out = cls.outs["en"]
 
     @classmethod
     def tearDownClass(cls) -> None:
         cls.tmp.cleanup()
 
-    def read(self, slug: str = "") -> str:
-        return (self.out / slug / "index.html").read_text(encoding="utf-8")
+    def read(self, slug: str = "", lang: str = "en") -> str:
+        return (self.outs[lang] / slug / "index.html").read_text(encoding="utf-8")
 
     @unittest.skipIf(
         os.environ.get("POKEFUTA_PAGES_DEPLOY") == "1",
@@ -65,14 +75,26 @@ class PrefecturePagesI18nTest(unittest.TestCase):
         self.assertEqual(set(), listed - current)
 
     def test_generates_all_prefectures_and_the_index(self) -> None:
-        self.assertEqual(47, self.count)
-        self.assertEqual(47, len(list(self.out.glob("*/index.html"))))
-        self.assertTrue((self.out / "index.html").exists())
+        for lang, out in self.outs.items():
+            with self.subTest(lang=lang):
+                self.assertEqual(47, self.counts[lang])
+                self.assertEqual(47, len(list(out.glob("*/index.html"))))
+                self.assertTrue((out / "index.html").exists())
 
     def test_prefecture_page_is_english(self) -> None:
         html = self.read("hokkaido")
         self.assertIn('<html lang="en">', html)
         self.assertIn("Poké Lids (Pokémon Manholes) in Hokkaido", html)
+
+    def test_prefecture_page_is_traditional_chinese(self) -> None:
+        html = self.read("kyoto", "zh-TW")
+        self.assertIn('<html lang="zh-TW">', html)
+        self.assertIn("<h1>京都府的寶可夢人孔蓋</h1>", html)
+        self.assertIn("全國第", html)
+        self.assertIn('href="/zh-TW/pokemon/', html)
+        self.assertIn('href="/zh-TW/prefectures/osaka/"', html)
+        self.assertIn('<link rel="canonical" href="https://data.pokefuta.com/zh-TW/prefectures/kyoto/">', html)
+        self.assertIn("宇治市", html)
 
     @unittest.skipIf(
         os.environ.get("POKEFUTA_PAGES_DEPLOY") == "1",
@@ -81,10 +103,11 @@ class PrefecturePagesI18nTest(unittest.TestCase):
     def test_no_page_has_japanese_outside_marked_places(self) -> None:
         """訳の抜け（自治体名・ポケモン名の表記揺れ）があると日本語のまま出る。全ページを見る。"""
         leftover = {}
-        for path in sorted(self.out.glob("**/index.html")):
-            found = JAPANESE.findall(_visible_text_outside_ja(path.read_text(encoding="utf-8")))
-            if found:
-                leftover[path.parent.name] = "".join(found[:20])
+        for lang, out in self.outs.items():
+            for path in sorted(out.glob("**/index.html")):
+                found = JAPANESE[lang].findall(_visible_text_outside_ja(path.read_text(encoding="utf-8")))
+                if found:
+                    leftover[f"{lang}/{path.parent.name}"] = "".join(found[:20])
         self.assertEqual({}, leftover)
 
     def test_hreflang_pairs_with_the_japanese_page(self) -> None:
@@ -93,6 +116,7 @@ class PrefecturePagesI18nTest(unittest.TestCase):
         for html in (en, jp_html):
             self.assertIn('hreflang="ja" href="https://data.pokefuta.com/prefectures/kyoto/"', html)
             self.assertIn('hreflang="en" href="https://data.pokefuta.com/en/prefectures/kyoto/"', html)
+            self.assertIn('hreflang="zh-TW" href="https://data.pokefuta.com/zh-TW/prefectures/kyoto/"', html)
             self.assertIn('hreflang="x-default" href="https://data.pokefuta.com/prefectures/kyoto/"', html)
         self.assertIn('<link rel="canonical" href="https://data.pokefuta.com/en/prefectures/kyoto/">', en)
 
@@ -127,6 +151,7 @@ class PrefecturePagesI18nTest(unittest.TestCase):
         sitemap = build_sitemap([])
         self.assertIn("https://data.pokefuta.com/en/prefectures/</loc>", sitemap)
         self.assertIn("https://data.pokefuta.com/en/prefectures/hokkaido/</loc>", sitemap)
+        self.assertIn("https://data.pokefuta.com/zh-TW/prefectures/hokkaido/</loc>", sitemap)
 
 
 if __name__ == "__main__":

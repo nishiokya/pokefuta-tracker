@@ -27,7 +27,7 @@ PREFECTURE_SLUGS = dict(PREFECTURES)
 # 地方の区分。都道府県一覧・トップ・全国一覧（summary）で同じものを使う
 # 県ページを訳してある言語（/<lang>/prefectures/。generate_prefecture_pages_i18n.py が作る）。
 # 日本語版の hreflang とサイトマップもこれを見る
-PREFECTURE_PAGE_LANGS: list[str] = ["en"]
+PREFECTURE_PAGE_LANGS: list[str] = ["en", "zh-TW"]
 
 REGIONS: list[tuple[str, list[str]]] = [
     ("北海道・東北", PREFECTURE_ORDER[0:7]),

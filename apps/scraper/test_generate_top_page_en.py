@@ -13,6 +13,7 @@ import unittest
 from pathlib import Path
 
 from apps.scraper import generate_top_page_en as module
+from apps.scraper.prefectures import PREFECTURE_PAGE_LANGS
 from apps.scraper.test_generate_top_page import SHELL, TODAY, Fixture, _block, _event
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -192,7 +193,9 @@ class LocalizedTopTest(unittest.TestCase):
             data = Fixture(self.tmp, events=[_event("東京都", "東京スタンプラリー", "2026-08-01", "2026-12-31")]).data()
             html = module.apply_blocks(EN_SHELL, data, loc)
             self.assertIn(lid, _block(html, "hero"))
-            self.assertIn('href="../prefectures/tokyo/"', _block(html, "pref"))
+            # 訳した県ページがある言語はその言語の県ページへ、無い言語は日本語版へ
+            expected = "prefectures/tokyo/" if lang in PREFECTURE_PAGE_LANGS else "../prefectures/tokyo/"
+            self.assertIn(f'href="{expected}"', _block(html, "pref"))
             visible = _visible(html)
             for english in ("Poké Lids are", "Choose how to search", "Latest fan photos", "Show all", "All Pokémon"):
                 self.assertNotIn(english, visible, f"{lang}: {english}")

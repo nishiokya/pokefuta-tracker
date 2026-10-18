@@ -164,8 +164,10 @@ jobs:
           python3 apps/scraper/generate_summary_pages.py
           echo "[dist] Generate prefecture landing pages (47 prefectures)"
           python3 apps/scraper/generate_prefecture_pages.py
-          echo "[dist] Generate translated prefecture pages (en)"
-          python3 apps/scraper/generate_prefecture_pages_i18n.py --lang en
+          echo "[dist] Generate translated prefecture pages (en / zh-TW)"
+          for lang in en zh-TW; do
+            python3 apps/scraper/generate_prefecture_pages_i18n.py --lang "$lang"
+          done
           echo "[dist] Generate municipality landing pages + ranking"
           python3 apps/scraper/generate_municipality_pages.py
           echo "[dist] Generate trip pages (/trip/)"
