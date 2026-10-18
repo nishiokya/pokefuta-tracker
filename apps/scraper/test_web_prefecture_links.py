@@ -148,7 +148,7 @@ class TranslatedPrefecturePageLinksTest(unittest.TestCase):
         spec.loader.exec_module(build_i18n)
         with tempfile.TemporaryDirectory() as tmp:
             build_i18n.DIST = Path(tmp)
-            for lang, base in (("en", "./"), ("zh-TW", "../")):
+            for lang, base in (("en", "./"), ("zh-TW", "./"), ("ko", "../")):
                 build_i18n.build(lang)
                 html = (Path(tmp) / lang / "map.html").read_text(encoding="utf-8")
                 self.assertIn(f"`{base}prefectures/${{encodeURIComponent(slug)}}/`", html, lang)

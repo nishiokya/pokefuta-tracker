@@ -138,7 +138,7 @@ TEXT: dict[str, dict[str, object]] = {
         "way_map_open": "開啟地圖",
         "way_map_theme": "依主題篩選",
         "way_pref_title": "依都道府縣",
-        "way_pref_text": "依地區瀏覽設有寶可夢人孔蓋的{prefs}個都道府縣。都道府縣頁面為日文。",
+        "way_pref_text": "依地區瀏覽設有寶可夢人孔蓋的{prefs}個都道府縣。",
         "way_pokemon_title": "依寶可夢",
         "way_pokemon_text": "從{npoke}種寶可夢中，找出你喜歡的那一個。",
         "way_theme_title": "依主題",
@@ -157,10 +157,10 @@ TEXT: dict[str, dict[str, object]] = {
         "events_show_all": "顯示全部（{n}個）",
         "pref_text": (
             "日本47個都道府縣中，有{prefs}個設有寶可夢人孔蓋。"
-            "依地區由北到南排列，並標示各地的數量。都道府縣頁面為日文。"
+            "依地區由北到南排列，並標示各地的數量。"
         ),
         "pref_none": "截至{month}，{places}尚未設置寶可夢人孔蓋。",
-        "pref_more": "47個都道府縣一覽（日文）",
+        "pref_more": "47個都道府縣一覽",
         "poke_count": "{n}個",
         "poke_all": "全部寶可夢",
         "purpose_title": "依目的尋找",

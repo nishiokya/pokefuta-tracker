@@ -1,1296 +1,1699 @@
 {
- "_comment": "訳した県ページ（/en/prefectures/）の自治体名。県 → municipality_label() の表記 → 言語。下書きは OpenStreetMap（Nominatim）の英語名で、長音記号は付けない",
+ "_comment": "訳した県ページ（/<lang>/prefectures/）の自治体名。県 → municipality_label() の表記 → 言語。下書きは OpenStreetMap（Nominatim）の名前（en は長音記号なし、zh-TW は name:zh-Hant）で、誤りは手で直した",
  "北海道": {
   "えりも町": {
-   "en": "Erimo"
+   "en": "Erimo",
+   "zh-TW": "襟裳町"
   },
   "三笠市": {
-   "en": "Mikasa"
+   "en": "Mikasa",
+   "zh-TW": "三笠市"
   },
   "上ノ国町": {
-   "en": "Kaminokuni"
+   "en": "Kaminokuni",
+   "zh-TW": "上之國町"
   },
   "上富良野町": {
-   "en": "Kamifurano"
+   "en": "Kamifurano",
+   "zh-TW": "上富良野町"
   },
   "中標津町": {
-   "en": "Nakashibetsu"
+   "en": "Nakashibetsu",
+   "zh-TW": "中標津町"
   },
   "函館市": {
-   "en": "Hakodate"
+   "en": "Hakodate",
+   "zh-TW": "函館市"
   },
   "別海町": {
-   "en": "Betsukai"
+   "en": "Betsukai",
+   "zh-TW": "別海町"
   },
   "剣淵町": {
-   "en": "Kenbuchi"
+   "en": "Kenbuchi",
+   "zh-TW": "劍淵町"
   },
   "北見市": {
-   "en": "Kitami"
+   "en": "Kitami",
+   "zh-TW": "北見市"
   },
   "厚沢部町": {
-   "en": "Assabu"
+   "en": "Assabu",
+   "zh-TW": "厚澤部町"
   },
   "士別市": {
-   "en": "Shibetsu"
+   "en": "Shibetsu",
+   "zh-TW": "士別市"
   },
   "大空町": {
-   "en": "Ozora"
+   "en": "Ozora",
+   "zh-TW": "大空町"
   },
   "天塩町": {
-   "en": "Teshio"
+   "en": "Teshio",
+   "zh-TW": "天鹽町"
   },
   "室蘭市": {
-   "en": "Muroran"
+   "en": "Muroran",
+   "zh-TW": "室蘭市"
   },
   "小樽市": {
-   "en": "Otaru"
+   "en": "Otaru",
+   "zh-TW": "小樽市"
   },
   "帯広市": {
-   "en": "Obihiro"
+   "en": "Obihiro",
+   "zh-TW": "帶廣市"
   },
   "幌延町": {
-   "en": "Horonobe"
+   "en": "Horonobe",
+   "zh-TW": "幌延町"
   },
   "当別町": {
-   "en": "Tobetsu"
+   "en": "Tobetsu",
+   "zh-TW": "當別町"
   },
   "恵庭市": {
-   "en": "Eniwa"
+   "en": "Eniwa",
+   "zh-TW": "惠庭市"
   },
   "斜里町": {
-   "en": "Shari"
+   "en": "Shari",
+   "zh-TW": "斜里町"
   },
   "新得町": {
-   "en": "Shintoku"
+   "en": "Shintoku",
+   "zh-TW": "新得町"
   },
   "旭川市": {
-   "en": "Asahikawa"
+   "en": "Asahikawa",
+   "zh-TW": "旭川市"
   },
   "木古内町": {
-   "en": "Kikonai"
+   "en": "Kikonai",
+   "zh-TW": "木古內町"
   },
   "本別町": {
-   "en": "Honbetsu"
+   "en": "Honbetsu",
+   "zh-TW": "本別町"
   },
   "札幌市": {
-   "en": "Sapporo"
+   "en": "Sapporo",
+   "zh-TW": "札幌市"
   },
   "東川町": {
-   "en": "Higashikawa"
+   "en": "Higashikawa",
+   "zh-TW": "東川町"
   },
   "根室市": {
-   "en": "Nemuro"
+   "en": "Nemuro",
+   "zh-TW": "根室市"
   },
   "森町": {
-   "en": "Mori"
+   "en": "Mori",
+   "zh-TW": "森町"
   },
   "歌志内市": {
-   "en": "Utashinai"
+   "en": "Utashinai",
+   "zh-TW": "歌志內市"
   },
   "比布町": {
-   "en": "Pippu"
+   "en": "Pippu",
+   "zh-TW": "比布町"
   },
   "洞爺湖町": {
-   "en": "Toyako"
+   "en": "Toyako",
+   "zh-TW": "洞爺湖町"
   },
   "津別町": {
-   "en": "Tsubetsu"
+   "en": "Tsubetsu",
+   "zh-TW": "津別町"
   },
   "湧別町": {
-   "en": "Yubetsu"
+   "en": "Yubetsu",
+   "zh-TW": "湧別町"
   },
   "猿払村": {
-   "en": "Sarufutsu"
+   "en": "Sarufutsu",
+   "zh-TW": "猿拂村"
   },
   "由仁町": {
-   "en": "Yuni"
+   "en": "Yuni",
+   "zh-TW": "由仁町"
   },
   "登別市": {
-   "en": "Noboribetsu"
+   "en": "Noboribetsu",
+   "zh-TW": "登別市"
   },
   "石狩市": {
-   "en": "Ishikari"
+   "en": "Ishikari",
+   "zh-TW": "石狩市"
   },
   "砂川市": {
-   "en": "Sunagawa"
+   "en": "Sunagawa",
+   "zh-TW": "砂川市"
   },
   "稚内市": {
-   "en": "Wakkanai"
+   "en": "Wakkanai",
+   "zh-TW": "稚內市"
   },
   "紋別市": {
-   "en": "Monbetsu"
+   "en": "Monbetsu",
+   "zh-TW": "紋別市"
   },
   "網走市": {
-   "en": "Abashiri"
+   "en": "Abashiri",
+   "zh-TW": "網走市"
   },
   "美幌町": {
-   "en": "Bihoro"
+   "en": "Bihoro",
+   "zh-TW": "美幌町"
   },
   "美瑛町": {
-   "en": "Biei"
+   "en": "Biei",
+   "zh-TW": "美瑛町"
   },
   "苫小牧市": {
-   "en": "Tomakomai"
+   "en": "Tomakomai",
+   "zh-TW": "苫小牧市"
   },
   "豊富町": {
-   "en": "Toyotomi"
+   "en": "Toyotomi",
+   "zh-TW": "豐富町"
   },
   "赤井川村": {
-   "en": "Akaigawa"
+   "en": "Akaigawa",
+   "zh-TW": "赤井川村"
   },
   "足寄町": {
-   "en": "Ashoro"
+   "en": "Ashoro",
+   "zh-TW": "足寄町"
   },
   "遠軽町": {
-   "en": "Engaru"
+   "en": "Engaru",
+   "zh-TW": "遠輕町"
   },
   "釧路市": {
-   "en": "Kushiro"
+   "en": "Kushiro",
+   "zh-TW": "釧路市"
   },
   "陸別町": {
-   "en": "Rikubetsu"
+   "en": "Rikubetsu",
+   "zh-TW": "陸別町"
   }
  },
  "青森県": {
   "八戸市": {
-   "en": "Hachinohe"
+   "en": "Hachinohe",
+   "zh-TW": "八戶市"
   },
   "階上町": {
-   "en": "Hashikami"
+   "en": "Hashikami",
+   "zh-TW": "階上町"
   }
  },
  "岩手県": {
   "一戸町": {
-   "en": "Ichinohe"
+   "en": "Ichinohe",
+   "zh-TW": "一戶町"
   },
   "一関市": {
-   "en": "Ichinoseki"
+   "en": "Ichinoseki",
+   "zh-TW": "一關市"
   },
   "久慈市": {
-   "en": "Kuji"
+   "en": "Kuji",
+   "zh-TW": "久慈市"
   },
   "九戸村": {
-   "en": "Kunohe"
+   "en": "Kunohe",
+   "zh-TW": "九戶村"
   },
   "二戸市": {
-   "en": "Ninohe"
+   "en": "Ninohe",
+   "zh-TW": "二戶市"
   },
   "住田町": {
-   "en": "Sumita"
+   "en": "Sumita",
+   "zh-TW": "住田町"
   },
   "八幡平市": {
-   "en": "Hachimantai"
+   "en": "Hachimantai",
+   "zh-TW": "八幡平市"
   },
   "北上市": {
-   "en": "Kitakami"
+   "en": "Kitakami",
+   "zh-TW": "北上市"
   },
   "大槌町": {
-   "en": "Otsuchi"
+   "en": "Otsuchi",
+   "zh-TW": "大槌町"
   },
   "大船渡市": {
-   "en": "Ofunato"
+   "en": "Ofunato",
+   "zh-TW": "大船渡市"
   },
   "奥州市": {
-   "en": "Oshu"
+   "en": "Oshu",
+   "zh-TW": "奧州市"
   },
   "宮古市": {
-   "en": "Miyako"
+   "en": "Miyako",
+   "zh-TW": "宮古市"
   },
   "山田町": {
-   "en": "Yamada"
+   "en": "Yamada",
+   "zh-TW": "山田町"
   },
   "岩手町": {
-   "en": "Iwate"
+   "en": "Iwate",
+   "zh-TW": "岩手町"
   },
   "岩泉町": {
-   "en": "Iwaizumi"
+   "en": "Iwaizumi",
+   "zh-TW": "岩泉町"
   },
   "平泉町": {
-   "en": "Hiraizumi"
+   "en": "Hiraizumi",
+   "zh-TW": "平泉町"
   },
   "普代村": {
-   "en": "Fudai"
+   "en": "Fudai",
+   "zh-TW": "普代村"
   },
   "洋野町": {
-   "en": "Hirono"
+   "en": "Hirono",
+   "zh-TW": "洋野町"
   },
   "滝沢市": {
-   "en": "Takizawa"
+   "en": "Takizawa",
+   "zh-TW": "瀧澤市"
   },
   "田野畑村": {
-   "en": "Tanohata"
+   "en": "Tanohata",
+   "zh-TW": "田野畑村"
   },
   "盛岡市": {
-   "en": "Morioka"
+   "en": "Morioka",
+   "zh-TW": "盛岡市"
   },
   "矢巾町": {
-   "en": "Yahaba"
+   "en": "Yahaba",
+   "zh-TW": "矢巾町"
   },
   "紫波町": {
-   "en": "Shiwa"
+   "en": "Shiwa",
+   "zh-TW": "紫波町"
   },
   "花巻市": {
-   "en": "Hanamaki"
+   "en": "Hanamaki",
+   "zh-TW": "花卷市"
   },
   "葛巻町": {
-   "en": "Kuzumaki"
+   "en": "Kuzumaki",
+   "zh-TW": "葛卷町"
   },
   "西和賀町": {
-   "en": "Nishiwaga"
+   "en": "Nishiwaga",
+   "zh-TW": "西和賀町"
   },
   "軽米町": {
-   "en": "Karumai"
+   "en": "Karumai",
+   "zh-TW": "輕米町"
   },
   "遠野市": {
-   "en": "Tono"
+   "en": "Tono",
+   "zh-TW": "遠野市"
   },
   "野田村": {
-   "en": "Noda"
+   "en": "Noda",
+   "zh-TW": "野田村"
   },
   "金ヶ崎": {
-   "en": "Kanegasaki"
+   "en": "Kanegasaki",
+   "zh-TW": "金崎町"
   },
   "釜石市": {
-   "en": "Kamaishi"
+   "en": "Kamaishi",
+   "zh-TW": "釜石市"
   },
   "陸前高田市": {
-   "en": "Rikuzen-Takata"
+   "en": "Rikuzen-Takata",
+   "zh-TW": "陸前高田市"
   },
   "雫石町": {
-   "en": "Shizukuishi"
+   "en": "Shizukuishi",
+   "zh-TW": "雫石町"
   }
  },
  "宮城県": {
   "七ヶ宿町": {
-   "en": "Shichikashuku"
+   "en": "Shichikashuku",
+   "zh-TW": "七宿町"
   },
   "七ヶ浜町": {
-   "en": "Shichigahama"
+   "en": "Shichigahama",
+   "zh-TW": "七濱町"
   },
   "丸森町": {
-   "en": "Marumori"
+   "en": "Marumori",
+   "zh-TW": "丸森町"
   },
   "亘理町": {
-   "en": "Watari"
+   "en": "Watari",
+   "zh-TW": "亘理町"
   },
   "仙台市": {
-   "en": "Sendai"
+   "en": "Sendai",
+   "zh-TW": "仙臺市"
   },
   "利府町": {
-   "en": "Rifu"
+   "en": "Rifu",
+   "zh-TW": "利府町"
   },
   "加美町": {
-   "en": "Kami"
+   "en": "Kami",
+   "zh-TW": "加美町"
   },
   "南三陸町": {
-   "en": "Minami-Sanriku"
+   "en": "Minami-Sanriku",
+   "zh-TW": "南三陸町"
   },
   "名取市": {
-   "en": "Natori"
+   "en": "Natori",
+   "zh-TW": "名取市"
   },
   "塩竈市": {
-   "en": "Shiogama"
+   "en": "Shiogama",
+   "zh-TW": "鹽竈市"
   },
   "多賀城市": {
-   "en": "Tagajo"
+   "en": "Tagajo",
+   "zh-TW": "多賀城市"
   },
   "大和町": {
-   "en": "Taiwa"
+   "en": "Taiwa",
+   "zh-TW": "大和町"
   },
   "大崎市": {
-   "en": "Osaki"
+   "en": "Osaki",
+   "zh-TW": "大崎市"
   },
   "大河原町": {
-   "en": "Ogawara"
+   "en": "Ogawara",
+   "zh-TW": "大河原町"
   },
   "大衡村": {
-   "en": "Ohira"
+   "en": "Ohira",
+   "zh-TW": "大衡村"
   },
   "大郷町": {
-   "en": "Osato"
+   "en": "Osato",
+   "zh-TW": "大鄉町"
   },
   "女川町": {
-   "en": "Onagawa"
+   "en": "Onagawa",
+   "zh-TW": "女川町"
   },
   "富谷市": {
-   "en": "Tomiya"
+   "en": "Tomiya",
+   "zh-TW": "富谷市"
   },
   "山元町": {
-   "en": "Yamamoto"
+   "en": "Yamamoto",
+   "zh-TW": "山元町"
   },
   "岩沼市": {
-   "en": "Iwanuma"
+   "en": "Iwanuma",
+   "zh-TW": "岩沼市"
   },
   "川崎町": {
-   "en": "Kawasaki"
+   "en": "Kawasaki",
+   "zh-TW": "川崎町"
   },
   "村田町": {
-   "en": "Murata"
+   "en": "Murata",
+   "zh-TW": "村田町"
   },
   "東松島市": {
-   "en": "Higashimatsushima"
+   "en": "Higashimatsushima",
+   "zh-TW": "東松島市"
   },
   "松島町": {
-   "en": "Matsushima"
+   "en": "Matsushima",
+   "zh-TW": "松島町"
   },
   "柴田町": {
-   "en": "Shibata"
+   "en": "Shibata",
+   "zh-TW": "柴田町"
   },
   "栗原市": {
-   "en": "Kurihara"
+   "en": "Kurihara",
+   "zh-TW": "栗原市"
   },
   "気仙沼市": {
-   "en": "Kesennuma"
+   "en": "Kesennuma",
+   "zh-TW": "氣仙沼市"
   },
   "涌谷町": {
-   "en": "Wakuya"
+   "en": "Wakuya",
+   "zh-TW": "涌谷町"
   },
   "登米市": {
-   "en": "Tome"
+   "en": "Tome",
+   "zh-TW": "登米市"
   },
   "白石市": {
-   "en": "Shiroishi"
+   "en": "Shiroishi",
+   "zh-TW": "白石市"
   },
   "石巻市": {
-   "en": "Ishinomaki"
+   "en": "Ishinomaki",
+   "zh-TW": "石卷市"
   },
   "美里町": {
-   "en": "Misato"
+   "en": "Misato",
+   "zh-TW": "美里町"
   },
   "色麻町": {
-   "en": "Shikama"
+   "en": "Shikama",
+   "zh-TW": "色麻町"
   },
   "蔵王町": {
-   "en": "Zao"
+   "en": "Zao",
+   "zh-TW": "藏王町"
   },
   "角田市": {
-   "en": "Kakuda"
+   "en": "Kakuda",
+   "zh-TW": "角田市"
   }
  },
  "秋田県": {
   "仙北市": {
-   "en": "Senboku"
+   "en": "Senboku",
+   "zh-TW": "仙北市"
   },
   "横手市": {
-   "en": "Yokote"
+   "en": "Yokote",
+   "zh-TW": "橫手市"
   },
   "男鹿市": {
-   "en": "Oga"
+   "en": "Oga",
+   "zh-TW": "男鹿市"
   },
   "秋田市": {
-   "en": "Akita"
+   "en": "Akita",
+   "zh-TW": "秋田市"
   },
   "鹿角市": {
-   "en": "Kazuno"
+   "en": "Kazuno",
+   "zh-TW": "鹿角市"
   }
  },
  "山形県": {
   "大蔵村": {
-   "en": "Okura"
+   "en": "Okura",
+   "zh-TW": "大藏村"
   },
   "寒河江市": {
-   "en": "Sagae"
+   "en": "Sagae",
+   "zh-TW": "寒河江市"
   },
   "小国町": {
-   "en": "Oguni"
+   "en": "Oguni",
+   "zh-TW": "小國町"
   },
   "山形市": {
-   "en": "Yamagata"
+   "en": "Yamagata",
+   "zh-TW": "山形市"
   },
   "鶴岡市": {
-   "en": "Tsuruoka"
+   "en": "Tsuruoka",
+   "zh-TW": "鶴岡市"
   }
  },
  "福島県": {
   "いわき市": {
-   "en": "Iwaki"
+   "en": "Iwaki",
+   "zh-TW": "磐城市"
   },
   "三春町": {
-   "en": "Miharu"
+   "en": "Miharu",
+   "zh-TW": "三春町"
   },
   "下郷町": {
-   "en": "Shimogo"
+   "en": "Shimogo",
+   "zh-TW": "下鄉町"
   },
   "二本松市": {
-   "en": "Nihonmatsu"
+   "en": "Nihonmatsu",
+   "zh-TW": "二本松市"
   },
   "伊達市": {
-   "en": "Date"
+   "en": "Date",
+   "zh-TW": "伊達市"
   },
   "会津坂下町": {
-   "en": "Aizubange"
+   "en": "Aizubange",
+   "zh-TW": "會津坂下町"
   },
   "会津美里町": {
-   "en": "Aizumisato"
+   "en": "Aizumisato",
+   "zh-TW": "會津美里町"
   },
   "会津若松市": {
-   "en": "Aizuwakamatsu"
+   "en": "Aizuwakamatsu",
+   "zh-TW": "會津若松市"
   },
   "北塩原村": {
-   "en": "Kitashiobara"
+   "en": "Kitashiobara",
+   "zh-TW": "北鹽原村"
   },
   "南会津町": {
-   "en": "Minamiaizu"
+   "en": "Minamiaizu",
+   "zh-TW": "南會津町"
   },
   "南相馬市": {
-   "en": "Minamisoma"
+   "en": "Minamisoma",
+   "zh-TW": "南相馬市"
   },
   "双葉町": {
-   "en": "Futaba"
+   "en": "Futaba",
+   "zh-TW": "雙葉町"
   },
   "古殿町": {
-   "en": "Furudono"
+   "en": "Furudono",
+   "zh-TW": "古殿町"
   },
   "国見町": {
-   "en": "Kunimi"
+   "en": "Kunimi",
+   "zh-TW": "國見町"
   },
   "大熊町": {
-   "en": "Okuma"
+   "en": "Okuma",
+   "zh-TW": "大熊町"
   },
   "天栄村": {
-   "en": "Ten-ei"
+   "en": "Ten-ei",
+   "zh-TW": "天榮村"
   },
   "小野町": {
-   "en": "Ono"
+   "en": "Ono",
+   "zh-TW": "小野町"
   },
   "川俣町": {
-   "en": "Kawamata"
+   "en": "Kawamata",
+   "zh-TW": "川俣町"
   },
   "川内村": {
-   "en": "Kawauchi"
+   "en": "Kawauchi",
+   "zh-TW": "川內村"
   },
   "平田村": {
-   "en": "Hirata"
+   "en": "Hirata",
+   "zh-TW": "平田村"
   },
   "広野町": {
-   "en": "Hirono"
+   "en": "Hirono",
+   "zh-TW": "廣野町"
   },
   "新地町": {
-   "en": "Shinchi"
+   "en": "Shinchi",
+   "zh-TW": "新地町"
   },
   "昭和村": {
-   "en": "Showa"
+   "en": "Showa",
+   "zh-TW": "昭和村"
   },
   "柳津町": {
-   "en": "Yanaizu"
+   "en": "Yanaizu",
+   "zh-TW": "柳津町"
   },
   "棚倉町": {
-   "en": "Tanagura"
+   "en": "Tanagura",
+   "zh-TW": "棚倉町"
   },
   "楢葉町": {
-   "en": "Naraha"
+   "en": "Naraha",
+   "zh-TW": "楢葉町"
   },
   "泉崎村": {
-   "en": "Izumizaki"
+   "en": "Izumizaki",
+   "zh-TW": "泉崎村"
   },
   "浅川町": {
-   "en": "Asakawa"
+   "en": "Asakawa",
+   "zh-TW": "淺川町"
   },
   "浪江町": {
-   "en": "Namie"
+   "en": "Namie",
+   "zh-TW": "浪江町"
   },
   "湯川村": {
-   "en": "Yugawa"
+   "en": "Yugawa",
+   "zh-TW": "湯川村"
   },
   "猪苗代町": {
-   "en": "Inawashiro"
+   "en": "Inawashiro",
+   "zh-TW": "猪苗代町"
   },
   "田村市": {
-   "en": "Tamura"
+   "en": "Tamura",
+   "zh-TW": "田村市"
   },
   "白河市": {
-   "en": "Shirakawa"
+   "en": "Shirakawa",
+   "zh-TW": "白河市"
   },
   "相馬市": {
-   "en": "Soma"
+   "en": "Soma",
+   "zh-TW": "相馬市"
   },
   "矢吹町": {
-   "en": "Yabuki"
+   "en": "Yabuki",
+   "zh-TW": "矢吹町"
   },
   "福島市": {
-   "en": "Fukushima"
+   "en": "Fukushima",
+   "zh-TW": "福島市"
   },
   "西会津町": {
-   "en": "Nishiaizu"
+   "en": "Nishiaizu",
+   "zh-TW": "西會津町"
   },
   "西郷村": {
-   "en": "Nishigo"
+   "en": "Nishigo",
+   "zh-TW": "西鄉村"
   },
   "郡山市": {
-   "en": "Koriyama"
+   "en": "Koriyama",
+   "zh-TW": "郡山市"
   },
   "鏡石町": {
-   "en": "Kagamiishi"
+   "en": "Kagamiishi",
+   "zh-TW": "鏡石町"
   },
   "須賀川市": {
-   "en": "Sukagawa"
+   "en": "Sukagawa",
+   "zh-TW": "須賀川市"
   },
   "飯舘村": {
-   "en": "Iitate"
+   "en": "Iitate",
+   "zh-TW": "飯舘村"
   },
   "鮫川村": {
-   "en": "Samegawa"
+   "en": "Samegawa",
+   "zh-TW": "鮫川村"
   }
  },
  "茨城県": {
   "つくば市": {
-   "en": "Tsukuba"
+   "en": "Tsukuba",
+   "zh-TW": "筑波市"
   },
   "常陸太田市": {
-   "en": "Hitachiota"
+   "en": "Hitachiota",
+   "zh-TW": "常陸太田市"
   },
   "水戸市": {
-   "en": "Mito"
+   "en": "Mito",
+   "zh-TW": "水戶市"
   },
   "神栖市": {
-   "en": "Kamisu"
+   "en": "Kamisu",
+   "zh-TW": "神栖市"
   },
   "筑西市": {
-   "en": "Chikusei"
+   "en": "Chikusei",
+   "zh-TW": "筑西市"
   }
  },
  "栃木県": {
   "宇都宮市": {
-   "en": "Utsunomiya"
+   "en": "Utsunomiya",
+   "zh-TW": "宇都宮市"
   }
  },
  "埼玉県": {
   "所沢市": {
-   "en": "Tokorozawa"
+   "en": "Tokorozawa",
+   "zh-TW": "所澤市"
   }
  },
  "千葉県": {
   "香取市": {
-   "en": "Katori"
+   "en": "Katori",
+   "zh-TW": "香取市"
   }
  },
  "東京都": {
   "台東区上野": {
-   "en": "Ueno, Taito"
+   "en": "Ueno, Taito",
+   "zh-TW": "臺東區上野"
   },
   "小笠原村": {
-   "en": "Ogasawara"
+   "en": "Ogasawara",
+   "zh-TW": "小笠原村"
   },
   "町田市": {
-   "en": "Machida"
+   "en": "Machida",
+   "zh-TW": "町田市"
   },
   "稲城市": {
-   "en": "Inagi"
+   "en": "Inagi",
+   "zh-TW": "稻城市"
   }
  },
  "神奈川県": {
   "横浜市": {
-   "en": "Yokohama"
+   "en": "Yokohama",
+   "zh-TW": "橫濱市"
   }
  },
  "新潟県": {
   "小千谷市": {
-   "en": "Ojiya"
+   "en": "Ojiya",
+   "zh-TW": "小千谷市"
   }
  },
  "富山県": {
   "富山市": {
-   "en": "Toyama"
+   "en": "Toyama",
+   "zh-TW": "富山市"
   }
  },
  "石川県": {
   "七尾市": {
-   "en": "Nanao"
+   "en": "Nanao",
+   "zh-TW": "七尾市"
   },
   "志賀町": {
-   "en": "Shika"
+   "en": "Shika",
+   "zh-TW": "志賀町"
   },
   "珠洲市": {
-   "en": "Suzu"
+   "en": "Suzu",
+   "zh-TW": "珠洲市"
   },
   "穴水町": {
-   "en": "Anamizu"
+   "en": "Anamizu",
+   "zh-TW": "穴水町"
   },
   "能登町": {
-   "en": "Noto"
+   "en": "Noto",
+   "zh-TW": "能登町"
   },
   "輪島市": {
-   "en": "Wajima"
+   "en": "Wajima",
+   "zh-TW": "輪島市"
   },
   "金沢市": {
-   "en": "Kanazawa"
+   "en": "Kanazawa",
+   "zh-TW": "金澤市"
   }
  },
  "福井県": {
   "あわら市": {
-   "en": "Awara"
+   "en": "Awara",
+   "zh-TW": "蘆原市"
   },
   "おおい町": {
-   "en": "Ohi"
+   "en": "Ohi",
+   "zh-TW": "大飯町"
   },
   "勝山市": {
-   "en": "Katsuyama"
+   "en": "Katsuyama",
+   "zh-TW": "勝山市"
   },
   "南越前町": {
-   "en": "Minami-Echizen"
+   "en": "Minami-Echizen",
+   "zh-TW": "南越前町"
   },
   "坂井市": {
-   "en": "Sakai"
+   "en": "Sakai",
+   "zh-TW": "坂井市"
   },
   "大野市": {
-   "en": "Ono"
+   "en": "Ono",
+   "zh-TW": "大野市"
   },
   "小浜市": {
-   "en": "Obama"
+   "en": "Obama",
+   "zh-TW": "小濱市"
   },
   "敦賀市": {
-   "en": "Tsuruga"
+   "en": "Tsuruga",
+   "zh-TW": "敦賀市"
   },
   "永平寺町": {
-   "en": "Eiheiji"
+   "en": "Eiheiji",
+   "zh-TW": "永平寺町"
   },
   "池田町": {
-   "en": "Ikeda"
+   "en": "Ikeda",
+   "zh-TW": "池田町"
   },
   "福井市": {
-   "en": "Fukui"
+   "en": "Fukui",
+   "zh-TW": "福井市"
   },
   "美浜町": {
-   "en": "Mihama"
+   "en": "Mihama",
+   "zh-TW": "美濱町"
   },
   "若狭町": {
-   "en": "Wakasa"
+   "en": "Wakasa",
+   "zh-TW": "若狹町"
   },
   "越前市": {
-   "en": "Echizen"
+   "en": "Echizen",
+   "zh-TW": "越前市"
   },
   "越前町": {
-   "en": "Echizen"
+   "en": "Echizen",
+   "zh-TW": "越前町"
   },
   "高浜町": {
-   "en": "Takahama"
+   "en": "Takahama",
+   "zh-TW": "高濱町"
   },
   "鯖江市": {
-   "en": "Sabae"
+   "en": "Sabae",
+   "zh-TW": "鯖江市"
   }
  },
  "長野県": {
   "伊那市": {
-   "en": "Ina"
+   "en": "Ina",
+   "zh-TW": "伊那市"
   },
   "南牧村": {
-   "en": "Minamimaki"
+   "en": "Minamimaki",
+   "zh-TW": "南牧村"
   },
   "大町市": {
-   "en": "Omachi"
+   "en": "Omachi",
+   "zh-TW": "大町市"
   },
   "山ノ内町": {
-   "en": "Yamanouchi"
+   "en": "Yamanouchi",
+   "zh-TW": "山之內町"
   },
   "岡谷市": {
-   "en": "Okaya"
+   "en": "Okaya",
+   "zh-TW": "岡谷市"
   },
   "木祖村": {
-   "en": "Kiso"
+   "en": "Kiso",
+   "zh-TW": "木祖村"
   }
  },
  "岐阜県": {
   "下呂市": {
-   "en": "Gero"
+   "en": "Gero",
+   "zh-TW": "下呂市"
   },
   "各務原市": {
-   "en": "Kakamigahara"
+   "en": "Kakamigahara",
+   "zh-TW": "各務原市"
   },
   "関ケ原町": {
-   "en": "Sekigahara"
+   "en": "Sekigahara",
+   "zh-TW": "關原町"
   },
   "関市": {
-   "en": "Seki"
+   "en": "Seki",
+   "zh-TW": "關市"
   },
   "高山市": {
-   "en": "Takayama"
+   "en": "Takayama",
+   "zh-TW": "高山市"
   }
  },
  "静岡県": {
   "伊豆市": {
-   "en": "Izu"
+   "en": "Izu",
+   "zh-TW": "伊豆市"
   },
   "富士市": {
-   "en": "Fuji"
+   "en": "Fuji",
+   "zh-TW": "富士市"
   },
   "沼津市": {
-   "en": "Numazu"
+   "en": "Numazu",
+   "zh-TW": "沼津市"
   },
   "浜松市": {
-   "en": "Hamamatsu"
+   "en": "Hamamatsu",
+   "zh-TW": "濱松市"
   },
   "静岡市": {
-   "en": "Shizuoka"
+   "en": "Shizuoka",
+   "zh-TW": "靜岡市"
   }
  },
  "愛知県": {
   "刈谷市": {
-   "en": "Kariya"
+   "en": "Kariya",
+   "zh-TW": "刈谷市"
   },
   "名古屋市中区": {
-   "en": "Naka, Nagoya"
+   "en": "Naka, Nagoya",
+   "zh-TW": "名古屋市中區"
   },
   "常滑市": {
-   "en": "Tokoname"
+   "en": "Tokoname",
+   "zh-TW": "常滑市"
   },
   "瀬戸市": {
-   "en": "Seto"
+   "en": "Seto",
+   "zh-TW": "瀨戶市"
   },
   "西尾市": {
-   "en": "Nishio"
+   "en": "Nishio",
+   "zh-TW": "西尾市"
   },
   "豊橋市": {
-   "en": "Toyohashi"
+   "en": "Toyohashi",
+   "zh-TW": "豐橋市"
   }
  },
  "三重県": {
   "いなべ市": {
-   "en": "Inabe"
+   "en": "Inabe",
+   "zh-TW": "員辨市"
   },
   "三重郡川越町": {
-   "en": "Kawagoe"
+   "en": "Kawagoe",
+   "zh-TW": "川越町"
   },
   "三重郡朝日町": {
-   "en": "Asahi"
+   "en": "Asahi",
+   "zh-TW": "朝日町"
   },
   "三重郡菰野町": {
-   "en": "Komono"
+   "en": "Komono",
+   "zh-TW": "菰野町"
   },
   "亀山市": {
-   "en": "Kameyama"
+   "en": "Kameyama",
+   "zh-TW": "龜山市"
   },
   "伊勢市": {
-   "en": "Ise"
+   "en": "Ise",
+   "zh-TW": "伊勢市"
   },
   "伊賀市": {
-   "en": "Iga"
+   "en": "Iga",
+   "zh-TW": "伊賀市"
   },
   "北牟婁郡紀北町": {
-   "en": "Kihoku"
+   "en": "Kihoku",
+   "zh-TW": "紀北町"
   },
   "南牟婁郡御浜町": {
-   "en": "Mihama"
+   "en": "Mihama",
+   "zh-TW": "御濱町"
   },
   "南牟婁郡紀宝町": {
-   "en": "Kiho"
+   "en": "Kiho",
+   "zh-TW": "紀寶町"
   },
   "名張市": {
-   "en": "Nabari"
+   "en": "Nabari",
+   "zh-TW": "名張市"
   },
   "員弁郡東員町": {
-   "en": "Toin"
+   "en": "Toin",
+   "zh-TW": "東員町"
   },
   "四日市市": {
-   "en": "Yokkaichi"
+   "en": "Yokkaichi",
+   "zh-TW": "四日市市"
   },
   "多気郡多気町": {
-   "en": "Taki"
+   "en": "Taki",
+   "zh-TW": "多氣町"
   },
   "多気郡大台町": {
-   "en": "Odai"
+   "en": "Odai",
+   "zh-TW": "大臺町"
   },
   "多気郡明和町": {
-   "en": "Meiwa"
+   "en": "Meiwa",
+   "zh-TW": "明和町"
   },
   "尾鷲市": {
-   "en": "Owase"
+   "en": "Owase",
+   "zh-TW": "尾鷲市"
   },
   "度会郡南伊勢町": {
-   "en": "Minamiise"
+   "en": "Minamiise",
+   "zh-TW": "南伊勢町"
   },
   "度会郡大紀町": {
-   "en": "Taiki"
+   "en": "Taiki",
+   "zh-TW": "大紀町"
   },
   "度会郡度会町": {
-   "en": "Watarai"
+   "en": "Watarai",
+   "zh-TW": "度會町"
   },
   "度会郡玉城町": {
-   "en": "Tamaki"
+   "en": "Tamaki",
+   "zh-TW": "玉城町"
   },
   "志摩市": {
-   "en": "Shima"
+   "en": "Shima",
+   "zh-TW": "志摩市"
   },
   "松阪市": {
-   "en": "Matsusaka"
+   "en": "Matsusaka",
+   "zh-TW": "松阪市"
   },
   "桑名市": {
-   "en": "Kuwana"
+   "en": "Kuwana",
+   "zh-TW": "桑名市"
   },
   "桑名郡木曽岬町": {
-   "en": "Kisosaki"
+   "en": "Kisosaki",
+   "zh-TW": "木曾岬町"
   },
   "津市": {
-   "en": "Tsu"
+   "en": "Tsu",
+   "zh-TW": "津市"
   },
   "熊野市": {
-   "en": "Kumano"
+   "en": "Kumano",
+   "zh-TW": "熊野市"
   },
   "鈴鹿市": {
-   "en": "Suzuka"
+   "en": "Suzuka",
+   "zh-TW": "鈴鹿市"
   },
   "鳥羽市": {
-   "en": "Toba"
+   "en": "Toba",
+   "zh-TW": "鳥羽市"
   }
  },
  "滋賀県": {
   "大津市": {
-   "en": "Otsu"
+   "en": "Otsu",
+   "zh-TW": "大津市"
   },
   "甲賀市": {
-   "en": "Koka"
+   "en": "Koka",
+   "zh-TW": "甲賀市"
   }
  },
  "京都府": {
   "京都市": {
-   "en": "Kyoto"
+   "en": "Kyoto",
+   "zh-TW": "京都市"
   },
   "宇治市": {
-   "en": "Uji"
+   "en": "Uji",
+   "zh-TW": "宇治市"
   }
  },
  "大阪府": {
   "東大阪市": {
-   "en": "Higashiosaka"
+   "en": "Higashiosaka",
+   "zh-TW": "東大阪市"
   }
  },
  "兵庫県": {
   "淡路市": {
-   "en": "Awaji"
+   "en": "Awaji",
+   "zh-TW": "淡路市"
   }
  },
  "奈良県": {
   "斑鳩町": {
-   "en": "Ikaruga"
+   "en": "Ikaruga",
+   "zh-TW": "斑鳩町"
   }
  },
  "和歌山県": {
   "串本町": {
-   "en": "Kushimoto"
+   "en": "Kushimoto",
+   "zh-TW": "串本町"
   },
   "和歌山市": {
-   "en": "Wakayama"
+   "en": "Wakayama",
+   "zh-TW": "和歌山市"
   },
   "白浜町": {
-   "en": "Shirahama"
+   "en": "Shirahama",
+   "zh-TW": "白濱町"
   },
   "那智勝浦町": {
-   "en": "Nachikatsuura"
+   "en": "Nachikatsuura",
+   "zh-TW": "那智勝浦町"
   },
   "高野町": {
-   "en": "Koya"
+   "en": "Koya",
+   "zh-TW": "高野町"
   }
  },
  "鳥取県": {
   "三朝町": {
-   "en": "Misasa"
+   "en": "Misasa",
+   "zh-TW": "三朝町"
   },
   "伯耆町": {
-   "en": "Hoki"
+   "en": "Hoki",
+   "zh-TW": "伯耆町"
   },
   "倉吉市": {
-   "en": "Kurayoshi"
+   "en": "Kurayoshi",
+   "zh-TW": "倉吉市"
   },
   "八頭町": {
-   "en": "Yazu"
+   "en": "Yazu",
+   "zh-TW": "八頭町"
   },
   "北栄町": {
-   "en": "Hokuei"
+   "en": "Hokuei",
+   "zh-TW": "北榮町"
   },
   "南部町": {
-   "en": "Nanbu"
+   "en": "Nanbu",
+   "zh-TW": "南部町"
   },
   "境港市": {
-   "en": "Sakaiminato"
+   "en": "Sakaiminato",
+   "zh-TW": "境港市"
   },
   "大山町": {
-   "en": "Daisen"
+   "en": "Daisen",
+   "zh-TW": "大山町"
   },
   "岩美町": {
-   "en": "Iwami"
+   "en": "Iwami",
+   "zh-TW": "岩美町"
   },
   "日南町": {
-   "en": "Nichinan"
+   "en": "Nichinan",
+   "zh-TW": "日南町"
   },
   "日吉津村": {
-   "en": "Hiezu"
+   "en": "Hiezu",
+   "zh-TW": "日吉津村"
   },
   "日野町": {
-   "en": "Hino"
+   "en": "Hino",
+   "zh-TW": "日野町"
   },
   "智頭町": {
-   "en": "Chizu"
+   "en": "Chizu",
+   "zh-TW": "智頭町"
   },
   "江府町": {
-   "en": "Kofu"
+   "en": "Kofu",
+   "zh-TW": "江府町"
   },
   "湯梨浜町": {
-   "en": "Yurihama"
+   "en": "Yurihama",
+   "zh-TW": "湯梨濱町"
   },
   "琴浦町": {
-   "en": "Kotoura"
+   "en": "Kotoura",
+   "zh-TW": "琴浦町"
   },
   "米子市": {
-   "en": "Yonago"
+   "en": "Yonago",
+   "zh-TW": "米子市"
   },
   "若桜町": {
-   "en": "Wakasa"
+   "en": "Wakasa",
+   "zh-TW": "若櫻町"
   },
   "鳥取市": {
-   "en": "Tottori"
+   "en": "Tottori",
+   "zh-TW": "鳥取市"
   }
  },
  "島根県": {
   "出雲市": {
-   "en": "Izumo"
+   "en": "Izumo",
+   "zh-TW": "出雲市"
   },
   "大田市": {
-   "en": "Oda"
+   "en": "Oda",
+   "zh-TW": "大田市"
   },
   "安来市": {
-   "en": "Yasugi"
+   "en": "Yasugi",
+   "zh-TW": "安來市"
   },
   "浜田市": {
-   "en": "Hamada"
+   "en": "Hamada",
+   "zh-TW": "濱田市"
   },
   "隠岐の島町": {
-   "en": "Okinoshima"
+   "en": "Okinoshima",
+   "zh-TW": "隱岐之島町"
   }
  },
  "岡山県": {
   "倉敷市": {
-   "en": "Kurashiki"
+   "en": "Kurashiki",
+   "zh-TW": "倉敷市"
   }
  },
  "山口県": {
   "下関市": {
-   "en": "Shimonoseki"
+   "en": "Shimonoseki",
+   "zh-TW": "下關市"
   }
  },
  "徳島県": {
   "鳴門市": {
-   "en": "Naruto"
+   "en": "Naruto",
+   "zh-TW": "鳴門市"
   }
  },
  "香川県": {
   "さぬき市": {
-   "en": "Sanuki"
+   "en": "Sanuki",
+   "zh-TW": "讚岐市"
   },
   "まんのう町": {
-   "en": "Manno"
+   "en": "Manno",
+   "zh-TW": "滿濃町"
   },
   "三木町": {
-   "en": "Miki"
+   "en": "Miki",
+   "zh-TW": "三木町"
   },
   "三豊市": {
-   "en": "Mitoyo"
+   "en": "Mitoyo",
+   "zh-TW": "三豐市"
   },
   "丸亀市": {
-   "en": "Marugame"
+   "en": "Marugame",
+   "zh-TW": "丸龜市"
   },
   "善通寺市": {
-   "en": "Zentsuji"
+   "en": "Zentsuji",
+   "zh-TW": "善通寺市"
   },
   "土庄町": {
-   "en": "Tonosho"
+   "en": "Tonosho",
+   "zh-TW": "土庄町"
   },
   "坂出市": {
-   "en": "Sakaide"
+   "en": "Sakaide",
+   "zh-TW": "坂出市"
   },
   "多度津町": {
-   "en": "Tadotsu"
+   "en": "Tadotsu",
+   "zh-TW": "多度津町"
   },
   "宇多津町": {
-   "en": "Utazu"
+   "en": "Utazu",
+   "zh-TW": "宇多津町"
   },
   "小豆島町": {
-   "en": "Shodoshima"
+   "en": "Shodoshima",
+   "zh-TW": "小豆島町"
   },
   "東かがわ市": {
-   "en": "Higashi-Kagawa"
+   "en": "Higashi-Kagawa",
+   "zh-TW": "東香川市"
   },
   "琴平町": {
-   "en": "Kotohira"
+   "en": "Kotohira",
+   "zh-TW": "琴平町"
   },
   "直島町": {
-   "en": "Naoshima"
+   "en": "Naoshima",
+   "zh-TW": "直島町"
   },
   "綾川町": {
-   "en": "Ayagawa"
+   "en": "Ayagawa",
+   "zh-TW": "綾川町"
   },
   "観音寺市": {
-   "en": "Kanonji"
+   "en": "Kanonji",
+   "zh-TW": "觀音寺市"
   },
   "高松市": {
-   "en": "Takamatsu"
+   "en": "Takamatsu",
+   "zh-TW": "高松市"
   }
  },
  "愛媛県": {
   "松山市": {
-   "en": "Matsuyama"
+   "en": "Matsuyama",
+   "zh-TW": "松山市"
   }
  },
  "高知県": {
   "三原村": {
-   "en": "Mihara"
+   "en": "Mihara",
+   "zh-TW": "三原村"
   },
   "仁淀川町": {
-   "en": "Niyodogawa"
+   "en": "Niyodogawa",
+   "zh-TW": "仁淀川町"
   },
   "土佐清水市": {
-   "en": "Tosashimizu"
+   "en": "Tosashimizu",
+   "zh-TW": "土佐清水市"
   },
   "大月町": {
-   "en": "Otsuki"
+   "en": "Otsuki",
+   "zh-TW": "大月町"
   },
   "大豊町": {
-   "en": "Otoyo"
+   "en": "Otoyo",
+   "zh-TW": "大豐町"
   },
   "奈半利町": {
-   "en": "Nahari"
+   "en": "Nahari",
+   "zh-TW": "奈半利町"
   },
   "安田町": {
-   "en": "Yasuda"
+   "en": "Yasuda",
+   "zh-TW": "安田町"
   },
   "安芸市": {
-   "en": "Aki"
+   "en": "Aki",
+   "zh-TW": "安藝市"
   },
   "室戸市": {
-   "en": "Muroto"
+   "en": "Muroto",
+   "zh-TW": "室戶市"
   },
   "宿毛市": {
-   "en": "Sukumo"
+   "en": "Sukumo",
+   "zh-TW": "宿毛市"
   },
   "日高村": {
-   "en": "Hidaka"
+   "en": "Hidaka",
+   "zh-TW": "日高村"
   },
   "本山町": {
-   "en": "Motoyama"
+   "en": "Motoyama",
+   "zh-TW": "本山町"
   },
   "東洋町": {
-   "en": "Toyo"
+   "en": "Toyo",
+   "zh-TW": "東洋町"
   },
   "津野町": {
-   "en": "Tsuno"
+   "en": "Tsuno",
+   "zh-TW": "津野町"
   },
   "須崎市": {
-   "en": "Susaki"
+   "en": "Susaki",
+   "zh-TW": "須崎市"
   },
   "香南市": {
-   "en": "Konan"
+   "en": "Konan",
+   "zh-TW": "香南市"
   },
   "香美市": {
-   "en": "Kami"
+   "en": "Kami",
+   "zh-TW": "香美市"
   },
   "高知市": {
-   "en": "Kochi"
+   "en": "Kochi",
+   "zh-TW": "高知市"
   }
  },
  "福岡県": {
   "北九州市": {
-   "en": "Kitakyushu"
+   "en": "Kitakyushu",
+   "zh-TW": "北九州市"
   },
   "太宰府市": {
-   "en": "Dazaifu"
+   "en": "Dazaifu",
+   "zh-TW": "太宰府市"
   }
  },
  "佐賀県": {
   "佐賀市": {
-   "en": "Saga"
+   "en": "Saga",
+   "zh-TW": "佐賀市"
   }
  },
  "長崎県": {
   "五島市": {
-   "en": "Goto"
+   "en": "Goto",
+   "zh-TW": "五島市"
   },
   "佐々町": {
-   "en": "Saza"
+   "en": "Saza",
+   "zh-TW": "佐佐町"
   },
   "佐世保市": {
-   "en": "Sasebo"
+   "en": "Sasebo",
+   "zh-TW": "佐世保市"
   },
   "壱岐市": {
-   "en": "Iki"
+   "en": "Iki",
+   "zh-TW": "壹岐市"
   },
   "大村市": {
-   "en": "Omura"
+   "en": "Omura",
+   "zh-TW": "大村市"
   },
   "対馬市": {
-   "en": "Tsushima"
+   "en": "Tsushima",
+   "zh-TW": "對馬市"
   },
   "島原市": {
-   "en": "Shimabara"
+   "en": "Shimabara",
+   "zh-TW": "島原市"
   },
   "新上五島町": {
-   "en": "Shinkamigoto"
+   "en": "Shinkamigoto",
+   "zh-TW": "新上五島町"
   },
   "時津町": {
-   "en": "Togitsu"
+   "en": "Togitsu",
+   "zh-TW": "時津町"
   },
   "東彼杵町": {
-   "en": "Higashi-Sonogi"
+   "en": "Higashi-Sonogi",
+   "zh-TW": "東彼杵町"
   },
   "波佐見町": {
-   "en": "Hasami"
+   "en": "Hasami",
+   "zh-TW": "波佐見町"
   },
   "西海市": {
-   "en": "Saikai"
+   "en": "Saikai",
+   "zh-TW": "西海市"
   },
   "諫早市": {
-   "en": "Isahaya"
+   "en": "Isahaya",
+   "zh-TW": "諫早市"
   },
   "長崎市": {
-   "en": "Nagasaki"
+   "en": "Nagasaki",
+   "zh-TW": "長崎市"
   },
   "雲仙市": {
-   "en": "Unzen"
+   "en": "Unzen",
+   "zh-TW": "雲仙市"
   }
  },
  "宮崎県": {
   "えびの市": {
-   "en": "Ebino"
+   "en": "Ebino",
+   "zh-TW": "蝦野市"
   },
   "三股町": {
-   "en": "Mimata"
+   "en": "Mimata",
+   "zh-TW": "三股町"
   },
   "串間市": {
-   "en": "Kushima"
+   "en": "Kushima",
+   "zh-TW": "串間市"
   },
   "五ヶ瀬町": {
-   "en": "Gokase"
+   "en": "Gokase",
+   "zh-TW": "五瀨町"
   },
   "国富町": {
-   "en": "Kunitomi"
+   "en": "Kunitomi",
+   "zh-TW": "國富町"
   },
   "宮崎市": {
-   "en": "Miyazaki"
+   "en": "Miyazaki",
+   "zh-TW": "宮崎市"
   },
   "小林市": {
-   "en": "Kobayashi"
+   "en": "Kobayashi",
+   "zh-TW": "小林市"
   },
   "川南町": {
-   "en": "Kawaminami"
+   "en": "Kawaminami",
+   "zh-TW": "川南町"
   },
   "延岡市": {
-   "en": "Nobeoka"
+   "en": "Nobeoka",
+   "zh-TW": "延岡市"
   },
   "新富町": {
-   "en": "Shintomi"
+   "en": "Shintomi",
+   "zh-TW": "新富町"
   },
   "日之影町": {
-   "en": "Hinokage"
+   "en": "Hinokage",
+   "zh-TW": "日之影町"
   },
   "日南市": {
-   "en": "Nichinan"
+   "en": "Nichinan",
+   "zh-TW": "日南市"
   },
   "日向市": {
-   "en": "Hyuga"
+   "en": "Hyuga",
+   "zh-TW": "日向市"
   },
   "木城町": {
-   "en": "Kijo"
+   "en": "Kijo",
+   "zh-TW": "木城町"
   },
   "椎葉村": {
-   "en": "Shiiba"
+   "en": "Shiiba",
+   "zh-TW": "椎葉村"
   },
   "綾町": {
-   "en": "Aya"
+   "en": "Aya",
+   "zh-TW": "綾町"
   },
   "美郷町": {
-   "en": "Misato"
+   "en": "Misato",
+   "zh-TW": "美郷町"
   },
   "西米良村": {
-   "en": "Nishimera"
+   "en": "Nishimera",
+   "zh-TW": "西米良村"
   },
   "西都市": {
-   "en": "Saito"
+   "en": "Saito",
+   "zh-TW": "西都市"
   },
   "諸塚村": {
-   "en": "Morotsuka"
+   "en": "Morotsuka",
+   "zh-TW": "諸塚村"
   },
   "都城市": {
-   "en": "Miyakonojo"
+   "en": "Miyakonojo",
+   "zh-TW": "都城市"
   },
   "都農町": {
-   "en": "Tsuno"
+   "en": "Tsuno",
+   "zh-TW": "都農町"
   },
   "門川町": {
-   "en": "Kadogawa"
+   "en": "Kadogawa",
+   "zh-TW": "門川町"
   },
   "高千穂町": {
-   "en": "Takachiho"
+   "en": "Takachiho",
+   "zh-TW": "高千穗町"
   },
   "高原町": {
-   "en": "Takaharu"
+   "en": "Takaharu",
+   "zh-TW": "高原町"
   },
   "高鍋町": {
-   "en": "Takanabe"
+   "en": "Takanabe",
+   "zh-TW": "高鍋町"
   }
  },
  "鹿児島県": {
   "指宿市": {
-   "en": "Ibusuki"
+   "en": "Ibusuki",
+   "zh-TW": "指宿市"
   }
  },
  "沖縄県": {
   "うるま市": {
-   "en": "Uruma"
+   "en": "Uruma",
+   "zh-TW": "宇流麻市"
   },
   "久米島町": {
-   "en": "Kumejima"
+   "en": "Kumejima",
+   "zh-TW": "久米島町"
   },
   "北大東村": {
-   "en": "Kitadaito"
+   "en": "Kitadaito",
+   "zh-TW": "北大東村"
   },
   "北谷町": {
-   "en": "Chatan"
+   "en": "Chatan",
+   "zh-TW": "北谷町"
   },
   "南城市": {
-   "en": "Nanjo"
+   "en": "Nanjo",
+   "zh-TW": "南城市"
   },
   "名護市": {
-   "en": "Nago"
+   "en": "Nago",
+   "zh-TW": "名護市"
   },
   "国頭村": {
-   "en": "Kunigami"
+   "en": "Kunigami",
+   "zh-TW": "國頭村"
   },
   "大宜味村": {
-   "en": "Ogimi"
+   "en": "Ogimi",
+   "zh-TW": "大宜味村"
   },
   "宜野湾市": {
-   "en": "Ginowan"
+   "en": "Ginowan",
+   "zh-TW": "宜野灣市"
   },
   "宮古島市": {
-   "en": "Miyakojima"
+   "en": "Miyakojima",
+   "zh-TW": "宮古島市"
   },
   "座間味村": {
-   "en": "Zamami"
+   "en": "Zamami",
+   "zh-TW": "座間味村"
   },
   "本部町": {
-   "en": "Motobu"
+   "en": "Motobu",
+   "zh-TW": "本部町"
   },
   "東村": {
-   "en": "Higashi"
+   "en": "Higashi",
+   "zh-TW": "東村"
   },
   "沖縄市": {
-   "en": "Okinawa"
+   "en": "Okinawa",
+   "zh-TW": "沖繩市"
   },
   "浦添市": {
-   "en": "Urasoe"
+   "en": "Urasoe",
+   "zh-TW": "浦添市"
   },
   "渡嘉敷村": {
-   "en": "Tokashiki"
+   "en": "Tokashiki",
+   "zh-TW": "渡嘉敷村"
   },
   "石垣市": {
-   "en": "Ishigaki"
+   "en": "Ishigaki",
+   "zh-TW": "石垣市"
   },
   "糸満市": {
-   "en": "Itoman"
+   "en": "Itoman",
+   "zh-TW": "絲滿市"
   },
   "豊見城市": {
-   "en": "Tomigusuku"
+   "en": "Tomigusuku",
+   "zh-TW": "豊見城市"
   },
   "那覇市": {
-   "en": "Naha"
+   "en": "Naha",
+   "zh-TW": "那霸市"
   }
  }
 }
