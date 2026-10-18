@@ -20,6 +20,6 @@ GA4 プロパティ 507799028 の「管理 → カスタム定義 → カスタ�
 
 登録できたかは、Data API の `properties/507799028/metadata` に `customEvent:page_lang` が出るかで確かめる。
 
-- 登録日: 未登録
+- 登録日: 2026-10-18（Data API の metadata で `customEvent:page_lang` を確認済み）
 
 登録より前の期間は `pageLocation`（URL 全体）で言語版を分ける。
