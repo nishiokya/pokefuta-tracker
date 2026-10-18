@@ -8,6 +8,7 @@
   // 表示している言語版。/en/・/zh-TW/・/zh-CN/・/ko/ の下ならその言語、ほかは日本語。
   // page_path は言語をまたいで同じ（/top・/map …）なので、言語別に見るときはこれで分ける。
   // GA4 の予約語 language（ブラウザの言語）とは別物。
+  // GA4 のカスタムディメンション登録が要る（docs/analytics-page-lang.md）。
   var PAGE_LANGS = ['en', 'zh-TW', 'zh-CN', 'ko'];
   var langMatch = window.location.pathname.match(/^\/([^/]+)\//);
   var pageLang = langMatch && PAGE_LANGS.indexOf(langMatch[1]) !== -1 ? langMatch[1] : 'ja';
