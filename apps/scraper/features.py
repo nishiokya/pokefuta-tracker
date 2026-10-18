@@ -4,6 +4,9 @@
 /features/<slug>/ のページ・/features/ の一覧・sitemap に載る。
 highlight_until までの間は /summary/ の上の方にも出す（新作の告知など、期間のある話題向け）。
 
+特集を足したら `python3 apps/scraper/features.py` で、載せた蓋とグループ（県・市町村）が合っているかを確かめる
+（同じ確認は test_generate_feature_pages でも毎回走る）。
+
 書式:
     slug             URL に使う英小文字・数字・ハイフン（ファイル名と同じにする）
     title            見出し（h1）
@@ -157,3 +160,78 @@ def highlighted(features: list[dict], today: date | None = None) -> list[dict]:
     """/summary/ に出す特集（highlight_until が今日以降）。"""
     today_iso = (today or _today_jst()).isoformat()
     return [f for f in features if f.get("highlight_until") and f["highlight_until"] >= today_iso]
+
+
+def _fold_kana(text: str) -> str:
+    """「金ヶ崎」と「金ケ崎」のような表記ゆれをそろえる。"""
+    return text.replace("ヶ", "ケ").replace("ヵ", "カ").replace("ゑ", "え")
+
+
+def _city_core(city: str) -> str:
+    """「三重郡菰野町」「桑名市」「台東区上野」→「菰野」「桑名」「台東」。本文に出てくるかの照合用。"""
+    core = _fold_kana(city).split("郡")[-1]
+    for suffix in ("市", "町", "村", "区"):
+        if suffix in core:
+            core = core.split(suffix)[0]
+            break
+    return core
+
+
+def check_feature_groups(features: list[dict], min_listed_ratio: float = 0.5) -> list[str]:
+    """特集に載せた蓋とそのグループが合っているかの簡易チェック。問題を文章で返す（無ければ空）。
+
+    - 特集の prefecture と蓋の県が違う
+    - 同じ蓋が1つの特集に二重に入っている／別の特集にも入っている
+    - 導入文などに市町村名を並べている特集で、載せた蓋の市町村が本文に出てこない
+      （半分以上の蓋の市町村が本文にある特集だけを「市町村を並べている」とみなす。全35市町村のような特集は対象外）
+    """
+    problems: list[str] = []
+    owner: dict[str, str] = {}
+    for f in features:
+        slug, records = f["slug"], f["records"]
+        ids = [str(r.get("id")) for r in records]
+        for mid in sorted({i for i in ids if ids.count(i) > 1}):
+            problems.append(f"{slug}: 蓋 {mid} が二重に入っている")
+        for mid in dict.fromkeys(ids):
+            if mid in owner:
+                problems.append(f"{slug}: 蓋 {mid} は {owner[mid]} にも入っている")
+            else:
+                owner[mid] = slug
+        pref = f.get("prefecture")
+        if pref:
+            for r in records:
+                if r.get("prefecture") != pref:
+                    problems.append(f"{slug}: 蓋 {r.get('id')} は{r.get('prefecture')}（特集は{pref}）")
+        text = _fold_kana(" ".join(
+            [f.get("title", ""), f.get("lead", ""), f.get("description", "")]
+            + [t.get("text", "") for t in f.get("timeline", [])]
+        ))
+        cores = {str(r.get("id")): _city_core(str(r.get("city", ""))) for r in records}
+        listed = [mid for mid, core in cores.items() if core and core in text]
+        if cores and len(listed) / len(cores) >= min_listed_ratio:
+            for mid, core in cores.items():
+                if mid not in listed:
+                    problems.append(f"{slug}: 蓋 {mid}（{core}）の市町村が本文に無い。ID の書き間違いかもしれない")
+    return problems
+
+
+if __name__ == "__main__":
+    # 手元での確認用: python3 apps/scraper/features.py
+    import argparse
+    parser = argparse.ArgumentParser(description="特集の蓋とグループの簡易チェック")
+    parser.add_argument("--manholes", type=Path, default=ROOT / "docs" / "pokefuta.ndjson")
+    args = parser.parse_args()
+    by_id: dict[str, dict] = {}
+    for line in args.manholes.read_text(encoding="utf-8").splitlines():
+        if line.strip():
+            rec = json.loads(line)
+            if rec.get("status", "active") == "active":
+                by_id[str(rec.get("id", ""))] = {**by_id.get(str(rec.get("id", "")), {}), **rec}
+    loaded = load_features(by_id, today=date(2099, 1, 1))
+    found = check_feature_groups(loaded)
+    print(f"[features] {len(loaded)} 本の特集・{sum(len(f['records']) for f in loaded)} 枚を確認")
+    for p in found:
+        print("  NG", p)
+    if not found:
+        print("  OK 問題なし")
+    raise SystemExit(1 if found else 0)
