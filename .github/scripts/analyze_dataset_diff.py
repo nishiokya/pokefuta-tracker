@@ -85,11 +85,6 @@ def report(results, base, head):
         for rid in results["new"]:
             r = head[rid]
             lines.append(f"- id {rid}: {r.get('prefecture', '')}/{r.get('city', '')} — {', '.join(r.get('pokemons', []))}")
-        missing = missing_municipality_names([head[rid] for rid in results["new"]])
-        if missing:
-            lines.append("\n⚠️ 訳した県ページで自治体名が日本語のまま出ます。`dataset/municipality_names.json` に足してください")
-            for r, label, langs in missing:
-                lines.append(f"- {r.get('prefecture', '')}/{label}（{', '.join(langs)}）")
 
     if results["deleted"]:
         lines.append(f"\n### 削除 ({len(results['deleted'])} 件)")
@@ -102,6 +97,15 @@ def report(results, base, head):
         for rid, fields in results["content_changed"]:
             r = head[rid]
             lines.append(f"- id {rid}: {r.get('prefecture', '')}/{r.get('city', '')} — 変更フィールド: `{'`, `'.join(fields)}`")
+
+    # 新規だけでなく、自治体名が変わったレコード（コンテンツ変更に入る）も見る
+    changed_ids = [rid for rid, _ in results["content_changed"]]
+    missing = missing_municipality_names([head[rid] for rid in results["new"] + changed_ids])
+    if missing:
+        lines.append("\n### ⚠️ 訳した県ページで自治体名が日本語のまま出ます")
+        lines.append("`dataset/municipality_names.json` に足してください")
+        for r, label, langs in missing:
+            lines.append(f"- id {r.get('id', '')}: {r.get('prefecture', '')}/{label}（{', '.join(langs)}）")
 
     if results["timestamp_only"]:
         ids_str = ", ".join(results["timestamp_only"][:20])

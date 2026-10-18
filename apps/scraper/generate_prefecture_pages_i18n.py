@@ -677,8 +677,12 @@ def build_page(
 
 
 def build_index_page(page: Page, records_by_pref: dict[str, list[dict]]) -> str:
-    total = sum(len(v) for v in records_by_pref.values())
-    prefs = sum(1 for v in records_by_pref.values() if v)
+    # 「installed」と書くので設置予定（installed: false）は数えない
+    installed = {
+        pref: [r for r in items if r.get("installed") is not False] for pref, items in records_by_pref.items()
+    }
+    total = sum(len(v) for v in installed.values())
+    prefs = sum(1 for v in installed.values() if v)
     title = page.t("index_title")
     description = page.t("index_description", total=total, prefs=prefs)
     regions = []
