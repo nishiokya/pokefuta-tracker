@@ -205,7 +205,7 @@ def _analytics_script(page_path: str, page_type: str, feature_slug: str = "", pr
     defaults = {"event_category": "feature", "surface": f"{page_type}_page"}
     if feature_slug:
         defaults["content_group"] = feature_slug
-    return f"""  <script src="/assets/analytics.js?v=20260929a"></script>
+    return f"""  <script src="/assets/analytics.js?v=20261018a"></script>
   <script>
     window.PokefutaAnalytics.init({_json_for_script(context)});
     const featureEventDefaults = {_json_for_script(defaults)};
