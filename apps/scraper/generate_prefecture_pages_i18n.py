@@ -187,8 +187,12 @@ class Page:
     def municipalities(self, n: int) -> str:
         return self.t("municipality_one") if n == 1 else self.t("municipality_many", n=n)
 
+    def pokemon_name(self, name: str) -> str:
+        # データには「ゴンべ」のように末尾がひらがなの表記があるので、カタカナにそろえて引き直す
+        return self.loc.pokemon.get(name) or self.loc.pokemon_name(ja._normalize_katakana(name))
+
     def pokemons(self, record: dict) -> str:
-        names = [self.loc.pokemon_name(p) for p in ja._clean_pokemons(record)]
+        names = [self.pokemon_name(p) for p in ja._clean_pokemons(record)]
         return self.t("sep").join(names) or self.t("pokemon_fallback")
 
     def prefix(self) -> str:
@@ -448,7 +452,7 @@ def _pokemon_cards(page: Page, records: list[dict], pokemon_slugs: dict[str, str
     def card(name: str, n: int) -> str:
         slug = pokemon_slugs.get(name) or pokemon_slugs.get(ja._normalize_katakana(name))
         label = page.t("pokemon_count_one") if n == 1 else page.t("pokemon_count_many", n=n)
-        content = f"<strong>{escape(page.loc.pokemon_name(name))}</strong><span>{escape(label)}</span>"
+        content = f"<strong>{escape(page.pokemon_name(name))}</strong><span>{escape(label)}</span>"
         if not slug:
             return f'<article class="pokemon-card">{content}</article>'
         return (

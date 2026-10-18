@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import re
 import tempfile
 import unittest
@@ -43,12 +44,20 @@ class PrefecturePagesI18nTest(unittest.TestCase):
     def read(self, slug: str = "") -> str:
         return (self.out / slug / "index.html").read_text(encoding="utf-8")
 
+    @unittest.skipIf(
+        os.environ.get("POKEFUTA_PAGES_DEPLOY") == "1",
+        "デプロイ中は止めない。抜けは生成時の WARN と日次データ PR の差分レポートで出る",
+    )
     def test_every_municipality_has_a_name_in_each_language(self) -> None:
         """抜けがあると、その自治体だけ日本語名で出る（デプロイは止めない）。"""
         for lang in PREFECTURE_PAGE_LANGS:
             with self.subTest(lang=lang):
                 self.assertEqual([], module.missing_municipalities(self.records, self.names, lang))
 
+    @unittest.skipIf(
+        os.environ.get("POKEFUTA_PAGES_DEPLOY") == "1",
+        "デプロイ中は止めない。抜けは生成時の WARN と日次データ PR の差分レポートで出る",
+    )
     def test_names_file_has_no_stale_or_misplaced_entries(self) -> None:
         """県を取り違えた行・もう無い自治体の行が残っていないこと。"""
         current = {(r.get("prefecture"), municipality_label(r)) for r in self.records}
@@ -60,12 +69,23 @@ class PrefecturePagesI18nTest(unittest.TestCase):
         self.assertEqual(47, len(list(self.out.glob("*/index.html"))))
         self.assertTrue((self.out / "index.html").exists())
 
-    def test_prefecture_page_is_english_with_japanese_only_where_marked(self) -> None:
+    def test_prefecture_page_is_english(self) -> None:
         html = self.read("hokkaido")
         self.assertIn('<html lang="en">', html)
         self.assertIn("Poké Lids (Pokémon Manholes) in Hokkaido", html)
-        leftover = JAPANESE.findall(_visible_text_outside_ja(html))
-        self.assertEqual([], leftover[:20])
+
+    @unittest.skipIf(
+        os.environ.get("POKEFUTA_PAGES_DEPLOY") == "1",
+        "デプロイ中は止めない。新しいポケモン・自治体の訳の抜けで落ちうる",
+    )
+    def test_no_page_has_japanese_outside_marked_places(self) -> None:
+        """訳の抜け（自治体名・ポケモン名の表記揺れ）があると日本語のまま出る。全ページを見る。"""
+        leftover = {}
+        for path in sorted(self.out.glob("**/index.html")):
+            found = JAPANESE.findall(_visible_text_outside_ja(path.read_text(encoding="utf-8")))
+            if found:
+                leftover[path.parent.name] = "".join(found[:20])
+        self.assertEqual({}, leftover)
 
     def test_hreflang_pairs_with_the_japanese_page(self) -> None:
         en = self.read("kyoto")
