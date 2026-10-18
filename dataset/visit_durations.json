@@ -1,5 +1,5 @@
 {
-  "measured_on": "2026-10-11",
+  "measured_on": "2026-10-18",
   "min_public_people": 3,
   "entries": [
     {
@@ -11,7 +11,7 @@
         "209",
         "210"
       ],
-      "p25_minutes": 84,
+      "p25_minutes": 93,
       "p75_minutes": 150,
       "median_minutes": 102,
       "common_order": [
@@ -69,6 +69,19 @@
       ]
     },
     {
+      "label": "奈良県斑鳩",
+      "manhole_ids": [
+        "148",
+        "149",
+        "150",
+        "151",
+        "152"
+      ],
+      "p25_minutes": 30,
+      "p75_minutes": 68,
+      "median_minutes": 39
+    },
+    {
       "label": "青森県",
       "manhole_ids": [
         "157",
@@ -81,19 +94,6 @@
         "157",
         "158"
       ]
-    },
-    {
-      "label": "奈良県斑鳩",
-      "manhole_ids": [
-        "148",
-        "149",
-        "150",
-        "151",
-        "152"
-      ],
-      "p25_minutes": 29,
-      "p75_minutes": 55,
-      "median_minutes": 36
     },
     {
       "label": "東京都町田",
@@ -138,6 +138,20 @@
       ]
     },
     {
+      "label": "三重県鳥羽市",
+      "manhole_ids": [
+        "243",
+        "414"
+      ],
+      "p25_minutes": 13,
+      "p75_minutes": 30,
+      "median_minutes": 25,
+      "common_order": [
+        "243",
+        "414"
+      ]
+    },
+    {
       "label": "岩手県北上",
       "manhole_ids": [
         "323",
@@ -152,17 +166,19 @@
       ]
     },
     {
-      "label": "三重県鳥羽市",
+      "label": "富山県富山",
       "manhole_ids": [
-        "243",
-        "414"
+        "275",
+        "276",
+        "277"
       ],
-      "p25_minutes": 25,
-      "p75_minutes": 31,
-      "median_minutes": 25,
+      "p25_minutes": 76,
+      "p75_minutes": 88,
+      "median_minutes": 76,
       "common_order": [
-        "243",
-        "414"
+        "275",
+        "276",
+        "277"
       ]
     },
     {
@@ -189,17 +205,6 @@
       "p25_minutes": 24,
       "p75_minutes": 27,
       "median_minutes": 25
-    },
-    {
-      "label": "富山県富山",
-      "manhole_ids": [
-        "275",
-        "276",
-        "277"
-      ],
-      "p25_minutes": 76,
-      "p75_minutes": 95,
-      "median_minutes": 82
     },
     {
       "label": "岩手県久慈",
