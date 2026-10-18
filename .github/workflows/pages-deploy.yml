@@ -24,6 +24,8 @@ on:
       - 'apps/scraper/summary_faq.py' # summary trivia FAQ (ja)
       - 'apps/scraper/generate_summary_ogp.py' # summary page OGP generator
       - 'apps/scraper/generate_prefecture_pages.py' # prefecture page generator
+      - 'apps/scraper/generate_prefecture_pages_i18n.py' # translated prefecture pages (/en/prefectures/)
+      - 'dataset/municipality_names.json' # municipality names for translated prefecture pages
       - 'apps/scraper/generate_municipality_pages.py' # municipality page generator + ranking
       - 'apps/scraper/visit_durations.py' # measured visit-time text (prefecture + municipality pages)
       - 'dataset/visit_durations.json' # measured visit times, built by apps/tools/build_visit_durations.py
@@ -121,6 +123,7 @@ jobs:
             apps.scraper.test_analytics_contract \
             apps.scraper.test_inject_adsense \
             apps.scraper.test_generate_prefecture_pages \
+            apps.scraper.test_generate_prefecture_pages_i18n \
             apps.scraper.test_manhole_tile_image \
             apps.scraper.test_generate_municipality_pages \
             apps.scraper.test_visit_durations \
@@ -161,6 +164,8 @@ jobs:
           python3 apps/scraper/generate_summary_pages.py
           echo "[dist] Generate prefecture landing pages (47 prefectures)"
           python3 apps/scraper/generate_prefecture_pages.py
+          echo "[dist] Generate translated prefecture pages (en)"
+          python3 apps/scraper/generate_prefecture_pages_i18n.py --lang en
           echo "[dist] Generate municipality landing pages + ranking"
           python3 apps/scraper/generate_municipality_pages.py
           echo "[dist] Generate trip pages (/trip/)"
