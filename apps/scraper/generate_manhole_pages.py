@@ -23,6 +23,7 @@ from xml.sax.saxutils import escape
 sys.path.insert(0, str(Path(__file__).parent))
 from display_names import compose_display_name, landmark_label, municipality_label  # noqa: E402
 from generate_pokemon_pages import _FORM_PREFIX, _normalize_katakana  # noqa: E402
+from generate_pokemon_pages import load_pokemon_metadata as load_pokemon_metadata_with_forms  # noqa: E402
 from manhole_page_css import PAGE_CSS  # noqa: E402
 from photo_caption import (  # noqa: E402
     format_display_name,
@@ -446,27 +447,12 @@ def load_photos(path: Path) -> dict[str, dict]:
 
 
 def load_pokemon_metadata(path: Path) -> dict[str, dict]:
-    """Load Pokemon metadata indexed by Japanese name."""
-    if not path.exists():
-        logger.warning(f"Pokemon metadata file not found: {path}")
-        return {}
+    """Load Pokemon metadata indexed by Japanese name (regional forms included).
 
-    try:
-        data = json.loads(path.read_text(encoding="utf-8"))
-        # Index by Japanese name for quick lookup
-        metadata = {}
-        for pokemon in data:
-            if isinstance(pokemon, dict):
-                names = pokemon.get("names", {})
-                ja_name = names.get("ja", "")
-                if ja_name:
-                    metadata[ja_name] = pokemon
-
-        logger.info(f"Loaded metadata for {len(metadata)} Pokemon")
-        return metadata
-    except json.JSONDecodeError as e:
-        logger.error(f"Failed to parse Pokemon metadata: {e}")
-        return {}
+    ポケモンページと同じ索引を使う。メタデータの日本語名は通常種もリージョンフォームも
+    「ロコン」なので、日本語名だけで引くと通常のロコンがアローラのタイプ・世代になる。
+    """
+    return load_pokemon_metadata_with_forms(path)
 
 
 def filter_pokemons(pokemons: list) -> list[str]:
@@ -695,7 +681,7 @@ def generate_html(
     if pokemons:
         pokemon_info_html = "<section class='pokemon-section section-card'><h2>登場ポケモン</h2><div class='pokemon-list'>"
         for poke_name in pokemons:
-            meta = pokemon_meta.get(poke_name, {})
+            meta = pokemon_meta.get(poke_name) or pokemon_meta.get(_normalize_katakana(poke_name)) or {}
             names = meta.get("names", {})
             en_name = names.get("en", "")
             types_data = meta.get("types", [])
