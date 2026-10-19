@@ -175,6 +175,15 @@ TYPE_NAMES: dict[str, dict[str, str]] = {
 }
 
 EXTRA_CSS = """
+    /* 見出しが日本語版より長い（Municipality など）。値と重ならないよう見出しの列を広げる（「(Japanese)」は折り返す） */
+    .location-section dl {
+      grid-template-columns: minmax(5em, 8.5em) 1fr;
+      column-gap: 12px;
+    }
+    .location-section dd {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
     .hero-ja-name {
       margin-top: 4px;
       font-size: 13px;
@@ -184,10 +193,20 @@ EXTRA_CSS = """
       margin-left: 6px;
       color: #6b5b45;
     }
-    .related-card-body small {
-      display: block;
+    .related-card-text {
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+    .related-card-text a {
+      white-space: normal;
+      overflow-wrap: break-word;
+    }
+    .related-card-text small {
       font-size: 12px;
       color: #6b5b45;
+      overflow-wrap: anywhere;
     }
     .ja-note {
       margin-top: 12px;
@@ -243,9 +262,11 @@ def _related_card(page: DetailPage, other: dict, id_to_image_url: dict[str, str]
         f"<li class='related-card'>{thumb_html}"
         f"<div class='related-card-body'>"
         f'{ja._icon("icon-detail-location", "icon-sm")}'
+        # 訳と日本語名は縦に積む（横並びだとスマホ幅で日本語名がリンクの幅を食いつぶす）
+        f"<span class='related-card-text'>"
         f"<a href='{_attr(page.detail_path(oid))}'{_onclick(event, {**params, 'to_manhole_id': oid})}>"
         f"{escape(page.pokemons(other))} · {escape(page.municipality(other))}</a>"
-        f"<small lang='ja'>{escape(_ja_name(other))}</small>"
+        f"<small lang='ja'>{escape(_ja_name(other))}</small></span>"
         f"</div>{extra_html}</li>"
     )
 

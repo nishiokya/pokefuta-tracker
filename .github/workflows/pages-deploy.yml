@@ -13,6 +13,7 @@ on:
       - 'apps/scraper/generate_sitemap.py' # sitemap generator used during deploy
       - 'apps/scraper/generate_manhole_pages.py' # manhole page generator
       - 'apps/scraper/generate_manhole_pages_i18n.py' # translated manhole pages (/en/manholes/)
+      - 'apps/scraper/manhole_page_css.py' # detail page CSS shared by ja / translated pages
       - 'apps/scraper/generate_manhole_ogp.py' # OGP image generator
       - 'apps/scraper/generate_pokemon_pages.py' # Pokemon LP generator
       - 'apps/scraper/generate_pokemon_index_page.py' # Pokemon index page generator
