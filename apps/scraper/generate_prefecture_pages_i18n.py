@@ -95,14 +95,14 @@ TEXT: dict[str, dict[str, str]] = {
         "legend_preinstall": "Coming soon",
         "map_note": "Drag or pinch to move the map. Mouse-wheel zoom is off so the page scrolls normally.",
         "map_empty": "No locations to show yet.",
-        "popup_details": "Details (Japanese)",
+        "popup_details": "Details",
         "popup_directions": "Directions",
         "popup_preinstall": "This Poké Lid is not installed yet.",
         "popup_no_photo": "No photo yet",
         "popup_photo_alt": "Fan photo of the Poké Lid in {place}",
         "marker_title": "Poké Lid in {place}",
         "photos_heading": "Fan photos from {pref}",
-        "photos_lead": "Photos posted by visitors. Tap one for the location details (in Japanese).",
+        "photos_lead": "Photos posted by visitors. Tap one for the location details.",
         "photos_empty": "No fan photos yet.",
         "photo_by": "Photo by {name}",
         "list_heading": "All Poké Lids in {pref}",
@@ -183,14 +183,14 @@ TEXT: dict[str, dict[str, str]] = {
         "legend_preinstall": "即將設置",
         "map_note": "可拖曳或用兩指縮放地圖。為了讓頁面正常捲動，已關閉滑鼠滾輪縮放。",
         "map_empty": "目前沒有可顯示的設置地點。",
-        "popup_details": "詳細資訊（日文）",
+        "popup_details": "詳細資訊",
         "popup_directions": "交通指引",
         "popup_preinstall": "這個寶可夢人孔蓋尚未設置。",
         "popup_no_photo": "尚無照片",
         "popup_photo_alt": "{place}的寶可夢人孔蓋粉絲照片",
         "marker_title": "{place}的寶可夢人孔蓋",
         "photos_heading": "{pref}的粉絲照片",
-        "photos_lead": "訪客投稿的照片。點選可查看設置地點的詳細資訊（日文）。",
+        "photos_lead": "訪客投稿的照片。點選可查看設置地點的詳細資訊。",
         "photos_empty": "目前還沒有粉絲照片。",
         "photo_by": "攝影：{name}",
         "list_heading": "{pref}的寶可夢人孔蓋一覽",
@@ -418,7 +418,7 @@ def _map_script(page: Page, points: list[dict]) -> str:
         const popupHtml = '<div class="map-popup"><strong>' + escapeHtml(point.pokemons) + '</strong><br>' +
           escapeHtml(point.place) + '<br><span lang="ja">' + escapeHtml(point.ja_name) + '</span>' + photoHtml +
           '<div class="map-popup-actions' + (point.is_preinstall ? ' preinstall-actions' : '') + '">' +
-          '<a href="/manholes/' + encodeURIComponent(point.id) + '/" hreflang="ja" ' +
+          '<a href="' + {_json(page.prefix() + "manholes/")} + encodeURIComponent(point.id) + '/" ' +
           'data-track="prefecture_manhole_click" data-destination="' + escapeHtml(point.id) + '" ' +
           'data-content-id="' + escapeHtml(point.id) + '" data-surface="map_popup">' + escapeHtml(labels.details) + '</a>' +
           '<a href="https://www.google.com/maps?q=' + point.lat + ',' + point.lng + '" target="_blank" ' +
@@ -489,7 +489,7 @@ def _manhole_cards(page: Page, records: list[dict], photos: dict[str, dict], dis
         )
         cards.append(
             f'<article class="manhole-card" data-manhole-id="{_attr(mid)}" id="manhole-{_attr(mid)}">'
-            f'<a class="manhole-detail" href="/manholes/{quote(mid)}/" hreflang="ja" '
+            f'<a class="manhole-detail" href="{page.prefix()}manholes/{quote(mid)}/" '
             f'data-track="prefecture_manhole_click" data-position="{position}" '
             f'data-destination="{_attr(mid)}" data-content-id="{_attr(mid)}" data-surface="manhole_card">'
             f'{image_html}<span class="manhole-shade" aria-hidden="true"></span>'
@@ -519,7 +519,7 @@ def _photo_cards(page: Page, records: list[dict], photos: dict[str, dict]) -> st
         )
         cards.append(
             '<article class="photo-card">'
-            f'<a class="photo-card-image" href="/manholes/{quote(mid)}/" hreflang="ja" '
+            f'<a class="photo-card-image" href="{page.prefix()}manholes/{quote(mid)}/" '
             f'data-track="prefecture_photo_click" data-position="{position}" '
             f'data-destination="{_attr(mid)}" data-surface="photo_gallery">'
             f'<img src="{_attr(ja._photo_asset_url(record, photo))}" '
