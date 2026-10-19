@@ -14,7 +14,8 @@
 
    ブレークポイントは 1024px の1本だけ。以前あった 720px の段は、
    640〜720px で写真館と挙動が食い違う原因だったので廃止した。 */
-@import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@600;700;800&display=swap');
+/* M PLUS Rounded 1c は inject_site_header.py が <head> に描画を止めない形で入れる。
+   ここで @import すると CSS→CSS の直列読み込みになり、全ページの初回描画が約1秒遅れていた。 */
 
 :root {
   /* ── ここから site-chrome-tokens.css のコピー ── */

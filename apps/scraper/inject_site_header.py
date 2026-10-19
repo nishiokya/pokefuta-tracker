@@ -24,9 +24,19 @@ from pathlib import Path
 
 
 # site-header.css を変えたら上げる。再訪者のブラウザに古いクロム・本文幅が残らないように
-SITE_HEADER_CSS_VERSION = "20261011c"
+SITE_HEADER_CSS_VERSION = "20261019a"
 STYLESHEET_TEMPLATE = (
     '<link rel="stylesheet" href="{asset_base}assets/site-header.css?v=' + SITE_HEADER_CSS_VERSION + '">'
+)
+# ヘッダーの丸ゴシック。media="print" で読み込み、届いたら all に切り替える。
+# 描画を止める stylesheet にすると、Google Fonts の CSS が来るまで本文も出ない
+# （モバイル計測で全ページ 1.1〜1.5 秒）。届くまではシステムフォントで表示する。
+FONT_CSS_URL = "https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@600;700;800&display=swap"
+FONT_LINKS = (
+    '<link rel="preconnect" href="https://fonts.googleapis.com">\n'
+    '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n'
+    f'<link rel="stylesheet" href="{FONT_CSS_URL}" media="print" onload="this.media=\'all\'">\n'
+    f'<noscript><link rel="stylesheet" href="{FONT_CSS_URL}"></noscript>'
 )
 SESSION_BADGE_SCRIPT_TEMPLATE = '<script src="{asset_base}assets/session-badge.js" defer></script>'
 SITE_HEADER_ANALYTICS_SCRIPT_TEMPLATE = '<script src="{asset_base}assets/site-header-analytics.js" defer></script>'
@@ -350,6 +360,8 @@ def inject(
         f'<link rel="apple-touch-icon" href="{asset_base}assets/apple-touch-icon.png" sizes="180x180">',
     ])
     html = re.sub(r'</head>', lambda _: icon_links + '\n</head>', html, count=1, flags=re.IGNORECASE)
+    if FONT_CSS_URL not in html:
+        html = html.replace("</head>", f"{FONT_LINKS}\n</head>", 1)
     if stylesheet not in html:
         html = html.replace("</head>", f"  {stylesheet}\n</head>", 1)
 
