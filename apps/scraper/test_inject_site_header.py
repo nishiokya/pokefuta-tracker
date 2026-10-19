@@ -38,6 +38,16 @@ class InjectSiteHeaderTest(unittest.TestCase):
         self.assertIn('aria-hidden="true"', mark.group(0))
         self.assertNotIn("DATABASE", result)
 
+    def test_font_css_does_not_block_rendering(self):
+        result = inject(BARE)
+        font_links = re.findall(r'<link rel="stylesheet" href="https://fonts\.googleapis\.com/[^"]*"[^>]*>', result)
+        # noscript の中の1本を除けば、描画を止めない media="print" だけ
+        self.assertEqual(len(font_links), 2)
+        self.assertIn('media="print" onload="this.media=\'all\'"', font_links[0])
+        self.assertIn('<noscript>' + font_links[1] + '</noscript>', result)
+        self.assertIn('<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>', result)
+        self.assertEqual(result.count('fonts.googleapis.com/css2'), inject(result).count('fonts.googleapis.com/css2'))
+
     def test_pc_nav_order(self):
         result = inject(BARE)
         # スイッチャーのメニューにも同じ href が出るので、ナビの中だけを見る
