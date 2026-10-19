@@ -10,7 +10,7 @@ from apps.scraper import generate_prefecture_pages as ja
 from apps.scraper import generate_prefecture_pages_i18n as module
 from apps.scraper.display_names import municipality_label
 from apps.scraper.generate_sitemap import build_sitemap
-from apps.scraper.prefectures import PREFECTURE_PAGE_LANGS
+from apps.scraper.prefectures import MANHOLE_PAGE_LANGS, PREFECTURE_PAGE_LANGS
 
 # 訳したページに日本語が混ざってよいのは lang="ja" を付けた正式名・「日本語」ボタンと、
 # 投稿者が自分で付けた表示名（<bdi>）だけ。英語は漢字も含めて、繁体字はかなと
@@ -132,13 +132,20 @@ class PrefecturePagesI18nTest(unittest.TestCase):
         html = self.read("hokkaido")
         self.assertIn('href="/en/pokemon/', html)
         self.assertIn('href="/en/prefectures/aomori/"', html)
-        self.assertIn('href="/manholes/', html)
+        # 詳細ページも訳してあるので、同じ言語の詳細ページへ
+        self.assertIn('href="/en/manholes/', html)
+        self.assertIn('"/en/manholes/" + encodeURIComponent(point.id)', html)
+        self.assertNotIn("Japanese)", html)
         # 日本語だけのページへのリンクには hreflang="ja" を付ける
         for link in re.findall(r'<a [^>]*href="/(?:manholes|prefectures)/[^"]*"[^>]*>', html):
             self.assertIn('hreflang="ja"', link)
         # 写真館（日本語のみ）への投稿・訪問記録の導線は出さない
         self.assertNotIn("pokefuta.com/upload", html)
         self.assertNotIn("pokefuta.com/visits", html)
+
+    def test_detail_pages_exist_for_every_translated_prefecture_language(self) -> None:
+        """県ページの訳は詳細ページを同じ言語の /<lang>/manholes/ へリンクする。そちらも訳してあること。"""
+        self.assertLessEqual(set(PREFECTURE_PAGE_LANGS), set(MANHOLE_PAGE_LANGS))
 
     def test_empty_prefecture_shows_the_nearest_poke_lids(self) -> None:
         html = self.read("gunma")

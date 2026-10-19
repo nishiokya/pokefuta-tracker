@@ -13,13 +13,13 @@ from xml.sax.saxutils import escape
 try:
     from apps.scraper.character_manhole_works import WorkPage, available_pages, gundam_work_records
     from apps.scraper.generate_character_manhole_page import _is_active, load_ndjson
-    from apps.scraper.prefectures import PREFECTURE_ORDER, PREFECTURE_PAGE_LANGS, PREFECTURE_SLUGS
+    from apps.scraper.prefectures import MANHOLE_PAGE_LANGS, PREFECTURE_ORDER, PREFECTURE_PAGE_LANGS, PREFECTURE_SLUGS
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
     from character_manhole_works import WorkPage, available_pages, gundam_work_records
     from generate_character_manhole_page import _is_active, load_ndjson
-    from prefectures import PREFECTURE_ORDER, PREFECTURE_PAGE_LANGS, PREFECTURE_SLUGS
+    from prefectures import MANHOLE_PAGE_LANGS, PREFECTURE_ORDER, PREFECTURE_PAGE_LANGS, PREFECTURE_SLUGS
 
 try:
     from apps.scraper.generate_tag_pages import available_tag_slugs, load_records
@@ -252,6 +252,13 @@ def build_sitemap(
         entries.append(
             url_entry(f"{BASE_URL}manholes/{quote(manhole_id)}/", "weekly", "0.8")
         )
+
+    # 訳した詳細ページ（/<lang>/manholes/<id>/）。日本語版と同じ扱い
+    for lang in MANHOLE_PAGE_LANGS:
+        for manhole_id in manhole_ids:
+            entries.append(
+                url_entry(f"{BASE_URL}{lang}/manholes/{quote(manhole_id)}/", "weekly", "0.8")
+            )
 
     # Pokemon LP pages (Japanese root)
     for slug in pokemon_slugs or []:

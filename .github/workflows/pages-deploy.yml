@@ -12,6 +12,7 @@ on:
       - 'apps/web/**' # HTML and assets changes
       - 'apps/scraper/generate_sitemap.py' # sitemap generator used during deploy
       - 'apps/scraper/generate_manhole_pages.py' # manhole page generator
+      - 'apps/scraper/generate_manhole_pages_i18n.py' # translated manhole pages (/en/manholes/)
       - 'apps/scraper/generate_manhole_ogp.py' # OGP image generator
       - 'apps/scraper/generate_pokemon_pages.py' # Pokemon LP generator
       - 'apps/scraper/generate_pokemon_index_page.py' # Pokemon index page generator
@@ -143,9 +144,13 @@ jobs:
             apps.scraper.test_generate_character_work_pages \
             apps.scraper.test_generate_gmanhole_map_page
           echo "[dist] Test manhole detail page headings"
-          python3 -m unittest apps.scraper.test_generate_manhole_pages_h1 apps.scraper.test_generate_manhole_pages_breadcrumb apps.scraper.test_display_name_consumers apps.scraper.test_generate_top_feed
+          python3 -m unittest apps.scraper.test_generate_manhole_pages_h1 apps.scraper.test_generate_manhole_pages_breadcrumb apps.scraper.test_display_name_consumers apps.scraper.test_generate_top_feed apps.scraper.test_generate_manhole_pages_i18n
           echo "[dist] Generate static manhole detail pages"
           python3 apps/scraper/generate_manhole_pages.py
+          echo "[dist] Generate translated manhole detail pages (en / zh-TW)"
+          for lang in en zh-TW; do
+            python3 apps/scraper/generate_manhole_pages_i18n.py --lang "$lang"
+          done
           echo "[dist] Test Pokemon LP page content"
           python3 -m unittest apps.scraper.test_generate_pokemon_pages_ja_seo apps.scraper.test_generate_pokemon_pages_hero
           echo "[dist] Generate static Pokemon LP pages"
