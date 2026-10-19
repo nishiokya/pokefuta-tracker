@@ -10,6 +10,7 @@ from pathlib import Path
 from apps.scraper import generate_manhole_pages as ja
 from apps.scraper import generate_manhole_pages_i18n as module
 from apps.scraper import generate_prefecture_pages_i18n as pref_i18n
+from apps.scraper.generate_pokemon_pages import load_pokemon_metadata
 from apps.scraper.generate_sitemap import build_sitemap
 from apps.scraper.prefectures import MANHOLE_PAGE_LANGS
 from apps.scraper.test_generate_prefecture_pages_i18n import JAPANESE
@@ -31,7 +32,7 @@ class ManholePagesI18nTest(unittest.TestCase):
         cls.manholes = ja.load_manholes(ROOT / "docs" / "pokefuta.ndjson")
         photos = ja.load_photos(ROOT / "docs" / "latest-manhole-photos.json")
         pokemon_path = ROOT / "docs" / "pokemon_metadata.json"
-        pokemon_meta = ja.load_pokemon_metadata(pokemon_path)
+        pokemon_meta = load_pokemon_metadata(pokemon_path)
         ja_to_slug = ja.build_ja_to_slug(json.loads(pokemon_path.read_text(encoding="utf-8")))
         names = pref_i18n.load_municipality_names()
         cls.tmp = tempfile.TemporaryDirectory()
@@ -84,6 +85,22 @@ class ManholePagesI18nTest(unittest.TestCase):
                 if match:
                     leaks.append(f"{page.parent.name}: {match.group(0)}")
             self.assertEqual([], leaks[:10], lang)
+
+    def test_regional_forms_show_their_own_type_and_generation(self) -> None:
+        """アローラロコンと通常のロコンを取り違えない（メタデータの日本語名は同じ「ロコン」）。"""
+        def card(pokemon: str) -> str:
+            for m in self.manholes:
+                if pokemon in ja.filter_pokemons(m.get("pokemons", [])):
+                    html = self.read(str(m["id"]).strip())
+                    section = html.split("pokemon-section", 1)[1]
+                    start = section.index(f"lang='ja'>{pokemon}<")
+                    return section[start:section.index("</div>", start)]
+            self.skipTest(f"{pokemon} のポケふたが今のデータに無い")
+
+        self.assertIn("Type: Fire", card("ロコン"))
+        self.assertIn("Generation 1", card("ロコン"))
+        self.assertIn("Type: Ice", card("アローラロコン"))
+        self.assertIn("Generation 7", card("アローラロコン"))
 
     def test_hreflang_links_every_language_both_ways(self) -> None:
         expected = [

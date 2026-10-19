@@ -32,6 +32,7 @@ try:
     from apps.scraper import generate_manhole_pages as ja
     from apps.scraper import generate_prefecture_pages_i18n as pref_i18n
     from apps.scraper.display_names import compose_display_name, municipality_label
+    from apps.scraper.generate_pokemon_pages import load_pokemon_metadata
     from apps.scraper.generate_top_page_en import Locale
     from apps.scraper.photo_caption import format_display_name, format_photo_date
     from apps.scraper.prefectures import MANHOLE_PAGE_LANGS, PREFECTURE_PAGE_LANGS, PREFECTURE_SLUGS
@@ -41,6 +42,7 @@ except ModuleNotFoundError as exc:
     import generate_manhole_pages as ja
     import generate_prefecture_pages_i18n as pref_i18n
     from display_names import compose_display_name, municipality_label
+    from generate_pokemon_pages import load_pokemon_metadata
     from generate_top_page_en import Locale
     from photo_caption import format_display_name, format_photo_date
     from prefectures import MANHOLE_PAGE_LANGS, PREFECTURE_PAGE_LANGS, PREFECTURE_SLUGS
@@ -472,7 +474,7 @@ def build_page(
     if pokemons:
         cards = []
         for name in pokemons:
-            meta = pokemon_meta.get(name, {})
+            meta = pokemon_meta.get(name) or pokemon_meta.get(ja._normalize_katakana(name)) or {}
             poke_slug = ja_to_slug.get(name) or ja_to_slug.get(ja._normalize_katakana(name), "")
             local = escape(page.pokemon_name(name))
             card = "<div class='pokemon-card'>"
@@ -740,7 +742,8 @@ def main(argv: list[str] | None = None) -> int:
         args.lang,
         manholes,
         ja.load_photos(args.photos),
-        ja.load_pokemon_metadata(args.pokemon),
+        # リージョンフォーム（アローラロコン など）も引ける索引。ポケモンページと同じもの
+        load_pokemon_metadata(args.pokemon),
         ja.build_ja_to_slug(raw_pokemon),
         pref_i18n.load_municipality_names(args.municipality_names),
         args.image_dir,
