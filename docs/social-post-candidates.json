@@ -791,10 +791,10 @@
     }
   },
   {
-    "id": "photo-195-4631f2de",
+    "id": "photo-62-15614031",
     "type": "latest_photo",
-    "title": "最新写真：岡山県/倉敷市",
-    "url": "https://data.pokefuta.com/manholes/195/",
+    "title": "最新写真：北海道/森町",
+    "url": "https://data.pokefuta.com/manholes/62/",
     "hashtags": [
       "#ポケふた",
       "#ポケモンマンホール"
@@ -802,19 +802,19 @@
     "imageType": "latest_photo",
     "source": "photos",
     "raw_data": {
-      "manhole_id": "195",
-      "title": "岡山県/倉敷市",
-      "pref": "岡山県",
-      "city": "倉敷",
-      "pokemon": "アゲハント",
+      "manhole_id": "62",
+      "title": "北海道/森町",
+      "pref": "北海道",
+      "city": "森",
+      "pokemon": "アローラロコン",
       "pokemon_list": [
-        "アゲハント",
-        "ポチエナ"
+        "アローラロコン",
+        "マーイーカ"
       ],
-      "created_at": "2026-10-11T23:00:19.741883+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/825e7e5e-2b05-4fd9-89f5-f918fd4f463f.jpg",
-      "display_name": "ぴぃ",
-      "photo_rank": "recent"
+      "created_at": "2026-10-19T11:43:14.813104+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/7ed1e5d2-25b3-4af5-9f46-bf7956c58dac.jpg",
+      "display_name": "minmin_m",
+      "photo_rank": "first_ever"
     }
   },
   {
