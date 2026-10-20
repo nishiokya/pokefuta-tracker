@@ -157,8 +157,9 @@ PREFECTURE_SEO: dict[str, dict[str, str]] = {
         "title": "長崎のポケふた{count}枚｜デンリュウの設置場所一覧・地図",
         "h1": "長崎（長崎県）のポケふた{count}枚",
         "description": (
-            "長崎県のデンリュウのポケふた{count}枚を一覧と地図で紹介。本土の長崎市周辺・県央・"
-            "島原半島・県北と、壱岐・対馬・五島・新上五島の離島に分けて設置場所を確認できます。"
+            # 「長崎 ポケふた 場所／地図／回り方」で探されるので、その語から書き出す。
+            "長崎のポケふた{count}枚の場所を地図と一覧で。長崎市・大村・諫早・島原・佐世保の"
+            "本土と、壱岐・対馬・五島の離島に分けて、回り方を地域別に確認できます。"
         ),
     },
     "大阪府": {
@@ -1812,6 +1813,14 @@ def _guide_stop_name(record: dict) -> str:
     return _manhole_name(record).removeprefix(f'{record.get("prefecture", "")}/')
 
 
+def _guide_stop_address(record: dict) -> str:
+    # Google は地点名と住所を区切りなしでつなぎ「長崎市長崎県長崎市尾上町5-6」という
+    # スニペットを作っていた（2026-10-20）。県ページ内なので県名を省き、
+    # 住所は data-nosnippet で検索結果の抜粋に使わせない（ページ内の表示は変えない）。
+    address = str(record.get("address") or "").removeprefix(str(record.get("prefecture") or ""))
+    return f'<span data-nosnippet>{escape(address)}</span>' if address else ""
+
+
 def _visit_guide_html(records: list[dict], guide: dict | None) -> str:
     if not guide:
         return ""
@@ -1846,7 +1855,7 @@ def _visit_guide_html(records: list[dict], guide: dict | None) -> str:
             'data-track="prefecture_photo_candidate_click" data-surface="visit_guide" '
             f'data-destination="manhole_list" data-content-id="{_escape_attr(mid)}">'
             f'{escape(_guide_stop_name(by_id[mid]))}</a>'
-            f'<span>{escape(str(by_id[mid].get("address") or ""))}</span></li>'
+            f'{_guide_stop_address(by_id[mid])}</li>'
             for mid in route_stop_ids if mid in by_id
         )
         return f'<ul class="visit-guide-stops">{stops}</ul>'

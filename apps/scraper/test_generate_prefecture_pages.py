@@ -337,6 +337,19 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         self.assertIn("A &amp; B", html)
         self.assertIn("&lt;unsafe&gt;", html)
 
+    def test_visit_guide_address_drops_prefecture_and_is_kept_out_of_snippets(self) -> None:
+        guide = {
+            "heading": "h", "intro": "i", "manhole_ids": ["354"], "sections": [],
+            "checked_on": "2026-10-20", "sources": [],
+        }
+        record = {
+            "id": "354", "prefecture": "長崎県", "city": "長崎",
+            "address": "長崎県長崎市尾上町5-6",
+        }
+        html = MODULE._visit_guide_html([record], guide)
+        self.assertIn("<span data-nosnippet>長崎市尾上町5-6</span>", html)
+        self.assertNotIn("長崎県長崎市", html)
+
     def test_expired_event_is_hidden(self) -> None:
         import datetime
 
