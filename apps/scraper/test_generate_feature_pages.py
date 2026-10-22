@@ -153,6 +153,21 @@ class FeaturePageTests(unittest.TestCase):
         self.assertNotIn("timeline-heading", plain)
         self.assertNotIn("news-heading", plain)
 
+    def test_feature_without_manholes_yet_drops_lid_sections(self) -> None:
+        """お披露目直後で公式に蓋がまだ無い特集は、日程・設置場所・ニュースだけで出す。"""
+        with tempfile.TemporaryDirectory() as tmp:
+            d = _write(Path(tmp), _feature("planned", manholes=[]))
+            loaded = FEATURES.load_features(RECORDS, d, today=date(2026, 10, 17))
+        self.assertEqual([f["slug"] for f in loaded], ["planned"])
+        html = MODULE.build_feature_page(
+            {**loaded[0], "sections": [{"heading": "設置場所", "body": "土佐市：土佐市役所"}]}, {}, []
+        )
+        self.assertIn("土佐市役所", html)
+        for absent in ("notes-heading", 'id="manhole-list"', 'id="prefecture-map"', "ポケふたを見る", '"mainEntity"'):
+            self.assertNotIn(absent, html)
+        self.assertIn("設置場所の一覧", MODULE.build_index_page(loaded))
+        self.assertNotIn("ポケふた0枚", MODULE.build_index_page(loaded))
+
     def test_index_thumbs_keep_lids_without_photos_and_plus_only_counts_overflow(self) -> None:
         """写真の無い蓋は灰色の丸で並べ、「+n」は6枚を超えた分だけにする（5枚で「+2」と出ないように）。"""
         with tempfile.TemporaryDirectory() as tmp:
