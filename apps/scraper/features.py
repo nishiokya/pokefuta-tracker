@@ -17,7 +17,8 @@ highlight_until までの間は /summary/ の上の方にも出す（新作の�
     date_label       任意。published の日付に添える言葉（既定「公開」）。過去の新作をあとから特集にするときは
                      published をお披露目の日にして「お披露目」とする（このときは記事の公開日として扱わない）
     date_text        任意。日まで分からないときの表示（例「2018年12月」）。published は並び順にだけ使う
-    manholes         [{"id": "487", "note": "ひとこと"}] 並べた順に出す
+    manholes         [{"id": "487", "note": "ひとこと"}] 並べた順に出す。お披露目直後で公式サイトにまだ蓋が無いときは
+                     [] にして、設置場所は sections に書く（蓋の一覧・地図・見どころは出さない）。id が付いたら足す
     links            任意。[{"text": ..., "href": "/..." か "https://...", "external": true}]
     sections         任意。[{"heading": "見出し", "body": "本文（空行で段落を分ける）"}] 見どころの下に出す
     timeline         任意。[{"when": "2026年10月16日", "date": "2026-10-16"（任意）, "text": "お披露目式"}]
@@ -79,7 +80,7 @@ def _valid(entry: object, name: str) -> bool:
         and isinstance(entry.get("published"), str) and bool(_DATE_RE.match(entry["published"]))
         and (entry.get("highlight_until") is None
              or (isinstance(entry["highlight_until"], str) and bool(_DATE_RE.match(entry["highlight_until"]))))
-        and isinstance(entry.get("manholes"), list) and bool(entry["manholes"])
+        and isinstance(entry.get("manholes"), list)
         and all(
             isinstance(m, dict) and isinstance(m.get("id"), (str, int)) and str(m["id"]).strip()
             and isinstance(m.get("note", ""), str)

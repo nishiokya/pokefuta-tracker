@@ -260,7 +260,9 @@ def build_feature_page(feature: dict, photos: dict[str, dict], others: list[dict
         "description": description,
         **({"datePublished": article_date(feature)} if article_date(feature) else {}),
         "url": canonical,
-        "mainEntity": {
+    }
+    if records:
+        json_ld["mainEntity"] = {
             "@type": "ItemList",
             "numberOfItems": len(records),
             "itemListElement": [
@@ -272,8 +274,26 @@ def build_feature_page(feature: dict, photos: dict[str, dict], others: list[dict
                 }
                 for i, r in enumerate(records, start=1)
             ],
-        },
-    }
+        }
+    # お披露目直後で蓋がまだ無い特集は、蓋に頼る欄（見どころ・一覧・地図）を出さない
+    notes_html = (
+        f"""
+    <section aria-labelledby="notes-heading">
+      <h2 id="notes-heading">見どころ</h2>
+      {_notes_html(feature)}
+    </section>
+"""
+        if records else ""
+    )
+    list_html = (
+        f"""
+    <section id="manhole-list" aria-labelledby="manhole-heading">
+      <h2 id="manhole-heading">この特集のポケふた</h2>
+      <div class="manhole-grid">{cards_html}</div>
+    </section>
+"""
+        if records else ""
+    )
     map_html = (
         f"""
     <section aria-labelledby="map-heading">
@@ -303,23 +323,12 @@ def build_feature_page(feature: dict, photos: dict[str, dict], others: list[dict
         <h1>{escape(feature['title'])}</h1>
         {f'<p>{escape(lead)}</p>' if lead else ''}
         <div class="hero-actions">
-          <a class="button primary" href="#manhole-list" data-track="feature_list_click"
-            data-surface="hero" data-destination="manhole_list">ポケふたを見る</a>
+          {'<a class="button primary" href="#manhole-list" data-track="feature_list_click" data-surface="hero" data-destination="manhole_list">ポケふたを見る</a>' if records else ''}
           {'<a class="button tertiary" href="#prefecture-map" data-track="feature_map_click" data-surface="hero" data-destination="feature_map">地図で見る</a>' if map_points else ''}
         </div>
       </div>
     </header>
-{_timeline_html(feature)}
-    <section aria-labelledby="notes-heading">
-      <h2 id="notes-heading">見どころ</h2>
-      {_notes_html(feature)}
-    </section>
-{_sections_html(feature)}
-    <section id="manhole-list" aria-labelledby="manhole-heading">
-      <h2 id="manhole-heading">この特集のポケふた</h2>
-      <div class="manhole-grid">{cards_html}</div>
-    </section>
-{map_html}{_news_html(feature)}
+{_timeline_html(feature)}{notes_html}{_sections_html(feature)}{list_html}{map_html}{_news_html(feature)}
     <section aria-labelledby="related-heading">
       <h2 id="related-heading">あわせて見る</h2>
       <div class="municipality-actions">
@@ -356,7 +365,7 @@ def build_index_page(features: list[dict]) -> str:
             f'<span class="feature-meta">{escape(meta)}</span>'
             f'<span class="feature-title">{escape(feature["title"])}</span>'
             f'{_thumbs_html(records)}'
-            f'<small>ポケふた{len(records)}枚</small></a>'
+            f'<small>{f"ポケふた{len(records)}枚" if records else "設置場所の一覧"}</small></a>'
         )
 
     json_ld = {

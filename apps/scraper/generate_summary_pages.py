@@ -1945,7 +1945,7 @@ def _build_features_section(s: dict, features: list[dict], pokemon_metadata: dic
             + (f'\n      <span class="summary-feature-kicker">{escape(str(feature["kicker"]))}</span>' if feature.get("kicker") else "")
             + f'\n      <h2 id="{_escape_attr(heading_id)}">{escape(str(feature["title"]))}</h2>'
             + (f'\n      <p class="summary-feature-lead">{escape(str(feature["lead"]))}</p>' if feature.get("lead") else "")
-            + f'\n      <ul class="summary-feature-grid">{"".join(cards)}</ul>'
+            + (f'\n      <ul class="summary-feature-grid">{"".join(cards)}</ul>' if cards else "")
             + f'\n      <ul class="summary-feature-links">{links}</ul>'
             + '\n    </section>\n'
         )
