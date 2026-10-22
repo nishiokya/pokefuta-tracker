@@ -8,7 +8,7 @@ Supabase を読む構成をやめ、GitHub Pages (data.pokefuta.com) 配信の
 生成物:
   docs/api/manholes.json   … manhole 全件 + 写真有無（匿名ユーザー向け形状）
   docs/api/site-stats.json … /api/site-stats と同形状のサイト統計
-  docs/api/regulars.json   … 投稿者に付ける 👑 / 常連 / 🌱 新人 の判定（公開ID → 段階）
+  docs/api/regulars.json   … 投稿者に付ける 🏆 / 👑 / 常連 / 🌱 新人 の判定（公開ID → 段階）
 
 実行元: .github/workflows/import-manhole-photos.yml（日次）
 
@@ -475,10 +475,32 @@ def compute_rookies(
     return rookies
 
 
-def merge_badges(tiers: dict[str, str], rookies: set[str]) -> dict[str, str]:
-    """👑 / 常連 が付く人には 🌱 を重ねない。"""
+# 🏆 LEGEND（"legend"）: 公開で訪問したポケふたが LEGEND_MIN_MANHOLES 枚以上の人。
+# 枚数は公開スタンプ帳で誰でも見える実績なので、常連の線と違って秘密にしない（目標として見せる）。
+# ほかのどの段階より優先する。サイトに来たばかりでも、たくさん回っている人を 🌱 にしないため。
+# 写真館の src/lib/regular-badges.ts の LEGEND_MIN_MANHOLES と同じ値にする。
+LEGEND_MIN_MANHOLES = 100
+
+
+def compute_legends(visits: list[dict], public_id_by_auth: dict[str, str]) -> set[str]:
+    """公開の訪問のポケふた（manhole_id の重複なし）が LEGEND_MIN_MANHOLES 枚以上の人の公開ID を返す。
+
+    visits は公開の {user_id, manhole_id}。期間では絞らない（これまでの累計）。
+    """
+    manholes: dict[str, set] = {}
+    for v in visits:
+        public_id = public_id_by_auth.get(v.get("user_id") or "")
+        if not public_id or public_id in REGULAR_EXCLUDED_PUBLIC_IDS or v.get("manhole_id") is None:
+            continue
+        manholes.setdefault(public_id, set()).add(v["manhole_id"])
+    return {public_id for public_id, ids in manholes.items() if len(ids) >= LEGEND_MIN_MANHOLES}
+
+
+def merge_badges(tiers: dict[str, str], rookies: set[str], legends: set[str] = frozenset()) -> dict[str, str]:
+    """🏆 がいちばん強い。👑 / 常連 が付く人には 🌱 を重ねない。"""
     merged = {public_id: "rookie" for public_id in rookies}
     merged.update(tiers)
+    merged.update({public_id: "legend" for public_id in legends})
     return dict(sorted(merged.items()))
 
 
@@ -516,10 +538,16 @@ def build_regulars(rule: BadgeRule) -> dict:
     public_id_by_auth = {u["auth_uid"]: u["id"] for u in users if u.get("auth_uid")}
     tiers = compute_regular_tiers(visits, public_id_by_auth, now, rule)
     rookies = compute_rookies(visits, veteran_auth_ids, public_id_by_auth, now)
+    # 🏆 はこれまでの累計で見るので、窓で絞らずに公開の訪問を全部読む（写真の有無は問わない。
+    # 公開スタンプ帳の訪問数と同じ数え方にするため）
+    all_public_visits = fetch_all(
+        "visit", {"select": "user_id,manhole_id", "is_public": "eq.true", "order": "id.asc"}
+    )
+    legends = compute_legends(all_public_visits, public_id_by_auth)
     return {
         "success": True,
         "generated_at": now.isoformat(timespec="seconds"),
-        "users": merge_badges(tiers, rookies),
+        "users": merge_badges(tiers, rookies, legends),
     }
 
 
@@ -575,7 +603,8 @@ def main() -> None:
     tiers = list(regulars["users"].values())
     print(
         "docs/api/regulars.json: "
-        f"crown={tiers.count('crown')} regular={tiers.count('regular')} rookie={tiers.count('rookie')}"
+        f"legend={tiers.count('legend')} crown={tiers.count('crown')} "
+        f"regular={tiers.count('regular')} rookie={tiers.count('rookie')}"
     )
 
 

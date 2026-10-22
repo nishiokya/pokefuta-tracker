@@ -339,5 +339,41 @@ class RookieTest(unittest.TestCase):
         self.assertEqual({"pub-a": "regular", "pub-b": "rookie"}, merged)
 
 
+class LegendTest(unittest.TestCase):
+    IDS = {"auth-a": "pub-a", "auth-b": "pub-b"}
+
+    @staticmethod
+    def visits(user: str, manhole_ids) -> list[dict]:
+        return [{"user_id": user, "manhole_id": m} for m in manhole_ids]
+
+    def test_threshold_counts_distinct_manholes(self) -> None:
+        n = MODULE.LEGEND_MIN_MANHOLES
+        visits = (
+            self.visits("auth-a", range(n))
+            # 同じ蓋を何度訪問しても1枚
+            + self.visits("auth-b", list(range(n - 1)) + [0, 0])
+        )
+        self.assertEqual({"pub-a"}, MODULE.compute_legends(visits, self.IDS))
+
+    def test_unknown_user_operator_and_missing_manhole_are_skipped(self) -> None:
+        operator = next(iter(MODULE.REGULAR_EXCLUDED_PUBLIC_IDS))
+        ids = {**self.IDS, "auth-op": operator}
+        n = MODULE.LEGEND_MIN_MANHOLES
+        visits = (
+            self.visits("auth-op", range(n))
+            + self.visits("auth-x", range(n))
+            + self.visits("auth-a", [None] * n)
+        )
+        self.assertEqual(set(), MODULE.compute_legends(visits, ids))
+
+    def test_legend_wins_over_every_tier(self) -> None:
+        merged = MODULE.merge_badges(
+            {"pub-a": "crown", "pub-b": "regular"}, {"pub-c", "pub-d"}, {"pub-a", "pub-b", "pub-c"}
+        )
+        self.assertEqual(
+            {"pub-a": "legend", "pub-b": "legend", "pub-c": "legend", "pub-d": "rookie"}, merged
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
