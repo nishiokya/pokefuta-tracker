@@ -150,7 +150,7 @@ class PageTest(unittest.TestCase):
         self.assertIn("都内4枚のうち3枚", html)
         ld = json.loads(re.search(r'<script type="application/ld\+json">(.*?)</script>', html).group(1))
         names = [item["name"] for item in ld["breadcrumb"]["itemListElement"]]
-        self.assertEqual(names, ["全国マップ", "全国一覧", "東京都", "町田市"])
+        self.assertEqual(names, ["全国マップ", "都道府県一覧", "東京都", "町田市"])
         self.assertEqual(ld["mainEntity"]["numberOfItems"], 3)
 
     def test_events_are_municipality_events(self) -> None:
