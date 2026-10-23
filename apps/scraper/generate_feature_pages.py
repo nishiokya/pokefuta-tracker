@@ -8,6 +8,7 @@
 from __future__ import annotations
 
 import argparse
+from datetime import date
 from pathlib import Path
 from urllib.parse import quote
 from xml.sax.saxutils import escape
@@ -16,7 +17,7 @@ try:
     from apps.scraper import generate_municipality_pages as muni_page
     from apps.scraper import generate_prefecture_pages as pref
     from apps.scraper.features import (
-        DEFAULT_FEATURES_DIR, FEATURES_BASE, article_date, date_label, feature_path, load_features, safe_links,
+        DEFAULT_FEATURES_DIR, FEATURES_BASE, article_date, date_label, feature_path, highlighted, load_features, safe_links,
     )
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
@@ -24,7 +25,7 @@ except ModuleNotFoundError as exc:
     import generate_municipality_pages as muni_page
     import generate_prefecture_pages as pref
     from features import (
-        DEFAULT_FEATURES_DIR, FEATURES_BASE, article_date, date_label, feature_path, load_features, safe_links,
+        DEFAULT_FEATURES_DIR, FEATURES_BASE, article_date, date_label, feature_path, highlighted, load_features, safe_links,
     )
 
 ROOT = pref.ROOT
@@ -66,6 +67,11 @@ FEATURE_CSS = """
     .feature-thumb-empty { display: inline-block; width: 32px; height: 32px; border-radius: 50%;
       background: repeating-linear-gradient(135deg, #ece4d7 0 6px, #f6f0e6 6px 12px); }
     .feature-card .feature-meta { color: #75685c; font-size: .75rem; }
+    /* 新作（highlight_until 中）の欄。トップの「〇〇に新しいポケふた」から #new で飛んでくる */
+    .feature-new { scroll-margin-top: 12px; }
+    .feature-new .feature-card { background: #fff; border: 2px solid #a85b2e; }
+    .feature-new .feature-meta::before { content: "新作"; display: inline-block; margin-right: 6px; padding: 0 8px;
+      border-radius: 999px; background: #a85b2e; color: #fff; font-weight: 700; }
     .feature-card .feature-title { font-weight: 850; }
     .feature-card small { color: #62564a; font-size: .82rem; }
 """
@@ -345,7 +351,7 @@ def build_feature_page(feature: dict, photos: dict[str, dict], others: list[dict
 """
 
 
-def build_index_page(features: list[dict]) -> str:
+def build_index_page(features: list[dict], today: date | None = None) -> str:
     title = "ポケふた特集｜新しいポケふたと、旅のテーマ"
     description = (
         "新しく設置・発表されたポケふた（ポケモンマンホール）や、テーマごとに集めたポケふたを"
@@ -380,7 +386,17 @@ def build_index_page(features: list[dict]) -> str:
             for f in features
         ],
     }
-    cards = "".join(card(f) for f in features) or '<p class="empty-state">特集はまだありません。</p>'
+    # 新作は上の欄にまとめて目立たせ、下の一覧には重ねて出さない
+    new = highlighted(features, today)
+    new_slugs = {f["slug"] for f in new}
+    rest = [f for f in features if f["slug"] not in new_slugs]
+    cards = "".join(card(f) for f in rest) or '<p class="empty-state">特集はまだありません。</p>'
+    new_html = (
+        '\n    <section class="feature-new" id="new" aria-labelledby="feature-new-heading">'
+        '\n      <h2 id="feature-new-heading">新しく置かれるポケふた</h2>'
+        f'\n      <div class="feature-grid">{"".join(card(f) for f in new)}</div>'
+        "\n    </section>"
+    ) if new else ""
     return _head(title, description, canonical, json_ld, with_map=False) + f"""<body>
   <main class="page">
     <nav class="breadcrumb" aria-label="パンくず">
@@ -393,9 +409,9 @@ def build_index_page(features: list[dict]) -> str:
         <h1>ポケふた特集</h1>
         <p>新しく置かれるポケふたや、テーマで集めたポケふたをまとめています。</p>
       </div>
-    </header>
+    </header>{new_html}
     <section aria-labelledby="feature-list-heading">
-      <h2 id="feature-list-heading">特集の一覧</h2>
+      <h2 id="feature-list-heading">{"これまでの特集" if new else "特集の一覧"}</h2>
       <div class="feature-grid">{cards}</div>
     </section>
     <footer><a href="/summary/">ポケふたのまとめへ</a></footer>

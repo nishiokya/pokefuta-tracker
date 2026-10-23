@@ -432,6 +432,22 @@ class GeneratedHtmlTest(unittest.TestCase):
         self.assertNotIn("home-hero-feature", _block(Fixture(self.tmp, features=[feature]).html(date(2026, 11, 1)), "hero"))
         self.assertIn('href="features/"', later)
 
+    def test_hero_groups_new_features_by_prefecture_and_links_to_the_new_list(self) -> None:
+        """新作特集が2県以上あるときは、古い順に県名を並べた1行にまとめて特集一覧の新作欄へ。"""
+        features = [
+            {"slug": "gunma-test", "title": "群馬", "published": "2026-10-23", "prefecture": "群馬県",
+             "highlight_until": "2026-12-31", "manholes": []},
+            {"slug": "kochi-test", "title": "高知", "published": "2026-10-22", "prefecture": "高知県",
+             "highlight_until": "2026-12-31", "manholes": [{"id": "1"}]},
+            {"slug": "okinawa-test", "title": "沖縄", "published": "2026-10-16", "prefecture": "沖縄県",
+             "highlight_until": "2027-01-31", "manholes": [{"id": "1"}]},
+        ]
+        hero = _block(Fixture(self.tmp, features=features).html(date(2026, 10, 23)), "hero")
+        self.assertEqual(hero.count('class="home-hero-feature"'), 1)
+        self.assertIn("沖縄・高知・群馬に新しいポケふた", hero)
+        self.assertIn('href="features/#new"', hero)
+        self.assertIn("feature:'new_list'", hero)
+
     def test_popular_pokemon_follow_the_pokemon_page_index(self) -> None:
         block = _block(Fixture(self.tmp).html(), "pokemon")
         self.assertIn('href="pokemon/pikachu/"', block)

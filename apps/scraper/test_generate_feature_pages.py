@@ -125,6 +125,18 @@ class FeaturePageTests(unittest.TestCase):
         self.assertIn("2026年10月17日お披露目 / 沖縄県", index)
         self.assertNotIn("datePublished", index)
 
+    def test_index_puts_highlighted_features_in_the_new_section_first(self) -> None:
+        old = {**self.feature, "slug": "old-test", "title": "むかしの特集", "highlight_until": None}
+        index = MODULE.build_index_page([self.feature, old], today=date(2026, 10, 23))
+        self.assertIn('id="new"', index)
+        self.assertLess(index.index('id="new"'), index.index('href="/features/old-test/"'))
+        self.assertEqual(index.count('href="/features/okinawa-test/"'), 1)
+        self.assertIn("これまでの特集", index)
+        # 期間が終わったら新作欄は消え、ふつうの一覧に戻る
+        later = MODULE.build_index_page([self.feature, old], today=date(2027, 2, 1))
+        self.assertNotIn('id="new"', later)
+        self.assertIn("特集の一覧", later)
+
     def test_sections_are_split_into_paragraphs(self) -> None:
         feature = {**self.feature, "sections": [{"heading": "行き方", "body": "飛行機で1時間。\n\n船は<15時間>。"}]}
         html = MODULE.build_feature_page(feature, {}, [])

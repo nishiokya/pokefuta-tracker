@@ -636,15 +636,25 @@ def render_hero(data: TopData) -> str:
         f'onclick="{_track("click_search_way", surface="top_hero_quick", way=way, destination=dest)}">{escape(label)}</a>'
         for way, dest, href, label, cls in quick
     )
-    # 新作特集の告知（highlight_until 中の最新1本だけ）。スマホの最初の画面に入るよう、ボタンの直下に1行で
-    current = highlighted(data.features, data.today)[:1]
-    feature_html = "".join(
-        f'<a class="home-hero-feature" href="{escape(feature_path(f).lstrip("/"))}" '
-        f'onclick="{_track("click_feature", surface="top_hero", feature=f["slug"], position=0)}">'
-        f'<span class="home-feature__kicker">{escape(f.get("kicker") or "特集")}</span>'
-        f'<b>{escape(f["title"])}</b></a>'
-        for f in current
-    )
+    # 新作特集の告知。スマホの最初の画面に入るよう、ボタンの直下に1行で。
+    # highlight_until 中の新作が2県以上あるときは「沖縄・高知・群馬に新しいポケふた」とまとめて特集一覧の新作欄へ
+    current = highlighted(data.features, data.today)
+    prefs = list(dict.fromkeys(_short_pref(f["prefecture"]) for f in reversed(current) if f.get("prefecture")))
+    if len(prefs) >= 2:
+        feature_html = (
+            '<a class="home-hero-feature" href="features/#new" '
+            f'onclick="{_track("click_feature", surface="top_hero", feature="new_list", position=0)}">'
+            '<span class="home-feature__kicker">新作</span>'
+            f'<b>{escape("・".join(prefs))}に新しいポケふた</b></a>'
+        )
+    else:
+        feature_html = "".join(
+            f'<a class="home-hero-feature" href="{escape(feature_path(f).lstrip("/"))}" '
+            f'onclick="{_track("click_feature", surface="top_hero", feature=f["slug"], position=0)}">'
+            f'<span class="home-feature__kicker">{escape(f.get("kicker") or "特集")}</span>'
+            f'<b>{escape(f["title"])}</b></a>'
+            for f in current[:1]
+        )
     names = "・".join(top_pokemon)
     lead = (
         f"ポケふた（ポケモンマンホール）は、全国{len(data.installed_prefectures)}都道府県に"
@@ -691,6 +701,11 @@ def render_hero(data: TopData) -> str:
         f"{mosaic}"
         "</section>"
     )
+
+
+def _short_pref(name: str) -> str:
+    """「群馬県」→「群馬」。北海道はそのまま。"""
+    return name[:-1] if name != "北海道" and name[-1:] in ("都", "府", "県") else name
 
 
 def render_ways(data: TopData) -> str:
