@@ -1957,3 +1957,42 @@ body.pokefuta-map-page {
     background: rgba(255, 255, 255, 1);
   }
 }
+
+/* ズームしたときの写真マーカー。丸い写真の下に小さな三角を付けてピンと同じく地点を指す */
+.pokefuta-photo-marker {
+  background: none;
+  border: none;
+}
+
+.pokefuta-photo-marker img {
+  display: block;
+  box-sizing: border-box;
+  width: 48px;
+  height: 48px;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #ece6f5;
+  box-shadow: 0 3px 10px rgba(67, 38, 111, .35);
+}
+
+.pokefuta-photo-marker::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  margin-left: -6px;
+  border-width: 9px 6px 0;
+  border-style: solid;
+  border-color: #fff transparent transparent;
+  filter: drop-shadow(0 2px 1px rgba(67, 38, 111, .25));
+}
+
+.pokefuta-photo-marker:hover,
+.pokefuta-photo-marker:focus-visible {
+  z-index: 1000 !important;
+}
+
+.pokefuta-photo-marker:hover img {
+  transform: scale(1.08);
+}

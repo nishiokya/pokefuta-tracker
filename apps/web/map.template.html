@@ -331,7 +331,7 @@
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
   <link rel="stylesheet" href="%%BASE_PATH%%assets/theme.css" />
   <link rel="stylesheet" href="%%BASE_PATH%%assets/map.css" />
-  <link rel="stylesheet" href="%%BASE_PATH%%assets/pokefuta-map.css?v=20260614-hero-toggle" />
+  <link rel="stylesheet" href="%%BASE_PATH%%assets/pokefuta-map.css?v=20261023-photo-marker" />
   <link rel="icon" href="%%BASE_PATH%%assets/pokefuta-marker.svg" type="image/svg+xml" />
   <!-- Google Analytics -->
   <script src="%%BASE_PATH%%assets/tag-meta.js"></script>
@@ -680,6 +680,8 @@
     var prefectureMarkerCounts = {};  // 都道府県ごとのマンホール数（グローバルスコープ）
     const PREFECTURE_BOUNDS_OFFSET = 0.5;  // 都道府県 bounding box のオフセット（度）
     const PREFECTURE_OVERVIEW_MAX_ZOOM = 6;
+    // これ以上寄せたら、写真のあるマンホールはピンの代わりに写真で出す（市区町村が見える程度）
+    const PHOTO_MARKER_MIN_ZOOM = 12;
     const OVERALL_PANEL_MEDIA_QUERY = '(max-width: 759px)';
     var isInitialPageLoad = true;  // Track if this is initial page load to prevent duplicate page_views
     var activeTagFilter = null;  // タグフィルタ（null = 全件）
@@ -1707,9 +1709,57 @@
         if (map.hasLayer(prefectureOverviewLayer)) map.removeLayer(prefectureOverviewLayer);
         if (!map.hasLayer(markerLayer)) markerLayer.addTo(map);
       }
+      refreshPhotoMarkers();
+    }
+
+    function getPhotoMarkerIcon(d) {
+      const imageUrl = getLocalManholeImageUrl(d.id);
+      return L.divIcon({
+        html: `<img src="${escapeHtml(imageUrl)}" alt="" data-manhole-id="${escapeHtml(String(d.id))}" decoding="async" onerror="handlePhotoMarkerImageError(this)">`,
+        className: 'pokefuta-photo-marker',
+        iconSize: [48, 56],
+        iconAnchor: [24, 54],
+        popupAnchor: [0, -50]
+      });
+    }
+
+    // 写真が読めなかったマンホールは以後ずっとピンに戻す
+    function handlePhotoMarkerImageError(img) {
+      const id = img.getAttribute('data-manhole-id');
+      const marker = allMarkers.find(item => String(item.pokefutaData?.id) === id);
+      if (!marker) return;
+      marker.photoFailed = true;
+      marker.isPhotoIcon = false;
+      marker.setIcon(pokefutaIcon);
+    }
+
+    // ズームしたときだけ、画面内（少し外側まで）の写真つきマンホールを写真アイコンにする。
+    // 全件を一度に写真にすると 720px の JPEG を数百枚読むので、見えている分に限る。
+    // 一度写真にしたものはズームアウトするまでそのまま（読み込み済みの画像を捨てない）
+    function refreshPhotoMarkers() {
+      if (!allMarkers.length) return;
+      const usePhoto = map.getZoom() >= PHOTO_MARKER_MIN_ZOOM;
+      const bounds = usePhoto ? map.getBounds().pad(0.2) : null;
+      allMarkers.forEach(marker => {
+        if (!usePhoto) {
+          if (marker.isPhotoIcon) {
+            marker.isPhotoIcon = false;
+            marker.setIcon(pokefutaIcon);
+          }
+          return;
+        }
+        if (marker.isPhotoIcon || marker.photoFailed) return;
+        const d = marker.pokefutaData;
+        const photoMeta = getLatestPhotoMeta(d.id);
+        const hasPhoto = Boolean(photoMeta?.url || photoMeta?.original_url || photoMeta?.storage_key);
+        if (!hasPhoto || !bounds.contains(marker.getLatLng())) return;
+        marker.isPhotoIcon = true;
+        marker.setIcon(getPhotoMarkerIcon(d));
+      });
     }
 
     map.on('zoomend', refreshMapMarkerLayers);
+    map.on('moveend', refreshPhotoMarkers);
 
     function initRecentFilter() {
       const toggle = document.getElementById('recent-toggle');
