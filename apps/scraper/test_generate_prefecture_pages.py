@@ -717,6 +717,51 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         self.assertIn("<span>写真募集中</span><strong>台東区上野 東京国立博物館</strong>", html)
         self.assertIn('"name": "台東区上野 東京国立博物館"', html)
 
+    def test_map_legend_lists_only_the_pins_drawn_as_dots(self) -> None:
+        """写真のあるピンは蓋の切り抜きなので凡例に載せない。全部切り抜きなら凡例も現地写真欄も出さない。"""
+        def record(mid: str, installed: bool = True) -> dict:
+            return {"id": mid, "prefecture": "北海道", "city": "札幌市",
+                    "pokemons": ["ピカチュウ"], "lat": 43.0, "lng": 141.0,
+                    "installed": installed}
+
+        def render(records: list[dict], photo_ids: list[str], lid_ids: list[str]) -> str:
+            photos = {
+                mid: {"url": f"https://images.pokefuta.com/photos/{mid}.jpg",
+                      "created_at": "2026-07-20T00:00:00Z"}
+                for mid in photo_ids
+            }
+            with tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                image_dir = root / "dataset" / "manhole" / "image"
+                image_dir.mkdir(parents=True)
+                # 取込は代表写真の _latest を必ず作り、蓋の枠が取れたものだけ _lid も作る
+                for mid in photo_ids:
+                    (image_dir / f"{mid}_latest.jpeg").write_bytes(b"test image")
+                    if mid in lid_ids:
+                        (image_dir / f"{mid}_lid.jpeg").write_bytes(b"test image")
+                with mock.patch.object(MODULE, "ROOT", root):
+                    return MODULE.build_page(
+                        "北海道", "hokkaido", records, len(records), self.pokemon_slugs,
+                        None, photos=photos,
+                    )
+
+        html = render([record("1"), record("2")], ["1", "2"], ["1", "2"])
+        self.assertNotIn('class="map-legend"', html)
+        self.assertNotIn('id="prefecture-photos"', html)
+        self.assertIn('"tile_url": "/manhole/image/1_lid.jpeg"', html)
+        self.assertIn('prefecture-marker clip', html)
+
+        mixed = render([record("1"), record("2"), record("3", installed=False)], ["1"], ["1"])
+        self.assertNotIn("legend-dot has-photo", mixed)
+        self.assertIn('<i class="legend-dot needs-photo"></i>写真募集中', mixed)
+        self.assertIn('<i class="legend-dot preinstall"></i>設置予定', mixed)
+        self.assertIn('id="prefecture-photos"', mixed)
+
+        # 蓋の枠が無い写真（_latest だけ）も一覧タイルと同じ _latest を丸く出す
+        latest_only = render([record("1"), record("2")], ["1"], [])
+        self.assertIn('"tile_url": "/manhole/image/1_latest.jpeg"', latest_only)
+        self.assertNotIn("legend-dot has-photo", latest_only)
+
     def test_photo_section_zero_inventory_invites_first_contribution(self) -> None:
         records = [
             {"id": "1", "city": "A市", "pokemons": ["イーブイ"]},

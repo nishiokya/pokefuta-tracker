@@ -2084,6 +2084,12 @@ PAGE_CSS = """    :root { color-scheme: light; }
     .prefecture-marker.has-photo { background: #2d846c; }
     .prefecture-marker.needs-photo { background: #d78548; }
     .prefecture-marker.preinstall { background: #8b8f94; }
+    .prefecture-marker.clip {
+      width: 46px; height: 46px; padding: 0; overflow: hidden; border: 3px solid white;
+      border-radius: 50%; transform: none; background: #2d846c;
+      box-shadow: 0 0 0 2px #2d846c, 0 3px 8px rgba(32,27,22,.35);
+    }
+    .prefecture-marker.clip img { display: block; width: 100%; height: 100%; object-fit: cover; }
     .map-popup { min-width: 210px; }
     .map-popup img {
       display: block; width: 100%; height: 120px; margin: 8px 0; border-radius: 10px;
@@ -2370,13 +2376,22 @@ def _map_script(
             (point.is_preinstall
               ? '設置予定'
               : (point.photo_url ? '投稿写真あり' : '写真募集中')),
-          icon: L.divIcon({{
-            className: '',
-            html: '<div class="prefecture-marker ' + markerClass + '"></div>',
-            iconSize: [28, 34],
-            iconAnchor: [14, 31],
-            popupAnchor: [0, -30]
-          }})
+          icon: point.tile_url
+            ? L.divIcon({{
+              className: '',
+              html: '<div class="prefecture-marker clip"><img src="' +
+                escapeHtml(point.tile_url) + '" alt="" decoding="async" width="40" height="40"></div>',
+              iconSize: [46, 46],
+              iconAnchor: [23, 23],
+              popupAnchor: [0, -22]
+            }})
+            : L.divIcon({{
+              className: '',
+              html: '<div class="prefecture-marker ' + markerClass + '"></div>',
+              iconSize: [28, 34],
+              iconAnchor: [14, 31],
+              popupAnchor: [0, -30]
+            }})
         }}).addTo(map).bindPopup(popupHtml, {{ maxWidth: 300 }});
         marker.on('click', function() {{
           {track_fn}('{event_prefix}_map_pin_click', {{
@@ -2464,9 +2479,53 @@ def build_page(
         if isinstance(record.get("lat"), (int, float))
         and isinstance(record.get("lng"), (int, float))
     ]
+    # 写真のあるピンは一覧のタイルと同じ蓋の切り抜き（_lid）を丸く出す。
+    # 色の点と凡例を読み合わせなくても、地図上でどの蓋かが分かる
+    for point in map_points:
+        point["tile_url"] = (
+            tile_image_url(point["id"], ROOT / "dataset" / "manhole" / "image")
+            if point["photo_url"] else ""
+        )
+    # 地図に実際に描く形。切り抜きは見れば分かるので凡例に載せない。
+    # 写真はあるが切り抜き画像がまだ無い地点だけ、緑の点として凡例に残る
+    map_states = {
+        "preinstall" if point["is_preinstall"]
+        else "clip" if point["tile_url"]
+        else ("has-photo" if point["photo_url"] else "needs-photo")
+        for point in map_points
+    }
+    legend_items = [
+        f'<span><i class="legend-dot {state}"></i>{label}</span>'
+        for state, label in (
+            ("has-photo", "投稿写真あり"),
+            ("needs-photo", "写真募集中"),
+            ("preinstall", "設置予定"),
+        )
+        if state in map_states
+    ]
+    legend_html = (
+        '<div class="map-legend" aria-label="地図の凡例">'
+        + "".join(legend_items) + "</div>"
+        if legend_items else ""
+    )
     pokemon_html = _pokemon_cards(records, pokemon_slugs)
     manhole_html = _manhole_cards(records, photos, slug)
-    photo_html = _photo_section(prefecture, slug, records, photos)
+    installed_records = [r for r in records if r.get("installed") is not False]
+    _, unphotographed_installed = _split_photographed(installed_records, photos)
+    # 全点に写真がそろった県では「現地写真」欄を出さない。すぐ下の一覧の
+    # タイルが同じ投稿写真の蓋の切り抜きで、同じ写真の並びが2つ続いていた
+    photo_section_html = (
+        "" if installed_records and not unphotographed_installed
+        else f"""<section id="prefecture-photos" aria-labelledby="photo-heading">
+      <div class="section-heading-row">
+        <h2 id="photo-heading">{escape(prefecture)}の現地写真</h2>
+        <p>写真は場所選びの参考に。クリックするとマンホール詳細を確認できます。</p>
+      </div>
+      {_photo_section(prefecture, slug, records, photos)}
+    </section>
+
+    """
+    )
     trivia_html = _trivia_html(prefecture, trivia_entry, count)
     events_html = _events_html(events)
     related_html = _related_prefectures(prefecture, empty_prefectures)
@@ -2596,11 +2655,7 @@ def build_page(
         <p>ピンから詳細・行き方へ。設置済みのポケふたは写真投稿にも進めます。</p>
       </div>
       <div class="map-toolbar">
-        <div class="map-legend" aria-label="地図の凡例">
-          <span><i class="legend-dot has-photo"></i>投稿写真あり</span>
-          <span><i class="legend-dot needs-photo"></i>写真募集中</span>
-          <span><i class="legend-dot preinstall"></i>設置予定</span>
-        </div>
+        {legend_html}
         <a class="nearby-link" href="{_escape_attr(nearby_url)}"
           data-track="prefecture_nearby_click" data-destination="pokefuta_nearby">現在地の近くから探す</a>
       </div>
@@ -2610,15 +2665,7 @@ def build_page(
 
     <!-- adsense:prefecture -->
 
-    <section id="prefecture-photos" aria-labelledby="photo-heading">
-      <div class="section-heading-row">
-        <h2 id="photo-heading">{escape(prefecture)}の現地写真</h2>
-        <p>写真は場所選びの参考に。クリックするとマンホール詳細を確認できます。</p>
-      </div>
-      {photo_html}
-    </section>
-
-    {events_html}<section class="trivia-card" aria-labelledby="trivia-heading">
+    {photo_section_html}{events_html}<section class="trivia-card" aria-labelledby="trivia-heading">
       <span class="trivia-kicker">まず知りたい</span>
       <h2 id="trivia-heading">{escape(prefecture)}のポケふたトリビア</h2>
       {trivia_html}
