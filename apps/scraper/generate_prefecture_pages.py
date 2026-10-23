@@ -2285,7 +2285,7 @@ PAGE_CSS = """    :root { color-scheme: light; }
       .hero-photos, .hero-photos[data-count="1"] {
         grid-template-columns: repeat(4, minmax(0, 72px)); gap: 8px;
       }
-      .hero-photos[data-count="3"] > a:first-child { grid-column: auto; width: auto; }
+      .hero-photos[data-count="3"] > a:first-child { grid-column: auto; width: auto; justify-self: stretch; }
       .hero-photos a { border-width: 3px; }
       .hero-actions { display: grid; grid-template-columns: 1fr 1fr; }
       .hero-actions .button { justify-content: center; padding: 0 12px; text-align: center; }
