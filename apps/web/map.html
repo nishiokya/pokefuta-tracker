@@ -1768,7 +1768,7 @@
     function getPhotoMarkerIcon(d) {
       const imageUrl = getLocalManholeImageUrl(d.id);
       return L.divIcon({
-        html: `<img src="${escapeHtml(imageUrl)}" alt="" data-manhole-id="${escapeHtml(String(d.id))}" decoding="async" onerror="handlePhotoMarkerImageError(this)">`,
+        html: `<img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(getManholeDisplayName(d))}" data-manhole-id="${escapeHtml(String(d.id))}" decoding="async" onerror="handlePhotoMarkerImageError(this)">`,
         className: 'pokefuta-photo-marker',
         iconSize: [48, 56],
         iconAnchor: [24, 54],
