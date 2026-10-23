@@ -107,7 +107,6 @@ DESIGN_STUDIO_HOST = "pokefuta.com"
 DEFAULT_OUTPUT = ROOT / "dist" / "prefectures"
 BASE_URL = "https://data.pokefuta.com"
 OG_IMAGE = f"{BASE_URL}/assets/ogp/pokefuta_summary_ogp.png"
-RELIABLE_FIRST_SEEN_START = datetime.fromisoformat("2025-11-01T00:00:00+00:00")
 
 
 FORM_PREFIX = {
@@ -523,56 +522,11 @@ def _record_date(record: dict) -> datetime | None:
             parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
         except ValueError:
             continue
-        # 呼び出し側は RELIABLE_FIRST_SEEN_START や JST 基準の cutoff など
+        # 呼び出し側は JST 基準の cutoff など
         # tz-aware な値と比較するので、タイムゾーン無しの文字列が紛れ込んでも
         # 比較で例外にならないよう UTC を補う。
         return parsed if parsed.tzinfo else parsed.replace(tzinfo=timezone.utc)
     return None
-
-
-def _format_year_month(date: datetime) -> str:
-    return f"{date.year}年{date.month}月"
-
-
-def _first_reliable_month(records: list[dict]) -> str:
-    first_dates = [date for record in records if (date := _record_date(record))]
-    if not first_dates:
-        return ""
-    first_date = min(first_dates)
-    if first_date < RELIABLE_FIRST_SEEN_START:
-        return ""
-    return _format_year_month(first_date)
-
-
-def _hero_summary(
-    prefecture: str,
-    count: int,
-    records: list[dict],
-    trivia_entry: dict | None,
-    coverage: "PrefectureCoverage | None" = None,
-) -> str:
-    if not count:
-        return f"{prefecture}は現在未設置。新しい設置情報を追跡中です。"
-
-    cities = {
-        str(record.get("city", "")).strip()
-        for record in records
-        if str(record.get("city", "")).strip()
-    }
-    # トリビアの municipality_count は city の表記揺れ（「利府」と「利府町」）を別に数え、
-    # 生成時点で止まっているので、カバー率と同じ数え方があればそちらを使う
-    municipalities = (
-        (coverage.covered if coverage and coverage.covered else 0)
-        or (trivia_entry or {}).get("municipality_count", 0)
-        or len(cities)
-    )
-    first_month = _first_reliable_month(records)
-    if first_month:
-        return (
-            f"{prefecture}は{first_month}にポケふた初登場。"
-            f"現在は{municipalities}自治体で{count}枚を巡れます。"
-        )
-    return f"{prefecture}では{municipalities}自治体で{count}枚のポケふたを巡れます。"
 
 
 def _hero_photos(records: list[dict]) -> str:
@@ -2126,10 +2080,11 @@ PAGE_CSS = """    :root { color-scheme: light; }
     .prefecture-marker.has-photo { background: #2d846c; }
     .prefecture-marker.needs-photo { background: #d78548; }
     .prefecture-marker.preinstall { background: #8b8f94; }
+    /* 蓋の写真自体に黒い縁があるので、外側は細い白線と影だけにする（緑の二重線は重かった） */
     .prefecture-marker.clip {
-      width: 46px; height: 46px; padding: 0; overflow: hidden; border: 3px solid white;
-      border-radius: 50%; transform: none; background: #2d846c;
-      box-shadow: 0 0 0 2px #2d846c, 0 3px 8px rgba(32,27,22,.35);
+      width: 44px; height: 44px; padding: 0; overflow: hidden; border: 2px solid white;
+      border-radius: 50%; transform: none; background: #e9e3d6;
+      box-shadow: 0 2px 6px rgba(32,27,22,.45);
     }
     .prefecture-marker.clip img { display: block; width: 100%; height: 100%; object-fit: cover; }
     .map-popup { min-width: 210px; }
@@ -2431,10 +2386,10 @@ def _map_script(
             ? L.divIcon({{
               className: '',
               html: '<div class="prefecture-marker clip"><img src="' +
-                escapeHtml(point.tile_url) + '" alt="" decoding="async" width="40" height="40"></div>',
-              iconSize: [46, 46],
-              iconAnchor: [23, 23],
-              popupAnchor: [0, -22]
+                escapeHtml(point.tile_url) + '" alt="" decoding="async" width="44" height="44"></div>',
+              iconSize: [44, 44],
+              iconAnchor: [22, 22],
+              popupAnchor: [0, -21]
             }})
             : L.divIcon({{
               className: '',
@@ -2501,7 +2456,6 @@ def build_page(
     title, description, h1 = _prefecture_seo(prefecture, count, records, nearest)
     rank_label = f"全国{rank}位" if rank else "現在未設置"
     hero_intro = _hero_intro(prefecture, count, trivia_entry, coverage, complete)
-    hero_summary = _hero_summary(prefecture, count, records, trivia_entry, coverage)
     hero_photos_html = _hero_photos(records)
     official_url = _prefecture_official_url(records)
     official_cta = (
@@ -2816,13 +2770,7 @@ def build_page(
         <p class="hero-note">{escape(hero_note)}</p>
         <div class="hero-utility">{official_cta}</div>
       </div>
-      <div class="hero-side">
-        {hero_photos_html}
-        <div class="hero-summary" aria-label="{_escape_attr(prefecture)}のサマリー">
-          <span>サマリー</span>
-          <p>{escape(hero_summary)}</p>
-        </div>
-      </div>
+      {f'<div class="hero-side">{hero_photos_html}</div>' if hero_photos_html else ""}
     </header>
 
 {main_sections_html}

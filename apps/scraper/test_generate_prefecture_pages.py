@@ -575,7 +575,8 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         self.assertIn("設置予定地を地図で見る", html)
         self.assertNotIn("投稿するポケふたを選ぶ", html)
 
-    def test_nagano_desktop_header_summary_mentions_first_month(self) -> None:
+    def test_hero_has_lid_photos_instead_of_summary(self) -> None:
+        """ヒーロー右の「サマリー」（〇〇では N自治体で M枚…）は本文・集計と同じことを言うだけだったので、蓋の写真に置き換えた。"""
         records = [r for r in self.records if r.get("prefecture") == "長野県"]
         html = MODULE.build_page(
             "長野県",
@@ -585,27 +586,19 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
             self.pokemon_slugs,
             self.trivia["長野県"],
         )
-        self.assertIn('class="hero-summary"', html)
         hero = html[html.index('<header class="hero prefecture-hero">'):html.index("</header>")]
+        self.assertNotIn('class="hero-summary"', hero)
+        self.assertNotIn("サマリー", hero)
+        self.assertIn('class="hero-side"><div class="hero-photos"', hero)
         self.assertLess(hero.index('class="hero-heading"'), hero.index('class="hero-main"'))
-        self.assertIn(".hero-heading { position: relative; z-index: 1; grid-column: 1 / -1; }", html)
-        self.assertIn(".prefecture-hero { gap: 14px 22px; align-items: start; }", html)
-        self.assertIn("長野県は2026年7月にポケふた初登場。", html)
-        self.assertIn("現在は6自治体で6枚を巡れます。", html)
-        self.assertIn(".hero-summary { display: none; }", html)
 
-    def test_prefecture_summary_omits_initial_crawl_month(self) -> None:
-        records = [r for r in self.records if r.get("prefecture") == "福井県"]
-        html = MODULE.build_page(
-            "福井県",
-            "fukui",
-            records,
-            MODULE.build_rankings(self.records)["福井県"],
-            self.pokemon_slugs,
-            self.trivia["福井県"],
-        )
-        self.assertIn("福井県では16自治体で17枚のポケふたを巡れます。", html)
-        self.assertNotIn("福井県は2025年10月にポケふた初登場。", html)
+    def test_hero_without_photos_has_no_side_column(self) -> None:
+        records = [{"id": "no-photo", "prefecture": "長野県", "city": "A市",
+                    "pokemons": ["ピカチュウ"], "lat": 36.0, "lng": 138.0}]
+        with tempfile.TemporaryDirectory() as directory:
+            with mock.patch.object(MODULE, "ROOT", Path(directory)):
+                html = MODULE.build_page("長野県", "nagano", records, 1, self.pokemon_slugs, None)
+        self.assertNotIn('class="hero-side"', html)
 
     def test_manhole_card_shows_preinstall_badge(self) -> None:
         records = [
