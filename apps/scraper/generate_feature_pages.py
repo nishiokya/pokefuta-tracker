@@ -16,6 +16,18 @@ from xml.sax.saxutils import escape
 try:
     from apps.scraper import generate_municipality_pages as muni_page
     from apps.scraper import generate_prefecture_pages as pref
+    from apps.scraper.manhole_records import (
+        clean_pokemons,
+        load_photos,
+        load_records,
+        manhole_name,
+    )
+    from apps.scraper.page_html import (
+        BASE_URL,
+        campaign_params,
+        escape_attr,
+        json_for_script,
+    )
     from apps.scraper.features import (
         DEFAULT_FEATURES_DIR, FEATURES_BASE, article_date, date_label, feature_path, highlighted, load_features, safe_links,
     )
@@ -24,17 +36,28 @@ except ModuleNotFoundError as exc:
         raise
     import generate_municipality_pages as muni_page
     import generate_prefecture_pages as pref
+    from manhole_records import (
+        clean_pokemons,
+        load_photos,
+        load_records,
+        manhole_name,
+    )
+    from page_html import (
+        BASE_URL,
+        campaign_params,
+        escape_attr,
+        json_for_script,
+    )
     from features import (
         DEFAULT_FEATURES_DIR, FEATURES_BASE, article_date, date_label, feature_path, highlighted, load_features, safe_links,
     )
 
 ROOT = pref.ROOT
-BASE_URL = pref.BASE_URL
 DEFAULT_OUTPUT = ROOT / "dist" / "features"
 IMAGE_DIR = muni_page.IMAGE_DIR
 
-_escape_attr = pref._escape_attr
-_json_for_script = pref._json_for_script
+_escape_attr = escape_attr
+_json_for_script = json_for_script
 
 FEATURE_CSS = """
     .feature-notes { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
@@ -135,12 +158,12 @@ def _notes_html(feature: dict) -> str:
     items = []
     for item, record in zip(feature["manholes"], feature["records"]):
         mid = str(record["id"])
-        pokemons = "・".join(pref._clean_pokemons(record))
+        pokemons = "・".join(clean_pokemons(record))
         note = f'<p>{escape(str(item["note"]))}</p>' if item.get("note") else ""
         items.append(
             f'<li><a href="/manholes/{quote(mid)}/" data-track="feature_manhole_click" '
             f'data-surface="feature_notes" data-destination="{_escape_attr(mid)}" '
-            f'data-content-id="{_escape_attr(mid)}">{escape(pref._manhole_name(record))}</a>'
+            f'data-content-id="{_escape_attr(mid)}">{escape(manhole_name(record))}</a>'
             f'{_status_html(record)}'
             f'<span class="feature-pokemon">{escape(pokemons)}</span>{note}</li>'
         )
@@ -239,8 +262,8 @@ def build_feature_page(feature: dict, photos: dict[str, dict], others: list[dict
             "id": str(r["id"]),
             "lat": r["lat"],
             "lng": r["lng"],
-            "name": pref._manhole_name(r),
-            "pokemons": pref._clean_pokemons(r),
+            "name": manhole_name(r),
+            "pokemons": clean_pokemons(r),
             "is_preinstall": r.get("installed") is False,
             "photo_url": pref._photo_asset_url(r, photos[str(r["id"])]) if str(r["id"]) in photos else "",
         }
@@ -276,7 +299,7 @@ def build_feature_page(feature: dict, photos: dict[str, dict], others: list[dict
                     "@type": "ListItem",
                     "position": i,
                     "url": f"{BASE_URL}/manholes/{quote(str(r['id']))}/",
-                    "name": f"{pref._manhole_name(r)}のポケふた",
+                    "name": f"{manhole_name(r)}のポケふた",
                 }
                 for i, r in enumerate(records, start=1)
             ],
@@ -313,7 +336,7 @@ def build_feature_page(feature: dict, photos: dict[str, dict], others: list[dict
         """  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 """
-        + pref._map_script(map_points, pref._campaign_params(pref_slug), "feature", "trackFeatureEvent")
+        + pref._map_script(map_points, campaign_params(pref_slug), "feature", "trackFeatureEvent")
         if map_points else ""
     )
     return _head(title, description, canonical, json_ld, with_map=bool(map_points)) + f"""<body>
@@ -444,7 +467,7 @@ def main() -> int:
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     args = parser.parse_args()
     features = generate_all(
-        pref.load_records(args.manholes), pref.load_photos(args.photos), args.output, args.features
+        load_records(args.manholes), load_photos(args.photos), args.output, args.features
     )
     print(f"[generate_feature_pages] wrote {len(features)} feature pages + index to {args.output}")
     return 0

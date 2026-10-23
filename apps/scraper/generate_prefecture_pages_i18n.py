@@ -29,6 +29,20 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 try:
     from apps.scraper import generate_prefecture_pages as ja
+    from apps.scraper.manhole_records import (
+        clean_pokemons,
+        google_maps_url,
+        load_photos,
+        load_pokemon_slugs,
+        load_records,
+        normalize_katakana,
+    )
+    from apps.scraper.page_html import (
+        BASE_URL,
+        OG_IMAGE,
+        hreflang_links,
+        json_for_script,
+    )
     from apps.scraper.display_names import compose_display_name, municipality_label
     from apps.scraper.generate_top_page_en import Locale
     from apps.scraper.manhole_tile_image import tile_image_url
@@ -38,6 +52,20 @@ except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
     import generate_prefecture_pages as ja
+    from manhole_records import (
+        clean_pokemons,
+        google_maps_url,
+        load_photos,
+        load_pokemon_slugs,
+        load_records,
+        normalize_katakana,
+    )
+    from page_html import (
+        BASE_URL,
+        OG_IMAGE,
+        hreflang_links,
+        json_for_script,
+    )
     from display_names import compose_display_name, municipality_label
     from generate_top_page_en import Locale
     from manhole_tile_image import tile_image_url
@@ -45,7 +73,6 @@ except ModuleNotFoundError as exc:
     from prefectures import PREFECTURE_ORDER, PREFECTURE_PAGE_LANGS, PREFECTURE_SLUGS, PREFECTURES, REGIONS
 
 ROOT = ja.ROOT
-BASE_URL = ja.BASE_URL
 DEFAULT_MUNICIPALITY_NAMES = ROOT / "dataset" / "municipality_names.json"
 # 県ページを訳してある言語。日本語版の hreflang・サイトマップもこれを見る
 LANGS = PREFECTURE_PAGE_LANGS
@@ -275,10 +302,10 @@ class Page:
 
     def pokemon_name(self, name: str) -> str:
         # データには「ゴンべ」のように末尾がひらがなの表記があるので、カタカナにそろえて引き直す
-        return self.loc.pokemon.get(name) or self.loc.pokemon_name(ja._normalize_katakana(name))
+        return self.loc.pokemon.get(name) or self.loc.pokemon_name(normalize_katakana(name))
 
     def pokemons(self, record: dict) -> str:
-        names = [self.pokemon_name(p) for p in ja._clean_pokemons(record)]
+        names = [self.pokemon_name(p) for p in clean_pokemons(record)]
         return self.t("sep").join(names) or self.t("pokemon_fallback")
 
     def prefix(self) -> str:
@@ -290,7 +317,7 @@ def _attr(value: object) -> str:
 
 
 def _json(value: object) -> str:
-    return ja._json_for_script(value)
+    return json_for_script(value)
 
 
 def _ja_name(record: dict) -> str:
@@ -325,13 +352,13 @@ def _head(page: Page, *, title: str, description: str, path: str, json_ld: dict,
   <meta property="og:title" content="{_attr(title)}">
   <meta property="og:description" content="{_attr(description)}">
   <meta property="og:url" content="{_attr(canonical)}">
-  <meta property="og:image" content="{ja.OG_IMAGE}">
+  <meta property="og:image" content="{OG_IMAGE}">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="{_attr(title)}">
   <meta name="twitter:description" content="{_attr(description)}">
-  <meta name="twitter:image" content="{ja.OG_IMAGE}">
+  <meta name="twitter:image" content="{OG_IMAGE}">
   <link rel="canonical" href="{_attr(canonical)}">
-  {ja.hreflang_links(path)}
+  {hreflang_links(path)}
   <link rel="icon" href="/assets/pokefuta-marker.svg" type="image/svg+xml">{leaflet_css}
   <script type="application/ld+json">{_json(json_ld)}</script>
   <style>
@@ -479,7 +506,7 @@ def _manhole_cards(page: Page, records: list[dict], photos: dict[str, dict], dis
         sub = escape(place)
         if distances and mid in distances:
             sub = f'{escape(page.pref(record.get("prefecture", "")))} · {sub} · {escape(page.t("nearest_km", km=round(distances[mid])))}'
-        maps_url = ja._google_maps_url(record)
+        maps_url = google_maps_url(record)
         actions = (
             f'<div class="manhole-actions"><a href="{_attr(maps_url)}" target="_blank" rel="noopener noreferrer" '
             f'data-track="prefecture_google_maps_click" data-position="{position}" '
@@ -532,11 +559,11 @@ def _photo_cards(page: Page, records: list[dict], photos: dict[str, dict]) -> st
 
 
 def _pokemon_cards(page: Page, records: list[dict], pokemon_slugs: dict[str, str]) -> str:
-    counts = Counter(p for record in records for p in set(ja._clean_pokemons(record)))
+    counts = Counter(p for record in records for p in set(clean_pokemons(record)))
     ranked = sorted(counts.items(), key=lambda item: (-item[1], item[0]))
 
     def card(name: str, n: int) -> str:
-        slug = pokemon_slugs.get(name) or pokemon_slugs.get(ja._normalize_katakana(name))
+        slug = pokemon_slugs.get(name) or pokemon_slugs.get(normalize_katakana(name))
         label = page.t("pokemon_count_one") if n == 1 else page.t("pokemon_count_many", n=n)
         content = f"<strong>{escape(page.pokemon_name(name))}</strong><span>{escape(label)}</span>"
         if not slug:
@@ -868,9 +895,9 @@ def main(argv: list[str] | None = None) -> int:
     output = args.output or ROOT / "dist" / args.lang / "prefectures"
     count = generate_all(
         args.lang,
-        ja.load_records(args.manholes),
-        ja.load_pokemon_slugs(args.pokemon),
-        ja.load_photos(args.photos),
+        load_records(args.manholes),
+        load_pokemon_slugs(args.pokemon),
+        load_photos(args.photos),
         load_municipality_names(args.municipality_names),
         output,
     )

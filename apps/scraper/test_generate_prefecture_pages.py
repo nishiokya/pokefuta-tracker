@@ -32,14 +32,14 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         `from=data` だけだと図鑑由来であることしか分からず、
         /prefectures/ の施策（イベント掲載・内容充実）を県単位で評価できない。
         """
-        self.assertEqual(MODULE._campaign_params("kagawa"), "from=data&pref=kagawa")
-        self.assertIn("&pref=kagawa", MODULE._upload_url("9002", "kagawa"))
+        self.assertEqual(MODULE.campaign_params("kagawa"), "from=data&pref=kagawa")
+        self.assertIn("&pref=kagawa", MODULE.upload_url("9002", "kagawa"))
         self.assertIn("?from=data&pref=kagawa", MODULE._visits_url("kagawa"))
         self.assertIn("?from=data&pref=kagawa", MODULE._nearby_url("kagawa"))
 
     def test_app_links_omit_the_prefecture_when_slug_is_missing(self) -> None:
         """slug が無いときに pref= を空で送ると、GA4 側で空値の行が増えるだけなので付けない。"""
-        self.assertEqual(MODULE._campaign_params(""), "from=data")
+        self.assertEqual(MODULE.campaign_params(""), "from=data")
         self.assertEqual(MODULE._visits_url(""), "https://pokefuta.com/visits?from=data")
 
     def test_generates_all_47_prefectures_including_empty(self) -> None:

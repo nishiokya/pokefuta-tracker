@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import math
 import re
 from collections import Counter
 from datetime import date, datetime, timedelta, timezone
@@ -69,7 +68,6 @@ try:
     from apps.scraper.prefectures import (
         PREFECTURES,
         PREFECTURE_ORDER,
-        PREFECTURE_PAGE_LANGS,
         PREFECTURE_SLUGS,
         REGIONS,
         select_full_coverage_pokemon,
@@ -80,10 +78,59 @@ except ModuleNotFoundError as exc:
     from prefectures import (
         PREFECTURES,
         PREFECTURE_ORDER,
-        PREFECTURE_PAGE_LANGS,
         PREFECTURE_SLUGS,
         REGIONS,
         select_full_coverage_pokemon,
+    )
+
+try:
+    from apps.scraper.manhole_records import (
+        load_records,
+        load_photos,
+        normalize_katakana,
+        load_pokemon_slugs,
+        clean_pokemons,
+        manhole_name,
+        distance_km,
+        guide_stop_name,
+        google_maps_url,
+    )
+except ModuleNotFoundError as exc:
+    if exc.name != "apps":
+        raise
+    from manhole_records import (
+        load_records,
+        load_photos,
+        normalize_katakana,
+        load_pokemon_slugs,
+        clean_pokemons,
+        manhole_name,
+        distance_km,
+        guide_stop_name,
+        google_maps_url,
+    )
+
+try:
+    from apps.scraper.page_html import (
+        BASE_URL,
+        OG_IMAGE,
+        escape_attr,
+        json_for_script,
+        hreflang_links,
+        campaign_params,
+        upload_url,
+    )
+except ModuleNotFoundError as exc:
+    if exc.name != "apps":
+        raise
+    from page_html import (
+        BASE_URL,
+        OG_IMAGE,
+        escape_attr,
+        json_for_script,
+        hreflang_links,
+        campaign_params,
+        upload_url,
     )
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -105,17 +152,6 @@ DESIGN_SHOWCASE_LIMIT = 8
 DESIGN_STUDIO_LIST_URL = "https://pokefuta.com/design-manholes"
 DESIGN_STUDIO_HOST = "pokefuta.com"
 DEFAULT_OUTPUT = ROOT / "dist" / "prefectures"
-BASE_URL = "https://data.pokefuta.com"
-OG_IMAGE = f"{BASE_URL}/assets/ogp/pokefuta_summary_ogp.png"
-
-
-FORM_PREFIX = {
-    "alola": "アローラ",
-    "galar": "ガラル",
-    "hisui": "ヒスイ",
-    "paldea": "パルデア",
-}
-
 PREFECTURE_SEO: dict[str, dict[str, str]] = {
     "千葉県": {
         "search_name": "千葉",
@@ -195,25 +231,6 @@ EMPTY_PREFECTURE_ORIGINS: dict[str, tuple[str, float, float]] = {
 NEAREST_POKEFUTA_LIMIT = 8
 
 
-def load_records(path: Path) -> list[dict]:
-    by_id: dict[str, dict] = {}
-    for line in path.read_text(encoding="utf-8").splitlines():
-        if not line.strip():
-            continue
-        try:
-            record = json.loads(line)
-        except json.JSONDecodeError:
-            continue
-        record_id = str(record.get("id", "")).strip()
-        if not record_id:
-            continue
-        by_id[record_id] = {**by_id.get(record_id, {}), **record}
-    return [
-        record for record in by_id.values()
-        if record.get("status", "active") == "active"
-    ]
-
-
 def _studio_url(value: object) -> str:
     """写真館（https://pokefuta.com/）の URL だけを通す。データ由来の URL をそのままリンクにしない。"""
     url = str(value or "").strip()
@@ -266,7 +283,7 @@ def _with_campaign(url: str, slug: str) -> str:
     """写真館への URL に流入元（from=data&pref=<県>）を足す。既存のクエリ・フラグメントは残す。"""
     base, hash_mark, fragment = url.partition("#")
     joiner = "&" if "?" in base else "?"
-    return f"{base}{joiner}{_campaign_params(slug)}{hash_mark}{fragment}"
+    return f"{base}{joiner}{campaign_params(slug)}{hash_mark}{fragment}"
 
 
 def _design_manhole_section(prefecture: str, slug: str, posts: list[dict] | None) -> str:
@@ -279,12 +296,12 @@ def _design_manhole_section(prefecture: str, slug: str, posts: list[dict] | None
         place = post["city"] or prefecture
         cards.append(
             f'<article class="photo-card">'
-            f'<a class="photo-card-image" href="{_escape_attr(_with_campaign(post["source_url"], slug))}" '
+            f'<a class="photo-card-image" href="{escape_attr(_with_campaign(post["source_url"], slug))}" '
             f'data-track="prefecture_design_manhole_click" data-position="{position}" '
-            f'data-destination="design_manhole" data-content-id="{_escape_attr(post["id"])}" '
+            f'data-destination="design_manhole" data-content-id="{escape_attr(post["id"])}" '
             f'data-surface="design_manholes">'
-            f'<img src="{_escape_attr(post["photo_url"])}" '
-            f'alt="{_escape_attr(place)}で見つかったデザインマンホール「{_escape_attr(name)}」の投稿写真" '
+            f'<img src="{escape_attr(post["photo_url"])}" '
+            f'alt="{escape_attr(place)}で見つかったデザインマンホール「{escape_attr(name)}」の投稿写真" '
             f'loading="lazy" decoding="async" width="640" height="480">'
             f'<span><strong>{escape(name)}</strong><small>{escape(place)}</small></span></a>'
             f'</article>'
@@ -300,59 +317,15 @@ def _design_manhole_section(prefecture: str, slug: str, posts: list[dict] | None
         <p>ポケふた以外のご当地デザインマンホールも、写真館にみんなが投稿しています。{more}</p>
       </div>
       <div class="photo-showcase-grid">{"".join(cards)}</div>
-      <p><a class="inline-link" href="{_escape_attr(_with_campaign(DESIGN_STUDIO_LIST_URL, slug))}" data-track="prefecture_design_manhole_click"
+      <p><a class="inline-link" href="{escape_attr(_with_campaign(DESIGN_STUDIO_LIST_URL, slug))}" data-track="prefecture_design_manhole_click"
         data-destination="design_manholes_list" data-surface="design_manholes">みんなのデザインマンホールを写真館で見る</a></p>
     </section>
 """
 
 
-def load_photos(path: Path) -> dict[str, dict]:
-    if not path.exists():
-        return {}
-    try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
-    except (json.JSONDecodeError, OSError):
-        return {}
-    raw_photos = payload.get("photos", {}) if isinstance(payload, dict) else {}
-    if not isinstance(raw_photos, dict):
-        return {}
-    return {
-        str(manhole_id): photo
-        for manhole_id, photo in raw_photos.items()
-        if isinstance(photo, dict)
-    }
-
-
 def load_visit_guides(path: Path) -> dict[str, dict]:
     """Load curated travel advice; fail the build on malformed editorial data."""
     return json.loads(path.read_text(encoding="utf-8"))
-
-
-def _normalize_katakana(text: str) -> str:
-    return "".join(
-        chr(ord(char) + 0x60) if "ぁ" <= char <= "ゖ" else char
-        for char in text
-    )
-
-
-def load_pokemon_slugs(path: Path) -> dict[str, str]:
-    result: dict[str, str] = {}
-    for pokemon in json.loads(path.read_text(encoding="utf-8")):
-        if not isinstance(pokemon, dict):
-            continue
-        name = pokemon.get("names", {}).get("ja", "")
-        slug = pokemon.get("slug", "")
-        form = pokemon.get("form") or ""
-        if not name or not slug:
-            continue
-        if name not in result or not form:
-            result[name] = slug
-        prefix = FORM_PREFIX.get(form)
-        if prefix:
-            result.setdefault(prefix + name, slug)
-    for name, slug in list(result.items()):
-        result.setdefault(_normalize_katakana(name), slug)
-    return result
 
 
 def load_trivia(path: Path) -> dict[str, dict]:
@@ -400,10 +373,6 @@ def _format_date(value: date) -> str:
     return f"{value.year}年{value.month}月{value.day}日"
 
 
-def _escape_attr(value: object) -> str:
-    return escape(str(value), {'"': "&quot;", "'": "&#x27;"})
-
-
 def _active_events(events: list[dict] | None, today: date) -> list[dict]:
     return [e for e in events or [] if e["end"] >= today]
 
@@ -424,7 +393,7 @@ def _events_html(events: list[dict] | None, today: date | None = None) -> str:
         items.append(
             '<div class="event-item">'
             f'<span class="event-status">{escape(status)}</span>'
-            f'<strong><a href="{_escape_attr(event["url"])}" target="_blank" '
+            f'<strong><a href="{escape_attr(event["url"])}" target="_blank" '
             'rel="noopener noreferrer" data-track="prefecture_event_click" '
             f'data-destination="event">{escape(event["title"])}</a></strong>'
             + (f"<p>{escape(description)}</p>" if description else "")
@@ -455,36 +424,6 @@ def build_rankings(records: list[dict]) -> dict[str, int | None]:
     }
 
 
-def _clean_pokemons(record: dict) -> list[str]:
-    return [
-        pokemon for pokemon in record.get("pokemons", [])
-        if isinstance(pokemon, str)
-        and pokemon.strip()
-        and "ローカルActs" not in pokemon
-    ]
-
-
-def _manhole_name(record: dict) -> str:
-    # 正本のマンホール名。city は公式の生の値（「町田」「台東区上野」）で、
-    # 同じ自治体の蓋を区別できないので名前には使わない。
-    return compose_display_name(record) or municipality_label(record) or "所在地不明"
-
-
-def hreflang_links(path: str) -> str:
-    """日本語版と訳した言語の県ページを相互に指す。x-default は日本語版。path は "prefectures/<slug>/" の形。"""
-    links = [f'<link rel="alternate" hreflang="ja" href="{BASE_URL}/{path}">']
-    links += [
-        f'<link rel="alternate" hreflang="{lang}" href="{BASE_URL}/{lang}/{path}">'
-        for lang in PREFECTURE_PAGE_LANGS
-    ]
-    links.append(f'<link rel="alternate" hreflang="x-default" href="{BASE_URL}/{path}">')
-    return "\n  ".join(links)
-
-
-def _json_for_script(value: object) -> str:
-    return json.dumps(value, ensure_ascii=False).replace("</", "<\\/")
-
-
 def _trivia_html(prefecture: str, trivia_entry: dict | None, count: int) -> str:
     entries = (trivia_entry or {}).get("trivia", [])
     selected = entries[0] if entries else None
@@ -493,7 +432,7 @@ def _trivia_html(prefecture: str, trivia_entry: dict | None, count: int) -> str:
         source = ""
         if source_url.startswith("https://"):
             source = (
-                f'<a href="{_escape_attr(source_url)}" target="_blank" '
+                f'<a href="{escape_attr(source_url)}" target="_blank" '
                 f'rel="noopener noreferrer">'
                 f'{escape(selected.get("source_label", "出典"))}</a>'
             )
@@ -540,7 +479,7 @@ def _hero_photos(records: list[dict]) -> str:
         mid = str(record.get("id", "")).strip()
         url = tile_image_url(mid, ROOT / "dataset" / "manhole" / "image")
         if url:
-            tiles.append((str(record.get("city", "")), mid, _manhole_name(record), url))
+            tiles.append((str(record.get("city", "")), mid, manhole_name(record), url))
     seen_cities: set[str] = set()
     first_per_city = []
     for tile in tiles:
@@ -552,9 +491,9 @@ def _hero_photos(records: list[dict]) -> str:
         return ""
     links = "".join(
         f'<a href="/manholes/{quote(mid)}/" data-track="prefecture_manhole_click" '
-        f'data-position="{position}" data-destination="{_escape_attr(mid)}" '
-        f'data-content-id="{_escape_attr(mid)}" data-surface="hero_photos">'
-        f'<img src="{_escape_attr(url)}" alt="{_escape_attr(name)}のポケふた" '
+        f'data-position="{position}" data-destination="{escape_attr(mid)}" '
+        f'data-content-id="{escape_attr(mid)}" data-surface="hero_photos">'
+        f'<img src="{escape_attr(url)}" alt="{escape_attr(name)}のポケふた" '
         f'decoding="async" width="360" height="360"></a>'
         for position, (_, mid, name, url) in enumerate(picked, start=1)
     )
@@ -562,7 +501,7 @@ def _hero_photos(records: list[dict]) -> str:
 
 
 def _pokemon_card(name: str, count: int, pokemon_slugs: dict[str, str]) -> str:
-    slug = pokemon_slugs.get(name) or pokemon_slugs.get(_normalize_katakana(name))
+    slug = pokemon_slugs.get(name) or pokemon_slugs.get(normalize_katakana(name))
     content = (
         f"<strong>{escape(name)}</strong>"
         f"<span>{count}枚のポケふたに登場</span>"
@@ -571,7 +510,7 @@ def _pokemon_card(name: str, count: int, pokemon_slugs: dict[str, str]) -> str:
         return (
             f'<a class="pokemon-card" href="/pokemon/{quote(slug)}/" '
             f'data-track="prefecture_pokemon_click" '
-            f'data-destination="{_escape_attr(slug)}">{content}</a>'
+            f'data-destination="{escape_attr(slug)}">{content}</a>'
         )
     return f'<article class="pokemon-card">{content}</article>'
 
@@ -580,7 +519,7 @@ def _pokemon_cards(records: list[dict], pokemon_slugs: dict[str, str]) -> str:
     counts = Counter(
         pokemon
         for record in records
-        for pokemon in set(_clean_pokemons(record))
+        for pokemon in set(clean_pokemons(record))
     )
     if not counts:
         return '<p class="empty-state">現在、掲載できるポケモンはいません。</p>'
@@ -604,42 +543,12 @@ def _pokemon_cards(records: list[dict], pokemon_slugs: dict[str, str]) -> str:
     )
 
 
-def _campaign_params(slug: str) -> str:
-    """写真館（pokefuta.com）へのリンクに付ける流入元パラメータ。
-
-    `from=data` だけだと写真館側で「図鑑から来た」ことしか分からず、
-    どの都道府県ページが投稿・訪問登録に繋がったかを GA4 で追えない。
-    `pref` を足して流入元の県を渡す（GA4 への送信は写真館側で別途対応）。
-
-    内部導線を外部キャンペーンとして扱わないよう utm_* は使わず、
-    クロスドメインリンカーと独自の流入元パラメータを使う。
-    """
-    if not slug:
-        return "from=data"
-    return f"from=data&pref={quote(slug)}"
-
-
-def _upload_url(manhole_id: str, slug: str) -> str:
-    return (
-        "https://pokefuta.com/upload?"
-        f"manhole_id={quote(manhole_id)}&{_campaign_params(slug)}"
-    )
-
-
 def _visits_url(slug: str) -> str:
-    return f"https://pokefuta.com/visits?{_campaign_params(slug)}"
+    return f"https://pokefuta.com/visits?{campaign_params(slug)}"
 
 
 def _nearby_url(slug: str) -> str:
-    return f"https://pokefuta.com/nearby?{_campaign_params(slug)}"
-
-
-def _google_maps_url(record: dict) -> str:
-    lat = record.get("lat")
-    lng = record.get("lng")
-    if not isinstance(lat, (int, float)) or not isinstance(lng, (int, float)):
-        return ""
-    return f"https://www.google.com/maps?q={lat},{lng}"
+    return f"https://pokefuta.com/nearby?{campaign_params(slug)}"
 
 
 def _photo_asset_url(record: dict, photo: dict) -> str:
@@ -717,19 +626,19 @@ def _photo_section(
     gallery_cards = []
     for position, (record, photo) in enumerate(entries[:PHOTO_SHOWCASE_LIMIT], start=1):
         mid = str(record.get("id", "")).strip()
-        name = _manhole_name(record)
-        pokemons = "・".join(_clean_pokemons(record)) or "ポケモン"
+        name = manhole_name(record)
+        pokemons = "・".join(clean_pokemons(record)) or "ポケモン"
         poster = str(photo.get("display_name", "") or "").strip()
         profile_url = poster_profile_url(photo.get("public_user_id"))
         if profile_url:
-            profile_url = f"{profile_url}?{_campaign_params(slug)}"
+            profile_url = f"{profile_url}?{campaign_params(slug)}"
         poster_html = ""
         if poster:
             if profile_url:
                 poster_html = (
-                    f'<small class="photo-card-poster"><a href="{_escape_attr(profile_url)}" '
+                    f'<small class="photo-card-poster"><a href="{escape_attr(profile_url)}" '
                     f'target="_blank" rel="noopener noreferrer" '
-                    f'aria-label="{_escape_attr(poster)}さんの公開スタンプ帳を開く">'
+                    f'aria-label="{escape_attr(poster)}さんの公開スタンプ帳を開く">'
                     f'{escape(poster)}さんの投稿</a></small>'
                 )
             else:
@@ -738,15 +647,15 @@ def _photo_section(
             f'<article class="photo-card">'
             f'<a class="photo-card-image" href="/manholes/{quote(mid)}/" '
             f'data-track="prefecture_photo_click" data-position="{position}" '
-            f'data-destination="{_escape_attr(mid)}" data-surface="photo_gallery">'
-            f'<img src="{_escape_attr(_photo_asset_url(record, photo))}" '
-            f'alt="{_escape_attr(name)}のポケふた投稿写真" '
+            f'data-destination="{escape_attr(mid)}" data-surface="photo_gallery">'
+            f'<img src="{escape_attr(_photo_asset_url(record, photo))}" '
+            f'alt="{escape_attr(name)}のポケふた投稿写真" '
             f'loading="lazy" decoding="async" width="640" height="480">'
             f'<span><strong>{escape(name)}</strong><small>{escape(pokemons)}</small>'
             f'</span></a>{poster_html}'
-            f'<a class="photo-card-upload" href="{_escape_attr(_upload_url(mid, slug))}" '
+            f'<a class="photo-card-upload" href="{escape_attr(upload_url(mid, slug))}" '
             f'data-track="prefecture_photo_upload_start" data-position="{position}" '
-            f'data-destination="upload" data-content-id="{_escape_attr(mid)}" '
+            f'data-destination="upload" data-content-id="{escape_attr(mid)}" '
             f'data-surface="photo_gallery" '
             f'data-photo-state="has_photo">このポケふたに写真を追加</a>'
             f'</article>'
@@ -760,12 +669,12 @@ def _photo_section(
     contribution_cards = []
     for position, record in enumerate(missing_records, start=1):
         mid = str(record.get("id", "")).strip()
-        name = _manhole_name(record)
-        pokemons = "・".join(_clean_pokemons(record)) or "ポケモン"
+        name = manhole_name(record)
+        pokemons = "・".join(clean_pokemons(record)) or "ポケモン"
         contribution_cards.append(
-            f'<a class="contribution-card" href="{_escape_attr(_upload_url(mid, slug))}" '
+            f'<a class="contribution-card" href="{escape_attr(upload_url(mid, slug))}" '
             f'data-track="prefecture_photo_upload_start" data-position="{position}" '
-            f'data-destination="upload" data-content-id="{_escape_attr(mid)}" '
+            f'data-destination="upload" data-content-id="{escape_attr(mid)}" '
             f'data-surface="photo_contribution" '
             f'data-photo-state="missing">'
             f'<span>写真募集中</span><strong>{escape(name)}</strong>'
@@ -808,13 +717,13 @@ def _manhole_cards(
         start=1,
     ):
         mid = str(record.get("id", "")).strip()
-        display_name = _manhole_name(record)
-        pokemons = "・".join(_clean_pokemons(record)) or "ポケモン"
+        display_name = manhole_name(record)
+        pokemons = "・".join(clean_pokemons(record)) or "ポケモン"
         # 小さいタイルは蓋でいっぱいの画像（{id}_lid.jpeg）。無ければ代表写真の正方形
         tile_url = tile_image_url(mid, ROOT / "dataset" / "manhole" / "image")
         image_html = (
-            f'<img src="{_escape_attr(tile_url)}" '
-            f'alt="{_escape_attr(display_name)}のポケふた" loading="lazy" decoding="async" '
+            f'<img src="{escape_attr(tile_url)}" '
+            f'alt="{escape_attr(display_name)}のポケふた" loading="lazy" decoding="async" '
             f'width="720" height="720">'
             if tile_url
             # 写真館（マイ旅・探す）の写真無しタイルと同じストライプ。
@@ -842,21 +751,21 @@ def _manhole_cards(
             else (" photo-ready" if has_photo else " photo-needed")
         )
         upload_label = "写真を追加" if has_photo else "写真を投稿"
-        maps_url = _google_maps_url(record)
+        maps_url = google_maps_url(record)
         # 蓋の写真そのものが詳細への導線になったので、カード内に「詳細」
         # ボタンは置かない（写真館が /nearby のタイルから「経路を見る」を外し、
         # タイル全体を詳細リンクにしたのと同じ整理）。
         maps_html = (
-            f'<a href="{_escape_attr(maps_url)}" target="_blank" rel="noopener noreferrer" '
+            f'<a href="{escape_attr(maps_url)}" target="_blank" rel="noopener noreferrer" '
             f'data-track="prefecture_google_maps_click" data-position="{position}" '
-            f'data-destination="google_maps" data-content-id="{_escape_attr(mid)}" '
+            f'data-destination="google_maps" data-content-id="{escape_attr(mid)}" '
             f'data-surface="manhole_actions">地図で開く</a>'
             if maps_url else ""
         )
         upload_html = (
-            f'<a class="upload" href="{_escape_attr(_upload_url(mid, slug))}" '
+            f'<a class="upload" href="{escape_attr(upload_url(mid, slug))}" '
             f'data-track="prefecture_photo_upload_start" data-position="{position}" '
-            f'data-destination="upload" data-content-id="{_escape_attr(mid)}" '
+            f'data-destination="upload" data-content-id="{escape_attr(mid)}" '
             f'data-surface="manhole_actions" '
             f'data-photo-state="{"has_photo" if has_photo else "missing"}">{upload_label}</a>'
             if not is_preinstall else ""
@@ -867,11 +776,11 @@ def _manhole_cards(
             if maps_html or upload_html else ""
         )
         cards.append(
-            f'<article class="manhole-card" data-manhole-id="{_escape_attr(mid)}" '
-            f'id="manhole-{_escape_attr(mid)}">'
+            f'<article class="manhole-card" data-manhole-id="{escape_attr(mid)}" '
+            f'id="manhole-{escape_attr(mid)}">'
             f'<a class="manhole-detail" href="/manholes/{quote(mid)}/" '
             f'data-track="prefecture_manhole_click" data-position="{position}" '
-            f'data-destination="{_escape_attr(mid)}" data-content-id="{_escape_attr(mid)}" '
+            f'data-destination="{escape_attr(mid)}" data-content-id="{escape_attr(mid)}" '
             f'data-surface="manhole_card">'
             f'{image_html}<span class="manhole-shade" aria-hidden="true"></span>'
             f'<span class="manhole-badges">{preinstall_badge_html}'
@@ -951,7 +860,7 @@ def _link_municipalities(text: str, links: dict[str, str]) -> str:
         linked.add(city)
         # data-track が無いと外側の県カード（prefectures_index_click）として記録されるので、
         # 県ページの市区町村リンクと同じイベント名で、出どころを surface で分ける
-        path = _escape_attr(links[city])
+        path = escape_attr(links[city])
         return (
             f'<a href="{path}" data-track="prefecture_municipality_click" '
             f'data-surface="prefectures_index_trivia" data-destination="{path}">{label}</a>'
@@ -1026,7 +935,7 @@ def _index_card_campaign_html(
     event = active[0]
     status = _event_status(event, today)
     return (
-        f'<a class="prefecture-card-campaign" href="{_escape_attr(event["url"])}" '
+        f'<a class="prefecture-card-campaign" href="{escape_attr(event["url"])}" '
         'target="_blank" rel="noopener noreferrer" '
         'data-track="prefectures_index_campaign_click">'
         f'🎫 {status}: {escape(event["title"])}</a>'
@@ -1145,9 +1054,9 @@ def build_index_page(
         )
         gallery_items = [
             f'<a class="prefecture-card-photo" href="/manholes/{quote(str(record.get("id", "")))}/" '
-            f'aria-label="{_escape_attr(_caption(record))}のポケふたの詳細を開く">'
+            f'aria-label="{escape_attr(_caption(record))}のポケふたの詳細を開く">'
             # 小さいタイルは蓋でいっぱいの画像（{id}_lid.jpeg）。無ければ代表写真の正方形
-            f'<img src="{_escape_attr(tile_image_url(str(record.get("id", "")), ROOT / "dataset" / "manhole" / "image") or _photo_asset_url(record, photo))}" alt="" loading="lazy" decoding="async">'
+            f'<img src="{escape_attr(tile_image_url(str(record.get("id", "")), ROOT / "dataset" / "manhole" / "image") or _photo_asset_url(record, photo))}" alt="" loading="lazy" decoding="async">'
             f'<span class="prefecture-card-photo-city" aria-hidden="true">'
             f'{escape(_caption(record))}</span></a>'
             for record, photo in photographed
@@ -1155,7 +1064,7 @@ def build_index_page(
         gallery_items += [
             f'<a class="prefecture-card-photo prefecture-card-photo-needed" '
             f'href="/manholes/{quote(str(record.get("id", "")))}/" '
-            f'aria-label="{_escape_attr(_caption(record))}のポケふた（写真募集中）の詳細を開く">'
+            f'aria-label="{escape_attr(_caption(record))}のポケふた（写真募集中）の詳細を開く">'
             '<span class="prefecture-card-photo-placeholder" aria-hidden="true">写真募集中</span>'
             f'<span class="prefecture-card-photo-city" aria-hidden="true">'
             f'{escape(_caption(record))}</span></a>'
@@ -1181,7 +1090,7 @@ def build_index_page(
       </a>
       {campaign_html}
       {trivia_html}
-      <div class="prefecture-card-gallery" aria-label="{_escape_attr(name)}のマンホール写真">{gallery_html}</div>
+      <div class="prefecture-card-gallery" aria-label="{escape_attr(name)}のマンホール写真">{gallery_html}</div>
       {detail_link_html}
     </article>"""
 
@@ -1225,19 +1134,19 @@ def build_index_page(
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{escape(title)}</title>
-  <meta name="description" content="{_escape_attr(description)}">
+  <meta name="description" content="{escape_attr(description)}">
   <meta name="robots" content="index,follow">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ja_JP">
-  <meta property="og:title" content="{_escape_attr(title)}">
-  <meta property="og:description" content="{_escape_attr(description)}">
-  <meta property="og:url" content="{_escape_attr(canonical)}">
+  <meta property="og:title" content="{escape_attr(title)}">
+  <meta property="og:description" content="{escape_attr(description)}">
+  <meta property="og:url" content="{escape_attr(canonical)}">
   <meta property="og:image" content="{OG_IMAGE}">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="{_escape_attr(title)}">
-  <meta name="twitter:description" content="{_escape_attr(description)}">
+  <meta name="twitter:title" content="{escape_attr(title)}">
+  <meta name="twitter:description" content="{escape_attr(description)}">
   <meta name="twitter:image" content="{OG_IMAGE}">
-  <link rel="canonical" href="{_escape_attr(canonical)}">
+  <link rel="canonical" href="{escape_attr(canonical)}">
   {hreflang_links("prefectures/")}
   <link rel="icon" href="/assets/pokefuta-marker.svg" type="image/svg+xml">
   <style>
@@ -1477,7 +1386,7 @@ def _seo_config(prefecture: str, records: list[dict]) -> dict[str, str] | None:
     short = _short_prefecture_name(prefecture)
     title_places = "・".join(municipalities[:3]) + ("など" if len(municipalities) > 3 else "")
     pokemons = list(dict.fromkeys(
-        name for record in records for name in _clean_pokemons(record)
+        name for record in records for name in clean_pokemons(record)
     ))
     pokemon_text = (
         "、" + "・".join(pokemons[:3]) + ("など" if len(pokemons) > 3 else "")
@@ -1499,16 +1408,6 @@ def _seo_config(prefecture: str, records: list[dict]) -> dict[str, str] | None:
     }
 
 
-def _distance_km(lat1: float, lng1: float, lat2: float, lng2: float) -> float:
-    dlat = math.radians(lat2 - lat1)
-    dlng = math.radians(lng2 - lng1)
-    a = (
-        math.sin(dlat / 2) ** 2
-        + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlng / 2) ** 2
-    )
-    return 6371.0 * 2 * math.asin(math.sqrt(a))
-
-
 def _nearest_pokefuta(
     prefecture: str, all_records: list[dict] | None
 ) -> list[tuple[float, dict]]:
@@ -1518,7 +1417,7 @@ def _nearest_pokefuta(
         return []
     _, lat, lng = origin
     candidates = [
-        (_distance_km(lat, lng, record["lat"], record["lng"]), record)
+        (distance_km(lat, lng, record["lat"], record["lng"]), record)
         for record in all_records
         if record.get("installed") is not False
         and record.get("prefecture") != prefecture
@@ -1583,8 +1482,8 @@ def _prefecture_seo(
 
 def _municipality_link_item(name: str, count: int, path: str | None) -> str:
     label = (
-        f'<a href="{_escape_attr(path)}" data-track="prefecture_municipality_click" '
-        f'data-surface="municipality_guide" data-destination="{_escape_attr(path)}">'
+        f'<a href="{escape_attr(path)}" data-track="prefecture_municipality_click" '
+        f'data-surface="municipality_guide" data-destination="{escape_attr(path)}">'
         f'<strong>{escape(name)}</strong></a>'
         if path else f'<strong>{escape(name)}</strong>'
     )
@@ -1650,11 +1549,11 @@ def _nearest_pokefuta_html(prefecture: str, nearest: list[tuple[float, dict]]) -
         f'<li><a href="/manholes/{quote(str(record.get("id", "")))}/" '
         'data-track="prefecture_manhole_click" data-surface="nearest_pokefuta" '
         f'data-position="{position}" '
-        f'data-destination="{_escape_attr(record.get("id", ""))}" '
-        f'data-content-id="{_escape_attr(record.get("id", ""))}">'
-        f'{escape(_guide_stop_name(record))}</a>'
+        f'data-destination="{escape_attr(record.get("id", ""))}" '
+        f'data-content-id="{escape_attr(record.get("id", ""))}">'
+        f'{escape(guide_stop_name(record))}</a>'
         f'<span>{escape(str(record.get("address") or ""))}・直線約{distance:.0f}km</span>'
-        f'<span>{escape("・".join(_clean_pokemons(record)))}</span></li>'
+        f'<span>{escape("・".join(clean_pokemons(record)))}</span></li>'
         for position, (distance, record) in enumerate(nearest, start=1)
     )
     return (
@@ -1662,7 +1561,7 @@ def _nearest_pokefuta_html(prefecture: str, nearest: list[tuple[float, dict]]) -
         f'<h2 id="nearest-heading">{escape(short)}から近いポケふた{len(nearest)}枚</h2>'
         f'<p>{escape(prefecture)}には現在ポケふたがありません。'
         f'{escape(office)}からいちばん近いのは{escape(str(first.get("prefecture", "")))}の'
-        f'{escape(_guide_stop_name(first))}で、直線で約{first_distance:.0f}kmです。'
+        f'{escape(guide_stop_name(first))}で、直線で約{first_distance:.0f}kmです。'
         '距離は直線のため、移動距離や所要時間は地図アプリで確認してください。</p>'
         f'<ul class="visit-guide-stops">{stops}</ul>'
         '</section>'
@@ -1733,8 +1632,8 @@ def _coverage_html(
         if not path:
             return label
         return (
-            f'<a href="{_escape_attr(path)}" data-track="prefecture_municipality_click" '
-            f'data-surface="municipality_coverage" data-destination="{_escape_attr(path)}">{label}</a>'
+            f'<a href="{escape_attr(path)}" data-track="prefecture_municipality_click" '
+            f'data-surface="municipality_coverage" data-destination="{escape_attr(path)}">{label}</a>'
         )
 
     multi = coverage.multi
@@ -1744,7 +1643,7 @@ def _coverage_html(
         others = [
             f'<a href="/prefectures/{quote(PREFECTURE_SLUGS[pref])}/" '
             'data-track="prefecture_related_click" data-surface="municipality_coverage" '
-            f'data-destination="{_escape_attr(PREFECTURE_SLUGS[pref])}">{escape(pref)}</a>'
+            f'data-destination="{escape_attr(PREFECTURE_SLUGS[pref])}">{escape(pref)}</a>'
             if pref != prefecture else f"<b>{escape(pref)}</b>"
             for pref in complete
         ]
@@ -1794,11 +1693,6 @@ def _coverage_html(
     )
 
 
-def _guide_stop_name(record: dict) -> str:
-    # 施設名のない蓋は「長崎県/長崎市」になる。県ページ内の案内では県名が重複するので省く。
-    return _manhole_name(record).removeprefix(f'{record.get("prefecture", "")}/')
-
-
 def _guide_stop_address(record: dict) -> str:
     # Google は地点名と住所を区切りなしでつなぎ「長崎市長崎県長崎市尾上町5-6」という
     # スニペットを作っていた（2026-10-20）。県ページ内なので県名を省き、
@@ -1837,10 +1731,10 @@ def _visit_guide_html(records: list[dict], guide: dict | None) -> str:
 
     def stop_list(route_stop_ids: list[str]) -> str:
         stops = "".join(
-            f'<li><a href="#manhole-{_escape_attr(mid)}" '
+            f'<li><a href="#manhole-{escape_attr(mid)}" '
             'data-track="prefecture_photo_candidate_click" data-surface="visit_guide" '
-            f'data-destination="manhole_list" data-content-id="{_escape_attr(mid)}">'
-            f'{escape(_guide_stop_name(by_id[mid]))}</a>'
+            f'data-destination="manhole_list" data-content-id="{escape_attr(mid)}">'
+            f'{escape(guide_stop_name(by_id[mid]))}</a>'
             f'{_guide_stop_address(by_id[mid])}</li>'
             for mid in route_stop_ids if mid in by_id
         )
@@ -1862,7 +1756,7 @@ def _visit_guide_html(records: list[dict], guide: dict | None) -> str:
         for section in guide["sections"]
     )
     sources = "・".join(
-        f'<a href="{_escape_attr(source["url"])}" target="_blank" '
+        f'<a href="{escape_attr(source["url"])}" target="_blank" '
         'rel="noopener noreferrer" data-track="prefecture_official_click" '
         'data-surface="visit_guide" data-destination="travel_source">'
         f'{escape(source["label"])}</a>'
@@ -1883,7 +1777,7 @@ def _visit_guide_html(records: list[dict], guide: dict | None) -> str:
         f'<summary>{escape(guide.get("advice_label", "駅・車での回り方"))}</summary>'
         f'{advice}</details>'
         f'<p class="visit-guide-sources">出典：{sources}'
-        f'（確認日：<time datetime="{_escape_attr(guide["checked_on"])}">'
+        f'（確認日：<time datetime="{escape_attr(guide["checked_on"])}">'
         f'{escape(guide["checked_on"])}</time>）</p></section>'
     )
 
@@ -1908,7 +1802,7 @@ def _trip_links_html(
     すぐ上の所要時間の文で同じエリアへのリンクを出しているときは重ねない。
     """
     links = "".join(
-        f'<a href="{_escape_attr(path)}" data-track="prefecture_trip_click" data-surface="trip_links" '
+        f'<a href="{escape_attr(path)}" data-track="prefecture_trip_click" data-surface="trip_links" '
         f'data-destination="trip">{escape(name)} {count}枚'
         f'{f"<small>{escape(time)}</small>" if time else ""}</a>'
         for name, path, count, time in trips or []
@@ -2323,8 +2217,8 @@ def _map_script(
     市区町村ページも同じ地図を出すので、イベント名の接頭辞と送信関数の名前だけを差し替えられる。
     """
     return f"""  <script>
-    const points = {_json_for_script(map_points)};
-    const campaignParams = {_json_for_script(campaign_params)};
+    const points = {json_for_script(map_points)};
+    const campaignParams = {json_for_script(campaign_params)};
     const mapElement = document.getElementById('prefecture-map');
     if (!mapElement) {{
       /* ポケふたが無い県では地図セクション自体を出していない */
@@ -2459,7 +2353,7 @@ def build_page(
     hero_photos_html = _hero_photos(records)
     official_url = _prefecture_official_url(records)
     official_cta = (
-        f'<a class="inline-link official-link" href="{_escape_attr(official_url)}" target="_blank" '
+        f'<a class="inline-link official-link" href="{escape_attr(official_url)}" target="_blank" '
         f'rel="noopener noreferrer" data-track="prefecture_official_click" '
         f'data-destination="prefecture_official">{escape(prefecture)}公式を見る</a>'
         if official_url else ""
@@ -2469,8 +2363,8 @@ def build_page(
             "id": str(record.get("id", "")),
             "lat": record.get("lat"),
             "lng": record.get("lng"),
-            "name": _manhole_name(record),
-            "pokemons": _clean_pokemons(record),
+            "name": manhole_name(record),
+            "pokemons": clean_pokemons(record),
             "is_preinstall": record.get("installed") is False,
             "photo_url": (
                 _photo_asset_url(
@@ -2566,7 +2460,7 @@ def build_page(
             '<a class="button secondary" href="#prefecture-map" '
             'data-track="prefecture_map_click" '
             'data-destination="prefecture_map">地図で探す</a>'
-            f'<a class="button tertiary" href="{_escape_attr(visits_url)}" '
+            f'<a class="button tertiary" href="{escape_attr(visits_url)}" '
             'data-track="prefecture_visit_cta_click" '
             'data-destination="pokefuta_visits">訪問記録を開く</a>'
         )
@@ -2581,9 +2475,9 @@ def build_page(
         <div class="journey-step"><span>STEP 4</span>未訪問を探す</div>
       </div>
       <div class="journey-actions">
-        <a class="button primary" href="{_escape_attr(visits_url)}"
+        <a class="button primary" href="{escape_attr(visits_url)}"
           data-track="prefecture_visit_cta_click" data-destination="pokefuta_visits">スタンプ帳で進捗を見る</a>
-        <a class="button tertiary" href="{_escape_attr(nearby_url)}"
+        <a class="button tertiary" href="{escape_attr(nearby_url)}"
           data-track="prefecture_nearby_click" data-destination="pokefuta_nearby">近くの未訪問を探す</a>
       </div>
     </section>"""
@@ -2604,7 +2498,7 @@ def build_page(
       <div class="journey-actions">
         <a class="button primary" href="#prefecture-map"
           data-track="prefecture_map_click" data-destination="prefecture_map">設置予定地を見る</a>
-        <a class="button tertiary" href="{_escape_attr(nearby_url)}"
+        <a class="button tertiary" href="{escape_attr(nearby_url)}"
           data-track="prefecture_nearby_click" data-destination="pokefuta_nearby">現在地の近くから探す</a>
       </div>
     </section>"""
@@ -2613,7 +2507,7 @@ def build_page(
             '<a class="button primary" href="/summary/" '
             'data-track="prefecture_summary_click" '
             'data-destination="summary">全国のポケふたを見る</a>'
-            f'<a class="button tertiary" href="{_escape_attr(nearby_url)}" '
+            f'<a class="button tertiary" href="{escape_attr(nearby_url)}" '
             'data-track="prefecture_nearby_click" '
             'data-destination="pokefuta_nearby">現在地の近くから探す</a>'
         )
@@ -2625,7 +2519,7 @@ def build_page(
       <div class="journey-actions">
         <a class="button primary" href="/summary/"
           data-track="prefecture_summary_click" data-destination="summary">全国のポケふた一覧</a>
-        <a class="button tertiary" href="{_escape_attr(nearby_url)}"
+        <a class="button tertiary" href="{escape_attr(nearby_url)}"
           data-track="prefecture_nearby_click" data-destination="pokefuta_nearby">現在地の近くから探す</a>
       </div>
     </section>"""
@@ -2662,7 +2556,7 @@ def build_page(
       </div>
       <div class="map-toolbar">
         {legend_html}
-        <a class="nearby-link" href="{_escape_attr(nearby_url)}"
+        <a class="nearby-link" href="{escape_attr(nearby_url)}"
           data-track="prefecture_nearby_click" data-destination="pokefuta_nearby">現在地の近くから探す</a>
       </div>
       <div id="prefecture-map" class="{map_empty_class.strip()}"></div>
@@ -2724,24 +2618,24 @@ def build_page(
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{escape(title)}</title>
-  <meta name="description" content="{_escape_attr(description)}">
+  <meta name="description" content="{escape_attr(description)}">
   <meta name="robots" content="index,follow">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ja_JP">
-  <meta property="og:title" content="{_escape_attr(title)}">
-  <meta property="og:description" content="{_escape_attr(description)}">
-  <meta property="og:url" content="{_escape_attr(canonical)}">
+  <meta property="og:title" content="{escape_attr(title)}">
+  <meta property="og:description" content="{escape_attr(description)}">
+  <meta property="og:url" content="{escape_attr(canonical)}">
   <meta property="og:image" content="{OG_IMAGE}">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="{_escape_attr(title)}">
-  <meta name="twitter:description" content="{_escape_attr(description)}">
+  <meta name="twitter:title" content="{escape_attr(title)}">
+  <meta name="twitter:description" content="{escape_attr(description)}">
   <meta name="twitter:image" content="{OG_IMAGE}">
-  <link rel="canonical" href="{_escape_attr(canonical)}">
+  <link rel="canonical" href="{escape_attr(canonical)}">
   {hreflang_links(f"prefectures/{slug}/")}
   <link rel="icon" href="/assets/pokefuta-marker.svg" type="image/svg+xml">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-  <script type="application/ld+json">{_json_for_script(json_ld)}</script>
+  <script type="application/ld+json">{json_for_script(json_ld)}</script>
   <style>
 {PAGE_CSS}  </style>
 </head>
@@ -2759,7 +2653,7 @@ def build_page(
       </div>
       <div class="hero-main">
         <p>{escape(hero_intro)}</p>
-        <div class="{"stats stats-3" if coverage_stat_html else "stats"}" aria-label="{_escape_attr(prefecture)}の集計">
+        <div class="{"stats stats-3" if coverage_stat_html else "stats"}" aria-label="{escape_attr(prefecture)}の集計">
           <div class="stat"><span>設置枚数</span><strong>{count}枚</strong></div>
           <div class="stat"><span>全国順位</span><strong>{escape(rank_label)}</strong></div>
           {coverage_stat_html}
@@ -2779,16 +2673,16 @@ def build_page(
   <script src="/assets/analytics.js?v=20261018a"></script>
   <script>
     window.PokefutaAnalytics.init({{
-      'page_path': '/prefectures/' + {_json_for_script(slug)} + '/',
+      'page_path': '/prefectures/' + {json_for_script(slug)} + '/',
       site_type: 'map',
       page_type: 'prefecture',
-      prefecture: {_json_for_script(slug)}
+      prefecture: {json_for_script(slug)}
     }});
     const prefectureEventDefaults = {{
       event_category: 'prefecture_growth',
       surface: 'prefecture_page',
-      prefecture: {_json_for_script(slug)},
-      prefecture_name: {_json_for_script(prefecture)}
+      prefecture: {json_for_script(slug)},
+      prefecture_name: {json_for_script(prefecture)}
     }};
     function trackPrefectureEvent(name, params) {{
       window.PokefutaAnalytics.trackEvent(name, Object.assign({{}}, prefectureEventDefaults, params || {{}}));
@@ -2813,7 +2707,7 @@ def build_page(
   </script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-{_map_script(map_points, _campaign_params(slug))}
+{_map_script(map_points, campaign_params(slug))}
 </body>
 </html>
 """
