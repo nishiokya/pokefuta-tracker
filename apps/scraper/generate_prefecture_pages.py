@@ -97,6 +97,8 @@ JST = timezone(timedelta(hours=9))
 # 現地写真の欄に並べる上限（4列×2段）。4枚だと写真が5〜8枚ある県で掲載率 100% なのに
 # 1枚も2枚も欠けて見えた。全件はすぐ下の一覧にあるので、それ以上は重ねて出さない。
 PHOTO_SHOWCASE_LIMIT = 8
+# ヒーローに出す蓋の写真の上限（PC は2×2、スマホは横一列）
+HERO_PHOTO_LIMIT = 4
 # 写真館に投稿されたデザインマンホール（ポケふた以外のご当地蓋）。県ページから写真館の投稿へ送る
 DEFAULT_DESIGN_MANHOLES = ROOT / "docs" / "design_manholes.ndjson"
 DESIGN_SHOWCASE_LIMIT = 8
@@ -105,7 +107,6 @@ DESIGN_STUDIO_HOST = "pokefuta.com"
 DEFAULT_OUTPUT = ROOT / "dist" / "prefectures"
 BASE_URL = "https://data.pokefuta.com"
 OG_IMAGE = f"{BASE_URL}/assets/ogp/pokefuta_summary_ogp.png"
-RELIABLE_FIRST_SEEN_START = datetime.fromisoformat("2025-11-01T00:00:00+00:00")
 
 
 FORM_PREFIX = {
@@ -521,56 +522,43 @@ def _record_date(record: dict) -> datetime | None:
             parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
         except ValueError:
             continue
-        # 呼び出し側は RELIABLE_FIRST_SEEN_START や JST 基準の cutoff など
+        # 呼び出し側は JST 基準の cutoff など
         # tz-aware な値と比較するので、タイムゾーン無しの文字列が紛れ込んでも
         # 比較で例外にならないよう UTC を補う。
         return parsed if parsed.tzinfo else parsed.replace(tzinfo=timezone.utc)
     return None
 
 
-def _format_year_month(date: datetime) -> str:
-    return f"{date.year}年{date.month}月"
-
-
-def _first_reliable_month(records: list[dict]) -> str:
-    first_dates = [date for record in records if (date := _record_date(record))]
-    if not first_dates:
+def _hero_photos(records: list[dict]) -> str:
+    """ヒーローに出す蓋の写真（一覧タイルと同じ切り抜き）。最初の画面で、この県の蓋が見えるように。
+    自治体が偏らないよう、まず自治体ごとに1枚ずつ、足りなければ残りから一覧と同じ順で埋める。"""
+    tiles = []
+    for record in sorted(
+        (r for r in records if r.get("installed") is not False),
+        key=lambda item: (item.get("city", ""), str(item.get("id", ""))),
+    ):
+        mid = str(record.get("id", "")).strip()
+        url = tile_image_url(mid, ROOT / "dataset" / "manhole" / "image")
+        if url:
+            tiles.append((str(record.get("city", "")), mid, _manhole_name(record), url))
+    seen_cities: set[str] = set()
+    first_per_city = []
+    for tile in tiles:
+        if tile[0] not in seen_cities:
+            seen_cities.add(tile[0])
+            first_per_city.append(tile)
+    picked = (first_per_city + [t for t in tiles if t not in first_per_city])[:HERO_PHOTO_LIMIT]
+    if not picked:
         return ""
-    first_date = min(first_dates)
-    if first_date < RELIABLE_FIRST_SEEN_START:
-        return ""
-    return _format_year_month(first_date)
-
-
-def _hero_summary(
-    prefecture: str,
-    count: int,
-    records: list[dict],
-    trivia_entry: dict | None,
-    coverage: "PrefectureCoverage | None" = None,
-) -> str:
-    if not count:
-        return f"{prefecture}は現在未設置。新しい設置情報を追跡中です。"
-
-    cities = {
-        str(record.get("city", "")).strip()
-        for record in records
-        if str(record.get("city", "")).strip()
-    }
-    # トリビアの municipality_count は city の表記揺れ（「利府」と「利府町」）を別に数え、
-    # 生成時点で止まっているので、カバー率と同じ数え方があればそちらを使う
-    municipalities = (
-        (coverage.covered if coverage and coverage.covered else 0)
-        or (trivia_entry or {}).get("municipality_count", 0)
-        or len(cities)
+    links = "".join(
+        f'<a href="/manholes/{quote(mid)}/" data-track="prefecture_manhole_click" '
+        f'data-position="{position}" data-destination="{_escape_attr(mid)}" '
+        f'data-content-id="{_escape_attr(mid)}" data-surface="hero_photos">'
+        f'<img src="{_escape_attr(url)}" alt="{_escape_attr(name)}のポケふた" '
+        f'decoding="async" width="360" height="360"></a>'
+        for position, (_, mid, name, url) in enumerate(picked, start=1)
     )
-    first_month = _first_reliable_month(records)
-    if first_month:
-        return (
-            f"{prefecture}は{first_month}にポケふた初登場。"
-            f"現在は{municipalities}自治体で{count}枚を巡れます。"
-        )
-    return f"{prefecture}では{municipalities}自治体で{count}枚のポケふたを巡れます。"
+    return f'<div class="hero-photos" data-count="{len(picked)}">{links}</div>'
 
 
 def _pokemon_card(name: str, count: int, pokemon_slugs: dict[str, str]) -> str:
@@ -1624,12 +1612,10 @@ def _municipality_guide(
     return (
         '<section class="municipality-guide" aria-labelledby="municipality-heading">'
         f'<h2 id="municipality-heading">{escape(search_name)}のポケふたはどこ？市町村別の設置枚数</h2>'
-        f'<p>{escape(lead)}各地点の住所と行き方は、下の一覧と地図から確認できます。</p>'
-        f'<ul>{items}</ul>'
-        '<div class="municipality-actions">'
-        '<a class="inline-link" href="#manhole-list">場所一覧を見る</a>'
-        '<a class="inline-link" href="#prefecture-map">地図を見る</a>'
-        '</div></section>'
+        f'<p>{escape(lead)}各地点の住所と行き方は、下の地図と一覧から確認できます。</p>'
+        # 「場所一覧を見る」「地図を見る」のジャンプは置かない。地図はこの欄のすぐ下で、
+        # ヒーローにも「地図で探す」があり、ボタンの段が場所を取るだけだった
+        f'<ul>{items}</ul></section>'
     )
 
 
@@ -1962,6 +1948,16 @@ PAGE_CSS = """    :root { color-scheme: light; }
     /* 右側の要約（.hero-summary）があるときだけ2列。無いページ（/trip/・ランキング）で
        空の280px列が残って見出しが途中で折り返していた */
     .hero:has(> .hero-summary) { grid-template-columns: minmax(0, 1fr) 280px; }
+    .hero:has(> .hero-side) { grid-template-columns: minmax(0, 1fr) 300px; }
+    .hero-side { position: relative; z-index: 1; display: grid; gap: 12px; }
+    .hero-photos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .hero-photos[data-count="1"] { grid-template-columns: minmax(0, 1fr); }
+    .hero-photos[data-count="3"] > a:first-child { grid-column: 1 / -1; width: 50%; justify-self: center; }
+    .hero-photos a {
+      display: block; aspect-ratio: 1; overflow: hidden; border-radius: 50%;
+      border: 4px solid white; box-shadow: 0 6px 16px rgba(77,56,30,.16); background: #e9e3d6;
+    }
+    .hero-photos img { display: block; width: 100%; height: 100%; object-fit: cover; }
     .hero::after {
       content: ""; position: absolute; width: 230px; height: 230px;
       right: -70px; top: -90px; border: 42px solid rgba(126,107,169,.1);
@@ -2084,10 +2080,11 @@ PAGE_CSS = """    :root { color-scheme: light; }
     .prefecture-marker.has-photo { background: #2d846c; }
     .prefecture-marker.needs-photo { background: #d78548; }
     .prefecture-marker.preinstall { background: #8b8f94; }
+    /* 蓋の写真自体に黒い縁があるので、外側は細い白線と影だけにする（緑の二重線は重かった） */
     .prefecture-marker.clip {
-      width: 46px; height: 46px; padding: 0; overflow: hidden; border: 3px solid white;
-      border-radius: 50%; transform: none; background: #2d846c;
-      box-shadow: 0 0 0 2px #2d846c, 0 3px 8px rgba(32,27,22,.35);
+      width: 44px; height: 44px; padding: 0; overflow: hidden; border: 2px solid white;
+      border-radius: 50%; transform: none; background: #e9e3d6;
+      box-shadow: 0 2px 6px rgba(32,27,22,.45);
     }
     .prefecture-marker.clip img { display: block; width: 100%; height: 100%; object-fit: cover; }
     .map-popup { min-width: 210px; }
@@ -2281,6 +2278,15 @@ PAGE_CSS = """    :root { color-scheme: light; }
       .hero { display: block; padding: 22px 18px; }
       .hero-heading { display: contents; }
       .hero-summary { display: none; }
+      /* スマホは見出しのすぐ下に横一列。hero-heading は display: contents なので並べ替えられる */
+      .prefecture-hero { display: flex; flex-direction: column; }
+      .prefecture-hero .hero-side { order: 1; }
+      .prefecture-hero .hero-main { order: 2; }
+      .hero-photos, .hero-photos[data-count="1"] {
+        grid-template-columns: repeat(4, minmax(0, 72px)); gap: 8px;
+      }
+      .hero-photos[data-count="3"] > a:first-child { grid-column: auto; width: auto; justify-self: stretch; }
+      .hero-photos a { border-width: 3px; }
       .hero-actions { display: grid; grid-template-columns: 1fr 1fr; }
       .hero-actions .button { justify-content: center; padding: 0 12px; text-align: center; }
       .hero-actions .button.primary { grid-column: 1 / -1; }
@@ -2380,10 +2386,10 @@ def _map_script(
             ? L.divIcon({{
               className: '',
               html: '<div class="prefecture-marker clip"><img src="' +
-                escapeHtml(point.tile_url) + '" alt="" decoding="async" width="40" height="40"></div>',
-              iconSize: [46, 46],
-              iconAnchor: [23, 23],
-              popupAnchor: [0, -22]
+                escapeHtml(point.tile_url) + '" alt="" decoding="async" width="44" height="44"></div>',
+              iconSize: [44, 44],
+              iconAnchor: [22, 22],
+              popupAnchor: [0, -21]
             }})
             : L.divIcon({{
               className: '',
@@ -2450,7 +2456,7 @@ def build_page(
     title, description, h1 = _prefecture_seo(prefecture, count, records, nearest)
     rank_label = f"全国{rank}位" if rank else "現在未設置"
     hero_intro = _hero_intro(prefecture, count, trivia_entry, coverage, complete)
-    hero_summary = _hero_summary(prefecture, count, records, trivia_entry, coverage)
+    hero_photos_html = _hero_photos(records)
     official_url = _prefecture_official_url(records)
     official_cta = (
         f'<a class="inline-link official-link" href="{_escape_attr(official_url)}" target="_blank" '
@@ -2764,10 +2770,7 @@ def build_page(
         <p class="hero-note">{escape(hero_note)}</p>
         <div class="hero-utility">{official_cta}</div>
       </div>
-      <div class="hero-summary" aria-label="{_escape_attr(prefecture)}のサマリー">
-        <span>サマリー</span>
-        <p>{escape(hero_summary)}</p>
-      </div>
+      {f'<div class="hero-side">{hero_photos_html}</div>' if hero_photos_html else ""}
     </header>
 
 {main_sections_html}
