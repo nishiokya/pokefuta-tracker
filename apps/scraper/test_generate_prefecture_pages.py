@@ -762,6 +762,36 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         self.assertIn('"tile_url": "/manhole/image/1_latest.jpeg"', latest_only)
         self.assertNotIn("legend-dot has-photo", latest_only)
 
+    def test_hero_shows_lid_photos_one_per_municipality_first(self) -> None:
+        records = [
+            {"id": mid, "prefecture": "北海道", "city": city, "pokemons": ["ピカチュウ"],
+             "lat": 43.0, "lng": 141.0}
+            for mid, city in (("1", "A市"), ("2", "A市"), ("3", "A市"), ("4", "B町"), ("5", "C村"))
+        ]
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            image_dir = root / "dataset" / "manhole" / "image"
+            image_dir.mkdir(parents=True)
+            for mid in ("1", "2", "3", "4"):
+                (image_dir / f"{mid}_lid.jpeg").write_bytes(b"test image")
+            with mock.patch.object(MODULE, "ROOT", root):
+                hero = MODULE._hero_photos(records)
+                self.assertEqual("", MODULE._hero_photos([{"id": "5", "city": "C村"}]))
+        # A市・B町を1枚ずつ（写真の無い C村は飛ばす）→ 残りを A市から
+        self.assertEqual(
+            ["1", "4", "2", "3"],
+            re.findall(r'href="/manholes/(\d+)/"', hero),
+        )
+        self.assertIn('data-count="4"', hero)
+        self.assertIn('data-surface="hero_photos"', hero)
+
+    def test_municipality_guide_has_no_jump_buttons(self) -> None:
+        records = [r for r in self.records if r.get("prefecture") == "徳島県"]
+        html = MODULE._municipality_guide("徳島県", records)
+        self.assertIn("市町村別の設置枚数", html)
+        self.assertNotIn("場所一覧を見る", html)
+        self.assertNotIn("地図を見る", html)
+
     def test_photo_section_zero_inventory_invites_first_contribution(self) -> None:
         records = [
             {"id": "1", "city": "A市", "pokemons": ["イーブイ"]},
