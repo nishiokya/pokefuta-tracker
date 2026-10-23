@@ -2486,12 +2486,14 @@ def build_page(
             tile_image_url(point["id"], ROOT / "dataset" / "manhole" / "image")
             if point["photo_url"] else ""
         )
+    # 地図に実際に描く形。切り抜きは見れば分かるので凡例に載せない。
+    # 写真はあるが切り抜き画像がまだ無い地点だけ、緑の点として凡例に残る
     map_states = {
         "preinstall" if point["is_preinstall"]
+        else "clip" if point["tile_url"]
         else ("has-photo" if point["photo_url"] else "needs-photo")
         for point in map_points
     }
-    # 全ピンが蓋の切り抜きなら凡例は要らない。残るのは出ている状態だけ
     legend_items = [
         f'<span><i class="legend-dot {state}"></i>{label}</span>'
         for state, label in (
@@ -2504,7 +2506,7 @@ def build_page(
     legend_html = (
         '<div class="map-legend" aria-label="地図の凡例">'
         + "".join(legend_items) + "</div>"
-        if map_states - {"has-photo"} else ""
+        if legend_items else ""
     )
     pokemon_html = _pokemon_cards(records, pokemon_slugs)
     manhole_html = _manhole_cards(records, photos, slug)
