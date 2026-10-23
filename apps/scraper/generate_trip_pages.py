@@ -19,6 +19,20 @@ from xml.sax.saxutils import escape
 try:
     from apps.scraper import generate_municipality_pages as muni_page
     from apps.scraper import generate_prefecture_pages as pref
+    from apps.scraper.manhole_records import (
+        clean_pokemons,
+        distance_km,
+        guide_stop_name,
+        load_photos,
+        load_records,
+        manhole_name,
+    )
+    from apps.scraper.page_html import (
+        BASE_URL,
+        campaign_params,
+        escape_attr,
+        json_for_script,
+    )
     from apps.scraper.municipalities import build_municipalities, load_slugs
     from apps.scraper.visit_durations import (
         DEFAULT_DURATIONS,
@@ -42,6 +56,20 @@ except ModuleNotFoundError as exc:
         raise
     import generate_municipality_pages as muni_page
     import generate_prefecture_pages as pref
+    from manhole_records import (
+        clean_pokemons,
+        distance_km,
+        guide_stop_name,
+        load_photos,
+        load_records,
+        manhole_name,
+    )
+    from page_html import (
+        BASE_URL,
+        campaign_params,
+        escape_attr,
+        json_for_script,
+    )
     from municipalities import build_municipalities, load_slugs
     from visit_durations import (
         DEFAULT_DURATIONS,
@@ -62,7 +90,6 @@ except ModuleNotFoundError as exc:
     )
 
 ROOT = pref.ROOT
-BASE_URL = pref.BASE_URL
 DEFAULT_OUTPUT = ROOT / "dist" / "trip"
 CARD_THUMB_LIMIT = muni_page.THUMB_LIMIT
 IMAGE_DIR = muni_page.IMAGE_DIR
@@ -71,8 +98,8 @@ NEARBY_TRIP_KM = 80.0
 # 特集ページの「まとまっている場所」: ほかの地点からいちばん離れた地点でもこの距離以内
 COMPACT_GAP_KM = 3.0
 
-_escape_attr = pref._escape_attr
-_json_for_script = pref._json_for_script
+_escape_attr = escape_attr
+_json_for_script = json_for_script
 
 
 def _head(title: str, description: str, canonical: str, json_ld: dict, with_map: bool) -> str:
@@ -118,7 +145,7 @@ def page_paths(records: list[dict], areas: list[dict]) -> list[str]:
 def has_route_link(route: list[dict]) -> bool:
     """Google マップの順路リンクを出せるか（_route_html と説明文で同じ判定を使う）。"""
     return len(route) >= 2 and max(
-        pref._distance_km(a["lat"], a["lng"], b["lat"], b["lng"]) for a, b in zip(route, route[1:])
+        distance_km(a["lat"], a["lng"], b["lat"], b["lng"]) for a, b in zip(route, route[1:])
     ) <= muni_page.ROUTE_LINK_MAX_LEG_KM
 
 
@@ -136,7 +163,7 @@ def trips_by_manhole(records: list[dict], areas: list[dict], durations: dict) ->
             continue
         entry = find_entry(rs, durations)
         route, common = area_route(rs, entry)
-        legs = [pref._distance_km(a["lat"], a["lng"], b["lat"], b["lng"]) for a, b in zip(route, route[1:])]
+        legs = [distance_km(a["lat"], a["lng"], b["lat"], b["lng"]) for a, b in zip(route, route[1:])]
         text = duration_text(rs, durations) or (
             "1日で全部回った人の記録がまだ少ないため、かかる時間の目安はまだありません。" + mode_hint(rs)
         )
@@ -187,11 +214,11 @@ def _title(area: dict, count: int) -> str:
 
 
 def _stop_name(record: dict) -> str:
-    return pref._guide_stop_name(record)
+    return guide_stop_name(record)
 
 
 def _route_html(area: dict, route: list[dict], common: bool, entry: dict | None) -> str:
-    legs = [pref._distance_km(a["lat"], a["lng"], b["lat"], b["lng"]) for a, b in zip(route, route[1:])]
+    legs = [distance_km(a["lat"], a["lng"], b["lat"], b["lng"]) for a, b in zip(route, route[1:])]
     items = "".join(
         f'<li><a href="#manhole-{_escape_attr(str(r["id"]))}" data-track="trip_stop_click" '
         f'data-surface="route" data-destination="manhole_list" data-position="{i + 1}" '
@@ -297,7 +324,7 @@ def _nearby_html(area: dict, records: list[dict], others: list[tuple[dict, list[
         if other["slug"] == area["slug"]:
             continue
         there = _centroid(other_records)
-        km = pref._distance_km(here[0], here[1], there[0], there[1])
+        km = distance_km(here[0], here[1], there[0], there[1])
         if km <= NEARBY_TRIP_KM:
             near.append((km, other, other_records))
     if not near:
@@ -344,8 +371,8 @@ def build_area_page(
             "id": str(r["id"]),
             "lat": r["lat"],
             "lng": r["lng"],
-            "name": pref._manhole_name(r),
-            "pokemons": pref._clean_pokemons(r),
+            "name": manhole_name(r),
+            "pokemons": clean_pokemons(r),
             "is_preinstall": False,
             "photo_url": pref._photo_asset_url(r, photos[str(r["id"])]) if str(r["id"]) in photos else "",
         }
@@ -375,7 +402,7 @@ def build_area_page(
                     "position": i,
                     "item": {
                         "@type": "TouristAttraction",
-                        "name": f"{pref._manhole_name(r)}のポケふた",
+                        "name": f"{manhole_name(r)}のポケふた",
                         "url": f"{BASE_URL}/manholes/{quote(str(r['id']))}/",
                     },
                 }
@@ -436,7 +463,7 @@ def build_area_page(
   </main>
 {_analytics_script(path, "trip", pref_slug)}  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-{pref._map_script(map_points, pref._campaign_params(pref_slug), "trip", "trackTripEvent")}
+{pref._map_script(map_points, campaign_params(pref_slug), "trip", "trackTripEvent")}
 </body>
 </html>
 """
@@ -475,7 +502,7 @@ def compact_places(
             continue
         route = muni_page.shortest_route(points)
         total = sum(
-            pref._distance_km(a["lat"], a["lng"], b["lat"], b["lng"]) for a, b in zip(route, route[1:])
+            distance_km(a["lat"], a["lng"], b["lat"], b["lng"]) for a, b in zip(route, route[1:])
         )
         link = m.path or f"/prefectures/{quote(m.prefecture_slug)}/"
         entry = find_entry(points, durations or {})
@@ -656,10 +683,10 @@ def main() -> int:
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     args = parser.parse_args()
     pages = generate_all(
-        pref.load_records(args.manholes),
+        load_records(args.manholes),
         load_trip_areas(args.areas),
         load_durations(args.durations, args.areas),
-        pref.load_photos(args.photos),
+        load_photos(args.photos),
         load_slugs(),
         args.output,
     )

@@ -21,6 +21,22 @@ from xml.sax.saxutils import escape
 
 try:
     from apps.scraper import generate_prefecture_pages as pref
+    from apps.scraper.manhole_records import (
+        clean_pokemons,
+        distance_km,
+        guide_stop_name,
+        load_photos,
+        load_pokemon_slugs,
+        load_records,
+        manhole_name,
+    )
+    from apps.scraper.page_html import (
+        BASE_URL,
+        OG_IMAGE,
+        campaign_params,
+        escape_attr,
+        json_for_script,
+    )
     from apps.scraper.municipalities import (
         MIN_MANHOLES,
         RANKING_MIN_MANHOLES,
@@ -36,6 +52,22 @@ except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
     import generate_prefecture_pages as pref
+    from manhole_records import (
+        clean_pokemons,
+        distance_km,
+        guide_stop_name,
+        load_photos,
+        load_pokemon_slugs,
+        load_records,
+        manhole_name,
+    )
+    from page_html import (
+        BASE_URL,
+        OG_IMAGE,
+        campaign_params,
+        escape_attr,
+        json_for_script,
+    )
     from municipalities import (
         MIN_MANHOLES,
         RANKING_MIN_MANHOLES,
@@ -60,9 +92,7 @@ except ModuleNotFoundError as exc:
     )
 
 ROOT = pref.ROOT
-BASE_URL = pref.BASE_URL
 DEFAULT_OUTPUT = ROOT / "dist" / "municipalities"
-OG_IMAGE = pref.OG_IMAGE
 JST = pref.JST
 # 隣の地点までの直線距離がこれを超える区間があるときは、Google マップのルートを出さない。
 # 島どうし（船で渡る区間）のように、道路のルートが意味を持たない場合があるため。
@@ -75,8 +105,8 @@ IMAGE_DIR = ROOT / "dataset" / "manhole" / "image"
 # それより多いときは前の区間の終点を次の区間の始点にして分ける。
 ROUTE_LINK_MAX_STOPS = 5
 
-_escape_attr = pref._escape_attr
-_json_for_script = pref._json_for_script
+_escape_attr = escape_attr
+_json_for_script = json_for_script
 
 
 def _short_prefecture_name(prefecture: str) -> str:
@@ -117,7 +147,7 @@ def shortest_route(records: list[dict]) -> list[dict]:
         return points
 
     def leg(a: dict, b: dict) -> float:
-        return pref._distance_km(a["lat"], a["lng"], b["lat"], b["lng"])
+        return distance_km(a["lat"], a["lng"], b["lat"], b["lng"])
 
     def total(order: list[dict]) -> float:
         return sum(leg(a, b) for a, b in zip(order, order[1:]))
@@ -168,7 +198,7 @@ def _google_route_url(route: list[dict]) -> str:
 def _stop_name(record: dict, municipality_name: str) -> str:
     # 「京都市 円山公園」→「円山公園」。市区町村ページの中では自治体名が重複する。
     # 施設名の無い蓋（「町田市（ゼニガメ）」）は自治体名しか手がかりが無いので残す。
-    name = pref._guide_stop_name(record)
+    name = guide_stop_name(record)
     short = name.removeprefix(f"{municipality_name} ")
     return short if short != name else name
 
@@ -187,7 +217,7 @@ def _route_section(municipality: Municipality, durations: dict | None = None) ->
     if len(route) < 2:
         return ""
     legs = [
-        pref._distance_km(a["lat"], a["lng"], b["lat"], b["lng"])
+        distance_km(a["lat"], a["lng"], b["lat"], b["lng"])
         for a, b in zip(route, route[1:])
     ]
     total_km = sum(legs)
@@ -282,7 +312,7 @@ def _hero_intro(municipality: Municipality) -> str:
 
 def _pokemon_summary(records: list[dict]) -> list[str]:
     return list(dict.fromkeys(
-        name for record in records for name in pref._clean_pokemons(record)
+        name for record in records for name in clean_pokemons(record)
     ))
 
 
@@ -473,8 +503,8 @@ def build_page(
             "id": str(record.get("id", "")),
             "lat": record.get("lat"),
             "lng": record.get("lng"),
-            "name": pref._manhole_name(record),
-            "pokemons": pref._clean_pokemons(record),
+            "name": manhole_name(record),
+            "pokemons": clean_pokemons(record),
             "is_preinstall": record.get("installed") is False,
             "photo_url": (
                 pref._photo_asset_url(record, photos.get(str(record.get("id", "")), {}))
@@ -523,7 +553,7 @@ def build_page(
                 {
                     "@type": "ListItem",
                     "position": index,
-                    "name": f"{pref._manhole_name(record)}のポケふた",
+                    "name": f"{manhole_name(record)}のポケふた",
                     "url": f"{BASE_URL}/manholes/{quote(str(record.get('id', '')))}/",
                 }
                 for index, record in enumerate(
@@ -615,7 +645,7 @@ def build_page(
   </main>
 {_analytics_script(m.path, "municipality", pref_slug, m.slug or "")}  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-{pref._map_script(map_points, pref._campaign_params(pref_slug), "municipality", "trackMunicipalityEvent")}
+{pref._map_script(map_points, campaign_params(pref_slug), "municipality", "trackMunicipalityEvent")}
 </body>
 </html>
 """
@@ -877,7 +907,7 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
-    records = pref.load_records(args.manholes)
+    records = load_records(args.manholes)
     slugs = load_slugs()
     missing = missing_slugs(build_municipalities(records, slugs))
     if missing:
@@ -895,7 +925,7 @@ def main() -> int:
         from generate_trip_pages import trip_summaries
         from visit_durations import load_trip_areas
     pages = generate_all(
-        records, slugs, pref.load_pokemon_slugs(args.pokemon), pref.load_photos(args.photos), args.output,
+        records, slugs, load_pokemon_slugs(args.pokemon), load_photos(args.photos), args.output,
         durations=durations,
         trips=trip_summaries(records, load_trip_areas(), durations),
     )
