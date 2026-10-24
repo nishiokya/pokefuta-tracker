@@ -576,6 +576,35 @@ def _photo_entries(
     )
 
 
+def _cover_photo_url(entries: list[tuple[dict, dict]]) -> str:
+    """検索結果のサムネイルと共有カードに使う、県を代表する現地写真の絶対URL。
+    写真の点数が高いものを選び、同点は ID 順にして日ごとに入れ替わらないようにする。"""
+    if not entries:
+        return ""
+    record, photo = min(
+        entries,
+        key=lambda item: (-float(item[1].get("quality_score") or 0), str(item[0].get("id", ""))),
+    )
+    return f"{BASE_URL}{_photo_asset_url(record, photo)}"
+
+
+def _date_modified(records: list[dict], entries: list[tuple[dict, dict]]) -> str:
+    """ページの中身が最後に変わった日（JST）。蓋が加わった日と、写真が投稿された日のうち新しい方。
+    last_updated は取り込みのたびに一括で進むので使わない。"""
+    stamps = [str(record.get("added_at") or "") for record in records]
+    stamps += [str(photo.get("created_at") or "") for _, photo in entries]
+    latest = None
+    for stamp in stamps:
+        try:
+            moment = datetime.fromisoformat(stamp.replace("Z", "+00:00"))
+        except ValueError:
+            continue
+        if moment.tzinfo is None:
+            moment = moment.replace(tzinfo=JST)
+        latest = moment if latest is None or moment > latest else latest
+    return latest.astimezone(JST).date().isoformat() if latest else ""
+
+
 def _split_photographed(
     records: list[dict], photos: dict[str, dict]
 ) -> tuple[list[tuple[dict, dict]], list[dict]]:
@@ -1151,7 +1180,7 @@ def build_index_page(
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{escape(title)}｜ポケふた図鑑</title>
   <meta name="description" content="{escape_attr(description)}">
-  <meta name="robots" content="index,follow">
+  <meta name="robots" content="index,follow,max-image-preview:large">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ja_JP">
   <meta property="og:title" content="{escape_attr(title)}">
@@ -2378,7 +2407,11 @@ def build_page(
     canonical = f"{BASE_URL}/prefectures/{slug}/"
     nearest = [] if count else _nearest_pokefuta(prefecture, all_records)
     # 写真データにあっても画像を取り込めていない蓋はページに写真が出ないので数えない
-    photo_count = len(_photo_entries(records, photos))
+    photo_entries = _photo_entries(records, photos)
+    photo_count = len(photo_entries)
+    cover_url = _cover_photo_url(photo_entries)
+    og_image = cover_url or OG_IMAGE
+    date_modified = _date_modified(records, photo_entries)
     title, description, h1 = _prefecture_seo(prefecture, count, records, nearest, photo_count)
     rank_label = f"全国{rank}位" if rank else "現在未設置"
     hero_intro = _hero_intro(prefecture, count, trivia_entry, coverage, complete)
@@ -2643,6 +2676,11 @@ def build_page(
             ],
         },
     }
+    if cover_url:
+        json_ld["primaryImageOfPage"] = {"@type": "ImageObject", "url": cover_url}
+        json_ld["image"] = cover_url
+    if date_modified:
+        json_ld["dateModified"] = date_modified
 
     return f"""<!doctype html>
 <html lang="ja">
@@ -2651,17 +2689,17 @@ def build_page(
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{escape(title)}｜ポケふた図鑑</title>
   <meta name="description" content="{escape_attr(description)}">
-  <meta name="robots" content="index,follow">
+  <meta name="robots" content="index,follow,max-image-preview:large">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ja_JP">
   <meta property="og:title" content="{escape_attr(title)}">
   <meta property="og:description" content="{escape_attr(description)}">
   <meta property="og:url" content="{escape_attr(canonical)}">
-  <meta property="og:image" content="{OG_IMAGE}">
+  <meta property="og:image" content="{escape_attr(og_image)}">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="{escape_attr(title)}">
   <meta name="twitter:description" content="{escape_attr(description)}">
-  <meta name="twitter:image" content="{OG_IMAGE}">
+  <meta name="twitter:image" content="{escape_attr(og_image)}">
   <link rel="canonical" href="{escape_attr(canonical)}">
   {hreflang_links(f"prefectures/{slug}/")}
   <link rel="icon" href="/assets/pokefuta-marker.svg" type="image/svg+xml">

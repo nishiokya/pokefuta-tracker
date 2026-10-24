@@ -562,6 +562,42 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
             )
         self.assertIn("現地写真つき地図・一覧", html)
 
+    def test_cover_photo_and_date_modified(self) -> None:
+        """検索結果のサムネイルは県の現地写真（点数の高いもの）、dateModified は蓋の追加と写真の投稿の新しい方。"""
+        records = [
+            {"id": "1", "prefecture": "福井県", "added_at": "2025-10-26T00:00:00+09:00"},
+            {"id": "2", "prefecture": "福井県", "added_at": "2025-10-26T00:00:00+09:00"},
+        ]
+        photos = {
+            "1": {"created_at": "2026-10-20T16:00:00Z", "quality_score": 0.5},
+            "2": {"created_at": "2026-09-01T00:00:00Z", "quality_score": 0.9},
+        }
+        with mock.patch.object(MODULE, "_photo_asset_url",
+                               side_effect=lambda r, p: f"/manhole/image/{r['id']}_latest.jpeg"):
+            entries = MODULE._photo_entries(records, photos)
+            self.assertEqual(MODULE._cover_photo_url(entries), "https://data.pokefuta.com/manhole/image/2_latest.jpeg")
+            # 2026-10-20T16:00Z は JST では 10-21
+            self.assertEqual(MODULE._date_modified(records, entries), "2026-10-21")
+        self.assertEqual(MODULE._cover_photo_url([]), "")
+        self.assertEqual(MODULE._date_modified([{"added_at": "不明"}], []), "")
+
+    def test_page_uses_cover_photo_for_og_image_and_json_ld(self) -> None:
+        records = [r for r in self.records if r.get("prefecture") == "福井県"]
+        photos = {str(r["id"]): {"created_at": "2026-01-01T00:00:00Z"} for r in records}
+        with mock.patch.object(MODULE, "_photo_asset_url", return_value="/manhole/image/x_latest.jpeg"):
+            html = MODULE.build_page(
+                "福井県", "fukui", records, 1, self.pokemon_slugs, self.trivia["福井県"], photos=photos,
+            )
+        self.assertIn('<meta property="og:image" content="https://data.pokefuta.com/manhole/image/x_latest.jpeg">', html)
+        self.assertIn('content="index,follow,max-image-preview:large"', html)
+        ld = json.loads(re.search(r'<script type="application/ld\+json">(.*?)</script>', html, re.S).group(1))
+        self.assertEqual(ld["primaryImageOfPage"]["url"], "https://data.pokefuta.com/manhole/image/x_latest.jpeg")
+        self.assertEqual(ld["dateModified"], "2026-01-01")
+        # 写真が無い県は共通の画像のままで、画像の構造化データも出さない
+        html = MODULE.build_page("福井県", "fukui", records, 1, self.pokemon_slugs, self.trivia["福井県"])
+        self.assertIn(MODULE.OG_IMAGE, html)
+        self.assertNotIn("primaryImageOfPage", html)
+
     def test_default_title_says_photos_only_when_every_lid_has_one(self) -> None:
         """全部の蓋に現地写真がある県だけ、検索結果で公式と違う点（写真つきで1ページ）を出す。"""
         records = [{"id": "1", "prefecture": "三重県"}, {"id": "2", "prefecture": "三重県"}]
@@ -1387,7 +1423,7 @@ class BuildIndexPageTest(unittest.TestCase):
     def test_canonical_and_seo_meta(self) -> None:
         html = MODULE.build_index_page(self.records_by_pref)
         self.assertIn('<link rel="canonical" href="https://data.pokefuta.com/prefectures/">', html)
-        self.assertIn('<meta name="robots" content="index,follow">', html)
+        self.assertIn('<meta name="robots" content="index,follow,max-image-preview:large">', html)
         self.assertIn("<title>都道府県から探す｜ポケふた図鑑</title>", html)
 
     def test_ga4_is_wired_up_via_the_shared_loader(self) -> None:

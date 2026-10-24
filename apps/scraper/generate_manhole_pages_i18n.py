@@ -612,7 +612,7 @@ def build_page(
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{escape(title)}</title>
   <meta name="description" content="{_attr(description)}">
-  <meta name="robots" content="index,follow">
+  <meta name="robots" content="index,follow,max-image-preview:large">
   <link rel="canonical" href="{_attr(canonical)}">
   {ja.hreflang_links(manhole_id)}
 

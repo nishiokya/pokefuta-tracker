@@ -1172,7 +1172,7 @@ def generate_html(
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{escape(strings['title'])}</title>
   <meta name="description" content="{escape(strings['description'])}">
-  <meta name="robots" content="index,follow">
+  <meta name="robots" content="index,follow,max-image-preview:large">
   <link rel="canonical" href="{escape(canonical_url)}">
 {hreflang_html}
 

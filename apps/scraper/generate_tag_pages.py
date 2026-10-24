@@ -361,7 +361,7 @@ def build_page(
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{escape(title)}</title>
   <meta name="description" content="{_escape_attr(description)}">
-  <meta name="robots" content="index,follow">
+  <meta name="robots" content="index,follow,max-image-preview:large">
   <link rel="canonical" href="{_escape_attr(canonical_url)}">
 
   <meta property="og:type" content="website">

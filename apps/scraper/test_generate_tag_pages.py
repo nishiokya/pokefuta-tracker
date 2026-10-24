@@ -106,7 +106,7 @@ class BuildPageTest(unittest.TestCase):
             '<link rel="canonical" href="https://data.pokefuta.com/tags/roadside/">',
             self.html,
         )
-        self.assertIn('<meta name="robots" content="index,follow">', self.html)
+        self.assertIn('<meta name="robots" content="index,follow,max-image-preview:large">', self.html)
 
     def test_title_and_heading_state_the_real_count(self) -> None:
         self.assertIn("<title>道の駅・SAのポケふた一覧（全国3枚）| ポケふた図鑑</title>", self.html)

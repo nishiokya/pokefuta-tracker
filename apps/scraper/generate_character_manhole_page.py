@@ -784,7 +784,7 @@ def generate_html(
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{escape(title)}</title>
   <meta name="description" content="{escape(description)}">
-  <meta name="robots" content="index,follow">
+  <meta name="robots" content="index,follow,max-image-preview:large">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ja_JP">
   <meta property="og:site_name" content="ポケふた図鑑">

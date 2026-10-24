@@ -359,7 +359,7 @@ class SeoStructureTest(_PageTestCase):
         self.assertIn(f"<title>アニメ・キャラクターマンホール全国一覧｜{self.total_count}枚の設置場所・地図</title>", self.html)
         self.assertIn('name="description" content="全国3都道府県・3作品、6枚', self.html)
         self.assertIn('<link rel="canonical" href="https://data.pokefuta.com/character_manholes.html">', self.html)
-        self.assertIn('<meta name="robots" content="index,follow">', self.html)
+        self.assertIn('<meta name="robots" content="index,follow,max-image-preview:large">', self.html)
 
     def test_has_exactly_one_h1_answering_the_directory_intent(self):
         headings = re.findall(r"<h1[^>]*>(.*?)</h1>", self.html, re.S)
