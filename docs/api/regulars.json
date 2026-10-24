@@ -1,17 +1,20 @@
 {
-  "generated_at": "2026-10-24T11:08:34+00:00",
+  "generated_at": "2026-10-24T13:05:47+00:00",
   "legends": [
     {
       "id": "fd89d552-0e0b-4538-a828-73baa327a1ef",
-      "name": "temporary accounnt"
+      "name": "temporary accounnt",
+      "photo_id": "045ce494-af12-4693-96c6-d094d72d395d"
     },
     {
       "id": "c713e125-557a-4c70-a59c-db840c53eed0",
-      "name": "どんくん"
+      "name": "どんくん",
+      "photo_id": "0ca4cd5b-10bf-4aa1-8eec-9b69c0c84442"
     },
     {
       "id": "6e2bbf33-a6f6-4ae6-9a65-6303313d1443",
-      "name": "よさそう商品"
+      "name": "よさそう商品",
+      "photo_id": "9e9567d3-4cf5-47e1-b1f4-275a1dd39475"
     }
   ],
   "success": true,
