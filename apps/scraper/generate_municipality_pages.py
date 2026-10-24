@@ -421,7 +421,7 @@ EXTRA_CSS = """
       .hero-pick { scroll-snap-align: start; }
     }
     .stop-thumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 3px; margin: 4px 0 2px; }
-    .stop-thumbs img { width: 32px; height: 32px; }
+    .stop-thumbs img { width: 32px; height: 32px; border-radius: 50%; }
     .stop-thumb-more { color: #75685c; font-size: .75rem; font-weight: 800; }
 """
 
