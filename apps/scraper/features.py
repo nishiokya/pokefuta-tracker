@@ -246,8 +246,9 @@ def parse_body_html(text: str) -> tuple[str, list[str]]:
     try:
         parser.feed(text)
         parser.close()
-    except AssertionError as exc:
-        # Python 3.11 の HTMLParser は "<![foo]>" のような崩れた宣言で例外を投げる。デプロイを止めずに問題として返す
+    except Exception as exc:  # noqa: BLE001
+        # HTMLParser は "<![foo]>" のような崩れた宣言で例外を投げる（3.11 は AssertionError、3.9 は
+        # NotImplementedError と版で違う）。デプロイを止めずに問題として返す
         return "", [*parser.problems, f"{parser.getpos()[0]}行目: HTML として読めない（{exc}）"]
     problems = parser.problems
     if parser.stack:

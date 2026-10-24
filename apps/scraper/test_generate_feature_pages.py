@@ -149,13 +149,14 @@ class BodyHtmlTests(unittest.TestCase):
             "<p>外</p>": "<section> の外にある",
             "<!DOCTYPE html><section><h2>a</h2></section>": "本文の部分だけを書く",
             "": "<section> が1つも無い",
-            # 3.11 では HTMLParser が例外を投げる書き方。3.12 以降は unknown_decl に来る
-            "<section><h2>a</h2><![foo]></section>": "",
         }
         for text, expected in cases.items():
             with self.subTest(text=text):
                 _, problems = FEATURES.parse_body_html(text)
                 self.assertTrue(any(expected in p for p in problems), problems)
+        # 崩れた宣言は版で扱いが違う（3.9・3.11 は HTMLParser が例外、3.14 はコメント扱い）。どれでも止まらず中身は出さない
+        body, problems = FEATURES.parse_body_html("<section><h2>a</h2><![foo]></section>")
+        self.assertTrue(problems or "foo" not in body, (body, problems))
         _, problems = FEATURES.parse_body_html("<section>\n  <h2>a</h2>\n  <p><b>太字</b></p>\n</section>")
         self.assertEqual(problems, ["3行目: <b> は使えない"])
 
