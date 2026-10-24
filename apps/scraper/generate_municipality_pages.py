@@ -446,7 +446,7 @@ def _head(
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{escape(head_title)}</title>
   <meta name="description" content="{_escape_attr(description)}">
-  <meta name="robots" content="index,follow">
+  <meta name="robots" content="index,follow,max-image-preview:large">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ja_JP">
   <meta property="og:title" content="{_escape_attr(title)}">

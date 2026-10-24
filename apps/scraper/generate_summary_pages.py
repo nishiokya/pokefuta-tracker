@@ -3509,7 +3509,7 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{pt}</title>
   <meta name="description" content="{md}">
-  <meta name="robots" content="index,follow">
+  <meta name="robots" content="index,follow,max-image-preview:large">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="{s['og_locale']}">
   <meta property="og:title" content="{pt}">

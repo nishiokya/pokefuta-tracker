@@ -345,7 +345,7 @@ def _head(page: Page, *, title: str, description: str, path: str, json_ld: dict,
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{escape(title)}</title>
   <meta name="description" content="{_attr(description)}">
-  <meta name="robots" content="index,follow">
+  <meta name="robots" content="index,follow,max-image-preview:large">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="{page.t("og_locale")}">
   <meta property="og:site_name" content="{_attr(page.t("site_name"))}">
