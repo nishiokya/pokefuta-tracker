@@ -690,7 +690,7 @@ def render_hero(data: TopData) -> str:
     return (
         f'<section class="{cls}" id="home-hero" aria-labelledby="home-h1">'
         '<div class="home-hero__copy">'
-        '<p class="home-eyebrow">ポケモンマンホール図鑑</p>'
+        '<p class="home-eyebrow">ポケふた図鑑</p>'
         f'<h1 class="home-h1" id="home-h1">全国{data.total:,}枚のポケふたを、<wbr>地図と一覧から探す</h1>'
         f'<p class="home-lead">{lead}</p>'
         f'<nav class="home-quick" aria-label="主な探し方">{quick_html}</nav>'
