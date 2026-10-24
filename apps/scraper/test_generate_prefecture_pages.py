@@ -544,6 +544,24 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         self.assertIn(f"<title>三重県のポケふた{len(by_pref['三重県'])}枚｜設置場所マップ・ポケモン一覧｜ポケふた図鑑</title>", html)
         self.assertNotIn('id="municipality-heading"', html)
 
+    def test_photo_title_needs_every_photo_to_render(self) -> None:
+        """写真データにあっても画像ファイルが無い蓋がある県は「現地写真つき」と名乗らない。"""
+        records = [r for r in self.records if r.get("prefecture") == "福井県"]
+        photos = {str(r["id"]): {"created_at": "2026-01-01T00:00:00Z"} for r in records}
+        missing = str(records[0]["id"])
+        def asset_url(record, photo):
+            return "" if str(record.get("id")) == missing else "/manhole/image/x_latest.jpeg"
+        with mock.patch.object(MODULE, "_photo_asset_url", side_effect=asset_url):
+            html = MODULE.build_page(
+                "福井県", "fukui", records, 1, self.pokemon_slugs, self.trivia["福井県"], photos=photos,
+            )
+        self.assertNotIn("現地写真つき", html)
+        with mock.patch.object(MODULE, "_photo_asset_url", return_value="/manhole/image/x_latest.jpeg"):
+            html = MODULE.build_page(
+                "福井県", "fukui", records, 1, self.pokemon_slugs, self.trivia["福井県"], photos=photos,
+            )
+        self.assertIn("現地写真つき地図・一覧", html)
+
     def test_default_title_says_photos_only_when_every_lid_has_one(self) -> None:
         """全部の蓋に現地写真がある県だけ、検索結果で公式と違う点（写真つきで1ページ）を出す。"""
         records = [{"id": "1", "prefecture": "三重県"}, {"id": "2", "prefecture": "三重県"}]

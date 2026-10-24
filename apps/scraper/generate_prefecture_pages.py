@@ -2360,7 +2360,8 @@ def build_page(
     installed_count = len(installed_records)
     canonical = f"{BASE_URL}/prefectures/{slug}/"
     nearest = [] if count else _nearest_pokefuta(prefecture, all_records)
-    photo_count = sum(1 for record in records if str(record.get("id")) in photos)
+    # 写真データにあっても画像を取り込めていない蓋はページに写真が出ないので数えない
+    photo_count = len(_photo_entries(records, photos))
     title, description, h1 = _prefecture_seo(prefecture, count, records, nearest, photo_count)
     rank_label = f"全国{rank}位" if rank else "現在未設置"
     hero_intro = _hero_intro(prefecture, count, trivia_entry, coverage, complete)
