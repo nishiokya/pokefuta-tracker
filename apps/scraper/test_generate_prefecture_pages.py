@@ -598,6 +598,21 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         self.assertIn(MODULE.OG_IMAGE, html)
         self.assertNotIn("primaryImageOfPage", html)
 
+    def test_cover_photo_skips_uninstalled_lids(self) -> None:
+        """設置予定・撤去の蓋の写真は、点数が高くても県の代表写真にしない（写真欄に出ないため）。"""
+        records = [r for r in self.records if r.get("prefecture") == "福井県"][:2]
+        records = [{**records[0], "installed": False}, records[1]]
+        photos = {
+            str(records[0]["id"]): {"created_at": "2026-01-01T00:00:00Z", "quality_score": 0.99},
+            str(records[1]["id"]): {"created_at": "2026-01-01T00:00:00Z", "quality_score": 0.1},
+        }
+        with mock.patch.object(MODULE, "_photo_asset_url",
+                               side_effect=lambda r, p: f"/manhole/image/{r['id']}_latest.jpeg"):
+            html = MODULE.build_page(
+                "福井県", "fukui", records, 1, self.pokemon_slugs, self.trivia["福井県"], photos=photos,
+            )
+        self.assertIn(f'og:image" content="https://data.pokefuta.com/manhole/image/{records[1]["id"]}_latest.jpeg"', html)
+
     def test_default_title_says_photos_only_when_every_lid_has_one(self) -> None:
         """全部の蓋に現地写真がある県だけ、検索結果で公式と違う点（写真つきで1ページ）を出す。"""
         records = [{"id": "1", "prefecture": "三重県"}, {"id": "2", "prefecture": "三重県"}]

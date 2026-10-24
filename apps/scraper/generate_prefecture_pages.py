@@ -2409,7 +2409,10 @@ def build_page(
     # 写真データにあっても画像を取り込めていない蓋はページに写真が出ないので数えない
     photo_entries = _photo_entries(records, photos)
     photo_count = len(photo_entries)
-    cover_url = _cover_photo_url(photo_entries)
+    # 写真欄は設置済みの蓋だけを出すので、代表写真も設置済みから選ぶ
+    cover_url = _cover_photo_url(
+        [(record, photo) for record, photo in photo_entries if record.get("installed") is not False]
+    )
     og_image = cover_url or OG_IMAGE
     date_modified = _date_modified(records, photo_entries)
     title, description, h1 = _prefecture_seo(prefecture, count, records, nearest, photo_count)
