@@ -483,6 +483,15 @@ class GeneratedHtmlTest(unittest.TestCase):
         self.assertNotIn("1", {p.manhole_id for p in data.photos})
         self.assertIn("全国10都道府県・19枚", module.description(data))
 
+    def test_description_leads_with_photos_and_new_releases(self) -> None:
+        """数だけだと AI の概要がそのまま答えるので、現地写真の数と新作の県を説明文に入れる。"""
+        self.assertNotIn("新しいポケふた", module.description(Fixture(self.tmp).data()))
+        feature = {"slug": "okinawa-test", "title": "沖縄にポケふたが増えます", "published": "2026-09-01",
+                   "highlight_until": "2026-10-31", "prefecture": "沖縄県", "manholes": [{"id": "1"}]}
+        text = module.description(Fixture(self.tmp, features=[feature]).data())
+        self.assertIn("現地写真1,234枚つきの地図と一覧", text)
+        self.assertIn("沖縄の新しいポケふたも掲載", text)
+
     def test_place_does_not_repeat_the_prefecture(self) -> None:
         """表示名が「宮崎県/五ヶ瀬町」形式でも「宮崎県 宮崎県/五ヶ瀬町」にしない。"""
         record = {"id": "9", "prefecture": "宮崎県", "city": "五ヶ瀬", "place_label": "宮崎県/五ヶ瀬町"}
