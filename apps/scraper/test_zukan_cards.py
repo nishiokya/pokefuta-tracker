@@ -1,6 +1,7 @@
 """Cross-page rendering contracts: changing one card component reaches every hub."""
 
 import json
+import re
 import tempfile
 import unittest
 from datetime import date
@@ -16,6 +17,10 @@ from apps.scraper import generate_prefecture_pages as pref
 from apps.scraper import generate_summary_pages as summary
 from apps.scraper import generate_top_page as top
 from apps.scraper.zukan_cards import CARD_CSS, card_image, card_open
+
+CARD_SURFACE = {"background", "background-color", "border", "border-radius", "box-shadow"}
+IMAGE_SHAPE = {"aspect-ratio", "object-fit"}
+PSEUDO_CLASS = re.compile(r"(?<!:):[a-zA-Z-]+(\((?:[^()]|\([^()]*\))*\))?")
 
 
 def render_hubs(image_dir: Path) -> dict[str, str]:
@@ -78,16 +83,26 @@ class SharedCardsTest(unittest.TestCase):
                         if rule.type != "qualified-rule":
                             continue
                         selector = tinycss2.serialize(rule.prelude).strip()
-                        if "[data-zukan-card]" in selector or ":" in selector:
+                        # Pseudo-elements style generated boxes, not the card itself.
+                        if "[data-zukan-card]" in selector or "[data-zukan-image]" in selector or "::" in selector:
                             continue
-                        if not any(el.has_attr("data-zukan-card") for el in soup.select(selector)):
+                        # Match :hover / :not(...) rules against the element they can override.
+                        matchable = PSEUDO_CLASS.sub("", selector)
+                        if not matchable.strip(", "):
                             continue
-                        properties = {
-                            d.lower_name for d in tinycss2.parse_declaration_list(rule.content)
+                        matched = soup.select(matchable)
+                        declarations = {
+                            d.lower_name: tinycss2.serialize(d.value).strip()
+                            for d in tinycss2.parse_declaration_list(rule.content, skip_whitespace=True)
                             if d.type == "declaration"
                         }
-                        self.assertFalse(properties & {"background", "background-color", "border",
-                                                       "border-radius", "box-shadow"}, selector)
+                        if any(el.has_attr("data-zukan-card") for el in matched):
+                            self.assertFalse(declarations.keys() & CARD_SURFACE, selector)
+                        if any(el.has_attr("data-zukan-image") for el in matched):
+                            self.assertFalse(declarations.keys() & IMAGE_SHAPE, selector)
+                            # Small thumbnails may resize, but only as squares.
+                            if "height" in declarations:
+                                self.assertEqual(declarations["height"], declarations.get("width"), selector)
                 for style in soup.select("style"):
                     check_rules(tinycss2.parse_stylesheet(style.get_text()))
         self.assertIn('data-track="pokemon_index_ranking_click"', pages["pokemon"])
@@ -95,6 +110,20 @@ class SharedCardsTest(unittest.TestCase):
         self.assertIn('href="/municipalities/tokyo/machida/"', pages["municipalities"])
         self.assertIn('data-summary-event="summary_discovery_detail_click"', pages["summary"])
         self.assertIn('/manhole/image/1_lid.jpeg', pages["summary"])
+
+    def test_shared_image_rule_keeps_lids_square(self):
+        # width/height attributes only reserve space; the rendered shape comes from CSS.
+        rules = [r for r in tinycss2.parse_stylesheet(CARD_CSS, skip_whitespace=True)
+                 if r.type == "qualified-rule" and tinycss2.serialize(r.prelude).strip() == "[data-zukan-image]"]
+        self.assertEqual(len(rules), 1)
+        declarations = {
+            d.lower_name: tinycss2.serialize(d.value).strip()
+            for d in tinycss2.parse_declaration_list(rules[0].content, skip_whitespace=True)
+            if d.type == "declaration"
+        }
+        self.assertEqual(declarations.get("aspect-ratio"), "1")
+        self.assertEqual(declarations.get("object-fit"), "cover")
+        self.assertEqual(declarations.get("height"), "auto")
 
     def test_card_attributes_are_escaped(self):
         html = card_open('test', href='/path/?q="<&', attrs={"data-destination": '"<&'})
