@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import copy
 import importlib.util
+import json
 import re
 import tempfile
 import unittest
@@ -376,6 +377,23 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
             self.trivia["福井県"],
         )
         self.assertNotIn("開催中のイベント・スタンプラリー", html)
+
+    def test_breadcrumb_goes_to_prefecture_index(self) -> None:
+        html = MODULE.build_page(
+            "福井県",
+            "fukui",
+            [r for r in self.records if r.get("prefecture") == "福井県"],
+            MODULE.build_rankings(self.records)["福井県"],
+            self.pokemon_slugs,
+            self.trivia["福井県"],
+        )
+        nav = html.split('<nav class="breadcrumb"', 1)[1].split("</nav>", 1)[0]
+        self.assertIn('<a href="/prefectures/">都道府県一覧</a>', nav)
+        self.assertNotIn("/summary/", nav)
+        ld = json.loads(re.search(r'<script type="application/ld\+json">(.*?)</script>', html).group(1))
+        crumb = ld["breadcrumb"]["itemListElement"][1]
+        self.assertEqual(crumb["name"], "都道府県一覧")
+        self.assertEqual(crumb["item"], "https://data.pokefuta.com/prefectures/")
 
     def test_empty_prefecture_meta_description_is_complete(self) -> None:
         html = MODULE.build_page(

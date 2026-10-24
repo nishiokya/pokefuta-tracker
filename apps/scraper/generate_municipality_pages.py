@@ -540,7 +540,7 @@ def build_page(
             "@type": "BreadcrumbList",
             "itemListElement": [
                 {"@type": "ListItem", "position": 1, "name": "全国マップ", "item": f"{BASE_URL}/"},
-                {"@type": "ListItem", "position": 2, "name": "全国一覧", "item": f"{BASE_URL}/summary/"},
+                {"@type": "ListItem", "position": 2, "name": "都道府県一覧", "item": f"{BASE_URL}/prefectures/"},
                 {"@type": "ListItem", "position": 3, "name": m.prefecture,
                  "item": f"{BASE_URL}/prefectures/{pref_slug}/"},
                 {"@type": "ListItem", "position": 4, "name": m.name, "item": canonical},
@@ -572,7 +572,7 @@ def build_page(
   <main class="page">
     <nav class="breadcrumb" aria-label="パンくず">
       <a href="/">全国マップ</a><span>›</span>
-      <a href="/summary/">全国一覧</a><span>›</span>
+      <a href="/prefectures/">都道府県一覧</a><span>›</span>
       <a href="/prefectures/{quote(pref_slug)}/">{escape(m.prefecture)}</a><span>›</span>
       <span>{escape(m.name)}</span>
     </nav>
