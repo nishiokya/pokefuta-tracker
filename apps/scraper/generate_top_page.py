@@ -478,10 +478,22 @@ def _img(photo: Photo, *, eager: bool = False, priority: bool = False) -> str:
     )
 
 
+def new_release_prefs(data: TopData) -> list[str]:
+    """highlight_until 中の新作特集の県（「群馬」など、新しい順・重複なし）。"""
+    current = highlighted(data.features, data.today)
+    return list(dict.fromkeys(_short_pref(f["prefecture"]) for f in reversed(current) if f.get("prefecture")))
+
+
 def description(data: TopData) -> str:
+    """検索結果の説明文。数だけだと AI の概要がそのまま答えるので、図鑑の強み（現地写真・県ごとに全部）と新作を前に出す。"""
+    posts = data.stats.get("public_posts") if isinstance(data.stats.get("public_posts"), int) else None
+    photos = f"現地写真{posts:,}枚つきの" if posts else "現地写真つきの"
+    prefs = new_release_prefs(data)
+    news = f"{'・'.join(prefs)}の新しいポケふたも掲載。" if prefs else ""
     return (
         f"全国{len(data.installed_prefectures)}都道府県・{data.total}枚のポケふた（ポケモンマンホール）を、"
-        "投稿写真・地図・都道府県・ポケモン・テーマから探せる図鑑です。設置場所や周辺のポケふたも確認できます。"
+        f"みんなが撮った{photos}地図と一覧で探せる図鑑。{news}"
+        "県ごとに全部の蓋を1ページで確認できます。"
     )
 
 
@@ -640,7 +652,7 @@ def render_hero(data: TopData) -> str:
     # 新作特集の告知。スマホの最初の画面に入るよう、ボタンの直下に1行で。
     # highlight_until 中の新作が2県以上あるときは「沖縄・高知・群馬に新しいポケふた」とまとめて特集一覧の新作欄へ
     current = highlighted(data.features, data.today)
-    prefs = list(dict.fromkeys(_short_pref(f["prefecture"]) for f in reversed(current) if f.get("prefecture")))
+    prefs = new_release_prefs(data)
     if len(prefs) >= 2:
         feature_html = (
             '<a class="home-hero-feature" href="features/#new" '
@@ -966,8 +978,9 @@ def render_pref(data: TopData) -> str:
         '<div class="home-section__head"><h2 class="home-h2" id="home-pref-title">都道府県から探す</h2>'
         f'<a class="home-purpose__more" href="prefectures/" onclick="{_track("click_pref_link", surface="top_prefecture_list", prefecture="all")}">'
         "都道府県一覧 47都道府県</a></div>"
+        # Google は「ポケふた」の検索でこの文を説明文に選ぶことがある（2026-10-25）。並べ方ではなく、押した先で何が見られるかを書く
         f'<p class="home-text">ポケふたは47都道府県のうち{len(data.installed_prefectures)}都道府県に'
-        f"設置されています。地域ごとに北から並べ、県名の横に設置枚数を載せています。</p>"
+        f"{data.total:,}枚。県名を押すと、その県のポケふたを全部、現地写真つきの地図と一覧で見られます。</p>"
         f'<div class="home-regions">{"".join(regions)}</div>'
         f"{note}"
         "</section>"
