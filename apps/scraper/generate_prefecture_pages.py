@@ -1437,6 +1437,7 @@ def _prefecture_seo(
     count: int,
     records: list[dict] | None = None,
     nearest: list[tuple[float, dict]] | None = None,
+    photo_count: int = 0,
 ) -> tuple[str, str, str]:
     config = _seo_config(prefecture, records or [])
     if config and count:
@@ -1458,6 +1459,18 @@ def _prefecture_seo(
                 f"{prefecture}には現在ポケふたが設置されていません。"
                 f"{office}から直線距離が近い順に、{near}のポケふた"
                 f"{len(nearest)}枚の場所とポケモンを紹介します。"
+            ),
+            f"{prefecture}のポケふた",
+        )
+
+    # 検索結果では公式の「1市町村1ページ・デザイン画」の結果が並ぶ。全部の蓋に現地写真が
+    # そろった県は、県内を写真つきで1ページにまとめていることをタイトルと説明の先頭で示す。
+    if count and photo_count >= count:
+        return (
+            f"{prefecture}のポケふた全{count}枚｜現地写真つき地図・一覧",
+            (
+                f"{prefecture}のポケふた全{count}枚を、訪れた人が撮った現地写真つきで1つの地図にまとめました。"
+                "市町村ごとに探さなくても、県内の設置場所と登場ポケモンをまとめて確認できます。"
             ),
             f"{prefecture}のポケふた",
         )
@@ -2347,7 +2360,8 @@ def build_page(
     installed_count = len(installed_records)
     canonical = f"{BASE_URL}/prefectures/{slug}/"
     nearest = [] if count else _nearest_pokefuta(prefecture, all_records)
-    title, description, h1 = _prefecture_seo(prefecture, count, records, nearest)
+    photo_count = sum(1 for record in records if str(record.get("id")) in photos)
+    title, description, h1 = _prefecture_seo(prefecture, count, records, nearest, photo_count)
     rank_label = f"全国{rank}位" if rank else "現在未設置"
     hero_intro = _hero_intro(prefecture, count, trivia_entry, coverage, complete)
     hero_photos_html = _hero_photos(records)

@@ -67,7 +67,7 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
             self.trivia["福井県"],
             photos=self.photos,
         )
-        self.assertIn("福井県のポケふた17枚", html)
+        self.assertIn("福井県のポケふた全17枚", html)
         self.assertIn("福井県の設置マップ", html)
         self.assertIn("福井県で会えるポケモン", html)
         self.assertIn("福井県のマンホール一覧", html)
@@ -76,7 +76,7 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         self.assertIn("/manholes/", html)
         self.assertIn("prefecture_manhole_click", html)
         self.assertIn(
-            "旅行やポケふた巡りの計画にご活用ください。",
+            "訪れた人が撮った現地写真つきで1つの地図にまとめました。",
             html,
         )
         self.assertLess(html.index('id="map-heading"'), html.index('id="trivia-heading"'))
@@ -543,6 +543,23 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         )
         self.assertIn(f"<title>三重県のポケふた{len(by_pref['三重県'])}枚｜設置場所マップ・ポケモン一覧｜ポケふた図鑑</title>", html)
         self.assertNotIn('id="municipality-heading"', html)
+
+    def test_default_title_says_photos_only_when_every_lid_has_one(self) -> None:
+        """全部の蓋に現地写真がある県だけ、検索結果で公式と違う点（写真つきで1ページ）を出す。"""
+        records = [{"id": "1", "prefecture": "三重県"}, {"id": "2", "prefecture": "三重県"}]
+        title, description, _ = MODULE._prefecture_seo("三重県", 2, records, photo_count=2)
+        self.assertEqual(title, "三重県のポケふた全2枚｜現地写真つき地図・一覧")
+        self.assertTrue(description.startswith("三重県のポケふた全2枚を、訪れた人が撮った現地写真つきで"))
+        title, description, _ = MODULE._prefecture_seo("三重県", 2, records, photo_count=1)
+        self.assertEqual(title, "三重県のポケふた2枚｜設置場所マップ・ポケモン一覧")
+        self.assertNotIn("現地写真", description)
+        # 個別に調整した県（北海道）と、市町村名を出す県（秋田）は写真がそろっても変えない
+        title, _, _ = MODULE._prefecture_seo("北海道", 2, records, photo_count=2)
+        self.assertNotIn("現地写真つき", title)
+        title, _, _ = MODULE._prefecture_seo(
+            "秋田県", 1, [{"id": "1", "prefecture": "秋田県", "city": "男鹿市", "pokemons": []}], photo_count=1
+        )
+        self.assertNotIn("現地写真つき", title)
 
     def test_related_links_skip_prefectures_without_any_pokefuta(self) -> None:
         """行き止まりから行き止まりへ送らない。
