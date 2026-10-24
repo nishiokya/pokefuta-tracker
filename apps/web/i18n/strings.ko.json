@@ -52,7 +52,7 @@
     "baseKeyword": "포케후타",
     "defaultPokemonText": "포켓몬",
     "manholeTitleInfix": " 포케후타 | ",
-    "siteName": "Pokefuta Map",
+    "siteName": "포켓몬 맨홀 도감",
     "manholeDescTemplate": "{place}에 있는 {pokemon} 포케후타. 지도에서 위치와 사진을 확인하세요.",
     "manholeDescNoPlaceTemplate": "일본에 있는 {pokemon} 포케후타. 지도에서 위치와 사진을 확인하세요.",
     "manholeKeywordsEnd": [
@@ -71,7 +71,7 @@
     "unknownCity": "자치체 미설정",
     "photoAltSuffix": " 사진",
     "photoDatePrefix": "촬영일 ",
-    "shareTitleSuffix": " | 포케후타 맵",
+    "shareTitleSuffix": " | 포켓몬 맨홀 도감",
     "shareHashtags": " #포케후타 #포켓몬맨홀",
     "shareTextSuffix": " 포케후타!\n",
     "manholePhotoAria": "맨홀 사진",

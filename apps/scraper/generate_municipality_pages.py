@@ -20,6 +20,13 @@ from urllib.parse import quote
 from xml.sax.saxutils import escape
 
 try:
+    from apps.scraper.site_names import og_site_name
+except ModuleNotFoundError as exc:
+    if exc.name != "apps":
+        raise
+    from site_names import og_site_name
+
+try:
     from apps.scraper import generate_prefecture_pages as pref
     from apps.scraper.manhole_records import (
         clean_pokemons,
@@ -447,6 +454,7 @@ def _head(
   <meta name="robots" content="index,follow,max-image-preview:large">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ja_JP">
+  {og_site_name("ja_JP")}
   <meta property="og:title" content="{_escape_attr(title)}">
   <meta property="og:description" content="{_escape_attr(description)}">
   <meta property="og:url" content="{_escape_attr(canonical)}">

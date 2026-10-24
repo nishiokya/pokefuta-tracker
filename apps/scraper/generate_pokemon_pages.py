@@ -25,6 +25,7 @@ from xml.sax.saxutils import escape
 sys.path.insert(0, str(Path(__file__).parent))
 from display_names import compose_display_name, municipality_label  # noqa: E402
 from site_terms import format_count  # noqa: E402
+from site_names import og_site_name  # noqa: E402
 
 try:
     from apps.scraper.prefectures import PREFECTURE_SLUGS  # noqa: E402
@@ -1056,6 +1057,7 @@ def generate_html(
 
   <meta property="og:type" content="website">
   <meta property="og:locale" content="{lang_config['og_locale']}">
+  {og_site_name(lang_config['og_locale'])}
   <meta property="og:title" content="{escape(og_title)}">
   <meta property="og:description" content="{escape(description)}">
   <meta property="og:url" content="{escape(canonical_url)}">

@@ -41,6 +41,7 @@ from photo_caption import (  # noqa: E402
     format_photo_date,
     poster_profile_url,
 )
+from site_names import og_site_name  # noqa: E402
 
 logging.basicConfig(level=logging.INFO, format="%(message)s")
 logger = logging.getLogger(__name__)
@@ -1189,6 +1190,7 @@ def generate_html(
 
   <meta property="og:type" content="website">
   <meta property="og:locale" content="{lang_config['og_locale']}">
+  {og_site_name(lang_config['og_locale'])}
   <meta property="og:title" content="{escape(strings['og_title'])}">
   <meta property="og:description" content="{escape(strings['description'])}">
   <meta property="og:url" content="{escape(canonical_url)}">

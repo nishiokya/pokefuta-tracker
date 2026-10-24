@@ -52,7 +52,7 @@
     "baseKeyword": "Pokefuta",
     "defaultPokemonText": "宝可梦",
     "manholeTitleInfix": " Pokéfuta | ",
-    "siteName": "Pokefuta Map",
+    "siteName": "宝可梦井盖图鉴",
     "manholeDescTemplate": "{place}的{pokemon} Pokéfuta。在地图上确认地点与照片。",
     "manholeDescNoPlaceTemplate": "日本的{pokemon} Pokéfuta。在地图上确认地点与照片。",
     "manholeKeywordsEnd": [
@@ -71,7 +71,7 @@
     "unknownCity": "未设定自治体",
     "photoAltSuffix": "的照片",
     "photoDatePrefix": "拍摄日期 ",
-    "shareTitleSuffix": " | Pokéfuta Map",
+    "shareTitleSuffix": "｜宝可梦井盖图鉴",
     "shareHashtags": " #Pokefuta #PokemonManhole",
     "shareTextSuffix": " Pokéfuta！\n",
     "manholePhotoAria": "井盖照片",

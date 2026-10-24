@@ -28,6 +28,7 @@ from manhole_tile_image import tile_image_url  # noqa: E402
 from tag_meta import load_tag_meta  # noqa: E402
 import summary_faq  # noqa: E402
 import features as summary_features_data  # noqa: E402
+from site_names import og_site_name  # noqa: E402
 
 # テーマページを持つタグ（dataset/tag_meta.json が正）。
 # 旅のテーマカードから一覧ページへ送るために使う。
@@ -3498,6 +3499,7 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
   <meta name="robots" content="index,follow,max-image-preview:large">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="{s['og_locale']}">
+  {og_site_name(s['og_locale'])}
   <meta property="og:title" content="{pt}">
   <meta property="og:description" content="{md}">
   <meta property="og:url" content="{can}">

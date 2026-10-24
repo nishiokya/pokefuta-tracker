@@ -28,6 +28,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(Path(__file__).parent))
 from display_names import compose_display_name  # noqa: E402
 from manhole_tile_image import tile_image_url  # noqa: E402
+from site_names import og_site_name  # noqa: E402
 
 try:
     from apps.scraper.prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS
@@ -366,6 +367,7 @@ def build_page(
 
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ja_JP">
+  {og_site_name("ja_JP")}
   <meta property="og:title" content="{_escape_attr(title)}">
   <meta property="og:description" content="{_escape_attr(description)}">
   <meta property="og:url" content="{_escape_attr(canonical_url)}">
