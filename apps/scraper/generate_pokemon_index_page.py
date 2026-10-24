@@ -74,7 +74,7 @@ LP_INDEX_STRINGS: dict[str, dict] = {
         "map_nav_hint": "都道府県ごとのポケふたは<a href='{map_href}'>全国マップ</a>から地域を選んで確認できます。",
         "cta": "地図で全国のポケふたを探す →",
         "breadcrumb_aria": "パンくずリスト",
-        "breadcrumb_home": "全国マップ",
+        "breadcrumb_home": "ポケふた図鑑",
         "footer": "ポケモンマンホール全国マップ",
         "region_summary_unknown": "所在地不明",
         "region_summary_fmt": "{count}枚 / {region}",

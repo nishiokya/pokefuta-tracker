@@ -1327,6 +1327,16 @@ class BuildIndexPageTest(unittest.TestCase):
             '<p class="prefecture-card-photo-empty">まだ投稿写真がありません</p>', html
         )
 
+    def test_index_page_has_breadcrumb_json_ld(self) -> None:
+        records_by_pref = {name: [] for name in MODULE.PREFECTURE_ORDER}
+        html = MODULE.build_index_page(records_by_pref, {})
+        ld = json.loads(re.search(r'<script type="application/ld\+json">(.*?)</script>', html, re.S).group(1))
+        self.assertEqual(ld["@type"], "CollectionPage")
+        self.assertEqual(
+            [i["name"] for i in ld["breadcrumb"]["itemListElement"]], ["ポケふた図鑑", "都道府県から探す"]
+        )
+        self.assertIn('<a href="/">ポケふた図鑑</a>', html)
+
     def test_preinstall_only_recent_record_does_not_trigger_the_new_badge(self) -> None:
         records_by_pref = {name: [] for name in MODULE.PREFECTURE_ORDER}
         records_by_pref["三重県"] = [

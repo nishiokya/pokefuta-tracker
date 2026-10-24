@@ -1003,6 +1003,22 @@ def build_index_page(
         f"現地写真がそろっているのは{completion.complete_count}都道府県。"
         "地方ごとにまとめた一覧から、行き先の設置数と詳細ページを確認できます。"
     )
+    json_ld = {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": title,
+        "description": description,
+        "url": canonical,
+        "inLanguage": "ja",
+        "isPartOf": {"@type": "WebSite", "name": "ポケふた図鑑", "url": f"{BASE_URL}/"},
+        "breadcrumb": {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {"@type": "ListItem", "position": 1, "name": "ポケふた図鑑", "item": f"{BASE_URL}/"},
+                {"@type": "ListItem", "position": 2, "name": title, "item": canonical},
+            ],
+        },
+    }
     recent_cutoff = datetime.now(JST) - timedelta(days=30)
 
     def prefecture_card(name: str) -> str:
@@ -1149,6 +1165,7 @@ def build_index_page(
   <link rel="canonical" href="{escape_attr(canonical)}">
   {hreflang_links("prefectures/")}
   <link rel="icon" href="/assets/pokefuta-marker.svg" type="image/svg+xml">
+  <script type="application/ld+json">{json_for_script(json_ld)}</script>
   <style>
     :root {{ color-scheme: light; }}
     * {{ box-sizing: border-box; }}
@@ -1307,7 +1324,7 @@ def build_index_page(
 <body>
   <main class="page">
     <nav class="breadcrumb" aria-label="パンくず">
-      <a href="/">全国マップ</a><span>›</span>
+      <a href="/">ポケふた図鑑</a><span>›</span>
       <span>都道府県から探す</span>
     </nav>
     <header class="index-hero">
@@ -2605,7 +2622,7 @@ def build_page(
         "breadcrumb": {
             "@type": "BreadcrumbList",
             "itemListElement": [
-                {"@type": "ListItem", "position": 1, "name": "全国マップ", "item": f"{BASE_URL}/"},
+                {"@type": "ListItem", "position": 1, "name": "ポケふた図鑑", "item": f"{BASE_URL}/"},
                 {"@type": "ListItem", "position": 2, "name": "都道府県一覧", "item": f"{BASE_URL}/prefectures/"},
                 {"@type": "ListItem", "position": 3, "name": prefecture, "item": canonical},
             ],
@@ -2642,7 +2659,7 @@ def build_page(
 <body>
   <main class="page">
     <nav class="breadcrumb" aria-label="パンくず">
-      <a href="/">全国マップ</a><span>›</span>
+      <a href="/">ポケふた図鑑</a><span>›</span>
       <a href="/prefectures/">都道府県一覧</a><span>›</span>
       <span>{escape(prefecture)}</span>
     </nav>

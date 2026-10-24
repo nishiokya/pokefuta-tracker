@@ -76,7 +76,7 @@ class DetailBreadcrumbTests(unittest.TestCase):
     def test_city_without_page_is_plain_text(self):
         html = _generate(_manhole(id="308", prefecture="三重県", city="名張",
                                   address="三重県名張市"))
-        self.assertEqual([i["name"] for i in _breadcrumb(html)][:2], ["全国マップ", "三重県"])
+        self.assertEqual([i["name"] for i in _breadcrumb(html)][:2], ["ポケふた図鑑", "三重県"])
         self.assertEqual(len(_breadcrumb(html)), 3)
         nav = _nav(html)
         self.assertIn("<span>名張</span>", nav)
