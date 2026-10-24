@@ -239,6 +239,26 @@ class DiscoveryHubTests(unittest.TestCase):
         self.assertIn('href="/prefectures/', html)
         self.assertIn(">詳しく見る</a>", html)
 
+    def test_japanese_title_answers_count_ranking_and_empty_prefectures(self):
+        """検索は「ポケふた 何個」「多い県」「ない県」が多いので、タイトルと説明文で数とランキングに答える。"""
+        records = summary.load_records(summary.NDJSON)
+        stats = summary.build_stats(records)
+        html = summary.render_page(summary.SUMMARY_STRINGS["ja"], stats, {}, {}, {}, {}, {})
+        top1 = stats["ranking"][0]
+        self.assertIn(
+            f"<title>ポケふたは全国{stats['total']}枚｜都道府県別の数ランキングと"
+            f"設置のない{len(stats['empty'])}県｜ポケふた図鑑</title>",
+            html,
+        )
+        self.assertIn(f"いちばん多いのは{top1['pref']}の{top1['count']}枚", html)
+        self.assertNotIn("{", html[html.index("<title>"):html.index("</title>")])
+
+        all_installed = dict(stats, empty=[])
+        html = summary.render_page(summary.SUMMARY_STRINGS["ja"], all_installed, {}, {}, {}, {}, {})
+        self.assertIn(
+            f"<title>ポケふたは全国{stats['total']}枚｜都道府県別の数ランキング｜ポケふた図鑑</title>", html
+        )
+
     def test_hero_features_todays_trivia_with_one_map_button(self):
         """ヒーローはリンク集にせず、今日の雑学を主役にして押す所は地図の1つにする。
         Xで共有は押されていなかったので、ヒーローにも雑学の一覧にも置かない。"""
