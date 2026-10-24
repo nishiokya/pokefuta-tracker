@@ -26,7 +26,8 @@ highlight_until までの間は /summary/ の上の方にも出す（新作の�
     timeline         任意。[{"when": "2026年10月16日", "date": "2026-10-16"（任意）, "text": "お披露目式"}]
                      お披露目・設置予定などを見出しの直後に出す
     news             任意。[{"title": 記事名, "source": 媒体名, "href": "https://...", "date": "2026-10-16"（任意）}]
-                     公式発表・報道。並べた順に出す（公式を先に）
+                     公式発表・報道。並べた順に出す（公式を先に）。<slug>.html の <section id="news"> に
+                     HTML で書いてもよい（そのときは news は書かない。書き方は dataset/features/README.md）
 """
 
 from __future__ import annotations
@@ -135,13 +136,25 @@ BODY_TAGS = {
     "section", "h2", "h3", "p", "ul", "ol", "li", "a", "strong", "em", "br",
     "table", "thead", "tbody", "tr", "th", "td",
 }
+# ニュースの節（<section id="news">）で使えるタグ。記事ごとに <li><a>見出し</a><small>媒体・<time></small></li>
+NEWS_TAGS = {"section", "h2", "ul", "li", "a", "small", "time"}
+NEWS_HEADING = "公式発表・ニュース"
+_ALLOWED_ATTRS = {("a", "href"), ("time", "datetime"), ("section", "id")}
 _VOID_TAGS = {"br"}
 # 文字を直接書けないタグ（<p> や <li> で包む）
 _NO_TEXT_TAGS = {"section", "ul", "ol", "table", "thead", "tbody", "tr"}
 
 
+def _format_date(value: str) -> str:
+    year, month, day = value.split("-")
+    return f"{int(year)}年{int(month)}月{int(day)}日"
+
+
 class _BodyParser(HTMLParser):
-    """本文の HTML を読み、許したタグだけで組み直す。問題は「何行目: 何がだめか」で集める。"""
+    """本文の HTML を読み、許したタグだけで組み直す。問題は「何行目: 何がだめか」で集める。
+
+    <section id="news"> はページに直接出さず、記事の一覧（JSON の news と同じ形）にして返す。
+    """
 
     def __init__(self) -> None:
         super().__init__(convert_charrefs=True)
@@ -150,26 +163,44 @@ class _BodyParser(HTMLParser):
         self.stack: list[str] = []
         self.sections = 0
         self.expect_h2 = False
+        self.in_news = False
+        self.news_sections = 0
+        self.news: list[dict] = []
+        self.news_heading = ""
+        self.item: dict | None = None
 
     def _problem(self, text: str) -> None:
         self.problems.append(f"{self.getpos()[0]}行目: {text}")
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
-        if tag not in BODY_TAGS:
+        allowed = NEWS_TAGS if self.in_news else BODY_TAGS
+        if tag not in BODY_TAGS | NEWS_TAGS:
             self._problem(f"<{tag}> は使えない")
             return
-        href = None
+        if tag not in allowed:
+            where = "ニュースの節" if self.in_news else "ニュースの節（<section id=\"news\">）の外"
+            self._problem(f"{where}では <{tag}> は使えない")
+            return
+        values: dict[str, str] = {}
         for name, value in attrs:
-            if tag == "a" and name == "href":
-                href = value or ""
+            if (tag, name) in _ALLOWED_ATTRS:
+                values[name] = value or ""
             else:
                 self._problem(f"<{tag}> の {name} 属性は使えない")
         if tag == "section":
             if self.stack:
                 self._problem("<section> は一番外側に並べる（中に入れない）")
-            self.sections += 1
             self.expect_h2 = True
-            self.out.append(f'<section class="feature-section" aria-labelledby="section-{self.sections}-heading">')
+            if "id" in values:
+                if values["id"] != "news":
+                    self._problem(f'<section> の id は "news" だけ（ニュースの節）。"{values["id"]}" は使えない')
+                self.news_sections += 1
+                if self.news_sections > 1:
+                    self._problem('<section id="news"> は1つだけ')
+                self.in_news = True
+            else:
+                self.sections += 1
+                self.out.append(f'<section class="feature-section" aria-labelledby="section-{self.sections}-heading">')
         else:
             if not self.stack:
                 self._problem(f"<{tag}> が <section> の外にある")
@@ -178,11 +209,14 @@ class _BodyParser(HTMLParser):
             elif tag != "h2" and self.expect_h2:
                 self._problem("<section> は <h2> の見出しから始める")
             self.expect_h2 = False
-            if tag == "h2":
+            if self.in_news:
+                self._news_start(tag, values)
+            elif tag == "h2":
                 self.out.append(f'<h2 id="section-{self.sections}-heading">')
             elif tag == "a":
-                if href is None or not _safe_href(href):
-                    self._problem(f'<a href="{href or ""}"> のリンク先は https:// か / で始める')
+                href = values.get("href", "")
+                if not _safe_href(href):
+                    self._problem(f'<a href="{href}"> のリンク先は https:// か / で始める')
                     href = ""
                 external = href.startswith("https://")
                 self.out.append(
@@ -194,6 +228,54 @@ class _BodyParser(HTMLParser):
         if tag not in _VOID_TAGS:
             self.stack.append(tag)
 
+    def _news_start(self, tag: str, values: dict[str, str]) -> None:
+        in_li = "li" in self.stack
+        if tag == "li":
+            if self.stack[-1] != "ul":
+                self._problem("<li> は <ul> の中に書く")
+            self.item = {"title": "", "source": "", "href": None, "date": None, "when": "", "line": self.getpos()[0]}
+        elif tag in ("a", "small", "time") and not in_li:
+            self._problem(f"<{tag}> は <li> の中に書く")
+        elif tag == "ul" and self.stack[-1] != "section":
+            self._problem("<ul> は <section> のすぐ中に書く")
+        if self.item is None:
+            return
+        if tag == "a":
+            if self.item["href"] is not None:
+                self._problem("1つの <li> に <a> は1つだけ（記事1本に1つ）")
+            self.item["href"] = values.get("href", "")
+        elif tag == "time":
+            if self.item["date"] is not None:
+                self._problem("1つの <li> に <time> は1つだけ")
+            self.item["date"] = values.get("datetime", "")
+
+    def _news_end_item(self) -> None:
+        item, self.item = self.item, None
+        if item is None:
+            return
+        line = item["line"]
+        href = item["href"] or ""
+        title = item["title"].strip()
+        source = item["source"].strip().rstrip("・").strip()
+        if not href.startswith("https://") or "\\" in href:
+            self.problems.append(f'{line}行目: 記事のリンク <a href="{href}"> は https:// で始める')
+        if not title:
+            self.problems.append(f"{line}行目: <a> の中に記事の見出しを書く")
+        if not source:
+            self.problems.append(f"{line}行目: <small> の中に媒体名を書く（例 <small>琉球新報・<time ...></small>）")
+        news = {"title": title, "source": source, "href": href}
+        if item["date"] is not None:
+            date_value = item["date"]
+            if not _DATE_RE.match(date_value):
+                self.problems.append(f'{line}行目: <time datetime="{date_value}"> は 2026-10-16 の形で書く')
+            elif item["when"].strip() != _format_date(date_value):
+                self.problems.append(
+                    f'{line}行目: <time> の表示「{item["when"].strip()}」が datetime と合わない'
+                    f"（{_format_date(date_value)} と書く）"
+                )
+            news["date"] = date_value
+        self.news.append(news)
+
     def handle_startendtag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         # <br/> のような書き方
         self.handle_starttag(tag, attrs)
@@ -201,7 +283,7 @@ class _BodyParser(HTMLParser):
             self.handle_endtag(tag)
 
     def handle_endtag(self, tag: str) -> None:
-        if tag not in BODY_TAGS or tag in _VOID_TAGS:
+        if tag not in BODY_TAGS | NEWS_TAGS or tag in _VOID_TAGS:
             return
         if not self.stack or self.stack[-1] != tag:
             opened = f"（いま閉じるのは </{self.stack[-1]}>）" if self.stack else ""
@@ -209,14 +291,29 @@ class _BodyParser(HTMLParser):
             if tag not in self.stack:
                 return
             while self.stack[-1] != tag:
-                self.out.append(f"</{self.stack.pop()}>")
+                closed = self.stack.pop()
+                if not self.in_news:
+                    self.out.append(f"</{closed}>")
         self.stack.pop()
         if self.expect_h2 and tag == "section":
             self._problem("<section> に <h2> の見出しが無い")
             self.expect_h2 = False
+        if self.in_news:
+            if tag == "li":
+                self._news_end_item()
+            elif tag == "section":
+                if self.news_heading.strip() != NEWS_HEADING:
+                    self._problem(f"ニュースの節の見出しは <h2>{NEWS_HEADING}</h2> にする")
+                if not self.news:
+                    self._problem("ニュースの節に記事が1つも無い")
+                self.in_news = False
+            return
         self.out.append(f"</{tag}>")
 
     def handle_data(self, data: str) -> None:
+        if self.in_news:
+            self._news_data(data)
+            return
         if not data.strip():
             self.out.append(data)
             return
@@ -225,6 +322,19 @@ class _BodyParser(HTMLParser):
         elif self.stack[-1] in _NO_TEXT_TAGS:
             self._problem(f"文字「{data.strip()[:10]}」は <p> や <li> などの中に書く")
         self.out.append(escape(data, quote=False))
+
+    def _news_data(self, data: str) -> None:
+        top = self.stack[-1] if self.stack else ""
+        if top == "h2":
+            self.news_heading += data
+        elif self.item is not None and top == "time":
+            self.item["when"] += data
+        elif self.item is not None and "a" in self.stack:
+            self.item["title"] += data
+        elif self.item is not None and "small" in self.stack:
+            self.item["source"] += data
+        elif data.strip():
+            self._problem(f"文字「{data.strip()[:10]}」は <a>（見出し）か <small>（媒体名）の中に書く")
 
     def handle_comment(self, data: str) -> None:
         # <!-- メモ --> は書いてよい。ページには出さない
@@ -240,8 +350,11 @@ class _BodyParser(HTMLParser):
         self._problem("<?...> は使えない")
 
 
-def parse_body_html(text: str) -> tuple[str, list[str]]:
-    """本文の HTML を (ページに出す HTML, 問題の一覧) にする。問題があればその特集は出さない。"""
+def parse_body(text: str) -> tuple[str, list[dict] | None, list[str]]:
+    """<slug>.html を (本文の HTML, ニュースの一覧, 問題の一覧) にする。問題があればその特集は出さない。
+
+    ニュースの節（<section id="news">）が無ければニュースの一覧は None（JSON の news を使う）。
+    """
     parser = _BodyParser()
     try:
         parser.feed(text)
@@ -249,13 +362,31 @@ def parse_body_html(text: str) -> tuple[str, list[str]]:
     except Exception as exc:  # noqa: BLE001
         # HTMLParser は "<![foo]>" のような崩れた宣言で例外を投げる（3.11 は AssertionError、3.9 は
         # NotImplementedError と版で違う）。デプロイを止めずに問題として返す
-        return "", [*parser.problems, f"{parser.getpos()[0]}行目: HTML として読めない（{exc}）"]
+        return "", None, [*parser.problems, f"{parser.getpos()[0]}行目: HTML として読めない（{exc}）"]
     problems = parser.problems
     if parser.stack:
         problems.append(f"最後まで閉じていないタグがある: {' '.join(f'<{t}>' for t in parser.stack)}")
-    if not parser.sections:
+    if not parser.sections and not parser.news_sections:
         problems.append("<section> が1つも無い")
-    return "".join(parser.out).strip(), problems
+    return "".join(parser.out).strip(), parser.news if parser.news_sections else None, problems
+
+
+def parse_body_html(text: str) -> tuple[str, list[str]]:
+    """本文の HTML を (ページに出す HTML, 問題の一覧) にする。"""
+    body, _, problems = parse_body(text)
+    return body, problems
+
+
+def _doubled(entry: object, news: list[dict] | None) -> list[str]:
+    """本文・ニュースを JSON と .html の両方に書いていないか。"""
+    if not isinstance(entry, dict):
+        return []
+    found = []
+    if entry.get("sections"):
+        found.append("sections")
+    if news is not None and entry.get("news"):
+        found.append("news")
+    return found
 
 
 def check_body_files(features_dir: Path = DEFAULT_FEATURES_DIR) -> list[str]:
@@ -270,9 +401,9 @@ def check_body_files(features_dir: Path = DEFAULT_FEATURES_DIR) -> list[str]:
             entry = json.loads(json_path.read_text(encoding="utf-8"))
         except (json.JSONDecodeError, OSError):
             entry = {}
-        if isinstance(entry, dict) and entry.get("sections"):
-            problems.append(f"{path.name}: {json_path.name} にも sections がある。本文はどちらか一方に書く")
-        _, found = parse_body_html(path.read_text(encoding="utf-8"))
+        _, news, found = parse_body(path.read_text(encoding="utf-8"))
+        for key in _doubled(entry, news):
+            problems.append(f"{path.name}: {json_path.name} にも {key} がある。どちらか一方に書く")
         problems.extend(f"{path.name} {p}" for p in found)
     return problems
 
@@ -315,15 +446,18 @@ def load_features(
             continue
         body_path = path.with_suffix(".html")
         if body_path.exists():
-            if entry.get("sections"):
-                print(f"[features] WARNING: 本文が sections と {body_path.name} の両方にあるので飛ばす: {path.name}",
+            body, news, problems = parse_body(body_path.read_text(encoding="utf-8"))
+            doubled = _doubled(entry, news)
+            if doubled:
+                print(f"[features] WARNING: {'・'.join(doubled)} が {path.name} と {body_path.name} の両方にあるので飛ばす",
                       file=sys.stderr)
                 continue
-            body, problems = parse_body_html(body_path.read_text(encoding="utf-8"))
             if problems:
                 print(f"[features] WARNING: {body_path.name} の書き方が違うので飛ばす: {problems}", file=sys.stderr)
                 continue
             entry = {**entry, "body_html": body}
+            if news is not None:
+                entry["news"] = news
         features.append({**entry, "records": [records_by_id[mid] for mid in ids]})
     features.sort(key=lambda f: (f["published"], f["slug"]), reverse=True)
     return features

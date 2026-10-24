@@ -160,6 +160,71 @@ class BodyHtmlTests(unittest.TestCase):
         _, problems = FEATURES.parse_body_html("<section>\n  <h2>a</h2>\n  <p><b>太字</b></p>\n</section>")
         self.assertEqual(problems, ["3行目: <b> は使えない"])
 
+    NEWS = (
+        '<section id="news">\n  <h2>公式発表・ニュース</h2>\n  <ul>\n'
+        '    <li><a href="https://example.com/a">お披露目の記事</a><small>沖縄の新聞・'
+        '<time datetime="2026-10-16">2026年10月16日</time></small></li>\n'
+        '    <li><a href="https://example.com/b">公式</a><small>ポケモン公式</small></li>\n'
+        "  </ul>\n</section>\n"
+    )
+
+    def test_news_section_becomes_the_news_list(self) -> None:
+        body, news, problems = FEATURES.parse_body("<section><h2>行き方</h2><p>船で</p></section>\n" + self.NEWS)
+        self.assertEqual(problems, [])
+        self.assertNotIn("お披露目の記事", body)
+        self.assertEqual(news, [
+            {"title": "お披露目の記事", "source": "沖縄の新聞", "href": "https://example.com/a", "date": "2026-10-16"},
+            {"title": "公式", "source": "ポケモン公式", "href": "https://example.com/b"},
+        ])
+        # ニュースだけの .html でもよい。ニュースの節が無ければ None（JSON の news を使う）
+        self.assertEqual(FEATURES.parse_body(self.NEWS)[2], [])
+        self.assertIsNone(FEATURES.parse_body("<section><h2>a</h2><p>b</p></section>")[1])
+
+    def test_broken_news_section_is_reported(self) -> None:
+        ok_item = '<li><a href="https://example.com/">記事</a><small>新聞</small></li>'
+
+        def news(items: str, heading: str = "公式発表・ニュース", attrs: str = 'id="news"') -> str:
+            return f"<section {attrs}><h2>{heading}</h2><ul>{items}</ul></section>"
+
+        cases = {
+            news('<li><a href="http://example.com/">記事</a><small>新聞</small></li>'): "https:// で始める",
+            news('<li><a href="/prefectures/">記事</a><small>新聞</small></li>'): "https:// で始める",
+            news('<li><a href="https://example.com/">記事</a></li>'): "媒体名を書く",
+            news('<li><a href="https://example.com/"></a><small>新聞</small></li>'): "見出しを書く",
+            news('<li><a href="https://example.com/">記事</a><small>新聞・'
+                 '<time datetime="2026-10-16">10月16日</time></small></li>'): "2026年10月16日 と書く",
+            news('<li><a href="https://example.com/">記事</a><small>新聞・'
+                 '<time datetime="10/16">10月16日</time></small></li>'): "2026-10-16 の形",
+            news(ok_item, heading="ニュース"): "見出しは <h2>公式発表・ニュース</h2>",
+            news(ok_item, attrs='id="top"'): 'id は "news" だけ',
+            news(ok_item + "<li><p>本文</p></li>"): "ニュースの節では <p> は使えない",
+            news(""): "記事が1つも無い",
+            news(ok_item) + news(ok_item): '<section id="news"> は1つだけ',
+            "<section><h2>a</h2><p><small>小さく</small></p></section>": "ニュースの節（<section id=\"news\">）の外",
+        }
+        for text, expected in cases.items():
+            with self.subTest(text=text):
+                problems = FEATURES.parse_body(text)[2]
+                self.assertTrue(any(expected in p for p in problems), problems)
+
+    def test_news_from_html_is_drawn_like_json_news_and_cannot_be_doubled(self) -> None:
+        news_json = [{"title": "記事", "source": "新聞", "href": "https://example.com/"}]
+        with tempfile.TemporaryDirectory() as tmp:
+            d = _write(Path(tmp), _feature("html-news"), _feature("both-news", news=news_json))
+            (d / "html-news.html").write_text(self.NEWS, encoding="utf-8")
+            (d / "both-news.html").write_text(self.NEWS, encoding="utf-8")
+            loaded = FEATURES.load_features(RECORDS, d, today=date(2026, 10, 17))
+            problems = FEATURES.check_body_files(d)
+        self.assertEqual([f["slug"] for f in loaded], ["html-news"])
+        html = MODULE.build_feature_page(loaded[0], {}, [])
+        self.assertIn(
+            '<a href="https://example.com/a" target="_blank" rel="noopener noreferrer" '
+            'data-track="feature_news_click" data-surface="news" data-destination="沖縄の新聞">お披露目の記事</a>', html)
+        self.assertIn("沖縄の新聞・<time", html)
+        # ニュースはページの最後（蓋の一覧・地図より後）のまま
+        self.assertLess(html.index('id="manhole-list"'), html.index('id="news-heading"'))
+        self.assertTrue(any(p.startswith("both-news.html:") and "news" in p for p in problems), problems)
+
     def test_loader_uses_the_html_body_and_skips_broken_or_doubled_bodies(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             d = _write(Path(tmp), _feature("html"), _feature("broken"),
