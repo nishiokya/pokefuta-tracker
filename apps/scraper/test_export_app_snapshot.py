@@ -277,6 +277,19 @@ class RegularTiersTest(unittest.TestCase):
         )
         self.assertEqual({}, MODULE.compute_tiers(visits, ids))
 
+    def test_legends_have_public_id_and_name_only_in_name_order(self) -> None:
+        tiers = {"pub-a": "legend", "pub-b": "crown", "pub-c": "legend", "pub-d": "legend"}
+        users = [
+            {"id": "pub-a", "auth_uid": "auth-a", "display_name": "みかん"},
+            {"id": "pub-b", "auth_uid": "auth-b", "display_name": "いちご"},
+            {"id": "pub-c", "auth_uid": "auth-c", "display_name": " あんず "},
+            {"id": "pub-d", "auth_uid": "auth-d", "display_name": None},
+        ]
+        self.assertEqual(
+            [{"id": "pub-c", "name": "あんず"}, {"id": "pub-a", "name": "みかん"}, {"id": "pub-d", "name": "トレーナー"}],
+            MODULE.legend_entries(tiers, users),
+        )
+
     def test_output_has_only_public_ids(self) -> None:
         tiers = MODULE.compute_tiers(self.visits("auth-a", range(10)), self.IDS)
         self.assertEqual(["pub-a"], list(tiers))

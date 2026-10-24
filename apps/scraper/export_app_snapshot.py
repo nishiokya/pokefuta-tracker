@@ -423,18 +423,40 @@ def compute_tiers(visits: list[dict], public_id_by_auth: dict[str, str]) -> dict
     return dict(sorted((k, v) for k, v in tiers.items() if v))
 
 
+# LEGEND の人は写真館のトップ（「LEGEND を目指そう」のカード）と /badges に名前を出す。
+# 表示名が空の人は写真館の表示と同じ「トレーナー」にする
+FALLBACK_DISPLAY_NAME = "トレーナー"
+
+
+def legend_entries(tiers: dict[str, str], users: list[dict]) -> list[dict]:
+    """LEGEND の公開ID と表示名。順位にしないため、枚数は出さず名前順に並べる。
+
+    公開 JSON に出してよい利用者の情報は公開ID と表示名まで（CLAUDE.md）。
+    LEGEND の人は公開の訪問を持つので、get_public_display_names() で名前が出る条件にも当たる。
+    """
+    name_by_id = {u["id"]: (u.get("display_name") or "").strip() for u in users if u.get("id")}
+    entries = [
+        {"id": public_id, "name": name_by_id.get(public_id) or FALLBACK_DISPLAY_NAME}
+        for public_id, tier in tiers.items()
+        if tier == "legend"
+    ]
+    return sorted(entries, key=lambda e: (e["name"], e["id"]))
+
+
 def build_regulars() -> dict:
     now = datetime.now(timezone.utc)
     visits = fetch_all(
         "visit", {"select": "user_id,manhole_id", "is_public": "eq.true", "order": "id.asc"}
     )
     # 公開 JSON に auth UID を出さないため、ここで公開ID（app_user.id）に置き換える
-    users = fetch_all("app_user", {"select": "id,auth_uid", "order": "id.asc"})
+    users = fetch_all("app_user", {"select": "id,auth_uid,display_name", "order": "id.asc"})
     public_id_by_auth = {u["auth_uid"]: u["id"] for u in users if u.get("auth_uid")}
+    tiers = compute_tiers(visits, public_id_by_auth)
     return {
         "success": True,
         "generated_at": now.isoformat(timespec="seconds"),
-        "users": compute_tiers(visits, public_id_by_auth),
+        "users": tiers,
+        "legends": legend_entries(tiers, users),
     }
 
 
