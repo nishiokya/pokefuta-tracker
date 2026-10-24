@@ -804,9 +804,13 @@
         .replace(/\t/g, '\\t');
     }
 
-    function getLocalManholeImageUrl(id) {
+    // width を渡すと、デプロイ時に作る小さい WebP（180 / 360 / 480）を指す（apps/scraper/build_small_images.py）。
+    // 一覧のサムネイルに 720px の JPEG を出していて、地図を開くだけで約15MB 読んでいた（2026-10-25）
+    function getLocalManholeImageUrl(id, width) {
       const safeId = String(id ?? '').trim();
-      return safeId ? `%%BASE_PATH%%manhole/image/${encodeURIComponent(safeId)}_latest.jpeg` : '';
+      if (!safeId) return '';
+      const base = `%%BASE_PATH%%manhole/image/${encodeURIComponent(safeId)}_latest`;
+      return width ? `${base}_${width}.webp` : `${base}.jpeg`;
     }
 
     function getManholePageUrl(id) {
@@ -962,7 +966,7 @@
         place: [manhole.prefecture, manhole.city].filter(Boolean).join(' ') || window.I18N?.unknownPref || '不明',
         reason: photoDate ? strings.freshDate.replace('{date}', photoDate) : strings.categories.fresh.label,
         imageAlt: getHeroPokemonText(manhole),
-        imageUrl: getLocalManholeImageUrl(manhole.id),
+        imageUrl: getLocalManholeImageUrl(manhole.id, 360),
         destinationUrl: getManholePageUrl(manhole.id),
         destinationHub: 'map_popup',
         contentType: 'latest_photo',
@@ -997,7 +1001,7 @@
         place: [manhole.prefecture, manhole.city].filter(Boolean).join(' ') || window.I18N?.unknownPref || '不明',
         reason,
         imageAlt: getHeroPokemonText(manhole),
-        imageUrl: getLocalManholeImageUrl(manhole.id),
+        imageUrl: getLocalManholeImageUrl(manhole.id, 360),
         destinationUrl: getSummaryHubUrl(category === 'travel' ? 'travel-discovery' : 'rare-discovery'),
         destinationHub: category === 'travel' ? 'summary_travel' : 'summary_rare',
         contentType: category === 'travel' ? 'travel_theme' : 'rare_fact',
@@ -1121,7 +1125,7 @@
               : `<span class="travel-popup-pokemon">${displayName}</span>`;
           }).join('')
         : `<span class="travel-popup-pokemon">${I.noPokemon}</span>`;
-      const imageUrl = getLocalManholeImageUrl(d.id);
+      const imageUrl = getLocalManholeImageUrl(d.id, 480);
       // place_label は見出しに既に building を含む（例: 指宿市 砂むし会館砂楽）ので
       // 📍 行は出さない。place_label の無い古いデータを読んだときだけ出る
       const showBuildingLine = Boolean(d.building) && !d.place_label;
@@ -1713,7 +1717,7 @@
     }
 
     function getPhotoMarkerIcon(d) {
-      const imageUrl = getLocalManholeImageUrl(d.id);
+      const imageUrl = getLocalManholeImageUrl(d.id, 180);
       return L.divIcon({
         html: `<img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(getManholeDisplayName(d))}" data-manhole-id="${escapeHtml(String(d.id))}" decoding="async" onerror="handlePhotoMarkerImageError(this)">`,
         className: 'pokefuta-photo-marker',
@@ -2066,7 +2070,7 @@
           prefectureThumbnails[pref].push({
             id: d.id,
             title: getManholeDisplayName(d),
-            imageUrl: getLocalManholeImageUrl(d.id)
+            imageUrl: getLocalManholeImageUrl(d.id, 180)
           });
         }
         if (isWithinLastDays(d._addedDate, 30)) {
@@ -2290,7 +2294,7 @@
         return `
           <button type="button" class="prefecture-spot-item" data-manhole-id="${escapeHtml(d.id)}">
             <span class="prefecture-spot-thumb" aria-hidden="true">
-              <img src="${getLocalManholeImageUrl(d.id)}" alt="" loading="lazy" decoding="async" onerror="this.closest('.prefecture-spot-thumb').classList.add('is-missing'); this.remove();">
+              <img src="${getLocalManholeImageUrl(d.id, 180)}" alt="" loading="lazy" decoding="async" onerror="this.closest('.prefecture-spot-thumb').classList.add('is-missing'); this.remove();">
             </span>
             <span class="prefecture-spot-copy">
               <strong>${escapeHtml(d.city || window.I18N.unknownCity)}</strong>

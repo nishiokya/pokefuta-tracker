@@ -1,5 +1,6 @@
 """manhole_tile_image のテスト（小さいタイルは _lid、無ければ _latest。小さい WebP の srcset）。"""
 
+import re
 import tempfile
 import unittest
 from pathlib import Path
@@ -8,12 +9,12 @@ from PIL import Image
 
 try:
     from apps.scraper import build_small_images
-    from apps.scraper.manhole_tile_image import responsive_attrs, small_image_url, srcset, tile_image_url
+    from apps.scraper.manhole_tile_image import SMALL_WIDTHS, responsive_attrs, small_image_url, srcset, tile_image_url
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
     import build_small_images
-    from manhole_tile_image import responsive_attrs, small_image_url, srcset, tile_image_url
+    from manhole_tile_image import SMALL_WIDTHS, responsive_attrs, small_image_url, srcset, tile_image_url
 
 
 class TileImageUrlTest(unittest.TestCase):
@@ -75,6 +76,31 @@ class SmallImageTest(unittest.TestCase):
             self.assertFalse(list(root.glob("7_abcd_*")))
             # 2回目は作り直さない
             self.assertEqual(sum(build_small_images.build_one(p) for p in build_small_images.sources(root)), 0)
+
+
+
+class MapPageSmallImageTest(unittest.TestCase):
+    def test_map_pages_ask_only_for_widths_the_builder_writes(self):
+        """地図の JS は画像の URL を自分で組み立てるので、指す幅がデプロイで作る WebP と食い違わないか。"""
+        web = Path(__file__).parents[1] / "web"
+        for name in ("map.html", "map.template.html"):
+            with self.subTest(page=name):
+                source = (web / name).read_text(encoding="utf-8")
+                calls = re.findall(r"getLocalManholeImageUrl\(([^()]*)\)", source)
+                widths = [c.split(",")[1].strip() for c in calls if "," in c and not c.startswith("id,")]
+                self.assertTrue(widths)
+                for width in widths:
+                    self.assertIn(int(width), SMALL_WIDTHS["latest"])
+                # 幅を付けずに 720px の JPEG を読む呼び出しを残さない（定義の行だけ）
+                self.assertEqual([c for c in calls if "," not in c], [])
+
+
+    def test_manhole_related_thumbnails_use_small_webp(self):
+        from apps.scraper import generate_manhole_pages as ja  # noqa: PLC0415
+        url = f"{ja.BASE_URL}manhole/image/7_latest.jpeg"
+        html = ja._render_related_card({"id": "7", "prefecture": "東京都", "city": "町田市"}, {"7": url})
+        self.assertIn("manhole/image/7_latest_180.webp", html)
+        self.assertNotIn("7_latest.jpeg", html)
 
 
 if __name__ == "__main__":
