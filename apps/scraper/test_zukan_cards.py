@@ -170,6 +170,11 @@ class EventClassificationTest(unittest.TestCase):
                 for title in expected:
                     self.assertIn(title, html)
 
+    def test_translated_top_filters_news_in_browser(self):
+        # 多言語版トップは api/prefecture_events.json をブラウザで読むので、同じ条件を JS 側にも置く
+        template = (Path(__file__).parents[1] / "web" / "index.template.html").read_text(encoding="utf-8")
+        self.assertIn("e.kind !== 'news'", template)
+
 
 if __name__ == "__main__":
     unittest.main()
