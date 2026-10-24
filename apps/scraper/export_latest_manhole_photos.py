@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import os
 import sys
 import urllib.parse
@@ -156,26 +157,48 @@ def photo_crop(photo: dict[str, Any]) -> Optional[list[float]]:
     return [x0, y0, x1, y1]
 
 
-def photo_rank_key(photo: dict[str, Any]) -> tuple:
+def _rep_score(photo: dict[str, Any]) -> Optional[float]:
+    """代表写真の点（ai_tags.rep_score。大きいほど代表に向く）。k11 の manhole-score が quality_score/0.10.0 から書く。"""
+    value = _ai_tags(photo).get("rep_score")
+    if isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value):
+        return float(value)
+    return None
+
+
+def _rank_tier(photo: dict[str, Any]) -> int:
+    if photo.get("quality_eligible") is False:
+        return 2
+    return 1 if _quality_score(photo) is None else 0
+
+
+def photo_rank_key(photo: dict[str, Any], by_rep: bool = False) -> tuple:
     """代表写真とギャラリーの並び（小さいほど先）。写真館の src/lib/manhole-photo-ranking.ts と同じ考え方。
 
       1. 段: 採点済みの候補 → 未採点（採点後の投稿）→ 採点で候補外（ブレ・白飛び・蓋が写っていない等）
       2. 採点済みの候補の中では、蓋が真ん中で正方形に収まる写真（ai_tags.scene = centered_clean かつ lid_fits）を先
       3. スコア（photo.quality_score）の高い順
       4. 撮影日（無ければ投稿日）の新しい順
+    by_rep（蓋の採点済みの候補すべてに rep_score がある。rank_photos が決める）のときは、2・3 の代わりに
+    「正方形に収まる（lid_fits）→ rep_score の高い順」。人が判定した比較（k11 manhole-score 2026-10-25-rep9v7）と同じ。
     写真館の「ひとこと付きを先」は、吹き出しを重ねる写真館の画面のための決まりなので入れない。
     スコアは k11 の manhole-score が毎朝 05:15 に書く（このジョブは 05:30）。
     """
     score = _quality_score(photo)
-    if photo.get("quality_eligible") is False:
-        tier = 2
-    elif score is None:
-        tier = 1
-    else:
-        tier = 0
+    tier = _rank_tier(photo)
     tags = _ai_tags(photo)
+    date_key = -photo_sort_date(photo).timestamp()
+    if by_rep and tier == 0:
+        return (tier, 0 if tags.get("lid_fits") is True else 1, -(_rep_score(photo) or 0.0), date_key)
     centered = tags.get("scene") == "centered_clean" and tags.get("lid_fits") is True
-    return (tier, 0 if tier == 0 and centered else 1, -(score or 0.0), -photo_sort_date(photo).timestamp())
+    return (tier, 0 if tier == 0 and centered else 1, -(score or 0.0), date_key)
+
+
+def rank_photos(photos: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """1つの蓋の写真を並べる。採点済みの候補すべてに rep_score があるときだけ rep_score で並べる
+    （1枚でも無いと点を比べられない。版の切り替え中・未採点の新着）。"""
+    scored = [photo for photo in photos if _rank_tier(photo) == 0]
+    by_rep = bool(scored) and all(_rep_score(photo) is not None for photo in scored)
+    return sorted(photos, key=lambda photo: photo_rank_key(photo, by_rep))
 
 
 def _lookup_user_info(
@@ -252,8 +275,8 @@ def select_gallery_photos(
 
     The spec (pokefuta-tracker docs/MANHOLE_DETAIL_SPEC.md) requires the
     gallery to contain only is_public photos even when the export itself
-    runs with --include-private. The rest are ordered by photo_rank_key
-    (score order, centered lids first). A missing/private featured photo
+    runs with --include-private. The rest are ordered by rank_photos
+    (rep_score or score order, square-fitting / centered lids first). A missing/private featured photo
     safely falls back to the best-ranked public photo.
     """
     public_photos = [
@@ -262,7 +285,7 @@ def select_gallery_photos(
         if normalize_visit(photo.get("visit")).get("is_public")
         and photo.get("is_landscape") is not True
     ]
-    ordered = sorted(public_photos, key=photo_rank_key)
+    ordered = rank_photos(public_photos)
     if featured_photo_id:
         featured = next(
             (photo for photo in ordered if str(photo.get("id")) == featured_photo_id),
@@ -486,7 +509,7 @@ def build_payload(
     photos: dict[str, dict[str, Any]] = {}
     featured_photo_overrides = featured_photo_overrides or {}
     for manhole_id in sorted(photos_by_manhole_id):
-        manhole_photos = sorted(photos_by_manhole_id[manhole_id], key=photo_rank_key)
+        manhole_photos = rank_photos(photos_by_manhole_id[manhole_id])
         featured_photo_id = featured_photo_overrides.get(str(manhole_id))
         selected_photos = select_gallery_photos(
             manhole_photos,

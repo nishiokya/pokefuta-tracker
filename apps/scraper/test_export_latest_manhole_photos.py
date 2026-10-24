@@ -39,7 +39,7 @@ def _photo(
     }
 
 
-def _scored(photo_id: str, score, shot_at=None, eligible=True, scene=None, lid_fits=None, crop=None) -> dict:
+def _scored(photo_id: str, score, shot_at=None, eligible=True, scene=None, lid_fits=None, crop=None, rep=None) -> dict:
     tags = {"model": "scene_attrs/1"}
     if scene:
         tags["scene"] = scene
@@ -47,6 +47,8 @@ def _scored(photo_id: str, score, shot_at=None, eligible=True, scene=None, lid_f
         tags["lid_fits"] = lid_fits
     if crop is not None:
         tags["crop"] = crop
+    if rep is not None:
+        tags["rep_score"] = rep
     return {**_photo(photo_id, shot_at=shot_at), "quality_score": score,
             "quality_eligible": eligible if score is not None else None, "ai_tags": tags}
 
@@ -66,6 +68,24 @@ class PhotoRankTest(unittest.TestCase):
             _scored("centered", 0.82, scene="centered_clean", lid_fits=True),
         ]
         self.assertEqual([p["id"] for p in export.select_gallery_photos(photos, 5)], ["centered", "wide", "closeup"])
+
+    def test_rep_score_orders_when_every_scored_candidate_has_one(self):
+        photos = [
+            _scored("best-quality", 0.95, scene="centered_clean", lid_fits=True, rep=3),
+            _scored("best-rep", 0.7, scene="wide_context", lid_fits=True, rep=9),
+            _scored("high-rep-not-fitting", 0.9, scene="centered_clean", lid_fits=False, rep=20),
+            _scored("unscored", None, shot_at="2026-09-01T00:00:00Z"),
+            _scored("ineligible", 0.99, eligible=False, lid_fits=True, rep=50),
+        ]
+        self.assertEqual([p["id"] for p in export.select_gallery_photos(photos, 5)],
+                         ["best-rep", "best-quality", "high-rep-not-fitting", "unscored", "ineligible"])
+
+    def test_previous_order_while_any_scored_candidate_lacks_rep_score(self):
+        photos = [
+            _scored("best-rep", 0.7, scene="wide_context", lid_fits=True, rep=9),
+            _scored("centered", 0.6, scene="centered_clean", lid_fits=True),
+        ]
+        self.assertEqual([p["id"] for p in export.select_gallery_photos(photos, 5)], ["centered", "best-rep"])
 
     def test_tiers_scored_then_unscored_then_ineligible(self):
         photos = [
