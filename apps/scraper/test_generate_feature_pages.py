@@ -225,6 +225,18 @@ class BodyHtmlTests(unittest.TestCase):
         self.assertLess(html.index('id="manhole-list"'), html.index('id="news-heading"'))
         self.assertTrue(any(p.startswith("both-news.html:") and "news" in p for p in problems), problems)
 
+    def test_news_only_html_keeps_json_sections(self) -> None:
+        """ニュースだけを .html に移した特集は、本文を JSON の sections のまま出す。"""
+        with tempfile.TemporaryDirectory() as tmp:
+            d = _write(Path(tmp), _feature("news-only", sections=[{"heading": "行き方", "body": "船で"}]))
+            (d / "news-only.html").write_text(self.NEWS, encoding="utf-8")
+            loaded = FEATURES.load_features(RECORDS, d, today=date(2026, 10, 17))
+            self.assertEqual(FEATURES.check_body_files(d), [])
+        self.assertEqual([f["slug"] for f in loaded], ["news-only"])
+        html = MODULE.build_feature_page(loaded[0], {}, [])
+        self.assertIn('<h2 id="section-1-heading">行き方</h2>', html)
+        self.assertIn("お披露目の記事", html)
+
     def test_loader_uses_the_html_body_and_skips_broken_or_doubled_bodies(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             d = _write(Path(tmp), _feature("html"), _feature("broken"),

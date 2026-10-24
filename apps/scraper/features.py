@@ -377,12 +377,12 @@ def parse_body_html(text: str) -> tuple[str, list[str]]:
     return body, problems
 
 
-def _doubled(entry: object, news: list[dict] | None) -> list[str]:
-    """本文・ニュースを JSON と .html の両方に書いていないか。"""
+def _doubled(entry: object, body: str, news: list[dict] | None) -> list[str]:
+    """本文・ニュースを JSON と .html の両方に書いていないか。ニュースだけの .html なら本文は JSON のままでよい。"""
     if not isinstance(entry, dict):
         return []
     found = []
-    if entry.get("sections"):
+    if body and entry.get("sections"):
         found.append("sections")
     if news is not None and entry.get("news"):
         found.append("news")
@@ -401,8 +401,8 @@ def check_body_files(features_dir: Path = DEFAULT_FEATURES_DIR) -> list[str]:
             entry = json.loads(json_path.read_text(encoding="utf-8"))
         except (json.JSONDecodeError, OSError):
             entry = {}
-        _, news, found = parse_body(path.read_text(encoding="utf-8"))
-        for key in _doubled(entry, news):
+        body, news, found = parse_body(path.read_text(encoding="utf-8"))
+        for key in _doubled(entry, body, news):
             problems.append(f"{path.name}: {json_path.name} にも {key} がある。どちらか一方に書く")
         problems.extend(f"{path.name} {p}" for p in found)
     return problems
@@ -447,7 +447,7 @@ def load_features(
         body_path = path.with_suffix(".html")
         if body_path.exists():
             body, news, problems = parse_body(body_path.read_text(encoding="utf-8"))
-            doubled = _doubled(entry, news)
+            doubled = _doubled(entry, body, news)
             if doubled:
                 print(f"[features] WARNING: {'・'.join(doubled)} が {path.name} と {body_path.name} の両方にあるので飛ばす",
                       file=sys.stderr)
