@@ -158,13 +158,13 @@
         }
       }
 
-      // title: {ポケモン名}のポケふた | {都道府県}{市区町村} | Pokefuta Map
+      // title: {ポケモン名}のポケふた｜{都道府県}{市区町村}｜ポケふた図鑑
       const locationPart = prefecture && city
         ? `${prefecture}${city}`
         : prefecture || '';
       const title = locationPart
-        ? `${pokemonText}のポケふた | ${locationPart} | Pokefuta Map`
-        : `${pokemonText}のポケふた | Pokefuta Map`;
+        ? `${pokemonText}のポケふた｜${locationPart}｜ポケふた図鑑`
+        : `${pokemonText}のポケふた｜ポケふた図鑑`;
 
       // description: {都道府県}{市区町村}にある{ポケモン名}（English）のポケふた。場所・写真・訪問記録を地図で確認できます。
       const placeText = prefecture && city ? `${prefecture}${city}` : (prefecture || '');

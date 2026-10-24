@@ -60,7 +60,7 @@ class DetailH1Tests(unittest.TestCase):
     def test_title_tag_keeps_search_form(self):
         # <title> は検索向けの「県市のポケふた」の形を保つ
         html = _generate(_manhole(building="道の駅とよはし"))
-        self.assertIn("<title>愛知県豊橋のポケふた｜スターミー・デンヂムシ | data.pokefuta.com</title>", html)
+        self.assertIn("<title>愛知県豊橋のポケふた｜スターミー・デンヂムシ｜ポケふた図鑑</title>", html)
 
     def test_building_is_normalized_like_map(self):
         # 全角スペースや先頭の自治体名は地図の place_label と同じ規則で整える

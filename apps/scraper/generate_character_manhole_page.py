@@ -732,7 +732,7 @@ def generate_html(
         "name": title,
         "description": description,
         "inLanguage": "ja",
-        "isPartOf": {"@type": "WebSite", "name": "ポケふたDATABASE", "url": BASE_URL},
+        "isPartOf": {"@type": "WebSite", "name": "ポケふた図鑑", "url": BASE_URL},
         "primaryImageOfPage": {"@type": "ImageObject", "url": OG_IMAGE, "width": 1200, "height": 630},
         "breadcrumb": {"@id": f"{CANONICAL_URL}#breadcrumb"},
         "mainEntity": {"@id": works_list_id},
@@ -787,7 +787,7 @@ def generate_html(
   <meta name="robots" content="index,follow">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ja_JP">
-  <meta property="og:site_name" content="ポケふたDATABASE">
+  <meta property="og:site_name" content="ポケふた図鑑">
   <meta property="og:title" content="{escape(title)}">
   <meta property="og:description" content="{escape(description)}">
   <meta property="og:url" content="{escape(CANONICAL_URL)}">
@@ -952,7 +952,7 @@ def generate_html(
     </section>
 
     <footer class="cm-footer" role="contentinfo">
-      <a href="./">ポケふたマップ</a>/<a href="{MAP_HREF}">キャラクターマンホールマップ</a>/<a href="{DESIGN_MANHOLE_HREF}">デザインマンホール投稿</a>/<a href="./character_manholes.ndjson" target="_blank" rel="noopener">キャラNDJSON</a>/<a href="./gmanhole.ndjson" target="_blank" rel="noopener">ガンダムNDJSON</a>
+      <a href="./">ポケふた図鑑</a>/<a href="{MAP_HREF}">キャラクターマンホールマップ</a>/<a href="{DESIGN_MANHOLE_HREF}">デザインマンホール投稿</a>/<a href="./character_manholes.ndjson" target="_blank" rel="noopener">キャラNDJSON</a>/<a href="./gmanhole.ndjson" target="_blank" rel="noopener">ガンダムNDJSON</a>
     </footer>
   </main>
 
