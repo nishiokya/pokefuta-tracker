@@ -7,6 +7,13 @@ square so its circular design is not cropped to a landscape banner.
 
 from html import escape
 
+try:
+    from apps.scraper.manhole_tile_image import responsive_attrs
+except ModuleNotFoundError as exc:
+    if exc.name != "apps":
+        raise
+    from manhole_tile_image import responsive_attrs
+
 
 CARD_CSS = """
     [data-zukan-card] {
@@ -49,9 +56,13 @@ def card_open(class_name: str, *, href: str = "", attrs: dict[str, str] | None =
     ) + '>'
 
 
-def card_image(src: str, *, alt: str = "", size: int = 320) -> str:
-    """A square lid photo with a reserved aspect ratio and consistent loading behavior."""
+def card_image(src: str, *, alt: str = "", size: int = 320, sizes: str = "") -> str:
+    """A square lid photo with a reserved aspect ratio and consistent loading behavior.
+
+    sizes is the displayed width; with it the browser picks a small WebP (manhole_tile_image.srcset).
+    """
+    source = responsive_attrs(src, sizes) if sizes else f'src="{escape(src, quote=True)}"'
     return (
-        f'<img src="{escape(src, quote=True)}" alt="{escape(alt, quote=True)}" '
+        f'<img {source} alt="{escape(alt, quote=True)}" '
         f'width="{size}" height="{size}" loading="lazy" decoding="async" data-zukan-image="">'
     )

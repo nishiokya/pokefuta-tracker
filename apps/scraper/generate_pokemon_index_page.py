@@ -839,13 +839,20 @@ def generate_html(
         pokemon_index, photos_data, image_dir, lang_config, translate_pref, lang,
     )
 
+    # 写真の表示幅（2026-10-25 に幅 390px と 1280px で測った値）。小さい WebP を選ばせる
+    photo_sizes = {
+        "card-photo": "(min-width: 960px) 260px, 86vw",
+        "regional-photo": "(min-width: 960px) 260px, 86vw",
+        "ranking-photo": "96px",
+    }
+
     def image_html(card: dict, class_name: str = "card-photo") -> str:
         image = card.get("latest_image")
         if not image:
             return ""
         return (
             f'<span class="{class_name}">'
-            f'{card_image(image["url"], alt=image["alt"])}'
+            f'{card_image(image["url"], alt=image["alt"], sizes=photo_sizes[class_name])}'
             f"</span>"
         )
 

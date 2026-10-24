@@ -3203,7 +3203,7 @@ def _build_discovery_hub_sections(
         representative = pictured[0] if pictured else (candidates[0] if candidates else {})
         image = image_url(representative)
         image_html = (
-            card_image(image, alt=record_label(representative))
+            card_image(image, alt=record_label(representative), sizes="(min-width: 960px) 270px, 70vw")
             if image else ""
         )
         links = "".join(

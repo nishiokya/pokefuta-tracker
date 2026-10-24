@@ -27,11 +27,11 @@ except ModuleNotFoundError as exc:
     from visit_durations import DEFAULT_DURATIONS, duration_html, load_durations
 
 try:
-    from apps.scraper.manhole_tile_image import tile_image_url
+    from apps.scraper.manhole_tile_image import responsive_attrs, small_image_url, tile_image_url
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
-    from manhole_tile_image import tile_image_url
+    from manhole_tile_image import responsive_attrs, small_image_url, tile_image_url
 
 try:
     from apps.scraper.photo_caption import poster_profile_url
@@ -521,7 +521,7 @@ def _hero_photos(records: list[dict]) -> str:
         f'<a href="/manholes/{quote(mid)}/" data-track="prefecture_manhole_click" '
         f'data-position="{position}" data-destination="{escape_attr(mid)}" '
         f'data-content-id="{escape_attr(mid)}" data-surface="hero_photos">'
-        f'<img src="{escape_attr(url)}" alt="{escape_attr(name)}のポケふた" '
+        f'<img {responsive_attrs(url, "(min-width: 960px) 140px, 70px")} alt="{escape_attr(name)}のポケふた" '
         f'decoding="async" width="360" height="360"></a>'
         for position, (_, mid, name, url) in enumerate(picked, start=1)
     )
@@ -779,7 +779,7 @@ def _manhole_cards(
         # 小さいタイルは蓋でいっぱいの画像（{id}_lid.jpeg）。無ければ代表写真の正方形
         tile_url = tile_image_url(mid, ROOT / "dataset" / "manhole" / "image")
         image_html = (
-            f'<img src="{escape_attr(tile_url)}" '
+            f'<img {responsive_attrs(tile_url, "(min-width: 960px) 260px, 40vw")} '
             f'alt="{escape_attr(display_name)}のポケふた" loading="lazy" decoding="async" '
             f'width="720" height="720">'
             if tile_url
@@ -1129,7 +1129,7 @@ def build_index_page(
             f'<a class="prefecture-card-photo" href="/manholes/{quote(str(record.get("id", "")))}/" '
             f'aria-label="{escape_attr(_caption(record))}のポケふたの詳細を開く">'
             # 小さいタイルは蓋でいっぱいの画像（{id}_lid.jpeg）。無ければ代表写真の正方形
-            f'{card_image(tile_image_url(str(record.get("id", "")), ROOT / "dataset" / "manhole" / "image") or _photo_asset_url(record, photo))}'
+            f'{card_image(tile_image_url(str(record.get("id", "")), ROOT / "dataset" / "manhole" / "image") or _photo_asset_url(record, photo), sizes="80px")}'
             f'<span class="prefecture-card-photo-city" aria-hidden="true">'
             f'{escape(_caption(record))}</span></a>'
             for record, photo in photographed
@@ -2485,9 +2485,10 @@ def build_page(
     ]
     # 写真のあるピンは一覧のタイルと同じ蓋の切り抜き（_lid）を丸く出す。
     # 色の点と凡例を読み合わせなくても、地図上でどの蓋かが分かる
+    # ピンは 40px なので、デプロイ時に作る 180px の WebP を直接指す（manhole_tile_image.SMALL_WIDTHS）
     for point in map_points:
         point["tile_url"] = (
-            tile_image_url(point["id"], ROOT / "dataset" / "manhole" / "image")
+            small_image_url(tile_image_url(point["id"], ROOT / "dataset" / "manhole" / "image"), 180)
             if point["photo_url"] else ""
         )
     # 地図に実際に描く形。切り抜きは見れば分かるので凡例に載せない。

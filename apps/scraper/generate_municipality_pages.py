@@ -287,7 +287,7 @@ def stop_thumbs_html(route: list[dict], total: int, image_dir: Path = IMAGE_DIR)
     shown = urls[:THUMB_LIMIT]
     rest = total - len(shown)
     imgs = "".join(
-        pref.card_image(u, size=32)
+        pref.card_image(u, size=32, sizes="40px")
         for u in shown
     )
     more = f'<span class="stop-thumb-more">+{rest}</span>' if rest > 0 else ""
