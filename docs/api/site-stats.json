@@ -1,19 +1,19 @@
 {
-  "active_users_7d": 98,
-  "auth_users": 825,
-  "generated_at": "2026-10-24T11:08:30+00:00",
+  "active_users_7d": 100,
+  "auth_users": 829,
+  "generated_at": "2026-10-24T13:05:41+00:00",
   "latest_photo_at": "2026-10-24T09:37:52.046438+00:00",
-  "latest_user_at": "2026-10-24T08:19:16.198954+00:00",
+  "latest_user_at": "2026-10-24T12:40:13.82599+00:00",
   "latest_visit_at": "2026-10-24T09:37:51.740317+00:00",
   "manhole_comments": 10,
   "manholes": 482,
   "manholes_with_photos": 482,
   "posts": 4065,
-  "posts_last_30d": 1579,
+  "posts_last_30d": 1577,
   "posts_last_7d": 982,
   "private_posts": 918,
   "public_posts": 3147,
   "source": "baked",
   "success": true,
-  "users": 275
+  "users": 276
 }
