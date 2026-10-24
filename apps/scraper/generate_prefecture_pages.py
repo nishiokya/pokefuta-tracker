@@ -997,7 +997,7 @@ def build_index_page(
         order=PREFECTURE_ORDER,
     )
     canonical = f"{BASE_URL}/prefectures/"
-    title = "都道府県から探す｜全国のポケふた一覧"
+    title = "都道府県から探す"
     description = (
         f"ポケふたの情報がある{listed_count}都道府県、計{total}枚（ポケモンマンホール）を都道府県別に探せます。"
         f"現地写真がそろっているのは{completion.complete_count}都道府県。"
@@ -1133,7 +1133,7 @@ def build_index_page(
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{escape(title)}</title>
+  <title>{escape(title)}｜ポケふた図鑑</title>
   <meta name="description" content="{escape_attr(description)}">
   <meta name="robots" content="index,follow">
   <meta property="og:type" content="website">
@@ -2617,7 +2617,7 @@ def build_page(
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{escape(title)}</title>
+  <title>{escape(title)}｜ポケふた図鑑</title>
   <meta name="description" content="{escape_attr(description)}">
   <meta name="robots" content="index,follow">
   <meta property="og:type" content="website">

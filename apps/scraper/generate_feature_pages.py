@@ -375,7 +375,7 @@ def build_feature_page(feature: dict, photos: dict[str, dict], others: list[dict
 
 
 def build_index_page(features: list[dict], today: date | None = None) -> str:
-    title = "ポケふた特集｜新しいポケふたと、旅のテーマ"
+    title = "ポケふた特集｜ポケふた図鑑"
     description = (
         "新しく設置・発表されたポケふた（ポケモンマンホール）や、テーマごとに集めたポケふたを"
         "特集としてまとめています。"

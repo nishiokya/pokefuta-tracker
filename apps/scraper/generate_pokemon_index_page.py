@@ -47,7 +47,7 @@ logger = logging.getLogger(__name__)
 # UI strings per language for the Pokemon index page.
 LP_INDEX_STRINGS: dict[str, dict] = {
     "ja": {
-        "title": "ポケモン別ポケふた一覧｜登場ポケモンから探すポケモンマンホール",
+        "title": "ポケモンから探す｜ポケふた図鑑",
         "description": (
             "全国のポケモンマンホール「ポケふた」を登場ポケモン別に探せる一覧ページです。"
             "ピカチュウ、イーブイ、カビゴンなど、ポケふたに登場するポケモンから設置場所を探せます。"

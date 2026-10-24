@@ -143,7 +143,7 @@ class PageTest(unittest.TestCase):
 
     def test_meta_and_breadcrumb(self) -> None:
         html = self.html
-        self.assertIn("<title>町田市のポケふた3枚はどこ？場所一覧・地図・巡る順番</title>", html)
+        self.assertIn("<title>町田市のポケふた3枚はどこ？場所一覧・地図・巡る順番｜ポケふた図鑑</title>", html)
         self.assertIn('<link rel="canonical" href="https://data.pokefuta.com/municipalities/tokyo/machida/">', html)
         self.assertIn('<meta name="robots" content="index,follow">', html)
         self.assertIn("<h1>町田市（東京都）のポケふた3枚</h1>", html)

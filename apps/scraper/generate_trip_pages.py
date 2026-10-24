@@ -514,7 +514,7 @@ def compact_places(
 def build_index_page(
     areas: list[tuple[dict, list[dict]]], durations: dict, compact: list[tuple[str, str, int, float]]
 ) -> str:
-    title = "ポケふた旅｜1日で回れるポケふたと、かかる時間の目安"
+    title = "ポケふた旅｜1日で回れるルート｜ポケふた図鑑"
     description = (
         "ポケふた（ポケモンマンホール）を1日で回れるエリアを、かかる時間の目安と"
         "回る順番つきでまとめています。旅行やおでかけの計画に。"

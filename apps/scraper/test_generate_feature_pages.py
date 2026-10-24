@@ -123,6 +123,9 @@ class FeaturePageTests(unittest.TestCase):
         self.assertNotIn("datePublished", unveiled)
         index = MODULE.build_index_page([{**self.feature, "date_label": "お披露目"}])
         self.assertIn("2026年10月17日お披露目 / 沖縄県", index)
+        # 市区町村ページと共用の <head> でサイト名が二重にならず、個別ページには付かない
+        self.assertIn("<title>ポケふた特集｜ポケふた図鑑</title>", index)
+        self.assertNotIn("ポケふた図鑑</title>", plain)
         self.assertNotIn("datePublished", index)
 
     def test_index_puts_highlighted_features_in_the_new_section_first(self) -> None:

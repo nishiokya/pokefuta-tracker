@@ -145,7 +145,7 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
                     self.trivia[prefecture],
                     photos=self.photos,
                 )
-                self.assertIn(f'<title>{expected["title"]}</title>', html)
+                self.assertIn(f'<title>{expected["title"]}｜ポケふた図鑑</title>', html)
                 self.assertIn(f'<h1>{expected["h1"]}</h1>', html)
                 self.assertIn("市町村別の設置枚数", html)
                 self.assertIn(f'<strong>{expected["place"]}</strong>', html)
@@ -181,7 +181,7 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
             )
             html = (output / "chiba" / "index.html").read_text(encoding="utf-8")
             self.assertIn(
-                "<title>千葉のポケふた4枚はどこ？香取市・佐原の場所一覧と地図</title>", html
+                "<title>千葉のポケふた4枚はどこ？香取市・佐原の場所一覧と地図｜ポケふた図鑑</title>", html
             )
             self.assertIn('<h1>千葉（千葉県）のポケふた4枚</h1>', html)
             self.assertLess(html.index('id="visit-guide-heading"'), html.index('id="map-heading"'))
@@ -260,7 +260,7 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
                     self.pokemon_slugs, self.trivia[prefecture],
                     photos=self.photos, visit_guide=guides[prefecture],
                 )
-                self.assertIn(f"<title>{title}</title>", html)
+                self.assertIn(f"<title>{title}｜ポケふた図鑑</title>", html)
                 guide_html = html[
                     html.index('<section class="visit-guide"'):html.index('id="map-heading"')
                 ]
@@ -502,7 +502,7 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         html = MODULE.build_page(
             "広島県", "hiroshima", [], None, self.pokemon_slugs, self.trivia.get("広島県"),
         )
-        self.assertIn("<title>広島県のポケふた｜設置状況・ポケモンマンホール情報</title>", html)
+        self.assertIn("<title>広島県のポケふた｜設置状況・ポケモンマンホール情報｜ポケふた図鑑</title>", html)
         self.assertNotIn('id="nearest-heading"', html)
 
     def test_low_ctr_prefectures_get_municipality_titles_from_data(self) -> None:
@@ -541,7 +541,7 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
             "三重県", "mie", by_pref["三重県"], 1, self.pokemon_slugs,
             self.trivia.get("三重県"), all_records=self.records,
         )
-        self.assertIn(f"<title>三重県のポケふた{len(by_pref['三重県'])}枚｜設置場所マップ・ポケモン一覧</title>", html)
+        self.assertIn(f"<title>三重県のポケふた{len(by_pref['三重県'])}枚｜設置場所マップ・ポケモン一覧｜ポケふた図鑑</title>", html)
         self.assertNotIn('id="municipality-heading"', html)
 
     def test_related_links_skip_prefectures_without_any_pokefuta(self) -> None:
@@ -1343,7 +1343,7 @@ class BuildIndexPageTest(unittest.TestCase):
         html = MODULE.build_index_page(self.records_by_pref)
         self.assertIn('<link rel="canonical" href="https://data.pokefuta.com/prefectures/">', html)
         self.assertIn('<meta name="robots" content="index,follow">', html)
-        self.assertIn("<title>都道府県から探す｜全国のポケふた一覧</title>", html)
+        self.assertIn("<title>都道府県から探す｜ポケふた図鑑</title>", html)
 
     def test_ga4_is_wired_up_via_the_shared_loader(self) -> None:
         """このページには実装当初 analytics.js の読み込みが漏れていて、
