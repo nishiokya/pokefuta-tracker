@@ -25,6 +25,7 @@ from display_names import compose_display_name, landmark_label, municipality_lab
 from generate_pokemon_pages import _FORM_PREFIX, _normalize_katakana  # noqa: E402
 from generate_pokemon_pages import load_pokemon_metadata as load_pokemon_metadata_with_forms  # noqa: E402
 from manhole_page_css import PAGE_CSS  # noqa: E402
+from manhole_tile_image import small_image_url  # noqa: E402
 from photo_caption import (  # noqa: E402
     format_display_name,
     format_photo_date,
@@ -557,10 +558,11 @@ def _render_related_card(
     """Build a related-manhole list item with local thumbnail and pin icon."""
     oid = str(other.get("id", "")).strip()
     label = manhole_label(other)
-    thumb_url = id_to_image_url.get(oid, "")
+    # 60px のサムネイルなので、デプロイ時に作る 180px の WebP を指す（720px の写真を14枚読んでいた）
+    thumb_url = small_image_url(id_to_image_url.get(oid, ""), 180)
     thumb_html = (
         f'<div class="related-card-thumb">'
-        f'<img src="{escape(thumb_url)}" alt="" loading="lazy"'
+        f'<img src="{escape(thumb_url)}" alt="" loading="lazy" decoding="async" width="60" height="60"'
         f' onerror="this.closest(\'.related-card-thumb\').remove()">'
         f"</div>"
     ) if thumb_url else ""

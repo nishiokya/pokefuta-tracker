@@ -253,10 +253,11 @@ def _ja_name(record: dict) -> str:
 def _related_card(page: DetailPage, other: dict, id_to_image_url: dict[str, str], event: str, params: dict,
                   extra_html: str = "") -> str:
     oid = str(other.get("id", "")).strip()
-    thumb_url = id_to_image_url.get(oid, "")
+    # 日本語版と同じく 180px の WebP（ja._render_related_card）
+    thumb_url = ja.small_image_url(id_to_image_url.get(oid, ""), 180)
     thumb_html = (
         f'<div class="related-card-thumb">'
-        f'<img src="{_attr(thumb_url)}" alt="" loading="lazy"'
+        f'<img src="{_attr(thumb_url)}" alt="" loading="lazy" decoding="async" width="60" height="60"'
         f' onerror="this.closest(\'.related-card-thumb\').remove()">'
         f"</div>"
     ) if thumb_url else ""
