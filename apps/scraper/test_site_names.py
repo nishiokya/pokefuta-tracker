@@ -52,6 +52,7 @@ class SiteNamesTest(unittest.TestCase):
         strings = (WEB / "i18n" / "strings.zh-TW.json").read_text(encoding="utf-8")
         outside_keywords = re.sub(r'"META_KEYWORDS": "[^"]*"', "", strings)
         self.assertNotIn("神奇寶貝", outside_keywords)
+        self.assertNotIn("神奇寶貝", (SCRAPER / "inject_site_header.py").read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":

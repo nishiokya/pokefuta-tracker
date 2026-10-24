@@ -11,6 +11,7 @@ from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from urllib.parse import quote, urlparse
 from xml.sax.saxutils import escape
+
 try:
     from apps.scraper.site_names import og_site_name
 except ModuleNotFoundError as exc:

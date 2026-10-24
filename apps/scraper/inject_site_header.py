@@ -137,7 +137,7 @@ LABELS = {
         "site_album_sub": "拍攝與記錄",
         "nav_map": "地圖",
         "nav_pref": "都道府縣",
-        "nav_pokemon": "神奇寶貝",
+        "nav_pokemon": "寶可夢",
         "nav_summary": "統計",
         "nav_character": "角色蓋",
         "tab_stamp": "集章冊",
