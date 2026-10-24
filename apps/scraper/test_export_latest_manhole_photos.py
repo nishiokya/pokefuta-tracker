@@ -39,7 +39,7 @@ def _photo(
     }
 
 
-def _scored(photo_id: str, score, shot_at=None, eligible=True, scene=None, lid_fits=None, crop=None) -> dict:
+def _scored(photo_id: str, score, shot_at=None, eligible=True, scene=None, lid_fits=None, crop=None, rep=None) -> dict:
     tags = {"model": "scene_attrs/1"}
     if scene:
         tags["scene"] = scene
@@ -47,6 +47,8 @@ def _scored(photo_id: str, score, shot_at=None, eligible=True, scene=None, lid_f
         tags["lid_fits"] = lid_fits
     if crop is not None:
         tags["crop"] = crop
+    if rep is not None:
+        tags["rep_score"] = rep
     return {**_photo(photo_id, shot_at=shot_at), "quality_score": score,
             "quality_eligible": eligible if score is not None else None, "ai_tags": tags}
 
@@ -66,6 +68,39 @@ class PhotoRankTest(unittest.TestCase):
             _scored("centered", 0.82, scene="centered_clean", lid_fits=True),
         ]
         self.assertEqual([p["id"] for p in export.select_gallery_photos(photos, 5)], ["centered", "wide", "closeup"])
+
+    def test_rep_score_orders_when_every_scored_candidate_has_one(self):
+        photos = [
+            _scored("best-quality", 0.95, scene="centered_clean", lid_fits=True, rep=3),
+            _scored("best-rep", 0.7, scene="wide_context", lid_fits=True, rep=9),
+            _scored("high-rep-not-fitting", 0.9, scene="centered_clean", lid_fits=False, rep=20),
+            _scored("unscored", None, shot_at="2026-09-01T00:00:00Z"),
+            _scored("ineligible", 0.99, eligible=False, lid_fits=True, rep=50),
+        ]
+        self.assertEqual([p["id"] for p in export.select_gallery_photos(photos, 5)],
+                         ["best-rep", "best-quality", "high-rep-not-fitting", "unscored", "ineligible"])
+
+    def test_previous_order_while_any_scored_candidate_lacks_rep_score(self):
+        photos = [
+            _scored("best-rep", 0.7, scene="wide_context", lid_fits=True, rep=9),
+            _scored("centered", 0.6, scene="centered_clean", lid_fits=True),
+        ]
+        self.assertEqual([p["id"] for p in export.select_gallery_photos(photos, 5)], ["centered", "best-rep"])
+
+    def test_rep_score_tie_falls_back_to_quality_like_the_photo_site(self):
+        photos = [
+            _scored("new-low", 0.2, shot_at="2026-09-01T00:00:00Z", lid_fits=True, rep=5),
+            _scored("old-high", 0.95, shot_at="2026-01-01T00:00:00Z", lid_fits=True, rep=5),
+        ]
+        self.assertEqual([p["id"] for p in export.select_gallery_photos(photos, 5)], ["old-high", "new-low"])
+
+    def test_nan_quality_counts_as_unscored_and_does_not_block_rep_score(self):
+        photos = [
+            _scored("low-rep", 0.9, lid_fits=True, rep=1),
+            _scored("high-rep", 0.5, lid_fits=True, rep=8),
+            _scored("nan", float("nan")),
+        ]
+        self.assertEqual([p["id"] for p in export.select_gallery_photos(photos, 5)], ["high-rep", "low-rep", "nan"])
 
     def test_tiers_scored_then_unscored_then_ineligible(self):
         photos = [
@@ -220,6 +255,21 @@ class BuildPayloadFeaturedPhotoTest(unittest.TestCase):
                     )
                 self.assertEqual(payload["count"], 0)
                 self.assertEqual(payload["photos"], {})
+
+    @mock.patch.object(export, "fetch_manhole_comments_by_display_name", return_value={})
+    @mock.patch.object(export, "fetch_user_info", return_value={})
+    @mock.patch.object(export, "get_effective_r2_public_base_url", return_value="https://images.example")
+    def test_representative_does_not_depend_on_gallery_limit(self, *_mocks):
+        # 公開の候補はそろって rep_score あり、非公開の候補には無い（--include-private）
+        photos = [
+            _scored("public-high-quality", 0.95, lid_fits=True, rep=1),
+            _scored("public-best-rep", 0.6, lid_fits=True, rep=9),
+            {**_scored("private", 0.99, lid_fits=True), "visit": {**_photo("p", is_public=False)["visit"]}},
+        ]
+        for gallery_limit in [0, 5]:
+            with mock.patch.object(export, "iter_photos", return_value=iter([dict(p) for p in photos])):
+                payload = export.build_payload(True, 100, 10, "tako", gallery_limit, {})
+            self.assertEqual(payload["photos"]["1"]["photo_id"], "public-best-rep", gallery_limit)
 
     def test_query_filters_landscapes_before_pagination(self):
         with mock.patch.object(export, "iter_supabase_rows", return_value=iter([])) as rows:
