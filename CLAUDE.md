@@ -1,6 +1,6 @@
 manhole_titles.jsonは手動で更新している
 dataset/prefecture_events.json は手動更新（都道府県ページに出す開催中スタンプラリー等のリンク。end_date 過ぎは日次再生成で自動非表示）
-dataset/features/<slug>.json は手動更新（特集。1本1ファイルで /features/<slug>/ ができる。highlight_until まではトップと /summary/ にも出る。書式は apps/scraper/features.py）
+dataset/features/<slug>.json は手動更新（特集。1本1ファイルで /features/<slug>/ ができる。highlight_until まではトップと /summary/ にも出る。書式は apps/scraper/features.py。本文は <slug>.html に HTML でも書け、許可タグ以外があると特集ごと出ない。書き方は dataset/features/README.md。PR では check-features.yml が検査する）
 dataset/pokemon_representatives.json は手動更新（ポケモンごとの代表のマンホール。manhole-ai の Tools/pokemon-rep で選び、export_reps.py の出力を入れる。トップの「設置の多いポケモンから探す」、/pokemon/ のカード、ポケモンのページの上の1枚と og:image のように1枚だけ出す所で使い、ポケモンのページの一覧は全部出す）
 dataset/trip_areas.json は手動更新（/trip/ のエリア。マンホールIDの組を登録すると、日次の Pages デプロイでページができる。地点が欠けた・設置予定のエリアは出ない）
 dataset/visit_durations.json は手動更新（k11 の DB バックアップで `apps/tools/build_visit_durations.py` を実行して PR。集計値だけで人数は載せない。公開の記録で1日で全部回った人が3人以上の組だけ（時間の幅は非公開も含める。`MIN_PUBLIC_PEOPLE`）。県・市・trip のページの所要時間はこれを読む）

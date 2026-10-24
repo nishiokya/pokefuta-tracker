@@ -21,6 +21,8 @@ highlight_until までの間は /summary/ の上の方にも出す（新作の�
                      [] にして、設置場所は sections に書く（蓋の一覧・地図・見どころは出さない）。id が付いたら足す
     links            任意。[{"text": ..., "href": "/..." か "https://...", "external": true}]
     sections         任意。[{"heading": "見出し", "body": "本文（空行で段落を分ける）"}] 見どころの下に出す
+                     本文は <slug>.html に HTML で書いてもよい（そのときは sections は書かない）。
+                     書き方と使えるタグは dataset/features/README.md
     timeline         任意。[{"when": "2026年10月16日", "date": "2026-10-16"（任意）, "text": "お披露目式"}]
                      お披露目・設置予定などを見出しの直後に出す
     news             任意。[{"title": 記事名, "source": 媒体名, "href": "https://...", "date": "2026-10-16"（任意）}]
@@ -33,6 +35,8 @@ import json
 import re
 import sys
 from datetime import date, datetime, timedelta, timezone
+from html import escape
+from html.parser import HTMLParser
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -116,6 +120,156 @@ def _valid(entry: object, name: str) -> bool:
     )
 
 
+def _safe_href(href: str) -> bool:
+    # "/\" はブラウザが "//" と同じに読んで別のサイトへ飛ぶので、\ ごと断る
+    return "\\" not in href and (
+        href.startswith("https://") or (href.startswith("/") and not href.startswith("//"))
+    )
+
+
+# 本文の HTML で使えるタグ。ここに無いタグ・属性は通さない（同じドメインでログインを扱うので、
+# <script> や onclick が入ると利用者のログインを盗めてしまう）
+BODY_TAGS = {
+    "section", "h2", "h3", "p", "ul", "ol", "li", "a", "strong", "em", "br",
+    "table", "thead", "tbody", "tr", "th", "td",
+}
+_VOID_TAGS = {"br"}
+# 文字を直接書けないタグ（<p> や <li> で包む）
+_NO_TEXT_TAGS = {"section", "ul", "ol", "table", "thead", "tbody", "tr"}
+
+
+class _BodyParser(HTMLParser):
+    """本文の HTML を読み、許したタグだけで組み直す。問題は「何行目: 何がだめか」で集める。"""
+
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.out: list[str] = []
+        self.problems: list[str] = []
+        self.stack: list[str] = []
+        self.sections = 0
+        self.expect_h2 = False
+
+    def _problem(self, text: str) -> None:
+        self.problems.append(f"{self.getpos()[0]}行目: {text}")
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        if tag not in BODY_TAGS:
+            self._problem(f"<{tag}> は使えない")
+            return
+        href = None
+        for name, value in attrs:
+            if tag == "a" and name == "href":
+                href = value or ""
+            else:
+                self._problem(f"<{tag}> の {name} 属性は使えない")
+        if tag == "section":
+            if self.stack:
+                self._problem("<section> は一番外側に並べる（中に入れない）")
+            self.sections += 1
+            self.expect_h2 = True
+            self.out.append(f'<section class="feature-section" aria-labelledby="section-{self.sections}-heading">')
+        else:
+            if not self.stack:
+                self._problem(f"<{tag}> が <section> の外にある")
+            elif tag == "h2" and not self.expect_h2:
+                self._problem("<h2> は <section> の最初に1つだけ")
+            elif tag != "h2" and self.expect_h2:
+                self._problem("<section> は <h2> の見出しから始める")
+            self.expect_h2 = False
+            if tag == "h2":
+                self.out.append(f'<h2 id="section-{self.sections}-heading">')
+            elif tag == "a":
+                if href is None or not _safe_href(href):
+                    self._problem(f'<a href="{href or ""}"> のリンク先は https:// か / で始める')
+                    href = ""
+                external = href.startswith("https://")
+                self.out.append(
+                    f'<a href="{escape(href)}"'
+                    + (' target="_blank" rel="noopener noreferrer"' if external else "") + ">"
+                )
+            else:
+                self.out.append(f"<{tag}>")
+        if tag not in _VOID_TAGS:
+            self.stack.append(tag)
+
+    def handle_startendtag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        # <br/> のような書き方
+        self.handle_starttag(tag, attrs)
+        if tag in BODY_TAGS and tag not in _VOID_TAGS:
+            self.handle_endtag(tag)
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag not in BODY_TAGS or tag in _VOID_TAGS:
+            return
+        if not self.stack or self.stack[-1] != tag:
+            opened = f"（いま閉じるのは </{self.stack[-1]}>）" if self.stack else ""
+            self._problem(f"</{tag}> の閉じ方が合わない{opened}")
+            if tag not in self.stack:
+                return
+            while self.stack[-1] != tag:
+                self.out.append(f"</{self.stack.pop()}>")
+        self.stack.pop()
+        if self.expect_h2 and tag == "section":
+            self._problem("<section> に <h2> の見出しが無い")
+            self.expect_h2 = False
+        self.out.append(f"</{tag}>")
+
+    def handle_data(self, data: str) -> None:
+        if not data.strip():
+            self.out.append(data)
+            return
+        if not self.stack:
+            self._problem(f"文字「{data.strip()[:10]}」が <section> の外にある")
+        elif self.stack[-1] in _NO_TEXT_TAGS:
+            self._problem(f"文字「{data.strip()[:10]}」は <p> や <li> などの中に書く")
+        self.out.append(escape(data, quote=False))
+
+    def handle_comment(self, data: str) -> None:
+        # <!-- メモ --> は書いてよい。ページには出さない
+        pass
+
+    def handle_decl(self, decl: str) -> None:
+        self._problem("<!DOCTYPE> などは書かない（本文の部分だけを書く）")
+
+    def unknown_decl(self, data: str) -> None:
+        self._problem("<![...]> は使えない")
+
+    def handle_pi(self, data: str) -> None:
+        self._problem("<?...> は使えない")
+
+
+def parse_body_html(text: str) -> tuple[str, list[str]]:
+    """本文の HTML を (ページに出す HTML, 問題の一覧) にする。問題があればその特集は出さない。"""
+    parser = _BodyParser()
+    parser.feed(text)
+    parser.close()
+    problems = parser.problems
+    if parser.stack:
+        problems.append(f"最後まで閉じていないタグがある: {' '.join(f'<{t}>' for t in parser.stack)}")
+    if not parser.sections:
+        problems.append("<section> が1つも無い")
+    return "".join(parser.out).strip(), problems
+
+
+def check_body_files(features_dir: Path = DEFAULT_FEATURES_DIR) -> list[str]:
+    """dataset/features/*.html の書き方の問題を文章で返す（無ければ空）。"""
+    problems: list[str] = []
+    for path in sorted(features_dir.glob("*.html")) if features_dir.exists() else []:
+        json_path = path.with_suffix(".json")
+        if not json_path.exists():
+            problems.append(f"{path.name}: 同じ名前の {json_path.name} が無い")
+            continue
+        try:
+            entry = json.loads(json_path.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError):
+            entry = {}
+        if isinstance(entry, dict) and entry.get("sections"):
+            problems.append(f"{path.name}: {json_path.name} にも sections がある。本文はどちらか一方に書く")
+        _, found = parse_body_html(path.read_text(encoding="utf-8"))
+        problems.extend(f"{path.name} {p}" for p in found)
+    return problems
+
+
 def safe_links(feature: dict) -> list[dict]:
     return [
         link for link in feature.get("links", []) or []
@@ -152,6 +306,17 @@ def load_features(
         if missing:
             print(f"[features] WARNING: 蓋が見つからないので飛ばす: {path.name} {missing}", file=sys.stderr)
             continue
+        body_path = path.with_suffix(".html")
+        if body_path.exists():
+            if entry.get("sections"):
+                print(f"[features] WARNING: 本文が sections と {body_path.name} の両方にあるので飛ばす: {path.name}",
+                      file=sys.stderr)
+                continue
+            body, problems = parse_body_html(body_path.read_text(encoding="utf-8"))
+            if problems:
+                print(f"[features] WARNING: {body_path.name} の書き方が違うので飛ばす: {problems}", file=sys.stderr)
+                continue
+            entry = {**entry, "body_html": body}
         features.append({**entry, "records": [records_by_id[mid] for mid in ids]})
     features.sort(key=lambda f: (f["published"], f["slug"]), reverse=True)
     return features
@@ -229,7 +394,7 @@ if __name__ == "__main__":
             if rec.get("status", "active") == "active":
                 by_id[str(rec.get("id", ""))] = {**by_id.get(str(rec.get("id", "")), {}), **rec}
     loaded = load_features(by_id, today=date(2099, 1, 1))
-    found = check_feature_groups(loaded)
+    found = check_body_files() + check_feature_groups(loaded)
     print(f"[features] {len(loaded)} 本の特集・{sum(len(f['records']) for f in loaded)} 枚を確認")
     for p in found:
         print("  NG", p)

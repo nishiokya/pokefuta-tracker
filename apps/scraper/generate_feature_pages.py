@@ -214,7 +214,10 @@ def _news_html(feature: dict) -> str:
 
 
 def _sections_html(feature: dict) -> str:
-    """手書きの読み物（sections）。本文は空行で段落に分ける。"""
+    """手書きの読み物（sections か <slug>.html）。sections の本文は空行で段落に分ける。"""
+    if feature.get("body_html"):
+        # features.parse_body_html で許したタグだけに組み直してある
+        return f"\n    {feature['body_html']}\n"
     html = []
     for i, section in enumerate(feature.get("sections", []), start=1):
         paragraphs = "".join(

@@ -113,6 +113,67 @@ class LoadFeaturesTests(unittest.TestCase):
         self.assertEqual([link["text"] for link in links], ["県", "公式"])
 
 
+class BodyHtmlTests(unittest.TestCase):
+    """本文を <slug>.html に HTML で書いたとき。許したタグだけで組み直し、ほかは特集ごと止める。"""
+
+    def test_sections_get_heading_ids_and_external_links_open_in_a_new_tab(self) -> None:
+        body, problems = FEATURES.parse_body_html(
+            "<!-- メモは出さない -->\n<section>\n  <h2>行き方</h2>\n  <p>船は&lt;15時間&gt;。<br/>"
+            '<a href="https://example.com/">公式</a>・<a href="/prefectures/okinawa/">県</a></p>\n</section>\n'
+            "<section><h2>宿</h2><ul><li><strong>2軒</strong>だけ</li></ul></section>\n"
+        )
+        self.assertEqual(problems, [])
+        self.assertNotIn("メモ", body)
+        self.assertIn('<section class="feature-section" aria-labelledby="section-1-heading">', body)
+        self.assertIn('<h2 id="section-2-heading">宿</h2>', body)
+        self.assertIn("船は&lt;15時間&gt;。<br>", body)
+        self.assertIn('<a href="https://example.com/" target="_blank" rel="noopener noreferrer">公式</a>', body)
+        self.assertIn('<a href="/prefectures/okinawa/">県</a>', body)
+
+    def test_dangerous_or_broken_html_is_reported_with_line_numbers(self) -> None:
+        cases = {
+            "<section><h2>a</h2><script>alert(1)</script></section>": "<script> は使えない",
+            '<section><h2>a</h2><p onclick="x()">b</p></section>': "onclick 属性は使えない",
+            '<section><h2>a</h2><p style="color:red">b</p></section>': "style 属性は使えない",
+            '<section><h2>a</h2><p><a href="javascript:alert(1)">b</a></p></section>': "https:// か / で始める",
+            '<section><h2>a</h2><p><a href="//evil.example/">b</a></p></section>': "https:// か / で始める",
+            '<section><h2>a</h2><p><a href="/\\evil.example/">b</a></p></section>': "https:// か / で始める",
+            "<section><h2>a</h2><iframe src=x></iframe></section>": "<iframe> は使えない",
+            "<section><h2>a</h2><p>b</section>": "閉じ方が合わない",
+            "<section><h2>a</h2><p>b</p>": "閉じていないタグ",
+            "<section><p>b</p></section>": "<h2> の見出しから始める",
+            "<section><h2>a</h2><h2>b</h2></section>": "<h2> は <section> の最初に1つだけ",
+            "<section><h2>a</h2>じか書き</section>": "<p> や <li> などの中に書く",
+            "<p>外</p>": "<section> の外にある",
+            "<!DOCTYPE html><section><h2>a</h2></section>": "本文の部分だけを書く",
+            "": "<section> が1つも無い",
+        }
+        for text, expected in cases.items():
+            with self.subTest(text=text):
+                _, problems = FEATURES.parse_body_html(text)
+                self.assertTrue(any(expected in p for p in problems), problems)
+        _, problems = FEATURES.parse_body_html("<section>\n  <h2>a</h2>\n  <p><b>太字</b></p>\n</section>")
+        self.assertEqual(problems, ["3行目: <b> は使えない"])
+
+    def test_loader_uses_the_html_body_and_skips_broken_or_doubled_bodies(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            d = _write(Path(tmp), _feature("html"), _feature("broken"),
+                       _feature("both", sections=[{"heading": "見出し", "body": "本文"}]))
+            (d / "html.html").write_text("<section><h2>行き方</h2><p>船で</p></section>", encoding="utf-8")
+            (d / "broken.html").write_text("<section><h2>行き方</h2><script></script></section>", encoding="utf-8")
+            (d / "both.html").write_text("<section><h2>行き方</h2><p>船で</p></section>", encoding="utf-8")
+            (d / "orphan.html").write_text("<section><h2>a</h2></section>", encoding="utf-8")
+            loaded = FEATURES.load_features(RECORDS, d, today=date(2026, 10, 17))
+            problems = FEATURES.check_body_files(d)
+        self.assertEqual([f["slug"] for f in loaded], ["html"])
+        html = MODULE.build_feature_page(loaded[0], {}, [])
+        self.assertIn('<h2 id="section-1-heading">行き方</h2><p>船で</p>', html)
+        self.assertLess(html.index('id="notes-heading"'), html.index('id="section-1-heading"'))
+        self.assertTrue(any(p.startswith("broken.html 1行目: <script>") for p in problems), problems)
+        self.assertTrue(any(p.startswith("both.html:") for p in problems), problems)
+        self.assertTrue(any(p.startswith("orphan.html:") for p in problems), problems)
+
+
 class FeaturePageTests(unittest.TestCase):
     def setUp(self) -> None:
         self.feature = {**_feature(), "records": [RECORDS["488"], RECORDS["487"]]}
@@ -237,6 +298,7 @@ class RealFeatureDataTests(unittest.TestCase):
         files = sorted(FEATURES.DEFAULT_FEATURES_DIR.glob("*.json"))
         loaded = FEATURES.load_features(records, today=date(2099, 1, 1))
         self.assertEqual(sorted(f["slug"] for f in loaded), sorted(p.stem for p in files))
+        self.assertEqual(FEATURES.check_body_files(), [])
 
 
 class FeatureGroupCheckTests(unittest.TestCase):

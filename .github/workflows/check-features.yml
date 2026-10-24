@@ -1,0 +1,40 @@
+# 家系C: 読み取り専用。特集（dataset/features/）を変える PR で、書式・本文の HTML・蓋の組を確かめる。
+# 何も書き込まない。問題があれば「何行目: 何がだめか」をログに出して失敗させる。
+name: Check Features
+
+on:
+  pull_request:
+    paths:
+      - 'dataset/features/**'
+      - 'apps/scraper/features.py'
+      - 'apps/scraper/generate_feature_pages.py'
+      - 'apps/scraper/test_generate_feature_pages.py'
+
+permissions:
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Check feature files
+        run: python3 apps/scraper/features.py
+
+      - name: Test feature pages
+        run: python3 -m unittest apps.scraper.test_generate_feature_pages
