@@ -118,6 +118,7 @@ SHELL_REPLACEMENTS = [
     ('content="en_US"', lambda loc: f'content="{loc.t("og_locale")}"'),
     ('<meta property="og:url" content="https://data.pokefuta.com/en/">', lambda loc: f'<meta property="og:url" content="{loc.page_url}">'),
     ('<link rel="canonical" href="https://data.pokefuta.com/en/">', lambda loc: f'<link rel="canonical" href="{loc.page_url}">'),
+    ('<meta property="og:site_name" content="Pokéfuta Directory">', lambda loc: f'<meta property="og:site_name" content="{escape(loc.t("site_name"))}">'),
     ('<span class="brand-name">Pokéfuta Directory</span>', lambda loc: f'<span class="brand-name">{escape(loc.t("site_name"))}</span>'),
     (">Search by purpose</h2>", lambda loc: f'>{escape(loc.t("purpose_title"))}</h2>'),
     ('<h3 class="home-h3">By theme</h3>', lambda loc: f'<h3 class="home-h3">{escape(loc.t("purpose_theme"))}</h3>'),

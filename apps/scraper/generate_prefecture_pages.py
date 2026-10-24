@@ -11,6 +11,12 @@ from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from urllib.parse import quote, urlparse
 from xml.sax.saxutils import escape
+try:
+    from apps.scraper.site_names import og_site_name
+except ModuleNotFoundError as exc:
+    if exc.name != "apps":
+        raise
+    from site_names import og_site_name
 
 try:
     from apps.scraper.zukan_cards import CARD_CSS, card_image, card_open
@@ -1214,6 +1220,7 @@ def build_index_page(
   <meta name="robots" content="index,follow,max-image-preview:large">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ja_JP">
+  {og_site_name("ja_JP")}
   <meta property="og:title" content="{escape_attr(title)}">
   <meta property="og:description" content="{escape_attr(description)}">
   <meta property="og:url" content="{escape_attr(canonical)}">
@@ -2732,6 +2739,7 @@ def build_page(
   <meta name="robots" content="index,follow,max-image-preview:large">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ja_JP">
+  {og_site_name("ja_JP")}
   <meta property="og:title" content="{escape_attr(title)}">
   <meta property="og:description" content="{escape_attr(description)}">
   <meta property="og:url" content="{escape_attr(canonical)}">
