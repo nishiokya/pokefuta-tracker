@@ -290,6 +290,24 @@ class RegularTiersTest(unittest.TestCase):
             MODULE.legend_entries(tiers, users),
         )
 
+    def test_legend_photo_is_best_scored_then_newest(self) -> None:
+        photos = [
+            {"id": "ph-1", "created_at": "2026-10-01", "quality_score": 0.5, "visit": {"user_id": "auth-a"}},
+            {"id": "ph-2", "created_at": "2026-09-01", "quality_score": 0.9, "visit": {"user_id": "auth-a"}},
+            {"id": "ph-3", "created_at": "2026-10-02", "quality_score": 0.9, "visit": {"user_id": "auth-a"}},
+            {"id": "ph-4", "created_at": "2026-10-03", "quality_score": None, "visit": {"user_id": "auth-b"}},
+            {"id": "ph-5", "created_at": "2026-10-03", "quality_score": 1.0, "visit": {"user_id": "auth-x"}},
+        ]
+        self.assertEqual({"pub-a": "ph-3", "pub-b": "ph-4"}, MODULE.pick_legend_photos(photos, self.IDS))
+
+    def test_legend_entry_has_photo_only_when_found(self) -> None:
+        tiers = {"pub-a": "legend", "pub-b": "legend"}
+        users = [{"id": "pub-a", "display_name": "a"}, {"id": "pub-b", "display_name": "b"}]
+        self.assertEqual(
+            [{"id": "pub-a", "name": "a", "photo_id": "ph-1"}, {"id": "pub-b", "name": "b"}],
+            MODULE.legend_entries(tiers, users, {"pub-a": "ph-1"}),
+        )
+
     def test_output_has_only_public_ids(self) -> None:
         tiers = MODULE.compute_tiers(self.visits("auth-a", range(10)), self.IDS)
         self.assertEqual(["pub-a"], list(tiers))

@@ -428,19 +428,61 @@ def compute_tiers(visits: list[dict], public_id_by_auth: dict[str, str]) -> dict
 FALLBACK_DISPLAY_NAME = "トレーナー"
 
 
-def legend_entries(tiers: dict[str, str], users: list[dict]) -> list[dict]:
-    """LEGEND の公開ID と表示名。順位にしないため、枚数は出さず名前順に並べる。
+def legend_entries(
+    tiers: dict[str, str], users: list[dict], photo_by_id: dict[str, str] | None = None
+) -> list[dict]:
+    """LEGEND の公開ID と表示名（と写真）。順位にしないため、枚数は出さず名前順に並べる。
 
-    公開 JSON に出してよい利用者の情報は公開ID と表示名まで（CLAUDE.md）。
+    公開 JSON に出してよい利用者の情報は公開ID と表示名まで（CLAUDE.md）。写真は公開の訪問の
+    photo_id（latest-manhole-photos.json と同じく公開してよい ID）。
     LEGEND の人は公開の訪問を持つので、get_public_display_names() で名前が出る条件にも当たる。
     """
+    photo_by_id = photo_by_id or {}
     name_by_id = {u["id"]: (u.get("display_name") or "").strip() for u in users if u.get("id")}
-    entries = [
-        {"id": public_id, "name": name_by_id.get(public_id) or FALLBACK_DISPLAY_NAME}
-        for public_id, tier in tiers.items()
-        if tier == "legend"
-    ]
+    entries = []
+    for public_id, tier in tiers.items():
+        if tier != "legend":
+            continue
+        entry = {"id": public_id, "name": name_by_id.get(public_id) or FALLBACK_DISPLAY_NAME}
+        if photo_by_id.get(public_id):
+            entry["photo_id"] = photo_by_id[public_id]
+        entries.append(entry)
     return sorted(entries, key=lambda e: (e["name"], e["id"]))
+
+
+def pick_legend_photos(photos: list[dict], public_id_by_auth: dict[str, str]) -> dict[str, str]:
+    """LEGEND の人ごとに、公開の訪問の写真から1枚（採点 quality_score の高い順、同点は新しい順）。
+
+    photos は {id, created_at, quality_score, visit: {user_id}}。写真館のヒーローで丸く見せるので、
+    蓋が真ん中に大きく写っている（採点の高い）写真を選ぶ。
+    """
+    best: dict[str, tuple] = {}
+    for photo in photos:
+        public_id = public_id_by_auth.get(((photo.get("visit") or {}).get("user_id")) or "")
+        if not public_id or not photo.get("id"):
+            continue
+        score = photo.get("quality_score")
+        key = (score if isinstance(score, (int, float)) else -1.0, str(photo.get("created_at") or ""))
+        if public_id not in best or key > best[public_id][0]:
+            best[public_id] = (key, photo["id"])
+    return {public_id: photo_id for public_id, (_, photo_id) in best.items()}
+
+
+def fetch_legend_photos(tiers: dict[str, str], public_id_by_auth: dict[str, str]) -> dict[str, str]:
+    auth_by_public = {public_id: auth for auth, public_id in public_id_by_auth.items()}
+    auth_ids = sorted(auth_by_public[p] for p, tier in tiers.items() if tier == "legend" and p in auth_by_public)
+    if not auth_ids:
+        return {}
+    photos = fetch_all(
+        "photo",
+        {
+            "select": "id,created_at,quality_score,visit!inner(user_id,is_public)",
+            "visit.is_public": "eq.true",
+            "visit.user_id": f"in.({','.join(auth_ids)})",
+            "order": "id.asc",
+        },
+    )
+    return pick_legend_photos(photos, public_id_by_auth)
 
 
 def build_regulars() -> dict:
@@ -452,11 +494,17 @@ def build_regulars() -> dict:
     users = fetch_all("app_user", {"select": "id,auth_uid,display_name", "order": "id.asc"})
     public_id_by_auth = {u["auth_uid"]: u["id"] for u in users if u.get("auth_uid")}
     tiers = compute_tiers(visits, public_id_by_auth)
+    # 写真は飾り。取れなくても名前だけで出す
+    try:
+        photo_by_id = fetch_legend_photos(tiers, public_id_by_auth)
+    except requests.RequestException as exc:
+        print(f"::warning::LEGEND の写真を取れませんでした: {exc}", file=sys.stderr)
+        photo_by_id = {}
     return {
         "success": True,
         "generated_at": now.isoformat(timespec="seconds"),
         "users": tiers,
-        "legends": legend_entries(tiers, users),
+        "legends": legend_entries(tiers, users, photo_by_id),
     }
 
 
