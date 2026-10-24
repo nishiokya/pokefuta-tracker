@@ -24,6 +24,7 @@ try:
     )
     from apps.scraper.page_html import (
         BASE_URL,
+        breadcrumb_list,
         campaign_params,
         escape_attr,
         json_for_script,
@@ -44,6 +45,7 @@ except ModuleNotFoundError as exc:
     )
     from page_html import (
         BASE_URL,
+        breadcrumb_list,
         campaign_params,
         escape_attr,
         json_for_script,
@@ -339,10 +341,23 @@ def build_feature_page(feature: dict, photos: dict[str, dict], others: list[dict
         + pref._map_script(map_points, campaign_params(pref_slug), "feature", "trackFeatureEvent")
         if map_points else ""
     )
-    return _head(title, description, canonical, json_ld, with_map=bool(map_points)) + f"""<body>
+    # Article とパンくずを @graph で並べる（Article は breadcrumb を持てない）
+    article = {key: value for key, value in json_ld.items() if key != "@context"}
+    graph = {
+        "@context": "https://schema.org",
+        "@graph": [
+            article,
+            breadcrumb_list([
+                ("ポケふた図鑑", f"{BASE_URL}/"),
+                ("特集", f"{BASE_URL}{FEATURES_BASE}"),
+                (feature["title"], canonical),
+            ]),
+        ],
+    }
+    return _head(title, description, canonical, graph, with_map=bool(map_points)) + f"""<body>
   <main class="page">
     <nav class="breadcrumb" aria-label="パンくず">
-      <a href="/">全国マップ</a><span>›</span>
+      <a href="/">ポケふた図鑑</a><span>›</span>
       <a href="{FEATURES_BASE}">特集</a><span>›</span>
       <span>{escape(feature['title'])}</span>
     </nav>
@@ -408,6 +423,10 @@ def build_index_page(features: list[dict], today: date | None = None) -> str:
              **({"datePublished": article_date(f)} if article_date(f) else {})}
             for f in features
         ],
+        "breadcrumb": breadcrumb_list([
+            ("ポケふた図鑑", f"{BASE_URL}/"),
+            ("特集", canonical),
+        ]),
     }
     # 新作は上の欄にまとめて目立たせ、下の一覧には重ねて出さない
     new = highlighted(features, today)
@@ -423,7 +442,7 @@ def build_index_page(features: list[dict], today: date | None = None) -> str:
     return _head(title, description, canonical, json_ld, with_map=False) + f"""<body>
   <main class="page">
     <nav class="breadcrumb" aria-label="パンくず">
-      <a href="/">全国マップ</a><span>›</span>
+      <a href="/">ポケふた図鑑</a><span>›</span>
       <span>特集</span>
     </nav>
     <header class="hero">

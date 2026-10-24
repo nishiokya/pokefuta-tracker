@@ -37,6 +37,17 @@ def hreflang_links(path: str) -> str:
     return "\n  ".join(links)
 
 
+def breadcrumb_list(items: list[tuple[str, str]]) -> dict:
+    """パンくずの JSON-LD。items は (表示名, 絶対URL) を上から順に。画面のパンくずと同じ並びにする。"""
+    return {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {"@type": "ListItem", "position": i, "name": name, "item": url}
+            for i, (name, url) in enumerate(items, start=1)
+        ],
+    }
+
+
 def campaign_params(slug: str) -> str:
     """写真館（pokefuta.com）へのリンクに付ける流入元パラメータ。
 

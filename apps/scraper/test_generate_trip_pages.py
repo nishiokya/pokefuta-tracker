@@ -12,6 +12,18 @@ from apps.scraper import generate_trip_pages as MODULE
 from apps.scraper import visit_durations as VD
 
 
+def _crumbs(html: str) -> list[tuple[str, str]]:
+    """ページの JSON-LD からパンくずの (名前, URL) を取り出す。"""
+    for block in re.findall(r'<script type="application/ld\+json">(.*?)</script>', html, re.S):
+        data = json.loads(block)
+        nodes = data.get("@graph", [data])
+        for node in nodes:
+            crumb = node if node.get("@type") == "BreadcrumbList" else node.get("breadcrumb")
+            if crumb:
+                return [(i["name"], i["item"]) for i in crumb["itemListElement"]]
+    return []
+
+
 def _record(mid: str, city: str, lat: float, lng: float, prefecture: str = "大阪府", **extra) -> dict:
     return {
         "id": mid, "prefecture": prefecture, "city": city, "address": f"{prefecture}{city}市{mid}",
@@ -94,6 +106,16 @@ class AreaTest(unittest.TestCase):
         self.assertNotIn("google.com/maps/dir/", page)
         near_page = MODULE.build_area_page(AREAS[0], RECORDS[:5], DURATIONS, {}, [], {})
         self.assertIn("Googleマップで順路を開けます", near_page)
+
+    def test_breadcrumb_json_ld_matches_the_visible_trail(self) -> None:
+        page = MODULE.build_area_page(AREAS[0], RECORDS[:5], DURATIONS, {}, [], {})
+        self.assertEqual(
+            [name for name, _ in _crumbs(page)], ["ポケふた図鑑", "ポケふた旅", AREAS[0]["name"]]
+        )
+        self.assertEqual(_crumbs(page)[1][1], "https://data.pokefuta.com/trip/")
+        index = MODULE.build_index_page([], DURATIONS, [])
+        self.assertEqual([name for name, _ in _crumbs(index)], ["ポケふた図鑑", "ポケふた旅"])
+        self.assertIn('<a href="/">ポケふた図鑑</a>', index)
 
 
     def test_trip_summaries_put_measured_areas_first(self) -> None:

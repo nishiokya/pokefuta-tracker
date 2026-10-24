@@ -108,7 +108,7 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "page_title": "全国のポケモンマンホール一覧・分布｜ポケふた図鑑",
         "meta_desc": "全国{total}枚のポケモンマンホール「ポケふた」を都道府県別・ポケモン別に検索。旅行先のポケふた探しにご活用ください。",
         "breadcrumb_aria": "パンくず",
-        "nav_home_text": "全国マップ",
+        "nav_home_text": "ポケふた図鑑",
         "nav_home_href": "/",
         "h1": "全国のポケモンマンホール（ポケふた）一覧",
         "hero_title_lines": ("ポケふた", "データマップ"),

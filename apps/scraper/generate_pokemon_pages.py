@@ -167,7 +167,7 @@ LP_STRINGS: dict[str, dict[str, str]] = {
         "count_text": "全国に <strong>{count}</strong> 枚の{name}のポケふたがあります。",
         "cta": "地図で全国のポケふたを探す →",
         "breadcrumb_aria": "パンくずリスト",
-        "breadcrumb_home": "全国マップ",
+        "breadcrumb_home": "ポケふた図鑑",
         "breadcrumb_pokemon": "ポケモン一覧",
         "footer": "ポケモンマンホール全国マップ",
         "summary_0pref": "{name}のポケふたは現在{count}枚確認されています。",

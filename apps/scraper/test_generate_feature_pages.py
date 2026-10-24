@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 import tempfile
 import unittest
 from datetime import date
@@ -10,6 +11,18 @@ from apps.scraper import features as FEATURES
 from apps.scraper import generate_feature_pages as MODULE
 from apps.scraper import generate_sitemap as SITEMAP
 from apps.scraper import generate_summary_pages as SUMMARY
+
+
+def _crumbs(html: str) -> list[tuple[str, str]]:
+    """ページの JSON-LD からパンくずの (名前, URL) を取り出す。"""
+    for block in re.findall(r'<script type="application/ld\+json">(.*?)</script>', html, re.S):
+        data = json.loads(block)
+        nodes = data.get("@graph", [data])
+        for node in nodes:
+            crumb = node if node.get("@type") == "BreadcrumbList" else node.get("breadcrumb")
+            if crumb:
+                return [(i["name"], i["item"]) for i in crumb["itemListElement"]]
+    return []
 
 
 def _record(mid: str, city: str, **extra) -> dict:
@@ -126,6 +139,12 @@ class FeaturePageTests(unittest.TestCase):
         # 市区町村ページと共用の <head> でサイト名が二重にならず、個別ページには付かない
         self.assertIn("<title>ポケふた特集｜ポケふた図鑑</title>", index)
         self.assertNotIn("ポケふた図鑑</title>", plain)
+        # パンくずは画面と同じ並びで JSON-LD にも出す。Article は @graph で残す
+        self.assertEqual(
+            [name for name, _ in _crumbs(plain)], ["ポケふた図鑑", "特集", self.feature["title"]]
+        )
+        self.assertIn('"@type": "Article"', plain)
+        self.assertEqual([name for name, _ in _crumbs(index)], ["ポケふた図鑑", "特集"])
         self.assertNotIn("datePublished", index)
 
     def test_index_puts_highlighted_features_in_the_new_section_first(self) -> None:

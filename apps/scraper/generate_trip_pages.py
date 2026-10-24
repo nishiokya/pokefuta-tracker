@@ -29,6 +29,7 @@ try:
     )
     from apps.scraper.page_html import (
         BASE_URL,
+        breadcrumb_list,
         campaign_params,
         escape_attr,
         json_for_script,
@@ -66,6 +67,7 @@ except ModuleNotFoundError as exc:
     )
     from page_html import (
         BASE_URL,
+        breadcrumb_list,
         campaign_params,
         escape_attr,
         json_for_script,
@@ -387,8 +389,7 @@ def build_area_page(
         f'data-destination="municipality">{escape(municipality_paths[k][0])}のページ</a>'
         for k in keys if k in municipality_paths
     )
-    json_ld = {
-        "@context": "https://schema.org",
+    trip = {
         "@type": "TouristTrip",
         "name": _title(area, count),
         "description": description,
@@ -410,10 +411,21 @@ def build_area_page(
             ],
         },
     }
+    json_ld = {
+        "@context": "https://schema.org",
+        "@graph": [
+            trip,
+            breadcrumb_list([
+                ("ポケふた図鑑", f"{BASE_URL}/"),
+                ("ポケふた旅", f"{BASE_URL}{TRIP_BASE}"),
+                (area["name"], canonical),
+            ]),
+        ],
+    }
     return _head(title, description, canonical, json_ld, with_map=True) + f"""<body>
   <main class="page">
     <nav class="breadcrumb" aria-label="パンくず">
-      <a href="/">全国マップ</a><span>›</span>
+      <a href="/">ポケふた図鑑</a><span>›</span>
       <a href="{TRIP_BASE}">ポケふた旅</a><span>›</span>
       <span>{escape(area['name'])}</span>
     </nav>
@@ -592,11 +604,15 @@ def build_index_page(
                 for i, (a, rs) in enumerate(measured + pending, start=1)
             ],
         },
+        "breadcrumb": breadcrumb_list([
+            ("ポケふた図鑑", f"{BASE_URL}/"),
+            ("ポケふた旅", canonical),
+        ]),
     }
     return _head(title, description, canonical, json_ld, with_map=False) + f"""<body>
   <main class="page">
     <nav class="breadcrumb" aria-label="パンくず">
-      <a href="/">全国マップ</a><span>›</span><span>ポケふた旅</span>
+      <a href="/">ポケふた図鑑</a><span>›</span><span>ポケふた旅</span>
     </nav>
     <header class="hero">
       <div class="hero-main">

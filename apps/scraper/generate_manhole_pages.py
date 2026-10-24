@@ -849,7 +849,7 @@ def generate_html(
 
     # HERO card: region label（県・市区町村ページへのパンくずを兼ねる。JSON-LD の BreadcrumbList と同じ並び）
     region_parts: list[str] = []
-    breadcrumb_items: list[dict] = [{"name": "全国マップ", "item": BASE_URL}]
+    breadcrumb_items: list[dict] = [{"name": "ポケふた図鑑", "item": BASE_URL}]
     if prefecture:
         if pref_page_slug:
             region_parts.append(f'<a href="{escape(pref_url)}">{escape(prefecture)}</a>')
