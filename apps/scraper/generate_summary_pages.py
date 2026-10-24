@@ -105,8 +105,10 @@ SUMMARY_STRINGS: dict[str, dict] = {
         "out_path": "summary/index.html",
         "canonical": f"{BASE_URL}/summary/",
         "map_base_href": "/",
-        "page_title": "全国のポケモンマンホール一覧・分布｜ポケふた図鑑",
-        "meta_desc": "全国{total}枚のポケモンマンホール「ポケふた」を都道府県別・ポケモン別に検索。旅行先のポケふた探しにご活用ください。",
+        # 検索は「ポケふた 何個」「多い県」「ない県」が多い（一覧はトップが受ける）ので、数とランキングで答える
+        "page_title": "ポケふたは全国{total}枚｜都道府県別の数ランキングと設置のない{empty_count}県｜ポケふた図鑑",
+        "page_title_all_installed": "ポケふたは全国{total}枚｜都道府県別の数ランキング｜ポケふた図鑑",
+        "meta_desc": "ポケふた（ポケモンマンホール）は全国に{total}枚。いちばん多いのは{top1pref}の{top1count}枚で、{top2pref}{top2count}枚・{top3pref}{top3count}枚と続きます。都道府県別の数とランキング、まだ設置のない県を最新のデータでまとめています。",
         "breadcrumb_aria": "パンくず",
         "nav_home_text": "ポケふた図鑑",
         "nav_home_href": "/",
@@ -2041,6 +2043,7 @@ def _top_rank_context(stats: dict) -> dict[str, str | int]:
         "top2count": top2["count"],
         "top3pref": top3["pref"],
         "top3count": top3["count"],
+        "empty_count": len(stats["empty"]),
     }
 
 
@@ -3496,7 +3499,10 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
         if pref_key == "ja" else ""
     )
 
-    pt = escape(s["page_title"])
+    page_title = s["page_title"]
+    if not stats["empty"] and s.get("page_title_all_installed"):
+        page_title = s["page_title_all_installed"]
+    pt = escape(_format_summary_text(page_title, s, stats))
     md = escape(_format_summary_text(s["meta_desc"], s, stats))
     subtitle = escape(_format_summary_text(s["subtitle"], s, stats))
     can = escape(s["canonical"])

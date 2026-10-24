@@ -159,6 +159,10 @@ class SectionOrderAndCollapseTest(unittest.TestCase):
                 Path(tmpdir),
             )
 
+    def test_japanese_title_says_list_like_the_h1(self) -> None:
+        """「ポケふた 一覧」「ポケふた ポケモン一覧」で出るので、タイトルも h1 と同じ「一覧」の形にする。"""
+        self.assertIn("<title>ポケモン別ポケふた一覧｜ポケふた図鑑</title>", self.html)
+
     def test_featured_and_ranking_come_before_the_seo_taxonomy_sections(self) -> None:
         html = self.html
         self.assertLess(
