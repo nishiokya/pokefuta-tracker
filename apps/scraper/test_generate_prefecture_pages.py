@@ -1258,7 +1258,7 @@ class BuildIndexPageTest(unittest.TestCase):
     def test_shows_the_installed_count_and_code_per_prefecture(self) -> None:
         html = MODULE.build_index_page(self.records_by_pref)
         self.assertIn(
-            '<article class="prefecture-card" data-track="prefectures_index_click" data-destination="mie">'
+            '<article class="prefecture-card" data-zukan-card="" data-track="prefectures_index_click" data-destination="mie">'
             '\n      <a class="prefecture-card-main" href="/prefectures/mie/">'
             '\n        <span class="prefecture-code">24</span>'
             '\n        <span class="prefecture-card-name">三重県</span>',

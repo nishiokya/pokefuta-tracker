@@ -309,7 +309,8 @@ def load_events(path: Path | None, today: date) -> list[dict]:
         except (KeyError, ValueError):
             continue
         title = str(item.get("title") or "").strip()
-        if not title or end < today:
+        # 新しいポケふたの発表（kind: news）は県ページ向け。トップの枠はイベント・スタンプラリーだけ
+        if not title or end < today or item.get("kind") == "news":
             continue
         events.append({"prefecture": item["prefecture"], "title": title, "start": start, "end": end})
     ongoing = sorted((e for e in events if e["start"] <= today), key=lambda e: (e["end"], e["title"]))

@@ -567,7 +567,8 @@
       .then(function(events) {
         var today = new Date(Date.now() + 9 * 3600000).toISOString().slice(0, 10);
         var active = (events || []).filter(function(e) {
-          return e && typeof e.title === 'string'
+          // 新しいポケふたの発表（kind: news）は県ページ向け。日本語トップの load_events と同じ条件
+          return e && typeof e.title === 'string' && e.kind !== 'news'
             && typeof e.start_date === 'string' && typeof e.end_date === 'string'
             && e.end_date >= today
             && window.getPrefecturePageUrl(e.prefecture);

@@ -23,6 +23,8 @@ from xml.sax.saxutils import escape
 sys.path.insert(0, str(Path(__file__).parent))
 from display_names import compose_display_name  # noqa: E402
 from site_terms import format_count  # noqa: E402
+from zukan_cards import CARD_CSS, card_image, card_open  # noqa: E402
+from manhole_tile_image import tile_image_url  # noqa: E402
 from tag_meta import load_tag_meta  # noqa: E402
 import summary_faq  # noqa: E402
 import features as summary_features_data  # noqa: E402
@@ -936,27 +938,17 @@ _CSS = """\
       gap: 9px;
       min-width: 0;
       overflow: hidden;
-      border: 1px solid rgba(93, 67, 35, .14);
-      border-radius: 12px;
-      background: #fffdf7;
-    }
-
-    .discovery-hub-card img {
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      object-fit: cover;
-      background: #fffaf0;
     }
 
     .discovery-hub-copy {
       display: grid;
       gap: 7px;
-      padding: 4px 14px 14px;
+      padding: var(--zukan-card-space);
     }
 
     .discovery-hub-copy h3 {
       margin: 0;
-      font-size: 1.05rem;
+      font-size: var(--zukan-card-title-size);
     }
 
     .discovery-hub-count {
@@ -1499,8 +1491,7 @@ _CSS = """\
     .discovery-card,
     .ai-summary-box,
     .regional-trend-box,
-    .gundam-crossover,
-    .discovery-hub-card {
+    .gundam-crossover {
       border: 0;
       border-radius: 0;
       box-shadow: none;
@@ -1545,14 +1536,6 @@ _CSS = """\
 
     .gundam-crossover-tip {
       background: none;
-    }
-
-    .discovery-hub-card img {
-      border-radius: 12px;
-    }
-
-    .discovery-hub-copy {
-      padding: 0 2px 4px;
     }
 
     .discovery-hub-count {
@@ -1847,6 +1830,7 @@ def _load_prefecture_events(path: Path) -> list[dict]:
         entry
         for entry in entries
         if isinstance(entry, dict)
+        and entry.get("kind") != "news"
         and entry.get("title")
         and isinstance(entry.get("url"), str)
         and entry["url"].startswith("https://")
@@ -3189,10 +3173,7 @@ def _build_discovery_hub_sections(
     records = list(records_by_id.values())
 
     def image_url(record: dict) -> str:
-        mid = str(record.get("id", ""))
-        if not mid or not (IMAGE_DIR / f"{mid}_latest.jpeg").exists():
-            return ""
-        return f"/manhole/image/{quote(mid, safe='')}_latest.jpeg"
+        return tile_image_url(str(record.get("id", "")), IMAGE_DIR)
 
     def record_label(record: dict) -> str:
         pokemon = next(
@@ -3222,8 +3203,7 @@ def _build_discovery_hub_sections(
         representative = pictured[0] if pictured else (candidates[0] if candidates else {})
         image = image_url(representative)
         image_html = (
-            f'<img src="{escape(image)}" alt="{escape(record_label(representative))}" '
-            f'loading="lazy" decoding="async">'
+            card_image(image, alt=record_label(representative))
             if image else ""
         )
         links = "".join(
@@ -3243,7 +3223,7 @@ def _build_discovery_hub_sections(
             if hub_href else f'<span>{escape(copy["details"])}</span>'
         )
         return (
-            f'<article class="discovery-hub-card">{image_html}'
+            card_open("discovery-hub-card") + image_html +
             f'<div class="discovery-hub-copy"><h3>{escape(title)}</h3>'
             f'<strong class="discovery-hub-count">{escape(count_text)}</strong>'
             f'{details_html}'
@@ -3535,6 +3515,7 @@ def render_page(s: dict, stats: dict, pref_names: dict, pokemon_stats: dict, rec
   <link rel="icon" href="https://data.pokefuta.com/assets/pokefuta-marker.svg" type="image/svg+xml">
 {faq_ld_html}  <style>
 {_CSS}
+{CARD_CSS}
   </style>
 </head>
 <body>

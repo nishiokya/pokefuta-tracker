@@ -13,6 +13,13 @@ from urllib.parse import quote, urlparse
 from xml.sax.saxutils import escape
 
 try:
+    from apps.scraper.zukan_cards import CARD_CSS, card_image, card_open
+except ModuleNotFoundError as exc:
+    if exc.name != "apps":
+        raise
+    from zukan_cards import CARD_CSS, card_image, card_open
+
+try:
     from apps.scraper.visit_durations import DEFAULT_DURATIONS, duration_html, load_durations
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
@@ -1122,7 +1129,7 @@ def build_index_page(
             f'<a class="prefecture-card-photo" href="/manholes/{quote(str(record.get("id", "")))}/" '
             f'aria-label="{escape_attr(_caption(record))}のポケふたの詳細を開く">'
             # 小さいタイルは蓋でいっぱいの画像（{id}_lid.jpeg）。無ければ代表写真の正方形
-            f'<img src="{escape_attr(tile_image_url(str(record.get("id", "")), ROOT / "dataset" / "manhole" / "image") or _photo_asset_url(record, photo))}" alt="" loading="lazy" decoding="async">'
+            f'{card_image(tile_image_url(str(record.get("id", "")), ROOT / "dataset" / "manhole" / "image") or _photo_asset_url(record, photo))}'
             f'<span class="prefecture-card-photo-city" aria-hidden="true">'
             f'{escape(_caption(record))}</span></a>'
             for record, photo in photographed
@@ -1147,7 +1154,10 @@ def build_index_page(
             f'data-track="prefectures_index_detail_click" data-destination="{slug}">'
             f'{escape(name)}の詳細を見る →</a>'
         )
-        return f"""<article class="prefecture-card" data-track="prefectures_index_click" data-destination="{slug}">
+        opening = card_open("prefecture-card", attrs={
+            "data-track": "prefectures_index_click", "data-destination": slug,
+        })
+        return f"""{opening}
       <a class="prefecture-card-main" href="/prefectures/{slug}/">
         <span class="prefecture-code">{code}</span>
         <span class="prefecture-card-name">{escape(name)}</span>
@@ -1274,14 +1284,12 @@ def build_index_page(
        リンクにしている点だけ差分。 */
     .prefecture-card-list {{ display: grid; gap: 10px; }}
     .prefecture-card {{
-      min-height: 72px; border: 1px solid rgba(116,82,38,.17); border-radius: 12px;
-      background: rgba(255,250,239,.94); box-shadow: 0 7px 18px rgba(80,54,20,.08);
-      overflow: hidden;
+      min-height: 72px;
     }}
     .prefecture-card-main {{
       display: grid; grid-template-columns: 42px minmax(0,1fr) minmax(96px,auto) auto;
       align-items: center; gap: 10px; width: 100%; min-height: 56px;
-      padding: 12px 12px 8px; text-decoration: none; color: inherit;
+      padding: var(--zukan-card-space) var(--zukan-card-space) 8px; text-decoration: none; color: inherit;
     }}
     .prefecture-card-meta {{
       display: inline-flex; align-items: center; justify-content: flex-end;
@@ -1319,7 +1327,6 @@ def build_index_page(
       text-decoration: none; color: #574b41; min-width: 0;
     }}
     .prefecture-card-photo img {{
-      width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 10px;
       border: 2px solid rgba(255,255,255,.95); box-shadow: 0 4px 10px rgba(67,38,111,.16);
     }}
     .prefecture-card-photo:hover img, .prefecture-card-photo:focus-visible img {{
@@ -1352,7 +1359,7 @@ def build_index_page(
       border-radius: 8px; background: linear-gradient(135deg, #7e6ba9, #6d55a3); color: #fff;
       box-shadow: inset 0 -2px 0 rgba(0,0,0,.12); font-size: .78rem; font-weight: 900;
     }}
-    .prefecture-card-name {{ min-width: 0; color: #191613; font-size: 1rem; font-weight: 900; }}
+    .prefecture-card-name {{ min-width: 0; color: #191613; font-size: var(--zukan-card-title-size); font-weight: 900; }}
     .prefecture-complete-badge {{
       display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 999px;
       font-size: .68rem; font-weight: 900; background: rgba(58,148,106,.14); color: #2f7a57;
@@ -1369,6 +1376,7 @@ def build_index_page(
       background: rgba(126,107,169,.14); color: #654aa0;
     }}
     footer {{ margin-top: 24px; color: #75685c; font-size: .8rem; text-align: center; }}
+    {CARD_CSS}
   </style>
 </head>
 <body>

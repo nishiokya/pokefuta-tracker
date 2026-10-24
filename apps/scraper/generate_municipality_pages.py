@@ -287,7 +287,7 @@ def stop_thumbs_html(route: list[dict], total: int, image_dir: Path = IMAGE_DIR)
     shown = urls[:THUMB_LIMIT]
     rest = total - len(shown)
     imgs = "".join(
-        f'<img src="{_escape_attr(u)}" alt="" width="32" height="32" loading="lazy" decoding="async">'
+        pref.card_image(u, size=32)
         for u in shown
     )
     more = f'<span class="stop-thumb-more">+{rest}</span>' if rest > 0 else ""
@@ -402,12 +402,10 @@ EXTRA_CSS = """
       grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
     }
     .hero-pick {
-      display: grid; align-content: start; gap: 2px; padding: 12px 14px; border-radius: 14px;
-      background: rgba(255,255,255,.82); box-shadow: inset 0 0 0 1px rgba(93,67,35,.12);
-      color: inherit; text-decoration: none;
+      display: grid; align-content: start; gap: 2px; padding: var(--zukan-card-space, 12px);
     }
     .hero-pick > span:first-child { color: #75685c; font-size: .75rem; font-weight: 800; }
-    .hero-pick b { font-size: 1.05rem; }
+    .hero-pick b { font-size: var(--zukan-card-title-size, 1rem); }
     .hero-pick strong { color: #6b4aa2; }
     .hero-pick small { color: #62564a; font-size: .78rem; }
     .hero-pick .stop-thumbs img { width: 40px; height: 40px; }
@@ -423,7 +421,7 @@ EXTRA_CSS = """
       .hero-pick { scroll-snap-align: start; }
     }
     .stop-thumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 3px; margin: 4px 0 2px; }
-    .stop-thumbs img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; background: #ece4d7; }
+    .stop-thumbs img { width: 32px; height: 32px; border-radius: 50%; }
     .stop-thumb-more { color: #75685c; font-size: .75rem; font-weight: 800; }
 """
 
@@ -461,7 +459,7 @@ def _head(
   <link rel="icon" href="/assets/pokefuta-marker.svg" type="image/svg+xml">
 {leaflet_css}  <script type="application/ld+json">{_json_for_script(json_ld)}</script>
   <style>
-{pref.PAGE_CSS}{EXTRA_CSS}  </style>
+{pref.PAGE_CSS}{EXTRA_CSS}{pref.CARD_CSS}  </style>
 </head>
 """
 
@@ -719,8 +717,11 @@ def _ranking_picks(listed: list[Municipality], image_dir: Path) -> str:
     for m in listed[:3]:
         target = m.path or f"/prefectures/{quote(m.prefecture_slug)}/"
         cards.append(
-            f'<a class="hero-pick" href="{_escape_attr(target)}" data-track="municipality_ranking_row_click" '
-            f'data-surface="ranking_hero" data-destination="{_escape_attr(m.slug or m.prefecture_slug)}">'
+            pref.card_open("hero-pick", href=target, attrs={
+                "data-track": "municipality_ranking_row_click", "data-surface": "ranking_hero",
+                "data-destination": m.slug or m.prefecture_slug,
+            })
+            +
             f'<span>{m.national_rank}位・{escape(m.prefecture)}</span>'
             f'<b>{escape(m.name)} {m.count}枚</b>'
             f'{stop_thumbs_html(shortest_route(m.records), m.count, image_dir)}</a>'

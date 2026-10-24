@@ -20,6 +20,7 @@ from xml.sax.saxutils import escape
 sys.path.insert(0, str(Path(__file__).parent))
 from display_names import compose_display_name  # noqa: E402
 from site_terms import format_count  # noqa: E402
+from zukan_cards import CARD_CSS, card_image, card_open  # noqa: E402
 
 sys.path.insert(0, str(Path(__file__).parent))
 from generate_pokemon_pages import (
@@ -844,8 +845,7 @@ def generate_html(
             return ""
         return (
             f'<span class="{class_name}">'
-            f'<img src="{escape(image["url"])}" alt="{escape(image["alt"])}" '
-            f'loading="lazy" decoding="async" width="320" height="180">'
+            f'{card_image(image["url"], alt=image["alt"])}'
             f"</span>"
         )
 
@@ -869,13 +869,12 @@ def generate_html(
             f'<span class="poke-en">{escape(card["name_en"])}</span>'
             if card["name_en"] and lang != "en" else ""
         )
-        track_attrs = (
-            f' data-track="{escape(track_name)}" data-destination="{escape(card["slug"])}"'
-            if track_name else ""
-        )
         return (
             f'<article class="{class_name}">'
-            f'<a href="{escape(card["href"])}"{track_attrs}>'
+            + card_open("poke-card-link", href=card["href"], attrs={
+                "data-track": track_name, "data-destination": card["slug"],
+            } if track_name else None)
+            +
             f'{image_html(card)}'
             f'<span class="poke-card-body">'
             f'<span class="poke-name">{escape(card["name"])}</span>'
@@ -917,8 +916,10 @@ def generate_html(
         )
         regional_items.append(
             f"<li class='regional-item'>"
-            f"<a href='{escape(card['href'])}' "
-            f"data-track='pokemon_index_regional_click' data-destination='{escape(card['slug'])}'>"
+            + card_open("poke-card-link", href=card["href"], attrs={
+                "data-track": "pokemon_index_regional_click", "data-destination": card["slug"],
+            })
+            +
             f"{image_html(card, 'regional-photo')}"
             f"<span class='poke-name'>{escape(card['name'])}</span>"
             f"{en_span}"
@@ -940,8 +941,10 @@ def generate_html(
         )
         ranking_items.append(
             f'<li class="ranking-item">'
-            f'<a href="{escape(card["href"])}" '
-            f'data-track="pokemon_index_ranking_click" data-destination="{escape(card["slug"])}">'
+            + card_open("poke-card-link", href=card["href"], attrs={
+                "data-track": "pokemon_index_ranking_click", "data-destination": card["slug"],
+            })
+            +
             f'<span class="ranking-rank">{escape(strings["rank_label"].format(rank=rank))}</span>'
             f'{ranking_image}'
             f'<span class="ranking-main">'
@@ -1413,44 +1416,31 @@ def generate_html(
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      background: #fffaf0;
-      border: 1px solid #ded3bd;
-      border-radius: 14px;
       text-decoration: none;
-      color: #333;
       transition: border-color 0.15s, box-shadow 0.15s;
       height: 100%;
     }}
-    .featured-card a:hover, .regional-item a:hover, .ranking-item a:hover, .hub-card:hover {{
+    .hub-card:hover {{
       border-color: #6F55A3;
       box-shadow: 0 2px 8px rgba(111,85,163,0.12);
     }}
     .regional-item a {{
-      background: #f5f0ff;
-      border-color: #d8ccf0;
-      padding: 0 0 12px;
+      padding: 0 0 var(--zukan-card-space);
     }}
     .card-photo, .regional-photo, .ranking-photo {{
       display: block;
       width: 100%;
-      aspect-ratio: 16 / 9;
       background: #eee;
       overflow: hidden;
-    }}
-    .card-photo img, .regional-photo img, .ranking-photo img {{
-      display: block;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
     }}
     .poke-card-body {{
       display: flex;
       flex-direction: column;
       gap: 4px;
-      padding: 10px 12px 12px;
+      padding: var(--zukan-card-space);
     }}
     .poke-name {{
-      font-size: 15px;
+      font-size: var(--zukan-card-title-size, 1rem);
       font-weight: bold;
       color: #1a1a1a;
     }}
@@ -1515,9 +1505,6 @@ def generate_html(
       color: #6F55A3;
       text-align: center;
     }}
-    .ranking-photo {{
-      border-radius: 6px;
-    }}
     @media (min-width: 900px) {{
       .ranking-list {{ grid-template-columns: repeat(3, minmax(0, 1fr)); }}
       .ranking-item a {{
@@ -1526,6 +1513,7 @@ def generate_html(
       }}
     }}
     .image-placeholder {{
+      aspect-ratio: 1;
       background: linear-gradient(135deg, #eef2e6, #f7f8f3);
       border: 1px solid #dde4d3;
     }}
@@ -1634,6 +1622,7 @@ def generate_html(
         grid-template-columns: 50px 84px minmax(0, 1fr);
       }}
     }}
+    {CARD_CSS}
   </style>
 </head>
 <body>
