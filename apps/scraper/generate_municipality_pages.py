@@ -439,7 +439,7 @@ def _head(title: str, description: str, canonical: str, json_ld: dict, with_map:
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{escape(title)}</title>
+  <title>{escape(title)}｜ポケふた図鑑</title>
   <meta name="description" content="{_escape_attr(description)}">
   <meta name="robots" content="index,follow">
   <meta property="og:type" content="website">
@@ -761,7 +761,7 @@ def build_ranking_page(
     singles = sum(1 for m in municipalities if m.count < RANKING_MIN_MANHOLES)
     canonical = f"{BASE_URL}/municipalities/"
     top = listed[0] if listed else None
-    title = "ポケふたが多い市区町村ランキング｜自治体別の設置枚数"
+    title = "ポケふたが多い市区町村ランキング"
     description = (
         f"全国{total_manholes}枚のポケふたを市区町村別に集計。"
         + (f"最多は{top.prefecture}{top.name}の{top.count}枚。" if top else "")

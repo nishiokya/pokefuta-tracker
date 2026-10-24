@@ -152,7 +152,7 @@ LANG_CONFIGS: dict[str, dict] = {
 # UI strings per language for LP pages.
 LP_STRINGS: dict[str, dict[str, str]] = {
     "ja": {
-        "title_suffix": "のポケふた一覧 | 全国のポケモンマンホールマップ",
+        "title_suffix": "のポケふた一覧",
         "desc_template": "{name}が描かれた全国のポケふた（ポケモンマンホール）を地図で探せます。旅行先や現在地から近くのポケふたを見つけよう。",
         "og_title_suffix": "のポケふた一覧",
         "generation": "第{gen}世代",
@@ -813,6 +813,8 @@ def generate_html(
         title = display_name + strings["title_suffix"]
         description = strings["desc_template"].format(name=display_name)
     og_title = display_name + strings["og_title_suffix"]
+    # 日本語版の <title> はサイト名で終える（og:title には付けない）
+    head_title = f"{title}｜ポケふた図鑑" if lang == "ja" else title
 
     # Multilingual names line (other languages than the current one)
     other_lang_keys = ["en", "ja", "ko", "zh-Hans", "zh-Hant"]
@@ -1046,7 +1048,7 @@ def generate_html(
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{escape(title)}</title>
+  <title>{escape(head_title)}</title>
   <meta name="description" content="{escape(description)}">
   <meta name="robots" content="index,follow">
   <link rel="canonical" href="{escape(canonical_url)}">
