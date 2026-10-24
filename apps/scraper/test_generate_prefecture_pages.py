@@ -351,6 +351,45 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         self.assertIn("<span data-nosnippet>長崎市尾上町5-6</span>", html)
         self.assertNotIn("長崎県長崎市", html)
 
+    def test_headline_event_is_used_until_headline_until(self) -> None:
+        """新しいポケふたの発表は、告知の期間とは別に headline_until まで検索結果向けの文に出す。"""
+        event = {
+            "title": "新しいポケふた",
+            "url": "https://example.com/",
+            "start": date(2026, 10, 22),
+            "end": date(2026, 10, 31),
+            "headline": "新しいポケふた5枚が発表されました。",
+            "headline_until": "2026-11-30",
+        }
+        plain = {**event, "headline": ""}
+        self.assertIsNone(MODULE._headline_event([event], date(2026, 10, 21)))
+        self.assertIs(MODULE._headline_event([plain, event], date(2026, 11, 15)), event)
+        self.assertIsNone(MODULE._headline_event([event], date(2026, 12, 1)))
+        no_until = {k: v for k, v in event.items() if k != "headline_until"}
+        self.assertIsNone(MODULE._headline_event([no_until], date(2026, 11, 1)))
+
+    def test_headline_event_leads_title_description_and_intro(self) -> None:
+        records = [r for r in self.records if r.get("prefecture") == "高知県"]
+        event = {
+            "title": "新しいポケふた",
+            "url": "https://example.com/",
+            "start": date(2020, 1, 1),
+            "end": date(2020, 1, 2),
+            "headline": "新しいポケふた5枚が発表されました。",
+            "headline_title": "高知県のポケふた{count}枚｜10月に新しく5枚",
+            "headline_until": "2999-12-31",
+        }
+        html = MODULE.build_page(
+            "高知県", "kochi", records,
+            MODULE.build_rankings(self.records)["高知県"],
+            self.pokemon_slugs, self.trivia.get("高知県"), [event],
+        )
+        self.assertIn(f"<title>高知県のポケふた{len(records)}枚｜10月に新しく5枚｜ポケふた図鑑</title>", html)
+        self.assertIn('<meta name="description" content="新しいポケふた5枚が発表されました。高知県', html)
+        self.assertIn("<p>新しいポケふた5枚が発表されました。高知県には", html)
+        # 告知の期間（end）は過ぎているので、イベント欄には出さない
+        self.assertNotIn("https://example.com/", html)
+
     def test_expired_event_is_hidden(self) -> None:
         import datetime
 
