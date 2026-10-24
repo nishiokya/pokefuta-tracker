@@ -428,7 +428,12 @@ EXTRA_CSS = """
 """
 
 
-def _head(title: str, description: str, canonical: str, json_ld: dict, with_map: bool) -> str:
+def _head(
+    title: str, description: str, canonical: str, json_ld: dict, with_map: bool,
+    site_suffix: bool = False,
+) -> str:
+    # 旅・特集もこの関数を使う。<title> のサイト名は市区町村ページだけで付ける
+    head_title = f"{title}｜ポケふた図鑑" if site_suffix else title
     leaflet_css = (
         '  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"\n'
         '    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">\n'
@@ -439,7 +444,7 @@ def _head(title: str, description: str, canonical: str, json_ld: dict, with_map:
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{escape(title)}｜ポケふた図鑑</title>
+  <title>{escape(head_title)}</title>
   <meta name="description" content="{_escape_attr(description)}">
   <meta name="robots" content="index,follow">
   <meta property="og:type" content="website">
@@ -568,7 +573,7 @@ def build_page(
         'data-surface="hero" data-destination="route">巡る順番を見る</a>'
         if route_html else ""
     )
-    return _head(title, description, canonical, json_ld, with_map=True) + f"""<body>
+    return _head(title, description, canonical, json_ld, with_map=True, site_suffix=True) + f"""<body>
   <main class="page">
     <nav class="breadcrumb" aria-label="パンくず">
       <a href="/">全国マップ</a><span>›</span>
@@ -821,7 +826,7 @@ def build_ranking_page(
             ],
         },
     }
-    return _head(title, description, canonical, json_ld, with_map=False) + f"""<body>
+    return _head(title, description, canonical, json_ld, with_map=False, site_suffix=True) + f"""<body>
   <main class="page">
     <nav class="breadcrumb" aria-label="パンくず">
       <a href="/">全国マップ</a><span>›</span>

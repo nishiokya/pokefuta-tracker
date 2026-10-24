@@ -81,6 +81,8 @@ class AreaTest(unittest.TestCase):
         index = MODULE.build_index_page([], durations, MODULE.compact_places(RECORDS, {}, set(), durations))
         self.assertNotIn("まだ実績はありません", index)
         self.assertIn("かかる時間の目安は約20分〜30分", index)
+        # 市区町村ページと共用の <head> でサイト名が二重にならない
+        self.assertIn("<title>ポケふた旅｜1日で回れるルート｜ポケふた図鑑</title>", index)
 
     def test_description_promises_maps_only_when_the_link_exists(self) -> None:
         """離れた区間（15km超）があると順路リンクを出さないので、説明文でも約束しない。"""
