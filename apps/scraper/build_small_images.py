@@ -30,7 +30,9 @@ def build_one(source: Path) -> int:
             target = source.with_name(Path(small_image_url(source.name, width)).name)
             if target.exists() and target.stat().st_mtime >= source.stat().st_mtime:
                 continue
-            resized = image if image.width == width else image.resize((width, width), Image.Resampling.LANCZOS)
+            # 取り込み側（import_latest_manhole_photos.py）が正方形で作るが、崩れた画像が来ても縦横比は保つ
+            height = round(image.height * width / image.width)
+            resized = image if image.width == width else image.resize((width, height), Image.Resampling.LANCZOS)
             resized.save(target, "WEBP", quality=QUALITY, method=4)
             written += 1
     return written
