@@ -71,6 +71,14 @@ FEATURE_CSS = """
       background: #a85b2e; color: #fff; font-size: .72rem; font-weight: 700; vertical-align: 1px; }
     .feature-section p { margin: 0 0 10px; line-height: 1.8; }
     .feature-section p:last-child { margin-bottom: 0; }
+    .feature-section h3 { margin: 16px 0 6px; font-size: 1rem; }
+    .feature-section ul, .feature-section ol { margin: 0 0 10px; padding-left: 1.4em; line-height: 1.8; }
+    /* 本文の HTML（<slug>.html）には div を書けないので、表そのものを横スクロールさせて狭い画面ではみ出さない */
+    .feature-section table { display: block; max-width: 100%; overflow-x: auto; margin: 0 0 10px;
+      border-collapse: collapse; font-size: .92rem; }
+    .feature-section th, .feature-section td { padding: 6px 10px; border-bottom: 1px solid #ece4d7;
+      text-align: left; vertical-align: top; }
+    .feature-section th { background: #fffaf0; white-space: nowrap; }
     .feature-timeline { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
     .feature-timeline li { display: grid; grid-template-columns: minmax(0, 11em) minmax(0, 1fr); gap: 4px 12px; }
     .feature-timeline time, .feature-timeline .feature-when { color: #a85b2e; font-weight: 850; }
