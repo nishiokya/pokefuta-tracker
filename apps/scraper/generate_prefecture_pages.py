@@ -377,6 +377,27 @@ def _active_events(events: list[dict] | None, today: date) -> list[dict]:
     return [e for e in events or [] if e["end"] >= today]
 
 
+def _headline_event(events: list[dict] | None, today: date | None = None) -> dict | None:
+    """検索結果に出したい県の新着（新しいポケふたの発表など）。
+
+    prefecture_events.json の項目に headline があれば、start_date から headline_until
+    （無ければ end_date）まで、タイトル・説明文・ヒーローの導入の先頭に使う。
+    告知の期間（end_date）が短くても、検索結果には少し長めに出せるよう期限を分けている。
+    """
+    today = today or datetime.now(JST).date()
+    for event in events or []:
+        headline = str(event.get("headline", "")).strip()
+        if not headline:
+            continue
+        try:
+            until = date.fromisoformat(event["headline_until"]) if event.get("headline_until") else event["end"]
+        except (TypeError, ValueError):
+            until = event["end"]
+        if event["start"] <= today <= until:
+            return event
+    return None
+
+
 def _event_status(event: dict, today: date) -> str:
     return "開催中" if event["start"] <= today else "まもなく開催"
 
@@ -2418,6 +2439,13 @@ def build_page(
     title, description, h1 = _prefecture_seo(prefecture, count, records, nearest, photo_count)
     rank_label = f"全国{rank}位" if rank else "現在未設置"
     hero_intro = _hero_intro(prefecture, count, trivia_entry, coverage, complete)
+    headline_event = _headline_event(events)
+    if headline_event:
+        headline = str(headline_event["headline"]).strip()
+        if headline_event.get("headline_title"):
+            title = str(headline_event["headline_title"]).format(count=count)
+        description = headline + description
+        hero_intro = headline + hero_intro
     hero_photos_html = _hero_photos(records)
     official_url = _prefecture_official_url(records)
     official_cta = (
