@@ -621,7 +621,7 @@ def generate_html(
     # 自治体名が欠落する場合は都道府県名を優先（og:/twitter: タイトル用）
     city_label = city if city else prefecture
 
-    title = f"{prefecture}{city}のポケふた｜{pokemon_text} | data.pokefuta.com"
+    title = f"{prefecture}{city}のポケふた｜{pokemon_text}｜ポケふた図鑑"
 
     description = (
         f"{prefecture}{city}に設置されているポケふた。"
@@ -635,12 +635,12 @@ def generate_html(
     if _top:
         _top_prefix = f"{_top['emoji']} " if _top.get('emoji') else ""
         _top_label = f"{_top_prefix}{_top['label']}"
-        _og_title = f"{_top_label}｜{city_label}のポケふた（{pokemon_label}）｜ポケふたマップ"
+        _og_title = f"{_top_label}｜{city_label}のポケふた（{pokemon_label}）｜ポケふた図鑑"
         _og_desc = f"{_top_label}！{prefecture}{city}に設置されている{pokemon_label}のポケふた。場所・写真・地図で確認できます。"
         _tw_title = f"{_top_label}｜{city_label}のポケふた（{pokemon_label}）"
         _tw_desc = f"{_top_label}！{prefecture}{city}のポケふたを地図で確認できます。"
     else:
-        _og_title = f"{city_label}のポケふた｜{pokemon_label}｜ポケふたマップ"
+        _og_title = f"{city_label}のポケふた｜{pokemon_label}｜ポケふた図鑑"
         _og_desc = f"{prefecture}{city}に設置されている{pokemon_label}のポケふた。場所・写真・地図で確認できます。"
         _tw_title = f"{city_label}のポケふた｜{pokemon_label}"
         _tw_desc = f"{prefecture}{city}のポケふたを地図で確認できます。"
@@ -1337,7 +1337,7 @@ def generate_html(
 
   <meta property="og:type" content="article">
   <meta property="og:locale" content="ja_JP">
-  <meta property="og:site_name" content="ポケふたマップ">
+  <meta property="og:site_name" content="ポケふた図鑑">
   <meta property="og:title" content="{escape(_og_title)}">
   <meta property="og:description" content="{escape(_og_desc)}">
   <meta property="og:url" content="{escape(canonical_url)}">

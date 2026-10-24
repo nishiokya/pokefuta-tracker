@@ -535,7 +535,7 @@ def build_page(
         "name": title,
         "description": description,
         "url": canonical,
-        "isPartOf": {"@type": "WebSite", "name": "Pokefuta Map", "url": BASE_URL},
+        "isPartOf": {"@type": "WebSite", "name": "ポケふた図鑑", "url": BASE_URL},
         "breadcrumb": {
             "@type": "BreadcrumbList",
             "itemListElement": [
@@ -811,7 +811,7 @@ def build_ranking_page(
         "name": title,
         "description": description,
         "url": canonical,
-        "isPartOf": {"@type": "WebSite", "name": "Pokefuta Map", "url": BASE_URL},
+        "isPartOf": {"@type": "WebSite", "name": "ポケふた図鑑", "url": BASE_URL},
         "breadcrumb": {
             "@type": "BreadcrumbList",
             "itemListElement": [
