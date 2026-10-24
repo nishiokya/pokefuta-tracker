@@ -89,6 +89,8 @@ class LoadFeaturesTests(unittest.TestCase):
             _feature("news-http", news=[{"title": "記事", "source": "新聞", "href": "http://example.com/"}]),
             _feature("news-no-source", news=[{"title": "記事", "href": "https://example.com/"}]),
             _feature("section-empty", sections=[{"heading": "見出し", "body": ""}]),
+            # 本文の HTML は <slug>.html だけ。JSON に書くと検査を素通りしてしまう
+            _feature("body-in-json", body_html="<script>alert(1)</script>"),
         ]
         with tempfile.TemporaryDirectory() as tmp:
             d = _write(Path(tmp), *broken, _feature("ok"))

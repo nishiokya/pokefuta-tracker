@@ -84,6 +84,8 @@ def _valid(entry: object, name: str) -> bool:
         and isinstance(entry.get("published"), str) and bool(_DATE_RE.match(entry["published"]))
         and (entry.get("highlight_until") is None
              or (isinstance(entry["highlight_until"], str) and bool(_DATE_RE.match(entry["highlight_until"]))))
+        # body_html は <slug>.html を検査した結果だけが入る。JSON に直接書くと検査を素通りするので断る
+        and "body_html" not in entry
         and isinstance(entry.get("manholes"), list)
         and all(
             isinstance(m, dict) and isinstance(m.get("id"), (str, int)) and str(m["id"]).strip()
