@@ -479,7 +479,7 @@ def _img(photo: Photo, *, eager: bool = False, priority: bool = False) -> str:
 
 
 def new_release_prefs(data: TopData) -> list[str]:
-    """highlight_until 中の新作特集の県（「群馬」など、新しい順・重複なし）。"""
+    """highlight_until 中の新作特集の県（「群馬」など、発表の古い順・重複なし）。ヒーローの新作の告知と同じ並び。"""
     current = highlighted(data.features, data.today)
     return list(dict.fromkeys(_short_pref(f["prefecture"]) for f in reversed(current) if f.get("prefecture")))
 
