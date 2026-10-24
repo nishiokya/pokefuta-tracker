@@ -884,7 +884,7 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         html = render([record("1"), record("2")], ["1", "2"], ["1", "2"])
         self.assertNotIn('class="map-legend"', html)
         self.assertNotIn('id="prefecture-photos"', html)
-        self.assertIn('"tile_url": "/manhole/image/1_lid.jpeg"', html)
+        self.assertIn('"tile_url": "/manhole/image/1_lid_180.webp"', html)
         self.assertIn('prefecture-marker clip', html)
 
         mixed = render([record("1"), record("2"), record("3", installed=False)], ["1"], ["1"])
@@ -895,7 +895,7 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
 
         # 蓋の枠が無い写真（_latest だけ）も一覧タイルと同じ _latest を丸く出す
         latest_only = render([record("1"), record("2")], ["1"], [])
-        self.assertIn('"tile_url": "/manhole/image/1_latest.jpeg"', latest_only)
+        self.assertIn('"tile_url": "/manhole/image/1_latest_180.webp"', latest_only)
         self.assertNotIn("legend-dot has-photo", latest_only)
 
     def test_hero_shows_lid_photos_one_per_municipality_first(self) -> None:

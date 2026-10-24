@@ -51,7 +51,7 @@ try:
     from apps.scraper.generate_pokemon_pages import build_pokemon_index, load_pokemon_metadata
     from apps.scraper.generate_tag_pages import load_records
     from apps.scraper.generate_trip_pages import area_records, area_route
-    from apps.scraper.manhole_tile_image import tile_image_url
+    from apps.scraper.manhole_tile_image import responsive_attrs, tile_image_url
     from apps.scraper.visit_durations import (
         MODE_LABELS, duration_range, find_entry, load_durations, load_trip_areas, travel_mode, trip_path,
     )
@@ -67,7 +67,7 @@ except ModuleNotFoundError as exc:
     from generate_pokemon_pages import build_pokemon_index, load_pokemon_metadata
     from generate_tag_pages import load_records
     from generate_trip_pages import area_records, area_route
-    from manhole_tile_image import tile_image_url
+    from manhole_tile_image import responsive_attrs, tile_image_url
     from visit_durations import (
         MODE_LABELS, duration_range, find_entry, load_durations, load_trip_areas, travel_mode, trip_path,
     )
@@ -96,6 +96,11 @@ TRIP_THUMB_LIMIT = 4  # カードに並べる蓋の画像の数。残りは「+n
 NEW_RELEASE_DAYS = 30
 PHOTO_SIZE = 720  # ローカルミラーは 720×720
 LID_SIZE = 360  # 蓋の枠に合わせた切り出し {id}_lid.jpeg
+# 写真の表示幅（img の sizes）。2026-10-25 に幅 390px と 1280px で測った値から。
+# 変えるのは top-home.css の段組みを変えたとき
+MOSAIC_SIZES = "(min-width: 960px) 1px, 62vw"  # スマホは1枚目が 237px。PC はモザイクを出さない
+GALLERY_SIZES = "(min-width: 960px) 170px, 30vw"  # スマホ3列で 115px、PC 170px
+POKE_SIZES = "(min-width: 960px) 170px, 30vw"  # スマホ 112px、PC 167px
 EXCLUDED_POKEMON_PATTERN = "ローカルActs"
 
 REGION_OF = {pref: name for name, prefs in REGIONS for pref in prefs}
@@ -326,7 +331,8 @@ def trip_thumbs_html(route: list[dict], image_dir: Path, limit: int = TRIP_THUMB
     shown = urls[:limit]
     rest = len(route) - len(shown)
     imgs = "".join(
-        f'<img src="{escape(u)}" alt="" width="34" height="34" loading="lazy" decoding="async">' for u in shown
+        f'<img {responsive_attrs(u, "34px")} alt="" width="34" height="34" loading="lazy" decoding="async">'
+        for u in shown
     )
     more = f'<span class="stop-thumb-more">+{rest}</span>' if rest > 0 else ""
     return f'<span class="stop-thumbs">{imgs}{more}</span>'
@@ -469,11 +475,12 @@ def _jst_iso(value: str) -> str:
     return day.isoformat() if day else ""
 
 
-def _img(photo: Photo, *, eager: bool = False, priority: bool = False) -> str:
+def _img(photo: Photo, sizes: str, *, eager: bool = False, priority: bool = False, max_width: int | None = None) -> str:
+    """sizes は表示幅。小さい WebP から合う版をブラウザが選ぶ（manhole_tile_image.srcset）。"""
     loading = 'loading="eager"' if eager else 'loading="lazy"'
     fetch = ' fetchpriority="high"' if priority else ""
     return (
-        f'<img src="{escape(photo.src)}" alt="{escape(photo.alt)}" '
+        f'<img {responsive_attrs(photo.src, sizes, max_width)} alt="{escape(photo.alt)}" '
         f'width="{PHOTO_SIZE}" height="{PHOTO_SIZE}" {loading} decoding="async"{fetch}>'
     )
 
@@ -669,7 +676,7 @@ def render_hero(data: TopData) -> str:
         items = "".join(
             f'<li class="home-mosaic__item"><a href="{p.href}" '
             f'onclick="{_track("click_hero_photo", surface="top_hero_photo", manhole=p.manhole_id, position=i)}">'
-            f"{mobile_only(_img(p, eager=True, priority=(i == 0)))}"
+            f"{mobile_only(_img(p, MOSAIC_SIZES, eager=True, priority=(i == 0), max_width=480))}"
             f'<span class="home-mosaic__cap"><b>{escape(p.title)}</b>{escape(p.prefecture)} {escape(p.place)}</span>'
             "</a></li>"
             for i, p in enumerate(photos)
@@ -833,7 +840,7 @@ def render_photos(data: TopData) -> str:
     items = "".join(
         f'<li class="home-gallery__item"><a href="{p.href}" '
         f'onclick="{_track("click_top_photo", surface="top_photo_gallery", manhole=p.manhole_id, position=i)}">'
-        f"{_img(p)}"
+        f"{_img(p, GALLERY_SIZES)}"
         f'<span class="home-gallery__cap"><b>{escape(p.title)}</b>'
         f'<span>{escape(p.prefecture)} {escape(p.place)}</span>'
         f'<time datetime="{escape(_jst_iso(p.created_at))}">{escape(format_photo_date(p.created_at))}</time></span>'
@@ -889,7 +896,7 @@ def _event_card(event: dict, data: TopData, extra: bool = False) -> str:
         name, photo = picked
         src, size = photo.thumb_src
         media = (
-            f'<img class="home-event__img" src="{escape(src)}" '
+            f'<img class="home-event__img" {responsive_attrs(src, "64px")} '
             f'alt="{escape(name)}のポケふた（{escape(photo.prefecture)}{escape(photo.place)}）" '
             f'width="{size}" height="{size}" loading="lazy" decoding="async">'
         )
@@ -998,7 +1005,7 @@ def render_pokemon(data: TopData) -> str:
         photo = pick_pokemon_photo(entry, data.photos, used)
         src, size = photo.thumb_src if photo else ("", 0)
         media = (
-            f'<img src="{escape(src)}" alt="{escape(entry.name)}のポケふた（{escape(photo.prefecture)}{escape(photo.place)}）" '
+            f'<img {responsive_attrs(src, POKE_SIZES)} alt="{escape(entry.name)}のポケふた（{escape(photo.prefecture)}{escape(photo.place)}）" '
             f'width="{size}" height="{size}" loading="lazy" decoding="async">'
             if photo else '<span class="home-poke__placeholder" aria-hidden="true"></span>'
         )
