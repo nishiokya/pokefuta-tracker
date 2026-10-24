@@ -95,7 +95,7 @@
         <line x1="15.5" y1="-15.5" x2="11" y2="-11"></line><line x1="-15.5" y1="-15.5" x2="-11" y2="-11"></line>
       </g>
     </g>
-    <text id="footer-name" class="jp" x="94" y="582" font-size="26" font-weight="900" fill="#FFFFFF">ポケふたマップ</text>
+    <text id="footer-name" class="jp" x="94" y="582" font-size="26" font-weight="900" fill="#FFFFFF">ポケふた図鑑</text>
     <text id="footer-sub" class="jp" x="94" y="608" font-size="15" font-weight="700" fill="#9FAAD2">日本全国のご当地マンホール雑学</text>
     <text id="footer-url" class="mono" x="1142" y="582" text-anchor="end" font-size="20" font-weight="900" fill="#FFD86B">data.pokefuta.com</text>
     <text id="footer-note" class="jp" x="1142" y="608" text-anchor="end" font-size="15" font-weight="700" fill="#9FAAD2">全国470枚以上を地図で掲載</text>

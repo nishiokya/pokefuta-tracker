@@ -552,7 +552,7 @@ def _render_design_template(theme: str, v: dict) -> str:
     svg = _set_text(svg, "main-unit",          v.get("mainUnit", ""))
     svg = _set_text(svg, "description",        v.get("description", ""))
     svg = _set_text(svg, "map-caption",        v.get("mapCaption", ""))
-    svg = _set_text(svg, "footer-name",        v.get("footerLabel", "ポケふたマップ"))
+    svg = _set_text(svg, "footer-name",        v.get("footerLabel", "ポケふた図鑑"))
     svg = _set_text(svg, "footer-url",         v.get("footerUrl", "data.pokefuta.com"))
 
     # main-unit x: 74 + digit_count*70 + 14
@@ -859,7 +859,7 @@ def _render_rare_few_horizontal(v: dict) -> str:
     svg = _set_text(svg, "main-unit",        v.get("mainUnit", "枚"))
     svg = _set_text(svg, "description",      v.get("description", ""))
     svg = _set_text(svg, "map-caption",      "")
-    svg = _set_text(svg, "footer-name",      "ポケふたマップ")
+    svg = _set_text(svg, "footer-name",      "ポケふた図鑑")
     svg = _set_text(svg, "footer-url",       "data.pokefuta.com")
     svg = _set_text(svg, "footer-note",      v.get("footerCta", "全国470枚から、次の旅先を探す"))
     svg = _set_main_unit_x(svg, 74 + len(main_num) * 70 + 14)
@@ -1017,7 +1017,7 @@ def _render_ibusuki_eevee_complete(v: dict) -> str:
     svg = _set_text(svg, "main-unit",        "枚")
     svg = _set_text(svg, "description",      v.get("description", ""))
     svg = _set_text(svg, "map-caption",      "鹿児島県 指宿市")
-    svg = _set_text(svg, "footer-name",      "ポケふたマップ")
+    svg = _set_text(svg, "footer-name",      "ポケふた図鑑")
     svg = _set_text(svg, "footer-url",       "data.pokefuta.com")
     svg = _set_main_unit_x(svg, 74 + 1 * 70 + 14)
     svg = _replace_chips_section(svg, v.get("chips", []), "rare")

@@ -85,7 +85,7 @@ DEFAULT_IMAGE_DIR = ROOT / "dataset" / "manhole" / "image"
 
 BASE_URL = "https://data.pokefuta.com/"
 SITE_NAME = "ポケふた図鑑"
-PAGE_TITLE = "ポケふたデータベース｜全国のポケモンマンホール一覧・地図"
+PAGE_TITLE = "ポケふた図鑑｜全国のポケモンマンホール一覧・地図"
 UPLOAD_URL = "https://pokefuta.com/upload?from=data"
 
 HERO_PHOTO_LIMIT = 6
