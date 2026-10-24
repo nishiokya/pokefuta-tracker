@@ -117,7 +117,10 @@ def _ai_tags(photo: dict[str, Any]) -> dict[str, Any]:
 
 def _quality_score(photo: dict[str, Any]) -> Optional[float]:
     score = photo.get("quality_score")
-    return float(score) if isinstance(score, (int, float)) and not isinstance(score, bool) else None
+    # NaN・無限大は未採点と同じ扱い（写真館の getManholePhotoScore と同じ）
+    if isinstance(score, (int, float)) and not isinstance(score, bool) and math.isfinite(score):
+        return float(score)
+    return None
 
 
 def _unit_box(value: Any) -> Optional[list[float]]:
@@ -188,7 +191,8 @@ def photo_rank_key(photo: dict[str, Any], by_rep: bool = False) -> tuple:
     tags = _ai_tags(photo)
     date_key = -photo_sort_date(photo).timestamp()
     if by_rep and tier == 0:
-        return (tier, 0 if tags.get("lid_fits") is True else 1, -(_rep_score(photo) or 0.0), date_key)
+        # rep_score が同じなら点数 → 新しい順（写真館の rankManholePhotos と同じ）
+        return (tier, 0 if tags.get("lid_fits") is True else 1, -(_rep_score(photo) or 0.0), -(score or 0.0), date_key)
     centered = tags.get("scene") == "centered_clean" and tags.get("lid_fits") is True
     return (tier, 0 if tier == 0 and centered else 1, -(score or 0.0), date_key)
 
@@ -516,7 +520,9 @@ def build_payload(
             gallery_limit,
             featured_photo_id=featured_photo_id,
         )
-        representative = selected_photos[0] if selected_photos else manhole_photos[0]
+        # 代表はギャラリーの件数（--gallery-limit 0 もある）に関係なく、公開写真の並びの先頭から選ぶ
+        best = select_gallery_photos(manhole_photos, 1, featured_photo_id=featured_photo_id)
+        representative = best[0] if best else manhole_photos[0]
         entry = to_photo_entry(representative, base_url, user_info_by_auth_uid)
         entry["representative_source"] = (
             "curated" if featured_photo_id and str(representative.get("id")) == featured_photo_id
