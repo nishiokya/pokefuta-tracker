@@ -1,6 +1,11 @@
 {
-  "generated_at": "2026-10-24T13:05:47+00:00",
+  "generated_at": "2026-10-24T22:41:27+00:00",
   "legends": [
+    {
+      "id": "9825f349-e09e-493d-87e8-0186c008a110",
+      "name": "apjet21",
+      "photo_id": "cef65b03-8f84-4a13-b61f-10640c71d0e5"
+    },
     {
       "id": "fd89d552-0e0b-4538-a828-73baa327a1ef",
       "name": "temporary accounnt",
@@ -71,11 +76,13 @@
     "659cf286-cb3f-493e-90f2-e9ac2ac8e6ac": "rookie",
     "65a274e2-a72e-40da-addc-30a33e9e281b": "rookie",
     "660ba2e0-b7f4-4482-9c3c-1ae8ab69f63c": "rookie",
+    "66aedd03-8f7e-4402-a499-9d1921dd6299": "regular",
     "66cebdf1-340a-423f-baa5-ed5f650873ac": "rookie",
     "68cdf803-4bd3-47ac-91eb-fea194e1669b": "rookie",
     "68e7e84a-e149-4f7f-a15b-984fc436daeb": "rookie",
     "6c107390-da8a-4caa-aaf2-10f8f7c6cbf4": "crown",
     "6d230ed1-6562-4c00-af5c-ec03c48b47a6": "rookie",
+    "6da7ca99-1694-4fb7-86ed-a7b918495ea7": "rookie",
     "6e2bbf33-a6f6-4ae6-9a65-6303313d1443": "legend",
     "734b3fe0-d4f3-46ef-b9c1-7121cd8fbe0c": "regular",
     "73be6570-bf80-461b-94d4-182dff1dce5a": "regular",
@@ -100,6 +107,7 @@
     "92cd9a42-4e0c-4196-9218-bfc9e22ff796": "crown",
     "9406a94e-2bbb-4496-ab05-0078f0983479": "regular",
     "97932797-2cc9-4da4-9240-0e6da1bf2d84": "ranger",
+    "9825f349-e09e-493d-87e8-0186c008a110": "legend",
     "9b4979e1-6311-422a-80a3-f7ac1aa244dd": "rookie",
     "9c6936dc-2331-45e4-b96d-0a3ea6c2a775": "rookie",
     "9d1a699b-e97d-4c05-b22f-ce31b71ba480": "rookie",
