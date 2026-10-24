@@ -11,8 +11,8 @@ latest-manhole-photos.json と docs/api/*.json は import-manhole-photos.yml が
 
 このリポジトリと data.pokefuta.com は公開。2026-10-11 の点検では、全履歴・PR・Issue に秘密は出ていなかった。この状態を保つ。
 
-- **資格情報は GitHub Actions の secrets にだけ置く**（`SUPABASE_SERVICE_ROLE_KEY`・`R2_*`・`REGULAR_BADGE_RULE` など）。ワークフローでは `env:` で渡し、`echo`・`set -x`・`curl -v` でログに出さない。`pull_request_target` は使わない
-- **常連バッジの線（`REGULAR_BADGE_RULE`）の数字は、コード・PR・画面に書かない**
+- **資格情報は GitHub Actions の secrets にだけ置く**（`SUPABASE_SERVICE_ROLE_KEY`・`R2_*` など）。ワークフローでは `env:` で渡し、`echo`・`set -x`・`curl -v` でログに出さない。`pull_request_target` は使わない
+- 称号（`docs/api/regulars.json`）は公開で訪問した枚数の5段階で、線は公開している（写真館の /badges）。2026-10-24 までの「週の数」の線（旧 secret `REGULAR_BADGE_RULE`）は使っていないが、数字は今後も書かない
 - **PR・コミット・データに他ユーザーの名前・行動・auth UID を書かない。** 指すときは公開ID（`photo_id`・`public_user_id`・マンホールID）
 - **公開する JSON（`docs/api/*.json`・`docs/latest-manhole-photos.json`）に出してよい利用者の情報は `public_user_id` と表示名まで。** auth の user_id・メール・署名付きURL・写真の位置情報（EXIF）は出さない
 - Supabase の anon キー（`apps/web/assets/pokefuta-auth.js`）は公開前提の値。守りは写真館側の RLS とテーブル権限で効かせる

@@ -8,14 +8,13 @@ Supabase を読む構成をやめ、GitHub Pages (data.pokefuta.com) 配信の
 生成物:
   docs/api/manholes.json   … manhole 全件 + 写真有無（匿名ユーザー向け形状）
   docs/api/site-stats.json … /api/site-stats と同形状のサイト統計
-  docs/api/regulars.json   … 投稿者に付ける 🏆 / 👑 / 常連 / 🌱 新人 の判定（公開ID → 段階）
+  docs/api/regulars.json   … 投稿者に付ける称号（🌱 ROOKIE〜🏆 LEGEND の5段階）の判定（公開ID → 段階）
 
 実行元: .github/workflows/import-manhole-photos.yml（日次）
 
 環境変数:
   SUPABASE_URL              例 https://xxxx.supabase.co
   SUPABASE_SERVICE_ROLE_KEY service role キー
-  REGULAR_BADGE_RULE        常連バッジの判定の線（secret。無ければ regulars.json を更新しない）
 """
 
 from __future__ import annotations
@@ -26,7 +25,6 @@ import struct
 import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import NamedTuple
 
 import requests
 
@@ -375,117 +373,45 @@ def build_site_stats() -> dict:
     }
 
 
-# --- 常連バッジ（docs/api/regulars.json） ---
+# --- 称号（docs/api/regulars.json） ---
 #
-# トップ「最新の投稿」の投稿者名に付ける 👑 / 常連 の判定。直近の何週に公開の投稿が
-# あったかで決める。**判定の線（何週中何週）は公開しない**ので、コードには持たず
-# secret `REGULAR_BADGE_RULE`（"<窓の週数>:<👑の週数>:<常連の週数>"）から読む。
-# 出力にも線は書かない。
+# 投稿者名に付ける称号。公開で訪問したポケふたの枚数（manhole_id の重複なし、これまでの累計）で
+# 5段階に分ける。線は写真館の /badges に全部書いてある（目標として見せる）。
+# 写真館の src/lib/regular-badges.ts の REGULAR_TIER_MIN_MANHOLES と同じ値にする。
+#
+# 2026-10-24 に「直近の何週に投稿があったか（線は非公開）」と「初投稿から30日の新人」から置き換えた。
+# 段階の名前（JSON の値）は写真館との互換のため据え置き: regular=EXPLORER、crown=MASTER。
 #
 # アプリが毎リクエスト集計すると Amplify の SSR 実行時間が増えるので、ここで日次に
 # 焼いて data.pokefuta.com から配る。
-JST = timezone(timedelta(hours=9))
 # 運営者のアカウント（app_user.id）。自分のサイトで自分にバッジを出さない
 REGULAR_EXCLUDED_PUBLIC_IDS = frozenset({
     "08c2bb09-8aa0-44f7-8287-7b332a589f33",
 })
 
-
-class BadgeRule(NamedTuple):
-    window_weeks: int
-    crown_weeks: int
-    regular_weeks: int
-
-
-def parse_badge_rule(raw: str | None) -> BadgeRule | None:
-    """'5:3:2' のような値を読む。壊れていれば None（バッジを更新しない）。"""
-    try:
-        window, crown, regular = (int(x) for x in (raw or "").strip().split(":"))
-    except ValueError:
-        return None
-    if not (0 < regular <= crown <= window):
-        return None
-    return BadgeRule(window, crown, regular)
+# 高い段から順に。最初に届いた段を付ける
+TIER_MIN_MANHOLES: tuple[tuple[str, int], ...] = (
+    ("legend", 100),
+    ("crown", 50),
+    ("ranger", 30),
+    ("regular", 10),
+    ("rookie", 1),
+)
+LEGEND_MIN_MANHOLES = dict(TIER_MIN_MANHOLES)["legend"]
 
 
-def regular_window_start(now: datetime, rule: BadgeRule) -> datetime:
-    """集計窓の始まり（今週を含めて窓の週数ぶん遡った月曜 00:00 JST）。"""
-    today = now.astimezone(JST).date()
-    monday = today - timedelta(days=today.weekday())
-    start = monday - timedelta(weeks=rule.window_weeks - 1)
-    return datetime(start.year, start.month, start.day, tzinfo=JST)
+def tier_for_count(count: int) -> str | None:
+    for tier, minimum in TIER_MIN_MANHOLES:
+        if count >= minimum:
+            return tier
+    return None
 
 
-def compute_regular_tiers(
-    visits: list[dict], public_id_by_auth: dict[str, str], now: datetime, rule: BadgeRule
-) -> dict[str, str]:
-    """公開の投稿があった週を数え、公開ID → "crown" / "regular" を返す。
-
-    visits は公開・写真ありに絞り込み済みの {user_id, created_at}。
-    週は投稿日（created_at）の JST・月曜始まりで数える。撮影日ではなく「サイトに来た週」を見たいため。
-    """
-    start = regular_window_start(now, rule)
-    weeks: dict[str, set] = {}
-    for v in visits:
-        public_id = public_id_by_auth.get(v.get("user_id") or "")
-        if not public_id or public_id in REGULAR_EXCLUDED_PUBLIC_IDS:
-            continue
-        created = datetime.fromisoformat(str(v["created_at"]).replace("Z", "+00:00"))
-        if created < start or created > now:
-            continue
-        day = created.astimezone(JST).date()
-        weeks.setdefault(public_id, set()).add(day - timedelta(days=day.weekday()))
-    tiers: dict[str, str] = {}
-    for public_id, ws in weeks.items():
-        if len(ws) >= rule.crown_weeks:
-            tiers[public_id] = "crown"
-        elif len(ws) >= rule.regular_weeks:
-            tiers[public_id] = "regular"
-    return dict(sorted(tiers.items()))
-
-
-# 🌱 新人（"rookie"）: 最初の公開の投稿から ROOKIE_DAYS 日のあいだ付ける。来たばかりの人に
-# 気づいてもらい、コメントのきっかけにするため。初投稿日は投稿一覧から誰でも分かるので、
-# 常連の線と違ってこの日数は秘密にしない。👑 / 常連 が付く人はそちらを優先する。
-ROOKIE_DAYS = 30
-
-
-def rookie_since(now: datetime) -> datetime:
-    return now - timedelta(days=ROOKIE_DAYS)
-
-
-def compute_rookies(
-    visits: list[dict], veteran_auth_ids: set[str], public_id_by_auth: dict[str, str], now: datetime
-) -> set[str]:
-    """ROOKIE_DAYS 日以内に初めて公開の投稿をした人の公開ID を返す。
-
-    visits は公開・写真ありの {user_id, created_at}（窓より古いものが混ざっていてよい）。
-    veteran_auth_ids は窓より前にも公開の投稿がある人（auth UID）。
-    """
-    since = rookie_since(now)
-    rookies: set[str] = set()
-    for v in visits:
-        auth = v.get("user_id") or ""
-        public_id = public_id_by_auth.get(auth)
-        if not public_id or public_id in REGULAR_EXCLUDED_PUBLIC_IDS or auth in veteran_auth_ids:
-            continue
-        created = datetime.fromisoformat(str(v["created_at"]).replace("Z", "+00:00"))
-        if since <= created <= now:
-            rookies.add(public_id)
-    return rookies
-
-
-# 🏆 LEGEND（"legend"）: 公開で訪問したポケふたが LEGEND_MIN_MANHOLES 枚以上の人。
-# 枚数は公開スタンプ帳で誰でも見える実績なので、常連の線と違って秘密にしない（目標として見せる）。
-# ほかのどの段階より優先する。サイトに来たばかりでも、たくさん回っている人を 🌱 にしないため。
-# 写真館の src/lib/regular-badges.ts の LEGEND_MIN_MANHOLES と同じ値にする。
-LEGEND_MIN_MANHOLES = 100
-
-
-def compute_legends(visits: list[dict], public_id_by_auth: dict[str, str]) -> set[str]:
-    """公開の訪問のポケふた（manhole_id の重複なし）が LEGEND_MIN_MANHOLES 枚以上の人の公開ID を返す。
+def compute_tiers(visits: list[dict], public_id_by_auth: dict[str, str]) -> dict[str, str]:
+    """公開の訪問のポケふた（manhole_id の重複なし）の枚数から、公開ID → 段階 を返す。
 
     visits は公開の {user_id, manhole_id}。期間では絞らない（これまでの累計）。
+    写真の有無は問わない（公開スタンプ帳の訪問数と同じ数え方）。
     """
     manholes: dict[str, set] = {}
     for v in visits:
@@ -493,61 +419,22 @@ def compute_legends(visits: list[dict], public_id_by_auth: dict[str, str]) -> se
         if not public_id or public_id in REGULAR_EXCLUDED_PUBLIC_IDS or v.get("manhole_id") is None:
             continue
         manholes.setdefault(public_id, set()).add(v["manhole_id"])
-    return {public_id for public_id, ids in manholes.items() if len(ids) >= LEGEND_MIN_MANHOLES}
+    tiers = {public_id: tier_for_count(len(ids)) for public_id, ids in manholes.items()}
+    return dict(sorted((k, v) for k, v in tiers.items() if v))
 
 
-def merge_badges(tiers: dict[str, str], rookies: set[str], legends: set[str] = frozenset()) -> dict[str, str]:
-    """🏆 がいちばん強い。👑 / 常連 が付く人には 🌱 を重ねない。"""
-    merged = {public_id: "rookie" for public_id in rookies}
-    merged.update(tiers)
-    merged.update({public_id: "legend" for public_id in legends})
-    return dict(sorted(merged.items()))
-
-
-def build_regulars(rule: BadgeRule) -> dict:
+def build_regulars() -> dict:
     now = datetime.now(timezone.utc)
-    since = min(regular_window_start(now, rule), rookie_since(now))
-    public_with_photo = {"select": "user_id,created_at,photo!inner(id)", "is_public": "eq.true"}
     visits = fetch_all(
-        "visit", {
-            **public_with_photo,
-            "created_at": f"gte.{since.isoformat(timespec='seconds')}",
-            "order": "id.asc",
-        }
+        "visit", {"select": "user_id,manhole_id", "is_public": "eq.true", "order": "id.asc"}
     )
-    # 新人の候補（最近投稿した人）のうち、もっと前にも投稿がある人を除くための問い合わせ
-    recent_auth_ids = sorted({
-        v["user_id"] for v in visits
-        if v.get("user_id")
-        and datetime.fromisoformat(str(v["created_at"]).replace("Z", "+00:00")) >= rookie_since(now)
-    })
-    # in.(...) の URL が伸びすぎないよう、100人ずつに分けて聞く
-    veteran_auth_ids: set[str] = set()
-    for i in range(0, len(recent_auth_ids), 100):
-        older = fetch_all(
-            "visit", {
-                **public_with_photo,
-                "user_id": f"in.({','.join(recent_auth_ids[i:i + 100])})",
-                "created_at": f"lt.{rookie_since(now).isoformat(timespec='seconds')}",
-                "order": "id.asc",
-            }
-        )
-        veteran_auth_ids |= {v["user_id"] for v in older if v.get("user_id")}
     # 公開 JSON に auth UID を出さないため、ここで公開ID（app_user.id）に置き換える
     users = fetch_all("app_user", {"select": "id,auth_uid", "order": "id.asc"})
     public_id_by_auth = {u["auth_uid"]: u["id"] for u in users if u.get("auth_uid")}
-    tiers = compute_regular_tiers(visits, public_id_by_auth, now, rule)
-    rookies = compute_rookies(visits, veteran_auth_ids, public_id_by_auth, now)
-    # 🏆 はこれまでの累計で見るので、窓で絞らずに公開の訪問を全部読む（写真の有無は問わない。
-    # 公開スタンプ帳の訪問数と同じ数え方にするため）
-    all_public_visits = fetch_all(
-        "visit", {"select": "user_id,manhole_id", "is_public": "eq.true", "order": "id.asc"}
-    )
-    legends = compute_legends(all_public_visits, public_id_by_auth)
     return {
         "success": True,
         "generated_at": now.isoformat(timespec="seconds"),
-        "users": merge_badges(tiers, rookies, legends),
+        "users": compute_tiers(visits, public_id_by_auth),
     }
 
 
@@ -586,13 +473,8 @@ def main() -> None:
     )
 
     # バッジは飾りなので、取れなくても蓋一覧・統計の更新を止めない（前日の regulars.json が残る）
-    rule = parse_badge_rule(os.environ.get("REGULAR_BADGE_RULE"))
-    if rule is None:
-        print("::warning::REGULAR_BADGE_RULE が無いか壊れているので docs/api/regulars.json を更新しません",
-              file=sys.stderr)
-        return
     try:
-        regulars = build_regulars(rule)
+        regulars = build_regulars()
     except requests.RequestException as exc:
         print(f"::warning::docs/api/regulars.json を更新できませんでした: {exc}", file=sys.stderr)
         return
@@ -603,8 +485,7 @@ def main() -> None:
     tiers = list(regulars["users"].values())
     print(
         "docs/api/regulars.json: "
-        f"legend={tiers.count('legend')} crown={tiers.count('crown')} "
-        f"regular={tiers.count('regular')} rookie={tiers.count('rookie')}"
+        + " ".join(f"{tier}={tiers.count(tier)}" for tier, _ in TIER_MIN_MANHOLES)
     )
 
 

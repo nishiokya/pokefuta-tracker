@@ -235,144 +235,51 @@ class ApplyPlaceLabelsTest(unittest.TestCase):
 
 
 class RegularTiersTest(unittest.TestCase):
-    # 本番の線は secret なので、テストは別の線（窓5週・👑3週・常連2週）で確かめる
-    RULE = MODULE.BadgeRule(5, 3, 2)
-    # 2026-10-07(水) 12:00 JST。今週の月曜は 10-05、窓の始まりは 4週前の 09-07
-    NOW = MODULE.datetime(2026, 10, 7, 3, 0, tzinfo=MODULE.timezone.utc)
+    """称号は公開で訪問したポケふたの枚数（重複なし）で5段階。線は /badges に公開している。"""
+
     IDS = {"auth-a": "pub-a", "auth-b": "pub-b", "auth-c": "pub-c"}
-
-    @staticmethod
-    def visit(user: str, jst: str) -> dict:
-        return {"user_id": user, "created_at": f"{jst}+09:00"}
-
-    def tiers(self, visits: list[dict]) -> dict:
-        return MODULE.compute_regular_tiers(visits, self.IDS, self.NOW, self.RULE)
-
-    def test_parse_rule(self) -> None:
-        self.assertEqual(MODULE.BadgeRule(5, 3, 2), MODULE.parse_badge_rule(" 5:3:2\n"))
-        for raw in (None, "", "5:3", "a:b:c", "5:2:3", "2:3:1", "5:3:0"):
-            self.assertIsNone(MODULE.parse_badge_rule(raw), raw)
-
-    def test_window_starts_on_monday_in_jst(self) -> None:
-        start = MODULE.regular_window_start(self.NOW, self.RULE)
-        self.assertEqual("2026-09-07T00:00:00+09:00", start.isoformat())
-
-    def test_counts_weeks_not_posts(self) -> None:
-        # 1日に50枚上げても1週。まとめて投稿した人には付かない
-        bulk = [self.visit("auth-a", "2026-09-20T10:00:00")] * 50
-        self.assertEqual({}, self.tiers(bulk))
-
-    def test_tiers(self) -> None:
-        visits = [
-            self.visit("auth-a", "2026-09-14T10:00:00"),
-            self.visit("auth-a", "2026-10-05T10:00:00"),
-            self.visit("auth-b", "2026-09-07T00:00:00"),
-            self.visit("auth-b", "2026-09-21T10:00:00"),
-            self.visit("auth-b", "2026-10-06T10:00:00"),
-        ]
-        self.assertEqual({"pub-a": "regular", "pub-b": "crown"}, self.tiers(visits))
-
-    def test_week_boundary_is_monday_in_jst(self) -> None:
-        # 日曜 23:30 JST と月曜 00:30 JST は別の週（UTC ではどちらも日曜）
-        visits = [
-            self.visit("auth-a", "2026-09-27T23:30:00"),
-            self.visit("auth-a", "2026-09-28T00:30:00"),
-        ]
-        self.assertEqual({"pub-a": "regular"}, self.tiers(visits))
-
-    def test_posts_before_window_do_not_count(self) -> None:
-        visits = [
-            self.visit("auth-a", "2026-09-06T23:59:00"),
-            self.visit("auth-a", "2026-09-21T10:00:00"),
-        ]
-        self.assertEqual({}, self.tiers(visits))
-
-    def test_unknown_user_and_operator_are_skipped(self) -> None:
-        operator = next(iter(MODULE.REGULAR_EXCLUDED_PUBLIC_IDS))
-        ids = {**self.IDS, "auth-op": operator}
-        weeks = ["2026-09-14", "2026-09-21", "2026-09-28"]
-        visits = [self.visit(u, f"{d}T10:00:00") for u in ("auth-op", "auth-x") for d in weeks]
-        self.assertEqual({}, MODULE.compute_regular_tiers(visits, ids, self.NOW, self.RULE))
-
-    def test_output_has_only_public_ids(self) -> None:
-        visits = [self.visit("auth-c", f"{d}T10:00:00") for d in ("2026-09-14", "2026-09-28")]
-        result = self.tiers(visits)
-        self.assertEqual(["pub-c"], list(result))
-        self.assertNotIn("auth-c", json.dumps(result))
-
-
-class RookieTest(unittest.TestCase):
-    # 2026-10-07(水) 12:00 JST。新人の窓は 30日前の 09-07 12:00 JST から
-    NOW = MODULE.datetime(2026, 10, 7, 3, 0, tzinfo=MODULE.timezone.utc)
-    IDS = {"auth-a": "pub-a", "auth-b": "pub-b", "auth-c": "pub-c"}
-
-    @staticmethod
-    def visit(user: str, jst: str) -> dict:
-        return {"user_id": user, "created_at": f"{jst}+09:00"}
-
-    def rookies(self, visits: list[dict], veterans: set[str] | None = None) -> set:
-        return MODULE.compute_rookies(visits, veterans or set(), self.IDS, self.NOW)
-
-    def test_first_post_within_days_is_rookie(self) -> None:
-        visits = [self.visit("auth-a", "2026-10-01T10:00:00")]
-        self.assertEqual({"pub-a"}, self.rookies(visits))
-
-    def test_boundary(self) -> None:
-        visits = [
-            self.visit("auth-a", "2026-09-07T12:00:00"),
-            self.visit("auth-b", "2026-09-07T11:59:00"),
-        ]
-        self.assertEqual({"pub-a"}, self.rookies(visits))
-
-    def test_user_with_earlier_posts_is_not_rookie(self) -> None:
-        visits = [self.visit("auth-a", "2026-10-01T10:00:00")]
-        self.assertEqual(set(), self.rookies(visits, {"auth-a"}))
-
-    def test_unknown_user_and_operator_are_skipped(self) -> None:
-        operator = next(iter(MODULE.REGULAR_EXCLUDED_PUBLIC_IDS))
-        ids = {**self.IDS, "auth-op": operator}
-        visits = [self.visit(u, "2026-10-01T10:00:00") for u in ("auth-op", "auth-x")]
-        self.assertEqual(set(), MODULE.compute_rookies(visits, set(), ids, self.NOW))
-
-    def test_regular_tier_wins_over_rookie(self) -> None:
-        merged = MODULE.merge_badges({"pub-a": "regular"}, {"pub-a", "pub-b"})
-        self.assertEqual({"pub-a": "regular", "pub-b": "rookie"}, merged)
-
-
-class LegendTest(unittest.TestCase):
-    IDS = {"auth-a": "pub-a", "auth-b": "pub-b"}
 
     @staticmethod
     def visits(user: str, manhole_ids) -> list[dict]:
         return [{"user_id": user, "manhole_id": m} for m in manhole_ids]
 
-    def test_threshold_counts_distinct_manholes(self) -> None:
-        n = MODULE.LEGEND_MIN_MANHOLES
-        visits = (
-            self.visits("auth-a", range(n))
-            # 同じ蓋を何度訪問しても1枚
-            + self.visits("auth-b", list(range(n - 1)) + [0, 0])
+    def test_thresholds_match_the_badges_page(self) -> None:
+        self.assertEqual(
+            (("legend", 100), ("crown", 50), ("ranger", 30), ("regular", 10), ("rookie", 1)),
+            MODULE.TIER_MIN_MANHOLES,
         )
-        self.assertEqual({"pub-a"}, MODULE.compute_legends(visits, self.IDS))
+        self.assertEqual(100, MODULE.LEGEND_MIN_MANHOLES)
+
+    def test_tier_for_count(self) -> None:
+        for count, tier in ((0, None), (1, "rookie"), (9, "rookie"), (10, "regular"), (29, "regular"),
+                            (30, "ranger"), (50, "crown"), (99, "crown"), (100, "legend"), (300, "legend")):
+            self.assertEqual(tier, MODULE.tier_for_count(count), count)
+
+    def test_counts_distinct_manholes(self) -> None:
+        visits = (
+            self.visits("auth-a", range(30))
+            # 同じ蓋を何度訪問しても1枚
+            + self.visits("auth-b", list(range(9)) + [0, 0, 0])
+            + self.visits("auth-c", [1])
+        )
+        self.assertEqual(
+            {"pub-a": "ranger", "pub-b": "rookie", "pub-c": "rookie"},
+            MODULE.compute_tiers(visits, self.IDS),
+        )
 
     def test_unknown_user_operator_and_missing_manhole_are_skipped(self) -> None:
         operator = next(iter(MODULE.REGULAR_EXCLUDED_PUBLIC_IDS))
         ids = {**self.IDS, "auth-op": operator}
-        n = MODULE.LEGEND_MIN_MANHOLES
         visits = (
-            self.visits("auth-op", range(n))
-            + self.visits("auth-x", range(n))
-            + self.visits("auth-a", [None] * n)
+            self.visits("auth-op", range(100))
+            + self.visits("auth-x", range(100))
+            + self.visits("auth-a", [None] * 100)
         )
-        self.assertEqual(set(), MODULE.compute_legends(visits, ids))
+        self.assertEqual({}, MODULE.compute_tiers(visits, ids))
 
-    def test_legend_wins_over_every_tier(self) -> None:
-        merged = MODULE.merge_badges(
-            {"pub-a": "crown", "pub-b": "regular"}, {"pub-c", "pub-d"}, {"pub-a", "pub-b", "pub-c"}
-        )
-        self.assertEqual(
-            {"pub-a": "legend", "pub-b": "legend", "pub-c": "legend", "pub-d": "rookie"}, merged
-        )
+    def test_output_has_only_public_ids(self) -> None:
+        tiers = MODULE.compute_tiers(self.visits("auth-a", range(10)), self.IDS)
+        self.assertEqual(["pub-a"], list(tiers))
 
 
 if __name__ == "__main__":
