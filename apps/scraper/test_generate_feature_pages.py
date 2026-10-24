@@ -149,6 +149,8 @@ class BodyHtmlTests(unittest.TestCase):
             "<p>外</p>": "<section> の外にある",
             "<!DOCTYPE html><section><h2>a</h2></section>": "本文の部分だけを書く",
             "": "<section> が1つも無い",
+            # 3.11 では HTMLParser が例外を投げる書き方。3.12 以降は unknown_decl に来る
+            "<section><h2>a</h2><![foo]></section>": "",
         }
         for text, expected in cases.items():
             with self.subTest(text=text):

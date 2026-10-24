@@ -243,8 +243,12 @@ class _BodyParser(HTMLParser):
 def parse_body_html(text: str) -> tuple[str, list[str]]:
     """本文の HTML を (ページに出す HTML, 問題の一覧) にする。問題があればその特集は出さない。"""
     parser = _BodyParser()
-    parser.feed(text)
-    parser.close()
+    try:
+        parser.feed(text)
+        parser.close()
+    except AssertionError as exc:
+        # Python 3.11 の HTMLParser は "<![foo]>" のような崩れた宣言で例外を投げる。デプロイを止めずに問題として返す
+        return "", [*parser.problems, f"{parser.getpos()[0]}行目: HTML として読めない（{exc}）"]
     problems = parser.problems
     if parser.stack:
         problems.append(f"最後まで閉じていないタグがある: {' '.join(f'<{t}>' for t in parser.stack)}")
