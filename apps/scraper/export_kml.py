@@ -10,6 +10,11 @@ import xml.etree.ElementTree as ET
 
 sys.path.insert(0, str(Path(__file__).parent))
 from site_terms import term  # noqa: E402
+from manhole_tile_image import tile_image_url  # noqa: E402
+
+ROOT = Path(__file__).resolve().parents[2]
+IMAGE_DIR = ROOT / "dataset" / "manhole" / "image"
+ICON_BASE_URL = "https://data.pokefuta.com/manhole/kml-icons/"
 
 KML_NS = "http://www.opengis.net/kml/2.2"
 ET.register_namespace("", KML_NS)
@@ -26,6 +31,10 @@ def _parse_args() -> argparse.Namespace:
         "--output",
         default="docs/pokefuta.kml",
         help="Path where the generated KML will be written",
+    )
+    parser.add_argument(
+        "--icon-output-dir", type=Path,
+        help="Generate circular PNG icons here (used by the Pages build)",
     )
     parser.add_argument(
         "--include-deleted",
@@ -124,7 +133,8 @@ def _indent(elem: ET.Element, level: int = 0) -> None:
             elem.tail = indent
 
 
-def build_kml(records: List[Dict[str, Any]], *, include_deleted: bool, document_name: str) -> ET.ElementTree:
+def build_kml(records: List[Dict[str, Any]], *, include_deleted: bool, document_name: str,
+              image_dir: Path = IMAGE_DIR, icon_output_dir: Optional[Path] = None) -> ET.ElementTree:
     kml = ET.Element(f"{{{KML_NS}}}kml")
     document = ET.SubElement(kml, f"{{{KML_NS}}}Document")
     name_elem = ET.SubElement(document, f"{{{KML_NS}}}name")
@@ -153,12 +163,44 @@ def build_kml(records: List[Dict[str, Any]], *, include_deleted: bool, document_
         description = ET.SubElement(placemark, f"{{{KML_NS}}}description")
         description.text = _format_description(record)
 
+        # KML is opened outside our site: use public, absolute URLs and PNG
+        # transparency rather than relying on the map's CSS circle clipping.
+        image_url = tile_image_url(str(record.get("id", "")), image_dir)
+        if image_url:
+            icon_name = Path(image_url).stem + ".png"
+            if icon_output_dir is not None:
+                _write_icon(image_dir / Path(image_url).name, icon_output_dir / icon_name)
+            style = ET.SubElement(placemark, f"{{{KML_NS}}}Style")
+            icon_style = ET.SubElement(style, f"{{{KML_NS}}}IconStyle")
+            ET.SubElement(icon_style, f"{{{KML_NS}}}scale").text = "1"
+            icon = ET.SubElement(icon_style, f"{{{KML_NS}}}Icon")
+            ET.SubElement(icon, f"{{{KML_NS}}}href").text = ICON_BASE_URL + icon_name
+            ET.SubElement(icon_style, f"{{{KML_NS}}}hotSpot", {
+                "x": "0.5", "y": "0.5", "xunits": "fraction", "yunits": "fraction",
+            })
+
         point = ET.SubElement(placemark, f"{{{KML_NS}}}Point")
         coordinates = ET.SubElement(point, f"{{{KML_NS}}}coordinates")
         coordinates.text = f"{lng},{lat},0"
 
     _indent(kml)
     return ET.ElementTree(kml)
+
+
+def _write_icon(source: Path, target: Path) -> None:
+    from PIL import Image, ImageDraw, ImageOps
+
+    # Antialias the circular edge; a light rim remains visible on the basemap.
+    size, supersample = 64, 4
+    large = size * supersample
+    with Image.open(source) as image:
+        image = ImageOps.fit(image.convert("RGBA"), (large, large), method=Image.Resampling.LANCZOS)
+    mask = Image.new("L", (large, large))
+    ImageDraw.Draw(mask).ellipse((0, 0, large - 1, large - 1), fill=255)
+    image.putalpha(mask)
+    ImageDraw.Draw(image).ellipse((2, 2, large - 3, large - 3), outline="white", width=4)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    image.resize((size, size), Image.Resampling.LANCZOS).save(target, "PNG")
 
 
 def main() -> None:
@@ -168,7 +210,8 @@ def main() -> None:
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     records = _load_records(input_path)
-    tree = build_kml(records, include_deleted=args.include_deleted, document_name=args.document_name)
+    tree = build_kml(records, include_deleted=args.include_deleted, document_name=args.document_name,
+                     icon_output_dir=args.icon_output_dir)
     tree.write(output_path, encoding="utf-8", xml_declaration=True)
     print(f"Wrote {output_path}")
 

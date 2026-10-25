@@ -162,5 +162,44 @@ class BuildKmlTest(unittest.TestCase):
         self.assertEqual(2, len(placemarks(ET.parse(out))))
 
 
+class ImageIconTest(unittest.TestCase):
+    def test_lid_preferred_latest_fallback_and_missing_image(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            images = Path(tmp)
+            for name in ("1_lid.jpeg", "1_latest.jpeg", "2_latest.jpeg"):
+                (images / name).touch()
+            tree = MODULE.build_kml(
+                [record(id=str(i)) for i in (1, 2, 3)], include_deleted=False,
+                document_name="Trip", image_dir=images,
+            )
+            points = placemarks(tree)
+            for point, filename in zip(points, ("1_lid.png", "2_latest.png")):
+                self.assertEqual(
+                    MODULE.ICON_BASE_URL + filename,
+                    point.find("kml:Style/kml:IconStyle/kml:Icon/kml:href", NS).text,
+                )
+                anchor = point.find("kml:Style/kml:IconStyle/kml:hotSpot", NS)
+                self.assertEqual("0.5", anchor.get("y"))
+            self.assertIsNone(points[2].find("kml:Style", NS))
+
+    def test_generated_icon_is_transparent_png_and_matches_kml(self):
+        from PIL import Image
+
+        with tempfile.TemporaryDirectory() as tmp:
+            images, output = Path(tmp) / "images", Path(tmp) / "icons"
+            images.mkdir()
+            Image.new("RGB", (100, 120), "red").save(images / "1_lid.jpeg")
+            tree = MODULE.build_kml(
+                [record()], include_deleted=False, document_name="Trip",
+                image_dir=images, icon_output_dir=output,
+            )
+            url = tree.getroot().find(".//kml:Icon/kml:href", NS).text
+            with Image.open(output / url.rsplit("/", 1)[1]) as icon:
+                self.assertEqual("PNG", icon.format)
+                self.assertEqual((64, 64), icon.size)
+                self.assertEqual(0, icon.getpixel((0, 0))[3])
+                self.assertEqual(255, icon.getpixel((32, 32))[3])
+
+
 if __name__ == "__main__":
     unittest.main()
