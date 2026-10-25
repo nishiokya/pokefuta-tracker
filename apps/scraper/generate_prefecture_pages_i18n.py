@@ -45,7 +45,7 @@ try:
     )
     from apps.scraper.display_names import compose_display_name, municipality_label
     from apps.scraper.generate_top_page_en import Locale
-    from apps.scraper.manhole_tile_image import tile_image_url
+    from apps.scraper.manhole_tile_image import small_image_url, tile_image_url
     from apps.scraper.municipalities import complete_prefectures, prefecture_coverage
     from apps.scraper.prefectures import PREFECTURE_ORDER, PREFECTURE_PAGE_LANGS, PREFECTURE_SLUGS, PREFECTURES, REGIONS
 except ModuleNotFoundError as exc:
@@ -68,7 +68,7 @@ except ModuleNotFoundError as exc:
     )
     from display_names import compose_display_name, municipality_label
     from generate_top_page_en import Locale
-    from manhole_tile_image import tile_image_url
+    from manhole_tile_image import small_image_url, tile_image_url
     from municipalities import complete_prefectures, prefecture_coverage
     from prefectures import PREFECTURE_ORDER, PREFECTURE_PAGE_LANGS, PREFECTURE_SLUGS, PREFECTURES, REGIONS
 
@@ -457,13 +457,22 @@ def _map_script(page: Page, points: list[dict]) -> str:
         const marker = L.marker(latlng, {{
           title: title,
           alt: title + ' — ' + state,
-          icon: L.divIcon({{
-            className: '',
-            html: '<div class="prefecture-marker ' + markerClass + '"></div>',
-            iconSize: [28, 34],
-            iconAnchor: [14, 31],
-            popupAnchor: [0, -30]
-          }})
+          icon: point.tile_url
+            ? L.divIcon({{
+              className: '',
+              html: '<div class="prefecture-marker clip"><img src="' +
+                escapeHtml(point.tile_url) + '" alt="" decoding="async" width="44" height="44"></div>',
+              iconSize: [44, 44],
+              iconAnchor: [22, 22],
+              popupAnchor: [0, -21]
+            }})
+            : L.divIcon({{
+              className: '',
+              html: '<div class="prefecture-marker ' + markerClass + '"></div>',
+              iconSize: [28, 34],
+              iconAnchor: [14, 31],
+              popupAnchor: [0, -30]
+            }})
         }}).addTo(map).bindPopup(popupHtml, {{ maxWidth: 300 }});
         marker.on('click', function() {{
           trackPrefectureEvent('prefecture_map_pin_click', {{
@@ -678,6 +687,12 @@ def build_page(
         for r in records
         if isinstance(r.get("lat"), (int, float)) and isinstance(r.get("lng"), (int, float))
     ]
+
+    for point in points:
+        point["tile_url"] = (
+            small_image_url(tile_image_url(point["id"], ROOT / "dataset" / "manhole" / "image"), 180)
+            if point["photo_url"] else ""
+        )
 
     ja_section = (
         f'<section aria-labelledby="ja-heading"><h2 id="ja-heading">{escape(page.t("ja_heading"))}</h2>'

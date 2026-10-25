@@ -685,8 +685,8 @@
     var prefectureMarkerCounts = {};  // 都道府県ごとのマンホール数（グローバルスコープ）
     const PREFECTURE_BOUNDS_OFFSET = 0.5;  // 都道府県 bounding box のオフセット（度）
     const PREFECTURE_OVERVIEW_MAX_ZOOM = 6;
-    // これ以上寄せたら、写真のあるマンホールはピンの代わりに写真で出す（市区町村が見える程度）
-    const PHOTO_MARKER_MIN_ZOOM = 12;
+    // 個別の蓋を表示するズームでは、写真のある地点を実画像で出す。
+    const PHOTO_MARKER_MIN_ZOOM = PREFECTURE_OVERVIEW_MAX_ZOOM + 1;
     const OVERALL_PANEL_MEDIA_QUERY = '(max-width: 759px)';
     var isInitialPageLoad = true;  // Track if this is initial page load to prevent duplicate page_views
     var activeTagFilter = null;  // タグフィルタ（null = 全件）
