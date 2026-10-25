@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-10-25T09:30:52+00:00",
+  "generated_at": "2026-10-25T22:50:20+00:00",
   "legends": [
     {
       "id": "9825f349-e09e-493d-87e8-0186c008a110",
       "name": "apjet21",
-      "photo_id": "cef65b03-8f84-4a13-b61f-10640c71d0e5"
+      "photo_id": "900f45cb-a367-4eaf-9d7e-a443fde320ef"
     },
     {
       "id": "fd89d552-0e0b-4538-a828-73baa327a1ef",
@@ -32,8 +32,9 @@
     "0b601fb2-12bd-4927-9eb0-64542cb3ef9a": "rookie",
     "0b98f613-711b-4db0-9619-3fa18e12de46": "crown",
     "0c4b6d9b-2bc5-469f-bb9a-3c970a661903": "regular",
-    "0e627cdb-b748-4367-acf4-da1e0268b0f4": "rookie",
+    "0e627cdb-b748-4367-acf4-da1e0268b0f4": "regular",
     "0e64df41-11a1-4391-b059-e78e70c79f50": "rookie",
+    "12e767c0-7054-4fe6-8bb6-d4f5132a40bf": "regular",
     "12fd4594-7c06-4718-83a7-1f2514422ebc": "rookie",
     "131a9f24-57ab-4694-b017-27c753127823": "rookie",
     "1f21635d-4ce4-43a8-9967-a90723cd1ba4": "rookie",
@@ -64,6 +65,7 @@
     "4ea5e12d-4cc7-438e-ab6d-e487683bb155": "rookie",
     "50047689-92f9-4aac-85c6-d37f61538faa": "regular",
     "54a79f0c-bf9c-4768-b6b0-c611e1fcf1df": "rookie",
+    "57360911-32f3-435b-bbe1-d79d78273439": "regular",
     "582456cc-7ebd-4cb1-a3b1-8467d0801e5c": "rookie",
     "5dca0127-6e13-4d7c-acbd-a3ecf2ca9d20": "rookie",
     "5efab7a4-3a69-47aa-8a2f-d5ab7d7d6d93": "regular",
@@ -144,6 +146,7 @@
     "cffbb4e3-7855-44c8-9516-11b29c2ca8ef": "regular",
     "d0530387-de23-40ec-8e8f-b7a50a648e05": "regular",
     "d07facdb-b091-4228-a312-fcea700a74ad": "ranger",
+    "d217964a-656d-42fd-bf73-01700b343b40": "rookie",
     "d3730df7-58c6-4fe2-b5e7-a6015f19de77": "regular",
     "d378b1d1-a1a6-4f9c-8490-f2dfdb40fa97": "regular",
     "d3b3f2e4-b820-4ea4-8bf0-0034deaa2126": "rookie",
@@ -151,10 +154,11 @@
     "de093c6a-b46a-48fe-bcae-f275faf7474e": "regular",
     "df3220e0-d105-4d60-9898-f5a2fda6dc1f": "crown",
     "dfd8ca4c-0dbe-4dcc-9978-70ec7cee5235": "ranger",
+    "e0445800-c8b6-4273-9eb9-07e04afaa17d": "crown",
     "e0ce0fba-cd3d-4adb-bc39-2d348372b8af": "crown",
     "e1aaaccb-f8ed-4bbb-801b-11c8b1ac8bc0": "regular",
-    "e2fec7b7-0afe-4a84-9563-ff4cf8d0c075": "rookie",
-    "e321d224-9477-46ea-bfd6-b8b8cfdf7508": "rookie",
+    "e2fec7b7-0afe-4a84-9563-ff4cf8d0c075": "ranger",
+    "e321d224-9477-46ea-bfd6-b8b8cfdf7508": "ranger",
     "e3410288-d672-46c5-9c38-da927342456c": "rookie",
     "e3fa1b94-8cd6-46ff-b053-a4bbbf272122": "rookie",
     "e637555a-8da0-4023-84be-21c9b8dac5ac": "ranger",
