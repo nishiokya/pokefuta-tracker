@@ -653,7 +653,9 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         self.assertIn(f'og:image" content="https://data.pokefuta.com/manhole/image/{records[1]["id"]}_latest.jpeg"', html)
 
     def test_visit_search_copy_matches_description_and_visible_intro(self) -> None:
-        for prefecture, slug in (("京都府", "kyoto"), ("埼玉県", "saitama")):
+        for prefecture, slug in (
+            ("京都府", "kyoto"), ("埼玉県", "saitama"), ("神奈川県", "kanagawa"),
+        ):
             with self.subTest(prefecture=prefecture):
                 records = [r for r in self.records if r.get("prefecture") == prefecture]
                 html = MODULE.build_page(
@@ -670,8 +672,11 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
                 if prefecture == "京都府":
                     self.assertIn("京都市・宇治市にあります。", description)
                     self.assertIn("京都のポケふた8枚はどこ？京都市・宇治市の場所一覧・地図", html)
-                else:
+                elif prefecture == "埼玉県":
                     self.assertIn("すべて所沢市にあります。", description)
+                else:
+                    self.assertIn("すべて横浜市にあります。", description)
+                    self.assertIn("神奈川のポケふた5枚はどこ？横浜市の場所一覧・地図", html)
 
     def test_visit_search_copy_uses_current_municipalities_and_photo_coverage(self) -> None:
         records = [
@@ -701,6 +706,24 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         self.assertEqual(MODULE._visit_search_intro(
             "埼玉県", 1, [{"city": "所沢市", "installed": False}], 1,
         ), "")
+        self.assertEqual(MODULE._visit_search_intro(
+            "神奈川県", 1, [{"city": "横浜市", "installed": False}], 1,
+        ), "")
+
+    def test_kanagawa_search_copy_tracks_photos_and_new_municipalities(self) -> None:
+        records = [{"id": "1", "city": "横浜市"}, {"id": "2", "city": "川崎市"}]
+        for photo_count, wording in (
+            (0, "一覧と地図"),
+            (1, "投稿されている現地写真と地図"),
+            (2, "現地写真と地図"),
+        ):
+            with self.subTest(photo_count=photo_count):
+                _, description, _ = MODULE._prefecture_seo(
+                    "神奈川県", 2, records, photo_count=photo_count,
+                )
+                self.assertIn(wording + "で設置場所を確認", description)
+                self.assertIn("川崎市", description)
+                self.assertNotIn("すべて横浜市", description)
 
     def test_default_title_says_photos_only_when_every_lid_has_one(self) -> None:
         """全部の蓋に現地写真がある県だけ、検索結果で公式と違う点（写真つきで1ページ）を出す。"""

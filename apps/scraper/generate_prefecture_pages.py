@@ -1518,8 +1518,8 @@ def _nearest_prefectures(nearest: list[tuple[float, dict]]) -> list[str]:
 def _visit_search_intro(
     prefecture: str, count: int, records: list[dict], photo_count: int
 ) -> str:
-    """京都・埼玉で、本文と検索向け説明に同じ訪問価値を伝える。"""
-    if prefecture not in {"京都府", "埼玉県"} or not count:
+    """京都・埼玉・神奈川で、本文と検索向け説明に同じ訪問価値を伝える。"""
+    if prefecture not in {"京都府", "埼玉県", "神奈川県"} or not count:
         return ""
     if any(record.get("installed") is False for record in records):
         return ""
