@@ -228,10 +228,15 @@ PREFECTURE_SEO: dict[str, dict[str, str]] = {
 # 平均順位9位以下だった県。県別の文面を書く代わりに、設置市町村とポケモンを
 # データから入れたタイトル・説明と、市町村別の案内を出す。京都・大阪は
 # 9月22日に個別設定へ変えて測定中なので含めない。
+# 表示機能の対象であり、個別変更後の県も含む。この集合をそのまま比較群にしない。
 MUNICIPALITY_SEO_PREFECTURES = frozenset({
     "青森県", "秋田県", "栃木県", "神奈川県", "新潟県", "富山県", "岐阜県",
     "兵庫県", "山口県", "徳島県", "愛媛県", "福岡県", "鹿児島県",
 })
+
+# 表示方法の対象。施策の変更日・比較群の除外履歴は分析ノートで管理する。
+# MUNICIPALITY_SEO_PREFECTURES は表示機能を兼ねるため、測定対象とは分ける。
+VISIT_SEARCH_INTRO_PREFECTURES = frozenset({"京都府", "埼玉県", "神奈川県"})
 
 # ポケふたが無い県から近いポケふたを測る起点（県庁所在地の県庁）。
 # 距離は直線で、移動距離ではない。
@@ -1518,8 +1523,8 @@ def _nearest_prefectures(nearest: list[tuple[float, dict]]) -> list[str]:
 def _visit_search_intro(
     prefecture: str, count: int, records: list[dict], photo_count: int
 ) -> str:
-    """京都・埼玉で、本文と検索向け説明に同じ訪問価値を伝える。"""
-    if prefecture not in {"京都府", "埼玉県"} or not count:
+    """対象県の本文と検索向け説明に同じ訪問価値を伝える。"""
+    if prefecture not in VISIT_SEARCH_INTRO_PREFECTURES or not count:
         return ""
     if any(record.get("installed") is False for record in records):
         return ""
@@ -1538,6 +1543,20 @@ def _visit_search_intro(
         else "投稿されている現地写真と地図" if photo_count > 0
         else "一覧と地図"
     )
+    if prefecture == "神奈川県":
+        pokemons = list(dict.fromkeys(
+            name for record in records for name in clean_pokemons(record)
+        ))
+        designs = (
+            "・".join(pokemons[:3]) + ("など" if len(pokemons) > 3 else "")
+            + "が描かれたポケふたの"
+            if pokemons else ""
+        )
+        return (
+            f"{prefecture}のポケふた{count}枚は、{location}"
+            f"{designs}{tools.replace('と地図', '・住所・地図')}をまとめて確認し、"
+            "巡る計画を立てられます。"
+        )
     return (
         f"{prefecture}のポケふた{count}枚は、{location}"
         f"{tools}で設置場所を確認し、巡る計画を立てられます。"
@@ -1711,12 +1730,15 @@ def _hero_intro(
 
     municipality_count = (trivia_entry or {}).get("municipality_count", 0)
     intro = _visit_search_intro(prefecture, count, records or [], photo_count)
+    single_municipality_intro = bool(intro) and len(_municipality_counts(records or [])) == 1
     intro = intro or f"{prefecture}には{count}枚のポケふたがあります。"
-    if coverage and coverage.covered:
+    if not single_municipality_intro and coverage and coverage.covered:
         intro += _coverage_sentence(coverage, complete or [])
-    elif municipality_count:
+    elif not single_municipality_intro and municipality_count:
         intro += f"県内{municipality_count}自治体に広がっています。"
     trivia = (trivia_entry or {}).get("trivia", [])
+    if single_municipality_intro:
+        trivia = [item for item in trivia if item.get("type") != "single_municipality"]
     if trivia and trivia[0].get("text"):
         fact = str(trivia[0]["text"]).rstrip("。")
         intro += f"{fact}。"
