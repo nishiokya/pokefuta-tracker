@@ -245,19 +245,19 @@ class RegularTiersTest(unittest.TestCase):
 
     def test_thresholds_match_the_badges_page(self) -> None:
         self.assertEqual(
-            (("legend", 100), ("crown", 50), ("ranger", 30), ("regular", 10), ("rookie", 1)),
+            (("legend", 150), ("crown", 100), ("ranger", 50), ("regular", 10), ("rookie", 1)),
             MODULE.TIER_MIN_MANHOLES,
         )
-        self.assertEqual(100, MODULE.LEGEND_MIN_MANHOLES)
+        self.assertEqual(150, MODULE.LEGEND_MIN_MANHOLES)
 
     def test_tier_for_count(self) -> None:
-        for count, tier in ((0, None), (1, "rookie"), (9, "rookie"), (10, "regular"), (29, "regular"),
-                            (30, "ranger"), (50, "crown"), (99, "crown"), (100, "legend"), (300, "legend")):
+        for count, tier in ((0, None), (1, "rookie"), (9, "rookie"), (10, "regular"), (49, "regular"),
+                            (50, "ranger"), (99, "ranger"), (100, "crown"), (149, "crown"), (150, "legend"), (300, "legend")):
             self.assertEqual(tier, MODULE.tier_for_count(count), count)
 
     def test_counts_distinct_manholes(self) -> None:
         visits = (
-            self.visits("auth-a", range(30))
+            self.visits("auth-a", range(50))
             # 同じ蓋を何度訪問しても1枚
             + self.visits("auth-b", list(range(9)) + [0, 0, 0])
             + self.visits("auth-c", [1])
@@ -266,6 +266,31 @@ class RegularTiersTest(unittest.TestCase):
             {"pub-a": "ranger", "pub-b": "rookie", "pub-c": "rookie"},
             MODULE.compute_tiers(visits, self.IDS),
         )
+
+    def test_floor_keeps_the_tier_reached_before_the_lines_were_raised(self) -> None:
+        visits = (
+            # 旧 LEGEND（146枚）→ 新しい線では MASTER だが LEGEND のまま
+            self.visits("auth-a", range(146))
+            # 旧 RANGER（35枚）が 160枚に増えたら新しい線の LEGEND に上がる
+            + self.visits("auth-b", range(160))
+            # 据え置きの無い人は新しい線どおり（35枚は EXPLORER）
+            + self.visits("auth-c", range(35))
+        )
+        floors = {"pub-a": "legend", "pub-b": "ranger", "pub-gone": "crown"}
+        self.assertEqual(
+            # 公開の訪問が無い人（pub-gone）には付けない
+            {"pub-a": "legend", "pub-b": "legend", "pub-c": "regular"},
+            MODULE.compute_tiers(visits, self.IDS, floors),
+        )
+
+    def test_floors_file_has_only_known_tiers_and_public_ids(self) -> None:
+        floors = MODULE.load_tier_floors()
+        self.assertTrue(floors)
+        self.assertTrue(set(floors.values()) <= {"ranger", "crown", "legend"})
+        self.assertNotIn(next(iter(MODULE.REGULAR_EXCLUDED_PUBLIC_IDS)), floors)
+
+    def test_missing_floors_file_means_no_floors(self) -> None:
+        self.assertEqual({}, MODULE.load_tier_floors(Path("/nonexistent/regular_tier_floors.json")))
 
     def test_unknown_user_operator_and_missing_manhole_are_skipped(self) -> None:
         operator = next(iter(MODULE.REGULAR_EXCLUDED_PUBLIC_IDS))
