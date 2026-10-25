@@ -439,6 +439,7 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
         map_cta = f'<a class="cm-btn cm-btn--ghost" href="#location-map">{escape(label)}の地図を見る ↓</a>'
         points = [{"lat": r["lat"], "lng": r["lng"], "name": str(r.get("character") or r.get("title") or "マンホール"),
                    "alt": str(r.get("character") or r.get("title") or "マンホール") + ("のふたマス" if idolmaster else f"（{page.name}のマンホール）"),
+                   "photo_url": safe_url(r.get("user_photo_url")),
                    "address": str(r.get("address") or ""), "anchor": spot_id(r)} for r in selected if has_coordinates(r)]
         map_section = f'''<section class="cm-section" id="location-map" aria-labelledby="map-heading">
           <div class="cm-section-head"><h2 id="map-heading">{escape(label)}の設置場所マップ</h2><a class="cm-btn cm-btn--soft" href="{escape(map_href(page.map_query))}">大きな地図で見る →</a></div>
@@ -450,7 +451,7 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
         </section>'''
         map_assets = f'''<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
           <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-          <script defer src="{ASSET_BASE}assets/character-work-map.js?v=20261017a"></script>'''
+          <script defer src="{ASSET_BASE}assets/character-work-map.js?v=20261025a"></script>'''
     return f"""<!doctype html>
 <html lang="ja"><head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">

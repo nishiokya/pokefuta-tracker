@@ -2367,6 +2367,11 @@ def _map_script(
 
     市区町村ページも同じ地図を出すので、イベント名の接頭辞と送信関数の名前だけを差し替えられる。
     """
+    # 県・市町村・旅行・特集の全呼び出し元に同じ写真選定を適用する。
+    map_points = [dict(point, tile_url=(
+        small_image_url(tile_image_url(point["id"], ROOT / "dataset" / "manhole" / "image"), 180)
+        or point.get("photo_url", "")
+    ) if point.get("photo_url") and not point.get("is_preinstall") else "") for point in map_points]
     return f"""  <script>
     const points = {json_for_script(map_points)};
     const campaignParams = {json_for_script(campaign_params)};

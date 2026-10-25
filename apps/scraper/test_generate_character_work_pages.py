@@ -146,7 +146,7 @@ class OtherWorkPageTest(unittest.TestCase):
 
     def test_embeds_the_location_map_with_work_specific_labels(self) -> None:
         self.assertIn('<h2 id="map-heading">東海オンエアのマンホールの設置場所マップ</h2>', self.html)
-        self.assertIn('character-work-map.js?v=20261017a', self.html)
+        self.assertIn('character-work-map.js?v=20261025a', self.html)
         payload = re.search(r'id="cw-map-data">(.*?)</script>', self.html).group(1)
         points = json.loads(payload)
         self.assertEqual(2, len(points))
@@ -192,6 +192,9 @@ class IdolmasterPageTest(unittest.TestCase):
         self.assertIn("photo-a/photo?size=small", html)
         self.assertIn("みんなの投稿写真", html)
         self.assertIn("渡辺みのりのユーザー投稿写真", html)
+        points = json.loads(re.search(r'id="cw-map-data">(.*?)</script>', html).group(1))
+        self.assertEqual(submissions[0]["photo_url"], next(p for p in points if p["anchor"] == "spot-imas-a")["photo_url"])
+        self.assertTrue(any(not p["photo_url"] for p in points))
 
     def test_unlinked_submission_does_not_replace_a_photo(self) -> None:
         submissions = [{

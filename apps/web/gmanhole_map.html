@@ -405,6 +405,7 @@
 
     // Data containers
     let gundamData = []; // gmanhole
+    let pokemonPhotos = {}; // 公開代表写真（取得失敗時はピンを維持）
     let pokemonData = []; // pokefuta
     let characterData = []; // character_manholes (ZLS/ロマサガ/弱虫ペダル/ちびまる子 など)
     let communityData = []; // pokefuta.com のデザインマンホール投稿
@@ -529,6 +530,10 @@
           linked.push(d);
           communityByCanonicalRef.set(d.canonical_ref, linked);
         });
+        try {
+          const photoRes = await fetch('./latest-manhole-photos.json');
+          if (photoRes.ok) pokemonPhotos = (await photoRes.json()).photos || {};
+        } catch (e) { console.warn('pokefuta photos not loaded', e); }
         buildCharacterWorkFilters();
         buildMarkers();
         buildPrefectureCounts();
@@ -677,6 +682,40 @@
       }
     }
 
+    function markerPhotoUrl(d, franchise) {
+      if (franchise === 'pokefuta') {
+        if (d.installed === false || !pokemonPhotos[String(d.id)]) return '';
+        return './manhole/image/' + encodeURIComponent(d.id) + '_latest_180.webp';
+      }
+      const linked = communityByCanonicalRef.get(franchise + ':' + d.id) || [];
+      const photo = linked.find(item => safeHttpUrl(item.photo_url));
+      if (photo) return safeHttpUrl(photo.photo_url);
+      if (franchise === 'community') return safeHttpUrl(d.photo_url);
+      if (franchise === 'gundam') {
+        const detail = safeHttpUrl(d.detail_url);
+        const raw = Array.isArray(d.image_urls) ? d.image_urls[0] : '';
+        if (detail && raw) {
+          try { return safeHttpUrl(new URL(raw, detail).href); } catch {}
+        }
+      }
+      return '';
+    }
+
+    function applyPhotoMarker(marker, url) {
+      if (!url) return;
+      const fallback = marker.options.icon;
+      const img = document.createElement('img');
+      img.alt = '';
+      img.decoding = 'async';
+      img.loading = 'lazy';
+      img.width = 44;
+      img.height = 44;
+      img.style.cssText = 'width:44px;height:44px;object-fit:cover;border-radius:50%;border:2px solid white;box-shadow:0 2px 6px #0005;box-sizing:border-box';
+      img.onerror = () => marker.setIcon(fallback);
+      img.src = url;
+      marker.setIcon(L.divIcon({ className: '', html: img, iconSize: [44,44], iconAnchor: [22,22], popupAnchor: [0,-22] }));
+    }
+
     function buildMarkers() {
       allMarkers.forEach(m => { if (map.hasLayer(m)) map.removeLayer(m); });
       allMarkers = [];
@@ -710,6 +749,7 @@
         marker.addTo(map); allMarkers.push(marker);
       });
       recomputeVisibility();
+      allMarkers.forEach(marker => applyPhotoMarker(marker, markerPhotoUrl(marker._data, marker._data.franchise)));
     }
 
     function buildCharacterWorkFilters() {

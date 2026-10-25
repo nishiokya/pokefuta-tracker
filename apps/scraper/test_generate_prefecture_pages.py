@@ -994,6 +994,28 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         self.assertIn('"tile_url": "/manhole/image/1_latest_180.webp"', latest_only)
         self.assertNotIn("legend-dot has-photo", latest_only)
 
+    def test_every_shared_map_receives_photo_icons_without_caller_tile_urls(self) -> None:
+        points = [
+            {"id": "1", "photo_url": "https://example.com/1.jpeg"},
+            {"id": "2", "photo_url": "https://example.com/2.jpeg"},
+            {"id": "3", "photo_url": ""},
+            {"id": "4", "photo_url": "https://example.com/4.jpeg", "is_preinstall": True},
+        ]
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            images = root / "dataset/manhole/image"
+            images.mkdir(parents=True)
+            (images / "1_lid.jpeg").write_bytes(b"image")
+            with mock.patch.object(MODULE, "ROOT", root):
+                for prefix in ("prefecture", "municipality", "trip", "feature"):
+                    script = MODULE._map_script(points, "", prefix)
+                    rendered = json.loads(re.search(r"const points = (.*);", script).group(1))
+                    self.assertEqual("/manhole/image/1_lid_180.webp", rendered[0]["tile_url"])
+                    self.assertEqual("https://example.com/2.jpeg", rendered[1]["tile_url"])
+                    self.assertEqual("", rendered[2]["tile_url"])
+                    self.assertEqual("", rendered[3]["tile_url"])
+        self.assertNotIn("tile_url", points[0])
+
     def test_hero_shows_lid_photos_one_per_municipality_first(self) -> None:
         records = [
             {"id": mid, "prefecture": "北海道", "city": city, "pokemons": ["ピカチュウ"],
