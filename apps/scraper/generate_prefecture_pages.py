@@ -1515,6 +1515,35 @@ def _nearest_prefectures(nearest: list[tuple[float, dict]]) -> list[str]:
     return list(dict.fromkeys(str(record.get("prefecture", "")) for _, record in nearest))
 
 
+def _visit_search_intro(
+    prefecture: str, count: int, records: list[dict], photo_count: int
+) -> str:
+    """京都・埼玉で、本文と検索向け説明に同じ訪問価値を伝える。"""
+    if prefecture not in {"京都府", "埼玉県"} or not count:
+        return ""
+    if any(record.get("installed") is False for record in records):
+        return ""
+    municipalities = [name for name, _ in _municipality_counts(records)]
+    if not municipalities:
+        return ""
+    places = "・".join(municipalities[:3])
+    if len(municipalities) > 3:
+        places += "など"
+    location = f"{places}にあります。"
+    if len(municipalities) == 1:
+        location = f"すべて{places}にあります。"
+    # 写真が一部だけの場合も、全枚に写真があるようには案内しない。
+    tools = (
+        "現地写真と地図" if photo_count >= count
+        else "投稿されている現地写真と地図" if photo_count > 0
+        else "一覧と地図"
+    )
+    return (
+        f"{prefecture}のポケふた{count}枚は、{location}"
+        f"{tools}で設置場所を確認し、巡る計画を立てられます。"
+    )
+
+
 def _prefecture_seo(
     prefecture: str,
     count: int,
@@ -1522,10 +1551,11 @@ def _prefecture_seo(
     nearest: list[tuple[float, dict]] | None = None,
     photo_count: int = 0,
 ) -> tuple[str, str, str]:
+    visit_intro = _visit_search_intro(prefecture, count, records or [], photo_count)
     config = _seo_config(prefecture, records or [])
     if config and count:
         values = {key: value.format(count=count) for key, value in config.items()}
-        return values["title"], values["description"], values["h1"]
+        return values["title"], visit_intro or values["description"], values["h1"]
 
     if not count and nearest:
         short = _short_prefecture_name(prefecture)
@@ -1551,7 +1581,7 @@ def _prefecture_seo(
     if count and photo_count >= count:
         return (
             f"{prefecture}のポケふた全{count}枚｜現地写真つき地図・一覧",
-            (
+            visit_intro or (
                 f"{prefecture}のポケふた全{count}枚を、訪れた人が撮った現地写真つきで1つの地図にまとめました。"
                 "市町村ごとに探さなくても、県内の設置場所と登場ポケモンをまとめて確認できます。"
             ),
@@ -1573,7 +1603,7 @@ def _prefecture_seo(
             "現在の設置枚数や全国のポケモンマンホール情報を確認できます。"
         )
     )
-    return title, description, f"{prefecture}のポケふた"
+    return title, visit_intro or description, f"{prefecture}のポケふた"
 
 
 def _municipality_link_item(name: str, count: int, path: str | None) -> str:
@@ -1670,6 +1700,8 @@ def _hero_intro(
     trivia_entry: dict | None,
     coverage: PrefectureCoverage | None = None,
     complete: list[str] | None = None,
+    records: list[dict] | None = None,
+    photo_count: int = 0,
 ) -> str:
     if not count:
         return (
@@ -1678,7 +1710,8 @@ def _hero_intro(
         )
 
     municipality_count = (trivia_entry or {}).get("municipality_count", 0)
-    intro = f"{prefecture}には{count}枚のポケふたがあります。"
+    intro = _visit_search_intro(prefecture, count, records or [], photo_count)
+    intro = intro or f"{prefecture}には{count}枚のポケふたがあります。"
     if coverage and coverage.covered:
         intro += _coverage_sentence(coverage, complete or [])
     elif municipality_count:
@@ -2454,7 +2487,10 @@ def build_page(
     date_modified = _date_modified(records, photo_entries)
     title, description, h1 = _prefecture_seo(prefecture, count, records, nearest, photo_count)
     rank_label = f"全国{rank}位" if rank else "現在未設置"
-    hero_intro = _hero_intro(prefecture, count, trivia_entry, coverage, complete)
+    hero_intro = _hero_intro(
+        prefecture, count, trivia_entry, coverage, complete,
+        records=records, photo_count=photo_count,
+    )
     headline_event = _headline_event(events)
     if headline_event:
         headline = str(headline_event["headline"]).strip()
