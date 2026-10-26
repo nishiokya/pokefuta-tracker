@@ -677,6 +677,67 @@
       }
     }
 
+    // 写真は高ズームの表示範囲内だけ読み込み、低ズームでは分類ピンを維持する。
+    const PHOTO_MARKER_MIN_ZOOM = 12;
+    const photoMarkerColors = {
+      pokefuta: '#3c9a58', gundam: '#286fb5', character: '#b45ba4', community: '#dc8839'
+    };
+
+    function markerPhotoUrl(d, franchise) {
+      const linked = communityByCanonicalRef.get(franchise + ':' + d.id) || [];
+      const photo = linked.filter(item => safeHttpUrl(item.photo_url))
+        .sort((a, b) => String(b.created_at || '').localeCompare(String(a.created_at || '')))[0];
+      if (photo) return safeHttpUrl(photo.photo_url);
+      if (franchise === 'community') return safeHttpUrl(d.photo_url);
+      // 外部サイトの原寸ガンダム画像はアイコンには読み込まない。
+      if (franchise === 'gundam') return '';
+      if (franchise === 'pokefuta' && d.installed !== false && d.id != null) {
+        // 約2MBの写真ID一覧は取得しない。写真がなければ onerror でピンに戻す。
+        return './manhole/image/' + encodeURIComponent(d.id) + '_latest_180.webp';
+      }
+      return '';
+    }
+
+    function refreshPhotoMarkers() {
+      const showPhotos = map.getZoom() >= PHOTO_MARKER_MIN_ZOOM;
+      const bounds = showPhotos ? map.getBounds().pad(0.15) : null;
+      allMarkers.forEach(marker => {
+        const base = marker._baseIcon || marker.options.icon;
+        marker._baseIcon = base;
+        const visible = showPhotos && map.hasLayer(marker) && bounds.contains(marker.getLatLng());
+        if (!visible) {
+          if (marker._photoActive) marker.setIcon(base);
+          marker._photoActive = false;
+          return;
+        }
+        if (marker._photoActive || marker._photoFailed) return;
+        const d = marker._data;
+        const url = markerPhotoUrl(d, d.franchise);
+        if (!url) return;
+        const img = document.createElement('img');
+        img.alt = String(d.title || d.character || d.name || d.city || 'マンホール') + 'の写真';
+        img.decoding = 'async';
+        img.width = 44;
+        img.height = 44;
+        const border = photoMarkerColors[d.franchise] || '#555';
+        img.style.cssText = 'width:44px;height:44px;object-fit:cover;border-radius:50%;border:3px solid ' + border + ';box-shadow:0 2px 6px #0005;box-sizing:border-box';
+        img.onerror = () => {
+          marker._photoFailed = true;
+          marker._photoActive = false;
+          marker.setIcon(base);
+        };
+        marker.setIcon(L.divIcon({
+          className: '',
+          html: img,
+          iconSize: [44, 44], iconAnchor: [22, 22], popupAnchor: [0, -22]
+        }));
+        marker._photoActive = true;
+        img.src = url;
+      });
+    }
+
+    map.on('zoomend moveend', refreshPhotoMarkers);
+
     function buildMarkers() {
       allMarkers.forEach(m => { if (map.hasLayer(m)) map.removeLayer(m); });
       allMarkers = [];
@@ -710,6 +771,7 @@
         marker.addTo(map); allMarkers.push(marker);
       });
       recomputeVisibility();
+      refreshPhotoMarkers();
     }
 
     function buildCharacterWorkFilters() {
@@ -919,6 +981,7 @@
           if(map.hasLayer(m)) map.removeLayer(m);
         }
       });
+      refreshPhotoMarkers();
       updateStats(visible, gCount, pCount, cCount, communityCount);
       buildPrefectureCounts();
       // 現在地検索済みなら、フィルタ変更に合わせて近くのリストも再計算する

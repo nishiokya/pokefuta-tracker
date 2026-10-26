@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import json
 import re
 import tempfile
 import unittest
@@ -119,6 +120,21 @@ class PrefecturePagesI18nTest(unittest.TestCase):
             self.assertIn('hreflang="zh-TW" href="https://data.pokefuta.com/zh-TW/prefectures/kyoto/"', html)
             self.assertIn('hreflang="x-default" href="https://data.pokefuta.com/prefectures/kyoto/"', html)
         self.assertIn('<link rel="canonical" href="https://data.pokefuta.com/en/prefectures/kyoto/">', en)
+
+    def test_map_uses_small_lid_photos_for_published_photos(self) -> None:
+        checked = 0
+        for lang in self.outs:
+            html = self.read("hokkaido", lang)
+            points = json.loads(re.search(r"const points = (.*);", html).group(1))
+            for point in points:
+                if point["is_preinstall"] or not point["photo_url"]:
+                    self.assertEqual("", point["tile_url"])
+                elif point["tile_url"]:
+                    self.assertRegex(point["tile_url"], r"/manhole/image/.*_(lid|latest)_180\.webp$")
+                    checked += 1
+            self.assertIn('prefecture-marker clip', html)
+            self.assertIn('escapeHtml(point.tile_url)', html)
+        self.assertGreater(checked, 0)
 
     def test_analytics_match_the_japanese_page(self) -> None:
         """page_path・イベント名は日本語版と同じ。言語は analytics.js の page_lang で分ける。"""

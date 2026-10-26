@@ -457,13 +457,23 @@ def _map_script(page: Page, points: list[dict]) -> str:
         const marker = L.marker(latlng, {{
           title: title,
           alt: title + ' — ' + state,
-          icon: L.divIcon({{
-            className: '',
-            html: '<div class="prefecture-marker ' + markerClass + '"></div>',
-            iconSize: [28, 34],
-            iconAnchor: [14, 31],
-            popupAnchor: [0, -30]
-          }})
+          icon: point.tile_url
+            ? L.divIcon({{
+              className: '',
+              html: '<div class="prefecture-marker clip"><img src="' +
+                escapeHtml(point.tile_url) + '" alt="' + escapeHtml(title) +
+                '" decoding="async" width="44" height="44"></div>',
+              iconSize: [44, 44],
+              iconAnchor: [22, 22],
+              popupAnchor: [0, -21]
+            }})
+            : L.divIcon({{
+              className: '',
+              html: '<div class="prefecture-marker ' + markerClass + '"></div>',
+              iconSize: [28, 34],
+              iconAnchor: [14, 31],
+              popupAnchor: [0, -30]
+            }})
         }}).addTo(map).bindPopup(popupHtml, {{ maxWidth: 300 }});
         marker.on('click', function() {{
           trackPrefectureEvent('prefecture_map_pin_click', {{
@@ -679,12 +689,20 @@ def build_page(
         if isinstance(r.get("lat"), (int, float)) and isinstance(r.get("lng"), (int, float))
     ]
 
+    # 写真アイコンの選び方と凡例は日本語版と共通（設置予定・切り抜き未生成はピンのまま）
+    points = ja.with_map_tiles(points)
+
     ja_section = (
         f'<section aria-labelledby="ja-heading"><h2 id="ja-heading">{escape(page.t("ja_heading"))}</h2>'
         f'<p>{escape(page.t("ja_text", pref=pref))}</p>'
         f'<p><a class="inline-link" href="{ja_url}" hreflang="ja" data-track="prefecture_language_click" '
         f'data-surface="ja_more" data-destination="ja">{escape(page.t("ja_link", pref=pref))}</a></p></section>'
     )
+    legend_labels = {
+        "has-photo": page.t("legend_photo"),
+        "needs-photo": page.t("legend_no_photo"),
+        "preinstall": page.t("legend_preinstall"),
+    }
     related = _related(page, prefecture, empty_prefectures)
     if count:
         sections = f"""    <section aria-labelledby="map-heading">
@@ -693,11 +711,7 @@ def build_page(
         <p>{escape(page.t("map_lead"))}</p>
       </div>
       <div class="map-toolbar">
-        <div class="map-legend" aria-label="{_attr(page.t("legend_aria"))}">
-          <span><i class="legend-dot has-photo"></i>{escape(page.t("legend_photo"))}</span>
-          <span><i class="legend-dot needs-photo"></i>{escape(page.t("legend_no_photo"))}</span>
-          <span><i class="legend-dot preinstall"></i>{escape(page.t("legend_preinstall"))}</span>
-        </div>
+        {ja.map_legend_html(points, legend_labels, page.t("legend_aria"))}
       </div>
       <div id="prefecture-map"></div>
       <p class="map-note">{escape(page.t("map_note"))}</p>

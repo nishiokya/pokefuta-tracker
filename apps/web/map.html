@@ -686,6 +686,7 @@
     const PREFECTURE_BOUNDS_OFFSET = 0.5;  // 都道府県 bounding box のオフセット（度）
     const PREFECTURE_OVERVIEW_MAX_ZOOM = 6;
     // これ以上寄せたら、写真のあるマンホールはピンの代わりに写真で出す（市区町村が見える程度）
+    // zoom 7 だと北海道・関東くらいが一画面に入り、写真が重なり合ってほぼ全点を読むことになる
     const PHOTO_MARKER_MIN_ZOOM = 12;
     const OVERALL_PANEL_MEDIA_QUERY = '(max-width: 759px)';
     var isInitialPageLoad = true;  // Track if this is initial page load to prevent duplicate page_views
@@ -1791,7 +1792,7 @@
     }
 
     // ズームしたときだけ、画面内（少し外側まで）の写真つきマンホールを写真アイコンにする。
-    // 全件を一度に写真にすると 720px の JPEG を数百枚読むので、見えている分に限る。
+    // 写真は 180px の WebP だが、全件を一度に写真にすると数百枚読むので、見えている分に限る。
     // 一度写真にしたものはズームアウトするまでそのまま（読み込み済みの画像を捨てない）
     function refreshPhotoMarkers() {
       if (!allMarkers.length) return;

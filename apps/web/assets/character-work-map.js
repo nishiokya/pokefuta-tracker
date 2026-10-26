@@ -34,8 +34,23 @@
       link.href = '#' + point.anchor;
       link.textContent = '写真・設置場所の案内を見る';
       popup.append(name, address, link);
-      return L.marker([point.lat, point.lng], { title: point.name, alt: point.alt || point.name })
+      const marker = L.marker([point.lat, point.lng], { title: point.name, alt: point.alt || point.name })
         .bindPopup(popup).addTo(map);
+      if (/^https?:\/\//i.test(point.photo_url || '')) {
+        const fallback = marker.options.icon;
+        const photo = document.createElement('img');
+        // divIcon には Leaflet の alt が付かないので、写真自体に名前を持たせる
+        photo.alt = point.alt || point.name;
+        photo.decoding = 'async';
+        photo.loading = 'lazy';
+        photo.width = 44;
+        photo.height = 44;
+        photo.style.cssText = 'width:44px;height:44px;object-fit:cover;border-radius:50%;border:2px solid white;box-shadow:0 2px 6px #0005;box-sizing:border-box';
+        photo.onerror = () => marker.setIcon(fallback);
+        photo.src = point.photo_url;
+        marker.setIcon(L.divIcon({ className: '', html: photo, iconSize: [44, 44], iconAnchor: [22, 22], popupAnchor: [0, -22] }));
+      }
+      return marker;
     });
     map.fitBounds(L.featureGroup(markers).getBounds(), { padding: [30, 30], maxZoom: 14 });
     status.textContent = points.length + '枚の設置場所を表示しています。ピンを選ぶと詳しい案内が開きます。';
