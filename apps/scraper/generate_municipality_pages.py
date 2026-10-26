@@ -323,6 +323,35 @@ def _pokemon_summary(records: list[dict]) -> list[str]:
     ))
 
 
+def _hero_photo(records: list[dict]) -> tuple[str, str]:
+    """ヒーローに出す代表写真1枚（検索結果の写真つき表示・og:image 向け）。(og用URL, HTML) を返す。
+    一覧と同じ並び（city, id 順）で最初に写真がある設置済みのふた。"""
+    for record in sorted(
+        (r for r in records if r.get("installed") is not False),
+        key=lambda item: (item.get("city", ""), str(item.get("id", ""))),
+    ):
+        mid = str(record.get("id", "")).strip()
+        url = pref.tile_image_url(mid, pref.ROOT / "dataset" / "manhole" / "image")
+        if not url:
+            continue
+        name = manhole_name(record)
+        html = (
+            '<div class="hero-photos" data-count="1">'
+            f'<a href="/manholes/{quote(mid)}/" data-track="municipality_manhole_click" '
+            f'data-position="1" data-destination="{_escape_attr(mid)}" '
+            f'data-content-id="{_escape_attr(mid)}" data-surface="hero_photos">'
+            f'<img {pref.responsive_attrs(url, "(min-width: 960px) 240px, 120px")} '
+            f'alt="{_escape_attr(name)}のポケふた" decoding="async" fetchpriority="high" '
+            'width="360" height="360"></a></div>'
+        )
+        # og:image は検索結果・SNSの大きい表示に出るので、720px の _latest があればそれを使う
+        og_url = url.replace("_lid.jpeg", "_latest.jpeg")
+        if not (pref.ROOT / "dataset" / "manhole" / "image" / og_url.rsplit("/", 1)[-1]).exists():
+            og_url = url
+        return f"{BASE_URL}{og_url}", html
+    return "", ""
+
+
 def _seo(municipality: Municipality) -> tuple[str, str, str]:
     m = municipality
     pokemons = _pokemon_summary(m.records)
@@ -427,6 +456,13 @@ EXTRA_CSS = """
       .hero-picks--scroll::-webkit-scrollbar { display: none; }
       .hero-picks--scroll .hero-pick { scroll-snap-align: start; }
     }
+    /* 代表写真は1枚だけ。県ページ用の4枚並び（72px）や右列いっぱいの円にならないよう大きさを決める */
+    .hero-side .hero-photos[data-count="1"] { justify-items: center; }
+    .hero-side .hero-photos[data-count="1"] a { width: min(100%, 220px); }
+    @media (max-width: 700px) {
+      .hero-side .hero-photos[data-count="1"] { grid-template-columns: minmax(0, 1fr); margin-bottom: 14px; }
+      .hero-side .hero-photos[data-count="1"] a { width: 120px; }
+    }
     .stop-thumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 3px; margin: 4px 0 2px; }
     .stop-thumbs img { width: 32px; height: 32px; border-radius: 50%; }
     .stop-thumb-more { color: #75685c; font-size: .75rem; font-weight: 800; }
@@ -435,10 +471,11 @@ EXTRA_CSS = """
 
 def _head(
     title: str, description: str, canonical: str, json_ld: dict, with_map: bool,
-    site_suffix: bool = False,
+    site_suffix: bool = False, og_image: str = "",
 ) -> str:
     # 旅・特集もこの関数を使う。<title> のサイト名は市区町村ページだけで付ける
     head_title = f"{title}｜ポケふた図鑑" if site_suffix else title
+    og_image = og_image or OG_IMAGE
     leaflet_css = (
         '  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"\n'
         '    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">\n'
@@ -458,11 +495,11 @@ def _head(
   <meta property="og:title" content="{_escape_attr(title)}">
   <meta property="og:description" content="{_escape_attr(description)}">
   <meta property="og:url" content="{_escape_attr(canonical)}">
-  <meta property="og:image" content="{OG_IMAGE}">
+  <meta property="og:image" content="{_escape_attr(og_image)}">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="{_escape_attr(title)}">
   <meta name="twitter:description" content="{_escape_attr(description)}">
-  <meta name="twitter:image" content="{OG_IMAGE}">
+  <meta name="twitter:image" content="{_escape_attr(og_image)}">
   <link rel="canonical" href="{_escape_attr(canonical)}">
   <link rel="icon" href="/assets/pokefuta-marker.svg" type="image/svg+xml">
 {leaflet_css}  <script type="application/ld+json">{_json_for_script(json_ld)}</script>
@@ -529,7 +566,7 @@ def build_page(
         and isinstance(record.get("lng"), (int, float))
     ]
 
-    photo_html = _to_municipality_events(pref._photo_section(m.name, pref_slug, records, photos))
+    hero_photo_url, hero_photo_html = _hero_photo(records)
     manhole_html = _to_municipality_events(pref._manhole_cards(records, photos, pref_slug))
     pokemon_html = _to_municipality_events(pref._pokemon_cards(records, pokemon_slugs))
     route_html = _route_section(m, durations)
@@ -579,7 +616,7 @@ def build_page(
         'data-surface="hero" data-destination="route">巡る順番を見る</a>'
         if route_html else ""
     )
-    return _head(title, description, canonical, json_ld, with_map=True, site_suffix=True) + f"""<body>
+    return _head(title, description, canonical, json_ld, with_map=True, site_suffix=True, og_image=hero_photo_url) + f"""<body>
   <main class="page">
     <nav class="breadcrumb" aria-label="パンくず">
       <a href="/">ポケふた図鑑</a><span>›</span>
@@ -587,10 +624,12 @@ def build_page(
       <a href="/prefectures/{quote(pref_slug)}/">{escape(m.prefecture)}</a><span>›</span>
       <span>{escape(m.name)}</span>
     </nav>
-    <header class="hero">
-      <div class="hero-main">
+    <header class="hero prefecture-hero">
+      <div class="hero-heading">
         <p class="hero-kicker">市区町村別 ポケふたガイド</p>
         <h1>{escape(h1)}</h1>
+      </div>
+      <div class="hero-main">
         <p>{escape(_hero_intro(m))}</p>
         <div class="stats stats-3" aria-label="{_escape_attr(m.name)}の集計">
           <div class="stat"><span>設置枚数</span><strong>{m.count}枚</strong></div>
@@ -606,9 +645,12 @@ def build_page(
             data-surface="hero" data-destination="municipality_map">地図で探す</a>
         </div>
       </div>
-      <div class="hero-summary" aria-label="{_escape_attr(m.name)}のサマリー">
-        <span>会えるポケモン</span>
-        <p>{escape(hero_summary)}</p>
+      <div class="hero-side">
+        {hero_photo_html}
+        <div class="hero-summary" aria-label="{_escape_attr(m.name)}のサマリー">
+          <span>会えるポケモン</span>
+          <p>{escape(hero_summary)}</p>
+        </div>
       </div>
     </header>
 
@@ -632,14 +674,6 @@ def build_page(
         <p>写真から詳細へ。訪れたポケふたは写真で記録できます。</p>
       </div>
       <div class="manhole-grid">{manhole_html}</div>
-    </section>
-
-    <section id="prefecture-photos" aria-labelledby="photo-heading">
-      <div class="section-heading-row">
-        <h2 id="photo-heading">{escape(m.name)}のポケふた写真</h2>
-        <p>写真館に投稿された現地写真です。クリックするとマンホール詳細を確認できます。</p>
-      </div>
-      {photo_html}
     </section>
 
     <section aria-labelledby="pokemon-heading">
