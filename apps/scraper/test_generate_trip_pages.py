@@ -223,6 +223,12 @@ class HeroSelectionTest(unittest.TestCase):
         ])
         self.assertEqual(picks, ["walk", "bus-a", "bus-b"])
 
+    def test_hero_wraps_and_never_uses_the_municipality_carousel(self):
+        html, _ = self.render([("walk", "walk", True)])
+        self.assertNotIn('class="hero-picks hero-picks--scroll"', html)
+        # 1列に積まれる幅では2枚まで
+        self.assertIn(".hero-pick:nth-child(n+3) { display: none; }", MODULE.TRIP_CSS)
+
     def test_no_eligible_areas_omits_hero_cards(self):
         for specs in [[], [("car", "car", True)], [("pending", "walk", False)]]:
             with self.subTest(specs=specs):
