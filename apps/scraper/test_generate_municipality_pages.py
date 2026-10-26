@@ -225,6 +225,38 @@ class PageTest(unittest.TestCase):
             self.assertFalse((out / "chiba").exists())
 
 
+class TripOverlapTest(unittest.TestCase):
+    """市の蓋がそっくり1つの /trip/ ページになっているときは、順路を持たず旅ページへ案内する。"""
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.items = MUNI.build_municipalities(SYNTHETIC, SLUGS)
+        cls.machida = [m for m in cls.items if m.name == "町田市"][0]
+        ids = ",".join(sorted(str(r["id"]) for r in cls.machida.records))
+        cls.durations = {"trip_paths": {ids: "/trip/machida/"}}
+
+    def test_route_is_replaced_by_trip_card(self) -> None:
+        html = MODULE.build_page(self.machida, self.items, {}, {}, self.durations)
+        self.assertNotIn("ポケふたを巡る順番</h2>", html)
+        self.assertNotIn('class="route-stops"', html)
+        self.assertIn('href="/trip/machida/"', html)
+        self.assertIn('id="route"', html)
+
+    def test_title_drops_route_wording(self) -> None:
+        html = MODULE.build_page(self.machida, self.items, {}, {}, self.durations)
+        self.assertIn("場所一覧・地図・会えるポケモン｜ポケふた図鑑</title>", html)
+        self.assertNotIn("巡る順番｜ポケふた図鑑</title>", html)
+
+    def test_hero_button_goes_to_trip(self) -> None:
+        html = MODULE.build_page(self.machida, self.items, {}, {}, self.durations)
+        self.assertIn('data-surface="hero" data-destination="trip">回り方・所要時間</a>', html)
+
+    def test_no_trip_keeps_route(self) -> None:
+        html = MODULE.build_page(self.machida, self.items, {}, {}, {"trip_paths": {}})
+        self.assertIn('class="route-stops"', html)
+        self.assertIn("巡る順番｜ポケふた図鑑</title>", html)
+
+
 class CoverageTest(unittest.TestCase):
     TOTALS = {pref: 10 for pref in MUNI.PREFECTURE_ORDER}
 

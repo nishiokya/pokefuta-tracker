@@ -89,13 +89,13 @@ except ModuleNotFoundError as exc:
 
 try:
     from apps.scraper.visit_durations import (
-        DEFAULT_DURATIONS, duration_html, find_entry, format_minutes, load_durations,
+        DEFAULT_DURATIONS, duration_html, duration_text, find_entry, format_minutes, load_durations,
     )
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
     from visit_durations import (
-        DEFAULT_DURATIONS, duration_html, find_entry, format_minutes, load_durations,
+        DEFAULT_DURATIONS, duration_html, duration_text, find_entry, format_minutes, load_durations,
     )
 
 ROOT = pref.ROOT
@@ -219,10 +219,38 @@ def _leg_label(km: float) -> str:
     return f"次まで直線約{km:.1f}km"
 
 
+def _trip_path(municipality: Municipality, durations: dict | None) -> str:
+    """この市区町村の蓋がそっくり1つの /trip/ ページになっているとき、そのパス。無ければ ""。
+    市ページと旅ページで同じ順路・同じ蓋カードが並ぶ重複を避けるのに使う（町田は6枚とも芹ヶ谷公園）。"""
+    ids = ",".join(sorted(str(r.get("id", "")) for r in _visitable(municipality.records)))
+    return (durations or {}).get("trip_paths", {}).get(ids, "") if ids else ""
+
+
+def _trip_card(municipality: Municipality, trip_path: str, durations: dict | None) -> str:
+    """順路の代わりに置く、旅ページへの案内。順番・時間・行き方は旅ページが持つ。"""
+    name = municipality.name
+    time = duration_text(municipality.records, durations or {})
+    return (
+        '<section id="route" class="visit-guide" aria-labelledby="route-heading">'
+        f'<h2 id="route-heading">{escape(name)}のポケふたの回り方</h2>'
+        f'<p>{escape(name)}の{municipality.count}枚は近くにまとまっています。'
+        '回る順番・かかる時間の目安・行き方は、ポケふた旅のページにまとめました。'
+        '場所の一覧と地図は、このまま下に続きます。</p>'
+        + (f'<p class="visit-duration">{escape(time)}</p>' if time else "")
+        + '<div class="municipality-actions">'
+        f'<a class="button primary" href="{_escape_attr(trip_path)}" data-track="municipality_trip_click" '
+        'data-surface="route" data-destination="trip">回り方・所要時間を見る</a></div>'
+        '</section>'
+    )
+
+
 def _route_section(municipality: Municipality, durations: dict | None = None) -> str:
     route = shortest_route(municipality.records)
     if len(route) < 2:
         return ""
+    trip_path = _trip_path(municipality, durations)
+    if trip_path:
+        return _trip_card(municipality, trip_path, durations)
     legs = [
         distance_km(a["lat"], a["lng"], b["lat"], b["lng"])
         for a, b in zip(route, route[1:])
@@ -352,17 +380,20 @@ def _hero_photo(records: list[dict]) -> tuple[str, str]:
     return "", ""
 
 
-def _seo(municipality: Municipality) -> tuple[str, str, str]:
+def _seo(municipality: Municipality, has_trip: bool = False) -> tuple[str, str, str]:
+    """has_trip: 旅ページが回り方を持っているとき、こちらは「場所・地図・ポケモン」に絞る（検索意図を分ける）。"""
     m = municipality
     pokemons = _pokemon_summary(m.records)
     pokemon_text = (
         "・".join(pokemons[:3]) + ("など" if len(pokemons) > 3 else "") + "の"
         if pokemons else ""
     )
-    title = f"{m.name}のポケふた{m.count}枚はどこ？場所一覧・地図・巡る順番"
+    title = f"{m.name}のポケふた{m.count}枚はどこ？場所一覧・地図・" + ("会えるポケモン" if has_trip else "巡る順番")
     description = (
         f"{m.prefecture}{m.name}にあるポケふた{m.count}枚を一覧と地図で紹介。"
-        f"{pokemon_text}設置場所と住所、現地写真、近い順に巡る順番を確認できます。"
+        f"{pokemon_text}設置場所と住所、現地写真、"
+        + ("会えるポケモンを確認できます。回り方と所要時間はポケふた旅のページへ。" if has_trip
+           else "近い順に巡る順番を確認できます。")
     )
     h1 = f"{m.name}（{m.prefecture}）のポケふた{m.count}枚"
     return title, description, h1
@@ -542,7 +573,8 @@ def build_page(
     m = municipality
     pref_slug = m.prefecture_slug
     canonical = f"{BASE_URL}{m.path}"
-    title, description, h1 = _seo(m)
+    trip_path = _trip_path(m, durations)
+    title, description, h1 = _seo(m, bool(trip_path))
     records = m.records
     pokemons = _pokemon_summary(records)
 
@@ -611,11 +643,17 @@ def build_page(
         },
     }
 
-    route_button = (
-        '<a class="button secondary" href="#route" data-track="municipality_route_click" '
-        'data-surface="hero" data-destination="route">巡る順番を見る</a>'
-        if route_html else ""
-    )
+    if trip_path:
+        route_button = (
+            f'<a class="button secondary" href="{_escape_attr(trip_path)}" data-track="municipality_trip_click" '
+            'data-surface="hero" data-destination="trip">回り方・所要時間</a>'
+        )
+    else:
+        route_button = (
+            '<a class="button secondary" href="#route" data-track="municipality_route_click" '
+            'data-surface="hero" data-destination="route">巡る順番を見る</a>'
+            if route_html else ""
+        )
     return _head(title, description, canonical, json_ld, with_map=True, site_suffix=True, og_image=hero_photo_url) + f"""<body>
   <main class="page">
     <nav class="breadcrumb" aria-label="パンくず">
