@@ -34,11 +34,11 @@ except ModuleNotFoundError as exc:
     from visit_durations import DEFAULT_DURATIONS, duration_html, load_durations
 
 try:
-    from apps.scraper.manhole_tile_image import responsive_attrs, small_image_url, tile_image_url
+    from apps.scraper.manhole_tile_image import map_tile_url, responsive_attrs, small_image_url, tile_image_url
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
-    from manhole_tile_image import responsive_attrs, small_image_url, tile_image_url
+    from manhole_tile_image import map_tile_url, responsive_attrs, small_image_url, tile_image_url
 
 try:
     from apps.scraper.photo_caption import poster_profile_url
@@ -2357,6 +2357,43 @@ PAGE_CSS = """    :root { color-scheme: light; }
 """
 
 
+def with_map_tiles(map_points: list[dict]) -> list[dict]:
+    """地図の点に丸い写真アイコンの URL（tile_url）を付ける。既に付いている点はそのまま。
+
+    県・市区町村・旅・特集・多言語の地図はすべてこれを通す。凡例もこの結果から作るので、地図と食い違わない。
+    """
+    image_dir = ROOT / "dataset" / "manhole" / "image"
+    return [
+        point if "tile_url" in point else {**point, "tile_url": map_tile_url(point, image_dir)}
+        for point in map_points
+    ]
+
+
+# 凡例に載せる形の並び。写真アイコン（clip）は見れば分かるので載せない
+MAP_LEGEND_STATES = ("has-photo", "needs-photo", "preinstall")
+MAP_LEGEND_LABELS = {"has-photo": "投稿写真あり", "needs-photo": "写真募集中", "preinstall": "設置予定"}
+
+
+def map_legend_html(
+    map_points: list[dict],
+    labels: dict[str, str] = MAP_LEGEND_LABELS,
+    aria_label: str = "地図の凡例",
+) -> str:
+    """地図に実際に描く形だけを並べた凡例。写真はあるが切り抜きがまだ無い地点だけ、緑の点として残る。"""
+    states = {
+        "preinstall" if point.get("is_preinstall")
+        else "clip" if point.get("tile_url")
+        else ("has-photo" if point.get("photo_url") else "needs-photo")
+        for point in with_map_tiles(map_points)
+    }
+    items = "".join(
+        f'<span><i class="legend-dot {state}"></i>{escape(labels[state])}</span>'
+        for state in MAP_LEGEND_STATES
+        if state in states
+    )
+    return f'<div class="map-legend" aria-label="{escape_attr(aria_label)}">{items}</div>' if items else ""
+
+
 def _map_script(
     map_points: list[dict],
     campaign_params: str,
@@ -2367,11 +2404,8 @@ def _map_script(
 
     市区町村ページも同じ地図を出すので、イベント名の接頭辞と送信関数の名前だけを差し替えられる。
     """
-    # 県・市町村・旅行・特集の全呼び出し元に同じ写真選定を適用する。
-    map_points = [dict(point, tile_url=(
-        small_image_url(tile_image_url(point["id"], ROOT / "dataset" / "manhole" / "image"), 180)
-        or point.get("photo_url", "")
-    ) if point.get("photo_url") and not point.get("is_preinstall") else "") for point in map_points]
+    # 呼び出し元が凡例用に付けた tile_url はそのまま使い、無ければ同じ規則で付ける
+    map_points = with_map_tiles(map_points)
     return f"""  <script>
     const points = {json_for_script(map_points)};
     const campaignParams = {json_for_script(campaign_params)};
@@ -2436,7 +2470,8 @@ def _map_script(
             ? L.divIcon({{
               className: '',
               html: '<div class="prefecture-marker clip"><img src="' +
-                escapeHtml(point.tile_url) + '" alt="" decoding="async" width="44" height="44"></div>',
+                escapeHtml(point.tile_url) + '" alt="' + escapeHtml(point.name + 'のポケふた') +
+                '" decoding="async" width="44" height="44"></div>',
               iconSize: [44, 44],
               iconAnchor: [22, 22],
               popupAnchor: [0, -21]
@@ -2556,34 +2591,8 @@ def build_page(
     ]
     # 写真のあるピンは一覧のタイルと同じ蓋の切り抜き（_lid）を丸く出す。
     # 色の点と凡例を読み合わせなくても、地図上でどの蓋かが分かる
-    # ピンは 40px なので、デプロイ時に作る 180px の WebP を直接指す（manhole_tile_image.SMALL_WIDTHS）
-    for point in map_points:
-        point["tile_url"] = (
-            small_image_url(tile_image_url(point["id"], ROOT / "dataset" / "manhole" / "image"), 180)
-            if point["photo_url"] else ""
-        )
-    # 地図に実際に描く形。切り抜きは見れば分かるので凡例に載せない。
-    # 写真はあるが切り抜き画像がまだ無い地点だけ、緑の点として凡例に残る
-    map_states = {
-        "preinstall" if point["is_preinstall"]
-        else "clip" if point["tile_url"]
-        else ("has-photo" if point["photo_url"] else "needs-photo")
-        for point in map_points
-    }
-    legend_items = [
-        f'<span><i class="legend-dot {state}"></i>{label}</span>'
-        for state, label in (
-            ("has-photo", "投稿写真あり"),
-            ("needs-photo", "写真募集中"),
-            ("preinstall", "設置予定"),
-        )
-        if state in map_states
-    ]
-    legend_html = (
-        '<div class="map-legend" aria-label="地図の凡例">'
-        + "".join(legend_items) + "</div>"
-        if legend_items else ""
-    )
+    map_points = with_map_tiles(map_points)
+    legend_html = map_legend_html(map_points)
     pokemon_html = _pokemon_cards(records, pokemon_slugs)
     manhole_html = _manhole_cards(records, photos, slug)
     installed_records = [r for r in records if r.get("installed") is not False]

@@ -620,11 +620,7 @@ def build_page(
         <p>ピンから詳細・行き方へ。設置済みのポケふたは写真投稿にも進めます。</p>
       </div>
       <div class="map-toolbar">
-        <div class="map-legend" aria-label="地図の凡例">
-          <span><i class="legend-dot has-photo"></i>投稿写真あり</span>
-          <span><i class="legend-dot needs-photo"></i>写真募集中</span>
-          <span><i class="legend-dot preinstall"></i>設置予定</span>
-        </div>
+        {pref.map_legend_html(map_points)}
       </div>
       <div id="prefecture-map"></div>
       <p class="map-note">地図はドラッグとピンチ操作に対応。スクロール中の誤操作を防ぐため、マウスホイール拡大は無効です。</p>

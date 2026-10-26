@@ -65,3 +65,15 @@ def responsive_attrs(url: str, sizes: str, max_width: int | None = None) -> str:
     if candidates:
         attrs += f' srcset="{escape(candidates, quote=True)}" sizes="{escape(sizes, quote=True)}"'
     return attrs
+
+
+def map_tile_url(point: dict, image_dir: Path) -> str:
+    """地図の丸い写真アイコンに出す 180px の WebP。写真なし・設置予定・切り抜き未生成なら ""。
+
+    県・市区町村・旅・特集・多言語の地図と凡例はすべてこれで決める。
+    切り抜きが無いときに投稿写真（720px の JPEG）へ落とすと 44px のアイコンに重いので、ピンのままにする。
+    """
+    if not point.get("photo_url") or point.get("is_preinstall"):
+        return ""
+    url = tile_image_url(str(point.get("id", "")), image_dir)
+    return small_image_url(url, 180) if url else ""

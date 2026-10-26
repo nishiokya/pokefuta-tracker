@@ -146,7 +146,7 @@ class OtherWorkPageTest(unittest.TestCase):
 
     def test_embeds_the_location_map_with_work_specific_labels(self) -> None:
         self.assertIn('<h2 id="map-heading">東海オンエアのマンホールの設置場所マップ</h2>', self.html)
-        self.assertIn('character-work-map.js?v=20261025a', self.html)
+        self.assertIn('character-work-map.js?v=20261026a', self.html)
         payload = re.search(r'id="cw-map-data">(.*?)</script>', self.html).group(1)
         points = json.loads(payload)
         self.assertEqual(2, len(points))

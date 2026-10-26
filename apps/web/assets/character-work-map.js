@@ -39,7 +39,8 @@
       if (/^https?:\/\//i.test(point.photo_url || '')) {
         const fallback = marker.options.icon;
         const photo = document.createElement('img');
-        photo.alt = '';
+        // divIcon には Leaflet の alt が付かないので、写真自体に名前を持たせる
+        photo.alt = point.alt || point.name;
         photo.decoding = 'async';
         photo.loading = 'lazy';
         photo.width = 44;
