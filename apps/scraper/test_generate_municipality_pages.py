@@ -141,6 +141,27 @@ class PageTest(unittest.TestCase):
         cls.machida = [m for m in cls.items if m.name == "町田市"][0]
         cls.html = MODULE.build_page(cls.machida, cls.items, {}, {})
 
+    def test_no_duplicate_photo_section(self) -> None:
+        # 一覧カードが写真つきなので、同じ写真を並べ直す「〜のポケふた写真」セクションは置かない
+        self.assertNotIn("のポケふた写真</h2>", self.html)
+        self.assertNotIn('id="prefecture-photos"', self.html)
+
+    def test_hero_heading_spans_full_width(self) -> None:
+        # 見出しを右列の外に出し、長い市名でも h1 が途中で折り返さない
+        self.assertIn('<header class="hero prefecture-hero">', self.html)
+        self.assertIn('<div class="hero-heading">', self.html)
+        self.assertIn('<div class="hero-side">', self.html)
+
+    def test_hero_photo_is_single_and_sets_og_image(self) -> None:
+        html = MODULE.build_page(self.machida, self.items, {}, {})
+        url, photo_html = MODULE._hero_photo(self.machida.records)
+        if url:
+            self.assertEqual(photo_html.count("<img"), 1)
+            self.assertIn(f'<meta property="og:image" content="{url}">', html)
+        else:
+            self.assertEqual(photo_html, "")
+            self.assertIn(f'<meta property="og:image" content="{MODULE.OG_IMAGE}">', html)
+
     def test_meta_and_breadcrumb(self) -> None:
         html = self.html
         self.assertIn("<title>町田市のポケふた3枚はどこ？場所一覧・地図・巡る順番｜ポケふた図鑑</title>", html)
