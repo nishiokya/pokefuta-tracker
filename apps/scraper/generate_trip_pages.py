@@ -533,9 +533,12 @@ def build_index_page(
     )
     canonical = f"{BASE_URL}{TRIP_BASE}"
 
+    # travel_mode は全点ペアの距離計算なので、エリアごとに1回だけ求める
+    modes = {a["slug"]: travel_mode(rs) for a, rs in areas}
+
     def card(area: dict, records: list[dict]) -> str:
         entry = find_entry(records, durations)
-        mode = MODE_LABELS[travel_mode(records)]
+        mode = MODE_LABELS[modes[area["slug"]]]
         time = (
             f'<strong>{escape(duration_range(entry["p25_minutes"], entry["p75_minutes"]))}</strong>'
             if entry else '<strong>時間の目安はまだ</strong>'
@@ -563,12 +566,17 @@ def build_index_page(
             f'<b>{escape(area["name"])} {len(records)}枚</b>'
             f'{card_thumbs_html(records, entry)}'
             f'<strong>{escape(duration_range(entry["p25_minutes"], entry["p75_minutes"]))}</strong>'
-            f'<small>移動の目安：{MODE_LABELS[travel_mode(records)]}</small></a>'
+            f'<small>移動の目安：{MODE_LABELS[modes[area["slug"]]]}</small></a>'
         )
 
-    # ヒーローには回った人が多い上位3エリアを、蓋の写真を大きめにしたカードで出す（下の一覧にも残す）
+    # 徒歩を優先し、車中心のエリアは下の一覧だけに残す。
+    # 同じ移動手段では measured の順（回った人が多い順）を保つ。
+    hero_areas = sorted(
+        ((a, rs) for a, rs in measured if modes[a["slug"]] != "car"),
+        key=lambda t: modes[t[0]["slug"]] != "walk",
+    )[:3]
     picks_html = (
-        f'<div class="hero-picks">{"".join(pick(a, rs) for a, rs in measured[:3])}</div>' if measured else ""
+        f'<div class="hero-picks">{"".join(pick(a, rs) for a, rs in hero_areas)}</div>' if hero_areas else ""
     )
     pending_html = (
         '<section aria-labelledby="pending-heading"><h2 id="pending-heading">時間の目安がまだのエリア</h2>'
@@ -640,6 +648,15 @@ def build_index_page(
 
 
 TRIP_CSS = """
+    .hero-pick { min-width: 0; overflow-wrap: anywhere; }
+    @media (max-width: 700px) {
+      .hero-picks { margin: 16px 0 0; }
+      .hero-pick .stop-thumbs img { width: 32px; height: 32px; }
+    }
+    /* 1列に積まれる幅では3枚だと画面1枚分を超え、下の一覧が押し出される。2枚までにする（3枚目は下の一覧にある） */
+    @media (max-width: 439px) {
+      .hero-pick:nth-child(n+3) { display: none; }
+    }
     .trip-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); gap: 10px; }
     .trip-card { display: grid; align-content: start; gap: 2px; padding: 12px 14px; border-radius: 14px; background: #fffaf0;
       border: 1px solid #ece4d7; color: inherit; text-decoration: none; }

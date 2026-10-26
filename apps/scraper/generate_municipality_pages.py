@@ -417,15 +417,15 @@ EXTRA_CSS = """
     .hero-pick small { color: #62564a; font-size: .78rem; }
     .hero-pick .stop-thumbs img { width: 40px; height: 40px; }
     /* スマホで3枚を縦に積むとヒーローが画面1枚分になるので、横に並べてスクロールさせる。
-       次のカードの端が見えるよう1枚は幅の8割 */
+       次のカードの端が見えるよう1枚は幅の8割。横スクロールするのは .hero-picks--scroll だけ（旅行ページは使わない） */
     @media (max-width: 700px) {
-      .hero-picks {
+      .hero-picks--scroll {
         margin: 16px -18px 0; padding: 0 18px 4px; display: grid; grid-auto-flow: column;
         grid-template-columns: none; grid-auto-columns: 80%; overflow-x: auto;
         scroll-snap-type: x mandatory; scrollbar-width: none;
       }
-      .hero-picks::-webkit-scrollbar { display: none; }
-      .hero-pick { scroll-snap-align: start; }
+      .hero-picks--scroll::-webkit-scrollbar { display: none; }
+      .hero-picks--scroll .hero-pick { scroll-snap-align: start; }
     }
     .stop-thumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 3px; margin: 4px 0 2px; }
     .stop-thumbs img { width: 32px; height: 32px; border-radius: 50%; }
@@ -730,7 +730,7 @@ def _ranking_picks(listed: list[Municipality], image_dir: Path) -> str:
             f'<b>{escape(m.name)} {m.count}枚</b>'
             f'{stop_thumbs_html(shortest_route(m.records), m.count, image_dir)}</a>'
         )
-    return f'<div class="hero-picks">{"".join(cards)}</div>' if cards else ""
+    return f'<div class="hero-picks hero-picks--scroll">{"".join(cards)}</div>' if cards else ""
 
 
 def _trip_announce(trips: list[tuple[str, str, int, str]] | None) -> str:

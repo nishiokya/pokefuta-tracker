@@ -181,6 +181,62 @@ class AreaTest(unittest.TestCase):
         self.assertIn("🚗 車</strong> 島内は車で回る", car_only)
         self.assertNotIn("🚃", car_only)
 
+
+class HeroSelectionTest(unittest.TestCase):
+    def render(self, specs):
+        areas, entries = [], []
+        for slug, mode, measured in specs:
+            # 距離による実際の移動手段判定を使う。
+            gap = {"walk": .001, "bus": .03, "car": .2}[mode]
+            records = [_record(f"{slug}-1", slug, 35, 135),
+                       _record(f"{slug}-2", slug, 35 + gap, 135)]
+            self.assertEqual(VD.travel_mode(records), mode)
+            ids = [r["id"] for r in records]
+            areas.append(({"slug": slug, "name": slug, "prefecture": "大阪府",
+                           "manhole_ids": ids}, records))
+            if measured:
+                entries.append({"manhole_ids": ids, "p25_minutes": 20, "p75_minutes": 40})
+        # 登録順と人気順を変え、人気順が同一モード内で維持されることも検証する。
+        html = MODULE.build_index_page(list(reversed(areas)), {"entries": entries}, [])
+        hero = html[html.index('<header class="hero">'):html.index("</header>")]
+        return html, re.findall(r'data-destination="([^"]+)"', hero)
+
+    def test_walks_precede_bus_and_cars_stay_in_the_regular_list(self):
+        html, picks = self.render([
+            ("awaji", "car", True), ("bus", "bus", True),
+            ("hachinohe", "car", True), ("walk-a", "walk", True),
+            ("walk-b", "walk", True), ("walk-c", "walk", True),
+            ("walk-d", "walk", True), ("pending", "walk", False),
+        ])
+        self.assertEqual(picks, ["walk-a", "walk-b", "walk-c"])
+        start = html.index('<section aria-labelledby="measured-heading">')
+        regular = html[start:html.index('</section>', start)]
+        for slug in ["awaji", "hachinohe", "bus", "walk-a", "walk-d"]:
+            self.assertIn(f'href="/trip/{slug}/"', regular)
+        self.assertNotIn('href="/trip/pending/"', regular)
+        self.assertIn('href="/trip/pending/"', html[html.index('id="pending-heading"'):])
+
+    def test_bus_fills_available_slots_after_walks(self):
+        _, picks = self.render([
+            ("bus-a", "bus", True), ("car", "car", True),
+            ("walk", "walk", True), ("bus-b", "bus", True),
+        ])
+        self.assertEqual(picks, ["walk", "bus-a", "bus-b"])
+
+    def test_hero_wraps_and_never_uses_the_municipality_carousel(self):
+        html, _ = self.render([("walk", "walk", True)])
+        self.assertNotIn('class="hero-picks hero-picks--scroll"', html)
+        # 1列に積まれる幅では2枚まで
+        self.assertIn(".hero-pick:nth-child(n+3) { display: none; }", MODULE.TRIP_CSS)
+
+    def test_no_eligible_areas_omits_hero_cards(self):
+        for specs in [[], [("car", "car", True)], [("pending", "walk", False)]]:
+            with self.subTest(specs=specs):
+                html, picks = self.render(specs)
+                self.assertEqual(picks, [])
+                self.assertNotIn('<div class="hero-picks">', html)
+
+
 class GenerateTest(unittest.TestCase):
     def test_pages_index_and_links(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

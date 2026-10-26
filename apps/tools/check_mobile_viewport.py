@@ -33,11 +33,15 @@ import sys
 # 320 は iPhone SE(第1世代)級で、ここだけはブランド名の省略を許容する。
 DEFAULT_WIDTHS = (320, 360, 375, 390, 393, 412, 430)
 
+# 一部のページだけ、カードが2列＋1枚に折り返す中間幅（〜700px）も見る。全ページに足すと日次検査が重いので /trip/ のみ。
+EXTRA_WIDTHS = {"/trip/": (600, 700)}
+
 # ページ種別 × ロケールを1本ずつ。英語は認証ラベルが最長で最初に破綻するので必ず含める。
 DEFAULT_PATHS = (
     "/",
     "/map.html",
     "/summary/",
+    "/trip/",
     "/prefectures/aichi/",
     "/prefectures/hokkaido/",
     "/manholes/290/",
@@ -78,7 +82,10 @@ PROBE = """() => {
     });
   });
   const tabs = document.querySelector('.site-tabs');
+  // ページ自体が収まっていても、Heroの内部だけ横スクロールする退行を検出する。
+  const tripHero = document.querySelector('.hero-picks:has([data-surface="trip_hero"])');
   return {
+    tripHeroOverflow: !!tripHero && tripHero.scrollWidth > tripHero.clientWidth + 1,
     scrollWidth: de.scrollWidth,
     clientWidth: vw,
     innerWidth: window.innerWidth,
@@ -89,14 +96,15 @@ PROBE = """() => {
 }"""
 
 
-def check(base_url: str, paths, widths, timeout_ms: int = 45000) -> list[str]:
+def check(base_url: str, paths, widths, timeout_ms: int = 45000, extra_widths=None) -> list[str]:
+    extra_widths = extra_widths or {}
     from playwright.sync_api import sync_playwright
 
     failures: list[str] = []
     with sync_playwright() as pw:
         browser = pw.chromium.launch()
         try:
-            for width in widths:
+            for width in sorted({*widths, *(w for ws in extra_widths.values() for w in ws)}):
                 context = browser.new_context(
                     viewport={"width": width, "height": 780},
                     device_scale_factor=2,
@@ -105,6 +113,8 @@ def check(base_url: str, paths, widths, timeout_ms: int = 45000) -> list[str]:
                     user_agent=IPHONE_UA,
                 )
                 for path in paths:
+                    if width not in widths and width not in extra_widths.get(path, ()):
+                        continue
                     url = base_url.rstrip("/") + path
                     page = context.new_page()
                     try:
@@ -122,6 +132,8 @@ def check(base_url: str, paths, widths, timeout_ms: int = 45000) -> list[str]:
                         continue
 
                     problems = []
+                    if result["tripHeroOverflow"]:
+                        problems.append("旅行Heroのカードが横スクロールしている")
                     if result["scrollWidth"] > result["clientWidth"] + 1:
                         problems.append(
                             f"横スクロールが出ている（scrollWidth={result['scrollWidth']} > "
@@ -160,7 +172,8 @@ def main() -> int:
     paths = tuple(args.paths) if args.paths else DEFAULT_PATHS
     widths = tuple(args.widths) if args.widths else DEFAULT_WIDTHS
 
-    failures = check(args.base_url, paths, widths)
+    # --width を指定したときは、その幅だけを見る
+    failures = check(args.base_url, paths, widths, extra_widths=None if args.widths else EXTRA_WIDTHS)
     if failures:
         print("\n=== スマホ幅の検証に失敗した ===", file=sys.stderr)
         for line in failures:
