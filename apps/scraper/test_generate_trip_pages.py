@@ -216,6 +216,19 @@ class HeroSelectionTest(unittest.TestCase):
         self.assertNotIn('href="/trip/pending/"', regular)
         self.assertIn('href="/trip/pending/"', html[html.index('id="pending-heading"'):])
 
+    def test_regular_list_orders_walk_bus_car_keeping_popularity(self):
+        html, _ = self.render([
+            ("car-a", "car", True), ("bus-a", "bus", True), ("walk-a", "walk", True),
+            ("car-b", "car", True), ("walk-b", "walk", True), ("bus-b", "bus", True),
+            ("pend-car", "car", False), ("pend-walk", "walk", False),
+        ])
+        start = html.index('<section aria-labelledby="measured-heading">')
+        regular = html[start:html.index('</section>', start)]
+        self.assertEqual(re.findall(r'href="/trip/([^/]+)/"', regular),
+                         ["walk-a", "walk-b", "bus-a", "bus-b", "car-a", "car-b"])
+        pending = html[html.index('id="pending-heading"'):]
+        self.assertEqual(re.findall(r'href="/trip/([^/]+)/"', pending)[:2], ["pend-walk", "pend-car"])
+
     def test_bus_fills_available_slots_after_walks(self):
         _, picks = self.render([
             ("bus-a", "bus", True), ("car", "car", True),
