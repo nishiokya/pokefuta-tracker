@@ -556,7 +556,13 @@ def build_index_page(
     pending = [(a, rs) for a, rs in areas if not find_entry(rs, durations)]
     # visit_durations.json は回った人が多い順に並んでいる（人数そのものは書かない）
     rank = {",".join(e["manhole_ids"]): i for i, e in enumerate(durations.get("entries", []))}
-    measured.sort(key=lambda t: rank.get(",".join(find_entry(t[1], durations)["manhole_ids"]), len(rank)))
+    # 一覧は 徒歩 → バス・自転車 → 車 の順。同じ移動手段では回った人が多い順
+    mode_rank = {"walk": 0, "bus": 1, "car": 2}
+    measured.sort(key=lambda t: (
+        mode_rank[modes[t[0]["slug"]]],
+        rank.get(",".join(find_entry(t[1], durations)["manhole_ids"]), len(rank)),
+    ))
+    pending.sort(key=lambda t: mode_rank[modes[t[0]["slug"]]])
     def pick(area: dict, records: list[dict]) -> str:
         entry = find_entry(records, durations)
         return (
@@ -569,12 +575,8 @@ def build_index_page(
             f'<small>移動の目安：{MODE_LABELS[modes[area["slug"]]]}</small></a>'
         )
 
-    # 徒歩を優先し、車中心のエリアは下の一覧だけに残す。
-    # 同じ移動手段では measured の順（回った人が多い順）を保つ。
-    hero_areas = sorted(
-        ((a, rs) for a, rs in measured if modes[a["slug"]] != "car"),
-        key=lambda t: modes[t[0]["slug"]] != "walk",
-    )[:3]
+    # measured はもう徒歩が先。車中心のエリアは下の一覧だけに残す
+    hero_areas = [(a, rs) for a, rs in measured if modes[a["slug"]] != "car"][:3]
     picks_html = (
         f'<div class="hero-picks">{"".join(pick(a, rs) for a, rs in hero_areas)}</div>' if hero_areas else ""
     )
