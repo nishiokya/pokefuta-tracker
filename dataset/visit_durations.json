@@ -1,5 +1,5 @@
 {
-  "measured_on": "2026-10-18",
+  "measured_on": "2026-10-27",
   "min_public_people": 3,
   "entries": [
     {
@@ -11,15 +11,15 @@
         "209",
         "210"
       ],
-      "p25_minutes": 93,
-      "p75_minutes": 150,
-      "median_minutes": 102,
+      "p25_minutes": 96,
+      "p75_minutes": 139,
+      "median_minutes": 103,
       "common_order": [
         "206",
-        "210",
-        "209",
+        "208",
         "207",
-        "208"
+        "210",
+        "209"
       ]
     },
     {
@@ -43,29 +43,13 @@
         "204",
         "205"
       ],
-      "p25_minutes": 85,
-      "p75_minutes": 182,
-      "median_minutes": 93,
+      "p25_minutes": 65,
+      "p75_minutes": 173,
+      "median_minutes": 92,
       "common_order": [
         "203",
         "204",
         "205"
-      ]
-    },
-    {
-      "label": "埼玉県所沢",
-      "manhole_ids": [
-        "211",
-        "212",
-        "213"
-      ],
-      "p25_minutes": 57,
-      "p75_minutes": 87,
-      "median_minutes": 71,
-      "common_order": [
-        "211",
-        "213",
-        "212"
       ]
     },
     {
@@ -77,22 +61,15 @@
         "151",
         "152"
       ],
-      "p25_minutes": 30,
+      "p25_minutes": 28,
       "p75_minutes": 68,
-      "median_minutes": 39
-    },
-    {
-      "label": "青森県",
-      "manhole_ids": [
-        "157",
-        "158"
-      ],
-      "p25_minutes": 30,
-      "p75_minutes": 57,
-      "median_minutes": 33,
+      "median_minutes": 39,
       "common_order": [
-        "157",
-        "158"
+        "148",
+        "149",
+        "150",
+        "151",
+        "152"
       ]
     },
     {
@@ -105,9 +82,9 @@
         "102",
         "103"
       ],
-      "p25_minutes": 20,
-      "p75_minutes": 29,
-      "median_minutes": 25,
+      "p25_minutes": 18,
+      "p75_minutes": 31,
+      "median_minutes": 22,
       "common_order": [
         "100",
         "102",
@@ -115,6 +92,36 @@
         "103",
         "99",
         "98"
+      ]
+    },
+    {
+      "label": "滋賀県大津",
+      "manhole_ids": [
+        "104",
+        "105"
+      ],
+      "p25_minutes": 28,
+      "p75_minutes": 44,
+      "median_minutes": 32,
+      "common_order": [
+        "104",
+        "105"
+      ]
+    },
+    {
+      "label": "埼玉県所沢",
+      "manhole_ids": [
+        "211",
+        "212",
+        "213"
+      ],
+      "p25_minutes": 60,
+      "p75_minutes": 100,
+      "median_minutes": 74,
+      "common_order": [
+        "211",
+        "213",
+        "212"
       ]
     },
     {
@@ -127,8 +134,8 @@
         "314"
       ],
       "p25_minutes": 96,
-      "p75_minutes": 123,
-      "median_minutes": 111,
+      "p75_minutes": 120,
+      "median_minutes": 114,
       "common_order": [
         "23",
         "314",
@@ -143,56 +150,26 @@
         "243",
         "414"
       ],
-      "p25_minutes": 13,
-      "p75_minutes": 30,
-      "median_minutes": 25,
+      "p25_minutes": 9,
+      "p75_minutes": 25,
+      "median_minutes": 12,
       "common_order": [
         "243",
         "414"
       ]
     },
     {
-      "label": "岩手県北上",
+      "label": "青森県",
       "manhole_ids": [
-        "323",
-        "397"
+        "157",
+        "158"
       ],
-      "p25_minutes": 14,
-      "p75_minutes": 36,
-      "median_minutes": 15,
+      "p25_minutes": 30,
+      "p75_minutes": 46,
+      "median_minutes": 35,
       "common_order": [
-        "323",
-        "397"
-      ]
-    },
-    {
-      "label": "富山県富山",
-      "manhole_ids": [
-        "275",
-        "276",
-        "277"
-      ],
-      "p25_minutes": 76,
-      "p75_minutes": 88,
-      "median_minutes": 76,
-      "common_order": [
-        "275",
-        "276",
-        "277"
-      ]
-    },
-    {
-      "label": "滋賀県大津",
-      "manhole_ids": [
-        "104",
-        "105"
-      ],
-      "p25_minutes": 27,
-      "p75_minutes": 32,
-      "median_minutes": 30,
-      "common_order": [
-        "104",
-        "105"
+        "157",
+        "158"
       ]
     },
     {
@@ -203,21 +180,42 @@
         "257"
       ],
       "p25_minutes": 24,
-      "p75_minutes": 27,
-      "median_minutes": 25
+      "p75_minutes": 31,
+      "median_minutes": 28,
+      "common_order": [
+        "255",
+        "257",
+        "256"
+      ]
     },
     {
-      "label": "岩手県久慈",
+      "label": "岩手県北上",
       "manhole_ids": [
-        "11",
-        "299"
+        "323",
+        "397"
       ],
-      "p25_minutes": 35,
-      "p75_minutes": 44,
-      "median_minutes": 39,
+      "p25_minutes": 14,
+      "p75_minutes": 43,
+      "median_minutes": 19,
       "common_order": [
-        "11",
-        "299"
+        "323",
+        "397"
+      ]
+    },
+    {
+      "label": "滋賀県甲賀",
+      "manhole_ids": [
+        "237",
+        "238",
+        "239"
+      ],
+      "p25_minutes": 83,
+      "p75_minutes": 127,
+      "median_minutes": 112,
+      "common_order": [
+        "238",
+        "237",
+        "239"
       ]
     },
     {
@@ -227,21 +225,247 @@
         "316",
         "317"
       ],
-      "p25_minutes": 88,
-      "p75_minutes": 163,
-      "median_minutes": 121
+      "p25_minutes": 40,
+      "p75_minutes": 121,
+      "median_minutes": 44,
+      "common_order": [
+        "315",
+        "317",
+        "316"
+      ]
     },
     {
-      "label": "滋賀県甲賀",
+      "label": "京都府京都",
       "manhole_ids": [
+        "159",
+        "160",
+        "161",
+        "162",
+        "163"
+      ],
+      "p25_minutes": 307,
+      "p75_minutes": 420,
+      "median_minutes": 361
+    },
+    {
+      "label": "千葉県香取",
+      "manhole_ids": [
+        "222",
+        "223",
+        "224",
+        "225"
+      ],
+      "p25_minutes": 107,
+      "p75_minutes": 159,
+      "median_minutes": 121,
+      "common_order": [
+        "222",
+        "223",
+        "225",
+        "224"
+      ]
+    },
+    {
+      "label": "富山県富山",
+      "manhole_ids": [
+        "275",
+        "276",
+        "277"
+      ],
+      "p25_minutes": 76,
+      "p75_minutes": 92,
+      "median_minutes": 82,
+      "common_order": [
+        "275",
+        "276",
+        "277"
+      ]
+    },
+    {
+      "label": "鳥取県鳥取",
+      "manhole_ids": [
+        "74",
+        "300"
+      ],
+      "p25_minutes": 16,
+      "p75_minutes": 67,
+      "median_minutes": 28,
+      "common_order": [
+        "300",
+        "74"
+      ]
+    },
+    {
+      "label": "岩手県久慈",
+      "manhole_ids": [
+        "11",
+        "299"
+      ],
+      "p25_minutes": 28,
+      "p75_minutes": 39,
+      "median_minutes": 38,
+      "common_order": [
+        "11",
+        "299"
+      ]
+    },
+    {
+      "label": "徳島県鳴門",
+      "manhole_ids": [
+        "327",
+        "328",
+        "329"
+      ],
+      "p25_minutes": 56,
+      "p75_minutes": 144,
+      "median_minutes": 57
+    },
+    {
+      "label": "愛媛県松山",
+      "manhole_ids": [
+        "325",
+        "326"
+      ],
+      "p25_minutes": 45,
+      "p75_minutes": 75,
+      "median_minutes": 71,
+      "common_order": [
+        "325",
+        "326"
+      ]
+    },
+    {
+      "label": "愛知県豊橋市",
+      "manhole_ids": [
+        "271",
+        "272",
+        "273",
+        "274"
+      ],
+      "p25_minutes": 119,
+      "p75_minutes": 138,
+      "median_minutes": 124
+    },
+    {
+      "label": "石川県輪島",
+      "manhole_ids": [
+        "469",
+        "475"
+      ],
+      "p25_minutes": 34,
+      "p75_minutes": 83,
+      "median_minutes": 45,
+      "common_order": [
+        "469",
+        "475"
+      ]
+    },
+    {
+      "label": "鹿児島県指宿",
+      "manhole_ids": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
+      "p25_minutes": 79,
+      "p75_minutes": 194,
+      "median_minutes": 120
+    },
+    {
+      "label": "山口県下関",
+      "manhole_ids": [
+        "288",
+        "289",
+        "290",
+        "291"
+      ],
+      "p25_minutes": 78,
+      "p75_minutes": 106,
+      "median_minutes": 92
+    },
+    {
+      "label": "岡山県倉敷",
+      "manhole_ids": [
+        "194",
+        "195",
+        "196",
+        "197"
+      ],
+      "p25_minutes": 82,
+      "p75_minutes": 212,
+      "median_minutes": 140,
+      "common_order": [
+        "194",
+        "196",
+        "195",
+        "197"
+      ]
+    },
+    {
+      "label": "能登半島",
+      "manhole_ids": [
+        "468",
+        "469",
+        "470",
+        "472",
+        "473",
+        "475"
+      ],
+      "p25_minutes": 415,
+      "p75_minutes": 494,
+      "median_minutes": 455
+    },
+    {
+      "label": "香川県綾川",
+      "manhole_ids": [
+        "40",
+        "298"
+      ],
+      "p25_minutes": 15,
+      "p75_minutes": 19,
+      "median_minutes": 17,
+      "common_order": [
+        "298",
+        "40"
+      ]
+    },
+    {
+      "label": "栃木県宇都宮",
+      "manhole_ids": [
+        "226",
+        "227",
+        "228"
+      ],
+      "p25_minutes": 90,
+      "p75_minutes": 161,
+      "median_minutes": 92,
+      "common_order": [
+        "226",
+        "228",
+        "227"
+      ]
+    },
+    {
+      "label": "滋賀県",
+      "manhole_ids": [
+        "104",
+        "105",
         "237",
         "238",
         "239"
       ],
-      "p25_minutes": 72,
-      "p75_minutes": 134,
-      "median_minutes": 107,
+      "p25_minutes": 222,
+      "p75_minutes": 287,
+      "median_minutes": 240,
       "common_order": [
+        "104",
+        "105",
         "238",
         "237",
         "239"
