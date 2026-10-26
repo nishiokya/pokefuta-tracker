@@ -38,6 +38,7 @@ DEFAULT_PATHS = (
     "/",
     "/map.html",
     "/summary/",
+    "/trip/",
     "/prefectures/aichi/",
     "/prefectures/hokkaido/",
     "/manholes/290/",
@@ -78,7 +79,10 @@ PROBE = """() => {
     });
   });
   const tabs = document.querySelector('.site-tabs');
+  // ページ自体が収まっていても、Heroの内部だけ横スクロールする退行を検出する。
+  const tripHero = document.querySelector('.hero-picks:has([data-surface="trip_hero"])');
   return {
+    tripHeroOverflow: !!tripHero && tripHero.scrollWidth > tripHero.clientWidth + 1,
     scrollWidth: de.scrollWidth,
     clientWidth: vw,
     innerWidth: window.innerWidth,
@@ -122,6 +126,8 @@ def check(base_url: str, paths, widths, timeout_ms: int = 45000) -> list[str]:
                         continue
 
                     problems = []
+                    if result["tripHeroOverflow"]:
+                        problems.append("旅行Heroのカードが横スクロールしている")
                     if result["scrollWidth"] > result["clientWidth"] + 1:
                         problems.append(
                             f"横スクロールが出ている（scrollWidth={result['scrollWidth']} > "

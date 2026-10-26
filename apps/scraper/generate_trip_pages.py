@@ -566,9 +566,14 @@ def build_index_page(
             f'<small>移動の目安：{MODE_LABELS[travel_mode(records)]}</small></a>'
         )
 
-    # ヒーローには回った人が多い上位3エリアを、蓋の写真を大きめにしたカードで出す（下の一覧にも残す）
+    # 徒歩を優先し、車中心のエリアは下の一覧だけに残す。
+    # 同じ移動手段では measured の順（回った人が多い順）を保つ。
+    hero_areas = sorted(
+        ((a, rs) for a, rs in measured if travel_mode(rs) != "car"),
+        key=lambda t: travel_mode(t[1]) != "walk",
+    )[:3]
     picks_html = (
-        f'<div class="hero-picks">{"".join(pick(a, rs) for a, rs in measured[:3])}</div>' if measured else ""
+        f'<div class="hero-picks">{"".join(pick(a, rs) for a, rs in hero_areas)}</div>' if hero_areas else ""
     )
     pending_html = (
         '<section aria-labelledby="pending-heading"><h2 id="pending-heading">時間の目安がまだのエリア</h2>'
@@ -640,6 +645,16 @@ def build_index_page(
 
 
 TRIP_CSS = """
+    .hero-pick { min-width: 0; overflow-wrap: anywhere; }
+    @media (max-width: 700px) {
+      .hero-picks {
+        margin: 16px 0 0; padding: 0; grid-auto-flow: row; grid-auto-columns: auto;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+        overflow: visible; scroll-snap-type: none;
+      }
+      .hero-pick { scroll-snap-align: none; }
+      .hero-pick .stop-thumbs img { width: 32px; height: 32px; }
+    }
     .trip-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); gap: 10px; }
     .trip-card { display: grid; align-content: start; gap: 2px; padding: 12px 14px; border-radius: 14px; background: #fffaf0;
       border: 1px solid #ece4d7; color: inherit; text-decoration: none; }
