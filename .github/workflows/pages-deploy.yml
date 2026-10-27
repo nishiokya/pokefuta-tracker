@@ -11,6 +11,8 @@ on:
     paths:
       - 'apps/web/**' # HTML and assets changes
       - 'apps/scraper/generate_sitemap.py' # sitemap generator used during deploy
+      - 'apps/scraper/export_kml.py' # KML generator (pokefuta.kml and icons) run during deploy
+      - 'apps/scraper/test_export_kml.py' # KML tests run before generating
       - 'apps/scraper/generate_manhole_pages.py' # manhole page generator
       - 'apps/scraper/generate_manhole_pages_i18n.py' # translated manhole pages (/en/manholes/)
       - 'apps/scraper/manhole_page_css.py' # detail page CSS shared by ja / translated pages
