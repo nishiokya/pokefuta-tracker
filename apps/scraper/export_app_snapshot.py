@@ -382,8 +382,8 @@ def build_site_stats() -> dict:
 # 2026-10-24 に「直近の何週に投稿があったか（線は非公開）」と「初投稿から30日の新人」から置き換えた。
 # 段階の名前（JSON の値）は写真館との互換のため据え置き: regular=EXPLORER、crown=MASTER。
 #
-# 2026-10-25 に線を 30/50/100 から 50/100/150 へ上げた。それまでに届いていた人の段は下げない
-# （dataset/regular_tier_floors.json に当時の段を残し、新しい線の段と高いほうを付ける）。
+# 2026-10-25 に線を 30/50/100 から 50/100/150 へ上げ、届いていた段は据え置いたが、枚数と称号が
+# 食い違って見えたので 2026-10-28 に据え置きをやめた。称号は枚数だけで決める。
 #
 # アプリが毎リクエスト集計すると Amplify の SSR 実行時間が増えるので、ここで日次に
 # 焼いて data.pokefuta.com から配る。
@@ -401,20 +401,6 @@ TIER_MIN_MANHOLES: tuple[tuple[str, int], ...] = (
     ("rookie", 1),
 )
 LEGEND_MIN_MANHOLES = dict(TIER_MIN_MANHOLES)["legend"]
-TIER_RANK = {tier: rank for rank, (tier, _) in enumerate(reversed(TIER_MIN_MANHOLES))}
-
-# 線を上げる前に届いていた段（公開ID → 段）。この人たちはこれより下にしない
-TIER_FLOORS_PATH = ROOT / "dataset" / "regular_tier_floors.json"
-
-
-def load_tier_floors(path: Path = TIER_FLOORS_PATH) -> dict[str, str]:
-    try:
-        floors = json.loads(path.read_text(encoding="utf-8")).get("floors") or {}
-    except (OSError, ValueError) as exc:
-        print(f"::warning::{path.name} を読めませんでした（据え置きなしで判定）: {exc}", file=sys.stderr)
-        return {}
-    return {k: v for k, v in floors.items() if isinstance(k, str) and v in TIER_RANK}
-
 
 def tier_for_count(count: int) -> str | None:
     for tier, minimum in TIER_MIN_MANHOLES:
@@ -423,17 +409,13 @@ def tier_for_count(count: int) -> str | None:
     return None
 
 
-def compute_tiers(
-    visits: list[dict], public_id_by_auth: dict[str, str], floors: dict[str, str] | None = None
-) -> dict[str, str]:
+def compute_tiers(visits: list[dict], public_id_by_auth: dict[str, str]) -> dict[str, str]:
     """公開の訪問のポケふた（manhole_id の重複なし）の枚数から、公開ID → 段階 を返す。
 
     visits は公開の {user_id, manhole_id}。期間では絞らない（これまでの累計）。
     写真の有無は問わない（公開スタンプ帳の訪問数と同じ数え方）。
-    floors（線を上げる前の段）がある人は、新しい線の段と高いほうにする。
     公開の訪問が無くなった人には付けない。
     """
-    floors = floors or {}
     manholes: dict[str, set] = {}
     for v in visits:
         public_id = public_id_by_auth.get(v.get("user_id") or "")
@@ -442,11 +424,7 @@ def compute_tiers(
         manholes.setdefault(public_id, set()).add(v["manhole_id"])
     tiers = {}
     for public_id, ids in manholes.items():
-        tier = tier_for_count(len(ids))
-        floor = floors.get(public_id)
-        if floor and (tier is None or TIER_RANK[floor] > TIER_RANK[tier]):
-            tier = floor
-        tiers[public_id] = tier
+        tiers[public_id] = tier_for_count(len(ids))
     return dict(sorted((k, v) for k, v in tiers.items() if v))
 
 
@@ -520,7 +498,7 @@ def build_regulars() -> dict:
     # 公開 JSON に auth UID を出さないため、ここで公開ID（app_user.id）に置き換える
     users = fetch_all("app_user", {"select": "id,auth_uid,display_name", "order": "id.asc"})
     public_id_by_auth = {u["auth_uid"]: u["id"] for u in users if u.get("auth_uid")}
-    tiers = compute_tiers(visits, public_id_by_auth, load_tier_floors())
+    tiers = compute_tiers(visits, public_id_by_auth)
     # 写真は飾り。取れなくても名前だけで出す
     try:
         photo_by_id = fetch_legend_photos(tiers, public_id_by_auth)

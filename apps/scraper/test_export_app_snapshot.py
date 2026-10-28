@@ -267,31 +267,6 @@ class RegularTiersTest(unittest.TestCase):
             MODULE.compute_tiers(visits, self.IDS),
         )
 
-    def test_floor_keeps_the_tier_reached_before_the_lines_were_raised(self) -> None:
-        visits = (
-            # 旧 LEGEND（146枚）→ 新しい線では MASTER だが LEGEND のまま
-            self.visits("auth-a", range(146))
-            # 旧 RANGER（35枚）が 160枚に増えたら新しい線の LEGEND に上がる
-            + self.visits("auth-b", range(160))
-            # 据え置きの無い人は新しい線どおり（35枚は EXPLORER）
-            + self.visits("auth-c", range(35))
-        )
-        floors = {"pub-a": "legend", "pub-b": "ranger", "pub-gone": "crown"}
-        self.assertEqual(
-            # 公開の訪問が無い人（pub-gone）には付けない
-            {"pub-a": "legend", "pub-b": "legend", "pub-c": "regular"},
-            MODULE.compute_tiers(visits, self.IDS, floors),
-        )
-
-    def test_floors_file_has_only_known_tiers_and_public_ids(self) -> None:
-        floors = MODULE.load_tier_floors()
-        self.assertTrue(floors)
-        self.assertTrue(set(floors.values()) <= {"ranger", "crown", "legend"})
-        self.assertNotIn(next(iter(MODULE.REGULAR_EXCLUDED_PUBLIC_IDS)), floors)
-
-    def test_missing_floors_file_means_no_floors(self) -> None:
-        self.assertEqual({}, MODULE.load_tier_floors(Path("/nonexistent/regular_tier_floors.json")))
-
     def test_unknown_user_operator_and_missing_manhole_are_skipped(self) -> None:
         operator = next(iter(MODULE.REGULAR_EXCLUDED_PUBLIC_IDS))
         ids = {**self.IDS, "auth-op": operator}
