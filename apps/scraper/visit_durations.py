@@ -90,6 +90,11 @@ def travel_mode(records: list[dict]) -> str:
     return "bus" if km <= BUS_OR_BIKE_MAX_KM else "car"
 
 
+def mode_label(area: dict, records: list[dict]) -> str:
+    """一覧に出す移動の目安。船に乗るなど距離だけでは決まらないエリアは trip_areas.json の mode_label で上書きする。"""
+    return area.get("mode_label") or MODE_LABELS[travel_mode(records)]
+
+
 def _km_label(km: float) -> str:
     meters = max(100, round(km * 1000, -2))
     if meters < 1000:
