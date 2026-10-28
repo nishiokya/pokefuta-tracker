@@ -11,6 +11,8 @@ on:
     paths:
       - 'apps/web/**' # HTML and assets changes
       - 'apps/scraper/generate_sitemap.py' # sitemap generator used during deploy
+      - 'apps/scraper/export_kml.py' # KML generator (pokefuta.kml and icons) run during deploy
+      - 'apps/scraper/test_export_kml.py' # KML tests run before generating
       - 'apps/scraper/generate_manhole_pages.py' # manhole page generator
       - 'apps/scraper/generate_manhole_pages_i18n.py' # translated manhole pages (/en/manholes/)
       - 'apps/scraper/manhole_page_css.py' # detail page CSS shared by ja / translated pages
@@ -249,7 +251,10 @@ jobs:
           cp docs/pokefuta.ndjson dist/pokefuta.ndjson || true
           # KML は map.html のフッタからリンクしている配布物なので、
           # 失敗を握りつぶすと 404 のままデプロイが成功してしまう
-          cp docs/pokefuta.kml dist/pokefuta.kml
+          python3 -m unittest apps.scraper.test_export_kml
+          python3 apps/scraper/export_kml.py \
+            --input docs/pokefuta.ndjson --output dist/pokefuta.kml \
+            --icon-output-dir dist/manhole/kml-icons
           cp docs/gmanhole.ndjson dist/gmanhole.ndjson || true
           cp docs/character_manholes.ndjson dist/character_manholes.ndjson
           cp docs/design_manholes.ndjson dist/design_manholes.ndjson
