@@ -1,5 +1,5 @@
 {
-  "_comment": "/trip/ のエリア。manhole_ids はページに出す地点の全部。所要時間は dataset/visit_durations.json に同じ組があるときだけ出る（apps/tools/build_visit_durations.py がこのファイルも読んで集計する）。 同じ市町村の2枚だけのエリアは登録しない（回る順番がA→Bの1本だけで、詳細ページの「次に寄れるポケふた」を狭めるだけになるため。2026-10-11 に上野・北上・鳥羽・大津を外した）。 access（任意）: スタート地点と行き方を1行ずつ。train は電車の1行、car は車の1行（電車が無いエリアなど）、parking は {name, kind: 公共（自治体・道の駅など）|施設（観光施設などの駐車場）|コインパーキング, fee: 無料|有料, note}。公式の案内で確かめた内容だけを書き、sources と checked_on を付ける。金額は書かない。",
+  "_comment": "/trip/ のエリア。manhole_ids はページに出す地点の全部。所要時間は dataset/visit_durations.json に同じ組があるときだけ出る（apps/tools/build_visit_durations.py がこのファイルも読んで集計する）。 同じ市町村の2枚だけのエリアは登録しない（回る順番がA→Bの1本だけで、詳細ページの「次に寄れるポケふた」を狭めるだけになるため。2026-10-11 に上野・北上・鳥羽・大津を外した）。 移動の目安が「車」で2〜3枚のエリアも登録しない（2026-10-28 に淡路・八戸＋階上を外した）。 access（任意）: スタート地点と行き方を1行ずつ。train は電車の1行、car は車の1行（電車が無いエリアなど）、boat は船の1行、note は予約や最終便など行く前に知っておくことの1行、parking は {name, kind: 公共（自治体・道の駅など）|施設（観光施設などの駐車場）|コインパーキング, fee: 無料|有料, note}。公式の案内で確かめた内容だけを書き、sources と checked_on を付ける。金額は書かない。 mode_label（任意）: 一覧の「移動の目安」を上書きする（船に乗るなど、地点の距離だけでは決まらないエリア）。",
   "areas": [
     {
       "slug": "higashiosaka",
@@ -76,102 +76,6 @@
           {
             "label": "YOT-TOKO",
             "url": "https://yot-toko.jp/pages/about"
-          }
-        ],
-        "checked_on": "2026-10-11"
-      }
-    },
-    {
-      "slug": "awaji",
-      "prefecture": "兵庫県",
-      "name": "淡路",
-      "manhole_ids": [
-        "205",
-        "204",
-        "203"
-      ],
-      "access": {
-        "car": "島内に電車はなく、車で回るエリア。3か所とも施設の無料駐車場がある",
-        "parking": [
-          {
-            "name": "道の駅あわじ",
-            "kind": "公共",
-            "fee": "無料",
-            "note": "道の駅"
-          },
-          {
-            "name": "北淡震災記念公園",
-            "kind": "施設",
-            "fee": "無料"
-          },
-          {
-            "name": "パルシェ香りの館",
-            "kind": "施設",
-            "fee": "無料"
-          }
-        ],
-        "sources": [
-          {
-            "label": "淡路市のポケふた案内",
-            "url": "https://www.city.awaji.lg.jp/soshiki/kankou/33895.html"
-          },
-          {
-            "label": "淡路島観光ガイド「北淡震災記念公園」",
-            "url": "https://www.awajishima-kanko.jp/manual/detail.html?bid=432"
-          },
-          {
-            "label": "パルシェ香りの館のアクセス",
-            "url": "https://www.parchez.co.jp/access/"
-          },
-          {
-            "label": "道の駅の登録要件（国土交通省）",
-            "url": "https://www.mlit.go.jp/road/Michi-no-Eki/outline.html"
-          }
-        ],
-        "checked_on": "2026-10-11"
-      }
-    },
-    {
-      "slug": "hachinohe-hashikami",
-      "prefecture": "青森県",
-      "name": "八戸・階上",
-      "manhole_ids": [
-        "157",
-        "158"
-      ],
-      "access": {
-        "train": "蕪嶋神社前の1枚は鮫駅（JR八戸線）から徒歩15分。道の駅はしかみは階上駅から車で約10分",
-        "car": "2か所は約10km離れているので車が楽。どちらも無料駐車場がある",
-        "parking": [
-          {
-            "name": "蕪島の駐車場",
-            "kind": "公共",
-            "fee": "無料",
-            "note": "かぶーにゃ近く"
-          },
-          {
-            "name": "道の駅はしかみ",
-            "kind": "公共",
-            "fee": "無料",
-            "note": "道の駅"
-          }
-        ],
-        "sources": [
-          {
-            "label": "八戸市のポケふた案内",
-            "url": "https://www.city.hachinohe.aomori.jp/soshikikarasagasu/kankoka/pokemon/17101.html"
-          },
-          {
-            "label": "VISITはちのへ「蕪島」",
-            "url": "https://visithachinohe.com/spot/kabushima/"
-          },
-          {
-            "label": "VISITはちのへ「道の駅はしかみ」",
-            "url": "https://visithachinohe.com/spot/mitinoekihashikami/"
-          },
-          {
-            "label": "道の駅の登録要件（国土交通省）",
-            "url": "https://www.mlit.go.jp/road/Michi-no-Eki/outline.html"
           }
         ],
         "checked_on": "2026-10-11"
@@ -339,6 +243,111 @@
         "2",
         "3",
         "7"
+      ]
+    },
+    {
+      "slug": "shimonoseki",
+      "prefecture": "山口県",
+      "name": "下関",
+      "mode_label": "徒歩＋船",
+      "intro": "下関市の4枚は、唐戸の海沿いに2枚、関門海峡に浮かぶ巌流島に2枚です。巌流島へは唐戸桟橋から連絡船で渡ります。回る順番と時間の目安をまとめました。",
+      "manhole_ids": [
+        "288",
+        "289",
+        "290",
+        "291"
+      ],
+      "access": {
+        "boat": "巌流島の2枚は、唐戸1号桟橋から関門汽船の巌流島連絡船で片道約10分。毎日運航で、予約はできない",
+        "note": "荒天のときは船が休むことがある。巌流島発の最終便に乗り遅れると島から出られなくなるので、最終便の時刻を先に確かめる",
+        "sources": [
+          {
+            "label": "下関市のポケふた設置案内",
+            "url": "https://www.city.shimonoseki.lg.jp/site/water/86736.html"
+          },
+          {
+            "label": "下関市公式観光サイト「巌流島」",
+            "url": "https://shimonoseki.travel/shimonosekistory/ganryujima/"
+          },
+          {
+            "label": "関門汽船",
+            "url": "https://www.kanmon-kisen.co.jp/"
+          }
+        ],
+        "checked_on": "2026-10-28"
+      }
+    },
+    {
+      "slug": "dazaifu",
+      "prefecture": "福岡県",
+      "name": "太宰府",
+      "manhole_ids": [
+        "315",
+        "316",
+        "317"
+      ]
+    },
+    {
+      "slug": "saga",
+      "prefecture": "佐賀県",
+      "name": "佐賀",
+      "manhole_ids": [
+        "255",
+        "256",
+        "257"
+      ]
+    },
+    {
+      "slug": "toyama",
+      "prefecture": "富山県",
+      "name": "富山",
+      "manhole_ids": [
+        "275",
+        "276",
+        "277"
+      ]
+    },
+    {
+      "slug": "uji",
+      "prefecture": "京都府",
+      "name": "宇治",
+      "intro": "宇治川沿いの2枚と、ニンテンドーミュージアムの施設内の1枚です。ミュージアムの入館チケットはすべて日時指定の予約制なので、3枚そろえるなら先に入館の予約を取ってください。",
+      "manhole_ids": [
+        "352",
+        "353",
+        "382"
+      ],
+      "access": {
+        "note": "ピカチュウの1枚はニンテンドーミュージアムの施設内にあり、見るには入館が要る。入館チケットはすべて日時指定の予約制",
+        "sources": [
+          {
+            "label": "Nintendo Museum チケットページ",
+            "url": "https://museum-tickets.nintendo.com/calendar?lang=ja"
+          }
+        ],
+        "checked_on": "2026-10-28"
+      }
+    },
+    {
+      "slug": "ojiya",
+      "prefecture": "新潟県",
+      "name": "小千谷",
+      "manhole_ids": [
+        "144",
+        "145",
+        "146",
+        "147"
+      ]
+    },
+    {
+      "slug": "ogasawara",
+      "prefecture": "東京都",
+      "name": "小笠原（父島）",
+      "manhole_ids": [
+        "153",
+        "154",
+        "155",
+        "156"
       ]
     }
   ]

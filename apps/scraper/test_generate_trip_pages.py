@@ -180,6 +180,14 @@ class AreaTest(unittest.TestCase):
         car_only = MODULE._access_html({**AREAS[1], "access": {"car": "島内は車で回る"}})
         self.assertIn("🚗 車</strong> 島内は車で回る", car_only)
         self.assertNotIn("🚃", car_only)
+        boat = MODULE._access_html({**AREAS[1], "access": {"boat": "連絡船で片道約10分", "note": "最終便に注意"}})
+        self.assertIn("⛴ 船</strong> 連絡船で片道約10分", boat)
+        self.assertIn("⚠ 注意</strong> 最終便に注意", boat)
+
+    def test_mode_label_overrides_distance_based_mode(self):
+        records = [_record("a", "a", 35, 135), _record("b", "a", 35.03, 135)]
+        self.assertEqual(VD.mode_label({}, records), "バス・自転車")
+        self.assertEqual(VD.mode_label({"mode_label": "徒歩＋船"}, records), "徒歩＋船")
 
 
 class HeroSelectionTest(unittest.TestCase):

@@ -42,8 +42,8 @@ try:
         duration_note,
         duration_range,
         duration_text,
-        MODE_LABELS,
         mode_hint,
+        mode_label,
         farthest_gap_km,
         spread_km,
         travel_mode,
@@ -80,8 +80,8 @@ except ModuleNotFoundError as exc:
         duration_note,
         duration_range,
         duration_text,
-        MODE_LABELS,
         mode_hint,
+        mode_label,
         farthest_gap_km,
         spread_km,
         travel_mode,
@@ -270,6 +270,8 @@ def _access_html(area: dict) -> str:
         rows.append(("🚃 電車", escape(access["train"])))
     if access.get("car"):
         rows.append(("🚗 車", escape(access["car"])))
+    if access.get("boat"):
+        rows.append(("⛴ 船", escape(access["boat"])))
     parking = [
         f'{escape(p["name"])}（{"・".join(escape(x) for x in (p.get("kind"), p.get("fee"), p.get("note")) if x)}）'
         for p in access.get("parking") or []
@@ -277,6 +279,8 @@ def _access_html(area: dict) -> str:
     ]
     if parking:
         rows.append(("🅿 駐車場", "、".join(parking)))
+    if access.get("note"):
+        rows.append(("⚠ 注意", escape(access["note"])))
     if not rows:
         return ""
     body = "".join(f"<li><strong>{label}</strong> {text}</li>" for label, text in rows)
@@ -538,7 +542,7 @@ def build_index_page(
 
     def card(area: dict, records: list[dict]) -> str:
         entry = find_entry(records, durations)
-        mode = MODE_LABELS[modes[area["slug"]]]
+        mode = mode_label(area, records)
         time = (
             f'<strong>{escape(duration_range(entry["p25_minutes"], entry["p75_minutes"]))}</strong>'
             if entry else '<strong>時間の目安はまだ</strong>'
@@ -549,7 +553,7 @@ def build_index_page(
             f'<span class="trip-pref">{escape(area["prefecture"])}</span>'
             f'<span class="trip-name">{escape(area["name"])} {len(records)}枚</span>'
             f'{card_thumbs_html(records, entry)}'
-            f'{time}<small>移動の目安：{mode}</small></a>'
+            f'{time}<small>移動の目安：{escape(mode)}</small></a>'
         )
 
     measured = [(a, rs) for a, rs in areas if find_entry(rs, durations)]
@@ -572,7 +576,7 @@ def build_index_page(
             f'<b>{escape(area["name"])} {len(records)}枚</b>'
             f'{card_thumbs_html(records, entry)}'
             f'<strong>{escape(duration_range(entry["p25_minutes"], entry["p75_minutes"]))}</strong>'
-            f'<small>移動の目安：{MODE_LABELS[modes[area["slug"]]]}</small></a>'
+            f'<small>移動の目安：{escape(mode_label(area, records))}</small></a>'
         )
 
     # measured はもう徒歩が先。車中心のエリアは下の一覧だけに残す

@@ -1,7 +1,21 @@
 {
-  "measured_on": "2026-10-27",
+  "measured_on": "2026-10-28",
   "min_public_people": 3,
   "entries": [
+    {
+      "label": "東京都台東区上野",
+      "manhole_ids": [
+        "172",
+        "173"
+      ],
+      "p25_minutes": 3,
+      "p75_minutes": 5,
+      "median_minutes": 4,
+      "common_order": [
+        "172",
+        "173"
+      ]
+    },
     {
       "label": "大阪府東大阪",
       "manhole_ids": [
@@ -20,20 +34,6 @@
         "207",
         "210",
         "209"
-      ]
-    },
-    {
-      "label": "東京都台東区上野",
-      "manhole_ids": [
-        "172",
-        "173"
-      ],
-      "p25_minutes": 3,
-      "p75_minutes": 5,
-      "median_minutes": 4,
-      "common_order": [
-        "172",
-        "173"
       ]
     },
     {
@@ -61,9 +61,9 @@
         "151",
         "152"
       ],
-      "p25_minutes": 28,
+      "p25_minutes": 26,
       "p75_minutes": 68,
-      "median_minutes": 39,
+      "median_minutes": 36,
       "common_order": [
         "148",
         "149",
@@ -83,7 +83,7 @@
         "103"
       ],
       "p25_minutes": 18,
-      "p75_minutes": 31,
+      "p75_minutes": 30,
       "median_minutes": 22,
       "common_order": [
         "100",
@@ -106,6 +106,20 @@
       "common_order": [
         "104",
         "105"
+      ]
+    },
+    {
+      "label": "三重県鳥羽市",
+      "manhole_ids": [
+        "243",
+        "414"
+      ],
+      "p25_minutes": 9,
+      "p75_minutes": 25,
+      "median_minutes": 11,
+      "common_order": [
+        "243",
+        "414"
       ]
     },
     {
@@ -145,17 +159,19 @@
       ]
     },
     {
-      "label": "三重県鳥羽市",
+      "label": "佐賀県佐賀",
       "manhole_ids": [
-        "243",
-        "414"
+        "255",
+        "256",
+        "257"
       ],
-      "p25_minutes": 9,
-      "p75_minutes": 25,
-      "median_minutes": 12,
+      "p25_minutes": 25,
+      "p75_minutes": 31,
+      "median_minutes": 27,
       "common_order": [
-        "243",
-        "414"
+        "255",
+        "257",
+        "256"
       ]
     },
     {
@@ -170,22 +186,6 @@
       "common_order": [
         "157",
         "158"
-      ]
-    },
-    {
-      "label": "佐賀県佐賀",
-      "manhole_ids": [
-        "255",
-        "256",
-        "257"
-      ],
-      "p25_minutes": 24,
-      "p75_minutes": 31,
-      "median_minutes": 28,
-      "common_order": [
-        "255",
-        "257",
-        "256"
       ]
     },
     {
@@ -406,6 +406,19 @@
         "195",
         "197"
       ]
+    },
+    {
+      "label": "福岡県北九州",
+      "manhole_ids": [
+        "198",
+        "199",
+        "200",
+        "201",
+        "202"
+      ],
+      "p25_minutes": 171,
+      "p75_minutes": 212,
+      "median_minutes": 192
     },
     {
       "label": "能登半島",

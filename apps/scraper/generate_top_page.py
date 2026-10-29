@@ -53,7 +53,7 @@ try:
     from apps.scraper.generate_trip_pages import area_records, area_route
     from apps.scraper.manhole_tile_image import responsive_attrs, tile_image_url
     from apps.scraper.visit_durations import (
-        MODE_LABELS, duration_range, find_entry, load_durations, load_trip_areas, travel_mode, trip_path,
+        duration_range, find_entry, load_durations, load_trip_areas, mode_label, trip_path,
     )
     from apps.scraper.photo_caption import JST, format_photo_date, to_jst_date
     from apps.scraper.prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS, REGIONS
@@ -69,7 +69,7 @@ except ModuleNotFoundError as exc:
     from generate_trip_pages import area_records, area_route
     from manhole_tile_image import responsive_attrs, tile_image_url
     from visit_durations import (
-        MODE_LABELS, duration_range, find_entry, load_durations, load_trip_areas, travel_mode, trip_path,
+        duration_range, find_entry, load_durations, load_trip_areas, mode_label, trip_path,
     )
     from photo_caption import JST, format_photo_date, to_jst_date
     from prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS, REGIONS
@@ -368,7 +368,7 @@ def build_trips(
             "count": len(rs),
             "minutes": entry.get("median_minutes") or 0,
             "time": duration_range(entry["p25_minutes"], entry["p75_minutes"]),
-            "mode": MODE_LABELS[travel_mode(rs)],
+            "mode": mode_label(area, rs),
             "thumbs": trip_thumbs_html(area_route(rs, entry)[0], image_dir),
         })
     trips.sort(key=lambda t: (-t["count"], -t["minutes"], t["slug"]))
