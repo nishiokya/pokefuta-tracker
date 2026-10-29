@@ -2636,20 +2636,18 @@ def build_page(
     visits_url = _visits_url(slug)
     nearby_url = _nearby_url(slug)
     if installed_count:
+        # 「投稿するポケふたを選ぶ」は同じページの一覧へ飛ぶだけで、数枚の県では
+        # 意味が薄い。写真は一覧のカード（写真を追加）から入れるので、ヒーローは
+        # 地図と訪問記録の2つに絞る。
         hero_actions_html = (
-            '<a class="button primary" href="#manhole-list" '
-            'data-track="prefecture_photo_candidate_click" '
-            'data-legacy-track="prefecture_photo_cta_click" '
-            'data-surface="hero" '
-            'data-destination="manhole_list">投稿するポケふたを選ぶ</a>'
-            '<a class="button secondary" href="#prefecture-map" '
+            '<a class="button primary" href="#prefecture-map" '
             'data-track="prefecture_map_click" '
             'data-destination="prefecture_map">地図で探す</a>'
-            f'<a class="button tertiary" href="{escape_attr(visits_url)}" '
+            f'<a class="button secondary" href="{escape_attr(visits_url)}" '
             'data-track="prefecture_visit_cta_click" '
             'data-destination="pokefuta_visits">訪問記録を開く</a>'
         )
-        hero_note = "対象を選ぶまではログイン不要です。写真投稿時にログインへ進みます。"
+        hero_note = ""
         journey_html = f"""
     <section class="journey-loop" aria-labelledby="journey-heading">
       <h2 id="journey-heading">記録して、次のポケふたへ</h2>
@@ -2852,7 +2850,7 @@ def build_page(
         <div class="hero-actions">
           {hero_actions_html}
         </div>
-        <p class="hero-note">{escape(hero_note)}</p>
+        {f'<p class="hero-note">{escape(hero_note)}</p>' if hero_note else ""}
         <div class="hero-utility">{official_cta}</div>
       </div>
       {f'<div class="hero-side">{hero_photos_html}</div>' if hero_photos_html else ""}
