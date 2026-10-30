@@ -74,8 +74,6 @@ LP_INDEX_STRINGS: dict[str, dict] = {
         "generation_heading": "世代別に探す",
         "regional_heading": "地域を応援するポケモン",
         "all_heading": "全ポケモン一覧（{total}体）",
-        "map_nav_hint": "都道府県ごとのポケふたは<a href='{map_href}'>全国マップ</a>から地域を選んで確認できます。",
-        "cta": "地図で全国のポケふたを探す →",
         "breadcrumb_aria": "パンくずリスト",
         "breadcrumb_home": "ポケふた図鑑",
         "footer": "ポケモンマンホール全国マップ",
@@ -123,8 +121,6 @@ LP_INDEX_STRINGS: dict[str, dict] = {
         "generation_heading": "Browse by Generation",
         "regional_heading": "Regional Pokémon",
         "all_heading": "All Pokémon ({total})",
-        "map_nav_hint": "Browse Poké Lids by prefecture on the <a href='{map_href}'>Japan Map</a>.",
-        "cta": "Explore all Poké Lids on the map →",
         "breadcrumb_aria": "Breadcrumb",
         "breadcrumb_home": "Japan Map",
         "footer": "Pokémon Manhole Map of Japan",
@@ -173,8 +169,6 @@ LP_INDEX_STRINGS: dict[str, dict] = {
         "generation_heading": "按世代查找",
         "regional_heading": "代表各地区的宝可梦",
         "all_heading": "全部宝可梦（{total}只）",
-        "map_nav_hint": "可从<a href='{map_href}'>全国地图</a>按都道府县查看宝可梦井盖分布。",
-        "cta": "在地图上查找全国宝可梦井盖 →",
         "breadcrumb_aria": "面包屑导航",
         "breadcrumb_home": "全国地图",
         "footer": "日本宝可梦井盖全国地图",
@@ -222,8 +216,6 @@ LP_INDEX_STRINGS: dict[str, dict] = {
         "generation_heading": "按世代查找",
         "regional_heading": "代表各地區的寶可夢",
         "all_heading": "全部寶可夢（{total}隻）",
-        "map_nav_hint": "可從<a href='{map_href}'>全國地圖</a>按都道府縣查看寶可夢人孔蓋分布。",
-        "cta": "在地圖上查找全國寶可夢人孔蓋 →",
         "breadcrumb_aria": "麵包屑導覽",
         "breadcrumb_home": "全國地圖",
         "footer": "日本寶可夢人孔蓋全國地圖",
@@ -271,8 +263,6 @@ LP_INDEX_STRINGS: dict[str, dict] = {
         "generation_heading": "세대별로 찾기",
         "regional_heading": "지역을 응원하는 포켓몬",
         "all_heading": "모든 포켓몬（{total}마리）",
-        "map_nav_hint": "<a href='{map_href}'>전국 지도</a>에서 현별로 포케후타를 확인할 수 있습니다.",
-        "cta": "지도에서 전국의 포케후타 찾기 →",
         "breadcrumb_aria": "이동 경로",
         "breadcrumb_home": "전국 지도",
         "footer": "일본 포켓몬 맨홀 전국 지도",
@@ -1126,8 +1116,6 @@ def generate_html(
     regional_heading = escape(strings["regional_heading"])
     h1 = escape(strings["h1"])
     lead = escape(strings["lead"])
-    map_nav_hint = strings["map_nav_hint"].format(map_href=escape(map_href))
-    cta = escape(strings["cta"])
     footer_text = escape(strings["footer"])
     breadcrumb_aria = escape(strings["breadcrumb_aria"])
     breadcrumb_home = escape(strings["breadcrumb_home"])
@@ -1579,28 +1567,6 @@ def generate_html(
       color: #777;
       font-weight: normal;
     }}
-    .map-nav-hint {{
-      font-size: 13px;
-      color: #666;
-      margin: 16px 0 4px;
-      text-align: center;
-    }}
-    .map-nav-hint a {{ color: #6F55A3; text-decoration: none; font-weight: bold; }}
-    .map-nav-hint a:hover {{ text-decoration: underline; }}
-    .cta-map {{
-      display: block;
-      background: #6F55A3;
-      color: white;
-      text-align: center;
-      padding: 14px 24px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-size: 16px;
-      font-weight: bold;
-      margin-top: 24px;
-      transition: background 0.2s;
-    }}
-    .cta-map:hover {{ background: #5a4480; }}
     footer {{
       margin-top: 32px;
       text-align: center;
@@ -1719,11 +1685,6 @@ def generate_html(
   <section class="page-section" aria-labelledby="pokemon-faq">
     <h2 id="pokemon-faq">{escape(enhancement["faq_heading"])}</h2>
     <div class="faq-list">{faq_html}</div>
-  </section>
-
-  <section class="page-section">
-    <p class="map-nav-hint">{map_nav_hint}</p>
-    <a href="{escape(map_url)}" class="cta-map">{cta}</a>
   </section>
 
   <footer class="page-credit">
