@@ -276,6 +276,47 @@ jobs:
             --exclude 'supabase-ssr.js' \
             dist
 
+      # 蓋の写真を R2（img.pokefuta.com）にも同じパスで置く。Pages の配信量を減らすための移行の第1段で、
+      # いまはどのページも img を参照していないので、失敗してもデプロイは止めない（参照し始めたら continue-on-error を外す）。
+      # 中身は dist/manhole/image と同じ集合: 非公開になって消えたギャラリー画像は sync で R2 からも消える。
+      # 鍵は pokefuta-public-images だけを読み書きできるもの（写真館の原本バケットには届かない）。
+      - name: Mirror manhole photos to R2 (img.pokefuta.com)
+        continue-on-error: true
+        timeout-minutes: 10
+        env:
+          RCLONE_CONFIG_R2_TYPE: s3
+          RCLONE_CONFIG_R2_PROVIDER: Cloudflare
+          RCLONE_CONFIG_R2_ACCESS_KEY_ID: ${{ secrets.R2_PUBLIC_ACCESS_KEY_ID }}
+          RCLONE_CONFIG_R2_SECRET_ACCESS_KEY: ${{ secrets.R2_PUBLIC_SECRET_ACCESS_KEY }}
+          R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
+          R2_BUCKET: ${{ secrets.R2_BUCKET }}
+          # バケットの作成・確認の権限は渡していない
+          RCLONE_CONFIG_R2_NO_CHECK_BUCKET: 'true'
+        run: |
+          # R2_ENDPOINT は原本バケット用で、バケット名のサブドメインやパスが付いていることがある
+          # （import_latest_manhole_photos.build_r2_object_url と同じ読み方）。アカウントのエンドポイントだけ取り出す
+          export RCLONE_CONFIG_R2_ENDPOINT="$(python3 -c '
+          import os
+          from urllib.parse import urlparse
+          host = urlparse(os.environ["R2_ENDPOINT"]).netloc
+          bucket = os.environ.get("R2_BUCKET", "")
+          if bucket and host.startswith(bucket + "."):
+              host = host[len(bucket) + 1:]
+          print("https://" + host)
+          ')"
+          sudo apt-get install -y -qq rclone
+          rclone version | head -1
+          # --checksum: 中身（MD5）が変わったものだけ上げる。チェックアウトし直すと mtime が変わるため
+          # --max-delete: 取り込みの失敗などで画像が大量に消えたときに R2 を道連れにしない
+          rclone sync dist/manhole/image r2:pokefuta-public-images/manhole/image \
+            --checksum \
+            --max-delete 100 \
+            --transfers 16 \
+            --header-upload 'Cache-Control: public, max-age=3600' \
+            --stats-one-line --stats 0 --log-level NOTICE
+          echo "[r2] local files: $(find dist/manhole/image -type f | wc -l)"
+          echo "[r2] remote files: $(rclone lsf -R --files-only r2:pokefuta-public-images/manhole/image | wc -l)"
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
         with:
