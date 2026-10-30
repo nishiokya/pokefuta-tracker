@@ -166,7 +166,6 @@ LP_STRINGS: dict[str, dict[str, str]] = {
         "same_generation_heading": "同じ世代のポケモン",
         "summary_link": "ポケふた統計・一覧ハブ",
         "count_text": "全国に <strong>{count}</strong> 枚の{name}のポケふたがあります。",
-        "cta": "地図で全国のポケふたを探す →",
         "breadcrumb_aria": "パンくずリスト",
         "breadcrumb_home": "ポケふた図鑑",
         "breadcrumb_pokemon": "ポケモン一覧",
@@ -193,7 +192,6 @@ LP_STRINGS: dict[str, dict[str, str]] = {
         "summary_link": "Poké Lid Summary Hub",
         "count_text": "There are <strong>{count}</strong> {name} Poké Lids across Japan.",
         "count_text_one": "There is <strong>{count}</strong> {name} Poké Lid in Japan.",
-        "cta": "Explore all Poké Lids on the map →",
         "breadcrumb_aria": "Breadcrumb",
         "breadcrumb_home": "Japan Map",
         "breadcrumb_pokemon": "Pokémon List",
@@ -221,7 +219,6 @@ LP_STRINGS: dict[str, dict[str, str]] = {
         "same_generation_heading": "相同世代的宝可梦",
         "summary_link": "宝可梦井盖统计中心",
         "count_text": "全国共有 <strong>{count}</strong> 个{name}宝可梦井盖。",
-        "cta": "在地图上查找全国宝可梦井盖 →",
         "breadcrumb_aria": "面包屑导航",
         "breadcrumb_home": "全国地图",
         "breadcrumb_pokemon": "宝可梦列表",
@@ -247,7 +244,6 @@ LP_STRINGS: dict[str, dict[str, str]] = {
         "same_generation_heading": "相同世代的寶可夢",
         "summary_link": "寶可夢人孔蓋統計中心",
         "count_text": "全國共有 <strong>{count}</strong> 個{name}寶可夢人孔蓋。",
-        "cta": "在地圖上查找全國寶可夢人孔蓋 →",
         "breadcrumb_aria": "麵包屑導覽",
         "breadcrumb_home": "全國地圖",
         "breadcrumb_pokemon": "寶可夢列表",
@@ -273,7 +269,6 @@ LP_STRINGS: dict[str, dict[str, str]] = {
         "same_generation_heading": "같은 세대 포켓몬",
         "summary_link": "포케후타 통계 허브",
         "count_text": "전국에 <strong>{count}</strong>개의 {name} 포케후타가 있습니다.",
-        "cta": "지도에서 전국의 포케후타 찾기 →",
         "breadcrumb_aria": "이동 경로",
         "breadcrumb_home": "전국 지도",
         "breadcrumb_pokemon": "포켓몬 목록",
@@ -1038,7 +1033,6 @@ def generate_html(
         )
 
     count_text_html = format_count(strings, "count_text", count, name=escape(display_name))
-    cta_text = strings["cta"]
     footer_text = strings["footer"]
     breadcrumb_aria = strings["breadcrumb_aria"]
 
@@ -1317,20 +1311,6 @@ def generate_html(
       background: #fbf9ff;
     }}
     .back-links a:hover {{ background: #f0ebfa; }}
-    .cta-map {{
-      display: block;
-      background: #6F55A3;
-      color: white;
-      text-align: center;
-      padding: 16px 24px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-size: 17px;
-      font-weight: bold;
-      margin-top: 24px;
-      transition: background 0.2s;
-    }}
-    .cta-map:hover {{ background: #5a4480; }}
     footer {{
       margin-top: 32px;
       text-align: center;
@@ -1376,11 +1356,6 @@ def generate_html(
   </div>
 
   {related_html}
-
-  <a href="{escape(map_url)}" class="cta-map"
-     onclick="trackEvent('click_map_cta', {{surface: 'pokemon_lp', pokemon_slug: {slug_js}}})">
-    {escape(cta_text)}
-  </a>
 
   <footer class="page-credit">
     <p><a href="{escape(BASE_URL)}">data.pokefuta.com</a> &mdash; {escape(footer_text)}</p>
