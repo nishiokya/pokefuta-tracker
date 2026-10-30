@@ -2198,23 +2198,22 @@ PAGE_CSS = """    :root { color-scheme: light; }
     .contribution-card b { margin-top: 6px; color: #176f68; font-size: .75rem; }
     .photo-empty-state { padding: 18px; border-radius: 14px; background: #f3efe7; }
     .photo-empty-state p { margin: 4px 0 12px; color: #75685c; }
-    .pokemon-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+    /* 位置取りの薄いセクションなので、カードではなく小さなチップで並べる（文言は残す） */
+    .pokemon-grid { display: flex; flex-wrap: wrap; gap: 6px; }
     .pokemon-card {
-      display: grid; gap: 2px; padding: 12px; border: 1px solid rgba(93,67,35,.13);
-      border-radius: 13px; background: white; color: inherit; text-decoration: none;
+      display: inline-flex; align-items: baseline; gap: 6px; padding: 5px 10px;
+      border: 1px solid rgba(93,67,35,.13); border-radius: 999px; background: white;
+      color: inherit; text-decoration: none;
     }
-    .pokemon-card strong { color: #3d2b72; }
-    .pokemon-card span { color: #75685c; font-size: .75rem; font-weight: 750; }
+    .pokemon-card strong { color: #3d2b72; font-size: .86rem; }
+    .pokemon-card span { color: #75685c; font-size: .7rem; font-weight: 750; }
     .pokemon-more { grid-column: 1 / -1; }
     .pokemon-more summary {
       width: fit-content; margin: 12px auto 0; padding: 8px 14px;
       border-radius: 999px; background: #eee7fb; color: #57408f;
       cursor: pointer; font-size: .82rem; font-weight: 900;
     }
-    .pokemon-more-grid {
-      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 8px; margin-top: 12px;
-    }
+    .pokemon-more-grid { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
     .manhole-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
     .manhole-card {
       overflow: hidden; border: 1px solid #e9dfc7;
@@ -2309,12 +2308,13 @@ PAGE_CSS = """    :root { color-scheme: light; }
     .event-item p { margin: 6px 0 0; font-size: .92rem; }
     .event-period { color: #75685c; font-size: .78rem; }
     .empty-state { margin: 0; color: #75685c; }
-    .related-label { margin: 0 0 8px; color: #75685c; font-size: .8rem; font-weight: 850; }
-    .related-links { display: flex; flex-wrap: wrap; gap: 8px; }
+    .related-label { margin: 0 0 6px; color: #75685c; font-size: .75rem; font-weight: 850; }
+    .related-links { display: flex; flex-wrap: wrap; gap: 6px; }
     .related-links a {
-      padding: 6px 10px; border-radius: 999px; background: #eee7fb;
-      color: #57408f; font-size: .82rem; font-weight: 850; text-decoration: none;
+      padding: 3px 9px; border-radius: 999px; background: #f3efe7;
+      color: #6b5a8c; font-size: .76rem; font-weight: 800; text-decoration: none;
     }
+    #related-heading { font-size: .95rem; color: #75685c; }
     footer { margin-top: 24px; color: #75685c; font-size: .8rem; text-align: center; }
     .leaflet-popup-content a { font-weight: 850; }
     @media (max-width: 700px) {
@@ -2343,7 +2343,6 @@ PAGE_CSS = """    :root { color-scheme: light; }
       .contribution-panel { grid-template-columns: 1fr; }
       .contribution-grid { grid-template-columns: 1fr; }
       .journey-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .pokemon-grid, .pokemon-more-grid { grid-template-columns: 1fr; }
       .manhole-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       #prefecture-map { height: 360px; }
       section { padding: 16px; }
@@ -2636,20 +2635,18 @@ def build_page(
     visits_url = _visits_url(slug)
     nearby_url = _nearby_url(slug)
     if installed_count:
+        # 「投稿するポケふたを選ぶ」は同じページの一覧へ飛ぶだけで、数枚の県では
+        # 意味が薄い。写真は一覧のカード（写真を追加）から入れるので、ヒーローは
+        # 地図と訪問記録の2つに絞る。
         hero_actions_html = (
-            '<a class="button primary" href="#manhole-list" '
-            'data-track="prefecture_photo_candidate_click" '
-            'data-legacy-track="prefecture_photo_cta_click" '
-            'data-surface="hero" '
-            'data-destination="manhole_list">投稿するポケふたを選ぶ</a>'
-            '<a class="button secondary" href="#prefecture-map" '
+            '<a class="button primary" href="#prefecture-map" '
             'data-track="prefecture_map_click" '
             'data-destination="prefecture_map">地図で探す</a>'
-            f'<a class="button tertiary" href="{escape_attr(visits_url)}" '
+            f'<a class="button secondary" href="{escape_attr(visits_url)}" '
             'data-track="prefecture_visit_cta_click" '
             'data-destination="pokefuta_visits">訪問記録を開く</a>'
         )
-        hero_note = "対象を選ぶまではログイン不要です。写真投稿時にログインへ進みます。"
+        hero_note = ""
         journey_html = f"""
     <section class="journey-loop" aria-labelledby="journey-heading">
       <h2 id="journey-heading">記録して、次のポケふたへ</h2>
@@ -2852,7 +2849,7 @@ def build_page(
         <div class="hero-actions">
           {hero_actions_html}
         </div>
-        <p class="hero-note">{escape(hero_note)}</p>
+        {f'<p class="hero-note">{escape(hero_note)}</p>' if hero_note else ""}
         <div class="hero-utility">{official_cta}</div>
       </div>
       {f'<div class="hero-side">{hero_photos_html}</div>' if hero_photos_html else ""}

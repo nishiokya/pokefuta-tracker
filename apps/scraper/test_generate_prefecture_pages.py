@@ -88,7 +88,8 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         self.assertIn("https://pokefuta.com/visits?from=data", html)
         self.assertNotIn("utm_", html)
         self.assertIn("prefecture_visit_cta_click", html)
-        self.assertIn("prefecture_photo_candidate_click", html)
+        # ヒーローの「投稿するポケふたを選ぶ」は同ページ内スクロールだけなので置かない
+        self.assertNotIn("投稿するポケふたを選ぶ", html)
         self.assertIn("prefecture_photo_upload_start", html)
         self.assertIn("prefecture_map_pin_click", html)
         self.assertIn("prefecture_google_maps_click", html)
@@ -1299,7 +1300,6 @@ class PrefecturePageDeployContractTest(unittest.TestCase):
             "prefecture_photo_upload_start",
             "prefecture_map_pin_click",
             "prefecture_scroll_depth",
-            "prefecture_photo_cta_click",
         ):
             with self.subTest(expected=expected):
                 self.assertIn(expected, html)
