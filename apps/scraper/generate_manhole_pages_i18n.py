@@ -64,7 +64,6 @@ TEXT: dict[str, dict[str, str]] = {
         "h1": "{pokemons} Poké Lid in {place}",
         "breadcrumb_aria": "Breadcrumb",
         "breadcrumb_top": "Map of Japan",
-        "back": "← Back to the map of Japan",
         "photo_alt": "Photo of the {h1}",
         "photo_by": "Photo by {name}",
         "no_photo": "No photo yet",
@@ -122,7 +121,6 @@ TEXT: dict[str, dict[str, str]] = {
         "h1": "{place}的寶可夢人孔蓋（{pokemons}）",
         "breadcrumb_aria": "導覽路徑",
         "breadcrumb_top": "日本全國地圖",
-        "back": "← 回到日本全國地圖",
         "photo_alt": "{h1}的照片",
         "photo_by": "攝影：{name}",
         "no_photo": "尚無照片",
@@ -562,12 +560,6 @@ def build_page(
         f"<p class='ja-note'>{escape(page.t('ja_note'))}</p></section>"
     )
 
-    back_html = (
-        f'<a href="{_attr(map_url)}" class="back-btn"'
-        f'{_onclick("click_map_internal", {"manhole_id": manhole_id, "surface": "back_btn"})}>'
-        f"{escape(page.t('back'))}</a>"
-    )
-
     # ---- head
     og_image = photo_url or f"{BASE_URL}assets/ogp/pokefuta_map_ogp.png"
     if ogp_dir is not None and (ogp_dir / f"{manhole_id}.png").exists():
@@ -659,8 +651,6 @@ def build_page(
 <body>
   {ja._SVG_DEFS}
   <div class="container">
-    {back_html}
-
     {hero_html}
 
     {gallery_html}
