@@ -805,12 +805,15 @@
         .replace(/\t/g, '\\t');
     }
 
+    // 画像は R2（img.pokefuta.com）から読む。デプロイのたびに dist/manhole/image を同じパスで複写している
+    // （pages-deploy.yml「Mirror manhole photos to R2」）。GitHub Pages の配信量を減らすため、配信量の多い地図から切り替えた（2026-11）
+    const MANHOLE_IMAGE_BASE = 'https://img.pokefuta.com/manhole/image/';
     // width を渡すと、デプロイ時に作る小さい WebP（180 / 360 / 480）を指す（apps/scraper/build_small_images.py）。
     // 一覧のサムネイルに 720px の JPEG を出していて、地図を開くだけで約15MB 読んでいた（2026-10-25）
     function getLocalManholeImageUrl(id, width) {
       const safeId = String(id ?? '').trim();
       if (!safeId) return '';
-      const base = `%%BASE_PATH%%manhole/image/${encodeURIComponent(safeId)}_latest`;
+      const base = `${MANHOLE_IMAGE_BASE}${encodeURIComponent(safeId)}_latest`;
       return width ? `${base}_${width}.webp` : `${base}.jpeg`;
     }
 
