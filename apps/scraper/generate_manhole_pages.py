@@ -654,7 +654,6 @@ def generate_html(
         h1 += f"（{pokemon_text}）"
 
     canonical_url = f"{BASE_URL}manholes/{quote(manhole_id)}/"
-    map_url = f"{BASE_URL}?manhole={quote(manhole_id)}"
     pref_page_slug = PREFECTURE_SLUGS.get(prefecture, "")
     pref_url = f"/prefectures/{quote(pref_page_slug)}/" if pref_page_slug else f"{BASE_URL}?pref={quote(prefecture)}"
 
@@ -1264,14 +1263,6 @@ def generate_html(
         f"</a></section>"
     )
 
-    # Back button HTML
-    _back_onclick = _attr_json({"manhole_id": manhole_id, "surface": "back_btn"})
-    back_btn_html = (
-        f"<a href=\"{escape(map_url)}\" class=\"back-btn\""
-        f" onclick=\"trackEvent('click_map_internal', {_back_onclick})\">"
-        f"← 全国マップへ戻る</a>"
-    )
-
     # Hero photo upload CTA — suppressed entirely for 設置前 (notice is already shown in hero_photo_html)
     _photo_event = "click_photo_upload" if has_photo_bool else "click_photo_upload_placeholder"
     _photo_label = "写真を投稿" if has_photo_bool else "最初の旅写真を投稿する"
@@ -1409,8 +1400,6 @@ def generate_html(
 <body>
   {_SVG_DEFS}
   <div class="container">
-    {back_btn_html}
-
     {hero_card_html}
 
     {gallery_html}

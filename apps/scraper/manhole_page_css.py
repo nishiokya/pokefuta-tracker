@@ -737,25 +737,6 @@ PAGE_CSS = f"""    * {{
       color: #6b5d44;
     }}
 
-    .back-btn {{
-      display: inline-flex;
-      align-items: center;
-      background: #fff;
-      border: 1px solid #e0d8cc;
-      border-radius: 20px;
-      padding: 10px 18px;
-      font-size: 14px;
-      font-weight: 500;
-      color: #5b4a36;
-      text-decoration: none;
-      margin-bottom: 12px;
-      transition: background 0.15s;
-    }}
-
-    .back-btn:hover {{
-      background: #f8f3eb;
-    }}
-
     .visit-cta {{
       display: flex;
       align-items: center;
