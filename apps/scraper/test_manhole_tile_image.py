@@ -94,6 +94,15 @@ class MapPageSmallImageTest(unittest.TestCase):
                 # 幅を付けずに 720px の JPEG を読む呼び出しを残さない（定義の行だけ）
                 self.assertEqual([c for c in calls if "," not in c], [])
 
+    def test_map_pages_read_photos_from_r2(self):
+        """地図の写真は Pages ではなく R2（img.pokefuta.com）から読む。デプロイで同じパスに複写している。"""
+        web = Path(__file__).parents[1] / "web"
+        for name in ("map.html", "map.template.html"):
+            with self.subTest(page=name):
+                source = (web / name).read_text(encoding="utf-8")
+                self.assertIn("const MANHOLE_IMAGE_BASE = 'https://img.pokefuta.com/manhole/image/';", source)
+                self.assertIn("const base = `${MANHOLE_IMAGE_BASE}${encodeURIComponent(safeId)}_latest`;", source)
+
 
     def test_manhole_related_thumbnails_use_small_webp(self):
         from apps.scraper import generate_manhole_pages as ja  # noqa: PLC0415

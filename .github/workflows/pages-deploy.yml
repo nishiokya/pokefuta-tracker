@@ -276,8 +276,9 @@ jobs:
             --exclude 'supabase-ssr.js' \
             dist
 
-      # 蓋の写真を R2（img.pokefuta.com）にも同じパスで置く。Pages の配信量を減らすための移行の第1段で、
-      # いまはどのページも img を参照していないので、失敗してもデプロイは止めない（参照し始めたら continue-on-error を外す）。
+      # 蓋の写真を R2（img.pokefuta.com）にも同じパスで置く。Pages の配信量を減らすため、地図（map.html）はここから読む。
+      # 失敗してもデプロイは止めない: R2 には前回までの同じパスの画像が残るので、地図で欠けるのは新しく増えた蓋だけ。
+      # 止めると docs/api（写真館が読む）や他のページの更新まで止まるほうが痛い。失敗は実行結果の注記で分かる。
       # 中身は dist/manhole/image と同じ集合: 非公開になって消えたギャラリー画像は sync で R2 からも消える。
       # 鍵は pokefuta-public-images だけを読み書きできる移行期間用のもの（写真館の原本バケットには届かない）。写真館が公開用画像を作るようになったら secret ごと消す。
       - name: Mirror manhole photos to R2 (img.pokefuta.com)
