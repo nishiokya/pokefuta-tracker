@@ -304,7 +304,14 @@ jobs:
               host = host[len(bucket) + 1:]
           print("https://" + host)
           ')"
-          sudo apt-get install -y -qq rclone
+          # apt の rclone（Ubuntu 24.04 は v1.60.1）は R2 へ上げた全件で 501 NotImplemented を受け（中身は届いている）、
+          # 1回目の試行が全件失敗扱いになる。公式の版を固定して入れる（版を上げるときは SHA256SUMS の値も替える）
+          RCLONE_VERSION=v1.75.2
+          RCLONE_SHA256=349ac8fba6ff65d6247043f1750cdcb518ec5d500ef91463a10d37c0ccdf3702
+          curl -fsSL -o "$RUNNER_TEMP/rclone.zip" "https://downloads.rclone.org/${RCLONE_VERSION}/rclone-${RCLONE_VERSION}-linux-amd64.zip"
+          echo "${RCLONE_SHA256}  $RUNNER_TEMP/rclone.zip" | sha256sum -c -
+          unzip -q -j "$RUNNER_TEMP/rclone.zip" "rclone-${RCLONE_VERSION}-linux-amd64/rclone" -d "$RUNNER_TEMP/rclone-bin"
+          export PATH="$RUNNER_TEMP/rclone-bin:$PATH"
           rclone version | head -1
           # --checksum: 中身（MD5）が変わったものだけ上げる。チェックアウトし直すと mtime が変わるため
           # --max-delete: 取り込みの失敗などで画像が大量に消えたときに R2 を道連れにしない
