@@ -1203,7 +1203,7 @@ def generate_html(
     if same_pokemon:
         same_pokemon_html = (
             "<section id='same-pokemon' class='same-pokemon-section section-card'>"
-            "<h2>同じポケモンのポケふた</h2>"
+            "<h2>ほかの県の同じポケモン</h2>"
             "<ul class='related-list related-list--cards'>"
         )
         _current_poke_set = set(pokemons)
@@ -1497,6 +1497,7 @@ class RelatedIndex:
         )[:20]
 
         # Same pokemon manholes (deduplicated: one entry per manhole)
+        # 同じ県の蓋は「◯◯県のポケふた」に出るので、ここには他県の蓋だけを並べる（件数バッジは全国の数のまま）
         seen_ids: set[str] = set()
         same_pokemon: list[dict] = []
         for pk in filter_pokemons(manhole.get("pokemons", [])):
@@ -1504,7 +1505,8 @@ class RelatedIndex:
                 oid = str(other.get("id", "")).strip()
                 if oid != manhole_id and oid not in seen_ids:
                     seen_ids.add(oid)
-                    same_pokemon.append(other)
+                    if not prefecture or other.get("prefecture", "") != prefecture:
+                        same_pokemon.append(other)
 
         return {
             "nearby": nearby[:5],
