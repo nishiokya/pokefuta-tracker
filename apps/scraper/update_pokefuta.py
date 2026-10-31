@@ -50,6 +50,17 @@ REQ_TIMEOUT = 15
 RETRY = 3
 DEFAULT_SLEEP = 0.4
 
+# 公式が落ちている（503・タイムアウト）ときに既存の蓋を deleted にしないための安全弁。
+# 取得失敗がこの回数続いたら公式停止とみなし、何も書かずに失敗終了する。
+MAX_CONSECUTIVE_FETCH_ERRORS = 5
+# 1回の実行で deleted にしてよい件数の上限。メンテ画面が 200 や 404 で返ると
+# 座標が読めず全件が削除扱いになるため、超えたら何も書かずに失敗終了する。
+DEFAULT_MAX_DELETIONS = 10
+
+
+class FetchError(Exception):
+    """404 以外の理由で取得できなかった（5xx・タイムアウト・接続失敗など）。"""
+
 # ウェブスクレイプ由来フィールド — 変化時に last_updated を更新する
 # 手動メタデータ(tags/address_norm/building など)はここに含めない
 # 更新ループで実際に上書きするフィールドのみ比較対象にすること。
@@ -91,6 +102,11 @@ def setup_logger(level: str = "INFO") -> logging.Logger:
 
 
 def fetch(url: str, logger: logging.Logger, headers: Dict[str, str]) -> Optional[str]:
+    """本文を返す。404 は None。それ以外で取得できなければ FetchError を投げる。
+
+    取得失敗を None（＝ページが無い）と同じに扱うと、公式の停止中に既存の蓋が
+    deleted になってしまうため、404 とそれ以外を呼び出し側で区別できるようにしている。
+    """
     last_err = None
     for i in range(RETRY):
         try:
@@ -104,7 +120,7 @@ def fetch(url: str, logger: logging.Logger, headers: Dict[str, str]) -> Optional
             logger.warning("fetch failed (%s) retry=%d err=%s", url, i + 1, e)
             time.sleep(0.8 * (i + 1))
     logger.error("giving up %s: %s", url, last_err)
-    return None
+    raise FetchError(f"{url}: {last_err}")
 
 
 def load_manhole_titles_master(dataset_dir: str) -> Dict:
@@ -587,6 +603,8 @@ def main():
                         default=os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
                                              'docs', 'api', 'manholes.json'),
                         help='写真館スナップショット。写真のある蓋は「設置予定」表記でも設置済みとする')
+    parser.add_argument('--max-deletions', type=int, default=DEFAULT_MAX_DELETIONS,
+                        help='1回で deleted にしてよい件数。超えたら公式の異常とみなし何も書かずに失敗終了する')
     args = parser.parse_args()
 
     logger = setup_logger(args.log_level)
@@ -646,10 +664,24 @@ def main():
 
     logger.info("Starting scan up to %d (current max existing id=%d)", args.scan_max, last_existing_id)
 
+    fetch_errors = 0
+    consecutive_fetch_errors = 0
     try:
         for i in range(1, 0 if args.no_fetch else args.scan_max + 1):
             detail_url = f"{args.base.rstrip('/')}/desc/{i}/?is_modal=1"
-            html = fetch(detail_url, logger, HEADERS)
+            try:
+                html = fetch(detail_url, logger, HEADERS)
+            except FetchError:
+                # 取れなかっただけで、無くなったとは限らない。既存の記録はそのまま残す
+                fetch_errors += 1
+                consecutive_fetch_errors += 1
+                if consecutive_fetch_errors >= MAX_CONSECUTIVE_FETCH_ERRORS:
+                    logger.error("fetch failed %d times in a row; official site looks down. "
+                                 "Aborting without writing %s", consecutive_fetch_errors, args.out)
+                    sys.exit(1)
+                time.sleep(sleep_sec)
+                continue
+            consecutive_fetch_errors = 0
             if html is None:
                 # Mark deletion if previously active
                 if str(i) in by_id and by_id[str(i)].get('status') == 'active':
@@ -719,6 +751,14 @@ def main():
             time.sleep(sleep_sec)
     except KeyboardInterrupt:
         logger.warning("Interrupted; proceeding to write partial results")
+
+    if fetch_errors:
+        logger.warning("%d detail pages could not be fetched; kept their existing records", fetch_errors)
+    if len(deleted_ids) > args.max_deletions:
+        logger.error("%d records would be marked deleted (limit %d): %s. "
+                     "Official site may be in maintenance. Aborting without writing %s",
+                     len(deleted_ids), args.max_deletions, ",".join(deleted_ids), args.out)
+        sys.exit(1)
 
     # Prepare ordered list (keep stable ordering by numeric id then status)
     all_records = list(by_id.values())

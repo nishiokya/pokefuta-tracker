@@ -3,9 +3,12 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import sys
+import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 MODULE_PATH = Path(__file__).with_name("update_pokefuta.py")
 sys.path.insert(0, str(MODULE_PATH.parent))
@@ -141,6 +144,73 @@ class UpdatePokefutaApplyInstallStatusTest(unittest.TestCase):
         result = MODULE.apply_install_status(record, idx)
         self.assertFalse(result)
         self.assertEqual(record, {"id": "999", "title": "unchanged"})
+
+
+class UpdatePokefutaOfficialOutageTest(unittest.TestCase):
+    """公式が止まっている（503・タイムアウト・メンテ画面）ときに既存の蓋を deleted にしない。"""
+
+    def setUp(self) -> None:
+        self.tmp = tempfile.TemporaryDirectory()
+        self.out = Path(self.tmp.name) / "pokefuta.ndjson"
+        rows = [
+            {"id": str(i), "title": f"t{i}", "prefecture": "東京都", "city": "千代田区",
+             "lat": 35.0, "lng": 139.0, "status": "active"}
+            for i in range(1, 4)
+        ]
+        self.original = "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows)
+        self.out.write_text(self.original, encoding="utf-8")
+
+    def tearDown(self) -> None:
+        self.tmp.cleanup()
+
+    def _run(self, fetch_side_effect, *extra_args: str) -> None:
+        argv = ["update_pokefuta.py", "--out", str(self.out), "--scan-max", "3",
+                "--photo-snapshot", str(Path(self.tmp.name) / "missing.json"), *extra_args]
+        with mock.patch.object(sys, "argv", argv), \
+                mock.patch.object(MODULE, "fetch", side_effect=fetch_side_effect), \
+                mock.patch.object(MODULE, "fetch_install_status", return_value={}), \
+                mock.patch.object(MODULE.time, "sleep"):
+            MODULE.main()
+
+    def _statuses(self) -> dict:
+        lines = self.out.read_text(encoding="utf-8").splitlines()
+        return {r["id"]: r["status"] for r in map(json.loads, lines)}
+
+    def test_site_down_aborts_without_writing(self) -> None:
+        with mock.patch.object(MODULE, "MAX_CONSECUTIVE_FETCH_ERRORS", 2):
+            with self.assertRaises(SystemExit) as cm:
+                self._run(MODULE.FetchError("503"))
+        self.assertEqual(cm.exception.code, 1)
+        self.assertEqual(self.out.read_text(encoding="utf-8"), self.original)
+
+    def test_isolated_fetch_error_keeps_record_active(self) -> None:
+        def fake_fetch(url, logger, headers):
+            if "/desc/1/" in url:
+                raise MODULE.FetchError("timeout")
+            return None  # 404
+
+        with self.assertRaises(SystemExit) as cm:
+            self._run(fake_fetch)
+        self.assertEqual(cm.exception.code, 0)
+        self.assertEqual(self._statuses(), {"1": "active", "2": "deleted", "3": "deleted"})
+
+    def test_mass_deletion_aborts_without_writing(self) -> None:
+        # メンテ画面が 200 で返り座標が読めないと、全件が削除扱いになる
+        with self.assertRaises(SystemExit) as cm:
+            self._run(lambda url, logger, headers: "<html>maintenance</html>", "--max-deletions", "2")
+        self.assertEqual(cm.exception.code, 1)
+        self.assertEqual(self.out.read_text(encoding="utf-8"), self.original)
+
+    def test_fetch_raises_on_server_error_and_returns_none_on_404(self) -> None:
+        logger = MODULE.setup_logger("CRITICAL")
+        resp_503 = mock.Mock(status_code=503)
+        resp_503.raise_for_status.side_effect = MODULE.requests.HTTPError("503")
+        with mock.patch.object(MODULE.requests, "get", return_value=resp_503), \
+                mock.patch.object(MODULE.time, "sleep"):
+            with self.assertRaises(MODULE.FetchError):
+                MODULE.fetch("https://example.invalid/", logger, {})
+        with mock.patch.object(MODULE.requests, "get", return_value=mock.Mock(status_code=404)):
+            self.assertIsNone(MODULE.fetch("https://example.invalid/", logger, {}))
 
 
 if __name__ == "__main__":
