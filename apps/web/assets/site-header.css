@@ -598,11 +598,20 @@ body.has-site-header.pokefuta-map-page .site-header { z-index: 1100; }
   body.has-site-header.pokefuta-map-page #controls {
     bottom: calc(var(--chrome-bottomnav-height) + env(safe-area-inset-bottom));
     max-height: calc(78vh - var(--chrome-bottomnav-height));
+    max-height: calc(78dvh - var(--chrome-bottomnav-height));
   }
 
-  /* 展開時は 88vh が正。上のルールのほうが詳細度が高いので個別に引き直す */
+  /* 展開時は 88vh が正。上のルールのほうが詳細度が高いので個別に引き直す。
+     vh ではなく dvh で測り、さらに「ヘッダーの下まで」で頭打ちにする。
+     iPhone の Chrome は vh がツールバーを隠したときの高さで、見えている範囲より大きい。
+     88vh のままだとシート上端のつまみが z-index 1100 のヘッダーの裏に潜り、
+     開いたシートを閉じられなくなる（Safari はツールバーが小さく、PC は vh＝実寸なので出ない） */
   body.has-site-header.pokefuta-map-page.sheet-expanded #controls {
     max-height: calc(88vh - var(--chrome-bottomnav-height));
+    max-height: min(
+      calc(88dvh - var(--chrome-bottomnav-height)),
+      calc(100dvh - var(--chrome-height) - var(--chrome-bottomnav-height) - env(safe-area-inset-bottom) - 8px)
+    );
   }
 }
 
