@@ -936,6 +936,39 @@ body.pokefuta-map-page {
   cursor: pointer;
 }
 
+/* 近くの5件：行の本体（地図で開く）と、Google マップの経路案内を横に並べる */
+.pokefuta-map-page .prefecture-spot-row {
+  display: flex;
+  align-items: stretch;
+  gap: 6px;
+}
+
+.pokefuta-map-page .prefecture-spot-row .prefecture-spot-item {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.pokefuta-map-page .prefecture-spot-maps {
+  display: inline-flex;
+  flex: 0 0 76px;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 8px;
+  border-radius: 12px;
+  background: #1a73e8;
+  color: #fff;
+  font-size: .7rem;
+  font-weight: 900;
+  line-height: 1.25;
+  text-align: center;
+  text-decoration: none;
+}
+
+.pokefuta-map-page .prefecture-spot-maps:hover,
+.pokefuta-map-page .prefecture-spot-maps:focus-visible {
+  background: #1558b0;
+}
+
 .pokefuta-map-page .recent-added-empty {
   grid-column: 1 / -1;
   margin: 0;

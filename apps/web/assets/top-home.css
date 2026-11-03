@@ -810,11 +810,16 @@
   .home-quick__link--map { display: none; }
   .home-quick__link--desktop { display: flex; }
   .home-quick__link--wide { grid-column: 1 / -1; }
-  .home-map__cta {
+  .home-map__actions {
     position: absolute;
     right: 20px;
     bottom: 26px;
     z-index: 1;
+    display: flex;
+    gap: 10px;
+  }
+  .home-map__near,
+  .home-map__cta {
     display: inline-flex;
     align-items: center;
     min-height: 48px;
@@ -825,6 +830,12 @@
     font-size: 14px;
     font-weight: 800;
     box-shadow: 0 6px 18px rgba(108, 92, 166, 0.45);
+  }
+  .home-map__near {
+    border: 1.5px solid var(--top-purple);
+    background: #fff;
+    color: var(--top-purple-dark);
+    box-shadow: 0 6px 18px rgba(43, 43, 48, 0.16);
   }
   .home-map__attr {
     position: absolute;

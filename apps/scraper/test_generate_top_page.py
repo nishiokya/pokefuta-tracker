@@ -216,12 +216,17 @@ class GeneratedHtmlTest(unittest.TestCase):
         self.assertIn("surface:'top_map_hero'", cta.group(1))
         self.assertIn("地図を全画面で開く", cta.group(2))
         self.assertIn("© OpenStreetMap contributors", hero)
+        # 現在地から探すは ?near=me のときだけ位置を聞く。ふつうの「地図を全画面で開く」には付けない
+        near = re.search(r'<a class="home-map__near" href="map.html\?near=me" onclick="([^"]+)">([^<]+)</a>', hero)
+        self.assertIsNotNone(near)
+        self.assertIn("way:'nearby'", near.group(1))
+        self.assertIn("現在地から探す", near.group(2))
 
     def test_map_data_cannot_close_the_script_element(self) -> None:
         payload = module.map_block(
             Fixture(self.tmp).data(),
             pins=[{"prefecture": "</script><b>", "label": "x", "title": "x", "count": 1, "lat": 0, "lng": 0}],
-            aria="a", cta="c", cta_href="map.html",
+            aria="a", cta="c", cta_href="map.html", near="n",
         )
         self.assertNotIn("</script><b>", payload)
 

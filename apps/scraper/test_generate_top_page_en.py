@@ -114,6 +114,8 @@ class EnglishTopTest(unittest.TestCase):
         self.assertEqual("Tokyo", pins["東京都"]["label"])
         self.assertEqual("Tokyo: 2 Poké Lids — view on the map", pins["東京都"]["title"])
         self.assertIn('<a class="home-map__cta" href="map.html"', hero)
+        self.assertIn('<a class="home-map__near" href="map.html?near=me"', hero)
+        self.assertNotIn("現在地から探す", hero)
         self.assertIn("Open the full-screen map", hero)
         self.assertEqual(module.ja.HERO_PHOTO_LIMIT, hero.count("<picture>"))
 

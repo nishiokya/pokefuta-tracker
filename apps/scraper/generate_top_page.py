@@ -601,14 +601,20 @@ def map_pins(data: TopData, label=None, title=None) -> list[dict]:
     ]
 
 
-def map_block(data: TopData, *, pins: list[dict], aria: str, cta: str, cta_href: str) -> str:
+def map_block(data: TopData, *, pins: list[dict], aria: str, cta: str, cta_href: str, near: str) -> str:
     """デスクトップの大地図。Leaflet はページ側の JS が幅を判定してから読み込む（スマホでは通信しない）。"""
     payload = json.dumps({"pins": pins}, ensure_ascii=False, separators=(",", ":")).replace("<", "\\u003c")
     return (
         '<div class="home-map" id="home-map-wrap">'
         f'<div class="home-map__canvas" id="home-map" role="region" aria-label="{escape(aria)}"></div>'
+        '<div class="home-map__actions">'
+        # 押した人にだけ位置を聞く。地図をふつうに開いたときは聞かない（map.html の ?near=me）
+        '<a class="home-map__near" href="map.html?near=me" '
+        f'onclick="{_track("click_search_way", surface="top_map_hero", way="nearby", destination="map_nearby")}">'
+        f"{escape(near)}</a>"
         f'<a class="home-map__cta" href="{cta_href}" '
         f'onclick="{_track("click_map_gateway", surface="top_map_hero")}">{escape(cta)}</a>'
+        "</div>"
         '<span class="home-map__attr">© OpenStreetMap contributors</span>'
         f'<script type="application/json" id="home-map-data">{payload}</script>'
         "</div>"
@@ -706,6 +712,7 @@ def render_hero(data: TopData) -> str:
         aria="都道府県別のポケふた設置数の地図",
         cta="🗺 地図を全画面で開く",
         cta_href="map.html",
+        near="📍 現在地から探す",
     )
     return (
         f'<section class="{cls}" id="home-hero" aria-labelledby="home-h1">'
@@ -742,7 +749,7 @@ def render_ways(data: TopData) -> str:
     cards = [
         ("map", "map.html", "assets/icon-map.svg", "地図・現在地から",
          "日本地図で設置場所を確かめ、今いる場所の近くにあるポケふたを探せます。",
-         [("map.html?view=theme", "テーマで絞り込む")]),
+         [("map.html?near=me", "現在地の近くを探す"), ("map.html?view=theme", "テーマで絞り込む")]),
         # ヒーローの「都道府県から探す」と同じく、ページ内の都道府県の欄へ飛ばす
         ("prefecture", "#home-pref", "assets/icon-pin.svg", "都道府県から",
          f"設置のある{len(data.installed_prefectures)}都道府県を、地域ごとの一覧で確認できます。",

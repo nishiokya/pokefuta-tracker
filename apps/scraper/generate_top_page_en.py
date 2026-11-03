@@ -321,6 +321,7 @@ def render_hero(data: ja.TopData, en: Locale) -> str:
         ),
         aria=en.t("map_aria"),
         cta=en.t("map_cta"),
+        near=en.t("map_near"),
         cta_href="map.html",
     )
     return (
@@ -351,7 +352,7 @@ def render_ways(data: ja.TopData, en: Locale) -> str:
 
     cards = [
         ("map", "map.html", "icon-map.svg", en.t("way_map_title"), en.t("way_map_text"),
-         [("map.html", escape(en.t("way_map_open"))), ("map.html?view=theme", escape(en.t("way_map_theme")))]),
+         [("map.html", escape(en.t("way_map_open"))), ("map.html?near=me", escape(en.t("way_map_near"))), ("map.html?view=theme", escape(en.t("way_map_theme")))]),
         ("prefecture", "#home-pref", "icon-pin.svg", en.t("way_pref_title"),
          en.t("way_pref_text", prefs=len(data.installed_prefectures)),
          [(_pref_href(p, en), f"{escape(en.pref(p))} {counts[p]}") for p in top_prefs]),
