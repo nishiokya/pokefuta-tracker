@@ -598,7 +598,6 @@ body.has-site-header.pokefuta-map-page .site-header { z-index: 1100; }
   body.has-site-header.pokefuta-map-page #controls {
     bottom: calc(var(--chrome-bottomnav-height) + env(safe-area-inset-bottom));
     max-height: calc(78vh - var(--chrome-bottomnav-height));
-    max-height: calc(78dvh - var(--chrome-bottomnav-height));
   }
 
   /* 展開時は 88vh が正。上のルールのほうが詳細度が高いので個別に引き直す。
@@ -608,10 +607,21 @@ body.has-site-header.pokefuta-map-page .site-header { z-index: 1100; }
      開いたシートを閉じられなくなる（Safari はツールバーが小さく、PC は vh＝実寸なので出ない） */
   body.has-site-header.pokefuta-map-page.sheet-expanded #controls {
     max-height: calc(88vh - var(--chrome-bottomnav-height));
-    max-height: min(
-      calc(88dvh - var(--chrome-bottomnav-height)),
-      calc(100dvh - var(--chrome-height) - var(--chrome-bottomnav-height) - env(safe-area-inset-bottom) - 8px)
-    );
+  }
+
+  /* dvh の宣言は @supports に入れる。var() を含む宣言は解決後に無効になると
+     直前の vh 宣言へ戻らず none になり、未対応ブラウザでシートの上限が消える */
+  @supports (height: 100dvh) {
+    body.has-site-header.pokefuta-map-page #controls {
+      max-height: calc(78dvh - var(--chrome-bottomnav-height));
+    }
+
+    body.has-site-header.pokefuta-map-page.sheet-expanded #controls {
+      max-height: min(
+        calc(88dvh - var(--chrome-bottomnav-height)),
+        calc(100dvh - var(--chrome-height) - var(--chrome-bottomnav-height) - env(safe-area-inset-bottom) - 8px)
+      );
+    }
   }
 }
 
