@@ -2366,6 +2366,7 @@
           <div class="prefecture-spot-row">
             ${item}
             <a class="prefecture-spot-maps" href="${googleMapsDirectionsUrl(d.lat, d.lng)}" target="_blank" rel="noopener noreferrer"
+              aria-label="${escapeHtml(`${'Google Mapsで行く'}: ${getManholeDisplayName(d)}`)}"
               onclick="if(window.trackEvent){window.trackEvent('nearby_click_google_maps',{surface:'map_nearby',manhole_id:'${escapeHtml(d.id)}'});}">${escapeHtml('Google Mapsで行く')}</a>
           </div>
         `;
@@ -2396,7 +2397,8 @@
     // 「行く」ための導線なので、場所を表示するだけの maps?q= ではなく経路案内を開く。
     // スマホでは Google マップのアプリが開き、現在地からの道案内がそのまま始まる。
     function googleMapsDirectionsUrl(lat, lng) {
-      return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${lat},${lng}`)}`;
+      // dir_action=navigate：対応端末ではナビを始め、使えないときは経路のプレビューになる
+      return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${lat},${lng}`)}&dir_action=navigate`;
     }
 
     function distanceKm(aLat, aLng, bLat, bLng) {
