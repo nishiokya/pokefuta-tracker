@@ -216,6 +216,14 @@ class GeneratedHtmlTest(unittest.TestCase):
         self.assertIn("surface:'top_map_hero'", cta.group(1))
         self.assertIn("地図を全画面で開く", cta.group(2))
         self.assertIn("© OpenStreetMap contributors", hero)
+        # 現在地から探すはスマホのヒーローの先頭だけ。PC の大地図には位置情報の導線を置かない
+        big_map = re.search(r'<div class="home-map" id="home-map-wrap">.*?</script></div>', hero, re.DOTALL).group(0)
+        self.assertNotIn("near=me", big_map)
+        near = re.search(r'<a class="home-quick__link home-quick__link--primary home-quick__link--near" href="map.html\?near=me" onclick="([^"]+)">([^<]+)</a>', hero)
+        self.assertIsNotNone(near)
+        self.assertIn("way:'nearby'", near.group(1))
+        self.assertIn("現在地から近いポケふたを探す", near.group(2))
+        self.assertLess(hero.index("home-quick__link--near"), hero.index("home-quick__link--map"))
 
     def test_map_data_cannot_close_the_script_element(self) -> None:
         payload = module.map_block(
@@ -529,7 +537,7 @@ class GeneratedHtmlTest(unittest.TestCase):
     def test_hero_quick_links_carry_destination_and_desktop_only_extras(self) -> None:
         """ヒーローの導線は GA4 登録済みの destination を持つ（way は未登録で集計に出ない）。
 
-        近く・テーマは PC だけに出す（スマホのヒーローは3つのまま）。destination の値は
+        テーマは PC だけ、現在地から探す（map_nearby）はスマホだけに出す。destination の値は
         2026-10 の評価（計測ノート）で使うので、変えると前後比較が分断される。
         """
         hero = _block(Fixture(self.tmp).html(), "hero")
@@ -537,7 +545,8 @@ class GeneratedHtmlTest(unittest.TestCase):
         links = re.findall(r'<a class="home-quick__link ([^"]*)" href="([^"]+)" onclick="([^"]+)"', nav)
         got = {href: (cls.strip(), re.search(r"destination:'([^']+)'", js).group(1)) for cls, href, js in links}
         self.assertEqual({
-            "map.html": ("home-quick__link--primary home-quick__link--map", "map"),
+            "map.html?near=me": ("home-quick__link--primary home-quick__link--near", "map_nearby"),
+            "map.html": ("home-quick__link--map", "map"),
             "#home-pref": ("", "home_pref_section"),
             "pokemon/": ("", "pokemon_index"),
             "map.html?view=theme": ("home-quick__link--desktop", "map_theme_directory"),

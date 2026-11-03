@@ -119,6 +119,9 @@
   color: #fff;
 }
 
+/* 現地でスマホから探す人向け。横いっぱいに出し、PC では出さない（PC に位置情報の導線は要らない） */
+.home-quick__link--near { grid-column: 1 / -1; }
+
 .home-stats {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -807,7 +810,8 @@
     box-shadow: 0 8px 28px rgba(43, 43, 48, 0.12);
   }
   .home-quick { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .home-quick__link--map { display: none; }
+  .home-quick__link--map,
+  .home-quick__link--near { display: none; }
   .home-quick__link--desktop { display: flex; }
   .home-quick__link--wide { grid-column: 1 / -1; }
   .home-map__cta {

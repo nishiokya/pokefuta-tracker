@@ -278,7 +278,9 @@ def render_hero(data: ja.TopData, en: Locale) -> str:
         f'<div class="home-stat"><dt>{escape(label)}</dt><dd>{escape(num)}</dd></div>' for num, label in stats
     )
     quick = [
-        ("map", "map", "map.html", en.t("quick_map"), "home-quick__link--primary home-quick__link--map"),
+        # スマホだけ（日本語版と同じ）
+        ("nearby", "map_nearby", "map.html?near=me", en.t("quick_near"), "home-quick__link--primary home-quick__link--near"),
+        ("map", "map", "map.html", en.t("quick_map"), "home-quick__link--map"),
         ("prefecture", "home_pref_section", "#home-pref", en.t("quick_pref"), ""),
         ("pokemon", "pokemon_index", "pokemon/", en.t("quick_pokemon"), ""),
         # PC だけ。テーマを横いっぱいに出す

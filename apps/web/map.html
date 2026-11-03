@@ -342,7 +342,7 @@
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
   <link rel="stylesheet" href="./assets/theme.css" />
   <link rel="stylesheet" href="./assets/map.css" />
-  <link rel="stylesheet" href="./assets/pokefuta-map.css?v=20261023-photo-marker" />
+  <link rel="stylesheet" href="./assets/pokefuta-map.css?v=20261103-nearby-maps" />
   <link rel="icon" href="./assets/pokefuta-marker.svg" type="image/svg+xml" />
   <!-- Google Analytics -->
   <script src="./assets/tag-meta.js"></script>
@@ -1264,7 +1264,7 @@
         : `<a href="${escapeHtml(uploadUrl)}" target="_blank" rel="noopener noreferrer" class="travel-popup-action travel-popup-action--primary travel-popup-action--upload"
               onclick="if(window.trackEvent){window.trackEvent('popup_click_upload',{surface:'map_popup',${eventParams}});}">最初の写真を投稿<span class="travel-popup-action-sub">pokefuta.comで受付・無料ログイン</span></a>`;
       const mapsUrl = Number.isFinite(Number(d.lat)) && Number.isFinite(Number(d.lng))
-        ? `https://www.google.com/maps?q=${encodeURIComponent(`${d.lat},${d.lng}`)}`
+        ? googleMapsDirectionsUrl(d.lat, d.lng)
         : '';
       const mapsAction = mapsUrl
         ? `<a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" class="travel-popup-action travel-popup-action--maps"
@@ -1658,6 +1658,12 @@
           openThemeDirectory(); // テーマ絞り込みパネルを開く（タグ選択済み）
         } else if (viewParam === 'theme') {
           openThemeDirectory(); // タグ未選択でテーマ一覧パネルを開く
+        }
+        // トップの「現在地から探す」から来たときだけ、着いてすぐ位置を聞く。
+        // ふつうに地図を開いた人には聞かない（意図しない許可ダイアログはブロックされやすく、
+        // 一度ブロックされると近くを探すボタンもずっと使えなくなるため）。
+        if (urlParams.get('near') === 'me' && startNearbySearch) {
+          startNearbySearch('top_nearby_cta');
         }
         // Mark initial page load as complete to enable SPA page_view tracking
         isInitialPageLoad = false;
@@ -2331,7 +2337,8 @@
         meta,
         badge,
         badgeClass = 'prefecture-spot-new',
-        limit = 24
+        limit = 24,
+        mapsLink = false
       } = options;
       const visibleSpots = spots.slice(0, limit);
       if (!visibleSpots.length) {
@@ -2341,7 +2348,7 @@
       list.innerHTML = visibleSpots.map(d => {
         const metaText = meta ? meta(d) : (getManholeDisplayName(d));
         const badgeText = badge ? badge(d) : '';
-        return `
+        const item = `
           <button type="button" class="prefecture-spot-item" data-manhole-id="${escapeHtml(d.id)}">
             <span class="prefecture-spot-thumb" aria-hidden="true">
               <img src="${getLocalManholeImageUrl(d.id, 180)}" alt="" loading="lazy" decoding="async" onerror="this.closest('.prefecture-spot-thumb').classList.add('is-missing'); this.remove();">
@@ -2352,6 +2359,16 @@
             </span>
             ${badgeText ? `<span class="${badgeClass}">${badgeText}</span>` : ''}
           </button>
+        `;
+        if (!mapsLink || !Number.isFinite(Number(d.lat)) || !Number.isFinite(Number(d.lng))) return item;
+        // 行の本体（button）の中に a は入れられないので、行を div で包んで横に並べる。
+        return `
+          <div class="prefecture-spot-row">
+            ${item}
+            <a class="prefecture-spot-maps" href="${googleMapsDirectionsUrl(d.lat, d.lng)}" target="_blank" rel="noopener noreferrer"
+              aria-label="${escapeHtml(`${'Google Mapsで行く'}: ${getManholeDisplayName(d)}`)}"
+              onclick="if(window.trackEvent){window.trackEvent('nearby_click_google_maps',{surface:'map_nearby',manhole_id:'${escapeHtml(d.id)}'});}">${escapeHtml('Google Mapsで行く')}</a>
+          </div>
         `;
       }).join('');
     }
@@ -2375,6 +2392,13 @@
         badge: d => isWithinLastDays(d._addedDate, 30) ? '<img src="./assets/icon-fire.svg" alt="" aria-hidden="true">NEW' : ''
       });
       panel.hidden = spots.length === 0;
+    }
+
+    // 「行く」ための導線なので、場所を表示するだけの maps?q= ではなく経路案内を開く。
+    // スマホでは Google マップのアプリが開き、現在地からの道案内がそのまま始まる。
+    function googleMapsDirectionsUrl(lat, lng) {
+      // dir_action=navigate：対応端末ではナビを始め、使えないときは経路のプレビューになる
+      return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${lat},${lng}`)}&dir_action=navigate`;
     }
 
     function distanceKm(aLat, aLng, bLat, bLng) {
@@ -2405,7 +2429,8 @@
       renderSpotResults(list, nearest, {
         meta: d => [d.prefecture || '不明', getManholeDisplayName(d)].join(' / '),
         badge: d => `${d.distance.toFixed(1)}km`,
-        badgeClass: 'prefecture-spot-distance'
+        badgeClass: 'prefecture-spot-distance',
+        mapsLink: true
       });
       section.dataset.hasResults = 'true';
       showNearbyResults = true;
@@ -2416,6 +2441,8 @@
       if (recentToggle) recentToggle.checked = false;
       syncExploreSections();
     }
+
+    let startNearbySearch = null;
 
     function initLocationSearch() {
       const button = document.getElementById('locate-button');
@@ -2434,7 +2461,7 @@
           }, resetAfter);
         }
       };
-      button.addEventListener('click', () => {
+      startNearbySearch = (surface) => {
         if (!navigator.geolocation) {
           setButtonState('現在地を使えません', { resetAfter: 1800 });
           expandBottomSheet();
@@ -2444,7 +2471,7 @@
 
         // Track locate button click
         if (window.trackEvent) {
-          window.trackEvent('click_locate_nearby', {surface:'map_toolbar',
+          window.trackEvent('click_locate_nearby', {surface,
             'event_category': 'user_engagement',
             'event_label': 'locate_button_clicked'
           });
@@ -2492,7 +2519,8 @@
 
           expandBottomSheet();
         }, { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 });
-      });
+      };
+      button.addEventListener('click', () => startNearbySearch('map_toolbar'));
     }
 
     // 多言語機能削除のため switchLanguage / refreshMarkersContent は不要

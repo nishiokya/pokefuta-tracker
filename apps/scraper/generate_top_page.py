@@ -643,7 +643,10 @@ def render_hero(data: TopData) -> str:
     # destination は GA4 に登録済みのディメンション（way は未登録で集計に出ない）。
     # 同じページ内へ飛ぶ都道府県は home_pref_section として、ページ移動と区別する
     quick = [
-        ("map", "map", "map.html", "地図で探す", "home-quick__link--primary home-quick__link--map"),
+        # スマホだけ。現地でスマホから探す人が増えているので一番上に横いっぱいで置く。
+        # 位置を聞くのは map.html?near=me で来たときだけ（ふつうに地図を開いた人には聞かない）
+        ("nearby", "map_nearby", "map.html?near=me", "📍 現在地から近いポケふたを探す", "home-quick__link--primary home-quick__link--near"),
+        ("map", "map", "map.html", "地図で探す", "home-quick__link--map"),
         ("prefecture", "home_pref_section", "#home-pref", "都道府県から探す", ""),
         ("pokemon", "pokemon_index", "pokemon/", "ポケモンから探す", ""),
         # PC だけ。上の2つと行き先が重ならない導線（近くから探す＝nearby.html は廃止して地図の現在地検索へ統合）
