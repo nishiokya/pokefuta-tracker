@@ -278,7 +278,9 @@ def render_hero(data: ja.TopData, en: Locale) -> str:
         f'<div class="home-stat"><dt>{escape(label)}</dt><dd>{escape(num)}</dd></div>' for num, label in stats
     )
     quick = [
-        ("map", "map", "map.html", en.t("quick_map"), "home-quick__link--primary home-quick__link--map"),
+        # スマホだけ（日本語版と同じ）
+        ("nearby", "map_nearby", "map.html?near=me", en.t("quick_near"), "home-quick__link--primary home-quick__link--near"),
+        ("map", "map", "map.html", en.t("quick_map"), "home-quick__link--map"),
         ("prefecture", "home_pref_section", "#home-pref", en.t("quick_pref"), ""),
         ("pokemon", "pokemon_index", "pokemon/", en.t("quick_pokemon"), ""),
         # PC だけ。テーマを横いっぱいに出す
@@ -321,7 +323,6 @@ def render_hero(data: ja.TopData, en: Locale) -> str:
         ),
         aria=en.t("map_aria"),
         cta=en.t("map_cta"),
-        near=en.t("map_near"),
         cta_href="map.html",
     )
     return (
@@ -352,7 +353,7 @@ def render_ways(data: ja.TopData, en: Locale) -> str:
 
     cards = [
         ("map", "map.html", "icon-map.svg", en.t("way_map_title"), en.t("way_map_text"),
-         [("map.html", escape(en.t("way_map_open"))), ("map.html?near=me", escape(en.t("way_map_near"))), ("map.html?view=theme", escape(en.t("way_map_theme")))]),
+         [("map.html", escape(en.t("way_map_open"))), ("map.html?view=theme", escape(en.t("way_map_theme")))]),
         ("prefecture", "#home-pref", "icon-pin.svg", en.t("way_pref_title"),
          en.t("way_pref_text", prefs=len(data.installed_prefectures)),
          [(_pref_href(p, en), f"{escape(en.pref(p))} {counts[p]}") for p in top_prefs]),
