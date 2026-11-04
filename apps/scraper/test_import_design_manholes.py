@@ -71,7 +71,7 @@ class ImportDesignManholesTests(unittest.TestCase):
         self.assertEqual(calls, [(35.0, 135.0)])
         self.assertEqual(cache["35.0000000,135.0000000"]["prefecture"], "北海道")
 
-    def test_nearby_candidate_does_not_auto_merge(self):
+    def test_single_gundam_candidate_auto_matches(self):
         references = {
             "gundam": [
                 {"id": "5", "title": "既存蓋", "lat": 35.0001, "lng": 135.0001}
@@ -91,13 +91,42 @@ class ImportDesignManholesTests(unittest.TestCase):
             "2026-07-14T00:00:00Z",
         )
 
-        self.assertIsNone(records[0]["canonical_ref"])
-        self.assertEqual(records[0]["review_status"], "needs_review")
-        self.assertEqual(records[0]["status"], "pending")
+        self.assertEqual(records[0]["canonical_ref"], "gundam:5")
+        self.assertEqual(records[0]["review_status"], "auto_matched")
+        self.assertEqual(records[0]["status"], "active")
         self.assertEqual(records[0]["nearby_refs"][0]["ref"], "gundam:5")
         self.assertNotIn("submitter_name", records[0])
+        self.assertEqual(importer.select_public_records(records), records)
+        self.assertEqual(importer.select_review_records(records), [])
+
+    def test_two_candidates_wait_for_review(self):
+        references = {
+            "gundam": [{"id": "5", "title": "既存蓋", "lat": 35.0001, "lng": 135.0001}],
+            "character": [{"id": "zls-1", "title": "別の蓋", "lat": 35.0002, "lng": 135.0}],
+        }
+        records = importer.build_public_records(
+            [self.submission], {}, {}, references, "2026-07-14T00:00:00Z"
+        )
+
+        self.assertIsNone(records[0]["canonical_ref"])
+        self.assertEqual(records[0]["review_status"], "needs_review")
         self.assertEqual(importer.select_public_records(records), [])
-        self.assertEqual(importer.select_review_records(records), records)
+
+    def test_reviewed_distinct_override_blocks_auto_match(self):
+        references = {
+            "gundam": [{"id": "5", "title": "既存蓋", "lat": 35.0001, "lng": 135.0001}]
+        }
+        records = importer.build_public_records(
+            [self.submission],
+            {},
+            {"submission-1": {"review_status": "reviewed_distinct"}},
+            references,
+            "2026-07-14T00:00:00Z",
+        )
+
+        self.assertIsNone(records[0]["canonical_ref"])
+        self.assertEqual(records[0]["review_status"], "reviewed_distinct")
+        self.assertEqual(importer.select_public_records(records), records)
 
     def test_official_pokefuta_candidate_is_not_published(self):
         submission = {
