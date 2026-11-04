@@ -222,6 +222,21 @@ def gallery_photo_slug(photo_id: Any) -> str | None:
 
 
 GALLERY_FILE_RE = re.compile(r"^(\d+)_([0-9a-f]{8})\.jpeg$")
+# ギャラリー画像ごとに、取り込んだときの storage_key の指紋を残す（画像と同じディレクトリ）。
+# 写真館で写真が差し替わる（k11 が横・逆さの写真を 90° 刻みで直して新しいキーにする、manhole-ai rotate_photos.py）と
+# photo_id はそのままキーだけ変わるので、ファイル名だけ見ていると古い向きの画像が残る
+GALLERY_SOURCES = "gallery_sources.json"
+
+
+def key_fingerprint(storage_key: str | None) -> str | None:
+    return hashlib.sha256(storage_key.encode()).hexdigest()[:16] if storage_key else None
+
+
+def gallery_needs_fetch(exists: bool, refresh: bool, known: str | None, current: str | None) -> bool:
+    """既にあるギャラリー画像を取り直すか。指紋が無い（この仕組みより前に取り込んだ）ものは今のキーで取り込んだとみなす"""
+    if not exists or refresh:
+        return True
+    return known is not None and current is not None and known != current
 
 
 def validate_url(raw_url: str) -> str | None:
@@ -343,6 +358,8 @@ def main() -> int:
     gallery_imported = 0
     gallery_kept = 0
     expected_gallery: set[str] = set()
+    sources_path = output_dir / GALLERY_SOURCES
+    sources: dict[str, str] = json.loads(sources_path.read_text(encoding="utf-8")) if sources_path.exists() else {}
 
     for record in iter_records(payload):
         manhole_id = sanitize_id(pick_first(record, ID_KEYS))
@@ -392,11 +409,15 @@ def main() -> int:
                 # local file survives cleanup even when this run can't reach it.
                 gallery_path = output_dir / f"{manhole_id}_{slug}.jpeg"
                 expected_gallery.add(gallery_path.name)
-                if gallery_path.exists() and not args.refresh_gallery:
+                item_storage_key = get_storage_key(item)
+                fp = key_fingerprint(item_storage_key)
+                if not gallery_needs_fetch(gallery_path.exists(), args.refresh_gallery,
+                                           sources.get(gallery_path.name), fp):
+                    if fp and gallery_path.name not in sources:
+                        sources[gallery_path.name] = fp
                     gallery_kept += 1
                     continue
 
-                item_storage_key = get_storage_key(item)
                 if args.presign_r2 and item_storage_key:
                     item_url = presign_r2_get_object(item_storage_key, args.presign_expires)
                 elif args.public_base_url and item_storage_key:
@@ -410,6 +431,8 @@ def main() -> int:
                     image = download_image(session, item_url, args.timeout)
                     cropped = crop_to_square(image, args.size, crop_box(item))
                     cropped.save(gallery_path, "JPEG", quality=args.quality, optimize=True, progressive=True)
+                    if fp:
+                        sources[gallery_path.name] = fp
                     gallery_imported += 1
                     print(f"imported gallery id={manhole_id} -> {gallery_path}")
                 except Exception as exc:
@@ -426,6 +449,9 @@ def main() -> int:
                 path.unlink()
                 removed += 1
                 print(f"removed stale gallery file {path.name}")
+        sources = {k: v for k, v in sources.items() if k in expected_gallery}
+    sources_path.write_text(json.dumps(dict(sorted(sources.items())), ensure_ascii=False, indent=0) + "\n",
+                            encoding="utf-8")
 
     print(
         f"summary imported={imported} skipped={skipped} failed={failed} "
