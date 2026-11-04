@@ -130,6 +130,28 @@ class LoadDesignSpotsTest(unittest.TestCase):
         ])
         self.assertEqual(self._load(), [])
 
+    def test_reviewed_distinct_submission_stays_standalone(self):
+        # 人が「近くの別の蓋」と判断した投稿は、近さの候補（ガンダム・キャラ・ポケふた）に合流も除外もしない
+        _write_ndjson(self.gundam, [
+            {"id": "1", "title": "豊富町観光情報センター", "lat": 45.10487,
+             "lng": 141.772842, "status": "active"},
+        ])
+        _write_ndjson(self.character, [])
+        _write_ndjson(self.submissions, [
+            {"id": "pokefuta-design:distinct", "title": "町の蓋",
+             "lat": 45.1049, "lng": 141.7729, "status": "active",
+             "canonical_ref": None, "review_status": "reviewed_distinct",
+             "nearby_refs": [{"ref": "gundam:1", "distance_m": 30},
+                             {"ref": "character:miku", "distance_m": 35},
+                             {"ref": "pokefuta:272", "distance_m": 40}],
+             "source_url": "https://pokefuta.com/design-manholes/distinct",
+             "photo_url": "https://pokefuta.com/api/design-manholes/distinct/photo?size=small"},
+        ])
+        spots = {s["ref"]: s for s in self._load()}
+        self.assertEqual(set(spots), {"gundam:1", "pokefuta-design:distinct"})
+        self.assertEqual(spots["gundam:1"]["studio_url"], "")
+        self.assertEqual(spots["pokefuta-design:distinct"]["kind"], "studio")
+
     def test_standalone_submission_becomes_spot(self):
         _write_ndjson(self.gundam, [])
         _write_ndjson(self.character, [])
