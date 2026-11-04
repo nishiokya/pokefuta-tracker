@@ -18,6 +18,7 @@ on:
       - 'apps/scraper/manhole_page_css.py' # detail page CSS shared by ja / translated pages
       - 'apps/scraper/zukan_cards.py' # shared index card HTML and CSS
       - 'apps/scraper/build_small_images.py' # small WebP lid photos for srcset
+      - 'apps/scraper/use_image_host.py' # point every page's manhole photos at img.pokefuta.com (R2)
       - 'apps/scraper/site_names.py' # site name per language (og:site_name, map share titles)
       - 'apps/scraper/test_zukan_cards.py' # cross-page card and event regression tests
       - 'apps/scraper/generate_manhole_ogp.py' # OGP image generator
@@ -135,6 +136,7 @@ jobs:
             apps.scraper.test_generate_prefecture_pages \
             apps.scraper.test_generate_prefecture_pages_i18n \
             apps.scraper.test_manhole_tile_image \
+            apps.scraper.test_use_image_host \
             apps.scraper.test_site_names \
             apps.scraper.test_zukan_cards \
             apps.scraper.test_generate_municipality_pages \
@@ -236,6 +238,10 @@ jobs:
           python3 apps/scraper/inject_site_header.py dist
           echo "[dist] Inject AdSense verification and in-content slots when configured"
           python3 apps/scraper/inject_adsense.py dist
+          echo "[dist] Point manhole photos at img.pokefuta.com (R2)"
+          # 全ページの HTML ができた後に、蓋の写真の URL をまとめて img に向ける（og:image・JSON-LD は data のまま）。
+          # 画像そのものは下の「Mirror manhole photos to R2」が同じパスで R2 に置く
+          python3 apps/scraper/use_image_host.py dist
           echo "[dist] Copy assets (CSS + images)"
           cp -r apps/web/assets/* dist/assets/ || true
           # Root fallbacks for browsers/crawlers; explicit links use /assets/.
@@ -277,8 +283,8 @@ jobs:
             --exclude 'supabase-ssr.js' \
             dist
 
-      # 蓋の写真を R2（img.pokefuta.com）にも同じパスで置く。Pages の配信量を減らすため、地図（map.html）はここから読む。
-      # 失敗してもデプロイは止めない: R2 には前回までの同じパスの画像が残るので、地図で欠けるのは新しく増えた蓋だけ。
+      # 蓋の写真を R2（img.pokefuta.com）にも同じパスで置く。Pages の配信量を減らすため、全ページの写真はここから読む（use_image_host.py）。
+      # 失敗してもデプロイは止めない: R2 には前回までの同じパスの画像が残るので、欠けるのは新しく増えた蓋の写真だけ。
       # 止めると docs/api（写真館が読む）や他のページの更新まで止まるほうが痛い。失敗は実行結果の注記で分かる。
       # 中身は dist/manhole/image と同じ集合: 非公開になって消えたギャラリー画像は sync で R2 からも消える。
       # 鍵は pokefuta-public-images だけを読み書きできる移行期間用のもの（写真館の原本バケットには届かない）。写真館が公開用画像を作るようになったら secret ごと消す。

@@ -34,11 +34,11 @@ except ModuleNotFoundError as exc:
     from visit_durations import DEFAULT_DURATIONS, duration_html, load_durations
 
 try:
-    from apps.scraper.manhole_tile_image import map_tile_url, responsive_attrs, small_image_url, tile_image_url, use_image_host
+    from apps.scraper.manhole_tile_image import map_tile_url, responsive_attrs, small_image_url, tile_image_url
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
-    from manhole_tile_image import map_tile_url, responsive_attrs, small_image_url, tile_image_url, use_image_host
+    from manhole_tile_image import map_tile_url, responsive_attrs, small_image_url, tile_image_url
 
 try:
     from apps.scraper.photo_caption import poster_profile_url
@@ -2962,10 +2962,10 @@ def generate_all(
             (trips or {}).get(prefecture),
             (design_posts or {}).get(prefecture),
         )
-        (out_dir / "index.html").write_text(use_image_host(html, "prefecture"), encoding="utf-8")
+        (out_dir / "index.html").write_text(html, encoding="utf-8")
     output_dir.mkdir(parents=True, exist_ok=True)
     (output_dir / "index.html").write_text(
-        use_image_host(build_index_page(records_by_pref, photos, trivia, events), "prefecture"), encoding="utf-8"
+        build_index_page(records_by_pref, photos, trivia, events), encoding="utf-8"
     )
     return len(PREFECTURES)
 

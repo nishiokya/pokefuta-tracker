@@ -77,22 +77,3 @@ def map_tile_url(point: dict, image_dir: Path) -> str:
         return ""
     url = tile_image_url(str(point.get("id", "")), image_dir)
     return small_image_url(url, 180) if url else ""
-
-
-# ── 写真の配信先（R2） ─────────────────────────────────────────────────────
-# GitHub Pages の配信量を減らすため、蓋の写真を Cloudflare R2 の img.pokefuta.com から出す。
-# デプロイのたびに dist/manhole/image を同じパスで複写している（pages-deploy.yml「Mirror manhole photos to R2」）。
-# 切り替えは配信量の多いページの種類から1つずつ。地図（apps/web/map.html）は #779 で切り替え済み。
-# 戻すときはこの集合から外すだけ（Pages にも同じパスの画像が残っている）。
-# og:image・JSON-LD の画像は data.pokefuta.com の絶対 URL のまま（ここでは書き換えない）。
-
-IMAGE_HOST = "https://img.pokefuta.com"
-IMAGE_HOST_PAGES = {"prefecture"}
-_ROOT_RELATIVE_IMAGE_RE = re.compile(r"""(?<=["' ,])/manhole/image/""")
-
-
-def use_image_host(html: str, page: str) -> str:
-    """page が切り替え済みなら、HTML の中の "/manhole/image/…"（src・srcset・埋め込み JSON）を img.pokefuta.com に向ける。"""
-    if page not in IMAGE_HOST_PAGES:
-        return html
-    return _ROOT_RELATIVE_IMAGE_RE.sub(f"{IMAGE_HOST}/manhole/image/", html)
