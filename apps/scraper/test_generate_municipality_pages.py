@@ -117,6 +117,16 @@ class RouteTest(unittest.TestCase):
         self.assertIn("1〜5番目を経路案内", section)
         self.assertIn("5〜6番目を経路案内", section)
 
+    def test_single_manhole_link_opens_the_place_and_route_stays_directions(self) -> None:
+        """蓋1枚の「経路案内」は場所の地図（道順は Google マップ側で出す）。巡る順番だけ経路を直接開く。"""
+        from apps.scraper import manhole_records
+
+        url = manhole_records.google_maps_url({"lat": 35.54, "lng": 139.44})
+        self.assertEqual(url, "https://www.google.com/maps/search/?api=1&query=35.54,139.44")
+        self.assertEqual(manhole_records.google_maps_url({"lat": None, "lng": 139.44}), "")
+        near = MUNI.build_municipalities(SYNTHETIC, SLUGS)[0]
+        self.assertIn("google.com/maps/dir/?api=1&amp;origin=", MODULE._route_section(near))
+
     def test_far_apart_stops_get_no_road_route_link(self) -> None:
         """小笠原（父島と母島）のように離れた区間があると、Google マップの道路ルートは出さない。"""
         near = MUNI.build_municipalities(SYNTHETIC, SLUGS)[0]

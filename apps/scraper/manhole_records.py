@@ -124,4 +124,5 @@ def google_maps_url(record: dict) -> str:
     lng = record.get("lng")
     if not isinstance(lat, (int, float)) or not isinstance(lng, (int, float)):
         return ""
-    return f"https://www.google.com/maps/dir/?api=1&destination={lat},{lng}"
+    # 文言は「経路案内」だが、開くのは場所の地図。道順は Google マップ側で出してもらう
+    return f"https://www.google.com/maps/search/?api=1&query={lat},{lng}"

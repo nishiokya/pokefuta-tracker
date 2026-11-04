@@ -1113,7 +1113,7 @@
         : `<a href="${escapeHtml(uploadUrl)}" target="_blank" rel="noopener noreferrer" class="travel-popup-action travel-popup-action--primary travel-popup-action--upload"
               onclick="if(window.trackEvent){window.trackEvent('popup_click_upload',{surface:'map_popup',${eventParams}});}">${I.firstPhotoUploadCta}<span class="travel-popup-action-sub">${I.firstPhotoUploadNote}</span></a>`;
       const mapsUrl = Number.isFinite(Number(d.lat)) && Number.isFinite(Number(d.lng))
-        ? googleMapsDirectionsUrl(d.lat, d.lng)
+        ? googleMapsPlaceUrl(d.lat, d.lng)
         : '';
       const mapsAction = mapsUrl
         ? `<a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" class="travel-popup-action travel-popup-action--maps"
@@ -2222,7 +2222,7 @@
         return `
           <div class="prefecture-spot-row">
             ${item}
-            <a class="prefecture-spot-maps" href="${googleMapsDirectionsUrl(d.lat, d.lng)}" target="_blank" rel="noopener noreferrer"
+            <a class="prefecture-spot-maps" href="${googleMapsPlaceUrl(d.lat, d.lng)}" target="_blank" rel="noopener noreferrer"
               aria-label="${escapeHtml(`${window.I18N.googleMapsCta}: ${getManholeDisplayName(d)}`)}"
               onclick="if(window.trackEvent){window.trackEvent('nearby_click_google_maps',{surface:'map_nearby',manhole_id:'${escapeHtml(d.id)}'});}">${escapeHtml(window.I18N.googleMapsCta)}</a>
           </div>
@@ -2251,11 +2251,11 @@
       panel.hidden = spots.length === 0;
     }
 
-    // 「行く」ための導線なので、場所を表示するだけの maps?q= ではなく経路案内を開く。
-    // スマホでは Google マップのアプリが開き、現在地からの道案内がそのまま始まる。
-    function googleMapsDirectionsUrl(lat, lng) {
-      // dir_action=navigate：対応端末ではナビを始め、使えないときは経路のプレビューになる
-      return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${lat},${lng}`)}&dir_action=navigate`;
+    // 文言は「経路案内」だが、開くのは場所の地図（ピン）。道順は Google マップの「経路」から出してもらう。
+    // 経路（maps/dir）を直接開くと、スマホでは現在地からのナビがすぐ始まり、下調べの人には大げさだった。
+    // 図鑑・写真館とも同じ形にそろえている（複数の蓋をまわる順路だけは経路のまま）。
+    function googleMapsPlaceUrl(lat, lng) {
+      return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${lat},${lng}`)}`;
     }
 
     function distanceKm(aLat, aLng, bLat, bLng) {

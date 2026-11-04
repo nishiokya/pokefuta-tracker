@@ -103,7 +103,7 @@ class AreaTest(unittest.TestCase):
         area = {"slug": "noto", "prefecture": "石川県", "name": "能登", "manhole_ids": ["31", "32"]}
         page = MODULE.build_area_page(area, far, {}, {}, [(area, far)], {})
         self.assertNotIn("Googleマップで順路を開けます", page)
-        # 各蓋の「経路案内」も maps/dir/ なので、順路リンクは計測名で見る
+        # 順路リンクの有無は計測名で見る
         self.assertNotIn('data-track="trip_route_open"', page)
         near_page = MODULE.build_area_page(AREAS[0], RECORDS[:5], DURATIONS, {}, [], {})
         self.assertIn("Googleマップで順路を開けます", near_page)

@@ -2431,7 +2431,7 @@ def _map_script(
         const photoState = point.is_preinstall
           ? 'preinstall'
           : (point.photo_url ? 'has_photo' : 'missing');
-        const googleMapsUrl = 'https://www.google.com/maps/dir/?api=1&destination=' + point.lat + ',' + point.lng;
+        const googleMapsUrl = 'https://www.google.com/maps/search/?api=1&query=' + point.lat + ',' + point.lng;
         const uploadUrl = 'https://pokefuta.com/upload?manhole_id=' +
           encodeURIComponent(point.id) + '&' + campaignParams;
         const photoHtml = point.is_preinstall
