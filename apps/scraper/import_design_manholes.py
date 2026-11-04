@@ -31,7 +31,8 @@ GSI_MUNI_URL = "https://maps.gsi.go.jp/js/muni.js"
 USER_AGENT = "pokefuta-tracker design-manhole importer (+https://github.com/nishiokya/pokefuta-tracker)"
 DEFAULT_LIMIT = 200
 NEARBY_THRESHOLD_METERS = 50.0
-PUBLIC_REVIEW_STATUSES = frozenset({"pending", "matched", "reviewed_distinct"})
+PUBLIC_REVIEW_STATUSES = frozenset({"pending", "matched", "auto_matched", "reviewed_distinct"})
+AUTO_MATCH_PREFIXES = ("gundam:", "character:")
 
 
 def utc_now() -> str:
@@ -231,6 +232,19 @@ def nearby_references(
     return sorted(candidates, key=lambda candidate: (candidate["distance_m"], candidate["ref"]))
 
 
+def auto_match_reference(nearby: list[dict[str, Any]]) -> str | None:
+    """50m 以内の候補がガンダム／キャラクターマンホール1か所だけなら、その参照を返す。
+
+    ポケふた（公式）の候補が混じる・候補が2か所以上あるときは人の確認に回す。
+    外すときは overrides に ``review_status: reviewed_distinct`` を書く。
+    """
+    refs = {candidate["ref"] for candidate in nearby}
+    if len(refs) != 1:
+        return None
+    ref = next(iter(refs))
+    return ref if ref.startswith(AUTO_MATCH_PREFIXES) else None
+
+
 def build_public_records(
     submissions: list[dict[str, Any]],
     geocode_cache: dict[str, dict[str, str]],
@@ -251,10 +265,14 @@ def build_public_records(
         )
         nearby = nearby_references(submission, reference_sets)
         canonical_ref = override.get("canonical_ref")
+        auto_ref = auto_match_reference(nearby)
         if canonical_ref:
             review_status = "matched"
         elif override.get("review_status"):
             review_status = override["review_status"]
+        elif auto_ref:
+            canonical_ref = auto_ref
+            review_status = "auto_matched"
         elif nearby:
             review_status = "needs_review"
         else:
@@ -393,6 +411,7 @@ def main() -> None:
     print(
         f"Imported {len(submissions)} design-manhole submissions; "
         f"matched={sum(bool(row['canonical_ref']) for row in public_records)} "
+        f"auto_matched={sum(row['review_status'] == 'auto_matched' for row in public_records)} "
         f"needs_review={sum(row['review_status'] == 'needs_review' for row in normalized_records)} "
         f"published={len(public_records)} "
         f"review_queue={len(review_records)}"

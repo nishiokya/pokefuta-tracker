@@ -362,9 +362,13 @@ def _is_design_manhole_page(url: str) -> bool:
 
 
 def _linked_ref(record: dict) -> str:
-    """canonical_ref → nearby_refs の順に、gundam:/character: の参照を1つ返す（無ければ空）。"""
+    """canonical_ref → nearby_refs の順に、gundam:/character: の参照を1つ返す（無ければ空）。
+
+    reviewed_distinct は「近くにあるが別の蓋」と人が判断した投稿なので、nearby_refs では紐付けない。
+    """
     refs = [str(record.get("canonical_ref") or "")]
-    for entry in record.get("nearby_refs") or []:
+    nearby = [] if record.get("review_status") == "reviewed_distinct" else record.get("nearby_refs") or []
+    for entry in nearby:
         if isinstance(entry, dict):
             refs.append(str(entry.get("ref") or ""))
     return next((ref for ref in refs if ref.startswith(CHARACTER_LINKAGE_PREFIXES)), "")
@@ -407,7 +411,10 @@ def build_photos(path: Path | None, character_records: list[dict], gundam_record
             meta = _work_meta_for(manhole, is_gundam)
             place = str(manhole.get("landmark") or manhole.get("title") or title).strip()
             href = meta["href"]
-            if href.startswith("./characters/"):
+            if is_gundam:
+                # ガンダムの作品ガイドは設置エリアの要約で、1基ずつの行は一覧・地図（gmanhole_map.html）にある
+                href = "./gmanhole_map.html#gundam-" + quote(str(manhole.get("id")), safe="")
+            elif href.startswith("./characters/"):
                 href += "#spot-" + quote(str(manhole.get("id")), safe="")
             label = _short_work_name(meta["name"])
             prefecture = str(manhole.get("prefecture") or "")

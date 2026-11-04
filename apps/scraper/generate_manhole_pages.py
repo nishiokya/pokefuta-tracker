@@ -385,11 +385,13 @@ def load_design_spots(
         refs: list[str] = []
         if row.get("canonical_ref"):
             refs.append(str(row["canonical_ref"]))
-        refs += [
-            str(r.get("ref", ""))
-            for r in (row.get("nearby_refs") or [])
-            if isinstance(r, dict) and r.get("ref")
-        ]
+        # reviewed_distinct は人が「近くの別の蓋」と判断した投稿なので、近さでは合流させない
+        if row.get("review_status") != "reviewed_distinct":
+            refs += [
+                str(r.get("ref", ""))
+                for r in (row.get("nearby_refs") or [])
+                if isinstance(r, dict) and r.get("ref")
+            ]
         matched = next((by_ref[r] for r in refs if r in by_ref), None)
         if matched is not None:
             # マスタ蓋の写真館リンク・写真として合流（最初の投稿を採用）
