@@ -378,7 +378,8 @@
     <h1 id="hero-title" class="sr-only">%%HERO_TITLE%%</h1>
   </main>
   <script>
-  (function () {
+  // 案内の a はこの後ろのシート（#controls）の中にあるので、読み終わってから埋める
+  document.addEventListener('DOMContentLoaded', function () {
     var lang = (navigator.languages && navigator.languages[0]) || navigator.language || '';
     if (/^ja/i.test(lang)) return;
     var map = [
@@ -393,7 +394,7 @@
     el.href = entry.path + window.location.search;
     el.textContent = entry.label;
     el.removeAttribute('hidden');
-  })();
+  });
   </script>
 
   <div id="controls" class="bottom-sheet" role="complementary" aria-labelledby="page-title">
