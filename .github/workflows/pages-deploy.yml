@@ -238,10 +238,6 @@ jobs:
           python3 apps/scraper/inject_site_header.py dist
           echo "[dist] Inject AdSense verification and in-content slots when configured"
           python3 apps/scraper/inject_adsense.py dist
-          echo "[dist] Point manhole photos at img.pokefuta.com (R2)"
-          # 全ページの HTML ができた後に、蓋の写真の URL をまとめて img に向ける（og:image・JSON-LD は data のまま）。
-          # 画像そのものは下の「Mirror manhole photos to R2」が同じパスで R2 に置く
-          python3 apps/scraper/use_image_host.py dist
           echo "[dist] Copy assets (CSS + images)"
           cp -r apps/web/assets/* dist/assets/ || true
           # Root fallbacks for browsers/crawlers; explicit links use /assets/.
@@ -284,11 +280,12 @@ jobs:
             dist
 
       # 蓋の写真を R2（img.pokefuta.com）にも同じパスで置く。Pages の配信量を減らすため、全ページの写真はここから読む（use_image_host.py）。
-      # 失敗してもデプロイは止めない: R2 には前回までの同じパスの画像が残るので、欠けるのは新しく増えた蓋の写真だけ。
+      # 失敗してもデプロイは止めない。その回はページの写真を img に向けず、Pages の画像のまま出す（下の書き換えを飛ばす）。
       # 止めると docs/api（写真館が読む）や他のページの更新まで止まるほうが痛い。失敗は実行結果の注記で分かる。
       # 中身は dist/manhole/image と同じ集合: 非公開になって消えたギャラリー画像は sync で R2 からも消える。
       # 鍵は pokefuta-public-images だけを読み書きできる移行期間用のもの（写真館の原本バケットには届かない）。写真館が公開用画像を作るようになったら secret ごと消す。
       - name: Mirror manhole photos to R2 (img.pokefuta.com)
+        id: r2_mirror
         continue-on-error: true
         timeout-minutes: 10
         env:
@@ -331,6 +328,13 @@ jobs:
             --stats-one-line --stats 0 --log-level NOTICE
           echo "[r2] local files: $(find dist/manhole/image -type f | wc -l)"
           echo "[r2] remote files: $(rclone lsf -R --files-only r2:pokefuta-public-images/manhole/image | wc -l)"
+
+      # 全ページの HTML の蓋の写真の URL をまとめて img に向ける（og:image・JSON-LD は data のまま）。
+      # 上の複写が成功したときだけ。失敗した回は R2 に新しい写真が無いので、Pages の画像のまま出す（写真が欠けない）
+      - name: Point manhole photos at img.pokefuta.com (R2)
+        if: steps.r2_mirror.outcome == 'success'
+        timeout-minutes: 5
+        run: python3 apps/scraper/use_image_host.py dist
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
