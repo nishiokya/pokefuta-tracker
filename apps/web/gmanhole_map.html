@@ -828,7 +828,7 @@
 
     function buildMapsAction(d, eventParams, label = '経路案内'){
       if (!(Number.isFinite(Number(d.lat)) && Number.isFinite(Number(d.lng)))) return '';
-      const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${d.lat},${d.lng}`)}`;
+      const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${d.lat},${d.lng}`)}`;
       return `<a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" class="travel-popup-action travel-popup-action--maps"
         onclick="if(window.trackEvent){window.trackEvent('popup_click_google_maps',{surface:'gmanhole_map_popup',${eventParams}});}">${esc(label)}</a>`;
     }

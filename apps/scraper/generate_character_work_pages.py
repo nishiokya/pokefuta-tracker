@@ -205,11 +205,11 @@ def spot_html(record: dict, event: dict | None, event_active: bool) -> str:
     address = str(record.get("address") or "詳細な住所は出典でご確認ください")
     if has_coordinates(record):
         maps = "https://www.google.com/maps/search/?" + urlencode({"api": "1", "query": f"{record['lat']},{record['lng']}"})
-        map_label = "設置場所の地図"
+        map_label = "経路案内"
         coordinate_note = ""
     else:
         maps = "https://www.google.com/maps/search/?" + urlencode({"api": "1", "query": address + " " + location})
-        map_label = "施設の住所を地図で確認"
+        map_label = "経路案内（住所で検索）"
         coordinate_note = '<p class="cw-note">正確な座標は確認中です。全国地図のピンにはまだ表示されません。</p>'
     # ガンダムは設置場所名がそのまま見出しになるので、同じ文字列を2行続けない
     location_html = "" if location == name else f'<p class="cw-location">{escape(location)}</p>'

@@ -188,7 +188,7 @@ def _google_maps_url(record: dict) -> str:
     lng = record.get("lng")
     if not isinstance(lat, (int, float)) or not isinstance(lng, (int, float)):
         return ""
-    return f"https://www.google.com/maps/dir/?api=1&destination={lat},{lng}"
+    return f"https://www.google.com/maps/search/?api=1&query={lat},{lng}"
 
 
 def _photo_asset_url(record: dict, photo: dict) -> str:
@@ -521,7 +521,7 @@ def build_page(
 
     <section aria-labelledby="list-heading">
       <h2 id="list-heading">{escape(meta["h1"])}一覧（{count}枚）</h2>
-      <p class="section-note">都道府県順に並べています。「地図で開く」は Google マップの経路検索へ、
+      <p class="section-note">都道府県順に並べています。「経路案内」は Google マップで場所を開きます（道順はそこから出せます）。
         「詳細」はポケふたの詳細ページへ移動します。</p>
       <div class="manhole-grid">{_manhole_cards(records, photos, tag)}</div>
     </section>
