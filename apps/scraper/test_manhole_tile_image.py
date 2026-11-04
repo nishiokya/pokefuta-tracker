@@ -9,12 +9,12 @@ from PIL import Image
 
 try:
     from apps.scraper import build_small_images
-    from apps.scraper.manhole_tile_image import SMALL_WIDTHS, responsive_attrs, small_image_url, srcset, tile_image_url, use_image_host
+    from apps.scraper.manhole_tile_image import SMALL_WIDTHS, responsive_attrs, small_image_url, srcset, tile_image_url
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
     import build_small_images
-    from manhole_tile_image import SMALL_WIDTHS, responsive_attrs, small_image_url, srcset, tile_image_url, use_image_host
+    from manhole_tile_image import SMALL_WIDTHS, responsive_attrs, small_image_url, srcset, tile_image_url
 
 
 class TileImageUrlTest(unittest.TestCase):
@@ -110,25 +110,6 @@ class MapPageSmallImageTest(unittest.TestCase):
         html = ja._render_related_card({"id": "7", "prefecture": "東京都", "city": "町田市"}, {"7": url})
         self.assertIn("manhole/image/7_latest_180.webp", html)
         self.assertNotIn("7_latest.jpeg", html)
-
-
-class ImageHostTest(unittest.TestCase):
-    def test_switched_page_reads_photos_from_r2(self):
-        html = (
-            '<img src="/manhole/image/7_lid.jpeg" '
-            'srcset="/manhole/image/7_lid_180.webp 180w, /manhole/image/7_lid.jpeg 360w">'
-            '<script>{"photo_url": "/manhole/image/7_latest.jpeg"}</script>'
-        )
-        out = use_image_host(html, "prefecture")
-        self.assertNotIn('"/manhole/image/', out)
-        self.assertNotIn(", /manhole/image/", out)
-        self.assertEqual(out.count("https://img.pokefuta.com/manhole/image/"), 4)
-
-    def test_absolute_data_urls_and_other_pages_are_left_alone(self):
-        og = '<meta property="og:image" content="https://data.pokefuta.com/manhole/image/7_latest.jpeg">'
-        self.assertEqual(use_image_host(og, "prefecture"), og)
-        tile = '<img src="/manhole/image/7_lid.jpeg">'
-        self.assertEqual(use_image_host(tile, "manhole"), tile)
 
 
 if __name__ == "__main__":
