@@ -271,6 +271,11 @@ class GenerateTest(unittest.TestCase):
             cards = area[area.index('id="manhole-list"'):]
             ids = re.findall(r'id="manhole-(\d+)"', cards)
             self.assertEqual(ids[:5], ["206", "210", "209", "207", "208"])  # 「回るポケふた」も回る順
+            # 地図のピンにも回る順番と同じ番号を付ける
+            points = re.search(r"const points = (\[.*?\]);", area, re.S).group(1)
+            orders = re.findall(r'"id": "(\d+)".*?"order": (\d+)', points, re.S)
+            self.assertEqual(orders, [("206", "1"), ("210", "2"), ("209", "3"), ("207", "4"), ("208", "5")])
+            self.assertIn(".map-order", area)
             self.assertIn('href="/trip/ikaruga/"', area)  # あわせて回るなら
             self.assertIn('"@type": "TouristTrip"', area)
             ikaruga = (out / "ikaruga" / "index.html").read_text(encoding="utf-8")

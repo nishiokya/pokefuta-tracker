@@ -2459,8 +2459,12 @@ def _map_script(
           'data-track="{event_prefix}_google_maps_click" data-destination="google_maps" ' +
           'data-content-id="' + escapeHtml(point.id) + '" data-surface="map_popup">行き方</a>' +
           uploadHtml + '</div></div>';
+        // 旅ページは回る順番の番号をピンに重ねる（order が無い県・市のページは今まで通り）
+        const orderBadge = point.order
+          ? '<span class="map-order" aria-hidden="true">' + point.order + '</span>'
+          : '';
         const marker = L.marker(latlng, {{
-          title: point.name + 'のポケふた',
+          title: (point.order ? point.order + '番目 ' : '') + point.name + 'のポケふた',
           alt: point.name + 'のポケふた・' +
             (point.is_preinstall
               ? '設置予定'
@@ -2470,14 +2474,14 @@ def _map_script(
               className: '',
               html: '<div class="prefecture-marker clip"><img src="' +
                 escapeHtml(point.tile_url) + '" alt="' + escapeHtml(point.name + 'のポケふた') +
-                '" decoding="async" width="44" height="44"></div>',
+                '" decoding="async" width="44" height="44"></div>' + orderBadge,
               iconSize: [44, 44],
               iconAnchor: [22, 22],
               popupAnchor: [0, -21]
             }})
             : L.divIcon({{
               className: '',
-              html: '<div class="prefecture-marker ' + markerClass + '"></div>',
+              html: '<div class="prefecture-marker ' + markerClass + '"></div>' + orderBadge,
               iconSize: [28, 34],
               iconAnchor: [14, 31],
               popupAnchor: [0, -30]
