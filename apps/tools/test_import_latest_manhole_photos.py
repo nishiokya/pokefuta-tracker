@@ -72,5 +72,27 @@ class LidTileTest(unittest.TestCase):
         self.assertIsNone(imp.crop_box({"lid": [0.8, 0.2, 0.2, 0.8]}, "lid"))
 
 
+
+class GalleryNeedsFetchTest(unittest.TestCase):
+    def test_new_file_is_fetched(self):
+        self.assertTrue(imp.gallery_needs_fetch(False, False, None, "a"))
+
+    def test_same_key_is_kept(self):
+        self.assertFalse(imp.gallery_needs_fetch(True, False, "a", "a"))
+
+    def test_changed_key_is_fetched_again(self):
+        self.assertTrue(imp.gallery_needs_fetch(True, False, "a", "b"))
+
+    def test_unknown_old_file_is_kept(self):
+        self.assertFalse(imp.gallery_needs_fetch(True, False, None, "b"))
+
+    def test_refresh_fetches_everything(self):
+        self.assertTrue(imp.gallery_needs_fetch(True, True, "a", "a"))
+
+    def test_fingerprint_is_short_and_stable(self):
+        self.assertEqual(imp.key_fingerprint("photos/original/x.jpg"), imp.key_fingerprint("photos/original/x.jpg"))
+        self.assertEqual(len(imp.key_fingerprint("photos/original/x.jpg")), 16)
+        self.assertIsNone(imp.key_fingerprint(None))
+
 if __name__ == "__main__":
     unittest.main()
