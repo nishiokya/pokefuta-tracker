@@ -13,9 +13,11 @@ Usage:
 import json
 import pathlib
 import sys
+from html import escape
 
 sys.path.insert(0, str(pathlib.Path(__file__).parent.parent / 'apps' / 'scraper'))
 from prefectures import PREFECTURE_PAGE_LANGS  # noqa: E402
+from site_names import SITE_NAMES  # noqa: E402
 
 ROOT = pathlib.Path(__file__).parent.parent
 I18N_DIR = ROOT / 'apps' / 'web' / 'i18n'
@@ -41,6 +43,7 @@ def build_template(template_path: pathlib.Path, out_name: str, lang: str, string
     # 県ページへのリンクの起点。訳した県ページがある言語は自分の言語（./prefectures/）、
     # 無い言語は日本語版（../prefectures/）
     merged['PREF_PAGE_BASE'] = strings['LANG_PATH'] if lang in PREFECTURE_PAGE_LANGS else strings['BASE_PATH']
+    merged['SITE_NAME'] = escape(SITE_NAMES[lang], quote=True)
     merged['PREFECTURE_NAMES_JSON'] = json.dumps(pref_data, ensure_ascii=False).replace('</', '<\\/')
 
     result = template
