@@ -425,7 +425,7 @@ def build_page(
         gmaps_params = {**base, "surface": "hero"}
         visit_html = (
             f'<a href="https://www.google.com/maps/search/?api=1&query={lat},{lng}" class="visit-cta" target="_blank"'
-            f' rel="noopener noreferrer"{_onclick("click_google_maps", gmaps_params)}>'
+            f' rel="noopener noreferrer" data-geo-label="{_attr(pokemon_text + " · " + place)}"{_onclick("click_google_maps", gmaps_params)}>'
             f'<span class="visit-cta-icon">{ja._icon("icon-link-google-map", "visit-cta-map-icon")}</span>'
             f'<span class="visit-cta-body"><span class="visit-cta-main">{escape(page.t("directions_main"))}</span>'
             f'<span class="visit-cta-sub">{escape(page.t("directions_sub"))}</span></span></a>'
