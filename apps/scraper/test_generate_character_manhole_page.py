@@ -593,6 +593,13 @@ class PhotoTest(unittest.TestCase):
         self.assertEqual("https://pokefuta.com/design-manholes/p-plain-0?from=data", by_id["p-plain-0"]["href"])
         self.assertEqual("名古屋市北区", by_id["p-plain-0"]["city"])  # 全角スペースを詰める
 
+    def test_reviewed_distinct_photos_are_not_linked_by_nearby_refs(self):
+        records = [dict(PHOTO_RECORDS[1], id="p-distinct", review_status="reviewed_distinct")]
+        path = _write_ndjson(Path(self.tmpdir.name), "distinct.ndjson", records)
+        photo = build_photos(path, self.character_records, self.gundam_records)[0]
+        self.assertFalse(photo["linked"])
+        self.assertEqual(UNLINKED_PHOTO_LABEL, photo["label"])
+
     def test_hero_and_gallery_split_without_duplicates(self):
         hero, gallery = select_photos(self.photos, seed_date=date(2026, 9, 26))
         self.assertEqual(HERO_PHOTO_LIMIT, len(hero))

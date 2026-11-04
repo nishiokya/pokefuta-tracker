@@ -362,9 +362,13 @@ def _is_design_manhole_page(url: str) -> bool:
 
 
 def _linked_ref(record: dict) -> str:
-    """canonical_ref → nearby_refs の順に、gundam:/character: の参照を1つ返す（無ければ空）。"""
+    """canonical_ref → nearby_refs の順に、gundam:/character: の参照を1つ返す（無ければ空）。
+
+    reviewed_distinct は「近くにあるが別の蓋」と人が判断した投稿なので、nearby_refs では紐付けない。
+    """
     refs = [str(record.get("canonical_ref") or "")]
-    for entry in record.get("nearby_refs") or []:
+    nearby = [] if record.get("review_status") == "reviewed_distinct" else record.get("nearby_refs") or []
+    for entry in nearby:
         if isinstance(entry, dict):
             refs.append(str(entry.get("ref") or ""))
     return next((ref for ref in refs if ref.startswith(CHARACTER_LINKAGE_PREFIXES)), "")
