@@ -10,6 +10,8 @@ pages-deploy.yml がデプロイのたびに dist/manhole/image を同じパス�
 - 書き換えない: <meta>（og:image・twitter:image）・<link>・JSON-LD。外へ出す画像の URL は data のまま
 - data.pokefuta.com の絶対 URL は <img> / <source> の中だけ書き換える（スクリプトの JSON-LD 組み立てなどに触らない）
 - "BASE_PATH + 'manhole/image/'" のような連結は、前にパスが付くので書き換えない
+- 書き換えたページの <head> に img.pokefuta.com への preconnect を足す。トップと蓋の詳細は LCP が蓋の写真なので、
+  別ホストへの接続（DNS・TCP・TLS で約60ms、2026-11-04 実測）を HTML の読み込み中に済ませておく
 - 戻すときは pages-deploy.yml からこのステップを外す（Pages にも同じパスの画像が残っている）
 """
 
@@ -21,6 +23,7 @@ from pathlib import Path
 
 
 IMAGE_BASE = "https://img.pokefuta.com/manhole/image/"
+PRECONNECT = '<link rel="preconnect" href="https://img.pokefuta.com">'
 
 # 書き換えない範囲: <meta …>・<link …>・<script type="application/ld+json">…</script>
 _PROTECTED_RE = re.compile(
@@ -32,6 +35,7 @@ _RELATIVE_RE = re.compile(r"""(?<=["'`\s,=(])(?:/|\./|(?:\.\./)+)?manhole/image/
 _ABSOLUTE_RE = re.compile(r"https://data\.pokefuta\.com/manhole/image/")
 _IMG_TAG_RE = re.compile(r"<(?:img|source)\b[^>]*>", re.IGNORECASE)
 _CONCAT_RE = re.compile(r"""\+\s*["'`]$""")
+_HEAD_RE = re.compile(r"<head\b[^>]*>", re.IGNORECASE)
 
 
 def _rewrite_relative(text: str) -> str:
@@ -49,7 +53,7 @@ def _rewrite_open(text: str) -> str:
 
 
 def use_image_host(html: str) -> str:
-    """HTML の中の蓋の写真を img.pokefuta.com に向ける（meta・link・JSON-LD はそのまま）。"""
+    """HTML の中の蓋の写真を img.pokefuta.com に向ける（meta・link・JSON-LD はそのまま）。書き換えたら preconnect も足す。"""
     out: list[str] = []
     pos = 0
     for match in _PROTECTED_RE.finditer(html):
@@ -57,7 +61,10 @@ def use_image_host(html: str) -> str:
         out.append(match.group(0))
         pos = match.end()
     out.append(_rewrite_open(html[pos:]))
-    return "".join(out)
+    new_html = "".join(out)
+    if new_html != html and PRECONNECT not in new_html:
+        new_html = _HEAD_RE.sub(lambda m: m.group(0) + "\n" + PRECONNECT, new_html, count=1)
+    return new_html
 
 
 def rewrite_dist(dist: Path) -> int:

@@ -5,11 +5,11 @@ import unittest
 from pathlib import Path
 
 try:
-    from apps.scraper.use_image_host import IMAGE_BASE, rewrite_dist, use_image_host
+    from apps.scraper.use_image_host import IMAGE_BASE, PRECONNECT, rewrite_dist, use_image_host
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
-    from use_image_host import IMAGE_BASE, rewrite_dist, use_image_host
+    from use_image_host import IMAGE_BASE, PRECONNECT, rewrite_dist, use_image_host
 
 
 class UseImageHostTest(unittest.TestCase):
@@ -52,6 +52,14 @@ class UseImageHostTest(unittest.TestCase):
         )
         self.assertEqual(use_image_host(html), html)
 
+    def test_rewritten_page_preconnects_to_r2_once(self):
+        html = '<html><head><meta charset="utf-8"></head><body><img src="/manhole/image/1_lid.jpeg"></body></html>'
+        out = use_image_host(html)
+        self.assertIn(f'<head>\n{PRECONNECT}<meta charset="utf-8">', out)
+        self.assertEqual(use_image_host(out), out)
+        plain = "<html><head></head><body><p>no photos</p></body></html>"
+        self.assertEqual(use_image_host(plain), plain)
+
     def test_rewrite_dist_counts_changed_files(self):
         with tempfile.TemporaryDirectory() as d:
             root = Path(d)
@@ -62,7 +70,7 @@ class UseImageHostTest(unittest.TestCase):
             self.assertEqual(
                 (root / "prefectures" / "hokkaido" / "index.html").read_text(encoding="utf-8"),
                 f'<img src="{IMAGE_BASE}1_lid.jpeg">',
-            )
+            )  # <head> が無ければ preconnect は足さない
             self.assertEqual(rewrite_dist(root), 0)
 
 
