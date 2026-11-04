@@ -16,7 +16,8 @@ from urllib.parse import quote, urlencode, urlparse
 
 try:
     from apps.scraper.character_manhole_works import (
-        CHARACTER_CSS_VERSION, GUNDAM_WORK_QUERY, WORK_PAGES, WorkPage, available_pages, gundam_work_records,
+        CHARACTER_CSS_VERSION, GUNDAM_WORK, GUNDAM_WORK_QUERY, WORK_PAGES, WorkPage, available_pages, gundam_work_records,
+        page_for_work,
     )
     from apps.scraper.generate_character_manhole_page import (
         BASE_URL, ROOT, _is_active, load_ndjson,
@@ -27,7 +28,8 @@ except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
     from character_manhole_works import (
-        CHARACTER_CSS_VERSION, GUNDAM_WORK_QUERY, WORK_PAGES, WorkPage, available_pages, gundam_work_records,
+        CHARACTER_CSS_VERSION, GUNDAM_WORK, GUNDAM_WORK_QUERY, WORK_PAGES, WorkPage, available_pages, gundam_work_records,
+        page_for_work,
     )
     from generate_character_manhole_page import (
         BASE_URL, ROOT, _is_active, load_ndjson,
@@ -75,14 +77,20 @@ def has_coordinates(record: dict) -> bool:
                for v in (lat, lng)) and -90 <= lat <= 90 and -180 <= lng <= 180
 
 
+def record_ref(record: dict) -> str:
+    """写真館投稿の canonical_ref と同じ形（gundam:<id> / character:<id>）。"""
+    prefix = "gundam" if record.get("work") == GUNDAM_WORK else "character"
+    return f"{prefix}:{record.get('id')}"
+
+
 def attach_user_photos(records: list[dict], submissions: list[dict]) -> list[dict]:
-    """Attach the newest linked public submission to each character record."""
+    """Attach the newest linked public submission to each character / gundam record."""
     linked: dict[str, dict] = {}
     for submission in submissions:
         canonical_ref = str(submission.get("canonical_ref") or "")
         if (
             submission.get("status") != "active"
-            or not canonical_ref.startswith("character:")
+            or not canonical_ref.startswith(("character:", "gundam:"))
             or not safe_url(submission.get("photo_url"))
         ):
             continue
@@ -95,7 +103,7 @@ def attach_user_photos(records: list[dict], submissions: list[dict]) -> list[dic
     enriched: list[dict] = []
     for record in records:
         item = dict(record)
-        submission = linked.get(f"character:{record.get('id')}")
+        submission = linked.get(record_ref(record))
         if submission:
             item["user_photo_url"] = submission["photo_url"]
             item["user_photo_source_url"] = submission.get("source_url")
@@ -553,6 +561,51 @@ def write_pages(
     return written
 
 
+def design_manhole_links(records: list[dict], submissions: list[dict], generated_at: str) -> dict:
+    """写真館の投稿ID → 紐付いた作品ガイドの設置場所。写真館の投稿詳細ページが読む（api/design_manhole_links.json）。
+
+    records は attach_user_photos 後の掲載中のもの。紐付けは canonical_ref だけを見る（近さの候補は使わない）。
+    """
+    by_ref = {record_ref(r): r for r in records}
+    pages = available_pages(records)
+    totals = {page.slug: [r for r in records if r.get("work") in page.works] for page in pages}
+    links = {}
+    for submission in submissions:
+        source_id = submission.get("source_id")
+        record = by_ref.get(str(submission.get("canonical_ref") or ""))
+        if submission.get("status") != "active" or not source_id or record is None:
+            continue
+        page = page_for_work(record.get("work") or "")
+        if page is None or page not in pages:
+            continue
+        spots = totals[page.slug]
+        links[source_id] = {
+            "ref": record_ref(record),
+            "work": record.get("work") or "",
+            "work_name": page.name,
+            "place": record.get("landmark") or record.get("title") or "",
+            "prefecture": record.get("prefecture") or "",
+            "city": record.get("city") or "",
+            # ガンダムの作品ガイドは設置エリアの要約なので、1基ずつの行がある一覧・地図の行へ飛ばす
+            "url": (f"{BASE_URL}gmanhole_map.html#gundam-{quote(str(record.get('id')), safe='')}"
+                    if record.get("work") == GUNDAM_WORK else f"{BASE_URL}{page.path}#{spot_id(record)}"),
+            "guide_url": f"{BASE_URL}{page.path}",
+            "spots": len(spots),
+            "spots_with_photo": sum(1 for r in spots if r.get("user_photo_url")),
+        }
+    return {"success": True, "generated_at": generated_at, "links": links}
+
+
+def write_design_manhole_links(records: list[dict], submissions: list[dict], output: Path) -> Path:
+    active = [r for r in attach_user_photos(records, submissions) if _is_active(r)]
+    generated_at = datetime.now(JST).isoformat(timespec="seconds")
+    path = output / "api/design_manhole_links.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(design_manhole_links(active, submissions, generated_at), ensure_ascii=False,
+                               separators=(",", ":")), encoding="utf-8")
+    return path
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data", type=Path, default=ROOT / "docs/character_manholes.ndjson")
@@ -564,12 +617,14 @@ def main() -> int:
     records = load_ndjson(args.data) + gundam_work_records(load_ndjson(args.gundam))
     if not any(_is_active(r) for r in records):
         parser.error("No active character records; refusing to generate empty guides")
+    submissions = load_ndjson(args.design_manholes)
     written = write_pages(
         records,
         load_events(args.events),
         args.output,
-        design_submissions=load_ndjson(args.design_manholes),
+        design_submissions=submissions,
     )
+    write_design_manhole_links(records, submissions, args.output)
     print(f"[generate_character_work_pages] wrote {len(written)} character pages")
     return 0
 
