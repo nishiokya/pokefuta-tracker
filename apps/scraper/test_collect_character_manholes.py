@@ -204,7 +204,7 @@ class CharacterManholeCollectorTests(unittest.TestCase):
 
         source = (ROOT / "apps/web/gmanhole_map.html").read_text(encoding="utf-8")
         self.assertIn("d.coordinate_method === 'gsi_address_block'", source)
-        self.assertIn("Google Mapsで付近へ", source)
+        self.assertIn("付近まで経路案内", source)
         self.assertIn("travel-popup-approx", source)
 
 

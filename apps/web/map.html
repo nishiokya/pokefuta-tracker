@@ -342,7 +342,7 @@
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
   <link rel="stylesheet" href="./assets/theme.css" />
   <link rel="stylesheet" href="./assets/map.css" />
-  <link rel="stylesheet" href="./assets/pokefuta-map.css?v=20261103-nearby-maps" />
+  <link rel="stylesheet" href="./assets/pokefuta-map.css?v=20261104-compact-sheet" />
   <link rel="icon" href="./assets/pokefuta-marker.svg" type="image/svg+xml" />
   <!-- Google Analytics -->
   <script src="./assets/tag-meta.js"></script>
@@ -386,29 +386,11 @@
 <body class="pokefuta-map-page">
   <main class="map-stage" aria-label="ポケふた探索マップ">
     <div id="map"></div>
-    <section class="map-hero-card" aria-labelledby="hero-title">
-      <button type="button" id="hero-card-toggle" class="hero-card-toggle" aria-expanded="true" aria-controls="hero-card-content">
-        <span class="hero-card-toggle-icon" aria-hidden="true"></span>
-        <span class="hero-card-toggle-label">地図を広く見る</span>
-      </button>
-      <a href="./" class="map-back-to-top">← トップに戻る</a>
-      <div id="hero-card-content" class="hero-card-content">
-        <h1 id="hero-title" class="sr-only">全国のポケふた・ポケモンマンホールマップ</h1>
-        <nav class="map-hero-nav-grid" aria-label="サイト内ナビゲーション">
-          <a class="map-hero-nav-item" href="./">🏠<span>トップ</span></a>
-          <a class="map-hero-nav-item" href="/summary/">📋<span>サマリー</span></a>
-          <a class="map-hero-nav-item" href="/pokemon/">⭐<span>ポケモン</span></a>
-          <button type="button" class="map-hero-nav-item" onclick="document.getElementById('prefecture-open-button')?.click()">🏙<span>都道府県から探す</span></button>
-          <button type="button" class="map-hero-nav-item" onclick="document.getElementById('feature-open-button')?.click()">🎯<span>目的から探す</span></button>
-        </nav>
-        <a id="i18n-notice" href="" hidden
-           style="display:block; margin-top:8px; padding-top:8px; border-top:1px solid rgba(110,80,44,.12); font-size:0.78rem; font-weight:700; color:#4a7c59; text-decoration:none;"
-        ></a>
-      </div>
-    </section>
+    <h1 id="hero-title" class="sr-only">全国のポケふた・ポケモンマンホールマップ</h1>
   </main>
   <script>
-  (function () {
+  // 案内の a はこの後ろのシート（#controls）の中にあるので、読み終わってから埋める
+  document.addEventListener('DOMContentLoaded', function () {
     var lang = (navigator.languages && navigator.languages[0]) || navigator.language || '';
     if (/^ja/i.test(lang)) return;
     var map = [
@@ -423,7 +405,7 @@
     el.href = entry.path + window.location.search;
     el.textContent = entry.label;
     el.removeAttribute('hidden');
-  })();
+  });
   </script>
 
   <div id="controls" class="bottom-sheet" role="complementary" aria-labelledby="page-title">
@@ -434,32 +416,29 @@
       </button>
     </div>
     <div id="controls-content" class="controls-content" role="region" aria-label="全体パネルの内容">
-      <div class="sheet-explore-section">
-        <p class="sheet-section-label">探す</p>
-        <button type="button" id="prefecture-open-button" class="sheet-primary-btn" aria-pressed="false">
+      <div class="sheet-actions" role="group" aria-label="探す">
+        <button type="button" id="prefecture-open-button" class="sheet-action-btn sheet-action-btn--primary" aria-pressed="false" title="都道府県から探す">
           <img src="./assets/icon-map.svg" alt="" aria-hidden="true">
-          都道府県から探す
+          <span>都道府県</span>
         </button>
-        <button type="button" id="feature-open-button" class="sheet-secondary-btn" aria-pressed="false">
+        <button type="button" id="feature-open-button" class="sheet-action-btn" aria-pressed="false" title="テーマで絞り込む">
           <img src="./assets/icon-tag.svg" alt="" aria-hidden="true">
-          テーマで絞り込む
+          <span>テーマ</span>
         </button>
+        <button type="button" id="locate-button" class="sheet-action-btn" title="現在地から近いポケふたを探す">
+          <img src="./assets/icon-current-location.svg" alt="" aria-hidden="true">
+          <span id="locate-button-label">近くを探す</span>
+        </button>
+        <label class="sheet-action-btn" for="recent-toggle" title="新着ポケふたを見る">
+          <input type="checkbox" id="recent-toggle" />
+          <img src="./assets/icon-fire.svg" alt="" aria-hidden="true">
+          <span>新着</span>
+        </label>
       </div>
-      <div class="sheet-utility-section">
-        <p class="sheet-section-label">便利機能</p>
-        <div class="sheet-utility-btns">
-          <button type="button" id="locate-button" class="sheet-utility-btn">
-            <img src="./assets/icon-current-location.svg" alt="" aria-hidden="true">
-            <span id="locate-button-label">現在地から近いポケふたを探す</span>
-          </button>
-          <label class="sheet-utility-btn sheet-utility-btn--toggle" for="recent-toggle">
-            <input type="checkbox" id="recent-toggle" />
-            <img src="./assets/icon-fire.svg" alt="" aria-hidden="true">
-            新着ポケふたを見る
-          </label>
-        </div>
-        <p class="sheet-locate-desc">現在地を使って、近くのポケふたを距離順に表示します。位置情報は検索のためだけに使用します。</p>
-      </div>
+      <p class="sheet-locate-desc">「近くを探す」は現在地から距離順に表示します。位置情報は検索のためだけに使います。</p>
+      <a id="i18n-notice" href="" hidden
+         style="display:block; margin-top:6px; font-size:0.78rem; font-weight:700; color:#4a7c59; text-decoration:none;"
+      ></a>
       <section class="tag-directory" aria-labelledby="tag-directory-heading" hidden>
         <div class="section-title-row">
           <h2 id="tag-directory-heading">テーマでポケふた巡り</h2>
@@ -560,89 +539,16 @@
     map.on('popupopen', () => document.body.classList.add('popup-open'));
     map.on('popupclose', () => document.body.classList.remove('popup-open'));
     const POPUP_SIDE_PADDING = 16;
-    const POPUP_TOP_PADDING = 176;
+    // 地図の上端には何も重ねていない（ヒーローカードは廃止）ので、余白は小さくてよい
+    const POPUP_TOP_PADDING = 24;
     const POPUP_BOTTOM_SHEET_PADDING = 250;
     const pokefutaPopupOptions = {
       closeOnClick: !isTouchMapPointer,
       autoPan: true,
-      // Keep popups clear of the hero card at the top and collapsed bottom sheet on mobile.
+      // Keep popups clear of the collapsed bottom sheet on mobile.
       autoPanPaddingTopLeft: L.point(POPUP_SIDE_PADDING, POPUP_TOP_PADDING),
       autoPanPaddingBottomRight: L.point(POPUP_SIDE_PADDING, POPUP_BOTTOM_SHEET_PADDING)
     };
-    const HERO_CARD_STORAGE_KEY = 'pokefutaHeroCardCollapsed';
-
-    function getHeroCardToggleLabels() {
-      const lang = document.documentElement.lang.toLowerCase();
-      if (lang.startsWith('zh-tw') || lang.startsWith('zh-hant')) {
-        return { collapse: '放大地圖', expand: '顯示推薦卡片' };
-      }
-      if (lang.startsWith('zh')) {
-        return { collapse: '放大地图', expand: '显示推荐卡片' };
-      }
-      if (lang.startsWith('ko')) {
-        return { collapse: '지도를 넓게 보기', expand: '추천 카드 표시' };
-      }
-      if (lang.startsWith('en')) {
-        return { collapse: 'Show more map', expand: 'Show discovery card' };
-      }
-      return { collapse: '地図を広く見る', expand: 'カードを表示' };
-    }
-
-    function setHeroCardCollapsed(collapsed, persist = false) {
-      const heroCard = document.querySelector('.map-hero-card');
-      const toggle = document.getElementById('hero-card-toggle');
-      const content = document.getElementById('hero-card-content');
-      const label = toggle?.querySelector('.hero-card-toggle-label');
-      if (!heroCard || !toggle || !content || !label) return;
-
-      const labels = getHeroCardToggleLabels();
-      heroCard.classList.toggle('is-collapsed', collapsed);
-      document.body.classList.toggle('hero-collapsed', collapsed);
-      content.hidden = collapsed;
-      toggle.setAttribute('aria-expanded', String(!collapsed));
-      toggle.setAttribute('aria-label', collapsed ? labels.expand : labels.collapse);
-      toggle.title = collapsed ? labels.expand : labels.collapse;
-      label.textContent = collapsed ? labels.expand : labels.collapse;
-      pokefutaPopupOptions.autoPanPaddingTopLeft = L.point(
-        POPUP_SIDE_PADDING,
-        collapsed ? 84 : POPUP_TOP_PADDING
-      );
-
-      if (persist) {
-        try {
-          localStorage.setItem(HERO_CARD_STORAGE_KEY, collapsed ? '1' : '0');
-        } catch (error) {
-          console.warn('Could not save hero card state:', error);
-        }
-      }
-      requestAnimationFrame(() => map.invalidateSize());
-    }
-
-    function initHeroCardToggle() {
-      const toggle = document.getElementById('hero-card-toggle');
-      if (!toggle) return;
-
-      let collapsed = false;
-      try {
-        collapsed = localStorage.getItem(HERO_CARD_STORAGE_KEY) === '1';
-      } catch (error) {
-        console.warn('Could not read hero card state:', error);
-      }
-      setHeroCardCollapsed(collapsed);
-
-      toggle.addEventListener('click', () => {
-        const nextCollapsed = toggle.getAttribute('aria-expanded') === 'true';
-        setHeroCardCollapsed(nextCollapsed, true);
-        if (window.trackEvent) {
-          window.trackEvent(nextCollapsed ? 'collapse_hero_card' : 'expand_hero_card', {
-            surface: 'map_hero',
-            event_category: 'map_ui',
-            event_label: 'hero_card'
-          });
-        }
-      });
-    }
-    initHeroCardToggle();
 
     // 都道府県中心座標マッピング（クリック時の移動用）
     const prefectureCenterCoords = {
@@ -1268,7 +1174,7 @@
         : '';
       const mapsAction = mapsUrl
         ? `<a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" class="travel-popup-action travel-popup-action--maps"
-              onclick="if(window.trackEvent){window.trackEvent('popup_click_google_maps',{surface:'map_popup',${eventParams}});}">Google Mapsで行く</a>`
+              onclick="if(window.trackEvent){window.trackEvent('popup_click_google_maps',{surface:'map_popup',${eventParams}});}">経路案内</a>`
         : '';
 
       return `
@@ -2366,8 +2272,8 @@
           <div class="prefecture-spot-row">
             ${item}
             <a class="prefecture-spot-maps" href="${googleMapsDirectionsUrl(d.lat, d.lng)}" target="_blank" rel="noopener noreferrer"
-              aria-label="${escapeHtml(`${'Google Mapsで行く'}: ${getManholeDisplayName(d)}`)}"
-              onclick="if(window.trackEvent){window.trackEvent('nearby_click_google_maps',{surface:'map_nearby',manhole_id:'${escapeHtml(d.id)}'});}">${escapeHtml('Google Mapsで行く')}</a>
+              aria-label="${escapeHtml(`${'経路案内'}: ${getManholeDisplayName(d)}`)}"
+              onclick="if(window.trackEvent){window.trackEvent('nearby_click_google_maps',{surface:'map_nearby',manhole_id:'${escapeHtml(d.id)}'});}">${escapeHtml('経路案内')}</a>
           </div>
         `;
       }).join('');

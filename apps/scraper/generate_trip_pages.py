@@ -240,8 +240,8 @@ def _route_html(area: dict, route: list[dict], common: bool, entry: dict | None)
         segments = muni_page._route_segments(route)
         for position, (first, last) in enumerate(segments, start=1):
             label = (
-                "この順番でGoogleマップを開く" if len(segments) == 1
-                else f"{first + 1}〜{last + 1}番目をGoogleマップで開く"
+                "この順番で経路案内" if len(segments) == 1
+                else f"{first + 1}〜{last + 1}番目を経路案内"
             )
             links += (
                 f'<a class="inline-link" href="{_escape_attr(muni_page._google_route_url(route[first:last + 1]))}" '

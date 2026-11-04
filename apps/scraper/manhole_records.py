@@ -124,4 +124,4 @@ def google_maps_url(record: dict) -> str:
     lng = record.get("lng")
     if not isinstance(lat, (int, float)) or not isinstance(lng, (int, float)):
         return ""
-    return f"https://www.google.com/maps?q={lat},{lng}"
+    return f"https://www.google.com/maps/dir/?api=1&destination={lat},{lng}"

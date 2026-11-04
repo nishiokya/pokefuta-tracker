@@ -1289,14 +1289,14 @@ def generate_html(
     # Visit CTA (Google Maps full-width card)
     visit_cta_html = ""
     if lat is not None and lng is not None:
-        gmaps_url = f"https://www.google.com/maps?q={lat},{lng}"
+        gmaps_url = f"https://www.google.com/maps/dir/?api=1&destination={lat},{lng}"
         visit_cta_html = (
             f'<a href="{escape(gmaps_url)}" class="visit-cta"'
             f' target="_blank" rel="noopener noreferrer"'
             f' onclick="trackEvent(\'click_google_maps\', {gmaps_onclick_hero})">'
             f'<span class="visit-cta-icon">{_icon("icon-link-google-map", "visit-cta-map-icon")}</span>'
             f'<span class="visit-cta-body">'
-            f'<span class="visit-cta-main">Google Mapsで行き方を見る</span>'
+            f'<span class="visit-cta-main">経路案内</span>'
             f'<span class="visit-cta-sub">現地への訪問ルートを確認する</span>'
             f'</span></a>'
         )

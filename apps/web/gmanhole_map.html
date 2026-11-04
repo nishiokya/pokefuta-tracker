@@ -826,9 +826,9 @@
       return `event_category:'popup_navigation',manhole_id:'${escapeJs(d.id)}',prefecture:'${escapeJs(d.prefecture)}'`;
     }
 
-    function buildMapsAction(d, eventParams, label = 'Google Mapsで行く'){
+    function buildMapsAction(d, eventParams, label = '経路案内'){
       if (!(Number.isFinite(Number(d.lat)) && Number.isFinite(Number(d.lng)))) return '';
-      const mapsUrl = `https://www.google.com/maps?q=${encodeURIComponent(`${d.lat},${d.lng}`)}`;
+      const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${d.lat},${d.lng}`)}`;
       return `<a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" class="travel-popup-action travel-popup-action--maps"
         onclick="if(window.trackEvent){window.trackEvent('popup_click_google_maps',{surface:'gmanhole_map_popup',${eventParams}});}">${esc(label)}</a>`;
     }
@@ -936,7 +936,7 @@
         title: (d.character && d.character !== d.work ? d.character : d.title) || d.character || 'キャラクターマンホール',
         building: d.landmark || d.address || '',
         badgeHtml: (d.work ? `<div class="travel-popup-badges"><span class="travel-popup-badge">${esc(d.work)}</span></div>` : '') + approxNote,
-        mapsLabel: approximate ? 'Google Mapsで付近へ' : undefined,
+        mapsLabel: approximate ? '付近まで経路案内' : undefined,
         chipsHtml: '',
         chipsLabel: '',
         photoUrl: '',

@@ -188,7 +188,7 @@ def _google_maps_url(record: dict) -> str:
     lng = record.get("lng")
     if not isinstance(lat, (int, float)) or not isinstance(lng, (int, float)):
         return ""
-    return f"https://www.google.com/maps?q={lat},{lng}"
+    return f"https://www.google.com/maps/dir/?api=1&destination={lat},{lng}"
 
 
 def _photo_asset_url(record: dict, photo: dict) -> str:
@@ -265,7 +265,7 @@ def _manhole_cards(records: list[dict], photos: dict[str, dict], tag: str) -> st
             f'<a href="{_escape_attr(maps_url)}" target="_blank" rel="noopener noreferrer" '
             f'data-track="tag_google_maps_click" data-position="{position}" '
             f'data-destination="google_maps" data-content-id="{_escape_attr(mid)}" '
-            f'data-surface="manhole_actions">地図で開く</a>'
+            f'data-surface="manhole_actions">経路案内</a>'
             if maps_url else ""
         )
         upload_html = (

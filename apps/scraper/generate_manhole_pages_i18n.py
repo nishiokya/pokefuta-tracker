@@ -77,7 +77,7 @@ TEXT: dict[str, dict[str, str]] = {
         "badge_same_pokemon": "{n} with the same Pokémon",
         "badge_nearby": "{n} within 30 km",
         "gallery_heading": "Fan photos",
-        "directions_main": "Get directions in Google Maps",
+        "directions_main": "Directions",
         "directions_sub": "Plan your route to this Poké Lid",
         "location_heading": "Location",
         "location_pref": "Prefecture",
@@ -134,7 +134,7 @@ TEXT: dict[str, dict[str, str]] = {
         "badge_same_pokemon": "相同寶可夢{n}個",
         "badge_nearby": "30公里內{n}個",
         "gallery_heading": "粉絲照片",
-        "directions_main": "在 Google 地圖查看交通方式",
+        "directions_main": "路線導航",
         "directions_sub": "確認前往這個寶可夢人孔蓋的路線",
         "location_heading": "設置地點",
         "location_pref": "都道府縣",
@@ -424,7 +424,7 @@ def build_page(
     if lat is not None and lng is not None:
         gmaps_params = {**base, "surface": "hero"}
         visit_html = (
-            f'<a href="https://www.google.com/maps?q={lat},{lng}" class="visit-cta" target="_blank"'
+            f'<a href="https://www.google.com/maps/dir/?api=1&destination={lat},{lng}" class="visit-cta" target="_blank"'
             f' rel="noopener noreferrer"{_onclick("click_google_maps", gmaps_params)}>'
             f'<span class="visit-cta-icon">{ja._icon("icon-link-google-map", "visit-cta-map-icon")}</span>'
             f'<span class="visit-cta-body"><span class="visit-cta-main">{escape(page.t("directions_main"))}</span>'
