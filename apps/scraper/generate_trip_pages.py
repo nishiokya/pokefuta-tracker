@@ -381,8 +381,9 @@ def build_area_page(
             "pokemons": clean_pokemons(r),
             "is_preinstall": False,
             "photo_url": pref._photo_asset_url(r, photos[str(r["id"])]) if str(r["id"]) in photos else "",
+            "order": i,
         }
-        for r in records
+        for i, r in enumerate(route, start=1)
     ]
     manhole_html = muni_page._to_municipality_events(pref._manhole_cards(route, photos, pref_slug, keep_order=True))
     manhole_html = manhole_html.replace("municipality_", "trip_")
@@ -654,6 +655,11 @@ def build_index_page(
 
 
 TRIP_CSS = """
+    /* 地図ピンに重ねる「回る順番」の番号（回る順番のリストと同じ数字） */
+    .map-order { position: absolute; top: -8px; left: -8px; min-width: 22px; height: 22px; padding: 0 5px;
+      border: 2px solid white; border-radius: 11px; background: #201b16; color: white; font-size: .78rem;
+      font-weight: 900; line-height: 18px; text-align: center; box-shadow: 0 1px 4px rgba(32,27,22,.45);
+      pointer-events: none; box-sizing: border-box; }
     .hero-pick { min-width: 0; overflow-wrap: anywhere; }
     @media (max-width: 700px) {
       .hero-picks { margin: 16px 0 0; }

@@ -919,7 +919,10 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         self.assertIn('data-photo-state="missing"', html)
         self.assertIn("const markerClass = point.is_preinstall", html)
         self.assertIn("html: '<div class=\"prefecture-marker ' + markerClass", html)
-        self.assertIn("title: point.name + 'のポケふた'", html)
+        self.assertIn("point.name + 'のポケふた'", html)
+        # 県のページの点には order が無いので番号は付かない
+        self.assertIn("const orderBadge = point.order", html)
+        self.assertNotIn('"order":', html)
         self.assertIn("? '設置予定'", html)
 
     def test_photo_and_contribution_cards_use_the_display_name(self) -> None:
