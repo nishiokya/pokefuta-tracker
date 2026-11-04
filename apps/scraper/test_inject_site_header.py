@@ -153,6 +153,17 @@ class InjectSiteHeaderTest(unittest.TestCase):
         # Android の「経路案内」に蓋の名前を出す（data-geo-label のリンクを geo: に差し替える）
         self.assertIn('<script src="./assets/geo-link.js" defer></script>', result)
 
+    def test_geo_link_script_is_added_even_if_a_comment_mentions_it(self):
+        # 県ページや地図のインラインスクリプトのコメントにファイル名が出てくる
+        html = '<html><head></head><body><script>// assets/geo-link.js が geo: に差し替える</script></body></html>'
+        result = inject(html)
+        self.assertIn('<script src="./assets/geo-link.js" defer></script>', result)
+
+    def test_does_not_duplicate_geo_link_script(self):
+        html = '<html><head><script src="./assets/geo-link.js" defer></script></head><body></body></html>'
+        result = inject(html)
+        self.assertEqual(result.count('src="./assets/geo-link.js"'), 1)
+
     def test_does_not_duplicate_site_header_analytics_script(self):
         html = '<html><head><script src="./assets/site-header-analytics.js" defer></script></head><body></body></html>'
         result = inject(html)
