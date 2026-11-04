@@ -45,7 +45,7 @@ try:
     )
     from apps.scraper.display_names import compose_display_name, municipality_label
     from apps.scraper.generate_top_page_en import Locale
-    from apps.scraper.manhole_tile_image import tile_image_url
+    from apps.scraper.manhole_tile_image import tile_image_url, use_image_host
     from apps.scraper.municipalities import complete_prefectures, prefecture_coverage
     from apps.scraper.prefectures import PREFECTURE_ORDER, PREFECTURE_PAGE_LANGS, PREFECTURE_SLUGS, PREFECTURES, REGIONS
 except ModuleNotFoundError as exc:
@@ -68,7 +68,7 @@ except ModuleNotFoundError as exc:
     )
     from display_names import compose_display_name, municipality_label
     from generate_top_page_en import Locale
-    from manhole_tile_image import tile_image_url
+    from manhole_tile_image import tile_image_url, use_image_host
     from municipalities import complete_prefectures, prefecture_coverage
     from prefectures import PREFECTURE_ORDER, PREFECTURE_PAGE_LANGS, PREFECTURE_SLUGS, PREFECTURES, REGIONS
 
@@ -893,9 +893,11 @@ def generate_all(
             page, prefecture, slug, records_by_pref[prefecture], rankings[prefecture],
             pokemon_slugs, photos, empty, records, coverage[prefecture], complete,
         )
-        (out / "index.html").write_text(html, encoding="utf-8")
+        (out / "index.html").write_text(use_image_host(html, "prefecture"), encoding="utf-8")
     output_dir.mkdir(parents=True, exist_ok=True)
-    (output_dir / "index.html").write_text(build_index_page(page, records_by_pref), encoding="utf-8")
+    (output_dir / "index.html").write_text(
+        use_image_host(build_index_page(page, records_by_pref), "prefecture"), encoding="utf-8"
+    )
     return len(PREFECTURES)
 
 
