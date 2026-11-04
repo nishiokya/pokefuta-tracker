@@ -1,5 +1,5 @@
 {
-  "_comment": "/trip/ のエリア。manhole_ids はページに出す地点の全部。所要時間は dataset/visit_durations.json に同じ組があるときだけ出る（apps/tools/build_visit_durations.py がこのファイルも読んで集計する）。 同じ市町村の2枚だけのエリアは登録しない（回る順番がA→Bの1本だけで、詳細ページの「次に寄れるポケふた」を狭めるだけになるため。2026-10-11 に上野・北上・鳥羽・大津を外した）。 移動の目安が「車」で2〜3枚のエリアも登録しない（2026-10-28 に淡路・八戸＋階上を外した）。 access（任意）: スタート地点と行き方を1行ずつ。train は電車の1行、car は車の1行（電車が無いエリアなど）、boat は船の1行、note は予約や最終便など行く前に知っておくことの1行、parking は {name, kind: 公共（自治体・道の駅など）|施設（観光施設などの駐車場）|コインパーキング, fee: 無料|有料, note}。公式の案内で確かめた内容だけを書き、sources と checked_on を付ける。金額は書かない。 mode_label（任意）: 一覧の「移動の目安」を上書きする（船に乗るなど、地点の距離だけでは決まらないエリア）。",
+  "_comment": "/trip/ のエリア。manhole_ids はページに出す地点の全部。所要時間は dataset/visit_durations.json に同じ組があるときだけ出る（apps/tools/build_visit_durations.py がこのファイルも読んで集計する）。 同じ市町村の2枚だけのエリアは登録しない（回る順番がA→Bの1本だけで、詳細ページの「次に寄れるポケふた」を狭めるだけになるため。2026-10-11 に上野・北上・鳥羽・大津を外した）。 移動の目安が「車」でも、同じ市町村に3枚以上あれば登録する（2026-11-04 に決め直し、淡路を戻して鳴門・宇都宮・甲賀・倉敷・豊橋・京都・北九州を足した）。市町村をまたぐ2〜3枚の車のエリアは登録しない（2026-10-28 に八戸＋階上を外した）。 access（任意）: スタート地点と行き方を1行ずつ。train は電車の1行、car は車の1行（電車が無いエリアなど）、boat は船の1行、note は予約や最終便など行く前に知っておくことの1行、parking は {name, kind: 公共（自治体・道の駅など）|施設（観光施設などの駐車場）|コインパーキング, fee: 無料|有料, note}。公式の案内で確かめた内容だけを書き、sources と checked_on を付ける。金額は書かない。 mode_label（任意）: 一覧の「移動の目安」を上書きする（船に乗るなど、地点の距離だけでは決まらないエリア）。",
   "areas": [
     {
       "slug": "higashiosaka",
@@ -348,6 +348,132 @@
         "154",
         "155",
         "156"
+      ]
+    },
+    {
+      "slug": "kyoto",
+      "prefecture": "京都府",
+      "name": "京都",
+      "manhole_ids": [
+        "159",
+        "161",
+        "163",
+        "160",
+        "162"
+      ]
+    },
+    {
+      "slug": "awaji",
+      "prefecture": "兵庫県",
+      "name": "淡路",
+      "manhole_ids": [
+        "205",
+        "204",
+        "203"
+      ],
+      "access": {
+        "car": "島内に電車はなく、車で回るエリア。3か所とも施設の無料駐車場がある",
+        "parking": [
+          {
+            "name": "道の駅あわじ",
+            "kind": "公共",
+            "fee": "無料",
+            "note": "道の駅"
+          },
+          {
+            "name": "北淡震災記念公園",
+            "kind": "施設",
+            "fee": "無料"
+          },
+          {
+            "name": "パルシェ香りの館",
+            "kind": "施設",
+            "fee": "無料"
+          }
+        ],
+        "sources": [
+          {
+            "label": "淡路市のポケふた案内",
+            "url": "https://www.city.awaji.lg.jp/soshiki/kankou/33895.html"
+          },
+          {
+            "label": "淡路島観光ガイド「北淡震災記念公園」",
+            "url": "https://www.awajishima-kanko.jp/manual/detail.html?bid=432"
+          },
+          {
+            "label": "パルシェ香りの館のアクセス",
+            "url": "https://www.parchez.co.jp/access/"
+          },
+          {
+            "label": "道の駅の登録要件（国土交通省）",
+            "url": "https://www.mlit.go.jp/road/Michi-no-Eki/outline.html"
+          }
+        ],
+        "checked_on": "2026-10-11"
+      }
+    },
+    {
+      "slug": "kurashiki",
+      "prefecture": "岡山県",
+      "name": "倉敷",
+      "manhole_ids": [
+        "194",
+        "196",
+        "195",
+        "197"
+      ]
+    },
+    {
+      "slug": "naruto",
+      "prefecture": "徳島県",
+      "name": "鳴門",
+      "manhole_ids": [
+        "327",
+        "328",
+        "329"
+      ]
+    },
+    {
+      "slug": "toyohashi",
+      "prefecture": "愛知県",
+      "name": "豊橋",
+      "manhole_ids": [
+        "272",
+        "271",
+        "274",
+        "273"
+      ]
+    },
+    {
+      "slug": "utsunomiya",
+      "prefecture": "栃木県",
+      "name": "宇都宮",
+      "manhole_ids": [
+        "226",
+        "228",
+        "227"
+      ]
+    },
+    {
+      "slug": "koka",
+      "prefecture": "滋賀県",
+      "name": "甲賀",
+      "manhole_ids": [
+        "238",
+        "237",
+        "239"
+      ]
+    },
+    {
+      "slug": "kitakyushu",
+      "prefecture": "福岡県",
+      "name": "北九州",
+      "manhole_ids": [
+        "200",
+        "198",
+        "199",
+        "201",
+        "202"
       ]
     }
   ]
