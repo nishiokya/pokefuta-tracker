@@ -828,7 +828,7 @@ def _manhole_cards(
             f'<a href="{escape_attr(maps_url)}" target="_blank" rel="noopener noreferrer" '
             f'data-track="prefecture_google_maps_click" data-position="{position}" '
             f'data-destination="google_maps" data-content-id="{escape_attr(mid)}" '
-            f'data-surface="manhole_actions">地図で開く</a>'
+            f'data-surface="manhole_actions">経路案内</a>'
             if maps_url else ""
         )
         upload_html = (
@@ -2431,7 +2431,7 @@ def _map_script(
         const photoState = point.is_preinstall
           ? 'preinstall'
           : (point.photo_url ? 'has_photo' : 'missing');
-        const googleMapsUrl = 'https://www.google.com/maps?q=' + point.lat + ',' + point.lng;
+        const googleMapsUrl = 'https://www.google.com/maps/dir/?api=1&destination=' + point.lat + ',' + point.lng;
         const uploadUrl = 'https://pokefuta.com/upload?manhole_id=' +
           encodeURIComponent(point.id) + '&' + campaignParams;
         const photoHtml = point.is_preinstall
@@ -2457,7 +2457,7 @@ def _map_script(
           '<a href="' + escapeHtml(googleMapsUrl) +
           '" target="_blank" rel="noopener noreferrer" ' +
           'data-track="{event_prefix}_google_maps_click" data-destination="google_maps" ' +
-          'data-content-id="' + escapeHtml(point.id) + '" data-surface="map_popup">行き方</a>' +
+          'data-content-id="' + escapeHtml(point.id) + '" data-surface="map_popup">経路案内</a>' +
           uploadHtml + '</div></div>';
         const marker = L.marker(latlng, {{
           title: point.name + 'のポケふた',

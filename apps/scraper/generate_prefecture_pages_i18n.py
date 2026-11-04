@@ -448,7 +448,7 @@ def _map_script(page: Page, points: list[dict]) -> str:
           '<a href="' + {_json(page.prefix() + "manholes/")} + encodeURIComponent(point.id) + '/" ' +
           'data-track="prefecture_manhole_click" data-destination="' + escapeHtml(point.id) + '" ' +
           'data-content-id="' + escapeHtml(point.id) + '" data-surface="map_popup">' + escapeHtml(labels.details) + '</a>' +
-          '<a href="https://www.google.com/maps?q=' + point.lat + ',' + point.lng + '" target="_blank" ' +
+          '<a href="https://www.google.com/maps/dir/?api=1&destination=' + point.lat + ',' + point.lng + '" target="_blank" ' +
           'rel="noopener noreferrer" data-track="prefecture_google_maps_click" data-destination="google_maps" ' +
           'data-content-id="' + escapeHtml(point.id) + '" data-surface="map_popup">' + escapeHtml(labels.directions) + '</a>' +
           '</div></div>';

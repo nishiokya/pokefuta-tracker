@@ -1152,7 +1152,7 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         self.assertIn('data-surface="manhole_card"', html)
         self.assertNotIn(">詳細</a>", html)
         # 使われている導線（地図8千件／投稿5百件規模）はタイルに残す。
-        self.assertIn("地図で開く", html)
+        self.assertIn("経路案内", html)
         self.assertIn("写真を投稿", html)
 
     def test_untrusted_photo_url_is_not_rendered(self) -> None:

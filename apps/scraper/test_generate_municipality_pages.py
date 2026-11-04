@@ -114,8 +114,8 @@ class RouteTest(unittest.TestCase):
         self.assertEqual(len(urls), 2)
         for url in urls:
             self.assertLessEqual(url.count("%7C") + 1 if "waypoints=" in url else 0, 3)
-        self.assertIn("1〜5番目をGoogleマップで開く", section)
-        self.assertIn("5〜6番目をGoogleマップで開く", section)
+        self.assertIn("1〜5番目を経路案内", section)
+        self.assertIn("5〜6番目を経路案内", section)
 
     def test_far_apart_stops_get_no_road_route_link(self) -> None:
         """小笠原（父島と母島）のように離れた区間があると、Google マップの道路ルートは出さない。"""
