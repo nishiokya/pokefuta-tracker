@@ -9,7 +9,9 @@ from pathlib import Path
 from unittest.mock import patch
 
 from apps.scraper.character_manhole_works import CHARACTER_CSS_VERSION, WORK_PAGES, gundam_work_records, page_for_work
-from apps.scraper.generate_character_work_pages import attach_user_photos, generate_html, generate_index_html, load_events, write_pages
+from apps.scraper.generate_character_work_pages import (
+    attach_user_photos, design_manhole_links, generate_html, generate_index_html, load_events, write_pages,
+)
 from apps.scraper.generate_character_manhole_page import _is_active, load_ndjson
 from apps.scraper.photo_caption import JST
 
@@ -56,6 +58,47 @@ GUNDAM_RECORDS = [
     {"id": "2", "title": "壊れた行", "prefecture": "", "status": "invalid",
      "detail_url": "https://www.g-manhole.net/about/detail.php?id=2"},
 ]
+
+
+GUNDAM_SUBMISSION = {
+    "source_id": "photo-g", "canonical_ref": "gundam:1", "status": "active",
+    "photo_url": "https://pokefuta.com/api/design-manholes/photo-g/photo?size=small",
+    "source_url": "https://pokefuta.com/design-manholes/photo-g",
+    "created_at": "2026-09-21T00:00:00Z",
+}
+
+
+class DesignManholeLinksTest(unittest.TestCase):
+    """写真館の投稿詳細が読む api/design_manhole_links.json の中身。"""
+
+    def test_gundam_submission_photo_is_attached_to_the_spot(self) -> None:
+        enriched = attach_user_photos(gundam_work_records(GUNDAM_RECORDS), [GUNDAM_SUBMISSION])
+        self.assertEqual(GUNDAM_SUBMISSION["photo_url"], enriched[0]["user_photo_url"])
+
+    def test_links_point_to_the_work_guide_spot(self) -> None:
+        records = [r for r in attach_user_photos(gundam_work_records(GUNDAM_RECORDS) + RECORDS, [GUNDAM_SUBMISSION])
+                   if _is_active(r)]
+        unlinked = {**GUNDAM_SUBMISSION, "source_id": "photo-x", "canonical_ref": None}
+        hidden = {**GUNDAM_SUBMISSION, "source_id": "photo-h", "status": "pending"}
+        out = design_manhole_links(records, [GUNDAM_SUBMISSION, unlinked, hidden], "2026-11-04T00:00:00+09:00")
+        self.assertTrue(out["success"])
+        self.assertEqual(["photo-g"], list(out["links"]))
+        link = out["links"]["photo-g"]
+        self.assertEqual("https://data.pokefuta.com/gmanhole_map.html#gundam-1", link["url"])
+        self.assertEqual("https://data.pokefuta.com/characters/gundam/", link["guide_url"])
+        self.assertEqual("豊富町観光情報センター", link["place"])
+        self.assertEqual((1, 1), (link["spots"], link["spots_with_photo"]))
+
+    def test_character_link_uses_the_guide_spot(self) -> None:
+        records = [r for r in RECORDS if _is_active(r)]
+        sub = {**GUNDAM_SUBMISSION, "canonical_ref": "character:imas-b"}
+        link = design_manhole_links(records, [sub], "x")["links"]["photo-g"]
+        self.assertEqual("https://data.pokefuta.com/characters/idolmaster/#spot-imas-b", link["url"])
+
+    def test_link_to_a_removed_record_is_dropped(self) -> None:
+        records = [r for r in RECORDS if _is_active(r)]
+        sub = {**GUNDAM_SUBMISSION, "canonical_ref": "character:removed"}
+        self.assertEqual({}, design_manhole_links(records, [sub], "x")["links"])
 
 
 class GundamGuideTest(unittest.TestCase):
