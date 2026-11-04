@@ -22,6 +22,7 @@ from xml.sax.saxutils import escape
 
 sys.path.insert(0, str(Path(__file__).parent))
 from display_names import compose_display_name, landmark_label, municipality_label  # noqa: E402
+from manhole_records import geo_label  # noqa: E402
 from generate_pokemon_pages import _FORM_PREFIX, _normalize_katakana  # noqa: E402
 from generate_pokemon_pages import load_pokemon_metadata as load_pokemon_metadata_with_forms  # noqa: E402
 from manhole_page_css import PAGE_CSS  # noqa: E402
@@ -1292,9 +1293,12 @@ def generate_html(
     visit_cta_html = ""
     if lat is not None and lng is not None:
         gmaps_url = f"https://www.google.com/maps/search/?api=1&query={lat},{lng}"
+        # Android は assets/geo-link.js が geo: に差し替え、ピンにこの名前を出す
+        _geo_label = geo_label(manhole)
         visit_cta_html = (
             f'<a href="{escape(gmaps_url)}" class="visit-cta"'
             f' target="_blank" rel="noopener noreferrer"'
+            f' data-geo-label="{_escape_attr_value(_geo_label)}"'
             f' onclick="trackEvent(\'click_google_maps\', {gmaps_onclick_hero})">'
             f'<span class="visit-cta-icon">{_icon("icon-link-google-map", "visit-cta-map-icon")}</span>'
             f'<span class="visit-cta-body">'

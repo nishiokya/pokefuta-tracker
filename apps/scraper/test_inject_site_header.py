@@ -150,6 +150,8 @@ class InjectSiteHeaderTest(unittest.TestCase):
             [("map", "1"), ("prefectures", "2"), ("pokemon", "3"), ("summary", "4"), ("stamp", "5")],
         )
         self.assertIn('<script src="./assets/site-header-analytics.js" defer></script>', result)
+        # Android の「経路案内」に蓋の名前を出す（data-geo-label のリンクを geo: に差し替える）
+        self.assertIn('<script src="./assets/geo-link.js" defer></script>', result)
 
     def test_does_not_duplicate_site_header_analytics_script(self):
         html = '<html><head><script src="./assets/site-header-analytics.js" defer></script></head><body></body></html>'

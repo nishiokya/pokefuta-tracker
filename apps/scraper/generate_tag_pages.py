@@ -27,6 +27,7 @@ from xml.sax.saxutils import escape
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(Path(__file__).parent))
 from display_names import compose_display_name  # noqa: E402
+from manhole_records import geo_label  # noqa: E402
 from manhole_tile_image import tile_image_url  # noqa: E402
 from site_names import og_site_name  # noqa: E402
 
@@ -263,6 +264,7 @@ def _manhole_cards(records: list[dict], photos: dict[str, dict], tag: str) -> st
         maps_url = _google_maps_url(record)
         maps_html = (
             f'<a href="{_escape_attr(maps_url)}" target="_blank" rel="noopener noreferrer" '
+            f'data-geo-label="{_escape_attr(geo_label(record))}" '
             f'data-track="tag_google_maps_click" data-position="{position}" '
             f'data-destination="google_maps" data-content-id="{_escape_attr(mid)}" '
             f'data-surface="manhole_actions">経路案内</a>'

@@ -1117,6 +1117,7 @@
         : '';
       const mapsAction = mapsUrl
         ? `<a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" class="travel-popup-action travel-popup-action--maps"
+              data-geo-label="${escapeHtml(geoLabel(d))}"
               onclick="if(window.trackEvent){window.trackEvent('popup_click_google_maps',{surface:'map_popup',${eventParams}});}">${I.googleMapsCta}</a>`
         : '';
 
@@ -2223,6 +2224,7 @@
           <div class="prefecture-spot-row">
             ${item}
             <a class="prefecture-spot-maps" href="${googleMapsPlaceUrl(d.lat, d.lng)}" target="_blank" rel="noopener noreferrer"
+              data-geo-label="${escapeHtml(geoLabel(d))}"
               aria-label="${escapeHtml(`${window.I18N.googleMapsCta}: ${getManholeDisplayName(d)}`)}"
               onclick="if(window.trackEvent){window.trackEvent('nearby_click_google_maps',{surface:'map_nearby',manhole_id:'${escapeHtml(d.id)}'});}">${escapeHtml(window.I18N.googleMapsCta)}</a>
           </div>
@@ -2256,6 +2258,18 @@
     // 図鑑・写真館とも同じ形にそろえている（複数の蓋をまわる順路だけは経路のまま）。
     function googleMapsPlaceUrl(lat, lng) {
       return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${lat},${lng}`)}`;
+    }
+
+    // Android では assets/geo-link.js がこの名前で geo: に差し替え、Google マップのピンに出す
+    function geoLabel(d) {
+      const lang = window.I18N?.lang || 'ja';
+      const localize = window.getHeroPokemonDisplayName || (name => name);
+      const pokemons = (Array.isArray(d.pokemons) ? d.pokemons : [])
+        .filter(name => name && !name.includes('ローカルActs'))
+        .map(localize)
+        .join(window.I18N?.pokemonJoiner || '・');
+      return [lang === 'ja' ? 'ポケふた' : '', pokemons, d.place_label || d.title || '']
+        .filter(Boolean).join(' ');
     }
 
     function distanceKm(aLat, aLng, bLat, bLng) {

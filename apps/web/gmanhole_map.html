@@ -827,10 +827,12 @@
       return `event_category:'popup_navigation',manhole_id:'${escapeJs(d.id)}',prefecture:'${escapeJs(d.prefecture)}'`;
     }
 
-    function buildMapsAction(d, eventParams, label = '経路案内'){
+    // geoLabel: Android では assets/geo-link.js がこの名前で geo: に差し替え、Google マップのピンに出す
+    function buildMapsAction(d, eventParams, label = '経路案内', geoLabel = ''){
       if (!(Number.isFinite(Number(d.lat)) && Number.isFinite(Number(d.lng)))) return '';
       const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${d.lat},${d.lng}`)}`;
-      return `<a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" class="travel-popup-action travel-popup-action--maps"
+      const geoAttr = geoLabel ? ` data-geo-label="${esc(geoLabel)}"` : '';
+      return `<a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" class="travel-popup-action travel-popup-action--maps"${geoAttr}
         onclick="if(window.trackEvent){window.trackEvent('popup_click_google_maps',{surface:'gmanhole_map_popup',${eventParams}});}">${esc(label)}</a>`;
     }
 
@@ -870,7 +872,7 @@
             ${badgeHtml}
             ${chipsHtml ? `<div class="travel-popup-pokemon-list" aria-label="${esc(chipsLabel || '')}">${chipsHtml}</div>` : ''}
             <div class="popup-actions travel-popup-actions">
-              ${buildMapsAction(d, eventParams, mapsLabel)}
+              ${buildMapsAction(d, eventParams, mapsLabel, [title, building].filter(Boolean).join(' '))}
               ${buildDetailAction(detailUrl, detailLabel, eventParams)}
             </div>
           </div>

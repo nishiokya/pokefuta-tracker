@@ -108,6 +108,7 @@ try:
         distance_km,
         guide_stop_name,
         google_maps_url,
+        geo_label,
     )
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
@@ -122,6 +123,7 @@ except ModuleNotFoundError as exc:
         distance_km,
         guide_stop_name,
         google_maps_url,
+        geo_label,
     )
 
 try:
@@ -826,6 +828,7 @@ def _manhole_cards(
         # タイル全体を詳細リンクにしたのと同じ整理）。
         maps_html = (
             f'<a href="{escape_attr(maps_url)}" target="_blank" rel="noopener noreferrer" '
+            f'data-geo-label="{escape_attr(geo_label(record))}" '
             f'data-track="prefecture_google_maps_click" data-position="{position}" '
             f'data-destination="google_maps" data-content-id="{escape_attr(mid)}" '
             f'data-surface="manhole_actions">経路案内</a>'
@@ -2432,6 +2435,10 @@ def _map_script(
           ? 'preinstall'
           : (point.photo_url ? 'has_photo' : 'missing');
         const googleMapsUrl = 'https://www.google.com/maps/search/?api=1&query=' + point.lat + ',' + point.lng;
+        // Android で Google マップのピンに出す名前（assets/geo-link.js）。manhole_records.geo_label と同じ形
+        const geoName = String(point.name || '').replace('/', ' ');
+        const geoLabel = ['ポケふた', point.pokemons.some(function(p) {{ return geoName.indexOf(p) >= 0; }})
+          ? '' : point.pokemons.join('・'), geoName].filter(Boolean).join(' ');
         const uploadUrl = 'https://pokefuta.com/upload?manhole_id=' +
           encodeURIComponent(point.id) + '&' + campaignParams;
         const photoHtml = point.is_preinstall
@@ -2455,7 +2462,8 @@ def _map_script(
           'data-destination="' + escapeHtml(point.id) + '" data-content-id="' + escapeHtml(point.id) +
           '" data-surface="map_popup">詳細</a>' +
           '<a href="' + escapeHtml(googleMapsUrl) +
-          '" target="_blank" rel="noopener noreferrer" ' +
+          '" target="_blank" rel="noopener noreferrer" data-geo-label="' +
+          escapeHtml(geoLabel) + '" ' +
           'data-track="{event_prefix}_google_maps_click" data-destination="google_maps" ' +
           'data-content-id="' + escapeHtml(point.id) + '" data-surface="map_popup">経路案内</a>' +
           uploadHtml + '</div></div>';

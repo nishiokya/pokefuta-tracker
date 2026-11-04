@@ -124,6 +124,11 @@ class RouteTest(unittest.TestCase):
         url = manhole_records.google_maps_url({"lat": 35.54, "lng": 139.44})
         self.assertEqual(url, "https://www.google.com/maps/search/?api=1&query=35.54,139.44")
         self.assertEqual(manhole_records.google_maps_url({"lat": None, "lng": 139.44}), "")
+        # Android で Google マップのピンに出す名前（assets/geo-link.js が geo: に使う）
+        self.assertEqual(
+            manhole_records.geo_label({"prefecture": "神奈川県", "city": "座間市", "pokemons": ["ピカチュウ", "イーブイ"]}),
+            "ポケふた ピカチュウ・イーブイ " + manhole_records.manhole_name({"prefecture": "神奈川県", "city": "座間市"}),
+        )
         near = MUNI.build_municipalities(SYNTHETIC, SLUGS)[0]
         self.assertIn("google.com/maps/dir/?api=1&amp;origin=", MODULE._route_section(near))
 
