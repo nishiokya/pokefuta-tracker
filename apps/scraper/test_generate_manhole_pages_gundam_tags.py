@@ -46,8 +46,9 @@ class GundamTagPageTests(unittest.TestCase):
             id_to_image_url={},
         )
 
+        # ヒーローの称号の札は1つ目だけ（札が折り返して空白が増えていた）。ハッシュタグは全部の称号から作る
         self.assertIn("🤖 ガンダムマンホールまで約500m以内", html)
-        self.assertIn("🤖 天塩町にはガンダムマンホールもある", html)
+        self.assertNotIn("🤖 天塩町にはガンダムマンホールもある", html)
         self.assertIn("%23%E3%82%AC%E3%83%B3%E3%83%80%E3%83%A0%E3%83%9E%E3%83%B3%E3%83%9B%E3%83%BC%E3%83%AB%E8%BF%91%E6%8E%A5", html)
         self.assertIn("%23%E3%82%AC%E3%83%B3%E3%83%80%E3%83%A0%E3%83%9E%E3%83%B3%E3%83%9B%E3%83%BC%E3%83%AB%E3%81%AE%E3%81%82%E3%82%8B%E3%81%BE%E3%81%A1", html)
 

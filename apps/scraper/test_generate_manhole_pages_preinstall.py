@@ -51,10 +51,11 @@ class PreinstallRenderingTests(unittest.TestCase):
         self.assertIn(BADGE_MARKUP, html)
         self.assertIn("設置前のポケふたです", html)
         self.assertIn("2026年8月上旬までに設置予定。", html)
-        # No upload CTA (placeholder link nor the secondary hero-actions button)
-        # must be rendered anywhere on the page when 設置前.
+        # No upload CTA (placeholder link nor the hero photo link)
+        # must be rendered anywhere on the page when 設置前. 経路案内 stays in hero-actions.
         self.assertNotIn("pokefuta.com/upload", html)
-        self.assertNotIn('<div class="hero-actions">', html)
+        self.assertNotIn('class="hero-photo-link"', html)
+        self.assertIn('<div class="hero-actions"><a href="https://www.google.com/maps/search/', html)
 
     def test_preinstall_without_note_uses_default_text(self):
         manhole = _manhole(installed=False)

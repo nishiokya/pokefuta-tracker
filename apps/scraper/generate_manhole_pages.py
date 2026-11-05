@@ -36,26 +36,14 @@ from photo_caption import (  # noqa: E402
 try:
     from apps.scraper.municipalities import page_paths as municipality_page_paths  # noqa: E402
     from apps.scraper.prefectures import MANHOLE_PAGE_LANGS, PREFECTURE_SLUGS  # noqa: E402
-    from apps.scraper.tag_meta import load_tag_meta  # noqa: E402
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
     from municipalities import page_paths as municipality_page_paths  # noqa: E402
     from prefectures import MANHOLE_PAGE_LANGS, PREFECTURE_SLUGS  # noqa: E402
-    from tag_meta import load_tag_meta  # noqa: E402
 
 # Constants
 BASE_URL = "https://data.pokefuta.com/"
-
-# 補助タグの絵文字とラベルは dataset/tag_meta.json（`icon_only`）が正。
-# 以前はここに手書きの辞書があり、同じタグを地図と詳細ページで
-# 別の絵文字・別の呼び名にしていた（史跡・観光・博物館など）。
-_TAG_META = load_tag_meta()
-SECONDARY_TAG_LABELS: dict[str, tuple[str, str]] = {
-    tag["slug"]: (tag.get("emoji", ""), tag.get("label", tag["slug"]))
-    for tag in _TAG_META.tags
-    if tag.get("icon_only")
-}
 
 # 近くのデザインマンホール（ガンダム・キャラクターマンホール・写真館投稿）
 DESIGN_STUDIO_LIST_URL = "https://pokefuta.com/design-manholes"
@@ -548,7 +536,7 @@ def _trip_section_html(trip: dict, manhole_id: str, id_to_image_url: dict[str, s
     order_note = "よく回られる順番です。" if trip.get("common") else "直線距離がいちばん短くなる順番です。"
     more_params = _attr_json({"surface": "manhole_trip", "from_manhole_id": manhole_id})
     return (
-        f"<section class='nearby-section trip-section section-card'>"
+        f"<section id='nearby' class='nearby-section trip-section section-card'>"
         f"<h2>{_icon('icon-detail-nearby', 'icon-lg')} "
         f"{escape(trip['name'])}のポケふた{trip['count']}枚を回る</h2>"
         f"<p class='design-note'>{escape(trip['text'])}{order_note}</p>"
@@ -881,8 +869,6 @@ def generate_html(
             region_parts.append(f"<span>{escape(city)}</span>")
     breadcrumb_items.append({"name": h1})
     region_html = "".join(region_parts)
-    pref_en = PREFECTURE_EN.get(prefecture, "")
-    region_en_html = f"<div class='hero-region-en'>{escape(pref_en)}</div>" if pref_en else ""
 
     # HERO card: pokemon tags
     pokemon_tags_html = ""
@@ -896,7 +882,9 @@ def generate_html(
         tags = "".join(_hero_tag(p) for p in pokemons)
         pokemon_tags_html = f"<div class='hero-pokemon-tags'>{tags}</div>"
 
-    # HERO card: stats badges
+    # HERO card: badges
+    # 設置前・NEW のほかは2つまで。その蓋ならではの称号1つと「30km以内にN件」（次に寄れる欄へ）。
+    # 県・市区町村・同じポケモンの枚数は下の各欄とパンくずにあるので出さない（2026-11、札が2〜3段に折り返していた）
     title_keys: set[str] = {t["key"] for t in titles}
     badges: list[str] = []
     if is_preinstall:
@@ -908,37 +896,22 @@ def generate_html(
             badges.append(f"<span class='hero-badge hero-badge-new'>NEW {added_year}年設置</span>")
     except (ValueError, TypeError):
         pass
-    # Title badges (all, from pokefuta.ndjson) — prepended before stats badges
-    for t in titles:
+    extra_badges: list[str] = []
+    if titles:
+        t = titles[0]
         label = f"{escape(t['emoji'])} {escape(t['label'])}" if t.get("emoji") else escape(t["label"])
         if t.get("key") in DESIGN_ANCHOR_TITLE_KEYS and nearby_design:
             # 🎨近接称号は本文の「近くのデザインマンホール」へ飛べるようにする
-            badges.append(
+            extra_badges.append(
                 f"<a class='hero-badge hero-badge-title hero-badge-anchor' href='#design-manholes'>{label}</a>"
             )
         else:
-            badges.append(f"<span class='hero-badge hero-badge-title'>{label}</span>")
-    # Secondary tag badges (tourism/park/museum/history/food/rail_access_good/river/in_station)
-    for tag in (manhole.get("tags") or []):
-        if tag in SECONDARY_TAG_LABELS:
-            em, lbl = SECONDARY_TAG_LABELS[tag]
-            badges.append(f"<span class='hero-badge hero-badge-secondary'>{escape(em)} {escape(lbl)}</span>")
-    # Stats badges with suppression rules (§2.3)
-    suppress_pref = title_keys & {"only_in_pref", "unique_pokemon"}
-    suppress_nearby = "lone" in title_keys
-    if pref_total > 0 and prefecture and not suppress_pref:
-        badges.append(f"<span class='hero-badge'>{escape(prefecture)} {pref_total}枚</span>")
-    if city_total >= 2 and city and municipality_path:
-        badges.append(
-            f"<a class='hero-badge hero-badge-anchor' href=\"{escape(municipality_path)}\">"
-            f"{escape(municipality_label(manhole))} {city_total}枚</a>"
+            extra_badges.append(f"<span class='hero-badge hero-badge-title'>{label}</span>")
+    if nearby_count > 0 and "lone" not in title_keys and (nearby or trip):
+        extra_badges.append(
+            f"<a class='hero-badge hero-badge-anchor' href='#nearby'>30km以内に{nearby_count}件</a>"
         )
-    elif city_total >= 2 and city:
-        badges.append(f"<span class='hero-badge'>{escape(city)} {city_total}枚</span>")
-    if same_pokemon_total > 0:
-        badges.append(f"<span class='hero-badge'>同じポケモン {same_pokemon_total}枚</span>")
-    if nearby_count > 0 and not suppress_nearby:
-        badges.append(f"<span class='hero-badge'>30km以内に{nearby_count}件</span>")
+    badges += extra_badges[:2]
     stats_html = f"<div class='hero-stats'>{''.join(badges)}</div>" if badges else ""
 
     # HERO card: share JS data (Python-serialized to avoid injection)
@@ -1181,7 +1154,7 @@ def generate_html(
     nearby_html = _trip_section_html(trip, manhole_id, id_to_image_url) if trip else ""
     if nearby and not trip:
         nearby_html = (
-            f"<section class='nearby-section section-card'>"
+            f"<section id='nearby' class='nearby-section section-card'>"
             f"<h2>{_icon('icon-detail-nearby', 'icon-lg')} 次に寄れるポケふた</h2>"
             f"<ul class='related-list related-list--cards'>"
         )
@@ -1288,17 +1261,6 @@ def generate_html(
             "has_photo": has_photo_bool,
         }
     )
-    hero_actions_html = (
-        ""
-        if is_preinstall
-        else (
-            f'<div class="hero-actions">'
-            f'<a class="btn-photo-upload" href="https://pokefuta.com/upload?manhole_id={manhole_id}&amp;from=data" target="_blank" rel="noopener noreferrer" onclick="trackEvent(\'{_photo_event}\', {_photo_cta_onclick})">{_icon("icon-link-photo", "action-icon")}<span>{escape(_photo_label)}</span></a>'
-            f'<p class="photo-upload-note">投稿はポケふた写真館で受付（無料ログイン・GPS付き写真が必要）</p>'
-            f'</div>'
-        )
-    )
-
     # Visit CTA (Google Maps full-width card)
     visit_cta_html = ""
     if lat is not None and lng is not None:
@@ -1317,13 +1279,26 @@ def generate_html(
             f'</span></a>'
         )
 
+
+    # 経路案内（詳細ページ利用者の14%）をヒーローの主役にし、写真投稿（0.7%）はその下の1行にする
+    photo_link_html = (
+        ""
+        if is_preinstall
+        else (
+            f'<a class="hero-photo-link" href="https://pokefuta.com/upload?manhole_id={manhole_id}&amp;from=data" target="_blank" rel="noopener noreferrer" onclick="trackEvent(\'{_photo_event}\', {_photo_cta_onclick})">{_icon("icon-link-photo", "hero-photo-link-icon")}<span>{escape(_photo_label)}</span><small>写真館で受付・GPS付き写真</small></a>'
+        )
+    )
+    hero_actions_html = (
+        f'<div class="hero-actions">{visit_cta_html}{photo_link_html}</div>'
+        if visit_cta_html or photo_link_html else ""
+    )
+
     # HERO card HTML
     hero_card_html = f"""
 <div class="hero-card">
   {hero_photo_html}
   <div class="hero-body">
     <nav class="hero-region" aria-label="パンくず">{region_html}</nav>
-    {region_en_html}
     <h1 class="hero-title">{escape(h1)}</h1>
     {pokemon_tags_html}
     {stats_html}
@@ -1419,8 +1394,6 @@ def generate_html(
     {hero_card_html}
 
     {gallery_html}
-
-    {visit_cta_html}
 
     <!-- adsense:manhole -->
 

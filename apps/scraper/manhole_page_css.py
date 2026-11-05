@@ -466,40 +466,33 @@ PAGE_CSS = f"""    * {{
       gap: 10px;
     }}
 
-    .btn-photo-upload {{
+    /* ヒーローの主役は経路案内。下の欄に置いていたときの白いカードを、塗りのボタンにする */
+    .hero-actions .visit-cta {{
+      margin-bottom: 0;
+      padding: 12px 16px;
+      border: 0;
+      border-radius: 14px;
+      background: #176f68;
+      box-shadow: 0 2px 8px rgba(23,111,104,0.25);
+    }}
+    .hero-actions .visit-cta-icon {{ width: 40px; height: 40px; background: #fff; }}
+    .hero-actions .visit-cta-main {{ font-size: 16px; color: #fff; }}
+    .hero-actions .visit-cta-sub {{ color: #d9efec; }}
+
+    .hero-photo-link {{
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      width: 100%;
-      min-height: 52px;
-      border-radius: 14px;
-      padding: 14px 16px;
-      font-size: 15px;
+      gap: 4px 8px;
+      min-height: 44px;
+      font-size: 14px;
       font-weight: 700;
-      letter-spacing: 0.01em;
-      background: #fff0f3;
       color: #c0394b;
-      border: 1.5px solid #f5c0ca;
       text-decoration: none;
-      cursor: pointer;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
-      transition: background 0.15s, box-shadow 0.15s, transform 0.15s;
     }}
-
-    .btn-photo-upload:hover {{
-      background: #ffe4ea;
-      box-shadow: 0 3px 10px rgba(192,57,75,0.14);
-      transform: translateY(-1px);
-    }}
-
-    .photo-upload-note {{
-      margin: -2px 0 0;
-      font-size: 11.5px;
-      line-height: 1.5;
-      text-align: center;
-      color: #8a7f72;
-    }}
+    .hero-photo-link small {{ font-size: 11.5px; font-weight: 400; color: #8a7f72; }}
+    .hero-photo-link-icon {{ width: 22px; height: 22px; display: block; flex-shrink: 0; }}
 
     .action-icon {{
       width: 36px;
@@ -647,11 +640,6 @@ PAGE_CSS = f"""    * {{
         font-size: 18px;
       }}
 
-      .btn-photo-upload {{
-        font-size: 16px;
-        min-height: 56px;
-      }}
-
       .section-card {{
         padding: 14px;
         border-radius: 8px;
@@ -666,13 +654,6 @@ PAGE_CSS = f"""    * {{
       font-size: 13px;
       color: #666;
       margin-top: 2px;
-    }}
-
-    .hero-region-en {{
-      font-size: 12px;
-      color: #aaa;
-      margin-bottom: 8px;
-      letter-spacing: 0.03em;
     }}
 
     .hero-photo {{
