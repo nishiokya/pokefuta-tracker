@@ -19,6 +19,13 @@ SPEC.loader.exec_module(MODULE)
 from apps.scraper.prefecture_completion import PREFECTURES_WITHOUT_POKEFUTA  # noqa: E402
 
 
+def _visit_guide_html(html: str) -> str:
+    """回り方の案内（地図の後ろ）の section だけを切り出す。"""
+    # 所要時間・旅の記録の節も class="visit-guide" なので、見出しの id で回り方の案内を選ぶ
+    start = html.index('<section class="visit-guide" aria-labelledby="visit-guide-heading"')
+    return html[start:html.index("</section>", start)]
+
+
 class GeneratePrefecturePagesTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
@@ -88,6 +95,13 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         self.assertIn("https://pokefuta.com/visits?from=data", html)
         self.assertNotIn("utm_", html)
         self.assertIn("prefecture_visit_cta_click", html)
+        # ヒーローのボタンは「地図で探す」だけ。訪問記録は下の「記録して、次のポケふたへ」に残す
+        hero = html[html.index('<header class="hero prefecture-hero">'):html.index("</header>")]
+        self.assertIn("地図で探す", hero)
+        self.assertNotIn("prefecture_visit_cta_click", hero)
+        self.assertNotIn("prefecture_official_click", hero)
+        # ボタン1つでもスマホで幅いっぱいにする
+        self.assertIn(".hero-actions > .button:only-child { grid-column: 1 / -1; }", html)
         # ヒーローの「投稿するポケふたを選ぶ」は同ページ内スクロールだけなので置かない
         self.assertNotIn("投稿するポケふたを選ぶ", html)
         self.assertIn("prefecture_photo_upload_start", html)
@@ -150,9 +164,10 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
                 self.assertIn(f'<h1>{expected["h1"]}</h1>', html)
                 self.assertIn("市町村別の設置枚数", html)
                 self.assertIn(f'<strong>{expected["place"]}</strong>', html)
+                # 地図をヒーローのすぐ下に置き、市町村の案内はその後ろ
                 self.assertLess(
-                    html.index('id="municipality-heading"'),
                     html.index('id="map-heading"'),
+                    html.index('id="municipality-heading"'),
                 )
 
     def test_active_event_renders_section_with_link(self) -> None:
@@ -185,8 +200,8 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
                 "<title>千葉のポケふた4枚はどこ？香取市・佐原の場所一覧と地図｜ポケふた図鑑</title>", html
             )
             self.assertIn('<h1>千葉（千葉県）のポケふた4枚</h1>', html)
-            self.assertLess(html.index('id="visit-guide-heading"'), html.index('id="map-heading"'))
-            guide_html = html[html.index('<section class="visit-guide"'):html.index('id="map-heading"')]
+            self.assertLess(html.index('id="map-heading"'), html.index('id="visit-guide-heading"'))
+            guide_html = _visit_guide_html(html)
             for mid in ("222", "223", "224", "225"):
                 self.assertIn(f'href="#manhole-{mid}"', guide_html)
                 self.assertEqual(1, html.count(f'id="manhole-{mid}"'))
@@ -213,7 +228,7 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
             self.pokemon_slugs, self.trivia["福島県"],
             photos=self.photos, visit_guide=guides["福島県"],
         )
-        guide_html = html[html.index('<section class="visit-guide"'):html.index('id="map-heading"')]
+        guide_html = _visit_guide_html(html)
         self.assertIn("福島のポケふたの回り方", guide_html)
         for heading, count in (("会津から回る", 11), ("中通りから回る", 21), ("浜通りから回る", 11)):
             self.assertIn(f"{heading}（{count}地点）", guide_html)
@@ -262,9 +277,7 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
                     photos=self.photos, visit_guide=guides[prefecture],
                 )
                 self.assertIn(f"<title>{title}｜ポケふた図鑑</title>", html)
-                guide_html = html[
-                    html.index('<section class="visit-guide"'):html.index('id="map-heading"')
-                ]
+                guide_html = _visit_guide_html(html)
                 for heading, count in routes:
                     self.assertIn(f"{heading}（{count}地点）", guide_html)
                 for record in records:
