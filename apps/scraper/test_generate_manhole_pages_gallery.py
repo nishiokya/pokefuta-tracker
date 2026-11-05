@@ -1,4 +1,5 @@
 import importlib.util
+import re
 import tempfile
 import unittest
 from pathlib import Path
@@ -114,6 +115,10 @@ class GallerySectionTests(unittest.TestCase):
     def test_thumbs_reserve_their_size(self):
         html = _generate(_photo([{"url": f"{pages.BASE_URL}manhole/image/1_abcd1234.webp"}]))
         self.assertIn('width="360" height="360" loading="lazy" decoding="async"', html)
+        # height 属性があると CSS で高さを auto にしない限り 360px の縦長になる（aspect-ratio が効かない）
+        rule = re.search(r"\.gallery-item img \{([^}]*)\}", html).group(1)
+        self.assertIn("height: auto", rule)
+        self.assertIn("aspect-ratio: 1 / 1", rule)
 
     def test_more_link_tells_how_many_photos_the_studio_has(self):
         gallery_local = [{"url": f"{pages.BASE_URL}manhole/image/1_abcd123{i}.webp"} for i in range(3)]

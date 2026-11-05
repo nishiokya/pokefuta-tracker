@@ -850,6 +850,8 @@ PAGE_CSS = f"""    * {{
     }}
     .gallery-item img {{
       width: 100%;
+      /* img の height 属性（場所の確保用）が高さに効かないようにする。正方形は aspect-ratio で保つ */
+      height: auto;
       aspect-ratio: 1 / 1;
       object-fit: cover;
       border-radius: 10px;
