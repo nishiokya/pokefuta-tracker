@@ -132,6 +132,19 @@ class SectionOrderAndCollapseTest(unittest.TestCase):
                         "city": "宇治市",
                         "pokemons": ["ピカチュウ"],
                     }
+                ]
+                * 2,
+            ),
+            "snorlax": (
+                {"names": {"ja": "カビゴン", "en": "Snorlax"}, "generation": 1},
+                [
+                    {
+                        "id": "3",
+                        "title": "石川県/七尾市",
+                        "prefecture": "石川県",
+                        "city": "七尾市",
+                        "pokemons": ["カビゴン"],
+                    }
                 ],
             ),
             "eevee": (
@@ -192,6 +205,12 @@ class SectionOrderAndCollapseTest(unittest.TestCase):
         self.assertIn('<summary>すべて表示</summary>', list_section)
         self.assertNotIn('class="poke-card"', list_section)
         self.assertNotIn('<img', list_section)
+
+    def test_featured_skips_pokemon_on_only_one_lid(self) -> None:
+        """1枚しか無いポケモン（カビゴン）は「人気・代表」の上位に出さない。"""
+        featured = self.html[self.html.index('id="featured-pokemon"'):self.html.index('id="pokemon-ranking"')]
+        self.assertIn('data-destination="pikachu"', featured)
+        self.assertNotIn('data-destination="snorlax"', featured)
 
     def test_card_links_carry_ga4_click_tracking(self) -> None:
         html = self.html
