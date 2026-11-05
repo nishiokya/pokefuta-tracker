@@ -89,5 +89,27 @@ class HeroHtmlTests(unittest.TestCase):
         self.assertIn("manhole/image/42_latest.jpeg' alt='Slowpoke'", _html("42", "en"))
 
 
+class ManholeListTests(unittest.TestCase):
+    """ページ下のマンホール一覧。スマホは2列、写真は小さい WebP を srcset で選ばせる。"""
+
+    def test_list_photos_use_small_webp(self):
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "42_latest.jpeg").write_bytes(b"")
+            html = generate_html(
+                slug="slowpoke", pokemon=SLOWPOKE, manholes=MANHOLES, related=[], taxonomy_related={},
+                image_dir=Path(d), lang="ja", lang_config=LANG_CONFIGS["ja"], strings=LP_STRINGS["ja"],
+                translate_pref=lambda pref: pref, hero_manhole_id="",
+            )
+        item = re.search(r"<li class='manhole-item'><a href='/manholes/42/'>(.*?)</a></li>", html, re.S).group(1)
+        self.assertIn("42_latest_360.webp 360w", item)
+        self.assertIn('sizes="(min-width: 640px) 280px, 46vw"', item)
+        self.assertIn("loading='lazy'", item)
+
+    def test_two_columns_on_phones(self):
+        html = _html("")
+        self.assertIn("grid-template-columns: repeat(2, minmax(0, 1fr));", html)
+        self.assertIn("@media (min-width: 640px)", html)
+
+
 if __name__ == "__main__":
     unittest.main()

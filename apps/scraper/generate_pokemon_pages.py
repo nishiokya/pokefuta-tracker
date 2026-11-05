@@ -26,6 +26,10 @@ sys.path.insert(0, str(Path(__file__).parent))
 from display_names import compose_display_name, municipality_label  # noqa: E402
 from site_terms import format_count  # noqa: E402
 from site_names import og_site_name  # noqa: E402
+from manhole_tile_image import responsive_attrs  # noqa: E402
+
+# ページ下のマンホール一覧の写真の表示幅（.manhole-list の CSS と合わせる）
+MANHOLE_LIST_IMG_SIZES = "(min-width: 640px) 280px, 46vw"
 
 try:
     from apps.scraper.prefectures import PREFECTURE_SLUGS  # noqa: E402
@@ -950,11 +954,13 @@ def generate_html(
             img_html = ""
             img_path = image_dir / f"{mid}_latest.jpeg"
             if img_path.exists():
-                img_url = escape(f"https://data.pokefuta.com/manhole/image/{mid}_latest.jpeg")
+                img_url = f"https://data.pokefuta.com/manhole/image/{mid}_latest.jpeg"
                 alt = image_alt(m)
+                # スマホは2列（表示幅は画面のおよそ半分）、PC は 220px 以上の列
                 img_html = (
-                    f"<img src='{img_url}' alt='{escape(alt, {chr(39): '&#x27;'})}'"
-                    f" loading='lazy' decoding='async' width='320' height='180'>"
+                    f"<img {responsive_attrs(img_url, MANHOLE_LIST_IMG_SIZES)}"
+                    f" alt='{escape(alt, {chr(39): '&#x27;'})}'"
+                    f" loading='lazy' decoding='async' width='720' height='720'>"
                 )
 
             cards_html += (
@@ -1237,19 +1243,24 @@ def generate_html(
     .manhole-list {{
       list-style: none;
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      /* スマホは2列で写真をたくさん並べる。PC は 220px 以上の列 */
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 8px;
+    }}
+    @media (min-width: 640px) {{
+      .manhole-list {{ grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }}
     }}
     .manhole-item a {{
       display: block;
       background: white;
       border: 1px solid #ddd;
       border-radius: 8px;
-      padding: 10px 14px;
+      padding: 8px 10px;
       text-decoration: none;
       color: #333;
       transition: border-color 0.15s, box-shadow 0.15s;
       overflow: hidden;
+      height: 100%;
     }}
     .manhole-item a:hover {{
       border-color: #6F55A3;
@@ -1257,14 +1268,17 @@ def generate_html(
     }}
     .manhole-item a img {{
       display: block;
-      width: calc(100% + 28px);
-      margin: -10px -14px 8px;
-      height: 160px;
+      width: calc(100% + 20px);
+      max-width: none;
+      margin: -8px -10px 6px;
+      height: auto;
+      aspect-ratio: 1 / 1;
       object-fit: cover;
     }}
     .manhole-location {{
       display: block;
-      font-size: 14px;
+      font-size: 13px;
+      line-height: 1.35;
       font-weight: bold;
       color: #1a1a1a;
     }}
