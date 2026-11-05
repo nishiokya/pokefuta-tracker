@@ -77,6 +77,14 @@ class LidTileTest(unittest.TestCase):
 
 
 
+class DownloadRetryTest(unittest.TestCase):
+    def test_session_retries_timeouts_and_server_errors(self):
+        retry = imp.download_session().get_adapter("https://example.com").max_retries
+        self.assertEqual((retry.total, retry.read, retry.connect), (3, 3, 3))
+        self.assertIn(503, retry.status_forcelist)
+        self.assertGreater(retry.backoff_factor, 0)
+
+
 class GalleryNeedsFetchTest(unittest.TestCase):
     def test_new_file_is_fetched(self):
         self.assertTrue(imp.gallery_needs_fetch(False, False, None, "a"))

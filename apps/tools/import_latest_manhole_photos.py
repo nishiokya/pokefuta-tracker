@@ -16,6 +16,8 @@ from typing import Any, Iterable
 from urllib.parse import quote, urlparse, urlunparse
 
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 from PIL import Image, ImageOps
 
 
@@ -325,6 +327,21 @@ def lid_tile(image: Image.Image, lid: list[float], size: int = LID_TILE_SIZE) ->
     return tile.resize((size, size), Image.Resampling.LANCZOS)
 
 
+# R2 の原本は数千枚に1枚ほど読み込みが30秒を超える（2026-11-05、ギャラリーを13枚に増やした初回の取り込みで
+# 2,480 枚中 4 枚が Read timed out）。1枚の失敗で日次の取り込み全体が止まるので、間をあけて取り直す
+DOWNLOAD_RETRY = Retry(
+    total=3, connect=3, read=3, status=3, backoff_factor=2,
+    status_forcelist=(429, 500, 502, 503, 504), allowed_methods=frozenset({"GET"}),
+)
+
+
+def download_session() -> requests.Session:
+    session = requests.Session()
+    session.mount("https://", HTTPAdapter(max_retries=DOWNLOAD_RETRY))
+    session.mount("http://", HTTPAdapter(max_retries=DOWNLOAD_RETRY))
+    return session
+
+
 def download_image(session: requests.Session, url: str, timeout: int) -> Image.Image:
     response = session.get(url, timeout=timeout)
     response.raise_for_status()
@@ -365,7 +382,7 @@ def main() -> int:
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    session = requests.Session()
+    session = download_session()
     seen: set[str] = set()
     imported = 0
     attempted = 0
