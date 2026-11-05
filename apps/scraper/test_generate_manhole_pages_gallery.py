@@ -1,4 +1,6 @@
 import importlib.util
+import re
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -110,6 +112,25 @@ class GallerySectionTests(unittest.TestCase):
         # サムネ側は lazy のまま（ヒーローだけを eager にした）
         self.assertIn('loading="lazy"', html[html.index("みんなの写真"):])
 
+    def test_thumbs_reserve_their_size(self):
+        html = _generate(_photo([{"url": f"{pages.BASE_URL}manhole/image/1_abcd1234.webp"}]))
+        self.assertIn('width="360" height="360" loading="lazy" decoding="async"', html)
+        # height 属性があると CSS で高さを auto にしない限り 360px の縦長になる（aspect-ratio が効かない）
+        rule = re.search(r"\.gallery-item img \{([^}]*)\}", html).group(1)
+        self.assertIn("height: auto", rule)
+        self.assertIn("aspect-ratio: 1 / 1", rule)
+
+    def test_more_link_tells_how_many_photos_the_studio_has(self):
+        gallery_local = [{"url": f"{pages.BASE_URL}manhole/image/1_abcd123{i}.webp"} for i in range(3)]
+        photo = _photo(gallery_local)
+        photo["public_photo_count"] = 21
+        self.assertIn("写真館で全 21 枚を見る →", _generate(photo))
+        # 代表＋3枚で全部出しているときは枚数を出さない
+        photo["public_photo_count"] = 4
+        html = _generate(photo)
+        self.assertIn("すべての写真を見る →", html)
+        self.assertNotIn("写真館で全", html)
+
     def test_no_gallery_section_without_items(self):
         html = _generate(_photo([]))
         self.assertNotIn("みんなの写真", html)
@@ -118,6 +139,30 @@ class GallerySectionTests(unittest.TestCase):
     def test_no_gallery_section_without_photo(self):
         html = _generate(None)
         self.assertNotIn("みんなの写真", html)
+
+
+class PagePhotoGalleryFilesTests(unittest.TestCase):
+    """ギャラリー画像は .webp。前の形式の .jpeg は取り込みが作り直すまでの間だけ使う"""
+
+    def _page_photo(self, files: list[str]) -> dict:
+        with tempfile.TemporaryDirectory() as tmp:
+            image_dir = Path(tmp)
+            for name in files:
+                (image_dir / name).write_bytes(b"")
+            photos = {"1": {"photo_id": "rep11111-0000", "gallery": [
+                {"photo_id": "rep11111-0000"},
+                {"photo_id": "abcd1234-0000"},
+                {"photo_id": "ef012345-0000"},
+                {"photo_id": "99999999-0000"},
+            ]}}
+            return pages.page_photo("1", photos, image_dir, {"1": f"{pages.BASE_URL}manhole/image/1_latest.jpeg"})
+
+    def test_prefers_webp_and_falls_back_to_jpeg(self):
+        photo = self._page_photo(["1_abcd1234.webp", "1_abcd1234.jpeg", "1_ef012345.jpeg"])
+        self.assertEqual(
+            [g["url"] for g in photo["gallery_local"]],
+            [f"{pages.BASE_URL}manhole/image/1_abcd1234.webp", f"{pages.BASE_URL}manhole/image/1_ef012345.jpeg"],
+        )
 
 
 if __name__ == "__main__":

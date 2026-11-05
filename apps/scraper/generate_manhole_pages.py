@@ -66,6 +66,15 @@ DESIGN_NEARBY_MAX = 4
 CHARACTER_COORD_METHODS = {"official_google_map_link", "municipal_google_map_link"}
 # 🎨近接称号は本文のデザインマンホールセクションへアンカーで飛ばす
 DESIGN_ANCHOR_TITLE_KEYS = {"near_character_manhole", "near_gundam_manhole"}
+# 「みんなの写真」のサムネイルの大きさ（import_latest_manhole_photos.GALLERY_SIZE と同じ）
+GALLERY_THUMB_SIZE = 360
+
+
+def gallery_more_label(public_photo_count: object, shown: int) -> str:
+    """「みんなの写真」の末尾のリンク。出しきれていないときは写真館にある枚数を入れる（shown は代表を含む）。"""
+    if isinstance(public_photo_count, int) and public_photo_count > shown:
+        return f"写真館で全 {public_photo_count} 枚を見る →"
+    return "すべての写真を見る →"
 
 
 def build_ja_to_slug(raw_data: list) -> dict[str, str]:
@@ -828,7 +837,8 @@ def generate_html(
                 credit_span = ""
             thumbs += (
                 f"<figure class='gallery-item'>"
-                f"<img src=\"{escape(g['url'])}\" alt=\"{escape(h1)}の写真\" loading=\"lazy\">"
+                f"<img src=\"{escape(g['url'])}\" alt=\"{escape(h1)}の写真\""
+                f" width=\"{GALLERY_THUMB_SIZE}\" height=\"{GALLERY_THUMB_SIZE}\" loading=\"lazy\" decoding=\"async\">"
                 f"{credit_span}"
                 f"</figure>"
             )
@@ -842,7 +852,7 @@ def generate_html(
             f"<a class='gallery-more' href='https://pokefuta.com/manhole/{quote(manhole_id)}'"
             f" target='_blank' rel='noopener noreferrer'"
             f" onclick=\"trackEvent('click_gallery_more', {_gallery_more_onclick})\">"
-            f"すべての写真を見る →</a>"
+            f"{escape(gallery_more_label(photo.get('public_photo_count'), len(gallery_items) + 1))}</a>"
             f"</section>"
         )
 
@@ -1534,16 +1544,20 @@ def page_photo(
     user_photo = photos.get(norm_id) or {}
 
     # Gallery thumbnails beyond the hero (local files downloaded by
-    # import_latest_manhole_photos.py as {id}_{photo_id[:8]}.jpeg)
+    # import_latest_manhole_photos.py as {id}_{photo_id[:8]}.webp。.jpeg は前の形式で、作り直すまでの間だけ使う)
     gallery_local: list[dict] = []
     rep_photo_id = user_photo.get("photo_id")
     for item in user_photo.get("gallery") or []:
         if not isinstance(item, dict) or item.get("photo_id") == rep_photo_id:
             continue
         slug = re.sub(r"[^0-9a-fA-F]", "", str(item.get("photo_id") or ""))[:8].lower()
-        if len(slug) == 8 and (image_dir / f"{manhole_id}_{slug}.jpeg").exists():
+        name = next(
+            (n for n in (f"{manhole_id}_{slug}.webp", f"{manhole_id}_{slug}.jpeg") if (image_dir / n).exists()),
+            None,
+        ) if len(slug) == 8 else None
+        if name:
             gallery_local.append({
-                "url": f"{BASE_URL}manhole/image/{manhole_id}_{slug}.jpeg",
+                "url": f"{BASE_URL}manhole/image/{name}",
                 "display_name": item.get("display_name"),
                 "shot_at": item.get("shot_at"),
                 "created_at": item.get("created_at"),

@@ -115,7 +115,11 @@ def photo_count_for(photo: dict) -> int:
     （export_latest_manhole_photos.py の select_gallery_photos は全写真から選ぶ）。
     export 側で gallery_limit 件にキャップされるため、この値は実際の枚数の
     下限でしかない（上限到達かどうかは at_cap を参照）。
+    export が public_photo_count（公開写真の本当の枚数）を書いていればそれを使う。
     """
+    count = photo.get("public_photo_count")
+    if isinstance(count, int) and not isinstance(count, bool) and count >= 1:
+        return count
     gallery = photo.get("gallery")
     if isinstance(gallery, list) and gallery:
         return len(gallery)
@@ -177,7 +181,7 @@ def build_top_feed(
             entry["photo_count"] = photo_count
             # gallery が export のキャップに達している = 実際はこれ以上ある可能性がある。
             # キャップ値をクライアントに焼き込ませないためフラグで渡す（'📷5+' の判定用）
-            if photo_count >= gallery_limit:
+            if "public_photo_count" not in photo and photo_count >= gallery_limit:
                 entry["photo_count_at_cap"] = True
         entries.append(entry)
         if len(entries) >= max_photos:

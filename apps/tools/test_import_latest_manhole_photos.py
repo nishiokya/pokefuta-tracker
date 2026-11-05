@@ -1,8 +1,12 @@
 """import_latest_manhole_photos.crop_to_square / crop_box のテスト（蓋の位置に寄せた正方形）。"""
 
 import importlib.util
+import json
+import sys
+import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 from PIL import Image
 
@@ -93,6 +97,78 @@ class GalleryNeedsFetchTest(unittest.TestCase):
         self.assertEqual(imp.key_fingerprint("photos/original/x.jpg"), imp.key_fingerprint("photos/original/x.jpg"))
         self.assertEqual(len(imp.key_fingerprint("photos/original/x.jpg")), 16)
         self.assertIsNone(imp.key_fingerprint(None))
+
+class GalleryImportTest(unittest.TestCase):
+    """ギャラリーは 360px の WebP。前の形式の JPEG は取り直さずに作り直し、掃除で消す"""
+
+    PHOTO_ID = "abcdef12-0000-0000-0000-000000000000"
+    KEY = "photos/original/a.jpg"
+
+    def _run(self, out: Path, gallery: list[dict], download=None) -> int:
+        payload = {"photos": {"1": {
+            "manhole_id": 1, "photo_id": "11111111-0000", "url": "https://example.com/hero.jpg",
+            "gallery": [{"photo_id": "11111111-0000"}, *gallery],
+        }}}
+        src = out / "in.json"
+        src.write_text(json.dumps(payload), encoding="utf-8")
+        argv = ["import", "--input", str(src), "--output-dir", str(out), "--env-file", str(out / "none")]
+        download = download or mock.Mock(return_value=Image.new("RGB", (1200, 900), (10, 20, 30)))
+        with mock.patch.object(sys, "argv", argv), mock.patch.object(imp, "download_image", download), \
+                mock.patch("builtins.print"):
+            return imp.main()
+
+    def _item(self, key: str = KEY) -> dict:
+        return {"photo_id": self.PHOTO_ID, "url": "https://example.com/g.jpg", "storage_key": key}
+
+    def test_new_gallery_photo_is_a_small_webp(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp)
+            self.assertEqual(self._run(out, [self._item()]), 0)
+            with Image.open(out / "1_abcdef12.webp") as image:
+                self.assertEqual((image.format, image.size), ("WEBP", (360, 360)))
+            self.assertFalse((out / "1_abcdef12.jpeg").exists())
+
+    def test_legacy_jpeg_is_converted_without_downloading(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp)
+            Image.new("RGB", (720, 720), (200, 0, 0)).save(out / "1_abcdef12.jpeg", "JPEG")
+            (out / imp.GALLERY_SOURCES).write_text(json.dumps({"1_abcdef12.jpeg": imp.key_fingerprint(self.KEY)}))
+            stale = out / "1_99999999.jpeg"
+            Image.new("RGB", (720, 720)).save(stale, "JPEG")
+            download = mock.Mock(return_value=Image.new("RGB", (720, 720)))
+            self.assertEqual(self._run(out, [self._item()], download), 0)
+            self.assertEqual(download.call_count, 1)  # 代表だけ
+            with Image.open(out / "1_abcdef12.webp") as image:
+                self.assertEqual(image.size, (360, 360))
+                self.assertGreater(image.convert("RGB").getpixel((180, 180))[0], 150)
+            self.assertFalse((out / "1_abcdef12.jpeg").exists())
+            self.assertFalse(stale.exists())
+            sources = json.loads((out / imp.GALLERY_SOURCES).read_text())
+            self.assertEqual(sources, {"1_abcdef12.webp": imp.key_fingerprint(self.KEY)})
+
+    def test_legacy_jpeg_with_a_changed_key_is_fetched_again(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp)
+            Image.new("RGB", (720, 720), (200, 0, 0)).save(out / "1_abcdef12.jpeg", "JPEG")
+            (out / imp.GALLERY_SOURCES).write_text(json.dumps({"1_abcdef12.jpeg": imp.key_fingerprint("old")}))
+            download = mock.Mock(return_value=Image.new("RGB", (900, 900), (0, 0, 200)))
+            self.assertEqual(self._run(out, [self._item()], download), 0)
+            self.assertEqual(download.call_count, 2)
+            with Image.open(out / "1_abcdef12.webp") as image:
+                self.assertGreater(image.convert("RGB").getpixel((180, 180))[2], 150)
+            self.assertFalse((out / "1_abcdef12.jpeg").exists())
+
+    def test_legacy_jpeg_survives_when_it_cannot_be_fetched_again(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp)
+            Image.new("RGB", (720, 720)).save(out / "1_abcdef12.jpeg", "JPEG")
+            (out / imp.GALLERY_SOURCES).write_text(json.dumps({"1_abcdef12.jpeg": imp.key_fingerprint("old")}))
+            hero = Image.new("RGB", (720, 720))
+            download = mock.Mock(side_effect=[hero, OSError("unreachable")])
+            self.assertEqual(self._run(out, [self._item()], download), 1)
+            self.assertTrue((out / "1_abcdef12.jpeg").exists())
+            self.assertFalse((out / "1_abcdef12.webp").exists())
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -411,7 +411,8 @@ def build_page(
             credit = f"<span class='gallery-credit'>📷 {label}</span>" if label else ""
             thumbs.append(
                 "<figure class='gallery-item'>"
-                f'<img src="{_attr(g["url"])}" alt="{_attr(page.t("photo_alt", h1=h1))}" loading="lazy">'
+                f'<img src="{_attr(g["url"])}" alt="{_attr(page.t("photo_alt", h1=h1))}"'
+                f' width="{ja.GALLERY_THUMB_SIZE}" height="{ja.GALLERY_THUMB_SIZE}" loading="lazy" decoding="async">'
                 f"{credit}</figure>"
             )
         gallery_html = (
