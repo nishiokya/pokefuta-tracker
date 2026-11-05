@@ -11,6 +11,7 @@ import io
 import json
 import os
 import re
+import time
 from pathlib import Path
 from typing import Any, Iterable
 from urllib.parse import quote, urlparse, urlunparse
@@ -325,10 +326,28 @@ def lid_tile(image: Image.Image, lid: list[float], size: int = LID_TILE_SIZE) ->
     return tile.resize((size, size), Image.Resampling.LANCZOS)
 
 
+# R2 の原本は数千枚に1枚ほど読み込みが30秒を超える（2026-11-05、ギャラリーを13枚に増やした初回の取り込みで
+# 2,480 枚中 4 枚が Read timed out）。1枚の失敗で日次の取り込み全体が止まるので、間をあけて取り直す。
+# 本文の途中で止まることもあり、HTTPAdapter の Retry はヘッダーまでしか見ないので、本文を読み終えるまでを取り直す
+DOWNLOAD_ATTEMPTS = 4
+DOWNLOAD_BACKOFF = 2
+RETRY_STATUSES = frozenset({429, 500, 502, 503, 504})
+
+
 def download_image(session: requests.Session, url: str, timeout: int) -> Image.Image:
-    response = session.get(url, timeout=timeout)
-    response.raise_for_status()
-    return Image.open(io.BytesIO(response.content))
+    for attempt in range(1, DOWNLOAD_ATTEMPTS + 1):
+        try:
+            response = session.get(url, timeout=timeout)
+            response.raise_for_status()
+            return Image.open(io.BytesIO(response.content))
+        except requests.HTTPError as exc:
+            if exc.response.status_code not in RETRY_STATUSES or attempt == DOWNLOAD_ATTEMPTS:
+                raise
+        except (requests.ConnectionError, requests.Timeout, requests.exceptions.ChunkedEncodingError):
+            if attempt == DOWNLOAD_ATTEMPTS:
+                raise
+        time.sleep(DOWNLOAD_BACKOFF * 2 ** (attempt - 1))
+    raise AssertionError("unreachable")
 
 
 def main() -> int:
