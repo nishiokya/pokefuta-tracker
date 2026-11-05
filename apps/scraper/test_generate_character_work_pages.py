@@ -117,7 +117,7 @@ class GundamGuideTest(unittest.TestCase):
         html = generate_html(GUNDAM, enriched, {})
         self.assertIn('id="location-map"', html)
         self.assertIn('id="cw-map"', html)
-        self.assertIn('character-work-map.js?v=20261105a', html)
+        self.assertIn('character-work-map.js?v=20261105c', html)
         self.assertIn('gmanhole_map.html?work=gundam', html)
         payload = re.search(r'id="cw-map-data">(.*?)</script>', html).group(1)
         points = json.loads(payload)
@@ -125,6 +125,17 @@ class GundamGuideTest(unittest.TestCase):
         self.assertEqual(GUNDAM_SUBMISSION["photo_url"], points[0]["photo_url"])
         self.assertEqual('../../gmanhole_map.html#gundam-1', points[0]["href"])
         self.assertNotIn('id="cw-map-data">[]', html)
+
+    def test_gundam_map_filters_and_photo_clip_are_emitted(self) -> None:
+        html = generate_html(GUNDAM, gundam_work_records(GUNDAM_RECORDS), {})
+        self.assertIn('id="cw-map-region"', html)
+        self.assertIn('id="cw-map-photos"', html)
+        self.assertIn('value="without">写真募集中', html)
+        points = json.loads(re.search(r'id="cw-map-data">(.*?)</script>', html).group(1))
+        self.assertEqual('北海道・東北', points[0]['region'])
+        js = (Path(__file__).parents[1] / 'web/assets/character-work-map.js').read_text(encoding='utf-8')
+        self.assertIn('function applyFilters()', js)
+        self.assertIn("photo.className = 'cw-map-photo-marker'", js)
 
     def test_gundam_map_keeps_spots_without_submitted_photos(self) -> None:
         html = generate_html(GUNDAM, gundam_work_records(GUNDAM_RECORDS), {})
@@ -209,7 +220,7 @@ class OtherWorkPageTest(unittest.TestCase):
 
     def test_embeds_the_location_map_with_work_specific_labels(self) -> None:
         self.assertIn('<h2 id="map-heading">東海オンエアのマンホールの設置場所マップ</h2>', self.html)
-        self.assertIn('character-work-map.js?v=20261105a', self.html)
+        self.assertIn('character-work-map.js?v=20261105c', self.html)
         payload = re.search(r'id="cw-map-data">(.*?)</script>', self.html).group(1)
         points = json.loads(payload)
         self.assertEqual(2, len(points))
@@ -228,6 +239,86 @@ class OtherWorkPageTest(unittest.TestCase):
         self.assertIn("<title>東海オンエアのマンホール一覧・地図｜設置場所マップ</title>", generate_html(TOKAI, same_name, {}))
         no_pref = [dict(TOKAI_RECORDS[0], prefecture=""), TOKAI_RECORDS[1]]
         self.assertIn("<title>東海オンエアのマンホール一覧・地図｜設置場所マップ</title>", generate_html(TOKAI, no_pref, {}))
+
+
+class SharedWorkExperienceTest(unittest.TestCase):
+    def records_for(self, page):
+        return [dict(TOKAI_RECORDS[0], id="public", work=page.works[0]),
+                dict(TOKAI_RECORDS[1], id="no-photo", work=page.works[0], prefecture="北海道"),
+                dict(TOKAI_RECORDS[0], id="no-coordinates", work=page.works[0], lat=None)]
+
+    def test_all_guides_share_photo_hero_filters_gallery_and_return_links(self):
+        for page in WORK_PAGES:
+            with self.subTest(work=page.slug):
+                prefix = "gundam" if page == GUNDAM else "character"
+                sub = dict(GUNDAM_SUBMISSION, canonical_ref=f"{prefix}:public")
+                hidden = dict(sub, status="hidden", photo_url="https://example.com/hidden.jpg", created_at="2099")
+                pending = dict(sub, canonical_ref=f"{prefix}:no-photo", status="pending", photo_url="https://example.com/pending.jpg")
+                records = attach_user_photos(self.records_for(page), [sub, hidden, pending])
+                html = generate_html(page, records, {})
+                self.assertIn('id="cw-map-region"', html)
+                self.assertIn('id="cw-map-photos"', html)
+                points = json.loads(re.search(r'id="cw-map-data">(.*?)</script>', html).group(1))
+                self.assertEqual({"spot-public", "spot-no-photo"}, {p["anchor"] for p in points})
+                photo = next(p for p in points if p["anchor"] == "spot-public")
+                self.assertEqual(sub["photo_url"], photo["photo_url"])
+                self.assertEqual(sub["source_url"], photo["photo_source_url"])
+                self.assertEqual("中部", photo["region"])
+                self.assertEqual("", next(p for p in points if p["anchor"] == "spot-no-photo")["photo_url"])
+                self.assertNotIn("hidden.jpg", html)
+                self.assertNotIn("pending.jpg", html)
+                hero = re.search(r'<section class="cm-hero.*?</section>', html, re.S).group()
+                self.assertIn('class="cw-hero-photo"', hero)
+                self.assertIn(sub["photo_url"].replace("&", "&amp;"), hero)
+                self.assertEqual(2, hero.count('class="cm-btn'))
+                self.assertNotIn(page.intro, hero)
+                self.assertIn('href="#community-photos"', hero)
+                self.assertIn('href="' + sub["source_url"] + '"', html)
+                links = design_manhole_links(records, [sub], "fixture")["links"][sub["source_id"]]
+                self.assertEqual(f"https://data.pokefuta.com/{page.path}", links["guide_url"])
+                self.assertEqual((3, 1), (links["spots"], links["spots_with_photo"]))
+                if page == GUNDAM:
+                    self.assertEqual("../../gmanhole_map.html#gundam-public", photo["href"])
+                    self.assertNotIn('class="cw-spot"', html)
+                else:
+                    self.assertEqual("", photo["href"])
+                    self.assertIn('id="spot-no-coordinates"', html)
+                    self.assertTrue(links["url"].endswith("#spot-public"))
+
+    def test_photo_without_source_falls_back_to_existing_detail(self):
+        for page in WORK_PAGES:
+            with self.subTest(work=page.slug):
+                records = [dict(self.records_for(page)[0], user_photo_url="https://example.com/photo.jpg",
+                                user_photo_source_url="javascript:alert(1)")]
+                html = generate_html(page, records, {})
+                gallery = re.search(r'<section class="cm-section cw-photo-gallery".*?</section>', html, re.S).group()
+                target = "../../gmanhole_map.html#gundam-public" if page == GUNDAM else "#spot-public"
+                self.assertIn(f'href="{target}"', gallery)
+                self.assertNotIn("javascript:", html)
+
+    def test_all_guides_without_photos_or_coordinates_keep_working_links(self):
+        for page in WORK_PAGES:
+            with self.subTest(work=page.slug):
+                rows = [dict(r, lat=None) for r in self.records_for(page)]
+                html = generate_html(page, rows, {})
+                self.assertNotIn('id="cw-map"', html)
+                self.assertNotIn('href="#location-map"', html)
+                self.assertNotIn('href="#community-photos"', html)
+                self.assertNotIn('class="cw-hero-photo"', html)
+                self.assertIn('class="cw-emblem"', html)
+                self.assertIn('href="#locations"', html)
+                self.assertIn(f'<link rel="canonical" href="https://data.pokefuta.com/{page.path}">', html)
+
+    def test_invalid_coordinates_never_become_map_pins_for_any_work(self):
+        for page in WORK_PAGES:
+            with self.subTest(work=page.slug):
+                base = self.records_for(page)[0]
+                rows = [base] + [dict(base, id=f"invalid-{i}", lat=lat, lng=lng)
+                                 for i, (lat, lng) in enumerate([(None, 135), (91, 135), (35, 181),
+                                                                (True, 135), (float("nan"), 135), (35, float("inf"))])]
+                html = generate_html(page, rows, {})
+                points = json.loads(re.search(r'id="cw-map-data">(.*?)</script>', html).group(1))
+                self.assertEqual(["spot-public"], [p["anchor"] for p in points])
 
 
 class WorkDefinitionsTest(unittest.TestCase):

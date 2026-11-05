@@ -293,6 +293,86 @@ def gundam_areas_html(groups: dict[tuple[str, str], list[dict]]) -> str:
     return pair_note + "".join(sections)
 
 
+def work_label(page: WorkPage) -> str:
+    return {"gundam": "ガンダムマンホール", "idolmaster": "ふたマス"}.get(page.slug, f"{page.name}のマンホール")
+
+
+def detail_href(page: WorkPage, record: dict) -> str:
+    if page.slug == "gundam":
+        return ASSET_BASE + "gmanhole_map.html#gundam-" + quote(str(record["id"]), safe="")
+    return "#" + spot_id(record)
+
+
+def work_photo_gallery(page: WorkPage, selected: list[dict]) -> str:
+    """取り込み済みの公開写真から写真館へ。投稿リンクがなければ設置案内へ。"""
+    cards = []
+    for r in selected:
+        photo_url = safe_url(r.get("user_photo_url"))
+        if not photo_url:
+            continue
+        destination = safe_url(r.get("user_photo_source_url")) or detail_href(page, r)
+        place = str(r.get("prefecture") or "") + str(r.get("city") or "")
+        name = str(r.get("character") or r.get("title") or "マンホール")
+        cards.append(
+            f'<a class="cw-photo-card" href="{escape(destination)}">'
+            f'<img src="{escape(photo_url)}" alt="{escape(place + "の" + name + "の投稿写真")}" loading="lazy" decoding="async" width="320" height="320">'
+            f'<span><strong>{escape(place)}</strong><small>{escape(name)}</small></span></a>'
+        )
+    if not cards:
+        return ""
+    return (
+        '<section class="cm-section cw-photo-gallery" id="community-photos" aria-labelledby="community-photos-heading">'
+        f'<div class="cm-section-head"><h2 id="community-photos-heading">みんなが撮った{escape(work_label(page))}</h2>'
+        f'<a class="cm-btn cm-btn--soft" href="{ASSET_BASE}design_manhole.html">写真を投稿する →</a></div>'
+        f'<p class="cm-lead">{len(cards)} / {len(selected)}枚に現地写真が届いています。写真から投稿詳細や設置場所の案内へ。</p>'
+        '<div class="cw-photo-grid">' + "".join(cards) + '</div></section>'
+    )
+
+
+def work_map_html(page: WorkPage, selected: list[dict]) -> tuple[str, str, str]:
+    count = len(selected)
+    map_count = sum(has_coordinates(r) for r in selected)
+    map_note = f"地図のピンは座標確認済みの{map_count}枚。" if map_count != count else ""
+    map_section = map_assets = map_cta = ""
+    # 作品ガイドには簡易地図、詳細なフィルタ・個別一覧は全国マップに残す。
+    # 公開写真は丸型ピン、写真なしは通常ピン。座標なしは静的な案内に残す。
+    if map_count:
+        idolmaster = page.slug == "idolmaster"
+        gundam = page.slug == "gundam"
+        label = work_label(page)
+        lead = "地方と写真の有無から探せます。丸い写真ピンを選ぶと、設置場所や写真館へ進めます。"
+        map_cta = '<a class="cm-btn" href="#location-map">地図から探す ↓</a>'
+        region_lookup = {pref: region for region, prefs in REGIONS for pref in prefs}
+        points = [{"lat": r["lat"], "lng": r["lng"], "name": str(r.get("character") or r.get("title") or "マンホール"),
+                   "alt": str(r.get("character") or r.get("title") or "マンホール") + ("のふたマス" if idolmaster else f"（{page.name}のマンホール）"),
+                   "photo_url": safe_url(r.get("user_photo_url")),
+                   "address": str(r.get("address") or ""), "anchor": spot_id(r),
+                   "href": detail_href(page, r) if gundam else "",
+                   "photo_source_url": safe_url(r.get("user_photo_source_url")) if safe_url(r.get("user_photo_url")) else "",
+                   "region": region_lookup.get(str(r.get("prefecture") or ""), "その他")}
+                  for r in selected if has_coordinates(r)]
+        map_filters = (
+            '<div class="cw-map-controls" aria-label="地図の表示設定">'
+            '<label for="cw-map-region">地方<select id="cw-map-region"><option value="">全国</option></select></label>'
+            '<label for="cw-map-photos">写真<select id="cw-map-photos"><option value="all">すべて</option>'
+            '<option value="with">写真あり</option><option value="without">写真募集中</option></select></label>'
+            '<span id="cw-map-count" role="status" aria-live="polite"></span></div>'
+        )
+        map_section = f'''<section class="cm-section" id="location-map" aria-labelledby="map-heading">
+          <div class="cm-section-head"><h2 id="map-heading">{escape(label)}の設置場所マップ</h2><a class="cm-btn cm-btn--soft" href="{escape(map_href(page.map_query))}">大きな地図で見る →</a></div>
+          <p class="cm-lead">{escape(lead)}{map_note}</p>
+          {map_filters}
+          <p id="cw-map-status" class="cw-note" role="status">地図を読み込み中です。表示されない場合は、全国の設置場所一覧をご利用ください。</p>
+          <div id="cw-map" class="cw-map" role="region" aria-label="{escape(label)}の設置場所の地図"></div>
+          <noscript><p>地図の表示にはJavaScriptが必要です。<a href="{ASSET_BASE + "gmanhole_map.html" if gundam else "#locations"}">{escape(label)}の設置場所一覧</a>から住所と地図リンクを確認できます。</p></noscript>
+          <script type="application/json" id="cw-map-data">{json_script(points)}</script>
+        </section>'''
+        map_assets = f'''<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+          <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+          <script defer src="{ASSET_BASE}assets/character-work-map.js?v=20261105c"></script>'''
+    return map_section, map_assets, map_cta
+
+
 def generate_html(page: WorkPage, records: list[dict], events: dict,
                   *, now: datetime | None = None, related: tuple[WorkPage, ...] = ()) -> str:
     selected = [r for r in records if _is_active(r) and r.get("work") in page.works]
@@ -324,7 +404,6 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
     if page.slug == "gundam":
         hero_heading = "ガンダムマンホールを<br>巡る旅のガイド。"
     hero_note = "担当アイドルのふたを訪ねて、公式チェックインへ。" if event_active else "好きな作品を、次の旅の目的地に。"
-    hero_cta = '<a class="cm-btn cm-btn--ghost" href="#check-in">チェックインの参加方法 →</a>' if event_active else ""
     # 全国一覧の作品カードと同じ色・同じ字の蓋を掲げ、2種類のページを同じ図鑑に見せる
     lid_color = next((str(r["marker_color"]) for r in selected if r.get("marker_color")), "#6C5CA6")
     lid_label = next((str(r["marker_label"]) for r in selected if r.get("marker_label")), page.name[:1])
@@ -335,19 +414,20 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
     )
     pref_order = {pref: i for i, pref in enumerate(PREFECTURE_ORDER)}
     selected.sort(key=lambda r: (pref_order.get(r.get("prefecture"), 999), str(r.get("city") or ""), str(r["id"])))
-    hero_photo = next((r for r in selected if safe_url(r.get("user_photo_url"))), None) if page.slug == "idolmaster" else None
+    hero_photo = next((r for r in selected if safe_url(r.get("user_photo_url"))), None)
     social_image = safe_url(hero_photo.get("user_photo_url")) if hero_photo else OG_IMAGE
     image_dimensions = '' if hero_photo else '<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">'
-    hero_visual = f'''<aside class="cw-emblem" aria-label="掲載数"><span class="cm-lid cm-lid--lg" style="--c:{escape(lid_color)}" aria-hidden="true">{escape(lid_label[:1])}</span>
-        <p class="cw-emblem-count"><strong class="cm-num">{count}</strong>枚 ・ {pref_count}都道府県</p></aside>'''
+    hero_visual = f'''<aside class="cw-emblem" aria-label="作品のマーク"><span class="cm-lid cm-lid--lg" style="--c:{escape(lid_color)}" aria-hidden="true">{escape(lid_label[:1])}</span></aside>'''
     image_alt = ""
     if hero_photo:
         name = str(hero_photo.get("character") or hero_photo.get("title") or "マンホール")
         place = str(hero_photo.get("prefecture") or "") + str(hero_photo.get("city") or "")
-        image_alt = f"{place}に設置された{name}のふたマス（アイマスのマンホール）の投稿写真"
-        hero_visual = f'''<figure class="cw-hero-photo"><a href="#{spot_id(hero_photo)}">
+        photo_name = f"{name}のふたマス" if page.slug == "idolmaster" else name
+        image_alt = f"{place}に設置された{photo_name}（{page.name}のマンホール）の投稿写真"
+        hero_destination = "#community-photos" if page.slug == "gundam" else detail_href(page, hero_photo)
+        hero_visual = f'''<figure class="cw-hero-photo"><a href="{escape(hero_destination)}">
           <img src="{escape(social_image)}" alt="{escape(image_alt)}" width="640" height="640" fetchpriority="high" loading="eager" decoding="async"></a>
-          <figcaption><strong>{escape(name)}のふたマス</strong><span>{escape(place)} · みんなの投稿写真</span><a href="#{spot_id(hero_photo)}">このマンホールの設置場所を見る →</a></figcaption></figure>'''
+          <figcaption><strong>{escape(photo_name)}</strong><span>{escape(place)} · みんなの投稿写真</span></figcaption></figure>'''
     index_html = "".join(
         f'<a href="#{spot_id(r)}"><strong>{escape(str(r.get("character") or r.get("title") or "マンホール"))}</strong>'
         f'<span>{escape(str(r.get("prefecture") or ""))} {escape(str(r.get("city") or ""))}</span></a>'
@@ -370,32 +450,7 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
         # 「一覧・設置場所」の検索をマップと取り合わない
         locations_heading = "地方・都道府県別の設置エリア"
         locations_html = gundam_areas_html(groups)
-    # 巡り方ガイドは地図ページと競合させず、写真館の現地写真から地域を選べるようにする。
-    # 画像は日次取り込み済みの公開投稿のみ。新たなブラウザーAPI呼び出しは不要。
-    photo_gallery = ""
-    if page.slug == "gundam":
-        with_photos = [r for r in selected if safe_url(r.get("user_photo_url"))]
-        cards = []
-        for r in with_photos:
-            photo_url = safe_url(r.get("user_photo_url"))
-            source_url = safe_url(r.get("user_photo_source_url"))
-            # 投稿へのリンクが無い場合は、写真館ではなく個別地点の地図へ送る。
-            destination = source_url or (BASE_URL + "gmanhole_map.html#gundam-" + quote(str(r["id"]), safe=""))
-            place = str(r.get("prefecture") or "") + str(r.get("city") or "")
-            name = str(r.get("title") or "ガンダムマンホール")
-            cards.append(
-                f'<a class="cw-photo-card" href="{escape(destination, quote=True)}">'
-                f'<img src="{escape(photo_url, quote=True)}" alt="{escape(place + "の" + name + "の投稿写真", quote=True)}" loading="lazy" decoding="async">'
-                f'<span><strong>{escape(place)}</strong><small>{escape(name)}</small></span></a>'
-            )
-        if cards:
-            photo_gallery = (
-                '<section class="cm-section cw-photo-gallery" id="community-photos" aria-labelledby="community-photos-heading">'
-                '<div class="cm-section-head"><h2 id="community-photos-heading">みんなが撮ったガンダムマンホール</h2>'
-                f'<a class="cm-btn cm-btn--soft" href="{ASSET_BASE}gmanhole_map.html?work=gundam">全国の設置場所を見る →</a></div>'
-                f'<p class="cm-lead">写真館に寄せられた現地写真。{len(cards)}基 / {count}基の写真を掲載しています。写真を選ぶと投稿詳細を確認できます。</p>'
-                '<div class="cw-photo-grid">' + "".join(cards) + '</div></section>'
-            )
+    photo_gallery = work_photo_gallery(page, selected)
     jump_label = {"idolmaster": "アイドル・設置場所を探す", "gundam": "設置エリアを見る"}.get(page.slug, "設置場所を探す")
     locations_cta = (f'<a class="cm-btn cm-btn--soft" href="{ASSET_BASE}gmanhole_map.html">全国の一覧・地図を見る →</a>'
                      if page.slug == "gundam" else
@@ -457,38 +512,10 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
             ]},
         ]}
     analytics = {"page_path": "/" + page.path, "site_type": "map", "page_type": "lp_character_work", "work": page.slug}
-    map_count = sum(has_coordinates(r) for r in selected)
-    map_note = f"地図のピンは座標確認済みの{map_count}枚。" if map_count != count else ""
-    map_section = map_assets = map_cta = ""
-    # 作品ガイドには簡易地図、詳細なフィルタ・個別一覧は全国マップに残す。
-    # ガンダムは写真館の実写写真を円形アイコンにし、未投稿地点は通常ピン。
-    if map_count:
-        idolmaster = page.slug == "idolmaster"
-        gundam = page.slug == "gundam"
-        label = "ガンダムマンホール" if gundam else ("ふたマス" if idolmaster else f"{page.name}のマンホール")
-        lead = (f"{map_count}基の設置場所を表示。写真館に投稿された場所は丸い写真ピンで表示します。ピンから個別の設置場所を確認できます。"
-                if gundam else
-                f"アイマスのマンホール{map_count}枚を地図に表示。ピンを選ぶとアイドル名と住所が開き、設置場所の詳しい案内へ進めます。"
-                if idolmaster else
-                f"{page.name}のマンホール{map_count}枚を地図に表示。ピンを選ぶと名前と住所が開き、下の設置場所の案内へ進めます。")
-        map_cta = f'<a class="cm-btn cm-btn--ghost" href="#location-map">{escape(label)}の地図を見る ↓</a>'
-        points = [{"lat": r["lat"], "lng": r["lng"], "name": str(r.get("character") or r.get("title") or "マンホール"),
-                   "alt": str(r.get("character") or r.get("title") or "マンホール") + ("のふたマス" if idolmaster else f"（{page.name}のマンホール）"),
-                   "photo_url": safe_url(r.get("user_photo_url")),
-                   "address": str(r.get("address") or ""), "anchor": spot_id(r),
-                   "href": (ASSET_BASE + "gmanhole_map.html#gundam-" + quote(str(r["id"]), safe="")) if gundam else ""}
-                  for r in selected if has_coordinates(r)]
-        map_section = f'''<section class="cm-section" id="location-map" aria-labelledby="map-heading">
-          <div class="cm-section-head"><h2 id="map-heading">{escape(label)}の設置場所マップ</h2><a class="cm-btn cm-btn--soft" href="{ASSET_BASE + "gmanhole_map.html?work=gundam" if gundam else escape(map_href(page.map_query))}">大きな地図で見る →</a></div>
-          <p class="cm-lead">{escape(lead)}{map_note}</p>
-          <p id="cw-map-status" class="cw-note" role="status">地図を読み込み中です。表示されない場合は、全国の設置場所一覧をご利用ください。</p>
-          <div id="cw-map" class="cw-map" role="region" aria-label="{escape(label)}の設置場所の地図"></div>
-          <noscript><p>地図の表示にはJavaScriptが必要です。<a href="{ASSET_BASE + "gmanhole_map.html" if gundam else "#locations"}">{escape(label)}の設置場所一覧</a>から住所と地図リンクを確認できます。</p></noscript>
-          <script type="application/json" id="cw-map-data">{json_script(points)}</script>
-        </section>'''
-        map_assets = f'''<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-          <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-          <script defer src="{ASSET_BASE}assets/character-work-map.js?v=20261105a"></script>'''
+    map_section, map_assets, map_cta = work_map_html(page, selected)
+    primary_cta = map_cta or f'<a class="cm-btn" href="#locations">{jump_label} ↓</a>'
+    secondary_cta = ('<a class="cm-btn cm-btn--ghost" href="#community-photos">写真を見る ↓</a>'
+                     if photo_gallery else (f'<a class="cm-btn cm-btn--ghost" href="#locations">{jump_label} ↓</a>' if map_cta else ""))
     return f"""<!doctype html>
 <html lang="ja"><head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
@@ -510,11 +537,11 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
 </head><body class="character-work-page cm-page">
   <main class="cm-wrap">
     <nav class="cw-breadcrumb" aria-label="パンくず"><a href="{ASSET_BASE}">ポケふた図鑑</a><span>/</span><a href="{ASSET_BASE}character_manholes.html">キャラクターマンホール</a><span>/</span><span>{escape(page.name)}</span></nav>
-    <section class="cm-hero{' cw-hero--photo' if hero_photo else ''}" aria-labelledby="work-heading">
-      <div class="cw-hero-copy"><p class="cm-eyebrow">CHARACTER MANHOLE GUIDE / {escape(page.name)}</p>{badge}
+    <section class="cm-hero cw-hero{' cw-hero--photo' if hero_photo else ''}" aria-labelledby="work-heading">
+      <div class="cw-hero-copy"><p class="cm-eyebrow">{escape(page.name)}</p>
         <h1 id="work-heading">{hero_heading}</h1><p class="cm-hero-lead">{hero_note}</p>
-        <p>{escape(page.intro)}</p><div class="cm-jump"><a class="cm-btn" href="#locations">{jump_label} ↓</a>{map_cta}{hero_cta}</div>
-        <p class="cm-hero-note">掲載 {count}枚 / {pref_count}都道府県　{map_note}</p>
+        <p class="cm-hero-note">掲載 {count}枚 / {pref_count}都道府県</p>
+        <div class="cm-jump">{primary_cta}{secondary_cta}</div>
       </div>
       {hero_visual}
     </section>
@@ -523,7 +550,8 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
     <section class="cm-section" id="locations" aria-labelledby="locations-heading">
       <div class="cm-section-head"><h2 id="locations-heading"><span aria-hidden="true">FIND YOUR FAVORITE</span>{locations_heading}</h2>
         {locations_cta}</div>
-      <p class="cm-lead">{escape(page.guide)}</p>{index_block}
+      <p class="cm-lead">{escape(page.intro)}</p>
+      <p class="cm-lead">{escape(page.guide)}</p>{badge}{index_block}
       {locations_html}
     </section>
     {event_section}

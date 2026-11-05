@@ -81,6 +81,13 @@ AdSense はPVと検索流入の多い `data.pokefuta.com` を最初の導入先�
 
 テストファイルは20個以上あるが **CI で走っているのはごく一部**。ワークフローからスクリプトを呼ぶなら、対応するテストを実行するステップも同じワークフローに入れること。
 
+## 作品別マンホールガイド
+
+- `generate_character_work_pages.py` の `work_map_html` / `work_photo_gallery` と `character-work-map.js` を全作品で共有する。写真は `canonical_ref` で紐付いた公開投稿のみ。写真なしは通常ピン、座標なしは静的な設置案内に残す。
+- Heroは公開写真・短い説明・最大2つのページ内導線に絞る。写真がなければ既存の蓋マークを使い、作品紹介やチェックイン案内は下のコンテンツに置く。
+- ガンダムは巡り方ガイドとして維持し、個別の名称・住所一覧と詳細リンクは `gmanhole_map.html#gundam-<id>` に任せる。他作品の `#spot-<id>`、作品別地図のクエリ、写真館向け `api/design_manhole_links.json` の契約を保つ。
+- 地図変更時は `python3 -m unittest apps.scraper.test_generate_character_work_pages` と `node --test apps/web/assets/character-work-map.test.js` を実行し、PC・SPでHeroと絞り込みを確認する。
+
 ## ポケふた旅
 
 - `/trip/` のHeroは時間の目安があるエリアから徒歩を優先し、車中心のエリアはHeroに入れず通常リストに残す。同じ移動手段では既存の人気順を保つ。下の一覧（目安あり・目安まだの両方）も 徒歩 → バス・自転車 → 車 の順に並べ、同じ移動手段では人気順。この選定は `/trip/` だけの方針で、トップページの「1日で回れる」枠（`generate_top_page.py`）は枚数順のまま車中心も載せる。

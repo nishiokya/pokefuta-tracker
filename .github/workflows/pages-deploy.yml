@@ -158,6 +158,7 @@ jobs:
             apps.scraper.test_generate_summary_pages \
             apps.scraper.test_prefecture_completion
           echo "[dist] Test character manhole landing page generation"
+          node --test apps/web/assets/character-work-map.test.js
           python3 -m unittest \
             apps.scraper.test_generate_character_manhole_page \
             apps.scraper.test_generate_character_work_pages \
