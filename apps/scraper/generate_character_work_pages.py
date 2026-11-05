@@ -382,7 +382,7 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
             # 投稿へのリンクが無い場合は、写真館ではなく個別地点の地図へ送る。
             destination = source_url or (BASE_URL + "gmanhole_map.html#gundam-" + quote(str(r["id"]), safe=""))
             place = str(r.get("prefecture") or "") + str(r.get("city") or "")
-            name = str(r.get("character") or r.get("title") or r.get("landmark") or "ガンダムマンホール")
+            name = str(r.get("title") or "ガンダムマンホール")
             cards.append(
                 f'<a class="cw-photo-card" href="{escape(destination, quote=True)}">'
                 f'<img src="{escape(photo_url, quote=True)}" alt="{escape(place + "の" + name + "の投稿写真", quote=True)}" loading="lazy" decoding="async">'
@@ -501,15 +501,6 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
   <link rel="stylesheet" href="{ASSET_BASE}assets/top-page.css?v=20260707a">
   <link rel="stylesheet" href="{ASSET_BASE}assets/character-work.css?v={CHARACTER_CSS_VERSION}">
   {map_assets}
-  <style>
-    .cw-photo-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,180px),1fr)); gap:1rem; }
-    .cw-photo-card { display:block; overflow:hidden; border:1px solid #e4e7eb; border-radius:12px; color:inherit; text-decoration:none; background:#fff; }
-    .cw-photo-card img { display:block; width:100%; aspect-ratio:1; object-fit:cover; }
-    .cw-photo-card span { display:block; padding:.65rem .75rem; }
-    .cw-photo-card strong,.cw-photo-card small { display:block; }
-    .cw-photo-card small { margin-top:.25rem; font-size:.8rem; opacity:.8; }
-    .cw-photo-card:hover { box-shadow:0 4px 16px #0002; }
-  </style>
   <script type="application/ld+json">{json_script(schema)}</script>
   <script src="{ASSET_BASE}assets/analytics.js?v=20261018a"></script>
   <script>window.PokefutaAnalytics.init({json_script(analytics)});</script>
