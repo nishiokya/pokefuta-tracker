@@ -137,7 +137,11 @@ class GundamGuideTest(unittest.TestCase):
         self.assertIn('function applyFilters()', js)
         self.assertIn("photo.className = 'cw-map-photo-marker'", js)
         css = (Path(__file__).parents[1] / 'web/assets/character-work.css').read_text(encoding='utf-8')
-        marker_css = re.search(r'\.cw-map-photo-marker \{(.*?)\}', css, re.S).group(1)
+        # Leaflet の `.leaflet-container .leaflet-marker-pane img { width: auto }` に負けない強さで書く
+        marker_css = re.search(
+            r'\.leaflet-container \.leaflet-marker-pane img\.cw-map-photo-marker \{(.*?)\}', css, re.S
+        ).group(1)
+        self.assertIn('width:44px', marker_css)
         self.assertIn('border-radius:50%', marker_css)
         self.assertNotIn('clip-path', marker_css)  # 白い縁と影まで削れる
 

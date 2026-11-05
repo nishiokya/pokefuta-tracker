@@ -367,8 +367,10 @@
 .cw-photo-card:hover { box-shadow: 0 4px 16px #0002; }
 
 /* 地図の写真ピン: 写真の中央を丸く切り抜く。
-   clip-path は使わない（白い縁の外側と影まで削れる）。丸めは border-radius だけで足りる */
-.cw-map-photo-marker {
+   clip-path は使わない（白い縁の外側と影まで削れる）。丸めは border-radius だけで足りる。
+   Leaflet の `.leaflet-container .leaflet-marker-pane img { width: auto }` より強くしないと、
+   横長の写真が 44px に収まらず楕円になる */
+.leaflet-container .leaflet-marker-pane img.cw-map-photo-marker {
   display:block; width:44px; height:44px; box-sizing:border-box;
   object-fit:cover; object-position:center;
   border-radius:50%;
