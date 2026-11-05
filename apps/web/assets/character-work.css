@@ -365,3 +365,19 @@
 .cw-photo-card strong, .cw-photo-card small { display: block; }
 .cw-photo-card small { margin-top: .25rem; font-size: .8rem; opacity: .8; }
 .cw-photo-card:hover { box-shadow: 0 4px 16px #0002; }
+
+/* ガンダム地図: 写真の円形マスクと検索フィルター */
+.cw-map-photo-marker {
+  display:block; width:44px; height:44px; box-sizing:border-box;
+  object-fit:cover; object-position:center;
+  border-radius:50%; clip-path:circle(48% at 50% 50%);
+  border:2px solid white; box-shadow:0 2px 6px #0005; background:#ececec;
+}
+.cw-map-controls { display:flex; flex-wrap:wrap; gap:10px 16px; align-items:end; margin:0 0 12px; }
+.cw-map-controls label { display:grid; gap:4px; font-size:13px; font-weight:700; }
+.cw-map-controls select { min-height:42px; border:1px solid var(--cm-line); border-radius:10px; background:#fff; color:var(--cm-ink); padding:8px 26px 8px 10px; }
+.cw-map-controls #cw-map-count { color:var(--cm-muted); font-size:13px; }
+@media (max-width:700px) {
+  .cw-map-controls label { flex:1 1 120px; }
+  .cw-map-controls select { width:100%; }
+}
