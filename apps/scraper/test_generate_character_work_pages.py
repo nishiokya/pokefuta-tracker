@@ -110,7 +110,7 @@ class GundamGuideTest(unittest.TestCase):
     def test_title_leaves_the_list_query_to_the_map(self) -> None:
         self.assertIn("<title>ガンダムマンホールの巡り方ガイド｜地方・都道府県別の設置エリア</title>", self.html)
         # 一覧・地図の検索語は gmanhole_map.html に寄せる。ヒーローからパラメータ無しのURLへ送る
-        self.assertIn('href="../../gmanhole_map.html">ガンダムマンホール一覧・地図 →</a>', self.html)
+        self.assertIn('href="../../gmanhole_map.html?work=gundam">大きな地図で見る →</a>', self.html)
 
     def test_gundam_has_embedded_photo_map_linking_to_dedicated_map(self) -> None:
         enriched = attach_user_photos(gundam_work_records(GUNDAM_RECORDS), [GUNDAM_SUBMISSION])
@@ -209,7 +209,7 @@ class OtherWorkPageTest(unittest.TestCase):
 
     def test_embeds_the_location_map_with_work_specific_labels(self) -> None:
         self.assertIn('<h2 id="map-heading">東海オンエアのマンホールの設置場所マップ</h2>', self.html)
-        self.assertIn('character-work-map.js?v=20261026a', self.html)
+        self.assertIn('character-work-map.js?v=20261105a', self.html)
         payload = re.search(r'id="cw-map-data">(.*?)</script>', self.html).group(1)
         points = json.loads(payload)
         self.assertEqual(2, len(points))
@@ -320,7 +320,7 @@ class IdolmasterPageTest(unittest.TestCase):
         self.assertIn('https://example.com/gundam.jpg', html)
         self.assertIn('href="https://pokefuta.com/design-manholes/submission-1"', html)
         self.assertNotIn('private.jpg', html)
-        self.assertNotIn('id="cw-map"', html)
+        self.assertIn('id="cw-map"', html)
         self.assertIn('地方・都道府県別の設置エリア', html)
 
     def test_gundam_gallery_is_omitted_without_user_photos(self) -> None:
@@ -334,8 +334,8 @@ class IdolmasterPageTest(unittest.TestCase):
         self.assertNotIn('character-work-map.js', html)
         self.assertIn('id="locations"', html)
         other = generate_html(GUNDAM, gundam_work_records(GUNDAM_RECORDS), {})
-        self.assertNotIn('character-work-map.js', other)
-        self.assertNotIn('leaflet', other)
+        self.assertIn('character-work-map.js', other)
+        self.assertIn('leaflet', other)
 
     def test_hero_leads_to_official_checkin(self) -> None:
         self.assertIn("ふたマス一覧・設置場所マップ", self.html)
