@@ -283,6 +283,30 @@ class IdolmasterPageTest(unittest.TestCase):
         items = next(n for n in schema['@graph'] if n['@type'] == 'ItemList')['itemListElement']
         self.assertEqual(1, sum('geo' in item['item'] for item in items))
 
+    def test_gundam_gallery_links_public_photos_to_photo_library(self) -> None:
+        records = gundam_work_records(GUNDAM_RECORDS)
+        first_id = records[0]["id"]
+        enriched = attach_user_photos(records, [{
+            "canonical_ref": f"gundam:{first_id}", "status": "active",
+            "photo_url": "https://example.com/gundam.jpg",
+            "source_url": "https://pokefuta.com/design-manholes/submission-1",
+        }, {
+            "canonical_ref": f"gundam:{first_id}", "status": "hidden",
+            "photo_url": "https://example.com/private.jpg",
+            "created_at": "2099-01-01",
+        }])
+        html = generate_html(GUNDAM, enriched, {})
+        self.assertIn('id="community-photos"', html)
+        self.assertIn('https://example.com/gundam.jpg', html)
+        self.assertIn('href="https://pokefuta.com/design-manholes/submission-1"', html)
+        self.assertNotIn('private.jpg', html)
+        self.assertNotIn('id="cw-map"', html)
+        self.assertIn('地方・都道府県別の設置エリア', html)
+
+    def test_gundam_gallery_is_omitted_without_user_photos(self) -> None:
+        html = generate_html(GUNDAM, gundam_work_records(GUNDAM_RECORDS), {})
+        self.assertNotIn('id="community-photos"', html)
+
     def test_empty_map_and_other_guides_keep_static_fallback(self) -> None:
         # 座標が1つも無いなら空の地図は出さず、設置場所一覧だけにする
         html = generate_html(IDOLMASTER, [dict(RECORDS[0], lat=None)], {}, now=self.now)
