@@ -483,7 +483,7 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
         map_filters = ""
         if gundam:
             map_filters = (
-                '<div class="cw-map-controls" aria-label="地図の表示設定">'
+                '<div class="cw-map-controls" role="group" aria-label="地図の表示設定">'
                 '<label for="cw-map-region">地方<select id="cw-map-region"><option value="">全国</option></select></label>'
                 '<label for="cw-map-photos">写真<select id="cw-map-photos"><option value="all">すべて</option>'
                 '<option value="with">写真あり</option><option value="without">写真募集中</option></select></label>'

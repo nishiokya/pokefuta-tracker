@@ -130,6 +130,8 @@ class GundamGuideTest(unittest.TestCase):
         html = generate_html(GUNDAM, gundam_work_records(GUNDAM_RECORDS), {})
         self.assertIn('id="cw-map-region"', html)
         self.assertIn('id="cw-map-photos"', html)
+        # 囲みに role が無いと aria-label が読み上げで無視される
+        self.assertIn('class="cw-map-controls" role="group" aria-label="地図の表示設定"', html)
         self.assertIn('value="without">写真募集中', html)
         points = json.loads(re.search(r'id="cw-map-data">(.*?)</script>', html).group(1))
         self.assertEqual('北海道・東北', points[0]['region'])
