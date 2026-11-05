@@ -479,7 +479,6 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
                    "address": str(r.get("address") or ""), "anchor": spot_id(r),
                    "href": (ASSET_BASE + "gmanhole_map.html#gundam-" + quote(str(r["id"]), safe="")) if gundam else "",
                    "region": region_lookup.get(str(r.get("prefecture") or ""), "その他")}
-
                   for r in selected if has_coordinates(r)]
         map_filters = ""
         if gundam:

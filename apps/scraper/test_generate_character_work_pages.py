@@ -126,7 +126,7 @@ class GundamGuideTest(unittest.TestCase):
         self.assertEqual('../../gmanhole_map.html#gundam-1', points[0]["href"])
         self.assertNotIn('id="cw-map-data">[]', html)
 
-    def test_gundam_map_filters_and_photo_clip_are_emitted(self) -> None:
+    def test_gundam_map_has_region_and_photo_filters_and_round_photo_pins(self) -> None:
         html = generate_html(GUNDAM, gundam_work_records(GUNDAM_RECORDS), {})
         self.assertIn('id="cw-map-region"', html)
         self.assertIn('id="cw-map-photos"', html)
@@ -136,6 +136,10 @@ class GundamGuideTest(unittest.TestCase):
         js = (Path(__file__).parents[1] / 'web/assets/character-work-map.js').read_text(encoding='utf-8')
         self.assertIn('function applyFilters()', js)
         self.assertIn("photo.className = 'cw-map-photo-marker'", js)
+        css = (Path(__file__).parents[1] / 'web/assets/character-work.css').read_text(encoding='utf-8')
+        marker_css = re.search(r'\.cw-map-photo-marker \{(.*?)\}', css, re.S).group(1)
+        self.assertIn('border-radius:50%', marker_css)
+        self.assertNotIn('clip-path', marker_css)  # 白い縁と影まで削れる
 
     def test_gundam_map_keeps_spots_without_submitted_photos(self) -> None:
         html = generate_html(GUNDAM, gundam_work_records(GUNDAM_RECORDS), {})
