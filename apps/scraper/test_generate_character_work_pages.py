@@ -110,12 +110,32 @@ class GundamGuideTest(unittest.TestCase):
     def test_title_leaves_the_list_query_to_the_map(self) -> None:
         self.assertIn("<title>ガンダムマンホールの巡り方ガイド｜地方・都道府県別の設置エリア</title>", self.html)
         # 一覧・地図の検索語は gmanhole_map.html に寄せる。ヒーローからパラメータ無しのURLへ送る
-        self.assertIn('href="../../gmanhole_map.html">ガンダムマンホール一覧・地図 →</a>', self.html)
+        self.assertIn('href="../../gmanhole_map.html?work=gundam">大きな地図で見る →</a>', self.html)
+
+    def test_gundam_has_embedded_photo_map_linking_to_dedicated_map(self) -> None:
+        enriched = attach_user_photos(gundam_work_records(GUNDAM_RECORDS), [GUNDAM_SUBMISSION])
+        html = generate_html(GUNDAM, enriched, {})
+        self.assertIn('id="location-map"', html)
+        self.assertIn('id="cw-map"', html)
+        self.assertIn('character-work-map.js?v=20261105a', html)
+        self.assertIn('gmanhole_map.html?work=gundam', html)
+        payload = re.search(r'id="cw-map-data">(.*?)</script>', html).group(1)
+        points = json.loads(payload)
+        self.assertEqual(1, len(points))
+        self.assertEqual(GUNDAM_SUBMISSION["photo_url"], points[0]["photo_url"])
+        self.assertEqual('../../gmanhole_map.html#gundam-1', points[0]["href"])
+        self.assertNotIn('id="cw-map-data">[]', html)
+
+    def test_gundam_map_keeps_spots_without_submitted_photos(self) -> None:
+        html = generate_html(GUNDAM, gundam_work_records(GUNDAM_RECORDS), {})
+        points = json.loads(re.search(r'id="cw-map-data">(.*?)</script>', html).group(1))
+        self.assertEqual("", points[0]["photo_url"])
+        self.assertEqual('../../gmanhole_map.html#gundam-1', points[0]["href"])
 
     def test_summarises_areas_instead_of_listing_each_spot(self) -> None:
         # 1基ずつの一覧（名称・住所・出典）は gmanhole_map.html だけが持つ
         self.assertNotIn('class="cw-spot"', self.html)
-        self.assertNotIn("豊富町観光情報センター", self.html)
+        self.assertIn("豊富町観光情報センター", self.html)  # 地図JSONには名称を保持する
         self.assertNotIn("壊れた行", self.html)
         self.assertIn("<h3>北海道・東北 <small>1都道府県</small></h3>", self.html)
         self.assertIn("<strong>北海道</strong> <small>1基</small>", self.html)
@@ -189,7 +209,7 @@ class OtherWorkPageTest(unittest.TestCase):
 
     def test_embeds_the_location_map_with_work_specific_labels(self) -> None:
         self.assertIn('<h2 id="map-heading">東海オンエアのマンホールの設置場所マップ</h2>', self.html)
-        self.assertIn('character-work-map.js?v=20261026a', self.html)
+        self.assertIn('character-work-map.js?v=20261105a', self.html)
         payload = re.search(r'id="cw-map-data">(.*?)</script>', self.html).group(1)
         points = json.loads(payload)
         self.assertEqual(2, len(points))
@@ -300,7 +320,7 @@ class IdolmasterPageTest(unittest.TestCase):
         self.assertIn('https://example.com/gundam.jpg', html)
         self.assertIn('href="https://pokefuta.com/design-manholes/submission-1"', html)
         self.assertNotIn('private.jpg', html)
-        self.assertNotIn('id="cw-map"', html)
+        self.assertIn('id="cw-map"', html)
         self.assertIn('地方・都道府県別の設置エリア', html)
 
     def test_gundam_gallery_is_omitted_without_user_photos(self) -> None:
@@ -314,8 +334,8 @@ class IdolmasterPageTest(unittest.TestCase):
         self.assertNotIn('character-work-map.js', html)
         self.assertIn('id="locations"', html)
         other = generate_html(GUNDAM, gundam_work_records(GUNDAM_RECORDS), {})
-        self.assertNotIn('character-work-map.js', other)
-        self.assertNotIn('leaflet', other)
+        self.assertIn('character-work-map.js', other)
+        self.assertIn('leaflet', other)
 
     def test_hero_leads_to_official_checkin(self) -> None:
         self.assertIn("ふたマス一覧・設置場所マップ", self.html)

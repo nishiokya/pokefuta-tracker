@@ -31,8 +31,8 @@
       const address = document.createElement('p');
       address.textContent = point.address;
       const link = document.createElement('a');
-      link.href = '#' + point.anchor;
-      link.textContent = '写真・設置場所の案内を見る';
+      link.href = point.href || ('#' + point.anchor);
+      link.textContent = point.href ? '全国地図で設置場所を見る' : '写真・設置場所の案内を見る';
       popup.append(name, address, link);
       const marker = L.marker([point.lat, point.lng], { title: point.name, alt: point.alt || point.name })
         .bindPopup(popup).addTo(map);
