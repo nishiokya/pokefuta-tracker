@@ -1,13 +1,18 @@
 """import_latest_manhole_photos.crop_to_square / crop_box のテスト（蓋の位置に寄せた正方形）。"""
 
+import http.server
 import importlib.util
+import io
 import json
 import sys
 import tempfile
+import threading
+import time
 import unittest
 from pathlib import Path
 from unittest import mock
 
+import requests
 from PIL import Image
 
 MODULE_PATH = Path(__file__).with_name("import_latest_manhole_photos.py")
@@ -77,12 +82,64 @@ class LidTileTest(unittest.TestCase):
 
 
 
+class _FlakyHandler(http.server.BaseHTTPRequestHandler):
+    """1回目だけ、ヘッダーを送ったあと本文を止める。2回目からは小さい PNG を返す。status を決めると毎回それを返す"""
+
+    calls = 0
+    status = 200
+
+    def do_GET(self):
+        type(self).calls += 1
+        if self.status != 200:
+            self.send_response(self.status)
+            self.send_header("Content-Length", "0")
+            self.end_headers()
+            return
+        buf = io.BytesIO()
+        Image.new("RGB", (4, 4), (255, 0, 0)).save(buf, "PNG")
+        body = buf.getvalue()
+        self.send_response(200)
+        self.send_header("Content-Type", "image/png")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        if type(self).calls == 1:
+            time.sleep(1.5)  # timeout=0.5 より長く本文を止める
+            return
+        self.wfile.write(body)
+
+    def log_message(self, *args):
+        pass
+
+
 class DownloadRetryTest(unittest.TestCase):
-    def test_session_retries_timeouts_and_server_errors(self):
-        retry = imp.download_session().get_adapter("https://example.com").max_retries
-        self.assertEqual((retry.total, retry.read, retry.connect), (3, 3, 3))
-        self.assertIn(503, retry.status_forcelist)
-        self.assertGreater(retry.backoff_factor, 0)
+    def _serve(self, status: int = 200) -> str:
+        handler = type("Handler", (_FlakyHandler,), {"calls": 0, "status": status})
+        server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), handler)
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+        self.addCleanup(server.server_close)
+        self.addCleanup(server.shutdown)
+        self.handler = handler
+        return f"http://127.0.0.1:{server.server_port}/a.png"
+
+    def test_body_read_timeout_is_retried(self):
+        url = self._serve()
+        with mock.patch.object(imp.time, "sleep"):
+            image = imp.download_image(requests.Session(), url, 0.5)
+        self.assertEqual(image.size, (4, 4))
+        self.assertEqual(self.handler.calls, 2)
+
+    def test_server_error_is_retried_up_to_the_limit(self):
+        url = self._serve(503)
+        with mock.patch.object(imp.time, "sleep") as sleep, self.assertRaises(requests.HTTPError):
+            imp.download_image(requests.Session(), url, 0.5)
+        self.assertEqual(self.handler.calls, imp.DOWNLOAD_ATTEMPTS)
+        self.assertEqual(sleep.call_count, imp.DOWNLOAD_ATTEMPTS - 1)
+
+    def test_not_found_is_not_retried(self):
+        url = self._serve(404)
+        with mock.patch.object(imp.time, "sleep"), self.assertRaises(requests.HTTPError):
+            imp.download_image(requests.Session(), url, 0.5)
+        self.assertEqual(self.handler.calls, 1)
 
 
 class GalleryNeedsFetchTest(unittest.TestCase):
