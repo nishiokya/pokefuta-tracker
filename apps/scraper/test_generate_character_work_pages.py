@@ -117,7 +117,7 @@ class GundamGuideTest(unittest.TestCase):
         html = generate_html(GUNDAM, enriched, {})
         self.assertIn('id="location-map"', html)
         self.assertIn('id="cw-map"', html)
-        self.assertIn('character-work-map.js?v=20261105a', html)
+        self.assertIn('character-work-map.js?v=20261105b', html)
         self.assertIn('gmanhole_map.html?work=gundam', html)
         payload = re.search(r'id="cw-map-data">(.*?)</script>', html).group(1)
         points = json.loads(payload)
@@ -125,6 +125,27 @@ class GundamGuideTest(unittest.TestCase):
         self.assertEqual(GUNDAM_SUBMISSION["photo_url"], points[0]["photo_url"])
         self.assertEqual('../../gmanhole_map.html#gundam-1', points[0]["href"])
         self.assertNotIn('id="cw-map-data">[]', html)
+
+    def test_gundam_map_has_region_and_photo_filters_and_round_photo_pins(self) -> None:
+        html = generate_html(GUNDAM, gundam_work_records(GUNDAM_RECORDS), {})
+        self.assertIn('id="cw-map-region"', html)
+        self.assertIn('id="cw-map-photos"', html)
+        # 囲みに role が無いと aria-label が読み上げで無視される
+        self.assertIn('class="cw-map-controls" role="group" aria-label="地図の表示設定"', html)
+        self.assertIn('value="without">写真募集中', html)
+        points = json.loads(re.search(r'id="cw-map-data">(.*?)</script>', html).group(1))
+        self.assertEqual('北海道・東北', points[0]['region'])
+        js = (Path(__file__).parents[1] / 'web/assets/character-work-map.js').read_text(encoding='utf-8')
+        self.assertIn('function applyFilters()', js)
+        self.assertIn("photo.className = 'cw-map-photo-marker'", js)
+        css = (Path(__file__).parents[1] / 'web/assets/character-work.css').read_text(encoding='utf-8')
+        # Leaflet の `.leaflet-container .leaflet-marker-pane img { width: auto }` に負けない強さで書く
+        marker_css = re.search(
+            r'\.leaflet-container \.leaflet-marker-pane img\.cw-map-photo-marker \{(.*?)\}', css, re.S
+        ).group(1)
+        self.assertIn('width:44px', marker_css)
+        self.assertIn('border-radius:50%', marker_css)
+        self.assertNotIn('clip-path', marker_css)  # 白い縁と影まで削れる
 
     def test_gundam_map_keeps_spots_without_submitted_photos(self) -> None:
         html = generate_html(GUNDAM, gundam_work_records(GUNDAM_RECORDS), {})
@@ -209,7 +230,7 @@ class OtherWorkPageTest(unittest.TestCase):
 
     def test_embeds_the_location_map_with_work_specific_labels(self) -> None:
         self.assertIn('<h2 id="map-heading">東海オンエアのマンホールの設置場所マップ</h2>', self.html)
-        self.assertIn('character-work-map.js?v=20261105a', self.html)
+        self.assertIn('character-work-map.js?v=20261105b', self.html)
         payload = re.search(r'id="cw-map-data">(.*?)</script>', self.html).group(1)
         points = json.loads(payload)
         self.assertEqual(2, len(points))

@@ -365,3 +365,23 @@
 .cw-photo-card strong, .cw-photo-card small { display: block; }
 .cw-photo-card small { margin-top: .25rem; font-size: .8rem; opacity: .8; }
 .cw-photo-card:hover { box-shadow: 0 4px 16px #0002; }
+
+/* 地図の写真ピン: 写真の中央を丸く切り抜く。
+   clip-path は使わない（白い縁の外側と影まで削れる）。丸めは border-radius だけで足りる。
+   Leaflet の `.leaflet-container .leaflet-marker-pane img { width: auto }` より強くしないと、
+   横長の写真が 44px に収まらず楕円になる */
+.leaflet-container .leaflet-marker-pane img.cw-map-photo-marker {
+  display:block; width:44px; height:44px; box-sizing:border-box;
+  object-fit:cover; object-position:center;
+  border-radius:50%;
+  border:2px solid white; box-shadow:0 2px 6px #0005; background:#ececec;
+}
+/* ガンダム地図の地方・写真の絞り込み */
+.cw-map-controls { display:flex; flex-wrap:wrap; gap:10px 16px; align-items:end; margin:0 0 12px; }
+.cw-map-controls label { display:grid; gap:4px; font-size:13px; font-weight:700; }
+.cw-map-controls select { min-height:42px; border:1px solid var(--cm-line); border-radius:10px; background:#fff; color:var(--cm-ink); padding:8px 26px 8px 10px; }
+.cw-map-controls #cw-map-count { color:var(--cm-muted); font-size:13px; }
+@media (max-width:700px) {
+  .cw-map-controls label { flex:1 1 120px; }
+  .cw-map-controls select { width:100%; }
+}
