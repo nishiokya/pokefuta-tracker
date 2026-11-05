@@ -460,32 +460,35 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
     map_count = sum(has_coordinates(r) for r in selected)
     map_note = f"地図のピンは座標確認済みの{map_count}枚。" if map_count != count else ""
     map_section = map_assets = map_cta = ""
-    if page.slug == "gundam":
-        map_cta = f'<a class="cm-btn cm-btn--ghost" href="{ASSET_BASE}gmanhole_map.html">ガンダムマンホール一覧・地図 →</a>'
-    # 「〜 マンホール 地図／マップ」で検索されるので、ページ内に設置場所の地図を置く。
-    # ガンダムは1基ずつの地図・一覧を gmanhole_map.html が持つので置かない
-    if page.slug != "gundam" and map_count:
+    # 作品ガイドには簡易地図、詳細なフィルタ・個別一覧は全国マップに残す。
+    # ガンダムは写真館の実写写真を円形アイコンにし、未投稿地点は通常ピン。
+    if map_count:
         idolmaster = page.slug == "idolmaster"
-        label = "ふたマス" if idolmaster else f"{page.name}のマンホール"
-        lead = (f"アイマスのマンホール{map_count}枚を地図に表示。ピンを選ぶとアイドル名と住所が開き、設置場所の詳しい案内へ進めます。"
+        gundam = page.slug == "gundam"
+        label = "ガンダムマンホール" if gundam else ("ふたマス" if idolmaster else f"{page.name}のマンホール")
+        lead = (f"{map_count}基の設置場所を表示。写真館に投稿された場所は丸い写真ピンで表示します。ピンから個別の設置場所を確認できます。"
+                if gundam else
+                f"アイマスのマンホール{map_count}枚を地図に表示。ピンを選ぶとアイドル名と住所が開き、設置場所の詳しい案内へ進めます。"
                 if idolmaster else
                 f"{page.name}のマンホール{map_count}枚を地図に表示。ピンを選ぶと名前と住所が開き、下の設置場所の案内へ進めます。")
         map_cta = f'<a class="cm-btn cm-btn--ghost" href="#location-map">{escape(label)}の地図を見る ↓</a>'
         points = [{"lat": r["lat"], "lng": r["lng"], "name": str(r.get("character") or r.get("title") or "マンホール"),
                    "alt": str(r.get("character") or r.get("title") or "マンホール") + ("のふたマス" if idolmaster else f"（{page.name}のマンホール）"),
                    "photo_url": safe_url(r.get("user_photo_url")),
-                   "address": str(r.get("address") or ""), "anchor": spot_id(r)} for r in selected if has_coordinates(r)]
+                   "address": str(r.get("address") or ""), "anchor": spot_id(r),
+                   "href": (ASSET_BASE + "gmanhole_map.html#gundam-" + quote(str(r["id"]), safe="")) if gundam else ""}
+                  for r in selected if has_coordinates(r)]
         map_section = f'''<section class="cm-section" id="location-map" aria-labelledby="map-heading">
-          <div class="cm-section-head"><h2 id="map-heading">{escape(label)}の設置場所マップ</h2><a class="cm-btn cm-btn--soft" href="{escape(map_href(page.map_query))}">大きな地図で見る →</a></div>
+          <div class="cm-section-head"><h2 id="map-heading">{escape(label)}の設置場所マップ</h2><a class="cm-btn cm-btn--soft" href="{ASSET_BASE + "gmanhole_map.html?work=gundam" if gundam else escape(map_href(page.map_query))}">大きな地図で見る →</a></div>
           <p class="cm-lead">{escape(lead)}{map_note}</p>
-          <p id="cw-map-status" class="cw-note" role="status">地図を読み込み中です。表示されない場合は、下の設置場所一覧をご利用ください。</p>
+          <p id="cw-map-status" class="cw-note" role="status">地図を読み込み中です。表示されない場合は、全国の設置場所一覧をご利用ください。</p>
           <div id="cw-map" class="cw-map" role="region" aria-label="{escape(label)}の設置場所の地図"></div>
-          <noscript><p>地図の表示にはJavaScriptが必要です。<a href="#locations">{escape(label)}の設置場所一覧</a>から住所と地図リンクを確認できます。</p></noscript>
+          <noscript><p>地図の表示にはJavaScriptが必要です。<a href="{ASSET_BASE + "gmanhole_map.html" if gundam else "#locations"}">{escape(label)}の設置場所一覧</a>から住所と地図リンクを確認できます。</p></noscript>
           <script type="application/json" id="cw-map-data">{json_script(points)}</script>
         </section>'''
         map_assets = f'''<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
           <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-          <script defer src="{ASSET_BASE}assets/character-work-map.js?v=20261026a"></script>'''
+          <script defer src="{ASSET_BASE}assets/character-work-map.js?v=20261105a"></script>'''
     return f"""<!doctype html>
 <html lang="ja"><head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
