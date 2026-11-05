@@ -21,7 +21,8 @@ from apps.scraper.prefecture_completion import PREFECTURES_WITHOUT_POKEFUTA  # n
 
 def _visit_guide_html(html: str) -> str:
     """回り方の案内（地図の後ろ）の section だけを切り出す。"""
-    start = html.index('<section class="visit-guide"')
+    # 所要時間・旅の記録の節も class="visit-guide" なので、見出しの id で回り方の案内を選ぶ
+    start = html.index('<section class="visit-guide" aria-labelledby="visit-guide-heading"')
     return html[start:html.index("</section>", start)]
 
 
@@ -99,6 +100,8 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         self.assertIn("地図で探す", hero)
         self.assertNotIn("prefecture_visit_cta_click", hero)
         self.assertNotIn("prefecture_official_click", hero)
+        # ボタン1つでもスマホで幅いっぱいにする
+        self.assertIn(".hero-actions > .button:only-child { grid-column: 1 / -1; }", html)
         # ヒーローの「投稿するポケふたを選ぶ」は同ページ内スクロールだけなので置かない
         self.assertNotIn("投稿するポケふたを選ぶ", html)
         self.assertIn("prefecture_photo_upload_start", html)

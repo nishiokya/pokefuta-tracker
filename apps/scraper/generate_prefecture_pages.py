@@ -2348,6 +2348,8 @@ PAGE_CSS = """    :root { color-scheme: light; }
       .hero-photos[data-count="3"] > a:first-child { grid-column: auto; width: auto; justify-self: stretch; }
       .hero-photos a { border-width: 3px; }
       .hero-actions { display: grid; grid-template-columns: 1fr 1fr; }
+      /* 設置済みの県はボタンが「地図で探す」1つだけなので、幅いっぱいにする */
+      .hero-actions > .button:only-child { grid-column: 1 / -1; }
       .hero-actions .button { justify-content: center; padding: 0 12px; text-align: center; }
       .hero-actions .button.primary { grid-column: 1 / -1; }
       .section-heading-row { display: block; }
