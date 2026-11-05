@@ -5,6 +5,12 @@ name: Build & Deploy Pokefuta Pages (Artifact)
 
 on:
   workflow_dispatch:
+    inputs:
+      r2_max_delete:
+        # 画像の形式を替えたときなど、R2 から古い画像がまとめて消えるのが分かっている回だけ手で上げる
+        description: 'R2 への複写で消してよい上限（既定 100）'
+        required: false
+        default: '100'
   push:
     branches:
       - main
@@ -297,6 +303,7 @@ jobs:
           R2_BUCKET: ${{ secrets.R2_BUCKET }}
           # バケットの作成・確認の権限は渡していない
           RCLONE_CONFIG_R2_NO_CHECK_BUCKET: 'true'
+          R2_MAX_DELETE: ${{ inputs.r2_max_delete || '100' }}
         run: |
           # R2_ENDPOINT は原本バケット用で、バケット名のサブドメインやパスが付いていることがある
           # （import_latest_manhole_photos.build_r2_object_url と同じ読み方）。アカウントのエンドポイントだけ取り出す
@@ -319,10 +326,12 @@ jobs:
           export PATH="$RUNNER_TEMP/rclone-bin:$PATH"
           rclone version | head -1
           # --checksum: 中身（MD5）が変わったものだけ上げる。チェックアウトし直すと mtime が変わるため
-          # --max-delete: 取り込みの失敗などで画像が大量に消えたときに R2 を道連れにしない
+          # --max-delete: 取り込みの失敗などで画像が大量に消えたときに R2 を道連れにしない。
+          # 超えると複写が失敗し、ページは Pages の画像のまま出る（下の書き換えを飛ばす）。上げるのは手動実行の入力だけ
+          case "$R2_MAX_DELETE" in ''|*[!0-9]*) echo "r2_max_delete は数字で指定" >&2; exit 1 ;; esac
           rclone sync dist/manhole/image r2:pokefuta-public-images/manhole/image \
             --checksum \
-            --max-delete 100 \
+            --max-delete "$R2_MAX_DELETE" \
             --transfers 16 \
             --header-upload 'Cache-Control: public, max-age=3600' \
             --stats-one-line --stats 0 --log-level NOTICE

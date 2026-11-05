@@ -156,6 +156,10 @@ class PhotoCountCapTests(unittest.TestCase):
         self.assertEqual(entry["photo_count"], 4)
         self.assertNotIn("photo_count_at_cap", entry)
 
+    def test_real_public_count_wins_over_the_capped_gallery(self):
+        self.assertEqual(top_feed.photo_count_for({"gallery": [{}] * 13, "public_photo_count": 21}), 21)
+        self.assertEqual(top_feed.photo_count_for({"gallery": [{}] * 2, "public_photo_count": 0}), 2)
+
     def test_larger_cap_keeps_mid_counts_uncapped(self):
         # キャップが増えても 5 枚が「5+」にならない（クライアントは値を持たない）
         entry = self._feed(gallery_len=5, gallery_limit=10)

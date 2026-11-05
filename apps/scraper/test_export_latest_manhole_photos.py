@@ -307,6 +307,21 @@ class BuildPayloadFeaturedPhotoTest(unittest.TestCase):
         self.assertEqual(entry["representative_source"], "curated")
         self.assertEqual(entry["gallery"][0]["photo_id"], "featured")
 
+    @mock.patch.object(export, "fetch_manhole_comments_by_display_name", return_value={})
+    @mock.patch.object(export, "fetch_user_info", return_value={})
+    @mock.patch.object(export, "get_effective_r2_public_base_url", return_value="https://images.example")
+    def test_public_photo_count_is_not_capped_by_the_gallery(self, *_mocks):
+        photos = [_photo(f"p{i}", shot_at=f"2026-03-{i + 1:02d}T00:00:00Z") for i in range(4)]
+        photos.append(_photo("private", shot_at="2026-04-01T00:00:00Z", is_public=False))
+        with mock.patch.object(export, "iter_photos", return_value=iter(photos)):
+            payload = export.build_payload(True, 100, 10, "tako", 2, {})
+        entry = payload["photos"]["1"]
+        self.assertEqual(len(entry["gallery"]), 2)
+        self.assertEqual(entry["public_photo_count"], 4)
+
+    def test_default_gallery_shows_the_representative_and_twelve_more(self):
+        self.assertEqual(export.DEFAULT_GALLERY_LIMIT, 13)
+
 
 class ToGalleryEntryTest(unittest.TestCase):
     def test_fields_and_display_name(self):

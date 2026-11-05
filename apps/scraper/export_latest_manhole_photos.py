@@ -30,7 +30,9 @@ DEFAULT_OUTPUT = "public/data/latest-manhole-photos.json"
 DEFAULT_BATCH_SIZE = 1000
 DEFAULT_TIMEOUT = 30
 DEFAULT_MANHOLE_COMMENT_DISPLAY_NAME = "tako"
-DEFAULT_GALLERY_LIMIT = 5
+# 代表を含む。図鑑の蓋の詳細に代表＋12枚を出す（公開写真は1蓋あたり中央値11枚、2026-11-05）。
+# それより多い蓋は「写真館で全 N 枚を見る」へ（N は public_photo_count）
+DEFAULT_GALLERY_LIMIT = 13
 DEFAULT_FEATURED_PHOTO_OVERRIDES = "dataset/manhole_featured_photos.json"
 
 
@@ -270,6 +272,16 @@ def to_gallery_entry(
     }
 
 
+def public_gallery_photos(photos: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """ギャラリーに出してよい写真（公開・風景でない）。"""
+    return [
+        photo
+        for photo in photos
+        if normalize_visit(photo.get("visit")).get("is_public")
+        and photo.get("is_landscape") is not True
+    ]
+
+
 def select_gallery_photos(
     photos: list[dict[str, Any]],
     limit: int,
@@ -283,13 +295,7 @@ def select_gallery_photos(
     (rep_score or score order, square-fitting / centered lids first). A missing/private featured photo
     safely falls back to the best-ranked public photo.
     """
-    public_photos = [
-        photo
-        for photo in photos
-        if normalize_visit(photo.get("visit")).get("is_public")
-        and photo.get("is_landscape") is not True
-    ]
-    ordered = rank_photos(public_photos)
+    ordered = rank_photos(public_gallery_photos(photos))
     if featured_photo_id:
         featured = next(
             (photo for photo in ordered if str(photo.get("id")) == featured_photo_id),
@@ -532,6 +538,8 @@ def build_payload(
             to_gallery_entry(photo, base_url, user_info_by_auth_uid)
             for photo in selected_photos
         ]
+        # ギャラリーは gallery_limit で切るので、写真館にある公開写真の本当の枚数は別に持つ
+        entry["public_photo_count"] = len(public_gallery_photos(manhole_photos))
         photos[str(manhole_id)] = entry
     manhole_comments = fetch_manhole_comments_by_display_name(
         manhole_comment_display_name,
