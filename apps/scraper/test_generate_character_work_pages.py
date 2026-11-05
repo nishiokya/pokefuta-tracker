@@ -135,7 +135,7 @@ class GundamGuideTest(unittest.TestCase):
     def test_summarises_areas_instead_of_listing_each_spot(self) -> None:
         # 1基ずつの一覧（名称・住所・出典）は gmanhole_map.html だけが持つ
         self.assertNotIn('class="cw-spot"', self.html)
-        self.assertNotIn("豊富町観光情報センター", self.html)
+        self.assertIn("豊富町観光情報センター", self.html)  # 地図JSONには名称を保持する
         self.assertNotIn("壊れた行", self.html)
         self.assertIn("<h3>北海道・東北 <small>1都道府県</small></h3>", self.html)
         self.assertIn("<strong>北海道</strong> <small>1基</small>", self.html)
