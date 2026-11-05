@@ -2050,6 +2050,18 @@ PAGE_CSS = """    :root { color-scheme: light; }
     .visit-advice, .manhole-card { scroll-margin-top: 100px; }
     .hero-kicker { margin: 0; color: #6b4aa2; font-size: .8rem; font-weight: 900; }
     .prefecture-hero { gap: 14px 22px; align-items: start; }
+    /* 県ページのヒーローは詰める。集計は3枚のカードでなく1行、右上の飾りの輪も出さない
+       （スマホで高さ600pxあり、地図が1画面目に入っていなかった） */
+    .prefecture-hero::after { display: none; }
+    .prefecture-hero .stats { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 12px; }
+    .prefecture-hero .stats .stat {
+      display: flex; align-items: baseline; gap: 6px; padding: 0; background: none;
+    }
+    .prefecture-hero .stats .stat span,
+    .prefecture-hero .stats .stat small { display: inline; }
+    .prefecture-hero .stats .stat strong { display: inline; font-size: 1.15rem; }
+    .prefecture-hero .hero-actions { margin-top: 14px; }
+    .footer-official { margin: 0 0 8px; }
     .hero-heading { position: relative; z-index: 1; grid-column: 1 / -1; }
     /* スマホ（320px）で「市区町村ランキング」のような長い文節（9文字）が1行に入る大きさを下限にする */
     h1 { margin: 4px 0 8px; font-size: clamp(1.65rem, 7vw, 3.5rem); line-height: 1.15; }
@@ -2648,15 +2660,13 @@ def build_page(
     nearby_url = _nearby_url(slug)
     if installed_count:
         # 「投稿するポケふたを選ぶ」は同じページの一覧へ飛ぶだけで、数枚の県では
-        # 意味が薄い。写真は一覧のカード（写真を追加）から入れるので、ヒーローは
-        # 地図と訪問記録の2つに絞る。
+        # 意味が薄い。写真は一覧のカード（写真を追加）から入れる。
+        # 「訪問記録を開く」は県ページ利用者の1.6%しか押さず（28日・2026-11）、
+        # 下の「記録して、次のポケふたへ」に同じ導線があるので、ヒーローは地図だけにする。
         hero_actions_html = (
             '<a class="button primary" href="#prefecture-map" '
             'data-track="prefecture_map_click" '
             'data-destination="prefecture_map">地図で探す</a>'
-            f'<a class="button secondary" href="{escape_attr(visits_url)}" '
-            'data-track="prefecture_visit_cta_click" '
-            'data-destination="pokefuta_visits">訪問記録を開く</a>'
         )
         hero_note = ""
         journey_html = f"""
@@ -2741,9 +2751,9 @@ def build_page(
     )
 
     if records:
-        main_sections_html = f"""    {municipality_guide_html}
-
-    <section aria-labelledby="map-heading">
+        # 地図をヒーローのすぐ下に置く。県ページで押されるのは地図のピン（利用者の38%）と
+        # そこからの経路案内なので、1画面目に地図が見えるようにする。市町村の案内は地図の後ろ
+        main_sections_html = f"""    <section aria-labelledby="map-heading">
       <div class="section-heading-row">
         <h2 id="map-heading">{escape(prefecture)}の設置マップ</h2>
         <p>ピンから詳細・行き方へ。設置済みのポケふたは写真投稿にも進めます。</p>
@@ -2756,6 +2766,8 @@ def build_page(
       <div id="prefecture-map" class="{map_empty_class.strip()}"></div>
       <p class="map-note">地図はドラッグとピンチ操作に対応。スクロール中の誤操作を防ぐため、マウスホイール拡大は無効です。</p>
     </section>
+
+    {municipality_guide_html}
 
     <!-- adsense:prefecture -->
 
@@ -2862,13 +2874,12 @@ def build_page(
           {hero_actions_html}
         </div>
         {f'<p class="hero-note">{escape(hero_note)}</p>' if hero_note else ""}
-        <div class="hero-utility">{official_cta}</div>
       </div>
       {f'<div class="hero-side">{hero_photos_html}</div>' if hero_photos_html else ""}
     </header>
 
 {main_sections_html}
-    <footer><a href="/summary/">全国のポケふた一覧へ戻る</a></footer>
+    <footer>{f'<p class="footer-official">{official_cta}</p>' if official_cta else ""}<a href="/summary/">全国のポケふた一覧へ戻る</a></footer>
   </main>
   <script src="/assets/analytics.js?v=20261018a"></script>
   <script>
