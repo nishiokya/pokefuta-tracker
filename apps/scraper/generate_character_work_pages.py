@@ -370,6 +370,32 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
         # 「一覧・設置場所」の検索をマップと取り合わない
         locations_heading = "地方・都道府県別の設置エリア"
         locations_html = gundam_areas_html(groups)
+    # 巡り方ガイドは地図ページと競合させず、写真館の現地写真から地域を選べるようにする。
+    # 画像は日次取り込み済みの公開投稿のみ。新たなブラウザーAPI呼び出しは不要。
+    photo_gallery = ""
+    if page.slug == "gundam":
+        with_photos = [r for r in selected if safe_url(r.get("user_photo_url"))]
+        cards = []
+        for r in with_photos:
+            photo_url = safe_url(r.get("user_photo_url"))
+            source_url = safe_url(r.get("user_photo_source_url"))
+            # 投稿へのリンクが無い場合は、写真館ではなく個別地点の地図へ送る。
+            destination = source_url or (BASE_URL + "gmanhole_map.html#gundam-" + quote(str(r["id"]), safe=""))
+            place = str(r.get("prefecture") or "") + str(r.get("city") or "")
+            name = str(r.get("character") or r.get("title") or r.get("landmark") or "ガンダムマンホール")
+            cards.append(
+                f'<a class="cw-photo-card" href="{escape(destination, quote=True)}">'
+                f'<img src="{escape(photo_url, quote=True)}" alt="{escape(place + "の" + name + "の投稿写真", quote=True)}" loading="lazy" decoding="async">'
+                f'<span><strong>{escape(place)}</strong><small>{escape(name)}</small></span></a>'
+            )
+        if cards:
+            photo_gallery = (
+                '<section class="cm-section cw-photo-gallery" id="community-photos" aria-labelledby="community-photos-heading">'
+                '<div class="cm-section-head"><h2 id="community-photos-heading">みんなが撮ったガンダムマンホール</h2>'
+                f'<a class="cm-btn cm-btn--soft" href="{ASSET_BASE}gmanhole_map.html?work=gundam">全国の設置場所を見る →</a></div>'
+                f'<p class="cm-lead">写真館に寄せられた現地写真。{len(cards)}基 / {count}基の写真を掲載しています。写真を選ぶと投稿詳細を確認できます。</p>'
+                '<div class="cw-photo-grid">' + "".join(cards) + '</div></section>'
+            )
     jump_label = {"idolmaster": "アイドル・設置場所を探す", "gundam": "設置エリアを見る"}.get(page.slug, "設置場所を探す")
     locations_cta = (f'<a class="cm-btn cm-btn--soft" href="{ASSET_BASE}gmanhole_map.html">全国の一覧・地図を見る →</a>'
                      if page.slug == "gundam" else
@@ -475,6 +501,15 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
   <link rel="stylesheet" href="{ASSET_BASE}assets/top-page.css?v=20260707a">
   <link rel="stylesheet" href="{ASSET_BASE}assets/character-work.css?v={CHARACTER_CSS_VERSION}">
   {map_assets}
+  <style>
+    .cw-photo-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,180px),1fr)); gap:1rem; }
+    .cw-photo-card { display:block; overflow:hidden; border:1px solid #e4e7eb; border-radius:12px; color:inherit; text-decoration:none; background:#fff; }
+    .cw-photo-card img { display:block; width:100%; aspect-ratio:1; object-fit:cover; }
+    .cw-photo-card span { display:block; padding:.65rem .75rem; }
+    .cw-photo-card strong,.cw-photo-card small { display:block; }
+    .cw-photo-card small { margin-top:.25rem; font-size:.8rem; opacity:.8; }
+    .cw-photo-card:hover { box-shadow:0 4px 16px #0002; }
+  </style>
   <script type="application/ld+json">{json_script(schema)}</script>
   <script src="{ASSET_BASE}assets/analytics.js?v=20261018a"></script>
   <script>window.PokefutaAnalytics.init({json_script(analytics)});</script>
@@ -490,6 +525,7 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
       {hero_visual}
     </section>
     {map_section}
+    {photo_gallery}
     <section class="cm-section" id="locations" aria-labelledby="locations-heading">
       <div class="cm-section-head"><h2 id="locations-heading"><span aria-hidden="true">FIND YOUR FAVORITE</span>{locations_heading}</h2>
         {locations_cta}</div>
