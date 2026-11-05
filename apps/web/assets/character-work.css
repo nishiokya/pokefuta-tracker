@@ -356,3 +356,12 @@
   .lp-work-card { transition: none; }
   .lp-work-card:hover { transform: none; }
 }
+
+/* ガンダム巡り方ガイド：写真館の現地写真ギャラリー */
+.cw-photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 180px), 1fr)); gap: 1rem; }
+.cw-photo-card { display: block; overflow: hidden; border: 1px solid #e4e7eb; border-radius: 12px; color: inherit; text-decoration: none; background: #fff; }
+.cw-photo-card img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; }
+.cw-photo-card span { display: block; padding: .65rem .75rem; }
+.cw-photo-card strong, .cw-photo-card small { display: block; }
+.cw-photo-card small { margin-top: .25rem; font-size: .8rem; opacity: .8; }
+.cw-photo-card:hover { box-shadow: 0 4px 16px #0002; }
