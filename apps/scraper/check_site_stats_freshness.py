@@ -61,11 +61,25 @@ def validate(
     except (TypeError, ValueError) as exc:
         errors.append(str(exc))
 
-    for key in STAT_KEYS:
-        if upstream.get(key) != site.get(key):
+    if site.get("counts_source") == "live":
+        # 写真館は件数を get_site_counts() で毎回 DB から数える（pokefuta #227、2026-08-16〜）。
+        # 前日のスナップショットとは投稿があるたびにずれるので一致は見ない（9〜11月の誤検知の原因）。
+        # 件数以外はスナップショットのままなので、スナップショットが届いていることは generated_at で見る。
+        if site.get("generated_at") != upstream.get("generated_at"):
             errors.append(
-                f"{key} differs: upstream={upstream.get(key)!r}, site={site.get(key)!r}"
+                "generated_at differs: "
+                f"upstream={upstream.get('generated_at')!r}, site={site.get('generated_at')!r}"
             )
+        for key in STAT_KEYS:
+            value = site.get(key)
+            if not isinstance(value, int) or isinstance(value, bool) or value < 0:
+                errors.append(f"{key} is missing from live counts: site={value!r}")
+    else:
+        for key in STAT_KEYS:
+            if upstream.get(key) != site.get(key):
+                errors.append(
+                    f"{key} differs: upstream={upstream.get(key)!r}, site={site.get(key)!r}"
+                )
 
     if site_headers.get("x-nextjs-cache", "").upper() == "HIT":
         errors.append("x-nextjs-cache: HIT indicates that the route was statically cached")
