@@ -481,10 +481,11 @@ REGIONAL_POKEMON_SLUGS: list[str] = [
 ]
 
 # 「人気・代表ポケモン」に並べる順。知られているポケモンを先に、蓋の絵で主役になれる代表がある順
-# （コイキングは代表の蓋でほかのポケモンと並ぶので後ろ）。
+# （コイキングは代表の蓋でほかのポケモンと並ぶので後ろ）。トップは先頭5匹だけ出すので、
+# 2枚しかないイーブイはヤドンと入れ替えて6番目にした（2026-11-06）。
 FEATURED_POKEMON_SLUGS: list[str] = [
-    "pikachu", "eevee", "lapras", "vulpix",
-    "dragonite", "slowpoke", "meowth", "magikarp",
+    "pikachu", "slowpoke", "lapras", "vulpix",
+    "dragonite", "eevee", "meowth", "magikarp",
 ]
 # 1枚しか無いポケモンは「人気・代表」に出さない（カビゴンが3番目に並んでいた）。
 # イーブイは2枚だが最初のポケふたなので残る
