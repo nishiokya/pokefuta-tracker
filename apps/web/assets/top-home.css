@@ -155,24 +155,6 @@
   color: var(--top-text-faint);
 }
 
-/* 写真モザイク：3列で先頭だけ2×2。6枚でちょうど埋まる */
-.home-mosaic { margin: 0; }
-
-.home-mosaic__grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 6px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.home-mosaic__item:first-child {
-  grid-column: span 2;
-  grid-row: span 2;
-}
-
-.home-mosaic__item a,
 .home-gallery__item a {
   position: relative;
   display: block;
@@ -181,7 +163,6 @@
   background: var(--top-border-light);
 }
 
-.home-mosaic__item img,
 .home-gallery__item img,
 .home-poke img {
   display: block;
@@ -190,44 +171,6 @@
   aspect-ratio: 1;
   object-fit: cover;
 }
-
-.home-mosaic__cap {
-  position: absolute;
-  inset: auto 0 0;
-  padding: 18px 8px 6px;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.62), transparent);
-  color: #fff;
-  font-size: 10.5px;
-  line-height: 1.35;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.home-mosaic__cap b {
-  display: block;
-  font-size: 12px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.home-mosaic__item:first-child .home-mosaic__cap { padding: 32px 12px 10px; font-size: 12px; }
-.home-mosaic__item:first-child .home-mosaic__cap b { font-size: 16px; }
-
-.home-mosaic__note {
-  margin-top: 6px;
-  font-size: 11px;
-  color: var(--top-text-faint);
-  text-align: right;
-}
-
-/* 小さいタイルは地名を省き、ポケモン名だけ残す */
-@media (max-width: 599px) {
-  .home-mosaic__item:not(:first-child) .home-mosaic__cap { font-size: 0; padding: 14px 6px 5px; }
-  .home-mosaic__item:not(:first-child) .home-mosaic__cap b { font-size: 11px; }
-}
-
-.home-hero--no-photos { grid-template-columns: minmax(0, 1fr); }
 
 /* 大地図はデスクトップだけ。スマホでは要素ごと出さない（Leaflet も読み込まれない） */
 .home-map { display: none; }
@@ -764,7 +707,6 @@
   .home-poke a:hover,
   .home-event a:hover,
   .home-region:hover { border-color: var(--top-purple-light); }
-  .home-mosaic__item a:hover img,
   .home-gallery__item a:hover img { opacity: 0.9; }
   .home-quick__link:hover { filter: brightness(1.05); }
 }
@@ -795,7 +737,6 @@
     overflow: hidden;
     background: #E4ECEF;
   }
-  .home-mosaic { display: none; }
   .home-map { display: block; position: absolute; inset: 0; }
   /* z-index で重ね合わせの文脈を作り、Leaflet のペイン（z-index 400〜）を中に閉じ込める */
   .home-map__canvas { position: absolute; inset: 0; z-index: 0; background: #E4ECEF; }
