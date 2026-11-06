@@ -456,9 +456,10 @@ class GeneratedHtmlTest(unittest.TestCase):
             entry("イーブイ", "eevee", ["4", "5"], ""),
             entry("ピカチュウ", "pikachu", ["6", "7"], ""),
             entry("ロコン", "vulpix", ["8"], ""),
+            entry("ヤドン", "slowpoke", ["9", "10"], ""),
         ]
         picked = module.select_featured_pokemon(entries)
-        self.assertEqual(["pikachu", "eevee", "lapras"], [e.slug for e in picked])
+        self.assertEqual(["pikachu", "slowpoke", "lapras", "eevee"], [e.slug for e in picked])
 
     def test_popular_pokemon_card_uses_the_representative_photo(self) -> None:
         # ピカチュウ（1, 3, …, 19）の新しい写真は 19。人が選んだ代表 5 を優先する
