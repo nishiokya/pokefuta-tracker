@@ -33,14 +33,14 @@ try:
     from apps.scraper import generate_top_page as ja
     from apps.scraper.photo_caption import JST, format_photo_date
     from apps.scraper.prefectures import PREFECTURE_ORDER, PREFECTURE_PAGE_LANGS, PREFECTURE_SLUGS
-    from apps.scraper.top_page_i18n_text import FORM_PREFIX, NAME_KEYS, TEXT, day_label, join_places, month_label
+    from apps.scraper.top_page_i18n_text import FORM_PREFIX, NAME_KEYS, TEXT, join_places, month_label
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
     import generate_top_page as ja
     from photo_caption import JST, format_photo_date
     from prefectures import PREFECTURE_ORDER, PREFECTURE_PAGE_LANGS, PREFECTURE_SLUGS
-    from top_page_i18n_text import FORM_PREFIX, NAME_KEYS, TEXT, day_label, join_places, month_label
+    from top_page_i18n_text import FORM_PREFIX, NAME_KEYS, TEXT, join_places, month_label
 
 ROOT = ja.ROOT
 DEFAULT_TARGET = ROOT / "apps" / "web" / "index.en.html"
@@ -151,12 +151,10 @@ def _alt(photo: ja.Photo, en: Locale) -> str:
     return en.t("alt_photo", where=where, names=names) if names else en.t("alt_photo_noname", where=where)
 
 
-def _img(photo: ja.Photo, en: English, *, eager: bool = False, priority: bool = False) -> str:
-    loading = 'loading="eager"' if eager else 'loading="lazy"'
-    fetch = ' fetchpriority="high"' if priority else ""
+def _img(photo: ja.Photo, en: English) -> str:
     return (
         f'<img src="{ROOT_PATH}{escape(photo.src)}" alt="{escape(_alt(photo, en))}" '
-        f'width="{ja.PHOTO_SIZE}" height="{ja.PHOTO_SIZE}" {loading} decoding="async"{fetch}>'
+        f'width="{ja.PHOTO_SIZE}" height="{ja.PHOTO_SIZE}" loading="lazy" decoding="async">'
     )
 
 
@@ -264,7 +262,6 @@ def render_head(data: ja.TopData, en: Locale, indent: str) -> str:
 
 
 def render_hero(data: ja.TopData, en: Locale) -> str:
-    photos = ja.select_hero_photos(data.photos)
     popular = [en.pokemon_by_slug.get(e.slug, e.name) for e in data.popular_pokemon[:3]]
     posts = data.stats.get("public_posts") if isinstance(data.stats.get("public_posts"), int) else None
     stats = [
@@ -295,25 +292,6 @@ def render_hero(data: ja.TopData, en: Locale) -> str:
         en.t("lead_popular", names=escape(en.t("sep").join(popular)), npoke=f"{len(data.pokemon_counts):,}")
         if popular else en.t("lead_end")
     )
-    if photos:
-        items = "".join(
-            f'<li class="home-mosaic__item"><a href="{_photo_href(p)}" '
-            f'onclick="{ja._track("click_hero_photo", surface="top_hero_photo", manhole=p.manhole_id, position=i)}">'
-            f"{ja.mobile_only(_img(p, en, eager=True, priority=(i == 0)))}"
-            f'<span class="home-mosaic__cap"><b>{escape(_names(p, en) or en.t("lid"))}</b>{escape(en.pref(p.prefecture))}</span>'
-            "</a></li>"
-            for i, p in enumerate(photos)
-        )
-        mosaic = (
-            '<figure class="home-mosaic">'
-            f'<ul class="home-mosaic__grid">{items}</ul>'
-            f'<figcaption class="home-mosaic__note">{escape(en.t("mosaic_note", date=day_label(en.lang, data.today.month, data.today.day)))}</figcaption>'
-            "</figure>"
-        )
-        cls = "home-hero"
-    else:
-        mosaic = ""
-        cls = "home-hero home-hero--no-photos"
     map_html = ja.map_block(
         data,
         pins=ja.map_pins(
@@ -326,7 +304,7 @@ def render_hero(data: ja.TopData, en: Locale) -> str:
         cta_href="map.html",
     )
     return (
-        f'<section class="{cls}" id="home-hero" aria-labelledby="home-h1">'
+        '<section class="home-hero" id="home-hero" aria-labelledby="home-h1">'
         '<div class="home-hero__copy">'
         f'<p class="home-eyebrow">{escape(en.t("eyebrow"))}</p>'
         f'<h1 class="home-h1" id="home-h1">{escape(en.t("h1", total=f"{data.total:,}"))}</h1>'
@@ -335,7 +313,6 @@ def render_hero(data: ja.TopData, en: Locale) -> str:
         f'<dl class="home-stats">{stats_html}</dl>'
         "</div>"
         f"{map_html}"
-        f"{mosaic}"
         "</section>"
     )
 
@@ -415,7 +392,7 @@ def render_newrelease(data: ja.TopData, en: Locale) -> str:
 
 
 def render_photos(data: ja.TopData, en: Locale) -> str:
-    photos = ja.select_gallery_photos(data.photos, ja.select_hero_photos(data.photos))
+    photos = ja.select_gallery_photos(data.photos)
     upload = (
         f'<a class="home-cta" href="{ja.UPLOAD_URL}" '
         f'onclick="{ja._track("click_photo_post_cta", surface="top_photo_gallery")}">{escape(en.t("photos_cta"))}</a>'

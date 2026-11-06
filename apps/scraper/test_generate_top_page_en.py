@@ -100,7 +100,7 @@ class EnglishTopTest(unittest.TestCase):
 
     def test_photos_are_lazy_outside_the_hero_and_dated_in_english(self) -> None:
         html = self.html()
-        self.assertEqual(module.ja.HERO_PHOTO_LIMIT, _block(html, "hero").count('loading="eager"'))
+        self.assertNotIn("<img", _block(html, "hero"))
         gallery = _block(html, "photos")
         self.assertEqual(module.ja.GALLERY_PHOTO_LIMIT, gallery.count('loading="lazy"'))
         self.assertRegex(gallery, r'<time datetime="2026-09-\d\d">Sep \d+</time>')
@@ -117,7 +117,7 @@ class EnglishTopTest(unittest.TestCase):
         self.assertIn('home-quick__link--near" href="map.html?near=me"', hero)
         self.assertNotIn("現在地", hero)
         self.assertIn("Open the full-screen map", hero)
-        self.assertEqual(module.ja.HERO_PHOTO_LIMIT, hero.count("<picture>"))
+        self.assertNotIn("<picture>", hero)
 
     def test_themes_use_english_labels(self) -> None:
         block = _block(self.html(), "themes")

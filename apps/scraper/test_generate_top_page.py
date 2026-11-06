@@ -168,15 +168,13 @@ class GeneratedHtmlTest(unittest.TestCase):
         ld = re.search(r'<script type="application/ld\+json">(.*?)</script>', html, re.DOTALL).group(1)
         self.assertNotIn("</", ld)
 
-    def test_hero_shows_six_eager_photos_from_distinct_prefectures(self) -> None:
+    def test_hero_has_no_photos(self) -> None:
+        """スマホの最新写真モザイクは下の「新着・注目の写真」と重なるので出さない（PC は大地図）。"""
         hero = _block(Fixture(self.tmp).html(), "hero")
-        imgs = re.findall(r"<img [^>]+>", hero)
-        self.assertEqual(module.HERO_PHOTO_LIMIT, len(imgs))
-        self.assertTrue(all('loading="eager"' in img for img in imgs))
-        self.assertEqual(1, hero.count('fetchpriority="high"'))
-        self.assertIn('fetchpriority="high"', imgs[0])
-        prefs = re.findall(r'<span class="home-mosaic__cap"><b>[^<]*</b>(\S+) ', hero)
-        self.assertEqual(len(prefs), len(set(prefs)))
+        self.assertNotIn("<img", hero)
+        self.assertNotIn("home-mosaic", hero)
+        self.assertNotIn("click_hero_photo", hero)
+        self.assertIn('class="home-hero" id="home-hero"', hero)
         for label in ("地図で探す", "都道府県から探す", "ポケモンから探す"):
             self.assertIn(label, hero)
         self.assertIn('href="map.html"', hero)
@@ -185,15 +183,6 @@ class GeneratedHtmlTest(unittest.TestCase):
         hero = _block(Fixture(self.tmp).html(), "hero")
         self.assertIn("<dd>1,234</dd>", hero)
         self.assertNotIn("1,500", hero)
-
-    def test_hero_photos_are_not_fetched_at_desktop_width(self) -> None:
-        """デスクトップは大地図を出すので、モザイクの写真は <picture> の空画像に差し替わる。"""
-        hero = _block(Fixture(self.tmp).html(), "hero")
-        pictures = re.findall(r"<picture>(.*?)</picture>", hero)
-        self.assertEqual(module.HERO_PHOTO_LIMIT, len(pictures))
-        for picture in pictures:
-            self.assertIn('<source media="(min-width: 960px)" srcset="data:image/gif;base64,', picture)
-            self.assertRegex(picture, r'<img src="manhole/image/\d+_latest\.jpeg"')
 
     def test_desktop_map_has_prefecture_count_pins(self) -> None:
         records = _records()
@@ -232,12 +221,6 @@ class GeneratedHtmlTest(unittest.TestCase):
             aria="a", cta="c", cta_href="map.html",
         )
         self.assertNotIn("</script><b>", payload)
-
-    def test_hero_without_photos_falls_back_to_one_column(self) -> None:
-        hero = _block(Fixture(self.tmp, photos=False).html(), "hero")
-        self.assertIn("home-hero--no-photos", hero)
-        self.assertNotIn("<img", hero)
-        self.assertNotIn("home-mosaic", hero)
 
     def test_gallery_is_lazy_and_spread_across_regions(self) -> None:
         html = Fixture(self.tmp).html()
@@ -531,7 +514,7 @@ class GeneratedHtmlTest(unittest.TestCase):
     def test_tracking_uses_surface(self) -> None:
         html = Fixture(self.tmp).html()
         self.assertNotRegex(html, r"trackEvent\([^)]*\bsource:")
-        self.assertIn("click_hero_photo", html)
+        self.assertIn("click_top_photo", html)
         self.assertIn("click_search_way", html)
 
     def test_hero_quick_links_carry_destination_and_desktop_only_extras(self) -> None:

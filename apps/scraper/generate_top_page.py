@@ -7,8 +7,8 @@
 ここでは次のブロックを `<!-- home:NAME:start -->` 〜 `<!-- home:NAME:end -->` の間へ描画する。
 
 - head      … description / og / twitter の説明文と JSON-LD（WebSite・CollectionPage・ItemList・BreadcrumbList）
-- hero      … H1・導入文・件数・3つの主導線。デスクトップは都道府県ピンつきの大地図（ピンは JSON で埋め込み）、
-              スマホは投稿写真モザイク（6枚。<picture> でデスクトップでは写真を取得しない）
+- hero      … H1・導入文・件数・3つの主導線。デスクトップは都道府県ピンつきの大地図（ピンは JSON で埋め込み）。
+              スマホは写真を置かない（最新写真のモザイクは下の photos と同じ新着で重なっていたので外した）
 - ways      … 地図・都道府県・ポケモン・テーマの4つの探し方
 - newrelease… 直近30日の新作と特集（/features/）への入口。highlight_until 中の特集は帯で目立たせ、
               特集一覧へのリンクは特集が1本でもあれば常に出す（新作も特集も無ければセクションごと出さない）
@@ -88,7 +88,6 @@ SITE_NAME = "ポケふた図鑑"
 PAGE_TITLE = "ポケふた図鑑｜全国のポケモンマンホール一覧・地図"
 UPLOAD_URL = "https://pokefuta.com/upload?from=data"
 
-HERO_PHOTO_LIMIT = 6
 GALLERY_PHOTO_LIMIT = 9  # スマホ・タブレットは3列×3行、PC は先頭6枚（CSS）
 EVENT_VISIBLE_LIMIT = 3
 TRIP_LIMIT = 4  # 「目的から探す」に出すポケふた旅のエリア数
@@ -98,7 +97,6 @@ PHOTO_SIZE = 720  # ローカルミラーは 720×720
 LID_SIZE = 360  # 蓋の枠に合わせた切り出し {id}_lid.jpeg
 # 写真の表示幅（img の sizes）。2026-10-25 に幅 390px と 1280px で測った値から。
 # 変えるのは top-home.css の段組みを変えたとき
-MOSAIC_SIZES = "(min-width: 960px) 1px, 62vw"  # スマホは1枚目が 237px。PC はモザイクを出さない
 GALLERY_SIZES = "(min-width: 960px) 170px, 30vw"  # スマホ3列で 115px、PC 170px
 POKE_SIZES = "(min-width: 960px) 170px, 30vw"  # スマホ 112px、PC 167px
 EXCLUDED_POKEMON_PATTERN = "ローカルActs"
@@ -415,35 +413,12 @@ def load_data(
 # ── 写真の選び方 ──────────────────────────────────────────────────────────
 
 
-def select_hero_photos(photos: list[Photo], limit: int = HERO_PHOTO_LIMIT) -> list[Photo]:
-    """最新の投稿から、同じ都道府県が続かないように選ぶ。"""
-    chosen: list[Photo] = []
-    seen: set[str] = set()
-    for photo in photos:
-        if photo.prefecture in seen:
-            continue
-        chosen.append(photo)
-        seen.add(photo.prefecture)
-        if len(chosen) == limit:
-            return chosen
-    # 都道府県が足りないときは重複を許して埋める
-    for photo in photos:
-        if len(chosen) == limit:
-            break
-        if photo not in chosen:
-            chosen.append(photo)
-    return chosen
-
-
-def select_gallery_photos(
-    photos: list[Photo], exclude: list[Photo], limit: int = GALLERY_PHOTO_LIMIT
-) -> list[Photo]:
+def select_gallery_photos(photos: list[Photo], limit: int = GALLERY_PHOTO_LIMIT) -> list[Photo]:
     """地方ごとに新しい順のキューを作り、北から順に1枚ずつ取る（地域の偏りを抑える）。"""
-    used = {p.manhole_id for p in exclude}
     queues: dict[str, list[Photo]] = {name: [] for name, _ in REGIONS}
     for photo in photos:
         region = REGION_OF.get(photo.prefecture)
-        if region and photo.manhole_id not in used:
+        if region:
             queues[region].append(photo)
     chosen: list[Photo] = []
     while len(chosen) < limit and any(queues.values()):
@@ -475,13 +450,11 @@ def _jst_iso(value: str) -> str:
     return day.isoformat() if day else ""
 
 
-def _img(photo: Photo, sizes: str, *, eager: bool = False, priority: bool = False, max_width: int | None = None) -> str:
+def _img(photo: Photo, sizes: str) -> str:
     """sizes は表示幅。小さい WebP から合う版をブラウザが選ぶ（manhole_tile_image.srcset）。"""
-    loading = 'loading="eager"' if eager else 'loading="lazy"'
-    fetch = ' fetchpriority="high"' if priority else ""
     return (
-        f'<img {responsive_attrs(photo.src, sizes, max_width)} alt="{escape(photo.alt)}" '
-        f'width="{PHOTO_SIZE}" height="{PHOTO_SIZE}" {loading} decoding="async"{fetch}>'
+        f'<img {responsive_attrs(photo.src, sizes)} alt="{escape(photo.alt)}" '
+        f'width="{PHOTO_SIZE}" height="{PHOTO_SIZE}" loading="lazy" decoding="async">'
     )
 
 
@@ -616,18 +589,7 @@ def map_block(data: TopData, *, pins: list[dict], aria: str, cta: str, cta_href:
 
 
 # デスクトップではモザイクを出さないので、<picture> で写真そのものを取りに行かせない
-DESKTOP_BLANK_SOURCE = (
-    '<source media="(min-width: 960px)" '
-    'srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">'
-)
-
-
-def mobile_only(img: str) -> str:
-    return f"<picture>{DESKTOP_BLANK_SOURCE}{img}</picture>"
-
-
 def render_hero(data: TopData) -> str:
-    photos = select_hero_photos(data.photos)
     top_pokemon = [e.name for e in data.popular_pokemon[:3]] or [n for n, _ in data.pokemon_counts.most_common(3)]
     posts = data.stats.get("public_posts") if isinstance(data.stats.get("public_posts"), int) else None
     stats = [
@@ -686,23 +648,6 @@ def render_hero(data: TopData) -> str:
         + (f"<b>{escape(names)}</b>など{len(data.pokemon_counts):,}種類のポケモンから、" if names else "")
         + "旅先や近所の一枚を見つけられます。"
     )
-    mosaic = ""
-    if photos:
-        items = "".join(
-            f'<li class="home-mosaic__item"><a href="{p.href}" '
-            f'onclick="{_track("click_hero_photo", surface="top_hero_photo", manhole=p.manhole_id, position=i)}">'
-            f"{mobile_only(_img(p, MOSAIC_SIZES, eager=True, priority=(i == 0), max_width=480))}"
-            f'<span class="home-mosaic__cap"><b>{escape(p.title)}</b>{escape(p.prefecture)} {escape(p.place)}</span>'
-            "</a></li>"
-            for i, p in enumerate(photos)
-        )
-        mosaic = (
-            '<figure class="home-mosaic">'
-            f'<ul class="home-mosaic__grid">{items}</ul>'
-            f'<figcaption class="home-mosaic__note">みんなが投稿した最新の写真（{data.today.month}月{data.today.day}日更新）</figcaption>'
-            "</figure>"
-        )
-    cls = "home-hero" if photos else "home-hero home-hero--no-photos"
     map_html = map_block(
         data,
         pins=map_pins(data),
@@ -711,7 +656,7 @@ def render_hero(data: TopData) -> str:
         cta_href="map.html",
     )
     return (
-        f'<section class="{cls}" id="home-hero" aria-labelledby="home-h1">'
+        '<section class="home-hero" id="home-hero" aria-labelledby="home-h1">'
         '<div class="home-hero__copy">'
         '<p class="home-eyebrow">ポケふた図鑑</p>'
         f'<h1 class="home-h1" id="home-h1">全国{data.total:,}枚のポケふたを、<wbr>地図と一覧から探す</h1>'
@@ -721,7 +666,6 @@ def render_hero(data: TopData) -> str:
         f'<dl class="home-stats">{stats_html}</dl>'
         "</div>"
         f"{map_html}"
-        f"{mosaic}"
         "</section>"
     )
 
@@ -839,8 +783,7 @@ def render_newrelease(data: TopData) -> str:
 
 
 def render_photos(data: TopData) -> str:
-    hero = select_hero_photos(data.photos)
-    photos = select_gallery_photos(data.photos, hero)
+    photos = select_gallery_photos(data.photos)
     upload = (
         f'<a class="home-cta" href="{UPLOAD_URL}" '
         f'onclick="{_track("click_photo_post_cta", surface="top_photo_gallery")}">ポケふた写真館で写真を投稿する</a>'
