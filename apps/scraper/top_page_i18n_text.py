@@ -86,7 +86,7 @@ TEXT: dict[str, dict[str, object]] = {
         "purpose_title": "Search by purpose",
         "purpose_theme": "By theme",
         "purpose_theme_more": "Explore on the map",
-        "purpose_pokemon": "Most common Pokémon",
+        "purpose_pokemon": "Popular Pokémon",
         "regions": {
             "北海道・東北": "Hokkaido & Tohoku", "関東": "Kanto", "中部": "Chubu", "近畿": "Kinki",
             "中国": "Chugoku", "四国": "Shikoku", "九州・沖縄": "Kyushu & Okinawa",
@@ -166,7 +166,7 @@ TEXT: dict[str, dict[str, object]] = {
         "purpose_title": "依目的尋找",
         "purpose_theme": "依主題",
         "purpose_theme_more": "在地圖上查看",
-        "purpose_pokemon": "設置最多的寶可夢",
+        "purpose_pokemon": "人氣寶可夢",
         "regions": {
             "北海道・東北": "北海道・東北", "関東": "關東", "中部": "中部", "近畿": "近畿",
             "中国": "中國", "四国": "四國", "九州・沖縄": "九州・沖繩",
@@ -246,7 +246,7 @@ TEXT: dict[str, dict[str, object]] = {
         "purpose_title": "按目的查找",
         "purpose_theme": "按主题",
         "purpose_theme_more": "在地图上查看",
-        "purpose_pokemon": "设置最多的宝可梦",
+        "purpose_pokemon": "人气宝可梦",
         "regions": {
             "北海道・東北": "北海道・东北", "関東": "关东", "中部": "中部", "近畿": "近畿",
             "中国": "中国", "四国": "四国", "九州・沖縄": "九州・冲绳",
@@ -326,7 +326,7 @@ TEXT: dict[str, dict[str, object]] = {
         "purpose_title": "목적별로 찾기",
         "purpose_theme": "테마별",
         "purpose_theme_more": "지도에서 보기",
-        "purpose_pokemon": "많이 설치된 포켓몬",
+        "purpose_pokemon": "인기 포켓몬",
         "regions": {
             "北海道・東北": "홋카이도・도호쿠", "関東": "간토", "中部": "주부", "近畿": "긴키",
             "中国": "주고쿠", "四国": "시코쿠", "九州・沖縄": "규슈・오키나와",
