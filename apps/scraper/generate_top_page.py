@@ -17,7 +17,7 @@
 - pref      … 設置のある都道府県を地方別に、未設置の県は短い注記に分ける
 - trips     … ポケふた旅（目的から探す。枚数・かかる時間の多いエリアをカードで。続きは /trip/）
 - tripsmore / themesmore … 目的から探すの見出し横の一覧リンク（「1日で回るルート一覧 9ルート」など）
-- pokemon   … 設置の多いポケモン（写真つきカード。/pokemon/ と同じ突き合わせ規則。写真は
+- pokemon   … 人気のポケモン（/pokemon/ の「人気・代表ポケモン」と同じ並び。写真つきカード。写真は
               dataset/pokemon_representatives.json の代表を優先し、無ければ新しい投稿）
 
 写真はローカルミラー `dataset/manhole/image/{id}_latest.jpeg`（720×720）が
@@ -47,7 +47,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 try:
     from apps.scraper.display_names import compose_display_name
     from apps.scraper.features import DEFAULT_FEATURES_DIR, feature_path, highlighted, load_features
-    from apps.scraper.generate_pokemon_index_page import load_representatives
+    from apps.scraper.generate_pokemon_index_page import FEATURED_MIN_COUNT, FEATURED_POKEMON_SLUGS, load_representatives
     from apps.scraper.generate_pokemon_pages import build_pokemon_index, load_pokemon_metadata
     from apps.scraper.generate_tag_pages import load_records
     from apps.scraper.generate_trip_pages import area_records, area_route
@@ -63,7 +63,7 @@ except ModuleNotFoundError as exc:
         raise
     from display_names import compose_display_name
     from features import DEFAULT_FEATURES_DIR, feature_path, highlighted, load_features
-    from generate_pokemon_index_page import load_representatives
+    from generate_pokemon_index_page import FEATURED_MIN_COUNT, FEATURED_POKEMON_SLUGS, load_representatives
     from generate_pokemon_pages import build_pokemon_index, load_pokemon_metadata
     from generate_tag_pages import load_records
     from generate_trip_pages import area_records, area_route
@@ -210,6 +210,16 @@ def build_popular_pokemon(
     return build_pokemon_entries(records, metadata_path, representatives_path)[:limit]
 
 
+def select_featured_pokemon(entries: list[PokemonEntry], limit: int = POPULAR_POKEMON_LIMIT) -> list[PokemonEntry]:
+    """「人気のポケモンから探す」の並び。/pokemon/ の「人気・代表ポケモン」と同じ順・同じ足切り（1枚だけは出さない）。"""
+    by_slug = {e.slug: e for e in entries}
+    picked = [
+        by_slug[slug] for slug in FEATURED_POKEMON_SLUGS
+        if slug in by_slug and len(by_slug[slug].manhole_ids) >= FEATURED_MIN_COUNT
+    ]
+    return picked[:limit]
+
+
 @dataclass
 class TopData:
     records: list[dict]
@@ -219,7 +229,8 @@ class TopData:
     today: date
     tag_meta: object = None
     tag_counts: dict = field(default_factory=dict)
-    popular_pokemon: list[PokemonEntry] = field(default_factory=list)
+    popular_pokemon: list[PokemonEntry] = field(default_factory=list)  # 設置の多い順（導入文・探し方カード）
+    featured_pokemon: list[PokemonEntry] = field(default_factory=list)  # 人気のポケモン（目的から探す）
     all_pokemon: list[PokemonEntry] = field(default_factory=list)
     trips: list[dict] = field(default_factory=list)
     trip_total: int = 0  # /trip/ に載っているエリアの数
@@ -403,6 +414,7 @@ def load_data(
         tag_meta=load_tag_meta(),
         tag_counts=count_tags(records),
         popular_pokemon=pokemon[:POPULAR_POKEMON_LIMIT],
+        featured_pokemon=select_featured_pokemon(pokemon),
         all_pokemon=pokemon,
         trips=trips,
         trip_total=trip_total,
@@ -960,7 +972,7 @@ def render_pokemon(data: TopData) -> str:
     counts = data.pokemon_counts
     cards = []
     used: set[str] = set()
-    for entry in data.popular_pokemon:
+    for entry in data.featured_pokemon:
         photo = pick_pokemon_photo(entry, data.photos, used)
         src, size = photo.thumb_src if photo else ("", 0)
         media = (
