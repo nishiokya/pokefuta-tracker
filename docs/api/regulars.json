@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-05T04:53:13+00:00",
+  "generated_at": "2026-11-06T01:06:27+00:00",
   "legends": [
     {
       "id": "9825f349-e09e-493d-87e8-0186c008a110",
@@ -15,6 +15,11 @@
       "id": "fd89d552-0e0b-4538-a828-73baa327a1ef",
       "name": "temporary accounnt",
       "photo_id": "045ce494-af12-4693-96c6-d094d72d395d"
+    },
+    {
+      "id": "e228af7e-3d20-4072-a0af-c5413726cfa5",
+      "name": "どらこ",
+      "photo_id": "b809020a-e903-40c6-90ba-29512bf5be9a"
     },
     {
       "id": "c713e125-557a-4c70-a59c-db840c53eed0",
@@ -33,9 +38,10 @@
     "031c934a-fc2b-48d3-ae2b-475dc695b72a": "regular",
     "03bfeb8d-3b63-464b-9eee-98006413e1ef": "regular",
     "053500f4-c2a6-493b-88a6-5386d663328c": "regular",
+    "0556a362-001e-44c9-b5ae-bbea67bada54": "rookie",
     "059bc8a9-c2a4-4dcb-982c-b9bcd652c263": "rookie",
     "07ba00ca-4eb2-4715-84a5-0135ba609bc7": "rookie",
-    "07ce4931-96e0-4d66-902f-97be711ac736": "regular",
+    "07ce4931-96e0-4d66-902f-97be711ac736": "ranger",
     "08a3742a-cb7a-4864-bf7e-0d4ad939e34a": "regular",
     "0a636753-0f06-4de6-b968-955daafa7b29": "ranger",
     "0a90efd0-9d93-4282-93ae-7b358af57f17": "regular",
@@ -62,6 +68,7 @@
     "1f380040-2aaf-4e08-8541-904b9dbe420d": "rookie",
     "1f646237-1e58-43bc-9a7b-9303e5722319": "rookie",
     "20a8c7d7-4c81-4f17-aecf-c2b4e4f01170": "regular",
+    "2159cdb2-b81b-4263-9e68-e78e875853b7": "rookie",
     "22969d6b-451c-475d-bd08-5a8202ebd418": "rookie",
     "245657b2-512a-4cbb-a571-e641147586f8": "rookie",
     "247f7342-9012-45d8-9905-1545aead8fc1": "rookie",
@@ -77,6 +84,7 @@
     "2bd6f4bb-dc05-4f0c-9541-2613cec61dd4": "rookie",
     "2d44920c-fb67-451b-8eda-9993b83c13b5": "rookie",
     "2dc3b0ab-b436-45e4-acde-290dae05e595": "regular",
+    "2ea4c5c1-9c1c-45aa-9958-940ab89f8f55": "rookie",
     "2fa9bc3c-bd9d-4470-82be-7ba9ab493930": "regular",
     "30f66a0a-1ff5-4d7d-8186-81c4148e0678": "rookie",
     "31a59f32-4256-4d07-9077-a8974a2933b7": "rookie",
@@ -87,7 +95,7 @@
     "39f973eb-2331-4fab-8b25-95397a057d6a": "regular",
     "3b7b7b62-11c0-416f-a823-401e8aa27416": "rookie",
     "3bc3f0a4-9dc0-41c9-b92a-c199e2d6dc87": "regular",
-    "3bc750e4-0da9-49d9-98b7-449345696cf7": "rookie",
+    "3bc750e4-0da9-49d9-98b7-449345696cf7": "regular",
     "3de51e0d-4868-4e41-81f3-f5c8ea01fe24": "rookie",
     "3e81bf3c-0dd1-4bfd-8a2e-4590647e8ce8": "rookie",
     "4094f49c-27e0-4b1f-9356-f6054e887e14": "regular",
@@ -121,6 +129,7 @@
     "5f0c2482-a6d6-41c1-ad0d-ade28010fff0": "rookie",
     "6007030d-0f71-41e8-ab04-7a60d566a41a": "rookie",
     "6096691c-eeda-4e73-8401-a11274868ede": "ranger",
+    "614ffdb4-c0c5-464c-a11d-f85a7b7cc44d": "rookie",
     "628e1bed-7b8b-4b49-afa6-374b1a8cb7eb": "rookie",
     "629ab45e-f385-48fb-a778-dd6e141c4394": "regular",
     "63240b9e-8907-452b-889d-7c94ab6ffad1": "regular",
@@ -199,6 +208,7 @@
     "9ecfa795-6b98-4cbf-92ca-711744a5a05e": "regular",
     "a2b2023c-4420-48d5-877d-59b24eaf2c76": "rookie",
     "a372f95b-5f4b-41ad-a62f-495f60bc10f6": "regular",
+    "a3d02b0f-d0e2-4db8-9360-3cf2d86f1bb4": "regular",
     "a3f8a866-4236-444e-ae90-dca0faeb80b9": "regular",
     "a4240a73-b915-48fb-80f7-2a64a3b5e258": "regular",
     "a463b53a-eaab-4e51-8386-0fd003c2a871": "rookie",
@@ -268,8 +278,9 @@
     "e0445800-c8b6-4273-9eb9-07e04afaa17d": "crown",
     "e0934118-b2c9-4ee4-9962-f6a1d0f64c76": "rookie",
     "e0ce0fba-cd3d-4adb-bc39-2d348372b8af": "ranger",
+    "e0d34f48-fd1e-48a7-921c-1119f6628fac": "regular",
     "e1aaaccb-f8ed-4bbb-801b-11c8b1ac8bc0": "regular",
-    "e228af7e-3d20-4072-a0af-c5413726cfa5": "crown",
+    "e228af7e-3d20-4072-a0af-c5413726cfa5": "legend",
     "e2fec7b7-0afe-4a84-9563-ff4cf8d0c075": "ranger",
     "e321d224-9477-46ea-bfd6-b8b8cfdf7508": "ranger",
     "e3410288-d672-46c5-9c38-da927342456c": "rookie",
