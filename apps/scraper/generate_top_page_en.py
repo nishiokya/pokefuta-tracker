@@ -123,7 +123,7 @@ SHELL_REPLACEMENTS = [
     (">Search by purpose</h2>", lambda loc: f'>{escape(loc.t("purpose_title"))}</h2>'),
     ('<h3 class="home-h3">By theme</h3>', lambda loc: f'<h3 class="home-h3">{escape(loc.t("purpose_theme"))}</h3>'),
     (">Explore on the map</a>", lambda loc: f'>{escape(loc.t("purpose_theme_more"))}</a>'),
-    ('<h3 class="home-h3">Most common Pokémon</h3>', lambda loc: f'<h3 class="home-h3">{escape(loc.t("purpose_pokemon"))}</h3>'),
+    ('<h3 class="home-h3">Popular Pokémon</h3>', lambda loc: f'<h3 class="home-h3">{escape(loc.t("purpose_pokemon"))}</h3>'),
 ]
 
 
@@ -521,7 +521,7 @@ def render_themes(data: ja.TopData, en: Locale) -> str:
 def render_pokemon(data: ja.TopData, en: Locale) -> str:
     cards = []
     used: set[str] = set()
-    for entry in data.popular_pokemon:
+    for entry in data.featured_pokemon:
         name = en.pokemon_by_slug.get(entry.slug, entry.name)
         photo = ja.pick_pokemon_photo(entry, data.photos, used)
         media = (

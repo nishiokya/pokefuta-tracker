@@ -447,6 +447,19 @@ class GeneratedHtmlTest(unittest.TestCase):
         self.assertNotIn("ローカルActs", block)
         self.assertIn('href="pokemon/"', block)
 
+    def test_featured_pokemon_follow_the_pokemon_index_order_and_skip_single_lids(self) -> None:
+        """トップの「人気のポケモン」は /pokemon/ の人気・代表と同じ順。設置の多さでは並べず、1枚だけは出さない。"""
+        entry = module.PokemonEntry
+        entries = [
+            entry("ラッキー", "chansey", [str(i) for i in range(40)], ""),
+            entry("ラプラス", "lapras", ["1", "2", "3"], ""),
+            entry("イーブイ", "eevee", ["4", "5"], ""),
+            entry("ピカチュウ", "pikachu", ["6", "7"], ""),
+            entry("ロコン", "vulpix", ["8"], ""),
+        ]
+        picked = module.select_featured_pokemon(entries)
+        self.assertEqual(["pikachu", "eevee", "lapras"], [e.slug for e in picked])
+
     def test_popular_pokemon_card_uses_the_representative_photo(self) -> None:
         # ピカチュウ（1, 3, …, 19）の新しい写真は 19。人が選んだ代表 5 を優先する
         self.assertIn('manhole/image/19_latest.jpeg', _block(Fixture(self.tmp).html(), "pokemon"))
