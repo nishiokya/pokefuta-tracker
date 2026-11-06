@@ -31,6 +31,27 @@ class ValidateTest(unittest.TestCase):
         errors = validate(STATS, site, {}, now=NOW, max_age=timedelta(hours=30))
         self.assertIn("posts differs: upstream=370, site=280", errors)
 
+    def test_live_counts_may_differ_from_snapshot(self):
+        site = {**STATS, "posts": 400, "public_posts": 360, "private_posts": 40, "counts_source": "live"}
+        self.assertEqual(
+            validate(STATS, site, {}, now=NOW, max_age=timedelta(hours=30)), []
+        )
+
+    def test_live_counts_still_need_the_latest_snapshot(self):
+        site = {**STATS, "counts_source": "live", "generated_at": "2026-07-16T21:00:00+00:00"}
+        errors = validate(STATS, site, {}, now=NOW, max_age=timedelta(hours=30))
+        self.assertTrue(any("generated_at differs" in error for error in errors))
+
+    def test_live_counts_must_not_be_missing(self):
+        site = {**STATS, "counts_source": "live", "posts": None}
+        errors = validate(STATS, site, {}, now=NOW, max_age=timedelta(hours=30))
+        self.assertIn("posts is missing from live counts: site=None", errors)
+
+    def test_snapshot_fallback_still_compares_counts(self):
+        site = {**STATS, "counts_source": "snapshot", "posts": 280}
+        errors = validate(STATS, site, {}, now=NOW, max_age=timedelta(hours=30))
+        self.assertIn("posts differs: upstream=370, site=280", errors)
+
     def test_rejects_static_nextjs_cache(self):
         errors = validate(
             STATS,
