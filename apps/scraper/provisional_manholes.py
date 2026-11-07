@@ -18,6 +18,8 @@ dataset/provisional_manholes.json（手動の台帳）に仮番号（9001〜）�
 from __future__ import annotations
 
 import argparse
+import http.client
+import io
 import json
 import re
 import sys
@@ -179,8 +181,27 @@ def fetch_photo(uuid: str, timeout: float = 30.0) -> Optional[bytes]:
         if exc.code not in (403, 404, 410):
             print(f"[provisional] WARN 投稿 {uuid} の写真が取れない（HTTP {exc.code}）", file=sys.stderr)
         return None
-    except (urllib.error.URLError, TimeoutError, OSError) as exc:
+    except (urllib.error.URLError, http.client.HTTPException, TimeoutError, OSError) as exc:
         print(f"[provisional] WARN 投稿 {uuid} の写真が取れない（{exc}）", file=sys.stderr)
+        return None
+
+
+def strip_metadata(data: bytes) -> Optional[bytes]:
+    """向きを直し、EXIF（位置情報・端末情報）を持たない JPEG に描き直す。画像として読めなければ None。
+
+    写真館は投稿時に位置情報を消しているが、公開リポジトリの配信物に原本をそのまま置かないよう
+    既存の写真取り込み（import_latest_manhole_photos.py）と同じく再エンコードする。
+    """
+    from PIL import Image, ImageOps, UnidentifiedImageError
+
+    try:
+        with Image.open(io.BytesIO(data)) as image:
+            image = ImageOps.exif_transpose(image).convert("RGB")
+            out = io.BytesIO()
+            image.save(out, "JPEG", quality=88, optimize=True, progressive=True)
+            return out.getvalue()
+    except (UnidentifiedImageError, OSError, ValueError) as exc:
+        print(f"[provisional] WARN 写真を画像として読めない（{exc}）", file=sys.stderr)
         return None
 
 
@@ -193,6 +214,7 @@ def attach_photos(
     for record in records:
         path = image_dir / f"{record['id']}_latest.jpeg"
         data = fetch(record["design_manhole_id"])
+        data = strip_metadata(data) if data else None
         if not data:
             path.unlink(missing_ok=True)
             print(f"[provisional] {record['id']}: 投稿の写真が公開されていないので出さない", file=sys.stderr)

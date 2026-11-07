@@ -1,7 +1,12 @@
+import http.client
+import io
 import json
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
+
+from PIL import Image
 
 from apps.scraper import provisional_manholes as pm
 from apps.scraper.page_html import upload_url
@@ -42,6 +47,17 @@ def design_record(uuid=UUID, **overrides):
 
 
 OVERRIDES = {UUID: {"canonical_ref": "pokefuta:9001"}}
+
+
+def _jpeg_with_gps() -> bytes:
+    exif = Image.Exif()
+    exif[0x0110] = "test-camera"
+    exif.get_ifd(0x8825)[2] = (36.0, 29.0, 49.65)
+    out = io.BytesIO()
+    Image.new("RGB", (8, 8), "yellow").save(out, "JPEG", exif=exif)
+    with Image.open(io.BytesIO(out.getvalue())) as check:
+        assert len(check.getexif()) > 0
+    return out.getvalue()
 
 
 class ValidateLedgerTests(unittest.TestCase):
@@ -104,9 +120,19 @@ class PhotoTests(unittest.TestCase):
             (image_dir / "9001_latest.jpeg").write_bytes(b"old")
             self.assertEqual(pm.attach_photos([record], image_dir, fetch=lambda uuid: None), [])
             self.assertFalse((image_dir / "9001_latest.jpeg").exists())
-            kept = pm.attach_photos([record], image_dir, fetch=lambda uuid: b"jpeg")
+            kept = pm.attach_photos([record], image_dir, fetch=lambda uuid: _jpeg_with_gps())
             self.assertEqual([r["id"] for r in kept], ["9001"])
-            self.assertEqual((image_dir / "9001_latest.jpeg").read_bytes(), b"jpeg")
+            with Image.open(image_dir / "9001_latest.jpeg") as saved:
+                self.assertEqual(saved.format, "JPEG")
+                self.assertEqual(len(saved.getexif()), 0)
+            # 画像として読めないものは置かない
+            self.assertEqual(pm.attach_photos([record], image_dir, fetch=lambda uuid: b"not a jpeg"), [])
+
+    def test_fetch_photo_returns_none_when_the_body_is_cut(self):
+        def broken(request, timeout):
+            raise http.client.IncompleteRead(b"partial")
+        with mock.patch.object(pm.urllib.request, "urlopen", broken):
+            self.assertIsNone(pm.fetch_photo(UUID))
 
     def test_merge_photos_adds_a_row_per_provisional_id(self):
         [record] = pm.build_records({"9001": ledger_entry()}, [design_record()])
@@ -163,6 +189,31 @@ class ConsumerTests(unittest.TestCase):
         self.assertFalse(is_countable(record))
         # 未設置県に仮の1枚だけがあっても、公式の取りこぼし判定は通る
         verify_known_empty({"群馬県": [record]}, ["群馬県"], known_empty={"群馬県"})
+
+    def test_national_totals_count_official_lids_only(self):
+        from apps.scraper import generate_prefecture_pages as ja
+        from apps.scraper import generate_prefecture_pages_i18n as i18n
+
+        official = {"id": "1", "prefecture": "高知県", "city": "高知", "lat": 33.5, "lng": 133.5,
+                    "pokemons": ["ヌオー"], "address": "高知県高知市"}
+        provisional = {**official, "id": "9002", "provisional": True}
+        gunma = {**official, "id": "9001", "prefecture": "群馬県", "provisional": True}
+        from apps.scraper.prefectures import PREFECTURE_ORDER
+
+        records_by_pref = {name: [] for name in PREFECTURE_ORDER}
+        records_by_pref.update({"高知県": [official, provisional], "群馬県": [gunma]})
+        html = ja.build_index_page(records_by_pref)
+        self.assertIn("計1枚", html)
+        self.assertNotIn("計3枚", html)
+        en = i18n.build_index_page(i18n.Page("en", {}), records_by_pref)
+        self.assertIn("1 Poké Lids are installed in 1 of Japan", en)
+
+    def test_shared_map_falls_back_to_the_photo_studio_upload(self):
+        from apps.scraper import generate_prefecture_pages as ja
+
+        # 市区町村・trip・特集の地図は upload_url を渡さない
+        script = ja._map_script([{"id": "1", "lat": 33.5, "lng": 133.5}], "from=data")
+        self.assertIn("point.upload_url || ('https://pokefuta.com/upload?manhole_id='", script)
 
     def test_repository_ledger_is_valid(self):
         official_ids = {

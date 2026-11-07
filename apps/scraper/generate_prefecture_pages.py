@@ -1058,7 +1058,8 @@ def build_index_page(
     ).items():
         municipality_paths.setdefault(prefecture, {})[muni_name] = path
     events = events or {}
-    total = sum(len(records) for records in records_by_pref.values())
+    # 全国の枚数は公式の枚数（仮番号の蓋は県のカードには出すが、全国の合計には入れない）
+    total = sum(1 for records in records_by_pref.values() for r in records if not r.get("provisional"))
     # マンホールが1枚も無い都道府県はこのページに出さない（region_section()
     # 側の実際のフィルタと二重管理にならないよう、ここでは案内文の数字だけ
     # 同じ条件で数える）。
@@ -2456,7 +2457,9 @@ def _map_script(
         const geoName = String(point.name || '').replace('/', ' ');
         const geoLabel = ['ポケふた', point.pokemons.some(function(p) {{ return geoName.indexOf(p) >= 0; }})
           ? '' : point.pokemons.join('・'), geoName].filter(Boolean).join(' ');
-        const uploadUrl = point.upload_url;
+        // 県ページは仮番号の蓋の投稿先を渡す。市区町村・trip・特集の地図は渡さないので従来の投稿先
+        const uploadUrl = point.upload_url || ('https://pokefuta.com/upload?manhole_id=' +
+          encodeURIComponent(point.id) + '&' + campaignParams);
         const photoHtml = point.is_preinstall
           ? '<div class="map-popup-preinstall">設置予定のポケふたです。設置後に写真を投稿できます。</div>'
           : (point.photo_url
