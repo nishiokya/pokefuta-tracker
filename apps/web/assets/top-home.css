@@ -278,9 +278,8 @@
 /* 新作の特集（/features/）への帯。新作カードの上に置く */
 .home-feature {
   display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 4px 8px;
+  align-items: center;
+  gap: 12px;
   margin: 0 0 10px;
   padding: 12px 14px;
   background: var(--top-card-bg);
@@ -290,6 +289,22 @@
   color: var(--top-text);
 }
 
+.home-feature__text {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
+  min-width: 0;
+}
+/* 特集の蓋の写真（無い特集は文字だけ）。新作欄のカードと並ぶので小さい正方形にとどめる */
+.home-feature__img {
+  flex: none;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--top-border);
+}
 .home-feature b { font-size: 15px; }
 .home-feature b::after { content: " →"; color: var(--top-purple); }
 
