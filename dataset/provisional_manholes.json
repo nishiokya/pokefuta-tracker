@@ -18,6 +18,15 @@
       "pokemons": ["フラエッテ", "ピッピ", "ヌオー"],
       "source_url": "https://kyodonewsprwire.jp/release/202610208331",
       "official_id": null
+    },
+    "9003": {
+      "design_manhole_id": "66839dc4-9b07-47a7-bfdc-40e5f6f67e5b",
+      "prefecture": "群馬県",
+      "city": "沼田",
+      "building": "吹割の滝遊歩道入口",
+      "pokemons": ["ノココッチ", "ダーテング"],
+      "source_url": "https://www.pref.gunma.jp/site/houdou/779585.html",
+      "official_id": null
     }
   }
 }
