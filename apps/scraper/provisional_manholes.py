@@ -222,6 +222,44 @@ def merge_photos(payload: dict, records: list[dict]) -> dict:
     return {**payload, "photos": photos, "count": len(photos)}
 
 
+SITE_URL = "https://data.pokefuta.com/"
+# 詳細ページの日本語版と訳した版（generate_manhole_pages*.py の出力先）
+REDIRECT_PREFIXES = ("", "en/", "zh-TW/")
+
+
+def redirect_html(official_path: str) -> str:
+    target = SITE_URL + official_path
+    return f"""<!doctype html>
+<html lang="ja"><head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>正式な番号のページへ移動しました</title>
+  <link rel="canonical" href="{target}"><meta name="robots" content="noindex,follow">
+  <meta http-equiv="refresh" content="0; url={target}">
+</head><body>
+  <p>このポケふたは公式サイトに載りました。<a href="{target}">正式な番号のページ</a>へ移動します。</p>
+</body></html>
+"""
+
+
+def write_redirects(ledger: dict[str, dict], output: Path) -> list[Path]:
+    """公式に載って official_id が付いた仮番号の詳細ページを、正式な番号のページへの転送にする。
+
+    静的ホスティングで 301 は出せないので canonical + meta refresh（generate_character_work_pages と同じ形）。
+    詳細ページを作った後に呼ぶ（仮番号のページは build_records() が出さないので上書きの心配はない）。
+    """
+    written: list[Path] = []
+    for pid, entry in sorted(ledger.items(), key=lambda item: int(item[0])):
+        official_id = entry.get("official_id")
+        if official_id is None:
+            continue
+        for prefix in REDIRECT_PREFIXES:
+            path = output / prefix / "manholes" / pid / "index.html"
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(redirect_html(f"{prefix}manholes/{official_id}/"), encoding="utf-8")
+            written.append(path)
+    return written
+
+
 def main(argv: Optional[list[str]] = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--ledger", type=Path, default=DEFAULT_LEDGER)
@@ -232,6 +270,7 @@ def main(argv: Optional[list[str]] = None) -> int:
     parser.add_argument("--image-dir", type=Path, help="投稿の写真を落とすフォルダ")
     parser.add_argument("--photos-in", type=Path, help="latest-manhole-photos.json（--photos-out と一緒に）")
     parser.add_argument("--photos-out", type=Path, help="仮番号の写真の行を足した写真 JSON の書き出し先")
+    parser.add_argument("--redirects-dir", type=Path, help="公式に載った仮番号の転送ページを書くサイトのルート（dist）")
     args = parser.parse_args(argv)
 
     official_lines = [line for line in args.official.read_text(encoding="utf-8").splitlines() if line.strip()]
@@ -250,6 +289,10 @@ def main(argv: Optional[list[str]] = None) -> int:
             + "".join(json.dumps(record, ensure_ascii=False) + "\n" for record in records),
             encoding="utf-8",
         )
+    if args.redirects_dir:
+        written = write_redirects(ledger, args.redirects_dir)
+        print(f"[provisional] 公式に載った仮番号の転送ページ {len(written)} 件")
+        return 0
     if args.photos_in and args.photos_out:
         payload = json.loads(args.photos_in.read_text(encoding="utf-8"))
         args.photos_out.parent.mkdir(parents=True, exist_ok=True)

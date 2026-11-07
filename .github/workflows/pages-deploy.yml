@@ -185,6 +185,8 @@ jobs:
           for lang in en zh-TW; do
             python3 apps/scraper/generate_manhole_pages_i18n.py --lang "$lang" --manholes build/pokefuta_with_provisional.ndjson --photos build/latest-manhole-photos.json
           done
+          echo "[dist] Forward provisional manhole pages that now have an official ID"
+          python3 apps/scraper/provisional_manholes.py --redirects-dir dist
           echo "[dist] Test Pokemon LP page content"
           python3 -m unittest apps.scraper.test_generate_pokemon_pages_ja_seo apps.scraper.test_generate_pokemon_pages_hero
           echo "[dist] Generate static Pokemon LP pages"

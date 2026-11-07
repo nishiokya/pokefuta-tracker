@@ -116,6 +116,21 @@ class PhotoTests(unittest.TestCase):
         self.assertEqual(merged["count"], 2)
 
 
+class RedirectTests(unittest.TestCase):
+    def test_moved_ids_get_forwarding_pages_in_every_language(self):
+        ledger = {"9001": ledger_entry(official_id=491), "9002": ledger_entry(uuid=OTHER_UUID)}
+        with tempfile.TemporaryDirectory() as tmp:
+            written = pm.write_redirects(ledger, Path(tmp))
+            self.assertEqual(
+                sorted(str(p.relative_to(tmp)) for p in written),
+                ["en/manholes/9001/index.html", "manholes/9001/index.html", "zh-TW/manholes/9001/index.html"],
+            )
+            html = (Path(tmp) / "en/manholes/9001/index.html").read_text(encoding="utf-8")
+            self.assertIn('url=https://data.pokefuta.com/en/manholes/491/', html)
+            self.assertIn('rel="canonical" href="https://data.pokefuta.com/en/manholes/491/"', html)
+            self.assertIn("noindex", html)
+
+
 class MainTests(unittest.TestCase):
     def test_writes_official_lines_unchanged_then_provisional_records(self):
         with tempfile.TemporaryDirectory() as tmp:
