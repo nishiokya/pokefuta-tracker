@@ -22,6 +22,7 @@ on:
       - 'apps/scraper/generate_manhole_pages.py' # manhole page generator
       - 'apps/scraper/generate_manhole_pages_i18n.py' # translated manhole pages (/en/manholes/)
       - 'apps/scraper/manhole_page_css.py' # detail page CSS shared by ja / translated pages
+      - 'apps/scraper/poster_identity.py' # poster avatar and tier badge on detail pages
       - 'apps/scraper/zukan_cards.py' # shared index card HTML and CSS
       - 'apps/scraper/build_small_images.py' # small WebP lid photos for srcset
       - 'apps/scraper/use_image_host.py' # point every page's manhole photos at img.pokefuta.com (R2)
