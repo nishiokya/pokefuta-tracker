@@ -183,7 +183,7 @@ jobs:
             apps.scraper.test_generate_character_work_pages \
             apps.scraper.test_generate_gmanhole_map_page
           echo "[dist] Test manhole detail page headings"
-          python3 -m unittest apps.scraper.test_generate_manhole_pages_h1 apps.scraper.test_generate_manhole_pages_breadcrumb apps.scraper.test_display_name_consumers apps.scraper.test_generate_top_feed apps.scraper.test_generate_manhole_pages_i18n apps.scraper.test_generate_manhole_pages_regional_forms apps.scraper.test_generate_manhole_pages_design_nearby apps.scraper.test_generate_manhole_pages_hero_actions apps.scraper.test_generate_manhole_pages_preinstall apps.scraper.test_generate_manhole_pages_provisional
+          python3 -m unittest apps.scraper.test_generate_manhole_pages_h1 apps.scraper.test_generate_manhole_pages_breadcrumb apps.scraper.test_display_name_consumers apps.scraper.test_generate_top_feed apps.scraper.test_generate_manhole_pages_i18n apps.scraper.test_generate_manhole_pages_regional_forms apps.scraper.test_generate_manhole_pages_design_nearby apps.scraper.test_generate_manhole_pages_hero_actions apps.scraper.test_generate_manhole_pages_preinstall apps.scraper.test_generate_manhole_pages_provisional apps.scraper.test_generate_manhole_pages_poster_links apps.scraper.test_generate_manhole_pages_gallery
           echo "[dist] Generate static manhole detail pages"
           python3 apps/scraper/generate_manhole_pages.py --manholes build/pokefuta_with_provisional.ndjson --photos build/latest-manhole-photos.json
           echo "[dist] Generate translated manhole detail pages (en / zh-TW)"

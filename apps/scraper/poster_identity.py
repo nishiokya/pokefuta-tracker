@@ -71,7 +71,8 @@ def _tier_map() -> dict[str, str]:
         _tiers = {
             str(k).lower(): str(v)
             for k, v in (raw.items() if isinstance(raw, dict) else [])
-            if v in TIER_LABEL
+            # 配列・オブジェクトの値は辞書の in で TypeError になるので、文字列だけを見る
+            if isinstance(v, str) and v in TIER_LABEL
         }
     return _tiers
 

@@ -1,5 +1,8 @@
 import importlib.util
+import json
+import tempfile
 import unittest
+from unittest import mock
 from pathlib import Path
 
 MODULE_PATH = Path(__file__).with_name("generate_manhole_pages.py")
@@ -165,6 +168,17 @@ class PosterAvatarAndTierTests(unittest.TestCase):
         ]
         html = _generate(_photo(gallery_local=gallery_local))
         self.assertIn("たこ<span class='poster-tier poster-tier--icon poster-tier--legend' title=\"LEGEND\" aria-label=\"LEGEND\">🏆</span> · 5月1日</a>", html)
+
+    def test_broken_regulars_json_drops_only_the_tier(self):
+        identity = sys.modules["poster_identity"]
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "regulars.json"
+            path.write_text(json.dumps({"users": {VALID_UUID: ["legend"], "x": {"tier": "legend"}}}), encoding="utf-8")
+            with mock.patch.object(identity, "REGULARS_PATH", path):
+                identity.set_sources({}, None)
+                html = _generate(_photo(public_user_id=VALID_UUID))
+        self.assertIn(NO_AVATAR + "いろはす</a>", html)
+        self.assertNotIn("poster-tier--", html.split("</style>")[-1])
 
     def test_no_avatar_or_tier_for_unknown_user(self):
         sys.modules["poster_identity"].set_sources({}, {})
