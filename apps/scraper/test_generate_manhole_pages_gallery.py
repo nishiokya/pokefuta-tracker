@@ -9,6 +9,10 @@ SPEC = importlib.util.spec_from_file_location("generate_manhole_pages", MODULE_P
 pages = importlib.util.module_from_spec(SPEC)
 assert SPEC and SPEC.loader
 SPEC.loader.exec_module(pages)
+# アイコンと称号は docs/api の実データに左右されないよう空にしておく（poster_identity.py）
+import sys  # noqa: E402
+sys.modules["poster_identity"].set_sources({}, {})
+NO_AVATAR = "<span class='poster-avatar' aria-hidden='true'></span>"
 
 
 def _manhole() -> dict:
@@ -70,8 +74,8 @@ class GallerySectionTests(unittest.TestCase):
         self.assertIn("みんなの写真", html)
         self.assertIn("manhole/image/1_abcd1234.jpeg", html)
         self.assertIn("manhole/image/1_ef012345.jpeg", html)
-        # クレジットは「📷 名前 · 5月1日」（撮影日のロケール短表記）に統一
-        self.assertIn("📷 たこ · 5月1日", html)
+        # クレジットは「アイコン 名前 · 5月1日」（撮影日のロケール短表記）に統一
+        self.assertIn(NO_AVATAR + "たこ · 5月1日", html)
         self.assertIn("https://pokefuta.com/manhole/1", html)
         self.assertIn("すべての写真を見る", html)
         self.assertIn("click_gallery_more", html)
@@ -80,7 +84,7 @@ class GallerySectionTests(unittest.TestCase):
         html = _generate(_photo([]))
         # ヒーローのクレジットは年付きロケール表記（shot_at=2026-06-07 UTC → JST 同日）
         self.assertIn("2026年6月7日", html)
-        self.assertIn("📷 いろはす", html)
+        self.assertIn(NO_AVATAR + "いろはす", html)
 
     def test_hero_credit_falls_back_to_created_at_without_shot_at(self):
         photo = _photo([])

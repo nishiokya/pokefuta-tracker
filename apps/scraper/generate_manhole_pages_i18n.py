@@ -334,12 +334,21 @@ def build_page(
         if poster:
             # 投稿者の表示名は本人が付けたもので訳さない（ブラウザ翻訳にもかけない）
             name_html = f'<bdi translate="no">{escape(poster)}</bdi>'
-            credit_parts.append(f'📷 {escape(page.t("photo_by", name="{name}")).format(name=name_html)}')
+            credit_parts.append(
+                ja.avatar_html(photo.get("public_user_id"))
+                + escape(page.t("photo_by", name="{name}")).format(name=name_html)
+            )
+            # 称号は名前の後ろ（日本語ページと同じ。名前だけを省略させる）
+            tier = ja.tier_badge_html(photo.get("public_user_id"))
+            if tier:
+                credit_parts.append(tier)
         shot = format_photo_date(photo.get("shot_at") or photo.get("created_at"), page.lang, with_year=True)
         if shot:
             credit_parts.append(escape(shot))
         credit_html = (
-            "<div class='photo-credit'>" + "".join(f"<span>{p}</span>" for p in credit_parts) + "</div>"
+            "<div class='photo-credit'>"
+            + "".join(p if p.startswith("<span class='poster-tier") else f"<span>{p}</span>" for p in credit_parts)
+            + "</div>"
             if credit_parts else ""
         )
         hero_photo_html = (
@@ -409,10 +418,13 @@ def build_page(
         for g in gallery_items:
             name = format_display_name(g.get("display_name"))
             date = format_photo_date(g.get("shot_at") or g.get("created_at"), page.lang)
-            label = " · ".join(
-                part for part in (f'<bdi translate="no">{escape(name)}</bdi>' if name else "", escape(date)) if part
-            )
-            credit = f"<span class='gallery-credit'>📷 {label}</span>" if label else ""
+            who = (
+                ja.avatar_html(g.get("public_user_id"))
+                + f'<bdi translate="no">{escape(name)}</bdi>'
+                + ja.tier_badge_html(g.get("public_user_id"), icon_only=True)
+            ) if name else ""
+            label = " · ".join(part for part in (who, escape(date)) if part)
+            credit = f"<span class='gallery-credit'>{label}</span>" if label else ""
             thumbs.append(
                 "<figure class='gallery-item'>"
                 f'<img src="{_attr(g["url"])}" alt="{_attr(page.t("photo_alt", h1=h1))}"'

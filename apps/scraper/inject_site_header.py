@@ -24,7 +24,7 @@ from pathlib import Path
 
 
 # site-header.css を変えたら上げる。再訪者のブラウザに古いクロム・本文幅が残らないように
-SITE_HEADER_CSS_VERSION = "20261104a"
+SITE_HEADER_CSS_VERSION = "20261107a"
 STYLESHEET_TEMPLATE = (
     '<link rel="stylesheet" href="{asset_base}assets/site-header.css?v=' + SITE_HEADER_CSS_VERSION + '">'
 )
@@ -241,7 +241,7 @@ HEADER_TEMPLATE = """<header class="site-header">
       <a class="site-auth__signup" data-login-link href="{signup_url}">{signup}</a>
     </div>
     <a class="site-auth__user" data-auth-user hidden href="{profile_url}" title="{profile}" aria-label="{profile}">
-      <span class="site-auth__avatar" aria-hidden="true">👤</span><span class="site-auth__name" data-auth-name></span>
+      <span class="site-auth__avatar" data-auth-avatar aria-hidden="true">👤</span><span class="site-auth__name" data-auth-name></span>
     </a>
   </div>
 </header>"""

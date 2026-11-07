@@ -10,6 +10,7 @@
 //  - <div data-auth-guest>   未ログイン時に出す（ログイン / 新規登録）
 //  - <a data-auth-user>      ログイン時に出す（アバター＋表示名 → /profile）
 //    <span data-auth-name>   ここに表示名を入れる
+//    <span data-auth-avatar> 写真館の /profile で選んだアイコンを入れる（未設定は 👤 のまま）
 //  - <a data-login-link>     未ログイン時に href へ redirect パラメータを付ける
 //    （pokefuta.com/login がログイン後にこのページへ戻す）
 //
@@ -23,6 +24,10 @@
   'use strict';
 
   var COOKIE_NAME = 'sb-kbwzwgsjqvflgfauzcpn-auth-token';
+  // 写真館が .pokefuta.com に書く「auth の利用者ID.写真ID」（写真館 src/lib/shared-avatar-cookie.ts）。
+  // ログインクッキーの利用者ID と一致するときだけ使う（別の人がログインし直したとき前の人を出さない）
+  var AVATAR_COOKIE_NAME = 'pf_avatar';
+  var UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
   function readCookies() {
     var map = {};
@@ -118,6 +123,31 @@
     return 'トレーナー';
   }
 
+  function avatarPhotoId(cookies, user) {
+    var raw = cookies[AVATAR_COOKIE_NAME];
+    var userId = user && (user.id || user.sub);
+    if (!raw || !userId) return null;
+    var parts = String(raw).split('.');
+    if (parts.length !== 2 || !UUID_RE.test(parts[0]) || !UUID_RE.test(parts[1])) return null;
+    return parts[0].toLowerCase() === String(userId).toLowerCase() ? parts[1].toLowerCase() : null;
+  }
+
+  // 画像は写真館の縮小版。読めなければ（縮小版が無いと 404）👤 に戻す
+  function showAvatar(slot, photoId) {
+    if (!slot || !photoId || typeof document.createElement !== 'function') return;
+    var img = document.createElement('img');
+    img.src = 'https://pokefuta.com/api/photo/' + encodeURIComponent(photoId) + '?size=small&strict=1';
+    img.alt = '';
+    img.width = 26;
+    img.height = 26;
+    img.decoding = 'async';
+    img.onerror = function () {
+      slot.textContent = '👤';
+    };
+    slot.textContent = '';
+    slot.appendChild(img);
+  }
+
   function setHidden(node, hidden) {
     if (!node) return;
     if (hidden) node.setAttribute('hidden', '');
@@ -156,6 +186,7 @@
     var authed = document.querySelector('[data-auth-user]');
     var nameSlot = document.querySelector('[data-auth-name]');
     if (nameSlot) nameSlot.textContent = displayName(user);
+    if (user) showAvatar(document.querySelector('[data-auth-avatar]'), avatarPhotoId(readCookies(), user));
     setHidden(guest, Boolean(user));
     setHidden(authed, !user);
   }

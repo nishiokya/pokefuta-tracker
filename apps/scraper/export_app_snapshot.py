@@ -9,6 +9,7 @@ Supabase を読む構成をやめ、GitHub Pages (data.pokefuta.com) 配信の
   docs/api/manholes.json   … manhole 全件 + 写真有無（匿名ユーザー向け形状）
   docs/api/site-stats.json … /api/site-stats と同形状のサイト統計
   docs/api/regulars.json   … 投稿者に付ける称号（🌱 ROOKIE〜🏆 LEGEND の5段階）の判定（公開ID → 段階）
+  docs/api/avatars.json    … 投稿者のアイコン（写真館の /profile で選んだ公開写真。公開ID → 写真ID）
 
 実行元: .github/workflows/import-manhole-photos.yml（日次）
 
@@ -513,6 +514,58 @@ def build_regulars() -> dict:
     }
 
 
+# --- アイコン（docs/api/avatars.json） ---
+#
+# 写真館の /profile で本人が選んだアイコン（app_user.avatar_photo_id、写真館 PR #433）。
+# 図鑑の詳細ページの投稿者名の前に焼き込む（apps/scraper/poster_identity.py）。
+# 出すのは写真館の get_public_avatar_photo_id() と同じ条件（本人の公開訪問の写真）のときだけ。
+# 公開 JSON に auth UID は出さず、公開ID → 写真ID にする。
+
+
+def pick_public_avatars(users: list[dict], photos: list[dict]) -> dict[str, str]:
+    """users は {id, auth_uid, avatar_photo_id}、photos は {id, visit: {user_id, is_public}}。
+
+    写真の持ち主が本人で、その訪問が公開のときだけ残す（写真館の get_public_avatar_photo_id と同じ）。
+    """
+    photo_by_id = {p.get("id"): p for p in photos if p.get("id")}
+    avatars = {}
+    for u in users:
+        photo = photo_by_id.get(u.get("avatar_photo_id"))
+        if not photo or not u.get("id") or not u.get("auth_uid"):
+            continue
+        visit = photo.get("visit") or {}
+        if visit.get("is_public") is True and visit.get("user_id") == u["auth_uid"]:
+            avatars[u["id"]] = photo["id"]
+    return dict(sorted(avatars.items()))
+
+
+AVATAR_PHOTO_CHUNK = 100
+
+
+def build_avatars() -> dict:
+    users = fetch_all(
+        "app_user",
+        {"select": "id,auth_uid,avatar_photo_id", "avatar_photo_id": "not.is.null", "order": "id.asc"},
+    )
+    photo_ids = sorted({u["avatar_photo_id"] for u in users if u.get("avatar_photo_id")})
+    photos: list[dict] = []
+    for i in range(0, len(photo_ids), AVATAR_PHOTO_CHUNK):
+        chunk = photo_ids[i:i + AVATAR_PHOTO_CHUNK]
+        photos += fetch_all(
+            "photo",
+            {
+                "select": "id,visit!inner(user_id,is_public)",
+                "id": f"in.({','.join(chunk)})",
+                "order": "id.asc",
+            },
+        )
+    return {
+        "success": True,
+        "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "avatars": pick_public_avatars(users, photos),
+    }
+
+
 def write_manholes_json(payload: dict, path: Path) -> None:
     """1マンホール1行で書き出し、git diff を読みやすくする。payload は変更しない。"""
     head_obj = {k: v for k, v in payload.items() if k != "manholes"}
@@ -546,6 +599,18 @@ def main() -> None:
         "docs/api/site-stats.json: "
         f"users={stats['users']} posts={stats['posts']} manholes={stats['manholes']}"
     )
+
+    # アイコンも飾り。取れなければ前日の avatars.json が残る
+    try:
+        avatars = build_avatars()
+    except requests.RequestException as exc:
+        print(f"::warning::docs/api/avatars.json を更新できませんでした: {exc}", file=sys.stderr)
+    else:
+        (OUT_DIR / "avatars.json").write_text(
+            json.dumps(avatars, ensure_ascii=False, sort_keys=True, indent=2) + "\n",
+            encoding="utf-8",
+        )
+        print(f"docs/api/avatars.json: {len(avatars['avatars'])} users")
 
     # バッジは飾りなので、取れなくても蓋一覧・統計の更新を止めない（前日の regulars.json が残る）
     try:

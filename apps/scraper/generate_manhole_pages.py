@@ -26,6 +26,7 @@ from manhole_records import geo_label  # noqa: E402
 from generate_pokemon_pages import _FORM_PREFIX, _normalize_katakana  # noqa: E402
 from generate_pokemon_pages import load_pokemon_metadata as load_pokemon_metadata_with_forms  # noqa: E402
 from manhole_page_css import PAGE_CSS  # noqa: E402
+from poster_identity import avatar_html, tier_badge_html  # noqa: E402
 from manhole_tile_image import small_image_url  # noqa: E402
 from photo_caption import (  # noqa: E402
     format_display_name,
@@ -780,14 +781,18 @@ def generate_html(
                     f"<a class='poster-link' href='{_profile_url}'"
                     f" target='_blank' rel='noopener noreferrer'"
                     f" onclick=\"trackEvent('click_poster_profile', {_poster_onclick})\">"
-                    f"📷 {escape(display_name)}</a>"
+                    f"{avatar_html(photo.get('public_user_id'))}{escape(display_name)}</a>"
                 )
             else:
-                credit_parts.append(f"📷 {escape(display_name)}")
+                credit_parts.append(f"{avatar_html(photo.get('public_user_id'))}{escape(display_name)}")
+            # 称号は名前の後ろ。名前（先頭の span）だけを省略させ、称号と日付は潰さない
+            _tier = tier_badge_html(photo.get("public_user_id"))
+            if _tier:
+                credit_parts.append(_tier)
         if shot_date:
             credit_parts.append(shot_date)
         if credit_parts:
-            inner = "".join(f"<span>{p}</span>" for p in credit_parts)
+            inner = "".join(p if p.startswith("<span class='poster-tier") else f"<span>{p}</span>" for p in credit_parts)
             credit_html = f"<div class='photo-credit'>{inner}</div>"
         else:
             credit_html = ""
@@ -818,7 +823,10 @@ def generate_html(
             # ギャラリーは overlay が小さいため年なしの短形式（撮影日→投稿日フォールバック）
             g_date = format_photo_date(g.get("shot_at") or g.get("created_at"), "ja")
             if g_credit:
-                g_label = f"📷 {escape(g_credit)}"
+                g_label = (
+                    f"{avatar_html(g.get('public_user_id'))}{escape(g_credit)}"
+                    f"{tier_badge_html(g.get('public_user_id'), icon_only=True)}"
+                )
                 if g_date:
                     g_label += f" · {escape(g_date)}"
                 _g_profile_url = poster_profile_url(g.get("public_user_id"))
@@ -833,7 +841,7 @@ def generate_html(
                 else:
                     credit_span = f"<span class='gallery-credit'>{g_label}</span>"
             elif g_date:
-                credit_span = f"<span class='gallery-credit'>📷 {escape(g_date)}</span>"
+                credit_span = f"<span class='gallery-credit'>{escape(g_date)}</span>"
             else:
                 credit_span = ""
             thumbs += (
