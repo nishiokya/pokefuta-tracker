@@ -168,18 +168,23 @@ def build_records(ledger: dict[str, dict], design_records: list[dict]) -> list[d
     return records
 
 
-def fetch_photo(uuid: str, timeout: float = 30.0) -> Optional[bytes]:
-    """投稿の写真（原寸）。非公開・削除なら None。
+class PhotoGone(Exception):
+    """写真 API が 403/404/410 を返した（投稿が非公開・削除になった）。"""
 
-    写真館が落ちているときも None にして、その仮番号だけ外す（図鑑全体のデプロイは止めない）。
+
+def fetch_photo(uuid: str, timeout: float = 30.0) -> Optional[bytes]:
+    """投稿の写真（原寸）。非公開・削除なら PhotoGone、写真館が落ちている・途中で切れたなら None。
+
+    None のときも図鑑全体のデプロイは止めない（attach_photos() がその仮番号を写真なしで出す）。
     """
     request = urllib.request.Request(PHOTO_URL.format(uuid=uuid), headers={"User-Agent": USER_AGENT})
     try:
         with urllib.request.urlopen(request, timeout=timeout) as response:
             return response.read()
     except urllib.error.HTTPError as exc:
-        if exc.code not in (403, 404, 410):
-            print(f"[provisional] WARN 投稿 {uuid} の写真が取れない（HTTP {exc.code}）", file=sys.stderr)
+        if exc.code in (403, 404, 410):
+            raise PhotoGone(uuid) from exc
+        print(f"[provisional] WARN 投稿 {uuid} の写真が取れない（HTTP {exc.code}）", file=sys.stderr)
         return None
     except (urllib.error.URLError, http.client.HTTPException, TimeoutError, OSError) as exc:
         print(f"[provisional] WARN 投稿 {uuid} の写真が取れない（{exc}）", file=sys.stderr)
@@ -207,21 +212,34 @@ def strip_metadata(data: bytes) -> Optional[bytes]:
 
 def attach_photos(
     records: list[dict], image_dir: Path, fetch: Callable[[str], Optional[bytes]] = fetch_photo
-) -> list[dict]:
-    """写真を {仮番号}_latest.jpeg に置く。写真が取れない（非公開になった）仮番号は外す。"""
+) -> tuple[list[dict], list[dict]]:
+    """写真を {仮番号}_latest.jpeg に置き、(出す仮番号, そのうち写真を置けた仮番号) を返す。
+
+    投稿が非公開・削除になった（PhotoGone）仮番号は外す。写真館が一時的に落ちている・画像が読めない
+    ときは仮番号を残し、写真なしで出す（一時的な障害でページを消さない）。
+    """
     kept: list[dict] = []
+    with_photo: list[dict] = []
     image_dir.mkdir(parents=True, exist_ok=True)
     for record in records:
         path = image_dir / f"{record['id']}_latest.jpeg"
-        data = fetch(record["design_manhole_id"])
-        data = strip_metadata(data) if data else None
-        if not data:
+        try:
+            data = fetch(record["design_manhole_id"])
+        except PhotoGone:
             path.unlink(missing_ok=True)
-            print(f"[provisional] {record['id']}: 投稿の写真が公開されていないので出さない", file=sys.stderr)
+            print(f"[provisional] {record['id']}: 投稿が公開されていないので出さない", file=sys.stderr)
             continue
-        path.write_bytes(data)
         kept.append(record)
-    return kept
+        data = strip_metadata(data) if data else None
+        if data:
+            path.write_bytes(data)
+            with_photo.append(record)
+        elif not path.exists():
+            print(f"[provisional] WARN {record['id']}: 写真なしで出す", file=sys.stderr)
+        else:
+            # 手元に前回の写真がある（ローカルで回したとき）ならそれを使う
+            with_photo.append(record)
+    return kept, with_photo
 
 
 def merge_photos(payload: dict, records: list[dict]) -> dict:
@@ -302,8 +320,9 @@ def main(argv: Optional[list[str]] = None) -> int:
     validate_ledger(ledger, official_ids, overrides)
 
     records = build_records(ledger, read_ndjson(args.design))
+    with_photo: list[dict] = []
     if args.image_dir:
-        records = attach_photos(records, args.image_dir)
+        records, with_photo = attach_photos(records, args.image_dir)
     if args.out:
         args.out.parent.mkdir(parents=True, exist_ok=True)
         args.out.write_text(
@@ -319,7 +338,7 @@ def main(argv: Optional[list[str]] = None) -> int:
         payload = json.loads(args.photos_in.read_text(encoding="utf-8"))
         args.photos_out.parent.mkdir(parents=True, exist_ok=True)
         args.photos_out.write_text(
-            json.dumps(merge_photos(payload, records if args.image_dir else []), ensure_ascii=False),
+            json.dumps(merge_photos(payload, with_photo), ensure_ascii=False),
             encoding="utf-8",
         )
     print(f"[provisional] 台帳 {len(ledger)} 件のうち {len(records)} 件を出す: {[r['id'] for r in records]}")

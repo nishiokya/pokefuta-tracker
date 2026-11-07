@@ -118,15 +118,35 @@ class PhotoTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             image_dir = Path(tmp)
             (image_dir / "9001_latest.jpeg").write_bytes(b"old")
-            self.assertEqual(pm.attach_photos([record], image_dir, fetch=lambda uuid: None), [])
+
+            def gone(uuid):
+                raise pm.PhotoGone(uuid)
+
+            self.assertEqual(pm.attach_photos([record], image_dir, fetch=gone), ([], []))
             self.assertFalse((image_dir / "9001_latest.jpeg").exists())
-            kept = pm.attach_photos([record], image_dir, fetch=lambda uuid: _jpeg_with_gps())
+            kept, with_photo = pm.attach_photos([record], image_dir, fetch=lambda uuid: _jpeg_with_gps())
             self.assertEqual([r["id"] for r in kept], ["9001"])
+            self.assertEqual([r["id"] for r in with_photo], ["9001"])
             with Image.open(image_dir / "9001_latest.jpeg") as saved:
                 self.assertEqual(saved.format, "JPEG")
                 self.assertEqual(len(saved.getexif()), 0)
-            # 画像として読めないものは置かない
-            self.assertEqual(pm.attach_photos([record], image_dir, fetch=lambda uuid: b"not a jpeg"), [])
+
+    def test_attach_photos_keeps_the_lid_when_the_photo_is_temporarily_unavailable(self):
+        [record] = pm.build_records({"9001": ledger_entry()}, [design_record()])
+        with tempfile.TemporaryDirectory() as tmp:
+            image_dir = Path(tmp)
+            for fetch in (lambda uuid: None, lambda uuid: b"not a jpeg"):
+                kept, with_photo = pm.attach_photos([record], image_dir, fetch=fetch)
+                self.assertEqual([r["id"] for r in kept], ["9001"])
+                self.assertEqual(with_photo, [])
+                self.assertFalse((image_dir / "9001_latest.jpeg").exists())
+
+    def test_fetch_photo_raises_photo_gone_for_unpublished_posts(self):
+        def not_found(request, timeout):
+            raise pm.urllib.error.HTTPError(request.full_url, 404, "Not Found", {}, None)
+        with mock.patch.object(pm.urllib.request, "urlopen", not_found):
+            with self.assertRaises(pm.PhotoGone):
+                pm.fetch_photo(UUID)
 
     def test_fetch_photo_returns_none_when_the_body_is_cut(self):
         def broken(request, timeout):
