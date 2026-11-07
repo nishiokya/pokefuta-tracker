@@ -293,6 +293,30 @@
 .home-feature b { font-size: 15px; }
 .home-feature b::after { content: " →"; color: var(--top-purple); }
 
+/* 設置が発表されたが写真が届いていない新作への投稿の呼びかけ（新作カードの下） */
+.home-wanted {
+  margin: 12px 0 0;
+  padding: 12px 14px;
+  background: var(--top-card-bg);
+  border: 1px solid var(--top-border);
+  border-left: 4px solid var(--top-purple);
+  border-radius: 12px;
+  color: var(--top-text);
+}
+.home-wanted b { display: block; margin-top: 6px; font-size: 15px; }
+.home-wanted p { margin: 4px 0 0; font-size: 13px; }
+.home-wanted__links a { margin-right: 12px; color: var(--top-purple); font-weight: 700; }
+.home-wanted__cta {
+  display: inline-flex;
+  margin-top: 10px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: var(--top-purple);
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+}
+
 .home-feature__kicker {
   padding: 1px 8px;
   border-radius: 999px;

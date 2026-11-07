@@ -71,6 +71,7 @@ on:
       - 'apps/scraper/prefecture_completion.py' # shared photo-completion rollup (prefectures + summary)
       - 'apps/scraper/provisional_manholes.py' # 公式未掲載のポケふた（仮番号）を詳細・県・ポケモンのページへ合流
       - 'dataset/provisional_manholes.json' # 仮番号の台帳（手動）
+      - 'dataset/provisional_wanted.json' # 場所を調べているポケふた（県ページ・トップの投稿の呼びかけ）
       - 'dataset/design_manhole_overrides.json' # 仮番号へ結びつけた投稿（canonical_ref pokefuta:<仮番号>）
       - 'docs/**'     # dataset changes copied into dist/
       - 'dataset/prefecture_trivia*.json' # generated trivia and editorial sources
@@ -116,7 +117,8 @@ jobs:
         run: sudo apt-get update -y && sudo apt-get install -y fonts-noto-cjk libcairo2
 
       # 公式未掲載のポケふた（仮番号 9001〜）。公式の docs/pokefuta.ndjson は変えず、公式＋仮を build/ に書き出す。
-      # 詳細・県・ポケモンのページと sitemap だけが build/ を読み、全国の枚数・トップ・まとめ・トリビアは公式のみ。
+      # 詳細・県・ポケモンのページと sitemap は build/ を読む。地図とトップの新作欄は仮番号だけの dist/provisional_manholes.ndjson を重ねる。
+      # 全国の枚数・まとめ・トリビア・配布する dist/pokefuta.ndjson は公式のみ。
       # 写真館で投稿が非公開になった仮番号は、写真 API が 404 を返すのでここで外れる。
       - name: Merge provisional manholes
         run: |
@@ -125,7 +127,9 @@ jobs:
             --out build/pokefuta_with_provisional.ndjson \
             --image-dir dataset/manhole/image \
             --photos-in docs/latest-manhole-photos.json \
-            --photos-out build/latest-manhole-photos.json
+            --photos-out build/latest-manhole-photos.json \
+            --provisional-out dist/provisional_manholes.ndjson \
+            --wanted-out dist/api/provisional-wanted.json
 
       - name: Generate per-manhole OGP images
         run: |
@@ -231,7 +235,7 @@ jobs:
           echo "[dist] Copy HTML sources"
           cp apps/web/index.html dist/index.html
           echo "[dist] Rebuild top page counts, photos, prefecture list and JSON-LD from today's data"
-          python3 apps/scraper/generate_top_page.py dist/index.html
+          python3 apps/scraper/generate_top_page.py dist/index.html --provisional dist/provisional_manholes.ndjson
           echo "[dist] Rebuild top page theme chips from dataset/tag_meta.json"
           python3 apps/scraper/generate_top_tag_chips.py dist/index.html
           cp apps/web/nearby.html dist/nearby.html  # 廃止済み。map.html へのリダイレクトだけ
