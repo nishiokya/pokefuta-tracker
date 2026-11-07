@@ -1042,7 +1042,10 @@
       const showBuildingLine = Boolean(d.building) && !d.place_label;
       const photoAlt = `${getManholeDisplayName(d)}${I.photoAltSuffix}`;
       const photoMeta = getLatestPhotoMeta(d.id);
-      const hasPhoto = Boolean(photoMeta?.url || photoMeta?.original_url || photoMeta?.storage_key);
+      const isProvisional = Boolean(d.provisional);
+      // 仮番号の蓋の写真は latest-manhole-photos.json に無い（投稿の写真を {id}_latest.jpeg に置いている）
+      const hasPhoto = Boolean(photoMeta?.url || photoMeta?.original_url || photoMeta?.storage_key)
+        || (isProvisional && d.has_photo === true);
       const photoDate = getPhotoTakenDate(d.id);
       const displayName = String(photoMeta?.display_name || '').trim();
       const posterProfileUrl = getPosterProfileUrl(photoMeta?.public_user_id);
@@ -1058,9 +1061,13 @@
       const preinstallBadgeHtml = isPreinstall
         ? '<span class="travel-popup-badge travel-popup-badge--pre">🚧 ' + escapeHtml(I.preinstall) + '</span>'
         : '';
-      const titleBadgesHtml = (titles.length || isPreinstall)
+      const provisionalBadgeHtml = isProvisional
+        ? '<span class="travel-popup-badge travel-popup-badge--pre">' + escapeHtml(I.provisional) + '</span>'
+        : '';
+      const titleBadgesHtml = (titles.length || isPreinstall || isProvisional)
         ? '<div class="travel-popup-badges">'
           + preinstallBadgeHtml
+          + provisionalBadgeHtml
           + titles.slice(0, 1).map(t => '<span class="travel-popup-badge">'
             + escapeHtml((t.emoji ? t.emoji + ' ' : '') + t.label)
             + '</span>').join('')
@@ -1345,6 +1352,20 @@
               prefecture_site_url: prefUrlToKeep
             });
           }
+        }
+        // 公式サイト未掲載の仮番号の蓋（provisional_manholes.py がデプロイで dist/ 直下に書く）。日本語の map.html と同じく
+        // 公式の pokefuta.ndjson には混ぜず、地図でだけ重ねる。無くても地図は公式だけで動く
+        try {
+          const provisionalRes = await fetch('%%BASE_PATH%%provisional_manholes.ndjson', { cache: 'no-store' });
+          if (provisionalRes.ok) {
+            for (const line of (await provisionalRes.text()).split('\n')) {
+              if (!line.trim()) continue;
+              let obj; try { obj = JSON.parse(line); } catch { continue; }
+              if (obj && obj.provisional && obj.id && !aggById.has(obj.id)) aggById.set(obj.id, obj);
+            }
+          }
+        } catch (e) {
+          console.warn('Failed to fetch provisional manholes:', e);
         }
         allData = [...aggById.values()];
   // Detect presence of date field for recent filter (include source_last_checked / last_seen)
@@ -1673,7 +1694,8 @@
         if (marker.isPhotoIcon || marker.photoFailed) return;
         const d = marker.pokefutaData;
         const photoMeta = getLatestPhotoMeta(d.id);
-        const hasPhoto = Boolean(photoMeta?.url || photoMeta?.original_url || photoMeta?.storage_key);
+        const hasPhoto = Boolean(photoMeta?.url || photoMeta?.original_url || photoMeta?.storage_key)
+          || (d.provisional && d.has_photo === true);
         if (!hasPhoto || !bounds.contains(marker.getLatLng())) return;
         marker.isPhotoIcon = true;
         marker.setIcon(getPhotoMarkerIcon(d));
