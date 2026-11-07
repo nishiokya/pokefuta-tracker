@@ -128,7 +128,8 @@ jobs:
             --image-dir dataset/manhole/image \
             --photos-in docs/latest-manhole-photos.json \
             --photos-out build/latest-manhole-photos.json \
-            --provisional-out dist/provisional_manholes.ndjson
+            --provisional-out dist/provisional_manholes.ndjson \
+            --wanted-out dist/api/provisional-wanted.json
 
       - name: Generate per-manhole OGP images
         run: |

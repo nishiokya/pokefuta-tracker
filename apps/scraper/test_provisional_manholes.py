@@ -299,3 +299,16 @@ class WantedTests(unittest.TestCase):
         self.assertIn("高知県 1か所", html)
         # 全国の枚数には入れない
         self.assertEqual(data.total, 0)
+
+
+class WantedSummaryTests(unittest.TestCase):
+    def test_summary_for_the_photo_studio_lists_prefectures_north_to_south(self):
+        places = {
+            "高知県": {"places": [{"city": "土佐市", "place": "土佐市役所"}]},
+            "群馬県": {"places": [{"city": "沼田市", "place": "吹割の滝遊歩道入口", "pokemons": ["x"]},
+                                  {"city": "館林市"}]},
+        }
+        summary = pm.wanted_summary(places)
+        self.assertEqual(summary["total"], 3)
+        self.assertEqual([p["slug"] for p in summary["prefectures"]], ["gunma", "kochi"])
+        self.assertEqual(summary["prefectures"][0]["places"][1], {"city": "館林市", "place": ""})

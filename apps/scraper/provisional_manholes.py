@@ -30,10 +30,12 @@ from typing import Any, Callable, Optional
 
 try:
     from apps.scraper.display_names import build_place_label, municipality_label
+    from apps.scraper.prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
     from display_names import build_place_label, municipality_label
+    from prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -289,6 +291,24 @@ def wanted_places(wanted: dict[str, dict], records: list[dict]) -> dict[str, dic
     return out
 
 
+def wanted_summary(places_by_prefecture: dict[str, dict]) -> dict:
+    """写真館に渡す形。県は北から（PREFECTURE_ORDER）、場所は市町と施設名だけ。"""
+    prefectures = [
+        {
+            "prefecture": prefecture,
+            "slug": PREFECTURE_SLUGS.get(prefecture, ""),
+            "count": len(places_by_prefecture[prefecture]["places"]),
+            "places": [
+                {"city": str(p["city"]), "place": str(p.get("place") or "")}
+                for p in places_by_prefecture[prefecture]["places"]
+            ],
+        }
+        for prefecture in PREFECTURE_ORDER
+        if prefecture in places_by_prefecture
+    ]
+    return {"total": sum(p["count"] for p in prefectures), "prefectures": prefectures}
+
+
 SITE_URL = "https://data.pokefuta.com/"
 # 詳細ページの日本語版と訳した版（generate_manhole_pages*.py の出力先）
 REDIRECT_PREFIXES = ("", "en/", "zh-TW/")
@@ -335,11 +355,16 @@ def main(argv: Optional[list[str]] = None) -> int:
     parser.add_argument("--overrides", type=Path, default=DEFAULT_OVERRIDES)
     parser.add_argument("--out", type=Path, help="公式＋仮の NDJSON の書き出し先（省略時は検査だけ）")
     parser.add_argument("--image-dir", type=Path, help="投稿の写真を落とすフォルダ")
+    parser.add_argument("--wanted", type=Path, default=DEFAULT_WANTED)
     parser.add_argument("--photos-in", type=Path, help="latest-manhole-photos.json（--photos-out と一緒に）")
     parser.add_argument("--photos-out", type=Path, help="仮番号の写真の行を足した写真 JSON の書き出し先")
     parser.add_argument(
         "--provisional-out", type=Path,
         help="仮番号の蓋だけの NDJSON（地図 map.html が公式の pokefuta.ndjson に重ねて読む）",
+    )
+    parser.add_argument(
+        "--wanted-out", type=Path,
+        help="緯度経度を調べているポケふたの JSON（写真館トップの「募集中」カードが読む。api/provisional-wanted.json）",
     )
     parser.add_argument("--redirects-dir", type=Path, help="公式に載った仮番号の転送ページを書くサイトのルート（dist）")
     args = parser.parse_args(argv)
@@ -373,6 +398,13 @@ def main(argv: Optional[list[str]] = None) -> int:
                 json.dumps({**record, "has_photo": record["id"] in photo_ids}, ensure_ascii=False) + "\n"
                 for record in records
             ),
+            encoding="utf-8",
+        )
+    if args.wanted_out:
+        official = [json.loads(line) for line in official_lines]
+        args.wanted_out.parent.mkdir(parents=True, exist_ok=True)
+        args.wanted_out.write_text(
+            json.dumps(wanted_summary(wanted_places(load_wanted(args.wanted), official + records)), ensure_ascii=False),
             encoding="utf-8",
         )
     if args.photos_in and args.photos_out:
