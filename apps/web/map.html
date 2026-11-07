@@ -1945,7 +1945,8 @@
       if(!el) return;
       if(!hasAddedAtField){ el.textContent='日付フィールドなし'; return; }
       const recentCnt = countRecent(30);
-      const total = allData.length;
+      // 全国の枚数は公式の枚数（仮番号の蓋はピン・新着・県のパネルには出すが、全国の合計には入れない）
+      const total = allData.filter(d => !d.provisional).length;
       el.textContent=`${recentCnt} / ${total}`;
     }
 
