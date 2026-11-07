@@ -368,18 +368,22 @@ body.has-site-header [id] {
   width: 26px;
   height: 26px;
   flex-shrink: 0;
+  overflow: hidden;
   border-radius: 50%;
   background: #dfe7f3;
   font-size: 13px;
 }
 
-/* 写真館で選んだアイコン（session-badge.js が入れる） */
+/* 写真館で選んだアイコン（session-badge.js が入れる）。
+   写真は縦長（3:4 など）なので、枠と同じ正方形に決め打ちして中央で切り抜く。
+   grid の中では height: 100% が効かず、元の縦横比のまま縦長の楕円になっていた */
 .site-auth__avatar img {
   display: block;
-  width: 100%;
-  height: 100%;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   object-fit: cover;
+  object-position: center;
 }
 
 .site-auth__name {
