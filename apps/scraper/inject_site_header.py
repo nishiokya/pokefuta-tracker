@@ -241,7 +241,7 @@ HEADER_TEMPLATE = """<header class="site-header">
       <a class="site-auth__signup" data-login-link href="{signup_url}">{signup}</a>
     </div>
     <a class="site-auth__user" data-auth-user hidden href="{profile_url}" title="{profile}" aria-label="{profile}">
-      <span class="site-auth__avatar" aria-hidden="true">👤</span><span class="site-auth__name" data-auth-name></span>
+      <span class="site-auth__avatar" data-auth-avatar aria-hidden="true">👤</span><span class="site-auth__name" data-auth-name></span>
     </a>
   </div>
 </header>"""

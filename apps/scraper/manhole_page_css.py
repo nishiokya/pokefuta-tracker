@@ -10,6 +10,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 from photo_caption import CAPTION_ELLIPSIS_CSS  # noqa: E402
+from poster_identity import POSTER_IDENTITY_CSS  # noqa: E402
 
 PAGE_CSS = f"""    * {{
       box-sizing: border-box;
@@ -873,3 +874,6 @@ PAGE_CSS = f"""    * {{
       text-decoration: none;
     }}
 """
+
+# 投稿者名の前のアイコンと後ろの称号（poster_identity.py）
+PAGE_CSS += POSTER_IDENTITY_CSS
