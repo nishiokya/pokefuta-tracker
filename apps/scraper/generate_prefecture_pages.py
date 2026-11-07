@@ -514,7 +514,9 @@ def build_rankings(records: list[dict]) -> dict[str, int | None]:
     }
 
 
-def _trivia_html(prefecture: str, trivia_entry: dict | None, count: int) -> str:
+def _trivia_html(
+    prefecture: str, trivia_entry: dict | None, count: int, pending: list[str] | None = None
+) -> str:
     entries = (trivia_entry or {}).get("trivia", [])
     selected = entries[0] if entries else None
     if selected:
@@ -533,8 +535,14 @@ def _trivia_html(prefecture: str, trivia_entry: dict | None, count: int) -> str:
     if count:
         municipalities = (trivia_entry or {}).get("municipality_count", 0)
         if not municipalities:
-            # トリビアは公式の枚数から作るので、仮番号の蓋しか無い県は自治体数を持たない
-            return f"<p>{escape(prefecture)}では{count}枚のポケふたを巡れます。</p>"
+            # トリビアは公式の枚数から作るので、仮番号の蓋しか無い県（群馬）は持たない。発表された枚数で書く
+            if pending:
+                return (
+                    f"<p>{escape(prefecture)}で設置が発表されたポケふたは{count + len(pending)}枚。"
+                    f"図鑑に載っているのは{count}枚で、{escape('・'.join(pending))}の{len(pending)}か所は"
+                    "写真が届くのを待っています。</p>"
+                )
+            return f"<p>{escape(prefecture)}には{count}枚のポケふたがあります。</p>"
         return (
             f"<p>{escape(prefecture)}では{count}枚のポケふたを"
             f"{municipalities}自治体で巡れます。</p>"
@@ -1776,6 +1784,7 @@ def _hero_intro(
     complete: list[str] | None = None,
     records: list[dict] | None = None,
     photo_count: int = 0,
+    pending: list[str] | None = None,
 ) -> str:
     if not count:
         return (
@@ -1787,7 +1796,9 @@ def _hero_intro(
     intro = _visit_search_intro(prefecture, count, records or [], photo_count)
     single_municipality_intro = bool(intro) and len(_municipality_counts(records or [])) == 1
     intro = intro or f"{prefecture}には{count}枚のポケふたがあります。"
-    if not single_municipality_intro and coverage and coverage.covered:
+    # 設置が発表されたのに写真がまだ届いていない蓋がある（provisional_wanted.json）ときは、図鑑に載っている分だけで
+    # 「◯◯だけです」と言い切らない
+    if not single_municipality_intro and coverage and coverage.covered and not (pending and coverage.covered == 1):
         intro += _coverage_sentence(coverage, complete or [])
     elif not single_municipality_intro and municipality_count:
         intro += f"県内{municipality_count}自治体に広がっています。"
@@ -1797,6 +1808,8 @@ def _hero_intro(
     if trivia and trivia[0].get("text"):
         fact = str(trivia[0]["text"]).rstrip("。")
         intro += f"{fact}。"
+    if pending:
+        intro += f"ほかに{'・'.join(pending)}の{len(pending)}か所で設置が発表されていて、写真を待っています。"
     return intro
 
 
@@ -1825,8 +1838,13 @@ def _coverage_html(
     coverage: PrefectureCoverage | None,
     complete: list[str],
     municipality_paths: dict[str, str] | None = None,
+    pending: list[str] | None = None,
 ) -> str:
-    """何市町村にポケふたがあるか。市区町村ページや自治体の公式サイトには無い、県単位の情報。"""
+    """何市町村にポケふたがあるか。市区町村ページや自治体の公式サイトには無い、県単位の情報。
+
+    pending は設置が発表されたのに写真がまだ届いていない市町村（provisional_wanted.json）。
+    あるときは「すべて◯◯に」「◯◯だけ」と言い切らない。
+    """
     if not coverage or not coverage.covered or not count:
         return ""
     short = _short_prefecture_name(prefecture)
@@ -1861,6 +1879,14 @@ def _coverage_html(
             )
             + "</p>"
             f"<p>全市町村にポケふたがあるのは、全国で{'・'.join(others)}の{len(complete)}県です。</p>"
+        )
+    elif coverage.covered == 1 and pending:
+        only = next(iter(coverage.counts))
+        heading = f"{short}のポケふたがある市町村"
+        body = (
+            f"<p>図鑑に載っている{escape(prefecture)}のポケふた{count}枚は{escape(only)}にあります。"
+            f"ほかに{escape('・'.join(pending))}の{len(pending)}か所で設置が発表されていて、"
+            "写真が届きしだい図鑑に載せます。</p>"
         )
     elif coverage.covered == 1:
         only, only_count = next(iter(coverage.counts.items()))
@@ -2642,9 +2668,10 @@ def build_page(
     date_modified = _date_modified(records, photo_entries)
     title, description, h1 = _prefecture_seo(prefecture, count, records, nearest, photo_count)
     rank_label = f"全国{rank}位" if rank else "現在未設置"
+    pending = [str(place["city"]) for place in (wanted or {}).get("places") or []]
     hero_intro = _hero_intro(
         prefecture, count, trivia_entry, coverage, complete,
-        records=records, photo_count=photo_count,
+        records=records, photo_count=photo_count, pending=pending,
     )
     headline_event = _headline_event(events)
     if headline_event:
@@ -2709,7 +2736,7 @@ def build_page(
 
     """
     )
-    trivia_html = _trivia_html(prefecture, trivia_entry, count)
+    trivia_html = _trivia_html(prefecture, trivia_entry, count, pending)
     events_html = _events_html(events)
     wanted_html = _wanted_html(prefecture, slug, wanted)
     related_html = _related_prefectures(prefecture, empty_prefectures)
@@ -2723,7 +2750,7 @@ def build_page(
             or _municipality_guide(prefecture, records, municipality_paths)
         )
     )
-    coverage_html = _coverage_html(prefecture, count, coverage, complete or [], municipality_paths)
+    coverage_html = _coverage_html(prefecture, count, coverage, complete or [], municipality_paths, pending)
     # 1市町村だけの県で「市町村別の設置枚数」が既に出ているなら、同じことを2回言わない
     # （「県内43市町村のうち指宿市だけ」はヒーローの導入に入っている）
     if coverage and coverage.covered == 1 and not coverage.is_complete and municipality_guide_html:

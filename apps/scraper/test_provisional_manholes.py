@@ -312,3 +312,30 @@ class WantedSummaryTests(unittest.TestCase):
         self.assertEqual(summary["total"], 3)
         self.assertEqual([p["slug"] for p in summary["prefectures"]], ["gunma", "kochi"])
         self.assertEqual(summary["prefectures"][0]["places"][1], {"city": "館林市", "place": ""})
+
+
+class PendingWordingTests(unittest.TestCase):
+    """設置が発表されたのに写真が届いていない蓋がある県（群馬）で「すべて◯◯に」「◯◯だけ」と言い切らない。"""
+
+    def test_trivia_counts_announced_lids(self):
+        from apps.scraper import generate_prefecture_pages as ja
+
+        html = ja._trivia_html("群馬県", None, 1, ["沼田市", "館林市"])
+        self.assertIn("設置が発表されたポケふたは3枚", html)
+        self.assertIn("沼田市・館林市の2か所", html)
+        self.assertNotIn("巡れます", ja._trivia_html("群馬県", None, 1))
+
+    def test_coverage_section_does_not_say_all_in_one_city(self):
+        from apps.scraper import generate_prefecture_pages as ja
+        from apps.scraper.municipalities import prefecture_coverage
+
+        record = {"id": "9001", "prefecture": "群馬県", "city": "渋川", "address": "群馬県渋川市伊香保町伊香保",
+                  "provisional": True}
+        coverage = prefecture_coverage([record])["群馬県"]
+        html = ja._coverage_html("群馬県", 1, coverage, [], None, ["沼田市"])
+        self.assertNotIn("すべて渋川市", html)
+        self.assertIn("ほかに沼田市の1か所", html)
+        self.assertIn("すべて渋川市", ja._coverage_html("群馬県", 1, coverage, [], None))
+        intro = ja._hero_intro("群馬県", 1, None, coverage, [], records=[record], pending=["沼田市"])
+        self.assertNotIn("だけです", intro)
+        self.assertIn("ほかに沼田市の1か所で設置が発表されていて", intro)
