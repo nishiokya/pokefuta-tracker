@@ -336,6 +336,12 @@ class PendingWordingTests(unittest.TestCase):
         self.assertNotIn("すべて渋川市", html)
         self.assertIn("ほかに沼田市の1か所", html)
         self.assertIn("すべて渋川市", ja._coverage_html("群馬県", 1, coverage, [], None))
+        two = prefecture_coverage([record, {**record, "id": "9003", "city": "沼田",
+                                            "address": "群馬県沼田市利根町追貝"}])["群馬県"]
+        html = ja._coverage_html("群馬県", 2, two, [], None, ["館林市"])
+        self.assertIn("図鑑に載っていて、まだ載っていない市町村は", html)
+        self.assertIn("ほかに館林市の1か所で設置が発表されていて", html)
+        self.assertIn("まだ無い市町村は", ja._coverage_html("群馬県", 2, two, [], None))
         intro = ja._hero_intro("群馬県", 1, None, coverage, [], records=[record], pending=["沼田市"])
         self.assertNotIn("だけです", intro)
         self.assertIn("ほかに沼田市の1か所で設置が発表されていて", intro)

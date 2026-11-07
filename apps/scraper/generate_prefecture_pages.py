@@ -1900,9 +1900,19 @@ def _coverage_html(
         heading = f"{short}のポケふたがある市町村（{coverage.covered}/{coverage.total}）"
         body = (
             f"<p>{escape(prefecture)}の{coverage.total}市町村のうち{coverage.covered}市町村"
-            f"（{coverage.percent}%）にポケふたがあり、まだ無い市町村は{coverage.uncovered}です。"
-            f"ポケふたがある市町村の数は全国{coverage.covered_rank}位です。"
+            + (
+                # 写真待ちの市町村は「まだ無い」に入るので、図鑑の数だと断って場所を添える
+                f"（{coverage.percent}%）のポケふたが図鑑に載っていて、まだ載っていない市町村は{coverage.uncovered}です。"
+                if pending else
+                f"（{coverage.percent}%）にポケふたがあり、まだ無い市町村は{coverage.uncovered}です。"
+            )
+            + f"ポケふたがある市町村の数は全国{coverage.covered_rank}位です。"
             + (f"複数あるのは{multi_text}です。" if multi else "どの市町村も1枚ずつです。")
+            + (
+                f"ほかに{escape('・'.join(pending))}の{len(pending)}か所で設置が発表されていて、"
+                "写真が届きしだい図鑑に載せます。"
+                if pending else ""
+            )
             + "</p>"
         )
     # 1市町村だけの県（指宿だけの鹿児島など）は「1/43（2%）」のメーターが情報にならないので出さない
