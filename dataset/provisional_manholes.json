@@ -27,6 +27,42 @@
       "pokemons": ["ノココッチ", "ダーテング"],
       "source_url": "https://www.pref.gunma.jp/site/houdou/779585.html",
       "official_id": null
+    },
+    "9004": {
+      "design_manhole_id": "afb5e0bf-5259-427d-86f0-9d51534a6229",
+      "prefecture": "高知県",
+      "city": "土佐",
+      "building": "土佐市役所",
+      "pokemons": ["ジジーロン", "ヌオー"],
+      "source_url": "https://kyodonewsprwire.jp/release/202610208331",
+      "official_id": null
+    },
+    "9005": {
+      "design_manhole_id": "91f132e4-c923-4b66-ae79-a34f89af638b",
+      "prefecture": "高知県",
+      "city": "いの",
+      "building": "JR伊野駅ロータリー",
+      "pokemons": ["ウパー", "ヌオー"],
+      "source_url": "https://kyodonewsprwire.jp/release/202610208331",
+      "official_id": null
+    },
+    "9006": {
+      "design_manhole_id": "7bf78a32-bbcc-4592-86da-7f2948d689fc",
+      "prefecture": "高知県",
+      "city": "佐川",
+      "building": "まきのさんの道の駅・佐川",
+      "pokemons": ["ポポッコ", "ゾウドウ", "ヌオー"],
+      "source_url": "https://kyodonewsprwire.jp/release/202610208331",
+      "official_id": null
+    },
+    "9007": {
+      "design_manhole_id": "7747f7da-bc6f-4bd4-949f-94f5467d8c21",
+      "prefecture": "高知県",
+      "city": "四万十",
+      "building": "中村駅",
+      "pokemons": ["メガヤンマ", "ヌオー"],
+      "source_url": "https://kyodonewsprwire.jp/release/202610208331",
+      "official_id": null
     }
   }
 }

@@ -30,6 +30,9 @@ class ImportDesignManholesTests(unittest.TestCase):
             }
         )
 
+    def test_normalize_submission_drops_submitter_name(self):
+        self.assertNotIn("submitter_name", self.submission)
+
     def test_normalize_submission_makes_photo_url_absolute(self):
         self.assertEqual(self.submission["title"], "テスト蓋")
         self.assertEqual(

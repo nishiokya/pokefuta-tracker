@@ -111,11 +111,12 @@ def normalize_submission(item: dict[str, Any]) -> dict[str, Any]:
         raise ValueError(f"Invalid coordinates for design-manhole {item['id']}")
 
     photo_url = urllib.parse.urljoin(PHOTO_BASE_URL, str(item["photo_url"]))
+    # 投稿者名は残さない。この ndjson は公開リポジトリに入り、投稿時刻・位置と結びつくため。
+    # 後ろの処理（公開スナップショット・紐付け）は投稿の id だけで足りる
     return {
         "id": str(item["id"]),
         "title": str(item.get("title") or "").strip() or None,
         "description": str(item.get("description") or "").strip() or None,
-        "submitter_name": str(item.get("submitter_name") or "").strip() or None,
         "latitude": latitude,
         "longitude": longitude,
         "width": item.get("width"),
