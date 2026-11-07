@@ -398,6 +398,21 @@ class GeneratedHtmlTest(unittest.TestCase):
         # 市区町村ランキングへの導線は「目的から探す」の市区町村チップへ移した
         self.assertNotIn("municipalities/", block)
 
+    def test_provisional_lids_put_their_prefecture_in_the_list_but_not_the_totals(self) -> None:
+        # 公式が0枚の群馬（仮番号だけ）を「設置されていません」と書かず、一覧と地図ピンに出す
+        import dataclasses
+        record = {"id": "9001", "prefecture": "群馬県", "city": "渋川", "status": "active", "provisional": True,
+                  "pokemons": ["サンダー"], "added_at": "2026-09-20T00:00:00Z"}
+        data = dataclasses.replace(Fixture(self.tmp).data(), provisional=[record])
+        block = _block(module.apply_blocks(SHELL, data), "pref")
+        installed = re.findall(r'<span class="home-pref__name">([^<]+)</span>', block)
+        self.assertIn("群馬県", installed)
+        self.assertIn("47都道府県のうち10都道府県", block)
+        note = re.search(r'<p class="home-pref-note">(.*?)</p>', block).group(1)
+        self.assertIn("36県", note)
+        self.assertNotIn("gunma", note)
+        self.assertIn("群馬県", [pin["prefecture"] for pin in module.map_pins(data)])
+
     def test_new_releases_only_appear_when_recent(self) -> None:
         self.assertNotIn("home-newrelease", Fixture(self.tmp).html())
         records = _records()

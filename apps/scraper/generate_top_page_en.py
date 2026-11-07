@@ -471,7 +471,7 @@ def render_events(data: ja.TopData, en: Locale) -> str:
 
 
 def render_pref(data: ja.TopData, en: Locale) -> str:
-    counts = data.pref_counts
+    counts = data.listed_counts
     regions = []
     for name, prefs in ja.REGIONS:
         installed = [p for p in prefs if counts.get(p)]
@@ -577,6 +577,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--source", type=Path, default=DEFAULT_TARGET,
                         help="雛形（省略時は apps/web/index.en.html。全言語で同じ雛形を使う）")
     parser.add_argument("--lang", choices=LANGS, default="en")
+    parser.add_argument("--provisional", type=Path, help="仮番号の蓋だけの NDJSON（県の一覧・地図ピンに数える）")
     args = parser.parse_args(argv)
 
     loc = Locale(args.lang)
@@ -585,7 +586,7 @@ def main(argv: list[str] | None = None) -> int:
     if missing:
         print(f"[top-page-en] markers missing in {args.source}: {', '.join(missing)}", file=sys.stderr)
         return 1
-    data = ja.load_data()
+    data = ja.load_data(provisional=args.provisional)
     args.target.parent.mkdir(parents=True, exist_ok=True)
     args.target.write_text(apply_blocks(html, data, loc), encoding="utf-8")
     print(f"[top-page-{args.lang}] wrote {args.target}: {data.total} manholes, {len(data.installed_prefectures)} prefectures")

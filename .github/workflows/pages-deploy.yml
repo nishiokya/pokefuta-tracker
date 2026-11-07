@@ -255,10 +255,10 @@ jobs:
           echo "[dist] Build multilingual pages (en / zh-TW / zh-CN / ko)"
           python3 tools/build_i18n.py
           echo "[dist] Replace the English top with the photo-led layout"
-          python3 apps/scraper/generate_top_page_en.py dist/en/index.html
+          python3 apps/scraper/generate_top_page_en.py dist/en/index.html --provisional dist/provisional_manholes.ndjson
           echo "[dist] zh-TW / zh-CN / ko tops use the same photo-led layout (index.en.html with localized text)"
           for lang in zh-TW zh-CN ko; do
-            python3 apps/scraper/generate_top_page_en.py --lang "$lang" "dist/$lang/index.html"
+            python3 apps/scraper/generate_top_page_en.py --lang "$lang" "dist/$lang/index.html" --provisional dist/provisional_manholes.ndjson
           done
           cp apps/web/nearby.html dist/nearby_manholes.html  # 旧 URL も map.html へ
           echo "[dist] Inject shared site header into every HTML page"

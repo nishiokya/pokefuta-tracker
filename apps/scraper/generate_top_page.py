@@ -259,8 +259,20 @@ class TopData:
         return [p for p in PREFECTURE_ORDER if counts.get(p)]
 
     @property
+    def listed_counts(self) -> Counter:
+        """県の一覧・地図ピン用。仮番号の蓋も数える（公式が0枚の群馬も一覧に出す）。全国の枚数・県数は pref_counts"""
+        return self.pref_counts + Counter(
+            r["prefecture"] for r in self.provisional if r.get("prefecture") in PREFECTURE_SLUGS
+        )
+
+    @property
+    def listed_prefectures(self) -> list[str]:
+        counts = self.listed_counts
+        return [p for p in PREFECTURE_ORDER if counts.get(p)]
+
+    @property
     def empty_prefectures(self) -> list[str]:
-        counts = self.pref_counts
+        counts = self.listed_counts
         return [p for p in PREFECTURE_ORDER if not counts.get(p)]
 
 
@@ -579,7 +591,7 @@ def render_head(data: TopData, indent: str) -> str:
 
 def map_pins(data: TopData, label=None, title=None) -> list[dict]:
     """ヒーロー地図の都道府県ピン。件数は同じ生成時データから出す（ブラウザで ndjson を読まない）。"""
-    counts = data.pref_counts
+    counts = data.listed_counts
     label = label or (lambda pref: pref if pref == "北海道" else pref[:-1])
     title = title or (lambda pref, count: f"{pref} {count}枚：地図で見る")
     return [
@@ -591,7 +603,7 @@ def map_pins(data: TopData, label=None, title=None) -> list[dict]:
             "lat": PREF_COORDS[pref][0],
             "lng": PREF_COORDS[pref][1],
         }
-        for pref in data.installed_prefectures
+        for pref in data.listed_prefectures
         if pref in PREF_COORDS
     ]
 
@@ -950,7 +962,7 @@ def render_events(data: TopData) -> str:
 
 
 def render_pref(data: TopData) -> str:
-    counts = data.pref_counts
+    counts = data.listed_counts
     regions = []
     for name, prefs in REGIONS:
         installed = [p for p in prefs if counts.get(p)]
