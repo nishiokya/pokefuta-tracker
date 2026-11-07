@@ -13,6 +13,13 @@ except ModuleNotFoundError as exc:
         raise
     from prefectures import PREFECTURE_PAGE_LANGS
 
+try:
+    from apps.scraper.provisional_manholes import PROVISIONAL_UPLOAD_URL
+except ModuleNotFoundError as exc:
+    if exc.name != "apps":
+        raise
+    from provisional_manholes import PROVISIONAL_UPLOAD_URL
+
 
 BASE_URL = "https://data.pokefuta.com"
 OG_IMAGE = f"{BASE_URL}/assets/ogp/pokefuta_summary_ogp.png"
@@ -63,7 +70,10 @@ def campaign_params(slug: str) -> str:
     return f"from=data&pref={quote(slug)}"
 
 
-def upload_url(manhole_id: str, slug: str) -> str:
+def upload_url(manhole_id: str, slug: str, *, provisional: bool = False) -> str:
+    """写真の投稿先。仮番号の蓋（record["provisional"]）は写真館に番号が無いので新しいポケふたの投稿へ。"""
+    if provisional:
+        return f"{PROVISIONAL_UPLOAD_URL}&{campaign_params(slug)}"
     return (
         "https://pokefuta.com/upload?"
         f"manhole_id={quote(manhole_id)}&{campaign_params(slug)}"

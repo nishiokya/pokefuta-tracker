@@ -806,9 +806,10 @@ def build_page(
 
 
 def build_index_page(page: Page, records_by_pref: dict[str, list[dict]]) -> str:
-    # 「installed」と書くので設置予定（installed: false）は数えない
+    # 「installed」と書くので設置予定（installed: false）は数えない。全国の数字は公式の枚数なので仮番号の蓋も数えない
     installed = {
-        pref: [r for r in items if r.get("installed") is not False] for pref, items in records_by_pref.items()
+        pref: [r for r in items if r.get("installed") is not False and not r.get("provisional")]
+        for pref, items in records_by_pref.items()
     }
     total = sum(len(v) for v in installed.values())
     prefs = sum(1 for v in installed.values() if v)

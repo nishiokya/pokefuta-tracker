@@ -1,0 +1,23 @@
+{
+  "_comment": "公式サイト（local.pokemon.jp）に載っていない新しいポケふたの仮番号の台帳（手動更新）。写真館のデザインふた投稿が来たものだけ1行足す。緯度経度・写真・投稿日は投稿（docs/design_manholes.ndjson）から引くのでここに書かない。番号は 9001 から通し番号で振り、使い回さない。同じ投稿は dataset/design_manhole_overrides.json に canonical_ref \"pokefuta:<仮番号>\" を書いてデザインふたの一覧から外す。公式に載ったら official_id に正式な番号を書く。生成は apps/scraper/provisional_manholes.py",
+  "manholes": {
+    "9001": {
+      "design_manhole_id": "202ff606-b1b7-4b9b-bba2-de3092a16a6d",
+      "prefecture": "群馬県",
+      "city": "渋川",
+      "building": "伊香保ロープウェイ不如帰駅前",
+      "pokemons": ["サンダー"],
+      "source_url": "https://www.pref.gunma.jp/site/houdou/779585.html",
+      "official_id": null
+    },
+    "9002": {
+      "design_manhole_id": "a0326912-b668-41ee-9a63-c82fedb54136",
+      "prefecture": "高知県",
+      "city": "芸西",
+      "building": "",
+      "pokemons": ["フラエッテ", "ピッピ", "ヌオー"],
+      "source_url": "",
+      "official_id": null
+    }
+  }
+}

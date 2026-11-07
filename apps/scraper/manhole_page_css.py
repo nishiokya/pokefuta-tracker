@@ -718,6 +718,22 @@ PAGE_CSS = f"""    * {{
       color: #6b5d44;
     }}
 
+    .hero-badge-provisional {{
+      background: #f3eefb;
+      border-color: #a891cf;
+      color: #5b4392;
+    }}
+
+    .provisional-note p {{
+      margin: 0 0 6px;
+      font-size: 14px;
+      line-height: 1.7;
+    }}
+
+    .provisional-note a {{
+      color: #5b4392;
+    }}
+
     .visit-cta {{
       display: flex;
       align-items: center;

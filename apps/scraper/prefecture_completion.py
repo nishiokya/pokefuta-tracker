@@ -113,8 +113,11 @@ def is_countable(record: dict) -> bool:
     generate_prefecture_pages.py 内で繰り返し使われている規約。まだ現地に
     無いものを「写真が足りない」と数えると、撮りに行きようのない残数が
     永遠に残る。
+
+    公式サイト未掲載の仮番号の蓋（provisional_manholes.py）も数えない。
+    公式の番号へ移ってから数える（コンプリート率・未設置県の判定は公式の枚数で見る）。
     """
-    return record.get("installed") is not False
+    return record.get("installed") is not False and not record.get("provisional")
 
 
 def build_completion(
@@ -171,7 +174,8 @@ def verify_known_empty(
     )
     problems: list[str] = []
     for name in order:
-        records = records_by_pref.get(name, [])
+        # 仮番号の蓋は公式の取りこぼしの判定に使わない（未設置県に仮の1枚があっても通す）
+        records = [r for r in records_by_pref.get(name, []) if not r.get("provisional")]
         if not records:
             if name not in allowed:
                 problems.append(f"{name}（1枚も取れていない）")

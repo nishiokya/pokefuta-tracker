@@ -69,6 +69,9 @@ on:
       - 'apps/scraper/manhole_records.py' # record loading / names / distances shared by prefecture, municipality, trip, feature pages
       - 'apps/scraper/page_html.py' # escape / JSON / campaign params / hreflang shared by the same pages
       - 'apps/scraper/prefecture_completion.py' # shared photo-completion rollup (prefectures + summary)
+      - 'apps/scraper/provisional_manholes.py' # 公式未掲載のポケふた（仮番号）を詳細・県・ポケモンのページへ合流
+      - 'dataset/provisional_manholes.json' # 仮番号の台帳（手動）
+      - 'dataset/design_manhole_overrides.json' # 仮番号へ結びつけた投稿（canonical_ref pokefuta:<仮番号>）
       - 'docs/**'     # dataset changes copied into dist/
       - 'dataset/prefecture_trivia*.json' # generated trivia and editorial sources
       - 'dataset/prefecture_events.json' # prefecture campaign/stamp-rally links
@@ -112,13 +115,25 @@ jobs:
       - name: Install Japanese fonts (Noto Sans CJK)
         run: sudo apt-get update -y && sudo apt-get install -y fonts-noto-cjk libcairo2
 
+      # 公式未掲載のポケふた（仮番号 9001〜）。公式の docs/pokefuta.ndjson は変えず、公式＋仮を build/ に書き出す。
+      # 詳細・県・ポケモンのページと sitemap だけが build/ を読み、全国の枚数・トップ・まとめ・トリビアは公式のみ。
+      # 写真館で投稿が非公開になった仮番号は、写真 API が 404 を返すのでここで外れる。
+      - name: Merge provisional manholes
+        run: |
+          python3 -m unittest apps.scraper.test_provisional_manholes
+          python3 apps/scraper/provisional_manholes.py \
+            --out build/pokefuta_with_provisional.ndjson \
+            --image-dir dataset/manhole/image \
+            --photos-in docs/latest-manhole-photos.json \
+            --photos-out build/latest-manhole-photos.json
+
       - name: Generate per-manhole OGP images
         run: |
           mkdir -p dist/assets/ogp/manholes
           python3 apps/scraper/generate_manhole_ogp.py \
-            --manholes docs/pokefuta.ndjson \
+            --manholes build/pokefuta_with_provisional.ndjson \
             --image-dir dataset/manhole/image \
-            --photos docs/latest-manhole-photos.json \
+            --photos build/latest-manhole-photos.json \
             --pokemon docs/pokemon_metadata.json \
             --output dist/assets/ogp/manholes \
             --force
@@ -163,21 +178,23 @@ jobs:
             apps.scraper.test_generate_character_work_pages \
             apps.scraper.test_generate_gmanhole_map_page
           echo "[dist] Test manhole detail page headings"
-          python3 -m unittest apps.scraper.test_generate_manhole_pages_h1 apps.scraper.test_generate_manhole_pages_breadcrumb apps.scraper.test_display_name_consumers apps.scraper.test_generate_top_feed apps.scraper.test_generate_manhole_pages_i18n apps.scraper.test_generate_manhole_pages_regional_forms apps.scraper.test_generate_manhole_pages_design_nearby apps.scraper.test_generate_manhole_pages_hero_actions apps.scraper.test_generate_manhole_pages_preinstall
+          python3 -m unittest apps.scraper.test_generate_manhole_pages_h1 apps.scraper.test_generate_manhole_pages_breadcrumb apps.scraper.test_display_name_consumers apps.scraper.test_generate_top_feed apps.scraper.test_generate_manhole_pages_i18n apps.scraper.test_generate_manhole_pages_regional_forms apps.scraper.test_generate_manhole_pages_design_nearby apps.scraper.test_generate_manhole_pages_hero_actions apps.scraper.test_generate_manhole_pages_preinstall apps.scraper.test_generate_manhole_pages_provisional
           echo "[dist] Generate static manhole detail pages"
-          python3 apps/scraper/generate_manhole_pages.py
+          python3 apps/scraper/generate_manhole_pages.py --manholes build/pokefuta_with_provisional.ndjson --photos build/latest-manhole-photos.json
           echo "[dist] Generate translated manhole detail pages (en / zh-TW)"
           for lang in en zh-TW; do
-            python3 apps/scraper/generate_manhole_pages_i18n.py --lang "$lang"
+            python3 apps/scraper/generate_manhole_pages_i18n.py --lang "$lang" --manholes build/pokefuta_with_provisional.ndjson --photos build/latest-manhole-photos.json
           done
+          echo "[dist] Forward provisional manhole pages that now have an official ID"
+          python3 apps/scraper/provisional_manholes.py --redirects-dir dist
           echo "[dist] Test Pokemon LP page content"
           python3 -m unittest apps.scraper.test_generate_pokemon_pages_ja_seo apps.scraper.test_generate_pokemon_pages_hero
           echo "[dist] Generate static Pokemon LP pages"
-          python3 apps/scraper/generate_pokemon_pages.py
+          python3 apps/scraper/generate_pokemon_pages.py --manholes build/pokefuta_with_provisional.ndjson --photos build/latest-manhole-photos.json
           echo "[dist] Test Pokemon index page generation"
           python3 -m unittest apps.scraper.test_generate_pokemon_index_page
           echo "[dist] Generate Pokemon index page"
-          python3 apps/scraper/generate_pokemon_index_page.py
+          python3 apps/scraper/generate_pokemon_index_page.py --manholes build/pokefuta_with_provisional.ndjson --photos build/latest-manhole-photos.json
           echo "[dist] Generate character manhole landing page"
           python3 apps/scraper/generate_character_manhole_page.py --output dist/character_manholes.html
           echo "[dist] Generate character work guides"
@@ -187,10 +204,10 @@ jobs:
           echo "[dist] Generate summary pages (ja/en/zh-CN/zh-TW/ko)"
           python3 apps/scraper/generate_summary_pages.py
           echo "[dist] Generate prefecture landing pages (47 prefectures)"
-          python3 apps/scraper/generate_prefecture_pages.py
+          python3 apps/scraper/generate_prefecture_pages.py --manholes build/pokefuta_with_provisional.ndjson --photos build/latest-manhole-photos.json
           echo "[dist] Generate translated prefecture pages (en / zh-TW)"
           for lang in en zh-TW; do
-            python3 apps/scraper/generate_prefecture_pages_i18n.py --lang "$lang"
+            python3 apps/scraper/generate_prefecture_pages_i18n.py --lang "$lang" --manholes build/pokefuta_with_provisional.ndjson --photos build/latest-manhole-photos.json
           done
           echo "[dist] Generate municipality landing pages + ranking"
           python3 apps/scraper/generate_municipality_pages.py
@@ -210,7 +227,7 @@ jobs:
           echo "[dist] Test sitemap generation"
           python3 -m unittest apps.scraper.test_generate_sitemap
           echo "[dist] Generate sitemap with manhole + pokemon URLs"
-          python3 apps/scraper/generate_sitemap.py
+          python3 apps/scraper/generate_sitemap.py --data build/pokefuta_with_provisional.ndjson
           echo "[dist] Copy HTML sources"
           cp apps/web/index.html dist/index.html
           echo "[dist] Rebuild top page counts, photos, prefecture list and JSON-LD from today's data"

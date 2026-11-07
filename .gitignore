@@ -36,3 +36,7 @@ docs/social-post-ogp.png
 
 # 都道府県ワイヤーマップGeoJSONキャッシュ（都度ダウンロード）
 dataset/prefecture_boundaries/
+
+# 仮番号のポケふた（apps/scraper/provisional_manholes.py がデプロイ時に作る）
+build/
+dataset/manhole/image/9[0-9][0-9][0-9]_latest.jpeg

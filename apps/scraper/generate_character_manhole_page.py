@@ -398,6 +398,9 @@ def build_photos(path: Path | None, character_records: list[dict], gundam_record
         url = str(record.get("photo_url") or "")
         if record.get("status") != "active" or not _is_small_photo_url(url):
             continue
+        # ポケふた（仮番号を含む）へ結びつけた投稿はポケふたの写真なので、デザインマンホールとしては出さない
+        if str(record.get("canonical_ref") or "").startswith("pokefuta:"):
+            continue
         title = str(record.get("title") or "デザインマンホール").strip()
         photo = {
             "id": str(record.get("id") or url),
