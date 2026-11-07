@@ -234,11 +234,10 @@ def attach_photos(
         if data:
             path.write_bytes(data)
             with_photo.append(record)
-        elif not path.exists():
-            print(f"[provisional] WARN {record['id']}: 写真なしで出す", file=sys.stderr)
         else:
-            # 手元に前回の写真がある（ローカルで回したとき）ならそれを使う
-            with_photo.append(record)
+            # 前回の写真が手元に残っていても使わない（今の投稿の写真か確かめられない）
+            path.unlink(missing_ok=True)
+            print(f"[provisional] WARN {record['id']}: 写真なしで出す", file=sys.stderr)
     return kept, with_photo
 
 

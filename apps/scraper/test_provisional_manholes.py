@@ -136,6 +136,7 @@ class PhotoTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             image_dir = Path(tmp)
             for fetch in (lambda uuid: None, lambda uuid: b"not a jpeg"):
+                (image_dir / "9001_latest.jpeg").write_bytes(b"stale")
                 kept, with_photo = pm.attach_photos([record], image_dir, fetch=fetch)
                 self.assertEqual([r["id"] for r in kept], ["9001"])
                 self.assertEqual(with_photo, [])
