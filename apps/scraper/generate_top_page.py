@@ -240,6 +240,7 @@ class TopData:
     # 公式サイト未掲載の仮番号の蓋（provisional_manholes.py）。新作の欄にだけ出し、全国の枚数には入れない
     provisional: list[dict] = field(default_factory=list)
     wanted: dict[str, dict] = field(default_factory=dict)  # 県 → 場所を調べているポケふた
+    feature_images: dict[str, str] = field(default_factory=dict)  # 特集の slug → 帯に出す蓋の画像
 
     @property
     def total(self) -> int:
@@ -389,6 +390,29 @@ def build_trips(
     return trips[:limit], total
 
 
+def _newest_first(records: list[dict]) -> list[dict]:
+    return sorted(records, key=lambda r: (str(r.get("added_at") or ""), str(r.get("id", ""))), reverse=True)
+
+
+def feature_image(feature: dict, provisional: list[dict], records: list[dict], image_dir: Path) -> str:
+    """特集の帯に出す蓋の画像（tile_image_url の形、無ければ ""）。
+
+    1. 特集に載せた蓋を並べた順に、写真のある最初の1枚
+    2. 新作の特集は設置前で写真が無いことが多いので、同じ県の仮番号（写真館に投稿が来た新しい蓋）の新しい順
+    3. それも無ければ同じ県の設置済みの蓋の新しい順（県の雰囲気が分かる1枚）
+    """
+    candidates = list(feature.get("records") or [])
+    prefecture = feature.get("prefecture")
+    if prefecture:
+        candidates += _newest_first([r for r in provisional if r.get("prefecture") == prefecture])
+        candidates += _newest_first([r for r in records if r.get("prefecture") == prefecture])
+    for record in candidates:
+        url = tile_image_url(str(record.get("id", "")), image_dir)
+        if url:
+            return url
+    return ""
+
+
 def load_data(
     manholes: Path = DEFAULT_MANHOLES,
     photos: Path | None = DEFAULT_PHOTOS,
@@ -413,6 +437,9 @@ def load_data(
     # 新作の特集は設置前の蓋を載せるので、設置済みに絞る前のレコードで引く
     features = load_features({str(r.get("id", "")): r for r in all_records}, features_dir, today=today)
     provisional_records = load_records(provisional) if provisional and provisional.exists() else []
+    feature_images = {
+        f["slug"]: feature_image(f, provisional_records, records, image_dir) for f in highlighted(features, today)
+    }
     return TopData(
         records=records,
         photos=build_photos(_load_json(photos), records, image_dir),
@@ -429,6 +456,7 @@ def load_data(
         features=features,
         provisional=provisional_records,
         wanted=wanted_places(load_wanted(wanted), all_records + provisional_records) if wanted else {},
+        feature_images={slug: url for slug, url in feature_images.items() if url},
     )
 
 
@@ -783,8 +811,10 @@ def render_newrelease(data: TopData) -> str:
     banners = "".join(
         f'<a class="home-feature" href="{escape(feature_path(f).lstrip("/"))}" '
         f'onclick="{_track("click_feature", surface="top_newrelease", feature=f["slug"], position=i)}">'
+        + _feature_img(data.feature_images.get(f["slug"], ""))
+        + '<span class="home-feature__text">'
         f'<span class="home-feature__kicker">{escape(f.get("kicker") or "特集")}</span>'
-        f'<b>{escape(f["title"])}</b></a>'
+        f'<b>{escape(f["title"])}</b></span></a>'
         for i, f in enumerate(highlighted(data.features, data.today))
     )
     more = (
@@ -805,6 +835,16 @@ def render_newrelease(data: TopData) -> str:
         + (f'<ul class="home-newrel">{"".join(cards)}</ul>' if cards else "")
         + wanted_html
         + "</section>"
+    )
+
+
+def _feature_img(url: str) -> str:
+    """特集の帯の左端の蓋の正方形。画像が無い特集は何も出さない（帯は文字だけ）。"""
+    if not url:
+        return ""
+    return (
+        f'<img class="home-feature__img" {responsive_attrs(url, "56px")} alt="" '
+        'width="56" height="56" loading="lazy" decoding="async">'
     )
 
 
