@@ -127,6 +127,13 @@ except ModuleNotFoundError as exc:
     )
 
 try:
+    from apps.scraper.provisional_manholes import load_wanted, wanted_places
+except ModuleNotFoundError as exc:
+    if exc.name != "apps":
+        raise
+    from provisional_manholes import load_wanted, wanted_places
+
+try:
     from apps.scraper.page_html import (
         BASE_URL,
         OG_IMAGE,
@@ -448,6 +455,47 @@ def _events_html(events: list[dict] | None, today: date | None = None) -> str:
         '      <h2 id="event-heading">開催中のイベント・スタンプラリー</h2>\n'
         f'      {"".join(items)}\n'
         "    </section>\n\n    "
+    )
+
+
+def _wanted_html(prefecture: str, slug: str, wanted: dict | None) -> str:
+    """設置が発表されたが写真がまだ届いていない（緯度経度が分からない）ポケふたへの投稿の呼びかけ。
+
+    投稿の写真の GPS から図鑑に仮番号で載せる（provisional_manholes.py）。場所の一覧は
+    dataset/provisional_wanted.json から、図鑑に同じ自治体の蓋が入ったものを除いたもの。
+    """
+    places = (wanted or {}).get("places") or []
+    if not places:
+        return ""
+    items = []
+    for place in places:
+        pokemons = "・".join(str(p) for p in place.get("pokemons") or [] if p)
+        items.append(
+            f'<li><strong>{escape(str(place["city"]))}</strong> {escape(str(place.get("place") or ""))}'
+            + (f'<small>{escape(pokemons)}</small>' if pokemons else "")
+            + "</li>"
+        )
+    source_url = str((wanted or {}).get("source_url") or "")
+    feature = str((wanted or {}).get("feature") or "")
+    sources = []
+    if source_url.startswith("https://"):
+        sources.append(
+            f'<a href="{escape_attr(source_url)}" target="_blank" rel="noopener noreferrer">設置の発表</a>'
+        )
+    if feature:
+        sources.append(f'<a href="/features/{quote(feature)}/">新作特集</a>')
+    return (
+        '<section class="wanted-card" id="wanted" aria-labelledby="wanted-heading">\n'
+        '      <span class="event-status">緯度経度を調べています</span>\n'
+        f'      <h2 id="wanted-heading">{escape(prefecture)}の新しいポケふた、写真の投稿をお願いします</h2>\n'
+        f'      <p>設置が発表された次の{len(places)}か所は、まだ写真が届いていないため、図鑑に正確な場所を載せられていません。'
+        "現地で撮った写真をデザインマンホール投稿から送ってもらえると、写真の位置から図鑑に載せます。</p>\n"
+        f'      <ul class="wanted-list">{"".join(items)}</ul>\n'
+        f'      <a class="wanted-cta" href="{escape_attr(upload_url("", slug, provisional=True))}" target="_blank" '
+        'rel="noopener noreferrer" data-track="prefecture_wanted_upload_click" '
+        'data-destination="pokefuta_design_manhole_new">写真を投稿する</a>\n'
+        + (f'      <p class="wanted-source">{" ・ ".join(sources)}</p>\n' if sources else "")
+        + "    </section>\n\n    "
     )
 
 
@@ -2317,6 +2365,20 @@ PAGE_CSS = """    :root { color-scheme: light; }
       background: linear-gradient(135deg, #fffaf0, #edf8f2);
     }
     .event-item + .event-item { margin-top: 14px; }
+    .wanted-card {
+      border-left: 5px solid #5b4392;
+      background: linear-gradient(135deg, #fbf8ff, #f1ecfb);
+    }
+    .wanted-card .event-status { background: #5b4392; }
+    .wanted-card p { margin: 6px 0 0; font-size: .92rem; }
+    .wanted-list { margin: 10px 0 0; padding-left: 1.2em; }
+    .wanted-list li { margin: 4px 0; }
+    .wanted-list small { margin-left: 6px; color: #6b5d8f; }
+    .wanted-cta {
+      display: inline-flex; margin-top: 12px; padding: 10px 18px; border-radius: 999px;
+      background: #5b4392; color: white; font-weight: 900; text-decoration: none;
+    }
+    .wanted-source { font-size: .8rem !important; color: #6b6b6b; }
     .event-status {
       display: inline-flex; margin: 0 0 6px; padding: 3px 9px;
       border-radius: 999px; background: #176f68; color: white;
@@ -2559,6 +2621,7 @@ def build_page(
     durations: dict | None = None,
     trips: list[tuple[str, str, int, str]] | None = None,
     design_posts: list[dict] | None = None,
+    wanted: dict | None = None,
 ) -> str:
     photos = photos or {}
     count = len(records)
@@ -2648,6 +2711,7 @@ def build_page(
     )
     trivia_html = _trivia_html(prefecture, trivia_entry, count)
     events_html = _events_html(events)
+    wanted_html = _wanted_html(prefecture, slug, wanted)
     related_html = _related_prefectures(prefecture, empty_prefectures)
     design_html = _design_manhole_section(prefecture, slug, design_posts)
     duration_html = _visit_duration_html(prefecture, records, durations)
@@ -2779,7 +2843,7 @@ def build_page(
       <p class="map-note">地図はドラッグとピンチ操作に対応。スクロール中の誤操作を防ぐため、マウスホイール拡大は無効です。</p>
     </section>
 
-    {municipality_guide_html}
+    {wanted_html}{municipality_guide_html}
 
     <!-- adsense:prefecture -->
 
@@ -2806,7 +2870,7 @@ def build_page(
 {design_html}
 {related_section_html}"""
     else:
-        main_sections_html = f"""    {_nearest_pokefuta_html(prefecture, nearest)}
+        main_sections_html = f"""    {wanted_html}{_nearest_pokefuta_html(prefecture, nearest)}
 
     <!-- adsense:prefecture -->
 
@@ -2947,6 +3011,7 @@ def generate_all(
     durations: dict | None = None,
     trips: dict[str, list[tuple[str, str, int, str]]] | None = None,
     design_posts: dict[str, list[dict]] | None = None,
+    wanted: dict[str, dict] | None = None,
 ) -> int:
     photos = photos or {}
     records_by_pref = {pref: [] for pref in PREFECTURE_ORDER}
@@ -2984,6 +3049,7 @@ def generate_all(
             durations,
             (trips or {}).get(prefecture),
             (design_posts or {}).get(prefecture),
+            (wanted or {}).get(prefecture),
         )
         (out_dir / "index.html").write_text(html, encoding="utf-8")
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -3003,6 +3069,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--guides", type=Path, default=DEFAULT_GUIDES)
     parser.add_argument("--durations", type=Path, default=DEFAULT_DURATIONS)
     parser.add_argument("--design-manholes", type=Path, default=DEFAULT_DESIGN_MANHOLES)
+    parser.add_argument("--wanted", type=Path, default=ROOT / "dataset" / "provisional_wanted.json")
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     return parser.parse_args()
 
@@ -3049,6 +3116,7 @@ def main() -> int:
         records, pokemon_slugs, trivia, args.output, events, photos, visit_guides,
         durations, _trips_by_prefecture(records, durations),
         load_design_posts(args.design_manholes),
+        wanted_places(load_wanted(args.wanted), records),
     )
     print(
         f"[generate_prefecture_pages] wrote {count} pages to "

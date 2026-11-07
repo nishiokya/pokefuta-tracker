@@ -1,0 +1,25 @@
+{
+  "_comment": "設置が発表されたが、まだ写真館に投稿が来ていない（緯度経度が分からない）ポケふた。県ページ・トップの「場所を調べています」カードに出し、デザインマンホール投稿（新しいポケふた）を呼びかける（手動更新）。投稿が来て dataset/provisional_manholes.json に仮番号を振るか、公式に載って同じ自治体の蓋が図鑑に入ると、その場所はカードから自動で消える。生成は apps/scraper/provisional_manholes.py の wanted_places()",
+  "prefectures": {
+    "群馬県": {
+      "source_url": "https://www.pref.gunma.jp/site/houdou/779585.html",
+      "feature": "gunma-2026-autumn",
+      "places": [
+        {"city": "沼田市", "place": "吹割の滝遊歩道入口"},
+        {"city": "館林市", "place": "つつじが岡ふれあいセンター正面"},
+        {"city": "下仁田町", "place": "駅前交流施設coconita", "pokemons": ["カモネギ", "ネギガナイト"]},
+        {"city": "長野原町", "place": "道の駅八ッ場ふるさと館"}
+      ]
+    },
+    "高知県": {
+      "source_url": "https://kyodonewsprwire.jp/release/202610208331",
+      "feature": "kochi-2026-autumn",
+      "places": [
+        {"city": "土佐市", "place": "土佐市役所"},
+        {"city": "四万十市", "place": "中村駅", "pokemons": ["メガヤンマ"]},
+        {"city": "いの町", "place": "JR伊野駅ロータリー"},
+        {"city": "佐川町", "place": "まきのさんの道の駅・佐川"}
+      ]
+    }
+  }
+}

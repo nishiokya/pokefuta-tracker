@@ -248,3 +248,54 @@ class ConsumerTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class WantedTests(unittest.TestCase):
+    WANTED = {
+        "群馬県": {
+            "source_url": "https://www.pref.gunma.jp/site/houdou/779585.html",
+            "feature": "gunma-2026-autumn",
+            "places": [
+                {"city": "渋川市", "place": "伊香保ロープウェイ不如帰駅前"},
+                {"city": "沼田市", "place": "吹割の滝遊歩道入口"},
+            ],
+        },
+        "高知県": {"places": [{"city": "芸西村", "place": "琴ヶ浜かっぱ市"}]},
+    }
+
+    def test_places_with_a_lid_in_the_zukan_drop_out(self):
+        [record] = pm.build_records({"9001": ledger_entry()}, [design_record()])
+        geisei = {**record, "id": "9002", "prefecture": "高知県", "city": "芸西", "address": "高知県芸西村和食"}
+        out = pm.wanted_places(self.WANTED, [record, geisei])
+        self.assertEqual([p["city"] for p in out["群馬県"]["places"]], ["沼田市"])
+        self.assertNotIn("高知県", out)
+
+    def test_prefecture_page_card_asks_for_a_design_manhole_post(self):
+        from apps.scraper import generate_prefecture_pages as ja
+
+        self.assertEqual("", ja._wanted_html("群馬県", "gunma", None))
+        html = ja._wanted_html("群馬県", "gunma", pm.wanted_places(self.WANTED, [])["群馬県"])
+        self.assertIn('id="wanted"', html)
+        self.assertIn("緯度経度を調べています", html)
+        self.assertIn("沼田市", html)
+        self.assertIn("design-manholes/new?kind=pokefuta&amp;from=data&amp;pref=gunma", html)
+        self.assertIn("/features/gunma-2026-autumn/", html)
+
+    def test_top_page_lists_provisional_lids_as_new_and_links_to_the_wanted_cards(self):
+        from datetime import date
+
+        from apps.scraper import generate_top_page as top
+
+        [record] = pm.build_records({"9001": ledger_entry()}, [design_record()])
+        data = top.TopData(
+            records=[], photos=[], events=[], stats={}, today=date(2026, 11, 7),
+            provisional=[record], wanted=pm.wanted_places(self.WANTED, [record]),
+        )
+        html = top.render_newrelease(data)
+        self.assertIn('href="manholes/9001/"', html)
+        self.assertIn("公式サイト未掲載", html)
+        self.assertIn('href="prefectures/gunma/#wanted"', html)
+        self.assertIn("群馬県 1か所", html)
+        self.assertIn("高知県 1か所", html)
+        # 全国の枚数には入れない
+        self.assertEqual(data.total, 0)

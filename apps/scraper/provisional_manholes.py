@@ -41,6 +41,7 @@ DEFAULT_LEDGER = ROOT / "dataset" / "provisional_manholes.json"
 DEFAULT_OFFICIAL = ROOT / "docs" / "pokefuta.ndjson"
 DEFAULT_DESIGN = ROOT / "docs" / "design_manholes.ndjson"
 DEFAULT_OVERRIDES = ROOT / "dataset" / "design_manhole_overrides.json"
+DEFAULT_WANTED = ROOT / "dataset" / "provisional_wanted.json"
 
 # 仮番号の範囲。公式は 1 から振っていて 2026-11 時点で 490 まで。
 PROVISIONAL_MIN_ID = 9001
@@ -261,6 +262,33 @@ def merge_photos(payload: dict, records: list[dict]) -> dict:
     return {**payload, "photos": photos, "count": len(photos)}
 
 
+def load_wanted(path: Path = DEFAULT_WANTED) -> dict[str, dict]:
+    """場所を調べているポケふた（dataset/provisional_wanted.json）。ファイルが無ければ空。"""
+    if not path.exists():
+        return {}
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    prefectures = payload.get("prefectures") if isinstance(payload, dict) else None
+    return prefectures if isinstance(prefectures, dict) else {}
+
+
+def wanted_places(wanted: dict[str, dict], records: list[dict]) -> dict[str, dict]:
+    """県 → {places, source_url, feature}。図鑑に同じ自治体の蓋（公式・仮番号）があれば、その場所は出さない。
+
+    投稿が来て仮番号を振る、または公式に載ると、台帳を直さなくてもカードから消える。
+    """
+    known = {(r.get("prefecture"), municipality_label(r)) for r in records}
+    out: dict[str, dict] = {}
+    for prefecture, entry in wanted.items():
+        places = [
+            place for place in entry.get("places") or []
+            if isinstance(place, dict) and place.get("city")
+            and (prefecture, str(place["city"])) not in known
+        ]
+        if places:
+            out[prefecture] = {**entry, "places": places}
+    return out
+
+
 SITE_URL = "https://data.pokefuta.com/"
 # 詳細ページの日本語版と訳した版（generate_manhole_pages*.py の出力先）
 REDIRECT_PREFIXES = ("", "en/", "zh-TW/")
@@ -309,6 +337,10 @@ def main(argv: Optional[list[str]] = None) -> int:
     parser.add_argument("--image-dir", type=Path, help="投稿の写真を落とすフォルダ")
     parser.add_argument("--photos-in", type=Path, help="latest-manhole-photos.json（--photos-out と一緒に）")
     parser.add_argument("--photos-out", type=Path, help="仮番号の写真の行を足した写真 JSON の書き出し先")
+    parser.add_argument(
+        "--provisional-out", type=Path,
+        help="仮番号の蓋だけの NDJSON（地図 map.html が公式の pokefuta.ndjson に重ねて読む）",
+    )
     parser.add_argument("--redirects-dir", type=Path, help="公式に載った仮番号の転送ページを書くサイトのルート（dist）")
     args = parser.parse_args(argv)
 
@@ -333,6 +365,16 @@ def main(argv: Optional[list[str]] = None) -> int:
         written = write_redirects(ledger, args.redirects_dir)
         print(f"[provisional] 公式に載った仮番号の転送ページ {len(written)} 件")
         return 0
+    if args.provisional_out:
+        photo_ids = {record["id"] for record in with_photo}
+        args.provisional_out.parent.mkdir(parents=True, exist_ok=True)
+        args.provisional_out.write_text(
+            "".join(
+                json.dumps({**record, "has_photo": record["id"] in photo_ids}, ensure_ascii=False) + "\n"
+                for record in records
+            ),
+            encoding="utf-8",
+        )
     if args.photos_in and args.photos_out:
         payload = json.loads(args.photos_in.read_text(encoding="utf-8"))
         args.photos_out.parent.mkdir(parents=True, exist_ok=True)

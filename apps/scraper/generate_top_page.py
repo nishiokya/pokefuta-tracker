@@ -58,6 +58,7 @@ try:
     from apps.scraper.photo_caption import JST, format_photo_date, to_jst_date
     from apps.scraper.prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS, REGIONS
     from apps.scraper.tag_meta import count_tags, load_tag_meta
+    from apps.scraper.provisional_manholes import DEFAULT_WANTED, load_wanted, wanted_places
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
@@ -74,6 +75,7 @@ except ModuleNotFoundError as exc:
     from photo_caption import JST, format_photo_date, to_jst_date
     from prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS, REGIONS
     from tag_meta import count_tags, load_tag_meta
+    from provisional_manholes import DEFAULT_WANTED, load_wanted, wanted_places
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_TARGET = ROOT / "apps" / "web" / "index.html"
@@ -235,6 +237,9 @@ class TopData:
     trips: list[dict] = field(default_factory=list)
     trip_total: int = 0  # /trip/ に載っているエリアの数
     features: list[dict] = field(default_factory=list)  # 公開中の特集（新しい順）
+    # 公式サイト未掲載の仮番号の蓋（provisional_manholes.py）。新作の欄にだけ出し、全国の枚数には入れない
+    provisional: list[dict] = field(default_factory=list)
+    wanted: dict[str, dict] = field(default_factory=dict)  # 県 → 場所を調べているポケふた
 
     @property
     def total(self) -> int:
@@ -396,6 +401,8 @@ def load_data(
     trip_areas: Path | None = DEFAULT_TRIP_AREAS,
     durations: Path | None = DEFAULT_DURATIONS,
     features_dir: Path = DEFAULT_FEATURES_DIR,
+    provisional: Path | None = None,
+    wanted: Path | None = None,  # CLI は DEFAULT_WANTED を渡す（テストのデータに台帳を混ぜない）
 ) -> TopData:
     today = today or datetime.now(JST).date()
     all_records = load_records(manholes)
@@ -405,6 +412,7 @@ def load_data(
     trips, trip_total = build_trips(all_records, trip_areas, durations, image_dir)
     # 新作の特集は設置前の蓋を載せるので、設置済みに絞る前のレコードで引く
     features = load_features({str(r.get("id", "")): r for r in all_records}, features_dir, today=today)
+    provisional_records = load_records(provisional) if provisional and provisional.exists() else []
     return TopData(
         records=records,
         photos=build_photos(_load_json(photos), records, image_dir),
@@ -419,6 +427,8 @@ def load_data(
         trips=trips,
         trip_total=trip_total,
         features=features,
+        provisional=provisional_records,
+        wanted=wanted_places(load_wanted(wanted), all_records + provisional_records) if wanted else {},
     )
 
 
@@ -746,7 +756,7 @@ def render_ways(data: TopData) -> str:
 def render_newrelease(data: TopData) -> str:
     cutoff = datetime.combine(data.today - timedelta(days=NEW_RELEASE_DAYS), datetime.min.time(), JST)
     fresh = []
-    for record in data.records:
+    for record in [*data.records, *data.provisional]:
         added = str(record.get("added_at") or "")
         try:
             added_at = datetime.fromisoformat(added.replace("Z", "+00:00"))
@@ -754,7 +764,8 @@ def render_newrelease(data: TopData) -> str:
             continue
         if added_at >= cutoff:
             fresh.append((added_at, record))
-    if not fresh and not data.features:
+    wanted_html = render_wanted(data.wanted)
+    if not fresh and not data.features and not wanted_html:
         return ""
     fresh.sort(key=lambda item: (item[0], str(item[1].get("id"))), reverse=True)
     cards = []
@@ -762,6 +773,8 @@ def render_newrelease(data: TopData) -> str:
         mid = str(record.get("id"))
         names = "・".join(pokemons_of(record)) or "ポケふた"
         place = f"{record.get('prefecture', '')} {place_label(record)}"
+        if record.get("provisional"):
+            place += "（公式サイト未掲載）"
         cards.append(
             f'<li><a class="home-newrel__card" href="manholes/{quote(mid, safe="")}/" '
             f'onclick="{_track("click_newrelease", surface="top_newrelease", manhole=mid, position=i)}">'
@@ -790,7 +803,36 @@ def render_newrelease(data: TopData) -> str:
         f'<h2 class="home-h2" id="home-newrelease-title">{title}</h2>{more}</div>'
         f'{banners}'
         + (f'<ul class="home-newrel">{"".join(cards)}</ul>' if cards else "")
+        + wanted_html
         + "</section>"
+    )
+
+
+def render_wanted(wanted: dict[str, dict]) -> str:
+    """設置が発表されたが写真がまだ届いていない新作への投稿の呼びかけ（県ページの #wanted へ）。"""
+    links = []
+    for prefecture in PREFECTURE_ORDER:
+        entry = wanted.get(prefecture)
+        slug = PREFECTURE_SLUGS.get(prefecture)
+        if not entry or not slug:
+            continue
+        links.append(
+            f'<a href="prefectures/{quote(slug)}/#wanted" '
+            f'onclick="{_track("click_wanted", surface="top_newrelease", prefecture=slug)}">'
+            f'{escape(prefecture)} {len(entry["places"])}か所</a>'
+        )
+    if not links:
+        return ""
+    return (
+        '<div class="home-wanted">'
+        '<span class="home-feature__kicker">緯度経度を調べています</span>'
+        "<b>新しいポケふたの写真を投稿してください</b>"
+        "<p>設置が発表されたのに写真がまだ届いていない場所です。写真の位置から図鑑に載せます。</p>"
+        f'<p class="home-wanted__links">{"".join(links)}</p>'
+        f'<a class="home-wanted__cta" href="https://pokefuta.com/design-manholes/new?kind=pokefuta&amp;from=data" '
+        f'target="_blank" rel="noopener noreferrer" '
+        f'onclick="{_track("click_wanted_upload", surface="top_newrelease")}">写真を投稿する</a>'
+        "</div>"
     )
 
 
@@ -1074,11 +1116,15 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--events", type=Path, default=DEFAULT_EVENTS)
     parser.add_argument("--image-dir", type=Path, default=DEFAULT_IMAGE_DIR)
     parser.add_argument("--pokemon-metadata", type=Path, default=DEFAULT_POKEMON_METADATA)
+    parser.add_argument("--provisional", type=Path, help="仮番号の蓋だけの NDJSON（provisional_manholes.py --provisional-out）")
+    parser.add_argument("--wanted", type=Path, default=DEFAULT_WANTED)
     args = parser.parse_args(argv)
 
     data = load_data(
         args.manholes, args.photos, args.stats, args.events, args.image_dir,
         pokemon_metadata=args.pokemon_metadata,
+        provisional=args.provisional,
+        wanted=args.wanted,
     )
     html = args.target.read_text(encoding="utf-8")
     updated = apply_blocks(html, data)
