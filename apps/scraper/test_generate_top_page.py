@@ -436,6 +436,11 @@ class GeneratedHtmlTest(unittest.TestCase):
         bare = _block(Fixture(bare_dir, features=[feature], photos=False).html(), "newrelease")
         self.assertNotIn("home-feature__img", bare)
         self.assertIn("沖縄にポケふたが増えます", bare)
+        # 写真が非公開・削除になった（_latest.jpeg は残る）蓋は出さない
+        gone_dir = self.tmp / "gone"
+        gone_dir.mkdir()
+        gone = _block(Fixture(gone_dir, features=[feature], drop_photos=("1",)).html(), "newrelease")
+        self.assertNotIn("home-feature__img", gone)
 
     def test_feature_image_falls_back_to_provisional_then_prefecture_lids(self) -> None:
         image_dir = self.tmp / "img"
@@ -449,14 +454,21 @@ class GeneratedHtmlTest(unittest.TestCase):
             {"id": "31", "prefecture": "沖縄県", "added_at": "2026-01-01"},  # 写真なし
         ]
         provisional = [{"id": "9001", "prefecture": "群馬県", "added_at": "2026-10-28"}]
+        public = {"10", "30"}
         # 載せた蓋（設置前で写真なし）→ 同じ県の仮番号
         gunma = {"prefecture": "群馬県", "records": [{"id": "99"}]}
         self.assertEqual("/manhole/image/9001_latest.jpeg",
-                         module.feature_image(gunma, provisional, records, image_dir))
+                         module.feature_image(gunma, provisional, records, image_dir, public))
         # 仮番号も無い県は、設置済みで写真のある新しい蓋（_lid を優先）
         okinawa = {"prefecture": "沖縄県", "records": []}
-        self.assertEqual("/manhole/image/30_lid.jpeg", module.feature_image(okinawa, provisional, records, image_dir))
-        self.assertEqual("", module.feature_image({"records": []}, provisional, records, image_dir))
+        self.assertEqual("/manhole/image/30_lid.jpeg",
+                         module.feature_image(okinawa, provisional, records, image_dir, public))
+        self.assertEqual("", module.feature_image({"records": []}, provisional, records, image_dir, public))
+        # 写真が非公開・削除になった蓋は、_latest/_lid が手元に残っていても出さない
+        self.assertEqual("", module.feature_image(okinawa, provisional, records, image_dir, {"10"}))
+        self.assertEqual("/manhole/image/9001_latest.jpeg",
+                         module.feature_image({"prefecture": "群馬県", "records": [{"id": "10"}]},
+                                              provisional, records, image_dir, set()))
 
     def test_hero_groups_new_features_by_prefecture_and_links_to_the_new_list(self) -> None:
         """新作特集が2県以上あるときは、古い順に県名を並べた1行にまとめて特集一覧の新作欄へ。"""

@@ -394,18 +394,33 @@ def _newest_first(records: list[dict]) -> list[dict]:
     return sorted(records, key=lambda r: (str(r.get("added_at") or ""), str(r.get("id", ""))), reverse=True)
 
 
-def feature_image(feature: dict, provisional: list[dict], records: list[dict], image_dir: Path) -> str:
+def public_photo_ids(photos_json: object) -> set[str]:
+    """今公開されている投稿写真のある蓋の ID（latest-manhole-photos.json の manhole_id）。"""
+    raw = (photos_json or {}).get("photos") if isinstance(photos_json, dict) else None
+    return {str(item.get("manhole_id", "")) for item in (raw or {}).values() if isinstance(item, dict)}
+
+
+def feature_image(
+    feature: dict, provisional: list[dict], records: list[dict], image_dir: Path, public_ids: set[str]
+) -> str:
     """特集の帯に出す蓋の画像（tile_image_url の形、無ければ ""）。
 
     1. 特集に載せた蓋を並べた順に、写真のある最初の1枚
     2. 新作の特集は設置前で写真が無いことが多いので、同じ県の仮番号（写真館に投稿が来た新しい蓋）の新しい順
     3. それも無ければ同じ県の設置済みの蓋の新しい順（県の雰囲気が分かる1枚）
+
+    公式の蓋は public_ids（今公開されている写真のある蓋）に絞る。写真取込は写真が非公開・削除になった
+    蓋の _latest/_lid を消さないので、ファイルがあるだけでは出さない。仮番号は provisional_manholes.py が
+    公開を確かめ、非公開になった投稿の写真を消しているのでそのまま使う。
     """
-    candidates = list(feature.get("records") or [])
+    def public(rs: list[dict]) -> list[dict]:
+        return [r for r in rs if str(r.get("id", "")) in public_ids]
+
+    candidates = public(list(feature.get("records") or []))
     prefecture = feature.get("prefecture")
     if prefecture:
         candidates += _newest_first([r for r in provisional if r.get("prefecture") == prefecture])
-        candidates += _newest_first([r for r in records if r.get("prefecture") == prefecture])
+        candidates += public(_newest_first([r for r in records if r.get("prefecture") == prefecture]))
     for record in candidates:
         url = tile_image_url(str(record.get("id", "")), image_dir)
         if url:
@@ -437,12 +452,15 @@ def load_data(
     # 新作の特集は設置前の蓋を載せるので、設置済みに絞る前のレコードで引く
     features = load_features({str(r.get("id", "")): r for r in all_records}, features_dir, today=today)
     provisional_records = load_records(provisional) if provisional and provisional.exists() else []
+    photos_json = _load_json(photos)
+    public_ids = public_photo_ids(photos_json)
     feature_images = {
-        f["slug"]: feature_image(f, provisional_records, records, image_dir) for f in highlighted(features, today)
+        f["slug"]: feature_image(f, provisional_records, records, image_dir, public_ids)
+        for f in highlighted(features, today)
     }
     return TopData(
         records=records,
-        photos=build_photos(_load_json(photos), records, image_dir),
+        photos=build_photos(photos_json, records, image_dir),
         events=load_events(events, today),
         stats=stats_json if isinstance(stats_json, dict) else {},
         today=today,
