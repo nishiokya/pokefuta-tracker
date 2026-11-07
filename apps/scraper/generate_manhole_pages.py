@@ -381,6 +381,9 @@ def load_design_spots(
         if coords is None:
             continue
         refs: list[str] = []
+        if str(row.get("canonical_ref") or "").startswith("pokefuta:"):
+            # 人がポケふた（仮番号を含む）へ結びつけた投稿。近くのキャラクターマンホールへも合流させない
+            continue
         if row.get("canonical_ref"):
             refs.append(str(row["canonical_ref"]))
         # reviewed_distinct は人が「近くの別の蓋」と判断した投稿なので、近さでは合流させない
@@ -615,6 +618,16 @@ def generate_html(
     detail_url = manhole.get("detail_url", "")
     lat = manhole.get("lat")
     lng = manhole.get("lng")
+    # 公式サイトに載っていない仮番号の蓋（provisional_manholes.py）。写真館にこの番号のページは無いので、
+    # 写真館へのリンクは元の投稿へ、写真の投稿はデザインふた投稿（kind=pokefuta）へ向ける
+    is_provisional = bool(manhole.get("provisional"))
+    provisional_post_url = _safe_pokefuta_url(manhole.get("provisional_post_url")) if is_provisional else ""
+    photo_studio_url = provisional_post_url or f"https://pokefuta.com/manhole/{quote(manhole_id, safe='')}"
+    photo_upload_url = (
+        "https://pokefuta.com/design-manholes/new?kind=pokefuta&amp;from=data"
+        if is_provisional
+        else f"https://pokefuta.com/upload?manhole_id={manhole_id}&amp;from=data"
+    )
 
     # Generate unique title and description
     pokemon_text = "・".join(pokemons) if pokemons else "ポケモン"
@@ -733,7 +746,7 @@ def generate_html(
         )
     else:
         hero_photo_html = (
-            f"<a class='hero-photo-placeholder' href='https://pokefuta.com/upload?manhole_id={manhole_id}&amp;from=data'"
+            f"<a class='hero-photo-placeholder' href='{photo_upload_url}'"
             f" target='_blank' rel='noopener noreferrer'"
             f" onclick=\"trackEvent('click_photo_upload_placeholder', {_attr_json({'surface': 'manhole_gallery', 'manhole_id': manhole_id, 'prefecture': prefecture, 'city': city, 'has_photo': False})})\">"
             f"<span class='placeholder-camera' aria-hidden='true'>📷</span>"
@@ -837,7 +850,7 @@ def generate_html(
             f"<section class='gallery-section section-card'>"
             f"<h2>みんなの写真</h2>"
             f"<div class='gallery-grid'>{thumbs}</div>"
-            f"<a class='gallery-more' href='https://pokefuta.com/manhole/{quote(manhole_id)}'"
+            f"<a class='gallery-more' href='{escape(photo_studio_url)}'"
             f" target='_blank' rel='noopener noreferrer'"
             f" onclick=\"trackEvent('click_gallery_more', {_gallery_more_onclick})\">"
             f"{escape(gallery_more_label(photo.get('public_photo_count'), len(gallery_items) + 1))}</a>"
@@ -889,6 +902,8 @@ def generate_html(
     badges: list[str] = []
     if is_preinstall:
         badges.append("<span class='hero-badge hero-badge-pre'>🚧 設置前</span>")
+    if is_provisional:
+        badges.append("<a class='hero-badge hero-badge-provisional hero-badge-anchor' href='#provisional'>公式サイト未掲載・仮番号</a>")
     added_at = manhole.get("added_at", "") or ""
     try:
         added_year = datetime.date.fromisoformat(added_at[:10]).year
@@ -958,6 +973,28 @@ def generate_html(
     # Validate official URL (used for links-grid cards)
     _parsed = urlparse(detail_url) if detail_url else None
     has_official_url = _parsed and _parsed.scheme == "https" and _parsed.hostname == "local.pokemon.jp"
+
+    provisional_html = ""
+    if is_provisional:
+        _source_url = str(manhole.get("provisional_source_url") or "")
+        _source_html = (
+            f"<p>設置の発表: <a href=\"{escape(_source_url)}\" target=\"_blank\" rel=\"noopener noreferrer\">"
+            f"{escape(urlparse(_source_url).hostname or _source_url)}</a></p>"
+            if _source_url.startswith("https://") else ""
+        )
+        _post_html = (
+            f"<p>写真と場所は<a href=\"{escape(provisional_post_url)}\" target=\"_blank\" rel=\"noopener noreferrer\">"
+            f"ポケふた写真館への投稿</a>から（場所は撮影した位置です）。</p>"
+            if provisional_post_url else ""
+        )
+        provisional_html = (
+            f"<section id='provisional' class='provisional-note section-card'>"
+            f"<h2>公式サイト未掲載のポケふた</h2>"
+            f"<p>公式サイトにまだ載っていない新しいポケふたです。番号 {escape(manhole_id)} は図鑑の仮の番号で、"
+            f"公式サイトに載ったら正式な番号のページへ移ります。</p>"
+            f"{_post_html}{_source_html}"
+            f"</section>"
+        )
 
     # Location info
     location_html = f"""
@@ -1050,7 +1087,7 @@ def generate_html(
     # ポケふた写真館（pokefuta.com）の同ふたページ。ギャラリー未表示のふたでも写真館へ飛べるよう常設
     _photo_studio_onclick = _attr_json({"manhole_id": manhole_id, "surface": "links_photo_studio"})
     link_cards.append(
-        f"<a class='link-card link-card--internal' href='https://pokefuta.com/manhole/{quote(manhole_id, safe='')}'"
+        f"<a class='link-card link-card--internal' href='{escape(photo_studio_url)}'"
         f" target='_blank' rel='noopener noreferrer'"
         f" onclick=\"trackEvent('click_photo_studio', {_photo_studio_onclick})\">"
         f"{_icon('icon-link-photo', 'link-card-icon')}<span>ポケふた写真館</span></a>"
@@ -1285,7 +1322,7 @@ def generate_html(
         ""
         if is_preinstall
         else (
-            f'<a class="hero-photo-link" href="https://pokefuta.com/upload?manhole_id={manhole_id}&amp;from=data" target="_blank" rel="noopener noreferrer" onclick="trackEvent(\'{_photo_event}\', {_photo_cta_onclick})">{_icon("icon-link-photo", "hero-photo-link-icon")}<span>{escape(_photo_label)}</span><small>写真館で受付・GPS付き写真</small></a>'
+            f'<a class="hero-photo-link" href="{photo_upload_url}" target="_blank" rel="noopener noreferrer" onclick="trackEvent(\'{_photo_event}\', {_photo_cta_onclick})">{_icon("icon-link-photo", "hero-photo-link-icon")}<span>{escape(_photo_label)}</span><small>写真館で受付・GPS付き写真</small></a>'
         )
     )
     hero_actions_html = (
@@ -1392,6 +1429,8 @@ def generate_html(
   {_SVG_DEFS}
   <div class="container">
     {hero_card_html}
+
+    {provisional_html}
 
     {gallery_html}
 

@@ -71,6 +71,7 @@ TEXT: dict[str, dict[str, str]] = {
         "preinstall": "Not installed yet",
         "preinstall_sub": "Installation is planned.",
         "badge_preinstall": "🚧 Coming soon",
+        "badge_provisional": "Not yet on the official site",
         "badge_new": "NEW · installed {year}",
         "badge_pref": "{n} in {pref}",
         "badge_city": "{n} in {place}",
@@ -128,6 +129,7 @@ TEXT: dict[str, dict[str, str]] = {
         "preinstall": "尚未設置",
         "preinstall_sub": "預定設置。",
         "badge_preinstall": "🚧 即將設置",
+        "badge_provisional": "官方網站尚未刊登",
         "badge_new": "NEW・{year}年設置",
         "badge_pref": "{pref}共{n}個",
         "badge_city": "{place}共{n}個",
@@ -369,6 +371,8 @@ def build_page(
     badges = []
     if is_preinstall:
         badges.append(f"<span class='hero-badge hero-badge-pre'>{escape(page.t('badge_preinstall'))}</span>")
+    if manhole.get("provisional"):
+        badges.append(f"<span class='hero-badge hero-badge-provisional'>{escape(page.t('badge_provisional'))}</span>")
     try:
         added_year = datetime.date.fromisoformat((manhole.get("added_at") or "")[:10]).year
         if added_year >= datetime.date.today().year:

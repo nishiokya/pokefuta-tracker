@@ -484,6 +484,9 @@ def _trivia_html(prefecture: str, trivia_entry: dict | None, count: int) -> str:
         )
     if count:
         municipalities = (trivia_entry or {}).get("municipality_count", 0)
+        if not municipalities:
+            # トリビアは公式の枚数から作るので、仮番号の蓋しか無い県は自治体数を持たない
+            return f"<p>{escape(prefecture)}では{count}枚のポケふたを巡れます。</p>"
         return (
             f"<p>{escape(prefecture)}では{count}枚のポケふたを"
             f"{municipalities}自治体で巡れます。</p>"
@@ -724,7 +727,7 @@ def _photo_section(
             f'loading="lazy" decoding="async" width="640" height="480">'
             f'<span><strong>{escape(name)}</strong><small>{escape(pokemons)}</small>'
             f'</span></a>{poster_html}'
-            f'<a class="photo-card-upload" href="{escape_attr(upload_url(mid, slug))}" '
+            f'<a class="photo-card-upload" href="{escape_attr(upload_url(mid, slug, provisional=bool(record.get("provisional"))))}" '
             f'data-track="prefecture_photo_upload_start" data-position="{position}" '
             f'data-destination="upload" data-content-id="{escape_attr(mid)}" '
             f'data-surface="photo_gallery" '
@@ -743,7 +746,7 @@ def _photo_section(
         name = manhole_name(record)
         pokemons = "・".join(clean_pokemons(record)) or "ポケモン"
         contribution_cards.append(
-            f'<a class="contribution-card" href="{escape_attr(upload_url(mid, slug))}" '
+            f'<a class="contribution-card" href="{escape_attr(upload_url(mid, slug, provisional=bool(record.get("provisional"))))}" '
             f'data-track="prefecture_photo_upload_start" data-position="{position}" '
             f'data-destination="upload" data-content-id="{escape_attr(mid)}" '
             f'data-surface="photo_contribution" '
@@ -835,7 +838,7 @@ def _manhole_cards(
             if maps_url else ""
         )
         upload_html = (
-            f'<a class="upload" href="{escape_attr(upload_url(mid, slug))}" '
+            f'<a class="upload" href="{escape_attr(upload_url(mid, slug, provisional=bool(record.get("provisional"))))}" '
             f'data-track="prefecture_photo_upload_start" data-position="{position}" '
             f'data-destination="upload" data-content-id="{escape_attr(mid)}" '
             f'data-surface="manhole_actions" '
@@ -2453,8 +2456,7 @@ def _map_script(
         const geoName = String(point.name || '').replace('/', ' ');
         const geoLabel = ['ポケふた', point.pokemons.some(function(p) {{ return geoName.indexOf(p) >= 0; }})
           ? '' : point.pokemons.join('・'), geoName].filter(Boolean).join(' ');
-        const uploadUrl = 'https://pokefuta.com/upload?manhole_id=' +
-          encodeURIComponent(point.id) + '&' + campaignParams;
+        const uploadUrl = point.upload_url;
         const photoHtml = point.is_preinstall
           ? '<div class="map-popup-preinstall">設置予定のポケふたです。設置後に写真を投稿できます。</div>'
           : (point.photo_url
@@ -2596,6 +2598,11 @@ def build_page(
     map_points = [
         {
             "id": str(record.get("id", "")),
+            # 設置前の蓋は投稿導線を出さないので URL も持たせない
+            "upload_url": (
+                upload_url(str(record.get("id", "")), slug, provisional=bool(record.get("provisional")))
+                if record.get("installed") is not False else ""
+            ),
             "lat": record.get("lat"),
             "lng": record.get("lng"),
             "name": manhole_name(record),

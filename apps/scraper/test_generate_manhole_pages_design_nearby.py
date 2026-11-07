@@ -130,6 +130,24 @@ class LoadDesignSpotsTest(unittest.TestCase):
         ])
         self.assertEqual(self._load(), [])
 
+    def test_submission_matched_to_a_pokefuta_skips_nearby_masters(self):
+        # 人がポケふた（仮番号）へ結びつけた投稿は、近くのガンダムへも合流させない
+        _write_ndjson(self.gundam, [
+            {"id": "1", "title": "近くのガンダム", "lat": 36.497, "lng": 138.919, "status": "active"},
+        ])
+        _write_ndjson(self.character, [])
+        _write_ndjson(self.submissions, [
+            {"id": "pokefuta-design:new", "title": "デザインマンホール",
+             "lat": 36.4971, "lng": 138.9193, "status": "active",
+             "canonical_ref": "pokefuta:9001",
+             "nearby_refs": [{"ref": "gundam:1", "distance_m": 30}],
+             "source_url": "https://pokefuta.com/design-manholes/new",
+             "photo_url": "https://pokefuta.com/api/design-manholes/new/photo?size=small"},
+        ])
+        spots = self._load()
+        self.assertEqual([s["ref"] for s in spots], ["gundam:1"])
+        self.assertEqual(spots[0]["studio_url"], "")
+
     def test_reviewed_distinct_submission_stays_standalone(self):
         # 人が「近くの別の蓋」と判断した投稿は、近さの候補（ガンダム・キャラ・ポケふた）に合流も除外もしない
         _write_ndjson(self.gundam, [
