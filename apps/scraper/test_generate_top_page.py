@@ -168,10 +168,14 @@ class GeneratedHtmlTest(unittest.TestCase):
         ld = re.search(r'<script type="application/ld\+json">(.*?)</script>', html, re.DOTALL).group(1)
         self.assertNotIn("</", ld)
 
-    def test_hero_has_no_photos(self) -> None:
-        """スマホの最新写真モザイクは下の「新着・注目の写真」と重なるので出さない（PC は大地図）。"""
+    def test_hero_has_two_mobile_manhole_photos(self) -> None:
+        """スマホ導入部にピカチュウとヤドンを出す（PC は大地図）。"""
         hero = _block(Fixture(self.tmp).html(), "hero")
-        self.assertNotIn("<img", hero)
+        self.assertEqual(2, hero.count("<img"))
+        for mid in ("23", "28"):
+            self.assertIn(f'href="manhole/{mid}.html"', hero)
+            self.assertIn(f"/{mid}_lid.jpeg", hero)
+        self.assertEqual(2, hero.count('loading="eager"'))
         self.assertNotIn("home-mosaic", hero)
         self.assertNotIn("click_hero_photo", hero)
         self.assertIn('class="home-hero" id="home-hero"', hero)
@@ -247,6 +251,11 @@ class GeneratedHtmlTest(unittest.TestCase):
         self.assertTrue(photos)
         for img in photos:
             with self.subTest(img=img):
+                if '_lid.jpeg' in img:
+                    self.assertRegex(img, r'src="/manhole/image/(23|28)_lid\.jpeg"')
+                    self.assertIn('width="100" height="100"', img)
+                    self.assertRegex(img, r'alt="[^"]+"')
+                    continue
                 self.assertRegex(img, r'src="manhole/image/\d+_latest\.jpeg"')
                 self.assertIn('width="720"', img)
                 self.assertIn('height="720"', img)

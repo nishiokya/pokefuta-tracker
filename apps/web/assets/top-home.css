@@ -862,3 +862,37 @@
   .home-pokes { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; }
   .home-newrel { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
+
+/* スマホの導入文右側に、実物のポケふたを見せる。 */
+.home-hero__portraits { display: none; }
+@media (max-width: 959px) {
+  .home-hero__portraits {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    float: right;
+    width: 116px;
+    gap: 10px;
+    margin: 2px 0 12px 14px;
+  }
+  .home-hero__portraits a {
+    display: block;
+    width: 100px;
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(43, 43, 48, 0.16);
+  }
+  .home-hero__portraits a:last-child { align-self: flex-start; }
+  .home-hero__portraits img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    border-radius: 50%;
+  }
+  .home-hero__copy .home-quick { clear: both; }
+}
+@media (max-width: 599px) {
+  .home-hero__copy:has(.home-hero__portraits) .home-h1 { font-size: 24px; }
+  .home-hero__portraits { width: 92px; margin-left: 12px; }
+  .home-hero__portraits a { width: 80px; }
+}
