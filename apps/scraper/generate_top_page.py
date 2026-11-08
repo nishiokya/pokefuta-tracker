@@ -735,17 +735,27 @@ def render_hero(data: TopData) -> str:
         cta="🗺 地図を全画面で開く",
         cta_href="map.html",
     )
+    public_photos = {photo.manhole_id: photo for photo in data.photos}
+    portraits = []
+    for mid in ("23", "28"):
+        photo = public_photos.get(mid)
+        if photo is None:
+            continue
+        src, size = photo.thumb_src
+        portraits.append(
+            f'<a href="{escape(photo.href)}" aria-label="{escape(photo.alt)}を見る">'
+            f'<img {responsive_attrs(src, "(max-width: 599px) 80px, 100px")} '
+            f'alt="{escape(photo.alt)}" width="{size}" height="{size}" '
+            'loading="eager" decoding="async"></a>'
+        )
+    portraits_html = (
+        '<div class="home-hero__portraits">' + "".join(portraits) + '</div>'
+        if portraits else ""
+    )
     return (
         '<section class="home-hero" id="home-hero" aria-labelledby="home-h1">'
         '<div class="home-hero__copy">'
-        '<div class="home-hero__portraits">'
-        '<a href="manhole/23.html" aria-label="横浜のピカチュウのポケふたを見る">'
-        f'<img {responsive_attrs("/manhole/image/23_lid.jpeg", "(max-width: 599px) 80px, 100px")} '
-        'alt="横浜のピカチュウのマンホール" width="100" height="100" loading="eager" decoding="async"></a>'
-        '<a href="manhole/28.html" aria-label="高松のヤドンのポケふたを見る">'
-        f'<img {responsive_attrs("/manhole/image/28_lid.jpeg", "(max-width: 599px) 80px, 100px")} '
-        'alt="高松のヤドンのマンホール" width="100" height="100" loading="eager" decoding="async"></a>'
-        '</div>'
+        f"{portraits_html}"
         '<p class="home-eyebrow">ポケふた図鑑</p>'
         f'<h1 class="home-h1" id="home-h1">全国{data.total:,}枚のポケふたを、<wbr>地図と一覧から探す</h1>'
         f'<p class="home-lead">{lead}</p>'
