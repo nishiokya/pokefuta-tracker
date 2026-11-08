@@ -168,16 +168,47 @@ class GeneratedHtmlTest(unittest.TestCase):
         ld = re.search(r'<script type="application/ld\+json">(.*?)</script>', html, re.DOTALL).group(1)
         self.assertNotIn("</", ld)
 
-    def test_hero_has_no_photos(self) -> None:
-        """スマホの最新写真モザイクは下の「新着・注目の写真」と重なるので出さない（PC は大地図）。"""
-        hero = _block(Fixture(self.tmp).html(), "hero")
-        self.assertNotIn("<img", hero)
+    def test_hero_has_two_mobile_manhole_photos(self) -> None:
+        """スマホ導入部にピカチュウとヤドンを出す（PC は大地図）。"""
+        records = _records()
+        records[0]["id"], records[1]["id"] = "23", "28"
+        fixture = Fixture(self.tmp, records=records)
+        for mid in ("23", "28"):
+            (fixture.image_dir / f"{mid}_lid.jpeg").write_bytes(b"x")
+        hero = _block(fixture.html(), "hero")
+        self.assertEqual(2, hero.count("<img"))
+        for mid in ("23", "28"):
+            self.assertIn(f'href="manholes/{mid}/"', hero)
+            self.assertIn(f"/{mid}_lid.jpeg", hero)
+        self.assertEqual(2, hero.count('loading="eager"'))
         self.assertNotIn("home-mosaic", hero)
         self.assertNotIn("click_hero_photo", hero)
         self.assertIn('class="home-hero" id="home-hero"', hero)
         for label in ("地図で探す", "都道府県から探す", "ポケモンから探す"):
             self.assertIn(label, hero)
         self.assertIn('href="map.html"', hero)
+
+    def test_hero_portraits_fall_back_without_lid(self) -> None:
+        records = _records()
+        records[0]["id"], records[1]["id"] = "23", "28"
+        hero = _block(Fixture(self.tmp, records=records).html(), "hero")
+        for mid in ("23", "28"):
+            self.assertIn(f'src="manhole/image/{mid}_latest.jpeg"', hero)
+        self.assertNotIn("_lid", hero)
+        self.assertEqual(2, hero.count('width="720" height="720"'))
+
+    def test_hero_portraits_skip_nonpublic_or_missing_photos(self) -> None:
+        records = _records()
+        records[0]["id"], records[1]["id"] = "23", "28"
+        fixture = Fixture(self.tmp, records=records, drop_photos=("23",))
+        (fixture.image_dir / "23_lid.jpeg").write_bytes(b"x")
+        hero = _block(fixture.html(), "hero")
+        self.assertNotIn('href="manholes/23/"', hero)
+        self.assertIn('href="manholes/28/"', hero)
+        (fixture.image_dir / "28_latest.jpeg").unlink()
+        hero = _block(fixture.html(), "hero")
+        self.assertNotIn("home-hero__portraits", hero)
+        self.assertNotIn("<img", hero)
 
     def test_hero_photo_count_excludes_private_posts(self) -> None:
         hero = _block(Fixture(self.tmp).html(), "hero")
