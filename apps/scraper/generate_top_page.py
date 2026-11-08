@@ -811,7 +811,8 @@ def render_ways(data: TopData) -> str:
     )
 
 
-def render_newrelease(data: TopData) -> str:
+def recent_manholes(data: TopData) -> list[tuple[datetime, dict]]:
+    """新作枠と都道府県の NEW 表示で同じ30日間の判定を使う。"""
     cutoff = datetime.combine(data.today - timedelta(days=NEW_RELEASE_DAYS), datetime.min.time(), JST)
     fresh = []
     for record in [*data.records, *data.provisional]:
@@ -822,6 +823,11 @@ def render_newrelease(data: TopData) -> str:
             continue
         if added_at >= cutoff:
             fresh.append((added_at, record))
+    return fresh
+
+
+def render_newrelease(data: TopData) -> str:
+    fresh = recent_manholes(data)
     wanted_html = render_wanted(data.wanted)
     if not fresh and not data.features and not wanted_html:
         return ""
@@ -1020,6 +1026,8 @@ def render_events(data: TopData) -> str:
 
 
 def render_pref(data: TopData) -> str:
+    recent_prefs = {record.get("prefecture") for _, record in recent_manholes(data)}
+    new_badge = '<span class="home-pref__new" aria-label="30日以内に新しいマンホールを追加">NEW</span>'
     counts = data.listed_counts
     regions = []
     for name, prefs in REGIONS:
@@ -1029,7 +1037,8 @@ def render_pref(data: TopData) -> str:
         links = "".join(
             f'<li><a href="prefectures/{PREFECTURE_SLUGS[p]}/" '
             f'onclick="{_track("click_pref_link", surface="top_prefecture_list", prefecture=p)}">'
-            f'<span class="home-pref__name">{escape(p)}</span><span class="home-pref__count">{counts[p]}枚</span></a></li>'
+            f'<span class="home-pref__label"><span class="home-pref__name">{escape(p)}</span>{new_badge if p in recent_prefs else ""}</span>'
+            f'<span class="home-pref__count">{counts[p]}枚</span></a></li>'
             for p in installed
         )
         region_total = sum(counts[p] for p in installed)
