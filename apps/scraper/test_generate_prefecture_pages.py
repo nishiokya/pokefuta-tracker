@@ -59,9 +59,9 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
             )
             self.assertEqual(47, count)
             self.assertEqual(47, len(list(output.glob("*/index.html"))))
-            gunma = (output / "gunma" / "index.html").read_text(encoding="utf-8")
-            self.assertIn("現在未設置", gunma)
-            self.assertIn("canonical", gunma)
+            yamanashi = (output / "yamanashi" / "index.html").read_text(encoding="utf-8")
+            self.assertIn("現在未設置", yamanashi)
+            self.assertIn("canonical", yamanashi)
 
     def test_fukui_page_has_required_sections_and_links(self) -> None:
         records = [r for r in self.records if r.get("prefecture") == "福井県"]
