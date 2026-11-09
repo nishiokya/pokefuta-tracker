@@ -37,11 +37,55 @@ def load_durations(path: Path = DEFAULT_DURATIONS, areas_path: Path = DEFAULT_TR
     if not path.exists():
         return {}
     durations = json.loads(path.read_text(encoding="utf-8"))
+    areas = load_trip_areas(areas_path)
     durations["trip_paths"] = {
         ",".join(sorted(str(i) for i in area["manhole_ids"])): trip_path(area)
-        for area in load_trip_areas(areas_path)
+        for area in areas
     }
+    durations["entries"] = apply_partial_durations(durations.get("entries", []), areas)
     return durations
+
+
+def _ids_key(ids) -> str:
+    return ",".join(sorted(str(i) for i in ids))
+
+
+def apply_partial_durations(entries: list[dict], areas: list[dict]) -> list[dict]:
+    """trip_areas.json の duration（任意）: 全部を1日で回る時間が目安にならないエリアは、一部の地点の時間を出す。
+
+    例: 宇治は館内の1枚が入館の予約時刻しだいなので、宇治川沿いの2か所の時間を出す。
+    エリアの全地点の組の集計は、一部の地点の集計（measured_ids・measured_label つき）に置き換える。
+    並び（回った人が多い順）も、出す時間と同じ一部の地点の集計の位置にそろえる。
+    一部の地点の集計が無ければ、エリアの全地点の時間も出さない（予約待ちの時間を目安に見せないため）。
+    """
+    out = list(entries)
+    for area in areas:
+        partial = area.get("duration")
+        if not partial:
+            continue
+        full_key, part_key = _ids_key(area["manhole_ids"]), _ids_key(partial["manhole_ids"])
+        index = next((i for i, e in enumerate(out) if _ids_key(e["manhole_ids"]) == full_key), None)
+        source = next((e for e in entries if _ids_key(e["manhole_ids"]) == part_key), None)
+        if source is None:
+            if index is not None:
+                out.pop(index)
+            continue
+        if index is not None:
+            out.pop(index)
+        alias = {
+            **{k: v for k, v in source.items() if k != "common_order"},
+            "manhole_ids": sorted((str(i) for i in area["manhole_ids"]), key=lambda x: (len(x), x)),
+            "measured_ids": sorted(str(i) for i in partial["manhole_ids"]),
+            "measured_label": partial["label"],
+        }
+        out.insert(out.index(source), alias)
+    return out
+
+
+def entry_range(entry: dict) -> str:
+    """一覧に出す時間の目安。一部の地点の時間なら、どこの時間かを添える（「約10〜25分（宇治川沿いの2か所）」）。"""
+    text = duration_range(entry["p25_minutes"], entry["p75_minutes"])
+    return f"{text}（{entry['measured_label']}）" if entry.get("measured_label") else text
 
 
 def _visitable(records: list[dict]) -> list[dict]:
@@ -149,6 +193,13 @@ def duration_text(records: list[dict], durations: dict) -> str:
     entry = find_entry(records, durations)
     if not entry:
         return ""
+    if entry.get("measured_label"):
+        measured = [r for r in records if str(r.get("id", "")) in set(entry["measured_ids"])]
+        return (
+            f"{entry['measured_label']}を回った人は、たいてい"
+            f"{duration_span(entry['p25_minutes'], entry['p75_minutes'])}ほどかかっています。"
+            + mode_hint(measured)
+        )
     count = len(entry["manhole_ids"])
     return (
         f"{count}か所を1日で回った人は、たいてい"
