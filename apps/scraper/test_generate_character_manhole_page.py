@@ -577,7 +577,7 @@ class PhotoTest(unittest.TestCase):
         gundam = by_id["p-gundam"]
         self.assertTrue(gundam["linked"])
         self.assertEqual("機動戦士ガンダム", gundam["label"])
-        self.assertEqual("./gmanhole_map.html#gundam-1", gundam["href"])
+        self.assertEqual("./characters/gundam/", gundam["href"])  # ガンダムは共通地図でなく作品ガイドへ
         zls = by_id["p-zls"]
         self.assertEqual("ゾンビランドサガ", zls["label"])
         self.assertEqual("唐人プラザビル", zls["place"])

@@ -414,10 +414,8 @@ def build_photos(path: Path | None, character_records: list[dict], gundam_record
             meta = _work_meta_for(manhole, is_gundam)
             place = str(manhole.get("landmark") or manhole.get("title") or title).strip()
             href = meta["href"]
-            if is_gundam:
-                # ガンダムの作品ガイドは設置エリアの要約で、1基ずつの行は一覧・地図（gmanhole_map.html）にある
-                href = "./gmanhole_map.html#gundam-" + quote(str(manhole.get("id")), safe="")
-            elif href.startswith("./characters/"):
+            # ガンダムは作品ガイド（./characters/gundam/）へ。ガイドに1基ずつの行は無いのでアンカーは付けない
+            if not is_gundam and href.startswith("./characters/"):
                 href += "#spot-" + quote(str(manhole.get("id")), safe="")
             label = _short_work_name(meta["name"])
             prefecture = str(manhole.get("prefecture") or "")
