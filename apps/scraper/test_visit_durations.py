@@ -131,3 +131,41 @@ class RankingTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class PartialDurationTest(unittest.TestCase):
+    """trip_areas.json の duration: 予約制の施設の1枚などで、全部の時間の代わりに一部の地点の時間を出す。"""
+
+    AREA = {"slug": "uji", "name": "宇治", "manhole_ids": ["352", "353", "382"],
+            "duration": {"manhole_ids": ["352", "353"], "label": "宇治川沿いの2か所"}}
+    ENTRIES = [
+        {"manhole_ids": ["352", "353"], "p25_minutes": 12, "p75_minutes": 48, "common_order": ["352", "353"]},
+        {"manhole_ids": ["100", "101"], "p25_minutes": 5, "p75_minutes": 9},
+        {"manhole_ids": ["352", "353", "382"], "p25_minutes": 71, "p75_minutes": 399},
+    ]
+    RECORDS = [
+        {"id": "352", "lat": 34.890627, "lng": 135.809787, "status": "active", "installed": True},
+        {"id": "353", "lat": 34.895547, "lng": 135.805962, "status": "active", "installed": True},
+        {"id": "382", "lat": 34.892561, "lng": 135.784525, "status": "active", "installed": True},
+    ]
+
+    def test_full_set_takes_the_partial_time_in_place(self) -> None:
+        out = MODULE.apply_partial_durations(self.ENTRIES, [self.AREA])
+        self.assertEqual(len(out), 3)
+        alias = out[2]
+        self.assertEqual(alias["manhole_ids"], ["352", "353", "382"])
+        self.assertEqual((alias["p25_minutes"], alias["p75_minutes"]), (12, 48))
+        self.assertEqual(alias["measured_label"], "宇治川沿いの2か所")
+        self.assertNotIn("common_order", alias)  # 2か所の順番を3か所の順番に使わない
+
+    def test_full_set_is_dropped_without_the_partial_time(self) -> None:
+        out = MODULE.apply_partial_durations(self.ENTRIES[1:], [self.AREA])
+        self.assertEqual([e["manhole_ids"] for e in out], [["100", "101"]])
+
+    def test_text_and_range_name_the_measured_part(self) -> None:
+        durations = {"entries": MODULE.apply_partial_durations(self.ENTRIES, [self.AREA])}
+        text = MODULE.duration_text(self.RECORDS, durations)
+        self.assertTrue(text.startswith("宇治川沿いの2か所を回った人は、たいてい10分〜50分ほど"), text)
+        self.assertIn("約600m", text)  # 距離も2か所の分
+        entry = MODULE.find_entry(self.RECORDS, durations)
+        self.assertEqual(MODULE.entry_range(entry), "約10分〜50分（宇治川沿いの2か所）")

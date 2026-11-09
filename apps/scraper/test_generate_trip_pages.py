@@ -186,6 +186,21 @@ class AreaTest(unittest.TestCase):
         self.assertIn("⛴ 船</strong> 連絡船で片道約10分", boat)
         self.assertIn("⚠ 注意</strong> 最終便に注意", boat)
 
+    def test_plans_section_is_one_line_each_and_https_only(self):
+        html = MODULE._plans_html({"plans": {
+            "heading": "宇治の観光もするなら",
+            "items": [{"title": "午前に入館するなら", "text": "<b>先に</b>ミュージアム"}, {"title": "空", "text": ""}],
+            "sources": [{"label": "平等院", "url": "https://www.byodoin.or.jp/guide/"},
+                        {"label": "http", "url": "http://example.com/"}],
+            "checked_on": "2026-11-09",
+        }})
+        self.assertIn('<h2 id="plans-heading">宇治の観光もするなら</h2>', html)
+        self.assertIn("&lt;b&gt;先に&lt;/b&gt;", html)
+        self.assertEqual(html.count("<li>"), 1)
+        self.assertIn("https://www.byodoin.or.jp/guide/", html)
+        self.assertNotIn("http://example.com/", html)
+        self.assertEqual(MODULE._plans_html({}), "")
+
     def test_mode_label_overrides_distance_based_mode(self):
         records = [_record("a", "a", 35, 135), _record("b", "a", 35.03, 135)]
         self.assertEqual(VD.mode_label({}, records), "バス・自転車")

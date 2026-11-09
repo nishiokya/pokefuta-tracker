@@ -39,6 +39,20 @@
       ]
     },
     {
+      "label": "宇治（宇治川沿いの2か所）",
+      "manhole_ids": [
+        "352",
+        "353"
+      ],
+      "p25_minutes": 12,
+      "p75_minutes": 48,
+      "median_minutes": 17,
+      "common_order": [
+        "352",
+        "353"
+      ]
+    },
+    {
       "label": "奈良県斑鳩",
       "manhole_ids": [
         "148",
