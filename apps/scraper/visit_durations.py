@@ -55,6 +55,7 @@ def apply_partial_durations(entries: list[dict], areas: list[dict]) -> list[dict
 
     例: 宇治は館内の1枚が入館の予約時刻しだいなので、宇治川沿いの2か所の時間を出す。
     エリアの全地点の組の集計は、一部の地点の集計（measured_ids・measured_label つき）に置き換える。
+    並び（回った人が多い順）も、出す時間と同じ一部の地点の集計の位置にそろえる。
     一部の地点の集計が無ければ、エリアの全地点の時間も出さない（予約待ちの時間を目安に見せないため）。
     """
     out = list(entries)
@@ -69,16 +70,15 @@ def apply_partial_durations(entries: list[dict], areas: list[dict]) -> list[dict
             if index is not None:
                 out.pop(index)
             continue
+        if index is not None:
+            out.pop(index)
         alias = {
             **{k: v for k, v in source.items() if k != "common_order"},
             "manhole_ids": sorted((str(i) for i in area["manhole_ids"]), key=lambda x: (len(x), x)),
             "measured_ids": sorted(str(i) for i in partial["manhole_ids"]),
             "measured_label": partial["label"],
         }
-        if index is None:
-            out.insert(out.index(source), alias)
-        else:
-            out[index] = alias
+        out.insert(out.index(source), alias)
     return out
 
 

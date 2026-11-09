@@ -559,7 +559,7 @@ def compact_places(
         )
         link = m.path or f"/prefectures/{quote(m.prefecture_slug)}/"
         entry = find_entry(points, durations or {})
-        time = duration_range(entry["p25_minutes"], entry["p75_minutes"]) if entry else ""
+        time = entry_range(entry) if entry else ""
         out.append((f"{m.prefecture} {m.name}", link, len(points), total, time))
     return sorted(out, key=lambda t: (-t[2], t[3]))
 

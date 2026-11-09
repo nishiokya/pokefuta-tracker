@@ -149,10 +149,10 @@ class PartialDurationTest(unittest.TestCase):
         {"id": "382", "lat": 34.892561, "lng": 135.784525, "status": "active", "installed": True},
     ]
 
-    def test_full_set_takes_the_partial_time_in_place(self) -> None:
+    def test_full_set_takes_the_partial_time_and_its_rank(self) -> None:
         out = MODULE.apply_partial_durations(self.ENTRIES, [self.AREA])
         self.assertEqual(len(out), 3)
-        alias = out[2]
+        alias = out[0]  # 並びは出す時間（2か所）の位置
         self.assertEqual(alias["manhole_ids"], ["352", "353", "382"])
         self.assertEqual((alias["p25_minutes"], alias["p75_minutes"]), (12, 48))
         self.assertEqual(alias["measured_label"], "宇治川沿いの2か所")
