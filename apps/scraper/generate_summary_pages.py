@@ -3607,7 +3607,7 @@ def main() -> None:
         pref_names = json.loads(PREFECTURES_JSON.read_text(encoding="utf-8"))
 
     records = load_page_records(NDJSON)
-    # 「まだ写真が投稿されていないポケふた」の母数（42県）の前提を、
+    # 「まだ写真が投稿されていないポケふた」の母数（43県）の前提を、
     # ページを作る前に確かめる。詳しくは prefecture_completion.py を参照。
     records_by_prefecture: dict[str, list[dict]] = {}
     for record in records:

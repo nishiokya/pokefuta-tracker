@@ -170,9 +170,9 @@ class PrefecturePagesI18nTest(unittest.TestCase):
         self.assertLessEqual(set(PREFECTURE_PAGE_LANGS), set(MANHOLE_PAGE_LANGS))
 
     def test_empty_prefecture_shows_the_nearest_poke_lids(self) -> None:
-        html = self.read("gunma")
-        self.assertIn("No Poké Lids have been confirmed in Gunma yet", html)
-        self.assertIn("Nearest Poké Lids from Gunma", html)
+        html = self.read("yamanashi")
+        self.assertIn("No Poké Lids have been confirmed in Yamanashi yet", html)
+        self.assertIn("Nearest Poké Lids from Yamanashi", html)
         self.assertIn("km away", html)
         self.assertNotIn('id="prefecture-map"', html)
 

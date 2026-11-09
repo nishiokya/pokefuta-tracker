@@ -250,7 +250,6 @@ VISIT_SEARCH_INTRO_PREFECTURES = frozenset({"京都府", "埼玉県", "神奈川
 # ポケふたが無い県から近いポケふたを測る起点（県庁所在地の県庁）。
 # 距離は直線で、移動距離ではない。
 EMPTY_PREFECTURE_ORIGINS: dict[str, tuple[str, float, float]] = {
-    "群馬県": ("群馬県庁", 36.3911, 139.0608),
     "山梨県": ("山梨県庁", 35.6639, 138.5684),
     "広島県": ("広島県庁", 34.3966, 132.4596),
     "熊本県": ("熊本県庁", 32.7898, 130.7416),
@@ -3133,7 +3132,7 @@ def _trips_by_prefecture(records: list[dict], durations: dict) -> dict[str, list
 def main() -> int:
     args = parse_args()
     records = load_records(args.manholes)
-    # 公開する母数（42県）の前提を、ページを作る前に確かめる。ある県が
+    # 公開する母数（43県）の前提を、ページを作る前に確かめる。ある県が
     # まるごと取りこぼされると、黙って母数から外れてコンプリート率が
     # 上がったように見えるので、気づけるようにここで止める。generate_all()
     # ではなく main() に置くのは、合成データで generate_all() を呼ぶ
