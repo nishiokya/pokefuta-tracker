@@ -320,11 +320,12 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
     canonical = BASE_URL + page.path
     event = event_for_page(page.slug, events)
     badge, event_section, event_active = event_html(event, now) if event else ("", "", False)
-    hero_heading = "ふたマス一覧・設置場所マップ<br><small>アイマスのマンホールを探そう。</small>" if page.slug == "idolmaster" else f"{escape(page.name)}の<br>マンホールを探そう。"
+    # 見出しはポケモンのページ（「ピカチュウのポケふた一覧」）と同じく、何のページかを1行で言い切る
+    hero_heading = "ふたマス一覧・設置場所マップ <small>アイマスのマンホールを探そう。</small>" if page.slug == "idolmaster" else f"{escape(page.name)}のマンホール一覧・設置場所"
     if page.slug == "gundam":
-        hero_heading = "ガンダムマンホールを<br>巡る旅のガイド。"
-    hero_note = "担当アイドルのふたを訪ねて、公式チェックインへ。" if event_active else "好きな作品を、次の旅の目的地に。"
-    hero_cta = '<a class="cm-btn cm-btn--ghost" href="#check-in">チェックインの参加方法 →</a>' if event_active else ""
+        hero_heading = "ガンダムマンホールの巡り方ガイド"
+    hero_summary = ("担当アイドルのふたを訪ねて、公式チェックインへ。" if event_active else "") + page.intro
+    hero_cta = '<a class="cw-hub-card" href="#check-in">チェックインの参加方法 →</a>' if event_active else ""
     # 全国一覧の作品カードと同じ色・同じ字の蓋を掲げ、2種類のページを同じ図鑑に見せる
     lid_color = next((str(r["marker_color"]) for r in selected if r.get("marker_color")), "#6C5CA6")
     lid_label = next((str(r["marker_label"]) for r in selected if r.get("marker_label")), page.name[:1])
@@ -335,19 +336,39 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
     )
     pref_order = {pref: i for i, pref in enumerate(PREFECTURE_ORDER)}
     selected.sort(key=lambda r: (pref_order.get(r.get("prefecture"), 999), str(r.get("city") or ""), str(r["id"])))
-    hero_photo = next((r for r in selected if safe_url(r.get("user_photo_url"))), None) if page.slug == "idolmaster" else None
-    social_image = safe_url(hero_photo.get("user_photo_url")) if hero_photo else OG_IMAGE
-    image_dimensions = '' if hero_photo else '<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">'
-    hero_visual = f'''<aside class="cw-emblem" aria-label="掲載数"><span class="cm-lid cm-lid--lg" style="--c:{escape(lid_color)}" aria-hidden="true">{escape(lid_label[:1])}</span>
-        <p class="cw-emblem-count"><strong class="cm-num">{count}</strong>枚 ・ {pref_count}都道府県</p></aside>'''
+    # ヒーローの右には、ポケモンのページと同じく実物の写真（写真館の公開投稿）を出す。無い作品は数の丸バッジだけ
+    hero_photo = next((r for r in selected if safe_url(r.get("user_photo_url"))), None)
+    # og:image は SNS 向けに 1200×630 の共通画像を使い、ふたマスだけ従来どおり投稿写真にする
+    social_photo = hero_photo if page.slug == "idolmaster" else None
+    social_image = safe_url(social_photo.get("user_photo_url")) if social_photo else OG_IMAGE
+    image_dimensions = '' if social_photo else '<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">'
+    unit = "基" if page.slug == "gundam" else "枚"  # ガンダムのガイドは本文も「基」で数える
+    count_badge = (f'<p class="cw-count-badge" aria-label="掲載 {count}{unit}・{pref_count}都道府県"><span>掲載</span>'
+                   f'<strong class="cm-num">{count}</strong><small>{unit}・{pref_count}都道府県</small></p>')
+    hero_visual = f'<div class="cw-hero-side">{count_badge}</div>'
     image_alt = ""
     if hero_photo:
         name = str(hero_photo.get("character") or hero_photo.get("title") or "マンホール")
         place = str(hero_photo.get("prefecture") or "") + str(hero_photo.get("city") or "")
-        image_alt = f"{place}に設置された{name}のふたマス（アイマスのマンホール）の投稿写真"
-        hero_visual = f'''<figure class="cw-hero-photo"><a href="#{spot_id(hero_photo)}">
-          <img src="{escape(social_image)}" alt="{escape(image_alt)}" width="640" height="640" fetchpriority="high" loading="eager" decoding="async"></a>
-          <figcaption><strong>{escape(name)}のふたマス</strong><span>{escape(place)} · みんなの投稿写真</span><a href="#{spot_id(hero_photo)}">このマンホールの設置場所を見る →</a></figcaption></figure>'''
+        if page.slug == "idolmaster":
+            image_alt = f"{place}に設置された{name}のふたマス（アイマスのマンホール）の投稿写真"
+            caption = f"<strong>{escape(name)}のふたマス</strong><span>{escape(place)} · みんなの投稿写真</span>"
+        else:
+            image_alt = f"{place}に設置された{name}（{page.name}のマンホール）の投稿写真"
+            caption = f"<strong>{escape(name)}</strong><span>{escape(place)} · 写真館の投稿写真</span>"
+        if page.slug == "gundam":
+            # ガンダムのガイドに1基ずつの行は無いので、投稿詳細か全国地図の該当地点へ送る
+            photo_href = safe_url(hero_photo.get("user_photo_source_url")) or (
+                ASSET_BASE + "gmanhole_map.html#gundam-" + quote(str(hero_photo["id"]), safe=""))
+            photo_link = "この写真の投稿を見る →"
+        else:
+            photo_href = "#" + spot_id(hero_photo)
+            photo_link = "このマンホールの設置場所を見る →"
+        hero_visual = f'''<div class="cw-hero-side">{count_badge}<figure class="cw-hero-photo"><a href="{escape(photo_href)}">
+          <img src="{escape(safe_url(hero_photo.get("user_photo_url")))}" alt="{escape(image_alt)}" width="640" height="640" fetchpriority="high" loading="eager" decoding="async"></a>
+          <figcaption>{caption}<a href="{escape(photo_href)}">{photo_link}</a></figcaption></figure></div>'''
+    # og:image:alt・primaryImageOfPage は共有画像の説明。共通画像のときは投稿写真の説明を使わない
+    social_alt = image_alt if social_photo else ""
     index_html = "".join(
         f'<a href="#{spot_id(r)}"><strong>{escape(str(r.get("character") or r.get("title") or "マンホール"))}</strong>'
         f'<span>{escape(str(r.get("prefecture") or ""))} {escape(str(r.get("city") or ""))}</span></a>'
@@ -433,8 +454,8 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
             for i, r in enumerate(selected, 1)
         ]},
     ]}
-    if hero_photo:
-        schema["@graph"][0]["primaryImageOfPage"] = {"@type": "ImageObject", "url": social_image, "caption": image_alt}
+    if social_photo:
+        schema["@graph"][0]["primaryImageOfPage"] = {"@type": "ImageObject", "url": social_image, "caption": social_alt}
     if page.slug == "idolmaster":
         for item, record in zip(schema["@graph"][2]["itemListElement"], selected):
             place = {"@type": "Place", "name": str(record.get("character") or record.get("title")) + "のふたマス",
@@ -471,7 +492,7 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
                 f"アイマスのマンホール{map_count}枚を地図に表示。ピンを選ぶとアイドル名と住所が開き、設置場所の詳しい案内へ進めます。"
                 if idolmaster else
                 f"{page.name}のマンホール{map_count}枚を地図に表示。ピンを選ぶと名前と住所が開き、下の設置場所の案内へ進めます。")
-        map_cta = f'<a class="cm-btn cm-btn--ghost" href="#location-map">{escape(label)}の地図を見る ↓</a>'
+        map_cta = f'<a class="cw-hub-card" href="#location-map">{escape(label)}の地図を見る ↓</a>'
         region_lookup = {pref: region for region, prefs in REGIONS for pref in prefs}
         points = [{"lat": r["lat"], "lng": r["lng"], "name": str(r.get("character") or r.get("title") or "マンホール"),
                    "alt": str(r.get("character") or r.get("title") or "マンホール") + ("のふたマス" if idolmaster else f"（{page.name}のマンホール）"),
@@ -510,7 +531,7 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
   <meta property="og:title" content="{escape(title)}"><meta property="og:description" content="{escape(description)}">
   <meta property="og:url" content="{canonical}"><meta property="og:site_name" content="ポケふた図鑑">
   <meta property="og:image" content="{escape(social_image)}">{image_dimensions}
-  <meta property="og:image:alt" content="{escape(image_alt or title)}">
+  <meta property="og:image:alt" content="{escape(social_alt or title)}">
   <meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="{escape(social_image)}">
   <link rel="icon" href="{ASSET_BASE}assets/pokefuta_icon_32.png">
   <link rel="stylesheet" href="{ASSET_BASE}assets/top-page.css?v=20260707a">
@@ -521,12 +542,14 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
   <script>window.PokefutaAnalytics.init({json_script(analytics)});</script>
 </head><body class="character-work-page cm-page">
   <main class="cm-wrap">
-    <nav class="cw-breadcrumb" aria-label="パンくず"><a href="{ASSET_BASE}">ポケふた図鑑</a><span>/</span><a href="{ASSET_BASE}character_manholes.html">キャラクターマンホール</a><span>/</span><span>{escape(page.name)}</span></nav>
-    <section class="cm-hero{' cw-hero--photo' if hero_photo else ''}" aria-labelledby="work-heading">
-      <div class="cw-hero-copy"><p class="cm-eyebrow">CHARACTER MANHOLE GUIDE / {escape(page.name)}</p>{badge}
-        <h1 id="work-heading">{hero_heading}</h1><p class="cm-hero-lead">{hero_note}</p>
-        <p>{escape(page.intro)}</p><div class="cm-jump"><a class="cm-btn" href="#locations">{jump_label} ↓</a>{map_cta}{hero_cta}</div>
-        <p class="cm-hero-note">掲載 {count}枚 / {pref_count}都道府県　{map_note}</p>
+    <section class="cm-hero cw-hero{' cw-hero--photo' if hero_photo else ''}" aria-labelledby="work-heading">
+      <div class="cw-hero-copy">
+        <nav class="cw-breadcrumb" aria-label="パンくず"><a href="{ASSET_BASE}">ポケふた図鑑</a><span>›</span><a href="{ASSET_BASE}character_manholes.html">キャラクターマンホール</a><span>›</span><span aria-current="page">{escape(page.name)}</span></nav>
+        <p class="cm-eyebrow cw-kicker"><span class="cm-lid cm-lid--sm" style="--c:{escape(lid_color)}" aria-hidden="true">{escape(lid_label[:1])}</span>キャラクターマンホール 作品ガイド</p>{badge}
+        <h1 id="work-heading">{hero_heading}</h1>
+        <p class="cw-hero-summary">{escape(hero_summary)}</p>
+        <nav class="cw-hub" aria-label="このページの見方"><a class="cw-hub-card" href="#locations">{jump_label} ↓</a>{map_cta}{hero_cta}<a class="cw-hub-card" href="{ASSET_BASE}character_manholes.html">ほかの作品を探す →</a></nav>
+        {f'<p class="cm-hero-note">{map_note}</p>' if map_note else ""}
       </div>
       {hero_visual}
     </section>

@@ -256,19 +256,51 @@
 
 /* ── 作品ガイド（characters/<slug>/） ── */
 .cw-breadcrumb { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 14px; font-size: 12px; color: var(--cm-muted); }
-.cw-hero-copy > p:not([class]) { font-size: 14px; color: #4d4a55; max-width: 38em; }
-.cw-emblem { display: grid; justify-items: center; gap: 14px; text-align: center; }
-.cw-hero-photo { margin: 0; min-width: 0; }
-.cw-hero-photo > a { display: block; aspect-ratio: 1; background: var(--dm-tint-strong); border-radius: 20px; overflow: hidden; }
-.cw-hero-photo img { display: block; width: 100%; height: 100%; object-fit: contain; }
-.cw-hero-photo figcaption { display: grid; gap: 3px; margin-top: 12px; font-size: 12px; color: var(--cm-muted); }
-.cw-hero-photo figcaption strong { font-size: 17px; color: var(--cm-ink); }
-.cw-hero-photo figcaption a { margin-top: 4px; }
-.cw-hero--photo h1 small { font-size: .6em; font-weight: 700; }
+/* 作品ガイドのヒーロー: ポケモン一覧（/pokemon/）・ポケモンのページと同じ組み方。
+   カードの中にパンくず → 小見出し → 1行の見出し → 説明の枠 → 白い入口カード、右に実物の写真と数の丸バッジ */
+.cm-hero.cw-hero {
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 300px); gap: 28px; align-items: center;
+  margin: 4px 0 32px; padding: 22px 26px; border-radius: 24px;
+  background: linear-gradient(108deg, #fbf9fe 0 52%, var(--dm-tint-strong) 100%);
+  box-shadow: 0 12px 28px rgba(88, 73, 62, .1);
+}
+.cm-hero.cw-hero::before { display: none; }
+.cw-hero .cw-breadcrumb { margin-bottom: 8px; }
+.cw-hero .cw-breadcrumb a { text-decoration: none; }
+.cw-hero .cm-eyebrow.cw-kicker { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 12px; letter-spacing: .08em; font-weight: 800; }
+.cw-kicker .cm-lid--sm { --lid-size: 22px; font-size: 11px; }
+.cm-hero.cw-hero h1 { margin-bottom: 12px; font-size: clamp(24px, 2.8vw, 32px); line-height: 1.35; }
+.cw-hero h1 small { display: block; margin-top: 4px; font-size: .55em; font-weight: 700; color: var(--cm-muted); }
+.cw-hero-summary {
+  max-width: 44em; margin: 0 0 14px; padding: 10px 14px; border-left: 4px solid var(--dm-line); border-radius: 0 10px 10px 0;
+  background: rgba(255, 255, 255, .72); font-size: 13.5px; line-height: 1.7; color: #4d4a55;
+}
+.cw-hub { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; max-width: 560px; margin: 0 0 8px; }
+.cm-wrap .cw-hub-card {
+  display: flex; align-items: center; min-height: 44px; padding: 9px 14px; border-radius: 12px;
+  background: rgba(255, 255, 255, .88); border: 1px solid color-mix(in srgb, var(--dm-line) 22%, transparent);
+  color: var(--dm-ink); font-size: 13.5px; font-weight: 800; line-height: 1.4; text-decoration: none;
+}
+.cm-wrap a.cw-hub-card:hover { border-color: var(--dm-line); background: #fff; }
+.cw-hero-side { position: relative; display: grid; justify-items: center; min-width: 0; }
+.cw-hero-photo { width: 100%; margin: 0; min-width: 0; }
+.cw-hero-photo > a { display: block; aspect-ratio: 1; background: var(--dm-tint-strong); border-radius: 18px; overflow: hidden; box-shadow: 0 8px 20px rgba(87, 64, 143, .15); }
+.cw-hero-photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.cw-hero-photo figcaption { display: grid; gap: 2px; margin-top: 8px; font-size: 12px; color: var(--cm-muted); }
+.cw-hero-photo figcaption strong { font-size: 14px; color: var(--cm-ink); }
+.cw-hero-photo figcaption a { margin-top: 2px; font-weight: 700; }
+/* 数の丸バッジ（/pokemon/ の「登場ポケモン」と同じ形）。写真があるときは写真の左上に重ねる */
+.cw-count-badge {
+  display: grid; place-content: center; width: 132px; height: 132px; margin: 0; border-radius: 50%; text-align: center;
+  background: var(--dm-ink); color: #fff; border: 5px solid rgba(255, 255, 255, .75); box-shadow: 0 8px 20px rgba(87, 64, 143, .25);
+}
+.cw-count-badge span, .cw-count-badge small { display: block; font-size: 11px; line-height: 1.4; }
+.cw-count-badge strong { display: block; font-size: 34px; font-weight: 900; line-height: 1.05; color: #ffe17c; }
+.cw-hero--photo .cw-count-badge { position: absolute; z-index: 1; left: -22px; top: -16px; width: 96px; height: 96px; border-width: 4px; }
+.cw-hero--photo .cw-count-badge strong { font-size: 26px; }
+.cw-hero--photo .cw-count-badge small { font-size: 9.5px; }
 .cw-map { height: 450px; width: 100%; border: 1px solid var(--cm-line); border-radius: 20px; background: #e9e7df; isolation: isolate; }
 .cw-map .leaflet-popup-content { font-family: inherit; line-height: 1.7; }
-.cw-emblem-count { margin: 0; font-size: 14px; color: var(--cm-muted); }
-.cw-emblem-count strong { display: block; font-size: 56px; font-weight: 900; line-height: 1; letter-spacing: -.03em; color: var(--dm-ink); }
 .cw-event-badge { display: inline-block; margin-bottom: 14px; padding: 5px 14px; border-radius: 999px; background: #d4a15e; font-size: 12px; font-weight: 800; text-decoration: none; }
 .cm-hero a.cw-event-badge { color: var(--cm-ink); }
 .cw-event { margin: 0 0 40px; padding: 32px; border-radius: 24px; background: #efe7d3; }
@@ -325,8 +357,23 @@
   .lp-place-grid--mini { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 16px; }
 }
 @media (max-width: 700px) {
-  .cw-hero--photo .cw-hero-photo { order: -1; }
-  .cw-hero--photo .cw-hero-photo > a { max-height: 340px; }
+  /* スマホは見出し・説明・入口のあとに写真。数のバッジは /pokemon/ の狭い画面と同じく横長の札にする */
+  .cm-hero.cw-hero { grid-template-columns: minmax(0, 1fr); gap: 16px; margin-bottom: 24px; padding: 16px; border-radius: 16px; }
+  .cm-hero.cw-hero h1 { font-size: 22px; }
+  .cw-hub { gap: 6px; }
+  .cm-wrap .cw-hub-card { padding: 8px 10px; font-size: 12.5px; }
+  .cw-hero-side { justify-items: stretch; }
+  .cw-count-badge, .cw-hero--photo .cw-count-badge {
+    position: static; display: inline-flex; align-items: baseline; justify-self: start; gap: 6px;
+    width: auto; height: auto; padding: 4px 14px; border-radius: 999px; border-width: 3px;
+  }
+  .cw-count-badge strong, .cw-hero--photo .cw-count-badge strong { font-size: 20px; }
+  .cw-count-badge small, .cw-hero--photo .cw-count-badge small { font-size: 11px; }
+  .cw-hero--photo .cw-hero-side { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  /* 写真は小さな正方形にして説明を横に置く（全幅にするとヒーローが画面1枚を超える） */
+  .cw-hero-photo { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 12px; align-items: center; }
+  .cw-hero-photo > a { border-radius: 12px; }
+  .cw-hero-photo figcaption { margin-top: 0; }
   .cw-map { height: 360px; border-radius: 14px; }
   .cm-wrap { padding: 12px 16px 48px; }
   .cm-hero { grid-template-columns: minmax(0, 1fr); gap: 24px; margin-bottom: 28px; padding: 30px 22px 26px; border-radius: 22px; }
@@ -367,9 +414,6 @@
   .lp-place-pref--mini .lp-place-line { font-size: 12px; line-height: 1.6; overflow-wrap: anywhere; }
   .lp-explain-grid { grid-template-columns: minmax(0, 1fr); gap: 18px; }
   .lp-promo { grid-template-columns: minmax(0, 1fr); padding: 26px 22px; }
-  .cw-emblem { grid-template-columns: auto minmax(0, 1fr); justify-items: start; text-align: left; }
-  .cw-emblem .cm-lid--lg { --lid-size: 96px; }
-  .cw-emblem-count strong { font-size: 40px; }
   .cw-event { padding: 24px 20px; }
   .cw-steps { grid-template-columns: minmax(0, 1fr); gap: 16px; }
   .cw-index { grid-template-columns: repeat(2, minmax(0, 1fr)); }

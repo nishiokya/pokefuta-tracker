@@ -164,7 +164,7 @@ class GundamGuideTest(unittest.TestCase):
         self.assertIn('gmanhole_map.html?work=gundam&amp;pref=%E5%8C%97%E6%B5%B7%E9%81%93', self.html)
 
     def test_page_does_not_claim_to_be_a_list(self) -> None:
-        self.assertIn('<h1 id="work-heading">ガンダムマンホールを<br>巡る旅のガイド。</h1>', self.html)
+        self.assertIn('<h1 id="work-heading">ガンダムマンホールの巡り方ガイド</h1>', self.html)
         self.assertNotIn("マンホール一覧</h2>", self.html)
         schema = json.loads(re.search(r'<script type="application/ld\+json">(.*?)</script>', self.html).group(1))
         types = [node["@type"] for node in schema["@graph"]]
@@ -203,6 +203,22 @@ class GundamGuideTest(unittest.TestCase):
     def test_maps_use_the_gundam_filter(self) -> None:
         self.assertIn('gmanhole_map.html?work=gundam', self.html)
         self.assertNotIn('?work=%E6%A9%9F%E5%8B%95', self.html)  # 作品名そのままでは地図が絞り込めない
+
+    def test_hero_counts_in_ki_and_has_no_emblem(self) -> None:
+        self.assertIn('<small>基・1都道府県</small>', self.html)
+        self.assertNotIn('cm-lid--lg', self.html)  # 大きな蓋の絵はやめ、/pokemon/ と同じ数の丸バッジにした
+
+    def test_hero_photo_links_to_the_post_and_keeps_the_common_social_image(self) -> None:
+        submissions = [{"canonical_ref": "gundam:1", "status": "active", "photo_url": "https://example.com/g.jpg",
+                        "source_url": "https://pokefuta.com/design-manholes/abc", "created_at": "2026-11-01"}]
+        records = attach_user_photos(gundam_work_records(GUNDAM_RECORDS), submissions)
+        html = generate_html(GUNDAM, records, {})
+        hero = html.split('<figure class="cw-hero-photo">')[1].split('</figure>')[0]
+        self.assertIn('src="https://example.com/g.jpg"', hero)
+        self.assertIn('href="https://pokefuta.com/design-manholes/abc"', hero)
+        self.assertIn('property="og:image" content="https://data.pokefuta.com/assets/ogp/pokefuta_map_ogp.png"', html)
+        # 共通画像の代替テキストに投稿写真の説明を入れない
+        self.assertIn('property="og:image:alt" content="ガンダムマンホールの巡り方ガイド｜地方・都道府県別の設置エリア"', html)
 
     def test_hero_uses_the_gundam_lid_and_generic_cta(self) -> None:
         self.assertIn('style="--c:#0044aa" aria-hidden="true">G</span>', self.html)
@@ -467,7 +483,7 @@ class GenerateAllPagesTest(unittest.TestCase):
         """全国一覧の作品カードと同じ色・同じ字の蓋をヒーローに出す。"""
         records = [dict(r, marker_color="#f97316", marker_label="ア") for r in RECORDS]
         html = generate_html(IDOLMASTER, records, EVENT, now=datetime(2026, 9, 20, tzinfo=JST))
-        self.assertIn('<span class="cm-lid cm-lid--lg" style="--c:#f97316" aria-hidden="true">ア</span>', html)
+        self.assertIn('<span class="cm-lid cm-lid--sm" style="--c:#f97316" aria-hidden="true">ア</span>', html)
 
     def test_loaded_event_is_not_validated_twice(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
