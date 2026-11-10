@@ -393,6 +393,13 @@ class SeoStructureTest(_PageTestCase):
         self.assertIn('<input id="place-q"', hub)
         self.assertIn(f'href="./gmanhole_map.html"', hub)
         self.assertIn(f"地図で{self.total_count}件を見る", hub)
+        # 表示は「作品・都道府県・地図」の1段 → 検索。CSS の order で入れ替えず HTML の順で並べ、
+        # Tab のフォーカス順と見た目の順を揃える
+        self.assertLess(hub.index("<b>地図で探す</b>"), hub.index('<input id="place-q"'))
+
+    def test_search_hub_does_not_reorder_items_with_css(self):
+        css = (Path(__file__).resolve().parents[2] / "apps" / "web" / "assets" / "character-work.css").read_text(encoding="utf-8")
+        self.assertNotRegex(css, r"\.lp-hub[^{]*\{[^}]*\border:")
 
     def test_intro_explains_the_topic_scope_and_caveats_in_300_to_500_chars(self):
         intro = self.html[self.html.index('<section class="lp-intro"'):]

@@ -135,7 +135,7 @@
 .lp-hub-item b { font-size: 13.5px; font-weight: 800; }
 .lp-hub-item > span { font-size: 11.5px; color: var(--cm-muted); }
 /* 作品・都道府県・地図のボタンを1段に並べ、検索はその下の全幅 */
-.lp-hub-search { grid-column: 1 / -1; order: 1; min-height: 0; }
+.lp-hub-search { grid-column: 1 / -1; min-height: 0; }
 .lp-hub-search input {
   width: 100%; min-height: 44px; margin-top: 2px; padding: 8px 14px; border: 1px solid color-mix(in srgb, var(--dm-line) 35%, transparent); border-radius: 10px;
   background: #fff; color: var(--cm-ink); font: inherit; font-size: 15px;
