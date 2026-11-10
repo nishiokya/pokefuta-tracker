@@ -93,19 +93,25 @@
 /* 全国一覧のヒーロー: 左に見出し・件数・探し方、右に投稿写真のモザイク。
    並びは「見出し → 写真 → 探し方」。広い画面では写真を右列に2段またがせる */
 .cm-hero--lp {
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); grid-template-areas: "copy photos" "hub photos";
-  align-items: start; row-gap: 22px; padding: 40px 44px;
+  /* 高さは以前（PC 約790px）の半分ほどに抑える。写真の枚数は減らさず、小さく並べる */
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); grid-template-areas: "copy photos" "hub photos";
+  align-items: start; gap: 14px 32px; margin-bottom: 28px; padding: 26px 30px;
 }
+.cm-hero--lp .cm-eyebrow { margin-bottom: 6px; }
+.cm-hero--lp h1 { margin-bottom: 8px; font-size: clamp(22px, 2.4vw, 28px); line-height: 1.35; }
+.cm-hero--lp .cm-hero-lead { margin-bottom: 6px; font-size: 13.5px; }
+.cm-hero--lp .cm-stats { gap: 4px 20px; margin: 8px 0 2px; }
+.cm-hero--lp .cm-stats strong { font-size: 26px; }
+.cm-hero--lp .cm-hero-note { font-size: 11px; }
 .cm-hero--lp > div { grid-area: copy; }
 /* 写真が1枚も無いとき（データ欠損など）は右列を空けず1カラムにする */
 .cm-hero--lp.cm-hero--no-photos { grid-template-columns: minmax(0, 1fr); grid-template-areas: "copy" "hub"; }
 .cm-hero--no-photos .lp-hub { max-width: 640px; }
-.lp-hub { grid-area: hub; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.lp-hub { grid-area: hub; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
 .lp-hero-photos { grid-area: photos; margin: 0; }
-.lp-hero-mosaic { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 0; padding: 0; list-style: none; }
-.lp-hero-mosaic-item { position: relative; aspect-ratio: 1; border-radius: 14px; overflow: hidden; background: var(--dm-tint-strong); }
-/* 8枚を3列×3段に収める: 先頭だけ縦2段（元写真が縦長なので切り抜きが少ない） */
-.lp-hero-mosaic-item:first-child { grid-row: span 2; aspect-ratio: auto; }
+.lp-hero-mosaic { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 0; padding: 0; list-style: none; }
+.lp-hero-mosaic-item { position: relative; aspect-ratio: 1; border-radius: 10px; overflow: hidden; background: var(--dm-tint-strong); }
+/* 8枚を4列×2段に並べる */
 .lp-hero-mosaic-item a { display: block; width: 100%; height: 100%; }
 .lp-hero-mosaic img, .lp-gallery img, .lp-work-thumb img {
   display: block; width: 100%; height: 100%; object-fit: cover; object-position: center;
@@ -116,23 +122,28 @@
   background: var(--dm-line); color: #fff; font-size: 11px; font-weight: 800; line-height: 1.6;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
-.lp-hero-mosaic-caption { margin: 10px 0 0; font-size: 11.5px; line-height: 1.6; color: var(--cm-muted); }
+.lp-hero-mosaic-caption {
+  margin: 8px 0 0; font-size: 11px; line-height: 1.55; color: var(--cm-muted);
+  /* 写真の作品名・場所は本文として残し、表示だけ2行に畳む */
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
 .cm-wrap .lp-hub-item {
-  display: grid; align-content: start; gap: 4px; min-height: 84px; padding: 14px 16px; border-radius: 16px;
+  display: grid; align-content: start; gap: 2px; min-height: 0; padding: 9px 12px; border-radius: 12px;
   background: #fff; border: 1px solid color-mix(in srgb, var(--dm-line) 25%, transparent); color: var(--cm-ink); text-decoration: none;
 }
 .cm-wrap a.lp-hub-item:hover { border-color: var(--dm-line); }
-.lp-hub-item b { font-size: 14.5px; font-weight: 800; }
-.lp-hub-item > span { font-size: 12.5px; color: var(--cm-muted); }
-.lp-hub-search { grid-column: 1 / -1; min-height: 0; }
+.lp-hub-item b { font-size: 13.5px; font-weight: 800; }
+.lp-hub-item > span { font-size: 11.5px; color: var(--cm-muted); }
+/* 作品・都道府県・地図のボタンを1段に並べ、検索はその下の全幅 */
+.lp-hub-search { grid-column: 1 / -1; order: 1; min-height: 0; }
 .lp-hub-search input {
-  width: 100%; min-height: 44px; margin-top: 4px; padding: 8px 14px; border: 1px solid color-mix(in srgb, var(--dm-line) 35%, transparent); border-radius: 10px;
+  width: 100%; min-height: 44px; margin-top: 2px; padding: 8px 14px; border: 1px solid color-mix(in srgb, var(--dm-line) 35%, transparent); border-radius: 10px;
   background: #fff; color: var(--cm-ink); font: inherit; font-size: 15px;
 }
 .lp-hub-search input:focus-visible { outline: 3px solid var(--dm-line); outline-offset: 2px; }
-.lp-hub-status { min-height: 1.2em; font-size: 12.5px; color: var(--cm-text); }
+.lp-hub-status { min-height: 0; font-size: 12.5px; color: var(--cm-text); }
 .cm-hero .lp-hub-status a { color: var(--dm-ink); }
-.cm-wrap .lp-hub-map { grid-column: 1 / -1; min-height: 0; background: var(--dm-ink); border-color: var(--dm-ink); color: #fff; }
+.cm-wrap .lp-hub-map { min-height: 0; background: var(--dm-ink); border-color: var(--dm-ink); color: #fff; }
 .cm-wrap a.lp-hub-map:hover { background: var(--dm-line); border-color: var(--dm-line); }
 .lp-hub-map > span { color: #fff; font-weight: 700; }
 
@@ -306,6 +317,7 @@
 @media (max-width: 860px) {
   .lp-work-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .cm-hero--lp { grid-template-columns: minmax(0, 1fr); grid-template-areas: "copy" "photos" "hub"; }
+  .lp-hero-mosaic { grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 6px; }
   .lp-gallery { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .lp-intro { grid-template-columns: minmax(0, 1fr); gap: 14px; }
   .lp-regions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -331,15 +343,22 @@
   .lp-work-grid > li:first-child .lp-work-count b, .lp-work-count b { font-size: 24px; }
   .lp-work-card { gap: 2px 14px; padding: 14px 16px; }
   .lp-work-go { display: none; }  /* カード全体がリンクなので、狭い画面では行を省く */
-  .cm-hero--lp { padding: 26px 18px 18px; }
-  .lp-hero-mosaic { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
-  .lp-hero-mosaic-item { border-radius: 10px; }
-  .lp-hero-mosaic-item:first-child { grid-row: auto; aspect-ratio: 1; }  /* 4列×2段にそろえる */
-  .lp-photo-badge { left: 4px; bottom: 4px; padding: 1px 6px; font-size: 10px; }
+  .cm-hero--lp { gap: 12px; margin-bottom: 20px; padding: 18px 16px 16px; }
+  .cm-hero--lp h1 { font-size: 21px; }
+  .cm-hero--lp .cm-hero-lead { font-size: 13px; }
+  .cm-hero--lp .cm-stats strong { font-size: 22px; }
+  /* スマホは8枚を横1列のスクロールに（2段に積むと画面の半分を写真が占める） */
+  .lp-hero-mosaic { display: flex; gap: 6px; overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none; }
+  .lp-hero-mosaic::-webkit-scrollbar { display: none; }
+  .lp-hero-mosaic-item { flex: 0 0 76px; border-radius: 8px; scroll-snap-align: start; }
+  .lp-photo-badge { left: 3px; bottom: 3px; padding: 0 5px; font-size: 9px; }
   .lp-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
   .lp-promo--photos { padding: 20px 18px; }
-  .lp-hub { gap: 8px; }
-  .cm-wrap .lp-hub-item { min-height: 0; padding: 12px 14px; }
+  .lp-hub { gap: 6px; }
+  .cm-wrap .lp-hub-item { min-height: 0; padding: 8px 10px; }
+  .lp-hub-item b { font-size: 12.5px; }
+  .lp-hub-item:not(.lp-hub-search) > span { display: none; }  /* 件数は上の数字と重なるので、狭い画面ではボタン名だけ */
+  .lp-hub-search > label b, .lp-hub-status { font-size: 12px; }
   .lp-regions { gap: 18px 16px; }
   .lp-pref-list li { grid-template-columns: auto minmax(0, 1fr); padding: 6px 0; gap: 0 8px; }
   .lp-pref-works { grid-column: 1 / -1; font-size: 11.5px; line-height: 1.5; }
