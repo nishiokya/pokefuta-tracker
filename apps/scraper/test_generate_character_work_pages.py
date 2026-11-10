@@ -217,6 +217,8 @@ class GundamGuideTest(unittest.TestCase):
         self.assertIn('src="https://example.com/g.jpg"', hero)
         self.assertIn('href="https://pokefuta.com/design-manholes/abc"', hero)
         self.assertIn('property="og:image" content="https://data.pokefuta.com/assets/ogp/pokefuta_map_ogp.png"', html)
+        # 共通画像の代替テキストに投稿写真の説明を入れない
+        self.assertIn('property="og:image:alt" content="ガンダムマンホールの巡り方ガイド｜地方・都道府県別の設置エリア"', html)
 
     def test_hero_uses_the_gundam_lid_and_generic_cta(self) -> None:
         self.assertIn('style="--c:#0044aa" aria-hidden="true">G</span>', self.html)

@@ -367,6 +367,8 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
         hero_visual = f'''<div class="cw-hero-side">{count_badge}<figure class="cw-hero-photo"><a href="{escape(photo_href)}">
           <img src="{escape(safe_url(hero_photo.get("user_photo_url")))}" alt="{escape(image_alt)}" width="640" height="640" fetchpriority="high" loading="eager" decoding="async"></a>
           <figcaption>{caption}<a href="{escape(photo_href)}">{photo_link}</a></figcaption></figure></div>'''
+    # og:image:alt・primaryImageOfPage は共有画像の説明。共通画像のときは投稿写真の説明を使わない
+    social_alt = image_alt if social_photo else ""
     index_html = "".join(
         f'<a href="#{spot_id(r)}"><strong>{escape(str(r.get("character") or r.get("title") or "マンホール"))}</strong>'
         f'<span>{escape(str(r.get("prefecture") or ""))} {escape(str(r.get("city") or ""))}</span></a>'
@@ -453,7 +455,7 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
         ]},
     ]}
     if social_photo:
-        schema["@graph"][0]["primaryImageOfPage"] = {"@type": "ImageObject", "url": social_image, "caption": image_alt}
+        schema["@graph"][0]["primaryImageOfPage"] = {"@type": "ImageObject", "url": social_image, "caption": social_alt}
     if page.slug == "idolmaster":
         for item, record in zip(schema["@graph"][2]["itemListElement"], selected):
             place = {"@type": "Place", "name": str(record.get("character") or record.get("title")) + "のふたマス",
@@ -529,7 +531,7 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
   <meta property="og:title" content="{escape(title)}"><meta property="og:description" content="{escape(description)}">
   <meta property="og:url" content="{canonical}"><meta property="og:site_name" content="ポケふた図鑑">
   <meta property="og:image" content="{escape(social_image)}">{image_dimensions}
-  <meta property="og:image:alt" content="{escape(image_alt or title)}">
+  <meta property="og:image:alt" content="{escape(social_alt or title)}">
   <meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="{escape(social_image)}">
   <link rel="icon" href="{ASSET_BASE}assets/pokefuta_icon_32.png">
   <link rel="stylesheet" href="{ASSET_BASE}assets/top-page.css?v=20260707a">
