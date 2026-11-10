@@ -697,9 +697,10 @@ class MobileLayoutCssTest(unittest.TestCase):
         self.assertRegex(self.css, r"\.lp-gallery a \{[^}]*aspect-ratio: 1")
         self.assertIn("object-fit: cover", self.css)
 
-    def test_phone_layout_uses_two_column_gallery_and_four_column_mosaic(self):
+    def test_phone_layout_uses_two_column_gallery_and_one_row_mosaic(self):
         self.assertIn(".lp-gallery { grid-template-columns: repeat(2, minmax(0, 1fr));", self.mobile)
-        self.assertIn(".lp-hero-mosaic { grid-template-columns: repeat(4, minmax(0, 1fr));", self.mobile)
+        # ヒーローを低く保つため、スマホの写真は横1列のスクロール（枚数は減らさない）
+        self.assertRegex(self.mobile, r"\.lp-hero-mosaic \{ display: flex;[^}]*overflow-x: auto")
         # 並びは 見出し → 写真 → 探し方（写真の後ろに見出しを隠さない）
         self.assertIn('grid-template-areas: "copy" "photos" "hub";', self.css)
 
