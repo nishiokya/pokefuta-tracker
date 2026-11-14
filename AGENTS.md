@@ -2,7 +2,8 @@
 
 manhole_titles.jsonは手動で更新している
 dataset/manhole_featured_photos.json は図鑑の代表写真を手動選定する `{manhole_id: photo_id}`。未指定・無効・非公開なら最新公開写真へ自動フォールバックする
-dataset/design_manhole_overrides.json はユーザー投稿を既存図鑑へ紐付ける `canonical_ref` と、`category`・`work` などの手動分類に使う。野球マンホールは `category: sports` と球団名の `work` で育てる
+dataset/design_manhole_overrides.json はユーザー投稿を既存図鑑へ紐付ける `canonical_ref` と、`category`・`work` などの手動分類に使う。設置場所の一覧が無いもの（野球など）は `tags` に dataset/manhole_groups.json の slug を書く（例 `"tags": ["carp"]`。旧い `category: sports`・`work` は残してあるが、写真館のタグには使わない）
+dataset/manhole_groups.json は手動更新（デザインふた投稿に付けるタグ＝グループの台帳。`catalog` は設置場所の一覧がある作品で、紐付いた投稿（`canonical_ref`）に自動で付く。`open` は一覧が無いもので、overrides の `tags` で手で付ける。`parent` は1段だけ。Pages のデプロイで `generate_character_work_pages.py` が `api/design_manhole_tags.json` に書き出し、写真館の /design-manholes が読む。slug は写真館の URL に入るので、出したあとは変えない）
 dataset/prefecture_events.json は手動更新（都道府県ページに出す開催中スタンプラリー等のリンク。end_date 過ぎは日次再生成で自動非表示）
 dataset/pokemon_representatives.json は手動更新（ポケモンごとの代表のマンホール `{ポケモン名: マンホールID}`。manhole-ai の Tools/pokemon-rep で選び、export_reps.py の出力を入れる。生成物ではないので上書き・削除しない。トップの「人気のポケモンから探す」、/pokemon/ のカード、ポケモンのページの上の1枚と og:image のように1枚だけ出す所で使い、ポケモンのページの一覧は全部出す。代表が対象外・非公開なら最新公開写真へ自動フォールバックする）
 dataset/prefecture_visit_guides.json は手動更新（県ページの設置場所案内・回り方・公式出典・確認日）。参照する全IDが設置済みである場合だけ表示する。設置場所名と住所は既存データから生成し、移動時間などは公式情報を確認して記載する

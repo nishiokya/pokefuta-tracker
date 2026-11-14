@@ -35,6 +35,8 @@ on:
       - 'apps/scraper/generate_character_manhole_page.py' # character manhole LP generator
       - 'apps/scraper/generate_character_work_pages.py' # per-work character manhole guides
       - 'apps/scraper/character_manhole_works.py' # shared work page definitions
+      - 'apps/scraper/manhole_groups.py' # design manhole tag registry loader (api/design_manhole_tags.json)
+      - 'dataset/manhole_groups.json' # hand-edited tag registry for design manhole posts
       - 'apps/scraper/generate_gmanhole_map_page.py' # static Gundam list for gmanhole_map.html
       - 'apps/scraper/generate_summary_pages.py' # summary page generator
       - 'apps/scraper/summary_faq.py' # summary trivia FAQ (ja)

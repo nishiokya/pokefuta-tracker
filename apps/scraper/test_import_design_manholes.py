@@ -187,6 +187,17 @@ class ImportDesignManholesTests(unittest.TestCase):
             "https://pokefuta.com/design-manholes/submission-1",
         )
 
+    def test_manual_tags_are_carried_and_absent_when_empty(self):
+        tagged, plain = (
+            importer.build_public_records(
+                [self.submission], {}, {"submission-1": override}, {}, "2026-07-14T00:00:00Z"
+            )[0]
+            for override in ({"tags": ["carp"]}, {"tags": []})
+        )
+
+        self.assertEqual(tagged["tags"], ["carp"])
+        self.assertNotIn("tags", plain)
+
     def test_manual_override_links_canonical_record(self):
         records = importer.build_public_records(
             [self.submission],
