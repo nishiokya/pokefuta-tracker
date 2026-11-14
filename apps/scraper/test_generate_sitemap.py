@@ -124,3 +124,87 @@ class TagPageUrlTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class LastmodTest(unittest.TestCase):
+    """<lastmod> はデータ（蓋の追加日・写真の投稿日）から決まるページだけに書く。
+
+    全ページの日付が毎デプロイ進むと Google は lastmod を無視する（2026-10-24 の SERP 対策ノートの「残り」）。
+    last_updated は使わず、蓋ごとに added_at と公開写真の created_at の新しい方を取る。
+    """
+
+    RECORDS = [
+        {"id": "1", "prefecture": "鹿児島県", "pokemons": ["イーブイ"], "added_at": "2025-07-01T00:00:00Z",
+         "last_updated": "2026-11-13T12:00:00Z", "status": "active"},
+        {"id": "2", "prefecture": "鹿児島県", "pokemons": ["ピカチュウ"], "added_at": "2026-02-10T00:00:00Z",
+         "last_updated": "2026-11-13T12:00:00Z", "status": "active"},
+        {"id": "3", "prefecture": "宮城県", "pokemons": ["ラプラス"], "first_seen": "2026-10-20T23:30:00Z",
+         "status": "active"},
+        {"id": "4", "prefecture": "群馬県", "pokemons": [], "status": "active"},
+    ]
+    PHOTOS = {
+        "1": {"created_at": "2026-09-08T01:24:20+00:00",
+              "gallery": [{"created_at": "2026-10-30T20:00:00+00:00"}, {"created_at": "2026-05-01T00:00:00+00:00"}]},
+    }
+    JA_TO_SLUG = {"イーブイ": "eevee", "ピカチュウ": "pikachu", "ラプラス": "lapras"}
+
+    def setUp(self) -> None:
+        self.lastmods = MODULE.build_lastmods(self.RECORDS, self.PHOTOS, self.JA_TO_SLUG)
+        self.xml = MODULE.build_sitemap(["1", "2", "3", "4"], ["eevee", "pikachu", "lapras"], lastmods=self.lastmods)
+
+    def _lastmod(self, loc: str) -> str | None:
+        import re
+        m = re.search(r"<loc>" + re.escape(loc) + r"</loc>\n(?:    <lastmod>(.*?)</lastmod>\n)?", self.xml)
+        assert m, loc
+        return m.group(1)
+
+    def test_manhole_takes_newest_of_added_at_and_representative_photo(self) -> None:
+        # 代表写真（9/8）が added_at（2025-07）より新しい。ギャラリーの新しい写真（10/30）は数えない
+        self.assertEqual(self._lastmod("https://data.pokefuta.com/manholes/1/"), "2026-09-08")
+        self.assertNotIn("2026-10-31", self.xml)
+        # 写真が無い蓋は added_at
+        self.assertEqual(self._lastmod("https://data.pokefuta.com/manholes/2/"), "2026-02-10")
+        # added_at が無ければ first_seen。UTC 23:30 は JST の翌日
+        self.assertEqual(self._lastmod("https://data.pokefuta.com/manholes/3/"), "2026-10-21")
+
+    def test_last_updated_is_ignored_and_dateless_pages_have_no_lastmod(self) -> None:
+        self.assertNotIn("2026-11-13", self.xml)
+        self.assertIsNone(self._lastmod("https://data.pokefuta.com/manholes/4/"))
+        self.assertIsNone(self._lastmod("https://data.pokefuta.com/prefectures/gunma/"))
+        self.assertIsNone(self._lastmod("https://data.pokefuta.com/privacy.html"))
+
+    def test_prefecture_and_top_take_the_newest_lid_in_scope(self) -> None:
+        self.assertEqual(self._lastmod("https://data.pokefuta.com/prefectures/kagoshima/"), "2026-09-08")
+        self.assertEqual(self._lastmod("https://data.pokefuta.com/prefectures/miyagi/"), "2026-10-21")
+        self.assertEqual(self._lastmod("https://data.pokefuta.com/"), "2026-10-21")
+        self.assertEqual(self._lastmod("https://data.pokefuta.com/prefectures/"), "2026-10-21")
+
+    def test_pokemon_and_translated_pages_follow_the_japanese_page(self) -> None:
+        self.assertEqual(self._lastmod("https://data.pokefuta.com/pokemon/pikachu/"), "2026-02-10")
+        self.assertEqual(self._lastmod("https://data.pokefuta.com/en/pokemon/eevee/"), "2026-09-08")
+        self.assertEqual(self._lastmod("https://data.pokefuta.com/en/manholes/1/"), "2026-09-08")
+        self.assertEqual(self._lastmod("https://data.pokefuta.com/zh-TW/prefectures/kagoshima/"), "2026-09-08")
+
+    def test_summary_ignores_provisional_lids(self) -> None:
+        # /summary/ は公式の docs/pokefuta.ndjson だけから作る。仮番号（provisional）の蓋が増えても中身は変わらないので、
+        # トップ・県・一覧は進んでも /summary/ の lastmod は公式の最新のまま（Copilot の指摘、PR #864）
+        records = self.RECORDS + [{"id": "9001", "prefecture": "宮城県", "pokemons": [], "provisional": True,
+                                   "added_at": "2026-11-12T00:00:00Z", "status": "active"}]
+        xml = MODULE.build_sitemap(["1", "2", "3", "4", "9001"], [], lastmods=MODULE.build_lastmods(records, self.PHOTOS, self.JA_TO_SLUG))
+        import re
+        get = lambda loc: re.search(r"<loc>" + re.escape(loc) + r"</loc>\n    <lastmod>(.*?)</lastmod>", xml).group(1)
+        self.assertEqual(get("https://data.pokefuta.com/"), "2026-11-12")
+        self.assertEqual(get("https://data.pokefuta.com/prefectures/miyagi/"), "2026-11-12")
+        self.assertEqual(get("https://data.pokefuta.com/summary/"), "2026-10-21")
+
+    def test_without_lastmods_nothing_changes(self) -> None:
+        self.assertNotIn("<lastmod>", MODULE.build_sitemap(["1"], ["pikachu"]))
+
+    def test_load_photos_accepts_the_import_output_shape(self) -> None:
+        import json, tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "p.json"
+            path.write_text(json.dumps({"photos": {"7": {"created_at": "2026-01-01T00:00:00Z"}}}), encoding="utf-8")
+            self.assertEqual(list(MODULE.load_photos(path)), ["7"])
+            self.assertEqual(MODULE.load_photos(Path(tmp) / "missing.json"), {})
+
