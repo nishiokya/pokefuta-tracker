@@ -232,7 +232,7 @@ jobs:
           echo "[dist] Test sitemap generation"
           python3 -m unittest apps.scraper.test_generate_sitemap
           echo "[dist] Generate sitemap with manhole + pokemon URLs"
-          python3 apps/scraper/generate_sitemap.py --data build/pokefuta_with_provisional.ndjson
+          python3 apps/scraper/generate_sitemap.py --data build/pokefuta_with_provisional.ndjson --photos build/latest-manhole-photos.json
           echo "[dist] Copy HTML sources"
           cp apps/web/index.html dist/index.html
           echo "[dist] Rebuild top page counts, photos, prefecture list and JSON-LD from today's data"
