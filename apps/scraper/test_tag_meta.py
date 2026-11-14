@@ -158,9 +158,11 @@ class NoHardcodedListsTest(unittest.TestCase):
                 ))
                 self.assertEqual(expected, actual)
 
-    def test_manhole_detail_labels_come_from_tag_meta(self) -> None:
+    def test_manhole_detail_does_not_hardcode_tag_labels(self) -> None:
+        # 詳細ページのヒーローは補助タグの札を出さない（#820）。出すなら tag_meta.json から読む
         source = (ROOT / "apps/scraper/generate_manhole_pages.py").read_text(encoding="utf-8")
-        self.assertIn("load_tag_meta", source)
+        if "SECONDARY_TAG_LABELS" in source:
+            self.assertIn("load_tag_meta", source)
         # 地図が「史跡・名所」と呼ぶものを詳細ページだけ「歴史スポット」と呼んでいた
         self.assertNotIn("歴史スポット", source)
 

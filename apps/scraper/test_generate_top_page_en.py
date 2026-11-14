@@ -100,7 +100,7 @@ class EnglishTopTest(unittest.TestCase):
 
     def test_photos_are_lazy_outside_the_hero_and_dated_in_english(self) -> None:
         html = self.html()
-        self.assertEqual(module.ja.HERO_PHOTO_LIMIT, _block(html, "hero").count('loading="eager"'))
+        self.assertNotIn("<img", _block(html, "hero"))
         gallery = _block(html, "photos")
         self.assertEqual(module.ja.GALLERY_PHOTO_LIMIT, gallery.count('loading="lazy"'))
         self.assertRegex(gallery, r'<time datetime="2026-09-\d\d">Sep \d+</time>')
@@ -114,8 +114,10 @@ class EnglishTopTest(unittest.TestCase):
         self.assertEqual("Tokyo", pins["東京都"]["label"])
         self.assertEqual("Tokyo: 2 Poké Lids — view on the map", pins["東京都"]["title"])
         self.assertIn('<a class="home-map__cta" href="map.html"', hero)
+        self.assertIn('home-quick__link--near" href="map.html?near=me"', hero)
+        self.assertNotIn("現在地", hero)
         self.assertIn("Open the full-screen map", hero)
-        self.assertEqual(module.ja.HERO_PHOTO_LIMIT, hero.count("<picture>"))
+        self.assertNotIn("<picture>", hero)
 
     def test_themes_use_english_labels(self) -> None:
         block = _block(self.html(), "themes")
@@ -143,7 +145,8 @@ class EnglishTopTest(unittest.TestCase):
         links = re.findall(r'<a class="home-quick__link ([^"]*)" href="([^"]+)" onclick="([^"]+)"', nav)
         got = {href: (cls.strip(), re.search(r"destination:'([^']+)'", js).group(1)) for cls, href, js in links}
         self.assertEqual({
-            "map.html": ("home-quick__link--primary home-quick__link--map", "map"),
+            "map.html?near=me": ("home-quick__link--primary home-quick__link--near", "map_nearby"),
+            "map.html": ("home-quick__link--map", "map"),
             "#home-pref": ("", "home_pref_section"),
             "pokemon/": ("", "pokemon_index"),
             "map.html?view=theme": ("home-quick__link--desktop home-quick__link--wide", "map_theme_directory"),

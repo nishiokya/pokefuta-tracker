@@ -127,7 +127,7 @@ class PrefectureTriviaDatasetSnapshotTest(unittest.TestCase):
             "三重県": ("ミジュマル", 31),
             "福井県": ("カイリュー", 17),
             "長崎県": ("デンリュウ", 15),
-            "高知県": ("ヌオー", 18),
+            "高知県": ("ヌオー", 23),
         }
         for prefecture, (label, count) in expected.items():
             coverage = {

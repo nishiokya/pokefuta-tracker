@@ -7,8 +7,8 @@
 ここでは次のブロックを `<!-- home:NAME:start -->` 〜 `<!-- home:NAME:end -->` の間へ描画する。
 
 - head      … description / og / twitter の説明文と JSON-LD（WebSite・CollectionPage・ItemList・BreadcrumbList）
-- hero      … H1・導入文・件数・3つの主導線。デスクトップは都道府県ピンつきの大地図（ピンは JSON で埋め込み）、
-              スマホは投稿写真モザイク（6枚。<picture> でデスクトップでは写真を取得しない）
+- hero      … H1・導入文・件数・3つの主導線。デスクトップは都道府県ピンつきの大地図（ピンは JSON で埋め込み）。
+              スマホは写真を置かない（最新写真のモザイクは下の photos と同じ新着で重なっていたので外した）
 - ways      … 地図・都道府県・ポケモン・テーマの4つの探し方
 - newrelease… 直近30日の新作と特集（/features/）への入口。highlight_until 中の特集は帯で目立たせ、
               特集一覧へのリンクは特集が1本でもあれば常に出す（新作も特集も無ければセクションごと出さない）
@@ -17,7 +17,7 @@
 - pref      … 設置のある都道府県を地方別に、未設置の県は短い注記に分ける
 - trips     … ポケふた旅（目的から探す。枚数・かかる時間の多いエリアをカードで。続きは /trip/）
 - tripsmore / themesmore … 目的から探すの見出し横の一覧リンク（「1日で回るルート一覧 9ルート」など）
-- pokemon   … 設置の多いポケモン（写真つきカード。/pokemon/ と同じ突き合わせ規則。写真は
+- pokemon   … 人気のポケモン（/pokemon/ の「人気・代表ポケモン」と同じ並び。写真つきカード。写真は
               dataset/pokemon_representatives.json の代表を優先し、無ければ新しい投稿）
 
 写真はローカルミラー `dataset/manhole/image/{id}_latest.jpeg`（720×720）が
@@ -47,33 +47,35 @@ sys.path.insert(0, str(Path(__file__).parent))
 try:
     from apps.scraper.display_names import compose_display_name
     from apps.scraper.features import DEFAULT_FEATURES_DIR, feature_path, highlighted, load_features
-    from apps.scraper.generate_pokemon_index_page import load_representatives
+    from apps.scraper.generate_pokemon_index_page import FEATURED_MIN_COUNT, FEATURED_POKEMON_SLUGS, load_representatives
     from apps.scraper.generate_pokemon_pages import build_pokemon_index, load_pokemon_metadata
     from apps.scraper.generate_tag_pages import load_records
     from apps.scraper.generate_trip_pages import area_records, area_route
     from apps.scraper.manhole_tile_image import responsive_attrs, tile_image_url
     from apps.scraper.visit_durations import (
-        duration_range, find_entry, load_durations, load_trip_areas, mode_label, trip_path,
+        duration_range, entry_range, find_entry, load_durations, load_trip_areas, mode_label, trip_path,
     )
     from apps.scraper.photo_caption import JST, format_photo_date, to_jst_date
     from apps.scraper.prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS, REGIONS
     from apps.scraper.tag_meta import count_tags, load_tag_meta
+    from apps.scraper.provisional_manholes import DEFAULT_WANTED, load_wanted, wanted_places
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
     from display_names import compose_display_name
     from features import DEFAULT_FEATURES_DIR, feature_path, highlighted, load_features
-    from generate_pokemon_index_page import load_representatives
+    from generate_pokemon_index_page import FEATURED_MIN_COUNT, FEATURED_POKEMON_SLUGS, load_representatives
     from generate_pokemon_pages import build_pokemon_index, load_pokemon_metadata
     from generate_tag_pages import load_records
     from generate_trip_pages import area_records, area_route
     from manhole_tile_image import responsive_attrs, tile_image_url
     from visit_durations import (
-        duration_range, find_entry, load_durations, load_trip_areas, mode_label, trip_path,
+        duration_range, entry_range, find_entry, load_durations, load_trip_areas, mode_label, trip_path,
     )
     from photo_caption import JST, format_photo_date, to_jst_date
     from prefectures import PREFECTURE_ORDER, PREFECTURE_SLUGS, REGIONS
     from tag_meta import count_tags, load_tag_meta
+    from provisional_manholes import DEFAULT_WANTED, load_wanted, wanted_places
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_TARGET = ROOT / "apps" / "web" / "index.html"
@@ -88,7 +90,6 @@ SITE_NAME = "ポケふた図鑑"
 PAGE_TITLE = "ポケふた図鑑｜全国のポケモンマンホール一覧・地図"
 UPLOAD_URL = "https://pokefuta.com/upload?from=data"
 
-HERO_PHOTO_LIMIT = 6
 GALLERY_PHOTO_LIMIT = 9  # スマホ・タブレットは3列×3行、PC は先頭6枚（CSS）
 EVENT_VISIBLE_LIMIT = 3
 TRIP_LIMIT = 4  # 「目的から探す」に出すポケふた旅のエリア数
@@ -98,7 +99,6 @@ PHOTO_SIZE = 720  # ローカルミラーは 720×720
 LID_SIZE = 360  # 蓋の枠に合わせた切り出し {id}_lid.jpeg
 # 写真の表示幅（img の sizes）。2026-10-25 に幅 390px と 1280px で測った値から。
 # 変えるのは top-home.css の段組みを変えたとき
-MOSAIC_SIZES = "(min-width: 960px) 1px, 62vw"  # スマホは1枚目が 237px。PC はモザイクを出さない
 GALLERY_SIZES = "(min-width: 960px) 170px, 30vw"  # スマホ3列で 115px、PC 170px
 POKE_SIZES = "(min-width: 960px) 170px, 30vw"  # スマホ 112px、PC 167px
 EXCLUDED_POKEMON_PATTERN = "ローカルActs"
@@ -212,6 +212,16 @@ def build_popular_pokemon(
     return build_pokemon_entries(records, metadata_path, representatives_path)[:limit]
 
 
+def select_featured_pokemon(entries: list[PokemonEntry], limit: int = POPULAR_POKEMON_LIMIT) -> list[PokemonEntry]:
+    """「人気のポケモンから探す」の並び。/pokemon/ の「人気・代表ポケモン」と同じ順・同じ足切り（1枚だけは出さない）。"""
+    by_slug = {e.slug: e for e in entries}
+    picked = [
+        by_slug[slug] for slug in FEATURED_POKEMON_SLUGS
+        if slug in by_slug and len(by_slug[slug].manhole_ids) >= FEATURED_MIN_COUNT
+    ]
+    return picked[:limit]
+
+
 @dataclass
 class TopData:
     records: list[dict]
@@ -221,11 +231,16 @@ class TopData:
     today: date
     tag_meta: object = None
     tag_counts: dict = field(default_factory=dict)
-    popular_pokemon: list[PokemonEntry] = field(default_factory=list)
+    popular_pokemon: list[PokemonEntry] = field(default_factory=list)  # 設置の多い順（導入文・探し方カード）
+    featured_pokemon: list[PokemonEntry] = field(default_factory=list)  # 人気のポケモン（目的から探す）
     all_pokemon: list[PokemonEntry] = field(default_factory=list)
     trips: list[dict] = field(default_factory=list)
     trip_total: int = 0  # /trip/ に載っているエリアの数
     features: list[dict] = field(default_factory=list)  # 公開中の特集（新しい順）
+    # 公式サイト未掲載の仮番号の蓋（provisional_manholes.py）。新作の欄にだけ出し、全国の枚数には入れない
+    provisional: list[dict] = field(default_factory=list)
+    wanted: dict[str, dict] = field(default_factory=dict)  # 県 → 場所を調べているポケふた
+    feature_images: dict[str, str] = field(default_factory=dict)  # 特集の slug → 帯に出す蓋の画像
 
     @property
     def total(self) -> int:
@@ -245,8 +260,20 @@ class TopData:
         return [p for p in PREFECTURE_ORDER if counts.get(p)]
 
     @property
+    def listed_counts(self) -> Counter:
+        """県の一覧・地図ピン用。仮番号の蓋も数える（公式が0枚の群馬も一覧に出す）。全国の枚数・県数は pref_counts"""
+        return self.pref_counts + Counter(
+            r["prefecture"] for r in self.provisional if r.get("prefecture") in PREFECTURE_SLUGS
+        )
+
+    @property
+    def listed_prefectures(self) -> list[str]:
+        counts = self.listed_counts
+        return [p for p in PREFECTURE_ORDER if counts.get(p)]
+
+    @property
     def empty_prefectures(self) -> list[str]:
-        counts = self.pref_counts
+        counts = self.listed_counts
         return [p for p in PREFECTURE_ORDER if not counts.get(p)]
 
 
@@ -367,12 +394,50 @@ def build_trips(
             "path": trip_path(area).lstrip("/"),
             "count": len(rs),
             "minutes": entry.get("median_minutes") or 0,
-            "time": duration_range(entry["p25_minutes"], entry["p75_minutes"]),
+            "time": entry_range(entry),
             "mode": mode_label(area, rs),
             "thumbs": trip_thumbs_html(area_route(rs, entry)[0], image_dir),
         })
     trips.sort(key=lambda t: (-t["count"], -t["minutes"], t["slug"]))
     return trips[:limit], total
+
+
+def _newest_first(records: list[dict]) -> list[dict]:
+    return sorted(records, key=lambda r: (str(r.get("added_at") or ""), str(r.get("id", ""))), reverse=True)
+
+
+def public_photo_ids(photos_json: object) -> set[str]:
+    """今公開されている投稿写真のある蓋の ID（latest-manhole-photos.json の manhole_id）。"""
+    raw = (photos_json or {}).get("photos") if isinstance(photos_json, dict) else None
+    return {str(item.get("manhole_id", "")) for item in (raw or {}).values() if isinstance(item, dict)}
+
+
+def feature_image(
+    feature: dict, provisional: list[dict], records: list[dict], image_dir: Path, public_ids: set[str]
+) -> str:
+    """特集の帯に出す蓋の画像（tile_image_url の形、無ければ ""）。
+
+    1. 特集に載せた蓋を並べた順に、写真のある最初の1枚
+    2. 新作の特集は設置前で写真が無いことが多いので、同じ県の仮番号（写真館に投稿が来た新しい蓋）の新しい順
+    3. それも無ければ同じ県の設置済みの蓋の新しい順（県の雰囲気が分かる1枚）
+
+    公式の蓋は public_ids（今公開されている写真のある蓋）に絞る。写真取込は写真が非公開・削除になった
+    蓋の _latest/_lid を消さないので、ファイルがあるだけでは出さない。仮番号は provisional_manholes.py が
+    公開を確かめ、非公開になった投稿の写真を消しているのでそのまま使う。
+    """
+    def public(rs: list[dict]) -> list[dict]:
+        return [r for r in rs if str(r.get("id", "")) in public_ids]
+
+    candidates = public(list(feature.get("records") or []))
+    prefecture = feature.get("prefecture")
+    if prefecture:
+        candidates += _newest_first([r for r in provisional if r.get("prefecture") == prefecture])
+        candidates += public(_newest_first([r for r in records if r.get("prefecture") == prefecture]))
+    for record in candidates:
+        url = tile_image_url(str(record.get("id", "")), image_dir)
+        if url:
+            return url
+    return ""
 
 
 def load_data(
@@ -387,6 +452,8 @@ def load_data(
     trip_areas: Path | None = DEFAULT_TRIP_AREAS,
     durations: Path | None = DEFAULT_DURATIONS,
     features_dir: Path = DEFAULT_FEATURES_DIR,
+    provisional: Path | None = None,
+    wanted: Path | None = None,  # CLI は DEFAULT_WANTED を渡す（テストのデータに台帳を混ぜない）
 ) -> TopData:
     today = today or datetime.now(JST).date()
     all_records = load_records(manholes)
@@ -396,54 +463,42 @@ def load_data(
     trips, trip_total = build_trips(all_records, trip_areas, durations, image_dir)
     # 新作の特集は設置前の蓋を載せるので、設置済みに絞る前のレコードで引く
     features = load_features({str(r.get("id", "")): r for r in all_records}, features_dir, today=today)
+    provisional_records = load_records(provisional) if provisional and provisional.exists() else []
+    photos_json = _load_json(photos)
+    public_ids = public_photo_ids(photos_json)
+    feature_images = {
+        f["slug"]: feature_image(f, provisional_records, records, image_dir, public_ids)
+        for f in highlighted(features, today)
+    }
     return TopData(
         records=records,
-        photos=build_photos(_load_json(photos), records, image_dir),
+        photos=build_photos(photos_json, records, image_dir),
         events=load_events(events, today),
         stats=stats_json if isinstance(stats_json, dict) else {},
         today=today,
         tag_meta=load_tag_meta(),
         tag_counts=count_tags(records),
         popular_pokemon=pokemon[:POPULAR_POKEMON_LIMIT],
+        featured_pokemon=select_featured_pokemon(pokemon),
         all_pokemon=pokemon,
         trips=trips,
         trip_total=trip_total,
         features=features,
+        provisional=provisional_records,
+        wanted=wanted_places(load_wanted(wanted), all_records + provisional_records) if wanted else {},
+        feature_images={slug: url for slug, url in feature_images.items() if url},
     )
 
 
 # ── 写真の選び方 ──────────────────────────────────────────────────────────
 
 
-def select_hero_photos(photos: list[Photo], limit: int = HERO_PHOTO_LIMIT) -> list[Photo]:
-    """最新の投稿から、同じ都道府県が続かないように選ぶ。"""
-    chosen: list[Photo] = []
-    seen: set[str] = set()
-    for photo in photos:
-        if photo.prefecture in seen:
-            continue
-        chosen.append(photo)
-        seen.add(photo.prefecture)
-        if len(chosen) == limit:
-            return chosen
-    # 都道府県が足りないときは重複を許して埋める
-    for photo in photos:
-        if len(chosen) == limit:
-            break
-        if photo not in chosen:
-            chosen.append(photo)
-    return chosen
-
-
-def select_gallery_photos(
-    photos: list[Photo], exclude: list[Photo], limit: int = GALLERY_PHOTO_LIMIT
-) -> list[Photo]:
+def select_gallery_photos(photos: list[Photo], limit: int = GALLERY_PHOTO_LIMIT) -> list[Photo]:
     """地方ごとに新しい順のキューを作り、北から順に1枚ずつ取る（地域の偏りを抑える）。"""
-    used = {p.manhole_id for p in exclude}
     queues: dict[str, list[Photo]] = {name: [] for name, _ in REGIONS}
     for photo in photos:
         region = REGION_OF.get(photo.prefecture)
-        if region and photo.manhole_id not in used:
+        if region:
             queues[region].append(photo)
     chosen: list[Photo] = []
     while len(chosen) < limit and any(queues.values()):
@@ -475,13 +530,11 @@ def _jst_iso(value: str) -> str:
     return day.isoformat() if day else ""
 
 
-def _img(photo: Photo, sizes: str, *, eager: bool = False, priority: bool = False, max_width: int | None = None) -> str:
+def _img(photo: Photo, sizes: str) -> str:
     """sizes は表示幅。小さい WebP から合う版をブラウザが選ぶ（manhole_tile_image.srcset）。"""
-    loading = 'loading="eager"' if eager else 'loading="lazy"'
-    fetch = ' fetchpriority="high"' if priority else ""
     return (
-        f'<img {responsive_attrs(photo.src, sizes, max_width)} alt="{escape(photo.alt)}" '
-        f'width="{PHOTO_SIZE}" height="{PHOTO_SIZE}" {loading} decoding="async"{fetch}>'
+        f'<img {responsive_attrs(photo.src, sizes)} alt="{escape(photo.alt)}" '
+        f'width="{PHOTO_SIZE}" height="{PHOTO_SIZE}" loading="lazy" decoding="async">'
     )
 
 
@@ -584,7 +637,7 @@ def render_head(data: TopData, indent: str) -> str:
 
 def map_pins(data: TopData, label=None, title=None) -> list[dict]:
     """ヒーロー地図の都道府県ピン。件数は同じ生成時データから出す（ブラウザで ndjson を読まない）。"""
-    counts = data.pref_counts
+    counts = data.listed_counts
     label = label or (lambda pref: pref if pref == "北海道" else pref[:-1])
     title = title or (lambda pref, count: f"{pref} {count}枚：地図で見る")
     return [
@@ -596,7 +649,7 @@ def map_pins(data: TopData, label=None, title=None) -> list[dict]:
             "lat": PREF_COORDS[pref][0],
             "lng": PREF_COORDS[pref][1],
         }
-        for pref in data.installed_prefectures
+        for pref in data.listed_prefectures
         if pref in PREF_COORDS
     ]
 
@@ -616,18 +669,7 @@ def map_block(data: TopData, *, pins: list[dict], aria: str, cta: str, cta_href:
 
 
 # デスクトップではモザイクを出さないので、<picture> で写真そのものを取りに行かせない
-DESKTOP_BLANK_SOURCE = (
-    '<source media="(min-width: 960px)" '
-    'srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">'
-)
-
-
-def mobile_only(img: str) -> str:
-    return f"<picture>{DESKTOP_BLANK_SOURCE}{img}</picture>"
-
-
 def render_hero(data: TopData) -> str:
-    photos = select_hero_photos(data.photos)
     top_pokemon = [e.name for e in data.popular_pokemon[:3]] or [n for n, _ in data.pokemon_counts.most_common(3)]
     posts = data.stats.get("public_posts") if isinstance(data.stats.get("public_posts"), int) else None
     stats = [
@@ -643,7 +685,10 @@ def render_hero(data: TopData) -> str:
     # destination は GA4 に登録済みのディメンション（way は未登録で集計に出ない）。
     # 同じページ内へ飛ぶ都道府県は home_pref_section として、ページ移動と区別する
     quick = [
-        ("map", "map", "map.html", "地図で探す", "home-quick__link--primary home-quick__link--map"),
+        # スマホだけ。現地でスマホから探す人が増えているので一番上に横いっぱいで置く。
+        # 位置を聞くのは map.html?near=me で来たときだけ（ふつうに地図を開いた人には聞かない）
+        ("nearby", "map_nearby", "map.html?near=me", "📍 現在地から近いポケふたを探す", "home-quick__link--primary home-quick__link--near"),
+        ("map", "map", "map.html", "地図で探す", "home-quick__link--map"),
         ("prefecture", "home_pref_section", "#home-pref", "都道府県から探す", ""),
         ("pokemon", "pokemon_index", "pokemon/", "ポケモンから探す", ""),
         # PC だけ。上の2つと行き先が重ならない導線（近くから探す＝nearby.html は廃止して地図の現在地検索へ統合）
@@ -683,23 +728,6 @@ def render_hero(data: TopData) -> str:
         + (f"<b>{escape(names)}</b>など{len(data.pokemon_counts):,}種類のポケモンから、" if names else "")
         + "旅先や近所の一枚を見つけられます。"
     )
-    mosaic = ""
-    if photos:
-        items = "".join(
-            f'<li class="home-mosaic__item"><a href="{p.href}" '
-            f'onclick="{_track("click_hero_photo", surface="top_hero_photo", manhole=p.manhole_id, position=i)}">'
-            f"{mobile_only(_img(p, MOSAIC_SIZES, eager=True, priority=(i == 0), max_width=480))}"
-            f'<span class="home-mosaic__cap"><b>{escape(p.title)}</b>{escape(p.prefecture)} {escape(p.place)}</span>'
-            "</a></li>"
-            for i, p in enumerate(photos)
-        )
-        mosaic = (
-            '<figure class="home-mosaic">'
-            f'<ul class="home-mosaic__grid">{items}</ul>'
-            f'<figcaption class="home-mosaic__note">みんなが投稿した最新の写真（{data.today.month}月{data.today.day}日更新）</figcaption>'
-            "</figure>"
-        )
-    cls = "home-hero" if photos else "home-hero home-hero--no-photos"
     map_html = map_block(
         data,
         pins=map_pins(data),
@@ -707,9 +735,27 @@ def render_hero(data: TopData) -> str:
         cta="🗺 地図を全画面で開く",
         cta_href="map.html",
     )
+    public_photos = {photo.manhole_id: photo for photo in data.photos}
+    portraits = []
+    for mid in ("23", "28"):
+        photo = public_photos.get(mid)
+        if photo is None:
+            continue
+        src, size = photo.thumb_src
+        portraits.append(
+            f'<a href="{escape(photo.href)}" aria-label="{escape(photo.alt)}を見る">'
+            f'<img {responsive_attrs(src, "(max-width: 599px) 80px, 100px")} '
+            f'alt="{escape(photo.alt)}" width="{size}" height="{size}" '
+            'loading="eager" decoding="async"></a>'
+        )
+    portraits_html = (
+        '<div class="home-hero__portraits">' + "".join(portraits) + '</div>'
+        if portraits else ""
+    )
     return (
-        f'<section class="{cls}" id="home-hero" aria-labelledby="home-h1">'
+        '<section class="home-hero" id="home-hero" aria-labelledby="home-h1">'
         '<div class="home-hero__copy">'
+        f"{portraits_html}"
         '<p class="home-eyebrow">ポケふた図鑑</p>'
         f'<h1 class="home-h1" id="home-h1">全国{data.total:,}枚のポケふたを、<wbr>地図と一覧から探す</h1>'
         f'<p class="home-lead">{lead}</p>'
@@ -718,7 +764,6 @@ def render_hero(data: TopData) -> str:
         f'<dl class="home-stats">{stats_html}</dl>'
         "</div>"
         f"{map_html}"
-        f"{mosaic}"
         "</section>"
     )
 
@@ -784,10 +829,11 @@ def render_ways(data: TopData) -> str:
     )
 
 
-def render_newrelease(data: TopData) -> str:
+def recent_manholes(data: TopData) -> list[tuple[datetime, dict]]:
+    """新作枠と都道府県の NEW 表示で同じ30日間の判定を使う。"""
     cutoff = datetime.combine(data.today - timedelta(days=NEW_RELEASE_DAYS), datetime.min.time(), JST)
     fresh = []
-    for record in data.records:
+    for record in [*data.records, *data.provisional]:
         added = str(record.get("added_at") or "")
         try:
             added_at = datetime.fromisoformat(added.replace("Z", "+00:00"))
@@ -795,7 +841,13 @@ def render_newrelease(data: TopData) -> str:
             continue
         if added_at >= cutoff:
             fresh.append((added_at, record))
-    if not fresh and not data.features:
+    return fresh
+
+
+def render_newrelease(data: TopData) -> str:
+    fresh = recent_manholes(data)
+    wanted_html = render_wanted(data.wanted)
+    if not fresh and not data.features and not wanted_html:
         return ""
     fresh.sort(key=lambda item: (item[0], str(item[1].get("id"))), reverse=True)
     cards = []
@@ -803,6 +855,8 @@ def render_newrelease(data: TopData) -> str:
         mid = str(record.get("id"))
         names = "・".join(pokemons_of(record)) or "ポケふた"
         place = f"{record.get('prefecture', '')} {place_label(record)}"
+        if record.get("provisional"):
+            place += "（公式サイト未掲載）"
         cards.append(
             f'<li><a class="home-newrel__card" href="manholes/{quote(mid, safe="")}/" '
             f'onclick="{_track("click_newrelease", surface="top_newrelease", manhole=mid, position=i)}">'
@@ -811,8 +865,10 @@ def render_newrelease(data: TopData) -> str:
     banners = "".join(
         f'<a class="home-feature" href="{escape(feature_path(f).lstrip("/"))}" '
         f'onclick="{_track("click_feature", surface="top_newrelease", feature=f["slug"], position=i)}">'
+        + _feature_img(data.feature_images.get(f["slug"], ""))
+        + '<span class="home-feature__text">'
         f'<span class="home-feature__kicker">{escape(f.get("kicker") or "特集")}</span>'
-        f'<b>{escape(f["title"])}</b></a>'
+        f'<b>{escape(f["title"])}</b></span></a>'
         for i, f in enumerate(highlighted(data.features, data.today))
     )
     more = (
@@ -831,13 +887,51 @@ def render_newrelease(data: TopData) -> str:
         f'<h2 class="home-h2" id="home-newrelease-title">{title}</h2>{more}</div>'
         f'{banners}'
         + (f'<ul class="home-newrel">{"".join(cards)}</ul>' if cards else "")
+        + wanted_html
         + "</section>"
     )
 
 
+def _feature_img(url: str) -> str:
+    """特集の帯の左端の蓋の正方形。画像が無い特集は何も出さない（帯は文字だけ）。"""
+    if not url:
+        return ""
+    return (
+        f'<img class="home-feature__img" {responsive_attrs(url, "56px")} alt="" '
+        'width="56" height="56" loading="lazy" decoding="async">'
+    )
+
+
+def render_wanted(wanted: dict[str, dict]) -> str:
+    """設置が発表されたが写真がまだ届いていない新作への投稿の呼びかけ（県ページの #wanted へ）。"""
+    links = []
+    for prefecture in PREFECTURE_ORDER:
+        entry = wanted.get(prefecture)
+        slug = PREFECTURE_SLUGS.get(prefecture)
+        if not entry or not slug:
+            continue
+        links.append(
+            f'<a href="prefectures/{quote(slug)}/#wanted" '
+            f'onclick="{_track("click_wanted", surface="top_newrelease", prefecture=slug)}">'
+            f'{escape(prefecture)} {len(entry["places"])}か所</a>'
+        )
+    if not links:
+        return ""
+    return (
+        '<div class="home-wanted">'
+        '<span class="home-feature__kicker">緯度経度を調べています</span>'
+        "<b>新しいポケふたの写真を投稿してください</b>"
+        "<p>設置が発表されたのに写真がまだ届いていない場所です。写真の位置から図鑑に載せます。</p>"
+        f'<p class="home-wanted__links">{"".join(links)}</p>'
+        f'<a class="home-wanted__cta" href="https://pokefuta.com/design-manholes/new?kind=pokefuta&amp;from=data" '
+        f'target="_blank" rel="noopener noreferrer" '
+        f'onclick="{_track("click_wanted_upload", surface="top_newrelease")}">写真を投稿する</a>'
+        "</div>"
+    )
+
+
 def render_photos(data: TopData) -> str:
-    hero = select_hero_photos(data.photos)
-    photos = select_gallery_photos(data.photos, hero)
+    photos = select_gallery_photos(data.photos)
     upload = (
         f'<a class="home-cta" href="{UPLOAD_URL}" '
         f'onclick="{_track("click_photo_post_cta", surface="top_photo_gallery")}">ポケふた写真館で写真を投稿する</a>'
@@ -950,7 +1044,9 @@ def render_events(data: TopData) -> str:
 
 
 def render_pref(data: TopData) -> str:
-    counts = data.pref_counts
+    recent_prefs = {record.get("prefecture") for _, record in recent_manholes(data)}
+    new_badge = '<span class="home-pref__new" aria-label="30日以内に新しいマンホールを追加">NEW</span>'
+    counts = data.listed_counts
     regions = []
     for name, prefs in REGIONS:
         installed = [p for p in prefs if counts.get(p)]
@@ -959,7 +1055,8 @@ def render_pref(data: TopData) -> str:
         links = "".join(
             f'<li><a href="prefectures/{PREFECTURE_SLUGS[p]}/" '
             f'onclick="{_track("click_pref_link", surface="top_prefecture_list", prefecture=p)}">'
-            f'<span class="home-pref__name">{escape(p)}</span><span class="home-pref__count">{counts[p]}枚</span></a></li>'
+            f'<span class="home-pref__label"><span class="home-pref__name">{escape(p)}</span>{new_badge if p in recent_prefs else ""}</span>'
+            f'<span class="home-pref__count">{counts[p]}枚</span></a></li>'
             for p in installed
         )
         region_total = sum(counts[p] for p in installed)
@@ -1014,7 +1111,7 @@ def render_pokemon(data: TopData) -> str:
     counts = data.pokemon_counts
     cards = []
     used: set[str] = set()
-    for entry in data.popular_pokemon:
+    for entry in data.featured_pokemon:
         photo = pick_pokemon_photo(entry, data.photos, used)
         src, size = photo.thumb_src if photo else ("", 0)
         media = (
@@ -1116,11 +1213,15 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--events", type=Path, default=DEFAULT_EVENTS)
     parser.add_argument("--image-dir", type=Path, default=DEFAULT_IMAGE_DIR)
     parser.add_argument("--pokemon-metadata", type=Path, default=DEFAULT_POKEMON_METADATA)
+    parser.add_argument("--provisional", type=Path, help="仮番号の蓋だけの NDJSON（provisional_manholes.py --provisional-out）")
+    parser.add_argument("--wanted", type=Path, default=DEFAULT_WANTED)
     args = parser.parse_args(argv)
 
     data = load_data(
         args.manholes, args.photos, args.stats, args.events, args.image_dir,
         pokemon_metadata=args.pokemon_metadata,
+        provisional=args.provisional,
+        wanted=args.wanted,
     )
     html = args.target.read_text(encoding="utf-8")
     updated = apply_blocks(html, data)

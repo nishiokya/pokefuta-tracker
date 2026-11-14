@@ -86,8 +86,8 @@ class PrefectureCompletionTest(unittest.TestCase):
     def test_known_empty_prefecture_that_gained_pokefuta_is_an_error(self) -> None:
         """未設置のはずの県に1枚出てきたら、リストの更新漏れとして止める。"""
         with self.assertRaises(MODULE.CompletionDataError) as caught:
-            MODULE.verify_known_empty({"群馬県": [record("1")]}, ["群馬県"])
-        self.assertIn("群馬県", str(caught.exception))
+            MODULE.verify_known_empty({"山梨県": [record("1")]}, ["山梨県"])
+        self.assertIn("山梨県", str(caught.exception))
 
     def test_prefecture_with_only_planned_installations_is_not_an_error(self) -> None:
         """設置予定だけの県は母数から外すが、取得漏れではないので止めない。
@@ -110,7 +110,7 @@ class PrefectureCompletionTest(unittest.TestCase):
     def test_known_empty_list_matches_the_real_dataset(self) -> None:
         """PREFECTURES_WITHOUT_POKEFUTA が実データとずれていないこと。
 
-        ずれたまま公開すると「42県」という母数の根拠が無くなる。
+        ずれたまま公開すると「43県」という母数の根拠が無くなる。
         """
         import json
 
@@ -131,7 +131,7 @@ class PrefectureCompletionTest(unittest.TestCase):
         empty = {p for p in PREFECTURE_ORDER if not records_by_pref.get(p)}
         self.assertEqual(empty, set(MODULE.PREFECTURES_WITHOUT_POKEFUTA))
         self.assertEqual(
-            len(PREFECTURE_ORDER) - len(MODULE.PREFECTURES_WITHOUT_POKEFUTA), 42
+            len(PREFECTURE_ORDER) - len(MODULE.PREFECTURES_WITHOUT_POKEFUTA), 43
         )
 
     def test_incomplete_is_ordered_by_fewest_missing_first(self) -> None:

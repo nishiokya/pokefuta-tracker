@@ -1,9 +1,18 @@
 """import_latest_manhole_photos.crop_to_square / crop_box のテスト（蓋の位置に寄せた正方形）。"""
 
+import http.server
 import importlib.util
+import io
+import json
+import sys
+import tempfile
+import threading
+import time
 import unittest
 from pathlib import Path
+from unittest import mock
 
+import requests
 from PIL import Image
 
 MODULE_PATH = Path(__file__).with_name("import_latest_manhole_photos.py")
@@ -70,6 +79,160 @@ class LidTileTest(unittest.TestCase):
     def test_crop_box_reads_lid(self):
         self.assertEqual(imp.crop_box({"lid": [0.2, 0.2, 0.8, 0.8]}, "lid"), [0.2, 0.2, 0.8, 0.8])
         self.assertIsNone(imp.crop_box({"lid": [0.8, 0.2, 0.2, 0.8]}, "lid"))
+
+
+
+class _FlakyHandler(http.server.BaseHTTPRequestHandler):
+    """1回目だけ、ヘッダーを送ったあと本文を止める。2回目からは小さい PNG を返す。status を決めると毎回それを返す"""
+
+    calls = 0
+    status = 200
+
+    def do_GET(self):
+        type(self).calls += 1
+        if self.status != 200:
+            self.send_response(self.status)
+            self.send_header("Content-Length", "0")
+            self.end_headers()
+            return
+        buf = io.BytesIO()
+        Image.new("RGB", (4, 4), (255, 0, 0)).save(buf, "PNG")
+        body = buf.getvalue()
+        self.send_response(200)
+        self.send_header("Content-Type", "image/png")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        if type(self).calls == 1:
+            time.sleep(1.5)  # timeout=0.5 より長く本文を止める
+            return
+        self.wfile.write(body)
+
+    def log_message(self, *args):
+        pass
+
+
+class DownloadRetryTest(unittest.TestCase):
+    def _serve(self, status: int = 200) -> str:
+        handler = type("Handler", (_FlakyHandler,), {"calls": 0, "status": status})
+        server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), handler)
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+        self.addCleanup(server.server_close)
+        self.addCleanup(server.shutdown)
+        self.handler = handler
+        return f"http://127.0.0.1:{server.server_port}/a.png"
+
+    def test_body_read_timeout_is_retried(self):
+        url = self._serve()
+        with mock.patch.object(imp.time, "sleep"):
+            image = imp.download_image(requests.Session(), url, 0.5)
+        self.assertEqual(image.size, (4, 4))
+        self.assertEqual(self.handler.calls, 2)
+
+    def test_server_error_is_retried_up_to_the_limit(self):
+        url = self._serve(503)
+        with mock.patch.object(imp.time, "sleep") as sleep, self.assertRaises(requests.HTTPError):
+            imp.download_image(requests.Session(), url, 0.5)
+        self.assertEqual(self.handler.calls, imp.DOWNLOAD_ATTEMPTS)
+        self.assertEqual(sleep.call_count, imp.DOWNLOAD_ATTEMPTS - 1)
+
+    def test_not_found_is_not_retried(self):
+        url = self._serve(404)
+        with mock.patch.object(imp.time, "sleep"), self.assertRaises(requests.HTTPError):
+            imp.download_image(requests.Session(), url, 0.5)
+        self.assertEqual(self.handler.calls, 1)
+
+
+class GalleryNeedsFetchTest(unittest.TestCase):
+    def test_new_file_is_fetched(self):
+        self.assertTrue(imp.gallery_needs_fetch(False, False, None, "a"))
+
+    def test_same_key_is_kept(self):
+        self.assertFalse(imp.gallery_needs_fetch(True, False, "a", "a"))
+
+    def test_changed_key_is_fetched_again(self):
+        self.assertTrue(imp.gallery_needs_fetch(True, False, "a", "b"))
+
+    def test_unknown_old_file_is_kept(self):
+        self.assertFalse(imp.gallery_needs_fetch(True, False, None, "b"))
+
+    def test_refresh_fetches_everything(self):
+        self.assertTrue(imp.gallery_needs_fetch(True, True, "a", "a"))
+
+    def test_fingerprint_is_short_and_stable(self):
+        self.assertEqual(imp.key_fingerprint("photos/original/x.jpg"), imp.key_fingerprint("photos/original/x.jpg"))
+        self.assertEqual(len(imp.key_fingerprint("photos/original/x.jpg")), 16)
+        self.assertIsNone(imp.key_fingerprint(None))
+
+class GalleryImportTest(unittest.TestCase):
+    """ギャラリーは 360px の WebP。前の形式の JPEG は取り直さずに作り直し、掃除で消す"""
+
+    PHOTO_ID = "abcdef12-0000-0000-0000-000000000000"
+    KEY = "photos/original/a.jpg"
+
+    def _run(self, out: Path, gallery: list[dict], download=None) -> int:
+        payload = {"photos": {"1": {
+            "manhole_id": 1, "photo_id": "11111111-0000", "url": "https://example.com/hero.jpg",
+            "gallery": [{"photo_id": "11111111-0000"}, *gallery],
+        }}}
+        src = out / "in.json"
+        src.write_text(json.dumps(payload), encoding="utf-8")
+        argv = ["import", "--input", str(src), "--output-dir", str(out), "--env-file", str(out / "none")]
+        download = download or mock.Mock(return_value=Image.new("RGB", (1200, 900), (10, 20, 30)))
+        with mock.patch.object(sys, "argv", argv), mock.patch.object(imp, "download_image", download), \
+                mock.patch("builtins.print"):
+            return imp.main()
+
+    def _item(self, key: str = KEY) -> dict:
+        return {"photo_id": self.PHOTO_ID, "url": "https://example.com/g.jpg", "storage_key": key}
+
+    def test_new_gallery_photo_is_a_small_webp(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp)
+            self.assertEqual(self._run(out, [self._item()]), 0)
+            with Image.open(out / "1_abcdef12.webp") as image:
+                self.assertEqual((image.format, image.size), ("WEBP", (360, 360)))
+            self.assertFalse((out / "1_abcdef12.jpeg").exists())
+
+    def test_legacy_jpeg_is_converted_without_downloading(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp)
+            Image.new("RGB", (720, 720), (200, 0, 0)).save(out / "1_abcdef12.jpeg", "JPEG")
+            (out / imp.GALLERY_SOURCES).write_text(json.dumps({"1_abcdef12.jpeg": imp.key_fingerprint(self.KEY)}))
+            stale = out / "1_99999999.jpeg"
+            Image.new("RGB", (720, 720)).save(stale, "JPEG")
+            download = mock.Mock(return_value=Image.new("RGB", (720, 720)))
+            self.assertEqual(self._run(out, [self._item()], download), 0)
+            self.assertEqual(download.call_count, 1)  # 代表だけ
+            with Image.open(out / "1_abcdef12.webp") as image:
+                self.assertEqual(image.size, (360, 360))
+                self.assertGreater(image.convert("RGB").getpixel((180, 180))[0], 150)
+            self.assertFalse((out / "1_abcdef12.jpeg").exists())
+            self.assertFalse(stale.exists())
+            sources = json.loads((out / imp.GALLERY_SOURCES).read_text())
+            self.assertEqual(sources, {"1_abcdef12.webp": imp.key_fingerprint(self.KEY)})
+
+    def test_legacy_jpeg_with_a_changed_key_is_fetched_again(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp)
+            Image.new("RGB", (720, 720), (200, 0, 0)).save(out / "1_abcdef12.jpeg", "JPEG")
+            (out / imp.GALLERY_SOURCES).write_text(json.dumps({"1_abcdef12.jpeg": imp.key_fingerprint("old")}))
+            download = mock.Mock(return_value=Image.new("RGB", (900, 900), (0, 0, 200)))
+            self.assertEqual(self._run(out, [self._item()], download), 0)
+            self.assertEqual(download.call_count, 2)
+            with Image.open(out / "1_abcdef12.webp") as image:
+                self.assertGreater(image.convert("RGB").getpixel((180, 180))[2], 150)
+            self.assertFalse((out / "1_abcdef12.jpeg").exists())
+
+    def test_legacy_jpeg_survives_when_it_cannot_be_fetched_again(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp)
+            Image.new("RGB", (720, 720)).save(out / "1_abcdef12.jpeg", "JPEG")
+            (out / imp.GALLERY_SOURCES).write_text(json.dumps({"1_abcdef12.jpeg": imp.key_fingerprint("old")}))
+            hero = Image.new("RGB", (720, 720))
+            download = mock.Mock(side_effect=[hero, OSError("unreachable")])
+            self.assertEqual(self._run(out, [self._item()], download), 1)
+            self.assertTrue((out / "1_abcdef12.jpeg").exists())
+            self.assertFalse((out / "1_abcdef12.webp").exists())
 
 
 if __name__ == "__main__":

@@ -10,6 +10,7 @@ from pathlib import Path
 from apps.scraper import generate_prefecture_pages as ja
 from apps.scraper import generate_prefecture_pages_i18n as module
 from apps.scraper.display_names import municipality_label
+from apps.scraper import provisional_manholes
 from apps.scraper.generate_sitemap import build_sitemap
 from apps.scraper.prefectures import MANHOLE_PAGE_LANGS, PREFECTURE_PAGE_LANGS
 
@@ -71,7 +72,12 @@ class PrefecturePagesI18nTest(unittest.TestCase):
     )
     def test_names_file_has_no_stale_or_misplaced_entries(self) -> None:
         """県を取り違えた行・もう無い自治体の行が残っていないこと。"""
-        current = {(r.get("prefecture"), municipality_label(r)) for r in self.records}
+        # 仮番号の蓋（デプロイ時に合流する）の自治体も訳を持つ
+        provisional = provisional_manholes.build_records(
+            provisional_manholes.load_ledger(provisional_manholes.DEFAULT_LEDGER),
+            provisional_manholes.read_ndjson(provisional_manholes.DEFAULT_DESIGN),
+        )
+        current = {(r.get("prefecture"), municipality_label(r)) for r in [*self.records, *provisional]}
         listed = {(pref, label) for pref, names in self.names.items() for label in names}
         self.assertEqual(set(), listed - current)
 
@@ -164,9 +170,9 @@ class PrefecturePagesI18nTest(unittest.TestCase):
         self.assertLessEqual(set(PREFECTURE_PAGE_LANGS), set(MANHOLE_PAGE_LANGS))
 
     def test_empty_prefecture_shows_the_nearest_poke_lids(self) -> None:
-        html = self.read("gunma")
-        self.assertIn("No Poké Lids have been confirmed in Gunma yet", html)
-        self.assertIn("Nearest Poké Lids from Gunma", html)
+        html = self.read("yamanashi")
+        self.assertIn("No Poké Lids have been confirmed in Yamanashi yet", html)
+        self.assertIn("Nearest Poké Lids from Yamanashi", html)
         self.assertIn("km away", html)
         self.assertNotIn('id="prefecture-map"', html)
 

@@ -10,6 +10,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 from photo_caption import CAPTION_ELLIPSIS_CSS  # noqa: E402
+from poster_identity import POSTER_IDENTITY_CSS  # noqa: E402
 
 PAGE_CSS = f"""    * {{
       box-sizing: border-box;
@@ -466,40 +467,33 @@ PAGE_CSS = f"""    * {{
       gap: 10px;
     }}
 
-    .btn-photo-upload {{
+    /* ヒーローの主役は経路案内。下の欄に置いていたときの白いカードを、塗りのボタンにする */
+    .hero-actions .visit-cta {{
+      margin-bottom: 0;
+      padding: 12px 16px;
+      border: 0;
+      border-radius: 14px;
+      background: #176f68;
+      box-shadow: 0 2px 8px rgba(23,111,104,0.25);
+    }}
+    .hero-actions .visit-cta-icon {{ width: 40px; height: 40px; background: #fff; }}
+    .hero-actions .visit-cta-main {{ font-size: 16px; color: #fff; }}
+    .hero-actions .visit-cta-sub {{ color: #d9efec; }}
+
+    .hero-photo-link {{
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      width: 100%;
-      min-height: 52px;
-      border-radius: 14px;
-      padding: 14px 16px;
-      font-size: 15px;
+      gap: 4px 8px;
+      min-height: 44px;
+      font-size: 14px;
       font-weight: 700;
-      letter-spacing: 0.01em;
-      background: #fff0f3;
       color: #c0394b;
-      border: 1.5px solid #f5c0ca;
       text-decoration: none;
-      cursor: pointer;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
-      transition: background 0.15s, box-shadow 0.15s, transform 0.15s;
     }}
-
-    .btn-photo-upload:hover {{
-      background: #ffe4ea;
-      box-shadow: 0 3px 10px rgba(192,57,75,0.14);
-      transform: translateY(-1px);
-    }}
-
-    .photo-upload-note {{
-      margin: -2px 0 0;
-      font-size: 11.5px;
-      line-height: 1.5;
-      text-align: center;
-      color: #8a7f72;
-    }}
+    .hero-photo-link small {{ font-size: 11.5px; font-weight: 400; color: #8a7f72; }}
+    .hero-photo-link-icon {{ width: 22px; height: 22px; display: block; flex-shrink: 0; }}
 
     .action-icon {{
       width: 36px;
@@ -647,11 +641,6 @@ PAGE_CSS = f"""    * {{
         font-size: 18px;
       }}
 
-      .btn-photo-upload {{
-        font-size: 16px;
-        min-height: 56px;
-      }}
-
       .section-card {{
         padding: 14px;
         border-radius: 8px;
@@ -666,13 +655,6 @@ PAGE_CSS = f"""    * {{
       font-size: 13px;
       color: #666;
       margin-top: 2px;
-    }}
-
-    .hero-region-en {{
-      font-size: 12px;
-      color: #aaa;
-      margin-bottom: 8px;
-      letter-spacing: 0.03em;
     }}
 
     .hero-photo {{
@@ -735,6 +717,22 @@ PAGE_CSS = f"""    * {{
       background: #f1ede4;
       border-color: #b8ab8e;
       color: #6b5d44;
+    }}
+
+    .hero-badge-provisional {{
+      background: #f3eefb;
+      border-color: #a891cf;
+      color: #5b4392;
+    }}
+
+    .provisional-note p {{
+      margin: 0 0 6px;
+      font-size: 14px;
+      line-height: 1.7;
+    }}
+
+    .provisional-note a {{
+      color: #5b4392;
     }}
 
     .visit-cta {{
@@ -850,6 +848,8 @@ PAGE_CSS = f"""    * {{
     }}
     .gallery-item img {{
       width: 100%;
+      /* img の height 属性（場所の確保用）が高さに効かないようにする。正方形は aspect-ratio で保つ */
+      height: auto;
       aspect-ratio: 1 / 1;
       object-fit: cover;
       border-radius: 10px;
@@ -874,3 +874,6 @@ PAGE_CSS = f"""    * {{
       text-decoration: none;
     }}
 """
+
+# 投稿者名の前のアイコンと後ろの称号（poster_identity.py）
+PAGE_CSS += POSTER_IDENTITY_CSS

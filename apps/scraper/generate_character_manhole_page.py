@@ -362,9 +362,13 @@ def _is_design_manhole_page(url: str) -> bool:
 
 
 def _linked_ref(record: dict) -> str:
-    """canonical_ref → nearby_refs の順に、gundam:/character: の参照を1つ返す（無ければ空）。"""
+    """canonical_ref → nearby_refs の順に、gundam:/character: の参照を1つ返す（無ければ空）。
+
+    reviewed_distinct は「近くにあるが別の蓋」と人が判断した投稿なので、nearby_refs では紐付けない。
+    """
     refs = [str(record.get("canonical_ref") or "")]
-    for entry in record.get("nearby_refs") or []:
+    nearby = [] if record.get("review_status") == "reviewed_distinct" else record.get("nearby_refs") or []
+    for entry in nearby:
         if isinstance(entry, dict):
             refs.append(str(entry.get("ref") or ""))
     return next((ref for ref in refs if ref.startswith(CHARACTER_LINKAGE_PREFIXES)), "")
@@ -394,6 +398,9 @@ def build_photos(path: Path | None, character_records: list[dict], gundam_record
         url = str(record.get("photo_url") or "")
         if record.get("status") != "active" or not _is_small_photo_url(url):
             continue
+        # ポケふた（仮番号を含む）へ結びつけた投稿はポケふたの写真なので、デザインマンホールとしては出さない
+        if str(record.get("canonical_ref") or "").startswith("pokefuta:"):
+            continue
         title = str(record.get("title") or "デザインマンホール").strip()
         photo = {
             "id": str(record.get("id") or url),
@@ -407,7 +414,8 @@ def build_photos(path: Path | None, character_records: list[dict], gundam_record
             meta = _work_meta_for(manhole, is_gundam)
             place = str(manhole.get("landmark") or manhole.get("title") or title).strip()
             href = meta["href"]
-            if href.startswith("./characters/"):
+            # ガンダムは作品ガイド（./characters/gundam/）へ。ガイドに1基ずつの行は無いのでアンカーは付けない
+            if not is_gundam and href.startswith("./characters/"):
                 href += "#spot-" + quote(str(manhole.get("id")), safe="")
             label = _short_work_name(meta["name"])
             prefecture = str(manhole.get("prefecture") or "")
@@ -852,13 +860,13 @@ def generate_html(
       <nav class="lp-hub" aria-label="探し方">
         <a class="lp-hub-item" href="#works"><b>作品から探す</b><span>{work_count}作品</span></a>
         <a class="lp-hub-item" href="#prefectures"><b>都道府県から探す</b><span>{pref_count}都道府県</span></a>
+        <a class="lp-hub-item lp-hub-map" href="{MAP_HREF}"
+           onclick="trackEvent('click_map_cta',{{surface:'character_search_hub',cta:'map_hub',from:'character_manholes_lp'}})"><b>地図で探す</b><span>地図で{total_count}件を見る →</span></a>
         <form class="lp-hub-item lp-hub-search" role="search" action="#places">
           <label for="place-q"><b>設置場所名・市町村から探す</b></label>
           <input id="place-q" name="q" type="search" enterkeyhint="search" autocomplete="off" placeholder="例：{escape(sample_city)}、{escape(sample_character)}">
           <span class="lp-hub-status" id="place-q-status" aria-live="polite"></span>
         </form>
-        <a class="lp-hub-item lp-hub-map" href="{MAP_HREF}"
-           onclick="trackEvent('click_map_cta',{{surface:'character_search_hub',cta:'map_hub',from:'character_manholes_lp'}})"><b>地図で探す</b><span>地図で{total_count}件を見る →</span></a>
       </nav>
     </section>
 

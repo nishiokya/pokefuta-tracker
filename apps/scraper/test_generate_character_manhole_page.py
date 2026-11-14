@@ -393,6 +393,13 @@ class SeoStructureTest(_PageTestCase):
         self.assertIn('<input id="place-q"', hub)
         self.assertIn(f'href="./gmanhole_map.html"', hub)
         self.assertIn(f"地図で{self.total_count}件を見る", hub)
+        # 表示は「作品・都道府県・地図」の1段 → 検索。CSS の order で入れ替えず HTML の順で並べ、
+        # Tab のフォーカス順と見た目の順を揃える
+        self.assertLess(hub.index("<b>地図で探す</b>"), hub.index('<input id="place-q"'))
+
+    def test_search_hub_does_not_reorder_items_with_css(self):
+        css = (Path(__file__).resolve().parents[2] / "apps" / "web" / "assets" / "character-work.css").read_text(encoding="utf-8")
+        self.assertNotRegex(css, r"\.lp-hub[^{]*\{[^}]*\border:")
 
     def test_intro_explains_the_topic_scope_and_caveats_in_300_to_500_chars(self):
         intro = self.html[self.html.index('<section class="lp-intro"'):]
@@ -577,7 +584,7 @@ class PhotoTest(unittest.TestCase):
         gundam = by_id["p-gundam"]
         self.assertTrue(gundam["linked"])
         self.assertEqual("機動戦士ガンダム", gundam["label"])
-        self.assertEqual("./characters/gundam/#spot-1", gundam["href"])
+        self.assertEqual("./characters/gundam/", gundam["href"])  # ガンダムは共通地図でなく作品ガイドへ
         zls = by_id["p-zls"]
         self.assertEqual("ゾンビランドサガ", zls["label"])
         self.assertEqual("唐人プラザビル", zls["place"])
@@ -592,6 +599,18 @@ class PhotoTest(unittest.TestCase):
             self.assertIn(UNLINKED_PHOTO_LABEL, photo["alt"])
         self.assertEqual("https://pokefuta.com/design-manholes/p-plain-0?from=data", by_id["p-plain-0"]["href"])
         self.assertEqual("名古屋市北区", by_id["p-plain-0"]["city"])  # 全角スペースを詰める
+
+    def test_photos_matched_to_a_pokefuta_are_not_shown_as_design_manholes(self):
+        records = [dict(PHOTO_RECORDS[2], id="p-pokefuta", canonical_ref="pokefuta:9001")]
+        path = _write_ndjson(Path(self.tmpdir.name), "pokefuta.ndjson", records)
+        self.assertEqual([], build_photos(path, self.character_records, self.gundam_records))
+
+    def test_reviewed_distinct_photos_are_not_linked_by_nearby_refs(self):
+        records = [dict(PHOTO_RECORDS[1], id="p-distinct", review_status="reviewed_distinct")]
+        path = _write_ndjson(Path(self.tmpdir.name), "distinct.ndjson", records)
+        photo = build_photos(path, self.character_records, self.gundam_records)[0]
+        self.assertFalse(photo["linked"])
+        self.assertEqual(UNLINKED_PHOTO_LABEL, photo["label"])
 
     def test_hero_and_gallery_split_without_duplicates(self):
         hero, gallery = select_photos(self.photos, seed_date=date(2026, 9, 26))
@@ -685,9 +704,10 @@ class MobileLayoutCssTest(unittest.TestCase):
         self.assertRegex(self.css, r"\.lp-gallery a \{[^}]*aspect-ratio: 1")
         self.assertIn("object-fit: cover", self.css)
 
-    def test_phone_layout_uses_two_column_gallery_and_four_column_mosaic(self):
+    def test_phone_layout_uses_two_column_gallery_and_one_row_mosaic(self):
         self.assertIn(".lp-gallery { grid-template-columns: repeat(2, minmax(0, 1fr));", self.mobile)
-        self.assertIn(".lp-hero-mosaic { grid-template-columns: repeat(4, minmax(0, 1fr));", self.mobile)
+        # ヒーローを低く保つため、スマホの写真は横1列のスクロール（枚数は減らさない）
+        self.assertRegex(self.mobile, r"\.lp-hero-mosaic \{ display: flex;[^}]*overflow-x: auto")
         # 並びは 見出し → 写真 → 探し方（写真の後ろに見出しを隠さない）
         self.assertIn('grid-template-areas: "copy" "photos" "hub";', self.css)
 

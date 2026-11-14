@@ -41,6 +41,7 @@ try:
         TRIP_BASE,
         duration_note,
         duration_range,
+        entry_range,
         duration_text,
         mode_hint,
         mode_label,
@@ -79,6 +80,7 @@ except ModuleNotFoundError as exc:
         TRIP_BASE,
         duration_note,
         duration_range,
+        entry_range,
         duration_text,
         mode_hint,
         mode_label,
@@ -189,7 +191,7 @@ def trip_summaries(records: list[dict], areas: list[dict], durations: dict) -> l
         if rs is None:
             continue
         entry = find_entry(rs, durations)
-        time = duration_range(entry["p25_minutes"], entry["p75_minutes"]) if entry else ""
+        time = entry_range(entry) if entry else ""
         order = rank.get(",".join(entry["manhole_ids"]), len(rank)) if entry else len(rank) + 1
         out.append((order, (area["name"], trip_path(area), len(rs), time)))
     return [item for _, item in sorted(out, key=lambda t: t[0])]
@@ -240,8 +242,8 @@ def _route_html(area: dict, route: list[dict], common: bool, entry: dict | None)
         segments = muni_page._route_segments(route)
         for position, (first, last) in enumerate(segments, start=1):
             label = (
-                "この順番でGoogleマップを開く" if len(segments) == 1
-                else f"{first + 1}〜{last + 1}番目をGoogleマップで開く"
+                "この順番で経路案内" if len(segments) == 1
+                else f"{first + 1}〜{last + 1}番目を経路案内"
             )
             links += (
                 f'<a class="inline-link" href="{_escape_attr(muni_page._google_route_url(route[first:last + 1]))}" '
@@ -296,6 +298,38 @@ def _access_html(area: dict) -> str:
         '<section id="access" class="visit-guide" aria-labelledby="access-heading">'
         '<h2 id="access-heading">スタート地点と行き方</h2>'
         f'<ul class="access-list">{body}</ul>'
+        + (
+            f'<p class="visit-guide-sources">出典：{sources}'
+            + (f'（確認日：<time datetime="{_escape_attr(checked)}">{escape(checked)}</time>）' if checked else "")
+            + "</p>"
+            if sources else ""
+        )
+        + '</section>'
+    )
+
+
+def _plans_html(area: dict) -> str:
+    """観光とあわせた回り方（trip_areas.json の plans、任意）。公式の案内で確かめた時間だけを手で書く。"""
+    plans = area.get("plans") or {}
+    items = [i for i in plans.get("items") or [] if i.get("title") and i.get("text")]
+    if not items:
+        return ""
+    body = "".join(
+        f"<li><strong>{escape(i['title'])}</strong> {escape(i['text'])}</li>" for i in items
+    )
+    sources = "・".join(
+        f'<a href="{_escape_attr(s["url"])}" target="_blank" rel="noopener noreferrer" '
+        'data-track="trip_source_click" data-surface="plans" data-destination="travel_source">'
+        f'{escape(s["label"])}</a>'
+        for s in plans.get("sources") or []
+        if s.get("url", "").startswith("https://")
+    )
+    checked = plans.get("checked_on", "")
+    return (
+        '<section id="plans" class="visit-guide" aria-labelledby="plans-heading">'
+        f'<h2 id="plans-heading">{escape(plans.get("heading") or "観光もするなら")}</h2>'
+        + (f'<p>{escape(plans["intro"])}</p>' if plans.get("intro") else "")
+        + f'<ul class="access-list">{body}</ul>'
         + (
             f'<p class="visit-guide-sources">出典：{sources}'
             + (f'（確認日：<time datetime="{_escape_attr(checked)}">{escape(checked)}</time>）' if checked else "")
@@ -365,7 +399,7 @@ def build_area_page(
     canonical = f"{BASE_URL}{path}"
     title = f"{_title(area, count)}ルートと所要時間｜ポケふた旅"
     time_phrase = (
-        f"かかる時間の目安は{duration_range(entry['p25_minutes'], entry['p75_minutes'])}。"
+        f"かかる時間の目安は{entry_range(entry)}。"
         if entry else ""
     )
     description = (
@@ -381,8 +415,9 @@ def build_area_page(
             "pokemons": clean_pokemons(r),
             "is_preinstall": False,
             "photo_url": pref._photo_asset_url(r, photos[str(r["id"])]) if str(r["id"]) in photos else "",
+            "order": i,
         }
-        for r in records
+        for i, r in enumerate(route, start=1)
     ]
     manhole_html = muni_page._to_municipality_events(pref._manhole_cards(route, photos, pref_slug, keep_order=True))
     manhole_html = manhole_html.replace("municipality_", "trip_")
@@ -453,6 +488,8 @@ def build_area_page(
 
     {_access_html(area)}
 
+    {_plans_html(area)}
+
     <section aria-labelledby="map-heading">
       <h2 id="map-heading">{escape(area['name'])}のポケふたマップ</h2>
       <div id="prefecture-map"></div>
@@ -522,7 +559,7 @@ def compact_places(
         )
         link = m.path or f"/prefectures/{quote(m.prefecture_slug)}/"
         entry = find_entry(points, durations or {})
-        time = duration_range(entry["p25_minutes"], entry["p75_minutes"]) if entry else ""
+        time = entry_range(entry) if entry else ""
         out.append((f"{m.prefecture} {m.name}", link, len(points), total, time))
     return sorted(out, key=lambda t: (-t[2], t[3]))
 
@@ -544,7 +581,7 @@ def build_index_page(
         entry = find_entry(records, durations)
         mode = mode_label(area, records)
         time = (
-            f'<strong>{escape(duration_range(entry["p25_minutes"], entry["p75_minutes"]))}</strong>'
+            f'<strong>{escape(entry_range(entry))}</strong>'
             if entry else '<strong>時間の目安はまだ</strong>'
         )
         return (
@@ -575,7 +612,7 @@ def build_index_page(
             f'<span>{escape(area["prefecture"])}</span>'
             f'<b>{escape(area["name"])} {len(records)}枚</b>'
             f'{card_thumbs_html(records, entry)}'
-            f'<strong>{escape(duration_range(entry["p25_minutes"], entry["p75_minutes"]))}</strong>'
+            f'<strong>{escape(entry_range(entry))}</strong>'
             f'<small>移動の目安：{escape(mode_label(area, records))}</small></a>'
         )
 
@@ -654,6 +691,11 @@ def build_index_page(
 
 
 TRIP_CSS = """
+    /* 地図ピンに重ねる「回る順番」の番号（回る順番のリストと同じ数字） */
+    .map-order { position: absolute; top: -8px; left: -8px; min-width: 22px; height: 22px; padding: 0 5px;
+      border: 2px solid white; border-radius: 11px; background: #201b16; color: white; font-size: .78rem;
+      font-weight: 900; line-height: 18px; text-align: center; box-shadow: 0 1px 4px rgba(32,27,22,.45);
+      pointer-events: none; box-sizing: border-box; }
     .hero-pick { min-width: 0; overflow-wrap: anywhere; }
     @media (max-width: 700px) {
       .hero-picks { margin: 16px 0 0; }

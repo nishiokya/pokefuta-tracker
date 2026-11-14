@@ -75,6 +75,12 @@ def manhole_groups(manholes: list[dict[str, str]], areas: list[dict] | None = No
         groups.setdefault(frozenset(ids), f"{prefecture}{municipality}")
     for area in areas or []:
         groups.setdefault(frozenset(str(i) for i in area["manhole_ids"]), area.get("name", ""))
+        # duration（任意）: ページに出す一部の地点の組（apps/scraper/visit_durations.py apply_partial_durations）
+        if area.get("duration"):
+            groups.setdefault(
+                frozenset(str(i) for i in area["duration"]["manhole_ids"]),
+                f"{area.get('name', '')}（{area['duration']['label']}）",
+            )
     return {ids: label for ids, label in groups.items() if len(ids) >= 2}
 
 

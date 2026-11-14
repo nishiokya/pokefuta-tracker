@@ -108,6 +108,7 @@ try:
         distance_km,
         guide_stop_name,
         google_maps_url,
+        geo_label,
     )
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
@@ -122,7 +123,15 @@ except ModuleNotFoundError as exc:
         distance_km,
         guide_stop_name,
         google_maps_url,
+        geo_label,
     )
+
+try:
+    from apps.scraper.provisional_manholes import load_wanted, wanted_places
+except ModuleNotFoundError as exc:
+    if exc.name != "apps":
+        raise
+    from provisional_manholes import load_wanted, wanted_places
 
 try:
     from apps.scraper.page_html import (
@@ -241,7 +250,6 @@ VISIT_SEARCH_INTRO_PREFECTURES = frozenset({"京都府", "埼玉県", "神奈川
 # ポケふたが無い県から近いポケふたを測る起点（県庁所在地の県庁）。
 # 距離は直線で、移動距離ではない。
 EMPTY_PREFECTURE_ORIGINS: dict[str, tuple[str, float, float]] = {
-    "群馬県": ("群馬県庁", 36.3911, 139.0608),
     "山梨県": ("山梨県庁", 35.6639, 138.5684),
     "広島県": ("広島県庁", 34.3966, 132.4596),
     "熊本県": ("熊本県庁", 32.7898, 130.7416),
@@ -449,6 +457,47 @@ def _events_html(events: list[dict] | None, today: date | None = None) -> str:
     )
 
 
+def _wanted_html(prefecture: str, slug: str, wanted: dict | None) -> str:
+    """設置が発表されたが写真がまだ届いていない（緯度経度が分からない）ポケふたへの投稿の呼びかけ。
+
+    投稿の写真の GPS から図鑑に仮番号で載せる（provisional_manholes.py）。場所の一覧は
+    dataset/provisional_wanted.json から、図鑑に同じ自治体の蓋が入ったものを除いたもの。
+    """
+    places = (wanted or {}).get("places") or []
+    if not places:
+        return ""
+    items = []
+    for place in places:
+        pokemons = "・".join(str(p) for p in place.get("pokemons") or [] if p)
+        items.append(
+            f'<li><strong>{escape(str(place["city"]))}</strong> {escape(str(place.get("place") or ""))}'
+            + (f'<small>{escape(pokemons)}</small>' if pokemons else "")
+            + "</li>"
+        )
+    source_url = str((wanted or {}).get("source_url") or "")
+    feature = str((wanted or {}).get("feature") or "")
+    sources = []
+    if source_url.startswith("https://"):
+        sources.append(
+            f'<a href="{escape_attr(source_url)}" target="_blank" rel="noopener noreferrer">設置の発表</a>'
+        )
+    if feature:
+        sources.append(f'<a href="/features/{quote(feature)}/">新作特集</a>')
+    return (
+        '<section class="wanted-card" id="wanted" aria-labelledby="wanted-heading">\n'
+        '      <span class="event-status">緯度経度を調べています</span>\n'
+        f'      <h2 id="wanted-heading">{escape(prefecture)}の新しいポケふた、写真の投稿をお願いします</h2>\n'
+        f'      <p>設置が発表された次の{len(places)}か所は、まだ写真が届いていないため、図鑑に正確な場所を載せられていません。'
+        "現地で撮った写真をデザインマンホール投稿から送ってもらえると、写真の位置から図鑑に載せます。</p>\n"
+        f'      <ul class="wanted-list">{"".join(items)}</ul>\n'
+        f'      <a class="wanted-cta" href="{escape_attr(upload_url("", slug, provisional=True))}" target="_blank" '
+        'rel="noopener noreferrer" data-track="prefecture_wanted_upload_click" '
+        'data-destination="pokefuta_design_manhole_new">写真を投稿する</a>\n'
+        + (f'      <p class="wanted-source">{" ・ ".join(sources)}</p>\n' if sources else "")
+        + "    </section>\n\n    "
+    )
+
+
 def build_rankings(records: list[dict]) -> dict[str, int | None]:
     counts = Counter(record.get("prefecture", "") for record in records)
     installed_counts = [
@@ -464,7 +513,9 @@ def build_rankings(records: list[dict]) -> dict[str, int | None]:
     }
 
 
-def _trivia_html(prefecture: str, trivia_entry: dict | None, count: int) -> str:
+def _trivia_html(
+    prefecture: str, trivia_entry: dict | None, count: int, pending: list[str] | None = None
+) -> str:
     entries = (trivia_entry or {}).get("trivia", [])
     selected = entries[0] if entries else None
     if selected:
@@ -482,6 +533,15 @@ def _trivia_html(prefecture: str, trivia_entry: dict | None, count: int) -> str:
         )
     if count:
         municipalities = (trivia_entry or {}).get("municipality_count", 0)
+        if not municipalities:
+            # トリビアは公式の枚数から作るので、仮番号の蓋しか無い県（群馬）は持たない。発表された枚数で書く
+            if pending:
+                return (
+                    f"<p>{escape(prefecture)}で設置が発表されたポケふたは{count + len(pending)}枚。"
+                    f"図鑑に載っているのは{count}枚で、{escape('・'.join(pending))}の{len(pending)}か所は"
+                    "写真が届くのを待っています。</p>"
+                )
+            return f"<p>{escape(prefecture)}には{count}枚のポケふたがあります。</p>"
         return (
             f"<p>{escape(prefecture)}では{count}枚のポケふたを"
             f"{municipalities}自治体で巡れます。</p>"
@@ -722,7 +782,7 @@ def _photo_section(
             f'loading="lazy" decoding="async" width="640" height="480">'
             f'<span><strong>{escape(name)}</strong><small>{escape(pokemons)}</small>'
             f'</span></a>{poster_html}'
-            f'<a class="photo-card-upload" href="{escape_attr(upload_url(mid, slug))}" '
+            f'<a class="photo-card-upload" href="{escape_attr(upload_url(mid, slug, provisional=bool(record.get("provisional"))))}" '
             f'data-track="prefecture_photo_upload_start" data-position="{position}" '
             f'data-destination="upload" data-content-id="{escape_attr(mid)}" '
             f'data-surface="photo_gallery" '
@@ -741,7 +801,7 @@ def _photo_section(
         name = manhole_name(record)
         pokemons = "・".join(clean_pokemons(record)) or "ポケモン"
         contribution_cards.append(
-            f'<a class="contribution-card" href="{escape_attr(upload_url(mid, slug))}" '
+            f'<a class="contribution-card" href="{escape_attr(upload_url(mid, slug, provisional=bool(record.get("provisional"))))}" '
             f'data-track="prefecture_photo_upload_start" data-position="{position}" '
             f'data-destination="upload" data-content-id="{escape_attr(mid)}" '
             f'data-surface="photo_contribution" '
@@ -826,13 +886,14 @@ def _manhole_cards(
         # タイル全体を詳細リンクにしたのと同じ整理）。
         maps_html = (
             f'<a href="{escape_attr(maps_url)}" target="_blank" rel="noopener noreferrer" '
+            f'data-geo-label="{escape_attr(geo_label(record))}" '
             f'data-track="prefecture_google_maps_click" data-position="{position}" '
             f'data-destination="google_maps" data-content-id="{escape_attr(mid)}" '
-            f'data-surface="manhole_actions">地図で開く</a>'
+            f'data-surface="manhole_actions">経路案内</a>'
             if maps_url else ""
         )
         upload_html = (
-            f'<a class="upload" href="{escape_attr(upload_url(mid, slug))}" '
+            f'<a class="upload" href="{escape_attr(upload_url(mid, slug, provisional=bool(record.get("provisional"))))}" '
             f'data-track="prefecture_photo_upload_start" data-position="{position}" '
             f'data-destination="upload" data-content-id="{escape_attr(mid)}" '
             f'data-surface="manhole_actions" '
@@ -1052,7 +1113,8 @@ def build_index_page(
     ).items():
         municipality_paths.setdefault(prefecture, {})[muni_name] = path
     events = events or {}
-    total = sum(len(records) for records in records_by_pref.values())
+    # 全国の枚数は公式の枚数（仮番号の蓋は県のカードには出すが、全国の合計には入れない）
+    total = sum(1 for records in records_by_pref.values() for r in records if not r.get("provisional"))
     # マンホールが1枚も無い都道府県はこのページに出さない（region_section()
     # 側の実際のフィルタと二重管理にならないよう、ここでは案内文の数字だけ
     # 同じ条件で数える）。
@@ -1721,6 +1783,7 @@ def _hero_intro(
     complete: list[str] | None = None,
     records: list[dict] | None = None,
     photo_count: int = 0,
+    pending: list[str] | None = None,
 ) -> str:
     if not count:
         return (
@@ -1732,7 +1795,15 @@ def _hero_intro(
     intro = _visit_search_intro(prefecture, count, records or [], photo_count)
     single_municipality_intro = bool(intro) and len(_municipality_counts(records or [])) == 1
     intro = intro or f"{prefecture}には{count}枚のポケふたがあります。"
-    if not single_municipality_intro and coverage and coverage.covered:
+    # 公式が発表済みでまだ設置前の蓋（installed: false）は count に入っている。「5枚あります」と言い切ると
+    # 地図の「設置予定」の札と矛盾する（2026-11 の群馬）ので、何枚がどこで設置待ちかを添える
+    planned = [record for record in records or [] if record.get("installed") is False]
+    if planned:
+        places = "・".join(name for name, _ in _municipality_counts(planned))
+        intro += f"うち{len(planned)}枚（{places}）は設置予定で、設置されしだい写真を募集します。"
+    # 設置が発表されたのに写真がまだ届いていない蓋がある（provisional_wanted.json）ときは、図鑑に載っている分だけで
+    # 「◯◯だけです」と言い切らない
+    if not single_municipality_intro and coverage and coverage.covered and not (pending and coverage.covered == 1):
         intro += _coverage_sentence(coverage, complete or [])
     elif not single_municipality_intro and municipality_count:
         intro += f"県内{municipality_count}自治体に広がっています。"
@@ -1742,6 +1813,8 @@ def _hero_intro(
     if trivia and trivia[0].get("text"):
         fact = str(trivia[0]["text"]).rstrip("。")
         intro += f"{fact}。"
+    if pending:
+        intro += f"ほかに{'・'.join(pending)}の{len(pending)}か所で設置が発表されていて、写真を待っています。"
     return intro
 
 
@@ -1770,8 +1843,13 @@ def _coverage_html(
     coverage: PrefectureCoverage | None,
     complete: list[str],
     municipality_paths: dict[str, str] | None = None,
+    pending: list[str] | None = None,
 ) -> str:
-    """何市町村にポケふたがあるか。市区町村ページや自治体の公式サイトには無い、県単位の情報。"""
+    """何市町村にポケふたがあるか。市区町村ページや自治体の公式サイトには無い、県単位の情報。
+
+    pending は設置が発表されたのに写真がまだ届いていない市町村（provisional_wanted.json）。
+    あるときは「すべて◯◯に」「◯◯だけ」と言い切らない。
+    """
     if not coverage or not coverage.covered or not count:
         return ""
     short = _short_prefecture_name(prefecture)
@@ -1807,6 +1885,14 @@ def _coverage_html(
             + "</p>"
             f"<p>全市町村にポケふたがあるのは、全国で{'・'.join(others)}の{len(complete)}県です。</p>"
         )
+    elif coverage.covered == 1 and pending:
+        only = next(iter(coverage.counts))
+        heading = f"{short}のポケふたがある市町村"
+        body = (
+            f"<p>図鑑に載っている{escape(prefecture)}のポケふた{count}枚は{escape(only)}にあります。"
+            f"ほかに{escape('・'.join(pending))}の{len(pending)}か所で設置が発表されていて、"
+            "写真が届きしだい図鑑に載せます。</p>"
+        )
     elif coverage.covered == 1:
         only, only_count = next(iter(coverage.counts.items()))
         heading = f"{short}のポケふたはすべて{only}に"
@@ -1819,9 +1905,19 @@ def _coverage_html(
         heading = f"{short}のポケふたがある市町村（{coverage.covered}/{coverage.total}）"
         body = (
             f"<p>{escape(prefecture)}の{coverage.total}市町村のうち{coverage.covered}市町村"
-            f"（{coverage.percent}%）にポケふたがあり、まだ無い市町村は{coverage.uncovered}です。"
-            f"ポケふたがある市町村の数は全国{coverage.covered_rank}位です。"
+            + (
+                # 写真待ちの市町村は「まだ無い」に入るので、図鑑の数だと断って場所を添える
+                f"（{coverage.percent}%）のポケふたが図鑑に載っていて、まだ載っていない市町村は{coverage.uncovered}です。"
+                if pending else
+                f"（{coverage.percent}%）にポケふたがあり、まだ無い市町村は{coverage.uncovered}です。"
+            )
+            + f"ポケふたがある市町村の数は全国{coverage.covered_rank}位です。"
             + (f"複数あるのは{multi_text}です。" if multi else "どの市町村も1枚ずつです。")
+            + (
+                f"ほかに{escape('・'.join(pending))}の{len(pending)}か所で設置が発表されていて、"
+                "写真が届きしだい図鑑に載せます。"
+                if pending else ""
+            )
             + "</p>"
         )
     # 1市町村だけの県（指宿だけの鹿児島など）は「1/43（2%）」のメーターが情報にならないので出さない
@@ -2047,6 +2143,18 @@ PAGE_CSS = """    :root { color-scheme: light; }
     .visit-advice, .manhole-card { scroll-margin-top: 100px; }
     .hero-kicker { margin: 0; color: #6b4aa2; font-size: .8rem; font-weight: 900; }
     .prefecture-hero { gap: 14px 22px; align-items: start; }
+    /* 県ページのヒーローは詰める。集計は3枚のカードでなく1行、右上の飾りの輪も出さない
+       （スマホで高さ600pxあり、地図が1画面目に入っていなかった） */
+    .prefecture-hero::after { display: none; }
+    .prefecture-hero .stats { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 12px; }
+    .prefecture-hero .stats .stat {
+      display: flex; align-items: baseline; gap: 6px; padding: 0; background: none;
+    }
+    .prefecture-hero .stats .stat span,
+    .prefecture-hero .stats .stat small { display: inline; }
+    .prefecture-hero .stats .stat strong { display: inline; font-size: 1.15rem; }
+    .prefecture-hero .hero-actions { margin-top: 14px; }
+    .footer-official { margin: 0 0 8px; }
     .hero-heading { position: relative; z-index: 1; grid-column: 1 / -1; }
     /* スマホ（320px）で「市区町村ランキング」のような長い文節（9文字）が1行に入る大きさを下限にする */
     h1 { margin: 4px 0 8px; font-size: clamp(1.65rem, 7vw, 3.5rem); line-height: 1.15; }
@@ -2298,6 +2406,20 @@ PAGE_CSS = """    :root { color-scheme: light; }
       background: linear-gradient(135deg, #fffaf0, #edf8f2);
     }
     .event-item + .event-item { margin-top: 14px; }
+    .wanted-card {
+      border-left: 5px solid #5b4392;
+      background: linear-gradient(135deg, #fbf8ff, #f1ecfb);
+    }
+    .wanted-card .event-status { background: #5b4392; }
+    .wanted-card p { margin: 6px 0 0; font-size: .92rem; }
+    .wanted-list { margin: 10px 0 0; padding-left: 1.2em; }
+    .wanted-list li { margin: 4px 0; }
+    .wanted-list small { margin-left: 6px; color: #6b5d8f; }
+    .wanted-cta {
+      display: inline-flex; margin-top: 12px; padding: 10px 18px; border-radius: 999px;
+      background: #5b4392; color: white; font-weight: 900; text-decoration: none;
+    }
+    .wanted-source { font-size: .8rem !important; color: #6b6b6b; }
     .event-status {
       display: inline-flex; margin: 0 0 6px; padding: 3px 9px;
       border-radius: 999px; background: #176f68; color: white;
@@ -2333,6 +2455,8 @@ PAGE_CSS = """    :root { color-scheme: light; }
       .hero-photos[data-count="3"] > a:first-child { grid-column: auto; width: auto; justify-self: stretch; }
       .hero-photos a { border-width: 3px; }
       .hero-actions { display: grid; grid-template-columns: 1fr 1fr; }
+      /* 設置済みの県はボタンが「地図で探す」1つだけなので、幅いっぱいにする */
+      .hero-actions > .button:only-child { grid-column: 1 / -1; }
       .hero-actions .button { justify-content: center; padding: 0 12px; text-align: center; }
       .hero-actions .button.primary { grid-column: 1 / -1; }
       .section-heading-row { display: block; }
@@ -2431,9 +2555,14 @@ def _map_script(
         const photoState = point.is_preinstall
           ? 'preinstall'
           : (point.photo_url ? 'has_photo' : 'missing');
-        const googleMapsUrl = 'https://www.google.com/maps?q=' + point.lat + ',' + point.lng;
-        const uploadUrl = 'https://pokefuta.com/upload?manhole_id=' +
-          encodeURIComponent(point.id) + '&' + campaignParams;
+        const googleMapsUrl = 'https://www.google.com/maps/search/?api=1&query=' + point.lat + ',' + point.lng;
+        // Android で Google マップのピンに出す名前（assets/geo-link.js）。manhole_records.geo_label と同じ形
+        const geoName = String(point.name || '').replace('/', ' ');
+        const geoLabel = ['ポケふた', point.pokemons.some(function(p) {{ return geoName.indexOf(p) >= 0; }})
+          ? '' : point.pokemons.join('・'), geoName].filter(Boolean).join(' ');
+        // 県ページは仮番号の蓋の投稿先を渡す。市区町村・trip・特集の地図は渡さないので従来の投稿先
+        const uploadUrl = point.upload_url || ('https://pokefuta.com/upload?manhole_id=' +
+          encodeURIComponent(point.id) + '&' + campaignParams);
         const photoHtml = point.is_preinstall
           ? '<div class="map-popup-preinstall">設置予定のポケふたです。設置後に写真を投稿できます。</div>'
           : (point.photo_url
@@ -2455,12 +2584,17 @@ def _map_script(
           'data-destination="' + escapeHtml(point.id) + '" data-content-id="' + escapeHtml(point.id) +
           '" data-surface="map_popup">詳細</a>' +
           '<a href="' + escapeHtml(googleMapsUrl) +
-          '" target="_blank" rel="noopener noreferrer" ' +
+          '" target="_blank" rel="noopener noreferrer" data-geo-label="' +
+          escapeHtml(geoLabel) + '" ' +
           'data-track="{event_prefix}_google_maps_click" data-destination="google_maps" ' +
-          'data-content-id="' + escapeHtml(point.id) + '" data-surface="map_popup">行き方</a>' +
+          'data-content-id="' + escapeHtml(point.id) + '" data-surface="map_popup">経路案内</a>' +
           uploadHtml + '</div></div>';
+        // 旅ページは回る順番の番号をピンに重ねる（order が無い県・市のページは今まで通り）
+        const orderBadge = point.order
+          ? '<span class="map-order" aria-hidden="true">' + point.order + '</span>'
+          : '';
         const marker = L.marker(latlng, {{
-          title: point.name + 'のポケふた',
+          title: (point.order ? point.order + '番目 ' : '') + point.name + 'のポケふた',
           alt: point.name + 'のポケふた・' +
             (point.is_preinstall
               ? '設置予定'
@@ -2470,14 +2604,14 @@ def _map_script(
               className: '',
               html: '<div class="prefecture-marker clip"><img src="' +
                 escapeHtml(point.tile_url) + '" alt="' + escapeHtml(point.name + 'のポケふた') +
-                '" decoding="async" width="44" height="44"></div>',
+                '" decoding="async" width="44" height="44"></div>' + orderBadge,
               iconSize: [44, 44],
               iconAnchor: [22, 22],
               popupAnchor: [0, -21]
             }})
             : L.divIcon({{
               className: '',
-              html: '<div class="prefecture-marker ' + markerClass + '"></div>',
+              html: '<div class="prefecture-marker ' + markerClass + '"></div>' + orderBadge,
               iconSize: [28, 34],
               iconAnchor: [14, 31],
               popupAnchor: [0, -30]
@@ -2528,6 +2662,7 @@ def build_page(
     durations: dict | None = None,
     trips: list[tuple[str, str, int, str]] | None = None,
     design_posts: list[dict] | None = None,
+    wanted: dict | None = None,
 ) -> str:
     photos = photos or {}
     count = len(records)
@@ -2548,15 +2683,23 @@ def build_page(
     date_modified = _date_modified(records, photo_entries)
     title, description, h1 = _prefecture_seo(prefecture, count, records, nearest, photo_count)
     rank_label = f"全国{rank}位" if rank else "現在未設置"
+    pending = [str(place["city"]) for place in (wanted or {}).get("places") or []]
     hero_intro = _hero_intro(
         prefecture, count, trivia_entry, coverage, complete,
-        records=records, photo_count=photo_count,
+        records=records, photo_count=photo_count, pending=pending,
     )
     headline_event = _headline_event(events)
     if headline_event:
-        headline = str(headline_event["headline"]).strip()
+        # 見出しは数か月出るので、「10月に新しく5枚」のような時点に依る書き方を避け、枚数は {count}・
+        # {installed_count}・{planned_count} でデータから入れられるようにする
+        counts = {
+            "count": count,
+            "installed_count": installed_count,
+            "planned_count": count - installed_count,
+        }
+        headline = str(headline_event["headline"]).strip().format(**counts)
         if headline_event.get("headline_title"):
-            title = str(headline_event["headline_title"]).format(count=count)
+            title = str(headline_event["headline_title"]).format(**counts)
         description = headline + description
         hero_intro = headline + hero_intro
     hero_photos_html = _hero_photos(records)
@@ -2570,6 +2713,11 @@ def build_page(
     map_points = [
         {
             "id": str(record.get("id", "")),
+            # 設置前の蓋は投稿導線を出さないので URL も持たせない
+            "upload_url": (
+                upload_url(str(record.get("id", "")), slug, provisional=bool(record.get("provisional")))
+                if record.get("installed") is not False else ""
+            ),
             "lat": record.get("lat"),
             "lng": record.get("lng"),
             "name": manhole_name(record),
@@ -2610,8 +2758,9 @@ def build_page(
 
     """
     )
-    trivia_html = _trivia_html(prefecture, trivia_entry, count)
+    trivia_html = _trivia_html(prefecture, trivia_entry, count, pending)
     events_html = _events_html(events)
+    wanted_html = _wanted_html(prefecture, slug, wanted)
     related_html = _related_prefectures(prefecture, empty_prefectures)
     design_html = _design_manhole_section(prefecture, slug, design_posts)
     duration_html = _visit_duration_html(prefecture, records, durations)
@@ -2623,7 +2772,7 @@ def build_page(
             or _municipality_guide(prefecture, records, municipality_paths)
         )
     )
-    coverage_html = _coverage_html(prefecture, count, coverage, complete or [], municipality_paths)
+    coverage_html = _coverage_html(prefecture, count, coverage, complete or [], municipality_paths, pending)
     # 1市町村だけの県で「市町村別の設置枚数」が既に出ているなら、同じことを2回言わない
     # （「県内43市町村のうち指宿市だけ」はヒーローの導入に入っている）
     if coverage and coverage.covered == 1 and not coverage.is_complete and municipality_guide_html:
@@ -2636,15 +2785,13 @@ def build_page(
     nearby_url = _nearby_url(slug)
     if installed_count:
         # 「投稿するポケふたを選ぶ」は同じページの一覧へ飛ぶだけで、数枚の県では
-        # 意味が薄い。写真は一覧のカード（写真を追加）から入れるので、ヒーローは
-        # 地図と訪問記録の2つに絞る。
+        # 意味が薄い。写真は一覧のカード（写真を追加）から入れる。
+        # 「訪問記録を開く」は県ページ利用者の1.6%しか押さず（28日・2026-11）、
+        # 下の「記録して、次のポケふたへ」に同じ導線があるので、ヒーローは地図だけにする。
         hero_actions_html = (
             '<a class="button primary" href="#prefecture-map" '
             'data-track="prefecture_map_click" '
             'data-destination="prefecture_map">地図で探す</a>'
-            f'<a class="button secondary" href="{escape_attr(visits_url)}" '
-            'data-track="prefecture_visit_cta_click" '
-            'data-destination="pokefuta_visits">訪問記録を開く</a>'
         )
         hero_note = ""
         journey_html = f"""
@@ -2729,9 +2876,9 @@ def build_page(
     )
 
     if records:
-        main_sections_html = f"""    {municipality_guide_html}
-
-    <section aria-labelledby="map-heading">
+        # 地図をヒーローのすぐ下に置く。県ページで押されるのは地図のピン（利用者の38%）と
+        # そこからの経路案内なので、1画面目に地図が見えるようにする。市町村の案内は地図の後ろ
+        main_sections_html = f"""    <section aria-labelledby="map-heading">
       <div class="section-heading-row">
         <h2 id="map-heading">{escape(prefecture)}の設置マップ</h2>
         <p>ピンから詳細・行き方へ。設置済みのポケふたは写真投稿にも進めます。</p>
@@ -2744,6 +2891,8 @@ def build_page(
       <div id="prefecture-map" class="{map_empty_class.strip()}"></div>
       <p class="map-note">地図はドラッグとピンチ操作に対応。スクロール中の誤操作を防ぐため、マウスホイール拡大は無効です。</p>
     </section>
+
+    {wanted_html}{municipality_guide_html}
 
     <!-- adsense:prefecture -->
 
@@ -2770,7 +2919,7 @@ def build_page(
 {design_html}
 {related_section_html}"""
     else:
-        main_sections_html = f"""    {_nearest_pokefuta_html(prefecture, nearest)}
+        main_sections_html = f"""    {wanted_html}{_nearest_pokefuta_html(prefecture, nearest)}
 
     <!-- adsense:prefecture -->
 
@@ -2850,13 +2999,12 @@ def build_page(
           {hero_actions_html}
         </div>
         {f'<p class="hero-note">{escape(hero_note)}</p>' if hero_note else ""}
-        <div class="hero-utility">{official_cta}</div>
       </div>
       {f'<div class="hero-side">{hero_photos_html}</div>' if hero_photos_html else ""}
     </header>
 
 {main_sections_html}
-    <footer><a href="/summary/">全国のポケふた一覧へ戻る</a></footer>
+    <footer>{f'<p class="footer-official">{official_cta}</p>' if official_cta else ""}<a href="/summary/">全国のポケふた一覧へ戻る</a></footer>
   </main>
   <script src="/assets/analytics.js?v=20261018a"></script>
   <script>
@@ -2912,6 +3060,7 @@ def generate_all(
     durations: dict | None = None,
     trips: dict[str, list[tuple[str, str, int, str]]] | None = None,
     design_posts: dict[str, list[dict]] | None = None,
+    wanted: dict[str, dict] | None = None,
 ) -> int:
     photos = photos or {}
     records_by_pref = {pref: [] for pref in PREFECTURE_ORDER}
@@ -2949,6 +3098,7 @@ def generate_all(
             durations,
             (trips or {}).get(prefecture),
             (design_posts or {}).get(prefecture),
+            (wanted or {}).get(prefecture),
         )
         (out_dir / "index.html").write_text(html, encoding="utf-8")
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -2968,6 +3118,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--guides", type=Path, default=DEFAULT_GUIDES)
     parser.add_argument("--durations", type=Path, default=DEFAULT_DURATIONS)
     parser.add_argument("--design-manholes", type=Path, default=DEFAULT_DESIGN_MANHOLES)
+    parser.add_argument("--wanted", type=Path, default=ROOT / "dataset" / "provisional_wanted.json")
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     return parser.parse_args()
 
@@ -2994,7 +3145,7 @@ def _trips_by_prefecture(records: list[dict], durations: dict) -> dict[str, list
 def main() -> int:
     args = parse_args()
     records = load_records(args.manholes)
-    # 公開する母数（42県）の前提を、ページを作る前に確かめる。ある県が
+    # 公開する母数（43県）の前提を、ページを作る前に確かめる。ある県が
     # まるごと取りこぼされると、黙って母数から外れてコンプリート率が
     # 上がったように見えるので、気づけるようにここで止める。generate_all()
     # ではなく main() に置くのは、合成データで generate_all() を呼ぶ
@@ -3014,6 +3165,7 @@ def main() -> int:
         records, pokemon_slugs, trivia, args.output, events, photos, visit_guides,
         durations, _trips_by_prefecture(records, durations),
         load_design_posts(args.design_manholes),
+        wanted_places(load_wanted(args.wanted), records),
     )
     print(
         f"[generate_prefecture_pages] wrote {count} pages to "

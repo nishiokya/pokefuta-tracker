@@ -22,9 +22,11 @@ from xml.sax.saxutils import escape
 
 sys.path.insert(0, str(Path(__file__).parent))
 from display_names import compose_display_name, landmark_label, municipality_label  # noqa: E402
+from manhole_records import geo_label  # noqa: E402
 from generate_pokemon_pages import _FORM_PREFIX, _normalize_katakana  # noqa: E402
 from generate_pokemon_pages import load_pokemon_metadata as load_pokemon_metadata_with_forms  # noqa: E402
 from manhole_page_css import PAGE_CSS  # noqa: E402
+from poster_identity import avatar_html, tier_badge_html  # noqa: E402
 from manhole_tile_image import small_image_url  # noqa: E402
 from photo_caption import (  # noqa: E402
     format_display_name,
@@ -35,26 +37,14 @@ from photo_caption import (  # noqa: E402
 try:
     from apps.scraper.municipalities import page_paths as municipality_page_paths  # noqa: E402
     from apps.scraper.prefectures import MANHOLE_PAGE_LANGS, PREFECTURE_SLUGS  # noqa: E402
-    from apps.scraper.tag_meta import load_tag_meta  # noqa: E402
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
     from municipalities import page_paths as municipality_page_paths  # noqa: E402
     from prefectures import MANHOLE_PAGE_LANGS, PREFECTURE_SLUGS  # noqa: E402
-    from tag_meta import load_tag_meta  # noqa: E402
 
 # Constants
 BASE_URL = "https://data.pokefuta.com/"
-
-# 補助タグの絵文字とラベルは dataset/tag_meta.json（`icon_only`）が正。
-# 以前はここに手書きの辞書があり、同じタグを地図と詳細ページで
-# 別の絵文字・別の呼び名にしていた（史跡・観光・博物館など）。
-_TAG_META = load_tag_meta()
-SECONDARY_TAG_LABELS: dict[str, tuple[str, str]] = {
-    tag["slug"]: (tag.get("emoji", ""), tag.get("label", tag["slug"]))
-    for tag in _TAG_META.tags
-    if tag.get("icon_only")
-}
 
 # 近くのデザインマンホール（ガンダム・キャラクターマンホール・写真館投稿）
 DESIGN_STUDIO_LIST_URL = "https://pokefuta.com/design-manholes"
@@ -65,6 +55,15 @@ DESIGN_NEARBY_MAX = 4
 CHARACTER_COORD_METHODS = {"official_google_map_link", "municipal_google_map_link"}
 # 🎨近接称号は本文のデザインマンホールセクションへアンカーで飛ばす
 DESIGN_ANCHOR_TITLE_KEYS = {"near_character_manhole", "near_gundam_manhole"}
+# 「みんなの写真」のサムネイルの大きさ（import_latest_manhole_photos.GALLERY_SIZE と同じ）
+GALLERY_THUMB_SIZE = 360
+
+
+def gallery_more_label(public_photo_count: object, shown: int) -> str:
+    """「みんなの写真」の末尾のリンク。出しきれていないときは写真館にある枚数を入れる（shown は代表を含む）。"""
+    if isinstance(public_photo_count, int) and public_photo_count > shown:
+        return f"写真館で全 {public_photo_count} 枚を見る →"
+    return "すべての写真を見る →"
 
 
 def build_ja_to_slug(raw_data: list) -> dict[str, str]:
@@ -383,13 +382,18 @@ def load_design_spots(
         if coords is None:
             continue
         refs: list[str] = []
+        if str(row.get("canonical_ref") or "").startswith("pokefuta:"):
+            # 人がポケふた（仮番号を含む）へ結びつけた投稿。近くのキャラクターマンホールへも合流させない
+            continue
         if row.get("canonical_ref"):
             refs.append(str(row["canonical_ref"]))
-        refs += [
-            str(r.get("ref", ""))
-            for r in (row.get("nearby_refs") or [])
-            if isinstance(r, dict) and r.get("ref")
-        ]
+        # reviewed_distinct は人が「近くの別の蓋」と判断した投稿なので、近さでは合流させない
+        if row.get("review_status") != "reviewed_distinct":
+            refs += [
+                str(r.get("ref", ""))
+                for r in (row.get("nearby_refs") or [])
+                if isinstance(r, dict) and r.get("ref")
+            ]
         matched = next((by_ref[r] for r in refs if r in by_ref), None)
         if matched is not None:
             # マスタ蓋の写真館リンク・写真として合流（最初の投稿を採用）
@@ -536,7 +540,7 @@ def _trip_section_html(trip: dict, manhole_id: str, id_to_image_url: dict[str, s
     order_note = "よく回られる順番です。" if trip.get("common") else "直線距離がいちばん短くなる順番です。"
     more_params = _attr_json({"surface": "manhole_trip", "from_manhole_id": manhole_id})
     return (
-        f"<section class='nearby-section trip-section section-card'>"
+        f"<section id='nearby' class='nearby-section trip-section section-card'>"
         f"<h2>{_icon('icon-detail-nearby', 'icon-lg')} "
         f"{escape(trip['name'])}のポケふた{trip['count']}枚を回る</h2>"
         f"<p class='design-note'>{escape(trip['text'])}{order_note}</p>"
@@ -579,6 +583,78 @@ def _render_related_card(
     )
 
 
+# 検索結果の title は長いと後ろが切れる。施設名を先頭に置いたうえで、この長さに収まるように県名・ポケモン名を削る
+TITLE_MAX_CHARS = 56
+
+
+def seo_title_and_description(
+    manhole: dict,
+    photo: Optional[dict],
+    *,
+    prefecture: str,
+    city: str,
+    building: str,
+    address: str,
+    pokemons: list[str],
+) -> tuple[str, str]:
+    """検索結果に出る <title> と meta description。
+
+    2026-10 の Search Console では詳細ページが種類別で最低の CTR（1.8%、順位 7.5）だった。それまでの title は
+    「鹿児島県指宿のポケふた｜イーブイ｜ポケふた図鑑」と場所が市までで、h1 にある施設名が検索結果に出ていなかった。
+    施設名（地図の見出しと同じ landmark_label）を先頭に置き、説明文は定型文ではなく住所・写真の枚数・経路案内の
+    実データで書く。施設名が無い蓋（496枚のうち約170枚）は従来の「県市のポケふた」の形のまま。
+    og:/twitter: のタイトルは SNS 向けに別で作っているので触らない。
+    """
+    pokemon_text = "・".join(pokemons) if pokemons else "ポケモン"
+    # 名前が多い蓋（5匹など）は title が長くなりすぎるので、og: と同じ「3匹＋ほか」に丸める
+    pokemon_label = format_pokemon_label(pokemons) if pokemons else "ポケモン"
+    municipality = municipality_label(manhole) or city or prefecture
+    is_preinstall = manhole.get("installed") is False
+    where = f"{prefecture}{municipality}" if municipality != prefecture else prefecture
+
+    if building:
+        # 施設名が長い蓋（「刈谷ハイウェイオアシス内にある…正面玄関前」など）は、県名→ポケモン名の順に
+        # 削って TITLE_MAX_CHARS に収める。施設名と市区町村名は残す
+        short_label = "・".join(pokemons[:2]) + (" ほか" if len(pokemons) > 2 else "") if pokemons else pokemon_label
+        candidates = [
+            f"{building}のポケふた（{pokemon_label}）｜{where}の場所・写真・行き方｜ポケふた図鑑",
+            f"{building}のポケふた（{pokemon_label}）｜{municipality}の場所・写真・行き方｜ポケふた図鑑",
+            f"{building}のポケふた（{short_label}）｜{municipality}の場所・写真・行き方｜ポケふた図鑑",
+            f"{building}のポケふた｜{municipality}の場所・写真・行き方｜ポケふた図鑑",
+        ]
+        title = next((c for c in candidates if len(c) <= TITLE_MAX_CHARS), candidates[-1])
+        place = f"{where}の{building}"
+    else:
+        title = f"{where}のポケふた（{pokemon_label}）｜場所・写真・行き方｜ポケふた図鑑"
+        place = where
+    if is_preinstall:
+        # 設置前の蓋は「行き方」と写真をうたわない
+        title = (
+            f"{building}のポケふた（{pokemon_label}）｜{where}に設置予定｜ポケふた図鑑"
+            if building else f"{where}のポケふた（{pokemon_label}）｜設置予定｜ポケふた図鑑"
+        )
+
+    parts: list[str] = []
+    if is_preinstall:
+        note = str(manhole.get("installation_note") or "").strip()
+        parts.append(f"{place}に設置予定のポケふた（{pokemon_text}）。")
+        if note:
+            parts.append(note if note.endswith("。") else note + "。")
+        parts.append("設置場所の地図と、同じ県のポケふたを掲載。")
+    else:
+        parts.append(f"{place}にあるポケふた（{pokemon_text}）。")
+        if address:
+            parts.append(f"住所は{address}。")
+        public_count = photo.get("public_photo_count") if photo else None
+        if isinstance(public_count, int) and public_count > 0:
+            parts.append(f"訪れた人の現地写真{public_count}枚と地図、Googleマップの経路案内、周辺のポケふたを掲載。")
+        elif photo:
+            parts.append("訪れた人の現地写真と地図、Googleマップの経路案内、周辺のポケふたを掲載。")
+        else:
+            parts.append("地図とGoogleマップの経路案内、周辺のポケふたを掲載。写真は募集中。")
+    return title, "".join(parts)
+
+
 def generate_html(
     manhole: dict,
     photo: Optional[dict],
@@ -615,6 +691,16 @@ def generate_html(
     detail_url = manhole.get("detail_url", "")
     lat = manhole.get("lat")
     lng = manhole.get("lng")
+    # 公式サイトに載っていない仮番号の蓋（provisional_manholes.py）。写真館にこの番号のページは無いので、
+    # 写真館へのリンクは元の投稿へ、写真の投稿はデザインふた投稿（kind=pokefuta）へ向ける
+    is_provisional = bool(manhole.get("provisional"))
+    provisional_post_url = _safe_pokefuta_url(manhole.get("provisional_post_url")) if is_provisional else ""
+    photo_studio_url = provisional_post_url or f"https://pokefuta.com/manhole/{quote(manhole_id, safe='')}"
+    photo_upload_url = (
+        "https://pokefuta.com/design-manholes/new?kind=pokefuta&amp;from=data"
+        if is_provisional
+        else f"https://pokefuta.com/upload?manhole_id={manhole_id}&amp;from=data"
+    )
 
     # Generate unique title and description
     pokemon_text = "・".join(pokemons) if pokemons else "ポケモン"
@@ -623,12 +709,9 @@ def generate_html(
     # 自治体名が欠落する場合は都道府県名を優先（og:/twitter: タイトル用）
     city_label = city if city else prefecture
 
-    title = f"{prefecture}{city}のポケふた｜{pokemon_text}｜ポケふた図鑑"
-
-    description = (
-        f"{prefecture}{city}に設置されているポケふた。"
-        f"{pokemon_text}が描かれています。"
-        f"場所・写真・地図・周辺のポケふた情報を掲載。"
+    title, description = seo_title_and_description(
+        manhole, photo, prefecture=prefecture, city=city, building=building,
+        address=address, pokemons=pokemons,
     )
 
     # og:/twitter: meta tags — inject top title when available
@@ -647,7 +730,7 @@ def generate_html(
         _tw_title = f"{city_label}のポケふた｜{pokemon_label}"
         _tw_desc = f"{prefecture}{city}のポケふたを地図で確認できます。"
 
-    # <title> と og: は検索向けに「県市のポケふた」の形を保つので、施設名は h1 だけに入れる
+    # og: は SNS 向けに「県市のポケふた」の形を保つ。<title> は seo_title_and_description（施設名を先頭に）
     h1 = f"{compose_display_name(manhole) or city_label}のポケふた"
     # place_ambiguous な蓋は名前にポケモン名が入っているので、二重に付けない
     if pokemons and not manhole.get("place_ambiguous"):
@@ -733,7 +816,7 @@ def generate_html(
         )
     else:
         hero_photo_html = (
-            f"<a class='hero-photo-placeholder' href='https://pokefuta.com/upload?manhole_id={manhole_id}&amp;from=data'"
+            f"<a class='hero-photo-placeholder' href='{photo_upload_url}'"
             f" target='_blank' rel='noopener noreferrer'"
             f" onclick=\"trackEvent('click_photo_upload_placeholder', {_attr_json({'surface': 'manhole_gallery', 'manhole_id': manhole_id, 'prefecture': prefecture, 'city': city, 'has_photo': False})})\">"
             f"<span class='placeholder-camera' aria-hidden='true'>📷</span>"
@@ -767,14 +850,18 @@ def generate_html(
                     f"<a class='poster-link' href='{_profile_url}'"
                     f" target='_blank' rel='noopener noreferrer'"
                     f" onclick=\"trackEvent('click_poster_profile', {_poster_onclick})\">"
-                    f"📷 {escape(display_name)}</a>"
+                    f"{avatar_html(photo.get('public_user_id'))}{escape(display_name)}</a>"
                 )
             else:
-                credit_parts.append(f"📷 {escape(display_name)}")
+                credit_parts.append(f"{avatar_html(photo.get('public_user_id'))}{escape(display_name)}")
+            # 称号は名前の後ろ。名前（先頭の span）だけを省略させ、称号と日付は潰さない
+            _tier = tier_badge_html(photo.get("public_user_id"))
+            if _tier:
+                credit_parts.append(_tier)
         if shot_date:
             credit_parts.append(shot_date)
         if credit_parts:
-            inner = "".join(f"<span>{p}</span>" for p in credit_parts)
+            inner = "".join(p if p.startswith("<span class='poster-tier") else f"<span>{p}</span>" for p in credit_parts)
             credit_html = f"<div class='photo-credit'>{inner}</div>"
         else:
             credit_html = ""
@@ -805,7 +892,10 @@ def generate_html(
             # ギャラリーは overlay が小さいため年なしの短形式（撮影日→投稿日フォールバック）
             g_date = format_photo_date(g.get("shot_at") or g.get("created_at"), "ja")
             if g_credit:
-                g_label = f"📷 {escape(g_credit)}"
+                g_label = (
+                    f"{avatar_html(g.get('public_user_id'))}{escape(g_credit)}"
+                    f"{tier_badge_html(g.get('public_user_id'), icon_only=True)}"
+                )
                 if g_date:
                     g_label += f" · {escape(g_date)}"
                 _g_profile_url = poster_profile_url(g.get("public_user_id"))
@@ -820,12 +910,13 @@ def generate_html(
                 else:
                     credit_span = f"<span class='gallery-credit'>{g_label}</span>"
             elif g_date:
-                credit_span = f"<span class='gallery-credit'>📷 {escape(g_date)}</span>"
+                credit_span = f"<span class='gallery-credit'>{escape(g_date)}</span>"
             else:
                 credit_span = ""
             thumbs += (
                 f"<figure class='gallery-item'>"
-                f"<img src=\"{escape(g['url'])}\" alt=\"{escape(h1)}の写真\" loading=\"lazy\">"
+                f"<img src=\"{escape(g['url'])}\" alt=\"{escape(h1)}の写真\""
+                f" width=\"{GALLERY_THUMB_SIZE}\" height=\"{GALLERY_THUMB_SIZE}\" loading=\"lazy\" decoding=\"async\">"
                 f"{credit_span}"
                 f"</figure>"
             )
@@ -836,10 +927,10 @@ def generate_html(
             f"<section class='gallery-section section-card'>"
             f"<h2>みんなの写真</h2>"
             f"<div class='gallery-grid'>{thumbs}</div>"
-            f"<a class='gallery-more' href='https://pokefuta.com/manhole/{quote(manhole_id)}'"
+            f"<a class='gallery-more' href='{escape(photo_studio_url)}'"
             f" target='_blank' rel='noopener noreferrer'"
             f" onclick=\"trackEvent('click_gallery_more', {_gallery_more_onclick})\">"
-            f"すべての写真を見る →</a>"
+            f"{escape(gallery_more_label(photo.get('public_photo_count'), len(gallery_items) + 1))}</a>"
             f"</section>"
         )
 
@@ -868,8 +959,6 @@ def generate_html(
             region_parts.append(f"<span>{escape(city)}</span>")
     breadcrumb_items.append({"name": h1})
     region_html = "".join(region_parts)
-    pref_en = PREFECTURE_EN.get(prefecture, "")
-    region_en_html = f"<div class='hero-region-en'>{escape(pref_en)}</div>" if pref_en else ""
 
     # HERO card: pokemon tags
     pokemon_tags_html = ""
@@ -883,11 +972,15 @@ def generate_html(
         tags = "".join(_hero_tag(p) for p in pokemons)
         pokemon_tags_html = f"<div class='hero-pokemon-tags'>{tags}</div>"
 
-    # HERO card: stats badges
+    # HERO card: badges
+    # 設置前・NEW のほかは2つまで。その蓋ならではの称号1つと「30km以内にN件」（次に寄れる欄へ）。
+    # 県・市区町村・同じポケモンの枚数は下の各欄とパンくずにあるので出さない（2026-11、札が2〜3段に折り返していた）
     title_keys: set[str] = {t["key"] for t in titles}
     badges: list[str] = []
     if is_preinstall:
         badges.append("<span class='hero-badge hero-badge-pre'>🚧 設置前</span>")
+    if is_provisional:
+        badges.append("<a class='hero-badge hero-badge-provisional hero-badge-anchor' href='#provisional'>公式サイト未掲載・仮番号</a>")
     added_at = manhole.get("added_at", "") or ""
     try:
         added_year = datetime.date.fromisoformat(added_at[:10]).year
@@ -895,37 +988,22 @@ def generate_html(
             badges.append(f"<span class='hero-badge hero-badge-new'>NEW {added_year}年設置</span>")
     except (ValueError, TypeError):
         pass
-    # Title badges (all, from pokefuta.ndjson) — prepended before stats badges
-    for t in titles:
+    extra_badges: list[str] = []
+    if titles:
+        t = titles[0]
         label = f"{escape(t['emoji'])} {escape(t['label'])}" if t.get("emoji") else escape(t["label"])
         if t.get("key") in DESIGN_ANCHOR_TITLE_KEYS and nearby_design:
             # 🎨近接称号は本文の「近くのデザインマンホール」へ飛べるようにする
-            badges.append(
+            extra_badges.append(
                 f"<a class='hero-badge hero-badge-title hero-badge-anchor' href='#design-manholes'>{label}</a>"
             )
         else:
-            badges.append(f"<span class='hero-badge hero-badge-title'>{label}</span>")
-    # Secondary tag badges (tourism/park/museum/history/food/rail_access_good/river/in_station)
-    for tag in (manhole.get("tags") or []):
-        if tag in SECONDARY_TAG_LABELS:
-            em, lbl = SECONDARY_TAG_LABELS[tag]
-            badges.append(f"<span class='hero-badge hero-badge-secondary'>{escape(em)} {escape(lbl)}</span>")
-    # Stats badges with suppression rules (§2.3)
-    suppress_pref = title_keys & {"only_in_pref", "unique_pokemon"}
-    suppress_nearby = "lone" in title_keys
-    if pref_total > 0 and prefecture and not suppress_pref:
-        badges.append(f"<span class='hero-badge'>{escape(prefecture)} {pref_total}枚</span>")
-    if city_total >= 2 and city and municipality_path:
-        badges.append(
-            f"<a class='hero-badge hero-badge-anchor' href=\"{escape(municipality_path)}\">"
-            f"{escape(municipality_label(manhole))} {city_total}枚</a>"
+            extra_badges.append(f"<span class='hero-badge hero-badge-title'>{label}</span>")
+    if nearby_count > 0 and "lone" not in title_keys and (nearby or trip):
+        extra_badges.append(
+            f"<a class='hero-badge hero-badge-anchor' href='#nearby'>30km以内に{nearby_count}件</a>"
         )
-    elif city_total >= 2 and city:
-        badges.append(f"<span class='hero-badge'>{escape(city)} {city_total}枚</span>")
-    if same_pokemon_total > 0:
-        badges.append(f"<span class='hero-badge'>同じポケモン {same_pokemon_total}枚</span>")
-    if nearby_count > 0 and not suppress_nearby:
-        badges.append(f"<span class='hero-badge'>30km以内に{nearby_count}件</span>")
+    badges += extra_badges[:2]
     stats_html = f"<div class='hero-stats'>{''.join(badges)}</div>" if badges else ""
 
     # HERO card: share JS data (Python-serialized to avoid injection)
@@ -972,6 +1050,28 @@ def generate_html(
     # Validate official URL (used for links-grid cards)
     _parsed = urlparse(detail_url) if detail_url else None
     has_official_url = _parsed and _parsed.scheme == "https" and _parsed.hostname == "local.pokemon.jp"
+
+    provisional_html = ""
+    if is_provisional:
+        _source_url = str(manhole.get("provisional_source_url") or "")
+        _source_html = (
+            f"<p>設置の発表: <a href=\"{escape(_source_url)}\" target=\"_blank\" rel=\"noopener noreferrer\">"
+            f"{escape(urlparse(_source_url).hostname or _source_url)}</a></p>"
+            if _source_url.startswith("https://") else ""
+        )
+        _post_html = (
+            f"<p>写真と場所は<a href=\"{escape(provisional_post_url)}\" target=\"_blank\" rel=\"noopener noreferrer\">"
+            f"ポケふた写真館への投稿</a>から（場所は撮影した位置です）。</p>"
+            if provisional_post_url else ""
+        )
+        provisional_html = (
+            f"<section id='provisional' class='provisional-note section-card'>"
+            f"<h2>公式サイト未掲載のポケふた</h2>"
+            f"<p>公式サイトにまだ載っていない新しいポケふたです。番号 {escape(manhole_id)} は図鑑の仮の番号で、"
+            f"公式サイトに載ったら正式な番号のページへ移ります。</p>"
+            f"{_post_html}{_source_html}"
+            f"</section>"
+        )
 
     # Location info
     location_html = f"""
@@ -1064,7 +1164,7 @@ def generate_html(
     # ポケふた写真館（pokefuta.com）の同ふたページ。ギャラリー未表示のふたでも写真館へ飛べるよう常設
     _photo_studio_onclick = _attr_json({"manhole_id": manhole_id, "surface": "links_photo_studio"})
     link_cards.append(
-        f"<a class='link-card link-card--internal' href='https://pokefuta.com/manhole/{quote(manhole_id, safe='')}'"
+        f"<a class='link-card link-card--internal' href='{escape(photo_studio_url)}'"
         f" target='_blank' rel='noopener noreferrer'"
         f" onclick=\"trackEvent('click_photo_studio', {_photo_studio_onclick})\">"
         f"{_icon('icon-link-photo', 'link-card-icon')}<span>ポケふた写真館</span></a>"
@@ -1168,7 +1268,7 @@ def generate_html(
     nearby_html = _trip_section_html(trip, manhole_id, id_to_image_url) if trip else ""
     if nearby and not trip:
         nearby_html = (
-            f"<section class='nearby-section section-card'>"
+            f"<section id='nearby' class='nearby-section section-card'>"
             f"<h2>{_icon('icon-detail-nearby', 'icon-lg')} 次に寄れるポケふた</h2>"
             f"<ul class='related-list related-list--cards'>"
         )
@@ -1275,31 +1375,37 @@ def generate_html(
             "has_photo": has_photo_bool,
         }
     )
-    hero_actions_html = (
-        ""
-        if is_preinstall
-        else (
-            f'<div class="hero-actions">'
-            f'<a class="btn-photo-upload" href="https://pokefuta.com/upload?manhole_id={manhole_id}&amp;from=data" target="_blank" rel="noopener noreferrer" onclick="trackEvent(\'{_photo_event}\', {_photo_cta_onclick})">{_icon("icon-link-photo", "action-icon")}<span>{escape(_photo_label)}</span></a>'
-            f'<p class="photo-upload-note">投稿はポケふた写真館で受付（無料ログイン・GPS付き写真が必要）</p>'
-            f'</div>'
-        )
-    )
-
     # Visit CTA (Google Maps full-width card)
     visit_cta_html = ""
     if lat is not None and lng is not None:
-        gmaps_url = f"https://www.google.com/maps?q={lat},{lng}"
+        gmaps_url = f"https://www.google.com/maps/search/?api=1&query={lat},{lng}"
+        # Android は assets/geo-link.js が geo: に差し替え、ピンにこの名前を出す
+        _geo_label = geo_label(manhole)
         visit_cta_html = (
             f'<a href="{escape(gmaps_url)}" class="visit-cta"'
             f' target="_blank" rel="noopener noreferrer"'
+            f' data-geo-label="{_escape_attr_value(_geo_label)}"'
             f' onclick="trackEvent(\'click_google_maps\', {gmaps_onclick_hero})">'
             f'<span class="visit-cta-icon">{_icon("icon-link-google-map", "visit-cta-map-icon")}</span>'
             f'<span class="visit-cta-body">'
-            f'<span class="visit-cta-main">Google Mapsで行き方を見る</span>'
-            f'<span class="visit-cta-sub">現地への訪問ルートを確認する</span>'
+            f'<span class="visit-cta-main">経路案内</span>'
+            f'<span class="visit-cta-sub">Googleマップで場所と道順を確認する</span>'
             f'</span></a>'
         )
+
+
+    # 経路案内（詳細ページ利用者の14%）をヒーローの主役にし、写真投稿（0.7%）はその下の1行にする
+    photo_link_html = (
+        ""
+        if is_preinstall
+        else (
+            f'<a class="hero-photo-link" href="{photo_upload_url}" target="_blank" rel="noopener noreferrer" onclick="trackEvent(\'{_photo_event}\', {_photo_cta_onclick})">{_icon("icon-link-photo", "hero-photo-link-icon")}<span>{escape(_photo_label)}</span><small>写真館で受付・GPS付き写真</small></a>'
+        )
+    )
+    hero_actions_html = (
+        f'<div class="hero-actions">{visit_cta_html}{photo_link_html}</div>'
+        if visit_cta_html or photo_link_html else ""
+    )
 
     # HERO card HTML
     hero_card_html = f"""
@@ -1307,7 +1413,6 @@ def generate_html(
   {hero_photo_html}
   <div class="hero-body">
     <nav class="hero-region" aria-label="パンくず">{region_html}</nav>
-    {region_en_html}
     <h1 class="hero-title">{escape(h1)}</h1>
     {pokemon_tags_html}
     {stats_html}
@@ -1402,9 +1507,9 @@ def generate_html(
   <div class="container">
     {hero_card_html}
 
-    {gallery_html}
+    {provisional_html}
 
-    {visit_cta_html}
+    {gallery_html}
 
     <!-- adsense:manhole -->
 
@@ -1528,16 +1633,20 @@ def page_photo(
     user_photo = photos.get(norm_id) or {}
 
     # Gallery thumbnails beyond the hero (local files downloaded by
-    # import_latest_manhole_photos.py as {id}_{photo_id[:8]}.jpeg)
+    # import_latest_manhole_photos.py as {id}_{photo_id[:8]}.webp。.jpeg は前の形式で、作り直すまでの間だけ使う)
     gallery_local: list[dict] = []
     rep_photo_id = user_photo.get("photo_id")
     for item in user_photo.get("gallery") or []:
         if not isinstance(item, dict) or item.get("photo_id") == rep_photo_id:
             continue
         slug = re.sub(r"[^0-9a-fA-F]", "", str(item.get("photo_id") or ""))[:8].lower()
-        if len(slug) == 8 and (image_dir / f"{manhole_id}_{slug}.jpeg").exists():
+        name = next(
+            (n for n in (f"{manhole_id}_{slug}.webp", f"{manhole_id}_{slug}.jpeg") if (image_dir / n).exists()),
+            None,
+        ) if len(slug) == 8 else None
+        if name:
             gallery_local.append({
-                "url": f"{BASE_URL}manhole/image/{manhole_id}_{slug}.jpeg",
+                "url": f"{BASE_URL}manhole/image/{name}",
                 "display_name": item.get("display_name"),
                 "shot_at": item.get("shot_at"),
                 "created_at": item.get("created_at"),

@@ -92,6 +92,7 @@
     .page-seo .gundam-pref ul { gap:0; margin:0 0 10px; }
     .page-seo .gundam-pref li { display:flex; flex-wrap:wrap; align-items:baseline; gap:2px 8px; padding:8px 2px; border:0; border-top:1px solid var(--top-border-light); border-radius:0; background:none; }
     .gundam-pref li span { flex:1 1 100%; color:var(--top-text-muted); font-size:12px; overflow-wrap:anywhere; }
+    .page-seo .gundam-pref li:target { background:#FFF3C4; border-radius:6px; scroll-margin-top:80px; }
     /* Desktop floating panel: keep clear of the fixed app bar; no hero card on this page */
     @media (min-width: 760px) {
       .pokefuta-map-page #controls { top:72px; max-height:calc(100dvh - 104px); }
@@ -826,10 +827,12 @@
       return `event_category:'popup_navigation',manhole_id:'${escapeJs(d.id)}',prefecture:'${escapeJs(d.prefecture)}'`;
     }
 
-    function buildMapsAction(d, eventParams, label = 'Google Mapsで行く'){
+    // geoLabel: Android では assets/geo-link.js がこの名前で geo: に差し替え、Google マップのピンに出す
+    function buildMapsAction(d, eventParams, label = '経路案内', geoLabel = ''){
       if (!(Number.isFinite(Number(d.lat)) && Number.isFinite(Number(d.lng)))) return '';
-      const mapsUrl = `https://www.google.com/maps?q=${encodeURIComponent(`${d.lat},${d.lng}`)}`;
-      return `<a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" class="travel-popup-action travel-popup-action--maps"
+      const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${d.lat},${d.lng}`)}`;
+      const geoAttr = geoLabel ? ` data-geo-label="${esc(geoLabel)}"` : '';
+      return `<a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" class="travel-popup-action travel-popup-action--maps"${geoAttr}
         onclick="if(window.trackEvent){window.trackEvent('popup_click_google_maps',{surface:'gmanhole_map_popup',${eventParams}});}">${esc(label)}</a>`;
     }
 
@@ -869,7 +872,7 @@
             ${badgeHtml}
             ${chipsHtml ? `<div class="travel-popup-pokemon-list" aria-label="${esc(chipsLabel || '')}">${chipsHtml}</div>` : ''}
             <div class="popup-actions travel-popup-actions">
-              ${buildMapsAction(d, eventParams, mapsLabel)}
+              ${buildMapsAction(d, eventParams, mapsLabel, [title, building].filter(Boolean).join(' '))}
               ${buildDetailAction(detailUrl, detailLabel, eventParams)}
             </div>
           </div>
@@ -936,7 +939,7 @@
         title: (d.character && d.character !== d.work ? d.character : d.title) || d.character || 'キャラクターマンホール',
         building: d.landmark || d.address || '',
         badgeHtml: (d.work ? `<div class="travel-popup-badges"><span class="travel-popup-badge">${esc(d.work)}</span></div>` : '') + approxNote,
-        mapsLabel: approximate ? 'Google Mapsで付近へ' : undefined,
+        mapsLabel: approximate ? '付近まで経路案内' : undefined,
         chipsHtml: '',
         chipsLabel: '',
         photoUrl: '',
@@ -1261,6 +1264,22 @@
     initLocationSearch();
     bindNearbyList();
     loadDatasets();
+  </script>
+  <script>
+    // #gundam-<id>（写真館・キャラクターマンホール全国一覧から1基を指して来る）なら、
+    // 閉じている都道府県の <details> を開いてその行までスクロールする
+    (() => {
+      const openTarget = () => {
+        const m = /^#(gundam-[A-Za-z0-9_-]+)$/.exec(location.hash);
+        const el = m && document.getElementById(m[1]);
+        if (!el) return;
+        const details = el.closest('details');
+        if (details) details.open = true;
+        el.scrollIntoView({ block: 'center' });
+      };
+      window.addEventListener('hashchange', openTarget);
+      openTarget();
+    })();
   </script>
 </body>
 </html>

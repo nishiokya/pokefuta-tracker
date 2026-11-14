@@ -480,10 +480,16 @@ REGIONAL_POKEMON_SLUGS: list[str] = [
     "vulpix", "vulpix-alola", "slowpoke", "lapras", "geodude", "chansey",
 ]
 
+# 「人気・代表ポケモン」に並べる順。知られているポケモンを先に、蓋の絵で主役になれる代表がある順
+# （コイキングは代表の蓋でほかのポケモンと並ぶので後ろ）。トップは先頭5匹だけ出すので、
+# 2枚しかないイーブイはヤドンと入れ替えて6番目にした（2026-11-06）。
 FEATURED_POKEMON_SLUGS: list[str] = [
-    "pikachu", "eevee", "snorlax", "lapras",
-    "vulpix", "magikarp", "slowpoke", "meowth",
+    "pikachu", "slowpoke", "lapras", "vulpix",
+    "dragonite", "eevee", "meowth", "magikarp",
 ]
+# 1枚しか無いポケモンは「人気・代表」に出さない（カビゴンが3番目に並んでいた）。
+# イーブイは2枚だが最初のポケふたなので残る
+FEATURED_MIN_COUNT = 2
 
 TYPE_ORDER_JA: list[str] = [
     "ノーマル", "ほのお", "みず", "でんき", "くさ", "こおり",
@@ -963,7 +969,10 @@ def generate_html(
         )
     ranking_html = "\n".join(ranking_items)
 
-    featured_cards = [cards_by_slug[slug] for slug in FEATURED_POKEMON_SLUGS if slug in cards_by_slug]
+    featured_cards = [
+        cards_by_slug[slug] for slug in FEATURED_POKEMON_SLUGS
+        if slug in cards_by_slug and cards_by_slug[slug]["count"] >= FEATURED_MIN_COUNT
+    ]
     featured_html = "".join(
         card_html(card, "featured-card", track_name="pokemon_index_featured_click")
         for card in featured_cards

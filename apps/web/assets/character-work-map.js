@@ -31,8 +31,8 @@
       const address = document.createElement('p');
       address.textContent = point.address;
       const link = document.createElement('a');
-      link.href = '#' + point.anchor;
-      link.textContent = '写真・設置場所の案内を見る';
+      link.href = point.href || ('#' + point.anchor);
+      link.textContent = point.href ? '全国地図で設置場所を見る' : '写真・設置場所の案内を見る';
       popup.append(name, address, link);
       const marker = L.marker([point.lat, point.lng], { title: point.name, alt: point.alt || point.name })
         .bindPopup(popup).addTo(map);
@@ -45,14 +45,42 @@
         photo.loading = 'lazy';
         photo.width = 44;
         photo.height = 44;
-        photo.style.cssText = 'width:44px;height:44px;object-fit:cover;border-radius:50%;border:2px solid white;box-shadow:0 2px 6px #0005;box-sizing:border-box';
+        photo.className = 'cw-map-photo-marker';
         photo.onerror = () => marker.setIcon(fallback);
         photo.src = point.photo_url;
         marker.setIcon(L.divIcon({ className: '', html: photo, iconSize: [44, 44], iconAnchor: [22, 22], popupAnchor: [0, -22] }));
       }
-      return marker;
+      return { marker, point };
     });
-    map.fitBounds(L.featureGroup(markers).getBounds(), { padding: [30, 30], maxZoom: 14 });
+    const regionFilter = document.getElementById('cw-map-region');
+    const photoFilter = document.getElementById('cw-map-photos');
+    const count = document.getElementById('cw-map-count');
+    const initialBounds = L.featureGroup(markers.map(item => item.marker)).getBounds();
+    if (regionFilter) {
+      [...new Set(points.map(point => point.region).filter(Boolean))].forEach(region => {
+        const option = document.createElement('option');
+        option.value = region;
+        option.textContent = region;
+        regionFilter.appendChild(option);
+      });
+    }
+    function applyFilters() {
+      const region = regionFilter?.value || '';
+      const photos = photoFilter?.value || 'all';
+      const visible = [];
+      for (const { marker, point } of markers) {
+        const matches = (!region || point.region === region)
+          && (photos === 'all' || (photos === 'with' ? Boolean(point.photo_url) : !point.photo_url));
+        if (matches) { marker.addTo(map); visible.push(marker); }
+        else marker.remove();
+      }
+      if (count) count.textContent = visible.length + ' / ' + points.length + '基を表示';
+      map.fitBounds(visible.length ? L.featureGroup(visible).getBounds() : initialBounds,
+        { padding: [30, 30], maxZoom: 14 });
+    }
+    regionFilter?.addEventListener('change', applyFilters);
+    photoFilter?.addEventListener('change', applyFilters);
+    applyFilters();
     status.textContent = points.length + '枚の設置場所を表示しています。ピンを選ぶと詳しい案内が開きます。';
   }
 

@@ -448,8 +448,9 @@ def _map_script(page: Page, points: list[dict]) -> str:
           '<a href="' + {_json(page.prefix() + "manholes/")} + encodeURIComponent(point.id) + '/" ' +
           'data-track="prefecture_manhole_click" data-destination="' + escapeHtml(point.id) + '" ' +
           'data-content-id="' + escapeHtml(point.id) + '" data-surface="map_popup">' + escapeHtml(labels.details) + '</a>' +
-          '<a href="https://www.google.com/maps?q=' + point.lat + ',' + point.lng + '" target="_blank" ' +
-          'rel="noopener noreferrer" data-track="prefecture_google_maps_click" data-destination="google_maps" ' +
+          '<a href="https://www.google.com/maps/search/?api=1&query=' + point.lat + ',' + point.lng + '" target="_blank" ' +
+          'rel="noopener noreferrer" data-geo-label="' + escapeHtml(point.pokemons + ' · ' + point.place) + '" ' +
+          'data-track="prefecture_google_maps_click" data-destination="google_maps" ' +
           'data-content-id="' + escapeHtml(point.id) + '" data-surface="map_popup">' + escapeHtml(labels.directions) + '</a>' +
           '</div></div>';
         const state = point.is_preinstall ? labels.legendPreinstall : (point.photo_url ? labels.legendPhoto : labels.legendNoPhoto);
@@ -519,6 +520,7 @@ def _manhole_cards(page: Page, records: list[dict], photos: dict[str, dict], dis
         maps_url = google_maps_url(record)
         actions = (
             f'<div class="manhole-actions"><a href="{_attr(maps_url)}" target="_blank" rel="noopener noreferrer" '
+            f'data-geo-label="{_attr(page.pokemons(record) + " · " + place)}" '
             f'data-track="prefecture_google_maps_click" data-position="{position}" '
             f'data-destination="google_maps" data-content-id="{_attr(mid)}" '
             f'data-surface="manhole_actions">{escape(page.t("card_directions"))}</a></div>'
@@ -804,9 +806,10 @@ def build_page(
 
 
 def build_index_page(page: Page, records_by_pref: dict[str, list[dict]]) -> str:
-    # 「installed」と書くので設置予定（installed: false）は数えない
+    # 「installed」と書くので設置予定（installed: false）は数えない。全国の数字は公式の枚数なので仮番号の蓋も数えない
     installed = {
-        pref: [r for r in items if r.get("installed") is not False] for pref, items in records_by_pref.items()
+        pref: [r for r in items if r.get("installed") is not False and not r.get("provisional")]
+        for pref, items in records_by_pref.items()
     }
     total = sum(len(v) for v in installed.values())
     prefs = sum(1 for v in installed.values() if v)

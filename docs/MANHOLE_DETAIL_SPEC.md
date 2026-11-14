@@ -15,7 +15,7 @@ data.pokefuta.com（tracker）と pokefuta.com のマンホール詳細ページ
 |---|---|---|---|---|
 | 1 | 戻る導線 | 全国マップ／一覧へ戻る | 共通 | 共通 |
 | 2 | ヒーロー | 代表写真＋撮影者クレジット、タイトル(h1)、バッジ（レア・初期等）、タグ、統計チップ（県内枚数・30km圏内件数） | 共通 | 「あなたの写真」があればそちらを優先表示＋写真図鑑ステータス |
-| 3 | みんなの写真 | 公開写真ギャラリー（代表含め最大5枚）。全量は pokefuta.com へのリンクで誘導 | 共通（**新設**） | 自分の写真バッジ付き、「別の構図を追加する」CTA |
+| 3 | みんなの写真 | 公開写真ギャラリー（代表含め最大13枚。2026-11-05 に5枚から増やした）。全量は pokefuta.com へのリンクで誘導（出しきれない蓋は「写真館で全 N 枚を見る」） | 共通（**新設**） | 自分の写真バッジ付き、「別の構図を追加する」CTA |
 | 4 | アクション | 「写真を投稿」（→ pokefuta.com、未ログインはログインCTA文言）／「Google Mapsで行き方を見る」 | 共通 | 投稿フォームへ直行 |
 | 5 | 設置場所 | 都道府県・市区町村・施設・住所 | 共通 | 共通 |
 | 6 | 近くのデザインマンホール | 20km以内のガンダム蓋・キャラクターマンホール・写真館投稿（最大5件・距離付き）。写真館に投稿がある蓋は `pokefuta.com/design-manholes/{id}` へ直リンク＋写真、無い蓋は一覧へフォールバック＋「📷 写真募集中」 | 共通（tracker実装済み） | pokefuta.com は今後 |
@@ -47,7 +47,7 @@ data.pokefuta.com（tracker）と pokefuta.com のマンホール詳細ページ
 ### エクスポート拡張（tracker repo: `apps/scraper/export_latest_manhole_photos.py`）
 
 - `photos[manhole_id]` の既存フィールドは**そのまま維持**（後方互換）。代表写真は `dataset/manhole_featured_photos.json` の手動指定を優先し、指定がない・削除済み・非公開の場合は**スコア順で先頭**の公開写真へフォールバックする（2026-10-04 から。それまでは最新）。
-- 各エントリに `representative_source`（`curated` / `score`）と `gallery` 配列を追加。ギャラリーは代表を先頭に置き、残りを**スコア順**で**最大5枚**。
+- 各エントリに `representative_source`（`curated` / `score`）と `gallery` 配列を追加。ギャラリーは代表を先頭に置き、残りを**スコア順**で**最大13枚**（`DEFAULT_GALLERY_LIMIT`。公開写真は1蓋あたり中央値11枚、2026-11-05）。あわせて `public_photo_count`（公開・風景でない写真の本当の枚数。ギャラリーの上限で切らない）を書く。
 - **スコア順**（`rank_photos` / `photo_rank_key`）: 採点済みの候補 → 未採点 → 採点で候補外、の段。採点済みの候補の中では蓋が真ん中で正方形に収まる写真（`ai_tags.scene = centered_clean` かつ `ai_tags.lid_fits`）を先、次に `photo.quality_score` の高い順、最後に新しい順。スコアと AI タグは k11 の manhole-score が毎朝 05:15 に書く（このジョブは 05:30）。蓋の採点済みの候補すべてに `ai_tags.rep_score`（代表くらべから学習した代表写真の点。quality_score/0.10.0 から）があるときは、「正方形に収まる（`lid_fits`）→ `rep_score` の高い順」で並べる（`rank_photos`）
 - 代表・`gallery` の各エントリに `crop`（`ai_tags.crop`。正方形の位置 [x0, y0, x1, y1]、0〜1、無ければ null）。取り込みがこの位置で切る
 
@@ -76,8 +76,8 @@ data.pokefuta.com（tracker）と pokefuta.com のマンホール詳細ページ
 
 - 代表: 現行どおり `dataset/manhole/image/{id}_latest.jpeg`。
 - 代表のタイル用: `dataset/manhole/image/{id}_lid.jpeg`（360px）。エントリの `lid`（`ai_tags.lid`、蓋の枠）に合わせて拡大し、正方形を蓋でいっぱいにする（蓋の長い辺 × 1.04、最大 3 倍、はみ出しは地の色）。蓋の枠が無ければ作らず、古いものは消す。都道府県ページ・タグページの小さいタイルはこれを使い、無ければ `_latest`（`apps/scraper/manhole_tile_image.py`）
-- ギャラリー: `dataset/manhole/image/{id}_{photo_idの先頭8桁(hex)}.jpeg`。代表と重複する photo_id はスキップ。既存ファイルは再ダウンロードしない（冪等）。切り抜きの決め方を変えたときは、手動実行で `refresh_gallery` を選ぶと既存のギャラリー画像も切り直す。
-- **リポジトリ肥大対策**: ギャラリー画像も代表と同じスクエア720px・JPEG品質82に縮小して保存。正方形はエントリの `crop` があればその位置（蓋の枠に寄せた位置）、無ければ真ん中。エクスポートから外れた photo_id のファイルは自動削除（`--limit` 指定時は削除しない）。
+- ギャラリー: `dataset/manhole/image/{id}_{photo_idの先頭8桁(hex)}.webp`（360px 正方形、WebP 品質78、1枚40KB前後。2026-11-05 までは 720px の `.jpeg` で、残っているものは取り直さずに作り直して消す）。代表と重複する photo_id はスキップ。既存ファイルは再ダウンロードしない（冪等）。切り抜きの決め方を変えたときは、手動実行で `refresh_gallery` を選ぶと既存のギャラリー画像も切り直す。
+- **リポジトリ肥大対策**: ギャラリーはサムネイルでしか出さない（拡大表示なし）ので 360px の WebP で保存（720px JPEG の 1/4）。正方形はエントリの `crop` があればその位置（蓋の枠に寄せた位置）、無ければ真ん中。エクスポートから外れた photo_id のファイルは自動削除（`--limit` 指定時は削除しない）。
 
 ### ページ生成（tracker repo: `generate_manhole_pages.py`）
 

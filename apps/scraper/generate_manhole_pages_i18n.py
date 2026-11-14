@@ -71,14 +71,15 @@ TEXT: dict[str, dict[str, str]] = {
         "preinstall": "Not installed yet",
         "preinstall_sub": "Installation is planned.",
         "badge_preinstall": "🚧 Coming soon",
+        "badge_provisional": "Not yet on the official site",
         "badge_new": "NEW · installed {year}",
         "badge_pref": "{n} in {pref}",
         "badge_city": "{n} in {place}",
         "badge_same_pokemon": "{n} with the same Pokémon",
         "badge_nearby": "{n} within 30 km",
         "gallery_heading": "Fan photos",
-        "directions_main": "Get directions in Google Maps",
-        "directions_sub": "Plan your route to this Poké Lid",
+        "directions_main": "Directions",
+        "directions_sub": "Open it in Google Maps and get directions",
         "location_heading": "Location",
         "location_pref": "Prefecture",
         "location_city": "Municipality",
@@ -128,14 +129,15 @@ TEXT: dict[str, dict[str, str]] = {
         "preinstall": "尚未設置",
         "preinstall_sub": "預定設置。",
         "badge_preinstall": "🚧 即將設置",
+        "badge_provisional": "官方網站尚未刊登",
         "badge_new": "NEW・{year}年設置",
         "badge_pref": "{pref}共{n}個",
         "badge_city": "{place}共{n}個",
         "badge_same_pokemon": "相同寶可夢{n}個",
         "badge_nearby": "30公里內{n}個",
         "gallery_heading": "粉絲照片",
-        "directions_main": "在 Google 地圖查看交通方式",
-        "directions_sub": "確認前往這個寶可夢人孔蓋的路線",
+        "directions_main": "路線導航",
+        "directions_sub": "在 Google 地圖確認位置與路線",
         "location_heading": "設置地點",
         "location_pref": "都道府縣",
         "location_city": "市町村",
@@ -332,12 +334,21 @@ def build_page(
         if poster:
             # 投稿者の表示名は本人が付けたもので訳さない（ブラウザ翻訳にもかけない）
             name_html = f'<bdi translate="no">{escape(poster)}</bdi>'
-            credit_parts.append(f'📷 {escape(page.t("photo_by", name="{name}")).format(name=name_html)}')
+            credit_parts.append(
+                ja.avatar_html(photo.get("public_user_id"))
+                + escape(page.t("photo_by", name="{name}")).format(name=name_html)
+            )
+            # 称号は名前の後ろ（日本語ページと同じ。名前だけを省略させる）
+            tier = ja.tier_badge_html(photo.get("public_user_id"))
+            if tier:
+                credit_parts.append(tier)
         shot = format_photo_date(photo.get("shot_at") or photo.get("created_at"), page.lang, with_year=True)
         if shot:
             credit_parts.append(escape(shot))
         credit_html = (
-            "<div class='photo-credit'>" + "".join(f"<span>{p}</span>" for p in credit_parts) + "</div>"
+            "<div class='photo-credit'>"
+            + "".join(p if p.startswith("<span class='poster-tier") else f"<span>{p}</span>" for p in credit_parts)
+            + "</div>"
             if credit_parts else ""
         )
         hero_photo_html = (
@@ -369,6 +380,8 @@ def build_page(
     badges = []
     if is_preinstall:
         badges.append(f"<span class='hero-badge hero-badge-pre'>{escape(page.t('badge_preinstall'))}</span>")
+    if manhole.get("provisional"):
+        badges.append(f"<span class='hero-badge hero-badge-provisional'>{escape(page.t('badge_provisional'))}</span>")
     try:
         added_year = datetime.date.fromisoformat((manhole.get("added_at") or "")[:10]).year
         if added_year >= datetime.date.today().year:
@@ -405,13 +418,17 @@ def build_page(
         for g in gallery_items:
             name = format_display_name(g.get("display_name"))
             date = format_photo_date(g.get("shot_at") or g.get("created_at"), page.lang)
-            label = " · ".join(
-                part for part in (f'<bdi translate="no">{escape(name)}</bdi>' if name else "", escape(date)) if part
-            )
-            credit = f"<span class='gallery-credit'>📷 {label}</span>" if label else ""
+            who = (
+                ja.avatar_html(g.get("public_user_id"))
+                + f'<bdi translate="no">{escape(name)}</bdi>'
+                + ja.tier_badge_html(g.get("public_user_id"), icon_only=True)
+            ) if name else ""
+            label = " · ".join(part for part in (who, escape(date)) if part)
+            credit = f"<span class='gallery-credit'>{label}</span>" if label else ""
             thumbs.append(
                 "<figure class='gallery-item'>"
-                f'<img src="{_attr(g["url"])}" alt="{_attr(page.t("photo_alt", h1=h1))}" loading="lazy">'
+                f'<img src="{_attr(g["url"])}" alt="{_attr(page.t("photo_alt", h1=h1))}"'
+                f' width="{ja.GALLERY_THUMB_SIZE}" height="{ja.GALLERY_THUMB_SIZE}" loading="lazy" decoding="async">'
                 f"{credit}</figure>"
             )
         gallery_html = (
@@ -424,8 +441,8 @@ def build_page(
     if lat is not None and lng is not None:
         gmaps_params = {**base, "surface": "hero"}
         visit_html = (
-            f'<a href="https://www.google.com/maps?q={lat},{lng}" class="visit-cta" target="_blank"'
-            f' rel="noopener noreferrer"{_onclick("click_google_maps", gmaps_params)}>'
+            f'<a href="https://www.google.com/maps/search/?api=1&query={lat},{lng}" class="visit-cta" target="_blank"'
+            f' rel="noopener noreferrer" data-geo-label="{_attr(pokemon_text + " · " + place)}"{_onclick("click_google_maps", gmaps_params)}>'
             f'<span class="visit-cta-icon">{ja._icon("icon-link-google-map", "visit-cta-map-icon")}</span>'
             f'<span class="visit-cta-body"><span class="visit-cta-main">{escape(page.t("directions_main"))}</span>'
             f'<span class="visit-cta-sub">{escape(page.t("directions_sub"))}</span></span></a>'

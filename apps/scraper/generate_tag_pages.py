@@ -27,6 +27,7 @@ from xml.sax.saxutils import escape
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(Path(__file__).parent))
 from display_names import compose_display_name  # noqa: E402
+from manhole_records import geo_label  # noqa: E402
 from manhole_tile_image import tile_image_url  # noqa: E402
 from site_names import og_site_name  # noqa: E402
 
@@ -188,7 +189,7 @@ def _google_maps_url(record: dict) -> str:
     lng = record.get("lng")
     if not isinstance(lat, (int, float)) or not isinstance(lng, (int, float)):
         return ""
-    return f"https://www.google.com/maps?q={lat},{lng}"
+    return f"https://www.google.com/maps/search/?api=1&query={lat},{lng}"
 
 
 def _photo_asset_url(record: dict, photo: dict) -> str:
@@ -263,9 +264,10 @@ def _manhole_cards(records: list[dict], photos: dict[str, dict], tag: str) -> st
         maps_url = _google_maps_url(record)
         maps_html = (
             f'<a href="{_escape_attr(maps_url)}" target="_blank" rel="noopener noreferrer" '
+            f'data-geo-label="{_escape_attr(geo_label(record))}" '
             f'data-track="tag_google_maps_click" data-position="{position}" '
             f'data-destination="google_maps" data-content-id="{_escape_attr(mid)}" '
-            f'data-surface="manhole_actions">地図で開く</a>'
+            f'data-surface="manhole_actions">経路案内</a>'
             if maps_url else ""
         )
         upload_html = (
@@ -521,7 +523,7 @@ def build_page(
 
     <section aria-labelledby="list-heading">
       <h2 id="list-heading">{escape(meta["h1"])}一覧（{count}枚）</h2>
-      <p class="section-note">都道府県順に並べています。「地図で開く」は Google マップの経路検索へ、
+      <p class="section-note">都道府県順に並べています。「経路案内」は Google マップで場所を開きます（道順はそこから出せます）。
         「詳細」はポケふたの詳細ページへ移動します。</p>
       <div class="manhole-grid">{_manhole_cards(records, photos, tag)}</div>
     </section>

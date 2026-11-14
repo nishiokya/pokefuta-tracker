@@ -119,9 +119,20 @@ def guide_stop_name(record: dict) -> str:
     return manhole_name(record).removeprefix(f'{record.get("prefecture", "")}/')
 
 
+def geo_label(record: dict) -> str:
+    # Android の「経路案内」で Google マップのピンに出す名前（assets/geo-link.js が geo: に差し替える）
+    # 施設名の無い蓋は「宮城県/大衡村」なので区切りを空白に。同じ町に何枚もある蓋は
+    # 名前にポケモンが入っている（「小笠原村（フシギバナ）」）ので、そのときは重ねない
+    name = manhole_name(record).replace("/", " ")
+    pokemons = clean_pokemons(record)
+    pokemon_text = "" if any(p in name for p in pokemons) else "・".join(pokemons)
+    return " ".join(part for part in ("ポケふた", pokemon_text, name) if part)
+
+
 def google_maps_url(record: dict) -> str:
     lat = record.get("lat")
     lng = record.get("lng")
     if not isinstance(lat, (int, float)) or not isinstance(lng, (int, float)):
         return ""
-    return f"https://www.google.com/maps?q={lat},{lng}"
+    # 文言は「経路案内」だが、開くのは場所の地図。道順は Google マップ側で出してもらう
+    return f"https://www.google.com/maps/search/?api=1&query={lat},{lng}"

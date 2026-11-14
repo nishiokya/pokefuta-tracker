@@ -288,8 +288,8 @@ def _route_section(municipality: Municipality, durations: dict | None = None) ->
     route_link = ""
     for position, (first, last) in enumerate(segments, start=1):
         label = (
-            "この順番でGoogleマップを開く" if len(segments) == 1
-            else f"{first + 1}〜{last + 1}番目をGoogleマップで開く"
+            "この順番で経路案内" if len(segments) == 1
+            else f"{first + 1}〜{last + 1}番目を経路案内"
         )
         route_link += (
             f'<a class="inline-link" href="{_escape_attr(_google_route_url(route[first:last + 1]))}" '
@@ -865,8 +865,9 @@ def build_ranking_page(
             track_destination = m.prefecture_slug
         note_html = f"<small>{escape(note)}</small>" if note else ""
         # 全部を1日で回った人の中央値（「平均的な人」）。外れ値に引っ張られる平均は使わない
+        # 一部の地点の時間（measured_label、宇治の川沿いなど）は「全部」の時間ではないので出さない
         entry = find_entry(m.records, durations or {})
-        if entry and entry.get("median_minutes") is not None:
+        if entry and entry.get("median_minutes") is not None and not entry.get("measured_label"):
             note_html += (
                 f'<small class="ranking-time">全部のポケふたを見るのにかかった時間は、'
                 f'平均的な人で約{escape(format_minutes(entry["median_minutes"]))}です</small>'

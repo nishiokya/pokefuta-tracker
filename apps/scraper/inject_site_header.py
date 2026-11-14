@@ -24,7 +24,7 @@ from pathlib import Path
 
 
 # site-header.css を変えたら上げる。再訪者のブラウザに古いクロム・本文幅が残らないように
-SITE_HEADER_CSS_VERSION = "20261019a"
+SITE_HEADER_CSS_VERSION = "20261107b"
 STYLESHEET_TEMPLATE = (
     '<link rel="stylesheet" href="{asset_base}assets/site-header.css?v=' + SITE_HEADER_CSS_VERSION + '">'
 )
@@ -40,6 +40,9 @@ FONT_LINKS = (
 )
 SESSION_BADGE_SCRIPT_TEMPLATE = '<script src="{asset_base}assets/session-badge.js" defer></script>'
 SITE_HEADER_ANALYTICS_SCRIPT_TEMPLATE = '<script src="{asset_base}assets/site-header-analytics.js" defer></script>'
+# Android の「経路案内」を geo: に差し替えて、Google マップのピンに蓋の名前を出す（data-geo-label のリンクだけ）
+GEO_LINK_SCRIPT_TEMPLATE = '<script src="{asset_base}assets/geo-link.js" defer></script>'
+GEO_LINK_SCRIPT_RE = re.compile(r'<script\b[^>]*\bsrc="[^"]*assets/geo-link\.js[^"]*"', re.IGNORECASE)
 
 # pokefuta.com への導線には必ず `from=data` を付ける（AGENTS.md）。
 # 同一GA4プロパティ内の内部UTMは使わず、着地側の source_app=tracker /
@@ -238,7 +241,7 @@ HEADER_TEMPLATE = """<header class="site-header">
       <a class="site-auth__signup" data-login-link href="{signup_url}">{signup}</a>
     </div>
     <a class="site-auth__user" data-auth-user hidden href="{profile_url}" title="{profile}" aria-label="{profile}">
-      <span class="site-auth__avatar" aria-hidden="true">👤</span><span class="site-auth__name" data-auth-name></span>
+      <span class="site-auth__avatar" data-auth-avatar aria-hidden="true">👤</span><span class="site-auth__name" data-auth-name></span>
     </a>
   </div>
 </header>"""
@@ -370,6 +373,9 @@ def inject(
         scripts.append(SESSION_BADGE_SCRIPT_TEMPLATE.format(asset_base=asset_base))
     if "site-header-analytics.js" not in html:
         scripts.append(SITE_HEADER_ANALYTICS_SCRIPT_TEMPLATE.format(asset_base=asset_base))
+    # ページのコメントにもファイル名が出てくる（「assets/geo-link.js が geo: に差し替える」）ので、読み込みの script タグだけで判定する
+    if not GEO_LINK_SCRIPT_RE.search(html):
+        scripts.append(GEO_LINK_SCRIPT_TEMPLATE.format(asset_base=asset_base))
 
     body_start = html.lower().find("<body")
     body_end = html.find(">", body_start)

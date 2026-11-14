@@ -8,6 +8,8 @@ sys.path.insert(0, str(Path(__file__).parent))
 from generate_pokemon_index_page import _build_latest_photo_cards
 from generate_pokemon_index_page import generate_html
 from generate_pokemon_index_page import LP_INDEX_STRINGS
+from generate_pokemon_index_page import FEATURED_MIN_COUNT
+from generate_pokemon_index_page import FEATURED_POKEMON_SLUGS as MODULE_FEATURED_SLUGS
 from generate_pokemon_pages import LANG_CONFIGS
 
 
@@ -132,6 +134,20 @@ class SectionOrderAndCollapseTest(unittest.TestCase):
                         "city": "宇治市",
                         "pokemons": ["ピカチュウ"],
                     }
+                ]
+                * 2,
+            ),
+            # 「人気・代表」の並びにいるが1枚だけ（枚数で外れる）
+            "meowth": (
+                {"names": {"ja": "ニャース", "en": "Meowth"}, "generation": 1},
+                [
+                    {
+                        "id": "3",
+                        "title": "新潟県/新潟市",
+                        "prefecture": "新潟県",
+                        "city": "新潟市",
+                        "pokemons": ["ニャース"],
+                    }
                 ],
             ),
             "eevee": (
@@ -192,6 +208,14 @@ class SectionOrderAndCollapseTest(unittest.TestCase):
         self.assertIn('<summary>すべて表示</summary>', list_section)
         self.assertNotIn('class="poke-card"', list_section)
         self.assertNotIn('<img', list_section)
+
+    def test_featured_skips_pokemon_on_only_one_lid(self) -> None:
+        """並びにいても1枚しか無いポケモンは「人気・代表」に出さない。2枚（ちょうど下限）は出す。"""
+        featured = self.html[self.html.index('id="featured-pokemon"'):self.html.index('id="pokemon-ranking"')]
+        self.assertIn("meowth", MODULE_FEATURED_SLUGS)
+        self.assertEqual(2, FEATURED_MIN_COUNT)
+        self.assertIn('data-destination="pikachu"', featured)  # 2枚
+        self.assertNotIn('data-destination="meowth"', featured)  # 1枚
 
     def test_card_links_carry_ga4_click_tracking(self) -> None:
         html = self.html

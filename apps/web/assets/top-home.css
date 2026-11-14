@@ -119,6 +119,9 @@
   color: #fff;
 }
 
+/* 現地でスマホから探す人向け。横いっぱいに出し、PC では出さない（PC に位置情報の導線は要らない） */
+.home-quick__link--near { grid-column: 1 / -1; }
+
 .home-stats {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -152,24 +155,6 @@
   color: var(--top-text-faint);
 }
 
-/* 写真モザイク：3列で先頭だけ2×2。6枚でちょうど埋まる */
-.home-mosaic { margin: 0; }
-
-.home-mosaic__grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 6px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.home-mosaic__item:first-child {
-  grid-column: span 2;
-  grid-row: span 2;
-}
-
-.home-mosaic__item a,
 .home-gallery__item a {
   position: relative;
   display: block;
@@ -178,7 +163,6 @@
   background: var(--top-border-light);
 }
 
-.home-mosaic__item img,
 .home-gallery__item img,
 .home-poke img {
   display: block;
@@ -187,44 +171,6 @@
   aspect-ratio: 1;
   object-fit: cover;
 }
-
-.home-mosaic__cap {
-  position: absolute;
-  inset: auto 0 0;
-  padding: 18px 8px 6px;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.62), transparent);
-  color: #fff;
-  font-size: 10.5px;
-  line-height: 1.35;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.home-mosaic__cap b {
-  display: block;
-  font-size: 12px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.home-mosaic__item:first-child .home-mosaic__cap { padding: 32px 12px 10px; font-size: 12px; }
-.home-mosaic__item:first-child .home-mosaic__cap b { font-size: 16px; }
-
-.home-mosaic__note {
-  margin-top: 6px;
-  font-size: 11px;
-  color: var(--top-text-faint);
-  text-align: right;
-}
-
-/* 小さいタイルは地名を省き、ポケモン名だけ残す */
-@media (max-width: 599px) {
-  .home-mosaic__item:not(:first-child) .home-mosaic__cap { font-size: 0; padding: 14px 6px 5px; }
-  .home-mosaic__item:not(:first-child) .home-mosaic__cap b { font-size: 11px; }
-}
-
-.home-hero--no-photos { grid-template-columns: minmax(0, 1fr); }
 
 /* 大地図はデスクトップだけ。スマホでは要素ごと出さない（Leaflet も読み込まれない） */
 .home-map { display: none; }
@@ -332,9 +278,8 @@
 /* 新作の特集（/features/）への帯。新作カードの上に置く */
 .home-feature {
   display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 4px 8px;
+  align-items: center;
+  gap: 12px;
   margin: 0 0 10px;
   padding: 12px 14px;
   background: var(--top-card-bg);
@@ -344,8 +289,48 @@
   color: var(--top-text);
 }
 
+.home-feature__text {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
+  min-width: 0;
+}
+/* 特集の蓋の写真（無い特集は文字だけ）。新作欄のカードと並ぶので小さい正方形にとどめる */
+.home-feature__img {
+  flex: none;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--top-border);
+}
 .home-feature b { font-size: 15px; }
 .home-feature b::after { content: " →"; color: var(--top-purple); }
+
+/* 設置が発表されたが写真が届いていない新作への投稿の呼びかけ（新作カードの下） */
+.home-wanted {
+  margin: 12px 0 0;
+  padding: 12px 14px;
+  background: var(--top-card-bg);
+  border: 1px solid var(--top-border);
+  border-left: 4px solid var(--top-purple);
+  border-radius: 12px;
+  color: var(--top-text);
+}
+.home-wanted b { display: block; margin-top: 6px; font-size: 15px; }
+.home-wanted p { margin: 4px 0 0; font-size: 13px; }
+.home-wanted__links a { margin-right: 12px; color: var(--top-purple); font-weight: 700; }
+.home-wanted__cta {
+  display: inline-flex;
+  margin-top: 10px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: var(--top-purple);
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+}
 
 .home-feature__kicker {
   padding: 1px 8px;
@@ -587,6 +572,24 @@
   font-weight: 700;
 }
 
+.home-pref__name { white-space: nowrap; }
+.home-pref__label {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.home-pref__new {
+  display: inline-block;
+  flex-shrink: 0;
+  padding: 2px 5px;
+  border-radius: 4px;
+  background: #fff0e5;
+  color: #a63c13;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1.3;
+}
 .home-pref__count {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 12px;
@@ -612,7 +615,8 @@
   .home-region__title { margin-bottom: 2px; font-size: 12.5px; color: var(--top-text-muted); }
   .home-pref { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 10px; }
   .home-pref a { min-height: 34px; font-size: 13px; }
-  .home-pref__count { font-size: 11px; }
+  .home-pref__label { gap: 2px 4px; padding: 4px 0; }
+  .home-pref__count { font-size: 11px; flex-shrink: 0; }
 }
 
 .home-pref-note {
@@ -686,9 +690,17 @@
   margin: 4px 0 2px;
 }
 
+/* 丸は34pxまで。スマホの2列カード（320〜360px）は5つ並ぶと入らないので、カードの幅に合わせて縮める */
+.home-trip .stop-thumbs img,
+.home-trip .stop-thumb-more {
+  flex: 0 1 34px;
+  min-width: 0;
+  aspect-ratio: 1;
+}
+
 .home-trip .stop-thumbs img {
   width: 34px;
-  height: 34px;
+  height: auto;
   border-radius: 50%;
   object-fit: cover;
   background: var(--top-border-light);
@@ -699,10 +711,9 @@
   align-items: center;
   justify-content: center;
   width: 34px;
-  height: 34px;
   border-radius: 50%;
   background: var(--top-purple-pale);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 800;
   color: var(--top-purple);
 }
@@ -761,7 +772,6 @@
   .home-poke a:hover,
   .home-event a:hover,
   .home-region:hover { border-color: var(--top-purple-light); }
-  .home-mosaic__item a:hover img,
   .home-gallery__item a:hover img { opacity: 0.9; }
   .home-quick__link:hover { filter: brightness(1.05); }
 }
@@ -792,7 +802,6 @@
     overflow: hidden;
     background: #E4ECEF;
   }
-  .home-mosaic { display: none; }
   .home-map { display: block; position: absolute; inset: 0; }
   /* z-index で重ね合わせの文脈を作り、Leaflet のペイン（z-index 400〜）を中に閉じ込める */
   .home-map__canvas { position: absolute; inset: 0; z-index: 0; background: #E4ECEF; }
@@ -807,7 +816,8 @@
     box-shadow: 0 8px 28px rgba(43, 43, 48, 0.12);
   }
   .home-quick { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .home-quick__link--map { display: none; }
+  .home-quick__link--map,
+  .home-quick__link--near { display: none; }
   .home-quick__link--desktop { display: flex; }
   .home-quick__link--wide { grid-column: 1 / -1; }
   .home-map__cta {
@@ -851,4 +861,38 @@
   .home-events { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .home-pokes { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; }
   .home-newrel { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+/* スマホの導入文右側に、実物のポケふたを見せる。 */
+.home-hero__portraits { display: none; }
+@media (max-width: 959px) {
+  .home-hero__portraits {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    float: right;
+    width: 116px;
+    gap: 10px;
+    margin: 2px 0 12px 14px;
+  }
+  .home-hero__portraits a {
+    display: block;
+    width: 100px;
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(43, 43, 48, 0.16);
+  }
+  .home-hero__portraits a:last-child { align-self: flex-start; }
+  .home-hero__portraits img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    border-radius: 50%;
+  }
+  .home-hero__copy .home-quick { clear: both; }
+}
+@media (max-width: 599px) {
+  .home-hero__copy:has(.home-hero__portraits) .home-h1 { font-size: 24px; }
+  .home-hero__portraits { width: 92px; margin-left: 12px; }
+  .home-hero__portraits a { width: 80px; }
 }

@@ -33,14 +33,14 @@ try:
     from apps.scraper import generate_top_page as ja
     from apps.scraper.photo_caption import JST, format_photo_date
     from apps.scraper.prefectures import PREFECTURE_ORDER, PREFECTURE_PAGE_LANGS, PREFECTURE_SLUGS
-    from apps.scraper.top_page_i18n_text import FORM_PREFIX, NAME_KEYS, TEXT, day_label, join_places, month_label
+    from apps.scraper.top_page_i18n_text import FORM_PREFIX, NAME_KEYS, TEXT, join_places, month_label
 except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
     import generate_top_page as ja
     from photo_caption import JST, format_photo_date
     from prefectures import PREFECTURE_ORDER, PREFECTURE_PAGE_LANGS, PREFECTURE_SLUGS
-    from top_page_i18n_text import FORM_PREFIX, NAME_KEYS, TEXT, day_label, join_places, month_label
+    from top_page_i18n_text import FORM_PREFIX, NAME_KEYS, TEXT, join_places, month_label
 
 ROOT = ja.ROOT
 DEFAULT_TARGET = ROOT / "apps" / "web" / "index.en.html"
@@ -123,7 +123,7 @@ SHELL_REPLACEMENTS = [
     (">Search by purpose</h2>", lambda loc: f'>{escape(loc.t("purpose_title"))}</h2>'),
     ('<h3 class="home-h3">By theme</h3>', lambda loc: f'<h3 class="home-h3">{escape(loc.t("purpose_theme"))}</h3>'),
     (">Explore on the map</a>", lambda loc: f'>{escape(loc.t("purpose_theme_more"))}</a>'),
-    ('<h3 class="home-h3">Most common Pokémon</h3>', lambda loc: f'<h3 class="home-h3">{escape(loc.t("purpose_pokemon"))}</h3>'),
+    ('<h3 class="home-h3">Popular Pokémon</h3>', lambda loc: f'<h3 class="home-h3">{escape(loc.t("purpose_pokemon"))}</h3>'),
 ]
 
 
@@ -151,12 +151,10 @@ def _alt(photo: ja.Photo, en: Locale) -> str:
     return en.t("alt_photo", where=where, names=names) if names else en.t("alt_photo_noname", where=where)
 
 
-def _img(photo: ja.Photo, en: English, *, eager: bool = False, priority: bool = False) -> str:
-    loading = 'loading="eager"' if eager else 'loading="lazy"'
-    fetch = ' fetchpriority="high"' if priority else ""
+def _img(photo: ja.Photo, en: English) -> str:
     return (
         f'<img src="{ROOT_PATH}{escape(photo.src)}" alt="{escape(_alt(photo, en))}" '
-        f'width="{ja.PHOTO_SIZE}" height="{ja.PHOTO_SIZE}" {loading} decoding="async"{fetch}>'
+        f'width="{ja.PHOTO_SIZE}" height="{ja.PHOTO_SIZE}" loading="lazy" decoding="async">'
     )
 
 
@@ -264,7 +262,6 @@ def render_head(data: ja.TopData, en: Locale, indent: str) -> str:
 
 
 def render_hero(data: ja.TopData, en: Locale) -> str:
-    photos = ja.select_hero_photos(data.photos)
     popular = [en.pokemon_by_slug.get(e.slug, e.name) for e in data.popular_pokemon[:3]]
     posts = data.stats.get("public_posts") if isinstance(data.stats.get("public_posts"), int) else None
     stats = [
@@ -278,7 +275,9 @@ def render_hero(data: ja.TopData, en: Locale) -> str:
         f'<div class="home-stat"><dt>{escape(label)}</dt><dd>{escape(num)}</dd></div>' for num, label in stats
     )
     quick = [
-        ("map", "map", "map.html", en.t("quick_map"), "home-quick__link--primary home-quick__link--map"),
+        # スマホだけ（日本語版と同じ）
+        ("nearby", "map_nearby", "map.html?near=me", en.t("quick_near"), "home-quick__link--primary home-quick__link--near"),
+        ("map", "map", "map.html", en.t("quick_map"), "home-quick__link--map"),
         ("prefecture", "home_pref_section", "#home-pref", en.t("quick_pref"), ""),
         ("pokemon", "pokemon_index", "pokemon/", en.t("quick_pokemon"), ""),
         # PC だけ。テーマを横いっぱいに出す
@@ -293,25 +292,6 @@ def render_hero(data: ja.TopData, en: Locale) -> str:
         en.t("lead_popular", names=escape(en.t("sep").join(popular)), npoke=f"{len(data.pokemon_counts):,}")
         if popular else en.t("lead_end")
     )
-    if photos:
-        items = "".join(
-            f'<li class="home-mosaic__item"><a href="{_photo_href(p)}" '
-            f'onclick="{ja._track("click_hero_photo", surface="top_hero_photo", manhole=p.manhole_id, position=i)}">'
-            f"{ja.mobile_only(_img(p, en, eager=True, priority=(i == 0)))}"
-            f'<span class="home-mosaic__cap"><b>{escape(_names(p, en) or en.t("lid"))}</b>{escape(en.pref(p.prefecture))}</span>'
-            "</a></li>"
-            for i, p in enumerate(photos)
-        )
-        mosaic = (
-            '<figure class="home-mosaic">'
-            f'<ul class="home-mosaic__grid">{items}</ul>'
-            f'<figcaption class="home-mosaic__note">{escape(en.t("mosaic_note", date=day_label(en.lang, data.today.month, data.today.day)))}</figcaption>'
-            "</figure>"
-        )
-        cls = "home-hero"
-    else:
-        mosaic = ""
-        cls = "home-hero home-hero--no-photos"
     map_html = ja.map_block(
         data,
         pins=ja.map_pins(
@@ -324,7 +304,7 @@ def render_hero(data: ja.TopData, en: Locale) -> str:
         cta_href="map.html",
     )
     return (
-        f'<section class="{cls}" id="home-hero" aria-labelledby="home-h1">'
+        '<section class="home-hero" id="home-hero" aria-labelledby="home-h1">'
         '<div class="home-hero__copy">'
         f'<p class="home-eyebrow">{escape(en.t("eyebrow"))}</p>'
         f'<h1 class="home-h1" id="home-h1">{escape(en.t("h1", total=f"{data.total:,}"))}</h1>'
@@ -333,7 +313,6 @@ def render_hero(data: ja.TopData, en: Locale) -> str:
         f'<dl class="home-stats">{stats_html}</dl>'
         "</div>"
         f"{map_html}"
-        f"{mosaic}"
         "</section>"
     )
 
@@ -413,7 +392,7 @@ def render_newrelease(data: ja.TopData, en: Locale) -> str:
 
 
 def render_photos(data: ja.TopData, en: Locale) -> str:
-    photos = ja.select_gallery_photos(data.photos, ja.select_hero_photos(data.photos))
+    photos = ja.select_gallery_photos(data.photos)
     upload = (
         f'<a class="home-cta" href="{ja.UPLOAD_URL}" '
         f'onclick="{ja._track("click_photo_post_cta", surface="top_photo_gallery")}">{escape(en.t("photos_cta"))}</a>'
@@ -492,7 +471,7 @@ def render_events(data: ja.TopData, en: Locale) -> str:
 
 
 def render_pref(data: ja.TopData, en: Locale) -> str:
-    counts = data.pref_counts
+    counts = data.listed_counts
     regions = []
     for name, prefs in ja.REGIONS:
         installed = [p for p in prefs if counts.get(p)]
@@ -542,7 +521,7 @@ def render_themes(data: ja.TopData, en: Locale) -> str:
 def render_pokemon(data: ja.TopData, en: Locale) -> str:
     cards = []
     used: set[str] = set()
-    for entry in data.popular_pokemon:
+    for entry in data.featured_pokemon:
         name = en.pokemon_by_slug.get(entry.slug, entry.name)
         photo = ja.pick_pokemon_photo(entry, data.photos, used)
         media = (
@@ -598,6 +577,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--source", type=Path, default=DEFAULT_TARGET,
                         help="雛形（省略時は apps/web/index.en.html。全言語で同じ雛形を使う）")
     parser.add_argument("--lang", choices=LANGS, default="en")
+    parser.add_argument("--provisional", type=Path, help="仮番号の蓋だけの NDJSON（県の一覧・地図ピンに数える）")
     args = parser.parse_args(argv)
 
     loc = Locale(args.lang)
@@ -606,7 +586,7 @@ def main(argv: list[str] | None = None) -> int:
     if missing:
         print(f"[top-page-en] markers missing in {args.source}: {', '.join(missing)}", file=sys.stderr)
         return 1
-    data = ja.load_data()
+    data = ja.load_data(provisional=args.provisional)
     args.target.parent.mkdir(parents=True, exist_ok=True)
     args.target.write_text(apply_blocks(html, data, loc), encoding="utf-8")
     print(f"[top-page-{args.lang}] wrote {args.target}: {data.total} manholes, {len(data.installed_prefectures)} prefectures")

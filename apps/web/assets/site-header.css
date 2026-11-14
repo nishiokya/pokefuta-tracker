@@ -368,9 +368,22 @@ body.has-site-header [id] {
   width: 26px;
   height: 26px;
   flex-shrink: 0;
+  overflow: hidden;
   border-radius: 50%;
   background: #dfe7f3;
   font-size: 13px;
+}
+
+/* 写真館で選んだアイコン（session-badge.js が入れる）。
+   写真は縦長（3:4 など）なので、枠と同じ正方形に決め打ちして中央で切り抜く。
+   grid の中では height: 100% が効かず、元の縦横比のまま縦長の楕円になっていた */
+.site-auth__avatar img {
+  display: block;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
 }
 
 .site-auth__name {
@@ -600,9 +613,28 @@ body.has-site-header.pokefuta-map-page .site-header { z-index: 1100; }
     max-height: calc(78vh - var(--chrome-bottomnav-height));
   }
 
-  /* 展開時は 88vh が正。上のルールのほうが詳細度が高いので個別に引き直す */
+  /* 展開時は 88vh が正。上のルールのほうが詳細度が高いので個別に引き直す。
+     vh ではなく dvh で測り、さらに「ヘッダーの下まで」で頭打ちにする。
+     iPhone の Chrome は vh がツールバーを隠したときの高さで、見えている範囲より大きい。
+     88vh のままだとシート上端のつまみが z-index 1100 のヘッダーの裏に潜り、
+     開いたシートを閉じられなくなる（Safari はツールバーが小さく、PC は vh＝実寸なので出ない） */
   body.has-site-header.pokefuta-map-page.sheet-expanded #controls {
     max-height: calc(88vh - var(--chrome-bottomnav-height));
+  }
+
+  /* dvh の宣言は @supports に入れる。var() を含む宣言は解決後に無効になると
+     直前の vh 宣言へ戻らず none になり、未対応ブラウザでシートの上限が消える */
+  @supports (height: 100dvh) {
+    body.has-site-header.pokefuta-map-page #controls {
+      max-height: calc(78dvh - var(--chrome-bottomnav-height));
+    }
+
+    body.has-site-header.pokefuta-map-page.sheet-expanded #controls {
+      max-height: min(
+        calc(88dvh - var(--chrome-bottomnav-height)),
+        calc(100dvh - var(--chrome-height) - var(--chrome-bottomnav-height) - env(safe-area-inset-bottom) - 8px)
+      );
+    }
   }
 }
 

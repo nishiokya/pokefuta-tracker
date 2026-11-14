@@ -11,6 +11,7 @@ import io
 import json
 import os
 import re
+import time
 from pathlib import Path
 from typing import Any, Iterable
 from urllib.parse import quote, urlparse, urlunparse
@@ -221,7 +222,38 @@ def gallery_photo_slug(photo_id: Any) -> str | None:
     return text[:8].lower() if len(text) >= 8 else None
 
 
-GALLERY_FILE_RE = re.compile(r"^(\d+)_([0-9a-f]{8})\.jpeg$")
+# ギャラリーは小さいサムネイルでしか出さない（拡大表示は無い）ので 360px の WebP。1枚 40KB 前後で、
+# 720px の JPEG（約 160KB）の 1/4。1蓋に12枚まで出すので、git に入れる量をこれで抑える
+GALLERY_SIZE = 360
+GALLERY_WEBP_QUALITY = 78
+# .jpeg は 2026-11 より前の形式。見つけたら取り直さずに .webp へ作り直し、掃除で消す
+GALLERY_FILE_RE = re.compile(r"^(\d+)_([0-9a-f]{8})\.(?:jpeg|webp)$")
+# ギャラリー画像ごとに、取り込んだときの storage_key の指紋を残す（画像と同じディレクトリ）。
+# 写真館で写真が差し替わる（k11 が横・逆さの写真を 90° 刻みで直して新しいキーにする、manhole-ai rotate_photos.py）と
+# photo_id はそのままキーだけ変わるので、ファイル名だけ見ていると古い向きの画像が残る
+GALLERY_SOURCES = "gallery_sources.json"
+
+
+def key_fingerprint(storage_key: str | None) -> str | None:
+    return hashlib.sha256(storage_key.encode()).hexdigest()[:16] if storage_key else None
+
+
+def gallery_needs_fetch(exists: bool, refresh: bool, known: str | None, current: str | None) -> bool:
+    """既にあるギャラリー画像を取り直すか。指紋が無い（この仕組みより前に取り込んだ）ものは今のキーで取り込んだとみなす"""
+    if not exists or refresh:
+        return True
+    return known is not None and current is not None and known != current
+
+
+def save_gallery_image(image: Image.Image, path: Path) -> None:
+    image.save(path, "WEBP", quality=GALLERY_WEBP_QUALITY, method=4)
+
+
+def convert_legacy_gallery(legacy_path: Path, gallery_path: Path) -> None:
+    """前の形式（720px 正方形 JPEG）から .webp を作り、JPEG を消す。もう正方形に切ってあるので縮めるだけ"""
+    with Image.open(legacy_path) as image:
+        save_gallery_image(crop_to_square(image, GALLERY_SIZE), gallery_path)
+    legacy_path.unlink()
 
 
 def validate_url(raw_url: str) -> str | None:
@@ -294,10 +326,28 @@ def lid_tile(image: Image.Image, lid: list[float], size: int = LID_TILE_SIZE) ->
     return tile.resize((size, size), Image.Resampling.LANCZOS)
 
 
+# R2 の原本は数千枚に1枚ほど読み込みが30秒を超える（2026-11-05、ギャラリーを13枚に増やした初回の取り込みで
+# 2,480 枚中 4 枚が Read timed out）。1枚の失敗で日次の取り込み全体が止まるので、間をあけて取り直す。
+# 本文の途中で止まることもあり、HTTPAdapter の Retry はヘッダーまでしか見ないので、本文を読み終えるまでを取り直す
+DOWNLOAD_ATTEMPTS = 4
+DOWNLOAD_BACKOFF = 2
+RETRY_STATUSES = frozenset({429, 500, 502, 503, 504})
+
+
 def download_image(session: requests.Session, url: str, timeout: int) -> Image.Image:
-    response = session.get(url, timeout=timeout)
-    response.raise_for_status()
-    return Image.open(io.BytesIO(response.content))
+    for attempt in range(1, DOWNLOAD_ATTEMPTS + 1):
+        try:
+            response = session.get(url, timeout=timeout)
+            response.raise_for_status()
+            return Image.open(io.BytesIO(response.content))
+        except requests.HTTPError as exc:
+            if exc.response.status_code not in RETRY_STATUSES or attempt == DOWNLOAD_ATTEMPTS:
+                raise
+        except (requests.ConnectionError, requests.Timeout, requests.exceptions.ChunkedEncodingError):
+            if attempt == DOWNLOAD_ATTEMPTS:
+                raise
+        time.sleep(DOWNLOAD_BACKOFF * 2 ** (attempt - 1))
+    raise AssertionError("unreachable")
 
 
 def main() -> int:
@@ -342,7 +392,10 @@ def main() -> int:
     failed = 0
     gallery_imported = 0
     gallery_kept = 0
+    gallery_converted = 0
     expected_gallery: set[str] = set()
+    sources_path = output_dir / GALLERY_SOURCES
+    sources: dict[str, str] = json.loads(sources_path.read_text(encoding="utf-8")) if sources_path.exists() else {}
 
     for record in iter_records(payload):
         manhole_id = sanitize_id(pick_first(record, ID_KEYS))
@@ -390,13 +443,31 @@ def main() -> int:
                     continue
                 # Register as expected before resolving the URL so an existing
                 # local file survives cleanup even when this run can't reach it.
-                gallery_path = output_dir / f"{manhole_id}_{slug}.jpeg"
+                gallery_path = output_dir / f"{manhole_id}_{slug}.webp"
                 expected_gallery.add(gallery_path.name)
-                if gallery_path.exists() and not args.refresh_gallery:
+                item_storage_key = get_storage_key(item)
+                fp = key_fingerprint(item_storage_key)
+                legacy_path = gallery_path.with_suffix(".jpeg")
+                if (not gallery_path.exists() and legacy_path.exists()
+                        and not gallery_needs_fetch(True, args.refresh_gallery, sources.get(legacy_path.name), fp)):
+                    try:
+                        convert_legacy_gallery(legacy_path, gallery_path)
+                    except Exception as exc:
+                        print(f"failed to convert {legacy_path.name}, fetching again: {exc}")
+                    else:
+                        if legacy_path.name in sources:
+                            sources[gallery_path.name] = sources.pop(legacy_path.name)
+                        gallery_converted += 1
+                if legacy_path.exists() and not gallery_path.exists():
+                    # 作り直せなかった（キーが変わった・壊れていた）。取り直しに失敗しても前の画像は残す
+                    expected_gallery.add(legacy_path.name)
+                if not gallery_needs_fetch(gallery_path.exists(), args.refresh_gallery,
+                                           sources.get(gallery_path.name), fp):
+                    if fp and gallery_path.name not in sources:
+                        sources[gallery_path.name] = fp
                     gallery_kept += 1
                     continue
 
-                item_storage_key = get_storage_key(item)
                 if args.presign_r2 and item_storage_key:
                     item_url = presign_r2_get_object(item_storage_key, args.presign_expires)
                 elif args.public_base_url and item_storage_key:
@@ -408,8 +479,12 @@ def main() -> int:
                     continue
                 try:
                     image = download_image(session, item_url, args.timeout)
-                    cropped = crop_to_square(image, args.size, crop_box(item))
-                    cropped.save(gallery_path, "JPEG", quality=args.quality, optimize=True, progressive=True)
+                    save_gallery_image(crop_to_square(image, GALLERY_SIZE, crop_box(item)), gallery_path)
+                    if legacy_path.exists():
+                        legacy_path.unlink()
+                        expected_gallery.discard(legacy_path.name)
+                    if fp:
+                        sources[gallery_path.name] = fp
                     gallery_imported += 1
                     print(f"imported gallery id={manhole_id} -> {gallery_path}")
                 except Exception as exc:
@@ -426,10 +501,14 @@ def main() -> int:
                 path.unlink()
                 removed += 1
                 print(f"removed stale gallery file {path.name}")
+        sources = {k: v for k, v in sources.items() if k in expected_gallery}
+    sources_path.write_text(json.dumps(dict(sorted(sources.items())), ensure_ascii=False, indent=0) + "\n",
+                            encoding="utf-8")
 
     print(
         f"summary imported={imported} skipped={skipped} failed={failed} "
-        f"gallery_imported={gallery_imported} gallery_kept={gallery_kept} gallery_removed={removed} "
+        f"gallery_imported={gallery_imported} gallery_kept={gallery_kept} gallery_converted={gallery_converted} "
+        f"gallery_removed={removed} "
         f"output_dir={output_dir}"
     )
     return 1 if failed else 0

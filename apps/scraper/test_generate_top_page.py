@@ -168,32 +168,52 @@ class GeneratedHtmlTest(unittest.TestCase):
         ld = re.search(r'<script type="application/ld\+json">(.*?)</script>', html, re.DOTALL).group(1)
         self.assertNotIn("</", ld)
 
-    def test_hero_shows_six_eager_photos_from_distinct_prefectures(self) -> None:
-        hero = _block(Fixture(self.tmp).html(), "hero")
-        imgs = re.findall(r"<img [^>]+>", hero)
-        self.assertEqual(module.HERO_PHOTO_LIMIT, len(imgs))
-        self.assertTrue(all('loading="eager"' in img for img in imgs))
-        self.assertEqual(1, hero.count('fetchpriority="high"'))
-        self.assertIn('fetchpriority="high"', imgs[0])
-        prefs = re.findall(r'<span class="home-mosaic__cap"><b>[^<]*</b>(\S+) ', hero)
-        self.assertEqual(len(prefs), len(set(prefs)))
+    def test_hero_has_two_mobile_manhole_photos(self) -> None:
+        """スマホ導入部にピカチュウとヤドンを出す（PC は大地図）。"""
+        records = _records()
+        records[0]["id"], records[1]["id"] = "23", "28"
+        fixture = Fixture(self.tmp, records=records)
+        for mid in ("23", "28"):
+            (fixture.image_dir / f"{mid}_lid.jpeg").write_bytes(b"x")
+        hero = _block(fixture.html(), "hero")
+        self.assertEqual(2, hero.count("<img"))
+        for mid in ("23", "28"):
+            self.assertIn(f'href="manholes/{mid}/"', hero)
+            self.assertIn(f"/{mid}_lid.jpeg", hero)
+        self.assertEqual(2, hero.count('loading="eager"'))
+        self.assertNotIn("home-mosaic", hero)
+        self.assertNotIn("click_hero_photo", hero)
+        self.assertIn('class="home-hero" id="home-hero"', hero)
         for label in ("地図で探す", "都道府県から探す", "ポケモンから探す"):
             self.assertIn(label, hero)
         self.assertIn('href="map.html"', hero)
+
+    def test_hero_portraits_fall_back_without_lid(self) -> None:
+        records = _records()
+        records[0]["id"], records[1]["id"] = "23", "28"
+        hero = _block(Fixture(self.tmp, records=records).html(), "hero")
+        for mid in ("23", "28"):
+            self.assertIn(f'src="manhole/image/{mid}_latest.jpeg"', hero)
+        self.assertNotIn("_lid", hero)
+        self.assertEqual(2, hero.count('width="720" height="720"'))
+
+    def test_hero_portraits_skip_nonpublic_or_missing_photos(self) -> None:
+        records = _records()
+        records[0]["id"], records[1]["id"] = "23", "28"
+        fixture = Fixture(self.tmp, records=records, drop_photos=("23",))
+        (fixture.image_dir / "23_lid.jpeg").write_bytes(b"x")
+        hero = _block(fixture.html(), "hero")
+        self.assertNotIn('href="manholes/23/"', hero)
+        self.assertIn('href="manholes/28/"', hero)
+        (fixture.image_dir / "28_latest.jpeg").unlink()
+        hero = _block(fixture.html(), "hero")
+        self.assertNotIn("home-hero__portraits", hero)
+        self.assertNotIn("<img", hero)
 
     def test_hero_photo_count_excludes_private_posts(self) -> None:
         hero = _block(Fixture(self.tmp).html(), "hero")
         self.assertIn("<dd>1,234</dd>", hero)
         self.assertNotIn("1,500", hero)
-
-    def test_hero_photos_are_not_fetched_at_desktop_width(self) -> None:
-        """デスクトップは大地図を出すので、モザイクの写真は <picture> の空画像に差し替わる。"""
-        hero = _block(Fixture(self.tmp).html(), "hero")
-        pictures = re.findall(r"<picture>(.*?)</picture>", hero)
-        self.assertEqual(module.HERO_PHOTO_LIMIT, len(pictures))
-        for picture in pictures:
-            self.assertIn('<source media="(min-width: 960px)" srcset="data:image/gif;base64,', picture)
-            self.assertRegex(picture, r'<img src="manhole/image/\d+_latest\.jpeg"')
 
     def test_desktop_map_has_prefecture_count_pins(self) -> None:
         records = _records()
@@ -216,6 +236,14 @@ class GeneratedHtmlTest(unittest.TestCase):
         self.assertIn("surface:'top_map_hero'", cta.group(1))
         self.assertIn("地図を全画面で開く", cta.group(2))
         self.assertIn("© OpenStreetMap contributors", hero)
+        # 現在地から探すはスマホのヒーローの先頭だけ。PC の大地図には位置情報の導線を置かない
+        big_map = re.search(r'<div class="home-map" id="home-map-wrap">.*?</script></div>', hero, re.DOTALL).group(0)
+        self.assertNotIn("near=me", big_map)
+        near = re.search(r'<a class="home-quick__link home-quick__link--primary home-quick__link--near" href="map.html\?near=me" onclick="([^"]+)">([^<]+)</a>', hero)
+        self.assertIsNotNone(near)
+        self.assertIn("way:'nearby'", near.group(1))
+        self.assertIn("現在地から近いポケふたを探す", near.group(2))
+        self.assertLess(hero.index("home-quick__link--near"), hero.index("home-quick__link--map"))
 
     def test_map_data_cannot_close_the_script_element(self) -> None:
         payload = module.map_block(
@@ -224,12 +252,6 @@ class GeneratedHtmlTest(unittest.TestCase):
             aria="a", cta="c", cta_href="map.html",
         )
         self.assertNotIn("</script><b>", payload)
-
-    def test_hero_without_photos_falls_back_to_one_column(self) -> None:
-        hero = _block(Fixture(self.tmp, photos=False).html(), "hero")
-        self.assertIn("home-hero--no-photos", hero)
-        self.assertNotIn("<img", hero)
-        self.assertNotIn("home-mosaic", hero)
 
     def test_gallery_is_lazy_and_spread_across_regions(self) -> None:
         html = Fixture(self.tmp).html()
@@ -407,6 +429,21 @@ class GeneratedHtmlTest(unittest.TestCase):
         # 市区町村ランキングへの導線は「目的から探す」の市区町村チップへ移した
         self.assertNotIn("municipalities/", block)
 
+    def test_provisional_lids_put_their_prefecture_in_the_list_but_not_the_totals(self) -> None:
+        # 公式が0枚の群馬（仮番号だけ）を「設置されていません」と書かず、一覧と地図ピンに出す
+        import dataclasses
+        record = {"id": "9001", "prefecture": "群馬県", "city": "渋川", "status": "active", "provisional": True,
+                  "pokemons": ["サンダー"], "added_at": "2026-09-20T00:00:00Z"}
+        data = dataclasses.replace(Fixture(self.tmp).data(), provisional=[record])
+        block = _block(module.apply_blocks(SHELL, data), "pref")
+        installed = re.findall(r'<span class="home-pref__name">([^<]+)</span>', block)
+        self.assertIn("群馬県", installed)
+        self.assertIn("47都道府県のうち10都道府県", block)
+        note = re.search(r'<p class="home-pref-note">(.*?)</p>', block).group(1)
+        self.assertIn("36県", note)
+        self.assertNotIn("gunma", note)
+        self.assertIn("群馬県", [pin["prefecture"] for pin in module.map_pins(data)])
+
     def test_new_releases_only_appear_when_recent(self) -> None:
         self.assertNotIn("home-newrelease", Fixture(self.tmp).html())
         records = _records()
@@ -432,6 +469,53 @@ class GeneratedHtmlTest(unittest.TestCase):
         self.assertNotIn("home-hero-feature", _block(Fixture(self.tmp, features=[feature]).html(date(2026, 11, 1)), "hero"))
         self.assertIn('href="features/"', later)
 
+    def test_feature_banner_shows_a_lid_image(self) -> None:
+        feature = {"slug": "okinawa-test", "title": "沖縄にポケふたが増えます", "published": "2026-09-01",
+                   "highlight_until": "2026-10-31", "manholes": [{"id": "1"}]}
+        block = _block(Fixture(self.tmp, features=[feature]).html(), "newrelease")
+        banner = re.search(r'<a class="home-feature".*?</a>', block).group(0)
+        self.assertIn('class="home-feature__img"', banner)
+        self.assertIn('src="/manhole/image/1_latest.jpeg"', banner)
+        # 写真が1枚も無ければ帯は文字だけ
+        bare_dir = self.tmp / "bare"
+        bare_dir.mkdir()
+        bare = _block(Fixture(bare_dir, features=[feature], photos=False).html(), "newrelease")
+        self.assertNotIn("home-feature__img", bare)
+        self.assertIn("沖縄にポケふたが増えます", bare)
+        # 写真が非公開・削除になった（_latest.jpeg は残る）蓋は出さない
+        gone_dir = self.tmp / "gone"
+        gone_dir.mkdir()
+        gone = _block(Fixture(gone_dir, features=[feature], drop_photos=("1",)).html(), "newrelease")
+        self.assertNotIn("home-feature__img", gone)
+
+    def test_feature_image_falls_back_to_provisional_then_prefecture_lids(self) -> None:
+        image_dir = self.tmp / "img"
+        image_dir.mkdir()
+        for mid in ("10", "9001", "30"):
+            (image_dir / f"{mid}_latest.jpeg").write_bytes(b"x")
+        (image_dir / "30_lid.jpeg").write_bytes(b"x")
+        records = [
+            {"id": "10", "prefecture": "群馬県", "added_at": "2020-01-01"},
+            {"id": "30", "prefecture": "沖縄県", "added_at": "2024-01-01"},
+            {"id": "31", "prefecture": "沖縄県", "added_at": "2026-01-01"},  # 写真なし
+        ]
+        provisional = [{"id": "9001", "prefecture": "群馬県", "added_at": "2026-10-28"}]
+        public = {"10", "30"}
+        # 載せた蓋（設置前で写真なし）→ 同じ県の仮番号
+        gunma = {"prefecture": "群馬県", "records": [{"id": "99"}]}
+        self.assertEqual("/manhole/image/9001_latest.jpeg",
+                         module.feature_image(gunma, provisional, records, image_dir, public))
+        # 仮番号も無い県は、設置済みで写真のある新しい蓋（_lid を優先）
+        okinawa = {"prefecture": "沖縄県", "records": []}
+        self.assertEqual("/manhole/image/30_lid.jpeg",
+                         module.feature_image(okinawa, provisional, records, image_dir, public))
+        self.assertEqual("", module.feature_image({"records": []}, provisional, records, image_dir, public))
+        # 写真が非公開・削除になった蓋は、_latest/_lid が手元に残っていても出さない
+        self.assertEqual("", module.feature_image(okinawa, provisional, records, image_dir, {"10"}))
+        self.assertEqual("/manhole/image/9001_latest.jpeg",
+                         module.feature_image({"prefecture": "群馬県", "records": [{"id": "10"}]},
+                                              provisional, records, image_dir, set()))
+
     def test_hero_groups_new_features_by_prefecture_and_links_to_the_new_list(self) -> None:
         """新作特集が2県以上あるときは、古い順に県名を並べた1行にまとめて特集一覧の新作欄へ。"""
         features = [
@@ -455,6 +539,20 @@ class GeneratedHtmlTest(unittest.TestCase):
         self.assertIn(">10枚</span>", block)
         self.assertNotIn("ローカルActs", block)
         self.assertIn('href="pokemon/"', block)
+
+    def test_featured_pokemon_follow_the_pokemon_index_order_and_skip_single_lids(self) -> None:
+        """トップの「人気のポケモン」は /pokemon/ の人気・代表と同じ順。設置の多さでは並べず、1枚だけは出さない。"""
+        entry = module.PokemonEntry
+        entries = [
+            entry("ラッキー", "chansey", [str(i) for i in range(40)], ""),
+            entry("ラプラス", "lapras", ["1", "2", "3"], ""),
+            entry("イーブイ", "eevee", ["4", "5"], ""),
+            entry("ピカチュウ", "pikachu", ["6", "7"], ""),
+            entry("ロコン", "vulpix", ["8"], ""),
+            entry("ヤドン", "slowpoke", ["9", "10"], ""),
+        ]
+        picked = module.select_featured_pokemon(entries)
+        self.assertEqual(["pikachu", "slowpoke", "lapras", "eevee"], [e.slug for e in picked])
 
     def test_popular_pokemon_card_uses_the_representative_photo(self) -> None:
         # ピカチュウ（1, 3, …, 19）の新しい写真は 19。人が選んだ代表 5 を優先する
@@ -523,13 +621,13 @@ class GeneratedHtmlTest(unittest.TestCase):
     def test_tracking_uses_surface(self) -> None:
         html = Fixture(self.tmp).html()
         self.assertNotRegex(html, r"trackEvent\([^)]*\bsource:")
-        self.assertIn("click_hero_photo", html)
+        self.assertIn("click_top_photo", html)
         self.assertIn("click_search_way", html)
 
     def test_hero_quick_links_carry_destination_and_desktop_only_extras(self) -> None:
         """ヒーローの導線は GA4 登録済みの destination を持つ（way は未登録で集計に出ない）。
 
-        近く・テーマは PC だけに出す（スマホのヒーローは3つのまま）。destination の値は
+        テーマは PC だけ、現在地から探す（map_nearby）はスマホだけに出す。destination の値は
         2026-10 の評価（計測ノート）で使うので、変えると前後比較が分断される。
         """
         hero = _block(Fixture(self.tmp).html(), "hero")
@@ -537,7 +635,8 @@ class GeneratedHtmlTest(unittest.TestCase):
         links = re.findall(r'<a class="home-quick__link ([^"]*)" href="([^"]+)" onclick="([^"]+)"', nav)
         got = {href: (cls.strip(), re.search(r"destination:'([^']+)'", js).group(1)) for cls, href, js in links}
         self.assertEqual({
-            "map.html": ("home-quick__link--primary home-quick__link--map", "map"),
+            "map.html?near=me": ("home-quick__link--primary home-quick__link--near", "map_nearby"),
+            "map.html": ("home-quick__link--map", "map"),
             "#home-pref": ("", "home_pref_section"),
             "pokemon/": ("", "pokemon_index"),
             "map.html?view=theme": ("home-quick__link--desktop", "map_theme_directory"),

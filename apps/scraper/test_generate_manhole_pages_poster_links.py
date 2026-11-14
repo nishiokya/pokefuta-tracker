@@ -1,5 +1,8 @@
 import importlib.util
+import json
+import tempfile
 import unittest
+from unittest import mock
 from pathlib import Path
 
 MODULE_PATH = Path(__file__).with_name("generate_manhole_pages.py")
@@ -7,6 +10,10 @@ SPEC = importlib.util.spec_from_file_location("generate_manhole_pages", MODULE_P
 pages = importlib.util.module_from_spec(SPEC)
 assert SPEC and SPEC.loader
 SPEC.loader.exec_module(pages)
+# アイコンと称号は docs/api の実データに左右されないよう空にしておく（poster_identity.py）
+import sys  # noqa: E402
+sys.modules["poster_identity"].set_sources({}, {})
+NO_AVATAR = "<span class='poster-avatar' aria-hidden='true'></span>"
 
 VALID_UUID = "6096691c-eeda-4e73-8401-a11274868ede"
 PROFILE_URL = f"https://pokefuta.com/users/{VALID_UUID}/visits"
@@ -73,19 +80,19 @@ class HeroCreditLinkTests(unittest.TestCase):
     def test_hero_credit_linked_with_valid_public_user_id(self):
         html = _generate(_photo(public_user_id=VALID_UUID))
         self.assertIn(f"<a class='poster-link' href='{PROFILE_URL}'", html)
-        self.assertIn("📷 いろはす</a>", html)
+        self.assertIn(NO_AVATAR + "いろはす</a>", html)
         self.assertIn("click_poster_profile", html)
         self.assertIn("&quot;surface&quot;: &quot;hero&quot;", html)
 
     def test_hero_credit_plain_text_without_public_user_id(self):
         html = _generate(_photo(public_user_id=None))
-        self.assertIn("<span>📷 いろはす</span>", html)
+        self.assertIn("<span>" + NO_AVATAR + "いろはす</span>", html)
         self.assertNotIn("poster-link", html.replace("a.poster-link", ""))  # CSS 定義は除外
         self.assertNotIn("click_poster_profile", html)
 
     def test_hero_credit_plain_text_with_invalid_public_user_id(self):
         html = _generate(_photo(public_user_id="../evil"))
-        self.assertIn("<span>📷 いろはす</span>", html)
+        self.assertIn("<span>" + NO_AVATAR + "いろはす</span>", html)
         self.assertNotIn("click_poster_profile", html)
         self.assertNotIn("/users/", html)
 
@@ -102,7 +109,7 @@ class GalleryCreditLinkTests(unittest.TestCase):
         ]
         html = _generate(_photo(gallery_local=gallery_local))
         self.assertIn(f"<a class='gallery-credit poster-link' href='{PROFILE_URL}'", html)
-        self.assertIn("📷 たこ · 5月1日</a>", html)
+        self.assertIn(NO_AVATAR + "たこ · 5月1日</a>", html)
         self.assertIn("&quot;surface&quot;: &quot;gallery&quot;", html)
 
     def test_gallery_credit_plain_text_without_public_user_id(self):
@@ -114,7 +121,7 @@ class GalleryCreditLinkTests(unittest.TestCase):
             },
         ]
         html = _generate(_photo(gallery_local=gallery_local))
-        self.assertIn("<span class='gallery-credit'>📷 たこ · 5月1日</span>", html)
+        self.assertIn("<span class='gallery-credit'>" + NO_AVATAR + "たこ · 5月1日</span>", html)
         self.assertNotIn("gallery-credit poster-link", html)
 
 
@@ -130,3 +137,51 @@ class PhotoStudioLinkCardTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class PosterAvatarAndTierTests(unittest.TestCase):
+    """投稿者名の前に選んだアイコン、後ろに称号（poster_identity.py）"""
+
+    PHOTO_ID = "0c0c0c0c-1111-4222-8333-444444444444"
+
+    def setUp(self):
+        sys.modules["poster_identity"].set_sources({VALID_UUID: self.PHOTO_ID}, {VALID_UUID: "legend"})
+
+    def tearDown(self):
+        sys.modules["poster_identity"].set_sources({}, {})
+
+    def test_hero_credit_has_avatar_before_name_and_tier_after(self):
+        html = _generate(_photo(public_user_id=VALID_UUID))
+        avatar = f"https://pokefuta.com/api/photo/{self.PHOTO_ID}?size=small&amp;strict=1"
+        self.assertIn(f"<img src=\"{avatar}\"", html)
+        self.assertRegex(html, r"poster-avatar'[^\n]*</span>いろはす</a></span><span class='poster-tier poster-tier--legend'>🏆 LEGEND</span>")
+        self.assertNotIn("📷 いろはす", html)
+
+    def test_gallery_credit_has_icon_only_tier(self):
+        gallery_local = [
+            {
+                "url": f"{pages.BASE_URL}manhole/image/1_abcd1234.jpeg",
+                "display_name": "たこ",
+                "shot_at": "2026-05-01T00:00:00+00:00",
+                "public_user_id": VALID_UUID,
+            },
+        ]
+        html = _generate(_photo(gallery_local=gallery_local))
+        self.assertIn("たこ<span class='poster-tier poster-tier--icon poster-tier--legend' title=\"LEGEND\" aria-label=\"LEGEND\">🏆</span> · 5月1日</a>", html)
+
+    def test_broken_regulars_json_drops_only_the_tier(self):
+        identity = sys.modules["poster_identity"]
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "regulars.json"
+            path.write_text(json.dumps({"users": {VALID_UUID: ["legend"], "x": {"tier": "legend"}}}), encoding="utf-8")
+            with mock.patch.object(identity, "REGULARS_PATH", path):
+                identity.set_sources({}, None)
+                html = _generate(_photo(public_user_id=VALID_UUID))
+        self.assertIn(NO_AVATAR + "いろはす</a>", html)
+        self.assertNotIn("poster-tier--", html.split("</style>")[-1])
+
+    def test_no_avatar_or_tier_for_unknown_user(self):
+        sys.modules["poster_identity"].set_sources({}, {})
+        html = _generate(_photo(public_user_id=VALID_UUID))
+        self.assertIn(NO_AVATAR + "いろはす</a>", html)
+        self.assertNotIn("poster-tier--", html.split("</style>")[-1])

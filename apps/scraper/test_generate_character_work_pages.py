@@ -9,7 +9,9 @@ from pathlib import Path
 from unittest.mock import patch
 
 from apps.scraper.character_manhole_works import CHARACTER_CSS_VERSION, WORK_PAGES, gundam_work_records, page_for_work
-from apps.scraper.generate_character_work_pages import attach_user_photos, generate_html, generate_index_html, load_events, write_pages
+from apps.scraper.generate_character_work_pages import (
+    attach_user_photos, design_manhole_links, generate_html, generate_index_html, load_events, write_pages,
+)
 from apps.scraper.generate_character_manhole_page import _is_active, load_ndjson
 from apps.scraper.photo_caption import JST
 
@@ -58,6 +60,47 @@ GUNDAM_RECORDS = [
 ]
 
 
+GUNDAM_SUBMISSION = {
+    "source_id": "photo-g", "canonical_ref": "gundam:1", "status": "active",
+    "photo_url": "https://pokefuta.com/api/design-manholes/photo-g/photo?size=small",
+    "source_url": "https://pokefuta.com/design-manholes/photo-g",
+    "created_at": "2026-09-21T00:00:00Z",
+}
+
+
+class DesignManholeLinksTest(unittest.TestCase):
+    """写真館の投稿詳細が読む api/design_manhole_links.json の中身。"""
+
+    def test_gundam_submission_photo_is_attached_to_the_spot(self) -> None:
+        enriched = attach_user_photos(gundam_work_records(GUNDAM_RECORDS), [GUNDAM_SUBMISSION])
+        self.assertEqual(GUNDAM_SUBMISSION["photo_url"], enriched[0]["user_photo_url"])
+
+    def test_links_point_to_the_work_guide_spot(self) -> None:
+        records = [r for r in attach_user_photos(gundam_work_records(GUNDAM_RECORDS) + RECORDS, [GUNDAM_SUBMISSION])
+                   if _is_active(r)]
+        unlinked = {**GUNDAM_SUBMISSION, "source_id": "photo-x", "canonical_ref": None}
+        hidden = {**GUNDAM_SUBMISSION, "source_id": "photo-h", "status": "pending"}
+        out = design_manhole_links(records, [GUNDAM_SUBMISSION, unlinked, hidden], "2026-11-04T00:00:00+09:00")
+        self.assertTrue(out["success"])
+        self.assertEqual(["photo-g"], list(out["links"]))
+        link = out["links"]["photo-g"]
+        self.assertEqual("https://data.pokefuta.com/gmanhole_map.html#gundam-1", link["url"])
+        self.assertEqual("https://data.pokefuta.com/characters/gundam/", link["guide_url"])
+        self.assertEqual("豊富町観光情報センター", link["place"])
+        self.assertEqual((1, 1), (link["spots"], link["spots_with_photo"]))
+
+    def test_character_link_uses_the_guide_spot(self) -> None:
+        records = [r for r in RECORDS if _is_active(r)]
+        sub = {**GUNDAM_SUBMISSION, "canonical_ref": "character:imas-b"}
+        link = design_manhole_links(records, [sub], "x")["links"]["photo-g"]
+        self.assertEqual("https://data.pokefuta.com/characters/idolmaster/#spot-imas-b", link["url"])
+
+    def test_link_to_a_removed_record_is_dropped(self) -> None:
+        records = [r for r in RECORDS if _is_active(r)]
+        sub = {**GUNDAM_SUBMISSION, "canonical_ref": "character:removed"}
+        self.assertEqual({}, design_manhole_links(records, [sub], "x")["links"])
+
+
 class GundamGuideTest(unittest.TestCase):
     """ガンダムは別データセット（gmanhole.ndjson）から作品ガイドを作る。"""
 
@@ -67,12 +110,53 @@ class GundamGuideTest(unittest.TestCase):
     def test_title_leaves_the_list_query_to_the_map(self) -> None:
         self.assertIn("<title>ガンダムマンホールの巡り方ガイド｜地方・都道府県別の設置エリア</title>", self.html)
         # 一覧・地図の検索語は gmanhole_map.html に寄せる。ヒーローからパラメータ無しのURLへ送る
-        self.assertIn('href="../../gmanhole_map.html">ガンダムマンホール一覧・地図 →</a>', self.html)
+        self.assertIn('href="../../gmanhole_map.html?work=gundam">大きな地図で見る →</a>', self.html)
+
+    def test_gundam_has_embedded_photo_map_linking_to_dedicated_map(self) -> None:
+        enriched = attach_user_photos(gundam_work_records(GUNDAM_RECORDS), [GUNDAM_SUBMISSION])
+        html = generate_html(GUNDAM, enriched, {})
+        self.assertIn('id="location-map"', html)
+        self.assertIn('id="cw-map"', html)
+        self.assertIn('character-work-map.js?v=20261105b', html)
+        self.assertIn('gmanhole_map.html?work=gundam', html)
+        payload = re.search(r'id="cw-map-data">(.*?)</script>', html).group(1)
+        points = json.loads(payload)
+        self.assertEqual(1, len(points))
+        self.assertEqual(GUNDAM_SUBMISSION["photo_url"], points[0]["photo_url"])
+        self.assertEqual('../../gmanhole_map.html#gundam-1', points[0]["href"])
+        self.assertNotIn('id="cw-map-data">[]', html)
+
+    def test_gundam_map_has_region_and_photo_filters_and_round_photo_pins(self) -> None:
+        html = generate_html(GUNDAM, gundam_work_records(GUNDAM_RECORDS), {})
+        self.assertIn('id="cw-map-region"', html)
+        self.assertIn('id="cw-map-photos"', html)
+        # 囲みに role が無いと aria-label が読み上げで無視される
+        self.assertIn('class="cw-map-controls" role="group" aria-label="地図の表示設定"', html)
+        self.assertIn('value="without">写真募集中', html)
+        points = json.loads(re.search(r'id="cw-map-data">(.*?)</script>', html).group(1))
+        self.assertEqual('北海道・東北', points[0]['region'])
+        js = (Path(__file__).parents[1] / 'web/assets/character-work-map.js').read_text(encoding='utf-8')
+        self.assertIn('function applyFilters()', js)
+        self.assertIn("photo.className = 'cw-map-photo-marker'", js)
+        css = (Path(__file__).parents[1] / 'web/assets/character-work.css').read_text(encoding='utf-8')
+        # Leaflet の `.leaflet-container .leaflet-marker-pane img { width: auto }` に負けない強さで書く
+        marker_css = re.search(
+            r'\.leaflet-container \.leaflet-marker-pane img\.cw-map-photo-marker \{(.*?)\}', css, re.S
+        ).group(1)
+        self.assertIn('width:44px', marker_css)
+        self.assertIn('border-radius:50%', marker_css)
+        self.assertNotIn('clip-path', marker_css)  # 白い縁と影まで削れる
+
+    def test_gundam_map_keeps_spots_without_submitted_photos(self) -> None:
+        html = generate_html(GUNDAM, gundam_work_records(GUNDAM_RECORDS), {})
+        points = json.loads(re.search(r'id="cw-map-data">(.*?)</script>', html).group(1))
+        self.assertEqual("", points[0]["photo_url"])
+        self.assertEqual('../../gmanhole_map.html#gundam-1', points[0]["href"])
 
     def test_summarises_areas_instead_of_listing_each_spot(self) -> None:
         # 1基ずつの一覧（名称・住所・出典）は gmanhole_map.html だけが持つ
         self.assertNotIn('class="cw-spot"', self.html)
-        self.assertNotIn("豊富町観光情報センター", self.html)
+        self.assertIn("豊富町観光情報センター", self.html)  # 地図JSONには名称を保持する
         self.assertNotIn("壊れた行", self.html)
         self.assertIn("<h3>北海道・東北 <small>1都道府県</small></h3>", self.html)
         self.assertIn("<strong>北海道</strong> <small>1基</small>", self.html)
@@ -80,7 +164,7 @@ class GundamGuideTest(unittest.TestCase):
         self.assertIn('gmanhole_map.html?work=gundam&amp;pref=%E5%8C%97%E6%B5%B7%E9%81%93', self.html)
 
     def test_page_does_not_claim_to_be_a_list(self) -> None:
-        self.assertIn('<h1 id="work-heading">ガンダムマンホールを<br>巡る旅のガイド。</h1>', self.html)
+        self.assertIn('<h1 id="work-heading">ガンダムマンホールの巡り方ガイド</h1>', self.html)
         self.assertNotIn("マンホール一覧</h2>", self.html)
         schema = json.loads(re.search(r'<script type="application/ld\+json">(.*?)</script>', self.html).group(1))
         types = [node["@type"] for node in schema["@graph"]]
@@ -120,6 +204,22 @@ class GundamGuideTest(unittest.TestCase):
         self.assertIn('gmanhole_map.html?work=gundam', self.html)
         self.assertNotIn('?work=%E6%A9%9F%E5%8B%95', self.html)  # 作品名そのままでは地図が絞り込めない
 
+    def test_hero_counts_in_ki_and_has_no_emblem(self) -> None:
+        self.assertIn('<small>基・1都道府県</small>', self.html)
+        self.assertNotIn('cm-lid--lg', self.html)  # 大きな蓋の絵はやめ、/pokemon/ と同じ数の丸バッジにした
+
+    def test_hero_photo_links_to_the_post_and_keeps_the_common_social_image(self) -> None:
+        submissions = [{"canonical_ref": "gundam:1", "status": "active", "photo_url": "https://example.com/g.jpg",
+                        "source_url": "https://pokefuta.com/design-manholes/abc", "created_at": "2026-11-01"}]
+        records = attach_user_photos(gundam_work_records(GUNDAM_RECORDS), submissions)
+        html = generate_html(GUNDAM, records, {})
+        hero = html.split('<figure class="cw-hero-photo">')[1].split('</figure>')[0]
+        self.assertIn('src="https://example.com/g.jpg"', hero)
+        self.assertIn('href="https://pokefuta.com/design-manholes/abc"', hero)
+        self.assertIn('property="og:image" content="https://data.pokefuta.com/assets/ogp/pokefuta_map_ogp.png"', html)
+        # 共通画像の代替テキストに投稿写真の説明を入れない
+        self.assertIn('property="og:image:alt" content="ガンダムマンホールの巡り方ガイド｜地方・都道府県別の設置エリア"', html)
+
     def test_hero_uses_the_gundam_lid_and_generic_cta(self) -> None:
         self.assertIn('style="--c:#0044aa" aria-hidden="true">G</span>', self.html)
         self.assertIn(">設置エリアを見る ↓</a>", self.html)
@@ -146,7 +246,7 @@ class OtherWorkPageTest(unittest.TestCase):
 
     def test_embeds_the_location_map_with_work_specific_labels(self) -> None:
         self.assertIn('<h2 id="map-heading">東海オンエアのマンホールの設置場所マップ</h2>', self.html)
-        self.assertIn('character-work-map.js?v=20261026a', self.html)
+        self.assertIn('character-work-map.js?v=20261105b', self.html)
         payload = re.search(r'id="cw-map-data">(.*?)</script>', self.html).group(1)
         points = json.loads(payload)
         self.assertEqual(2, len(points))
@@ -240,6 +340,30 @@ class IdolmasterPageTest(unittest.TestCase):
         items = next(n for n in schema['@graph'] if n['@type'] == 'ItemList')['itemListElement']
         self.assertEqual(1, sum('geo' in item['item'] for item in items))
 
+    def test_gundam_gallery_links_public_photos_to_photo_library(self) -> None:
+        records = gundam_work_records(GUNDAM_RECORDS)
+        first_id = records[0]["id"]
+        enriched = attach_user_photos(records, [{
+            "canonical_ref": f"gundam:{first_id}", "status": "active",
+            "photo_url": "https://example.com/gundam.jpg",
+            "source_url": "https://pokefuta.com/design-manholes/submission-1",
+        }, {
+            "canonical_ref": f"gundam:{first_id}", "status": "hidden",
+            "photo_url": "https://example.com/private.jpg",
+            "created_at": "2099-01-01",
+        }])
+        html = generate_html(GUNDAM, enriched, {})
+        self.assertIn('id="community-photos"', html)
+        self.assertIn('https://example.com/gundam.jpg', html)
+        self.assertIn('href="https://pokefuta.com/design-manholes/submission-1"', html)
+        self.assertNotIn('private.jpg', html)
+        self.assertIn('id="cw-map"', html)
+        self.assertIn('地方・都道府県別の設置エリア', html)
+
+    def test_gundam_gallery_is_omitted_without_user_photos(self) -> None:
+        html = generate_html(GUNDAM, gundam_work_records(GUNDAM_RECORDS), {})
+        self.assertNotIn('id="community-photos"', html)
+
     def test_empty_map_and_other_guides_keep_static_fallback(self) -> None:
         # 座標が1つも無いなら空の地図は出さず、設置場所一覧だけにする
         html = generate_html(IDOLMASTER, [dict(RECORDS[0], lat=None)], {}, now=self.now)
@@ -247,8 +371,8 @@ class IdolmasterPageTest(unittest.TestCase):
         self.assertNotIn('character-work-map.js', html)
         self.assertIn('id="locations"', html)
         other = generate_html(GUNDAM, gundam_work_records(GUNDAM_RECORDS), {})
-        self.assertNotIn('character-work-map.js', other)
-        self.assertNotIn('leaflet', other)
+        self.assertIn('character-work-map.js', other)
+        self.assertIn('leaflet', other)
 
     def test_hero_leads_to_official_checkin(self) -> None:
         self.assertIn("ふたマス一覧・設置場所マップ", self.html)
@@ -359,7 +483,7 @@ class GenerateAllPagesTest(unittest.TestCase):
         """全国一覧の作品カードと同じ色・同じ字の蓋をヒーローに出す。"""
         records = [dict(r, marker_color="#f97316", marker_label="ア") for r in RECORDS]
         html = generate_html(IDOLMASTER, records, EVENT, now=datetime(2026, 9, 20, tzinfo=JST))
-        self.assertIn('<span class="cm-lid cm-lid--lg" style="--c:#f97316" aria-hidden="true">ア</span>', html)
+        self.assertIn('<span class="cm-lid cm-lid--sm" style="--c:#f97316" aria-hidden="true">ア</span>', html)
 
     def test_loaded_event_is_not_validated_twice(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

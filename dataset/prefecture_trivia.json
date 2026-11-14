@@ -3421,11 +3421,138 @@
   },
   {
     "prefecture": "群馬県",
-    "manhole_count": 0,
-    "municipality_count": 0,
-    "municipalities": [],
-    "municipality_distribution": [],
-    "pokemon_coverage": [],
+    "manhole_count": 5,
+    "municipality_count": 5,
+    "municipalities": [
+      "下仁田",
+      "沼田",
+      "渋川",
+      "長野原",
+      "館林"
+    ],
+    "municipality_distribution": [
+      {
+        "municipality": "下仁田",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "沼田",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "渋川",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "長野原",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "館林",
+        "manhole_count": 1
+      }
+    ],
+    "pokemon_coverage": [
+      {
+        "id": "アズマオウ",
+        "label": "アズマオウ",
+        "pokemon": [
+          "アズマオウ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "カモネギ",
+        "label": "カモネギ",
+        "pokemon": [
+          "カモネギ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ガラルカモネギ",
+        "label": "ガラルカモネギ",
+        "pokemon": [
+          "ガラルカモネギ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ガラルジグザグマ",
+        "label": "ガラルジグザグマ",
+        "pokemon": [
+          "ガラルジグザグマ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "サンダー",
+        "label": "サンダー",
+        "pokemon": [
+          "サンダー"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ジグザグマ",
+        "label": "ジグザグマ",
+        "pokemon": [
+          "ジグザグマ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ダーテング",
+        "label": "ダーテング",
+        "pokemon": [
+          "ダーテング"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ネギガナイト",
+        "label": "ネギガナイト",
+        "pokemon": [
+          "ネギガナイト"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "ノココッチ",
+        "label": "ノココッチ",
+        "pokemon": [
+          "ノココッチ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "パルスワン",
+        "label": "パルスワン",
+        "pokemon": [
+          "パルスワン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      },
+      {
+        "id": "メルタン",
+        "label": "メルタン",
+        "pokemon": [
+          "メルタン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 20.0
+      }
+    ],
     "trivia": []
   },
   {
@@ -7352,11 +7479,15 @@
   },
   {
     "prefecture": "高知県",
-    "manhole_count": 18,
-    "municipality_count": 18,
+    "manhole_count": 23,
+    "municipality_count": 23,
     "municipalities": [
+      "いの",
       "三原",
       "仁淀川",
+      "佐川",
+      "四万十",
+      "土佐",
       "土佐清水",
       "大月",
       "大豊",
@@ -7369,6 +7500,7 @@
       "本山",
       "東洋",
       "津野",
+      "芸西",
       "須崎",
       "香南",
       "香美",
@@ -7376,11 +7508,27 @@
     ],
     "municipality_distribution": [
       {
+        "municipality": "いの",
+        "manhole_count": 1
+      },
+      {
         "municipality": "三原",
         "manhole_count": 1
       },
       {
         "municipality": "仁淀川",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "佐川",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "四万十",
+        "manhole_count": 1
+      },
+      {
+        "municipality": "土佐",
         "manhole_count": 1
       },
       {
@@ -7432,6 +7580,10 @@
         "manhole_count": 1
       },
       {
+        "municipality": "芸西",
+        "manhole_count": 1
+      },
+      {
         "municipality": "須崎",
         "manhole_count": 1
       },
@@ -7455,8 +7607,17 @@
         "pokemon": [
           "ヌオー"
         ],
-        "cover_count": 18,
+        "cover_count": 23,
         "coverage_percent": 100.0
+      },
+      {
+        "id": "ウパー",
+        "label": "ウパー",
+        "pokemon": [
+          "ウパー"
+        ],
+        "cover_count": 2,
+        "coverage_percent": 8.7
       },
       {
         "id": "アメタマ",
@@ -7465,7 +7626,7 @@
           "アメタマ"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.6
+        "coverage_percent": 4.3
       },
       {
         "id": "アメモース",
@@ -7474,16 +7635,7 @@
           "アメモース"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.6
-      },
-      {
-        "id": "ウパー",
-        "label": "ウパー",
-        "pokemon": [
-          "ウパー"
-        ],
-        "cover_count": 1,
-        "coverage_percent": 5.6
+        "coverage_percent": 4.3
       },
       {
         "id": "カラナクシ",
@@ -7492,7 +7644,7 @@
           "カラナクシ"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.6
+        "coverage_percent": 4.3
       },
       {
         "id": "ケイコウオ",
@@ -7501,7 +7653,7 @@
           "ケイコウオ"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.6
+        "coverage_percent": 4.3
       },
       {
         "id": "コジオ",
@@ -7510,7 +7662,7 @@
           "コジオ"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.6
+        "coverage_percent": 4.3
       },
       {
         "id": "コマタナ",
@@ -7519,7 +7671,7 @@
           "コマタナ"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.6
+        "coverage_percent": 4.3
       },
       {
         "id": "サニーゴ",
@@ -7528,7 +7680,7 @@
           "サニーゴ"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.6
+        "coverage_percent": 4.3
       },
       {
         "id": "シズクモ",
@@ -7537,7 +7689,7 @@
           "シズクモ"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.6
+        "coverage_percent": 4.3
       },
       {
         "id": "シビシラス",
@@ -7546,7 +7698,25 @@
           "シビシラス"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.6
+        "coverage_percent": 4.3
+      },
+      {
+        "id": "ジジーロン",
+        "label": "ジジーロン",
+        "pokemon": [
+          "ジジーロン"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 4.3
+      },
+      {
+        "id": "ゾウドウ",
+        "label": "ゾウドウ",
+        "pokemon": [
+          "ゾウドウ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 4.3
       },
       {
         "id": "チルタリス",
@@ -7555,7 +7725,7 @@
           "チルタリス"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.6
+        "coverage_percent": 4.3
       },
       {
         "id": "トサキント",
@@ -7564,7 +7734,7 @@
           "トサキント"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.6
+        "coverage_percent": 4.3
       },
       {
         "id": "ドオー",
@@ -7573,7 +7743,7 @@
           "ドオー"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.6
+        "coverage_percent": 4.3
       },
       {
         "id": "ノクタス",
@@ -7582,7 +7752,7 @@
           "ノクタス"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.6
+        "coverage_percent": 4.3
       },
       {
         "id": "ピィ",
@@ -7591,7 +7761,16 @@
           "ピィ"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.6
+        "coverage_percent": 4.3
+      },
+      {
+        "id": "ピッピ",
+        "label": "ピッピ",
+        "pokemon": [
+          "ピッピ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 4.3
       },
       {
         "id": "フィオネ",
@@ -7600,7 +7779,16 @@
           "フィオネ"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.6
+        "coverage_percent": 4.3
+      },
+      {
+        "id": "フラエッテ",
+        "label": "フラエッテ",
+        "pokemon": [
+          "フラエッテ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 4.3
       },
       {
         "id": "フローゼル",
@@ -7609,7 +7797,7 @@
           "フローゼル"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.6
+        "coverage_percent": 4.3
       },
       {
         "id": "ブイゼル",
@@ -7618,7 +7806,7 @@
           "ブイゼル"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.6
+        "coverage_percent": 4.3
       },
       {
         "id": "ホーホー",
@@ -7627,7 +7815,16 @@
           "ホーホー"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.6
+        "coverage_percent": 4.3
+      },
+      {
+        "id": "ポポッコ",
+        "label": "ポポッコ",
+        "pokemon": [
+          "ポポッコ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 4.3
       },
       {
         "id": "マンタイン",
@@ -7636,7 +7833,16 @@
           "マンタイン"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.6
+        "coverage_percent": 4.3
+      },
+      {
+        "id": "メガヤンマ",
+        "label": "メガヤンマ",
+        "pokemon": [
+          "メガヤンマ"
+        ],
+        "cover_count": 1,
+        "coverage_percent": 4.3
       },
       {
         "id": "メタモン",
@@ -7645,7 +7851,7 @@
           "メタモン"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.6
+        "coverage_percent": 4.3
       },
       {
         "id": "メッソン",
@@ -7654,7 +7860,7 @@
           "メッソン"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.6
+        "coverage_percent": 4.3
       },
       {
         "id": "モノズ",
@@ -7663,7 +7869,7 @@
           "モノズ"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.6
+        "coverage_percent": 4.3
       },
       {
         "id": "ヤンヤンマ",
@@ -7672,7 +7878,7 @@
           "ヤンヤンマ"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.6
+        "coverage_percent": 4.3
       },
       {
         "id": "リリーラ",
@@ -7681,7 +7887,7 @@
           "リリーラ"
         ],
         "cover_count": 1,
-        "coverage_percent": 5.6
+        "coverage_percent": 4.3
       }
     ],
     "trivia": [
@@ -7697,7 +7903,7 @@
       {
         "id": "高知県-ヌオー-100",
         "type": "pokemon_100",
-        "text": "県内18枚すべてにヌオーが登場します",
+        "text": "県内23枚すべてにヌオーが登場します",
         "source_type": "dataset"
       }
     ]

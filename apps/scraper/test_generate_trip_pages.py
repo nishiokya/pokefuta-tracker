@@ -103,9 +103,11 @@ class AreaTest(unittest.TestCase):
         area = {"slug": "noto", "prefecture": "石川県", "name": "能登", "manhole_ids": ["31", "32"]}
         page = MODULE.build_area_page(area, far, {}, {}, [(area, far)], {})
         self.assertNotIn("Googleマップで順路を開けます", page)
-        self.assertNotIn("google.com/maps/dir/", page)
+        # 順路リンクの有無は計測名で見る
+        self.assertNotIn('data-track="trip_route_open"', page)
         near_page = MODULE.build_area_page(AREAS[0], RECORDS[:5], DURATIONS, {}, [], {})
         self.assertIn("Googleマップで順路を開けます", near_page)
+        self.assertIn('data-track="trip_route_open"', near_page)
 
     def test_breadcrumb_json_ld_matches_the_visible_trail(self) -> None:
         page = MODULE.build_area_page(AREAS[0], RECORDS[:5], DURATIONS, {}, [], {})
@@ -183,6 +185,21 @@ class AreaTest(unittest.TestCase):
         boat = MODULE._access_html({**AREAS[1], "access": {"boat": "連絡船で片道約10分", "note": "最終便に注意"}})
         self.assertIn("⛴ 船</strong> 連絡船で片道約10分", boat)
         self.assertIn("⚠ 注意</strong> 最終便に注意", boat)
+
+    def test_plans_section_is_one_line_each_and_https_only(self):
+        html = MODULE._plans_html({"plans": {
+            "heading": "宇治の観光もするなら",
+            "items": [{"title": "午前に入館するなら", "text": "<b>先に</b>ミュージアム"}, {"title": "空", "text": ""}],
+            "sources": [{"label": "平等院", "url": "https://www.byodoin.or.jp/guide/"},
+                        {"label": "http", "url": "http://example.com/"}],
+            "checked_on": "2026-11-09",
+        }})
+        self.assertIn('<h2 id="plans-heading">宇治の観光もするなら</h2>', html)
+        self.assertIn("&lt;b&gt;先に&lt;/b&gt;", html)
+        self.assertEqual(html.count("<li>"), 1)
+        self.assertIn("https://www.byodoin.or.jp/guide/", html)
+        self.assertNotIn("http://example.com/", html)
+        self.assertEqual(MODULE._plans_html({}), "")
 
     def test_mode_label_overrides_distance_based_mode(self):
         records = [_record("a", "a", 35, 135), _record("b", "a", 35.03, 135)]
@@ -271,6 +288,11 @@ class GenerateTest(unittest.TestCase):
             cards = area[area.index('id="manhole-list"'):]
             ids = re.findall(r'id="manhole-(\d+)"', cards)
             self.assertEqual(ids[:5], ["206", "210", "209", "207", "208"])  # 「回るポケふた」も回る順
+            # 地図のピンにも回る順番と同じ番号を付ける
+            points = re.search(r"const points = (\[.*?\]);", area, re.S).group(1)
+            orders = re.findall(r'"id": "(\d+)".*?"order": (\d+)', points, re.S)
+            self.assertEqual(orders, [("206", "1"), ("210", "2"), ("209", "3"), ("207", "4"), ("208", "5")])
+            self.assertIn(".map-order", area)
             self.assertIn('href="/trip/ikaruga/"', area)  # あわせて回るなら
             self.assertIn('"@type": "TouristTrip"', area)
             ikaruga = (out / "ikaruga" / "index.html").read_text(encoding="utf-8")

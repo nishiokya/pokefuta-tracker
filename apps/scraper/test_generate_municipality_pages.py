@@ -114,8 +114,23 @@ class RouteTest(unittest.TestCase):
         self.assertEqual(len(urls), 2)
         for url in urls:
             self.assertLessEqual(url.count("%7C") + 1 if "waypoints=" in url else 0, 3)
-        self.assertIn("1〜5番目をGoogleマップで開く", section)
-        self.assertIn("5〜6番目をGoogleマップで開く", section)
+        self.assertIn("1〜5番目を経路案内", section)
+        self.assertIn("5〜6番目を経路案内", section)
+
+    def test_single_manhole_link_opens_the_place_and_route_stays_directions(self) -> None:
+        """蓋1枚の「経路案内」は場所の地図（道順は Google マップ側で出す）。巡る順番だけ経路を直接開く。"""
+        from apps.scraper import manhole_records
+
+        url = manhole_records.google_maps_url({"lat": 35.54, "lng": 139.44})
+        self.assertEqual(url, "https://www.google.com/maps/search/?api=1&query=35.54,139.44")
+        self.assertEqual(manhole_records.google_maps_url({"lat": None, "lng": 139.44}), "")
+        # Android で Google マップのピンに出す名前（assets/geo-link.js が geo: に使う）
+        self.assertEqual(
+            manhole_records.geo_label({"prefecture": "神奈川県", "city": "座間市", "pokemons": ["ピカチュウ", "イーブイ"]}),
+            "ポケふた ピカチュウ・イーブイ " + manhole_records.manhole_name({"prefecture": "神奈川県", "city": "座間市"}),
+        )
+        near = MUNI.build_municipalities(SYNTHETIC, SLUGS)[0]
+        self.assertIn("google.com/maps/dir/?api=1&amp;origin=", MODULE._route_section(near))
 
     def test_far_apart_stops_get_no_road_route_link(self) -> None:
         """小笠原（父島と母島）のように離れた区間があると、Google マップの道路ルートは出さない。"""

@@ -15,18 +15,18 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-# ポケふたが1枚も無い都道府県。公開コピーの母数（42県）はこの5県を引いた数で、
+# ポケふたが1枚も無い都道府県。公開コピーの母数（43県）はこの4県を引いた数で、
 # 根拠をコードの外に置くと「取りこぼしで空になった県」と区別できなくなる。
 #
 # 検証 (2026-09-23): local.pokemon.jp の /manhole/desc/{id}/ を 1〜488 まで当たり、
 # 中身がある最大IDは 486、欠番は 24〜27 のみ（いずれも公式側も空）で、487 以降は
 # 存在しない。つまり手元のデータセット（ID 1-486・482件）に ID の取りこぼしは無く、
 # この5県は取得漏れではなく本当に未設置。
+# 2026-11-09: 群馬県に初めてポケふたが載った（ID 496〜500）ので外した。
 #
 # 新しく設置された県が出たらここから消す。verify_known_empty() が食い違いを
 # 例外にするので、消し忘れるとページ生成が止まって気づける。
 PREFECTURES_WITHOUT_POKEFUTA = frozenset({
-    "群馬県",
     "山梨県",
     "広島県",
     "熊本県",
@@ -113,8 +113,11 @@ def is_countable(record: dict) -> bool:
     generate_prefecture_pages.py 内で繰り返し使われている規約。まだ現地に
     無いものを「写真が足りない」と数えると、撮りに行きようのない残数が
     永遠に残る。
+
+    公式サイト未掲載の仮番号の蓋（provisional_manholes.py）も数えない。
+    公式の番号へ移ってから数える（コンプリート率・未設置県の判定は公式の枚数で見る）。
     """
-    return record.get("installed") is not False
+    return record.get("installed") is not False and not record.get("provisional")
 
 
 def build_completion(
@@ -171,7 +174,8 @@ def verify_known_empty(
     )
     problems: list[str] = []
     for name in order:
-        records = records_by_pref.get(name, [])
+        # 仮番号の蓋は公式の取りこぼしの判定に使わない（未設置県に仮の1枚があっても通す）
+        records = [r for r in records_by_pref.get(name, []) if not r.get("provisional")]
         if not records:
             if name not in allowed:
                 problems.append(f"{name}（1枚も取れていない）")

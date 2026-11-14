@@ -315,3 +315,25 @@ class RegularTiersTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class PickPublicAvatarsTest(unittest.TestCase):
+    """写真館の get_public_avatar_photo_id() と同じ条件（本人の公開訪問の写真）だけ出す"""
+
+    def test_only_own_public_photos(self) -> None:
+        users = [
+            {"id": "p-ok", "auth_uid": "a-1", "avatar_photo_id": "ph-1"},
+            {"id": "p-private", "auth_uid": "a-2", "avatar_photo_id": "ph-2"},
+            {"id": "p-other", "auth_uid": "a-3", "avatar_photo_id": "ph-3"},
+            {"id": "p-missing", "auth_uid": "a-4", "avatar_photo_id": "ph-gone"},
+        ]
+        photos = [
+            {"id": "ph-1", "visit": {"user_id": "a-1", "is_public": True}},
+            {"id": "ph-2", "visit": {"user_id": "a-2", "is_public": False}},
+            # 他人の訪問の写真（visit_id の付け替えなど）
+            {"id": "ph-3", "visit": {"user_id": "a-1", "is_public": True}},
+        ]
+        result = MODULE.pick_public_avatars(users, photos)
+        self.assertEqual(result, {"p-ok": "ph-1"})
+        # 公開 JSON に auth UID を出さない
+        self.assertNotIn("a-1", json.dumps(result))

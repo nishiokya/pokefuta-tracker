@@ -1,4 +1,6 @@
 import importlib.util
+import re
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -7,6 +9,10 @@ SPEC = importlib.util.spec_from_file_location("generate_manhole_pages", MODULE_P
 pages = importlib.util.module_from_spec(SPEC)
 assert SPEC and SPEC.loader
 SPEC.loader.exec_module(pages)
+# アイコンと称号は docs/api の実データに左右されないよう空にしておく（poster_identity.py）
+import sys  # noqa: E402
+sys.modules["poster_identity"].set_sources({}, {})
+NO_AVATAR = "<span class='poster-avatar' aria-hidden='true'></span>"
 
 
 def _manhole() -> dict:
@@ -68,8 +74,8 @@ class GallerySectionTests(unittest.TestCase):
         self.assertIn("みんなの写真", html)
         self.assertIn("manhole/image/1_abcd1234.jpeg", html)
         self.assertIn("manhole/image/1_ef012345.jpeg", html)
-        # クレジットは「📷 名前 · 5月1日」（撮影日のロケール短表記）に統一
-        self.assertIn("📷 たこ · 5月1日", html)
+        # クレジットは「アイコン 名前 · 5月1日」（撮影日のロケール短表記）に統一
+        self.assertIn(NO_AVATAR + "たこ · 5月1日", html)
         self.assertIn("https://pokefuta.com/manhole/1", html)
         self.assertIn("すべての写真を見る", html)
         self.assertIn("click_gallery_more", html)
@@ -78,7 +84,7 @@ class GallerySectionTests(unittest.TestCase):
         html = _generate(_photo([]))
         # ヒーローのクレジットは年付きロケール表記（shot_at=2026-06-07 UTC → JST 同日）
         self.assertIn("2026年6月7日", html)
-        self.assertIn("📷 いろはす", html)
+        self.assertIn(NO_AVATAR + "いろはす", html)
 
     def test_hero_credit_falls_back_to_created_at_without_shot_at(self):
         photo = _photo([])
@@ -110,6 +116,25 @@ class GallerySectionTests(unittest.TestCase):
         # サムネ側は lazy のまま（ヒーローだけを eager にした）
         self.assertIn('loading="lazy"', html[html.index("みんなの写真"):])
 
+    def test_thumbs_reserve_their_size(self):
+        html = _generate(_photo([{"url": f"{pages.BASE_URL}manhole/image/1_abcd1234.webp"}]))
+        self.assertIn('width="360" height="360" loading="lazy" decoding="async"', html)
+        # height 属性があると CSS で高さを auto にしない限り 360px の縦長になる（aspect-ratio が効かない）
+        rule = re.search(r"\.gallery-item img \{([^}]*)\}", html).group(1)
+        self.assertIn("height: auto", rule)
+        self.assertIn("aspect-ratio: 1 / 1", rule)
+
+    def test_more_link_tells_how_many_photos_the_studio_has(self):
+        gallery_local = [{"url": f"{pages.BASE_URL}manhole/image/1_abcd123{i}.webp"} for i in range(3)]
+        photo = _photo(gallery_local)
+        photo["public_photo_count"] = 21
+        self.assertIn("写真館で全 21 枚を見る →", _generate(photo))
+        # 代表＋3枚で全部出しているときは枚数を出さない
+        photo["public_photo_count"] = 4
+        html = _generate(photo)
+        self.assertIn("すべての写真を見る →", html)
+        self.assertNotIn("写真館で全", html)
+
     def test_no_gallery_section_without_items(self):
         html = _generate(_photo([]))
         self.assertNotIn("みんなの写真", html)
@@ -118,6 +143,30 @@ class GallerySectionTests(unittest.TestCase):
     def test_no_gallery_section_without_photo(self):
         html = _generate(None)
         self.assertNotIn("みんなの写真", html)
+
+
+class PagePhotoGalleryFilesTests(unittest.TestCase):
+    """ギャラリー画像は .webp。前の形式の .jpeg は取り込みが作り直すまでの間だけ使う"""
+
+    def _page_photo(self, files: list[str]) -> dict:
+        with tempfile.TemporaryDirectory() as tmp:
+            image_dir = Path(tmp)
+            for name in files:
+                (image_dir / name).write_bytes(b"")
+            photos = {"1": {"photo_id": "rep11111-0000", "gallery": [
+                {"photo_id": "rep11111-0000"},
+                {"photo_id": "abcd1234-0000"},
+                {"photo_id": "ef012345-0000"},
+                {"photo_id": "99999999-0000"},
+            ]}}
+            return pages.page_photo("1", photos, image_dir, {"1": f"{pages.BASE_URL}manhole/image/1_latest.jpeg"})
+
+    def test_prefers_webp_and_falls_back_to_jpeg(self):
+        photo = self._page_photo(["1_abcd1234.webp", "1_abcd1234.jpeg", "1_ef012345.jpeg"])
+        self.assertEqual(
+            [g["url"] for g in photo["gallery_local"]],
+            [f"{pages.BASE_URL}manhole/image/1_abcd1234.webp", f"{pages.BASE_URL}manhole/image/1_ef012345.jpeg"],
+        )
 
 
 if __name__ == "__main__":
