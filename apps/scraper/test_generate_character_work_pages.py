@@ -117,7 +117,7 @@ class GundamGuideTest(unittest.TestCase):
         html = generate_html(GUNDAM, enriched, {})
         self.assertIn('id="location-map"', html)
         self.assertIn('id="cw-map"', html)
-        self.assertIn('character-work-map.js?v=20261105b', html)
+        self.assertIn('character-work-map.js?v=20261114a', html)
         self.assertIn('gmanhole_map.html?work=gundam', html)
         payload = re.search(r'id="cw-map-data">(.*?)</script>', html).group(1)
         points = json.loads(payload)
@@ -174,7 +174,8 @@ class GundamGuideTest(unittest.TestCase):
         records = gundam_work_records([GUNDAM_RECORDS[0], {**GUNDAM_RECORDS[0], "id": "x", "prefecture": "", "city": ""}])
         html = generate_html(GUNDAM, records, {})
         self.assertIn("<h3>地方未確認 <small>1都道府県</small></h3>", html)
-        self.assertIn("<li><strong>都道府県未記録</strong> <small>1基</small><span>市町村未記録</span></li>", html)
+        self.assertIn("<strong>都道府県未記録</strong> <small>1基</small>", html)
+        self.assertIn("<span>市町村未記録</span>", html)
         self.assertNotIn("pref=%E9%83%BD%E9%81%93%E5%BA%9C%E7%9C%8C%E6%9C%AA%E8%A8%98%E9%8C%B2", html)
 
     def test_faq_points_to_the_list_page_instead_of_calling_itself_a_list(self) -> None:
@@ -246,7 +247,7 @@ class OtherWorkPageTest(unittest.TestCase):
 
     def test_embeds_the_location_map_with_work_specific_labels(self) -> None:
         self.assertIn('<h2 id="map-heading">東海オンエアのマンホールの設置場所マップ</h2>', self.html)
-        self.assertIn('character-work-map.js?v=20261105b', self.html)
+        self.assertIn('character-work-map.js?v=20261114a', self.html)
         payload = re.search(r'id="cw-map-data">(.*?)</script>', self.html).group(1)
         points = json.loads(payload)
         self.assertEqual(2, len(points))
@@ -519,6 +520,37 @@ class GenerateAllPagesTest(unittest.TestCase):
         events = {"zombieland-saga": EVENT["idolmaster"]}
         html = generate_html(zombie, records, events, now=datetime(2026, 9, 20, tzinfo=JST))
         self.assertNotIn("アイドルマスター ポータル", html)
+
+
+class GundamPhotoPresentationTest(unittest.TestCase):
+    def test_bounds_follow_the_selected_photo_not_the_manhole(self):
+        from apps.scraper.generate_character_work_pages import photo_visual
+        bounds = {'box': [.2, .3, .8, .7], 'width': 400, 'height': 300}
+        newer = {**GUNDAM_SUBMISSION, 'source_id': 'new-photo', 'created_at': '2026-11-14T00:00:00Z'}
+        records = attach_user_photos(gundam_work_records(GUNDAM_RECORDS), [GUNDAM_SUBMISSION, newer], {'photo-g': bounds})
+        self.assertEqual('new-photo', records[0]['user_photo_id'])
+        self.assertIsNone(records[0]['user_photo_lid'])
+        self.assertNotIn('cw-photo-visual--clipped', photo_visual(records[0], 'photo'))
+        records = attach_user_photos(gundam_work_records(GUNDAM_RECORDS), [GUNDAM_SUBMISSION], {'photo-g': bounds})
+        self.assertIn('cw-photo-visual--clipped', photo_visual(records[0], '<test>'))
+        self.assertIn('&lt;test&gt;', photo_visual(records[0], '<test>'))
+
+    def test_invalid_bounds_never_produce_broken_css(self):
+        from apps.scraper.generate_character_work_pages import valid_lid
+        for box in ([0, 0, 0, 1], [0, 0, 2, 1], [0, float('nan'), 1, 1], ['bad', 0, 1, 1], [True, 0, 1, 1]):
+            self.assertIsNone(valid_lid({'box': box, 'width': 400, 'height': 300}))
+        self.assertIsNone(valid_lid({'box': [0, 0, 1, 1], 'width': 0, 'height': 300}))
+
+    def test_area_thumbnails_count_each_lid_once_and_keep_credit_public_only(self):
+        sub = {**GUNDAM_SUBMISSION, 'source_id': '11111111-1111-4111-8111-111111111111', 'submitter_name': 'Not stored in HTML'}
+        records = attach_user_photos(gundam_work_records(GUNDAM_RECORDS), [sub, sub], {})
+        html = generate_html(GUNDAM, records, {})
+        self.assertEqual(1, html.count('class="cw-area-thumb"'))
+        self.assertIn('撮影済み 1 / 1基', html)
+        self.assertIn('data-photo-author="11111111-1111-4111-8111-111111111111"', html)
+        self.assertNotIn('Not stored in HTML', html)
+        self.assertIn('character-work-photos.js', html)
+        self.assertIn('id="cw-photo-mode"', html)
 
 
 if __name__ == "__main__":

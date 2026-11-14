@@ -42,6 +42,7 @@ INDEX_ASSET_BASE = "../"
 DEFAULT_EVENTS = ROOT / "dataset/character_manhole_events.json"
 DEFAULT_GUNDAM = ROOT / "docs/gmanhole.ndjson"
 DEFAULT_DESIGN_MANHOLES = ROOT / "docs/design_manholes.ndjson"
+DEFAULT_LIDS = ROOT / "dataset/design_manhole_lids.json"
 OG_IMAGE = BASE_URL + "assets/ogp/pokefuta_map_ogp.png"
 IDOLMASTER_EVENT_TYPE = "idolmaster_20th_checkin"
 EVENT_REQUIRED_KEYS = {"type", "url", "project_url", "verified_at", "ends_at", "spots"}
@@ -83,8 +84,10 @@ def record_ref(record: dict) -> str:
     return f"{prefix}:{record.get('id')}"
 
 
-def attach_user_photos(records: list[dict], submissions: list[dict]) -> list[dict]:
+def attach_user_photos(records: list[dict], submissions: list[dict], lids: dict | None = None) -> list[dict]:
     """Attach the newest linked public submission to each character / gundam record."""
+    if lids is None:
+        lids = json.loads(DEFAULT_LIDS.read_text()) if DEFAULT_LIDS.exists() else {}
     linked: dict[str, dict] = {}
     for submission in submissions:
         canonical_ref = str(submission.get("canonical_ref") or "")
@@ -107,8 +110,55 @@ def attach_user_photos(records: list[dict], submissions: list[dict]) -> list[dic
         if submission:
             item["user_photo_url"] = submission["photo_url"]
             item["user_photo_source_url"] = submission.get("source_url")
+            item["user_photo_id"] = submission.get("source_id")
+            item["user_photo_lid"] = valid_lid(lids.get(str(submission.get("source_id"))))
         enriched.append(item)
     return enriched
+
+
+def valid_lid(value: object) -> dict | None:
+    """Only finite, in-frame bounds with real image dimensions may become CSS."""
+    if not isinstance(value, dict):
+        return None
+    box = value.get("box")
+    if not isinstance(box, list) or len(box) != 4:
+        return None
+    numbers = box + [value.get("width"), value.get("height")]
+    if not all(isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v) for v in numbers):
+        return None
+    x0, y0, x1, y1 = box
+    if not (0 <= x0 < x1 <= 1 and 0 <= y0 < y1 <= 1 and value["width"] > 0 and value["height"] > 0):
+        return None
+    return value
+
+
+def photo_credit(record: dict) -> str:
+    sid = str(record.get("user_photo_id") or "")
+    attr = f' data-photo-author="{escape(sid, quote=True)}"' if re.fullmatch(r"[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}", sid) else ""
+    return f'<small class="cw-photo-credit"{attr}>写真館の投稿</small>'
+
+
+def photo_visual(record: dict, alt: str, *, eager: bool = False) -> str:
+    """Clip the original public photo with reviewed lid bounds; do not copy its pixels.
+
+    Keep the detected ellipse's aspect ratio, so slanted photos are not stretched.
+    With no bounds, retain the complete photo instead of guessing a crop.
+    """
+    url = escape(safe_url(record.get("user_photo_url")), quote=True)
+    loading = 'loading="eager" fetchpriority="high"' if eager else 'loading="lazy"'
+    lid = valid_lid(record.get("user_photo_lid"))
+    style = ""
+    if lid:
+        x0, y0, x1, y1 = lid["box"]
+        w, h = x1 - x0, y1 - y0
+        ratio = w * lid["width"] / (h * lid["height"])
+        style = (f' style="--lid-ratio:{ratio:.6f};--lid-size:{min(1, ratio)*100:.4f}%;'
+                 f'--lid-width:{100/w:.4f}%;--lid-height:{100/h:.4f}%;'
+                 f'--lid-left:{-x0/w*100:.4f}%;--lid-top:{-y0/h*100:.4f}%;"')
+    cls = "cw-photo-visual" + (" cw-photo-visual--clipped" if lid else "")
+    return (f'<span class="{cls}"{style}><span class="cw-photo-frame">'
+            f'<img src="{url}" alt="{escape(alt, quote=True)}" {loading} decoding="async" width="400" height="400">'
+            '</span></span>')
 
 
 def validate_event(slug: str, raw: object) -> dict | None:
@@ -259,10 +309,12 @@ def work_area(records: list[dict]) -> str:
 
 
 def gundam_areas_html(groups: dict[tuple[str, str], list[dict]]) -> str:
-    """ガンダムガイドの設置エリア。地方→都道府県→市町村（基数）だけを並べ、1基ずつの一覧はマップへ送る。"""
+    """地方→県の設置エリアに撮影済みの蓋を添える。住所一覧はマップへ送る。"""
     by_pref: dict[str, list[tuple[str, int]]] = defaultdict(list)
+    photos_by_pref: dict[str, list[dict]] = defaultdict(list)
     for (pref, city), rows in groups.items():
         by_pref[pref].append((city, len(rows)))
+        photos_by_pref[pref].extend(r for r in rows if safe_url(r.get("user_photo_url")))
     counts = {n for cities in by_pref.values() for _, n in cities}
     # 掲載データでは市町村ごとに同じ数ずつ置かれている。そのときは1文で説明し、市町村ごとの「（2基）」は繰り返さない。
     # データが変わってそろわなくなったら、説明の文を出さず市町村ごとに基数を出す
@@ -277,7 +329,19 @@ def gundam_areas_html(groups: dict[tuple[str, str], list[dict]]) -> str:
         # 都道府県が分からない行は地図の県絞り込みに渡せないので、リンクにしない
         if pref in PREFECTURE_ORDER:
             heading = f'<a href="{escape(map_href(GUNDAM_WORK_QUERY, pref))}">{heading}</a>'
-        return f'<li>{heading}<span>{escape("・".join(city_label(city, n) for city, n in by_pref[pref]))}</span></li>'
+        photos = photos_by_pref[pref]
+        total = sum(n for _, n in by_pref[pref])
+        thumbs = ""
+        for r in photos:
+            name = str(r.get("title") or "ガンダムマンホール")
+            destination = safe_url(r.get("user_photo_source_url")) or map_href(GUNDAM_WORK_QUERY, pref)
+            thumbs += (f'<a class="cw-area-thumb" href="{escape(destination, quote=True)}" '
+                       f'aria-label="{escape(name, quote=True)}の投稿写真を見る" title="{escape(name, quote=True)}">'
+                       f'{photo_visual(r, name + "の投稿写真")}</a>')
+        photo_label = f"撮影済み {len(photos)} / {total}基" if photos else "写真募集中"
+        return (f'<li><div class="cw-area-heading">{heading}<small class="cw-area-count">{photo_label}</small></div>'
+                f'<span>{escape("・".join(city_label(city, n) for city, n in by_pref[pref]))}</span>'
+                + (f'<div class="cw-area-photos" aria-label="{escape(pref)}の撮影済みマンホール">{thumbs}</div>' if thumbs else "") + '</li>')
 
     # 地方に属さない県名（都道府県未記録など）も件数には入っているので、黙って落とさず最後にまとめる
     known = {pref for _, prefs in REGIONS for pref in prefs}
@@ -364,9 +428,12 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
         else:
             photo_href = "#" + spot_id(hero_photo)
             photo_link = "このマンホールの設置場所を見る →"
+        hero_image = (photo_visual(hero_photo, image_alt, eager=True) if page.slug == "gundam" else
+                      f'<img src="{escape(safe_url(hero_photo.get("user_photo_url")))}" alt="{escape(image_alt)}" '
+                      'width="640" height="640" fetchpriority="high" loading="eager" decoding="async">')
         hero_visual = f'''<div class="cw-hero-side">{count_badge}<figure class="cw-hero-photo"><a href="{escape(photo_href)}">
-          <img src="{escape(safe_url(hero_photo.get("user_photo_url")))}" alt="{escape(image_alt)}" width="640" height="640" fetchpriority="high" loading="eager" decoding="async"></a>
-          <figcaption>{caption}<a href="{escape(photo_href)}">{photo_link}</a></figcaption></figure></div>'''
+          {hero_image}</a>
+          <figcaption>{caption}{photo_credit(hero_photo) if page.slug == "gundam" else ""}<a href="{escape(photo_href)}">{photo_link}</a></figcaption></figure></div>'''
     # og:image:alt・primaryImageOfPage は共有画像の説明。共通画像のときは投稿写真の説明を使わない
     social_alt = image_alt if social_photo else ""
     index_html = "".join(
@@ -392,13 +459,12 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
         locations_heading = "地方・都道府県別の設置エリア"
         locations_html = gundam_areas_html(groups)
     # 巡り方ガイドは地図ページと競合させず、写真館の現地写真から地域を選べるようにする。
-    # 画像は日次取り込み済みの公開投稿のみ。新たなブラウザーAPI呼び出しは不要。
+    # 写真は取り込み済みの公開投稿。名前だけは表示時に公開レコードから読む。
     photo_gallery = ""
     if page.slug == "gundam":
         with_photos = [r for r in selected if safe_url(r.get("user_photo_url"))]
         cards = []
         for r in with_photos:
-            photo_url = safe_url(r.get("user_photo_url"))
             source_url = safe_url(r.get("user_photo_source_url"))
             # 投稿へのリンクが無い場合は、写真館ではなく個別地点の地図へ送る。
             destination = source_url or (BASE_URL + "gmanhole_map.html#gundam-" + quote(str(r["id"]), safe=""))
@@ -406,8 +472,8 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
             name = str(r.get("title") or "ガンダムマンホール")
             cards.append(
                 f'<a class="cw-photo-card" href="{escape(destination, quote=True)}">'
-                f'<img src="{escape(photo_url, quote=True)}" alt="{escape(place + "の" + name + "の投稿写真", quote=True)}" loading="lazy" decoding="async">'
-                f'<span><strong>{escape(place)}</strong><small>{escape(name)}</small></span></a>'
+                f'{photo_visual(r, place + "の" + name + "の投稿写真")}'
+                f'<span class="cw-photo-caption"><strong>{escape(place)}</strong><small>{escape(name)}</small>{photo_credit(r)}</span></a>'
             )
         if cards:
             photo_gallery = (
@@ -415,6 +481,7 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
                 '<div class="cm-section-head"><h2 id="community-photos-heading">みんなが撮ったガンダムマンホール</h2>'
                 f'<a class="cm-btn cm-btn--soft" href="{ASSET_BASE}gmanhole_map.html?work=gundam">全国の設置場所を見る →</a></div>'
                 f'<p class="cm-lead">写真館に寄せられた現地写真。{len(cards)}基 / {count}基の写真を掲載しています。写真を選ぶと投稿詳細を確認できます。</p>'
+                '<div class="cw-photo-toolbar"><span>写真の表示</span><button type="button" id="cw-photo-mode" aria-pressed="true" hidden>ふただけ表示：オン</button></div>'
                 '<div class="cw-photo-grid">' + "".join(cards) + '</div></section>'
             )
     jump_label = {"idolmaster": "アイドル・設置場所を探す", "gundam": "設置エリアを見る"}.get(page.slug, "設置場所を探す")
@@ -497,6 +564,7 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
         points = [{"lat": r["lat"], "lng": r["lng"], "name": str(r.get("character") or r.get("title") or "マンホール"),
                    "alt": str(r.get("character") or r.get("title") or "マンホール") + ("のふたマス" if idolmaster else f"（{page.name}のマンホール）"),
                    "photo_url": safe_url(r.get("user_photo_url")),
+                   "photo_lid": valid_lid(r.get("user_photo_lid")),
                    "address": str(r.get("address") or ""), "anchor": spot_id(r),
                    "href": (ASSET_BASE + "gmanhole_map.html#gundam-" + quote(str(r["id"]), safe="")) if gundam else "",
                    "region": region_lookup.get(str(r.get("prefecture") or ""), "その他")}
@@ -521,7 +589,7 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
         </section>'''
         map_assets = f'''<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
           <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-          <script defer src="{ASSET_BASE}assets/character-work-map.js?v=20261105b"></script>'''
+          <script defer src="{ASSET_BASE}assets/character-work-map.js?v=20261114a"></script>'''
     return f"""<!doctype html>
 <html lang="ja"><head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
@@ -537,6 +605,7 @@ def generate_html(page: WorkPage, records: list[dict], events: dict,
   <link rel="stylesheet" href="{ASSET_BASE}assets/top-page.css?v=20260707a">
   <link rel="stylesheet" href="{ASSET_BASE}assets/character-work.css?v={CHARACTER_CSS_VERSION}">
   {map_assets}
+  {('<script type="module" src="../../assets/character-work-photos.js?v=20261114a"></script>') if page.slug == "gundam" else ""}
   <script type="application/ld+json">{json_script(schema)}</script>
   <script src="{ASSET_BASE}assets/analytics.js?v=20261018a"></script>
   <script>window.PokefutaAnalytics.init({json_script(analytics)});</script>
