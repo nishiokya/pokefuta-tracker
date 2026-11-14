@@ -583,6 +583,78 @@ def _render_related_card(
     )
 
 
+# 検索結果の title は長いと後ろが切れる。施設名を先頭に置いたうえで、この長さに収まるように県名・ポケモン名を削る
+TITLE_MAX_CHARS = 56
+
+
+def seo_title_and_description(
+    manhole: dict,
+    photo: Optional[dict],
+    *,
+    prefecture: str,
+    city: str,
+    building: str,
+    address: str,
+    pokemons: list[str],
+) -> tuple[str, str]:
+    """検索結果に出る <title> と meta description。
+
+    2026-10 の Search Console では詳細ページが種類別で最低の CTR（1.8%、順位 7.5）だった。それまでの title は
+    「鹿児島県指宿のポケふた｜イーブイ｜ポケふた図鑑」と場所が市までで、h1 にある施設名が検索結果に出ていなかった。
+    施設名（地図の見出しと同じ landmark_label）を先頭に置き、説明文は定型文ではなく住所・写真の枚数・経路案内の
+    実データで書く。施設名が無い蓋（496枚のうち約170枚）は従来の「県市のポケふた」の形のまま。
+    og:/twitter: のタイトルは SNS 向けに別で作っているので触らない。
+    """
+    pokemon_text = "・".join(pokemons) if pokemons else "ポケモン"
+    # 名前が多い蓋（5匹など）は title が長くなりすぎるので、og: と同じ「3匹＋ほか」に丸める
+    pokemon_label = format_pokemon_label(pokemons) if pokemons else "ポケモン"
+    municipality = municipality_label(manhole) or city or prefecture
+    is_preinstall = manhole.get("installed") is False
+    where = f"{prefecture}{municipality}" if municipality != prefecture else prefecture
+
+    if building:
+        # 施設名が長い蓋（「刈谷ハイウェイオアシス内にある…正面玄関前」など）は、県名→ポケモン名の順に
+        # 削って TITLE_MAX_CHARS に収める。施設名と市区町村名は残す
+        short_label = "・".join(pokemons[:2]) + (" ほか" if len(pokemons) > 2 else "") if pokemons else pokemon_label
+        candidates = [
+            f"{building}のポケふた（{pokemon_label}）｜{where}の場所・写真・行き方｜ポケふた図鑑",
+            f"{building}のポケふた（{pokemon_label}）｜{municipality}の場所・写真・行き方｜ポケふた図鑑",
+            f"{building}のポケふた（{short_label}）｜{municipality}の場所・写真・行き方｜ポケふた図鑑",
+            f"{building}のポケふた｜{municipality}の場所・写真・行き方｜ポケふた図鑑",
+        ]
+        title = next((c for c in candidates if len(c) <= TITLE_MAX_CHARS), candidates[-1])
+        place = f"{where}の{building}"
+    else:
+        title = f"{where}のポケふた（{pokemon_label}）｜場所・写真・行き方｜ポケふた図鑑"
+        place = where
+    if is_preinstall:
+        # 設置前の蓋は「行き方」と写真をうたわない
+        title = (
+            f"{building}のポケふた（{pokemon_label}）｜{where}に設置予定｜ポケふた図鑑"
+            if building else f"{where}のポケふた（{pokemon_label}）｜設置予定｜ポケふた図鑑"
+        )
+
+    parts: list[str] = []
+    if is_preinstall:
+        note = str(manhole.get("installation_note") or "").strip()
+        parts.append(f"{place}に設置予定のポケふた（{pokemon_text}）。")
+        if note:
+            parts.append(note if note.endswith("。") else note + "。")
+        parts.append("設置場所の地図と、同じ県のポケふたを掲載。")
+    else:
+        parts.append(f"{place}にあるポケふた（{pokemon_text}）。")
+        if address:
+            parts.append(f"住所は{address}。")
+        public_count = photo.get("public_photo_count") if photo else None
+        if isinstance(public_count, int) and public_count > 0:
+            parts.append(f"訪れた人の現地写真{public_count}枚と地図、Googleマップの経路案内、周辺のポケふたを掲載。")
+        elif photo:
+            parts.append("訪れた人の現地写真と地図、Googleマップの経路案内、周辺のポケふたを掲載。")
+        else:
+            parts.append("地図とGoogleマップの経路案内、周辺のポケふたを掲載。写真は募集中。")
+    return title, "".join(parts)
+
+
 def generate_html(
     manhole: dict,
     photo: Optional[dict],
@@ -637,12 +709,9 @@ def generate_html(
     # 自治体名が欠落する場合は都道府県名を優先（og:/twitter: タイトル用）
     city_label = city if city else prefecture
 
-    title = f"{prefecture}{city}のポケふた｜{pokemon_text}｜ポケふた図鑑"
-
-    description = (
-        f"{prefecture}{city}に設置されているポケふた。"
-        f"{pokemon_text}が描かれています。"
-        f"場所・写真・地図・周辺のポケふた情報を掲載。"
+    title, description = seo_title_and_description(
+        manhole, photo, prefecture=prefecture, city=city, building=building,
+        address=address, pokemons=pokemons,
     )
 
     # og:/twitter: meta tags — inject top title when available
@@ -661,7 +730,7 @@ def generate_html(
         _tw_title = f"{city_label}のポケふた｜{pokemon_label}"
         _tw_desc = f"{prefecture}{city}のポケふたを地図で確認できます。"
 
-    # <title> と og: は検索向けに「県市のポケふた」の形を保つので、施設名は h1 だけに入れる
+    # og: は SNS 向けに「県市のポケふた」の形を保つ。<title> は seo_title_and_description（施設名を先頭に）
     h1 = f"{compose_display_name(manhole) or city_label}のポケふた"
     # place_ambiguous な蓋は名前にポケモン名が入っているので、二重に付けない
     if pokemons and not manhole.get("place_ambiguous"):
