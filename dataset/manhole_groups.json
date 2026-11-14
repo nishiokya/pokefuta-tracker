@@ -5,7 +5,9 @@
     "name": "機動戦士ガンダム",
     "category": "anime",
     "kind": "catalog",
-    "works": ["機動戦士ガンダム"]
+    "works": [
+      "機動戦士ガンダム"
+    ]
   },
   {
     "slug": "idolmaster",
@@ -28,7 +30,9 @@
     "name": "ゾンビランドサガ",
     "category": "anime",
     "kind": "catalog",
-    "works": ["ゾンビランドサガ"]
+    "works": [
+      "ゾンビランドサガ"
+    ]
   },
   {
     "slug": "romancing-saga",
@@ -36,7 +40,9 @@
     "name": "ロマンシング サガ",
     "category": "anime",
     "kind": "catalog",
-    "works": ["ロマンシング サガ"]
+    "works": [
+      "ロマンシング サガ"
+    ]
   },
   {
     "slug": "yowamushi-pedal",
@@ -44,7 +50,9 @@
     "name": "弱虫ペダル",
     "category": "anime",
     "kind": "catalog",
-    "works": ["弱虫ペダル"]
+    "works": [
+      "弱虫ペダル"
+    ]
   },
   {
     "slug": "tokai-onair",
@@ -52,7 +60,9 @@
     "name": "東海オンエア",
     "category": "anime",
     "kind": "catalog",
-    "works": ["東海オンエア"]
+    "works": [
+      "東海オンエア"
+    ]
   },
   {
     "slug": "chibi-maruko",
@@ -60,7 +70,9 @@
     "name": "ちびまる子ちゃん",
     "category": "anime",
     "kind": "catalog",
-    "works": ["ちびまる子ちゃん"]
+    "works": [
+      "ちびまる子ちゃん"
+    ]
   },
   {
     "slug": "cinnamoroll",
@@ -68,7 +80,9 @@
     "name": "シナモロール",
     "category": "anime",
     "kind": "catalog",
-    "works": ["シナモロール"]
+    "works": [
+      "シナモロール"
+    ]
   },
   {
     "slug": "baseball",
