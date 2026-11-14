@@ -404,6 +404,39 @@ class GeneratePrefecturePagesTest(unittest.TestCase):
         # 告知の期間（end）は過ぎているので、イベント欄には出さない
         self.assertNotIn("https://example.com/", html)
 
+    def test_headline_fills_counts_from_data(self) -> None:
+        """見出しは数か月出るので、枚数は {count}/{installed_count}/{planned_count} でデータから入れる。"""
+        records = [dict(r) for r in self.records if r.get("prefecture") == "高知県"]
+        records[0] = {**records[0], "installed": False}
+        records[1] = {**records[1], "installed": False}
+        event = {
+            "title": "新しいポケふた", "url": "https://example.com/",
+            "start": date(2020, 1, 1), "end": date(2020, 1, 2),
+            "headline": "新作が加わり全{count}枚になりました（{installed_count}枚設置済み・{planned_count}枚は設置予定）。",
+            "headline_title": "高知県のポケふた{count}枚｜新作を含む地図",
+            "headline_until": "2999-12-31",
+        }
+        html = MODULE.build_page(
+            "高知県", "kochi", records,
+            MODULE.build_rankings(self.records)["高知県"],
+            self.pokemon_slugs, self.trivia.get("高知県"), [event],
+        )
+        n = len(records)
+        self.assertIn(f"<title>高知県のポケふた{n}枚｜新作を含む地図｜ポケふた図鑑</title>", html)
+        self.assertIn(f"新作が加わり全{n}枚になりました（{n - 2}枚設置済み・2枚は設置予定）。", html)
+
+    def test_intro_tells_planned_lids_apart(self) -> None:
+        """設置前の蓋（installed: false）が count に入る県は、「N枚あります」の後に設置予定の枚数と市町村を添える。"""
+        records = [dict(r) for r in self.records if r.get("prefecture") == "高知県"]
+        records[0] = {**records[0], "installed": False}
+        place = MODULE._municipality_counts(records[:1])[0][0]
+        intro = MODULE._hero_intro("高知県", len(records), self.trivia.get("高知県"), records=records)
+        self.assertIn(f"高知県には{len(records)}枚のポケふたがあります。", intro)
+        self.assertIn(f"うち1枚（{place}）は設置予定で、設置されしだい写真を募集します。", intro)
+        installed = [r for r in self.records if r.get("prefecture") == "高知県"]
+        plain = MODULE._hero_intro("高知県", len(installed), self.trivia.get("高知県"), records=installed)
+        self.assertNotIn("設置予定", plain)
+
     def test_expired_event_is_hidden(self) -> None:
         import datetime
 
