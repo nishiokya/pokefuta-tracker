@@ -1795,6 +1795,12 @@ def _hero_intro(
     intro = _visit_search_intro(prefecture, count, records or [], photo_count)
     single_municipality_intro = bool(intro) and len(_municipality_counts(records or [])) == 1
     intro = intro or f"{prefecture}には{count}枚のポケふたがあります。"
+    # 公式が発表済みでまだ設置前の蓋（installed: false）は count に入っている。「5枚あります」と言い切ると
+    # 地図の「設置予定」の札と矛盾する（2026-11 の群馬）ので、何枚がどこで設置待ちかを添える
+    planned = [record for record in records or [] if record.get("installed") is False]
+    if planned:
+        places = "・".join(name for name, _ in _municipality_counts(planned))
+        intro += f"うち{len(planned)}枚（{places}）は設置予定で、設置されしだい写真を募集します。"
     # 設置が発表されたのに写真がまだ届いていない蓋がある（provisional_wanted.json）ときは、図鑑に載っている分だけで
     # 「◯◯だけです」と言い切らない
     if not single_municipality_intro and coverage and coverage.covered and not (pending and coverage.covered == 1):
@@ -2684,9 +2690,16 @@ def build_page(
     )
     headline_event = _headline_event(events)
     if headline_event:
-        headline = str(headline_event["headline"]).strip()
+        # 見出しは数か月出るので、「10月に新しく5枚」のような時点に依る書き方を避け、枚数は {count}・
+        # {installed_count}・{planned_count} でデータから入れられるようにする
+        counts = {
+            "count": count,
+            "installed_count": installed_count,
+            "planned_count": count - installed_count,
+        }
+        headline = str(headline_event["headline"]).strip().format(**counts)
         if headline_event.get("headline_title"):
-            title = str(headline_event["headline_title"]).format(count=count)
+            title = str(headline_event["headline_title"]).format(**counts)
         description = headline + description
         hero_intro = headline + hero_intro
     hero_photos_html = _hero_photos(records)
