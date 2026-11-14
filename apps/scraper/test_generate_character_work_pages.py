@@ -10,9 +10,11 @@ from unittest.mock import patch
 
 from apps.scraper.character_manhole_works import CHARACTER_CSS_VERSION, WORK_PAGES, gundam_work_records, page_for_work
 from apps.scraper.generate_character_work_pages import (
-    attach_user_photos, design_manhole_links, generate_html, generate_index_html, load_events, write_pages,
+    attach_user_photos, design_manhole_links, design_manhole_tags, generate_html, generate_index_html, load_events,
+    write_pages,
 )
-from apps.scraper.generate_character_manhole_page import _is_active, load_ndjson
+from apps.scraper.generate_character_manhole_page import ROOT, _is_active, load_ndjson
+from apps.scraper.manhole_groups import group_for_work, load_groups, validate_groups
 from apps.scraper.photo_caption import JST
 
 
@@ -99,6 +101,80 @@ class DesignManholeLinksTest(unittest.TestCase):
         records = [r for r in RECORDS if _is_active(r)]
         sub = {**GUNDAM_SUBMISSION, "canonical_ref": "character:removed"}
         self.assertEqual({}, design_manhole_links(records, [sub], "x")["links"])
+
+
+class DesignManholeTagsTest(unittest.TestCase):
+    """写真館の一覧が読む api/design_manhole_tags.json の中身。"""
+
+    GROUPS = [
+        {"slug": "gundam", "label": "ガンダム", "name": "機動戦士ガンダム", "category": "anime",
+         "kind": "catalog", "works": ["機動戦士ガンダム"]},
+        {"slug": "baseball", "label": "野球", "name": "野球のマンホール", "category": "sports",
+         "kind": "open", "experimental": True},
+        {"slug": "carp", "label": "カープ", "name": "広島東洋カープ", "category": "sports",
+         "kind": "open", "parent": "baseball"},
+    ]
+
+    def _tags(self, submissions: list[dict]) -> dict:
+        records = [r for r in attach_user_photos(gundam_work_records(GUNDAM_RECORDS), submissions) if _is_active(r)]
+        return design_manhole_tags(records, submissions, self.GROUPS, "x")
+
+    def test_linked_submission_gets_the_work_tag(self) -> None:
+        out = self._tags([GUNDAM_SUBMISSION])
+        self.assertEqual({"photo-g": {"tags": ["gundam"]}}, out["posts"])
+        gundam = out["groups"][0]
+        self.assertEqual(("gundam", 1, 1, 1), (gundam["slug"], gundam["photos"], gundam["spots"],
+                                               gundam["spots_with_photo"]))
+        self.assertEqual("https://data.pokefuta.com/characters/gundam/", gundam["guide_url"])
+
+    def test_manual_tag_adds_the_parent_and_drops_unknown_tags(self) -> None:
+        carp = {**GUNDAM_SUBMISSION, "source_id": "photo-c", "canonical_ref": None, "tags": ["carp", "no-such-tag"]}
+        out = self._tags([carp])
+        self.assertEqual({"photo-c": {"tags": ["carp", "baseball"]}}, out["posts"])
+        photos = {g["slug"]: g["photos"] for g in out["groups"]}
+        self.assertEqual({"gundam": 0, "baseball": 1, "carp": 1}, photos)
+        baseball = next(g for g in out["groups"] if g["slug"] == "baseball")
+        self.assertTrue(baseball["experimental"])
+        self.assertNotIn("spots", baseball)
+
+    def test_hidden_and_untagged_submissions_are_left_out(self) -> None:
+        hidden = {**GUNDAM_SUBMISSION, "source_id": "photo-h", "status": "pending", "tags": ["carp"]}
+        plain = {**GUNDAM_SUBMISSION, "source_id": "photo-p", "canonical_ref": None}
+        self.assertEqual({}, self._tags([hidden, plain])["posts"])
+
+
+class ManholeGroupsRegistryTest(unittest.TestCase):
+    """dataset/manhole_groups.json（タグの台帳）と、作品ガイド・設置場所データとの食い違いを止める。"""
+
+    def test_registry_is_valid_and_covers_every_work_page(self) -> None:
+        groups = load_groups()
+        by_slug = {g["slug"]: g for g in groups}
+        for page in WORK_PAGES:
+            self.assertEqual(set(page.works), set(by_slug[page.slug]["works"]), page.slug)
+
+    def test_every_listed_work_has_a_group(self) -> None:
+        groups = load_groups()
+        works = {json.loads(line)["work"] for line in
+                 (ROOT / "docs/character_manholes.ndjson").read_text(encoding="utf-8").splitlines() if line.strip()}
+        self.assertEqual([], sorted(w for w in works if group_for_work(groups, w) is None))
+
+    def test_manual_tags_in_overrides_are_registered(self) -> None:
+        slugs = {g["slug"] for g in load_groups()}
+        overrides = json.loads((ROOT / "dataset/design_manhole_overrides.json").read_text(encoding="utf-8"))
+        unknown = sorted({tag for o in overrides.values() for tag in o.get("tags", [])} - slugs)
+        self.assertEqual([], unknown)
+
+    def test_broken_registry_is_rejected(self) -> None:
+        base = {"slug": "a", "label": "A", "name": "A", "category": "anime", "kind": "open"}
+        for broken in (
+            [{**base, "slug": "Bad Slug"}],
+            [base, base],
+            [{**base, "kind": "catalog"}],
+            [{**base, "parent": "missing"}],
+            [base, {**base, "slug": "b", "parent": "a"}, {**base, "slug": "c", "parent": "b"}],
+        ):
+            with self.assertRaises(ValueError):
+                validate_groups(broken)
 
 
 class GundamGuideTest(unittest.TestCase):

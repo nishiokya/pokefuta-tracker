@@ -22,6 +22,7 @@ try:
     from apps.scraper.generate_character_manhole_page import (
         BASE_URL, ROOT, _is_active, load_ndjson,
     )
+    from apps.scraper.manhole_groups import DEFAULT_GROUPS, expand_tags, group_for_work, load_groups
     from apps.scraper.photo_caption import JST
     from apps.scraper.prefectures import PREFECTURE_ORDER, REGIONS
 except ModuleNotFoundError as exc:
@@ -34,6 +35,7 @@ except ModuleNotFoundError as exc:
     from generate_character_manhole_page import (
         BASE_URL, ROOT, _is_active, load_ndjson,
     )
+    from manhole_groups import DEFAULT_GROUPS, expand_tags, group_for_work, load_groups
     from photo_caption import JST
     from prefectures import PREFECTURE_ORDER, REGIONS
 
@@ -730,13 +732,69 @@ def design_manhole_links(records: list[dict], submissions: list[dict], generated
     return {"success": True, "generated_at": generated_at, "links": links}
 
 
-def write_design_manhole_links(records: list[dict], submissions: list[dict], output: Path) -> Path:
+def design_manhole_tags(records: list[dict], submissions: list[dict], groups: list[dict], generated_at: str) -> dict:
+    """写真館の投稿ID → タグ（グループの slug）と、グループの一覧。写真館の一覧が読む（api/design_manhole_tags.json）。
+
+    records は attach_user_photos 後の掲載中のもの。タグの付き方は2通り。
+    - 設置場所に紐付いた投稿（canonical_ref）は、その設置場所の作品のグループ
+    - overrides に手で書いた ``tags``（設置場所の一覧が無い野球など）
+    子のグループのタグには親のタグも足す。台帳に無いタグは出さない。
+    """
+    by_ref = {record_ref(r): r for r in records}
+    available = {page.slug: page for page in available_pages(records)}
+    posts: dict[str, dict] = {}
+    photos: Counter = Counter()
+    for submission in submissions:
+        source_id = submission.get("source_id")
+        if submission.get("status") != "active" or not source_id:
+            continue
+        slugs: list[str] = []
+        record = by_ref.get(str(submission.get("canonical_ref") or ""))
+        if record is not None:
+            group = group_for_work(groups, record.get("work") or "")
+            if group is not None:
+                slugs.append(group["slug"])
+        slugs.extend(tag for tag in submission.get("tags") or [] if isinstance(tag, str))
+        tags = expand_tags(groups, slugs)
+        if tags:
+            posts[source_id] = {"tags": tags}
+            photos.update(tags)
+    out_groups = []
+    for group in groups:
+        slug = group["slug"]
+        item = {
+            "slug": slug,
+            "label": group["label"],
+            "name": group["name"],
+            "category": group["category"],
+            "kind": group["kind"],
+            "parent": group.get("parent"),
+            "experimental": bool(group.get("experimental")),
+            "photos": photos[slug],
+        }
+        if group["kind"] == "catalog":
+            spots = [r for r in records if r.get("work") in group.get("works", [])]
+            item["spots"] = len(spots)
+            item["spots_with_photo"] = sum(1 for r in spots if r.get("user_photo_url"))
+            # 作品ガイドがある作品だけ（シナモロールは全国一覧に載るがガイドは無い）
+            item["guide_url"] = f"{BASE_URL}{available[slug].path}" if slug in available else None
+        out_groups.append(item)
+    return {"success": True, "generated_at": generated_at, "groups": out_groups, "posts": posts}
+
+
+def write_design_manhole_links(
+    records: list[dict], submissions: list[dict], output: Path, groups: list[dict] | None = None,
+) -> Path:
     active = [r for r in attach_user_photos(records, submissions) if _is_active(r)]
     generated_at = datetime.now(JST).isoformat(timespec="seconds")
     path = output / "api/design_manhole_links.json"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(design_manhole_links(active, submissions, generated_at), ensure_ascii=False,
                                separators=(",", ":")), encoding="utf-8")
+    if groups is not None:
+        tags_path = output / "api/design_manhole_tags.json"
+        tags_path.write_text(json.dumps(design_manhole_tags(active, submissions, groups, generated_at),
+                                        ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     return path
 
 
@@ -746,8 +804,10 @@ def main() -> int:
     parser.add_argument("--events", type=Path, default=DEFAULT_EVENTS)
     parser.add_argument("--gundam", type=Path, default=DEFAULT_GUNDAM)
     parser.add_argument("--design-manholes", type=Path, default=DEFAULT_DESIGN_MANHOLES)
+    parser.add_argument("--groups", type=Path, default=DEFAULT_GROUPS)
     parser.add_argument("--output", type=Path, default=ROOT / "dist")
     args = parser.parse_args()
+    groups = load_groups(args.groups)  # 台帳が壊れていたらページを書く前に止める
     records = load_ndjson(args.data) + gundam_work_records(load_ndjson(args.gundam))
     if not any(_is_active(r) for r in records):
         parser.error("No active character records; refusing to generate empty guides")
@@ -758,7 +818,7 @@ def main() -> int:
         args.output,
         design_submissions=submissions,
     )
-    write_design_manhole_links(records, submissions, args.output)
+    write_design_manhole_links(records, submissions, args.output, groups)
     print(f"[generate_character_work_pages] wrote {len(written)} character pages")
     return 0
 

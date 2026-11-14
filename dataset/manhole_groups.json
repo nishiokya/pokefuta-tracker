@@ -1,0 +1,90 @@
+[
+  {
+    "slug": "gundam",
+    "label": "ガンダム",
+    "name": "機動戦士ガンダム",
+    "category": "anime",
+    "kind": "catalog",
+    "works": ["機動戦士ガンダム"]
+  },
+  {
+    "slug": "idolmaster",
+    "label": "アイマス",
+    "name": "アイドルマスター",
+    "category": "anime",
+    "kind": "catalog",
+    "works": [
+      "アイドルマスター",
+      "アイドルマスター シンデレラガールズ",
+      "アイドルマスター ミリオンライブ！",
+      "アイドルマスター SideM",
+      "アイドルマスター シャイニーカラーズ",
+      "学園アイドルマスター"
+    ]
+  },
+  {
+    "slug": "zombieland-saga",
+    "label": "ゾンビランドサガ",
+    "name": "ゾンビランドサガ",
+    "category": "anime",
+    "kind": "catalog",
+    "works": ["ゾンビランドサガ"]
+  },
+  {
+    "slug": "romancing-saga",
+    "label": "ロマサガ",
+    "name": "ロマンシング サガ",
+    "category": "anime",
+    "kind": "catalog",
+    "works": ["ロマンシング サガ"]
+  },
+  {
+    "slug": "yowamushi-pedal",
+    "label": "弱虫ペダル",
+    "name": "弱虫ペダル",
+    "category": "anime",
+    "kind": "catalog",
+    "works": ["弱虫ペダル"]
+  },
+  {
+    "slug": "tokai-onair",
+    "label": "東海オンエア",
+    "name": "東海オンエア",
+    "category": "anime",
+    "kind": "catalog",
+    "works": ["東海オンエア"]
+  },
+  {
+    "slug": "chibi-maruko",
+    "label": "ちびまる子ちゃん",
+    "name": "ちびまる子ちゃん",
+    "category": "anime",
+    "kind": "catalog",
+    "works": ["ちびまる子ちゃん"]
+  },
+  {
+    "slug": "cinnamoroll",
+    "label": "シナモロール",
+    "name": "シナモロール",
+    "category": "anime",
+    "kind": "catalog",
+    "works": ["シナモロール"]
+  },
+  {
+    "slug": "baseball",
+    "label": "野球",
+    "name": "野球のマンホール",
+    "category": "sports",
+    "kind": "open",
+    "experimental": true
+  },
+  {
+    "slug": "carp",
+    "label": "カープ",
+    "name": "広島東洋カープ",
+    "category": "sports",
+    "kind": "open",
+    "parent": "baseball",
+    "experimental": true
+  }
+]

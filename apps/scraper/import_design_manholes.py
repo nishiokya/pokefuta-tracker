@@ -302,6 +302,11 @@ def build_public_records(
             "last_updated": imported_at,
             "status": override.get("status", default_status),
         }
+        # 手で付けたタグ（dataset/manhole_groups.json の slug）。無い投稿には鍵を出さない
+        # （全行に空の配列を足すと、既存の全行が「変わった」扱いになる）
+        tags = [tag for tag in override.get("tags") or [] if isinstance(tag, str) and tag]
+        if tags:
+            record["tags"] = tags
         previous = previous_by_id.get(source_id)
         if previous:
             comparable = {key: value for key, value in record.items() if key != "last_updated"}
