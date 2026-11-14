@@ -48,7 +48,27 @@
         photo.className = 'cw-map-photo-marker';
         photo.onerror = () => marker.setIcon(fallback);
         photo.src = point.photo_url;
-        marker.setIcon(L.divIcon({ className: '', html: photo, iconSize: [44, 44], iconAnchor: [22, 22], popupAnchor: [0, -22] }));
+        let icon = photo;
+        const lid = point.photo_lid;
+        if (lid && Array.isArray(lid.box) && lid.box.length === 4
+            && [...lid.box, lid.width, lid.height].every(v => typeof v === 'number' && Number.isFinite(v))
+            && lid.width > 0 && lid.height > 0) {
+          const [x0, y0, x1, y1] = lid.box;
+          if (0 <= x0 && x0 < x1 && x1 <= 1 && 0 <= y0 && y0 < y1 && y1 <= 1) {
+            const w = x1 - x0, h = y1 - y0, ratio = w * lid.width / (h * lid.height);
+            const visual = document.createElement('span');
+            visual.className = 'cw-photo-visual cw-photo-visual--clipped cw-map-lid';
+            const frame = document.createElement('span');
+            frame.className = 'cw-photo-frame';
+            photo.className = '';
+            const styles = { '--lid-ratio': ratio, '--lid-size': Math.min(1, ratio) * 100 + '%',
+              '--lid-width': 100 / w + '%', '--lid-height': 100 / h + '%',
+              '--lid-left': -x0 / w * 100 + '%', '--lid-top': -y0 / h * 100 + '%' };
+            for (const [key, value] of Object.entries(styles)) visual.style.setProperty(key, value);
+            frame.append(photo); visual.append(frame); icon = visual;
+          }
+        }
+        marker.setIcon(L.divIcon({ className: '', html: icon, iconSize: [44, 44], iconAnchor: [22, 22], popupAnchor: [0, -22] }));
       }
       return { marker, point };
     });
