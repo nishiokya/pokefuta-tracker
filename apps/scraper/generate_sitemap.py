@@ -222,12 +222,15 @@ def build_lastmods(
 ) -> dict:
     """sitemap に書く lastmod をページ種別ごとにまとめる。
 
-    返り値: {"all": 日付, "manhole": {id: 日付}, "prefecture": {slug: 日付}, "pokemon": {slug: 日付}}。
+    返り値: {"all": 日付, "official": 日付, "manhole": {id: 日付}, "prefecture": {slug: 日付}, "pokemon": {slug: 日付}}。
     日付が決まらないページは入れない（lastmod を書かない）。
+    "official" は仮番号（provisional_manholes.py の provisional: true）を除いた最新。/summary/ は公式の
+    docs/pokefuta.ndjson だけから作るので、仮番号が増えても中身は変わらず、こちらを使う。
     """
     photos = photos or {}
     ja_to_slug = ja_to_slug or {}
     per_manhole: dict[str, str] = {}
+    official_dates: list[str] = []
     per_prefecture: dict[str, list[str]] = {}
     per_pokemon: dict[str, list[str]] = {}
     for record in records:
@@ -238,6 +241,8 @@ def build_lastmods(
         if not date:
             continue
         per_manhole[manhole_id] = date
+        if not record.get("provisional"):
+            official_dates.append(date)
         slug = PREFECTURE_SLUGS.get(str(record.get("prefecture") or ""))
         if slug:
             per_prefecture.setdefault(slug, []).append(date)
@@ -247,6 +252,7 @@ def build_lastmods(
                 per_pokemon.setdefault(pokemon_slug, []).append(date)
     return {
         "all": max(per_manhole.values(), default=""),
+        "official": max(official_dates, default=""),
         "manhole": per_manhole,
         "prefecture": {slug: max(dates) for slug, dates in per_prefecture.items()},
         "pokemon": {slug: max(dates) for slug, dates in per_pokemon.items()},
@@ -300,6 +306,7 @@ def build_sitemap(
     <lastmod> を書き、日付の根拠が無いページ（旅・特集・タグなど）には書かない。"""
     lastmods = lastmods or {}
     all_date = str(lastmods.get("all") or "")
+    official_date = str(lastmods.get("official") or all_date)
     manhole_dates: dict[str, str] = lastmods.get("manhole") or {}
     prefecture_dates: dict[str, str] = lastmods.get("prefecture") or {}
     pokemon_dates: dict[str, str] = lastmods.get("pokemon") or {}
@@ -307,7 +314,8 @@ def build_sitemap(
         url_entry(BASE_URL, "daily", "1.0", all_date),
         # map.html は自分自身を canonical にしているので、sitemap にも載せる
         url_entry(f"{BASE_URL}map.html", "daily", "0.9", all_date),
-        url_entry(f"{BASE_URL}summary/", "weekly", "0.9", all_date),
+        # /summary/ は公式データだけから作る（generate_summary_pages.NDJSON）ので仮番号の日付は使わない
+        url_entry(f"{BASE_URL}summary/", "weekly", "0.9", official_date),
         url_entry(f"{BASE_URL}prefectures/", "weekly", "0.9", all_date),
         url_entry(f"{BASE_URL}pokemon/", "weekly", "0.9", all_date),
         url_entry(f"{BASE_URL}character_manholes.html", "weekly", "0.8"),

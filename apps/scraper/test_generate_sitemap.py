@@ -185,6 +185,18 @@ class LastmodTest(unittest.TestCase):
         self.assertEqual(self._lastmod("https://data.pokefuta.com/en/manholes/1/"), "2026-09-08")
         self.assertEqual(self._lastmod("https://data.pokefuta.com/zh-TW/prefectures/kagoshima/"), "2026-09-08")
 
+    def test_summary_ignores_provisional_lids(self) -> None:
+        # /summary/ は公式の docs/pokefuta.ndjson だけから作る。仮番号（provisional）の蓋が増えても中身は変わらないので、
+        # トップ・県・一覧は進んでも /summary/ の lastmod は公式の最新のまま（Copilot の指摘、PR #864）
+        records = self.RECORDS + [{"id": "9001", "prefecture": "宮城県", "pokemons": [], "provisional": True,
+                                   "added_at": "2026-11-12T00:00:00Z", "status": "active"}]
+        xml = MODULE.build_sitemap(["1", "2", "3", "4", "9001"], [], lastmods=MODULE.build_lastmods(records, self.PHOTOS, self.JA_TO_SLUG))
+        import re
+        get = lambda loc: re.search(r"<loc>" + re.escape(loc) + r"</loc>\n    <lastmod>(.*?)</lastmod>", xml).group(1)
+        self.assertEqual(get("https://data.pokefuta.com/"), "2026-11-12")
+        self.assertEqual(get("https://data.pokefuta.com/prefectures/miyagi/"), "2026-11-12")
+        self.assertEqual(get("https://data.pokefuta.com/summary/"), "2026-10-21")
+
     def test_without_lastmods_nothing_changes(self) -> None:
         self.assertNotIn("<lastmod>", MODULE.build_sitemap(["1"], ["pikachu"]))
 
