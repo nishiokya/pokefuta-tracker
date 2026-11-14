@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-13T01:21:26+00:00",
+  "generated_at": "2026-11-14T01:00:49+00:00",
   "legends": [
     {
       "id": "07ce4931-96e0-4d66-902f-97be711ac736",
@@ -63,6 +63,7 @@
     "0e627cdb-b748-4367-acf4-da1e0268b0f4": "regular",
     "0e64df41-11a1-4391-b059-e78e70c79f50": "regular",
     "0e763e46-5f27-48d6-b597-7be0e5906802": "rookie",
+    "0f6c735a-cd97-4d98-bd9c-40b5ebdb4799": "rookie",
     "11dd7781-613e-45fc-925e-db0724a1331e": "rookie",
     "12e767c0-7054-4fe6-8bb6-d4f5132a40bf": "regular",
     "12fd4594-7c06-4718-83a7-1f2514422ebc": "rookie",
@@ -91,7 +92,7 @@
     "247f7342-9012-45d8-9905-1545aead8fc1": "rookie",
     "24c7d10a-e6b7-4f86-a6eb-1a1d7745cd54": "regular",
     "267e3929-3f54-4dd4-829e-ecb94daabd4a": "rookie",
-    "278e047c-fcc4-4f7d-af04-2f0753471134": "regular",
+    "278e047c-fcc4-4f7d-af04-2f0753471134": "ranger",
     "278ea7e1-24e8-4769-9e1c-2c7bf7855d56": "regular",
     "28e031d5-cd59-4eae-892a-0b990bb3c630": "rookie",
     "2934af0e-de67-44a4-a9d5-978dc79cdc74": "regular",
@@ -112,13 +113,14 @@
     "3361a418-56d6-43b7-b3bf-dc09398dc18c": "rookie",
     "367affa9-fb88-4968-a683-182361047c14": "rookie",
     "37869e5f-fbad-442f-8d01-5f18272f4d2a": "ranger",
+    "37a8006d-d438-4af1-bb03-992ea74db657": "rookie",
     "37ff7113-2c3a-4433-97f6-f05367d5379c": "rookie",
     "38b9f9d3-6305-48b5-a9d8-7c1a7d8933e4": "regular",
     "38cbfd09-cb09-4346-9aa5-8eb6a4ad9b8d": "rookie",
     "39f973eb-2331-4fab-8b25-95397a057d6a": "regular",
     "3b7b7b62-11c0-416f-a823-401e8aa27416": "rookie",
     "3bc3f0a4-9dc0-41c9-b92a-c199e2d6dc87": "regular",
-    "3bc750e4-0da9-49d9-98b7-449345696cf7": "regular",
+    "3bc750e4-0da9-49d9-98b7-449345696cf7": "ranger",
     "3cc9ae99-877d-4981-8726-d45945d5fa28": "rookie",
     "3d2d161f-5b73-4b91-bd37-5654bed42547": "rookie",
     "3d512688-b661-44a7-a7f0-9c4290ccec53": "ranger",
@@ -292,7 +294,7 @@
     "b26509a1-626c-493f-bbf6-85309a097067": "rookie",
     "b4a18552-eb68-43be-a37f-3157546846d7": "ranger",
     "b4abeb75-657f-4138-b67e-068a8fa4c94e": "rookie",
-    "b4def358-979b-47ad-b1f1-fb5ae8016e00": "rookie",
+    "b4def358-979b-47ad-b1f1-fb5ae8016e00": "regular",
     "b4f988d3-8a06-46db-ad43-46e0e3139354": "regular",
     "b61a47b1-4a0c-41c3-839d-c8d1ac05bd40": "regular",
     "b6247311-bfd1-4234-8e94-85eefb1d4316": "rookie",
@@ -401,6 +403,7 @@
     "fd9877e4-097c-4e6d-a36a-e82f727968d4": "regular",
     "fe978339-09fd-44a2-a87e-258f12154107": "rookie",
     "fe9deba6-7adc-4988-b815-f56488b69674": "ranger",
+    "ff89e2f4-dbbd-4709-aa7a-ac1b6cd8b3a5": "rookie",
     "ffb57758-fd10-4527-9987-8148046ab213": "rookie",
     "ffd4cdb3-c954-4990-aee1-82afb428fa42": "regular"
   }
