@@ -30,6 +30,7 @@ GSI_REVERSE_URL = "https://mreversegeocoder.gsi.go.jp/reverse-geocoder/LonLatToA
 GSI_MUNI_URL = "https://maps.gsi.go.jp/js/muni.js"
 USER_AGENT = "pokefuta-tracker design-manhole importer (+https://github.com/nishiokya/pokefuta-tracker)"
 DEFAULT_LIMIT = 1000
+API_PAGE_SIZE = 200  # pokefuta.com/api/design-manholes が1回に返す上限
 NEARBY_THRESHOLD_METERS = 50.0
 PUBLIC_REVIEW_STATUSES = frozenset({"pending", "matched", "auto_matched", "reviewed_distinct"})
 AUTO_MATCH_PREFIXES = ("gundam:", "character:")
@@ -127,13 +128,28 @@ def normalize_submission(item: dict[str, Any]) -> dict[str, Any]:
 
 
 def fetch_submissions(limit: int, api_url: str = API_URL) -> list[dict[str, Any]]:
-    payload = fetch_json(api_url, {"limit": str(limit)})
-    if not payload.get("success") or not isinstance(payload.get("design_manholes"), list):
-        raise ValueError("Design-manhole API returned an invalid payload")
-    submissions = [normalize_submission(item) for item in payload["design_manholes"]]
-    ids = [item["id"] for item in submissions]
-    if len(ids) != len(set(ids)):
-        raise ValueError("Design-manhole API returned duplicate IDs")
+    """公開中の投稿を全部読む。API は1回 API_PAGE_SIZE 枚までなので、offset を進めて読む。
+
+    以前は limit=1000 を1回頼むだけで、API が黙って200枚に切っていた。公開が200枚を超えると
+    古い投稿がデータから落ち、紐付けやタグも一緒に消えた（2026-11-15）。
+    同じ ID が2度出たら止める（API が offset を無視して同じページを返した・読んでいる間に投稿が増えた）。
+    """
+    submissions: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    offset = 0
+    while len(submissions) < limit:
+        payload = fetch_json(api_url, {"limit": str(API_PAGE_SIZE), "offset": str(offset)})
+        if not payload.get("success") or not isinstance(payload.get("design_manholes"), list):
+            raise ValueError("Design-manhole API returned an invalid payload")
+        page = [normalize_submission(item) for item in payload["design_manholes"]]
+        ids = [item["id"] for item in page]
+        if len(ids) != len(set(ids)) or seen.intersection(ids):
+            raise ValueError("Design-manhole API returned duplicate IDs")
+        seen.update(ids)
+        submissions.extend(page)
+        if len(page) < API_PAGE_SIZE:
+            break
+        offset += API_PAGE_SIZE
     return sorted(submissions, key=lambda item: (item["created_at"], item["id"]))
 
 

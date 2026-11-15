@@ -30,6 +30,60 @@ class ImportDesignManholesTests(unittest.TestCase):
             }
         )
 
+    def _api(self, total, ignore_offset=False):
+        """total 枚ある API のふり。呼ばれた (limit, offset) を self.calls に残す。"""
+        rows = [
+            {"id": f"s-{i:04d}", "title": "蓋", "description": None, "latitude": 35.0, "longitude": 135.0,
+             "created_at": f"2026-07-10T00:{i // 60:02d}:{i % 60:02d}Z",
+             "photo_url": f"/api/design-manholes/s-{i:04d}/photo?size=small"}
+            for i in range(total)
+        ]
+        rows.reverse()  # API は新しい順
+        self.calls = []
+
+        def fetch_json(url, params=None):
+            limit, offset = int(params["limit"]), 0 if ignore_offset else int(params["offset"])
+            self.calls.append((int(params["limit"]), int(params["offset"])))
+            return {"success": True, "design_manholes": rows[offset:offset + min(limit, 200)]}
+
+        return fetch_json
+
+    def _fetch(self, total, limit=1000, **kwargs):
+        original = importer.fetch_json
+        importer.fetch_json = self._api(total, **kwargs)
+        try:
+            return importer.fetch_submissions(limit)
+        finally:
+            importer.fetch_json = original
+
+    def test_fetch_submissions_reads_every_page(self):
+        submissions = self._fetch(450)
+
+        self.assertEqual(len(submissions), 450)
+        self.assertEqual(len({item["id"] for item in submissions}), 450)
+        self.assertEqual(self.calls, [(200, 0), (200, 200), (200, 400)])
+        # 古い順に並べ直す（今までと同じ）
+        self.assertEqual(submissions[0]["id"], "s-0000")
+
+    def test_fetch_submissions_stops_after_a_short_page(self):
+        self.assertEqual(len(self._fetch(150)), 150)
+        self.assertEqual(self.calls, [(200, 0)])
+        # ちょうど1ページ分のときは、次のページが空なのを見てから終わる
+        self.assertEqual(len(self._fetch(200)), 200)
+        self.assertEqual(self.calls, [(200, 0), (200, 200)])
+
+    def test_fetch_submissions_fails_when_api_ignores_offset(self):
+        # offset を知らない古い API は同じ200枚を返し続ける。黙って200枚で終わらせない
+        with self.assertRaisesRegex(ValueError, "duplicate IDs"):
+            self._fetch(450, ignore_offset=True)
+
+    def test_fetch_submissions_stops_at_the_limit_for_the_truncation_guard(self):
+        submissions = self._fetch(450, limit=400)
+
+        self.assertEqual(len(submissions), 400)
+        with self.assertRaisesRegex(ValueError, "limit"):
+            importer.validate_snapshot_size(submissions, [], 400, False, False)
+
     def test_normalize_submission_drops_submitter_name(self):
         self.assertNotIn("submitter_name", self.submission)
 
