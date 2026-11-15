@@ -100,5 +100,141 @@
     "kind": "open",
     "parent": "baseball",
     "experimental": true
+  },
+  {
+    "slug": "hatsune-miku",
+    "label": "初音ミク",
+    "name": "初音ミク",
+    "category": "anime",
+    "kind": "open",
+    "experimental": true
+  },
+  {
+    "slug": "evangelion",
+    "label": "エヴァンゲリオン",
+    "name": "エヴァンゲリオン",
+    "category": "anime",
+    "kind": "open",
+    "experimental": true
+  },
+  {
+    "slug": "sports",
+    "label": "スポーツ",
+    "name": "スポーツのマンホール",
+    "category": "sports",
+    "kind": "open",
+    "experimental": true
+  },
+  {
+    "slug": "usj",
+    "label": "USJ",
+    "name": "ユニバーサル・スタジオ・ジャパン",
+    "category": "local",
+    "kind": "open",
+    "experimental": true
+  },
+  {
+    "slug": "history",
+    "label": "歴史",
+    "name": "歴史のマンホール",
+    "category": "local",
+    "kind": "open",
+    "experimental": true
+  },
+  {
+    "slug": "expo2025",
+    "label": "大阪万博",
+    "name": "大阪・関西万博",
+    "category": "event",
+    "kind": "open",
+    "experimental": true
+  },
+  {
+    "slug": "miffy",
+    "label": "ミッフィー",
+    "name": "ミッフィー",
+    "category": "anime",
+    "kind": "open",
+    "experimental": true
+  },
+  {
+    "slug": "yuru-chara",
+    "label": "ゆるキャラ",
+    "name": "ゆるキャラのマンホール",
+    "category": "local",
+    "kind": "open",
+    "experimental": true
+  },
+  {
+    "slug": "festival",
+    "label": "お祭り",
+    "name": "お祭りのマンホール",
+    "category": "local",
+    "kind": "open",
+    "experimental": true
+  },
+  {
+    "slug": "animals",
+    "label": "動物",
+    "name": "動物のマンホール",
+    "category": "local",
+    "kind": "open",
+    "experimental": true
+  },
+  {
+    "slug": "company",
+    "label": "企業",
+    "name": "企業のマンホール",
+    "category": "local",
+    "kind": "open",
+    "experimental": true
+  },
+  {
+    "slug": "keroro",
+    "label": "ケロロ軍曹",
+    "name": "ケロロ軍曹",
+    "category": "anime",
+    "kind": "open",
+    "experimental": true
+  },
+  {
+    "slug": "initial-d",
+    "label": "頭文字D",
+    "name": "頭文字D",
+    "category": "anime",
+    "kind": "open",
+    "experimental": true
+  },
+  {
+    "slug": "glay",
+    "label": "GLAY",
+    "name": "GLAY",
+    "category": "music",
+    "kind": "open",
+    "experimental": true
+  },
+  {
+    "slug": "ultraman",
+    "label": "ウルトラマン",
+    "name": "ウルトラマン",
+    "category": "anime",
+    "kind": "open",
+    "experimental": true
+  },
+  {
+    "slug": "plants",
+    "label": "植物",
+    "name": "植物のマンホール",
+    "category": "local",
+    "kind": "open",
+    "experimental": true
+  },
+  {
+    "slug": "vehicles",
+    "label": "乗り物",
+    "name": "乗り物のマンホール",
+    "category": "local",
+    "kind": "open",
+    "experimental": true
   }
 ]
