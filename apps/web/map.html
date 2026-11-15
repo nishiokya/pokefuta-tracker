@@ -592,9 +592,9 @@
     var prefectureMarkerCounts = {};  // 都道府県ごとのマンホール数（グローバルスコープ）
     const PREFECTURE_BOUNDS_OFFSET = 0.5;  // 都道府県 bounding box のオフセット（度）
     const PREFECTURE_OVERVIEW_MAX_ZOOM = 6;
-    // これ以上寄せたら、写真のあるマンホールはピンの代わりに写真で出す（市区町村が見える程度）
+    // 周辺の市区町村を見渡す縮尺から、写真のあるマンホールはピンの代わりに写真で出す
     // zoom 7 だと北海道・関東くらいが一画面に入り、写真が重なり合ってほぼ全点を読むことになる
-    const PHOTO_MARKER_MIN_ZOOM = 12;
+    const PHOTO_MARKER_MIN_ZOOM = 10;
     const OVERALL_PANEL_MEDIA_QUERY = '(max-width: 759px)';
     var isInitialPageLoad = true;  // Track if this is initial page load to prevent duplicate page_views
     var activeTagFilter = null;  // タグフィルタ（null = 全件）
