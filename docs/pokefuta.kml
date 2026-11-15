@@ -10877,6 +10877,15 @@ Address: 沖縄県国頭村辺戸９３７
 Detail: https://local.pokemon.jp/manhole/desc/487/?is_modal=1
 Last Updated: 2026-11-09T12:59:51Z
 Status: active</description>
+      <Style>
+        <IconStyle>
+          <scale>1</scale>
+          <Icon>
+            <href>https://data.pokefuta.com/manhole/kml-icons/487_lid.png</href>
+          </Icon>
+          <hotSpot x="0.5" y="0.5" xunits="fraction" yunits="fraction" />
+        </IconStyle>
+      </Style>
       <Point>
         <coordinates>128.264718,26.87221,0</coordinates>
       </Point>
