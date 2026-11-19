@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-18T02:37:13+00:00",
+  "generated_at": "2026-11-19T02:01:55+00:00",
   "legends": [
     {
       "id": "07ce4931-96e0-4d66-902f-97be711ac736",
@@ -59,7 +59,7 @@
     "0942bf4d-1da8-4b45-8bac-3cc739bb6fea": "regular",
     "098c9838-6710-43c8-8650-6e2b285bdb16": "regular",
     "0a636753-0f06-4de6-b968-955daafa7b29": "ranger",
-    "0a90efd0-9d93-4282-93ae-7b358af57f17": "regular",
+    "0a90efd0-9d93-4282-93ae-7b358af57f17": "ranger",
     "0aab40bd-6bf2-4fbb-b271-326c2a2c35f1": "rookie",
     "0b2e5fb2-9eae-4118-80f8-0b1a28a06421": "rookie",
     "0b601fb2-12bd-4927-9eb0-64542cb3ef9a": "rookie",
@@ -131,7 +131,7 @@
     "37ff7113-2c3a-4433-97f6-f05367d5379c": "rookie",
     "38b9f9d3-6305-48b5-a9d8-7c1a7d8933e4": "regular",
     "38cbfd09-cb09-4346-9aa5-8eb6a4ad9b8d": "rookie",
-    "39f973eb-2331-4fab-8b25-95397a057d6a": "regular",
+    "39f973eb-2331-4fab-8b25-95397a057d6a": "ranger",
     "3b7b7b62-11c0-416f-a823-401e8aa27416": "rookie",
     "3bc3f0a4-9dc0-41c9-b92a-c199e2d6dc87": "regular",
     "3bc750e4-0da9-49d9-98b7-449345696cf7": "ranger",
@@ -416,6 +416,7 @@
     "ed5c024b-a580-45dd-868b-6dac1b949dec": "regular",
     "ee331041-68e0-4895-8aa5-3e98da86a154": "regular",
     "ee7c211d-f9c7-423d-a3e2-5f23ba60fbbf": "rookie",
+    "eea20172-96a2-4538-8452-a86cd0790275": "rookie",
     "efa3bedf-9a17-4c3c-8280-9e41131df48d": "rookie",
     "f07d4b46-df61-445d-bfd8-4f78172486e9": "regular",
     "f0e4c16d-e4cf-489b-871a-1b01ac88ea13": "rookie",
