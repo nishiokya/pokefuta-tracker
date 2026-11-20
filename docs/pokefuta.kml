@@ -11058,8 +11058,17 @@ Status: active</description>
 City: 館林
 Address: 群馬県館林市花山町3181
 Detail: https://local.pokemon.jp/manhole/desc/497/?is_modal=1
-Last Updated: 2026-11-09T12:59:59Z
+Last Updated: 2026-11-19T18:43:13Z
 Status: active</description>
+      <Style>
+        <IconStyle>
+          <scale>1</scale>
+          <Icon>
+            <href>https://data.pokefuta.com/manhole/kml-icons/497_lid.png</href>
+          </Icon>
+          <hotSpot x="0.5" y="0.5" xunits="fraction" yunits="fraction" />
+        </IconStyle>
+      </Style>
       <Point>
         <coordinates>139.55104,36.241375,0</coordinates>
       </Point>
