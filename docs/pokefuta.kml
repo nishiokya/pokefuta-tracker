@@ -10920,10 +10920,10 @@ Status: active</description>
 City: 北大東
 Address: 沖縄県北大東村南
 Detail: https://local.pokemon.jp/manhole/desc/490/?is_modal=1
-Last Updated: 2026-10-16T14:28:41Z
+Last Updated: 2026-11-21T17:05:02Z
 Status: active</description>
       <Point>
-        <coordinates>131.327837,25.944616,0</coordinates>
+        <coordinates>131.3276824,25.9439145,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -11114,6 +11114,15 @@ Address: 群馬県長野原町林1567-4
 Detail: https://local.pokemon.jp/manhole/desc/500/?is_modal=1
 Last Updated: 2026-11-09T13:00:01Z
 Status: active</description>
+      <Style>
+        <IconStyle>
+          <scale>1</scale>
+          <Icon>
+            <href>https://data.pokefuta.com/manhole/kml-icons/500_lid.png</href>
+          </Icon>
+          <hotSpot x="0.5" y="0.5" xunits="fraction" yunits="fraction" />
+        </IconStyle>
+      </Style>
       <Point>
         <coordinates>138.684549,36.547169,0</coordinates>
       </Point>
