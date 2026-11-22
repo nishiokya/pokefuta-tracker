@@ -516,33 +516,6 @@
     }
   },
   {
-    "id": "photo-497-2b04a197",
-    "type": "latest_photo",
-    "title": "最新写真：群馬県/館林市",
-    "url": "https://data.pokefuta.com/manholes/497/",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "latest_photo",
-    "source": "photos",
-    "raw_data": {
-      "manhole_id": "497",
-      "title": "群馬県/館林市",
-      "pref": "群馬県",
-      "city": "館林",
-      "pokemon": "ガラルジグザグマ",
-      "pokemon_list": [
-        "ガラルジグザグマ",
-        "ジグザグマ"
-      ],
-      "created_at": "2026-11-17T02:13:55.475716+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/503e6b29-9dd9-4af9-ae80-84e27ec3c34b.jpg",
-      "display_name": "KY",
-      "photo_rank": "first_ever"
-    }
-  },
-  {
     "id": "photo-258-25d07145",
     "type": "latest_photo",
     "title": "最新写真：岩手県/花巻市",
@@ -844,6 +817,34 @@
     }
   },
   {
+    "id": "photo-124-e1a775b9",
+    "type": "latest_photo",
+    "title": "最新写真：宮城県/大崎市",
+    "url": "https://data.pokefuta.com/manholes/124/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "124",
+      "title": "宮城県/大崎市",
+      "pref": "宮城県",
+      "city": "大崎",
+      "pokemon": "オニスズメ",
+      "pokemon_list": [
+        "オニスズメ",
+        "ダグトリオ",
+        "ラプラス"
+      ],
+      "created_at": "2026-11-18T16:22:31.482421+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/e79efe73-85b9-4182-99bc-beaa019771d8.jpg",
+      "display_name": "ぴぃ",
+      "photo_rank": "first_ever"
+    }
+  },
+  {
     "id": "pref47-nophoto",
     "type": "no_photo",
     "title": "沖縄県：写真なしポケふた3枚",
@@ -863,7 +864,7 @@
   {
     "id": "pref10-nophoto",
     "type": "no_photo",
-    "title": "群馬県：写真なしポケふた2枚",
+    "title": "群馬県：写真なしポケふた1枚",
     "url": "https://data.pokefuta.com/summary/",
     "hashtags": [
       "#ポケふた",
@@ -873,7 +874,7 @@
     "source": "summary",
     "raw_data": {
       "pref": "群馬県",
-      "no_photo_count": 2,
+      "no_photo_count": 1,
       "total_count": 5
     }
   },
