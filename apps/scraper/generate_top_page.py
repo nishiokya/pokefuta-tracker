@@ -247,6 +247,7 @@ class TopData:
     # 公式サイト未掲載の仮番号の蓋（provisional_manholes.py）。新作の欄にだけ出し、全国の枚数には入れない
     provisional: list[dict] = field(default_factory=list)
     wanted: dict[str, dict] = field(default_factory=dict)  # 県 → 場所を調べているポケふた
+    newrelease_images: dict[str, str] = field(default_factory=dict)
     feature_images: dict[str, str] = field(default_factory=dict)  # 特集の slug → 帯に出す蓋の画像
     # みんなのマンホール写真ギャラリー（/gallery/）の特集 → 写真（tagged-photos.json の並び）
     gallery: dict[str, list[dict]] = field(default_factory=dict)
@@ -480,6 +481,11 @@ def load_data(
         f["slug"]: feature_image(f, provisional_records, records, image_dir, public_ids)
         for f in highlighted(features, today)
     }
+    # 古い画像ファイルが残っていても、公開中の投稿と、公開確認済みの仮番号だけを出す。
+    newrelease_image_ids = public_ids | {str(r.get("id", "")) for r in provisional_records}
+    newrelease_images = {
+        mid: url for mid in newrelease_image_ids if (url := tile_image_url(mid, image_dir))
+    }
     return TopData(
         records=records,
         photos=build_photos(photos_json, records, image_dir),
@@ -496,6 +502,7 @@ def load_data(
         features=features,
         provisional=provisional_records,
         wanted=wanted_places(load_wanted(wanted), all_records + provisional_records) if wanted else {},
+        newrelease_images=newrelease_images,
         feature_images={slug: url for slug, url in feature_images.items() if url},
         gallery=load_gallery(tagged),
     )
@@ -862,6 +869,23 @@ def recent_manholes(data: TopData) -> list[tuple[datetime, dict]]:
     return fresh
 
 
+def newrelease_card_content(names: str, place: str, image: str, wanted_label: str, image_prefix: str = "") -> str:
+    status = ""
+    if image:
+        attrs = responsive_attrs(image_prefix + image.lstrip("/"), "48px", max_width=180)
+        media = (
+            f'<img class="home-newrel__image" {attrs} alt="" width="48" height="48" '
+            'loading="lazy" decoding="async">'
+        )
+    else:
+        media = '<span class="home-newrel__placeholder" aria-hidden="true">📷</span>'
+        status = f'<span class="home-newrel__status">{escape(wanted_label)}</span>'
+    return (
+        f'{media}<span class="home-newrel__text"><b>{escape(names)}</b>'
+        f'<span>{escape(place)}</span>{status}</span>'
+    )
+
+
 def render_newrelease(data: TopData) -> str:
     fresh = recent_manholes(data)
     wanted_html = render_wanted(data.wanted)
@@ -878,7 +902,8 @@ def render_newrelease(data: TopData) -> str:
         cards.append(
             f'<li><a class="home-newrel__card" href="manholes/{quote(mid, safe="")}/" '
             f'onclick="{_track("click_newrelease", surface="top_newrelease", manhole=mid, position=i)}">'
-            f'<b>{escape(names)}</b><span>{escape(place)}</span></a></li>'
+            + newrelease_card_content(names, place, data.newrelease_images.get(mid, ""), "写真募集中")
+            + "</a></li>"
         )
     banners = "".join(
         f'<a class="home-feature" href="{escape(feature_path(f).lstrip("/"))}" '

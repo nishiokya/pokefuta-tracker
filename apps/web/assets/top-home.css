@@ -244,8 +244,10 @@
 
 .home-newrel__card {
   display: flex;
-  flex-direction: column;
-  gap: 2px;
+  align-items: center;
+  gap: 8px;
+  height: 100%;
+  box-sizing: border-box;
   padding: 10px 12px;
   background: var(--top-card-bg);
   border: 1px solid var(--top-border);
@@ -254,7 +256,33 @@
   color: var(--top-text-muted);
 }
 
-.home-newrel__card b { font-size: 13.5px; color: var(--top-text); }
+.home-newrel__image,
+.home-newrel__placeholder {
+  flex: 0 0 48px;
+  height: 48px;
+  border-radius: 8px;
+}
+
+.home-newrel__image { object-fit: cover; }
+.home-newrel__placeholder {
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  background: #F5F0E5;
+  border: 1px dashed var(--top-border);
+  font-size: 20px;
+}
+
+.home-newrel__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.home-newrel__text b { font-size: 13.5px; color: var(--top-text); }
+.home-newrel__status { font-size: 11px; font-weight: 700; color: var(--top-purple); }
 
 /* ヒーローの探し方ボタン直下の1行告知（特集の highlight_until 中だけ） */
 .home-hero-feature {

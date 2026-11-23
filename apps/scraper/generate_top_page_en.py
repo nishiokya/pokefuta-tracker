@@ -377,10 +377,14 @@ def render_newrelease(data: ja.TopData, en: Locale) -> str:
     for i, (_, record) in enumerate(fresh):
         mid = str(record.get("id"))
         names = en.t("sep").join(en.pokemon_name(p) for p in ja.pokemons_of(record)) or en.t("lid")
+        place = en.pref(str(record.get("prefecture", "")))
         cards.append(
             f'<li><a class="home-newrel__card" href="{ROOT_PATH}manholes/{quote(mid, safe="")}/" '
             f'onclick="{ja._track("click_newrelease", surface="top_newrelease", manhole=mid, position=i)}">'
-            f'<b>{escape(names)}</b><span>{escape(en.pref(str(record.get("prefecture", ""))))}</span></a></li>'
+            + ja.newrelease_card_content(
+                names, place, data.newrelease_images.get(mid, ""), en.t("new_photo_wanted"), ROOT_PATH
+            )
+            + "</a></li>"
         )
     return (
         '<section class="home-section" id="home-newrelease" aria-labelledby="home-newrelease-title">'
