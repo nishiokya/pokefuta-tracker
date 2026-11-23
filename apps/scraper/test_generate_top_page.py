@@ -454,6 +454,40 @@ class GeneratedHtmlTest(unittest.TestCase):
         self.assertIn("新作ポケふた", block)
         self.assertIn('href="manholes/1/"', block)
 
+    def test_new_release_images_and_photo_wanted_states(self) -> None:
+        records = _records()
+        for record in records[:4]:
+            record["added_at"] = "2026-09-20T00:00:00Z"
+        fixture = Fixture(self.tmp, records=records, drop_photos=("3",))
+        (fixture.image_dir / "1_lid.jpeg").write_bytes(b"x")
+        (fixture.image_dir / "4_latest.jpeg").unlink()
+
+        block = _block(fixture.html(), "newrelease")
+        cards = dict(re.findall(r'href="manholes/(\d+)/".*?>(.*?)</a>', block))
+        self.assertIn('src="manhole/image/1_lid.jpeg"', cards["1"])
+        self.assertIn('srcset="manhole/image/1_lid_180.webp 180w"', cards["1"])
+        self.assertIn('src="manhole/image/2_latest.jpeg"', cards["2"])
+        for mid in ("1", "2"):
+            self.assertNotIn("写真募集中", cards[mid])
+        for mid in ("3", "4"):
+            self.assertIn("写真募集中", cards[mid])
+            self.assertIn('class="home-newrel__placeholder"', cards[mid])
+            self.assertNotIn("<img", cards[mid])
+
+    def test_new_release_shows_verified_provisional_image(self) -> None:
+        fixture = Fixture(self.tmp)
+        provisional = self.tmp / "provisional.ndjson"
+        record = {**fixture.records[0], "id": "9001", "provisional": True, "added_at": "2026-09-20T00:00:00Z"}
+        provisional.write_text(json.dumps(record), encoding="utf-8")
+        (fixture.image_dir / "9001_lid.jpeg").write_bytes(b"x")
+        data = module.load_data(
+            fixture.manholes, fixture.photos, fixture.stats, fixture.events, fixture.image_dir,
+            today=TODAY, features_dir=fixture.features_dir, provisional=provisional,
+        )
+        block = module.render_newrelease(data)
+        self.assertIn('href="manholes/9001/"', block)
+        self.assertIn('src="manhole/image/9001_lid.jpeg"', block)
+
     def test_features_get_a_banner_while_highlighted_and_a_permanent_index_link(self) -> None:
         feature = {"slug": "okinawa-test", "title": "沖縄にポケふたが増えます", "published": "2026-09-01",
                    "highlight_until": "2026-10-31", "manholes": [{"id": "1"}]}

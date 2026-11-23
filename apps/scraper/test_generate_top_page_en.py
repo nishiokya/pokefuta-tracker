@@ -14,7 +14,7 @@ from pathlib import Path
 
 from apps.scraper import generate_top_page_en as module
 from apps.scraper.prefectures import PREFECTURE_PAGE_LANGS
-from apps.scraper.test_generate_top_page import SHELL, TODAY, Fixture, _block, _event
+from apps.scraper.test_generate_top_page import SHELL, TODAY, Fixture, _block, _event, _records
 
 ROOT = Path(__file__).resolve().parents[2]
 INDEX_EN = ROOT / "apps" / "web" / "index.en.html"
@@ -87,6 +87,19 @@ class EnglishTopTest(unittest.TestCase):
         self.assertIn('href="map.html?tag=', html)
         self.assertNotIn('href="/tags/', html)
         self.assertNotIn('href="manholes/', html)
+
+    def test_new_release_media_is_shared_across_languages(self) -> None:
+        records = _records()
+        for record in records[:2]:
+            record["added_at"] = "2026-09-20T00:00:00Z"
+        data = Fixture(self.tmp, records=records, drop_photos=("2",)).data()
+        for lang, label in (
+            ("en", "Photo wanted"), ("zh-TW", "徵集照片"), ("zh-CN", "征集照片"), ("ko", "사진 모집 중")
+        ):
+            with self.subTest(lang=lang):
+                html = module.render_newrelease(data, module.Locale(lang))
+                self.assertIn('src="../manhole/image/1_latest.jpeg"', html)
+                self.assertIn(f'<span class="home-newrel__status">{label}</span>', html)
 
     def test_prefectures_and_regions_are_in_english(self) -> None:
         block = _block(self.html(), "pref")
