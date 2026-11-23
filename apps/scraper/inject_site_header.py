@@ -24,7 +24,7 @@ from pathlib import Path
 
 
 # site-header.css を変えたら上げる。再訪者のブラウザに古いクロム・本文幅が残らないように
-SITE_HEADER_CSS_VERSION = "20261107b"
+SITE_HEADER_CSS_VERSION = "20261123-features-nav"
 STYLESHEET_TEMPLATE = (
     '<link rel="stylesheet" href="{asset_base}assets/site-header.css?v=' + SITE_HEADER_CSS_VERSION + '">'
 )
@@ -231,7 +231,7 @@ HEADER_TEMPLATE = """<header class="site-header">
       <a class="site-header__link{active_pref}" href="{page_base}prefectures/">{nav_pref}</a>
       <a class="site-header__link{active_pokemon}" href="{page_base}pokemon/">{nav_pokemon}</a>
       <a class="site-header__link{active_summary}" href="{page_base}summary/">{nav_summary}</a>
-      <a class="site-header__link{active_character}" href="{asset_base}character_manholes.html">{nav_character}</a>{gallery_nav}
+      <a class="site-header__link{active_character}" href="{asset_base}character_manholes.html">{nav_character}</a>{features_nav}{gallery_nav}
     </nav>
 
     <a class="site-header__icon" href="{about_url}" title="{about}" aria-label="{about}">{icon_info}</a>
@@ -252,7 +252,7 @@ BOTTOM_TABS_TEMPLATE = """<nav class="site-tabs" aria-label="{tabs_aria}" data-n
   <a class="site-tab{active_map}" href="{page_base}map.html" data-nav-item="map" data-nav-position="1">{icon_map}<span>{nav_map}</span></a>
   <a class="site-tab{active_pref}" href="{page_base}prefectures/" data-nav-item="prefectures" data-nav-position="2">{icon_pref}<span>{nav_pref}</span></a>
   <a class="site-tab{active_pokemon}" href="{page_base}pokemon/" data-nav-item="pokemon" data-nav-position="3">{icon_pokemon}<span>{nav_pokemon}</span></a>
-  <a class="site-tab{active_summary}" href="{page_base}{fourth_item}/" data-nav-item="{fourth_item}" data-nav-position="4">{icon_fourth}<span>{fourth_label}</span></a>
+  <a class="site-tab{active_fourth}" href="{page_base}{fourth_item}/" data-nav-item="{fourth_item}" data-nav-position="4">{icon_fourth}<span>{fourth_label}</span></a>
   <a class="site-tab" data-login-link data-stamp-page="{stamp_url}" href="{login_url}" data-nav-item="stamp" data-nav-position="5">{icon_stamp}<span>{tab_stamp}</span></a>
 </nav>"""
 
@@ -297,9 +297,10 @@ def _active_tab(page_path: str | None) -> str | None:
         return "pref"
     if normalized.startswith("pokemon/") or normalized == "pokemon":
         return "pokemon"
-    # 特集と集計は同じナビ項目からたどれる
-    if normalized.startswith(("summary/", "features/")) or normalized in ("summary", "features"):
+    if normalized.startswith("summary/") or normalized == "summary":
         return "summary"
+    if normalized.startswith("features/") or normalized == "features":
+        return "features"
     if normalized.startswith(("character_manholes.html", "characters/")):
         return "character"
     if normalized.startswith("gallery/") or normalized == "gallery":
@@ -307,18 +308,19 @@ def _active_tab(page_path: str | None) -> str | None:
     return None
 
 
-# みんなのマンホール写真ギャラリー（/gallery/、generate_gallery_pages.py）。日本語のページだけなので、
-# 日本語のヘッダーにだけ出す。SP の下タブは5つで埋まっているので入れず、メニューとフッターに置く
+# 特集と写真ギャラリーは日本語のサイトナビに出す。SP のギャラリーはメニューとフッターに置く。
 GALLERY_LABEL = "ギャラリー"
 GALLERY_LONG_LABEL = "写真ギャラリー"
 
 
-def _gallery_links(language: str, asset_base: str, active: str | None) -> dict[str, str]:
+def _japanese_content_links(language: str, asset_base: str, active: str | None) -> dict[str, str]:
     if language != "ja":
-        return {"gallery_nav": "", "gallery_sub": "", "gallery_footer": ""}
+        return {"features_nav": "", "gallery_nav": "", "gallery_sub": "", "gallery_footer": ""}
     href = f"{asset_base}gallery/"
     current = " is-active" if active == "gallery" else ""
+    features_current = " is-active" if active == "features" else ""
     return {
+        "features_nav": f'\n      <a class="site-header__link{features_current}" href="{asset_base}features/">特集</a>',
         "gallery_nav": f'\n      <a class="site-header__link{current}" href="{href}">{GALLERY_LABEL}</a>',
         "gallery_sub": f'\n        <a class="site-switch__sub" href="{href}">{GALLERY_LONG_LABEL}</a>',
         "gallery_footer": f'\n  <a class="site-footer__link" href="{href}">{GALLERY_LONG_LABEL}</a>',
@@ -372,8 +374,9 @@ def inject(
         active_pref=" is-active" if active == "pref" else "",
         active_pokemon=" is-active" if active == "pokemon" else "",
         active_summary=" is-active" if active == "summary" else "",
+        active_fourth=" is-active" if active in ("summary", fourth_item) else "",
         active_character=" is-active" if active == "character" else "",
-        **_gallery_links(language, asset_base, active),
+        **_japanese_content_links(language, asset_base, active),
     )
 
     header = HEADER_TEMPLATE.format(**fields)

@@ -16,6 +16,12 @@ from xml.sax.saxutils import escape
 try:
     from apps.scraper import generate_municipality_pages as muni_page
     from apps.scraper import generate_prefecture_pages as pref
+    from apps.scraper import generate_summary_pages as summary
+    from apps.scraper.generate_gallery_pages import (
+        DEFAULT_TAGGED, EAGER_COUNT, FEATURES as GALLERY_FEATURES, GALLERY_PATH, GALLERY_TITLE,
+        PHOTO_MEDIA_CSS, feature_photos, load_tagged,
+    )
+    from apps.scraper.municipalities import RANKING_MIN_MANHOLES, build_municipalities
     from apps.scraper.manhole_records import (
         clean_pokemons,
         load_photos,
@@ -37,6 +43,12 @@ except ModuleNotFoundError as exc:
         raise
     import generate_municipality_pages as muni_page
     import generate_prefecture_pages as pref
+    import generate_summary_pages as summary
+    from generate_gallery_pages import (
+        DEFAULT_TAGGED, EAGER_COUNT, FEATURES as GALLERY_FEATURES, GALLERY_PATH, GALLERY_TITLE,
+        PHOTO_MEDIA_CSS, feature_photos, load_tagged,
+    )
+    from municipalities import RANKING_MIN_MANHOLES, build_municipalities
     from manhole_records import (
         clean_pokemons,
         load_photos,
@@ -109,10 +121,64 @@ FEATURE_CSS = """
     .feature-card small { color: #62564a; font-size: .82rem; }
 """
 
+FEATURE_INDEX_CSS = PHOTO_MEDIA_CSS + """
+    .feature-index-hero::after { display: none; }
+    .feature-index-hero h1 { margin-top: 0; }
+    .feature-gallery { min-width: 0; }
+    .feature-gallery-head, .feature-data-head {
+      display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 4px 16px;
+      margin-bottom: 12px;
+    }
+    .feature-gallery-head h2, .feature-data-head h2 { margin: 0; }
+    .feature-gallery-head a, .feature-data-head a { font-size: .84rem; font-weight: 800; text-decoration: none; }
+    .feature-gallery-grid {
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(8px, 2vw, 16px);
+    }
+    .feature-gallery-card {
+      display: flex; flex-direction: column; min-width: 0; overflow: hidden;
+      border: 1px solid rgba(93,67,35,.18); border-radius: 14px;
+      background: #fffaf0; color: inherit; text-decoration: none;
+    }
+    .feature-gallery-card:focus-visible { outline-offset: -3px; }
+    .feature-gallery-media {
+      display: flex; gap: 3px; height: clamp(100px, 17vw, 176px); background: #efe4cc;
+    }
+    .feature-gallery-preview { position: relative; flex: 1; min-width: 0; overflow: hidden; }
+    .feature-gallery-preview .gl-lid { width: min(73%, clamp(82px, 13vw, 154px)); }
+    .feature-gallery-preview .gl-plush { width: min(42%, clamp(52px, 9vw, 102px)); }
+    .feature-gallery-copy {
+      flex: 1; display: flex; flex-direction: column; gap: 6px; padding: 10px 12px;
+    }
+    .feature-gallery-copy h3 { margin: 0; font-size: clamp(.88rem, 2vw, 1.14rem); line-height: 1.4; }
+    .feature-gallery-copy small { margin-top: auto; color: #5b4688; font-size: .78rem; font-weight: 800; }
+    .feature-gallery-card:hover h3, .feature-ranking:hover h3 { text-decoration: underline; }
+    .feature-ranking-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
+    .feature-ranking {
+      display: grid; min-width: 0; gap: 8px; padding: 12px 14px; border-radius: 12px;
+      background: #fff; border: 1px solid #ece4d7; color: inherit; text-decoration: none;
+    }
+    .feature-ranking h3 {
+      display: flex; justify-content: space-between; gap: 8px; margin: 0; font-size: .96rem;
+    }
+    .feature-ranking h3 span { color: #176f68; }
+    .feature-ranking ol { margin: 0; padding-left: 1.5em; font-size: .85rem; }
+    .feature-ranking li::marker { color: #62564a; font-variant-numeric: tabular-nums; }
+    .feature-ranking-row { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+    .feature-ranking-row b { color: #57408f; white-space: nowrap; font-variant-numeric: tabular-nums; }
+    @media (min-width: 760px) {
+      .feature-ranking-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+    @media (max-width: 599px) {
+      .feature-gallery-preview + .feature-gallery-preview { display: none; }
+      .feature-gallery-copy { padding: 9px; }
+    }
+"""
 
-def _head(title: str, description: str, canonical: str, json_ld: dict, with_map: bool) -> str:
+
+def _head(title: str, description: str, canonical: str, json_ld: dict, with_map: bool, *, index: bool = False) -> str:
     head = muni_page._head(title, description, canonical, json_ld, with_map)
-    return head.replace("  </style>", f"{FEATURE_CSS}  </style>", 1)
+    css = FEATURE_CSS + (FEATURE_INDEX_CSS if index else "")
+    return head.replace("  </style>", f"{css}  </style>", 1)
 
 
 def _to_feature_events(html: str) -> str:
@@ -400,11 +466,78 @@ def build_feature_page(feature: dict, photos: dict[str, dict], others: list[dict
 """
 
 
-def build_index_page(features: list[dict], today: date | None = None) -> str:
+def _gallery_hero(tagged: dict) -> str:
+    cards = []
+    for key, meta in GALLERY_FEATURES.items():
+        photos = feature_photos(tagged, key)
+        images = "".join(
+            f'<span class="feature-gallery-preview">{meta["media"](photo, i * EAGER_COUNT)}</span>'
+            for i, photo in enumerate(photos[:2])
+        )
+        media = f'<span class="feature-gallery-media" aria-hidden="true">{images}</span>' if images else ""
+        count = f"写真{len(photos):,}枚を見る" if photos else "ギャラリーを見る"
+        cards.append(
+            f'<a class="feature-gallery-card" href="{GALLERY_PATH}{key}/" data-track="feature_card_click" '
+            f'data-surface="gallery_hero" data-destination="{key}">'
+            f'{media}<div class="feature-gallery-copy"><h3>{escape(meta["title"])}</h3>'
+            f'<small>{count}</small></div></a>'
+        )
+    return (
+        '<div class="feature-gallery" role="region" aria-labelledby="feature-gallery-heading">'
+        '<div class="feature-gallery-head">'
+        f'<h2 id="feature-gallery-heading">{escape(GALLERY_TITLE)}</h2>'
+        f'<a href="{GALLERY_PATH}" data-track="feature_card_click" data-surface="gallery_hero" '
+        'data-destination="gallery">ギャラリー一覧 <span aria-hidden="true">→</span></a></div>'
+        f'<div class="feature-gallery-grid">{"".join(cards)}</div></div>'
+    )
+
+
+def _ranking_section(records: list[dict], pokemon_metadata: dict) -> str:
+    active = [r for r in records if r.get("status", "active") == "active"]
+    installed = [r for r in active if r.get("installed") is not False]
+    stats = summary.build_stats(installed)
+    # 市区町村ランキング側は設置予定も含むため、同じ集計対象を渡す。
+    municipalities = build_municipalities(active, slugs={})
+    pokemon = summary.build_pokemon_stats(installed, pokemon_metadata)["by_count"]
+    categories = [
+        ("都道府県別", "/summary/#ranking-heading", "prefecture_ranking",
+         [(i, row["pref"], row["count"]) for i, row in enumerate(stats["ranking"][:3], 1)]),
+        ("市区町村別", "/municipalities/#ranking-heading", "municipality_ranking",
+         [(m.national_rank, m.name, m.count) for m in municipalities[:3] if m.count >= RANKING_MIN_MANHOLES]),
+        ("ポケモン別", "/summary/#pokemon-ranking-heading", "pokemon_ranking",
+         [(i, row["ja_name"], row["count"]) for i, row in enumerate(pokemon[:3], 1)]),
+    ]
+    cards = []
+    for title, href, destination, entries in categories:
+        items = "".join(
+            f'<li value="{rank}"><span class="feature-ranking-row">'
+            f'<span>{escape(name)}</span><b>{count:,}枚</b></span></li>'
+            for rank, name, count in entries
+        )
+        listing = f"<ol>{items}</ol>" if items else ""
+        cards.append(
+            f'<a class="feature-ranking" href="{href}" data-track="feature_card_click" '
+            f'data-surface="data_ranking" data-destination="{destination}">'
+            f'<h3>{title}<span aria-hidden="true">→</span></h3>{listing}</a>'
+        )
+    overview = f'全国の設置データ（{stats["total"]:,}枚）' if stats["total"] else "全国の設置データ"
+    return (
+        '<section aria-labelledby="feature-data-heading">'
+        '<div class="feature-data-head"><h2 id="feature-data-heading">データ・ランキング</h2>'
+        '<a href="/summary/" data-track="feature_card_click" data-surface="data_ranking" '
+        f'data-destination="summary">{overview} <span aria-hidden="true">→</span></a></div>'
+        f'<div class="feature-ranking-grid">{"".join(cards)}</div></section>'
+    )
+
+
+def build_index_page(
+    features: list[dict], today: date | None = None, *,
+    tagged: dict | None = None, records: list[dict] | None = None, pokemon_metadata: dict | None = None,
+) -> str:
     title = "ポケふた特集｜ポケふた図鑑"
     description = (
         "新しく設置・発表されたポケふた（ポケモンマンホール）や、テーマごとに集めたポケふたを"
-        "特集としてまとめています。全国の設置数やランキングも確認できます。"
+        "特集としてまとめています。ぬいぐるみや雪景色のギャラリーと、全国の設置数・ランキングも掲載しています。"
     )
     canonical = f"{BASE_URL}{FEATURES_BASE}"
 
@@ -450,25 +583,19 @@ def build_index_page(features: list[dict], today: date | None = None) -> str:
         f'\n      <div class="feature-grid">{"".join(card(f) for f in new)}</div>'
         "\n    </section>"
     ) if new else ""
-    return _head(title, description, canonical, json_ld, with_map=False) + f"""<body>
+    return _head(title, description, canonical, json_ld, with_map=False, index=True) + f"""<body>
   <main class="page">
     <nav class="breadcrumb" aria-label="パンくず">
       <a href="/">ポケふた図鑑</a><span>›</span>
       <span>特集</span>
     </nav>
-    <header class="hero">
+    <header class="hero feature-index-hero">
       <div class="hero-main">
-        <p class="hero-kicker">ポケふた特集</p>
         <h1>ポケふた特集</h1>
-        <p>新しく置かれるポケふたや、テーマで集めたポケふたをまとめています。</p>
       </div>
+      {_gallery_hero(tagged or {})}
     </header>{new_html}
-    <section aria-labelledby="feature-data-heading">
-      <a class="feature-card" href="/summary/">
-        <span class="feature-title" id="feature-data-heading">データ・ランキング</span>
-        <small>全国のポケふたの枚数や、都道府県別のランキングを見る</small>
-      </a>
-    </section>
+    {_ranking_section(records or [], pokemon_metadata or {})}
     <section aria-labelledby="feature-list-heading">
       <h2 id="feature-list-heading">{"これまでの特集" if new else "特集の一覧"}</h2>
       <div class="feature-grid">{cards}</div>
@@ -480,7 +607,8 @@ def build_index_page(features: list[dict], today: date | None = None) -> str:
 
 
 def generate_all(
-    records: list[dict], photos: dict[str, dict], output_dir: Path, features_dir: Path = DEFAULT_FEATURES_DIR
+    records: list[dict], photos: dict[str, dict], output_dir: Path, features_dir: Path = DEFAULT_FEATURES_DIR,
+    *, tagged: dict | None = None, pokemon_metadata: dict | None = None,
 ) -> list[dict]:
     by_id = {str(r.get("id", "")): r for r in records if r.get("status", "active") == "active"}
     features = load_features(by_id, features_dir)
@@ -490,7 +618,8 @@ def generate_all(
         others = [f for f in features if f["slug"] != feature["slug"]]
         (out / "index.html").write_text(build_feature_page(feature, photos, others), encoding="utf-8")
     output_dir.mkdir(parents=True, exist_ok=True)
-    (output_dir / "index.html").write_text(build_index_page(features), encoding="utf-8")
+    index = build_index_page(features, tagged=tagged, records=records, pokemon_metadata=pokemon_metadata)
+    (output_dir / "index.html").write_text(index, encoding="utf-8")
     return features
 
 
@@ -499,10 +628,13 @@ def main() -> int:
     parser.add_argument("--manholes", type=Path, default=pref.DEFAULT_MANHOLES)
     parser.add_argument("--photos", type=Path, default=pref.DEFAULT_PHOTOS)
     parser.add_argument("--features", type=Path, default=DEFAULT_FEATURES_DIR)
+    parser.add_argument("--tagged", type=Path, default=DEFAULT_TAGGED)
+    parser.add_argument("--pokemon", type=Path, default=summary.POKEMON_METADATA_JSON)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     args = parser.parse_args()
     features = generate_all(
-        load_records(args.manholes), load_photos(args.photos), args.output, args.features
+        load_records(args.manholes), load_photos(args.photos), args.output, args.features,
+        tagged=load_tagged(args.tagged), pokemon_metadata=summary.load_pokemon_metadata_with_slugs(args.pokemon),
     )
     print(f"[generate_feature_pages] wrote {len(features)} feature pages + index to {args.output}")
     return 0
