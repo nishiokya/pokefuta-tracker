@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-23T08:18:19.737586Z",
+  "generated_at": "2026-11-23T12:03:39.896515Z",
   "source": "pokefuta photo table",
   "image": {
     "r2_public_base_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image"
@@ -245,7 +245,7 @@
           ]
         }
       ],
-      "public_photo_count": 28
+      "public_photo_count": 30
     },
     "2": {
       "manhole_id": 2,
@@ -486,7 +486,7 @@
           ]
         }
       ],
-      "public_photo_count": 25
+      "public_photo_count": 27
     },
     "3": {
       "manhole_id": 3,
@@ -727,7 +727,7 @@
           ]
         }
       ],
-      "public_photo_count": 25
+      "public_photo_count": 26
     },
     "4": {
       "manhole_id": 4,
@@ -968,7 +968,7 @@
           ]
         }
       ],
-      "public_photo_count": 31
+      "public_photo_count": 33
     },
     "5": {
       "manhole_id": 5,
@@ -1209,7 +1209,7 @@
           ]
         }
       ],
-      "public_photo_count": 27
+      "public_photo_count": 29
     },
     "6": {
       "manhole_id": 6,
@@ -1450,7 +1450,7 @@
           ]
         }
       ],
-      "public_photo_count": 26
+      "public_photo_count": 28
     },
     "7": {
       "manhole_id": 7,
@@ -1691,7 +1691,7 @@
           ]
         }
       ],
-      "public_photo_count": 26
+      "public_photo_count": 28
     },
     "8": {
       "manhole_id": 8,
@@ -1932,7 +1932,7 @@
           ]
         }
       ],
-      "public_photo_count": 26
+      "public_photo_count": 28
     },
     "9": {
       "manhole_id": 9,
@@ -2173,7 +2173,7 @@
           ]
         }
       ],
-      "public_photo_count": 26
+      "public_photo_count": 27
     },
     "10": {
       "manhole_id": 10,
@@ -2398,23 +2398,18 @@
           ]
         },
         {
-          "photo_id": "66cbf941-1a8f-48d4-96a9-64fc99f0e2a0",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/2a42540f-9a37-4bb8-bb74-6a7942471530.jpg",
-          "storage_key": "photos/original/2026/11/2a42540f-9a37-4bb8-bb74-6a7942471530.jpg",
-          "content_type": "image/png",
-          "created_at": "2026-11-02T07:22:20.814953+00:00",
-          "shot_at": "2023-10-23T00:34:18+00:00",
-          "display_name": "human",
-          "public_user_id": "bad9c24b-0644-4438-82cb-fcfb6d8ad11c",
-          "crop": [
-            0.0,
-            0.2517,
-            1.0,
-            0.6798
-          ]
+          "photo_id": "b7e2bb71-d21a-426d-a983-531afd8c3d8a",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/c94c5911-b3ef-4d2c-8374-af51ce0da417.jpg",
+          "storage_key": "photos/original/2026/11/c94c5911-b3ef-4d2c-8374-af51ce0da417.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:25:54.429667+00:00",
+          "shot_at": "2022-09-17T02:50:32+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 14
+      "public_photo_count": 15
     },
     "11": {
       "manhole_id": 11,
@@ -2634,23 +2629,18 @@
           "crop": null
         },
         {
-          "photo_id": "b68e8203-60b4-48ff-af28-462bff0621d6",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/35eeeb9a-cab6-4ced-936a-c3802530c8c6.jpg",
-          "storage_key": "photos/original/2026/11/35eeeb9a-cab6-4ced-936a-c3802530c8c6.jpg",
-          "content_type": "image/png",
-          "created_at": "2026-11-02T07:24:58.857375+00:00",
-          "shot_at": "2023-10-23T04:07:28+00:00",
-          "display_name": "human",
-          "public_user_id": "bad9c24b-0644-4438-82cb-fcfb6d8ad11c",
-          "crop": [
-            0.0,
-            0.2471,
-            1.0,
-            0.6752
-          ]
+          "photo_id": "1764f160-80a3-4b84-b2e3-a40e7107c640",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/6cdd8084-a4f6-40ce-a290-e2ffb50a9330.jpg",
+          "storage_key": "photos/original/2026/11/6cdd8084-a4f6-40ce-a290-e2ffb50a9330.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:21:38.678312+00:00",
+          "shot_at": "2023-06-24T04:56:51+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 13
+      "public_photo_count": 14
     },
     "12": {
       "manhole_id": 12,
@@ -2854,6 +2844,17 @@
           "crop": null
         },
         {
+          "photo_id": "d3ba3139-c2c0-49c1-b3a3-b97d3c2821ea",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/69687c00-a3e7-43f8-9273-548d99dafce2.jpg",
+          "storage_key": "photos/original/2026/11/69687c00-a3e7-43f8-9273-548d99dafce2.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:25:54.2967+00:00",
+          "shot_at": "2022-09-17T03:58:52+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "02025c56-24f8-49fa-95f2-271f4fe5df68",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/4afc1e54-c2c9-4fa2-ae7c-3dd6b21d036d.jpg",
           "storage_key": "photos/original/2026/11/4afc1e54-c2c9-4fa2-ae7c-3dd6b21d036d.jpg",
@@ -2868,25 +2869,9 @@
             1.0,
             0.7985
           ]
-        },
-        {
-          "photo_id": "e68e07a4-9f07-49fd-ab01-0bb614428016",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/aa4ad184-8135-4594-b26e-20947a6d46d2.jpg",
-          "storage_key": "photos/original/2026/11/aa4ad184-8135-4594-b26e-20947a6d46d2.jpg",
-          "content_type": "image/jpeg",
-          "created_at": "2026-11-02T14:48:19.828794+00:00",
-          "shot_at": "2026-10-25T07:57:00+00:00",
-          "display_name": "ターボ",
-          "public_user_id": "189b4c95-94f9-421a-951a-256bbef62c38",
-          "crop": [
-            0.0,
-            0.223,
-            1.0,
-            0.973
-          ]
         }
       ],
-      "public_photo_count": 14
+      "public_photo_count": 15
     },
     "13": {
       "manhole_id": 13,
@@ -3090,6 +3075,17 @@
           "crop": null
         },
         {
+          "photo_id": "50a1aed5-eca5-4f48-aaea-6db8d34834f9",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/47ee0d13-8fdf-4ed1-b410-62893913ee85.jpg",
+          "storage_key": "photos/original/2026/11/47ee0d13-8fdf-4ed1-b410-62893913ee85.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:25:55.176696+00:00",
+          "shot_at": "2022-09-17T04:16:38+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "0366d981-620b-4ffc-a90d-76dff4e9dd25",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/ffbb6b7d-137d-405c-94df-e82457bca8d7.jpg",
           "storage_key": "photos/original/2026/11/ffbb6b7d-137d-405c-94df-e82457bca8d7.jpg",
@@ -3104,25 +3100,9 @@
             1.0,
             1.0
           ]
-        },
-        {
-          "photo_id": "3a26d05a-9be8-4cef-b649-9b5e328362d5",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/2f51d545-6f8c-4362-833a-1d074650fb2a.jpg",
-          "storage_key": "photos/original/2026/11/2f51d545-6f8c-4362-833a-1d074650fb2a.jpg",
-          "content_type": "image/png",
-          "created_at": "2026-11-02T17:33:53.293642+00:00",
-          "shot_at": "2023-10-23T05:35:06+00:00",
-          "display_name": "human",
-          "public_user_id": "bad9c24b-0644-4438-82cb-fcfb6d8ad11c",
-          "crop": [
-            0.0,
-            0.244,
-            1.0,
-            0.6721
-          ]
         }
       ],
-      "public_photo_count": 13
+      "public_photo_count": 14
     },
     "14": {
       "manhole_id": 14,
@@ -3551,6 +3531,17 @@
           ]
         },
         {
+          "photo_id": "7633fc18-6e65-4623-9059-f10fdea56b5f",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/78c892e9-71ed-4452-99a5-1699b2c6992a.jpg",
+          "storage_key": "photos/original/2026/11/78c892e9-71ed-4452-99a5-1699b2c6992a.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:25:55.045755+00:00",
+          "shot_at": "2022-09-17T04:47:20+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "140ea18a-8981-451d-8cdb-76c60c3e12de",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/7cf1a973-30df-4776-a0d8-13beeff3c74d.jpg",
           "storage_key": "photos/original/2026/11/7cf1a973-30df-4776-a0d8-13beeff3c74d.jpg",
@@ -3567,7 +3558,7 @@
           ]
         }
       ],
-      "public_photo_count": 12
+      "public_photo_count": 13
     },
     "16": {
       "manhole_id": 16,
@@ -5008,7 +4999,7 @@
           ]
         }
       ],
-      "public_photo_count": 17
+      "public_photo_count": 18
     },
     "22": {
       "manhole_id": 22,
@@ -5480,7 +5471,7 @@
           ]
         }
       ],
-      "public_photo_count": 57
+      "public_photo_count": 58
     },
     "28": {
       "manhole_id": 28,
@@ -5962,7 +5953,7 @@
           ]
         }
       ],
-      "public_photo_count": 31
+      "public_photo_count": 32
     },
     "30": {
       "manhole_id": 30,
@@ -6444,7 +6435,7 @@
           ]
         }
       ],
-      "public_photo_count": 20
+      "public_photo_count": 21
     },
     "32": {
       "manhole_id": 32,
@@ -6926,7 +6917,7 @@
           ]
         }
       ],
-      "public_photo_count": 18
+      "public_photo_count": 19
     },
     "34": {
       "manhole_id": 34,
@@ -7167,7 +7158,7 @@
           ]
         }
       ],
-      "public_photo_count": 19
+      "public_photo_count": 20
     },
     "35": {
       "manhole_id": 35,
@@ -7532,7 +7523,7 @@
           ]
         }
       ],
-      "public_photo_count": 14
+      "public_photo_count": 15
     },
     "37": {
       "manhole_id": 37,
@@ -7773,7 +7764,7 @@
           ]
         }
       ],
-      "public_photo_count": 16
+      "public_photo_count": 17
     },
     "38": {
       "manhole_id": 38,
@@ -8014,7 +8005,7 @@
           ]
         }
       ],
-      "public_photo_count": 16
+      "public_photo_count": 17
     },
     "39": {
       "manhole_id": 39,
@@ -8205,9 +8196,20 @@
             1.0,
             1.0
           ]
+        },
+        {
+          "photo_id": "89c7a82f-fbf6-44da-864a-bf5d837f0daf",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/92212ae1-9aff-46e3-ad59-9041f7c36d81.jpg",
+          "storage_key": "photos/original/2026/11/92212ae1-9aff-46e3-ad59-9041f7c36d81.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:23:51.304672+00:00",
+          "shot_at": "2023-01-05T00:41:54+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 10
+      "public_photo_count": 11
     },
     "40": {
       "manhole_id": 40,
@@ -8448,7 +8450,7 @@
           ]
         }
       ],
-      "public_photo_count": 20
+      "public_photo_count": 21
     },
     "41": {
       "manhole_id": 41,
@@ -8689,7 +8691,7 @@
           ]
         }
       ],
-      "public_photo_count": 22
+      "public_photo_count": 23
     },
     "42": {
       "manhole_id": 42,
@@ -8930,7 +8932,7 @@
           ]
         }
       ],
-      "public_photo_count": 21
+      "public_photo_count": 22
     },
     "43": {
       "manhole_id": 43,
@@ -9155,23 +9157,18 @@
           ]
         },
         {
-          "photo_id": "350bc49d-00f3-4994-9841-71df65caa2d2",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/6a0162db-a557-488b-8f78-d82ff169efd3.jpg",
-          "storage_key": "photos/original/2026/11/6a0162db-a557-488b-8f78-d82ff169efd3.jpg",
-          "content_type": "image/png",
-          "created_at": "2026-11-01T18:58:29.009533+00:00",
-          "shot_at": "2021-09-29T08:45:57+00:00",
-          "display_name": "human",
-          "public_user_id": "bad9c24b-0644-4438-82cb-fcfb6d8ad11c",
-          "crop": [
-            0.0,
-            0.2495,
-            1.0,
-            0.6777
-          ]
+          "photo_id": "f8e81340-fea7-420f-b2a5-40aef0a6b069",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/6c69ec34-011f-4eb5-b88f-4004b4f11dba.jpg",
+          "storage_key": "photos/original/2026/11/6c69ec34-011f-4eb5-b88f-4004b4f11dba.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:18:50.492218+00:00",
+          "shot_at": "2025-04-27T00:52:07+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 13
+      "public_photo_count": 14
     },
     "44": {
       "manhole_id": 44,
@@ -9412,7 +9409,7 @@
           ]
         }
       ],
-      "public_photo_count": 16
+      "public_photo_count": 17
     },
     "45": {
       "manhole_id": 45,
@@ -9632,23 +9629,18 @@
           "crop": null
         },
         {
-          "photo_id": "179a706a-451a-4daa-a78f-ee6ce4f73c84",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/e534528b-e2ff-489b-b289-ed592333a5c2.jpg",
-          "storage_key": "photos/original/2026/11/e534528b-e2ff-489b-b289-ed592333a5c2.jpg",
-          "content_type": "image/png",
-          "created_at": "2026-11-04T05:59:50.489809+00:00",
-          "shot_at": "2023-10-24T04:31:14+00:00",
-          "display_name": "human",
-          "public_user_id": "bad9c24b-0644-4438-82cb-fcfb6d8ad11c",
-          "crop": [
-            0.0,
-            0.2539,
-            1.0,
-            0.6821
-          ]
+          "photo_id": "c9b59ff6-667c-4712-b97e-067fd63bf0bf",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/aab09881-2107-45ae-9723-c2f1e4478f59.jpg",
+          "storage_key": "photos/original/2026/11/aab09881-2107-45ae-9723-c2f1e4478f59.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:25:56.654062+00:00",
+          "shot_at": "2022-09-17T23:37:16+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 13
+      "public_photo_count": 14
     },
     "46": {
       "manhole_id": 46,
@@ -9889,7 +9881,7 @@
           ]
         }
       ],
-      "public_photo_count": 16
+      "public_photo_count": 17
     },
     "47": {
       "manhole_id": 47,
@@ -10371,7 +10363,7 @@
           ]
         }
       ],
-      "public_photo_count": 16
+      "public_photo_count": 17
     },
     "49": {
       "manhole_id": 49,
@@ -10612,7 +10604,7 @@
           ]
         }
       ],
-      "public_photo_count": 23
+      "public_photo_count": 24
     },
     "50": {
       "manhole_id": 50,
@@ -10853,7 +10845,7 @@
           ]
         }
       ],
-      "public_photo_count": 24
+      "public_photo_count": 25
     },
     "51": {
       "manhole_id": 51,
@@ -11094,7 +11086,7 @@
           ]
         }
       ],
-      "public_photo_count": 21
+      "public_photo_count": 22
     },
     "52": {
       "manhole_id": 52,
@@ -11303,6 +11295,17 @@
           ]
         },
         {
+          "photo_id": "9db4242b-17c5-4088-9b98-b315b0020cbe",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/5843ad64-eb22-473a-8733-74fa63efd2ea.jpg",
+          "storage_key": "photos/original/2026/11/5843ad64-eb22-473a-8733-74fa63efd2ea.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:21:16.071848+00:00",
+          "shot_at": "2023-05-13T00:07:07+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "9cd21f57-b4dc-46af-b12a-f31a171db0e2",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/fed27ea1-82c6-4faa-afa5-564e0ef1120d.jpg",
           "storage_key": "photos/original/2026/07/fed27ea1-82c6-4faa-afa5-564e0ef1120d.jpg",
@@ -11317,25 +11320,9 @@
             1.0,
             0.8864
           ]
-        },
-        {
-          "photo_id": "6dc311f8-7663-4b49-92ab-3e3341e1c583",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/4228fc0d-0db8-4f6a-802f-e749669121a6.jpg",
-          "storage_key": "photos/original/2026/10/4228fc0d-0db8-4f6a-802f-e749669121a6.jpg",
-          "content_type": "image/jpeg",
-          "created_at": "2026-10-21T14:26:41.864782+00:00",
-          "shot_at": "2025-02-28T22:56:08+00:00",
-          "display_name": "どんくん",
-          "public_user_id": "c713e125-557a-4c70-a59c-db840c53eed0",
-          "crop": [
-            0.1301,
-            0.0,
-            0.8801,
-            1.0
-          ]
         }
       ],
-      "public_photo_count": 16
+      "public_photo_count": 17
     },
     "53": {
       "manhole_id": 53,
@@ -11576,7 +11563,7 @@
           ]
         }
       ],
-      "public_photo_count": 24
+      "public_photo_count": 25
     },
     "54": {
       "manhole_id": 54,
@@ -11817,7 +11804,7 @@
           ]
         }
       ],
-      "public_photo_count": 37
+      "public_photo_count": 38
     },
     "55": {
       "manhole_id": 55,
@@ -12058,7 +12045,7 @@
           ]
         }
       ],
-      "public_photo_count": 20
+      "public_photo_count": 21
     },
     "56": {
       "manhole_id": 56,
@@ -12278,23 +12265,18 @@
           "crop": null
         },
         {
-          "photo_id": "bce5a54c-eea0-481f-a9f1-e1cf48364acd",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/0bdf757d-3541-4d35-8b26-0f16416bdd7c.jpg",
-          "storage_key": "photos/original/2026/07/0bdf757d-3541-4d35-8b26-0f16416bdd7c.jpg",
+          "photo_id": "6d9020d6-6b89-4340-a6d4-6a15e093ce57",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/83f85955-f597-42f3-8ead-aa5996a2d7c8.jpg",
+          "storage_key": "photos/original/2026/11/83f85955-f597-42f3-8ead-aa5996a2d7c8.jpg",
           "content_type": "image/jpeg",
-          "created_at": "2026-07-27T02:47:22.808969+00:00",
-          "shot_at": "2026-07-20T12:10:19+00:00",
-          "display_name": "Ⓜ︎agenta",
-          "public_user_id": "af0fb869-ded3-49a9-85a9-c2c3919e7ab6",
-          "crop": [
-            0.0,
-            0.017,
-            1.0,
-            0.9688
-          ]
+          "created_at": "2026-11-23T08:21:18.239462+00:00",
+          "shot_at": "2023-05-13T02:14:42+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 15
+      "public_photo_count": 16
     },
     "57": {
       "manhole_id": 57,
@@ -12530,7 +12512,7 @@
           "crop": null
         }
       ],
-      "public_photo_count": 14
+      "public_photo_count": 15
     },
     "58": {
       "manhole_id": 58,
@@ -12771,7 +12753,7 @@
           ]
         }
       ],
-      "public_photo_count": 16
+      "public_photo_count": 17
     },
     "59": {
       "manhole_id": 59,
@@ -12946,9 +12928,20 @@
             1.0,
             0.8224
           ]
+        },
+        {
+          "photo_id": "44a893cb-be42-4c44-9f9b-70017904600f",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/9106d651-a578-4b10-a5ab-004b06420827.jpg",
+          "storage_key": "photos/original/2026/11/9106d651-a578-4b10-a5ab-004b06420827.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:21:29.667398+00:00",
+          "shot_at": "2023-06-02T23:28:29+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 9
+      "public_photo_count": 10
     },
     "60": {
       "manhole_id": 60,
@@ -13189,7 +13182,7 @@
           ]
         }
       ],
-      "public_photo_count": 38
+      "public_photo_count": 39
     },
     "61": {
       "manhole_id": 61,
@@ -13430,7 +13423,7 @@
           ]
         }
       ],
-      "public_photo_count": 30
+      "public_photo_count": 31
     },
     "62": {
       "manhole_id": 62,
@@ -13671,7 +13664,7 @@
           ]
         }
       ],
-      "public_photo_count": 22
+      "public_photo_count": 23
     },
     "63": {
       "manhole_id": 63,
@@ -13878,9 +13871,20 @@
             1.0,
             0.8672
           ]
+        },
+        {
+          "photo_id": "34d99ead-3a91-4dc5-bb58-377d7fe1740e",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/ec2b0f4b-c865-4694-832f-4bf3b44ebed9.jpg",
+          "storage_key": "photos/original/2026/11/ec2b0f4b-c865-4694-832f-4bf3b44ebed9.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:21:28.112158+00:00",
+          "shot_at": "2023-06-02T06:25:42+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 11
+      "public_photo_count": 12
     },
     "64": {
       "manhole_id": 64,
@@ -14121,7 +14125,7 @@
           ]
         }
       ],
-      "public_photo_count": 15
+      "public_photo_count": 16
     },
     "65": {
       "manhole_id": 65,
@@ -14362,7 +14366,7 @@
           ]
         }
       ],
-      "public_photo_count": 15
+      "public_photo_count": 16
     },
     "66": {
       "manhole_id": 66,
@@ -14569,9 +14573,20 @@
             1.0,
             0.9851
           ]
+        },
+        {
+          "photo_id": "064a3aa0-571b-4f9b-9a30-d668b7e2e228",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/bf05ddbf-a43c-4c34-a523-75fab41af425.jpg",
+          "storage_key": "photos/original/2026/11/bf05ddbf-a43c-4c34-a523-75fab41af425.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:21:30.311787+00:00",
+          "shot_at": "2023-06-03T02:33:58+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 11
+      "public_photo_count": 12
     },
     "67": {
       "manhole_id": 67,
@@ -14812,7 +14827,7 @@
           ]
         }
       ],
-      "public_photo_count": 17
+      "public_photo_count": 18
     },
     "68": {
       "manhole_id": 68,
@@ -14955,9 +14970,20 @@
             0.85,
             1.0
           ]
+        },
+        {
+          "photo_id": "7c7451ba-3839-496c-92d7-6353c668e454",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/9192945d-a9b3-4878-bcf5-0c610dc8f1a7.jpg",
+          "storage_key": "photos/original/2026/11/9192945d-a9b3-4878-bcf5-0c610dc8f1a7.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:21:30.263335+00:00",
+          "shot_at": "2023-06-03T05:10:38+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 7
+      "public_photo_count": 8
     },
     "69": {
       "manhole_id": 69,
@@ -15086,6 +15112,17 @@
           ]
         },
         {
+          "photo_id": "0ef222ac-59de-4c98-9732-f751fc5c9022",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/ecdc60b5-b9cd-4e55-987d-c7ede7250417.jpg",
+          "storage_key": "photos/original/2026/11/ecdc60b5-b9cd-4e55-987d-c7ede7250417.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:26:09.117881+00:00",
+          "shot_at": "2022-10-15T05:43:01+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "8682f326-4bb6-4538-a283-51557350cc7c",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/b4e64d9c-98c3-48b0-8a2f-ba69788a73e1.jpg",
           "storage_key": "photos/original/2026/11/b4e64d9c-98c3-48b0-8a2f-ba69788a73e1.jpg",
@@ -15102,7 +15139,7 @@
           ]
         }
       ],
-      "public_photo_count": 7
+      "public_photo_count": 8
     },
     "70": {
       "manhole_id": 70,
@@ -15304,9 +15341,20 @@
           "display_name": "北村歌織",
           "public_user_id": "99ccadcc-d003-46b1-8b28-1f3e5aa65693",
           "crop": null
+        },
+        {
+          "photo_id": "1be71123-db00-4128-8cce-1a491a145eda",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/a0ee4843-f191-4872-ab27-294981b3cc9e.jpg",
+          "storage_key": "photos/original/2026/11/a0ee4843-f191-4872-ab27-294981b3cc9e.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:26:08.168284+00:00",
+          "shot_at": "2022-10-15T04:42:46+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 11
+      "public_photo_count": 12
     },
     "71": {
       "manhole_id": 71,
@@ -15547,7 +15595,7 @@
           ]
         }
       ],
-      "public_photo_count": 13
+      "public_photo_count": 14
     },
     "72": {
       "manhole_id": 72,
@@ -15756,6 +15804,17 @@
           ]
         },
         {
+          "photo_id": "d74325b7-708b-4899-b152-d096572d4229",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/f2912a9c-a165-4057-98cc-607a1405976b.jpg",
+          "storage_key": "photos/original/2026/11/f2912a9c-a165-4057-98cc-607a1405976b.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:21:33.065701+00:00",
+          "shot_at": "2023-06-03T23:18:55+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "ec8fa754-7f35-4592-83f3-10ec33595a2a",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/9204b194-7356-4213-85df-d703a1e17b40.jpg",
           "storage_key": "photos/original/2026/08/9204b194-7356-4213-85df-d703a1e17b40.jpg",
@@ -15772,7 +15831,7 @@
           ]
         }
       ],
-      "public_photo_count": 12
+      "public_photo_count": 13
     },
     "73": {
       "manhole_id": 73,
@@ -16013,7 +16072,7 @@
           ]
         }
       ],
-      "public_photo_count": 14
+      "public_photo_count": 15
     },
     "74": {
       "manhole_id": 74,
@@ -16254,7 +16313,7 @@
           ]
         }
       ],
-      "public_photo_count": 26
+      "public_photo_count": 27
     },
     "75": {
       "manhole_id": 75,
@@ -16495,7 +16554,7 @@
           ]
         }
       ],
-      "public_photo_count": 23
+      "public_photo_count": 24
     },
     "76": {
       "manhole_id": 76,
@@ -16736,7 +16795,7 @@
           ]
         }
       ],
-      "public_photo_count": 21
+      "public_photo_count": 22
     },
     "77": {
       "manhole_id": 77,
@@ -16977,7 +17036,7 @@
           ]
         }
       ],
-      "public_photo_count": 21
+      "public_photo_count": 22
     },
     "78": {
       "manhole_id": 78,
@@ -17218,7 +17277,7 @@
           ]
         }
       ],
-      "public_photo_count": 19
+      "public_photo_count": 20
     },
     "79": {
       "manhole_id": 79,
@@ -17459,7 +17518,7 @@
           ]
         }
       ],
-      "public_photo_count": 14
+      "public_photo_count": 15
     },
     "80": {
       "manhole_id": 80,
@@ -17700,7 +17759,7 @@
           ]
         }
       ],
-      "public_photo_count": 16
+      "public_photo_count": 17
     },
     "81": {
       "manhole_id": 81,
@@ -17941,7 +18000,7 @@
           ]
         }
       ],
-      "public_photo_count": 19
+      "public_photo_count": 20
     },
     "82": {
       "manhole_id": 82,
@@ -18182,7 +18241,7 @@
           ]
         }
       ],
-      "public_photo_count": 19
+      "public_photo_count": 20
     },
     "83": {
       "manhole_id": 83,
@@ -18423,7 +18482,7 @@
           ]
         }
       ],
-      "public_photo_count": 21
+      "public_photo_count": 22
     },
     "84": {
       "manhole_id": 84,
@@ -19141,7 +19200,7 @@
           ]
         }
       ],
-      "public_photo_count": 14
+      "public_photo_count": 15
     },
     "87": {
       "manhole_id": 87,
@@ -19613,7 +19672,7 @@
           ]
         }
       ],
-      "public_photo_count": 21
+      "public_photo_count": 22
     },
     "89": {
       "manhole_id": 89,
@@ -19854,7 +19913,7 @@
           ]
         }
       ],
-      "public_photo_count": 18
+      "public_photo_count": 19
     },
     "90": {
       "manhole_id": 90,
@@ -20079,23 +20138,18 @@
           ]
         },
         {
-          "photo_id": "bb4daf0e-b85b-4c15-86ac-52fe73bedb7a",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/8b0f50cb-ae43-4b52-9a99-43572446f0f8.jpg",
-          "storage_key": "photos/original/2026/11/8b0f50cb-ae43-4b52-9a99-43572446f0f8.jpg",
+          "photo_id": "237d0e0d-2c5f-4511-b934-7ab2560c814e",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/cb33ffa0-ce40-405a-aed3-9b65d3903279.jpg",
+          "storage_key": "photos/original/2026/11/cb33ffa0-ce40-405a-aed3-9b65d3903279.jpg",
           "content_type": "image/jpeg",
-          "created_at": "2026-11-04T07:51:37.442159+00:00",
-          "shot_at": "2026-11-04T07:51:35.134+00:00",
-          "display_name": "べー",
-          "public_user_id": "29b8318e-8aca-40fc-9547-dab47da4a71c",
-          "crop": [
-            0.1681,
-            0.0,
-            0.8352,
-            1.0
-          ]
+          "created_at": "2026-11-23T08:26:02.8195+00:00",
+          "shot_at": "2022-09-19T01:43:11+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 14
+      "public_photo_count": 15
     },
     "91": {
       "manhole_id": 91,
@@ -20336,7 +20390,7 @@
           ]
         }
       ],
-      "public_photo_count": 20
+      "public_photo_count": 21
     },
     "92": {
       "manhole_id": 92,
@@ -20577,7 +20631,7 @@
           ]
         }
       ],
-      "public_photo_count": 18
+      "public_photo_count": 19
     },
     "93": {
       "manhole_id": 93,
@@ -20818,7 +20872,7 @@
           ]
         }
       ],
-      "public_photo_count": 18
+      "public_photo_count": 19
     },
     "94": {
       "manhole_id": 94,
@@ -21059,7 +21113,7 @@
           ]
         }
       ],
-      "public_photo_count": 16
+      "public_photo_count": 17
     },
     "95": {
       "manhole_id": 95,
@@ -21188,6 +21242,17 @@
           ]
         },
         {
+          "photo_id": "bf3b5085-e96c-4876-a606-63a5a471da39",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/223a0eb6-2327-4594-be84-ec827574ea5e.jpg",
+          "storage_key": "photos/original/2026/11/223a0eb6-2327-4594-be84-ec827574ea5e.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:26:04.923346+00:00",
+          "shot_at": "2022-09-19T05:08:24+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "f8c56431-2398-491a-8a02-db30cf5032ff",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/3c588104-c82b-4b22-8918-4909f95d3f27.jpg",
           "storage_key": "photos/original/2026/11/3c588104-c82b-4b22-8918-4909f95d3f27.jpg",
@@ -21236,7 +21301,7 @@
           ]
         }
       ],
-      "public_photo_count": 9
+      "public_photo_count": 10
     },
     "96": {
       "manhole_id": 96,
@@ -21413,6 +21478,17 @@
           ]
         },
         {
+          "photo_id": "b45f95bd-fc98-4ec3-aa31-3216e5ede0f1",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/baec8d0d-1727-4b9e-8ec1-c07e167bd98e.jpg",
+          "storage_key": "photos/original/2026/11/baec8d0d-1727-4b9e-8ec1-c07e167bd98e.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:21:21.809388+00:00",
+          "shot_at": "2023-05-13T22:33:43+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "4738e28f-1531-4524-9598-5fbf2043c39c",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/96f2ade4-3af8-4bb3-bc7c-9869fb1bdef0.jpg",
           "storage_key": "photos/original/2026/11/96f2ade4-3af8-4bb3-bc7c-9869fb1bdef0.jpg",
@@ -21429,7 +21505,7 @@
           ]
         }
       ],
-      "public_photo_count": 10
+      "public_photo_count": 11
     },
     "97": {
       "manhole_id": 97,
@@ -21670,7 +21746,7 @@
           ]
         }
       ],
-      "public_photo_count": 24
+      "public_photo_count": 25
     },
     "98": {
       "manhole_id": 98,
@@ -21911,7 +21987,7 @@
           ]
         }
       ],
-      "public_photo_count": 37
+      "public_photo_count": 38
     },
     "99": {
       "manhole_id": 99,
@@ -22152,7 +22228,7 @@
           ]
         }
       ],
-      "public_photo_count": 40
+      "public_photo_count": 41
     },
     "100": {
       "manhole_id": 100,
@@ -23357,7 +23433,7 @@
           ]
         }
       ],
-      "public_photo_count": 39
+      "public_photo_count": 40
     },
     "105": {
       "manhole_id": 105,
@@ -23839,7 +23915,7 @@
           ]
         }
       ],
-      "public_photo_count": 18
+      "public_photo_count": 19
     },
     "107": {
       "manhole_id": 107,
@@ -24080,7 +24156,7 @@
           ]
         }
       ],
-      "public_photo_count": 15
+      "public_photo_count": 16
     },
     "108": {
       "manhole_id": 108,
@@ -24321,7 +24397,7 @@
           ]
         }
       ],
-      "public_photo_count": 22
+      "public_photo_count": 23
     },
     "109": {
       "manhole_id": 109,
@@ -24562,7 +24638,7 @@
           ]
         }
       ],
-      "public_photo_count": 24
+      "public_photo_count": 25
     },
     "110": {
       "manhole_id": 110,
@@ -24980,6 +25056,17 @@
           ]
         },
         {
+          "photo_id": "89bafc4a-d36f-46a4-8d6f-0ff103a6a836",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/396de324-5b1e-47f3-a4c4-84b8694119fc.jpg",
+          "storage_key": "photos/original/2026/11/396de324-5b1e-47f3-a4c4-84b8694119fc.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:24:05.865475+00:00",
+          "shot_at": "2023-01-11T08:48:30+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "70562e1e-a5ba-4651-a2c7-987d619f0738",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/ef199103-be01-4cf0-94c5-8df7d4d2da72.jpg",
           "storage_key": "photos/original/2026/10/ef199103-be01-4cf0-94c5-8df7d4d2da72.jpg",
@@ -25012,7 +25099,7 @@
           ]
         }
       ],
-      "public_photo_count": 11
+      "public_photo_count": 12
     },
     "112": {
       "manhole_id": 112,
@@ -25173,6 +25260,17 @@
           ]
         },
         {
+          "photo_id": "b5af0731-7dff-4950-9558-54b29d43484e",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/b75e1838-5435-40f4-9ced-b2ecbdf8cc39.jpg",
+          "storage_key": "photos/original/2026/11/b75e1838-5435-40f4-9ced-b2ecbdf8cc39.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:24:05.094949+00:00",
+          "shot_at": "2023-01-11T04:05:46+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "8609cef8-c8c4-4be4-ac72-8f022d11c655",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/4b987842-2ee5-4594-b812-2a2539f7ed4d.jpg",
           "storage_key": "photos/original/2026/11/4b987842-2ee5-4594-b812-2a2539f7ed4d.jpg",
@@ -25189,7 +25287,7 @@
           ]
         }
       ],
-      "public_photo_count": 9
+      "public_photo_count": 10
     },
     "113": {
       "manhole_id": 113,
@@ -25350,6 +25448,17 @@
           ]
         },
         {
+          "photo_id": "9ed1fb6f-606c-4445-a53e-4955c9e9eb69",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/95143efb-f0a7-4625-94da-89c7ca35f4b5.jpg",
+          "storage_key": "photos/original/2026/11/95143efb-f0a7-4625-94da-89c7ca35f4b5.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:23:58.1437+00:00",
+          "shot_at": "2023-01-10T01:42:23+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "08bf6c93-2eb7-4af7-8f29-3e0d367477fe",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/850d174b-cb85-4a5b-960c-737e591de286.jpg",
           "storage_key": "photos/original/2026/11/850d174b-cb85-4a5b-960c-737e591de286.jpg",
@@ -25366,7 +25475,7 @@
           ]
         }
       ],
-      "public_photo_count": 9
+      "public_photo_count": 10
     },
     "114": {
       "manhole_id": 114,
@@ -25511,6 +25620,17 @@
           ]
         },
         {
+          "photo_id": "4b27e386-d3b4-4f7a-aa46-d9f34596e972",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/952be2d0-a8dc-4245-b0f1-20d38dfea23f.jpg",
+          "storage_key": "photos/original/2026/11/952be2d0-a8dc-4245-b0f1-20d38dfea23f.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:43:17.571766+00:00",
+          "shot_at": "2023-01-11T07:54:28+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "c6d69f3e-efbe-49d8-b9d8-3590b84212e7",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/7bfc265e-a6b4-42f4-aaf5-ebee7fe2f10b.jpg",
           "storage_key": "photos/original/2026/11/7bfc265e-a6b4-42f4-aaf5-ebee7fe2f10b.jpg",
@@ -25527,7 +25647,7 @@
           ]
         }
       ],
-      "public_photo_count": 8
+      "public_photo_count": 9
     },
     "115": {
       "manhole_id": 115,
@@ -25892,6 +26012,17 @@
           ]
         },
         {
+          "photo_id": "c35a8db2-68c8-4b74-92dc-13963ab7fca3",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/cc661d72-64ab-4b67-9572-1ca9522dbe2b.jpg",
+          "storage_key": "photos/original/2026/11/cc661d72-64ab-4b67-9572-1ca9522dbe2b.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:24:00.889615+00:00",
+          "shot_at": "2023-01-10T07:45:19+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "5951924d-4b5d-4c44-92ec-4341f41faa1f",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/73c65e7d-a8bd-4093-bd5f-403b5ec5d0b3.jpg",
           "storage_key": "photos/original/2026/11/73c65e7d-a8bd-4093-bd5f-403b5ec5d0b3.jpg",
@@ -25908,7 +26039,7 @@
           ]
         }
       ],
-      "public_photo_count": 10
+      "public_photo_count": 11
     },
     "117": {
       "manhole_id": 117,
@@ -26037,6 +26168,17 @@
           ]
         },
         {
+          "photo_id": "51e74115-ea84-4458-827a-dfd3b4eb0a3a",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/fcb983b5-478c-4a44-900c-34a8269773c9.jpg",
+          "storage_key": "photos/original/2026/11/fcb983b5-478c-4a44-900c-34a8269773c9.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:24:05.874538+00:00",
+          "shot_at": "2023-01-11T05:50:03+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "757c18c6-5b28-4f17-b796-a57728672f7c",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/d65d1afa-d8c0-47e2-a36b-b3af51031cef.jpg",
           "storage_key": "photos/original/2026/11/d65d1afa-d8c0-47e2-a36b-b3af51031cef.jpg",
@@ -26053,7 +26195,7 @@
           ]
         }
       ],
-      "public_photo_count": 7
+      "public_photo_count": 8
     },
     "118": {
       "manhole_id": 118,
@@ -26214,6 +26356,17 @@
           ]
         },
         {
+          "photo_id": "65ae9dcb-9581-48b3-952d-c4c6b972106d",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/0aa1f6b6-7bf4-4deb-b403-3db426622b75.jpg",
+          "storage_key": "photos/original/2026/11/0aa1f6b6-7bf4-4deb-b403-3db426622b75.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:24:02.576005+00:00",
+          "shot_at": "2023-01-10T10:26:05+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "e4185a77-e01d-40da-8824-29568a967dce",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/2c1bcda6-5433-42cc-a53c-12b58d9b4368.jpg",
           "storage_key": "photos/original/2026/10/2c1bcda6-5433-42cc-a53c-12b58d9b4368.jpg",
@@ -26246,7 +26399,7 @@
           ]
         }
       ],
-      "public_photo_count": 10
+      "public_photo_count": 11
     },
     "119": {
       "manhole_id": 119,
@@ -26375,6 +26528,17 @@
           ]
         },
         {
+          "photo_id": "26e1e4bd-e403-4052-b416-40888fecc210",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/134a3602-27a5-4147-9b1e-d87909830591.jpg",
+          "storage_key": "photos/original/2026/11/134a3602-27a5-4147-9b1e-d87909830591.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:24:03.355042+00:00",
+          "shot_at": "2023-01-11T00:13:18+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "dcd7ab50-8303-461a-86cf-fafad64219fc",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/1514d513-0b8f-427d-9d42-0c1e99baa7b4.jpg",
           "storage_key": "photos/original/2026/10/1514d513-0b8f-427d-9d42-0c1e99baa7b4.jpg",
@@ -26407,7 +26571,7 @@
           ]
         }
       ],
-      "public_photo_count": 8
+      "public_photo_count": 9
     },
     "120": {
       "manhole_id": 120,
@@ -26889,7 +27053,7 @@
           ]
         }
       ],
-      "public_photo_count": 21
+      "public_photo_count": 22
     },
     "122": {
       "manhole_id": 122,
@@ -27130,7 +27294,7 @@
           ]
         }
       ],
-      "public_photo_count": 15
+      "public_photo_count": 16
     },
     "123": {
       "manhole_id": 123,
@@ -27323,6 +27487,17 @@
           ]
         },
         {
+          "photo_id": "74e601a5-9683-413e-af7a-13c2c6b73d67",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/3cd691fb-9b65-46fa-b23d-f6308b14f51f.jpg",
+          "storage_key": "photos/original/2026/11/3cd691fb-9b65-46fa-b23d-f6308b14f51f.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:21:13.800337+00:00",
+          "shot_at": "2023-05-12T20:53:08+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "a8994e97-4968-4066-aed0-b79e4aec2160",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/e240b720-8c13-44e3-9fa6-156d0f81c40b.jpg",
           "storage_key": "photos/original/2026/11/e240b720-8c13-44e3-9fa6-156d0f81c40b.jpg",
@@ -27355,7 +27530,7 @@
           ]
         }
       ],
-      "public_photo_count": 12
+      "public_photo_count": 13
     },
     "124": {
       "manhole_id": 124,
@@ -27821,23 +27996,18 @@
           ]
         },
         {
-          "photo_id": "d7d90a32-50a6-428e-b80b-8ab5e9a4c388",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/102bf04e-0551-465b-84cc-53adb8bf795e.jpg",
-          "storage_key": "photos/original/2026/11/102bf04e-0551-465b-84cc-53adb8bf795e.jpg",
-          "content_type": "image/png",
-          "created_at": "2026-11-02T06:21:01.45384+00:00",
-          "shot_at": "2023-10-19T04:12:05+00:00",
-          "display_name": "human",
-          "public_user_id": "bad9c24b-0644-4438-82cb-fcfb6d8ad11c",
-          "crop": [
-            0.0,
-            0.2462,
-            1.0,
-            0.6744
-          ]
+          "photo_id": "1e8a09d2-f2c5-4a79-b120-94eb0e16374e",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/44f63ba0-8850-475e-85fb-c8fb8079426d.jpg",
+          "storage_key": "photos/original/2026/11/44f63ba0-8850-475e-85fb-c8fb8079426d.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:25:58.858871+00:00",
+          "shot_at": "2022-09-18T06:32:54+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 13
+      "public_photo_count": 14
     },
     "126": {
       "manhole_id": 126,
@@ -28073,7 +28243,7 @@
           "crop": null
         }
       ],
-      "public_photo_count": 14
+      "public_photo_count": 15
     },
     "127": {
       "manhole_id": 127,
@@ -28314,7 +28484,7 @@
           ]
         }
       ],
-      "public_photo_count": 16
+      "public_photo_count": 17
     },
     "128": {
       "manhole_id": 128,
@@ -28518,6 +28688,17 @@
           "crop": null
         },
         {
+          "photo_id": "3c7ec12b-c6b0-448c-b243-fd17bd5c1fe5",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/e96ca012-f4e1-4ef1-82b0-6feac31fa8e0.jpg",
+          "storage_key": "photos/original/2026/11/e96ca012-f4e1-4ef1-82b0-6feac31fa8e0.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:26:00.442033+00:00",
+          "shot_at": "2022-09-18T08:13:32+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "669d4cce-4230-4cfa-886d-f0ca45487bb7",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/f1a10f4d-45a0-4760-8641-6a57ace8825c.jpg",
           "storage_key": "photos/original/2026/07/f1a10f4d-45a0-4760-8641-6a57ace8825c.jpg",
@@ -28532,25 +28713,9 @@
             1.0,
             1.0
           ]
-        },
-        {
-          "photo_id": "ded095cd-296c-433b-8faa-852a7ccaffbf",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/08/c0ee792a-9d1c-4e88-b142-eb251adc82e4.jpg",
-          "storage_key": "photos/original/2026/08/c0ee792a-9d1c-4e88-b142-eb251adc82e4.jpg",
-          "content_type": "image/jpeg",
-          "created_at": "2026-08-23T13:26:14.374452+00:00",
-          "shot_at": "2026-08-23T12:22:14+00:00",
-          "display_name": "べが",
-          "public_user_id": "0b98f613-711b-4db0-9619-3fa18e12de46",
-          "crop": [
-            0.0,
-            0.1508,
-            1.0,
-            0.9008
-          ]
         }
       ],
-      "public_photo_count": 15
+      "public_photo_count": 16
     },
     "129": {
       "manhole_id": 129,
@@ -28791,7 +28956,7 @@
           ]
         }
       ],
-      "public_photo_count": 17
+      "public_photo_count": 18
     },
     "130": {
       "manhole_id": 130,
@@ -29027,7 +29192,7 @@
           "crop": null
         }
       ],
-      "public_photo_count": 15
+      "public_photo_count": 16
     },
     "131": {
       "manhole_id": 131,
@@ -29247,23 +29412,18 @@
           "crop": null
         },
         {
-          "photo_id": "3bf2adab-d340-4803-a479-a38bb299404c",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/01ccb6f5-2055-4c88-86fb-6b9dba74e2a4.jpg",
-          "storage_key": "photos/original/2026/10/01ccb6f5-2055-4c88-86fb-6b9dba74e2a4.jpg",
+          "photo_id": "d92512e4-213d-4b6d-bb34-974b0f268ac2",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/64e07ec2-fbd1-48fa-ab10-fe0abd5d898a.jpg",
+          "storage_key": "photos/original/2026/11/64e07ec2-fbd1-48fa-ab10-fe0abd5d898a.jpg",
           "content_type": "image/jpeg",
-          "created_at": "2026-10-23T07:43:08.610911+00:00",
-          "shot_at": "2026-06-10T10:43:54+00:00",
-          "display_name": "よさそう商品",
-          "public_user_id": "6e2bbf33-a6f6-4ae6-9a65-6303313d1443",
-          "crop": [
-            0.0,
-            0.165,
-            1.0,
-            0.915
-          ]
+          "created_at": "2026-11-23T08:21:19.419628+00:00",
+          "shot_at": "2023-05-13T05:33:48+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 15
+      "public_photo_count": 16
     },
     "132": {
       "manhole_id": 132,
@@ -29504,7 +29664,7 @@
           ]
         }
       ],
-      "public_photo_count": 15
+      "public_photo_count": 16
     },
     "133": {
       "manhole_id": 133,
@@ -29745,7 +29905,7 @@
           ]
         }
       ],
-      "public_photo_count": 15
+      "public_photo_count": 16
     },
     "134": {
       "manhole_id": 134,
@@ -29976,7 +30136,7 @@
           "crop": null
         }
       ],
-      "public_photo_count": 15
+      "public_photo_count": 16
     },
     "135": {
       "manhole_id": 135,
@@ -30217,7 +30377,7 @@
           ]
         }
       ],
-      "public_photo_count": 16
+      "public_photo_count": 17
     },
     "136": {
       "manhole_id": 136,
@@ -30458,7 +30618,7 @@
           ]
         }
       ],
-      "public_photo_count": 14
+      "public_photo_count": 15
     },
     "137": {
       "manhole_id": 137,
@@ -30699,7 +30859,7 @@
           ]
         }
       ],
-      "public_photo_count": 14
+      "public_photo_count": 15
     },
     "138": {
       "manhole_id": 138,
@@ -30908,6 +31068,17 @@
           ]
         },
         {
+          "photo_id": "6d481c7d-d3fb-4245-b503-074276ef3775",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/d4ff51cd-73f0-47db-a2e0-450b7cc1339b.jpg",
+          "storage_key": "photos/original/2026/11/d4ff51cd-73f0-47db-a2e0-450b7cc1339b.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:25:58.105387+00:00",
+          "shot_at": "2022-09-18T03:22:03+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "bd5e4cb3-9bad-4741-97fb-903405530450",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/437892d9-eec5-4d4f-9b5c-7d958bda5e03.jpg",
           "storage_key": "photos/original/2026/11/437892d9-eec5-4d4f-9b5c-7d958bda5e03.jpg",
@@ -30924,7 +31095,7 @@
           ]
         }
       ],
-      "public_photo_count": 12
+      "public_photo_count": 13
     },
     "139": {
       "manhole_id": 139,
@@ -31133,6 +31304,17 @@
           ]
         },
         {
+          "photo_id": "f23e1bdc-a719-4877-9cce-25f3f56d4f89",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/dc1d9170-00b1-4687-93a1-b9a33e247c5b.jpg",
+          "storage_key": "photos/original/2026/11/dc1d9170-00b1-4687-93a1-b9a33e247c5b.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:25:57.400167+00:00",
+          "shot_at": "2022-09-18T03:06:35+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "d7724b94-aa43-43a4-9e6f-2bbe7cfd7cc1",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/d84abf09-2dbc-44c9-8257-a46d8d0f0b4b.jpg",
           "storage_key": "photos/original/2026/11/d84abf09-2dbc-44c9-8257-a46d8d0f0b4b.jpg",
@@ -31149,7 +31331,7 @@
           ]
         }
       ],
-      "public_photo_count": 12
+      "public_photo_count": 13
     },
     "140": {
       "manhole_id": 140,
@@ -31390,7 +31572,7 @@
           ]
         }
       ],
-      "public_photo_count": 32
+      "public_photo_count": 33
     },
     "141": {
       "manhole_id": 141,
@@ -31597,9 +31779,20 @@
             1.0,
             0.8314
           ]
+        },
+        {
+          "photo_id": "ef15d6e9-a452-492a-b373-24c434979434",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/62133bda-5920-4396-be74-46284d493b10.jpg",
+          "storage_key": "photos/original/2026/11/62133bda-5920-4396-be74-46284d493b10.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:21:29.7227+00:00",
+          "shot_at": "2023-06-02T21:55:50+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 11
+      "public_photo_count": 12
     },
     "142": {
       "manhole_id": 142,
@@ -31840,7 +32033,7 @@
           ]
         }
       ],
-      "public_photo_count": 18
+      "public_photo_count": 19
     },
     "143": {
       "manhole_id": 143,
@@ -32031,9 +32224,20 @@
             1.0,
             0.8803
           ]
+        },
+        {
+          "photo_id": "f1cbe480-19f3-42f9-abe0-99c4422f078e",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/2564f2e7-dddd-49f0-97dd-7f26d895a55c.jpg",
+          "storage_key": "photos/original/2026/11/2564f2e7-dddd-49f0-97dd-7f26d895a55c.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:21:31.036012+00:00",
+          "shot_at": "2023-06-03T08:05:52+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 10
+      "public_photo_count": 11
     },
     "144": {
       "manhole_id": 144,
@@ -32237,6 +32441,17 @@
           "crop": null
         },
         {
+          "photo_id": "36dead0d-5123-4fe7-ade1-bbddac9feac1",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/534e2d9a-a703-4af0-94a8-06308b70c47b.jpg",
+          "storage_key": "photos/original/2026/11/534e2d9a-a703-4af0-94a8-06308b70c47b.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:24:17.497618+00:00",
+          "shot_at": "2023-05-07T02:18:11+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "a22f8453-581f-41ea-81cc-6aa3e0a7f36c",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/c970f547-6c86-4580-8c60-73ec7fa1b3ea.jpg",
           "storage_key": "photos/original/2026/11/c970f547-6c86-4580-8c60-73ec7fa1b3ea.jpg",
@@ -32251,25 +32466,9 @@
             1.0,
             0.9357
           ]
-        },
-        {
-          "photo_id": "7477bded-1292-4f36-aa44-554ffc920521",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/3668f716-bb36-43fe-ae55-1811e2a90fe3.jpg",
-          "storage_key": "photos/original/2026/11/3668f716-bb36-43fe-ae55-1811e2a90fe3.jpg",
-          "content_type": "image/jpeg",
-          "created_at": "2026-11-09T13:09:14.316504+00:00",
-          "shot_at": "2022-10-21T09:50:16+00:00",
-          "display_name": "どんくん",
-          "public_user_id": "c713e125-557a-4c70-a59c-db840c53eed0",
-          "crop": [
-            0.0,
-            0.1857,
-            1.0,
-            0.9357
-          ]
         }
       ],
-      "public_photo_count": 14
+      "public_photo_count": 15
     },
     "145": {
       "manhole_id": 145,
@@ -32473,6 +32672,17 @@
           "crop": null
         },
         {
+          "photo_id": "916474a5-f680-4bd5-8a0e-0a9a4a6524b6",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/10f85c86-a599-442a-b4ac-5ee1ce6f12a2.jpg",
+          "storage_key": "photos/original/2026/11/10f85c86-a599-442a-b4ac-5ee1ce6f12a2.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:24:18.243437+00:00",
+          "shot_at": "2023-05-07T02:42:11+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "51689094-c085-4021-9b10-3982b98eaec7",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/0490add3-310a-409e-9776-84080813e09a.jpg",
           "storage_key": "photos/original/2026/11/0490add3-310a-409e-9776-84080813e09a.jpg",
@@ -32487,25 +32697,9 @@
             1.0,
             0.8743
           ]
-        },
-        {
-          "photo_id": "7ea0bbc4-a6af-4e46-9b01-1d734aff51b9",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/a2f4aac6-5dfe-4fed-88d7-1e81dd9f4c6c.jpg",
-          "storage_key": "photos/original/2026/11/a2f4aac6-5dfe-4fed-88d7-1e81dd9f4c6c.jpg",
-          "content_type": "image/png",
-          "created_at": "2026-11-02T03:56:07.334229+00:00",
-          "shot_at": "2022-09-13T21:39:24+00:00",
-          "display_name": "human",
-          "public_user_id": "bad9c24b-0644-4438-82cb-fcfb6d8ad11c",
-          "crop": [
-            0.0,
-            0.2483,
-            1.0,
-            0.6764
-          ]
         }
       ],
-      "public_photo_count": 13
+      "public_photo_count": 14
     },
     "146": {
       "manhole_id": 146,
@@ -32741,7 +32935,7 @@
           "crop": null
         }
       ],
-      "public_photo_count": 14
+      "public_photo_count": 15
     },
     "147": {
       "manhole_id": 147,
@@ -32934,6 +33128,17 @@
           ]
         },
         {
+          "photo_id": "f4098c2f-3e25-42ef-b4fa-e952df8f580a",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/fc4a0e8b-9ebd-45d0-b148-b082a33576a7.jpg",
+          "storage_key": "photos/original/2026/11/fc4a0e8b-9ebd-45d0-b148-b082a33576a7.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:24:16.595555+00:00",
+          "shot_at": "2023-05-07T02:08:54+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "f41e842b-2582-4538-b032-436835ef3178",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/e90dd498-de69-4ea9-90a0-4e87fee7e313.jpg",
           "storage_key": "photos/original/2026/10/e90dd498-de69-4ea9-90a0-4e87fee7e313.jpg",
@@ -32964,25 +33169,9 @@
             1.0,
             0.9841
           ]
-        },
-        {
-          "photo_id": "9d31be6e-f09f-4fcd-8542-86ecb5e514a3",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/7352c02c-3056-4f89-b0d0-9b866cfd07f6.jpg",
-          "storage_key": "photos/original/2026/11/7352c02c-3056-4f89-b0d0-9b866cfd07f6.jpg",
-          "content_type": "image/png",
-          "created_at": "2026-11-02T03:52:53.523001+00:00",
-          "shot_at": "2022-09-13T21:00:26+00:00",
-          "display_name": "human",
-          "public_user_id": "bad9c24b-0644-4438-82cb-fcfb6d8ad11c",
-          "crop": [
-            0.0,
-            0.2485,
-            1.0,
-            0.6766
-          ]
         }
       ],
-      "public_photo_count": 13
+      "public_photo_count": 14
     },
     "148": {
       "manhole_id": 148,
@@ -33223,7 +33412,7 @@
           ]
         }
       ],
-      "public_photo_count": 45
+      "public_photo_count": 46
     },
     "149": {
       "manhole_id": 149,
@@ -33464,7 +33653,7 @@
           ]
         }
       ],
-      "public_photo_count": 47
+      "public_photo_count": 48
     },
     "150": {
       "manhole_id": 150,
@@ -33705,7 +33894,7 @@
           ]
         }
       ],
-      "public_photo_count": 44
+      "public_photo_count": 45
     },
     "151": {
       "manhole_id": 151,
@@ -33946,7 +34135,7 @@
           ]
         }
       ],
-      "public_photo_count": 50
+      "public_photo_count": 51
     },
     "152": {
       "manhole_id": 152,
@@ -34187,7 +34376,7 @@
           ]
         }
       ],
-      "public_photo_count": 49
+      "public_photo_count": 50
     },
     "153": {
       "manhole_id": 153,
@@ -34282,9 +34471,20 @@
             1.0,
             0.7999
           ]
+        },
+        {
+          "photo_id": "801bf8a4-f65d-4bec-ada5-b4912449fd4a",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/68861c65-9946-45c8-8404-64ec0f9068a5.jpg",
+          "storage_key": "photos/original/2026/11/68861c65-9946-45c8-8404-64ec0f9068a5.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:24:15.311495+00:00",
+          "shot_at": "2023-04-29T03:38:14+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 4
+      "public_photo_count": 5
     },
     "154": {
       "manhole_id": 154,
@@ -34379,9 +34579,20 @@
             1.0,
             0.7873
           ]
+        },
+        {
+          "photo_id": "cc2229ce-b323-4830-822a-3dd5fbd5b1a8",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/43a6986d-03c5-45ff-b608-8e818b345dd3.jpg",
+          "storage_key": "photos/original/2026/11/43a6986d-03c5-45ff-b608-8e818b345dd3.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:24:15.962151+00:00",
+          "shot_at": "2023-04-29T03:39:22+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 4
+      "public_photo_count": 5
     },
     "155": {
       "manhole_id": 155,
@@ -34476,9 +34687,20 @@
             1.0,
             0.8485
           ]
+        },
+        {
+          "photo_id": "28817c22-dee2-46c7-9ba5-aafe712495d2",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/ac21f835-8bd3-4a3b-a3dd-74c1a9fa63db.jpg",
+          "storage_key": "photos/original/2026/11/ac21f835-8bd3-4a3b-a3dd-74c1a9fa63db.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:24:15.937893+00:00",
+          "shot_at": "2023-04-29T03:52:53+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 4
+      "public_photo_count": 5
     },
     "156": {
       "manhole_id": 156,
@@ -34573,9 +34795,20 @@
             1.0,
             0.7859
           ]
+        },
+        {
+          "photo_id": "d5f4b811-cf11-46dc-a80b-1872ca2d57ed",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/851a7ee3-1e2e-4b63-ad40-aac056c9f337.jpg",
+          "storage_key": "photos/original/2026/11/851a7ee3-1e2e-4b63-ad40-aac056c9f337.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:24:16.612488+00:00",
+          "shot_at": "2023-04-29T05:29:45+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 4
+      "public_photo_count": 5
     },
     "157": {
       "manhole_id": 157,
@@ -34816,7 +35049,7 @@
           ]
         }
       ],
-      "public_photo_count": 16
+      "public_photo_count": 17
     },
     "158": {
       "manhole_id": 158,
@@ -35057,7 +35290,7 @@
           ]
         }
       ],
-      "public_photo_count": 15
+      "public_photo_count": 16
     },
     "159": {
       "manhole_id": 159,
@@ -35298,7 +35531,7 @@
           ]
         }
       ],
-      "public_photo_count": 43
+      "public_photo_count": 44
     },
     "160": {
       "manhole_id": 160,
@@ -35539,7 +35772,7 @@
           ]
         }
       ],
-      "public_photo_count": 49
+      "public_photo_count": 50
     },
     "161": {
       "manhole_id": 161,
@@ -35780,7 +36013,7 @@
           ]
         }
       ],
-      "public_photo_count": 34
+      "public_photo_count": 35
     },
     "162": {
       "manhole_id": 162,
@@ -36021,7 +36254,7 @@
           ]
         }
       ],
-      "public_photo_count": 45
+      "public_photo_count": 46
     },
     "163": {
       "manhole_id": 163,
@@ -36262,7 +36495,7 @@
           ]
         }
       ],
-      "public_photo_count": 47
+      "public_photo_count": 48
     },
     "164": {
       "manhole_id": 164,
@@ -36439,6 +36672,17 @@
           ]
         },
         {
+          "photo_id": "1ab4b61d-abfb-404a-bb14-86dabc35da67",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/9d189e59-8288-4629-8f96-191cf728207c.jpg",
+          "storage_key": "photos/original/2026/11/9d189e59-8288-4629-8f96-191cf728207c.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:24:05.185116+00:00",
+          "shot_at": "2023-01-11T03:46:32+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "a4beb169-3657-4cb1-9a0b-e5421718eca1",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/3bac50f6-b8a5-453b-9910-d5ae300882c1.jpg",
           "storage_key": "photos/original/2026/11/3bac50f6-b8a5-453b-9910-d5ae300882c1.jpg",
@@ -36455,7 +36699,7 @@
           ]
         }
       ],
-      "public_photo_count": 10
+      "public_photo_count": 11
     },
     "165": {
       "manhole_id": 165,
@@ -36616,6 +36860,17 @@
           ]
         },
         {
+          "photo_id": "5b6f85ee-a7c6-47f8-8eac-d557e0adf033",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/1a99f37b-d1c1-458a-9942-318bf16723ba.jpg",
+          "storage_key": "photos/original/2026/11/1a99f37b-d1c1-458a-9942-318bf16723ba.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:24:02.209414+00:00",
+          "shot_at": "2023-01-10T09:04:07+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "967af643-ecce-49a7-8188-f78b5aaf49cb",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/97d4a865-19e4-4b38-8f21-b0a370ad2607.jpg",
           "storage_key": "photos/original/2026/11/97d4a865-19e4-4b38-8f21-b0a370ad2607.jpg",
@@ -36632,7 +36887,7 @@
           ]
         }
       ],
-      "public_photo_count": 9
+      "public_photo_count": 10
     },
     "166": {
       "manhole_id": 166,
@@ -37222,6 +37477,17 @@
           ]
         },
         {
+          "photo_id": "ccbdb877-c1ec-4fdf-a5d6-d9dee21d8d64",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/f14f05b9-3a50-476a-a5ee-c4ab8b03a812.jpg",
+          "storage_key": "photos/original/2026/11/f14f05b9-3a50-476a-a5ee-c4ab8b03a812.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:24:01.822951+00:00",
+          "shot_at": "2023-01-10T08:39:30+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "c24fcfe4-752f-4702-a5c4-b4d23db9b1b7",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/7549d7dc-6ded-4181-8367-f33b5581be51.jpg",
           "storage_key": "photos/original/2026/11/7549d7dc-6ded-4181-8367-f33b5581be51.jpg",
@@ -37238,7 +37504,7 @@
           ]
         }
       ],
-      "public_photo_count": 11
+      "public_photo_count": 12
     },
     "169": {
       "manhole_id": 169,
@@ -37431,6 +37697,17 @@
           ]
         },
         {
+          "photo_id": "0bd086b7-4dda-444c-8dee-0f40352e51e7",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/6291c6a7-cc36-4704-b583-fd550de1994a.jpg",
+          "storage_key": "photos/original/2026/11/6291c6a7-cc36-4704-b583-fd550de1994a.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:24:01.553593+00:00",
+          "shot_at": "2023-01-10T08:18:52+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "1f58b66c-ac5c-4bef-9d75-ad32ff9b189e",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/8603b8ad-b513-47dd-abb0-42ba24aab4f4.jpg",
           "storage_key": "photos/original/2026/11/8603b8ad-b513-47dd-abb0-42ba24aab4f4.jpg",
@@ -37447,7 +37724,7 @@
           ]
         }
       ],
-      "public_photo_count": 11
+      "public_photo_count": 12
     },
     "170": {
       "manhole_id": 170,
@@ -37608,6 +37885,17 @@
           ]
         },
         {
+          "photo_id": "46e85bc9-a1ab-4d46-a94e-2c9b70b765dc",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/0b1069ac-1cc5-4fc9-9f7d-60032a374919.jpg",
+          "storage_key": "photos/original/2026/11/0b1069ac-1cc5-4fc9-9f7d-60032a374919.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:24:00.853417+00:00",
+          "shot_at": "2023-01-10T07:10:51+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "87cd6ef2-b262-425d-9ad1-5ee758e18603",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/072ccbfd-039b-407e-855e-4e38014611bf.jpg",
           "storage_key": "photos/original/2026/11/072ccbfd-039b-407e-855e-4e38014611bf.jpg",
@@ -37624,7 +37912,7 @@
           ]
         }
       ],
-      "public_photo_count": 9
+      "public_photo_count": 10
     },
     "171": {
       "manhole_id": 171,
@@ -37705,6 +37993,17 @@
           ]
         },
         {
+          "photo_id": "f9e78930-219b-4a51-8089-3578453da3e7",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/54c74924-2667-4a13-b67d-545d7b25fb5b.jpg",
+          "storage_key": "photos/original/2026/11/54c74924-2667-4a13-b67d-545d7b25fb5b.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:24:00.186813+00:00",
+          "shot_at": "2023-01-10T06:09:11+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "c29de72c-cfcc-41af-ae81-2d7473af479f",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/ae40c8db-d8bd-4f78-a1fc-d2077732a1b7.jpg",
           "storage_key": "photos/original/2026/11/ae40c8db-d8bd-4f78-a1fc-d2077732a1b7.jpg",
@@ -37721,7 +38020,7 @@
           ]
         }
       ],
-      "public_photo_count": 4
+      "public_photo_count": 5
     },
     "172": {
       "manhole_id": 172,
@@ -37962,7 +38261,7 @@
           ]
         }
       ],
-      "public_photo_count": 51
+      "public_photo_count": 52
     },
     "173": {
       "manhole_id": 173,
@@ -38203,7 +38502,7 @@
           ]
         }
       ],
-      "public_photo_count": 51
+      "public_photo_count": 52
     },
     "174": {
       "manhole_id": 174,
@@ -38444,7 +38743,7 @@
           ]
         }
       ],
-      "public_photo_count": 18
+      "public_photo_count": 19
     },
     "175": {
       "manhole_id": 175,
@@ -38667,9 +38966,20 @@
             1.0,
             0.8521
           ]
+        },
+        {
+          "photo_id": "1f4bfe54-f886-4ebf-8f70-2a6ac09fcd80",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/d7c127a7-c32f-4332-86ea-665a0d0ddddd.jpg",
+          "storage_key": "photos/original/2026/11/d7c127a7-c32f-4332-86ea-665a0d0ddddd.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:26:16.326756+00:00",
+          "shot_at": "2022-12-03T04:56:53+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 12
+      "public_photo_count": 13
     },
     "176": {
       "manhole_id": 176,
@@ -38860,9 +39170,20 @@
             1.0,
             0.8632
           ]
+        },
+        {
+          "photo_id": "bd38b66b-a561-486a-b956-87b17b8fa70d",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/aa5ecfa8-7b65-4104-b8ad-a3c7d9c57760.jpg",
+          "storage_key": "photos/original/2026/11/aa5ecfa8-7b65-4104-b8ad-a3c7d9c57760.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:26:16.277132+00:00",
+          "shot_at": "2022-12-03T05:46:33+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 10
+      "public_photo_count": 11
     },
     "177": {
       "manhole_id": 177,
@@ -39087,23 +39408,18 @@
           ]
         },
         {
-          "photo_id": "8ce2c0ae-2631-455c-a581-70cc9a068645",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/cfcc4ae1-f526-489a-b453-6d165bccec29.jpg",
-          "storage_key": "photos/original/2026/11/cfcc4ae1-f526-489a-b453-6d165bccec29.jpg",
+          "photo_id": "2d9d2fae-5331-430a-ba04-62ba20c49852",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/a8acf9a2-ca55-49fd-8411-84284573931b.jpg",
+          "storage_key": "photos/original/2026/11/a8acf9a2-ca55-49fd-8411-84284573931b.jpg",
           "content_type": "image/jpeg",
-          "created_at": "2026-11-04T07:06:39.678164+00:00",
-          "shot_at": "2026-02-09T12:27:32+00:00",
-          "display_name": "Man Fai Adrian Law",
-          "public_user_id": "07ce4931-96e0-4d66-902f-97be711ac736",
-          "crop": [
-            0.1125,
-            0.0,
-            0.8626,
-            1.0
-          ]
+          "created_at": "2026-11-23T08:26:17.067733+00:00",
+          "shot_at": "2022-12-03T06:27:08+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 13
+      "public_photo_count": 14
     },
     "178": {
       "manhole_id": 178,
@@ -39248,6 +39564,17 @@
           ]
         },
         {
+          "photo_id": "e48735ec-1aad-4974-aba1-52a48ebfdb78",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/27caa6b4-399f-4029-88a7-742b641b71cf.jpg",
+          "storage_key": "photos/original/2026/11/27caa6b4-399f-4029-88a7-742b641b71cf.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:24:03.486821+00:00",
+          "shot_at": "2023-01-11T01:01:40+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "4bca09a8-8547-443b-bbe6-385b1dca83b4",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/98de5e7a-ef4f-42c3-b069-9f46eee3f255.jpg",
           "storage_key": "photos/original/2026/11/98de5e7a-ef4f-42c3-b069-9f46eee3f255.jpg",
@@ -39280,7 +39607,7 @@
           ]
         }
       ],
-      "public_photo_count": 9
+      "public_photo_count": 10
     },
     "179": {
       "manhole_id": 179,
@@ -39409,6 +39736,17 @@
           ]
         },
         {
+          "photo_id": "ed8ee510-033b-40fb-a233-76d46c4da17a",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/b15a3563-a0ad-43c3-a520-2d46fcc85941.jpg",
+          "storage_key": "photos/original/2026/11/b15a3563-a0ad-43c3-a520-2d46fcc85941.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:24:04.255843+00:00",
+          "shot_at": "2023-01-11T02:32:03+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "8a39d6ef-395a-4c47-8aee-20efc29fc24a",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/93576080-84da-4070-93fc-e942a294bf05.jpg",
           "storage_key": "photos/original/2026/11/93576080-84da-4070-93fc-e942a294bf05.jpg",
@@ -39441,7 +39779,7 @@
           ]
         }
       ],
-      "public_photo_count": 8
+      "public_photo_count": 9
     },
     "180": {
       "manhole_id": 180,
@@ -39586,6 +39924,17 @@
           ]
         },
         {
+          "photo_id": "c68f9b33-a6eb-401e-8f6e-4adc9eae464d",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/afa13b8d-3cba-456b-96ee-60c40241756c.jpg",
+          "storage_key": "photos/original/2026/11/afa13b8d-3cba-456b-96ee-60c40241756c.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:24:04.13149+00:00",
+          "shot_at": "2023-01-11T02:12:09+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "371c81a0-0707-4bf2-a70d-69ec9020a7cb",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/ec6d710f-4fa2-4ffe-8ea5-ddf58cd28645.jpg",
           "storage_key": "photos/original/2026/11/ec6d710f-4fa2-4ffe-8ea5-ddf58cd28645.jpg",
@@ -39602,7 +39951,7 @@
           ]
         }
       ],
-      "public_photo_count": 8
+      "public_photo_count": 9
     },
     "181": {
       "manhole_id": 181,
@@ -39699,6 +40048,17 @@
           ]
         },
         {
+          "photo_id": "6e83a42a-acfe-4456-8752-6205e1db4161",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/fc3b33da-d4f6-4ad4-8c04-8e90bbebba82.jpg",
+          "storage_key": "photos/original/2026/11/fc3b33da-d4f6-4ad4-8c04-8e90bbebba82.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:24:02.866623+00:00",
+          "shot_at": "2023-01-10T22:21:41+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "99fd50cf-da0d-43a5-a6d2-af29091675e4",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/be2adc94-94f4-4c4c-88d6-ac0b557f59d8.jpg",
           "storage_key": "photos/original/2026/11/be2adc94-94f4-4c4c-88d6-ac0b557f59d8.jpg",
@@ -39715,7 +40075,7 @@
           ]
         }
       ],
-      "public_photo_count": 5
+      "public_photo_count": 6
     },
     "182": {
       "manhole_id": 182,
@@ -39796,6 +40156,17 @@
           ]
         },
         {
+          "photo_id": "c89f9cbf-bf15-418f-854a-1c2e0852cae7",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/39eb52f2-c632-4319-b4a5-4ec959147bb6.jpg",
+          "storage_key": "photos/original/2026/11/39eb52f2-c632-4319-b4a5-4ec959147bb6.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:24:00.043817+00:00",
+          "shot_at": "2023-01-10T05:12:36+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "915a1f09-fdba-4d87-99b1-9d1f25b5a14f",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/d95546b6-6cf4-4029-9c0b-157be8c9c6e5.jpg",
           "storage_key": "photos/original/2026/11/d95546b6-6cf4-4029-9c0b-157be8c9c6e5.jpg",
@@ -39812,7 +40183,7 @@
           ]
         }
       ],
-      "public_photo_count": 4
+      "public_photo_count": 5
     },
     "183": {
       "manhole_id": 183,
@@ -39909,6 +40280,17 @@
           ]
         },
         {
+          "photo_id": "94016efe-09e4-4655-9f05-c7a756ce44ae",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/bac47b73-f424-4b86-ba03-9a32e533c41a.jpg",
+          "storage_key": "photos/original/2026/11/bac47b73-f424-4b86-ba03-9a32e533c41a.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:23:59.538914+00:00",
+          "shot_at": "2023-01-10T04:17:23+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "b9982499-5a01-4171-8418-83740df62a5e",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/2f68e84b-a368-4225-8f42-37f43b883c8d.jpg",
           "storage_key": "photos/original/2026/11/2f68e84b-a368-4225-8f42-37f43b883c8d.jpg",
@@ -39925,7 +40307,7 @@
           ]
         }
       ],
-      "public_photo_count": 5
+      "public_photo_count": 6
     },
     "184": {
       "manhole_id": 184,
@@ -40118,6 +40500,17 @@
           ]
         },
         {
+          "photo_id": "6337f1ef-5043-4e72-803c-b7b0ddafa207",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/1225c526-f710-49fc-a84e-57640f72c042.jpg",
+          "storage_key": "photos/original/2026/11/1225c526-f710-49fc-a84e-57640f72c042.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:23:58.766904+00:00",
+          "shot_at": "2023-01-10T03:03:54+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "fd2d382a-d978-4506-a8e6-fb940e6c5282",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/bbeeed4c-d679-4615-9318-e3162cff446f.jpg",
           "storage_key": "photos/original/2026/11/bbeeed4c-d679-4615-9318-e3162cff446f.jpg",
@@ -40134,7 +40527,7 @@
           ]
         }
       ],
-      "public_photo_count": 11
+      "public_photo_count": 12
     },
     "185": {
       "manhole_id": 185,
@@ -40327,6 +40720,17 @@
           ]
         },
         {
+          "photo_id": "8f423116-eeeb-43a0-be59-c61f241a239e",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/020ff86f-9ec7-4c75-9ef2-91738c397f4f.jpg",
+          "storage_key": "photos/original/2026/11/020ff86f-9ec7-4c75-9ef2-91738c397f4f.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:23:58.760687+00:00",
+          "shot_at": "2023-01-10T02:39:41+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "cb5ce718-9c2b-4255-bef4-e66b796393a3",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/ffbb5288-b0c9-41ae-a98a-45c6a1f0c85e.jpg",
           "storage_key": "photos/original/2026/11/ffbb5288-b0c9-41ae-a98a-45c6a1f0c85e.jpg",
@@ -40343,7 +40747,7 @@
           ]
         }
       ],
-      "public_photo_count": 11
+      "public_photo_count": 12
     },
     "186": {
       "manhole_id": 186,
@@ -40504,6 +40908,17 @@
           ]
         },
         {
+          "photo_id": "7d95ac35-1a25-4322-815c-3cf597de1b36",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/9fda52fa-ce09-470a-95d8-f1fc73932899.jpg",
+          "storage_key": "photos/original/2026/11/9fda52fa-ce09-470a-95d8-f1fc73932899.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:23:59.513251+00:00",
+          "shot_at": "2023-01-10T03:27:23+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "fbecc20a-f705-434f-ae1f-7f20ca96602f",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/f6204cee-bf42-4b1a-9265-c75adac75ac2.jpg",
           "storage_key": "photos/original/2026/11/f6204cee-bf42-4b1a-9265-c75adac75ac2.jpg",
@@ -40520,7 +40935,7 @@
           ]
         }
       ],
-      "public_photo_count": 9
+      "public_photo_count": 10
     },
     "187": {
       "manhole_id": 187,
@@ -40761,7 +41176,7 @@
           ]
         }
       ],
-      "public_photo_count": 30
+      "public_photo_count": 31
     },
     "188": {
       "manhole_id": 188,
@@ -41002,7 +41417,7 @@
           ]
         }
       ],
-      "public_photo_count": 39
+      "public_photo_count": 40
     },
     "189": {
       "manhole_id": 189,
@@ -41225,9 +41640,20 @@
             1.0,
             0.8921
           ]
+        },
+        {
+          "photo_id": "e749ed1b-97cd-4656-aaa4-b582583d065e",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/cab5b2f8-ec0d-439a-999b-cd48ccb42f96.jpg",
+          "storage_key": "photos/original/2026/11/cab5b2f8-ec0d-439a-999b-cd48ccb42f96.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:26:11.227468+00:00",
+          "shot_at": "2022-10-16T00:02:18+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 12
+      "public_photo_count": 13
     },
     "190": {
       "manhole_id": 190,
@@ -41709,7 +42135,7 @@
           ]
         }
       ],
-      "public_photo_count": 17
+      "public_photo_count": 18
     },
     "192": {
       "manhole_id": 192,
@@ -41945,7 +42371,7 @@
           "crop": null
         }
       ],
-      "public_photo_count": 13
+      "public_photo_count": 14
     },
     "193": {
       "manhole_id": 193,
@@ -42106,6 +42532,17 @@
           ]
         },
         {
+          "photo_id": "dcf6e41a-b2a6-4d8f-9670-0b373be8d5b4",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/a7bdc598-ee8a-4da2-beb4-35a5dcc3dddc.jpg",
+          "storage_key": "photos/original/2026/11/a7bdc598-ee8a-4da2-beb4-35a5dcc3dddc.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:26:11.143154+00:00",
+          "shot_at": "2022-10-15T22:17:39+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "b154a0c9-5717-4fa6-ab5b-c26163c5bd4c",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/e21b5cb0-cf96-4fa0-a482-dc0a2f4f902f.jpg",
           "storage_key": "photos/original/2026/11/e21b5cb0-cf96-4fa0-a482-dc0a2f4f902f.jpg",
@@ -42122,7 +42559,7 @@
           ]
         }
       ],
-      "public_photo_count": 9
+      "public_photo_count": 10
     },
     "194": {
       "manhole_id": 194,
@@ -42363,7 +42800,7 @@
           ]
         }
       ],
-      "public_photo_count": 25
+      "public_photo_count": 26
     },
     "195": {
       "manhole_id": 195,
@@ -42604,7 +43041,7 @@
           ]
         }
       ],
-      "public_photo_count": 29
+      "public_photo_count": 30
     },
     "196": {
       "manhole_id": 196,
@@ -42845,7 +43282,7 @@
           ]
         }
       ],
-      "public_photo_count": 28
+      "public_photo_count": 29
     },
     "197": {
       "manhole_id": 197,
@@ -43086,7 +43523,7 @@
           ]
         }
       ],
-      "public_photo_count": 32
+      "public_photo_count": 33
     },
     "198": {
       "manhole_id": 198,
@@ -43327,7 +43764,7 @@
           ]
         }
       ],
-      "public_photo_count": 21
+      "public_photo_count": 22
     },
     "199": {
       "manhole_id": 199,
@@ -43568,7 +44005,7 @@
           ]
         }
       ],
-      "public_photo_count": 19
+      "public_photo_count": 20
     },
     "200": {
       "manhole_id": 200,
@@ -43809,7 +44246,7 @@
           ]
         }
       ],
-      "public_photo_count": 20
+      "public_photo_count": 21
     },
     "201": {
       "manhole_id": 201,
@@ -44050,7 +44487,7 @@
           ]
         }
       ],
-      "public_photo_count": 23
+      "public_photo_count": 24
     },
     "202": {
       "manhole_id": 202,
@@ -44291,7 +44728,7 @@
           ]
         }
       ],
-      "public_photo_count": 20
+      "public_photo_count": 21
     },
     "203": {
       "manhole_id": 203,
@@ -44532,7 +44969,7 @@
           ]
         }
       ],
-      "public_photo_count": 34
+      "public_photo_count": 35
     },
     "204": {
       "manhole_id": 204,
@@ -44773,7 +45210,7 @@
           ]
         }
       ],
-      "public_photo_count": 30
+      "public_photo_count": 31
     },
     "205": {
       "manhole_id": 205,
@@ -45014,7 +45451,7 @@
           ]
         }
       ],
-      "public_photo_count": 32
+      "public_photo_count": 33
     },
     "206": {
       "manhole_id": 206,
@@ -45255,7 +45692,7 @@
           ]
         }
       ],
-      "public_photo_count": 55
+      "public_photo_count": 56
     },
     "207": {
       "manhole_id": 207,
@@ -45496,7 +45933,7 @@
           ]
         }
       ],
-      "public_photo_count": 53
+      "public_photo_count": 54
     },
     "208": {
       "manhole_id": 208,
@@ -45737,7 +46174,7 @@
           ]
         }
       ],
-      "public_photo_count": 54
+      "public_photo_count": 55
     },
     "209": {
       "manhole_id": 209,
@@ -45978,7 +46415,7 @@
           ]
         }
       ],
-      "public_photo_count": 54
+      "public_photo_count": 56
     },
     "210": {
       "manhole_id": 210,
@@ -46219,7 +46656,7 @@
           ]
         }
       ],
-      "public_photo_count": 55
+      "public_photo_count": 57
     },
     "211": {
       "manhole_id": 211,
@@ -46460,7 +46897,7 @@
           ]
         }
       ],
-      "public_photo_count": 29
+      "public_photo_count": 30
     },
     "212": {
       "manhole_id": 212,
@@ -46701,7 +47138,7 @@
           ]
         }
       ],
-      "public_photo_count": 30
+      "public_photo_count": 31
     },
     "213": {
       "manhole_id": 213,
@@ -46942,7 +47379,7 @@
           ]
         }
       ],
-      "public_photo_count": 31
+      "public_photo_count": 32
     },
     "214": {
       "manhole_id": 214,
@@ -47183,7 +47620,7 @@
           ]
         }
       ],
-      "public_photo_count": 24
+      "public_photo_count": 25
     },
     "215": {
       "manhole_id": 215,
@@ -47419,7 +47856,7 @@
           "crop": null
         }
       ],
-      "public_photo_count": 13
+      "public_photo_count": 14
     },
     "216": {
       "manhole_id": 216,
@@ -47660,7 +48097,7 @@
           ]
         }
       ],
-      "public_photo_count": 19
+      "public_photo_count": 20
     },
     "217": {
       "manhole_id": 217,
@@ -47901,7 +48338,7 @@
           ]
         }
       ],
-      "public_photo_count": 19
+      "public_photo_count": 20
     },
     "218": {
       "manhole_id": 218,
@@ -48142,7 +48579,7 @@
           ]
         }
       ],
-      "public_photo_count": 15
+      "public_photo_count": 16
     },
     "219": {
       "manhole_id": 219,
@@ -48383,7 +48820,7 @@
           ]
         }
       ],
-      "public_photo_count": 13
+      "public_photo_count": 14
     },
     "220": {
       "manhole_id": 220,
@@ -48576,6 +49013,17 @@
           ]
         },
         {
+          "photo_id": "b452d7f6-8387-4172-9f0a-576caf39b087",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/e0b4a9a8-a67c-4634-afb7-81a266c3e26e.jpg",
+          "storage_key": "photos/original/2026/11/e0b4a9a8-a67c-4634-afb7-81a266c3e26e.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:26:09.810624+00:00",
+          "shot_at": "2022-10-15T20:35:32+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "ab712293-0738-45e8-867d-bd851119a22f",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/d515168e-1076-4850-a74c-ed372778d324.jpg",
           "storage_key": "photos/original/2026/11/d515168e-1076-4850-a74c-ed372778d324.jpg",
@@ -48606,25 +49054,9 @@
             1.0,
             0.9432
           ]
-        },
-        {
-          "photo_id": "c17984aa-0333-4920-8942-b0073703cf36",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/07f70dc6-5122-4597-9dde-d2c97891113a.jpg",
-          "storage_key": "photos/original/2026/10/07f70dc6-5122-4597-9dde-d2c97891113a.jpg",
-          "content_type": "image/jpeg",
-          "created_at": "2026-10-20T10:53:46.59966+00:00",
-          "shot_at": "2024-10-11T04:19:44+00:00",
-          "display_name": "ako take",
-          "public_user_id": "e2fec7b7-0afe-4a84-9563-ff4cf8d0c075",
-          "crop": [
-            0.0,
-            0.1932,
-            1.0,
-            0.9432
-          ]
         }
       ],
-      "public_photo_count": 14
+      "public_photo_count": 15
     },
     "221": {
       "manhole_id": 221,
@@ -48762,9 +49194,20 @@
           "display_name": "Keeee",
           "public_user_id": "d42f5c8c-5711-4b54-85df-c88642444c4c",
           "crop": null
+        },
+        {
+          "photo_id": "4f79a7b1-d679-428e-9b96-4c2165e9f347",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/c1ff5041-0d86-4cfe-9ee0-e1eba6a3dbb7.jpg",
+          "storage_key": "photos/original/2026/11/c1ff5041-0d86-4cfe-9ee0-e1eba6a3dbb7.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:21:33.866631+00:00",
+          "shot_at": "2023-06-04T03:51:24+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 7
+      "public_photo_count": 8
     },
     "222": {
       "manhole_id": 222,
@@ -49005,7 +49448,7 @@
           ]
         }
       ],
-      "public_photo_count": 24
+      "public_photo_count": 25
     },
     "223": {
       "manhole_id": 223,
@@ -49246,7 +49689,7 @@
           ]
         }
       ],
-      "public_photo_count": 21
+      "public_photo_count": 22
     },
     "224": {
       "manhole_id": 224,
@@ -49487,7 +49930,7 @@
           ]
         }
       ],
-      "public_photo_count": 19
+      "public_photo_count": 20
     },
     "225": {
       "manhole_id": 225,
@@ -49728,7 +50171,7 @@
           ]
         }
       ],
-      "public_photo_count": 23
+      "public_photo_count": 24
     },
     "226": {
       "manhole_id": 226,
@@ -49969,7 +50412,7 @@
           ]
         }
       ],
-      "public_photo_count": 25
+      "public_photo_count": 26
     },
     "227": {
       "manhole_id": 227,
@@ -50210,7 +50653,7 @@
           ]
         }
       ],
-      "public_photo_count": 24
+      "public_photo_count": 25
     },
     "228": {
       "manhole_id": 228,
@@ -50451,7 +50894,7 @@
           ]
         }
       ],
-      "public_photo_count": 24
+      "public_photo_count": 25
     },
     "229": {
       "manhole_id": 229,
@@ -50933,7 +51376,7 @@
           ]
         }
       ],
-      "public_photo_count": 15
+      "public_photo_count": 16
     },
     "231": {
       "manhole_id": 231,
@@ -51174,7 +51617,7 @@
           ]
         }
       ],
-      "public_photo_count": 16
+      "public_photo_count": 17
     },
     "232": {
       "manhole_id": 232,
@@ -51415,7 +51858,7 @@
           ]
         }
       ],
-      "public_photo_count": 15
+      "public_photo_count": 16
     },
     "233": {
       "manhole_id": 233,
@@ -51608,6 +52051,17 @@
           ]
         },
         {
+          "photo_id": "3655b2be-2603-476c-b369-45c0af84b888",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/5b72f163-185e-4af3-a204-12de9f784570.jpg",
+          "storage_key": "photos/original/2026/11/5b72f163-185e-4af3-a204-12de9f784570.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:26:14.664433+00:00",
+          "shot_at": "2022-12-03T01:41:50+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "24f12219-526a-42da-88b0-bace5b5782a0",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/59ac9af7-ea74-45ef-ad1b-5fd280166f74.jpg",
           "storage_key": "photos/original/2026/10/59ac9af7-ea74-45ef-ad1b-5fd280166f74.jpg",
@@ -51638,25 +52092,9 @@
             1.0,
             0.853
           ]
-        },
-        {
-          "photo_id": "43b276c4-b233-4cf5-96dc-a39efd6afe76",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/d9628839-e6db-45a1-ab37-126ad9b61ca6.jpg",
-          "storage_key": "photos/original/2026/10/d9628839-e6db-45a1-ab37-126ad9b61ca6.jpg",
-          "content_type": "image/jpeg",
-          "created_at": "2026-10-21T05:54:20.872931+00:00",
-          "shot_at": "2024-12-14T22:36:44+00:00",
-          "display_name": "どんくん",
-          "public_user_id": "c713e125-557a-4c70-a59c-db840c53eed0",
-          "crop": [
-            0.1247,
-            0.0,
-            0.8747,
-            1.0
-          ]
         }
       ],
-      "public_photo_count": 13
+      "public_photo_count": 14
     },
     "234": {
       "manhole_id": 234,
@@ -51863,9 +52301,20 @@
             1.0,
             0.9433
           ]
+        },
+        {
+          "photo_id": "7888490a-c9c1-41d9-894a-2f0f95386092",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/05f58563-841b-4974-83f3-14efa23054de.jpg",
+          "storage_key": "photos/original/2026/11/05f58563-841b-4974-83f3-14efa23054de.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:26:15.461533+00:00",
+          "shot_at": "2022-12-03T02:48:52+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 11
+      "public_photo_count": 12
     },
     "235": {
       "manhole_id": 235,
@@ -52003,9 +52452,20 @@
           "display_name": "北村歌織",
           "public_user_id": "99ccadcc-d003-46b1-8b28-1f3e5aa65693",
           "crop": null
+        },
+        {
+          "photo_id": "0acebe58-1e75-47e9-b6b9-002915b9f47b",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/4e94c92c-65ba-472a-b685-1108d9847c9c.jpg",
+          "storage_key": "photos/original/2026/11/4e94c92c-65ba-472a-b685-1108d9847c9c.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:26:19.264497+00:00",
+          "shot_at": "2022-12-04T00:25:27+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 7
+      "public_photo_count": 8
     },
     "236": {
       "manhole_id": 236,
@@ -52100,9 +52560,20 @@
             1.0,
             0.8604
           ]
+        },
+        {
+          "photo_id": "9c77eafe-4f84-47f2-bed5-6afca7f88483",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/7c77f534-7d35-4a7c-8e03-1b317c0619ee.jpg",
+          "storage_key": "photos/original/2026/11/7c77f534-7d35-4a7c-8e03-1b317c0619ee.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:26:18.857417+00:00",
+          "shot_at": "2022-12-04T05:16:16+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 4
+      "public_photo_count": 5
     },
     "237": {
       "manhole_id": 237,
@@ -52343,7 +52814,7 @@
           ]
         }
       ],
-      "public_photo_count": 32
+      "public_photo_count": 33
     },
     "238": {
       "manhole_id": 238,
@@ -52584,7 +53055,7 @@
           ]
         }
       ],
-      "public_photo_count": 33
+      "public_photo_count": 34
     },
     "239": {
       "manhole_id": 239,
@@ -52825,7 +53296,7 @@
           ]
         }
       ],
-      "public_photo_count": 30
+      "public_photo_count": 31
     },
     "240": {
       "manhole_id": 240,
@@ -53066,7 +53537,7 @@
           ]
         }
       ],
-      "public_photo_count": 28
+      "public_photo_count": 29
     },
     "241": {
       "manhole_id": 241,
@@ -53307,7 +53778,7 @@
           ]
         }
       ],
-      "public_photo_count": 25
+      "public_photo_count": 26
     },
     "242": {
       "manhole_id": 242,
@@ -53548,7 +54019,7 @@
           ]
         }
       ],
-      "public_photo_count": 25
+      "public_photo_count": 26
     },
     "243": {
       "manhole_id": 243,
@@ -53789,7 +54260,7 @@
           ]
         }
       ],
-      "public_photo_count": 35
+      "public_photo_count": 36
     },
     "244": {
       "manhole_id": 244,
@@ -54030,7 +54501,7 @@
           ]
         }
       ],
-      "public_photo_count": 19
+      "public_photo_count": 20
     },
     "245": {
       "manhole_id": 245,
@@ -54271,7 +54742,7 @@
           ]
         }
       ],
-      "public_photo_count": 19
+      "public_photo_count": 20
     },
     "246": {
       "manhole_id": 246,
@@ -54512,7 +54983,7 @@
           ]
         }
       ],
-      "public_photo_count": 30
+      "public_photo_count": 31
     },
     "247": {
       "manhole_id": 247,
@@ -54753,7 +55224,7 @@
           ]
         }
       ],
-      "public_photo_count": 19
+      "public_photo_count": 20
     },
     "248": {
       "manhole_id": 248,
@@ -54930,6 +55401,17 @@
           ]
         },
         {
+          "photo_id": "fb83d728-cb80-424e-b4b4-a02c080ae258",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/9b5a17c5-0166-481c-8595-886d92cdf07c.jpg",
+          "storage_key": "photos/original/2026/11/9b5a17c5-0166-481c-8595-886d92cdf07c.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:21:24.52912+00:00",
+          "shot_at": "2023-05-14T04:03:33+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "7bdb710d-1226-4b60-b583-a830a2017cd1",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/f81cb28f-7712-4886-ab42-b704f0918754.jpg",
           "storage_key": "photos/original/2026/11/f81cb28f-7712-4886-ab42-b704f0918754.jpg",
@@ -54962,7 +55444,7 @@
           ]
         }
       ],
-      "public_photo_count": 11
+      "public_photo_count": 12
     },
     "249": {
       "manhole_id": 249,
@@ -55203,7 +55685,7 @@
           ]
         }
       ],
-      "public_photo_count": 20
+      "public_photo_count": 21
     },
     "250": {
       "manhole_id": 250,
@@ -55396,6 +55878,17 @@
           ]
         },
         {
+          "photo_id": "2d05ab97-a971-4d39-8582-7b62a8fd4d37",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/0ce360e2-46fa-4917-bc43-9b5cd8a40e11.jpg",
+          "storage_key": "photos/original/2026/11/0ce360e2-46fa-4917-bc43-9b5cd8a40e11.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:21:26.030192+00:00",
+          "shot_at": "2023-05-14T07:29:39+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "f6306d61-1fa0-4b3e-a145-cde924f6b354",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/c614f75d-ec55-44a3-af90-59cca270db8d.jpg",
           "storage_key": "photos/original/2026/11/c614f75d-ec55-44a3-af90-59cca270db8d.jpg",
@@ -55426,25 +55919,9 @@
             0.9165,
             1.0
           ]
-        },
-        {
-          "photo_id": "ed854870-4a5b-453d-b1b7-82c6b97d46b1",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/bbe49468-b1a7-44bc-8552-2fe47d699919.jpg",
-          "storage_key": "photos/original/2026/11/bbe49468-b1a7-44bc-8552-2fe47d699919.jpg",
-          "content_type": "image/png",
-          "created_at": "2026-11-04T15:20:54.69677+00:00",
-          "shot_at": "2024-06-04T07:40:05+00:00",
-          "display_name": "human",
-          "public_user_id": "bad9c24b-0644-4438-82cb-fcfb6d8ad11c",
-          "crop": [
-            0.0,
-            0.2453,
-            1.0,
-            0.6735
-          ]
         }
       ],
-      "public_photo_count": 13
+      "public_photo_count": 14
     },
     "251": {
       "manhole_id": 251,
@@ -55648,6 +56125,17 @@
           "crop": null
         },
         {
+          "photo_id": "6be0cbf9-3377-440b-86ea-224a97b5196a",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/ea2d48d7-5f5b-4ddf-bbe3-1002f6c7c4e6.jpg",
+          "storage_key": "photos/original/2026/11/ea2d48d7-5f5b-4ddf-bbe3-1002f6c7c4e6.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:21:25.461802+00:00",
+          "shot_at": "2023-05-14T05:14:30+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "3e0d4975-1987-45c9-a7a6-89445615f766",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/22b50a39-2a66-46a4-80b7-9f1a443e7054.jpg",
           "storage_key": "photos/original/2026/11/22b50a39-2a66-46a4-80b7-9f1a443e7054.jpg",
@@ -55664,7 +56152,7 @@
           ]
         }
       ],
-      "public_photo_count": 12
+      "public_photo_count": 13
     },
     "252": {
       "manhole_id": 252,
@@ -55777,6 +56265,17 @@
           ]
         },
         {
+          "photo_id": "c6367f49-1f03-4ea0-973f-e53cd69b669b",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/97bc9444-895d-48f9-bba0-a74f37ea7980.jpg",
+          "storage_key": "photos/original/2026/11/97bc9444-895d-48f9-bba0-a74f37ea7980.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:21:25.30177+00:00",
+          "shot_at": "2023-05-14T06:43:13+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "7f61f531-04b6-434e-bfdb-a90396ca8d4b",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/07/39cd8e88-0eca-4763-b792-e8e6cf93cad5.jpg",
           "storage_key": "photos/original/2026/07/39cd8e88-0eca-4763-b792-e8e6cf93cad5.jpg",
@@ -55809,7 +56308,7 @@
           ]
         }
       ],
-      "public_photo_count": 7
+      "public_photo_count": 8
     },
     "253": {
       "manhole_id": 253,
@@ -56034,23 +56533,18 @@
           ]
         },
         {
-          "photo_id": "0a8f10a2-812b-4817-b044-149f59d76950",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/db8501be-fe86-4784-9213-8b99101a3ec8.jpg",
-          "storage_key": "photos/original/2026/11/db8501be-fe86-4784-9213-8b99101a3ec8.jpg",
+          "photo_id": "e14f8a82-5e67-4ed6-a949-576293c3642a",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/edadee50-d3d6-4c46-9c4b-658f4adb6157.jpg",
+          "storage_key": "photos/original/2026/11/edadee50-d3d6-4c46-9c4b-658f4adb6157.jpg",
           "content_type": "image/jpeg",
-          "created_at": "2026-11-12T06:32:15.207599+00:00",
-          "shot_at": "2023-12-28T05:09:52+00:00",
-          "display_name": "Man Fai Adrian Law",
-          "public_user_id": "07ce4931-96e0-4d66-902f-97be711ac736",
-          "crop": [
-            0.0,
-            0.0,
-            1.0,
-            1.0
-          ]
+          "created_at": "2026-11-23T08:26:03.528691+00:00",
+          "shot_at": "2022-09-19T02:31:59+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 15
+      "public_photo_count": 16
     },
     "254": {
       "manhole_id": 254,
@@ -56259,6 +56753,17 @@
           ]
         },
         {
+          "photo_id": "9c90f8a8-7e50-4654-9507-d1e6da287123",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/16d6cf24-20e2-4e6d-b428-8751e546474d.jpg",
+          "storage_key": "photos/original/2026/11/16d6cf24-20e2-4e6d-b428-8751e546474d.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:26:01.86799+00:00",
+          "shot_at": "2022-09-19T00:01:56+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "6894f90d-af54-4b75-a420-8a0152cff502",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/09/61471609-1d53-4610-b9bc-23bc5dcaab47.jpg",
           "storage_key": "photos/original/2026/09/61471609-1d53-4610-b9bc-23bc5dcaab47.jpg",
@@ -56273,25 +56778,9 @@
             1.0,
             0.8779
           ]
-        },
-        {
-          "photo_id": "8ea0c815-37ac-4465-993e-d17d9edd1b2e",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/b0242d67-272c-4cb1-89c8-525a8de8e2f2.jpg",
-          "storage_key": "photos/original/2026/11/b0242d67-272c-4cb1-89c8-525a8de8e2f2.jpg",
-          "content_type": "image/png",
-          "created_at": "2026-11-04T14:54:49.588839+00:00",
-          "shot_at": "2024-05-29T00:16:01+00:00",
-          "display_name": "human",
-          "public_user_id": "bad9c24b-0644-4438-82cb-fcfb6d8ad11c",
-          "crop": [
-            0.0,
-            0.2525,
-            1.0,
-            0.6807
-          ]
         }
       ],
-      "public_photo_count": 13
+      "public_photo_count": 14
     },
     "255": {
       "manhole_id": 255,
@@ -56532,7 +57021,7 @@
           ]
         }
       ],
-      "public_photo_count": 21
+      "public_photo_count": 22
     },
     "256": {
       "manhole_id": 256,
@@ -56773,7 +57262,7 @@
           ]
         }
       ],
-      "public_photo_count": 21
+      "public_photo_count": 22
     },
     "257": {
       "manhole_id": 257,
@@ -57014,7 +57503,7 @@
           ]
         }
       ],
-      "public_photo_count": 21
+      "public_photo_count": 22
     },
     "258": {
       "manhole_id": 258,
@@ -57255,7 +57744,7 @@
           ]
         }
       ],
-      "public_photo_count": 23
+      "public_photo_count": 24
     },
     "259": {
       "manhole_id": 259,
@@ -57722,7 +58211,7 @@
           "crop": null
         }
       ],
-      "public_photo_count": 15
+      "public_photo_count": 16
     },
     "261": {
       "manhole_id": 261,
@@ -57963,7 +58452,7 @@
           ]
         }
       ],
-      "public_photo_count": 14
+      "public_photo_count": 15
     },
     "262": {
       "manhole_id": 262,
@@ -58445,7 +58934,7 @@
           ]
         }
       ],
-      "public_photo_count": 18
+      "public_photo_count": 19
     },
     "264": {
       "manhole_id": 264,
@@ -58927,7 +59416,7 @@
           ]
         }
       ],
-      "public_photo_count": 20
+      "public_photo_count": 21
     },
     "266": {
       "manhole_id": 266,
@@ -59136,6 +59625,17 @@
           ]
         },
         {
+          "photo_id": "526534e5-2399-4061-aadb-77df2dacbb54",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/3c4cb790-b0b0-479a-b2c3-9b7f190739db.jpg",
+          "storage_key": "photos/original/2026/11/3c4cb790-b0b0-479a-b2c3-9b7f190739db.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:25:52.062495+00:00",
+          "shot_at": "2022-09-16T20:49:47+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "2e075fa6-25b7-4b5c-bda3-bd9c1ac40c46",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/5f181855-3a1a-4cf3-ba63-a904e5a1c8fa.jpg",
           "storage_key": "photos/original/2026/11/5f181855-3a1a-4cf3-ba63-a904e5a1c8fa.jpg",
@@ -59152,7 +59652,7 @@
           ]
         }
       ],
-      "public_photo_count": 12
+      "public_photo_count": 13
     },
     "267": {
       "manhole_id": 267,
@@ -59393,7 +59893,7 @@
           ]
         }
       ],
-      "public_photo_count": 19
+      "public_photo_count": 20
     },
     "268": {
       "manhole_id": 268,
@@ -59618,23 +60118,18 @@
           ]
         },
         {
-          "photo_id": "fcea9039-4843-47ae-8e04-9269dea20fcc",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/75c00de6-ae63-46bc-9588-ea42c72167c4.jpg",
-          "storage_key": "photos/original/2026/11/75c00de6-ae63-46bc-9588-ea42c72167c4.jpg",
-          "content_type": "image/png",
-          "created_at": "2026-11-02T07:01:12.369165+00:00",
-          "shot_at": "2023-10-21T05:28:38+00:00",
-          "display_name": "human",
-          "public_user_id": "bad9c24b-0644-4438-82cb-fcfb6d8ad11c",
-          "crop": [
-            0.0,
-            0.2422,
-            1.0,
-            0.6704
-          ]
+          "photo_id": "1bd73039-9dc6-4450-8789-77eb51643aa7",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/5be07800-b554-4147-8761-aceb21bc67ce.jpg",
+          "storage_key": "photos/original/2026/11/5be07800-b554-4147-8761-aceb21bc67ce.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:25:53.533041+00:00",
+          "shot_at": "2022-09-17T01:53:59+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 13
+      "public_photo_count": 14
     },
     "269": {
       "manhole_id": 269,
@@ -59875,7 +60370,7 @@
           ]
         }
       ],
-      "public_photo_count": 16
+      "public_photo_count": 17
     },
     "270": {
       "manhole_id": 270,
@@ -60352,7 +60847,7 @@
           ]
         }
       ],
-      "public_photo_count": 28
+      "public_photo_count": 29
     },
     "272": {
       "manhole_id": 272,
@@ -60593,7 +61088,7 @@
           ]
         }
       ],
-      "public_photo_count": 35
+      "public_photo_count": 36
     },
     "273": {
       "manhole_id": 273,
@@ -60834,7 +61329,7 @@
           ]
         }
       ],
-      "public_photo_count": 25
+      "public_photo_count": 26
     },
     "274": {
       "manhole_id": 274,
@@ -61075,7 +61570,7 @@
           ]
         }
       ],
-      "public_photo_count": 27
+      "public_photo_count": 28
     },
     "275": {
       "manhole_id": 275,
@@ -61316,7 +61811,7 @@
           ]
         }
       ],
-      "public_photo_count": 23
+      "public_photo_count": 24
     },
     "276": {
       "manhole_id": 276,
@@ -61557,7 +62052,7 @@
           ]
         }
       ],
-      "public_photo_count": 28
+      "public_photo_count": 29
     },
     "277": {
       "manhole_id": 277,
@@ -61798,7 +62293,7 @@
           ]
         }
       ],
-      "public_photo_count": 30
+      "public_photo_count": 31
     },
     "278": {
       "manhole_id": 278,
@@ -62039,7 +62534,7 @@
           ]
         }
       ],
-      "public_photo_count": 20
+      "public_photo_count": 21
     },
     "279": {
       "manhole_id": 279,
@@ -62280,7 +62775,7 @@
           ]
         }
       ],
-      "public_photo_count": 17
+      "public_photo_count": 18
     },
     "280": {
       "manhole_id": 280,
@@ -62500,23 +62995,18 @@
           "crop": null
         },
         {
-          "photo_id": "d3bf15d4-9951-4fb0-8664-9be5163a6709",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/2047186e-0b0b-4cf6-96b2-e070b11acae0.jpg",
-          "storage_key": "photos/original/2026/10/2047186e-0b0b-4cf6-96b2-e070b11acae0.jpg",
+          "photo_id": "3b4f7289-705c-4b84-b5fc-171b745567c4",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/07036e96-328b-4293-b3c1-ef45539f1772.jpg",
+          "storage_key": "photos/original/2026/11/07036e96-328b-4293-b3c1-ef45539f1772.jpg",
           "content_type": "image/jpeg",
-          "created_at": "2026-10-24T22:18:55.330111+00:00",
-          "shot_at": "2026-10-21T12:18:54+00:00",
-          "display_name": "S",
-          "public_user_id": "6da7ca99-1694-4fb7-86ed-a7b918495ea7",
-          "crop": [
-            0.0,
-            0.115,
-            1.0,
-            0.8649
-          ]
+          "created_at": "2026-11-23T08:21:20.168945+00:00",
+          "shot_at": "2023-05-13T20:28:22+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 14
+      "public_photo_count": 15
     },
     "281": {
       "manhole_id": 281,
@@ -62693,6 +63183,17 @@
           ]
         },
         {
+          "photo_id": "943df4c7-3a79-4f9e-8b89-7b70cb47f293",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/4d69260b-d714-470e-81fc-31f280985e64.jpg",
+          "storage_key": "photos/original/2026/11/4d69260b-d714-470e-81fc-31f280985e64.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:21:23.904142+00:00",
+          "shot_at": "2023-05-14T02:45:13+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "fa1dc8e1-61db-4cf6-8882-6d31e2810d98",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/583f7df6-680b-4e67-a56e-77fbd8523139.jpg",
           "storage_key": "photos/original/2026/10/583f7df6-680b-4e67-a56e-77fbd8523139.jpg",
@@ -62725,7 +63226,7 @@
           ]
         }
       ],
-      "public_photo_count": 11
+      "public_photo_count": 12
     },
     "282": {
       "manhole_id": 282,
@@ -62966,7 +63467,7 @@
           ]
         }
       ],
-      "public_photo_count": 23
+      "public_photo_count": 24
     },
     "283": {
       "manhole_id": 283,
@@ -63127,6 +63628,17 @@
           ]
         },
         {
+          "photo_id": "e931542f-a400-43f8-948b-8cb2573526f2",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/5a8b9b01-47d7-4229-8083-bebe6ea9915f.jpg",
+          "storage_key": "photos/original/2026/11/5a8b9b01-47d7-4229-8083-bebe6ea9915f.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:21:24.558706+00:00",
+          "shot_at": "2023-05-14T04:29:09+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "119f5a38-aa26-4c87-8fb3-ae608056d6bb",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/70f72ab9-a711-48f4-b812-a49b59d84a9b.jpg",
           "storage_key": "photos/original/2026/10/70f72ab9-a711-48f4-b812-a49b59d84a9b.jpg",
@@ -63191,7 +63703,7 @@
           ]
         }
       ],
-      "public_photo_count": 12
+      "public_photo_count": 13
     },
     "284": {
       "manhole_id": 284,
@@ -63384,6 +63896,17 @@
           ]
         },
         {
+          "photo_id": "2d4bf01e-1d6f-4067-8d20-7134d43e3693",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/bf0c9991-aa96-4cef-b8f2-ccdddce759b0.jpg",
+          "storage_key": "photos/original/2026/11/bf0c9991-aa96-4cef-b8f2-ccdddce759b0.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:21:26.044692+00:00",
+          "shot_at": "2023-05-14T08:25:49+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "e072eb1e-5005-4d4f-913d-c210d4240d2f",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/c7d9a2b6-be2a-47f8-95a8-633494413619.jpg",
           "storage_key": "photos/original/2026/10/c7d9a2b6-be2a-47f8-95a8-633494413619.jpg",
@@ -63414,25 +63937,9 @@
             1.0,
             1.0
           ]
-        },
-        {
-          "photo_id": "95b67592-c2ea-46b8-becd-0763f6c968b0",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/09/53f3ff0c-df6d-46b1-8a01-13383e5d2fc3.jpg",
-          "storage_key": "photos/original/2026/09/53f3ff0c-df6d-46b1-8a01-13383e5d2fc3.jpg",
-          "content_type": "image/jpeg",
-          "created_at": "2026-09-19T12:42:59.31214+00:00",
-          "shot_at": "2026-03-21T05:19:57+00:00",
-          "display_name": "佐藤麗子",
-          "public_user_id": "ba466725-d13f-4188-92af-aa651c5906f2",
-          "crop": [
-            0.0,
-            0.1966,
-            1.0,
-            0.9466
-          ]
         }
       ],
-      "public_photo_count": 14
+      "public_photo_count": 15
     },
     "285": {
       "manhole_id": 285,
@@ -63620,6 +64127,17 @@
           "crop": null
         },
         {
+          "photo_id": "6a4f191f-9c95-45d0-8d4b-608909091d0c",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/bca2fe4e-9ebe-4bad-8ea5-33b3ffa85636.jpg",
+          "storage_key": "photos/original/2026/11/bca2fe4e-9ebe-4bad-8ea5-33b3ffa85636.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:21:22.88792+00:00",
+          "shot_at": "2023-05-14T00:29:21+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "4077ded5-c9fe-486e-9837-2ea46e3bb6a6",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/69baf8dd-ad46-4d07-9db0-535210ca71d1.jpg",
           "storage_key": "photos/original/2026/11/69baf8dd-ad46-4d07-9db0-535210ca71d1.jpg",
@@ -63636,7 +64154,7 @@
           ]
         }
       ],
-      "public_photo_count": 11
+      "public_photo_count": 12
     },
     "286": {
       "manhole_id": 286,
@@ -63749,6 +64267,17 @@
           ]
         },
         {
+          "photo_id": "405550a4-e90b-4216-95f3-249d495afae0",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/ec385d80-efbb-44f3-b446-a6e754c4b07d.jpg",
+          "storage_key": "photos/original/2026/11/ec385d80-efbb-44f3-b446-a6e754c4b07d.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:21:21.596916+00:00",
+          "shot_at": "2023-05-13T23:45:53+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "c325699b-b05b-4eef-bde8-786cb352beb6",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/b439a4dd-2360-4b5a-bdd6-5f6dab236e3e.jpg",
           "storage_key": "photos/original/2026/11/b439a4dd-2360-4b5a-bdd6-5f6dab236e3e.jpg",
@@ -63765,7 +64294,7 @@
           ]
         }
       ],
-      "public_photo_count": 6
+      "public_photo_count": 7
     },
     "287": {
       "manhole_id": 287,
@@ -64006,7 +64535,7 @@
           ]
         }
       ],
-      "public_photo_count": 15
+      "public_photo_count": 16
     },
     "288": {
       "manhole_id": 288,
@@ -64247,7 +64776,7 @@
           ]
         }
       ],
-      "public_photo_count": 17
+      "public_photo_count": 18
     },
     "289": {
       "manhole_id": 289,
@@ -64488,7 +65017,7 @@
           ]
         }
       ],
-      "public_photo_count": 20
+      "public_photo_count": 21
     },
     "290": {
       "manhole_id": 290,
@@ -64729,7 +65258,7 @@
           ]
         }
       ],
-      "public_photo_count": 17
+      "public_photo_count": 18
     },
     "291": {
       "manhole_id": 291,
@@ -64970,7 +65499,7 @@
           ]
         }
       ],
-      "public_photo_count": 18
+      "public_photo_count": 19
     },
     "292": {
       "manhole_id": 292,
@@ -65211,7 +65740,7 @@
           ]
         }
       ],
-      "public_photo_count": 24
+      "public_photo_count": 25
     },
     "293": {
       "manhole_id": 293,
@@ -65452,7 +65981,7 @@
           ]
         }
       ],
-      "public_photo_count": 25
+      "public_photo_count": 26
     },
     "294": {
       "manhole_id": 294,
@@ -65693,7 +66222,7 @@
           ]
         }
       ],
-      "public_photo_count": 21
+      "public_photo_count": 22
     },
     "295": {
       "manhole_id": 295,
@@ -65918,23 +66447,18 @@
           ]
         },
         {
-          "photo_id": "69bfb1ee-bae2-41e2-8204-a3a2fd206eab",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/7d32cfd9-756a-4c3d-a457-85cf487b9e18.jpg",
-          "storage_key": "photos/original/2026/11/7d32cfd9-756a-4c3d-a457-85cf487b9e18.jpg",
-          "content_type": "image/png",
-          "created_at": "2026-11-02T04:11:44.651893+00:00",
-          "shot_at": "2023-05-24T07:24:47+00:00",
-          "display_name": "human",
-          "public_user_id": "bad9c24b-0644-4438-82cb-fcfb6d8ad11c",
-          "crop": [
-            0.0,
-            0.2439,
-            1.0,
-            0.672
-          ]
+          "photo_id": "b7a6403c-09d1-4cd6-b3dc-57f66226bbe3",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/6cf77e38-e4a8-4b9b-9bb5-9f2f1189bfb7.jpg",
+          "storage_key": "photos/original/2026/11/6cf77e38-e4a8-4b9b-9bb5-9f2f1189bfb7.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:21:42.452024+00:00",
+          "shot_at": "2023-08-13T06:54:16+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 13
+      "public_photo_count": 14
     },
     "296": {
       "manhole_id": 296,
@@ -66175,7 +66699,7 @@
           ]
         }
       ],
-      "public_photo_count": 25
+      "public_photo_count": 26
     },
     "297": {
       "manhole_id": 297,
@@ -66416,7 +66940,7 @@
           ]
         }
       ],
-      "public_photo_count": 18
+      "public_photo_count": 19
     },
     "298": {
       "manhole_id": 298,
@@ -66657,7 +67181,7 @@
           ]
         }
       ],
-      "public_photo_count": 23
+      "public_photo_count": 24
     },
     "299": {
       "manhole_id": 299,
@@ -66877,23 +67401,18 @@
           "crop": null
         },
         {
-          "photo_id": "43d7a815-3cfb-48c8-afc3-b4266224b329",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/539b5b67-bc65-4ada-8a17-7c928846efb8.jpg",
-          "storage_key": "photos/original/2026/11/539b5b67-bc65-4ada-8a17-7c928846efb8.jpg",
-          "content_type": "image/png",
-          "created_at": "2026-11-02T17:30:58.318329+00:00",
-          "shot_at": "2023-10-23T02:15:12+00:00",
-          "display_name": "human",
-          "public_user_id": "bad9c24b-0644-4438-82cb-fcfb6d8ad11c",
-          "crop": [
-            0.0,
-            0.2482,
-            1.0,
-            0.6764
-          ]
+          "photo_id": "2974337f-f40e-4810-a217-b346f282aea6",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/61835d50-c349-42d7-b78d-de7624a704b7.jpg",
+          "storage_key": "photos/original/2026/11/61835d50-c349-42d7-b78d-de7624a704b7.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:21:37.96599+00:00",
+          "shot_at": "2023-06-24T04:20:00+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 13
+      "public_photo_count": 14
     },
     "300": {
       "manhole_id": 300,
@@ -67134,7 +67653,7 @@
           ]
         }
       ],
-      "public_photo_count": 22
+      "public_photo_count": 23
     },
     "301": {
       "manhole_id": 301,
@@ -67375,7 +67894,7 @@
           ]
         }
       ],
-      "public_photo_count": 45
+      "public_photo_count": 46
     },
     "302": {
       "manhole_id": 302,
@@ -67616,7 +68135,7 @@
           ]
         }
       ],
-      "public_photo_count": 14
+      "public_photo_count": 15
     },
     "303": {
       "manhole_id": 303,
@@ -67857,7 +68376,7 @@
           ]
         }
       ],
-      "public_photo_count": 17
+      "public_photo_count": 18
     },
     "304": {
       "manhole_id": 304,
@@ -68082,23 +68601,18 @@
           ]
         },
         {
-          "photo_id": "0a0cc4d4-3951-4153-90ed-972a313bdfa9",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/462ef828-fccb-42d5-a9af-b894f0276002.jpg",
-          "storage_key": "photos/original/2026/10/462ef828-fccb-42d5-a9af-b894f0276002.jpg",
+          "photo_id": "6798f837-e0c1-4d4e-8fdd-08e37886cbdd",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/7e949f8f-ec3f-45a5-8b88-b89bfcc2917a.jpg",
+          "storage_key": "photos/original/2026/11/7e949f8f-ec3f-45a5-8b88-b89bfcc2917a.jpg",
           "content_type": "image/jpeg",
-          "created_at": "2026-10-13T08:26:39.916902+00:00",
-          "shot_at": "2026-10-12T05:59:30+00:00",
-          "display_name": "がく",
-          "public_user_id": "affb6037-7fc0-4598-a2a6-d65898791f8c",
-          "crop": [
-            0.0,
-            0.0,
-            1.0,
-            1.0
-          ]
+          "created_at": "2026-11-23T08:21:48.564544+00:00",
+          "shot_at": "2023-09-03T09:12:55+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 14
+      "public_photo_count": 15
     },
     "305": {
       "manhole_id": 305,
@@ -68334,7 +68848,7 @@
           "crop": null
         }
       ],
-      "public_photo_count": 14
+      "public_photo_count": 15
     },
     "306": {
       "manhole_id": 306,
@@ -68463,6 +68977,17 @@
           ]
         },
         {
+          "photo_id": "2fb17d58-cfe5-4bd3-9576-38bbd7eb8c82",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/35b5a4af-80dc-499a-80f9-d20cf94b6f20.jpg",
+          "storage_key": "photos/original/2026/11/35b5a4af-80dc-499a-80f9-d20cf94b6f20.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:21:48.500728+00:00",
+          "shot_at": "2023-09-03T21:03:51+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "791fc193-e602-4de3-bcbd-10de5b7c08bf",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/490d31d4-826b-4ee7-8f76-72a4f91def4d.jpg",
           "storage_key": "photos/original/2026/11/490d31d4-826b-4ee7-8f76-72a4f91def4d.jpg",
@@ -68479,7 +69004,7 @@
           ]
         }
       ],
-      "public_photo_count": 7
+      "public_photo_count": 8
     },
     "307": {
       "manhole_id": 307,
@@ -68720,7 +69245,7 @@
           ]
         }
       ],
-      "public_photo_count": 14
+      "public_photo_count": 15
     },
     "308": {
       "manhole_id": 308,
@@ -68961,7 +69486,7 @@
           ]
         }
       ],
-      "public_photo_count": 21
+      "public_photo_count": 22
     },
     "309": {
       "manhole_id": 309,
@@ -69202,7 +69727,7 @@
           ]
         }
       ],
-      "public_photo_count": 22
+      "public_photo_count": 23
     },
     "310": {
       "manhole_id": 310,
@@ -69443,7 +69968,7 @@
           ]
         }
       ],
-      "public_photo_count": 23
+      "public_photo_count": 24
     },
     "311": {
       "manhole_id": 311,
@@ -69684,7 +70209,7 @@
           ]
         }
       ],
-      "public_photo_count": 51
+      "public_photo_count": 52
     },
     "312": {
       "manhole_id": 312,
@@ -69925,7 +70450,7 @@
           ]
         }
       ],
-      "public_photo_count": 48
+      "public_photo_count": 49
     },
     "313": {
       "manhole_id": 313,
@@ -70166,7 +70691,7 @@
           ]
         }
       ],
-      "public_photo_count": 55
+      "public_photo_count": 56
     },
     "314": {
       "manhole_id": 314,
@@ -70407,7 +70932,7 @@
           ]
         }
       ],
-      "public_photo_count": 54
+      "public_photo_count": 55
     },
     "315": {
       "manhole_id": 315,
@@ -70648,7 +71173,7 @@
           ]
         }
       ],
-      "public_photo_count": 30
+      "public_photo_count": 31
     },
     "316": {
       "manhole_id": 316,
@@ -70889,7 +71414,7 @@
           ]
         }
       ],
-      "public_photo_count": 28
+      "public_photo_count": 29
     },
     "317": {
       "manhole_id": 317,
@@ -71130,7 +71655,7 @@
           ]
         }
       ],
-      "public_photo_count": 28
+      "public_photo_count": 29
     },
     "318": {
       "manhole_id": 318,
@@ -71371,7 +71896,7 @@
           ]
         }
       ],
-      "public_photo_count": 15
+      "public_photo_count": 16
     },
     "319": {
       "manhole_id": 319,
@@ -71612,7 +72137,7 @@
           ]
         }
       ],
-      "public_photo_count": 15
+      "public_photo_count": 16
     },
     "320": {
       "manhole_id": 320,
@@ -71853,7 +72378,7 @@
           ]
         }
       ],
-      "public_photo_count": 16
+      "public_photo_count": 17
     },
     "321": {
       "manhole_id": 321,
@@ -72071,9 +72596,20 @@
           "display_name": "北の大地の黒猫",
           "public_user_id": "27298136-f4a0-4573-a70c-2c47cae4fd8e",
           "crop": null
+        },
+        {
+          "photo_id": "3bc4765b-2cbd-41f9-9a30-a14312891c90",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/ff2fcaa8-36d0-4c2e-9b5c-21b1f65aef4c.jpg",
+          "storage_key": "photos/original/2026/11/ff2fcaa8-36d0-4c2e-9b5c-21b1f65aef4c.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:21:54.737279+00:00",
+          "shot_at": "2024-06-01T20:10:09+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 12
+      "public_photo_count": 13
     },
     "322": {
       "manhole_id": 322,
@@ -72314,7 +72850,7 @@
           ]
         }
       ],
-      "public_photo_count": 15
+      "public_photo_count": 16
     },
     "323": {
       "manhole_id": 323,
@@ -72555,7 +73091,7 @@
           ]
         }
       ],
-      "public_photo_count": 20
+      "public_photo_count": 21
     },
     "324": {
       "manhole_id": 324,
@@ -72796,7 +73332,7 @@
           ]
         }
       ],
-      "public_photo_count": 18
+      "public_photo_count": 19
     },
     "325": {
       "manhole_id": 325,
@@ -73037,7 +73573,7 @@
           ]
         }
       ],
-      "public_photo_count": 27
+      "public_photo_count": 28
     },
     "326": {
       "manhole_id": 326,
@@ -73246,6 +73782,17 @@
           ]
         },
         {
+          "photo_id": "d70c1088-3f85-45c3-bc3d-0e9c5a507dd7",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/e0daa079-752d-456e-b372-cd2e9c4ae1be.jpg",
+          "storage_key": "photos/original/2026/11/e0daa079-752d-456e-b372-cd2e9c4ae1be.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:21:51.434474+00:00",
+          "shot_at": "2024-05-01T08:01:36+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "24347d5b-a825-4eb5-95ad-d00d7f8ff12b",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/3b3cecd5-07cb-4872-8103-bbee04cfc9ce.jpg",
           "storage_key": "photos/original/2026/11/3b3cecd5-07cb-4872-8103-bbee04cfc9ce.jpg",
@@ -73260,25 +73807,9 @@
             1.0,
             1.0
           ]
-        },
-        {
-          "photo_id": "36169808-45d9-4471-81eb-25e2f9d0b4d7",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/5ee8c260-dbf3-4e46-9d9b-1a057bb1d4d8.jpg",
-          "storage_key": "photos/original/2026/11/5ee8c260-dbf3-4e46-9d9b-1a057bb1d4d8.jpg",
-          "content_type": "image/png",
-          "created_at": "2026-11-04T14:27:50.857956+00:00",
-          "shot_at": "2024-04-19T04:31:55+00:00",
-          "display_name": "human",
-          "public_user_id": "bad9c24b-0644-4438-82cb-fcfb6d8ad11c",
-          "crop": [
-            0.0,
-            0.2499,
-            1.0,
-            0.678
-          ]
         }
       ],
-      "public_photo_count": 13
+      "public_photo_count": 14
     },
     "327": {
       "manhole_id": 327,
@@ -73519,7 +74050,7 @@
           ]
         }
       ],
-      "public_photo_count": 18
+      "public_photo_count": 19
     },
     "328": {
       "manhole_id": 328,
@@ -73760,7 +74291,7 @@
           ]
         }
       ],
-      "public_photo_count": 21
+      "public_photo_count": 22
     },
     "329": {
       "manhole_id": 329,
@@ -74001,7 +74532,7 @@
           ]
         }
       ],
-      "public_photo_count": 20
+      "public_photo_count": 21
     },
     "330": {
       "manhole_id": 330,
@@ -74242,7 +74773,7 @@
           ]
         }
       ],
-      "public_photo_count": 24
+      "public_photo_count": 25
     },
     "331": {
       "manhole_id": 331,
@@ -74483,7 +75014,7 @@
           ]
         }
       ],
-      "public_photo_count": 22
+      "public_photo_count": 24
     },
     "332": {
       "manhole_id": 332,
@@ -74724,7 +75255,7 @@
           ]
         }
       ],
-      "public_photo_count": 20
+      "public_photo_count": 21
     },
     "333": {
       "manhole_id": 333,
@@ -74965,7 +75496,7 @@
           ]
         }
       ],
-      "public_photo_count": 21
+      "public_photo_count": 22
     },
     "334": {
       "manhole_id": 334,
@@ -75206,7 +75737,7 @@
           ]
         }
       ],
-      "public_photo_count": 21
+      "public_photo_count": 22
     },
     "335": {
       "manhole_id": 335,
@@ -75447,7 +75978,7 @@
           ]
         }
       ],
-      "public_photo_count": 19
+      "public_photo_count": 20
     },
     "336": {
       "manhole_id": 336,
@@ -75688,7 +76219,7 @@
           ]
         }
       ],
-      "public_photo_count": 29
+      "public_photo_count": 30
     },
     "337": {
       "manhole_id": 337,
@@ -75929,7 +76460,7 @@
           ]
         }
       ],
-      "public_photo_count": 26
+      "public_photo_count": 27
     },
     "338": {
       "manhole_id": 338,
@@ -76170,7 +76701,7 @@
           ]
         }
       ],
-      "public_photo_count": 25
+      "public_photo_count": 26
     },
     "339": {
       "manhole_id": 339,
@@ -76411,7 +76942,7 @@
           ]
         }
       ],
-      "public_photo_count": 21
+      "public_photo_count": 22
     },
     "340": {
       "manhole_id": 340,
@@ -76652,7 +77183,7 @@
           ]
         }
       ],
-      "public_photo_count": 14
+      "public_photo_count": 15
     },
     "341": {
       "manhole_id": 341,
@@ -76893,7 +77424,7 @@
           ]
         }
       ],
-      "public_photo_count": 20
+      "public_photo_count": 21
     },
     "342": {
       "manhole_id": 342,
@@ -77134,7 +77665,7 @@
           ]
         }
       ],
-      "public_photo_count": 29
+      "public_photo_count": 30
     },
     "343": {
       "manhole_id": 343,
@@ -77375,7 +77906,7 @@
           ]
         }
       ],
-      "public_photo_count": 18
+      "public_photo_count": 19
     },
     "344": {
       "manhole_id": 344,
@@ -77616,7 +78147,7 @@
           ]
         }
       ],
-      "public_photo_count": 23
+      "public_photo_count": 24
     },
     "345": {
       "manhole_id": 345,
@@ -77857,7 +78388,7 @@
           ]
         }
       ],
-      "public_photo_count": 20
+      "public_photo_count": 21
     },
     "346": {
       "manhole_id": 346,
@@ -78098,7 +78629,7 @@
           ]
         }
       ],
-      "public_photo_count": 25
+      "public_photo_count": 26
     },
     "347": {
       "manhole_id": 347,
@@ -78339,7 +78870,7 @@
           ]
         }
       ],
-      "public_photo_count": 30
+      "public_photo_count": 31
     },
     "348": {
       "manhole_id": 348,
@@ -78580,7 +79111,7 @@
           ]
         }
       ],
-      "public_photo_count": 29
+      "public_photo_count": 30
     },
     "349": {
       "manhole_id": 349,
@@ -78821,7 +79352,7 @@
           ]
         }
       ],
-      "public_photo_count": 22
+      "public_photo_count": 23
     },
     "350": {
       "manhole_id": 350,
@@ -79062,7 +79593,7 @@
           ]
         }
       ],
-      "public_photo_count": 23
+      "public_photo_count": 24
     },
     "351": {
       "manhole_id": 351,
@@ -79287,23 +79818,18 @@
           ]
         },
         {
-          "photo_id": "0f290726-1106-4c15-b7c4-5e8ad7f33699",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/09/ea3f8e53-9421-4b66-ba43-6a71cc1c9ffd.jpg",
-          "storage_key": "photos/original/2026/09/ea3f8e53-9421-4b66-ba43-6a71cc1c9ffd.jpg",
+          "photo_id": "bca1c992-d633-475e-a0e8-4ff66d8b30cb",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/52873224-2dcb-471c-9b7d-5461c3da80a8.jpg",
+          "storage_key": "photos/original/2026/11/52873224-2dcb-471c-9b7d-5461c3da80a8.jpg",
           "content_type": "image/jpeg",
-          "created_at": "2026-09-06T10:55:54.796354+00:00",
-          "shot_at": "2026-09-05T15:38:20+00:00",
-          "display_name": "ごろう",
-          "public_user_id": "4094f49c-27e0-4b1f-9356-f6054e887e14",
-          "crop": [
-            0.0,
-            0.0,
-            1.0,
-            1.0
-          ]
+          "created_at": "2026-11-23T08:18:30.434826+00:00",
+          "shot_at": "2024-06-14T22:53:38+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 14
+      "public_photo_count": 15
     },
     "352": {
       "manhole_id": 352,
@@ -79544,7 +80070,7 @@
           ]
         }
       ],
-      "public_photo_count": 40
+      "public_photo_count": 41
     },
     "353": {
       "manhole_id": 353,
@@ -79785,7 +80311,7 @@
           ]
         }
       ],
-      "public_photo_count": 42
+      "public_photo_count": 43
     },
     "354": {
       "manhole_id": 354,
@@ -80026,7 +80552,7 @@
           ]
         }
       ],
-      "public_photo_count": 20
+      "public_photo_count": 21
     },
     "355": {
       "manhole_id": 355,
@@ -80251,23 +80777,18 @@
           ]
         },
         {
-          "photo_id": "237c9b51-979d-402e-bb71-e420a70df188",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/e5932667-c181-408d-adb7-7a787c72d179.jpg",
-          "storage_key": "photos/original/2026/10/e5932667-c181-408d-adb7-7a787c72d179.jpg",
+          "photo_id": "3971bc2c-010a-42bc-9f35-9c2fce38d899",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/62e61763-2f60-41ad-a99d-35fdae72494f.jpg",
+          "storage_key": "photos/original/2026/11/62e61763-2f60-41ad-a99d-35fdae72494f.jpg",
           "content_type": "image/jpeg",
-          "created_at": "2026-10-30T10:14:37.522671+00:00",
-          "shot_at": "2026-10-30T10:14:36.061+00:00",
-          "display_name": "ちょび",
-          "public_user_id": "b4a18552-eb68-43be-a37f-3157546846d7",
-          "crop": [
-            0.0,
-            0.0,
-            1.0,
-            1.0
-          ]
+          "created_at": "2026-11-23T08:18:47.668556+00:00",
+          "shot_at": "2025-02-01T03:48:30+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 13
+      "public_photo_count": 14
     },
     "356": {
       "manhole_id": 356,
@@ -80508,7 +81029,7 @@
           ]
         }
       ],
-      "public_photo_count": 16
+      "public_photo_count": 17
     },
     "357": {
       "manhole_id": 357,
@@ -80685,6 +81206,17 @@
           ]
         },
         {
+          "photo_id": "08a01db7-47e1-458f-bfc2-91488bde0447",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/192abea9-663a-44ff-8551-dbca415cd715.jpg",
+          "storage_key": "photos/original/2026/11/192abea9-663a-44ff-8551-dbca415cd715.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:18:49.306978+00:00",
+          "shot_at": "2025-02-03T02:22:08+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "deedbfc2-0bc0-4d33-a5e9-469016f7b9b5",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/766f6b16-481d-47c4-81e7-e849bdf82c75.jpg",
           "storage_key": "photos/original/2026/11/766f6b16-481d-47c4-81e7-e849bdf82c75.jpg",
@@ -80701,7 +81233,7 @@
           ]
         }
       ],
-      "public_photo_count": 10
+      "public_photo_count": 11
     },
     "358": {
       "manhole_id": 358,
@@ -80748,9 +81280,20 @@
             0.877,
             1.0
           ]
+        },
+        {
+          "photo_id": "cdaeac93-e7dc-4cb1-8e05-64f0f3f3409e",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/884cb3e1-b866-4568-88af-bd3894f3d082.jpg",
+          "storage_key": "photos/original/2026/11/884cb3e1-b866-4568-88af-bd3894f3d082.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:18:48.302734+00:00",
+          "shot_at": "2025-02-01T08:00:50+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 1
+      "public_photo_count": 2
     },
     "359": {
       "manhole_id": 359,
@@ -80991,7 +81534,7 @@
           ]
         }
       ],
-      "public_photo_count": 24
+      "public_photo_count": 25
     },
     "360": {
       "manhole_id": 360,
@@ -81232,7 +81775,7 @@
           ]
         }
       ],
-      "public_photo_count": 19
+      "public_photo_count": 20
     },
     "361": {
       "manhole_id": 361,
@@ -81473,7 +82016,7 @@
           ]
         }
       ],
-      "public_photo_count": 15
+      "public_photo_count": 16
     },
     "362": {
       "manhole_id": 362,
@@ -81714,7 +82257,7 @@
           ]
         }
       ],
-      "public_photo_count": 33
+      "public_photo_count": 34
     },
     "363": {
       "manhole_id": 363,
@@ -81955,7 +82498,7 @@
           ]
         }
       ],
-      "public_photo_count": 24
+      "public_photo_count": 25
     },
     "364": {
       "manhole_id": 364,
@@ -82196,7 +82739,7 @@
           ]
         }
       ],
-      "public_photo_count": 16
+      "public_photo_count": 17
     },
     "365": {
       "manhole_id": 365,
@@ -82437,7 +82980,7 @@
           ]
         }
       ],
-      "public_photo_count": 20
+      "public_photo_count": 21
     },
     "366": {
       "manhole_id": 366,
@@ -82678,7 +83221,7 @@
           ]
         }
       ],
-      "public_photo_count": 24
+      "public_photo_count": 25
     },
     "367": {
       "manhole_id": 367,
@@ -82919,7 +83462,7 @@
           ]
         }
       ],
-      "public_photo_count": 18
+      "public_photo_count": 19
     },
     "368": {
       "manhole_id": 368,
@@ -83144,23 +83687,18 @@
           ]
         },
         {
-          "photo_id": "81c9704d-1222-4512-ba96-39c1e3b886b5",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/190f5531-7099-4dd3-9b07-ea5f449fbe68.jpg",
-          "storage_key": "photos/original/2026/11/190f5531-7099-4dd3-9b07-ea5f449fbe68.jpg",
+          "photo_id": "2cf0ea1b-65f2-401d-ae51-6a6464313f85",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/0d687d93-6e93-4bc4-9514-73756c788612.jpg",
+          "storage_key": "photos/original/2026/11/0d687d93-6e93-4bc4-9514-73756c788612.jpg",
           "content_type": "image/jpeg",
-          "created_at": "2026-11-14T12:22:02.621068+00:00",
-          "shot_at": "2024-10-04T07:32:23+00:00",
-          "display_name": "伴武",
-          "public_user_id": "0f6c735a-cd97-4d98-bd9c-40b5ebdb4799",
-          "crop": [
-            0.0,
-            0.0732,
-            1.0,
-            0.8232
-          ]
+          "created_at": "2026-11-23T08:18:46.035475+00:00",
+          "shot_at": "2025-01-02T04:12:33+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 15
+      "public_photo_count": 16
     },
     "369": {
       "manhole_id": 369,
@@ -83351,9 +83889,20 @@
             1.0,
             0.9206
           ]
+        },
+        {
+          "photo_id": "91a8a82a-7d7f-48b2-9920-fc98a91917b0",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/f2107442-9ad1-4e27-b6f5-0f378cc668d0.jpg",
+          "storage_key": "photos/original/2026/11/f2107442-9ad1-4e27-b6f5-0f378cc668d0.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:18:42.761391+00:00",
+          "shot_at": "2024-10-26T05:55:34+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 10
+      "public_photo_count": 11
     },
     "370": {
       "manhole_id": 370,
@@ -83482,6 +84031,17 @@
           ]
         },
         {
+          "photo_id": "cd0a3881-a121-44fb-82de-499a07dc639c",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/d9701f19-12be-4306-b986-e0d0b8e4bdeb.jpg",
+          "storage_key": "photos/original/2026/11/d9701f19-12be-4306-b986-e0d0b8e4bdeb.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:18:43.444201+00:00",
+          "shot_at": "2024-11-16T02:17:06+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "ab82dcb3-171d-4a28-b0d6-5c3d34436cb5",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/9e67b8de-e987-4ee8-b700-b2c3ed39d220.jpg",
           "storage_key": "photos/original/2026/10/9e67b8de-e987-4ee8-b700-b2c3ed39d220.jpg",
@@ -83514,7 +84074,7 @@
           ]
         }
       ],
-      "public_photo_count": 8
+      "public_photo_count": 9
     },
     "371": {
       "manhole_id": 371,
@@ -83670,6 +84230,17 @@
           "crop": null
         },
         {
+          "photo_id": "9a96f383-8308-4621-801d-149aba444cc7",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/b5a44921-0918-45bf-8226-d256c72d79cf.jpg",
+          "storage_key": "photos/original/2026/11/b5a44921-0918-45bf-8226-d256c72d79cf.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:18:41.465527+00:00",
+          "shot_at": "2024-10-24T23:02:09+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "1f0d2d80-8fda-47e2-91be-ff9c284ae193",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/e7f44747-3451-44ba-8b90-f5d64bf01831.jpg",
           "storage_key": "photos/original/2026/11/e7f44747-3451-44ba-8b90-f5d64bf01831.jpg",
@@ -83686,7 +84257,7 @@
           ]
         }
       ],
-      "public_photo_count": 9
+      "public_photo_count": 10
     },
     "372": {
       "manhole_id": 372,
@@ -83845,9 +84416,20 @@
             1.0,
             0.9086
           ]
+        },
+        {
+          "photo_id": "8c77d85b-4e90-40f0-9ed7-4830b73f13c3",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/6d39a71f-daf4-4273-ba70-bbcd4e928e39.jpg",
+          "storage_key": "photos/original/2026/11/6d39a71f-daf4-4273-ba70-bbcd4e928e39.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:18:42.654199+00:00",
+          "shot_at": "2024-10-26T05:34:47+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 8
+      "public_photo_count": 9
     },
     "373": {
       "manhole_id": 373,
@@ -84088,7 +84670,7 @@
           ]
         }
       ],
-      "public_photo_count": 16
+      "public_photo_count": 17
     },
     "374": {
       "manhole_id": 374,
@@ -84313,23 +84895,18 @@
           ]
         },
         {
-          "photo_id": "41fdfa0a-2806-40ec-9033-341b65c76f6f",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/922a6f88-264b-45a4-a4b9-895a14b57c9a.jpg",
-          "storage_key": "photos/original/2026/11/922a6f88-264b-45a4-a4b9-895a14b57c9a.jpg",
-          "content_type": "image/png",
-          "created_at": "2026-11-04T03:24:08.284091+00:00",
-          "shot_at": "2025-07-19T08:18:34+00:00",
-          "display_name": "human",
-          "public_user_id": "bad9c24b-0644-4438-82cb-fcfb6d8ad11c",
-          "crop": [
-            0.0,
-            0.2454,
-            1.0,
-            0.6735
-          ]
+          "photo_id": "950f0395-6eed-400a-9ba0-1485ab48cbf3",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/10824de8-5347-48f8-81ee-80cf6dcd484f.jpg",
+          "storage_key": "photos/original/2026/11/10824de8-5347-48f8-81ee-80cf6dcd484f.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:18:43.984792+00:00",
+          "shot_at": "2024-11-16T07:03:01+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 14
+      "public_photo_count": 15
     },
     "375": {
       "manhole_id": 375,
@@ -84490,6 +85067,17 @@
           ]
         },
         {
+          "photo_id": "81ead368-f120-4211-be33-d57b1bed6f7d",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/62a87339-17cb-47c7-88b4-579b71e161e1.jpg",
+          "storage_key": "photos/original/2026/11/62a87339-17cb-47c7-88b4-579b71e161e1.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:18:41.649317+00:00",
+          "shot_at": "2024-10-24T23:57:47+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "702be27b-cc16-4ac9-a9b9-610004cd440f",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/9f82e194-76a1-42cb-9e69-98acb1905f72.jpg",
           "storage_key": "photos/original/2026/11/9f82e194-76a1-42cb-9e69-98acb1905f72.jpg",
@@ -84506,7 +85094,7 @@
           ]
         }
       ],
-      "public_photo_count": 9
+      "public_photo_count": 10
     },
     "376": {
       "manhole_id": 376,
@@ -84747,7 +85335,7 @@
           ]
         }
       ],
-      "public_photo_count": 16
+      "public_photo_count": 17
     },
     "377": {
       "manhole_id": 377,
@@ -84956,6 +85544,17 @@
           ]
         },
         {
+          "photo_id": "2c322140-89ac-4697-989a-bf391350a1be",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/91dee5a5-f3e8-4c50-addc-1548cd18aad0.jpg",
+          "storage_key": "photos/original/2026/11/91dee5a5-f3e8-4c50-addc-1548cd18aad0.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:18:44.713585+00:00",
+          "shot_at": "2024-11-23T07:15:17+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "81042d93-a18a-4475-9609-fa7d9bd6a534",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/1409f39a-625e-4120-9a90-20577c5ff722.jpg",
           "storage_key": "photos/original/2026/11/1409f39a-625e-4120-9a90-20577c5ff722.jpg",
@@ -84970,25 +85569,9 @@
             1.0,
             0.6755
           ]
-        },
-        {
-          "photo_id": "63e7a558-b259-42b9-b02d-739ac3079c1d",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/5cb95074-d831-42d8-8c4a-7055362f5cff.jpg",
-          "storage_key": "photos/original/2026/11/5cb95074-d831-42d8-8c4a-7055362f5cff.jpg",
-          "content_type": "image/jpeg",
-          "created_at": "2026-11-22T06:38:19.005835+00:00",
-          "shot_at": "2026-11-22T06:37:28+00:00",
-          "display_name": "サコ",
-          "public_user_id": "911b0bbf-506b-42ee-8ad8-68ff8c3d78d8",
-          "crop": [
-            0.0,
-            0.25,
-            1.0,
-            1.0
-          ]
         }
       ],
-      "public_photo_count": 13
+      "public_photo_count": 14
     },
     "378": {
       "manhole_id": 378,
@@ -85433,6 +86016,17 @@
           ]
         },
         {
+          "photo_id": "06496030-530f-4cac-bd55-eb2ec89b093f",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/98708d21-dc96-4df6-a785-be750380f2c6.jpg",
+          "storage_key": "photos/original/2026/11/98708d21-dc96-4df6-a785-be750380f2c6.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:18:45.328936+00:00",
+          "shot_at": "2024-11-23T08:23:35+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "328ef25e-11d7-493e-922f-d776f34bf215",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/e1325bea-d7da-48f5-a895-8afb8d18a870.jpg",
           "storage_key": "photos/original/2026/11/e1325bea-d7da-48f5-a895-8afb8d18a870.jpg",
@@ -85447,25 +86041,9 @@
             1.0,
             0.6742
           ]
-        },
-        {
-          "photo_id": "1b40735a-d897-446f-9bc2-5844cc731ea6",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/02d07d34-fd3b-4302-89fd-bfd4b0905d0a.jpg",
-          "storage_key": "photos/original/2026/11/02d07d34-fd3b-4302-89fd-bfd4b0905d0a.jpg",
-          "content_type": "image/jpeg",
-          "created_at": "2026-11-21T02:40:01.705068+00:00",
-          "shot_at": "2026-11-21T02:37:49+00:00",
-          "display_name": "サコ",
-          "public_user_id": "911b0bbf-506b-42ee-8ad8-68ff8c3d78d8",
-          "crop": [
-            0.0,
-            0.25,
-            1.0,
-            1.0
-          ]
         }
       ],
-      "public_photo_count": 13
+      "public_photo_count": 14
     },
     "380": {
       "manhole_id": 380,
@@ -85706,7 +86284,7 @@
           ]
         }
       ],
-      "public_photo_count": 16
+      "public_photo_count": 17
     },
     "381": {
       "manhole_id": 381,
@@ -85771,6 +86349,17 @@
           ]
         },
         {
+          "photo_id": "a7c9afe8-b1f2-4c27-a3b6-147510c9ed5c",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/ec42f648-5e51-4cd9-aee6-96e14c547ea2.jpg",
+          "storage_key": "photos/original/2026/11/ec42f648-5e51-4cd9-aee6-96e14c547ea2.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:18:44.646726+00:00",
+          "shot_at": "2024-11-22T08:50:42+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "ab295f06-1571-4fdc-8530-144f7b9b6dd9",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/03746a93-1636-4c0a-b5cf-57823d777efb.jpg",
           "storage_key": "photos/original/2026/10/03746a93-1636-4c0a-b5cf-57823d777efb.jpg",
@@ -85787,7 +86376,7 @@
           ]
         }
       ],
-      "public_photo_count": 3
+      "public_photo_count": 4
     },
     "382": {
       "manhole_id": 382,
@@ -86269,7 +86858,7 @@
           ]
         }
       ],
-      "public_photo_count": 20
+      "public_photo_count": 21
     },
     "384": {
       "manhole_id": 384,
@@ -86494,23 +87083,18 @@
           ]
         },
         {
-          "photo_id": "60ba38da-448e-4e69-aa52-87f5a4e87db6",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/a1007793-d0de-4d2d-9c73-98cff31e29d7.jpg",
-          "storage_key": "photos/original/2026/10/a1007793-d0de-4d2d-9c73-98cff31e29d7.jpg",
+          "photo_id": "2ad01eda-b1c3-4e70-9e67-2d622076c6a2",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/f1c8be3e-da86-43eb-948c-4debf4436d8c.jpg",
+          "storage_key": "photos/original/2026/11/f1c8be3e-da86-43eb-948c-4debf4436d8c.jpg",
           "content_type": "image/jpeg",
-          "created_at": "2026-10-27T14:34:22.097876+00:00",
-          "shot_at": "2025-04-29T07:15:22+00:00",
-          "display_name": "めろき",
-          "public_user_id": "e321d224-9477-46ea-bfd6-b8b8cfdf7508",
-          "crop": [
-            0.0,
-            0.1949,
-            1.0,
-            0.9449
-          ]
+          "created_at": "2026-11-23T08:18:55.124036+00:00",
+          "shot_at": "2025-05-01T04:17:49+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 14
+      "public_photo_count": 15
     },
     "385": {
       "manhole_id": 385,
@@ -86751,7 +87335,7 @@
           ]
         }
       ],
-      "public_photo_count": 22
+      "public_photo_count": 23
     },
     "386": {
       "manhole_id": 386,
@@ -86992,7 +87576,7 @@
           ]
         }
       ],
-      "public_photo_count": 23
+      "public_photo_count": 24
     },
     "387": {
       "manhole_id": 387,
@@ -87217,23 +87801,18 @@
           ]
         },
         {
-          "photo_id": "9b36b739-058c-4ae1-bbba-ca1c45ddeff4",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/10/a1686604-b8d2-4c27-8b45-73b5053111b7.jpg",
-          "storage_key": "photos/original/2026/10/a1686604-b8d2-4c27-8b45-73b5053111b7.jpg",
+          "photo_id": "f70798ca-1e0f-4382-84a2-7ecbdc8e1262",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/98079152-b108-485d-8f89-9ece8511fa82.jpg",
+          "storage_key": "photos/original/2026/11/98079152-b108-485d-8f89-9ece8511fa82.jpg",
           "content_type": "image/jpeg",
-          "created_at": "2026-10-25T11:58:07.862015+00:00",
-          "shot_at": "2025-04-20T08:15:31+00:00",
-          "display_name": "めろき",
-          "public_user_id": "e321d224-9477-46ea-bfd6-b8b8cfdf7508",
-          "crop": [
-            0.0,
-            0.1099,
-            1.0,
-            0.8599
-          ]
+          "created_at": "2026-11-23T08:18:54.404882+00:00",
+          "shot_at": "2025-05-01T02:48:21+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 18
+      "public_photo_count": 19
     },
     "388": {
       "manhole_id": 388,
@@ -87474,7 +88053,7 @@
           ]
         }
       ],
-      "public_photo_count": 20
+      "public_photo_count": 21
     },
     "389": {
       "manhole_id": 389,
@@ -87651,6 +88230,17 @@
           ]
         },
         {
+          "photo_id": "a59ba318-a57b-4880-a3f6-191507764852",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/1e4072af-98c0-4f76-a830-9102b3c0c8f7.jpg",
+          "storage_key": "photos/original/2026/11/1e4072af-98c0-4f76-a830-9102b3c0c8f7.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:18:55.842114+00:00",
+          "shot_at": "2025-05-01T06:21:30+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "e8b41cde-18e9-47fa-8462-d05291321ab8",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/40773bcb-f7c2-4357-ac47-862f25b2d96a.jpg",
           "storage_key": "photos/original/2026/11/40773bcb-f7c2-4357-ac47-862f25b2d96a.jpg",
@@ -87697,25 +88287,9 @@
             1.0,
             0.7031
           ]
-        },
-        {
-          "photo_id": "8fa34f08-1481-4286-baf4-c1bd9a879c8c",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/09/3f45ad3a-9f67-41e3-976a-868d9ba34012.jpg",
-          "storage_key": "photos/original/2026/09/3f45ad3a-9f67-41e3-976a-868d9ba34012.jpg",
-          "content_type": "image/jpeg",
-          "created_at": "2026-09-22T15:05:48.661577+00:00",
-          "shot_at": "2026-09-22T15:05:20+00:00",
-          "display_name": "ほぴ",
-          "public_user_id": "3bc3f0a4-9dc0-41c9-b92a-c199e2d6dc87",
-          "crop": [
-            0.0,
-            0.1225,
-            1.0,
-            0.8725
-          ]
         }
       ],
-      "public_photo_count": 13
+      "public_photo_count": 14
     },
     "390": {
       "manhole_id": 390,
@@ -87906,9 +88480,20 @@
             1.0,
             1.0
           ]
+        },
+        {
+          "photo_id": "e212bb80-b888-45aa-9989-2d4aa9c78109",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/478146dd-7f06-4474-9618-f26aa4bb2afa.jpg",
+          "storage_key": "photos/original/2026/11/478146dd-7f06-4474-9618-f26aa4bb2afa.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:18:51.591371+00:00",
+          "shot_at": "2025-04-27T04:04:05+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 10
+      "public_photo_count": 11
     },
     "391": {
       "manhole_id": 391,
@@ -88149,7 +88734,7 @@
           ]
         }
       ],
-      "public_photo_count": 16
+      "public_photo_count": 17
     },
     "392": {
       "manhole_id": 392,
@@ -88372,9 +88957,20 @@
             1.0,
             0.8869
           ]
+        },
+        {
+          "photo_id": "58120ebe-a30f-457b-9046-f2f3382489e7",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/2566e29f-7bc6-409c-b37d-cbe30e57aba3.jpg",
+          "storage_key": "photos/original/2026/11/2566e29f-7bc6-409c-b37d-cbe30e57aba3.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:18:50.530246+00:00",
+          "shot_at": "2025-04-27T02:44:25+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 12
+      "public_photo_count": 13
     },
     "393": {
       "manhole_id": 393,
@@ -88615,7 +89211,7 @@
           ]
         }
       ],
-      "public_photo_count": 18
+      "public_photo_count": 20
     },
     "394": {
       "manhole_id": 394,
@@ -88846,7 +89442,7 @@
           "crop": null
         }
       ],
-      "public_photo_count": 13
+      "public_photo_count": 14
     },
     "395": {
       "manhole_id": 395,
@@ -89034,6 +89630,17 @@
           "crop": null
         },
         {
+          "photo_id": "27e74908-951e-47cf-b2ac-22790f25e563",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/da353a44-8d2c-4b93-b54a-700a11553c2e.jpg",
+          "storage_key": "photos/original/2026/11/da353a44-8d2c-4b93-b54a-700a11553c2e.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:18:53.020158+00:00",
+          "shot_at": "2025-04-28T01:57:18+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "73c3c5ad-4393-428a-b96d-608f18f93935",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/854e6283-b5cd-4342-a5cb-8e4aed2c5e99.jpg",
           "storage_key": "photos/original/2026/11/854e6283-b5cd-4342-a5cb-8e4aed2c5e99.jpg",
@@ -89050,7 +89657,7 @@
           ]
         }
       ],
-      "public_photo_count": 11
+      "public_photo_count": 12
     },
     "396": {
       "manhole_id": 396,
@@ -89220,9 +89827,20 @@
           "display_name": "MAKOTO",
           "public_user_id": "03d588b5-10ae-4458-be58-218e1553ba59",
           "crop": null
+        },
+        {
+          "photo_id": "49999183-7583-45a0-9f5e-e2f272caea07",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/64ac8da9-474b-40ad-827c-df1d3d0687c8.jpg",
+          "storage_key": "photos/original/2026/11/64ac8da9-474b-40ad-827c-df1d3d0687c8.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:18:52.609573+00:00",
+          "shot_at": "2025-04-28T00:22:20+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
         }
       ],
-      "public_photo_count": 9
+      "public_photo_count": 10
     },
     "397": {
       "manhole_id": 397,
@@ -89463,7 +90081,7 @@
           ]
         }
       ],
-      "public_photo_count": 22
+      "public_photo_count": 23
     },
     "398": {
       "manhole_id": 398,
@@ -89704,7 +90322,7 @@
           ]
         }
       ],
-      "public_photo_count": 22
+      "public_photo_count": 23
     },
     "399": {
       "manhole_id": 399,
@@ -91114,7 +91732,7 @@
           ]
         }
       ],
-      "public_photo_count": 40
+      "public_photo_count": 41
     },
     "405": {
       "manhole_id": 405,
@@ -91355,7 +91973,7 @@
           ]
         }
       ],
-      "public_photo_count": 22
+      "public_photo_count": 23
     },
     "406": {
       "manhole_id": 406,
@@ -91596,7 +92214,7 @@
           ]
         }
       ],
-      "public_photo_count": 20
+      "public_photo_count": 21
     },
     "407": {
       "manhole_id": 407,
@@ -91837,7 +92455,7 @@
           ]
         }
       ],
-      "public_photo_count": 30
+      "public_photo_count": 31
     },
     "408": {
       "manhole_id": 408,
@@ -92078,7 +92696,7 @@
           ]
         }
       ],
-      "public_photo_count": 27
+      "public_photo_count": 28
     },
     "409": {
       "manhole_id": 409,
@@ -92319,7 +92937,7 @@
           ]
         }
       ],
-      "public_photo_count": 16
+      "public_photo_count": 17
     },
     "410": {
       "manhole_id": 410,
@@ -92560,7 +93178,7 @@
           ]
         }
       ],
-      "public_photo_count": 20
+      "public_photo_count": 21
     },
     "411": {
       "manhole_id": 411,
@@ -92801,7 +93419,7 @@
           ]
         }
       ],
-      "public_photo_count": 23
+      "public_photo_count": 24
     },
     "412": {
       "manhole_id": 412,
@@ -93042,7 +93660,7 @@
           ]
         }
       ],
-      "public_photo_count": 25
+      "public_photo_count": 26
     },
     "413": {
       "manhole_id": 413,
@@ -93283,7 +93901,7 @@
           ]
         }
       ],
-      "public_photo_count": 22
+      "public_photo_count": 23
     },
     "414": {
       "manhole_id": 414,
@@ -93765,7 +94383,7 @@
           ]
         }
       ],
-      "public_photo_count": 17
+      "public_photo_count": 18
     },
     "416": {
       "manhole_id": 416,
@@ -94006,7 +94624,7 @@
           ]
         }
       ],
-      "public_photo_count": 15
+      "public_photo_count": 16
     },
     "417": {
       "manhole_id": 417,
@@ -94247,7 +94865,7 @@
           ]
         }
       ],
-      "public_photo_count": 21
+      "public_photo_count": 22
     },
     "418": {
       "manhole_id": 418,
@@ -94408,6 +95026,17 @@
           ]
         },
         {
+          "photo_id": "ff7a36f6-72c8-4c2e-a687-fe4acb2e574a",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/b3b8e2fd-e904-4f95-9fe1-37475159e272.jpg",
+          "storage_key": "photos/original/2026/11/b3b8e2fd-e904-4f95-9fe1-37475159e272.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:19:02.460521+00:00",
+          "shot_at": "2025-08-17T01:11:04+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "9ea54064-e0a9-4e0c-bfa0-b117bfa391d1",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/ba091818-ef68-4f3e-a26b-f04a33c4ae5f.jpg",
           "storage_key": "photos/original/2026/11/ba091818-ef68-4f3e-a26b-f04a33c4ae5f.jpg",
@@ -94440,7 +95069,7 @@
           ]
         }
       ],
-      "public_photo_count": 10
+      "public_photo_count": 11
     },
     "419": {
       "manhole_id": 419,
@@ -94681,7 +95310,7 @@
           ]
         }
       ],
-      "public_photo_count": 20
+      "public_photo_count": 21
     },
     "420": {
       "manhole_id": 420,
@@ -94890,6 +95519,17 @@
           ]
         },
         {
+          "photo_id": "be99b89e-63b8-46ec-9aba-fc3e329933f6",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/d2a7fdbf-ff1b-43f8-9c6e-b8137fe36aa5.jpg",
+          "storage_key": "photos/original/2026/11/d2a7fdbf-ff1b-43f8-9c6e-b8137fe36aa5.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:19:02.46653+00:00",
+          "shot_at": "2025-08-17T00:28:27+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "1b16196e-9930-4203-aa31-e15251ac7ff4",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/d76c47a5-e1fb-42e0-bb69-bfd0e9704f68.jpg",
           "storage_key": "photos/original/2026/11/d76c47a5-e1fb-42e0-bb69-bfd0e9704f68.jpg",
@@ -94904,25 +95544,9 @@
             1.0,
             0.702
           ]
-        },
-        {
-          "photo_id": "a19cf30a-cfb2-483b-bcd1-77d87274ecef",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/b36d0a47-edbb-4e91-a67b-96f58d95d3b0.jpg",
-          "storage_key": "photos/original/2026/11/b36d0a47-edbb-4e91-a67b-96f58d95d3b0.jpg",
-          "content_type": "image/jpeg",
-          "created_at": "2026-11-12T12:37:51.635978+00:00",
-          "shot_at": "2026-04-29T10:31:16+00:00",
-          "display_name": "morizone",
-          "public_user_id": "278e047c-fcc4-4f7d-af04-2f0753471134",
-          "crop": [
-            0.0,
-            0.046,
-            1.0,
-            0.796
-          ]
         }
       ],
-      "public_photo_count": 13
+      "public_photo_count": 14
     },
     "421": {
       "manhole_id": 421,
@@ -95110,6 +95734,17 @@
           "crop": null
         },
         {
+          "photo_id": "1dc1c39b-1322-4d6d-afd6-be6cfd31c203",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/bdc3c1b6-5062-464f-8c1b-f59d64ac7c57.jpg",
+          "storage_key": "photos/original/2026/11/bdc3c1b6-5062-464f-8c1b-f59d64ac7c57.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T08:19:03.124885+00:00",
+          "shot_at": "2025-08-17T03:54:20+00:00",
+          "display_name": "z011989",
+          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+          "crop": null
+        },
+        {
           "photo_id": "066979b8-7325-4c38-ac7a-1238165fd6ac",
           "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/9ae70945-a7fb-40e2-aa4d-7898458f51a4.jpg",
           "storage_key": "photos/original/2026/11/9ae70945-a7fb-40e2-aa4d-7898458f51a4.jpg",
@@ -95126,7 +95761,7 @@
           ]
         }
       ],
-      "public_photo_count": 11
+      "public_photo_count": 12
     },
     "422": {
       "manhole_id": 422,
@@ -97748,7 +98383,7 @@
           ]
         }
       ],
-      "public_photo_count": 18
+      "public_photo_count": 19
     },
     "437": {
       "manhole_id": 437,
@@ -100382,7 +101017,7 @@
           ]
         }
       ],
-      "public_photo_count": 24
+      "public_photo_count": 25
     },
     "450": {
       "manhole_id": 450,
@@ -100541,20 +101176,9 @@
             1.0,
             1.0
           ]
-        },
-        {
-          "photo_id": "c3d1ba0f-b77b-42ed-895b-ee39089e0843",
-          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/c5c14c59-d827-4abb-b3ec-8e59393066cb.jpg",
-          "storage_key": "photos/original/2026/11/c5c14c59-d827-4abb-b3ec-8e59393066cb.jpg",
-          "content_type": "image/jpeg",
-          "created_at": "2026-11-23T08:15:32.94999+00:00",
-          "shot_at": "2026-04-29T06:33:06+00:00",
-          "display_name": "z011989",
-          "public_user_id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
-          "crop": null
         }
       ],
-      "public_photo_count": 9
+      "public_photo_count": 8
     },
     "451": {
       "manhole_id": 451,
@@ -108069,9 +108693,20 @@
             0.8829,
             1.0
           ]
+        },
+        {
+          "photo_id": "91cf676c-9358-4079-9e6e-5af56083299a",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/244679ec-d5c1-402d-9cbf-fe55362bbcfd.jpg",
+          "storage_key": "photos/original/2026/11/244679ec-d5c1-402d-9cbf-fe55362bbcfd.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T09:30:37.932876+00:00",
+          "shot_at": "2026-11-23T06:14:16+00:00",
+          "display_name": "MAKOTO",
+          "public_user_id": "03d588b5-10ae-4458-be58-218e1553ba59",
+          "crop": null
         }
       ],
-      "public_photo_count": 3
+      "public_photo_count": 4
     },
     "492": {
       "manhole_id": 492,
@@ -108296,9 +108931,20 @@
             1.0,
             0.8158
           ]
+        },
+        {
+          "photo_id": "bc6f1776-78bd-4f03-a880-333815b6a2b2",
+          "url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/640a3fee-e933-47bf-bc49-dc19529991b0.jpg",
+          "storage_key": "photos/original/2026/11/640a3fee-e933-47bf-bc49-dc19529991b0.jpg",
+          "content_type": "image/jpeg",
+          "created_at": "2026-11-23T09:30:17.070367+00:00",
+          "shot_at": "2026-11-23T05:52:00+00:00",
+          "display_name": "MAKOTO",
+          "public_user_id": "03d588b5-10ae-4458-be58-218e1553ba59",
+          "crop": null
         }
       ],
-      "public_photo_count": 4
+      "public_photo_count": 5
     },
     "495": {
       "manhole_id": 495,
