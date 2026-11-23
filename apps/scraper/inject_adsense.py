@@ -19,6 +19,7 @@ SLOT_RE = re.compile(r"^\d{6,20}$")
 MARKERS = {
     "prefecture": "<!-- adsense:prefecture -->",
     "manhole": "<!-- adsense:manhole -->",
+    "home": "<!-- adsense:home -->",
 }
 
 
@@ -53,6 +54,8 @@ def inject_html(
     client_id: str,
     prefecture_slot: str = "",
     manhole_slot: str = "",
+    *,
+    home_slot: str = "",
 ) -> str:
     """Inject verification everywhere and ads only at explicit markers."""
     if 'http-equiv="refresh"' in html.lower() or "</head>" not in html:
@@ -62,7 +65,7 @@ def inject_html(
     if "google-adsense-account" not in html:
         html = html.replace("</head>", f"  {meta}\n</head>", 1)
 
-    slots = {"prefecture": prefecture_slot, "manhole": manhole_slot}
+    slots = {"prefecture": prefecture_slot, "manhole": manhole_slot, "home": home_slot}
     active = [name for name, marker in MARKERS.items() if marker in html and slots[name]]
     if not active:
         return html
@@ -84,6 +87,7 @@ def inject_html(
     # 高さを変えたら apps/web/assets/adsense.css の min-height も合わせること。
     sizing = """<style>
     .pokefuta_adslot_1 { display: block; width: 300px; height: 250px; }
+    @media (max-width: 359.98px) { .ad-slot--home .pokefuta_adslot_1 { width: 250px; } }
     @media (min-width: 500px) { .pokefuta_adslot_1 { width: 336px; height: 280px; } }
     @media (min-width: 800px) { .pokefuta_adslot_1 { width: 728px; height: 90px; } }
   </style>"""
@@ -97,16 +101,19 @@ def inject_html(
     return html
 
 
-def configure(root: Path, publisher: str, prefecture_slot: str, manhole_slot: str) -> tuple[int, int]:
+def configure(
+    root: Path, publisher: str, prefecture_slot: str, manhole_slot: str, *, home_slot: str = "",
+) -> tuple[int, int]:
     publisher_id, client_id = normalize_publisher_id(publisher)
     prefecture_slot = validate_slot(prefecture_slot, "ADSENSE_PREFECTURE_SLOT")
     manhole_slot = validate_slot(manhole_slot, "ADSENSE_MANHOLE_SLOT")
+    home_slot = validate_slot(home_slot, "ADSENSE_HOME_SLOT")
 
     updated = 0
     ad_pages = 0
     for path in sorted(root.rglob("*.html")):
         original = path.read_text(encoding="utf-8")
-        result = inject_html(original, client_id, prefecture_slot, manhole_slot)
+        result = inject_html(original, client_id, prefecture_slot, manhole_slot, home_slot=home_slot)
         if result != original:
             path.write_text(result, encoding="utf-8")
             updated += 1
@@ -128,14 +135,15 @@ def main() -> int:
     publisher = os.environ.get("ADSENSE_PUBLISHER_ID", "").strip()
     prefecture_slot = os.environ.get("ADSENSE_PREFECTURE_SLOT", "").strip()
     manhole_slot = os.environ.get("ADSENSE_MANHOLE_SLOT", "").strip()
+    home_slot = os.environ.get("ADSENSE_HOME_SLOT", "").strip()
 
     if not publisher:
-        if prefecture_slot or manhole_slot:
+        if prefecture_slot or manhole_slot or home_slot:
             raise SystemExit("AdSense slot IDs are set but ADSENSE_PUBLISHER_ID is missing")
         print("[inject_adsense] disabled: ADSENSE_PUBLISHER_ID is not configured")
         return 0
 
-    updated, ad_pages = configure(args.root, publisher, prefecture_slot, manhole_slot)
+    updated, ad_pages = configure(args.root, publisher, prefecture_slot, manhole_slot, home_slot=home_slot)
     print(f"[inject_adsense] verified {updated} HTML files; enabled {ad_pages} ad pages; wrote ads.txt")
     return 0
 
