@@ -155,6 +155,64 @@ def parse_wkb_point(wkb_hex: str) -> tuple[float, float] | None:
 
 
 MANHOLE_TITLES_JSON = ROOT / "dataset" / "manhole_titles.json"
+# 同じジョブの前の手順（export_latest_manhole_photos.py）が書く、蓋ごとの写真の正本
+LATEST_PHOTOS_JSON = ROOT / "docs" / "latest-manhole-photos.json"
+
+
+def _unit_box(value) -> list[float] | None:
+    """[x0, y0, x1, y1]（0〜1）だけを通す。形の違うものは捨てる。"""
+    if not isinstance(value, list) or len(value) != 4:
+        return None
+    if not all(isinstance(v, (int, float)) and not isinstance(v, bool) for v in value):
+        return None
+    if not all(0.0 <= float(v) <= 1.0 for v in value):
+        return None
+    return [float(v) for v in value]
+
+
+def attach_photo_summary(entries: list[dict],
+                         photos_path: Path = LATEST_PHOTOS_JSON) -> int:
+    """latest-manhole-photos.json の代表写真と公開写真の枚数を entry に写す。
+
+    写真館（pokefuta.com）は蓋の丸い写真（代表写真と蓋に寄せる切り抜き）を
+    /api/manholes/cover-photos で Supabase から毎回選び直していた。代表写真は
+    ここ（図鑑）がすでに同じものを選んでいる（2026-11-23 に 492枚すべてで一致を確認）ので、
+    manholes.json に載せて写真館がそれを読む。latest-manhole-photos.json は 3MB を超える
+    （大半はギャラリー）ので、ブラウザが読む manholes.json には蓋ごとに小さいものだけ写す。
+
+      cover              … { photo_id, lid, crop }。lid / crop は [x0, y0, x1, y1]（0〜1）、無ければ null
+      public_photo_count … 公開の写真の枚数（photo_count は 0/1 の「ある・なし」のまま）
+
+    誰の写真か（表示名・公開ID）は写さない。読めなければ何も足さずに警告だけ出す
+    （写真館は cover が無ければ今までの API に戻る）。写した蓋の数を返す。
+    """
+    try:
+        payload = json.loads(photos_path.read_text(encoding="utf-8"))
+        photos = payload.get("photos") or {}
+        if not isinstance(photos, dict):
+            raise ValueError("photos is not an object")
+    except (OSError, json.JSONDecodeError, ValueError, AttributeError) as exc:
+        print(f"::warning::{photos_path} を読めないため cover を付けません: {exc}", file=sys.stderr)
+        return 0
+
+    attached = 0
+    for entry in entries:
+        photo = photos.get(str(entry.get("id")))
+        if not isinstance(photo, dict):
+            continue
+        photo_id = photo.get("photo_id")
+        if not isinstance(photo_id, str) or not photo_id:
+            continue
+        entry["cover"] = {
+            "photo_id": photo_id,
+            "lid": _unit_box(photo.get("lid")),
+            "crop": _unit_box(photo.get("crop")),
+        }
+        count = photo.get("public_photo_count")
+        if isinstance(count, int) and not isinstance(count, bool) and count >= 0:
+            entry["public_photo_count"] = count
+        attached += 1
+    return attached
 
 # 手動マスタから重ねる、表示名の組み立てに効くフィールドだけ。
 # address は address_norm -> address_raw の順で採用する（update_pokefuta.py の
@@ -267,6 +325,8 @@ def build_manholes() -> dict:
         entries.append(entry)
 
     apply_place_labels(entries)
+    covered = attach_photo_summary(entries)
+    print(f"cover: {covered} manholes")
 
     if skipped:
         print(f"WARN: skipped {skipped} manholes without parsable location")
