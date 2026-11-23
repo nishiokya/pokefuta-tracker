@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-23T06:15:43+00:00",
+  "generated_at": "2026-11-23T08:24:17+00:00",
   "legends": [
     {
       "id": "07ce4931-96e0-4d66-902f-97be711ac736",
@@ -25,6 +25,11 @@
       "id": "fd89d552-0e0b-4538-a828-73baa327a1ef",
       "name": "temporary accounnt",
       "photo_id": "045ce494-af12-4693-96c6-d094d72d395d"
+    },
+    {
+      "id": "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4",
+      "name": "z011989",
+      "photo_id": "3888032b-a792-4752-85c6-fb7d232fa0de"
     },
     {
       "id": "e228af7e-3d20-4072-a0af-c5413726cfa5",
@@ -464,6 +469,7 @@
     "f537ca26-4c22-4497-b06f-9f5957149837": "regular",
     "f7b5f578-721c-42fd-a71c-33375d0a90fd": "regular",
     "f7cabca9-3c72-4e11-b13f-f6e7fb9ecf93": "rookie",
+    "f7eebd83-56af-4c5a-b02f-2d9a9f3f5da4": "legend",
     "f8da7f03-9efa-4b9b-b685-19e301ea0695": "rookie",
     "f964b8ea-c32d-4b97-8df9-27723a4c5179": "rookie",
     "f9e81e5f-96ec-4f25-8b06-0855a1c78b03": "regular",
