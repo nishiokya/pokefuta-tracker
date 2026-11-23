@@ -683,6 +683,13 @@ def build_index_page(
     {pending_html}
 
     {compact_html}
+    <aside class="trip-affiliate" aria-label="広告">
+      <small>広告</small>
+      <span data-track="trip_affiliate_click" data-surface="trip_index" data-destination="rakuten_travel">
+        <a href="https://hb.afl.rakuten.co.jp/hgc/59e54b6b.42820fd9.59e54b6c.866c5f88/_RTLink159064?pc=https%3A%2F%2Ftravel.rakuten.co.jp%2Fyado%2Fjapan.html&amp;link_type=text&amp;ut=eyJwYWdlIjoidXJsIiwidHlwZSI6InRleHQiLCJjb2wiOjF9"
+           target="_blank" rel="nofollow sponsored noopener" style="word-wrap:break-word;">旅先の宿を楽天トラベルで探す</a>
+      </span>
+    </aside>
     <footer><a href="/">全国マップへ戻る</a></footer>
   </main>
 {_analytics_script(TRIP_BASE, "trip_index")}</body>
@@ -714,6 +721,10 @@ TRIP_CSS = """
     .trip-card small { color: #62564a; font-size: .78rem; }
     .compact-list { margin: 10px 0 0; padding-left: 1.2em; display: grid; gap: 6px; }
     .compact-list span { margin-left: 8px; color: #62564a; font-size: .82rem; }
+    .trip-affiliate { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px;
+      margin: 24px 0; padding: 12px 14px; border: 1px solid #ece4d7; border-radius: 14px; }
+    .trip-affiliate small { color: #62564a; }
+    .trip-affiliate a { text-decoration: underline; }
     .related-links small { margin-left: 6px; color: #75685c; font-size: .75rem; }
     .access-list { margin: 8px 0 0; padding: 0; list-style: none; display: grid; gap: 6px; }
     .access-list strong { margin-right: 6px; white-space: nowrap; }
