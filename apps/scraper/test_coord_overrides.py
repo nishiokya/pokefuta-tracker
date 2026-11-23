@@ -34,12 +34,10 @@ class ApplyTest(unittest.TestCase):
         self.assertEqual(applied, 0)
         self.assertIn("64", warnings[0])
 
-    def test_dataset_file_is_valid_and_matches_docs(self):
-        overrides = coord_overrides.load()
-        self.assertTrue(overrides)
-        docs = coord_overrides.ROOT / "docs" / "pokefuta.ndjson"
-        ids = {json.loads(l)["id"] for l in docs.read_text(encoding="utf-8").splitlines() if l.strip()}
-        self.assertLessEqual(set(overrides), ids)
+    def test_dataset_file_is_valid(self):
+        # 対象が docs に残っているかは見ない。公式から消えた蓋は apply() が警告するだけにして、
+        # 日次の更新（このテストを先に回す）を止めない
+        self.assertTrue(coord_overrides.load())
 
     def test_load_rejects_missing_official(self):
         with tempfile.TemporaryDirectory() as d:
