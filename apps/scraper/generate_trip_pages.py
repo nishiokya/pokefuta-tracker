@@ -340,6 +340,65 @@ def _plans_html(area: dict) -> str:
     )
 
 
+RAKUTEN_AFFILIATE_ID = "59e54b6b.42820fd9.59e54b6c.866c5f88"
+# 楽天アフィリエイトのテキストリンク生成ツールが付ける表示パラメータ（一覧ページと同じ）。
+RAKUTEN_LINK_SUFFIX = "&link_type=text&ut=eyJwYWdlIjoidXJsIiwidHlwZSI6InRleHQiLCJjb2wiOjF9"
+# 楽天レンタカーの県別ページは /cars/area/<地方>/<県>/。2026-11 にトップの地図から取った。
+# 北海道・沖縄には県別ページが無く、地方ページ（travel.rakuten.co.jp/cars/area/<県>/）だけ。
+RAKUTEN_CAR_REGIONS = {
+    **dict.fromkeys(("aomori", "iwate", "miyagi", "akita", "yamagata", "fukushima"), "tohoku"),
+    **dict.fromkeys(("ibaraki", "tochigi", "gunma", "saitama", "chiba", "tokyo", "kanagawa"), "kanto"),
+    **dict.fromkeys(
+        ("niigata", "toyama", "ishikawa", "fukui", "yamanashi", "nagano", "gifu", "shizuoka", "aichi"),
+        "chubu",
+    ),
+    **dict.fromkeys(("mie", "shiga", "kyoto", "osaka", "hyogo", "nara", "wakayama"), "kinki"),
+    **dict.fromkeys(
+        ("tottori", "shimane", "okayama", "hiroshima", "yamaguchi", "tokushima", "kagawa", "ehime", "kochi"),
+        "chu-shikoku",
+    ),
+    **dict.fromkeys(
+        ("fukuoka", "saga", "nagasaki", "kumamoto", "oita", "miyazaki", "kagoshima"), "kyushu"
+    ),
+}
+
+
+def rakuten_link(url: str) -> str:
+    return (
+        f"https://hb.afl.rakuten.co.jp/hgc/{RAKUTEN_AFFILIATE_ID}/_RTLink159064"
+        f"?pc={quote(url, safe='')}{RAKUTEN_LINK_SUFFIX}"
+    )
+
+
+def rakuten_car_url(pref_slug: str) -> str:
+    region = RAKUTEN_CAR_REGIONS.get(pref_slug)
+    if region:
+        return f"https://cars.travel.rakuten.co.jp/cars/area/{region}/{pref_slug}/"
+    if pref_slug in ("hokkaido", "okinawa"):
+        return f"https://travel.rakuten.co.jp/cars/area/{pref_slug}/"
+    return "https://travel.rakuten.co.jp/cars/"
+
+
+def _affiliate_html(area: dict, pref_slug: str) -> str:
+    """エリアの県の宿とレンタカーを楽天トラベルで探すリンク（広告）。"""
+    prefecture = area["prefecture"]
+    links = (
+        ("rakuten_hotel", f"https://travel.rakuten.co.jp/yado/{pref_slug}/", f"{prefecture}の宿を探す"),
+        ("rakuten_rental_car", rakuten_car_url(pref_slug), f"{prefecture}のレンタカーを探す"),
+    )
+    items = "".join(
+        f'<a href="{_escape_attr(rakuten_link(url))}" target="_blank" rel="nofollow sponsored noopener" '
+        f'data-track="trip_affiliate_click" data-surface="trip_area" data-destination="{destination}">'
+        f'{escape(label)}</a>'
+        for destination, url, label in links
+    )
+    return (
+        '<aside class="trip-affiliate trip-affiliate--area" aria-label="広告">'
+        f'<small>広告・楽天トラベル</small><p>{escape(area["name"])}のポケふた旅に</p>'
+        f'<div class="trip-affiliate-links">{items}</div></aside>'
+    )
+
+
 def _time_html(records: list[dict], durations: dict) -> str:
     text = duration_text(records, durations)
     if text:
@@ -489,6 +548,8 @@ def build_area_page(
     {_access_html(area)}
 
     {_plans_html(area)}
+
+    {_affiliate_html(area, pref_slug)}
 
     <section aria-labelledby="map-heading">
       <h2 id="map-heading">{escape(area['name'])}のポケふたマップ</h2>
@@ -725,6 +786,11 @@ TRIP_CSS = """
       margin: 24px 0; padding: 12px 14px; border: 1px solid #ece4d7; border-radius: 14px; }
     .trip-affiliate small { color: #62564a; }
     .trip-affiliate a { text-decoration: underline; }
+    .trip-affiliate--area { display: block; }
+    .trip-affiliate--area p { margin: 2px 0 8px; font-size: .9rem; }
+    .trip-affiliate-links { display: flex; flex-wrap: wrap; gap: 8px; }
+    .trip-affiliate-links a { padding: 8px 12px; border-radius: 999px; background: #bf0000; color: #fff;
+      font-size: .88rem; font-weight: 800; text-decoration: none; }
     .related-links small { margin-left: 6px; color: #75685c; font-size: .75rem; }
     .access-list { margin: 8px 0 0; padding: 0; list-style: none; display: grid; gap: 6px; }
     .access-list strong { margin-right: 6px; white-space: nowrap; }
