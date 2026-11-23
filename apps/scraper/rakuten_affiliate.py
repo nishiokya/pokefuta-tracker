@@ -34,6 +34,49 @@ CAR_REGIONS = {
     ),
 }
 
+# 宿は県より狭い楽天トラベルの地区（/yado/<県>/<地区>.html）へ送る。地区は市町村と1対1ではないので、
+# 宿の地名がその地区のページに出てくることを確かめて手で対応させる（2026-11-24）。
+# 載っていない旅のエリア・市町村は県の宿ページへ。
+TRIP_HOTEL_AREAS = {
+    "higashiosaka": "osaka/toubu",
+    "tokorozawa": "saitama/tokorozawa",
+    "ikaruga": "nara/hokubu",  # 法隆寺周辺の宿はこの地区
+    "yokohama": "kanagawa/yokohama",
+    "machida": "tokyo/nishi",
+    "katori": "chiba/choshi",  # 佐原の宿はこの地区
+    "noto": "ishikawa/noto",
+    "ibusuki": "kagoshima/nansatsu",
+    "shimonoseki": "yamaguchi/shimonoseki",
+    "dazaifu": "fukuoka/fukuoka",
+    "saga": "saga/saga",
+    "toyama": "toyama/toyama",
+    "uji": "kyoto/nannbu",
+    "ojiya": "niigata/kita",  # 小千谷を含む地区が無いので、隣の長岡の地区
+    "ogasawara": "tokyo/Ogasawara",
+    "awaji": "hyogo/awaji",
+    "naruto": "tokushima/tokushima",
+    "utsunomiya": "tochigi/utsunomiya",
+    "koka": "shiga/shigaraki",
+    "kurashiki": "okayama/kurashiki",
+    "toyohashi": "aichi/mikawawan",
+    "kyoto": "kyoto/shi",
+    "kitakyushu": "fukuoka/kitakyusyu",
+}
+# キーは市町村ページのパス（/municipalities/<県>/<市>/）
+MUNICIPALITY_HOTEL_AREAS = {
+    "aichi/toyohashi": "aichi/mikawawan",
+    "fukuoka/dazaifu": "fukuoka/fukuoka",
+    "fukuoka/kitakyushu": "fukuoka/kitakyusyu",
+    "kyoto/kyoto": "kyoto/shi",
+    "kyoto/uji": "kyoto/nannbu",
+    "shiga/koka": "shiga/shigaraki",
+    "tokyo/machida": "tokyo/nishi",
+    "tokyo/ogasawara": "tokyo/Ogasawara",
+}
+# 本土のレンタカーが旅の役に立たないところ（船で渡る島）。レンタカーのボタンを出さない。
+NO_CAR_TRIPS = {"ogasawara"}
+NO_CAR_MUNICIPALITIES = {"tokyo/ogasawara"}
+
 CSS = """
     .rakuten-affiliate { margin: 22px 0; padding: 12px 14px; border: 1px solid #ece4d7; border-radius: 14px;
       background: rgba(255, 255, 255, .42); }
@@ -49,7 +92,9 @@ def link(url: str) -> str:
     return f"https://hb.afl.rakuten.co.jp/hgc/{AFFILIATE_ID}/_RTLink159064?pc={quote(url, safe='')}{LINK_SUFFIX}"
 
 
-def hotel_url(pref_slug: str) -> str:
+def hotel_url(pref_slug: str, area: str = "") -> str:
+    if area:
+        return f"https://travel.rakuten.co.jp/yado/{area}.html"
     return f"https://travel.rakuten.co.jp/yado/{pref_slug}/"
 
 
@@ -63,14 +108,27 @@ def car_url(pref_slug: str) -> str:
 
 
 def block_html(
-    lead: str, *, event: str, surface: str, prefecture: str = "", pref_slug: str = ""
+    lead: str,
+    *,
+    event: str,
+    surface: str,
+    prefecture: str = "",
+    pref_slug: str = "",
+    hotel_area: str = "",
+    place: str = "",
+    car: bool = True,
 ) -> str:
-    """「広告・楽天トラベル」の枠。県が分かればその県の宿・レンタカー、無ければ全国。"""
+    """「広告・楽天トラベル」の枠。県が分かればその県の宿・レンタカー、無ければ全国。
+
+    hotel_area（楽天の地区）があれば、宿だけはその地区へ送り、ボタンの地名を place にする。
+    """
     where = prefecture or "旅先"
+    hotel = hotel_url(pref_slug, hotel_area) if pref_slug else HOTEL_JAPAN_URL
+    hotel_where = place if hotel_area and place else where
     links = (
-        ("rakuten_hotel", hotel_url(pref_slug) if pref_slug else HOTEL_JAPAN_URL, f"{where}の宿を探す"),
+        ("rakuten_hotel", hotel, f"{hotel_where}の宿を探す"),
         ("rakuten_rental_car", car_url(pref_slug) if pref_slug else CAR_TOP_URL, f"{where}のレンタカーを探す"),
-    )
+    )[: 2 if car else 1]
     items = "".join(
         f'<a href="{escape(link(url), {chr(34): "&quot;"})}" target="_blank" rel="nofollow sponsored noopener" '
         f'data-track="{escape(event)}" data-surface="{escape(surface)}" data-destination="{destination}">'

@@ -347,6 +347,8 @@ def _affiliate_html(area: dict, pref_slug: str) -> str:
     return rakuten.block_html(
         f"{area['name']}のポケふた旅に", event="trip_affiliate_click", surface="trip_area",
         prefecture=area["prefecture"], pref_slug=pref_slug,
+        hotel_area=rakuten.TRIP_HOTEL_AREAS.get(area["slug"], ""), place=area["name"],
+        car=area["slug"] not in rakuten.NO_CAR_TRIPS,
     )
 
 

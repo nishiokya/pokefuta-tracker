@@ -202,7 +202,9 @@ class PageTest(unittest.TestCase):
         aside = html[html.index('<aside class="rakuten-affiliate"'):]
         aside = aside[:aside.index("</aside>")]
         self.assertIn('aria-label="広告"', aside)
-        self.assertIn("pc=https%3A%2F%2Ftravel.rakuten.co.jp%2Fyado%2Ftokyo%2F", aside)
+        # 宿は町田を含む楽天の地区（立川・八王子・町田・府中・吉祥寺）
+        self.assertIn("pc=https%3A%2F%2Ftravel.rakuten.co.jp%2Fyado%2Ftokyo%2Fnishi.html&", aside)
+        self.assertIn("町田市の宿を探す", aside)
         self.assertIn("pc=https%3A%2F%2Fcars.travel.rakuten.co.jp%2Fcars%2Farea%2Fkanto%2Ftokyo%2F", aside)
         self.assertIn('data-track="municipality_affiliate_click"', aside)
         self.assertIn('data-surface="municipality"', aside)
