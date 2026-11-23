@@ -48,6 +48,7 @@ on:
       - 'apps/scraper/visit_durations.py' # measured visit-time text (prefecture + municipality pages)
       - 'dataset/visit_durations.json' # measured visit times, built by apps/tools/build_visit_durations.py
       - 'apps/scraper/generate_trip_pages.py' # /trip/ feature page + per-area trip pages
+      - 'apps/scraper/rakuten_affiliate.py' # Rakuten Travel hotel/car links (/trip/ + /municipalities/)
       - 'dataset/trip_areas.json' # hand-registered trip areas (manhole id sets)
       - 'apps/scraper/features.py' # /features/ data loader (shared with summary + sitemap)
       - 'apps/scraper/generate_feature_pages.py' # /features/ index + per-feature pages
@@ -175,6 +176,7 @@ jobs:
             apps.scraper.test_visit_durations \
             apps.scraper.test_build_visit_durations \
             apps.scraper.test_generate_trip_pages \
+            apps.scraper.test_rakuten_affiliate \
             apps.scraper.test_generate_feature_pages \
             apps.scraper.test_prefectures \
             apps.scraper.test_web_prefecture_links \

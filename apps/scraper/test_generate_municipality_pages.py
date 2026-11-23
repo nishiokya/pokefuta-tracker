@@ -197,6 +197,22 @@ class PageTest(unittest.TestCase):
         self.assertIn("'municipality_map_pin_click'", self.html)
         self.assertIn("PokefutaAnalytics.bindClickTracking(", self.html)
 
+    def test_page_has_rakuten_hotel_and_car_links_for_its_prefecture(self) -> None:
+        html = self.html
+        aside = html[html.index('<aside class="rakuten-affiliate"'):]
+        aside = aside[:aside.index("</aside>")]
+        self.assertIn('aria-label="広告"', aside)
+        self.assertIn("pc=https%3A%2F%2Ftravel.rakuten.co.jp%2Fyado%2Ftokyo%2F", aside)
+        self.assertIn("pc=https%3A%2F%2Fcars.travel.rakuten.co.jp%2Fcars%2Farea%2Fkanto%2Ftokyo%2F", aside)
+        self.assertIn('data-track="municipality_affiliate_click"', aside)
+        self.assertIn('data-surface="municipality"', aside)
+        self.assertIn(".rakuten-affiliate-links a", html)
+        self.assertLess(html.index('<aside class="rakuten-affiliate"'), html.index('id="map-heading"'))
+
+    def test_ranking_has_no_affiliate_block(self) -> None:
+        html = MODULE.build_ranking_page(self.items, 7, "2026年10月4日")
+        self.assertNotIn('<aside class="rakuten-affiliate"', html)
+
     def test_ranking_sends_whole_prefecture_municipalities_to_the_prefecture_page(self) -> None:
         html = MODULE.build_ranking_page(self.items, 7, "2026年10月4日")
         self.assertIn('href="/municipalities/tokyo/machida/"', html)

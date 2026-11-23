@@ -111,7 +111,7 @@ class AreaTest(unittest.TestCase):
 
     def test_area_page_has_rakuten_hotel_and_car_links_for_its_prefecture(self) -> None:
         page = MODULE.build_area_page(AREAS[0], RECORDS[:5], DURATIONS, {}, [], {})
-        aside = page[page.index('<aside class="trip-affiliate trip-affiliate--area"'):]
+        aside = page[page.index('<aside class="rakuten-affiliate"'):]
         aside = aside[:aside.index("</aside>")]
         self.assertIn('aria-label="広告"', aside)
         self.assertIn("hb.afl.rakuten.co.jp/hgc/59e54b6b.42820fd9.59e54b6c.866c5f88/", aside)
@@ -121,17 +121,11 @@ class AreaTest(unittest.TestCase):
         self.assertEqual(2, aside.count('rel="nofollow sponsored noopener"'))
         self.assertIn('data-destination="rakuten_hotel"', aside)
         self.assertIn('data-destination="rakuten_rental_car"', aside)
+        self.assertIn('data-surface="trip_area"', aside)
+        self.assertIn(".rakuten-affiliate-links a", page)
         self.assertNotIn("adsense", page)
         # 広告は観光プランの後・地図の前
-        self.assertLess(page.index("trip-affiliate--area"), page.index('id="map-heading"'))
-
-    def test_rakuten_car_url_covers_every_prefecture(self) -> None:
-        for slug in PREF.PREFECTURE_SLUGS.values():
-            url = MODULE.rakuten_car_url(slug)
-            self.assertNotEqual("https://travel.rakuten.co.jp/cars/", url, slug)
-        self.assertEqual(
-            "https://travel.rakuten.co.jp/cars/area/hokkaido/", MODULE.rakuten_car_url("hokkaido")
-        )
+        self.assertLess(page.index('<aside class="rakuten-affiliate"'), page.index('id="map-heading"'))
 
     def test_breadcrumb_json_ld_matches_the_visible_trail(self) -> None:
         page = MODULE.build_area_page(AREAS[0], RECORDS[:5], DURATIONS, {}, [], {})
