@@ -369,6 +369,8 @@ def to_tagged_entry(
 ) -> dict[str, Any]:
     """特集の1枚。写真館の PlushPhoto（src/lib/plush-photos.ts）に合わせる。
 
+    訪問の id は載せない（公開リポジトリに利用者の行動の識別子を残さない。Codex の指摘 #895）。
+
     蓋の表示名・ポケモンは載せない（読む側が manholes.json・pokefuta.ndjson の manhole_id で引く）。
     投稿者は表示名と公開IDだけ。auth の user_id・storage_key・画像の URL・位置情報は出さない
     （画像は写真館の /api/photo/{id} が配るたびに公開かを確かめる）。
@@ -380,7 +382,6 @@ def to_tagged_entry(
     return {
         "id": photo["id"],
         "manhole_id": photo["manhole_id"],
-        "visit_id": visit.get("id"),
         "is_landscape": photo.get("is_landscape") is True,
         "plush_score": (
             float(plush_score)
@@ -491,9 +492,9 @@ def iter_photos(include_private: bool, batch_size: int, timeout: int) -> Iterato
     （2026-11-23 時点で風景 43枚。風景を全部読むより少ない）。
     """
     select_visit = (
-        "visit(id,shot_at,is_public,user_id,comment)"
+        "visit(shot_at,is_public,user_id,comment)"
         if include_private
-        else "visit!inner(id,shot_at,is_public,user_id,comment)"
+        else "visit!inner(shot_at,is_public,user_id,comment)"
     )
     query = {
         "select": (

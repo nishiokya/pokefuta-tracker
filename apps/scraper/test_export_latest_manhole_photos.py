@@ -283,7 +283,7 @@ class BuildPayloadFeaturedPhotoTest(unittest.TestCase):
         )
         self.assertEqual(query["visit.is_public"], "eq.true")
         self.assertIn("is_landscape", query["select"])
-        self.assertIn("visit!inner(id,", query["select"])
+        self.assertIn("visit!inner(shot_at,", query["select"])
 
     @mock.patch.object(export, "fetch_manhole_comments_by_display_name", return_value={})
     @mock.patch.object(export, "fetch_user_info", return_value={})
@@ -493,7 +493,6 @@ class TaggedPhotosTest(unittest.TestCase):
         self.assertEqual(entry, {
             "id": "abc",
             "manhole_id": 1,
-            "visit_id": "visit-abc",
             "is_landscape": False,
             "plush_score": 0.99,
             "created_at": "2026-01-01T00:00:00Z",
@@ -504,7 +503,7 @@ class TaggedPhotosTest(unittest.TestCase):
             "ai_tags": {k: v for k, v in PLUSH_TAGS.items() if k not in ("model", "rep_score")},
         })
         text = json.dumps(tagged, ensure_ascii=False)
-        for secret in ("user-1", "storage_key", "photos/abc.jpeg", "images.example", "rep_score", "scene_attrs"):
+        for secret in ("user-1", "visit-abc", "visit_id", "storage_key", "photos/abc.jpeg", "images.example", "rep_score", "scene_attrs"):
             self.assertNotIn(secret, text)
 
     def test_unknown_poster_and_blank_comment_become_null(self, *_mocks):

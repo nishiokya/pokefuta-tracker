@@ -27,7 +27,6 @@ def _photo(photo_id, tags=None, **extra):
     return {
         "id": photo_id,
         "manhole_id": 23,
-        "visit_id": f"visit-{photo_id}",
         "is_landscape": False,
         "plush_score": 0.99,
         "created_at": "2026-11-01T15:30:00Z",
