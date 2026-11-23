@@ -131,6 +131,27 @@ class GenerateTest(unittest.TestCase):
         }
         return counts, pages
 
+    def test_malformed_photos_only_empties_that_feature(self):
+        for photos in (1, True, "invalid", {"id": "p1"}, None):
+            with self.subTest(photos=photos):
+                counts, pages = self._generate({
+                    "success": True,
+                    "features": {
+                        "plush": {"photos": photos},
+                        "snow": {"photos": [_photo("s1", tags={"snow": True})]},
+                    },
+                })
+                self.assertEqual(counts, {"plush": 0, "snow": 1})
+                self.assertIn("まだ写真がありません", pages["plush"])
+                self.assertIn('class="gl-card"', pages["snow"])
+
+    def test_head_escapes_closing_tags_in_json_ld(self):
+        item = {"name": "ポケふた </section>"}
+        head = gallery._head("特集", "説明", "https://data.pokefuta.com/gallery/", [item])
+        block = re.search(r'<script type="application/ld\+json">(.*?)</script>', head, re.S).group(1)
+        self.assertNotIn("</section>", block)
+        self.assertEqual(json.loads(block), item)
+
     def test_writes_index_and_both_features(self):
         payload = {
             "success": True,

@@ -81,7 +81,9 @@ def load_tagged(path: Path) -> dict[str, Any]:
 def feature_photos(features: dict[str, Any], key: str) -> list[dict[str, Any]]:
     entry = features.get(key)
     photos = entry.get("photos") if isinstance(entry, dict) else None
-    return [p for p in photos or [] if isinstance(p, dict) and isinstance(p.get("id"), str) and p["id"]]
+    if not isinstance(photos, list):
+        return []
+    return [p for p in photos if isinstance(p, dict) and isinstance(p.get("id"), str) and p["id"]]
 
 
 def load_manholes(path: Path) -> dict[str, dict]:
@@ -466,7 +468,7 @@ STYLE = """
 
 def _head(title: str, description: str, canonical: str, jsonld: list[dict]) -> str:
     scripts = "\n".join(
-        f'  <script type="application/ld+json">\n{json.dumps(item, ensure_ascii=False, indent=2)}\n  </script>'
+        f'  <script type="application/ld+json">\n{_json_for_script(item)}\n  </script>'
         for item in jsonld
     )
     return f"""<!doctype html>
