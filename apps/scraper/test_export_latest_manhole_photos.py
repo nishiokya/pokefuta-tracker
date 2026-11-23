@@ -275,9 +275,15 @@ class BuildPayloadFeaturedPhotoTest(unittest.TestCase):
         with mock.patch.object(export, "iter_supabase_rows", return_value=iter([])) as rows:
             list(export.iter_photos(False, 100, 10))
         query = rows.call_args.args[1]
-        self.assertEqual(query["is_landscape"], "eq.false")
+        # 風景は特集のタグが付いたものだけ読む（全部は読まない）
+        self.assertNotIn("is_landscape", query)
+        self.assertEqual(
+            query["or"],
+            "(is_landscape.eq.false,ai_tags->>plush.eq.true,ai_tags->>snow.eq.true)",
+        )
         self.assertEqual(query["visit.is_public"], "eq.true")
         self.assertIn("is_landscape", query["select"])
+        self.assertIn("visit!inner(id,", query["select"])
 
     @mock.patch.object(export, "fetch_manhole_comments_by_display_name", return_value={})
     @mock.patch.object(export, "fetch_user_info", return_value={})
@@ -385,3 +391,138 @@ class ToPhotoEntryTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+PLUSH_TAGS = {
+    "model": "scene_attrs/1",
+    "rep_score": 3.2,
+    "plush": True,
+    "plush_score": 0.99,
+    "plush_box": [0.5, 0.5, 0.9, 0.9],
+    "lid": [0.1, 0.1, 0.5, 0.5],
+    "crop": [0.0, 0.0, 0.75, 1.0],
+    "scene": "wide_context",
+}
+
+
+def _tagged(photo_id, tags, created_at="2026-01-01T00:00:00Z", shot_at=None, is_public=True,
+            is_landscape=False, user_id="user-1", comment=None) -> dict:
+    photo = _photo(photo_id, shot_at=shot_at, created_at=created_at, is_public=is_public, user_id=user_id)
+    photo["visit"] = {**photo["visit"], "id": f"visit-{photo_id}", "comment": comment}
+    return {**photo, "is_landscape": is_landscape, "ai_tags": dict(tags)}
+
+
+@mock.patch.object(export, "fetch_manhole_comments_by_display_name", return_value={})
+@mock.patch.object(export, "get_effective_r2_public_base_url", return_value="https://images.example")
+class TaggedPhotosTest(unittest.TestCase):
+    """図鑑の写真ギャラリー（/gallery/plush/・/gallery/snow/）の特集データ。"""
+
+    USERS = {
+        "user-1": {"display_name": "  なまえ ", "public_user_id": "pub-1"},
+        "user-2": {"display_name": None, "public_user_id": None},
+    }
+
+    def _build(self, photos, limit=300, include_private=False):
+        with mock.patch.object(export, "iter_photos", return_value=iter(photos)), \
+                mock.patch.object(export, "fetch_user_info", return_value=self.USERS) as users:
+            payload, tagged = export.build_payloads(include_private, 100, 10, "tako", 13, {}, tagged_limit=limit)
+        return payload, tagged, users
+
+    def test_plush_needs_both_boxes_and_crop(self, *_mocks):
+        no_box = {k: v for k, v in PLUSH_TAGS.items() if k != "plush_box"}
+        _, tagged, _ = self._build([
+            _tagged("clip", PLUSH_TAGS),
+            _tagged("no-box", no_box),
+            _tagged("not-plush", {**PLUSH_TAGS, "plush": False}),
+        ])
+        self.assertEqual([p["id"] for p in tagged["features"]["plush"]["photos"]], ["clip"])
+        self.assertEqual(tagged["features"]["snow"]["photos"], [])
+
+    def test_private_visits_never_enter_a_feature(self, *_mocks):
+        _, tagged, _ = self._build([
+            _tagged("private", {**PLUSH_TAGS, "snow": True}, is_public=False),
+        ], include_private=True)
+        self.assertEqual(tagged["features"]["plush"]["photos"], [])
+        self.assertEqual(tagged["features"]["snow"]["photos"], [])
+
+    def test_landscape_photos_enter_features_but_not_the_manhole_gallery(self, *_mocks):
+        payload, tagged, users = self._build([
+            _tagged("scenery", {"snow": True}, is_landscape=True, user_id="user-2"),
+        ])
+        self.assertEqual(payload["photos"], {})
+        snow = tagged["features"]["snow"]["photos"]
+        self.assertEqual([p["id"] for p in snow], ["scenery"])
+        self.assertTrue(snow[0]["is_landscape"])
+        # 風景だけの投稿者の名前も引く
+        self.assertIn("user-2", users.call_args.args[0])
+
+    def test_plush_is_newest_upload_first_and_snow_is_newest_shot_first(self, *_mocks):
+        snow = {"snow": True}
+        _, tagged, _ = self._build([
+            _tagged("old-upload", PLUSH_TAGS, created_at="2026-01-01T00:00:00Z"),
+            _tagged("new-upload", PLUSH_TAGS, created_at="2026-03-01T00:00:00Z"),
+            _tagged("shot-last-winter", snow, created_at="2026-11-20T00:00:00Z", shot_at="2026-01-10T00:00:00Z"),
+            _tagged("shot-this-month", snow, created_at="2026-11-01T00:00:00Z", shot_at="2026-11-01T00:00:00Z"),
+            _tagged("no-shot-at", snow, created_at="2026-02-01T00:00:00Z"),
+        ])
+        self.assertEqual([p["id"] for p in tagged["features"]["plush"]["photos"]], ["new-upload", "old-upload"])
+        self.assertEqual(
+            [p["id"] for p in tagged["features"]["snow"]["photos"]],
+            ["shot-this-month", "no-shot-at", "shot-last-winter"],
+        )
+
+    def test_limit_cuts_after_ordering_and_total_counts_everything(self, *_mocks):
+        photos = [
+            _tagged(f"s{i}", {"snow": True}, created_at=f"2026-11-{20 - i:02d}T00:00:00Z", shot_at=f"2025-01-{i + 1:02d}T00:00:00Z")
+            for i in range(5)
+        ]
+        _, tagged, _ = self._build(photos, limit=2)
+        snow = tagged["features"]["snow"]
+        self.assertEqual(snow["total"], 5)
+        # 撮影日の新しい2枚（投稿日が一番新しい s0 は撮影日が一番古い）
+        self.assertEqual([p["id"] for p in snow["photos"]], ["s4", "s3"])
+        self.assertEqual(tagged["limit"], 2)
+
+    def test_entry_fields_follow_the_photo_site_and_leak_nothing(self, *_mocks):
+        _, tagged, _ = self._build([
+            _tagged("abc", PLUSH_TAGS, shot_at="2026-01-02T03:04:05Z", comment="  たのしい  "),
+        ])
+        self.assertTrue(tagged["success"])
+        self.assertTrue(tagged["generated_at"].endswith("Z"))
+        entry = tagged["features"]["plush"]["photos"][0]
+        self.assertEqual(entry, {
+            "id": "abc",
+            "manhole_id": 1,
+            "visit_id": "visit-abc",
+            "is_landscape": False,
+            "plush_score": 0.99,
+            "created_at": "2026-01-01T00:00:00Z",
+            "shot_at": "2026-01-02T03:04:05Z",
+            "comment": "たのしい",
+            "poster_name": "なまえ",
+            "poster_public_id": "pub-1",
+            "ai_tags": {k: v for k, v in PLUSH_TAGS.items() if k not in ("model", "rep_score")},
+        })
+        text = json.dumps(tagged, ensure_ascii=False)
+        for secret in ("user-1", "storage_key", "photos/abc.jpeg", "images.example", "rep_score", "scene_attrs"):
+            self.assertNotIn(secret, text)
+
+    def test_unknown_poster_and_blank_comment_become_null(self, *_mocks):
+        _, tagged, _ = self._build([
+            _tagged("abc", {"snow": True}, user_id="nobody", comment="   "),
+        ])
+        entry = tagged["features"]["snow"]["photos"][0]
+        self.assertIsNone(entry["poster_name"])
+        self.assertIsNone(entry["poster_public_id"])
+        self.assertIsNone(entry["comment"])
+        self.assertEqual(entry["plush_score"], 0.0)
+
+    def test_latest_payload_is_unchanged_by_tagged_photos(self, *_mocks):
+        photos = [_tagged("abc", PLUSH_TAGS)]
+        with mock.patch.object(export, "iter_photos", return_value=iter([dict(p) for p in photos])), \
+                mock.patch.object(export, "fetch_user_info", return_value=self.USERS):
+            only_latest = export.build_payload(False, 100, 10, "tako", 13, {})
+        payload, _, _ = self._build(photos)
+        only_latest.pop("generated_at")
+        payload.pop("generated_at")
+        self.assertEqual(payload, only_latest)
