@@ -502,6 +502,8 @@ def build_area_page(
 
     {_plans_html(area)}
 
+    {_affiliate_html(area, pref_slug)}
+
     <section aria-labelledby="map-heading">
       <h2 id="map-heading">{escape(area['name'])}のポケふたマップ</h2>
       <div id="prefecture-map"></div>
@@ -513,8 +515,6 @@ def build_area_page(
     </section>
 
     {_nearby_html(area, records, all_areas)}
-
-    {_affiliate_html(area, pref_slug)}
 
     <section aria-labelledby="related-heading">
       <h2 id="related-heading">{escape(area['prefecture'])}のポケふた</h2>

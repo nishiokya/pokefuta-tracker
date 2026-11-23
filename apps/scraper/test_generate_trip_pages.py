@@ -128,9 +128,9 @@ class AreaTest(unittest.TestCase):
         self.assertIn('data-surface="trip_area"', aside)
         self.assertIn(".rakuten-affiliate-links a", page)
         self.assertNotIn("adsense", page)
-        # 広告は「あわせて回るなら」（泊まり・2日目の行き先選び）の下、県のリンクの前
-        self.assertLess(page.index('id="manhole-heading"'), page.index('<aside class="rakuten-affiliate"'))
-        self.assertLess(page.index('<aside class="rakuten-affiliate"'), page.index('id="related-heading"'))
+        # 成果を見るため目立つ位置に置く: 回る順番（と観光プラン）の後・地図の前
+        self.assertLess(page.index('id="route-heading"'), page.index('<aside class="rakuten-affiliate"'))
+        self.assertLess(page.index('<aside class="rakuten-affiliate"'), page.index('id="map-heading"'))
 
     def test_hotel_areas_cover_every_registered_trip_in_its_prefecture(self) -> None:
         areas = MODULE.load_trip_areas()
