@@ -294,12 +294,15 @@ class FeaturePageTests(unittest.TestCase):
         old = {**self.feature, "slug": "old-test", "title": "むかしの特集", "highlight_until": None}
         index = MODULE.build_index_page([self.feature, old], today=date(2026, 10, 23))
         self.assertIn('id="new"', index)
-        self.assertLess(index.index('id="new"'), index.index('href="/features/old-test/"'))
+        summary_link = '<a class="feature-card" href="/summary/">'
+        self.assertLess(index.index('id="new"'), index.index(summary_link))
+        self.assertLess(index.index(summary_link), index.index('href="/features/old-test/"'))
         self.assertEqual(index.count('href="/features/okinawa-test/"'), 1)
         self.assertIn("これまでの特集", index)
         # 期間が終わったら新作欄は消え、ふつうの一覧に戻る
         later = MODULE.build_index_page([self.feature, old], today=date(2027, 2, 1))
         self.assertNotIn('id="new"', later)
+        self.assertIn(summary_link, later)
         self.assertIn("特集の一覧", later)
 
     def test_sections_are_split_into_paragraphs(self) -> None:

@@ -63,6 +63,7 @@ ICONS = {
     "map": '<polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/>',
     "pokemon": '<rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/>',
     "summary": '<path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>',
+    "features": '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M8 6h8"/><path d="M8 10h6"/>',
     "pref": '<line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/>',
     # スタンプ帳は写真館の下タブと同じ CircleDot。両サイトで同じ意味に固定する
     "stamp": '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="1"/>',
@@ -247,11 +248,11 @@ HEADER_TEMPLATE = """<header class="site-header">
 </header>"""
 
 
-BOTTOM_TABS_TEMPLATE = """<nav class="site-tabs" aria-label="{tabs_aria}" data-nav-variant="baseline_v1">
+BOTTOM_TABS_TEMPLATE = """<nav class="site-tabs" aria-label="{tabs_aria}" data-nav-variant="{nav_variant}">
   <a class="site-tab{active_map}" href="{page_base}map.html" data-nav-item="map" data-nav-position="1">{icon_map}<span>{nav_map}</span></a>
   <a class="site-tab{active_pref}" href="{page_base}prefectures/" data-nav-item="prefectures" data-nav-position="2">{icon_pref}<span>{nav_pref}</span></a>
   <a class="site-tab{active_pokemon}" href="{page_base}pokemon/" data-nav-item="pokemon" data-nav-position="3">{icon_pokemon}<span>{nav_pokemon}</span></a>
-  <a class="site-tab{active_summary}" href="{page_base}summary/" data-nav-item="summary" data-nav-position="4">{icon_summary}<span>{nav_summary}</span></a>
+  <a class="site-tab{active_summary}" href="{page_base}{fourth_item}/" data-nav-item="{fourth_item}" data-nav-position="4">{icon_fourth}<span>{fourth_label}</span></a>
   <a class="site-tab" data-login-link data-stamp-page="{stamp_url}" href="{login_url}" data-nav-item="stamp" data-nav-position="5">{icon_stamp}<span>{tab_stamp}</span></a>
 </nav>"""
 
@@ -296,7 +297,7 @@ def _active_tab(page_path: str | None) -> str | None:
         return "pref"
     if normalized.startswith("pokemon/") or normalized == "pokemon":
         return "pokemon"
-    # 特集はまとめ（サマリー）の下に置いている
+    # 特集と集計は同じナビ項目からたどれる
     if normalized.startswith(("summary/", "features/")) or normalized in ("summary", "features"):
         return "summary"
     if normalized.startswith(("character_manholes.html", "characters/")):
@@ -341,6 +342,8 @@ def inject(
     language = _language(html)
     labels = LABELS[language]
     active = _active_tab(page_path)
+    # 特集ページは日本語のみ。翻訳版の下タブは各言語の集計ページに送る。
+    fourth_item = "features" if language == "ja" else "summary"
 
     fields = dict(labels)
     fields.update(
@@ -360,7 +363,10 @@ def inject(
         icon_map=_icon("map"),
         icon_pref=_icon("pref"),
         icon_pokemon=_icon("pokemon"),
-        icon_summary=_icon("summary"),
+        fourth_item=fourth_item,
+        fourth_label="特集" if fourth_item == "features" else labels["nav_summary"],
+        icon_fourth=_icon(fourth_item),
+        nav_variant="features_v1" if fourth_item == "features" else "baseline_v1",
         icon_stamp=_icon("stamp"),
         active_map=" is-active" if active == "map" else "",
         active_pref=" is-active" if active == "pref" else "",
