@@ -138,16 +138,16 @@ class InjectSiteHeaderTest(unittest.TestCase):
         """左側が探す系（都道府県も含む）、右端がサイトをまたぐ導線、という並びを写真館と揃える。"""
         result = inject(BARE)
         tabs = re.findall(r'<a class="site-tab[^"]*"[^>]*>.*?<span>([^<]+)</span>', result, re.DOTALL)
-        self.assertEqual(tabs, ["地図", "都道府県", "ポケモン", "集計", "スタンプ帳"])
+        self.assertEqual(tabs, ["地図", "都道府県", "ポケモン", "特集", "スタンプ帳"])
         self.assertIn('data-login-link data-stamp-page="https://pokefuta.com/visits?from=data"', result)
 
     def test_bottom_tabs_expose_stable_analytics_metadata(self):
         result = inject(BARE)
-        self.assertIn('class="site-tabs" aria-label="サイト内タブ" data-nav-variant="baseline_v1"', result)
+        self.assertIn('class="site-tabs" aria-label="サイト内タブ" data-nav-variant="features_v1"', result)
         items = re.findall(r'data-nav-item="([^"]+)" data-nav-position="([^"]+)"', result)
         self.assertEqual(
             items,
-            [("map", "1"), ("prefectures", "2"), ("pokemon", "3"), ("summary", "4"), ("stamp", "5")],
+            [("map", "1"), ("prefectures", "2"), ("pokemon", "3"), ("features", "4"), ("stamp", "5")],
         )
         self.assertIn('<script src="./assets/site-header-analytics.js" defer></script>', result)
         # Android の「経路案内」に蓋の名前を出す（data-geo-label のリンクを geo: に差し替える）
@@ -181,9 +181,16 @@ class InjectSiteHeaderTest(unittest.TestCase):
         """図鑑にはアクティブ表現が一切無かったので、現在地を出せることを固定する。"""
         result = inject(BARE, page_path="summary/index.html")
         self.assertIn('<a class="site-header__link is-active" href="./summary/">', result)
-        self.assertIn('<a class="site-tab is-active" href="./summary/" data-nav-item="summary"', result)
+        self.assertIn('<a class="site-tab is-active" href="./features/" data-nav-item="features"', result)
         # 他のタブまで active にしない
         self.assertEqual(result.count("is-active"), 2)
+
+    def test_marks_features_tab_active_on_nested_feature_pages(self):
+        result = inject(BARE, page_base="../../", page_path="features/gunma/index.html")
+        self.assertIn(
+            '<a class="site-tab is-active" href="../../features/" data-nav-item="features" data-nav-position="4">',
+            result,
+        )
 
     def test_no_active_marker_for_unknown_page(self):
         result = inject(BARE, page_path="manholes/482/index.html")
@@ -291,6 +298,8 @@ class InjectSiteHeaderTest(unittest.TestCase):
         self.assertIn('href="../../map.html">Map</a>', result)
         self.assertIn('href="../../prefectures/">Prefectures</a>', result)
         self.assertIn('href="../../summary/">Stats</a>', result)
+        self.assertRegex(result, r'href="../../summary/" data-nav-item="summary" data-nav-position="4">.*<span>Stats</span>')
+        self.assertIn('data-nav-variant="baseline_v1"', result)
         self.assertIn('href="../../pokemon/">Pokémon</a>', result)
         self.assertIn('href="../../../character_manholes.html">Characters</a>', result)
         self.assertIn('src="../../../assets/session-badge.js"', result)

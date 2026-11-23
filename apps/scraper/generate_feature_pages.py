@@ -404,7 +404,7 @@ def build_index_page(features: list[dict], today: date | None = None) -> str:
     title = "ポケふた特集｜ポケふた図鑑"
     description = (
         "新しく設置・発表されたポケふた（ポケモンマンホール）や、テーマごとに集めたポケふたを"
-        "特集としてまとめています。"
+        "特集としてまとめています。全国の設置数やランキングも確認できます。"
     )
     canonical = f"{BASE_URL}{FEATURES_BASE}"
 
@@ -463,11 +463,16 @@ def build_index_page(features: list[dict], today: date | None = None) -> str:
         <p>新しく置かれるポケふたや、テーマで集めたポケふたをまとめています。</p>
       </div>
     </header>{new_html}
+    <section aria-labelledby="feature-data-heading">
+      <a class="feature-card" href="/summary/">
+        <span class="feature-title" id="feature-data-heading">データ・ランキング</span>
+        <small>全国のポケふたの枚数や、都道府県別のランキングを見る</small>
+      </a>
+    </section>
     <section aria-labelledby="feature-list-heading">
       <h2 id="feature-list-heading">{"これまでの特集" if new else "特集の一覧"}</h2>
       <div class="feature-grid">{cards}</div>
     </section>
-    <footer><a href="/summary/">ポケふたのまとめへ</a></footer>
   </main>
 {_analytics_script(FEATURES_BASE, "feature_index")}</body>
 </html>
