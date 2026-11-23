@@ -23,6 +23,7 @@ from xml.sax.saxutils import escape
 sys.path.insert(0, str(Path(__file__).parent))
 from display_names import compose_display_name, landmark_label, municipality_label  # noqa: E402
 from manhole_records import geo_label  # noqa: E402
+from coord_overrides import is_applied as coord_fixed_by_photos  # noqa: E402
 from generate_pokemon_pages import _FORM_PREFIX, _normalize_katakana  # noqa: E402
 from generate_pokemon_pages import load_pokemon_metadata as load_pokemon_metadata_with_forms  # noqa: E402
 from manhole_page_css import PAGE_CSS  # noqa: E402
@@ -1097,6 +1098,11 @@ def generate_html(
         location_html += f"""
     <dt>アクセス</dt>
     <dd>{escape(access)}</dd>
+"""
+    if coord_fixed_by_photos(manhole):
+        location_html += """
+    <dt>地図の位置</dt>
+    <dd class="coord-note">公式の位置が実際の場所とずれていたため、地図と経路案内の位置は投稿された写真の撮影位置で直しています</dd>
 """
     location_html += """
   </dl>

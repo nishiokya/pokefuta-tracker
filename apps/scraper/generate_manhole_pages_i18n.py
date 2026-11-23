@@ -86,6 +86,8 @@ TEXT: dict[str, dict[str, str]] = {
         "location_place": "Place (Japanese)",
         "location_address": "Address (Japanese)",
         "location_access": "Access (Japanese)",
+        "location_pin": "Map position",
+        "location_pin_fixed": "The official location was off, so the map and directions use where visitors took their photos",
         "nearby_heading": "Poké Lids nearby",
         "distance_km": "{km} km",
         "pokemon_heading": "Pokémon on this lid",
@@ -144,6 +146,8 @@ TEXT: dict[str, dict[str, str]] = {
         "location_place": "地點（日文）",
         "location_address": "地址（日文）",
         "location_access": "交通（日文）",
+        "location_pin": "地圖位置",
+        "location_pin_fixed": "官方標示的位置與實際地點有落差，地圖與路線規劃改用投稿照片的拍攝地點",
         "nearby_heading": "附近的寶可夢人孔蓋",
         "distance_km": "{km}公里",
         "pokemon_heading": "人孔蓋上的寶可夢",
@@ -462,6 +466,8 @@ def build_page(
                        ("location_access", manhole.get("access", ""))):
         if value:
             rows.append((page.t(key), f"<span lang='ja'>{escape(value)}</span>"))
+    if ja.coord_fixed_by_photos(manhole):
+        rows.append((page.t("location_pin"), escape(page.t("location_pin_fixed"))))
     location_html = (
         f"<section class='location-section section-card'><h2>{escape(page.t('location_heading'))}</h2><dl>"
         + "".join(f"<dt>{escape(dt)}</dt><dd>{dd}</dd>" for dt, dd in rows)

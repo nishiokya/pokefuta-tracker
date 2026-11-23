@@ -75,6 +75,7 @@ jobs:
             -p 'test_tag_meta.py'
           python -m unittest discover -s apps/scraper -v \
             -p 'test_generate_top_tag_chips.py'
+          python -m unittest apps.scraper.test_coord_overrides
 
       - name: Run incremental updater
         id: updater
@@ -104,6 +105,10 @@ jobs:
                   f.write('\n')
           print(f'Wrote {len(active_records)} active records to docs/pokefuta.ndjson')
           "
+
+      # 公式の座標がずれているポケふたを dataset/pokefuta_coord_overrides.json で上書きする
+      - name: Apply coordinate overrides
+        run: python apps/scraper/coord_overrides.py docs/pokefuta.ndjson
 
       - name: Generate KML snapshot
         run: |
