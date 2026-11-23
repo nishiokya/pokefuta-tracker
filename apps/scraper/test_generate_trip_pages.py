@@ -124,8 +124,9 @@ class AreaTest(unittest.TestCase):
         self.assertIn('data-surface="trip_area"', aside)
         self.assertIn(".rakuten-affiliate-links a", page)
         self.assertNotIn("adsense", page)
-        # 広告は観光プランの後・地図の前
-        self.assertLess(page.index('<aside class="rakuten-affiliate"'), page.index('id="map-heading"'))
+        # 広告は「あわせて回るなら」（泊まり・2日目の行き先選び）の下、県のリンクの前
+        self.assertLess(page.index('id="manhole-heading"'), page.index('<aside class="rakuten-affiliate"'))
+        self.assertLess(page.index('<aside class="rakuten-affiliate"'), page.index('id="related-heading"'))
 
     def test_breadcrumb_json_ld_matches_the_visible_trail(self) -> None:
         page = MODULE.build_area_page(AREAS[0], RECORDS[:5], DURATIONS, {}, [], {})
