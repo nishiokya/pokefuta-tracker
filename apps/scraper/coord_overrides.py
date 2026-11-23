@@ -71,6 +71,20 @@ def apply(records: list[dict], overrides: dict[str, dict]) -> tuple[int, list[st
     return applied, warnings
 
 
+_LOADED: dict[str, dict] | None = None
+
+
+def is_applied(record: dict, overrides: dict[str, dict] | None = None) -> bool:
+    """この蓋の座標が上書きされている（docs の座標が上書きの座標と同じ）か。詳細ページの注記に使う。"""
+    global _LOADED
+    if overrides is None:
+        if _LOADED is None:
+            _LOADED = load()
+        overrides = _LOADED
+    o = overrides.get(str(record.get("id")))
+    return bool(o) and _same(record.get("lat"), record.get("lng"), o)
+
+
 def main(argv: list[str]) -> int:
     if len(argv) != 2:
         print(__doc__, file=sys.stderr)

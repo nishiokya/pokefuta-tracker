@@ -29,6 +29,11 @@ class ApplyTest(unittest.TestCase):
         records = [{"id": "64", "lat": 44.176286, "lng": 142.392808}]
         self.assertEqual(coord_overrides.apply(records, OVERRIDES), (1, []))
 
+    def test_is_applied_only_with_override_coords(self):
+        self.assertTrue(coord_overrides.is_applied({"id": "64", "lat": 44.176286, "lng": 142.392808}, OVERRIDES))
+        self.assertFalse(coord_overrides.is_applied({"id": "64", "lat": 44.175974, "lng": 142.392417}, OVERRIDES))
+        self.assertFalse(coord_overrides.is_applied({"id": "1", "lat": 31.2, "lng": 130.6}, OVERRIDES))
+
     def test_warns_missing_target(self):
         applied, warnings = coord_overrides.apply([], OVERRIDES)
         self.assertEqual(applied, 0)
