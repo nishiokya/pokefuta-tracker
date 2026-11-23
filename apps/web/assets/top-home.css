@@ -896,3 +896,56 @@
   .home-hero__portraits { width: 92px; margin-left: 12px; }
   .home-hero__portraits a { width: 80px; }
 }
+
+/* ── みんなのマンホール写真ギャラリー（/gallery/）の特集 ──
+   切り抜きの見せ方は特集ページ（generate_gallery_pages.py の .gl-*）と同じ */
+.home-feature-photos {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+  margin: 0 0 14px;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 700px) {
+  .home-feature-photos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+.home-feature-photos__card {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  border-radius: 14px;
+  background: var(--top-card-bg, #fffaf0);
+  box-shadow: 0 1px 3px rgba(77, 56, 30, 0.12);
+  color: inherit;
+  text-decoration: none;
+}
+.home-feature-photos__thumbs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px;
+  padding: 4px;
+}
+.home-feature-photos__thumb {
+  position: relative;
+  display: block;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #efe4cc;
+}
+.home-feature-photos__copy { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; padding: 6px 12px 10px; }
+.home-feature-photos__copy b { font-size: 15px; }
+.home-feature-photos__copy small { flex-shrink: 0; color: #6b4aa2; font-size: 12px; font-weight: 800; }
+.home-feature-photos .gl-media { position: absolute; inset: 0; display: block; }
+.home-feature-photos .gl-media--plush { background: radial-gradient(circle at 30% 20%, #fff8eb 0, #f1e3c6 75%); }
+.home-feature-photos .gl-media--whole { display: flex; align-items: center; justify-content: center;
+  background: radial-gradient(circle at 30% 20%, #f4f9fd 0, #dceaf4 75%); }
+.home-feature-photos .gl-media--whole img { width: 100%; height: 100%; object-fit: contain; }
+.home-feature-photos .gl-lid,
+.home-feature-photos .gl-plush { position: absolute; display: block; aspect-ratio: 1 / 1; overflow: hidden;
+  background: #efe4cc; border: 2px solid #fff; }
+.home-feature-photos .gl-lid { left: 4%; top: 4%; width: 80%; border-radius: 50%; }
+.home-feature-photos .gl-plush { right: 4%; bottom: 4%; width: 40%; border-radius: 16%; transform: rotate(4deg); }
+.home-feature-photos .gl-lid img,
+.home-feature-photos .gl-plush img { display: block; }

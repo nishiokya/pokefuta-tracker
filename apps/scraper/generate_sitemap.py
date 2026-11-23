@@ -319,6 +319,11 @@ def build_sitemap(
         url_entry(f"{BASE_URL}prefectures/", "weekly", "0.9", all_date),
         url_entry(f"{BASE_URL}pokemon/", "weekly", "0.9", all_date),
         url_entry(f"{BASE_URL}character_manholes.html", "weekly", "0.8"),
+        # みんなのマンホール写真ギャラリー（generate_gallery_pages.py）。写真は日次で入れ替わる。
+        # データが無い日もページは作る（写真館の /photos/plush・/photos/snow の 308 の行き先）ので常に載せる
+        url_entry(f"{BASE_URL}gallery/", "daily", "0.7"),
+        url_entry(f"{BASE_URL}gallery/plush/", "daily", "0.7"),
+        url_entry(f"{BASE_URL}gallery/snow/", "daily", "0.7"),
         url_entry(f"{BASE_URL}gmanhole_map.html", "weekly", "0.7"),
         url_entry(f"{BASE_URL}design_manhole.html", "weekly", "0.6"),
         url_entry(f"{BASE_URL}privacy.html", "monthly", "0.3"),
