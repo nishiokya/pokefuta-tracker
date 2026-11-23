@@ -2065,6 +2065,47 @@ def _trip_links_html(
     )
 
 
+RAKUTEN_AFFILIATE_ID = "59e54b6b.42820fd9.59e54b6c.866c5f88"
+# 楽天アフィリエイトのテキストリンク生成ツールが付ける表示パラメータ（周遊ページと同じ）。
+RAKUTEN_LINK_SUFFIX = "&link_type=text&ut=eyJwYWdlIjoidXJsIiwidHlwZSI6InRleHQiLCJjb2wiOjF9"
+# AdSense の代わりに楽天トラベル（宿・レンタカー）を出す県。県ごとに増やしていく。
+# 値は (楽天トラベル宿の県パス, 楽天レンタカーの地方/県パス)。
+RAKUTEN_PREFECTURES: dict[str, tuple[str, str]] = {
+    "shiga": ("shiga", "kinki/shiga"),
+}
+
+
+def _rakuten_link(url: str) -> str:
+    return (
+        f"https://hb.afl.rakuten.co.jp/hgc/{RAKUTEN_AFFILIATE_ID}/_RTLink159064"
+        f"?pc={quote(url, safe='')}{RAKUTEN_LINK_SUFFIX}"
+    )
+
+
+def _ad_slot_html(prefecture: str, slug: str) -> str:
+    """県ページの広告枠。楽天対象の県は宿とレンタカーのリンク、それ以外は AdSense のマーカー。"""
+    paths = RAKUTEN_PREFECTURES.get(slug)
+    if not paths:
+        return "<!-- adsense:prefecture -->"
+    yado, cars = paths
+    links = (
+        ("hotel", f"https://travel.rakuten.co.jp/yado/{yado}/", f"{prefecture}の宿を探す"),
+        ("rental_car", f"https://cars.travel.rakuten.co.jp/cars/area/{cars}/", f"{prefecture}のレンタカーを探す"),
+    )
+    items = "".join(
+        f'<a href="{escape_attr(_rakuten_link(url))}" target="_blank" rel="nofollow sponsored noopener" '
+        f'data-track="prefecture_affiliate_click" data-surface="prefecture_ad_slot" '
+        f'data-destination="rakuten_{kind}">{escape(label)}</a>'
+        for kind, url, label in links
+    )
+    return (
+        '<aside class="pref-affiliate" aria-label="広告">'
+        '<small>広告・楽天トラベル</small>'
+        f'<p>{escape(prefecture)}のポケふためぐりに。</p>'
+        f'<div class="pref-affiliate-links">{items}</div></aside>'
+    )
+
+
 # 都道府県ページと市区町村ページ（generate_municipality_pages.py）で共有する見た目。
 # build_page の f-string から外に出したので、波括弧は1つで書く。
 PAGE_CSS = """    :root { color-scheme: light; }
@@ -2432,6 +2473,13 @@ PAGE_CSS = """    :root { color-scheme: light; }
     .empty-state { margin: 0; color: #75685c; }
     .related-label { margin: 0 0 6px; color: #75685c; font-size: .75rem; font-weight: 850; }
     .related-links { display: flex; flex-wrap: wrap; gap: 6px; }
+    .pref-affiliate { margin: 22px 0; padding: 12px 14px; border: 1px solid rgba(112, 82, 52, .12);
+      border-radius: 10px; background: rgba(255, 255, 255, .42); }
+    .pref-affiliate small { color: #75685c; font-size: .72rem; letter-spacing: .08em; }
+    .pref-affiliate p { margin: 4px 0 8px; font-size: .9rem; }
+    .pref-affiliate-links { display: flex; flex-wrap: wrap; gap: 8px; }
+    .pref-affiliate-links a { padding: 8px 12px; border-radius: 999px; background: #bf0000; color: #fff;
+      font-size: .88rem; font-weight: 800; text-decoration: none; }
     .related-links a {
       padding: 3px 9px; border-radius: 999px; background: #f3efe7;
       color: #6b5a8c; font-size: .76rem; font-weight: 800; text-decoration: none;
@@ -2665,6 +2713,7 @@ def build_page(
     wanted: dict | None = None,
 ) -> str:
     photos = photos or {}
+    ad_slot_html = _ad_slot_html(prefecture, slug)
     count = len(records)
     installed_records = [
         record for record in records if record.get("installed") is not False
@@ -2894,7 +2943,7 @@ def build_page(
 
     {wanted_html}{municipality_guide_html}
 
-    <!-- adsense:prefecture -->
+    {ad_slot_html}
 
     {photo_section_html}{events_html}<section class="trivia-card" aria-labelledby="trivia-heading">
       <span class="trivia-kicker">まず知りたい</span>
@@ -2921,7 +2970,7 @@ def build_page(
     else:
         main_sections_html = f"""    {wanted_html}{_nearest_pokefuta_html(prefecture, nearest)}
 
-    <!-- adsense:prefecture -->
+    {ad_slot_html}
 
 {events_html}{design_html}{related_section_html}
 

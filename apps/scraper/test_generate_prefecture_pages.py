@@ -1687,6 +1687,22 @@ class BuildIndexPageTest(unittest.TestCase):
         self.assertIn("window.PokefutaAnalytics.bindClickTracking({", html)
         self.assertNotIn("googletagmanager.com/gtag", html)
 
+    def test_rakuten_prefecture_replaces_adsense_with_hotel_and_car_links(self) -> None:
+        """楽天対象の県（滋賀）は AdSense の代わりに宿とレンタカーの楽天リンクを出す。"""
+        html = MODULE._ad_slot_html("滋賀県", "shiga")
+        self.assertNotIn("adsense", html)
+        self.assertIn('aria-label="広告"', html)
+        self.assertIn("hb.afl.rakuten.co.jp/hgc/59e54b6b.42820fd9.59e54b6c.866c5f88/", html)
+        self.assertIn("pc=https%3A%2F%2Ftravel.rakuten.co.jp%2Fyado%2Fshiga%2F", html)
+        self.assertIn("pc=https%3A%2F%2Fcars.travel.rakuten.co.jp%2Fcars%2Farea%2Fkinki%2Fshiga%2F", html)
+        self.assertEqual(2, html.count('rel="nofollow sponsored noopener"'))
+        self.assertIn('data-destination="rakuten_hotel"', html)
+        self.assertIn('data-destination="rakuten_rental_car"', html)
+        self.assertIn("&amp;link_type=text", html)
+
+    def test_other_prefectures_keep_the_adsense_marker(self) -> None:
+        self.assertEqual("<!-- adsense:prefecture -->", MODULE._ad_slot_html("福井県", "fukui"))
+
     def test_adsense_marker_is_present_for_the_prefecture_ad_slot(self) -> None:
         """都道府県詳細ページ（build_page()）と同じ "prefecture" 広告枠を
         一覧ページにも配置する。マーカーが無いと inject_adsense.py は
