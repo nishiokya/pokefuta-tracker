@@ -294,7 +294,7 @@ class FeaturePageTests(unittest.TestCase):
         old = {**self.feature, "slug": "old-test", "title": "むかしの特集", "highlight_until": None}
         index = MODULE.build_index_page([self.feature, old], today=date(2026, 10, 23))
         self.assertIn('id="new"', index)
-        summary_link = '<a class="feature-card" href="/summary/">'
+        summary_link = 'href="/summary/" data-track="feature_card_click"'
         self.assertLess(index.index('id="new"'), index.index(summary_link))
         self.assertLess(index.index(summary_link), index.index('href="/features/old-test/"'))
         self.assertEqual(index.count('href="/features/okinawa-test/"'), 1)
@@ -304,6 +304,40 @@ class FeaturePageTests(unittest.TestCase):
         self.assertNotIn('id="new"', later)
         self.assertIn(summary_link, later)
         self.assertIn("特集の一覧", later)
+
+    def test_index_gallery_hero_previews_each_theme_and_handles_empty_feeds(self) -> None:
+        tagged = {
+            "plush": {"photos": [{"id": "plush-1"}, {"id": "plush-2"}, {"id": "plush-3"}]},
+            "snow": {"photos": [{"id": "snow-1"}]},
+        }
+        index = MODULE.build_index_page([], tagged=tagged)
+        hero = re.search(r'<header class="hero feature-index-hero">.*?</header>', index, re.S).group()
+        self.assertIn('href="/gallery/"', hero)
+        self.assertIn('href="/gallery/plush/"', hero)
+        self.assertIn('href="/gallery/snow/"', hero)
+        self.assertIn("写真3枚を見る", hero)
+        self.assertIn("写真1枚を見る", hero)
+        for photo in ("plush-1", "plush-2", "snow-1"):
+            self.assertIn(f"/api/photo/{photo}?size=small", hero)
+        self.assertNotIn("/api/photo/plush-3", hero)
+        self.assertIn('href="/gallery/snow/"', MODULE.build_index_page([]))
+
+    def test_index_ranking_cards_preview_counts_and_link_to_the_right_sections(self) -> None:
+        records = [
+            _record("501", "那覇", address="沖縄県那覇市"),
+            _record("502", "那覇", address="沖縄県那覇市"),
+            _record("503", "那覇", address="沖縄県那覇市", installed=False),
+            _record("504", "鹿児島市", prefecture="鹿児島県", pokemons=["イーブイ"]),
+            _record("505", "鹿児島市", prefecture="鹿児島県", pokemons=["イーブイ"], status="deleted"),
+        ]
+        metadata = {"ガーディ": {"slug": "growlithe"}, "イーブイ": {"slug": "eevee"}}
+        index = MODULE.build_index_page([], records=records, pokemon_metadata=metadata)
+        previews = dict(re.findall(r'class="feature-ranking" href="([^"]+)".*?>(.*?)</a>', index))
+        self.assertIn("全国の設置データ（3枚）", index)
+        self.assertIn("<span>沖縄県</span><b>2枚</b>", previews["/summary/#ranking-heading"])
+        self.assertIn("<span>那覇市</span><b>3枚</b>", previews["/municipalities/#ranking-heading"])
+        self.assertIn("<span>ガーディ</span><b>2枚</b>", previews["/summary/#pokemon-ranking-heading"])
+        self.assertIn("<span>イーブイ</span><b>1枚</b>", previews["/summary/#pokemon-ranking-heading"])
 
     def test_sections_are_split_into_paragraphs(self) -> None:
         feature = {**self.feature, "sections": [{"heading": "行き方", "body": "飛行機で1時間。\n\n船は<15時間>。"}]}

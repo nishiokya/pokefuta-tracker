@@ -348,6 +348,21 @@ def feedback_url(page_name: str, path: str) -> str:
     return f"https://x.com/intent/post?text={text}&url={quote(BASE_URL + path, safe='')}"
 
 
+PHOTO_MEDIA_CSS = """
+    .gl-media { position: absolute; inset: 0; display: block; }
+    .gl-media--plush { background: radial-gradient(circle at 30% 20%, #fff8eb 0, #f1e3c6 75%); }
+    .gl-media--whole { display: flex; align-items: center; justify-content: center;
+      background: radial-gradient(circle at 30% 20%, #f4f9fd 0, #dceaf4 75%); }
+    .gl-media--whole img { width: 100%; height: 100%; object-fit: contain; }
+    .gl-lid, .gl-plush { position: absolute; display: block; aspect-ratio: 1 / 1; overflow: hidden;
+      background: #efe4cc; border: 3px solid white; }
+    .gl-lid { left: 4%; top: 4%; width: 80%; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,.15); }
+    .gl-plush { right: 4%; bottom: 4%; width: 40%; border-radius: 16%; transform: rotate(4deg);
+      box-shadow: 0 6px 14px rgba(0,0,0,.2); }
+    .gl-lid img, .gl-plush img { display: block; }
+"""
+
+
 STYLE = """
     :root { color-scheme: light; }
     * { box-sizing: border-box; }
@@ -394,17 +409,7 @@ STYLE = """
       box-shadow: 0 1px 3px rgba(77,56,30,.1); outline: 1px solid rgba(123,99,168,.15);
     }
     .gl-photo { position: relative; display: block; aspect-ratio: 1 / 1; overflow: hidden; background: #efe4cc; }
-    .gl-media { position: absolute; inset: 0; display: block; }
-    .gl-media--plush { background: radial-gradient(circle at 30% 20%, #fff8eb 0, #f1e3c6 75%); }
-    .gl-media--whole { display: flex; align-items: center; justify-content: center;
-      background: radial-gradient(circle at 30% 20%, #f4f9fd 0, #dceaf4 75%); }
-    .gl-media--whole img { width: 100%; height: 100%; object-fit: contain; }
-    .gl-lid, .gl-plush { position: absolute; display: block; aspect-ratio: 1 / 1; overflow: hidden;
-      background: #efe4cc; border: 3px solid white; }
-    .gl-lid { left: 4%; top: 4%; width: 80%; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,.15); }
-    .gl-plush { right: 4%; bottom: 4%; width: 40%; border-radius: 16%; transform: rotate(4deg);
-      box-shadow: 0 6px 14px rgba(0,0,0,.2); }
-    .gl-lid img, .gl-plush img { display: block; }
+""" + PHOTO_MEDIA_CSS + """
     .gl-badge {
       position: absolute; left: 8px; top: 8px; padding: 3px 8px; border-radius: 999px;
       background: rgba(32,27,22,.72); color: white; font-size: .7rem; font-weight: 800;

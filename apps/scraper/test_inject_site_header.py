@@ -186,7 +186,9 @@ class InjectSiteHeaderTest(unittest.TestCase):
         self.assertEqual(result.count("is-active"), 2)
 
     def test_marks_features_tab_active_on_nested_feature_pages(self):
-        result = inject(BARE, page_base="../../", page_path="features/gunma/index.html")
+        result = inject(BARE, asset_base="../../", page_base="../../", page_path="features/gunma/index.html")
+        self.assertIn('<a class="site-header__link is-active" href="../../features/">特集</a>', result)
+        self.assertNotIn('<a class="site-header__link is-active" href="../../summary/">', result)
         self.assertIn(
             '<a class="site-tab is-active" href="../../features/" data-nav-item="features" data-nav-position="4">',
             result,
@@ -333,12 +335,13 @@ class GalleryLinkTest(unittest.TestCase):
     PAGE_JA = '<!doctype html><html lang="ja"><head></head><body><main>x</main></body></html>'
     PAGE_EN = '<!doctype html><html lang="en"><head></head><body><main>x</main></body></html>'
 
-    def test_japanese_header_menu_and_footer_link_to_the_gallery(self):
+    def test_japanese_header_links_to_features_and_gallery(self):
         result = header.inject(self.PAGE_JA, asset_base="../", page_base="../", page_path="summary/index.html")
+        self.assertIn('<a class="site-header__link" href="../features/">特集</a>', result)
         self.assertIn('<a class="site-header__link" href="../gallery/">ギャラリー</a>', result)
         self.assertIn('<a class="site-switch__sub" href="../gallery/">写真ギャラリー</a>', result)
         self.assertIn('<a class="site-footer__link" href="../gallery/">写真ギャラリー</a>', result)
-        self.assertEqual(result.count('class="site-header__link'), 6)
+        self.assertEqual(result.count('class="site-header__link'), 7)
         # SP の下タブは5つのまま
         self.assertEqual(len(re.findall(r'<a class="site-tab[ "]', result)), 5)
 
@@ -349,4 +352,5 @@ class GalleryLinkTest(unittest.TestCase):
     def test_other_languages_do_not_link_to_the_japanese_gallery(self):
         result = header.inject(self.PAGE_EN, asset_base="../", page_base="./", page_path="index.html")
         self.assertNotIn("gallery/", result)
+        self.assertNotIn("features/", result)
 

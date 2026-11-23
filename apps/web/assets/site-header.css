@@ -276,7 +276,7 @@ body.has-site-header [id] {
 .site-header__link {
   display: inline-flex;
   align-items: center;
-  padding: 7px 13px;
+  padding: 7px clamp(9px, 1.05vw, 13px);
   border-radius: var(--chrome-radius-nav);
   color: var(--chrome-pc-nav);
   font-size: 13.5px;
@@ -535,6 +535,7 @@ body.has-site-header [id] {
 
   .site-header__nav {
     display: flex;
+    flex-shrink: 0;
     align-items: center;
     gap: 4px;
     margin-left: 4px;
