@@ -316,3 +316,28 @@ class InjectSiteHeaderTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class GalleryLinkTest(unittest.TestCase):
+    """みんなのマンホール写真ギャラリー（/gallery/）は日本語のページだけなので、日本語のヘッダーにだけ出す。"""
+
+    PAGE_JA = '<!doctype html><html lang="ja"><head></head><body><main>x</main></body></html>'
+    PAGE_EN = '<!doctype html><html lang="en"><head></head><body><main>x</main></body></html>'
+
+    def test_japanese_header_menu_and_footer_link_to_the_gallery(self):
+        result = header.inject(self.PAGE_JA, asset_base="../", page_base="../", page_path="summary/index.html")
+        self.assertIn('<a class="site-header__link" href="../gallery/">ギャラリー</a>', result)
+        self.assertIn('<a class="site-switch__sub" href="../gallery/">写真ギャラリー</a>', result)
+        self.assertIn('<a class="site-footer__link" href="../gallery/">写真ギャラリー</a>', result)
+        self.assertEqual(result.count('class="site-header__link'), 6)
+        # SP の下タブは5つのまま
+        self.assertEqual(len(re.findall(r'<a class="site-tab[ "]', result)), 5)
+
+    def test_gallery_pages_mark_the_link_active(self):
+        result = header.inject(self.PAGE_JA, asset_base="../../", page_base="../../", page_path="gallery/plush/index.html")
+        self.assertIn('<a class="site-header__link is-active" href="../../gallery/">ギャラリー</a>', result)
+
+    def test_other_languages_do_not_link_to_the_japanese_gallery(self):
+        result = header.inject(self.PAGE_EN, asset_base="../", page_base="./", page_path="index.html")
+        self.assertNotIn("gallery/", result)
+

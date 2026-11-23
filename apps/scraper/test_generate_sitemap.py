@@ -44,7 +44,7 @@ class BuildSitemapTest(unittest.TestCase):
                 )
 
     def test_includes_other_static_hub_pages(self) -> None:
-        for path in ("summary/", "pokemon/"):
+        for path in ("summary/", "pokemon/", "gallery/", "gallery/plush/", "gallery/snow/"):
             with self.subTest(path=path):
                 self.assertIn(
                     f"<loc>https://data.pokefuta.com/{path}</loc>", self.xml

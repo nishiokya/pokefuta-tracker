@@ -3,6 +3,7 @@ name: Daily Supabase Data Sync
 # Supabase から日次で以下をまとめて取得し、Pages へ再デプロイする。
 #   1. 公開写真のエクスポート + ローカル画像の取り込み（latest-manhole-photos.json / dataset/manhole/image）
 #   2. アプリ用スナップショット（docs/api/manholes.json / site-stats.json）
+#   3. 図鑑の写真ギャラリー（/gallery/）の特集（docs/api/tagged-photos.json。1 と同じ読み込みから作る）
 #
 # 旧 bake-app-data.yml を統合したもの。同じ photo / visit テーブルを2ワークフローが
 # 別々に引いていたのを1ジョブに集約した。pages-deploy の generate_top_feed.py が
@@ -74,7 +75,8 @@ jobs:
         run: |
           python apps/scraper/export_latest_manhole_photos.py \
             --output docs/latest-manhole-photos.json \
-            --featured-photo-overrides dataset/manhole_featured_photos.json
+            --featured-photo-overrides dataset/manhole_featured_photos.json \
+            --tagged-output docs/api/tagged-photos.json
           cp docs/latest-manhole-photos.json apps/web/latest-manhole-photos.json
 
       - name: Import photos (download, square-crop, cleanup)

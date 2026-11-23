@@ -51,6 +51,8 @@ on:
       - 'dataset/trip_areas.json' # hand-registered trip areas (manhole id sets)
       - 'apps/scraper/features.py' # /features/ data loader (shared with summary + sitemap)
       - 'apps/scraper/generate_feature_pages.py' # /features/ index + per-feature pages
+      - 'apps/scraper/generate_gallery_pages.py' # /gallery/ photo gallery (plush + snow features) from docs/api/tagged-photos.json
+      - 'apps/scraper/test_generate_gallery_pages.py' # gallery page tests run before generating
       - 'dataset/features/**' # hand-written features, one JSON per feature
       - 'apps/scraper/municipalities.py' # which municipalities get a page (shared with prefecture/detail/sitemap)
       - 'dataset/municipality_slugs.json' # romanized municipality URL slugs
@@ -223,6 +225,9 @@ jobs:
           python3 apps/scraper/generate_trip_pages.py
           echo "[dist] Generate feature pages (/features/)"
           python3 apps/scraper/generate_feature_pages.py
+          echo "[dist] Generate photo gallery pages (/gallery/) from docs/api/tagged-photos.json"
+          python3 -m unittest apps.scraper.test_generate_gallery_pages
+          python3 apps/scraper/generate_gallery_pages.py --manholes build/pokefuta_with_provisional.ndjson --output dist/gallery
           echo "[dist] Test theme (tag) metadata and landing page generation"
           python3 -m unittest \
             apps.scraper.test_tag_meta \

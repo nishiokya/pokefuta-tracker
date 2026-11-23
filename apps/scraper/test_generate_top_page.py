@@ -32,6 +32,8 @@ SHELL = """<html><head>
     <!-- home:newrelease:end -->
     <!-- home:photos:start -->
     <!-- home:photos:end -->
+    <!-- home:gallery:start -->
+    <!-- home:gallery:end -->
     <!-- home:events:start -->
     <!-- home:events:end -->
     <!-- home:pref:start -->
@@ -657,6 +659,47 @@ class GeneratedHtmlTest(unittest.TestCase):
     def test_ways_prefecture_card_jumps_to_the_section_like_the_hero(self) -> None:
         block = module.render_ways(Fixture(self.tmp).data())
         self.assertIn('<a class="home-way__main" href="#home-pref"', block)
+
+
+class GalleryBlockTest(unittest.TestCase):
+    """みんなのマンホール写真ギャラリー（/gallery/）の特集への入口。"""
+
+    def setUp(self) -> None:
+        self._tmp = tempfile.TemporaryDirectory()
+        self.tmp = Path(self._tmp.name)
+
+    def tearDown(self) -> None:
+        self._tmp.cleanup()
+
+    def _html(self, tagged: object | None) -> str:
+        fixture = Fixture(self.tmp)
+        path = self.tmp / "tagged.json"
+        if tagged is not None:
+            path.write_text(json.dumps(tagged), encoding="utf-8")
+        data = module.load_data(
+            fixture.manholes, fixture.photos, fixture.stats, fixture.events, fixture.image_dir,
+            today=TODAY, pokemon_metadata=fixture.metadata, representatives=fixture.representatives,
+            features_dir=fixture.features_dir, tagged=path,
+        )
+        return _block(module.apply_blocks(SHELL, data), "gallery")
+
+    def test_cards_link_to_each_feature_with_photo_site_images(self) -> None:
+        photo = {"id": "p1", "manhole_id": 1, "ai_tags": {"snow": True}}
+        block = self._html({"success": True, "features": {
+            "plush": {"photos": []},
+            "snow": {"photos": [photo, {**photo, "id": "p2"}]},
+        }})
+        self.assertIn('href="gallery/snow/"', block)
+        self.assertNotIn('href="gallery/plush/"', block)  # 写真の無い特集は出さない
+        self.assertIn("写真2枚", block)
+        self.assertIn('src="https://pokefuta.com/api/photo/p1?size=small"', block)
+        self.assertIn('loading="lazy"', block)
+        self.assertNotIn('loading="eager"', block)
+        self.assertIn('href="gallery/"', block)
+
+    def test_no_data_hides_the_section(self) -> None:
+        self.assertEqual(self._html(None).strip(), "")
+        self.assertEqual(self._html({"success": False}).strip(), "")
 
 
 class CommittedIndexTest(unittest.TestCase):

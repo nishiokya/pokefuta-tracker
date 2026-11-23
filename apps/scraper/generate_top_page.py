@@ -13,6 +13,8 @@
 - newrelease… 直近30日の新作と特集（/features/）への入口。highlight_until 中の特集は帯で目立たせ、
               特集一覧へのリンクは特集が1本でもあれば常に出す（新作も特集も無ければセクションごと出さない）
 - photos    … 新着・注目の写真（地域が偏らないよう地方ごとに順番に選ぶ）
+- gallery   … みんなのマンホール写真ギャラリー（/gallery/）の特集への入口。docs/api/tagged-photos.json から
+              （画像は写真館の /api/photo/{id}。写真が無ければ節ごと出さない）
 - events    … 開催中イベント（上位3件＋残りは折りたたみ。イベント名のポケモンの写真を1枚添える）
 - pref      … 設置のある都道府県を地方別に、未設置の県は短い注記に分ける
 - trips     … ポケふた旅（目的から探す。枚数・かかる時間の多いエリアをカードで。続きは /trip/）
@@ -50,6 +52,7 @@ try:
     from apps.scraper.generate_pokemon_index_page import FEATURED_MIN_COUNT, FEATURED_POKEMON_SLUGS, load_representatives
     from apps.scraper.generate_pokemon_pages import build_pokemon_index, load_pokemon_metadata
     from apps.scraper.generate_tag_pages import load_records
+    from apps.scraper.generate_gallery_pages import FEATURES as GALLERY_FEATURES, GALLERY_TITLE, feature_photos, load_tagged
     from apps.scraper.generate_trip_pages import area_records, area_route
     from apps.scraper.manhole_tile_image import responsive_attrs, tile_image_url
     from apps.scraper.visit_durations import (
@@ -67,6 +70,7 @@ except ModuleNotFoundError as exc:
     from generate_pokemon_index_page import FEATURED_MIN_COUNT, FEATURED_POKEMON_SLUGS, load_representatives
     from generate_pokemon_pages import build_pokemon_index, load_pokemon_metadata
     from generate_tag_pages import load_records
+    from generate_gallery_pages import FEATURES as GALLERY_FEATURES, GALLERY_TITLE, feature_photos, load_tagged
     from generate_trip_pages import area_records, area_route
     from manhole_tile_image import responsive_attrs, tile_image_url
     from visit_durations import (
@@ -82,6 +86,9 @@ DEFAULT_TARGET = ROOT / "apps" / "web" / "index.html"
 DEFAULT_MANHOLES = ROOT / "docs" / "pokefuta.ndjson"
 DEFAULT_PHOTOS = ROOT / "docs" / "latest-manhole-photos.json"
 DEFAULT_STATS = ROOT / "docs" / "api" / "site-stats.json"
+DEFAULT_TAGGED = ROOT / "docs" / "api" / "tagged-photos.json"
+# トップのギャラリーの節で、特集ごとに並べる写真の数
+GALLERY_FEATURE_THUMBS = 3
 DEFAULT_EVENTS = ROOT / "dataset" / "prefecture_events.json"
 DEFAULT_IMAGE_DIR = ROOT / "dataset" / "manhole" / "image"
 
@@ -241,6 +248,8 @@ class TopData:
     provisional: list[dict] = field(default_factory=list)
     wanted: dict[str, dict] = field(default_factory=dict)  # 県 → 場所を調べているポケふた
     feature_images: dict[str, str] = field(default_factory=dict)  # 特集の slug → 帯に出す蓋の画像
+    # みんなのマンホール写真ギャラリー（/gallery/）の特集 → 写真（tagged-photos.json の並び）
+    gallery: dict[str, list[dict]] = field(default_factory=dict)
 
     @property
     def total(self) -> int:
@@ -454,6 +463,7 @@ def load_data(
     features_dir: Path = DEFAULT_FEATURES_DIR,
     provisional: Path | None = None,
     wanted: Path | None = None,  # CLI は DEFAULT_WANTED を渡す（テストのデータに台帳を混ぜない）
+    tagged: Path | None = None,  # CLI は DEFAULT_TAGGED を渡す。無ければギャラリーの節を出さない
 ) -> TopData:
     today = today or datetime.now(JST).date()
     all_records = load_records(manholes)
@@ -487,7 +497,15 @@ def load_data(
         provisional=provisional_records,
         wanted=wanted_places(load_wanted(wanted), all_records + provisional_records) if wanted else {},
         feature_images={slug: url for slug, url in feature_images.items() if url},
+        gallery=load_gallery(tagged),
     )
+
+
+def load_gallery(path: Path | None) -> dict[str, list[dict]]:
+    if not path or not path.exists():
+        return {}
+    raw = load_tagged(path)
+    return {key: feature_photos(raw, key) for key in GALLERY_FEATURES}
 
 
 # ── 写真の選び方 ──────────────────────────────────────────────────────────
@@ -968,6 +986,42 @@ def render_photos(data: TopData) -> str:
     )
 
 
+def render_gallery(data: TopData) -> str:
+    """みんなのマンホール写真ギャラリー（/gallery/）の特集への入口。写真が1枚も無ければ出さない。
+
+    写真は写真館の /api/photo/{id}（配るたびに公開かを確かめる）。見せ方は特集ページと同じ
+    （ぬいぐるみは蓋とぬいぐるみの切り抜き、雪は写真全体）。
+    """
+    cards = []
+    for key, meta in GALLERY_FEATURES.items():
+        photos = data.gallery.get(key) or []
+        if not photos:
+            continue
+        thumbs = "".join(
+            # 位置を大きく渡して loading="lazy" にする（トップの下のほうの節なので）
+            f'<span class="home-feature-photos__thumb">{meta["media"](photo, 10**6)}</span>'
+            for photo in photos[:GALLERY_FEATURE_THUMBS]
+        )
+        cards.append(
+            f'<li><a class="home-feature-photos__card" href="gallery/{key}/" '
+            f'onclick="{_track("click_gallery_feature", surface="top_gallery", gallery=key)}">'
+            f'<span class="home-feature-photos__thumbs" aria-hidden="true">{thumbs}</span>'
+            f'<span class="home-feature-photos__copy"><b>{escape(meta["title"])}</b>'
+            f"<small>写真{len(photos)}枚</small></span></a></li>"
+        )
+    if not cards:
+        return ""
+    return (
+        '<section class="home-section" id="home-gallery" aria-labelledby="home-gallery-title">'
+        f'<h2 class="home-h2" id="home-gallery-title">{escape(GALLERY_TITLE)}</h2>'
+        '<p class="home-text">写真館に届いた写真から、ぬいぐるみと一緒の一枚や雪景色をテーマごとに集めました。</p>'
+        f'<ul class="home-feature-photos">{"".join(cards)}</ul>'
+        f'<a class="home-more" href="gallery/" '
+        f'onclick="{_track("click_gallery_index", surface="top_gallery")}">ギャラリーを見る</a>'
+        "</section>"
+    )
+
+
 def event_pokemon_photo(event: dict, data: TopData) -> tuple[str, Photo] | None:
     """イベントの顔にするポケモンと写真。
 
@@ -1177,6 +1231,7 @@ RENDERERS = {
     "ways": render_ways,
     "newrelease": render_newrelease,
     "photos": render_photos,
+    "gallery": render_gallery,
     "events": render_events,
     "pref": render_pref,
     "pokemon": render_pokemon,
@@ -1215,6 +1270,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--pokemon-metadata", type=Path, default=DEFAULT_POKEMON_METADATA)
     parser.add_argument("--provisional", type=Path, help="仮番号の蓋だけの NDJSON（provisional_manholes.py --provisional-out）")
     parser.add_argument("--wanted", type=Path, default=DEFAULT_WANTED)
+    parser.add_argument("--tagged", type=Path, default=DEFAULT_TAGGED, help="写真ギャラリーの特集（api/tagged-photos.json）")
     args = parser.parse_args(argv)
 
     data = load_data(
@@ -1222,6 +1278,7 @@ def main(argv: list[str] | None = None) -> int:
         pokemon_metadata=args.pokemon_metadata,
         provisional=args.provisional,
         wanted=args.wanted,
+        tagged=args.tagged,
     )
     html = args.target.read_text(encoding="utf-8")
     updated = apply_blocks(html, data)

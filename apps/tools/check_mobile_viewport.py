@@ -42,6 +42,7 @@ DEFAULT_PATHS = (
     "/map.html",
     "/summary/",
     "/trip/",
+    "/gallery/plush/",  # 写真ギャラリー。切り抜きの img を枠より大きく置くので、はみ出しを見る
     "/prefectures/aichi/",
     "/prefectures/hokkaido/",
     "/manholes/290/",

@@ -218,7 +218,7 @@ HEADER_TEMPLATE = """<header class="site-header">
         <a class="site-switch__item" href="{app_url}"><b>{site_album}</b><small>{site_album_sub}</small></a>
         <a class="site-switch__item is-current" aria-current="true" href="{page_base}"><b>{site_dex}</b><small>{site_dex_sub}</small></a>
         <hr class="site-switch__sep">
-        <a class="site-switch__sub" href="{asset_base}character_manholes.html">{nav_character}</a>
+        <a class="site-switch__sub" href="{asset_base}character_manholes.html">{nav_character}</a>{gallery_sub}
         <a class="site-switch__sub" href="{about_url}">{about}</a>
         <a class="site-switch__sub" href="{privacy_url}">{privacy}</a>
         <a class="site-switch__sub" href="{x_url}" target="_blank" rel="noopener noreferrer">X @pokemonmanhole</a>
@@ -230,7 +230,7 @@ HEADER_TEMPLATE = """<header class="site-header">
       <a class="site-header__link{active_pref}" href="{page_base}prefectures/">{nav_pref}</a>
       <a class="site-header__link{active_pokemon}" href="{page_base}pokemon/">{nav_pokemon}</a>
       <a class="site-header__link{active_summary}" href="{page_base}summary/">{nav_summary}</a>
-      <a class="site-header__link{active_character}" href="{asset_base}character_manholes.html">{nav_character}</a>
+      <a class="site-header__link{active_character}" href="{asset_base}character_manholes.html">{nav_character}</a>{gallery_nav}
     </nav>
 
     <a class="site-header__icon" href="{about_url}" title="{about}" aria-label="{about}">{icon_info}</a>
@@ -263,7 +263,7 @@ BOTTOM_TABS_TEMPLATE = """<nav class="site-tabs" aria-label="{tabs_aria}" data-n
 # ⚠️ <footer> にしないこと。既存ページが <footer role="contentinfo"> を持っており、
 # ラベルの無い contentinfo が2つになる。中身はリンク一覧なので nav が正しい。
 FOOTER_TEMPLATE = """<nav class="site-footer" aria-label="{footer_aria}">
-  <a class="site-footer__link" href="{asset_base}character_manholes.html">{nav_character}</a>
+  <a class="site-footer__link" href="{asset_base}character_manholes.html">{nav_character}</a>{gallery_footer}
   <a class="site-footer__link" href="{about_url}">{about}</a>
   <a class="site-footer__link" href="{privacy_url}">{privacy}</a>
   <a class="site-footer__link" href="{contact_url}">{contact}</a>
@@ -301,7 +301,27 @@ def _active_tab(page_path: str | None) -> str | None:
         return "summary"
     if normalized.startswith(("character_manholes.html", "characters/")):
         return "character"
+    if normalized.startswith("gallery/") or normalized == "gallery":
+        return "gallery"
     return None
+
+
+# みんなのマンホール写真ギャラリー（/gallery/、generate_gallery_pages.py）。日本語のページだけなので、
+# 日本語のヘッダーにだけ出す。SP の下タブは5つで埋まっているので入れず、メニューとフッターに置く
+GALLERY_LABEL = "ギャラリー"
+GALLERY_LONG_LABEL = "写真ギャラリー"
+
+
+def _gallery_links(language: str, asset_base: str, active: str | None) -> dict[str, str]:
+    if language != "ja":
+        return {"gallery_nav": "", "gallery_sub": "", "gallery_footer": ""}
+    href = f"{asset_base}gallery/"
+    current = " is-active" if active == "gallery" else ""
+    return {
+        "gallery_nav": f'\n      <a class="site-header__link{current}" href="{href}">{GALLERY_LABEL}</a>',
+        "gallery_sub": f'\n        <a class="site-switch__sub" href="{href}">{GALLERY_LONG_LABEL}</a>',
+        "gallery_footer": f'\n  <a class="site-footer__link" href="{href}">{GALLERY_LONG_LABEL}</a>',
+    }
 
 
 def inject(
@@ -318,7 +338,8 @@ def inject(
         return html
 
     page_base = page_base or asset_base
-    labels = LABELS[_language(html)]
+    language = _language(html)
+    labels = LABELS[language]
     active = _active_tab(page_path)
 
     fields = dict(labels)
@@ -346,6 +367,7 @@ def inject(
         active_pokemon=" is-active" if active == "pokemon" else "",
         active_summary=" is-active" if active == "summary" else "",
         active_character=" is-active" if active == "character" else "",
+        **_gallery_links(language, asset_base, active),
     )
 
     header = HEADER_TEMPLATE.format(**fields)

@@ -34,6 +34,15 @@ DEFAULT_MANHOLE_COMMENT_DISPLAY_NAME = "tako"
 # それより多い蓋は「写真館で全 N 枚を見る」へ（N は public_photo_count）
 DEFAULT_GALLERY_LIMIT = 13
 DEFAULT_FEATURED_PHOTO_OVERRIDES = "dataset/manhole_featured_photos.json"
+# 図鑑の写真ギャラリー（/gallery/）の特集。写真館の /photos/plush・/photos/snow（PLUSH_PAGE_LIMIT）と同じ上限
+TAGGED_FEATURES = ("plush", "snow")
+DEFAULT_TAGGED_LIMIT = 300
+# 特集の項目に残す ai_tags のキー。写真館の photoAiTags（タグの表示）と hasPlushClip・photoBoxZoom（切り抜き）が読むものだけ。
+# model・rep_score などの採点の内部の値は載せない
+TAGGED_AI_TAG_KEYS = (
+    "plush", "plush_score", "plush_box", "snow", "lid", "crop", "lid_fits",
+    "scene", "night", "person", "autumn", "feet",
+)
 
 
 def require_env(name: str) -> str:
@@ -330,6 +339,106 @@ def load_featured_photo_overrides(path: Optional[str]) -> dict[str, str]:
     return overrides
 
 
+def has_plush_clip(photo: dict[str, Any]) -> bool:
+    """蓋とぬいぐるみをそれぞれ切り抜けるか（lid・plush_box・crop がそろっている）。写真館の hasPlushClip と同じ。"""
+    tags = _ai_tags(photo)
+    return bool(_unit_box(tags.get("lid")) and _unit_box(tags.get("plush_box")) and _unit_box(tags.get("crop")))
+
+
+def tagged_features_of(photo: dict[str, Any]) -> list[str]:
+    """この写真が入る特集（公開の訪問の写真だけ）。ぬいぐるみは切り抜けるものだけ（写真館の /photos/plush と同じ）。"""
+    if not normalize_visit(photo.get("visit")).get("is_public"):
+        return []
+    tags = _ai_tags(photo)
+    features = []
+    if tags.get("plush") is True and has_plush_clip(photo):
+        features.append("plush")
+    if tags.get("snow") is True:
+        features.append("snow")
+    return features
+
+
+def _tagged_ai_tags(photo: dict[str, Any]) -> dict[str, Any]:
+    tags = _ai_tags(photo)
+    return {key: tags[key] for key in TAGGED_AI_TAG_KEYS if key in tags}
+
+
+def to_tagged_entry(
+    photo: dict[str, Any],
+    user_info_by_auth_uid: dict[str, dict[str, Optional[str]]],
+) -> dict[str, Any]:
+    """特集の1枚。写真館の PlushPhoto（src/lib/plush-photos.ts）に合わせる。
+
+    訪問の id は載せない（公開リポジトリに利用者の行動の識別子を残さない。Codex の指摘 #895）。
+
+    蓋の表示名・ポケモンは載せない（読む側が manholes.json・pokefuta.ndjson の manhole_id で引く）。
+    投稿者は表示名と公開IDだけ。auth の user_id・storage_key・画像の URL・位置情報は出さない
+    （画像は写真館の /api/photo/{id} が配るたびに公開かを確かめる）。
+    """
+    visit = normalize_visit(photo.get("visit"))
+    display_name, public_user_id = _lookup_user_info(user_info_by_auth_uid, visit.get("user_id"))
+    comment = visit.get("comment")
+    plush_score = _ai_tags(photo).get("plush_score")
+    return {
+        "id": photo["id"],
+        "manhole_id": photo["manhole_id"],
+        "is_landscape": photo.get("is_landscape") is True,
+        "plush_score": (
+            float(plush_score)
+            if isinstance(plush_score, (int, float)) and not isinstance(plush_score, bool) and math.isfinite(plush_score)
+            else 0.0
+        ),
+        "created_at": photo.get("created_at"),
+        "shot_at": visit.get("shot_at"),
+        "comment": comment.strip() if isinstance(comment, str) and comment.strip() else None,
+        "poster_name": display_name.strip() if isinstance(display_name, str) and display_name.strip() else None,
+        "poster_public_id": public_user_id,
+        "ai_tags": _tagged_ai_tags(photo),
+    }
+
+
+def _created_key(photo: dict[str, Any]) -> tuple[float, str]:
+    return (parse_datetime(photo.get("created_at")).timestamp(), str(photo.get("id") or ""))
+
+
+def order_tagged(feature: str, photos: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """特集の並び。写真館の各ページと同じ。
+
+    ぬいぐるみ: 投稿の新しい順（新しく上がった写真が上）
+    雪: 撮影日（無ければ投稿日）の新しい順、同じなら投稿の新しい順（sortByShotAtDesc。季節の写真なので）
+    上限で切るのはこの並びの後（写真館は投稿の新しい順で切ってから並べ直していた）。
+    """
+    if feature == "snow":
+        return sorted(
+            photos,
+            key=lambda photo: (photo_sort_date(photo).timestamp(), *_created_key(photo)),
+            reverse=True,
+        )
+    return sorted(photos, key=_created_key, reverse=True)
+
+
+def build_tagged_payload(
+    tagged_photos: dict[str, list[dict[str, Any]]],
+    user_info_by_auth_uid: dict[str, dict[str, Optional[str]]],
+    generated_at: str,
+    limit: int,
+) -> dict[str, Any]:
+    features = {}
+    for feature in TAGGED_FEATURES:
+        ordered = order_tagged(feature, tagged_photos.get(feature, []))
+        features[feature] = {
+            # 上限で切る前の枚数
+            "total": len(ordered),
+            "photos": [to_tagged_entry(photo, user_info_by_auth_uid) for photo in ordered[:limit]],
+        }
+    return {
+        "success": True,
+        "generated_at": generated_at,
+        "limit": limit,
+        "features": features,
+    }
+
+
 def supabase_get(
     path: str,
     query: dict[str, str],
@@ -376,6 +485,12 @@ def iter_supabase_rows(
 
 
 def iter_photos(include_private: bool, batch_size: int, timeout: int) -> Iterator[dict[str, Any]]:
+    """公開写真（風景を除く）と、特集のタグ（ぬいぐるみ・雪）が付いた風景の写真を読む。
+
+    風景の写真は蓋の代表・ギャラリーには使わない（build_payloads が外す）。特集は写真館の
+    /photos/plush・/photos/snow と同じく風景の写真も出すので、タグの付いたものだけを足す
+    （2026-11-23 時点で風景 43枚。風景を全部読むより少ない）。
+    """
     select_visit = (
         "visit(shot_at,is_public,user_id,comment)"
         if include_private
@@ -386,7 +501,8 @@ def iter_photos(include_private: bool, batch_size: int, timeout: int) -> Iterato
             "id,manhole_id,storage_key,content_type,width,height,file_size,created_at,is_landscape,"
             f"quality_score,quality_eligible,ai_tags,{select_visit}"
         ),
-        "is_landscape": "eq.false",
+        # 風景でない写真＋特集のタグが付いた風景の写真。PostgREST の or= は jsonb の ->> も使える
+        "or": "(is_landscape.eq.false," + ",".join(f"ai_tags->>{tag}.eq.true" for tag in TAGGED_FEATURES) + ")",
         "manhole_id": "not.is.null",
         "storage_key": "not.is.null",
         "order": "created_at.desc,id.desc",
@@ -498,17 +614,39 @@ def build_payload(
     gallery_limit: int,
     featured_photo_overrides: Optional[dict[str, str]] = None,
 ) -> dict[str, Any]:
+    return build_payloads(
+        include_private, batch_size, timeout, manhole_comment_display_name,
+        gallery_limit, featured_photo_overrides,
+    )[0]
+
+
+def build_payloads(
+    include_private: bool,
+    batch_size: int,
+    timeout: int,
+    manhole_comment_display_name: str,
+    gallery_limit: int,
+    featured_photo_overrides: Optional[dict[str, str]] = None,
+    tagged_limit: int = DEFAULT_TAGGED_LIMIT,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """(latest-manhole-photos.json, api/tagged-photos.json) の中身。写真は1回だけ読む。"""
     base_url = get_effective_r2_public_base_url()
     photos_by_manhole_id: dict[int, list[dict[str, Any]]] = {}
     photo_user_ids: set[str] = set()
+    tagged_photos: dict[str, list[dict[str, Any]]] = {feature: [] for feature in TAGGED_FEATURES}
 
     for photo in iter_photos(include_private=include_private, batch_size=batch_size, timeout=timeout):
-        # 防御的にここでも除外。手動代表指定やフォールバックで風景を採用しない。
-        # 風景の閲覧は写真館の既存ギャラリーが担当する。
-        if photo.get("is_landscape") is True:
-            continue
         visit = normalize_visit(photo.get("visit"))
         user_id = visit.get("user_id")
+        features = tagged_features_of(photo)
+        for feature in features:
+            tagged_photos[feature].append(photo)
+        # 防御的にここでも除外。手動代表指定やフォールバックで風景を採用しない。
+        # 風景の閲覧は写真館の既存ギャラリーが担当する（特集にだけ入る）。
+        if photo.get("is_landscape") is True:
+            if features and isinstance(user_id, str):
+                photo_user_ids.add(user_id)
+            continue
         if isinstance(user_id, str):
             photo_user_ids.add(user_id)
 
@@ -547,8 +685,10 @@ def build_payload(
         timeout,
     )
 
+    generated_at = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+    tagged = build_tagged_payload(tagged_photos, user_info_by_auth_uid, generated_at, tagged_limit)
     return {
-        "generated_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+        "generated_at": generated_at,
         "source": "pokefuta photo table",
         "image": {
             "r2_public_base_url": base_url,
@@ -556,7 +696,7 @@ def build_payload(
         "count": len(photos),
         "photos": photos,
         "manhole_comments": manhole_comments,
-    }
+    }, tagged
 
 
 def parse_args() -> argparse.Namespace:
@@ -614,7 +754,19 @@ def parse_args() -> argparse.Namespace:
             f"Default: {DEFAULT_FEATURED_PHOTO_OVERRIDES}"
         ),
     )
+    parser.add_argument(
+        "--tagged-output",
+        default=os.environ.get("TAGGED_OUTPUT_PATH"),
+        help="図鑑の写真ギャラリーの特集（ぬいぐるみ・雪）を書き出す JSON。指定したときだけ書く",
+    )
     return parser.parse_args()
+
+
+def write_json(path: Path, payload: dict[str, Any], compact: bool) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8") as output:
+        json.dump(payload, output, ensure_ascii=False, indent=None if compact else 2)
+        output.write("\n")
 
 
 def main() -> None:
@@ -622,7 +774,10 @@ def main() -> None:
     featured_photo_overrides = load_featured_photo_overrides(
         args.featured_photo_overrides
     )
-    payload = build_payload(
+    if args.tagged_output and args.include_private:
+        # 特集は公開の訪問だけから作る（tagged_features_of）が、念のため非公開も読む実行では書かない
+        raise RuntimeError("--tagged-output cannot be combined with --include-private")
+    payload, tagged = build_payloads(
         include_private=args.include_private,
         batch_size=args.batch_size,
         timeout=args.timeout,
@@ -632,14 +787,17 @@ def main() -> None:
     )
 
     output_path = Path(args.output)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-
-    with output_path.open("w", encoding="utf-8") as output:
-        indent = None if args.compact else 2
-        json.dump(payload, output, ensure_ascii=False, indent=indent)
-        output.write("\n")
-
+    write_json(output_path, payload, args.compact)
     print(f"Exported {payload['count']} latest manhole photos to {output_path}", file=sys.stderr)
+
+    if args.tagged_output:
+        tagged_path = Path(args.tagged_output)
+        # 特集はページ（/gallery/）の生成でそのまま読むので、1行に詰めて小さくする
+        write_json(tagged_path, tagged, compact=True)
+        counts = ", ".join(
+            f"{feature} {len(entry['photos'])}/{entry['total']}" for feature, entry in tagged["features"].items()
+        )
+        print(f"Exported tagged photos ({counts}) to {tagged_path}", file=sys.stderr)
 
 
 if __name__ == "__main__":
