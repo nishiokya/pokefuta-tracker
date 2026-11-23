@@ -234,6 +234,55 @@ class ApplyPlaceLabelsTest(unittest.TestCase):
         self.assertEqual(entries[0]["name"], "ポケふた")
 
 
+class AttachPhotoSummaryTest(unittest.TestCase):
+    def write(self, payload) -> Path:
+        tmp = tempfile.NamedTemporaryFile("w", suffix=".json", delete=False, encoding="utf-8")
+        json.dump(payload, tmp, ensure_ascii=False)
+        tmp.close()
+        self.addCleanup(Path(tmp.name).unlink)
+        return Path(tmp.name)
+
+    def test_copies_cover_and_public_count_without_poster(self) -> None:
+        path = self.write({"photos": {"1": {
+            "manhole_id": 1, "photo_id": "p-1",
+            "lid": [0.0003, 0.0203, 0.9886, 0.993], "crop": [0, 0, 1, 1],
+            "display_name": "だれか", "public_user_id": "u-1", "url": "https://x/y.jpg",
+            "public_photo_count": 7, "gallery": [{"photo_id": "p-2"}],
+        }}})
+        entries = [{"id": 1}, {"id": 2}]
+        self.assertEqual(MODULE.attach_photo_summary(entries, path), 1)
+        self.assertEqual(entries[0]["cover"], {
+            "photo_id": "p-1",
+            "lid": [0.0003, 0.0203, 0.9886, 0.993],
+            "crop": [0.0, 0.0, 1.0, 1.0],
+        })
+        self.assertEqual(entries[0]["public_photo_count"], 7)
+        # 写真の無い蓋には何も足さない。誰の写真かは写さない
+        self.assertNotIn("cover", entries[1])
+        self.assertNotIn("public_photo_count", entries[1])
+        dumped = json.dumps(entries, ensure_ascii=False)
+        for leaked in ("だれか", "u-1", "https://x/y.jpg", "p-2"):
+            self.assertNotIn(leaked, dumped)
+
+    def test_bad_boxes_become_null_and_missing_photo_id_is_skipped(self) -> None:
+        path = self.write({"photos": {
+            "1": {"photo_id": "p-1", "lid": [0, 0, 1.5, 1], "crop": "x", "public_photo_count": True},
+            "2": {"photo_id": "", "lid": [0, 0, 1, 1]},
+        }})
+        entries = [{"id": 1}, {"id": 2}]
+        self.assertEqual(MODULE.attach_photo_summary(entries, path), 1)
+        self.assertEqual(entries[0]["cover"], {"photo_id": "p-1", "lid": None, "crop": None})
+        self.assertNotIn("public_photo_count", entries[0])
+        self.assertNotIn("cover", entries[1])
+
+    def test_missing_or_broken_file_adds_nothing(self) -> None:
+        entries = [{"id": 1}]
+        self.assertEqual(MODULE.attach_photo_summary(entries, Path("/nonexistent/x.json")), 0)
+        broken = self.write({"photos": []})
+        self.assertEqual(MODULE.attach_photo_summary(entries, broken), 0)
+        self.assertEqual(entries, [{"id": 1}])
+
+
 class RegularTiersTest(unittest.TestCase):
     """称号は公開で訪問したポケふたの枚数（重複なし）で5段階。線は /badges に公開している。"""
 
