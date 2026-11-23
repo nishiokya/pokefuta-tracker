@@ -89,7 +89,10 @@ class InjectAdsenseTest(unittest.TestCase):
     def test_configure_writes_ads_txt_and_keeps_top_ad_free(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            (root / "index.html").write_text("<html><head></head><body>top</body></html>", encoding="utf-8")
+            (root / "index.html").write_text(
+                "<html><head></head><body><!-- adsense:home --></body></html>",
+                encoding="utf-8",
+            )
             (root / "prefecture.html").write_text(
                 "<html><head></head><body><!-- adsense:prefecture --></body></html>",
                 encoding="utf-8",
@@ -104,3 +107,26 @@ class InjectAdsenseTest(unittest.TestCase):
                 "google.com, pub-1234567890123456, DIRECT, f08c47fec0942fa0\n",
                 (root / "ads.txt").read_text(encoding="utf-8"),
             )
+
+
+    def test_home_slot_is_between_gallery_and_events_on_japanese_top_only(self) -> None:
+        web = MODULE_PATH.resolve().parents[1] / "web"
+        index = (web / "index.html").read_text(encoding="utf-8")
+        client = "ca-pub-1234567890123456"
+        slot = "9876543210"
+        result = MODULE.inject_html(index, client, home_slot=slot)
+        self.assertEqual(1, result.count('class="ad-slot ad-slot--home"'))
+        self.assertEqual(1, result.count('adsbygoogle.js?client='))
+        self.assertIn(f'data-ad-slot="{slot}"', result)
+        self.assertLess(result.index("<!-- home:gallery:end -->"), result.index('ad-slot--home"'))
+        self.assertLess(result.index('ad-slot--home"'), result.index("<!-- home:events:start -->"))
+        self.assertNotIn("<!-- adsense:home -->", result)
+        self.assertEqual(result, MODULE.inject_html(result, client, home_slot=slot))
+
+        english = (web / "index.en.html").read_text(encoding="utf-8")
+        self.assertNotIn("adsbygoogle.js", MODULE.inject_html(english, client, home_slot=slot))
+
+    def test_configure_validates_home_slot(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            with self.assertRaisesRegex(ValueError, "ADSENSE_HOME_SLOT"):
+                MODULE.configure(Path(directory), "pub-1234567890123456", "", "", home_slot="invalid")
