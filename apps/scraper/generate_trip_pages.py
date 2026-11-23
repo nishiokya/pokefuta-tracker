@@ -19,6 +19,7 @@ from xml.sax.saxutils import escape
 try:
     from apps.scraper import generate_municipality_pages as muni_page
     from apps.scraper import generate_prefecture_pages as pref
+    from apps.scraper import rakuten_affiliate as rakuten
     from apps.scraper.manhole_records import (
         clean_pokemons,
         distance_km,
@@ -58,6 +59,7 @@ except ModuleNotFoundError as exc:
         raise
     import generate_municipality_pages as muni_page
     import generate_prefecture_pages as pref
+    import rakuten_affiliate as rakuten
     from manhole_records import (
         clean_pokemons,
         distance_km,
@@ -340,6 +342,14 @@ def _plans_html(area: dict) -> str:
     )
 
 
+def _affiliate_html(area: dict, pref_slug: str) -> str:
+    """エリアの県の宿とレンタカーを楽天トラベルで探すリンク（広告）。"""
+    return rakuten.block_html(
+        f"{area['name']}のポケふた旅に", event="trip_affiliate_click", surface="trip_area",
+        prefecture=area["prefecture"], pref_slug=pref_slug,
+    )
+
+
 def _time_html(records: list[dict], durations: dict) -> str:
     text = duration_text(records, durations)
     if text:
@@ -489,6 +499,8 @@ def build_area_page(
     {_access_html(area)}
 
     {_plans_html(area)}
+
+    {_affiliate_html(area, pref_slug)}
 
     <section aria-labelledby="map-heading">
       <h2 id="map-heading">{escape(area['name'])}のポケふたマップ</h2>

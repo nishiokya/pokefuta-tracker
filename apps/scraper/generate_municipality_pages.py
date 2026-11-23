@@ -28,6 +28,7 @@ except ModuleNotFoundError as exc:
 
 try:
     from apps.scraper import generate_prefecture_pages as pref
+    from apps.scraper import rakuten_affiliate as rakuten
     from apps.scraper.manhole_records import (
         clean_pokemons,
         distance_km,
@@ -59,6 +60,7 @@ except ModuleNotFoundError as exc:
     if exc.name != "apps":
         raise
     import generate_prefecture_pages as pref
+    import rakuten_affiliate as rakuten
     from manhole_records import (
         clean_pokemons,
         distance_km,
@@ -535,7 +537,7 @@ def _head(
   <link rel="icon" href="/assets/pokefuta-marker.svg" type="image/svg+xml">
 {leaflet_css}  <script type="application/ld+json">{_json_for_script(json_ld)}</script>
   <style>
-{pref.PAGE_CSS}{EXTRA_CSS}{pref.CARD_CSS}  </style>
+{pref.PAGE_CSS}{EXTRA_CSS}{rakuten.CSS}{pref.CARD_CSS}  </style>
 </head>
 """
 
@@ -654,6 +656,10 @@ def build_page(
             'data-surface="hero" data-destination="route">巡る順番を見る</a>'
             if route_html else ""
         )
+    affiliate_html = rakuten.block_html(
+        f"{m.name}のポケふためぐりに", event="municipality_affiliate_click", surface="municipality",
+        prefecture=m.prefecture, pref_slug=pref_slug,
+    )
     return _head(title, description, canonical, json_ld, with_map=True, site_suffix=True, og_image=hero_photo_url) + f"""<body>
   <main class="page">
     <nav class="breadcrumb" aria-label="パンくず">
@@ -693,6 +699,8 @@ def build_page(
     </header>
 
     {route_html}
+
+    {affiliate_html}
 
     <section aria-labelledby="map-heading">
       <div class="section-heading-row">

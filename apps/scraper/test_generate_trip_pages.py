@@ -109,6 +109,24 @@ class AreaTest(unittest.TestCase):
         self.assertIn("Googleマップで順路を開けます", near_page)
         self.assertIn('data-track="trip_route_open"', near_page)
 
+    def test_area_page_has_rakuten_hotel_and_car_links_for_its_prefecture(self) -> None:
+        page = MODULE.build_area_page(AREAS[0], RECORDS[:5], DURATIONS, {}, [], {})
+        aside = page[page.index('<aside class="rakuten-affiliate"'):]
+        aside = aside[:aside.index("</aside>")]
+        self.assertIn('aria-label="広告"', aside)
+        self.assertIn("hb.afl.rakuten.co.jp/hgc/59e54b6b.42820fd9.59e54b6c.866c5f88/", aside)
+        self.assertIn("pc=https%3A%2F%2Ftravel.rakuten.co.jp%2Fyado%2Fosaka%2F", aside)
+        self.assertIn("pc=https%3A%2F%2Fcars.travel.rakuten.co.jp%2Fcars%2Farea%2Fkinki%2Fosaka%2F", aside)
+        self.assertIn("&amp;link_type=text", aside)
+        self.assertEqual(2, aside.count('rel="nofollow sponsored noopener"'))
+        self.assertIn('data-destination="rakuten_hotel"', aside)
+        self.assertIn('data-destination="rakuten_rental_car"', aside)
+        self.assertIn('data-surface="trip_area"', aside)
+        self.assertIn(".rakuten-affiliate-links a", page)
+        self.assertNotIn("adsense", page)
+        # 広告は観光プランの後・地図の前
+        self.assertLess(page.index('<aside class="rakuten-affiliate"'), page.index('id="map-heading"'))
+
     def test_breadcrumb_json_ld_matches_the_visible_trail(self) -> None:
         page = MODULE.build_area_page(AREAS[0], RECORDS[:5], DURATIONS, {}, [], {})
         self.assertEqual(
