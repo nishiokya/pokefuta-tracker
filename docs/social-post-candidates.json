@@ -516,62 +516,6 @@
     }
   },
   {
-    "id": "photo-139-2ffcc6af",
-    "type": "latest_photo",
-    "title": "最新写真：宮城県/美里町",
-    "url": "https://data.pokefuta.com/manholes/139/",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "latest_photo",
-    "source": "photos",
-    "raw_data": {
-      "manhole_id": "139",
-      "title": "宮城県/美里町",
-      "pref": "宮城県",
-      "city": "美里",
-      "pokemon": "ドードリオ",
-      "pokemon_list": [
-        "ドードリオ",
-        "ドードー",
-        "ラプラス"
-      ],
-      "created_at": "2026-11-18T03:21:37.524346+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/5a3a1675-0d10-41b9-96d0-249637c73be7.jpg",
-      "display_name": "北の大地の黒猫",
-      "photo_rank": "first_ever"
-    }
-  },
-  {
-    "id": "photo-124-e1a775b9",
-    "type": "latest_photo",
-    "title": "最新写真：宮城県/大崎市",
-    "url": "https://data.pokefuta.com/manholes/124/",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "latest_photo",
-    "source": "photos",
-    "raw_data": {
-      "manhole_id": "124",
-      "title": "宮城県/大崎市",
-      "pref": "宮城県",
-      "city": "大崎",
-      "pokemon": "オニスズメ",
-      "pokemon_list": [
-        "オニスズメ",
-        "ダグトリオ",
-        "ラプラス"
-      ],
-      "created_at": "2026-11-18T16:22:31.482421+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/e79efe73-85b9-4182-99bc-beaa019771d8.jpg",
-      "display_name": "ぴぃ",
-      "photo_rank": "first_ever"
-    }
-  },
-  {
     "id": "photo-260-b8ce3b36",
     "type": "latest_photo",
     "title": "最新写真：岩手県/一関市",
@@ -837,6 +781,59 @@
       ],
       "created_at": "2026-11-21T15:14:12.971403+00:00",
       "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/6e04082c-538a-41fd-86c0-f2559afc676d.jpg",
+      "display_name": "東風流",
+      "photo_rank": "first_ever"
+    }
+  },
+  {
+    "id": "photo-30-e46c36aa",
+    "type": "latest_photo",
+    "title": "最新写真：香川県/坂出市",
+    "url": "https://data.pokefuta.com/manholes/30/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "30",
+      "title": "香川県/坂出市",
+      "pref": "香川県",
+      "city": "坂出",
+      "pokemon": "ヤドン",
+      "pokemon_list": [
+        "ヤドン"
+      ],
+      "created_at": "2026-11-21T15:27:30.713761+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/d4db65ef-f916-4524-b45b-f180f811c36f.jpg",
+      "display_name": "東風流",
+      "photo_rank": "first_ever"
+    }
+  },
+  {
+    "id": "photo-97-b8ec5af9",
+    "type": "latest_photo",
+    "title": "最新写真：香川県/宇多津町",
+    "url": "https://data.pokefuta.com/manholes/97/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "97",
+      "title": "香川県/宇多津町",
+      "pref": "香川県",
+      "city": "宇多津",
+      "pokemon": "ガラルヤドン",
+      "pokemon_list": [
+        "ガラルヤドン",
+        "ヌオー"
+      ],
+      "created_at": "2026-11-21T15:29:29.369523+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/8078cd0a-3619-4015-b437-89ac37bb31f1.jpg",
       "display_name": "東風流",
       "photo_rank": "first_ever"
     }
