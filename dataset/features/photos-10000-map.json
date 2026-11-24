@@ -8,7 +8,7 @@
   "description": "ポケふた写真館の公開写真が10,000枚を超えた記念に、写真10,161枚を1マス1枚で並べた日本地図の動画をつくりました。最初に全部そろった県、全国のポケふたに写真がそろった日など、1年の節目も紹介します。",
   "manholes": [],
   "links": [
-    {"text": "動画を見る（ポケふた写真館）", "href": "https://pokefuta.com/features/10k-map?utm_source=zukan&utm_medium=referral&utm_campaign=10k_feature", "external": true},
+    {"text": "動画を見る（ポケふた写真館）", "href": "https://pokefuta.com/features/10k-map?from=data", "external": true},
     {"text": "みんなのマンホール写真ギャラリー", "href": "/gallery/"}
   ]
 }
