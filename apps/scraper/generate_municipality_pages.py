@@ -659,6 +659,8 @@ def build_page(
     affiliate_html = rakuten.block_html(
         f"{m.name}のポケふためぐりに", event="municipality_affiliate_click", surface="municipality",
         prefecture=m.prefecture, pref_slug=pref_slug,
+        hotel_area=rakuten.MUNICIPALITY_HOTEL_AREAS.get(f"{pref_slug}/{m.slug}", ""), place=m.name,
+        car=f"{pref_slug}/{m.slug}" not in rakuten.NO_CAR_MUNICIPALITIES,
     )
     return _head(title, description, canonical, json_ld, with_map=True, site_suffix=True, og_image=hero_photo_url) + f"""<body>
   <main class="page">

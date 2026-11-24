@@ -9,6 +9,7 @@ from pathlib import Path
 from apps.scraper import generate_sitemap as SITEMAP
 from apps.scraper import generate_prefecture_pages as PREF
 from apps.scraper import generate_trip_pages as MODULE
+from apps.scraper import rakuten_affiliate as RAKUTEN
 from apps.scraper import visit_durations as VD
 
 
@@ -115,7 +116,10 @@ class AreaTest(unittest.TestCase):
         aside = aside[:aside.index("</aside>")]
         self.assertIn('aria-label="広告"', aside)
         self.assertIn("hb.afl.rakuten.co.jp/hgc/59e54b6b.42820fd9.59e54b6c.866c5f88/", aside)
-        self.assertIn("pc=https%3A%2F%2Ftravel.rakuten.co.jp%2Fyado%2Fosaka%2F", aside)
+        # 宿は県ではなくエリアに近い楽天の地区（東大阪 → 枚方・守口・東大阪）
+        self.assertIn("pc=https%3A%2F%2Ftravel.rakuten.co.jp%2Fyado%2Fosaka%2Ftoubu.html&", aside)
+        self.assertIn("東大阪の宿を探す", aside)
+        self.assertIn("大阪府のレンタカーを探す", aside)
         self.assertIn("pc=https%3A%2F%2Fcars.travel.rakuten.co.jp%2Fcars%2Farea%2Fkinki%2Fosaka%2F", aside)
         self.assertIn("&amp;link_type=text", aside)
         self.assertEqual(2, aside.count('rel="nofollow sponsored noopener"'))
@@ -124,8 +128,22 @@ class AreaTest(unittest.TestCase):
         self.assertIn('data-surface="trip_area"', aside)
         self.assertIn(".rakuten-affiliate-links a", page)
         self.assertNotIn("adsense", page)
-        # 広告は観光プランの後・地図の前
+        # 成果を見るため目立つ位置に置く: 回る順番（と観光プラン）の後・地図の前
+        self.assertLess(page.index('id="route-heading"'), page.index('<aside class="rakuten-affiliate"'))
         self.assertLess(page.index('<aside class="rakuten-affiliate"'), page.index('id="map-heading"'))
+
+    def test_hotel_areas_cover_every_registered_trip_in_its_prefecture(self) -> None:
+        areas = MODULE.load_trip_areas()
+        for area in areas:
+            hotel = RAKUTEN.TRIP_HOTEL_AREAS.get(area["slug"])
+            self.assertIsNotNone(hotel, area["slug"])
+            self.assertEqual(PREF.PREFECTURE_SLUGS[area["prefecture"]], hotel.split("/")[0], area["slug"])
+
+    def test_island_trip_has_no_rental_car_button(self) -> None:
+        area = {"slug": "ogasawara", "prefecture": "東京都", "name": "小笠原（父島）"}
+        html = MODULE._affiliate_html(area, "tokyo")
+        self.assertIn("yado%2Ftokyo%2FOgasawara.html", html)
+        self.assertNotIn("rakuten_rental_car", html)
 
     def test_breadcrumb_json_ld_matches_the_visible_trail(self) -> None:
         page = MODULE.build_area_page(AREAS[0], RECORDS[:5], DURATIONS, {}, [], {})
