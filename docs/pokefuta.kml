@@ -11100,8 +11100,17 @@ Status: active</description>
 City: 下仁田
 Address: 群馬県下仁田町大字下仁田381-2
 Detail: https://local.pokemon.jp/manhole/desc/499/?is_modal=1
-Last Updated: 2026-11-09T13:00:00Z
+Last Updated: 2026-11-25T19:39:12Z
 Status: active</description>
+      <Style>
+        <IconStyle>
+          <scale>1</scale>
+          <Icon>
+            <href>https://data.pokefuta.com/manhole/kml-icons/499_lid.png</href>
+          </Icon>
+          <hotSpot x="0.5" y="0.5" xunits="fraction" yunits="fraction" />
+        </IconStyle>
+      </Style>
       <Point>
         <coordinates>138.787017,36.210725,0</coordinates>
       </Point>
