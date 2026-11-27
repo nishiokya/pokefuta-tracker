@@ -516,33 +516,6 @@
     }
   },
   {
-    "id": "photo-454-f7d2f5ea",
-    "type": "latest_photo",
-    "title": "最新写真：福島県/須賀川市",
-    "url": "https://data.pokefuta.com/manholes/454/",
-    "hashtags": [
-      "#ポケふた",
-      "#ポケモンマンホール"
-    ],
-    "imageType": "latest_photo",
-    "source": "photos",
-    "raw_data": {
-      "manhole_id": "454",
-      "title": "福島県/須賀川市",
-      "pref": "福島県",
-      "city": "須賀川",
-      "pokemon": "マフォクシー",
-      "pokemon_list": [
-        "マフォクシー",
-        "ラッキー"
-      ],
-      "created_at": "2026-11-23T08:15:46.264127+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/438949db-2427-4c36-b40d-7bdcd49f4a16.jpg",
-      "display_name": "z011989",
-      "photo_rank": "first_ever"
-    }
-  },
-  {
     "id": "photo-478-d76a507d",
     "type": "latest_photo",
     "title": "最新写真：長崎県/五島市",
@@ -810,7 +783,7 @@
         "レパルダス"
       ],
       "created_at": "2026-11-23T23:21:59.304091+00:00",
-      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/c96b356b-73b9-48b5-a930-dc7797f94059.jpg",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/6f12adec-82e3-4dc0-8531-af2926fd7172.jpg",
       "display_name": "松原哲也",
       "photo_rank": "first_ever"
     }
@@ -840,6 +813,34 @@
       "created_at": "2026-11-23T23:22:38.315164+00:00",
       "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/279a7b61-76fe-447a-add6-ee3f1245fa22.jpg",
       "display_name": "松原哲也",
+      "photo_rank": "first_ever"
+    }
+  },
+  {
+    "id": "photo-499-1442b22e",
+    "type": "latest_photo",
+    "title": "最新写真：群馬県/下仁田町",
+    "url": "https://data.pokefuta.com/manholes/499/",
+    "hashtags": [
+      "#ポケふた",
+      "#ポケモンマンホール"
+    ],
+    "imageType": "latest_photo",
+    "source": "photos",
+    "raw_data": {
+      "manhole_id": "499",
+      "title": "群馬県/下仁田町",
+      "pref": "群馬県",
+      "city": "下仁田",
+      "pokemon": "カモネギ",
+      "pokemon_list": [
+        "カモネギ",
+        "ガラルカモネギ",
+        "ネギガナイト"
+      ],
+      "created_at": "2026-11-24T00:59:26.623528+00:00",
+      "image_url": "https://509ce5c2ad8789cb0c6b20908ab44404.r2.cloudflarestorage.com/image/photos/original/2026/11/3fea3109-2904-4d07-9939-c994624d0b38.jpg",
+      "display_name": "横坂守",
       "photo_rank": "first_ever"
     }
   },
