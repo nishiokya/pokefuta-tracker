@@ -122,6 +122,40 @@ class DiscoveryHubTests(unittest.TestCase):
         )
         self.assertNotIn('href="https://example.com/" onclick="alert(1)"', html)
 
+    def test_gundam_crossover_links_article(self):
+        spots = [
+            {
+                "rank": 1,
+                "pokefuta_id": "66",
+                "headline": "テスト",
+                "article_url": "https://mookie.hatenablog.com/entry/2026/11/27/184049",
+                "article_label": "一緒に回れる10の町を記事で読む",
+            }
+        ]
+        html = summary._build_discovery_hub_sections(
+            summary.SUMMARY_STRINGS["ja"], self.records_by_id, self.metadata, spots
+        )
+        self.assertIn(
+            '<a href="https://mookie.hatenablog.com/entry/2026/11/27/184049" '
+            'target="_blank" rel="noopener">一緒に回れる10の町を記事で読む</a>',
+            html,
+        )
+
+    def test_non_https_article_url_is_omitted(self):
+        spots = [
+            {
+                "rank": 1,
+                "pokefuta_id": "66",
+                "headline": "テスト",
+                "article_url": "javascript:alert(1)",
+            }
+        ]
+        html = summary._build_discovery_hub_sections(
+            summary.SUMMARY_STRINGS["ja"], self.records_by_id, self.metadata, spots
+        )
+        self.assertNotIn("javascript:", html)
+        self.assertNotIn("記事を読む", html)
+
     def test_non_https_gundam_official_url_is_omitted(self):
         spots = [
             {

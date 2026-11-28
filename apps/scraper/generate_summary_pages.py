@@ -3246,6 +3246,12 @@ def _build_discovery_hub_sections(
             f'ガンダムマンホール公式を見る</a>'
             if official_url else ""
         )
+        article_url = _safe_https_url(spot.get("article_url"), "")
+        article_link = (
+            f'<a href="{_escape_attr(article_url)}" target="_blank" rel="noopener">'
+            f'{escape(str(spot.get("article_label") or "記事を読む"))}</a>'
+            if article_url else ""
+        )
         crossover_html = (
             f'<div class="gundam-crossover">'
             f'<span class="gundam-crossover-rank">一緒に巡れるスポット 第{spot.get("rank", 1)}位</span>'
@@ -3256,7 +3262,7 @@ def _build_discovery_hub_sections(
             f'<p class="gundam-crossover-tip">現地メモ: {escape(str(spot.get("onsite_tip", "")))}</p>'
             f'<div class="gundam-crossover-links">'
             f'<a href="/manholes/{quote(pokefuta_id, safe="")}/">ポケふた詳細を見る</a>'
-            f'{official_link}</div></div>'
+            f'{official_link}{article_link}</div></div>'
         )
 
     travel_cards = []
