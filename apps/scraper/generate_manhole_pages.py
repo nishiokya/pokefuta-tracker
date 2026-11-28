@@ -1233,7 +1233,8 @@ def generate_html(
     <dt>アクセス</dt>
     <dd>{escape(access)}</dd>
 """
-    tips = extract_tips(reviews) if reviews else []
+    # 設置前の蓋は「訪れた人のひとこと」を出さないので、チップ（#reviews へのリンク付き）も出さない
+    tips = extract_tips(reviews) if reviews and not is_preinstall else []
     if tips:
         location_html += (
             "\n    <dt>口コミから</dt>\n    <dd>"

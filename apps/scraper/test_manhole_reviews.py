@@ -61,6 +61,15 @@ class UsableReviewsTests(unittest.TestCase):
         ]}
         self.assertEqual([r["comment"] for r in mr.usable_reviews(raw)["1"]], ["新しい", "古い ひとこと"])
 
+    def test_others_counts_distinct_people_not_visits(self):
+        # Copilot レビュー（PR #929）: 同じ人の再訪は「ほかN人」に数えない
+        same_person = [_review("駅から歩ける", uid=UID_A), _review("駅から歩ける", uid=UID_A)]
+        self.assertEqual(mr.display_reviews(same_person)[0]["others"], 0)
+        no_id = [_review("駅から歩ける", uid=None), _review("駅から歩ける", uid=UID_B)]
+        self.assertEqual(mr.display_reviews(no_id)[0]["others"], 0)  # 表示中の人のIDが分からない
+        mixed = [_review("駅から歩ける", uid=UID_A), _review("駅から歩ける", uid=None), _review("駅から歩ける", uid=UID_B)]
+        self.assertEqual(mr.display_reviews(mixed)[0]["others"], 1)  # IDの無い投稿は数えない
+
     def test_display_folds_same_text(self):
         reviews = [_review("駅から歩ける", uid=UID_A), _review("駅から歩ける", uid=UID_B), _review("入口の横")]
         shown = mr.display_reviews(reviews)
@@ -92,6 +101,17 @@ class TipTests(unittest.TestCase):
         self.assertEqual(self._keys(["駐車スペースはありません"]), ["parking_no"])
         self.assertEqual(self._keys(["駐車場に停められません"]), ["parking_no"])
         self.assertEqual(self._keys(["駐車場あり、トイレはない"]), ["parking_yes"])
+
+    def test_negation_stays_in_its_clause(self):
+        # Copilot レビュー（PR #929）
+        self.assertEqual(self._keys(["駐車場あり。駅から歩けない"]), ["parking_yes"])
+        self.assertEqual(self._keys(["ひさしはありません"]), [])
+        self.assertEqual(self._keys(["道の駅から車で10分の公園にあります"]), [])
+
+    def test_latest_month_is_jst(self):
+        # 2026-10-31T15:00Z は JST で 11月1日（本文の日付表示と揃える）
+        chips = mr.extract_tips([_review("駅前", shot_at="2026-10-31T15:00:00+00:00")])
+        self.assertEqual(chips[0]["latest"], "2026-11")
 
     def test_michinoeki_is_not_a_station(self):
         self.assertEqual(self._keys(["道の駅の入り口にある"]), ["michinoeki", "entrance"])

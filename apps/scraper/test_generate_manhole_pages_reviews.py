@@ -92,6 +92,9 @@ class ReviewsSectionTests(unittest.TestCase):
     def test_preinstall_has_no_review_section(self):
         html = _generate([_review("駅前")], manhole=_manhole(installed=False), photo=None)
         self.assertNotIn("id='reviews'", html)
+        # セクションが無いのでチップ（#reviews へのリンク）も出さない（PR #929 の Copilot レビュー）
+        self.assertNotIn("<dt>口コミから</dt>", html)
+        self.assertNotIn("href='#reviews'", html)
 
 
 if __name__ == "__main__":

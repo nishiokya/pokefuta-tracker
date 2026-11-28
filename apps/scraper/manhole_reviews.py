@@ -21,6 +21,8 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any, Optional
 
+from photo_caption import to_jst_date
+
 logger = logging.getLogger(__name__)
 
 # 詳細ページに原文で出す件数（新しい順）。残りは写真館で読ませる
@@ -58,7 +60,8 @@ PARKING_YES_LABEL = "🅿️ 駐車場あり"
 PARKING_NO_LABEL = "🅿️ 駐車場なし"
 
 # 一致した直後にこれが来たら打ち消し（「駅前にあるわけではない」）。数える範囲は直後の数文字だけ
-_NEGATION_AFTER = re.compile(r"^.{0,8}?(わけでは|ではな|じゃな|ではありませ|けない|けません|遠|終了|中止|休止|なくな|無くな)")
+# 句読点をまたがない（「駐車場あり。駅から歩けない」の否定は駐車場に掛からない。PR #929 の Copilot レビュー）
+_NEGATION_AFTER = re.compile(r"^[^。、,，!！?？]{0,8}?(わけでは|ではな|じゃな|ではありませ|けない|けません|遠|終了|中止|休止|なくな|無くな)")
 # すぐ後ろ（句読点をまたがない4文字以内）の否定。「駐車スペースはありません」「停められません」
 # （PR #929 の Codex レビュー）。句読点で止めるのは「駐車場あり、トイレはない」を打ち消しにしないため
 _NEGATION_NEAR = re.compile(r"^[^。、,，!！?？\s]{0,4}?(ません|ない|無い|なし|無し)")
@@ -114,15 +117,24 @@ def has_tip(comment: str) -> bool:
 
 
 def display_reviews(reviews: list[dict], limit: int = REVIEWS_SHOWN) -> list[dict]:
-    """原文で並べる分。同じ蓋に同じ文が何件もあるときは新しい1件だけ出し、others に残りの人数を持たせる。"""
-    seen: dict[str, dict] = {}
+    """原文で並べる分。同じ蓋に同じ文が何件もあるときは新しい1件だけ出す。
+
+    others は「表示中の投稿者以外で、同じ文を書いた人の数」。同じ人の再訪は数えない。
+    公開IDの無い投稿は数えず、表示中の投稿者のIDが分からないときは人数を出さない（0）。
+    """
+    first: dict[str, dict] = {}
+    people: dict[str, set[str]] = defaultdict(set)
     for review in reviews:
         key = review["comment"]
-        if key in seen:
-            seen[key]["others"] += 1
-        else:
-            seen[key] = {**review, "others": 0}
-    return list(seen.values())[:limit]
+        first.setdefault(key, review)
+        if review.get("public_user_id"):
+            people[key].add(str(review["public_user_id"]))
+    shown = []
+    for key, review in first.items():
+        own = review.get("public_user_id")
+        others = len(people[key] - {str(own)}) if own else 0
+        shown.append({**review, "others": others})
+    return shown[:limit]
 
 
 def usable_reviews(reviews_by_manhole: dict[str, list[dict]]) -> dict[str, list[dict]]:
@@ -145,8 +157,14 @@ def usable_reviews(reviews_by_manhole: dict[str, list[dict]]) -> dict[str, list[
     return out
 
 
+def _jst_month(review: dict) -> str:
+    """根拠の年月（YYYY-MM）。本文の日付（format_photo_date）と同じく JST で数える。"""
+    day = to_jst_date(review_date(review))
+    return day.strftime("%Y-%m") if day else ""
+
+
 def _chip(key: str, label: str, matched: list[dict]) -> dict[str, Any]:
-    return {"key": key, "label": label, "count": len(matched), "latest": review_date(matched[0])[:7]}
+    return {"key": key, "label": label, "count": len(matched), "latest": _jst_month(matched[0])}
 
 
 def extract_tips(reviews: list[dict]) -> list[dict[str, Any]]:
