@@ -22,6 +22,7 @@ on:
       - 'apps/scraper/generate_manhole_pages.py' # manhole page generator
       - 'apps/scraper/generate_manhole_pages_i18n.py' # translated manhole pages (/en/manholes/)
       - 'apps/scraper/manhole_page_css.py' # detail page CSS shared by ja / translated pages
+      - 'apps/scraper/manhole_reviews.py' # visitor tips (filters and travel-info chips) on detail pages
       - 'apps/scraper/poster_identity.py' # poster avatar and tier badge on detail pages
       - 'apps/scraper/zukan_cards.py' # shared index card HTML and CSS
       - 'apps/scraper/build_small_images.py' # small WebP lid photos for srcset
@@ -191,7 +192,7 @@ jobs:
             apps.scraper.test_generate_character_work_pages \
             apps.scraper.test_generate_gmanhole_map_page
           echo "[dist] Test manhole detail page headings"
-          python3 -m unittest apps.scraper.test_generate_manhole_pages_h1 apps.scraper.test_generate_manhole_pages_breadcrumb apps.scraper.test_display_name_consumers apps.scraper.test_generate_top_feed apps.scraper.test_generate_manhole_pages_i18n apps.scraper.test_generate_manhole_pages_regional_forms apps.scraper.test_generate_manhole_pages_design_nearby apps.scraper.test_generate_manhole_pages_hero_actions apps.scraper.test_generate_manhole_pages_preinstall apps.scraper.test_generate_manhole_pages_provisional apps.scraper.test_generate_manhole_pages_poster_links apps.scraper.test_generate_manhole_pages_gallery
+          python3 -m unittest apps.scraper.test_generate_manhole_pages_h1 apps.scraper.test_generate_manhole_pages_breadcrumb apps.scraper.test_display_name_consumers apps.scraper.test_generate_top_feed apps.scraper.test_generate_manhole_pages_i18n apps.scraper.test_generate_manhole_pages_regional_forms apps.scraper.test_generate_manhole_pages_design_nearby apps.scraper.test_generate_manhole_pages_hero_actions apps.scraper.test_generate_manhole_pages_preinstall apps.scraper.test_generate_manhole_pages_provisional apps.scraper.test_generate_manhole_pages_poster_links apps.scraper.test_generate_manhole_pages_gallery apps.scraper.test_manhole_reviews apps.scraper.test_generate_manhole_pages_reviews
           echo "[dist] Generate static manhole detail pages"
           python3 apps/scraper/generate_manhole_pages.py --manholes build/pokefuta_with_provisional.ndjson --photos build/latest-manhole-photos.json
           echo "[dist] Generate translated manhole detail pages (en / zh-TW)"
