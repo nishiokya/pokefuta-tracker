@@ -39,6 +39,7 @@ data.pokefuta.com（tracker）と pokefuta.com のマンホール詳細ページ
 - 旅情報チップ: 決まった言い回しの一致だけで作る（LLM で要約しない）。言い回しは写真館の投稿フォームの候補（pokefuta `src/lib/visit-tip.ts` の `VISIT_TIP_SUGGESTIONS`）に揃える。「道の駅から車で10分」のように別の場所として出る道の駅や、「配布終了」のカードは数えない。チップには根拠の件数と最新の年月を必ず添える。駐車場の「あり／なし」が食い違うときは新しい言及の側。「〜わけではない」などの打ち消しは数えない
 - 呼びかけ: 口コミが0件の蓋にも出す。駐車場のチップが無い蓋は「駐車場の情報がまだありません」と名指しする。投稿（`/upload?manhole_id=`）と、投稿済みの写真にひとことを足す（写真館の蓋ページ）の2つ。GA4 は `click_review_cta`（`cta`: upload / add_to_posted、`missing`）と `click_reviews_more`、surface は `manhole_reviews`
 - 口コミのデータがあるとき、代表写真のひとことはヒーローに重ねない（5b にまとめる）。ファイルが無い実行では今までどおりヒーローに出し、5b は出さない
+- 写真館向け: 同じチップを `docs/api/manholes.json` の各蓋に `review_tips`（`{tips: [{key, label, count, latest}], review_count, missing}`）として載せる（`export_app_snapshot.py`）。写真館は言い回しの判定を作り直さずこれを読む。集計値だけで表示名・本文は載せない。口コミが読めない回は `review_tips` 自体を付けない
 - 設置前の蓋には 5b を出さない。訳したページ（/en/ など）には出さない（原文が日本語のため）
 
 ## データソース対応表

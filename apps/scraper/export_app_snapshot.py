@@ -31,6 +31,7 @@ import requests
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from display_names import attach_place_labels, compose_display_name  # noqa: E402
+from manhole_reviews import extract_tips, load_reviews, missing_tip_prompt  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 OUT_DIR = ROOT / "docs" / "api"
@@ -214,6 +215,39 @@ def attach_photo_summary(entries: list[dict],
         attached += 1
     return attached
 
+# 同じジョブの前の手順（export_latest_manhole_photos.py --reviews-output）が書く口コミ。コミットはしない
+REVIEWS_JSON = ROOT / "build" / "manhole-reviews.json"
+
+
+def attach_review_tips(entries: list[dict], reviews_path: Path = REVIEWS_JSON) -> int:
+    """口コミから作った旅情報チップ（詳細ページの「口コミから」と同じもの）を entry に写す。
+
+      review_tips … { tips: [{key, label, count, latest}], review_count, missing }
+                    latest は JST の YYYY-MM。missing は "parking"（駐車場の情報がまだ無い）か null
+
+    写真館（pokefuta.com）が蓋ページのチップと、ひとこと欄の呼びかけに使う。言い回しの判定を
+    manhole_reviews.py の1か所に置くため、写真館では作り直さない。集計値だけで、誰が何を書いたか
+    （表示名・本文）は写さない。口コミが読めない回は何も足さない（写真館はチップを出さないだけ）。
+    口コミが0件の蓋にも review_count 0・missing "parking" を付ける（呼びかけに使う）。写した蓋の数を返す。
+    """
+    if not reviews_path.exists():
+        print(f"::warning::{reviews_path} が無いため review_tips を付けません", file=sys.stderr)
+        return 0
+    reviews = load_reviews(reviews_path)
+    if not reviews:
+        print(f"::warning::{reviews_path} から口コミを読めないため review_tips を付けません", file=sys.stderr)
+        return 0
+    for entry in entries:
+        mine = reviews.get(str(entry.get("id")).lstrip("0") or "0", [])
+        tips = extract_tips(mine)
+        entry["review_tips"] = {
+            "tips": tips,
+            "review_count": len(mine),
+            "missing": "parking" if missing_tip_prompt(tips) else None,
+        }
+    return len(entries)
+
+
 # 手動マスタから重ねる、表示名の組み立てに効くフィールドだけ。
 # address は address_norm -> address_raw の順で採用する（update_pokefuta.py の
 # apply_title_metadata と同じ優先順位）。
@@ -327,6 +361,8 @@ def build_manholes() -> dict:
     apply_place_labels(entries)
     covered = attach_photo_summary(entries)
     print(f"cover: {covered} manholes")
+    tipped = attach_review_tips(entries)
+    print(f"review_tips: {tipped} manholes")
 
     if skipped:
         print(f"WARN: skipped {skipped} manholes without parsable location")
