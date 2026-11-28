@@ -255,6 +255,28 @@ class InjectSiteHeaderTest(unittest.TestCase):
         self.assertIn('href="https://pokefuta.com/about?from=data#contact"', result)
         self.assertIn('href="https://x.com/pokemonmanhole"', result)
 
+    def test_blog_link_replaces_x_icon_in_pc_header(self):
+        result = inject(BARE)
+        header = result[result.index('<header class="site-header">'):result.index("</header>")]
+        # PC ヘッダー右のボタンは X ではなくブログ
+        self.assertIn('class="site-header__icon site-header__icon--blog" href="https://mookie.hatenablog.com/"', header)
+        self.assertNotIn("site-header__icon--x", header)
+        self.assertIn('data-blog-link="header"', header)
+        # スイッチャーのメニューにはブログと X の両方が残る
+        self.assertIn('data-blog-link="site_switch"', header)
+        self.assertIn('href="https://x.com/pokemonmanhole"', header)
+        # フッターにもブログと X
+        footer = result[result.index('<nav class="site-footer"'):]
+        self.assertIn('data-blog-link="footer"', footer)
+        self.assertIn('href="https://x.com/pokemonmanhole"', footer)
+        # 外部サイトなので新しいタブで開く
+        self.assertEqual(result.count('href="https://mookie.hatenablog.com/" target="_blank" rel="noopener noreferrer"'), 3)
+
+    def test_blog_link_says_japanese_on_translated_pages(self):
+        result = inject('<html lang="en"><head></head><body></body></html>')
+        self.assertIn('>Blog</a>', result)
+        self.assertIn('Developer blog (Japanese, Hatena Blog)', result)
+
     # ── 既存の振る舞い ───────────────────────────────────
 
     def test_preserves_existing_body_classes(self):
