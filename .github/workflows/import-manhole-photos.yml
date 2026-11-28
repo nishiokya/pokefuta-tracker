@@ -4,6 +4,8 @@ name: Daily Supabase Data Sync
 #   1. 公開写真のエクスポート + ローカル画像の取り込み（latest-manhole-photos.json / dataset/manhole/image）
 #   2. アプリ用スナップショット（docs/api/manholes.json / site-stats.json）
 #   3. 図鑑の写真ギャラリー（/gallery/）の特集（docs/api/tagged-photos.json。1 と同じ読み込みから作る）
+#   4. 蓋ごとの訪れた人のひとこと（公開訪問の visit.comment）。**リポジトリにはコミットしない**（非公開に戻したひとことが
+#      公開の Git 履歴に残り続けるため）。artifact「manhole-reviews」（2日で消える）にして pages-deploy.yml が引く
 #
 # 旧 bake-app-data.yml を統合したもの。同じ photo / visit テーブルを2ワークフローが
 # 別々に引いていたのを1ジョブに集約した。pages-deploy の generate_top_feed.py が
@@ -54,12 +56,13 @@ jobs:
       # このジョブが呼ぶスクリプトに対応するテスト。スクリプトを足したら
       # その依存も含めて対応する test_*.py をここに足すこと。
       #   export_latest_manhole_photos.py -> test_export_latest_manhole_photos.py
+      #   manhole_reviews.py（生成側の口コミの規則。書き出しの形と一緒に確かめる） -> test_manhole_reviews.py
       #   import_latest_manhole_photos.py -> apps/tools/test_import_latest_manhole_photos.py
       #   export_app_snapshot.py          -> test_export_app_snapshot.py
       #   display_names.py (内部ライブラリ) -> test_display_names.py
       - name: Run tests
         run: |
-          python3 -m unittest apps.scraper.test_export_latest_manhole_photos
+          python3 -m unittest apps.scraper.test_export_latest_manhole_photos apps.scraper.test_manhole_reviews
           python3 -m unittest apps/tools/test_import_latest_manhole_photos.py
           python3 -m unittest discover -s apps/scraper -v \
             -p 'test_export_app_snapshot.py'
@@ -76,7 +79,8 @@ jobs:
           python apps/scraper/export_latest_manhole_photos.py \
             --output docs/latest-manhole-photos.json \
             --featured-photo-overrides dataset/manhole_featured_photos.json \
-            --tagged-output docs/api/tagged-photos.json
+            --tagged-output docs/api/tagged-photos.json \
+            --reviews-output build/manhole-reviews.json
           cp docs/latest-manhole-photos.json apps/web/latest-manhole-photos.json
 
       - name: Import photos (download, square-crop, cleanup)
@@ -96,6 +100,16 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: python3 apps/scraper/export_app_snapshot.py
+
+      # 口コミはコミットせず artifact で pages-deploy.yml に渡す（上の 4.）。デプロイの起動より前に上げておく
+      - name: Upload visitor reviews snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: manhole-reviews
+          path: build/manhole-reviews.json
+          retention-days: 2
+          # 口コミの取得だけが失敗した日はファイルが無い。写真の同期は続ける（export_reviews）
+          if-no-files-found: warn
 
       # bot の PR では production-url-check.yml が承認待ちのまま走らないため、PR 前にここで検査する。
       - name: Reject loopback URLs in production sources

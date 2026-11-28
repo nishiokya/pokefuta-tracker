@@ -283,6 +283,47 @@ class AttachPhotoSummaryTest(unittest.TestCase):
         self.assertEqual(entries, [{"id": 1}])
 
 
+class ReviewTipsTest(unittest.TestCase):
+    """口コミの旅情報チップ（manhole_reviews.py）を manholes.json に写す。集計値だけで、誰が何を書いたかは写さない。"""
+
+    def write(self, reviews: dict) -> Path:
+        tmp = tempfile.NamedTemporaryFile("w", suffix=".json", delete=False, encoding="utf-8")
+        json.dump({"reviews": reviews}, tmp, ensure_ascii=False)
+        tmp.close()
+        self.addCleanup(Path(tmp.name).unlink)
+        return Path(tmp.name)
+
+    def test_copies_tips_without_text_or_poster(self) -> None:
+        path = self.write({"1": [
+            {"comment": "駐車場あり。秘密の目印", "display_name": "だれか", "public_user_id": "u-1",
+             "shot_at": "2026-10-31T15:00:00+00:00"},
+        ]})
+        entries = [{"id": 1}, {"id": 2}]
+        self.assertEqual(MODULE.attach_review_tips(entries, path), 2)
+        self.assertEqual(entries[0]["review_tips"], {
+            "tips": [{"key": "parking_yes", "label": "🅿️ 駐車場あり", "count": 1, "latest": "2026-11"}],
+            "review_count": 1,
+            "missing": None,
+        })
+        # 口コミの無い蓋にも、呼びかけ用に件数0と駐車場の募集を付ける
+        self.assertEqual(entries[1]["review_tips"], {"tips": [], "review_count": 0, "missing": "parking"})
+        dumped = json.dumps(entries, ensure_ascii=False)
+        for leaked in ("だれか", "u-1", "秘密の目印"):
+            self.assertNotIn(leaked, dumped)
+
+    def test_valid_file_without_usable_reviews_still_asks(self) -> None:
+        # Codex レビュー（PR #929）: 読めて0件の回は「読めなかった」と分け、呼びかけを付ける
+        path = self.write({"1": [{"comment": "48"}]})
+        entries = [{"id": 1}]
+        self.assertEqual(MODULE.attach_review_tips(entries, path), 1)
+        self.assertEqual(entries[0]["review_tips"], {"tips": [], "review_count": 0, "missing": "parking"})
+
+    def test_missing_file_adds_nothing(self) -> None:
+        entries = [{"id": 1}]
+        self.assertEqual(MODULE.attach_review_tips(entries, Path("/nonexistent/r.json")), 0)
+        self.assertEqual(entries, [{"id": 1}])
+
+
 class RegularTiersTest(unittest.TestCase):
     """称号は公開で訪問したポケふたの枚数（重複なし）で5段階。線は /badges に公開している。"""
 

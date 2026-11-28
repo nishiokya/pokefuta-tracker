@@ -22,6 +22,7 @@ on:
       - 'apps/scraper/generate_manhole_pages.py' # manhole page generator
       - 'apps/scraper/generate_manhole_pages_i18n.py' # translated manhole pages (/en/manholes/)
       - 'apps/scraper/manhole_page_css.py' # detail page CSS shared by ja / translated pages
+      - 'apps/scraper/manhole_reviews.py' # visitor tips (filters and travel-info chips) on detail pages
       - 'apps/scraper/poster_identity.py' # poster avatar and tier badge on detail pages
       - 'apps/scraper/zukan_cards.py' # shared index card HTML and CSS
       - 'apps/scraper/build_small_images.py' # small WebP lid photos for srcset
@@ -94,6 +95,7 @@ on:
 
 permissions:
   contents: read
+  actions: read # import-manhole-photos.yml の artifact（口コミ）を引く
   pages: write
   id-token: write
 
@@ -149,6 +151,40 @@ jobs:
             --output dist/assets/ogp/manholes \
             --force
 
+      # 訪れた人のひとこと（詳細ページの「口コミから」と「訪れた人のひとこと」）。公開リポジトリにはコミットせず、
+      # import-manhole-photos.yml が artifact「manhole-reviews」（2日で消える）に上げたものを引く。
+      # 取り込むのは **import-manhole-photos.yml の main での定時・手動の実行** の artifact だけで、ZIP からは
+      # manhole-reviews.json だけを出す。名前だけで選ぶと PR などの実行が同じ名前で上げたものを本番が取り込み、
+      # ZIP 全体を展開すると build/ の他のファイルまで差し替えられる（PR #929 の Copilot / Codex レビュー）。
+      # 起動元の日次の実行はまだ実行中なので、状態（成功）では絞らない。見るのは**一番新しい実行だけ**で、そこに
+      # artifact が無ければ（口コミの取得失敗など）古い実行には戻らない。戻ると、その後に非公開にされた口コミを
+      # 古いスナップショットから再掲してしまう（PR #929 の Codex レビュー）。
+      # 取れないとき（期限切れ・初回・口コミの取得失敗）は口コミの欄を出さない今までのページになるだけで、デプロイは止めない。
+      - name: Fetch visitor reviews snapshot
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          mkdir -p build
+          rm -f build/manhole-reviews.json build/manhole-reviews.zip
+          id=""
+          run_id=$(gh api "repos/$REPO/actions/workflows/import-manhole-photos.yml/runs?branch=main&per_page=10" \
+            --jq '[.workflow_runs[] | select(.head_branch == "main" and (.event == "schedule" or .event == "workflow_dispatch"))][0].id // empty' || true)
+          if [ -n "$run_id" ]; then
+            id=$(gh api "repos/$REPO/actions/runs/$run_id/artifacts?name=manhole-reviews" \
+              --jq '[.artifacts[] | select(.expired | not)][0].id // empty' || true)
+            echo "latest import run $run_id, reviews artifact ${id:-none}"
+          fi
+          if [ -n "$id" ] && gh api "repos/$REPO/actions/artifacts/$id/zip" > build/manhole-reviews.zip \
+              && unzip -o -q -j build/manhole-reviews.zip manhole-reviews.json -d build/ \
+              && python3 -c "import json,sys; d=json.load(open('build/manhole-reviews.json')); sys.exit(0 if isinstance(d.get('reviews'), dict) else 1)"; then
+            echo "reviews loaded"
+          else
+            echo "::warning::口コミの artifact を取れなかった。詳細ページは口コミの欄なしで出る"
+            rm -f build/manhole-reviews.json
+          fi
+          rm -f build/manhole-reviews.zip
+
       - name: Prepare dist directory (site + data)
         env:
           ADSENSE_PUBLISHER_ID: ${{ secrets.ADSENSE_PUBLISHER_ID }}
@@ -191,9 +227,9 @@ jobs:
             apps.scraper.test_generate_character_work_pages \
             apps.scraper.test_generate_gmanhole_map_page
           echo "[dist] Test manhole detail page headings"
-          python3 -m unittest apps.scraper.test_generate_manhole_pages_h1 apps.scraper.test_generate_manhole_pages_breadcrumb apps.scraper.test_display_name_consumers apps.scraper.test_generate_top_feed apps.scraper.test_generate_manhole_pages_i18n apps.scraper.test_generate_manhole_pages_regional_forms apps.scraper.test_generate_manhole_pages_design_nearby apps.scraper.test_generate_manhole_pages_hero_actions apps.scraper.test_generate_manhole_pages_preinstall apps.scraper.test_generate_manhole_pages_provisional apps.scraper.test_generate_manhole_pages_poster_links apps.scraper.test_generate_manhole_pages_gallery
+          python3 -m unittest apps.scraper.test_generate_manhole_pages_h1 apps.scraper.test_generate_manhole_pages_breadcrumb apps.scraper.test_display_name_consumers apps.scraper.test_generate_top_feed apps.scraper.test_generate_manhole_pages_i18n apps.scraper.test_generate_manhole_pages_regional_forms apps.scraper.test_generate_manhole_pages_design_nearby apps.scraper.test_generate_manhole_pages_hero_actions apps.scraper.test_generate_manhole_pages_preinstall apps.scraper.test_generate_manhole_pages_provisional apps.scraper.test_generate_manhole_pages_poster_links apps.scraper.test_generate_manhole_pages_gallery apps.scraper.test_manhole_reviews apps.scraper.test_generate_manhole_pages_reviews
           echo "[dist] Generate static manhole detail pages"
-          python3 apps/scraper/generate_manhole_pages.py --manholes build/pokefuta_with_provisional.ndjson --photos build/latest-manhole-photos.json
+          python3 apps/scraper/generate_manhole_pages.py --manholes build/pokefuta_with_provisional.ndjson --photos build/latest-manhole-photos.json --reviews build/manhole-reviews.json
           echo "[dist] Generate translated manhole detail pages (en / zh-TW)"
           for lang in en zh-TW; do
             python3 apps/scraper/generate_manhole_pages_i18n.py --lang "$lang" --manholes build/pokefuta_with_provisional.ndjson --photos build/latest-manhole-photos.json

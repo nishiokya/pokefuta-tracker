@@ -514,6 +514,62 @@ def iter_photos(include_private: bool, batch_size: int, timeout: int) -> Iterato
     yield from iter_supabase_rows("photo", query, batch_size, timeout)
 
 
+def iter_review_visits(batch_size: int, timeout: int) -> Iterator[dict[str, Any]]:
+    """ひとことの付いた公開訪問（詳細ページの「訪れた人のひとこと」用）。
+
+    写真の読み込み（iter_photos）は風景を外しているので、風景だけの訪問のひとことが落ちる
+    （2026-11-28 のダンプで 2000 件中 192 件）。ひとことは訪問の値なので visit から直接読む。
+    """
+    query = {
+        "select": "id,manhole_id,user_id,comment,shot_at,created_at,photo(id,is_landscape)",
+        "is_public": "eq.true",
+        "manhole_id": "not.is.null",
+        "comment": "not.is.null",
+        "order": "created_at.desc,id.desc",
+    }
+    yield from iter_supabase_rows("visit", query, batch_size, timeout)
+
+
+def build_reviews_payload(
+    visits: list[dict[str, Any]],
+    user_info_by_auth_uid: dict[str, dict[str, Optional[str]]],
+    generated_at: str,
+) -> dict[str, Any]:
+    """build/manhole-reviews.json の中身（コミットしない。artifact で pages-deploy.yml に渡す）。公開訪問のひとことを原文のまま、蓋ごとに新しい順で並べる。
+
+    出す利用者の情報は表示名と public_user_id まで（auth の user_id は出さない）。
+    photo_ids は蓋の写真（風景を除く）で、詳細ページがギャラリーの画像と突き合わせるのに使う。
+    数字だけ・定型文の除外は生成側（manhole_reviews.py）でやる。
+    """
+    reviews: dict[str, list[dict[str, Any]]] = {}
+    for visit in visits:
+        comment = visit.get("comment")
+        manhole_id = visit.get("manhole_id")
+        if not isinstance(comment, str) or not comment.strip() or manhole_id is None:
+            continue
+        display_name, public_user_id = _lookup_user_info(user_info_by_auth_uid, visit.get("user_id"))
+        photos = visit.get("photo") if isinstance(visit.get("photo"), list) else []
+        reviews.setdefault(str(int(manhole_id)), []).append({
+            "comment": comment.strip(),
+            "display_name": display_name,
+            "public_user_id": public_user_id,
+            "shot_at": visit.get("shot_at"),
+            "created_at": visit.get("created_at"),
+            "photo_ids": [
+                str(photo["id"]) for photo in photos
+                if isinstance(photo, dict) and photo.get("id") and photo.get("is_landscape") is not True
+            ],
+        })
+    for entries in reviews.values():
+        entries.sort(key=lambda r: str(r.get("shot_at") or r.get("created_at") or ""), reverse=True)
+    return {
+        "generated_at": generated_at,
+        "source": "pokefuta visit.comment (is_public)",
+        "count": sum(len(entries) for entries in reviews.values()),
+        "reviews": {key: reviews[key] for key in sorted(reviews, key=int)},
+    }
+
+
 def chunked(values: list[str], size: int) -> Iterator[list[str]]:
     for index in range(0, len(values), size):
         yield values[index:index + size]
@@ -759,6 +815,11 @@ def parse_args() -> argparse.Namespace:
         default=os.environ.get("TAGGED_OUTPUT_PATH"),
         help="図鑑の写真ギャラリーの特集（ぬいぐるみ・雪）を書き出す JSON。指定したときだけ書く",
     )
+    parser.add_argument(
+        "--reviews-output",
+        default=os.environ.get("REVIEWS_OUTPUT_PATH"),
+        help="蓋ごとの訪れた人のひとこと（公開訪問の visit.comment）を書き出す JSON。指定したときだけ書く",
+    )
     return parser.parse_args()
 
 
@@ -798,6 +859,33 @@ def main() -> None:
             f"{feature} {len(entry['photos'])}/{entry['total']}" for feature, entry in tagged["features"].items()
         )
         print(f"Exported tagged photos ({counts}) to {tagged_path}", file=sys.stderr)
+
+    if args.reviews_output:
+        export_reviews(Path(args.reviews_output), args.batch_size, args.timeout, payload["generated_at"])
+
+
+def export_reviews(reviews_path: Path, batch_size: int, timeout: int, generated_at: str) -> bool:
+    """口コミを書き出す。失敗しても日次の写真同期は止めない（警告だけ出し、ファイルは書かない）。
+
+    口コミは後から足した機能で、ここが落ちて写真の取り込み・データ更新・デプロイまで止まるのは
+    割に合わない（PR #929 の Codex レビュー）。書けなかった日は artifact が上がらず、
+    pages-deploy.yml は直近の日次の artifact か、口コミの欄なしで出す。
+    """
+    try:
+        visits = list(iter_review_visits(batch_size, timeout))
+        user_ids = {v["user_id"] for v in visits if isinstance(v.get("user_id"), str)}
+        user_info = fetch_user_info(user_ids, batch_size, timeout)
+        reviews = build_reviews_payload(visits, user_info, generated_at)
+    except Exception as exc:  # noqa: BLE001 — どの失敗でも同期は続ける
+        print(f"::warning::口コミを書き出せなかった（写真の同期は続ける）: {exc}", file=sys.stderr)
+        return False
+    # 生成（generate_manhole_pages.py）で読むだけ。公開サイトには置かない
+    write_json(reviews_path, reviews, compact=True)
+    print(
+        f"Exported {reviews['count']} reviews for {len(reviews['reviews'])} manholes to {reviews_path}",
+        file=sys.stderr,
+    )
+    return True
 
 
 if __name__ == "__main__":

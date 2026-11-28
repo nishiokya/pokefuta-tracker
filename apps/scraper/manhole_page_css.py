@@ -873,6 +873,116 @@ PAGE_CSS = f"""    * {{
       color: #1a73e8;
       text-decoration: none;
     }}
+
+    /* 口コミ（manhole_reviews.py）: 設置場所の「口コミから」チップと「訪れた人のひとこと」 */
+    .tip-chips {{
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 2px 0 6px;
+    }}
+    .tip-chip {{
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      column-gap: 6px;
+      /* 名前は途中で折らない。狭い幅では根拠（件数・日付）が次の行に回る */
+      white-space: nowrap;
+      font-size: 13px;
+      background: #fdf6e7;
+      border: 1px solid #f0dfb8;
+      border-radius: 999px;
+      padding: 3px 10px;
+    }}
+    .tip-basis {{
+      font-size: 11px;
+      color: #8a7c62;
+    }}
+    .tip-source {{
+      font-size: 12px;
+      color: #1a73e8;
+      text-decoration: none;
+    }}
+    .review-list {{
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }}
+    .review-item {{
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }}
+    .review-thumb {{
+      width: 56px;
+      height: 56px;
+      object-fit: cover;
+      border-radius: 8px;
+      flex-shrink: 0;
+    }}
+    .review-body {{
+      min-width: 0;
+    }}
+    .review-text {{
+      font-size: 14px;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }}
+    .review-meta {{
+      font-size: 11px;
+      color: #8a8072;
+      margin-top: 2px;
+    }}
+    .review-meta a {{
+      /* 投稿者リンクは写真に重ねる白文字が既定なので、白地の一覧では本文の色に戻す */
+      color: #5f564a;
+      text-decoration: none;
+    }}
+    .review-empty {{
+      font-size: 13px;
+      color: #8a8072;
+    }}
+    .tip-note {{
+      font-size: 11px;
+      color: #8a8072;
+      margin-top: 10px;
+    }}
+    .review-cta {{
+      margin-top: 14px;
+      padding: 12px 14px;
+      background: #f6f9ff;
+      border: 1px dashed #b8c8ee;
+      border-radius: 10px;
+    }}
+    .review-cta-lead {{
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+    }}
+    .review-cta-text {{
+      font-size: 12px;
+      color: #666;
+      margin: 4px 0 10px;
+    }}
+    .review-cta-btn {{
+      display: inline-block;
+      background: #1a73e8;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 14px;
+      border-radius: 8px;
+      text-decoration: none;
+      margin-right: 10px;
+    }}
+    .review-cta-sub {{
+      display: inline-block;
+      font-size: 12px;
+      color: #1a73e8;
+      text-decoration: none;
+      margin-top: 8px;
+    }}
 """
 
 # 投稿者名の前のアイコンと後ろの称号（poster_identity.py）

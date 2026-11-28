@@ -28,6 +28,7 @@ from generate_pokemon_pages import _FORM_PREFIX, _normalize_katakana  # noqa: E4
 from generate_pokemon_pages import load_pokemon_metadata as load_pokemon_metadata_with_forms  # noqa: E402
 from manhole_page_css import PAGE_CSS  # noqa: E402
 from poster_identity import avatar_html, tier_badge_html  # noqa: E402
+from manhole_reviews import display_reviews, extract_tips, load_reviews, missing_tip_prompt, REVIEW_MAX_CHARS  # noqa: E402
 from manhole_tile_image import small_image_url  # noqa: E402
 from photo_caption import (  # noqa: E402
     format_display_name,
@@ -656,6 +657,134 @@ def seo_title_and_description(
     return title, "".join(parts)
 
 
+def _tip_chips_html(tips: list[dict]) -> str:
+    """旅情報チップ。根拠（口コミの件数と最新の年月）を必ず添える。"""
+    items = "".join(
+        f"<li class='tip-chip'>{escape(t['label'])}"
+        f"<span class='tip-basis'>口コミ{int(t['count'])}件"
+        + (f"・{escape(t['latest'].replace('-', '/'))}" if t.get("latest") else "")
+        + "</span></li>"
+        for t in tips
+    )
+    return f"<ul class='tip-chips'>{items}</ul>"
+
+
+def _review_photo_urls(photo: Optional[dict]) -> dict[str, str]:
+    """ひとことに添える写真（photo_id → ローカルの画像URL）。代表とギャラリーに画像がある分だけ。"""
+    if not photo:
+        return {}
+    urls = {}
+    if photo.get("photo_id") and photo.get("url"):
+        urls[str(photo["photo_id"])] = photo["url"]
+    for item in photo.get("gallery_local") or []:
+        if item.get("photo_id") and item.get("url"):
+            urls[str(item["photo_id"])] = item["url"]
+    return urls
+
+
+def _reviews_section_html(
+    manhole_id: str,
+    reviews: list[dict],
+    tips: list[dict],
+    photo: Optional[dict],
+    photo_upload_url: str,
+    photo_studio_url: str,
+    *,
+    is_provisional: bool,
+    prefecture: str,
+) -> str:
+    """「訪れた人のひとこと」: 原文を新しい順に REVIEWS_SHOWN 件と、ひとことの投稿の呼びかけ。
+
+    呼びかけは口コミが0件でも出す（最初の1件を集めたい）。駐車場の情報がまだ無い蓋はそれを名指しする。
+    """
+    photo_urls = _review_photo_urls(photo)
+    items = ""
+    for review in display_reviews(reviews):
+        text = review["comment"]
+        if len(text) > REVIEW_MAX_CHARS:
+            text = text[: REVIEW_MAX_CHARS - 1] + "…"
+        thumb_url = next((photo_urls[pid] for pid in review.get("photo_ids") or [] if pid in photo_urls), "")
+        thumb = (
+            f"<img class='review-thumb' src=\"{escape(thumb_url)}\" alt=\"\" width=\"56\" height=\"56\""
+            f" loading=\"lazy\" decoding=\"async\">"
+            if thumb_url else ""
+        )
+        meta_parts = []
+        name = format_display_name(review.get("display_name"))
+        if name:
+            label = (
+                f"{avatar_html(review.get('public_user_id'))}{escape(name)}"
+                f"{tier_badge_html(review.get('public_user_id'), icon_only=True)}"
+            )
+            profile_url = poster_profile_url(review.get("public_user_id"))
+            if profile_url:
+                _onclick = _attr_json({"manhole_id": manhole_id, "surface": "reviews"})
+                label = (
+                    f"<a class='poster-link' href='{profile_url}' target='_blank' rel='noopener noreferrer'"
+                    f" onclick=\"trackEvent('click_poster_profile', {_onclick})\">{label}</a>"
+                )
+            meta_parts.append(label)
+        date = format_photo_date(review.get("shot_at") or review.get("created_at"), "ja", with_year=True)
+        if date:
+            meta_parts.append(escape(date))
+        if review.get("others"):
+            meta_parts.append(f"ほか{int(review['others'])}人も同じひとこと")
+        meta = " · ".join(meta_parts)
+        items += (
+            f"<li class='review-item'>{thumb}<div class='review-body'>"
+            f"<p class='review-text'>{escape(text)}</p>"
+            + (f"<p class='review-meta'>{meta}</p>" if meta else "")
+            + "</div></li>"
+        )
+
+    total = len(reviews)
+    shown = len(display_reviews(reviews))
+    if items:
+        body = f"<ul class='review-list'>{items}</ul>"
+        if total > shown:
+            _more = _attr_json({"surface": "manhole_reviews", "manhole_id": manhole_id, "prefecture": prefecture, "total": total})
+            body += (
+                f"<a class='gallery-more' href='{escape(photo_studio_url)}' target='_blank' rel='noopener noreferrer'"
+                f" onclick=\"trackEvent('click_reviews_more', {_more})\">"
+                f"ひとこと全{total}件を写真館で見る →</a>"
+            )
+    else:
+        body = "<p class='review-empty'>まだひとことがありません。</p>"
+
+    prompt = missing_tip_prompt(tips)
+    lead = prompt or ("行ったことがある方へ" if items else "最初のひとことを書いてみませんか")
+    _cta = {"manhole_id": manhole_id, "prefecture": prefecture, "has_reviews": bool(items),
+            "missing": "parking" if prompt else ""}
+    _cta_upload = _attr_json({"surface": "manhole_reviews", **_cta, "cta": "upload"})
+    _cta_add = _attr_json({"surface": "manhole_reviews", **_cta, "cta": "add_to_posted"})
+    cta_links = (
+        f"<a class='review-cta-btn' href='{photo_upload_url}' target='_blank' rel='noopener noreferrer'"
+        f" onclick=\"trackEvent('click_review_cta', {_cta_upload})\">"
+        f"写真とひとことを投稿する</a>"
+    )
+    if not is_provisional:
+        cta_links += (
+            f"<a class='review-cta-sub' href='{escape(photo_studio_url)}' target='_blank' rel='noopener noreferrer'"
+            f" onclick=\"trackEvent('click_review_cta', {_cta_add})\">"
+            f"投稿済みの写真にひとことを足す →</a>"
+        )
+    cta = (
+        f"<div class='review-cta'>"
+        f"<p class='review-cta-lead'>{escape(lead)}</p>"
+        f"<p class='review-cta-text'>駐車場・駅からの道・目印など、次に来る人の役に立つひとことを写真と一緒に書けます。</p>"
+        f"{cta_links}</div>"
+    )
+    note = (
+        "<p class='tip-note'>「口コミから」は投稿されたひとことの言葉から自動でまとめています。"
+        "状況は変わることがあるので、日付を見て判断してください。</p>"
+        if tips else ""
+    )
+    return (
+        f"\n<section class='reviews-section section-card' id='reviews'>"
+        f"<h2>訪れた人のひとこと</h2>{body}{note}{cta}</section>\n"
+    )
+
+
 def generate_html(
     manhole: dict,
     photo: Optional[dict],
@@ -673,8 +802,12 @@ def generate_html(
     nearby_design: list[tuple[dict, float]] | None = None,
     municipality_path: str | None = None,
     trip: dict | None = None,
+    reviews: list[dict] | None = None,
 ) -> str:
     """Generate complete HTML for a manhole detail page.
+
+    reviews: この蓋の訪れた人のひとこと（manhole_reviews.load_reviews の1蓋分、新しい順）。
+    None は口コミのデータが無い実行（ファイル無し）で、そのときは代表写真のひとことを今までどおりヒーローに出す。
 
     trip: この蓋が入っている /trip/ エリア（generate_trip_pages.trips_by_manhole）。あれば「次に寄れるポケふた」の
     代わりに、そのエリアだけを trip ページと同じ順番・時間で出す（ほかのエリアの蓋は混ぜない）。
@@ -867,9 +1000,10 @@ def generate_html(
         else:
             credit_html = ""
 
+        # 口コミのデータがあるときは、ひとことは「訪れた人のひとこと」にまとめてヒーローには重ねない
         comment_html = (
             f"<div class='photo-comment'>{escape(comment)}</div>"
-            if comment else ""
+            if comment and reviews is None else ""
         )
 
         hero_photo_html = (
@@ -1099,6 +1233,14 @@ def generate_html(
     <dt>アクセス</dt>
     <dd>{escape(access)}</dd>
 """
+    # 設置前の蓋は「訪れた人のひとこと」を出さないので、チップ（#reviews へのリンク付き）も出さない
+    tips = extract_tips(reviews) if reviews and not is_preinstall else []
+    if tips:
+        location_html += (
+            "\n    <dt>口コミから</dt>\n    <dd>"
+            + _tip_chips_html(tips)
+            + "<a class='tip-source' href='#reviews'>ひとことを読む</a></dd>\n"
+        )
     if coord_fixed_by_photos(manhole):
         location_html += """
     <dt>地図の位置</dt>
@@ -1108,6 +1250,11 @@ def generate_html(
   </dl>
 </section>
 """
+    if reviews is not None and not is_preinstall:
+        location_html += _reviews_section_html(
+            manhole_id, reviews, tips, photo, photo_upload_url, photo_studio_url,
+            is_provisional=is_provisional, prefecture=prefecture,
+        )
 
     # JSON-LD structured data
     jsonld = {
@@ -1652,6 +1799,7 @@ def page_photo(
         ) if len(slug) == 8 else None
         if name:
             gallery_local.append({
+                "photo_id": item.get("photo_id"),
                 "url": f"{BASE_URL}manhole/image/{name}",
                 "display_name": item.get("display_name"),
                 "shot_at": item.get("shot_at"),
@@ -1680,6 +1828,7 @@ def generate_all_pages(
     ja_to_slug: dict[str, str] | None = None,
     design_spots: list[dict] | None = None,
     trips: dict[str, dict] | None = None,
+    reviews: dict[str, list[dict]] | None = None,
 ) -> tuple[int, int, int]:
     """Generate HTML pages for all manholes.
 
@@ -1743,6 +1892,7 @@ def generate_all_pages(
             nearby_design=nearby_design,
             municipality_path=municipality_paths.get((prefecture, municipality_label(manhole))),
             trip=(trips or {}).get(manhole_id),
+            reviews=None if reviews is None else reviews.get(normalize_id(manhole_id), []),
         )
 
         page_dir = output_dir / "manholes" / manhole_id
@@ -1807,6 +1957,11 @@ def main() -> int:
         help="Path to pokefuta.com design-manhole submissions NDJSON file"
     )
     parser.add_argument(
+        "--reviews",
+        default="build/manhole-reviews.json",
+        help="訪れた人のひとこと（import-manhole-photos.yml の artifact。pages-deploy.yml が build/ に置く）。無ければ口コミの欄を出さない",
+    )
+    parser.add_argument(
         "--output",
         default="dist",
         help="Output directory (will create manholes/ subdirectory)"
@@ -1852,6 +2007,7 @@ def main() -> int:
         manholes, photos, pokemon_meta, output_dir, Path(args.image_dir),
         ja_to_slug=ja_to_slug, design_spots=design_spots,
         trips=_load_trips(manholes),
+        reviews=load_reviews(Path(args.reviews)),
     )
 
     print(f"[generate_manhole_pages] total manholes: {len(manholes)}")

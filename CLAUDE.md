@@ -9,6 +9,7 @@ dataset/provisional_manholes.json は手動更新（公式サイトに載って�
 dataset/provisional_wanted.json は手動更新（設置が発表されたが写真館に投稿が来ていない＝緯度経度が分からないポケふた。群馬・高知の県ページとトップに「緯度経度を調べています」カードを出す。図鑑に同じ自治体の蓋が入るとその場所は自動で消える）
 pokefuta.ndjsonはapps/scraperで更新している
 latest-manhole-photos.json と docs/api/*.json は import-manhole-photos.yml が Supabase から日次一括生成（画像DL込み。pokefuta.com アプリの /api/manholes・/api/site-stats は docs/api を読む。手動で回すときだけ `/import-photos` スキル）
+訪れた人のひとこと（公開訪問の visit.comment を原文で。詳細ページの「口コミから」チップと「訪れた人のひとこと」の元）も同じジョブが読むが、**リポジトリにはコミットしない**（非公開に戻したひとことが公開の Git 履歴に残り続けるため）。artifact「manhole-reviews」（2日で消える）に上げ、pages-deploy.yml が build/ に引く。pages-deploy.yml は日次ジョブの一番新しい main の実行の artifact だけを使い、取れない日（口コミの取得失敗を含む）は古い実行に戻らず口コミの欄なしで出る。数字だけ・定型文の除外とチップの言い回しは `apps/scraper/manhole_reviews.py`。非公開に戻したひとことは次のデプロイまで残る
 みんなのマンホール写真ギャラリー（/gallery/・/gallery/plush/・/gallery/snow/）は、日次ジョブが同じ写真の読み込みから書く docs/api/tagged-photos.json を Pages のデプロイで `generate_gallery_pages.py` が静的ページにする（写真館の /photos/plush・/photos/snow を移したもの。画像は写真館の /api/photo/{id}、非公開に戻した写真の行は次の日次まで残る＝最大1日で了承済み）
 
 ## 公開リポジトリとして守ること
