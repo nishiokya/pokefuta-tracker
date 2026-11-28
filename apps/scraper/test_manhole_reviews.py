@@ -93,6 +93,7 @@ class TipTests(unittest.TestCase):
     def test_other_places_and_ended_distribution_are_not_hits(self):
         # Codex レビュー（PR #929）: 別の場所として出てくる道の駅・配布終了のカードをチップにしない
         self.assertEqual(self._keys(["道の駅から車で10分", "近くの道の駅まで歩いて5分"]), [])
+        self.assertEqual(self._keys(["道の駅の向かいの公園", "道の駅 あいおいの隣の公園にある"]), [])
         self.assertEqual(self._keys(["マンホールカードは配布終了", "マンホールカードの配布はありません"]), [])
         self.assertEqual(self._keys(["道の駅 あっさぶの敷地内", "隣の施設でマンホールカードももらえます"]), ["michinoeki", "card"])
 
@@ -166,6 +167,18 @@ class ExportShapeTests(unittest.TestCase):
         self.assertEqual(query["is_public"], "eq.true")
         self.assertEqual(query["comment"], "not.is.null")
         self.assertIn("photo(id,is_landscape)", query["select"])
+
+    def test_review_fetch_failure_does_not_stop_the_sync(self):
+        # Codex レビュー（PR #929）: 口コミの取得だけが落ちても、日次の写真同期は止めない
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "manhole-reviews.json"
+            with mock.patch.object(export, "iter_review_visits", side_effect=RuntimeError("HTTP 503")):
+                self.assertFalse(export.export_reviews(path, 100, 10, "2026-11-28T00:00:00Z"))
+            self.assertFalse(path.exists())
+            with mock.patch.object(export, "iter_review_visits", return_value=iter([])), \
+                    mock.patch.object(export, "fetch_user_info", return_value={}):
+                self.assertTrue(export.export_reviews(path, 100, 10, "2026-11-28T00:00:00Z"))
+            self.assertEqual(json.loads(path.read_text(encoding="utf-8"))["reviews"], {})
 
     def test_payload_has_only_public_identity_and_skips_landscape_photos(self):
         visits = [

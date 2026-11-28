@@ -861,17 +861,31 @@ def main() -> None:
         print(f"Exported tagged photos ({counts}) to {tagged_path}", file=sys.stderr)
 
     if args.reviews_output:
-        visits = list(iter_review_visits(args.batch_size, args.timeout))
+        export_reviews(Path(args.reviews_output), args.batch_size, args.timeout, payload["generated_at"])
+
+
+def export_reviews(reviews_path: Path, batch_size: int, timeout: int, generated_at: str) -> bool:
+    """口コミを書き出す。失敗しても日次の写真同期は止めない（警告だけ出し、ファイルは書かない）。
+
+    口コミは後から足した機能で、ここが落ちて写真の取り込み・データ更新・デプロイまで止まるのは
+    割に合わない（PR #929 の Codex レビュー）。書けなかった日は artifact が上がらず、
+    pages-deploy.yml は直近の日次の artifact か、口コミの欄なしで出す。
+    """
+    try:
+        visits = list(iter_review_visits(batch_size, timeout))
         user_ids = {v["user_id"] for v in visits if isinstance(v.get("user_id"), str)}
-        user_info = fetch_user_info(user_ids, args.batch_size, args.timeout)
-        reviews = build_reviews_payload(visits, user_info, payload["generated_at"])
-        reviews_path = Path(args.reviews_output)
-        # 生成（generate_manhole_pages.py）で読むだけ。公開サイトには置かない
-        write_json(reviews_path, reviews, compact=True)
-        print(
-            f"Exported {reviews['count']} reviews for {len(reviews['reviews'])} manholes to {reviews_path}",
-            file=sys.stderr,
-        )
+        user_info = fetch_user_info(user_ids, batch_size, timeout)
+        reviews = build_reviews_payload(visits, user_info, generated_at)
+    except Exception as exc:  # noqa: BLE001 — どの失敗でも同期は続ける
+        print(f"::warning::口コミを書き出せなかった（写真の同期は続ける）: {exc}", file=sys.stderr)
+        return False
+    # 生成（generate_manhole_pages.py）で読むだけ。公開サイトには置かない
+    write_json(reviews_path, reviews, compact=True)
+    print(
+        f"Exported {reviews['count']} reviews for {len(reviews['reviews'])} manholes to {reviews_path}",
+        file=sys.stderr,
+    )
+    return True
 
 
 if __name__ == "__main__":

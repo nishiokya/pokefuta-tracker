@@ -108,7 +108,8 @@ jobs:
           name: manhole-reviews
           path: build/manhole-reviews.json
           retention-days: 2
-          if-no-files-found: error
+          # 口コミの取得だけが失敗した日はファイルが無い。写真の同期は続ける（export_reviews）
+          if-no-files-found: warn
 
       # bot の PR では production-url-check.yml が承認待ちのまま走らないため、PR 前にここで検査する。
       - name: Reject loopback URLs in production sources

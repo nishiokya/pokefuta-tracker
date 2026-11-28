@@ -152,22 +152,35 @@ jobs:
             --force
 
       # 訪れた人のひとこと（詳細ページの「口コミから」と「訪れた人のひとこと」）。公開リポジトリにはコミットせず、
-      # import-manhole-photos.yml が artifact「manhole-reviews」（2日で消える）に上げたものを名前で一番新しい順に引く。
-      # 取れないとき（期限切れ・初回）は口コミの欄を出さない今までのページになるだけなので、デプロイは止めない。
+      # import-manhole-photos.yml が artifact「manhole-reviews」（2日で消える）に上げたものを引く。
+      # 取り込むのは **import-manhole-photos.yml の main での定時・手動の実行** の artifact だけで、ZIP からは
+      # manhole-reviews.json だけを出す。名前だけで選ぶと PR などの実行が同じ名前で上げたものを本番が取り込み、
+      # ZIP 全体を展開すると build/ の他のファイルまで差し替えられる（PR #929 の Copilot / Codex レビュー）。
+      # 起動元の日次の実行はまだ実行中なので、状態（成功）では絞らない。新しい実行から順に、artifact のある最初の1つ。
+      # 取れないとき（期限切れ・初回・口コミの取得失敗）は口コミの欄を出さない今までのページになるだけで、デプロイは止めない。
       - name: Fetch visitor reviews snapshot
         env:
           GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
         run: |
           mkdir -p build
-          id=$(gh api "repos/${{ github.repository }}/actions/artifacts?name=manhole-reviews&per_page=1" \
-            --jq '[.artifacts[] | select(.expired | not)][0].id // empty' || true)
-          if [ -n "$id" ] && gh api "repos/${{ github.repository }}/actions/artifacts/$id/zip" > build/manhole-reviews.zip \
-              && unzip -o -q build/manhole-reviews.zip -d build/; then
-            echo "reviews artifact $id"
+          rm -f build/manhole-reviews.json build/manhole-reviews.zip
+          id=""
+          for run_id in $(gh api "repos/$REPO/actions/workflows/import-manhole-photos.yml/runs?branch=main&per_page=10" \
+              --jq '.workflow_runs[] | select(.head_branch == "main" and (.event == "schedule" or .event == "workflow_dispatch")) | .id' || true); do
+            id=$(gh api "repos/$REPO/actions/runs/$run_id/artifacts?name=manhole-reviews" \
+              --jq '[.artifacts[] | select(.expired | not)][0].id // empty' || true)
+            if [ -n "$id" ]; then echo "reviews artifact $id (run $run_id)"; break; fi
+          done
+          if [ -n "$id" ] && gh api "repos/$REPO/actions/artifacts/$id/zip" > build/manhole-reviews.zip \
+              && unzip -o -q -j build/manhole-reviews.zip manhole-reviews.json -d build/ \
+              && python3 -c "import json,sys; d=json.load(open('build/manhole-reviews.json')); sys.exit(0 if isinstance(d.get('reviews'), dict) else 1)"; then
+            echo "reviews loaded"
           else
             echo "::warning::口コミの artifact を取れなかった。詳細ページは口コミの欄なしで出る"
             rm -f build/manhole-reviews.json
           fi
+          rm -f build/manhole-reviews.zip
 
       - name: Prepare dist directory (site + data)
         env:
