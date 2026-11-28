@@ -156,7 +156,9 @@ jobs:
       # 取り込むのは **import-manhole-photos.yml の main での定時・手動の実行** の artifact だけで、ZIP からは
       # manhole-reviews.json だけを出す。名前だけで選ぶと PR などの実行が同じ名前で上げたものを本番が取り込み、
       # ZIP 全体を展開すると build/ の他のファイルまで差し替えられる（PR #929 の Copilot / Codex レビュー）。
-      # 起動元の日次の実行はまだ実行中なので、状態（成功）では絞らない。新しい実行から順に、artifact のある最初の1つ。
+      # 起動元の日次の実行はまだ実行中なので、状態（成功）では絞らない。見るのは**一番新しい実行だけ**で、そこに
+      # artifact が無ければ（口コミの取得失敗など）古い実行には戻らない。戻ると、その後に非公開にされた口コミを
+      # 古いスナップショットから再掲してしまう（PR #929 の Codex レビュー）。
       # 取れないとき（期限切れ・初回・口コミの取得失敗）は口コミの欄を出さない今までのページになるだけで、デプロイは止めない。
       - name: Fetch visitor reviews snapshot
         env:
@@ -166,12 +168,13 @@ jobs:
           mkdir -p build
           rm -f build/manhole-reviews.json build/manhole-reviews.zip
           id=""
-          for run_id in $(gh api "repos/$REPO/actions/workflows/import-manhole-photos.yml/runs?branch=main&per_page=10" \
-              --jq '.workflow_runs[] | select(.head_branch == "main" and (.event == "schedule" or .event == "workflow_dispatch")) | .id' || true); do
+          run_id=$(gh api "repos/$REPO/actions/workflows/import-manhole-photos.yml/runs?branch=main&per_page=10" \
+            --jq '[.workflow_runs[] | select(.head_branch == "main" and (.event == "schedule" or .event == "workflow_dispatch"))][0].id // empty' || true)
+          if [ -n "$run_id" ]; then
             id=$(gh api "repos/$REPO/actions/runs/$run_id/artifacts?name=manhole-reviews" \
               --jq '[.artifacts[] | select(.expired | not)][0].id // empty' || true)
-            if [ -n "$id" ]; then echo "reviews artifact $id (run $run_id)"; break; fi
-          done
+            echo "latest import run $run_id, reviews artifact ${id:-none}"
+          fi
           if [ -n "$id" ] && gh api "repos/$REPO/actions/artifacts/$id/zip" > build/manhole-reviews.zip \
               && unzip -o -q -j build/manhole-reviews.zip manhole-reviews.json -d build/ \
               && python3 -c "import json,sys; d=json.load(open('build/manhole-reviews.json')); sys.exit(0 if isinstance(d.get('reviews'), dict) else 1)"; then
