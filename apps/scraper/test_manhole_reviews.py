@@ -94,6 +94,11 @@ class TipTests(unittest.TestCase):
         # Codex レビュー（PR #929）: 別の場所として出てくる道の駅・配布終了のカードをチップにしない
         self.assertEqual(self._keys(["道の駅から車で10分", "近くの道の駅まで歩いて5分"]), [])
         self.assertEqual(self._keys(["道の駅の向かいの公園", "道の駅 あいおいの隣の公園にある"]), [])
+        # PR #929 の Codex / Copilot レビュー
+        self.assertEqual(self._keys(["駅から10km、車で20分かかります", "駅から5km離れた公園です"]), [])
+        self.assertEqual(self._keys(["瓦町駅からは3〜400m", "駅から徒歩5分"]), ["station"])
+        self.assertEqual(self._keys(["マンホールカードは配布中止"]), [])
+        self.assertEqual(self._keys(["マンホールカードを配布中"]), ["card"])
         self.assertEqual(self._keys(["マンホールカードは配布終了", "マンホールカードの配布はありません"]), [])
         self.assertEqual(self._keys(["道の駅 あっさぶの敷地内", "隣の施設でマンホールカードももらえます"]), ["michinoeki", "card"])
 
