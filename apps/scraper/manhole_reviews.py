@@ -38,7 +38,7 @@ _PARKING_YES = re.compile(
     r"(停|止|とめ)められ|駐車可|停めて|停めた|駐車スペース|コインパーキング"
 )
 _PARKING_NO = re.compile(
-    r"駐車場(は|が)?(なし|無し|ない|無い|ありません|ございません)|駐車できな|"
+    r"駐車(場|スペース)(は|が)?(なし|無し|ない|無い|ありません|ございません)|駐車できな|(停|止|とめ)められ(ません|ない)|"
     r"(停める|止める|とめる)(所|場所|ところ)(が|は)?(な|無)"
 )
 TIP_RULES: list[tuple[str, str, re.Pattern[str]]] = [
@@ -59,11 +59,17 @@ PARKING_NO_LABEL = "🅿️ 駐車場なし"
 
 # 一致した直後にこれが来たら打ち消し（「駅前にあるわけではない」）。数える範囲は直後の数文字だけ
 _NEGATION_AFTER = re.compile(r"^.{0,8}?(わけでは|ではな|じゃな|ではありませ|けない|けません|遠|終了|中止|休止|なくな|無くな)")
+# すぐ後ろ（句読点をまたがない4文字以内）の否定。「駐車スペースはありません」「停められません」
+# （PR #929 の Codex レビュー）。句読点で止めるのは「駐車場あり、トイレはない」を打ち消しにしないため
+_NEGATION_NEAR = re.compile(r"^[^。、,，!！?？\s]{0,4}?(ません|ない|無い|なし|無し)")
 
 
 def _hit(pattern: re.Pattern[str], text: str) -> bool:
     """pattern がどこかで、直後に打ち消しを伴わずに当たるか。"""
-    return any(not _NEGATION_AFTER.match(text[m.end():]) for m in pattern.finditer(text))
+    return any(
+        not _NEGATION_AFTER.match(rest) and not _NEGATION_NEAR.match(rest)
+        for rest in (text[m.end():] for m in pattern.finditer(text))
+    )
 
 
 def normalize_comment(value: object) -> str:

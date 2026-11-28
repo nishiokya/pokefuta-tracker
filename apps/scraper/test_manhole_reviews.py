@@ -87,6 +87,12 @@ class TipTests(unittest.TestCase):
         self.assertEqual(self._keys(["マンホールカードは配布終了", "マンホールカードの配布はありません"]), [])
         self.assertEqual(self._keys(["道の駅 あっさぶの敷地内", "隣の施設でマンホールカードももらえます"]), ["michinoeki", "card"])
 
+    def test_negative_parking_is_not_parking_yes(self):
+        # GitHub Codex レビュー（PR #929）
+        self.assertEqual(self._keys(["駐車スペースはありません"]), ["parking_no"])
+        self.assertEqual(self._keys(["駐車場に停められません"]), ["parking_no"])
+        self.assertEqual(self._keys(["駐車場あり、トイレはない"]), ["parking_yes"])
+
     def test_michinoeki_is_not_a_station(self):
         self.assertEqual(self._keys(["道の駅の入り口にある"]), ["michinoeki", "entrance"])
 
