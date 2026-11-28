@@ -1,4 +1,4 @@
-"""manhole_reviews.py（口コミの除外とチップ）と、書き出し側の docs/manhole-reviews.json の形。
+"""manhole_reviews.py（口コミの除外とチップ）と、書き出し側の build/manhole-reviews.json の形。
 
 名前・本文はすべて作り物（実在の利用者のものを使わない）。
 """
@@ -80,6 +80,12 @@ class TipTests(unittest.TestCase):
 
     def test_negation_is_not_a_hit(self):
         self.assertEqual(self._keys(["高松駅前にあるわけではない", "駅から歩けない"]), [])
+
+    def test_other_places_and_ended_distribution_are_not_hits(self):
+        # Codex レビュー（PR #929）: 別の場所として出てくる道の駅・配布終了のカードをチップにしない
+        self.assertEqual(self._keys(["道の駅から車で10分", "近くの道の駅まで歩いて5分"]), [])
+        self.assertEqual(self._keys(["マンホールカードは配布終了", "マンホールカードの配布はありません"]), [])
+        self.assertEqual(self._keys(["道の駅 あっさぶの敷地内", "隣の施設でマンホールカードももらえます"]), ["michinoeki", "card"])
 
     def test_michinoeki_is_not_a_station(self):
         self.assertEqual(self._keys(["道の駅の入り口にある"]), ["michinoeki", "entrance"])

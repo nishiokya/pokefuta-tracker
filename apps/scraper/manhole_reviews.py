@@ -1,6 +1,6 @@
 """蓋ごとの「訪れた人のひとこと」（写真館の visit.comment）を詳細ページ用に整える。
 
-データは import-manhole-photos.yml が書く docs/manhole-reviews.json（公開訪問のひとことを原文のまま、
+データは import-manhole-photos.yml が書く build/manhole-reviews.json（コミットせず artifact で pages-deploy.yml に渡す。公開訪問のひとことを原文のまま、
 訪問ごとに1件）。ここでは次の2つをする。
 
 - 出さないものを落とす: 数字だけの書き込み（自分の訪問の通し番号）と、同じ人が同じ文を
@@ -45,17 +45,20 @@ TIP_RULES: list[tuple[str, str, re.Pattern[str]]] = [
     ("station", "🚉 駅から歩ける", re.compile(
         r"(?<!道の)駅(から(は|も)?(.{0,4}歩|徒歩|すぐ|近|[0-9０-９〜~]+ ?(m|ｍ|メートル|分|km))|前|の(近く|すぐ|目の前|横|隣|前|構内|ロータリー|改札|出口)|構内|すぐ|近く|直結|ロータリー)"
     )),
-    ("michinoeki", "🏪 道の駅にある", re.compile(r"道の駅")),
+    # 「道の駅から車で10分」のように、別の場所として出てくる文は数えない（道の駅の名前は空白入り・長いものもある）
+    ("michinoeki", "🏪 道の駅にある", re.compile(r"道の駅(?![^。、,，!！?？]{0,15}?(から|まで|へ|方面|経由))")),
     ("entrance", "🚪 建物の入り口にある", re.compile(r"(入り?口|玄関)(の|に|前|横|付近|近く|脇)")),
     ("eaves", "☂️ ひさしの下にある", re.compile(r"ひさし|庇|屋根の下|屋根付き")),
     ("hard_to_find", "🔍 見つけにくい", re.compile(r"分かりにく|わかりにく|見つけにく|見つからな|迷(っ|い|う)")),
-    ("card", "🎴 マンホールカード配布", re.compile(r"マンホールカード")),
+    ("card", "🎴 マンホールカード配布", re.compile(
+        r"マンホールカード[^。、,，]{0,16}?(配布(し|中|あり|して|され)|配って|もらえ|貰え|ゲット|入手|いただ|頂)"
+    )),
 ]
 PARKING_YES_LABEL = "🅿️ 駐車場あり"
 PARKING_NO_LABEL = "🅿️ 駐車場なし"
 
 # 一致した直後にこれが来たら打ち消し（「駅前にあるわけではない」）。数える範囲は直後の数文字だけ
-_NEGATION_AFTER = re.compile(r"^.{0,8}?(わけでは|ではな|じゃな|ではありませ|けない|けません|遠)")
+_NEGATION_AFTER = re.compile(r"^.{0,8}?(わけでは|ではな|じゃな|ではありませ|けない|けません|遠|終了|中止|休止|なくな|無くな)")
 
 
 def _hit(pattern: re.Pattern[str], text: str) -> bool:
@@ -174,7 +177,7 @@ def missing_tip_prompt(chips: list[dict[str, Any]]) -> Optional[str]:
 
 
 def load_reviews(path: Path) -> dict[str, list[dict]]:
-    """docs/manhole-reviews.json を読み、出してよいものだけを蓋ID（正規化済みの文字列）ごとに返す。
+    """build/manhole-reviews.json（artifact から pages-deploy.yml が置く）を読み、出してよいものだけを蓋ID（正規化済みの文字列）ごとに返す。
 
     ファイルが無い・壊れているときは空（ページは口コミ無しの形で出る。日次の生成を止めない）。
     """

@@ -1957,8 +1957,8 @@ def main() -> int:
     )
     parser.add_argument(
         "--reviews",
-        default="docs/manhole-reviews.json",
-        help="訪れた人のひとこと（import-manhole-photos.yml が書く）。無ければ口コミの欄を出さない",
+        default="build/manhole-reviews.json",
+        help="訪れた人のひとこと（import-manhole-photos.yml の artifact。pages-deploy.yml が build/ に置く）。無ければ口コミの欄を出さない",
     )
     parser.add_argument(
         "--output",

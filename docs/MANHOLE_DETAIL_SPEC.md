@@ -34,9 +34,9 @@ data.pokefuta.com（tracker）と pokefuta.com のマンホール詳細ページ
 
 ## 口コミ（セクション5・5b）
 
-- データ: `docs/manhole-reviews.json`（import-manhole-photos.yml の `--reviews-output`）。公開訪問（`visit.is_public`）のひとことを訪問ごとに1件、原文のまま。`visit` から直接読むので、風景の写真だけの訪問のひとことも入る（写真の読み込みは風景を外している）。利用者の情報は表示名と `public_user_id` まで
+- データ: import-manhole-photos.yml の `--reviews-output build/manhole-reviews.json`。**リポジトリにはコミットせず** artifact「manhole-reviews」（保存2日）で pages-deploy.yml に渡す（非公開に戻したひとことを公開の Git 履歴に残さないため。PR #929 の Codex レビュー）。artifact が取れない日は口コミの欄なしで出る。公開訪問（`visit.is_public`）のひとことを訪問ごとに1件、原文のまま。`visit` から直接読むので、風景の写真だけの訪問のひとことも入る（写真の読み込みは風景を外している）。利用者の情報は表示名と `public_user_id` まで
 - 出さないもの（`apps/scraper/manhole_reviews.py`）: 数字だけ（自分の訪問の通し番号）、同じ人が同じ文を3つ以上の蓋に書いた定型文のうち旅情報を含まないもの。同じ蓋に同じ文が並ぶときは1件にまとめ「ほかN人も同じひとこと」
-- 旅情報チップ: 決まった言い回しの一致だけで作る（LLM で要約しない）。言い回しは写真館の投稿フォームの候補（pokefuta `src/lib/visit-tip.ts` の `VISIT_TIP_SUGGESTIONS`）に揃える。チップには根拠の件数と最新の年月を必ず添える。駐車場の「あり／なし」が食い違うときは新しい言及の側。「〜わけではない」などの打ち消しは数えない
+- 旅情報チップ: 決まった言い回しの一致だけで作る（LLM で要約しない）。言い回しは写真館の投稿フォームの候補（pokefuta `src/lib/visit-tip.ts` の `VISIT_TIP_SUGGESTIONS`）に揃える。「道の駅から車で10分」のように別の場所として出る道の駅や、「配布終了」のカードは数えない。チップには根拠の件数と最新の年月を必ず添える。駐車場の「あり／なし」が食い違うときは新しい言及の側。「〜わけではない」などの打ち消しは数えない
 - 呼びかけ: 口コミが0件の蓋にも出す。駐車場のチップが無い蓋は「駐車場の情報がまだありません」と名指しする。投稿（`/upload?manhole_id=`）と、投稿済みの写真にひとことを足す（写真館の蓋ページ）の2つ。GA4 は `click_review_cta`（`cta`: upload / add_to_posted、`missing`）と `click_reviews_more`、surface は `manhole_reviews`
 - 口コミのデータがあるとき、代表写真のひとことはヒーローに重ねない（5b にまとめる）。ファイルが無い実行では今までどおりヒーローに出し、5b は出さない
 - 設置前の蓋には 5b を出さない。訳したページ（/en/ など）には出さない（原文が日本語のため）

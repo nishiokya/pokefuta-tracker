@@ -535,7 +535,7 @@ def build_reviews_payload(
     user_info_by_auth_uid: dict[str, dict[str, Optional[str]]],
     generated_at: str,
 ) -> dict[str, Any]:
-    """docs/manhole-reviews.json の中身。公開訪問のひとことを原文のまま、蓋ごとに新しい順で並べる。
+    """build/manhole-reviews.json の中身（コミットしない。artifact で pages-deploy.yml に渡す）。公開訪問のひとことを原文のまま、蓋ごとに新しい順で並べる。
 
     出す利用者の情報は表示名と public_user_id まで（auth の user_id は出さない）。
     photo_ids は蓋の写真（風景を除く）で、詳細ページがギャラリーの画像と突き合わせるのに使う。
