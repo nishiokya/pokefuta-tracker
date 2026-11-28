@@ -138,11 +138,16 @@ class TipTests(unittest.TestCase):
 
 
 class LoadReviewsTests(unittest.TestCase):
-    def test_missing_or_broken_file_is_empty(self):
+    def test_missing_or_broken_file_is_none_but_valid_empty_is_empty(self):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "r.json"
-            self.assertEqual(mr.load_reviews(path), {})
+            self.assertIsNone(mr.load_reviews(path))
             path.write_text("{broken", encoding="utf-8")
+            self.assertIsNone(mr.load_reviews(path))
+            path.write_text(json.dumps({"reviews": []}), encoding="utf-8")
+            self.assertIsNone(mr.load_reviews(path))
+            # 読めて、出せる口コミが0件（数字だけ）なら空（読めなかったとは分ける）
+            path.write_text(json.dumps({"reviews": {"1": [_review("48")]}}), encoding="utf-8")
             self.assertEqual(mr.load_reviews(path), {})
 
     def test_ids_are_normalized(self):

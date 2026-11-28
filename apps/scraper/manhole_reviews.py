@@ -200,22 +200,25 @@ def missing_tip_prompt(chips: list[dict[str, Any]]) -> Optional[str]:
     return "駐車場の情報がまだありません"
 
 
-def load_reviews(path: Path) -> dict[str, list[dict]]:
+def load_reviews(path: Path) -> Optional[dict[str, list[dict]]]:
     """build/manhole-reviews.json（artifact から pages-deploy.yml が置く）を読み、出してよいものだけを蓋ID（正規化済みの文字列）ごとに返す。
 
-    ファイルが無い・壊れているときは空（ページは口コミ無しの形で出る。日次の生成を止めない）。
+    ファイルが無い・壊れているときは None（ページは口コミの欄なしで出る。日次の生成を止めない）。
+    読めたが出せる口コミが0件のときは空の dict（どの蓋も「0件」として呼びかけを出す）。
+    この2つを分けるのは、0件の日まで「読めなかった」扱いにして呼びかけを消さないため（PR #929 の Codex レビュー）。
     """
     if not path.exists():
         logger.warning("Reviews file not found: %s", path)
-        return {}
+        return None
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
         logger.warning("Could not read reviews %s: %s", path, exc)
-        return {}
+        return None
     raw = data.get("reviews") if isinstance(data, dict) else None
     if not isinstance(raw, dict):
-        return {}
+        logger.warning("Reviews file has no reviews object: %s", path)
+        return None
     cleaned = {
         str(manhole_id).strip().lstrip("0") or "0": [r for r in reviews if isinstance(r, dict)]
         for manhole_id, reviews in raw.items()

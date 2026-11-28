@@ -230,12 +230,10 @@ def attach_review_tips(entries: list[dict], reviews_path: Path = REVIEWS_JSON) -
     （表示名・本文）は写さない。口コミが読めない回は何も足さない（写真館はチップを出さないだけ）。
     口コミが0件の蓋にも review_count 0・missing "parking" を付ける（呼びかけに使う）。写した蓋の数を返す。
     """
-    if not reviews_path.exists():
-        print(f"::warning::{reviews_path} が無いため review_tips を付けません", file=sys.stderr)
-        return 0
     reviews = load_reviews(reviews_path)
-    if not reviews:
-        print(f"::warning::{reviews_path} から口コミを読めないため review_tips を付けません", file=sys.stderr)
+    if reviews is None:
+        # 読めなかった回だけ付けない。読めて0件の回は全部の蓋に「0件・駐車場を募集」を付ける
+        print(f"::warning::{reviews_path} を読めないため review_tips を付けません", file=sys.stderr)
         return 0
     for entry in entries:
         mine = reviews.get(str(entry.get("id")).lstrip("0") or "0", [])

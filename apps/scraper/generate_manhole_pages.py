@@ -2007,7 +2007,7 @@ def main() -> int:
         manholes, photos, pokemon_meta, output_dir, Path(args.image_dir),
         ja_to_slug=ja_to_slug, design_spots=design_spots,
         trips=_load_trips(manholes),
-        reviews=load_reviews(Path(args.reviews)) if Path(args.reviews).exists() else None,
+        reviews=load_reviews(Path(args.reviews)),
     )
 
     print(f"[generate_manhole_pages] total manholes: {len(manholes)}")

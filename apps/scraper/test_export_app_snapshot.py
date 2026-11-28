@@ -311,6 +311,13 @@ class ReviewTipsTest(unittest.TestCase):
         for leaked in ("だれか", "u-1", "秘密の目印"):
             self.assertNotIn(leaked, dumped)
 
+    def test_valid_file_without_usable_reviews_still_asks(self) -> None:
+        # Codex レビュー（PR #929）: 読めて0件の回は「読めなかった」と分け、呼びかけを付ける
+        path = self.write({"1": [{"comment": "48"}]})
+        entries = [{"id": 1}]
+        self.assertEqual(MODULE.attach_review_tips(entries, path), 1)
+        self.assertEqual(entries[0]["review_tips"], {"tips": [], "review_count": 0, "missing": "parking"})
+
     def test_missing_file_adds_nothing(self) -> None:
         entries = [{"id": 1}]
         self.assertEqual(MODULE.attach_review_tips(entries, Path("/nonexistent/r.json")), 0)
