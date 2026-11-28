@@ -26,6 +26,9 @@ from manhole_records import geo_label  # noqa: E402
 from coord_overrides import is_applied as coord_fixed_by_photos  # noqa: E402
 from generate_pokemon_pages import _FORM_PREFIX, _normalize_katakana  # noqa: E402
 from generate_pokemon_pages import load_pokemon_metadata as load_pokemon_metadata_with_forms  # noqa: E402
+from generate_gallery_pages import photo_page_url
+from manhole_visitor_section import render_visitor_section
+from visitor_guide import legacy_guide
 from manhole_page_css import PAGE_CSS  # noqa: E402
 from poster_identity import avatar_html, tier_badge_html  # noqa: E402
 from manhole_tile_image import small_image_url  # noqa: E402
@@ -440,11 +443,13 @@ def load_photos(path: Path) -> dict[str, dict]:
         photos = data.get("photos", {})
         logger.info(f"Loaded {len(photos)} photo entries from {path}")
 
-        # Normalize keys
+        guides = data.get("visitor_guides")
         normalized = {}
-        for manhole_id, photo_data in photos.items():
-            norm_id = normalize_id(manhole_id)
-            normalized[norm_id] = photo_data
+        for mid, photo in photos.items():
+            guide = legacy_guide(photo) if guides is None else guides.get(mid, {})
+            normalized[normalize_id(mid)] = {**photo, "visitor_guide": guide}
+        for mid, guide in (guides or {}).items():
+            normalized.setdefault(normalize_id(mid), {"visitor_guide": guide})
 
         return normalized
     except json.JSONDecodeError as e:
@@ -673,6 +678,7 @@ def generate_html(
     nearby_design: list[tuple[dict, float]] | None = None,
     municipality_path: str | None = None,
     trip: dict | None = None,
+    visitor_guide: dict | None = None,
 ) -> str:
     """Generate complete HTML for a manhole detail page.
 
@@ -831,11 +837,6 @@ def generate_html(
 
         display_name = format_display_name(photo.get("display_name"))
 
-        raw_comment = photo.get("comment") or ""
-        comment = " ".join(str(raw_comment).split())  # normalize whitespace
-        if len(comment) > 100:
-            comment = comment[:97] + "…"
-
         # 撮影日（shot_at）優先、欠損時は投稿日（created_at）にフォールバック。
         # 撮影日は古い場合があるため年付き表記を維持する。
         shot_date = format_photo_date(
@@ -867,11 +868,6 @@ def generate_html(
         else:
             credit_html = ""
 
-        comment_html = (
-            f"<div class='photo-comment'>{escape(comment)}</div>"
-            if comment else ""
-        )
-
         hero_photo_html = (
             f"<div class='hero-photo'>"
             # ヒーロー写真は LCP 要素なので lazy にしない。
@@ -879,7 +875,6 @@ def generate_html(
             f"<img src=\"{escape(photo_url)}\" alt=\"{escape(h1)}の写真\""
             f" loading=\"eager\" fetchpriority=\"high\">"
             f"{credit_html}"
-            f"{comment_html}"
             f"</div>"
         )
 
@@ -914,10 +909,14 @@ def generate_html(
                 credit_span = f"<span class='gallery-credit'>{escape(g_date)}</span>"
             else:
                 credit_span = ""
-            thumbs += (
-                f"<figure class='gallery-item'>"
+            image = (
                 f"<img src=\"{escape(g['url'])}\" alt=\"{escape(h1)}の写真\""
                 f" width=\"{GALLERY_THUMB_SIZE}\" height=\"{GALLERY_THUMB_SIZE}\" loading=\"lazy\" decoding=\"async\">"
+            )
+            if g.get("photo_id"):
+                image = f'<a href="{photo_page_url(g["photo_id"])}">{image}</a>'
+            thumbs += (
+                f"<figure class='gallery-item'>{image}"
                 f"{credit_span}"
                 f"</figure>"
             )
@@ -1427,6 +1426,8 @@ def generate_html(
 </div>
 """
 
+    visitor_html = render_visitor_section(visitor_guide or {}, photo_studio_url) if not is_preinstall else ""
+
     # Complete HTML
     html = f"""<!doctype html>
 <html lang="ja">
@@ -1515,11 +1516,13 @@ def generate_html(
 
     {provisional_html}
 
-    {gallery_html}
+    {location_html}
+
+    {visitor_html}
 
     <!-- adsense:manhole -->
 
-    {location_html}
+    {gallery_html}
 
     {first_travel_html}
 
@@ -1653,6 +1656,7 @@ def page_photo(
         if name:
             gallery_local.append({
                 "url": f"{BASE_URL}manhole/image/{name}",
+                "photo_id": item.get("photo_id"),
                 "display_name": item.get("display_name"),
                 "shot_at": item.get("shot_at"),
                 "created_at": item.get("created_at"),
@@ -1743,6 +1747,7 @@ def generate_all_pages(
             nearby_design=nearby_design,
             municipality_path=municipality_paths.get((prefecture, municipality_label(manhole))),
             trip=(trips or {}).get(manhole_id),
+            visitor_guide=photos.get(normalize_id(manhole_id), {}).get("visitor_guide"),
         )
 
         page_dir = output_dir / "manholes" / manhole_id

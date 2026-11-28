@@ -1,4 +1,5 @@
 import importlib.util
+import json
 import re
 import tempfile
 import unittest
@@ -167,6 +168,30 @@ class PagePhotoGalleryFilesTests(unittest.TestCase):
             [g["url"] for g in photo["gallery_local"]],
             [f"{pages.BASE_URL}manhole/image/1_abcd1234.webp", f"{pages.BASE_URL}manhole/image/1_ef012345.jpeg"],
         )
+
+
+class VisitorSectionTests(unittest.TestCase):
+    def test_board_and_scenery_without_local_lid_photo(self):
+        guide = {"notes": [{"content": "入口は<A>側", "created_at": "2026-11-20T23:30:00Z"}],
+                 "scenery": [{"photo_id": "sky", "display_name": "<someone>"}]}
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)
+            data = path / "snapshot.json"
+            data.write_text(json.dumps({"photos": {}, "visitor_guides": {"1": guide}}))
+            photos = pages.load_photos(data)
+            pages.generate_all_pages([_manhole()], photos, {}, path, path)
+            html = (path / "manholes/1/index.html").read_text()
+        self.assertIn("入口は&lt;A&gt;側", html)
+        self.assertIn("投稿 2026年11月21日", html)
+        self.assertIn("設置場所の周辺写真", html)
+        self.assertIn("https://pokefuta.com/p/sky?from=data", html)
+        self.assertIn("&lt;someone&gt;", html)
+        self.assertIn("まだ写真がありません", html)
+
+    def test_empty_section_and_photo_links(self):
+        self.assertNotIn("<h2>訪れた人の口コミ", _generate(None))
+        html = _generate(_photo([{"url": "thumb.webp", "photo_id": "abc"}]))
+        self.assertIn('<a href="https://pokefuta.com/p/abc?from=data"><img', html)
 
 
 if __name__ == "__main__":
