@@ -56,6 +56,9 @@ POKEFUTA_SIGNUP_URL = "https://pokefuta.com/login?from=data&mode=signup"
 POKEFUTA_STAMP_URL = "https://pokefuta.com/visits?from=data"
 POKEFUTA_PROFILE_URL = "https://pokefuta.com/profile?from=data"
 X_ACCOUNT_URL = "https://x.com/pokemonmanhole"
+# 運営の開発ブログ（はてなブログ・日本語）。PC ヘッダー右のボタンは X からこちらへ張り替えた（2026-11）。
+# X はスイッチャーのメニューとフッターに残している
+BLOG_URL = "https://mookie.hatenablog.com/"
 
 # lucide-react 0.294 系（写真館が使っているもの）と同じ字形を inline SVG で持つ。
 # アイコンの言語を両サイトで揃えるため、勝手に別のアイコンへ差し替えないこと。
@@ -101,6 +104,8 @@ LABELS = {
         "about": "このサイトについて",
         "privacy": "プライバシー",
         "contact": "お問い合わせ",
+        "blog": "ブログ",
+        "blog_title": "開発ブログ（はてなブログ）",
         "unofficial": "非公式のファンサイトです",
         "credit": "ポケふた情報はポケモン公式サイトを参照しています",
     },
@@ -126,6 +131,8 @@ LABELS = {
         "about": "About this site",
         "privacy": "Privacy",
         "contact": "Contact",
+        "blog": "Blog",
+        "blog_title": "Developer blog (Japanese, Hatena Blog)",
         "unofficial": "Unofficial fan site",
         "credit": "Poké Lid information is based on the official Pokémon website",
     },
@@ -151,6 +158,8 @@ LABELS = {
         "about": "關於本站",
         "privacy": "隱私權",
         "contact": "聯絡我們",
+        "blog": "部落格",
+        "blog_title": "開發部落格（日文・Hatena Blog）",
         "unofficial": "非官方粉絲網站",
         "credit": "寶可夢人孔蓋資訊參考寶可夢官方網站",
     },
@@ -176,6 +185,8 @@ LABELS = {
         "about": "关于本站",
         "privacy": "隐私",
         "contact": "联系我们",
+        "blog": "博客",
+        "blog_title": "开发博客（日语・Hatena Blog）",
         "unofficial": "非官方粉丝网站",
         "credit": "宝可梦井盖信息参考宝可梦官方网站",
     },
@@ -201,6 +212,8 @@ LABELS = {
         "about": "사이트 소개",
         "privacy": "개인정보처리방침",
         "contact": "문의",
+        "blog": "블로그",
+        "blog_title": "개발 블로그(일본어・Hatena Blog)",
         "unofficial": "비공식 팬 사이트입니다",
         "credit": "포켓몬 맨홀 정보는 포켓몬 공식 사이트를 참고했습니다",
     },
@@ -222,6 +235,7 @@ HEADER_TEMPLATE = """<header class="site-header">
         <a class="site-switch__sub" href="{asset_base}character_manholes.html">{nav_character}</a>{gallery_sub}
         <a class="site-switch__sub" href="{about_url}">{about}</a>
         <a class="site-switch__sub" href="{privacy_url}">{privacy}</a>
+        <a class="site-switch__sub" href="{blog_url}" target="_blank" rel="noopener noreferrer" data-blog-link="site_switch" title="{blog_title}">{blog_title}</a>
         <a class="site-switch__sub" href="{x_url}" target="_blank" rel="noopener noreferrer">X @pokemonmanhole</a>
       </div>
     </details>
@@ -235,7 +249,7 @@ HEADER_TEMPLATE = """<header class="site-header">
     </nav>
 
     <a class="site-header__icon" href="{about_url}" title="{about}" aria-label="{about}">{icon_info}</a>
-    <a class="site-header__icon site-header__icon--x" href="{x_url}" target="_blank" rel="noopener noreferrer" title="X @pokemonmanhole" aria-label="X @pokemonmanhole">X</a>
+    <a class="site-header__icon site-header__icon--blog" href="{blog_url}" target="_blank" rel="noopener noreferrer" data-blog-link="header" title="{blog_title}" aria-label="{blog_title}">{blog}</a>
 
     <div class="site-auth" data-auth-guest>
       <a class="site-auth__login" data-login-link href="{login_url}">{login}</a>
@@ -268,6 +282,7 @@ FOOTER_TEMPLATE = """<nav class="site-footer" aria-label="{footer_aria}">
   <a class="site-footer__link" href="{about_url}">{about}</a>
   <a class="site-footer__link" href="{privacy_url}">{privacy}</a>
   <a class="site-footer__link" href="{contact_url}">{contact}</a>
+  <a class="site-footer__link" href="{blog_url}" target="_blank" rel="noopener noreferrer" data-blog-link="footer">{blog_title}</a>
   <a class="site-footer__link" href="{x_url}" target="_blank" rel="noopener noreferrer"><b>X</b> @pokemonmanhole</a>
   <p class="site-footer__note">&copy; 2025-{year} data.pokefuta.com · {unofficial} · {credit}</p>
 </nav>"""
@@ -361,6 +376,7 @@ def inject(
         privacy_url=f"{asset_base}privacy.html",
         contact_url=POKEFUTA_CONTACT_URL,
         x_url=X_ACCOUNT_URL,
+        blog_url=BLOG_URL,
         icon_info=_icon("info"),
         icon_map=_icon("map"),
         icon_pref=_icon("pref"),

@@ -558,7 +558,14 @@ body.has-site-header [id] {
   .site-header__icon:first-of-type { margin-left: auto; }
 
   .site-header__icon svg { width: 18px; height: 18px; }
-  .site-header__icon--x { font-size: 15px; font-weight: 900; }
+  /* 文字のボタン。アイコン用の32px角に収まらないので幅は中身に合わせる */
+  .site-header__icon--blog {
+    width: auto;
+    padding: 0 12px;
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
 
   .site-header__icon:hover,
   .site-header__icon:focus-visible { background: var(--chrome-pc-nav-active-bg); }

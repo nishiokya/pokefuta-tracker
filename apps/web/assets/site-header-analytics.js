@@ -36,9 +36,23 @@
     });
   }
 
+  // 開発ブログへのリンク（PC ヘッダー・スイッチャーのメニュー・フッター）。
+  // 画面幅に関係なく送る。どこから押されたかは data-blog-link の値を surface にする
+  function initBlogLinks() {
+    document.addEventListener('click', function (event) {
+      var link = event.target.closest && event.target.closest('[data-blog-link]');
+      if (!link) return;
+      track('click_blog_link', {
+        surface: link.dataset.blogLink,
+        destination: 'blog'
+      });
+    });
+  }
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init, { once: true });
   } else {
     init();
   }
+  initBlogLinks();
 })();
