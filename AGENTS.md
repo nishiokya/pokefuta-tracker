@@ -9,6 +9,7 @@ dataset/pokemon_representatives.json は手動更新（ポケモンごとの代�
 dataset/prefecture_visit_guides.json は手動更新（県ページの設置場所案内・回り方・公式出典・確認日）。参照する全IDが設置済みである場合だけ表示する。設置場所名と住所は既存データから生成し、移動時間などは公式情報を確認して記載する
 pokefuta.ndjsonはapps/scraperで更新している
 latest-manhole-photos.json と docs/api/*.json は import-manhole-photos.yml が Supabase から日次一括生成（画像DL込み。pokefuta.com アプリの /api/manholes・/api/site-stats は docs/api を読む。手動で回すときだけ `/import-photos` スキル）
+docs/manhole-reviews.json も同じジョブが書く（公開訪問のひとこと visit.comment を原文で。詳細ページの「口コミから」チップと「訪れた人のひとこと」の元。数字だけ・定型文の除外とチップの言い回しは `apps/scraper/manhole_reviews.py`、生成で読むだけで公開サイトには置かない。非公開に戻したひとことは次の日次まで残る）
 都道府県ページは `docs/latest-manhole-photos.json` を生成時に読み、写真掲載率・投稿写真・写真募集状態を47都道府県共通テンプレートへ静的に埋め込む
 都道府県ページから pokefuta.com への導線は `from=data&pref=<県slug>` を付ける（県がない場合は `from=data` のみ）。同一GA4プロパティ内の内部UTMは使わず、クロスドメインリンカーと着地側の `source_app=tracker` / `p_data_referral` で分析する。`pref` のGA4送信・投稿までの引き継ぎは写真館側の対応が別途必要。GA4の `content_id`・`photo_state`・`surface` はカスタムディメンションとして登録して分析する
 GA4 は `apps/web/assets/analytics.js` から初期化し、`data.pokefuta.com` だけで送信する。各HTMLや生成スクリプトに gtag ローダーや独自の `trackEvent` を直書きしない
