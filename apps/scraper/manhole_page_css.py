@@ -230,7 +230,8 @@ PAGE_CSS = f"""    * {{
     .hero-photo img {{
       width: 100%;
       aspect-ratio: 4 / 3;
-      object-fit: cover;
+      object-fit: contain;
+      background: #f5efe7;
       display: block;
     }}
 
@@ -692,20 +693,16 @@ PAGE_CSS = f"""    * {{
       text-underline-offset: 2px;
     }}
 
-    .photo-comment {{
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(0,0,0,0.50);
-      color: #fff;
-      font-size: 13px;
-      padding: 8px 12px;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }}
+    .visitor-notes {{ list-style: none; margin: 0; padding: 0; }}
+    .visitor-notes li + li {{ border-top: 1px solid #e8d8c0; margin-top: 12px; padding-top: 12px; }}
+    .visitor-notes blockquote {{ margin: 0 0 6px; line-height: 1.65; overflow-wrap: anywhere; }}
+    .note-source {{ display: flex; gap: 4px 12px; flex-wrap: wrap; align-items: baseline; }}
+    .note-source, .visitor-scenery figcaption {{ color: #675a4e; font-size: 0.85rem; }}
+    .note-source a {{ color: #175a94; }}
+    .visitor-scenery {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(min(180px, 100%), 1fr)); gap: 12px; }}
+    .visitor-scenery figure {{ margin: 0; min-width: 0; }}
+    .visitor-scenery img {{ width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: contain; background: #f5efe7; border-radius: 8px; }}
+    .visitor-scenery figcaption {{ overflow-wrap: anywhere; }}
 
     .hero-badge-new {{
       background: #fff0f0;

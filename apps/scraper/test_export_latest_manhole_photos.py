@@ -242,7 +242,7 @@ class FeaturedPhotoOverridesTest(unittest.TestCase):
 
 
 class BuildPayloadFeaturedPhotoTest(unittest.TestCase):
-    @mock.patch.object(export, "fetch_manhole_comments_by_display_name", return_value={})
+    @mock.patch.object(export, "fetch_manhole_comments", return_value=({}, {}))
     @mock.patch.object(export, "fetch_user_info", return_value={})
     @mock.patch.object(export, "get_effective_r2_public_base_url", return_value="https://images.example")
     def test_landscape_only_location_does_not_count_as_photographed(self, *_mocks):
@@ -256,7 +256,7 @@ class BuildPayloadFeaturedPhotoTest(unittest.TestCase):
                 self.assertEqual(payload["count"], 0)
                 self.assertEqual(payload["photos"], {})
 
-    @mock.patch.object(export, "fetch_manhole_comments_by_display_name", return_value={})
+    @mock.patch.object(export, "fetch_manhole_comments", return_value=({}, {}))
     @mock.patch.object(export, "fetch_user_info", return_value={})
     @mock.patch.object(export, "get_effective_r2_public_base_url", return_value="https://images.example")
     def test_representative_does_not_depend_on_gallery_limit(self, *_mocks):
@@ -271,21 +271,17 @@ class BuildPayloadFeaturedPhotoTest(unittest.TestCase):
                 payload = export.build_payload(True, 100, 10, "tako", gallery_limit, {})
             self.assertEqual(payload["photos"]["1"]["photo_id"], "public-best-rep", gallery_limit)
 
-    def test_query_filters_landscapes_before_pagination(self):
+    def test_query_reads_public_landscapes_without_tag_filter(self):
         with mock.patch.object(export, "iter_supabase_rows", return_value=iter([])) as rows:
             list(export.iter_photos(False, 100, 10))
         query = rows.call_args.args[1]
-        # 風景は特集のタグが付いたものだけ読む（全部は読まない）
+        self.assertNotIn("or", query)  # 周辺風景は特集タグのない投稿も読む
         self.assertNotIn("is_landscape", query)
-        self.assertEqual(
-            query["or"],
-            "(is_landscape.eq.false,ai_tags->>plush.eq.true,ai_tags->>snow.eq.true)",
-        )
         self.assertEqual(query["visit.is_public"], "eq.true")
         self.assertIn("is_landscape", query["select"])
         self.assertIn("visit!inner(shot_at,", query["select"])
 
-    @mock.patch.object(export, "fetch_manhole_comments_by_display_name", return_value={})
+    @mock.patch.object(export, "fetch_manhole_comments", return_value=({}, {}))
     @mock.patch.object(export, "fetch_user_info", return_value={})
     @mock.patch.object(export, "get_effective_r2_public_base_url", return_value="https://images.example")
     def test_curated_photo_becomes_representative_and_first_gallery_item(
@@ -313,7 +309,7 @@ class BuildPayloadFeaturedPhotoTest(unittest.TestCase):
         self.assertEqual(entry["representative_source"], "curated")
         self.assertEqual(entry["gallery"][0]["photo_id"], "featured")
 
-    @mock.patch.object(export, "fetch_manhole_comments_by_display_name", return_value={})
+    @mock.patch.object(export, "fetch_manhole_comments", return_value=({}, {}))
     @mock.patch.object(export, "fetch_user_info", return_value={})
     @mock.patch.object(export, "get_effective_r2_public_base_url", return_value="https://images.example")
     def test_public_photo_count_is_not_capped_by_the_gallery(self, *_mocks):
@@ -327,6 +323,48 @@ class BuildPayloadFeaturedPhotoTest(unittest.TestCase):
 
     def test_default_gallery_shows_the_representative_and_twelve_more(self):
         self.assertEqual(export.DEFAULT_GALLERY_LIMIT, 13)
+
+
+class VisitorGuideTests(unittest.TestCase):
+    @mock.patch.object(export, "fetch_manhole_comments", return_value=(
+        {"7": [{"id": "board", "content": "駅前の公園です", "created_at": "2026-11-20"}]}, {}))
+    @mock.patch.object(export, "fetch_user_info", return_value={})
+    @mock.patch.object(export, "get_effective_r2_public_base_url", return_value="https://images.example")
+    def test_notes_and_scenery_are_independent_of_representative(self, *_mocks):
+        photos = []
+        for pid, text, public in [
+            ("a", "駅の北口にあります", True), ("b", "駅の北口にあります", True),
+            ("c", "12345", True), ("d", "個人用の記録です", False),
+        ]:
+            photo = _photo(pid, is_public=public)
+            photo["visit"]["comment"] = text
+            photo["is_landscape"] = True
+            photos.append(photo)
+        with mock.patch.object(export, "iter_photos", return_value=photos):
+            payload = export.build_payload(True, 100, 10, "tako", 0)
+        self.assertEqual(payload["photos"], {})
+        guides = payload["visitor_guides"]
+        self.assertEqual([n["content"] for n in guides["1"]["notes"]], ["駅の北口にあります"])
+        self.assertEqual([p["photo_id"] for p in guides["1"]["scenery"]], ["c", "b"])
+        self.assertEqual(guides["7"]["notes"][0]["content"], "駅前の公園です")
+        self.assertNotIn("user_id", json.dumps(guides))
+
+    def test_board_uses_public_fields_and_keeps_ogp_selection(self):
+        row = {"id": "1", "manhole_id": 12, "user_id": "author", "content": "投稿", "created_at": "2026-11-20"}
+        with mock.patch.object(export, "service_role_key_if_configured", return_value=""), \
+             mock.patch.object(export, "iter_supabase_rows", return_value=[row]) as rows:
+            public, ogp = export.fetch_manhole_comments("tako", 10, 5)
+        query = rows.call_args.args[1]
+        self.assertNotIn("user_id", query["select"])
+        self.assertEqual(query["parent_comment_id"], "is.null")
+        self.assertNotIn("user_id", public["12"][0])
+        self.assertFalse(ogp)
+        with mock.patch.object(export, "service_role_key_if_configured", return_value="key"), \
+             mock.patch.object(export, "fetch_auth_uids_by_display_name", return_value={"author"}), \
+             mock.patch.object(export, "iter_supabase_rows", return_value=[row, {**row, "user_id": "other"}]):
+            public, ogp = export.fetch_manhole_comments("tako", 10, 5)
+        self.assertEqual(len(public["12"]), 2)
+        self.assertEqual([r["display_name"] for r in ogp["12"]], ["tako"])
 
 
 class ToGalleryEntryTest(unittest.TestCase):
@@ -412,7 +450,7 @@ def _tagged(photo_id, tags, created_at="2026-01-01T00:00:00Z", shot_at=None, is_
     return {**photo, "is_landscape": is_landscape, "ai_tags": dict(tags)}
 
 
-@mock.patch.object(export, "fetch_manhole_comments_by_display_name", return_value={})
+@mock.patch.object(export, "fetch_manhole_comments", return_value=({}, {}))
 @mock.patch.object(export, "get_effective_r2_public_base_url", return_value="https://images.example")
 class TaggedPhotosTest(unittest.TestCase):
     """図鑑の写真ギャラリー（/gallery/plush/・/gallery/snow/）の特集データ。"""

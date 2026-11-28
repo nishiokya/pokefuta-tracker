@@ -26,6 +26,14 @@ from pathlib import Path
 from typing import Any, Iterator, Optional
 
 
+try:
+    from apps.scraper.visitor_guide import select_guide
+except ModuleNotFoundError as exc:
+    if exc.name != "apps":
+        raise
+    from visitor_guide import select_guide
+
+
 DEFAULT_OUTPUT = "public/data/latest-manhole-photos.json"
 DEFAULT_BATCH_SIZE = 1000
 DEFAULT_TIMEOUT = 30
@@ -60,9 +68,14 @@ def encode_storage_key(storage_key: str) -> str:
     return "/".join(urllib.parse.quote(part) for part in storage_key.split("/"))
 
 
+def service_role_key_if_configured() -> str:
+    key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "")
+    return "" if key.lower().startswith("placeholder") else key
+
+
 def get_supabase_key() -> str:
-    service_role_key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "")
-    if service_role_key and not service_role_key.lower().startswith("placeholder"):
+    service_role_key = service_role_key_if_configured()
+    if service_role_key:
         return service_role_key
     anon_key = os.environ.get("NEXT_PUBLIC_SUPABASE_ANON_KEY")
     if anon_key:
@@ -485,24 +498,17 @@ def iter_supabase_rows(
 
 
 def iter_photos(include_private: bool, batch_size: int, timeout: int) -> Iterator[dict[str, Any]]:
-    """公開写真（風景を除く）と、特集のタグ（ぬいぐるみ・雪）が付いた風景の写真を読む。
-
-    風景の写真は蓋の代表・ギャラリーには使わない（build_payloads が外す）。特集は写真館の
-    /photos/plush・/photos/snow と同じく風景の写真も出すので、タグの付いたものだけを足す
-    （2026-11-23 時点で風景 43枚。風景を全部読むより少ない）。
-    """
+    """蓋・周辺風景・口コミに使う写真を同じ日次スキャンで取得する。"""
     select_visit = (
-        "visit(shot_at,is_public,user_id,comment)"
+        "visit(shot_at,is_public,user_id,comment,created_at)"
         if include_private
-        else "visit!inner(shot_at,is_public,user_id,comment)"
+        else "visit!inner(shot_at,is_public,user_id,comment,created_at)"
     )
     query = {
         "select": (
             "id,manhole_id,storage_key,content_type,width,height,file_size,created_at,is_landscape,"
             f"quality_score,quality_eligible,ai_tags,{select_visit}"
         ),
-        # 風景でない写真＋特集のタグが付いた風景の写真。PostgREST の or= は jsonb の ->> も使える
-        "or": "(is_landscape.eq.false," + ",".join(f"ai_tags->>{tag}.eq.true" for tag in TAGGED_FEATURES) + ")",
         "manhole_id": "not.is.null",
         "storage_key": "not.is.null",
         "order": "created_at.desc,id.desc",
@@ -564,46 +570,28 @@ def fetch_auth_uids_by_display_name(
     return auth_uids
 
 
-def fetch_manhole_comments_by_display_name(
-    display_name: str,
-    batch_size: int,
-    timeout: int,
-) -> dict[str, list[dict[str, Any]]]:
-    auth_uids = fetch_auth_uids_by_display_name(display_name, batch_size, timeout)
-    if not auth_uids:
-        return {}
-
-    comments_by_manhole_id: dict[str, list[dict[str, Any]]] = {}
-
-    for id_batch in chunked(sorted(auth_uids), 100):
-        query = {
-            "select": "id,manhole_id,user_id,content,created_at,updated_at",
-            "user_id": f"in.({','.join(id_batch)})",
-            "parent_comment_id": "is.null",
-            "order": "manhole_id.asc,created_at.asc,id.asc",
-        }
-
-        for comment in iter_supabase_rows("manhole_comment", query, batch_size, timeout):
-            manhole_id = comment.get("manhole_id")
-            if manhole_id is None:
-                continue
-
-            key = str(manhole_id)
-            comments_by_manhole_id.setdefault(key, []).append(
-                {
-                    "id": comment.get("id"),
-                    "manhole_id": manhole_id,
-                    "content": comment.get("content"),
-                    "created_at": comment.get("created_at"),
-                    "updated_at": comment.get("updated_at"),
-                    "display_name": display_name,
-                }
-            )
-
-    return {
-        manhole_id: comments_by_manhole_id[manhole_id]
-        for manhole_id in sorted(comments_by_manhole_id, key=lambda value: int(value))
+def fetch_manhole_comments(display_name: str, batch_size: int, timeout: int):
+    """Read top-level posts once. Keep the OGP author's feed separate."""
+    # The author-specific OGP feed needs privileged column access. The visitor
+    # feed can also be exported with the anon key and only public columns.
+    authors = (fetch_auth_uids_by_display_name(display_name, batch_size, timeout)
+               if service_role_key_if_configured() else set())
+    fields = "id,manhole_id,content,created_at,updated_at"
+    public, ogp = {}, {}
+    query = {
+        "select": fields + (",user_id" if authors else ""),
+        "parent_comment_id": "is.null",
+        "order": "manhole_id.asc,created_at.asc,id.asc",
     }
+    for row in iter_supabase_rows("manhole_comment", query, batch_size, timeout):
+        if row.get("manhole_id") is None:
+            continue
+        key = str(row["manhole_id"])
+        entry = {field: row.get(field) for field in ("id", "manhole_id", "content", "created_at", "updated_at")}
+        public.setdefault(key, []).append(entry)
+        if row.get("user_id") in authors:
+            ogp.setdefault(key, []).append({**entry, "display_name": display_name})
+    return public, ogp
 
 
 def build_payload(
@@ -635,21 +623,19 @@ def build_payloads(
     photo_user_ids: set[str] = set()
     tagged_photos: dict[str, list[dict[str, Any]]] = {feature: [] for feature in TAGGED_FEATURES}
 
+    guide_photos = {}
     for photo in iter_photos(include_private=include_private, batch_size=batch_size, timeout=timeout):
         visit = normalize_visit(photo.get("visit"))
         user_id = visit.get("user_id")
         features = tagged_features_of(photo)
         for feature in features:
             tagged_photos[feature].append(photo)
-        # 防御的にここでも除外。手動代表指定やフォールバックで風景を採用しない。
-        # 風景の閲覧は写真館の既存ギャラリーが担当する（特集にだけ入る）。
-        if photo.get("is_landscape") is True:
-            if features and isinstance(user_id, str):
-                photo_user_ids.add(user_id)
-            continue
+        if visit.get("is_public") and (visit.get("comment") or photo.get("is_landscape")):
+            guide_photos.setdefault(str(photo["manhole_id"]), []).append({**photo, "visit": visit})
         if isinstance(user_id, str):
             photo_user_ids.add(user_id)
-
+        if photo.get("is_landscape") is True:
+            continue
         photos_by_manhole_id.setdefault(int(photo["manhole_id"]), []).append(photo)
 
     user_info_by_auth_uid = fetch_user_info(photo_user_ids, batch_size, timeout)
@@ -679,11 +665,17 @@ def build_payloads(
         # ギャラリーは gallery_limit で切るので、写真館にある公開写真の本当の枚数は別に持つ
         entry["public_photo_count"] = len(public_gallery_photos(manhole_photos))
         photos[str(manhole_id)] = entry
-    manhole_comments = fetch_manhole_comments_by_display_name(
+    public_comments, manhole_comments = fetch_manhole_comments(
         manhole_comment_display_name,
         batch_size,
         timeout,
     )
+
+    guides = {}
+    for key in sorted(guide_photos.keys() | public_comments.keys()):
+        guide = select_guide(guide_photos.get(key, []), public_comments.get(key, []), user_info_by_auth_uid)
+        if guide["notes"] or guide["scenery"]:
+            guides[key] = guide
 
     generated_at = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
     tagged = build_tagged_payload(tagged_photos, user_info_by_auth_uid, generated_at, tagged_limit)
@@ -696,6 +688,7 @@ def build_payloads(
         "count": len(photos),
         "photos": photos,
         "manhole_comments": manhole_comments,
+        "visitor_guides": guides,
     }, tagged
 
 

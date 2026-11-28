@@ -296,6 +296,7 @@ def build_page(
     id_to_image_url: dict[str, str],
     ja_to_slug: dict[str, str],
     ogp_dir: Optional[Path] = None,
+    visitor_guide: dict | None = None,
 ) -> str:
     manhole_id = str(manhole.get("id", "")).strip()
     prefecture = manhole.get("prefecture", "")
@@ -414,6 +415,9 @@ def build_page(
 </div>
 """
 
+    studio_url = f"https://pokefuta.com/manhole/{quote(manhole_id, safe='')}"
+    visitor_html = ja.render_visitor_section(visitor_guide or {}, studio_url, page.lang) if not is_preinstall else ""
+
     # ---- gallery
     gallery_html = ""
     gallery_items = (photo.get("gallery_local") or []) if photo else []
@@ -429,12 +433,13 @@ def build_page(
             ) if name else ""
             label = " · ".join(part for part in (who, escape(date)) if part)
             credit = f"<span class='gallery-credit'>{label}</span>" if label else ""
-            thumbs.append(
-                "<figure class='gallery-item'>"
+            image = (
                 f'<img src="{_attr(g["url"])}" alt="{_attr(page.t("photo_alt", h1=h1))}"'
                 f' width="{ja.GALLERY_THUMB_SIZE}" height="{ja.GALLERY_THUMB_SIZE}" loading="lazy" decoding="async">'
-                f"{credit}</figure>"
             )
+            if g.get("photo_id"):
+                image = f'<a href="{ja.photo_page_url(g["photo_id"])}">{image}</a>'
+            thumbs.append(f"<figure class='gallery-item'>{image}{credit}</figure>")
         gallery_html = (
             f"<section class='gallery-section section-card'><h2>{escape(page.t('gallery_heading'))}</h2>"
             f"<div class='gallery-grid'>{''.join(thumbs)}</div></section>"
@@ -676,11 +681,13 @@ def build_page(
   <div class="container">
     {hero_html}
 
-    {gallery_html}
-
     {visit_html}
 
     {location_html}
+
+    {visitor_html}
+
+    {gallery_html}
 
     {nearby_html}
 
@@ -731,6 +738,7 @@ def generate_all(
         photo = ja.page_photo(manhole_id, photos, image_dir, id_to_image_url)
         html = build_page(
             page, manhole, photo, pokemon_meta, index.related(manhole), id_to_image_url, ja_to_slug, ogp_dir,
+            visitor_guide=photos.get(ja.normalize_id(manhole_id), {}).get("visitor_guide"),
         )
         out = output_dir / manhole_id
         out.mkdir(parents=True, exist_ok=True)

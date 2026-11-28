@@ -21,6 +21,8 @@ on:
       - 'apps/scraper/test_export_kml.py' # KML tests run before generating
       - 'apps/scraper/generate_manhole_pages.py' # manhole page generator
       - 'apps/scraper/generate_manhole_pages_i18n.py' # translated manhole pages (/en/manholes/)
+      - 'apps/scraper/visitor_guide.py'
+      - 'apps/scraper/manhole_visitor_section.py'
       - 'apps/scraper/manhole_page_css.py' # detail page CSS shared by ja / translated pages
       - 'apps/scraper/poster_identity.py' # poster avatar and tier badge on detail pages
       - 'apps/scraper/zukan_cards.py' # shared index card HTML and CSS
